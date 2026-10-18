@@ -20,7 +20,8 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
 - `template/` shell.html, dex.css, dex.js: the one template (Emerald Imperium is the reference build).
 - `hacks/<hack>/` hack.json (title, version, `cfg` = wording, storage keys, feature switches), data.json (`#data`),
   sprites.json (own art), notes.md (build notes and schema), extract/ (the scripts that made data.json), SOURCES.md.
-- `sprites/` the shared standard sprite set (not chosen yet; see its README for the key scheme).
+- `sprites/` the shared sprite set (pokeemerald-expansion, 64×64, `png/<key>.png`; README has the key scheme,
+  SOURCES.md the pin and credits).
 - `tools/` source fetchers and extract helpers (README), `domcompare.mjs`. `plans/` work not done yet.
 - `dist/` built output (git-ignored); the Pages workflow builds and deploys it.
 
@@ -38,8 +39,10 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
    For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences).
 3. `hacks/<hack>/hack.json`: copy an existing one; new localStorage prefix in `cfg.ls`, the hack's wording in
    `cfg.txt`, feature switches. `notes.md`: sources, data rules and conflicts, like the existing ones.
-4. Sprites: the hack's own art in `sprites.json` (keyed by its species ids), else the shared set once it exists
-   (`sprites/README.md`). `assemble.py` lists species with no sprite; they show as blank squares.
+4. Sprites: give every species a sprite key `P[].sk` (`sprites/README.md`; look forms up in `sprites/index.json`).
+   The shared set covers everything through Legends: Z-A; the hack's own `sprites.json` (keyed by `sk`) only adds
+   what it lacks (new Megas, new forms, fakemon). `assemble.py` lists species with no sprite; they show as blank
+   squares.
 5. `python assemble.py <hack>`, then check `dist/<hack>.html` at 260 × 316 and maximised, normal and `dvkb` mode
    (headless Chrome over CDP, or on the Thor), and that every route renders without errors.
 

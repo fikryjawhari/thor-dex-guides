@@ -4,11 +4,11 @@ GitHub Action reruns it on every push.
 
 Usage: python assemble.py [hack ...]      (no arguments = every folder in hacks/ with a hack.json)
 
-Sprites: each guide's #spr maps its own species ids to data URIs. Today they all come from the hack's own
-sprites.json. When the shared set lands (sprites/), a species the hack has no art for falls back to it by sprite key
-(sprites/README.md); species with no sprite from either are reported, never silently dropped.
+Sprites: each guide's #spr maps its own species ids to data URIs. A species takes the hack's own sprites.json entry
+(keyed by species id or by sprite key `sk`), else the shared set's sprites/png/<sk>.png (sprites/README.md). Only the
+sprites a guide uses are inlined. Species with no sprite from either are reported, never silently dropped.
 """
-import html, json, os, sys
+import base64, html, json, os, sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 PAGES = 'https://fikryjawhari.github.io/thor-dex-guides/'
@@ -24,12 +24,33 @@ def script_json(obj):
     return json.dumps(obj, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
 
 
+SHARED = json.loads(read('sprites', 'index.json'))
+
+
+def shared_sprite(key):
+    """Data URI of the shared set's sprite for a sprite key, or None."""
+    key = SHARED['same'].get(key, key)
+    path = os.path.join(ROOT, 'sprites', 'png', f'{key}.png')
+    if not key or not os.path.exists(path):
+        return None
+    return 'data:image/png;base64,' + base64.b64encode(open(path, 'rb').read()).decode()
+
+
 def build(hid):
     h = json.loads(read('hacks', hid, 'hack.json'))
     data = json.loads(read('hacks', hid, 'data.json'))
-    spr = json.loads(read('hacks', hid, 'sprites.json'))
+    own = json.loads(read('hacks', hid, 'sprites.json')) if os.path.exists(os.path.join(ROOT, 'hacks', hid, 'sprites.json')) else {}
     data['cfg'] = h['cfg']
-    missing = [p['id'] for p in data['P'] if p['id'] not in spr]
+    spr, missing, shared = dict(own), [], 0
+    for p in data['P']:
+        if p['id'] in spr:
+            continue
+        uri = own.get(p.get('sk')) or shared_sprite(p.get('sk'))
+        if uri:
+            spr[p['id']] = uri
+            shared += uri is not own.get(p.get('sk'))
+        else:
+            missing.append(p['id'] + (f' ({p["sk"]})' if p.get('sk') else ''))
     url = f'{PAGES}{hid}.html'
     vals = {
         'id': hid, 'title': h['title'], 'game': h['game'], 'platform': h['platform'], 'version': h['version'],
@@ -44,6 +65,7 @@ def build(hid):
     os.makedirs(os.path.join(ROOT, 'dist'), exist_ok=True)
     open(os.path.join(ROOT, 'dist', hid + '.html'), 'w', encoding='utf-8', newline='\n').write(out)
     print(f'{hid}: {len(out.encode()) / 1e6:.2f} MB, {len(data["P"])} species, {len(spr)} sprites'
+          + (f' ({shared} from the shared set)' if shared else '')
           + (f', NO SPRITE for {len(missing)}: {", ".join(missing[:10])}' if missing else ''))
     return {'id': hid, 'title': h['title'], 'game': h['game'], 'platform': h['platform'], 'version': h['version'],
             'built': data.get('built', ''), 'url': url}

@@ -22,15 +22,15 @@ the split is in that repo's git log.
    URL (first device test ever), then "Update from link" after a rebuild (bump a guide's version, push, update).
    Imported guides get a new library id and storage origin, so saved trackers don't carry over from the
    USB-copied ones (Export/Import moves a tracker).
-3. **Shared sprite set** (a session here): pick the source (pokeemerald-expansion or hg-engine first; coverage through
-   Legends: Z-A Megas, licence), add `sprites/`, sprite keys `P[].sk` and the fallback in `assemble.py`.
-   Do this before any guide for a hack without its own art (most of the backlog, Photonic Sun included).
+3. ~~Shared sprite set~~ **done 2026-10-19** (see "Shared sprite set results"). Left: the footer credit (step 6)
+   and a sprite-size check on the Thor with the first guide that uses it.
 4. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
    this repo's flow (CLAUDE.md → Making a new guide). Can happen with the first new guide.
 5. **New guides** (one session each, here): CLAUDE.md → Making a new guide. Each needs its sources re-fetched first
    (`.src/` is empty on a fresh clone); the 3DS ones (Photonic Sun, Eternal X) also need the user's vanilla romfs
    dumps, which live on the PC.
-6. Later: footer credits (`cfg.credit` hook; hack authors from `SOURCES.md` plus the sprite set), the update
+6. Later: footer credits (`cfg.credit` hook; hack authors from `SOURCES.md` plus the sprite set's credits in
+   `sprites/SOURCES.md`), the update
    checker (`plans/update-checker.md`), the app's parked "Update" action reading `guides.json`, the damage calc.
 
 **Parallel sessions:** one session in each repo at a time is safe (separate folders and git histories), e.g. step 2
@@ -64,7 +64,21 @@ clash.
   action and `check_updates.py` later. `dist/guides.json` lists every guide (id, title, game, platform, version,
   built, url); `dist/index.html` links them.
 - Sprites: each guide's `sprites.json` is still keyed by its own species ids. The shared-set key scheme
-  (`sprites/README.md`) is agreed; wiring `P[].sk` into extract and `assemble.py` waits for the set.
+  (`sprites/README.md`) is agreed, and `assemble.py` falls back to the shared set by `P[].sk` (2026-10-19).
+
+## Shared sprite set results (2026-10-19)
+
+- `sprites/png/<key>.png` (1593 PNGs, 1.2 MB) + `sprites/index.json` (1666 keys, 73 of them `same` as another key),
+  built by `tools/sprites_pee.py` from pokeemerald-expansion `master` `73b3fbe` (2026-10-14). Every national dex
+  number 1–1025, every Mega through Legends: Z-A and the Mega Dimension DLC, Primals, regional forms, Gigantamax,
+  gender differences and the cosmetic forms. Keys come from the expansion's species constants (`sprites/README.md`).
+- Checked: no problems reported by the script, contact sheets of all 98 Megas/Primals and a random 120 (palettes and
+  transparency right), `assemble.py` builds both guides byte-identical to before (they still use their own art).
+- hg-engine (`f4fca05`) was rejected: Bulbasaur placeholders for every Gmax, 15 Z-A Megas, Terapagos and more.
+- `assemble.py`: own sprite by species id or `sk`, else the shared set by `sk`, else reported. Only used sprites are
+  inlined. No template change (`#spr` stays keyed by species id).
+- Re-fetch and credits: `sprites/SOURCES.md`. The expansion has no licence file; we credit it and the sprite resources
+  its CREDITS.md lists.
 
 ## Decisions
 
@@ -72,8 +86,9 @@ clash.
   stays private.
 - Guides stay single self-contained HTML files that work offline with or without the app. Shared sprites are **not**
   shipped with the app (the user, 2026-10-19).
-- The shared sprite set is only for hacks without their own art, so it's chosen once, not per guide. Candidates:
-  pokeemerald-expansion or hg-engine (Hardlove Gold already has the Legends: Z-A Megas). See `sprites/README.md`.
+- The shared sprite set is only for hacks without their own art, so it's chosen once, not per guide: **pokeemerald-
+  expansion** (2026-10-19; hg-engine still had ~100 placeholder forms). One set for every platform: GBA, NDS and 3DS
+  guides all use the same 64×64 DS-style art, and each guide inlines only the species it has.
 - Raw docs are never committed; `SOURCES.md` says how to fetch them.
 - For hacks with public source code, the code wins over the docs; differences stay visible as "Sheet says ...".
 - Credits: the index page and each guide's footer credit the hack's authors and sources and the sprite set (agreed;
