@@ -153,7 +153,7 @@ From the app repo's Build environment (adb is at `$LOCALAPPDATA/Android/Sdk/plat
   mobile), `Page.captureScreenshot`, then always `Emulation.clearDeviceMetricsOverride`.
 - Screenshots of the real screens: `adb exec-out screencap -p -d <id> > file.png` (top `4630946441858561667`,
   bottom `4630946482288158084`; screens must be on).
-- Environment: no `gh` CLI; `curl` against `api.github.com` (60 requests an hour without a token). `python -I`
+- Environment: `gh` CLI installed and authenticated (2026-10-19); use it for GitHub. `python -I`
   ignores `PYTHONIOENCODING`, so call `sys.stdout.reconfigure(encoding='utf-8')` when printing ♂/é.
 
 ## Guides pass 1 results (2026-10-18)
@@ -216,5 +216,5 @@ From the app repo's Build environment (adb is at `$LOCALAPPDATA/Android/Sdk/plat
 - Thor library: Hardlove Gold is imported (NDS; id in the app repo). The library has no adb import; push the
   file to `/sdcard/Emulation/ROM Hacks and Mods/` and import it by hand, or replace `files/guides/<id>/index.html`
   (Build environment → Testing a guide edit).
-- Environment: no `gh` CLI. Use `curl` against `api.github.com` (60 requests an hour without a token).
+- Environment: `gh` CLI is installed and authenticated (since 2026-10-19).
   `python -I` ignores `PYTHONIOENCODING`, so call `sys.stdout.reconfigure(encoding='utf-8')` when printing ♂/é.
