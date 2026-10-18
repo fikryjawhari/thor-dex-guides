@@ -19,14 +19,16 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
 ## Layout
 - `template/` shell.html, dex.css, dex.js: the one template (Emerald Imperium is the reference build).
 - `hacks/<hack>/` hack.json (title, version, `cfg` = wording, storage keys, feature switches), data.json (`#data`),
-  sprites.json (own art), notes.md (build notes and schema), extract/ (the scripts that made data.json), SOURCES.md.
-- `sprites/` the shared standard sprite set (not chosen yet; see its README for the key scheme).
+  sprites.json (only forms the shared set lacks), notes.md (build notes and schema), extract/ (the scripts that made data.json), SOURCES.md.
+- `sprites/` the shared sprite set (pokeemerald-expansion, 64×64, `png/<key>.png`; README has the key scheme,
+  SOURCES.md the pin and credits).
 - `tools/` source fetchers and extract helpers (README), `domcompare.mjs`. `plans/` work not done yet.
 - `dist/` built output (git-ignored); the Pages workflow builds and deploys it.
 
 ## Commands
 - Build all: `python assemble.py` (or `python assemble.py <hack>`). Stdlib only.
-- Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome).
+- Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome;
+  options `--routes`, `--jobs`, `--ignore` in its header). Runs can go in parallel.
 - In Git Bash, prefix commands that take `/`-paths as arguments with `MSYS_NO_PATHCONV=1`.
 
 ## Making a new guide
@@ -38,8 +40,10 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
    For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences).
 3. `hacks/<hack>/hack.json`: copy an existing one; new localStorage prefix in `cfg.ls`, the hack's wording in
    `cfg.txt`, feature switches. `notes.md`: sources, data rules and conflicts, like the existing ones.
-4. Sprites: the hack's own art in `sprites.json` (keyed by its species ids), else the shared set once it exists
-   (`sprites/README.md`). `assemble.py` lists species with no sprite; they show as blank squares.
+4. Sprites: every guide uses the shared set (`sprites/README.md`); keys are worked out from dex number and name.
+   `python -I tools/sprite_keys.py <hack>` lists the forms it matched (check once) and the species it couldn't place:
+   those are the hack's own additions and go in its `sprites.json`, the only art a hack keeps. `assemble.py` lists
+   species with no sprite; they show as a type-coloured circle with the name's first letter.
 5. `python assemble.py <hack>`, then check `dist/<hack>.html` at 260 × 316 and maximised, normal and `dvkb` mode
    (headless Chrome over CDP, or on the Thor), and that every route renders without errors.
 

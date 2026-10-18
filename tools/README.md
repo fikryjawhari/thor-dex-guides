@@ -11,6 +11,9 @@ this public repo), and its `SOURCES.md` says exactly how to fetch them again. Ru
 | `wiki_dump.py <api.php> <out-dir>` | Dumps every page of a MediaWiki as wikitext. Not used by any hack right now. |
 | `rp_item_locations.py` | Builds Renegade Platinum's `item-locations.csv` from its docs plus vanilla Platinum (pret decomp). |
 | `hge_species.py` | Extracts per-species dex data from hg-engine data files, and diffs two extracts (HeartGold Retiled). |
+| `sprites_pee.py <expansion dir> [out-dir]` | Builds the shared sprite set (`sprites/png/`, `sprites/index.json`) from a pokeemerald-expansion checkout (`sprites/SOURCES.md`). |
+| `sprite_keys.py <hack>` | Lists the sprite key each species gets (from dex number and name; `assemble.py` uses it) and the species not in the shared set, i.e. the hack's own forms. |
+| `pngpal.py` | Reads, writes and crops palette PNGs (used by `sprites_pee.py` and `assemble.py`). |
 | `garc.py` | Reads 3DS GARC archives, LZ11 entries, mini packs and Gen 6/7 game text. Used by the scripts below. |
 | `xy_trainers.py <romfs> <out.json> [vanilla-romfs]` | Dumps every trainer from an XY-engine romfs (Eternal X), names from its own text. |
 | `ex_rivals.py <trainers.json> <out.md>` | Eternal X's rival fights by battle and starter, from `xy_trainers.py` output. |
@@ -40,6 +43,30 @@ compare the hack's current version (its thread, Drive file names or changelog) w
 | Unbound | – | 2026-10-18 | – | RomHackDex, unboundwiki.com; the three trainer sheets |
 
 Plans for work not yet done live in `plans/`.
+
+## Timing `domcompare.mjs` (choosing `--jobs`)
+
+`domcompare.mjs` (usage in its header) splits the routes over `--jobs` pairs of tabs. To pick a job count on a
+machine, time one slice of routes rather than the full guide: compare a build with itself (always identical, so only
+the sweep is timed), with `--routes` picking the slice, and read the `swept in` line. Use a big slice; on a short one
+the fixed cost of booting each tab (each loads the whole 2.5 MB guide) hides the speedup.
+
+```
+MSYS_NO_PATHCONV=1 node tools/domcompare.mjs dist/emerald-imperium.html dist/emerald-imperium.html --routes=#/p/ --jobs=4
+```
+
+Check `no hashchange` is 0 in every timed run: each miss is a 5 s timeout and skews the numbers. Results:
+
+| Machine | Slice | 1 | 2 | 4 | 6 | 8 | 12 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| PC, 16 threads (2026-10-19) | EI `#/p/`, 1275 routes | 41.3 s | 21.9 s | **13.7 s** | 13.6 s | 15.5 s | 21.8 s |
+| PC, 16 threads (2026-10-19) | EI `#/a/`, 284 routes | 10.4 s | 6.5 s | **5.6 s** | 6.8 s | 8.4 s | – |
+
+Four jobs (the default, a quarter of the threads) is best on both the PC and the laptop; past 6 it gets slower.
+Before `--disable-ipc-flooding-protection` was added (2026-10-19), Chrome throttled each tab for about 10 s every 100
+routes (each route makes 2 history updates and Chrome allows 200 in 10 s). Those stalls showed as `no hashchange`
+misses at the 100th route of every tab, and they caused most of the older numbers and the apparent speedup from more
+jobs (EI `#/a/` at 1 job: 30.4 s with them, 10.4 s without).
 
 3DS hacks (LayeredFS) ship only the archives they change, so diff against vanilla dumps of the base game. The user's
 Azahar dumps are in `%APPDATA%/Azahar/dump/romfs/<title id>/`; a title update dumps as `0004000E…` and holds only the

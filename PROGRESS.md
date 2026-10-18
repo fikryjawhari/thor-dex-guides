@@ -21,16 +21,17 @@ the split is in that repo's git log.
    committed. Commits here use the GitHub no-reply email (repo-local `git config user.email`), not the user's Gmail.
 2. ~~**App side, Phase 2.**~~ Done 2026-10-19 (see Current status). Update from link was only exercised with unchanged
    content; the first real guide update is its first test with new content.
-3. **Shared sprite set** (a session here): pick the source (pokeemerald-expansion or hg-engine first; coverage through
-   Legends: Z-A Megas, licence), add `sprites/`, sprite keys `P[].sk` and the fallback in `assemble.py`.
-   Do this before any guide for a hack without its own art (most of the backlog, Photonic Sun included).
+3. ~~Shared sprite set~~ **done 2026-10-19** (see "Shared sprite set results"), on branch `worktree-sprites`, merged
+   into `main` only after the checks in "Sprite branch handover" (runbook: `plans/sprite-checks.md`). Left after
+   that: the footer credit (step 6).
 4. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
    this repo's flow (CLAUDE.md → Making a new guide). Can happen with the first new guide.
 5. **New guides** (one session each, here): CLAUDE.md → Making a new guide. Each needs its sources re-fetched first
    (`.src/` is empty on a fresh clone); the 3DS ones (Photonic Sun, Eternal X) also need the user's vanilla romfs
    dumps, which live on the PC.
-6. Later: footer credits (`cfg.credit` hook; hack authors from `SOURCES.md` plus the sprite set), the update
-   checker (`plans/update-checker.md`; run by hand, the user doesn't need it scheduled), the damage calc.
+6. Later: footer credits (`cfg.credit` hook; hack authors from `SOURCES.md` plus the sprite set's credits in
+   `sprites/SOURCES.md`), the update checker (`plans/update-checker.md`; run by hand, the user doesn't need it
+   scheduled), the damage calc.
 
 **Parallel sessions:** one session in each repo at a time is safe (separate folders and git histories). The app
 repo has nothing open now; come back to it only for an app bug or feature. Avoid two sessions in this repo at once: the template is shared, so they'd
@@ -64,8 +65,73 @@ clash.
 - New meta tags: `dex-viewer:version` (hack version) and `dex-viewer:source` (the guide's Pages URL), for the update
   action and `check_updates.py` later. `dist/guides.json` lists every guide (id, title, game, platform, version,
   built, url); `dist/index.html` links them.
-- Sprites: each guide's `sprites.json` is still keyed by its own species ids. The shared-set key scheme
-  (`sprites/README.md`) is agreed; wiring `P[].sk` into extract and `assemble.py` waits for the set.
+- Sprites: since 2026-10-19 both guides use the shared set (see "Shared sprite set results").
+
+## Sprite branch handover (2026-10-19)
+
+Work is on branch `worktree-sprites` (pushed), not yet merged into `main`. To continue: from the repo root,
+`git switch worktree-sprites` (or merge it into `main`); the folder `.claude/worktrees/sprites` is the same branch
+checked out separately and can be removed once merged. Built and looked at (screenshots), not yet fully checked:
+shared sprites in both guides, the box-fill crop, the no-sprite circle and per-type tag text. Left to do, in a
+dedicated checks session once the other UI changes are in:
+1. ~~Merge `main` into the branch, rebuild.~~ Done 2026-10-19 (`dadc3a2`, pushed). Baseline for step 2: `git archive main` into
+   a temp folder and `python assemble.py` there (no extra worktree needed).
+2. A full `domcompare` of both guides against builds from before these changes (`git stash`-free: build the
+   pre-sprite commit `f9caad4` in a temporary worktree) for page errors. Expect differences only where sprites and
+   type tags render. `domcompare` was sped up for this (2026-10-19): routes are split over parallel tab pairs
+   (`--jobs`, default a quarter of the CPU threads; on the laptop 4 beat 6 and 8), it waits on DOM quiet instead of
+   repeated snapshots, picks a free port (so both guides and both modes can run at once), and exits 0 only when
+   identical. Sprite images are blob URLs and compare equal, so only the type-tag class shows: pass
+   `--ignore=" bt"` and anything still flagged is unexpected. Laptop: 284 EI ability routes 52 s → 15.5 s. Not yet
+   run in full: it runs on the user's PC (fresh clone). **Step-by-step runbook, including PC setup, expected
+   differences and how to read the output: `plans/sprite-checks.md`.**
+   **Done 2026-10-19 on the PC** (baseline: `git archive main` built in a temp folder; all four runs at once with
+   `--jobs=2`, 126 s in total):
+   - Emerald Imperium, 2690 routes: normal swept in 69.9 s, `dvkb` 68.8 s. 0 flagged, 0 differing, 0 page errors
+     (old or new), 0 no-hashchange / never-settled.
+   - Hardlove Gold, 2481 routes: normal 49.9 s, `dvkb` 49.0 s. 0 page errors. 30 routes differ in both modes, all
+     from Bounsweet, whose `#spr` entry on `main` was empty and now has art (its own page plus the move/ability
+     lists and `#/` that show it). With `--ignore=' style="background-image:url\(blob:[^)]*\)"'` added (removes every
+     sprite style, so sprite presence is not compared), both modes are identical (27.6 s at 4 jobs). Bounsweet was
+     the only species missing a sprite on `main` in either guide, and the branch has none missing, so there are no
+     `sprph` placeholders.
+   - `domcompare` fix found while timing it: Chrome's IPC flooding protection stalled each tab for ~10 s every 100
+     routes (2 history updates per route, 200 allowed in 10 s). Now launched with
+     `--disable-ipc-flooding-protection`. Timing method and results: `tools/README.md` → Timing `domcompare.mjs`
+     (4 jobs is still best on the 16-thread PC, ~3× one job).
+3. Look on the Thor at 260 × 316, normal and `dvkb`, then merge into `main` (which publishes).
+
+## Shared sprite set results (2026-10-19)
+
+- `sprites/png/<key>.png` (1593 PNGs, 1.2 MB) + `sprites/index.json` (1666 keys, 73 of them `same` as another key),
+  built by `tools/sprites_pee.py` from pokeemerald-expansion `master` `73b3fbe` (2026-10-14). Every national dex
+  number 1–1025, every Mega through Legends: Z-A and the Mega Dimension DLC, Primals, regional forms, Gigantamax,
+  gender differences and the cosmetic forms. Keys come from the expansion's species constants (`sprites/README.md`).
+- Checked: no problems reported by the script, contact sheets of all 98 Megas/Primals and a random 120 (palettes and
+  transparency right), `assemble.py` builds both guides byte-identical to before (they still use their own art).
+- hg-engine (`f4fca05`) was rejected: Bulbasaur placeholders for every Gmax, 15 Z-A Megas, Terapagos and more.
+- `assemble.py`: keys come from `tools/sprite_keys.py` (dex number + name; `P[].sk` or a `hack.json` `sk` override
+  win). The hack's `sprites.json` (now only its added forms) wins, else the shared set, else reported. Only used
+  sprites are inlined. No template change (`#spr` stays keyed by species id).
+- **Both guides switched to it.** Emerald Imperium: 1247 shared + 28 own (its added Megas, Primal Dialga/Palkia,
+  Pikachu Surfing/Flying); 1154 of the 1247 were pixel-identical to its old art, the rest expansion touch-ups.
+  Hardlove Gold: all 986 shared, its `sprites.json` deleted. EI 2.75 → 2.56 MB, HG 2.42 → 2.32 MB. Neither is on
+  the Thor yet.
+- **Box fill (the user, 2026-10-19: "i like the box fill"):** `assemble.py` crops every inlined sprite, shared or
+  own, to its visible pixels, padded to a square (centred across, standing on the bottom edge), so small Pokémon fill
+  their box like Hardlove's old art. The PNGs in `sprites/` stay full 64×64 frames; removing `cropped()` undoes it.
+  Trade-off accepted: no relative size (Pichu and Charizard fill the same box), and small Pokémon look blockier at
+  112 px.
+- **No-sprite placeholder (template, the user 2026-10-19, from the search mockup):** a species with no sprite shows a
+  circle in its primary type's colour with the name's first letter, instead of a blank square. The letter sizes
+  with the circle (container units) and is coloured like that type's tag.
+- **Type text colour, per type (the user, 2026-10-19, from mockup https://claude.ai/artifact/UHV1nLRRFNr8rdTSYZP8Nm):**
+  type tags and placeholder letters are black on Normal, Electric, Ice, Fighting, Flying, Bug, Rock, Steel and Fairy
+  (white is under 3:1 on them; Ice 1.85) and white with the shadow on the other nine, the same in both themes
+  (`BT` / `btc()` in dex.js, `.ty.bt` in dex.css). Rejected: all white (as before) and "black in light mode" (Ghost
+  and Dark would need white anyway: black on them is 2.7). Checked in a test copy at 480 px, dark and light.
+- Re-fetch and credits: `sprites/SOURCES.md`. The expansion has no licence file; we credit it and the sprite resources
+  its CREDITS.md lists.
 
 ## Decisions
 
@@ -73,8 +139,10 @@ clash.
   stays private.
 - Guides stay single self-contained HTML files that work offline with or without the app. Shared sprites are **not**
   shipped with the app (the user, 2026-10-19).
-- The shared sprite set is only for hacks without their own art, so it's chosen once, not per guide. Candidates:
-  pokeemerald-expansion or hg-engine (Hardlove Gold already has the Legends: Z-A Megas). See `sprites/README.md`.
+- **One shared sprite set for every guide: pokeemerald-expansion** (2026-10-19; hg-engine still had ~100 placeholder
+  forms). GBA, NDS and 3DS guides all use the same 64×64 DS-style art, and each guide inlines only the species it
+  has. A hack keeps its own art only for forms it adds (the user: "use these sprites across the board", no per-hack
+  sprites unless the hack adds custom forms). Recolours of standard forms aren't detected; the docs would flag them.
 - Raw docs are never committed; `SOURCES.md` says how to fetch them.
 - For hacks with public source code, the code wins over the docs; differences stay visible as "Sheet says ...".
 - Credits: the index page and each guide's footer credit the hack's authors and sources and the sprite set (agreed;
@@ -107,7 +175,7 @@ From the app repo's Build environment (adb is at `$LOCALAPPDATA/Android/Sdk/plat
   mobile), `Page.captureScreenshot`, then always `Emulation.clearDeviceMetricsOverride`.
 - Screenshots of the real screens: `adb exec-out screencap -p -d <id> > file.png` (top `4630946441858561667`,
   bottom `4630946482288158084`; screens must be on).
-- Environment: no `gh` CLI; `curl` against `api.github.com` (60 requests an hour without a token). `python -I`
+- Environment: `gh` CLI installed and authenticated (2026-10-19); use it for GitHub. `python -I`
   ignores `PYTHONIOENCODING`, so call `sys.stdout.reconfigure(encoding='utf-8')` when printing ♂/é.
 
 ## Guides pass 1 results (2026-10-18)
@@ -170,5 +238,5 @@ From the app repo's Build environment (adb is at `$LOCALAPPDATA/Android/Sdk/plat
 - Thor library: Hardlove Gold is imported (NDS; id in the app repo). The library has no adb import; push the
   file to `/sdcard/Emulation/ROM Hacks and Mods/` and import it by hand, or replace `files/guides/<id>/index.html`
   (Build environment → Testing a guide edit).
-- Environment: no `gh` CLI. Use `curl` against `api.github.com` (60 requests an hour without a token).
+- Environment: `gh` CLI is installed and authenticated (since 2026-10-19).
   `python -I` ignores `PYTHONIOENCODING`, so call `sys.stdout.reconfigure(encoding='utf-8')` when printing ♂/é.

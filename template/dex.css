@@ -22,6 +22,9 @@ details.split[open]>.body,details.stopd[open]>.stop,.trd[open]>.trb{content-visi
 .row .bst{color:var(--mut);font-variant-numeric:tabular-nums;font-size:13px;text-align:right}
 .spr{overflow:hidden;flex:none;image-rendering:pixelated;background:no-repeat left/auto 100%}
 .spr img{height:100%;width:auto;display:block;image-rendering:pixelated}
+.sprph{border-radius:50%;display:flex;align-items:center;justify-content:center;container-type:size}
+.sprph span{font-weight:700;font-size:38cqh;line-height:1;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.ty.bt,.sprph.bt span{color:#000;text-shadow:none}
 .s40{width:40px;height:40px}.s56{width:56px;height:56px}.s112{width:112px;height:112px}
 .ty{display:inline-block;padding:1px 7px;border-radius:10px;font-size:12px;font-weight:700;color:#fff;margin-right:3px;text-shadow:0 1px 1px rgba(0,0,0,.35);white-space:nowrap}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
