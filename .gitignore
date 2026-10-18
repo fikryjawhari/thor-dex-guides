@@ -4,3 +4,5 @@ hacks/*/.src/
 dist/
 .tmp/
 __pycache__/
+# Claude Code worktrees and local settings
+.claude/
