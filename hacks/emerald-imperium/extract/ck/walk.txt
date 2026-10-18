@@ -1,0 +1,213 @@
+# Source: https://emeraldimperium.info/walkthrough.html (fetched 2026-10-02). S split, P place, - step, > note on previous step
+S|Split 1: Roxanne
+P|Littleroot Town
+-|Go upstairs in the first house you encounter and set your clock
+-|Go to the house directly next door, go upstairs and talk to your rival
+-|Go South to Professor Birch's Lab and acquire your starter
+-|Head North to Route 103
+P|Route 103
+-|Fight your Rival (northern side of Route 103)
+P|Oldale Town
+-|Head South to Oldale Town
+-|Collect and hatch the "Early Game Egg" from the Pokémon Center
+P|Littleroot Town
+-|Return to Professor Birch's Lab to get your Pokédex
+-|Head North to Oldale Town and then West to Petalburg City
+P|Petalburg City
+-|Speak with the Fisherman at the northern lake to receive the Old Rod
+-|Go to the Gym and speak with Wally to get the catch tutorial
+-|Go West to Petalburg Woods
+P|Petalburg Woods
+-|Halfway through the forest, you'll fight the Team Aqua Grunt
+-|Go North to Route 104
+P|Route 104
+-|Fight Dawn at the northern end of the bridge
+-|Continue North to Rustboro City and then East to Route 116
+P|Route 116
+-|Go all the way East through Route 116 and fight Roark
+>|Sinnoh Leaders tab
+-|Go all the way East through Route 116 and fight Candice
+>|Sinnoh Leaders tab
+-|Return to Rustboro City
+P|Rustboro City
+-|Clear the Rustboro Gym and fight Roxanne
+-|Speak with the man in the house on the southwest of town to receive HM Cut
+-|Leave eastward again toward Rusturf Tunnel
+S|Split 2: Brawly
+P|Rusturf Tunnel
+-|Fight the Aqua Grunt
+-|Return to Rustboro City
+P|Rustboro City
+-|Your rival will fight you when you exit the city to the South
+>|You will now be granted access to fast travel via the PokéNav!
+-|You can now optionally fight Gardenia at any time, in Petalburg Woods
+>|Sinnoh Leaders tab. If you wait until after you've defeated Wattson, she'll have a strong team!
+-|Head south through Petalburg Woods to Route 104
+P|Route 104
+-|Speak with Mr. Briney to have him sail you to Dewford Town
+P|Dewford Town
+-|Head North of town to Granite Cave
+P|Granite Cave
+-|Speak with the first Hiker inside the cave to get HM Flash
+-|Go through the cave to the top floor to speak with Steven and deliver the letter
+-|You may now optionally return to Rustboro City to get some evolution stones from the Devon Corp CEO
+P|Dewford Town
+-|Navigate the Gym and defeat Leader Brawly
+-|Talk to Mr. Briney and sail to Slateport City
+S|Split 3: Wattson
+P|Route 109
+-|You may optionally fight the trainers in the Hot House gauntlet to get gifted one of many gift Pokémon, depending on how many badges you have earned
+>|Hot House tab. You may choose to fight at a lower level of badges than you currently own!
+-|2 Badges: Tyrogue, Pansage, Pansear, Panpour
+-|3 Badges: Misdreavus, Heracross, Pinsir, Scyther
+-|4 Badges: Eevee, Magby, Elekid, Smoochum
+-|5 Badges: Togepi, Riolu
+-|6 Badges: Type: Null (access to all types)
+-|7 Badges: Charcadet, Aerodactyl
+P|Slateport City
+-|Go to the building south of the museum (where the grunts are blocking the entrance)
+-|Speak with Dock
+-|Return to the museum (get Flip Turn from the closest grunt) and speak with Captain Stern
+-|Get the Good Rod just South of town on the West side of the Trick House
+-|Head north from Slateport to Route 110, fighting mandatory trainers and your Rival
+-|Continue North to Mauville City
+P|Mauville City
+-|Get the HM Rock Smash
+-|Get the Stat Editor (same house as the Rock Smash HM)
+-|Get the Bike from the Bike Shop
+-|Acquire the gift Pikachu in the Pokémon Center
+-|You can optionally fight Fantina any time now, on Route 117 (though you'll have to fight through some mini-bosses)
+>|Sinnoh Leaders tab
+-|Fight Wally in front of the Mauville Gym
+-|Defeat Wattson in the Mauville Gym
+-|Access the Game Corner and buy items!
+-|Exit town to the West to go through Route 117 to Verdanturf Town
+S|Split 4: Flannery
+P|Verdanturf Town
+-|Enter Rusturf Tunnel and clear the rocks with Rock Smash to get HM Strength
+-|Purchase evolution items if you need them
+-|Return to Mauville City
+P|Mauville City
+-|Exit the city to the North
+-|Fight Dawn on Route 111
+-|Clear Route 111 and Route 112, culminating with Hiker Trent
+P|Fiery Path
+-|Continue through Fiery Path northwards to Route 113
+-|Defeat the mini-bosses on Route 113 to get access to Fallarbor Town
+P|Fallarbor Town
+-|Gain access to starter eggs!
+-|Exit town West to Route 114 and the snow bridge
+>|Sinnoh Leaders tab
+-|Continue South on Route 114, navigating the mountainous path and heading west to Meteor Falls, where you'll encounter a story cutscene with Team Magma
+-|Return to Mauville City
+P|Mauville City
+-|Return to the North path on Route 111, and go East when you get on the mountain, to the Cable Car
+-|Take the Cable Car up to the top of Mt. Chimney
+>|This unlocks a PokéNav travel checkpoint to Mt. Chimney
+P|Mt. Chimney
+-|There are 3 boss battles here: Magma Double, Tabitha, and Maxie
+-|Take the Meteorite off the pedestal after defeating Maxie
+-|You can now head to the South entrance of the mountain to go to Lavaridge Town
+P|Lavaridge Town
+-|Purchase a ton of TMs from the mart worker outside the Poké Mart
+-|Get the "Mid Game Egg" from the house West of the Pokémon Center
+-|You can optionally fight Maylene just Northeast of town (in Jagged Pass)
+>|Sinnoh Leaders tab
+-|Defeat Flannery in the Lavaridge Gym
+-|Acquire the Mega Ring!
+S|Split 5: Norman
+>|At this point, before or after Norman, you can go through the Route 111 desert, fight multiple mini-bosses in the sand, and get HM Surf
+P|Lavaridge Town
+-|Return to Slateport City and exit North to Route 110
+P|Route 110
+-|Find Wally in front of the Trick House north of Slateport past the Bike Route and defeat him
+-|Clear 3 floors of the Trick House
+-|Return to Petalburg City
+P|Petalburg City
+-|Clear Norman's Gym and face Gym Leader Norman
+-|Return to Mauville City
+-|You may also fight Wake, in the water on Route 118, just East of Mauville, optionally at any time now
+>|Sinnoh Leaders tab
+S|Split 6: Winona
+P|Mauville City
+-|Head East to Route 118, then North on Route 119
+-|Enter and clear the Weather Institute of Team Aqua
+-|Return to Route 119 and defeat your Rival
+-|Proceed to Fortree City
+P|Fortree City
+-|Go East to Route 120, and continue across the wooden bridge
+-|Speak with Steven to get the Devon Scope
+-|Return to Fortree City and fight Gym Leader Winona
+-|You can now access New Mauville and the caves across the map that hold the Regi Pokémon
+S|Split 7: Tate & Liza
+P|Fortree City
+-|Go East from Fortree through Route 120 into Route 121, where you'll fight some mandatory rain battles
+-|You can optionally fight Byron on Route 121 at this point
+>|Sinnoh Leaders tab
+-|You'll have a Team Aqua cutscene here
+-|Proceed to Lilycove City
+P|Lilycove City
+-|Defeat Dawn in the city
+-|You may go South from Lilycove to reach Pacifidlog Town
+P|Pacifidlog Town
+-|Get the "Late Game Egg", which contains a random baby pseudo-legendary Pokémon!
+-|Return to Route 121 and go South through Route 122 into Mt. Pyre
+P|Mt. Pyre
+-|Go to the top of the outside of Mt. Pyre, to activate a cutscene with Maxie on Mt. Pyre Summit
+-|Return to Slateport City
+P|Slateport City
+-|Go to the North side of Slateport to the Harbor, where you'll trigger a Team Aqua cutscene
+-|Make sure to go inside and watch Team Aqua escape
+-|Return to Lilycove City
+P|Lilycove City
+-|Go Northeast in Lilycove City to find Team Aqua's Hideout at the northern side of the beach
+-|Defeat Team Aqua in their hideout
+-|Go East through Route 124 until you arrive at Mossdeep City. You'll fight some sun battles here
+P|Mossdeep City
+-|Get the Super Rod
+-|You may optionally go North of Mossdeep at this time to fight Roark, who is guarding access to Shoal Cave
+>|Sinnoh Leaders tab. This location features a static Paradox or Ultra Beast encounter
+-|Clear the Mossdeep Gym and challenge Leaders Tate & Liza
+S|Split 8: Juan
+P|Mossdeep City
+-|Go East in Mossdeep City until you find the Space Center, where you'll have a cutscene with Steven and Drake inside
+-|Go to the West side of town to Steven's house to get HM Dive
+-|Return to Lavaridge Town
+P|Lavaridge Town
+-|Head to the Jagged Pass and discover Team Magma's Hideout
+-|Clear the Team Magma Hideout of enemy members, including a back-to-back and a final confrontation with Maxie
+-|Return to Mossdeep City
+P|Mossdeep City
+-|Go East and North from Mossdeep to Sootopolis City to unlock a travel checkpoint
+-|Head South through Route 127 and Route 128
+-|Use Dive to go underwater on Route 128, to get to the Seafloor Cavern
+P|Seafloor Cavern
+-|Defeat Team Aqua in the Seafloor Cavern
+-|Return to Sootopolis City
+P|Sootopolis City
+-|There's a cutscene here that you need to watch
+-|Speak with Steven and go to the Cave of Origin
+P|Cave of Origin
+-|Speak with Wallace, then go north of Route 131 to the Sky Pillar
+P|Sky Pillar
+-|Reach the top of Sky Pillar
+-|Defeat Drake to free Rayquaza
+-|Go back to Sootopolis City
+P|Sootopolis City
+-|There will be a cutscene here
+-|Speak with Archie and Maxie to make them leave
+-|Speak with Wallace in front of the Sootopolis Gym to get HM Waterfall
+-|Clear the Sootopolis City Gym, and challenge Leader Juan
+-|Head to Route 128 and proceed East to Ever Grande City
+S|Split 9: Elite Four
+P|Ever Grande City
+-|Defeat your Rival in Ever Grande City
+-|Defeat Dawn in Ever Grande City
+-|You may also optionally challenge Volkner in Ever Grande City
+>|Sinnoh Leaders tab
+-|Go North to Victory Road and clear it
+-|Defeat Wally in Victory Road
+>|Victory Road tab
+-|Complete Victory Road and enter the Elite Four
+-|Defeat the Elite Four and Champion
+>|Elite 4 tab

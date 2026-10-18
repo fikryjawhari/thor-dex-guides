@@ -1,0 +1,58 @@
+{
+ "id": "emerald-imperium",
+ "title": "Emerald Imperium Dex",
+ "game": "Emerald Imperium",
+ "platform": "GBA",
+ "version": "1.3.1",
+ "cfg": {
+  "name": "Emerald Imperium",
+  "orig": "EI",
+  "evs": true,
+  "starter": "slot",
+  "orbs": true,
+  "g3trainer": false,
+  "capLast": false,
+  "walkAreaNote": false,
+  "trw": [
+   "boss",
+   "bosses",
+   "boss trainers"
+  ],
+  "ls": {
+   "dex": "eidex1",
+   "calc": "eicalc",
+   "track": "eitrack",
+   "walk": "eiwalk",
+   "cap": "eicap",
+   "tr": "eitr",
+   "recent": "eirecent",
+   "pos": "eipos",
+   "mgm": "eimgm"
+  },
+  "txt": {
+   "obt": "Wild + evolutions",
+   "nw": "Not found only",
+   "g3": "Not found in any location source (wild tables, Locations PDF, encounter tracker), so probably not obtainable in 1.3.",
+   "conf": "The page shows the EI Dex values (the game's data files). Check in game if it matters.",
+   "van": "From the EI changes doc (vanilla) compared with the game data.",
+   "tc": "From the hack's type chart.",
+   "chdoc": "EI changes doc",
+   "mvh": "Differences from standard Gen 9",
+   "nodc": "Not listed in the EI changes doc, so this may be an engine default rather than an intentional change.",
+   "mvsrc": "Stats from the hack's data (EI Dex). Priority from Showdown Gen 9",
+   "mvsrcx": ", so it may be wrong for this EI original",
+   "absrc": "",
+   "ns": "Not in the official encounter tracker, so it has no encounter slot here.",
+   "locs": "areas in the official tracker's order.",
+   "items": "From the official items sheet (TMs, HMs, Mega Stones, battle rewards, shops, useful NPCs).",
+   "walk": "From the official walkthrough. Stops marked \"on the way\" are areas from the encounter tracker placed where you pass them. Boss teams sit inside their stop (tap a trainer to open the team); the Trainers tab has them all by split.",
+   "capl": "Your highest level",
+   "capw": "level cap",
+   "capnone": "",
+   "trh": "Sets come from the game's trainer data (hzla calc); where the boss sheet disagrees, the card says so. Speeds use real IVs and natures{ev}. \"cap−1\" levels scale to your highest level, assumed to be the level cap.",
+   "trs": "Rival teams shown for your {s} starter (from the Littleroot tracker slot).",
+   "trs0": "Record your starter in the Littleroot tracker slot to hide the other rival teams.",
+   "noev": ""
+  }
+ }
+}

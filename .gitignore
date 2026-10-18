@@ -1,0 +1,6 @@
+# Raw docs from hack authors (xlsx, pdf, zips, romfs dumps): never committed. Re-fetch with each SOURCES.md.
+hacks/*/.src/
+# Built by assemble.py; the Pages workflow builds and deploys it.
+dist/
+.tmp/
+__pycache__/
