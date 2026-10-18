@@ -77,7 +77,13 @@ dedicated checks session once the other UI changes are in:
    a temp folder and `python assemble.py` there (no extra worktree needed).
 2. A full `domcompare` of both guides against builds from before these changes (`git stash`-free: build the
    pre-sprite commit `f9caad4` in a temporary worktree) for page errors. Expect differences only where sprites and
-   type tags render; each full run takes 10+ minutes per guide, and only one can run at a time (fixed port 9555).
+   type tags render. `domcompare` was sped up for this (2026-10-19): routes are split over parallel tab pairs
+   (`--jobs`, default a quarter of the CPU threads; on the laptop 4 beat 6 and 8), it waits on DOM quiet instead of
+   repeated snapshots, picks a free port (so both guides and both modes can run at once), and exits 0 only when
+   identical. Sprite images are blob URLs and compare equal, so only the type-tag class shows: pass
+   `--ignore=" bt"` and anything still flagged is unexpected. Laptop: 284 EI ability routes 52 s → 15.5 s. Not yet
+   run in full (the user runs it on the PC). From the worktree, with `MSYS_NO_PATHCONV=1` in Git Bash:
+   `node tools/domcompare.mjs <baseline>/dist/<hack>.html dist/<hack>.html --ignore=" bt"` and again with `--kb`.
 3. Look on the Thor at 260 × 316, normal and `dvkb`, then merge into `main` (which publishes).
 
 ## Shared sprite set results (2026-10-19)

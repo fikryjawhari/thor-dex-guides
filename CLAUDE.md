@@ -27,7 +27,8 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
 
 ## Commands
 - Build all: `python assemble.py` (or `python assemble.py <hack>`). Stdlib only.
-- Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome).
+- Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome;
+  options `--routes`, `--jobs`, `--ignore` in its header). Runs can go in parallel.
 - In Git Bash, prefix commands that take `/`-paths as arguments with `MSYS_NO_PATHCONV=1`.
 
 ## Making a new guide
