@@ -44,6 +44,30 @@ compare the hack's current version (its thread, Drive file names or changelog) w
 
 Plans for work not yet done live in `plans/`.
 
+## Timing `domcompare.mjs` (choosing `--jobs`)
+
+`domcompare.mjs` (usage in its header) splits the routes over `--jobs` pairs of tabs. To pick a job count on a
+machine, time one slice of routes rather than the full guide: compare a build with itself (always identical, so only
+the sweep is timed), with `--routes` picking the slice, and read the `swept in` line. Use a big slice; on a short one
+the fixed cost of booting each tab (each loads the whole 2.5 MB guide) hides the speedup.
+
+```
+MSYS_NO_PATHCONV=1 node tools/domcompare.mjs dist/emerald-imperium.html dist/emerald-imperium.html --routes=#/p/ --jobs=4
+```
+
+Check `no hashchange` is 0 in every timed run: each miss is a 5 s timeout and skews the numbers. Results:
+
+| Machine | Slice | 1 | 2 | 4 | 6 | 8 | 12 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| PC, 16 threads (2026-10-19) | EI `#/p/`, 1275 routes | 41.3 s | 21.9 s | **13.7 s** | 13.6 s | 15.5 s | 21.8 s |
+| PC, 16 threads (2026-10-19) | EI `#/a/`, 284 routes | 10.4 s | 6.5 s | **5.6 s** | 6.8 s | 8.4 s | – |
+
+Four jobs (the default, a quarter of the threads) is best on both the PC and the laptop; past 6 it gets slower.
+Before `--disable-ipc-flooding-protection` was added (2026-10-19), Chrome throttled each tab for about 10 s every 100
+routes (each route makes 2 history updates and Chrome allows 200 in 10 s). Those stalls showed as `no hashchange`
+misses at the 100th route of every tab, and they caused most of the older numbers and the apparent speedup from more
+jobs (EI `#/a/` at 1 job: 30.4 s with them, 10.4 s without).
+
 3DS hacks (LayeredFS) ship only the archives they change, so diff against vanilla dumps of the base game. The user's
 Azahar dumps are in `%APPDATA%/Azahar/dump/romfs/<title id>/`; a title update dumps as `0004000E…` and holds only the
 files it replaces. Archive numbers: pk3DS `GARCReference.cs`, summarised in `plans/romfs-extraction.md`.

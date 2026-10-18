@@ -85,6 +85,20 @@ dedicated checks session once the other UI changes are in:
    `--ignore=" bt"` and anything still flagged is unexpected. Laptop: 284 EI ability routes 52 s → 15.5 s. Not yet
    run in full: it runs on the user's PC (fresh clone). **Step-by-step runbook, including PC setup, expected
    differences and how to read the output: `plans/sprite-checks.md`.**
+   **Done 2026-10-19 on the PC** (baseline: `git archive main` built in a temp folder; all four runs at once with
+   `--jobs=2`, 126 s in total):
+   - Emerald Imperium, 2690 routes: normal swept in 69.9 s, `dvkb` 68.8 s. 0 flagged, 0 differing, 0 page errors
+     (old or new), 0 no-hashchange / never-settled.
+   - Hardlove Gold, 2481 routes: normal 49.9 s, `dvkb` 49.0 s. 0 page errors. 30 routes differ in both modes, all
+     from Bounsweet, whose `#spr` entry on `main` was empty and now has art (its own page plus the move/ability
+     lists and `#/` that show it). With `--ignore=' style="background-image:url\(blob:[^)]*\)"'` added (removes every
+     sprite style, so sprite presence is not compared), both modes are identical (27.6 s at 4 jobs). Bounsweet was
+     the only species missing a sprite on `main` in either guide, and the branch has none missing, so there are no
+     `sprph` placeholders.
+   - `domcompare` fix found while timing it: Chrome's IPC flooding protection stalled each tab for ~10 s every 100
+     routes (2 history updates per route, 200 allowed in 10 s). Now launched with
+     `--disable-ipc-flooding-protection`. Timing method and results: `tools/README.md` → Timing `domcompare.mjs`
+     (4 jobs is still best on the 16-thread PC, ~3× one job).
 3. Look on the Thor at 260 × 316, normal and `dvkb`, then merge into `main` (which publishes).
 
 ## Shared sprite set results (2026-10-19)

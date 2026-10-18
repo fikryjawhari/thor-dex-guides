@@ -12,6 +12,8 @@
 // that still differ are replayed with their chunk's history and printed (SHOW=n of them, default 2). Exit code 0: identical and no page errors, 1: not, 2: Chrome failed.
 // Needs Chrome or Edge (CHROME env var, or the usual Windows install paths). Node 22+ (fetch, WebSocket).
 // Picks a free debugging port, so several runs (both guides, normal and --kb) can go at once.
+// IPC flooding protection is off: each route makes 2 history updates and Chrome stalls a tab for ~10 s after 200.
+// Timing --jobs: tools/README.md.
 import { spawn } from 'node:child_process';
 import { mkdtempSync, existsSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir, availableParallelism } from 'node:os';
@@ -28,7 +30,7 @@ const CHROME = process.env.CHROME || ['C:/Program Files/Google/Chrome/Applicatio
 const prof = mkdtempSync(join(tmpdir(), 'domcmp-'));
 const chrome = spawn(CHROME, ['--headless=new', '--remote-debugging-port=0', `--user-data-dir=${prof}`,
   '--allow-file-access-from-files', '--disable-background-timer-throttling', '--disable-renderer-backgrounding',
-  '--disable-backgrounding-occluded-windows', 'about:blank'], { stdio: 'ignore' });
+  '--disable-backgrounding-occluded-windows', '--disable-ipc-flooding-protection', 'about:blank'], { stdio: 'ignore' });
 let closing = false;
 const fail = msg => { if (!closing) { console.log(msg); cleanup().then(() => process.exit(2)); } };
 chrome.on('exit', c => fail('Chrome exited ' + c));

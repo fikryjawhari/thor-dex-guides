@@ -64,7 +64,7 @@ node tools/domcompare.mjs <base>/dist/hardlove-gold.html    dist/hardlove-gold.h
 
 Each picks its own port, so they can run at once. Each run opens `2 × --jobs` tabs (default jobs = CPU threads / 4).
 Keep the total tabs over all runs at or under the thread count: with 16 threads run all four with `--jobs=2`, or two
-at a time with the default. More tabs than cores made it slower on the laptop (4 jobs beat 6 and 8 for one run). Note
+at a time with the default. More tabs than cores made it slower on the laptop and the PC (4 jobs beat 6 and 8 for one run; tools/README.md → Timing). Note
 the "swept in" times for PROGRESS.
 
 ## 5. Read the results
