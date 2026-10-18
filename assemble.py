@@ -4,11 +4,17 @@ GitHub Action reruns it on every push.
 
 Usage: python assemble.py [hack ...]      (no arguments = every folder in hacks/ with a hack.json)
 
-Sprites: each guide's #spr maps its own species ids to data URIs. A species takes the hack's own sprites.json entry
-(keyed by species id or by sprite key `sk`), else the shared set's sprites/png/<sk>.png (sprites/README.md). Only the
-sprites a guide uses are inlined. Species with no sprite from either are reported, never silently dropped.
+Sprites: each guide's #spr maps its own species ids to data URIs. Every species gets a sprite key
+(tools/sprite_keys.py: data.json `sk`, hack.json `sk` override, else worked out from dex number and name) and takes
+the shared set's sprites/png/<key>.png (sprites/README.md). A hack's sprites.json is only a supplement, keyed by
+species id or sprite key, for forms the shared set lacks; an entry there wins. Only the sprites a guide uses are
+inlined, each cropped to its visible area. Species with no sprite from either are reported, never silently dropped.
 """
 import base64, html, json, os, sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tools'))
+from sprite_keys import keys_for  # noqa: E402
+import pngpal  # noqa: E402
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 PAGES = 'https://fikryjawhari.github.io/thor-dex-guides/'
@@ -36,21 +42,32 @@ def shared_sprite(key):
     return 'data:image/png;base64,' + base64.b64encode(open(path, 'rb').read()).decode()
 
 
+def cropped(uri):
+    """The sprite cropped to its visible area (a square box the Pokémon fills, small ones included; the user,
+    2026-10-19). Sprites that aren't palette PNGs pass through unchanged."""
+    head, _, b64 = uri.partition(',')
+    try:
+        return head + ',' + base64.b64encode(pngpal.crop(base64.b64decode(b64))).decode()
+    except ValueError:
+        return uri
+
+
 def build(hid):
     h = json.loads(read('hacks', hid, 'hack.json'))
-    data = json.loads(read('hacks', hid, 'data.json'))
+    keys, data = keys_for(hid)
     own = json.loads(read('hacks', hid, 'sprites.json')) if os.path.exists(os.path.join(ROOT, 'hacks', hid, 'sprites.json')) else {}
     data['cfg'] = h['cfg']
-    spr, missing, shared = dict(own), [], 0
+    spr, missing, shared = {}, [], 0
     for p in data['P']:
-        if p['id'] in spr:
-            continue
-        uri = own.get(p.get('sk')) or shared_sprite(p.get('sk'))
+        k = keys[p['id']]
+        uri = own.get(p['id']) or own.get(k)
+        if not uri:
+            uri = shared_sprite(k)
+            shared += bool(uri)
         if uri:
-            spr[p['id']] = uri
-            shared += uri is not own.get(p.get('sk'))
+            spr[p['id']] = cropped(uri)
         else:
-            missing.append(p['id'] + (f' ({p["sk"]})' if p.get('sk') else ''))
+            missing.append(f'{p["id"]} {p["n"]}' + (f' ({k})' if k else ''))
     url = f'{PAGES}{hid}.html'
     vals = {
         'id': hid, 'title': h['title'], 'game': h['game'], 'platform': h['platform'], 'version': h['version'],
@@ -65,7 +82,7 @@ def build(hid):
     os.makedirs(os.path.join(ROOT, 'dist'), exist_ok=True)
     open(os.path.join(ROOT, 'dist', hid + '.html'), 'w', encoding='utf-8', newline='\n').write(out)
     print(f'{hid}: {len(out.encode()) / 1e6:.2f} MB, {len(data["P"])} species, {len(spr)} sprites'
-          + (f' ({shared} from the shared set)' if shared else '')
+          + f' ({shared} shared, {len(spr) - shared} own)'
           + (f', NO SPRITE for {len(missing)}: {", ".join(missing[:10])}' if missing else ''))
     return {'id': hid, 'title': h['title'], 'game': h['game'], 'platform': h['platform'], 'version': h['version'],
             'built': data.get('built', ''), 'url': url}

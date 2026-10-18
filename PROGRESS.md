@@ -63,8 +63,7 @@ clash.
 - New meta tags: `dex-viewer:version` (hack version) and `dex-viewer:source` (the guide's Pages URL), for the update
   action and `check_updates.py` later. `dist/guides.json` lists every guide (id, title, game, platform, version,
   built, url); `dist/index.html` links them.
-- Sprites: each guide's `sprites.json` is still keyed by its own species ids. The shared-set key scheme
-  (`sprites/README.md`) is agreed, and `assemble.py` falls back to the shared set by `P[].sk` (2026-10-19).
+- Sprites: since 2026-10-19 both guides use the shared set (see "Shared sprite set results").
 
 ## Shared sprite set results (2026-10-19)
 
@@ -75,8 +74,24 @@ clash.
 - Checked: no problems reported by the script, contact sheets of all 98 Megas/Primals and a random 120 (palettes and
   transparency right), `assemble.py` builds both guides byte-identical to before (they still use their own art).
 - hg-engine (`f4fca05`) was rejected: Bulbasaur placeholders for every Gmax, 15 Z-A Megas, Terapagos and more.
-- `assemble.py`: own sprite by species id or `sk`, else the shared set by `sk`, else reported. Only used sprites are
-  inlined. No template change (`#spr` stays keyed by species id).
+- `assemble.py`: keys come from `tools/sprite_keys.py` (dex number + name; `P[].sk` or a `hack.json` `sk` override
+  win). The hack's `sprites.json` (now only its added forms) wins, else the shared set, else reported. Only used
+  sprites are inlined. No template change (`#spr` stays keyed by species id).
+- **Both guides switched to it.** Emerald Imperium: 1247 shared + 28 own (its added Megas, Primal Dialga/Palkia,
+  Pikachu Surfing/Flying); 1154 of the 1247 were pixel-identical to its old art, the rest expansion touch-ups.
+  Hardlove Gold: all 986 shared, its `sprites.json` deleted. EI 2.75 → 2.56 MB, HG 2.42 → 2.32 MB. Neither is on
+  the Thor yet.
+- **Box fill (the user, 2026-10-19: "i like the box fill"):** `assemble.py` crops every inlined sprite, shared or
+  own, to its visible pixels, padded to a square (centred across, standing on the bottom edge), so small Pokémon fill
+  their box like Hardlove's old art. The PNGs in `sprites/` stay full 64×64 frames; removing `cropped()` undoes it.
+  Trade-off accepted: no relative size (Pichu and Charizard fill the same box), and small Pokémon look blockier at
+  112 px.
+- **No-sprite placeholder (template, the user 2026-10-19, from the search mockup):** a species with no sprite shows a
+  circle in its primary type's colour with the name's first letter, instead of a blank square. The letter sizes
+  with the circle (container units). Dark mode: white letter with the type tags' shadow. Light mode: black letter,
+  except Ghost and Dark keep white. Contrast measured for every type colour: black clears 3:1 (large bold text) on
+  16 of 18 (Ghost and Dark 2.7); white fails on 9 (Normal, Electric, Ice, Fighting, Flying, Bug, Rock, Steel,
+  Fairy; Ice 1.85), which is also how the type tags look in dark mode today.
 - Re-fetch and credits: `sprites/SOURCES.md`. The expansion has no licence file; we credit it and the sprite resources
   its CREDITS.md lists.
 
@@ -86,9 +101,10 @@ clash.
   stays private.
 - Guides stay single self-contained HTML files that work offline with or without the app. Shared sprites are **not**
   shipped with the app (the user, 2026-10-19).
-- The shared sprite set is only for hacks without their own art, so it's chosen once, not per guide: **pokeemerald-
-  expansion** (2026-10-19; hg-engine still had ~100 placeholder forms). One set for every platform: GBA, NDS and 3DS
-  guides all use the same 64×64 DS-style art, and each guide inlines only the species it has.
+- **One shared sprite set for every guide: pokeemerald-expansion** (2026-10-19; hg-engine still had ~100 placeholder
+  forms). GBA, NDS and 3DS guides all use the same 64×64 DS-style art, and each guide inlines only the species it
+  has. A hack keeps its own art only for forms it adds (the user: "use these sprites across the board", no per-hack
+  sprites unless the hack adds custom forms). Recolours of standard forms aren't detected; the docs would flag them.
 - Raw docs are never committed; `SOURCES.md` says how to fetch them.
 - For hacks with public source code, the code wins over the docs; differences stay visible as "Sheet says ...".
 - Credits: the index page and each guide's footer credit the hack's authors and sources and the sprite set (agreed;

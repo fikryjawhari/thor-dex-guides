@@ -15,7 +15,11 @@ const ty=t=>`<span class="ty" style="background:${tcol(t)}">${esc(t)}</span>`;
 const SPRU={};const sprUrl=id=>{if(SPRU[id]!==undefined)return SPRU[id];const d=SPR[id];let u='';
  if(d){try{const i=d.indexOf(',');const b=atob(d.slice(i+1));const a=new Uint8Array(b.length);for(let j=0;j<b.length;j++)a[j]=b.charCodeAt(j);u=URL.createObjectURL(new Blob([a],{type:d.slice(5,d.indexOf(';'))}));}catch(e){u=d;}}
  return SPRU[id]=u;};
-const spr=(id,c)=>{const u=sprUrl(id);return `<div class="spr ${c}"${u?` style="background-image:url(${u})"`:''}></div>`;};
+// No sprite: a circle in the primary type's colour with the name's first letter (white text on Ghost and Dark in
+// light mode too, where black would be under 3:1).
+const spr=(id,c)=>{const u=sprUrl(id);if(u)return `<div class="spr ${c}" style="background-image:url(${u})"></div>`;
+ const p=byId[id],t=p?p.t[0]:'',l=p?(p.n.match(/[A-Za-z0-9]/)||['?'])[0].toUpperCase():'?';
+ return `<div class="spr ${c} sprph${/^(ghost|dark)$/i.test(t)?' wt':''}" style="background:${tcol(t)}"><span>${esc(l)}</span></div>`;};
 const plink=id=>byId[id]?`<a href="#/p/${id}">${esc(byId[id].name)}</a>`:'';
 const mlink=i=>`<a href="#/m/${i}">${esc(M[i])}</a>`;
 const alink=i=>`<a href="#/a/${i}">${esc(AB[i][0])}</a>`;

@@ -1,7 +1,6 @@
 # Shared sprite set
 
-One standard set of front sprites for guides whose hack has no art of its own. Emerald Imperium and Hardlove Gold
-ship their own art (`hacks/<hack>/sprites.json`) and don't need it.
+One standard set of front sprites used by every guide; a hack's own art only adds forms the set lacks.
 
 **Source: pokeemerald-expansion** (chosen 2026-10-19; pin, re-fetch and credits in `SOURCES.md`). 64×64 4bpp palette
 PNGs, colour 0 transparent, the same format as Emerald Imperium's own sprites. DS-style art for every generation (the
@@ -44,13 +43,27 @@ extract step.
 
 ## How a guide gets its sprites
 
-Each hack's extract step gives every species in its `data.json` a sprite key (`P[].sk`). `assemble.py` then takes,
-per species: the hack's own `sprites.json` entry under its species id or its `sk`, else `png/<sk>.png` (following
-`same`), and reports any species with neither. Only the sprites a guide uses are inlined, so a Gen 7 hack carries no
-Gen 8–9 art. `#spr` in the built guide stays keyed by species id.
+**Every guide uses this set** (the user, 2026-10-19). A hack's own art is only for forms the set doesn't have.
 
-(Emerald Imperium and Hardlove Gold don't have `sk` yet: their `sprites.json` is still keyed by their own species
-ids and covers every species, which `assemble.py` reads as is.)
+- `assemble.py` gives every species a sprite key with `tools/sprite_keys.py`: an explicit `P[].sk` in `data.json`,
+  else an override in `hack.json` → `sk` (`{"species id": "key"}`), else worked out from the species' dex number and
+  name ("Mega Absol Z" → `0359-mega-z`, "Shellos East Sea" → `0422-east`, "Deerling Summer" with no dex number →
+  `0585-summer`). No extract step has to do anything.
+- It inlines `png/<key>.png` (following `same`). Only the sprites a guide uses are inlined, so a Gen 7 hack carries
+  no Gen 8–9 art. `#spr` in the built guide stays keyed by species id.
+- Every inlined sprite (shared or the hack's own) is cropped to its visible pixels as a square, so each Pokémon
+  fills its box whatever its size (`tools/pngpal.py` `crop`). The files here stay full 64×64 frames.
+- **Finding a hack's custom forms:** `python -I tools/sprite_keys.py <hack>` lists every form it matched and every
+  species it couldn't place. The unplaced ones are the hack's additions (new Megas, new forms, fakemon); `assemble.py`
+  also reports them as "NO SPRITE" until they have art, and the guide shows a type-coloured circle with the name's
+  first letter in their place. Check the matched forms list once for a wrong match; fix one
+  with a `hack.json` `sk` override, or teach `sprite_keys.py` the word.
+- **The supplement:** the hack's own `sprites.json`, keyed by species id (or sprite key), holding only those
+  additions. An entry there wins over the set, so a recolour the docs call out can go there too. Matching can't spot
+  a recolour of a standard form; the hack's docs or changelog would mention one.
 
-Hacks only **supplement** what the set lacks: new Megas (Emerald Imperium's Mega Empoleon), new non-Mega forms
-(Radical Red), the rare fakemon. A supplement is the hack's own `sprites.json`, keyed by sprite key.
+Current guides (2026-10-19): Emerald Imperium keeps 28 of its own sprites (its Megas for Butterfree, Machamp, Kingler,
+Lapras, Snorlax, Slaking, Torterra, Infernape, Empoleon O/D, Luxray, Roserade, Dusknoir, Garbodor and the Galar
+Gigantamax line; Primal Dialga/Palkia; Pikachu Surfing/Flying). Of its other 1247, 1154 were pixel-identical to this
+set and the rest were the expansion's later touch-ups of the same designs (Gen 7 reshades, Silvally, Koraidon...),
+not hack changes. Hardlove Gold has no sprites of its own: all 986 species are standard forms.

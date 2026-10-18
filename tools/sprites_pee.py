@@ -13,7 +13,10 @@ as a 4bpp palette PNG named by sprite key (sprites/README.md):
 A form whose picture and palette are identical to an earlier key (battle-only forms such as Greninja-Bond,
 cosmetic splits the expansion draws the same) is not written again; "same" points it at that key.
 """
-import json, os, re, struct, subprocess, sys, zlib
+import json, os, re, subprocess, sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import pngpal  # noqa: E402
 
 sys.stdout.reconfigure(encoding='utf-8')
 SRC = sys.argv[1]
@@ -22,53 +25,6 @@ OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(os.path.dirname(os.path
 
 def text(*p):
     return open(os.path.join(SRC, *p), encoding='utf-8').read()
-
-
-# --- PNG (palette images only, which is all the expansion uses) ---
-
-def png_read(path):
-    b = open(path, 'rb').read()
-    assert b[:8] == b'\x89PNG\r\n\x1a\n', path
-    i, idat, plte = 8, b'', None
-    while i < len(b):
-        n, t = struct.unpack('>I4s', b[i:i + 8])
-        d = b[i + 8:i + 8 + n]
-        if t == b'IHDR':
-            w, h, depth, ctype, _, _, inter = struct.unpack('>IIBBBBB', d)
-            assert ctype == 3 and inter == 0 and depth in (4, 8), (path, depth, ctype)
-        elif t == b'PLTE':
-            plte = [tuple(d[j:j + 3]) for j in range(0, len(d), 3)]
-        elif t == b'IDAT':
-            idat += d
-        i += 12 + n
-    raw, stride = zlib.decompress(idat), (w * depth + 7) // 8
-    rows, prev = [], bytearray(stride)
-    for y in range(h):
-        f, line = raw[y * (stride + 1)], bytearray(raw[y * (stride + 1) + 1:(y + 1) * (stride + 1)])
-        for x in range(stride):
-            a = line[x - 1] if x else 0
-            up, c = prev[x], (prev[x - 1] if x else 0)
-            if f == 1: line[x] = (line[x] + a) & 255
-            elif f == 2: line[x] = (line[x] + up) & 255
-            elif f == 3: line[x] = (line[x] + (a + up) // 2) & 255
-            elif f == 4:
-                p = a + up - c
-                pa, pb, pc = abs(p - a), abs(p - up), abs(p - c)
-                line[x] = (line[x] + (a if pa <= pb and pa <= pc else up if pb <= pc else c)) & 255
-        prev = line
-        rows.append([line[x] for x in range(w)] if depth == 8 else
-                    [(line[x >> 1] >> (0 if x & 1 else 4)) & 15 for x in range(w)])
-    return w, h, rows, plte
-
-
-def png_write(path, rows, pal):
-    def chunk(t, d):
-        return struct.pack('>I', len(d)) + t + d + struct.pack('>I', zlib.crc32(t + d))
-    w, h = len(rows[0]), len(rows)
-    raw = b''.join(b'\0' + bytes((r[x] << 4) | r[x + 1] for x in range(0, w, 2)) for r in rows)
-    open(path, 'wb').write(b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', w, h, 4, 3, 0, 0, 0))
-                           + chunk(b'PLTE', b''.join(bytes(c) for c in pal)) + chunk(b'tRNS', b'\0')
-                           + chunk(b'IDAT', zlib.compress(raw, 9)) + chunk(b'IEND', b''))
 
 
 def jasc(path):
@@ -211,7 +167,8 @@ def main():
         if not pp or not lp or 'question_mark' in pp:
             problems.append(f'{key}: {const} has no sprite ({pic} -> {pp}, {pal} -> {lp})')
             return
-        w, h, rows, _ = png_read(os.path.join(SRC, pp))
+        rows = pngpal.decode(open(os.path.join(SRC, pp), 'rb').read())[0]
+        w, h = len(rows[0]), len(rows)
         pal16 = (jasc(os.path.join(SRC, lp)) + [(0, 0, 0)] * 16)[:16]
         rows = [r[:64] for r in rows[:64]]
         assert w >= 64 and h >= 64 and max(max(r) for r in rows) < 16, (const, pp, w, h)
@@ -220,7 +177,7 @@ def main():
             same[key] = seen[sig]
         else:
             seen[sig] = key
-            png_write(os.path.join(OUT, 'png', key + '.png'), rows, pal16)
+            open(os.path.join(OUT, 'png', key + '.png'), 'wb').write(pngpal.encode(rows, pal16))
         keys[key] = const
 
     # Every numbered species, bases first so a form identical to its base points at the base.
