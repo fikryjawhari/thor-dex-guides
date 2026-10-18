@@ -22,7 +22,8 @@ the split is in that repo's git log.
 2. ~~**App side, Phase 2.**~~ Done 2026-10-19 (see Current status). Update from link was only exercised with unchanged
    content; the first real guide update is its first test with new content.
 3. ~~Shared sprite set~~ **done 2026-10-19** (see "Shared sprite set results"), on branch `worktree-sprites`, merged
-   into `main` only after the checks in "Sprite branch handover". Left after that: the footer credit (step 6).
+   into `main` only after the checks in "Sprite branch handover" (runbook: `plans/sprite-checks.md`). Left after
+   that: the footer credit (step 6).
 4. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
    this repo's flow (CLAUDE.md → Making a new guide). Can happen with the first new guide.
 5. **New guides** (one session each, here): CLAUDE.md → Making a new guide. Each needs its sources re-fetched first
@@ -82,8 +83,8 @@ dedicated checks session once the other UI changes are in:
    repeated snapshots, picks a free port (so both guides and both modes can run at once), and exits 0 only when
    identical. Sprite images are blob URLs and compare equal, so only the type-tag class shows: pass
    `--ignore=" bt"` and anything still flagged is unexpected. Laptop: 284 EI ability routes 52 s → 15.5 s. Not yet
-   run in full (the user runs it on the PC). From the worktree, with `MSYS_NO_PATHCONV=1` in Git Bash:
-   `node tools/domcompare.mjs <baseline>/dist/<hack>.html dist/<hack>.html --ignore=" bt"` and again with `--kb`.
+   run in full: it runs on the user's PC (fresh clone). **Step-by-step runbook, including PC setup, expected
+   differences and how to read the output: `plans/sprite-checks.md`.**
 3. Look on the Thor at 260 × 316, normal and `dvkb`, then merge into `main` (which publishes).
 
 ## Shared sprite set results (2026-10-19)
