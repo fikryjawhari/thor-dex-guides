@@ -46,6 +46,12 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
 5. `python assemble.py <hack>`, then check `dist/<hack>.html` at 260 × 316 and maximised, normal and `dvkb` mode
    (headless Chrome over CDP, or on the Thor), and that every route renders without errors.
 
+## Git
+- Parallel work goes on a branch in a worktree. Claude Code creates them in `.claude/worktrees/<name>` (git-ignored);
+  merge into `main` when done. Only one session at a time edits on `main`.
+- Run `git status` before committing and stage files by name, not `git add -A`; never commit anything under `.claude/`.
+- Pushing to `main` publishes the site (the Pages workflow), so push only checked guides.
+
 ## Workflow
 - I test on the Thor. Testing a guide there without the library: PROGRESS.md → Testing on the Thor.
 - UI changes: mockup first as a plain interactive HTML artifact at the viewer's real size, then build it.

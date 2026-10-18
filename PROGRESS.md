@@ -6,35 +6,34 @@ the split is in that repo's git log.
 
 ## Current status
 
-- **Phase 1 of the split (this repo, the shared template): built 2026-10-19, not yet on GitHub.** See "Split results".
+- **Phase 1 of the split (this repo, the shared template): done 2026-10-19, pushed to GitHub.** See "Split results".
+- **Live on GitHub Pages** (https://fikryjawhari.github.io/thor-dex-guides/) and **Phase 2 passed on the Thor**
+  (2026-10-19): both guides were added to the Dex Viewer library from their Pages URLs and the old USB-copied entries
+  deleted. Details in the app repo's `docs/PROGRESS.md` → Phase 2 results.
+- **Shipping a guide update:** push here, wait for the Pages Action, then on the Thor long-press the guide → Update from
+  link. Same library id, so saved state (tracker, ticks, calc) is kept. No USB copying.
 - Guides: Emerald Imperium (1.3.1, GBA), Hardlove Gold (0.8.3, NDS). The other hacks in `hacks/` have sources
   compiled (`SOURCES.md`, re-fetch into `.src/`) but no guide yet.
 
 ## What's left, in order
 
-1. **Go live (the user + one short step).** Create the empty public repo `fikryjawhari/thor-dex-guides` on github.com
-   (no README/licence, so the first push is clean), then Settings → Pages → Source: **GitHub Actions**. Then push
-   (`git remote add origin https://github.com/fikryjawhari/thor-dex-guides.git; git push -u origin main`). The
-   workflow (`.github/workflows/pages.yml`) builds and publishes; check the Actions tab, then
-   `https://fikryjawhari.github.io/thor-dex-guides/`. Decided: Pages builds from the Action, `dist/` is never
+1. ~~**Go live.**~~ Done 2026-10-19. Pages builds from the Action (`.github/workflows/pages.yml`); `dist/` is never
    committed. Commits here use the GitHub no-reply email (repo-local `git config user.email`), not the user's Gmail.
-2. **App side, Phase 2** (a session in `thor-dex-viewer`, needs step 1 live): "Add from link" on the Thor with a Pages
-   URL (first device test ever), then "Update from link" after a rebuild (bump a guide's version, push, update).
-   Imported guides get a new library id and storage origin, so saved trackers don't carry over from the
-   USB-copied ones (Export/Import moves a tracker).
-3. ~~Shared sprite set~~ **done 2026-10-19** (see "Shared sprite set results"). Left: the footer credit (step 6)
-   and a sprite-size check on the Thor with the first guide that uses it.
+2. ~~**App side, Phase 2.**~~ Done 2026-10-19 (see Current status). Update from link was only exercised with unchanged
+   content; the first real guide update is its first test with new content.
+3. ~~Shared sprite set~~ **done 2026-10-19** (see "Shared sprite set results"), on branch `worktree-sprites`, merged
+   into `main` only after the checks in "Sprite branch handover". Left after that: the footer credit (step 6).
 4. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
    this repo's flow (CLAUDE.md → Making a new guide). Can happen with the first new guide.
 5. **New guides** (one session each, here): CLAUDE.md → Making a new guide. Each needs its sources re-fetched first
    (`.src/` is empty on a fresh clone); the 3DS ones (Photonic Sun, Eternal X) also need the user's vanilla romfs
    dumps, which live on the PC.
 6. Later: footer credits (`cfg.credit` hook; hack authors from `SOURCES.md` plus the sprite set's credits in
-   `sprites/SOURCES.md`), the update
-   checker (`plans/update-checker.md`), the app's parked "Update" action reading `guides.json`, the damage calc.
+   `sprites/SOURCES.md`), the update checker (`plans/update-checker.md`; run by hand, the user doesn't need it
+   scheduled), the damage calc.
 
-**Parallel sessions:** one session in each repo at a time is safe (separate folders and git histories), e.g. step 2
-in the viewer alongside step 3 here. Avoid two sessions in this repo at once: the template is shared, so they'd
+**Parallel sessions:** one session in each repo at a time is safe (separate folders and git histories). The app
+repo has nothing open now; come back to it only for an app bug or feature. Avoid two sessions in this repo at once: the template is shared, so they'd
 clash.
 
 ## Split results (2026-10-19)
@@ -52,7 +51,9 @@ clash.
   plus the five lists, every `<details>` opened) in the old file and the assembled one and compares the DOM.
   Hardlove Gold: identical. The full sweep flagged 14 routes, but each one is identical when loaded fresh (the sweep
   sometimes snapshots before a slow page has rendered; the old file against itself shows the same noise). Emerald
-  Imperium: running at the time of the first commit, see the next commit.
+  Imperium: identical too (43 flagged by the sweep, all identical rechecked one by one; the five list pages
+  compared in full). Keyboard (`dvkb`) mode: identical on every trainer page of both guides, the trainer list, and
+  387 EI / 119 HG Pokémon pages. Recheck a flagged route alone with `--routes==#/exact/route`.
   Not covered by the DOM check: CSS. Emerald Imperium now also gets Hardlove's `.itbl td{overflow-wrap:anywhere}`
   (long item names wrap at 260 px instead of widening the page).
 - Built files dropped the build notes comment and `#build-source` (EI 2.85 → 2.75 MB, HG 2.58 → 2.42 MB). The notes

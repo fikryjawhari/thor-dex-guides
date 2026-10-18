@@ -71,7 +71,7 @@ async function run(url, routes, want) {
 try {
   await connect(); await send('Runtime.enable');
   let routes = await run(files[0]);
-  if (PAT) routes = routes.filter(r => r.includes(PAT));
+  if (PAT) routes = routes.filter(r => PAT.startsWith('=') ? r === PAT.slice(1) : r.includes(PAT));
   console.log(routes.length, 'routes', KB ? '(keyboard mode)' : '');
   const a = await run(files[0], routes, []), b = await run(files[1], routes, []);
   const bad = routes.filter(r => a.out[r] !== b.out[r]);
