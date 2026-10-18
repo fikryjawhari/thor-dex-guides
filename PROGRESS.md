@@ -6,7 +6,7 @@ the split is in that repo's git log.
 
 ## Current status
 
-- **Phase 1 of the split (this repo, the shared template): built 2026-10-19, not yet on GitHub.** See "Split results".
+- **Phase 1 of the split (this repo, the shared template): done 2026-10-19, pushed to GitHub.** See "Split results".
 - Guides: Emerald Imperium (1.3.1, GBA), Hardlove Gold (0.8.3, NDS). The other hacks in `hacks/` have sources
   compiled (`SOURCES.md`, re-fetch into `.src/`) but no guide yet.
 
@@ -52,7 +52,9 @@ clash.
   plus the five lists, every `<details>` opened) in the old file and the assembled one and compares the DOM.
   Hardlove Gold: identical. The full sweep flagged 14 routes, but each one is identical when loaded fresh (the sweep
   sometimes snapshots before a slow page has rendered; the old file against itself shows the same noise). Emerald
-  Imperium: running at the time of the first commit, see the next commit.
+  Imperium: identical too (43 flagged by the sweep, all identical rechecked one by one; the five list pages
+  compared in full). Keyboard (`dvkb`) mode: identical on every trainer page of both guides, the trainer list, and
+  387 EI / 119 HG Pokémon pages. Recheck a flagged route alone with `--routes==#/exact/route`.
   Not covered by the DOM check: CSS. Emerald Imperium now also gets Hardlove's `.itbl td{overflow-wrap:anywhere}`
   (long item names wrap at 260 px instead of widening the page).
 - Built files dropped the build notes comment and `#build-source` (EI 2.85 → 2.75 MB, HG 2.58 → 2.42 MB). The notes
