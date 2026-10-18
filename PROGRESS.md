@@ -21,9 +21,8 @@ the split is in that repo's git log.
    committed. Commits here use the GitHub no-reply email (repo-local `git config user.email`), not the user's Gmail.
 2. ~~**App side, Phase 2.**~~ Done 2026-10-19 (see Current status). Update from link was only exercised with unchanged
    content; the first real guide update is its first test with new content.
-3. ~~Shared sprite set~~ **done 2026-10-19** (see "Shared sprite set results"), on branch `worktree-sprites`, merged
-   into `main` only after the checks in "Sprite branch handover" (runbook: `plans/sprite-checks.md`). Left after
-   that: the footer credit (step 6).
+3. ~~Shared sprite set~~ **done and live 2026-10-19** (see "Shared sprite set results"); checked and merged into
+   `main` (`94d0706`), see "Sprite branch handover". Left: the footer credit (step 6).
 4. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
    this repo's flow (CLAUDE.md → Making a new guide). Can happen with the first new guide.
 5. **New guides** (one session each, here): CLAUDE.md → Making a new guide. Each needs its sources re-fetched first
@@ -69,11 +68,8 @@ clash.
 
 ## Sprite branch handover (2026-10-19)
 
-Work is on branch `worktree-sprites` (pushed), not yet merged into `main`. To continue: from the repo root,
-`git switch worktree-sprites` (or merge it into `main`); the folder `.claude/worktrees/sprites` is the same branch
-checked out separately and can be removed once merged. Built and looked at (screenshots), not yet fully checked:
-shared sprites in both guides, the box-fill crop, the no-sprite circle and per-type tag text. Left to do, in a
-dedicated checks session once the other UI changes are in:
+**Finished 2026-10-19: merged into `main` and live.** Branch `worktree-sprites` is merged; its worktree is removed.
+Steps as they were done:
 1. ~~Merge `main` into the branch, rebuild.~~ Done 2026-10-19 (`dadc3a2`, pushed). Baseline for step 2: `git archive main` into
    a temp folder and `python assemble.py` there (no extra worktree needed).
 2. A full `domcompare` of both guides against builds from before these changes (`git stash`-free: build the
@@ -99,7 +95,16 @@ dedicated checks session once the other UI changes are in:
      routes (2 history updates per route, 200 allowed in 10 s). Now launched with
      `--disable-ipc-flooding-protection`. Timing method and results: `tools/README.md` → Timing `domcompare.mjs`
      (4 jobs is still best on the 16-thread PC, ~3× one job).
-3. Look on the Thor at 260 × 316, normal and `dvkb`, then merge into `main` (which publishes).
+3. ~~Look on the Thor, then merge into `main`.~~ Done 2026-10-19. The branch builds were copied over both guides'
+   `index.html` on the Thor and checked over CDP inside the viewer (so keyboard mode) at 260 × 316: list, three
+   Pokémon pages (Bounsweet, Pikachu, Charizard), trainer list and two trainer pages, locations and one location,
+   items, walkthrough, a move page, calc, full-window search. 0 page errors, width 260 on every route, every sprite
+   has art, no placeholders; screenshots looked right (box fill, black text on light types). Merged (`94d0706`),
+   Pages deployed. The live files differ from a local build only in the sprite PNGs' compressed bytes (CI's Python
+   zlib vs the PC's 3.14); every sprite decodes to the same pixels and the rest is byte-identical. The Thor copies
+   are the local build, so Update from link is a no-op visually. Worktree removed.
+   Thor notes: CDP screenshots hang while the screens are off (`input keyevent KEYCODE_WAKEUP` first); the viewer's
+   WebView serves only the open guide, and `OverlayService` isn't exported, so the user has to open the other guide.
 
 ## Shared sprite set results (2026-10-19)
 
@@ -115,8 +120,8 @@ dedicated checks session once the other UI changes are in:
   sprites are inlined. No template change (`#spr` stays keyed by species id).
 - **Both guides switched to it.** Emerald Imperium: 1247 shared + 28 own (its added Megas, Primal Dialga/Palkia,
   Pikachu Surfing/Flying); 1154 of the 1247 were pixel-identical to its old art, the rest expansion touch-ups.
-  Hardlove Gold: all 986 shared, its `sprites.json` deleted. EI 2.75 → 2.56 MB, HG 2.42 → 2.32 MB. Neither is on
-  the Thor yet.
+  Hardlove Gold: all 986 shared, its `sprites.json` deleted. EI 2.75 → 2.56 MB, HG 2.42 → 2.32 MB. Both are
+  live and on the Thor (2026-10-19).
 - **Box fill (the user, 2026-10-19: "i like the box fill"):** `assemble.py` crops every inlined sprite, shared or
   own, to its visible pixels, padded to a square (centred across, standing on the bottom edge), so small Pokémon fill
   their box like Hardlove's old art. The PNGs in `sprites/` stay full 64×64 frames; removing `cropped()` undoes it.
