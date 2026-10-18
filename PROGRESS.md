@@ -69,15 +69,14 @@ clash.
 
 Work is on branch `worktree-sprites` (pushed), not yet merged into `main`. To continue: from the repo root,
 `git switch worktree-sprites` (or merge it into `main`); the folder `.claude/worktrees/sprites` is the same branch
-checked out separately and can be removed once merged. Left to do:
-1. **Type text colour (the user is choosing):** mockup https://claude.ai/artifact/UHV1nLRRFNr8rdTSYZP8Nm (private)
-   shows today's all-white tags, "black in light mode" and the per-type pick (black on Normal, Electric, Ice,
-   Fighting, Flying, Bug, Rock, Steel, Fairy; white on the rest, both modes), with the no-sprite circle. Apply the
-   choice to `.ty` and `.sprph` in `template/dex.css` / `spr()` in `template/dex.js`.
-2. Check the placeholder renders: a small test page or a copy of a built guide with a few sprites removed, not a
-   full `domcompare` run (each full run takes 10+ minutes per guide).
-3. Merge `main` (it has newer commits, e.g. the CLAUDE.md Git section), rebuild, then a full `domcompare` of both
-   guides against the pre-sprite builds to confirm no page errors, and a look on the Thor.
+checked out separately and can be removed once merged. Built and looked at (screenshots), not yet fully checked:
+shared sprites in both guides, the box-fill crop, the no-sprite circle and per-type tag text. Left to do, in a
+dedicated checks session once the other UI changes are in:
+1. Merge `main` into the branch (it has newer commits, e.g. the CLAUDE.md Git section), rebuild.
+2. A full `domcompare` of both guides against builds from before these changes (`git stash`-free: build the
+   pre-sprite commit `f9caad4` in a temporary worktree) for page errors. Expect differences only where sprites and
+   type tags render; each full run takes 10+ minutes per guide, and only one can run at a time (fixed port 9555).
+3. Look on the Thor at 260 × 316, normal and `dvkb`, then merge into `main` (which publishes).
 
 ## Shared sprite set results (2026-10-19)
 
@@ -102,10 +101,12 @@ checked out separately and can be removed once merged. Left to do:
   112 px.
 - **No-sprite placeholder (template, the user 2026-10-19, from the search mockup):** a species with no sprite shows a
   circle in its primary type's colour with the name's first letter, instead of a blank square. The letter sizes
-  with the circle (container units). Dark mode: white letter with the type tags' shadow. Light mode: black letter,
-  except Ghost and Dark keep white. Contrast measured for every type colour: black clears 3:1 (large bold text) on
-  16 of 18 (Ghost and Dark 2.7); white fails on 9 (Normal, Electric, Ice, Fighting, Flying, Bug, Rock, Steel,
-  Fairy; Ice 1.85), which is also how the type tags look in dark mode today.
+  with the circle (container units) and is coloured like that type's tag.
+- **Type text colour, per type (the user, 2026-10-19, from mockup https://claude.ai/artifact/UHV1nLRRFNr8rdTSYZP8Nm):**
+  type tags and placeholder letters are black on Normal, Electric, Ice, Fighting, Flying, Bug, Rock, Steel and Fairy
+  (white is under 3:1 on them; Ice 1.85) and white with the shadow on the other nine, the same in both themes
+  (`BT` / `btc()` in dex.js, `.ty.bt` in dex.css). Rejected: all white (as before) and "black in light mode" (Ghost
+  and Dark would need white anyway: black on them is 2.7). Checked in a test copy at 480 px, dark and light.
 - Re-fetch and credits: `sprites/SOURCES.md`. The expansion has no licence file; we credit it and the sprite resources
   its CREDITS.md lists.
 
