@@ -73,7 +73,8 @@ Work is on branch `worktree-sprites` (pushed), not yet merged into `main`. To co
 checked out separately and can be removed once merged. Built and looked at (screenshots), not yet fully checked:
 shared sprites in both guides, the box-fill crop, the no-sprite circle and per-type tag text. Left to do, in a
 dedicated checks session once the other UI changes are in:
-1. Merge `main` into the branch (it has newer commits, e.g. the CLAUDE.md Git section), rebuild.
+1. ~~Merge `main` into the branch, rebuild.~~ Done 2026-10-19 (`dadc3a2`, pushed). Baseline for step 2: `git archive main` into
+   a temp folder and `python assemble.py` there (no extra worktree needed).
 2. A full `domcompare` of both guides against builds from before these changes (`git stash`-free: build the
    pre-sprite commit `f9caad4` in a temporary worktree) for page errors. Expect differences only where sprites and
    type tags render; each full run takes 10+ minutes per guide, and only one can run at a time (fixed port 9555).
