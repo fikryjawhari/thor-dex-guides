@@ -65,6 +65,20 @@ clash.
   built, url); `dist/index.html` links them.
 - Sprites: since 2026-10-19 both guides use the shared set (see "Shared sprite set results").
 
+## Sprite branch handover (2026-10-19)
+
+Work is on branch `worktree-sprites` (pushed), not yet merged into `main`. To continue: from the repo root,
+`git switch worktree-sprites` (or merge it into `main`); the folder `.claude/worktrees/sprites` is the same branch
+checked out separately and can be removed once merged. Left to do:
+1. **Type text colour (the user is choosing):** mockup https://claude.ai/artifact/UHV1nLRRFNr8rdTSYZP8Nm (private)
+   shows today's all-white tags, "black in light mode" and the per-type pick (black on Normal, Electric, Ice,
+   Fighting, Flying, Bug, Rock, Steel, Fairy; white on the rest, both modes), with the no-sprite circle. Apply the
+   choice to `.ty` and `.sprph` in `template/dex.css` / `spr()` in `template/dex.js`.
+2. Check the placeholder renders: a small test page or a copy of a built guide with a few sprites removed, not a
+   full `domcompare` run (each full run takes 10+ minutes per guide).
+3. Merge `main` (it has newer commits, e.g. the CLAUDE.md Git section), rebuild, then a full `domcompare` of both
+   guides against the pre-sprite builds to confirm no page errors, and a look on the Thor.
+
 ## Shared sprite set results (2026-10-19)
 
 - `sprites/png/<key>.png` (1593 PNGs, 1.2 MB) + `sprites/index.json` (1666 keys, 73 of them `same` as another key),
