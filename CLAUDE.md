@@ -22,7 +22,9 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
   sprites.json (only forms the shared set lacks), notes.md (build notes and schema), extract/ (the scripts that made data.json), SOURCES.md.
 - `sprites/` the shared sprite set (pokeemerald-expansion, 64×64, `png/<key>.png`; README has the key scheme,
   SOURCES.md the pin and credits).
-- `tools/` source fetchers and extract helpers (README), `domcompare.mjs`. `plans/` work not done yet.
+- `tools/` source fetchers and extract helpers (README), `domcompare.mjs`, `mockup/` (page snapshots for mockups, the
+  walkthrough check). `plans/` work not done yet, plus `split-ui.md` (the collapsible-page design, done for the
+  walkthrough, next for the other pages).
 - `dist/` built output (git-ignored); the Pages workflow builds and deploys it.
 
 ## Commands

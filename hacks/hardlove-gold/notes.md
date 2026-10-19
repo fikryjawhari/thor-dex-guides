@@ -123,7 +123,7 @@ STAT FORMULA
 LOCAL STORAGE (prefix hg)
   "hgtrack" tracker {s starter, e {areaIdx: {p: id} or {f: 1}}, t {"area|For X": id}} (same key and shape as the previous
   build), "hgcalc:<id>" + "hgcalc:lastlv" stat calc (same as before), "hgdex4" list filters, "hgwalk2" walkthrough open
-  state, "hgcap2" level cap per trainer (+ _last), "hgtr" open trainer groups, "hgrecent" search picks, "hgpos" last route
+  state (same shape as EI's "eiwalk"), "hgcap2" level cap per trainer (+ _last), "hgtr" open trainer groups, "hgrecent" search picks, "hgpos" last route
   and anchor. "dvkb" = "1" forces viewer mode (shared test switch).
 
 VIEWER UI (template from emerald-imperium-dex.html, changed by port.py)

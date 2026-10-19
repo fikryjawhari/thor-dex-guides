@@ -88,7 +88,10 @@ tr.dupe td,span.dupe{opacity:.45}span.dupe a,tr.dupe a{text-decoration:line-thro
 details.split>summary .tag{margin-left:6px}
 .trnote{font-size:12px;color:var(--mut);margin:-2px 0 6px;line-height:1.45}.trnote b{color:var(--acc)}
 details.stopd{margin:10px 0}details.stopd>summary{list-style:none;cursor:pointer;border-left:3px solid var(--acc);padding:4px 0 4px 10px}details.stopd>summary::after{content:' ▾';color:var(--mut);font-size:13px}details.stopd:not([open])>summary::after{content:' ▸'}
-details.stopd>.stop{margin-top:0;border-left:3px solid var(--line)}
+/* A stop's grey rail is drawn short of the stop's end, so its last pixels never peek out under the pinned yellow
+   header as that header slides off */
+details.stopd>.stop{margin-top:0;border-left:0;padding-left:13px;position:relative}
+details.stopd>.stop::before{content:'';position:absolute;left:0;top:0;bottom:12px;width:3px;background:var(--line)}
 
 .card.conf{border-color:#e0a030}.card.conf h3{color:#e0a030}
 .wstep{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}.wstep input{width:20px;height:20px;margin-top:1px;flex:none;accent-color:var(--acc)}.wstep.done>span{opacity:.5;text-decoration:line-through}
@@ -215,3 +218,60 @@ body.kbopen .sres{padding-bottom:calc(var(--kbh,0px) + 8px)}
 /* long single-word item names (Blastoisinite, Weakness Policy) wrap instead of widening the page at 260 */
 .itbl td{overflow-wrap:anywhere}
 .dpre{font:12px/1.4 ui-monospace,Consolas,monospace;white-space:pre;overflow-x:auto;max-width:100%;background:var(--panel2);border-radius:8px;padding:6px 8px;margin:6px 0;tab-size:8}
+/* ===== Collapsible pages (plans/split-ui.md) */
+/* Rail jump buttons: the rail's spare height under the icons (about 26px each at 316 tall, 44px from about 350) */
+.rjump{margin-top:auto;flex:1 0 52px;max-height:89px;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.rjump[hidden]{display:none}
+.rjump button{flex:1 1 0;min-height:25px;border:0;background:none;color:var(--fg);display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.rjump button+button{border-top:1px solid var(--line)}
+.rjump button:active{background:var(--railon);color:var(--acc)}
+.rjump button:disabled{opacity:.3}
+/* Expand all / Collapse all */
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel2)}
+.seg button{flex:1 1 0;min-width:0;min-height:28px;border:0;background:none;color:var(--fg);font:600 12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;touch-action:manipulation}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button:active{background:var(--acc);color:#111}
+.body>.seg{margin:8px 0 2px}.body>.seg button{min-height:26px;color:var(--mut)}
+/* Sticky headers: an open stop's header under the search bar (--hh), an open section's under its stop's (--sh) */
+details.stopd[open]>summary{position:sticky;top:var(--hh,0px);z-index:3;background:var(--bg)}
+details.stopd[open] details.sec[open]>summary{position:sticky;top:calc(var(--hh,0px) + var(--sh,34px));z-index:2;background:var(--bg)}
+/* Sections inside a stop */
+details.sec{margin:4px 0 2px}
+details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;flex-wrap:wrap;gap:3px 6px;min-height:32px;padding:4px 18px 4px 0;position:relative;border-bottom:1px solid var(--line);-webkit-tap-highlight-color:transparent}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::after{content:'▸';position:absolute;right:2px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:13px}
+details.sec[open]>summary::after{content:'▾'}
+details.sec>summary .sn{font-weight:700;color:var(--acc);font-size:14px}
+details.sec>summary .tag{margin-left:0}
+.tag.miss{background:#5e2e2e;color:#ffb4b4;letter-spacing:.03em}
+.secb{padding:2px 0 4px}
+.chkb .wstep:last-child{border-bottom:0}
+.secb>.itbl.wt{margin:6px 0 2px}
+/* Encounter areas: one box each; a short place tag where a stop has several */
+.area{padding:4px 0}.area+.area{border-top:1px dashed var(--line)}.area .trk{margin:4px 0}
+.atag{flex:none;font-size:11px;font-weight:700;color:var(--fg);background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:2px 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.area>.atag{display:inline-block;margin:4px 0 2px}
+/* Collapse bars at the bottom (only on blocks taller than the window) */
+.endbar{display:flex;align-items:center;gap:4px;width:100%;min-height:32px;border:0;background:none;color:var(--mut);font:600 12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-align:left;padding:4px 0;cursor:pointer;touch-action:manipulation}
+.endbar[hidden]{display:none}
+.endbar svg{flex:none;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.endbar span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.endbar.st{border-top:1px dashed var(--line);margin-top:8px}
+.endbar.sb{justify-content:flex-end;min-height:28px;width:auto;margin-left:auto;padding:2px 6px;color:var(--acc);font-size:11px;opacity:.85}
+.endbar.sp{justify-content:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 12px;margin:12px 0 4px;font-size:13px;color:var(--fg)}
+/* The header you land on flashes (inset, so nothing that clips the block can cut the ring) */
+.flash{animation:flash .9s ease-out}
+@keyframes flash{from{box-shadow:inset 0 0 0 2px var(--acc)}to{box-shadow:inset 0 0 0 2px transparent}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none}}
+/* Walkthrough top: Guide info, Next step, Starter, Expand / Collapse all */
+.wtool{display:flex;flex-direction:column;gap:6px;margin:0 0 2px}
+.wtool>details.split{margin:0}
+.wtool>details.split>summary .mut{font-weight:400;margin-left:4px}
+.pbody{padding:0 2px 6px}
+.psec{margin:12px 0 4px;font-weight:700;color:var(--acc);font-size:13px}
+.pbar{justify-content:flex-start;gap:6px;margin:6px 0 0}
+.pbody>details.stopd{margin:8px 0}
+.strow{display:flex;align-items:center;gap:8px;margin:0;padding:6px 8px}.strow select{flex:1;min-width:0}
+.resume{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;min-height:40px;padding:5px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);font:13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-align:left;cursor:pointer}
+.resume b{font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.04em}
+.resume span{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

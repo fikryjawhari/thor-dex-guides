@@ -161,9 +161,10 @@ STAT FORMULA (Gen 3+)
   Other = floor((floor((2B + IV + floor(EV/4)) x L / 100) + 5) x nature)
 
 LOCAL STORAGE
-  "eiwalk" walkthrough {c:{split.stop.step:1}, o:{open splits}, x:{closed stops}}, "eitrack" tracker {e:{areaIdx:{p:id} or {f:1}}}, "eidex1" list filters/sort/availability, "eicalc:<id>" calc inputs, "eicalc:lastlv", "eicap" {trainerKey: your highest level},
+  "eiwalk" walkthrough {c:{split.stop.step:1}, o:{open splits, gi: Guide info}, x:{closed stops, doc*: open docs}, s:{split.stop.c/e/i/t: section open 1 / closed 0}}, "eitrack" tracker {e:{areaIdx:{p:id} or {f:1}}}, "eidex1" list filters/sort/availability, "eicalc:<id>" calc inputs, "eicalc:lastlv", "eicap" {trainerKey: your highest level},
   "eimgm" "1" = Minimal Grinding Mode (speeds without EVs), "eitr" open trainer groups.
-  Rival teams are filtered by the type of the starter recorded in tracker area 0 (Littleroot).
+  Rival teams are filtered by the type of the starter recorded in tracker area 0 (Littleroot). The walkthrough's Starter
+  picker sets that same tracker value.
 
 TRAINER CONFLICTS (sheet vs calc; the calc wins, the card shows "Sheet says ...")
   68 Pokemon (72 fields): 39 EV rows (mostly shifted rows), 11 IVs, 6 species names (form names or a base name for a Mega holder),

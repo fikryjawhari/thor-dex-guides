@@ -12,6 +12,9 @@ the split is in that repo's git log.
   deleted. Details in the app repo's `docs/PROGRESS.md` → Phase 2 results.
 - **Shipping a guide update:** push here, wait for the Pages Action, then on the Thor long-press the guide → Update from
   link. Same library id, so saved state (tracker, ticks, calc) is kept. No USB copying.
+- **Walkthrough split UI built (2026-10-19)** on branch `worktree-walkthrough-ui`: collapsible sections, sticky headers,
+  rail jump buttons, Guide info, Next step, EI starter picker. Checked in headless Chrome; not yet on the Thor or
+  merged. See "Walkthrough split UI" below and `plans/split-ui.md`.
 - Guides: Emerald Imperium (1.3.1, GBA), Hardlove Gold (0.8.3, NDS). The other hacks in `hacks/` have sources
   compiled (`SOURCES.md`, re-fetch into `.src/`) but no guide yet.
 
@@ -22,19 +25,37 @@ the split is in that repo's git log.
 2. ~~**App side, Phase 2.**~~ Done 2026-10-19 (see Current status). Update from link was only exercised with unchanged
    content; the first real guide update is its first test with new content.
 3. ~~Shared sprite set~~ **done and live 2026-10-19** (see "Shared sprite set results"); checked and merged into
-   `main` (`94d0706`), see "Sprite branch handover". Left: the footer credit (step 6).
-4. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
+   `main` (`94d0706`), see "Sprite branch handover". Left: the footer credit (step 7).
+4. **Walkthrough split UI:** check it on the Thor (both guides, 260 wide and maximised, `dvkb`), then merge
+   `worktree-walkthrough-ui` into `main` and push. Then **bring the same patterns to Locations, Trainers and Items**
+   (`plans/split-ui.md` → Bringing it to the other pages; mockup first).
+5. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
    this repo's flow (CLAUDE.md → Making a new guide). Can happen with the first new guide.
-5. **New guides** (one session each, here): CLAUDE.md → Making a new guide. Each needs its sources re-fetched first
+6. **New guides** (one session each, here): CLAUDE.md → Making a new guide. Each needs its sources re-fetched first
    (`.src/` is empty on a fresh clone); the 3DS ones (Photonic Sun, Eternal X) also need the user's vanilla romfs
    dumps, which live on the PC.
-6. Later: footer credits (`cfg.credit` hook; hack authors from `SOURCES.md` plus the sprite set's credits in
+7. Later: footer credits (`cfg.credit` hook; hack authors from `SOURCES.md` plus the sprite set's credits in
    `sprites/SOURCES.md`), the update checker (`plans/update-checker.md`; run by hand, the user doesn't need it
    scheduled), the damage calc.
 
 **Parallel sessions:** one session in each repo at a time is safe (separate folders and git histories). The app
 repo has nothing open now; come back to it only for an app bug or feature. Avoid two sessions in this repo at once: the template is shared, so they'd
 clash.
+
+## Walkthrough split UI (2026-10-19)
+
+The user's walkthrough wishlist, mocked up over eight rounds (https://claude.ai/artifact/Kp64pS46UwPRSsyWVao1Zs) and
+built into the template. **Every decision, the rejected options and how it's built: `plans/split-ui.md`.** In short:
+Guide info → Next step → Starter → Expand / Collapse all at the top; sections Checklist / Encounters / Items /
+Trainers inside each stop; stop and section headers stick under the search bar; collapse bars at the bottom of blocks
+taller than the window; header taps never scroll; jump buttons in the rail. EI gets a starter picker that sets the
+Littleroot encounter. The item name column stays at 38% (sizing it from the longest word is possible; not done).
+- Checked (headless Chrome, 260 × 316, both guides, normal and `dvkb`): `tools/mockup/walkcheck.mjs` (taps, bars,
+  jumps, Next step, starter, state after a reload, other routes) passes with no page errors. `domcompare` against
+  `main` (EI 2690 routes, HG 2481, both modes, rail buttons ignored with
+  `--ignore='<div class="rjump"[\s\S]*?</div>(?=</nav>)'`): only `#/walk` differs, no page errors.
+- Not done yet: a look on the Thor, the merge into `main`.
+- Saved state: `LS.walk` gains `s` (sections) and `o.gi`; existing ticks, open splits and closed stops carry over.
 
 ## Split results (2026-10-19)
 

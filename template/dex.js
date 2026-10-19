@@ -257,12 +257,13 @@ function adjRows(li,cf){const r=locs[li]||[];const by={};r.forEach(([p,w])=>{con
  const out=[];for(const [m,o] of Object.entries(by)){const rows=Object.values(o);rows.forEach(x=>x.d=cf.has(FAM[x.p.id]));const live=rows.filter(x=>!x.d);const sum=live.reduce((a,x)=>a+x.r,0);
   rows.forEach(x=>{if(x.d){x.show=x.r?x.r+'%':x.rs;return;}if(x.r&&sum>0){const v=Math.round(x.r/sum*1000)/10;x.show=v+'%';x.chg=Math.abs(v-x.r)>0.05;}else if(/^1 of \d+/.test(x.rs)){x.show='1 of '+live.length;x.chg=live.length!==rows.length;}else x.show=x.r?x.r+'%':x.rs;});
   rows.sort((a,b)=>(a.d-b.d)||(b.r-a.r));const notes=[...new Set(rows.map(x=>x.note).filter(Boolean))];out.push([m,rows,live.length===0,notes.length===1?notes[0]:'']);}return out;}
-function trackerHTML(a){if(AR[a]?.ns)return `<div class="mut small" style="margin:6px 0">${TX.ns}</div>`;return trackerHTML0(a)+tradeHTML(a);}
-function trackerHTML0(a){
+// lab: the label before the picker (undefined = "Encounter", '' = none, else a short area tag; the walkthrough uses the last two).
+function trackerHTML(a,lab){if(AR[a]?.ns)return `<div class="mut small" style="margin:6px 0">${TX.ns}</div>`;return trackerHTML0(a,lab)+tradeHTML(a);}
+function trackerHTML0(a,lab){
  const e=TK.e[a];const sp=areaSpecies(a);const cf=caughtFams(a);let cur=e?(e.f?'__fail':e.p):'';
  const extra=e&&e.p&&!sp.some(p=>p.id===e.p)&&byId[e.p]?[byId[e.p]]:[];
  const opt=p=>`<option value="${p.id}" ${cur===p.id?'selected':''}>${esc(p.name)}${cf.has(FAM[p.id])?' (dupe)':''}</option>`;
- return `<div class="trk" data-a="${a}"><span class="mut small">Encounter</span><select class="tk-sel"><option value="">None yet</option><option value="__fail" ${cur==='__fail'?'selected':''}>Failed / fled</option>${extra.map(opt).join('')}${sp.map(opt).join('')}<option value="__other">Other…</option></select>${e?'<button class="tk-x" title="Clear">×</button>':''}
+ return `<div class="trk" data-a="${a}">${lab===undefined?'<span class="mut small">Encounter</span>':lab?`<span class="atag">${esc(lab)}</span>`:''}<select class="tk-sel"><option value="">None yet</option><option value="__fail" ${cur==='__fail'?'selected':''}>Failed / fled</option>${extra.map(opt).join('')}${sp.map(opt).join('')}<option value="__other">Other…</option></select>${e?'<button class="tk-x" title="Clear">×</button>':''}
  <div class="tk-other" style="display:none"><input type="search" placeholder="Type a Pokémon name"><div class="tk-res"></div></div></div>`;}
 function bindTrackers(){app.querySelectorAll('.trk').forEach(el=>{if(el.dataset.b)return;el.dataset.b=1;const a=+el.dataset.a;const sel=el.querySelector('.tk-sel'),oth=el.querySelector('.tk-other');if(!sel)return;
  sel.onchange=()=>{const v=sel.value;if(v==='__other'&&INV){otherKb(a);return;}if(v==='__other'){oth.style.display='block';const inp=oth.querySelector('input');inp.focus();inp.oninput=()=>{const s=inp.value.trim().toLowerCase();const res=s.length<2?[]:P.filter(p=>p.g===0&&p.key.includes(s)).slice(0,8);
@@ -327,44 +328,144 @@ function listItems(){fil.innerHTML='';sug.style.display='none';const s=st.q;cons
  app.querySelectorAll('details.split').forEach(d=>d.addEventListener('toggle',()=>{st.iopen[+d.dataset.si]=d.open;}));}
 
 
-// ===== WALKTHROUGH TAB (D.WK; state in localStorage LS.walk {c:{stepKey:1}, o:{splitIdx:1}, x:{stopKey:0 closed, docN:1 open}})
+// ===== COLLAPSIBLE PAGES (plans/split-ui.md). Pages built from details.split use these: header taps that never
+// scroll, collapse bars at the bottom of blocks taller than the window, the rail's jump buttons (to details.split.jt),
+// sticky stop and section headers (CSS, --hh and --sh) and the flash on a header you land on.
+const hdr=document.querySelector('header'),html=document.documentElement,GAP=8;
+// The search bar's height while it sticks (0 when it doesn't: very short windows), as --hh for the sticky headers.
+const hdrH=()=>getComputedStyle(hdr).position==='sticky'?hdr.offsetHeight:0;
+const T=()=>hdrH()+GAP;
+new ResizeObserver(()=>html.style.setProperty('--hh',hdrH()+'px')).observe(hdr);
+// Each stop carries its header's height (one or two lines) as --sh, so its section headers stick right under it.
+const SHO=new ResizeObserver(es=>es.forEach(e=>e.target.parentElement.style.setProperty('--sh',e.target.offsetHeight+'px')));
+const flash=e=>{e.classList.remove('flash');void e.offsetWidth;e.classList.add('flash');};
+// Browser scroll anchoring is off while we move things ourselves (it adds its own correction a frame later), and the
+// header is then held where it landed for a moment: blocks above it that content-visibility skipped render at their
+// real height as they come into view and would push it down. Any press, wheel or key ends the hold.
+const noAnchor=()=>{html.style.overflowAnchor='none';};
+function hold(el){const y=el.getBoundingClientRect().top,t0=performance.now();let stop=false;const end=()=>{stop=true;};
+ ['pointerdown','wheel','keydown'].forEach(k=>addEventListener(k,end,{once:true,passive:true}));
+ const f=()=>{if(stop||performance.now()-t0>450){html.style.overflowAnchor='';return;}
+  const dy=el.getBoundingClientRect().top-y;if(Math.abs(dy)>.5)scrollBy(0,dy);requestAnimationFrame(f);};requestAnimationFrame(f);}
+// Opening or closing from a header: the header stays at the same pixel and the bottom bars settle in the same frame.
+function flip(d,open){const sm=d.querySelector(':scope>summary'),y=sm.getBoundingClientRect().top;noAnchor();
+ d.open=open;bars();const dy=sm.getBoundingClientRect().top-y;if(dy)scrollBy(0,dy);hold(sm);jumpState();}
+// Collapse bars (.endbar, inside their details) show only where the open block, with its header and the bar itself,
+// doesn't fit under the search bar. Blocks inside a skipped content-visibility block are left until they render.
+const BH={};const barH=b=>{const k=b.className;if(BH[k]==null){b.hidden=false;const cs=getComputedStyle(b);BH[k]=b.offsetHeight+parseFloat(cs.marginTop)+parseFloat(cs.marginBottom);b.hidden=true;}return BH[k];};
+function bars(){const room=innerHeight-hdrH(),bs=[...app.querySelectorAll('.endbar')].map(b=>[b,b.closest('details')]).filter(([b,d])=>d&&!inSkip(d));
+ bs.forEach(([b])=>b.hidden=true);bs.filter(([b,d])=>d.open&&d.offsetHeight+barH(b)>room).forEach(([b])=>b.hidden=false);}
+let bq=0;const barsSoon=()=>{if(!bq)bq=requestAnimationFrame(()=>{bq=0;bars();});};
+document.addEventListener('contentvisibilityautostatechange',e=>{if(!e.skipped&&app.querySelector('.endbar'))barsSoon();},true);
+addEventListener('resize',()=>{if(app.querySelector('.endbar'))barsSoon();});
+// A collapse bar: a stop's or section's header is pinned at the top already, so it closes in place; a split closes and
+// its header goes to the top. Both flash. (Animated versions were tried and rejected: plans/split-ui.md.)
+function foldUp(d){const sm=d.querySelector(':scope>summary');
+ if(!d.matches('details.split')&&sm.getBoundingClientRect().top>=hdrH()-1){flip(d,false);flash(sm);return;}
+ noAnchor();d.open=false;bars();const y=sm.getBoundingClientRect().top-T();if(y<0)scrollBy(0,y);flash(sm);hold(sm);jumpState();}
+// Expand all / Collapse all bars (.seg): open or close their list; the bar you pressed stays where it is.
+function segAll(b,list){const open=b.dataset.a==='1',y=b.getBoundingClientRect().top;noAnchor();
+ list.forEach(d=>d.open=open);bars();scrollBy(0,b.getBoundingClientRect().top-y);hold(b);jumpState();}
+// Rail jump buttons: up = top of the split you're in, or the previous one when this one's header already sits at the
+// top with the gap above it; down = the next split to that same spot, so up and down undo each other.
+const RJ=document.querySelector('.rjump');
+const jts=()=>[...app.querySelectorAll('details.split.jt')];
+function jump(dir){const t=T(),sp=jts(),hs=sp.map(d=>d.getBoundingClientRect().top);let i;
+ if(dir<0){i=-1;hs.forEach((y,j)=>{if(y<t-2)i=j;});if(i<0){scrollTo(0,0);jumpState();return;}}
+ else{i=hs.findIndex(y=>y>t+2);if(i<0){scrollTo(0,html.scrollHeight);jumpState();return;}}
+ scrollBy(0,hs[i]-t);flash(sp[i].querySelector(':scope>summary'));jumpState();}
+function jumpState(){if(!RJ||RJ.hidden)return;const t=T(),atEnd=scrollY+innerHeight>=html.scrollHeight-1;
+ RJ.querySelector('[data-j="-1"]').disabled=scrollY<=0;RJ.querySelector('[data-j="1"]').disabled=atEnd||!jts().some(d=>d.getBoundingClientRect().top>t+2);}
+if(RJ){RJ.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>jump(+b.dataset.j));
+ let raf=0;addEventListener('scroll',()=>{if(!raf&&!RJ.hidden)raf=requestAnimationFrame(()=>{raf=0;jumpState();});},{passive:true});}
+const UPI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14l5-5 5 5"/></svg>';
+const segBar=cls=>`<div class="seg ${cls}"><button data-a="1">Expand all</button><button data-a="0">Collapse all</button></div>`;
+
+// ===== WALKTHROUGH TAB (D.WK; state in localStorage LS.walk {c:{stepKey:1}, o:{splitIdx:1, gi:1 Guide info},
+// x:{stopKey:0 closed, doc*:1 open}, s:{stopKey.c/e/i/t: 1 open, 0 closed}}; sections c checklist, e encounters,
+// i items, t trainers; the checklist starts closed, the rest open). Layout and behaviour: plans/split-ui.md.
 // Optional parts, each shown when the data has it: cheat codes (WK.cheats), checklist steps (stop.s), stop notes
-// (stop.note), game docs (WK.docs, WK.ko).
-const WO=(()=>{try{return Object.assign({c:{},o:{},x:{}},JSON.parse(localStorage.getItem(LS.walk)||'{}'))}catch(e){return {c:{},o:{},x:{}}}})();
+// (stop.note), game docs (WK.docs, WK.ko), items with no place (WK.np).
+const WO=(()=>{try{return Object.assign({c:{},o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.walk)||'{}'))}catch(e){return {c:{},o:{},x:{},s:{}}}})();
 const woSave=()=>{try{localStorage.setItem(LS.walk,JSON.stringify(WO))}catch(e){}};
 const CHK=D.WK.splits.some(sp=>sp.st.some(s=>(s.s||[]).length));
-// Game docs (Mechanics, AI docs, post-KO switch-in scores): built when opened.
-// Blocks aligned with runs of spaces (tables, level cap lists) keep their columns in monospace.
-function docsHTML(){const W=D.WK;const para=t=>esc(t).split(/\n\s*\n/).map(x=>/\S(?: {2,}|\t)\S/.test(x)?`<pre class="dpre">${x}</pre>`:`<p style="margin:6px 0">${x.replace(/\n/g,'<br>')}</p>`).join('');
- return W.docs.map(([n,t],j)=>`<details class="stopd" data-k="doc${j}" ${WO.x['doc'+j]===1?'open':''}><summary class="stoph">${esc(n)}</summary><div class="stop small doc">${para(t)}</div></details>`).join('')+
-  (W.ko?`<details class="stopd" data-k="docko" ${WO.x.docko===1?'open':''}><summary class="stoph">Post-KO switch-in AI</summary><div class="stop"><table class="itbl">${W.ko.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</table>${W.ko.note.map(x=>`<div class="mut small" style="margin-top:6px">${esc(x)}</div>`).join('')}</div></details>`:'');}
-function docsCard(){return D.WK.docs?`<details class="split" ${WO.o.doc?'open':''} data-wo="doc"><summary>Game docs</summary><div class="body" data-docs="1"></div></details>`:'';}
-function cheatCard(){const W=D.WK;if(!W.cheats)return '';return `<details class="split" ${WO.o.ch?'open':''} data-wo="ch"><summary>Cheat codes</summary><div class="card"><div class="mut small" style="margin-bottom:6px">${esc(W.cnote)}</div><table class="itbl">${W.cheats.map(c=>`<tr><td><b>${esc(c[0])}</b>${c[1]?`<div class="mut small">or ${esc(c[1])}</div>`:''}</td><td>${esc(c[2])}${c[3]?' <span class="tag">toggle</span>':''}</td></tr>`).join('')}</table></div></details>`;}
-function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;const q=st.q;
- const steps=(s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+(s.s||[]).map((x,j)=>{const sk=k+'.'+j;const done=!!WO.c[sk];return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-sk="${sk}" ${done?'checked':''}><span>${esc(x[0])}${x[1]?`<div class="mut small">${esc(x[1])}</div>`:''}</span></label>`;}).join('');
- let h=`<details class="stopd" ${closed?'':'open'} data-k="${k}"><summary class="stoph">${esc(s.n)}${s.x?' <span class="mut small">(on the way)</span>':''}${s.a.map(encSummary).join('')}${(s.tr||[]).length?' <span class="tag">'+(s.tr||[]).map(k=>TRK[k]).filter(t=>t&&!rivalHidden(t)).length+' '+CF.trw[(s.tr||[]).length>1?1:0]+'</span>':''}</summary><div class="stop">${steps}${walkTrainers(s)}`;
- s.a.forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;
-  h+=`<div class="sech" style="margin-top:8px">${esc(A.n)}</div>`+trackerHTML(ai)+(CF.walkAreaNote&&A.note?`<div class="trnote">${esc(A.note)}</div>`:'')+enc.map(([li,[m,rows]])=>`<div class="encl"><span class="mut">${A.l.length>1||LOC[li]!==A.n?esc(LOC[li])+' · ':''}${esc(m)}:</span> ${rows.map(x=>`<span class="${x.d?'dupe':''}"><a href="#/p/${x.p.id}">${esc(x.p.name)}</a> ${esc(x.show)}</span>`).join(', ')}</div>`).join('');});
- const its=s.it.filter(i=>starterOk(i[2]));if(its.length)h+=`<table class="itbl wt">${its.map(i=>`<tr><td>${i[3]!=null&&(i[0]==='TMs'||i[0]==='HMs'||i[0]==='Move Tutors')?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Mega Stones'&&i[3]?`<a href="#/p/${i[3]}">${esc(i[1])}</a>`:esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2])}${/miss permanently/i.test(i[2])?'<span class="warn">MISSABLE</span>':''}</td></tr>`).join('')}</table>`;
- return h+'</div></details>';}
+const tkCounts=()=>[Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length,Object.values(TK.e).filter(e=>e&&e.f).length];
+// Guide info: tracker and checklist tools, then the game docs (cheat codes and unplaced items count as docs), then the
+// intro. Built when opened.
+function guideInfoHTML(){const W=D.WK,[n,f]=tkCounts();
+ const para=t=>esc(t).split(/\n\s*\n/).map(x=>/\S(?: {2,}|\t)\S/.test(x)?`<pre class="dpre">${x}</pre>`:`<p style="margin:6px 0">${x.replace(/\n/g,'<br>')}</p>`).join('');
+ const doc=(k,n,body,cls='')=>`<details class="stopd" data-k="${k}" ${WO.x[k]===1?'open':''}><summary class="stoph">${n}</summary><div class="stop${cls}">${body}</div></details>`;
+ const docs=(W.cheats?doc('doccheat','Cheat codes',`<div class="mut small" style="margin:6px 0">${esc(W.cnote)}</div><table class="itbl">${W.cheats.map(c=>`<tr><td><b>${esc(c[0])}</b>${c[1]?`<div class="mut small">or ${esc(c[1])}</div>`:''}</td><td>${esc(c[2])}${c[3]?' <span class="tag">toggle</span>':''}</td></tr>`).join('')}</table>`):'')+
+  (W.docs||[]).map(([t,x],j)=>doc('doc'+j,esc(t),para(x),' small doc')).join('')+
+  (W.ko?doc('docko','Post-KO switch-in AI',`<table class="itbl">${W.ko.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</table>${W.ko.note.map(x=>`<div class="mut small" style="margin-top:6px">${esc(x)}</div>`).join('')}`):'')+
+  (W.np.length?doc('docnp',`Items with no walkthrough place <span class="mut small">${W.np.length}</span>`,`<table class="itbl wt">${W.np.map(i=>`<tr><td>${esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2])}</td></tr>`).join('')}</table>`):'');
+ return `<div class="psec">Encounter tracker</div><div class="mut small">${n} caught · ${f} failed · dupes clause on whole evolution lines</div>`+
+  `<div class="bar pbar"><button class="btn tk-export">Export</button><button class="btn tk-import">Import</button><button class="btn danger tk-reset">Reset all</button>${CHK?'<button class="btn danger wk-reset">Reset checklist</button>':''}</div>`+
+  (docs?`<div class="psec">Game docs</div>`+docs:'')+`<div class="mut small" style="margin:12px 0 4px">${TX.walk}</div>`;}
+// Next step: the first unticked checklist step, in walkthrough order.
+function nextStep(){const W=D.WK;for(let si=0;si<W.splits.length;si++){const sp=W.splits[si];for(let ti=0;ti<sp.st.length;ti++){const s=sp.st[ti];for(let j=0;j<(s.s||[]).length;j++)if(!WO.c[si+'.'+ti+'.'+j])return {si,ti,j,s};}}return null;}
+const nextInner=()=>{const n=nextStep();return n?`<b>Next step</b><span>${esc(n.s.n)} · ${esc(n.s.s[n.j][0])}</span>`:'<b>Checklist done</b>';};
+// Starter picker: pick guides choose TK.s; slot guides (the rival follows the starter caught in tracker area 0) pick
+// area 0's starter here, the same value as that area's tracker.
+function starterRow(){let sel='';
+ if(PICK)sel=`<select class="tk-starter"><option value="">Not chosen (show all)</option>${STARTERS.map(s=>`<option ${TK.s===s?'selected':''}>${esc(s)}</option>`).join('')}</select>`;
+ else if(CF.starter==='slot'&&AR[0]&&!AR[0].ns){const cur=(TK.e[0]||{}).p||'';const g=[];(AR[0].l).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]==='Starter choice'&&!g.includes(p))g.push(p);}));
+  sel=`<select class="wk-starter"><option value="">Not chosen</option>${(g.length?g:areaSpecies(0)).map(p=>`<option value="${p.id}" ${cur===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;}
+ return sel?`<div class="card strow"><span class="mut small">Starter</span>${sel}</div>`:'';}
+// Sections inside a stop, opened and closed from their yellow header; the header shows a summary.
+const SECN={c:'Checklist',e:'Encounters',i:'Items',t:'Trainers'};
+function walkSec(k,t,tags,body){const sk=k+'.'+t,v=WO.s[sk],open=v===undefined?t!=='c':!!v;
+ return `<details class="sec" data-s="${sk}" ${open?'open':''}><summary><span class="sn">${SECN[t]}</span>${tags}</summary><div class="secb">${body}</div><button class="endbar sb" hidden>${UPI}<span>${SECN[t]}</span></button></details>`;}
+function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;
+ const ss=s.s||[],nd=ss.filter((x,j)=>WO.c[k+'.'+j]).length;
+ const steps=ss.map((x,j)=>{const sk=k+'.'+j;const done=!!WO.c[sk];return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-sk="${sk}" ${done?'checked':''}><span>${esc(x[0])}${x[1]?`<div class="mut small">${esc(x[1])}</div>`:''}</span></label>`;}).join('');
+ const ts=(s.tr||[]).map(k=>TRK[k]).filter(t=>t&&!rivalHidden(t));
+ // Encounters: one box per area with its own tracker; several areas get a short tag (the area name minus the stop's).
+ const areas=[];s.a.forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;areas.push([ai,A,enc]);});
+ const multi=areas.length>1;
+ const enc=areas.map(([ai,A,enc])=>{const tag=multi?(A.n.startsWith(s.n+' ')?A.n.slice(s.n.length+1):A.n):'';
+  return `<div class="area">${A.ns&&tag?`<span class="atag">${esc(tag)}</span>`:''}${trackerHTML(ai,tag)}${CF.walkAreaNote&&A.note?`<div class="trnote">${esc(A.note)}</div>`:''}`+enc.map(([li,[m,rows]])=>`<div class="encl"><span class="mut">${A.l.length>1||LOC[li]!==A.n?esc(LOC[li])+' · ':''}${esc(m)}:</span> ${rows.map(x=>`<span class="${x.d?'dupe':''}"><a href="#/p/${x.p.id}">${esc(x.p.name)}</a> ${esc(x.show)}</span>`).join(', ')}</div>`).join('')+'</div>';}).join('');
+ const its=s.it.filter(i=>starterOk(i[2]));
+ let h=`<details class="stopd" ${closed?'':'open'} data-k="${k}"><summary class="stoph">${esc(s.n)}${s.x?' <span class="mut small">(on the way)</span>':''}${s.a.map(encSummary).join('')}${ts.length?' <span class="tag">'+ts.length+' '+CF.trw[ts.length>1?1:0]+'</span>':''}</summary><div class="stop">`+
+  (s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+
+  (ss.length?walkSec(k,'c',`<span class="tag${nd===ss.length?' got':''}">${nd}/${ss.length}</span>`,`<div class="chkb">${steps}</div>`):'')+
+  (areas.length?walkSec(k,'e',areas.map(([ai])=>encSummary(ai)).join(''),enc):'')+
+  (its.length?walkSec(k,'i',`<span class="tag">${its.length}</span>${its.some(i=>/miss permanently/i.test(i[2]))?'<span class="tag miss">MISSABLE</span>':''}`,`<table class="itbl wt">${its.map(i=>`<tr><td>${i[3]!=null&&(i[0]==='TMs'||i[0]==='HMs'||i[0]==='Move Tutors')?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Mega Stones'&&i[3]?`<a href="#/p/${i[3]}">${esc(i[1])}</a>`:esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2])}${/miss permanently/i.test(i[2])?'<span class="warn">MISSABLE</span>':''}</td></tr>`).join('')}</table>`):'')+
+  (ts.length?walkSec(k,'t',`<span class="tag">${ts.length}</span>`,walkTrainers(ts)):'');
+ return h+`<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.n)}</span></button></div></details>`;}
 // What a walkthrough search matches: the stop's name, notes, steps, items, areas (and their Pokemon) and trainers.
 const stopText=s=>s.tx??=(s.n+' '+(s.note?s.note+' ':'')+(s.s||[]).map(x=>x.join(' ')).join(' ')+' '+s.it.map(i=>i[1]+' '+i[2]).join(' ')+' '+s.a.map(ai=>AR[ai].n+' '+areaSpecies(ai).map(p=>p.name).join(' ')).join(' ')+' '+(s.tr||[]).map(k=>TRK[k]?TRK[k].key:'').join(' ')).toLowerCase();
 function listWalk(){fil.innerHTML='';sug.style.display='none';const W=D.WK;const cf=caughtFams(-1);const shown=new Set();const q=st.q;
  if(q){const hits=[];W.splits.forEach((sp,si)=>sp.st.forEach((s,ti)=>{if(stopText(s).includes(q))hits.push([si,ti]);}));
   app.innerHTML=`<div class="mut small" style="margin-bottom:6px">${hits.length} stops match.</div>`+hits.map(([si,ti])=>`<div class="sech">${esc(W.splits[si].n)}</div>`+walkStop(W.splits[si].st[ti],si,ti,cf,shown)).join('');bindWalk();return;}
- app.innerHTML=docsCard()+cheatCard()+tkBar()+`<div class="mut small" style="margin:6px 0">${TX.walk}</div>`+
+ const [n,f]=tkCounts();
+ // Top: Guide info, Next step, Starter, then Expand / Collapse all for the splits.
+ app.innerHTML=`<div class="wtool"><details class="split" data-wo="gi" ${WO.o.gi?'open':''}><summary>Guide info <span class="mut small">${n} caught · ${f} failed</span></summary><div class="body pbody" data-gi="1"></div></details>`+
+  (CHK?`<button class="resume wk-next">${nextInner()}</button>`:'')+starterRow()+segBar('wk-all')+`</div>`+
   W.splits.map((sp,si)=>{const all=sp.st.flatMap((s,ti)=>(s.s||[]).map((x,j)=>si+'.'+ti+'.'+j));const done=all.filter(k=>WO.c[k]).length;
-   return `<details class="split" data-wo="${si}" ${WO.o[si]?'open':''}><summary>${esc(sp.n)} ${CHK?`<span class="tag ${done===all.length&&all.length?'got':''}">${done}/${all.length}</span>`:`<span class="mut small">${sp.st.length} stop${sp.st.length===1?'':'s'}</span>`}</summary>${sp.note?`<div class="trnote" style="margin:8px 2px">${esc(sp.note)}</div>`:''}<div class="body" data-si="${si}"></div></details>`;}).join('')+
-  (W.np.length?`<details class="split"><summary>Items with no walkthrough place <span class="mut small">${W.np.length}</span></summary><table class="itbl wt">${W.np.map(i=>`<tr><td>${esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2])}</td></tr>`).join('')}</table></details>`:'')+
-  (CHK?`<div style="margin:14px 0"><button class="btn danger wk-reset">Reset checklist</button></div>`:'');
- app.querySelectorAll('details.split[data-wo]').forEach(d=>{const fill=()=>{const b=d.querySelector('.body');if(b&&d.open&&!b.innerHTML){if(b.dataset.docs){b.innerHTML=docsHTML();bindWalk();return;}const si=+b.dataset.si;b.innerHTML=W.splits[si].st.map((s,ti)=>walkStop(s,si,ti,cf,shown)).join('');bindWalk();}};
-  d.addEventListener('toggle',()=>{if(d.open)WO.o[d.dataset.wo]=1;else delete WO.o[d.dataset.wo];woSave();fill();});fill();});
- const r=app.querySelector('.wk-reset');if(r)r.onclick=()=>{if(confirm('Clear every walkthrough checkbox?')){WO.c={};woSave();rerender();}};
- bindWalk();}
+   return `<details class="split jt" data-wo="${si}" ${WO.o[si]?'open':''}><summary>${esc(sp.n)} ${CHK?`<span class="tag ${done===all.length&&all.length?'got':''}">${done}/${all.length}</span>`:`<span class="mut small">${sp.st.length} stop${sp.st.length===1?'':'s'}</span>`}</summary>${sp.note?`<div class="trnote" style="margin:8px 2px">${esc(sp.note)}</div>`:''}<div class="body" data-si="${si}"></div></details>`;}).join('');
+ app.querySelectorAll('details.split[data-wo]').forEach(d=>{const fill=()=>{const b=d.querySelector('.body');if(b&&d.open&&!b.innerHTML){if(b.dataset.gi){b.innerHTML=guideInfoHTML();bindWalk();return;}const si=+b.dataset.si;
+   b.innerHTML=segBar('wk-sp')+W.splits[si].st.map((s,ti)=>walkStop(s,si,ti,cf,shown)).join('')+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(W.splits[si].n)}</span></button>`;bindWalk();}};
+  d.addEventListener('toggle',()=>{if(d.open)WO.o[d.dataset.wo]=1;else delete WO.o[d.dataset.wo];woSave();fill();barsSoon();});fill();});
+ const ws=app.querySelector('.wk-starter');if(ws)ws.onchange=()=>{if(ws.value)TK.e[0]={p:ws.value};else delete TK.e[0];tkSave();rerender();};
+ bindWalk();bars();}
 function bindWalk(){bindTrackers();bindTrd();app.querySelectorAll('.wstep input').forEach(c=>{if(c.dataset.b)return;c.dataset.b=1;c.onchange=()=>{if(c.checked)WO.c[c.dataset.sk]=1;else delete WO.c[c.dataset.sk];woSave();c.closest('.wstep').classList.toggle('done',c.checked);
-  const det=c.closest('details.split');if(det){const si=det.dataset.wo;const all=[...det.querySelectorAll('.wstep input')];const tg=det.querySelector('summary .tag');if(tg){tg.textContent=all.filter(x=>x.checked).length+'/'+all.length;}}};});
- app.querySelectorAll('details.stopd').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{const k=d.dataset.k;if(/^doc/.test(k)){if(d.open)WO.x[k]=1;else delete WO.x[k];}else if(d.open)delete WO.x[k];else WO.x[k]=0;woSave();});});}
-
+  const tag=d=>{if(!d)return;const all=[...d.querySelectorAll('.wstep input')],n=all.filter(x=>x.checked).length,t=d.querySelector(':scope>summary .tag');if(t){t.textContent=n+'/'+all.length;t.classList.toggle('got',n===all.length);}};
+  tag(c.closest('details.sec'));tag(c.closest('details.split'));const nx=app.querySelector('.wk-next');if(nx)nx.innerHTML=nextInner();};});
+ app.querySelectorAll('details.stopd').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;SHO.observe(d.querySelector(':scope>summary'));d.addEventListener('toggle',()=>{const k=d.dataset.k;if(/^doc/.test(k)){if(d.open)WO.x[k]=1;else delete WO.x[k];}else if(d.open)delete WO.x[k];else WO.x[k]=0;woSave();barsSoon();});});
+ app.querySelectorAll('details.sec').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{WO.s[d.dataset.s]=d.open?1:0;woSave();barsSoon();});});
+ const r=app.querySelector('.wk-reset');if(r&&!r.dataset.b){r.dataset.b=1;r.onclick=()=>{if(confirm('Clear every walkthrough checkbox?')){WO.c={};woSave();rerender();}};}
+ barsSoon();}
+// Taps on the walkthrough: header taps (flip), the expand / collapse bars, collapse bars and Next step.
+app.addEventListener('click',e=>{if(document.body.dataset.v!=='walk')return;
+ const b=e.target.closest('.seg button');
+ if(b){segAll(b,b.closest('.wk-all')?app.querySelectorAll('details.split.jt'):b.closest('.body').querySelectorAll(':scope>details.stopd'));return;}
+ const end=e.target.closest('.endbar');if(end){foldUp(end.closest('details'));return;}
+ if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;delete WO.x[k];WO.s[k+'.c']=1;woSave();render(true);
+  const inp=app.querySelector(`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;const l=inp.closest('.wstep'),stop=l.closest('details.stopd'),sec=l.closest('details.sec');
+  noAnchor();scrollBy(0,l.getBoundingClientRect().top-(T()+stop.querySelector(':scope>summary').offsetHeight+sec.querySelector(':scope>summary').offsetHeight));flash(l);hold(l);jumpState();return;}
+ const sm=e.target.closest('summary');
+ if(sm&&sm.parentElement.tagName==='DETAILS'&&app.contains(sm)&&!e.target.closest('a,select,input,button')){e.preventDefault();flip(sm.parentElement,!sm.parentElement.open);}});
 // ===== TRAINERS TAB (D.TR, see notes). Speeds use each Pokemon's real IVs and nature; with EVs (CF.evs), on or off
 // via the Minimal Grinding Mode switch (LS.mgm). Relative levels (r:-1) use the trainer's level cap, which can be
 // overridden per trainer (LS.cap; CF.capLast also remembers the last one set, for trainers with no cap).
@@ -417,8 +518,9 @@ function listTrainers(){fil.innerHTML='';sug.style.display='none';const s=st.q;
   if(d.open)TOPEN[d.dataset.gi]=1;else delete TOPEN[d.dataset.gi];try{localStorage.setItem(LS.tr,JSON.stringify(TOPEN))}catch(e){}};d.addEventListener('toggle',fill);fill();});}
 function trainerDetail(k){fil.innerHTML='';sug.style.display='none';const t=TRK[k];if(!t){app.innerHTML='<p>Not found.</p>';return;}
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a><div class="mut small" style="margin-top:6px">${esc(t.g)}${t.h?' · '+esc(t.h):''}${t.c&&t.c.length?' · calc: '+t.c.map(esc).join(', '):''}</div>`+trainerBlock(t,true);bindTrainers();window.scrollTo(0,0);}
-function walkTrainers(s){const ts=(s.tr||[]).map(k=>TRK[k]).filter(t=>t&&!rivalHidden(t));if(!ts.length)return '';
- return `<div class="sech" style="margin-top:8px">Trainers</div>`+ts.map(t=>`<details class="trd" data-k="${t.k}" ${TRDO.has(t.k)?'open':''}><summary>${esc(t.n)} <span class="mut small">${t.tags.filter(z=>!/Optional/.test(z)).map(esc).join(' · ')}${t.tags.some(z=>/Optional/.test(z))?' · optional':''}</span><span class="trmini">${t.p.map(x=>spr(x.id,'s32')).join('')}</span></summary><div class="trb" data-k="${t.k}"></div></details>`).join('');}
+// The trainer rows of a walkthrough stop (ts: its trainers, rivals for the other starters already left out).
+function walkTrainers(ts){
+ return ts.map(t=>`<details class="trd" data-k="${t.k}" ${TRDO.has(t.k)?'open':''}><summary>${esc(t.n)} <span class="mut small">${t.tags.filter(z=>!/Optional/.test(z)).map(esc).join(' · ')}${t.tags.some(z=>/Optional/.test(z))?' · optional':''}</span><span class="trmini">${t.p.map(x=>spr(x.id,'s32')).join('')}</span></summary><div class="trb" data-k="${t.k}"></div></details>`).join('');}
 // Boss teams inside walkthrough stops are built when first opened (bindWalk), not with the stop.
 const TRDO=new Set();
 function bindTrd(){app.querySelectorAll('details.trd').forEach(d=>{if(d.dataset.b)return;d.dataset.b=1;const fill=()=>{const b=d.querySelector('.trb');if(d.open)TRDO.add(d.dataset.k);else TRDO.delete(d.dataset.k);if(d.open&&b&&!b.innerHTML){b.innerHTML=trainerBlock(TRK[b.dataset.k]);bindTrainers(b);}};d.addEventListener('toggle',fill);fill();});}
@@ -503,7 +605,7 @@ function soon(name,what){fil.innerHTML='';sug.style.display='none';app.innerHTML
 function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).split('/');const v=parts[0]||'';
  if(st.view===''&&v!==''&&!fromInput)st.listScroll=Object.assign(keepAnchor(),{z:cvSizes()});
  if(v!==''&&v!=='locs'&&v!=='items'&&v!=='walk'&&v!=='trainers'&&!fromInput){q.value='';st.q='';}
- document.body.dataset.v=v;
+ document.body.dataset.v=v;if(RJ)RJ.hidden=!(v==='walk'&&!st.q);
  if(v==='p'){setTab('p');detail(decodeURIComponent(parts[1]));}
  else if(v==='m'){setTab('p');moveDetail(+parts[1]);}
  else if(v==='a'){setTab('p');abilityDetail(+parts[1]);}
@@ -516,7 +618,7 @@ function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).sp
  else if(v==='calc'){setTab('c');calcPage();}
  else{setTab('p');filtersPokemon();listPokemon();if(!fromInput&&st.view!==''&&st.listScroll){cvApply(st.listScroll.z);toAnchor(st.listScroll);}}
  q.placeholder=v==='walk'?'Search walkthrough':v==='trainers'||v==='tr'?'Search trainers':v==='items'?'Search items':v==='locs'||v==='l'?'Search locations':'Search, or add filters';
- st.view=v;}
+ st.view=v;jumpState();}
 // Back and forward put each page back where it was (the browser's own restore would use a raw scrollY, which lands
 // wrong with estimated heights). The anchor is also saved (LS.pos) for Dex Viewer, which calls dexViewer.restoreScroll
 // after reopening the guide (screen swap, reboot) instead of setting a raw scrollY.

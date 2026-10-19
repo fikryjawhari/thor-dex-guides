@@ -1,0 +1,71 @@
+/* ===== Mockup additions (would go in dex.css) ===== */
+/* Top: Guide info, Next step, Starter, Expand/Collapse all */
+.wtool{display:flex;flex-direction:column;gap:6px;margin:0 0 2px}
+.wtool>details.split.pre{margin:0}
+details.split.pre>summary .mut{font-weight:400;margin-left:4px}
+.pbody{padding:0 2px 6px}
+.psec{margin:12px 0 4px;font-weight:700;color:var(--acc);font-size:13px}
+.pbody .bar{justify-content:flex-start;gap:6px}
+.pbody>details.stopd{margin:8px 0}
+.pbody .card{margin:4px 0}
+.strow{display:flex;align-items:center;gap:8px;margin:0;padding:6px 8px}.strow select{flex:1;min-width:0}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel2)}
+.seg button{flex:1 1 0;min-width:0;min-height:28px;border:0;background:none;color:var(--fg);font:600 12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;touch-action:manipulation}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button:active{background:var(--acc);color:#111}
+.split-ctl{margin:8px 0 2px}.split-ctl button{min-height:26px;color:var(--mut)}
+.resume{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;min-height:40px;padding:5px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);font:13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-align:left;cursor:pointer}
+.resume b{font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.04em}
+.resume span{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Sections inside a stop: Checklist, Encounters, Items, Trainers */
+details.sec{margin:4px 0 2px}
+details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;flex-wrap:wrap;gap:3px 6px;min-height:32px;padding:4px 18px 4px 0;position:relative;border-bottom:1px solid var(--line);-webkit-tap-highlight-color:transparent}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::after{content:'▸';position:absolute;right:2px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:13px}
+details.sec[open]>summary::after{content:'▾'}
+details.sec>summary .sn{font-weight:700;color:var(--acc);font-size:14px}
+details.sec>summary .si{display:contents}
+details.sec>summary .tag{margin-left:0}
+.tag.miss{background:#5e2e2e;color:#ffb4b4;letter-spacing:.03em}
+.secb{padding:2px 0 4px}
+.chkb .wstep:last-child{border-bottom:0}
+.secb>.itbl.wt{margin:6px 0 2px}
+/* Encounter areas: one box each, a short place tag where a stop has several */
+.area{padding:4px 0}
+.area+.area{border-top:1px dashed var(--line)}
+.area .trk{margin:4px 0}
+.atag{flex:none;font-size:11px;font-weight:700;color:var(--fg);background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:2px 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atag.solo{display:inline-block;margin:4px 0 2px}
+/* Collapse from the bottom (only on blocks taller than the window) */
+.endbar{display:flex;align-items:center;gap:4px;width:100%;min-height:32px;border:0;background:none;color:var(--mut);font:600 12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-align:left;padding:4px 0;cursor:pointer;touch-action:manipulation}
+.endbar svg{flex:none;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.endbar span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.endbar.st{border-top:1px dashed var(--line);margin-top:8px}
+/* section bar: small, right-aligned, accent, so it reads apart from the stop bar under it */
+.endbar.sb{justify-content:flex-end;min-height:28px;width:auto;margin-left:auto;padding:2px 6px;color:var(--acc);font-size:11px;opacity:.85}
+.endbar[hidden]{display:none}
+.endbar.sp{justify-content:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 12px;margin:12px 0 4px;font-size:13px;color:var(--fg)}
+/* Collapse style "sticky": an open stop's header stays under the search bar while you scroll through it */
+body.stk details.stopd[open]>summary{position:sticky;top:var(--hh,52px);z-index:3;background:var(--bg)}
+body.stk details.stopd[open] details.sec[open]>summary{position:sticky;top:calc(var(--hh,52px) + var(--sh,34px));z-index:2;background:var(--bg)}
+/* the stop's grey rail ends a little before the stop does, so its last pixels never peek out under the pinned header
+   as that header is pushed off */
+body.stk details.stopd>.stop{border-left:0;padding-left:13px;position:relative}
+body.stk details.stopd>.stop::before{content:'';position:absolute;left:0;top:0;bottom:12px;width:3px;background:var(--line)}
+/* while folding, the content slides up under its header */
+.folding>summary{position:relative;z-index:1}
+details.stopd.folding>summary,details.sec.folding>summary{background:var(--bg)}
+.flash{animation:flash .9s ease-out}
+/* inset, so a folding block's clipping can't cut the ring down to one edge */
+@keyframes flash{from{box-shadow:inset 0 0 0 2px var(--acc)}to{box-shadow:inset 0 0 0 2px transparent}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none}}
+/* Item tables: first column width (now 38%) */
+.itbl.wt td:first-child{width:var(--c1,38%)}
+/* Jump buttons in the empty rail under the icons (26px each at 316 tall, 44px from ~350) */
+.rjump{margin-top:auto;flex:1 0 52px;max-height:89px;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.rjump button{flex:1 1 0;min-height:25px;border:0;background:none;color:var(--fg);display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.rjump button+button{border-top:1px solid var(--line)}
+.rjump button:active{background:var(--railon);color:var(--acc)}
+.rjump button:disabled{opacity:.3}
+/* mockup only: overlay scrollbars like the Thor's WebView */
+html{scrollbar-width:none}html::-webkit-scrollbar{display:none}
