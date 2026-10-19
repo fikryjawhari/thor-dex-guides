@@ -208,8 +208,16 @@ input.sq::-webkit-search-cancel-button{display:none}
 body.kbopen .sres{padding-bottom:calc(var(--kbh,0px) + 8px)}
 .ssh{display:flex;justify-content:space-between;align-items:baseline;padding:10px 10px 3px;font-size:12px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.04em}
 .ssh span{color:var(--mut)}
-.sr{width:100%;min-height:44px;display:flex;align-items:center;gap:10px;padding:4px 10px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--fg);font:inherit;text-align:left;cursor:pointer;touch-action:manipulation;content-visibility:auto;contain-intrinsic-size:auto 48px}
+.sr{width:100%;min-height:44px;display:flex;align-items:center;gap:10px;padding:4px 10px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--fg);font:inherit;text-align:left;cursor:pointer;touch-action:manipulation}
 .sr:active{background:var(--panel2)}
+/* a result: the row (tap = its first action), then its actions as buttons under the name */
+.sri{border-bottom:1px solid var(--line);content-visibility:auto;contain-intrinsic-size:auto 74px}
+.sri .sr{border-bottom:0}
+.sac{display:flex;flex-wrap:wrap;gap:5px;padding:0 10px 8px;margin-top:-2px}
+.sc{min-height:28px;padding:0 9px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--fg);font:inherit;font-size:13px;font-weight:600;cursor:pointer;touch-action:manipulation}
+.sc.on{border-color:var(--acc);color:var(--acc)}
+.sc:active{background:var(--panel2)}
+.shere .sl{color:var(--acc)}
 .sr .ic{flex:none;width:32px;height:32px;border-radius:8px;background:var(--panel2);color:var(--mut);display:flex;align-items:center;justify-content:center}
 .sr .ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .sr .st{flex:1;min-width:0;display:flex;flex-direction:column}

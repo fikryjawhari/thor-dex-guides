@@ -264,6 +264,29 @@ From the app repo's Build environment (adb is at `$LOCALAPPDATA/Android/Sdk/plat
      button); in the viewer (or `dvkb`) it's the `KB` keyboard as before. Checked headless at 260 × 316 and 1280 × 800
      on both guides (order, Enter, Esc, pick, recents, no errors); domcompare vs main, normal and `--kb`.
 
+**Search anything, results with actions (2026-10-19, branch `worktree-global-search`, mockup round 1, not merged).**
+Mockup (the real builds in a frame at viewer sizes): https://claude.ai/artifact/BHLgSfusR5DHDPXecLkqzy, built with
+`python -I tools/mockup/pages.py . <out.html> search-outer.html`. Phone previews (full builds, republished each round):
+EI https://claude.ai/artifact/5qHALD2XdcdZvNFMpZKZv2, Hardlove https://claude.ai/artifact/5UajWcvvCzYfgXH22HH7zP.
+The user's rule ("option B"): picking a result jumps to it or searches with its full name; it no longer becomes the
+query. Typing + Enter / Done (or the first row, `Search "x" in <page>`) searches the current page for the raw text,
+and the list pages keep that search across tabs.
+   - Each result is a thing with action buttons under it (`SR.acts`), the current page's first; tapping the row does
+     the first. Pokémon: Dex (opens the entry) · Trainers · Places · Walk (search that page for its full name). On the
+     Pokémon tab a Pokémon always opens its Dex entry. Place: Places (jump, `#/l/`) · Walk (jump to its stop, or search
+     the walkthrough when it has several visits). Walkthrough stop: Walk (jump) · Places. Trainer: Trainers / Walk
+     (jump to its card, opened) · Full page. Item: Items (jump to its row) · Walk · Trainers (search; trainer search
+     text now includes held items). Move / ability / type: Filter (Pokédex chip) · Move / Ability page.
+   - Buttons only show where they find something. Trainer and item results match names only (no longer team members
+     or item locations); places no longer list for a Pokémon found there (its Places button covers that).
+   - A place's visits (`visits`): stops linked to it plus stops with its exact name (only the first visit links; EI
+     Mauville ×4). On the walkthrough a place shows as one row per visit; elsewhere one place row.
+   - Jumps (`SR.jump*`) set the page's open state, clear the search, render, then `land()` puts the target under the
+     pinned headers and flashes it, re-scrolling each frame for 700 ms (the first scroll can stop short while
+     content-visibility hasn't laid the page out). `SR.go(h, then)` runs `then` after the hashchange render.
+   - Checked headless at 260 × 316 on both guides, normal and `dvkb`: row → search, Enter, Dex, stop / trainer (both
+     pages) / item jumps land under their headers, item → trainers holding it, recents, no errors.
+
 ## Skill (2026-10-18)
 
 - **Skill.** `rom-hack-offline-dex` (claude.ai account skill) rewritten: Emerald Imperium is the reference build (keep its template, rebuild only the data, strip the EI-only parts), plus a new `references/viewer-ui.md` holding the whole viewer contract (sizes, rail, keyboard, full-window search, number pad, lag rules, anchor scroll restore, `dexViewer.restoreScroll`, testing at the viewer sizes in normal and `dvkb` mode). Also the EI data rules (calc sets are the authority, relative levels, cosmetic form folding, palette PNG sprites, level caps, tracker order, walkthrough placement), the `dex-viewer:` meta tags, a per-hack localStorage prefix, and mockups as plain HTML artifacts. The user uploads it by hand (zip with forward-slash paths); claude.ai skills sync into `~/.claude/skills/synced/<ids>/rom-hack-offline-dex/`, so a session can diff the live copy there (it refreshed mid-session after the upload).
