@@ -60,4 +60,20 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
 ## Workflow
 - I test on the Thor. Testing a guide there without the library: PROGRESS.md → Testing on the Thor.
 - UI changes: mockup first as a plain interactive HTML artifact at the viewer's real size, then build it.
+- **Complex UI work (several linked decisions) goes in steps, each its own small context:**
+  1. *Decide* (a Sonnet session the user talks to directly, in a worktree): cheap mockups only (a small standalone
+     page with sampled data from data.json, not the full build), wrapped in the Thor frame. Settle every behaviour,
+     then write the spec to `plans/<thing>.md`: what goes, what each control does in every state, edge cases, checks.
+     Example: `plans/trainers-show-switch.md`. No template or extract changes in this step.
+  2. *Build* (the Opus main chat reads the spec, then dispatches a Sonnet subagent in the worktree for template / UI
+     logic, or a Haiku one for mechanical work: extract rules, notes; or builds it itself if the spec is already
+     "this code in this place"). The build ends with the guide in the Thor frame published for the user.
+  3. *Fix* in the main chat (the user's feedback after testing on the phone / Thor).
+  4. *Audit* (a Haiku subagent): `assemble.py`, `domcompare` against main, the viewer-size checks, scenario runs from
+     the spec; reports pass / fail with evidence.
+  Template builds are one at a time (Parallel sessions); decide steps can run in parallel.
+- **Thor frame** (`tools/mockup/thor-frame/`): `python -I tools/mockup/thor-frame/build.py <page.html> <out.html>
+  [--title] [--sub] [--panel]` wraps a built guide or a mockup's inner page in a Thor-sized screen (the viewer sizes,
+  fit to screen, dvkb, tabs, reload / clear saved state, error and width readout; pinned on a phone). Publish the
+  output as an artifact. Mockups write only the inner page (and an optional `--panel` of options), never a frame.
 - When I say I'm moving to a new session, update PROGRESS.md with what a fresh session needs.
