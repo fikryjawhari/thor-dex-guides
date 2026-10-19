@@ -35,9 +35,9 @@ the split is in that repo's git log.
      not when Dex Viewer's A−/A+ text zoom changes (it scales text, not the viewport, so no resize fires). After a
      zoom change a bar can be missing or extra until the next toggle. Likely fix: a ResizeObserver on a hidden 1em
      probe element calling `barsSoon()` (and check how the app applies text zoom, in the app repo).
-   - **Search** (the user is overhauling it): step 1 done 2026-10-19, the full-window search on every device (see
-     Search fix and full-window search). Still open: a trainer result opens the trainer page instead of its place on
-     the Trainers page, plus the other search problems the user has noted.
+   - **Search** (the user is overhauling it): done and merged 2026-10-19, the full-window search on every device and
+     results with actions that jump or search (see Search fix and full-window search). A trainer result now jumps to
+     its card on the Trainers page. Not checked on the Thor yet; the user may have more search problems to raise.
    - Hardlove on the Thor was not checked over CDP (only EI was open in the viewer); it passed headless at Thor sizes.
    Details: `plans/split-ui.md`.
 5. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
@@ -297,7 +297,7 @@ From the app repo's Build environment (adb is at `$LOCALAPPDATA/Android/Sdk/plat
      button); in the viewer (or `dvkb`) it's the `KB` keyboard as before. Checked headless at 260 × 316 and 1280 × 800
      on both guides (order, Enter, Esc, pick, recents, no errors); domcompare vs main, normal and `--kb`.
 
-**Search anything, results with actions (2026-10-19, branch `worktree-global-search`, mockup round 1, not merged).**
+**Search anything, results with actions (2026-10-19, merged; the user signed off mockup round 1: "Looks good").**
 Mockup (the real builds in a frame at viewer sizes): https://claude.ai/artifact/BHLgSfusR5DHDPXecLkqzy, built with
 `python -I tools/mockup/pages.py . <out.html> search-outer.html`. Phone previews (full builds, republished each round):
 EI https://claude.ai/artifact/5qHALD2XdcdZvNFMpZKZv2, Hardlove https://claude.ai/artifact/5UajWcvvCzYfgXH22HH7zP.
