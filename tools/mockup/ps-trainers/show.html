@@ -1,0 +1,180 @@
+<title>Trainers Show Switch</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: the guide frame at viewer size on the left, the behaviour options beside it, a log of what each press did under it. */
+:root{--bg:#f4f5f7;--panel:#fff;--panel2:#eef0f3;--line:#d9dce1;--fg:#1d2126;--mut:#5f6670;--acc:#b7791f;--accfg:#111;--ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121417;--panel:#1b1e23;--panel2:#23272e;--line:#2e333b;--fg:#e8eaed;--mut:#9aa0a8;--acc:#f0b429;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121417;--panel:#1b1e23;--panel2:#23272e;--line:#2e333b;--fg:#e8eaed;--mut:#9aa0a8;--acc:#f0b429;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:14px/1.4 var(--ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 32px}
+h1{font-size:18px;margin:0 0 4px;text-wrap:balance}
+.intro{color:var(--mut);max-width:72ch;margin:0 0 14px}
+.wrap{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+.left{display:flex;flex-direction:column;gap:8px;min-width:0;max-width:100%}
+.frame{width:var(--w);height:var(--h);max-width:100%;overflow-y:auto;overflow-x:hidden;border:1px solid var(--line);border-radius:6px;background:var(--bg);padding:0 8px 8px;box-sizing:border-box;font-size:15px;position:relative}
+.log{width:var(--w);max-width:100%;box-sizing:border-box;font-size:12px;color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 8px;min-height:2.8em}
+.log b{color:var(--fg)}
+.opts{flex:1;min-width:0;max-width:560px;display:grid;gap:12px}
+fieldset{border:1px solid var(--line);border-radius:8px;padding:8px 10px 10px;margin:0;background:var(--panel)}
+legend{font-weight:700;font-size:13px;padding:0 4px}
+fieldset label{display:flex;gap:8px;align-items:flex-start;padding:4px 0;cursor:pointer}
+fieldset label input{margin-top:3px;accent-color:var(--acc);flex:none}
+fieldset label span{min-width:0}
+fieldset label small{display:block;color:var(--mut);font-size:12px}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+.tools button{font:inherit;font-size:13px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:5px 10px;cursor:pointer}
+.tools button[aria-pressed="true"]{background:var(--acc);color:var(--accfg);border-color:var(--acc)}
+/* guide look */
+.mut{color:var(--mut)}.small{font-size:12px}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:8px 0}
+.seg button{flex:1;font:inherit;font-weight:700;font-size:14px;background:var(--panel);color:var(--fg);border:0;padding:8px 4px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+details.split{margin:8px 0}
+details.split>summary{position:sticky;top:0;z-index:3;cursor:pointer;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-weight:700;list-style:none;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+details>summary::-webkit-details-marker{display:none}
+.sn{flex:1 1 auto;min-width:0}
+.tag{display:inline-block;font-size:11px;background:var(--panel2);color:var(--mut);padding:1px 6px;border-radius:6px;margin-left:4px;font-weight:600}
+.tag.capg{background:var(--acc);color:var(--accfg)}
+.show{display:flex;align-items:center;gap:6px;margin:8px 0;font-size:12px;color:var(--mut);background:var(--bg)}
+.show.stick{position:sticky;top:var(--sh,40px);z-index:2;padding:4px 0;margin:0}
+.show .o{display:flex;flex:1;border:1px solid var(--line);border-radius:999px;overflow:hidden;min-width:0}
+.show button{flex:1;font:inherit;font-size:13px;font-weight:600;background:var(--panel);color:var(--fg);border:0;padding:5px 2px;cursor:pointer;min-width:0}
+.show button+button{border-left:1px solid var(--line)}
+.show button[aria-pressed="true"]{background:var(--acc);color:var(--accfg)}
+.show .mx{font-size:11px;color:var(--mut);white-space:nowrap}
+summary .show{margin:0;flex:1 1 100%;background:none}
+.show.top{margin:0 0 8px}
+details.stopd{margin:8px 0}
+details.stopd>summary{list-style:none;cursor:pointer;border-left:3px solid var(--acc);padding:4px 0 4px 8px;font-weight:700;font-size:15px;display:flex;align-items:center;gap:2px;flex-wrap:wrap;background:var(--bg)}
+details.stopd.stk>summary{position:sticky;top:var(--ph,40px);z-index:1}
+.ar{color:var(--mut);font-size:12px;margin-left:4px}
+.grow{flex:1}
+.stop{border-left:3px solid var(--line);padding:2px 0 2px 8px}
+.capl{background:var(--panel2);border-radius:6px;padding:4px 8px;font-size:12px;color:var(--mut);margin:4px 0}
+.capl b{color:var(--acc)}
+details.trd{border-bottom:1px solid var(--line)}
+details.trd>summary{list-style:none;cursor:pointer;padding:6px 2px;font-size:14px;display:flex;gap:6px}
+details.trd>summary .pv{color:var(--mut);font-size:12px;margin-left:auto;text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45%}
+details.trd[open]>summary{color:var(--acc)}
+details.trd[open]>summary .pv{display:none}
+.card{font-size:12px;color:var(--mut);padding:2px 2px 8px;display:grid;gap:2px}
+.card b{color:var(--fg);font-weight:600}
+.ib{font:inherit;font-size:11px;font-weight:600;background:var(--panel2);color:var(--mut);border:1px solid var(--line);border-radius:6px;padding:2px 6px;cursor:pointer;flex:none;white-space:nowrap}
+.ib[aria-pressed="true"]{color:var(--acc);border-color:var(--acc)}
+.flash{animation:fl .6s}
+@keyframes fl{from{background:var(--panel2)}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none}}
+button:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
+</style>
+
+<h1>Trainers: the Show switch</h1>
+<p class="intro">Your pick: B's switch (Places · Trainers · Teams) per island, C's "teams" toggle in each place header, "Open all islands / Close all" on top. Real places from the guide (Rowlet picked as starter). The options on the right are the open questions; flip them and click around. Under the frame, a line says what the last press did.</p>
+<div class="wrap">
+ <div class="left">
+  <div class="tools" role="group" aria-label="Viewer size"><button id="s1" data-s="260x316" aria-pressed="true">260 × 316</button><button id="s2" data-s="538x425" aria-pressed="false">538 × 425</button><button id="rst">Reset page</button></div>
+  <div class="frame" id="fr"></div>
+  <div class="log" id="log">Press a switch.</div>
+ </div>
+ <div class="opts" id="opts">
+  <fieldset><legend>1 · Trainers / Teams and closed places</legend>
+   <label><input type="radio" name="m" id="m-all" value="all" checked><span>Open every place<small>The switch sets the whole island. Places closes them all, Trainers opens them all with cards closed, Teams opens them all with cards open. Places you closed by hand open again.</small></span></label>
+   <label><input type="radio" name="m" id="m-open" value="open"><span>Only places already open<small>Trainers and Teams change cards in open places and leave closed ones closed. If nothing is open (just after Places), they open every place.</small></span></label>
+   <label><input type="radio" name="m" id="m-mem" value="mem"><span>Remember my places<small>As above, but Places remembers which places were open; Trainers or Teams after it reopens just those. The first time, every place.</small></span></label>
+  </fieldset>
+  <fieldset><legend>2 · Places you open later</legend>
+   <label><input type="checkbox" id="stk" checked><span>Follow the switch<small>With Teams on, opening a closed place opens its cards too; with Trainers on, it opens with cards closed. Off: a place reopens as you left it.</small></span></label>
+  </fieldset>
+  <fieldset><legend>3 · What the switch lights up</legend>
+   <label><input type="radio" name="l" id="l-live" value="live" checked><span>What's on screen<small>It follows your taps: open one team in Trainers view and the switch shows "mixed" until you pick again.</small></span></label>
+   <label><input type="radio" name="l" id="l-last" value="last"><span>What you last pressed<small>Stays lit whatever you open or close by hand.</small></span></label>
+  </fieldset>
+  <fieldset><legend>4 · Where the switch sits</legend>
+   <label><input type="radio" name="w" id="w-row" value="row"><span>Row under the island header<small>Scrolls away with the island's top.</small></span></label>
+   <label><input type="radio" name="w" id="w-stick" value="stick" checked><span>Row pinned under the island header<small>Stays under the pinned header while you scroll the island, so you can switch from anywhere in it.</small></span></label>
+   <label><input type="radio" name="w" id="w-head" value="head"><span>Inside the island header<small>Part of the header itself (pinned too). One block instead of two.</small></span></label>
+  </fieldset>
+  <fieldset><legend>5 · The place "teams" toggle</legend>
+   <label><input type="radio" name="t" id="t-plain" value="plain" checked><span>teams<small>Lit when any card in the place is open; a press closes them, otherwise opens them all.</small></span></label>
+   <label><input type="radio" name="t" id="t-count" value="count"><span>teams 1/4<small>Same, with how many cards are open.</small></span></label>
+   <label><input type="radio" name="t" id="t-none1" value="hide1"><span>teams, hidden for one-trainer places<small>One trainer: the row is its own toggle.</small></span></label>
+  </fieldset>
+  <fieldset><legend>6 · Pinned place header</legend>
+   <label><input type="checkbox" id="pst" checked><span>Place header pins under the island header<small>As now in the guide, so its "teams" toggle stays reachable in a long place.</small></span></label>
+  </fieldset>
+  <fieldset><legend>7 · Top of the page</legend>
+   <label><input type="radio" name="g" id="g-bar" value="bar" checked><span>Open all islands · Close all<small>As agreed.</small></span></label>
+   <label><input type="radio" name="g" id="g-sw" value="sw"><span>Plus a Show switch for every island<small>Same three choices, applied to all islands (opens them). One tap for "everything down to places".</small></span></label>
+  </fieldset>
+ </div>
+</div>
+
+<script>
+const DATA=[["Melemele Island",[["Route 1",[12,"Captain Ilima","Hau'oli City",14],[["Pokémon Trainer Hau","Popplio 5",[]],["Lass Audrey","Buneary 3 · Ralts 4",[]],["Youngster Jimmy","Caterpie 3 · Weedle 3 · Wurmple 3",[]],["Preschooler Oliver","Rattata (Alola) 3 · Bunnelby 4",[]]]],["Iki Town Festival",[12,"Captain Ilima","Hau'oli City",10],[["Pokémon Trainer Hau","Pichu 7 · Popplio 8",[]]]],["Hau'oli City",[12,"Captain Ilima","Hau'oli City",1],[["Team Skull Grunt","Zubat 10 · Scraggy 10",[]],["Captain Ilima","Yungoos 11 · Porygon 11 · Buneary 11 · Smeargle 12",[]]]],["Big Wave Beach",[16,"Totem Gumshoos","Verdant Cavern",2],[["Team Skull Grunt","Houndour 11 · Whismur 11",[]]]],["Verdant Cavern",[16,"Totem Gumshoos","Verdant Cavern",1],[["Team Skull Grunt","Drowzee 13 · Poochyena 13 · Koffing 13",[]]]]]],["Akala Island",[["Heahea City",[28,"Totem Araquanid","Brooklet Hill",25],[["Pokémon Trainer Dexio","Mr. Mime 21 · Espeon 21 · Slowpoke 22",[]],["Pokémon Trainer Sina","Vulpix (Alola) 21 · Glaceon 21 · Smoochum 21 · Amaura 22",["Prismatic Moon"]]]],["Route 4",[28,"Totem Araquanid","Brooklet Hill",24],[["Bellhop Jody","Fomantis 20 · Venipede 20 · Wooper 20",[]],["Collector Bryan","Munchlax 19 · Bagon 19 · Deino 19 · Jangmo-o 19",[]],["Sightseer Scotty","Rattata 21 · Pidgeotto 21",[]],["Sightseer Perdita","Meowth 21 · Nidorina 21",[]],["Cook Ernie","Cutiefly 20 · Panpour 20 · Pansear 20 · Pansage 20",[]]]],["Paniola Town",[28,"Totem Araquanid","Brooklet Hill",19],[["Pokémon Trainer Hau","Brionne 25 · Pikachu 24 · Noibat 23 · Swinub 23 · Darumaka 22",[]],["Team Skull Grunt","Raticate (Alola) 22 · Stunky 22 · Loudred 22",[]]]]]]];
+const O={m:'all',stk:true,l:'live',w:'stick',t:'plain',pst:true,g:'bar'};
+let S;
+function reset(){S={box:{0:1},pl:{},tr:{},last:{},mem:{}};DATA.forEach((b,bi)=>b[1].forEach((_,pi)=>S.pl[bi+'.'+pi]=1));}
+reset();
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const pk=(bi,pi)=>bi+'.'+pi, tk=(bi,pi,ti)=>bi+'.'+pi+'.'+ti;
+const places=bi=>DATA[bi][1].map((_,pi)=>pi);
+const isOpen=(bi,pi)=>!!S.pl[pk(bi,pi)];
+const cards=(bi,pi)=>DATA[bi][1][pi][2].map((_,ti)=>!!S.tr[tk(bi,pi,ti)]);
+function setCards(bi,pi,v){DATA[bi][1][pi][2].forEach((_,ti)=>S.tr[tk(bi,pi,ti)]=v?1:0);}
+// What the island looks like now: 0 places, 1 trainers, 2 teams, -1 mixed.
+function live(bi){const ps=places(bi),op=ps.filter(p=>isOpen(bi,p));
+ if(!S.box[bi]||!op.length)return 0;
+ if(O.m==='all'&&op.length<ps.length)return -1;
+ const cs=op.flatMap(p=>cards(bi,p));
+ if(cs.every(c=>!c))return 1;if(cs.every(c=>c))return 2;return -1;}
+function lit(bi){return O.l==='live'?live(bi):(S.last[bi]??live(bi));}
+function setShow(bi,v){const ps=places(bi);let op=ps.filter(p=>isOpen(bi,p)),opened=0,changed=0;
+ S.box[bi]=1;
+ if(v===0){if(op.length)S.mem[bi]=op;ps.forEach(p=>S.pl[pk(bi,p)]=0);S.last[bi]=0;
+  return `<b>Places</b> on ${esc(DATA[bi][0])}: closed ${op.length} place${op.length===1?'':'s'}${O.m==='mem'&&op.length?' (remembered which)':''}.`;}
+ let target;
+ if(O.m==='all')target=ps;
+ else if(op.length)target=op;
+ else target=O.m==='mem'&&S.mem[bi]?S.mem[bi]:ps;
+ target.forEach(p=>{if(!isOpen(bi,p)){S.pl[pk(bi,p)]=1;opened++;}
+  cards(bi,p).forEach((c,ti)=>{if(c!==(v===2)){S.tr[tk(bi,p,ti)]=v===2?1:0;changed++;}});});
+ S.last[bi]=v;
+ const skipped=ps.length-target.length;
+ return `<b>${v===2?'Teams':'Trainers'}</b> on ${esc(DATA[bi][0])}: opened ${opened} place${opened===1?'':'s'}, ${v===2?'opened':'closed'} ${changed} card${changed===1?'':'s'}${skipped?`, left ${skipped} closed place${skipped===1?'':'s'} alone`:''}.`;}
+function showSw(bi,cls){const v=lit(bi);
+ return `<div class="show ${cls}" data-b="${bi}"><span>Show</span><div class="o" role="group" aria-label="Show">${['Places','Trainers','Teams'].map((x,i)=>`<button data-act="show" data-b="${bi}" data-v="${i}" aria-pressed="${v===i}">${x}</button>`).join('')}</div>${v===-1?'<span class="mx">mixed</span>':''}</div>`;}
+function teamsBtn(bi,pi){const cs=cards(bi,pi),n=cs.filter(Boolean).length;
+ if(O.t==='hide1'&&cs.length<2)return '';
+ return `<span class="grow"></span><button class="ib" data-act="pteams" data-b="${bi}" data-p="${pi}" aria-pressed="${n>0}">teams${O.t==='count'?` ${n}/${cs.length}`:''}</button>`;}
+function place(bi,pi){const p=DATA[bi][1][pi],c=p[1],o=isOpen(bi,pi);
+ return `<details class="stopd ${O.pst?'stk':''}" data-k="${pk(bi,pi)}" ${o?'open':''}><summary><span>${esc(p[0])}</span><span class="tag">${p[2].length}</span><span class="tag capg">cap ${c[0]}</span><span class="ar">${o?'▾':'▸'}</span>${teamsBtn(bi,pi)}</summary><div class="stop"><div class="capl">Level cap <b>${c[0]}</b> · ${esc(c[1])}, ${esc(c[2])} · ${c[3]?c[3]+' battle'+(c[3]===1?'':'s'):'next'}</div>`+
+ p[2].map((t,ti)=>`<details class="trd" data-k="${tk(bi,pi,ti)}" ${S.tr[tk(bi,pi,ti)]?'open':''}><summary><span>${esc(t[0])}</span><span class="pv">${esc(t[1].split(' · ').map(x=>x.replace(/ \d+$/,'')).join(', '))}</span></summary><div class="card"><b>${esc(t[1])}</b><span>Nature, ability, item and moves for each</span></div></details>`).join('')+`</div></details>`;}
+function render(){const n=b=>b[1].reduce((a,p)=>a+p[2].length,0);
+ let h=`<div class="seg" style="margin-top:8px"><button data-act="boxes" data-v="1">Open all islands</button><button data-act="boxes" data-v="0">Close all</button></div>`;
+ if(O.g==='sw'){const vs=DATA.map((_,bi)=>live(bi)),v=vs.every(x=>x===vs[0])&&DATA.every((_,bi)=>S.box[bi])?vs[0]:-1;
+  h+=`<div class="show top"><span>All</span><div class="o" role="group" aria-label="Show, every island">${['Places','Trainers','Teams'].map((x,i)=>`<button data-act="showall" data-v="${i}" aria-pressed="${v===i}">${x}</button>`).join('')}</div></div>`;}
+ h+=DATA.map((b,bi)=>`<details class="split" data-b="${bi}" ${S.box[bi]?'open':''}><summary><span class="sn">${esc(b[0])} <span class="mut small">${n(b)} trainers</span></span>${O.w==='head'&&S.box[bi]?showSw(bi,''):''}</summary>${O.w!=='head'?showSw(bi,O.w==='stick'?'stick':''):''}${b[1].map((_,pi)=>place(bi,pi)).join('')}</details>`).join('');
+ return h;}
+const fr=document.getElementById('fr'),log=document.getElementById('log');
+function measure(){const s=fr.querySelector('details.split[open]>summary');if(!s)return;const sh=s.getBoundingClientRect().height;
+ fr.style.setProperty('--sh',sh+'px');const sw=fr.querySelector('.show.stick');fr.style.setProperty('--ph',(sh+(sw?sw.getBoundingClientRect().height:0))+'px');}
+function draw(anchor){let y=null;if(anchor){const a=fr.querySelector(anchor);if(a)y=a.getBoundingClientRect().top;}
+ const top=fr.scrollTop;fr.innerHTML=render();fr.scrollTop=top;measure();
+ if(anchor&&y!=null){const a=fr.querySelector(anchor);if(a){fr.scrollTop+=a.getBoundingClientRect().top-y;a.classList.add('flash');}}}
+fr.addEventListener('click',e=>{const b=e.target.closest('button[data-act]');if(!b)return;e.preventDefault();e.stopPropagation();
+ const a=b.dataset.act,v=+b.dataset.v,bi=+b.dataset.b,pi=+b.dataset.p;let msg='',anc=null;
+ if(a==='boxes'){DATA.forEach((_,i)=>S.box[i]=v);msg=v?'Opened every island.':'Closed every island.';}
+ else if(a==='show'){msg=setShow(bi,v);anc=`button[data-act="show"][data-b="${bi}"][data-v="${v}"]`;}
+ else if(a==='showall'){msg=DATA.map((_,i)=>setShow(i,v)).join(' ');anc=`button[data-act="showall"][data-v="${v}"]`;}
+ else if(a==='pteams'){const any=cards(bi,pi).some(Boolean);setCards(bi,pi,!any);S.pl[pk(bi,pi)]=1;msg=`<b>teams</b> in ${esc(DATA[bi][1][pi][0])}: ${any?'closed':'opened'} every card.`;anc=`button[data-act="pteams"][data-b="${bi}"][data-p="${pi}"]`;}
+ log.innerHTML=msg;draw(anc);});
+fr.addEventListener('toggle',e=>{const d=e.target;if(!d.matches('details'))return;const k=d.dataset.k;
+ if(d.matches('details.split')){const bi=+d.dataset.b;if(!!S.box[bi]===d.open)return;S.box[bi]=d.open?1:0;}
+ else if(d.matches('details.stopd')){if(!!S.pl[k]===d.open)return;S.pl[k]=d.open?1:0;const [bi,pi]=k.split('.').map(Number);
+  if(d.open&&O.stk&&S.last[bi]!=null&&S.last[bi]>0){setCards(bi,pi,S.last[bi]===2);log.innerHTML=`Opened ${esc(DATA[bi][1][pi][0])}: cards follow the switch (${S.last[bi]===2?'Teams, open':'Trainers, closed'}).`;}}
+ else if(d.matches('details.trd')){if(!!S.tr[k]===d.open)return;S.tr[k]=d.open?1:0;}
+ requestAnimationFrame(()=>draw());},true);
+document.getElementById('opts').addEventListener('change',e=>{const i=e.target;O[i.type==='checkbox'?i.id:i.name]=i.type==='checkbox'?i.checked:i.value;draw();});
+function size(s){const [w,h]=s.split('x');document.documentElement.style.setProperty('--w',w+'px');document.documentElement.style.setProperty('--h',h+'px');measure();}
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b));size(b.dataset.s);});
+document.getElementById('rst').onclick=()=>{reset();log.textContent='Reset: Melemele open, every place open, cards closed.';draw();};
+size('260x316');draw();
+</script>

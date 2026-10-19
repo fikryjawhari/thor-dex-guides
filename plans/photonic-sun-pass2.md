@@ -146,6 +146,11 @@ overflows, so probably the footer.
     build): https://claude.ai/artifact/UPRRxTN8wJrWEawipmRDwk (Now / A labelled rows / B show switch / C header
     buttons). Source: `tools/mockup/ps-trainers/expand.html`. Waiting for the pick; then build it in the template (every
     guide's Trainers page; check Locations / Items / Walkthrough bars stay consistent) and domcompare EI and HG.
+    Picked: B's Show switch per island (Places / Trainers / Teams) + C's "teams" toggle in each place header, top
+    "Open all islands / Close all". Round 2b mockup with the behaviour options (closed places, places opened later,
+    what the switch lights, where it sits, teams label, pinned place header, a page-wide switch):
+    https://claude.ai/artifact/WFR57CSdHTHwzNpe3G7YG6 (source `tools/mockup/ps-trainers/show.html`, real places
+    from data.json). Waiting for the option picks.
   - No "forced" count (no source marks avoidable trainers; searched Bulbapedia, Serebii, the web). Cap line is now
     "Level cap 12 · Captain Ilima, Hau'oli City · 14 battles". Done (trainers.py, template).
   - Walkthrough entries that match no game trainer: the game data wins, leave them out. Done (as built).
