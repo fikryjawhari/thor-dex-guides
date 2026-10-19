@@ -41,7 +41,8 @@ Everything in the list below is built: sections as AR.es (data.json), SOS drop-d
 boxes, ability slot tags, the sticky gap (fractional `--sh`/`--hh` and a 1px tuck), the starter picker ("Not chosen",
 shrinks), a zero-width space before every tag so it can wrap, `table.lrn` names may break (two move pages were 261).
 The walkthrough's encounter lines now come from the sections (one line per section; the walkthrough tab redo is
-later). The evo/breed tag is still shown elsewhere: ask the user whether to drop it everywhere.
+later). **evo/breed tags: the user decided (2026-10-20) to remove them everywhere** (do it next session; keep
+Mega / Form change / Not found / Trainer only).
 Checks: `tools/mockup/ps-locations/guidecheck.mjs` (260x316, normal and kb): no page errors, every location /
 move / ability page 260 wide. `domcompare` EI and HG vs main, normal and `--kb`, with the expected changes ignored
 (zero-width space, move stats, ability slots, `lrn`, "(show all)", `--sh`/`--ch` values): 0 differing, 0 errors.
