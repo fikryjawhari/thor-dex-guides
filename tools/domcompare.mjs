@@ -9,7 +9,7 @@
 //   --ignore  remove what matches regex from every snapshot before comparing (expected changes, e.g. --ignore=" bt"
 //             for a new class); can be given more than once.
 // Flagged routes are loaded fresh first (up to FRESH=n of them, default 100; the rest count as differing); only those
-// that still differ are replayed with their chunk's history and printed (SHOW=n of them, default 2). Exit code 0: identical and no page errors, 1: not, 2: Chrome failed.
+// that still differ are replayed with their chunk's history and printed (SHOW=n of them, default 2; LIST=1 lists every differing route). Exit code 0: identical and no page errors, 1: not, 2: Chrome failed.
 // Needs Chrome or Edge (CHROME env var, or the usual Windows install paths). Node 22+ (fetch, WebSocket).
 // Picks a free debugging port, so several runs (both guides, normal and --kb) can go at once.
 // IPC flooding protection is off: each route makes 2 history updates and Chrome stalls a tab for ~10 s after 200.
@@ -148,7 +148,7 @@ try {
   }
   const bad = flagged.filter(r => !fresh.has(r));
   console.log(`flagged by the sweep: ${flagged.length}, rechecked fresh: ${Math.min(flagged.length, +(process.env.FRESH ?? 100))}, identical on a fresh load: ${fresh.size}`, [...fresh].slice(0, 10).join(' '));
-  console.log('differing routes:', bad.length, bad.slice(0, 40).join(' '));
+  console.log('differing routes:', bad.length, bad.slice(0, process.env.LIST ? bad.length : 40).join(' '));
   if (bad.length || a.errs.length || b.errs.length) code = 1;
   for (const r of bad.slice(0, +(process.env.SHOW || 2))) {
     const c = chunks.find(c => c.includes(r)), upTo = c.slice(0, c.indexOf(r) + 1);  // same history as the sweep

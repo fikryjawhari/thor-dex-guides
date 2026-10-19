@@ -12,9 +12,10 @@ the split is in that repo's git log.
   deleted. Details in the app repo's `docs/PROGRESS.md` → Phase 2 results.
 - **Shipping a guide update:** push here, wait for the Pages Action, then on the Thor long-press the guide → Update from
   link. Same library id, so saved state (tracker, ticks, calc) is kept. No USB copying.
-- **Walkthrough split UI built (2026-10-19)** on branch `worktree-walkthrough-ui`: collapsible sections, sticky headers,
-  rail jump buttons, Guide info, Next step, EI starter picker. Checked in headless Chrome; not yet on the Thor or
-  merged. See "Walkthrough split UI" below and `plans/split-ui.md`.
+- **Split UI on every list page (2026-10-19), merged into `main`:** walkthrough, Locations, Trainers, Items
+  (collapsible boxes, sticky headers, rail jump buttons, bottom collapse bars, trainer cards with Collapse). Checked
+  in headless Chrome, `domcompare` against the old `main` and on the Thor (EI). See "Walkthrough split UI" below and
+  `plans/split-ui.md`. The user is now playing with it and will report issues.
 - Guides: Emerald Imperium (1.3.1, GBA), Hardlove Gold (0.8.3, NDS). The other hacks in `hacks/` have sources
   compiled (`SOURCES.md`, re-fetch into `.src/`) but no guide yet.
 
@@ -26,12 +27,16 @@ the split is in that repo's git log.
    content; the first real guide update is its first test with new content.
 3. ~~Shared sprite set~~ **done and live 2026-10-19** (see "Shared sprite set results"); checked and merged into
    `main` (`94d0706`), see "Sprite branch handover". Left: the footer credit (step 7).
-4. **Walkthrough split UI:** check it on the Thor (both guides, 260 wide and maximised, `dvkb`), then merge
-   `worktree-walkthrough-ui` into `main` and push. Locations, Trainers and Items **built on the same branch, mockup round 2**
-   (2026-10-19, https://claude.ai/artifact/GmXrq1ATz3jBbi6Q6N5iQH): the user's round 1 answers are in (egg slots,
-   mini-split trainer boxes, item sub-headings, new data steps: EI `extract/stage7_split_ui.py`, Hardlove
-   `extract/split_ui.py`). Next: the user's comments on round 2, `domcompare` against `main`, the Thor, then merge.
-   Details: `plans/split-ui.md` → Locations, Trainers, Items.
+4. ~~**Split UI**~~ (walkthrough, Locations, Trainers, Items) **done and merged 2026-10-19** (mockup:
+   https://claude.ai/artifact/GmXrq1ATz3jBbi6Q6N5iQH). Open items:
+   - **Text size:** the bottom collapse bars are re-checked on toggles, window resizes and content-visibility renders,
+     not when Dex Viewer's A−/A+ text zoom changes (it scales text, not the viewport, so no resize fires). After a
+     zoom change a bar can be missing or extra until the next toggle. Likely fix: a ResizeObserver on a hidden 1em
+     probe element calling `barsSoon()` (and check how the app applies text zoom, in the app repo).
+   - **Search** (the user will overhaul it in its own session): a trainer result opens the trainer page instead of
+     its place on the Trainers page.
+   - Hardlove on the Thor was not checked over CDP (only EI was open in the viewer); it passed headless at Thor sizes.
+   Details: `plans/split-ui.md`.
 5. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
    this repo's flow (CLAUDE.md → Making a new guide). Can happen with the first new guide.
 6. **New guides** (one session each, here): CLAUDE.md → Making a new guide. Each needs its sources re-fetched first
@@ -57,7 +62,14 @@ Littleroot encounter. The item name column stays at 38% (sizing it from the long
   jumps, Next step, starter, state after a reload, other routes) passes with no page errors. `domcompare` against
   `main` (EI 2690 routes, HG 2481, both modes, rail buttons ignored with
   `--ignore='<div class="rjump"[\s\S]*?</div>(?=</nav>)'`): only `#/walk` differs, no page errors.
-- Not done yet: a look on the Thor, the merge into `main`.
+- Locations, Trainers, Items followed (`plans/split-ui.md` → Locations, Trainers, Items). Final checks 2026-10-19:
+  `pagecheck.mjs` and `walkcheck.mjs` (both guides, normal and `dvkb`); `domcompare` against the old `main` (both
+  guides, both modes): no page errors; differing routes are only #/walk, #/locs, #/trainers, #/items, every #/l/ and
+  #/tr/ route, and #/p/ pages whose "Used by trainers" card (new box names) or location table (EI eggs and gift
+  houses) changed: with those two ignored (`--routes=#/p/`), all Pokemon pages are identical. On the Thor (EI, over
+  CDP, at its maximised 538 × 425 and emulated 260 × 316): places pin flush under the search bar, trainer Collapse lands
+  under the pinned headers, no page errors. The previous builds are on the device as `index.html.bak-main` in each
+  guide folder.
 - Saved state: `LS.walk` gains `s` (sections) and `o.gi`; existing ticks, open splits and closed stops carry over.
 
 ## Split results (2026-10-19)
