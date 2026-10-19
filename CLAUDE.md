@@ -28,7 +28,9 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
 - `dist/` built output (git-ignored); the Pages workflow builds and deploys it.
 
 ## Commands
-- Build all: `python assemble.py` (or `python assemble.py <hack>`). Stdlib only.
+- Build all: `python assemble.py` (or `python assemble.py <hack>`). Stdlib only (the Pages workflow runs it bare).
+- Python env for tools and checks: `uv sync` once per machine (`pyproject.toml` + `uv.lock` are committed), then
+  `uv run python -I tools/<script>`. Need a package? `uv add <name>` and commit both files; don't work around it.
 - Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome;
   options `--routes`, `--jobs`, `--ignore` in its header). Runs can go in parallel.
 - In Git Bash, prefix commands that take `/`-paths as arguments with `MSYS_NO_PATHCONV=1`.

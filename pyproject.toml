@@ -1,0 +1,12 @@
+[project]
+name = "thor-dex-guides"
+version = "0"
+description = "Extract and check tools for the Thor dex guides. assemble.py itself stays stdlib only (the Pages workflow runs it bare)."
+requires-python = ">=3.12"
+dependencies = [
+    "openpyxl",
+    "pdfplumber",
+]
+
+[tool.uv]
+package = false

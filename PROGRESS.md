@@ -17,7 +17,9 @@ the split is in that repo's git log.
   in headless Chrome, `domcompare` against the old `main` and on the Thor (EI). See "Walkthrough split UI" below and
   `plans/split-ui.md`. The user is now playing with it and will report issues.
 - Guides: Emerald Imperium (1.3.1, GBA), Hardlove Gold (0.8.3, NDS). The other hacks in `hacks/` have sources
-  compiled (`SOURCES.md`, re-fetch into `.src/`) but no guide yet.
+  compiled (`SOURCES.md`, re-fetch into `.src/`) but no guide yet. **Their source data was checked and completed on
+  2026-10-19** (see "Source data check"): every one now has full dex, moves, abilities, wild and trainer data on
+  the PC. Next: Photonic Sun and Eternal X guides.
 
 ## What's left, in order
 
@@ -39,9 +41,10 @@ the split is in that repo's git log.
    Details: `plans/split-ui.md`.
 5. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
    this repo's flow (CLAUDE.md → Making a new guide). Can happen with the first new guide.
-6. **New guides** (one session each, here): CLAUDE.md → Making a new guide. Each needs its sources re-fetched first
-   (`.src/` is empty on a fresh clone); the 3DS ones (Photonic Sun, Eternal X) also need the user's vanilla romfs
-   dumps, which live on the PC.
+6. **New guides** (one session each, here; Photonic Sun and Eternal X first): CLAUDE.md → Making a new guide. On
+   the PC every `.src/` is complete (checked 2026-10-19); elsewhere re-fetch with each `SOURCES.md`. Photonic Sun
+   and Eternal X fall back to the user's vanilla Azahar dumps (PC only). "Source data check" says which file is the
+   dex source per hack; the extract step turns it into `data.json`.
 7. Later: footer credits (`cfg.credit` hook; hack authors from `SOURCES.md` plus the sprite set's credits in
    `sprites/SOURCES.md`), the update checker (`plans/update-checker.md`; run by hand, the user doesn't need it
    scheduled), the damage calc.
@@ -49,6 +52,36 @@ the split is in that repo's git log.
 **Parallel sessions:** one session in each repo at a time is safe (separate folders and git histories). The app
 repo has nothing open now; come back to it only for an app bug or feature. Avoid two sessions in this repo at once: the template is shared, so they'd
 clash.
+
+## Source data check (2026-10-19)
+
+The user copied every hack's `.src/` from the old repo onto the PC. All 2,000+ files open cleanly (zips, xlsx,
+PDFs with text layers, JSON, no saved error pages) and every count in the `SOURCES.md` files matches. What was
+missing, and is now fetched or extracted (details and commands in each `SOURCES.md`; Python deps via `uv sync`):
+
+| Hack | Dex source (stats, abilities, learnsets, evolutions) | Moves | Wild | Trainers | Filled in today |
+| --- | --- | --- | --- | --- | --- |
+| Photonic Sun | `.src/dex-rebalanced.json` (game data) | same | same (Gen 7 tables, method from PDF order) | `trainers-rebalanced.json` | `tools/ctr_dex.py`; TMs from `code.ips` |
+| Eternal X | `.src/dex-rebalanced.json` (= insanity's) | same | same, by method with rates | `trainers-<variant>.json`, rival files | `ctr_dex.py`; 6 Insanity archives were never extracted |
+| Meissa Moon | `.src/dex.json` (game data) | same | same | `trainers.json` (natures, EVs) | romfs zip fetched (915 MB); docs only cross-check |
+| Navy Sapphire | `.src/dex.json` (game data) | same | same, by method with rates | `trainers.json` | romfs zip fetched (151 MB) |
+| Renegade Platinum | `romhackdex/pokedex/` | `romhackdex/moves.json` | `WildPokemon.txt` (+ RomHackDex) | `TrainerPokemon.txt` | RomHackDex mirror; 491/491 changed species match the docs |
+| Blaze Black 2 Redux | `romhackdex/pokedex/` **but stats from `Pokemon Changes.txt`** | `romhackdex/moves.json` | `Wild Area Changes.txt` | `Trainer Changes.txt` | RomHackDex mirror; it shows vanilla stats for 188 changed species |
+| HeartGold Retiled | `hg-engine/species-pinned.json` | `hg-engine/pinned/Moves.c` | `source/Encounters.c` + guide | `source/Trainers.c` + guide | ability text (banks 720/722) |
+| SoulGold | `data/species.json` + `data/species-details/` | `data/moves.json` | `data/encounters.json` | `data/trainers.json` | 959 species-details files (the learnsets) |
+| Radical Red | `romhackdex/pokedex/` | `romhackdex/moves.json` | RomHackDex | the two sheets | move priority and descriptions |
+| Unbound | `romhackdex/pokedex/` | `romhackdex/moves.json` | RomHackDex | the three sheets | move priority and descriptions |
+
+Rules that came out of it:
+- **3DS hacks: the game data is the source, the docs are the check.** Buffel's PDFs are change lists with stat
+  rows as images; his `Level Up Moves` txt files match the extracts (970/975 and 798/798). Where docs and game
+  disagree the game wins ("Doc says ..."), e.g. Photonic Sun's PDF lists ~20 moves the game doesn't teach.
+- **HG Retiled:** never hg-engine `main`. Retiled's repo only carries the tables it changes and has no full fork;
+  species/moves come from the last upstream commit before its release (`dcbe17a`). Reading the user's patched ROM
+  would settle it exactly (needs an NDS NARC reader; not done).
+- Open questions for the build sessions: Gen 7 wild tables have no method field (label them from the docs);
+  BB2R has Complete and Classic versions (the doc has both ability sets; pick Complete like RomHackDex, or ask);
+  static and gift encounters are in the docs, not extracted from the 3DS games yet.
 
 ## Walkthrough split UI (2026-10-19)
 

@@ -1,7 +1,13 @@
 # Hack docs tools
 
 Each hack's downloaded docs go in `hacks/<hack>/.src/` (git-ignored: raw docs from hack authors are never committed to
-this public repo), and its `SOURCES.md` says exactly how to fetch them again. Run its commands from the repo root in Git Bash. Python 3 and curl are all you need.
+this public repo), and its `SOURCES.md` says exactly how to fetch them again. Run its commands from the repo root in Git Bash.
+
+**Python environment:** `uv sync` (repo root) builds `.venv` from `pyproject.toml` + `uv.lock`, the same on every
+machine; run tools with `uv run python -I tools/<script>` (or `.venv/Scripts/python.exe`). The fetch and extract
+scripts below are stdlib only; the venv adds what checking the docs needs (openpyxl for xlsx, pdfplumber for PDFs).
+Add a package with `uv add <name>` and commit both files. `assemble.py` stays stdlib only: the Pages workflow runs
+it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 
 | Script | What it does |
 | --- | --- |
@@ -16,10 +22,14 @@ this public repo), and its `SOURCES.md` says exactly how to fetch them again. Ru
 | `datajson.py` | `load()` / `save()` for a hack's `data.json` in its own layout (one line per entry for M, MV, AB, P, LOC, AR); for extract steps that edit the finished file (EI `stage7_split_ui.py`, Hardlove `split_ui.py`). |
 | `pngpal.py` | Reads, writes and crops palette PNGs (used by `sprites_pee.py` and `assemble.py`). |
 | `garc.py` | Reads 3DS GARC archives, LZ11 entries, mini packs and Gen 6/7 game text. Used by the scripts below. |
-| `xy_trainers.py <romfs> <out.json> [vanilla-romfs]` | Dumps every trainer from an XY-engine romfs (Eternal X), names from its own text. |
+| `ctr_dex.py <game> <out.json> <romfs> [fallback ...] [--code code.bin \| --ips code.ips]` | The whole dex from a 3DS romfs (`x`, `oras`, `sun`/`moon`, `usun`/`umoon`): species and forms with stats, abilities, every learnset, evolutions, Megas; moves; abilities; TM list; wild tables. Used for Photonic Sun, Eternal X, Meissa Moon, Navy Sapphire. |
+| `buffel_check.py <dex.json> <doc>` | Checks a `ctr_dex.py` extract against Buffel Saft's `Pokemon Changes.pdf` (new moves, abilities) or `Level Up Moves, *.txt` (every learnset). |
+| `xy_trainers.py [--oras] <romfs> <out.json> [vanilla-romfs]` | Dumps every trainer from an XY (Eternal X) or ORAS (Navy Sapphire) romfs, names from its own text. |
 | `ex_rivals.py <trainers.json> <out.md>` | Eternal X's rival fights by battle and starter, from `xy_trainers.py` output. |
-| `usum_trainers.py <romfs> <out.json> [fallback-romfs ...]` | Dumps every trainer from a USUM-engine romfs (Photonic Sun), with natures and EVs. |
+| `usum_trainers.py [--sm] <romfs> <out.json> [fallback-romfs ...]` | Dumps every trainer from a USUM (Photonic Sun) or SM (Meissa Moon) romfs, with natures and EVs. |
 | `serebii_usum_items.py <items.shtml> <tm.shtml> <out.csv>` | Vanilla Ultra Sun item locations from Serebii's pages. |
+| `rhd_moves.py <moves/index.html> <hack-slug> <out.json>` | Every RomHackDex move with priority and description (the index lacks both); reads each move page, saves only those fields. |
+| `drayano_check.py <Pokemon Changes.txt> <romhackdex/pokedex>` | Compares Drayano's change doc with a RomHackDex mirror (new base stats, full level-up lists) for every species the doc changes. |
 
 ## Source log
 
@@ -30,18 +40,18 @@ compare the hack's current version (its thread, Drive file names or changelog) w
 
 | Hack | Version | Sources compiled | Guide built | Where to look for updates |
 | --- | --- | --- | --- | --- |
-| Blaze Black 2 Redux | v1.4.1 | 2026-10-18 | – | Drayano's Drive (Documentation folder) |
+| Blaze Black 2 Redux | v1.4.1 | 2026-10-18 (docs), 2026-10-19 (RomHackDex) | – | Drayano's Drive (Documentation folder), RomHackDex |
 | Emerald Imperium | v1.3 / 1.3.1 | 2026-10-18 (guide built from the same sources) | 2026-10-02 | emeraldimperium.info Drive folder; eidex and Dynamic-Calc-Decomps repos |
-| Eternal X | v2.67 | 2026-10-18 (docs + romfs) | – | Buffel Saft's Drive, PokeCommunity thread |
+| Eternal X | v2.67 | 2026-10-18 (docs + romfs), dex extract 2026-10-19 | – | Buffel Saft's Drive, PokeCommunity thread |
 | Hardlove Gold | 0.8.3 (source `kumakuma1/hardlove` `f1b2363001`, trainer sets patched onto the 0.8.2 build; docs site `bb5862f` is older) | 2026-10-18 | 2026-10-19 | `kumakuma1/hardlove` branch `beta_hardlove` commits, the changelog, Drive sheets |
-| HeartGold Retiled | v6.12.1 | 2026-10-18 | – | GitHub repo releases |
-| Meissa Moon | v2.2.2 | 2026-10-18 | – | Author's Drive, PokeCommunity thread |
-| Navy Sapphire | v2.1.5 | 2026-10-18 | – | Hack's Drive, PokeCommunity thread |
-| Photonic Sun | v2.38 | 2026-10-18 (docs + romfs) | – | Buffel Saft's Drive, PokeCommunity thread |
-| Radical Red | v4.1 | 2026-10-18 | – | RomHackDex; the two trainer sheets |
-| Renegade Platinum | v1.3.0 | 2026-10-18 | – | Drayano's Drive (Documentation folder) |
-| SoulGold | no version number | 2026-10-18 | – | eemeliri.github.io/soulgold data files |
-| Unbound | – | 2026-10-18 | – | RomHackDex, unboundwiki.com; the three trainer sheets |
+| HeartGold Retiled | v6.12.1 | 2026-10-18, ability text 2026-10-19 | – | GitHub repo releases |
+| Meissa Moon | v2.2.2 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Author's Drive, PokeCommunity thread |
+| Navy Sapphire | v2.1.5 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Hack's Drive, PokeCommunity thread |
+| Photonic Sun | v2.38 | 2026-10-18 (docs + romfs), dex extract 2026-10-19 | – | Buffel Saft's Drive, PokeCommunity thread |
+| Radical Red | v4.1 | 2026-10-18, move details 2026-10-19 | – | RomHackDex; the two trainer sheets |
+| Renegade Platinum | v1.3.0 | 2026-10-18 (docs), 2026-10-19 (RomHackDex) | – | Drayano's Drive (Documentation folder), RomHackDex |
+| SoulGold | no version number | 2026-10-18, species details 2026-10-19 | – | eemeliri.github.io/soulgold data files |
+| Unbound | – | 2026-10-18, move details 2026-10-19 | – | RomHackDex, unboundwiki.com; the three trainer sheets |
 
 Plans for work not yet done live in `plans/`.
 
@@ -75,6 +85,22 @@ files it replaces. Archive numbers: pk3DS `GARCReference.cs`, summarised in `pla
 
 A single Google Sheet: `curl -sL "https://docs.google.com/spreadsheets/d/<id>/export?format=xlsx" -o <file>.xlsx`.
 A single Drive file: `curl -sL "https://drive.usercontent.google.com/download?id=<id>&export=download&confirm=t" -o <file>`.
+
+## 3DS game data (found 2026-10-19)
+
+- Every 3DS hack here ships its romfs as a zip in its Drive folder, next to the docs. `drive_ls.py` skips zips, so
+  they're fetched by id (each `SOURCES.md`). Meissa Moon and Navy Sapphire ship a full `code.bin`; Photonic Sun
+  and Eternal X ship a small `code.ips`, applied by `ctr_dex.py` to the vanilla TM list (PKHeX) at the TM table
+  offset (XY 0x464796, Ultra Sun v1.2 0x4BD98A).
+- The docs are change lists (and Buffel's stat rows are images), so the full dex comes from the game data; the
+  docs are the cross-check. Where they disagree the game wins, and the guide can say "Doc says ...".
+- XY/ORAS encounter archives: every entry is one zone, an LZ11 `ZO` mini pack (file 0 = 56-byte zone header,
+  location at 0x1C; file 3 = encounter table). Gen 7: area *i* is file 9 + 11*i* of the encounter GARC, zones map
+  to areas through the world data. Forms text: form 0 at the species' line; forms 1+ of every multi-form species
+  follow the species lines in dex order (cosmetic forms included).
+- Never LZ11-decompress personal, trainer or move records: a record can start with 0x11 (a Fairy-type move).
+- Hack data can hold IDs past the end of the game's text (Meissa Feraligatr's hidden ability 255) and 0xFFFF
+  filler; the tools print them as `ability #255` instead of failing.
 
 ## Gotchas found on 2026-10-18
 

@@ -6,3 +6,5 @@ dist/
 __pycache__/
 # Claude Code worktrees and local settings
 .claude/
+# uv environment (pyproject.toml + uv.lock are committed; run `uv sync` to recreate it)
+.venv/
