@@ -34,6 +34,7 @@ SOURCES.md). Merge `main` in before starting if it moved.
   check.mjs: `node check.mjs <url> <shot.png> [loc|mv|ab] [area name]`.
 
 ### Built 2026-10-20 (same session), waiting for the user's look on the phone preview / Thor
+Phone preview (branch build, republish `dist/photonic-sun.html` to update): https://claude.ai/artifact/DjXAVb4Eb6DB4PEYQ43dug
 
 Everything in the list below is built: sections as AR.es (data.json), SOS drop-downs with ally search, Starter box
 (AR.st) synced with the tracker bar's picker, doc maps (AR.map, rendered by locs.py `pdf_maps()`), move page stat
