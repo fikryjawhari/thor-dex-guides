@@ -20,10 +20,15 @@ the split is in that repo's git log.
   compiled (`SOURCES.md`, re-fetch into `.src/`) but no guide yet. **Their source data was checked and completed on
   2026-10-19** (see "Source data check"): every one now has full dex, moves, abilities, wild and trainer data on
   the PC. Next: Photonic Sun and Eternal X guides.
+- **Damage calc with save import: planned 2026-10-20, not started** (`plans/damage-calc.md`). `@smogon/calc` (MIT) as
+  the engine; our own save readers for Gen 3, 4/5 and 6/7, written from notes on hzla's Dynamic-Calc-Decomps (no
+  license: learn the formats, don't copy the code; the user decided not to ask hzla) and PKHeX. Also looked at PokeDaisy
+  (GPLv3 GBA emulator with a live companion; covers EI, Radical Red, Unbound, SoulGold): read-only reference; the
+  user may push the GBA guides back since the DS/3DS hacks have no such tool. Not decided.
 - **Photonic Sun guide built 2026-10-19 and merged into `main`** (not on the Thor yet). See "Photonic Sun guide"
   below and `hacks/photonic-sun/notes.md`.
 - **Photonic Sun pass 2 (the user's review), started 2026-10-20** on branch `worktree-photonic-sun-changes`
-  (worktree `.claude/worktrees/photonic-sun-changes`, nothing committed yet). Everything is in
+  (worktree `.claude/worktrees/photonic-sun-changes`, committed, not merged). Everything is in
   `plans/photonic-sun-pass2.md`: the feedback per tab, what's decided (Locations design A, doc maps, move page C,
   ability slots, two template bugs) and what's done. Next: build the Locations decisions into locs.py and the
   template, then Trainers, Items, Walkthrough one tab at a time. The worktree has its own git-ignored
@@ -56,7 +61,7 @@ the split is in that repo's git log.
    dex source per hack; the extract step turns it into `data.json`.
 7. Later: footer credits (`cfg.credit` hook; hack authors from `SOURCES.md` plus the sprite set's credits in
    `sprites/SOURCES.md`), the update checker (`plans/update-checker.md`; run by hand, the user doesn't need it
-   scheduled), the damage calc.
+   scheduled), the damage calc with save import (`plans/damage-calc.md`).
 
 **Parallel sessions:** one session in each repo at a time is safe (separate folders and git histories). The app
 repo has nothing open now; come back to it only for an app bug or feature. Avoid two sessions in this repo at once: the template is shared, so they'd
