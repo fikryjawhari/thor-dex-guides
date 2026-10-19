@@ -109,6 +109,22 @@ overflows, so probably the footer.
   Python here: `uv run` / `.venv\Scripts\python.exe` fail over SSH (sandbox won't follow the uv python junction);
   run the real interpreter `%APPDATA%\uv\python\cpython-3.14.2-windows-x86_64-none\python.exe` with the venv's
   site-packages added.
+- 2026-10-20, **Trainers round 1 mockup**: https://claude.ai/artifact/1ZQycsBEtfxzpTQQkasSeV (Now / A tags per trainer /
+  B one row per battle; Findings tab with both cap sets and open questions). Waiting for the user's pick.
+  Sources: `tools/mockup/ps-trainers/` (outer, patch.js/css = the designs, findings, build.py, check.mjs). Rebuild:
+  `git show HEAD~N:hacks/photonic-sun/data.json > head.json` (the "Now" frame's trainer data), `python assemble.py
+  photonic-sun`, `python -I tools/mockup/ps-trainers/build.py . head.json out/index.html`; serve over http and run
+  `node tools/mockup/ps-trainers/check.mjs <url> <dir> 260x316` (errors, width, partners per frame, screenshots).
+  Data done in trainers.py (data.json has it; the current template shows the format tags, ignores the rest):
+  `{{Party/2}}` and `{{tt|lv|...}}` levels read; `prize = none` parties are partners (t.pt [{n, st, p}], not rows),
+  except the Battle Royal; t.bt battle id shared by trainers fought at once; tags Double / Multi Battle / Battle
+  Royal / Prismatic Moon (MOON table, with a note); sections split by === sub-places === in Parts 14, 21, 31
+  (`==== VS X ====` stays in its room); Aether Paradise box (visit 1 = Nihilego note, visit 2 by floor); trainerdiv
+  captions are notes; story entries repeated post-game go to the post-game one; location-page trainers with
+  post-game vanilla levels go to "<place>: post-game"; Battle Buffet (30), Kantonian Gym lv 29 + Ryuki (PLACE),
+  Taro = Tristan, Hau's Aether partner copies dropped. Other: 55 -> 1 (Mallow lv 100, place unknown).
+  Caps: CAPS table (totems from Totem Battles.pdf), TR.caps = trials, TR.mini = all [name, where, lv, kind, dropped],
+  s.cap = [trial cap, with minis]. Open questions are in the mockup's Findings tab.
 - Hau on Route 1 has no team for a Litten starter: fix. (done)
 - Level 80 Team Skull grunt in Route 1 looks wrong: place it at its real story visit (another Route 1 visit) or move
   it to the bottom. (done: Ancient Poni Path) Same kind: Youngster Kenway in Royal Avenue (already at the bottom).

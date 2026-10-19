@@ -1,0 +1,19 @@
+/* Trainers mockup: format and version tags, partner drop-down, caps switch and lines. */
+.tag.fmt{background:#24435e;color:#d4e8fb}
+.tag.moon{background:var(--panel2);color:var(--mut);font-style:italic;font-weight:500}
+.trd.mrow>summary{opacity:.7}
+.tag.capg{background:var(--acc);color:#1b1608;margin-left:6px}
+.capl{font-size:12px;color:var(--mut);margin:2px 0 6px;padding:3px 8px;border-radius:6px;background:var(--panel2)}
+.capl b{color:var(--acc)}
+.ptd{margin:0 0 8px;border:1px dashed var(--line);border-radius:8px;padding:2px 6px}
+.ptd>summary{cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:4px 0;font-size:13px;list-style:none}
+.ptd>summary::-webkit-details-marker{display:none}
+.ptk{font-size:11px;font-weight:700;color:#d4e8fb;background:#24435e;border-radius:6px;padding:1px 6px}
+.ptd[open]>summary{border-bottom:1px solid var(--line);margin-bottom:4px}
+.vs{text-align:center;font-size:11px;color:var(--mut);margin:-2px 0}
+.moond{margin:8px 0 2px}.moond>summary{cursor:pointer;font-size:13px;color:var(--mut);padding:6px 4px;border-bottom:1px dashed var(--line)}
+.capsd{margin-top:6px}.capsd>summary{cursor:pointer}
+.capsw{display:flex;gap:4px;margin:6px 0;flex-wrap:wrap}
+.capsw button{flex:1 1 0;min-width:0;font:600 12px system-ui,sans-serif;background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:5px 4px;cursor:pointer}
+.capsw button[aria-pressed="true"]{background:var(--acc);color:#1b1608;border-color:var(--acc)}
+.capt td{vertical-align:top;padding:3px 4px 3px 0}.capt td.n{text-align:right}.capt tr.mini td:first-child{color:var(--mut)}

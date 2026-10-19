@@ -10,14 +10,57 @@ are placed from the Ultra Sun / Ultra Moon trainer lists on Bulbapedia's locatio
 trainers". Entries left in the game as placeholders (no name, or one level 5 Yungoos) are dropped.
 Rival and other starter-dependent teams: Bulbapedia's "If the player chose X" (PlayerChoice) becomes t.st.
 """
-import os, re
+import json, os, re
 from collections import defaultdict
 from common import BULBA, load, norm, report, fix
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon Ultra Sun and Ultra Moon-Part {}.wiki')
-CHAPTERS = [(1, 6, 'Melemele Island'), (7, 13, 'Akala Island'), (14, 14, 'Aether Paradise'), (15, 21, "Ula'ula Island"),
-            (22, 26, 'Poni Island'), (27, 28, 'The Pokémon League'), (29, 30, 'Post-game: Guardians and Poni Grove'),
-            (31, 31, 'Post-game: Episode RR'), (32, 35, 'Post-game: Ultra Space, Battle Tree and Title Defense')]
+# Boxes: (walkthrough parts, name). Aether Paradise is one box for its two story visits (Parts 14 and 21).
+CHAPTERS = [(range(1, 7), 'Melemele Island'), (range(7, 14), 'Akala Island'), (range(15, 21), "Ula'ula Island"),
+            ((14, 21), 'Aether Paradise'), (range(22, 27), 'Poni Island'), ((27, 28), 'The Pokémon League'),
+            ((29, 30), 'Post-game: Guardians and Poni Grove'), ((31,), 'Post-game: Episode RR'),
+            (range(32, 36), 'Post-game: Ultra Space, Battle Tree and Title Defense')]
+VISIT = {14: 'Visit 1', 21: 'Visit 2'}  # Aether Paradise section headings
+# Photonic Sun is built on Ultra Sun; the game data also holds Prismatic Moon's (Ultra Moon's) side of version splits.
+# vanilla id -> note (Bulbapedia marks these {{sup/7|UM}} in prose, not on the trainer entries)
+MOON = {75: 'In Photonic Sun you fight Dexio instead.', 648: 'In Photonic Sun you fight Dulse instead.',
+        651: 'In Photonic Sun you fight Dulse instead.', 498: 'In Photonic Sun you fight Dulse instead.',
+        499: 'In Photonic Sun you fight Dulse instead.', 503: 'In Photonic Sun you fight Mallow for the petals instead.',
+        508: 'In Photonic Sun Nanu just gives you the Purple Petal.', 543: 'In Photonic Sun Cyrus has Dialga.',
+        573: 'In Photonic Sun Lysandre has Xerneas.', 560: 'In Photonic Sun Ghetsis has Zekrom.',
+        645: 'In Photonic Sun Giovanni has Mega Mewtwo X.'}
+SUN_ONLY = {506: 'In Prismatic Moon Sophocles just gives you the Yellow Petal.'}
+# {{Party/2}} lists only the first trainer's team; the second one by vanilla id (the prose names an Employee)
+PAIR2 = {241: 442, 561: 544}
+# Partners the walkthrough names only in prose (opponent vanilla id -> partner vanilla id)
+PARTNER = {561: 582}  # Episode RR: Lillie fights at your side against Faba and his Employee
+ALIAS = {'youngstertaro': 'youngstertristan'}  # Bulbapedia's name -> the game's
+# Trainers neither the walkthrough nor a location page places: vanilla id -> (part, place, sub, note)
+PLACE = {**{i: (15, 'Malie City', 'Kantonian Gym', 'Kantonian Gym, optional. The Gym is rechallenged after the League.')
+            for i in (547, 548, 549, 550, 555)},
+         630: (15, 'Malie City', 'Kantonian Gym', 'Optional. Bulbapedia only lists his post-game battles; this one sits '
+                                                  'at Malie City by level (place not confirmed).')}
+LOCSTOP = {'maliegarden': (17, 'Malie City'), 'battlebuffet': (5, "Hau'oli City")}  # location page -> walkthrough stop
+LOCNOTE = {'battlebuffet': 'Battle Buffet in the Shopping Mall, once a day for a fee.'}
+POST = (34, 'post-game')  # where location-page trainers with post-game levels go (part, sub heading)
+# Level caps, story order: (part, stop, who, level or trainer vanilla id, kind). 'trial' = the next trial or grand trial
+# (the usual rule); 'mini' = a forced boss in between. Totem levels are the Totem Battles doc's (not in trainer data).
+CAPS = [(2, "Hau'oli City", 'Captain Ilima', 52, 'trial'), (3, 'Verdant Cavern', 'Totem Gumshoos', -16, 'trial'),
+        (4, 'Seaward Cave', 'Ultra Recon Squad Dulse', 649, 'mini'), (4, 'Route 3', 'Hau', 12, 'mini'),
+        (5, 'Iki Town', 'Kahuna Hala', 23, 'trial'),
+        (7, 'Heahea City', 'Dexio', 74, 'mini'), (7, 'Paniola Town', 'Hau', 76, 'mini'),
+        (8, 'Route 5 (South)', 'Trial Guide Bronson', 395, 'mini'), (8, 'Brooklet Hill', 'Totem Araquanid', -28, 'trial'),
+        (8, 'Paniola Ranch', 'Ultra Recon Squad Dulse', 652, 'mini'), (9, 'Royal Avenue', 'Battle Royal', 81, 'mini'),
+        (9, 'Wela Volcano Park', 'Totem Marowak', -37, 'trial'), (10, 'Lush Jungle', 'Totem Lurantis', -44, 'trial'),
+        (12, 'Akala Outskirts', 'Plumeria', 89, 'mini'), (12, 'Ruins of Life', 'Kahuna Olivia', 90, 'trial'),
+        (14, 'Aether Paradise', 'Nihilego', -58, 'mini'), (16, 'Mount Hokulani', 'Totem Togedemaru', -59, 'trial'),
+        (17, 'Malie City', 'Guzma', 'Guzma', 'mini'), (18, 'Route 14', 'Totem Mimikyu', -66, 'trial'),
+        (19, 'Route 15', 'Plumeria', 'Plumeria', 'mini'), (20, 'Po Town', 'Guzma', 'Guzma', 'mini'),
+        (20, 'Route 15', 'Gladion', 'Gladion', 'mini'), (20, 'Malie City', 'Kahuna Nanu', 154, 'trial'),
+        (21, 'Aether Paradise', 'Lusamine', 131, 'mini'), (24, 'Vast Poni Canyon', 'Ultra Recon Squad Dulse', 501, 'mini'),
+        (24, 'Vast Poni Canyon', 'Totem Kommo-o', -92, 'trial'), (25, 'Megalo Tower', 'Ultra Necrozma', -100, 'mini'),
+        (26, "Mina's trial", 'Totem Ribombee', -95, 'trial'), (26, 'Exeggutor Island (Revisited)', 'Kahuna Hapu', 497, 'trial'),
+        (27, 'Mount Lanakila', 'Gladion', 'Gladion', 'mini'), (28, 'The Pokémon League', 'Elite Four and Champion', -100, 'trial')]
 STARTERS = ('Rowlet', 'Litten', 'Popplio')
 TY = ['Fighting', 'Flying', 'Poison', 'Ground', 'Rock', 'Bug', 'Ghost', 'Steel', 'Fire', 'Water', 'Grass', 'Electric',
       'Psychic', 'Ice', 'Dragon', 'Dark']
@@ -62,20 +105,58 @@ def starter_of(text):
     return m.group(1) if m else ''
 
 
+SUB = {14, 21, 31}  # parts whose sections are their === sub-places === (Aether Paradise's floors, Team Rocket's Castle)
+
+
 def events():
-    out = []
+    """Every trainer battle of the walkthrough in order: dicts with part, place (== heading ==), sub (=== heading ===
+    in SUB parts), cond (the trainerdiv caption above it), bt (battle id: trainers fought at once share it), fmt
+    (Double / Multi / Battle Royal) and partner (1: a team on your side, prize = none, not a fight)."""
+    out, bt = [], 0
     for n in range(1, 36):
         s = open(PART.format(n), encoding='utf-8').read().replace('{{!}}', '¦')
-        h2 = ''
-        pat = r'^(={2,5})\s*(.*?)\s*\1\s*$|\{\{[Tt]rainerentry\|(.*?)\}\}\s*$|\{\{[Pp]arty\n(.*?)\{\{Party/end\}\}'  # Part 1 has one {{party
+        h2 = h3 = h4 = cond = ''
+        blk = 0
+        pat = (r'^(={2,5})\s*(.*?)\s*\1\s*$|\{\{[Tt]rainerentry\|(.*?)\}\}\s*$|\{\{[Pp]arty(/2)?\n(.*?)\{\{Party/end\}\}'
+               r'|\{\{[Tt]rainer(div|header|footer)\|([^\n]*)$')  # Part 1 has one {{party
         for m in re.finditer(pat, s, re.M | re.S):
             if m.group(1):
-                if len(m.group(1)) == 2:
-                    h2 = place_name(m.group(2))
+                lv, h = len(m.group(1)), place_name(m.group(2))
+                if lv == 2:
+                    h2, h3, h4 = h, '', ''
+                elif lv == 3:
+                    h3, h4 = h, ''
+                elif lv == 4 and not h.startswith('VS '):  # "VS Faba" is a boss in the room above, not a room
+                    h4 = h
+                if lv < 4:
+                    blk += 1
+                cond = ''
+                continue
+            sub = (h3 + (' · ' + h4 if h4 else '')) if n in SUB else ''
+            if m.group(6):
+                c = split_top(m.group(7)[:-2] if m.group(7).endswith('}}') else m.group(7))
+                cond = clean(c[1]) if m.group(6) == 'div' and len(c) > 1 else ''
             elif m.group(3):
-                out += entry_events(m.group(3), n, h2)
+                es = entry_events(m.group(3), n, h2)
+                link = re.search(r'with the (following|previous)', m.group(3))
+                if not (link and link.group(1) == 'previous' and out):
+                    bt += 1
+                for e in es:
+                    e.update(sub=sub, blk=(n, blk), cond=cond, bt=bt)
+                    if link or not e['key']:  # "Double Battle with the following Grunt", or a pair (Twins Isa and Nico)
+                        e['fmt'] = 'Double'
+                    if link and link.group(1) == 'previous' and out:
+                        out[-1]['fmt'] = 'Double'
+                out += es
             else:
-                out.append(party_event(m.group(4), n, h2))
+                bt += 1
+                for e in party_events(m.group(5), n, h2, two=bool(m.group(4))):
+                    e.update(sub=sub, blk=(n, blk), cond=cond, bt=bt)
+                    if h3 == 'Battle Royal Dome':  # four-way: the "prize = none" parties are opponents here, one battle
+                        e['fmt'], e['partner'] = 'Battle Royal', 0
+                        if out and out[-1].get('fmt') == 'Battle Royal' and out[-1]['blk'] == e['blk']:
+                            e['bt'] = out[-1]['bt']
+                    out.append(e)
     return out
 
 
@@ -98,17 +179,29 @@ def entry_events(raw, part, place):
     return [dict(part=part, place=place, key=norm(clean(p[1]) + name), name=norm(name), mons=[(s, l) for s, l, _ in mons], st=st)]
 
 
-def party_event(b, part, place):
+def party_events(b, part, place, two=False):
+    """A {{Party}} (one trainer) or {{Party/2}} (two at once: the first `pokemon` blocks are the first trainer's).
+    Levels may be {{tt|42|First two Multi Battles}}/{{tt|43|Against Faba}}: the first one is used."""
     head = b.split('{{Pokémon', 1)[0]
     g = lambda k: (re.search(r'\|\s*' + k + r'\s*=\s*(.*)', head) or [None, ''])[1].strip()
     mons = []
     for blk in b.split('{{Pokémon')[1:]:
         sp = re.search(r'\|\s*pokemon\s*=\s*([^\n|]+)', blk)
-        lv = re.search(r'\|\s*level\s*=\s*(\d+)', blk)
+        lv = re.search(r'\|\s*level\s*=\s*(?:\{\{tt\|)?(\d+)', blk)
         if sp:
             mons.append((clean(sp.group(1)), int(lv.group(1)) if lv else 0))
-    return dict(part=part, place=place, key=norm(clean(g('class')) + clean(g('name'))), name=norm(clean(g('name'))),
-                mons=mons, st=starter_of(g('caption')), boss=1)
+    partner = 1 if re.match(r'none\b', g('prize')) else 0
+    ev = lambda c, nm, ms: dict(part=part, place=place, key=norm(clean(c) + clean(nm)), name=norm(clean(nm)), mons=ms,
+                                st=starter_of(g('caption')), boss=1, partner=partner)
+    if not two:
+        if ' and ' in clean(g('name')):  # Harper and Sarah
+            return [dict(ev(g('class'), g('name'), mons), key='', names=[norm(x) for x in clean(g('name')).split(' and ')], fmt='Double')]
+        return [ev(g('class'), g('name'), mons)]
+    k = int(re.sub(r'\D', '', g('pokemon')) or 0)
+    c2, n2 = g('class2'), g('name2')
+    if c2 == 'Aether Foundation':  # name2 = {{tccolor|Aether Foundation Employee|000|Employee}}: the game's class, no name
+        c2, n2 = 'Aether Foundation Employee', ''
+    return [dict(ev(g('class'), g('name'), mons[:k]), fmt='Double'), dict(ev(c2, n2, mons[k:]), fmt='Double')]
 
 
 def location_entries():
@@ -147,7 +240,7 @@ def score(e, t):
 
 
 def dummy(t):
-    return not t['name'] or t['name'] == '●●●' or (len(t['team']) == 1 and t['team'][0]['species'] == 'Yungoos'
+    return t['name'] in ('', '●●●', '-') or (len(t['team']) == 1 and t['team'][0]['species'] == 'Yungoos'
                                                    and t['team'][0]['level'] == 5 and not t['team'][0]['moves'])
 
 
@@ -194,10 +287,22 @@ def build(D):
         return []
     evs = events()
     for e in evs:
-        ts = match(e)
+        e['key'] = ALIAS.get(e['key'], e['key'])
+    # A story entry that the post-game parts list again (Kagetora "after defeating the other Eevee users", Aristo
+    # "after defeating all of Alola's skilled Trainers") is placed at the post-game one.
+    late = {(e['key'], tuple(e['mons'])) for e in evs if e['part'] >= 29 and e['key']}
+    partners = []  # (event, vanilla id): teams on your side, attached to their battles below
+    for i, e in enumerate(evs):
+        if e['part'] < 29 and e['cond'].startswith('After defeating') and (e['key'], tuple(e['mons'])) in late:
+            continue
+        if not e['mons'] and i and evs[i - 1]['bt'] == e['bt'] and evs[i - 1].get('tid') in PAIR2:
+            ts = [V[PAIR2[evs[i - 1]['tid']]]]
+        else:
+            ts = match(e)
         for t in ts:
             used.add(t['id'])
-            placed.append((e, t['id']))
+            e['tid'] = t['id']
+            (partners if e.get('partner') else placed).append((e, t['id']))
         if not ts and e['mons']:
             miss += 1
             report('  walkthrough trainer not matched:', e['part'], e['place'], e['key'] or e['names'], e['mons'][:3])
@@ -216,10 +321,8 @@ def build(D):
     extra.sort(key=lambda x: next(i for i, e in enumerate(ents) if e is x[0]))  # back in page order
     real = [t for t in Hk if not dummy(t)]
     left = [t for t in real if t['id'] not in used]
-    report('trainers: walkthrough', len(placed), 'location pages', len(extra), 'other', len(left), 'of', len(real),
+    report('trainers: walkthrough', len(placed), 'partners', len(partners), 'location pages', len(extra), 'of', len(real),
            'real trainers (', len(Hk) - len(real), 'placeholders dropped )')
-    for t in left:
-        report('  trainer with no place:', t['id'], t['class'], t['name'], [(m['species'], m['level']) for m in V[t['id']]['team']][:4])
 
     def mon(m):
         s0 = (m['speciesId'], m['form'])
@@ -259,29 +362,63 @@ def build(D):
 
     def trainer(e, tid, k):
         t = Hk[tid]
-        cls = t['class']
-        n = f"{cls} {t['name']}".strip()
-        tags = [] if t['battle'] == 'Single' else [t['battle'] + ' Battle']
-        note = []
+        n = f"{t['class']} {t['name']}".strip()
+        tags, note = [], []
+        if e.get('fmt') == 'Battle Royal':
+            tags.append('Battle Royal')
+        elif e.get('fmt') == 'Double':
+            tags.append('Multi Battle' if e.get('pt') else 'Double Battle')
+        if tid in MOON:
+            tags.append('Prismatic Moon')
+            note.append('Prismatic Moon only. ' + MOON[tid])
+        if tid in SUN_ONLY:
+            note.append(SUN_ONLY[tid])
+        if e.get('cond') and not e['cond'].startswith(e['place']):
+            note.append(e['cond'] + ('' if e['cond'].endswith('.') else '.'))
+        if e.get('note'):
+            note.append(e['note'])
         if t['items']:
             note.append('Uses ' + ', '.join(t['items']))
-        return {'k': k, 'n': n, 'id': tid, 'loc': e['place'], 'tags': tags, 'st': e.get('st', ''), 'cap': 0,
-                'note': note, 'p': [mon(m) for m in t['team']]}
+        x = {'k': k, 'n': n, 'id': tid, 'loc': e['place'], 'tags': tags, 'st': e.get('st', ''), 'cap': 0,
+             'note': note, 'p': [mon(m) for m in t['team']]}
+        if e.get('bt'):
+            x['bt'] = e['bt']
+        if e.get('pt'):
+            x['pt'] = e['pt']
+        return x
 
-    # Boxes (chapters) -> sections (part + place runs) -> trainers; walkthrough stops keep the same order
-    loc_extra = defaultdict(list)
-    for e, tid in extra:
-        loc_extra[norm(e['place'])].append((e, tid))
-    stops, g = [], []
-    for lo, hi, name in CHAPTERS:
-        g.append({'n': name, 'cap': 0, 'tab': name, 'note': [], 'sec': []})
-    chap = lambda part: next(i for i, (lo, hi, _) in enumerate(CHAPTERS) if lo <= part <= hi)
-    seq = []  # (part, place, [(e, tid)])
+    # Partners: a team on your side joins the double battles after it in the same sub-place, or (none after: Diglett's
+    # Tunnel lists Hau after the grunts) the ones before it; teams by starter stay apart (t.pt [{n, st, p}]).
+    def pteam(pe, tid):
+        t = Hk[tid]
+        return {'n': f"{t['class']} {t['name']}".strip(), 'st': pe.get('st', ''), 'p': [mon(m) for m in t['team']]}
+    for pe, ptid in partners:
+        blk = [e for e, _ in placed if e.get('blk') == pe['blk'] and e.get('fmt') == 'Double']
+        after = [e for e in blk if e['bt'] > pe['bt']]
+        nxt = min((q['bt'] for q, _ in partners if q.get('blk') == pe['blk'] and q['bt'] > pe['bt']
+                   and not (q['key'] == pe['key'] and q['st'] != pe['st'])), default=10 ** 9)
+        for e in [e for e in after if e['bt'] < nxt] or blk:
+            e.setdefault('pt', []).append(pteam(pe, ptid))
     for e, tid in placed:
-        if seq and seq[-1][0] == e['part'] and seq[-1][1] == e['place']:
-            seq[-1][2].append((e, tid))
-        else:
-            seq.append([e['part'], e['place'], [(e, tid)]])
+        if tid in PARTNER:
+            for q, _ in placed:
+                if q['bt'] == e['bt']:
+                    q['pt'] = [pteam({}, PARTNER[tid])]
+            used.add(PARTNER[tid])
+    left = [t for t in left if t['id'] not in used]
+    # Partner copies the game keeps under other ids (Hau at Aether Paradise: the same species three times over, one
+    # Raichu a level apart)
+    pts = {(p['n'], tuple(x['id'] for x in p['p'])) for e, _ in placed for p in e.get('pt', [])}
+    copies = [t for t in left if (f"{t['class']} {t['name']}", tuple(mon(m)['id'] for m in t['team'])) in pts]
+    if copies:
+        report('  partner teams kept once (copies dropped):', [(t['id'], t['class'], t['name']) for t in copies])
+    left = [t for t in left if t not in copies]
+
+    # Boxes (chapters) -> sections (part + place + sub-place runs) -> trainers; walkthrough stops keep the same order
+    g = [{'n': name, 'cap': 0, 'tab': name, 'note': [], 'sec': []} for _, name in CHAPTERS]
+    chap = lambda part: next(i for i, (ps, _) in enumerate(CHAPTERS) if part in ps)
+    AE = chap(14)
+    g[AE]['note'] = ['Visit 1 comes after Akala (Olivia), visit 2 after Nanu. Visit 3 is Episode RR, after the League (its own box).']
     # Every stop of the walkthrough, trainers or not, in order (walk.py adds areas and items)
     allstops = []
     for n in range(1, 36):
@@ -290,36 +427,79 @@ def build(D):
             pl = place_name(m.group(1).strip())
             if not allstops or allstops[-1][:2] != [n, pl]:
                 allstops.append([n, pl, []])
-    # Location-page trainers join the first stop with their place's name
-    for key, items in loc_extra.items():
-        key = {'maliegarden': 'maliecity'}.get(key, key)  # the garden is a section of the Malie City stop
-        # The same name, else one name starting the other but not mid-number ("route1" is not "route17")
-        pre = lambda a, b: a.startswith(b) and not (a[len(b):len(b) + 1].isdigit() and b[-1:].isdigit())
-        hit = next((st for st in allstops if norm(st[1]) == key), None) or \
-            next((st for st in allstops if pre(norm(st[1]), key) or pre(key, norm(st[1]))), None)
-        if hit:
-            hit_seq = next((q for q in seq if q[0] == hit[0] and q[1] == hit[1]), None)
-            if hit_seq is None:
-                hit_seq = [hit[0], hit[1], []]
-                seq.append(hit_seq)
-            hit_seq[2].extend(items)
+    order = {(st[0], st[1]): i for i, st in enumerate(allstops)}
+    seq = []  # [part, place, sub, [(e, tid)]]
+    for e, tid in placed:
+        if seq and seq[-1][:3] == [e['part'], e['place'], e['sub']]:
+            seq[-1][3].append((e, tid))
         else:
+            seq.append([e['part'], e['place'], e['sub'], [(e, tid)]])
+    # Location-page trainers join the first stop with their place's name; post-game levels go to the post-game box
+    story_lv = defaultdict(list)
+    for e, tid in placed:
+        if e['part'] < 29:
+            story_lv[chap(e['part'])].append(max([m['level'] for m in V[tid]['team']] or [0]))
+    med = {c: sorted(v)[len(v) // 2] for c, v in story_lv.items()}
+    loc_extra = defaultdict(list)
+    for e, tid in extra:
+        loc_extra[norm(e['place'])].append((e, tid))
+    pre = lambda a, b: a.startswith(b) and not (a[len(b):len(b) + 1].isdigit() and b[-1:].isdigit())
+    for key, items in loc_extra.items():
+        if key in LOCSTOP:
+            hit = next(st for st in allstops if st[:2] == list(LOCSTOP[key]))
+        else:  # the same name, else one name starting the other but not mid-number ("route1" is not "route17")
+            hit = next((st for st in allstops if norm(st[1]) == key), None) or \
+                next((st for st in allstops if pre(norm(st[1]), key) or pre(key, norm(st[1]))), None)
+        if not hit:
             report('  location page with no walkthrough stop, trainers go to Other:', key)
             left += [Hk[tid] for _, tid in items]
-    order = {(st[0], st[1]): i for i, st in enumerate(allstops)}
-    seq.sort(key=lambda q: order.get((q[0], q[1]), 10 ** 6))
-    keys = {}
-    for part, place, items in seq:
+            continue
+        for e, tid in items:
+            e['note'] = LOCNOTE.get(key, '')
+            top = max([m['level'] for m in V[tid]['team']] or [0])
+            c = chap(hit[0])
+            if hit[0] < 29 and top >= med.get(c, 100) + 15:
+                e.update(part=POST[0], place=hit[1], sub=POST[1])
+            else:
+                e.update(part=hit[0], place=hit[1], sub='')
+            q = next((q for q in seq if q[:3] == [e['part'], e['place'], e['sub']]), None)
+            if q is None:
+                q = [e['part'], e['place'], e['sub'], []]
+                seq.append(q)
+            q[3].append((e, tid))
+    for t in list(left):
+        if t['id'] in PLACE:
+            part, place, sub, note = PLACE[t['id']]
+            e = dict(part=part, place=place, sub=sub, st='', note=note)
+            q = next((q for q in seq if q[:3] == [part, place, sub]), None)
+            if q is None:
+                q = [part, place, sub, []]
+                seq.append(q)
+            q[3].append((e, t['id']))
+            left.remove(t)
+    # Post-game rematch sections sit at the end of their stop; Aether Paradise's empty first visit gets its own section
+    sk = lambda q: (order.get((q[0], q[1]), 10 ** 6), q[2] == POST[1], q[2] == 'Kantonian Gym')
+    seq.sort(key=sk)
+    keys, secs = {}, []
+    for part, place, sub, items in seq:
         gi = chap(part)
-        if g[gi]['sec'] and g[gi]['sec'][-1]['h'] == place:  # the same place again right after (end of one part, start of the next)
+        h = (f"{VISIT[part]}: {sub}" if part in VISIT and sub else sub) if gi == AE else \
+            (f'{place}: {sub}' if sub else place)
+        if gi == AE and part == 21 and not any(s['h'].startswith('Visit 1') for s in g[AE]['sec']):
+            g[AE]['sec'].append({'h': 'Visit 1: 2F Conservation Area', 'tr': [], 'note': [
+                'No trainer battles. An Ultra Beast (Nihilego, level 58 in the Totem Battles doc) drops in and you '
+                'fight it with no way to catch it.'], 'at': order[(14, 'Aether Paradise')]})
+        if g[gi]['sec'] and g[gi]['sec'][-1]['h'] == h:  # the same place again right after (end of one part, start of the next)
             sec = g[gi]['sec'][-1]
         else:
-            sec = {'h': place, 'note': [], 'tr': []}
+            sec = {'h': h, 'note': [], 'tr': [], 'at': order.get((part, place), 10 ** 6)}
             g[gi]['sec'].append(sec)
         for e, tid in items:
             k = f"{gi}.{len(g[gi]['sec']) - 1}.{len(sec['tr'])}"
             sec['tr'].append(trainer(e, tid, k))
             keys.setdefault((part, place), []).append(k)
+    for t in left:
+        report('  trainer with no place:', t['id'], t['class'], t['name'], [(m['species'], m['level']) for m in V[t['id']]['team']][:4])
     if left:
         g.append({'n': 'Other trainers', 'cap': 0, 'tab': 'Other', 'note': [
             'In the game data but not in Bulbapedia\'s Ultra Sun / Ultra Moon walkthrough or trainer lists (places unknown).'], 'sec': []})
@@ -327,11 +507,41 @@ def build(D):
         g[-1]['sec'].append(sec)
         for t in left:
             k = f"{len(g) - 1}.0.{len(sec['tr'])}"
-            sec['tr'].append(trainer({'place': '', 'st': ''}, t['id'], k))
+            note = 'Post-game rematch (level 100). The walkthrough doesn\'t say where she waits.' if t['id'] == 146 else ''
+            sec['tr'].append(trainer({'place': '', 'st': '', 'note': note}, t['id'], k))
     for st in allstops:
         st[2] = keys.get((st[0], st[1]), [])
-    # Drop empty boxes (Aether Paradise's first visit has no trainer battles) and renumber the keys to match
-    g = [x for x in g if any(s['tr'] for s in x['sec'])]
+
+    # Level caps: each section's cap is the next cap at or after it ([trial rule, with mini caps]). A mini cap is left
+    # out when it doesn't raise the cap, or sits right before a higher trial (no section with trainers between).
+    # Ultra Necrozma (100) stays: it comes before Mina (95) and Hapu (96).
+    lvl = lambda tid: max(m['level'] for m in Hk[tid]['team'])
+    caps = []
+    for part, stop, who, x, kind in CAPS:
+        at = order[(part, stop)]
+        if isinstance(x, str):  # the named boss at that stop
+            ids = [tid for e, tid in placed if (e['part'], e['place']) == (part, stop) and x in Hk[tid]['name']]
+            lv = max(lvl(i) for i in ids)
+        else:
+            lv = -x if x < 0 else lvl(x)
+        caps.append({'n': who, 'w': stop, 'l': lv, 'k': kind, 'at': at})
+    post = min(i for i, st in enumerate(allstops) if st[0] >= 29)
+    story = [s for x in g for s in x['sec'] if s.get('at', 10 ** 6) < post]
+    for i, c in enumerate(caps):
+        if c['k'] == 'mini':
+            nt = next(d for d in caps if d['k'] == 'trial' and d['at'] >= c['at'])
+            prev = max([d['l'] for d in caps[:i] if not d.get('drop')] or [0])
+            between = [s for s in story if c['at'] < s['at'] < nt['at'] and s['tr']]
+            c['drop'] = int(c['l'] <= prev or (not between and c['l'] < nt['l']))
+    for s in story:
+        nxt = lambda ks: next((c['l'] for c in caps if c['k'] in ks and c['at'] >= s['at'] and not c.get('drop')), 100)
+        s['cap'] = [nxt(('trial',)), nxt(('trial', 'mini'))]
+    for x in g:
+        for s in x['sec']:
+            s.pop('at', None)
+
+    # Drop empty boxes and renumber the keys to match
+    g = [x for x in g if any(s['tr'] or s['note'] for s in x['sec'])]
     remap = {}
     for gi, x in enumerate(g):
         for si, s in enumerate(x['sec']):
@@ -340,6 +550,9 @@ def build(D):
                 t['k'] = remap[t['k']]
     for st in allstops:
         st[2] = [remap[k] for k in st[2]]
-    D['TR'] = {'caps': [], 'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
+    D['TR'] = {'caps': [[f"{c['n']} ({c['w']})", c['l']] for c in caps if c['k'] == 'trial'],
+               'mini': [[c['n'], c['w'], c['l'], c['k'], c.get('drop', 0)] for c in caps],
+               'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
     D['_stops'] = allstops
     report('trainer boxes:', ', '.join(f"{x['n']} {sum(len(s['tr']) for s in x['sec'])}" for x in g))
+    report('level caps:', ' · '.join(f"{c['n']} {c['l']}{'' if c['k'] == 'trial' else ' (mini' + (', dropped' if c.get('drop') else '') + ')'}" for c in caps))
