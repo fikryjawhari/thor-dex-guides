@@ -56,6 +56,24 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
   merge into `main` when done. Only one session at a time edits on `main`.
 - Run `git status` before committing and stage files by name, not `git add -A`; never commit anything under `.claude/`.
 - Pushing to `main` publishes the site (the Pages workflow), so push only checked guides.
+- Pushing from a session: this clone's `.git/config` (not committed) sets `core.sshCommand` to Git Bash's `ssh.exe`,
+  because the global Windows OpenSSH one hangs after the push when git runs without a terminal. A fresh clone that
+  hangs on push needs the same setting.
+
+## Parallel sessions
+Git merges change by change and only stops on lines both branches changed, so split work by the files it touches.
+- One worktree per independent piece, usually one tab of one guide (not one per guide). Branch it from current `main`;
+  check `git worktree list` first for a session already on the same files.
+- A session owns its files: its tab's extract script(s), and its tab's heading in `notes.md` / `PROGRESS.md`. Shared
+  extract code (`common.py`, `build.py`): add to it freely; changing existing code is something to raise first.
+- `template/` is one session at a time, since it is shared by every guide. A second piece that needs template changes
+  waits until the first is merged, or goes in the same session.
+- `data.json` and `dist/` are build output: on a merge conflict take either side, then rerun the hack's extract
+  `build.py` and `assemble.py`. Never merge them by hand.
+- Merge one branch at a time: merge, rebuild, check the guides (`domcompare` if the template changed), then the
+  next. After a merge, delete the worktree and the branch, local and on `origin`.
+- If I propose parallel work that breaks these (two sessions on the template or the same script, a worktree off an
+  unmerged branch), say so and suggest an order or a split before starting it.
 
 ## Workflow
 - I test on the Thor. Testing a guide there without the library: PROGRESS.md → Testing on the Thor.
