@@ -1,0 +1,60 @@
+{
+ "id": "photonic-sun",
+ "title": "Photonic Sun Dex",
+ "game": "Photonic Sun",
+ "platform": "3DS",
+ "version": "2.38",
+ "cfg": {
+  "name": "Photonic Sun",
+  "orig": "",
+  "evs": true,
+  "starter": "pick",
+  "orbs": false,
+  "g3trainer": false,
+  "capLast": false,
+  "walkAreaNote": true,
+  "trw": [
+   "trainer",
+   "trainers",
+   "trainers"
+  ],
+  "ls": {
+   "dex": "psdex",
+   "calc": "pscalc",
+   "track": "pstrack",
+   "walk": "pswalk",
+   "cap": "pscap",
+   "tr": "pstr",
+   "recent": "psrecent",
+   "pos": "pspos",
+   "mgm": "psmgm",
+   "loc": "psloc",
+   "items": "psitems"
+  },
+  "txt": {
+   "obt": "Obtainable only",
+   "nw": "Not found only",
+   "g3": "Not in the wild tables, the Special Encounters doc or an evolution line, so probably not obtainable in Photonic Sun 2.38.",
+   "conf": "",
+   "van": "Vanilla Ultra Sun (v1.2 game data) compared with the hack's game data (Rebalanced version).",
+   "tc": "Gen 7 type chart (the hack doesn't change it).",
+   "chdoc": "Move Changes doc",
+   "mvh": "Changes from Ultra Sun",
+   "nodc": "Not listed in the Move Changes doc.",
+   "mvsrc": "Type, category, power, accuracy, PP, priority and description from the hack's game data",
+   "mvsrcx": "",
+   "absrc": "Description from the game's text.",
+   "ns": "Not one place, so it has no encounter slot here.",
+   "locs": "areas in the Wild Pokémon Locations doc's order (roughly when they open up), plus Iki Town for the starter and the places of the Special Encounters doc.",
+   "items": "Places from Serebii's Ultra Sun item lists (the hack keeps Ultra Sun's overworld items); shops from the Vendor Changes doc. Wild held items are on each Pokémon's page.",
+   "walk": "Photonic Sun has no walkthrough of its own and follows Ultra Sun's story, so the parts and places are Bulbapedia's Ultra Sun / Ultra Moon walkthrough. Each stop holds its trainers, items and encounters; stops marked \"on the way\" are encounter areas that walkthrough has no heading for. Tap a trainer to open the team; the Trainers tab has them all.",
+   "capl": "Your level",
+   "capw": "level cap",
+   "capnone": "",
+   "trh": "Sets are the hack's game data (Rebalanced version): species, levels, natures, abilities, items, IVs, EVs and moves. Pokémon with no moves set use their last four level-up moves. Places and order come from Bulbapedia's Ultra Sun / Ultra Moon walkthrough. Speeds use the real IVs and natures{ev}.",
+   "trs": "Rival teams shown for your {s} starter (set in the Locations or Walkthrough tracker bar).",
+   "trs0": "Choose your starter in the Locations or Walkthrough tracker bar to hide the other rival teams.",
+   "noev": ""
+  }
+ }
+}

@@ -1,0 +1,89 @@
+in the Move Changes doc but unchanged in the game: Triple Kick
+in the Move Changes doc but unchanged in the game: Curse
+in the Move Changes doc but unchanged in the game: Sucker Punch
+in the Move Changes doc but unchanged in the game: Aura Sphere
+in the Move Changes doc but unchanged in the game: Toxic Thread
+species/forms 931 megas 50 form changes 34 changed from vanilla 364 moves changed 38
+wild PDF: 145 tables under 59 area titles
+  table differs from the PDF: Route 1 / Melemele Sea 2-3 as Route 1 / Grass 3: game only ['scatterbug'] PDF only []
+  wild table left out (no PDF table in its area): Route 1 / Melemele Sea 5-5 ['pidgey', 'pikipek']
+  two different game tables labelled the same, numbered: Route 1 Grass 3
+  wild table left out (no PDF table in its area): Hau'oli City 5-10 ['pikipek']
+  wild table left out (no PDF table in its area): Hau'oli City 5-5 ['pikipek']
+  wild table left out (no PDF table in its area): Ten Carat Hill 2-3 ['pikipek']
+  wild table left out (no PDF table in its area): Berry Fields 7-10 ['aipom', 'crabrawler']
+  wild table left out (no PDF table in its area): Verdant Cavern 2-3 ['pikipek']
+  wild table left out (no PDF table in its area): Paniola Town 10-17 ['barboach', 'magikarp']
+  wild table left out (no PDF table in its area): Paniola Town 10-22 ['barboach', 'magikarp']
+  wild table left out (no PDF table in its area): Paniola Town 2-3 ['pikipek']
+  wild table left out (no PDF table in its area): Route 5 2-3 ['pikipek']
+  two different game tables labelled the same, numbered: Route 7 Fishing
+  two different game tables labelled the same, numbered: Route 7 Fishing
+  two different game tables labelled the same, numbered: Route 7 Fishing
+  two different game tables labelled the same, numbered: Route 9 Fishing
+  two different game tables labelled the same, numbered: Akala Outskirts Fishing
+  two different game tables labelled the same, numbered: Brooklet Hill Fishing (Trial Site) (bubbling)
+  wild table left out (no PDF table in its area): Paniola Ranch 2-3 ['pikipek']
+  table differs from the PDF: Malie City 41-44 as Malie City / All Grass: game only ['minccino'] PDF only ['mincinno']
+  wild table left out (no PDF table in its area): Route 10 2-3 ['pikipek']
+  wild table left out (no PDF table in its area): Route 15 / Route 16 2-3 ['pikipek']
+  two different game tables labelled the same, numbered: Ula'ula Meadow Grass
+  table differs from the PDF: Malie Garden 41-44 as Malie Garden / Fishing: game only ['goldeen'] PDF only []
+  table differs from the PDF: Malie Garden 41-44 as Malie Garden / Fishing: game only ['goldeen'] PDF only ['seaking']
+  wild table left out (no PDF table in its area): Malie Garden 5-10 ['pikipek']
+  table differs from the PDF: Malie Garden 41-44 as Malie Garden / Fishing: game only [] PDF only ['seaking']
+  wild table left out (no PDF table in its area): Malie Garden 2-3 ['pikipek']
+  two different game tables labelled the same, numbered: Malie Garden Fishing
+  two different game tables labelled the same, numbered: Malie Garden Fishing
+  wild table left out (no PDF table in its area): Blush Mountain 2-3 ['pikipek']
+  wild table left out (no PDF table in its area): Ruins of Abundance 2-3 ['pikipek']
+  two different game tables labelled the same, numbered: Seafolk Village Fishing
+  wild table left out (no PDF table in its area): Poni Wilds 76-79 ['crabrawler', 'shuckle']
+  two different game tables labelled the same, numbered: Ponibreaker Coast Fishing
+  table differs from the PDF: Poni Grove 95-98 as Poni Grove / Grass: game only ['blacephalon', 'stakataka'] PDF only []
+  two different game tables labelled the same, numbered: Poni Grove Grass
+  table differs from the PDF: Vast Poni Canyon 80-83 as Vast Poni Canyon / Grass 1: game only ['boldore'] PDF only []
+  table differs from the PDF: Vast Poni Canyon 80-83 as Vast Poni Canyon / Grass 2: game only ['boldore'] PDF only []
+obtainable 854 not found 27 : Rattata, Raticate, Pikachu (Original Cap), Diglett, Dugtrio, Meowth, Persian, Grimer, Muk, Sableye, Illumise, Baltoy, Claydol, Pansage, Simisage, Pansear, Simisear, Panpour, Simipour, Heatmor, Floette (Eternal), Zygarde (10%), Zygarde (10%, Power Construct), Zygarde (50%, Power Construct), Diancie, Mareanie, Toxapex
+found only as SOS allies: Rattata, Raticate, Diglett, Dugtrio, Meowth, Persian, Grimer, Muk, Sableye, Illumise, Baltoy, Claydol, Pansage, Simisage, Pansear, Panpour, Simipour, Heatmor, Diancie, Mareanie
+obtainable 876 not found 5 : Pikachu (Original Cap), Floette (Eternal), Zygarde (10%), Zygarde (10%, Power Construct), Zygarde (50%, Power Construct)
+  walkthrough trainer not matched: 24 Ancient Poni Path teamskullgrunt [('Fomantis', 44)]
+  walkthrough trainer not matched: 31 Aether Paradise teamrainbowrocketgrunt [('Arbok', 62)]
+  walkthrough trainer not matched: 33 Battle Tree pokemonbreederrada [('Barbaracle', 50), ('Hawlucha', 50)]
+  walkthrough trainer not matched: 33 Battle Tree pokemontrainerlillie [('Ribombee', 50), ('Comfey', 50)]
+  walkthrough trainer not matched: 34 Brooklet Hill twinsharperandsarah [('Luvdisc', 56), ('Corsola', 56)]
+  walkthrough trainer not matched: 34 Mount Lanakila veteranaristo [('Carbink', 65), ('Torkoal', 65), ('Pelipper', 65)]
+  walkthrough trainer not matched: 34 Aether Paradise aetherfoundationfaba [('Slowbro', 61), ('Bruxish', 61), ('Raichu', 61)]
+  walkthrough trainer not matched: 34 Eevee Users eeveeuserkagetora [('Eevee', 57)]
+  walkthrough trainer not matched: 35 The Pokémon League: Round 2 youngstertaro [('Emolga', 66), ('Sharpedo', 66), ('Exeggutor', 66)]
+trainers: walkthrough 444 location pages 44 other 25 of 513 real trainers ( 140 placeholders dropped )
+  trainer with no place: 0 Pokémon Trainer - []
+  trainer with no place: 146 Captain Mallow [('Trevenant', 60), ('Shiinotic', 60), ('Tsareena', 60)]
+  trainer with no place: 241 Aether Branch Chief Faba [('Claydol', 44), ('Bruxish', 44), ('Hypno', 45)]
+  trainer with no place: 371 Preschooler Harper [('Luvdisc', 56)]
+  trainer with no place: 372 Preschooler Sarah [('Corsola', 56)]
+  trainer with no place: 442 Aether Foundation Employee [('Ledian', 42), ('Pupitar', 42)]
+  trainer with no place: 447 Pokémon Trainer Hau [('Raichu', 42), ('Flareon', 41), ('Noivern', 41), ('Tauros', 41)]
+  trainer with no place: 448 Pokémon Trainer Hau [('Raichu', 42), ('Vaporeon', 41), ('Noivern', 41), ('Tauros', 41)]
+  trainer with no place: 449 Pokémon Trainer Hau [('Raichu', 42), ('Leafeon', 41), ('Noivern', 41), ('Tauros', 41)]
+  trainer with no place: 450 Pokémon Trainer Hau [('Raichu', 43), ('Flareon', 42), ('Noivern', 42), ('Tauros', 42)]
+  trainer with no place: 451 Pokémon Trainer Hau [('Raichu', 43), ('Vaporeon', 42), ('Noivern', 42), ('Tauros', 42)]
+  trainer with no place: 452 Pokémon Trainer Hau [('Raichu', 43), ('Leafeon', 42), ('Noivern', 42), ('Tauros', 42)]
+  trainer with no place: 480 Youngster Tristan [('Emolga', 66), ('Sharpedo', 66), ('Exeggutor', 66), ('Magmortar', 66)]
+  trainer with no place: 492 Pokémon Trainer Hau [('Rowlet', 5)]
+  trainer with no place: 544 Aether Foundation Employee [('Granbull', 61), ('Scrafty', 61), ('Shiinotic', 61)]
+  trainer with no place: 547 Kantonian Gym Adrian [('Smoochum', 29)]
+  trainer with no place: 548 Kantonian Gym Blair [('Cutiefly', 29)]
+  trainer with no place: 549 Kantonian Gym Lee [('Minccino', 29)]
+  trainer with no place: 550 Kantonian Gym Dallas [('Fomantis', 29)]
+  trainer with no place: 555 Kantonian Gym Leader [('Machoke', 29)]
+  trainer with no place: 557 GAME FREAK Iwao [('Kecleon', 56), ('Ambipom', 56), ('Blissey', 56)]
+  trainer with no place: 561 Aether Branch Chief Faba [('Claydol', 63), ('Bruxish', 63), ('Hypno', 63)]
+  trainer with no place: 578 GAME FREAK Morimoto [('Gengar', 57), ('Machamp', 57), ('Dragonite', 57)]
+  trainer with no place: 582 Pokémon Trainer Lillie [('Clefairy', 60)]
+  trainer with no place: 630 Pokémon Trainer Ryuki [('Turtonator', 29), ('Drampa', 29), ('Gabite', 29)]
+  location page with no walkthrough stop, trainers go to Other: battlebuffet
+trainer boxes: Melemele Island 50, Akala Island 104, Ula'ula Island 119, Poni Island 40, The Pokémon League 26, Post-game: Guardians and Poni Grove 2, Post-game: Episode RR 48, Post-game: Ultra Space, Battle Tree and Title Defense 69, Other trainers 55
+items: Shops 21, TMs 100, Mega Stones 47, Z-Crystals 35, Evolution Items 27, Held Items 132, Battle Items 9, Vitamins 15, Fossils 10, Key Items 30
+walkthrough: on the way stops 5 : Hau'oli Cemetery, Malie Garden, Thrifty Megamart, Victory Road, Ruins of Conflict
+walkthrough: 35 splits 136 stops, 385 items placed, 20 not placed

@@ -571,7 +571,7 @@ function bindTrainers(root){(root||app).querySelectorAll('details.capd').forEach
 let TOPEN={};try{TOPEN=JSON.parse(localStorage.getItem(LS.tr)||'{}')}catch(e){}
 function trHead(){const s=starterType();return `<div class="card">${EVS?`<label class="row" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="mgm" ${MGM?'checked':''}> <span>Minimal Grinding Mode <span class="mut small">(speeds without trainer EVs)</span></span></label>
  <div class="mut small" style="margin-top:6px">`:'<div class="mut small">'}${TX.trh.replace('{ev}',MGM?', no EVs':' and EVs')} ${s?TX.trs.replace('{s}',esc(s)):TX.trs0}</div>
- <details style="margin-top:6px"><summary class="mut small">Level caps</summary><table class="itbl">${TRD.caps.map(c=>`<tr><td>${esc(c[0])}</td><td>${c[1]}</td></tr>`).join('')}</table></details></div>`;}
+ ${TRD.caps.length?`<details style="margin-top:6px"><summary class="mut small">Level caps</summary><table class="itbl">${TRD.caps.map(c=>`<tr><td>${esc(c[0])}</td><td>${c[1]}</td></tr>`).join('')}</table></details>`:''}</div>`;}
 function bindHead(){const m=app.querySelector('#mgm');if(m)m.onchange=()=>{MGM=m.checked;try{localStorage.setItem(LS.mgm,MGM?'1':'0')}catch(e){}rerender();};}
 function listTrainers(){fil.innerHTML='';sug.style.display='none';const s=st.q;
  if(s){const a=TRS.filter(t=>t.key.includes(s)&&!rivalHidden(t));app.innerHTML=`<div class="mut small" style="margin-bottom:6px">${a.length} trainers match. Search covers trainer names, places, tags and Pokémon.</div>`+a.map(t=>`<div class="mut small" style="margin-top:10px">${esc(t.g)}${t.h?' · '+esc(t.h):''}</div>`+trainerBlock(t)).join('');bindTrainers();return;}
