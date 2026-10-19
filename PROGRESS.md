@@ -20,6 +20,11 @@ the split is in that repo's git log.
   compiled (`SOURCES.md`, re-fetch into `.src/`) but no guide yet. **Their source data was checked and completed on
   2026-10-19** (see "Source data check"): every one now has full dex, moves, abilities, wild and trainer data on
   the PC. Next: Photonic Sun and Eternal X guides.
+- **Damage calc with save import: planned 2026-10-20, not started** (`plans/damage-calc.md`). `@smogon/calc` (MIT) as
+  the engine; our own save readers for Gen 3, 4/5 and 6/7, written from notes on hzla's Dynamic-Calc-Decomps (no
+  license: learn the formats, don't copy the code; the user decided not to ask hzla) and PKHeX. Also looked at PokeDaisy
+  (GPLv3 GBA emulator with a live companion; covers EI, Radical Red, Unbound, SoulGold): read-only reference; the
+  user may push the GBA guides back since the DS/3DS hacks have no such tool. Not decided.
 - **Photonic Sun guide built 2026-10-19** on branch `worktree-photonic-sun` (not merged, not on the Thor yet). See
   "Photonic Sun guide" below and `hacks/photonic-sun/notes.md`.
 
