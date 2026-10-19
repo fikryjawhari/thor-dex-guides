@@ -50,7 +50,7 @@ the split is in that repo's git log.
    dex source per hack; the extract step turns it into `data.json`.
 7. Later: footer credits (`cfg.credit` hook; hack authors from `SOURCES.md` plus the sprite set's credits in
    `sprites/SOURCES.md`), the update checker (`plans/update-checker.md`; run by hand, the user doesn't need it
-   scheduled), the damage calc.
+   scheduled), the damage calc with save import (`plans/damage-calc.md`).
 
 **Parallel sessions:** one session in each repo at a time is safe (separate folders and git histories). The app
 repo has nothing open now; come back to it only for an app bug or feature. Avoid two sessions in this repo at once: the template is shared, so they'd
