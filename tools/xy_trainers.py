@@ -1,7 +1,10 @@
 """Dump every XY-engine trainer (Eternal X) from a romfs into JSON, names taken from the romfs's own text.
 
 Usage:
-  python -I xy_trainers.py <romfs> <out.json> [fallback-romfs ...]
+  python -I xy_trainers.py [--oras] <romfs> <out.json> [fallback-romfs ...]
+
+--oras reads an ORAS romfs (Navy Sapphire): a/0/3/6 and a/0/3/8, text a/0/7/3, personal a/1/9/5, and the ORAS
+trdata header, whose format and class fields are u16 (pk3DS TrainerData6.cs).
 
 <romfs> is the folder holding a/0/3/8 (trdata), a/0/4/0 (trpoke), a/0/7/4 (English game text) and a/2/1/8
 (personal, for ability names). Archives missing from it (a LayeredFS hack folder ships only what it changed) are
@@ -28,14 +31,21 @@ def archive(roots, path):
     raise FileNotFoundError(path)
 
 
-def main(romfs, out, *fallback):
+XY = dict(trdata="a/0/3/8", trpoke="a/0/4/0", text="a/0/7/4", personal="a/2/1/8", T=(21, 20, 80, 13, 96, 34))
+ORAS = dict(trdata="a/0/3/6", trpoke="a/0/3/8", text="a/0/7/3", personal="a/1/9/5", T=(22, 21, 98, 14, 114, 37))
+
+
+def main(*args):
+    oras = args[0] == "--oras"
+    romfs, out, *fallback = args[1:] if oras else args
+    g = ORAS if oras else XY
     roots = [romfs, *fallback]
-    trdata = archive(roots, "a/0/3/8")
-    trpoke = archive(roots, "a/0/4/0")
-    gt = archive(roots, "a/0/7/4")
-    personal = archive(roots, "a/2/1/8")  # trainer and personal archives are never LZ11-compressed
+    trdata = archive(roots, g["trdata"])
+    trpoke = archive(roots, g["trpoke"])
+    gt = archive(roots, g["text"])
+    personal = archive(roots, g["personal"])  # trainer and personal archives are never LZ11-compressed
     T = lambda i: text(entry(gt[i]))
-    names, classes, species, moves, items, abilities = T(21), T(20), T(80), T(13), T(96), T(34)
+    names, classes, species, moves, items, abilities = (T(i) for i in g["T"])
 
     def ability(spec, form, slot):
         pi = personal[spec]
@@ -45,10 +55,12 @@ def main(romfs, out, *fallback):
         return {0: f"{a[0]} or {a[1]}" if a[0] != a[1] else a[0], 1: a[0], 2: a[1], 3: a[2]}.get(slot, slot)
     trainers = []
     for tid, (d, p) in enumerate(zip(trdata, trpoke)):
-        fmt, cls, battle, count = d[0], d[1], d[2], d[3]
-        bag = [items[i] for i in struct.unpack_from("<4H", d, 4) if i]
-        ai = d[0xC]
-        prize = struct.unpack_from("<H", d, 0x12)[0] if len(d) >= 0x14 else 0
+        h = 4 if oras else 0  # ORAS: u16 format, u16 class, u16 unknown, then the XY layout from byte 2
+        fmt, cls = struct.unpack_from("<HH", d, 0) if oras else (d[0], d[1])
+        battle, count = d[2 + h], d[3 + h]
+        bag = [items[i] for i in struct.unpack_from("<4H", d, 4 + h) if i]
+        ai = d[0xC + h]
+        prize = struct.unpack_from("<H", d, 0x12 + h)[0] if len(d) >= 0x14 + h else 0
         team = []
         if count:
             size = len(p) // count

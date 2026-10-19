@@ -11,7 +11,10 @@ Fetched 2026-10-18 (v1.3.0) from the Documentation folder in
 | `WildPokemon.txt` | Wild encounters by area |
 | `ItemChanges.txt` | Held and evolution item locations, all TM and HM locations, plates, key items |
 | `item-locations.csv` | **Use this for the dex.** 698 rows: 270 from `ItemChanges.txt`, 428 vanilla Platinum placements (`source=vanilla`) for items RP does not document |
-| `romhackdex/items/` | [RomHackDex](https://romhackdex.net/renegade-platinum/items/) item pages (170 held and key items); cross-check only, it adds nothing beyond `ItemChanges.txt` |
+| `romhackdex/pokedex/` | **Use this for the dex.** [RomHackDex](https://romhackdex.net/renegade-platinum/) pages for all 504 Pokémon and forms: stats, types (with Fairy), abilities, evolutions, level-up, TM, tutor and egg moves, wild locations. `PokemonChanges.txt` only covers what changed |
+| `romhackdex/moves.json` | All 467 moves with type, category, power, accuracy, PP, priority and description (`tools/rhd_moves.py`) |
+| `romhackdex/locations/`, `abilities/index.html`, `types/` | 100 location pages, ability descriptions, type chart |
+| `romhackdex/items/` | 230 item pages; cross-check only, it adds nothing beyond `ItemChanges.txt` |
 | `MoveChanges.txt`, `TypeChanges.txt`, `EvolutionChanges.txt`, `TradeChanges.txt` | Changes |
 | `SpecialEvents.txt`, `NPCChanges.txt`, `FrequentlyAskedQuestions.txt` | Events, NPCs, FAQ |
 
@@ -19,9 +22,17 @@ Fetched 2026-10-18 (v1.3.0) from the Documentation folder in
 
 ```bash
 python -I tools/drive_ls.py 1YZl5iShTdRwQIQ7FO1hAJaYBryWxxHwE hacks/renegade-platinum/.src
-python -I tools/mirror.py https://romhackdex.net/renegade-platinum/items/ hacks/renegade-platinum/.src/romhackdex/items 400
+D=hacks/renegade-platinum/.src/romhackdex
+python -I tools/mirror.py https://romhackdex.net/renegade-platinum/ $D 4000 team-builder compare /moves/ /abilities/
+for p in moves abilities; do mkdir -p $D/$p; curl -sL --compressed -A 'Mozilla/5.0' https://romhackdex.net/renegade-platinum/$p/ -o $D/$p/index.html; done
+python -I tools/rhd_moves.py $D/moves/index.html renegade-platinum $D/moves.json
 python -I tools/rp_item_locations.py
 ```
+
+**RomHackDex vs the docs (2026-10-19):** `python -I -X utf8 tools/drayano_check.py hacks/renegade-platinum/.src/PokemonChanges.txt hacks/renegade-platinum/.src/romhackdex/pokedex`
+compares every species `PokemonChanges.txt` changes: all 491 match on base stats and the full level-up list (2
+doc names have no page under that spelling). So RomHackDex is the dex; the docs add trainers (`TrainerPokemon.txt`),
+wild tables with rates (`WildPokemon.txt`), items and events.
 
 ## How item-locations.csv is built
 

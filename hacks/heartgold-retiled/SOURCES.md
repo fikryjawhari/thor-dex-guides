@@ -42,10 +42,22 @@ for ref in dcbe17a7fbcd447ab4258f6b8dbe5ce8659e5cd1:pinned main:main; do
     curl -sL "https://raw.githubusercontent.com/BluRosie/hg-engine/${ref%%:*}/data/$f" -o $D/hg-engine/${ref##*:}/$(basename $f)
   done
 done
+mkdir -p $D/hg-engine/pinned/text  # ability names (720) and descriptions (722)
+for n in 720 722; do curl -sL "https://raw.githubusercontent.com/BluRosie/hg-engine/dcbe17a7fbcd447ab4258f6b8dbe5ce8659e5cd1/data/text/$n.txt" -o $D/hg-engine/pinned/text/$n.txt; done
 python -I tools/hge_species.py $D/hg-engine/pinned $D/hg-engine/species-pinned.json
 python -I tools/hge_species.py $D/hg-engine/main $D/hg-engine/species-main.json
 python -I tools/hge_species.py --diff $D/hg-engine/species-pinned.json $D/hg-engine/species-main.json $D/hg-engine/diff-pinned-vs-main.json
 ```
+
+**Retiled's own engine copy (checked 2026-10-19).** The Retiled repo's `HG-Engine/` folder is not a full fork: it
+holds only the tables Retiled changes (`data/Encounters.c`, `Evolutions.c`, `Trainers.c`, `PokedexArea.c`,
+`src/field/mart.c`), and Trinsic64 has no hg-engine fork on GitHub. So those tables come from Retiled (`source/`
+above) and everything else (species, learnsets, moves, ability text) from upstream at the pin, **never from
+upstream main**, which is about two months newer than what Retiled builds with. The exact answer would be the
+patched ROM's NARCs (the user has a copy on the Thor); not needed unless the pin is in doubt.
+
+Ability names and descriptions: `hg-engine/pinned/text/720.txt` and `722.txt` (one line per ability ID, `\n` is a
+line break). Move descriptions, priority and flags are in `Moves.c`.
 
 For a newer Retiled release, re-pin: the last hg-engine commit before its release date is
 `curl -s "https://api.github.com/repos/BluRosie/hg-engine/commits?sha=main&until=<release ISO time>&per_page=1"`.
