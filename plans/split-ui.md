@@ -79,18 +79,24 @@ between boxes. Mockup = the real build in a frame: https://claude.ai/artifact/Gm
   "Granite Cave 1F" → Grass/cave). Boxes: next-to-each-other areas whose names share their first two words (names of
   3+ words; routes never group); an area with several places of its own never joins one. One-area box: tracker above
   its places; several areas: each place is one area with its tracker inside. Same-named places merge (`adjRows` takes
-  a list). Areas split into tracker slots (`AR[i].sub`, slots have `.in`; `ARS(a)`) show their slots as places: EI's
-  hatch towns have one slot per egg (stage 7), and an egg saved on the town before the split moves to its slot.
+  a list). Areas split into tracker slots (`AR[i].sub`, slots have `.in` and `.t`; `ARS(a)`): one place with the
+  town's name, a yellow section per slot with its own tracker (`locSlots`). EI's hatch towns have one slot per egg
+  (stage 7: Fire / Water / Grass egg, Lavaridge, Pacifidlog egg), and an egg saved on the town before the split moves
+  to its slot.
   `#/l/<place>` opens its box and place and lands it at `T()`.
 - **Trainers** (`trGroup`, `trRows`, `LS.tr` {o boxes, p places, t trainers}): box = one mini-split with its cap
   (data: EI stage 7 from the trainers' caps, Hardlove `split_ui.py` from the sheet's headings) → place (white, sticky,
   collapsible) → trainer row (`details.trd`: name, tags, team preview; open = the full card; not sticky). Bottom bars
-  at all three levels (the walkthrough's styles). Expand / Collapse all inside a box opens or closes its trainer cards.
+  at all three levels (the walkthrough's styles); a trainer's bar lands its header under the pinned place (`pinTop`).
+  Walkthrough trainer rows have no bar (it read the same as the Trainers section's; ideas for one: PROGRESS). Expand / Collapse all inside a box opens or closes its trainer cards.
   The user's reason for mini-splits as boxes: three collapse levels without a new collapse style.
 - **Level row** (`details.capd`, both pages and the walkthrough): closed by default, "Level cap 15", or "Level cap 15 ·
-  yours 17" once set; open state kept in memory (`CAPO`) so stepping the number doesn't close it, not saved.
+  yours 17" once set (setting the cap itself clears yours); open state kept in memory (`CAPO`) so stepping the number doesn't close it, not saved.
 - **Items** (`itemBox`, `LS.items` {o, x, s}): box → its name again as a white sticky heading (dashed stop bar) →
   yellow sub-headings where rows carry one (`r[4]`: EI shops; Hardlove held item kinds, Valuables). Tables `.itbl.ix`.
+- Fixed in round 2: the search bar and section header heights are observed as border boxes (the bar's padding changes
+  at 420 px wide without its content box changing, which left a 4 px gap under it); `#/l/<place>` from search now opens
+  and lands the place (it used to jump back to the top), re-renders on that route no longer reopen it.
 - Shared: `TOG[view]` (one capture `toggle` listener on #app: saving and filling), `colBind` (SHO observes place and
   section headers; sections carry `--ch`), the tap handler covers every page in `COLV`, `.seg.all` = the page's
   boxes, jump buttons on every `COLV` page.

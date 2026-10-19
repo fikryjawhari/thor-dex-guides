@@ -326,15 +326,18 @@ const LGRP=(()=>{const out=[],two=n=>n.split(' ').length>2?n.split(' ').slice(0,
   if(k&&one&&p&&p.one&&p.k===k)p.a.push(i);else out.push({k,one,a:[i]});});
  out.forEach(g=>g.n=g.a.length>1?g.k:AR[g.a[0]].n);return out;})();
 const LSEC=(k,m,tags,body)=>`<details class="sec" data-s="${esc(k+'.'+m)}" ${LO.s[k+'.'+m]===0?'':'open'}><summary><span class="sn">${esc(m)}</span>${tags}</summary><div class="secb">${body}</div><button class="endbar sb" hidden>${UPI}<span>${esc(m)}</span></button></details>`;
+const encTable=(rows,note)=>(note?`<div class="mut small" style="margin:4px 0 2px">${esc(note)}</div>`:'')+`<table class="enc">${rows.map(x=>`<tr class="${x.d?'dupe':''}"><td style="width:44px">${spr(x.p.id,'s40')}</td><td>${plink(x.p.id)}<div>${x.p.t.map(ty).join('')}</div>${x.note&&!note?`<div class="mut small">${esc(x.note)}</div>`:''}</td><td class="n">${esc(x.show)}${x.chg?'<div class="mut small">was '+(x.r?x.r+'%':esc(x.rs))+'</div>':''}</td><td class="n">${x.lv.size?'Lv '+esc([...x.lv].join(', ')):''}</td></tr>`).join('')}</table>`;
+const mTags=(rows,allD)=>allD?'<span class="tag">all dupes</span>':`<span class="mut small">${rows.length}</span>`;
+const locStop=(k,n,tags,body)=>`<details class="stopd" data-k="${k}" ${LO.x[k]===0&&!st.q?'':'open'}><summary class="stoph">${esc(n)}${tags}</summary><div class="stop">${body}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(n)}</span></button></div></details>`;
 function locPlace(a,p,cf,trk){const k=a+'.'+p.j;
- const ms=adjRows(p.ls,cf).map(([m,rows,allD,note])=>LSEC(k,m,allD?'<span class="tag">all dupes</span>':`<span class="mut small">${rows.length}</span>`,
-  (note?`<div class="mut small" style="margin:4px 0 2px">${esc(note)}</div>`:'')+`<table class="enc">${rows.map(x=>`<tr class="${x.d?'dupe':''}"><td style="width:44px">${spr(x.p.id,'s40')}</td><td>${plink(x.p.id)}<div>${x.p.t.map(ty).join('')}</div>${x.note&&!note?`<div class="mut small">${esc(x.note)}</div>`:''}</td><td class="n">${esc(x.show)}${x.chg?'<div class="mut small">was '+(x.r?x.r+'%':esc(x.rs))+'</div>':''}</td><td class="n">${x.lv.size?'Lv '+esc([...x.lv].join(', ')):''}</td></tr>`).join('')}</table>`)).join('');
- return `<details class="stopd" data-k="${k}" ${LO.x[k]===0&&!st.q?'':'open'}><summary class="stoph">${esc(p.n)}${trk?encSummary(a):''}</summary><div class="stop">`+
-  (trk?trackerHTML(a)+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:''):'')+(ms||'<div class="mut small" style="margin:6px 0">No wild Pokémon here.</div>')+
-  `<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(p.n)}</span></button></div></details>`;}
+ const ms=adjRows(p.ls,cf).map(([m,rows,allD,note])=>LSEC(k,m,mTags(rows,allD),encTable(rows,note))).join('');
+ return locStop(k,p.n,trk?encSummary(a):'',(trk?trackerHTML(a)+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:''):'')+(ms||'<div class="mut small" style="margin:6px 0">No wild Pokémon here.</div>'));}
+// A town split into tracker slots (EI's eggs): one place with the town's name, a yellow section per slot with its tracker.
+const locSlots=(a,cf)=>locStop(a+'.0',AR[a].n,encAll(a),AR[a].sub.map(x=>adjRows(AR[x].l,cf).map(([m,rows,allD,note])=>LSEC(a+'.0',m,encSummary(x)+mTags(rows,allD),trackerHTML(x,'')+encTable(rows,note))).join('')).join(''));
 function locBox(g,cf){const one=g.a.length===1&&!AR[g.a[0]].sub,a=g.a[0];let n=0,h;
- if(one){const ps=places(a);n=ps.length;h=trackerHTML(a)+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:'')+ps.map(p=>locPlace(a,p,cf,false)).join('');}
- else{const as=g.a.flatMap(ARS);n=as.length;h=as.map(a=>locPlace(a,places(a)[0],cf,true)).join('');}
+ if(AR[a].sub){n=1;h=locSlots(a,cf);}
+ else if(one){const ps=places(a);n=ps.length;h=trackerHTML(a)+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:'')+ps.map(p=>locPlace(a,p,cf,false)).join('');}
+ else{n=g.a.length;h=g.a.map(a=>locPlace(a,places(a)[0],cf,true)).join('');}
  return (n>1?segBar('lc-sp'):'')+h+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
 TOG.locs=TOG.l=d=>{if(d.matches('details.split[data-a]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=locBox(LGRP[+d.dataset.g],caughtFams(-1));colBind(b);bindTrackers();}
   if(!st.q){if(d.open)LO.o[d.dataset.a]=1;else delete LO.o[d.dataset.a];loSave();}}
@@ -342,7 +345,7 @@ TOG.locs=TOG.l=d=>{if(d.matches('details.split[data-a]')){const b=d.querySelecto
  else if(d.matches('details.sec')){if(d.open)delete LO.s[d.dataset.s];else LO.s[d.dataset.s]=0;loSave();}};
 function listLocs2(scroll){fil.innerHTML='';sug.style.display='none';const s=st.q;const li=st.lopenLi;st.lopenLi=null;
  // Opened from a Pokemon page (#/l/<place>): open its box and place, then scroll it under the search bar.
- let tk=null;if(li!=null&&LOC2A[li]!=null){const a=LOC2A[li];LO.o[LGRP.find(g=>g.a.includes(AR[a].in??a)).a[0]]=1;const p=places(a).find(p=>p.ls.includes(li));tk=a+'.'+p.j;delete LO.x[tk];loSave();}
+ let tk=null;if(li!=null&&LOC2A[li]!=null){const a=LOC2A[li];LO.o[LGRP.find(g=>g.a.includes(AR[a].in??a)).a[0]]=1;tk=AR[a].in!=null?AR[a].in+'.0':a+'.'+places(a).find(p=>p.ls.includes(li)).j;delete LO.x[tk];loSave();}
  const hit=i=>ARS(i).some(i=>AR[i].n.toLowerCase().includes(s)||AR[i].l.some(li=>LOC[li].toLowerCase().includes(s)||(locs[li]||[]).some(([p])=>p.key.includes(s))));
  const list=LGRP.map((g,gi)=>gi).filter(gi=>!s||LGRP[gi].a.some(hit));
  app.innerHTML=tkBar()+`<div class="mut small" style="margin:6px 0">${AR.length} ${TX.locs} Rates are recalculated for the dupes clause from your tracked encounters. Search matches places or Pokémon.</div>`+(s?'':segBar('lc-all all'))+
@@ -381,11 +384,12 @@ const hdr=document.querySelector('header'),html=document.documentElement,GAP=8;
 // The search bar's height while it sticks (0 when it doesn't: very short windows), as --hh for the sticky headers.
 const hdrH=()=>getComputedStyle(hdr).position==='sticky'?hdr.offsetHeight:0;
 const T=()=>hdrH()+GAP;
-new ResizeObserver(()=>html.style.setProperty('--hh',hdrH()+'px')).observe(hdr);
+// Border box: the bar's padding changes at 420 px wide without its content box changing.
+new ResizeObserver(()=>html.style.setProperty('--hh',hdrH()+'px')).observe(hdr,{box:'border-box'});
 // Each stop carries its header's height (one or two lines) as --sh, so its section headers stick right under it, and
 // each section its own header's as --ch (for trainer headers that stick under it). colBind observes new ones.
 const SHO=new ResizeObserver(es=>es.forEach(e=>{const d=e.target.parentElement;d.style.setProperty(d.matches('.sec')?'--ch':'--sh',e.target.offsetHeight+'px');}));
-function colBind(root){root.querySelectorAll('details.stopd>summary,details.sec>summary').forEach(s=>{if(s.dataset.ro)return;s.dataset.ro=1;SHO.observe(s);});barsSoon();}
+function colBind(root){root.querySelectorAll('details.stopd>summary,details.sec>summary').forEach(s=>{if(s.dataset.ro)return;s.dataset.ro=1;SHO.observe(s,{box:'border-box'});});barsSoon();}
 app.addEventListener('toggle',e=>{const d=e.target,f=TOG[document.body.dataset.v];if(f&&d.tagName==='DETAILS'){f(d);barsSoon();}},true);
 const flash=e=>{e.classList.remove('flash');void e.offsetWidth;e.classList.add('flash');};
 // Browser scroll anchoring is off while we move things ourselves (it adds its own correction a frame later), and the
@@ -407,11 +411,15 @@ function bars(){const room=innerHeight-hdrH(),bs=[...app.querySelectorAll('.endb
 let bq=0;const barsSoon=()=>{if(!bq)bq=requestAnimationFrame(()=>{bq=0;bars();});};
 document.addEventListener('contentvisibilityautostatechange',e=>{if(!e.skipped&&app.querySelector('.endbar'))barsSoon();},true);
 addEventListener('resize',()=>{if(app.querySelector('.endbar'))barsSoon();});
-// A collapse bar: a stop's or section's header is pinned at the top already, so it closes in place; a split closes and
-// its header goes to the top. Both flash. (Animated versions were tried and rejected: plans/split-ui.md.)
-function foldUp(d){const sm=d.querySelector(':scope>summary');
- if(!d.matches('details.split')&&sm.getBoundingClientRect().top>=hdrH()-1){flip(d,false);flash(sm);return;}
- noAnchor();d.open=false;bars();const y=sm.getBoundingClientRect().top-T();if(y<0)scrollBy(0,y);flash(sm);hold(sm);jumpState();}
+// A collapse bar. Anything but a split lands right under the headers pinned above it (the search bar, its stop's and
+// section's): a stop's or section's own header is pinned there already, so it closes in place; a trainer row's (not
+// sticky) is scrolled there if it's off the top. A split closes and its header goes to the top. All flash.
+// (Animated versions were tried and rejected: plans/split-ui.md.)
+function pinTop(d){let y=hdrH();for(let p=d.parentElement.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))
+ if(p.open&&p.matches('details.stopd,details.sec'))y+=p.querySelector(':scope>summary').offsetHeight;return y;}
+function foldUp(d){const sm=d.querySelector(':scope>summary'),split=d.matches('details.split'),t=split?T():pinTop(d);
+ if(!split&&sm.getBoundingClientRect().top>=t-1){flip(d,false);flash(sm);return;}
+ noAnchor();d.open=false;bars();const y=sm.getBoundingClientRect().top-t;if(y<0||!split)scrollBy(0,y);flash(sm);hold(sm);jumpState();}
 // Expand all / Collapse all bars (.seg): open or close their list; the bar you pressed stays where it is.
 function segAll(b,list){const open=b.dataset.a==='1',y=b.getBoundingClientRect().top;noAnchor();
  list.forEach(d=>d.open=open);bars();scrollBy(0,b.getBoundingClientRect().top-y);hold(b);jumpState();}
@@ -557,7 +565,7 @@ function trainerBlock(t,mini){const rel=t.p.some(x=>x.l==null);const cap=capOf(t
 // across reloads.
 const CAPO=new Set();
 function bindTrainers(root){(root||app).querySelectorAll('details.capd').forEach(d=>{if(d.dataset.b)return;d.dataset.b=1;d.addEventListener('toggle',()=>{if(d.open)CAPO.add(d.dataset.k);else CAPO.delete(d.dataset.k);});});
- (root||app).querySelectorAll('.capin').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const v=+i.value;if(v>0&&v<=100){TCAP[i.dataset.k]=v;if(CF.capLast)TCAP._last=v;}else delete TCAP[i.dataset.k];try{localStorage.setItem(LS.cap,JSON.stringify(TCAP))}catch(e){}rerender();};});
+ (root||app).querySelectorAll('.capin').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const v=+i.value;if(v>0&&v<=100){if(CF.capLast)TCAP._last=v;if(v!==TRK[i.dataset.k]?.cap)TCAP[i.dataset.k]=v;else delete TCAP[i.dataset.k];}else delete TCAP[i.dataset.k];try{localStorage.setItem(LS.cap,JSON.stringify(TCAP))}catch(e){}rerender();};});
  (root||app).querySelectorAll('.capreset').forEach(a=>{if(a.dataset.b)return;a.dataset.b=1;a.onclick=e=>{e.preventDefault();delete TCAP[a.dataset.k];try{localStorage.setItem(LS.cap,JSON.stringify(TCAP))}catch(e){}rerender();};});}
 let TOPEN={};try{TOPEN=JSON.parse(localStorage.getItem(LS.tr)||'{}')}catch(e){}
 function trHead(){const s=starterType();return `<div class="card">${EVS?`<label class="row" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="mgm" ${MGM?'checked':''}> <span>Minimal Grinding Mode <span class="mut small">(speeds without trainer EVs)</span></span></label>
@@ -588,10 +596,11 @@ TOG.trainers=d=>{if(st.q)return;const k=d.dataset.k;
 function trainerDetail(k){fil.innerHTML='';sug.style.display='none';const t=TRK[k];if(!t){app.innerHTML='<p>Not found.</p>';return;}
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a><div class="mut small" style="margin-top:6px">${esc(t.g)}${t.h?' · '+esc(t.h):''}${t.c&&t.c.length?' · calc: '+t.c.map(esc).join(', '):''}</div>`+trainerBlock(t,true);bindTrainers();window.scrollTo(0,0);}
 // Trainer rows (Trainers page and walkthrough stops): name, tags (and the place, where no heading gives it) and the
-// team preview; open, the full card, built when first opened (bindTrd). open(t): whether a row starts open.
-function trRows(ts,open,loc){
- return ts.map(t=>`<details class="trd" data-k="${t.k}" ${open(t)?'open':''}><summary>${esc(t.n)} <span class="mut small">${[loc?t.loc:'',...t.tags.filter(z=>!/Optional/.test(z))].filter(Boolean).map(esc).join(' · ')}${t.tags.some(z=>/Optional/.test(z))?' · optional':''}</span><span class="trmini">${t.p.map(x=>spr(x.id,'s32')).join('')}</span></summary><div class="trb" data-k="${t.k}"></div><button class="endbar sb" hidden>${UPI}<span>${esc(t.n)}</span></button></details>`).join('');}
-const walkTrainers=ts=>trRows(ts,t=>TRDO.has(t.k),false);
+// team preview; open, the full card, built when first opened (bindTrd). open(t): whether a row starts open; bar: a
+// collapse bar at the bottom (not in the walkthrough, where it read the same as the Trainers section's own).
+function trRows(ts,open,loc,bar=true){
+ return ts.map(t=>`<details class="trd" data-k="${t.k}" ${open(t)?'open':''}><summary>${esc(t.n)} <span class="mut small">${[loc?t.loc:'',...t.tags.filter(z=>!/Optional/.test(z))].filter(Boolean).map(esc).join(' · ')}${t.tags.some(z=>/Optional/.test(z))?' · optional':''}</span><span class="trmini">${t.p.map(x=>spr(x.id,'s32')).join('')}</span></summary><div class="trb" data-k="${t.k}"></div>${bar?`<button class="endbar sb" hidden>${UPI}<span>${esc(t.n)}</span></button>`:''}</details>`).join('');}
+const walkTrainers=ts=>trRows(ts,t=>TRDO.has(t.k),false,false);
 // Walkthrough trainer rows start closed and remember being opened until a reload.
 const TRDO=new Set();
 function bindTrd(root){(root||app).querySelectorAll('details.trd').forEach(d=>{if(d.dataset.b)return;d.dataset.b=1;const fill=()=>{const b=d.querySelector('.trb');if(document.body.dataset.v==='walk'){if(d.open)TRDO.add(d.dataset.k);else TRDO.delete(d.dataset.k);}if(d.open&&b&&!b.innerHTML){b.innerHTML=trainerBlock(TRK[b.dataset.k]);bindTrainers(b);}};d.addEventListener('toggle',fill);fill();});}
@@ -628,7 +637,7 @@ const SR={el:null,q:'',more:{},items:[],
   this.close();
   if(o.k==='p')this.go('#/p/'+o.v);else if(o.k==='t')this.go('#/tr/'+o.v);
   else if(o.k==='f'){if(!st.f.some(f=>f.k===o.v.k&&f.v===o.v.v))st.f.push(o.v);save();q.value='';st.q='';this.go('#/');}
-  else if(o.k==='l'){q.value='';st.q='';this.go('#/l/'+AR[o.v].l[0]);}
+  else if(o.k==='l'){q.value='';st.q='';this.go('#/l/'+AR[ARS(o.v)[0]].l[0]);}
   else{q.value=o.n;st.q=o.n.toLowerCase();this.go(o.k==='i'?'#/items':'#/walk');}},
  row(o,sub){let ic,lb,sb='';
   if(o.k==='p'){const p=byId[o.v];if(!p)return '';ic=spr(p.id,'s32');lb=esc(p.name);sb=p.t.map(ty).join('');}
@@ -646,9 +655,9 @@ const SR={el:null,q:'',more:{},items:[],
    usedMoves.filter(i=>norm(M[i]).includes(n)&&!has('mv',i)).sort((a,b)=>pre(M[a])-pre(M[b])).forEach(i=>f.push({k:'mv',v:i}));
    LOC.map((l,i)=>i).filter(i=>locs[i]&&norm(LOC[i]).includes(n)&&!has('loc',i)).forEach(i=>f.push({k:'loc',v:i}));}
   out.f=f.map(v=>[{k:'f',v}]);
-  const ln=[],lv=[];AR.forEach((A,a)=>{const other=A.l.map(li=>LOC[li]).filter(x=>x!==A.n);
+  const ln=[],lv=[];AR.forEach((A,a)=>{if(A.in!=null)return;const other=A.l.map(li=>LOC[li]).filter(x=>x!==A.n);
    if(norm(A.n).includes(n)||other.some(x=>norm(x).includes(n)))ln.push([{k:'l',v:a},other.join(', ')]);
-   else{const ms=areaSpecies(a).filter(p=>(p.nk??=norm(p.n)).includes(n));if(ms.length)lv.push([{k:'l',v:a},ms.map(p=>p.name).join(', ')]);}});
+   else{const ms=ARS(a).flatMap(areaSpecies).filter(p=>(p.nk??=norm(p.n)).includes(n));if(ms.length)lv.push([{k:'l',v:a},ms.map(p=>p.name).join(', ')]);}});
   out.l=[...ln,...lv];
   out.t=TRS.filter(t=>!rivalHidden(t)&&(t.key.includes(s)||norm(t.key).includes(n))).map(t=>[{k:'t',v:t.k}]);
   out.i=(D.IT||[]).flatMap(sec=>sec.r.filter(r=>(r[0]+' '+r[1]).toLowerCase().includes(s)||norm(r[0]).includes(n)).map(r=>[{k:'i',n:r[0],s:sec.n+' · '+r[1]}]));
@@ -681,7 +690,8 @@ function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).sp
  else if(v==='m'){setTab('p');moveDetail(+parts[1]);}
  else if(v==='a'){setTab('p');abilityDetail(+parts[1]);}
  else if(v==='locs'){setTab('l');listLocs2(false);}
- else if(v==='l'){setTab('l');st.lopenLi=+parts[1];listLocs2(!fromInput);}
+ // #/l/<place>: a navigation (also one typed from search, st.lgo) opens and scrolls to the place once; re-renders don't.
+ else if(v==='l'){setTab('l');const go=!fromInput||st.lgo;st.lgo=false;if(go)st.lopenLi=+parts[1];listLocs2(go);}
  else if(v==='trainers'){setTab('t');listTrainers();}
  else if(v==='tr'){setTab('t');trainerDetail(decodeURIComponent(parts[1]));}
  else if(v==='items'){setTab('i');listItems();}
@@ -702,7 +712,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)posSave();}
 window.dexViewer={restoreScroll(y){let c=null;try{c=JSON.parse(localStorage.getItem(LS.pos)||'null')}catch(e){}
  if(c&&c.h===location.hash&&c.a&&c.a.sel&&app.querySelector(c.a.sel))toAnchor(c.a);else window.scrollTo(0,y);}};
 window.addEventListener('hashchange',()=>{const typed=searchNav;searchNav=false;if(!typed){SR.close();KB.close(true);}if(curKey)SNAP[curKey]={a:keepAnchor(),z:cvSizes()};
- render(typed);curKey=entryKey();if(typed){window.scrollTo(0,0);return;}const sn=SNAP[curKey];if(sn){cvApply(sn.z);toAnchor(sn.a);}});
+ st.lgo=typed;render(typed);curKey=entryKey();if(typed){if(!/^#\/l\//.test(location.hash))window.scrollTo(0,0);return;}const sn=SNAP[curKey];if(sn){cvApply(sn.z);toAnchor(sn.a);}});
 // Opened without a route (the viewer always loads the bare file): go back to the page it was on.
 if(!location.hash||location.hash==='#'){try{const c=JSON.parse(localStorage.getItem(LS.pos)||'null');if(c&&/^#\/[\w\/%.-]*$/.test(c.h))history.replaceState(null,'',c.h);}catch(e){}}
 render(false);curKey=entryKey();

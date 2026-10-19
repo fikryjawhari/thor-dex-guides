@@ -105,8 +105,10 @@ SOURCES
     Speed check: our formula reproduces the sheet's Speed Stat for 592 of 609 checkable Pokemon at the sheet's own cap;
     the 17 misses are sheet slips (Badge 3 Fantina computed at cap 44 though her note says 34, Wally's Skarmory, etc.).
  1j. stage7_split_ui.py (run in this repo on data.json after stage 6; no sources): the split UI's data. Hatch towns
-    (Oldale, Verdanturf, Fallarbor, Mt. Chimney, Lavaridge, Fortree) get one tracker slot per egg (Fire / Water / Grass
-    starter egg by shard, Oldale, Lavaridge, Pacifidlog egg; the user: any egg can hatch at any of them), appended to AR;
+    (Verdanturf, Fallarbor, Mt. Chimney, Lavaridge, Fortree) get one tracker slot per egg (Fire / Water / Grass egg =
+    starter egg by shard, Lavaridge, Pacifidlog egg; the user: any of them can hatch at any of those towns), appended to
+    AR; Oldale keeps only its own egg (the user never hatches one elsewhere); Gardenia (Petalburg Woods, cap 20) moved
+    to the Wattson split at cap 34 (the user delays her for a stronger team; the walkthrough keeps her stop);
     Littleroot's lab and the gift houses of Rustboro, Mossdeep, Sootopolis fold into the town ("Gift (Devon Corp 2F)");
     trainers regrouped into level cap boxes (the cap 84 box, named "Wally in Victory Road" in the cap list, holds the
     Ever Grande trainers too: called "Victory Road"); shop rows get their shop as a sub-heading ("All free" dropped from
