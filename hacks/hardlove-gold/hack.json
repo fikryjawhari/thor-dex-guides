@@ -27,7 +27,9 @@
    "tr": "hgtr",
    "recent": "hgrecent",
    "pos": "hgpos",
-   "mgm": "hgmgm"
+   "mgm": "hgmgm",
+   "loc": "hgloc",
+   "items": "hgitems"
   },
   "txt": {
    "obt": "Obtainable only",

@@ -18,3 +18,11 @@ Chrome or Edge, and Node 22+.
 Work in a scratch folder: copy these files there, put the snapshots next to them, run `gen.py` with the repo path.
 To check motion, sample `getBoundingClientRect()` once per animation frame (this is how the overshoot in the rejected
 collapse animations was found).
+
+Locations, Trainers and Items (second mockup):
+- `pages.py <repo> <out.html>` wraps the built guides (`dist/`, run `assemble.py` first) in `pages-outer.html`: each
+  guide in an iframe srcdoc, with a hook that sets the route and the mockup switches (`data-wt`, `data-mi` on `<html>`)
+  and `<base href="about:srcdoc">` so the guide's own links stay in the frame. The mockup is the real build, so it
+  shows exactly what ships.
+- `pagecheck.mjs <guide.html> <shot-prefix> [kb]`: behaviour test of Locations, Trainers and Items at 260 × 316 (boxes,
+  places, taps, sticky headers, bars, jumps, state after a reload, place links), like `walkcheck.mjs`.

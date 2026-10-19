@@ -1,4 +1,4 @@
-# Split UI: collapsible pages (walkthrough done, other pages next)
+# Split UI: collapsible pages (walkthrough done, other pages in mockup)
 
 Decided with the user on 2026-10-19 over eight mockup rounds, then built into the template for the walkthrough page
 (`#/walk`). This file is the reference for bringing the same patterns to Locations, Trainers and Items (and anything
@@ -67,16 +67,36 @@ https://claude.ai/artifact/Kp64pS46UwPRSsyWVao1Zs. The final mockup choice is "S
   widths; or let the browser size each table (drop `overflow-wrap:anywhere` there), which would make columns differ
   from stop to stop. 30% breaks "Stomping"; EI needs about 37%.
 
-## Bringing it to the other pages (next session)
+## Locations, Trainers, Items (built 2026-10-19, mockup round 1, waiting for the user's picks)
 
-Locations (`listLocs2`, `details.split[data-a]`), Trainers (`listTrainers`, `details.split[data-gi]`, sections inside
-groups) and Items (`listItems`, `details.split[data-si]`) are flat lists of splits today. For each:
-- decide the levels (e.g. Trainers: group → section → trainer), which become split / stop / section;
-- add the expand/collapse bars, rail jump buttons (`JUMP` targets), sticky headers, `flip()` on header taps, bottom
-  bars (`bars()`), and save each level in that page's existing localStorage object (`LS.loc`-style keys: check
-  `hack.json` → `cfg.ls`; don't rename);
-- mock it first at 260 × 316 (CLAUDE.md → Workflow), reusing the walkthrough mockup's approach: snapshot the real
-  page in headless Chrome (`snap.mjs`-style), layer the change over it, and trace motion frame by frame.
+Asked for by the user (same session as the walkthrough check): the walkthrough patterns on the three other pages; top
+level closed by default, everything inside open (except the level box); entries under a box sit on the page, not in
+boxes of their own; rail arrows move between boxes. Mockup = the real build in a frame with switches:
+https://claude.ai/artifact/GmXrq1ATz3jBbi6Q6N5iQH (`tools/mockup/pages.py`, `pages-outer.html`).
+- **Locations** (`LGRP`, `locBox`, `locPlace`, `LS.loc`): box → place (`details.stopd`, sticky) → method
+  (`details.sec`, sticky under it). The user's rule: the place repeats the full name ("Route 102" box → "Route 102"
+  place; "Granite Cave" box → "Granite Cave 1F" → Grass/cave). Boxes: next-to-each-other areas whose names share
+  their first two words (names of 3+ words; routes never group); an area with several places of its own never
+  joins one (HG Safari Zone Gate stays apart). One-area box: tracker above its places; several areas: each place is
+  one area with its tracker inside. Same-named places merge (`adjRows` takes a list): EI Fallarbor / Mt. Chimney had
+  27 "Fallarbor Town Move Relearner House" entries, one per starter egg. `#/l/<place>` opens its box and place and
+  lands it at `T()`.
+- **Trainers** (`trGroup`, `trRows`, `LS.tr` gains `x` places and `t` trainers): box → place (the sheet's section
+  headings, HG and EI Hot House) → trainer row (`details.trd`: name, tags, team preview; open = the full card).
+  EI splits have no headings, so trainers sit straight in the box with their place in the row. Open trainer headers
+  stick under the place (or the search bar). The in-box Expand / Collapse all works on its places, or trainers.
+- **Level box** (`details.capd`, both pages and the walkthrough): closed by default, shows the level in use; open
+  state kept in memory (`CAPO`) so stepping the number doesn't close it, not saved.
+- **Items** (`LS.items`): boxes filled when opened, tables `.itbl.ix` with no card.
+- Shared: `TOG[view]` (one capture `toggle` listener on #app: saving and filling), `colBind` (SHO observes place and
+  section headers; sections carry `--ch`), the tap handler covers every page in `COLV`, `.seg.all` = the page's
+  boxes, jump buttons on every `COLV` page.
+- **Open choices (mockup switches, data attributes on `<html>`):** `data-wt` walkthrough trainer header (a covers the
+  "Trainers" header, the default; b stacks under it, three rows; c doesn't stick), `data-mi` item tables (a no box,
+  the default; b two lines; c joined to the header; now). Once picked, delete the losing CSS rules.
+- Checked: `tools/mockup/pagecheck.mjs` (both guides, 260 × 316: no page errors, width 260, taps hold, stickies,
+  bars, jumps, state after reload, place links) and `walkcheck.mjs` (walkthrough unchanged). Not done: `dvkb` run,
+  `domcompare` against `main`, the Thor.
 
 ## Implementation (as built, 2026-10-19)
 

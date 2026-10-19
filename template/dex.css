@@ -275,3 +275,34 @@ details.sec>summary .tag{margin-left:0}
 .resume{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;min-height:40px;padding:5px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);font:13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-align:left;cursor:pointer}
 .resume b{font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.04em}
 .resume span{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Trainer rows: an open row's header sticks under its place (Trainers page) or section (walkthrough, covering the
+   section header: mockup option a), or under the search bar where nothing is above it. Mockup options: data-wt b
+   stacks it under the section header instead, c doesn't stick it in the walkthrough. */
+details.stopd[open] details.trd[open]>summary{position:sticky;top:calc(var(--hh,0px) + var(--sh,34px));z-index:2;background:var(--bg)}
+.body>details.trd[open]>summary{position:sticky;top:var(--hh,0px);z-index:2;background:var(--bg)}
+html[data-wt=b] details.sec[open] details.trd[open]>summary{top:calc(var(--hh,0px) + var(--sh,34px) + var(--ch,33px))}
+html[data-wt=c] details.sec details.trd[open]>summary{position:static}
+.trd>.trb>.card.trc{margin:6px 0}
+/* The level box inside a trainer card: closed, it shows the level the team's levels use */
+details.capd{margin:2px 0 6px}
+details.capd>summary{list-style:none;cursor:pointer;display:flex;align-items:center;flex-wrap:wrap;gap:2px 5px;min-height:28px;font-size:12px;color:var(--mut);-webkit-tap-highlight-color:transparent}
+details.capd>summary::-webkit-details-marker{display:none}
+details.capd>summary::before{content:'▸';font-size:11px}details.capd[open]>summary::before{content:'▾'}
+details.capd>summary b{color:var(--fg)}
+details.capd>.trk{margin:2px 0 4px}
+/* Locations: the box's tracker above its places */
+.body>.trk{margin:8px 0 4px}
+/* Item tables (Items page, walkthrough items). Mockup options (data-mi): a (default) rows on the page with no box,
+   b each item as two lines, c the table joined to its header as one box, now = as before. */
+.itbl.ix{background:none;border-radius:0;margin:2px 0 4px}
+html[data-mi=now] .body>.itbl.ix,html[data-mi=now] #app>.itbl.ix{background:var(--panel);border-radius:12px;margin:10px 0;box-shadow:0 0 0 1px var(--line)}
+html[data-mi=now] .itbl.wt.ix{background:var(--panel);border-radius:10px;margin:6px 0}
+html[data-mi=b] .itbl.ix,html[data-mi=b] .itbl.ix tbody{display:block}
+html[data-mi=b] .itbl.ix tr{display:block;padding:5px 0;border-bottom:1px solid var(--line)}
+html[data-mi=b] .itbl.ix td{display:block;width:auto!important;border:0;padding:0 2px}
+html[data-mi=b] .itbl.ix td+td{margin-top:1px}
+html[data-mi=c] details.split[data-si][open]>summary{border-radius:10px 10px 0 0}
+html[data-mi=c] details.split[data-si][open]>.body{background:var(--panel);border:1px solid var(--line);border-top:0;border-radius:0 0 10px 10px;padding:0 6px 4px}
+html[data-mi=c] details.split[data-si][open]>.body>.itbl.ix{margin:0}
+html[data-mi=c] .secb>.itbl.wt.ix{background:var(--panel);border-radius:0 0 10px 10px;margin:0 0 2px}
+html[data-mi=c] #app>.itbl.ix{background:var(--panel);border-radius:0 0 10px 10px}

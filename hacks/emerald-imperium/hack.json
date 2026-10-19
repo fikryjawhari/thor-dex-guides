@@ -27,7 +27,9 @@
    "tr": "eitr",
    "recent": "eirecent",
    "pos": "eipos",
-   "mgm": "eimgm"
+   "mgm": "eimgm",
+   "loc": "eiloc",
+   "items": "eiitems"
   },
   "txt": {
    "obt": "Wild + evolutions",
