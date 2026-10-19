@@ -16,13 +16,23 @@ h1{font-size:18px;margin:0 0 4px;text-wrap:balance}
 .opts{flex:1;min-width:0;max-width:560px;display:grid;gap:12px}
 fieldset{border:1px solid var(--line);border-radius:8px;padding:8px 10px 10px;margin:0;background:var(--panel)}
 legend{font-weight:700;font-size:13px;padding:0 4px}
-fieldset label{display:flex;gap:8px;align-items:flex-start;padding:4px 0;cursor:pointer}
-fieldset label input{margin-top:3px;accent-color:var(--acc);flex:none}
-fieldset label span{min-width:0}
-fieldset label small{display:block;color:var(--mut);font-size:12px}
 .tools{display:flex;gap:6px;flex-wrap:wrap}
 .tools button{font:inherit;font-size:13px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:5px 10px;cursor:pointer}
 .tools button[aria-pressed="true"]{background:var(--acc);color:var(--accfg);border-color:var(--acc)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative;display:flex;cursor:pointer}
+.chip input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.chip span{display:flex;align-items:center;min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--panel2);font-size:13px;font-weight:600}
+.chip input:checked+span{background:var(--acc);color:var(--accfg);border-color:var(--acc)}
+.chip input:focus-visible+span{outline:2px solid var(--acc);outline-offset:2px}
+.desc{margin:6px 2px 0;font-size:12px;color:var(--mut)}
+.tools button{min-height:36px}
+@media (max-width:760px){
+ .wrap{gap:12px}
+ .left{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-bottom:8px;border-bottom:1px solid var(--line);width:100%;align-items:center}
+ .opts{max-width:none;width:100%}
+ h1{font-size:16px}.intro{font-size:13px}
+}
 /* guide look */
 .mut{color:var(--mut)}.small{font-size:12px}
 .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:8px 0}
@@ -67,7 +77,7 @@ button:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-
 </style>
 
 <h1>Trainers: the Show switch</h1>
-<p class="intro">Your pick: B's switch (Places · Trainers · Teams) per island, C's "teams" toggle in each place header, "Open all islands / Close all" on top. Real places from the guide (Rowlet picked as starter). The options on the right are the open questions; flip them and click around. Under the frame, a line says what the last press did.</p>
+<p class="intro">B's Show switch per island, C's "teams" toggle per place, real places (Rowlet starter). Flip the options below and click around in the frame; the line under it says what each press did.</p>
 <div class="wrap">
  <div class="left">
   <div class="tools" role="group" aria-label="Viewer size"><button id="s1" data-s="260x316" aria-pressed="true">260 × 316</button><button id="s2" data-s="538x425" aria-pressed="false">538 × 425</button><button id="rst">Reset page</button></div>
@@ -75,41 +85,21 @@ button:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-
   <div class="log" id="log">Press a switch.</div>
  </div>
  <div class="opts" id="opts">
-  <fieldset><legend>1 · Trainers / Teams and closed places</legend>
-   <label><input type="radio" name="m" id="m-all" value="all" checked><span>Open every place<small>The switch sets the whole island. Places closes them all, Trainers opens them all with cards closed, Teams opens them all with cards open. Places you closed by hand open again.</small></span></label>
-   <label><input type="radio" name="m" id="m-open" value="open"><span>Only places already open<small>Trainers and Teams change cards in open places and leave closed ones closed. If nothing is open (just after Places), they open every place.</small></span></label>
-   <label><input type="radio" name="m" id="m-mem" value="mem"><span>Remember my places<small>As above, but Places remembers which places were open; Trainers or Teams after it reopens just those. The first time, every place.</small></span></label>
-  </fieldset>
-  <fieldset><legend>2 · Places you open later</legend>
-   <label><input type="checkbox" id="stk" checked><span>Follow the switch<small>With Teams on, opening a closed place opens its cards too; with Trainers on, it opens with cards closed. Off: a place reopens as you left it.</small></span></label>
-  </fieldset>
-  <fieldset><legend>3 · What the switch lights up</legend>
-   <label><input type="radio" name="l" id="l-live" value="live" checked><span>What's on screen<small>It follows your taps: open one team in Trainers view and the switch shows "mixed" until you pick again.</small></span></label>
-   <label><input type="radio" name="l" id="l-last" value="last"><span>What you last pressed<small>Stays lit whatever you open or close by hand.</small></span></label>
-  </fieldset>
-  <fieldset><legend>4 · Where the switch sits</legend>
-   <label><input type="radio" name="w" id="w-row" value="row"><span>Row under the island header<small>Scrolls away with the island's top.</small></span></label>
-   <label><input type="radio" name="w" id="w-stick" value="stick" checked><span>Row pinned under the island header<small>Stays under the pinned header while you scroll the island, so you can switch from anywhere in it.</small></span></label>
-   <label><input type="radio" name="w" id="w-head" value="head"><span>Inside the island header<small>Part of the header itself (pinned too). One block instead of two.</small></span></label>
-  </fieldset>
-  <fieldset><legend>5 · The place "teams" toggle</legend>
-   <label><input type="radio" name="t" id="t-plain" value="plain" checked><span>teams<small>Lit when any card in the place is open; a press closes them, otherwise opens them all.</small></span></label>
-   <label><input type="radio" name="t" id="t-count" value="count"><span>teams 1/4<small>Same, with how many cards are open.</small></span></label>
-   <label><input type="radio" name="t" id="t-none1" value="hide1"><span>teams, hidden for one-trainer places<small>One trainer: the row is its own toggle.</small></span></label>
-  </fieldset>
-  <fieldset><legend>6 · Pinned place header</legend>
-   <label><input type="checkbox" id="pst" checked><span>Place header pins under the island header<small>As now in the guide, so its "teams" toggle stays reachable in a long place.</small></span></label>
-  </fieldset>
-  <fieldset><legend>7 · Top of the page</legend>
-   <label><input type="radio" name="g" id="g-bar" value="bar" checked><span>Open all islands · Close all<small>As agreed.</small></span></label>
-   <label><input type="radio" name="g" id="g-sw" value="sw"><span>Plus a Show switch for every island<small>Same three choices, applied to all islands (opens them). One tap for "everything down to places".</small></span></label>
-  </fieldset>
+  <fieldset><legend>1 · Trainers / Teams and closed places</legend><div class="chips"><label class="chip"><input type="radio" name="m" id="m-all" value="all" checked><span>Open every place</span></label><label class="chip"><input type="radio" name="m" id="m-open" value="open"><span>Only open ones</span></label><label class="chip"><input type="radio" name="m" id="m-mem" value="mem"><span>Remember mine</span></label></div><p class="desc" data-for="m"></p></fieldset>
+  <fieldset><legend>2 · Places you open later</legend><div class="chips"><label class="chip"><input type="radio" name="stk" id="stk-1" value="1" checked><span>Follow the switch</span></label><label class="chip"><input type="radio" name="stk" id="stk-off" value=""><span>Stay as left</span></label></div><p class="desc" data-for="stk"></p></fieldset>
+  <fieldset><legend>3 · What the switch lights</legend><div class="chips"><label class="chip"><input type="radio" name="l" id="l-live" value="live" checked><span>What's on screen</span></label><label class="chip"><input type="radio" name="l" id="l-last" value="last"><span>Last pressed</span></label></div><p class="desc" data-for="l"></p></fieldset>
+  <fieldset><legend>4 · Where the switch sits</legend><div class="chips"><label class="chip"><input type="radio" name="w" id="w-row" value="row"><span>Row</span></label><label class="chip"><input type="radio" name="w" id="w-stick" value="stick" checked><span>Pinned row</span></label><label class="chip"><input type="radio" name="w" id="w-head" value="head"><span>In header</span></label></div><p class="desc" data-for="w"></p></fieldset>
+  <fieldset><legend>5 · Place "teams" toggle</legend><div class="chips"><label class="chip"><input type="radio" name="t" id="t-plain" value="plain" checked><span>teams</span></label><label class="chip"><input type="radio" name="t" id="t-count" value="count"><span>teams 1/4</span></label><label class="chip"><input type="radio" name="t" id="t-hide1" value="hide1"><span>Hide if 1 trainer</span></label></div><p class="desc" data-for="t"></p></fieldset>
+  <fieldset><legend>6 · Place header</legend><div class="chips"><label class="chip"><input type="radio" name="pst" id="pst-1" value="1" checked><span>Pinned</span></label><label class="chip"><input type="radio" name="pst" id="pst-off" value=""><span>Scrolls away</span></label></div><p class="desc" data-for="pst"></p></fieldset>
+  <fieldset><legend>7 · Top of the page</legend><div class="chips"><label class="chip"><input type="radio" name="g" id="g-bar" value="bar" checked><span>Open / Close all</span></label><label class="chip"><input type="radio" name="g" id="g-sw" value="sw"><span>Plus Show switch</span></label></div><p class="desc" data-for="g"></p></fieldset>
  </div>
 </div>
 
 <script>
 const DATA=[["Melemele Island",[["Route 1",[12,"Captain Ilima","Hau'oli City",14],[["Pokémon Trainer Hau","Popplio 5",[]],["Lass Audrey","Buneary 3 · Ralts 4",[]],["Youngster Jimmy","Caterpie 3 · Weedle 3 · Wurmple 3",[]],["Preschooler Oliver","Rattata (Alola) 3 · Bunnelby 4",[]]]],["Iki Town Festival",[12,"Captain Ilima","Hau'oli City",10],[["Pokémon Trainer Hau","Pichu 7 · Popplio 8",[]]]],["Hau'oli City",[12,"Captain Ilima","Hau'oli City",1],[["Team Skull Grunt","Zubat 10 · Scraggy 10",[]],["Captain Ilima","Yungoos 11 · Porygon 11 · Buneary 11 · Smeargle 12",[]]]],["Big Wave Beach",[16,"Totem Gumshoos","Verdant Cavern",2],[["Team Skull Grunt","Houndour 11 · Whismur 11",[]]]],["Verdant Cavern",[16,"Totem Gumshoos","Verdant Cavern",1],[["Team Skull Grunt","Drowzee 13 · Poochyena 13 · Koffing 13",[]]]]]],["Akala Island",[["Heahea City",[28,"Totem Araquanid","Brooklet Hill",25],[["Pokémon Trainer Dexio","Mr. Mime 21 · Espeon 21 · Slowpoke 22",[]],["Pokémon Trainer Sina","Vulpix (Alola) 21 · Glaceon 21 · Smoochum 21 · Amaura 22",["Prismatic Moon"]]]],["Route 4",[28,"Totem Araquanid","Brooklet Hill",24],[["Bellhop Jody","Fomantis 20 · Venipede 20 · Wooper 20",[]],["Collector Bryan","Munchlax 19 · Bagon 19 · Deino 19 · Jangmo-o 19",[]],["Sightseer Scotty","Rattata 21 · Pidgeotto 21",[]],["Sightseer Perdita","Meowth 21 · Nidorina 21",[]],["Cook Ernie","Cutiefly 20 · Panpour 20 · Pansear 20 · Pansage 20",[]]]],["Paniola Town",[28,"Totem Araquanid","Brooklet Hill",19],[["Pokémon Trainer Hau","Brionne 25 · Pikachu 24 · Noibat 23 · Swinub 23 · Darumaka 22",[]],["Team Skull Grunt","Raticate (Alola) 22 · Stunky 22 · Loudred 22",[]]]]]]];
-const O={m:'all',stk:true,l:'live',w:'stick',t:'plain',pst:true,g:'bar'};
+const O={m:'all',stk:'1',l:'live',w:'stick',t:'plain',pst:'1',g:'bar'};
+const DESC={"m:all": "The switch sets the whole island. Places closes every place; Trainers opens every place with cards closed; Teams opens every place with cards open. Places you closed by hand open again.", "m:open": "Trainers and Teams change cards only in places already open; closed places stay closed. If nothing is open (just after Places), they open every place.", "m:mem": "Like \"Only open ones\", but Places remembers which places were open, and Trainers or Teams after it reopens just those. The first time: every place.", "stk:1": "With Teams on, opening a closed place opens its cards too; with Trainers on, it opens with cards closed.", "stk:": "A place you open shows its cards as you left them.", "l:live": "The switch follows your taps: open one team in Trainers view and it shows \"mixed\" until you pick again.", "l:last": "The switch stays lit on what you last pressed, whatever you open or close by hand.", "w:row": "A row under the island header that scrolls away with the island top.", "w:stick": "A row pinned under the pinned island header, so you can switch from anywhere in the island.", "w:head": "Part of the island header itself (pinned with it). One block instead of two.", "t:plain": "Lit when any card in the place is open. A press closes them, otherwise opens them all.", "t:count": "Same, plus how many cards are open.", "t:hide1": "Same, but no toggle in one-trainer places (the row is its own toggle).", "pst:1": "The place header pins under the island header, so its \"teams\" toggle stays reachable in a long place.", "pst:": "The place header scrolls away with the place.", "g:bar": "Open all islands · Close all, as agreed.", "g:sw": "Also a Show switch for every island at once (opens them). One tap for \"everything down to places\"."};
+function descs(){document.querySelectorAll('.desc').forEach(p=>p.textContent=DESC[p.dataset.for+':'+O[p.dataset.for]]||'');}
 let S;
 function reset(){S={box:{0:1},pl:{},tr:{},last:{},mem:{}};DATA.forEach((b,bi)=>b[1].forEach((_,pi)=>S.pl[bi+'.'+pi]=1));}
 reset();
@@ -172,7 +162,7 @@ fr.addEventListener('toggle',e=>{const d=e.target;if(!d.matches('details'))retur
   if(d.open&&O.stk&&S.last[bi]!=null&&S.last[bi]>0){setCards(bi,pi,S.last[bi]===2);log.innerHTML=`Opened ${esc(DATA[bi][1][pi][0])}: cards follow the switch (${S.last[bi]===2?'Teams, open':'Trainers, closed'}).`;}}
  else if(d.matches('details.trd')){if(!!S.tr[k]===d.open)return;S.tr[k]=d.open?1:0;}
  requestAnimationFrame(()=>draw());},true);
-document.getElementById('opts').addEventListener('change',e=>{const i=e.target;O[i.type==='checkbox'?i.id:i.name]=i.type==='checkbox'?i.checked:i.value;draw();});
+document.getElementById('opts').addEventListener('change',e=>{const i=e.target;O[i.name]=i.value;descs();draw();});descs();
 function size(s){const [w,h]=s.split('x');document.documentElement.style.setProperty('--w',w+'px');document.documentElement.style.setProperty('--h',h+'px');measure();}
 document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b));size(b.dataset.s);});
 document.getElementById('rst').onclick=()=>{reset();log.textContent='Reset: Melemele open, every place open, cards closed.';draw();};
