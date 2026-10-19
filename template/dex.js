@@ -617,7 +617,7 @@ function trHead(){const s=starterType();return `<div class="card">${EVS?`<label 
  ${TRD.mini?capsHead():TRD.caps.length?`<details style="margin-top:6px"><summary class="mut small">Level caps</summary><table class="itbl">${TRD.caps.map(c=>`<tr><td>${esc(c[0])}</td><td>${c[1]}</td></tr>`).join('')}</table></details>`:''}</div>`;}
 // Two sets of level caps (TR.mini [name, where, level, 'trial'|'mini', left out]): the next trial or grand trial, or
 // with the forced boss fights between them. The set (LS.capset) picks each place's cap (s.cap[set] = [level, who,
-// where, battles before it, forced ones]).
+// where, battles left before it]).
 let CSET=0;try{CSET=+localStorage.getItem(LS.capset)||0}catch(e){}
 let CAPSO=false;
 function capsHead(){const rows=TRD.mini.filter(c=>CSET?!c[4]:c[3]==='trial');
@@ -628,7 +628,7 @@ function capsHead(){const rows=TRD.mini.filter(c=>CSET?!c[4]:c[3]==='trial');
 const capOfSec=s=>s.cap&&s.cap[CSET];
 const capTag=s=>{const c=capOfSec(s);return c?`<span class="tag capg">cap ${c[0]}</span>`:'';};
 const capLine=s=>{const c=capOfSec(s);if(!c)return '';const n=c[3];
- return `<div class="capl">Level cap <b>${c[0]}</b> · ${esc(c[1])}, ${esc(c[2])} · ${n?`${n} battle${n===1?'':'s'} before it${c[4]!=null?`, ${c[4]} forced`:''}`:'next'}</div>`;};
+ return `<div class="capl">Level cap <b>${c[0]}</b> · ${esc(c[1])}, ${esc(c[2])} · ${n?`${n} battle${n===1?'':'s'}`:'next'}</div>`;};
 function bindHead(){const m=app.querySelector('#mgm');if(m)m.onchange=()=>{MGM=m.checked;try{localStorage.setItem(LS.mgm,MGM?'1':'0')}catch(e){}rerender();};
  app.querySelectorAll('.capsw button').forEach(b=>b.onclick=()=>{CSET=+b.dataset.s;CAPSO=true;try{localStorage.setItem(LS.capset,CSET)}catch(e){}rerender();});
  const d=app.querySelector('details.capsd');if(d)d.addEventListener('toggle',()=>{CAPSO=d.open;});}

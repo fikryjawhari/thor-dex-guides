@@ -59,13 +59,29 @@ changed), 233 abilities, 72 encounter areas, 513 trainers (488 placed), 35 walkt
   trainers in story order with vanilla teams (Trainerentry for regular trainers, Party for bosses); each entry is
   matched to a vanilla trainer by class + name, then species and levels (pairs like "Twins Isa and Nico" by either
   name), and the hack's trainer with that id is used (the hack edits trainers in place). Leftovers are placed from
-  the location pages' trainer lists, the rest go in "Other trainers" (25 real trainers: unused leftovers like the
-  level 29 Kantonian Gym copies, Hau as a Multi Battle partner, Battle Buffet). 140 placeholder entries (no name, or
-  one level 5 Yungoos with no moves) are dropped. "If the player chose X" (PlayerChoice) is t.st: rival and other
+  the location pages' trainer lists (exact team first, then exact place name, never a prefix in the middle of a
+  number: "Route 17" isn't "Route 1"). Mallow's level 100 team is her post-game Kantonian Gym battle (the Important
+  Trainers doc; Bulbapedia doesn't list it), Ryuki's level 50 the optional pre-League Kantonian Gym, Battle Buffet,
+  Tristan (= Taro) and Harper and Sarah are placed by hand (PLACE), so nothing is left in "Other trainers". 140
+  placeholder entries (no name, or one level 5 Yungoos with no moves) are dropped. 5 walkthrough entries match no
+  trainer (a Fomantis grunt, an Arbok grunt in RR, Rada and Lillie at the Battle Tree, a level 61 Faba): the game
+  data wins, they're left out.
+  Read from the walkthrough: `{{Party/2}}` and `{{tt|lv|...}}` levels, trainerdiv captions (notes), `=== sub-places ===`
+  in Parts 14, 21, 31 (`==== VS X ====` stays in its room). `prize = none` parties are partners (t.pt, shown first in
+  the battle's card; Hau's Aether copies kept once), except the Battle Royal. Trainers fought at once share t.bt
+  (one row per battle); tags Double / Multi Battle / Battle Royal / Prismatic Moon (the MOON table, with "Prismatic
+  Moon only. In Photonic Sun you fight X instead."). Story trainers repeated after the League go to the post-game
+  box; location-page trainers at post-game levels go to "<place>: post-game". "If the player chose X" (PlayerChoice) is t.st: rival and other
   starter-dependent teams follow the starter picker. Pokémon with no moves set use their last four level-up moves
   (the Gen 7 default). A Mega stone holder is shown as its Mega with a0 = the base ability. Bag items are a note.
-  Boxes are story chapters (CHAPTERS); sections are places in walkthrough order. No level caps (TR.caps is empty and
-  the template then hides the caps table).
+  Boxes are story chapters (CHAPTERS); sections are places in walkthrough order. Aether Paradise's second visit is a
+  box by floor; the first (no trainers, the Nihilego fight) is a section at the end of Akala; Episode RR splits by room.
+- **Level caps** (CAPS in trainers.py): the next trial or grand trial (totem levels from Totem Battles.pdf), or with
+  mini caps (story boss fights between trials). A mini cap is left out when it doesn't raise the cap, sits at or
+  above the next trial (Ultra Necrozma 100 before Mina 95) or comes right before it. Each place shows its next cap
+  and the battles left before it: one per battle (t.bt), one starter's rival fight, no optional places, Kantonian
+  Gym, Battle Buffet or Prismatic Moon teams. Route trainers you can walk around all count: no source marks them
+  (Bulbapedia's walkthrough and location pages don't, Serebii doesn't), so there's no "forced" count.
   Checked: Captain Ilima's three teams match Important Trainers, Rebalanced.pdf (species, levels, abilities, items,
   moves). The PDFs are not compared field by field (no "Sheet says" notes); the game data wins anyway.
 - **Items** (items.py): Serebii's Ultra Sun item lists (the hack's zone scripts are vanilla, SOURCES.md), vanilla mart
@@ -100,11 +116,13 @@ paragraph; P.w rows [area, method, rate "%"/"", level, note, 1?] where the note 
 area's sections (the template lists only the other rows, gifts and trades, apart); AR.es the area's sections
 [{n, k grass|water|other, g:[{m label, lv, bl bubbling levels, rows:[{p, r:[day,night], b:[day,night], sos:[[ally,
 ""|"day"|"night"]], note}]}]}]; AR.st 1 = the starter picker is this area's tracker; AR.map [data URI]; AR.note (trade items, Ultra Space Wilds); TR trainers carry `id` (the game's trainer id) and
-`note` (bag items); mons carry `ao` ("Stakeout / Strong Jaw") when the ability slot is random; WK has no cheats or
+`note` (bag items), `bt` (battle id, shared by trainers fought at once), `pt` partners [{n, st, p}], `tags`; sections
+carry `cap` [trial set, with-mini set], each [level, who, where, battles left] or null, and `opt` (optional place);
+TR.mini [name, where, level, "trial"|"mini", left out 0/1]; mons carry `ao` ("Stakeout / Strong Jaw") when the ability slot is random; WK has no cheats or
 checklist steps, and WK.docs holds the game docs.
 
 ## Local storage (prefix ps)
 
 `psdex` list filters, `pscalc:<id>` + `pscalc:lastlv` stat calc, `pstrack` tracker {s starter, e, t}, `pswalk`
 walkthrough open state, `pscap` levels per trainer, `pstr` open trainer boxes, `psrecent` search picks, `pspos` last
-route, `psmgm` Minimal Grinding Mode, `psloc` / `psitems` open boxes. Keep them once published.
+route, `psmgm` Minimal Grinding Mode, `pscapset` level cap set, `psloc` / `psitems` open boxes. Keep them once published.

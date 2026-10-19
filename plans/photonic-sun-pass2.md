@@ -140,6 +140,16 @@ overflows, so probably the footer.
   {{Party}} story fights; the sources don't say which route trainers can be walked around (the user wants that:
   open question, maybe a per-trainer "skipped" mark or a hand list).
   Phone preview republished (version 2).
+- **Round 2, 2026-10-20 (the user's look at preview v2):**
+  - Expand / Collapse: three identical bars (page, island, place) are too many. The island needs both "places" and
+    "trainer cards" (the old behaviour) controls. Mockup at 260 x 316 (small, standalone, fake data, not the full
+    build): https://claude.ai/artifact/UPRRxTN8wJrWEawipmRDwk (Now / A labelled rows / B show switch / C header
+    buttons). Source: `tools/mockup/ps-trainers/expand.html`. Waiting for the pick; then build it in the template (every
+    guide's Trainers page; check Locations / Items / Walkthrough bars stay consistent) and domcompare EI and HG.
+  - No "forced" count (no source marks avoidable trainers; searched Bulbapedia, Serebii, the web). Cap line is now
+    "Level cap 12 · Captain Ilima, Hau'oli City · 14 battles". Done (trainers.py, template).
+  - Walkthrough entries that match no game trainer: the game data wins, leave them out. Done (as built).
+  - notes.md trainers + schema, PROGRESS.md: updated.
 - Hau on Route 1 has no team for a Litten starter: fix. (done)
 - Level 80 Team Skull grunt in Route 1 looks wrong: place it at its real story visit (another Route 1 visit) or move
   it to the bottom. (done: Ancient Poni Path) Same kind: Youngster Kenway in Royal Avenue (already at the bottom).

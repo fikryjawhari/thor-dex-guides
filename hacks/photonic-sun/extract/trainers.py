@@ -535,21 +535,17 @@ def build(D):
     for st in allstops:
         st[2] = keys.get((st[0], st[1]), [])
 
-    # Level caps. Each section gets, for the trial rule and with mini caps, [level, who, where, battles left, forced
-    # battles left]: the next cap at or after it and the battles from the section's start up to that fight (not
-    # counting it). Battles, not
+    # Level caps. Each section gets, for the trial rule and with mini caps, [level, who, where, battles left]: the next
+    # cap at or after it and the battles from the section's start up to that fight (not counting it). Battles, not
     # trainers: a pair is one; one starter's version of a rival fight; no optional places (the walkthrough's
-    # "Optional:" lists, the Kantonian Gym), Battle Buffet or Prismatic Moon teams. The sources don't say which route
-    # trainers can be walked around, so those all count. A mini cap is left out when it doesn't raise the cap, when it's
+    # "Optional:" lists, the Kantonian Gym), Battle Buffet or Prismatic Moon teams. No source says which route
+    # trainers can be walked around (Bulbapedia and Serebii don't mark them), so those all count. A mini cap is left out when it doesn't raise the cap, when it's
     # at or above the next trial (Ultra Necrozma, 100, comes before Mina, 95: going to 100 breaks the next caps), or
     # when it sits right before the next trial with no trainers between.
     lvl = lambda tid: max(m['level'] for m in Hk[tid]['team'])
     post = min(i for i, st in enumerate(allstops) if st[0] >= 29)
     story = [s for x in g for s in x['sec'] if s.get('at', 10 ** 6) < post]
-    # Forced: the walkthrough writes scripted story fights as {{Party}} blocks; route trainers ({{Trainerentry}}) may
-    # or may not be avoidable, and nothing in the sources says which.
-    forced = {tid for e, tid in placed if e.get('boss')}
-    flat, start = [], []  # flat: (section at, bt, vanilla ids, counted, forced); start[i]: story[i]'s first flat index
+    flat, start = [], []  # flat: (section at, bt, vanilla ids, counted); start[i]: story[i]'s first flat index
     for s in story:
         start.append(len(flat))
         for t in s['tr']:
@@ -559,7 +555,7 @@ def build(D):
                 continue
             skip = s.get('opt') or 'Prismatic Moon' in t['tags'] or t['st'] not in ('', STARTERS[0]) or \
                 any(re.search(r'optional|Battle Buffet', z) for z in t['note'])
-            flat.append((s['at'], b, [t['id']], not skip, not skip and t['id'] in forced))
+            flat.append((s['at'], b, [t['id']], not skip))
     caps = []
     for part, stop, who, x, kind in CAPS:
         at = order[(part, stop)]
@@ -581,7 +577,7 @@ def build(D):
     for s, i0 in zip(story, start):
         def nxt(ks):
             c = next((c for c in caps if c['k'] in ks and not c.get('drop') and c['cut'] >= i0 and c['at'] >= s['at']), None)
-            return [c['l'], c['n'], c['w'], sum(f[3] for f in flat[i0:c['cut']]), sum(f[4] for f in flat[i0:c['cut']])] if c else None
+            return [c['l'], c['n'], c['w'], sum(f[3] for f in flat[i0:c['cut']])] if c else None
         if nxt(('trial',)):
             s['cap'] = [nxt(('trial',)), nxt(('trial', 'mini'))]
     for x in g:
