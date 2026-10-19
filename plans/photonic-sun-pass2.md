@@ -4,6 +4,14 @@ Branch `worktree-photonic-sun-changes`. Done one tab at a time (decisions in one
 Trainers, Items, Walkthrough. Every UI change gets a mockup first: a plain interactive HTML artifact at the viewer
 sizes, **the current design on the far left**, then each proposed design beside it.
 
+## Starting a new session on this
+
+Work happens in the worktree `.claude/worktrees/photonic-sun-changes` on branch `worktree-photonic-sun-changes`.
+First run `git branch --show-current`; if it isn't that branch, switch with EnterWorktree (`path` =
+`.claude/worktrees/photonic-sun-changes`), never edit this work on `main`. Its `hacks/photonic-sun/.src/` is its own
+git-ignored copy (no `romfs-dl/`; re-extracting the dex uses main's `romfs-dl` path and the Azahar dumps, see
+SOURCES.md). Merge `main` in before starting if it moved.
+
 ## Status
 
 - 2026-10-20, Locations round 1 mockup: https://claude.ai/artifact/88znwiq6cDMd15oBSp1aDG (designs A/B/C for SOS,
