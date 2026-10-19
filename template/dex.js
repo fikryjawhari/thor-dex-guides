@@ -28,7 +28,7 @@ const alink=i=>`<a href="#/a/${i}">${esc(AB[i][0])}</a>`;
 const cat=c=>c?`<span class="cat ${c}">${c==='Physical'?'Phys':c==='Special'?'Spec':'Status'}</span>`:'';
 // Features show only when the hack's data has them: tutor moves, vanilla comparison, EVs (CF.evs), starter picker (CF.starter).
 const HASTU=P.some(p=>p.tu.length),HASVC=P.some(p=>p.vc),EVS=CF.evs!==false,PICK=CF.starter==='pick';
-function tag(p){let r='';if(p.g===1)r+='&#8203;<span class="tag">Mega</span>';if(p.fc)r+='&#8203;<span class="tag">Form change</span>';else if(p.g===3||p.nu)r+=CF.g3trainer||TRUSE&&TRUSE[p.id]?'&#8203;<span class="tag">Trainer only</span>':'&#8203;<span class="tag">Not found</span>';if(p.g===0&&!p.w.length&&!p.fc)r+='&#8203;<span class="tag">evo/breed</span>';return r;}
+function tag(p){let r='';if(p.g===1)r+='&#8203;<span class="tag">Mega</span>';if(p.fc)r+='&#8203;<span class="tag">Form change</span>';else if(p.g===3||p.nu)r+=CF.g3trainer||TRUSE&&TRUSE[p.id]?'&#8203;<span class="tag">Trainer only</span>':'&#8203;<span class="tag">Not found</span>';return r;}
 const NAT={Lonely:[1,2],Brave:[1,5],Adamant:[1,3],Naughty:[1,4],Bold:[2,1],Relaxed:[2,5],Impish:[2,3],Lax:[2,4],Timid:[5,1],Hasty:[5,2],Jolly:[5,3],Naive:[5,4],Modest:[3,1],Mild:[3,2],Quiet:[3,5],Rash:[3,4],Calm:[4,1],Gentle:[4,2],Sassy:[4,5],Careful:[4,3]};
 const NATS=['Hardy','Docile','Serious','Bashful','Quirky',...Object.keys(NAT)].sort();
 function stat(b,i,iv,ev,lv,nat){if(i===0)return b===1?1:Math.floor((2*b+iv+Math.floor(ev/4))*lv/100)+lv+10;let v=Math.floor((2*b+iv+Math.floor(ev/4))*lv/100)+5;const n=NAT[nat];if(n){if(n[0]===i)v=Math.floor(v*1.1);else if(n[1]===i)v=Math.floor(v*0.9);}return v;}
