@@ -213,7 +213,7 @@ def build(D):
         return set(re.findall(r'[a-z]+|\d+', s.lower().replace("'", '').replace('’', '')))
 
     # Game tables: merge day/night and duplicates, then label
-    used, SOS = Counter(), defaultdict(set)
+    used, SOS, LAB = Counter(), defaultdict(set), []
     for ga in H['encounters']:
         uniq = {}
         for t in ga['tables']:
@@ -250,6 +250,7 @@ def build(D):
                 ttl = next((t for t in titles if toks(t) - GENERIC and toks(t) - GENERIC <= gtoks), None)
                 if ttl:
                     labelled.append((ttl, 'Berry Piles', dk, nk, sos))
+                    LAB.append((ga, tns, ttl, 'Berry Piles', dk, nk, 9999))
                     continue
             if best is None:
                 report('  wild table left out (no PDF table in its area):', ga['location'], f'{lo}-{hi}', sorted(species))
@@ -265,6 +266,7 @@ def build(D):
                 report(f"  table differs from the PDF: {ga['location']} {lo}-{hi} as {pt['title']} / {head}: game only",
                        sorted(species - pt['sp']), 'PDF only', sorted(pt['sp'] - species))
             labelled.append((pt['title'], head, dk, nk, sos))
+            LAB.append((ga, tns, pt['title'], head, dk, nk, best))
         # Same label, different content in one area: number them
         cnt = Counter((t, h) for t, h, *_ in labelled)
         seen = Counter()
@@ -336,6 +338,105 @@ def build(D):
                 added.append(p['n'])
     report('found only as SOS allies:', ', '.join(added))
     availability(D)
+    D['_LT'] = sections(LAB, A, pid_of, tabs)
+
+
+# Small one-off methods that share one "Other" section (each keeps its own label inside it)
+OTHER = ('Berry Piles', 'Ambush Encounters', 'Dust Clouds', 'Shadows', 'Rustling', 'Water Splashes', 'Wimpod')
+
+
+def sections(LAB, A, pid_of, tabs):
+    """Location sections (pass 2 preview, not shipped yet): {area index: {'s': [section], 'ws': [weather SOS allies]}}.
+    A section is one game table (a grass patch, cave, building), or Water (Surfing + Fishing, bubbling as a second
+    rate), or Other (berry piles, ambush, dust clouds...), or Special (gifts, trades, Island Scan). Rows carry
+    [day, night] rates and the allies that Pokémon calls (other species or forms only)."""
+    lv = lambda lo, hi: f'{lo}' if lo == hi else f'{lo}-{hi}'
+    tabsof = lambda ga, tns: [t for t in ga['tables'] if t['table'] == tns[0]]
+    seen, by = set(), defaultdict(list)  # (area, title, head) -> entries; identical tables in two game areas once
+    for ga, tns, title, head, dk, nk, pi in LAB:
+        if title not in A or (title, head, dk, nk) in seen:
+            continue
+        seen.add((title, head, dk, nk))
+        by[(A[title], re.sub(r'^\d+', '', head).replace(' (bubbling)', ''))].append((ga, tns, dk, nk, pi))
+    out = defaultdict(lambda: {'s': [], 'ws': []})
+
+    def rows(ga, tns, dk, nk):
+        allies = defaultdict(lambda: defaultdict(set))
+        for t in tabsof(ga, tns):
+            for (sp, f, r), al in zip(t['slots'], t.get('sosBy', [])):
+                for a, af in al:
+                    if (a, af) != (sp, f):
+                        allies[(sp, f)][pid_of(a, af)].add(t['time'])
+        rs = {}
+        for when, key in (('day', dk), ('night', nk)):
+            for (sp, f), r in (key or (0, 0, ()))[2]:
+                p = pid_of(sp, f)
+                if not p or not r:  # 0% slots (Poni Grove's Ultra Beasts) never appear
+                    continue
+                x = rs.setdefault(p, {'p': p, 'r': [0, 0]})
+                x['r'][when == 'night'] += r
+                al = [[a, '' if len(ts) == 2 else next(iter(ts))] for a, ts in allies[(sp, f)].items() if a and a != p]
+                if al:
+                    x['sos'] = al
+        return list(rs.values())
+
+    def merged(es):
+        """One table in several patches: the copy in the most patches, plus what the others add."""
+        es = sorted(es, key=lambda e: -len(e[1]))
+        rs = rows(*es[0][:4])
+        for e in es[1:]:
+            have = {x['p'] for x in rs}
+            for x in rows(*e[:4]):
+                if x['p'] not in have:
+                    x['note'] = 'Only in some patches'
+                    rs.append(x)
+        return rs
+
+    for (a, head), es in sorted(by.items(), key=lambda kv: (kv[0][0], min(e[4] for e in kv[1]))):
+        for ga, tns, *_ in es:
+            for t in tabsof(ga, tns):
+                for w in t.get('sosWeather', []):
+                    p = pid_of(w)
+                    if p and p not in out[a]['ws']:
+                        out[a]['ws'].append(p)
+        pi = min(e[4] for e in es)
+        S = out[a]['s']
+        m = re.match(r'(Surfing|Fishing)(.*)$', head)
+        if m:
+            name = 'Water' + m.group(2)
+            sec = next((s for s in S if s['n'] == name), None) or (S.append({'n': name, 'k': 'water', 'g': []}) or S[-1])
+            g = {'m': m.group(1), 'lv': '', 'rows': [], 'pi': pi}
+            # Fishing: of the area's copies, the ones reaching the highest level are the bubbling spots (the PDF's
+            # level ranges aren't always the game's, so they can't decide it)
+            top = max(e[2][1] for e in es)
+            fish = m.group(1) == 'Fishing' and len({e[2][1] for e in es}) > 1
+            plain, bub = ([e for e in es if e[2][1] < top], [e for e in es if e[2][1] == top]) if fish else (es, [])
+            g['rows'] = merged(plain)
+            g['lv'] = lv(min(e[2][0] for e in plain), max(e[2][1] for e in plain))
+            if bub:
+                g['bl'] = lv(min(e[2][0] for e in bub), top)
+                have = {x['p']: x for x in g['rows']}
+                for x in merged(bub):
+                    if x['p'] in have:
+                        have[x['p']]['b'] = x['r']
+                    else:
+                        g['rows'].append({'p': x['p'], 'r': [0, 0], 'b': x['r']} | ({'sos': x['sos']} if 'sos' in x else {}))
+            sec['g'].append(g)
+            continue
+        g = {'m': '', 'lv': lv(min(e[2][0] for e in es), max(e[2][1] for e in es)), 'rows': merged(es), 'pi': pi}
+        if head.startswith(OTHER):
+            sec = next((s for s in S if s['k'] == 'other'), None) or (S.append({'n': 'Other', 'k': 'other', 'g': []}) or S[-1])
+            g['m'] = head
+            sec['g'].append(g)
+        else:
+            S.append({'n': head, 'k': 'grass', 'g': [g]})
+    for a, d in out.items():  # Water and Other after the land tables, Fishing before Surfing as in the docs
+        d['s'].sort(key=lambda s: {'grass': 0, 'other': 1, 'water': 2}[s['k']])
+        for s in d['s']:
+            s['g'].sort(key=lambda g: (g['m'] == 'Surfing', g.get('pi', 0)))
+            for g in s['g']:
+                g.pop('pi', None)
+    return dict(out)
 
 
 def availability(D):

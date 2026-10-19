@@ -20,8 +20,14 @@ the split is in that repo's git log.
   compiled (`SOURCES.md`, re-fetch into `.src/`) but no guide yet. **Their source data was checked and completed on
   2026-10-19** (see "Source data check"): every one now has full dex, moves, abilities, wild and trainer data on
   the PC. Next: Photonic Sun and Eternal X guides.
-- **Photonic Sun guide built 2026-10-19** on branch `worktree-photonic-sun` (not merged, not on the Thor yet). See
-  "Photonic Sun guide" below and `hacks/photonic-sun/notes.md`.
+- **Photonic Sun guide built 2026-10-19 and merged into `main`** (not on the Thor yet). See "Photonic Sun guide"
+  below and `hacks/photonic-sun/notes.md`.
+- **Photonic Sun pass 2 (the user's review), started 2026-10-20** on branch `worktree-photonic-sun-changes`
+  (worktree `.claude/worktrees/photonic-sun-changes`, nothing committed yet). Everything is in
+  `plans/photonic-sun-pass2.md`: the feedback per tab, what's decided (Locations design A, doc maps, move page C,
+  ability slots, two template bugs) and what's done. Next: build the Locations decisions into locs.py and the
+  template, then Trainers, Items, Walkthrough one tab at a time. The worktree has its own git-ignored
+  `hacks/photonic-sun/.src/` (copied from main's, without the 887 MB `romfs-dl/`).
 
 ## What's left, in order
 
