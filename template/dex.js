@@ -547,11 +547,13 @@ function bindWalk(){bindTrackers();bindTrd();app.querySelectorAll('.wstep input'
  const r=app.querySelector('.wk-reset');if(r&&!r.dataset.b){r.dataset.b=1;r.onclick=()=>{if(confirm('Clear every walkthrough checkbox?')){WO.c={};woSave();rerender();}};}
  barsSoon();}
 // Taps on the collapsible pages: header taps (flip), the expand / collapse bars (.all = the page's boxes, .tr-sp = the
-// trainer cards of its box, else the blocks of the box it sits in), collapse bars and the walkthrough's Next step.
+// places of its box and their trainers, .tr-pl = the trainers of its place, else the blocks of the box it sits in),
+// collapse bars and the walkthrough's Next step.
 const COLV={walk:1,locs:1,l:1,trainers:1,items:1};
 app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
  const b=e.target.closest('.seg button');
- if(b){segAll(b,b.closest('.all')?app.querySelectorAll('details.split.jt'):b.closest('.body').querySelectorAll(b.closest('.tr-sp')?'details.trd':':scope>details'));return;}
+ if(b){const s=b.closest('.seg');segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.tr-pl')?b.closest('.stop').querySelectorAll('details.trd'):
+  b.closest('.body').querySelectorAll(s.matches('.tr-sp')?'details.stopd,details.trd':':scope>details'));return;}
  const end=e.target.closest('.endbar,.trfold');if(end){foldUp(end.closest('details'));return;}
  if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;delete WO.x[k];WO.s[k+'.c']=1;woSave();render(true);
   const inp=app.querySelector(`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;const l=inp.closest('.wstep'),stop=l.closest('details.stopd'),sec=l.closest('details.sec');
@@ -586,14 +588,22 @@ function monCard(x,cap){const p=byId[x.id];const lv=x.l!=null?x.l:x.r!=null&&cap
  <div class="mv">${x.m.map(i=>`<a href="#/m/${i}"><span class="dot" style="background:${tcol(M[i]==='Hidden Power'&&x.hp?x.hp:(MV[i]||{}).t)}"></span>${M[i]==='Hidden Power'&&x.hp?'HP '+esc(x.hp):esc(M[i])}</a>`).join('')}</div>
  ${ev?`<div class="mut small" style="margin-top:3px">EVs ${ev}</div>`:''}${iv}${(x.x||[]).length?`<div class="mut small">Sheet: ${x.x.map(esc).join('; ')}</div>`:''}
  ${(x.cf||[]).length?`<div class="cfx">Sheet says ${x.cf.map(esc).join('; ')}</div>`:''}</div>`;}
-// row: the card sits in a trainer row (Trainers page, walkthrough), so its bottom line starts with Collapse.
-function trainerBlock(t,mini,row){const rel=t.p.some(x=>x.l==null);const cap=capOf(t);const own=TCAP[t.k]!=null;
+// A partner fighting at your side (t.pt [{n, st, p}], one team per starter where it depends on it): a closed drop-down
+// with the team. Only your starter's team when you've chosen one.
+const ptName=n=>n.replace(/^(Pokémon Trainer|Team Skull) /,'');
+const ptOf=t=>{const s=starterType();const ps=(t.pt||[]).filter(p=>!p.st||!s||p.st===s);return ps.length?ps:t.pt||[];};
+function partnerBlock(t){const ps=ptOf(t);if(!ps.length)return '';
+ return `<details class="ptd"><summary><span class="ptk">Your partner</span> ${esc(ptName(ps[0].n))}${ps.length>1?` <span class="mut small">(${ps.length} teams, by starter)</span>`:''}<span class="trmini">${ps[0].p.map(x=>spr(x.id,'s24')).join('')}</span></summary>
+ ${ps.map(p=>`${ps.length>1?`<div class="mut small" style="margin:4px 0 2px">If your starter is ${esc(p.st)}</div>`:''}<div class="team">${p.p.map(x=>monCard(x,0)).join('')}</div>`).join('')}</details>`;}
+// row: the card sits in a trainer row (Trainers page, walkthrough), so its bottom line starts with Collapse. inRow: in
+// a row whose partner block is shown once above its cards (bindTrd), so not here.
+function trainerBlock(t,mini,row,inRow){const rel=t.p.some(x=>x.l==null);const cap=capOf(t);const own=TCAP[t.k]!=null;
  return `<div class="card trc" id="tr-${t.k}"><div class="trn">${mini?'':`<a href="#/tr/${t.k}">`}${esc(t.n)}${mini?'':'</a>'} <span class="mut small">${esc(t.loc)}</span></div>
  <div style="margin:-2px 0 6px">${t.st?`<span class="tag">If your starter is ${esc(t.st)}</span>`:''}${t.tags.map(z=>`<span class="tag">${esc(z)}</span>`).join('')}</div>
  ${(t.note||[]).length?`<div class="trnote">${t.note.map(esc).join('<br>')}</div>`:''}
  ${t.rw?`<div class="trnote"><b>Rewards:</b> ${t.rw.map(esc).join(', ')}</div>`:''}
  ${rel?`<details class="capd" data-k="${t.k}" ${CAPO.has(t.k)?'open':''}><summary>Level cap <b>${t.cap||'–'}</b>${own?` <span class="mut small">· yours</span> <b>${TCAP[t.k]}</b>`:!t.cap&&cap?` <span class="mut small">· using</span> <b>${cap}</b>`:''}</summary><div class="trk"><span class="mut small">Your level</span>${INV?numBox(`data-k="${t.k}"`,cap||'',{min:1,max:100,steppers:true,label:TX.capl}).replace('class="nv"','class="nv capin"'):`<input class="capin" type="number" inputmode="numeric" min="1" max="100" style="width:72px" data-k="${t.k}" value="${cap||''}">`}<span class="mut small">${own&&t.cap?`<a href="#" class="capreset" data-k="${t.k}">reset to cap ${t.cap}</a>`:t.cap?'':TX.capnone}</span></div></details>`:''}
- <div class="team">${t.p.map(x=>monCard(x,cap)).join('')}</div>
+ ${inRow?'':partnerBlock(t)}<div class="team">${t.p.map(x=>monCard(x,cap)).join('')}</div>
  ${row||t.pp?`<div class="trf mut small">${row?`<button class="trfold">${UPI}<span>Collapse</span></button>`:''}${t.pp?`<span class="trpp"><a href="${esc(t.pp)}" target="_blank" rel="noopener">Pokepaste</a></span>`:''}</div>`:''}</div>`;}
 // The level box under a trainer starts closed; it stays open across re-renders (setting the level re-renders) but not
 // across reloads.
@@ -604,8 +614,24 @@ function bindTrainers(root){(root||app).querySelectorAll('details.capd').forEach
 let TOPEN={};try{TOPEN=JSON.parse(localStorage.getItem(LS.tr)||'{}')}catch(e){}
 function trHead(){const s=starterType();return `<div class="card">${EVS?`<label class="row" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="mgm" ${MGM?'checked':''}> <span>Minimal Grinding Mode <span class="mut small">(speeds without trainer EVs)</span></span></label>
  <div class="mut small" style="margin-top:6px">`:'<div class="mut small">'}${TX.trh.replace('{ev}',MGM?', no EVs':' and EVs')} ${s?TX.trs.replace('{s}',esc(s)):TX.trs0}</div>
- ${TRD.caps.length?`<details style="margin-top:6px"><summary class="mut small">Level caps</summary><table class="itbl">${TRD.caps.map(c=>`<tr><td>${esc(c[0])}</td><td>${c[1]}</td></tr>`).join('')}</table></details>`:''}</div>`;}
-function bindHead(){const m=app.querySelector('#mgm');if(m)m.onchange=()=>{MGM=m.checked;try{localStorage.setItem(LS.mgm,MGM?'1':'0')}catch(e){}rerender();};}
+ ${TRD.mini?capsHead():TRD.caps.length?`<details style="margin-top:6px"><summary class="mut small">Level caps</summary><table class="itbl">${TRD.caps.map(c=>`<tr><td>${esc(c[0])}</td><td>${c[1]}</td></tr>`).join('')}</table></details>`:''}</div>`;}
+// Two sets of level caps (TR.mini [name, where, level, 'trial'|'mini', left out]): the next trial or grand trial, or
+// with the forced boss fights between them. The set (LS.capset) picks each place's cap (s.cap[set] = [level, who,
+// where, battles before it, forced ones]).
+let CSET=0;try{CSET=+localStorage.getItem(LS.capset)||0}catch(e){}
+let CAPSO=false;
+function capsHead(){const rows=TRD.mini.filter(c=>CSET?!c[4]:c[3]==='trial');
+ return `<details class="capsd" ${CAPSO?'open':''}><summary class="mut small">Level caps: <b>${CSET?'with mini caps':'trials and Kahunas'}</b></summary>
+ <div class="capsw" role="group" aria-label="Level caps"><button data-s="0" aria-pressed="${!CSET}">Trials and Kahunas</button><button data-s="1" aria-pressed="${!!CSET}">With mini caps</button></div>
+ <table class="itbl capt">${rows.map(c=>`<tr class="${c[3]}"><td>${esc(c[0])}<div class="mut small">${esc(c[1])}${c[3]==='mini'?' <span class="tag">mini</span>':''}</div></td><td class="n"><b>${c[2]}</b></td></tr>`).join('')}</table>
+ <div class="mut small" style="margin-top:4px">${CSET?'Mini caps are forced boss fights between trials. One that doesn\'t raise the cap, sits at or above the next trial, or comes right before it is left out.':'The next trial or grand trial.'}</div></details>`;}
+const capOfSec=s=>s.cap&&s.cap[CSET];
+const capTag=s=>{const c=capOfSec(s);return c?`<span class="tag capg">cap ${c[0]}</span>`:'';};
+const capLine=s=>{const c=capOfSec(s);if(!c)return '';const n=c[3];
+ return `<div class="capl">Level cap <b>${c[0]}</b> · ${esc(c[1])}, ${esc(c[2])} · ${n?`${n} battle${n===1?'':'s'} before it${c[4]!=null?`, ${c[4]} forced`:''}`:'next'}</div>`;};
+function bindHead(){const m=app.querySelector('#mgm');if(m)m.onchange=()=>{MGM=m.checked;try{localStorage.setItem(LS.mgm,MGM?'1':'0')}catch(e){}rerender();};
+ app.querySelectorAll('.capsw button').forEach(b=>b.onclick=()=>{CSET=+b.dataset.s;CAPSO=true;try{localStorage.setItem(LS.capset,CSET)}catch(e){}rerender();});
+ const d=app.querySelector('details.capsd');if(d)d.addEventListener('toggle',()=>{CAPSO=d.open;});}
 function listTrainers(){fil.innerHTML='';sug.style.display='none';const s=st.q;
  if(s){const a=TRS.filter(t=>t.key.includes(s)&&!rivalHidden(t));app.innerHTML=`<div class="mut small" style="margin-bottom:6px">${a.length} trainers match. Search covers trainer names, places, tags and Pokémon.</div>`+a.map(t=>`<div class="mut small" style="margin-top:10px">${esc(t.g)}${t.h?' · '+esc(t.h):''}</div>`+trainerBlock(t)).join('');bindTrainers();return;}
  app.innerHTML=trHead()+segBar('tr-all all')+TRD.g.map((g,gi)=>{const n=g.sec.reduce((a,x)=>a+x.tr.filter(t=>!rivalHidden(t)).length,0);return `<details class="split jt" data-gi="${gi}" ${TOPEN.o[gi]?'open':''}><summary>${esc(g.n)} <span class="mut small">${n} trainers</span></summary><div class="body"></div></details>`;}).join('')+
@@ -621,7 +647,7 @@ function trGroup(gi){const g=TRD.g[gi];let n=0;
  const secs=g.sec.map((s,si)=>{const ts=s.tr.filter(t=>!rivalHidden(t));
   const head=((s.note||[]).length?`<div class="trnote">${s.note.map(esc).join('<br>')}</div>`:'')+(s.rw?`<div class="trnote"><b>Reward, pick one:</b> ${s.rw.map(z=>{const p=P.find(q=>q.name===z||q.name.startsWith(z+' ('));return p?plink(p.id):esc(z);}).join(', ')}</div>`:'');
   const rows=trRows(ts,t=>TOPEN.t[t.k]!==0,!s.h);if(!s.h){n+=ts.length;return head+rows;}
-  n++;const k=gi+'.'+si;return `<details class="stopd" data-k="${k}" ${TOPEN.p[k]===0?'':'open'}><summary class="stoph">${esc(s.h)} <span class="tag">${ts.length}</span></summary><div class="stop">${head}${rows}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.h)}</span></button></div></details>`;}).join('');
+  n++;const k=gi+'.'+si;return `<details class="stopd" data-k="${k}" ${TOPEN.p[k]===0?'':'open'}><summary class="stoph">${esc(s.h)} <span class="tag">${ts.length}</span>${s.opt?'<span class="tag">optional</span>':''}${capTag(s)}</summary><div class="stop">${capLine(s)}${ts.length>1?segBar('tr-pl'):''}${head}${rows}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.h)}</span></button></div></details>`;}).join('');
  return (n>1?segBar('tr-sp'):'')+(g.note&&g.note.length?`<div class="trnote" style="margin:8px 2px">${g.note.map(esc).join('<br>')}</div>`:'')+secs+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
 TOG.trainers=d=>{if(st.q)return;const k=d.dataset.k;
  if(d.matches('details.split[data-gi]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=trGroup(+d.dataset.gi);colBind(b);bindTrd(b);}if(d.open)TOPEN.o[d.dataset.gi]=1;else delete TOPEN.o[d.dataset.gi];}
@@ -632,12 +658,23 @@ function trainerDetail(k){fil.innerHTML='';sug.style.display='none';const t=TRK[
 // Trainer rows (Trainers page and walkthrough stops): name, tags (and the place, where no heading gives it) and the
 // team preview; open, the full card, built when first opened (bindTrd), with Collapse on its bottom line. open(t):
 // whether a row starts open.
+// With battle ids (t.bt), one row per battle: trainers fought at once share a row ("Grunt + Grunt"), the format and
+// partner as a tag, and the other version's teams (tag Prismatic Moon) fold into a drop-down at the end.
 function trRows(ts,open,loc){
- return ts.map(t=>`<details class="trd" data-k="${t.k}" ${open(t)?'open':''}><summary>${esc(t.n)} <span class="mut small">${[loc?t.loc:'',...t.tags.filter(z=>!/Optional/.test(z))].filter(Boolean).map(esc).join(' · ')}${t.tags.some(z=>/Optional/.test(z))?' · optional':''}</span><span class="trmini">${t.p.map(x=>spr(x.id,'s32')).join('')}</span></summary><div class="trb" data-k="${t.k}"></div></details>`).join('');}
+ if(!ts.some(t=>t.bt))return ts.map(t=>`<details class="trd" data-k="${t.k}" ${open(t)?'open':''}><summary>${esc(t.n)} <span class="mut small">${[loc?t.loc:'',...t.tags.filter(z=>!/Optional/.test(z))].filter(Boolean).map(esc).join(' · ')}${t.tags.some(z=>/Optional/.test(z))?' · optional':''}</span><span class="trmini">${t.p.map(x=>spr(x.id,'s32')).join('')}</span></summary><div class="trb" data-k="${t.k}"></div></details>`).join('');
+ const gs=[];ts.forEach(t=>{const l=gs[gs.length-1];if(l&&t.bt&&l[0].bt===t.bt)l.push(t);else gs.push([t]);});
+ const FMT=/^(Double|Multi) Battle$|^Battle Royal$/,MOON='Prismatic Moon';
+ const row=g=>{const t=g[0],f=t.tags.find(z=>FMT.test(z)),ps=ptOf(t);
+  const nm=g.length>1?g.map(x=>esc(x.n.replace(/^(Pokémon Trainer|Team Skull Boss|Team Skull|Aether Foundation|Team Rainbow Rocket|Aether Branch Chief) /,''))).join(' + '):esc(t.n);
+  const rest=[loc?t.loc:'',...t.tags.filter(z=>!FMT.test(z)&&z!==MOON)].filter(Boolean).map(esc).join(' · ');
+  return `<details class="trd" data-k="${t.k}" data-ks="${g.map(x=>x.k).join(',')}" ${open(t)?'open':''}><summary>${nm} ${f?`<span class="tag fmt">${esc(f.replace(/ Battle$/,''))}${ps.length?' · with '+esc(ptName(ps[0].n)):''}</span>`:''}${t.tags.includes(MOON)?`<span class="tag moon">${MOON}</span>`:''}${rest?` <span class="mut small">${rest}</span>`:''}<span class="trmini">${g.flatMap(x=>x.p).map(x=>spr(x.id,g.length>1?'s24':'s32')).join('')}</span></summary><div class="trb" data-k="${t.k}"></div></details>`;};
+ const moon=gs.filter(g=>g[0].tags.includes(MOON));
+ return gs.filter(g=>!moon.includes(g)).map(row).join('')+(moon.length?`<details class="moond"><summary>${MOON} only <span class="tag">${moon.length}</span> <span class="mut small">the other version's teams</span></summary>${moon.map(row).join('')}</details>`:'');}
 const walkTrainers=ts=>trRows(ts,t=>TRDO.has(t.k),false);
 // Walkthrough trainer rows start closed and remember being opened until a reload.
 const TRDO=new Set();
-function bindTrd(root){(root||app).querySelectorAll('details.trd').forEach(d=>{if(d.dataset.b)return;d.dataset.b=1;const fill=()=>{const b=d.querySelector('.trb');if(document.body.dataset.v==='walk'){if(d.open)TRDO.add(d.dataset.k);else TRDO.delete(d.dataset.k);}if(d.open&&b&&!b.innerHTML){b.innerHTML=trainerBlock(TRK[b.dataset.k],false,true);bindTrainers(b);}};d.addEventListener('toggle',fill);fill();});}
+function bindTrd(root){(root||app).querySelectorAll('details.trd').forEach(d=>{if(d.dataset.b)return;d.dataset.b=1;const fill=()=>{const b=d.querySelector('.trb');if(document.body.dataset.v==='walk'){if(d.open)TRDO.add(d.dataset.k);else TRDO.delete(d.dataset.k);}if(d.open&&b&&!b.innerHTML){const ks=(d.dataset.ks||d.dataset.k).split(',');
+  b.innerHTML=partnerBlock(TRK[ks[0]])+ks.map((k,i)=>trainerBlock(TRK[k],false,i===ks.length-1,true)).join('<div class="vs">and</div>');bindTrainers(b);}};d.addEventListener('toggle',fill);fill();});}
 function usedByCard(p){const u=TRUSE[p.id];if(!u)return '';return `<div class="card"><h3>Used by trainers (${u.length})</h3>${u.map(t=>`<div><a href="#/tr/${t.k}">${esc(t.n)}</a> <span class="mut small">${esc(t.loc)} · ${esc(t.g)}${t.st?(PICK?' · if your starter is '+esc(t.st):' · '+esc(t.st)+' starter'):''}</span></div>`).join('')}</div>`;}
 
 // ===== FULL-WINDOW SEARCH. Tapping the search box covers the page with a query strip, results from every section and

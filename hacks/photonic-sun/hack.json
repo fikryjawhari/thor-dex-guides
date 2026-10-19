@@ -29,7 +29,8 @@
    "pos": "pspos",
    "mgm": "psmgm",
    "loc": "psloc",
-   "items": "psitems"
+   "items": "psitems",
+   "capset": "pscapset"
   },
   "txt": {
    "obt": "Obtainable only",

@@ -125,6 +125,21 @@ overflows, so probably the footer.
   Taro = Tristan, Hau's Aether partner copies dropped. Other: 55 -> 1 (Mallow lv 100, place unknown).
   Caps: CAPS table (totems from Totem Battles.pdf), TR.caps = trials, TR.mini = all [name, where, lv, kind, dropped],
   s.cap = [trial cap, with minis]. Open questions are in the mockup's Findings tab.
+- **Decided and built 2026-10-20 (round 1 sign-off):** design B rows (one per battle, t.bt) with the partner block
+  first in the card (only your starter's team once one is chosen); A's cap tag in the sticky place header plus B's
+  cap line under it, "Level cap 47 · Kahuna Olivia, Ruins of Life · 15 battles before it, 1 forced"; the
+  trials / with mini caps switch in the header (LS.capset, new key `pscapset`). Expand / Collapse all in a box now
+  opens and closes its places too, and every place with 2+ trainers has its own bar for its trainers (template, every
+  guide; EI and HG otherwise unchanged in domcompare). Mallow lv 100 = her post-game Kantonian Gym battle (the
+  Important Trainers doc); the doc also puts Ilima's, Kiawe's and Lana's post-game battles there (Bulbapedia has
+  them elsewhere; kept, with a note). Ryuki lv 50 = the optional pre-League Kantonian Gym. Episode RR stays in its
+  post-game box. Ultra Necrozma's mini cap is struck (a mini cap at or above the next trial is left out).
+  Aether Paradise's first visit (Nihilego) is a section at the end of Akala; the Aether box is visit 2 only.
+  "Battles before it" counts one row per battle, one starter's rival fight, and skips optional places (the
+  walkthrough's "Optional:" lists), the optional Kantonian Gym, Battle Buffet and Prismatic Moon teams. "Forced" =
+  {{Party}} story fights; the sources don't say which route trainers can be walked around (the user wants that:
+  open question, maybe a per-trainer "skipped" mark or a hand list).
+  Phone preview republished (version 2).
 - Hau on Route 1 has no team for a Litten starter: fix. (done)
 - Level 80 Team Skull grunt in Route 1 looks wrong: place it at its real story visit (another Route 1 visit) or move
   it to the bottom. (done: Ancient Poni Path) Same kind: Youngster Kenway in Royal Avenue (already at the bottom).

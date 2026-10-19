@@ -15,12 +15,12 @@ from collections import defaultdict
 from common import BULBA, load, norm, report, fix
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon Ultra Sun and Ultra Moon-Part {}.wiki')
-# Boxes: (walkthrough parts, name). Aether Paradise is one box for its two story visits (Parts 14 and 21).
-CHAPTERS = [(range(1, 7), 'Melemele Island'), (range(7, 14), 'Akala Island'), (range(15, 21), "Ula'ula Island"),
-            ((14, 21), 'Aether Paradise'), (range(22, 27), 'Poni Island'), ((27, 28), 'The Pokémon League'),
+# Boxes: (walkthrough parts, name). Aether Paradise's second visit (Part 21) is its own box; the first (Part 14, no
+# trainers, the Nihilego fight) is a section at the end of Akala, where it falls in the story.
+CHAPTERS = [(range(1, 7), 'Melemele Island'), (range(7, 15), 'Akala Island'), (range(15, 21), "Ula'ula Island"),
+            ((21,), 'Aether Paradise'), (range(22, 27), 'Poni Island'), ((27, 28), 'The Pokémon League'),
             ((29, 30), 'Post-game: Guardians and Poni Grove'), ((31,), 'Post-game: Episode RR'),
             (range(32, 36), 'Post-game: Ultra Space, Battle Tree and Title Defense')]
-VISIT = {14: 'Visit 1', 21: 'Visit 2'}  # Aether Paradise section headings
 # Photonic Sun is built on Ultra Sun; the game data also holds Prismatic Moon's (Ultra Moon's) side of version splits.
 # vanilla id -> note (Bulbapedia marks these {{sup/7|UM}} in prose, not on the trainer entries)
 MOON = {75: 'In Photonic Sun you fight Dexio instead.', 648: 'In Photonic Sun you fight Dulse instead.',
@@ -38,8 +38,15 @@ ALIAS = {'youngstertaro': 'youngstertristan'}  # Bulbapedia's name -> the game's
 # Trainers neither the walkthrough nor a location page places: vanilla id -> (part, place, sub, note)
 PLACE = {**{i: (15, 'Malie City', 'Kantonian Gym', 'Kantonian Gym, optional. The Gym is rechallenged after the League.')
             for i in (547, 548, 549, 550, 555)},
-         630: (15, 'Malie City', 'Kantonian Gym', 'Optional. Bulbapedia only lists his post-game battles; this one sits '
-                                                  'at Malie City by level (place not confirmed).')}
+         630: (15, 'Malie City', 'Kantonian Gym', 'Kantonian Gym, optional, before the League. He fights again there '
+                                                  'after the League and in the Title Defense.'),
+         146: (34, 'Malie City', '', 'Kantonian Gym, after the League (Important Trainers doc: her second battle). '
+                                     'Bulbapedia doesn\'t list it.')}
+# Post-game captain battles the Important Trainers doc puts at the Kantonian Gym, where Bulbapedia (the vanilla game)
+# has them elsewhere (vanilla id -> note)
+DOCNOTE = {396: 'The Important Trainers doc lists this as his Kantonian Gym battle.',
+           398: 'The Important Trainers doc lists this as his Kantonian Gym battle.',
+           144: 'The Important Trainers doc lists this as her Kantonian Gym battle.'}
 LOCSTOP = {'maliegarden': (17, 'Malie City'), 'battlebuffet': (5, "Hau'oli City")}  # location page -> walkthrough stop
 LOCNOTE = {'battlebuffet': 'Battle Buffet in the Shopping Mall, once a day for a fee.'}
 POST = (34, 'post-game')  # where location-page trainers with post-game levels go (part, sub heading)
@@ -373,6 +380,8 @@ def build(D):
             note.append('Prismatic Moon only. ' + MOON[tid])
         if tid in SUN_ONLY:
             note.append(SUN_ONLY[tid])
+        if tid in DOCNOTE:
+            note.append(DOCNOTE[tid])
         if e.get('cond') and not e['cond'].startswith(e['place']):
             note.append(e['cond'] + ('' if e['cond'].endswith('.') else '.'))
         if e.get('note'):
@@ -417,8 +426,8 @@ def build(D):
     # Boxes (chapters) -> sections (part + place + sub-place runs) -> trainers; walkthrough stops keep the same order
     g = [{'n': name, 'cap': 0, 'tab': name, 'note': [], 'sec': []} for _, name in CHAPTERS]
     chap = lambda part: next(i for i, (ps, _) in enumerate(CHAPTERS) if part in ps)
-    AE = chap(14)
-    g[AE]['note'] = ['Visit 1 comes after Akala (Olivia), visit 2 after Nanu. Visit 3 is Episode RR, after the League (its own box).']
+    g[chap(21)]['note'] = ['The second visit, after Nanu. The first (the Nihilego fight) is at the end of Akala Island; '
+                           'the third is Episode RR, after the League.']
     # Every stop of the walkthrough, trainers or not, in order (walk.py adds areas and items)
     allstops = []
     for n in range(1, 36):
@@ -477,22 +486,37 @@ def build(D):
                 seq.append(q)
             q[3].append((e, t['id']))
             left.remove(t)
-    # Post-game rematch sections sit at the end of their stop; Aether Paradise's empty first visit gets its own section
+    # Aether Paradise's first visit has no trainers but a forced fight (and a cap): a section of its own
+    seq.append([14, 'Aether Paradise', '', []])
+    # Places the walkthrough marks optional: the navigation boxes list a part's places, "..., Route 7, Trial 3: Wela
+    # Volcano Park, Optional: Melemele Sea, Seaward Cave, ...". Each optional place belongs to the part that has it as a
+    # stop next to the list's other places (Seaward Cave is a story stop in Part 4, optional in Part 9).
+    opt = set()
+    for n in range(1, 36):
+        for m in re.finditer(r"(?:name=|'')([^|\n]*?)(?:''')?Optional:(?:''')?\s*([^|\n']+)", open(PART.format(n), encoding='utf-8').read()):
+            names = lambda s: [re.sub(r'^Trial \d+: ', '', place_name(x)).strip() for x in s.split(',') if x.strip()]
+            before, after = names(m.group(1)), names(m.group(2))
+            parts = {st[0] for st in allstops if st[1] in after} if not before else \
+                {st[0] for st in allstops if st[1] == before[0]} & {st[0] for st in allstops if st[1] in after}
+            opt |= {(p, x) for p in parts for x in after}
+    # Post-game rematch sections sit at the end of their stop
     sk = lambda q: (order.get((q[0], q[1]), 10 ** 6), q[2] == POST[1], q[2] == 'Kantonian Gym')
     seq.sort(key=sk)
     keys, secs = {}, []
     for part, place, sub, items in seq:
         gi = chap(part)
-        h = (f"{VISIT[part]}: {sub}" if part in VISIT and sub else sub) if gi == AE else \
-            (f'{place}: {sub}' if sub else place)
-        if gi == AE and part == 21 and not any(s['h'].startswith('Visit 1') for s in g[AE]['sec']):
-            g[AE]['sec'].append({'h': 'Visit 1: 2F Conservation Area', 'tr': [], 'note': [
-                'No trainer battles. An Ultra Beast (Nihilego, level 58 in the Totem Battles doc) drops in and you '
-                'fight it with no way to catch it.'], 'at': order[(14, 'Aether Paradise')]})
+        h = sub if part in (21,) else (f'{place}: {sub}' if sub else place)
+        if part == 14:
+            h = 'Aether Paradise (first visit)'
         if g[gi]['sec'] and g[gi]['sec'][-1]['h'] == h:  # the same place again right after (end of one part, start of the next)
             sec = g[gi]['sec'][-1]
         else:
             sec = {'h': h, 'note': [], 'tr': [], 'at': order.get((part, place), 10 ** 6)}
+            if part == 14:
+                sec['note'] = ['No trainer battles. An Ultra Beast (Nihilego, level 58 in the Totem Battles doc) drops '
+                               'in and you fight it with no way to catch it.']
+            if (part, place) in opt or sub == 'Kantonian Gym':
+                sec['opt'] = 1
             g[gi]['sec'].append(sec)
         for e, tid in items:
             k = f"{gi}.{len(g[gi]['sec']) - 1}.{len(sec['tr'])}"
@@ -507,35 +531,59 @@ def build(D):
         g[-1]['sec'].append(sec)
         for t in left:
             k = f"{len(g) - 1}.0.{len(sec['tr'])}"
-            note = 'Post-game rematch (level 100). The walkthrough doesn\'t say where she waits.' if t['id'] == 146 else ''
-            sec['tr'].append(trainer({'place': '', 'st': '', 'note': note}, t['id'], k))
+            sec['tr'].append(trainer({'place': '', 'st': ''}, t['id'], k))
     for st in allstops:
         st[2] = keys.get((st[0], st[1]), [])
 
-    # Level caps: each section's cap is the next cap at or after it ([trial rule, with mini caps]). A mini cap is left
-    # out when it doesn't raise the cap, or sits right before a higher trial (no section with trainers between).
-    # Ultra Necrozma (100) stays: it comes before Mina (95) and Hapu (96).
+    # Level caps. Each section gets, for the trial rule and with mini caps, [level, who, where, battles left, forced
+    # battles left]: the next cap at or after it and the battles from the section's start up to that fight (not
+    # counting it). Battles, not
+    # trainers: a pair is one; one starter's version of a rival fight; no optional places (the walkthrough's
+    # "Optional:" lists, the Kantonian Gym), Battle Buffet or Prismatic Moon teams. The sources don't say which route
+    # trainers can be walked around, so those all count. A mini cap is left out when it doesn't raise the cap, when it's
+    # at or above the next trial (Ultra Necrozma, 100, comes before Mina, 95: going to 100 breaks the next caps), or
+    # when it sits right before the next trial with no trainers between.
     lvl = lambda tid: max(m['level'] for m in Hk[tid]['team'])
+    post = min(i for i, st in enumerate(allstops) if st[0] >= 29)
+    story = [s for x in g for s in x['sec'] if s.get('at', 10 ** 6) < post]
+    # Forced: the walkthrough writes scripted story fights as {{Party}} blocks; route trainers ({{Trainerentry}}) may
+    # or may not be avoidable, and nothing in the sources says which.
+    forced = {tid for e, tid in placed if e.get('boss')}
+    flat, start = [], []  # flat: (section at, bt, vanilla ids, counted, forced); start[i]: story[i]'s first flat index
+    for s in story:
+        start.append(len(flat))
+        for t in s['tr']:
+            b = t.get('bt') or t['k']
+            if flat and flat[-1][1] == b:
+                flat[-1][2].append(t['id'])
+                continue
+            skip = s.get('opt') or 'Prismatic Moon' in t['tags'] or t['st'] not in ('', STARTERS[0]) or \
+                any(re.search(r'optional|Battle Buffet', z) for z in t['note'])
+            flat.append((s['at'], b, [t['id']], not skip, not skip and t['id'] in forced))
     caps = []
     for part, stop, who, x, kind in CAPS:
         at = order[(part, stop)]
-        if isinstance(x, str):  # the named boss at that stop
-            ids = [tid for e, tid in placed if (e['part'], e['place']) == (part, stop) and x in Hk[tid]['name']]
+        if isinstance(x, (str, int)) and not (isinstance(x, int) and x < 0):  # a trainer: the cut is their battle
+            ids = [tid for e, tid in placed if (e['part'], e['place']) == (part, stop) and
+                   (x in Hk[tid]['name'] if isinstance(x, str) else tid == x)]
             lv = max(lvl(i) for i in ids)
-        else:
-            lv = -x if x < 0 else lvl(x)
-        caps.append({'n': who, 'w': stop, 'l': lv, 'k': kind, 'at': at})
-    post = min(i for i, st in enumerate(allstops) if st[0] >= 29)
-    story = [s for x in g for s in x['sec'] if s.get('at', 10 ** 6) < post]
+            cut = next(i for i, f in enumerate(flat) if f[0] == at and set(f[2]) & set(ids))
+        else:  # a totem or Nihilego: after the stop's trainers
+            lv = -x
+            cut = next((i for i, f in enumerate(flat) if f[0] > at), len(flat))
+        caps.append({'n': who, 'w': stop, 'l': lv, 'k': kind, 'at': at, 'cut': cut})
     for i, c in enumerate(caps):
         if c['k'] == 'mini':
             nt = next(d for d in caps if d['k'] == 'trial' and d['at'] >= c['at'])
             prev = max([d['l'] for d in caps[:i] if not d.get('drop')] or [0])
             between = [s for s in story if c['at'] < s['at'] < nt['at'] and s['tr']]
-            c['drop'] = int(c['l'] <= prev or (not between and c['l'] < nt['l']))
-    for s in story:
-        nxt = lambda ks: next((c['l'] for c in caps if c['k'] in ks and c['at'] >= s['at'] and not c.get('drop')), 100)
-        s['cap'] = [nxt(('trial',)), nxt(('trial', 'mini'))]
+            c['drop'] = int(c['l'] <= prev or c['l'] >= nt['l'] or not between)
+    for s, i0 in zip(story, start):
+        def nxt(ks):
+            c = next((c for c in caps if c['k'] in ks and not c.get('drop') and c['cut'] >= i0 and c['at'] >= s['at']), None)
+            return [c['l'], c['n'], c['w'], sum(f[3] for f in flat[i0:c['cut']]), sum(f[4] for f in flat[i0:c['cut']])] if c else None
+        if nxt(('trial',)):
+            s['cap'] = [nxt(('trial',)), nxt(('trial', 'mini'))]
     for x in g:
         for s in x['sec']:
             s.pop('at', None)
