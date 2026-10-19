@@ -42,8 +42,6 @@ def main():
     order = ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'IT', 'WK', 'TR', 'TC', 'built', 'src']
     D = {k: D[k] for k in order if k in D} | {k: v for k, v in D.items() if k not in order}
     write(D, os.path.join(HACK, 'data.json'))
-    if os.environ.get('LT_OUT'):  # pass 2 location sections preview (plans/photonic-sun-pass2.md)
-        json.dump(D['_LT'], open(os.environ['LT_OUT'], 'w', encoding='utf-8'), ensure_ascii=False)
     open(os.path.join(HACK, 'extract', 'report.txt'), 'w', encoding='utf-8', newline='\n').write('\n'.join(REPORT) + '\n')
     print('\n'.join(r for r in REPORT if not r.startswith('  ')))
 

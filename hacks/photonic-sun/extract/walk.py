@@ -9,7 +9,7 @@ location text; the rest are listed in Guide info. Game docs are the hack's own c
 import os, re
 from common import SRC, TXT, norm, report
 
-ALIAS = {'Routes 15 and 16': ['Route 15', 'Route 16'], "Trainers' School": ["Trainer's School"],
+ALIAS = {'Starter': ['Route 1'], 'Routes 15 and 16': ['Route 15', 'Route 16'],"Trainers' School": ["Trainer's School"],
          'Altar of the Sunne': ['Altar of the Sunne'], 'Ultra Space Wilds': ['Ultra Warp Ride']}
 # Item places that are rooms or corners of a walkthrough stop
 ITEM_ALIAS = {'Shady House': 'Po Town', 'Hokulani Observatory': 'Mount Hokulani', 'Plains Grotto': 'Poni Plains',

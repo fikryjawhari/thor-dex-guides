@@ -5,15 +5,16 @@ and one game area holds a copy of the table for every grass patch or fishing spo
 and each one is labelled from "Wild Pokemon Locations.pdf": the PDF is read by word position (area titles are the
 18 pt lines; a table is a bold heading, a bold "Levels: a-b" line and the species in its first column), and each
 game table takes the PDF table with the same level range and the most species in common, preferring tables under
-an area title that matches the game area's name. A fishing table whose levels run higher than the PDF's is the
-bubbling spot. Tables that differ by day and night become two methods ("Grass 1 (day)" / "(night)").
+an area title that matches the game area's name. sections() then builds each area's Locations sections (AR.es: one
+per game table, day and night in one row, Water with the bubbling spot as a second rate, SOS allies per caller), and
+the P.w rows are made from them (hacks/photonic-sun/notes.md says how).
 
 Areas (the tracker's slots) are the PDF's area titles in its order ("roughly the order they become accessible"),
-plus Iki Town for the starter and the places of the Special Encounters doc that have no wild table. SPECIALS is
+plus Starter (first) and the places of the Special Encounters doc that have no wild table. SPECIALS is
 Special Encounters.pdf transcribed by hand (its tables don't survive text extraction); the trades' "you give"
 Pokemon are from Bulbapedia's In-game trade page (the hack keeps the species, the doc only lists the new levels).
 """
-import re
+import base64, io, json, re
 from collections import Counter, defaultdict
 import pdfplumber
 from common import SRC, load, norm, report
@@ -84,7 +85,7 @@ SPECIALS = [
 TRADE_ITEMS = {'Hawlucha': 'Liechi Berry', 'Noibat': 'Dawn Stone', 'Barboach': 'Dusk Stone', 'Arbok': 'Shiny Stone',
                'Phantump': 'Custap Berry', 'Shellos': 'Focus Sash', 'Tauros': 'Life Orb'}
 # Areas with no wild table, and where they go in the area order (before the named PDF area; None = at the end)
-EXTRA_BEFORE = {'Iki Town': 'Route 1', 'Heahea City': 'Route 4', 'Heahea Beach': 'Route 4', 'Royal Avenue': 'Route 6',
+EXTRA_BEFORE = {'Starter': 'Route 1', 'Heahea City': 'Route 4', 'Heahea Beach': 'Route 4', 'Royal Avenue': 'Route 6',
                 'Aether Paradise': "Ula'ula Island", 'Ruins of Conflict': None, 'Ruins of Life': None,
                 'Ruins of Abundance': None, 'Ruins of Hope': None, 'Ultra Megalopolis': None, 'Altar of the Sunne': None,
                 'Ultra Space Wilds': None, 'Any Pokémon Center': None}
@@ -172,11 +173,37 @@ def pdf_tables():
     return tabs, titles
 
 
+def pdf_maps():
+    """{area title: [data URI]}: the doc's area maps with their numbered grass patches (the circles are drawn over the
+    picture, so the page region is rendered, not the image extracted). Island overview pictures have no area title."""
+    pdf = pdfplumber.open(f'{SRC}/Wild Pokemon Locations.pdf')
+    out = {}
+    for pg in pdf.pages[3:]:
+        tl = [w for w in pg.extract_words(extra_attrs=['size']) if round(w['size']) == 18]
+        for im in pg.images:
+            if im['width'] < 50 or (round(im['width']), round(im['height'])) in ((300, 180), (298, 179)):
+                continue  # icons and the area's screenshot
+            top = max((round(w['top']) for w in tl if w['top'] < im['top']), default=None)
+            title = ' '.join(w['text'] for w in sorted(tl, key=lambda w: w['x0']) if top is not None and round(w['top']) == top)
+            title = TITLE_FIX.get(title, re.sub(r"Hau’ oli", "Hau'oli", title).replace('’', "'"))
+            if not title:
+                continue
+            img = pg.crop((im['x0'] - 2, im['top'] - 2, im['x1'] + 2, im['bottom'] + 2)).to_image(resolution=144).original
+            if img.width > 520:
+                img = img.resize((520, round(img.height * 520 / img.width)))
+            b = io.BytesIO()
+            img.convert('RGB').quantize(96).save(b, 'PNG', optimize=True)
+            out.setdefault(title, []).append('data:image/png;base64,' + base64.b64encode(b.getvalue()).decode())
+    report('maps from the wild PDF:', ', '.join(out), f'({sum(len(x) * 3 // 4 for v in out.values() for x in v) // 1024} KB)')
+    return out
+
+
 def build(D):
     P, spec, byid = D['P'], D['_spec'], D['_byid']
     H = load('dex-rebalanced.json')
     sid = {s['name']: s['id'] for s in H['species'] if not s['form']}
     tabs, titles = pdf_tables()
+    MAPS = pdf_maps()
     report('wild PDF:', len(tabs), 'tables under', len(titles), 'area titles')
     areas = []
     for t in titles:
@@ -267,56 +294,51 @@ def build(D):
                        sorted(species - pt['sp']), 'PDF only', sorted(pt['sp'] - species))
             labelled.append((pt['title'], head, dk, nk, sos))
             LAB.append((ga, tns, pt['title'], head, dk, nk, best))
-        # Same label, different content in one area: number them
-        cnt = Counter((t, h) for t, h, *_ in labelled)
-        seen = Counter()
-        for title, head, dk, nk, sos in labelled:
-            for s in sos:
-                SOS[s].add((title, f'{dk[0]}-{dk[1]}'))
-            if cnt[(title, head)] > 1:
-                seen[(title, head)] += 1
-                if seen[(title, head)] > 1:
-                    report('  two different game tables labelled the same, numbered:', title, head)
-                    head = f'{head} (spot {seen[(title, head)]})'
+        for title, head, *_ in labelled:
             if title not in A:
                 report('PDF title not an area:', title)
-                continue
-            for when, key in (('', dk),) if dk == nk else (('day', dk), ('night', nk)):
-                if not key:
-                    continue
-                for (sp, f), r in key[2]:
-                    p = pid_of(sp, f)
-                    if p:
-                        lv = f'{key[0]}' if key[0] == key[1] else f'{key[0]}-{key[1]}'
-                        W[p].append([A[title], head + (f' ({when})' if when else ''), f'{r}%', lv, ''])
     for i, pt in enumerate(tabs):
         if not used[i] and not pt['head'].startswith(('SOS', 'Weather', 'Rain')):
             report('  PDF table no game table matched:', pt['title'], pt['head'], pt['lo'], pt['hi'], sorted(pt['sp']))
-    # Weather SOS tables (PDF only: the game keeps them elsewhere): these allies answer in rain, hail or sand
-    for pt in tabs:
-        if pt['head'].startswith(('Weather SOS', 'Rain SOS')) and pt['title'] in A:
-            for s in pt['sp']:
-                p = next((q['id'] for q in P if sk(q['n']) == s and q['g'] != 1 and not q.get('fc')), None)
-                if p:
-                    W[p].append([A[pt['title']], pt['head'], '', '', 'Answers SOS calls in rain, hail or sandstorm'])
+    # The area's sections (AR[i].es) are what the Locations page shows; each Pokemon's rows (P.w) come from them, with
+    # a 6th field 1 = "already in the area's sections" (the template lists only the other rows, gifts and trades, apart)
+    LT = sections(LAB, A, pid_of, tabs)
+    allies = defaultdict(lambda: defaultdict(lambda: [[], set()]))  # ally -> area -> [callers, levels]
+    for a, d in LT.items():
+        for s in d['s']:
+            for g in s['g']:
+                label = {'grass': s['n'], 'water': f"{s['n']} · {g['m']}", 'other': g['m']}[s['k']]
+                for x in g['rows']:
+                    if any(x['r']):
+                        W[x['p']].append([a, label, rate_str(x['r']), g['lv'], x.get('note', ''), 1])
+                    if any(x.get('b') or ()):
+                        W[x['p']].append([a, label + ' (bubbling)', rate_str(x['b']), g['bl'], '', 1])
+                    for al, w in x.get('sos', []):
+                        c = allies[al][a]
+                        if x['p'] not in c[0]:
+                            c[0].append(x['p'])
+                        c[1] |= {g['lv']} if any(x['r']) else set()
+                        c[1] |= {g['bl']} if any(x.get('b') or ()) else set()
+        for p in d['ws']:
+            W[p].append([a, 'Weather SOS', '', '', 'Any Pokémon here can call it in rain, sand or hail', 1])
+    for al, by in allies.items():
+        for a, (callers, lvs) in by.items():
+            W[al].append([a, 'SOS ally', '', ', '.join(sorted(lvs)), 'Called by ' + ', '.join(byid[c]['n'] for c in callers), 1])
     for s, l in STARTERS:
-        W[pid_of(s)].append([A['Iki Town'], 'Starter choice', '', str(l), 'Choose one from Hala'])
+        W[pid_of(s)].append([A['Starter'], 'Starter choice', '', str(l), 'Choose one on Route 1'])
     for a, m, s, l, n in SPECIALS:
         p = pid_of(s)
         if p:  # a trade's note ("For Spearow") is its label in the tracker; its item goes in the area note
             W[p].append([A[a], m, '', str(l), n])
-    # Merge duplicate rows (same place, method, level) by adding rates
     for p in P:
-        rows = {}
-        for w in W.get(p['id'], []):
-            k = (w[0], w[1], w[3], w[4])
-            if k in rows and w[2]:
-                rows[k][2] = f"{int(rows[k][2][:-1]) + int(w[2][:-1])}%"
-            else:
-                rows.setdefault(k, w)
-        p['w'] = list(rows.values())
+        p['w'] = list({json.dumps(w): w for w in W.get(p['id'], [])}.values())
     D['LOC'] = areas
     D['AR'] = [{'n': a, 'l': [i]} | ({'ns': 1} if a == 'Any Pokémon Center' else {}) for i, a in enumerate(areas)]
+    D['AR'][A['Starter']]['st'] = 1  # the starter picker is this area's tracker
+    for a, d in LT.items():
+        D['AR'][a]['es'] = d['s']
+        if MAPS.get(areas[a]):
+            D['AR'][a]['map'] = MAPS[areas[a]]
     trade_notes = defaultdict(list)
     for a, m, s, l, n in SPECIALS:
         if m == 'Trade':
@@ -326,19 +348,12 @@ def build(D):
     D['AR'][A['Ultra Space Wilds']]['note'] = ('Legendaries from the Special Encounters doc. The other Ultra Wormhole '
                                               'Pokémon are as in Ultra Sun.')
     availability(D)
-    # SOS allies, for Pokemon with no other way in (Kantonian forms answer their Alolan forms' calls, and so on)
-    added = []
-    for p in P:
-        if p['g'] == 3 and not p.get('fc'):
-            names = {n for n in SOS if n == p['n'] or (p['dex'] == sid.get(n) and spec.get((sid[n], 0)) == p['id'])}
-            for n in names:
-                for title, lv in sorted(SOS[n]):
-                    p['w'].append([A[title], 'SOS ally', '', lv, 'Answers a wild Pokémon\'s call for help'])
-            if names:
-                added.append(p['n'])
-    report('found only as SOS allies:', ', '.join(added))
-    availability(D)
-    D['_LT'] = sections(LAB, A, pid_of, tabs)
+    report('found only as SOS allies:', ', '.join(p['n'] for p in P if p['w'] and all(w[1] == 'SOS ally' for w in p['w'])))
+
+
+def rate_str(r):
+    d, n = r
+    return f'{d}%' if d == n else f'{d}% (day)' if not n else f'{n}% (night)' if not d else f'{d}% day, {n}% night'
 
 
 # Small one-off methods that share one "Other" section (each keeps its own label inside it)

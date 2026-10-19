@@ -27,14 +27,28 @@ changed), 233 abilities, 72 encounter areas, 513 trainers (488 placed), 35 walkt
   Identical tables merge; each is labelled from `Wild Pokemon Locations.pdf`, read by word position (area titles are
   the 18 pt lines; a table is a bold heading, a bold "Levels: a-b" line, species in the first column). A game table
   takes the PDF table under a matching area title that shares at least half its species, scored on species and the
-  level range; the bubbling fishing spot is the copy whose levels run higher. Small partial matches that aren't water
-  tables are "Ambush Encounters" (shaking trees and grass the PDF doesn't always list); same label, different
-  contents become "(spot 2)". Tables differing by time become "(day)" / "(night)". The game's leftover placeholder
-  tables (Route 1 copies at level 2-3, Pikipek 100% in towns) are left out.
-  Weather SOS tables come from the PDF only (no levels). SOS allies (the game tables' `sos` lists) are listed only
-  for Pokémon with no other source (all Kantonian forms, the Pansage line, Mareanie, Sableye, Baltoy...).
-- **Areas** (tracker slots) are the PDF's area titles in its order, plus Iki Town (starter choice, first so the rival
-  filter has a place) and the places of the Special Encounters doc. TITLE_FIX tidies three titles.
+  level range. Small partial matches that aren't water tables are "Ambush Encounters" (shaking trees and grass the
+  PDF doesn't always list). The game's leftover placeholder tables (Route 1 copies at level 2-3, Pikipek 100% in
+  towns) are left out.
+- **Sections** (2026-10-20, `sections()` in locs.py, the user's design A): each area's Locations page is one section
+  per game table, named from the PDF (Grass 1, Hau'oli Outskirts, Cave...), with day and night in one row ([day,
+  night] rates). The same table in two game areas counts once (it used to double Route 1's Grass 2/3 rates); copies of
+  a table in other patches merge, and a species only some copies have says "Only in some patches" (Route 1 Grass 3:
+  Scatterbug at night). Water = Fishing + Surfing; of an area's fishing copies, the higher-level ones are the
+  bubbling spot, shown as a second rate (the PDF's level ranges don't always match the game's, so they can't decide
+  it). Berry piles, ambush, dust clouds, shadows, splashes and Wimpod share an "Other" section. 0% slots are dropped
+  (Poni Grove's Stakataka / Blacephalon).
+- **SOS** (tools/ctr_dex.py `sosBy`): each slot's allies, so a row knows exactly whom it calls (Corsola → Mareanie,
+  Clamperl → Gorebyss by day, Huntail at night); allies the same as the caller are left out, other forms kept
+  (Kantonian Rattata, East Sea Shellos). Every ally gets a P.w row "SOS ally", note "Called by ...", so Pokémon pages,
+  search and the tracker know it. Weather allies (rain, sand, hail) come from the game's tables (`sosWeather`).
+  This found Eternal Floette (Poni Meadow) and Diancie (Carbink) as allies, so they're obtainable now.
+- **Maps** (`pdf_maps()`): the PDF's numbered grass maps (Route 1, Hau'oli City, Routes 2, 3, 5, 6, Mount Hokulani),
+  rendered from the page (the circles are drawn over the picture), at most 520 px wide, 96 colours, as data URIs
+  in AR.map (134 KB). Credited to the doc in the guide. The island overview pictures are skipped.
+- **Areas** (tracker slots) are the PDF's area titles in its order, plus Starter (first, so the rival filter has a
+  place; Ultra Sun gives the starter on Route 1, so the walkthrough files it under Route 1) and the places of the
+  Special Encounters doc. TITLE_FIX tidies three titles.
 - **Specials** (SPECIALS in locs.py): Special Encounters.pdf transcribed by hand from word positions (Island Scan by
   weekday with special moves, the Ultra Wormhole legendaries, gifts, totem stickers, fossils). The doc says
   legendaries it doesn't list "can be found in their usual locations ... at higher levels", so Ultra Sun's places are
@@ -68,17 +82,24 @@ changed), 233 abilities, 72 encounter areas, 513 trainers (488 placed), 35 walkt
 
 - The Move Changes doc says Triple Kick 10 → 20 power; the game data still has 10. Toxic Thread's new effect isn't a
   number the move data shows.
-- Wild tables that differ from the PDF: Vast Poni Canyon grass has Boldore (not in the PDF), Poni Grove grass has
-  Stakataka / Blacephalon (post-game), Malie Garden fishing spots swap Goldeen and Seaking, Route 1 Grass 3 has
-  Scatterbug at night. The game is shown.
+- Wild tables that differ from the PDF (the game is shown; the full list, rates and levels included, is
+  `tools/mockup/ps-locations/pdfcmp.py`'s output, summed up in the round 1 mockup's Findings tab): fishing rates on
+  Routes 7 and 9, Akala Outskirts, Seafolk Village (Dhelmise 50%, doc 5%), Poni Breaker Coast, Malie Garden (Goldeen
+  and Seaking swap by spot); grass rates on Route 5, Brooklet Hill, Ula'ula Meadow, Vast Poni Canyon (plus Boldore),
+  Poni Meadow, Route 16, Ancient Poni Path, Thrifty Megamart; levels at Verdant Cavern, Route 3 shadows, Route 8
+  surfing and most bubbling spots; Poni Wilds berry piles are half Crabrawler; Route 1 Grass 3 has Scatterbug at
+  night in one patch; Poni Grove's Stakataka / Blacephalon slots are 0%.
 - Not in the hack's sources at all: totem battle sets (Totem Battles.pdf is a game doc, not trainer cards).
 
 ## Data schema
 
 As Hardlove Gold (hacks/hardlove-gold/notes.md → DATA SCHEMA), with: P ids are slugs of the display name
 ("raichu-alola", "mega-charizard-x"); P.vc {s, t, a} vanilla values; MV.h always a list; MV.e + MV.dc the doc's
-paragraph; P.w rows [area, method, rate "%"/"", level, note] where the note of a Trade is its tracker label
-("For Spearow"); AR.note (trade items, Ultra Space Wilds); TR trainers carry `id` (the game's trainer id) and
+paragraph; P.w rows [area, method, rate "%"/"", level, note, 1?] where the note of a Trade is its tracker label
+("For Spearow"), the rate may say "20% (day)" / "15% day, 20% night", and a 6th field 1 means the row repeats the
+area's sections (the template lists only the other rows, gifts and trades, apart); AR.es the area's sections
+[{n, k grass|water|other, g:[{m label, lv, bl bubbling levels, rows:[{p, r:[day,night], b:[day,night], sos:[[ally,
+""|"day"|"night"]], note}]}]}]; AR.st 1 = the starter picker is this area's tracker; AR.map [data URI]; AR.note (trade items, Ultra Space Wilds); TR trainers carry `id` (the game's trainer id) and
 `note` (bag items); mons carry `ao` ("Stakeout / Strong Jaw") when the ability slot is random; WK has no cheats or
 checklist steps, and WK.docs holds the game docs.
 

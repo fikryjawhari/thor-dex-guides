@@ -245,7 +245,8 @@ body.kbopen .sres{padding-bottom:calc(var(--kbh,0px) + 8px)}
 .body>.seg{margin:8px 0 2px}.body>.seg button{min-height:26px;color:var(--mut)}
 /* Sticky headers: an open stop's header under the search bar (--hh), an open section's under its stop's (--sh) */
 details.stopd[open]>summary{position:sticky;top:var(--hh,0px);z-index:3;background:var(--bg)}
-details.stopd[open] details.sec[open]>summary{position:sticky;top:calc(var(--hh,0px) + var(--sh,34px));z-index:2;background:var(--bg)}
+/* 1px under the stop header (it sits above): rounding can't open a gap between the two */
+details.stopd[open] details.sec[open]>summary{position:sticky;top:calc(var(--hh,0px) + var(--sh,34px) - 1px);z-index:2;background:var(--bg)}
 /* Sections inside a stop */
 details.sec{margin:4px 0 2px}
 details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;flex-wrap:wrap;gap:3px 6px;min-height:32px;padding:4px 18px 4px 0;position:relative;border-bottom:1px solid var(--line);-webkit-tap-highlight-color:transparent}
@@ -305,3 +306,28 @@ details.capd>.trk{margin:2px 0 4px}
 .trfold{display:flex;align-items:center;gap:3px;min-height:28px;border:0;background:none;color:inherit;font:inherit;padding:0 8px 0 0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .trfold svg{flex:none;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .trfold:active{color:var(--acc)}
+/* Encounter sections (AR[i].es): sun / moon / bubbling icons, a rate per line, group labels, SOS drop-downs, maps */
+.dn{width:12px;height:12px;vertical-align:-2px;margin-right:2px;flex:none}
+.dn.s{color:#d9980b}.dn.m{color:#7f9cff}.dn.b{color:#2fa9cc}
+table.lt td.n{vertical-align:top}table.lt .rt{display:block;white-space:nowrap}
+.ltsub{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:center;margin:10px 0 2px;font-size:12px;color:var(--mut)}
+.ltsub b{color:var(--fg);font-size:13px}
+.ltkey{margin:4px 0 6px}
+.sosd{margin-top:3px}
+.sosd>summary{list-style:none;cursor:pointer;font-size:12px;color:var(--mut);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 0;min-height:22px}
+.sosd>summary::-webkit-details-marker{display:none}
+.sosd>summary::before{content:'▸ '}.sosd[open]>summary::before{content:'▾ '}
+.sosk{font-weight:700;color:var(--acc)}
+.sosl{display:grid;gap:5px;margin:2px 0 4px;padding-left:7px;border-left:2px solid var(--line)}
+.sosa{display:flex;gap:6px;align-items:center;font-size:13px;min-width:0}.sosa .ty{font-size:10px;padding:0 4px}
+.sosa.dupe{opacity:.45}.sosa.dupe a{text-decoration:line-through}
+.mapd{margin:4px 0 6px}.mapd>summary{cursor:pointer;font-size:13px;color:var(--acc);font-weight:600;padding:4px 0}
+.mapd img{display:block;max-width:100%;height:auto;border-radius:6px;margin:4px 0}
+/* Move page stats: four boxes, two by two when narrow */
+.mvst{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin-top:8px}
+.mvst>div{background:var(--panel2);border-radius:8px;padding:5px 8px;display:flex;flex-direction:column}
+.mvst span{font-size:11px;color:var(--mut);font-weight:600}.mvst b{font-variant-numeric:tabular-nums}
+/* Learned by / Pokémon with it: a long name may break rather than widen the page at 260 (a few move pages were 261) */
+table.lrn td:nth-child(2){overflow-wrap:anywhere}
+/* The starter picker shrinks instead of running out of the tracker bar at 260 */
+.tkbar select{min-width:0;max-width:100%}.trk .st-pick{min-width:0}

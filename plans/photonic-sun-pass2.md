@@ -33,7 +33,21 @@ SOURCES.md). Merge `main` in before starting if it moved.
   <out.html>`. Test over http (`python -m http.server`), not file:// (srcdoc frames get an opaque origin there).
   check.mjs: `node check.mjs <url> <shot.png> [loc|mv|ab] [area name]`.
 
-### Decided 2026-10-20 (round 1 sign-off), next: build them
+### Built 2026-10-20 (same session), waiting for the user's look on the phone preview / Thor
+
+Everything in the list below is built: sections as AR.es (data.json), SOS drop-downs with ally search, Starter box
+(AR.st) synced with the tracker bar's picker, doc maps (AR.map, rendered by locs.py `pdf_maps()`), move page stat
+boxes, ability slot tags, the sticky gap (fractional `--sh`/`--hh` and a 1px tuck), the starter picker ("Not chosen",
+shrinks), a zero-width space before every tag so it can wrap, `table.lrn` names may break (two move pages were 261).
+The walkthrough's encounter lines now come from the sections (one line per section; the walkthrough tab redo is
+later). The evo/breed tag is still shown elsewhere: ask the user whether to drop it everywhere.
+Checks: `tools/mockup/ps-locations/guidecheck.mjs` (260x316, normal and kb): no page errors, every location /
+move / ability page 260 wide. `domcompare` EI and HG vs main, normal and `--kb`, with the expected changes ignored
+(zero-width space, move stats, ability slots, `lrn`, "(show all)", `--sh`/`--ch` values): 0 differing, 0 errors.
+Found, not fixed (older, HG only): the Infiltrator ability page is 262 wide at 260 in main too; nothing inside #app
+overflows, so probably the footer.
+
+### Decided 2026-10-20 (round 1 sign-off)
 
 - **Locations: design A** (one section per game table, day/night in one row, Water with bubbling as a second rate,
   Other, Special, Starter box tied to the picker, SOS allies in a drop-down under each caller). Plus: **searching an

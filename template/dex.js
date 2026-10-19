@@ -28,7 +28,7 @@ const alink=i=>`<a href="#/a/${i}">${esc(AB[i][0])}</a>`;
 const cat=c=>c?`<span class="cat ${c}">${c==='Physical'?'Phys':c==='Special'?'Spec':'Status'}</span>`:'';
 // Features show only when the hack's data has them: tutor moves, vanilla comparison, EVs (CF.evs), starter picker (CF.starter).
 const HASTU=P.some(p=>p.tu.length),HASVC=P.some(p=>p.vc),EVS=CF.evs!==false,PICK=CF.starter==='pick';
-function tag(p){let r='';if(p.g===1)r+='<span class="tag">Mega</span>';if(p.fc)r+='<span class="tag">Form change</span>';else if(p.g===3||p.nu)r+=CF.g3trainer||TRUSE&&TRUSE[p.id]?'<span class="tag">Trainer only</span>':'<span class="tag">Not found</span>';if(p.g===0&&!p.w.length&&!p.fc)r+='<span class="tag">evo/breed</span>';return r;}
+function tag(p){let r='';if(p.g===1)r+='&#8203;<span class="tag">Mega</span>';if(p.fc)r+='&#8203;<span class="tag">Form change</span>';else if(p.g===3||p.nu)r+=CF.g3trainer||TRUSE&&TRUSE[p.id]?'&#8203;<span class="tag">Trainer only</span>':'&#8203;<span class="tag">Not found</span>';if(p.g===0&&!p.w.length&&!p.fc)r+='&#8203;<span class="tag">evo/breed</span>';return r;}
 const NAT={Lonely:[1,2],Brave:[1,5],Adamant:[1,3],Naughty:[1,4],Bold:[2,1],Relaxed:[2,5],Impish:[2,3],Lax:[2,4],Timid:[5,1],Hasty:[5,2],Jolly:[5,3],Naive:[5,4],Modest:[3,1],Mild:[3,2],Quiet:[3,5],Rash:[3,4],Calm:[4,1],Gentle:[4,2],Sassy:[4,5],Careful:[4,3]};
 const NATS=['Hardy','Docile','Serious','Bashful','Quirky',...Object.keys(NAT)].sort();
 function stat(b,i,iv,ev,lv,nat){if(i===0)return b===1?1:Math.floor((2*b+iv+Math.floor(ev/4))*lv/100)+lv+10;let v=Math.floor((2*b+iv+Math.floor(ev/4))*lv/100)+5;const n=NAT[nat];if(n){if(n[0]===i)v=Math.floor(v*1.1);else if(n[1]===i)v=Math.floor(v*0.9);}return v;}
@@ -215,18 +215,19 @@ function moveDetail(i){fil.innerHTML='';sug.style.display='none';const v=MV[i]||
  const order={Evo:0,Lv:0,TM:1,Tutor:2,Egg:3};r.sort((a,b)=>(order[a[1].split(' ')[0]]-order[b[1].split(' ')[0]])||a[0].i-b[0].i);
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
  <div class="card"><h2 style="margin:0 0 6px">${esc(M[i])}${v.x?` <span class="tag">${CF.orig} original</span>`:''}</h2><div>${v.t?ty(v.t):''} ${cat(v.c)}</div>
- <table style="margin-top:8px"><tr><th>Power</th><th>Accuracy</th><th>PP</th><th>Priority</th></tr><tr><td class="n">${v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'%':'Never misses'}</td><td class="n">${v.pp??'-'}</td><td class="n">${v.pr>0?'+'+v.pr:v.pr||0}</td></tr></table>
+ <div class="mvst">${[['Power',v.bp??'-'],['Accuracy',v.ac!=null?v.ac+'%':'Never misses'],['PP',v.pp??'-'],['Priority',v.pr>0?'+'+v.pr:v.pr||0]].map(([n,x])=>`<div><span>${n}</span><b>${x}</b></div>`).join('')}</div>
  ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${tms.map(t=>`<div style="margin-top:6px"><b>${esc(t[0])}:</b> ${esc(t[1])}</div>`).join('')}${v.f&&v.f.length?`<div class="mut small" style="margin-top:4px">Flags: ${v.f.map(esc).join(', ')}</div>`:''}
  ${v.e?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(v.e).replace(/\n/g,'<br>')}</div></div>`:''}
  ${v.h&&v.h.length?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.mvh}</b><ul>${v.h.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${v.dc||!TX.nodc?'':`<div class="mut small">${TX.nodc}</div>`}</div>`:''}${v.cf?confBox(v.cf):''}
  <div class="mut small" style="margin-top:8px">${TX.mvsrc}${v.x&&TX.mvsrcx?TX.mvsrcx:''}.</div></div>
- <div class="card"><h3>Learned by (${r.length})</h3><table>${r.map(([p,h])=>`<tr><td style="width:44px">${spr(p.id,'s40')}</td><td>${plink(p.id)}${tag(p)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${h}</td></tr>`).join('')}</table>
+ <div class="card"><h3>Learned by (${r.length})</h3><table class="lrn">${r.map(([p,h])=>`<tr><td style="width:44px">${spr(p.id,'s40')}</td><td>${plink(p.id)}${tag(p)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${h}</td></tr>`).join('')}</table>
  <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'mv',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
 // ===== ABILITY PAGE
+const abSlot=(p,i)=>{const n=new Set(p.a).size,r=[];if(p.a.includes(i))r.push(n===1?'Only ability':'Ability '+(p.a.indexOf(i)+1));if(p.ha===i)r.push('Hidden ability');return r.join(', ');};
 function abilityDetail(i){fil.innerHTML='';sug.style.display='none';const a=AB[i];if(!a){app.innerHTML='<p>Not found.</p>';return;}const us=abUsers[i]||[];
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
  <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2><p style="margin:0">${esc(a[1]||'No description.')}</p>${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
- <div class="card"><h3>Pokémon with it (${us.length})</h3><table>${us.map(p=>`<tr><td style="width:44px">${spr(p.id,'s40')}</td><td>${plink(p.id)}${tag(p)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${p.ha===i?'Hidden':''}</td></tr>`).join('')}</table>
+ <div class="card"><h3>Pokémon with it (${us.length})</h3><table class="lrn">${us.map(p=>`<tr><td style="width:44px">${spr(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>
  <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'ab',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
 
 // ===== LOCATIONS + ENCOUNTER TRACKER (state in localStorage LS.track {s starter, e:{area:{p}|{f}}, t:{trade}}; see hacks/<hack>/notes.md)
@@ -253,7 +254,7 @@ const STARTERS=PICK?[...new Set(P.flatMap(p=>p.w.filter(w=>w[1]==='Starter choic
 const starterOk=txt=>{const m=String(txt||'').match(/Starter:\s*([A-Za-z ,]+?)\.?\s*$/);return !(m&&TK.s)||m[1].split(',').map(x=>x.trim()).includes(TK.s);};
 function tradeHTML(a){const g={};(AR[a]?.l||[]).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]!=='Trade'||!starterOk(w[4]))return;(g[w[4]]=g[w[4]]||[]).push(p);}));
  return Object.entries(g).map(([n,ps])=>{const k=a+'|'+n;const cur=(TK.t||{})[k]||'';return `<div class="trk"><span class="mut small">Trade (${esc(n.replace(/^For /,'for '))})</span><select class="tk-trade" data-k="${esc(k)}"><option value="">Not traded</option>${ps.map(p=>`<option value="${p.id}" ${cur===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div>`;}).join('');}
-function adjRows(li,cf){const r=[].concat(li).flatMap(l=>locs[l]||[]);const by={};r.forEach(([p,w])=>{const m=w[1]||'Other';(by[m]=by[m]||{});const o=by[m][p.id]=by[m][p.id]||{p,r:0,rs:'',lv:new Set(),note:w[4]};const x=parseFloat(w[2]);if(!isNaN(x)&&/%/.test(w[2]))o.r+=x;else if(w[2])o.rs=w[2];if(w[3])o.lv.add(w[3]);});
+function adjRows(li,cf,keep){const r=[].concat(li).flatMap(l=>locs[l]||[]).filter(([p,w])=>!keep||keep(w));const by={};r.forEach(([p,w])=>{const m=w[1]||'Other';(by[m]=by[m]||{});const o=by[m][p.id]=by[m][p.id]||{p,r:0,rs:'',lv:new Set(),note:w[4]};const x=parseFloat(w[2]);if(!isNaN(x)&&/%/.test(w[2]))o.r+=x;else if(w[2])o.rs=w[2];if(w[3])o.lv.add(w[3]);});
  const out=[];for(const [m,o] of Object.entries(by)){const rows=Object.values(o);rows.forEach(x=>x.d=cf.has(FAM[x.p.id]));const live=rows.filter(x=>!x.d);const sum=live.reduce((a,x)=>a+x.r,0);
   rows.forEach(x=>{if(x.d){x.show=x.r?x.r+'%':x.rs;return;}if(x.r&&sum>0){const v=Math.round(x.r/sum*1000)/10;x.show=v+'%';x.chg=Math.abs(v-x.r)>0.05;}else if(/^1 of \d+/.test(x.rs)){x.show='1 of '+live.length;x.chg=live.length!==rows.length;}else x.show=x.r?x.r+'%':x.rs;});
   rows.sort((a,b)=>(a.d-b.d)||(b.r-a.r));const notes=[...new Set(rows.map(x=>x.note).filter(Boolean))];out.push([m,rows,live.length===0,notes.length===1?notes[0]:'']);}return out;}
@@ -274,7 +275,7 @@ function bindTrackers(){app.querySelectorAll('.trk').forEach(el=>{if(el.dataset.
  app.querySelectorAll('.tk-export').forEach(b=>b.onclick=()=>{prompt('Copy this backup code:',JSON.stringify(TK));});
  app.querySelectorAll('.tk-import').forEach(b=>b.onclick=()=>{const t=prompt('Paste a backup code:');if(!t)return;try{const o=JSON.parse(t);TK.s=o.s||'';TK.e=o.e||{};TK.t=o.t||{};tkSave();rerender();}catch(e){alert('That code could not be read.');}});
  app.querySelectorAll('.tk-trade').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.t=TK.t||{};if(s.value)TK.t[s.dataset.k]=s.value;else delete TK.t[s.dataset.k];tkSave();rerender();};});
- app.querySelectorAll('.tk-starter').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.s=s.value;tkSave();rerender();};});}
+ app.querySelectorAll('.tk-starter,.st-pick').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.s=s.value;const sa=AR.findIndex(A=>A.st),sp=P.find(x=>x.name===s.value);if(sa>=0){if(sp)TK.e[sa]={p:sp.id};else delete TK.e[sa];}tkSave();rerender();};});}
 // Scroll anchor: the element nearest the top of the window, saved as a selector plus its offset, so a re-render can put it back.
 const ANCH='.list>a.row,details.split[data-a],details.split[data-wo],details.split[data-gi],details.split[data-si],details.stopd[data-k],.trk[data-a],details.trd';
 const anchorSel=e=>e.matches('a.row')?`a.row[href="${e.getAttribute('href')}"]`:e.matches('details.trd')?`details.trd[data-k="${e.dataset.k}"]`:
@@ -299,9 +300,10 @@ function cvSizes(){const m={};CVB.forEach(([sel,k])=>app.querySelectorAll(sel).f
 function cvApply(z){if(!z)return;CVB.forEach(([sel,k])=>app.querySelectorAll(sel).forEach(e=>{const h=z.m[sel+'|'+e.parentElement.dataset[k]];if(h)e.style.containIntrinsicSize='auto '+h+'px';}));
  const l=app.querySelector('.list');if(l&&z.row)l.style.setProperty('--rowh',z.row+'px');}
 function rerender(){const a=keepAnchor(),z=cvSizes();render(true);cvApply(z);toAnchor(a);}
+const starterSel=c=>`<select class="${c}"><option value="">Not chosen</option>${STARTERS.map(s=>`<option ${TK.s===s?'selected':''}>${esc(s)}</option>`).join('')}</select>`;
 function tkBar(){const n=Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length,f=Object.values(TK.e).filter(e=>e&&e.f).length;
  const cnt=`${n} caught · ${f} failed · dupes clause on whole evolution lines`;
- return `<div class="card tkbar">${PICK?`<div class="bar" style="margin:0"><span class="mut small">Starter</span><select class="tk-starter"><option value="">Not chosen (show all)</option>${STARTERS.map(s=>`<option ${TK.s===s?'selected':''}>${esc(s)}</option>`).join('')}</select></div>
+ return `<div class="card tkbar">${PICK?`<div class="bar" style="margin:0"><span class="mut small">Starter</span>${starterSel('tk-starter')}</div>
  <div class="mut small" style="margin-top:6px">${cnt}</div>`:`<div class="bar" style="margin:0"><span class="mut small">${cnt}</span></div>`}
  <div class="bar" style="margin:8px 0 0"><button class="btn tk-export">Export</button><button class="btn tk-import">Import</button><button class="btn danger tk-reset">Reset all</button></div></div>`;}
 const encAll=a=>ARS(a).map(encSummary).join('');
@@ -323,13 +325,50 @@ const encTable=(rows,note)=>(note?`<div class="mut small" style="margin:4px 0 2p
 const mTags=(rows,allD)=>allD?'<span class="tag">all dupes</span>':`<span class="mut small">${rows.length}</span>`;
 const locStop=(k,n,tags,body)=>`<details class="stopd" data-k="${k}" ${LO.x[k]===0&&!st.q?'':'open'}><summary class="stoph">${esc(n)}${tags}</summary><div class="stop">${body}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(n)}</span></button></div></details>`;
 function locPlace(a,p,cf,trk){const k=a+'.'+p.j;
- const ms=adjRows(p.ls,cf).map(([m,rows,allD,note])=>LSEC(k,m,mTags(rows,allD),encTable(rows,note))).join('');
- return locStop(k,p.n,trk?encSummary(a):'',(trk?trackerHTML(a)+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:''):'')+(ms||'<div class="mut small" style="margin:6px 0">No wild Pokémon here.</div>'));}
+ const ms=AR[a].es||AR[a].st?placeSecs(a,p,cf):adjRows(p.ls,cf).map(([m,rows,allD,note])=>LSEC(k,m,mTags(rows,allD),encTable(rows,note))).join('');
+ return locStop(k,p.n,trk?encSummary(a):'',(trk?(AR[a].st?'':trackerHTML(a))+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:''):'')+(ms||'<div class="mut small" style="margin:6px 0">No wild Pokémon here.</div>'));}
 // A town split into tracker slots (EI's eggs): one place with the town's name, a yellow section per slot with its tracker.
 const locSlots=(a,cf)=>locStop(a+'.0',AR[a].n,encAll(a),AR[a].sub.map(x=>adjRows(AR[x].l,cf).map(([m,rows,allD,note])=>LSEC(a+'.0',m,encSummary(x)+mTags(rows,allD),trackerHTML(x,'')+encTable(rows,note))).join('')).join(''));
+// Encounter sections (AR[i].es, from the hack's extract; Photonic Sun): one per game table (a grass patch, cave,
+// building), Water (Fishing with the bubbling spot as a second rate, Surfing) and Other (berry piles, ambush...). A
+// section's groups are {m label, lv, bl bubbling levels, rows:[{p, r:[day,night], b:[day,night], sos:[[ally,when]],
+// note}]}. Day and night share a row: a sun or moon marks a rate that only holds then. The P.w rows flagged w[5]===1
+// repeat these for Pokémon pages, search and the tracker, so the page adds only the others (gifts, trades, weather
+// SOS). AR[i].st: the starter picker is the area's tracker. AR[i].map: the doc's maps (data URIs).
+const ICON={s:'<svg class="dn s" viewBox="0 0 16 16"><circle cx="8" cy="8" r="3.4" fill="currentColor"/><path d="M8 .8v2.4M8 12.8v2.4M.8 8h2.4M12.8 8h2.4M2.9 2.9l1.7 1.7M11.4 11.4l1.7 1.7M2.9 13.1l1.7-1.7M11.4 4.6l1.7-1.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+ m:'<svg class="dn m" viewBox="0 0 16 16"><path d="M11.2 1.2a6.8 6.8 0 1 0 3.6 11.6A5.6 5.6 0 0 1 11.2 1.2z" fill="currentColor"/></svg>',
+ b:'<svg class="dn b" viewBox="0 0 16 16"><circle cx="5" cy="10" r="3.2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="11" cy="5" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>'};
+const notSec=w=>w[5]!==1,pct=x=>Math.round(x*10)/10+'%',whenI=w=>w==='day'?ICON.s:w==='night'?ICON.m:'';
+function rateCell(r,f){if(r[0]===r[1])return r[0]?pct(f(r[0],0)):'';return (r[0]?`<span class="rt">${ICON.s}${pct(f(r[0],0))}</span>`:'')+(r[1]?`<span class="rt">${ICON.m}${pct(f(r[1],1))}</span>`:'');}
+// Rates rescale over the rows that aren't dupes: day, night and bubbling each on their own
+function secAdj(g,cf){const sum=(k,j,all)=>g.rows.reduce((s,x)=>s+(x[k]&&(all||!cf.has(FAM[x.p]))?x[k][j]:0),0);
+ return k=>(x,j)=>{const live=sum(k,j),full=sum(k,j,1);return live&&live!==full?x/live*100:x;};}
+// A caller's allies drop down under it; a search for an ally opens the drop-downs it's in
+function sosDrop(x,cf){if(!x.sos||!x.sos.length)return '';const hit=st.q&&x.sos.some(([p])=>byId[p]&&byId[p].key.includes(st.q));
+ return `<details class="sosd" ${hit?'open':''}><summary><span class="sosk">SOS</span> ${x.sos.map(([p])=>esc(byId[p]?byId[p].name:p)).join(', ')}</summary><div class="sosl">${x.sos.map(([p,w])=>`<div class="sosa${cf.has(FAM[p])?' dupe':''}">${spr(p,'s32')}<div>${plink(p)} ${whenI(w)}<div>${(byId[p]?byId[p].t:[]).map(ty).join('')}</div></div></div>`).join('')}</div></details>`;}
+function secRows(g,cf){const adj=secAdj(g,cf),raw=()=>x=>x,top=x=>Math.max(...x.r,...(x.b||[0]));
+ return `<table class="enc lt">${[...g.rows].sort((a,b)=>top(b)-top(a)||byId[a.p].name.localeCompare(byId[b.p].name)).map(x=>{const d=cf.has(FAM[x.p]),f=d?raw:adj;
+  return `<tr class="${d?'dupe':''}"><td style="width:44px">${spr(x.p,'s40')}</td><td>${plink(x.p)}<div>${byId[x.p].t.map(ty).join('')}</div>${x.note?`<div class="mut small">${esc(x.note)}</div>`:''}${sosDrop(x,cf)}</td><td class="n">${rateCell(x.r,f('r'))}</td>${g.bl!=null?`<td class="n">${x.b?ICON.b+rateCell(x.b,f('b')):''}</td>`:''}</tr>`;}).join('')}</table>`;}
+const secSub=g=>`<div class="ltsub"><b>${esc(g.m)}</b>${g.lv?`<span>Lv ${esc(g.lv)}</span>`:''}${g.bl?`<span>${ICON.b}bubbling Lv ${esc(g.bl)}</span>`:''}</div>`;
+function secTags(rows,cf,lv){const allD=rows.length&&rows.every(x=>cf.has(FAM[x.p]));return (lv?`<span class="mut small">Lv ${esc(lv)}</span>`:'')+(allD?'<span class="tag">all dupes</span>':`<span class="mut small">· ${rows.length}</span>`);}
+function placeSecs(a,p,cf){const k=a+'.'+p.j,T=AR[a].es||[];let h='';
+ if(AR[a].st)h+=`<div class="trk"><span class="mut small">Your starter</span>${starterSel('st-pick')}</div><div class="mut small" style="margin:2px 0 6px">The same picker as the tracker bar: it records this encounter and sets the rival's teams.</div>`;
+ if(T.some(s=>s.g.some(g=>g.rows.some(x=>x.r[0]!==x.r[1]||(x.b&&x.b[0]!==x.b[1])))))h+=`<div class="mut small ltkey">${ICON.s}day ${ICON.m}night: the rate only holds then.</div>`;
+ if(AR[a].map)h+=`<details class="mapd"><summary>Map: grass patch numbers</summary>${AR[a].map.map(u=>`<img src="${u}" alt="Map of ${esc(AR[a].n)}">`).join('')}<div class="mut small">From the Wild Pokémon Locations doc.</div></details>`;
+ h+=T.map(s=>{const one=s.g.length===1&&!s.g[0].m;return LSEC(k,s.n,secTags(s.g.flatMap(g=>g.rows),cf,one?s.g[0].lv:''),one?secRows(s.g[0],cf):s.g.map(g=>secSub(g)+secRows(g,cf)).join(''));}).join('');
+ const ws=adjRows(p.ls,cf,w=>w[1]==='Weather SOS');
+ if(ws.length)h+=LSEC(k,'Weather SOS',`<span class="mut small">· ${ws[0][1].length}</span>`,`<div class="mut small" style="margin:4px 0 2px">Any Pokémon here can call these in rain, sand or hail.</div>`+encTable(ws[0][1],''));
+ const sp=adjRows(p.ls,cf,notSec);
+ if(sp.length)h+=LSEC(k,AR[a].st?'Starter':'Special',`<span class="mut small">· ${sp.reduce((n,x)=>n+x[1].length,0)}</span>`,sp.map(([m,rows,allD,note])=>(AR[a].st?'':secSub({m}))+encTable(rows,note)).join(''));
+ return h;}
+// The walkthrough's one-line-per-method summary, from the sections
+function secLines(a,cf){const out=[],txt=r=>r[0]===r[1]?r[0]+'%':!r[1]?r[0]+'% day':!r[0]?r[1]+'% night':r[0]+'% day, '+r[1]+'% night';
+ (AR[a].es||[]).forEach(s=>s.g.forEach(g=>{const lab=s.k==='grass'?s.n:s.k==='water'?s.n+' · '+g.m:g.m;
+  const row=k=>g.rows.filter(x=>x[k]&&(x[k][0]||x[k][1])).map(x=>({p:byId[x.p],d:cf.has(FAM[x.p]),show:txt(x[k])}));
+  const n=row('r'),b=row('b');if(n.length)out.push([AR[a].l[0],[lab,n]]);if(b.length)out.push([AR[a].l[0],[lab+' (bubbling)',b]]);}));return out;}
 function locBox(g,cf){const one=g.a.length===1&&!AR[g.a[0]].sub,a=g.a[0];let n=0,h;
  if(AR[a].sub){n=1;h=locSlots(a,cf);}
- else if(one){const ps=places(a);n=ps.length;h=trackerHTML(a)+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:'')+ps.map(p=>locPlace(a,p,cf,false)).join('');}
+ else if(one){const ps=places(a);n=ps.length;h=(AR[a].st?'':trackerHTML(a))+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:'')+ps.map(p=>locPlace(a,p,cf,false)).join('');}
  else{n=g.a.length;h=g.a.map(a=>locPlace(a,places(a)[0],cf,true)).join('');}
  return (n>1?segBar('lc-sp'):'')+h+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
 TOG.locs=TOG.l=d=>{if(d.matches('details.split[data-a]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=locBox(LGRP[+d.dataset.g],caughtFams(-1));colBind(b);bindTrackers();}
@@ -375,13 +414,14 @@ TOG.items=d=>{if(st.q)return;const iS=()=>{try{localStorage.setItem(LS.items,JSO
 // sticky stop and section headers (CSS, --hh and --sh) and the flash on a header you land on.
 const hdr=document.querySelector('header'),html=document.documentElement,GAP=8;
 // The search bar's height while it sticks (0 when it doesn't: very short windows), as --hh for the sticky headers.
-const hdrH=()=>getComputedStyle(hdr).position==='sticky'?hdr.offsetHeight:0;
+const hdrH=()=>getComputedStyle(hdr).position==='sticky'?hdr.getBoundingClientRect().height:0;
 const T=()=>hdrH()+GAP;
 // Border box: the bar's padding changes at 420 px wide without its content box changing.
 new ResizeObserver(()=>html.style.setProperty('--hh',hdrH()+'px')).observe(hdr,{box:'border-box'});
 // Each stop carries its header's height (one or two lines) as --sh, so its section headers stick right under it, and
 // each section its own header's as --ch (for trainer headers that stick under it). colBind observes new ones.
-const SHO=new ResizeObserver(es=>es.forEach(e=>{const d=e.target.parentElement;d.style.setProperty(d.matches('.sec')?'--ch':'--sh',e.target.offsetHeight+'px');}));
+// Fractional heights: offsetHeight rounds, which left a hairline gap under a pinned stop header on the Thor (2.3x).
+const SHO=new ResizeObserver(es=>es.forEach(e=>{const d=e.target.parentElement;d.style.setProperty(d.matches('.sec')?'--ch':'--sh',e.target.getBoundingClientRect().height+'px');}));
 function colBind(root){root.querySelectorAll('details.stopd>summary,details.sec>summary').forEach(s=>{if(s.dataset.ro)return;s.dataset.ro=1;SHO.observe(s,{box:'border-box'});});barsSoon();}
 app.addEventListener('toggle',e=>{const d=e.target,f=TOG[document.body.dataset.v];if(f&&d.tagName==='DETAILS'){f(d);barsSoon();}},true);
 const flash=e=>{e.classList.remove('flash');void e.offsetWidth;e.classList.add('flash');};
@@ -471,7 +511,7 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;
  const steps=ss.map((x,j)=>{const sk=k+'.'+j;const done=!!WO.c[sk];return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-sk="${sk}" ${done?'checked':''}><span>${esc(x[0])}${x[1]?`<div class="mut small">${esc(x[1])}</div>`:''}</span></label>`;}).join('');
  const ts=(s.tr||[]).map(k=>TRK[k]).filter(t=>t&&!rivalHidden(t));
  // Encounters: one box per area with its own tracker; several areas get a short tag (the area name minus the stop's).
- const areas=[];s.a.flatMap(ARS).forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;areas.push([ai,A,enc]);});
+ const areas=[];s.a.flatMap(ARS).forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=A.es?secLines(ai,cf).concat(A.l.flatMap(li=>adjRows(li,cf,notSec).map(r=>[li,r]))):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;areas.push([ai,A,enc]);});
  const multi=areas.length>1;
  const enc=areas.map(([ai,A,enc])=>{const tag=multi?(A.n.startsWith(s.n+' ')?A.n.slice(s.n.length+1):A.n):'';
   return `<div class="area">${A.ns&&tag?`<span class="atag">${esc(tag)}</span>`:''}${trackerHTML(ai,tag)}${CF.walkAreaNote&&A.note?`<div class="trnote">${esc(A.note)}</div>`:''}`+enc.map(([li,[m,rows]])=>`<div class="encl"><span class="mut">${A.l.length>1||LOC[li]!==A.n?esc(LOC[li])+' · ':''}${esc(m)}:</span> ${rows.map(x=>`<span class="${x.d?'dupe':''}"><a href="#/p/${x.p.id}">${esc(x.p.name)}</a> ${esc(x.show)}</span>`).join(', ')}</div>`).join('')+'</div>';}).join('');
