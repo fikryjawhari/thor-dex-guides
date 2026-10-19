@@ -1,11 +1,13 @@
-"""Build the split pages mockup: python -I tools/mockup/pages.py <repo> <out.html>
+"""Build the split pages mockup: python -I tools/mockup/pages.py <repo> <out.html> [outer.html]
 
 Wraps the built guides (dist/, run assemble.py first) in pages-outer.html: each guide goes into an iframe srcdoc with a
 small hook at the top of its <head> that sets the route and the mockup switches (data attributes on <html>) from the
-parent's MK, and a <base href="about:srcdoc"> so the guide's own #/ links stay inside the frame."""
+parent's MK, and a <base href="about:srcdoc"> so the guide's own #/ links stay inside the frame. outer.html (default
+pages-outer.html, in tools/mockup) is the page around the frame: search-outer.html is the search mockup."""
 import json, sys
 from pathlib import Path
 repo, out = Path(sys.argv[1]), Path(sys.argv[2])
+outer = sys.argv[3] if len(sys.argv) > 3 else 'pages-outer.html'
 HOOK = ('<base href="about:srcdoc"><script>try{const M=parent.MK;history.replaceState(null,"","about:srcdoc#"+M.route);'
         'Object.assign(document.documentElement.dataset,M.ds)}catch(e){}</script>')
 g = {}
@@ -14,6 +16,6 @@ for k, h in (('ei', 'emerald-imperium'), ('hg', 'hardlove-gold')):
     g[k] = s.replace('<head>', '<head>' + HOOK, 1)
 # Every < escaped: the guides hold "<!--" and "<script", which would stop the outer script's own end tag being found.
 j = json.dumps(g, ensure_ascii=False).replace('<', '\\u003c')
-page = (repo / 'tools/mockup/pages-outer.html').read_text(encoding='utf8').replace('/*GUIDES*/', j)
+page = (repo / 'tools/mockup' / outer).read_text(encoding='utf8').replace('/*GUIDES*/', j)
 out.write_text(page, encoding='utf8')
 print(round(len(page.encode('utf8')) / 1e6, 2), 'MB')

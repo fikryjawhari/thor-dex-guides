@@ -1,0 +1,108 @@
+<title>Search Anything Mockup</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a control strip over the guide frame, notes beside it (under it on a phone). Palette borrowed from the guide. */
+:root{--bg:#f4f5f7;--panel:#fff;--panel2:#eef0f3;--line:#d9dce1;--fg:#1d2126;--mut:#5f6670;--acc:#b7791f;--onacc:#111;--sh:rgba(20,24,30,.12);--ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121417;--panel:#1b1e23;--panel2:#23272e;--line:#2e333b;--fg:#e8eaed;--mut:#9aa0a8;--acc:#f0b429;--sh:rgba(0,0,0,.5);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121417;--panel:#1b1e23;--panel2:#23272e;--line:#2e333b;--fg:#e8eaed;--mut:#9aa0a8;--acc:#f0b429;--sh:rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:14px/1.45 var(--ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+h1{font-size:19px;margin:0;text-wrap:balance}
+.lede{color:var(--mut);margin:4px 0 14px;max-width:70ch}
+.wrap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.ctl{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:end;margin-bottom:12px}
+.f{display:flex;flex-direction:column;gap:3px;min-width:0}
+.f>span{font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0}
+.seg label span{display:block;padding:6px 10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.seg label+label span{border-left:1px solid var(--line)}
+.seg input:checked+span{background:var(--acc);color:var(--onacc)}
+.seg input:focus-visible+span{outline:2px solid var(--acc);outline-offset:-2px}
+select,button{font:inherit;font-size:13px;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+button{font-weight:600;cursor:pointer}
+button:focus-visible,select:focus-visible,.chk input:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.chk{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:6px 0}
+.chk input{accent-color:var(--acc)}
+.stage{overflow-x:auto;max-width:100%;padding-bottom:6px}
+.dev{display:inline-block;border:1px solid var(--line);border-radius:6px;background:var(--panel2);padding:0;box-shadow:0 8px 28px var(--sh)}
+.dev .tb{height:22px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 8px;font-size:11px;color:var(--mut);border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+iframe{display:block;border:0;background:#121417}
+.notes{max-width:68ch;min-width:0}
+.notes h2{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--acc);margin:18px 0 6px}
+.notes h2:first-child{margin-top:0}
+.notes ol,.notes ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.notes b{font-weight:650}
+.opt{display:inline-block;font-size:12px;font-weight:700;background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:0 5px}
+</style>
+
+<h1>Search anything mockup</h1>
+<p class="lede">The real Emerald Imperium and Hardlove Gold guides, built from this branch's template, at the Thor viewer's sizes. Tap the search bar on any page. Results are now things with buttons: the button for the page you're on comes first, and tapping the row does it. <b>Thor keyboard</b> switches between your device's keyboard (as in a browser or on GitHub Pages) and the one built for Dex Viewer.</p>
+
+<div class="ctl">
+  <div class="f"><span>Guide</span><div class="seg" role="radiogroup">
+   <label><input type="radio" name="g" value="ei" checked><span>Emerald Imperium</span></label>
+   <label><input type="radio" name="g" value="hg"><span>Hardlove Gold</span></label></div></div>
+  <div class="f"><span>Page</span><div class="seg" role="radiogroup">
+   <label><input type="radio" name="p" value="/"><span>Pokémon</span></label>
+   <label><input type="radio" name="p" value="/locs"><span>Locations</span></label>
+   <label><input type="radio" name="p" value="/trainers"><span>Trainers</span></label>
+   <label><input type="radio" name="p" value="/items"><span>Items</span></label>
+   <label><input type="radio" name="p" value="/walk" checked><span>Walkthrough</span></label></div></div>
+  <div class="f"><span>Viewport</span><select id="size">
+   <option value="260x316">260 × 316 minimum</option><option value="260x350">260 × 350 everyday</option>
+   <option value="480x392">480 × 392 default</option><option value="537x424">537 × 424 max bottom</option><option value="832x424">832 × 424 max top</option><option value="360x640">360 × 640 phone</option></select></div>
+  <div class="f"><span>&nbsp;</span><label class="chk"><input type="checkbox" id="kb"> Thor keyboard</label></div>
+  <div class="f"><span>&nbsp;</span><div style="display:flex;gap:6px;flex-wrap:wrap"><button id="reload">Reload guide</button><button id="clear">Clear saved state</button></div></div>
+</div>
+<div class="wrap">
+<div>
+ <div class="stage"><div class="dev"><div class="tb"><span id="devname">Emerald Imperium</span><span id="devsize">260 × 316</span></div><iframe id="fr" title="Guide preview"></iframe></div></div>
+</div>
+
+<div class="notes">
+ <h2>What to try</h2>
+ <ul>
+  <li><b>Pokémon:</b> on the Walkthrough type <span class="opt">duralu</span> (EI) or <span class="opt">chikor</span> (Hardlove). The first row, Enter or Done searches this page for what you typed. The Pokémon row's buttons search Walk, Trainers or Places for its full name, or open its Dex entry. On the Pokémon tab, tapping a Pokémon always opens its Dex entry.</li>
+  <li><b>Places:</b> on the Walkthrough a place shows once per visit, each jumping to that stop: try <span class="opt">mauville</span> (EI, 4 visits) or <span class="opt">goldenrod</span> (Hardlove, 2). Elsewhere it's one row: Places jumps to it; Walk jumps to its stop, or searches the Walkthrough when there are several visits.</li>
+  <li><b>Trainers:</b> Trainers and Walk jump to the trainer's card on that page, opened; Full page is the trainer's own page. Trainer results match trainer names only now.</li>
+  <li><b>Items:</b> Items jumps to its row. Walk and Trainers search those pages for the item; Trainers finds trainers whose Pokémon hold it, which trainer search now covers. Item results match item names only now.</li>
+  <li><b>Moves, abilities, types:</b> add a Pokédex filter, as before; moves and abilities also have a button for their own page.</li>
+  <li>A jump opens the boxes it needs, clears the page's search and lands the thing under the headers pinned above it, with the flash.</li>
+ </ul>
+ <h2>Decisions to check</h2>
+ <ul>
+  <li>Searching a place's name on the Walkthrough lists its visits, and the Locations section then only keeps places with no visits.</li>
+  <li>Places where a matching Pokémon is found no longer list in Locations; the Pokémon's Places button covers it.</li>
+  <li>Buttons only show where they'd find something (no Trainers button for a Pokémon no trainer uses).</li>
+ </ul>
+ <p class="lede" style="margin-top:14px">Mockup limits: Export / Import and the reset buttons use browser dialogs, which the viewer blocks here.</p>
+</div>
+</div>
+
+<script>
+const G=/*GUIDES*/;
+const fr=document.getElementById('fr'),$=s=>document.querySelector(s);
+const val=n=>document.querySelector(`input[name=${n}]:checked`).value;
+const PREF={ei:'ei',hg:'hg'};
+// What the guide's hook reads on load: the route (and data attributes for its <html>, none now).
+window.MK={route:'/walk',ds:{}};
+const save=()=>{try{localStorage.setItem('searchmock',JSON.stringify({g:val('g'),p:val('p'),size:$('#size').value}))}catch(e){}};
+function size(){const [w,h]=$('#size').value.split('x');fr.width=w;fr.height=h;$('#devsize').textContent=w+' × '+h;}
+function load(){const g=val('g');$('#devname').textContent=g==='ei'?'Emerald Imperium':'Hardlove Gold';MK.route=val('p');
+ try{fr.contentWindow.localStorage.setItem('dvkb',$('#kb').checked?'1':'0')}catch(e){}fr.srcdoc=G[g];}
+function route(){const r=val('p');MK.route=r;try{fr.contentWindow.location.hash='#'+r;fr.contentWindow.scrollTo(0,0)}catch(e){load();}}
+try{const s=JSON.parse(localStorage.getItem('searchmock')||'null');if(s){['g','p'].forEach(n=>{const i=document.querySelector(`input[name=${n}][value="${s[n]}"]`);if(i)i.checked=true;});if(s.size)$('#size').value=s.size;}}catch(e){}
+try{$('#kb').checked=localStorage.getItem('dvkb')==='1'}catch(e){}
+// Keep the Page switch in step when the guide's own rail changes page.
+fr.addEventListener('load',()=>{try{fr.contentWindow.addEventListener('hashchange',()=>{const v='/'+(fr.contentWindow.location.hash.slice(2).split('/')[0]);const i=document.querySelector(`input[name=p][value="${v==='/l'?'/locs':v==='/tr'?'/trainers':v}"]`);if(i)i.checked=true;});}catch(e){}});
+document.querySelectorAll('input[name=g]').forEach(r=>r.onchange=()=>{save();load();});
+document.querySelectorAll('input[name=p]').forEach(r=>r.onchange=()=>{save();route();});
+$('#size').onchange=()=>{save();size();};
+$('#kb').onchange=load;
+$('#reload').onclick=load;
+$('#clear').onclick=()=>{const p=PREF[val('g')];try{const ls=fr.contentWindow.localStorage;Object.keys(ls).filter(k=>k.startsWith(p)).forEach(k=>ls.removeItem(k));}catch(e){}load();};
+size();load();
+</script>

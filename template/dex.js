@@ -98,7 +98,8 @@ const KB={o:null,el:null,buf:'',fresh:false,rep:false,
   else if(a==='done'){this.close();return;}
   this.show();if(o.input)o.input(this.buf);}};
 window.addEventListener('resize',()=>{if(KB.o)KB.draw();});
-// The search box as a button with value/placeholder properties, so the code below uses it like the <input>.
+// The search box as a button with value/placeholder properties, so the code below uses it like the <input>. Tapping it
+// opens the full-window search, in the viewer and in a browser alike.
 function searchDisp(inp){const b=document.createElement('button');b.type='button';b.id='q';b.className='disp';b.setAttribute('aria-label','Search');
  b.innerHTML='<span class="tx"></span><span class="x" aria-label="Clear search">×</span>';let val='',ph=inp.placeholder||'';
  const show=()=>{const t=b.firstChild;t.textContent=val;t.dataset.ph=ph;b.classList.toggle('has',!!val);if(KB.o&&KB.o.disp)KB.buf=val;};
@@ -125,25 +126,17 @@ function otherKb(a){const A=AR[a];const res=x=>{const n=norm(x);return n.length<
  KB.open({mode:'abc',value:'',label:A?A.n:'Name',strip:x=>{const r=res(x);return r.length?r.map(p=>`<button type="button" class="kpick" data-id="${esc(p.id)}">${spr(p.id,'s32')}<span>${esc(p.name)}</span></button>`).join('')
    :`<span class="mut small">${norm(x).length<2?'Type a Pokémon name':'No match'}</span>`;},
   pick:id=>{TK.e[a]={p:id};tkSave();KB.close();rerender();},onClose(quiet){if(!quiet&&!this.picked)rerender();}});}
-const app=document.getElementById('app'),q=INV?searchDisp(document.getElementById('q')):document.getElementById('q'),fil=document.getElementById('filters'),sug=document.getElementById('sugg');
+const app=document.getElementById('app'),q=searchDisp(document.getElementById('q')),fil=document.getElementById('filters'),sug=document.getElementById('sugg');
 // Typing on a page with no list (Pokemon, move, ability or trainer page) goes to its section's list as a new history
 // entry, so the results show and Back returns to the page. The keyboard stays open (see hashchange).
 const UP={p:'#/',m:'#/',a:'#/',tr:'#/trainers'};let searchNav=false;
 q.addEventListener('input',()=>{st.q=q.value.trim().toLowerCase();if(st.q&&UP[st.view]){searchNav=true;location.hash=UP[st.view];return;}render(true);});
-q.addEventListener('keydown',e=>{if(e.key==='Enter'){q.blur();sug.style.display='none';}});
 function setTab(t){['p','l','t','i','w','c'].forEach(x=>document.getElementById('t-'+x).classList.toggle('on',x===t));}
-// ===== POKEMON TAB: chip filters (type / ability / move / location) with typed suggestions
+// ===== POKEMON TAB: chip filters (type / ability / move / location)
 const FL={type:'Type',ab:'Ability',mv:'Move',loc:'Found at'};
 const fval=f=>f.k==='mv'?M[f.v]:f.k==='loc'?LOC[f.v]:f.k==='ab'?AB[f.v][0]:f.v;
-function suggestions(){const s=st.q;if(s.length<2||INV){sug.style.display='none';return;}
- const has=(k,v)=>st.f.some(f=>f.k===k&&f.v===v);const out=[];
- types.filter(t=>t.toLowerCase().startsWith(s)&&!has('type',t)).forEach(t=>out.push({k:'type',v:t}));
- AB.map((a,i)=>i).filter(i=>abUsers[i]&&AB[i][0].toLowerCase().includes(s)&&!has('ab',i)).slice(0,5).forEach(i=>out.push({k:'ab',v:i}));
- usedMoves.filter(i=>M[i].toLowerCase().includes(s)&&!has('mv',i)).sort((a,b)=>M[a].toLowerCase().indexOf(s)-M[b].toLowerCase().indexOf(s)).slice(0,6).forEach(i=>out.push({k:'mv',v:i}));
- LOC.map((l,i)=>i).filter(i=>locs[i]&&LOC[i].toLowerCase().includes(s)&&!has('loc',i)).slice(0,4).forEach(i=>out.push({k:'loc',v:i}));
- if(!out.length){sug.style.display='none';return;}
- sug.innerHTML=out.map((o,j)=>`<div class="s" data-j="${j}"><span>${o.k==='type'?ty(o.v):esc(fval(o))}</span><span class="k">${FL[o.k]} filter</span></div>`).join('');sug.style.display='block';
- sug.querySelectorAll('.s').forEach(el=>el.onclick=()=>{st.f.push(out[+el.dataset.j]);save();q.value='';st.q='';sug.style.display='none';render(true);});}
+// Filters are added from the full-window search; the old typed-suggestions dropdown (#sugg) stays hidden.
+function suggestions(){sug.style.display='none';}
 function filtersPokemon(){fil.innerHTML=`<div class="chips">${st.f.map((f,j)=>`<span class="chip"><b>${FL[f.k]}</b>${f.k==='type'?ty(f.v):esc(fval(f))}<button data-j="${j}" aria-label="Remove">×</button></span>`).join('')}</div>
 <div class="sorts"><select id="fs">${[['dex','Dex order'],['name','Name'],...SN.map((s,i)=>['s'+i,s])].map(([v,l])=>`<option value="${v}" ${st.sort===v?'selected':''}>${l}</option>`).join('')}</select>
 <select id="fa">${[['all','All Pokémon'],['obt',TX.obt],['nomega','Hide Megas'],['nw',TX.nw],...HASVC?[['chg','Changed from vanilla']]:[]].map(([v,l])=>`<option value="${v}" ${st.av===v?'selected':''}>${l}</option>`).join('')}</select></div>`;
@@ -530,8 +523,8 @@ app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
 // overridden per trainer (LS.cap; CF.capLast also remembers the last one set, for trainers with no cap).
 // Rival teams (t.st) follow the starter: its type from tracker area 0, or its name from the picker (CF.starter 'pick').
 const TRD=D.TR||{g:[],caps:[]};const TRS=[];const TRK={};
-TRD.g.forEach((g,gi)=>g.sec.forEach((s,si)=>s.tr.forEach(t=>{t.g=g.n;t.h=s.h;t.tab=g.tab;
- t.key=(t.n+' '+t.loc+' '+t.tags.join(' ')+' '+g.n+' '+s.h+' '+t.p.map(x=>byId[x.id]?byId[x.id].name:'').join(' ')+' '+(t.st?t.st+' starter':'')).toLowerCase();TRS.push(t);TRK[t.k]=t;})));
+TRD.g.forEach((g,gi)=>g.sec.forEach((s,si)=>s.tr.forEach(t=>{t.g=g.n;t.h=s.h;t.tab=g.tab;t.at=[gi,si];
+ t.key=(t.n+' '+t.loc+' '+t.tags.join(' ')+' '+g.n+' '+s.h+' '+t.p.map(x=>(byId[x.id]?byId[x.id].name:'')+' '+(x.i||'')).join(' ')+' '+(t.st?t.st+' starter':'')).toLowerCase();TRS.push(t);TRK[t.k]=t;})));
 const TRUSE={};TRS.forEach(t=>t.p.forEach(x=>{(TRUSE[x.id]=TRUSE[x.id]||[]).includes(t)||TRUSE[x.id].push(t);}));
 let TCAP={};try{TCAP=JSON.parse(localStorage.getItem(LS.cap)||'{}')}catch(e){}
 let MGM=false;try{MGM=EVS&&localStorage.getItem(LS.mgm)==='1'}catch(e){}
@@ -607,48 +600,91 @@ const TRDO=new Set();
 function bindTrd(root){(root||app).querySelectorAll('details.trd').forEach(d=>{if(d.dataset.b)return;d.dataset.b=1;const fill=()=>{const b=d.querySelector('.trb');if(document.body.dataset.v==='walk'){if(d.open)TRDO.add(d.dataset.k);else TRDO.delete(d.dataset.k);}if(d.open&&b&&!b.innerHTML){b.innerHTML=trainerBlock(TRK[b.dataset.k],false,true);bindTrainers(b);}};d.addEventListener('toggle',fill);fill();});}
 function usedByCard(p){const u=TRUSE[p.id];if(!u)return '';return `<div class="card"><h3>Used by trainers (${u.length})</h3>${u.map(t=>`<div><a href="#/tr/${t.k}">${esc(t.n)}</a> <span class="mut small">${esc(t.loc)} · ${esc(t.g)}${t.st?(PICK?' · if your starter is '+esc(t.st):' · '+esc(t.st)+' starter'):''}</span></div>`).join('')}</div>`;}
 
-// ===== FULL-WINDOW SEARCH (Dex Viewer only). Tapping the search box covers the page with a query strip, results from
-// every section and a 4-row keyboard. The section of the page you're on comes first and in full, then the others in a
-// fixed order (Pokemon, filters, locations, trainers, items, walkthrough), 8 each until "Show all". Picking a result
-// opens it; Done filters the page's own list with the query, as typing in the box used to. Recent picks (LS.recent)
-// show when the query is empty.
-const SR={el:null,q:'',more:{},items:[],
+// ===== FULL-WINDOW SEARCH. Tapping the search box covers the page with a query strip, results from every section and
+// a 4-row keyboard. In the viewer the query is typed on the in-page keyboard (KB); in a browser the strip holds a real
+// input for the device's own keyboard (Enter = Done, Esc = back).
+// The first row (and Done / Enter) searches the page you're on for the text as typed; the page keeps that search when
+// you change tab. Every other row is a thing (Pokemon, filter, place, walkthrough stop, trainer, item) with its actions
+// as buttons under it, the page you're on first; tapping the row does the first one. An action either opens a page
+// (Dex entry, move, ability, trainer), jumps to the thing on its page (open its boxes, put it under the pinned headers,
+// flash it) or searches a page for the thing's full name. Sections: the page you're on first and in full, then
+// Pokemon, filters, places, trainers, items, walkthrough, 8 each until "Show all". Recent picks (LS.recent) show when
+// the query is empty.
+const SR={el:null,q:'',more:{},items:[],after:null,
  ico(k){const sel={l:'#t-l',t:'#t-t',i:'#t-i',w:'#t-w'}[k];const s=sel&&document.querySelector(sel+' svg');
-  return `<span class="ic">${s?s.outerHTML:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7v6l-4 2v-8z"/></svg>'}</span>`;},
+  return `<span class="ic">${s?s.outerHTML:k==='q'?'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7v6l-4 2v-8z"/></svg>'}</span>`;},
  open(){if(this.el)return;this.q=q.value;this.more={};const el=this.el=document.createElement('div');el.className='srch';
   el.innerHTML=`<div class="sst"><button type="button" class="ib" data-a="back" aria-label="Back to the page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-<button type="button" class="sq" data-a="kb" aria-label="Search"><span class="tx" data-ph="Search everything"></span></button>
-<button type="button" class="ib sx" data-a="clear" aria-label="Clear">×</button><button type="button" class="ib hk" data-a="hide" aria-label="Hide or show the keyboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div><div class="sres"></div>`;
+${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span class="tx" data-ph="Search everything"></span></button>`
+  :`<input type="search" class="sq" placeholder="Search everything" aria-label="Search" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">`}
+<button type="button" class="ib sx" data-a="clear" aria-label="Clear">×</button>${INV?`<button type="button" class="ib hk" data-a="hide" aria-label="Hide or show the keyboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`:''}</div><div class="sres"></div>`;
   document.body.appendChild(el);document.body.classList.add('sopen');
+  const inp=INV?null:el.querySelector('input.sq');
+  if(inp){inp.value=this.q;inp.addEventListener('input',()=>{this.q=inp.value;this.more={};this.draw(true);});
+   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();this.done();}else if(e.key==='Escape'){e.preventDefault();this.close();}});}
   el.addEventListener('click',e=>{const b=e.target.closest('[data-a],[data-i],[data-more]');if(!b)return;
-   if(b.dataset.i!=null){this.pick(this.items[+b.dataset.i]);return;}
+   if(b.dataset.i!=null){this.pick(+b.dataset.i,+(b.dataset.x||0));return;}
    if(b.dataset.more){this.more[b.dataset.more]=1;this.draw();return;}
-   const a=b.dataset.a;if(a==='back')this.close();else if(a==='clear'){this.q='';if(KB.o)KB.buf='';this.draw(true);}
+   const a=b.dataset.a;if(a==='back')this.close();else if(a==='here')this.done();else if(a==='clear'){this.q='';if(KB.o)KB.buf='';if(inp){inp.value='';inp.focus();}this.draw(true);}
    else if(a==='hide'){if(KB.o)KB.close(true);else this.kb();}else if(a==='kb'&&!KB.o)this.kb();});
-  this.kb();this.draw(true);},
+  if(inp)inp.focus();else this.kb();this.draw(true);},
  kb(){this.el.classList.remove('nokb');
   KB.open({mode:'abc',full:true,value:this.q,input:v=>{this.q=v;this.more={};this.draw(true);},
    onClose:quiet=>{if(!this.el)return;if(quiet)this.el.classList.add('nokb');else this.done();}});},
  close(){if(!this.el)return;const el=this.el;this.el=null;el.remove();document.body.classList.remove('sopen');KB.close(true);},
  // Done: the query goes to the page's search box, which filters its list (on a page with no list, the section's list).
  done(){const v=this.q.trim();this.close();if(v===q.value)return;q.value=v;q.dispatchEvent(new Event('input'));window.scrollTo(0,0);},
- go(h){if(location.hash===h)render(false);else location.hash=h;},
- pick(o){let r=[];try{r=JSON.parse(localStorage.getItem(LS.recent)||'[]')}catch(e){}
-  r=[o,...r.filter(x=>JSON.stringify(x)!==JSON.stringify(o))].slice(0,6);try{localStorage.setItem(LS.recent,JSON.stringify(r))}catch(e){}
-  this.close();
-  if(o.k==='p')this.go('#/p/'+o.v);else if(o.k==='t')this.go('#/tr/'+o.v);
-  else if(o.k==='f'){if(!st.f.some(f=>f.k===o.v.k&&f.v===o.v.v))st.f.push(o.v);save();q.value='';st.q='';this.go('#/');}
-  else if(o.k==='l'){q.value='';st.q='';this.go('#/l/'+AR[ARS(o.v)[0]].l[0]);}
-  else{q.value=o.n;st.q=o.n.toLowerCase();this.go(o.k==='i'?'#/items':'#/walk');}},
- row(o,sub){let ic,lb,sb='';
-  if(o.k==='p'){const p=byId[o.v];if(!p)return '';ic=spr(p.id,'s32');lb=esc(p.name);sb=p.t.map(ty).join('');}
-  else if(o.k==='f'){ic=this.ico('f');lb=o.v.k==='type'?ty(o.v.v):esc(fval(o.v));sb=FL[o.v.k]+' filter';}
-  else if(o.k==='l'){if(!AR[o.v])return '';ic=this.ico('l');lb=esc(AR[o.v].n);sb=esc(sub||'');}
-  else if(o.k==='t'){const t=TRK[o.v];if(!t)return '';ic=this.ico('t');lb=esc(t.n);sb=esc(t.loc+' · '+t.p.map(x=>byId[x.id]?byId[x.id].name:'').join(', '));}
-  else{ic=this.ico(o.k);lb=esc(o.n);sb=esc(o.s||'');}
-  this.items.push(o);return `<button type="button" class="sr" data-i="${this.items.length-1}">${ic}<span class="st"><span class="sl">${lb}</span>${sb?`<span class="ss">${sb}</span>`:''}</span></button>`;},
+ // Open a route, then run then() once it has rendered (see hashchange).
+ go(h,then){if(location.hash===h){render(false);if(then)then();}else{this.after=then||null;location.hash=h;}},
+ cur(){const v=(location.hash||'#/').slice(2).split('/')[0];return {locs:'l',l:'l',trainers:'t',tr:'t',items:'i',walk:'w'}[v]||'p';},
+ pick(i,x){const it=this.items[i];if(!it)return;const o=it.o,a=it.acts[x]||it.acts[0];
+  let r=[];try{r=JSON.parse(localStorage.getItem(LS.recent)||'[]')}catch(e){}
+  r=[o,...r.filter(y=>JSON.stringify(y)!==JSON.stringify(o))].slice(0,6);try{localStorage.setItem(LS.recent,JSON.stringify(r))}catch(e){}
+  this.close();a[1]();},
+ // Actions. find: search a list page for text; clear: no search, so the page shows in full for a jump.
+ find(h,t){q.value=t;st.q=t.toLowerCase();this.go(h);},
+ clear(){q.value='';st.q='';},
+ jumpStop(si,ti){this.clear();WO.o[si]=1;delete WO.x[si+'.'+ti];woSave();this.go('#/walk',()=>land(app.querySelector(`details.stopd[data-k="${si}.${ti}"]>summary`)));},
+ jumpWalkTr(k){const w=walkOf(k);if(!w)return;const sk=w[0]+'.'+w[1];this.clear();WO.o[w[0]]=1;delete WO.x[sk];WO.s[sk+'.t']=1;TRDO.add(k);woSave();
+  this.go('#/walk',()=>land(app.querySelector(`details.stopd[data-k="${sk}"] details.trd[data-k="${k}"]>summary`)));},
+ jumpTr(k){const t=TRK[k];if(!t)return;this.clear();const [gi,si]=t.at;TOPEN.o[gi]=1;delete TOPEN.p[gi+'.'+si];delete TOPEN.t[k];trSave();
+  this.go('#/trainers',()=>land(app.querySelector(`details.split[data-gi="${gi}"] details.trd[data-k="${k}"]>summary`)));},
+ jumpItem(si,ri){const sec=D.IT[si],g=sec.r[ri][4];this.clear();IO.o[si]=1;delete IO.x[si];if(g)delete IO.s[si+'.'+g];try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
+  this.go('#/items',()=>land(app.querySelectorAll(`details.split[data-si="${si}"] .body tr`)[ri]));},
+ place(a){this.clear();this.go('#/l/'+AR[ARS(a)[0]].l[0]);},
+ // A result's actions, [label, run, page], the page you're on first (on the Pokemon tab, a Pokemon's Dex entry).
+ acts(o){const L=[],cur=this.cur(),add=(lb,pg,f)=>L.push([lb,f,pg]);
+  if(o.k==='p'){const p=byId[o.v];if(!p)return null;const nm=p.name,lc=nm.toLowerCase();
+   add('Dex','p',()=>this.go('#/p/'+p.id));
+   if(TRUSE[p.id])add('Trainers','t',()=>this.find('#/trainers',nm));
+   if(locFound().has(p.id))add('Places','l',()=>this.find('#/locs',nm));
+   if(walkStops().some(([s])=>stopText(s).includes(lc)))add('Walk','w',()=>this.find('#/walk',nm));}
+  else if(o.k==='f'){const v=o.v;add('Filter','p',()=>{if(!st.f.some(f=>f.k===v.k&&f.v===v.v))st.f.push(v);save();this.clear();this.go('#/');});
+   if(v.k==='mv')add('Move','m',()=>this.go('#/m/'+v.v));if(v.k==='ab')add('Ability','a',()=>this.go('#/a/'+v.v));}
+  else if(o.k==='l'){if(!AR[o.v])return null;const vs=visits(o.v);add('Places','l',()=>this.place(o.v));
+   if(vs.length===1)add('Walk','w',()=>this.jumpStop(...vs[0]));else if(vs.length)add('Walk','w',()=>this.find('#/walk',AR[o.v].n));}
+  else if(o.k==='w'){const s=(D.WK.splits[o.si]||{st:[]}).st[o.ti];if(!s)return null;add('Walk','w',()=>this.jumpStop(o.si,o.ti));
+   const a=s.a.find(a=>AR[a]);if(a!=null)add('Places','l',()=>this.place(a));}
+  else if(o.k==='t'){if(!TRK[o.v])return null;add('Trainers','t',()=>this.jumpTr(o.v));if(walkOf(o.v))add('Walk','w',()=>this.jumpWalkTr(o.v));add('Full page','tp',()=>this.go('#/tr/'+o.v));}
+  else if(o.k==='i'){const sec=(D.IT||[])[o.si],r=sec&&sec.r[o.ri];if(!r)return null;const lc=r[0].toLowerCase();
+   add('Items','i',()=>this.jumpItem(o.si,o.ri));
+   if(walkStops().some(([s])=>s.it.some(i=>i[1].toLowerCase().includes(lc))))add('Walk','w',()=>this.find('#/walk',r[0]));
+   if(TRS.some(t=>!rivalHidden(t)&&t.p.some(x=>x.i&&x.i.toLowerCase().includes(lc))))add('Trainers','t',()=>this.find('#/trainers',r[0]));}
+  else return null;
+  const j=L.findIndex(a=>a[2]===cur);if(j>0)L.unshift(...L.splice(j,1));
+  return L;},
+ row(o,sub){const acts=this.acts(o);if(!acts)return '';let ic,lb,sb='';
+  if(o.k==='p'){const p=byId[o.v];ic=spr(p.id,'s32');lb=esc(p.name);sb=p.t.map(ty).join('');}
+  else if(o.k==='f'){ic=this.ico('f');lb=o.v.k==='type'?ty(o.v.v):esc(fval(o.v));sb=esc(FL[o.v.k]+' filter');}
+  else if(o.k==='l'){ic=this.ico('l');lb=esc(AR[o.v].n);sb=esc(sub||'');}
+  else if(o.k==='w'){const sp=D.WK.splits[o.si];ic=this.ico('w');lb=esc(sp.st[o.ti].n);sb=esc(sp.n);}
+  else if(o.k==='t'){const t=TRK[o.v];ic=this.ico('t');lb=esc(t.n);sb=esc(t.loc);}
+  else{const sec=D.IT[o.si],r=sec.r[o.ri];ic=this.ico('i');lb=esc(r[0]);sb=esc(sec.n+' · '+r[1]);}
+  this.items.push({o,acts});const i=this.items.length-1;
+  return `<div class="sri"><button type="button" class="sr" data-i="${i}">${ic}<span class="st"><span class="sl">${lb}</span>${sb?`<span class="ss">${sb}</span>`:''}</span></button>`+
+   (acts.length>1?`<div class="sac">${acts.map((a,x)=>`<button type="button" class="sc${x?'':' on'}" data-i="${i}" data-x="${x}">${esc(a[0])}</button>`).join('')}</div>`:'')+'</div>';},
  // Each section: [[pick, sub text]] in display order.
- sections(s){const n=norm(s),out={};if(!n)return out;
+ sections(s){const n=norm(s),out={};if(!n)return out;const cur=this.cur();
   out.p=P.filter(p=>(p.nk??=norm(p.n)).includes(n)||p.key.includes(s)).sort((a,b)=>(b.nk.startsWith(n)-a.nk.startsWith(n))||a.i-b.i).map(p=>[{k:'p',v:p.id}]);
   const f=[],has=(k,v)=>st.f.some(x=>x.k===k&&x.v===v),pre=x=>norm(x).startsWith(n)?0:1;
   if(n.length>=2){types.filter(t=>norm(t).startsWith(n)&&!has('type',t)).forEach(t=>f.push({k:'type',v:t}));
@@ -656,27 +692,47 @@ const SR={el:null,q:'',more:{},items:[],
    usedMoves.filter(i=>norm(M[i]).includes(n)&&!has('mv',i)).sort((a,b)=>pre(M[a])-pre(M[b])).forEach(i=>f.push({k:'mv',v:i}));
    LOC.map((l,i)=>i).filter(i=>locs[i]&&norm(LOC[i]).includes(n)&&!has('loc',i)).forEach(i=>f.push({k:'loc',v:i}));}
   out.f=f.map(v=>[{k:'f',v}]);
-  const ln=[],lv=[];AR.forEach((A,a)=>{if(A.in!=null)return;const other=A.l.map(li=>LOC[li]).filter(x=>x!==A.n);
-   if(norm(A.n).includes(n)||other.some(x=>norm(x).includes(n)))ln.push([{k:'l',v:a},other.join(', ')]);
-   else{const ms=ARS(a).flatMap(areaSpecies).filter(p=>(p.nk??=norm(p.n)).includes(n));if(ms.length)lv.push([{k:'l',v:a},ms.map(p=>p.name).join(', ')]);}});
-  out.l=[...ln,...lv];
-  out.t=TRS.filter(t=>!rivalHidden(t)&&(t.key.includes(s)||norm(t.key).includes(n))).map(t=>[{k:'t',v:t.k}]);
-  out.i=(D.IT||[]).flatMap(sec=>sec.r.filter(r=>(r[0]+' '+r[1]).toLowerCase().includes(s)||norm(r[0]).includes(n)).map(r=>[{k:'i',n:r[0],s:sec.n+' · '+r[1]}]));
-  out.w=D.WK.splits.flatMap(sp=>sp.st.filter(x=>stopText(x).includes(s)).map(x=>[{k:'w',n:x.n,s:sp.n}]));
+  // Places by name (or the name of a place inside them); walkthrough stops by name. On the walkthrough a place shows
+  // as its visits, one row each; elsewhere as one place row, and stops it covers aren't listed again.
+  const pl=[];AR.forEach((A,a)=>{if(A.in!=null)return;const other=A.l.map(li=>LOC[li]).filter(x=>x!==A.n);
+   if(norm(A.n).includes(n)||other.some(x=>norm(x).includes(n)))pl.push([a,other.join(', ')]);});
+  const seen=new Set(),ws=[],addW=(si,ti)=>{const k=si+'.'+ti;if(!seen.has(k)){seen.add(k);ws.push([{k:'w',si,ti}]);}};
+  walkStops().forEach(([s,si,ti])=>{if(norm(s.n).includes(n))addW(si,ti);});
+  if(cur==='w'){pl.forEach(([a])=>visits(a).forEach(v=>addW(...v)));out.l=pl.filter(([a])=>!visits(a).length).map(([a,o])=>[{k:'l',v:a},o]);out.w=ws;}
+  else{const cov=new Set(pl.flatMap(([a])=>visits(a).map(v=>v.join('.'))));out.l=pl.map(([a,o])=>[{k:'l',v:a},o]);out.w=ws.filter(([o])=>!cov.has(o.si+'.'+o.ti));}
+  out.t=TRS.filter(t=>!rivalHidden(t)&&norm(t.n).includes(n)).map(t=>[{k:'t',v:t.k}]);
+  out.i=(D.IT||[]).flatMap((sec,si)=>sec.r.map((r,ri)=>[r,ri]).filter(([r])=>norm(r[0]).includes(n)).map(([r,ri])=>[{k:'i',si,ri}]));
   return out;},
  draw(top){if(!this.el)return;const s=this.q.trim().toLowerCase();
-  const tx=this.el.querySelector('.sq .tx');tx.textContent=this.q;this.el.classList.toggle('empty',!this.q);this.items=[];let h='';
+  const tx=this.el.querySelector('.sq .tx');if(tx)tx.textContent=this.q;this.el.classList.toggle('empty',!this.q);this.items=[];let h='';
+  const cur=this.cur(),T={p:'Pokémon',f:'Filters',l:'Locations',t:'Trainers',i:'Items',w:'Walkthrough'};
   if(!norm(s)){let r=[];try{r=JSON.parse(localStorage.getItem(LS.recent)||'[]')}catch(e){}
-   h=r.length?`<div class="ssh">Recent</div>`+r.map(o=>this.row(o,'')).join(''):`<div class="shint">Search Pokémon, types, abilities, moves, places, trainers, items and the walkthrough. Pick a result to open it, or Done to filter this page's list.</div>`;}
-  else{const S=this.sections(s);const v=(location.hash||'#/').slice(2).split('/')[0];
-   const cur={locs:'l',l:'l',trainers:'t',tr:'t',items:'i',walk:'w'}[v]||'p';
-   const T={p:'Pokémon',f:'Filters',l:'Locations',t:'Trainers',i:'Items',w:'Walkthrough'};
+   const rr=r.map(o=>this.row(o,'')).join('');
+   h=rr?`<div class="ssh">Recent</div>`+rr:`<div class="shint">Search Pokémon, types, abilities, moves, places, trainers, items and the walkthrough. Pick a result to open it or jump to it, or search this page for what you typed.</div>`;}
+  else{const S=this.sections(s);
+   h=`<button type="button" class="sr shere" data-a="here">${this.ico('q')}<span class="st"><span class="sl">Search “${esc(this.q.trim())}”</span><span class="ss">in ${T[cur]}</span></span></button>`;
    for(const k of [cur,...['p','f','l','t','i','w'].filter(x=>x!==cur)]){const a=S[k];if(!a||!a.length)continue;
     const lim=this.more[k]?a.length:k===cur?100:8;
     h+=`<div class="ssh">${T[k]}<span>${a.length}</span></div>`+a.slice(0,lim).map(([o,sub])=>this.row(o,sub)).join('')+
-     (a.length>lim?`<button type="button" class="smore" data-more="${k}">Show all ${a.length}</button>`:'');}
-   if(!h)h='<div class="shint">No matches.</div>';}
+     (a.length>lim?`<button type="button" class="smore" data-more="${k}">Show all ${a.length}</button>`:'');}}
   const r=this.el.querySelector('.sres');r.innerHTML=h;if(top)r.scrollTop=0;}};
+// Search helpers: every walkthrough stop as [stop, split, index]; the stops that visit a place (linked to it, or a
+// later visit: a stop with its name, which only the first visit links); the stop a trainer is fought at; the Pokemon
+// found at some place.
+let WSTOPS=null,WTR=null,LFOUND=null;
+const walkStops=()=>WSTOPS??=D.WK.splits.flatMap((sp,si)=>sp.st.map((s,ti)=>[s,si,ti]));
+function visits(a){const A=AR[a];return A.vis??=walkStops().filter(([s])=>s.n===A.n||s.a.some(x=>x===a||ARS(x).includes(a)||ARS(a).includes(x))).map(([s,si,ti])=>[si,ti]);}
+function walkOf(k){if(!WTR){WTR={};walkStops().forEach(([s,si,ti])=>(s.tr||[]).forEach(t=>{if(!WTR[t])WTR[t]=[si,ti];}));}return WTR[k];}
+const locFound=()=>LFOUND??=new Set(Object.values(locs).flatMap(l=>l.map(([p])=>p.id)));
+// Land a jump: put el under the headers pinned above it (the search bar, its stop's and section's) and flash it. The
+// page has only just rendered, so the scroll is repeated each frame for a moment: the first one can stop short at the
+// bottom of a page that content-visibility hasn't laid out yet. Any press, wheel or key ends it.
+function land(el){if(!el)return;const st0=el.tagName==='SUMMARY'?el.parentElement.parentElement:el;
+ const pin=()=>{let y=hdrH();for(let p=st0.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))if(p.open&&p.matches('details.stopd,details.sec'))y+=p.querySelector(':scope>summary').offsetHeight;return y;};
+ const to=()=>{const dy=el.getBoundingClientRect().top-pin();if(Math.abs(dy)>.5)scrollBy(0,dy);};
+ noAnchor();to();flash(el);const t0=performance.now();let stop=false;const end=()=>{stop=true;};
+ ['pointerdown','wheel','keydown'].forEach(k=>addEventListener(k,end,{once:true,passive:true}));
+ const f=()=>{if(stop||performance.now()-t0>700){html.style.overflowAnchor='';jumpState();return;}to();requestAnimationFrame(f);};requestAnimationFrame(f);}
 
 // ===== CALC (empty for now; the stat calculator is on each Pokemon page)
 function calcPage(){fil.innerHTML='';sug.style.display='none';app.innerHTML=`<div class="card"><h3>Calc</h3><p style="margin:0">Coming soon. Each Pokémon page has a stat calculator in the meantime.</p></div>`;}
@@ -713,7 +769,8 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)posSave();}
 window.dexViewer={restoreScroll(y){let c=null;try{c=JSON.parse(localStorage.getItem(LS.pos)||'null')}catch(e){}
  if(c&&c.h===location.hash&&c.a&&c.a.sel&&app.querySelector(c.a.sel))toAnchor(c.a);else window.scrollTo(0,y);}};
 window.addEventListener('hashchange',()=>{const typed=searchNav;searchNav=false;if(!typed){SR.close();KB.close(true);}if(curKey)SNAP[curKey]={a:keepAnchor(),z:cvSizes()};
- st.lgo=typed;render(typed);curKey=entryKey();if(typed){if(!/^#\/l\//.test(location.hash))window.scrollTo(0,0);return;}const sn=SNAP[curKey];if(sn){cvApply(sn.z);toAnchor(sn.a);}});
+ st.lgo=typed;render(typed);curKey=entryKey();if(typed){if(!/^#\/l\//.test(location.hash))window.scrollTo(0,0);return;}const sn=SNAP[curKey];if(sn){cvApply(sn.z);toAnchor(sn.a);}
+ if(SR.after){const f=SR.after;SR.after=null;f();}});
 // Opened without a route (the viewer always loads the bare file): go back to the page it was on.
 if(!location.hash||location.hash==='#'){try{const c=JSON.parse(localStorage.getItem(LS.pos)||'null');if(c&&/^#\/[\w\/%.-]*$/.test(c.h))history.replaceState(null,'',c.h);}catch(e){}}
 render(false);curKey=entryKey();
