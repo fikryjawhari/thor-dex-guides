@@ -27,6 +27,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `xy_trainers.py [--oras] <romfs> <out.json> [vanilla-romfs]` | Dumps every trainer from an XY (Eternal X) or ORAS (Navy Sapphire) romfs, names from its own text. |
 | `ex_rivals.py <trainers.json> <out.md>` | Eternal X's rival fights by battle and starter, from `xy_trainers.py` output. |
 | `usum_trainers.py [--sm] <romfs> <out.json> [fallback-romfs ...]` | Dumps every trainer from a USUM (Photonic Sun) or SM (Meissa Moon) romfs, with natures and EVs. |
+| `bulba_pages.py <out-dir> cat:<Category> \| pre:<Title prefix> ...` | Bulbapedia pages as wikitext through its API (category members or a title prefix; `Walkthrough:` prefixes work). Photonic Sun's trainer places and story order. |
 | `serebii_usum_items.py <items.shtml> <tm.shtml> <out.csv>` | Vanilla Ultra Sun item locations from Serebii's pages. |
 | `rhd_moves.py <moves/index.html> <hack-slug> <out.json>` | Every RomHackDex move with priority and description (the index lacks both); reads each move page, saves only those fields. |
 | `drayano_check.py <Pokemon Changes.txt> <romhackdex/pokedex>` | Compares Drayano's change doc with a RomHackDex mirror (new base stats, full level-up lists) for every species the doc changes. |
@@ -47,7 +48,7 @@ compare the hack's current version (its thread, Drive file names or changelog) w
 | HeartGold Retiled | v6.12.1 | 2026-10-18, ability text 2026-10-19 | – | GitHub repo releases |
 | Meissa Moon | v2.2.2 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Author's Drive, PokeCommunity thread |
 | Navy Sapphire | v2.1.5 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Hack's Drive, PokeCommunity thread |
-| Photonic Sun | v2.38 | 2026-10-18 (docs + romfs), dex extract 2026-10-19 | – | Buffel Saft's Drive, PokeCommunity thread |
+| Photonic Sun | v2.38 | 2026-10-18 (docs + romfs), dex extract 2026-10-19, vanilla extracts + Bulbapedia 2026-10-19 | – | Buffel Saft's Drive, PokeCommunity thread, Bulbapedia (USUM) |
 | Radical Red | v4.1 | 2026-10-18, move details 2026-10-19 | – | RomHackDex; the two trainer sheets |
 | Renegade Platinum | v1.3.0 | 2026-10-18 (docs), 2026-10-19 (RomHackDex) | – | Drayano's Drive (Documentation folder), RomHackDex |
 | SoulGold | no version number | 2026-10-18, species details 2026-10-19 | – | eemeliri.github.io/soulgold data files |

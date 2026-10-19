@@ -20,6 +20,8 @@ the split is in that repo's git log.
   compiled (`SOURCES.md`, re-fetch into `.src/`) but no guide yet. **Their source data was checked and completed on
   2026-10-19** (see "Source data check"): every one now has full dex, moves, abilities, wild and trainer data on
   the PC. Next: Photonic Sun and Eternal X guides.
+- **Photonic Sun guide built 2026-10-19** on branch `worktree-photonic-sun` (not merged, not on the Thor yet). See
+  "Photonic Sun guide" below and `hacks/photonic-sun/notes.md`.
 
 ## What's left, in order
 
@@ -42,7 +44,7 @@ the split is in that repo's git log.
    Details: `plans/split-ui.md`.
 5. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
    this repo's flow (CLAUDE.md → Making a new guide). Can happen with the first new guide.
-6. **New guides** (one session each, here; Photonic Sun and Eternal X first): CLAUDE.md → Making a new guide. On
+6. **New guides** (one session each, here; Photonic Sun done on its branch, Eternal X next): CLAUDE.md → Making a new guide. On
    the PC every `.src/` is complete (checked 2026-10-19); elsewhere re-fetch with each `SOURCES.md`. Photonic Sun
    and Eternal X fall back to the user's vanilla Azahar dumps (PC only). "Source data check" says which file is the
    dex source per hack; the extract step turns it into `data.json`.
@@ -53,6 +55,25 @@ the split is in that repo's git log.
 **Parallel sessions:** one session in each repo at a time is safe (separate folders and git histories). The app
 repo has nothing open now; come back to it only for an app bug or feature. Avoid two sessions in this repo at once: the template is shared, so they'd
 clash.
+
+## Photonic Sun guide (2026-10-19)
+
+Branch `worktree-photonic-sun`. `uv run python -I hacks/photonic-sun/extract/build.py` then `python assemble.py`.
+Everything about the data (sources, rules, conflicts, schema, storage prefix `ps`): `hacks/photonic-sun/notes.md`.
+- **Rebalanced version** (the only romfs fetched; its Standard twin would need its own zip and dex extract).
+- Game data for every number; docs for wild methods, specials, shops; **Bulbapedia's Ultra Sun / Ultra Moon
+  walkthrough** for trainer places and story order (new `tools/bulba_pages.py`; the game data has no places). 488 of
+  513 trainers placed; 35 walkthrough parts are the splits; Trainers boxes are story chapters. No level caps.
+- Template change (shared): the Trainers header hides "Level caps" when `TR.caps` is empty. `domcompare` vs `main`
+  (EI and Hardlove, normal and `--kb`): 0 differing routes, 0 page errors.
+- Checked headless at 260 × 316, normal and `dvkb`: every route (2,422) renders with no page errors;
+  `pagecheck.mjs` and `walkcheck.mjs` pass.
+- **Found, not fixed (template, every guide):** move pages whose accuracy is "Never misses" are 277 px wide at 260
+  (the Power / Accuracy / PP / Priority table; EI has 178 such pages too), and a "Crabominable" + "evo/breed" tag row
+  makes two Photonic Sun ability pages 267 px. Needs a small layout fix (mockup first).
+- Open: check on the Thor; the user to try it via the phone preview artifact; totem battles are a game doc, not
+  trainer cards (Totem Battles.pdf would need a positional parse); footer credit still to do (Bulbapedia and Serebii
+  should be credited with the hack author).
 
 ## Source data check (2026-10-19)
 

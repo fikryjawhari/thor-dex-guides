@@ -302,8 +302,11 @@ def build(D):
     keys = {}
     for part, place, items in seq:
         gi = chap(part)
-        sec = {'h': place, 'note': [], 'tr': []}
-        g[gi]['sec'].append(sec)
+        if g[gi]['sec'] and g[gi]['sec'][-1]['h'] == place:  # the same place again right after (end of one part, start of the next)
+            sec = g[gi]['sec'][-1]
+        else:
+            sec = {'h': place, 'note': [], 'tr': []}
+            g[gi]['sec'].append(sec)
         for e, tid in items:
             k = f"{gi}.{len(g[gi]['sec']) - 1}.{len(sec['tr'])}"
             sec['tr'].append(trainer(e, tid, k))

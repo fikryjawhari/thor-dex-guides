@@ -44,12 +44,18 @@ python -I tools/ctr_dex.py usun hacks/photonic-sun/.src/dex-rebalanced.json $R "
 mkdir -p hacks/photonic-sun/.src/serebii
 for p in items tm; do curl -s -A "Mozilla/5.0" https://www.serebii.net/ultrasunultramoon/$p.shtml -o hacks/photonic-sun/.src/serebii/$p.shtml; done
 python -I tools/serebii_usum_items.py hacks/photonic-sun/.src/serebii/items.shtml hacks/photonic-sun/.src/serebii/tm.shtml hacks/photonic-sun/.src/item-locations.csv
+# Added 2026-10-19 for the guide: vanilla Ultra Sun for the comparison and trainer matching, and Bulbapedia
+python -I tools/ctr_dex.py usun hacks/photonic-sun/.src/dex-vanilla.json "$A/0004000E001B5000" "$A/00040000001B5000"
+python -I tools/usum_trainers.py "$A/0004000E001B5000" hacks/photonic-sun/.src/trainers-vanilla.json "$A/00040000001B5000"
+python -I tools/bulba_pages.py hacks/photonic-sun/.src/bulbapedia "cat:Ultra Sun and Ultra Moon locations" "pre:Walkthrough:Pokémon Ultra Sun and Ultra Moon"
 ```
 
 | Output | Contents |
 | --- | --- |
 | `trainers-rebalanced.json` | **All 653 trainers** with natures, EVs and per-stat IVs (the PDFs leave out natures and EVs): name and class from the hack's text, battle type, bag, and per Pokémon species, form, level, nature, ability, gender, item, IVs, EVs, moves. Includes Hau's first two battles, which the PDF skips |
 | `dex-rebalanced.json` | **Use this for the dex** (`tools/ctr_dex.py`). 1,116 species and forms: stats, types, abilities, level-up, egg, TM and tutor moves, evolutions, Megas, form names; 728 moves (type, category, power, accuracy, PP, priority, flags, description); abilities with descriptions; the TM list; 794 wild tables in 74 areas (per table: day/night, levels, slots with rates, SOS allies). Gen 7 tables carry no method, so label grass/surf/rod tables from `Wild Pokemon Locations.pdf`, which lists them in the same order |
+| `dex-vanilla.json`, `trainers-vanilla.json` | The same two extracts from vanilla Ultra Sun v1.2 alone (2026-10-19): the "Changes from vanilla" cards and move notes, and the vanilla teams Bulbapedia's trainer entries are matched against |
+| `bulbapedia/` | 152 wikitext pages (2026-10-19): the 117 "Ultra Sun and Ultra Moon locations" pages (trainer lists per place) and the 35 parts of the Ultra Sun / Ultra Moon walkthrough (story order, trainers with vanilla teams, "If the player chose" variants). The guide's trainer places and walkthrough order. The in-game trades' "you give" Pokémon are from the In-game trade page (typed into `extract/locs.py`) |
 | `item-locations.csv` | 1,816 rows from Serebii's vanilla Ultra Sun items and TM pages: item, category, location, method (field, Shop, Wild Encounter, Festival Plaza, Poké Pelago, PickUp, …). For "Wild Encounter" the location is the Pokémon that holds it. Marts: use `Vendor Changes.pdf` over the Shop rows |
 
 **Overworld items are vanilla, verified 2026-10-18.** The hack ships `a/0/8/2` (encdata) because it changes wild
