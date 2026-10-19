@@ -519,7 +519,7 @@ const COLV={walk:1,locs:1,l:1,trainers:1,items:1};
 app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
  const b=e.target.closest('.seg button');
  if(b){segAll(b,b.closest('.all')?app.querySelectorAll('details.split.jt'):b.closest('.body').querySelectorAll(b.closest('.tr-sp')?'details.trd':':scope>details'));return;}
- const end=e.target.closest('.endbar');if(end){foldUp(end.closest('details'));return;}
+ const end=e.target.closest('.endbar,.trfold');if(end){foldUp(end.closest('details'));return;}
  if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;delete WO.x[k];WO.s[k+'.c']=1;woSave();render(true);
   const inp=app.querySelector(`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;const l=inp.closest('.wstep'),stop=l.closest('details.stopd'),sec=l.closest('details.sec');
   noAnchor();scrollBy(0,l.getBoundingClientRect().top-(T()+stop.querySelector(':scope>summary').offsetHeight+sec.querySelector(':scope>summary').offsetHeight));flash(l);hold(l);jumpState();return;}
@@ -553,14 +553,15 @@ function monCard(x,cap){const p=byId[x.id];const lv=x.l!=null?x.l:x.r!=null&&cap
  <div class="mv">${x.m.map(i=>`<a href="#/m/${i}"><span class="dot" style="background:${tcol(M[i]==='Hidden Power'&&x.hp?x.hp:(MV[i]||{}).t)}"></span>${M[i]==='Hidden Power'&&x.hp?'HP '+esc(x.hp):esc(M[i])}</a>`).join('')}</div>
  ${ev?`<div class="mut small" style="margin-top:3px">EVs ${ev}</div>`:''}${iv}${(x.x||[]).length?`<div class="mut small">Sheet: ${x.x.map(esc).join('; ')}</div>`:''}
  ${(x.cf||[]).length?`<div class="cfx">Sheet says ${x.cf.map(esc).join('; ')}</div>`:''}</div>`;}
-function trainerBlock(t,mini){const rel=t.p.some(x=>x.l==null);const cap=capOf(t);const own=TCAP[t.k]!=null;
+// row: the card sits in a trainer row (Trainers page, walkthrough), so its bottom line starts with Collapse.
+function trainerBlock(t,mini,row){const rel=t.p.some(x=>x.l==null);const cap=capOf(t);const own=TCAP[t.k]!=null;
  return `<div class="card trc" id="tr-${t.k}"><div class="trn">${mini?'':`<a href="#/tr/${t.k}">`}${esc(t.n)}${mini?'':'</a>'} <span class="mut small">${esc(t.loc)}</span></div>
  <div style="margin:-2px 0 6px">${t.st?`<span class="tag">If your starter is ${esc(t.st)}</span>`:''}${t.tags.map(z=>`<span class="tag">${esc(z)}</span>`).join('')}</div>
  ${(t.note||[]).length?`<div class="trnote">${t.note.map(esc).join('<br>')}</div>`:''}
  ${t.rw?`<div class="trnote"><b>Rewards:</b> ${t.rw.map(esc).join(', ')}</div>`:''}
  ${rel?`<details class="capd" data-k="${t.k}" ${CAPO.has(t.k)?'open':''}><summary>Level cap <b>${t.cap||'–'}</b>${own?` <span class="mut small">· yours</span> <b>${TCAP[t.k]}</b>`:!t.cap&&cap?` <span class="mut small">· using</span> <b>${cap}</b>`:''}</summary><div class="trk"><span class="mut small">Your level</span>${INV?numBox(`data-k="${t.k}"`,cap||'',{min:1,max:100,steppers:true,label:TX.capl}).replace('class="nv"','class="nv capin"'):`<input class="capin" type="number" inputmode="numeric" min="1" max="100" style="width:72px" data-k="${t.k}" value="${cap||''}">`}<span class="mut small">${own&&t.cap?`<a href="#" class="capreset" data-k="${t.k}">reset to cap ${t.cap}</a>`:t.cap?'':TX.capnone}</span></div></details>`:''}
  <div class="team">${t.p.map(x=>monCard(x,cap)).join('')}</div>
- ${t.pp?`<div class="mut small" style="margin-top:6px"><a href="${esc(t.pp)}" target="_blank" rel="noopener">Pokepaste</a> (online)</div>`:''}</div>`;}
+ ${row||t.pp?`<div class="trf mut small">${row?`<button class="trfold">${UPI}<span>Collapse</span></button>`:''}${t.pp?`<span class="trpp"><a href="${esc(t.pp)}" target="_blank" rel="noopener">Pokepaste</a></span>`:''}</div>`:''}</div>`;}
 // The level box under a trainer starts closed; it stays open across re-renders (setting the level re-renders) but not
 // across reloads.
 const CAPO=new Set();
@@ -596,14 +597,14 @@ TOG.trainers=d=>{if(st.q)return;const k=d.dataset.k;
 function trainerDetail(k){fil.innerHTML='';sug.style.display='none';const t=TRK[k];if(!t){app.innerHTML='<p>Not found.</p>';return;}
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a><div class="mut small" style="margin-top:6px">${esc(t.g)}${t.h?' · '+esc(t.h):''}${t.c&&t.c.length?' · calc: '+t.c.map(esc).join(', '):''}</div>`+trainerBlock(t,true);bindTrainers();window.scrollTo(0,0);}
 // Trainer rows (Trainers page and walkthrough stops): name, tags (and the place, where no heading gives it) and the
-// team preview; open, the full card, built when first opened (bindTrd). open(t): whether a row starts open; bar: a
-// collapse bar at the bottom (not in the walkthrough, where it read the same as the Trainers section's own).
-function trRows(ts,open,loc,bar=true){
- return ts.map(t=>`<details class="trd" data-k="${t.k}" ${open(t)?'open':''}><summary>${esc(t.n)} <span class="mut small">${[loc?t.loc:'',...t.tags.filter(z=>!/Optional/.test(z))].filter(Boolean).map(esc).join(' · ')}${t.tags.some(z=>/Optional/.test(z))?' · optional':''}</span><span class="trmini">${t.p.map(x=>spr(x.id,'s32')).join('')}</span></summary><div class="trb" data-k="${t.k}"></div>${bar?`<button class="endbar sb" hidden>${UPI}<span>${esc(t.n)}</span></button>`:''}</details>`).join('');}
-const walkTrainers=ts=>trRows(ts,t=>TRDO.has(t.k),false,false);
+// team preview; open, the full card, built when first opened (bindTrd), with Collapse on its bottom line. open(t):
+// whether a row starts open.
+function trRows(ts,open,loc){
+ return ts.map(t=>`<details class="trd" data-k="${t.k}" ${open(t)?'open':''}><summary>${esc(t.n)} <span class="mut small">${[loc?t.loc:'',...t.tags.filter(z=>!/Optional/.test(z))].filter(Boolean).map(esc).join(' · ')}${t.tags.some(z=>/Optional/.test(z))?' · optional':''}</span><span class="trmini">${t.p.map(x=>spr(x.id,'s32')).join('')}</span></summary><div class="trb" data-k="${t.k}"></div></details>`).join('');}
+const walkTrainers=ts=>trRows(ts,t=>TRDO.has(t.k),false);
 // Walkthrough trainer rows start closed and remember being opened until a reload.
 const TRDO=new Set();
-function bindTrd(root){(root||app).querySelectorAll('details.trd').forEach(d=>{if(d.dataset.b)return;d.dataset.b=1;const fill=()=>{const b=d.querySelector('.trb');if(document.body.dataset.v==='walk'){if(d.open)TRDO.add(d.dataset.k);else TRDO.delete(d.dataset.k);}if(d.open&&b&&!b.innerHTML){b.innerHTML=trainerBlock(TRK[b.dataset.k]);bindTrainers(b);}};d.addEventListener('toggle',fill);fill();});}
+function bindTrd(root){(root||app).querySelectorAll('details.trd').forEach(d=>{if(d.dataset.b)return;d.dataset.b=1;const fill=()=>{const b=d.querySelector('.trb');if(document.body.dataset.v==='walk'){if(d.open)TRDO.add(d.dataset.k);else TRDO.delete(d.dataset.k);}if(d.open&&b&&!b.innerHTML){b.innerHTML=trainerBlock(TRK[b.dataset.k],false,true);bindTrainers(b);}};d.addEventListener('toggle',fill);fill();});}
 function usedByCard(p){const u=TRUSE[p.id];if(!u)return '';return `<div class="card"><h3>Used by trainers (${u.length})</h3>${u.map(t=>`<div><a href="#/tr/${t.k}">${esc(t.n)}</a> <span class="mut small">${esc(t.loc)} · ${esc(t.g)}${t.st?(PICK?' · if your starter is '+esc(t.st):' · '+esc(t.st)+' starter'):''}</span></div>`).join('')}</div>`;}
 
 // ===== FULL-WINDOW SEARCH (Dex Viewer only). Tapping the search box covers the page with a query strip, results from

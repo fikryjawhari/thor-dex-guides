@@ -288,3 +288,9 @@ details.capd>.trk{margin:2px 0 4px}
 .body>.trk{margin:8px 0 4px}
 /* Item tables (Items page, walkthrough items): rows straight on the page, no box */
 .itbl.ix{background:none;border-radius:0;margin:2px 0 4px}
+/* A trainer card's bottom line: Collapse on the left (cards in a trainer row), anything else (Pokepaste) on the right */
+.trf{display:flex;align-items:center;gap:8px;margin-top:6px;min-height:28px}
+.trf .trpp{margin-left:auto;text-align:right;white-space:nowrap}
+.trfold{display:flex;align-items:center;gap:3px;min-height:28px;border:0;background:none;color:inherit;font:inherit;padding:0 8px 0 0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.trfold svg{flex:none;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.trfold:active{color:var(--acc)}

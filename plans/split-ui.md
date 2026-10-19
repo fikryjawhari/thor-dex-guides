@@ -87,8 +87,12 @@ between boxes. Mockup = the real build in a frame: https://claude.ai/artifact/Gm
 - **Trainers** (`trGroup`, `trRows`, `LS.tr` {o boxes, p places, t trainers}): box = one mini-split with its cap
   (data: EI stage 7 from the trainers' caps, Hardlove `split_ui.py` from the sheet's headings) → place (white, sticky,
   collapsible) → trainer row (`details.trd`: name, tags, team preview; open = the full card; not sticky). Bottom bars
-  at all three levels (the walkthrough's styles); a trainer's bar lands its header under the pinned place (`pinTop`).
-  Walkthrough trainer rows have no bar (it read the same as the Trainers section's; ideas for one: PROGRESS). Expand / Collapse all inside a box opens or closes its trainer cards.
+  for boxes and places (the walkthrough's styles). A trainer collapses from its card's bottom line instead, on every
+  card in a trainer row (Trainers page and walkthrough, both guides, always shown so all cards look the same):
+  "▴ Collapse" on the left, Pokepaste (if any) on the right (`.trf`, `.trfold`); it lands the trainer's header under
+  the pinned headers above it (`pinTop`). A trainer's own page has no Collapse. (The user's pick over a separate bar,
+  which in the walkthrough read the same as the Trainers section's, and over showing the trainer's name in the pinned
+  section header.) Expand / Collapse all inside a box opens or closes its trainer cards.
   The user's reason for mini-splits as boxes: three collapse levels without a new collapse style.
 - **Level row** (`details.capd`, both pages and the walkthrough): closed by default, "Level cap 15", or "Level cap 15 ·
   yours 17" once set (setting the cap itself clears yours); open state kept in memory (`CAPO`) so stepping the number doesn't close it, not saved.
