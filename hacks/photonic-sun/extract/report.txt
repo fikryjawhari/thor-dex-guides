@@ -43,7 +43,7 @@ found only as SOS allies: Charmeleon, Rattata, Raticate, Sandslash (Alola), Nido
   walkthrough trainer not matched: 34 Aether Paradise aetherfoundationfaba [('Slowbro', 61), ('Bruxish', 61), ('Raichu', 61)]
   walkthrough trainer not matched: 34 Eevee Users eeveeuserkagetora [('Eevee', 57)]
   walkthrough trainer not matched: 35 The Pokémon League: Round 2 youngstertaro [('Emolga', 66), ('Sharpedo', 66), ('Exeggutor', 66)]
-trainers: walkthrough 444 location pages 44 other 25 of 513 real trainers ( 140 placeholders dropped )
+trainers: walkthrough 445 location pages 44 other 24 of 513 real trainers ( 140 placeholders dropped )
   trainer with no place: 0 Pokémon Trainer - []
   trainer with no place: 146 Captain Mallow [('Trevenant', 60), ('Shiinotic', 60), ('Tsareena', 60)]
   trainer with no place: 241 Aether Branch Chief Faba [('Claydol', 44), ('Bruxish', 44), ('Hypno', 45)]
@@ -57,7 +57,6 @@ trainers: walkthrough 444 location pages 44 other 25 of 513 real trainers ( 140 
   trainer with no place: 451 Pokémon Trainer Hau [('Raichu', 43), ('Vaporeon', 42), ('Noivern', 42), ('Tauros', 42)]
   trainer with no place: 452 Pokémon Trainer Hau [('Raichu', 43), ('Leafeon', 42), ('Noivern', 42), ('Tauros', 42)]
   trainer with no place: 480 Youngster Tristan [('Emolga', 66), ('Sharpedo', 66), ('Exeggutor', 66), ('Magmortar', 66)]
-  trainer with no place: 492 Pokémon Trainer Hau [('Rowlet', 5)]
   trainer with no place: 544 Aether Foundation Employee [('Granbull', 61), ('Scrafty', 61), ('Shiinotic', 61)]
   trainer with no place: 547 Kantonian Gym Adrian [('Smoochum', 29)]
   trainer with no place: 548 Kantonian Gym Blair [('Cutiefly', 29)]
@@ -70,7 +69,7 @@ trainers: walkthrough 444 location pages 44 other 25 of 513 real trainers ( 140 
   trainer with no place: 582 Pokémon Trainer Lillie [('Clefairy', 60)]
   trainer with no place: 630 Pokémon Trainer Ryuki [('Turtonator', 29), ('Drampa', 29), ('Gabite', 29)]
   location page with no walkthrough stop, trainers go to Other: battlebuffet
-trainer boxes: Melemele Island 50, Akala Island 104, Ula'ula Island 119, Poni Island 40, The Pokémon League 26, Post-game: Guardians and Poni Grove 2, Post-game: Episode RR 48, Post-game: Ultra Space, Battle Tree and Title Defense 69, Other trainers 55
+trainer boxes: Melemele Island 49, Akala Island 105, Ula'ula Island 120, Poni Island 41, The Pokémon League 26, Post-game: Guardians and Poni Grove 2, Post-game: Episode RR 48, Post-game: Ultra Space, Battle Tree and Title Defense 68, Other trainers 54
 items: Shops 21, TMs 100, Mega Stones 47, Z-Crystals 35, Evolution Items 27, Held Items 132, Battle Items 9, Vitamins 15, Fossils 10, Key Items 30
 walkthrough: on the way stops 5 : Hau'oli Cemetery, Malie Garden, Thrifty Megamart, Victory Road, Ruins of Conflict
 walkthrough: 35 splits 136 stops, 385 items placed, 20 not placed

@@ -99,9 +99,20 @@ overflows, so probably the footer.
 
 ## Trainers
 
-- Hau on Route 1 has no team for a Litten starter: fix.
+- Done 2026-10-20 (trainers.py): the evo/breed tag is gone (template, all guides, domcompare clean). Hau's Litten team
+  on Route 1 was missed because Part 1 writes it `{{party` (lowercase); now matched. The level 84 grunt on Route 1
+  (id 233) came from location pages joining stops by prefix ("route17" starts with "route1"): now an exact name
+  first, and no prefix match in the middle of a number. Location-page trainers take exact teams (species + levels)
+  first, so 233 is Ancient Poni Path's Ekans 45 grunt (not Route 17's Ekans 36), and Actor Meredith's four teams sit
+  in Melemele Meadow / Royal Avenue / Ula'ula Meadow / Poni Meadow (two were swapped). Trainer keys shift with this
+  (positional), and the regrouping below shifts more.
+  Python here: `uv run` / `.venv\Scripts\python.exe` fail over SSH (sandbox won't follow the uv python junction);
+  run the real interpreter `%APPDATA%\uv\python\cpython-3.14.2-windows-x86_64-none\python.exe` with the venv's
+  site-packages added.
+- Hau on Route 1 has no team for a Litten starter: fix. (done)
 - Level 80 Team Skull grunt in Route 1 looks wrong: place it at its real story visit (another Route 1 visit) or move
-  it to the bottom. Same kind: Youngster Kenway in Royal Avenue (already at the bottom). Look for others.
+  it to the bottom. (done: Ancient Poni Path) Same kind: Youngster Kenway in Royal Avenue (already at the bottom).
+  Look for others.
 - Sina / Dexio and the Ultra Recon Squad: note which one you fight in Photonic Sun vs Prismatic Moon (a note is
   enough, no game switch). Archie / Maxie are probably split by game; others have two teams to pick from.
 - Aether Paradise needs its own area for trainers and walkthrough (visited twice, maybe three times). The level 80

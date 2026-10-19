@@ -67,7 +67,7 @@ def events():
     for n in range(1, 36):
         s = open(PART.format(n), encoding='utf-8').read().replace('{{!}}', '¦')
         h2 = ''
-        pat = r'^(={2,5})\s*(.*?)\s*\1\s*$|\{\{[Tt]rainerentry\|(.*?)\}\}\s*$|\{\{Party\n(.*?)\{\{Party/end\}\}'
+        pat = r'^(={2,5})\s*(.*?)\s*\1\s*$|\{\{[Tt]rainerentry\|(.*?)\}\}\s*$|\{\{[Pp]arty\n(.*?)\{\{Party/end\}\}'  # Part 1 has one {{party
         for m in re.finditer(pat, s, re.M | re.S):
             if m.group(1):
                 if len(m.group(1)) == 2:
@@ -201,13 +201,19 @@ def build(D):
         if not ts and e['mons']:
             miss += 1
             report('  walkthrough trainer not matched:', e['part'], e['place'], e['key'] or e['names'], e['mons'][:3])
-    # Second pass: location pages
-    extra = []
-    for e in location_entries():
-        for t in match(e):
-            if not dummy(Hk[t['id']]):
-                used.add(t['id'])
-                extra.append((e, t['id']))
+    # Second pass: location pages, exact teams first (Route 17's Ekans 36 grunt would take Ancient Poni Path's Ekans 45)
+    extra, ents = [], location_entries()
+    exact = lambda e, t: score(e, t) == 3 * len(e['mons']) == 3 * len(t['team'])
+    for strict in (True, False):
+        for e in ents:
+            if e.get('done'):
+                continue
+            for t in match(e):
+                if not dummy(Hk[t['id']]) and (not strict or exact(e, t)):
+                    used.add(t['id'])
+                    extra.append((e, t['id']))
+                    e['done'] = 1
+    extra.sort(key=lambda x: next(i for i, e in enumerate(ents) if e is x[0]))  # back in page order
     real = [t for t in Hk if not dummy(t)]
     left = [t for t in real if t['id'] not in used]
     report('trainers: walkthrough', len(placed), 'location pages', len(extra), 'other', len(left), 'of', len(real),
@@ -287,7 +293,10 @@ def build(D):
     # Location-page trainers join the first stop with their place's name
     for key, items in loc_extra.items():
         key = {'maliegarden': 'maliecity'}.get(key, key)  # the garden is a section of the Malie City stop
-        hit = next((st for st in allstops if norm(st[1]).startswith(key) or key.startswith(norm(st[1]))), None)
+        # The same name, else one name starting the other but not mid-number ("route1" is not "route17")
+        pre = lambda a, b: a.startswith(b) and not (a[len(b):len(b) + 1].isdigit() and b[-1:].isdigit())
+        hit = next((st for st in allstops if norm(st[1]) == key), None) or \
+            next((st for st in allstops if pre(norm(st[1]), key) or pre(key, norm(st[1]))), None)
         if hit:
             hit_seq = next((q for q in seq if q[0] == hit[0] and q[1] == hit[1]), None)
             if hit_seq is None:
