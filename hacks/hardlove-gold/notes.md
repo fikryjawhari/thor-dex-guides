@@ -31,6 +31,8 @@ HOW TO REBUILD (Git Bash, repo root; Python 3 stdlib and Node only, see docs/har
     python <B>/build.py docs/hardlove-gold <W> <W>/out          (prints the report below)
     python <B>/port.py <EI app script> <W>/hl_app.js              (EI = the last <script> of emerald-imperium-dex.html)
     python <B>/assemble.py <B> guides/emerald-imperium-dex.html <W>/out <W>/hl_app.js guides/hardlove-gold-dex.html
+  Then, in this repo on hacks/hardlove-gold/data.json: python -I hacks/hardlove-gold/extract/split_ui.py (trainer
+  boxes per mini-split, held item kinds, Valuables; see its header).
   port.py is a list of exact replacements on the EI app script; if the EI template changes, re-run it and fix any
   replacement that no longer matches (it stops with the text it could not find).
 
@@ -107,10 +109,11 @@ DATA SCHEMA (the JSON in #data)
       of [ids], lv [[level, moveIdx]] (0 = on evolution), tm/tu/eg [moveIdx], w [[LOCidx, method, rate, level, note]],
       g, nu, stone, sloc}]
   LOC [sublocation]   AR [{n area, l [LOC idx], ns 1 = no tracker slot (Roaming), note}]
-  IT [{n section, k tm|mega|gen, note, r [[item, text, link (move idx or mega id), missable 1/0]]}]
+  IT [{n section, k tm|mega|gen, note, r [[item, text, link (move idx or mega id), missable 1/0, sub-heading (Held Items kinds,
+      Valuables)]]}]
   WK {splits [{n, note, st [{n place, a [AR idx], s [], note, it [[section, item, text, link]], tr [trainer keys], x 1 = on the
       way}]}], np [unplaced items], docs [[title, text]], ko {rows, note}, gc game corner note}
-  TR {caps [[boss, cap]], fix [], g [{n, tab, note [], sec [{h, note [], tr [{k "g.s.t", n, id sheet trainer id, loc, tags [],
+  TR {caps [[boss, cap]], fix [], g [{n box ("Elder Li Split [Cap 12]", split_ui.py), cap, tab, note [], sec [{h place, note [], tr [{k "g.s.t", n, id sheet trainer id, loc, tags [],
       st starter or '', cap, note [], p [{id, s sheet name, l level or null, r relative to cap, na, a abilityIdx, ao "A / B" when
       the sheet lists two (sheet-only sets), a0 ability before Mega Evolution, i item, m [moveIdx], iv [6] HP,Atk,Def,SpA,SpD,Spe,
       ev [0 x6], hp Hidden Power type (from IVs), cf [what the sheet says instead], src "s" = no game set, sheet values}]}]}]}]}

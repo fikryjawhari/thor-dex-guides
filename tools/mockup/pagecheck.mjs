@@ -47,7 +47,7 @@ const page = async (route, pick) => { await go(route); return ev(`(async()=>{con
  // a section or trainer bar closes its block in place
  const eb=[...s0.querySelectorAll('details.sec>.endbar,details.trd>.endbar')].find(x=>!x.hidden);
  if(eb){const dd=eb.closest('details');eb.scrollIntoView({block:'end'});await sleep(300);eb.click();await sleep(600);o.push('inner bar: '+dd.className+' open '+dd.open+' header '+Math.round(dd.querySelector('summary').getBoundingClientRect().top));}
- const spb=s0.querySelector('.endbar.sp');o.push('box bar shown '+!spb.hidden);if(!spb.hidden){spb.scrollIntoView({block:'end'});await sleep(300);spb.click();await sleep(700);o.push('box bar: header '+Math.round(s0.querySelector('summary').getBoundingClientRect().top)+' T '+T()+' open '+s0.open);}
+ const spb=s0.querySelector('.endbar.sp');o.push('box bar '+(spb?'shown '+!spb.hidden:'none'));if(spb&&!spb.hidden){spb.scrollIntoView({block:'end'});await sleep(300);spb.click();await sleep(700);o.push('box bar: header '+Math.round(s0.querySelector('summary').getBoundingClientRect().top)+' T '+T()+' open '+s0.open);}
  scrollTo(0,0);await sleep(200);const dn=d.querySelector('.rjump [data-j="1"]'),up=d.querySelector('.rjump [data-j="-1"]');
  dn.click();await sleep(50);const a1=Math.round(sp()[0].getBoundingClientRect().top);dn.click();await sleep(50);const a2=Math.round(sp()[1].getBoundingClientRect().top);up.click();await sleep(50);
  o.push('jump down '+a1+' down '+a2+' up '+Math.round(sp()[0].getBoundingClientRect().top)+' (T '+T()+')');
@@ -56,7 +56,7 @@ const page = async (route, pick) => { await go(route); return ev(`(async()=>{con
  // leave the picked box open with its first place or trainer closed, for the reload check
  s0.open=true;await sleep(300);const p=s0.querySelector('details.stopd,details.trd');if(p){p.open=false;await sleep(200);}
  return o.join('\\n');})()`); };
-const pages = [['#/locs', 'Granite Cave'], ['#/locs', 'Littleroot'], ['#/trainers', 'Hot House'], ['#/trainers', 'Falkner'], ['#/items', 'TMs']];
+const pages = [['#/locs', 'Granite Cave'], ['#/locs', 'Littleroot'], ['#/locs', 'Fallarbor'], ['#/trainers', 'Hot House'], ['#/trainers', 'Rustboro Rival'], ['#/trainers', 'Elder Li'], ['#/items', 'Shops'], ['#/items', 'Held'], ['#/items', 'TMs']];
 for (const [r, p] of pages) { console.log(await page(r, p)); await shot(r.slice(2) + '-' + p.replace(/\W/g, '')); }
 // after a reload the open boxes and the closed places / trainers inside them come back
 for (const r of ['#/locs', '#/trainers', '#/items']) { await go(r); console.log(r + ' after reload: ' + await ev(`[...document.querySelectorAll('details.split.jt[open]')].map(d=>d.querySelector('summary').textContent.trim().slice(0,24)+' (closed inside: '+d.querySelectorAll('details.stopd:not([open]),details.trd:not([open])').length+')').join(' | ')`)); }

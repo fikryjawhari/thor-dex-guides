@@ -104,6 +104,13 @@ SOURCES
     have a calc set; the 3 without are the Route 103 rival starters (calc has only vanilla data there).
     Speed check: our formula reproduces the sheet's Speed Stat for 592 of 609 checkable Pokemon at the sheet's own cap;
     the 17 misses are sheet slips (Badge 3 Fantina computed at cap 44 though her note says 34, Wally's Skarmory, etc.).
+ 1j. stage7_split_ui.py (run in this repo on data.json after stage 6; no sources): the split UI's data. Hatch towns
+    (Oldale, Verdanturf, Fallarbor, Mt. Chimney, Lavaridge, Fortree) get one tracker slot per egg (Fire / Water / Grass
+    starter egg by shard, Oldale, Lavaridge, Pacifidlog egg; the user: any egg can hatch at any of them), appended to AR;
+    Littleroot's lab and the gift houses of Rustboro, Mossdeep, Sootopolis fold into the town ("Gift (Devon Corp 2F)");
+    trainers regrouped into level cap boxes (the cap 84 box, named "Wally in Victory Road" in the cap list, holds the
+    Ever Grande trainers too: called "Victory Road"); shop rows get their shop as a sub-heading ("All free" dropped from
+    Verdanturf's rows: gifts there, and the mart sells more).
  2. pokemon-showdown npm 0.11.11 (npm pack, extract dist/data/moves.js and abilities.js): move PRIORITY only,
     plus a comparison to flag EI changes (MV.h) and EI originals (MV.x, AB[2]).
  Not used: NBurhans/emerald-imperium (third-party analysis of v1.3; its world data cites the official
@@ -131,16 +138,19 @@ DATA SCHEMA (the JSON in #data)
         s[HP,Atk,Def,SpA,SpD,Spe] (reordered from the source's Gen 3 order HP,Atk,Def,Spe,SpA,SpD), ef/et [[how, id]] evolves from/into, of[ids] other forms,
         lv[[level, moveIdx]] (level 0 = learned on evolution), tm[moveIdx], eg[moveIdx], w[[LOCidx, method, rate, levels, note]],
         g availability (above), fc, hi[wild held item names]}]   dex order, base form then other forms
-  LOC [sublocationName] in tracker order   AR [{n area name, l[LOC idx], ns 1 = no tracker slot, note}]
+  LOC [sublocationName] in tracker order   AR [{n area name, l[LOC idx], ns 1 = no tracker slot, note,
+       sub [AR idx] tracker slots it is split into (hatch towns, one per egg), in = the area a slot belongs to}]
+       (slots are appended after the tracker's areas so saved trackers, keyed by AR index, keep their meaning)
   P.w methods: Grass/cave, Surf, Old/Good/Super Rod, Rock Smash (rates are %), Static, Gift, Egg / Starter egg /
   Pseudo egg, Starter choice, Hot House (N+ badges), Choice (...), Roaming (rates "1 of N"); w[4] = how to get it.
   P.g: 0 obtainable (any encounter or its evolution family), 1 Mega/Primal, 3 not found in any location source.
-  IT  [{n section, k tm|mega|gen|npc, note, r:[[item, text, link (move idx or mega id), missable 1?]]}]
+  IT  [{n section, k tm|mega|gen|npc, note, r:[[item, text, link (move idx or mega id), missable 1?, sub-heading (Shops)]]}]
   P.stone / P.sloc on Megas.
   WK  {cheats:[[code, alias, text, toggle]], cnote, splits:[{n, note, st:[{n place, a[AR idx], s:[[step, note]],
        it:[[section, item, text, link]], x 1 = "on the way" stop}]}], np unplaced items}
-  TR  {caps:[[label, cap]] (Navigation tab), fix:[name fixes], src, g:[{n group name, tab sheet tab, wk WK split index,
-       sec:[{h header ('' or "Hot House (N Badges)"), cap (Hot House tier cap), rw [reward choices], tr:[trainer]}]}]}
+  TR  {caps:[[label, cap]] (Navigation tab), fix:[name fixes], src, g:[{n box ("Roxanne Split [Cap 15]"), cap, tab sheet tab,
+       wk WK split index, sec:[{h place (trainer location, or "Hot House (N Badges) [Cap N]"), rw [reward choices], tr:[trainer]}]}]}
+       (stage 7: boxes are level cap runs named from caps, places runs of one location; Hot House stays one box)
        trainer {k "g.s.t" key, n name, loc place, tags[] (Optional, Double Battle, Back to Back #1, Permanent Rain, Trick
        Room...), st "Water"/"Grass"/"Fire" = shown if YOUR starter has that type, cap default level cap, rw rewards, pp
        pokepast url, note[], c[calc trainer names], p:[mon]}

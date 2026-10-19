@@ -1,4 +1,4 @@
-# Split UI: collapsible pages (walkthrough done, other pages in mockup)
+# Split UI: collapsible pages (walkthrough done, other pages built, mockup round 2)
 
 Decided with the user on 2026-10-19 over eight mockup rounds, then built into the template for the walkthrough page
 (`#/walk`). This file is the reference for bringing the same patterns to Locations, Trainers and Items (and anything
@@ -67,35 +67,36 @@ https://claude.ai/artifact/Kp64pS46UwPRSsyWVao1Zs. The final mockup choice is "S
   widths; or let the browser size each table (drop `overflow-wrap:anywhere` there), which would make columns differ
   from stop to stop. 30% breaks "Stomping"; EI needs about 37%.
 
-## Locations, Trainers, Items (built 2026-10-19, mockup round 1, waiting for the user's picks)
+## Locations, Trainers, Items (built 2026-10-19, mockup round 2)
 
-Asked for by the user (same session as the walkthrough check): the walkthrough patterns on the three other pages; top
-level closed by default, everything inside open (except the level box); entries under a box sit on the page, not in
-boxes of their own; rail arrows move between boxes. Mockup = the real build in a frame with switches:
-https://claude.ai/artifact/GmXrq1ATz3jBbi6Q6N5iQH (`tools/mockup/pages.py`, `pages-outer.html`).
+Asked for by the user: the walkthrough patterns on the three other pages; top level closed by default, everything
+inside open (except the level row); entries under a box sit on the page, not in boxes of their own; rail arrows move
+between boxes. Mockup = the real build in a frame: https://claude.ai/artifact/GmXrq1ATz3jBbi6Q6N5iQH
+(`tools/mockup/pages.py`, `pages-outer.html`). Round 1 had two switches; the user picked "trainer rows never stick"
+(a pinned team preview looked bad, on both pages) and "item tables with no box" (the losing CSS is gone).
 - **Locations** (`LGRP`, `locBox`, `locPlace`, `LS.loc`): box → place (`details.stopd`, sticky) → method
-  (`details.sec`, sticky under it). The user's rule: the place repeats the full name ("Route 102" box → "Route 102"
-  place; "Granite Cave" box → "Granite Cave 1F" → Grass/cave). Boxes: next-to-each-other areas whose names share
-  their first two words (names of 3+ words; routes never group); an area with several places of its own never
-  joins one (HG Safari Zone Gate stays apart). One-area box: tracker above its places; several areas: each place is
-  one area with its tracker inside. Same-named places merge (`adjRows` takes a list): EI Fallarbor / Mt. Chimney had
-  27 "Fallarbor Town Move Relearner House" entries, one per starter egg. `#/l/<place>` opens its box and place and
-  lands it at `T()`.
-- **Trainers** (`trGroup`, `trRows`, `LS.tr` gains `x` places and `t` trainers): box → place (the sheet's section
-  headings, HG and EI Hot House) → trainer row (`details.trd`: name, tags, team preview; open = the full card).
-  EI splits have no headings, so trainers sit straight in the box with their place in the row. Open trainer headers
-  stick under the place (or the search bar). The in-box Expand / Collapse all works on its places, or trainers.
-- **Level box** (`details.capd`, both pages and the walkthrough): closed by default, shows the level in use; open
-  state kept in memory (`CAPO`) so stepping the number doesn't close it, not saved.
-- **Items** (`LS.items`): boxes filled when opened, tables `.itbl.ix` with no card.
+  (`details.sec`, sticky under it). The place repeats the full name ("Route 102" box → "Route 102"; "Granite Cave" →
+  "Granite Cave 1F" → Grass/cave). Boxes: next-to-each-other areas whose names share their first two words (names of
+  3+ words; routes never group); an area with several places of its own never joins one. One-area box: tracker above
+  its places; several areas: each place is one area with its tracker inside. Same-named places merge (`adjRows` takes
+  a list). Areas split into tracker slots (`AR[i].sub`, slots have `.in`; `ARS(a)`) show their slots as places: EI's
+  hatch towns have one slot per egg (stage 7), and an egg saved on the town before the split moves to its slot.
+  `#/l/<place>` opens its box and place and lands it at `T()`.
+- **Trainers** (`trGroup`, `trRows`, `LS.tr` {o boxes, p places, t trainers}): box = one mini-split with its cap
+  (data: EI stage 7 from the trainers' caps, Hardlove `split_ui.py` from the sheet's headings) → place (white, sticky,
+  collapsible) → trainer row (`details.trd`: name, tags, team preview; open = the full card; not sticky). Bottom bars
+  at all three levels (the walkthrough's styles). Expand / Collapse all inside a box opens or closes its trainer cards.
+  The user's reason for mini-splits as boxes: three collapse levels without a new collapse style.
+- **Level row** (`details.capd`, both pages and the walkthrough): closed by default, "Level cap 15", or "Level cap 15 ·
+  yours 17" once set; open state kept in memory (`CAPO`) so stepping the number doesn't close it, not saved.
+- **Items** (`itemBox`, `LS.items` {o, x, s}): box → its name again as a white sticky heading (dashed stop bar) →
+  yellow sub-headings where rows carry one (`r[4]`: EI shops; Hardlove held item kinds, Valuables). Tables `.itbl.ix`.
 - Shared: `TOG[view]` (one capture `toggle` listener on #app: saving and filling), `colBind` (SHO observes place and
   section headers; sections carry `--ch`), the tap handler covers every page in `COLV`, `.seg.all` = the page's
   boxes, jump buttons on every `COLV` page.
-- **Open choices (mockup switches, data attributes on `<html>`):** `data-wt` walkthrough trainer header (a covers the
-  "Trainers" header, the default; b stacks under it, three rows; c doesn't stick), `data-mi` item tables (a no box,
-  the default; b two lines; c joined to the header; now). Once picked, delete the losing CSS rules.
-- Checked: `tools/mockup/pagecheck.mjs` (both guides, 260 × 316: no page errors, width 260, taps hold, stickies,
-  bars, jumps, state after reload, place links) and `walkcheck.mjs` (walkthrough unchanged). Not done: `dvkb` run,
+- The walkthrough keeps its own levels (its splits are the walkthrough's); only the level row and item tables changed.
+- Checked: `tools/mockup/pagecheck.mjs` (both guides, 260 × 316, also `dvkb`: no page errors, width 260, taps hold,
+  stickies, bars, jumps, state after reload, place links), `walkcheck.mjs` (both guides), the egg save move. Not done:
   `domcompare` against `main`, the Thor.
 
 ## Implementation (as built, 2026-10-19)

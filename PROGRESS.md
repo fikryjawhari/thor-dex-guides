@@ -27,10 +27,11 @@ the split is in that repo's git log.
 3. ~~Shared sprite set~~ **done and live 2026-10-19** (see "Shared sprite set results"); checked and merged into
    `main` (`94d0706`), see "Sprite branch handover". Left: the footer credit (step 7).
 4. **Walkthrough split UI:** check it on the Thor (both guides, 260 wide and maximised, `dvkb`), then merge
-   `worktree-walkthrough-ui` into `main` and push. Locations, Trainers and Items **built on the same branch as mockup round 1**
-   (2026-10-19, https://claude.ai/artifact/GmXrq1ATz3jBbi6Q6N5iQH): waiting for the user's picks (walkthrough trainer
-   header A/B/C, item tables A/B/C) and their comments; then drop the losing options, `dvkb` and `domcompare`
-   checks, Thor. Details: `plans/split-ui.md` → Locations, Trainers, Items.
+   `worktree-walkthrough-ui` into `main` and push. Locations, Trainers and Items **built on the same branch, mockup round 2**
+   (2026-10-19, https://claude.ai/artifact/GmXrq1ATz3jBbi6Q6N5iQH): the user's round 1 answers are in (egg slots,
+   mini-split trainer boxes, item sub-headings, new data steps: EI `extract/stage7_split_ui.py`, Hardlove
+   `extract/split_ui.py`). Next: the user's comments on round 2, `domcompare` against `main`, the Thor, then merge.
+   Details: `plans/split-ui.md` → Locations, Trainers, Items.
 5. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
    this repo's flow (CLAUDE.md → Making a new guide). Can happen with the first new guide.
 6. **New guides** (one session each, here): CLAUDE.md → Making a new guide. Each needs its sources re-fetched first
