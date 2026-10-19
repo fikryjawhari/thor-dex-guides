@@ -49,7 +49,8 @@ details>summary::-webkit-details-marker{display:none}
 .show .o{display:flex;flex:1;border:1px solid var(--line);border-radius:999px;overflow:hidden;min-width:0}
 .show button{flex:1;font:inherit;font-size:13px;font-weight:600;background:var(--panel);color:var(--fg);border:0;padding:5px 2px;cursor:pointer;min-width:0}
 .show button+button{border-left:1px solid var(--line)}
-.show button[aria-pressed="true"]{background:var(--acc);color:var(--accfg)}
+.show button.on{background:var(--acc);color:var(--accfg)}
+.show button.part{box-shadow:inset 0 0 0 2px var(--acc);color:var(--acc)}
 .show .mx{font-size:11px;color:var(--mut);white-space:nowrap}
 summary .show{margin:0;flex:1 1 100%;background:none}
 .show.top{margin:0 0 8px}
@@ -69,7 +70,8 @@ details.trd[open]>summary .pv{display:none}
 .card{font-size:12px;color:var(--mut);padding:2px 2px 8px;display:grid;gap:2px}
 .card b{color:var(--fg);font-weight:600}
 .ib{font:inherit;font-size:11px;font-weight:600;background:var(--panel2);color:var(--mut);border:1px solid var(--line);border-radius:6px;padding:2px 6px;cursor:pointer;flex:none;white-space:nowrap}
-.ib[aria-pressed="true"]{color:var(--acc);border-color:var(--acc)}
+.ib.part{color:var(--acc);border-color:var(--acc)}
+.ib.on{background:var(--acc);color:var(--accfg);border-color:var(--acc)}
 .flash{animation:fl .6s}
 @keyframes fl{from{background:var(--panel2)}}
 @media (prefers-reduced-motion:reduce){.flash{animation:none}}
@@ -77,7 +79,7 @@ button:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-
 </style>
 
 <h1>Trainers: the Show switch</h1>
-<p class="intro">B's Show switch per island, C's "teams" toggle per place, real places (Rowlet starter). Flip the options below and click around in the frame; the line under it says what each press did.</p>
+<p class="intro">B's Show switch per island, C's "teams" toggle per place, real places (Rowlet starter). Flip the options below and click around in the frame; the line under it says what each press did. Set to your picks. A switch outlined in yellow covers the open places; press it again to open every place (then it's solid). Place "teams": fill first (2/4 opens the rest, 4/4 closes all). Your view stays on the trainer you're reading.</p>
 <div class="wrap">
  <div class="left">
   <div class="tools" role="group" aria-label="Viewer size"><button id="s1" data-s="260x316" aria-pressed="true">260 × 316</button><button id="s2" data-s="538x425" aria-pressed="false">538 × 425</button><button id="rst">Reset page</button></div>
@@ -97,7 +99,7 @@ button:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-
 
 <script>
 const DATA=[["Melemele Island",[["Route 1",[12,"Captain Ilima","Hau'oli City",14],[["Pokémon Trainer Hau","Popplio 5",[]],["Lass Audrey","Buneary 3 · Ralts 4",[]],["Youngster Jimmy","Caterpie 3 · Weedle 3 · Wurmple 3",[]],["Preschooler Oliver","Rattata (Alola) 3 · Bunnelby 4",[]]]],["Iki Town Festival",[12,"Captain Ilima","Hau'oli City",10],[["Pokémon Trainer Hau","Pichu 7 · Popplio 8",[]]]],["Hau'oli City",[12,"Captain Ilima","Hau'oli City",1],[["Team Skull Grunt","Zubat 10 · Scraggy 10",[]],["Captain Ilima","Yungoos 11 · Porygon 11 · Buneary 11 · Smeargle 12",[]]]],["Big Wave Beach",[16,"Totem Gumshoos","Verdant Cavern",2],[["Team Skull Grunt","Houndour 11 · Whismur 11",[]]]],["Verdant Cavern",[16,"Totem Gumshoos","Verdant Cavern",1],[["Team Skull Grunt","Drowzee 13 · Poochyena 13 · Koffing 13",[]]]]]],["Akala Island",[["Heahea City",[28,"Totem Araquanid","Brooklet Hill",25],[["Pokémon Trainer Dexio","Mr. Mime 21 · Espeon 21 · Slowpoke 22",[]],["Pokémon Trainer Sina","Vulpix (Alola) 21 · Glaceon 21 · Smoochum 21 · Amaura 22",["Prismatic Moon"]]]],["Route 4",[28,"Totem Araquanid","Brooklet Hill",24],[["Bellhop Jody","Fomantis 20 · Venipede 20 · Wooper 20",[]],["Collector Bryan","Munchlax 19 · Bagon 19 · Deino 19 · Jangmo-o 19",[]],["Sightseer Scotty","Rattata 21 · Pidgeotto 21",[]],["Sightseer Perdita","Meowth 21 · Nidorina 21",[]],["Cook Ernie","Cutiefly 20 · Panpour 20 · Pansear 20 · Pansage 20",[]]]],["Paniola Town",[28,"Totem Araquanid","Brooklet Hill",19],[["Pokémon Trainer Hau","Brionne 25 · Pikachu 24 · Noibat 23 · Swinub 23 · Darumaka 22",[]],["Team Skull Grunt","Raticate (Alola) 22 · Stunky 22 · Loudred 22",[]]]]]]];
-const O={m:'all',stk:'1',l:'live',w:'stick',t:'plain',pst:'1',g:'bar'};
+const O={m:'open',stk:'',l:'live',w:'stick',t:'count',pst:'1',g:'bar'};
 const DESC={"m:all": "The switch sets the whole island. Places closes every place; Trainers opens every place with cards closed; Teams opens every place with cards open. Places you closed by hand open again.", "m:open": "Trainers and Teams change cards only in places already open; closed places stay closed. If nothing is open (just after Places), they open every place.", "m:mem": "Like \"Only open ones\", but Places remembers which places were open, and Trainers or Teams after it reopens just those. The first time: every place.", "stk:1": "With Teams on, opening a closed place opens its cards too; with Trainers on, it opens with cards closed.", "stk:": "A place you open shows its cards as you left them.", "l:live": "The switch follows your taps: open one team in Trainers view and it shows \"mixed\" until you pick again.", "l:last": "The switch stays lit on what you last pressed, whatever you open or close by hand.", "w:row": "A row under the island header that scrolls away with the island top.", "w:stick": "A row pinned under the pinned island header, so you can switch from anywhere in the island.", "w:head": "Part of the island header itself (pinned with it). One block instead of two.", "t:plain": "Lit when any card in the place is open. A press closes them, otherwise opens them all.", "t:count": "Same, plus how many cards are open.", "t:hide1": "Same, but no toggle in one-trainer places (the row is its own toggle).", "pst:1": "The place header pins under the island header, so its \"teams\" toggle stays reachable in a long place.", "pst:": "The place header scrolls away with the place.", "g:bar": "Open all islands · Close all, as agreed.", "g:sw": "Also a Show switch for every island at once (opens them). One tap for \"everything down to places\"."};
 function descs(){document.querySelectorAll('.desc').forEach(p=>p.textContent=DESC[p.dataset.for+':'+O[p.dataset.for]]||'');}
 let S;
@@ -116,24 +118,25 @@ function live(bi){const ps=places(bi),op=ps.filter(p=>isOpen(bi,p));
  const cs=op.flatMap(p=>cards(bi,p));
  if(cs.every(c=>!c))return 1;if(cs.every(c=>c))return 2;return -1;}
 function lit(bi){return O.l==='live'?live(bi):(S.last[bi]??live(bi));}
-function setShow(bi,v){const ps=places(bi);let op=ps.filter(p=>isOpen(bi,p)),opened=0,changed=0;
+const allOpen=bi=>places(bi).every(p=>isOpen(bi,p));
+function setShow(bi,v){const ps=places(bi);let op=ps.filter(p=>isOpen(bi,p)),opened=0,changed=0;const again=v>0&&lit(bi)===v;
  S.box[bi]=1;
  if(v===0){if(op.length)S.mem[bi]=op;ps.forEach(p=>S.pl[pk(bi,p)]=0);S.last[bi]=0;
   return `<b>Places</b> on ${esc(DATA[bi][0])}: closed ${op.length} place${op.length===1?'':'s'}${O.m==='mem'&&op.length?' (remembered which)':''}.`;}
  let target;
- if(O.m==='all')target=ps;
+ if(O.m==='all'||again)target=ps;
  else if(op.length)target=op;
  else target=O.m==='mem'&&S.mem[bi]?S.mem[bi]:ps;
  target.forEach(p=>{if(!isOpen(bi,p)){S.pl[pk(bi,p)]=1;opened++;}
   cards(bi,p).forEach((c,ti)=>{if(c!==(v===2)){S.tr[tk(bi,p,ti)]=v===2?1:0;changed++;}});});
  S.last[bi]=v;
  const skipped=ps.length-target.length;
- return `<b>${v===2?'Teams':'Trainers'}</b> on ${esc(DATA[bi][0])}: opened ${opened} place${opened===1?'':'s'}, ${v===2?'opened':'closed'} ${changed} card${changed===1?'':'s'}${skipped?`, left ${skipped} closed place${skipped===1?'':'s'} alone`:''}.`;}
+ return `<b>${v===2?'Teams':'Trainers'}</b>${again?' again':''} on ${esc(DATA[bi][0])}: opened ${opened} place${opened===1?'':'s'}, ${v===2?'opened':'closed'} ${changed} card${changed===1?'':'s'}${skipped?`, left ${skipped} closed place${skipped===1?'':'s'} alone`:''}.`;}
 function showSw(bi,cls){const v=lit(bi);
- return `<div class="show ${cls}" data-b="${bi}"><span>Show</span><div class="o" role="group" aria-label="Show">${['Places','Trainers','Teams'].map((x,i)=>`<button data-act="show" data-b="${bi}" data-v="${i}" aria-pressed="${v===i}">${x}</button>`).join('')}</div>${v===-1?'<span class="mx">mixed</span>':''}</div>`;}
+ return `<div class="show ${cls}" data-b="${bi}"><span>Show</span><div class="o" role="group" aria-label="Show">${['Places','Trainers','Teams'].map((x,i)=>`<button data-act="show" data-b="${bi}" data-v="${i}" aria-pressed="${v===i}" class="${v===i?(i===0||allOpen(bi)?'on':'part'):''}">${x}</button>`).join('')}</div>${v===-1?'<span class="mx">mixed</span>':''}</div>`;}
 function teamsBtn(bi,pi){const cs=cards(bi,pi),n=cs.filter(Boolean).length;
  if(O.t==='hide1'&&cs.length<2)return '';
- return `<span class="grow"></span><button class="ib" data-act="pteams" data-b="${bi}" data-p="${pi}" aria-pressed="${n>0}">teams${O.t==='count'?` ${n}/${cs.length}`:''}</button>`;}
+ return `<span class="grow"></span><button data-act="pteams" data-b="${bi}" data-p="${pi}" aria-pressed="${n===cs.length}" class="ib ${n===cs.length?'on':n?'part':''}">teams${O.t==='count'?` ${n}/${cs.length}`:''}</button>`;}
 function place(bi,pi){const p=DATA[bi][1][pi],c=p[1],o=isOpen(bi,pi);
  return `<details class="stopd ${O.pst?'stk':''}" data-k="${pk(bi,pi)}" ${o?'open':''}><summary><span>${esc(p[0])}</span><span class="tag">${p[2].length}</span><span class="tag capg">cap ${c[0]}</span><span class="ar">${o?'▾':'▸'}</span>${teamsBtn(bi,pi)}</summary><div class="stop"><div class="capl">Level cap <b>${c[0]}</b> · ${esc(c[1])}, ${esc(c[2])} · ${c[3]?c[3]+' battle'+(c[3]===1?'':'s'):'next'}</div>`+
  p[2].map((t,ti)=>`<details class="trd" data-k="${tk(bi,pi,ti)}" ${S.tr[tk(bi,pi,ti)]?'open':''}><summary><span>${esc(t[0])}</span><span class="pv">${esc(t[1].split(' · ').map(x=>x.replace(/ \d+$/,'')).join(', '))}</span></summary><div class="card"><b>${esc(t[1])}</b><span>Nature, ability, item and moves for each</span></div></details>`).join('')+`</div></details>`;}
@@ -146,23 +149,38 @@ function render(){const n=b=>b[1].reduce((a,p)=>a+p[2].length,0);
 const fr=document.getElementById('fr'),log=document.getElementById('log');
 function measure(){const s=fr.querySelector('details.split[open]>summary');if(!s)return;const sh=s.getBoundingClientRect().height;
  fr.style.setProperty('--sh',sh+'px');const sw=fr.querySelector('.show.stick');fr.style.setProperty('--ph',(sh+(sw?sw.getBoundingClientRect().height:0))+'px');}
+// The row you're reading: the trainer (or place) under a point a third of the way down the space below the pinned
+// headers. After a change it goes back to the same height; if its header would end up under the pinned ones, just below.
+function pinLim(){const fb=fr.getBoundingClientRect();let lim=fb.top+(parseFloat(getComputedStyle(fr).getPropertyValue('--ph'))||0);
+ if(O.pst){const st=[...fr.querySelectorAll('details.stopd[open]>summary')].find(x=>Math.abs(x.getBoundingClientRect().top-lim)<2);if(st)lim+=st.getBoundingClientRect().height;}
+ return {lim,fb};}
+function grab(){const {lim,fb}=pinLim(),py=lim+(fb.bottom-lim)/3;
+ const vis=[...fr.querySelectorAll('details.trd,details.stopd')].filter(d=>d.offsetParent!==null);
+ const rows=vis.filter(d=>d.matches('.trd'));
+ const d=rows.find(d=>{const r=d.getBoundingClientRect();return r.top<=py&&r.bottom>py;})||rows.find(d=>d.getBoundingClientRect().top>py)||vis.find(d=>d.getBoundingClientRect().top>=lim-1);
+ return d?{k:d.dataset.k,y:d.querySelector(':scope>summary').getBoundingClientRect().top}:null;}
+function restore(g){if(!g)return '';let d=fr.querySelector(`details[data-k="${g.k}"]`);
+ while(d&&d.offsetParent===null)d=d.parentElement.closest('details');if(!d)return '';
+ const sm=d.querySelector(':scope>summary');fr.scrollTop+=sm.getBoundingClientRect().top-g.y;
+ const {lim}=pinLim(),t=sm.getBoundingClientRect().top;if(t<lim)fr.scrollTop-=lim-t;
+ sm.classList.add('flash');return sm.querySelector('span').textContent;}
 function draw(anchor){let y=null;if(anchor){const a=fr.querySelector(anchor);if(a)y=a.getBoundingClientRect().top;}
  const top=fr.scrollTop;fr.innerHTML=render();fr.scrollTop=top;measure();
  if(anchor&&y!=null){const a=fr.querySelector(anchor);if(a){fr.scrollTop+=a.getBoundingClientRect().top-y;a.classList.add('flash');}}}
 fr.addEventListener('click',e=>{const b=e.target.closest('button[data-act]');if(!b)return;e.preventDefault();e.stopPropagation();
  const a=b.dataset.act,v=+b.dataset.v,bi=+b.dataset.b,pi=+b.dataset.p;let msg='',anc=null;
  if(a==='boxes'){DATA.forEach((_,i)=>S.box[i]=v);msg=v?'Opened every island.':'Closed every island.';}
- else if(a==='show'){msg=setShow(bi,v);anc=`button[data-act="show"][data-b="${bi}"][data-v="${v}"]`;}
- else if(a==='showall'){msg=DATA.map((_,i)=>setShow(i,v)).join(' ');anc=`button[data-act="showall"][data-v="${v}"]`;}
- else if(a==='pteams'){const any=cards(bi,pi).some(Boolean);setCards(bi,pi,!any);S.pl[pk(bi,pi)]=1;msg=`<b>teams</b> in ${esc(DATA[bi][1][pi][0])}: ${any?'closed':'opened'} every card.`;anc=`button[data-act="pteams"][data-b="${bi}"][data-p="${pi}"]`;}
- log.innerHTML=msg;draw(anc);});
+ else if(a==='show'){msg=setShow(bi,v);}
+ else if(a==='showall'){msg=DATA.map((_,i)=>setShow(i,v)).join(' ');}
+ else if(a==='pteams'){const cs=cards(bi,pi),full=cs.every(Boolean);setCards(bi,pi,!full);S.pl[pk(bi,pi)]=1;msg=`<b>teams</b> in ${esc(DATA[bi][1][pi][0])}: ${full?'closed every card':`opened ${cs.filter(c=>!c).length} more`}.`;}
+ const g=grab();log.innerHTML=msg;draw();const k=restore(g);if(k)log.innerHTML+=` View kept on <b>${esc(k)}</b>.`;});
 fr.addEventListener('toggle',e=>{const d=e.target;if(!d.matches('details'))return;const k=d.dataset.k;
  if(d.matches('details.split')){const bi=+d.dataset.b;if(!!S.box[bi]===d.open)return;S.box[bi]=d.open?1:0;}
  else if(d.matches('details.stopd')){if(!!S.pl[k]===d.open)return;S.pl[k]=d.open?1:0;const [bi,pi]=k.split('.').map(Number);
   if(d.open&&O.stk&&S.last[bi]!=null&&S.last[bi]>0){setCards(bi,pi,S.last[bi]===2);log.innerHTML=`Opened ${esc(DATA[bi][1][pi][0])}: cards follow the switch (${S.last[bi]===2?'Teams, open':'Trainers, closed'}).`;}}
  else if(d.matches('details.trd')){if(!!S.tr[k]===d.open)return;S.tr[k]=d.open?1:0;}
  requestAnimationFrame(()=>draw());},true);
-document.getElementById('opts').addEventListener('change',e=>{const i=e.target;O[i.name]=i.value;descs();draw();});descs();
+document.getElementById('opts').addEventListener('change',e=>{const i=e.target;O[i.name]=i.value;descs();draw();});document.querySelectorAll('#opts input').forEach(i=>i.checked=O[i.name]===i.value);descs();
 function size(s){const [w,h]=s.split('x');document.documentElement.style.setProperty('--w',w+'px');document.documentElement.style.setProperty('--h',h+'px');measure();}
 document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b));size(b.dataset.s);});
 document.getElementById('rst').onclick=()=>{reset();log.textContent='Reset: Melemele open, every place open, cards closed.';draw();};

@@ -150,7 +150,11 @@ overflows, so probably the footer.
     "Open all islands / Close all". Round 2b mockup with the behaviour options (closed places, places opened later,
     what the switch lights, where it sits, teams label, pinned place header, a page-wide switch):
     https://claude.ai/artifact/WFR57CSdHTHwzNpe3G7YG6 (source `tools/mockup/ps-trainers/show.html`, real places
-    from data.json). Waiting for the option picks.
+    from data.json). Picked (2026-10-20): only open places, stay as left, switch shows what's on screen, pinned
+    row, "teams 1/4", pinned place header, top bar Open / Close all. Plus: a lit Trainers / Teams pressed again opens
+    every place (outlined = open places only, solid = every place); place "teams" fills first (part → all open, all
+    → all closed; grey / outline / solid); toggling keeps the trainer you're reading in place (no jump when rows
+    above open or close). In the mockup, waiting for the user's try.
   - No "forced" count (no source marks avoidable trainers; searched Bulbapedia, Serebii, the web). Cap line is now
     "Level cap 12 · Captain Ilima, Hau'oli City · 14 battles". Done (trainers.py, template).
   - Walkthrough entries that match no game trainer: the game data wins, leave them out. Done (as built).
