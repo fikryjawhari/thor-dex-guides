@@ -98,7 +98,8 @@ const KB={o:null,el:null,buf:'',fresh:false,rep:false,
   else if(a==='done'){this.close();return;}
   this.show();if(o.input)o.input(this.buf);}};
 window.addEventListener('resize',()=>{if(KB.o)KB.draw();});
-// The search box as a button with value/placeholder properties, so the code below uses it like the <input>.
+// The search box as a button with value/placeholder properties, so the code below uses it like the <input>. Tapping it
+// opens the full-window search, in the viewer and in a browser alike.
 function searchDisp(inp){const b=document.createElement('button');b.type='button';b.id='q';b.className='disp';b.setAttribute('aria-label','Search');
  b.innerHTML='<span class="tx"></span><span class="x" aria-label="Clear search">×</span>';let val='',ph=inp.placeholder||'';
  const show=()=>{const t=b.firstChild;t.textContent=val;t.dataset.ph=ph;b.classList.toggle('has',!!val);if(KB.o&&KB.o.disp)KB.buf=val;};
@@ -125,25 +126,17 @@ function otherKb(a){const A=AR[a];const res=x=>{const n=norm(x);return n.length<
  KB.open({mode:'abc',value:'',label:A?A.n:'Name',strip:x=>{const r=res(x);return r.length?r.map(p=>`<button type="button" class="kpick" data-id="${esc(p.id)}">${spr(p.id,'s32')}<span>${esc(p.name)}</span></button>`).join('')
    :`<span class="mut small">${norm(x).length<2?'Type a Pokémon name':'No match'}</span>`;},
   pick:id=>{TK.e[a]={p:id};tkSave();KB.close();rerender();},onClose(quiet){if(!quiet&&!this.picked)rerender();}});}
-const app=document.getElementById('app'),q=INV?searchDisp(document.getElementById('q')):document.getElementById('q'),fil=document.getElementById('filters'),sug=document.getElementById('sugg');
+const app=document.getElementById('app'),q=searchDisp(document.getElementById('q')),fil=document.getElementById('filters'),sug=document.getElementById('sugg');
 // Typing on a page with no list (Pokemon, move, ability or trainer page) goes to its section's list as a new history
 // entry, so the results show and Back returns to the page. The keyboard stays open (see hashchange).
 const UP={p:'#/',m:'#/',a:'#/',tr:'#/trainers'};let searchNav=false;
 q.addEventListener('input',()=>{st.q=q.value.trim().toLowerCase();if(st.q&&UP[st.view]){searchNav=true;location.hash=UP[st.view];return;}render(true);});
-q.addEventListener('keydown',e=>{if(e.key==='Enter'){q.blur();sug.style.display='none';}});
 function setTab(t){['p','l','t','i','w','c'].forEach(x=>document.getElementById('t-'+x).classList.toggle('on',x===t));}
-// ===== POKEMON TAB: chip filters (type / ability / move / location) with typed suggestions
+// ===== POKEMON TAB: chip filters (type / ability / move / location)
 const FL={type:'Type',ab:'Ability',mv:'Move',loc:'Found at'};
 const fval=f=>f.k==='mv'?M[f.v]:f.k==='loc'?LOC[f.v]:f.k==='ab'?AB[f.v][0]:f.v;
-function suggestions(){const s=st.q;if(s.length<2||INV){sug.style.display='none';return;}
- const has=(k,v)=>st.f.some(f=>f.k===k&&f.v===v);const out=[];
- types.filter(t=>t.toLowerCase().startsWith(s)&&!has('type',t)).forEach(t=>out.push({k:'type',v:t}));
- AB.map((a,i)=>i).filter(i=>abUsers[i]&&AB[i][0].toLowerCase().includes(s)&&!has('ab',i)).slice(0,5).forEach(i=>out.push({k:'ab',v:i}));
- usedMoves.filter(i=>M[i].toLowerCase().includes(s)&&!has('mv',i)).sort((a,b)=>M[a].toLowerCase().indexOf(s)-M[b].toLowerCase().indexOf(s)).slice(0,6).forEach(i=>out.push({k:'mv',v:i}));
- LOC.map((l,i)=>i).filter(i=>locs[i]&&LOC[i].toLowerCase().includes(s)&&!has('loc',i)).slice(0,4).forEach(i=>out.push({k:'loc',v:i}));
- if(!out.length){sug.style.display='none';return;}
- sug.innerHTML=out.map((o,j)=>`<div class="s" data-j="${j}"><span>${o.k==='type'?ty(o.v):esc(fval(o))}</span><span class="k">${FL[o.k]} filter</span></div>`).join('');sug.style.display='block';
- sug.querySelectorAll('.s').forEach(el=>el.onclick=()=>{st.f.push(out[+el.dataset.j]);save();q.value='';st.q='';sug.style.display='none';render(true);});}
+// Filters are added from the full-window search; the old typed-suggestions dropdown (#sugg) stays hidden.
+function suggestions(){sug.style.display='none';}
 function filtersPokemon(){fil.innerHTML=`<div class="chips">${st.f.map((f,j)=>`<span class="chip"><b>${FL[f.k]}</b>${f.k==='type'?ty(f.v):esc(fval(f))}<button data-j="${j}" aria-label="Remove">×</button></span>`).join('')}</div>
 <div class="sorts"><select id="fs">${[['dex','Dex order'],['name','Name'],...SN.map((s,i)=>['s'+i,s])].map(([v,l])=>`<option value="${v}" ${st.sort===v?'selected':''}>${l}</option>`).join('')}</select>
 <select id="fa">${[['all','All Pokémon'],['obt',TX.obt],['nomega','Hide Megas'],['nw',TX.nw],...HASVC?[['chg','Changed from vanilla']]:[]].map(([v,l])=>`<option value="${v}" ${st.av===v?'selected':''}>${l}</option>`).join('')}</select></div>`;
@@ -607,25 +600,30 @@ const TRDO=new Set();
 function bindTrd(root){(root||app).querySelectorAll('details.trd').forEach(d=>{if(d.dataset.b)return;d.dataset.b=1;const fill=()=>{const b=d.querySelector('.trb');if(document.body.dataset.v==='walk'){if(d.open)TRDO.add(d.dataset.k);else TRDO.delete(d.dataset.k);}if(d.open&&b&&!b.innerHTML){b.innerHTML=trainerBlock(TRK[b.dataset.k],false,true);bindTrainers(b);}};d.addEventListener('toggle',fill);fill();});}
 function usedByCard(p){const u=TRUSE[p.id];if(!u)return '';return `<div class="card"><h3>Used by trainers (${u.length})</h3>${u.map(t=>`<div><a href="#/tr/${t.k}">${esc(t.n)}</a> <span class="mut small">${esc(t.loc)} · ${esc(t.g)}${t.st?(PICK?' · if your starter is '+esc(t.st):' · '+esc(t.st)+' starter'):''}</span></div>`).join('')}</div>`;}
 
-// ===== FULL-WINDOW SEARCH (Dex Viewer only). Tapping the search box covers the page with a query strip, results from
+// ===== FULL-WINDOW SEARCH. Tapping the search box covers the page with a query strip, results from
 // every section and a 4-row keyboard. The section of the page you're on comes first and in full, then the others in a
 // fixed order (Pokemon, filters, locations, trainers, items, walkthrough), 8 each until "Show all". Picking a result
 // opens it; Done filters the page's own list with the query, as typing in the box used to. Recent picks (LS.recent)
-// show when the query is empty.
+// show when the query is empty. In the viewer the query is typed on the in-page keyboard (KB); in a browser the strip
+// holds a real input for the device's own keyboard (Enter = Done, Esc = back).
 const SR={el:null,q:'',more:{},items:[],
  ico(k){const sel={l:'#t-l',t:'#t-t',i:'#t-i',w:'#t-w'}[k];const s=sel&&document.querySelector(sel+' svg');
   return `<span class="ic">${s?s.outerHTML:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7v6l-4 2v-8z"/></svg>'}</span>`;},
  open(){if(this.el)return;this.q=q.value;this.more={};const el=this.el=document.createElement('div');el.className='srch';
   el.innerHTML=`<div class="sst"><button type="button" class="ib" data-a="back" aria-label="Back to the page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-<button type="button" class="sq" data-a="kb" aria-label="Search"><span class="tx" data-ph="Search everything"></span></button>
-<button type="button" class="ib sx" data-a="clear" aria-label="Clear">×</button><button type="button" class="ib hk" data-a="hide" aria-label="Hide or show the keyboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div><div class="sres"></div>`;
+${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span class="tx" data-ph="Search everything"></span></button>`
+  :`<input type="search" class="sq" placeholder="Search everything" aria-label="Search" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">`}
+<button type="button" class="ib sx" data-a="clear" aria-label="Clear">×</button>${INV?`<button type="button" class="ib hk" data-a="hide" aria-label="Hide or show the keyboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`:''}</div><div class="sres"></div>`;
   document.body.appendChild(el);document.body.classList.add('sopen');
+  const inp=INV?null:el.querySelector('input.sq');
+  if(inp){inp.value=this.q;inp.addEventListener('input',()=>{this.q=inp.value;this.more={};this.draw(true);});
+   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();this.done();}else if(e.key==='Escape'){e.preventDefault();this.close();}});}
   el.addEventListener('click',e=>{const b=e.target.closest('[data-a],[data-i],[data-more]');if(!b)return;
    if(b.dataset.i!=null){this.pick(this.items[+b.dataset.i]);return;}
    if(b.dataset.more){this.more[b.dataset.more]=1;this.draw();return;}
-   const a=b.dataset.a;if(a==='back')this.close();else if(a==='clear'){this.q='';if(KB.o)KB.buf='';this.draw(true);}
+   const a=b.dataset.a;if(a==='back')this.close();else if(a==='clear'){this.q='';if(KB.o)KB.buf='';if(inp){inp.value='';inp.focus();}this.draw(true);}
    else if(a==='hide'){if(KB.o)KB.close(true);else this.kb();}else if(a==='kb'&&!KB.o)this.kb();});
-  this.kb();this.draw(true);},
+  if(inp)inp.focus();else this.kb();this.draw(true);},
  kb(){this.el.classList.remove('nokb');
   KB.open({mode:'abc',full:true,value:this.q,input:v=>{this.q=v;this.more={};this.draw(true);},
    onClose:quiet=>{if(!this.el)return;if(quiet)this.el.classList.add('nokb');else this.done();}});},
@@ -665,7 +663,7 @@ const SR={el:null,q:'',more:{},items:[],
   out.w=D.WK.splits.flatMap(sp=>sp.st.filter(x=>stopText(x).includes(s)).map(x=>[{k:'w',n:x.n,s:sp.n}]));
   return out;},
  draw(top){if(!this.el)return;const s=this.q.trim().toLowerCase();
-  const tx=this.el.querySelector('.sq .tx');tx.textContent=this.q;this.el.classList.toggle('empty',!this.q);this.items=[];let h='';
+  const tx=this.el.querySelector('.sq .tx');if(tx)tx.textContent=this.q;this.el.classList.toggle('empty',!this.q);this.items=[];let h='';
   if(!norm(s)){let r=[];try{r=JSON.parse(localStorage.getItem(LS.recent)||'[]')}catch(e){}
    h=r.length?`<div class="ssh">Recent</div>`+r.map(o=>this.row(o,'')).join(''):`<div class="shint">Search Pokémon, types, abilities, moves, places, trainers, items and the walkthrough. Pick a result to open it, or Done to filter this page's list.</div>`;}
   else{const S=this.sections(s);const v=(location.hash||'#/').slice(2).split('/')[0];

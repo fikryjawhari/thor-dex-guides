@@ -33,8 +33,9 @@ the split is in that repo's git log.
      not when Dex Viewer's A−/A+ text zoom changes (it scales text, not the viewport, so no resize fires). After a
      zoom change a bar can be missing or extra until the next toggle. Likely fix: a ResizeObserver on a hidden 1em
      probe element calling `barsSoon()` (and check how the app applies text zoom, in the app repo).
-   - **Search** (the user will overhaul it in its own session): a trainer result opens the trainer page instead of
-     its place on the Trainers page.
+   - **Search** (the user is overhauling it): step 1 done 2026-10-19, the full-window search on every device (see
+     Search fix and full-window search). Still open: a trainer result opens the trainer page instead of its place on
+     the Trainers page, plus the other search problems the user has noted.
    - Hardlove on the Thor was not checked over CDP (only EI was open in the viewer); it passed headless at Thor sizes.
    Details: `plans/split-ui.md`.
 5. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
@@ -252,12 +253,16 @@ From the app repo's Build environment (adb is at `$LOCALAPPDATA/Android/Sdk/plat
 ## Search fix and full-window search (2026-10-18)
 
 **Search fix (2026-10-18; both guides, now in the template).** Typing on a Pokémon, move, ability or trainer page used to re-render that page and ignore the query. Now the `input` handler sends it to the section's list (`UP` map) as a new history entry, and `hashchange` keeps the keyboard open for that one navigation (`searchNav`). Back returns to the page. Checked over CDP on the Thor.
-**Full-window search: built in Emerald Imperium (2026-10-18), viewer only (`INV`).** Mockup: https://claude.ai/artifact/3T5mc2eQd4mcGe19jkkNiT (private Design canvas, sample data). The user dislikes that canvas type ("how do I interact?"); next time use a plain HTML artifact like the keyboard mockup. The user called searching everything "perfect": it also fixes filters and Pokémon being separate lists.
+**Full-window search: built in Emerald Imperium (2026-10-18), everywhere since 2026-10-19 (was viewer only).** Mockup: https://claude.ai/artifact/3T5mc2eQd4mcGe19jkkNiT (private Design canvas, sample data). The user dislikes that canvas type ("how do I interact?"); next time use a plain HTML artifact like the keyboard mockup. The user called searching everything "perfect": it also fixes filters and Pokémon being separate lists.
    - Tapping the search box opens `SR`: a fixed layer over the guide (rail included, z 19, under the keyboard's z 20). It has a strip with ‹ back, the query, × clear and ⌄ hide/show keyboard; results; and the `KB` keyboard in `full` mode (4 rows: QWERTY / ASDF / 123 Z–M ⌫ / Space + Done; 123 swaps the top row for digits; keys 37 px at 260 × 360).
    - **Result order (the user's rule):** the current page's section first, in full (up to 100, then "Show all"). Then the others in the order Pokémon, Filters, Locations, Trainers, Items, Walkthrough, 8 each until "Show all". Detail pages count as their section (Pokémon/move/ability → Pokémon, trainer → Trainers); Calc counts as Pokémon.
-   - Picks: Pokémon / trainer → their page; filter → added as a chip on the Pokémon list; location → `#/l/…` opened; item / walkthrough stop → that list searched for its name. Done → the query goes into the page's search box, as before (on a detail page, the section's list, via `UP`). Recent picks (`eirecent`, 6) show when the query is empty. The old `#sugg` dropdown is off in the viewer.
+   - Picks: Pokémon / trainer → their page; filter → added as a chip on the Pokémon list; location → `#/l/…` opened; item / walkthrough stop → that list searched for its name. Done → the query goes into the page's search box, as before (on a detail page, the section's list, via `UP`). Recent picks (`eirecent`, 6) show when the query is empty. The old `#sugg` dropdown is off everywhere (`suggestions()` only hides it).
    - Checked over CDP on the Thor at 260 × 317: ordering on a Pokémon page and a trainer page, picking, Done, Back, recents, hide keyboard, plus a screenshot. The user has since used it by hand: "it was good".
-   - Outside the viewer (phone browser) the old search with the real input is unchanged.
+   - **Every device (2026-10-19):** the search box is always the `searchDisp` button opening `SR`, so phone and laptop
+     browsers get the same global search to test with. Only the typing differs: outside the viewer (`!INV`) the strip
+     holds a real `<input class="sq">` focused on open (the device's own keyboard; Enter = Done, Esc = back, no ⌄
+     button); in the viewer (or `dvkb`) it's the `KB` keyboard as before. Checked headless at 260 × 316 and 1280 × 800
+     on both guides (order, Enter, Esc, pick, recents, no errors); domcompare vs main, normal and `--kb`.
 
 ## Skill (2026-10-18)
 

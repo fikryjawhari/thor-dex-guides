@@ -198,6 +198,9 @@ body.sopen{overflow:hidden}
 .srch.empty .sx{visibility:hidden}
 .sq{flex:1;min-width:0;height:36px;display:flex;align-items:center;padding:0 8px;background:var(--panel);color:var(--fg);border:1px solid var(--acc);border-radius:8px;font:600 16px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-align:left;cursor:text;touch-action:manipulation}
 .srch.nokb .sq{border-color:var(--line)}
+input.sq{font-weight:600;outline:none;-webkit-appearance:none;appearance:none}
+input.sq::placeholder{color:var(--mut);font-weight:400}
+input.sq::-webkit-search-cancel-button{display:none}
 .sq .tx{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sq .tx:empty::before{content:attr(data-ph);color:var(--mut);font-weight:400}
 .srch:not(.nokb) .sq .tx::after{content:'';display:inline-block;width:2px;height:18px;background:var(--acc);vertical-align:-3px;margin-left:1px;animation:kbblink 1s steps(1) infinite}
