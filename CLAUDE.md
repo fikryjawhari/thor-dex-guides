@@ -80,6 +80,13 @@ Git merges change by change and only stops on lines both branches changed, so sp
 
 ## Where a session works
 Decide from my prompt, say it in one line ("working in X because Y"), then start. One session per worktree.
+- **Start order** (before any edit):
+  1. Work out the job from my prompt. Find the guide branch (below) and read the files the job is about straight
+     from it, without entering: `git show <branch>:<path>` (the spec, the plan's heading, PROGRESS.md).
+  2. **Model check**, now that you know the job: compare it with Which model (Workflow). If I picked a weaker model
+     than the job needs, say so and stop until I switch (`/model`) or say go on. If I picked a stronger one than it
+     needs, say which would do and carry on unless I switch. One line either way when it fits.
+  3. Busy check, claim, enter the worktree (or make the tab branch), then work.
 - **A hack's guide branch**: the branch ahead of `main` whose commits touch `hacks/<hack>/` (`git worktree list`,
   `git branch`, `git log --oneline main..<branch>`), usually `worktree-<hack>...`. None: `main` is the base. Two: ask.
 - **Routing:**
@@ -121,6 +128,12 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
   4. *Audit* (a Haiku subagent): `assemble.py`, `domcompare` against main, the viewer-size checks, scenario runs from
      the spec; reports pass / fail with evidence.
   Template builds are one at a time (Parallel sessions); decide steps can run in parallel.
+- **Which model** (the session's own; agents it dispatches pick theirs, step 2 above):
+  - Opus: building a spec, fixing after my tests, merges, anything that picks branches or dispatches agents; a new
+    hack's first build; anything unclear or touching data rules across tabs.
+  - Sonnet: decide sessions (mockups and specs with me); a small, fully specified change to one tab's extract script.
+  - Haiku: never a session I start; only agents an Opus session dispatches (audits, mechanical jobs).
+  - Effort: medium unless I say otherwise.
 - **Thor frame** (`tools/mockup/thor-frame/`, on the Photonic Sun branch until it merges): `python -I tools/mockup/thor-frame/build.py <page.html> <out.html>
   [--title] [--sub] [--panel]` wraps a built guide or a mockup's inner page in a Thor-sized screen (the viewer sizes,
   fit to screen, dvkb, tabs, reload / clear saved state, error and width readout; pinned on a phone). Publish the
