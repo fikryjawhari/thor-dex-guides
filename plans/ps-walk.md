@@ -13,12 +13,12 @@ https://claude.ai/artifact/5iPtwwnsGaijwvkydeu5MA, source `tools/mockup/ps-walk/
 rebuild `python assemble.py photonic-sun`, then `python -I tools/mockup/ps-walk/build.py . <out.html>`). The mockup
 converts empty stops in the DOM after render; the template builds the same thing in `walkStop`.
 
-## Options (user, round 2: B and C out; A and D stay, with a text size slider)
+## Design (user, round 3)
 
-- **A Rail row:** muted line on a dotted rail, regular weight. Was 13px, too small next to the 16px bold headers.
-- **D Muted header:** header weight, grey bar and text, no arrow. "Fine as it is" (15px).
-- The mockup has one slider (12–18px, step 0.5, default 15) that sets both, so the user picks the size. Final size to
-  be recorded here once chosen.
+**Muted header, bold, 14px, grey text, no arrow.** The earlier Rail row was dropped: what looked off was its dotted
+marker not lining up with the yellow bars. So the sign uses exactly the stop header's box (`margin:10px 0`,
+`padding:4px 0 4px 10px`, 3px bar at the same x) and only the bar changes. Bar still to pick in the mockup: faint solid
+(`--line`), grey solid (`--mut`), dotted, dashed, hollow (`3px double`). The slider is gone (size fixed at 14).
 
 ## Rule and behaviour (all options)
 
@@ -41,7 +41,7 @@ converts empty stops in the DOM after render; the template builds the same thing
 
 ## Open questions for the pick
 
-1. A or D, and the text size?
+1. Which bar?
 2. Should the row say what kind of stop it is ("story", "on the way") or just show the name?
 3. Stay one row each (assumed now that C is out).
 4. Do they get a tap action? (Today none; a tap could open the place's Locations page if it has one.)
