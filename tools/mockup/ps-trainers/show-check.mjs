@@ -82,7 +82,7 @@ for (const [w, h] of [[260, 316], [538, 425]]) for (const kb of [false, true]) {
     p=[...${box(0)}.querySelectorAll('details.stopd[open]>summary')].find(x=>{const r=x.getBoundingClientRect();return r.top>=w.bottom-3&&r.top<=w.bottom+3;});const pr=p&&p.getBoundingClientRect();
     return {hdrB:h.bottom,isT:s.top,isB:s.bottom,swT:w.top,swB:w.bottom,plT:pr&&pr.top,plTxt:p&&p.textContent.slice(0,20),wide:document.documentElement.scrollWidth,iw:innerWidth};})()`);
   log('  stack', JSON.stringify(g));
-  check(near(g.isT, g.hdrB, 1) && near(g.swT - g.isB, -1, 1.2) && g.plT != null && near(g.plT - g.swB, -1, 1.2), 'pinned stack flush (search bar / island / Show / place)');
+  check(g.isB < g.hdrB && near(g.swT - g.hdrB, -1, 1) && g.plT != null && near(g.plT - g.swB, -2, 1), 'pinned stack flush (search bar / Show / place; island header scrolled away)');
   check(g.wide <= g.iw, `no horizontal overflow (${g.wide} <= ${g.iw})`);
   const wide = await ev(`[...document.querySelectorAll('#app *')].filter(e=>e.getClientRects().length&&e.getBoundingClientRect().right>innerWidth+1).slice(0,3).map(e=>e.tagName+'.'+e.className+' '+Math.round(e.getBoundingClientRect().right))`);
   check(wide.length === 0, 'nothing wider than the window ' + wide.join(', '));

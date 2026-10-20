@@ -444,8 +444,8 @@ function bars(){const room=innerHeight-hdrH(),bs=[...app.querySelectorAll('.endb
 let bq=0;const barsSoon=()=>{if(!bq)bq=requestAnimationFrame(()=>{bq=0;bars();});};
 document.addEventListener('contentvisibilityautostatechange',e=>{if(!e.skipped&&app.querySelector('.endbar'))barsSoon();},true);
 addEventListener('resize',()=>{if(app.querySelector('.endbar'))barsSoon();});
-// Height of the island header and Show row pinned above a Trainers-page element.
-const trPinH=el=>{const bx=document.body.dataset.v==='trainers'&&!el.matches('details.split')&&el.closest('details.split');if(!bx)return 0;const w=bx.querySelector('.trsw');return bx.querySelector(':scope>summary').getBoundingClientRect().height+(w?w.getBoundingClientRect().height:0);};
+// Height of the Show row pinned above a Trainers-page element (less the 2px the place header overlaps it: dex.css).
+const trPinH=el=>{const bx=document.body.dataset.v==='trainers'&&!el.matches('details.split')&&el.closest('details.split');const w=bx&&bx.querySelector('.trsw');return w?w.getBoundingClientRect().height-2:0;};
 // A collapse bar. Anything but a split lands right under the headers pinned above it (the search bar, its stop's and
 // section's): a stop's or section's own header is pinned there already, so it closes in place; a trainer row's (not
 // sticky) is scrolled there if it's off the top. A split closes and its header goes to the top. All flash.
@@ -660,10 +660,10 @@ TOG.trainers=d=>{if(st.q)return;const k=d.dataset.k;
 // Trainers page controls (plans/trainers-show-switch.md). State is read from the page: the Show switch from which places and
 // cards are open (0 Places, 1 Trainers, 2 Teams, -1 mixed), the place buttons from their cards. Rows are the cards (one per
 // battle where trainers share one). Actions change the DOM in place (cards built at once: d._f) and keep TOPEN.p / TOPEN.t.
-// Island header, Show row and place header are pinned in turn (--ih, --sw measured below).
+// The Show row is pinned under the search bar and the place header under it (--sw measured below).
 const trSwitch=hp=>`<div class="trsw"><span>Show</span><div class="o" role="group" aria-label="Show">${['Places','Trainers','Teams'].map((x,i)=>hp||i?`<button type="button" data-v="${i}">${x}</button>`:'').join('')}</div><span class="mx" hidden>mixed</span></div>`;
-const IHO=new ResizeObserver(es=>es.forEach(e=>{const b=e.target.closest('details.split');if(b)b.style.setProperty(e.target.matches('summary')?'--ih':'--sw',e.target.getBoundingClientRect().height+'px');}));
-const trObs=d=>{const s=d.querySelector(':scope>summary'),w=d.querySelector('.trsw');if(!s.dataset.ro){s.dataset.ro=1;IHO.observe(s,{box:'border-box'});}if(w)IHO.observe(w,{box:'border-box'});};
+const IHO=new ResizeObserver(es=>es.forEach(e=>{const b=e.target.closest('details.split');if(b)b.style.setProperty('--sw',e.target.getBoundingClientRect().height+'px');}));
+const trObs=d=>{const w=d.querySelector('.trsw');if(w)IHO.observe(w,{box:'border-box'});};
 const trRowsOf=p=>[...p.querySelectorAll('details.trd')];
 const trLoose=b=>[...b.querySelectorAll('details.trd')].filter(d=>!d.closest('details.stopd'));
 function trLive(b,ps){const op=ps.filter(p=>p.open);if(ps.length&&!op.length)return 0;const cs=op.flatMap(trRowsOf).concat(trLoose(b));if(!cs.length)return 1;const n=cs.filter(d=>d.open).length;return n?n===cs.length?2:-1:1;}
