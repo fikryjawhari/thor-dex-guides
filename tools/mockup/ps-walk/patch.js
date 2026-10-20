@@ -11,6 +11,8 @@
   // first sign of a run (no sign right before it, hidden stops skipped)
   app.querySelectorAll('.sign').forEach(s=>{let p=s.previousElementSibling;while(p&&p.classList.contains('emp'))p=p.previousElementSibling;s.classList.toggle('run0',!(p&&p.classList.contains('sign')));});}
  new MutationObserver(()=>{convert();}).observe(document.documentElement,{childList:true,subtree:true});
+ R.style.setProperty('--sgfs',(()=>{try{return localStorage.getItem('mocksgfs')||'15'}catch(e){return '15'}})()+'px');
+ window.setSize=n=>{R.style.setProperty('--sgfs',n+'px');try{localStorage.setItem('mocksgfs',n)}catch(e){}};
  window.setOption=(k,v)=>{R.dataset.sg=v;try{localStorage.setItem(K,v)}catch(e){}convert();};
  window.showPart=n=>{if(location.hash!=='#/walk'){location.hash='#/walk';setTimeout(()=>showPart(n),700);return;}const d=document.querySelector('details.split[data-wo="'+(n-1)+'"]');if(!d)return;d.open=true;setTimeout(()=>{convert();d.scrollIntoView();},150);};
 })();

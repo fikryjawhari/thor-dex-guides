@@ -8,18 +8,17 @@ Decide session 2026-10-20 (Sonnet), tab branch `worktree-ps-walk` off `worktree-
 bare, yellow-barred header with a ▾ that opens nothing. This is a **template UI change** (every guide): a stop with
 nothing to show gets its own look, no arrow, not a `<details>`.
 
-Mockup (the real build in the Thor frame, four options on a switch, jump chips to parts 1, 9, 29, 32, 34):
+Mockup (the real build in the Thor frame, options on a switch, jump chips to parts 1, 9, 29, 32, 34):
 https://claude.ai/artifact/5iPtwwnsGaijwvkydeu5MA, source `tools/mockup/ps-walk/` (`patch.css`, `patch.js`, `panel.html`;
 rebuild `python assemble.py photonic-sun`, then `python -I tools/mockup/ps-walk/build.py . <out.html>`). The mockup
 converts empty stops in the DOM after render; the template builds the same thing in `walkStop`.
 
-## Options in the mockup (pick one; **not yet picked**)
+## Options (user, round 2: B and C out; A and D stay, with a text size slider)
 
-- **A Rail row:** one small muted line on a dotted rail, regular weight. Quietest.
-- **B Divider:** a thin line with the name in the middle, like a chapter break.
-- **C Route chips:** pills with arrows; neighbouring empty stops share a line (Seaward Cave → Kala'e Bay). Shortest in
-  height; wraps at 260.
-- **D Muted header:** header size and weight kept but grey, grey bar, no arrow. Closest to today.
+- **A Rail row:** muted line on a dotted rail, regular weight. Was 13px, too small next to the 16px bold headers.
+- **D Muted header:** header weight, grey bar and text, no arrow. "Fine as it is" (15px).
+- The mockup has one slider (12–18px, step 0.5, default 15) that sets both, so the user picks the size. Final size to
+  be recorded here once chosen.
 
 ## Rule and behaviour (all options)
 
@@ -42,9 +41,9 @@ converts empty stops in the DOM after render; the template builds the same thing
 
 ## Open questions for the pick
 
-1. Which option (A–D), or a mix (e.g. B for part-opening beats, A for the rest)?
+1. A or D, and the text size?
 2. Should the row say what kind of stop it is ("story", "on the way") or just show the name?
-3. Should a run of empty stops collapse into one line (only C does it) or stay one row each?
+3. Stay one row each (assumed now that C is out).
 4. Do they get a tap action? (Today none; a tap could open the place's Locations page if it has one.)
 
 ## Build (after the pick)

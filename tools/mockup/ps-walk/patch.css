@@ -1,15 +1,7 @@
 /* Empty-stop designs. The original details.stopd stays (class emp, hidden unless "Now"); a .sign sits after it. */
 .sign{display:none}
-html[data-sg=a] details.stopd.emp,html[data-sg=b] details.stopd.emp,html[data-sg=c] details.stopd.emp,html[data-sg=d] details.stopd.emp{display:none}
+html[data-sg=a] details.stopd.emp,html[data-sg=d] details.stopd.emp{display:none}
 /* A: small row on the rail, dotted, no weight */
-html[data-sg=a] .sign{display:block;margin:8px 0 8px 6px;padding:1px 0 1px 10px;border-left:3px dotted var(--line);color:var(--mut);font-size:13px;line-height:1.35}
-/* B: divider with the name in the middle */
-html[data-sg=b] .sign{display:flex;align-items:center;gap:8px;margin:12px 0;color:var(--mut);font-size:12px;font-weight:600;letter-spacing:.03em}
-html[data-sg=b] .sign::before,html[data-sg=b] .sign::after{content:'';flex:1;height:1px;background:var(--line)}
-html[data-sg=b] .sign span{max-width:70%;text-align:center}
-/* C: chips; neighbours share a line with arrows between */
-html[data-sg=c] .sign{display:inline-block;margin:6px 4px 6px 0;padding:2px 9px;border:1px solid var(--line);border-radius:999px;color:var(--mut);font-size:12px;line-height:1.35}
-html[data-sg=c] .sign:not(.run0){margin-left:2px}
-html[data-sg=c] .sign:not(.run0)::before{content:'→';margin-right:5px}
+html[data-sg=a] .sign{display:block;margin:8px 0 8px 6px;padding:1px 0 1px 10px;border-left:3px dotted var(--line);color:var(--mut);font-size:var(--sgfs,15px);line-height:1.35}
 /* D: stop header look, but grey, lighter, no arrow, no bar fill */
-html[data-sg=d] .sign{display:block;margin:10px 0;border-left:3px solid var(--line);padding:4px 0 4px 10px;font-weight:600;font-size:15px;color:var(--mut)}
+html[data-sg=d] .sign{display:block;margin:10px 0;border-left:3px solid var(--line);padding:4px 0 4px 10px;font-weight:600;font-size:var(--sgfs,15px);color:var(--mut)}

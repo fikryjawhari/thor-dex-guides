@@ -2,16 +2,22 @@
  <div class="chips" id="sg">
   <button data-v="now">Now (empty dropdown)</button>
   <button data-v="a" aria-pressed="true">A Rail row</button>
-  <button data-v="b">B Divider</button>
-  <button data-v="c">C Route chips</button>
   <button data-v="d">D Muted header</button>
  </div>
- <p class="hint">A: dotted rail, small text. B: a line with the name in it. C: neighbours share a line as chips with arrows. D: header size, grey, no arrow. None open or close. Jump to a part with empty stops:</p>
+ <div class="chips" style="margin-top:8px;align-items:center;flex-wrap:nowrap">
+  <label for="fs" style="font-size:13px;white-space:nowrap">Text size</label>
+  <input type="range" id="fs" min="12" max="18" step="0.5" value="15" style="flex:1;min-width:80px">
+  <output id="fo" style="font-size:13px;min-width:44px;text-align:right">15px</output>
+ </div>
+ <p class="hint">Rail row: dotted rail, regular weight. Muted header: bold, grey, no arrow. The slider sets both (a normal stop header is 16px bold). Jump to a part with empty stops:</p>
  <div class="chips" id="pt"><button data-p="1">1 start</button><button data-p="9">9 Seaward → Kala'e</button><button data-p="29">29 Ruins</button><button data-p="32">32 Sunne</button><button data-p="34">34 Kukui</button></div>
  <script>
  (function(){const q=s=>document.querySelector(s);
-  const sync=()=>{let v='a';try{v=thorFrame().localStorage.getItem('mocksg')||'a'}catch(e){}q('#sg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v))};
+  const sync=()=>{let v='a',z='15';try{const l=thorFrame().localStorage;v=l.getItem('mocksg')||'a';z=l.getItem('mocksgfs')||'15'}catch(e){}
+   q('#sg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+   if(document.activeElement!==q('#fs')){q('#fs').value=z;q('#fo').textContent=z+'px';}};
   q('#sg').onclick=e=>{const b=e.target.closest('button');if(!b)return;thorFrame().setOption('sg',b.dataset.v);sync();};
+  q('#fs').oninput=e=>{q('#fo').textContent=e.target.value+'px';thorFrame().setSize(e.target.value);};
   q('#pt').onclick=e=>{const b=e.target.closest('button');if(!b)return;thorFrame().showPart(+b.dataset.p);};
   setInterval(sync,1000);})();
  </script>
