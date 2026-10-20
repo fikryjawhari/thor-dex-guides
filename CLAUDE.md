@@ -128,7 +128,7 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
   4. *Audit* (a Haiku subagent): `assemble.py`, `domcompare` against main, the viewer-size checks, scenario runs from
      the spec; reports pass / fail with evidence.
   Template builds are one at a time (Parallel sessions); decide steps can run in parallel.
-- **Which model** (the session's own; agents it dispatches pick theirs, step 2 above):
+- **Which model** (the session's own; agents it dispatches pick theirs, see Build above):
   - Opus: building a spec, fixing after my tests, merges, anything that picks branches or dispatches agents; a new
     hack's first build; anything unclear or touching data rules across tabs.
   - Sonnet: decide sessions (mockups and specs with me); a small, fully specified change to one tab's extract script.
