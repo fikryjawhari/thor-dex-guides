@@ -193,5 +193,6 @@ overflows, so probably the footer.
 - Starter on Route 1 (Ultra Sun), not Iki Town.
 - Drop empty story stops (e.g. back to Iki Town after Mahalo Trail, then home). The walkthrough is for Pokémon,
   items, trainers and route order in one place.
-- **Decided 2026-10-20 (decide session, no mockup needed):** 21 empty stops are dropped by a rule in walk.py; the
-  starter is already on Route 1. **Build spec: `plans/ps-walk.md`** (tab branch `worktree-ps-walk`).
+- **Decide session 2026-10-20:** empty stops are kept (game direction) and get their own look, no ▾: a template UI change.
+  Mockup in the Thor frame, four options: https://claude.ai/artifact/5iPtwwnsGaijwvkydeu5MA. Waiting for the pick; draft
+  spec `plans/ps-walk.md` (tab branch `worktree-ps-walk`). The starter is already on Route 1.

@@ -1,18 +1,15 @@
-"""Walkthrough decide mockup: real stops from data.json, Now beside Proposed (empty stops dropped), a keep/drop
-checklist, the split title changes and the things to check. python -I tools/mockup/ps-walk/build.py <out.html>"""
-import json, re, sys, os
-ROOT = os.path.join(os.path.dirname(__file__), '..', '..', '..')
-D = json.load(open(os.path.join(ROOT, 'hacks/photonic-sun/data.json'), encoding='utf-8'))
-AR = D['AR']
-sp = []
-for i, s in enumerate(D['WK']['splits']):
-    p = int(re.match(r'(\d+)\.', s['n']).group(1))
-    st = []
-    for j, x in enumerate(s['st']):
-        areas = [AR[a]['n'] for a in x['a'] if not AR[a].get('ns')]
-        st.append({'n': x['n'], 'x': 1 if x.get('x') else 0, 'a': areas, 'i': len(x['it']), 't': len(x['tr']), 's': len(x['s']), 'note': 1 if x['note'] else 0})
-    sp.append({'p': p, 'st': st})
-data = json.dumps(sp, ensure_ascii=False, separators=(',', ':'))
-html = open(os.path.join(os.path.dirname(__file__), 'tpl.html'), encoding='utf-8').read().replace('/*DATA*/[]', data)
-open(sys.argv[1], 'w', encoding='utf-8').write(html)
-print(len(html))
+"""Walkthrough empty-stop mockup: python -I tools/mockup/ps-walk/build.py <repo> <out.html>
+The built guide (dist/photonic-sun.html) gets patch.css / patch.js (the designs), then thor-frame/build.py wraps it with
+a panel of option chips."""
+import subprocess, sys, tempfile
+from pathlib import Path
+here = Path(__file__).parent
+repo, out = Path(sys.argv[1]), sys.argv[2]
+g = (repo / 'dist/photonic-sun.html').read_text(encoding='utf8')
+i = g.rindex('</body>')
+g = g[:i] + '<style>' + (here / 'patch.css').read_text(encoding='utf8') + '</style><script>' + (here / 'patch.js').read_text(encoding='utf8') + '</script>' + g[i:]
+with tempfile.TemporaryDirectory() as t:
+    p = Path(t) / 'g.html'
+    p.write_text(g, encoding='utf8')
+    subprocess.run([sys.executable, '-I', str(repo / 'tools/mockup/thor-frame/build.py'), str(p), out, '--title', 'Walkthrough: empty stops',
+                    '--sub', 'Photonic Sun build with four ways to show the stops that have nothing in them.', '--panel', str(here / 'panel.html')], check=True)

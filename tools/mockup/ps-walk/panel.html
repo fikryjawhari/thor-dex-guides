@@ -1,0 +1,18 @@
+<fieldset><legend>Empty stops</legend>
+ <div class="chips" id="sg">
+  <button data-v="now">Now (empty dropdown)</button>
+  <button data-v="a" aria-pressed="true">A Rail row</button>
+  <button data-v="b">B Divider</button>
+  <button data-v="c">C Route chips</button>
+  <button data-v="d">D Muted header</button>
+ </div>
+ <p class="hint">A: dotted rail, small text. B: a line with the name in it. C: neighbours share a line as chips with arrows. D: header size, grey, no arrow. None open or close. Jump to a part with empty stops:</p>
+ <div class="chips" id="pt"><button data-p="1">1 start</button><button data-p="9">9 Seaward → Kala'e</button><button data-p="29">29 Ruins</button><button data-p="32">32 Sunne</button><button data-p="34">34 Kukui</button></div>
+ <script>
+ (function(){const q=s=>document.querySelector(s);
+  const sync=()=>{let v='a';try{v=thorFrame().localStorage.getItem('mocksg')||'a'}catch(e){}q('#sg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v))};
+  q('#sg').onclick=e=>{const b=e.target.closest('button');if(!b)return;thorFrame().setOption('sg',b.dataset.v);sync();};
+  q('#pt').onclick=e=>{const b=e.target.closest('button');if(!b)return;thorFrame().showPart(+b.dataset.p);};
+  setInterval(sync,1000);})();
+ </script>
+</fieldset>

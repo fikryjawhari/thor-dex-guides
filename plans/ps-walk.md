@@ -1,70 +1,61 @@
-# Photonic Sun Walkthrough tab (spec)
+# Photonic Sun Walkthrough tab (spec, draft: waiting for the design pick)
 
 Decide session 2026-10-20 (Sonnet), tab branch `worktree-ps-walk` off `worktree-photonic-sun-changes`. Feedback:
-`plans/photonic-sun-pass2.md` → Walkthrough. **No UI change** (a review mockup was built anyway: https://claude.ai/artifact/F85Avd46D9NZEgKLW7mc35, source `tools/mockup/ps-walk/`; rebuild `python -I tools/mockup/ps-walk/build.py <out.html>`): the three notes are data rules in
-`hacks/photonic-sun/extract/walk.py`. Template untouched, so EI and HG are unaffected. Build: a Haiku/Sonnet subagent
-or the main chat, it's ~15 lines.
+`plans/photonic-sun-pass2.md` → Walkthrough.
 
-## What the user asked, and where it stands
+**Decision (user, 2026-10-20): empty stops are kept, not dropped.** They're useful game direction ("back to Iki Town",
+"Home", "Megalo Tower"); the walkthrough just has no design for a stop with nothing in it, so today it shows as a
+bare, yellow-barred header with a ▾ that opens nothing. This is a **template UI change** (every guide): a stop with
+nothing to show gets its own look, no arrow, not a `<details>`.
 
-| Feedback | Finding | Action |
-|---|---|---|
-| Remove the empty headings | 21 of the 136 stops have no encounters, items, trainers, checklist steps or note, so they render as a bare yellow header (e.g. "Introduction") | Drop them (below) |
-| Starter on Route 1 (Ultra Sun), not Iki Town | Already true: the Locations "Starter" area is joined to the part 1 stop "Route 1 (Hau'oli Outskirts)" by `ALIAS['Starter'] = ['Route 1']`, and its picker shows in that stop's Encounters. Part 1's Iki Town stops hold items only. | **No change.** Check it still holds after the drop (check 2) |
-| Drop empty story stops (back to Iki Town after Mahalo Trail, then home) | Same 21 stops | Same rule |
+Mockup (the real build in the Thor frame, four options on a switch, jump chips to parts 1, 9, 29, 32, 34):
+https://claude.ai/artifact/5iPtwwnsGaijwvkydeu5MA, source `tools/mockup/ps-walk/` (`patch.css`, `patch.js`, `panel.html`;
+rebuild `python assemble.py photonic-sun`, then `python -I tools/mockup/ps-walk/build.py . <out.html>`). The mockup
+converts empty stops in the DOM after render; the template builds the same thing in `walkStop`.
 
-## The rule
+## Options in the mockup (pick one; **not yet picked**)
 
-A stop is dropped when, after items are placed, **all** hold: no area that renders (`s.a` has none, or only areas
-with `ns` and no encounters), `s.it` empty, `s.tr` empty, `s.s` empty, `s.note` empty. "On the way" stops (`x`) always
-have an area, so they stay. Done in `walk.py` `build()`, **after the item placement loop and before the splits are
-built**, so a stop that only exists to receive items isn't dropped, and the split titles ("N. first – last") come
-from the stops that are left.
+- **A Rail row:** one small muted line on a dotted rail, regular weight. Quietest.
+- **B Divider:** a thin line with the name in the middle, like a chapter break.
+- **C Route chips:** pills with arrows; neighbouring empty stops share a line (Seaward Cave → Kala'e Bay). Shortest in
+  height; wraps at 260.
+- **D Muted header:** header size and weight kept but grey, grey bar, no arrow. Closest to today.
 
-The 21 now (split: stops): 1: Introduction, Iki Town (second), Home · 5: Farthest Hollow, Big Wave Beach · 8: Heahea
-City · 9: Seaward Cave, Kala'e Bay (revisits) · 10: Fossil Restoration Center · 11: Dimensional Research Lab · 12:
-Hau'oli City (Police Station & Shopping Mall) · 22: Poni Beach · 25: Megalo Tower · 29: Guardians of Alola, Ruins of
-Life, Ruins of Hope · 30: Ancient Poni Path · 32: Altar of the Sunne, Lake of the Sunne · 34: Professor Kukui's Lab,
-Aether Paradise.
+## Rule and behaviour (all options)
 
-Edge cases:
-- No split loses all its stops (the smallest, part 29, keeps Ruins of Abundance).
-- Split titles change by themselves: "1. Introduction – Home" → "1. Route 1 (Hau'oli Outskirts) – Mahalo Trail", "29.
-  Guardians of Alola – Ruins of Hope" → "29. Ruins of Abundance", "32. Altar of the Sunne – Lake of the Sunne" → "32.
-  Ultra Warp Ride", "34. Professor Kukui's Lab – Eevee Users" → "34. Iki Town – Eevee Users". The split headers' "N stops"
-  counts drop with them.
-- Locations pages' walkthrough visit counts (`visits()`, "Seaward Cave ×2") follow the stops that are left; the
-  dropped Seaward Cave / Kala'e Bay revisits are empty, so those places show one visit. Expected, not a bug.
-- Saved state: `pswalk` stores closed stops and open sections by `split.stop` index (`WO.x`, `WO.s`), and the stop
-  indexes shift after a drop. Key names stay; the worst case is a stop that was closed opens again or the other way
-  round. No migration (the Trainers rebuild already re-keys trainers; open splits are by split index, which doesn't
-  move). Mention it in notes.md.
-- Starter picker: with a starter chosen, the rival's Route 1 teams for the other starters are hidden at render time.
-  No stop empties because of that (each rival fight keeps the chosen starter's team), so nothing to do at render time.
-- Don't touch what the stops hold (items listed twice, wild-held items on Route 1): that's the Items tab.
+- **Empty** = no checklist steps, no encounter area that renders, no items (after the starter filter), no trainers
+  (after the rival filter) and no note. Same test as `walkStop`'s section list: nothing in `ss`, `areas`, `its`, `ts`,
+  `s.note`. On-the-way (`x`) stops have an area, so they are never empty.
+- Not a `<details>`: no ▾ / ▸, no open state, no `WO.x` entry, no end bar ("Collapse X"), not sticky.
+- It keeps `data-k="<split>.<stop>"` so `jumpStop` / search "Walk" can land on it (`land()` needs a target; give it the
+  sign row itself). Search still matches its name (`stopText` unchanged).
+- Splits keep their titles and "N stops" counts; nothing is dropped, so saved state positions don't move.
+- State changes live: a stop is empty only because of what's filtered (starter picker), so decide at render time.
+  Checked in the data: with a starter chosen no stop empties extra (each rival fight keeps the chosen team).
+- 21 stops are empty today (listed in the mockup's part jumps and by `walk.py`): part 1 Introduction, Iki Town,
+  Home; 5 Farthest Hollow, Big Wave Beach; 8 Heahea City; 9 Seaward Cave, Kala'e Bay; 10 Fossil Restoration Center;
+  11 Dimensional Research Lab; 12 Hau'oli City (Police Station & Shopping Mall); 22 Poni Beach; 25 Megalo Tower;
+  29 Guardians of Alola, Ruins of Life, Ruins of Hope; 30 Ancient Poni Path; 32 Altar of the Sunne, Lake of the Sunne;
+  34 Professor Kukui's Lab, Aether Paradise. Emerald Imperium and HeartGold have empty stops too; the same look applies.
+- Starter: already on Route 1 (the Starter area joins the part 1 stop "Route 1 (Hau'oli Outskirts)", picker inside its
+  Encounters). No change.
 
-## Not done (kept on purpose)
+## Open questions for the pick
 
-Repeated visits to the same place (Route 1 ×2, Route 15 ×3, Hau'oli City ×4...) stay as separate stops: the
-walkthrough is route order, and each visit holds different trainers or items. Merge them only if the user asks.
+1. Which option (A–D), or a mix (e.g. B for part-opening beats, A for the rest)?
+2. Should the row say what kind of stop it is ("story", "on the way") or just show the name?
+3. Should a run of empty stops collapse into one line (only C does it) or stay one row each?
+4. Do they get a tap action? (Today none; a tap could open the place's Locations page if it has one.)
 
-## Build steps
+## Build (after the pick)
 
-1. `walk.py`: add the drop after the items loop (a `keep(s)` helper with the rule above). `report('walkthrough: empty
-   stops dropped', n, ':', names)` so `report.txt` lists them.
-2. `notes.md` Walkthrough paragraph: one sentence for the rule, one for the saved-state shift. PROGRESS.md / the pass 2
-   plan: tick Walkthrough.
-3. `python -I hacks/photonic-sun/extract/build.py` (needs the sources, see the pass 2 plan's python note), then
-   `python assemble.py photonic-sun`. Rebuild after the Trainers build merges: trainer keys are positional and `s.tr`
-   comes from trainers.py, so the stop contents (not the rule) can change.
+Template (`template/dex.js` `walkStop`, `template/dex.css`), one session on the template at a time. Then `assemble.py`
+for every guide and `domcompare` EI, HG and Photonic Sun against `main` (normal and `--kb`): only `#/walk` differs.
 
 ## Checks (audit)
 
-1. `report.txt`: 21 dropped (more only if the Trainers build moved trainers into empty stops; fewer if it filled
-   one), 115 stops left, 35 splits, items placed unchanged (verify the count).
-2. At 260 × 316, normal and `dvkb`: open part 1: headings are Route 1 (Hau'oli Outskirts), Route 1, Iki Town, Mahalo
-   Trail; the Starter box with its picker is in the first. No stop without a section. `tools/mockup/walkcheck.mjs`:
-   no page errors.
-3. Every stop on the Walkthrough page has at least one section (script: each `details.stopd` has a `details.sec`).
-4. `domcompare` EI and HG against `main`, normal and `--kb`: identical (template not touched; run it anyway). Photonic
-   Sun: only `#/walk` and Locations pages with a walk-visit link differ.
+1. At 260 × 316, normal and `dvkb`: parts 1, 9, 29, 32, 34 show the chosen design, no ▾, no page errors, width 260.
+2. Every `details.stopd` has at least one section; every other stop row is the sign (script over the DOM).
+3. Search "Megalo" finds the sign; the Locations "Walk" button for a place whose stop is empty scrolls to it.
+4. Expand all / Collapse all and the end bars don't leave stray text under a sign (a hidden "Collapse X" bar showed under
+   the last stop in the mockup's part 9: an older bug, check it in the real build).
