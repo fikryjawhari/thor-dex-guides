@@ -34,15 +34,14 @@ HELD = [
                      'Lagging Tail', 'Sticky Barb', 'Grip Claw', 'Light Clay', 'Metronome', 'Safety Goggles',
                      'Protective Pads', 'Ring Target', 'Shed Shell', 'Smoke Ball', 'Float Stone', 'Terrain Extender',
                      'Damp Rock', 'Heat Rock', 'Icy Rock', 'Smooth Rock', 'Binding Band', 'Bright Powder', 'Big Root']),
-    ('Gems', ['Normal Gem', 'Flying Gem']),
     ('One-use items', ['Focus Sash', 'Power Herb', 'White Herb', 'Mental Herb', 'Red Card', 'Eject Button', 'Air Balloon',
                        'Absorb Bulb', 'Cell Battery', 'Luminous Moss', 'Snowball', 'Weakness Policy', 'Electric Seed',
-                       'Grassy Seed', 'Misty Seed', 'Psychic Seed']),
+                       'Grassy Seed', 'Misty Seed', 'Psychic Seed', 'Normal Gem', 'Flying Gem']),
     ('Pokémon-specific', ['Light Ball', 'Thick Club', 'Stick', 'Metal Powder', 'Quick Powder', 'Lucky Punch', 'Soul Dew']),
     ('Silvally Memories, Genesect Drives', []),                         # every Memory and Drive
     ('Other held items', []),                                           # the rest: Everstone, Destiny Knot, Amulet Coin...
 ]
-HELD_BOX = {'Type boosters': 'Type Boosters', 'Battle gear': 'Battle Gear', 'Gems': 'Gems', 'One-use items': 'One-use Items',
+HELD_BOX = {'Type boosters': 'Type Boosters', 'Battle gear': 'Battle Gear', 'One-use items': 'One-use Items',
             'Pokémon-specific': 'Pokémon-specific Items', 'Silvally Memories, Genesect Drives': 'Memories and Drives',
             'Other held items': 'Other Held Items'}
 KEY_ALSO = {'Exp. Share'}                                               # in Key Items, not repeated in Held Items
@@ -246,37 +245,45 @@ def kind_label(n):
             'Stats and abilities': 'stats', 'TMs': 'TM', 'Other': ''}[k]
 
 
-def variant(shops, held, order, text):
-    IT = [shop_section(shops, order), OLD['TMs'], OLD['Mega Stones'], OLD['Z-Crystals']]
-    IT.append({'n': 'Evolution Items', 'k': 'gen', 'note': '', 'r': rowsfor(srt(sorted(EVO), order), order, text)})
+def row_score(r):
+    """Game order for rows that keep their own text (TMs, Mega stones, Z-Crystals): the earliest place the text names."""
+    c = []
+    for x in r[1].split(';'):
+        x = re.sub(r'^Was .*?\. ', '', x.strip())
+        if x and not x.startswith('held by'):
+            c.append(stop_of(x))
+    c = [x for x in c if x is not None]
+    return min(c) if c else BIG
+
+
+def by_game(sec):
+    return dict(sec, r=sorted(sec['r'], key=lambda r: (row_score(r), r[0])))
+
+
+def proposed():
+    """The chosen design (decide session 2026-10-20): shops by item kind; held items as sub-headings; Key Items and
+    Stats and Abilities, TMs, Mega Stones and Z-Crystals in game order, the rest A to Z; compact row text."""
+    T = 'C'
+    IT = [shop_section('K', 'A'), by_game(OLD['TMs']), by_game(OLD['Mega Stones']), by_game(OLD['Z-Crystals'])]
+    IT.append({'n': 'Evolution Items', 'k': 'gen', 'note': '', 'r': rowsfor(srt(sorted(EVO), 'A'), 'A', T)})
     hn = held_items()
-    if held == 'S':
-        IT.append({'n': 'Held Items', 'k': 'gen', 'note': 'Sorted by what they do. Evolution items and Power items have their own boxes.',
-                   'r': [x for c, _ in HELD for x in rowsfor(srt([n for n in hn if held_class(n) == c], order), order, text, lambda n, c=c: c)]})
-    else:
-        for c, _ in HELD:
-            names = [n for n in hn if held_class(n) == c]
-            IT.append({'n': HELD_BOX[c], 'k': 'gen', 'note': '', 'r': rowsfor(srt(names, order), order, text)})
-    sub = {n: g for g, xs in STATS for n in xs}
-    sn = [n for _, xs in STATS for n in xs]
+    IT.append({'n': 'Held Items', 'k': 'gen', 'note': 'Sorted by what they do. Evolution items and Power items have their own boxes.',
+               'r': [x for c, _ in HELD for x in rowsfor(srt([n for n in hn if held_class(n) == c], 'A'), 'A', T, lambda n, c=c: c)]})
     r = []
     for g, xs in STATS:
-        r += rowsfor(srt(xs, order), order, text, lambda n, g=g: g)
+        r += rowsfor(srt(xs, 'G'), 'G', T, lambda n, g=g: g)
     IT.append({'n': 'Stats and Abilities', 'k': 'gen', 'note': 'Vitamins, wings, Power items, Hyper Training, Ability Capsule, PP and levels.', 'r': r})
     keys = [x[0] for x in OLD['Key Items']['r']]
-    IT.append({'n': 'Key Items', 'k': 'gen', 'note': '', 'r': rowsfor(srt(keys, order), order, text)})
+    IT.append({'n': 'Key Items', 'k': 'gen', 'note': '', 'r': rowsfor(srt(keys, 'G'), 'G', T)})
     return IT
 
 
 if __name__ == '__main__':
-    V = {f'{a}.{b}.{c}.{d}': variant(a, b, c, d) for a in 'SK' for b in 'SB' for c in 'AG' for d in 'FC'}
-    print(len(V), 'variants;', 'unplaced in game order:',
-          [n for n in held_items() + [x for _, xs in STATS for x in xs] + [x[0] for x in OLD['Key Items']['r']] if score(n) == BIG])
-    cnt = {}
-    for n in held_items():
-        cnt[held_class(n)] = cnt.get(held_class(n), 0) + 1
-    print(cnt)
-    print([(s['n'], len(s['r'])) for s in V['S.S.G.C']])
-    print([(s['n'], len(s['r'])) for s in V['K.B.A.F']])
+    IT = proposed()
+    print([(s['n'], len(s['r'])) for s in IT])
+    print('unplaced in game order:', [n for n in [x for _, xs in STATS for x in xs] + [x[0] for x in OLD['Key Items']['r']] if score(n) == BIG])
+    for n in ('TMs', 'Mega Stones', 'Z-Crystals'):
+        sec = next(s for s in IT if s['n'] == n)
+        print(n, [r[0] for r in sec['r'][:6]], 'unplaced', sum(row_score(r) == BIG for r in sec['r']))
     if len(sys.argv) > 3:
-        json.dump(V, open(sys.argv[3], 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+        json.dump(IT, open(sys.argv[3], 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))

@@ -13,5 +13,5 @@ i = g.rindex('</body>')
 g = g[:i] + f'<script>window.__V={V};</script><script>' + (here / 'patch.js').read_text(encoding='utf8') + '</script>' + g[i:]
 (tmp / 'inner.html').write_text(g, encoding='utf8')
 subprocess.run([sys.executable, '-I', str(repo / 'tools/mockup/thor-frame/build.py'), str(tmp / 'inner.html'), str(out),
-                '--title', 'Photonic Sun: Items, round 1', '--sub', 'The real build with the proposed Items data. Now = the current tab. Use the chips to try each choice.',
+                '--title', 'Photonic Sun: Items, round 1', '--sub', 'The real build with the proposed Items data. Now = the current tab, Proposed = your picks.',
                 '--panel', str(here / 'panel.html')], check=True)

@@ -1,6 +1,6 @@
-// node check.mjs <mockup url> <shot dir>: every variant of the Items mockup at 260x316 and 480x392: page errors, page
-// width, box and sub-heading counts with every box opened, and screenshots. Serve over http (python -m http.server):
-// srcdoc frames get an opaque origin on file://.
+// node check.mjs <mockup url> <shot dir>: the Items mockup (Now and Proposed) at 260x316 and 480x392: page errors, page
+// width, box and sub-heading counts, the box-level Expand all / Collapse all, and screenshots of Shops. Serve over http
+// (python -m http.server): srcdoc frames get an opaque origin on file://.
 import { spawn } from 'node:child_process';
 import { mkdtempSync, existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -27,21 +27,21 @@ const shot = async name => { const r = await ev(`(()=>{const b=document.getEleme
   const s = await send('Page.captureScreenshot', { format: 'png', clip: { x: r[0], y: r[1], width: r[2], height: r[3], scale: 1 } }, sessionId);
   writeFileSync(join(dir, name + '.png'), Buffer.from(s.result.data, 'base64')); };
 const inner = body => `(()=>{const w=thorFrame(),d=w.document;${body}})()`;
-const opts = (m, s, h, o, t) => inner(`w.setOption('s','${s}');w.setOption('h','${h}');w.setOption('o','${o}');w.setOption('t','${t}');w.setOption('m','${m}');`);
+const openBox = name => inner(`d.querySelectorAll('details.split.jt').forEach(x=>{if(x.open){x.open=false;x.dispatchEvent(new w.Event('toggle'))}});
+  const b=[...d.querySelectorAll('details.split.jt')].find(x=>x.textContent.trim().startsWith('${name}'));b.open=true;b.dispatchEvent(new w.Event('toggle'));return new Promise(r=>setTimeout(()=>{b.scrollIntoView();r(1)},500))`);
+const secs = inner(`return [...d.querySelectorAll('details.split.jt[open] details.sec')].map(x=>x.open?1:0).join('')`);
+const click = a => inner(`d.querySelector('.seg.it-sp button[data-a="${a}"]').click();return new Promise(r=>setTimeout(r,500))`);
 for (const [W, H] of [[260, 316], [480, 392]]) {
-  await ev(`(()=>{document.querySelector('#sizes button[data-w="${W}"][data-h="${H}"]').click()})()`); await sleep(1500);
-  for (const m of ['cur', 'new']) for (const s of m === 'cur' ? ['S'] : ['S', 'K']) for (const h of m === 'cur' ? ['S'] : ['S', 'B']) for (const o of m === 'cur' ? ['A'] : ['A', 'G']) for (const t of m === 'cur' ? ['F'] : ['F', 'C']) {
-    await ev(opts(m, s, h, o, t)); await sleep(500);
-    const r = await ev(inner(`d.querySelectorAll('details.split.jt').forEach(x=>{if(!x.open){x.open=true;}});
-      w.document.querySelectorAll('details.split.jt').forEach(x=>x.dispatchEvent(new w.Event('toggle')));
-      return new Promise(res=>setTimeout(()=>{const hs=[...d.querySelectorAll('details.split.jt>summary')].map(s=>s.firstChild.textContent.trim()+' '+s.querySelector('span').textContent);
-       res({errs:w.__errs,sw:d.documentElement.scrollWidth,iw:w.innerWidth,boxes:hs.length,subs:d.querySelectorAll('details.sec').length,rows:d.querySelectorAll('table.ix tr').length,
-       wide:[...d.querySelectorAll('#app *')].filter(e=>e.getBoundingClientRect().right>w.innerWidth+1&&e.getClientRects().length).slice(0,3).map(e=>e.tagName+'.'+e.className)})},900))`));
-    const tag = `${W}x${H} ${m} ${s}${h}${o}${t}`;
-    console.log(tag, JSON.stringify(r));
+  await ev(`document.querySelector('#sizes button[data-w="${W}"][data-h="${H}"]').click()`); await sleep(1500);
+  for (const m of ['cur', 'new']) {
+    await ev(inner(`w.setOption('m','${m}')`)); await sleep(700);
+    const st = await ev(inner(`d.querySelectorAll('details.split.jt').forEach(x=>{if(!x.open){x.open=true;x.dispatchEvent(new w.Event('toggle'))}});
+      return new Promise(res=>setTimeout(()=>res({errs:w.__errs,sw:d.documentElement.scrollWidth,iw:w.innerWidth,boxes:d.querySelectorAll('details.split.jt').length,subs:d.querySelectorAll('details.sec').length,bars:d.querySelectorAll('.seg.it-sp').length,rows:d.querySelectorAll('table.ix tr').length}),800))`));
+    console.log(`${W}x${H} ${m}`, JSON.stringify(st));
   }
+  await ev(inner(`w.setOption('m','new')`)); await sleep(500);
+  await ev(openBox('Held')); const a = await ev(secs); await ev(click(0)); const b = await ev(secs); await ev(click(1)); const c = await ev(secs);
+  console.log(`  Held sub-headings open: start ${a}, after Collapse all ${b}, after Expand all ${c}`);
+  await ev(openBox('Shops')); await ev(click(0)); await sleep(300); await shot(`shops-${W}x${H}`);
 }
-await ev(opts('new', 'S', 'S', 'G', 'C')); await sleep(600);
-await ev(inner(`d.querySelectorAll('details.split.jt').forEach(x=>{if(x.open)x.open=false});const b=[...d.querySelectorAll('details.split.jt')].find(x=>x.textContent.startsWith('Held'));b.open=true;b.dispatchEvent(new w.Event('toggle'));b.scrollIntoView();`)); await sleep(800);
-await shot('held-new'); await ev(`(()=>{document.querySelector('#sizes button[data-w="260"][data-h="316"]').click()})()`); await sleep(1200); await shot('held-new-min');
 ws.close(); ch.kill();
