@@ -56,6 +56,10 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
   merge into `main` when done. Only one session at a time edits on `main`.
 - Run `git status` before committing and stage files by name, not `git add -A`; never commit anything under `.claude/`.
 - Pushing to `main` publishes the site (the Pages workflow), so push only checked guides.
+- Push working branches (guide and tab branches) to `origin` often, as a backup: after each finished step or a few
+  meaningful commits. It publishes nothing (only `main` deploys), and it keeps unmerged work off this PC alone (the
+  agents view also refuses to delete a session whose worktree has unpushed commits). **Ask me before every push, every
+  time**: name the branch and what's new since the last push, and push only on a yes.
 - Pushing from a session: this clone's `.git/config` (not committed) sets `core.sshCommand` to Git Bash's `ssh.exe`,
   because the global Windows OpenSSH one hangs after the push when git runs without a terminal. A fresh clone that
   hangs on push needs the same setting.
