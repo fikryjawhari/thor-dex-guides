@@ -70,6 +70,14 @@ overflows, so probably the footer.
     chosen") and/or `max-width:100%;min-width:0`.
 - Then: Trainers, Items, Walkthrough tabs, one at a time (the user may do them in a new session).
 
+## Parallel worktrees (2026-10-20)
+
+Items and Walkthrough decide sessions each have a worktree branched from this branch (not main, which lacks this
+work): `.claude/worktrees/ps-items` (`worktree-ps-items`), `.claude/worktrees/ps-walk` (`worktree-ps-walk`), each
+with its own `.src` copy. Each writes only its mockups (`tools/mockup/ps-items/`, `ps-walk/`) and its spec
+(`plans/ps-items.md`, `plans/ps-walk.md`) plus its tab's heading here. When a spec is done, merge that branch into
+`worktree-photonic-sun-changes`, then delete the worktree and branch. The Trainers build stays in this worktree.
+
 ## Template width bugs (every guide; propose fixes in a mockup)
 
 - Move pages whose accuracy is "Never misses" are 277 px wide at 260 (the Power / Accuracy / PP / Priority table;
