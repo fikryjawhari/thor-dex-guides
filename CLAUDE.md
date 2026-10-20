@@ -62,8 +62,7 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
 
 ## Parallel sessions
 Git merges change by change and only stops on lines both branches changed, so split work by the files it touches.
-- One worktree per independent piece, usually one tab of one guide (not one per guide). Branch it from current `main`;
-  check `git worktree list` first for a session already on the same files.
+- One worktree per independent piece. Which branch it comes from: Where a session works (below).
 - A session owns its files: its tab's extract script(s), and its tab's heading in `notes.md` / `PROGRESS.md`. Shared
   extract code (`common.py`, `build.py`): add to it freely; changing existing code is something to raise first.
 - `template/` is one session at a time, since it is shared by every guide. A second piece that needs template changes
@@ -72,10 +71,54 @@ Git merges change by change and only stops on lines both branches changed, so sp
   `build.py` and `assemble.py`. Never merge them by hand.
 - Merge one branch at a time: merge, rebuild, check the guides (`domcompare` if the template changed), then the
   next. After a merge, delete the worktree and the branch, local and on `origin`.
-- If I propose parallel work that breaks these (two sessions on the template or the same script, a worktree off an
-  unmerged branch), say so and suggest an order or a split before starting it.
+- If I propose parallel work that breaks these (two sessions on the template or the same script), say so and suggest
+  an order or a split before starting it.
+
+## Where a session works
+Decide from my prompt, say it in one line ("working in X because Y"), then start. One session per worktree.
+- **A hack's guide branch**: the branch ahead of `main` whose commits touch `hacks/<hack>/` (`git worktree list`,
+  `git branch`, `git log --oneline main..<branch>`), usually `worktree-<hack>...`. None: `main` is the base. Two: ask.
+- **Routing:**
+  - New hack ("let's move on to X"): new guide branch `worktree-<hack>` from `main`; the first build happens there,
+    one step after another. First say if a guide branch with `template/` changes is unmerged (merge it first, so the
+    new guide starts with them).
+  - A tab or change for one guide (review feedback, a decide session, a spec build, template changes that came out of
+    that guide's pass): its guide branch if it's free; a tab branch off it only if another session is working there.
+  - A change for every guide, not tied to one guide's pass (search, the damage calc): its own branch
+    `worktree-<thing>` from `main`. Say if a guide branch with unmerged `template/` changes exists (conflict risk).
+  - Questions, reading, planning: no branch. Small edits to CLAUDE.md / PROGRESS.md: on `main` if nobody else is.
+  - Nobody builds on `main`: it takes merges and doc edits only.
+- **Busy check** before entering a worktree: a `.claude/claim` file in it (session name, start time) means another
+  session holds it: say who and since when and ask before going in (older than a day is probably a crashed session;
+  still ask). Mention uncommitted changes there too. Write your own claim on entry; delete it when you finish or hand
+  over.
+- **Tab branch**: `git worktree add -b worktree-<hack>-<tab> .claude/worktrees/<hack>-<tab> <guide branch>` (a short
+  hack name is fine: `ps-items`), copy `hacks/<hack>/.src/` from the guide worktree (git-ignored), enter it by path
+  before any edit. Uncommitted changes in the guide worktree don't carry over: say so. Touch only the tab's files (its
+  extract script, mockups, `plans/<hack>-<tab>.md`, its own heading in notes / PROGRESS / the plan); a template
+  change is flagged and done in the guide branch. `git merge <guide branch>` when you need its newer commits.
+- **Merge order**: tab into its guide branch, one at a time (rebuild data.json and dist after each, check), then the
+  guide branch into `main`. Never a tab into `main` while its guide branch is unmerged. Finish a session by saying
+  which branch the work is on and what merges next.
 
 ## Workflow
 - I test on the Thor. Testing a guide there without the library: PROGRESS.md → Testing on the Thor.
 - UI changes: mockup first as a plain interactive HTML artifact at the viewer's real size, then build it.
+- **Complex UI work (several linked decisions) goes in steps, each its own small context** (trial since 2026-10-20;
+  revise it, and add workflows for other kinds of work, once a few runs show what works):
+  1. *Decide* (a Sonnet session the user talks to directly, in a worktree): cheap mockups only (a small standalone
+     page with sampled data from data.json, not the full build), wrapped in the Thor frame. Settle every behaviour,
+     then write the spec to `plans/<thing>.md`: what goes, what each control does in every state, edge cases, checks.
+     Example: `plans/trainers-show-switch.md`. No template or extract changes in this step.
+  2. *Build* (the Opus main chat reads the spec, then dispatches a Sonnet subagent in the worktree for template / UI
+     logic, or a Haiku one for mechanical work: extract rules, notes; or builds it itself if the spec is already
+     "this code in this place"). The build ends with the guide in the Thor frame published for the user.
+  3. *Fix* in the main chat (the user's feedback after testing on the phone / Thor).
+  4. *Audit* (a Haiku subagent): `assemble.py`, `domcompare` against main, the viewer-size checks, scenario runs from
+     the spec; reports pass / fail with evidence.
+  Template builds are one at a time (Parallel sessions); decide steps can run in parallel.
+- **Thor frame** (`tools/mockup/thor-frame/`, on the Photonic Sun branch until it merges): `python -I tools/mockup/thor-frame/build.py <page.html> <out.html>
+  [--title] [--sub] [--panel]` wraps a built guide or a mockup's inner page in a Thor-sized screen (the viewer sizes,
+  fit to screen, dvkb, tabs, reload / clear saved state, error and width readout; pinned on a phone). Publish the
+  output as an artifact. Mockups write only the inner page (and an optional `--panel` of options), never a frame.
 - When I say I'm moving to a new session, update PROGRESS.md with what a fresh session needs.
