@@ -155,7 +155,8 @@ overflows, so probably the footer.
     every place (outlined = open places only, solid = every place); place "teams" fills first (part → all open, all
     → all closed; grey / outline / solid); toggling keeps the trainer you're reading in place (no jump when rows
     above open or close). Tried on the phone: works; the anchor becomes the first row separator under the pinned
-    headers. **Build spec: `plans/trainers-show-switch.md`** (to be built in a new session).
+    headers. **Build spec: `plans/trainers-show-switch.md`**. Built 2026-10-20 (template, every guide;
+    check script `tools/mockup/ps-trainers/show-check.mjs`); waiting for the user's phone / Thor test.
   - No "forced" count (no source marks avoidable trainers; searched Bulbapedia, Serebii, the web). Cap line is now
     "Level cap 12 · Captain Ilima, Hau'oli City · 14 battles". Done (trainers.py, template).
   - Walkthrough entries that match no game trainer: the game data wins, leave them out. Done (as built).

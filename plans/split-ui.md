@@ -92,7 +92,9 @@ between boxes. Mockup = the real build in a frame: https://claude.ai/artifact/Gm
   "▴ Collapse" on the left, Pokepaste (if any) on the right (`.trf`, `.trfold`); it lands the trainer's header under
   the pinned headers above it (`pinTop`). A trainer's own page has no Collapse. (The user's pick over a separate bar,
   which in the walkthrough read the same as the Trainers section's, and over showing the trainer's name in the pinned
-  section header.) Expand / Collapse all inside a box opens or closes its trainer cards.
+  section header.) Box and place Expand / Collapse bars were replaced 2026-10-20 by the island Show switch
+  (Places / Trainers / Teams, pinned under the island header) and a "teams n/N" button per place header; the page-top
+  bar reads Open all islands / Close all (`plans/trainers-show-switch.md`).
   The user's reason for mini-splits as boxes: three collapse levels without a new collapse style.
 - **Level row** (`details.capd`, both pages and the walkthrough): closed by default, "Level cap 15", or "Level cap 15 ·
   yours 17" once set (setting the cap itself clears yours); open state kept in memory (`CAPO`) so stepping the number doesn't close it, not saved.

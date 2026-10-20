@@ -444,11 +444,13 @@ function bars(){const room=innerHeight-hdrH(),bs=[...app.querySelectorAll('.endb
 let bq=0;const barsSoon=()=>{if(!bq)bq=requestAnimationFrame(()=>{bq=0;bars();});};
 document.addEventListener('contentvisibilityautostatechange',e=>{if(!e.skipped&&app.querySelector('.endbar'))barsSoon();},true);
 addEventListener('resize',()=>{if(app.querySelector('.endbar'))barsSoon();});
+// Height of the island header and Show row pinned above a Trainers-page element.
+const trPinH=el=>{const bx=document.body.dataset.v==='trainers'&&!el.matches('details.split')&&el.closest('details.split');if(!bx)return 0;const w=bx.querySelector('.trsw');return bx.querySelector(':scope>summary').getBoundingClientRect().height+(w?w.getBoundingClientRect().height:0);};
 // A collapse bar. Anything but a split lands right under the headers pinned above it (the search bar, its stop's and
 // section's): a stop's or section's own header is pinned there already, so it closes in place; a trainer row's (not
 // sticky) is scrolled there if it's off the top. A split closes and its header goes to the top. All flash.
 // (Animated versions were tried and rejected: plans/split-ui.md.)
-function pinTop(d){let y=hdrH();for(let p=d.parentElement.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))
+function pinTop(d){let y=hdrH()+trPinH(d);for(let p=d.parentElement.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))
  if(p.open&&p.matches('details.stopd,details.sec'))y+=p.querySelector(':scope>summary').offsetHeight;return y;}
 function foldUp(d){const sm=d.querySelector(':scope>summary'),split=d.matches('details.split'),t=split?T():pinTop(d);
  if(!split&&sm.getBoundingClientRect().top>=t-1){flip(d,false);flash(sm);return;}
@@ -469,7 +471,7 @@ function jumpState(){if(!RJ||RJ.hidden)return;const t=T(),atEnd=scrollY+innerHei
 if(RJ){RJ.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>jump(+b.dataset.j));
  let raf=0;addEventListener('scroll',()=>{if(!raf&&!RJ.hidden)raf=requestAnimationFrame(()=>{raf=0;jumpState();});},{passive:true});}
 const UPI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14l5-5 5 5"/></svg>';
-const segBar=cls=>`<div class="seg ${cls}"><button data-a="1">Expand all</button><button data-a="0">Collapse all</button></div>`;
+const segBar=(cls,a='Expand all',c='Collapse all')=>`<div class="seg ${cls}"><button data-a="1">${a}</button><button data-a="0">${c}</button></div>`;
 
 // ===== WALKTHROUGH TAB (D.WK; state in localStorage LS.walk {c:{stepKey:1}, o:{splitIdx:1, gi:1 Guide info},
 // x:{stopKey:0 closed, doc*:1 open}, s:{stopKey.c/e/i/t: 1 open, 0 closed}}; sections c checklist, e encounters,
@@ -546,14 +548,15 @@ function bindWalk(){bindTrackers();bindTrd();app.querySelectorAll('.wstep input'
  app.querySelectorAll('details.sec').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{WO.s[d.dataset.s]=d.open?1:0;woSave();barsSoon();});});
  const r=app.querySelector('.wk-reset');if(r&&!r.dataset.b){r.dataset.b=1;r.onclick=()=>{if(confirm('Clear every walkthrough checkbox?')){WO.c={};woSave();rerender();}};}
  barsSoon();}
-// Taps on the collapsible pages: header taps (flip), the expand / collapse bars (.all = the page's boxes, .tr-sp = the
-// places of its box and their trainers, .tr-pl = the trainers of its place, else the blocks of the box it sits in),
+// Taps on the collapsible pages: header taps (flip), the expand / collapse bars (.all = the page's boxes, else the blocks
+// of the box it sits in; the Trainers page has its own controls: trShow, trTeams, trAll),
 // collapse bars and the walkthrough's Next step.
 const COLV={walk:1,locs:1,l:1,trainers:1,items:1};
 app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
+ if(document.body.dataset.v==='trainers'){const w=e.target.closest('.trsw button'),pt=e.target.closest('button.pt');
+  if(w){trShow(w.closest('details.split'),+w.dataset.v);return;}if(pt){e.preventDefault();e.stopPropagation();trTeams(pt.closest('details.stopd'),pt);return;}}
  const b=e.target.closest('.seg button');
- if(b){const s=b.closest('.seg');segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.tr-pl')?b.closest('.stop').querySelectorAll('details.trd'):
-  b.closest('.body').querySelectorAll(s.matches('.tr-sp')?'details.stopd,details.trd':':scope>details'));return;}
+ if(b){const s=b.closest('.seg');if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):b.closest('.body').querySelectorAll(':scope>details'));return;}
  const end=e.target.closest('.endbar,.trfold');if(end){foldUp(end.closest('details'));return;}
  if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;delete WO.x[k];WO.s[k+'.c']=1;woSave();render(true);
   const inp=app.querySelector(`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;const l=inp.closest('.wstep'),stop=l.closest('details.stopd'),sec=l.closest('details.sec');
@@ -634,7 +637,7 @@ function bindHead(){const m=app.querySelector('#mgm');if(m)m.onchange=()=>{MGM=m
  const d=app.querySelector('details.capsd');if(d)d.addEventListener('toggle',()=>{CAPSO=d.open;});}
 function listTrainers(){fil.innerHTML='';sug.style.display='none';const s=st.q;
  if(s){const a=TRS.filter(t=>t.key.includes(s)&&!rivalHidden(t));app.innerHTML=`<div class="mut small" style="margin-bottom:6px">${a.length} trainers match. Search covers trainer names, places, tags and Pokémon.</div>`+a.map(t=>`<div class="mut small" style="margin-top:10px">${esc(t.g)}${t.h?' · '+esc(t.h):''}</div>`+trainerBlock(t)).join('');bindTrainers();return;}
- app.innerHTML=trHead()+segBar('tr-all all')+TRD.g.map((g,gi)=>{const n=g.sec.reduce((a,x)=>a+x.tr.filter(t=>!rivalHidden(t)).length,0);return `<details class="split jt" data-gi="${gi}" ${TOPEN.o[gi]?'open':''}><summary>${esc(g.n)} <span class="mut small">${n} trainers</span></summary><div class="body"></div></details>`;}).join('')+
+ app.innerHTML=trHead()+segBar('tr-all all','Open all islands','Close all')+TRD.g.map((g,gi)=>{const n=g.sec.reduce((a,x)=>a+x.tr.filter(t=>!rivalHidden(t)).length,0);return `<details class="split jt" data-gi="${gi}" ${TOPEN.o[gi]?'open':''}><summary>${esc(g.n)} <span class="mut small">${n} trainers</span></summary><div class="body"></div></details>`;}).join('')+
  `<div class="mut small" style="margin:10px 2px">Sheet tab names: ${TRD.g.map(g=>esc(g.tab)).filter((x,i,a)=>a.indexOf(x)===i).join(', ')}.</div>`;
  bindHead();app.querySelectorAll('details.split[data-gi][open]').forEach(d=>TOG.trainers(d));bars();}
 // The page is boxes (D.TR.g: one per level cap, "Roxanne Split [Cap 15]"; Hot House, Mini Bosses) → places (the
@@ -647,12 +650,59 @@ function trGroup(gi){const g=TRD.g[gi];let n=0;
  const secs=g.sec.map((s,si)=>{const ts=s.tr.filter(t=>!rivalHidden(t));
   const head=((s.note||[]).length?`<div class="trnote">${s.note.map(esc).join('<br>')}</div>`:'')+(s.rw?`<div class="trnote"><b>Reward, pick one:</b> ${s.rw.map(z=>{const p=P.find(q=>q.name===z||q.name.startsWith(z+' ('));return p?plink(p.id):esc(z);}).join(', ')}</div>`:'');
   const rows=trRows(ts,t=>TOPEN.t[t.k]!==0,!s.h);if(!s.h){n+=ts.length;return head+rows;}
-  n++;const k=gi+'.'+si;return `<details class="stopd" data-k="${k}" ${TOPEN.p[k]===0?'':'open'}><summary class="stoph">${esc(s.h)} <span class="tag">${ts.length}</span>${s.opt?'<span class="tag">optional</span>':''}${capTag(s)}</summary><div class="stop">${capLine(s)}${ts.length>1?segBar('tr-pl'):''}${head}${rows}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.h)}</span></button></div></details>`;}).join('');
- return (n>1?segBar('tr-sp'):'')+(g.note&&g.note.length?`<div class="trnote" style="margin:8px 2px">${g.note.map(esc).join('<br>')}</div>`:'')+secs+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
+  n++;const k=gi+'.'+si;return `<details class="stopd" data-k="${k}" ${TOPEN.p[k]===0?'':'open'}><summary class="stoph"><button class="pt" type="button">teams</button>${esc(s.h)} <span class="tag">${ts.length}</span>${s.opt?'<span class="tag">optional</span>':''}${capTag(s)}</summary><div class="stop">${capLine(s)}${head}${rows}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.h)}</span></button></div></details>`;}).join('');
+ return trSwitch(g.sec.some(s=>s.h))+(g.note&&g.note.length?`<div class="trnote" style="margin:8px 2px">${g.note.map(esc).join('<br>')}</div>`:'')+secs+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
 TOG.trainers=d=>{if(st.q)return;const k=d.dataset.k;
- if(d.matches('details.split[data-gi]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=trGroup(+d.dataset.gi);colBind(b);bindTrd(b);}if(d.open)TOPEN.o[d.dataset.gi]=1;else delete TOPEN.o[d.dataset.gi];}
+ if(d.matches('details.split[data-gi]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=trGroup(+d.dataset.gi);colBind(b);bindTrd(b);trObs(d);trSync(d);}if(d.open)TOPEN.o[d.dataset.gi]=1;else delete TOPEN.o[d.dataset.gi];}
  else if(d.matches('details.stopd')){if(d.open)delete TOPEN.p[k];else TOPEN.p[k]=0;}
- else if(d.matches('details.trd')){if(d.open)delete TOPEN.t[k];else TOPEN.t[k]=0;}else return;trSave();};
+ else if(d.matches('details.trd')){if(d.open)delete TOPEN.t[k];else TOPEN.t[k]=0;}else return;trSave();
+ if(!d.matches('details.split')){const bx=d.closest('details.split');if(bx&&bx.querySelector('.trsw'))trSyncSoon(bx);}};
+// Trainers page controls (plans/trainers-show-switch.md). State is read from the page: the Show switch from which places and
+// cards are open (0 Places, 1 Trainers, 2 Teams, -1 mixed), the place buttons from their cards. Rows are the cards (one per
+// battle where trainers share one). Actions change the DOM in place (cards built at once: d._f) and keep TOPEN.p / TOPEN.t.
+// Island header, Show row and place header are pinned in turn (--ih, --sw measured below).
+const trSwitch=hp=>`<div class="trsw"><span>Show</span><div class="o" role="group" aria-label="Show">${['Places','Trainers','Teams'].map((x,i)=>hp||i?`<button type="button" data-v="${i}">${x}</button>`:'').join('')}</div><span class="mx" hidden>mixed</span></div>`;
+const IHO=new ResizeObserver(es=>es.forEach(e=>{const b=e.target.closest('details.split');if(b)b.style.setProperty(e.target.matches('summary')?'--ih':'--sw',e.target.getBoundingClientRect().height+'px');}));
+const trObs=d=>{const s=d.querySelector(':scope>summary'),w=d.querySelector('.trsw');if(!s.dataset.ro){s.dataset.ro=1;IHO.observe(s,{box:'border-box'});}if(w)IHO.observe(w,{box:'border-box'});};
+const trRowsOf=p=>[...p.querySelectorAll('details.trd')];
+const trLoose=b=>[...b.querySelectorAll('details.trd')].filter(d=>!d.closest('details.stopd'));
+function trLive(b,ps){const op=ps.filter(p=>p.open);if(ps.length&&!op.length)return 0;const cs=op.flatMap(trRowsOf).concat(trLoose(b));if(!cs.length)return 1;const n=cs.filter(d=>d.open).length;return n?n===cs.length?2:-1:1;}
+function trSync(b){const w=b.querySelector('.trsw');if(!w)return;const ps=[...b.querySelectorAll('details.stopd')],v=trLive(b,ps),part=ps.some(p=>!p.open);
+ w.querySelectorAll('button').forEach(x=>{const i=+x.dataset.v;x.setAttribute('aria-pressed',v===i);x.className=v===i?i===0||!part?'on':'part':'';});w.querySelector('.mx').hidden=v!==-1;w.classList.toggle('m',v===-1);
+ ps.forEach(p=>{const t=p.querySelector('.pt'),r=trRowsOf(p),n=r.filter(d=>d.open).length;t.textContent=`teams ${n}/${r.length}`;t.className='pt'+(n&&n===r.length?' on':n?' part':'');t.hidden=!r.length;});}
+const TRQ=new Set();let trq=0;
+const trSyncSoon=b=>{TRQ.add(b);if(!trq)trq=requestAnimationFrame(()=>{trq=0;TRQ.forEach(trSync);TRQ.clear();});};
+const trSet=(d,v)=>{if(d.open!==v){d.open=v;if(d._f)d._f();}if(v)delete TOPEN.t[d.dataset.k];else TOPEN.t[d.dataset.k]=0;};
+const trOpenP=(p,v)=>{if(p.open!==v)p.open=v;if(v)delete TOPEN.p[p.dataset.k];else TOPEN.p[p.dataset.k]=0;};
+// View anchoring: the first trainer row whose top edge is at or below the pinned stack (else the row spanning its edge,
+// else its place header, its island header, the pressed button); after the change it goes back to the same pixel, or just
+// under the pinned stack if it would sit beneath it.
+function trLim(){let lim=hdrH();for(let i=0;i<6;i++){const el=document.elementFromPoint(innerWidth/2,lim+1),s=el&&el.closest('details.split>summary,.trsw,details.stopd>summary');
+  if(!s||!app.contains(s))break;const r=s.getBoundingClientRect();if(r.top>lim+1.5||r.bottom<=lim+.5)break;lim=r.bottom;}return lim;}
+function trGrab(btn){const lim=trLim(),x=innerWidth/2;let y=lim+2,fb=null,pl=null,is=null,row=null;
+ const chain=el=>{const a=[el],sm=e=>e&&e.querySelector(':scope>summary'),p=el.closest('details.stopd'),b=el.closest('details.split');
+  if(p&&sm(p)!==el)a.push(sm(p));if(b&&sm(b)!==el)a.push(sm(b));a.push(btn);return a.map(e=>[e,e.getBoundingClientRect().top]);};
+ for(let i=0;i<150&&y<innerHeight;i++){const el=document.elementFromPoint(x,y);if(!el){y+=6;continue;}
+  const r=el.closest('details.trd');
+  if(r&&app.contains(r)){const t=r.getBoundingClientRect();if(t.top>=lim-1){row=r;break;}fb=fb||r;y=Math.max(y+1,t.bottom+1);continue;}
+  if(!pl)pl=el.closest('details.stopd>summary');if(!is)is=el.closest('details.split');y+=6;}
+ if(row)return{c:chain(row),row:1};if(fb)return{c:chain(fb),fb:1};
+ const a=pl||(is&&is.querySelector(':scope>summary'));return{c:a?chain(a):[[btn,btn.getBoundingClientRect().top]]};}
+function trRestore(g){const a=g.c.find(([e])=>e.isConnected&&e.getClientRects().length);if(!a)return;const [el,top]=a;
+ scrollBy(0,el.getBoundingClientRect().top-top);
+ if(g.row&&a===g.c[0]){const t=el.getBoundingClientRect().top,lim=trLim();if(t<lim-.5)scrollBy(0,t-lim);}
+ flash(el.matches('details')?el.querySelector(':scope>summary'):el);hold(el);jumpState();}
+function trShow(b,v){const ps=[...b.querySelectorAll('details.stopd')],lv=trLive(b,ps),part=ps.some(p=>!p.open);
+ if(v===0?lv===0:lv===v&&!part)return;
+ const g=trGrab(b.querySelector('.trsw'));noAnchor();
+ if(v===0)ps.forEach(p=>trOpenP(p,false));
+ else{let tg=ps.filter(p=>p.open);if(!tg.length||lv===v){ps.forEach(p=>trOpenP(p,true));tg=ps;}
+  tg.flatMap(trRowsOf).concat(trLoose(b)).forEach(d=>trSet(d,v===2));}
+ trSave();trSync(b);bars();trRestore(g);}
+function trTeams(p,btn){const r=trRowsOf(p),full=r.every(d=>d.open),g=trGrab(btn);noAnchor();
+ trOpenP(p,true);r.forEach(d=>trSet(d,!full));trSave();trSync(p.closest('details.split'));bars();trRestore(g);}
+function trAll(btn){const open=btn.dataset.a==='1',g=trGrab(btn);noAnchor();
+ app.querySelectorAll('details.split.jt').forEach(d=>{if(d.open!==open){d.open=open;TOG.trainers(d);}});bars();trRestore(g);}
 function trainerDetail(k){fil.innerHTML='';sug.style.display='none';const t=TRK[k];if(!t){app.innerHTML='<p>Not found.</p>';return;}
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a><div class="mut small" style="margin-top:6px">${esc(t.g)}${t.h?' · '+esc(t.h):''}${t.c&&t.c.length?' · calc: '+t.c.map(esc).join(', '):''}</div>`+trainerBlock(t,true);bindTrainers();window.scrollTo(0,0);}
 // Trainer rows (Trainers page and walkthrough stops): name, tags (and the place, where no heading gives it) and the
@@ -674,7 +724,7 @@ const walkTrainers=ts=>trRows(ts,t=>TRDO.has(t.k),false);
 // Walkthrough trainer rows start closed and remember being opened until a reload.
 const TRDO=new Set();
 function bindTrd(root){(root||app).querySelectorAll('details.trd').forEach(d=>{if(d.dataset.b)return;d.dataset.b=1;const fill=()=>{const b=d.querySelector('.trb');if(document.body.dataset.v==='walk'){if(d.open)TRDO.add(d.dataset.k);else TRDO.delete(d.dataset.k);}if(d.open&&b&&!b.innerHTML){const ks=(d.dataset.ks||d.dataset.k).split(',');
-  b.innerHTML=partnerBlock(TRK[ks[0]])+ks.map((k,i)=>trainerBlock(TRK[k],false,i===ks.length-1,true)).join('<div class="vs">and</div>');bindTrainers(b);}};d.addEventListener('toggle',fill);fill();});}
+  b.innerHTML=partnerBlock(TRK[ks[0]])+ks.map((k,i)=>trainerBlock(TRK[k],false,i===ks.length-1,true)).join('<div class="vs">and</div>');bindTrainers(b);}};d._f=fill;d.addEventListener('toggle',fill);fill();});}
 function usedByCard(p){const u=TRUSE[p.id];if(!u)return '';return `<div class="card"><h3>Used by trainers (${u.length})</h3>${u.map(t=>`<div><a href="#/tr/${t.k}">${esc(t.n)}</a> <span class="mut small">${esc(t.loc)} · ${esc(t.g)}${t.st?(PICK?' · if your starter is '+esc(t.st):' · '+esc(t.st)+' starter'):''}</span></div>`).join('')}</div>`;}
 
 // ===== FULL-WINDOW SEARCH. Tapping the search box covers the page with a query strip, results from every section and
@@ -805,7 +855,7 @@ const locFound=()=>LFOUND??=new Set(Object.values(locs).flatMap(l=>l.map(([p])=>
 // page has only just rendered, so the scroll is repeated each frame for a moment: the first one can stop short at the
 // bottom of a page that content-visibility hasn't laid out yet. Any press, wheel or key ends it.
 function land(el){if(!el)return;const st0=el.tagName==='SUMMARY'?el.parentElement.parentElement:el;
- const pin=()=>{let y=hdrH();for(let p=st0.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))if(p.open&&p.matches('details.stopd,details.sec'))y+=p.querySelector(':scope>summary').offsetHeight;return y;};
+ const pin=()=>{let y=hdrH()+trPinH(st0);for(let p=st0.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))if(p.open&&p.matches('details.stopd,details.sec'))y+=p.querySelector(':scope>summary').offsetHeight;return y;};
  const to=()=>{const dy=el.getBoundingClientRect().top-pin();if(Math.abs(dy)>.5)scrollBy(0,dy);};
  noAnchor();to();flash(el);const t0=performance.now();let stop=false;const end=()=>{stop=true;};
  ['pointerdown','wheel','keydown'].forEach(k=>addEventListener(k,end,{once:true,passive:true}));
