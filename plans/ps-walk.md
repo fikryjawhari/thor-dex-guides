@@ -1,7 +1,7 @@
 # Photonic Sun Walkthrough tab (spec)
 
 Decide session 2026-10-20 (Sonnet), tab branch `worktree-ps-walk` off `worktree-photonic-sun-changes`. Feedback:
-`plans/photonic-sun-pass2.md` → Walkthrough. **No UI change and no mockup**: the three notes are data rules in
+`plans/photonic-sun-pass2.md` → Walkthrough. **No UI change** (a review mockup was built anyway: https://claude.ai/artifact/F85Avd46D9NZEgKLW7mc35, source `tools/mockup/ps-walk/`; rebuild `python -I tools/mockup/ps-walk/build.py <out.html>`): the three notes are data rules in
 `hacks/photonic-sun/extract/walk.py`. Template untouched, so EI and HG are unaffected. Build: a Haiku/Sonnet subagent
 or the main chat, it's ~15 lines.
 
