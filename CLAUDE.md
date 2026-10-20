@@ -121,4 +121,5 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
   [--title] [--sub] [--panel]` wraps a built guide or a mockup's inner page in a Thor-sized screen (the viewer sizes,
   fit to screen, dvkb, tabs, reload / clear saved state, error and width readout; pinned on a phone). Publish the
   output as an artifact. Mockups write only the inner page (and an optional `--panel` of options), never a frame.
-- When I say I'm moving to a new session, update PROGRESS.md with what a fresh session needs.
+- When I say I'm moving to a new session, update PROGRESS.md with what a fresh session needs, commit, and delete
+  your `.claude/claim`.
