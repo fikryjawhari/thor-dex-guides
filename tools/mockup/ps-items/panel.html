@@ -1,0 +1,17 @@
+<fieldset id="mk"><legend>Items mockup</legend>
+ <div class="chips" data-k="m"><button data-v="cur" aria-pressed="true">Now</button><button data-v="new" aria-pressed="false">Proposed</button></div>
+ <p class="hint">Shops: a sub-heading per shop, or per kind of item.</p>
+ <div class="chips" data-k="s"><button data-v="S" aria-pressed="true">By shop</button><button data-v="K" aria-pressed="false">By item kind</button></div>
+ <p class="hint">Held items: one box with sub-headings, or one box per class.</p>
+ <div class="chips" data-k="h"><button data-v="S" aria-pressed="true">Sub-headings</button><button data-v="B" aria-pressed="false">Own boxes</button></div>
+ <p class="hint">Order inside a heading.</p>
+ <div class="chips" data-k="o"><button data-v="A" aria-pressed="true">A to Z</button><button data-v="G" aria-pressed="false">Game order</button></div>
+ <p class="hint">Where text.</p>
+ <div class="chips" data-k="t"><button data-v="F" aria-pressed="true">As now</button><button data-v="C" aria-pressed="false">Compact lines</button></div>
+ <p class="hint">The last four apply to Proposed. Switching resets the open boxes.</p>
+</fieldset>
+<script>
+document.getElementById('mk').onclick=e=>{const b=e.target.closest('button');if(!b)return;const g=b.parentElement;
+ g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+ try{thorFrame().setOption(g.dataset.k,b.dataset.v==='new'?'new':b.dataset.v);}catch(err){}};
+</script>

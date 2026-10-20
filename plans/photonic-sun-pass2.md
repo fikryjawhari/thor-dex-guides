@@ -193,3 +193,6 @@ overflows, so probably the footer.
 - Starter on Route 1 (Ultra Sun), not Iki Town.
 - Drop empty story stops (e.g. back to Iki Town after Mahalo Trail, then home). The walkthrough is for Pokémon,
   items, trainers and route order in one place.
+
+Decide session 2026-10-20 (branch `worktree-ps-items`): mockup https://claude.ai/artifact/WvhFG5Aa4htrr1VLvxqATt, spec
+`plans/ps-items.md` (waiting for the user's picks on its open choices).
