@@ -32,7 +32,8 @@ the split is in that repo's git log.
   `plans/photonic-sun-pass2.md`: the feedback per tab, what's decided (Locations design A, doc maps, move page C,
   ability slots, two template bugs) and what's done. Locations: built (round 1). Trainers: built (rows per battle,
   partners, level caps with battles left, Aether Paradise box); round 2 decided: build `plans/trainers-show-switch.md` next (template, every guide).
-  Then Items, Walkthrough one tab at a time. The worktree has its own git-ignored
+  Walkthrough decided (tab branch `worktree-ps-walk`, spec `plans/ps-walk.md`, to build: a small template change).
+  Items still to decide. The worktree has its own git-ignored
   `hacks/photonic-sun/.src/` (copied from main's, without the 887 MB `romfs-dl/`).
 
 ## What's left, in order
