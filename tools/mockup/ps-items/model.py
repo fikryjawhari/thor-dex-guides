@@ -246,7 +246,7 @@ def kind_label(n):
 
 
 def row_score(r):
-    """Game order for rows that keep their own text (TMs, Mega stones, Z-Crystals): the earliest place the text names."""
+    """Game order for rows that keep their own text (TMs, Z-Crystals): the earliest place the text names."""
     c = []
     for x in r[1].split(';'):
         x = re.sub(r'^Was .*?\. ', '', x.strip())
@@ -264,7 +264,7 @@ def proposed():
     """The chosen design (decide session 2026-10-20): shops by item kind; held items as sub-headings; Key Items and
     Stats and Abilities, TMs, Mega Stones and Z-Crystals in game order, the rest A to Z; compact row text."""
     T = 'C'
-    IT = [shop_section('K', 'A'), by_game(OLD['TMs']), by_game(OLD['Mega Stones']), by_game(OLD['Z-Crystals'])]
+    IT = [shop_section('K', 'A'), by_game(OLD['TMs']), by_game(OLD['Z-Crystals'])]
     IT.append({'n': 'Evolution Items', 'k': 'gen', 'note': '', 'r': rowsfor(srt(sorted(EVO), 'A'), 'A', T)})
     hn = held_items()
     IT.append({'n': 'Held Items', 'k': 'gen', 'note': 'Sorted by what they do. Evolution items and Power items have their own boxes.',
@@ -282,7 +282,7 @@ if __name__ == '__main__':
     IT = proposed()
     print([(s['n'], len(s['r'])) for s in IT])
     print('unplaced in game order:', [n for n in [x for _, xs in STATS for x in xs] + [x[0] for x in OLD['Key Items']['r']] if score(n) == BIG])
-    for n in ('TMs', 'Mega Stones', 'Z-Crystals'):
+    for n in ('TMs', 'Z-Crystals'):
         sec = next(s for s in IT if s['n'] == n)
         print(n, [r[0] for r in sec['r'][:6]], 'unplaced', sum(row_score(r) == BIG for r in sec['r']))
     if len(sys.argv) > 3:

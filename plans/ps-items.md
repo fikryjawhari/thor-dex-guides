@@ -13,7 +13,7 @@ sessions), then run `assemble.py` and `domcompare` on every guide.
 
 ## Design
 
-Boxes (8, was 10): Shops, TMs, Mega Stones, Z-Crystals, Evolution Items, Held Items, Stats and Abilities, Key Items.
+Boxes (7, was 10): Shops, TMs, Z-Crystals, Evolution Items, Held Items, Stats and Abilities, Key Items.
 
 1. **Shops, by item kind.** One box "Shops"; yellow sub-headings by kind: Poké Balls, Healing and repels, Evolution
    items, Power items, Held items, Stats and abilities, TMs, Other (`KINDS`, `kind()` in `model.py`). One row per item;
@@ -26,21 +26,25 @@ Boxes (8, was 10): Shops, TMs, Mega Stones, Z-Crystals, Evolution Items, Held It
    evolution items stay in Evolution Items, Power items move to Stats and Abilities, Exp. Share stays in Key Items.
    Shop-only items the Serebii list lacks (Flying Gem, Zoom Lens, Bright Powder, Binding Band...) are added as rows
    from SHOPS.
-3. **Battle Items: dropped.** **Fossils: dropped** (all 10 are Poké Pelago only).
+3. **Battle Items: dropped.** **Fossils: dropped** (all 10 are Poké Pelago only). **Mega Stones box: dropped** (the
+   user, 2026-10-20: the hack doesn't change their locations and the stones are generated in, so where they lie is
+   irrelevant). `items.py` still sets `P.stone` / `P.sloc` for the Mega pages: keep the stone name, and drop `sloc`
+   (the location line) from the Mega page too unless it shows something else; decide at build, checking where the
+   template uses `P.sloc`. Walkthrough: no Mega stone rows in the stops any more.
 4. **Stats and Abilities** (new, game order inside each sub-heading): Raise stats (vitamins), Raise stats (wings),
    Power items (EVs while held), Lower stats (berries: Pomeg, Kelpsy, Qualot, Hondew, Grepa, Tamato; all Route 10),
    Hyper Training (Bottle Cap, Gold Bottle Cap), Abilities (Ability Capsule), Levels and PP (Rare Candy, PP Up, PP Max).
    Needs rows the extract drops today (it reads only the Vitamins and Hold Items categories): the berries (Berries
    category), Ability Capsule and the Bottle Caps (Miscellaneous Items category).
 5. **Key Items** stay (30), in game order.
-6. **Order.** Game order: Key Items, Stats and Abilities, **TMs, Mega Stones, Z-Crystals**. A to Z: everything else
+6. **Order.** Game order: Key Items, Stats and Abilities, **TMs, Z-Crystals**. A to Z: everything else
    (Shops, Evolution Items, Held Items). Game order = the walkthrough stop of the earliest place the item can be had
-   (`score()` for items by name, `row_score()` for rows that keep their own text: TMs, Mega stones, Z-Crystals);
+   (`score()` for items by name, `row_score()` for rows that keep their own text: TMs, Z-Crystals);
    wild holders count by where the holder lives; items with no place go last (ties A to Z). TM names keep their
-   numbers. Stable ties: Battle Tree stones all share one stop, so they fall back to A to Z.
+   numbers.
 7. **Row text, compact lines** (Evolution Items, Held Items, Stats and Abilities, Key Items): `Found: places`,
    `Wild: species, species`, `Also: Festival Plaza...`, `Shop: Battle Tree (BP), Hau'oli City, PC right clerk`. Found
-   places are in game order. TMs, Mega Stones and Z-Crystals keep their current text.
+   places are in game order. TMs and Z-Crystals keep their current text.
 8. **Expand all / Collapse all inside a box (template change).** Each box that has two or more sub-headings (Shops,
    Held Items, Stats and Abilities) gets the same two-button bar (`.seg.it-sp`) as the walkthrough and Trainers
    boxes, right under the box note and above the first sub-heading. Expand all opens every sub-heading of that box,
@@ -71,4 +75,4 @@ Boxes (8, was 10): Shops, TMs, Mega Stones, Z-Crystals, Evolution Items, Held It
 3. Row counts: Shops about 126, Held Items about 118, Stats and Abilities 30, Key Items 30; no item in two boxes
    except Shops; no Battle Items or Fossils anywhere.
 4. Every item in SHOPS has a Shops row; every shop-only item that is not in the Serebii list has a row in its class.
-5. TMs, Mega Stones, Z-Crystals open in game order (TM01 Work Up first; Mega stones from Diancite / Alakazite).
+5. TMs and Z-Crystals open in game order (TM01 Work Up first). No Mega Stones box; Mega pages still name their stone.
