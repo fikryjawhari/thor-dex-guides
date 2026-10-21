@@ -1,0 +1,8 @@
+/* Empty stops: the stop header look (same box as details.stopd>summary), grey bold 14px text, no arrow; the bar varies. */
+.sign{display:none}
+html:not([data-sg=now]) details.stopd.emp{display:none}
+html:not([data-sg=now]) .sign{display:block;margin:10px 0;padding:4px 0 4px 10px;border-left:3px solid var(--line);font-weight:700;font-size:14px;line-height:1.25;color:var(--mut)}
+html[data-sg=dotted] .sign{border-left:3px dotted var(--mut)}
+html[data-sg=dashed] .sign{border-left:3px dashed var(--mut)}
+html[data-sg=hollow] .sign{border-left:3px double var(--mut)}
+html[data-sg=solid] .sign{border-left-color:var(--mut)}
