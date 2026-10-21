@@ -84,6 +84,7 @@ details.split[open]>summary::after{content:' ▾'}
 .tag.got{background:#2e5e3a;color:#d8f5de}
 tr.dupe td,span.dupe{opacity:.45}span.dupe a,tr.dupe a{text-decoration:line-through}
 .stop{border-left:3px solid var(--acc);padding:2px 0 2px 10px;margin:14px 0}.stoph{font-weight:700;font-size:16px;margin-bottom:4px}
+.wsign{margin:10px 0;padding:4px 0 4px 10px;border-left:3px solid var(--line);font-weight:700;font-size:14px;line-height:1.25;color:var(--mut)}
 .encl{font-size:13px;margin:3px 0;line-height:1.5}.itbl.wt{margin:6px 0;background:var(--panel);border-radius:10px}
 details.split>summary .tag{margin-left:6px}
 .trnote{font-size:12px;color:var(--mut);margin:-2px 0 6px;line-height:1.45}.trnote b{color:var(--acc)}

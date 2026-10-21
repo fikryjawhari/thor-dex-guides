@@ -518,6 +518,8 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;
  const enc=areas.map(([ai,A,enc])=>{const tag=multi?(A.n.startsWith(s.n+' ')?A.n.slice(s.n.length+1):A.n):'';
   return `<div class="area">${A.ns&&tag?`<span class="atag">${esc(tag)}</span>`:''}${trackerHTML(ai,tag)}${CF.walkAreaNote&&A.note?`<div class="trnote">${esc(A.note)}</div>`:''}`+enc.map(([li,[m,rows]])=>`<div class="encl"><span class="mut">${A.l.length>1||LOC[li]!==A.n?esc(LOC[li])+' · ':''}${esc(m)}:</span> ${rows.map(x=>`<span class="${x.d?'dupe':''}"><a href="#/p/${x.p.id}">${esc(x.p.name)}</a> ${esc(x.show)}</span>`).join(', ')}</div>`).join('')+'</div>';}).join('');
  const its=s.it.filter(i=>starterOk(i[2]));
+ // A stop with nothing in it is just a direction ("back to Iki Town"): a grey sign, not a box that opens nothing.
+ if(!ss.length&&!areas.length&&!its.length&&!ts.length&&!s.note)return `<div class="wsign" data-k="${k}">${esc(s.n)}</div>`;
  let h=`<details class="stopd" ${closed?'':'open'} data-k="${k}"><summary class="stoph">${esc(s.n)}${s.x?' <span class="mut small">(on the way)</span>':''}${s.a.map(encAll).join('')}${ts.length?' <span class="tag">'+ts.length+' '+CF.trw[ts.length>1?1:0]+'</span>':''}</summary><div class="stop">`+
   (s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+
   (ss.length?walkSec(k,'c',`<span class="tag${nd===ss.length?' got':''}">${nd}/${ss.length}</span>`,`<div class="chkb">${steps}</div>`):'')+
@@ -771,7 +773,7 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
  // Actions. find: search a list page for text; clear: no search, so the page shows in full for a jump.
  find(h,t){q.value=t;st.q=t.toLowerCase();this.go(h);},
  clear(){q.value='';st.q='';},
- jumpStop(si,ti){this.clear();WO.o[si]=1;delete WO.x[si+'.'+ti];woSave();this.go('#/walk',()=>land(app.querySelector(`details.stopd[data-k="${si}.${ti}"]>summary`)));},
+ jumpStop(si,ti){this.clear();WO.o[si]=1;delete WO.x[si+'.'+ti];woSave();this.go('#/walk',()=>land(app.querySelector(`details.stopd[data-k="${si}.${ti}"]>summary,.wsign[data-k="${si}.${ti}"]`)));},
  jumpWalkTr(k){const w=walkOf(k);if(!w)return;const sk=w[0]+'.'+w[1];this.clear();WO.o[w[0]]=1;delete WO.x[sk];WO.s[sk+'.t']=1;TRDO.add(k);woSave();
   this.go('#/walk',()=>land(app.querySelector(`details.stopd[data-k="${sk}"] details.trd[data-k="${k}"]>summary`)));},
  jumpTr(k){const t=TRK[k];if(!t)return;this.clear();const [gi,si]=t.at;TOPEN.o[gi]=1;delete TOPEN.p[gi+'.'+si];delete TOPEN.t[k];trSave();
