@@ -21,9 +21,9 @@ the row above it, and six 32 px preview sprites wrapped 5 + 1.
 - At **500 px and wider**: all Pokémon as boxed blocks (design A), **three across at most** (min column 150 px, so 2
   across at 500-~600 px, 3 above), no strip. Checked: 537 x 424 shows 4 full; 832 x 424 shows all 6.
 - Pokémon block (boxed compact, used by both): 30 px sprite; line 1 name (link) + level; line 2 type tags (10 px) + `Spe n`
-  (with the existing "no EVs / with EVs / 0 IV / Scarf" extras after it, `Spe n` never splitting); ability · item · nature
+  (one speed only: with EVs, or without when MGM is ticked; the "Scarf" extra after it, `Spe n` never splitting); ability · item · nature
   (small, muted, ability a link); moves two across (11.5 px, may wrap, type-coloured dot); EVs line only if the game has
-  EVs. Tags (Lead, pre-evolution, sheet only), "Sheet:" and "Sheet says" lines stay. **IVs are removed everywhere, on
+  EVs and MGM is off. Tags (Lead, pre-evolution, sheet only), "Sheet:" and "Sheet says" lines stay. **IVs are removed everywhere, on
   every page, in every guide** (the user: they don't matter). `0 IV` speed extra: keep only if it carries a fact the
   user needs; ask if unsure. EVs stay where a game has them (the user may patch EVs out of Eternal X, Photonic Sun and
   minimal-grinding hacks later: data/`cfg.evs` already handles that).

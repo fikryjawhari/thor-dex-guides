@@ -573,8 +573,8 @@ app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
   noAnchor();scrollBy(0,l.getBoundingClientRect().top-(T()+stop.querySelector(':scope>summary').offsetHeight+sec.querySelector(':scope>summary').offsetHeight));flash(l);hold(l);jumpState();return;}
  const sm=e.target.closest('summary');
  if(sm&&sm.parentElement.tagName==='DETAILS'&&app.contains(sm)&&!e.target.closest('a,select,input,button')){e.preventDefault();flip(sm.parentElement,!sm.parentElement.open);}});
-// ===== TRAINERS TAB (D.TR, see notes). Speeds use each Pokemon's real IVs and nature; with EVs (CF.evs), on or off
-// via the Minimal Grinding Mode switch (LS.mgm). Relative levels (r:-1) use the trainer's level cap, which can be
+// ===== TRAINERS TAB (D.TR, see notes). Speeds use each Pokemon's real IVs and nature, and its EVs unless the Minimal
+// Grinding Mode switch (LS.mgm) is on; hacks with no EVs at all (CF.evs false) have no switch. Relative levels (r:-1) use the trainer's level cap, which can be
 // overridden per trainer (LS.cap; CF.capLast also remembers the last one set, for trainers with no cap).
 // Rival teams (t.st) follow the starter: its type from tracker area 0, or its name from the picker (CF.starter 'pick').
 const TRD=D.TR||{g:[],caps:[]};const TRS=[];const TRK={};
@@ -593,12 +593,11 @@ const monLv=(x,cap)=>x.l!=null?x.l:x.r!=null&&cap?cap+x.r:NaN;
 // One Pokemon (plans/trainer-cards.md): sprite, name and level; types, tags and speed; ability · item · nature; moves
 // two across; EVs. No IVs (speeds still use them).
 function monCard(x,cap,sel){const p=byId[x.id];const lv=monLv(x,cap);
- const sp=e=>p&&lv?stat(p.s[5],5,x.iv[5],e,lv,x.na):null;const s0=sp(0),s1=EVS?sp(x.ev[5]):s0;
- const main=MGM?s0:s1,alt=MGM?s1:s0;
- const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b>${x.ia?'<span class="mut" title="IVs assumed 31">*</span>':''}</span>${alt!==main?` <span class="mut small">${MGM?'with EVs':'no EVs'} ${alt}</span>`:''}${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
+ const main=p&&lv?stat(p.s[5],5,x.iv[5],EVS&&!MGM?x.ev[5]:0,lv,x.na):null;
+ const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b>${x.ia?'<span class="mut" title="IVs assumed 31">*</span>':''}</span>${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
  const lvs=x.l!=null||x.r==null?`Lv ${x.l??'?'}`:`Lv ${lv||'?'} <span class="mut small">cap${x.r?(x.r>0?'+':'−')+Math.abs(x.r):''}</span>`;
  const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'');
- const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');const ev=EVS&&x.ev?evTxt(x.ev):'';
+ const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');const ev=EVS&&!MGM&&x.ev?evTxt(x.ev):'';
  return `<div class="mon${sel?' sel':''}"><div class="mh">${spr(x.id,'s32')}<div class="mt"><div class="l1"><span class="mn">${p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:esc(x.s||'?')}</span><b>${lvs}</b></div><div class="l2">${p?p.t.map(ty).join(''):''}${tags} ${spd}</div></div></div>
  <div class="small ab">${ab}${x.i?' · '+esc(x.i):''}${x.na?` · <span title="${esc(natLabel(x.na))}">${esc(x.na)}</span>`:''}</div>
  <div class="mv">${x.m.map(i=>`<a href="#/m/${i}"><span class="dot" style="background:${tcol(M[i]==='Hidden Power'&&x.hp?x.hp:(MV[i]||{}).t)}"></span>${M[i]==='Hidden Power'&&x.hp?'HP '+esc(x.hp):esc(M[i])}</a>`).join('')}</div>
