@@ -1,0 +1,85 @@
+/* Trainer cards mockup. Every rule is scoped by an html data attribute set by patch.js. */
+
+/* ---- Preview rows (pv): at most six sprites to a line (28 px: 178 px, fits the 190 px a row has at 260), on the name's line
+   when the name leaves room, else under it at the right */
+html:not([data-pv=now]) .trd{margin:2px 0}
+html:not([data-pv=now]) .trd>summary{padding:5px 4px;gap:1px 4px;line-height:1.25}
+html:not([data-pv=now]) .trmini{display:flex;flex-wrap:wrap;gap:2px;margin-left:auto;justify-content:flex-end;max-width:calc(6*var(--ms) + 10px)}
+html:not([data-pv=now]) .trmini .spr.s32,html:not([data-pv=now]) .trmini .spr.s24{width:var(--ms);height:var(--ms)}
+html:not([data-pv=now]) .trmini .spr img{width:100%;height:100%}
+
+/* ---- Place header (hd): one line */
+html[data-hd=slim] .stoph{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;margin-bottom:0;font-size:15px}
+html[data-hd=slim] .stoph .pn{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html[data-hd=slim] .stoph .tag{flex:none}
+html[data-hd=slim] .stoph .capg{display:none}
+html[data-hd=slim] .stoph .pt{float:none;order:3;margin:0;flex:none}
+html[data-hd=slim] .stoph::after{order:4;flex:none;margin-left:-2px}
+html[data-hd=slim] details.stopd>summary{padding-top:2px;padding-bottom:2px}
+
+/* ---- Show row (sw): scrolls away instead of pinning */
+html[data-sw=scroll] .trsw{position:static}
+html[data-sw=scroll] body[data-v=trainers] details.stopd[open]>summary{top:calc(var(--hh,0px) - 2px)}
+
+/* ---- Opened card chrome (rp) */
+.trn2{font-size:12px;margin-bottom:3px}
+html:not([data-cd=now]) .card.trc{padding:6px 8px}
+html:not([data-cd=now]) .trc .trnote,html:not([data-cd=now]) .trc .capd{font-size:12px}
+
+/* ---- Pokémon blocks (A, B, C, D) */
+html:not([data-cd=now]) .team{grid-template-columns:repeat(auto-fill,minmax(min(160px,100%),1fr));gap:4px}
+.mon.m2{padding:4px 6px;font-size:12px;line-height:1.25;min-width:0;container-type:inline-size}
+.m2 .mh{display:flex;gap:6px;align-items:center}
+.m2 .mh .spr{width:30px;height:30px;flex:none}
+.m2 .mt{min-width:0;flex:1}
+.m2 .l1{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.m2 .l2{margin-top:1px}
+.m2 .l2 .ty{font-size:10px;padding:0 4px;margin:0 2px 0 0}
+.m2 .l2 .tag{font-size:10px}
+.m2 .spd{display:inline;margin:0;font-size:12px}.m2 .spd b{font-size:12px}
+.m2 .ab{margin-top:2px;color:var(--mut)}
+.m2 .ab a{color:var(--fg)}
+.m2 .mv{display:grid;grid-template-columns:1fr 1fr;gap:0 6px;margin-top:2px;font-size:11.5px}
+.m2 .mv a{white-space:normal;overflow:visible;line-height:1.2}
+.m2 .ex{margin-top:1px;font-size:11px}
+.m2 .dot{width:7px;height:7px;margin-right:3px}
+html[data-cd=D] .team{grid-template-columns:repeat(auto-fill,minmax(min(190px,100%),1fr));gap:0 12px}
+html[data-cd=D] .mon.m2{background:none;border-radius:0;padding:5px 0 6px;border-bottom:1px solid var(--line)}
+html[data-cd=D] .team>.mon:last-child{border-bottom:0}
+html[data-cd=D] .m2 .mv{display:block;margin-top:3px}
+html[data-cd=D] .m2 .mv a{display:inline-block;white-space:nowrap;margin-right:9px}
+
+/* B: a strip of sprites, one Pokémon under it (narrow windows only) */
+.tpick{display:none}
+@media (max-width:429px){
+ html[data-cd=B] .tpick{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;margin:0 0 4px}
+ .tpick button{display:flex;flex-direction:column;align-items:center;gap:0;padding:2px 0 1px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;color:var(--mut);font:600 10px/1.1 system-ui,sans-serif;cursor:pointer;touch-action:manipulation;min-width:0}
+ .tpick button .spr{width:min(28px,100%);height:auto;aspect-ratio:1;background-size:auto 100%}
+ .tpick button.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc);color:var(--acc);background:var(--bg)}
+ .team.tB>.mon:not(.sel){display:none}
+ .team.tB{display:block}
+}
+
+/* C: one line per Pokémon, tap for the rest */
+html[data-cd=C] .team{grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:3px}
+.mC{padding:3px 6px}
+.mC>summary{display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none;min-height:30px}
+.mC>summary::-webkit-details-marker{display:none}
+.mC>summary::after{content:'▾';color:var(--mut);flex:none;font-size:12px}
+.mC[open]>summary::after{content:'▴'}
+.mC>summary .spr{width:26px;height:26px;flex:none}
+.mC .cm{flex:1 1 0;min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.mC .cn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;font-size:13px}
+.mC .cl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mut);font-size:11.5px}.mC .cl b{color:var(--fg)}.mC .cl .small{font-size:10px}
+.mC>summary{min-height:34px}
+.mC .cb{padding:3px 0 2px}
+.tall{display:block;margin:0 0 4px auto;background:none;border:1px solid var(--line);border-radius:6px;color:var(--mut);font:600 11px system-ui,sans-serif;padding:3px 8px;cursor:pointer}
+
+/* an opened card already shows its team: the row's sprite strip goes (it comes back when the card closes) */
+html[data-rp=hide] details.trd[open]>summary .trmini{display:none}
+
+/* slim header: the count is in "teams n/N", the cap in the cap line; tighter button; smaller row names */
+html[data-hd=slim] .stoph .pn+.tag{display:none}
+html[data-hd=slim] .stoph .pt{padding:0 6px;min-height:24px;font-size:10.5px}
+html:not([data-pv=now]) .trd>summary{font-size:14px}
+.m2 .nw{white-space:nowrap}
