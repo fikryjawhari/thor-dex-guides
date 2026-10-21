@@ -31,6 +31,18 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `serebii_usum_items.py <items.shtml> <tm.shtml> <out.csv>` | Vanilla Ultra Sun item locations from Serebii's pages. |
 | `rhd_moves.py <moves/index.html> <hack-slug> <out.json>` | Every RomHackDex move with priority and description (the index lacks both); reads each move page, saves only those fields. |
 | `drayano_check.py <Pokemon Changes.txt> <romhackdex/pokedex>` | Compares Drayano's change doc with a RomHackDex mirror (new base stats, full level-up lists) for every species the doc changes. |
+| `preview.py <page.html> [name.html] [--rm name ...]` | Puts a page on the phone preview (below) and prints its link. |
+
+## Phone preview
+
+Mockups and unmerged builds are tested on the phone and the Thor over Tailscale, from anywhere: `tools/preview.py`
+copies a page into `preview/` in the main checkout (git-ignored), and `tailscale serve` serves that folder on the
+tailnet only, at `https://<pc>.<tailnet>.ts.net/` (the index lists every page, newest first). Nothing is public.
+
+One-time setup per PC (serve keeps running across reboots):
+1. Serve enabled on the tailnet (the first `tailscale serve` prints the admin-console link; it also turns on HTTPS).
+2. `tailscale serve --bg "<main checkout>\preview"` (absolute Windows path). `tailscale serve status` shows it;
+   `tailscale serve reset` stops it.
 
 ## Source log
 

@@ -114,7 +114,10 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
 
 ## Workflow
 - I test on the Thor. Testing a guide there without the library: PROGRESS.md → Testing on the Thor.
-- UI changes: mockup first as a plain interactive HTML artifact at the viewer's real size, then build it.
+- UI changes: mockup first as a plain interactive HTML page at the viewer's real size, then build it.
+- **Showing pages to me** (mockups, unmerged builds): `python -I tools/preview.py <page.html> [name.html]` puts it on
+  the phone preview (served on my tailnet by `tailscale serve`; setup in `tools/README.md` → Phone preview) and prints
+  the link; give me that link. Same name = same link, I reload. Not artifacts: T3 Code sessions can't make them.
 - **Complex UI work (several linked decisions) goes in steps, each its own small context** (trial since 2026-10-20;
   revise it, and add workflows for other kinds of work, once a few runs show what works):
   1. *Decide* (a Sonnet session the user talks to directly, in a worktree): cheap mockups only (a small standalone
@@ -123,7 +126,7 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
      Example: `plans/trainers-show-switch.md`. No template or extract changes in this step.
   2. *Build* (the Opus main chat reads the spec, then dispatches a Sonnet subagent in the worktree for template / UI
      logic, or a Haiku one for mechanical work: extract rules, notes; or builds it itself if the spec is already
-     "this code in this place"). The build ends with the guide in the Thor frame published for the user.
+     "this code in this place"). The build ends with the guide in the Thor frame put on the phone preview.
   3. *Fix* in the main chat (the user's feedback after testing on the phone / Thor).
   4. *Audit* (a Haiku subagent): `assemble.py`, `domcompare` against main, the viewer-size checks, scenario runs from
      the spec; reports pass / fail with evidence.
@@ -136,7 +139,7 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
   - Effort: medium unless I say otherwise.
 - **Thor frame** (`tools/mockup/thor-frame/`, on the Photonic Sun branch until it merges): `python -I tools/mockup/thor-frame/build.py <page.html> <out.html>
   [--title] [--sub] [--panel]` wraps a built guide or a mockup's inner page in a Thor-sized screen (the viewer sizes,
-  fit to screen, dvkb, tabs, reload / clear saved state, error and width readout; pinned on a phone). Publish the
-  output as an artifact. Mockups write only the inner page (and an optional `--panel` of options), never a frame.
+  fit to screen, dvkb, tabs, reload / clear saved state, error and width readout; pinned on a phone). Put the
+  output on the phone preview. Mockups write only the inner page (and an optional `--panel` of options), never a frame.
 - When I say I'm moving to a new session, update PROGRESS.md with what a fresh session needs, commit, and delete
   your `.claude/claim`.

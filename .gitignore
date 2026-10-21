@@ -3,6 +3,8 @@ hacks/*/.src/
 # Built by assemble.py; the Pages workflow builds and deploys it.
 dist/
 .tmp/
+# Phone previews (tools/preview.py), served on the tailnet by tailscale serve
+preview/
 __pycache__/
 # Claude Code worktrees and local settings
 .claude/
