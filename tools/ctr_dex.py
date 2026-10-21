@@ -425,8 +425,12 @@ def wild(g, game, roots, arc, T, species_names, used):
                 if not slots:
                     continue
                 allies = sorted({species_names[sp] for row in rows[1:] for sp, _ in row if sp})
+                # Rows 1-7 are the SOS rows, column j the allies a slot-j caller can bring in
+                by_slot = [list(dict.fromkeys((species_names[sp], form) for sp, form in (rows[r][j] for r in range(1, 8)) if sp))
+                           for j, (sp, _) in enumerate(rows[0]) if sp]
                 tables.append({"table": ti + 1, "time": time, "levels": [half[0], half[1]], "slots": slots,
-                               "sos": allies, "sosWeather": sorted({species_names[sp] for sp, _ in weather if sp})})
+                               "sos": allies, "sosBy": [[list(a) for a in s] for s in by_slot],
+                               "sosWeather": sorted({species_names[sp] for sp, _ in weather if sp})})
         if tables:
             zs = area_zones.get(area, [])
             out.append({"area": area, "zones": [z for z, _ in zs],

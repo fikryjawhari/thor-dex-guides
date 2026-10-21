@@ -84,6 +84,7 @@ details.split[open]>summary::after{content:' ▾'}
 .tag.got{background:#2e5e3a;color:#d8f5de}
 tr.dupe td,span.dupe{opacity:.45}span.dupe a,tr.dupe a{text-decoration:line-through}
 .stop{border-left:3px solid var(--acc);padding:2px 0 2px 10px;margin:14px 0}.stoph{font-weight:700;font-size:16px;margin-bottom:4px}
+.wsign{margin:10px 0;padding:4px 0 4px 10px;border-left:3px solid var(--line);font-weight:700;font-size:14px;line-height:1.25;color:var(--mut)}
 .encl{font-size:13px;margin:3px 0;line-height:1.5}.itbl.wt{margin:6px 0;background:var(--panel);border-radius:10px}
 details.split>summary .tag{margin-left:6px}
 .trnote{font-size:12px;color:var(--mut);margin:-2px 0 6px;line-height:1.45}.trnote b{color:var(--acc)}
@@ -245,7 +246,8 @@ body.kbopen .sres{padding-bottom:calc(var(--kbh,0px) + 8px)}
 .body>.seg{margin:8px 0 2px}.body>.seg button{min-height:26px;color:var(--mut)}
 /* Sticky headers: an open stop's header under the search bar (--hh), an open section's under its stop's (--sh) */
 details.stopd[open]>summary{position:sticky;top:var(--hh,0px);z-index:3;background:var(--bg)}
-details.stopd[open] details.sec[open]>summary{position:sticky;top:calc(var(--hh,0px) + var(--sh,34px));z-index:2;background:var(--bg)}
+/* 1px under the stop header (it sits above): rounding can't open a gap between the two */
+details.stopd[open] details.sec[open]>summary{position:sticky;top:calc(var(--hh,0px) + var(--sh,34px) - 1px);z-index:2;background:var(--bg)}
 /* Sections inside a stop */
 details.sec{margin:4px 0 2px}
 details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;flex-wrap:wrap;gap:3px 6px;min-height:32px;padding:4px 18px 4px 0;position:relative;border-bottom:1px solid var(--line);-webkit-tap-highlight-color:transparent}
@@ -305,3 +307,68 @@ details.capd>.trk{margin:2px 0 4px}
 .trfold{display:flex;align-items:center;gap:3px;min-height:28px;border:0;background:none;color:inherit;font:inherit;padding:0 8px 0 0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .trfold svg{flex:none;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .trfold:active{color:var(--acc)}
+/* Encounter sections (AR[i].es): sun / moon / bubbling icons, a rate per line, group labels, SOS drop-downs, maps */
+.dn{width:12px;height:12px;vertical-align:-2px;margin-right:2px;flex:none}
+.dn.s{color:#d9980b}.dn.m{color:#7f9cff}.dn.b{color:#2fa9cc}
+table.lt td.n{vertical-align:top}table.lt .rt{display:block;white-space:nowrap}
+.ltsub{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:center;margin:10px 0 2px;font-size:12px;color:var(--mut)}
+.ltsub b{color:var(--fg);font-size:13px}
+.ltkey{margin:4px 0 6px}
+.sosd{margin-top:3px}
+.sosd>summary{list-style:none;cursor:pointer;font-size:12px;color:var(--mut);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 0;min-height:22px}
+.sosd>summary::-webkit-details-marker{display:none}
+.sosd>summary::before{content:'▸ '}.sosd[open]>summary::before{content:'▾ '}
+.sosk{font-weight:700;color:var(--acc)}
+.sosl{display:grid;gap:5px;margin:2px 0 4px;padding-left:7px;border-left:2px solid var(--line)}
+.sosa{display:flex;gap:6px;align-items:center;font-size:13px;min-width:0}.sosa .ty{font-size:10px;padding:0 4px}
+.sosa.dupe{opacity:.45}.sosa.dupe a{text-decoration:line-through}
+.mapd{margin:4px 0 6px}.mapd>summary{cursor:pointer;font-size:13px;color:var(--acc);font-weight:600;padding:4px 0}
+.mapd img{display:block;max-width:100%;height:auto;border-radius:6px;margin:4px 0}
+/* Move page stats: four boxes, two by two when narrow */
+.mvst{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin-top:8px}
+.mvst>div{background:var(--panel2);border-radius:8px;padding:5px 8px;display:flex;flex-direction:column}
+.mvst span{font-size:11px;color:var(--mut);font-weight:600}.mvst b{font-variant-numeric:tabular-nums}
+/* Learned by / Pokémon with it: a long name may break rather than widen the page at 260 (a few move pages were 261) */
+table.lrn td:nth-child(2){overflow-wrap:anywhere}
+/* The starter picker shrinks instead of running out of the tracker bar at 260 */
+.tkbar select{min-width:0;max-width:100%}.trk .st-pick{min-width:0}
+/* Trainers: battle format and version tags, partner drop-down, level caps (tag in the sticky place header, a line
+   under it with who and how many battles before it, the set switch in the header), per-place expand / collapse */
+.tag.fmt{background:#24435e;color:#d4e8fb}
+.tag.moon{background:var(--panel2);color:var(--mut);font-style:italic;font-weight:500}
+.tag.capg{background:var(--acc);color:#1b1608;margin-left:6px}
+.capl{font-size:12px;color:var(--mut);margin:2px 0 6px;padding:3px 8px;border-radius:6px;background:var(--panel2)}
+.capl b{color:var(--acc)}
+.stop>.seg{margin:4px 0 6px}.stop>.seg button{min-height:26px;color:var(--mut)}
+.ptd{margin:6px 0 8px;border:1px dashed var(--line);border-radius:8px;padding:2px 6px}
+.ptd>summary{cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:4px 0;font-size:13px;list-style:none}
+.ptd>summary::-webkit-details-marker{display:none}
+.ptk{font-size:11px;font-weight:700;color:#d4e8fb;background:#24435e;border-radius:6px;padding:1px 6px}
+.ptd[open]>summary{border-bottom:1px solid var(--line);margin-bottom:4px}
+.vs{text-align:center;font-size:11px;color:var(--mut);margin:-2px 0}
+.moond{margin:8px 0 2px}.moond>summary{cursor:pointer;font-size:13px;color:var(--mut);padding:6px 4px;border-bottom:1px dashed var(--line)}
+.capsd{margin-top:6px}.capsd>summary{cursor:pointer}
+.capsw{display:flex;gap:4px;margin:6px 0;flex-wrap:wrap}
+.capsw button{flex:1 1 0;min-width:0;font:600 12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:5px 4px;cursor:pointer}
+.capsw button[aria-pressed="true"]{background:var(--acc);color:#1b1608;border-color:var(--acc)}
+.capt td{vertical-align:top;padding:3px 4px 3px 0}.capt td:first-child{width:auto}.capt td.n{text-align:right;width:1%}.capt tr.mini td:first-child{color:var(--mut)}
+
+/* Trainers page (plans/trainers-show-switch.md): the Show row pinned under the search bar, the place header under it (--sw
+   is the row's measured height, set on the box). The place header paints the page background a few px above itself, so
+   no rounding can show content between the two (the Show row, painted above it, covers that band) */
+.trsw{position:sticky;top:calc(var(--hh,0px) - 1px);z-index:4;display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;color:var(--mut);background:var(--bg)}
+.trsw .o{display:flex;flex:1 1 0;min-width:0;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+.trsw button{flex:1 1 0;min-width:0;min-height:28px;border:0;background:none;color:var(--fg);font:600 13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;touch-action:manipulation}
+.trsw button+button{border-left:1px solid var(--line)}
+.trsw button.on{background:var(--acc);color:#1b1608}
+.trsw button.part{box-shadow:inset 0 0 0 2px var(--acc);color:var(--acc)}
+.trsw .mx{font-size:11px;white-space:nowrap}.trsw .mx[hidden]{display:none}
+/* narrow: three names need the room, so "mixed" takes the place of "Show" */
+@media (max-width:359px){.trsw button{font-size:12px;padding:0 1px}.trsw.m>span:first-child{display:none}.trsw .mx{order:-1}}
+body[data-v=trainers] details.stopd[open]>summary{top:calc(var(--hh,0px) + var(--sw,36px) - 2px);box-shadow:0 -5px 0 var(--bg)}
+/* a place's "teams n/N" button, right-aligned in its header (a float: the header is a plain block) */
+.stoph{display:flow-root}
+.pt{float:right;margin:0 0 0 6px;min-height:26px;padding:0 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--mut);font:600 11px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;white-space:nowrap;cursor:pointer;touch-action:manipulation}
+.pt[hidden]{display:none}
+.pt.part{background:none;border-color:var(--acc);color:var(--acc)}
+.pt.on{background:var(--acc);border-color:var(--acc);color:#1b1608}

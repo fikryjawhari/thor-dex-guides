@@ -1,0 +1,101 @@
+<title>/*TITLE*/</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: the Thor screen (an iframe at the viewer's real CSS size) left, controls right; on a phone the screen pins
+   to the top and the controls scroll under it. */
+:root{--bg:#f4f5f7;--panel:#fff;--panel2:#eef0f3;--line:#d9dce1;--fg:#1d2126;--mut:#5f6670;--acc:#b7791f;--accfg:#111;--bad:#c0392b;--ok:#2e7d4f;
+ --ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121417;--panel:#1b1e23;--panel2:#23272e;--line:#2e333b;--fg:#e8eaed;--mut:#9aa0a8;--acc:#f0b429;--bad:#ff7b6b;--ok:#6fcf97;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121417;--panel:#1b1e23;--panel2:#23272e;--line:#2e333b;--fg:#e8eaed;--mut:#9aa0a8;--acc:#f0b429;--bad:#ff7b6b;--ok:#6fcf97;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:14px/1.4 var(--ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 32px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+h1{font-size:16px;margin:0 0 2px}
+.sub{color:var(--mut);font-size:12px;margin:0 0 10px;max-width:72ch}
+.wrap{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+.scr{display:flex;flex-direction:column;gap:6px;min-width:0;max-width:100%}
+.box{width:calc(var(--w)*var(--s));height:calc(var(--h)*var(--s));max-width:100%;overflow:hidden;border:2px solid var(--line);border-radius:6px;background:#000;position:relative}
+.box iframe{border:0;width:calc(var(--w)*1px);height:calc(var(--h)*1px);transform:scale(var(--s));transform-origin:0 0;display:block;background:#fff}
+.stat{font-size:12px;color:var(--mut);display:flex;gap:10px;flex-wrap:wrap}
+.stat b.bad{color:var(--bad)}.stat b.ok{color:var(--ok)}
+.ctl{flex:1;min-width:0;max-width:560px;display:grid;gap:10px}
+fieldset{border:1px solid var(--line);border-radius:8px;padding:6px 10px 10px;margin:0;background:var(--panel)}
+legend{font-weight:700;font-size:13px;padding:0 4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button,.chips input[type=text],.chips input[type=number]{font:inherit;font-size:13px;min-height:36px;border:1px solid var(--line);border-radius:999px;background:var(--panel2);color:var(--fg);padding:0 12px;cursor:pointer}
+.chips input[type=text]{border-radius:8px;cursor:text;flex:1;min-width:120px}
+.chips input[type=number]{border-radius:8px;cursor:text;width:72px}
+.chips button[aria-pressed="true"]{background:var(--acc);color:var(--accfg);border-color:var(--acc);font-weight:600}
+.chips button:focus-visible,.chips input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.hint{font-size:12px;color:var(--mut);margin:6px 2px 0}
+@media (max-width:760px){
+ .scr{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-block:6px 8px;border-bottom:1px solid var(--line);width:100%;align-items:center}
+ .ctl{max-width:none;width:100%}
+}
+</style>
+
+<h1>/*TITLE*/</h1>
+<p class="sub">/*SUB*/</p>
+<div class="wrap">
+ <div class="scr">
+  <div class="box" id="box"><iframe id="fr" title="Thor screen"></iframe></div>
+  <div class="stat" id="stat"></div>
+ </div>
+ <div class="ctl">
+  /*PANEL*/
+  <fieldset><legend>Screen</legend>
+   <div class="chips" id="sizes"></div>
+   <div class="chips" style="margin-top:6px"><input type="number" id="cw" min="200" max="1200" aria-label="Width"><input type="number" id="ch" min="100" max="900" aria-label="Height"><button id="cset">Set size</button></div>
+   <div class="chips" style="margin-top:6px"><button id="fit" aria-pressed="true">Fit to my screen</button><button id="kb" aria-pressed="false">Keyboard mode (dvkb)</button></div>
+   <p class="hint">Sizes are the guide's viewport inside the Dex Viewer (title bar taken off). "Fit" shrinks a wide screen to fit the page; off, it's 1 px per CSS px.</p>
+  </fieldset>
+  <fieldset><legend>Page</legend>
+   <div class="chips" id="routes"></div>
+   <div class="chips" style="margin-top:6px"><input type="text" id="rt" placeholder="#/tr/0.0.0" aria-label="Route"><button id="go">Go</button></div>
+   <div class="chips" style="margin-top:6px"><button id="rl">Reload</button><button id="clr">Clear saved state</button></div>
+   <p class="hint">Reload keeps the page's saved state (trackers, open boxes), like closing and reopening the guide. Clear wipes it (keyboard mode stays as set).</p>
+  </fieldset>
+ </div>
+</div>
+
+<script>
+const SRC=/*SRC*/"";
+const ROUTES=/*ROUTES*/[];
+const SIZES=[[260,316,'Minimum'],[260,350,'Everyday'],[480,392,'First open'],[537,424,'Max bottom'],[832,424,'Max top']];
+const fr=document.getElementById('fr'),box=document.getElementById('box'),stat=document.getElementById('stat');
+let W=260,H=316,FIT=true,route=ROUTES.length?ROUTES[0][1]:'';
+const ls=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}};
+try{const s=JSON.parse(ls('thorframe')||'{}');if(s.w){W=s.w;H=s.h;}if(s.fit!=null)FIT=s.fit;}catch(e){}
+const save=()=>ls('thorframe',JSON.stringify({w:W,h:H,fit:FIT}));
+// The page inside shares this page's origin (srcdoc), so its localStorage, errors and layout can be read directly.
+const win=()=>fr.contentWindow;
+window.thorFrame=win;
+function scale(){const room=box.parentElement.parentElement.clientWidth||W;const s=FIT&&W>room?room/W:1;
+ box.style.setProperty('--w',W);box.style.setProperty('--h',H);box.style.setProperty('--s',s);
+ document.querySelectorAll('#sizes button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.w===W&&+b.dataset.h===H));
+ document.getElementById('cw').value=W;document.getElementById('ch').value=H;document.getElementById('fit').setAttribute('aria-pressed',FIT);}
+function kbOn(){try{return win().localStorage.getItem('dvkb')==='1'}catch(e){return false}}
+// The base keeps the page's own links (#/locs) inside the frame instead of resolving against this page's address.
+function load(){const hook=`<base href="about:srcdoc"><script>window.__errs=[];addEventListener('error',e=>__errs.push(String(e.message)));`+
+  `try{history.replaceState(null,'','about:srcdoc'+${JSON.stringify(route||'#/')})}catch(e){}<\/script>`;
+ const src=SRC.includes('<head>')?SRC.replace('<head>','<head>'+hook):hook+SRC;
+ fr.srcdoc=src;}
+fr.addEventListener('load',()=>{document.getElementById('kb').setAttribute('aria-pressed',kbOn());check();
+ try{win().addEventListener('hashchange',()=>{route=win().location.hash;mark();});}catch(e){}});
+function check(){let errs=[],sw=0;try{errs=win().__errs||[];sw=win().document.documentElement.scrollWidth;}catch(e){}
+ const wide=sw>W;stat.innerHTML=`<span>${W} × ${H}</span><span>Errors: <b class="${errs.length?'bad':'ok'}">${errs.length}</b></span><span>Width: <b class="${wide?'bad':'ok'}">${sw}${wide?' (too wide)':''}</b></span>`+(errs.length?`<span title="${errs.map(e=>e.replace(/"/g,'&quot;')).join('\n')}">${errs[0].slice(0,60)}</span>`:'');}
+setInterval(check,1500);
+function mark(){document.querySelectorAll('#routes button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.r===route));}
+function go(r){route=r;mark();try{win().location.hash=r;}catch(e){load();}}
+document.getElementById('sizes').innerHTML=SIZES.map(([w,h,n])=>`<button data-w="${w}" data-h="${h}">${n} ${w}×${h}</button>`).join('');
+document.getElementById('sizes').onclick=e=>{const b=e.target.closest('button');if(!b)return;W=+b.dataset.w;H=+b.dataset.h;save();scale();};
+document.getElementById('cset').onclick=()=>{W=Math.max(200,+document.getElementById('cw').value||W);H=Math.max(100,+document.getElementById('ch').value||H);save();scale();};
+document.getElementById('fit').onclick=()=>{FIT=!FIT;save();scale();};
+document.getElementById('kb').onclick=()=>{try{const l=win().localStorage;kbOn()?l.removeItem('dvkb'):l.setItem('dvkb','1');}catch(e){}load();};
+document.getElementById('routes').innerHTML=ROUTES.map(([n,r])=>`<button data-r="${r}">${n}</button>`).join('');
+document.getElementById('routes').onclick=e=>{const b=e.target.closest('button');if(b)go(b.dataset.r);};
+document.getElementById('go').onclick=()=>{const v=document.getElementById('rt').value.trim();if(v)go(v.startsWith('#')?v:'#'+v);};
+document.getElementById('rl').onclick=load;
+document.getElementById('clr').onclick=()=>{try{const l=win().localStorage,kb=l.getItem('dvkb');l.clear();if(kb)l.setItem('dvkb',kb);}catch(e){}load();};
+addEventListener('resize',scale);
+scale();mark();load();
+</script>

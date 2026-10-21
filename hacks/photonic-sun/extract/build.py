@@ -1,7 +1,7 @@
 """Build hacks/photonic-sun/data.json from hacks/photonic-sun/.src (SOURCES.md says how to fetch it).
 
 Usage (repo root): uv run python -I hacks/photonic-sun/extract/build.py
-Stages: dex.py (M, MV, AB, P, TC), locs.py (LOC, AR, P.w), trainers.py (TR), items.py (IT), walk.py (WK). The report
+Stages: dex.py (M, MV, AB, P, TC), locs.py (LOC, AR, P.w), trainers.py (TR), items.py (IT), walk.py (WK), items.order (game order, needs WK). The report
 of every conflict and guess goes to hacks/photonic-sun/extract/report.txt.
 """
 import datetime, json, os, subprocess, sys
@@ -37,6 +37,7 @@ def main():
     trainers.build(D)
     items.build(D)
     walk.build(D)
+    items.order(D)
     D['built'] = datetime.date.today().isoformat()
     D['src'] = 'Photonic Sun 2.38 Rebalanced: game data (romfs + code.ips over Ultra Sun v1.2), Buffel Saft\'s docs, Bulbapedia (trainer places, story order), Serebii (item locations)'
     order = ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'IT', 'WK', 'TR', 'TC', 'built', 'src']

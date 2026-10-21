@@ -25,8 +25,21 @@ the split is in that repo's git log.
   license: learn the formats, don't copy the code; the user decided not to ask hzla) and PKHeX. Also looked at PokeDaisy
   (GPLv3 GBA emulator with a live companion; covers EI, Radical Red, Unbound, SoulGold): read-only reference; the
   user may push the GBA guides back since the DS/3DS hacks have no such tool. Not decided.
-- **Photonic Sun guide built 2026-10-19** on branch `worktree-photonic-sun` (not merged, not on the Thor yet). See
-  "Photonic Sun guide" below and `hacks/photonic-sun/notes.md`.
+- **Photonic Sun guide built 2026-10-19 and merged into `main`** (not on the Thor yet). See "Photonic Sun guide"
+  below and `hacks/photonic-sun/notes.md`.
+- **Photonic Sun pass 2 (the user's review), started 2026-10-20** on branch `worktree-photonic-sun-changes`
+  (worktree `.claude/worktrees/photonic-sun-changes`, committed, not merged). Everything is in
+  `plans/photonic-sun-pass2.md`: the feedback per tab, what's decided (Locations design A, doc maps, move page C,
+  ability slots, two template bugs) and what's done. Locations: built (round 1). Trainers: built (rows per battle,
+  partners, level caps with battles left, Aether Paradise box); round 2 (`plans/trainers-show-switch.md`: island Show switch, place "teams n/N", view anchoring) built
+  2026-10-20 (template, every guide). Fix round 1 the same day (user's look on the phone): the island header no
+  longer pins (only the Show row and the place header), and the pinned place header paints `--bg` 5px above itself so
+  no gap shows under the Show row (headless checks said flush; the phone showed gaps). Not yet tested on the phone /
+  Thor nor the full audit after the fix (show-check.mjs passes; domcompare not rerun after the fix). **Next: a general
+  UI session** on reading room at 260 × 316 (the user: you can't see one full Pokémon under the pinned headers; search
+  bar, Show row, place header and the two-line place header with its cap tag all cost height), then test and merge.
+  Walkthrough (`plans/ps-walk.md`: empty stops are grey signs) and Items (`plans/ps-items.md`: 7 boxes, Shops by kind, Held Items by class, Stats and Abilities, game order, box Expand / Collapse all) built 2026-10-21 (tab branches merged in, template, every guide); audit passed (domcompare: only walk, items and the Photonic Sun Mega pages differ). Not yet tested on the phone / Thor. Open: Mega pages lost their stone place ("Venusaurite: Battle Tree" is now "Mega Stone: Venusaurite."), as the spec allowed; the user to confirm. The worktree has its own git-ignored
+  `hacks/photonic-sun/.src/` (copied from main's, without the 887 MB `romfs-dl/`).
 
 ## What's left, in order
 

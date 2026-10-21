@@ -1,0 +1,20 @@
+<fieldset><legend>Empty stop bar</legend>
+ <div class="chips" id="sg">
+  <button data-v="now">Now (empty dropdown)</button>
+  <button data-v="faint">Faint solid</button>
+  <button data-v="solid">Grey solid</button>
+  <button data-v="dotted" aria-pressed="true">Dotted</button>
+  <button data-v="dashed">Dashed</button>
+  <button data-v="hollow">Hollow</button>
+ </div>
+ <p class="hint">Same box as a stop header (bar, padding, spacing), bold 14px grey text, no arrow. Only the bar changes. The yellow bars on the stops around them are for comparison. Jump to a part with empty stops:</p>
+ <div class="chips" id="pt"><button data-p="1">1 start</button><button data-p="9">9 Seaward → Kala'e</button><button data-p="29">29 Ruins</button><button data-p="32">32 Sunne</button><button data-p="34">34 Kukui</button></div>
+ <script>
+ (function(){const q=s=>document.querySelector(s);
+  const sync=()=>{let v='dotted';try{v=thorFrame().localStorage.getItem('mocksg')||'dotted'}catch(e){}
+   q('#sg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));};
+  q('#sg').onclick=e=>{const b=e.target.closest('button');if(!b)return;thorFrame().setOption('sg',b.dataset.v);sync();};
+  q('#pt').onclick=e=>{const b=e.target.closest('button');if(!b)return;thorFrame().showPart(+b.dataset.p);};
+  setInterval(sync,1000);})();
+ </script>
+</fieldset>
