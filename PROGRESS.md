@@ -38,7 +38,7 @@ the split is in that repo's git log.
   Thor nor the full audit after the fix (show-check.mjs passes; domcompare not rerun after the fix). **Next: a general
   UI session** on reading room at 260 × 316 (the user: you can't see one full Pokémon under the pinned headers; search
   bar, Show row, place header and the two-line place header with its cap tag all cost height), then test and merge.
-  Walkthrough decided (`plans/ps-walk.md`), Items decided (`plans/ps-items.md`): being built. The worktree has its own git-ignored
+  Walkthrough (`plans/ps-walk.md`: empty stops are grey signs) and Items (`plans/ps-items.md`: 7 boxes, Shops by kind, Held Items by class, Stats and Abilities, game order, box Expand / Collapse all) built 2026-10-21 (tab branches merged in, template, every guide); audit passed (domcompare: only walk, items and the Photonic Sun Mega pages differ). Not yet tested on the phone / Thor. Open: Mega pages lost their stone place ("Venusaurite: Battle Tree" is now "Mega Stone: Venusaurite."), as the spec allowed; the user to confirm. The worktree has its own git-ignored
   `hacks/photonic-sun/.src/` (copied from main's, without the 887 MB `romfs-dl/`).
 
 ## What's left, in order
