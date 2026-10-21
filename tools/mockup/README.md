@@ -26,3 +26,6 @@ Locations, Trainers and Items (second mockup):
   shows exactly what ships.
 - `pagecheck.mjs <guide.html> <shot-prefix> [kb]`: behaviour test of Locations, Trainers and Items at 260 × 316 (boxes,
   places, taps, sticky headers, bars, jumps, state after a reload, place links), like `walkcheck.mjs`.
+- `jumpcheck.mjs <guide.html> [kb] [N]`: runs N (default 40) of each full-window search jump (trainer, walkthrough
+  trainer, stop, item, place) at 260 × 316 from another page with a search set, and lists any that don't end open and on
+  screen under the pinned headers.

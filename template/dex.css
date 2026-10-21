@@ -121,6 +121,8 @@ body{padding-left:44px}
 #rail a.on{color:var(--acc);background:var(--railon);box-shadow:inset 3px 0 0 var(--acc)}
 #rail svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 body[data-v=calc] header{display:none}
+/* Pokemon, move, ability and trainer pages hide the search bar but keep the query: the list pages still show it. */
+body:is([data-v=p],[data-v=m],[data-v=a],[data-v=tr]) header{display:none}
 /* Pokemon rows: types drop under the name when the row is narrow */
 .row .rt{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:2px 8px}
 .row .rt .nm{flex:1 1 auto}

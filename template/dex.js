@@ -133,6 +133,9 @@ const UP={p:'#/',m:'#/',a:'#/',tr:'#/trainers'};let searchNav=false;
 q.addEventListener('input',()=>{st.q=q.value.trim().toLowerCase();if(st.q&&UP[st.view]){searchNav=true;location.hash=UP[st.view];return;}render(true);});
 // The rail's top button opens the full-window search (the search box shows only while a query is set: dex.css).
 document.getElementById('t-s').addEventListener('click',e=>{e.preventDefault();SR.open();});
+// The search stays set across pages (detail pages hide it) until its × clears it, or a tap on the tab you're already on.
+document.getElementById('rail').addEventListener('click',e=>{const a=e.target.closest('a[href^="#/"]');
+ if(a&&a.getAttribute('href')===(location.hash||'#/')&&q.value){e.preventDefault();q.value='';q.dispatchEvent(new Event('input'));window.scrollTo(0,0);}});
 function setTab(t){['p','l','t','i','w','c'].forEach(x=>document.getElementById('t-'+x).classList.toggle('on',x===t));}
 // ===== POKEMON TAB: chip filters (type / ability / move / location)
 const FL={type:'Type',ab:'Ability',mv:'Move',loc:'Found at'};
@@ -389,7 +392,7 @@ function listLocs2(scroll){fil.innerHTML='';sug.style.display='none';const s=st.
  app.innerHTML=tkBar()+(s?'':segBar('lc-all all'))+
   list.map(gi=>{const g=LGRP[gi];return `<details class="split jt" data-a="${g.a[0]}" data-g="${gi}" ${LO.o[g.a[0]]||s?'open':''}><summary>${esc(g.n)} ${g.a.map(encAll).join('')}</summary><div class="body"></div></details>`;}).join('');
  app.querySelectorAll('details.split[data-a][open]').forEach(d=>TOG.locs(d));bindTrackers();bars();
- if(scroll&&tk){const el=app.querySelector(`details.stopd[data-k="${tk}"]>summary`);if(el){scrollTo(0,el.getBoundingClientRect().top+scrollY-T());flash(el);}}}
+ if(scroll&&tk)land(app.querySelector(`details.stopd[data-k="${tk}"]>summary`));}
 
 
 // ===== ITEMS TAB (D.IT sections from the items xlsx; r = [item, text, link, missable?])
@@ -806,10 +809,11 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
  find(h,t){q.value=t;st.q=t.toLowerCase();this.go(h);},
  clear(){q.value='';st.q='';},
  jumpStop(si,ti){this.clear();WO.o[si]=1;delete WO.x[si+'.'+ti];woSave();this.go('#/walk',()=>land(app.querySelector(`details.stopd[data-k="${si}.${ti}"]>summary,.wsign[data-k="${si}.${ti}"]`)));},
- jumpWalkTr(k){const w=walkOf(k);if(!w)return;const sk=w[0]+'.'+w[1];this.clear();WO.o[w[0]]=1;delete WO.x[sk];WO.s[sk+'.t']=1;TRDO.add(k);woSave();
-  this.go('#/walk',()=>land(app.querySelector(`details.stopd[data-k="${sk}"] details.trd[data-k="${k}"]>summary`)));},
- jumpTr(k){const t=TRK[k];if(!t)return;this.clear();const [gi,si]=t.at;TOPEN.o[gi]=1;delete TOPEN.p[gi+'.'+si];delete TOPEN.t[k];trSave();
-  this.go('#/trainers',()=>land(app.querySelector(`details.split[data-gi="${gi}"] details.trd[data-k="${k}"]>summary`)));},
+ // A trainer fought alongside others shares their row, which goes by the first one's key: open them all, find it by data-ks.
+ jumpWalkTr(k){const w=walkOf(k);if(!w)return;const sk=w[0]+'.'+w[1];this.clear();WO.o[w[0]]=1;delete WO.x[sk];WO.s[sk+'.t']=1;trMates(k).forEach(x=>TRDO.add(x));woSave();
+  this.go('#/walk',()=>land(trRowOf(app.querySelector(`details.stopd[data-k="${sk}"]`),k)));},
+ jumpTr(k){const t=TRK[k];if(!t)return;this.clear();const [gi,si]=t.at;TOPEN.o[gi]=1;delete TOPEN.p[gi+'.'+si];trMates(k).forEach(x=>delete TOPEN.t[x]);trSave();
+  this.go('#/trainers',()=>land(trRowOf(app.querySelector(`details.split[data-gi="${gi}"]`),k)));},
  jumpItem(si,ri){const sec=D.IT[si],g=sec.r[ri][4];this.clear();IO.o[si]=1;delete IO.x[si];if(g)delete IO.s[si+'.'+g];try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
   this.go('#/items',()=>land(app.querySelectorAll(`details.split[data-si="${si}"] .body tr`)[ri]));},
  place(a){this.clear();this.go('#/l/'+AR[ARS(a)[0]].l[0]);},
@@ -884,16 +888,23 @@ let WSTOPS=null,WTR=null,LFOUND=null;
 const walkStops=()=>WSTOPS??=D.WK.splits.flatMap((sp,si)=>sp.st.map((s,ti)=>[s,si,ti]));
 function visits(a){const A=AR[a];return A.vis??=walkStops().filter(([s])=>s.n===A.n||s.a.some(x=>x===a||ARS(x).includes(a)||ARS(a).includes(x))).map(([s,si,ti])=>[si,ti]);}
 function walkOf(k){if(!WTR){WTR={};walkStops().forEach(([s,si,ti])=>(s.tr||[]).forEach(t=>{if(!WTR[t])WTR[t]=[si,ti];}));}return WTR[k];}
+const trMates=k=>{const t=TRK[k];return t&&t.bt?TRS.filter(x=>x.bt===t.bt).map(x=>x.k):[k];};
+const trRowOf=(root,k)=>{const d=root&&(root.querySelector(`details.trd[data-k="${k}"]`)||[...root.querySelectorAll('details.trd[data-ks]')].find(d=>d.dataset.ks.split(',').includes(k)));return d&&d.querySelector(':scope>summary');};
 const locFound=()=>LFOUND??=new Set(Object.values(locs).flatMap(l=>l.map(([p])=>p.id)));
 // Land a jump: put el under the headers pinned above it (the search bar, its stop's and section's) and flash it. The
 // page has only just rendered, so the scroll is repeated each frame for a moment: the first one can stop short at the
-// bottom of a page that content-visibility hasn't laid out yet. Any press, wheel or key ends it.
+// bottom of a page that content-visibility hasn't laid out yet. Any press, wheel or key ends it. Boxes around el that
+// are still closed (a Prismatic Moon drop-down) are opened, and the ones content-visibility skips are laid out for real
+// until it ends: a skipped box counts at its 400 px estimate, so a target deep inside a long one sat past the page's end.
+let landEnd=null;
 function land(el){if(!el)return;const st0=el.tagName==='SUMMARY'?el.parentElement.parentElement:el;
+ for(let p=st0.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))if(!p.open){p.open=true;if(p._f)p._f();}
+ const cv=[];for(let p=el.parentElement;p&&p!==app;p=p.parentElement)if(getComputedStyle(p).contentVisibility==='auto'){p.style.contentVisibility='visible';cv.push(p);}
  const pin=()=>{let y=hdrH()+trPinH(st0);for(let p=st0.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))if(p.open&&p.matches('details.stopd,details.sec'))y+=p.querySelector(':scope>summary').offsetHeight;return y;};
  const to=()=>{const dy=el.getBoundingClientRect().top-pin();if(Math.abs(dy)>.5)scrollBy(0,dy);};
- noAnchor();to();flash(el);const t0=performance.now();let stop=false;const end=()=>{stop=true;};
+ noAnchor();to();flash(el);const t0=performance.now();let stop=false;const end=()=>{stop=true;};if(landEnd)landEnd();landEnd=end;
  ['pointerdown','wheel','keydown'].forEach(k=>addEventListener(k,end,{once:true,passive:true}));
- const f=()=>{if(stop||performance.now()-t0>700){html.style.overflowAnchor='';jumpState();return;}to();requestAnimationFrame(f);};requestAnimationFrame(f);}
+ const f=()=>{if(stop||performance.now()-t0>700){html.style.overflowAnchor='';cv.forEach(p=>p.style.contentVisibility='');jumpState();return;}to();requestAnimationFrame(f);};requestAnimationFrame(f);}
 
 // ===== CALC (empty for now; the stat calculator is on each Pokemon page)
 function calcPage(){fil.innerHTML='';sug.style.display='none';app.innerHTML=`<div class="card"><h3>Calc</h3><p style="margin:0">Coming soon. Each Pokémon page has a stat calculator in the meantime.</p></div>`;}
@@ -902,7 +913,8 @@ function soon(name,what){fil.innerHTML='';sug.style.display='none';app.innerHTML
 // ===== ROUTER
 function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).split('/');const v=parts[0]||'';
  if(st.view===''&&v!==''&&!fromInput)st.listScroll=Object.assign(keepAnchor(),{z:cvSizes()});
- if(v!==''&&v!=='locs'&&v!=='items'&&v!=='walk'&&v!=='trainers'&&!fromInput){q.value='';st.q='';}
+ // The search stays set from page to page, except into a place (#/l/, a link from a Pokemon page): that's a jump to it.
+ if(v==='l'&&!fromInput){q.value='';st.q='';}
  document.body.dataset.v=v;if(RJ)RJ.hidden=!(COLV[v]&&!st.q);
  if(v==='p'){setTab('p');detail(decodeURIComponent(parts[1]));}
  else if(v==='m'){setTab('p');moveDetail(+parts[1]);}
@@ -930,7 +942,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)posSave();}
 window.dexViewer={restoreScroll(y){let c=null;try{c=JSON.parse(localStorage.getItem(LS.pos)||'null')}catch(e){}
  if(c&&c.h===location.hash&&c.a&&c.a.sel&&app.querySelector(c.a.sel))toAnchor(c.a);else window.scrollTo(0,y);}};
 window.addEventListener('hashchange',()=>{const typed=searchNav;searchNav=false;if(!typed){SR.close();KB.close(true);}if(curKey)SNAP[curKey]={a:keepAnchor(),z:cvSizes()};
- st.lgo=typed;render(typed);curKey=entryKey();if(typed){if(!/^#\/l\//.test(location.hash))window.scrollTo(0,0);return;}const sn=SNAP[curKey];if(sn){cvApply(sn.z);toAnchor(sn.a);}
+ st.lgo=typed;render(typed);curKey=entryKey();if(typed){if(!/^#\/l\//.test(location.hash))window.scrollTo(0,0);return;}const sn=SNAP[curKey];if(sn){if(landEnd)landEnd();cvApply(sn.z);toAnchor(sn.a);}
  if(SR.after){const f=SR.after;SR.after=null;f();}});
 // Opened without a route (the viewer always loads the bare file): go back to the page it was on.
 if(!location.hash||location.hash==='#'){try{const c=JSON.parse(localStorage.getItem(LS.pos)||'null');if(c&&/^#\/[\w\/%.-]*$/.test(c.h))history.replaceState(null,'',c.h);}catch(e){}}

@@ -73,6 +73,7 @@ the split is in that repo's git log.
    - **Search** (the user is overhauling it): done and merged 2026-10-19, the full-window search on every device and
      results with actions that jump or search (see Search fix and full-window search). A trainer result now jumps to
      its card on the Trainers page. Not checked on the Thor yet; the user may have more search problems to raise.
+     Round 2 (2026-10-22, branch `worktree-search`): see Search round 2 under Search fix and full-window search.
    - Hardlove on the Thor was not checked over CDP (only EI was open in the viewer); it passed headless at Thor sizes.
    Details: `plans/split-ui.md`.
 5. **Skill update:** `rom-hack-offline-dex` still describes hand-building one file from the EI template. Point it at
@@ -373,6 +374,22 @@ and the list pages keep that search across tabs.
      content-visibility hasn't laid the page out). `SR.go(h, then)` runs `then` after the hashchange render.
    - Checked headless at 260 × 316 on both guides, normal and `dvkb`: row → search, Enter, Dex, stop / trainer (both
      pages) / item jumps land under their headers, item → trainers holding it, recents, no errors.
+
+**Search round 2 (2026-10-22, branch `worktree-search`; the user's two asks).**
+   - *The search stays set* from page to page until its × clears it or you tap the rail tab you're already on (like
+     tapping a place's n/N again). Pokémon, move, ability and trainer pages hide the bar (dex.css) but keep the query,
+     so search Popplio, open its Dex entry, then Trainers still shows Popplio's trainers. Before, opening any detail
+     page cleared it. Exception: a place link (`#/l/`, from a Pokémon page) still clears it, since it's a jump.
+   - *Jumps were glitchy*, about 1 in 10 ending off screen on every guide (`tools/mockup/jumpcheck.mjs` reproduced it):
+     a target deep inside a long box below the window sat inside a block content-visibility skips, counted at its
+     400 px estimate, so the page ended above it and `land()` stopped at the bottom. `land()` now lays out the
+     target's skipped ancestors for real while it runs (and opens any closed one, e.g. Prismatic Moon only). Also a
+     trainer sharing a battle row (doubles; the row goes by the first trainer's key) wasn't found or opened: jumps
+     open every trainer of the battle (`trMates`) and find the row by `data-ks` (`trRowOf`). Place jumps now use
+     `land()` too (was one scroll); Back onto a place cancels it so the saved position wins (`landEnd`).
+   - Checked headless at 260 × 316: jumpcheck 300 jumps per guide (PS, EI, Hardlove) 0 bad, PS `dvkb` 150 0 bad
+     (before: 13–22 bad of 150); the search-stays flow; Back onto a place keeps its position. domcompare vs main,
+     normal and `--kb`: only `#/l/` routes differ (land's flash and temporary inline style), 0 page errors.
 
 ## Skill (2026-10-18)
 
