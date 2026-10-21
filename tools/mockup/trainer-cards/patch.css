@@ -94,7 +94,6 @@ html:not([data-pv=now]) .trd>summary{font-size:14px}
 
 /* rail: search on top, seven icons in the height six had */
 #rail a{height:35px}
-body[data-v=trainers] header{display:none}
 /* Show row: less air above and below the words */
 .trsw{padding:1px 0}
 .trsw button{min-height:22px;font-size:12.5px}
@@ -106,8 +105,6 @@ html[data-hd=slim] .pt[data-cap]::after{content:' | ' attr(data-cap)}
    The header stays only where it still holds filters (Pokémon page: chips and the two selects) */
 header>.bar:first-child:not(:has(#q.has)){display:none}
 header:has(#filters:empty):not(:has(#q.has)){display:none}
-header #filters{margin-top:0}
-header{padding-top:4px;padding-bottom:4px}
 /* Show row: a few px of air above and below, a little taller bar */
 .trsw{padding:3px 0}
 .trsw button{min-height:26px}
@@ -128,3 +125,16 @@ details.split>summary{font-size:14px;padding:8px 10px}
 .pbar .btn,.tkbar .btn{flex:1 1 0;min-width:0;padding:5px 2px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* walkthrough stop header: trainers n/N | cap */
 .stoph .pt.wk{float:right}
+
+/* ===== Round 4: one gap everywhere (--g = the side padding), a short search bar ===== */
+html{--g:6px;--sbh:30px;--sbf:13px}
+header{padding:var(--g);border-bottom:0;box-shadow:0 1px 0 var(--line);display:flex;flex-direction:column;gap:var(--g)}
+header .bar{margin:0!important;gap:var(--g)}
+.disp{min-height:var(--sbh);font-size:var(--sbf);border-radius:6px}
+.disp .x{width:var(--sbh);height:var(--sbh);font-size:16px}
+main#app{display:flex;flex-direction:column;gap:var(--g);padding:var(--g) var(--g) 60px}
+#app>*{margin:0!important}
+.trh2 .r1 select{flex:1 1 0;min-width:0}
+header select{min-height:var(--sbh);font-size:var(--sbf)}
+.trh2 .r1{flex-wrap:wrap}.trh2 .capsw{flex:1 1 100%}
+header #filters:empty{display:none}

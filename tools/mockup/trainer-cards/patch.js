@@ -24,7 +24,7 @@
   const p=byId[x.id];const lv=x.l!=null?x.l:x.r!=null&&cap?cap+x.r:NaN;
   const sp=e=>p&&lv?stat(p.s[5],5,x.iv[5],e,lv,x.na):null;const s0=sp(0),s1=EVS?sp(x.ev[5]):s0;
   const main=MGM?s0:s1,alt=MGM?s1:s0;
-  const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b>${x.ia?'<span class="mut" title="IVs assumed 31">*</span>':''}</span>${alt!==main?` <span class="mut small">${MGM?'with EVs':'no EVs'} ${alt}</span>`:''}${x.t0?` <span class="mut small">0 IV ${stat(p.s[5],5,0,0,lv,x.na)}</span>`:''}${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
+  const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b>${x.ia?'<span class="mut" title="IVs assumed 31">*</span>':''}</span>${alt!==main?` <span class="mut small">${MGM?'with EVs':'no EVs'} ${alt}</span>`:''}${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
   const lvs=x.l!=null||x.r==null?`Lv ${x.l??'?'}`:`Lv ${lv||'?'} <span class="mut small">cap${x.r?(x.r>0?'+':'−')+Math.abs(x.r):''}</span>`;
   const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'');
   const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');
@@ -86,7 +86,7 @@
  trHead=function(){
   if(!(typeof TRD!=='undefined'&&TRD.mini))return _th();
   const rows=TRD.mini.filter(c=>CSET?!c[4]:c[3]==='trial');
-  return `<div class="card trh2"><div class="r1">${EVS?`<label><input type="checkbox" id="mgm" ${MGM?'checked':''}> MGM</label>`:''}
+  return `<div class="card trh2"><div class="r1">${EVS?`<label><input type="checkbox" id="mgm" ${MGM?'checked':''}> MGM</label>`:''}${PICK?starterSel('tk-starter').replace('Not chosen','Starter'):''}
    <div class="capsw" role="group" aria-label="Level caps"><button data-s="0" aria-pressed="${!CSET}">Trials</button><button data-s="1" aria-pressed="${!!CSET}">+ Mini caps</button></div></div>
    <details class="capsd" ${CAPSO?'open':''}><summary class="mut small">Level caps</summary>
    <table class="itbl capt">${rows.map(c=>`<tr class="${c[3]}"><td>${esc(c[0])}<div class="mut small">${esc(c[1])}${c[3]==='mini'?' <span class="tag">mini</span>':''}</div></td><td class="n"><b>${c[2]}</b></td></tr>`).join('')}</table></details></div>`;};
@@ -115,4 +115,10 @@
  new MutationObserver(clean).observe(document.getElementById('app'),{childList:true,subtree:true});
  // startup rerender: pages drawn before this layer loaded pick up the new functions
  setTimeout(()=>{try{rerender();}catch(e){}clean();},0);
+ // ---- search bar / spacing sliders (--sbh height px, --sbf font px, --g gap px)
+ const VK='mocktcv',V=Object.assign({sbh:30,sbf:13,g:6},JSON.parse(localStorage.getItem(VK)||'{}'));
+ const applyV=()=>{R.style.setProperty('--sbh',V.sbh+'px');R.style.setProperty('--sbf',V.sbf+'px');R.style.setProperty('--g',V.g+'px');};
+ applyV();
+ window.setVar=(k,v)=>{V[k]=+v;applyV();try{localStorage.setItem(VK,JSON.stringify(V))}catch(e){}};
+ window.getVars=()=>V;
 })();

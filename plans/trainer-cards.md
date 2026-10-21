@@ -107,7 +107,27 @@ the row above it, and six 32 px preview sprites wrapped 5 + 1.
 5. Search on every page: rail button opens it; a query set from it shows and clears on pages without a header.
 6. Put the Photonic Sun build in the Thor frame on the phone preview for the user's test.
 
+## 7. Round 4 (the user, 2026-10-21): active query bar, spacing, starter pick
+- **Active query**: the bar shows while a query is set on every page, Trainers included (header otherwise hidden), and
+  clears with its x. Decided; no open question.
+- **`0 IV` speed extra is removed** (the full speed number is enough). No IV text anywhere.
+- **Search bar shrunk**: height `--sbh` 30 px (was 40), font `--sbf` 13 px (was 15), radius 6 px; the x button as tall as
+  the bar; the Pokémon page's two selects take the same height and font. The user tunes these with the mockup's sliders
+  (height 22-44, font 10-17): **use the values he reports back**; if none, 30 / 13.
+- **One gap everywhere, `--g` = the side padding** (6 px at the narrow sizes; the mockup uses 6 at every width, the
+  slider goes 2-12; confirm the wide-window value with the user, 6-8 suggested). It is: the page's side padding, the top
+  padding under the header, the vertical gap between every box on every page, and the header's own padding on all
+  four sides (use a bottom `box-shadow` for the header line, not a border, so the bottom padding isn't 1 px bigger). Built as `#app`
+  `display:flex;flex-direction:column;gap:var(--g);padding:var(--g)` with `#app>*{margin:0}` (the mockup's way; other
+  ways are fine if the result is identical). Header: flex column, same gap between the search bar and the Pokémon page's
+  select row; hide an empty `#filters`. Fixes the user's list: Locations (Starter box too far from the top, its gap to
+  Expand / Collapse all differs), Trainers (MGM/caps box and Open all islands), Walkthrough (Guide info box above/below
+  and Expand / Collapse all vs Starter box and intro box), Pokémon (gap above Dex order / All Pokémon, Bulbasaur to the
+  top line). **Only exception: Pokémon rows keep their 4 px between each other.** Items was already right: keep it right.
+  Check every page's top, 260 x 316, and a detail page.
+- **Trainers header card**: add the **starter pick** (the existing `starterSel`, shown as "Starter" when none, bound like
+  the tracker's `tk-starter` so it sets `TK.s` and the rival teams follow) on the MGM line; the caps switch goes on its
+  own line, full width; then the Level caps expander. Where a hack has no starter pick (`PICK` false) nothing is added.
+
 ## Not decided / ask the user
-- Where an active page query shows on pages whose header is hidden (the mockup brings the search bar back while a query
-  is set).
-- The `0 IV` speed extra (see section 1).
+- The wide-window value of `--g` (see section 7) and the final search bar height / font from the sliders.
