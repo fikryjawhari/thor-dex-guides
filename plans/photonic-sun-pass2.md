@@ -199,3 +199,6 @@ overflows, so probably the footer.
 - **Walkthrough decided 2026-10-20 (decide session, spec final):** empty stops stay and get a grey, bold 14px, faint-bar
   header with no arrow (template change, every guide); the starter is already on Route 1. **Build spec:
   `plans/ps-walk.md`** (tab branch `worktree-ps-walk`, mockup https://claude.ai/artifact/5iPtwwnsGaijwvkydeu5MA).
+
+Decide session 2026-10-20 (branch `worktree-ps-items`): mockup https://claude.ai/artifact/WvhFG5Aa4htrr1VLvxqATt, spec
+`plans/ps-items.md` (decided, ready to build).
