@@ -100,3 +100,31 @@ body[data-v=trainers] header{display:none}
 .trsw button{min-height:22px;font-size:12.5px}
 /* place header: "1/1 | 21" (open cards / trainers | level cap) */
 html[data-hd=slim] .pt[data-cap]::after{content:' | ' attr(data-cap)}
+
+/* ===== Round 3 ===== */
+/* search box gone from the top of every page (the rail button opens it); it comes back only while a query is set, so it can be cleared.
+   The header stays only where it still holds filters (Pokémon page: chips and the two selects) */
+header>.bar:first-child:not(:has(#q.has)){display:none}
+header:has(#filters:empty):not(:has(#q.has)){display:none}
+header #filters{margin-top:0}
+header{padding-top:4px;padding-bottom:4px}
+/* Show row: a few px of air above and below, a little taller bar */
+.trsw{padding:3px 0}
+.trsw button{min-height:26px}
+/* smaller box titles (as the grey "pass-through" signs) and stop headers a little smaller */
+details.split>summary{font-size:14px;padding:8px 10px}
+.stoph{font-size:15px}
+/* Trainers header: MGM, the caps switch always showing, the caps table behind "Level caps" */
+.trh2{padding:6px 8px}
+.trh2 .r1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.trh2 label{display:flex;align-items:center;gap:5px;font-weight:700;font-size:13px}
+.trh2 .capsw{display:flex;flex:1 1 0;min-width:0;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+.trh2 .capsw button{flex:1 1 0;min-width:0;min-height:26px;border:0;background:none;color:var(--fg);font:600 12px system-ui,sans-serif;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.trh2 .capsw button+button{border-left:1px solid var(--line)}
+.trh2 .capsw button[aria-pressed=true]{background:var(--acc);color:#1b1608}
+.trh2 details{margin-top:4px}
+/* Export / Import / Reset side by side at 260 */
+.pbar,.tkbar>.bar:last-child{flex-wrap:nowrap;gap:4px}
+.pbar .btn,.tkbar .btn{flex:1 1 0;min-width:0;padding:5px 2px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* walkthrough stop header: trainers n/N | cap */
+.stoph .pt.wk{float:right}

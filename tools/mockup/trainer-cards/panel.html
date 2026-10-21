@@ -48,7 +48,7 @@
 <script>
 (function(){const q=s=>document.querySelector(s);
  const cur=()=>{try{return JSON.parse(thorFrame().localStorage.getItem('mocktc')||'{}')}catch(e){return {}}};
- const DEF={cd:'B',pv:'24',hd:'slim',rp:'hide',sw:'pin',sp:'430'};
+ const DEF={cd:'B',pv:'24',hd:'slim',rp:'hide',sw:'pin',sp:'500'};
  const sync=()=>{const o=Object.assign({},DEF,cur());document.querySelectorAll('[data-g]').forEach(g=>g.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===o[g.dataset.g])));};
  document.addEventListener('click',e=>{const b=e.target.closest('[data-g] button');if(!b)return;thorFrame().setOption(b.parentNode.dataset.g,b.dataset.v);sync();});
  q('#dm').onclick=e=>{const b=e.target.closest('button');if(!b)return;const [g,s,w]=b.dataset.d.split(',');thorFrame().demo(+g,+s,w);};

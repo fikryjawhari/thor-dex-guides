@@ -7,7 +7,7 @@
 //   sw  Show row (Places | Trainers | Teams): pinned (now) | scrolls away
 (function(){
  const R=document.documentElement,K='mocktc';
- const DEF={cd:'B',pv:'24',hd:'slim',rp:'hide',sw:'pin',sp:'430'};
+ const DEF={cd:'B',pv:'24',hd:'slim',rp:'hide',sw:'pin',sp:'500'};
  const O=Object.assign({},DEF);try{Object.assign(O,JSON.parse(localStorage.getItem(K)||'{}'))}catch(e){}
  const apply=()=>{for(const k in O)R.dataset[k]=O[k];R.style.setProperty('--ms',(O.pv==='now'?32:+O.pv)+'px');};
  apply();
@@ -80,4 +80,39 @@
   setTimeout(()=>{const p=b.querySelector(`details.stopd[data-k="${gi}.${si}"]`);if(!p)return;if(!p.open)p.open=true;
    setTimeout(()=>{p.querySelectorAll('details.trd').forEach(d=>{const w=who==='all'||(who&&d.querySelector('summary').textContent.includes(who));if(w!==d.open)d.open=w;});
     const o=who&&who!=='all'&&[...p.querySelectorAll('details.trd')].find(d=>d.open);setTimeout(()=>land(o?o.querySelector(':scope>summary'):p.querySelector(':scope>summary')),300);},300);},500);};
+ // ===== Round 3 =====
+ // Trainers header: MGM, the caps switch visible, caps table behind "Level caps"; no explanatory text
+ const _th=trHead;
+ trHead=function(){
+  if(!(typeof TRD!=='undefined'&&TRD.mini))return _th();
+  const rows=TRD.mini.filter(c=>CSET?!c[4]:c[3]==='trial');
+  return `<div class="card trh2"><div class="r1">${EVS?`<label><input type="checkbox" id="mgm" ${MGM?'checked':''}> MGM</label>`:''}
+   <div class="capsw" role="group" aria-label="Level caps"><button data-s="0" aria-pressed="${!CSET}">Trials</button><button data-s="1" aria-pressed="${!!CSET}">+ Mini caps</button></div></div>
+   <details class="capsd" ${CAPSO?'open':''}><summary class="mut small">Level caps</summary>
+   <table class="itbl capt">${rows.map(c=>`<tr class="${c[3]}"><td>${esc(c[0])}<div class="mut small">${esc(c[1])}${c[3]==='mini'?' <span class="tag">mini</span>':''}</div></td><td class="n"><b>${c[2]}</b></td></tr>`).join('')}</table></details></div>`;};
+ // no intro lines, no dupes-clause note
+ const clean=()=>{
+  document.querySelectorAll('#app>.mut.small').forEach(e=>e.remove());
+  document.querySelectorAll('#app .mut.small').forEach(e=>{if(/dupes clause on whole evolution lines/.test(e.textContent)&&!e.children.length)e.textContent=e.textContent.replace(/\s*·\s*dupes clause on whole evolution lines/,'');});
+  walkBadges();};
+ // walkthrough: a stop with trainers shows "n/N | cap" in its sticky header (the button opens / closes all its cards)
+ let CAPM=null;
+ const capMap=()=>{if(CAPM)return CAPM;CAPM={};try{TRD.g.forEach(g=>g.sec.forEach(s=>{const c=s.cap&&s.cap[CSET];s.tr.forEach(t=>{if(c)CAPM[t.k]=c[0];});}));}catch(e){}return CAPM;};
+ function walkBadges(){
+  if(document.body.dataset.v!=='walk')return;
+  document.querySelectorAll('details.stopd').forEach(d=>{
+   const sm=d.querySelector(':scope>summary'),ts=[...d.querySelectorAll('details.trd')];
+   let b=sm.querySelector('.pt.wk');
+   if(!ts.length){if(b)b.remove();return;}
+   sm.querySelectorAll(':scope>.tag').forEach(t=>{if(/trainer|battle|fight|boss|rival|grunt|^\d+\s/i.test(t.textContent))t.remove();});
+   if(!b){b=document.createElement('button');b.type='button';b.className='pt wk';b.onclick=e=>{e.preventDefault();e.stopPropagation();
+     const all=[...d.querySelectorAll('details.trd')],full=all.every(x=>x.open);if(!d.open)d.open=true;all.forEach(x=>{if(x.open===full)x.open=!full;});setTimeout(walkBadges,50);};
+    sm.insertBefore(b,sm.firstChild);}
+   const n=ts.filter(x=>x.open).length,m=ts.map(x=>capMap()[(x.dataset.ks||x.dataset.k).split(',')[0]]).filter(Boolean),cap=m.length?Math.max(...m):'';
+   const tx=n+'/'+ts.length+(cap?' | '+cap:'');if(b.textContent!==tx)b.textContent=tx;
+   b.classList.toggle('on',n===ts.length);b.classList.toggle('part',n>0&&n<ts.length);});}
+ document.addEventListener('toggle',()=>setTimeout(walkBadges,30),true);
+ new MutationObserver(clean).observe(document.getElementById('app'),{childList:true,subtree:true});
+ // startup rerender: pages drawn before this layer loaded pick up the new functions
+ setTimeout(()=>{try{rerender();}catch(e){}clean();},0);
 })();
