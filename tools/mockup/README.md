@@ -8,8 +8,8 @@ Chrome or Edge, and Node 22+.
 - `gen.py <repo> <dir>`: builds `walkthrough-mockup.html` in `<dir>` from `outer.html` (the page around the frame:
   guide, viewport size, collapse style, theme), `inner.js` and `inner.css` (the mockup layer over the snapshot) and the
   snapshots `<dir>/ei.json`, `<dir>/hg.json`, plus `template/dex.css` and the rail from `template/shell.html`. The
-  frame is an `iframe srcdoc`, so the guide's own CSS and media queries apply at the chosen size. Publish the result
-  as an artifact.
+  frame is an `iframe srcdoc`, so the guide's own CSS and media queries apply at the chosen size. Put the result on
+  the phone preview (`tools/preview.py`).
 - `inner.js` / `inner.css` are the state of the mockup when the user signed it off (mockup link in
   plans/split-ui.md). They rebuild the snapshot's DOM at runtime; the template builds the same thing directly.
 - `walkcheck.mjs <guide.html> <shot-prefix> [kb]`: behaviour test of the built walkthrough at 260 × 316 (`kb` = with
