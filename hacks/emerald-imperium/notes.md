@@ -143,6 +143,7 @@ DATA SCHEMA (the JSON in #data)
   LOC [sublocationName] in tracker order   AR [{n area name, l[LOC idx], ns 1 = no tracker slot, note,
        sub [AR idx] tracker slots it is split into (hatch towns, one per egg), in = the area a slot belongs to}]
        (slots are appended after the tracker's areas so saved trackers, keyed by AR index, keep their meaning)
+  ARO [AR idx] (optional) the Locations page's area order, where areas added later sit at the end of AR (same reason)
   P.w methods: Grass/cave, Surf, Old/Good/Super Rod, Rock Smash (rates are %), Static, Gift, Egg / Starter egg /
   Pseudo egg, Starter choice, Hot House (N+ badges), Choice (...), Roaming (rates "1 of N"); w[4] = how to get it.
   P.g: 0 obtainable (any encounter or its evolution family), 1 Mega/Primal, 3 not found in any location source.

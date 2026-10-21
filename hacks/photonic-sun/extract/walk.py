@@ -14,6 +14,15 @@ ALIAS = {'Starter': ['Route 1'], 'Routes 15 and 16': ['Route 15', 'Route 16'],"T
 # Item places that are rooms or corners of a walkthrough stop
 ITEM_ALIAS = {'Shady House': 'Po Town', 'Hokulani Observatory': 'Mount Hokulani', 'Plains Grotto': 'Poni Plains',
               "Team Rocket's Castle": 'Aether Paradise', 'Ultra Space Wilds': 'Ultra Warp Ride'}
+# Fixes to Bulbapedia's order (the user, 2026-10-21). PLACE: area -> (part, stop) it joins, the first stop of that name
+# in the part (Route 1's wild Pokémon come with the Route 1 visit of part 2, after the Poké Balls; part 1 keeps the
+# starter). NEW_STOP: (part, stop, first trainer, new stop): that trainer and the ones after him there move to a new stop
+# right after it.
+PLACE = {'Route 1': (2, 'Route 1'), "Hau'oli Outskirts": (2, "Route 1 (Hau'oli Outskirts)"),
+         "Trainers' School": (2, "Trainers' School")}
+NEW_STOP = [(2, "Route 1 (Hau'oli Outskirts)", 'Youth Athlete Hiromi', "Trainers' School")]
+# Item places that name a building inside a stop's place ("Route 1 - Trainer School")
+ITEM_IN = {'Trainer School': "Trainers' School"}
 DOCS = [('Evolution Changes', 'Evolution Changes'), ('Type Changes', 'Type Changes'), ('Move Changes', 'Move Changes'),
         ('Totem Battles', 'Totem Battles'), ('How to Enable Mega Evolution', 'How to Enable Mega Evolution')]
 
@@ -34,10 +43,20 @@ def same(area, stop):
 def build(D):
     AR, stops = D['AR'], D['_stops']
     st = [{'part': p, 'n': n, 'a': [], 's': [], 'note': '', 'it': [], 'tr': tr} for p, n, tr in stops]
+    TRN = {t['k']: t['n'] for g in D['TR']['g'] for s in g['sec'] for t in s['tr']}
+    for part, n, first, new in NEW_STOP:
+        j = next(j for j, s in enumerate(st) if s['part'] == part and s['n'] == n)
+        k = next(k for k, t in enumerate(st[j]['tr']) if TRN[t] == first)
+        st.insert(j + 1, {'part': part, 'n': new, 'a': [], 's': [], 'note': '', 'it': [], 'tr': st[j]['tr'][k:]})
+        st[j]['tr'] = st[j]['tr'][:k]
     where = {}
     for i, A in enumerate(AR):
         names = [A['n']] + ALIAS.get(A['n'], [])
-        hit = next((j for j, s in enumerate(st) if any(same(x, s['n']) for x in names)), None)
+        if A['n'] in PLACE:
+            part, n = PLACE[A['n']]
+            hit = next(j for j, s in enumerate(st) if s['part'] == part and s['n'] == n)
+        else:
+            hit = next((j for j, s in enumerate(st) if any(same(x, s['n']) for x in names)), None)
         if hit is not None:
             st[hit]['a'].append(i)
             where[i] = hit
@@ -64,6 +83,7 @@ def build(D):
             locs = [x for x in locs if x and not x.startswith('held by')]
             hit = None
             for loc in locs:
+                loc = next((v for k, v in ITEM_IN.items() if k in loc), loc)
                 loc = loc.split(' - ')[0].replace(' PokéMart', '').replace(' shop', '')
                 loc = ITEM_ALIAS.get(loc, loc)
                 hit = next((s for s in out if same(loc, s['n'])), None)

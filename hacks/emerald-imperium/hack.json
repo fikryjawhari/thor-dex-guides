@@ -45,15 +45,10 @@
    "mvsrcx": ", so it may be wrong for this EI original",
    "absrc": "",
    "ns": "Not in the official encounter tracker, so it has no encounter slot here.",
-   "locs": "areas in the official tracker's order.",
-   "items": "From the official items sheet (TMs, HMs, Mega Stones, battle rewards, shops, useful NPCs).",
    "walk": "From the official walkthrough. Stops marked \"on the way\" are areas from the encounter tracker placed where you pass them. Boss teams sit inside their stop (tap a trainer to open the team); the Trainers tab has them all by split.",
    "capl": "Your highest level",
    "capw": "level cap",
    "capnone": "",
-   "trh": "Sets come from the game's trainer data (hzla calc); where the boss sheet disagrees, the card says so. Speeds use real IVs and natures{ev}. \"cap−1\" levels scale to your highest level, assumed to be the level cap.",
-   "trs": "Rival teams shown for your {s} starter (from the Littleroot tracker slot).",
-   "trs0": "Record your starter in the Littleroot tracker slot to hide the other rival teams.",
    "noev": ""
   }
  }

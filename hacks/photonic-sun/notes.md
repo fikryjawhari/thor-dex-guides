@@ -48,7 +48,9 @@ changed), 233 abilities, 72 encounter areas, 513 trainers (488 placed), 35 walkt
   in AR.map (134 KB). Credited to the doc in the guide. The island overview pictures are skipped.
 - **Areas** (tracker slots) are the PDF's area titles in its order, plus Starter (first, so the rival filter has a
   place; Ultra Sun gives the starter on Route 1, so the walkthrough files it under Route 1) and the places of the
-  Special Encounters doc. TITLE_FIX tidies three titles.
+  Special Encounters doc. TITLE_FIX tidies three titles. SPLIT makes a game table an area of its own (Route 1's
+  Hau'oli Outskirts table, 2026-10-21); new areas go at the end of AR so saved trackers keep their slots, and AFTER
+  puts them in place in D.ARO, the Locations order (Starter, Route 1, Hau'oli Outskirts, Trainers' School, Hau'oli City).
 - **Specials** (SPECIALS in locs.py): Special Encounters.pdf transcribed by hand from word positions (Island Scan by
   weekday with special moves, the Ultra Wormhole legendaries, gifts, totem stickers, fossils). The doc says
   legendaries it doesn't list "can be found in their usual locations ... at higher levels", so Ultra Sun's places are
@@ -96,9 +98,12 @@ changed), 233 abilities, 72 encounter areas, 513 trainers (488 placed), 35 walkt
   Stats and Abilities, TMs, Z-Crystals) = the walkthrough stop of the earliest place (`items.order`, after walk.py);
   wild holders count where they live, the left clerk by trials; vanilla marts don't count. The rest A to Z.
 - **Walkthrough** (walk.py): one split per Bulbapedia part, one stop per place heading. Areas join the first stop with
-  their name (ALIAS for Routes 15 and 16 and others); areas with no stop are "on the way" stops after the previous
-  area's stop. Items file under the first stop named in their location (ITEM_ALIAS for rooms like Shady House); the
-  rest are in Guide info. Game docs: Evolution, Type and Move Changes, Totem Battles (preformatted, scrolls sideways),
+  their name (ALIAS for Routes 15 and 16 and others; PLACE picks the stop by hand: Route 1's wild Pokémon with part 2's
+  Route 1 visit, part 1 keeps the starter; Hau'oli Outskirts and Trainers' School in part 2); areas with no stop are
+  "on the way" stops after the previous area's stop. NEW_STOP adds Trainers' School after part 2's Route 1 (Hau'oli
+  Outskirts), with Youth Athlete Hiromi through Teacher Emily from there (the Trainers tab still has them under Route 1
+  (Hau'oli Outskirts): it follows trainers.py). Items file under the first stop named in their location (ITEM_ALIAS for rooms like Shady House); the
+  rest are in Guide info. ITEM_IN files a place inside a stop's ("Route 1 - Trainer School") under that building. Game docs: Evolution, Type and Move Changes, Totem Battles (preformatted, scrolls sideways),
   the Mega Evolution guide and the changelog.
 
 ## Conflicts and findings (report.txt)
@@ -122,7 +127,7 @@ paragraph; P.w rows [area, method, rate "%"/"", level, note, 1?] where the note 
 ("For Spearow"), the rate may say "20% (day)" / "15% day, 20% night", and a 6th field 1 means the row repeats the
 area's sections (the template lists only the other rows, gifts and trades, apart); AR.es the area's sections
 [{n, k grass|water|other, g:[{m label, lv, bl bubbling levels, rows:[{p, r:[day,night], b:[day,night], sos:[[ally,
-""|"day"|"night"]], note}]}]}]; AR.st 1 = the starter picker is this area's tracker; AR.map [data URI]; AR.note (trade items, Ultra Space Wilds); TR trainers carry `id` (the game's trainer id) and
+""|"day"|"night"]], note}]}]}]; AR.st 1 = the starter picker is this area's tracker; AR.map [data URI]; AR.note (trade items, Ultra Space Wilds); ARO the Locations order (EI's notes); TR trainers carry `id` (the game's trainer id) and
 `note` (bag items), `bt` (battle id, shared by trainers fought at once), `pt` partners [{n, st, p}], `tags`; sections
 carry `cap` [trial set, with-mini set], each [level, who, where, battles left] or null, and `opt` (optional place);
 TR.mini [name, where, level, "trial"|"mini", left out 0/1]; mons carry `ao` ("Stakeout / Strong Jaw") when the ability slot is random; WK has no cheats or

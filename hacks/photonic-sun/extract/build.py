@@ -40,7 +40,7 @@ def main():
     items.order(D)
     D['built'] = datetime.date.today().isoformat()
     D['src'] = 'Photonic Sun 2.38 Rebalanced: game data (romfs + code.ips over Ultra Sun v1.2), Buffel Saft\'s docs, Bulbapedia (trainer places, story order), Serebii (item locations)'
-    order = ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'IT', 'WK', 'TR', 'TC', 'built', 'src']
+    order = ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'built', 'src']
     D = {k: D[k] for k in order if k in D} | {k: v for k, v in D.items() if k not in order}
     write(D, os.path.join(HACK, 'data.json'))
     open(os.path.join(HACK, 'extract', 'report.txt'), 'w', encoding='utf-8', newline='\n').write('\n'.join(REPORT) + '\n')

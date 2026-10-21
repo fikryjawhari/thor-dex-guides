@@ -1,9 +1,19 @@
 :root{--bg:#121417;--panel:#1b1e23;--panel2:#23272e;--line:#2e333b;--fg:#e8eaed;--mut:#9aa0a8;--acc:#f0b429;--link:#8ab4f8;--rail:#181a1e;--railon:rgba(240,180,41,.14);--key:#2b3038}
 @media (prefers-color-scheme:light){:root{--bg:#f4f5f7;--panel:#fff;--panel2:#eef0f3;--line:#d9dce1;--fg:#1d2126;--mut:#5f6670;--acc:#b7791f;--link:#1a56db;--rail:#e7e9ed;--railon:rgba(183,121,31,.14);--key:#fff}}
+/* --g: the one gap (page sides, under the header, between boxes, the header's padding); --sbh / --sbf: the search bar's
+   height and font (plans/trainer-cards.md) */
+:root{--g:4px;--sbh:26px;--sbf:14px}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 a{color:var(--link);text-decoration:none}
-header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 12px}
+/* The header holds the search bar only while a query is set (the rail's top button opens search) and the Pokemon page's
+   filters; with neither it's hidden (its height, --hh, is then 0). Its line is a shadow, so all four paddings match. */
+header{position:sticky;top:0;z-index:5;background:var(--bg);box-shadow:0 1px 0 var(--line);padding:var(--g);display:flex;flex-direction:column;gap:var(--g)}
+header>.bar:first-child:not(:has(#q.has)){display:none}
+header:has(#filters:empty):not(:has(#q.has)){display:none}
+header .bar{margin:0;gap:var(--g)}
+header #filters:empty{display:none}
+header select{height:var(--sbh);padding:0 6px;font-size:var(--sbf);border-radius:6px}
 .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:960px;margin:0 auto}
 .tabs{display:flex;gap:4px}
 .tabs a{padding:6px 12px;border-radius:8px;background:var(--panel2);color:var(--fg);font-weight:600;font-size:14px}
@@ -11,7 +21,10 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px so
 input,select{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:15px}
 input[type=search]{flex:1;min-width:140px}
 label.chk{font-size:13px;color:var(--mut);display:flex;gap:4px;align-items:center}
-main{padding:10px 12px 60px;max-width:960px;margin:0 auto}
+main{padding:var(--g) var(--g) 60px;max-width:960px;margin:0 auto}
+/* Boxes on every page are one gap apart (their own margins don't count) */
+main#app{display:flex;flex-direction:column;gap:var(--g)}
+#app>*{margin:0!important}
 .list{display:flex;flex-direction:column;gap:4px}
 /* Off-screen rows and bodies skip style and layout (re-rendering the 1275-row list or the open walkthrough took ~1s). Scroll
    restores anchor on an element (keepAnchor), since estimated heights make a raw scrollY land in the wrong place. */
@@ -59,19 +72,13 @@ ul{margin:0;padding-left:18px}
 #sugg div.s{padding:8px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
 #sugg div.s span.k{color:var(--mut);font-size:12px}
 .trn{font-weight:700;margin-bottom:6px}
-.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
-.mon{background:var(--panel2);border-radius:10px;padding:6px 8px;font-size:13px}
-.mon .top{display:flex;gap:8px;align-items:center}
-.mon .mv{display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;margin-top:4px}
-.mv a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dot{display:inline-block;width:8px;height:8px;border-radius:4px;margin-right:4px;vertical-align:middle}
 details.split{margin:8px 0}
-details.split>summary{cursor:pointer;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-weight:700;list-style:none}
+details.split>summary{cursor:pointer;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-weight:700;font-size:14px;list-style:none}
 details.split>summary::after{content:' ▸';color:var(--mut)}
 details.split[open]>summary::after{content:' ▾'}
 .sech{margin:14px 0 4px;font-weight:700;color:var(--acc);font-size:14px}
 .num{color:var(--mut);font-variant-numeric:tabular-nums;font-size:12px;min-width:22px}
-.spd{margin-top:3px;font-size:13px}.spd b{color:var(--acc);font-size:15px}
 .calc input{width:52px;padding:5px 6px;font-size:14px;text-align:center}.calc select{padding:5px 6px;font-size:14px}
 .calc td,.calc th{padding:4px 4px;text-align:center}.calc .res{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
 .lvrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.lvrow span{background:var(--panel2);border-radius:8px;padding:4px 8px;font-size:13px;font-variant-numeric:tabular-nums}.lvrow span.cur{outline:2px solid var(--acc)}
@@ -83,7 +90,7 @@ details.split[open]>summary::after{content:' ▾'}
 .btn{background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600}.btn.danger{color:#e05252}
 .tag.got{background:#2e5e3a;color:#d8f5de}
 tr.dupe td,span.dupe{opacity:.45}span.dupe a,tr.dupe a{text-decoration:line-through}
-.stop{border-left:3px solid var(--acc);padding:2px 0 2px 10px;margin:14px 0}.stoph{font-weight:700;font-size:16px;margin-bottom:4px}
+.stop{border-left:3px solid var(--acc);padding:2px 0 2px 10px;margin:14px 0}.stoph{font-weight:700;font-size:15px}
 .wsign{margin:10px 0;padding:4px 0 4px 10px;border-left:3px solid var(--line);font-weight:700;font-size:14px;line-height:1.25;color:var(--mut)}
 .encl{font-size:13px;margin:3px 0;line-height:1.5}.itbl.wt{margin:6px 0;background:var(--panel);border-radius:10px}
 details.split>summary .tag{margin-left:6px}
@@ -98,40 +105,71 @@ details.stopd>.stop::before{content:'';position:absolute;left:0;top:0;bottom:12p
 .wstep{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}.wstep input{width:20px;height:20px;margin-top:1px;flex:none;accent-color:var(--acc)}.wstep.done>span{opacity:.5;text-decoration:line-through}
 .cfx{font-size:11px;color:#e0a030;margin-top:4px;line-height:1.35}
 .tag.warnb{background:#5e2e2e;color:#f5d8d8}
-.trd{margin:4px 0}.trd>summary{cursor:pointer;padding:7px 4px;list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:4px;border-bottom:1px solid var(--line)}
+.trd{margin:2px 0}.trd>summary{cursor:pointer;padding:5px 4px;list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:1px 4px;line-height:1.25;font-size:14px;border-bottom:1px solid var(--line)}
 .trd>summary::-webkit-details-marker{display:none}.trd[open]>summary{color:var(--acc)}
-.trmini{display:inline-flex;margin-left:auto}.spr.s24{width:24px;height:24px}.spr.s24 img{width:24px;height:24px}
+/* A closed trainer row's team: 24 px sprites, six to a line at most, beside the name when it leaves room, else under it
+   at the right. An open card shows the team, so the row's goes. */
+.trmini{display:flex;flex-wrap:wrap;gap:2px;margin-left:auto;justify-content:flex-end;max-width:calc(6*24px + 10px)}
+details.trd[open]>summary .trmini{display:none}
+.spr.s24{width:24px;height:24px}.spr.s24 img{width:24px;height:24px}
 .trc .trn a{color:var(--fg)}.capin{background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
 /* Section rail: icons down the left edge, the page beside it */
 body{padding-left:44px}
 #rail{position:fixed;left:0;top:0;bottom:0;width:44px;z-index:6;display:flex;flex-direction:column;background:var(--rail);border-right:1px solid var(--line);overflow-y:auto;scrollbar-width:none}
 #rail::-webkit-scrollbar{display:none}
-#rail a{flex:none;height:44px;display:flex;align-items:center;justify-content:center;color:var(--mut);-webkit-tap-highlight-color:transparent}
+#rail a{flex:none;height:35px;display:flex;align-items:center;justify-content:center;color:var(--mut);-webkit-tap-highlight-color:transparent}
 #rail a.on{color:var(--acc);background:var(--railon);box-shadow:inset 3px 0 0 var(--acc)}
 #rail svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 body[data-v=calc] header{display:none}
 /* Pokemon rows: types drop under the name when the row is narrow */
 .row .rt{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:2px 8px}
 .row .rt .nm{flex:1 1 auto}
-/* Trainer teams: as many Pokemon across as fit at 116px each (6 on the top screen maximised, 3 on the bottom, 1 at minimum width) */
-.card.trc{padding:8px}
-.team{grid-template-columns:repeat(auto-fill,minmax(116px,1fr));gap:4px}
-.mon{padding:5px 6px;border-radius:8px;font-size:12.5px;min-width:0;container-type:inline-size}
-.mon .top{gap:6px;align-items:flex-start}
-.mon .ty{font-size:11px;padding:0 5px;margin:1px 2px 1px 0}
-.mon .mv{gap:1px 6px;margin-top:3px}
-@container (max-width:200px){.mon .mv{grid-template-columns:1fr}}
+/* Trainer cards (plans/trainer-cards.md). An opened card in a trainer row starts at its team (the row says the rest). */
+.card.trc{padding:6px 8px}
+.trc .trnote,.trc .capd{font-size:12px}
+.trn2{font-size:12px;margin-bottom:3px}
+.trtg{margin:-2px 0 6px}.trtg:empty{display:none}
+/* Teams: every Pokemon, three across at most (160 px each at least: 2 across from 500 to about 560 px wide) */
+.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,max(160px,calc((100% - 8px)/3))),1fr));gap:4px}
+/* A Pokemon: sprite beside name and level, types and speed; ability · item · nature; moves two across; EVs */
+.mon{background:var(--panel2);border-radius:8px;padding:4px 6px;font-size:12px;line-height:1.25;min-width:0}
+.mon .mh{display:flex;gap:6px;align-items:center}
+.mon .mh .spr{width:30px;height:30px;flex:none}
+.mon .mt{min-width:0;flex:1}
+/* name and level on one line: a long name truncates, the level never does */
+.mon .l1{display:flex;gap:4px;white-space:nowrap;font-size:13px}
+.mon .l1 .mn{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.mon .l1 b{flex:none}
+.mon .l2{margin-top:1px}
+.mon .l2 .ty{font-size:10px;padding:0 4px;margin:0 2px 0 0}
+.mon .l2 .tag{font-size:10px}
+.mon .spd{font-size:12px}.mon .spd b{color:var(--acc);font-size:12px}
+.mon .nw{white-space:nowrap}
+.mon .ab{margin-top:2px;color:var(--mut)}.mon .ab a{color:var(--fg)}
+.mon .mv{display:grid;grid-template-columns:1fr 1fr;gap:0 6px;margin-top:2px;font-size:11.5px}
+.mon .mv a{line-height:1.2}
+.mon .ex{margin-top:1px;font-size:11px}
+.mon .dot{width:7px;height:7px;margin-right:3px}
+/* Under 500 px wide: a strip of up to six sprite buttons (28 px, level under each) over one Pokemon */
+.tpick{display:none}
+@media (max-width:499px){
+ .tpick{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;margin:0 0 4px}
+ .tpick button{display:flex;flex-direction:column;align-items:center;gap:0;min-width:0;padding:2px 0 1px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;color:var(--mut);font:600 10px/1.1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+ .tpick button .spr{width:min(28px,100%);height:auto;aspect-ratio:1;background-size:auto 100%}
+ .tpick button.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc);color:var(--acc);background:var(--bg)}
+ .team.tB{display:block}
+ .team.tB>.mon:not(.sel){display:none}
+}
+.spr.s28{width:28px;height:28px}
 .spr.s32{width:32px;height:32px}
-.trmini{gap:2px}.trmini .spr.s32 img{width:32px;height:32px}
 /* Tags wrap as a unit after long names (an inline tag glued to "Crabominable" made the page 271px wide at 260) */
 .tag{display:inline-block}
-.mon .top b{white-space:nowrap}
 /* Sort and availability share one row, shrinking rather than wrapping */
 .chips:empty{display:none}#filters .chips{flex:1 1 100%}
 .sorts{display:flex;gap:8px;min-width:0;max-width:100%}.sorts select{flex:0 1 auto;min-width:0}
 .trmini{flex-wrap:wrap;justify-content:flex-end;max-width:100%}
 .hero>div{min-width:0}.calc select{max-width:100%;min-width:0}
-@media (max-width:420px){main{padding:8px 6px 60px}header{padding:6px}.card{padding:8px}
+@media (max-width:420px){.card{padding:8px}
  .hero .s112{width:72px;height:72px}.hero{gap:10px}.hero h2{font-size:18px;overflow-wrap:anywhere}
  /* encounter rows restack: sprite and name on the left, rate over level on the right */
  table.enc,table.enc tbody{display:block}
@@ -147,7 +185,7 @@ body[data-v=calc] header{display:none}
 @media (max-height:260px){header{position:static}}
 /* In-page keyboard (Dex Viewer only; see IN-PAGE KEYBOARD in the script). The search box and number boxes are buttons
    there, and the keyboard is fixed to the bottom of the window, over the rail. */
-.disp{flex:1;min-width:140px;display:flex;align-items:center;gap:4px;min-height:40px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:0 2px 0 10px;font:inherit;font-size:15px;text-align:left;cursor:text;touch-action:manipulation}
+.disp{flex:1;min-width:140px;display:flex;align-items:center;gap:4px;min-height:var(--sbh);background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:0 0 0 8px;font:inherit;font-size:var(--sbf);text-align:left;cursor:text;touch-action:manipulation}
 .disp.open{border-color:var(--acc)}
 .disp .tx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .disp .tx:empty::before{content:attr(data-ph);color:var(--mut)}
@@ -155,7 +193,7 @@ body[data-v=calc] header{display:none}
 .disp.open .tx::after,.kq::after{content:'';display:inline-block;width:2px;height:18px;background:var(--acc);vertical-align:-3px;margin-left:1px;animation:kbblink 1s steps(1) infinite}
 @keyframes kbblink{50%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.disp.open .tx::after,.kq::after{animation:none}}
-.disp .x{flex:none;width:34px;height:34px;display:none;align-items:center;justify-content:center;border-radius:6px;color:var(--mut);font-size:18px}
+.disp .x{flex:none;width:var(--sbh);height:var(--sbh);display:none;align-items:center;justify-content:center;border-radius:6px;color:var(--mut);font-size:18px}
 .disp.has .x{display:flex}
 .nv{min-width:44px;min-height:40px;padding:0 6px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:6px;font:inherit;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;cursor:text;touch-action:manipulation}
 .nv.open{color:var(--acc);border-color:var(--acc)}
@@ -277,12 +315,15 @@ details.sec>summary .tag{margin-left:0}
 @keyframes flash{from{box-shadow:inset 0 0 0 2px var(--acc)}to{box-shadow:inset 0 0 0 2px transparent}}
 @media (prefers-reduced-motion:reduce){.flash{animation:none}}
 /* Walkthrough top: Guide info, Next step, Starter, Expand / Collapse all */
-.wtool{display:flex;flex-direction:column;gap:6px;margin:0 0 2px}
+.wtool{display:flex;flex-direction:column;gap:var(--g)}
 .wtool>details.split{margin:0}
 .wtool>details.split>summary .mut{font-weight:400;margin-left:4px}
 .pbody{padding:0 2px 6px}
 .psec{margin:12px 0 4px;font-weight:700;color:var(--acc);font-size:13px}
-.pbar{justify-content:flex-start;gap:6px;margin:6px 0 0}
+/* Export / Import / Reset all side by side, even at 260; the walkthrough's Reset checklist gets its own line */
+.pbar{gap:4px;margin:6px 0 0}.pbar .wk-reset{flex-basis:100%}
+.tkbar>.bar:last-child{flex-wrap:nowrap;gap:4px}
+.pbar .btn,.tkbar>.bar:last-child .btn{flex:1 1 0;min-width:0;padding:5px 2px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pbody>details.stopd{margin:8px 0}
 .strow{display:flex;align-items:center;gap:8px;margin:0;padding:6px 8px}.strow select{flex:1;min-width:0}
 .resume{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;min-height:40px;padding:5px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg);font:13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-align:left;cursor:pointer}
@@ -347,18 +388,25 @@ table.lrn td:nth-child(2){overflow-wrap:anywhere}
 .ptd[open]>summary{border-bottom:1px solid var(--line);margin-bottom:4px}
 .vs{text-align:center;font-size:11px;color:var(--mut);margin:-2px 0}
 .moond{margin:8px 0 2px}.moond>summary{cursor:pointer;font-size:13px;color:var(--mut);padding:6px 4px;border-bottom:1px dashed var(--line)}
-.capsd{margin-top:6px}.capsd>summary{cursor:pointer}
-.capsw{display:flex;gap:4px;margin:6px 0;flex-wrap:wrap}
-.capsw button{flex:1 1 0;min-width:0;font:600 12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:5px 4px;cursor:pointer}
-.capsw button[aria-pressed="true"]{background:var(--acc);color:#1b1608;border-color:var(--acc)}
+.capsd{margin-top:4px}.capsd>summary{cursor:pointer}
+/* Trainers header card: MGM and the starter pick, the cap set switch on its own line, "Level caps" closed */
+.card.trh{padding:6px 8px}
+.trh .r1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.trh .r1 select{flex:1 1 0;min-width:0}
+.trh .mgm{display:flex;align-items:center;gap:5px;font-weight:700;font-size:13px}
+.trh .r1+.capsw{margin-top:6px}
+.capsw{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+.capsw button{flex:1 1 0;min-width:0;min-height:26px;border:0;background:none;color:var(--fg);font:600 12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;touch-action:manipulation}
+.capsw button+button{border-left:1px solid var(--line)}
+.capsw button[aria-pressed="true"]{background:var(--acc);color:#1b1608}
 .capt td{vertical-align:top;padding:3px 4px 3px 0}.capt td:first-child{width:auto}.capt td.n{text-align:right;width:1%}.capt tr.mini td:first-child{color:var(--mut)}
 
 /* Trainers page (plans/trainers-show-switch.md): the Show row pinned under the search bar, the place header under it (--sw
    is the row's measured height, set on the box). The place header paints the page background a few px above itself, so
    no rounding can show content between the two (the Show row, painted above it, covers that band) */
-.trsw{position:sticky;top:calc(var(--hh,0px) - 1px);z-index:4;display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;color:var(--mut);background:var(--bg)}
+.trsw{position:sticky;top:calc(var(--hh,0px) - 1px);z-index:4;display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px;color:var(--mut);background:var(--bg)}
 .trsw .o{display:flex;flex:1 1 0;min-width:0;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
-.trsw button{flex:1 1 0;min-width:0;min-height:28px;border:0;background:none;color:var(--fg);font:600 13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;touch-action:manipulation}
+.trsw button{flex:1 1 0;min-width:0;min-height:26px;border:0;background:none;color:var(--fg);font:600 12.5px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;touch-action:manipulation}
 .trsw button+button{border-left:1px solid var(--line)}
 .trsw button.on{background:var(--acc);color:#1b1608}
 .trsw button.part{box-shadow:inset 0 0 0 2px var(--acc);color:var(--acc)}
@@ -366,9 +414,14 @@ table.lrn td:nth-child(2){overflow-wrap:anywhere}
 /* narrow: three names need the room, so "mixed" takes the place of "Show" */
 @media (max-width:359px){.trsw button{font-size:12px;padding:0 1px}.trsw.m>span:first-child{display:none}.trsw .mx{order:-1}}
 body[data-v=trainers] details.stopd[open]>summary{top:calc(var(--hh,0px) + var(--sw,36px) - 2px);box-shadow:0 -5px 0 var(--bg)}
-/* a place's "teams n/N" button, right-aligned in its header (a float: the header is a plain block) */
-.stoph{display:flow-root}
-.pt{float:right;margin:0 0 0 6px;min-height:26px;padding:0 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--mut);font:600 11px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;white-space:nowrap;cursor:pointer;touch-action:manipulation}
+/* Stop and place headers on one line: the name truncates, tags and the "n/N | cap" button (a place's or walkthrough
+   stop's trainers: open cards / trainers, level cap) keep their size, then the arrow */
+.stoph{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+.stoph .pn{flex:1 1 auto;min-width:3em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stoph .tag{flex:0 1 auto;min-width:0;margin-left:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stoph::after{order:2;flex:none;margin-left:-2px}
+details.stopd>summary.stoph{padding-top:2px;padding-bottom:2px}
+.pt{order:1;flex:none;margin:0;min-height:24px;padding:0 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--mut);font:600 10.5px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;white-space:nowrap;cursor:pointer;touch-action:manipulation}
 .pt[hidden]{display:none}
 .pt.part{background:none;border-color:var(--acc);color:var(--acc)}
 .pt.on{background:var(--acc);border-color:var(--acc);color:#1b1608}

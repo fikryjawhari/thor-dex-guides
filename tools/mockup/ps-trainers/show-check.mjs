@@ -62,7 +62,7 @@ const place = (i, k) => `document.querySelector('details.stopd[data-k="${i}.${k}
 const sw = (i, v) => `${box(i)}.querySelector('.trsw button[data-v="${v}"]')`;
 const pt = (i, k) => `${place(i, k)}.querySelector('.pt')`;
 const state = i => ev(`(()=>{const b=${box(i)},w=b.querySelector('.trsw'),on=[...w.querySelectorAll('button')].map(x=>x.className||'-').join('/');return {sw:on,mixed:!w.querySelector('.mx').hidden,
-  places:[...b.querySelectorAll('details.stopd')].map(p=>(p.open?'O':'c')+(p.querySelector('.pt').textContent.replace('teams ',''))).join(' ')};})()`);
+  places:[...b.querySelectorAll('details.stopd')].map(p=>(p.open?'O':'c')+(p.querySelector('.pt').textContent.replace('teams ','').replace(/ [|].*/,''))).join(' ')};})()`);
 // first trainer row whose top edge is at/below the pinned stack, found independently of the template's own code
 const probe = `(()=>{let lim=document.querySelector('header').getBoundingClientRect().bottom;const b=document.querySelector('details.split[open]');
   for(const s of ['details.split[open]>summary','.trsw']){document.querySelectorAll(s).forEach(e=>{const r=e.getBoundingClientRect();if(r.top<=lim+1.5&&r.bottom>lim)lim=r.bottom;});}

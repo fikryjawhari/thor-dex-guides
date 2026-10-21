@@ -41,10 +41,19 @@ the split is in that repo's git log.
   Walkthrough (`plans/ps-walk.md`: empty stops are grey signs) and Items (`plans/ps-items.md`: 7 boxes, Shops by kind, Held Items by class, Stats and Abilities, game order, box Expand / Collapse all) built 2026-10-21 (tab branches merged in, template, every guide); audit passed (domcompare: only walk, items and the Photonic Sun Mega pages differ). Not yet tested on the phone / Thor. Open: Mega pages lost their stone place ("Venusaurite: Battle Tree" is now "Mega Stone: Venusaurite."), as the spec allowed; the user to confirm. The worktree has its own git-ignored
   `hacks/photonic-sun/.src/` (copied from main's, without the 887 MB `romfs-dl/`).
 
-- **Trainer cards / reading room / page cleanup: decided 2026-10-21, not built.** Branch `worktree-trainer-cards`
-  (worktree `.claude/worktrees/trainer-cards`, local only, not pushed). Full build spec: `plans/trainer-cards.md`
-  (template for every guide + Photonic Sun walkthrough data). Mockup (Photonic Sun build with a layer over it):
-  `tools/mockup/trainer-cards/`, on the phone preview as `trainer-cards.html`. Next: an Opus build session.
+- **Trainer cards / reading room / page cleanup: built 2026-10-22, not tested on the phone / Thor yet.** Branch
+  `worktree-trainer-cards` (worktree `.claude/worktrees/trainer-cards`, not merged). Spec: `plans/trainer-cards.md`
+  (template for every guide + Photonic Sun walkthrough data); all of it is in. Phone preview:
+  `trainer-cards-build.html` (Photonic Sun in the Thor frame). Built beyond the spec: a Pokémon's name truncates
+  before its level does; `D.ARO` (optional Locations order) so Photonic Sun's new Hau'oli Outskirts area sits at the
+  end of AR and saved trackers keep their slots; TM01 ("Route 1 - Trainer School") files under the new Trainers'
+  School stop; the Trainers tab still lists Hiromi to Emily under Route 1 (Hau'oli Outskirts) (the spec only moved
+  them in the walkthrough). Checks: no page errors anywhere (domcompare EI / HG normal and kb, walkcheck, pagecheck,
+  all viewer sizes normal and dvkb); `ps-trainers/show-check.mjs` reads the new `n/N | cap` button; its "mixed setup"
+  step fails at 260 (a scripted tap lands after the page moves; the baseline build fails the same step at 538, and
+  real taps on a pinned place header work). Photonic Sun's `dex-rebalanced.json` in the main checkout's `.src/` is
+  older than the extract (no `sosBy`, so SOS allies vanish): regenerate it with SOURCES.md's `ctr_dex.py` line
+  before rebuilding there. Next: the user's test, then merge into `main`.
 
 ## What's left, in order
 

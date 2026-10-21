@@ -91,6 +91,11 @@ EXTRA_BEFORE = {'Starter': 'Route 1', 'Heahea City': 'Route 4', 'Heahea Beach': 
                 'Ultra Space Wilds': None, 'Any Pokémon Center': None}
 ISLANDS = {'Melemele Island', 'Akala Island', "Ula'ula Island", 'Poni Island'}
 GENERIC = {'route', 'routes', 'and', 'poni', 'city', 'town', 'island', 'the', 'of', 'mount'}  # too common to match on
+# Game tables that are an area of their own (the user, 2026-10-21): (area, section) -> new area. A new area goes at the
+# end of AR, so the saved tracker (keyed by area index) keeps its slots; D.ARO puts it in its place on the Locations page.
+SPLIT = {('Route 1', 'Hau’oli Outskirts'): "Hau'oli Outskirts"}
+# Locations order fixes: area -> the area it goes right after
+AFTER = {"Hau'oli Outskirts": 'Route 1', "Trainers' School": "Hau'oli Outskirts"}
 TITLE_FIX = {"Ula'Ula Meadow": "Ula'ula Meadow", 'Route 15/ 16': 'Routes 15 and 16', "Trainer's School": "Trainers' School"}
 ALIAS = {'Mount Lanakila': ' Victory Road'}  # game area name -> PDF titles its tables sit under
 
@@ -222,6 +227,7 @@ def build(D):
         if a not in areas:
             report('special encounter area not in the PDF, added at the end:', a)
             areas.append(a)
+    areas += [a for a in SPLIT.values() if a not in areas]
     A = {a: i for i, a in enumerate(areas)}
     W = defaultdict(list)  # pid -> w rows
 
@@ -303,6 +309,12 @@ def build(D):
     # The area's sections (AR[i].es) are what the Locations page shows; each Pokemon's rows (P.w) come from them, with
     # a 6th field 1 = "already in the area's sections" (the template lists only the other rows, gifts and trades, apart)
     LT = sections(LAB, A, pid_of, tabs)
+    for (a, sn), b in SPLIT.items():
+        ss = LT[A[a]]['s']
+        sec = next(x for x in ss if x['n'] == sn)
+        ss.remove(sec)
+        LT.setdefault(A[b], {'s': [], 'ws': []})['s'].append(sec | {'n': 'Grass'})
+        report('split from', a, ':', b)
     allies = defaultdict(lambda: defaultdict(lambda: [[], set()]))  # ally -> area -> [callers, levels]
     for a, d in LT.items():
         for s in d['s']:
@@ -335,6 +347,11 @@ def build(D):
     D['LOC'] = areas
     D['AR'] = [{'n': a, 'l': [i]} | ({'ns': 1} if a == 'Any Pokémon Center' else {}) for i, a in enumerate(areas)]
     D['AR'][A['Starter']]['st'] = 1  # the starter picker is this area's tracker
+    order = list(range(len(areas)))
+    for a, b in AFTER.items():
+        order.remove(A[a])
+        order.insert(order.index(A[b]) + 1, A[a])
+    D['ARO'] = order
     for a, d in LT.items():
         D['AR'][a]['es'] = d['s']
         if MAPS.get(areas[a]):

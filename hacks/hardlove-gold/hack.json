@@ -45,15 +45,10 @@
    "mvsrcx": "",
    "absrc": "Description from Showdown (Gen 9).",
    "ns": "Roamers appear on many routes, so they have no encounter slot here.",
-   "locs": "areas in game order (the locations sheet).",
-   "items": "From the Item Location sheet: held items, berries, heart scales, rare candies, TMs, HMs, tutors, evolution items, Mega Stones and other key items.",
    "walk": "Hardlove Gold has no written walkthrough. The order follows the trainer sheet's level-cap splits: each stop is a place with its trainers, items and encounters. Stops marked \"on the way\" are encounter areas placed where you pass them. Tap a trainer to open the team; the Trainers tab has them all by split.",
    "capl": "Level cap",
    "capw": "split cap",
    "capnone": "levels follow the cap of the split you are in",
-   "trh": "Sets are the game's own trainer data (0.8.3 source): species, levels, items, abilities, natures, moves and IVs. Where the Trainer Battles sheet says something else, the card shows \"Sheet says\". Order, places and notes come from the sheet. Speeds use the real IVs and nature and no EVs (Hardlove Gold removes them). Trick Room teams also show the speed at 0 IVs. \"cap−2\" levels follow the level cap.",
-   "trs": "Rival teams shown for your {s} starter (set in the Locations or Walkthrough tracker bar).",
-   "trs0": "Choose your starter in the Locations or Walkthrough tracker bar to hide the other rival teams.",
    "noev": "No EVs: Hardlove Gold removes them."
   }
  }
