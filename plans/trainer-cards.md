@@ -25,13 +25,23 @@ Options in the panel:
   while its card is open; place header on one line (name cut with …, count tag and cap tag dropped, cap stays in the cap
   line; `teams n/N` button smaller); Show row scrolls away instead of pinning.
 
-## Decided
-Nothing yet. Defaults in the mockup are my proposal: D, 28 px, one-line place header, card without repeated header,
-Show row pinned.
+## Decided (the user, 2026-10-21, after round 1)
+- **B (strip + one Pokémon at a time) is the narrow-window card** (below 430 px). Past it, boxed compact (A), **three
+  across at most** (was "as many as fit").
+- Preview rows: 24 px sprites. Card starts at the team (no repeated name / place / tags). IVs removed everywhere; EVs stay
+  where the game has them (the user may patch EVs out of Eternal X, Photonic Sun and minimal-grinding hacks later).
+- Show row stays pinned but shorter. **Search moves to a rail button, on top**; the other six icons get less height so
+  all seven (and the two jump buttons) show at 260 × 316. The search bar goes from the Trainers page (pinned stack
+  now: Show row + place header only).
+- Place header: one line, name truncated, and the button reads **`n/N | cap`** (open cards / trainers | level cap), no
+  words.
+
+## Round 2 mockup
+Same page. Open: the in-between size (430–500 px, e.g. the 480 × 392 first-open window): two Pokémon across, one row
+visible. Chip "B strip below 500 px" tries extending the strip to it. At 537 × 424 it is two across (the 150 px minimum
+doesn't fit three), 4 Pokémon visible; at 832 × 424 all six, three across.
 
 ## Open
-- Which card design (or a mix: C at narrow, D/A wide?).
-- Sprite size for the rows; whether the sprites should sit beside the name when there's room (rows then differ in
-  height) or always under it.
-- Pinned stack: one-line place header yes/no; Show row pinned or not.
-- Anything else the user wants on the cards (what facts matter most; what could go behind a tap).
+- The 430–500 window: strip, or boxed two across?
+- Whether 537 should be three across (needs ~140 px per Pokémon).
+- Does the rail search button open the same full-window search; remove the search box on other pages too?

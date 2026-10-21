@@ -6,7 +6,11 @@
   <button data-v="C">C One line each, tap for more</button>
   <button data-v="D">D Flat list</button>
  </div>
- <p class="hint">Same facts in every one (name, level, types, speed, ability, item, nature, moves, IVs / EVs, notes). A: the box kept, 30 px sprite, moves two across. B: six sprites in a strip, tap one to see it (narrow windows only; wide ones show all). C: name, level and speed on one line, tap for the rest, "Open all" above. D: no boxes, moves run on in a line.</p>
+ <div class="chips" data-g="sp" style="margin-top:6px">
+  <button data-v="430">B strip below 430 px wide</button>
+  <button data-v="500">B strip below 500 px (also the 480 first-open window)</button>
+ </div>
+ <p class="hint">IVs are gone everywhere here. Past the strip's width, Pokémon go three across at most. Same facts in every one (name, level, types, speed, ability, item, nature, moves, IVs / EVs, notes). A: the box kept, 30 px sprite, moves two across. B: six sprites in a strip, tap one to see it (narrow windows only; wide ones show all). C: name, level and speed on one line, tap for the rest, "Open all" above. D: no boxes, moves run on in a line.</p>
 </fieldset>
 <fieldset><legend>Preview rows (closed trainers)</legend>
  <div class="chips" data-g="pv">
@@ -44,7 +48,7 @@
 <script>
 (function(){const q=s=>document.querySelector(s);
  const cur=()=>{try{return JSON.parse(thorFrame().localStorage.getItem('mocktc')||'{}')}catch(e){return {}}};
- const DEF={cd:'D',pv:'28',hd:'slim',rp:'hide',sw:'pin'};
+ const DEF={cd:'B',pv:'24',hd:'slim',rp:'hide',sw:'pin',sp:'430'};
  const sync=()=>{const o=Object.assign({},DEF,cur());document.querySelectorAll('[data-g]').forEach(g=>g.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===o[g.dataset.g])));};
  document.addEventListener('click',e=>{const b=e.target.closest('[data-g] button');if(!b)return;thorFrame().setOption(b.parentNode.dataset.g,b.dataset.v);sync();});
  q('#dm').onclick=e=>{const b=e.target.closest('button');if(!b)return;const [g,s,w]=b.dataset.d.split(',');thorFrame().demo(+g,+s,w);};

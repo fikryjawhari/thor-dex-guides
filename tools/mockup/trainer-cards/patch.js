@@ -7,10 +7,16 @@
 //   sw  Show row (Places | Trainers | Teams): pinned (now) | scrolls away
 (function(){
  const R=document.documentElement,K='mocktc';
- const DEF={cd:'D',pv:'28',hd:'slim',rp:'hide',sw:'pin'};
+ const DEF={cd:'B',pv:'24',hd:'slim',rp:'hide',sw:'pin',sp:'430'};
  const O=Object.assign({},DEF);try{Object.assign(O,JSON.parse(localStorage.getItem(K)||'{}'))}catch(e){}
  const apply=()=>{for(const k in O)R.dataset[k]=O[k];R.style.setProperty('--ms',(O.pv==='now'?32:+O.pv)+'px');};
  apply();
+
+ // ---- search as the top button of the rail (opens the same full-window search as the search box)
+ const rail=document.getElementById('rail');
+ if(rail&&!document.getElementById('t-s')){const a=document.createElement('a');a.href='#';a.id='t-s';a.setAttribute('aria-label','Search');a.title='Search';
+  a.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11a7 7 0 1 0 14 0a7 7 0 1 0 -14 0 M16 16l4.5 4.5"/></svg>';
+  a.onclick=e=>{e.preventDefault();document.getElementById('q').click();};rail.insertBefore(a,rail.firstChild);}
  const _mc=monCard;
  // ---- Pokémon blocks. Same content as the template's monCard, laid out for each design.
  monCard=function(x,cap){
@@ -24,7 +30,7 @@
   const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');
   const abl=`${ab}${x.i?' · '+esc(x.i):''}${x.na?` · <span title="${esc(natLabel(x.na))}">${esc(x.na)}</span>`:''}`;
   const iv=x.iv.every(v=>v===31)?'':`IVs ${x.iv.join('/')}`;const ev=EVS&&x.ev?evTxt(x.ev):'';
-  const extra=[ev?`EVs ${ev}`:'',iv].filter(Boolean).join(' · ');
+  const extra=ev?`EVs ${ev}`:''; // IVs left out (the user, 2026-10-21)
   const nm=p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:esc(x.s||'?');
   const types=p?p.t.map(ty).join(''):'';
   const mv=x.m.map(i=>`<a href="#/m/${i}"><span class="dot" style="background:${tcol(M[i]==='Hidden Power'&&x.hp?x.hp:(MV[i]||{}).t)}"></span>${M[i]==='Hidden Power'&&x.hp?'HP '+esc(x.hp):esc(M[i])}</a>`).join('');
@@ -54,7 +60,9 @@
    ms[0].classList.add('sel');t.parentNode.insertBefore(bar,t);});
   if(O.cd==='C')document.querySelectorAll('.team:not([data-s])').forEach(t=>{t.dataset.s=1;if([...t.children].filter(m=>m.classList.contains('mC')).length<2)return;
    const b=document.createElement('button');b.type='button';b.className='tall';b.textContent='Open all';t.parentNode.insertBefore(b,t);});
-  if(O.hd==='slim')slim();};
+  if(O.hd==='slim'){slim();document.querySelectorAll('.stoph').forEach(s=>{const pt=s.querySelector('.pt'),c=s.querySelector('.capg');
+    if(!pt)return;const m=c&&c.textContent.match(/\d+/);if(m)pt.dataset.cap=m[0];else delete pt.dataset.cap;
+    if(/^teams /.test(pt.textContent))pt.textContent=pt.textContent.replace(/^teams /,'');});}};
  new MutationObserver(upgrade).observe(document.documentElement,{childList:true,subtree:true});
  document.addEventListener('click',e=>{
   const b=e.target.closest('.tpick button');

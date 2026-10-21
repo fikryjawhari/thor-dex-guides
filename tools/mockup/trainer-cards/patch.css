@@ -27,7 +27,7 @@ html:not([data-cd=now]) .card.trc{padding:6px 8px}
 html:not([data-cd=now]) .trc .trnote,html:not([data-cd=now]) .trc .capd{font-size:12px}
 
 /* ---- Pokémon blocks (A, B, C, D) */
-html:not([data-cd=now]) .team{grid-template-columns:repeat(auto-fill,minmax(min(160px,100%),1fr));gap:4px}
+html:not([data-cd=now]) .team{--mw:160px;--g:4px;grid-template-columns:repeat(auto-fill,minmax(min(100%,max(var(--mw),calc((100% - 2*var(--g))/3))),1fr));gap:var(--g)}
 .mon.m2{padding:4px 6px;font-size:12px;line-height:1.25;min-width:0;container-type:inline-size}
 .m2 .mh{display:flex;gap:6px;align-items:center}
 .m2 .mh .spr{width:30px;height:30px;flex:none}
@@ -43,7 +43,7 @@ html:not([data-cd=now]) .team{grid-template-columns:repeat(auto-fill,minmax(min(
 .m2 .mv a{white-space:normal;overflow:visible;line-height:1.2}
 .m2 .ex{margin-top:1px;font-size:11px}
 .m2 .dot{width:7px;height:7px;margin-right:3px}
-html[data-cd=D] .team{grid-template-columns:repeat(auto-fill,minmax(min(190px,100%),1fr));gap:0 12px}
+html[data-cd=D] .team{--mw:190px;--g:12px;gap:0 var(--g)}
 html[data-cd=D] .mon.m2{background:none;border-radius:0;padding:5px 0 6px;border-bottom:1px solid var(--line)}
 html[data-cd=D] .team>.mon:last-child{border-bottom:0}
 html[data-cd=D] .m2 .mv{display:block;margin-top:3px}
@@ -52,16 +52,24 @@ html[data-cd=D] .m2 .mv a{display:inline-block;white-space:nowrap;margin-right:9
 /* B: a strip of sprites, one Pokémon under it (narrow windows only) */
 .tpick{display:none}
 @media (max-width:429px){
- html[data-cd=B] .tpick{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;margin:0 0 4px}
- .tpick button{display:flex;flex-direction:column;align-items:center;gap:0;padding:2px 0 1px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;color:var(--mut);font:600 10px/1.1 system-ui,sans-serif;cursor:pointer;touch-action:manipulation;min-width:0}
- .tpick button .spr{width:min(28px,100%);height:auto;aspect-ratio:1;background-size:auto 100%}
- .tpick button.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc);color:var(--acc);background:var(--bg)}
- .team.tB>.mon:not(.sel){display:none}
- .team.tB{display:block}
+ html[data-cd=B][data-sp="430"] .tpick{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;margin:0 0 4px}
+ html[data-cd=B][data-sp="430"] .tpick button{display:flex;flex-direction:column;align-items:center;gap:0;padding:2px 0 1px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;color:var(--mut);font:600 10px/1.1 system-ui,sans-serif;cursor:pointer;touch-action:manipulation;min-width:0}
+ html[data-cd=B][data-sp="430"] .tpick button .spr{width:min(28px,100%);height:auto;aspect-ratio:1;background-size:auto 100%}
+ html[data-cd=B][data-sp="430"] .tpick button.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc);color:var(--acc);background:var(--bg)}
+ html[data-cd=B][data-sp="430"] .team.tB>.mon:not(.sel){display:none}
+ html[data-cd=B][data-sp="430"] .team.tB{display:block}
+}
+@media (max-width:499px){
+ html[data-cd=B][data-sp="500"] .tpick{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;margin:0 0 4px}
+ html[data-cd=B][data-sp="500"] .tpick button{display:flex;flex-direction:column;align-items:center;gap:0;padding:2px 0 1px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;color:var(--mut);font:600 10px/1.1 system-ui,sans-serif;cursor:pointer;touch-action:manipulation;min-width:0}
+ html[data-cd=B][data-sp="500"] .tpick button .spr{width:min(28px,100%);height:auto;aspect-ratio:1;background-size:auto 100%}
+ html[data-cd=B][data-sp="500"] .tpick button.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc);color:var(--acc);background:var(--bg)}
+ html[data-cd=B][data-sp="500"] .team.tB>.mon:not(.sel){display:none}
+ html[data-cd=B][data-sp="500"] .team.tB{display:block}
 }
 
 /* C: one line per Pokémon, tap for the rest */
-html[data-cd=C] .team{grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:3px}
+html[data-cd=C] .team{--mw:220px;--g:3px;gap:var(--g)}
 .mC{padding:3px 6px}
 .mC>summary{display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none;min-height:30px}
 .mC>summary::-webkit-details-marker{display:none}
@@ -83,3 +91,12 @@ html[data-hd=slim] .stoph .pn+.tag{display:none}
 html[data-hd=slim] .stoph .pt{padding:0 6px;min-height:24px;font-size:10.5px}
 html:not([data-pv=now]) .trd>summary{font-size:14px}
 .m2 .nw{white-space:nowrap}
+
+/* rail: search on top, seven icons in the height six had */
+#rail a{height:35px}
+body[data-v=trainers] header{display:none}
+/* Show row: less air above and below the words */
+.trsw{padding:1px 0}
+.trsw button{min-height:22px;font-size:12.5px}
+/* place header: "1/1 | 21" (open cards / trainers | level cap) */
+html[data-hd=slim] .pt[data-cap]::after{content:' | ' attr(data-cap)}
