@@ -13,6 +13,8 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
   people's saved trackers, checklists and positions.
 - The guide must work at the viewer sizes (PROGRESS.md → Viewer sizes), especially 260 × 316, in normal and `dvkb` mode.
   The full viewer contract is the `rom-hack-offline-dex` skill's `references/viewer-ui.md`.
+- No explanatory or provenance text at the top of pages (where the data came from, how search works, rules of the
+  tracker): the user doesn't want it, in any guide. Credits go in the footer.
 - Template changes are shared by every guide: after one, run `assemble.py` and check every guide, not just the one
   you were working on (`tools/domcompare.mjs` shows exactly what changed).
 
