@@ -111,11 +111,9 @@ the row above it, and six 32 px preview sprites wrapped 5 + 1.
 - **Active query**: the bar shows while a query is set on every page, Trainers included (header otherwise hidden), and
   clears with its x. Decided; no open question.
 - **`0 IV` speed extra is removed** (the full speed number is enough). No IV text anywhere.
-- **Search bar shrunk**: height `--sbh` 30 px (was 40), font `--sbf` 13 px (was 15), radius 6 px; the x button as tall as
-  the bar; the Pokémon page's two selects take the same height and font. The user tunes these with the mockup's sliders
-  (height 22-44, font 10-17): **use the values he reports back**; if none, 30 / 13.
-- **One gap everywhere, `--g` = the side padding** (6 px at the narrow sizes; the mockup uses 6 at every width, the
-  slider goes 2-12; confirm the wide-window value with the user, 6-8 suggested). It is: the page's side padding, the top
+- **Search bar shrunk** (final, from the user's slider test): height `--sbh` **26 px** (was 40), font `--sbf` **14 px** (was 15),
+  radius 6 px; the x button as tall as the bar; the Pokémon page's two selects take the same height and font.
+- **One gap everywhere, `--g` = the side padding** (final **4 px**, at every window width: wider windows do NOT get a larger gap). It is: the page's side padding, the top
   padding under the header, the vertical gap between every box on every page, and the header's own padding on all
   four sides (use a bottom `box-shadow` for the header line, not a border, so the bottom padding isn't 1 px bigger). Built as `#app`
   `display:flex;flex-direction:column;gap:var(--g);padding:var(--g)` with `#app>*{margin:0}` (the mockup's way; other
@@ -130,4 +128,4 @@ the row above it, and six 32 px preview sprites wrapped 5 + 1.
   own line, full width; then the Level caps expander. Where a hack has no starter pick (`PICK` false) nothing is added.
 
 ## Not decided / ask the user
-- The wide-window value of `--g` (see section 7) and the final search bar height / font from the sliders.
+Nothing open (search bar 26 / 14 px and gap 4 px are final).

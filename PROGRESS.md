@@ -41,6 +41,11 @@ the split is in that repo's git log.
   Walkthrough (`plans/ps-walk.md`: empty stops are grey signs) and Items (`plans/ps-items.md`: 7 boxes, Shops by kind, Held Items by class, Stats and Abilities, game order, box Expand / Collapse all) built 2026-10-21 (tab branches merged in, template, every guide); audit passed (domcompare: only walk, items and the Photonic Sun Mega pages differ). Not yet tested on the phone / Thor. Open: Mega pages lost their stone place ("Venusaurite: Battle Tree" is now "Mega Stone: Venusaurite."), as the spec allowed; the user to confirm. The worktree has its own git-ignored
   `hacks/photonic-sun/.src/` (copied from main's, without the 887 MB `romfs-dl/`).
 
+- **Trainer cards / reading room / page cleanup: decided 2026-10-21, not built.** Branch `worktree-trainer-cards`
+  (worktree `.claude/worktrees/trainer-cards`, local only, not pushed). Full build spec: `plans/trainer-cards.md`
+  (template for every guide + Photonic Sun walkthrough data). Mockup (Photonic Sun build with a layer over it):
+  `tools/mockup/trainer-cards/`, on the phone preview as `trainer-cards.html`. Next: an Opus build session.
+
 ## What's left, in order
 
 1. ~~**Go live.**~~ Done 2026-10-19. Pages builds from the Action (`.github/workflows/pages.yml`); `dist/` is never
