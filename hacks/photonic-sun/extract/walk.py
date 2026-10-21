@@ -4,7 +4,7 @@ Photonic Sun has no walkthrough of its own and follows Ultra Sun's story, so the
 Ultra Moon walkthrough: one split per part, one stop per place heading, with the trainers trainers.py placed there.
 Each encounter area joins the first stop with its name; areas with no stop of their own become "on the way" stops
 after the stop of the area before them (in the Locations order). Items are filed under the first stop named in their
-location text; the rest are listed in Guide info. Game docs are the hack's own change docs and changelog.
+location text (items.py's place list for rows with Found / Shop lines); the rest are listed in Guide info. Game docs are the hack's own change docs and changelog.
 """
 import os, re
 from common import SRC, TXT, norm, report
@@ -60,7 +60,7 @@ def build(D):
         if sec['n'] == 'Shops':
             continue
         for r in sec['r']:
-            locs = [re.sub(r'^Was .*?\. ', '', x.strip()) for x in r[1].split(';')]
+            locs = [re.sub(r'^Was .*?\. ', '', x.strip()) for x in D.get('_itp', {}).get(r[0], r[1]).split(';')]
             locs = [x for x in locs if x and not x.startswith('held by')]
             hit = None
             for loc in locs:

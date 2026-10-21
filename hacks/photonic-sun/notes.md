@@ -87,7 +87,14 @@ changed), 233 abilities, 72 encounter areas, 513 trainers (488 placed), 35 walkt
 - **Items** (items.py): Serebii's Ultra Sun item lists (the hack's zone scripts are vanilla, SOURCES.md), vanilla mart
   rows dropped except the Battle Tree's BP shop; shops from Vendor Changes.pdf (SHOPS, transcribed). TMs teach the
   hack's moves (TM59 Sucker Punch, TM60 Aura Sphere, TM67 Rock Climb, TM79 Freeze-Dry, TM100 Curse). Mega stones
-  link to their Mega through the game's Mega table and fill P.stone / P.sloc.
+  link to their Mega through the game's Mega table and fill P.stone only (no place: the stones are generated in).
+  Boxes (pass 2, `plans/ps-items.md`): Shops (a row per item under its kind, every shop on its own line), TMs,
+  Z-Crystals, Evolution Items, Held Items (sub-headings by class: HELD), Stats and Abilities (STATS), Key Items. No
+  Battle Items, Fossils (Poké Pelago only) or Mega Stones box. Each item is in one box (plus Shops); items in two
+  Serebii lists (King's Rock: hold and evolution) go to Evolution Items. Rows read Found / Wild / Also / Shop, one line
+  each, Found in game order; the walkthrough files them by `_itp` (the old '; ' place list). Game order (Key Items,
+  Stats and Abilities, TMs, Z-Crystals) = the walkthrough stop of the earliest place (`items.order`, after walk.py);
+  wild holders count where they live, the left clerk by trials; vanilla marts don't count. The rest A to Z.
 - **Walkthrough** (walk.py): one split per Bulbapedia part, one stop per place heading. Areas join the first stop with
   their name (ALIAS for Routes 15 and 16 and others); areas with no stop are "on the way" stops after the previous
   area's stop. Items file under the first stop named in their location (ITEM_ALIAS for rooms like Shady House); the

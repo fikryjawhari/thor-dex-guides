@@ -154,7 +154,7 @@ function listPokemon(){const typeF=st.f.filter(f=>f.k==='type').map(f=>f.v),abF=
  suggestions();}
 // ===== POKEMON PAGE
 function whereTable(p){let h='';
- if(p.g===1)h=p.nu?`<div class="mut">Mega form. ${p.stone?esc(p.stone)+' is':'Its stone is'} not obtainable in ${esc(CF.name)}; listed because trainers use it.</div>`:`<div class="mut">Mega form. ${p.stone?esc(p.stone)+': '+esc(p.sloc||''):CF.orbs&&(p.n.startsWith('Primal')||/Rayquaza/.test(p.n))?'Orb or move based (see Useful NPCs in Items).':'No stone location in the items sheet.'}</div>`;
+ if(p.g===1)h=p.nu?`<div class="mut">Mega form. ${p.stone?esc(p.stone)+' is':'Its stone is'} not obtainable in ${esc(CF.name)}; listed because trainers use it.</div>`:`<div class="mut">Mega form. ${p.stone?(p.sloc?esc(p.stone)+': '+esc(p.sloc):'Mega Stone: '+esc(p.stone)+'.'):CF.orbs&&(p.n.startsWith('Primal')||/Rayquaza/.test(p.n))?'Orb or move based (see Useful NPCs in Items).':'No stone location in the items sheet.'}</div>`;
  else if(p.fc){const b=P.find(x=>x.dex===p.dex&&!x.fc&&x.g!==1);h=`<div class="mut">Form change of ${b?plink(b.id):'its base form'} (held item, move or in battle), so it is available whenever ${b?esc(b.name):'the base form'} is.</div>`;}
  else if(p.g===3)h=`<div class="mut">${TX.g3}</div>`;
  else if(!p.w.length)h=`<div class="mut">No direct wild encounter. Obtained by evolving or breeding (see Evolution).</div>`;
@@ -395,12 +395,13 @@ function listItems(){fil.innerHTML='';sug.style.display='none';const s=st.q;cons
  app.innerHTML=`<div class="mut small" style="margin-bottom:6px">${TX.items}</div>`+segBar('it-all all')+IT.map((sec,si)=>`<details class="split jt" data-si="${si}" ${IO.o[si]?'open':''}><summary>${esc(sec.n)} <span class="mut small">${sec.r.length}</span></summary><div class="body"></div></details>`).join('');
  app.querySelectorAll('details.split[open]').forEach(d=>TOG.items(d));bars();}
 // Inside a box: its name again as a sticky heading, then the rows, under yellow sub-headings where the data gives them
-// (r[4]: EI shops, Hardlove's held item kinds). State in LS.items {o:{<box>:1 open}, x:{<box>:0 closed heading},
+// (r[4]: EI shops, Hardlove's held item kinds; two or more get an Expand / Collapse all bar). State in LS.items {o:{<box>:1 open}, x:{<box>:0 closed heading},
 // s:{<box>.<sub>:0 closed}}: boxes start closed, the rest open. Filled when first opened.
 const IO=(()=>{try{return Object.assign({o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.items)||'{}'))}catch(e){return {o:{},x:{},s:{}}}})();
 function itemBox(si){const sec=D.IT[si],tbl=rs=>`<table class="itbl ix">${rs.map(r=>itemRow(sec,r)).join('')}</table>`,subs=[];
  sec.r.forEach(r=>{const g=r[4]||'';if(!subs.length||subs[subs.length-1][0]!==g)subs.push([g,[]]);subs[subs.length-1][1].push(r);});
  return `<details class="stopd" data-k="${si}" ${IO.x[si]===0?'':'open'}><summary class="stoph">${esc(sec.n)}</summary><div class="stop">`+(sec.note?`<div class="mut small" style="margin:6px 0">${esc(sec.note)}</div>`:'')+
+  (subs.filter(([g])=>g).length>1?segBar('it-sp'):'')+
   subs.map(([g,rs])=>g?`<details class="sec" data-s="${esc(si+'.'+g)}" ${IO.s[si+'.'+g]===0?'':'open'}><summary><span class="sn">${esc(g)}</span><span class="mut small">${rs.length}</span></summary><div class="secb">${tbl(rs)}</div><button class="endbar sb" hidden>${UPI}<span>${esc(g)}</span></button></details>`:tbl(rs)).join('')+
   `<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(sec.n)}</span></button></div></details>`;}
 TOG.items=d=>{if(st.q)return;const iS=()=>{try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}};
@@ -524,7 +525,8 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;
   (s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+
   (ss.length?walkSec(k,'c',`<span class="tag${nd===ss.length?' got':''}">${nd}/${ss.length}</span>`,`<div class="chkb">${steps}</div>`):'')+
   (areas.length?walkSec(k,'e',areas.map(([ai])=>encSummary(ai)).join(''),enc):'')+
-  (its.length?walkSec(k,'i',`<span class="tag">${its.length}</span>${its.some(i=>/miss permanently/i.test(i[2]))?'<span class="tag miss">MISSABLE</span>':''}`,`<table class="itbl wt ix">${its.map(i=>`<tr><td>${i[3]!=null&&(i[0]==='TMs'||i[0]==='HMs'||i[0]==='Move Tutors')?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Mega Stones'&&i[3]?`<a href="#/p/${i[3]}">${esc(i[1])}</a>`:esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2])}${/miss permanently/i.test(i[2])?'<span class="warn">MISSABLE</span>':''}</td></tr>`).join('')}</table>`):'')+
+  (its.length?walkSec(k,'i',`<span class="tag">${its.length}</span>${its.some(i=>/miss permanently/i.test(i[2]))?'<span class="tag miss">MISSABLE</span>':''}`,`<table class="itbl wt ix">${its.map(i=>`<tr><td>${i[3]!=null&&(i[0]==='TMs'||i[0]==='HMs'||i[0]==='Move Tutors')?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Mega Stones'&&i[3]?`<a href="#/p/${i[3]}">${esc(i[1])}</a>`:esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2]).replace(/
+/g,'<br>')}${/miss permanently/i.test(i[2])?'<span class="warn">MISSABLE</span>':''}</td></tr>`).join('')}</table>`):'')+
   (ts.length?walkSec(k,'t',`<span class="tag">${ts.length}</span>`,walkTrainers(ts)):'');
  return h+`<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.n)}</span></button></div></details>`;}
 // What a walkthrough search matches: the stop's name, notes, steps, items, areas (and their Pokemon) and trainers.
@@ -558,7 +560,7 @@ app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
  if(document.body.dataset.v==='trainers'){const w=e.target.closest('.trsw button'),pt=e.target.closest('button.pt');
   if(w){trShow(w.closest('details.split'),+w.dataset.v);return;}if(pt){e.preventDefault();e.stopPropagation();trTeams(pt.closest('details.stopd'),pt);return;}}
  const b=e.target.closest('.seg button');
- if(b){const s=b.closest('.seg');if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):b.closest('.body').querySelectorAll(':scope>details'));return;}
+ if(b){const s=b.closest('.seg');if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.it-sp')?b.closest('.stop').querySelectorAll('details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
  const end=e.target.closest('.endbar,.trfold');if(end){foldUp(end.closest('details'));return;}
  if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;delete WO.x[k];WO.s[k+'.c']=1;woSave();render(true);
   const inp=app.querySelector(`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;const l=inp.closest('.wstep'),stop=l.closest('details.stopd'),sec=l.closest('details.sec');
