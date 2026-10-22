@@ -189,7 +189,7 @@ def kalos_items(tms):
         t = open(f, encoding='utf-8').read()
         for head, tpl in templates(t, ('{{itemlist|',)):
             pos, nm = args(tpl)
-            if nm.get('x', 'yes') == 'no':
+            if ('x' in nm or 'y' in nm) and nm.get('x') != 'yes':  # Y-only rows give only y=yes
                 continue
             desc = plain(pos[1]) if len(pos) > 1 else ''
             if desc.startswith('Randomly found by using') or head == 'Natural objects':

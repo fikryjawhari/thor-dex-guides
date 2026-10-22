@@ -5,9 +5,9 @@ their story order. Each doc title is one tracker area and one Locations page. It
 sections: Grass (walk encounters, flowers, Rough Terrain), Water (Surf and rods), Other (Rock Smash, hordes).
 A location with several zones is matched to the doc's sub-areas (1F, B2F, Outside...) by species.
 """
-import re
+import os, re
 
-from common import load, fix, norm, report, text
+from common import SRC, load, fix, norm, report, text
 
 GRASS = {'Grass', 'Yellow Flowers', 'Purple Flowers', 'Red Flowers', 'Rough Terrain'}
 WATER = {'Surf', 'Old Rod', 'Good Rod', 'Super Rod'}
@@ -17,8 +17,49 @@ PDF_TABLE = re.compile(r'^(Grass|Yellow Flowers|Purple Flowers|Red Flowers|Rough
 PDF_RATE = re.compile(r'([^,()]+?)\s*\((\d+)%\)')
 
 # Gifts and one-offs that the docs name (the game's tables don't have them). Level '' = not in the docs.
-STARTERS = ['Chespin', 'Fennekin', 'Froakie']  # Aquacorde Town, Lv 5 (Bulbapedia; the Changelog's Kanto starter isn't listed)
-SPECIALS = [('Route 2', 'One-time encounter', 'Torchic', '', 'Hidden Ability, holds Blazikenite (CFW only)')]
+STARTERS = ['Chespin', 'Fennekin', 'Froakie']  # Aquacorde Town, Lv 5 (Bulbapedia; DllField.cro agrees, holds a Big Nugget)
+# Gifts and fixed encounters in DllField.cro: (species, area, method, note); level and held item come from the cro.
+CRO_STATIC, CRO_GIFT = (0xEE46C, 0xC, 14), (0xF805C, 0x18, 19)  # vanilla X offsets, entry size, count (the hack keeps them)
+SPECIALS = [
+    ('Torchic', 'Route 2: Avance Trail', 'One-time encounter', 'Hidden Ability; replaces the Pidgey'),
+    ('Snorlax', 'Route 7: Rivière Walk', 'Static', 'Wake it with the Poké Flute'),
+    ('Xerneas', 'Team Flare Secret HQ', 'Static', ''),
+    ('Articuno', 'Azure Bay', 'Roaming', "After the League; flees and roams Kalos, then waits in the Sea Spirit's Den after 11 encounters. Starter: Chespin"),
+    ('Zapdos', 'Azure Bay', 'Roaming', "After the League; flees and roams Kalos, then waits in the Sea Spirit's Den after 11 encounters. Starter: Fennekin"),
+    ('Moltres', 'Azure Bay', 'Roaming', "After the League; flees and roams Kalos, then waits in the Sea Spirit's Den after 11 encounters. Starter: Froakie"),
+    ('Zygarde', 'Terminus Cave', 'Static', 'After the League'),
+    ('Mewtwo', 'Pokémon Village', 'Static', 'In the Unknown Dungeon, after the League'),
+    *[(k, 'Lumiose City', 'Gift', 'Choose one from Professor Sycamore') for k in ('Bulbasaur', 'Charmander', 'Squirtle')],
+    ('Lapras', 'Route 12: Fourrage Road', 'Gift', 'From a man on Route 12'),
+    ('Lucario', 'Shalour City', 'Gift', 'From Korrina after her Tower of Mastery battle'),
+    ('Omanyte', 'Ambrette Town', 'Gift (fossil)', 'Restore the Helix Fossil at the Fossil Lab'),
+    ('Kabuto', 'Ambrette Town', 'Gift (fossil)', 'Restore the Dome Fossil at the Fossil Lab'),
+    ('Aerodactyl', 'Ambrette Town', 'Gift (fossil)', 'Restore the Old Amber at the Fossil Lab'),
+    ('Lileep', 'Ambrette Town', 'Gift (fossil)', 'Restore the Root Fossil at the Fossil Lab'),
+    ('Anorith', 'Ambrette Town', 'Gift (fossil)', 'Restore the Claw Fossil at the Fossil Lab'),
+    ('Cranidos', 'Ambrette Town', 'Gift (fossil)', 'Restore the Skull Fossil at the Fossil Lab'),
+    ('Shieldon', 'Ambrette Town', 'Gift (fossil)', 'Restore the Armor Fossil at the Fossil Lab'),
+    ('Tirtouga', 'Ambrette Town', 'Gift (fossil)', 'Restore the Cover Fossil at the Fossil Lab'),
+    ('Archen', 'Ambrette Town', 'Gift (fossil)', 'Restore the Plume Fossil at the Fossil Lab'),
+    ('Tyrunt', 'Ambrette Town', 'Gift (fossil)', 'Restore the Jaw Fossil at the Fossil Lab'),
+    ('Amaura', 'Ambrette Town', 'Gift (fossil)', 'Restore the Sail Fossil at the Fossil Lab'),
+]
+
+
+def cro_specials():
+    """{species name: (level, held item)} from the hack's DllField.cro (fixed encounters, then gifts)."""
+    import struct
+    raw = open(os.path.join(SRC, 'cro', 'DllField-rebalanced.cro'), 'rb').read()
+    dexj = load('dex-rebalanced.json')
+    sname = {x['id']: fix(x['name']) for x in dexj['species'] if not x['form']}
+    iname = {x['id']: fix(x['name']) for x in dexj['items']}
+    out = {}
+    for (start, size, n), lv_at, item_at in ((CRO_STATIC, 3, 4), (CRO_GIFT, 5, 12)):
+        for k in range(n):
+            e = raw[start + k * size:start + (k + 1) * size]
+            sp, it = struct.unpack_from('<H', e, 0)[0], struct.unpack_from('<H', e, item_at)[0]
+            out.setdefault(sname.get(sp), (e[lv_at], iname.get(it) if it not in (0, 0xFFFF) else None))
+    return out
 
 
 def lvstr(lo, hi):
@@ -205,37 +246,33 @@ def build(D):
         LOC.append(fix(top['title']))
         AR.append({'n': fix(top['title']), 'l': [idx], 'es': secs})
 
-    for name, method, species, lv, note in SPECIALS:
-        pid = pid_of(species, 0)
-        area = next((i for i, a in enumerate(AR) if a['n'] == name or a['n'].startswith(name + ':')), None)
-        if pid is None or area is None:
-            report(f'locs: special {species} at {name} not placed')
-            continue
-        D['_byid'][pid]['w'].append([area, method, '', str(lv), note])
     for s in STARTERS:
         pid = pid_of(s, 0)
         if pid is None:
             report(f'locs: starter {s} not found')
             continue
-        D['_byid'][pid]['w'].append([0, 'Starter choice', '', '5', 'Choose one in Aquacorde Town'])
+        D['_byid'][pid]['w'].append([0, 'Starter choice', '', '5', 'Choose one in Aquacorde Town; holds a Big Nugget'])
 
-    # Gifts the docs only mention (Changelog: Kanto starter holds an Eviolite; Lapras and the Kanto starters have
-    # perfect IVs; fossils revive at Lv 25). Places and the other levels are vanilla X's (Bulbapedia).
-    names = [a['n'] for a in AR]
-    LOC.append('Lumiose City')
-    AR.append({'n': 'Lumiose City', 'l': [len(LOC) - 1]})
-    D['ARO'] = list(range(len(AR) - 1))
-    D['ARO'].insert(names.index('Route 5: Versant Road'), len(AR) - 1)  # Lumiose comes between Routes 4 and 5
-    for area, sp, lv, note in [
-        ('Lumiose City', 'Bulbasaur', 10, 'Choose one from Professor Sycamore; holds an Eviolite'),
-        ('Lumiose City', 'Charmander', 10, 'Choose one from Professor Sycamore; holds an Eviolite'),
-        ('Lumiose City', 'Squirtle', 10, 'Choose one from Professor Sycamore; holds an Eviolite'),
-        ('Route 12: Fourrage Road', 'Lapras', 25, 'From a man on Route 12'),
-        ('Ambrette Town', 'Tyrunt', 25, 'Restore the Jaw Fossil (chosen in Glittering Cave) at the Fossil Lab'),
-        ('Ambrette Town', 'Amaura', 25, 'Restore the Sail Fossil (chosen in Glittering Cave) at the Fossil Lab')]:
+    # Gifts and fixed encounters: species, levels and held items from the hack's DllField.cro (cro_specials()); the
+    # places are vanilla X's (Bulbapedia; the hack has no script edits).
+    def add_area(name, before):
+        LOC.append(name)
+        AR.append({'n': name, 'l': [len(LOC) - 1]})
+        aro.insert(aro.index([x['n'] for x in AR].index(before)), len(AR) - 1)
+    aro = list(range(len(AR)))
+    add_area('Lumiose City', 'Route 5: Versant Road')
+    add_area('Team Flare Secret HQ', 'Route 18: Vallée Étroite Way')
+    D['ARO'] = aro
+    cro = cro_specials()
+    for sp, area, method, note in SPECIALS:
+        if sp not in cro:
+            report('locs: special not in DllField.cro:', sp)
+            continue
+        lv, item = cro[sp]
         a = [x['n'] for x in AR].index(area)
-        D['_byid'][pid_of(sp, 0)]['w'].append([AR[a]['l'][0], 'Gift', '', str(lv), note])
-    report('locs: gifts from vanilla X places (Kanto starter, Lapras, Jaw/Sail fossils); other vanilla gifts not added')
+        note = '; '.join(x for x in (note, f'holds {item}' if item else '') if x)
+        D['_byid'][pid_of(sp, 0)]['w'].append([AR[a]['l'][0], method, '', str(lv), note])
+    report('locs: specials from DllField.cro', len(SPECIALS), '(Abomasnow Lv 45 in Frost Cavern is a battle, not a catch; Yveltal is Y only)')
 
     D['LOC'] = LOC
     D['AR'] = AR
