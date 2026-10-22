@@ -41,8 +41,7 @@ tailnet only, at `https://<pc>.<tailnet>.ts.net/preview/` (the index lists every
 
 One-time setup per PC (serve keeps running across reboots):
 1. Serve enabled on the tailnet (the first `tailscale serve` prints the admin-console link; it also turns on HTTPS).
-2. Serve it under `/preview` (T3 Code's remote access owns `/` since 2026-10-22; never `tailscale serve reset`, it
-   would cut T3 Code off). Permanent, from an admin terminal: `tailscale serve --bg --set-path /preview "<main
+2. Serve it under `/preview`. Permanent, from an admin terminal: `tailscale serve --bg --set-path /preview "<main
    checkout>\preview"`. Without admin (lasts until the server stops): `python -m http.server 8765 --bind 127.0.0.1
    --directory "<main checkout>/preview"` and `tailscale serve --bg --set-path /preview http://127.0.0.1:8765`
    (Git Bash: `MSYS_NO_PATHCONV=1`, or `/preview` becomes a Windows path). `tailscale serve status` shows both.
