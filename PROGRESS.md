@@ -63,6 +63,12 @@ the split is in that repo's git log.
   Serena / Calem) and the stage checklist: `plans/eternal-x.md`. The romfs stays in the main checkout's
   `hacks/eternal-x/.src/romfs-dl/`.
 
+- **Next, a separate session (the user, 2026-10-22): a consistency pass over every guide's template behaviour**, now
+  that the guides cover distinct setups: forced level caps (EI, Hardlove Gold), a different story structure (Photonic
+  Sun, which the user may also move to gym-style splits), and self-imposed caps (Eternal X). Known item: the Trainers
+  page's "Open all islands" button is Photonic Sun wording shown in every guide; make it "Open all splits" or go back
+  to Expand / Collapse all now that the Show bar exists.
+
 ## What's left, in order
 
 1. ~~**Go live.**~~ Done 2026-10-19. Pages builds from the Action (`.github/workflows/pages.yml`); `dist/` is never

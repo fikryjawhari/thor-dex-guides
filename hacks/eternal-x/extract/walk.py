@@ -21,8 +21,8 @@ ITEM_ALIAS = {'Anistar Gym': 'Anistar City', 'Coumarine Gym': 'Coumarine City', 
               'Vernal Avenue': 'Lumiose City', 'Poké Ball Factory': 'Laverre City', 'Battle Maison': 'Kiloude City',
               'Tower of Mastery': 'Shalour City', 'Kalos Power Plant': 'Route 13', 'Chamber of Emptiness': 'Route 22',
               'Unknown Dungeon': 'Pokémon Village', 'Berry fields': 'Route 7 (east)', 'Shabboneau Castle': 'Camphrier Town'}
-# Fixes to Bulbapedia's order: PLACE area -> (part, stop), NEW_STOP (part, stop, first trainer, new stop). None yet.
-PLACE = {}
+# Fixes to Bulbapedia's order: PLACE area -> (part, stop), NEW_STOP (part, stop, first trainer, new stop). 
+PLACE = {'Team Flare Secret HQ': (11, 'Geosenge Town')}  # Xerneas: the second Geosenge visit
 NEW_STOP = []
 # Item places that name a building inside a stop's place ("Route 1 - Trainer School"). None yet.
 ITEM_IN = {}
@@ -118,11 +118,17 @@ def build(D):
                 np.append(row)
     report('walkthrough Lumiose items moved:', ', '.join(f'part {p} stop {n}: {c}' for (p, n), c in sorted(moved.items())) or 'none',
            '; left in place', stayed)
-    splits = []
-    for p in sorted({s['part'] for s in out}):
-        ss = [s for s in out if s['part'] == p]
-        a, b = ss[0]['n'], ss[-1]['n']
-        splits.append({'n': f'{p}. {a}' + (f' – {b}' if b != a else ''), 'note': '', 'st': ss})
+    # Splits are the Trainers page's gym splits (D['_splits']: name, the key of the fight that ends it): stops in story
+    # order, cut after the stop holding that fight; the rest is the post-game.
+    splits, cur, ends = [], [], list(D['_splits'])
+    for st in out:
+        cur.append(st)
+        if ends and ends[0][1] in st.get('tr', []):
+            splits.append({'n': ends.pop(0)[0], 'note': '', 'st': cur})
+            cur = []
+    if ends:
+        report('walkthrough: split ends not found:', [e[0] for e in ends])
+    splits.append({'n': 'Post-game', 'note': '', 'st': cur})
     for s in out:
         s.pop('part')
     docs = []

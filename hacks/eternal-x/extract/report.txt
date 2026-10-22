@@ -46,14 +46,14 @@ trainers dropped as unused (no page lists them): 28
   unused trainer: 495 Driver Carter [('Krookodile', 86), ('Druddigon', 86)]
   unused trainer: 553 Team Flare Grunt [('Murkrow', 62), ('Lampent', 62)]
 level caps: Viola 16 · Sycamore 18 (mini) · Tierno 18 (mini, dropped) · Trevor & Tierno 25 (mini) · Grant 30 · Serena / Calem 36 (mini) · Korrina 37 · Serena / Calem 42 (mini) · Ramos 45 · Aliana 46 (mini) · Clemont 47 · Serena / Calem 49 (mini) · Valerie 52 · Bryony & Celosia 53 (mini) · Mable 60 (mini) · Serena / Calem 61 (mini) · Olympia 65 · Xerosic 66 (mini) · Lysandre 68 (mini) · Sycamore 70 (mini) · Trevor 72 (mini) · Wulfric 78 · Serena / Calem 78 (mini, dropped) · Elite Four 82
-trainer boxes: Vaniville Town to Santalune Gym 26, Lumiose City to Cyllage Gym 139, Route 10 to Shalour Gym 34, Route 12 to Coumarine Gym 34, Lumiose Gym 23, Route 14 to Laverre Gym 50, Dendemille Town to Anistar Gym 30, Lysandre Labs and Team Flare Secret HQ 33, Route 18 to Snowbelle Gym 30, Victory Road 41, Pokémon League 6, Post-game 234
+trainer boxes: Viola Split [Cap 16] 17, Grant Split [Cap 30] 148, Korrina Split [Cap 37] 33, Ramos Split [Cap 45] 24, Clemont Split [Cap 47] 34, Valerie Split [Cap 52] 17, Olympia Split [Cap 65] 63, Wulfric Split [Cap 78] 63, Elite Four Split [Cap 82] 46, Post-game 235
 COUNTS trainers shown 680 sections 63 battles 674 placeholders dropped 54 unmatched walkthrough entries 0 left over 28
 walkthrough rows for items no location page lists: Poké Radar, Venusaurite, Charizardite X, Blastoisinite, TM54 False Swipe, Wide Lens, Scope Lens, Zoom Lens, King's Rock
   wild-held items not in any box (berries, valuables, consumables): 20 Babiri Berry; Big Mushroom; Big Pearl; Chople Berry; Heart Scale; Honey; Leppa Berry; Lum Berry; Nugget; Oran Berry; Pearl; Pecha Berry; Persim Berry; Pretty Wing; Sacred Ash; Sitrus Berry; Star Piece; Stardust; Tanga Berry; Tiny Mushroom
   Mega stones with no place in any source: Mewtwonite Y
 items: Shops 145, TMs 100, Evolution Items 26, Held Items 136, Stats and Abilities 18, Fossils 11, Key Items 33
   doc says held by wild but P.hi lacks: Sun and Moon Stones/Solrock, Sun and Moon Stones/Lunatone
-walkthrough: on the way stops 3 : Lost Hotel, Terminus Cave, Team Flare Secret HQ
+walkthrough: on the way stops 2 : Lost Hotel, Terminus Cave
 walkthrough Lumiose items moved: part 8 stop Lumiose City: 5, part 11 stop Lumiose City: 3 ; left in place 9
-walkthrough: 17 splits 70 stops, 299 items placed, 25 not placed
+walkthrough: 10 splits 69 stops, 299 items placed, 25 not placed
 items: Shops 145, TMs 100, Evolution Items 26, Held Items 136, Stats and Abilities 18, Fossils 11, Key Items 33

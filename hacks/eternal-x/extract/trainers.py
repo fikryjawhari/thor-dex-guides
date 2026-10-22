@@ -600,6 +600,16 @@ def build(D):
     report('trainers dropped as unused (no page lists them):', len(left))
     for t in left:
         report('  unused trainer:', t['id'], t['class'], t['name'], [(m['species'], m['level']) for m in t['team']][:4])
+    # Boxes are gym splits (the user, 2026-10-22, as Hardlove Gold): the story's sections in order, cut after each Gym's
+    # section (a Leader in a "... Gym" section) and after the Champion's; what follows the Champion joins the post-game.
+    story = [sc for x in g[:-1] for sc in x['sec']]
+    boxes, cur = [], []
+    for sc in story:
+        cur.append(sc)
+        if any(t['n'].startswith('Leader ') for t in sc['tr']) and ' Gym' in sc['h'] or                 any(t['n'].startswith('Champion ') for t in sc['tr']):
+            boxes.append(cur)
+            cur = []
+    g = [{'n': '', 'cap': 0, 'tab': '', 'note': [], 'sec': b} for b in boxes] +         [dict(g[-1], sec=cur + g[-1]['sec'])]
     # Drop empty boxes and renumber the keys to match
     g = [x for x in g if any(s['tr'] or s['note'] for s in x['sec'])]
     remap = {}
@@ -611,6 +621,11 @@ def build(D):
     for st in allstops:
         st[2] = [remap[k] for k in keys.get((st[0], st[1]), [])]
     tc, tm = level_caps(g)
+    for x, (who, lv) in zip(g[:-1], tc):  # one main cap per split: its Gym Leader, then the Elite Four
+        x['n'] = x['tab'] = f"{who.split(' (')[0]} Split [Cap {lv}]"
+    # The key that ends each split (its Leader, the Champion) for walk.py's splits
+    D['_splits'] = [(x['n'], next(t['k'] for sc in reversed(x['sec']) for t in reversed(sc['tr'])
+                                  if t['n'].startswith(('Leader ', 'Champion ')))) for x in g[:-1]]
     D['TR'] = {'caps': tc, 'mini': tm, 'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
     D['_stops'] = allstops
     trs = [t for x in g for s in x['sec'] for t in s['tr']]

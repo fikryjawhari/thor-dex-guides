@@ -35,7 +35,7 @@ trainer cards, 7 item boxes, 17 walkthrough parts with 69 stops.
   not a catch. In-game trades aren't added.
 - **Trainers** (trainers.py): Bulbapedia's X / Y walkthrough matched on vanilla teams (class + name, species,
   levels); the hack's trainer with that id is used. 54 placeholders dropped. Rival / Shauna / Tierno / Trevor ids are
-  fixed (RIVAL, FRIEND). Boxes are CHAPTERS. Hand placements (guesses): Hotel Richissime (38), Battle Chatelaines,
+  fixed (RIVAL, FRIEND). Boxes are gym splits like Hardlove Gold's (the user, 2026-10-22): story sections cut after each Gym's section and the Champion's, named "<Leader> Split [Cap n]" from the main caps; what follows the Champion joins Post-game (CHAPTERS only sorts parts into story / post-game now). Hand placements (guesses): Hotel Richissime (38), Battle Chatelaines,
   4 by id neighbour, 156 nameless trainers (id 614+) as a Battle Maison pool in the post-game box (all post-game:
   levels near or above Diantha's 87, or Maison's fixed levels). 28 trainers no Bulbapedia page names (Drivers, a
   Gardener "●"...) are vanilla X's unused data and are dropped. No natures or EVs (cfg.evs false); IVs are the trainer byte / 8.
@@ -54,7 +54,7 @@ trainer cards, 7 item boxes, 17 walkthrough parts with 69 stops.
   Boxes: Shops, TMs, Evolution Items, Held Items (by class, Mega Stones a class), Stats and Abilities, Fossils, Key
   Items. Rows with only `y=yes` are Y-only and skipped. Items no location page places take the walkthrough pages'
   `{{itemlist}}` rows (the Kanto stones from Sycamore with your Kanto starter, TM54, the lenses...).
-- **Walkthrough** (walk.py): one split per Bulbapedia part, a stop per place heading; ALIAS Starter → Aquacorde
+- **Walkthrough** (walk.py): the Trainers page's gym splits (`D['_splits']`: cut after the stop holding the Leader / Champion fight), then Post-game; a stop per Bulbapedia place heading; PLACE puts Team Flare Secret HQ (Xerneas) at part 11's Geosenge Town; ALIAS Starter → Aquacorde
   Town; ITEM_ALIAS files gyms and buildings under their town; a Lumiose item goes to the earliest part whose Lumiose block
   lists it (8 move to parts 8 and 11), the rest stay at the first visit (part 3).
   Lost Hotel and Terminus Cave are "on the way" stops. Game docs: Evolution Changes, Move Changes, Changelog.
