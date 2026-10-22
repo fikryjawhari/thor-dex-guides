@@ -45,6 +45,7 @@ trainers dropped as unused (no page lists them): 28
   unused trainer: 494 Driver Cabot [('Krookodile', 70)]
   unused trainer: 495 Driver Carter [('Krookodile', 86), ('Druddigon', 86)]
   unused trainer: 553 Team Flare Grunt [('Murkrow', 62), ('Lampent', 62)]
+level caps: Viola 16 · Sycamore 18 (mini) · Tierno 18 (mini, dropped) · Trevor & Tierno 25 (mini) · Grant 30 · Serena / Calem 36 (mini) · Korrina 37 · Serena / Calem 42 (mini) · Ramos 45 · Aliana 46 (mini) · Clemont 47 · Serena / Calem 49 (mini) · Valerie 52 · Bryony & Celosia 53 (mini) · Mable 60 (mini) · Serena / Calem 61 (mini) · Olympia 65 · Xerosic 66 (mini) · Lysandre 68 (mini) · Sycamore 70 (mini) · Trevor 72 (mini) · Wulfric 78 · Serena / Calem 78 (mini, dropped) · Elite Four 82
 trainer boxes: Vaniville Town to Santalune Gym 26, Lumiose City to Cyllage Gym 139, Route 10 to Shalour Gym 34, Route 12 to Coumarine Gym 34, Lumiose Gym 23, Route 14 to Laverre Gym 50, Dendemille Town to Anistar Gym 30, Lysandre Labs and Team Flare Secret HQ 33, Route 18 to Snowbelle Gym 30, Victory Road 41, Pokémon League 6, Post-game 234
 COUNTS trainers shown 680 sections 63 battles 674 placeholders dropped 54 unmatched walkthrough entries 0 left over 28
 walkthrough rows for items no location page lists: Poké Radar, Venusaurite, Charizardite X, Blastoisinite, TM54 False Swipe, Wide Lens, Scope Lens, Zoom Lens, King's Rock

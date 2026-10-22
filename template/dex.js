@@ -648,7 +648,7 @@ let TOPEN={};try{TOPEN=JSON.parse(localStorage.getItem(LS.tr)||'{}')}catch(e){}
 // then the caps table behind a closed "Level caps".
 function trHead(){const r1=(EVS?`<label class="mgm"><input type="checkbox" id="mgm" ${MGM?'checked':''}> MGM</label>`:'')+(PICK?starterSel('tk-starter','Starter'):'')+playerSel('tk-player','Player');
  const rows=TRD.mini?TRD.mini.filter(c=>CSET?!c[4]:c[3]==='trial'):[];
- const sw=TRD.mini?`<div class="capsw" role="group" aria-label="Level caps"><button data-s="0" aria-pressed="${!CSET}">Trials</button><button data-s="1" aria-pressed="${!!CSET}">+ Mini caps</button></div>`:'';
+ const sw=TRD.mini?`<div class="capsw" role="group" aria-label="Level caps"><button data-s="0" aria-pressed="${!CSET}">${TX.capmain||'Trials'}</button><button data-s="1" aria-pressed="${!!CSET}">+ Mini caps</button></div>`:'';
  const tbl=TRD.mini?`<table class="itbl capt">${rows.map(c=>`<tr class="${c[3]}"><td>${esc(c[0])}<div class="mut small">${esc(c[1])}${c[3]==='mini'?' <span class="tag">mini</span>':''}</div></td><td class="n"><b>${c[2]}</b></td></tr>`).join('')}</table>`
   :TRD.caps.length?`<table class="itbl">${TRD.caps.map(c=>`<tr><td>${esc(c[0])}</td><td>${c[1]}</td></tr>`).join('')}</table>`:'';
  const h=(r1?`<div class="r1">${r1}</div>`:'')+sw+(tbl?`<details class="capsd" ${CAPSO?'open':''}><summary class="mut small">Level caps</summary>${tbl}</details>`:'');

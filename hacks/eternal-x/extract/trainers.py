@@ -232,6 +232,72 @@ def default_moves(p, lv):
             ms.append(mv)
     return ms[-4:]
 
+# Level caps, story order: (section head contains, trainer name contains, kind). 'trial' (the template's word for the
+# main set) = the Gym Leaders, then the Elite Four's highest level (not the Champion); 'mini' = rivals, friends,
+# Sycamore and Team Flare's bosses in between. Each matches the first such trainer after the previous cap.
+CAPS = [('Santalune Gym', 'Leader Viola', 'trial'), ('Lumiose City', 'Professor Sycamore', 'mini'),
+        ('Route 5', 'Tierno', 'mini'), ('Route 7', 'Trevor', 'mini'), ('Cyllage Gym', 'Leader Grant', 'trial'),
+        ('Tower of Mastery', 'Serena', 'mini'), ('Shalour Gym', 'Leader Korrina', 'trial'),
+        ('Coumarine City', 'Serena', 'mini'), ('Coumarine Gym', 'Leader Ramos', 'trial'),
+        ('Kalos Power Plant', 'Aliana', 'mini'), ('Lumiose Gym', 'Leader Clemont', 'trial'),
+        ('Route 14', 'Serena', 'mini'), ('Laverre Gym', 'Leader Valerie', 'trial'),
+        ('Poké Ball Factory', 'Celosia', 'mini'), ('Frost Cavern', 'Mable', 'mini'), ('Anistar City', 'Serena', 'mini'),
+        ('Anistar Gym', 'Leader Olympia', 'trial'), ('Lysandre Labs', 'Xerosic', 'mini'),
+        ('Team Flare Secret HQ', 'Boss Lysandre', 'mini'), ('Couriway Town', 'Professor Sycamore', 'mini'),
+        ('Route 19', 'Trevor', 'mini'), ('Snowbelle Gym', 'Leader Wulfric', 'trial'), ('Victory Road', 'Serena', 'mini'),
+        ('Pokémon League', 'Elite Four', 'trial')]
+
+
+def level_caps(g):
+    """Each story section gets cap [main, with mini caps], each [level, who, where, battles left] (the battles from the
+    section's start up to that fight, not counting it): one per battle (bt), one starter's and player's version of a
+    rival fight, no Battle Chateau or Viola nerf card. A mini cap is left out when it doesn't raise the cap, reaches
+    the next main cap, or has no trainers between it and the next main cap. Returns TR.caps and TR.mini."""
+    story = [s for x in g if x['n'] != 'Post-game' for s in x['sec']]
+    flat, start = [], []  # flat: [bt, [trainers], counted]
+    for s in story:
+        start.append(len(flat))
+        for t in s['tr']:
+            b = t.get('bt') or t['k']
+            if flat and flat[-1][0] == b:
+                flat[-1][1].append(t)
+                continue
+            skip = 'Battle Chateau' in s['h'] or 'Viola nerf patch' in t['tags'] or                 t.get('st', '') not in ('', STARTERS[0]) or t.get('pl', '') not in ('', 'm')
+            flat.append([b, [t], not skip])
+    sec_of = {id(t): i for i, s in enumerate(story) for t in s['tr']}
+    caps, pos = [], 0
+    for head, who, kind in CAPS:
+        i = next((i for i in range(pos, len(flat)) if flat[i][2] and any(who in t['n'] for t in flat[i][1])
+                  and head in story[sec_of[id(flat[i][1][0])]]['h']), None)
+        if i is None:
+            report('level cap not found:', head, who)
+            continue
+        ts = flat[i][1]
+        if who == 'Elite Four':  # the four are one cap: the highest of them, cut before the first
+            ts = [t for f in flat[i:] for t in f[1] if 'Elite Four' in t['n']]
+        lv = max(m['l'] for t in ts for m in t['p'])
+        short = lambda n: re.sub(r'^(Leader|Pokémon Trainer|Pokémon Professor|Team Flare( Boss)?) ', '', n)
+        name = 'Elite Four' if who == 'Elite Four' else ' & '.join(dict.fromkeys(short(t['n']) for t in ts))
+        name = name.replace('Serena', 'Serena / Calem')  # your rival: Calem if you play the girl
+        caps.append({'n': name, 'w': story[sec_of[id(ts[0])]]['h'].split(': ')[-1], 'l': lv, 'k': kind,
+                     'cut': i, 'sec': sec_of[id(ts[0])]})
+        pos = i + 1
+    for i, c in enumerate(caps):
+        if c['k'] == 'mini':
+            nt = next(d for d in caps[i:] if d['k'] == 'trial')
+            prev = max([d['l'] for d in caps[:i] if not d.get('drop')] or [0])
+            between = any(f[2] for f in flat[c['cut'] + 1:nt['cut']])
+            c['drop'] = int(c['l'] <= prev or c['l'] >= nt['l'] or not between)
+    for si, (s, i0) in enumerate(zip(story, start)):
+        def nxt(ks):
+            c = next((c for c in caps if c['k'] in ks and not c.get('drop') and c['cut'] >= i0), None)
+            return [c['l'], c['n'], c['w'], sum(f[2] for f in flat[i0:c['cut']])] if c else None
+        if nxt(('trial',)):
+            s['cap'] = [nxt(('trial',)), nxt(('trial', 'mini'))]
+    report('level caps:', ' · '.join(f"{c['n']} {c['l']}{'' if c['k'] == 'trial' else ' (mini' + (', dropped' if c.get('drop') else '') + ')'}" for c in caps))
+    return ([[f"{c['n']} ({c['w']})", c['l']] for c in caps if c['k'] == 'trial'],
+            [[c['n'], c['w'], c['l'], c['k'], c.get('drop', 0)] for c in caps])
+
 
 def build(D):
     V, Hk = prep(load('trainers-vanilla.json')), prep(load('trainers-rebalanced.json'))
@@ -544,7 +610,8 @@ def build(D):
                 t['k'] = remap[t['k']]
     for st in allstops:
         st[2] = [remap[k] for k in keys.get((st[0], st[1]), [])]
-    D['TR'] = {'caps': [], 'mini': [], 'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
+    tc, tm = level_caps(g)
+    D['TR'] = {'caps': tc, 'mini': tm, 'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
     D['_stops'] = allstops
     trs = [t for x in g for s in x['sec'] for t in s['tr']]
     report('trainer boxes:', ', '.join(f"{x['n']} {sum(len(s['tr']) for s in x['sec'])}" for x in g))

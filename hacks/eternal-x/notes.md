@@ -38,7 +38,12 @@ trainer cards, 7 item boxes, 17 walkthrough parts with 69 stops.
   fixed (RIVAL, FRIEND). Boxes are CHAPTERS. Hand placements (guesses): Hotel Richissime (38), Battle Chatelaines,
   4 by id neighbour, 156 nameless trainers (id 614+) as a Battle Maison pool in the post-game box (all post-game:
   levels near or above Diantha's 87, or Maison's fixed levels). 28 trainers no Bulbapedia page names (Drivers, a
-  Gardener "●"...) are vanilla X's unused data and are dropped. No natures or EVs (cfg.evs false); IVs are the trainer byte / 8. No level caps. Tags from the battle
+  Gardener "●"...) are vanilla X's unused data and are dropped. No natures or EVs (cfg.evs false); IVs are the trainer byte / 8.
+- **Level caps** (CAPS, `level_caps()` in trainers.py; the user's rule, 2026-10-22): main set ("Gyms", cfg.txt.capmain;
+  kind 'trial' in TR.mini) = the 8 Gym Leaders, then the Elite Four's highest level (82, not Diantha); mini caps =
+  rivals (Serena / Calem), Tierno and Trevor, Sycamore, Team Flare's admins and Lysandre. Dropped as in Photonic Sun
+  (doesn't raise the cap, reaches the next main cap, nothing in between): Tierno 18, Victory Road's rival 78. Battles
+  left count one per battle, one starter and player's rival version, no Battle Chateau, no Viola nerf card. Tags from the battle
   field (Double / Triple / Rotation, Multi Battle with a partner). Moves default to the last four level-up moves.
 - **Rivals, player picker**: `t.st` = starter name, `t.pl` = the player character the team appears for ("m" boy,
   you fight Serena; "f" girl, you fight Calem), on rival cards and partner entries (`pt`). Partners: Route 7,
