@@ -7,7 +7,7 @@ Bulbapedia: its X and Y walkthrough lists the trainers in story order under plac
 (trainers-vanilla.json, the same tool on vanilla X) by class + name, then species and levels; the hack edits trainers in
 place, so the hack's trainer with that id is the one you fight there. Trainers the walkthrough misses are placed from
 the Trainerentry lists of the location pages (Battle Chateau, Battle Maison, Hotel Richissime...), the rest go in
-"Other trainers". Placeholders (no name and a level 5 Rattata / Patrat...) are dropped.
+dropped as unused. Placeholders (no name and a level 5 Rattata / Patrat...) are dropped.
 
 Serena / Calem (the rival, by the player's character), Shauna, Tierno and Trevor are not matched by name: their ids are
 fixed by tools/ex_rivals.py (rival-teams-rebalanced.md), and their places by RIVAL / FRIEND below.
@@ -529,13 +529,11 @@ def build(D):
             k = f"{gi}.{len(g[gi]['sec']) - 1}.{len(sec['tr'])}"
             sec['tr'].append(trainer(e, t, k, ex))
             keys.setdefault((part, place), []).append(k)
+    # No Bulbapedia page (walkthrough or location) names these: vanilla X's unused trainer data (the Drivers, a
+    # Gardener named "●"...). Left out (2026-10-22, the user: no "Other trainers" box).
+    report('trainers dropped as unused (no page lists them):', len(left))
     for t in left:
-        report('  trainer with no place:', t['id'], t['class'], t['name'], [(m['species'], m['level']) for m in t['team']][:4])
-    if left:
-        g.append({'n': 'Other trainers', 'cap': 0, 'tab': 'Other', 'note': [], 'sec': [{'h': '', 'note': [], 'tr': []}]})
-        sec = g[-1]['sec'][0]
-        for t in left:
-            sec['tr'].append(trainer({'place': ''}, t, f"{len(g) - 1}.0.{len(sec['tr'])}", {}))
+        report('  unused trainer:', t['id'], t['class'], t['name'], [(m['species'], m['level']) for m in t['team']][:4])
     # Drop empty boxes and renumber the keys to match
     g = [x for x in g if any(s['tr'] or s['note'] for s in x['sec'])]
     remap = {}
