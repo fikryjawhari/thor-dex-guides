@@ -249,7 +249,7 @@ const FAM={};(()=>{const par={};const f=x=>{while(par[x]!==x){par[x]=par[par[x]]
  P.forEach(p=>[...p.ef,...p.et].forEach(([x,id])=>{if(id&&par[id]!==undefined){const a=f(p.id),b=f(id);if(a!==b)par[a]=b;}}));
  P.forEach(p=>{if((p.g===1||p.fc)&&p.dex){const b=P.find(x=>x.dex===p.dex&&x.g!==1&&!x.fc);if(b){const a=f(p.id),c=f(b.id);if(a!==c)par[a]=c;}}});
  P.forEach(p=>FAM[p.id]=f(p.id));})();
-const TK={s:'',e:{},t:{}};try{Object.assign(TK,JSON.parse(localStorage.getItem(LS.track)||'{}'));}catch(e){}
+const TK={s:'',pl:'',e:{},t:{}};try{Object.assign(TK,JSON.parse(localStorage.getItem(LS.track)||'{}'));}catch(e){}
 const tkSave=()=>{try{localStorage.setItem(LS.track,JSON.stringify(TK))}catch(e){}};
 const caughtFams=(skip)=>{const s=new Set();for(const v of Object.values(TK.t||{})){if(v)s.add(FAM[v]||v);}for(const [a,e] of Object.entries(TK.e)){if(e&&e.p&&+a!==skip)s.add(FAM[e.p]||e.p);}return s;};
 const areaSpecies=a=>{const seen=new Set(),out=[];(AR[a]?.l||[]).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]==='Trade')return;if(!seen.has(p.id)){seen.add(p.id);out.push(p);}}));return out;};
@@ -259,6 +259,12 @@ const ARS=a=>AR[a].sub||[a];
 AR.forEach((A,a)=>{const e=A.sub&&TK.e[a];if(!e)return;const t=A.sub.find(x=>e.p&&areaSpecies(x).some(p=>p.id===e.p))??A.sub[0];if(!TK.e[t])TK.e[t]=e;delete TK.e[a];tkSave();});
 // CF.starter 'pick': a starter picker in the tracker bar decides some gifts, trades and the rival's team ("Starter: X" in
 // notes, t.st on trainers). Otherwise the rival follows the type of the starter caught in tracker area 0.
+// Player picker (TK.pl 'm' boy / 'f' girl): shown when some trainer or partner has t.pl (Eternal X's rival is the
+// other character); its labels are CF.txt.plm / plf.
+const PLAYER=!!(D.TR&&D.TR.g.some(g=>g.sec.some(s=>s.tr.some(t=>t.pl||(t.pt||[]).some(p=>p.pl)))));
+const PLN={m:TX.plm||'Boy',f:TX.plf||'Girl'};
+const playerSel=(c,none='Not chosen')=>PLAYER?`<select class="${c}"><option value="">${none}</option>${['m','f'].map(v=>`<option value="${v}" ${TK.pl===v?'selected':''}>${esc(PLN[v])}</option>`).join('')}</select>`:'';
+const plOk=x=>!(x.pl&&TK.pl&&x.pl!==TK.pl);
 const STARTERS=PICK?[...new Set(P.flatMap(p=>p.w.filter(w=>w[1]==='Starter choice').map(()=>p.name)))]:[];
 const starterOk=txt=>{const m=String(txt||'').match(/Starter:\s*([A-Za-z ,]+?)\.?\s*$/);return !(m&&TK.s)||m[1].split(',').map(x=>x.trim()).includes(TK.s);};
 function tradeHTML(a){const g={};(AR[a]?.l||[]).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]!=='Trade'||!starterOk(w[4]))return;(g[w[4]]=g[w[4]]||[]).push(p);}));
@@ -280,11 +286,12 @@ function bindTrackers(){app.querySelectorAll('.trk').forEach(el=>{if(el.dataset.
    oth.querySelector('.tk-res').innerHTML=res.map(p=>`<div class="tk-opt" data-id="${p.id}">${spr(p.id,'s40')}<span>${esc(p.name)}</span></div>`).join('');oth.querySelectorAll('.tk-opt').forEach(o=>o.onclick=()=>{TK.e[a]={p:o.dataset.id};tkSave();rerender();});};return;}
   if(v==='')delete TK.e[a];else if(v==='__fail')TK.e[a]={f:1};else TK.e[a]={p:v};tkSave();rerender();};
  const x=el.querySelector('.tk-x');if(x)x.onclick=()=>{delete TK.e[a];tkSave();rerender();};});
- app.querySelectorAll('.tk-reset').forEach(b=>{if(b.dataset.b)return;b.dataset.b=1;b.onclick=()=>{if(confirm(PICK?'Clear every tracked encounter, trade and the starter choice?':'Clear every tracked encounter?')){TK.e={};TK.t={};TK.s='';tkSave();rerender();}};});
+ app.querySelectorAll('.tk-reset').forEach(b=>{if(b.dataset.b)return;b.dataset.b=1;b.onclick=()=>{if(confirm(PICK?'Clear every tracked encounter, trade and the starter choice?':'Clear every tracked encounter?')){TK.e={};TK.t={};TK.s='';TK.pl='';tkSave();rerender();}};});
  app.querySelectorAll('.tk-export').forEach(b=>b.onclick=()=>{prompt('Copy this backup code:',JSON.stringify(TK));});
  app.querySelectorAll('.tk-import').forEach(b=>b.onclick=()=>{const t=prompt('Paste a backup code:');if(!t)return;try{const o=JSON.parse(t);TK.s=o.s||'';TK.e=o.e||{};TK.t=o.t||{};tkSave();rerender();}catch(e){alert('That code could not be read.');}});
  app.querySelectorAll('.tk-trade').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.t=TK.t||{};if(s.value)TK.t[s.dataset.k]=s.value;else delete TK.t[s.dataset.k];tkSave();rerender();};});
- app.querySelectorAll('.tk-starter,.st-pick').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.s=s.value;const sa=AR.findIndex(A=>A.st),sp=P.find(x=>x.name===s.value);if(sa>=0){if(sp)TK.e[sa]={p:sp.id};else delete TK.e[sa];}tkSave();rerender();};});}
+ app.querySelectorAll('.tk-starter,.st-pick').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.s=s.value;const sa=AR.findIndex(A=>A.st),sp=P.find(x=>x.name===s.value);if(sa>=0){if(sp)TK.e[sa]={p:sp.id};else delete TK.e[sa];}tkSave();rerender();};});
+ app.querySelectorAll('.tk-player').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.pl=s.value;tkSave();rerender();};});}
 // Scroll anchor: the element nearest the top of the window, saved as a selector plus its offset, so a re-render can put it back.
 const ANCH='.list>a.row,details.split[data-a],details.split[data-wo],details.split[data-gi],details.split[data-si],details.stopd[data-k],.trk[data-a],details.trd';
 const anchorSel=e=>e.matches('a.row')?`a.row[href="${e.getAttribute('href')}"]`:e.matches('details.trd')?`details.trd[data-k="${e.dataset.k}"]`:
@@ -312,7 +319,7 @@ function rerender(){const a=keepAnchor(),z=cvSizes();render(true);cvApply(z);toA
 const starterSel=(c,none='Not chosen')=>`<select class="${c}"><option value="">${none}</option>${STARTERS.map(s=>`<option ${TK.s===s?'selected':''}>${esc(s)}</option>`).join('')}</select>`;
 function tkBar(){const n=Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length,f=Object.values(TK.e).filter(e=>e&&e.f).length;
  const cnt=`${n} caught · ${f} failed`;
- return `<div class="card tkbar">${PICK?`<div class="bar" style="margin:0"><span class="mut small">Starter</span>${starterSel('tk-starter')}</div>
+ return `<div class="card tkbar">${PICK?`<div class="bar" style="margin:0"><span class="mut small">Starter</span>${starterSel('tk-starter')}</div>${PLAYER?`<div class="bar" style="margin:6px 0 0"><span class="mut small">Player</span>${playerSel('tk-player')}</div>`:''}
  <div class="mut small" style="margin-top:6px">${cnt}</div>`:`<div class="bar" style="margin:0"><span class="mut small">${cnt}</span></div>`}
  <div class="bar" style="margin:8px 0 0"><button class="btn tk-export">Export</button><button class="btn tk-import">Import</button><button class="btn danger tk-reset">Reset all</button></div></div>`;}
 const encAll=a=>ARS(a).map(encSummary).join('');
@@ -513,7 +520,7 @@ function starterRow(){let sel='';
  if(PICK)sel=`<select class="tk-starter"><option value="">Not chosen (show all)</option>${STARTERS.map(s=>`<option ${TK.s===s?'selected':''}>${esc(s)}</option>`).join('')}</select>`;
  else if(CF.starter==='slot'&&AR[0]&&!AR[0].ns){const cur=(TK.e[0]||{}).p||'';const g=[];(AR[0].l).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]==='Starter choice'&&!g.includes(p))g.push(p);}));
   sel=`<select class="wk-starter"><option value="">Not chosen</option>${(g.length?g:areaSpecies(0)).map(p=>`<option value="${p.id}" ${cur===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;}
- return sel?`<div class="card strow"><span class="mut small">Starter</span>${sel}</div>`:'';}
+ return (sel?`<div class="card strow"><span class="mut small">Starter</span>${sel}</div>`:'')+(PLAYER?`<div class="card strow"><span class="mut small">Player</span>${playerSel('tk-player','Not chosen (show all)')}</div>`:'');}
 // Sections inside a stop, opened and closed from their yellow header; the header shows a summary.
 const SECN={c:'Checklist',e:'Encounters',i:'Items',t:'Trainers'};
 function walkSec(k,t,tags,body){const sk=k+'.'+t,v=WO.s[sk],open=v===undefined?t!=='c':!!v;
@@ -588,7 +595,7 @@ let TCAP={};try{TCAP=JSON.parse(localStorage.getItem(LS.cap)||'{}')}catch(e){}
 let MGM=false;try{MGM=EVS&&localStorage.getItem(LS.mgm)==='1'}catch(e){}
 const capOf=t=>+TCAP[t.k]||t.cap||(CF.capLast&&+TCAP._last)||0;
 const starterType=()=>{if(PICK)return TK.s;const e=TK.e&&TK.e[0];const p=e&&e.p&&byId[e.p];return p?(p.t.find(x=>['Grass','Fire','Water'].includes(x))||''):'';};
-const rivalHidden=t=>{const s=starterType();return !!(t.st&&s&&t.st!==s);};
+const rivalHidden=t=>{const s=starterType();return !!(t.st&&s&&t.st!==s)||!plOk(t);};
 const PRE={Burned:'BRN',Poisoned:'PSN',Frostbitten:'FRB',Burn:'BRN',Poison:'PSN',Frostbite:'FRB'};
 const evTxt=ev=>ev.map((v,i)=>v?v+' '+SN[i]:'').filter(Boolean).join(' / ');
 // A Pokemon's level: its own, or the trainer's cap plus its offset (r) for relative levels.
@@ -615,16 +622,16 @@ document.addEventListener('click',e=>{const b=e.target.closest('.tpick button');
 // A partner fighting at your side (t.pt [{n, st, p}], one team per starter where it depends on it): a closed drop-down
 // with the team. Only your starter's team when you've chosen one.
 const ptName=n=>n.replace(/^(Pokémon Trainer|Team Skull) /,'');
-const ptOf=t=>{const s=starterType();const ps=(t.pt||[]).filter(p=>!p.st||!s||p.st===s);return ps.length?ps:t.pt||[];};
+const ptOf=t=>{const s=starterType();const ps=(t.pt||[]).filter(p=>(!p.st||!s||p.st===s)&&plOk(p));return ps.length?ps:t.pt||[];};
 function partnerBlock(t){const ps=ptOf(t);if(!ps.length)return '';
  return `<details class="ptd"><summary><span class="ptk">Your partner</span> ${esc(ptName(ps[0].n))}${ps.length>1?` <span class="mut small">(${ps.length} teams, by starter)</span>`:''}<span class="trmini">${ps[0].p.map(x=>spr(x.id,'s24')).join('')}</span></summary>
- ${ps.map(p=>`${ps.length>1?`<div class="mut small" style="margin:4px 0 2px">If your starter is ${esc(p.st)}</div>`:''}${teamHTML(p.p,0)}`).join('')}</details>`;}
+ ${ps.map(p=>`${ps.length>1?`<div class="mut small" style="margin:4px 0 2px">${[p.st?'If your starter is '+esc(p.st):'',p.pl?'If you play '+esc(PLN[p.pl]):''].filter(Boolean).join(', ')}</div>`:''}${teamHTML(p.p,0)}`).join('')}</details>`;}
 // row: the card sits in a trainer row (Trainers page, walkthrough), so its bottom line starts with Collapse. inRow: in
 // a row whose partner block is shown once above its cards (bindTrd), and whose summary already gives the name, place
 // and tags: the card starts at its team (with the trainer's name as a small label where the row has several, multi).
 function trainerBlock(t,mini,row,inRow,multi){const rel=t.p.some(x=>x.l==null);const cap=capOf(t);const own=TCAP[t.k]!=null;
- return `<div class="card trc" id="tr-${t.k}">${inRow?(multi?`<div class="trn trn2">${esc(t.n)}</div>`:'')+(t.st?`<div class="trtg"><span class="tag">If your starter is ${esc(t.st)}</span></div>`:''):`<div class="trn">${mini?'':`<a href="#/tr/${t.k}">`}${esc(t.n)}${mini?'':'</a>'} <span class="mut small">${esc(t.loc)}</span></div>
- <div class="trtg">${t.st?`<span class="tag">If your starter is ${esc(t.st)}</span>`:''}${t.tags.map(z=>`<span class="tag">${esc(z)}</span>`).join('')}</div>`}
+ return `<div class="card trc" id="tr-${t.k}">${inRow?(multi?`<div class="trn trn2">${esc(t.n)}</div>`:'')+(t.st||t.pl?`<div class="trtg">${t.st?`<span class="tag">If your starter is ${esc(t.st)}</span>`:''}${t.pl?`<span class="tag">If you play ${esc(PLN[t.pl])}</span>`:''}</div>`:''):`<div class="trn">${mini?'':`<a href="#/tr/${t.k}">`}${esc(t.n)}${mini?'':'</a>'} <span class="mut small">${esc(t.loc)}</span></div>
+ <div class="trtg">${t.st?`<span class="tag">If your starter is ${esc(t.st)}</span>`:''}${t.pl?`<span class="tag">If you play ${esc(PLN[t.pl])}</span>`:''}${t.tags.map(z=>`<span class="tag">${esc(z)}</span>`).join('')}</div>`}
  ${(t.note||[]).length?`<div class="trnote">${t.note.map(esc).join('<br>')}</div>`:''}
  ${t.rw?`<div class="trnote"><b>Rewards:</b> ${t.rw.map(esc).join(', ')}</div>`:''}
  ${rel?`<details class="capd" data-k="${t.k}" ${CAPO.has(t.k)?'open':''}><summary>Level cap <b>${t.cap||'–'}</b>${own?` <span class="mut small">· yours</span> <b>${TCAP[t.k]}</b>`:!t.cap&&cap?` <span class="mut small">· using</span> <b>${cap}</b>`:''}</summary><div class="trk"><span class="mut small">Your level</span>${INV?numBox(`data-k="${t.k}"`,cap||'',{min:1,max:100,steppers:true,label:TX.capl}).replace('class="nv"','class="nv capin"'):`<input class="capin" type="number" inputmode="numeric" min="1" max="100" style="width:72px" data-k="${t.k}" value="${cap||''}">`}<span class="mut small">${own&&t.cap?`<a href="#" class="capreset" data-k="${t.k}">reset to cap ${t.cap}</a>`:t.cap?'':TX.capnone}</span></div></details>`:''}
@@ -639,7 +646,7 @@ function bindTrainers(root){(root||app).querySelectorAll('details.capd').forEach
 let TOPEN={};try{TOPEN=JSON.parse(localStorage.getItem(LS.tr)||'{}')}catch(e){}
 // Trainers header card: MGM and the starter pick on one line, the level-cap set switch (two sets: TR.mini) on its own,
 // then the caps table behind a closed "Level caps".
-function trHead(){const r1=(EVS?`<label class="mgm"><input type="checkbox" id="mgm" ${MGM?'checked':''}> MGM</label>`:'')+(PICK?starterSel('tk-starter','Starter'):'');
+function trHead(){const r1=(EVS?`<label class="mgm"><input type="checkbox" id="mgm" ${MGM?'checked':''}> MGM</label>`:'')+(PICK?starterSel('tk-starter','Starter'):'')+playerSel('tk-player','Player');
  const rows=TRD.mini?TRD.mini.filter(c=>CSET?!c[4]:c[3]==='trial'):[];
  const sw=TRD.mini?`<div class="capsw" role="group" aria-label="Level caps"><button data-s="0" aria-pressed="${!CSET}">Trials</button><button data-s="1" aria-pressed="${!!CSET}">+ Mini caps</button></div>`:'';
  const tbl=TRD.mini?`<table class="itbl capt">${rows.map(c=>`<tr class="${c[3]}"><td>${esc(c[0])}<div class="mut small">${esc(c[1])}${c[3]==='mini'?' <span class="tag">mini</span>':''}</div></td><td class="n"><b>${c[2]}</b></td></tr>`).join('')}</table>`
@@ -738,7 +745,7 @@ const trGroups=ts=>{const gs=[];ts.forEach(t=>{const l=gs[gs.length-1];if(l&&t.b
 function trRows(ts,open,loc){
  if(!ts.some(t=>t.bt))return ts.map(t=>`<details class="trd" data-k="${t.k}" ${open(t)?'open':''}><summary>${esc(t.n)} <span class="mut small">${[loc?t.loc:'',...t.tags.filter(z=>!/Optional/.test(z))].filter(Boolean).map(esc).join(' · ')}${t.tags.some(z=>/Optional/.test(z))?' · optional':''}</span><span class="trmini">${t.p.map(x=>spr(x.id,'s24')).join('')}</span></summary><div class="trb" data-k="${t.k}"></div></details>`).join('');
  const gs=trGroups(ts);
- const FMT=/^(Double|Multi) Battle$|^Battle Royal$/,MOON='Prismatic Moon';
+ const FMT=/^(Double|Multi|Triple|Rotation) Battle$|^Battle Royal$/,MOON='Prismatic Moon';
  const row=g=>{const t=g[0],f=t.tags.find(z=>FMT.test(z)),ps=ptOf(t);
   const nm=g.length>1?g.map(x=>esc(x.n.replace(/^(Pokémon Trainer|Team Skull Boss|Team Skull|Aether Foundation|Team Rainbow Rocket|Aether Branch Chief) /,''))).join(' + '):esc(t.n);
   const rest=[loc?t.loc:'',...t.tags.filter(z=>!FMT.test(z)&&z!==MOON)].filter(Boolean).map(esc).join(' · ');
