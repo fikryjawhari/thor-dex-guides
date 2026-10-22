@@ -47,6 +47,6 @@ for n in a.rm:
 if a.page:
     name = a.name or Path(a.page).name
     shutil.copyfile(a.page, out / name)
-    print(f'{host()}/{name}')
+    print(f'{host()}/preview/{name}')
 index()
-print(f'{host()}/  (all previews)')
+print(f'{host()}/preview/  (all previews)')
