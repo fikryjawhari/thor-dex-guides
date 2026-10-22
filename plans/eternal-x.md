@@ -23,12 +23,12 @@ worktree's `.src/` has everything else plus `txt/` (pdftotext copies).
    U+FFFD as é (Flabébé, Poké Ball).
 2. [x] **dex.py** (M, MV, AB, P, TC): 786 Pokémon and forms, 30 Megas, 23 form changes, 514 changed from X, 38 moves
    changed. Pumpkaboo's sizes have blank evolution rows in XY: the base form's apply.
-3. [ ] **locs.py** (LOC, AR, P.w): XY tables have methods and rates already (Grass, flowers, Rough Terrain, Surf,
+3. [ ] **locs.py** (2026-10-22: a Sonnet agent was stopped for usage before writing anything; restart it) (LOC, AR, P.w): XY tables have methods and rates already (Grass, flowers, Rough Terrain, Surf,
    Rock Smash, rods, Hordes); areas from `Wild Pokemon Locations.pdf` order; gifts, statics, trades from the docs.
-4. [ ] **trainers.py** (TR): Bulbapedia's X / Y walkthrough for places and story order, matched on vanilla teams
+4. [ ] **trainers.py** (2026-10-22: an unfinished, untested 257-line draft by a stopped agent is committed; review or redo it) (TR): Bulbapedia's X / Y walkthrough for places and story order, matched on vanilla teams
    (`trainers-vanilla.json`), hack teams by id. Rivals: t.st starter, plus the player tag for the picker. Viola nerf
    card. Gyms / Elite Four / Champion boxes; level caps if the docs give any.
-5. [ ] **items.py** (IT): `Item Changes _ Locations.pdf` + Bulbapedia / Serebii item lists for X.
+5. [ ] **items.py** (2026-10-22: stopped agent, nothing written) (IT): `Item Changes _ Locations.pdf` + Bulbapedia / Serebii item lists for X.
 6. [ ] **walk.py** (WK): one split per Bulbapedia walkthrough part; game docs (Changelog, Evolution / Move Changes).
 7. [ ] **Template: player picker** (mockup first, small).
 8. [ ] Sprites check (`tools/sprite_keys.py eternal-x`), `assemble.py`, viewer-size checks, domcompare of the other
