@@ -51,3 +51,6 @@ COUNTS trainers shown 708 sections 64 battles 702 placeholders dropped 54 unmatc
   rows with no place: TM54 False Swipe
 items: Shops 145, TMs 100, Evolution Items 26, Held Items 134, Stats and Abilities 18, Fossils 11, Key Items 33
   doc says held by wild but P.hi lacks: Sun and Moon Stones/Solrock, Sun and Moon Stones/Lunatone
+walkthrough: on the way stops 2 : Lost Hotel, Terminus Cave
+walkthrough: 17 splits 69 stops, 298 items placed, 24 not placed
+items: Shops 145, TMs 100, Evolution Items 26, Held Items 134, Stats and Abilities 18, Fossils 11, Key Items 33

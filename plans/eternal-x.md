@@ -29,7 +29,7 @@ worktree's `.src/` has everything else plus `txt/` (pdftotext copies).
    (`trainers-vanilla.json`), hack teams by id. Rivals: t.st starter, plus the player tag for the picker. Viola nerf
    card. Gyms / Elite Four / Champion boxes; level caps if the docs give any.
 5. [x] **items.py** (Sonnet agent, 140k tokens): 7 boxes (Shops 145, TMs 100, Evolution 26, Held 134 by class, Stats and Abilities 18, Fossils 11, Key 33); Mega stones in shops from five badges (doc). Open: Venusaurite / Charizardite X / Blastoisinite and TM54 have no place; `order()` untested until walk.py (IT): `Item Changes _ Locations.pdf` + Bulbapedia / Serebii item lists for X.
-6. [ ] **walk.py** (WK): one split per Bulbapedia walkthrough part; game docs (Changelog, Evolution / Move Changes).
+6. [x] **walk.py** (Haiku agent, 79k tokens): 17 splits, 69 stops, all 39 areas placed, 298 items on stops, 24 in Guide info. Caveat: Lumiose buildings all file under the first Lumiose stop (part 3). (WK): one split per Bulbapedia walkthrough part; game docs (Changelog, Evolution / Move Changes).
 7. [ ] **Template: player picker** (mockup first, small).
 8. [ ] Sprites check (`tools/sprite_keys.py eternal-x`), `assemble.py`, viewer-size checks, domcompare of the other
    guides if the template changed, phone preview in the Thor frame.
