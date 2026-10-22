@@ -10,3 +10,39 @@ locs: Frost Cavern: Horde B table of zone 317 repeats an earlier zone; skipped
 locs: Frost Cavern: Horde C table of zone 317 repeats an earlier zone; skipped
 locs: Whiscash form 1 not in the dex, using form 0 (cosmetic form)
 locs: gifts from vanilla X places (Kanto starter, Lapras, Jaw/Sail fossils); other vanilla gifts not added
+  partner Poké Ball Factory joins battles [276]
+  partner Team Flare Secret HQ joins battles [355, 356, 357]
+  partner Route 7 joins battles [135]
+  partner Glittering Cave joins battles [144]
+trainers: walkthrough 474 (rival and friend fights included); partner teams 24 ; location pages 3 ; of 731 real trainers; 54 placeholders dropped
+trainers no page lists: next to their id neighbours 4 ; Hotel Richissime 38 ; Battle Maison pool 156 ; left 28
+  trainer with no place: 51 Schoolboy Javier [("Farfetch'd", 10)]
+  trainer with no place: 54 Schoolgirl Emily [('Skitty', 8), ('Ralts', 8)]
+  trainer with no place: 62 Rising Star Nysa [('Bibarel', 12), ('Oddish', 10)]
+  trainer with no place: 73 Gardener ● [('Corphish', 10)]
+  trainer with no place: 74 Gardener Ashton [('Corphish', 10)]
+  trainer with no place: 75 Gardener Barclay [('Corphish', 10)]
+  trainer with no place: 94 Pokémon Breeder Boden [('Whismur', 14), ('Swirlix', 14)]
+  trainer with no place: 103 Swimmers Kai & Lani [('Luvdisc', 30), ('Gyarados', 30)]
+  trainer with no place: 173 Psychic Johannes [('Grumpig', 46)]
+  trainer with no place: 314 Team Flare Grunt [('Houndoom', 48)]
+  trainer with no place: 373 Psychic Ernest [('Alakazam', 46)]
+  trainer with no place: 374 Psychic Archibald [('Chimecho', 46)]
+  trainer with no place: 375 Psychic Andrew [('Medicham', 46)]
+  trainer with no place: 405 Veteran Guy [('Drapion', 53), ('Golurk', 54), ('Staraptor', 57)]
+  trainer with no place: 417 Hiker Mason [('Boldore', 42), ('Dugtrio', 42)]
+  trainer with no place: 418 Hiker Lorenzo [('Diggersby', 41), ('Onix', 43)]
+  trainer with no place: 485 Driver Coupe [('Krokorok', 43)]
+  trainer with no place: 486 Driver Clarence [('Krokorok', 43)]
+  trainer with no place: 487 Driver Hackney [('Krokorok', 43)]
+  trainer with no place: 488 Driver Hansom [('Krokorok', 43)]
+  trainer with no place: 489 Driver Wheeler [('Krokorok', 43)]
+  trainer with no place: 490 Driver Weaver [('Krookodile', 75)]
+  trainer with no place: 491 Driver Schaffer [('Krookodile', 75)]
+  trainer with no place: 492 Driver Wayne [('Krookodile', 75)]
+  trainer with no place: 493 Driver Cormick [('Krookodile', 75)]
+  trainer with no place: 494 Driver Cabot [('Krookodile', 70)]
+  trainer with no place: 495 Driver Carter [('Krookodile', 86), ('Druddigon', 86)]
+  trainer with no place: 553 Team Flare Grunt [('Murkrow', 62), ('Lampent', 62)]
+trainer boxes: Vaniville Town to Santalune Gym 26, Lumiose City to Cyllage Gym 139, Route 10 to Shalour Gym 34, Route 12 to Coumarine Gym 34, Lumiose Gym 23, Route 14 to Laverre Gym 50, Dendemille Town to Anistar Gym 30, Lysandre Labs and Team Flare Secret HQ 33, Route 18 to Snowbelle Gym 30, Victory Road 41, Pokémon League 6, Post-game 234, Other trainers 28
+COUNTS trainers shown 708 sections 64 battles 702 placeholders dropped 54 unmatched walkthrough entries 0 left over 28

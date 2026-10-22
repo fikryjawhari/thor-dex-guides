@@ -7,7 +7,7 @@
  "cfg": {
   "name": "Eternal X",
   "orig": "",
-  "evs": true,
+  "evs": false,
   "starter": "pick",
   "orbs": false,
   "g3trainer": false,

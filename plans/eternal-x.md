@@ -25,7 +25,7 @@ worktree's `.src/` has everything else plus `txt/` (pdftotext copies).
    changed. Pumpkaboo's sizes have blank evolution rows in XY: the base form's apply.
 3. [x] **locs.py** (Haiku agent, 150k tokens; gifts added by hand): 38 doc areas + Lumiose City (ARO), 79 sections, 270 tables, game wins over ~79 doc rate typos; open: other vanilla gifts and statics (Snorlax, legendaries) not added (LOC, AR, P.w): XY tables have methods and rates already (Grass, flowers, Rough Terrain, Surf,
    Rock Smash, rods, Hordes); areas from `Wild Pokemon Locations.pdf` order; gifts, statics, trades from the docs.
-4. [ ] **trainers.py** (2026-10-22: an unfinished, untested 257-line draft by a stopped agent is committed; review or redo it) (TR): Bulbapedia's X / Y walkthrough for places and story order, matched on vanilla teams
+4. [x] **trainers.py** (Sonnet agent, 166k tokens): 708 cards, 13 boxes, 64 sections; `st` + `pl` ("m" boy / "f" girl) on rivals and partners; Viola nerf card own `bt`; cfg.evs false. Open: 28 leftovers ("Other trainers"), Hotel Richissime and a 156-trainer nameless Battle Maison pool are guesses; template must filter `pl` and know Triple / Rotation tags (TR): Bulbapedia's X / Y walkthrough for places and story order, matched on vanilla teams
    (`trainers-vanilla.json`), hack teams by id. Rivals: t.st starter, plus the player tag for the picker. Viola nerf
    card. Gyms / Elite Four / Champion boxes; level caps if the docs give any.
 5. [ ] **items.py** (2026-10-22: stopped agent, nothing written) (IT): `Item Changes _ Locations.pdf` + Bulbapedia / Serebii item lists for X.

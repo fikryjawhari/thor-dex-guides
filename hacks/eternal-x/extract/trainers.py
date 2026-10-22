@@ -29,7 +29,7 @@ CHAPTERS = [((1, 2), 'Vaniville Town to Santalune Gym'), ((3, 4, 5), 'Lumiose Ci
 STARTERS = ('Chespin', 'Fennekin', 'Froakie')
 TY = ['Fighting', 'Flying', 'Poison', 'Ground', 'Rock', 'Bug', 'Ghost', 'Steel', 'Fire', 'Water', 'Grass', 'Electric',
       'Psychic', 'Ice', 'Dragon', 'Dark']
-RIVNAMES = {'Serena', 'Calem', 'Shauna', 'Tierno', 'Trevor'}
+RIVNAMES = {'shauna', 'tierno', 'trevor'}
 # Serena / Calem fights, in the order of the walkthrough's parts: (part, battle label in ex_rivals.py, partner?).
 # ex_rivals.py holds the ids: RIVAL below copies them (the tool's RIVAL / FRIENDS tables).
 RIVAL = {  # label -> (Calem ids, Serena ids) by starter (Chespin, Fennekin, Froakie)
@@ -47,6 +47,10 @@ PARTNER_AT = {'Route 7': ('Trevor', 4), 'Glittering Cave': (None, 5)}
 FRIEND = {('Shauna', 1): (137, 138, 139), ('Tierno', 3): (573,), ('Tierno', 4): (438,), ('Trevor', 4): (439,),
           ('Shauna', 12): (321, 322, 323), ('Tierno', 12): (324,), ('Trevor', 12): (325,)}
 VIOLA_NERF = 6
+POST = (17, 'post-game')  # where location-page trainers with post-game levels go
+LOCSTOP = {'teamflaresecrethq': (11, 'Geosenge Town')}  # location page -> walkthrough stop
+HOTEL = ((280, 298), (440, 458))  # Owner / Waitress / Garcon / Furisode Girl / Chef: Hotel Richissime (post-game)
+MAISON = 614  # nameless trainers from this id up: the Battle Maison's pool
 
 
 def split_top(s):
@@ -220,19 +224,31 @@ def prep(T):
     return T
 
 
+def default_moves(p, lv):
+    """The last four level-up moves at that level (the game's default when a set lists none)."""
+    ms = []
+    for l, mv in p['lv']:
+        if l <= lv and mv not in ms:
+            ms.append(mv)
+    return ms[-4:]
+
+
 def build(D):
     V, Hk = prep(load('trainers-vanilla.json')), prep(load('trainers-rebalanced.json'))
+    assert all(t['id'] == i for i, t in enumerate(Hk)) and all(t['id'] == i for i, t in enumerate(V))
     nerf = prep(load('trainers-rebalanced-viola-nerf.json'))[VIOLA_NERF]
     dexj = load('dex-rebalanced.json')
     spec, MI, ABI, byid = D['_spec'], D['_MI'], D['_ABI'], D['_byid']
+    hpi = D['M'].index('Hidden Power')
     megas = {}
     for s in dexj['species']:
         for m in s.get('mega', []):
             if m.get('item'):
                 megas[(s['id'], m['item'])] = spec[(s['id'], m['form'])]
     rival_ids = {i for a, b in RIVAL.values() for i in a + b} | {i for v in FRIEND.values() for i in v}
-    dummy = lambda t: not t['team'] or (not t['name'] and all(m['species'] in ('Rattata', 'Patrat') and m['level'] <= 10
-                                                              for m in t['team'])) or t['name'] in ('--',)
+    # Placeholders: no team, a nameless level <= 10 Rattata / Patrat team, or a level 5 Rattata team
+    dummy = lambda t: not t['team'] or t['name'] in ('--',) or all(m['species'] == 'Rattata' and m['level'] == 5
+                                                                    for m in t['team']) or         (not t['name'] and all(m['species'] in ('Rattata', 'Patrat') and m['level'] <= 10 for m in t['team']))
     byk, byn = defaultdict(list), defaultdict(list)
     for t in V:
         if not dummy(t) and t['id'] not in rival_ids:
@@ -253,5 +269,287 @@ def build(D):
                 return best
         return None
 
+    # --- the walkthrough's battles in order -> placed [(event, trainer id, extra fields)]
     evs = events()
-    return evs, V, Hk, match, used, byk
+    placed, partners, miss = [], [], 0   # partners: (battles joined, label, [(pl, st, id)])
+    is_riv = lambda e: e['name'] in ('calem', 'serena') and e['cls'] == 'pokemontrainer'
+    pairs = lambda lab: [(pl, stn, ids[k]) for k, stn in enumerate(STARTERS)
+                         for pl, ids in (('f', RIVAL[lab][0]), ('m', RIVAL[lab][1]))]
+    runs_in_part = defaultdict(int)
+    i = 0
+    while i < len(evs):
+        e = evs[i]
+        if is_riv(e):
+            j = i
+            while j < len(evs) and is_riv(evs[j]) and evs[j]['part'] == e['part']:
+                j += 1
+            run = evs[i:j]
+            lab = RIVAL_BY_PART[e['part']][runs_in_part[e['part']]]
+            runs_in_part[e['part']] += 1
+            ptn = lab.startswith('~')
+            lab = lab.lstrip('~')
+            if [x['name'] for x in run] != ['calem', 'serena'] * 3:
+                report('  rival run is not 3 x (Calem, Serena):', e['part'], lab, [x['name'] for x in run])
+            ents = pairs(lab)
+            if ptn:
+                partners.append((dict(part=e['part'], bt=e['bt'], after=True), lab, ents))
+            else:
+                for x, (pl, stn, tid) in zip(run, ents):
+                    placed.append((x, tid, dict(pl=pl, st=stn)))
+            i = j
+            continue
+        if e['name'] in RIVNAMES and e['cls'] == 'pokemontrainer':   # Shauna, Tierno, Trevor
+            ids = FRIEND.get((e['name'].capitalize(), e['part']))
+            if not ids:
+                report('  friend entry without ids:', e['part'], e['place'], e['name'])
+            else:
+                if e['name'] == 'shauna':
+                    ids = (ids[STARTERS.index(e['st'])],) if e['st'] in STARTERS else ids
+                placed.append((e, ids[0], dict(st=e['st'] if e['name'] == 'shauna' else '')))
+            i += 1
+            continue
+        t = match(e)
+        if t:
+            used.add(t['id'])
+            placed.append((e, t['id'], {}))
+        elif e['mons']:
+            miss += 1
+            report('  walkthrough trainer not matched:', e['part'], e['place'], e['key'], e['mons'][:3])
+        i += 1
+    # Partners the walkthrough names only in prose: Route 7 (with Trevor and Tierno), Glittering Cave (the last pair)
+    ev_of = lambda part, test: [e['bt'] for e in evs if e['part'] == part and test(e)]
+    for lab, bts in (('Route 7', ev_of(4, lambda e: e['name'] == 'trevor')),
+                     ('Glittering Cave', ev_of(5, lambda e: e['place'] == 'Glittering Cave' and e.get('with_')))):
+        partners.append((dict(bts=set(bts)), lab, pairs(lab)))
+        if not bts:
+            report('  partner battle not found:', lab)
+    # The '~' runs (Poke Ball Factory, Team Flare Secret HQ) join the pairs after them, before the part's next run
+    for pa, lab, ents in partners:
+        if pa.get('after'):
+            part, bt0 = pa['part'], pa['bt']
+            end = min([r['bt'] for r in evs if r['part'] == part and is_riv(r) and r['bt'] > bt0 + 5], default=10 ** 9)
+            cnt = defaultdict(int)
+            for r in evs:
+                if r['part'] == part and bt0 < r['bt'] < end and not is_riv(r):
+                    cnt[r['bt']] += 1
+            pa['bts'] = {b for b, n in cnt.items() if n >= 2}
+        report('  partner', lab, 'joins battles', sorted(pa['bts']))
+    tid_used = {tid for _, tid, _ in placed} | {tid for _, _, ents in partners for _, _, tid in ents}
+
+    # --- second pass: location pages (exact teams first)
+    extra, ents_ = [], location_entries()
+    exact = lambda e, t: score(e, t) == 3 * len(e['mons']) == 3 * len(t['team'])
+    for strict in (True, False):
+        for e in ents_:
+            if e.get('done'):
+                continue
+            t = match(e)
+            if t and not dummy(Hk[t['id']]) and (not strict or exact(e, t)):
+                used.add(t['id'])
+                extra.append((e, t['id']))
+                e['done'] = 1
+    extra.sort(key=lambda x: next(i for i, e in enumerate(ents_) if e is x[0]))
+    real = [t for t in Hk if not dummy(t)]
+    drop = [t for t in Hk if dummy(t)]
+    report('trainers: walkthrough', len(placed), '(rival and friend fights included); partner teams',
+           sum(len(x[2]) for x in partners), '; location pages', len(extra), '; of', len(real), 'real trainers;',
+           len(drop), 'placeholders dropped')
+
+    def mon(m):
+        sid_, form = m['speciesId'], m['form']
+        pid = spec.get((sid_, form))
+        if pid is None:
+            report('  no form', m['species'], form, '- using the base form')
+            pid = spec[(sid_, 0)]
+        base = byid[pid]
+        a0 = None
+        ab = None if ' or ' in m['ability'] else ABI.get(m['ability'])
+        if ab is None and ' or ' not in m['ability']:
+            report('  unknown ability', m['ability'], m['species'])
+        if m.get('item') and (sid_, m['item']) in megas:
+            pid = megas[(sid_, m['item'])]
+            a0 = ab
+        p = byid[pid]
+        mv = [MI[x] for x in m.get('moves', []) if x in MI] or default_moves(base, m['level'])
+        x = {'id': pid, 'l': m['level'], 'i': m.get('item') or '', 'm': mv, 'iv': [m['ivs']] * 6}
+        if a0 is not None:
+            x['a0'], x['a'] = a0, p['a'][0]
+        elif ab is None:
+            x['a'], x['ao'] = -1, m['ability'].replace(' or ', ' / ')
+        else:
+            x['a'] = ab
+        if hpi in mv:   # every IV equal: the type from the IVs' low bits
+            x['hp'] = TY[(sum((m['ivs'] & 1) << b for b in range(6)) * 15) // 63]
+        return x
+
+    pname = lambda t: f"{t['class']} {t['name']}".strip()
+
+    def trainer(e, t, k, ex):
+        tags, note = [], []
+        b = t['battle']
+        if b == 'Double':
+            tags.append('Multi Battle' if ex.get('pt') else 'Double Battle')
+        elif b in ('Triple', 'Rotation'):
+            tags.append(b + ' Battle')
+        if ex.get('tag'):
+            tags.append(ex['tag'])
+        if ex.get('note'):
+            note.append(ex['note'])
+        if t['items']:
+            note.append('Uses ' + ', '.join(t['items']))
+        x = {'k': k, 'n': pname(t), 'id': t['id'], 'loc': e['place'], 'tags': tags, 'st': ex.get('st', ''), 'cap': 0,
+             'note': note, 'p': [mon(m) for m in t['team']]}
+        if ex.get('pl'):
+            x['pl'] = ex['pl']
+        if ex.get('bt'):
+            x['bt'] = ex['bt']
+        if ex.get('pt'):
+            x['pt'] = ex['pt']
+        return x
+
+    # partners -> the battles they join (t.pt [{n, st, pl, p}])
+    ptfor = defaultdict(list)
+    for pa, lab, ents in partners:
+        for pl, stn, tid in ents:
+            for b in pa['bts']:
+                t = Hk[tid]
+                ptfor[b].append({'n': pname(t), 'st': stn, 'pl': pl, 'p': [mon(m) for m in t['team']]})
+    items = []   # (event, trainer, extra)
+    nbt = max(e['bt'] for e in evs) + 1000
+    for e, tid, ex in placed:
+        t = Hk[tid]
+        ex = dict(ex, bt=e['bt'], pt=ptfor.get(e['bt']))
+        items.append((e, t, ex))
+        if tid == VIOLA_NERF:   # the nerf patch: a second card for the same battle
+            items.append((e, dict(nerf, battle=t['battle']), dict(ex, bt=nbt, tag='Viola nerf patch',
+                          note='Viola nerf patch (Rebalanced version): only Viola changes.')))
+            nbt += 1
+    allstops = []
+    for n in range(1, NPARTS + 1):
+        s = open(PART.format(n), encoding='utf-8').read()
+        for m in re.finditer(r'^==([^=].*?)==\s*$', s, re.M):
+            pl = place_name(m.group(1).strip())
+            if not allstops or allstops[-1][:2] != [n, pl]:
+                allstops.append([n, pl, []])
+    order = {(st[0], st[1]): i for i, st in enumerate(allstops)}
+    chap = lambda part: next(i for i, (ps, _) in enumerate(CHAPTERS) if part in ps)
+    seq = []   # [part, place, sub, [(e, t, ex)]]
+    for e, t, ex in items:
+        if seq and seq[-1][:3] == [e['part'], e['place'], e['sub']]:
+            seq[-1][3].append((e, t, ex))
+        else:
+            seq.append([e['part'], e['place'], e['sub'], [(e, t, ex)]])
+    # location-page trainers join the first stop with their place's name; post-game levels go to the post-game box
+    story_lv = defaultdict(list)
+    for e, t, _ in items:
+        story_lv[chap(e['part'])].append(max([m['level'] for m in V[t['id']]['team']] or [0]))
+    med = {c: sorted(v)[len(v) // 2] for c, v in story_lv.items()}
+    loc_extra = defaultdict(list)
+    for e, tid in extra:
+        loc_extra[norm(e['place'])].append((e, tid))
+    pre = lambda a, b: a.startswith(b) and not (a[len(b):len(b) + 1].isdigit() and b[-1:].isdigit())
+    left = [t for t in real if t['id'] not in used and t['id'] not in tid_used]
+    for key, its in loc_extra.items():
+        hit = LOCSTOP.get(key)
+        hit = next((st for st in allstops if st[:2] == list(hit)), None) if hit else \
+            next((st for st in allstops if norm(st[1]) == key), None) or \
+            next((st for st in allstops if pre(norm(st[1]), key) or pre(key, norm(st[1]))), None)
+        if not hit:
+            report('  location page with no walkthrough stop, trainers go to Other:', key, len(its))
+            left += [Hk[tid] for _, tid in its]
+            continue
+        for e, tid in its:
+            top = max([m['level'] for m in V[tid]['team']] or [0])
+            if hit[0] < 16 and top >= med.get(chap(hit[0]), 100) + 15:
+                e.update(part=POST[0], place=hit[1], sub=POST[1])
+            else:
+                e.update(part=hit[0], place=hit[1], sub='')
+            q = next((q for q in seq if q[:3] == [e['part'], e['place'], e['sub']]), None)
+            if q is None:
+                q = [e['part'], e['place'], e['sub'], []]
+                seq.append(q)
+            q[3].append((e, Hk[tid], {}))
+    # Trainers no page lists. Nameless ones from id MAISON up are the Battle Maison's pool; the rest go next to the
+    # placed trainer with the closest lower id, when the one with the closest higher id is in the same place (the
+    # game numbers trainers by place), else they stay in "Other trainers".
+    anchors = {}
+    for q in seq:
+        for e, t, ex in q[3]:
+            if t['id'] not in rival_ids and 'tag' not in ex:
+                anchors.setdefault(t['id'], q)
+    aid = sorted(anchors)
+    maison, hotel, guessed, rest = [], [], 0, []
+    after = defaultdict(list)   # anchor id -> trainers placed after it
+    for t in sorted(left, key=lambda t: t['id']):
+        if not t['name'] and t['id'] >= MAISON:
+            maison.append(t)
+            continue
+        if t['class'] == 'Battle Chatelaine':   # the Battle Chateau's top rank
+            q = next((q for q in seq if q[:3] == [4, 'Route 7 (west)', 'Battle Chateau']), None)
+            if q:
+                q[3].append(({'place': q[1]}, t, {}))
+                continue
+        if any(a <= t['id'] <= b for a, b in HOTEL):
+            hotel.append(t)
+            continue
+        lo = max([a for a in aid if a < t['id']], default=None)
+        hi = min([a for a in aid if a > t['id']], default=None)
+        if lo is not None and hi is not None and anchors[lo][:2] == anchors[hi][:2]:
+            after[lo].append(t)
+            guessed += 1
+        else:
+            rest.append(t)
+    for q in seq:
+        out = []
+        for e, t, ex in q[3]:
+            out.append((e, t, ex))
+            for u in after.get(t['id'], []) if anchors.get(t['id']) is q and 'tag' not in ex else []:
+                out.append((dict(e, bt=0), u, {}))
+        q[3][:] = out
+    if hotel:
+        seq.append([16, 'Lumiose City', 'Hotel Richissime', [({'place': 'Lumiose City'}, t, {}) for t in hotel]])
+    if maison:
+        seq.append([POST[0], 'Battle Maison', '', [({'place': 'Battle Maison'}, t, {}) for t in maison]])
+    report('trainers no page lists: next to their id neighbours', guessed, '; Hotel Richissime', len(hotel), '; Battle Maison pool', len(maison),
+           '; left', len(rest))
+    left = rest
+    seq.sort(key=lambda q: (order.get((q[0], q[1]), 10 ** 6), q[2] == POST[1]))
+
+    g = [{'n': name, 'cap': 0, 'tab': name, 'note': [], 'sec': []} for _, name in CHAPTERS]
+    keys = {}
+    for part, place, sub, its in seq:
+        gi = chap(part)
+        h = f'{place}: {sub}' if sub else place
+        if g[gi]['sec'] and g[gi]['sec'][-1]['h'] == h:
+            sec = g[gi]['sec'][-1]
+        else:
+            sec = {'h': h, 'note': [], 'tr': []}
+            g[gi]['sec'].append(sec)
+        for e, t, ex in its:
+            k = f"{gi}.{len(g[gi]['sec']) - 1}.{len(sec['tr'])}"
+            sec['tr'].append(trainer(e, t, k, ex))
+            keys.setdefault((part, place), []).append(k)
+    for t in left:
+        report('  trainer with no place:', t['id'], t['class'], t['name'], [(m['species'], m['level']) for m in t['team']][:4])
+    if left:
+        g.append({'n': 'Other trainers', 'cap': 0, 'tab': 'Other', 'note': [], 'sec': [{'h': '', 'note': [], 'tr': []}]})
+        sec = g[-1]['sec'][0]
+        for t in left:
+            sec['tr'].append(trainer({'place': ''}, t, f"{len(g) - 1}.0.{len(sec['tr'])}", {}))
+    # Drop empty boxes and renumber the keys to match
+    g = [x for x in g if any(s['tr'] or s['note'] for s in x['sec'])]
+    remap = {}
+    for gi, x in enumerate(g):
+        for si, s in enumerate(x['sec']):
+            for ti, t in enumerate(s['tr']):
+                remap[t['k']] = f'{gi}.{si}.{ti}'
+                t['k'] = remap[t['k']]
+    for st in allstops:
+        st[2] = [remap[k] for k in keys.get((st[0], st[1]), [])]
+    D['TR'] = {'caps': [], 'mini': [], 'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
+    D['_stops'] = allstops
+    trs = [t for x in g for s in x['sec'] for t in s['tr']]
+    report('trainer boxes:', ', '.join(f"{x['n']} {sum(len(s['tr']) for s in x['sec'])}" for x in g))
+    report('COUNTS trainers shown', len(trs), 'sections', sum(len(x['sec']) for x in g),
+           'battles', len({t.get('bt') or t['k'] for t in trs}), 'placeholders dropped', len(drop),
+           'unmatched walkthrough entries', miss, 'left over', len(left))
