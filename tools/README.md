@@ -55,7 +55,7 @@ compare the hack's current version (its thread, Drive file names or changelog) w
 | --- | --- | --- | --- | --- |
 | Blaze Black 2 Redux | v1.4.1 | 2026-10-18 (docs), 2026-10-19 (RomHackDex) | – | Drayano's Drive (Documentation folder), RomHackDex |
 | Emerald Imperium | v1.3 / 1.3.1 | 2026-10-18 (guide built from the same sources) | 2026-10-02 | emeraldimperium.info Drive folder; eidex and Dynamic-Calc-Decomps repos |
-| Eternal X | v2.67 | 2026-10-18 (docs + romfs), dex extract 2026-10-19 | – | Buffel Saft's Drive, PokeCommunity thread |
+| Eternal X | v2.67 | 2026-10-18 (docs + romfs), dex extract 2026-10-19, regenerated + Bulbapedia 2026-10-22 | – | Buffel Saft's Drive, PokeCommunity thread |
 | Hardlove Gold | 0.8.3 (source `kumakuma1/hardlove` `f1b2363001`, trainer sets patched onto the 0.8.2 build; docs site `bb5862f` is older) | 2026-10-18 | 2026-10-19 | `kumakuma1/hardlove` branch `beta_hardlove` commits, the changelog, Drive sheets |
 | HeartGold Retiled | v6.12.1 | 2026-10-18, ability text 2026-10-19 | – | GitHub repo releases |
 | Meissa Moon | v2.2.2 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Author's Drive, PokeCommunity thread |

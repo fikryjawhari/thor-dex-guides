@@ -94,4 +94,18 @@ Dex checks (2026-10-19):
   Gen 6 slot rates are grass/flowers 10×9, 5, 4, 1; surf and Rock Smash 50, 30, 15, 4, 1; rods 60, 35, 5.
   The game has horde tables (A/B/C, picked 60/35/5) the PDF doesn't list.
 
+## Bulbapedia (trainer places, story order)
+
+Fetched 2026-10-22: 182 wikitext pages, the "Kalos locations" category (trainer and item lists per place) and the 17
+parts of the X / Y walkthrough (story order, trainers with vanilla teams).
+
+```bash
+python -I tools/bulba_pages.py hacks/eternal-x/.src/bulbapedia "cat:Kalos locations" "pre:Walkthrough:Pokémon X and Y"
+```
+
+Regenerated 2026-10-22 with the current tools (the commands above, plus the vanilla files for comparing):
+`dex-vanilla.json` (`ctr_dex.py x` on the vanilla dump alone) and `trainers-vanilla.json` (`xy_trainers.py` on it).
+The Viola nerf line needs the folder `"$G/Rebalanced version/Viola Nerf Files"` exactly: a wrong path silently falls
+back to the next romfs and gives plain Rebalanced (check: 4 trainers differ, Viola, Wulfric, Calem, Serena).
+
 Most docs are PDFs; text extraction is needed at build time (`pdftotext -layout` from Git Bash works). No walkthrough.

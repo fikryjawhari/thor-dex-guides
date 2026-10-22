@@ -9,11 +9,12 @@ revision time. Redirects are followed. Used for vanilla trainer places (Trainere
 import json, os, re, sys, time, urllib.parse, urllib.request
 
 API = 'https://bulbapedia.bulbagarden.net/w/api.php'
+UA = 'thor-dex-guides/1.0 (offline dex builder)'  # a browser UA gets 403 (2026-10-22)
 
 
 def call(**params):
     params['format'] = 'json'
-    req = urllib.request.Request(API + '?' + urllib.parse.urlencode(params), headers={'User-Agent': 'Mozilla/5.0'})
+    req = urllib.request.Request(API + '?' + urllib.parse.urlencode(params), headers={'User-Agent': UA})
     for attempt in range(4):
         try:
             return json.load(urllib.request.urlopen(req, timeout=60))
