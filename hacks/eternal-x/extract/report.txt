@@ -47,11 +47,12 @@ trainers dropped as unused (no page lists them): 28
   unused trainer: 553 Team Flare Grunt [('Murkrow', 62), ('Lampent', 62)]
 trainer boxes: Vaniville Town to Santalune Gym 26, Lumiose City to Cyllage Gym 139, Route 10 to Shalour Gym 34, Route 12 to Coumarine Gym 34, Lumiose Gym 23, Route 14 to Laverre Gym 50, Dendemille Town to Anistar Gym 30, Lysandre Labs and Team Flare Secret HQ 33, Route 18 to Snowbelle Gym 30, Victory Road 41, Pokémon League 6, Post-game 234
 COUNTS trainers shown 680 sections 63 battles 674 placeholders dropped 54 unmatched walkthrough entries 0 left over 28
+walkthrough rows for items no location page lists: Poké Radar, Venusaurite, Charizardite X, Blastoisinite, TM54 False Swipe, Wide Lens, Scope Lens, Zoom Lens, King's Rock
   wild-held items not in any box (berries, valuables, consumables): 20 Babiri Berry; Big Mushroom; Big Pearl; Chople Berry; Heart Scale; Honey; Leppa Berry; Lum Berry; Nugget; Oran Berry; Pearl; Pecha Berry; Persim Berry; Pretty Wing; Sacred Ash; Sitrus Berry; Star Piece; Stardust; Tanga Berry; Tiny Mushroom
-  Mega stones with no place in any source: Venusaurite, Charizardite X, Blastoisinite, Mewtwonite Y
-  rows with no place: TM54 False Swipe
-items: Shops 145, TMs 100, Evolution Items 26, Held Items 133, Stats and Abilities 18, Fossils 11, Key Items 33
+  Mega stones with no place in any source: Mewtwonite Y
+items: Shops 145, TMs 100, Evolution Items 26, Held Items 136, Stats and Abilities 18, Fossils 11, Key Items 33
   doc says held by wild but P.hi lacks: Sun and Moon Stones/Solrock, Sun and Moon Stones/Lunatone
 walkthrough: on the way stops 3 : Lost Hotel, Terminus Cave, Team Flare Secret HQ
-walkthrough: 17 splits 70 stops, 294 items placed, 27 not placed
-items: Shops 145, TMs 100, Evolution Items 26, Held Items 133, Stats and Abilities 18, Fossils 11, Key Items 33
+walkthrough Lumiose items moved: part 8 stop Lumiose City: 5, part 11 stop Lumiose City: 3 ; left in place 9
+walkthrough: 17 splits 70 stops, 299 items placed, 25 not placed
+items: Shops 145, TMs 100, Evolution Items 26, Held Items 136, Stats and Abilities 18, Fossils 11, Key Items 33

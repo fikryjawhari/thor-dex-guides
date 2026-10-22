@@ -34,7 +34,7 @@ worktree's `.src/` has everything else plus `txt/` (pdftotext copies).
 8. [x] Sprites: 786 of 786 from the shared set. Audit (Haiku, 2026-10-22): domcompare EI / HG / PS vs main 0
    differing routes, 0 page errors (PS also --kb); Eternal X 2,343 routes normal and kb, walkcheck, pagecheck: no
    page errors, every route 260 px wide at 260 × 316. Phone preview: `eternal-x-build.html` (Thor frame).
-9. [ ] **The user's review** on the phone / Thor, then fixes. Open items to raise: other vanilla gifts and statics
+9. [ ] **The user's review** (round 1 fixes done 2026-10-22: gifts / statics from DllField.cro, unused trainers dropped, Lumiose items by visit, Kanto stones and TM54 placed, Y-only item rows dropped) on the phone / Thor, then fixes. Open items to raise: other vanilla gifts and statics
    (Snorlax, legendaries) not added; 28 trainers in "Other trainers" and the guessed Hotel Richissime / Battle Maison
    pool; Lumiose buildings' items all under the first Lumiose stop; stones / TM54 with no place.
 

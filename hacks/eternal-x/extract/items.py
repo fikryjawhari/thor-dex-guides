@@ -204,6 +204,55 @@ def kalos_items(tms):
     return out
 
 
+WT_HEAD = re.compile(r'^==([^=][^\n]*?)==[ \t]*$', re.M)
+
+
+def ikey(name):
+    """An item's walkthrough key: TM / HM names are keyed by the number ("TM54 False Swipe" -> "TM54")."""
+    m = re.match(r'(?:TM|HM)\d+', name)
+    return m.group(0) if m else name
+
+
+def wt_name(a0, disp):
+    m = re.match(r'\{\{(TM|HM)\|(\d+)\|', disp, re.I)
+    if m:
+        return f'{m.group(1).upper()}{int(m.group(2)):02d}'
+    if re.match(r'\{\{DL\|', disp):
+        return None
+    m = re.match(r'\{\{i\|([^|}]+)', disp)
+    if m:
+        return m.group(1).strip()
+    n = re.sub(r' (VI|IV|XY)$', '', plain(a0))
+    return None if n in ('', 'None') or n in SKIP_NAMES else n
+
+
+def walk_rows():
+    """The walkthrough's {{itemlist}} rows (X rows only), in part order: dicts with part, block (the == heading the row
+    sits under), bi (how many blocks of that name the part had up to it), key (ikey), where, gift."""
+    out = []
+    for n in range(1, 18):
+        p = os.path.join(BULBA, f'Walkthrough-Pokémon X and Y-Part {n}.wiki')
+        if not os.path.exists(p):
+            continue
+        s = open(p, encoding='utf-8').read().replace('{{!}}', '¦')
+        pieces = WT_HEAD.split(s)
+        blocks = [('', pieces[0])] + [(pieces[i].strip(), pieces[i + 1]) for i in range(1, len(pieces) - 1, 2)]
+        seen = {}
+        for block, body in blocks:
+            seen[block] = seen.get(block, 0) + 1
+            for _, tpl in templates(body, ('{{itemlist|',)):
+                pos, nm = args(tpl)
+                if ('x' in nm or 'y' in nm) and nm.get('x') != 'yes':
+                    continue
+                name = wt_name(pos[0] if pos else '', nm.get('display', '')) if len(pos) > 1 else None
+                if not name:
+                    continue
+                where = plain(re.sub(r'\{\{[pa]\|([^{}|]*)\}\}', r'\1', pos[1]))
+                out.append({'part': n, 'block': block, 'bi': seen[block], 'key': ikey(name), 'where': where,
+                            'gift': bool(re.match(r'(From|Given|Gift|Reward|Received)\b', where))})
+    return out
+
+
 def kalos_shops(tms):
     """[{'place', 'lab', 'items'}] from the {{shop}} tables of the pages that have them (Pokemon X and Y rows only)."""
     out = []
@@ -340,6 +389,18 @@ def build(D):
     BY = OrderedDict()
     for n, pl, hid, gift, q in found:
         BY.setdefault(n, []).append({'loc': pl, 'hidden': hid, 'gift': gift, 'qty': q})
+    # Items no location page lists (Venusaurite, TM54...): their walkthrough rows, as "<stop> · <where>" so walk.py
+    # files them under the stop (From / Given rows go to Also, like the gift rows)
+    had, added = set(BY), []
+    for w in walk_rows():
+        name = f"{w['key']} {tms[w['key']]}" if w['key'] in tms else w['key']
+        if not w['block'] or name in had:
+            continue
+        if name in names or name in stone or w['key'] in tms:
+            BY.setdefault(name, []).append({'loc': f"{w['block']} · {w['where']}", 'hidden': False,
+                                            'gift': w['gift'], 'qty': 1})
+            added.append(name)
+    report('walkthrough rows for items no location page lists:', ', '.join(dict.fromkeys(added)) or 'none')
     wild = OrderedDict()
     for p in P:
         if p['g'] == 1:

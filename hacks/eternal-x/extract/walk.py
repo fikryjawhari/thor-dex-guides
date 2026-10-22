@@ -4,10 +4,11 @@ Eternal X follows Bulbapedia's Pokémon X and Y walkthrough: one split per part,
 trainers trainers.py placed there. Each encounter area joins the first stop with its name; areas with no stop of their
 own become "on the way" stops after the stop of the area before them (in the Locations order). Items are filed under the
 first stop named in their location text (items.py's place list for rows with Found / Shop lines); the rest are listed in
-Guide info. Game docs are the hack's own change docs and changelog.
+Guide info. An item filed under Lumiose City moves to the earliest part whose Lumiose City block lists it in its rows. Game docs are the hack's own change docs and changelog.
 """
 import os, re
 from common import SRC, TXT, norm, report
+from items import walk_rows, ikey
 
 ALIAS = {'Starter': ['Aquacorde Town']}
 # Item places that are gyms, buildings or rooms of a walkthrough stop (the "(gift)" tag is dropped before the lookup).
@@ -74,6 +75,18 @@ def build(D):
         for i in extra.get(j, []):
             out.append({'part': s['part'], 'n': AR[i]['n'], 'a': [i], 's': [], 'note': '', 'it': [], 'tr': [], 'x': 1})
     report('walkthrough: on the way stops', sum(len(v) for v in extra.values()), ':', ', '.join(AR[i]['n'] for v in extra.values() for i in v))
+    # Lumiose City is visited in several parts: an item filed there goes to the earliest part whose Lumiose City block
+    # lists it in the walkthrough's {{itemlist}} rows (that block's stop; parts with two blocks have two stops)
+    LUM = {}
+    for w in walk_rows():
+        if w['block'] == 'Lumiose City':
+            LUM.setdefault(w['key'], (w['part'], w['bi']))
+    lum_stop, cnt = {}, {}
+    for s in out:
+        if s['n'] == 'Lumiose City':
+            cnt[s['part']] = cnt.get(s['part'], 0) + 1
+            lum_stop[(s['part'], cnt[s['part']])] = s
+    moved, stayed = {}, 0
     # Items
     np = []
     for sec in D['IT']:
@@ -91,11 +104,20 @@ def build(D):
                 hit = next((s for s in out if same(loc, s['n'])), None)
                 if hit:
                     break
+            if hit and hit['n'] == 'Lumiose City' and ikey(r[0]) in LUM:
+                tgt = lum_stop.get(LUM[ikey(r[0])])
+                if tgt is not None and tgt is not hit:
+                    moved[(tgt['part'], tgt['n'])] = moved.get((tgt['part'], tgt['n']), 0) + 1
+                    hit = tgt
+                else:
+                    stayed += 1
             row = [sec['n'], r[0], r[1], r[2]]
             if hit:
                 hit['it'].append(row)
             else:
                 np.append(row)
+    report('walkthrough Lumiose items moved:', ', '.join(f'part {p} stop {n}: {c}' for (p, n), c in sorted(moved.items())) or 'none',
+           '; left in place', stayed)
     splits = []
     for p in sorted({s['part'] for s in out}):
         ss = [s for s in out if s['part'] == p]

@@ -25,15 +25,20 @@ trainer cards, 7 item boxes, 17 walkthrough parts with 69 stops.
   table are summed. Cosmetic forms the dex folds (Scatterbug, Munchlax, Misdreavus, Whiscash) use the base form.
   ~79 of 694 doc rates differ from the game (doc typos, missing hordes): the game wins. Route 17 is "Snow" in the doc,
   Rough Terrain in the game.
-- **Gifts**: Starter (area 0, starter picker; Lv 5, Aquacorde Town); Route 2 Torchic (Changelog: Hidden Ability,
-  Blazikenite, no level); vanilla X places for what the Changelog only mentions: Kanto starter (Lumiose City, Lv 10,
-  holds an Eviolite; Lumiose City is the last AR entry, ARO puts it between Routes 4 and 5), Lapras (Route 12, Lv 25),
-  Tyrunt / Amaura (Ambrette Town, Lv 25 per the Changelog). Other vanilla gifts and statics aren't added (open).
+- **Gifts and fixed encounters**: levels and held items from the hack's own `DllField.cro` (`.src/cro/`, from the
+  zip; vanilla's from the dump; `cro_specials()` in locs.py: statics 12-byte entries at 0xEE46C, gifts 24-byte at
+  0xF805C, level byte 3 / 5, item at 4 / 12). The hack changes: Kanto starters Lv 15 with Eviolite, Lapras Lv 35,
+  fossils Lv 25, Kalos starters hold a Big Nugget, Torchic (Blazikenite) replaces the Route 2 Pidgey, Xerneas 60,
+  birds 85, Zygarde and Mewtwo 90. Places are vanilla X's (Bulbapedia; no script edits): Lumiose City and Team
+  Flare Secret HQ are appended areas (ARO puts them in place); the roaming bird follows the starter (Chespin
+  Articuno, Fennekin Zapdos, Froakie Moltres; "Starter: X" in the note). Frost Cavern's Abomasnow (Lv 45) is a battle,
+  not a catch. In-game trades aren't added.
 - **Trainers** (trainers.py): Bulbapedia's X / Y walkthrough matched on vanilla teams (class + name, species,
   levels); the hack's trainer with that id is used. 54 placeholders dropped. Rival / Shauna / Tierno / Trevor ids are
   fixed (RIVAL, FRIEND). Boxes are CHAPTERS. Hand placements (guesses): Hotel Richissime (38), Battle Chatelaines,
-  4 by id neighbour, 156 nameless trainers (id 614+) as a Battle Maison pool in the post-game box; 28 left in "Other
-  trainers". No natures or EVs (cfg.evs false); IVs are the trainer byte / 8. No level caps. Tags from the battle
+  4 by id neighbour, 156 nameless trainers (id 614+) as a Battle Maison pool in the post-game box (all post-game:
+  levels near or above Diantha's 87, or Maison's fixed levels). 28 trainers no Bulbapedia page names (Drivers, a
+  Gardener "●"...) are vanilla X's unused data and are dropped. No natures or EVs (cfg.evs false); IVs are the trainer byte / 8. No level caps. Tags from the battle
   field (Double / Triple / Rotation, Multi Battle with a partner). Moves default to the last four level-up moves.
 - **Rivals, player picker**: `t.st` = starter name, `t.pl` = the player character the team appears for ("m" boy,
   you fight Serena; "f" girl, you fight Calem), on rival cards and partner entries (`pt`). Partners: Route 7,
@@ -42,9 +47,11 @@ trainer cards, 7 item boxes, 17 walkthrough parts with 69 stops.
 - **Items** (items.py): Bulbapedia's Kalos pages (`{{Itemlist}}` X rows, `{{shop}}` stocks) with the Item Changes doc
   applied (DOC_SWAPS, TM_WAS, Mega Stones in every Mart from five badges); TMs teach the hack's moves (code.ips).
   Boxes: Shops, TMs, Evolution Items, Held Items (by class, Mega Stones a class), Stats and Abilities, Fossils, Key
-  Items. Open: Venusaurite / Charizardite X / Blastoisinite and TM54 False Swipe have no place.
+  Items. Rows with only `y=yes` are Y-only and skipped. Items no location page places take the walkthrough pages'
+  `{{itemlist}}` rows (the Kanto stones from Sycamore with your Kanto starter, TM54, the lenses...).
 - **Walkthrough** (walk.py): one split per Bulbapedia part, a stop per place heading; ALIAS Starter → Aquacorde
-  Town; ITEM_ALIAS files gyms and buildings under their town (all Lumiose buildings go to the first Lumiose stop).
+  Town; ITEM_ALIAS files gyms and buildings under their town; a Lumiose item goes to the earliest part whose Lumiose block
+  lists it (8 move to parts 8 and 11), the rest stay at the first visit (part 3).
   Lost Hotel and Terminus Cave are "on the way" stops. Game docs: Evolution Changes, Move Changes, Changelog.
 
 ## Local storage (prefix ex)
