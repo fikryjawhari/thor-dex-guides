@@ -1,1 +1,12 @@
 species/forms 786 megas 30 form changes 23 changed from vanilla 514 moves changed 38
+locs: Scatterbug form 30 not in the dex, using form 0 (cosmetic form)
+locs: Munchlax form 2 not in the dex, using form 0 (cosmetic form)
+locs: Munchlax form 4 not in the dex, using form 0 (cosmetic form)
+locs: Misdreavus form 1 not in the dex, using form 0 (cosmetic form)
+locs: zone 317 (Frost Cavern) has no matching sub-area; merged into "3F & Ice Rock Room"
+locs: Frost Cavern: Grass table of zone 317 repeats an earlier zone; skipped
+locs: Frost Cavern: Horde A table of zone 317 repeats an earlier zone; skipped
+locs: Frost Cavern: Horde B table of zone 317 repeats an earlier zone; skipped
+locs: Frost Cavern: Horde C table of zone 317 repeats an earlier zone; skipped
+locs: Whiscash form 1 not in the dex, using form 0 (cosmetic form)
+locs: gifts from vanilla X places (Kanto starter, Lapras, Jaw/Sail fossils); other vanilla gifts not added

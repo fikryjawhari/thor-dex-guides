@@ -8,7 +8,7 @@ import datetime, json, os, subprocess, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import HACK, SRC, TXT, REPORT  # noqa: E402
-import dex  # noqa: E402
+import dex, locs  # noqa: E402
 
 LINES = ('M', 'MV', 'AB', 'P', 'LOC', 'AR')
 
@@ -33,6 +33,7 @@ def main():
     pdf_text()
     D = {}
     dex.build(D)
+    locs.build(D)
     D['built'] = datetime.date.today().isoformat()
     D['src'] = 'Eternal X 2.67 Rebalanced: game data (romfs + code.ips over Pokemon X v1.0), Buffel Saft\'s docs, Bulbapedia (trainer places, story order)'
     order = ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'built', 'src']
