@@ -31,5 +31,11 @@ worktree's `.src/` has everything else plus `txt/` (pdftotext copies).
 5. [x] **items.py** (Sonnet agent, 140k tokens): 7 boxes (Shops 145, TMs 100, Evolution 26, Held 134 by class, Stats and Abilities 18, Fossils 11, Key 33); Mega stones in shops from five badges (doc). Open: Venusaurite / Charizardite X / Blastoisinite and TM54 have no place; `order()` untested until walk.py (IT): `Item Changes _ Locations.pdf` + Bulbapedia / Serebii item lists for X.
 6. [x] **walk.py** (Haiku agent, 79k tokens): 17 splits, 69 stops, all 39 areas placed, 298 items on stops, 24 in Guide info. Caveat: Lumiose buildings all file under the first Lumiose stop (part 3). (WK): one split per Bulbapedia walkthrough part; game docs (Changelog, Evolution / Move Changes).
 7. [x] **Template: player picker** (built straight in, shown on the phone preview instead of a mockup): `PLAYER` when any trainer or partner has `pl`; TK.pl in the tracker state; a select in the tracker bar, the walkthrough starter row and the Trainers header (labels cfg.txt.plm / plf); rivalHidden and ptOf filter on it; "If you play X" tags; FMT knows Triple / Rotation Battle. pagecheck: no page errors.
-8. [ ] Sprites check (`tools/sprite_keys.py eternal-x`), `assemble.py`, viewer-size checks, domcompare of the other
-   guides if the template changed, phone preview in the Thor frame.
+8. [x] Sprites: 786 of 786 from the shared set. Audit (Haiku, 2026-10-22): domcompare EI / HG / PS vs main 0
+   differing routes, 0 page errors (PS also --kb); Eternal X 2,343 routes normal and kb, walkcheck, pagecheck: no
+   page errors, every route 260 px wide at 260 × 316. Phone preview: `eternal-x-build.html` (Thor frame).
+9. [ ] **The user's review** on the phone / Thor, then fixes. Open items to raise: other vanilla gifts and statics
+   (Snorlax, legendaries) not added; 28 trainers in "Other trainers" and the guessed Hotel Richissime / Battle Maison
+   pool; Lumiose buildings' items all under the first Lumiose stop; stones / TM54 with no place.
+
+Agent cost so far: locs Haiku 150k, trainers Sonnet 166k, items Sonnet 140k, walk Haiku 79k, audit Haiku 48k.

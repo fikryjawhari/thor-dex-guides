@@ -56,8 +56,10 @@ the split is in that repo's git log.
   older than the extract (no `sosBy`, so SOS allies vanish): regenerate it with SOURCES.md's `ctr_dex.py` line
   before rebuilding there.
 
-- **Eternal X guide: first build started 2026-10-22** on branch `worktree-eternal-x` (worktree
-  `.claude/worktrees/eternal-x`). Decisions (Rebalanced only, Viola nerf as a second card, a player picker for
+- **Eternal X guide: first build done 2026-10-22** on branch `worktree-eternal-x` (worktree
+  `.claude/worktrees/eternal-x`, not merged, not pushed); audit passed; awaiting the user's review on the phone
+  preview `eternal-x-build.html`. Template change for every guide: the player picker (`t.pl`). Notes:
+  `hacks/eternal-x/notes.md`. Decisions (Rebalanced only, Viola nerf as a second card, a player picker for
   Serena / Calem) and the stage checklist: `plans/eternal-x.md`. The romfs stays in the main checkout's
   `hacks/eternal-x/.src/romfs-dl/`.
 
