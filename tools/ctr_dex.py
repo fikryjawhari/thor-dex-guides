@@ -195,11 +195,12 @@ def main(game, out, *args):
     personal = arc("personal")
     levelup, egg, evo, mega = arc("levelup"), arc("egg"), arc("evo"), arc("mega")
     tms, tm_src = tm_list(g, code, ips)
-    n_species = len(species_names) - 1
+    # The last named species: XY's text has 78 blank lines after Volcanion, Navy Sapphire's 90 filler lines.
+    n_species = max(i for i, n in enumerate(species_names) if n)
 
     # Form names: line <species> names form 0; after the species lines (and one blank) come forms 1+ of every
     # species with more than one form, in dex order, cosmetic forms included (Unown's 27 "One form" lines).
-    form_names, form_line, nxt = T["forms"], {}, len(species_names) + 1
+    form_names, form_line, nxt = T["forms"], {}, n_species + 2
     for sp in range(1, n_species + 1):
         for f in range(1, personal[sp][0x20]):
             form_line[sp, f] = nxt

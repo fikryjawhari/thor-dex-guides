@@ -96,7 +96,8 @@ def mini(data):
     return ident, [data[offs[i]:offs[i + 1]] for i in range(count)]
 
 
-SPECIAL = {0xE08D: "…", 0xE08E: "♂", 0xE08F: "♀", 0xE07F: " ", 0x2019: "'"}
+# 0xFFFD: XY and USUM store é in names and descriptions as U+FFFD (the only accented letter English text uses).
+SPECIAL = {0xE08D: "…", 0xE08E: "♂", 0xE08F: "♀", 0xE07F: " ", 0x2019: "'", 0xFFFD: "é"}
 
 
 def text(data):

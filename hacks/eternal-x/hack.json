@@ -1,0 +1,56 @@
+{
+ "id": "eternal-x",
+ "title": "Eternal X Dex",
+ "game": "Eternal X",
+ "platform": "3DS",
+ "version": "2.67",
+ "cfg": {
+  "name": "Eternal X",
+  "orig": "",
+  "evs": true,
+  "starter": "pick",
+  "orbs": false,
+  "g3trainer": false,
+  "capLast": false,
+  "walkAreaNote": true,
+  "trw": [
+   "trainer",
+   "trainers",
+   "trainers"
+  ],
+  "ls": {
+   "dex": "exdex",
+   "calc": "excalc",
+   "track": "extrack",
+   "walk": "exwalk",
+   "cap": "excap",
+   "tr": "extr",
+   "recent": "exrecent",
+   "pos": "expos",
+   "mgm": "exmgm",
+   "loc": "exloc",
+   "items": "exitems",
+   "capset": "excapset"
+  },
+  "txt": {
+   "obt": "Obtainable only",
+   "nw": "Not found only",
+   "g3": "Not in the wild tables, the docs' gifts and statics or an evolution line, so probably not obtainable in Eternal X 2.67.",
+   "conf": "",
+   "van": "Vanilla Pokémon X (v1.0 game data) compared with the hack's game data (Rebalanced version).",
+   "tc": "Gen 6 type chart (the hack doesn't change it).",
+   "chdoc": "Move Changes doc",
+   "mvh": "Changes from X",
+   "nodc": "Not listed in the Move Changes doc.",
+   "mvsrc": "Type, category, power, accuracy, PP, priority and description from the hack's game data",
+   "mvsrcx": "",
+   "absrc": "Description from the game's text.",
+   "ns": "Not one place, so it has no encounter slot here.",
+   "walk": "",
+   "capl": "Your level",
+   "capw": "level cap",
+   "capnone": "",
+   "noev": ""
+  }
+ }
+}
