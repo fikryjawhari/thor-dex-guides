@@ -28,7 +28,7 @@ worktree's `.src/` has everything else plus `txt/` (pdftotext copies).
 4. [x] **trainers.py** (Sonnet agent, 166k tokens): 708 cards, 13 boxes, 64 sections; `st` + `pl` ("m" boy / "f" girl) on rivals and partners; Viola nerf card own `bt`; cfg.evs false. Open: 28 leftovers ("Other trainers"), Hotel Richissime and a 156-trainer nameless Battle Maison pool are guesses; template must filter `pl` and know Triple / Rotation tags (TR): Bulbapedia's X / Y walkthrough for places and story order, matched on vanilla teams
    (`trainers-vanilla.json`), hack teams by id. Rivals: t.st starter, plus the player tag for the picker. Viola nerf
    card. Gyms / Elite Four / Champion boxes; level caps if the docs give any.
-5. [ ] **items.py** (2026-10-22: stopped agent, nothing written) (IT): `Item Changes _ Locations.pdf` + Bulbapedia / Serebii item lists for X.
+5. [x] **items.py** (Sonnet agent, 140k tokens): 7 boxes (Shops 145, TMs 100, Evolution 26, Held 134 by class, Stats and Abilities 18, Fossils 11, Key 33); Mega stones in shops from five badges (doc). Open: Venusaurite / Charizardite X / Blastoisinite and TM54 have no place; `order()` untested until walk.py (IT): `Item Changes _ Locations.pdf` + Bulbapedia / Serebii item lists for X.
 6. [ ] **walk.py** (WK): one split per Bulbapedia walkthrough part; game docs (Changelog, Evolution / Move Changes).
 7. [ ] **Template: player picker** (mockup first, small).
 8. [ ] Sprites check (`tools/sprite_keys.py eternal-x`), `assemble.py`, viewer-size checks, domcompare of the other
