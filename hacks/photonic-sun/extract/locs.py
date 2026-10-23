@@ -206,6 +206,8 @@ def pdf_maps():
 def build(D):
     P, spec, byid = D['P'], D['_spec'], D['_byid']
     H = load('dex-rebalanced.json')
+    if any('sosBy' not in table for area in H['encounters'] for table in area['tables']):
+        raise ValueError('dex-rebalanced.json lacks SOS-by-caller data; regenerate with tools/ctr_dex.py per SOURCES.md before pruning species')
     sid = {s['name']: s['id'] for s in H['species'] if not s['form']}
     tabs, titles = pdf_tables()
     MAPS = pdf_maps()

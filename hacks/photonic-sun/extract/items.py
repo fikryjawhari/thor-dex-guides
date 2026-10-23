@@ -60,6 +60,12 @@ HELD = [
     ('Other held items', []),                                           # the rest: Everstone, Destiny Knot, Amulet Coin...
 ]
 KEY_ALSO = {'Exp. Share'}                                               # in Key Items, not repeated in Held Items
+KEY_KEEP = {
+    'Exp. Share', 'Ride Pager', 'Z-Power Ring', 'Sparkling Stone', 'Gracidea', "Ilima's Normalium Z",
+    'Orange Petal', 'Left Poké Ball', 'Oval Charm', 'Reveal Glass', 'Shiny Charm', 'Fishing Rod', 'Red Petal',
+    'Blue Petal', 'Forage Bag', 'Green Petal', 'DNA Splicers', 'Prison Bottle', "Professor's Mask", 'Yellow Petal', 'Zygarde Cube',
+    'Pink Petal', 'Rainbow Flower', 'Moon Flute', 'Sun Flute', 'N-Lunarizer', 'N-Solarizer', 'Key Stone', 'Purple Petal',
+}
 KINDS = ['Poké Balls', 'Healing and repels', 'Evolution items', 'Power items', 'Held items', 'Stats and abilities', 'TMs', 'Other']
 BIG = 10 ** 4
 
@@ -214,7 +220,9 @@ def build(D):
                'r': [row(n, c) for c, _ in HELD for n in az(n for n in held if held_class(n) == c)]})
     IT.append({'n': 'Stats and Abilities', 'k': 'gen', 'note': 'Vitamins, wings, Power items, Hyper Training, Ability Capsule, PP and levels.',
                'r': [row(n, g) for g, xs in STATS for n in xs]})
-    IT.append({'n': 'Key Items', 'k': 'gen', 'note': '', 'r': [row(n) for n in of('Key Items')]})
+    key_items = of('Key Items')
+    report('key items removed:', ', '.join(n for n in key_items if n not in KEY_KEEP))
+    IT.append({'n': 'Key Items', 'k': 'gen', 'note': '', 'r': [row(n) for n in key_items if n in KEY_KEEP]})
     D['IT'] = IT
 
 

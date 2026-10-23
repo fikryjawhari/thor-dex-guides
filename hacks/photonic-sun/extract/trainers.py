@@ -13,6 +13,7 @@ Rival and other starter-dependent teams: Bulbapedia's "If the player chose X" (P
 import json, os, re
 from collections import defaultdict
 from common import BULBA, load, norm, report, fix, split_name
+from consistency import trainer_splits
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon Ultra Sun and Ultra Moon-Part {}.wiki')
 # Boxes: (walkthrough parts, name). Aether Paradise's second visit (Part 21) is its own box; the first (Part 14, no
@@ -55,9 +56,9 @@ POST = (34, 'post-game')  # where location-page trainers with post-game levels g
 CAPS = [(2, "Hau'oli City", 'Captain Ilima', 52, 'trial'), (3, 'Verdant Cavern', 'Totem Gumshoos', -16, 'trial'),
         (4, 'Seaward Cave', 'Ultra Recon Squad Dulse', 649, 'mini'), (4, 'Route 3', 'Hau', 12, 'mini'),
         (5, 'Iki Town', 'Kahuna Hala', 23, 'trial'),
-        (7, 'Heahea City', 'Dexio', 74, 'mini'), (7, 'Paniola Town', 'Hau', 76, 'mini'),
+        (7, 'Paniola Town', 'Hau', 76, 'mini'),
         (8, 'Route 5 (South)', 'Trial Guide Bronson', 395, 'mini'), (8, 'Brooklet Hill', 'Totem Araquanid', -28, 'trial'),
-        (8, 'Paniola Ranch', 'Ultra Recon Squad Dulse', 652, 'mini'), (9, 'Royal Avenue', 'Battle Royal', 81, 'mini'),
+        (8, 'Paniola Ranch', 'Ultra Recon Squad Dulse', 652, 'mini'),
         (9, 'Wela Volcano Park', 'Totem Marowak', -37, 'trial'), (10, 'Lush Jungle', 'Totem Lurantis', -44, 'trial'),
         (12, 'Akala Outskirts', 'Plumeria', 89, 'mini'), (12, 'Ruins of Life', 'Kahuna Olivia', 90, 'trial'),
         (14, 'Aether Paradise', 'Nihilego', -58, 'mini'), (16, 'Mount Hokulani', 'Totem Togedemaru', -59, 'trial'),
@@ -535,19 +536,16 @@ def build(D):
     for st in allstops:
         st[2] = keys.get((st[0], st[1]), [])
 
-    # Level caps. Each section gets, for the trial rule and with mini caps, [level, who, where, battles left]: the next
+    # Level caps. Each section gets [level, who, where, battles left]: the next
     # cap at or after it and the battles from the section's start up to that fight (not counting it). Battles, not
     # trainers: a pair is one; one starter's version of a rival fight; no optional places (the walkthrough's
     # "Optional:" lists, the Kantonian Gym), Battle Buffet or Prismatic Moon teams. No source says which route
-    # trainers can be walked around (Bulbapedia and Serebii don't mark them), so those all count. A mini cap is left out when it doesn't raise the cap, when it's
-    # at or above the next trial (Ultra Necrozma, 100, comes before Mina, 95: going to 100 breaks the next caps), or
-    # when it sits right before the next trial with no trainers between.
+    # trainers can be walked around (Bulbapedia and Serebii don't mark them), so those all count.
     lvl = lambda tid: max(m['level'] for m in Hk[tid]['team'])
     post = min(i for i, st in enumerate(allstops) if st[0] >= 29)
     story = [s for x in g for s in x['sec'] if s.get('at', 10 ** 6) < post]
-    flat, start = [], []  # flat: (section at, bt, vanilla ids, counted); start[i]: story[i]'s first flat index
+    flat = []
     for s in story:
-        start.append(len(flat))
         for t in s['tr']:
             b = t.get('bt') or t['k']
             if flat and flat[-1][1] == b:
@@ -568,22 +566,6 @@ def build(D):
             lv = -x
             cut = next((i for i, f in enumerate(flat) if f[0] > at), len(flat))
         caps.append({'n': who, 'w': stop, 'l': lv, 'k': kind, 'at': at, 'cut': cut})
-    for i, c in enumerate(caps):
-        if c['k'] == 'mini':
-            nt = next(d for d in caps if d['k'] == 'trial' and d['at'] >= c['at'])
-            prev = max([d['l'] for d in caps[:i] if not d.get('drop')] or [0])
-            between = [s for s in story if c['at'] < s['at'] < nt['at'] and s['tr']]
-            c['drop'] = int(c['l'] <= prev or c['l'] >= nt['l'] or not between)
-    for s, i0 in zip(story, start):
-        def nxt(ks):
-            c = next((c for c in caps if c['k'] in ks and not c.get('drop') and c['cut'] >= i0 and c['at'] >= s['at']), None)
-            return [c['l'], c['n'], c['w'], sum(f[3] for f in flat[i0:c['cut']])] if c else None
-        if nxt(('trial',)):
-            s['cap'] = [nxt(('trial',)), nxt(('trial', 'mini'))]
-    for x in g:
-        for s in x['sec']:
-            s.pop('at', None)
-
     # Drop empty boxes and renumber the keys to match
     g = [x for x in g if any(s['tr'] or s['note'] for s in x['sec'])]
     remap = {}
@@ -594,11 +576,10 @@ def build(D):
                 t['k'] = remap[t['k']]
     for st in allstops:
         st[2] = [remap[k] for k in st[2]]
-    for group in g:
-        group['n'] = split_name(group['n'], group.get('cap') or None)
-    D['TR'] = {'caps': [[f"{c['n']} ({c['w']})", c['l']] for c in caps if c['k'] == 'trial'],
-               'mini': [[c['n'], c['w'], c['l'], c['k'], c.get('drop', 0)] for c in caps],
-               'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
+    g, targets, legacy = trainer_splits(g, caps, flat)
+    D['TR'] = {'caps': [[f"{c['n']} ({c['w']})", c['l']] for c in caps],
+               'fix': [], 'src': 'game data + Bulbapedia places', 'g': g, 'legacySections': legacy}
+    D['_cap_splits'], D['_trainer_splits'] = caps, targets
     D['_stops'] = allstops
     report('trainer boxes:', ', '.join(f"{x['n']} {sum(len(s['tr']) for s in x['sec'])}" for x in g))
-    report('level caps:', ' · '.join(f"{c['n']} {c['l']}{'' if c['k'] == 'trial' else ' (mini' + (', dropped' if c.get('drop') else '') + ')'}" for c in caps))
+    report('level caps:', ' · '.join(f"{c['n']} {c['l']}" for c in caps))

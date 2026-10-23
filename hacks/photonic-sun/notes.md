@@ -5,8 +5,10 @@ Photonic Sun 2.38 (Buffel Saft), **Rebalanced** version, a 3DS hack of Ultra Sun
 conflict), then `python assemble.py photonic-sun`. Sources: `SOURCES.md` (all fetched into `.src/`; the extract also
 makes `.src/txt/`, `pdftotext -layout -enc UTF-8` copies of the PDFs).
 
-931 Pokémon and forms (876 obtainable, 50 Megas/Primals, 34 form changes, 364 changed from Ultra Sun), 728 moves (38
-changed), 233 abilities, 72 encounter areas, 513 trainers (488 placed), 35 walkthrough parts with 136 stops.
+928 Pokémon and forms (876 obtainable, 50 Megas/Primals, 2 trainer-only), 728 moves (38 changed), 233 abilities,
+73 encounter areas (72 tracker slots), 497 trainers, 29 caps and 31 trainer/walkthrough splits.
+The 137 published walkthrough stops become 148 cap-aligned fragments. Part B details and the saved-open-state
+integration blocker are below; do not merge/deploy before the shared-template fix.
 
 ## Sources and rules
 
@@ -15,13 +17,13 @@ changed), 233 abilities, 72 encounter areas, 513 trainers (488 placed), 35 walkt
   `trainers-rebalanced.json` (tools/usum_trainers.py) for every trainer set, natures, IVs and EVs included. The docs
   are the check and give what the game data can't (wild methods, specials, shops).
 - **Vanilla comparison:** `dex-vanilla.json` and `trainers-vanilla.json`, the same two tools on the vanilla dumps
-  alone. P.vc (Changes from vanilla card, "Changed from vanilla" filter) and MV.h (move change notes) are the
-  differences between the two dex files; the Move Changes doc's paragraph is MV.e (shown as "Move Changes doc").
+  alone. MV.h (move change notes) compares the two dex files; the Move Changes doc's paragraph is MV.e (shown as
+  "Move Changes doc"). Part B no longer emits P.vc; move comparisons and their wording remain.
 - **Forms** (dex.py): totem forms (unnamed forms in the personal table) are dropped, except Own Tempo Rockruff, which
   evolves into Dusk Lycanroc. Cosmetic duplicates (same types, stats, abilities and level-up moves as a lower form of
   the same species: Pikachu caps, Unown, Arceus, Silvally, Minior colours, Furfrou, Vivillon, Flabébé line, Genesect...)
   fold into the lowest form. Megas and Primals are g 1; battle, item and fusion forms are P.fc (FC in dex.py).
-  The two Zygarde 10% forms (Aura Break, Power Construct) both stay, named by ability. Shedinja and the Sandy / Trash
+  The two Zygarde 10% forms (Aura Break, Power Construct) are pruned in Part B. Shedinja and the Sandy / Trash
   Wormadam evolutions are added by hand (the evolution table can't say them once Burmy's cloaks are folded).
 - **Wild tables** (locs.py): the game's tables have no method and repeat for every grass patch and fishing spot.
   Identical tables merge; each is labelled from `Wild Pokemon Locations.pdf`, read by word position (area titles are
@@ -76,11 +78,12 @@ changed), 233 abilities, 72 encounter areas, 513 trainers (488 placed), 35 walkt
   box; location-page trainers at post-game levels go to "<place>: post-game". "If the player chose X" (PlayerChoice) is t.st: rival and other
   starter-dependent teams follow the starter picker. Pokémon with no moves set use their last four level-up moves
   (the Gen 7 default). A Mega stone holder is shown as its Mega with a0 = the base ability. Bag items are a note.
-  Boxes are story chapters (CHAPTERS); sections are places in walkthrough order. Aether Paradise's second visit is a
-  box by floor; the first (no trainers, the Nihilego fight) is a section at the end of Akala; Episode RR splits by room.
-- **Level caps** (CAPS in trainers.py): the next trial or grand trial (totem levels from Totem Battles.pdf), or with
-  mini caps (story boss fights between trials). A mini cap is left out when it doesn't raise the cap, sits at or
-  above the next trial (Ultra Necrozma 100 before Mina 95) or comes right before it. Each place shows its next cap
+  CHAPTERS is an intermediate placement/keying scaffold only. Published trainer keys are assigned with the old
+  scaffold, then consistency.py regroups sections and trainer runs by cap without renumbering trainer keys.
+  Episode RR retains its rooms; all other postgame sections share the final Post-game box.
+- **Level caps** (CAPS in trainers.py): one list including all mini caps, except Dexio (Heahea) and Battle Royal.
+  Equal, decreasing and immediately adjacent caps stay, including Ultra Necrozma 100 before Ribombee 95.
+  Totem levels come from Totem Battles.pdf. Each place shows its next cap
   and the battles left before it: one per battle (t.bt), one starter's rival fight, no optional places, Kantonian
   Gym, Battle Buffet or Prismatic Moon teams. Route trainers you can walk around all count: no source marks them
   (Bulbapedia's walkthrough and location pages don't, Serebii doesn't), so there's no "forced" count.
@@ -97,7 +100,8 @@ changed), 233 abilities, 72 encounter areas, 513 trainers (488 placed), 35 walkt
   each, Found in game order; the walkthrough files them by `_itp` (the old '; ' place list). Game order (Key Items,
   Stats and Abilities, TMs, Z-Crystals) = the walkthrough stop of the earliest place (`items.order`, after walk.py);
   wild holders count where they live, the left clerk by trials; vanilla marts don't count. The rest A to Z.
-- **Walkthrough** (walk.py): one split per Bulbapedia part, one stop per place heading. Areas join the first stop with
+- **Walkthrough** (walk.py): stops start in Bulbapedia part/place order, then consistency.py regroups them into the
+  Trainers cap splits. Areas join the first stop with
   their name (ALIAS for Routes 15 and 16 and others; PLACE picks the stop by hand: Route 1's wild Pokémon with part 2's
   Route 1 visit, part 1 keeps the starter; Hau'oli Outskirts and Trainers' School in part 2); areas with no stop are
   "on the way" stops after the previous area's stop. NEW_STOP adds Trainers' School after part 2's Route 1 (Hau'oli
@@ -122,15 +126,15 @@ changed), 233 abilities, 72 encounter areas, 513 trainers (488 placed), 35 walkt
 ## Data schema
 
 As Hardlove Gold (hacks/hardlove-gold/notes.md → DATA SCHEMA), with: P ids are slugs of the display name
-("raichu-alola", "mega-charizard-x"); P.vc {s, t, a} vanilla values; MV.h always a list; MV.e + MV.dc the doc's
+("raichu-alola", "mega-charizard-x"); no P.vc; MV.h always a list; MV.e + MV.dc the doc's
 paragraph; P.w rows [area, method, rate "%"/"", level, note, 1?] where the note of a Trade is its tracker label
 ("For Spearow"), the rate may say "20% (day)" / "15% day, 20% night", and a 6th field 1 means the row repeats the
 area's sections (the template lists only the other rows, gifts and trades, apart); AR.es the area's sections
 [{n, k grass|water|other, g:[{m label, lv, bl bubbling levels, rows:[{p, r:[day,night], b:[day,night], sos:[[ally,
 ""|"day"|"night"]], note}]}]}]; AR.st 1 = the starter picker is this area's tracker; AR.map [data URI]; AR.note (trade items, Ultra Space Wilds); ARO the Locations order (EI's notes); TR trainers carry `id` (the game's trainer id) and
 `note` (bag items), `bt` (battle id, shared by trainers fought at once), `pt` partners [{n, st, p}], `tags`; sections
-carry `cap` [trial set, with-mini set], each [level, who, where, battles left] or null, and `opt` (optional place);
-TR.mini [name, where, level, "trial"|"mini", left out 0/1]; mons carry `ao` ("Stakeout / Strong Jaw") when the ability slot is random; WK has no cheats or
+carry one `cap` [level, who, where, battles left] or no cap after the League, and `opt` (optional place);
+TR.caps is one [name, level] list and TR.mini is absent; mons carry `ao` ("Stakeout / Strong Jaw") when the ability slot is random; WK has no cheats or
 checklist steps, and WK.docs holds the game docs.
 
 ## Local storage (prefix ps)
@@ -138,3 +142,102 @@ checklist steps, and WK.docs holds the game docs.
 `psdex` list filters, `pscalc:<id>` + `pscalc:lastlv` stat calc, `pstrack` tracker {s starter, e, t}, `pswalk`
 walkthrough open state, `pscap` levels per trainer, `pstr` open trainer boxes, `psrecent` search picks, `pspos` last
 route, `psmgm` Minimal Grinding Mode, `pscapset` level cap set, `psloc` / `psitems` open boxes. Keep them once published.
+
+## Part B consistency pass (2026-10-23)
+
+Base: worktree-consistency-template a07645a, including Part A 98cc969. Scope is this hack only. No shared helper,
+template, plan, PROGRESS or other hack changes. Parallel work is authorised by the latest instruction.
+
+- Pruning is after all extract stages, in consistency.prune: keep obtainable species/forms, trainer opponents and
+  partners, and Megas/Primals whose base dex is obtainable. Filter other-form/evolution references to retained IDs.
+  931 -> 928: removed `pikachu-original-cap`, `zygarde-10`, `zygarde-10-power-construct` (all unavailable and unused).
+  Keep `zygarde-50-power-construct` and `blacephalon`: trainer-only. All 50 Megas/Primals remain obtainable.
+- All 497 trainer records, keys, teams, partners, notes, EVs and per-trainer saved-cap references are unchanged.
+  All 73 AR indices, AR contents, LOC/ARO and move/ability indices match the committed baseline exactly.
+  Dex state stores filters with move/ability/location indices, not Pokemon-list positions; TK.e[area].p is a slug ID.
+  Every obtainable ID remains, so none of the normal tracker choices can be removed by pruning.
+- TR: 9 chapter boxes -> 31 cap/postgame boxes, 101 -> 111 sections. Retain all 31 old cap entries except the two
+  requested removals: 29 caps, including the previously auto-dropped 8 mini caps. Trainer runs split at the actual
+  boss battle within a place, using the existing counted-battle rules; no trainer data is invented for totems.
+  Ultra Necrozma's cap box has zero trainer cards because that fight is not in the source trainer sets.
+- WK: 35 parts -> the same 31 boxes, using tools/splits.py. Keep all 137 old visits; 11 extra fragments separate
+  trainers across cap boundaries, retaining each visit's encounters/items/notes once. Preserve all 502 original
+  walkthrough trainer occurrences (the published walkthrough already repeats some of its 497 trainers).
+  Both tabs end Elite Four Split [Cap 100], Post-game: Episode RR, Post-game. The two Poni Grove trainers and
+  Guardians/Ultra Space/Battle Tree/Title Defense content are in the last box; neither postgame box has a cap.
+- Key Items: 30 -> 29. Drop Surge Badge: a souvenir from the Kantonian Gym, not a progression unlock.
+  Retain Professor's Mask: Part 16 explicitly asks you to deliver it to Kukui. Retain story petals/flower/flutes,
+  Forage Bag, Sparkling Stone, Left Poke Ball sidequest, charms, Exp. Share, Ride Pager, Fishing Rod, transformation
+  tools, Key Stone and Z-Power Ring. Holo Caster, Running Shoes and Town Map were not present in PS's source list.
+  Use an explicit allowlist to prevent equivalent future clutter. Only Surge Badge disappears from the walkthrough;
+  327 -> 326 placed item rows, 13 unplaced rows unchanged. No Part C category/style changes.
+
+### Rebuild inputs and safeguards
+
+The available main-checkout dex-rebalanced.json predates `sosBy`. Running the full extract with it silently dropped
+SOS rows and made Rattata and other obtainable forms unavailable. Regenerated only that ignored JSON with current
+tools/ctr_dex.py, reading the existing hack romfs/code.ips and both vanilla Azahar dumps read-only at their existing
+paths (SOURCES.md command). No downloads or romfs/ZIP copying. locs.py now refuses stale JSON lacking sosBy.
+The resulting AR/LOC/ARO and every retained Pokemon's encounter rows match the committed baseline exactly.
+Other inputs copied locally: two trainer JSONs, vanilla dex JSON, item CSV, Changelog, Wild Pokemon Locations.pdf,
+the existing PDF text cache and Bulbapedia pages. Raw inputs remain ignored. No common.py correction was necessary;
+build.py adds post-build pruning, trainers.py exposes cap grouping, and walk.py consumes it.
+
+### Compatibility blocker: not ready to merge
+
+The plan's stable walkthrough key assumption is false in a07645a's template/dex.js. `walkStop`, `nextStep` and
+split checkbox totals use `si.ti` / `si.ti.step`; WO.o uses split indices, WO.x stop indices, WO.s `si.ti.section`.
+PS has **zero real checklist steps** before and after. No real published tick can be lost, but merely retaining
+synthetic WO.c bytes does not prove checklist rendering compatibility.
+
+119 of 148 new stop coordinates differ from the original visit. DOM-level old-build -> new-build reproduction,
+in normal and dvkb mode: Route 1 `1.0` becomes `0.7`. Baseline stop and encounter section render closed from saved
+`WO.x['1.0']=0`, `WO.s['1.0.e']=0`. After regrouping, the corresponding stop and encounter section render OPEN.
+A synthetic checklist probe at that same logical stop is checked in the old build but UNCHECKED in the new build,
+even though `WO.c['1.0.0']=1` remains stored. This probe modifies only runtime data, never the shipped walkthrough.
+Trainer box/place open states also use indices, although trainer-card keys and per-trainer levels survive.
+
+Every stop carries `k`: its original `si.ti` on the first fragment; additional fragments use `si.ti.fN`, all unique.
+`WK.legacyStops` maps new coordinates -> old visit coordinates, including every fragment. `TR.legacySections`
+maps new group/section coordinates -> old coordinates. These are stable-key/migration inputs only: the current
+template ignores k and both maps. Parent handles the shared fix separately after all agents finish, as instructed.
+Do not merge/deploy this branch before that fix. No runtime workaround or shared edit is hidden in this branch.
+
+The shared fix must cover rendering, checklist keys/counts/Next step, jumps and one-time versioned migration of
+split open state plus stop/section state across fragments. Trainer o/p state also needs the section map. Preserve
+document keys, tracker, dex, trainer-card keys, and every configured storage name. Never reapply old-coordinate
+maps after users save new state. Other guides need the same semantic compatibility check, not just stored-byte checks.
+
+### Checks and handover commands
+
+Baseline: committed data.json at a07645a, local .tmp/ps-before.json. Its HTML uses the same Part A template and
+baseline species sprite keys (.tmp/ps-before.html). New fields k/maps are data only; no template consumers changed.
+
+```
+uv run python -I hacks/photonic-sun/extract/build.py
+python -I hacks/photonic-sun/extract/check.py .tmp/ps-before.json
+python -I hacks/photonic-sun/extract/check.py .tmp/ps-before.json --require-viewer-compatibility
+python assemble.py photonic-sun
+node hacks/photonic-sun/extract/statecheck.mjs .tmp/ps-before.html dist/photonic-sun.html
+node tools/consistency-check.mjs
+node tools/mockup/walkcheck.mjs dist/photonic-sun.html .tmp/ps-walk
+node tools/mockup/walkcheck.mjs dist/photonic-sun.html .tmp/ps-walk-kb kb
+node tools/mockup/pagecheck.mjs dist/photonic-sun.html .tmp/ps-page
+node tools/mockup/pagecheck.mjs dist/photonic-sun.html .tmp/ps-page-kb kb
+node tools/domcompare.mjs .tmp/ps-before.html dist/photonic-sun.html --jobs=4
+node tools/domcompare.mjs .tmp/ps-before.html dist/photonic-sun.html --kb --jobs=4
+```
+
+Structural check passes exact indexed-table/area/trainer equality, species references, cap/postgame ordering, Poni
+Grove placement, legacy visit/encounter/item/trainer coverage and key-item decisions. The static strict gate deliberately
+fails on changed coordinates; replace that gate with the shared migration's browser assertions when integrating.
+Statecheck passes 72 saved picks, dex filters and saved trainer cap in both modes,
+and reproduces both DOM-level compatibility failures without page errors. PS has no actual checklist to lose.
+The shared consistency check requires all four dist files (built locally) and passes both modes, all five viewer
+sizes, expanded pages and light theme for all four, including PS's MGM/pickers/caps. Its synthetic tick-storage
+PASS is not evidence that the legacy stop/checklist rendering blocker is resolved.
+walkcheck/pagecheck: no page errors, 260 px document width in both modes. domcompare: 2,467 routes per mode,
+zero page errors, hashchange timeouts or unsettled routes; expected DOM differences include footer species/date,
+split labels, trainer group context and pruned forms. Exit 1 for differences is expected, not an identical-build PASS.
+Repeated full extracts produce byte-identical data.json and report.txt. Python compileall and git diff --check pass.
+The localStorage config dictionary is identical to a07645a. No physical Thor/device check was performed.

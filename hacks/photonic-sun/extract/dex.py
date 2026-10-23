@@ -1,7 +1,7 @@
 """Stage 1: Pokemon, moves, abilities and the type chart (M, MV, AB, P, TC) from the game data.
 
 dex-rebalanced.json (tools/ctr_dex.py on the hack's romfs + code.ips) is the source; dex-vanilla.json (the same tool
-on vanilla Ultra Sun v1.2) gives the "Changes from vanilla" card (P.vc) and the move change notes (MV.h).
+on vanilla Ultra Sun v1.2) gives the move change notes (MV.h).
 Forms: totems (unnamed forms) are dropped, except Own Tempo Rockruff; cosmetic duplicates (same types, stats,
 abilities and level-up moves as a lower form of the same species) fold into that form. SPEC maps every
 (species id, form) to the P id it ended up as, for the wild, trainer and item stages.
@@ -80,7 +80,6 @@ def evo_text(e, names):
 
 def build(D):
     H, V = load('dex-rebalanced.json'), load('dex-vanilla.json')
-    van = {(s['id'], s['form']): s for s in V['species']}
     # Moves
     M = [m['name'] for m in H['moves']]
     MI = {n: i for i, n in enumerate(M)}
@@ -153,17 +152,6 @@ def build(D):
         hi = [x for x in dict.fromkeys(s['items']) if x]
         if hi:
             p['hi'] = hi
-        v = van.get((s['id'], s['form']))
-        vc = {}
-        if v:
-            if v['stats'] != s['stats']:
-                vc['s'] = v['stats']
-            if list(dict.fromkeys(v['types'])) != p['t']:
-                vc['t'] = list(dict.fromkeys(v['types']))
-            if v['abilities'] != s['abilities']:
-                vc['a'] = list(dict.fromkeys(v['abilities']))
-        if vc:
-            p['vc'] = vc
         p['_s'] = s
         P.append(p)
     byid = {p['id']: p for p in P}
@@ -204,7 +192,7 @@ def build(D):
             D['TC'][a][d] = int(float(x) * 10)
     D['_spec'], D['_MI'], D['_ABI'], D['_byid'] = spec, MI, ABI, byid
     report('species/forms', len(P), 'megas', sum(p['g'] == 1 for p in P), 'form changes', sum(bool(p.get('fc')) for p in P),
-           'changed from vanilla', sum(bool(p.get('vc')) for p in P), 'moves changed', sum(bool(e.get('h')) for e in MV))
+           'moves changed', sum(bool(e.get('h')) for e in MV))
 
 
 def move_doc():
