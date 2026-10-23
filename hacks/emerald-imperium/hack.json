@@ -8,7 +8,7 @@
   "name": "Emerald Imperium",
   "orig": "EI",
   "evs": true,
-  "starter": "slot",
+  "starter": "type",
   "orbs": true,
   "g3trainer": false,
   "capLast": false,

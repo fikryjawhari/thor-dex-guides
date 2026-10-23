@@ -391,17 +391,13 @@ table.lrn td:nth-child(2){overflow-wrap:anywhere}
 .vs{text-align:center;font-size:11px;color:var(--mut);margin:-2px 0}
 .moond{margin:8px 0 2px}.moond>summary{cursor:pointer;font-size:13px;color:var(--mut);padding:6px 4px;border-bottom:1px dashed var(--line)}
 .capsd{margin-top:4px}.capsd>summary{cursor:pointer}
-/* Trainers header card: MGM and the starter pick, the cap set switch on its own line, "Level caps" closed */
 .card.trh{padding:6px 8px}
 .trh .r1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .trh .r1 select{flex:1 1 0;min-width:0}
-.trh .mgm{display:flex;align-items:center;gap:5px;font-weight:700;font-size:13px}
-.trh .r1+.capsw{margin-top:6px}
-.capsw{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
-.capsw button{flex:1 1 0;min-width:0;min-height:26px;border:0;background:none;color:var(--fg);font:600 12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;touch-action:manipulation}
-.capsw button+button{border-left:1px solid var(--line)}
-.capsw button[aria-pressed="true"]{background:var(--acc);color:#1b1608}
-.capt td{vertical-align:top;padding:3px 4px 3px 0}.capt td:first-child{width:auto}.capt td.n{text-align:right;width:1%}.capt tr.mini td:first-child{color:var(--mut)}
+.mgm{display:flex;align-items:center;gap:5px;font-weight:700;font-size:13px}
+.tkchoices{display:flex;flex-wrap:wrap;gap:6px 10px}
+.tkchoices label{display:flex;align-items:center;gap:5px;flex:1 1 150px;min-width:0}
+.tkchoices select{flex:1;min-width:0}
 
 /* Trainers page (plans/trainers-show-switch.md): the Show row pinned under the search bar, the place header under it (--sw
    is the row's measured height, set on the box). The place header paints the page background a few px above itself, so

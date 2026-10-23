@@ -68,9 +68,22 @@ the split is in that repo's git log.
   Serena / Calem) and the stage checklist: `plans/eternal-x.md`. The romfs stays in the main checkout's
   `hacks/eternal-x/.src/romfs-dl/`.
 
-- **Consistency pass over the four guides: scoped 2026-10-23, not started.** Everything (the user's review per tab,
-  decisions, the jobs A template → B per hack → C items → D audit, and the agreed workflow: one Sonnet session per
-  step, Haiku audit, Opus merge) is in `plans/consistency-pass.md`; its Status section says which step is next.
+- **Consistency pass over the four guides: A built 2026-10-23**, uncommitted on `worktree-consistency-template`
+  (T3 worktree; based on main including Codex setup commit `4aeaab9`). Vanilla cards / Changed filter removed;
+  EI gets a named starter picker, migrating its existing area-0 tracker and filtering rivals by type; Locations
+  starter / player pickers wrap on one row; single cap table; MGM appears only with actual trainer EVs and is
+  shared with Guide info; split wording and walkthrough cap fallback; shared extract naming helper.
+  All four builds, normal / dvkb DOM comparisons (19,960 route/mode comparisons, no page errors), focused
+  consistency checks at all five viewer sizes and light theme, expanded layouts, and all four walkcheck /
+  pagecheck runs in dvkb pass without page errors. DOM differences are expected for the agreed UI removals /
+  changes, not an identical-build result. Extract edits compile; six naming-helper cases pass; full extracts
+  were not rebuilt (raw sources are not in this worktree). Four Thor-frame phone previews:
+  `consistency-emerald-imperium.html`, `consistency-hardlove-gold.html`, `consistency-eternal-x.html`,
+  `consistency-photonic-sun.html`. Awaiting the user's phone / Thor review. **B is not done:** no data.json edits;
+  template normalises old dual-cap data in memory until B supplies one list / entry. Cap regrouping, species
+  pruning, starter-area data, league / walkthrough names and cap-list edits remain B. The actual branch name
+  supersedes the older workflow example; future B branches should start from this branch after A is committed.
+  See `plans/consistency-pass.md` Status for the handover. No implementation commit, merge or push authorised.
 
 ## What's left, in order
 

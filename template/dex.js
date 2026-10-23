@@ -26,8 +26,8 @@ const plink=id=>byId[id]?`<a href="#/p/${id}">${esc(byId[id].name)}</a>`:'';
 const mlink=i=>`<a href="#/m/${i}">${esc(M[i])}</a>`;
 const alink=i=>`<a href="#/a/${i}">${esc(AB[i][0])}</a>`;
 const cat=c=>c?`<span class="cat ${c}">${c==='Physical'?'Phys':c==='Special'?'Spec':'Status'}</span>`:'';
-// Features show only when the hack's data has them: tutor moves, vanilla comparison, EVs (CF.evs), starter picker (CF.starter).
-const HASTU=P.some(p=>p.tu.length),HASVC=P.some(p=>p.vc),EVS=CF.evs!==false,PICK=CF.starter==='pick';
+// Features show only when the hack's data has them: tutor moves, EVs (CF.evs), starter picker (CF.starter).
+const HASTU=P.some(p=>p.tu.length),EVS=CF.evs!==false,PICK=['pick','type'].includes(CF.starter);
 function tag(p){let r='';if(p.g===1)r+='&#8203;<span class="tag">Mega</span>';if(p.fc)r+='&#8203;<span class="tag">Form change</span>';else if(p.g===3||p.nu)r+=CF.g3trainer||TRUSE&&TRUSE[p.id]?'&#8203;<span class="tag">Trainer only</span>':'&#8203;<span class="tag">Not found</span>';return r;}
 const NAT={Lonely:[1,2],Brave:[1,5],Adamant:[1,3],Naughty:[1,4],Bold:[2,1],Relaxed:[2,5],Impish:[2,3],Lax:[2,4],Timid:[5,1],Hasty:[5,2],Jolly:[5,3],Naive:[5,4],Modest:[3,1],Mild:[3,2],Quiet:[3,5],Rash:[3,4],Calm:[4,1],Gentle:[4,2],Sassy:[4,5],Careful:[4,3]};
 const NATS=['Hardy','Docile','Serious','Bashful','Quirky',...Object.keys(NAT)].sort();
@@ -43,7 +43,7 @@ const types=[...new Set(P.flatMap(p=>p.t))].sort();
 const usedMoves=M.map((m,i)=>i).filter(i=>learn[i]);
 const st={q:'',f:[],sort:'dex',av:'all',listScroll:null,view:''};
 try{const s=JSON.parse(localStorage.getItem(LS.dex)||'{}');['f','sort','av'].forEach(k=>{if(s[k]!=null)st[k]=s[k];});}catch(e){}
-if(st.sort==='bst')st.sort='dex';if(st.av==='chg'&&!HASVC)st.av='all';
+if(st.sort==='bst')st.sort='dex';if(st.av==='chg')st.av='all';
 const save=()=>{try{localStorage.setItem(LS.dex,JSON.stringify({f:st.f,sort:st.sort,av:st.av}))}catch(e){}};
 // ===== IN-PAGE KEYBOARD (Dex Viewer only). The viewer's window never takes the Android keyboard, so there the search
 // box and number boxes are buttons, and these keyboards type into them. Elsewhere (a phone browser) the page keeps its
@@ -144,12 +144,12 @@ const fval=f=>f.k==='mv'?M[f.v]:f.k==='loc'?LOC[f.v]:f.k==='ab'?AB[f.v][0]:f.v;
 function suggestions(){sug.style.display='none';}
 function filtersPokemon(){fil.innerHTML=`<div class="chips">${st.f.map((f,j)=>`<span class="chip"><b>${FL[f.k]}</b>${f.k==='type'?ty(f.v):esc(fval(f))}<button data-j="${j}" aria-label="Remove">×</button></span>`).join('')}</div>
 <div class="sorts"><select id="fs">${[['dex','Dex order'],['name','Name'],...SN.map((s,i)=>['s'+i,s])].map(([v,l])=>`<option value="${v}" ${st.sort===v?'selected':''}>${l}</option>`).join('')}</select>
-<select id="fa">${[['all','All Pokémon'],['obt',TX.obt],['nomega','Hide Megas'],['nw',TX.nw],...HASVC?[['chg','Changed from vanilla']]:[]].map(([v,l])=>`<option value="${v}" ${st.av===v?'selected':''}>${l}</option>`).join('')}</select></div>`;
+<select id="fa">${[['all','All Pokémon'],['obt',TX.obt],['nomega','Hide Megas'],['nw',TX.nw]].map(([v,l])=>`<option value="${v}" ${st.av===v?'selected':''}>${l}</option>`).join('')}</select></div>`;
  fil.querySelectorAll('.chip button').forEach(b=>b.onclick=()=>{st.f.splice(+b.dataset.j,1);save();render(true);});
  fil.querySelector('#fs').onchange=e=>{st.sort=e.target.value;save();render(true)};
  fil.querySelector('#fa').onchange=e=>{st.av=e.target.value;save();render(true)};}
 function howLearn(p,i){const r=[];p.lv.forEach(([l,m])=>{if(m===i)r.push(l?'Lv '+l:'Evo')});if(p.tm.includes(i))r.push('TM');if(p.tu.includes(i))r.push('Tutor');if(p.eg.includes(i))r.push('Egg');return r.join(', ');}
-const avOk=p=>st.av==='all'||(st.av==='obt'&&p.g===0)||(st.av==='nomega'&&p.g!==1)||(st.av==='nw'&&(p.g===3||!!p.nu))||(st.av==='chg'&&!!p.vc);
+const avOk=p=>st.av==='all'||(st.av==='obt'&&p.g===0)||(st.av==='nomega'&&p.g!==1)||(st.av==='nw'&&(p.g===3||!!p.nu));
 function listPokemon(){const typeF=st.f.filter(f=>f.k==='type').map(f=>f.v),abF=st.f.filter(f=>f.k==='ab').map(f=>f.v),mvF=st.f.filter(f=>f.k==='mv').map(f=>f.v),locF=st.f.filter(f=>f.k==='loc').map(f=>f.v);
  const nq=norm(st.q);
  let a=P.filter(p=>avOk(p)&&typeF.every(t=>p.t.includes(t))&&abF.every(x=>p.as.has(x))&&mvF.every(i=>p.ms.has(i))&&locF.every(i=>p.ls.has(i))&&(!st.q||p.key.includes(st.q)||(nq&&(p.nk??=norm(p.n)).includes(nq))));
@@ -167,11 +167,6 @@ function whereTable(p){let h='';
  if(p.hi&&p.hi.length)h+=`<div class="mut small" style="margin-top:6px">Wild held item${p.hi.length>1?'s':''}: ${p.hi.map(esc).join(', ')}</div>`;
  return h;}
 function confBox(cf){return cf&&cf.length?`<div class="card conf"><h3>Sources disagree</h3><ul>${cf.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="mut small" style="margin-top:4px">${TX.conf}</div></div>`:'';}
-function vanCard(p){const v=p.vc;if(!v)return '';const r=[];
- if(v.s){const ch=SN.map((n,i)=>v.s[i]!==p.s[i]?`${n} ${v.s[i]} → ${p.s[i]}`:null).filter(Boolean);if(ch.length)r.push('<b>Stats:</b> '+esc(ch.join(', ')));}
- if(v.t)r.push('<b>Type:</b> '+v.t.map(ty).join('')+' → '+p.t.map(ty).join(''));
- if(v.a)r.push('<b>Abilities:</b> '+esc(v.a.join(', '))+' → '+esc([...p.a,p.ha].filter(x=>x>=0).map(i=>AB[i][0]).join(', ')));
- return r.length?`<div class="card"><h3>Changes from vanilla</h3>${r.map(x=>`<div style="margin:4px 0">${x}</div>`).join('')}<div class="mut small">${TX.van}</div></div>`:'';}
 function evoBlock(p){const li=arr=>arr.map(([how,id])=>`<li>${plink(id)} <span class="mut">${esc(how)}</span></li>`).join('');
  let h='';if(p.ef.length)h+=`<div class="mut small">Evolves from</div><ul class="evo">${li(p.ef)}</ul>`;
  if(p.et.length)h+=`<div class="mut small"${p.ef.length?' style="margin-top:6px"':''}>Evolves into</div><ul class="evo">${li(p.et)}</ul>`;
@@ -191,7 +186,7 @@ function detail(id){const p=byId[id];if(!p){app.innerHTML='<p>Not found.</p>';re
  if(!mv[moveTab])moveTab='lv';
  app.innerHTML=`<a class="back" href="#/">‹ All Pokémon</a>
  <div class="card hero">${spr(p.id,'s112')}<div><h2>${esc(p.name)}${tag(p)}</h2>${p.dex?`<div class="mut small">#${p.dex}</div>`:''}<div style="margin-top:4px">${p.t.map(ty).join('')}</div></div></div>
- ${confBox(p.cf)}${vanCard(p)}
+ ${confBox(p.cf)}
  <div class="card"><h3>Abilities</h3>${p.a.map(i=>`<div style="margin:4px 0">${abLine(i)}</div>`).join('')}${p.ha>=0?`<div style="margin:6px 0 0"><span class="mut small">Hidden</span> ${abLine(p.ha)}</div>`:''}</div>
  <div class="card"><h3>Base stats</h3>${p.s.map((v,i)=>`<div class="stat"><span class="mut">${SN[i]}</span><span class="v">${v}</span><span class="b"><i style="width:${Math.min(100,v/160*100)}%;background:${v<60?'#e05252':v<90?'#e0a030':v<120?'#5cb85c':'#3aa0d8'}"></i></span></div>`).join('')}</div>
  ${calcCard(p)}<div class="card"><h3>Type defences</h3>${defBlock(p)}</div>
@@ -265,7 +260,10 @@ const PLAYER=!!(D.TR&&D.TR.g.some(g=>g.sec.some(s=>s.tr.some(t=>t.pl||(t.pt||[])
 const PLN={m:TX.plm||'Boy',f:TX.plf||'Girl'};
 const playerSel=(c,none='Not chosen')=>PLAYER?`<select class="${c}"><option value="">${none}</option>${['m','f'].map(v=>`<option value="${v}" ${TK.pl===v?'selected':''}>${esc(PLN[v])}</option>`).join('')}</select>`:'';
 const plOk=x=>!(x.pl&&TK.pl&&x.pl!==TK.pl);
-const STARTERS=PICK?[...new Set(P.flatMap(p=>p.w.filter(w=>w[1]==='Starter choice').map(()=>p.name)))]:[];
+const STARTER_AREA=Math.max(AR.findIndex(A=>A.st),CF.starter==='type'?0:-1);
+const STARTERS=PICK?[...new Set((CF.starter==='type'?areaSpecies(STARTER_AREA):P.filter(p=>p.w.some(w=>w[1]==='Starter choice'))).map(p=>p.name))]:[];
+const syncStarter=()=>{if(STARTER_AREA<0)return;const entry=TK.e[STARTER_AREA];TK.s=entry&&!entry.f&&byId[entry.p]?.name||'';};
+if(PICK&&STARTER_AREA>=0){if(TK.e[STARTER_AREA])syncStarter();else if(TK.s){const starter=P.find(p=>p.name===TK.s);if(starter)TK.e[STARTER_AREA]={p:starter.id};}tkSave();}
 const starterOk=txt=>{const m=String(txt||'').match(/Starter:\s*([A-Za-z ,]+?)\.?\s*$/);return !(m&&TK.s)||m[1].split(',').map(x=>x.trim()).includes(TK.s);};
 function tradeHTML(a){const g={};(AR[a]?.l||[]).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]!=='Trade'||!starterOk(w[4]))return;(g[w[4]]=g[w[4]]||[]).push(p);}));
  return Object.entries(g).map(([n,ps])=>{const k=a+'|'+n;const cur=(TK.t||{})[k]||'';return `<div class="trk"><span class="mut small">Trade (${esc(n.replace(/^For /,'for '))})</span><select class="tk-trade" data-k="${esc(k)}"><option value="">Not traded</option>${ps.map(p=>`<option value="${p.id}" ${cur===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div>`;}).join('');}
@@ -290,7 +288,7 @@ function bindTrackers(){app.querySelectorAll('.trk').forEach(el=>{if(el.dataset.
  app.querySelectorAll('.tk-export').forEach(b=>b.onclick=()=>{prompt('Copy this backup code:',JSON.stringify(TK));});
  app.querySelectorAll('.tk-import').forEach(b=>b.onclick=()=>{const t=prompt('Paste a backup code:');if(!t)return;try{const o=JSON.parse(t);TK.s=o.s||'';TK.e=o.e||{};TK.t=o.t||{};tkSave();rerender();}catch(e){alert('That code could not be read.');}});
  app.querySelectorAll('.tk-trade').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.t=TK.t||{};if(s.value)TK.t[s.dataset.k]=s.value;else delete TK.t[s.dataset.k];tkSave();rerender();};});
- app.querySelectorAll('.tk-starter,.st-pick').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.s=s.value;const sa=AR.findIndex(A=>A.st),sp=P.find(x=>x.name===s.value);if(sa>=0){if(sp)TK.e[sa]={p:sp.id};else delete TK.e[sa];}tkSave();rerender();};});
+ app.querySelectorAll('.tk-starter,.st-pick').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.s=s.value;const sa=STARTER_AREA,sp=P.find(x=>x.name===s.value);if(sa>=0){if(sp)TK.e[sa]={p:sp.id};else delete TK.e[sa];}tkSave();rerender();};});
  app.querySelectorAll('.tk-player').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.pl=s.value;tkSave();rerender();};});}
 // Scroll anchor: the element nearest the top of the window, saved as a selector plus its offset, so a re-render can put it back.
 const ANCH='.list>a.row,details.split[data-a],details.split[data-wo],details.split[data-gi],details.split[data-si],details.stopd[data-k],.trk[data-a],details.trd';
@@ -315,11 +313,11 @@ function cvSizes(){const m={};CVB.forEach(([sel,k])=>app.querySelectorAll(sel).f
  let row=0;for(const r of app.querySelectorAll('.list>.row'))if(!SKIP.has(r)){row=r.offsetHeight;break;}return {m,row};}
 function cvApply(z){if(!z)return;CVB.forEach(([sel,k])=>app.querySelectorAll(sel).forEach(e=>{const h=z.m[sel+'|'+e.parentElement.dataset[k]];if(h)e.style.containIntrinsicSize='auto '+h+'px';}));
  const l=app.querySelector('.list');if(l&&z.row)l.style.setProperty('--rowh',z.row+'px');}
-function rerender(){const a=keepAnchor(),z=cvSizes();render(true);cvApply(z);toAnchor(a);}
+function rerender(){if(PICK){syncStarter();tkSave();}const a=keepAnchor(),z=cvSizes();render(true);cvApply(z);toAnchor(a);}
 const starterSel=(c,none='Not chosen')=>`<select class="${c}"><option value="">${none}</option>${STARTERS.map(s=>`<option ${TK.s===s?'selected':''}>${esc(s)}</option>`).join('')}</select>`;
 function tkBar(){const n=Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length,f=Object.values(TK.e).filter(e=>e&&e.f).length;
  const cnt=`${n} caught · ${f} failed`;
- return `<div class="card tkbar">${PICK?`<div class="bar" style="margin:0"><span class="mut small">Starter</span>${starterSel('tk-starter')}</div>${PLAYER?`<div class="bar" style="margin:6px 0 0"><span class="mut small">Player</span>${playerSel('tk-player')}</div>`:''}
+ return `<div class="card tkbar">${PICK?`<div class="bar tkchoices" style="margin:0"><label><span class="mut small">Starter</span>${starterSel('tk-starter')}</label>${PLAYER?`<label><span class="mut small">Player</span>${playerSel('tk-player')}</label>`:''}</div>
  <div class="mut small" style="margin-top:6px">${cnt}</div>`:`<div class="bar" style="margin:0"><span class="mut small">${cnt}</span></div>`}
  <div class="bar" style="margin:8px 0 0"><button class="btn tk-export">Export</button><button class="btn tk-import">Import</button><button class="btn danger tk-reset">Reset all</button></div></div>`;}
 const encAll=a=>ARS(a).map(encSummary).join('');
@@ -508,7 +506,7 @@ function guideInfoHTML(){const W=D.WK,[n,f]=tkCounts();
   (W.docs||[]).map(([t,x],j)=>doc('doc'+j,esc(t),para(x),' small doc')).join('')+
   (W.ko?doc('docko','Post-KO switch-in AI',`<table class="itbl">${W.ko.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</table>${W.ko.note.map(x=>`<div class="mut small" style="margin-top:6px">${esc(x)}</div>`).join('')}`):'')+
   (W.np.length?doc('docnp',`Items with no walkthrough place <span class="mut small">${W.np.length}</span>`,`<table class="itbl wt">${W.np.map(i=>`<tr><td>${esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2])}</td></tr>`).join('')}</table>`):'');
- return `<div class="psec">Encounter tracker</div><div class="mut small">${n} caught · ${f} failed</div>`+
+ return (HAS_MGM?`<label class="mgm"><input type="checkbox" class="mgm-toggle" ${MGM?'checked':''}> MGM</label>`:'')+`<div class="psec">Encounter tracker</div><div class="mut small">${n} caught · ${f} failed</div>`+
   `<div class="bar pbar"><button class="btn tk-export">Export</button><button class="btn tk-import">Import</button><button class="btn danger tk-reset">Reset all</button>${CHK?'<button class="btn danger wk-reset">Reset checklist</button>':''}</div>`+
   (docs?`<div class="psec">Game docs</div>`+docs:'')+`<div class="mut small" style="margin:12px 0 4px">${TX.walk}</div>`;}
 // Next step: the first unticked checklist step, in walkthrough order.
@@ -537,7 +535,8 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;
  const its=s.it.filter(i=>starterOk(i[2]));
  // A stop with nothing in it is just a direction ("back to Iki Town"): a grey sign, not a box that opens nothing.
  if(!ss.length&&!areas.length&&!its.length&&!ts.length&&!s.note)return `<div class="wsign" data-k="${k}">${esc(s.n)}</div>`;
- let h=`<details class="stopd" ${closed?'':'open'} data-k="${k}"><summary class="stoph"><span class="pn">${esc(s.n)}${s.x?' <span class="mut small">(on the way)</span>':''}</span>${s.a.map(encAll).join('')}${ts.length?walkPt(ts):''}</summary><div class="stop">`+
+ const split=D.WK.splits[si],fallback=split.cap||+(split.n.match(/\[(?:Level )?Cap (\d+)\]/)?.[1]||0),cap=capOfSec(s)?.[0]||fallback;
+ let h=`<details class="stopd" ${closed?'':'open'} data-k="${k}"><summary class="stoph"><span class="pn">${esc(s.n)}${s.x?' <span class="mut small">(on the way)</span>':''}</span>${s.a.map(encAll).join('')}${ts.length?walkPt(ts,cap):''}</summary><div class="stop">`+
   (s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+
   (ss.length?walkSec(k,'c',`<span class="tag${nd===ss.length?' got':''}">${nd}/${ss.length}</span>`,`<div class="chkb">${steps}</div>`):'')+
   (areas.length?walkSec(k,'e',areas.map(([ai])=>encSummary(ai)).join(''),enc):'')+
@@ -560,7 +559,7 @@ function listWalk(){fil.innerHTML='';sug.style.display='none';const W=D.WK;const
   d.addEventListener('toggle',()=>{if(d.open)WO.o[d.dataset.wo]=1;else delete WO.o[d.dataset.wo];woSave();fill();barsSoon();});fill();});
  const ws=app.querySelector('.wk-starter');if(ws)ws.onchange=()=>{if(ws.value)TK.e[0]={p:ws.value};else delete TK.e[0];tkSave();rerender();};
  bindWalk();bars();}
-function bindWalk(){bindTrackers();bindTrd();app.querySelectorAll('.wstep input').forEach(c=>{if(c.dataset.b)return;c.dataset.b=1;c.onchange=()=>{if(c.checked)WO.c[c.dataset.sk]=1;else delete WO.c[c.dataset.sk];woSave();c.closest('.wstep').classList.toggle('done',c.checked);
+function bindWalk(){bindTrackers();bindTrd();bindHead();app.querySelectorAll('.wstep input').forEach(c=>{if(c.dataset.b)return;c.dataset.b=1;c.onchange=()=>{if(c.checked)WO.c[c.dataset.sk]=1;else delete WO.c[c.dataset.sk];woSave();c.closest('.wstep').classList.toggle('done',c.checked);
   const tag=d=>{if(!d)return;const all=[...d.querySelectorAll('.wstep input')],n=all.filter(x=>x.checked).length,t=d.querySelector(':scope>summary .tag');if(t){t.textContent=n+'/'+all.length;t.classList.toggle('got',n===all.length);}};
   tag(c.closest('details.sec'));tag(c.closest('details.split'));const nx=app.querySelector('.wk-next');if(nx)nx.innerHTML=nextInner();};});
  colBind(app);app.querySelectorAll('details.stopd').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{const k=d.dataset.k;if(/^doc/.test(k)){if(d.open)WO.x[k]=1;else delete WO.x[k];}else if(d.open)delete WO.x[k];else WO.x[k]=0;woSave();barsSoon();});});
@@ -588,13 +587,16 @@ app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
 // overridden per trainer (LS.cap; CF.capLast also remembers the last one set, for trainers with no cap).
 // Rival teams (t.st) follow the starter: its type from tracker area 0, or its name from the picker (CF.starter 'pick').
 const TRD=D.TR||{g:[],caps:[]};const TRS=[];const TRK={};
+if(TRD.mini){TRD.caps=TRD.mini.filter(c=>!c[4]).map(c=>[c[0],c[2]]);delete TRD.mini;}
+TRD.g.forEach(g=>g.sec.forEach(s=>{if(Array.isArray(s.cap?.[0]))s.cap=s.cap[1];}));
 TRD.g.forEach((g,gi)=>g.sec.forEach((s,si)=>s.tr.forEach(t=>{t.g=g.n;t.h=s.h;t.tab=g.tab;t.at=[gi,si];
  t.key=(t.n+' '+t.loc+' '+t.tags.join(' ')+' '+g.n+' '+s.h+' '+t.p.map(x=>(byId[x.id]?byId[x.id].name:'')+' '+(x.i||'')).join(' ')+' '+(t.st?t.st+' starter':'')).toLowerCase();TRS.push(t);TRK[t.k]=t;})));
 const TRUSE={};TRS.forEach(t=>t.p.forEach(x=>{(TRUSE[x.id]=TRUSE[x.id]||[]).includes(t)||TRUSE[x.id].push(t);}));
 let TCAP={};try{TCAP=JSON.parse(localStorage.getItem(LS.cap)||'{}')}catch(e){}
-let MGM=false;try{MGM=EVS&&localStorage.getItem(LS.mgm)==='1'}catch(e){}
+const HAS_MGM=EVS&&!!D.TR?.g.some(g=>g.sec.some(s=>s.tr.some(t=>(t.p||[]).some(p=>p.ev?.some(v=>v>0))||(t.pt||[]).some(partner=>(partner.p||[]).some(p=>p.ev?.some(v=>v>0))))));
+let MGM=false;try{MGM=HAS_MGM&&localStorage.getItem(LS.mgm)==='1'}catch(e){}
 const capOf=t=>+TCAP[t.k]||t.cap||(CF.capLast&&+TCAP._last)||0;
-const starterType=()=>{if(PICK)return TK.s;const e=TK.e&&TK.e[0];const p=e&&e.p&&byId[e.p];return p?(p.t.find(x=>['Grass','Fire','Water'].includes(x))||''):'';};
+const starterType=()=>{if(PICK&&CF.starter!=='type')return TK.s;const e=TK.e&&TK.e[STARTER_AREA>=0?STARTER_AREA:0];const p=e&&e.p&&!e.f&&byId[e.p];return p?(p.t.find(x=>['Grass','Fire','Water'].includes(x))||''):'';};
 const rivalHidden=t=>{const s=starterType();return !!(t.st&&s&&t.st!==s)||!plOk(t);};
 const PRE={Burned:'BRN',Poisoned:'PSN',Frostbitten:'FRB',Burn:'BRN',Poison:'PSN',Frostbite:'FRB'};
 const evTxt=ev=>ev.map((v,i)=>v?v+' '+SN[i]:'').filter(Boolean).join(' / ');
@@ -644,31 +646,22 @@ function bindTrainers(root){(root||app).querySelectorAll('details.capd').forEach
  (root||app).querySelectorAll('.capin').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const v=+i.value;if(v>0&&v<=100){if(CF.capLast)TCAP._last=v;if(v!==TRK[i.dataset.k]?.cap)TCAP[i.dataset.k]=v;else delete TCAP[i.dataset.k];}else delete TCAP[i.dataset.k];try{localStorage.setItem(LS.cap,JSON.stringify(TCAP))}catch(e){}rerender();};});
  (root||app).querySelectorAll('.capreset').forEach(a=>{if(a.dataset.b)return;a.dataset.b=1;a.onclick=e=>{e.preventDefault();delete TCAP[a.dataset.k];try{localStorage.setItem(LS.cap,JSON.stringify(TCAP))}catch(e){}rerender();};});}
 let TOPEN={};try{TOPEN=JSON.parse(localStorage.getItem(LS.tr)||'{}')}catch(e){}
-// Trainers header card: MGM and the starter pick on one line, the level-cap set switch (two sets: TR.mini) on its own,
-// then the caps table behind a closed "Level caps".
-function trHead(){const r1=(EVS?`<label class="mgm"><input type="checkbox" id="mgm" ${MGM?'checked':''}> MGM</label>`:'')+(PICK?starterSel('tk-starter','Starter'):'')+playerSel('tk-player','Player');
- const rows=TRD.mini?TRD.mini.filter(c=>CSET?!c[4]:c[3]==='trial'):[];
- const sw=TRD.mini?`<div class="capsw" role="group" aria-label="Level caps"><button data-s="0" aria-pressed="${!CSET}">${TX.capmain||'Trials'}</button><button data-s="1" aria-pressed="${!!CSET}">+ Mini caps</button></div>`:'';
- const tbl=TRD.mini?`<table class="itbl capt">${rows.map(c=>`<tr class="${c[3]}"><td>${esc(c[0])}<div class="mut small">${esc(c[1])}${c[3]==='mini'?' <span class="tag">mini</span>':''}</div></td><td class="n"><b>${c[2]}</b></td></tr>`).join('')}</table>`
-  :TRD.caps.length?`<table class="itbl">${TRD.caps.map(c=>`<tr><td>${esc(c[0])}</td><td>${c[1]}</td></tr>`).join('')}</table>`:'';
- const h=(r1?`<div class="r1">${r1}</div>`:'')+sw+(tbl?`<details class="capsd" ${CAPSO?'open':''}><summary class="mut small">Level caps</summary>${tbl}</details>`:'');
+function trHead(){const r1=(HAS_MGM?`<label class="mgm"><input type="checkbox" class="mgm-toggle" ${MGM?'checked':''}> MGM</label>`:'')+(PICK?starterSel('tk-starter','Starter'):'')+playerSel('tk-player','Player');
+ const rows=TRD.caps;
+ const tbl=rows.length?`<table class="itbl">${rows.map(c=>`<tr><td>${esc(c[0])}</td><td>${c[1]}</td></tr>`).join('')}</table>`:'';
+ const h=(r1?`<div class="r1">${r1}</div>`:'')+(tbl?`<details class="capsd" ${CAPSO?'open':''}><summary class="mut small">Level caps</summary>${tbl}</details>`:'');
  return h?`<div class="card trh">${h}</div>`:'';}
-// Two sets of level caps (TR.mini [name, where, level, 'trial'|'mini', left out]): the next trial or grand trial, or
-// with the forced boss fights between them. The set (LS.capset) picks each place's cap (s.cap[set] = [level, who,
-// where, battles left before it]).
-let CSET=0;try{CSET=+localStorage.getItem(LS.capset)||0}catch(e){}
 let CAPSO=false;
-const capOfSec=s=>s.cap&&s.cap[CSET];
+const capOfSec=s=>Array.isArray(s.cap?.[0])?s.cap[1]:typeof s.cap==='number'?[s.cap]:s.cap;
 // A place's (or walkthrough stop's) trainer button: open cards / trainers, then the level cap where there is one.
 const ptText=(n,m,cap)=>n+'/'+m+(cap?' | '+cap:'');
 const capLine=s=>{const c=capOfSec(s);if(!c)return '';const n=c[3];
- return `<div class="capl">Level cap <b>${c[0]}</b> · ${esc(c[1])}, ${esc(c[2])} · ${n?`${n} battle${n===1?'':'s'}`:'next'}</div>`;};
-function bindHead(){const m=app.querySelector('#mgm');if(m)m.onchange=()=>{MGM=m.checked;try{localStorage.setItem(LS.mgm,MGM?'1':'0')}catch(e){}rerender();};
- app.querySelectorAll('.capsw button').forEach(b=>b.onclick=()=>{CSET=+b.dataset.s;try{localStorage.setItem(LS.capset,CSET)}catch(e){}rerender();});
+ return `<div class="capl">Level cap <b>${c[0]}</b>${c[1]?` · ${esc(c[1])}${c[2]?', '+esc(c[2]):''} · ${n?`${n} battle${n===1?'':'s'}`:'next'}`:''}</div>`;};
+function bindHead(){app.querySelectorAll('.mgm-toggle').forEach(m=>{m.onchange=()=>{MGM=m.checked;try{localStorage.setItem(LS.mgm,MGM?'1':'0')}catch(e){}rerender();};});
  const d=app.querySelector('details.capsd');if(d)d.addEventListener('toggle',()=>{CAPSO=d.open;});}
 function listTrainers(){fil.innerHTML='';sug.style.display='none';const s=st.q;
  if(s){const a=TRS.filter(t=>t.key.includes(s)&&!rivalHidden(t));app.innerHTML=a.map(t=>`<div class="mut small" style="margin-top:10px">${esc(t.g)}${t.h?' · '+esc(t.h):''}</div>`+trainerBlock(t)).join('');bindTrainers();return;}
- app.innerHTML=trHead()+segBar('tr-all all','Open all islands','Close all')+TRD.g.map((g,gi)=>{const n=g.sec.reduce((a,x)=>a+x.tr.filter(t=>!rivalHidden(t)).length,0);return `<details class="split jt" data-gi="${gi}" ${TOPEN.o[gi]?'open':''}><summary>${esc(g.n)} <span class="mut small">${n} trainers</span></summary><div class="body"></div></details>`;}).join('');
+ app.innerHTML=trHead()+segBar('tr-all all','Open all splits','Close all')+TRD.g.map((g,gi)=>{const n=g.sec.reduce((a,x)=>a+x.tr.filter(t=>!rivalHidden(t)).length,0);return `<details class="split jt" data-gi="${gi}" ${TOPEN.o[gi]?'open':''}><summary>${esc(g.n)} <span class="mut small">${n} trainers</span></summary><div class="body"></div></details>`;}).join('');
  bindHead();bindTrackers();app.querySelectorAll('details.split[data-gi][open]').forEach(d=>TOG.trainers(d));bars();}
 // The page is boxes (D.TR.g: one per level cap, "Roxanne Split [Cap 15]"; Hot House, Mini Bosses) → places (the
 // box's locations) → trainers (name, tags and team preview; open, the full card). State in LS.tr {o:{<box>:1 open},
@@ -756,8 +749,8 @@ const walkTrainers=ts=>trRows(ts,t=>TRDO.has(t.k),false);
 // A walkthrough stop with trainers: "n/N | cap" in its header (open cards / rows, the highest level cap of their places in
 // the current cap set). It opens or closes all the stop's cards, like a Trainers place's (walkTeams); walkPtSync keeps
 // it in step, touching the text only when it changed.
-const trCapOf=t=>{const c=capOfSec(TRD.g[t.at[0]].sec[t.at[1]]);return c?c[0]:0;};
-function walkPt(ts){const gs=trGroups(ts),n=gs.filter(g=>TRDO.has(g[0].k)).length,cap=Math.max(0,...ts.map(trCapOf));
+const trCapOf=t=>{const g=TRD.g[t.at[0]],c=capOfSec(g.sec[t.at[1]]);return c?c[0]:g.cap||t.cap||0;};
+function walkPt(ts,fallback=0){const gs=trGroups(ts),n=gs.filter(g=>TRDO.has(g[0].k)).length,cap=fallback||Math.max(0,...ts.map(trCapOf));
  return `<button class="pt wk${n&&n===gs.length?' on':n?' part':''}" type="button" data-cap="${cap||''}">${ptText(n,gs.length,cap)}</button>`;}
 function walkPtSync(d){const b=d&&d.querySelector(':scope>summary>.pt.wk');if(!b)return;const r=[...d.querySelectorAll('details.trd')],n=r.filter(x=>x.open).length;
  const tx=ptText(n,r.length,b.dataset.cap),c='pt wk'+(n&&n===r.length?' on':n?' part':'');if(b.textContent!==tx)b.textContent=tx;if(b.className!==c)b.className=c;}

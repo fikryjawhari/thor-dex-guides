@@ -125,3 +125,27 @@ Each session ticks off its part here (Status below) and says which step is next.
 
 ## Status
 - 2026-10-23: scoped, questions answered. Next: step 1 (A, template).
+- 2026-10-23: **A built, awaiting phone / Thor review**, uncommitted on `worktree-consistency-template` in the
+  T3-bound worktree (main's setup commit `4aeaab9` was committed separately and fast-forwarded here first).
+  A1-A7 implemented in the shared template; EI's only config edit is `cfg.starter: "slot"` → `"type"`.
+  All storage key names are unchanged. A8: `tools/splits.py` exports `split_name`, used by EI / HG's split-UI
+  extracts and EX / PS's trainer extracts (available through their shared `common.py`). It handles boss / cap,
+  league, legacy `[Level Cap N]` and post-game names; B should reuse it when rebuilding walkthrough splits.
+  `tools/consistency-check.mjs` covers saved Changed-filter state, EI's old tracker / type rivals, picker ↔
+  tracker state, failed / cleared starters, shared MGM state, single cap formats, walkthrough cap fallback,
+  saved ticks, all five viewer sizes, expanded pages and light theme, in normal and dvkb modes, for all four.
+  Checks: all four assemble; all eight complete DOM sweeps (19,960 route/mode comparisons) have zero page errors,
+  zero hashchange timeouts and zero unsettled routes; DOM differences are expected (EI 777, HG 98, EX 558,
+  PS 441 in each mode). All four walkcheck and pagecheck scripts in dvkb report no page errors. Python extract
+  edits compile and six naming-helper cases pass; full extracts were not run because this worktree has no raw sources.
+  Baselines / logs / minimum-size screenshot are local under `.tmp/` (ignored).
+  Phone previews on the existing Tailscale server, all in the Thor frame:
+  `consistency-emerald-imperium.html`, `consistency-hardlove-gold.html`, `consistency-eternal-x.html`,
+  `consistency-photonic-sun.html`. Same URLs can be reloaded after fixes; no new Tailscale serves needed.
+  **Compatibility until B:** legacy `TR.mini` and paired section caps are normalised to a single list / entry
+  in memory, including the usable mini caps. `LS.capset` is no longer read or written; the config key stays.
+  The published data.json files are untouched. EI still calls area 0 Littleroot, HG still has no Starter area,
+  EX / PS still have their old groupings / cap lists, and walkthrough names / league names remain for B to fix.
+  No species pruning, cap removal, items decisions or walkthrough regrouping was performed. Next: user review
+  and any A fixes, then commit A when authorised; B branches start from `worktree-consistency-template`, merge
+  back here one at a time before C / D. Do not merge this branch into main before the complete pass is approved.

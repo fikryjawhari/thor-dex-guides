@@ -12,7 +12,7 @@ Rival and other starter-dependent teams: Bulbapedia's "If the player chose X" (P
 """
 import json, os, re
 from collections import defaultdict
-from common import BULBA, load, norm, report, fix
+from common import BULBA, load, norm, report, fix, split_name
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon Ultra Sun and Ultra Moon-Part {}.wiki')
 # Boxes: (walkthrough parts, name). Aether Paradise's second visit (Part 21) is its own box; the first (Part 14, no
@@ -594,6 +594,8 @@ def build(D):
                 t['k'] = remap[t['k']]
     for st in allstops:
         st[2] = [remap[k] for k in st[2]]
+    for group in g:
+        group['n'] = split_name(group['n'], group.get('cap') or None)
     D['TR'] = {'caps': [[f"{c['n']} ({c['w']})", c['l']] for c in caps if c['k'] == 'trial'],
                'mini': [[c['n'], c['w'], c['l'], c['k'], c.get('drop', 0)] for c in caps],
                'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}

@@ -2,6 +2,8 @@
 import json, os, re, sys, unicodedata
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..'))
+sys.path.insert(0, os.path.join(ROOT, 'tools'))
+from splits import split_name
 HACK = os.path.join(ROOT, 'hacks', 'photonic-sun')
 SRC = os.path.join(HACK, '.src')
 TXT = os.path.join(SRC, 'txt')  # pdftotext -layout copies of the PDFs (build.py makes them)

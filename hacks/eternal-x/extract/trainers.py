@@ -16,7 +16,7 @@ the boy, Calem: you fight Serena; "f" = the girl, Serena: you fight Calem).
 """
 import json, os, re
 from collections import defaultdict
-from common import BULBA, load, norm, report, fix
+from common import BULBA, load, norm, report, fix, split_name
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon X and Y-Part {}.wiki')
 NPARTS = 17
@@ -622,7 +622,7 @@ def build(D):
         st[2] = [remap[k] for k in keys.get((st[0], st[1]), [])]
     tc, tm = level_caps(g)
     for x, (who, lv) in zip(g[:-1], tc):  # one main cap per split: its Gym Leader, then the Elite Four
-        x['n'] = x['tab'] = f"{who.split(' (')[0]} Split [Cap {lv}]"
+        x['n'] = x['tab'] = split_name(who.split(' (')[0], lv)
     # The key that ends each split (its Leader, the Champion) for walk.py's splits
     D['_splits'] = [(x['n'], next(t['k'] for sc in reversed(x['sec']) for t in reversed(sc['tr'])
                                   if t['n'].startswith(('Leader ', 'Champion ')))) for x in g[:-1]]

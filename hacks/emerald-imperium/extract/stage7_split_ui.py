@@ -15,6 +15,7 @@
 import os, re, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'tools'))
 import datajson
+from splits import split_name
 sys.stdout.reconfigure(encoding="utf-8")
 P = 'hacks/emerald-imperium/data.json'
 D, RAW = datajson.load(P)
@@ -79,7 +80,7 @@ for g in D['TR']['g']:
         assert not s['h'] and not s.get('note') and not s.get('rw')
         for t in s['tr']:
             c = t['cap']
-            if not G or G[-1].get('cap') != c: G.append({'n': f'{CAPN[c]} Split [Cap {c}]', 'cap': c, 'tab': g['tab'], 'wk': g.get('wk'), 'sec': []})
+            if not G or G[-1].get('cap') != c: G.append({'n': split_name(CAPN[c], c), 'cap': c, 'tab': g['tab'], 'wk': g.get('wk'), 'sec': []})
             place(G[-1]['sec'], t['loc'], t)
 D['TR']['g'] = G
 # ---------- shops

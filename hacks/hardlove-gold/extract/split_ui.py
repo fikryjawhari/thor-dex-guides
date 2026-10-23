@@ -8,6 +8,7 @@
 import os, re, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'tools'))
 import datajson
+from splits import split_name
 sys.stdout.reconfigure(encoding="utf-8")
 P = 'hacks/hardlove-gold/data.json'
 D, RAW = datajson.load(P)
@@ -18,7 +19,7 @@ for g in D['TR']['g']:
     first = True
     for s in g['sec']:
         h = s['h']; m = re.match(r'^(.*?) \[Level Cap (\d+)\],?\s*(.*)$', h)
-        if m: G.append({'n': f'{m[1]} [Cap {m[2]}]', 'cap': int(m[2]), 'tab': g['tab'], 'note': [], 'sec': []}); h = m[3] or m[1]
+        if m: G.append({'n': split_name(m[1], int(m[2])), 'cap': int(m[2]), 'tab': g['tab'], 'note': [], 'sec': []}); h = m[3] or m[1]
         elif g['n'] == 'Mini Bosses':
             if first: G.append({'n': 'Mini Bosses', 'tab': g['tab'], 'note': [], 'sec': []})
             h = re.sub(r'^\[Level Cap X-2\]\s*', '', h)

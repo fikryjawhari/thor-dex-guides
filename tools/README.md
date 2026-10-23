@@ -20,6 +20,8 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `sprites_pee.py <expansion dir> [out-dir]` | Builds the shared sprite set (`sprites/png/`, `sprites/index.json`) from a pokeemerald-expansion checkout (`sprites/SOURCES.md`). |
 | `sprite_keys.py <hack>` | Lists the sprite key each species gets (from dex number and name; `assemble.py` uses it) and the species not in the shared set, i.e. the hack's own forms. |
 | `datajson.py` | `load()` / `save()` for a hack's `data.json` in its own layout (one line per entry for M, MV, AB, P, LOC, AR); for extract steps that edit the finished file (EI `stage7_split_ui.py`, Hardlove `split_ui.py`). |
+| `splits.py` | Shared `split_name(name, cap=None)` for trainer and walkthrough split names; normalises `[Level Cap N]`, league names and post-game labels. |
+| `consistency-check.mjs` | After `python assemble.py`, run `node tools/consistency-check.mjs`: starter migration and rival filtering, single caps, MGM sharing, saved ticks, five viewer sizes, expanded pages and light theme, normal and `dvkb`, across all four guides. Requires Chrome or Edge, like `domcompare.mjs`. |
 | `pngpal.py` | Reads, writes and crops palette PNGs (used by `sprites_pee.py` and `assemble.py`). |
 | `garc.py` | Reads 3DS GARC archives, LZ11 entries, mini packs and Gen 6/7 game text. Used by the scripts below. |
 | `ctr_dex.py <game> <out.json> <romfs> [fallback ...] [--code code.bin \| --ips code.ips]` | The whole dex from a 3DS romfs (`x`, `oras`, `sun`/`moon`, `usun`/`umoon`): species and forms with stats, abilities, every learnset, evolutions, Megas; moves; abilities; TM list; wild tables. Used for Photonic Sun, Eternal X, Meissa Moon, Navy Sapphire. |
