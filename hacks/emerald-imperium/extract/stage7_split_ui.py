@@ -13,9 +13,11 @@
 #   follow the later cap): Gardenia (Petalburg Woods, "Pre-3rd Gym Badge") goes to the Wattson split, before Mauville.
 # - Shops: each row gets its shop as r[4] (the text before the first " · "); r[1] keeps the rest.
 import os, re, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'tools'))
 import datajson
 from splits import split_name
+from stage8_consistency import finalise
 sys.stdout.reconfigure(encoding="utf-8")
 P = 'hacks/emerald-imperium/data.json'
 D, RAW = datajson.load(P)
@@ -92,6 +94,8 @@ for sec in D['IT']:
         shop = 'Any Poké Mart' if parts[0].startswith('Any Pok') else parts[0]
         r[1] = ' · '.join(parts[1:]); r.append(shop)
 D['s7'] = 1
+removed = finalise(D)
 datajson.save(P, D, RAW)
+print('consistency: removed species', removed)
 print('areas', len(AR), 'locs', len(LOC), 'boxes', [g['n'] for g in G])
 print('shops', sorted({r[4] for s in D['IT'] if s['n'] == 'Shops' for r in s['r']}))

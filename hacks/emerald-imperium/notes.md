@@ -1,5 +1,50 @@
 # emerald-imperium build notes
 
+## Consistency pass Part B (2026-10-23)
+
+`extract/stage8_consistency.py` is the final, idempotent data extraction step. Stage 7 calls it automatically
+after assembling eggs, gifts, shops and trainer boxes; for an already-stage-7 build run
+`python -I hacks/emerald-imperium/extract/stage8_consistency.py`. It uses the source-derived encounter availability
+and actual trainer teams, not a hand-edited species blacklist. No additional raw inputs are needed for this step.
+Historical stages 1-6 still use their original `/home/claude/ei` and upload paths; a complete raw-doc rebuild
+was not run in this pass. Those stages need a separate portability pass, not shared extractor changes here.
+
+- Species: 1,275 -> 1,208. Drop 63 unavailable, unused ordinary/form entries and four unused Megas whose base
+  species is unavailable (Mega Mewtwo X/Y, Mega Latias/Latios). Megas/Primals require an obtainable base dex number
+  or actual trainer use; retain trainer-only Primal Dialga/Palkia with their existing Mega/Primal category.
+  Retain all trainer-used species.
+- Keep original species IDs, order among survivors, all move/ability/location indices and encounter records.
+  Filter links to removed species from `ef`/`et`/`of`; retain Mega Stone item facts but clear any removed-species
+  links, including their walkthrough copies. No item regrouping or Part C changes.
+- AR[0] is now `Starter`, `st:1`; its location list and index are unchanged. All 159 tracker area indices, egg
+  subslots and saved tracker species meanings survive. `cfg.starter: type` was already supplied by Part A.
+- Walkthrough retains its nine splits, every stop and step in the same order, now Roxanne 15, Brawly 25,
+  Wattson 34, Flannery 47, Norman 59, Winona 68, Tate & Liza 76, Juan 82, Elite Four 85, all named through
+  `tools/splits.py` as `<Boss> Split [Cap N]`. Trainers retains 20 boxes; only Champion's box becomes
+  `Elite Four Split [Cap 85]`. Trainer keys, sets, placement, cap list and Hot House tiers do not change.
+- Published `hack.json` and all localStorage keys remain byte-for-byte unchanged. `LS.dex` stores filter/sort
+  state, not species array offsets; tracker `TK.e[area].p` and trades store species IDs. Walkthrough ticks use
+  split/stop/step indices, which are unchanged. Saved links to intentionally removed species can no longer open
+  a detail page, but no saved ID is reassigned to a different species.
+
+Preservation/rebuild check against the pre-Part-B data:
+`python -I hacks/emerald-imperium/extract/check_consistency.py <baseline-data.json>`.
+The check verifies the exact keep rule, source-to-output regeneration, idempotence, trainer and encounter
+preservation, references, unchanged tables, tracker indices, split count and walkthrough stop/tick keys.
+
+Validation on 2026-10-23: the preservation check passes for all 481 trainer-used species, 159 areas, 106
+walkthrough stops and 141 steps. Reapplying stage 8 leaves data.json byte-identical; the three affected Python
+scripts compile; `python assemble.py emerald-imperium` builds with 1,208 sprites and no missing-sprite warning.
+An EI-only local copy of `tools/consistency-check.mjs` passes normal/dvkb, all five viewer sizes and light theme,
+including old area-0 starter migration, picker/type-rival synchronisation, failed/cleared starters, saved ticks,
+MGM state and expanded layouts. A local extension compares the old/new runtime FAM maps: every obtainable
+species keeps its dupes-clause family ID in both modes. `walkcheck.mjs` and `pagecheck.mjs` pass at 260x316 in
+both modes, with no page errors or width overflow; minimum-size screenshots were inspected.
+`domcompare.mjs` sweeps all 2,716 baseline routes per mode: zero page errors, hashchange timeouts or unsettled
+routes; all routes differ as expected because the footer's species count changes (not an identical-DOM pass).
+Logs, baseline data/build and screenshots are local under `.tmp/`, not tracked. No Thor-device testing or
+complete stages-1-6 raw-document rebuild was performed; no source refetch was needed.
+
 Moved from the guide's top comment on 2026-10-19 (it was in every built file).
 
 ```text
