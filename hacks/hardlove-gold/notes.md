@@ -1,5 +1,40 @@
 # hardlove-gold build notes
 
+## Consistency Part B (2026-10-23)
+
+- `extract/consistency.py` applies the agreed data changes to a published build, idempotently:
+  `python -I hacks/hardlove-gold/extract/consistency.py`, then `python assemble.py hardlove-gold`.
+  Both the raw `extract/build.py` and the existing `extract/split_ui.py` also call this finaliser.
+  Split names use the committed shared `tools/splits.py`; no shared extract code changes are needed.
+  `split_ui.py [data.json]` also accepts an output path for rebuilding away from the published file.
+  The hack-only `dex.py` helper now splits actual HTML closing tags instead of literal `\/` delimiters;
+  these three fixes are needed to run the archived raw pipeline, not changes to its data rules.
+- Starter is appended as area 61 and location 95, never inserted before existing entries. Only the three
+  Turtwig / Litten / Froakie `Starter choice` encounters move there. New Bark Town retains every other encounter.
+  The existing New Bark Town walkthrough stop includes Starter before its original area, without adding a stop.
+- Published species IDs and order, all 61 original area indices and 95 location indices, trainer keys and teams,
+  cap lists, item data, walkthrough split / stop indices, and checklist contents remain unchanged. The existing
+  unobtainable / unused-species pruning is untouched. Walkthrough split labels use `[Cap N]`; both tabs use
+  `Victory Road Split [Cap 81]` and `Elite Four Split [Cap 81]`.
+- All `hack.json` storage keys remain unchanged. Existing `hgtrack.e` / trade area keys still identify the same
+  places. The shared template seeds the new Starter slot from a saved `hgtrack.s`, independently of area 0's
+  New Bark Town encounter; failed / cleared New Bark encounters are not mistaken for the starter. Walkthrough
+  state uses split / stop indices, so labels and the extra area within the existing stop do not move saved state.
+- The source-free finaliser preserves the published 0.8.3 trainer corrections documented below. A complete raw
+  rebuild still requires the matching 0.8.3 source / sheet inputs, not just the older 0.8.2 source snapshot.
+  The locally available snapshot identifies itself as `8ac661afda`: its full extract and split pass succeed,
+  with identical species / encounters / areas to this build, but retain two duplicate trainer keys (`9.0.2`,
+  `9.0.5`) and differ on seven existing trainer records (including documented 0.8.3 corrections). Its walkthrough
+  trainer references also differ. That raw output was checked separately, not substituted into the published data.
+- Checks: the Part B finaliser reproduces this data byte-for-byte from its parent-commit data and is idempotent.
+  All 986 species, 329 published trainer keys, 18 walkthrough splits / 94 stops and all original saved indices are
+  preserved. `assemble.py hardlove-gold` succeeds. Normal / dvkb full DOM sweeps cover 2,481 routes each with
+  zero page errors, unsettled routes or hashchange timeouts; DOM differences reflect the agreed data changes.
+  The existing consistency check passes all five viewer sizes and light theme; pagecheck / walkcheck pass at
+  260 x 316 in both modes. Browser migration tests carry caught / failed / unchosen baseline state through the
+  old build, this build and reload, preserving original tracker / trade slots and walkthrough / item / trainer /
+  cap state. The named starter picker writes only the new slot, leaving New Bark Town's tracker unchanged.
+
 Moved from the guide's top comment on 2026-10-19 (it was in every built file).
 
 ```text

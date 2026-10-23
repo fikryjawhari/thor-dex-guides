@@ -1,5 +1,5 @@
 # Data for the split UI (plans/split-ui.md), run in the repo on hacks/hardlove-gold/data.json after extract/assemble.py:
-#   python -I hacks/hardlove-gold/extract/split_ui.py
+#   python -I hacks/hardlove-gold/extract/split_ui.py [data.json]
 # Works on the finished data.json (no sources needed) and refuses to run twice (D['su']).
 # - Trainers: boxes = the mini-splits the sheet's section headings start ("Elder Li Split [Level Cap 12], Cherrygrove
 #   City" -> box "Elder Li Split [Cap 12]", place "Cherrygrove City"); places = the headings, repeats next to each other
@@ -9,8 +9,10 @@ import os, re, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'tools'))
 import datajson
 from splits import split_name
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from consistency import apply as apply_consistency
 sys.stdout.reconfigure(encoding="utf-8")
-P = 'hacks/hardlove-gold/data.json'
+P = sys.argv[1] if len(sys.argv) > 1 else 'hacks/hardlove-gold/data.json'
 D, RAW = datajson.load(P)
 if D.get('su'): sys.exit('split_ui already applied')
 # ---------- trainers
@@ -46,6 +48,7 @@ IT = [dict(S['Held Items'], r=held), {'n': 'Valuables', 'k': 'gen', 'note': '', 
 IT += [s for s in D['IT'] if s['n'] not in ('Held Items', 'Berries', 'Heart Scales', 'Rare Candies')]
 D['IT'] = IT
 D['su'] = 1
+apply_consistency(D)
 datajson.save(P, D, RAW)
 print('boxes', [(g['n'], [s['h'] for s in g['sec']]) for g in G])
 print('held', {c: [r[0] for r in held if r[4] == c] for c in ORDER[:3]})

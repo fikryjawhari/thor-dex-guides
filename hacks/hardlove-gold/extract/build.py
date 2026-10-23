@@ -4,6 +4,7 @@ Writes data.json, spr.json and report.txt to <out dir>. See the notes comment in
 import sys, os, re, json, html, unicodedata, collections
 sys.path.insert(0, os.path.dirname(__file__))
 import xl, dex, png
+from consistency import apply as apply_consistency
 
 SRC, WORK, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
 sys.stdout.reconfigure(encoding='utf-8')
@@ -1045,6 +1046,7 @@ if nospr: rep('sprites missing or borrowed:', ', '.join(nospr))
 
 import datetime
 D = {'M': M, 'MV': MV, 'AB': AB, 'P': P, 'LOC': LOC, 'AR': AR, 'IT': IT, 'WK': WK, 'TR': TRD, 'TC': TC, 'built': datetime.date.today().isoformat()}
+apply_consistency(D)
 os.makedirs(OUT, exist_ok=True)
 json.dump(D, open(os.path.join(OUT, 'data.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
 json.dump(SPR, open(os.path.join(OUT, 'spr.json'), 'w'), separators=(',', ':'))
