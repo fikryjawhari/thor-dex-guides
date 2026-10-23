@@ -26,7 +26,12 @@ Key Items keep only what unlocks something or has story / QoL / gameplay value (
 "Other" key-type rows move here: Infinite Candy, Old Rod, Bike, Pokégear Upgrade, Starter Card, Dowsing Machine,
 SS Aqua Ticket, Mega Ring).
 
-## Sub-headings (yellow, A to Z inside, a sub-heading shows whenever its box has the heading in the standard, even when it is the only one, because it is the sticky heading that scrolls with the page; Expand / Collapse all bar when 2+)
+## Sub-headings (yellow, A to Z inside, Expand / Collapse all bar when a box has 2+)
+**Every box has at least one sub-heading** (user, 2026-10-23), so each has the same sticky heading that scrolls with the
+page. A box with no natural groups gets one sub-heading named after the box (Key Items, Evolution Items, Move Tutors,
+Fossils, Mega Stones / Z-Crystals, Useful NPCs); a box with groups uses them (below). Sub-headings show the row count and
+collapse like the others. The data gives each row a sub-heading (`r[4]`), so the extract writes the box name when there
+is no group. This also holds for a box with a single group (TMs and HMs in a hack with no HMs still shows TMs).
 - **Shops**, by item kind: Poké Balls, Healing and repels, Evolution items, Power items, Held items, Stats and abilities,
   TMs, Mega Stones, Other. One row per item; the row lists every shop that sells it, one per line (no `Shop:` prefix).
   EI is regrouped from its per-shop headings to this (user's call); the vanilla-stock note stays as the box note, and
@@ -40,8 +45,10 @@ SS Aqua Ticket, Mega Ring).
 - **TMs and HMs**: sub-headings TMs and HMs (a hack with no HMs still shows the TMs sub-heading, so the sticky heading is always there). Replaces the separate TMs and
   HMs boxes in EI / HG; the move pages' TM / HM lookups read `k:'tm'` rows by name, so check them after merging the boxes.
 - **Valuables**: sub-heading per item.
-- Boxes with one fixed sub-heading (TMs and HMs when no HMs) show it anyway; the template already renders a sub-heading
-  per row group and only the Expand / Collapse all bar needs 2+. Check the sticky heading stacking at 260 × 316.
+- The template already renders a sub-heading per row group and only the bar needs 2+, so the standard is a data rule.
+  The box's own sticky heading and the sub-heading stack: check the gap and stacking at 260 × 316 and `dvkb` (see the
+  sticky-stack lesson: paint background above the lower header, pin only what's asked), and that a lone sub-heading
+  named like its box doesn't look doubled. If it does, raise it before building.
 
 ## Row style
 `Found: places` / `Wild: species` / `Also: gift, reward, Festival Plaza...` / `Shop: shop, shop`, in that order, one
