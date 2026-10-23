@@ -124,6 +124,9 @@ sessions cost mostly cache reads, since each tool call re-reads the whole contex
 Each session ticks off its part here (Status below) and says which step is next.
 
 ## Status
+- 2026-10-23: A committed as 98cc969 with user authorisation. B runs sequentially, one 6.1 sol subagent and
+  separate worktree per hack, each based on committed A, not the previous hack. Commit each completed hack.
+  No pushes or merges; decide the merge session after all four are done. This supersedes the older workflow.
 - 2026-10-23: scoped, questions answered. Next: step 1 (A, template).
 - 2026-10-23: **A built, awaiting phone / Thor review**, uncommitted on `worktree-consistency-template` in the
   T3-bound worktree (main's setup commit `4aeaab9` was committed separately and fast-forwarded here first).
