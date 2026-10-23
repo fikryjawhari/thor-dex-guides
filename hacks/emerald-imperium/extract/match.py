@@ -1,8 +1,10 @@
-# match.py: shared name matching (species / moves / abilities / items) against data.json + eidex data
-import json,re
-D=json.load(open('data.json'))
-R='/home/claude/ei/eidex-HEAD/src/data/'
-MD=json.load(open(R+'moveData.json'));AD=json.load(open(R+'abilityData.json'));ID=json.load(open(R+'itemData.json'))
+"""Name matching for the Boss Battles sheet and the calc's trainer sets: species, moves, abilities and items against the dex.
+
+init(D) builds the lookups from the finished P / M of data.json; everything else is static (eidex.py's game data).
+Fuzzy matches (Levenshtein <= 2) are recorded in FIX for the trainers report.
+"""
+import re
+from eidex import AD, ID, MD
 key=lambda s:re.sub(r'[^a-z0-9]','',str(s).lower().replace('é','e').replace('♀','f').replace('♂','m'))
 def lev(a,b):
     if abs(len(a)-len(b))>2: return 9
@@ -19,18 +21,26 @@ def fuzzy(k,keys,mx=2):
         if x<bd: bd=x;best=c
     return best
 FIX=[]  # reported fixes
-# ---------- species
 REG={'alola':'alolan','alolan':'alolan','a':'alolan','galar':'galarian','galarian':'galarian','g':'galarian','hisui':'hisuian','hisuian':'hisuian','h':'hisuian','paldea':'paldean','paldean':'paldean','p':'paldean'}
 DEFAULT={'ice','normal','standard','shield','male','singlestrike','midday','meteorred','amped','hero','aria','teal','solo','incarnate','combat'}
-SK={}
-for p in D['P']:
-    n=p['n'];k=key(n);SK.setdefault(k,p['id'])
-    m=re.match(r'^(.*?) \((.*)\)$',n)
-    if m:
-        SK.setdefault(key(m[1]+m[2]),p['id'])
-        if key(m[2]) in DEFAULT: SK.setdefault(key(m[1]),p['id'])
-SK.update({'aegislashboth':'681','minior':'774','silvally':'773','urshifu':'892','toxtricity':'849','basculegion':'902','darmanitan':'555','lycanroc':'745','oricorio':'741','meloetta':'648','zamazenta':'889','greninjabond':'1112','wishiwashischool':'1175','paldeantauros':SK.get('paldeantauroscombat')})
-STONE={p['id']:p.get('stone') for p in D['P']}
+SK = {}
+STONE = {}
+MK = {}
+
+
+def init(D):
+    global SK, STONE, MK
+    SK = {}
+    for p in D['P']:
+        n=p['n'];k=key(n);SK.setdefault(k,p['id'])
+        m=re.match(r'^(.*?) \((.*)\)$',n)
+        if m:
+            SK.setdefault(key(m[1]+m[2]),p['id'])
+            if key(m[2]) in DEFAULT: SK.setdefault(key(m[1]),p['id'])
+    SK.update({'aegislashboth':'681','minior':'774','silvally':'773','urshifu':'892','toxtricity':'849','basculegion':'902','darmanitan':'555','lycanroc':'745','oricorio':'741','meloetta':'648','zamazenta':'889','greninjabond':'1112','wishiwashischool':'1175','paldeantauros':SK.get('paldeantauroscombat')})
+    STONE={p['id']:p.get('stone') for p in D['P']}
+    MK = {key(n):i for i,n in enumerate(D['M'])}
+
 def species(name,item=''):
     """sheet or calc name -> (dex id, note). Mega/Primal only with the matching held item."""
     raw=name.strip();n=raw.replace("'",'')
@@ -60,7 +70,6 @@ def mega_ok(pid,item):
     st=STONE.get(pid)
     return not st or lev(key(st),key(item))<=3 or key(st)[:5]==key(item)[:5]
 # ---------- moves
-MK={key(n):i for i,n in enumerate(D['M'])}
 MDK={key(v['name']):int(k) for k,v in MD.items()}
 HPT={'fire','water','grass','ice','electric','ground','rock','flying','bug','poison','ghost','steel','dark','dragon','psychic','fighting','fairy'}
 def move(name):
@@ -91,3 +100,4 @@ def item(name):
         if TYPO[k]!=n: FIX.append(('item',n,TYPO[k]))
         return TYPO[k]
     return n
+

@@ -1,4 +1,4 @@
-"""Stage 4: Items tab (IT) and the Mega stones' names (P.stone).
+"""Items (IT, P.stone): the Items tab and the Mega stones' names.
 
 Overworld items are vanilla (SOURCES.md: the hack's zone scripts are byte-identical to Ultra Sun's), so places come
 from Serebii's Ultra Sun lists (item-locations.csv). Marts are the hack's own (Vendor Changes.pdf, transcribed in

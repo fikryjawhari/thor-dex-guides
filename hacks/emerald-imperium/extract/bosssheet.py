@@ -1,6 +1,14 @@
-# parse_sheet.py: Boss Battles xlsx (sheet.pkl from openpyxl dump) -> ck/sheet_trainers.json
-import pickle,re,json
-S=pickle.load(open('sheet.pkl','rb'))
+"""The official Boss Battles sheet (xlsx; the LightGlory / Flash Ketchum / iamguitar / PrincessGlaceon / Cap sheet), read
+into trainer blocks for trainers.py: title, section, rewards, paste link and each Pokemon's level, nature, ability, item,
+moves, stats and Speed notes.
+
+Block layout: title in col C (rewards in col R), species above the "Pokemon:" row in cols F/K/P, then Level / Nature /
+Ability / Item / Moves in cols C/H/M, stats / IV / EV in +2/+3/+4, "Speed Stat: a (b)". xlsx truncates tab names to 31
+characters (TABS). Hidden tabs and the "Hoenn/Sinnoh Gyms Only" duplicates (DUP) are not used for the guide's order.
+"""
+import re
+from common import BOSS, workbook
+
 TABS=['Badge 1 (Roxanne)','Badge 2 (Brawly)','Hot House (Rewards Upto 7 Badge','Badge 3 (Wattson)','Badge 4 (Flannery)','Badge 5 (Norman)','Badge 6 (Winona)','Badge 7 (Tate & Liza)','Badge 8 (Juan)','Evergrande City','Victory Road','Elite 4  Champion']
 DUP=['Hoenn Gyms Only','Sinnoh Gyms Only']
 FIELD={'Level:','Nature:','Ability:','Item:','Moves:','Pokemon:','Types:'}
@@ -14,8 +22,8 @@ def stopper(r):
             if re.search(r'Speed Stat|\d\s*\)?\s*$|level cap used|Poke Paste|^\s*-\s|Rewards',ln): return True
         if c==1 and v.strip().rstrip(':') in ('Level','Nature','Ability','Item','Moves'): return True
     return 2 in r
-def parse(tab):
-    R=S[tab]['R'];out=[];tr=None;sect=None
+def parse(R, tab):
+    out=[];tr=None;sect=None
     for i,r in enumerate(R):
         c1=r.get(1,'').strip()
         if 1 in r and c1 not in FIELD and not c1.startswith('Poke Paste') and not c1.startswith('Pokemon') and not c1.startswith('Types') and 2 not in r:
@@ -63,9 +71,18 @@ def parse(tab):
                     if k>i+14: break
                 tr['p'].append(p)
     return out
-if __name__=='__main__':
-    allt={t:parse(t) for t in TABS+DUP}
-    json.dump(allt,open('ck/sheet_trainers.json','w'),indent=0,ensure_ascii=False)
-    for t,v in allt.items():
-        print('==',t,len(v))
-        for x in v: print('  ',x['sec'] or '',' | ',x['title'],' | ',[ (p['pre'],p['lv']) for p in x['p']],len(x['rw']))
+
+def rows(ws):
+    """A tab as a list of {column index: text} per row (empty cells left out; whole numbers without '.0')."""
+    def text(v):
+        if isinstance(v, float) and v == int(v):
+            v = int(v)
+        return str(v)
+    return [{c.column - 1: text(c.value) for c in row if c.value is not None and str(c.value).strip() != ''}
+            for row in ws.iter_rows()]
+
+
+def trainers():
+    """{tab: [trainer block]} for the split tabs and the duplicate gym tabs."""
+    wb = workbook(BOSS)
+    return {t: parse(rows(wb[t]), t) for t in TABS + DUP}

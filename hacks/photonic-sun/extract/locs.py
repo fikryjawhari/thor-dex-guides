@@ -1,4 +1,4 @@
-"""Stage 2: wild encounters, statics, gifts and trades (LOC, AR, P.w, P.g).
+"""Locations (LOC, AR, P.w, P.g): wild encounters, statics, gifts and trades.
 
 Rates, slots and levels come from the game's tables (dex-rebalanced.json encounters). Gen 7 tables carry no method,
 and one game area holds a copy of the table for every grass patch or fishing spot, so identical tables are merged

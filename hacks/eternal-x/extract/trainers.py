@@ -1,4 +1,4 @@
-"""Stage 3: trainers (TR) and the walkthrough's stops (D['_stops'], finished by walk.py).
+"""Trainers (TR): trainer boxes, and the walkthrough's stops (D['_stops'], finished by walk.py).
 
 Sets are the hack's own trainer data (trainers-rebalanced.json, tools/xy_trainers.py): species, form, level, ability,
 item, IVs and moves (Gen 6 trainer data has no natures or EVs). The game data has no places, so they come from

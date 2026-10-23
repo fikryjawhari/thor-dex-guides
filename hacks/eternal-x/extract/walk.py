@@ -1,4 +1,4 @@
-"""Stage 5: the Walkthrough tab (WK).
+"""Walkthrough (WK): the Walkthrough tab.
 
 Eternal X follows Bulbapedia's Pokémon X and Y walkthrough: one split per cap, one stop per place heading, with the
 trainers trainers.py placed there. Each encounter area joins the first stop with its name; areas with no stop of their

@@ -1,4 +1,4 @@
-"""Read the hack's hg-engine source files (docs/hardlove-gold/repos/hardlove, pinned commit in COMMIT): designated
+"""Read the hack's hg-engine source files (hacks/hardlove-gold/.src/repos/hardlove, pinned commit in COMMIT): designated
 initialisers like [SPECIES_X] = { .field = value, ... } become nested dicts/lists of strings and ints."""
 import re, json, os
 

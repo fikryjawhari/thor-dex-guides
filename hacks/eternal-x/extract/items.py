@@ -1,4 +1,4 @@
-"""Stage 5: Items tab (IT) and the Mega stones' names (P.stone).
+"""Items (IT, P.stone): the Items tab and the Mega stones' names.
 
 Vanilla places come from Bulbapedia's Kalos location pages (.src/bulbapedia/*.wiki): the {{Itemlist}} rows of each
 page's Items section (Pokemon X rows only; the random Berries from "Natural objects" trees are left out) and the

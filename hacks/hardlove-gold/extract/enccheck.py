@@ -1,7 +1,7 @@
 """Check the locations sheet's wild tables against the game's Encounters.c, slot by slot (with the hack's own slot odds).
 encounters(HG) -> {table: {method: {speciesId: rate}}}; compare(sheet, game) -> list of differences."""
 import re, collections
-from src import LAND, WATER, ROCK
+from hgsource import LAND, WATER, ROCK
 
 # sheet location -> Encounters.c table (sheet sub-locations not listed map by name: "Route 29" -> R29_ROUTE_29)
 MAP = {'Dark Cave (1)': 'D42R0102_DARK_CAVE_ROUTE_31_ENTRANCE', 'Dark Cave (Inner)': 'D42R0101_DARK_CAVE_ROUTE_45_ENTRANCE',

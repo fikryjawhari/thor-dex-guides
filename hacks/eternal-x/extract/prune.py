@@ -1,4 +1,4 @@
-"""Keep obtainable species/forms and species used by shown trainers or partners."""
+"""Species kept in P: obtainable species and forms, plus the species shown trainers and partners use."""
 from common import report
 
 

@@ -10,7 +10,7 @@ from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import HACK
-import availability
+import prune
 
 
 def trainers(data):
@@ -18,7 +18,7 @@ def trainers(data):
             for section in group['sec'] for trainer in section['tr']}
 
 
-def check_availability():
+def check_prune():
     def entry(identifier, dex_number, **fields):
         return dict(id=identifier, dex=dex_number, w=[], et=[], ef=[], of=[], g=0) | fields
 
@@ -32,7 +32,7 @@ def check_availability():
               'IT': [{'r': [['Available stone']]}],
               'TR': {'g': [{'sec': [{'tr': [{'p': [{'id': 'trainer-only'}, {'id': 'trainer-mega'}, {'id': 'trainer-form'}],
                                            'pt': [{'p': [{'id': 'partner-only'}]}]}]}]}]}}
-    availability.build(sample)
+    prune.build(sample)
     kept = {pokemon['id']: pokemon for pokemon in sample['P']}
     assert set(kept) == {'baby', 'base', 'mega', 'form', 'trainer-only', 'partner-only', 'trainer-mega', 'trainer-form'}
     assert kept['trainer-only']['g'] == kept['partner-only']['g'] == 3
@@ -125,7 +125,7 @@ def check(data, baseline=None):
 
 
 if __name__ == '__main__':
-    check_availability()
+    check_prune()
     with open(os.path.join(HACK, 'data.json'), encoding='utf-8') as source:
         data = json.load(source)
     baseline = None

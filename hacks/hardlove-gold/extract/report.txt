@@ -1,0 +1,140 @@
+starters: ['Turtwig', 'Litten', 'Froakie']
+starter name fixed: Turtig > Turtwig
+unavailable not matched: Wormadam-Sandy-Cloak
+unavailable not matched: Wormadam-Trash-Cloak
+in the location tables AND on the unavailable list (kept): chimecho, forretress, great_tusk, iron_bundle
+obtainable 596 locations 95
+trainer species fuzzy-matched: Amoongus > amoonguss; Blaizken > blaziken; Deoxys-D > deoxys_defense; Enamorus-T > enamorus_therian; Landorus-T > landorus_therian; Torkol > torkoal; Wigglituff > wigglytuff
+Z-A Megas from Showdown: mega_absol_z, mega_barbaracle, mega_baxcalibur, mega_chandelure, mega_chesnaught, mega_chimecho, mega_clefable, mega_crabominable, mega_darkrai, mega_delphox, mega_dragalge, mega_dragonite, mega_drampa, mega_eelektross, mega_emboar, mega_excadrill, mega_falinks, mega_feraligatr, mega_floette, mega_froslass, mega_garchomp_z, mega_glimmora, mega_golisopod, mega_golurk, mega_greninja, mega_hawlucha, mega_heatran, mega_lucario_z, mega_magearna, mega_malamar, mega_meganium, mega_pyroar, mega_raichu_y, mega_scolipede, mega_scovillain, mega_scrafty, mega_skarmory, mega_staraptor, mega_starmie, mega_victreebel, mega_zeraora, mega_zygarde
+hack source: kumakuma1/hardlove at 8ac661afdaba3c9bc60d39c1f0cc22a8a5ad63c8
+evolution method not described: SPIN_CLOCKWISE_LESS_THAN_5_SECONDS_DAY 0
+evolution method not described: SPIN_COUNTERCLOCKWISE_LESS_THAN_5_SECONDS_DAY 0
+evolution method not described: SPIN_CLOCKWISE_LESS_THAN_5_SECONDS_NIGHT 0
+evolution method not described: SPIN_COUNTERCLOCKWISE_MORE_THAN_5_SECONDS_NIGHT 0
+evolution method not described: SPIN_CLOCKWISE_MORE_THAN_5_SECONDS_NIGHT 0
+evolution method not described: SPIN_COUNTERCLOCKWISE_LESS_THAN_5_SECONDS_NIGHT 0
+evolution method not described: SPIN_COUNTERCLOCKWISE_MORE_THAN_5_SECONDS_DAY 0
+evolution method not described: SPIN_CLOCKWISE_MORE_THAN_5_SECONDS_DAY 0
+evolution method not described: SPIN_MORE_THAN_10_SECONDS_EVENING 0
+wild table Route 46 (ENCDATA_R46_ROUTE_46): Land: sheet rookidee 15%, taillow 10%; game rookidee 10%, taillow 15%
+wild table Violet City (ENCDATA_T22_VIOLET_CITY): Fishing: sheet remoraid 25%; game snorunt 25%
+wild table Route 5 (ENCDATA_R05_ROUTE_5): Land: sheet eldegoss 5%; game gossifleur 5%
+wild table Mt. Mortar 1F (Entrance) (ENCDATA_D38R0101_MT_MORTAR_WATERFALL_ROOM): Fishing: sheet samurott_hisuian 25%; game samurott 25% | Surf: sheet samurott 25%; game samurott_hisuian 25%
+wild table Mt. Mortar 2F (ENCDATA_D38R0103_MT_MORTAR_ROOM_ABOVE_WATERFALL): Surf: sheet dragapult 10%, drampa 5%, gengar 30%, golisopod 30%, skarmory 25%; game archeops 30%, banette 30%, gyarados 5%, hydreigon 25%, primarina 10% | Fishing: sheet archeops 30%, banette 30%, gyarados 5%, hydreigon 25%, primarina 10%; game dragapult 10%, drampa 5%, gengar 30%, golisopod 30%, skarmory 25%
+wild table Lake of Rage (ENCDATA_T29_LAKE_OF_RAGE): Land: sheet manectric 15%, parasect 10%; game manectric 25%
+wild table Whirl Islands 1F (ENCDATA_D40R0101_WHIRL_ISLANDS_1F): Fishing: sheet clawitzer 30%; game clauncher 30%
+wild table Whirl Islands B2F (ENCDATA_D40R0104_WHIRL_ISLANDS_B2F): Land: sheet golurk 15%; game mudsdale 15%
+wild table Ice Path 1F (None): no game table with these Pokemon (static, gift or scripted encounter, or not in the game)
+wild table Mt. Silver (Snowy Area) (ENCDATA_D41R0102_MT_SILVER_TOP_SNOWY_AREA): Surf in the game, not in the sheet: goldeen 100% | Fishing in the game, not in the sheet: goldeen 100%
+wild table Mt. Silver (Moltres Room) (None): no game table with these Pokemon (static, gift or scripted encounter, or not in the game)
+wild tables checked against the game: 85 locations, 11 with differences; replaced from the game: Route 46, Violet City, Route 5, Mt. Mortar 1F (Entrance), Mt. Mortar 2F, Lake of Rage, Whirl Islands 1F, Whirl Islands B2F, Mt. Silver (Snowy Area)
+trainer-only species from the game sets: groudon
+trainer-only species from the game sets: darkrai
+trainer-only species from the game sets: floette_eternal_flower
+trainer-only species from the game sets: mewtwo
+types filled: clefairy (calc), clefable (calc), wigglytuff (calc), mr_mime (calc), cleffa (calc), togepi (calc), togetic (calc), marill (calc), azumarill (calc), snubbull (calc), granbull (calc), ralts (calc), kirlia (calc), gardevoir (calc), mega_gardevoir (previous build), azurill (calc), mawile (calc), mega_mawile (previous build), mega_altaria (previous build), togekiss (calc), mega_audino (previous build), whimsicott (calc), flabebe (previous build), floette (calc), florges (calc), slurpuff (calc), sylveon (calc), dedenne (calc), carbink (calc), klefki (calc), xerneas (calc), diancie (calc), primarina (calc), cutiefly (calc), ribombee (calc), morelull (calc), shiinotic (calc), comfey (calc), mimikyu (calc), tapu_koko (calc), tapu_lele (calc), tapu_bulu (calc), magearna (calc), hatterene (calc), impidimp (calc), morgrem (calc), grimmsnarl (calc), alcremie (calc), enamorus (calc), dachsbun (calc), tinkaton (calc), flutter_mane (previous build), iron_valiant (previous build), enamorus_therian (calc)
+not in the hack source, site data kept: wormadam_trashy
+changed from the dex site by the hack source: {'hidden abilities (not on the site)': 647, 'level-up moves': 311, 'tm moves': 157, 'tu moves': 70, 'abilities': 28, 'evolutions': 2, 'eg moves': 59, 'stats': 5}
+  stats (5): mega_feraligatr [85, 160, 125, 89, 93, 78] > [85, 160, 100, 89, 93, 78]; mega_skarmory [65, 140, 110, 40, 100, 110] > [85, 140, 110, 40, 100, 110]; mega_garchomp_z [108, 130, 85, 141, 85, 151] > [108, 130, 95, 141, 85, 151]; zacian_crowned [92, 170, 115, 80, 115, 148] > [92, 150, 115, 80, 115, 148]; zamazenta_crowned [92, 130, 145, 80, 145, 128] > [92, 120, 140, 80, 140, 128]
+  abilities (28): mega_charizard_x Pressure > Tough Claws; mega_aerodactyl Pressure > Tough Claws; sentret Keen Eye > Keen Eye/Run Away; furret Keen Eye > Keen Eye/Run Away; mega_steelix Pressure > Sand Force; taillow Guts/Keen Eye > Guts; swellow Guts/Keen Eye > Guts; mega_sableye Pressure/Frisk > Magic Bounce; mega_medicham Huge Power > Pure Power; mega_sharpedo Speed Boost > Strong Jaw; mega_camerupt Magma Armor/Solid Rock > Sheer Force; mega_banette Frisk > Prankster; mega_absol Pressure > Magic Bounce; mega_absol_z Magic Bounce > Sharpness; mega_metagross Pressure > Tough Claws; mega_garchomp Pressure > Sand Force; mega_garchomp_z Sand Force > Levitate; mega_lucario_z Adaptability > Aura Guard; greninja Torrent > Battle Bond; gourgeist Frisk > Frisk/Insomnia; mudsdale Inner Focus/Stamina > Inner Focus/Own Tempo; mega_golisopod Emergency Exit > Tough Claws; drampa Berserk/Sap Sipper > Berserk; sneasler Inner Focus > Inner Focus/Poison Touch; sprigatito Protean > Libero; floragato Protean > Libero; meowscarada Protean > Libero; sneasel_hisuian Inner Focus > Inner Focus/Poison Touch
+  evolutions (2): growlithe > arcanine, arcanine_hisuian; koffing > weezing, weezing_galarian
+Megas dropped (stone unavailable, no trainer uses them): mega_latias
+ability without description: Aura Guard
+ability fuzzy: Lighting Rod > Lightning Rod
+ability fuzzy: Natural Cute > Natural Cure
+ability fuzzy: Initmidate > Intimidate
+ability fuzzy: Synrchonize > Synchronize
+ability fuzzy: Scappy > Scrappy
+ability fuzzy: Magmar Armor > Magma Armor
+ability fuzzy: Serence Grace > Serene Grace
+ability fuzzy: Aura Beak > Aura Break
+ability fuzzy: Adapatability > Adaptability
+in the game but not the sheet: Nuzlocker Ethan (Random Team, see Mini Bosses) mesprit Lv 78
+in the game but not the sheet: Nuzlocker Ethan (Random Team, see Mini Bosses) palafin Lv 78
+in the game but not the sheet: Nuzlocker Ethan (Random Team, see Mini Bosses) salamence Lv 78
+in the game but not the sheet: Nuzlocker Ethan (Random Team, see Mini Bosses) zamazenta_crowned Lv 78
+in the game but not the sheet: Nuzlocker Ethan (Random Team, see Mini Bosses) blaziken Lv 78
+in the game but not the sheet: Nuzlocker Ethan (Random Team, see Mini Bosses) absol Lv 78
+ability fuzzy: Swam > Swarm
+trainer sets: {'game set': 1466, 'sets where the sheet differs': 70, 'game Pokemon missing from the sheet': 6}
+  Leader Falkner Farfetch'd-G: sheet says ability Inner Focus
+  Fisherman Ralph Poliwhirl: sheet says item Oran Berry
+  Hiker Russel Geodude-A: sheet says moves Spark, Rock Tomb, Bulldoze, Thunder Wave
+  Hiker Russel Sandshrew-A: sheet says species Sandshrew-A
+  Bug Catcher Josh Charjabug: sheet says moves Crunch, Wild Charge, Crunch
+  Pokéfan♂ William Amoonguss: sheet says moves Spore, Pollen Puff, Giga Drain, Venoshock
+  Psychic♂ Mark Braixen: sheet says ability Blaze
+  School Kid Alan Palossand: sheet says nature Quiet
+  Hiker Schorsch Qwilfish-H: sheet says level 29
+  Firebreather Ned Magmortar: sheet says nature Timid
+  Rival Silver Grimmsnarl: sheet says item Sitrus Berry
+  Medium Martha Drifloon: sheet says species Drifloon
+  Swimmer♂ Randall Masquerain: sheet says level 42
+  Black Belt Nob Samurott-H: sheet says ability Sharpness
+  Camper Grant Swanna: sheet says item Sitrus Berry
+  Double Team Thom & Kae Lucario: sheet says nature Naive; ability Inner Focus
+  Rocket Grunt♀ #4 Scolipede: sheet says level 48
+  Rocket Grunt♂ #6 Machamp: sheet says moves Close Combat, Ice Punch, Fire Punch, Bullet Punch
+  Executive Ariana Altaria: sheet says level 49
+  Twins Meg & Peg Incineroar: sheet says item Assault Vest
+  Sailor Stanly Bronzong: sheet says item Colbur Berry
+  Leader Lt. Surge Pincurchin: sheet says moves Zing Zap, Scald, Charge, Spikes
+  Ace Trainer♂ Kevin Hawlucha: sheet says moves Acrobatics, Body Press, Poison Jab, Throat Chop
+  Leader Misty Golduck: sheet says level 51
+  Leader Jasmine Gholdengo: sheet says level 53
+  Fisherman Raymond Goodra: sheet says level 55
+  Fisherman Andre Corviknight: sheet says level 55
+  Rocket Grunt♂ #9 Lokix: sheet says moves First Impression, Sucker Punch, Axe Kick, Swords Dance
+  Rocket Grunt♂ #17 Zangoose: sheet says moves Secret Power, Quick Attack, Knock Off, Swords Dance
+  Scientist Ross Lickilicky: sheet says level 58
+  Rocket Grunt♂ #23 Dewgong: sheet says nature Hasty
+  Boarder Patton Tentacruel: sheet says level 61
+  Boarder Deandre Avalugg: sheet says moves Icicle Spear, Body Press, Gyro Ball, Earthquake
+  Executive Petrel Torkoal: sheet says level 66
+  Executive Petrel Lycanroc-Dusk: sheet says nature Jolly
+  Rival Silver Sinistcha: sheet says item Sitrus Berry
+  Rival Silver Hatterene: sheet says item Sitrus Berry
+  Rival Silver Entei: sheet says moves Sacred Fire, Extreme Speed, Stone Edge, Curse
+  Rocket Grunt♂ #36 Luxray: sheet says nature Adamant; ability Guts
+  Rocket Grunt♂ #37 Magcargo: sheet says ability Weak Armor
+  Executive Brianna Barbaracle-M: sheet says level 71
+  Executive Archer Exeggutor: sheet says moves Psychic, Solar Beam, Growth, Sleep Powder
+  Executive Archer Iron Moth: sheet says moves Heat Wave, Sludge Bomb, Psychic, Solar Beam
+  Poké Maniac Zach Qwilfish-H: sheet says nature Bashful
+  Ace Trainer♂ Ryan Bouffalant: sheet says nature Adamant
+  Ace Trainer♂ Ryan Cloyster: sheet says level 72
+  Ace Trainer♀ Kelly Mienshao: sheet says nature Jolly; ability Inner Focus
+  Hiker Michael Medicham: sheet says ability Pure Power
+  Hiker Bailey Ludicolo: sheet says nature Timid
+  Ace Trainer♂ Paulo Sylveon: sheet says level 74
+  Ace Trainer♂ Paulo Ampharos-M: sheet says ability Static / Mold Breaker
+  Ace Trainer♀ Fran Darmanitan: sheet says nature Jolly
+  Ace Trainer♂ Mike Indeedee-F: sheet says moves Expanding Force, Dazzling Gleam, Hyper Voice, Memento
+  Ace Trainer♂ Mike Gouging Fire: sheet says ability Protosynthesis
+  Ace Trainer♂ Brian Ogerpon: sheet says nature Jolly
+  Ace Trainer♂ Gaven Magnezone: sheet says nature Modest; ability Analytic
+  Ace Trainer♀ Morgan Volcanion: sheet says item Saftey Googles
+  Rival Silver Latias: sheet says ability Levitate
+  Elite Four Will Slowbro: sheet says moves Future Sight, Hydro Pump, Fire Blast, Yawn
+  Elite Four Will Farigiraf: sheet says moves Hyper Voice, Future Sight, Dazzling Gleam, Protect
+  Elite Four Will Mr. Mime: sheet says species Mr. Mime; item none; ability Filter; moves Dazzling Gleam, Psychic, Disable, Follow Me
+  Elite Four Will Solgaleo: sheet says moves Sunsteel Strike, Psychic Fangs, Play Rough, Dragon Dance
+  Elite Four Koga Spectrier: sheet says level 82
+  Elite Four Koga Dragalge: sheet says nature Modest
+  Elite Four Koga Thundurus: sheet says item Covert Cloak
+  Elite Four Koga Landorus-T: sheet says level 81
+  Elite Four Koga Weavile: sheet says species Weavile; level 82; item Ice Gem; nature Jolly; ability Inner Focus; moves Icicle Crash, Knock Off, Fake Out, Protect
+  Elite Four Karen Floette-Eternal-M: sheet says level 82
+  Elite Four Karen Floette-Eternal-M: sheet says level 82
+  Kimono Girl Zuki Golem: sheet says moves Earthquake, Rock Blast, Explosion
+trainer fixes: Fisherman Ralph Lumineon: item "Msytic Water" = Mystic Water; Hiker Schorsch: sheet id 11, game trainer 233; Rocket Grunt♂ #6 Absol: item "Scope Lense" = Scope Lens; Sailor Garrett Politoed: sheet rows shifted (nature "Perish Song"); Sailor Garrett Kilowattrel: sheet rows shifted (nature "Nasty Plot"); Sailor Garrett Durant: sheet rows shifted (nature "-"); Sailor Garrett Drampa: sheet rows shifted (nature "Weather Ball"); Rocket Grunt♂ #20 Lanturn: item "Letfovers" = Leftovers; Rival Silver Emboar-M: item "Emborite" = Emboarite; Ace Trainer♂ Vernon Malamar-M: item "Malarmarite" = Malamarite; Ace Trainer♂ Jake Alakazam-M: item "Alakazit" = Alakazite; Rival Silver Emboar-M: item "Emborite" = Emboarite; Elite Four Koga Glimmora: sheet rows shifted (nature "Toxic Spikes"); Elite Four Koga Landorus: sheet rows shifted (nature "Stealth Rock"); Elite Four Koga Greninja-M: sheet rows shifted (nature "U Turn"); Elite Four Koga Iron Valiant: sheet rows shifted (nature "Poison Jab"); Elite Four Koga Zoroark: sheet rows shifted (nature "Will O Wisp"); Elite Four Koga Spectrier: sheet rows shifted (nature "Substitute"); Elite Four Karen Gothitelle: sheet rows shifted (nature "Fake Out"); Elite Four Karen Urshifu-Rapid-Strike: sheet rows shifted (nature "-"); Elite Four Karen Gardevoir: sheet rows shifted (nature "Nasty Plot"); Elite Four Karen Clefairy: sheet rows shifted (nature "Follow Me"); Elite Four Karen Magearna: sheet rows shifted (nature "Shift Gear"); Elite Four Karen Floette-Eternal-M: sheet rows shifted (nature "Calm Mind"); Elite Four Lance Pelipper: sheet rows shifted (nature "-"); Elite Four Lance Garchomp: sheet rows shifted (nature "Poison Jab"); Elite Four Lance Aerodactyl: sheet rows shifted (nature "Tailwind"); Elite Four Lance Zapdos: sheet rows shifted (nature "Roost"); Elite Four Lance Palkia: sheet rows shifted (nature "Substitute"); Elite Four Lance Dragonite-M: sheet rows shifted (nature "Weather Ball"); Elite Four Lance Pelipper: sheet rows shifted (nature "-"); Elite Four Lance Garchomp: sheet rows shifted (nature "Spikes"); Elite Four Lance Overqwil: sheet rows shifted (nature "Fell Stinger"); Elite Four Lance Zapdos: sheet rows shifted (nature "Roost"); Elite Four Lance Dialga: sheet rows shifted (nature "Aura Sphere"); Elite Four Lance Dragonite-M: sheet rows shifted (nature "Roost"); Champion Blue Miraidon: sheet rows shifted (nature "Mt. Silver Summit"); Champion Blue Ho-Oh: sheet rows shifted (nature "Roost"); Champion Blue Exeggutor-A: sheet rows shifted (nature "Leech Seed"); Champion Blue Lucario: sheet rows shifted (nature "Work Up"); Champion Blue Mew: sheet rows shifted (nature "Calm Mind"); Champion Blue Raichu-M-Y: sheet rows shifted (nature "Grass Knot"); Trainer Red Tapu Lele: sheet rows shifted (nature "Substitute"); Trainer Red Clefable: sheet rows shifted (nature "Endeavor"); Trainer Red Zacian-Crowned: sheet rows shifted (nature "Crunch"); Trainer Red Greninja-Ash: sheet rows shifted (nature "Grass Knot"); Trainer Red Melmetal: sheet rows shifted (nature "Ice Punch"); Trainer Red Mewtwo-M-X: sheet rows shifted (nature "Blizzard"); Ace Trainer♀ Gwen Ninetales: sheet rows shifted (nature "-"); Ace Trainer♀ Gwen Eelektross: sheet rows shifted (nature "Coil"); Ace Trainer♀ Gwen Muk: sheet rows shifted (nature "Helping Hand"); Ace Trainer♀ Emma Araquanid: sheet rows shifted (nature "Sticky Web"); Ace Trainer♀ Emma Tauros: sheet rows shifted (nature "Close Combat"); Ace Trainer♀ Emma Absol-M: sheet rows shifted (nature "Flamethrower"); Ace Trainer♂ Nick Sawk: sheet rows shifted (nature "[Level Cap X-2] Mt. Mortar B1F (back)"); Ace Trainer♂ Nick Nidoqueen: sheet rows shifted (nature "Fire Blast"); Ace Trainer♂ Nick Jynx: sheet rows shifted (nature "Calm Mind"); Ace Trainer♂ Nick Dondozo: sheet rows shifted (nature "Protect"); Ace Trainer♂ Nick Altaria-M: sheet rows shifted (nature "Roost")
+move not in the game data: Collision Course
+moves vs the game data: {'changed in game, not in the sheet': 45, 'sheet disagrees with the game': 6, 'not in the game data': 1} ; sheet values the game contradicts: Dragon Tail ac, Screech pp, Reflect ac, Double Slap ac, Pain Split bp, Snarl pp
+move changes in the sheet: 188 on moves in the data: 183 ; not learned or used by anyone: barrage, freezeshock, iceburn, magmastorm, thundercage
+move names fuzzy-matched: Accelrock > Accelerock; Acient Power > Ancient Power; Baze Kick > Blaze Kick; ColisionCourse > Collision Course; Eartquake > Earthquake; Exploson > Explosion; Fisheous Rend > Fishious Rend; Fishous Rend > Fishious Rend; Flare Bitz > Flare Blitz; Icy Beam > Ice Beam; Leed Seed > Leech Seed; Lunch > Crunch; Precicipe Blades > Precipice Blades; Rock Romb > Rock Tomb; Sleep Power > Sleep Powder; Sludge Bumb > Sludge Bomb; Spirit Beak > Spirit Break; Stealth Rocks > Stealth Rock; Subsitute > Substitute; Sustitute > Substitute; Vaccuum Wave > Vacuum Wave; Vice Grip > Vise Grip; Whish > Wish
+TM/HM fixes from the game: TM14 = Blizzard; TM19 = Giga Drain; TM25 = Thunder; TM38 = Fire Blast; TM41 = Torment; TM47 = Steel Wing; TM52 = Focus Blast; TM53 = Energy Ball; TM55 = Brine; TM56 = Fling; TM63 = Embargo; TM65 = Shadow Claw; TM68 = Giga Impact; TM69 = Rock Polish; TM71 = Stone Edge; TM73 = Thunder Wave; TM78 = Captivate; TM80 = Rock Slide; TM81 = X-Scissor; TM82 = Sleep Talk; TM83 = Natural Gift; TM84 = Scald; TM85 = Dream Eater; TM86 = Grass Knot; TM90 = Protect; TM92 = Trick Room; HM05 Rock Smash is HM06 in the game; HM06 Whirlpool is HM05 in the game
+P 986 obtainable 596 megas 74 trainer only 316 moves 782 abilities 284 trainers 331 areas 61 stops 94 unplaced items 0
+items: dropped duplicate Metal Coat from Held Items (kept in Evolution Items)
+items: dropped duplicate Razor Claw from Held Items (kept in Evolution Items)
+items: dropped duplicate Razor Fang from Held Items (kept in Evolution Items)
+items: dropped duplicate King's Rock from Held Items (kept in Evolution Items)

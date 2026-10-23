@@ -1,4 +1,8 @@
-"""Check Part B invariants and preservation against a pre-Part-B data.json."""
+"""Check a built data.json: the Locations PDF's wild tables against the dex data and, given a pre-Part-B data.json, the
+Part B invariants and preservation.
+
+Usage: uv run python -I hacks/emerald-imperium/extract/check.py [baseline.json [current.json]]
+"""
 import argparse
 from copy import deepcopy
 import json
@@ -8,15 +12,36 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'tools'))
 import itemstd  # noqa: E402
-from stage8_consistency import GYMS, finalise
+import extractlib  # noqa: E402
+import pdfwild, prune, walk  # noqa: E402
+from extractlib import split_name  # noqa: E402
+from walk import GYMS  # noqa: E402
+
+
+def finalise(data):
+    """The build's finalisers on a finished data.json; returns the species ids pruned."""
+    before = [pokemon['id'] for pokemon in data['P']]
+    extractlib.finalise(data, 'emerald-imperium', prune.build)
+    walk.name_splits(data)
+    data['AR'][0].update(n='Starter', st=1)
+    for group in data['TR']['g']:
+        if group.get('cap') == 85:
+            group['n'] = split_name('Elite Four', 85)
+    kept = {pokemon['id'] for pokemon in data['P']}
+    return [i for i in before if i not in kept]
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('baseline', type=Path)
+    parser.add_argument('baseline', nargs='?', type=Path)
     parser.add_argument('current', nargs='?', type=Path,
                         default=Path(__file__).resolve().parents[1] / 'data.json')
     args = parser.parse_args()
+    diffs = pdfwild.compare()
+    assert not diffs, diffs[:10]
+    print('PASS: Locations PDF wild tables match the dex data slot by slot')
+    if not args.baseline:
+        return
     before = json.loads(args.baseline.read_text(encoding='utf8'))
     after = json.loads(args.current.read_text(encoding='utf8'))
     old_species = {pokemon['id']: pokemon for pokemon in before['P']}

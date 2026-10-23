@@ -1,4 +1,4 @@
-"""Stage 5: the Walkthrough tab (WK).
+"""Walkthrough (WK): the Walkthrough tab.
 
 Photonic Sun has no walkthrough of its own and follows Ultra Sun's story, so the order is Bulbapedia's Ultra Sun /
 Ultra Moon walkthrough: stops start in part/place order, then regroup into the same cap splits as Trainers.
@@ -8,8 +8,7 @@ after the stop of the area before them (in the Locations order). Items are filed
 location text (items.py's place list for rows with Found / Shop lines); the rest are listed in Guide info. Game docs are the hack's own change docs and changelog.
 """
 import os, re
-from common import SRC, TXT, norm, report
-from consistency import walkthrough_splits
+from common import SRC, TXT, norm, report, split_name
 
 ALIAS = {'Starter': ['Route 1'], 'Routes 15 and 16': ['Route 15', 'Route 16'],"Trainers' School": ["Trainer's School"],
          'Altar of the Sunne': ['Altar of the Sunne'], 'Ultra Space Wilds': ['Ultra Warp Ride']}
@@ -40,6 +39,41 @@ def same(area, stop):
         return True
     short, long_ = sorted((a, s), key=len)
     return len(short) > 5 and long_.startswith(short) and not long_[len(short)].isdigit()
+
+
+def walkthrough_splits(data, old_splits):
+    caps, targets = data['_cap_splits'], data['_trainer_splits']
+    stop_order = {(part, name): index for index, (part, name, _) in enumerate(data['_stops'])}
+    out = [{'n': group['n'], 'cap': group['cap'], 'note': '', 'st': []} for group in data['TR']['g']]
+    legacy = {}
+    previous_at = 0
+    for old_split, split in enumerate(old_splits):
+        for old_stop, stop in enumerate(split['st']):
+            if stop['s']:
+                raise ValueError('Checklist steps require shared stable-key support before cap regrouping')
+            part = stop['part']
+            if part >= 29:
+                target = len(caps) if part == 31 else len(caps) + 1
+            else:
+                at = stop_order.get((part, stop['n']), previous_at)
+                previous_at = at
+                target = next(index for index, cap in enumerate(caps) if cap['at'] >= at)
+            buckets = {}
+            for trainer_key in stop['tr']:
+                buckets.setdefault(targets[trainer_key], []).append(trainer_key)
+            buckets.setdefault(target, [])
+            for fragment, destination in enumerate(sorted(buckets)):
+                copy = {key: value for key, value in stop.items() if key != 'part'}
+                old_key = f'{old_split}.{old_stop}'
+                copy['k'] = old_key + (f'.f{fragment}' if fragment else '')
+                copy['tr'] = buckets[destination]
+                if fragment:
+                    copy.update(a=[], it=[], note='')
+                new_key = f'{destination}.{len(out[destination]["st"])}'
+                legacy[new_key] = old_key
+                out[destination]['st'].append(copy)
+    data['WK']['legacyStops'] = legacy
+    return out
 
 
 def build(D):

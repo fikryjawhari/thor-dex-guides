@@ -1,4 +1,4 @@
-"""Eternal X locations: LOC (Locations pages), AR (tracker areas) and each Pokemon's wild rows (P.w).
+"""Locations (LOC, AR, P.w): the Locations pages, the tracker areas and each Pokemon's wild rows.
 
 The game's encounter tables (dex-rebalanced.json) are the data. Wild Pokemon Locations.pdf names the areas and gives
 their story order. Each doc title is one tracker area and one Locations page. Its game zones (floors, rooms) become

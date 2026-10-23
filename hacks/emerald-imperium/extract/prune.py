@@ -1,22 +1,10 @@
-"""Finalise Part B after stage 7; safe to rerun on the published data."""
-import argparse
-from pathlib import Path
-import sys
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'tools'))
-import datajson
-import itemstd
-from splits import split_name
+"""Species kept in P: obtainable species and forms, the species shown trainers use, and the Megas whose base is obtainable.
+Mega stones and walkthrough item rows of a pruned Mega lose their link.
+"""
+from common import report
 
 
-GYMS = [('Roxanne', 15), ('Brawly', 25), ('Wattson', 34), ('Flannery', 47),
-        ('Norman', 59), ('Winona', 68), ('Tate & Liza', 76), ('Juan', 82), ('Elite Four', 85)]
-
-
-def finalise(data):
-    if not data.get('s7'):
-        raise ValueError('Run stage 7 before the consistency finaliser')
-    itemstd.standardise(data, itemstd.RULES['emerald-imperium'])    # Items standard (plans/items-standard.md)
+def build(data):
     species = data['P']
     used = {mon['id'] for group in data['TR']['g'] for section in group['sec']
             for trainer in section['tr'] for mon in trainer['p']}
@@ -45,27 +33,5 @@ def finalise(data):
     for row in walk['np'] + [row for split in walk['splits'] for stop in split['st'] for row in stop['it']]:
         if row[0] in mega_sections and row[3] and row[3] not in kept:
             row[3] = None
-    data['AR'][0].update(n='Starter', st=1)
-    if len(walk['splits']) != len(GYMS):
-        raise ValueError('Expected nine gym/league walkthrough splits')
-    for split, (boss, cap) in zip(walk['splits'], GYMS):
-        split['n'] = split_name(boss, cap)
-    for group in data['TR']['g']:
-        if group.get('cap') == 85:
-            group['n'] = split_name('Elite Four', 85)
+    report('prune: kept', len(data['P']), 'removed', len(removed), ', '.join(removed))
     return removed
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('data', nargs='?', type=Path,
-                        default=Path(__file__).resolve().parents[1] / 'data.json')
-    args = parser.parse_args()
-    data, raw = datajson.load(args.data)
-    removed = finalise(data)
-    datajson.save(args.data, data, raw)
-    print(f'Kept {len(data["P"])} species; removed {len(removed)}: {", ".join(removed)}')
-
-
-if __name__ == '__main__':
-    main()

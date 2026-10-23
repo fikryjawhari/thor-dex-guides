@@ -1,0 +1,143 @@
+"""The shared start and end of every hack's extract/ (build.py, common.py): paths, the build report, text helpers,
+PDF text, the node helper for Showdown data, the finalisers and the data.json writer.
+
+    from extractlib import Hack, report, finalise, write_data      # a hack's common.py builds on this
+
+Layout of every hack's extract/ (run from the repo root: uv run python -I hacks/<hack>/extract/build.py):
+    build.py     the one entry: raw sources in .src/ -> data.json + report.txt (flags below)
+    common.py    this hack's paths and the helpers its modules share
+    dex.py       M, MV, AB, P, TC          locs.py   LOC, AR, P.w         trainers.py  TR
+    items.py     IT                        walk.py   WK                   prune.py     species kept in P
+    check.py     checks on a built data.json (optional baseline to compare)
+    + helper modules that only one hack needs (format readers, source parsers), named for what they read.
+build.py ends with finalise(): Items standard (tools/itemstd.py), the hack's prune, shared split names.
+"""
+import datetime
+import json
+import os
+import re
+import subprocess
+import sys
+import unicodedata
+
+ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+sys.path.insert(0, os.path.join(ROOT, 'tools'))
+import datajson  # noqa: E402
+import itemstd  # noqa: E402
+from splits import split_name  # noqa: E402,F401  (re-exported for the hacks' modules)
+
+sys.stdout.reconfigure(encoding='utf-8')
+
+REPORT = []     # the build report: every conflict and guess; build.py writes it to extract/report.txt
+
+
+def report(*a):
+    REPORT.append(' '.join(str(x) for x in a))
+
+
+class Hack:
+    """Paths of one hack (hacks/<name>/) and loaders for its raw sources."""
+
+    def __init__(self, name):
+        self.name = name
+        self.dir = os.path.join(ROOT, 'hacks', name)
+        self.src = os.path.join(self.dir, '.src')                # raw docs, git-ignored (SOURCES.md fetches them)
+        self.txt = os.path.join(self.src, 'txt')                 # pdftotext -layout copies of the PDFs
+        self.bulba = os.path.join(self.src, 'bulbapedia')
+        self.cache = os.path.join(self.src, 'cache')             # files derived from the sources (node output...)
+        self.extract = os.path.join(self.dir, 'extract')
+
+    def load(self, name):
+        return json.load(open(os.path.join(self.src, name), encoding='utf-8'))
+
+    def text(self, name):
+        return open(os.path.join(self.txt, name + '.txt'), encoding='utf-8').read()
+
+    def pdf_text(self):
+        """pdftotext -layout of every PDF in .src/ into .src/txt/ (refreshed when the PDF is newer)."""
+        os.makedirs(self.txt, exist_ok=True)
+        for f in sorted(os.listdir(self.src)):
+            if f.endswith('.pdf'):
+                out = os.path.join(self.txt, f[:-4] + '.txt')
+                if not os.path.exists(out) or os.path.getmtime(out) < os.path.getmtime(os.path.join(self.src, f)):
+                    subprocess.run(['pdftotext', '-layout', '-enc', 'UTF-8', os.path.join(self.src, f), out], check=True)
+
+    def showdown(self, folder):
+        """tools/showdown.js on a pokemon-showdown dist/data folder (relative to .src/), cached in .src/cache/."""
+        os.makedirs(self.cache, exist_ok=True)
+        out = os.path.join(self.cache, 'showdown.json')
+        subprocess.run(['node', os.path.join(ROOT, 'tools', 'showdown.js'), os.path.join(self.src, folder), out],
+                       check=True, stdout=subprocess.DEVNULL)
+        return json.load(open(out, encoding='utf-8'))
+
+
+    def calc_backup(self, path):
+        """tools/calcbackup.js on a calc backup file (relative to .src/): {backup_data, backup_moves}, cached in .src/cache/."""
+        os.makedirs(self.cache, exist_ok=True)
+        out = os.path.join(self.cache, 'calc.json')
+        subprocess.run(['node', os.path.join(ROOT, 'tools', 'calcbackup.js'), os.path.join(self.src, path), out], check=True)
+        return json.load(open(out, encoding='utf-8'))
+
+
+def workbook(path, ints=False):
+    """openpyxl workbook (values, not formulas). ints=True turns whole-number floats into ints, as older exports had them."""
+    import openpyxl
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        wb = openpyxl.load_workbook(path, data_only=True)
+    if ints:
+        for ws in wb:
+            for row in ws.iter_rows():
+                for c in row:
+                    if isinstance(c.value, float) and c.value.is_integer():
+                        c.value = int(c.value)
+    return wb
+
+
+def fix(s):
+    """Game text: the extract decodes é as U+FFFD, and descriptions keep the game's line breaks."""
+    return re.sub(r'\s*\n\s*', ' ', (s or '').replace('�', 'é')).strip()
+
+
+def norm(s):
+    s = unicodedata.normalize('NFKD', str(s).replace('♀', 'f').replace('♂', 'm')).encode('ascii', 'ignore').decode()
+    return re.sub(r'[^a-z0-9]', '', s.lower())
+
+
+def slug(s):
+    s = unicodedata.normalize('NFKD', s.replace('♀', '-f').replace('♂', '-m')).encode('ascii', 'ignore').decode()
+    return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
+
+
+# ---- finalisers --------------------------------------------------------------------------------------------------------
+def split_names(D):
+    """Every walkthrough split and trainer box with a level cap is named 'Name Split [Cap N]' (tools/splits.py)."""
+    for split in D['WK']['splits']:
+        split['n'] = split_name(split['n'])
+    for group in D['TR']['g']:
+        if re.search(r'\[(?:Level )?Cap \d+\]$', group['n']):
+            group['n'] = split_name(group['n'])
+
+
+def finalise(D, hack, prune=None):
+    """The end of every build: Items standard (tools/itemstd.py), the hack's species prune, shared split names."""
+    itemstd.standardise(D, itemstd.RULES[hack], report)    # plans/items-standard.md
+    if prune:
+        prune(D)
+    split_names(D)
+
+
+DEFAULT_ORDER = ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'built', 'src']
+
+
+def write_data(D, H, src, order=None):
+    """Stamp built / src, order the keys, write data.json and extract/report.txt, print the report's headlines."""
+    D['built'] = datetime.date.today().isoformat()
+    if src:
+        D['src'] = src
+    order = order or DEFAULT_ORDER
+    D = {k: D[k] for k in order if k in D} | {k: v for k, v in D.items() if k not in order}
+    datajson.write(os.path.join(H.dir, 'data.json'), D)
+    open(os.path.join(H.extract, 'report.txt'), 'w', encoding='utf-8', newline='\n').write('\n'.join(REPORT) + '\n')
+    print('\n'.join(r for r in REPORT if not r.startswith('  ')))

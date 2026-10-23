@@ -1,4 +1,4 @@
-"""Stage 3: trainers (TR) and the walkthrough's stops (D['_stops'], finished by walk.py).
+"""Trainers (TR): trainer boxes, and the walkthrough's stops (D['_stops'], finished by walk.py).
 
 Sets are the hack's own trainer data (trainers-rebalanced.json, tools/usum_trainers.py): species, form, level,
 nature, ability, item, IVs, EVs and moves. The game data has no places, so they come from Bulbapedia: its Ultra
@@ -13,7 +13,6 @@ Rival and other starter-dependent teams: Bulbapedia's "If the player chose X" (P
 import json, os, re
 from collections import defaultdict
 from common import BULBA, load, norm, report, fix, split_name
-from consistency import trainer_splits
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon Ultra Sun and Ultra Moon-Part {}.wiki')
 # Boxes: (walkthrough parts, name). Aether Paradise's second visit (Part 21) is its own box; the first (Part 14, no
@@ -250,6 +249,46 @@ def score(e, t):
 def dummy(t):
     return t['name'] in ('', '●●●', '-') or (len(t['team']) == 1 and t['team'][0]['species'] == 'Yungoos'
                                                    and t['team'][0]['level'] == 5 and not t['team'][0]['moves'])
+
+
+def trainer_splits(groups, caps, battles):
+    out = [{'n': split_name(cap['n'], cap['l']), 'tab': cap['n'], 'cap': cap['l'], 'note': [], 'sec': []}
+           for cap in caps]
+    out.extend({'n': split_name(name), 'tab': name, 'cap': 0, 'note': [], 'sec': []}
+               for name in ('Post-game: Episode RR', 'Post-game'))
+    battle_of = {trainer_id: index for index, battle in enumerate(battles) for trainer_id in battle[2]}
+    targets, legacy = {}, {}
+    for old_group, group in enumerate(groups):
+        for old_section, section in enumerate(group['sec']):
+            if group['n'].startswith('Post-game') or group['n'] == 'Other trainers':
+                target = len(caps) if group['n'] == 'Post-game: Episode RR' else len(caps) + 1
+                copy = {key: value for key, value in section.items() if key not in ('at', 'cap')}
+                legacy[f'{target}.{len(out[target]["sec"])}'] = f'{old_group}.{old_section}'
+                out[target]['sec'].append(copy)
+                targets.update((trainer['k'], target) for trainer in section['tr'])
+                continue
+            runs = []
+            for trainer in section['tr']:
+                index = battle_of[trainer['id']]
+                target = next(index_cap for index_cap, cap in enumerate(caps)
+                              if cap['cut'] >= index and cap['at'] >= section['at'])
+                targets[trainer['k']] = target
+                if not runs or runs[-1][0] != target:
+                    runs.append((target, [], index))
+                runs[-1][1].append(trainer)
+            if not runs:
+                target = next(index_cap for index_cap, cap in enumerate(caps) if cap['at'] >= section['at'])
+                runs.append((target, [], caps[target]['cut']))
+            for target, trainers, first in runs:
+                cap = caps[target]
+                copy = {key: value for key, value in section.items() if key not in ('at', 'tr', 'cap')}
+                if old_section == 0 and first == runs[0][2] and group.get('note'):
+                    copy['note'] = group['note'] + copy.get('note', [])
+                copy['tr'] = trainers
+                copy['cap'] = [cap['l'], cap['n'], cap['w'], sum(battle[3] for battle in battles[first:cap['cut']])]
+                legacy[f'{target}.{len(out[target]["sec"])}'] = f'{old_group}.{old_section}'
+                out[target]['sec'].append(copy)
+    return out, targets, legacy
 
 
 def build(D):

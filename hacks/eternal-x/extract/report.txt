@@ -57,5 +57,6 @@ walkthrough: on the way stops 2 : Lost Hotel, Terminus Cave
 walkthrough Lumiose items moved: part 8 stop Lumiose City: 5, part 11 stop Lumiose City: 3 ; left in place 9
 walkthrough: 21 splits 74 stop fragments, 69 legacy stop keys, 294 items placed, 25 not placed
 items: Shops 145, TMs 100, Evolution Items 26, Held Items 136, Stats and Abilities 18, Fossils 11, Key Items 28
+items: dropped duplicate Exp. Share from Held Items (kept in Key Items)
 availability: obtainable 763 trainer/partner species 594 kept 782 removed 4
   removed species IDs: mega-mewtwo-y, wormadam-sandy, wormadam-trash, floette-eternal

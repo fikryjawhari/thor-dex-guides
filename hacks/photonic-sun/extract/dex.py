@@ -1,4 +1,4 @@
-"""Stage 1: Pokemon, moves, abilities and the type chart (M, MV, AB, P, TC) from the game data.
+"""Dex (M, MV, AB, P, TC): Pokemon, moves, abilities and the type chart from the game data.
 
 dex-rebalanced.json (tools/ctr_dex.py on the hack's romfs + code.ips) is the source; dex-vanilla.json (the same tool
 on vanilla Ultra Sun v1.2) gives the move change notes (MV.h).

@@ -1,0 +1,45 @@
+species 1534, banned forms 34, cosmetic duplicates folded 225, kept 1275
+EI original abilities: ['Feline Prowess', 'ORAORAORAORA!', 'Blazing Soul', 'Bone Zone', 'Striker', 'Bull Rush', 'Fatal Precision', 'Self Sufficient', 'Ice Eater', "Emperor's Presence", 'THE GRIPPER', 'Primal Armor', 'Sage Power', 'Parasitic Waste', 'Quill Rush', 'Bad Company']
+changed vs Gen 9: 155
+moves 788 (no Showdown match for priority: 3: Aqua Fang, Dark Hole, Draco Barrage...), abilities 284
+changes doc: species rows 1224 matched 1224 unmatched 0 []
+changes doc: species differing from the dex 16
+changes doc: species with vanilla diffs 535 with conflicts 9
+changes doc: moves 124 not in dex ['Strange Stream'] conflicts 7
+changes doc: abilities 30 not in dex data []
+changes doc: dex-detected move changes not in the doc 55 ['Grassy Glide', 'Substitute', 'Charm', 'Chloroblast', 'Dual Wingbeat', 'Pounce', 'Psychic Fangs', 'Poison Tail', 'Zippy Zap', 'Freezy Frost', 'Sparkly Swirl', 'Bouncy Bubble', 'Leech Life', 'Spiky Shield', 'Absorb', 'Sappy Seed', 'Mud-Slap', 'Mud Bomb', 'Leaf Tornado', 'Barb Barrage', 'Supercell Slam', 'Mirror Shot', 'Dark Void', 'Bonemerang', 'Strange Steam', 'Hyper Beam', 'Bleakwind Storm', 'Triple Dive', 'Victory Dance', 'Ion Deluge', 'Mystical Power', 'Twin Beam', 'Spin Out', 'Psyshield Bash', 'Triple Arrows', 'Silk Trap', 'Sandsear Storm', 'Mountain Gale', 'Bitter Malice', 'Roar of Time', 'Spacial Rend', 'Mat Block', 'Night Daze', 'Wildbolt Storm', 'Ice Burn', 'Mighty Cleave', 'Baneful Bunker', 'Burning Bulwark', "Nature's Madness", 'Obstruct', 'Meteor Assault', 'Springtide Storm', 'Skitter Smack', 'Ruination', 'Matcha Gotcha']
+changes doc merged: P vc 534 P cf 9 MV dc 124 MV cf [('Fly', ['Changes doc says PP 10, EI Dex says 15']), ('Fury Attack', ['Changes doc says power 15, EI Dex says 20']), ('Thunder Wave', ['Changes doc says accuracy 85, EI Dex says 90', 'Changes doc says PP 15, EI Dex says 20'])] AB doc 30
+locations 124, species with wild encounters 715
+wild locs not in tracker areas: []
+LOC 199 areas 134 not found 67
+NOT FOUND: Pikachu (Starter), Eevee (Starter), Mewtwo, Mew, Lugia, Ho-Oh, Latias, Latios, Deoxys (Normal), Deoxys (Attack), Deoxys (Defense), Deoxys (Speed), Wormadam (Sandy), Wormadam (Trash), Dialga, Dialga (Origin), Palkia, Palkia (Origin), Giratina (Altered), Giratina (Origin), Arceus (Normal), Arceus (Fighting), Arceus (Flying), Arceus (Poison), Arceus (Ground), Arceus (Rock), Arceus (Bug), Arceus (Ghost), Arceus (Steel), Arceus (Fire), Arceus (Water), Arceus (Grass), Arceus (Electric), Arceus (Psychic), Arceus (Ice), Arceus (Dragon), Arceus (Dark), Arceus (Fairy), Reshiram, Zekrom, Floette (Eternal), Pumpkaboo (Small), Pumpkaboo (Large), Pumpkaboo (Super), Gourgeist (Small), Gourgeist (Large), Gourgeist (Super), Xerneas, Yveltal, Zygarde (50), Zygarde (10 Aura Break), Zygarde (10 Power Construct), Zygarde (Power Construct), Zygarde (Complete), Skwovet, Greedent, Zacian (Hero), Zacian (Crowned), Zamazenta (Hero), Zamazenta (Crowned), Eternatus, Eternatus (Eternamax), Squawkabilly (Yellow), Koraidon, Miraidon, Terapagos (Normal), Terapagos (Terastal)
+items: {'TMs': 174, 'HMs': 8, 'Mega Stones': 70, 'Battle item rewards': 40, 'Shops': 99, 'Useful NPCs': 22}
+items: Megas with no stone location in the sheet: Mega Rayquaza, Mega Flapple
+items: applite [('Applite', '1516')]
+walkthrough: stops 106 extra 60 items placed 410 unplaced 3
+walkthrough: unplaced [('Mega Stones', 'Latiasite', 'Southern Island'), ('Mega Stones', 'Latiosite', 'Southern Island'), ('Mega Stones', 'Diancite', 'Navel Rock, post game')]
+trainers 138 mons 677 {'sheet': 3, 'calc': 674}
+speed check vs sheet (True = matches) {False: 17, True: 592}
+  speed differs: Rival (Brendan / May) Treecko L5: sheet 11-14 vs ours 13 (13)
+  speed differs: Rival (Brendan / May) Torchic L5: sheet 9-12 vs ours 11 (11)
+  speed differs: Rival (Brendan / May) Mudkip L5: sheet 9-11 vs ours 10 (10)
+  speed differs: Collector Edwin Stoutland L32: sheet 66 vs ours 72 (72)
+  speed differs: Collector Edwin Clodsire L32: sheet 25 vs ours 27 (27)
+  speed differs: Breeder Ezekiel Spiritomb L30: sheet 35 vs ours 31 (31)
+  speed differs: Fantina Mismagius L33: sheet 118 (148) vs ours 92 (115)
+  speed differs: Fantina Cursola L33: sheet 65 (92) vs ours 51 (72)
+  speed differs: Fantina Gallade L33: sheet 95 (125) vs ours 74 (96)
+  speed differs: Fantina Zoroark L34: sheet 122 (151) vs ours 94 (118)
+  speed differs: Fantina Mega Banette L34: sheet 92 (123) vs ours 72 (95)
+  speed differs: Wally Skarmory L31: sheet 28 vs ours 58 (58)
+  speed differs: Hiker Lucas Alolan Ninetales L42: sheet 118 (149) vs ours 119 (149)
+  speed differs: Trainer X Mimikyu L68: sheet 170 (217) vs ours 171 (218)
+  speed differs: Winona Staraptor L68: sheet 178 (222) vs ours 178 (224)
+  speed differs: Aqua Admin Shelly Keldeo L80: sheet 222 (253) vs ours 222 (278)
+  speed differs: Trainer Burak Mega Infernape L82: sheet 227 (278) vs ours 249 (305)
+new moves ['Behemoth Bash']
+new abilities []
+placed by fallback (first stop or pointer): ['Gardenia (Petalburg Woods) -> Verdanturf Town', 'Crasher Wake (Route 118) -> Mauville City']
+name fixes ["ability: Emperor's Prescence -> Emperor's Presence", 'ability: Gulp Missle -> Gulp Missile', 'ability: Tablet of Ruin -> Tablets of Ruin', 'item: Alakazamite -> Alakazite', 'item: Grimmsnarlite -> Grimmite', 'item: Infernite -> Infernapite', "item: Kings Rock -> King's Rock", 'item: Luxite -> Luxrite', 'item: Luxrayite -> Luxrite', 'item: Roseradeite -> Roseradite', 'item: Slakingite -> Slakite', 'move: Extrasensroy -> Extrasensory', 'move: Fishous Rend -> Fishious Rend', 'move: Scorching Sand -> Scorching Sands', 'move: Stealth Rocks -> Stealth Rock', 'species: Bannette-Mega -> megabanette', 'species: Crygonal -> cryogonal', 'species: Farigaraf -> farigiraf', 'species: Iron Jugulus -> ironjugulis', 'species: Lycaroc-Dusk -> lycanrocdusk', 'species: Mabostiff -> mabosstiff', 'species: Thunderus-Therian -> thundurustherian', 'species: Trevanant -> trevenant']
+unresolved ['ability?: As One (Spectrier)']
+prune: kept 1208 removed 67 1487, 1488, 150, 919, 920, 151, 249, 250, 380, 944, 381, 945, 386, 1054, 1055, 1056, 1059, 1060, 483, 1069, 484, 1070, 487, 1071, 493, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 644, 1141, 1157, 1158, 1159, 1160, 1161, 1162, 717, 718, 1164, 1165, 1166, 1167, 819, 820, 888, 1227, 889, 890, 1229, 1318, 1400, 1431, 1432
