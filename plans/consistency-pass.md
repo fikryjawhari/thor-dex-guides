@@ -124,6 +124,19 @@ sessions cost mostly cache reads, since each tool call re-reads the whole contex
 Each session ticks off its part here (Status below) and says which step is next.
 
 ## Status
+- 2026-10-23: **A shared state fix and all four B branches committed and integrated**, with user authorisation,
+  into `worktree-consistency-template` only. Shared fix: `677c5db`. Merge order: EI `5d48d5c`, HG `0b25cef`,
+  EX `61f7d52` (includes unique-fragment follow-up), PS `358fee4` (includes strict compatibility-gate follow-up).
+  Each merge was followed by assembly and hack-specific checks before the next. Combined all-guide consistency
+  checks pass at all five viewer sizes, expanded layouts and light theme, normal/dvkb; walkthrough-state browser
+  regressions pass for all four. PS's strict old/new browser gate passes legacy and layout-stamped saves in both
+  modes, including all 137 old stops / 148 fragments and 72 tracker picks. Focused walkthrough DOM comparisons
+  match the previously tested fixed overlays in normal/dvkb. `git diff --check` passes.
+  HG's baseline finaliser replay is byte-identical; published 0.8.3 trainer corrections remain intact rather than
+  adopting the differing 0.8.2 raw snapshot. EI's legacy full raw pipeline remains unrebuilt. No physical Thor
+  test or claim of completed D audit. No pushes, branch deletion or worktree deletion; `main` stays `4aeaab9`.
+  Next: C items decide/mockup, then build and D audit / user phone or Thor review. Do not merge into main yet.
+  This supersedes the uncommitted / unmerged status and merge-session decision in historical entries below.
 - 2026-10-23: B completed in four separate worktrees off `a07645a`; the user changed sequential execution to
   parallel. Commits: EI `ef9bb0d` (`t3/emerald-imperium-prune-splits`), HG `2ffaa90`
   (`t3/hardlove-gold-consistency`), EX `4718c59` (`t3/eternal-x-consistency`), PS `c94e4df`

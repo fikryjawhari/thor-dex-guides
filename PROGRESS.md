@@ -79,7 +79,7 @@ the split is in that repo's git log.
   changes, not an identical-build result. Extract edits compile; six naming-helper cases pass; full extracts
   were not rebuilt (raw sources are not in this worktree). Four Thor-frame phone previews:
   `consistency-emerald-imperium.html`, `consistency-hardlove-gold.html`, `consistency-eternal-x.html`,
-  `consistency-photonic-sun.html`. **B is committed in four retained, separate worktrees, not merged:**
+  `consistency-photonic-sun.html`. **B is committed and merged into `worktree-consistency-template` (2026-10-23):**
   EI `t3/emerald-imperium-prune-splits` (`ef9bb0d`), HG `t3/hardlove-gold-consistency` (`2ffaa90`),
   EX `t3/eternal-x-consistency` (`21883d4`, following `4718c59`), PS `t3/photonic-sun-part-b`
   (`cdee72e`, tests follow-up to `c94e4df`),
@@ -88,9 +88,13 @@ the split is in that repo's git log.
   HG's available 0.8.2 raw snapshot does not reproduce all published 0.8.3 trainer corrections; those published
   corrections remain preserved. EI's legacy full raw-source pipeline was not rebuilt. See each hack's notes.
   EX / PS exposed positional walkthrough state keys: the original template ignored their preserved legacy keys.
-  The user authorised the shared fix here: layout-aware state migration, regression checks and handover are
-  currently uncommitted. No hack branches have been merged; no pushes. Commit the shared fix when authorised,
-  then merge B one at a time with rebuilds/checks before C / D. See `plans/consistency-pass.md` for details.
+  Shared layout-aware state migration and regression checks are committed as `677c5db`. With user authorisation,
+  merged EI `5d48d5c`, HG `0b25cef`, EX `61f7d52`, then PS `358fee4`, rebuilding and checking each before the next.
+  Combined builds, all-guide consistency checks (five viewer sizes, light theme, normal/dvkb), walkthrough-state
+  regressions and PS's strict browser compatibility gate pass. Focused walkthrough DOM checks match the tested
+  overlays in both modes. Hack branches and worktrees are retained. No pushes; `main` remains `4aeaab9`.
+  Next: C items decide/mockup, then D final integration audit and phone / Thor review. No physical Thor test in
+  this merge session. Do not merge into main yet. See `plans/consistency-pass.md` for details.
 
 ## What's left, in order
 
