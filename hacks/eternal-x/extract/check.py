@@ -67,12 +67,10 @@ def check(data, baseline=None):
     fragment_keys = [stop['k'] for stop in stops_by_position.values()]
     assert len(fragment_keys) == len(set(fragment_keys)), 'duplicate persistent fragment keys'
     assert all(re.fullmatch(r'\d+\.\d+(?:\.f[1-9]\d*)?', key) for key in fragment_keys)
-    legacy_stops = data['WK']['legacyStops']
-    assert set(legacy_stops) == set(stops_by_position), 'every fragment needs a first-upgrade mapping'
+    legacy_stops = {position: stop['k'].split('.f', 1)[0] for position, stop in stops_by_position.items()}   # dex.js migrateWalkState
     fragments_by_root = defaultdict(list)
     for position, stop in stops_by_position.items():
         root = stop['k'].split('.f', 1)[0]
-        assert legacy_stops[position] == root, (position, root)
         fragments_by_root[root].append(stop['k'])
     assert len(fragments_by_root) == 69
     for root, keys in fragments_by_root.items():
@@ -92,9 +90,9 @@ def check(data, baseline=None):
         for section in group['sec']:
             if 'cap' in section:
                 assert len(section['cap']) == 4 and isinstance(section['cap'][0], int)
-        for stop in split['st']:
-            if stop['tr'] and group['cap']:
-                assert stop['cap'][0] == group['cap']
+        assert 'cap' not in split and all('cap' not in stop for stop in split['st'])
+        if group['cap']:
+            assert split['n'].endswith(f"[Cap {group['cap']}]")
     key_items = {row[0] for section in data['IT'] if section['n'] == 'Key Items' for row in section['r']}
     assert not key_items & {'Holo Caster', 'Running Shoes', 'Town Map', 'Adventure Rules', 'Honor of Kalos', 'Lens Case'}
     assert {'Poké Radar', 'Mega Ring', 'Exp. Share', 'Dowsing Machine', 'DNA Splicers'} <= key_items

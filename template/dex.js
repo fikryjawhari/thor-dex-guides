@@ -496,7 +496,7 @@ const segBar=(cls,a='Expand all',c='Collapse all')=>`<div class="seg ${cls}"><bu
 const WO=(()=>{try{return Object.assign({c:{},o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.walk)||'{}'))}catch(e){return {c:{},o:{},x:{},s:{}}}})();
 const woSave=()=>{try{localStorage.setItem(LS.walk,JSON.stringify(WO))}catch(e){}};
 function migrateWalkState(){
- const layout=D.WK.splits.map((split,splitIndex)=>split.st.map((stop,stopIndex)=>String(stop.k??(splitIndex+'.'+stopIndex))));
+ const layout=D.WK.splits.map((split,splitIndex)=>split.st.map(stop=>String(stop.k)));
  if(JSON.stringify(WO.layout)===JSON.stringify(layout))return;
  const previous=new Map(),remap=new Map(),splitMap=new Map();
  if(Array.isArray(WO.layout))WO.layout.forEach((split,splitIndex)=>split.forEach((key,stopIndex)=>{
@@ -506,7 +506,7 @@ function migrateWalkState(){
  const next={c:{},o:{},x:{},s:{}};
  for(const kind of ['c','o','x','s'])for(const [key,value] of Object.entries(old[kind]))if(!/^\d+(?:\.|$)/.test(key))next[kind][key]=value;
  layout.forEach((split,splitIndex)=>split.forEach((key,stopIndex)=>{
-  const position=splitIndex+'.'+stopIndex,legacy=D.WK.legacyStops?.[position]??String(D.WK.splits[splitIndex].st[stopIndex].k??position).replace(/\.f\d+$/,'');
+  const position=splitIndex+'.'+stopIndex,legacy=key.replace(/\.f\d+$/,'');
   const sources=previous.size?(previous.get(key)||previous.get(legacy)||[]):[legacy];
   for(const source of sources){
    if(!remap.has(source))remap.set(source,position);
@@ -575,7 +575,7 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;
  const its=s.it.filter(i=>starterOk(i[2]));
  // A stop with nothing in it is just a direction ("back to Iki Town"): a grey sign, not a box that opens nothing.
  if(!ss.length&&!areas.length&&!its.length&&!ts.length&&!s.note)return `<div class="wsign" data-k="${k}">${esc(s.n)}</div>`;
- const split=D.WK.splits[si],fallback=split.cap||+(split.n.match(/\[(?:Level )?Cap (\d+)\]/)?.[1]||0),cap=capOfSec(s)?.[0]||fallback;
+ const split=D.WK.splits[si],cap=+(split.n.match(/\[(?:Level )?Cap (\d+)\]/)?.[1]||0);
  let h=`<details class="stopd" ${closed?'':'open'} data-k="${k}"><summary class="stoph"><span class="pn">${esc(s.n)}${s.x?' <span class="mut small">(on the way)</span>':''}</span>${s.a.map(encAll).join('')}${ts.length?walkPt(ts,cap):''}</summary><div class="stop">`+
   (s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+
   (ss.length?walkSec(k,'c',`<span class="tag${nd===ss.length?' got':''}">${nd}/${ss.length}</span>`,`<div class="chkb">${steps}</div>`):'')+
@@ -646,11 +646,11 @@ const monLv=(x,cap)=>x.l!=null?x.l:x.r!=null&&cap?cap+x.r:NaN;
 // two across; EVs. No IVs (speeds still use them).
 function monCard(x,cap,sel){const p=byId[x.id];const lv=monLv(x,cap);
  const main=p&&lv?stat(p.s[5],5,x.iv[5],EVS&&!MGM?x.ev[5]:0,lv,x.na):null;
- const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b>${x.ia?'<span class="mut" title="IVs assumed 31">*</span>':''}</span>${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
+ const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b></span>${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
  const lvs=x.l!=null||x.r==null?`Lv ${x.l??'?'}`:`Lv ${lv||'?'} <span class="mut small">cap${x.r?(x.r>0?'+':'−')+Math.abs(x.r):''}</span>`;
  const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'');
  const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');const ev=EVS&&!MGM&&x.ev?evTxt(x.ev):'';
- return `<div class="mon${sel?' sel':''}"><div class="mh">${spr(x.id,'s32')}<div class="mt"><div class="l1"><span class="mn">${p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:esc(x.s||'?')}</span><b>${lvs}</b></div><div class="l2">${p?p.t.map(ty).join(''):''}${tags} ${spd}</div></div></div>
+ return `<div class="mon${sel?' sel':''}"><div class="mh">${spr(x.id,'s32')}<div class="mt"><div class="l1"><span class="mn">${p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:'?'}</span><b>${lvs}</b></div><div class="l2">${p?p.t.map(ty).join(''):''}${tags} ${spd}</div></div></div>
  <div class="small ab">${ab}${x.i?' · '+esc(x.i):''}${x.na?` · <span title="${esc(natLabel(x.na))}">${esc(x.na)}</span>`:''}</div>
  <div class="mv">${x.m.map(i=>`<a href="#/m/${i}"><span class="dot" style="background:${tcol(M[i]==='Hidden Power'&&x.hp?x.hp:(MV[i]||{}).t)}"></span>${M[i]==='Hidden Power'&&x.hp?'HP '+esc(x.hp):esc(M[i])}</a>`).join('')}</div>
  ${ev?`<div class="mut small ex">EVs ${ev}</div>`:''}${(x.x||[]).length?`<div class="mut small ex">Sheet: ${x.x.map(esc).join('; ')}</div>`:''}

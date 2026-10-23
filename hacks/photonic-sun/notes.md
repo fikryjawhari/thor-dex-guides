@@ -125,13 +125,13 @@ integration blocker are below; do not merge/deploy before the shared-template fi
 
 ## Data schema
 
-As Hardlove Gold (hacks/hardlove-gold/notes.md → DATA SCHEMA), with: P ids are slugs of the display name
-("raichu-alola", "mega-charizard-x"); no P.vc; MV.h always a list; MV.e + MV.dc the doc's
+As the unified schema (hacks/emerald-imperium/notes.md → DATA SCHEMA), with: P ids are slugs of the display name
+("raichu-alola", "mega-charizard-x"); MV.h always a list; MV.e + MV.dc the doc's
 paragraph; P.w rows [area, method, rate "%"/"", level, note, 1?] where the note of a Trade is its tracker label
 ("For Spearow"), the rate may say "20% (day)" / "15% day, 20% night", and a 6th field 1 means the row repeats the
 area's sections (the template lists only the other rows, gifts and trades, apart); AR.es the area's sections
 [{n, k grass|water|other, g:[{m label, lv, bl bubbling levels, rows:[{p, r:[day,night], b:[day,night], sos:[[ally,
-""|"day"|"night"]], note}]}]}]; AR.st 1 = the starter picker is this area's tracker; AR.map [data URI]; AR.note (trade items, Ultra Space Wilds); ARO the Locations order (EI's notes); TR trainers carry `id` (the game's trainer id) and
+""|"day"|"night"]], note}]}]}]; AR.st 1 = the starter picker is this area's tracker; AR.map [data URI]; AR.note (trade items, Ultra Space Wilds); ARO the Locations order (EI's notes); TR trainers carry
 `note` (bag items), `bt` (battle id, shared by trainers fought at once), `pt` partners [{n, st, p}], `tags`; sections
 carry one `cap` [level, who, where, battles left] or no cap after the League, and `opt` (optional place);
 TR.caps is one [name, level] list and TR.mini is absent; mons carry `ao` ("Stakeout / Strong Jaw") when the ability slot is random; WK has no cheats or
@@ -198,9 +198,7 @@ even though `WO.c['1.0.0']=1` remains stored. This probe modifies only runtime d
 Trainer box/place open states also use indices, although trainer-card keys and per-trainer levels survive.
 
 Every stop carries `k`: its original `si.ti` on the first fragment; additional fragments use `si.ti.fN`, all unique.
-`WK.legacyStops` maps new coordinates -> old visit coordinates, including every fragment. `TR.legacySections`
-maps new group/section coordinates -> old coordinates. These are stable-key/migration inputs only: this branch's
-template ignores k and both maps. Parent handles the shared fix separately, as instructed. Do not merge/deploy
+(Later: `WK.legacyStops` and `TR.legacySections` were dropped; the key minus `.fN` is the old coordinate.) Parent handles the shared fix separately, as instructed. Do not merge/deploy
 this branch without that fix. No runtime workaround or shared edit is hidden in this branch.
 
 2026-10-23 follow-up: parent's uncommitted `migrateWalkState` remaps WO.c/o/x/s into current positional coordinates
@@ -213,7 +211,7 @@ Read-only parent overlay `.tmp/state-photonic-sun.html`, against parent's `.tmp/
 passes normal and dvkb at 260 x 316, both for legacy saves without layout and saves stamped with the old layout.
 Each scenario seeds all 137 old stops and checks all 148 rendered new fragments: closed stops and encounter
 sections where present, open checklist sections, checked first synthetic step, unchecked second synthetic step,
-and expanded splits. Expected c/o/x/s are derived from legacyStops, including inheritance across fragments; the
+and expanded splits. Expected c/o/x/s are derived from the keys (k minus `.fN` = the old stop), including inheritance across fragments; the
 stored layout must match current stable identities. Document/Guide info flags, all 72 saved tracker picks, dex
 filters, per-trainer cap and 260 px width survive. Reload is idempotent; unchecking/reopening Route 1 survives another
 reload; clearing all ticks does not resurrect legacy values. There are no browser page errors. Runtime-only probes

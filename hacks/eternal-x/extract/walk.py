@@ -173,6 +173,6 @@ def build(D):
     fragment_keys = [stop['k'] for split in splits for stop in split['st']]
     assert len(fragment_keys) == len(set(fragment_keys)), 'Duplicate persistent walkthrough fragment keys'
     assert set(legacy_stops.values()) == {stop['k'] for stop in out}, 'Missing legacy walkthrough roots'
-    D['WK'] = {'splits': splits, 'legacyStops': legacy_stops, 'np': np, 'docs': docs}
+    D['WK'] = {'splits': splits, 'np': np, 'docs': docs}
     report('walkthrough:', len(splits), 'splits', sum(len(split['st']) for split in splits), 'stop fragments,',
            len(out), 'legacy stop keys,', sum(len(s['it']) for s in out), 'items placed,', len(np), 'not placed')

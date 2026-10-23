@@ -72,7 +72,6 @@ def walkthrough_splits(data, old_splits):
                 new_key = f'{destination}.{len(out[destination]["st"])}'
                 legacy[new_key] = old_key
                 out[destination]['st'].append(copy)
-    data['WK']['legacyStops'] = legacy
     return out
 
 

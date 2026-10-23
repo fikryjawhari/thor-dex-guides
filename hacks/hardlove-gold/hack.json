@@ -36,7 +36,6 @@
    "nw": "Trainer only",
    "g3": "Not obtainable in Hardlove Gold. Listed because trainers use it.",
    "conf": "",
-   "van": "",
    "tc": "Gen 9 type chart (the hack follows Gen 9 mechanics).",
    "chdoc": "",
    "mvh": "Hardlove changes",
@@ -47,7 +46,6 @@
    "ns": "Roamers appear on many routes, so they have no encounter slot here.",
    "walk": "Hardlove Gold has no written walkthrough. The order follows the trainer sheet's level-cap splits: each stop is a place with its trainers, items and encounters. Stops marked \"on the way\" are encounter areas placed where you pass them. Tap a trainer to open the team; the Trainers tab has them all by split.",
    "capl": "Level cap",
-   "capw": "split cap",
    "capnone": "levels follow the cap of the split you are in",
    "noev": "No EVs: Hardlove Gold removes them."
   }

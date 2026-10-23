@@ -12,8 +12,6 @@ from common import H  # noqa: E402
 from extractlib import finalise, write_data  # noqa: E402
 import dex, locs, trainers, items, walk, prune  # noqa: E402
 
-SRC_NOTE = 'Eternal X 2.67 Rebalanced: game data (romfs + code.ips over Pokemon X v1.0), Buffel Saft\'s docs, Bulbapedia (trainer places, story order)'
-
 
 def main():
     H.pdf_text()
@@ -25,7 +23,7 @@ def main():
     walk.build(D)
     items.order(D)
     finalise(D, H.name, prune.build)
-    write_data(D, H, SRC_NOTE)
+    write_data(D, H)
 
 
 if __name__ == '__main__':

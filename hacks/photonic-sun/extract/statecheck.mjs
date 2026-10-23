@@ -106,7 +106,7 @@ try {
     assertRendering(baselineRendering, 'baseline rendering');
     await navigate(current);
     const result = await evaluate(`(()=>{
-      const mapping=D.WK.legacyStops,now=Object.keys(mapping).find(key=>mapping[key]==='1.0');
+      const mapping=Object.fromEntries(D.WK.splits.flatMap((sp,si)=>sp.st.map((st,ti)=>[si+'.'+ti,st.k.replace(/\\.f\\d+$/,'')]))),now=Object.keys(mapping).find(key=>mapping[key]==='1.0');
       return {storage:Object.fromEntries(Object.keys(${JSON.stringify(seed)}).map(key=>[key,localStorage.getItem(key)])),
         tracked:Object.values(TK.e).filter(entry=>entry.p).length,allTrackedResolve:Object.values(TK.e).every(entry=>!entry.p||!!byId[entry.p]),
         filters:st.f,cap:TCAP['0.0.0'],oldStop:'1.0',newStop:now,mapping,

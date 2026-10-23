@@ -13,9 +13,6 @@ from common import H  # noqa: E402
 from extractlib import finalise, write_data  # noqa: E402
 import dex, locs, items, walk, trainers, prune  # noqa: E402
 
-# data.json keeps this key order (the published layout)
-ORDER = ['M', 'MV', 'AB', 'P', 'LOC', 'TC', 'built', 'src', 'AR', 'IT', 'WK', 'TR', 's7']
-
 
 def main():
     D = {}
@@ -28,9 +25,8 @@ def main():
     trainers.split(D)
     items.split(D)
     walk.name_splits(D)
-    D['s7'] = 1      # the published files carry the split UI marker; the template does not read it
     finalise(D, H.name, prune.build)
-    write_data(D, H, None, ORDER)
+    write_data(D, H)
 
 
 if __name__ == '__main__':

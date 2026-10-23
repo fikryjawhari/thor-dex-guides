@@ -138,21 +138,12 @@ DATA RULES
   Items are filed by the earliest area name in their location text (ALIASW in build.py).
   Level caps (TR.caps) from Mechanics.txt; a trainer's cap is its split header's cap.
 
-DATA SCHEMA (the JSON in #data)
-  M [moveName]   MV [{t, c, bp, ac, pp, pr, d description, f [], h [Hardlove change notes]}]   AB [[name, description]]
-  P [{id, n display name, dex, t[types], a[abilityIdx], ha hidden abilityIdx or -1, s[HP,Atk,Def,SpA,SpD,Spe], ef/et [[how, id or null]],
-      of [ids], lv [[level, moveIdx]] (0 = on evolution), tm/tu/eg [moveIdx], w [[LOCidx, method, rate, level, note]],
-      g, nu, stone, sloc}]
-  LOC [sublocation]   AR [{n area, l [LOC idx], ns 1 = no tracker slot (Roaming), note}]
-  IT [{n section, k tm|mega|gen, note, r [[item, text, link (move idx or mega id), missable 1/0, sub-heading (Held Items kinds,
-      Valuables)]]}]
-  WK {splits [{n, note, st [{n place, a [AR idx], s [], note, it [[section, item, text, link]], tr [trainer keys], x 1 = on the
-      way}]}], np [unplaced items], docs [[title, text]], ko {rows, note}, gc game corner note}
-  TR {caps [[boss, cap]], fix [], g [{n box ("Elder Li Split [Cap 12]", split_ui.py), cap, tab, note [], sec [{h place, note [], tr [{k "g.s.t", n, id sheet trainer id, loc, tags [],
-      st starter or '', cap, note [], p [{id, s sheet name, l level or null, r relative to cap, na, a abilityIdx, ao "A / B" when
-      the sheet lists two (sheet-only sets), a0 ability before Mega Evolution, i item, m [moveIdx], iv [6] HP,Atk,Def,SpA,SpD,Spe,
-      ev [0 x6], hp Hidden Power type (from IVs), cf [what the sheet says instead], src "s" = no game set, sheet values}]}]}]}]}
-  TC {attackType: {defendType: multiplier x10}} standard Gen 9 chart (Mechanics: assume Gen 9)
+DATA SCHEMA (the JSON in #data): the same for every guide, in hacks/emerald-imperium/notes.md → DATA SCHEMA. Hardlove's
+  own data: P.nu (Megas that cannot be used), P.tu tutors, P.stone / P.sloc; MV.h = Hardlove change notes; no MV.e / dc,
+  no AB original flags; WK.docs (game docs) and WK.ko (post-KO switch-in AI) instead of cheat codes; the walkthrough has
+  no checklist steps; TR trainers carry no `id`/`pp`/`c`; mons carry `ao` ("A / B" when the sheet lists two abilities),
+  `a0`, `hp`, `cf` (what the sheet says instead), `src` "s" = no game set, sheet values; `ev` is [0 x6] (the hack
+  removes EVs). TC is the standard Gen 9 chart (Mechanics: assume Gen 9).
 
 STAT FORMULA
   HP = floor((2B + IV + floor(EV/4)) x L / 100) + L + 10; others = floor((floor((2B + IV + floor(EV/4)) x L / 100) + 5) x nature)

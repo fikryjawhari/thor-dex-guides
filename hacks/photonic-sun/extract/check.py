@@ -64,7 +64,7 @@ def check(baseline_path):
     assert len(poni) == 2
     assert poni <= {trainer['k'] for section in new['TR']['g'][-1]['sec'] for trainer in section['tr']}
     old_stops, new_stops = stops(old), stops(new)
-    legacy = new['WK']['legacyStops']
+    legacy = {position: stop['k'].split('.f', 1)[0] for position, stop in new_stops.items()}   # dex.js migrateWalkState
     assert set(legacy) == set(new_stops) and set(legacy.values()) == set(old_stops)
     fragments = defaultdict(list)
     for current, previous in legacy.items():

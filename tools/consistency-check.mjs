@@ -93,8 +93,6 @@ try {
       const custom={...stop,cap:undefined};const original=D.WK.splits[0];
       D.WK.splits[0]={...original,n:'Test Split [Cap 73]',cap:undefined};
       check(walkStop(custom,0,0,new Set(),new Set()).includes('data-cap="73"'),'walk cap from split name');
-      D.WK.splits[0]={...original,cap:74};
-      check(walkStop(custom,0,0,new Set(),new Set()).includes('data-cap="74"'),'walk cap from split field');
       D.WK.splits[0]=original;
       return checks;
     })()`);

@@ -108,7 +108,7 @@ def main():
                                   for stop in split['st'] for row in stop['it']]:
         if row[0] in mega_sections:
             assert not row[3] or row[3] in species
-    for field in ('M', 'MV', 'AB', 'LOC', 'TC', 'built', 'src', 's7'):
+    for field in ('M', 'MV', 'AB', 'LOC', 'TC', 'built'):
         assert before[field] == after[field], field
     regenerated = deepcopy(before)
     removed = finalise(regenerated)

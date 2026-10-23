@@ -181,42 +181,58 @@ DATA RULES
   Move changes compare EI data with Showdown Gen 9; status moves with a nominal 100 accuracy and
   variable-power moves (Showdown power 0) are not counted as changes.
 
-DATA SCHEMA (the JSON in #data)
-  M   [moveName]   MV [{t type, c category, bp power or "Varies", ac accuracy or null, pp, pr priority,
-                       d description, f flags[], h change notes[], x 1 if EI original}]
-  AB  [[name, description, 1 if EI original]]
+DATA SCHEMA (the JSON in #data; the same for every guide. Key order and what is dropped: tools/schema.py, applied by the
+extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides that have that data, the others omit it)
+  Top level, in order: M MV AB P LOC AR [ARO] IT WK TR TC built   (no build markers, no source strings)
+  M   [moveName]
+  MV  [{t type, c category, bp power or "Varies", ac accuracy or null, pp, pr priority, d description, f flags[],
+        h change notes[], [dc 1 = the changes doc lists it, e the doc's paragraph], [cf doc-vs-data conflicts[]],
+        [x 1 = hack original]}]
+  AB  [[name, description, [1 if hack original, [changed]]]]   (trailing falsy values are not written)
   P   [{id speciesId string, n display name, dex, t[types], a[abilityIdx], ha hidden abilityIdx or -1,
-        s[HP,Atk,Def,SpA,SpD,Spe] (reordered from the source's Gen 3 order HP,Atk,Def,Spe,SpA,SpD), ef/et [[how, id]] evolves from/into, of[ids] other forms,
-        lv[[level, moveIdx]] (level 0 = learned on evolution), tm[moveIdx], eg[moveIdx], w[[LOCidx, method, rate, levels, note]],
-        g availability (above), fc, hi[wild held item names]}]   dex order, base form then other forms
-  LOC [sublocationName] in tracker order   AR [{n area name, l[LOC idx], ns 1 = no tracker slot, note,
-       sub [AR idx] tracker slots it is split into (hatch towns, one per egg), in = the area a slot belongs to}]
-       (slots are appended after the tracker's areas so saved trackers, keyed by AR index, keep their meaning)
-  ARO [AR idx] (optional) the Locations page's area order, where areas added later sit at the end of AR (same reason)
+        s[HP,Atk,Def,SpA,SpD,Spe], ef/et [[how, id]] evolves from/into, of[ids] other forms, lv[[level, moveIdx]]
+        (level 0 = learned on evolution), tm[moveIdx], [tu[moveIdx] tutors], eg[moveIdx], w[[LOCidx, method, rate,
+        levels, note]], g availability (0 obtainable, 1 Mega/Primal, 3 not found / trainer only),
+        [hi wild held item names], [stone, sloc: a Mega's stone and where to get it], [nu 1 = Mega not usable],
+        [fc 1 = form change], [cf doc-vs-data conflicts[] ("Sources disagree" card)]}]   dex order, base form then other forms
+  LOC [sublocationName] in tracker order
+  AR  [{n area name, l[LOC idx], [st 1 = the starter picker is this area's tracker], [sub [AR idx] tracker slots the
+        area is split into (hatch towns, one per egg), in = the area a slot belongs to], [es the area's encounter
+        sections], [map [data URI]], [ns 1 = no tracker slot], [note]}]   (slots are appended after the tracker's areas
+        so saved trackers, keyed by AR index, keep their meaning)
+  ARO [AR idx] [optional] the Locations page's area order, where areas added later sit at the end of AR (same reason)
   P.w methods: Grass/cave, Surf, Old/Good/Super Rod, Rock Smash (rates are %), Static, Gift, Egg / Starter egg /
   Pseudo egg, Starter choice, Hot House (N+ badges), Choice (...), Roaming (rates "1 of N"); w[4] = how to get it.
-  P.g: 0 obtainable (any encounter or its evolution family), 1 Mega/Primal, 3 not found in any location source.
-  IT  [{n section, k tm|mega|gen|npc, note, r:[[item, text, link (move idx or mega id), missable 1?, sub-heading (Shops)]]}]
-  P.stone / P.sloc on Megas.
-  WK  {cheats:[[code, alias, text, toggle]], cnote, splits:[{n, note, st:[{n place, a[AR idx], s:[[step, note]],
-       it:[[section, item, text, link]], x 1 = "on the way" stop}]}], np unplaced items}
-  TR  {caps:[[label, cap]] (Navigation tab), fix:[name fixes], src, g:[{n box ("Roxanne Split [Cap 15]"), cap, tab sheet tab,
-       wk WK split index, sec:[{h place (trainer location, or "Hot House (N Badges) [Cap N]"), rw [reward choices], tr:[trainer]}]}]}
-       (stage 7: boxes are level cap runs named from caps, places runs of one location; Hot House stays one box)
+  IT  [{n section, k tm|mega|gen|npc, note, r:[[item, text, link (move idx or mega id), missable 1?, sub-heading]]}]
+      (the Items standard: plans/items-standard.md)
+  WK  {splits:[{n "Name Split [Cap N]" (the cap is read from the name; none after the League), [note],
+       st:[{k stop key, n place, a[AR idx], s:[[step, note]], [note], it:[[section, item, text, link]],
+       tr [trainer keys], [x 1 = "on the way" stop]}]}], np unplaced items, [docs [[title, text]]],
+       [ko {rows, note}], [cheats [[code, alias, text, toggle]], cnote]}
+       Stop key k: the stop's identity for saved state. A guide's first build sets it to "split.stop" (its position
+       then) and it never changes; when stops are regrouped or reordered the old key stays (a stop split in two gets
+       "<key>.f1"), and dex.js migrateWalkState moves the saved ticks / collapse state to the new positions by key.
+       Positions in state are "split.stop"; there is no separate legacy table (the root of a key is its legacy position).
+  TR  {g:[{n box (= the walkthrough split name), cap, tab sheet tab, [note[]], sec:[{h place, [cap [level, who, where,
+       battles left]], [note[]], [opt 1 = optional place], [rw reward choices], tr:[trainer]}]}], caps:[[label, cap]]
+       (the page's Level caps table)}
+       (boxes are level cap runs named from caps, places runs of one location; Hot House stays one box)
        trainer {k "g.s.t" key, n name, loc place, tags[] (Optional, Double Battle, Back to Back #1, Permanent Rain, Trick
-       Room...), st "Water"/"Grass"/"Fire" = shown if YOUR starter has that type, cap default level cap, rw rewards, pp
-       pokepast url, note[], c[calc trainer names], p:[mon]}
-       mon {id speciesId (Mega/Primal form when it holds the stone), l absolute level OR r relative to highest level,
-       na nature, a ability idx (Mega ability for Megas), a0 ability before Mega Evolution, i item, m[moveIdx], hp Hidden
-       Power type (from IVs), iv[6], ev[6] (HP,Atk,Def,SpA,SpD,Spe), ld lead slot, pre[status], x[sheet extra speed lines],
-       cf[sheet values that differ from the calc], src "s" = sheet only}
+       Room...), [st "Water"/"Grass"/"Fire" or the starter's name = shown if that is YOUR starter], [cap default level
+       cap], note[], [rw rewards], [pp pokepast url], [c calc trainer names], [bt battle id shared by trainers fought at
+       once], [pl "m"/"f" = shown for that player character], [pt partners [{n, st, pl, p}]], p:[mon]}
+       mon {id speciesId (Mega/Primal form when it holds the stone), l absolute level OR r relative to the cap, i item,
+       [a0 ability before Mega Evolution], a ability idx (Mega ability for Megas), [ao "A / B" when the slot is random],
+       [na nature], iv[6], [ev[6]] (HP,Atk,Def,SpA,SpD,Spe), m[moveIdx], [hp Hidden Power type (from IVs)], [ld lead
+       slot], [pre[status]], [x[sheet extra speed lines]], [cf[sheet values that differ from the calc]],
+       [src "s" = sheet only]}
   WK stop .tr [trainer keys]: placed by location name within the walkthrough split (gym leaders take the last matching
        stop, others a forward pointer; Route 111 desert fights in Split 5 sit with Mirage Tower; Elite Four with Victory
        Road; fallbacks: Gardenia (post 3rd badge) -> Verdanturf Town, Crasher Wake -> Mauville City).
   Level caps: a trainer's default cap is the cap of the next boundary fight in the Navigation list (Roxanne 15, Rustboro
        rival 20 ... Champion 85); Hot House tiers 2-7 badges = 30/44/56/64/71/80. This reproduces every "level cap used
        for the speed calculation" note in the sheet.
-  TC {attackType: {defendType: multiplier x10}}   built, src
+  TC {attackType: {defendType: multiplier x10}}   built (date)
 
 STAT FORMULA (Gen 3+)
   HP    = floor((2B + IV + floor(EV/4)) x L / 100) + L + 10
@@ -235,7 +251,7 @@ TRAINER CONFLICTS (sheet vs calc; the calc wins, the card shows "Sheet says ..."
   Crobat Haze vs Leech Life on Route 119), 1 ability. Calc gives Battle Girl Jenny's Mega Flapple an Applite (items sheet:
   Applite = Mega Appletun, no stone for Flapple). Walkthrough says Roark on Route 116 in Split 1; the current sheet has
   Candice there and Roark outside Shoal Cave (Split 7).
-  Name fixes: see TR.fix (Lycaroc, Farigaraf, Crygonal, Thunderus, Iron Jugulus, Mabostiff, Trevanant, Bannette; items
+  Name fixes (the build report lists them): (Lycaroc, Farigaraf, Crygonal, Thunderus, Iron Jugulus, Mabostiff, Trevanant, Bannette; items
   Roseradeite, Infernite, Slakingite, Luxrayite/Luxite, Grimmsnarlite, Alakazamite; moves Extrasensroy, Fishous Rend,
   Stealth Rocks, Scorching Sand; abilities Emperor's Prescence, Gulp Missle, Tablet of Ruin). Items keep readable names
   (the game's item data truncates to 12 letters). Keldeo-Resolute uses Keldeo (folded cosmetic form). New move added to M:

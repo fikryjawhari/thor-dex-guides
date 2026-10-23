@@ -37,7 +37,6 @@
    "nw": "Not found only",
    "g3": "Not in the wild tables, the docs' gifts and statics or an evolution line, so probably not obtainable in Eternal X 2.67.",
    "conf": "",
-   "van": "Vanilla Pokémon X (v1.0 game data) compared with the hack's game data (Rebalanced version).",
    "tc": "Gen 6 type chart (the hack doesn't change it).",
    "chdoc": "Move Changes doc",
    "mvh": "Changes from X",
@@ -48,12 +47,10 @@
    "ns": "Not one place, so it has no encounter slot here.",
    "walk": "",
    "capl": "Your level",
-   "capw": "level cap",
    "capnone": "",
    "noev": "",
    "plm": "Calem (boy)",
-   "plf": "Serena (girl)",
-   "capmain": "Gyms"
+   "plf": "Serena (girl)"
   }
  }
 }

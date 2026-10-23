@@ -10,8 +10,7 @@ const source = readFileSync('template/dex.js', 'utf8');
 const migration = source.slice(source.indexOf('function migrateWalkState(){'), source.indexOf('\nmigrateWalkState();'));
 const store = new Map();
 const state = { c: { '1.0.0': 1 }, o: { 1: 1, gi: 1 }, x: { '1.0': 0, doc0: 1 }, s: { '1.0.e': 0, '1.0.c': 1 } };
-const context = { WO: state, D: { WK: { splits: [{ st: [{ k: '1.0', s: [] }, { k: '1.0.f1', s: [] }] }],
-  legacyStops: { '0.0': '1.0', '0.1': '1.0' } } }, LS: { pos: 'pos' },
+const context = { WO: state, D: { WK: { splits: [{ st: [{ k: '1.0', s: [] }, { k: '1.0.f1', s: [] }] }] } }, LS: { pos: 'pos' },
   localStorage: { getItem: key => store.get(key), setItem: (key, value) => store.set(key, value) }, woSave() {} };
 const migrate = () => vm.runInNewContext('(' + migration + ')()', context);
 store.set('pos', JSON.stringify({ h: '#/walk', a: { sel: 'details.stopd[data-k="1.0"]', off: 12 } }));
@@ -33,7 +32,6 @@ migrate();
 assert.equal(JSON.stringify(state), saved, 'reload must not replay old state');
 context.D.WK.splits.reverse();
 context.D.WK.splits[0].st.reverse();
-context.D.WK.legacyStops = {};
 migrate();
 assert.equal(state.c['0.0.0'], 1, 'later regroup follows previous fragment identity');
 assert.equal(state.c['0.1.0'], undefined, 'unchecked fragment stays unchecked');
@@ -62,6 +60,15 @@ assert.equal(fragments.x['0.1'], undefined);
 assert.equal(fragments.s['0.1.e'], 1);
 assert.equal(JSON.parse(store.get('pos')).a.sel, 'details.stopd[data-k="0.2"]');
 console.log('PASS: unique EX fragment keys retain independent states and anchors after later changes');
+
+// A guide whose stop keys are its positions (Emerald Imperium, Hardlove Gold) and a save that has no layout yet: nothing moves.
+const positional = { c: { '0.1.0': 1, '1.0.2': 1 }, o: { 0: 1, gi: 1 }, x: { '0.1': 0, '1.0': 0, doc0: 1 }, s: { '0.1.e': 0, '1.0.c': 1 } };
+const positionalSaved = JSON.stringify(positional);
+vm.runInNewContext('(' + migration + ')()', { ...context, WO: positional,
+  D: { WK: { splits: [{ st: [{ k: '0.0' }, { k: '0.1' }] }, { st: [{ k: '1.0' }] }] } } });
+delete positional.layout;
+assert.equal(JSON.stringify(positional), positionalSaved, 'position keys leave an old save as it is');
+console.log('PASS: position-keyed guides keep an old save untouched');
 
 const args = process.argv.slice(2);
 assert(args.length === 0 || args.length === 3, 'Usage: node tools/walk-state-check.mjs [old.html new.html legacy-stop-key]');
@@ -100,7 +107,7 @@ try {
   for (const [before, after, legacyKey] of guides) for (const keyboard of [false, true]) {
     const readData = file => JSON.parse(readFileSync(file, 'utf8').match(/<script id="data" type="application\/json">([\s\S]*?)<\/script>/)[1]);
     const originalData = readData(before), updatedData = readData(after);
-    const identities=updatedData.WK.splits.flatMap((split,splitIndex)=>split.st.map((stop,stopIndex)=>stop.k??(splitIndex+'.'+stopIndex)));
+    const identities=updatedData.WK.splits.flatMap((split,splitIndex)=>split.st.map((stop,stopIndex)=>stop.k));
     assert.equal(new Set(identities).size, identities.length, 'all walkthrough fragment identities must be unique');
     for (const stamped of [false, true]) {
       const baselineState = { c: {}, o: { gi: 1 }, x: { doc0: 1 }, s: {} };
@@ -114,11 +121,11 @@ try {
         });
       });
       if (stamped) baselineState.layout = originalData.WK.splits.map((split, splitIndex) =>
-        split.st.map((stop, stopIndex) => String(stop.k ?? (splitIndex + '.' + stopIndex))));
+        split.st.map((stop, stopIndex) => String(stop.k ?? (splitIndex + '.' + stopIndex)))); // the old build may have no keys
       vm.runInNewContext('(' + migration + ')()', { ...context, WO: baselineState, D: updatedData });
       updatedData.WK.splits.forEach((split, splitIndex) => split.st.forEach((stop, stopIndex) => {
         const position = splitIndex + '.' + stopIndex;
-        const oldKey = updatedData.WK.legacyStops?.[position] ?? (stop.k ?? position).replace(/\.f\d+$/, '');
+        const oldKey = stop.k.replace(/\.f\d+$/, '');
         const [oldSplit, oldStop] = oldKey.split('.').map(Number);
         assert.equal(baselineState.c[position + '.0'], 1, 'tick ' + position);
         assert.equal(baselineState.x[position], oldStop % 2 === 0 ? 0 : undefined, 'stop ' + position);
@@ -150,7 +157,7 @@ try {
           data.WK.splits.forEach((split, splitIndex) => split.st.forEach((stop, stopIndex) => {
             stop.s = [];
             const position = splitIndex + '.' + stopIndex;
-            if (!target && (current ? (stop.k ?? position) === legacyKey : position === legacyKey)) {
+            if (!target && (current ? stop.k === legacyKey : position === legacyKey)) {
               target = position;
               stop.s = [['Migration probe one', ''], ['Migration probe two', '']];
             }

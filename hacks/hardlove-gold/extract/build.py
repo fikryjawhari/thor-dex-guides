@@ -9,8 +9,7 @@ names). The report goes to hacks/hardlove-gold/extract/report.txt.
 
 Source-free path (keeps the published 0.8.3 corrections to WK and TR, which the 0.8.2 raw sources cannot reproduce):
     uv run python -I hacks/hardlove-gold/extract/build.py --published [data.json]
-loads the committed data.json and re-applies only the finishing steps (Starter area, split-UI reshaping if the file has
-no 'su' marker yet, Items standard, split names). Idempotent. This is how the published data.json is produced now;
+loads the committed data.json and re-applies only the finishing steps (Starter area, the shared finalisers). Idempotent. This is how the published data.json is produced now;
 the plain raw run is the check that the extract scripts still agree with the old pipeline.
 """
 import os, sys
@@ -20,9 +19,6 @@ from common import H, report  # noqa: E402
 from extractlib import finalise, write_data  # noqa: E402
 import dex, locs, trainers, items, walk  # noqa: E402
 import datajson  # noqa: E402
-
-# data.json keeps this key order (the published layout)
-ORDER = ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'IT', 'WK', 'TR', 'TC', 'built', 'su']
 
 
 def main():
@@ -51,21 +47,16 @@ def main():
     trainers.split(D)     # one box per mini-split
     items.split(D)        # Held Items + Berries, Valuables
     locs.starter(D)       # the Starter area
-    D['su'] = 1           # the published files carry the split UI marker; the template does not read it
     finalise(D, H.name)
-    write_data(D, H, None, ORDER)
+    write_data(D, H)
 
 
 def published(path):
     """Finish a published data.json without the raw sources."""
     D, _ = datajson.load(path)
-    if not D.get('su'):
-        trainers.split(D)
-        items.split(D)
-        D['su'] = 1
     locs.starter(D)
     finalise(D, H.name)
-    write_data(D, H, None, ORDER)
+    write_data(D, H, report_file=False)
 
 
 if __name__ == '__main__':

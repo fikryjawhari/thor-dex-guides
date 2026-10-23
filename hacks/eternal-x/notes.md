@@ -60,7 +60,7 @@ trainer cards, 7 item boxes, 21 walkthrough splits with 74 stop fragments retain
 - **Walkthrough** (walk.py): the Trainers page's cap splits, then Post-game. A place spanning cap boundaries is
   split into trainer fragments; encounters, items and steps stay on the first fragment, without duplication.
   Every fragment carries a unique persistent `k`: the original gym-split stop coordinate for the primary fragment,
-  then `.f1`, `.f2`, etc. `WK.legacyStops[newPosition]` maps every fragment back to its original stop for first upgrade.
+  then `.f1`, `.f2`, etc. Without its `.fN` suffix, `k` is the stop's position before the regroup (the saved-state position of old builds; there is no separate map).
   PLACE puts Team Flare Secret HQ (Xerneas) at part 11's Geosenge Town; ALIAS Starter → Aquacorde
   Town; ITEM_ALIAS files gyms and buildings under their town; a Lumiose item goes to the earliest part whose Lumiose block
   lists it (8 move to parts 8 and 11), the rest stay at the first visit (part 3).
@@ -124,7 +124,7 @@ the first fragment keeps its root, and subsequent fragments get `.f1`, `.f2`, et
 at `3.4`, `4.0` and `5.0` use `2.4`, `2.4.f1` and `2.4.f2`, respectively. These suffixes are assigned within the
 original stop, not from the cap/split index, so an unrelated layout insertion does not change their identities.
 
-`WK.legacyStops` contains all 74 new positions, each mapped to its pre-Part-B root. This lets the parent template
+The key minus its `.fN` suffix is each of the 74 new positions' pre-Part-B root. This lets the parent template
 inherit checklist/open/section state and anchors on first upgrade, while its subsequent `WO.layout` snapshots
 track each fragment independently. No species, trainer, area, item, stop content or storage-key changes accompany
 this follow-up. All changes are inside Eternal X; no shared template/helper changes or merges were made here.

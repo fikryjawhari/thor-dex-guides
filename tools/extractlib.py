@@ -24,6 +24,7 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 sys.path.insert(0, os.path.join(ROOT, 'tools'))
 import datajson  # noqa: E402
 import itemstd  # noqa: E402
+import schema  # noqa: E402
 from splits import split_name  # noqa: E402,F401  (re-exported for the hacks' modules)
 
 sys.stdout.reconfigure(encoding='utf-8')
@@ -121,23 +122,21 @@ def split_names(D):
 
 
 def finalise(D, hack, prune=None):
-    """The end of every build: Items standard (tools/itemstd.py), the hack's species prune, shared split names."""
+    """The end of every build: Items standard (tools/itemstd.py), the hack's species prune, shared split names, the data
+    schema (tools/schema.py: dead fields dropped, stop keys, key order). Idempotent."""
     itemstd.standardise(D, itemstd.RULES[hack], report)    # plans/items-standard.md
     if prune:
         prune(D)
     split_names(D)
+    schema.standardise(D)
 
 
-DEFAULT_ORDER = ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'built', 'src']
-
-
-def write_data(D, H, src, order=None):
-    """Stamp built / src, order the keys, write data.json and extract/report.txt, print the report's headlines."""
+def write_data(D, H, report_file=True):
+    """Stamp built, order the keys, write data.json and extract/report.txt (unless report_file is False: a re-finish of
+    a published data.json has no raw-source report to write), print the report's headlines."""
     D['built'] = datetime.date.today().isoformat()
-    if src:
-        D['src'] = src
-    order = order or DEFAULT_ORDER
-    D = {k: D[k] for k in order if k in D} | {k: v for k, v in D.items() if k not in order}
+    D = schema.order(D, 'top')
     datajson.write(os.path.join(H.dir, 'data.json'), D)
-    open(os.path.join(H.extract, 'report.txt'), 'w', encoding='utf-8', newline='\n').write('\n'.join(REPORT) + '\n')
+    if report_file:
+        open(os.path.join(H.extract, 'report.txt'), 'w', encoding='utf-8', newline='\n').write('\n'.join(REPORT) + '\n')
     print('\n'.join(r for r in REPORT if not r.startswith('  ')))
