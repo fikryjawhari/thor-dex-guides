@@ -146,7 +146,8 @@ def build(D):
         if not fragments:
             fragments = [(current, [])]
         for fragment_index, (group_index, trainer_keys) in enumerate(fragments):
-            fragment = dict(stop, tr=trainer_keys)
+            fragment_key = f"{stop['k']}.f{fragment_index}" if fragment_index else stop['k']
+            fragment = dict(stop, k=fragment_key, tr=trainer_keys)
             if fragment_index:
                 fragment.update(a=[], s=[], it=[], note='')
             if trainer_keys and cap_of[trainer_keys[0]]:
@@ -167,6 +168,11 @@ def build(D):
         docs.append([title, t.strip()])
     ch = open(os.path.join(SRC, 'Changelog.txt'), encoding='utf-8', errors='replace').read().replace('�', 'é')
     docs.append(['Changelog', ch.strip()])
-    D['WK'] = {'splits': splits, 'np': np, 'docs': docs}
+    legacy_stops = {f'{split_index}.{stop_index}': stop['k'].split('.f', 1)[0]
+                    for split_index, split in enumerate(splits) for stop_index, stop in enumerate(split['st'])}
+    fragment_keys = [stop['k'] for split in splits for stop in split['st']]
+    assert len(fragment_keys) == len(set(fragment_keys)), 'Duplicate persistent walkthrough fragment keys'
+    assert set(legacy_stops.values()) == {stop['k'] for stop in out}, 'Missing legacy walkthrough roots'
+    D['WK'] = {'splits': splits, 'legacyStops': legacy_stops, 'np': np, 'docs': docs}
     report('walkthrough:', len(splits), 'splits', sum(len(split['st']) for split in splits), 'stop fragments,',
            len(out), 'legacy stop keys,', sum(len(s['it']) for s in out), 'items placed,', len(np), 'not placed')

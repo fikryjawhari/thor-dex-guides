@@ -4,6 +4,7 @@ Usage: python -I hacks/eternal-x/extract/check.py [baseline.json]
 """
 import json
 import os
+import re
 import sys
 from collections import defaultdict
 
@@ -61,6 +62,22 @@ def check(data, baseline=None):
     assert not any('Sycamore' in cap[0] for cap in data['TR']['caps'])
     assert data['TR']['caps'][17][0] == 'Shauna, Tierno & Trevor (Route 19)'
     groups, splits = data['TR']['g'], data['WK']['splits']
+    stops_by_position = {f'{split_index}.{stop_index}': stop
+                         for split_index, split in enumerate(splits) for stop_index, stop in enumerate(split['st'])}
+    fragment_keys = [stop['k'] for stop in stops_by_position.values()]
+    assert len(fragment_keys) == len(set(fragment_keys)), 'duplicate persistent fragment keys'
+    assert all(re.fullmatch(r'\d+\.\d+(?:\.f[1-9]\d*)?', key) for key in fragment_keys)
+    legacy_stops = data['WK']['legacyStops']
+    assert set(legacy_stops) == set(stops_by_position), 'every fragment needs a first-upgrade mapping'
+    fragments_by_root = defaultdict(list)
+    for position, stop in stops_by_position.items():
+        root = stop['k'].split('.f', 1)[0]
+        assert legacy_stops[position] == root, (position, root)
+        fragments_by_root[root].append(stop['k'])
+    assert len(fragments_by_root) == 69
+    for root, keys in fragments_by_root.items():
+        assert set(keys) == {root} | {f'{root}.f{index}' for index in range(1, len(keys))}
+    print(f'Fragment identities: {len(fragment_keys)} unique keys; all 69 legacy roots and every position mapped PASS.')
     assert [group['n'] for group in groups] == [split['n'] for split in splits]
     assert groups[-2]['n'] == 'Elite Four Split [Cap 82]'
     assert groups[-1]['n'] == 'Post-game'
@@ -92,9 +109,8 @@ def check(data, baseline=None):
         old_stops = {f'{split_index}.{stop_index}': stop for split_index, split in enumerate(baseline['WK']['splits'])
                      for stop_index, stop in enumerate(split['st'])}
         new_stops = defaultdict(list)
-        for split in splits:
-            for stop in split['st']:
-                new_stops[stop['k']].append(stop)
+        for position, stop in stops_by_position.items():
+            new_stops[legacy_stops[position]].append(stop)
         assert set(new_stops) == set(old_stops)
         for key, old_stop in old_stops.items():
             fragments = new_stops[key]

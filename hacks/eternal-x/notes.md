@@ -59,7 +59,8 @@ trainer cards, 7 item boxes, 21 walkthrough splits with 74 stop fragments retain
   `{{itemlist}}` rows (the Kanto stones from Sycamore with your Kanto starter, TM54, the lenses...).
 - **Walkthrough** (walk.py): the Trainers page's cap splits, then Post-game. A place spanning cap boundaries is
   split into trainer fragments; encounters, items and steps stay on the first fragment, without duplication.
-  Every fragment carries `k`, the original gym-split stop coordinate. See the runtime compatibility blocker below.
+  Every fragment carries a unique persistent `k`: the original gym-split stop coordinate for the primary fragment,
+  then `.f1`, `.f2`, etc. `WK.legacyStops[newPosition]` maps every fragment back to its original stop for first upgrade.
   PLACE puts Team Flare Secret HQ (Xerneas) at part 11's Geosenge Town; ALIAS Starter → Aquacorde
   Town; ITEM_ALIAS files gyms and buildings under their town; a Lumiose item goes to the earliest part whose Lumiose block
   lists it (8 move to parts 8 and 11), the rest stay at the first visit (part 3).
@@ -99,7 +100,7 @@ trainer cards, 7 item boxes, 21 walkthrough splits with 74 stop fragments retain
   a removed species ID previously selected using Other remain in stored state (a removed species no longer has
   a display option; its stored value is not rewritten). Trainer card keys remain stable for cap/open state.
   Eternal X has **zero checklist steps** before and after, so no real checklist ticks can be reassigned.
-- **Unresolved shared-template blocker (do not treat this as a clean compatibility pass)**: the plan's assumption
+- **Original shared-template blocker (superseded by the parent compatibility fix and follow-up below)**: the plan's assumption
   of stable walkthrough stop keys is false in Part A. `walkStop` still uses `si + '.' + ti` for `WO.x` / `WO.s`,
   and checklist/summary helpers likewise use positional coordinates. The emitted `s.k` retains the legacy key,
   but current template code ignores it. 56 of the 74 fragments have different positional coordinates.
@@ -114,3 +115,22 @@ trainer cards, 7 item boxes, 21 walkthrough splits with 74 stop fragments retain
   `domcompare` sweeps 2,316 routes per mode: zero page errors, hashchange timeouts or unsettled routes; exits 1
   because DOMs intentionally differ (footer totals/date, split names, pruning and key items), not an identical-DOM
   pass. Local baselines, logs and minimum-size screenshot are under `.tmp/ex-*` / `.tmp/eternal-x-baseline.*`.
+
+### Persistent fragment identity follow-up (2026-10-23)
+
+Review found that sharing an original stop key across fragments would couple their saved state even after the
+parent's compatibility fix. Extraction now emits **74 unique persistent keys**, retaining all **69 legacy roots**:
+the first fragment keeps its root, and subsequent fragments get `.f1`, `.f2`, etc. For example, the Shalour stops
+at `3.4`, `4.0` and `5.0` use `2.4`, `2.4.f1` and `2.4.f2`, respectively. These suffixes are assigned within the
+original stop, not from the cap/split index, so an unrelated layout insertion does not change their identities.
+
+`WK.legacyStops` contains all 74 new positions, each mapped to its pre-Part-B root. This lets the parent template
+inherit checklist/open/section state and anchors on first upgrade, while its subsequent `WO.layout` snapshots
+track each fragment independently. No species, trainer, area, item, stop content or storage-key changes accompany
+this follow-up. All changes are inside Eternal X; no shared template/helper changes or merges were made here.
+
+Checks: full extraction twice with byte-identical output; `extract/check.py` against the pre-Part-B baseline,
+including unique fragment keys, exact suffix families, complete position mapping and all 69 legacy roots;
+`python assemble.py eternal-x`; `git diff --check`. The current worktree still has Part A's old template, so runtime
+migration is **not** claimed tested here: the parent owns the authorised shared fix and browser checks. Expensive
+DOM sweeps were not rerun for this identity-only addition.
