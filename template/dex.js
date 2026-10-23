@@ -495,6 +495,46 @@ const segBar=(cls,a='Expand all',c='Collapse all')=>`<div class="seg ${cls}"><bu
 // (stop.note), game docs (WK.docs, WK.ko), items with no place (WK.np).
 const WO=(()=>{try{return Object.assign({c:{},o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.walk)||'{}'))}catch(e){return {c:{},o:{},x:{},s:{}}}})();
 const woSave=()=>{try{localStorage.setItem(LS.walk,JSON.stringify(WO))}catch(e){}};
+function migrateWalkState(){
+ const layout=D.WK.splits.map((split,splitIndex)=>split.st.map((stop,stopIndex)=>String(stop.k??(splitIndex+'.'+stopIndex))));
+ if(JSON.stringify(WO.layout)===JSON.stringify(layout))return;
+ const previous=new Map(),remap=new Map(),splitMap=new Map();
+ if(Array.isArray(WO.layout))WO.layout.forEach((split,splitIndex)=>split.forEach((key,stopIndex)=>{
+  const positions=previous.get(key)||[];positions.push(splitIndex+'.'+stopIndex);previous.set(key,positions);
+ }));
+ const old={c:WO.c,o:WO.o,x:WO.x,s:WO.s};
+ const next={c:{},o:{},x:{},s:{}};
+ for(const kind of ['c','o','x','s'])for(const [key,value] of Object.entries(old[kind]))if(!/^\d+(?:\.|$)/.test(key))next[kind][key]=value;
+ layout.forEach((split,splitIndex)=>split.forEach((key,stopIndex)=>{
+  const position=splitIndex+'.'+stopIndex,legacy=D.WK.legacyStops?.[position]??String(D.WK.splits[splitIndex].st[stopIndex].k??position).replace(/\.f\d+$/,'');
+  const sources=previous.size?(previous.get(key)||previous.get(legacy)||[]):[legacy];
+  for(const source of sources){
+   if(!remap.has(source))remap.set(source,position);
+   const oldSplit=source.split('.')[0];if(!splitMap.has(oldSplit))splitMap.set(oldSplit,String(splitIndex));
+   if(old.o[oldSplit])next.o[splitIndex]=1;
+   if(old.x[source]===0)next.x[position]=0;
+   for(const section of ['c','e','i','t']){
+    const value=old.s[source+'.'+section],target=position+'.'+section;
+    if(value!==undefined&&(next.s[target]===undefined||value===0))next.s[target]=value;
+   }
+   for(const [step,value] of Object.entries(old.c))if(step.startsWith(source+'.')&&/^\d+$/.test(step.slice(source.length+1)))next.c[position+step.slice(source.length)]=value;
+  }
+ }));
+ const changed=Array.isArray(WO.layout)||layout.some((split,splitIndex)=>split.some((key,stopIndex)=>key!==splitIndex+'.'+stopIndex));
+ if(changed){
+  Object.assign(WO,next);
+  try{
+   const position=JSON.parse(localStorage.getItem(LS.pos)||'null');
+   if(position&&/^#\/walk(?:\/|$)/.test(position.h)&&position.a?.sel){
+    position.a.sel=position.a.sel.replace(/data-k="(\d+\.\d+)"/,(match,key)=>'data-k="'+(remap.get(key)??key)+'"')
+     .replace(/data-wo="(\d+)"/,(match,key)=>'data-wo="'+(splitMap.get(key)??key)+'"');
+    localStorage.setItem(LS.pos,JSON.stringify(position));
+   }
+  }catch(e){}
+ }
+ WO.layout=layout;woSave();
+}
+migrateWalkState();
 const CHK=D.WK.splits.some(sp=>sp.st.some(s=>(s.s||[]).length));
 const tkCounts=()=>[Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length,Object.values(TK.e).filter(e=>e&&e.f).length];
 // Guide info: tracker and checklist tools, then the game docs (cheat codes and unplaced items count as docs), then the

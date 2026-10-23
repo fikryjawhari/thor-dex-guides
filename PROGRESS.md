@@ -68,7 +68,7 @@ the split is in that repo's git log.
   Serena / Calem) and the stage checklist: `plans/eternal-x.md`. The romfs stays in the main checkout's
   `hacks/eternal-x/.src/romfs-dl/`.
 
-- **Consistency pass over the four guides: A built 2026-10-23**, uncommitted on `worktree-consistency-template`
+- **Consistency pass over the four guides: A committed 2026-10-23** as `98cc969` on `worktree-consistency-template`
   (T3 worktree; based on main including Codex setup commit `4aeaab9`). Vanilla cards / Changed filter removed;
   EI gets a named starter picker, migrating its existing area-0 tracker and filtering rivals by type; Locations
   starter / player pickers wrap on one row; single cap table; MGM appears only with actual trainer EVs and is
@@ -79,11 +79,18 @@ the split is in that repo's git log.
   changes, not an identical-build result. Extract edits compile; six naming-helper cases pass; full extracts
   were not rebuilt (raw sources are not in this worktree). Four Thor-frame phone previews:
   `consistency-emerald-imperium.html`, `consistency-hardlove-gold.html`, `consistency-eternal-x.html`,
-  `consistency-photonic-sun.html`. Awaiting the user's phone / Thor review. **B is not done:** no data.json edits;
-  template normalises old dual-cap data in memory until B supplies one list / entry. Cap regrouping, species
-  pruning, starter-area data, league / walkthrough names and cap-list edits remain B. The actual branch name
-  supersedes the older workflow example; future B branches should start from this branch after A is committed.
-  See `plans/consistency-pass.md` Status for the handover. No implementation commit, merge or push authorised.
+  `consistency-photonic-sun.html`. **B is committed in four retained, separate worktrees, not merged:**
+  EI `t3/emerald-imperium-prune-splits` (`ef9bb0d`), HG `t3/hardlove-gold-consistency` (`2ffaa90`),
+  EX `t3/eternal-x-consistency` (`21883d4`, following `4718c59`), PS `t3/photonic-sun-part-b`
+  (`cdee72e`, tests follow-up to `c94e4df`),
+  all based on `a07645a`.
+  The user changed B from sequential to parallel. Each child changed only its hack and committed it.
+  HG's available 0.8.2 raw snapshot does not reproduce all published 0.8.3 trainer corrections; those published
+  corrections remain preserved. EI's legacy full raw-source pipeline was not rebuilt. See each hack's notes.
+  EX / PS exposed positional walkthrough state keys: the original template ignored their preserved legacy keys.
+  The user authorised the shared fix here: layout-aware state migration, regression checks and handover are
+  currently uncommitted. No hack branches have been merged; no pushes. Commit the shared fix when authorised,
+  then merge B one at a time with rebuilds/checks before C / D. See `plans/consistency-pass.md` for details.
 
 ## What's left, in order
 

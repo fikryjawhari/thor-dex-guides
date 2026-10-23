@@ -124,6 +124,42 @@ sessions cost mostly cache reads, since each tool call re-reads the whole contex
 Each session ticks off its part here (Status below) and says which step is next.
 
 ## Status
+- 2026-10-23: B completed in four separate worktrees off `a07645a`; the user changed sequential execution to
+  parallel. Commits: EI `ef9bb0d` (`t3/emerald-imperium-prune-splits`), HG `2ffaa90`
+  (`t3/hardlove-gold-consistency`), EX `4718c59` (`t3/eternal-x-consistency`), PS `c94e4df`
+  (`t3/photonic-sun-part-b`). Each branch changes only its hack. Nothing merged or pushed.
+  EX follow-up `21883d4` gives all 74 fragments unique persistent identities and maps each to its original
+  legacy position (69 roots), fixing a review finding where duplicate identities merged independently saved
+  fragments on a later layout change. No other generated data changed.
+  PS follow-up `cdee72e` replaces obsolete raw-coordinate equality assertions with a strict semantic browser
+  gate, requiring explicit baseline/current HTML inputs. It passes the parent fixed overlay in both modes,
+  for legacy and layout-stamped saves, all 137 old stops / 148 fragments, and 72 tracker picks; it correctly
+  rejects the unpatched branch viewer. Only PS tests/notes changed, not data or the shared template.
+  EX / PS confirmed that the plan's stable walkthrough-key assumption was false: the template stores positional
+  coordinates. Their legacy stop keys now support the shared fix authorised by the user in this parent tree.
+  `migrateWalkState` records the last walkthrough layout inside the existing saved object; when it changes,
+  remaps checkbox ticks, stop/section collapse, split expansion and saved walkthrough scroll anchors from a
+  snapshot, avoiding coordinate collisions. Legacy PS fragments inherit their old stop's state once, then keep
+  independent edits on reload. No storage key names change; documents and Guide info retain their state.
+  Guides without explicit stop keys retain positional fallback. EX / PS have no real checklist steps, so browser
+  fixtures inject two steps before startup to check ticking, unchecking, Next step and reset after regrouping.
+  `tools/walk-state-check.mjs` checks both old unmarked saves and layout-stamped saves across every stop;
+  the old stop `1.8` -> `2.0` (EX) and `1.0` -> `0.7` (PS) render correctly in normal and dvkb.
+  This is forward migration from the published layout, not recovery of ambiguous saves made using an unfixed
+  Part B draft. Trainer-group expansion migration is separate; this fix concerns walkthrough state only.
+  Checks: all four assemble; shared consistency checks pass all five viewer sizes, expanded pages and light
+  theme, normal/dvkb. Eight full DOM sweeps (19,960 routes) have no page errors, hashchange timeouts or
+  unsettled routes. Seven sweeps are identical; EI normal flagged one timing-sensitive location route
+  (`#/l/0`), whose targeted repeat is identical. All four branch-data overlays pass minimum-size walk/page
+  checks in both modes. Dedicated migration browser regressions pass for all four base guides plus all four
+  branch overlays, including synthetic checklist rendering and no replay after uncheck/reset/reload.
+  Both read-only review rounds completed; the EX identity finding is resolved, with no further findings.
+  Local logs and overlays are `.tmp/walk-fix-*` and `.tmp/state-*.html`. Updated EX/PS Thor-frame phone
+  previews are `consistency-eternal-x-state.html` and `consistency-photonic-sun-state.html`; these combine
+  branch data and this parent template without merging branches. No physical Thor test performed.
+  Shared fix is uncommitted pending authorisation; hack branches remain untouched. Final integration audit,
+  phone / Thor checks and the merge-session decision remain. HG raw-input and EI rebuild limitations are in
+  their branch notes. Historical A / sequential notes below are superseded by this entry.
 - 2026-10-23: A committed as 98cc969 with user authorisation. B runs sequentially, one 6.1 sol subagent and
   separate worktree per hack, each based on committed A, not the previous hack. Commit each completed hack.
   No pushes or merges; decide the merge session after all four are done. This supersedes the older workflow.
