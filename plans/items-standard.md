@@ -9,24 +9,24 @@ item extracts), then part D, the audit.
 ## Boxes
 One fixed set, in this order. A box shows only when the hack has rows for it. No per-hack box names or order.
 
-1. Shops
+1. Valuables (HG's Heart Scale / Rare Candy / Big Nugget / Master Ball pickups, one row per pickup under a sub-heading
+   per item, as HG has it now; HG is the only guide with it)
 2. Key Items
-3. TMs and HMs (one box, sub-headings TMs and HMs, each with its own rows; HMs only where the hack has them)
-4. Move Tutors
-5. Evolution Items
+3. Shops
+4. TMs and HMs (one box, sub-headings TMs and HMs, each with its own rows)
+5. Move Tutors
 6. Held Items
-7. Stats and Abilities
-8. Mega Stones (every guide with stone locations: EI, HG, EX; **not PS**) or Z-Crystals (PS)
-9. Fossils
-10. Useful NPCs (EI's existing 22 rows; place | note rows, as now)
-11. Valuables (last; HG's Heart Scale / Rare Candy / Big Nugget / Master Ball pickups, one row per pickup under a
-    sub-heading per item, as HG has it now)
+7. Evolution Items
+8. Stats and Abilities
+9. Mega Stones (every guide with stone locations: EI, HG, EX; **not PS**) or Z-Crystals (PS)
+10. Fossils
+11. Useful NPCs (EI's existing 22 rows; place | note rows, as now)
 
 Key Items keep only what unlocks something or has story / QoL / gameplay value (the earlier rule for EX / PS; HG's
 "Other" key-type rows move here: Infinite Candy, Old Rod, Bike, Pokégear Upgrade, Starter Card, Dowsing Machine,
 SS Aqua Ticket, Mega Ring).
 
-## Sub-headings (yellow, A to Z inside, shown only when they have rows, Expand / Collapse all bar when 2+)
+## Sub-headings (yellow, A to Z inside, a sub-heading shows whenever its box has the heading in the standard, even when it is the only one, because it is the sticky heading that scrolls with the page; Expand / Collapse all bar when 2+)
 - **Shops**, by item kind: Poké Balls, Healing and repels, Evolution items, Power items, Held items, Stats and abilities,
   TMs, Mega Stones, Other. One row per item; the row lists every shop that sells it, one per line (no `Shop:` prefix).
   EI is regrouped from its per-shop headings to this (user's call); the vanilla-stock note stays as the box note, and
@@ -37,9 +37,11 @@ SS Aqua Ticket, Mega Ring).
   Drives. Each item appears once (evolution items stay in Evolution Items, Power items in Stats and Abilities).
 - **Stats and Abilities**, game order inside: Raise stats (vitamins), Raise stats (wings), Power items (EVs while held),
   Lower stats (berries), Hyper Training (IVs), Abilities, Levels and PP (as PS / EX have them).
-- **TMs and HMs**: sub-headings TMs and HMs (a hack with no HMs shows no sub-headings). Replaces the separate TMs and
+- **TMs and HMs**: sub-headings TMs and HMs (a hack with no HMs still shows the TMs sub-heading, so the sticky heading is always there). Replaces the separate TMs and
   HMs boxes in EI / HG; the move pages' TM / HM lookups read `k:'tm'` rows by name, so check them after merging the boxes.
 - **Valuables**: sub-heading per item.
+- Boxes with one fixed sub-heading (TMs and HMs when no HMs) show it anyway; the template already renders a sub-heading
+  per row group and only the Expand / Collapse all bar needs 2+. Check the sticky heading stacking at 260 × 316.
 
 ## Row style
 `Found: places` / `Wild: species` / `Also: gift, reward, Festival Plaza...` / `Shop: shop, shop`, in that order, one
