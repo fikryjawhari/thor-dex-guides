@@ -78,10 +78,10 @@ HELD = [
     ('Other held items', ['Everstone', 'Destiny Knot', 'Amulet Coin', 'Cleanse Tag', 'Lucky Egg', 'Lax Incense',
                           'Full Incense', 'Luck Incense', 'Pure Incense', 'Exp. Share']),
 ]
-KEY = ['Bicycle', 'Roller Skates', 'Running Shoes', 'Town Map', 'Dowsing Machine', 'Old Rod', 'Good Rod', 'Super Rod',
-       'Holo Caster', 'Mega Ring', 'Exp. Share', 'Poké Flute', 'Lens Case', "Prof's Letter", 'Honor of Kalos', 'Vs. Recorder',
+KEY = ['Bicycle', 'Roller Skates', 'Dowsing Machine', 'Old Rod', 'Good Rod', 'Super Rod',
+       'Mega Ring', 'Exp. Share', 'Poké Flute', "Prof's Letter", 'Vs. Recorder', 'Poké Radar',
        'Elevator Key', 'Lab Key Card A', 'Lab Key Card B', 'Lab Key Card C', 'Looker Ticket', 'Power Plant Pass',
-       'Reveal Glass', 'Gracidea', 'DNA Splicers', 'Intriguing Stone', 'TMV Pass', 'Adventure Rules']
+       'Reveal Glass', 'Gracidea', 'DNA Splicers', 'Intriguing Stone', 'TMV Pass']
 HEAL = ['Potion', 'Super Potion', 'Hyper Potion', 'Max Potion', 'Full Restore', 'Revive', 'Max Revive', 'Antidote',
         'Paralyze Heal', 'Awakening', 'Burn Heal', 'Ice Heal', 'Full Heal', 'Escape Rope', 'Repel', 'Super Repel',
         'Max Repel', 'Ether', 'Max Ether', 'Elixir', 'Max Elixir', 'Heal Powder', 'Energy Powder', 'Energy Root',

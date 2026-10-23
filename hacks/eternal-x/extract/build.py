@@ -1,14 +1,15 @@
 """Build hacks/eternal-x/data.json from hacks/eternal-x/.src (SOURCES.md says how to fetch it).
 
 Usage (repo root): uv run python -I hacks/eternal-x/extract/build.py
-Stages: dex.py (M, MV, AB, P, TC), locs.py (LOC, AR, P.w), trainers.py (TR), items.py (IT), walk.py (WK), items.order (game order, needs WK). The report
+Stages: dex.py (M, MV, AB, P, TC), locs.py (LOC, AR, P.w), trainers.py (TR), items.py (IT), walk.py (WK),
+items.order (game order, needs WK), availability.py (prune P after trainer and item dependencies). The report
 of every conflict and guess goes to hacks/eternal-x/extract/report.txt.
 """
 import datetime, json, os, subprocess, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import HACK, SRC, TXT, REPORT  # noqa: E402
-import dex, locs, trainers, items, walk  # noqa: E402
+import dex, locs, trainers, items, walk, availability  # noqa: E402
 
 LINES = ('M', 'MV', 'AB', 'P', 'LOC', 'AR')
 
@@ -38,6 +39,7 @@ def main():
     items.build(D)
     walk.build(D)
     items.order(D)
+    availability.build(D)
     D['built'] = datetime.date.today().isoformat()
     D['src'] = 'Eternal X 2.67 Rebalanced: game data (romfs + code.ips over Pokemon X v1.0), Buffel Saft\'s docs, Bulbapedia (trainer places, story order)'
     order = ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'built', 'src']

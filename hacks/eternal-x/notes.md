@@ -7,8 +7,8 @@ reads `.src/txt/`, `pdftotext -layout -enc UTF-8` copies of the PDFs, made by bu
 `plans/eternal-x.md`. Model: Photonic Sun's extract; schema as `hacks/photonic-sun/notes.md` → Data schema, plus
 `t.pl` below.
 
-786 Pokémon and forms (30 Megas, 23 form changes, 514 changed from X), 617 moves (38 changed), 39 areas, 708
-trainer cards, 7 item boxes, 17 walkthrough parts with 69 stops.
+782 Pokémon and forms (29 Megas, 23 form changes), 617 moves (38 changed), 39 areas, 680
+trainer cards, 7 item boxes, 21 walkthrough splits with 74 stop fragments retaining 69 original stop keys.
 
 ## Sources and rules
 
@@ -35,14 +35,17 @@ trainer cards, 7 item boxes, 17 walkthrough parts with 69 stops.
   not a catch. In-game trades aren't added.
 - **Trainers** (trainers.py): Bulbapedia's X / Y walkthrough matched on vanilla teams (class + name, species,
   levels); the hack's trainer with that id is used. 54 placeholders dropped. Rival / Shauna / Tierno / Trevor ids are
-  fixed (RIVAL, FRIEND). Boxes are gym splits like Hardlove Gold's (the user, 2026-10-22): story sections cut after each Gym's section and the Champion's, named "<Leader> Split [Cap n]" from the main caps; what follows the Champion joins Post-game (CHAPTERS only sorts parts into story / post-game now). Hand placements (guesses): Hotel Richissime (38), Battle Chatelaines,
+  fixed (RIVAL, FRIEND). Boxes follow the single cap list, including mini caps, named with the shared
+  `tools/splits.py` helper; the league is Elite Four Split [Cap 82], then Post-game. The old gym grouping still
+  assigns trainer keys before the cap regroup, keeping every published trainer key unchanged. Hand placements (guesses): Hotel Richissime (38), Battle Chatelaines,
   4 by id neighbour, 156 nameless trainers (id 614+) as a Battle Maison pool in the post-game box (all post-game:
   levels near or above Diantha's 87, or Maison's fixed levels). 28 trainers no Bulbapedia page names (Drivers, a
   Gardener "●"...) are vanilla X's unused data and are dropped. No natures or EVs (cfg.evs false); IVs are the trainer byte / 8.
-- **Level caps** (CAPS, `level_caps()` in trainers.py; the user's rule, 2026-10-22): main set ("Gyms", cfg.txt.capmain;
-  kind 'trial' in TR.mini) = the 8 Gym Leaders, then the Elite Four's highest level (82, not Diantha); mini caps =
-  rivals (Serena / Calem), Tierno and Trevor, Sycamore, Team Flare's admins and Lysandre. Dropped as in Photonic Sun
-  (doesn't raise the cap, reaches the next main cap, nothing in between): Tierno 18, Victory Road's rival 78. Battles
+- **Level caps** (CAPS, `level_caps()` in trainers.py; consistency pass 2026-10-23): one `TR.caps` list, no
+  `TR.mini`; each story section has one `[level, who, where, battles left]` entry. Eight Gym Leaders and the
+  Elite Four's highest level (82, not Diantha), plus the retained rival / Flare mini caps. Sycamore Lumiose 18
+  and Couriway 70 are removed; Route 19 is Shauna, Tierno & Trevor 72. Previously redundant Tierno 18 and
+  Victory Road's rival 78 remain excluded. Battles
   left count one per battle, one starter and player's rival version, no Battle Chateau, no Viola nerf card. Tags from the battle
   field (Double / Triple / Rotation, Multi Battle with a partner). Moves default to the last four level-up moves.
 - **Rivals, player picker**: `t.st` = starter name, `t.pl` = the player character the team appears for ("m" boy,
@@ -54,7 +57,10 @@ trainer cards, 7 item boxes, 17 walkthrough parts with 69 stops.
   Boxes: Shops, TMs, Evolution Items, Held Items (by class, Mega Stones a class), Stats and Abilities, Fossils, Key
   Items. Rows with only `y=yes` are Y-only and skipped. Items no location page places take the walkthrough pages'
   `{{itemlist}}` rows (the Kanto stones from Sycamore with your Kanto starter, TM54, the lenses...).
-- **Walkthrough** (walk.py): the Trainers page's gym splits (`D['_splits']`: cut after the stop holding the Leader / Champion fight), then Post-game; a stop per Bulbapedia place heading; PLACE puts Team Flare Secret HQ (Xerneas) at part 11's Geosenge Town; ALIAS Starter → Aquacorde
+- **Walkthrough** (walk.py): the Trainers page's cap splits, then Post-game. A place spanning cap boundaries is
+  split into trainer fragments; encounters, items and steps stay on the first fragment, without duplication.
+  Every fragment carries `k`, the original gym-split stop coordinate. See the runtime compatibility blocker below.
+  PLACE puts Team Flare Secret HQ (Xerneas) at part 11's Geosenge Town; ALIAS Starter → Aquacorde
   Town; ITEM_ALIAS files gyms and buildings under their town; a Lumiose item goes to the earliest part whose Lumiose block
   lists it (8 move to parts 8 and 11), the rest stay at the first visit (part 3).
   Lost Hotel and Terminus Cave are "on the way" stops. Game docs: Evolution Changes, Move Changes, Changelog.
@@ -63,3 +69,48 @@ trainer cards, 7 item boxes, 17 walkthrough parts with 69 stops.
 
 `exdex`, `excalc`, `extrack` (tracker {s starter, pl player, e, t}), `exwalk`, `excap`, `extr`, `exrecent`,
 `expos`, `exmgm`, `exloc`, `exitems`, `excapset`. Keep them once published.
+
+## Part B consistency pass (2026-10-23)
+
+- **Availability** (`extract/availability.py`, last build stage): direct encounters/gifts seed a fixed point over
+  evolution and breeding links. Form changes need an obtainable base; Megas additionally need a located stone.
+  Shown trainers and partner teams retain their exact used forms even when unobtainable, marked trainer-only.
+  Removed IDs: `mega-mewtwo-y`, `wormadam-sandy`, `wormadam-trash`, `floette-eternal` (786 -> 782).
+  763 entries are obtainable including forms/Megas; another 19 are trainer/partner-only. No species IDs are
+  renumbered; evolution and alternate-form links are filtered to retained IDs. `p.vc` is no longer generated;
+  move changes remain. No cross-hack helpers changed; only Eternal X's build pipeline adds the final prune stage.
+- **Key items**: remove Holo Caster, Running Shoes, Town Map and Adventure Rules (automatic/tutorial clutter),
+  Lens Case (cosmetic contact lenses), Honor of Kalos (commemorative trophy). Add the already-sourced Poké Radar
+  row, previously omitted by the whitelist. Keep movement tools, all rods/HMs, Dowsing Machine, Exp. Share,
+  Mega Ring, Poké Flute, story/access keys and passes, Prof's Letter, Looker Ticket, Intriguing Stone (Sun Stone
+  exchange), form-change items and Vs. Recorder (battle recording). 33 -> 28 Key Items; other box sets unchanged.
+- **Sources**: copied the required JSON, `txt/`, `bulbapedia/`, `cro/` and Changelog from the main checkout's
+  existing ignored `.src/`. No downloads, ROM extraction or external helper edits were needed. Raw inputs stay
+  ignored. Full `python -I hacks/eternal-x/extract/build.py` succeeds; repeat runs on the same date produce
+  identical data.json bytes. `python assemble.py eternal-x` succeeds (782 shared sprites, no missing sprites).
+- **Data checks**: `python -I hacks/eternal-x/extract/check.py <pre-B-data.json>` passes. Checks cover evolution,
+  usable/unavailable Megas and forms, trainer/partner retention, no dangling references, exact cap coverage and
+  matching Trainer/Walkthrough split names; all 680 complete trainer cards including their original keys and
+  partners are unchanged. AR, ARO and LOC are byte-equivalent as parsed objects. All 69 original stop keys,
+  attached area indices, trainer references and checklist arrays are retained across the 74 fragments.
+- **Saved-state evidence**: `template/dex.js` stores `LS.dex` as `{f,sort,av}`, not species-array indices;
+  `TK.e[area].p` and `TK.t` contain string species IDs; calc inputs use `LS.calc + ':' + p.id`. Config/storage
+  key names are untouched. Browser seeds verify ordinary catches, a failed area, starter/player, trades and even
+  a removed species ID previously selected using Other remain in stored state (a removed species no longer has
+  a display option; its stored value is not rewritten). Trainer card keys remain stable for cap/open state.
+  Eternal X has **zero checklist steps** before and after, so no real checklist ticks can be reassigned.
+- **Unresolved shared-template blocker (do not treat this as a clean compatibility pass)**: the plan's assumption
+  of stable walkthrough stop keys is false in Part A. `walkStop` still uses `si + '.' + ti` for `WO.x` / `WO.s`,
+  and checklist/summary helpers likewise use positional coordinates. The emitted `s.k` retains the legacy key,
+  but current template code ignores it. 56 of the 74 fragments have different positional coordinates.
+  Confirmed in normal and dvkb: Connecting Cave has legacy key `1.8`, new coordinate `2.0`; seeded
+  `exwalk.x['1.8']=0` survives storage but the stop renders open. The shared template must honour stable stop
+  keys consistently, with positional fallback for other guides, before merging/deploying this regroup.
+  This task did not edit template/shared code. Split accordion/scroll positions also remain positional.
+- **Headless checks**: existing `pagecheck.mjs` and `walkcheck.mjs`, both normal and dvkb, at 260 x 316:
+  no page errors and reported widths 260. An ignored Eternal-X-only copy of `tools/consistency-check.mjs` passes
+  its tracker/picker/cap checks, all five viewer sizes (260 x 316, 260 x 350, 480 x 392, 537 x 424, 832 x 424),
+  expanded Locations/Trainers/Walkthrough and light theme in both modes; it separately confirms the blocker above.
+  `domcompare` sweeps 2,316 routes per mode: zero page errors, hashchange timeouts or unsettled routes; exits 1
+  because DOMs intentionally differ (footer totals/date, split names, pruning and key items), not an identical-DOM
+  pass. Local baselines, logs and minimum-size screenshot are under `.tmp/ex-*` / `.tmp/eternal-x-baseline.*`.

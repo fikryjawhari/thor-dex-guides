@@ -235,24 +235,25 @@ def default_moves(p, lv):
 # Level caps, story order: (section head contains, trainer name contains, kind). 'trial' (the template's word for the
 # main set) = the Gym Leaders, then the Elite Four's highest level (not the Champion); 'mini' = rivals, friends,
 # Sycamore and Team Flare's bosses in between. Each matches the first such trainer after the previous cap.
-CAPS = [('Santalune Gym', 'Leader Viola', 'trial'), ('Lumiose City', 'Professor Sycamore', 'mini'),
-        ('Route 5', 'Tierno', 'mini'), ('Route 7', 'Trevor', 'mini'), ('Cyllage Gym', 'Leader Grant', 'trial'),
+CAPS = [('Santalune Gym', 'Leader Viola', 'trial'),
+        ('Route 7', 'Trevor', 'mini'), ('Cyllage Gym', 'Leader Grant', 'trial'),
         ('Tower of Mastery', 'Serena', 'mini'), ('Shalour Gym', 'Leader Korrina', 'trial'),
         ('Coumarine City', 'Serena', 'mini'), ('Coumarine Gym', 'Leader Ramos', 'trial'),
         ('Kalos Power Plant', 'Aliana', 'mini'), ('Lumiose Gym', 'Leader Clemont', 'trial'),
         ('Route 14', 'Serena', 'mini'), ('Laverre Gym', 'Leader Valerie', 'trial'),
         ('Poké Ball Factory', 'Celosia', 'mini'), ('Frost Cavern', 'Mable', 'mini'), ('Anistar City', 'Serena', 'mini'),
         ('Anistar Gym', 'Leader Olympia', 'trial'), ('Lysandre Labs', 'Xerosic', 'mini'),
-        ('Team Flare Secret HQ', 'Boss Lysandre', 'mini'), ('Couriway Town', 'Professor Sycamore', 'mini'),
-        ('Route 19', 'Trevor', 'mini'), ('Snowbelle Gym', 'Leader Wulfric', 'trial'), ('Victory Road', 'Serena', 'mini'),
+        ('Team Flare Secret HQ', 'Boss Lysandre', 'mini'),
+        ('Route 19', 'Shauna', 'mini'), ('Snowbelle Gym', 'Leader Wulfric', 'trial'),
         ('Pokémon League', 'Elite Four', 'trial')]
 
 
 def level_caps(g):
-    """Each story section gets cap [main, with mini caps], each [level, who, where, battles left] (the battles from the
-    section's start up to that fight, not counting it): one per battle (bt), one starter's and player's version of a
-    rival fight, no Battle Chateau or Viola nerf card. A mini cap is left out when it doesn't raise the cap, reaches
-    the next main cap, or has no trainers between it and the next main cap. Returns TR.caps and TR.mini."""
+    """One cap list and one [level, who, where, battles left] per story section.
+
+    Count one starter/player version per battle, excluding Chateau and Viola nerf cards.
+    The previously redundant Route 5 and Victory Road caps stay out of CAPS.
+    """
     story = [s for x in g if x['n'] != 'Post-game' for s in x['sec']]
     flat, start = [], []  # flat: [bt, [trainers], counted]
     for s in story:
@@ -275,28 +276,22 @@ def level_caps(g):
         ts = flat[i][1]
         if who == 'Elite Four':  # the four are one cap: the highest of them, cut before the first
             ts = [t for f in flat[i:] for t in f[1] if 'Elite Four' in t['n']]
+        elif head == 'Route 19':
+            ts = story[sec_of[id(ts[0])]]['tr']
         lv = max(m['l'] for t in ts for m in t['p'])
         short = lambda n: re.sub(r'^(Leader|Pokémon Trainer|Pokémon Professor|Team Flare( Boss)?) ', '', n)
         name = 'Elite Four' if who == 'Elite Four' else ' & '.join(dict.fromkeys(short(t['n']) for t in ts))
         name = name.replace('Serena', 'Serena / Calem')  # your rival: Calem if you play the girl
+        if head == 'Route 19':
+            name = 'Shauna, Tierno & Trevor'
         caps.append({'n': name, 'w': story[sec_of[id(ts[0])]]['h'].split(': ')[-1], 'l': lv, 'k': kind,
                      'cut': i, 'sec': sec_of[id(ts[0])]})
         pos = i + 1
-    for i, c in enumerate(caps):
-        if c['k'] == 'mini':
-            nt = next(d for d in caps[i:] if d['k'] == 'trial')
-            prev = max([d['l'] for d in caps[:i] if not d.get('drop')] or [0])
-            between = any(f[2] for f in flat[c['cut'] + 1:nt['cut']])
-            c['drop'] = int(c['l'] <= prev or c['l'] >= nt['l'] or not between)
     for si, (s, i0) in enumerate(zip(story, start)):
-        def nxt(ks):
-            c = next((c for c in caps if c['k'] in ks and not c.get('drop') and c['cut'] >= i0), None)
-            return [c['l'], c['n'], c['w'], sum(f[2] for f in flat[i0:c['cut']])] if c else None
-        if nxt(('trial',)):
-            s['cap'] = [nxt(('trial',)), nxt(('trial', 'mini'))]
-    report('level caps:', ' · '.join(f"{c['n']} {c['l']}{'' if c['k'] == 'trial' else ' (mini' + (', dropped' if c.get('drop') else '') + ')'}" for c in caps))
-    return ([[f"{c['n']} ({c['w']})", c['l']] for c in caps if c['k'] == 'trial'],
-            [[c['n'], c['w'], c['l'], c['k'], c.get('drop', 0)] for c in caps])
+        cap = next((cap for cap in caps if cap['cut'] >= i0), caps[-1])
+        s['cap'] = [cap['l'], cap['n'], cap['w'], sum(entry[2] for entry in flat[i0:cap['cut']])]
+    report('level caps:', ' · '.join(f"{cap['n']} {cap['l']}" for cap in caps))
+    return [[f"{cap['n']} ({cap['w']})", cap['l']] for cap in caps], caps
 
 
 def build(D):
@@ -620,13 +615,22 @@ def build(D):
                 t['k'] = remap[t['k']]
     for st in allstops:
         st[2] = [remap[k] for k in keys.get((st[0], st[1]), [])]
-    tc, tm = level_caps(g)
-    for x, (who, lv) in zip(g[:-1], tc):  # one main cap per split: its Gym Leader, then the Elite Four
-        x['n'] = x['tab'] = split_name(who.split(' (')[0], lv)
-    # The key that ends each split (its Leader, the Champion) for walk.py's splits
-    D['_splits'] = [(x['n'], next(t['k'] for sc in reversed(x['sec']) for t in reversed(sc['tr'])
-                                  if t['n'].startswith(('Leader ', 'Champion ')))) for x in g[:-1]]
-    D['TR'] = {'caps': tc, 'mini': tm, 'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
+    tc, caps = level_caps(g)
+    D['_legacy_splits'] = [next(trainer['k'] for section in reversed(group['sec'])
+                               for trainer in reversed(section['tr'])
+                               if trainer['n'].startswith(('Leader ', 'Champion '))) for group in g[:-1]]
+    story, post = [section for group in g[:-1] for section in group['sec']], g[-1]
+    groups, first = [], 0
+    for index, cap in enumerate(caps):
+        last = len(story) - 1 if index == len(caps) - 1 else cap['sec']
+        name = split_name(cap['n'], cap['l'])
+        sections = story[first:last + 1]
+        assert sections, name
+        groups.append({'n': name, 'cap': cap['l'], 'tab': name, 'note': [], 'sec': sections})
+        first = last + 1
+    g = groups + [post]
+    D['_splits'] = [(group['n'], group['sec'][-1]['tr'][-1]['k']) for group in groups]
+    D['TR'] = {'caps': tc, 'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
     D['_stops'] = allstops
     trs = [t for x in g for s in x['sec'] for t in s['tr']]
     report('trainer boxes:', ', '.join(f"{x['n']} {sum(len(s['tr']) for s in x['sec'])}" for x in g))
