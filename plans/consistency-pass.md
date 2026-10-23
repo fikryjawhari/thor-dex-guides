@@ -124,6 +124,12 @@ sessions cost mostly cache reads, since each tool call re-reads the whole contex
 Each session ticks off its part here (Status below) and says which step is next.
 
 ## Status
+- 2026-10-24: **C built** (`tools/itemstd.py`, spec `plans/items-standard.md`); **structure pass**: every hack's
+  extract on one layout (raw rebuild equals the old output; HG's published data refinished with `build.py --published`),
+  dead / duplicate data fields removed and every walkthrough stop keyed (`tools/schema.py`), notes.md / SOURCES.md on
+  one structure. **D passed** (Haiku): assemble, check.py, domcompare (0 page errors; `#/l` unsettled-route flake only
+  in full sweeps), consistency-check, walk-state-check against the published builds, walkcheck / pagecheck at 260,
+  items checks. Merged into `main`. Open: test on the Thor; HG Charcoal row reads `Found:` (looks like a gift).
 - 2026-10-23: **A shared state fix and all four B branches committed and integrated**, with user authorisation,
   into `worktree-consistency-template` only. Shared fix: `677c5db`. Merge order: EI `5d48d5c`, HG `0b25cef`,
   EX `61f7d52` (includes unique-fragment follow-up), PS `358fee4` (includes strict compatibility-gate follow-up).

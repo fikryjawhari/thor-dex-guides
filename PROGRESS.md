@@ -68,6 +68,11 @@ the split is in that repo's git log.
   Serena / Calem) and the stage checklist: `plans/eternal-x.md`. The romfs stays in the main checkout's
   `hacks/eternal-x/.src/romfs-dl/`.
 
+- **Consistency pass: done and merged into `main` 2026-10-24** (A template, B per hack, C items standard, then a
+  structure pass: one extract layout `tools/extractlib.py`, one data schema `tools/schema.py`, one notes / SOURCES
+  layout, `check.py` in every hack). Haiku audit passed: no page errors, viewer sizes, saved state from the
+  published builds carries over (EI ticks and starter checked for real). Not yet tested on the Thor. Details:
+  `plans/consistency-pass.md` → Status. History of the steps below.
 - **Consistency pass over the four guides: A committed 2026-10-23** as `98cc969` on `worktree-consistency-template`
   (T3 worktree; based on main including Codex setup commit `4aeaab9`). Vanilla cards / Changed filter removed;
   EI gets a named starter picker, migrating its existing area-0 tracker and filtering rivals by type; Locations
