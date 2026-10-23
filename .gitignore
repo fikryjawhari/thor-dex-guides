@@ -8,5 +8,9 @@ preview/
 __pycache__/
 # Claude Code worktrees and local settings
 .claude/
+# Codex local state only; instructions and .agents/skills stay versioned.
+.codex/worktrees/
+.codex/claim
+.codex/config.local.toml
 # uv environment (pyproject.toml + uv.lock are committed; run `uv sync` to recreate it)
 .venv/

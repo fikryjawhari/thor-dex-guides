@@ -6,6 +6,11 @@ the split is in that repo's git log.
 
 ## Current status
 
+- **Codex setup (2026-10-23):** added `AGENTS.md` and a repo-local `rom-hack-offline-dex` skill under
+  `.agents/skills/`, adapted to the shared-template build. Claude originals are unchanged. Codex uses 6.1 sol
+  throughout, without Claude model routing. Both use `.claude/claim` for worktree ownership. Switching and
+  maintenance notes: `tools/agent-setup.md`.
+
 - **Phase 1 of the split (this repo, the shared template): done 2026-10-19, pushed to GitHub.** See "Split results".
 - **Live on GitHub Pages** (https://fikryjawhari.github.io/thor-dex-guides/) and **Phase 2 passed on the Thor**
   (2026-10-19): both guides were added to the Dex Viewer library from their Pages URLs and the old USB-copied entries
