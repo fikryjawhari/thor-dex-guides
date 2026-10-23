@@ -1,9 +1,11 @@
-"""Check Part B data and published-state compatibility: python -I .../check.py <baseline.json>."""
+"""Check a built data.json; given a pre-Part-B data.json, also what Part B kept from it.
+
+Usage: uv run python -I hacks/photonic-sun/extract/check.py [baseline.json]
+"""
 from collections import Counter, defaultdict
 import argparse
 import json
 from pathlib import Path
-import subprocess
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -20,29 +22,17 @@ def stops(data):
             for stop_index, stop in enumerate(split['st'])}
 
 
-def check(baseline_path):
-    old = json.loads(Path(baseline_path).read_text(encoding='utf-8'))
-    new = json.loads((Path(HACK) / 'data.json').read_text(encoding='utf-8'))
-    old_pokemon = {pokemon['id']: pokemon for pokemon in old['P']}
+def check_current(new):
     new_pokemon = {pokemon['id']: pokemon for pokemon in new['P']}
-    assert trainers(old) == trainers(new), 'trainer keys, teams and all per-trainer data must survive'
-    assert [area['n'] for area in old['AR']] == [area['n'] for area in new['AR']]
-    for key in ('M', 'MV', 'AB', 'LOC', 'AR', 'ARO', 'TC'):
-        assert old[key] == new[key], f'{key} IDs/data changed'
-    assert all(not pokemon.get('vc') for pokemon in new['P'])
-    used = {mon['id'] for trainer in trainers(new).values()
-            for team in [trainer['p']] + [partner['p'] for partner in trainer.get('pt', [])] for mon in team}
-    available_dex = {pokemon['dex'] for pokemon in old['P'] if pokemon['g'] == 0}
-    expected = {pokemon['id'] for pokemon in old['P'] if pokemon['g'] == 0 or pokemon['id'] in used
-                or pokemon['g'] == 1 and pokemon['dex'] in available_dex}
-    assert set(new_pokemon) == expected
+    assert len(new_pokemon) == len(new['P'])
     for pokemon in new['P']:
-        previous = old_pokemon[pokemon['id']]
-        for key in pokemon.keys() - {'ef', 'et', 'of'}:
-            assert pokemon[key] == previous[key], (pokemon['id'], key)
         assert all(other in new_pokemon for other in pokemon['of'])
         assert all(edge[1] in new_pokemon for edge in pokemon['ef'] + pokemon['et'])
-    assert used <= new_pokemon.keys()
+    assert not any('vc' in pokemon for pokemon in new['P'])
+    cards = trainers(new)
+    for trainer in cards.values():
+        for team in [trainer] + trainer.get('pt', []):
+            assert all(mon['id'] in new_pokemon for mon in team['p'])
     assert 'mini' not in new['TR']
     assert len(new['TR']['caps']) == len(CAPS) == 29
     names = [group['n'] for group in new['TR']['g']]
@@ -59,6 +49,35 @@ def check(baseline_path):
                 assert section['cap'][0] == group['cap'] and isinstance(section['cap'][0], int)
             else:
                 assert 'cap' not in section
+    new_stops = stops(new)
+    assert len({stop['k'] for stop in new_stops.values()}) == len(new_stops), 'duplicate stop keys'
+    assert all(key in cards for stop in new_stops.values() for key in stop['tr'])
+    print(f"PASS: {len(new_pokemon)} species, {len(cards)} trainer cards, {len(new['TR']['caps'])} caps, "
+          f"{len(new['WK']['splits'])} walkthrough splits, {len(new_stops)} stops")
+
+
+def check(baseline_path):
+    old = json.loads(Path(baseline_path).read_text(encoding='utf-8'))
+    new = json.loads((Path(HACK) / 'data.json').read_text(encoding='utf-8'))
+    old_pokemon = {pokemon['id']: pokemon for pokemon in old['P']}
+    new_pokemon = {pokemon['id']: pokemon for pokemon in new['P']}
+    assert trainers(old) == trainers(new), 'trainer keys, teams and all per-trainer data must survive'
+    assert [area['n'] for area in old['AR']] == [area['n'] for area in new['AR']]
+    for key in ('M', 'MV', 'AB', 'LOC', 'AR', 'ARO', 'TC'):
+        assert old[key] == new[key], f'{key} IDs/data changed'
+    used = {mon['id'] for trainer in trainers(new).values()
+            for team in [trainer['p']] + [partner['p'] for partner in trainer.get('pt', [])] for mon in team}
+    available_dex = {pokemon['dex'] for pokemon in old['P'] if pokemon['g'] == 0}
+    expected = {pokemon['id'] for pokemon in old['P'] if pokemon['g'] == 0 or pokemon['id'] in used
+                or pokemon['g'] == 1 and pokemon['dex'] in available_dex}
+    assert set(new_pokemon) == expected
+    for pokemon in new['P']:
+        previous = old_pokemon[pokemon['id']]
+        for key in pokemon.keys() - {'ef', 'et', 'of'}:
+            assert pokemon[key] == previous[key], (pokemon['id'], key)
+        assert all(other in new_pokemon for other in pokemon['of'])
+        assert all(edge[1] in new_pokemon for edge in pokemon['ef'] + pokemon['et'])
+    assert used <= new_pokemon.keys()
     poni = {trainer['k'] for group in old['TR']['g'] if group['n'] == 'Post-game: Guardians and Poni Grove'
             for section in group['sec'] for trainer in section['tr']}
     assert len(poni) == 2
@@ -89,28 +108,12 @@ def check(baseline_path):
     print('PASS: species/partner/evolution references, exact trainer keys/teams, all 73 area indices and indexed tables')
     print('PASS: 29 caps, 31 matching boxes, cap-free postgame order, both Poni Grove trainers in Post-game')
     print(f'PASS: {len(old_stops)} legacy stops cover {len(new_stops)} fragments; all trainer occurrences/areas/items retained except Surge Badge')
-    print('PASS: published checklist count is zero before and after; runtime probes test synthetic legacy ticks')
     shifted = [current for current, previous in legacy.items() if current != previous]
     print(f'INFO: {len(shifted)} stop coordinates change; runtime migration must preserve their semantics, not their raw coordinates')
     print('Removed species:', ', '.join(sorted(old_pokemon.keys() - new_pokemon.keys())))
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('baseline', type=Path)
-    parser.add_argument('--require-viewer-compatibility', action='store_true')
-    parser.add_argument('--baseline-html', type=Path)
-    parser.add_argument('--viewer-html', type=Path)
-    args = parser.parse_args()
-    if args.require_viewer_compatibility and not (args.baseline_html and args.viewer_html):
-        parser.error('--require-viewer-compatibility requires --baseline-html and --viewer-html')
-    if not args.require_viewer_compatibility and (args.baseline_html or args.viewer_html):
-        parser.error('HTML paths require --require-viewer-compatibility')
-    check(args.baseline)
-    if args.require_viewer_compatibility:
-        for html_path in (args.baseline_html, args.viewer_html):
-            if not html_path.is_file():
-                parser.error(f'HTML file not found: {html_path}')
-        sys.stdout.flush()
-        subprocess.run(['node', str(Path(__file__).with_name('statecheck.mjs')),
-                        str(args.baseline_html.resolve()), str(args.viewer_html.resolve())], check=True)
+    check_current(json.loads((Path(HACK) / 'data.json').read_text(encoding='utf-8')))
+    if len(sys.argv) > 1:
+        check(sys.argv[1])

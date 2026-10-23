@@ -222,10 +222,8 @@ Littleroot encounter. The item name column stays at 38% (sizing it from the long
   Not covered by the DOM check: CSS. Emerald Imperium now also gets Hardlove's `.itbl td{overflow-wrap:anywhere}`
   (long item names wrap at 260 px instead of widening the page).
 - Built files dropped the build notes comment and `#build-source` (EI 2.85 → 2.75 MB, HG 2.58 → 2.42 MB). The notes
-  are `hacks/<hack>/notes.md`; the builders are unpacked into `hacks/<hack>/extract/` (EI: build.py and its stages;
-  HG: build.py and helpers, plus `port.py`, which patched EI's template into HG's and is now replaced by the template,
-  and its old `assemble.py`). They read raw sources from paths on the machine that built them; fix the paths when a
-  hack is next rebuilt.
+  are `hacks/<hack>/notes.md`; the builders are in `hacks/<hack>/extract/`, all four in the shared layout (`tools/extractlib.py` docstring:
+  build.py, common.py, dex / locs / trainers / items / walk / prune, check.py).
 - New meta tags: `dex-viewer:version` (hack version) and `dex-viewer:source` (the guide's Pages URL), for the update
   action and `check_updates.py` later. `dist/guides.json` lists every guide (id, title, game, platform, version,
   built, url); `dist/index.html` links them.
@@ -358,7 +356,7 @@ From the app repo's Build environment (adb is at `$LOCALAPPDATA/Android/Sdk/plat
 - 260-wide fixes: tags are `inline-block` (an inline "evo/breed" glued to "Crabominable" made the page 271px, so WebView zoomed to 0.96 and the zoom **stuck at the wrong scale after maximising**); Pokémon list rows put types under the name when narrow; sort and availability selects share one row; encounter tables (`table.enc`) and "Where to find" (`table.wh`) restack below 420px; the Pokémon page hero shrinks; the calc nature select can shrink. Sweep: every route, every 3rd Pokémon page and every trainer page has `scrollWidth` 260 at a 260 viewport.
 - Still in the guide: `<select>`s (work via the shim) and `<input>`s for search, tracker "Other…", calc Level/IV/EV and "Your highest level" (none can type in the viewer yet).
 - Light theme (Dark guide off) with the new rail tokens: confirmed working by the user (2026-10-18).
-- Hardlove Gold got all of this in its 0.8.2/0.8.3 rebuild (port.py), and both now share the template.
+- Hardlove Gold got all of this in its 0.8.2/0.8.3 rebuild (via a since deleted port.py), and both now share the template.
 
 ## Keyboard + lag results (2026-10-18, guide side)
 

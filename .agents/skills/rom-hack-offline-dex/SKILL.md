@@ -22,7 +22,8 @@ The reference is Emerald Imperium's data and `template/shell.html`, `template/de
 Do not hand-build an old standalone guide or implement guide UI in the sibling Android app.
 
 - Raw docs belong in `hacks/<hack>/.src/` (git-ignored); fetch with `SOURCES.md` and existing tools.
-- `hacks/<hack>/extract/` generates `hacks/<hack>/data.json`. Follow `hacks/emerald-imperium/notes.md`'s schema
+- `hacks/<hack>/extract/` generates `hacks/<hack>/data.json` in the shared layout (`tools/extractlib.py` docstring;
+  `check.py` checks the result). Follow `hacks/emerald-imperium/notes.md`'s schema
   and the existing one-entry-per-line layout.
 - Wording, feature switches and storage keys belong in `hacks/<hack>/hack.json` (`cfg`). Preserve published keys.
   Adapt Emerald Imperium-only features through existing configuration and schema.
@@ -50,7 +51,7 @@ Also look for: a dex site's GitHub repo (EI's site is built from JSON in `src/da
 4. **Update the head:** `<title>`, `<meta name="color-scheme" content="dark light">`, `<meta name="dex-viewer:game" content="<Hack name>">`, `<meta name="dex-viewer:platform" content="GBA|NDS|3DS">` (the app fills its library entry from these), and the footer line.
 5. **Rename every localStorage key** to the hack's own prefix (EI uses `ei*`: `eidex1`, `eitrack`, `eiwalk`, `eipos`, `eirecent`, `eicalc:*`, `eicap`, `eitr`, `eimgm`). Keep `dvkb` as is: it's the shared "force the in-page keyboard" test switch.
 6. **Test** (see the reference file): headless Chromium at the viewer sizes, normal mode and keyboard mode, every route, no console errors, no horizontal overflow at 260 wide. On the Thor too when adb is available.
-7. **Embed the notes comment** at the top (sources, quirks, data rules, schema, storage keys, conflicts, formulas, a short VIEWER UI section saying the template came from Emerald Imperium and what was changed) and the builder in `<script type="text/plain" id="build-source">`, so a later session can extend it.
+7. **Write the notes** in `hacks/<hack>/notes.md` (headings: Build, Sources and rules, Local storage, Hack-only data, Checks, History), not in the built file, so a later session can extend it.
 8. **Deliver** after every batch without asking. In the repo, save to `guides/` and offer to push it to the Thor (PROGRESS.md: "Testing a guide edit without the library").
 
 With the template in hand, aim for: batch 1 Pokémon + moves + abilities, batch 2 Locations + tracker, batch 3 Items + Walkthrough, batch 4 Trainers (in walkthrough stops and on Pokémon pages). Combine batches when the sources are small.

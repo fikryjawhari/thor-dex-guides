@@ -6,9 +6,9 @@ Prismatic Moon). The link came from the
 [PokeCommunity thread](https://www.pokecommunity.com/threads/pok%C3%A9mon-photonic-sun-prismatic-moon.411743/),
 read through the Wayback Machine (see `tools/README.md`).
 
-2026-10-23 Part B reused those sources without refetching. Regenerated the ignored dex-rebalanced.json with current
-tools/ctr_dex.py from the existing read-only hack and vanilla dumps because the cached JSON lacked `sosBy`.
-The extract now rejects that stale shape instead of silently losing SOS encounters; use the game-files command below.
+## Files
+
+Most docs are PDFs; text extraction is needed at build time (`pdftotext -layout`, done by `build.py`). No walkthrough.
 
 | File | Contents |
 | --- | --- |
@@ -37,6 +37,8 @@ curl -sL "https://drive.usercontent.google.com/download?id=1SicZJYkSF5LcBjvLtZqr
 Vanilla Ultra Sun is the user's own Azahar dump: the base game at `%APPDATA%/Azahar/dump/romfs/00040000001B5000/` and
 the v1.2 update at `.../0004000E001B5000/` (61 MB, 148 files). The update's romfs holds only the files it replaces,
 so v1.2 = the update's files over the base. The update doesn't touch `a/0/8/2` or the trainer archives.
+
+`locs.py` rejects a `dex-rebalanced.json` without `sosBy` (made before 2026-10-23): rerun `ctr_dex.py` below.
 
 ```bash
 D=hacks/photonic-sun/.src/romfs-dl; mkdir -p $D; A="$APPDATA/Azahar/dump/romfs"
@@ -67,10 +69,11 @@ encounters, so every zone was compared with vanilla: all 336 zones × 11 sub-fil
 encounter tables (EA) of 71 zones. The zone scripts (ZS/ZI) that place item balls and hidden items are untouched,
 and the pickup archive (`a/2/7/1`) isn't shipped. The changelog mentions no item changes either.
 
-Checked: Captain Ilima (ID 52) matches the PDF on species, levels, abilities, items and moves. Most docs are PDFs;
-text extraction is needed at build time (`pdftotext -layout` works). No walkthrough.
+## Source checks
 
-**Dex checks (2026-10-19).** The hack ships personal, level-up, evolution, move and text archives; egg moves,
+Checked: Captain Ilima (ID 52) matches the PDF on species, levels, abilities, items and moves.
+
+Dex checks (2026-10-19). The hack ships personal, level-up, evolution, move and text archives; egg moves,
 Megas, zone and world data fall back to vanilla v1.2 (`archives` in the JSON says which came from where).
 - Learnsets: all 975 entries of `Level Up Moves, Rebalanced.txt` (base forms and forms, numbered by personal
   index) match the game except Blaziken (doc High Jump Kick, game Close Combat at 1), Lucario (Bullet Punch at 52

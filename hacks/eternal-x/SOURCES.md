@@ -5,6 +5,10 @@ Fetched 2026-10-18 (v2.67) from Buffel Saft's
 from the [PokeCommunity thread](https://www.pokecommunity.com/threads/pok%C3%A9mon-eternal-x-wilting-y-version-2-67-released.362505/),
 read through the Wayback Machine (see `tools/README.md`).
 
+## Files
+
+Most docs are PDFs; text extraction is needed at build time (`pdftotext -layout`, done by `build.py`). No walkthrough.
+
 | File | Contents |
 | --- | --- |
 | `Pokemon Changes.pdf` | Stat, type, ability and TM changes (Rebalanced) |
@@ -65,6 +69,22 @@ overlay files are stale full copies of the trainer data: besides Viola they lack
 135). So the nerfed game really plays as Rebalanced with only Viola swapped; the dex should show the nerf
 as an alternative Viola team, nothing else.
 
+## Bulbapedia (trainer places, story order)
+
+Fetched 2026-10-22: 182 wikitext pages, the "Kalos locations" category (trainer and item lists per place) and the 17
+parts of the X / Y walkthrough (story order, trainers with vanilla teams).
+
+```bash
+python -I tools/bulba_pages.py hacks/eternal-x/.src/bulbapedia "cat:Kalos locations" "pre:Walkthrough:Pokémon X and Y"
+```
+
+Regenerated 2026-10-22 with the current tools (the commands above, plus the vanilla files for comparing):
+`dex-vanilla.json` (`ctr_dex.py x` on the vanilla dump alone) and `trainers-vanilla.json` (`xy_trainers.py` on it).
+The Viola nerf line needs the folder `"$G/Rebalanced version/Viola Nerf Files"` exactly: a wrong path silently falls
+back to the next romfs and gives plain Rebalanced (check: 4 trainers differ, Viola, Wulfric, Calem, Serena).
+
+## Source checks
+
 Checks done (2026-10-18):
 - Viola, Grant, Korrina, Malva and Diantha match `Important Trainer Parties, Rebalanced.pdf` on species, levels,
   items, moves, IVs and abilities; Viola and Diantha match `Important Trainer Parties, Insanity.pdf` too (one doc slip:
@@ -93,19 +113,3 @@ Dex checks (2026-10-19):
 - Wild: Routes 2 and 3 and Santalune Forest match `Wild Pokemon Locations.pdf` on species, levels and rates;
   Gen 6 slot rates are grass/flowers 10×9, 5, 4, 1; surf and Rock Smash 50, 30, 15, 4, 1; rods 60, 35, 5.
   The game has horde tables (A/B/C, picked 60/35/5) the PDF doesn't list.
-
-## Bulbapedia (trainer places, story order)
-
-Fetched 2026-10-22: 182 wikitext pages, the "Kalos locations" category (trainer and item lists per place) and the 17
-parts of the X / Y walkthrough (story order, trainers with vanilla teams).
-
-```bash
-python -I tools/bulba_pages.py hacks/eternal-x/.src/bulbapedia "cat:Kalos locations" "pre:Walkthrough:Pokémon X and Y"
-```
-
-Regenerated 2026-10-22 with the current tools (the commands above, plus the vanilla files for comparing):
-`dex-vanilla.json` (`ctr_dex.py x` on the vanilla dump alone) and `trainers-vanilla.json` (`xy_trainers.py` on it).
-The Viola nerf line needs the folder `"$G/Rebalanced version/Viola Nerf Files"` exactly: a wrong path silently falls
-back to the next romfs and gives plain Rebalanced (check: 4 trainers differ, Viola, Wulfric, Calem, Serena).
-
-Most docs are PDFs; text extraction is needed at build time (`pdftotext -layout` from Git Bash works). No walkthrough.

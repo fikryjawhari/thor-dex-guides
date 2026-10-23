@@ -5,7 +5,7 @@ every hack's data.json, so the four files look like one template with only the d
                        puts every object's keys in the canonical order below. Idempotent (a built data.json goes through
                        it unchanged), so a published data.json can be re-finished without its raw sources.
 
-What the template reads is in hacks/emerald-imperium/notes.md (DATA SCHEMA). A key that is not in ORDER raises: add it
+What the template reads is in hacks/emerald-imperium/notes.md (Data schema). A key that is not in ORDER raises: add it
 there (and to the notes) when a hack gets a new field.
 """
 import re

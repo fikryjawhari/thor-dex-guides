@@ -55,12 +55,13 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
 ## Making a new guide
 1. Fetch the sources into `hacks/<hack>/.src/` with its `SOURCES.md` (3DS hacks also need the user's vanilla romfs
    dumps: `plans/romfs-extraction.md`). Update its "Fetched" line and the source log in `tools/README.md`.
-2. Write `hacks/<hack>/extract/` scripts that turn them into `hacks/<hack>/data.json`, in the schema in
-   `hacks/emerald-imperium/notes.md` (DATA SCHEMA). Optional parts the template shows when present are listed in
+2. Write `hacks/<hack>/extract/` scripts (the shared layout: `tools/extractlib.py` docstring; copy a built hack's) that
+   turn them into `hacks/<hack>/data.json`, in the schema in `hacks/emerald-imperium/notes.md` (Data schema). Optional parts the template shows when present are listed in
    PROGRESS.md → Split results (tutor moves, trades, game docs...). Write it one entry per line like the existing ones.
    For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences).
 3. `hacks/<hack>/hack.json`: copy an existing one; new localStorage prefix in `cfg.ls`, the hack's wording in
-   `cfg.txt`, feature switches. `notes.md`: sources, data rules and conflicts, like the existing ones.
+   `cfg.txt`, feature switches. `notes.md`: the same headings as the existing ones (Build, Sources and rules, Local storage, Hack-only data, Checks,
+   History); `SOURCES.md` likewise (Files, Re-fetch, Game files, Source checks). Add `extract/check.py`.
 4. Sprites: every guide uses the shared set (`sprites/README.md`); keys are worked out from dex number and name.
    `python -I tools/sprite_keys.py <hack>` lists the forms it matched (check once) and the species it couldn't place:
    those are the hack's own additions and go in its `sprites.json`, the only art a hack keeps. `assemble.py` lists
