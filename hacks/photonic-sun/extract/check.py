@@ -1,7 +1,9 @@
 """Check Part B data and published-state compatibility: python -I .../check.py <baseline.json>."""
 from collections import Counter, defaultdict
+import argparse
 import json
 from pathlib import Path
+import subprocess
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -87,13 +89,28 @@ def check(baseline_path):
     print('PASS: species/partner/evolution references, exact trainer keys/teams, all 73 area indices and indexed tables')
     print('PASS: 29 caps, 31 matching boxes, cap-free postgame order, both Poni Grove trainers in Post-game')
     print(f'PASS: {len(old_stops)} legacy stops cover {len(new_stops)} fragments; all trainer occurrences/areas/items retained except Surge Badge')
-    print('PASS: published checklist count is zero before and after; no checklist ticks can be reassigned')
+    print('PASS: published checklist count is zero before and after; runtime probes test synthetic legacy ticks')
     shifted = [current for current, previous in legacy.items() if current != previous]
-    print(f'BLOCKER: {len(shifted)} stop coordinates change; template ignores legacyStops, so saved open/collapsed state needs shared migration')
+    print(f'INFO: {len(shifted)} stop coordinates change; runtime migration must preserve their semantics, not their raw coordinates')
     print('Removed species:', ', '.join(sorted(old_pokemon.keys() - new_pokemon.keys())))
-    if '--require-viewer-compatibility' in sys.argv:
-        assert not shifted, 'Shared template stable-key/migration support is required before integration'
 
 
 if __name__ == '__main__':
-    check(sys.argv[1])
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('baseline', type=Path)
+    parser.add_argument('--require-viewer-compatibility', action='store_true')
+    parser.add_argument('--baseline-html', type=Path)
+    parser.add_argument('--viewer-html', type=Path)
+    args = parser.parse_args()
+    if args.require_viewer_compatibility and not (args.baseline_html and args.viewer_html):
+        parser.error('--require-viewer-compatibility requires --baseline-html and --viewer-html')
+    if not args.require_viewer_compatibility and (args.baseline_html or args.viewer_html):
+        parser.error('HTML paths require --require-viewer-compatibility')
+    check(args.baseline)
+    if args.require_viewer_compatibility:
+        for html_path in (args.baseline_html, args.viewer_html):
+            if not html_path.is_file():
+                parser.error(f'HTML file not found: {html_path}')
+        sys.stdout.flush()
+        subprocess.run(['node', str(Path(__file__).with_name('statecheck.mjs')),
+                        str(args.baseline_html.resolve()), str(args.viewer_html.resolve())], check=True)

@@ -183,14 +183,14 @@ Other inputs copied locally: two trainer JSONs, vanilla dex JSON, item CSV, Chan
 the existing PDF text cache and Bulbapedia pages. Raw inputs remain ignored. No common.py correction was necessary;
 build.py adds post-build pruning, trainers.py exposes cap grouping, and walk.py consumes it.
 
-### Compatibility blocker: not ready to merge
+### Compatibility: shared runtime fix required before integration
 
 The plan's stable walkthrough key assumption is false in a07645a's template/dex.js. `walkStop`, `nextStep` and
 split checkbox totals use `si.ti` / `si.ti.step`; WO.o uses split indices, WO.x stop indices, WO.s `si.ti.section`.
 PS has **zero real checklist steps** before and after. No real published tick can be lost, but merely retaining
 synthetic WO.c bytes does not prove checklist rendering compatibility.
 
-119 of 148 new stop coordinates differ from the original visit. DOM-level old-build -> new-build reproduction,
+119 of 148 new stop coordinates differ from the original visit. Original unpatched DOM-level old-build -> new-build reproduction,
 in normal and dvkb mode: Route 1 `1.0` becomes `0.7`. Baseline stop and encounter section render closed from saved
 `WO.x['1.0']=0`, `WO.s['1.0.e']=0`. After regrouping, the corresponding stop and encounter section render OPEN.
 A synthetic checklist probe at that same logical stop is checked in the old build but UNCHECKED in the new build,
@@ -199,14 +199,33 @@ Trainer box/place open states also use indices, although trainer-card keys and p
 
 Every stop carries `k`: its original `si.ti` on the first fragment; additional fragments use `si.ti.fN`, all unique.
 `WK.legacyStops` maps new coordinates -> old visit coordinates, including every fragment. `TR.legacySections`
-maps new group/section coordinates -> old coordinates. These are stable-key/migration inputs only: the current
-template ignores k and both maps. Parent handles the shared fix separately after all agents finish, as instructed.
-Do not merge/deploy this branch before that fix. No runtime workaround or shared edit is hidden in this branch.
+maps new group/section coordinates -> old coordinates. These are stable-key/migration inputs only: this branch's
+template ignores k and both maps. Parent handles the shared fix separately, as instructed. Do not merge/deploy
+this branch without that fix. No runtime workaround or shared edit is hidden in this branch.
 
-The shared fix must cover rendering, checklist keys/counts/Next step, jumps and one-time versioned migration of
-split open state plus stop/section state across fragments. Trainer o/p state also needs the section map. Preserve
-document keys, tracker, dex, trainer-card keys, and every configured storage name. Never reapply old-coordinate
-maps after users save new state. Other guides need the same semantic compatibility check, not just stored-byte checks.
+2026-10-23 follow-up: parent's uncommitted `migrateWalkState` remaps WO.c/o/x/s into current positional coordinates
+and stamps WO.layout with stable stop identities. Changing the raw coordinate bytes is necessary to avoid collisions;
+preserving the old dictionary byte-for-byte is NOT a compatibility requirement. Removed the incorrect stored-byte
+assertions and the impossible static `not shifted` integration gate. The strict check now requires explicit baseline
+and current HTML paths and runs the browser regression; k/maps/layout fields alone cannot make it pass.
+
+Read-only parent overlay `.tmp/state-photonic-sun.html`, against parent's `.tmp/state-before/photonic-sun.html`,
+passes normal and dvkb at 260 x 316, both for legacy saves without layout and saves stamped with the old layout.
+Each scenario seeds all 137 old stops and checks all 148 rendered new fragments: closed stops and encounter
+sections where present, open checklist sections, checked first synthetic step, unchecked second synthetic step,
+and expanded splits. Expected c/o/x/s are derived from legacyStops, including inheritance across fragments; the
+stored layout must match current stable identities. Document/Guide info flags, all 72 saved tracker picks, dex
+filters, per-trainer cap and 260 px width survive. Reload is idempotent; unchecking/reopening Route 1 survives another
+reload; clearing all ticks does not resurrect legacy values. There are no browser page errors. Runtime-only probes
+never change shipped data, which still has zero real checklist steps.
+
+Negative control: rebuilding this branch's original template and running the same strict gate exits 1 on actual
+Route 1 rendering at `0.7`: stop and encounter section open, checklist closed, checkbox unchecked. It is not treated
+as a passing diagnostic. Runtime compatibility therefore passes ONLY with the shared fix applied. This PS branch
+alone remains not ready to merge. The parent overlay is external test evidence, not a committed dependency here.
+Shared Next step/jump/scroll-anchor and trainer o/p migration are not exercised by this PS test; parent owns those
+checks (its `tools/walk-state-check.mjs` covers additional walkthrough behaviour). Keep every configured storage
+name and never replay legacy maps after users save current-layout state.
 
 ### Checks and handover commands
 
@@ -216,8 +235,9 @@ baseline species sprite keys (.tmp/ps-before.html). New fields k/maps are data o
 ```
 uv run python -I hacks/photonic-sun/extract/build.py
 python -I hacks/photonic-sun/extract/check.py .tmp/ps-before.json
-python -I hacks/photonic-sun/extract/check.py .tmp/ps-before.json --require-viewer-compatibility
+python -I hacks/photonic-sun/extract/check.py .tmp/ps-before.json --require-viewer-compatibility --baseline-html "C:/Users/fikry/.t3/worktrees/thor-dex-guides/worktree-consistency-template/.tmp/state-before/photonic-sun.html" --viewer-html "C:/Users/fikry/.t3/worktrees/thor-dex-guides/worktree-consistency-template/.tmp/state-photonic-sun.html"
 python assemble.py photonic-sun
+# Negative control below MUST exit nonzero until the shared template fix is integrated:
 node hacks/photonic-sun/extract/statecheck.mjs .tmp/ps-before.html dist/photonic-sun.html
 node tools/consistency-check.mjs
 node tools/mockup/walkcheck.mjs dist/photonic-sun.html .tmp/ps-walk
@@ -229,10 +249,12 @@ node tools/domcompare.mjs .tmp/ps-before.html dist/photonic-sun.html --kb --jobs
 ```
 
 Structural check passes exact indexed-table/area/trainer equality, species references, cap/postgame ordering, Poni
-Grove placement, legacy visit/encounter/item/trainer coverage and key-item decisions. The static strict gate deliberately
-fails on changed coordinates; replace that gate with the shared migration's browser assertions when integrating.
-Statecheck passes 72 saved picks, dex filters and saved trainer cap in both modes,
-and reproduces both DOM-level compatibility failures without page errors. PS has no actual checklist to lose.
+Grove placement, legacy visit/encounter/item/trainer coverage and key-item decisions. The follow-up strict runtime
+gate exits 0 for the fixed parent overlay (four mode/save-format combinations), and exits 1 for the unpatched local
+dist viewer at the rendered-state assertion. Missing explicit HTML arguments exits 2, not a static compatibility PASS.
+Logs: `.tmp/ps-state-fixed-followup.log`, `.tmp/ps-state-unpatched-followup.log`,
+`.tmp/ps-state-missing-html-followup.log`. Node syntax, Python py_compile, PS assembly and git diff --check pass.
+The following broader checks are from the original Part B implementation, not rerun for this tests/notes-only follow-up.
 The shared consistency check requires all four dist files (built locally) and passes both modes, all five viewer
 sizes, expanded pages and light theme for all four, including PS's MGM/pickers/caps. Its synthetic tick-storage
 PASS is not evidence that the legacy stop/checklist rendering blocker is resolved.
