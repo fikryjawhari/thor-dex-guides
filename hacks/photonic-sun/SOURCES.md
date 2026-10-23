@@ -6,6 +6,10 @@ Prismatic Moon). The link came from the
 [PokeCommunity thread](https://www.pokecommunity.com/threads/pok%C3%A9mon-photonic-sun-prismatic-moon.411743/),
 read through the Wayback Machine (see `tools/README.md`).
 
+2026-10-23 Part B reused those sources without refetching. Regenerated the ignored dex-rebalanced.json with current
+tools/ctr_dex.py from the existing read-only hack and vanilla dumps because the cached JSON lacked `sosBy`.
+The extract now rejects that stale shape instead of silently losing SOS encounters; use the game-files command below.
+
 | File | Contents |
 | --- | --- |
 | `Pokemon Changes.pdf` | Stat, type, ability and TM changes |

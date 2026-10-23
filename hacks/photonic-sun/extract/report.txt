@@ -3,7 +3,7 @@ in the Move Changes doc but unchanged in the game: Curse
 in the Move Changes doc but unchanged in the game: Sucker Punch
 in the Move Changes doc but unchanged in the game: Aura Sphere
 in the Move Changes doc but unchanged in the game: Toxic Thread
-species/forms 931 megas 50 form changes 34 changed from vanilla 364 moves changed 38
+species/forms 931 megas 50 form changes 34 moves changed 38
 maps from the wild PDF: Route 1, Hau'oli City, Route 2, Route 3, Route 5, Route 6, Mount Hokulani (134 KB)
 wild PDF: 145 tables under 59 area titles
   table differs from the PDF: Route 1 / Melemele Sea 2-3 as Route 1 / Grass 3: game only ['scatterbug'] PDF only []
@@ -42,8 +42,11 @@ found only as SOS allies: Charmeleon, Rattata, Raticate, Sandslash (Alola), Nido
   walkthrough trainer not matched: 34 Aether Paradise aetherfoundationfaba [('Slowbro', 61), ('Bruxish', 61), ('Raichu', 61)]
 trainers: walkthrough 446 partners 8 location pages 44 of 512 real trainers ( 141 placeholders dropped )
   partner teams kept once (copies dropped): [(447, 'Pokémon Trainer', 'Hau'), (448, 'Pokémon Trainer', 'Hau'), (449, 'Pokémon Trainer', 'Hau'), (450, 'Pokémon Trainer', 'Hau'), (451, 'Pokémon Trainer', 'Hau'), (452, 'Pokémon Trainer', 'Hau')]
-trainer boxes: Melemele Island 62, Akala Island 100, Ula'ula Island 100, Aether Paradise 24, Poni Island 41, The Pokémon League 25, Post-game: Guardians and Poni Grove 2, Post-game: Episode RR 49, Post-game: Ultra Space, Battle Tree and Title Defense 94
-level caps: Captain Ilima 12 · Totem Gumshoos 16 · Ultra Recon Squad Dulse 19 (mini) · Hau 19 (mini, dropped) · Kahuna Hala 21 · Dexio 22 (mini) · Hau 25 (mini) · Trial Guide Bronson 27 (mini, dropped) · Totem Araquanid 28 · Ultra Recon Squad Dulse 30 (mini) · Battle Royal 33 (mini) · Totem Marowak 37 · Totem Lurantis 44 · Plumeria 45 (mini, dropped) · Kahuna Olivia 47 · Nihilego 58 (mini) · Totem Togedemaru 59 · Guzma 59 (mini, dropped) · Totem Mimikyu 66 · Plumeria 68 (mini) · Guzma 78 (mini) · Gladion 79 (mini, dropped) · Kahuna Nanu 79 · Lusamine 85 (mini) · Ultra Recon Squad Dulse 86 (mini, dropped) · Totem Kommo-o 92 · Ultra Necrozma 100 (mini, dropped) · Totem Ribombee 95 · Kahuna Hapu 96 · Gladion 97 (mini, dropped) · Elite Four and Champion 100
+trainer boxes: Captain Ilima Split [Cap 12] 21, Totem Gumshoos Split [Cap 16] 13, Ultra Recon Squad Dulse Split [Cap 19] 2, Hau Split [Cap 19] 6, Kahuna Hala Split [Cap 21] 3, Hau Split [Cap 25] 25, Trial Guide Bronson Split [Cap 27] 15, Totem Araquanid Split [Cap 28] 7, Ultra Recon Squad Dulse Split [Cap 30] 1, Totem Marowak Split [Cap 37] 21, Totem Lurantis Split [Cap 44] 17, Plumeria Split [Cap 45] 19, Kahuna Olivia Split [Cap 47] 1, Nihilego Split [Cap 58] 11, Totem Togedemaru Split [Cap 59] 29, Guzma Split [Cap 59] 1, Totem Mimikyu Split [Cap 66] 30, Plumeria Split [Cap 68] 1, Guzma Split [Cap 78] 37, Gladion Split [Cap 79] 1, Kahuna Nanu Split [Cap 79] 1, Lusamine Split [Cap 85] 24, Ultra Recon Squad Dulse Split [Cap 86] 14, Totem Kommo-o Split [Cap 92] 18, Ultra Necrozma Split [Cap 100] 0, Totem Ribombee Split [Cap 95] 8, Kahuna Hapu Split [Cap 96] 1, Gladion Split [Cap 97] 1, Elite Four Split [Cap 100] 24, Post-game: Episode RR 49, Post-game 96
+level caps: Captain Ilima 12 · Totem Gumshoos 16 · Ultra Recon Squad Dulse 19 · Hau 19 · Kahuna Hala 21 · Hau 25 · Trial Guide Bronson 27 · Totem Araquanid 28 · Ultra Recon Squad Dulse 30 · Totem Marowak 37 · Totem Lurantis 44 · Plumeria 45 · Kahuna Olivia 47 · Nihilego 58 · Totem Togedemaru 59 · Guzma 59 · Totem Mimikyu 66 · Plumeria 68 · Guzma 78 · Gladion 79 · Kahuna Nanu 79 · Lusamine 85 · Ultra Recon Squad Dulse 86 · Totem Kommo-o 92 · Ultra Necrozma 100 · Totem Ribombee 95 · Kahuna Hapu 96 · Gladion 97 · Elite Four and Champion 100
+key items removed: Surge Badge
 walkthrough: on the way stops 5 : Hau'oli Cemetery, Malie Garden, Thrifty Megamart, Victory Road, Ruins of Conflict
-walkthrough: 35 splits 137 stops, 327 items placed, 13 not placed
-items: Shops 126, TMs 100, Z-Crystals 35, Evolution Items 27, Held Items 118, Stats and Abilities 30, Key Items 30
+walkthrough: 31 splits 148 stops, 326 items placed, 13 not placed
+items: Shops 126, TMs 100, Z-Crystals 35, Evolution Items 27, Held Items 118, Stats and Abilities 30, Key Items 29
+species pruned: 3 pikachu-original-cap, zygarde-10, zygarde-10-power-construct
+species retained: 928 obtainable: 876 trainer-only: 2 Megas/Primals: 50

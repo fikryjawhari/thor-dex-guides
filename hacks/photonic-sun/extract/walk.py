@@ -1,13 +1,15 @@
 """Stage 5: the Walkthrough tab (WK).
 
 Photonic Sun has no walkthrough of its own and follows Ultra Sun's story, so the order is Bulbapedia's Ultra Sun /
-Ultra Moon walkthrough: one split per part, one stop per place heading, with the trainers trainers.py placed there.
+Ultra Moon walkthrough: stops start in part/place order, then regroup into the same cap splits as Trainers.
+Stops spanning cap boundaries split into trainer runs, retaining encounters and items once and recording legacy coordinates.
 Each encounter area joins the first stop with its name; areas with no stop of their own become "on the way" stops
 after the stop of the area before them (in the Locations order). Items are filed under the first stop named in their
 location text (items.py's place list for rows with Found / Shop lines); the rest are listed in Guide info. Game docs are the hack's own change docs and changelog.
 """
 import os, re
 from common import SRC, TXT, norm, report
+from consistency import walkthrough_splits
 
 ALIAS = {'Starter': ['Route 1'], 'Routes 15 and 16': ['Route 15', 'Route 16'],"Trainers' School": ["Trainer's School"],
          'Altar of the Sunne': ['Altar of the Sunne'], 'Ultra Space Wilds': ['Ultra Warp Ride']}
@@ -99,8 +101,6 @@ def build(D):
         ss = [s for s in out if s['part'] == p]
         a, b = ss[0]['n'], ss[-1]['n']
         splits.append({'n': f'{p}. {a}' + (f' – {b}' if b != a else ''), 'note': '', 'st': ss})
-    for s in out:
-        s.pop('part')
     docs = []
     for title, f in DOCS:
         t = open(os.path.join(TXT, f + '.txt'), encoding='utf-8').read()
@@ -109,4 +109,7 @@ def build(D):
     ch = open(os.path.join(SRC, 'Changelog.txt'), encoding='utf-8', errors='replace').read().replace('�', 'é')
     docs.append(['Changelog', ch.strip()])
     D['WK'] = {'splits': splits, 'np': np, 'docs': docs}
+    D['WK']['splits'] = walkthrough_splits(D, splits)
+    splits = D['WK']['splits']
+    out = [stop for split in splits for stop in split['st']]
     report('walkthrough:', len(splits), 'splits', len(out), 'stops,', sum(len(s['it']) for s in out), 'items placed,', len(np), 'not placed')
