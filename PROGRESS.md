@@ -63,11 +63,9 @@ the split is in that repo's git log.
   Serena / Calem) and the stage checklist: `plans/eternal-x.md`. The romfs stays in the main checkout's
   `hacks/eternal-x/.src/romfs-dl/`.
 
-- **Next, a separate session (the user, 2026-10-22): a consistency pass over every guide's template behaviour**, now
-  that the guides cover distinct setups: forced level caps (EI, Hardlove Gold), a different story structure (Photonic
-  Sun, which the user may also move to gym-style splits), and self-imposed caps (Eternal X). Known item: the Trainers
-  page's "Open all islands" button is Photonic Sun wording shown in every guide; make it "Open all splits" or go back
-  to Expand / Collapse all now that the Show bar exists.
+- **Consistency pass over the four guides: scoped 2026-10-23, not started.** Everything (the user's review per tab,
+  decisions, the jobs A template → B per hack → C items → D audit, and the agreed workflow: one Sonnet session per
+  step, Haiku audit, Opus merge) is in `plans/consistency-pass.md`; its Status section says which step is next.
 
 ## What's left, in order
 
