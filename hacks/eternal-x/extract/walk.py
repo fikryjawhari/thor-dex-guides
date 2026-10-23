@@ -1,13 +1,13 @@
 """Stage 5: the Walkthrough tab (WK).
 
-Eternal X follows Bulbapedia's Pokémon X and Y walkthrough: one split per part, one stop per place heading, with the
+Eternal X follows Bulbapedia's Pokémon X and Y walkthrough: one split per cap, one stop per place heading, with the
 trainers trainers.py placed there. Each encounter area joins the first stop with its name; areas with no stop of their
 own become "on the way" stops after the stop of the area before them (in the Locations order). Items are filed under the
 first stop named in their location text (items.py's place list for rows with Found / Shop lines); the rest are listed in
 Guide info. An item filed under Lumiose City moves to the earliest part whose Lumiose City block lists it in its rows. Game docs are the hack's own change docs and changelog.
 """
 import os, re
-from common import SRC, TXT, norm, report
+from common import SRC, TXT, norm, report, split_name
 from items import walk_rows, ikey
 
 ALIAS = {'Starter': ['Aquacorde Town']}
@@ -118,19 +118,49 @@ def build(D):
                 np.append(row)
     report('walkthrough Lumiose items moved:', ', '.join(f'part {p} stop {n}: {c}' for (p, n), c in sorted(moved.items())) or 'none',
            '; left in place', stayed)
-    # Splits are the Trainers page's gym splits (D['_splits']: name, the key of the fight that ends it): stops in story
-    # order, cut after the stop holding that fight; the rest is the post-game.
-    splits, cur, ends = [], [], list(D['_splits'])
-    for st in out:
-        cur.append(st)
-        if ends and ends[0][1] in st.get('tr', []):
-            splits.append({'n': ends.pop(0)[0], 'note': '', 'st': cur})
-            cur = []
-    if ends:
-        report('walkthrough: split ends not found:', [e[0] for e in ends])
-    splits.append({'n': 'Post-game', 'note': '', 'st': cur})
+    legacy_ends = list(D['_legacy_splits'])
+    legacy_split, legacy_stop = 0, 0
+    for stop in out:
+        stop['k'] = f'{legacy_split}.{legacy_stop}'
+        legacy_stop += 1
+        if legacy_ends and legacy_ends[0] in stop['tr']:
+            legacy_ends.pop(0)
+            legacy_split += 1
+            legacy_stop = 0
+    assert not legacy_ends, legacy_ends
+    groups = D['TR']['g']
+    splits = [{'n': split_name(group['n'], group['cap'] or None), 'note': '', 'st': []} for group in groups]
+    group_of = {trainer['k']: index for index, group in enumerate(groups)
+                for section in group['sec'] for trainer in section['tr']}
+    cap_of = {trainer['k']: section.get('cap') for group in groups
+              for section in group['sec'] for trainer in section['tr']}
+    ends = {trainer_key: index for index, (_, trainer_key) in enumerate(D['_splits'])}
+    current = 0
+    for stop in out:
+        fragments = []
+        for trainer_key in stop['tr']:
+            group_index = group_of[trainer_key]
+            if not fragments or fragments[-1][0] != group_index:
+                fragments.append((group_index, []))
+            fragments[-1][1].append(trainer_key)
+        if not fragments:
+            fragments = [(current, [])]
+        for fragment_index, (group_index, trainer_keys) in enumerate(fragments):
+            fragment_key = f"{stop['k']}.f{fragment_index}" if fragment_index else stop['k']
+            fragment = dict(stop, k=fragment_key, tr=trainer_keys)
+            if fragment_index:
+                fragment.update(a=[], s=[], it=[], note='')
+            if trainer_keys and cap_of[trainer_keys[0]]:
+                fragment['cap'] = cap_of[trainer_keys[0]]
+            splits[group_index]['st'].append(fragment)
+            current = group_index
+            if any(trainer_key in ends for trainer_key in trainer_keys):
+                current = min(group_index + 1, len(splits) - 1)
     for s in out:
         s.pop('part')
+    for split in splits:
+        for stop in split['st']:
+            stop.pop('part', None)
     docs = []
     for title, f in DOCS:
         t = open(os.path.join(TXT, f + '.txt'), encoding='utf-8').read()
@@ -138,5 +168,11 @@ def build(D):
         docs.append([title, t.strip()])
     ch = open(os.path.join(SRC, 'Changelog.txt'), encoding='utf-8', errors='replace').read().replace('�', 'é')
     docs.append(['Changelog', ch.strip()])
-    D['WK'] = {'splits': splits, 'np': np, 'docs': docs}
-    report('walkthrough:', len(splits), 'splits', len(out), 'stops,', sum(len(s['it']) for s in out), 'items placed,', len(np), 'not placed')
+    legacy_stops = {f'{split_index}.{stop_index}': stop['k'].split('.f', 1)[0]
+                    for split_index, split in enumerate(splits) for stop_index, stop in enumerate(split['st'])}
+    fragment_keys = [stop['k'] for split in splits for stop in split['st']]
+    assert len(fragment_keys) == len(set(fragment_keys)), 'Duplicate persistent walkthrough fragment keys'
+    assert set(legacy_stops.values()) == {stop['k'] for stop in out}, 'Missing legacy walkthrough roots'
+    D['WK'] = {'splits': splits, 'legacyStops': legacy_stops, 'np': np, 'docs': docs}
+    report('walkthrough:', len(splits), 'splits', sum(len(split['st']) for split in splits), 'stop fragments,',
+           len(out), 'legacy stop keys,', sum(len(s['it']) for s in out), 'items placed,', len(np), 'not placed')
