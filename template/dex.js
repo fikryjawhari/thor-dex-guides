@@ -414,13 +414,13 @@ function listItems(){fil.innerHTML='';sug.style.display='none';const s=st.q;cons
 const IO=(()=>{try{return Object.assign({o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.items)||'{}'))}catch(e){return {o:{},x:{},s:{}}}})();
 function itemBox(si){const sec=D.IT[si],tbl=rs=>`<table class="itbl ix">${rs.map(r=>itemRow(sec,r)).join('')}</table>`,subs=[];
  sec.r.forEach(r=>{const g=r[4]||'';if(!subs.length||subs[subs.length-1][0]!==g)subs.push([g,[]]);subs[subs.length-1][1].push(r);});
- return `<details class="stopd" data-k="${si}" ${IO.x[si]===0?'':'open'}><summary class="stoph"><span class="pn">${esc(sec.n)}</span></summary><div class="stop">`+(sec.note?`<div class="mut small" style="margin:6px 0">${esc(sec.note)}</div>`:'')+
+ // No stop header: the box's sub-headings (every row has one) pin straight under the search bar.
+ return (sec.note?`<div class="mut small" style="margin:6px 0">${esc(sec.note)}</div>`:'')+
   (subs.filter(([g])=>g).length>1?segBar('it-sp'):'')+
   subs.map(([g,rs])=>g?`<details class="sec" data-s="${esc(si+'.'+g)}" ${IO.s[si+'.'+g]===0?'':'open'}><summary><span class="sn">${esc(g)}</span><span class="mut small">${rs.length}</span></summary><div class="secb">${tbl(rs)}</div><button class="endbar sb" hidden>${UPI}<span>${esc(g)}</span></button></details>`:tbl(rs)).join('')+
-  `<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(sec.n)}</span></button></div></details>`;}
+  `<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(sec.n)}</span></button>`;}
 TOG.items=d=>{if(st.q)return;const iS=()=>{try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}};
  if(d.matches('details.split[data-si]')){const si=+d.dataset.si,b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=itemBox(si);colBind(b);}if(d.open)IO.o[si]=1;else delete IO.o[si];}
- else if(d.matches('details.stopd')){if(d.open)delete IO.x[d.dataset.k];else IO.x[d.dataset.k]=0;}
  else if(d.matches('details.sec')){if(d.open)delete IO.s[d.dataset.s];else IO.s[d.dataset.s]=0;}else return;iS();};
 
 
@@ -615,7 +615,7 @@ app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
   if(w){trShow(w.closest('details.split'),+w.dataset.v);return;}if(pt){e.preventDefault();e.stopPropagation();trTeams(pt.closest('details.stopd'),pt);return;}}
  const wk=e.target.closest('button.pt.wk');if(wk){e.preventDefault();e.stopPropagation();walkTeams(wk.closest('details.stopd'));return;}
  const b=e.target.closest('.seg button');
- if(b){const s=b.closest('.seg');if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.it-sp')?b.closest('.stop').querySelectorAll('details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
+ if(b){const s=b.closest('.seg');if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.it-sp')?b.closest('.body').querySelectorAll('details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
  const end=e.target.closest('.endbar,.trfold');if(end){foldUp(end.closest('details'));return;}
  if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;delete WO.x[k];WO.s[k+'.c']=1;woSave();render(true);
   const inp=app.querySelector(`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;const l=inp.closest('.wstep'),stop=l.closest('details.stopd'),sec=l.closest('details.sec');
@@ -854,7 +854,7 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
   this.go('#/walk',()=>land(trRowOf(app.querySelector(`details.stopd[data-k="${sk}"]`),k)));},
  jumpTr(k){const t=TRK[k];if(!t)return;this.clear();const [gi,si]=t.at;TOPEN.o[gi]=1;delete TOPEN.p[gi+'.'+si];trMates(k).forEach(x=>delete TOPEN.t[x]);trSave();
   this.go('#/trainers',()=>land(trRowOf(app.querySelector(`details.split[data-gi="${gi}"]`),k)));},
- jumpItem(si,ri){const sec=D.IT[si],g=sec.r[ri][4];this.clear();IO.o[si]=1;delete IO.x[si];if(g)delete IO.s[si+'.'+g];try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
+ jumpItem(si,ri){const sec=D.IT[si],g=sec.r[ri][4];this.clear();IO.o[si]=1;if(g)delete IO.s[si+'.'+g];try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
   this.go('#/items',()=>land(app.querySelectorAll(`details.split[data-si="${si}"] .body tr`)[ri]));},
  place(a){this.clear();this.go('#/l/'+AR[ARS(a)[0]].l[0]);},
  // A result's actions, [label, run, page], the page you're on first (on the Pokemon tab, a Pokemon's Dex entry).

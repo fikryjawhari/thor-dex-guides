@@ -288,6 +288,8 @@ body.kbopen .sres{padding-bottom:calc(var(--kbh,0px) + 8px)}
 details.stopd[open]>summary{position:sticky;top:var(--hh,0px);z-index:3;background:var(--bg)}
 /* 1px under the stop header (it sits above): rounding can't open a gap between the two */
 details.stopd[open] details.sec[open]>summary{position:sticky;top:calc(var(--hh,0px) + var(--sh,34px) - 1px);z-index:2;background:var(--bg)}
+/* Items: a box's sections have no stop above them and pin under the search bar */
+details.split>.body>details.sec[open]>summary{position:sticky;top:var(--hh,0px);z-index:2;background:var(--bg)}
 /* Sections inside a stop */
 details.sec{margin:4px 0 2px}
 details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;flex-wrap:wrap;gap:3px 6px;min-height:32px;padding:4px 18px 4px 0;position:relative;border-bottom:1px solid var(--line);-webkit-tap-highlight-color:transparent}
