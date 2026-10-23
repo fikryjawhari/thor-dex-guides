@@ -1,0 +1,10 @@
+<fieldset id="mk"><legend>Items standard</legend>
+ <div class="chips" data-g="m"><button data-v="cur" aria-pressed="false">Now</button><button data-v="new" aria-pressed="true">Standard</button></div>
+ <div class="chips" data-g="l"><button data-v="plain" aria-pressed="true">Labels plain</button><button data-v="tint" aria-pressed="false">Labels tinted</button></div>
+ <p class="hint">Standard = this guide's own items sorted into the shared boxes. The text conversion is rough (the build checks it by hand); look at the boxes, the sub-headings and the row shape. Switching resets the open boxes.</p>
+</fieldset>
+<script>
+document.getElementById('mk').onclick=e=>{const b=e.target.closest('button');if(!b)return;const g=b.parentNode;
+ g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+ try{thorFrame().setOption(g.dataset.g,b.dataset.v);}catch(err){}};
+</script>

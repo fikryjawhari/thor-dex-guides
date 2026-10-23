@@ -177,6 +177,7 @@ Each session ticks off its part here (Status below) and says which step is next.
   separate worktree per hack, each based on committed A, not the previous hack. Commit each completed hack.
   No pushes or merges; decide the merge session after all four are done. This supersedes the older workflow.
 - 2026-10-23: scoped, questions answered. Next: step 1 (A, template).
+- 2026-10-23: C decided, spec in plans/items-standard.md (branch worktree-items-standard). Next: C build.
 - 2026-10-23: **A built, awaiting phone / Thor review**, uncommitted on `worktree-consistency-template` in the
   T3-bound worktree (main's setup commit `4aeaab9` was committed separately and fast-forwarded here first).
   A1-A7 implemented in the shared template; EI's only config edit is `cfg.starter: "slot"` → `"type"`.
