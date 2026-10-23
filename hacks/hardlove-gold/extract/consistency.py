@@ -9,6 +9,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'tools'))
 import datajson
+import itemstd
 from splits import split_name
 
 
@@ -40,6 +41,7 @@ def apply(data):
     for group in data['TR']['g']:
         if re.search(r'\[(?:Level )?Cap \d+\]$', group['n']):
             group['n'] = split_name(group['n'])
+    itemstd.standardise(data, itemstd.RULES['hardlove-gold'])    # Items standard (plans/items-standard.md)
 
 
 if __name__ == '__main__':

@@ -326,3 +326,7 @@ BUILD REPORT (2026-10-18)
 NEXT
   Damage calc on the Calc page (hardlovecalc has an engine and older sets); save file import.
 ```
+
+## Items standard (2026-10-23)
+
+`tools/itemstd.py` (shared, idempotent) puts every guide's Items in one box set: Valuables, Key Items, Shops, TMs and HMs, Move Tutors, Held Items, Evolution Items, Stats and Abilities, Mega Stones / Z-Crystals, Fossils, Useful NPCs; a sub-heading on every row (`r[4]`), `Found:` / `Wild:` / `Also:` / `Shop:` lines, and the walkthrough's item rows rewritten to match. Run by `consistency.apply` (rules: `itemstd.RULES['hardlove-gold']`, the `Other` box mapped in `HG_OTHER`). Held Items classes renamed (Type boosting -> Type boosters, Battle -> Battle gear, Consumable -> One-use items); the four evolution items (Metal Coat, King's Rock, Razor Claw, Razor Fang) stay in Evolution Items only; `Other` split: 8 Key Items, 6 Valuables (Master Ball, Big Nugget, Rage Candy Bar, Escape Rope), 3 Useful NPCs (texts hand-written in `HG_OTHER`). TMs + HMs one box in game order. Prose places became Found / Also / Shop lines (`Sold at` = Shop; given by / gift / from the X / reward = Also; else Found); `Starter:` and `Possible to miss permanently` stay last.

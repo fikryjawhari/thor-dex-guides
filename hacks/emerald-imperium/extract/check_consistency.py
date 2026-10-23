@@ -6,6 +6,8 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'tools'))
+import itemstd  # noqa: E402
 from stage8_consistency import GYMS, finalise
 
 
@@ -57,14 +59,16 @@ def main():
             assert {key: value for key, value in old_stop.items() if key != 'it'} == {
                 key: value for key, value in new_stop.items() if key != 'it'}
     mega_sections = {section['n'] for section in after['IT'] if section['k'] == 'mega'}
-    expected_items = deepcopy(before['IT'])
+    standard = deepcopy(before)      # items and walkthrough item rows are expected in the Items standard (tools/itemstd.py)
+    itemstd.standardise(standard, itemstd.RULES['emerald-imperium'])
+    expected_items = deepcopy(standard['IT'])
     for section in expected_items:
         if section['k'] == 'mega':
             for row in section['r']:
                 if row[2] and row[2] not in expected:
                     row[2] = None
-    assert after['IT'] == expected_items, 'Item facts and ordering must not change'
-    expected_walk = deepcopy(before['WK'])
+    assert after['IT'] == expected_items, 'Items must be the Items standard of the baseline'
+    expected_walk = deepcopy(standard['WK'])
     for split, (boss, cap) in zip(expected_walk['splits'], GYMS):
         split['n'] = f'{boss} Split [Cap {cap}]'
     for row in expected_walk['np'] + [row for split in expected_walk['splits']

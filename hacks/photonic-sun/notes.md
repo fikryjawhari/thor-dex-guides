@@ -263,3 +263,7 @@ zero page errors, hashchange timeouts or unsettled routes; expected DOM differen
 split labels, trainer group context and pruned forms. Exit 1 for differences is expected, not an identical-build PASS.
 Repeated full extracts produce byte-identical data.json and report.txt. Python compileall and git diff --check pass.
 The localStorage config dictionary is identical to a07645a. No physical Thor/device check was performed.
+
+## Items standard (2026-10-23)
+
+`tools/itemstd.py` (shared, idempotent) puts every guide's Items in one box set: Valuables, Key Items, Shops, TMs and HMs, Move Tutors, Held Items, Evolution Items, Stats and Abilities, Mega Stones / Z-Crystals, Fossils, Useful NPCs; a sub-heading on every row (`r[4]`), `Found:` / `Wild:` / `Also:` / `Shop:` lines, and the walkthrough's item rows rewritten to match. Run by `extract/build.py` after `items.order` (rules: `itemstd.RULES['photonic-sun']`; `python -I tools/itemstd.py photonic-sun` on a published data.json). TMs -> TMs and HMs (no HMs: TMs sub-heading only); Z-Crystals text is `Found:` lines; Silvally Memories, Genesect Drives -> Memories and Drives; Shops Thunder Stone and Cherish Ball moved out of `Other`. No Mega Stones box (generated stones; the Mega page keeps its stone name).

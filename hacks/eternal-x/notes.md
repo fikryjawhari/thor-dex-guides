@@ -134,3 +134,7 @@ including unique fragment keys, exact suffix families, complete position mapping
 `python assemble.py eternal-x`; `git diff --check`. The current worktree still has Part A's old template, so runtime
 migration is **not** claimed tested here: the parent owns the authorised shared fix and browser checks. Expensive
 DOM sweeps were not rerun for this identity-only addition.
+
+## Items standard (2026-10-23)
+
+`tools/itemstd.py` (shared, idempotent) puts every guide's Items in one box set: Valuables, Key Items, Shops, TMs and HMs, Move Tutors, Held Items, Evolution Items, Stats and Abilities, Mega Stones / Z-Crystals, Fossils, Useful NPCs; a sub-heading on every row (`r[4]`), `Found:` / `Wild:` / `Also:` / `Shop:` lines, and the walkthrough's item rows rewritten to match. Run by `extract/build.py` after `items.order` (rules: `itemstd.RULES['eternal-x']`; `python -I tools/itemstd.py eternal-x` on a published data.json). The 29 stones under Held Items moved to Mega Stones (linked to the Mega page by `P.stone`); Genesect Drives -> Memories and Drives; the five HMs moved from Key Items to TMs and HMs (HMs sub-heading, linked to the move); Exp. Share stays in Key Items only. Fossils kept; Fossils, Mega Stones and Evolution Items A to Z.

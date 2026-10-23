@@ -5,6 +5,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'tools'))
 import datajson
+import itemstd
 from splits import split_name
 
 
@@ -15,6 +16,7 @@ GYMS = [('Roxanne', 15), ('Brawly', 25), ('Wattson', 34), ('Flannery', 47),
 def finalise(data):
     if not data.get('s7'):
         raise ValueError('Run stage 7 before the consistency finaliser')
+    itemstd.standardise(data, itemstd.RULES['emerald-imperium'])    # Items standard (plans/items-standard.md)
     species = data['P']
     used = {mon['id'] for group in data['TR']['g'] for section in group['sec']
             for trainer in section['tr'] for mon in trainer['p']}

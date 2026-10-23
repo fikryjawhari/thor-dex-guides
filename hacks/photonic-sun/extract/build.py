@@ -7,7 +7,9 @@ of every conflict and guess goes to hacks/photonic-sun/extract/report.txt.
 import datetime, json, os, subprocess, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from common import HACK, SRC, TXT, REPORT  # noqa: E402
+from common import HACK, SRC, TXT, REPORT, report  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'tools'))
+import itemstd  # noqa: E402
 import dex, locs, trainers, items, walk, consistency  # noqa: E402
 
 LINES = ('M', 'MV', 'AB', 'P', 'LOC', 'AR')
@@ -38,6 +40,7 @@ def main():
     items.build(D)
     walk.build(D)
     items.order(D)
+    itemstd.standardise(D, itemstd.RULES['photonic-sun'], report)    # Items standard (plans/items-standard.md)
     consistency.prune(D)
     D['built'] = datetime.date.today().isoformat()
     D['src'] = 'Photonic Sun 2.38 Rebalanced: game data (romfs + code.ips over Ultra Sun v1.2), Buffel Saft\'s docs, Bulbapedia (trainer places, story order), Serebii (item locations)'

@@ -6,6 +6,11 @@ Decided with the user 2026-10-23 from a mockup (real builds of all four guides w
 `worktree-items-standard` (off `worktree-consistency-template`). Next: a Sonnet build session (template check + the four
 item extracts), then part D, the audit.
 
+Status (2026-10-23): built on `worktree-items-standard` (not pushed or merged). `tools/itemstd.py` does the standard, run by each hack's
+finaliser / `build.py`; one template line (the walkthrough's TM / HM links read the new `TMs and HMs` box name). A lone sub-heading
+named like its box (Key Items, Evolution Items, Useful NPCs...) shows the name three times at 260 x 316 (box row, sticky heading,
+yellow sub-heading): raised, not redesigned.
+
 ## Boxes
 One fixed set, in this order. A box shows only when the hack has rows for it. No per-hack box names or order.
 

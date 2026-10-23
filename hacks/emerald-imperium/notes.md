@@ -1,5 +1,9 @@
 # emerald-imperium build notes
 
+## Items standard (2026-10-23)
+
+`tools/itemstd.py` (shared, idempotent) puts every guide's Items in one box set: Valuables, Key Items, Shops, TMs and HMs, Move Tutors, Held Items, Evolution Items, Stats and Abilities, Mega Stones / Z-Crystals, Fossils, Useful NPCs; a sub-heading on every row (`r[4]`), `Found:` / `Wild:` / `Also:` / `Shop:` lines, and the walkthrough's item rows rewritten to match. Run by `stage8_consistency.finalise` (rules: `itemstd.RULES['emerald-imperium']`). TMs + HMs are one box (182, game order); Shops is one row per item (shops one per line, price after the shop; the six berry lists split into single berries; the stray Pomeg Berry row dropped; kind from the item name, `EI_KIND`); the 40 Battle item rewards moved into Held Items (class by item), Evolution Items (Leaf, Shiny, Ice Stone) and Stats and Abilities (PP Max), as `Also: reward, defeat <trainer> <place>` (Leftovers x3 merged); capitalisation fixed (`rename`). Mega Stones (A to Z) and Useful NPCs (A to Z) keep their place text.
+
 ## Consistency pass Part B (2026-10-23)
 
 `extract/stage8_consistency.py` is the final, idempotent data extraction step. Stage 7 calls it automatically
