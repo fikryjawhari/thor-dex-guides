@@ -118,6 +118,41 @@ spec and the mockup differ, ask. Delete the mockup folder when the build is merg
   lines. Names truncate with an ellipsis in the main block and show in full where there's room (trainer sheet, expanders).
 - **Never overflow 260 px** (`documentElement.scrollWidth === 260`), in normal and `dvkb` mode, with every expander open.
 
+### Per-hack data and what the template owns (decided 2026-10-24)
+**The template** (`dex.js` / `dex.css`) owns every piece of UI above and the mechanics-free inputs: level, current HP, nature
+(where the game has them), IVs / EVs (when `cfg.evs`), stat stages, status picker, Mega / form toggling, the edit /
+Save / Reset layers, the import UI and sheets, the move rows and their controls (crit, hits, power / type), scroll stops,
+storage. It draws whatever a hack's data declares and has no game knowledge of its own.
+
+**The hack's data** owns everything that differs between games, defined per hack (with shared bases, below):
+- the engine setup for `@smogon/calc` (generation, per-hack overrides): crit multiplier and crit-stage chances, the stat
+  formula generation, type chart changes (Fairy, Steel resistances), physical / special rules, rounding;
+- the **field options** and their effects: weathers (including extreme weathers), terrains, screens and per-side effects
+  (Reflect, Light Screen, Aurora Veil, Tailwind, Helping Hand, Friend Guard...), global effects (Gravity, Trick Room...),
+  a Singles / Doubles switch where the game has it. Each entry: key, label, type (`select` options or `toggle`), which
+  side it applies to, and how the engine receives it. The Field box renders this list; nothing is hard-coded;
+- the status list and the stage range; the level range; whether natures, abilities and held items exist;
+- **effects that changed**: abilities, items, moves and species where the hack alters the game's own rules, as engine
+  override entries (power, type, category already come from `data.json`'s move data);
+- **move archetypes**: per move, its hit count range and default (multi-hit), whether it has variable power, and any other
+  control it needs next to `C` (the mockup's name table for multi-hit moves is a stand-in for this field);
+- **forms**: which species have Megas (or other temporary forms), the stone / item that triggers them, ability and stat
+  changes (the species entry already holds stats and abilities; the template switches the species id);
+- the save family and the game-ID tables (Save reading, above) and the hack's `cfg.calc` entry ("How to check a hack's
+  mechanics", above), with how it was checked written in `notes.md`.
+
+**Shared bases.** Hacks on the same engine or generation share one profile rather than repeating all of this: one per
+family (pokeemerald-expansion, CFRU, Gen 4, Gen 5, Gen 6, Gen 7, ...), and a hack's `cfg.calc` names its base and overrides
+only what it changes (Emerald Imperium and SoulGold share the expansion base, each with its own `B_*` config values).
+Where the base files live (`template/calc/`?), the exact data format and the `assemble.py` inlining are decided in the
+first build step, written into `template/README.md` and `tools/extractlib.py`'s docstring, and then every new guide's
+extract step fills it in (CLAUDE.md → Making a new guide gets a step for it).
+
+**A guide without calc data hides the feature for now:** no Calc tab in the rail, `#/calc` redirects to the Pokémon
+page, and the trainer card's `Calc vs ▸` and the Pokémon page's `Use in calc ▸` are not drawn. The feature switches on
+when the hack has `cfg.calc` (no other flag). Longer term calc data is part of every guide; Import also hides where `cfg.calc`
+has no save family.
+
 ### Layout (route `#/calc`, below 480 px wide)
 Top to bottom, one column beside the 44 px rail:
 1. **Import banner** (only after an import attempt; × dismisses it). Green: `Imported <file>` + counts + how many edited
@@ -221,8 +256,10 @@ move sheet to fill an empty slot. The move list of an imported Pokémon is edite
   a chance (min 1 %, max 99 %), `5+ hits` beyond four, `fainted` when the defender is at 0 HP, `No effect` for immunity.
   The KO chance uses the defender's current HP; the % uses its max HP.
 
-**Field box.** Collapsed row `Field · <summary>`; open: Weather, Terrain, Reflect, Light Screen. The final list is the
-user's to adjust later (it doesn't change the layout). Crit is per move, not a field option.
+**Field box.** Collapsed row `Field · <summary>`; open: whatever the hack's profile lists (see Per-hack data), drawn as two
+selects per row (weather, terrain...) and three toggles per row (Reflect, Light Screen, ...). The mockup's list (weather,
+terrain, Reflect, Light Screen) is a placeholder. Crit is per move, not a field option. The chosen values are stored under
+`field` and passed to the engine by key.
 
 **Scroll stops (rail `↑ ↓`).** Three stops, computed when pressed and de-duplicated within 24 px: (1) the top of the page,
 (2) the trainer block's last move row at the bottom of the viewport (so a full box stays visible above it), (3) the trainer
@@ -257,6 +294,7 @@ Open expanders and the open Edit dropdowns are not stored.
   existing history rules (sheets close on Back).
 
 ### Edge cases
+- **Hack without calc data:** the Calc tab, `#/calc`, `Calc vs ▸` and `Use in calc ▸` are absent (see above).
 - **No import yet:** the Mine card is the two big buttons; the results say `Pick one of yours`.
 - **Empty party / box:** the grid is just the tools row and any custom sets.
 - **No foe selected:** `Pick a trainer` in the bar, results say `Pick a foe`.
@@ -339,7 +377,11 @@ asserts: no page errors and `documentElement.scrollWidth` equals the viewport wi
     visible with the grid's first four rows.
 23. **Per-slot crit:** turn crit on for Earthquake on Garchomp; the same move on another Pokémon is unaffected; change the
     slot's move: crit is off again.
-24. **Persistence:** after changing foe, dir, field, crit, a hit count, a power override, an edit and a saved change, reload:
+24. **Hidden without data:** build a guide whose `hack.json` has no `cfg.calc`: the rail has five tabs, `#/calc` lands on the
+    Pokémon page, no `Calc vs` / `Use in calc` buttons, no page errors. Add `cfg.calc` and everything shows.
+25. **Field from data:** change the profile's field list (add a weather, remove a toggle): the Field box shows exactly the
+    new list; selections reach the engine call by key and are restored after a reload.
+26. **Persistence:** after changing foe, dir, field, crit, a hit count, a power override, an edit and a saved change, reload:
     all restored. `Clear saved state` in the frame: back to defaults.
 
 ## Order
