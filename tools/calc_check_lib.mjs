@@ -396,12 +396,14 @@ export const attackerRows = page => page.value(`[...document.querySelectorAll('.
 export const attackerCrit = page => page.value(`[...document.querySelectorAll('.dres:not(.na) .rc')].map(b=>b.getAttribute('aria-pressed'))`);
 export const pickCell = (page, src, index) => page.tap(`[data-a="mpick"][data-src="${src}"][data-i="${index}"]`);
 
+export const dismissBanner = page => page.count('.ban .bx').then(n => (n ? page.tap('.ban .bx') : null));
+
 // The imported party is the attacker's pool. Default: Cloyster (party slot 5) against a trainer, the Mine side attacking.
 export async function setupCalc(page, { save = 'good.json', mine = ['party', 5], trainer = EI_TRAINERS.candice } = {}) {
   await page.route('#/calc');
   if (save) {
     await page.importSave(save);
-    if (await page.count('.ban .bx')) await page.tap('.ban .bx');
+    await dismissBanner(page);
   }
   if (mine) await pickCell(page, mine[0], mine[1]);
   if (trainer) await page.value(`CALC.enter(${JSON.stringify(trainer)},0)`);

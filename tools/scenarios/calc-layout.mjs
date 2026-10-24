@@ -1,7 +1,7 @@
 // Calc layout: spec checks 1 (fit), 17 (long names), 18 (scroll stops), 19 (box size), 20 (wide window), 22 (big box).
 // Each check runs at the sizes and modes the spec gives (see runChecks in tools/calc_check_lib.mjs). Without cfg.calc: skip.
 import assert from 'node:assert/strict';
-import { EI_TRAINERS, fixturePatches, guideArg, prepareGuide, runChecks, SIZE_SMALL, SIZE_STAR } from '../calc_check_lib.mjs';
+import { dismissBanner, EI_TRAINERS, fixturePatches, guideArg, pickCell, prepareGuide, runChecks, setupCalc, SIZE_SMALL, SIZE_STAR } from '../calc_check_lib.mjs';
 
 const WIDE = [[480, 392], [537, 424], [832, 424], [832, 316]];
 
@@ -17,27 +17,9 @@ if (!file) {
   process.exit(0);
 }
 
-// The shared starting point: the imported party (Cloyster, party slot 5, attacking) against a trainer.
-async function attackerSetup(page, trainer = EI_TRAINERS.candice, save = 'good.json') {
-  await page.route('#/calc');
-  await page.importSave(save);
-  await dismissBanner(page);
-  await pickMine(page, 'party', 5);
-  await page.value(`CALC.enter(${JSON.stringify(trainer)},0)`);
-  await page.settle();
-}
-
-async function dismissBanner(page) {
-  if (await page.count('.ban .bx')) await page.tap('.ban .bx');
-}
-
-async function pickMine(page, src, index) {
-  await page.tap(`[data-a="mpick"][data-src="${src}"][data-i="${index}"]`);
-}
-
 // Check 18 body, shared by the spec's window (316 high, where the stops collapse) and a taller one (400) that separates them.
 async function scrollStops(page) {
-  await attackerSetup(page);
+  await setupCalc(page);
   await page.value('scrollTo(0,0)');
   await page.settle();
   const stops = await page.value('CALC.stops()');
@@ -69,7 +51,7 @@ const checks = [
     title: 'trainer bar at the top: the attacker\'s four rows end within the window',
     sizes: SIZE_STAR,
     run: async page => {
-      await attackerSetup(page);
+      await setupCalc(page);
       await page.value(`scrollTo(0, document.querySelector('.fbar').getBoundingClientRect().top + scrollY - 2)`);
       await page.settle();
       const m = await page.value(`(()=>{const rows=[...document.querySelectorAll('.dres:not(.na) .mr')];return {bar:document.querySelector('.fbar').getBoundingClientRect().top,rows:rows.length,bottom:rows.at(-1)?.getBoundingClientRect().bottom??null,edits:document.querySelectorAll('.ed').length,height:innerHeight};})()`);
@@ -84,7 +66,7 @@ const checks = [
     id: '17 long names',
     title: 'names truncate on one line inside their boxes, with a 1.2 line box',
     run: async page => {
-      await attackerSetup(page, EI_TRAINERS.longName);
+      await setupCalc(page, { trainer: EI_TRAINERS.longName });
       await pickMineCustom(page, 'Galarian Slowbro');
       await pickMineCustom(page, 'Mega Charizard X');
       const names = await page.value(`(()=>{const pick=(el,label)=>{const cs=getComputedStyle(el),r=el.getBoundingClientRect(),box=el.closest('.cc,.fbar,.mr,.dsrc,.dmatch,.fit')?.getBoundingClientRect();return {label,text:el.textContent.trim(),truncated:el.scrollWidth>el.clientWidth+0.5,nowrap:cs.whiteSpace==='nowrap',ellipsis:cs.textOverflow==='ellipsis',lineRatio:parseFloat(cs.lineHeight)/parseFloat(cs.fontSize),height:r.height,fontSize:parseFloat(cs.fontSize),padBottom:parseFloat(cs.paddingBottom),inside:box?r.right<=box.right+0.5:true};};
@@ -118,7 +100,7 @@ const checks = [
     title: 'a short page (party only) has no two stops within 24 px',
     sizes: SIZE_SMALL,
     run: async page => {
-      await attackerSetup(page, EI_TRAINERS.candice, 'party-only.json');
+      await setupCalc(page, { trainer: EI_TRAINERS.candice, save: 'party-only.json' });
       await page.value('scrollTo(0,0)');
       await page.settle();
       const stops = await page.value('CALC.stops()');
@@ -134,7 +116,7 @@ const checks = [
     title: 'grid cells match the trainer strip; six per row; no divider lines',
     sizes: SIZE_SMALL,
     run: async page => {
-      await attackerSetup(page);
+      await setupCalc(page);
       const m = await page.value(`(()=>{const cells=[...document.querySelectorAll('.mg .dstrip button')];const foe=[...document.querySelectorAll('.dside:not(.mg) .dstrip button:not(.ph)')];const media=e=>{const i=e.querySelector('img,svg,canvas');if(!i)return null;const r=i.getBoundingClientRect();return [Math.round(r.width),Math.round(r.height)];};const top0=cells[0].getBoundingClientRect().top;return {cellH:cells[0].getBoundingClientRect().height,foeH:foe[0]?.getBoundingClientRect().height,cellMedia:media(cells[0]),foeMedia:media(foe[0]),perRow:cells.filter(c=>Math.abs(c.getBoundingClientRect().top-top0)<1).length,dividers:document.querySelectorAll('.mg hr,.dside hr,.mg .sep').length,strip:getComputedStyle(document.querySelector('.mg .dstrip')).borderTopWidth};})()`);
       assert.equal(m.cellH, m.foeH, 'cell height vs the trainer strip');
       assert.deepEqual(m.cellMedia, m.foeMedia, 'sprite size vs the trainer strip');
@@ -148,7 +130,7 @@ const checks = [
     title: 'wide window: two equal columns, both movesets aligned, grid scrolls inside its card',
     sizes: WIDE,
     run: async (page, { height }) => {
-      await attackerSetup(page);
+      await setupCalc(page);
       await page.value('scrollTo(0,0)');
       await page.settle();
       const m = await page.value(`(()=>{const widths=s=>[...document.querySelectorAll(s)].map(e=>Math.round(e.getBoundingClientRect().width*10)/10);const mine=[...document.querySelectorAll('.dres:not(.na) .mr')].map(e=>e.getBoundingClientRect());const foe=[...document.querySelectorAll('.dres.na .mr')].map(e=>e.getBoundingClientRect());const grid=document.querySelector('.mg .dstrip');return {cols:widths('.top > .dside'),res:widths('.dmatch > .dres'),chips:widths('.dmatch > .cc'),mineRows:mine.length,foeRows:foe.length,mineTops:mine.map(r=>Math.round(r.top)),foeTops:foe.map(r=>Math.round(r.top)),rowHeights:mine.map(r=>Math.round(r.height)),fit:document.querySelector('.fit').getBoundingClientRect().height,innerH:innerHeight,gridOverflow:getComputedStyle(grid).overflowY,gridScrolls:grid.scrollHeight>grid.clientHeight,dfieldTop:document.querySelector('.dfield').getBoundingClientRect().top,rowsBottom:Math.max(...mine.map(r=>r.bottom),...foe.map(r=>r.bottom))};})()`);
@@ -172,7 +154,7 @@ const checks = [
     title: 'six foe Pokémon: list at 537 and 832 wide by 424 high, strip at 480 by 392 and 832 by 316',
     sizes: WIDE,
     run: async (page, { width, height }) => {
-      await attackerSetup(page, EI_TRAINERS.flannery);
+      await setupCalc(page, { trainer: EI_TRAINERS.flannery });
       const m = await page.value(`(()=>{const app=document.getElementById('app');const card=document.querySelector('.dside:not(.mg)').getBoundingClientRect();const visible=r=>r.width>0&&r.height>0;const list=[...document.querySelectorAll('.fteam .ft')].map(e=>e.getBoundingClientRect()).filter(visible);const strip=[...document.querySelectorAll('.dside:not(.mg) .dstrip button:not(.ph)')].map(e=>e.getBoundingClientRect()).filter(visible);const team=document.querySelector('.fteam');return {tl:app.classList.contains('tl'),avail:+app.dataset.avail,card:{top:card.top,bottom:card.bottom},list:list.map(r=>[r.top,r.bottom]),strip:strip.map(r=>[r.top,r.bottom,r.left,r.right]),teamScroll:team?team.scrollHeight-team.clientHeight:null,innerH:innerHeight,innerW:innerWidth};})()`);
       const wantList = (width === 537 || width === 832) && height === 424;
       assert.equal(m.tl, wantList, `team list ${m.tl}, want ${wantList} (available ${m.avail})`);
@@ -192,7 +174,7 @@ const checks = [
     title: 'resizing across the 222 px threshold switches the foe view once, with no loop',
     sizes: [[537, 424]],
     run: async page => {
-      await attackerSetup(page, EI_TRAINERS.flannery);
+      await setupCalc(page, { trainer: EI_TRAINERS.flannery });
       const tl = () => page.value(`document.getElementById('app').classList.contains('tl')`);
       const sweep = async heights => {
         const seen = [];
@@ -218,7 +200,7 @@ const checks = [
     title: '61 Pokémon: the grid card is at most 136 px and scrolls; the page is no longer than with 11',
     sizes: SIZE_SMALL,
     run: async page => {
-      await attackerSetup(page, EI_TRAINERS.candice, 'eleven.json');
+      await setupCalc(page, { trainer: EI_TRAINERS.candice, save: 'eleven.json' });
       await page.value('scrollTo(0,0)');
       const eleven = await page.value(`({doc:document.documentElement.scrollHeight})`);
       await page.importSave('good.json');
