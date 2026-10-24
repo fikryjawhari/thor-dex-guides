@@ -27,7 +27,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `datajson.py` | `load()` / `save()` for a hack's `data.json` in its own layout (one line per entry for M, MV, AB, P, LOC, AR); for extract steps that edit the finished file (Hardlove's `build.py --published`, `itemstd.py`). |
 | `splits.py` | Shared `split_name(name, cap=None)` for trainer and walkthrough split names; normalises `[Level Cap N]`, league names and post-game labels. |
 | `wikitext.py` | Shared `split_args(text)` splits template arguments around nested wikitext templates and links; each caller interprets and cleans its own fields. |
-| `ctrguide.py` | Shared 3DS guide conversion and trainer helpers: trainer matching and default level-up moves. |
+| `ctrguide.py` | Shared 3DS guide dex conversion, form names, move-doc parsing, trainer matching and default level-up moves; game-specific evolution handling stays in each extract. |
 | `itemstd.py` | Items tab standard (the rules are its docstring): `standardise(D, RULES.get(hack, {}))` puts `D['IT']` and the walkthrough's item rows in the shared box set, sub-headings and Found / Wild / Also / Shop lines; idempotent. CLI: `python -I tools/itemstd.py <hack> [data.json]`. |
 | `tabs_check.py` | `python -I tools/tabs_check.py [hack ...]` after a build: Walkthrough and Trainers pages list the same trainers in the same order, and the cap a place / stop shows never goes down (optional boxes left out). Exit 1 on a problem. |
 | `domcompare.mjs <old.html> <new.html> [--kb]` | Renders two builds route by route in headless Chrome and compares the DOM (options in its header; timing below). The check after any template change. |
