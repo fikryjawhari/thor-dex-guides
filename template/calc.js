@@ -110,7 +110,7 @@ function calcPage(){if(!host.isConnected)document.body.appendChild(host);if(prof
  bindCap();bindMain();bindEd();fitTeam();if($('.mg .dstrip'))$('.mg .dstrip').scrollTop=gridScroll;jumpState();}
 
 const TEAMNEED=222;
-function fitTeam(){const app=$('#app');if(!app)return;const fit=app.querySelector('.fit'),dm=app.querySelector('.dmatch');if(!fit||!dm||innerWidth<480){app.classList.remove('tl');return;}
+function fitTeam(){if(location.hash!=='#/calc')return;const app=$('#app');if(!app)return;const fit=app.querySelector('.fit'),dm=app.querySelector('.dmatch');if(!fit||!dm||innerWidth<480){app.classList.remove('tl');return;}
  const ban=fit.querySelector('.ban');const avail=fit.clientHeight-dm.offsetHeight-4-(ban?ban.offsetHeight+4:0);app.classList.toggle('tl',avail>=TEAMNEED);app.dataset.avail=Math.round(avail);}
 window.addEventListener('resize',()=>fitTeam());
 function bindMain(){document.querySelectorAll('[data-lv],[data-hp]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const side=i.dataset.lv||i.dataset.hp,f=i.dataset.lv?'l':'hp';const v=parseInt(i.value);if(isNaN(v))return;
@@ -127,7 +127,7 @@ function setMove(side,slot,mi){const ck=sideInfo(side).key+':'+slot;delete ST.cr
 function pickMove(side,slot){picker({title:'Move '+(slot+1),items:M.map((n,i)=>({label:n,sub:MV[i].t+' · '+MV[i].c+' · '+(MV[i].bp||'—'),v:i})),onPick:v=>{setMove(side,slot,v);refreshMainOnly();}});}
 const refresh=()=>{const y=scrollY;route2();scrollTo(0,y);};
 function route2(){calcPage();SH.redraw();}
-document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-f]');if(!el||!el.closest('#app'))return;
+document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const el=e.target.closest('[data-a],[data-f]');if(!el||!el.closest('#app'))return;
  const a=el.dataset.a;
  if(el.dataset.f&&el.tagName==='BUTTON'){const k=el.dataset.f;ST.field[k]=ST.field[k]?0:1;window.__fo=1;save();refresh();return;}
  if(a==='row'&&e.target.closest('.dd'))return;
@@ -146,7 +146,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-
  else if(a==='edel'){ST.custom.splice(ST.mine.i,1);ST.mine={src:'party',b:0,i:0};EDITOPEN.mine=false;save();refresh();}
  else if(a==='smode'){SMODE=SMODE==='+'?'-':'+';refresh();}
  else if(a==='sstep'){const side=el.dataset.s,x=+el.dataset.x,arr=resolve(getMon(side)).stg.slice();arr[x]=Math.max(stageRange[0],Math.min(stageRange[1],arr[x]+(SMODE==='+'?1:-1)));setField(side,'stg',arr);refresh();}
- else if(a==='sreset'){setField(el.dataset.s,'stg',undefined);refresh();}
+ else if(a==='sreset'){setField(el.dataset.s,'stg',[0,0,0,0,0]);refresh();}
  else if(a==='chmv'||a==='addmv'){pickMove(el.dataset.side,+el.dataset.slot);}
  else if(a==='mvreset'){delete ST.mvo[el.dataset.ck];save();refresh();}
  else if(a==='tprev'||a==='tnext'){const ti=D.TR.findIndex(x=>x.k===ST.foe.k)+(a==='tnext'?1:-1);if(D.TR[ti]){ST.foe={k:D.TR[ti].k,i:0};recent(D.TR[ti].k);save();refresh();}}
