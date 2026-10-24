@@ -86,6 +86,10 @@ const PAGE = `async (routes, want, ign) => {
   // Lazy sections fill on toggle events and timers: wait until the DOM has had no change for a while.
   let muts = 0; new MutationObserver(() => muts++).observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
   const quiet = async (ms, max) => { const end = performance.now() + max; let n; do { n = muts; await sleep(ms); if (muts === n) return true; } while (performance.now() < end); return false; };
+  // The guide's rAF work (the collapse bars) and ResizeObserver callbacks run in rendering frames: after the DOM is quiet,
+  // also wait until a whole frame pair passes with nothing changing.
+  const frame = () => Promise.race([new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))), sleep(500)]);
+  const settled = async max => { const end = performance.now() + max; let n; do { n = muts; await frame(); await sleep(25); } while (muts !== n && performance.now() < end); return muts === n; };
   const out = {}, errs = [], slow = [], busy = [];
   window.addEventListener('error', e => errs.push(e.message));
   for (const r of routes) {
@@ -98,7 +102,10 @@ const PAGE = `async (routes, want, ign) => {
       removeEventListener('hashchange', f);
     }
     for (let k = 0; k < 6; k++) { const ds = [...document.querySelectorAll('#app details:not([open])')]; if (!ds.length) break; ds.forEach(d => d.open = true); await quiet(10, 1000); }
-    if (!await quiet(25, 1500)) busy.push(r);
+    if (!await settled(1500)) busy.push(r);
+    // Trainer cards fill lazily (IntersectionObserver) without re-running the collapse bars, so which bars are shown depends on
+    // when the last fill landed: recompute them from the final layout.
+    if (typeof bars === 'function') { bars(); await frame(); }
     const s = snap();
     out[r] = want.includes(r) ? s : hash(s);
   }
