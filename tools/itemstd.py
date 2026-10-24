@@ -65,8 +65,10 @@ RULES = {
         'rename': {'Leaf stones': 'Leaf Stone', 'Choice band': 'Choice Band', 'Choice scarf': 'Choice Scarf',
                    'Choice specs': 'Choice Specs', 'Assault vest': 'Assault Vest', 'Punching glove': 'Punching Glove'},
     },
-    'hardlove-gold': {'reorder': set(GAME_ORDER_BOXES), 'other': HG_OTHER},
-    'eternal-x': {'reorder': {'TMs and HMs/HMs'}},
+    'hardlove-gold': {'reorder': set(GAME_ORDER_BOXES), 'other': HG_OTHER,
+                      'also': {'Charcoal'}},        # Found: -> Also: (it is the Cutters' reward after Bugsy, not lying around)
+    'eternal-x': {'reorder': {'TMs and HMs/HMs'},
+                  'also': {'Poké Radar', "King's Rock", 'Blastoisinite', 'Charizardite X', 'Venusaurite'}},
     'photonic-sun': {'reorder': {'TMs and HMs/HMs'}, 'shop_kind': {'Thunder Stone': 'Evolution items', 'Cherish Ball': 'Poké Balls'}},
 }
 
@@ -303,7 +305,35 @@ def standardise(D, rules=None, report=None):
     D['IT'] = new
     if 'WK' in D:
         walk(D['WK'], entries, new, rules, say)
+    if rules.get('also'):
+        relabel_also(D, rules['also'])
     return D
+
+
+def relabel_also(D, items):
+    """Items whose `Found:` line is really a gift / reward (the prose gave no hint _ALSO knows): that line becomes `Also:`.
+    Runs on the published rows too (idempotent), in Items and in the walkthrough's item rows."""
+    def fix(text):
+        lines = text.split(chr(10))
+        if not any(ln.startswith('Found:') for ln in lines):
+            return text
+        vals = {}
+        for ln in lines:
+            m = _LABEL.match(ln)
+            lb = 'Also' if m and m.group(1) == 'Found' else (m.group(1) if m else None)
+            if lb is None:
+                return text
+            vals.setdefault(lb, []).append(ln[len(m.group(0)):].strip())
+        return chr(10).join(f'{lb}: ' + '; '.join(vals[lb]) for lb in ('Found', 'Wild', 'Also', 'Shop') if lb in vals)
+    for b in D['IT']:
+        for r in b['r']:
+            if r[0] in items:
+                r[1] = fix(r[1])
+    if 'WK' in D:
+        for rows in walk_rows(D['WK']):
+            for r in rows:
+                if r[1] in items:
+                    r[2] = fix(r[2])
 
 
 def already(row, std):

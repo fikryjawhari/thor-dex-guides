@@ -104,6 +104,9 @@ missing ones), `tools/domcompare.mjs` against the previous build, and the viewer
 
 ## History
 
+- **2026-10-24, gifts read `Also:`.** Poké Radar, King's Rock (Lysandre) and the three Kanto Mega Stones from Sycamore
+  were `Found:` lines; `itemstd.RULES['eternal-x']['also']` relabels them (Items and the walkthrough).
+
 - **2026-10-23, Items standard.** `tools/itemstd.py` (shared, idempotent; run by `finalise()`) puts Items in the shared
   box set (rules: `itemstd.RULES['eternal-x']`; `python -I tools/itemstd.py eternal-x` on a published data.json). The 29
   stones under Held Items moved to Mega Stones (linked to the Mega page by `P.stone`); Genesect Drives -> Memories and

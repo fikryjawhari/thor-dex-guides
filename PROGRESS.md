@@ -138,6 +138,11 @@ the split is in that repo's git log.
 7. Later: footer credits (`cfg.credit` hook; hack authors from `SOURCES.md` plus the sprite set's credits in
    `sprites/SOURCES.md`), the update checker (`plans/update-checker.md`; run by hand, the user doesn't need it
    scheduled), the damage calc with save import (`plans/damage-calc.md`).
+   Small fixes (2026-10-24, branch `worktree-small-fixes`): HG Charcoal and EX gift rows now `Also:` (done); HG Infiltrator
+   page width not reproducible (no page of any guide is over 260 at 260 x 316, normal and dvkb; nothing changed).
+   Still open, needs a mockup and a decision: an Items box whose only sub-heading is named like the box (Key Items,
+   Evolution Items, Mega Stones, Fossils, Move Tutors, Useful NPCs, Z-Crystals) shows its name twice at the top (grey box
+   header + yellow sub-heading), and again in the two end bars at the bottom; only the yellow sub-heading pins.
 
 **Parallel sessions:** one session in each repo at a time is safe (separate folders and git histories). The app
 repo has nothing open now; come back to it only for an app bug or feature. Avoid two sessions in this repo at once: the template is shared, so they'd
