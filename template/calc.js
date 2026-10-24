@@ -79,8 +79,8 @@ function chip(r,att,side,fast){if(!r)return `<div class="cc"><button class="cn" 
   <div class="cl"><span>Lv</span>${nb(`data-lv="${side}"`,r.lv??'',{min:range[0],max:range[1],label:'Level'})}<button class="hpl" data-a="hpfull" data-s="${side}" title="Full HP">HP</button>${nb(`data-hp="${side}"`,r.hp??'',{min:0,max:mx||999,label:'HP now'})}<span class="mx">/${mx??'?'}</span></div>${open?editor(r,side):''}</div>`;}
 function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
  const D0=[0,1,2,3].map(slot=>{const mi=att.m[slot];if(mi==null)return {slot};const ck=sideInfo(side).key+':'+slot,crit=!!ST.crit[ck],n=hitsOf(mi,ck),mv=effMv(mi,ck);return {slot,mi,ck,mv,crit,n,r:((prof.varpow||[]).includes(M[mi])&&ST.mvo[ck]?.bp==null)?null:window.DMG.calc(toEngine(att),toEngine(def),{mv:mi,...ST.mvo[ck],hits:n,crit},F)};});
- const best=Math.max(0,...D0.map(x=>x.r?x.r.max*x.n:0));
- const pc=x=>(x/mx*100).toFixed(1).replace(/\.0$/,'');
+ const total=(result,mode)=>result.per?result.per.reduce((sum,rolls)=>sum+(mode==='min'?Math.min(...rolls):Math.max(...rolls)),0):result[mode]*result.hits;
+ const best=Math.max(0,...D0.map(entry=>entry.r?total(entry.r,'max'):0));
  return D0.map(x=>{const {slot,mi,ck,mv,crit,n,r}=x;
   if(mi==null)return `<div class="mr em"><div class="mm" data-a="addmv" data-slot="${slot}" data-side="${side}">+ Move</div></div>`;
   const open=ROWOPEN.has(ck),mh=MH[mi],ov=ST.mvo[ck];
@@ -89,11 +89,11 @@ function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
   const hits=mh?`<label>Hits${nb(`data-mo="hits" data-mi="${mi}" data-ck="${ck}"`,n,{min:mh[0],max:mh[1],label:'Hits'})}</label>`:'';
   const tail=`<div class="mvfull">${esc(M[mi])}</div><div class="ab1"><button class="dbtn sm" data-a="chmv" data-slot="${slot}" data-side="${side}">Change move</button></div>${ov?`<div class="ab1"><button class="dbtn sm" data-a="mvreset" data-mi="${mi}" data-ck="${ck}">Reset power / type</button></div>`:''}`;
   if(!r)return `<div class="mr st ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}" data-ck="${ck}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">—</span></div><div class="dd"><div class="eg">${types}${bp}</div>${tail}</div></div></div>`;
-  const imm=r.eff===0,ko=r.ko;
-  return `<div class="mr ${r.max*n===best&&best>0?'best':''} ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}" data-ck="${ck}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">${imm?'No effect':r.min+'–'+r.max}</span></div>
+  const imm=r.eff===0,ko=r.ko,minTotal=total(r,'min'),maxTotal=total(r,'max');
+  return `<div class="mr ${maxTotal===best&&best>0?'best':''} ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}" data-ck="${ck}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">${imm?'No effect':r.min+'–'+r.max}</span></div>
    <div class="r2"><span>${imm?'':(n>1?'×'+n+' · ':'')+r.pmin+'–'+r.pmax+'%'}</span><span class="ko k${ko.n}">${imm?'':hpNow<=0?'fainted':koTxt(ko)}</span></div>
-   <div class="dd"><div class="eg">${types}${bp}${hits}</div><div>${esc(mv.c)} · vs ${hpNow}/${mx} HP${n>1?` · ${n} hits: ${r.min*n}–${r.max*n}`:''}</div><div class="rolls">${r.rolls.join(' ')}</div>${r.notes.length?`<div>${r.notes.map(esc).join(' · ')}</div>`:''}
-   <div class="ab"><button class="dbtn sm" data-a="sub" data-side="${side}" data-v="${r.min*n}">HP −${r.min*n}</button><button class="dbtn sm" data-a="sub" data-side="${side}" data-v="${r.max*n}">HP −${r.max*n}</button></div>${tail}</div></div>
+   <div class="dd"><div class="eg">${types}${bp}${hits}</div><div>${esc(mv.c)} · vs ${hpNow}/${mx} HP${n>1?` · ${n} hits: ${minTotal}–${maxTotal}`:''}</div>${r.per?r.per.map((rolls,index)=>`<div class="rolls">Hit ${index+1}: ${Math.min(...rolls)}–${Math.max(...rolls)}<br>${rolls.join(' ')}</div>`).join(''):`<div class="rolls">${r.rolls.join(' ')}</div>`}${r.notes.length?`<div>${r.notes.map(esc).join(' · ')}</div>`:''}
+   <div class="ab"><button class="dbtn sm" data-a="sub" data-side="${side}" data-v="${minTotal}">HP −${minTotal}</button><button class="dbtn sm" data-a="sub" data-side="${side}" data-v="${maxTotal}">HP −${maxTotal}</button></div>${tail}</div></div>
    <div class="rcol ${mh?'two':''}">${mh?`<button class="rh" data-a="hits" data-mi="${mi}" data-ck="${ck}" aria-label="Hits">×${n}</button>`:''}<button class="rc" data-a="crit" data-mi="${mi}" data-ck="${ck}" aria-pressed="${crit}" aria-label="Crit">C</button></div></div>`;}).join('');}
 function calcPage(){const gridScroll=$('.mg .dstrip')?.scrollTop||0;fil.innerHTML='';const A0=getMon('mine'),B0=getMon('foe');const a=A0&&resolve(A0),b=B0&&resolve(B0);const out=ST.dir==='out';
  const F=ST.field;const sa=a&&effSpe(a),sb=b&&effSpe(b);
