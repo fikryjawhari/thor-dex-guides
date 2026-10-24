@@ -35,7 +35,7 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - Python env for tools and checks: `uv sync` once per machine (`pyproject.toml` + `uv.lock` are committed), then
   `uv run python -I tools/<script>`. Need a package? `uv add <name>` and commit both files; don't work around it.
 - Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome;
-  options `--routes`, `--jobs`, `--ignore` in its header). Runs can go in parallel.
+  options `--routes`, `--jobs`, `--ignore` in its header). Run browser sweeps one at a time.
 - In Git Bash, prefix commands that take `/`-paths as arguments with `MSYS_NO_PATHCONV=1`.
 
 ## Making a new guide
@@ -56,12 +56,11 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
    `python -I tools/sprite_keys.py <hack>` lists the forms it matched (check once) and the species it couldn't place:
    those are the hack's own additions and go in its `sprites.json`, the only art a hack keeps. `assemble.py` lists
    species with no sprite; they show as a type-coloured circle with the name's first letter.
-5. `python assemble.py <hack>`, then the checks: `extract/check.py`, `python -I tools/tabs_check.py <hack>`,
-   `node tools/consistency-check.mjs <hack>` (viewer sizes, normal and `dvkb`, light theme), `walkcheck.mjs` and
-   `pagecheck.mjs` (`tools/mockup/README.md`), and a `domcompare.mjs` of the build against itself for page errors on
-   every route. Then the Thor frame on the phone preview for the user's review.
+5. `uv run python -I tools/gate.py check <hack>` (baseline setup: `tools/README.md` → Standard gates).
+   Then `python -I tools/preview.py dist/<hack>.html --frame` for Thor-frame review on the phone preview.
 
 ## Git
+- Worker setup: `python -I tools/worktree_setup.py [hack ...] --session <name>`; `--release` removes only your claim.
 - Parallel work goes on a branch in a worktree. Claude Code creates them in `.claude/worktrees/<name>` (git-ignored);
   merge into `main` when done. Only one session at a time edits on `main`.
 - Run `git status` before committing and stage files by name, not `git add -A`; never commit anything under `.claude/`.
@@ -123,6 +122,7 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
   which branch the work is on and what merges next.
 
 ## Workflow
+- References: [worker brief](.agents/references/worker-brief.md), [spec skeleton](.agents/references/spec-skeleton.md), [big jobs](.agents/references/big-job.md).
 - I test on the Thor. Testing a guide there without the library: PROGRESS.md → Testing on the Thor.
 - UI changes: mockup first as a plain interactive HTML page at the viewer's real size, then build it.
 - **Showing pages to me** (mockups, unmerged builds): `python -I tools/preview.py <page.html> [name.html]` puts it on

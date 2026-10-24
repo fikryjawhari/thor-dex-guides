@@ -11,6 +11,9 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 
 | Script | What it does |
 | --- | --- |
+| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template]` | Captures committed HTML/data/reports at a ref; rebuilds data and runs serial DOM, consistency, tabs, migration, mockup and scenario checks. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
+| `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` to the main checkout (Windows junctions, no copying), then `uv sync`; no hacks means every built guide. Refuses other claims or existing source copies. Release removes only the matching claim. |
+| `scenarios/tracker-reload.mjs <guide.html>` | Seeded tracker state, Clear and reload at 260 × 316 in `dvkb`; assertions on the control and saved state. `scenarios/README.md` describes new spec checks. |
 | `extractlib.py` | The shared start and end of every hack's `extract/` (layout in its docstring): paths, build report, PDF text, `finalise()` (Items standard, prune, Trainers in walkthrough order, split names, schema) and the `data.json` writer. |
 | `schema.py` | The `data.json` schema: key order per object, dead fields dropped, stop keys. Raises on a key it doesn't know (add it there and to the EI notes' Data schema). |
 | `calcbackup.js <backup.js> <out.json>` | An hzla-style damage-calc backup file (trainer sets, moves) as JSON. |
@@ -46,7 +49,43 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `serebii_usum_items.py <items.shtml> <tm.shtml> <out.csv>` | Vanilla Ultra Sun item locations from Serebii's pages. |
 | `rhd_moves.py <moves/index.html> <hack-slug> <out.json>` | Every RomHackDex move with priority and description (the index lacks both); reads each move page, saves only those fields. |
 | `drayano_check.py <Pokemon Changes.txt> <romhackdex/pokedex>` | Compares Drayano's change doc with a RomHackDex mirror (new base stats, full level-up lists) for every species the doc changes. |
-| `preview.py <page.html> [name.html] [--rm name ...]` | Puts a page on the phone preview (below) and prints its link. |
+| `preview.py <page.html> [name.html] [--frame] [--title T] [--rm name ...]` | Puts a page on the phone preview (below) and prints its link; `--frame` wraps it with `mockup/thor-frame/build.py` first. Existing usage unchanged. |
+
+## Standard gates
+
+```
+uv run python -I tools/gate.py baseline main
+uv run python -I tools/gate.py check
+uv run python -I tools/gate.py check eternal-x --data
+uv run python -I tools/gate.py check --template
+```
+
+Capture the accepted pre-change ref once. `git archive` extracts committed files into a temporary directory under
+`.tmp/`, builds there, then retains HTML, data and reports in `.tmp/baseline/`; it never switches the working tree
+or registers a temporary worktree. The manifest records ref/SHA/date and SHA-256 hashes (verified before checks).
+Raw inputs are not needed to capture a baseline. A new guide needs a baseline ref containing its reviewed,
+committed first data build; without that the gate fails explicitly rather than silently self-comparing.
+
+Neither flag means both halves; both flags also run both. No hack names means every built guide. Data rebuilds
+use the explicit `REBUILDS` table: EX/PS raw, HG `--published`, EI `itemstd.py`; unknown paths fail until added.
+Data compares ignore only the top-level `built` stamp; reports compare byte-for-byte. Counts report species,
+trainer cards, item rows and walkthrough stops. Stamp-only rebuilds restore the original data file bytes.
+
+Template checks assemble every guide, then compare each selected guide normal/keyboard (four DOM jobs within one
+sweep), consistency, tabs and keyed-stop migration. The four existing mockup checks run on EI in both modes;
+if EI was not selected, the first selected guide is used. Every `scenarios/*.mjs` runs on every selected guide.
+Mockup tools that only print diagnostics are treated as failures on page errors, bad jumps or wrong route bars;
+their detailed geometry output remains a review log, not an invented assertion. Logs: `.tmp/gate/<run>/`, with
+one PASS/FAIL line per check and a total time; any failure exits 1. No baseline refreshes or DOM ignores on failure.
+
+Browser sweeps are serial, across worktrees too; the gate checks running Node check commands before each browser
+invocation and refuses contention. Standalone checks need the same busy check. Do not run a second sweep in parallel.
+The gate replaces the cleanup's one-off `.tmp/cleanup-baseline/datacmp.py`.
+
+T3 exposes project scripts with `runOnWorktreeCreate`; no repo project-config file is present. Set a Configure
+script to `python -I tools/worktree_setup.py` with that flag after integration. This worker could read the schema
+but the project update was denied (`capability_denied`: requires a full-access/default thread); the orchestrator
+must apply it. Setup does not imply permission to edit shared source inputs or commit, merge or push.
 
 ## Phone preview
 
