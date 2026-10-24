@@ -11,7 +11,7 @@
 // Flagged routes are loaded fresh first (up to FRESH=n of them, default 100; the rest count as differing); only those
 // that still differ are replayed with their chunk's history and printed (SHOW=n of them, default 2; LIST=1 lists every differing route). Exit code 0: identical and no page errors, 1: not, 2: Chrome failed.
 // Needs Chrome or Edge (CHROME env var, or the usual Windows install paths). Node 22+ (fetch, WebSocket).
-// Picks a free debugging port, so several runs (both guides, normal and --kb) can go at once.
+// Picks a free debugging port; run whole sweeps one at a time to avoid layout-timing noise from CPU contention.
 // content-visibility is forced to visible in every tab (see tab()): offscreen skipped parts are not observed or measured, so DOM that depends on them varied from run to run.
 // IPC flooding protection is off: each route makes 2 history updates and Chrome stalls a tab for ~10 s after 200.
 // Timing --jobs: tools/README.md.
