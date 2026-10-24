@@ -14,8 +14,7 @@ nature, EVs and per-stat IVs.
 import json, os, struct, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from garc import entry, text
-from xy_trainers import archive
+from garc import entry, read_archive, text
 
 BATTLE = {0: "Single", 1: "Double", 2: "Multi"}
 GENDER = {0: "random", 1: "male", 2: "female"}
@@ -31,10 +30,10 @@ def main(*args):
     romfs, out, *fallback = args[1:] if sm else args
     g = SM if sm else USUM
     roots = [romfs, *fallback]
-    trdata = archive(roots, g["trdata"])
-    trpoke = archive(roots, g["trpoke"])
-    gt = archive(roots, "a/0/3/2")
-    personal = archive(roots, "a/0/1/7")  # trainer and personal archives are never LZ11-compressed
+    trdata = read_archive(roots, g["trdata"])[0]
+    trpoke = read_archive(roots, g["trpoke"])[0]
+    gt = read_archive(roots, "a/0/3/2")[0]
+    personal = read_archive(roots, "a/0/1/7")[0]  # trainer and personal archives are never LZ11-compressed
     T = lambda i: text(entry(gt[i]))
     names, classes, species, moves, items, abilities, natures = (T(i) for i in g["T"])
 

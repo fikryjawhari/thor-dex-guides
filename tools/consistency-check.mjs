@@ -1,44 +1,19 @@
-import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import assert from 'node:assert/strict';
+import { startBrowser } from './browser.mjs';
 
 // node tools/consistency-check.mjs [hack ...]: after python assemble.py, the shared behaviour checks on every built guide
 // (or the ones named): saved state, starter / player pickers, single caps, MGM, five viewer sizes, expanded pages, light
 // theme, normal and dvkb. A guide is checked when hacks/<hack>/hack.json and dist/<hack>.html both exist.
 const ARGS = process.argv.slice(2);
 
-const chromePath = process.env.CHROME || ['C:/Program Files/Google/Chrome/Application/chrome.exe',
-  'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(existsSync);
-const profile = mkdtempSync(join(tmpdir(), 'consistency-'));
 mkdirSync('.tmp', { recursive: true });
-const chrome = spawn(chromePath, ['--headless=new', '--remote-debugging-port=0', `--user-data-dir=${profile}`,
-  '--allow-file-access-from-files', '--disable-ipc-flooding-protection', 'about:blank'], { stdio: 'ignore' });
 const sleep = milliseconds => new Promise(done => setTimeout(done, milliseconds));
-const pending = new Map();
-let socket, sequence = 0;
+const browser = await startBrowser({ profilePrefix: 'consistency-', flags: ['--disable-ipc-flooding-protection'] });
+const { send } = browser;
 try {
-  for (let attempt = 0; attempt < 100; attempt++) {
-    try {
-      const port = readFileSync(join(profile, 'DevToolsActivePort'), 'utf8').split('\n')[0];
-      const version = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json();
-      socket = new WebSocket(version.webSocketDebuggerUrl);
-      await new Promise((done, fail) => { socket.onopen = done; socket.onerror = fail; });
-      break;
-    } catch { await sleep(100); }
-  }
-  assert(socket, 'Chrome connection');
-  socket.onmessage = event => {
-    const message = JSON.parse(event.data);
-    if (pending.has(message.id)) { pending.get(message.id)(message); pending.delete(message.id); }
-  };
-  const send = (method, params = {}, sessionId) => new Promise(done => {
-    const commandId = ++sequence;
-    pending.set(commandId, done);
-    socket.send(JSON.stringify({ id: commandId, method, params, sessionId }));
-  });
   const hacks = ARGS.length ? ARGS : readdirSync('hacks').filter(hack => existsSync(`hacks/${hack}/hack.json`) && existsSync(`dist/${hack}.html`));
   let shot = false;
   for (const hack of hacks) for (const keyboard of [false, true]) {
@@ -139,6 +114,5 @@ try {
     await send('Target.disposeBrowserContext', { browserContextId });
   }
 } finally {
-  socket?.close();
-  chrome.kill();
+  await browser.close();
 }

@@ -29,6 +29,8 @@ No base stats, types or hidden abilities differ.
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py heartgold-retiled`).
+
 ```bash
 D=hacks/heartgold-retiled/.src; R=https://raw.githubusercontent.com/Trinsic64/Heart-Gold-Retiled/v6.12.1
 for f in Evolution-Guide HG-Engine-Features Item-Locations README Trainer-Guide Walkthrough Wild-Encounter-Guide; do

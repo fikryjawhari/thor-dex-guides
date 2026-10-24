@@ -11,12 +11,17 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 
 | Script | What it does |
 | --- | --- |
+| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template]` | Captures committed HTML/data/reports at a ref; rebuilds data and runs serial DOM, consistency, tabs, migration, mockup and scenario checks. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
+| `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` to the main checkout (Windows junctions, no copying), then `uv sync`; no hacks means every built guide. Refuses other claims or existing source copies. Release removes only the matching claim. |
+| `scenarios/tracker-reload.mjs <guide.html>` | Seeded tracker state, Clear and reload at 260 × 316 in `dvkb`; assertions on the control and saved state. `scenarios/README.md` describes new spec checks. |
 | `extractlib.py` | The shared start and end of every hack's `extract/` (layout in its docstring): paths, build report, PDF text, `finalise()` (Items standard, prune, Trainers in walkthrough order, split names, schema) and the `data.json` writer. |
 | `schema.py` | The `data.json` schema: key order per object, dead fields dropped, stop keys. Raises on a key it doesn't know (add it there and to the EI notes' Data schema). |
 | `calcbackup.js <backup.js> <out.json>` | An hzla-style damage-calc backup file (trainer sets, moves) as JSON. |
 | `showdown.js <dist/data dir> <out.json>` | pokemon-showdown data files (moves, texts, dex, abilities) as one JSON. |
 | `drive_ls.py <folder-id> [out-dir]` | Lists a public Google Drive folder; with `out-dir`, downloads every file in it (Sheets as .xlsx, Docs as .txt, other files as-is). Skips subfolders and archives (.zip etc.). |
 | `mirror.py <start-url> <out-dir> [max-pages] [skip ...]` | Mirrors a static site's pages under the start URL's folder. URLs containing any `skip` substring are not followed. |
+| `source_http.py` | Shared retrying byte reads for `mirror.py` and `rhd_moves.py`; each caller keeps its headers, timeout and delay policy. |
+| `check_updates.py [hack]` | Reports source changes against each hack's `watch.json`; `--accept <hack>` saves checked state after updating the guide/sources. No rebuilds or patch downloads. |
 | `wp_dump.py <site> <out.json> [types ...]` | Dumps a WordPress site (pages and custom post types) through its REST API into one JSON file. |
 | `wiki_dump.py <api.php> <out-dir>` | Dumps every page of a MediaWiki as wikitext. Not used by any hack right now. |
 | `rp_item_locations.py` | Builds Renegade Platinum's `item-locations.csv` from its docs plus vanilla Platinum (pret decomp). |
@@ -25,11 +30,14 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `sprite_keys.py <hack>` | Lists the sprite key each species gets (from dex number and name; `assemble.py` uses it) and the species not in the shared set, i.e. the hack's own forms. |
 | `datajson.py` | `load()` / `save()` for a hack's `data.json` in its own layout (one line per entry for M, MV, AB, P, LOC, AR); for extract steps that edit the finished file (Hardlove's `build.py --published`, `itemstd.py`). |
 | `splits.py` | Shared `split_name(name, cap=None)` for trainer and walkthrough split names; normalises `[Level Cap N]`, league names and post-game labels. |
+| `wikitext.py` | Shared `split_args(text)` splits template arguments around nested wikitext templates and links; each caller interprets and cleans its own fields. |
+| `ctrguide.py` | Shared 3DS guide dex conversion, form names, move-doc parsing, trainer matching, default level-up moves and initial walkthrough stop/area attachment; game-specific evolution handling, item routing and cap regrouping stay in each extract. |
 | `itemstd.py` | Items tab standard (the rules are its docstring): `standardise(D, RULES.get(hack, {}))` puts `D['IT']` and the walkthrough's item rows in the shared box set, sub-headings and Found / Wild / Also / Shop lines; idempotent. CLI: `python -I tools/itemstd.py <hack> [data.json]`. |
 | `tabs_check.py` | `python -I tools/tabs_check.py [hack ...]` after a build: Walkthrough and Trainers pages list the same trainers in the same order, and the cap a place / stop shows never goes down (optional boxes left out). Exit 1 on a problem. |
+| `browser.mjs` | Shared `startBrowser({profilePrefix, flags, onEvent, onDisconnect})` for domcompare, consistency, walk-state and mockup checks. Discovers Chrome / Edge (`CHROME` overrides), starts an isolated profile and CDP connection, and returns `{send, close}`; `close()` stops Chrome and removes the profile. Scenarios, navigation waits, assertions and per-check flags stay in callers. Requires Node 22+. |
 | `domcompare.mjs <old.html> <new.html> [--kb]` | Renders two builds route by route in headless Chrome and compares the DOM (options in its header; timing below). The check after any template change. |
 | `consistency-check.mjs [hack ...]` | After `python assemble.py`: starter / player pickers and rival filtering, single caps, MGM, saved ticks, five viewer sizes, expanded pages and light theme, normal and `dvkb`, on every built guide (or the ones named). Requires Chrome or Edge. |
-| `walk-state-check.mjs` | `node tools/walk-state-check.mjs <old.html> <new.html> <legacy-stop-key>` checks walkthrough layout migration, every stop's saved state, fragment inheritance, real checkbox rendering (synthetic steps), Next step, uncheck/reset and reload, normal and `dvkb`. For example use `1.8` for Eternal X or `1.0` for Photonic Sun. With no arguments, compares each `.tmp/state-before/<hack>.html` snapshot against its `dist/` build at stop `0.0`; save those snapshots before rebuilding. Requires Chrome or Edge. |
+| `walk-state-check.mjs` | `node tools/walk-state-check.mjs <old.html> <new.html> <legacy-stop-key>` checks walkthrough layout migration, every stop's saved state using the new build's migration function, fragment inheritance, real checkbox rendering (synthetic steps), Next step, uncheck/reset and reload, normal and `dvkb`. For an old build from before stop keys were stamped, use `1.8` for Eternal X or `1.0` for Photonic Sun; a current keyed baseline also works at `0.0`. With no arguments, compares each `.tmp/state-before/<hack>.html` snapshot against its `dist/` build at stop `0.0`; save those snapshots before rebuilding. Requires Chrome or Edge. |
 | `pngpal.py` | Reads, writes and crops palette PNGs (used by `sprites_pee.py` and `assemble.py`). |
 | `garc.py` | Reads 3DS GARC archives, LZ11 entries, mini packs and Gen 6/7 game text. Used by the scripts below. |
 | `ctr_dex.py <game> <out.json> <romfs> [fallback ...] [--code code.bin \| --ips code.ips]` | The whole dex from a 3DS romfs (`x`, `oras`, `sun`/`moon`, `usun`/`umoon`): species and forms with stats, abilities, every learnset, evolutions, Megas; moves; abilities; TM list; wild tables. Used for Photonic Sun, Eternal X, Meissa Moon, Navy Sapphire. |
@@ -41,7 +49,43 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `serebii_usum_items.py <items.shtml> <tm.shtml> <out.csv>` | Vanilla Ultra Sun item locations from Serebii's pages. |
 | `rhd_moves.py <moves/index.html> <hack-slug> <out.json>` | Every RomHackDex move with priority and description (the index lacks both); reads each move page, saves only those fields. |
 | `drayano_check.py <Pokemon Changes.txt> <romhackdex/pokedex>` | Compares Drayano's change doc with a RomHackDex mirror (new base stats, full level-up lists) for every species the doc changes. |
-| `preview.py <page.html> [name.html] [--rm name ...]` | Puts a page on the phone preview (below) and prints its link. |
+| `preview.py <page.html> [name.html] [--frame] [--title T] [--rm name ...]` | Puts a page on the phone preview (below) and prints its link; `--frame` wraps it with `mockup/thor-frame/build.py` first. Existing usage unchanged. |
+
+## Standard gates
+
+```
+uv run python -I tools/gate.py baseline main
+uv run python -I tools/gate.py check
+uv run python -I tools/gate.py check eternal-x --data
+uv run python -I tools/gate.py check --template
+```
+
+Capture the accepted pre-change ref once. `git archive` extracts committed files into a temporary directory under
+`.tmp/`, builds there, then retains HTML, data and reports in `.tmp/baseline/`; it never switches the working tree
+or registers a temporary worktree. The manifest records ref/SHA/date and SHA-256 hashes (verified before checks).
+Raw inputs are not needed to capture a baseline. A new guide needs a baseline ref containing its reviewed,
+committed first data build; without that the gate fails explicitly rather than silently self-comparing.
+
+Neither flag means both halves; both flags also run both. No hack names means every built guide. Data rebuilds
+use the explicit `REBUILDS` table: EX/PS raw, HG `--published`, EI `itemstd.py`; unknown paths fail until added.
+Data compares ignore only the top-level `built` stamp; reports compare byte-for-byte. Counts report species,
+trainer cards, item rows and walkthrough stops. Stamp-only rebuilds restore the original data file bytes.
+
+Template checks assemble every guide, then compare each selected guide normal/keyboard (four DOM jobs within one
+sweep), consistency, tabs and keyed-stop migration. The four existing mockup checks run on EI in both modes;
+if EI was not selected, the first selected guide is used. Every `scenarios/*.mjs` runs on every selected guide.
+Mockup tools that only print diagnostics are treated as failures on page errors, bad jumps or wrong route bars;
+their detailed geometry output remains a review log, not an invented assertion. Logs: `.tmp/gate/<run>/`, with
+one PASS/FAIL line per check and a total time; any failure exits 1. No baseline refreshes or DOM ignores on failure.
+
+Browser sweeps are serial, across worktrees too; the gate checks running Node check commands before each browser
+invocation and refuses contention. Standalone checks need the same busy check. Do not run a second sweep in parallel.
+The gate replaces the cleanup's one-off `.tmp/cleanup-baseline/datacmp.py`.
+
+T3 exposes project scripts with `runOnWorktreeCreate`; no repo project-config file is present. Set a Configure
+script to `python -I tools/worktree_setup.py` with that flag after integration. This worker could read the schema
+but the project update was denied (`capability_denied`: requires a full-access/default thread); the orchestrator
+must apply it. Setup does not imply permission to edit shared source inputs or commit, merge or push.
 
 ## Phone preview
 
@@ -60,8 +104,7 @@ One-time setup per PC (serve keeps running across reboots):
 
 When each hack's sources were compiled, and the version they cover. **Whenever a hack's sources are fetched again,
 update its row here and the "Fetched <date> (<version>)" line at the top of its `SOURCES.md`.** To spot an update,
-compare the hack's current version (its thread, Drive file names or changelog) with this table; for repos, compare
-`curl -s "https://api.github.com/repos/<repo>/commits?per_page=1"` with the commit pinned in `SOURCES.md`.
+run `uv run python -I tools/check_updates.py [hack]`; its pins and coverage are described below.
 
 | Hack | Version | Sources compiled | Guide built | Where to look for updates |
 | --- | --- | --- | --- | --- |
@@ -77,6 +120,49 @@ compare the hack's current version (its thread, Drive file names or changelog) w
 | Renegade Platinum | v1.3.0 | 2026-10-18 (docs), 2026-10-19 (RomHackDex) | – | Drayano's Drive (Documentation folder), RomHackDex |
 | SoulGold | no version number | 2026-10-18, species details 2026-10-19 | – | eemeliri.github.io/soulgold data files |
 | Unbound | – | 2026-10-18, move details 2026-10-19 | – | RomHackDex, unboundwiki.com; the three trainer sheets |
+
+## Source update checks
+
+`uv run python -I tools/check_updates.py` checks all twelve hacks; give one hack name for a smaller run.
+Exit 0 means unchanged, 1 changed, 2 a failed check. Manual entries always print a reminder: they are not checked.
+After updating the guide or compiled sources, run `uv run python -I tools/check_updates.py --accept <hack>`.
+Acceptance is atomic per hack and refused if any automatic check fails. It does not update this source log,
+the fetched version in `SOURCES.md`, the guide, or local baseline files. Review those separately.
+
+Each `hacks/<hack>/watch.json` has a `sources` list. Every entry has `name`, `type`, `state` and its configuration:
+
+| Type | Configuration | State / report |
+| --- | --- | --- |
+| `github` | `repo`, `ref`, `paths` (exact files or directory prefixes ending `/`); optional `release` guard | Commit SHA and watched blob SHAs; exact watched-file text diffs, including additions/deletions. Unrelated files and commit-only changes are ignored. |
+| `drive` | `id` of a folder; optional `ids` or `exclude_ids` | File IDs, names and modified dates from `embeddedfolderview`. Includes patch archives; skips subfolders (watch their IDs separately). |
+| `sheet` | `id`; optional `baseline` xlsx path relative to the hack | Hash per tab of cell values and cell notes, using Hardlove's existing stdlib xlsx reader. Shows cell diffs if a local baseline tab matches the saved hash, otherwise names the changed tabs. |
+| `version` | `url`, regex `pattern` with one capturing group; optional `select: "latest"` for numeric dotted versions | Version string. No match or ambiguous matches fail instead of silently accepting. |
+| `page` | `url`; optional `baseline` path relative to the hack | Normalised page-text hash; text diff when a matching local baseline is present. A map state checks every relative page in that map with six workers. `projection: "move-details"` checks only RomHackDex move priority/description, matching `rhd_moves.py`. |
+| `sitemap` | `url`; optional URL `prefix` | Each URL's lastmod. Without lastmod it checks membership only, explicitly labelled in state. |
+| `manual` | One-line `note` | Reminder only, never a claim of unchanged data. |
+
+Initial states use fetched files and published pins; `baseline_note` marks exceptions seeded from current metadata
+on 2026-10-24 (Drive dates and sitemaps were not retained with the original downloads). No downloaded document text
+is committed. Sheet hashes include hidden tabs and notes, but ignore formatting and ZIP metadata: two exports of
+the same Sheet can have different bytes. Update local baseline files only after checking the reported diff.
+
+GitHub allows 60 unauthenticated requests/hour. A full check uses fourteen API requests (two per repository/ref),
+plus raw-file requests for diffs. A run caps itself at fifty; that is not an hourly allowance, so count earlier
+runs too. Recursive trees avoid one request per watched path and the compare API's 300-file truncation; a truncated
+tree fails loudly. No token is required. No release tags are assumed.
+
+Hardlove watches its reviewed 0.8.3 release commit, not `beta_hardlove` head. Its Drive patch filenames guard that
+pin. A new version blocks accepting the source until the release commit is matched by UTC date and changelog;
+then update `ref` and `release.version`. Retiled's upstream engine is likewise release-matched, never upstream
+main; its own guides/tables may be checked on head. Code wins over docs; docs' Drive dates independently signal
+trainer order/split/location changes, since code and docs can update at different times.
+
+RomHackDex's sitemap has no lastmod on most data pages. The checks also hash every mirrored HTML page and compare
+move priority/description against the fetched `moves.json`; this downloads thousands of pages and can take minutes.
+Sitemap additions/removals signal when to re-mirror and add/drop content hashes. Sitemap timestamps are supplied by
+the publisher, not a guarantee. Unbound's wiki uses its page/wiki sitemap index dates. Drive dates are day-resolution
+(today's clock is normalised to the date); edits on the same day can be missed. 3DS patch archives are watched in
+their actual folders, but a changed patch still needs manual romfs extraction, not an automatic ROM download.
 
 ## Timing `domcompare.mjs` (choosing `--jobs`)
 
@@ -101,6 +187,15 @@ Before `--disable-ipc-flooding-protection` was added (2026-10-19), Chrome thrott
 routes (each route makes 2 history updates and Chrome allows 200 in 10 s). Those stalls showed as `no hashchange`
 misses at the 100th route of every tab, and they caused most of the older numbers and the apparent speedup from more
 jobs (EI `#/a/` at 1 job: 30.4 s with them, 10.4 s without).
+
+Since 2026-10-24, snapshots force `content-visibility:visible`, wait for rendering frames after DOM quiet, and
+recompute collapse bars after lazy cards fill. This removes skipped-layout and late-bar noise without ignoring DOM
+differences. The slice table above predates that change; remeasure it before tuning job counts. Run whole sweeps
+sequentially, not alongside another browser check. With four jobs, the current full EI guide (2649 routes) takes
+about 150–153 s in normal / keyboard mode; a keyboard self-comparison took 152.0 s with no flagged routes or page
+errors. The preceding worker recorded 139.1 s after the fix and 161.8 s with one spurious flag rechecked clean before
+the final settling fix. These are full sweeps, not the historical slice timings; contention-heavy baseline logs
+(including the 458.3 s EI keyboard run) are not a controlled performance comparison.
 
 ## 3DS game data (found 2026-10-19)
 

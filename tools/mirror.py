@@ -1,7 +1,10 @@
 """Mirror a static site's HTML pages (same-origin, under a start prefix) to a folder.
 Usage: python -I mirror.py <start-url> <out-dir> [max-pages] [skip-substring ...]"""
-import os, re, sys, time, urllib.parse, urllib.request
+import os, re, sys, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from source_http import fetch_bytes
 
 start, out = sys.argv[1], sys.argv[2]
 limit = int(sys.argv[3]) if len(sys.argv) > 3 else 5000
@@ -10,15 +13,8 @@ prefix = start.rsplit("/", 1)[0] + "/"
 
 
 def fetch(url):
-    for attempt in range(3):
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-            return urllib.request.urlopen(req, timeout=30).read()
-        except Exception as e:
-            err = e
-            time.sleep(1 + attempt)
-    print("FAIL", url, err, flush=True)
-    return None
+    return fetch_bytes(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=30, attempts=3,
+                       delay=lambda attempt: 1 + attempt)
 
 
 def save(url, data):

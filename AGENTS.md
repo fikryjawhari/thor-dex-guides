@@ -42,7 +42,7 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - `sprites/` the shared sprite set (pokeemerald-expansion, 64×64, `png/<key>.png`; README has the key scheme,
   SOURCES.md the pin and credits).
 - `tools/` source fetchers, extract helpers and checks (README), `mockup/` (the Thor frame and the page behaviour
-  checks). `plans/` work not done yet only (now: the damage calc, the code cleanup, the update checker).
+  checks). `plans/` work not done yet only (now: the damage calc).
 - `dist/` built output (git-ignored); the Pages workflow builds and deploys it.
 
 ## Commands
@@ -50,11 +50,11 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - Python env for tools and checks: `uv sync` once per machine (`pyproject.toml` + `uv.lock` are committed), then
   `uv run python -I tools/<script>`. Need a package? `uv add <name>` and commit both files; don't work around it.
 - Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome;
-  options `--routes`, `--jobs`, `--ignore` in its header). Runs can go in parallel.
+  options `--routes`, `--jobs`, `--ignore` in its header). Run browser sweeps one at a time.
 - In Git Bash, prefix commands that take `/`-paths as arguments with `MSYS_NO_PATHCONV=1`.
 
 ## Making a new guide
-1. Fetch the sources into `hacks/<hack>/.src/` with its `SOURCES.md` (3DS hacks also need the user's vanilla romfs
+1. Fetch the sources into `hacks/<hack>/.src/` with its `SOURCES.md`; write its `watch.json` (3DS hacks also need the user's vanilla romfs
    dumps: `tools/README.md` → 3DS game data). Update its "Fetched" line and the source log in `tools/README.md`.
 2. Write `hacks/<hack>/extract/` scripts (the shared layout: `tools/extractlib.py` docstring; copy a built hack's) that
    turn them into `hacks/<hack>/data.json`, in the schema in `hacks/emerald-imperium/notes.md` (Data schema).
@@ -63,6 +63,8 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
    for its quirks. What the template shows when the data has it: `template/README.md` → What the data switches on.
    For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences); 3DS hacks take
    the game data over the docs ("Doc says ...").
+   Hacks come in families (PROGRESS.md → Hack families): reuse the family's shared code (3DS: `tools/ctrguide.py`),
+   write a family's first guide so its siblings can reuse it, and lift the shared part out when the second one comes.
 3. `hacks/<hack>/hack.json`: copy an existing one; new localStorage prefix in `cfg.ls`, the hack's wording in
    `cfg.txt`, feature switches. `notes.md`: the same headings as the existing ones (Build, Sources and rules, Local storage, Hack-only data, Checks,
    History); `SOURCES.md` likewise (Files, Re-fetch, Game files, Source checks). Add `extract/check.py`. Add the
@@ -71,12 +73,11 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
    `python -I tools/sprite_keys.py <hack>` lists the forms it matched (check once) and the species it couldn't place:
    those are the hack's own additions and go in its `sprites.json`, the only art a hack keeps. `assemble.py` lists
    species with no sprite; they show as a type-coloured circle with the name's first letter.
-5. `python assemble.py <hack>`, then the checks: `extract/check.py`, `python -I tools/tabs_check.py <hack>`,
-   `node tools/consistency-check.mjs <hack>` (viewer sizes, normal and `dvkb`, light theme), `walkcheck.mjs` and
-   `pagecheck.mjs` (`tools/mockup/README.md`), and a `domcompare.mjs` of the build against itself for page errors on
-   every route. Then the Thor frame on the phone preview for the user's review.
+5. `uv run python -I tools/gate.py check <hack>` (baseline setup: `tools/README.md` → Standard gates).
+   Then `python -I tools/preview.py dist/<hack>.html --frame` for Thor-frame review on the phone preview.
 
 ## Git
+- Worker setup: `python -I tools/worktree_setup.py [hack ...] --session <name>`; `--release` removes only your claim.
 - Parallel work goes on a branch in a worktree. Codex may use `.codex/worktrees/<name>` (git-ignored), or the workspace supplied by T3;
   merge into `main` when done. Only one session at a time edits on `main`.
 - Run `git status` before committing and stage files by name, not `git add -A`; never commit anything under `.claude/`, or Codex worktrees, claims or local settings.
@@ -136,6 +137,7 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
   which branch the work is on and what merges next.
 
 ## Workflow
+- References: [worker brief](.agents/references/worker-brief.md), [spec skeleton](.agents/references/spec-skeleton.md), [big jobs](.agents/references/big-job.md).
 - I test on the Thor. Testing a guide there without the library: PROGRESS.md → Testing on the Thor.
 - UI changes: mockup first as a plain interactive HTML page at the viewer's real size, then build it.
 - **Showing pages to me** (mockups, unmerged builds): `python -I tools/preview.py <page.html> [name.html]` puts it on

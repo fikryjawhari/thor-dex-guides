@@ -23,6 +23,8 @@ Most docs are PDFs; text extraction is needed at build time (`pdftotext -layout`
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py photonic-sun`).
+
 ```bash
 D=hacks/photonic-sun/.src
 python -I tools/drive_ls.py 1W-TbF-XashTxOjQj6A4jdj4IkYFBEBVD $D

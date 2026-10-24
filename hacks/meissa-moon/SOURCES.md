@@ -14,6 +14,8 @@ read through the Wayback Machine (see `tools/README.md`).
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py meissa-moon`).
+
 ```bash
 python -I tools/drive_ls.py 1uRbqLFS-WALuT_mGmcFoM_bvmfjKGanE hacks/meissa-moon/.src
 ```

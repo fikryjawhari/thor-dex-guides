@@ -7,7 +7,8 @@ first stop named in their location text (items.py's place list for rows with Fou
 Guide info. An item filed under Lumiose City moves to the earliest part whose Lumiose City block lists it in its rows. Game docs are the hack's own change docs and changelog.
 """
 import os, re
-from common import SRC, TXT, norm, report, split_name
+from common import SRC, TXT, report, split_name
+from ctrguide import walk_same as same, walk_stops
 from items import walk_rows, ikey
 
 ALIAS = {'Starter': ['Aquacorde Town']}
@@ -29,52 +30,9 @@ ITEM_IN = {}
 DOCS = [('Evolution Changes', 'Evolution Changes'), ('Move Changes', 'Move Changes')]
 
 
-def key(s):
-    return norm(re.sub(r'\s*\(.*?\)', '', s))
-
-
-def same(area, stop):
-    """Names match whole, or one starts the other (not "Route 1" for "Route 10")."""
-    a, s = key(area), key(stop)
-    if a == s:
-        return True
-    short, long_ = sorted((a, s), key=len)
-    return len(short) > 5 and long_.startswith(short) and not long_[len(short)].isdigit()
-
-
 def build(D):
-    AR, stops = D['AR'], D['_stops']
-    st = [{'part': p, 'n': n, 'a': [], 's': [], 'note': '', 'it': [], 'tr': tr} for p, n, tr in stops]
     TRN = {t['k']: t['n'] for g in D['TR']['g'] for s in g['sec'] for t in s['tr']}
-    for part, n, first, new in NEW_STOP:
-        j = next(j for j, s in enumerate(st) if s['part'] == part and s['n'] == n)
-        k = next(k for k, t in enumerate(st[j]['tr']) if TRN[t] == first)
-        st.insert(j + 1, {'part': part, 'n': new, 'a': [], 's': [], 'note': '', 'it': [], 'tr': st[j]['tr'][k:]})
-        st[j]['tr'] = st[j]['tr'][:k]
-    where = {}
-    for i, A in enumerate(AR):
-        names = [A['n']] + ALIAS.get(A['n'], [])
-        if A['n'] in PLACE:
-            part, n = PLACE[A['n']]
-            hit = next(j for j, s in enumerate(st) if s['part'] == part and s['n'] == n)
-        else:
-            hit = next((j for j, s in enumerate(st) if any(same(x, s['n']) for x in names)), None)
-        if hit is not None:
-            st[hit]['a'].append(i)
-            where[i] = hit
-    # Areas with no stop: "on the way", after the stop holding the area before them
-    extra = {}
-    for i, A in enumerate(AR):
-        if i in where or A.get('ns'):
-            continue
-        prev = max((where[j] for j in range(i) if j in where), default=0)
-        extra.setdefault(prev, []).append(i)
-    out = []
-    for j, s in enumerate(st):
-        out.append(s)
-        for i in extra.get(j, []):
-            out.append({'part': s['part'], 'n': AR[i]['n'], 'a': [i], 's': [], 'note': '', 'it': [], 'tr': [], 'x': 1})
-    report('walkthrough: on the way stops', sum(len(v) for v in extra.values()), ':', ', '.join(AR[i]['n'] for v in extra.values() for i in v))
+    out = walk_stops(D['AR'], D['_stops'], TRN, aliases=ALIAS, placements=PLACE, new_stops=NEW_STOP)
     # Lumiose City is visited in several parts: an item filed there goes to the earliest part whose Lumiose City block
     # lists it in the walkthrough's {{itemlist}} rows (that block's stop; parts with two blocks have two stops)
     LUM = {}

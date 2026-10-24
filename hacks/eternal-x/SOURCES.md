@@ -21,6 +21,8 @@ Most docs are PDFs; text extraction is needed at build time (`pdftotext -layout`
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py eternal-x`).
+
 ```bash
 D=hacks/eternal-x/.src
 python -I tools/drive_ls.py 1T0WiSuU618qG397BHKhlJ6REEBbdIi_P $D

@@ -13,6 +13,8 @@ Rival and other starter-dependent teams: Bulbapedia's "If the player chose X" (P
 import json, os, re
 from collections import defaultdict
 from common import BULBA, load, norm, report, fix, split_name
+from wikitext import split_args
+from ctrguide import default_moves, trainer_match_score
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon Ultra Sun and Ultra Moon-Part {}.wiki')
 # Boxes: (walkthrough parts, name). Aether Paradise's second visit (Part 21) is its own box; the first (Part 14, no
@@ -73,21 +75,6 @@ TY = ['Fighting', 'Flying', 'Poison', 'Ground', 'Rock', 'Bug', 'Ghost', 'Steel',
       'Psychic', 'Ice', 'Dragon', 'Dark']
 
 
-def split_top(s):
-    out, cur, d = [], '', 0
-    i = 0
-    while i < len(s):
-        two = s[i:i + 2]
-        if two in ('{{', '[['):
-            d += 1; cur += two; i += 2; continue
-        if two in ('}}', ']]'):
-            d -= 1; cur += two; i += 2; continue
-        if s[i] == '|' and d == 0:
-            out.append(cur); cur = ''
-        else:
-            cur += s[i]
-        i += 1
-    return out + [cur]
 
 
 def clean(s):
@@ -141,7 +128,7 @@ def events():
                 continue
             sub = (h3 + (' · ' + h4 if h4 else '')) if n in SUB else ''
             if m.group(6):
-                c = split_top(m.group(7)[:-2] if m.group(7).endswith('}}') else m.group(7))
+                c = split_args(m.group(7)[:-2] if m.group(7).endswith('}}') else m.group(7))
                 cond = clean(c[1]) if m.group(6) == 'div' and len(c) > 1 else ''
             elif m.group(3):
                 es = entry_events(m.group(3), n, h2)
@@ -168,7 +155,7 @@ def events():
 
 
 def entry_events(raw, part, place):
-    p = [x for x in split_top(raw) if not re.match(r'^\w+=', x)]
+    p = [x for x in split_args(raw) if not re.match(r'^\w+=', x)]
     if len(p) < 5:
         return []
     st = starter_of(p[3])
@@ -235,15 +222,6 @@ def location_entries():
     return out
 
 
-def score(e, t):
-    vs = [(m['species'], m['level']) for m in t['team']]
-    sc = 0
-    for x in e['mons']:
-        if x in vs:
-            sc += 3
-        elif x[0] in [v[0] for v in vs]:
-            sc += 1
-    return sc - abs(len(vs) - len(e['mons']))
 
 
 def dummy(t):
@@ -257,13 +235,12 @@ def trainer_splits(groups, caps, battles):
     out.extend({'n': split_name(name), 'tab': name, 'cap': 0, 'note': [], 'sec': []}
                for name in ('Post-game: Episode RR', 'Post-game'))
     battle_of = {trainer_id: index for index, battle in enumerate(battles) for trainer_id in battle[2]}
-    targets, legacy = {}, {}
-    for old_group, group in enumerate(groups):
+    targets = {}
+    for group in groups:
         for old_section, section in enumerate(group['sec']):
             if group['n'].startswith('Post-game') or group['n'] == 'Other trainers':
                 target = len(caps) if group['n'] == 'Post-game: Episode RR' else len(caps) + 1
                 copy = {key: value for key, value in section.items() if key not in ('at', 'cap')}
-                legacy[f'{target}.{len(out[target]["sec"])}'] = f'{old_group}.{old_section}'
                 out[target]['sec'].append(copy)
                 targets.update((trainer['k'], target) for trainer in section['tr'])
                 continue
@@ -286,9 +263,8 @@ def trainer_splits(groups, caps, battles):
                     copy['note'] = group['note'] + copy.get('note', [])
                 copy['tr'] = trainers
                 copy['cap'] = [cap['l'], cap['n'], cap['w'], sum(battle[3] for battle in battles[first:cap['cut']])]
-                legacy[f'{target}.{len(out[target]["sec"])}'] = f'{old_group}.{old_section}'
                 out[target]['sec'].append(copy)
-    return out, targets, legacy
+    return out, targets
 
 
 def build(D):
@@ -313,8 +289,8 @@ def build(D):
         gives up to two trainers, whichever of its names share its Pokemon."""
         if not e['key']:
             c = [t for n in e['names'] for t in byn.get(n, []) if t['id'] not in used]
-            hits = sorted((t for t in c if score(dict(mons=e['mons']), t) + abs(len(t['team']) - len(e['mons'])) > 0),
-                          key=lambda t: -score(e, t))
+            hits = sorted((t for t in c if trainer_match_score(dict(mons=e['mons']), t) + abs(len(t['team']) - len(e['mons'])) > 0),
+                          key=lambda t: -trainer_match_score(e, t))
             out, seen = [], set()
             for t in hits:
                 if norm(t['name']) not in seen:
@@ -323,13 +299,13 @@ def build(D):
             return out
         c = [t for t in byk.get(e['key'], []) if t['id'] not in used]
         if c:
-            best = max(c, key=lambda t: score(e, t))
-            if score(e, best) > 0:
+            best = max(c, key=lambda t: trainer_match_score(e, t))
+            if trainer_match_score(e, best) > 0:
                 return [best]
         c = [t for t in byn.get(e.get('name', ''), []) if t['id'] not in used]
         if c:
-            best = max(c, key=lambda t: score(e, t))
-            if score(e, best) >= 2:
+            best = max(c, key=lambda t: trainer_match_score(e, t))
+            if trainer_match_score(e, best) >= 2:
                 return [best]
         return []
     evs = events()
@@ -355,7 +331,7 @@ def build(D):
             report('  walkthrough trainer not matched:', e['part'], e['place'], e['key'] or e['names'], e['mons'][:3])
     # Second pass: location pages, exact teams first (Route 17's Ekans 36 grunt would take Ancient Poni Path's Ekans 45)
     extra, ents = [], location_entries()
-    exact = lambda e, t: score(e, t) == 3 * len(e['mons']) == 3 * len(t['team'])
+    exact = lambda e, t: trainer_match_score(e, t) == 3 * len(e['mons']) == 3 * len(t['team'])
     for strict in (True, False):
         for e in ents:
             if e.get('done'):
@@ -400,12 +376,6 @@ def build(D):
         a = m['ability']
         return ABI.get(a) if ' or ' not in a else None
 
-    def default_moves(p, lv):
-        ms = []
-        for l, mv in p['lv']:
-            if l <= lv and mv not in ms:
-                ms.append(mv)
-        return ms[-4:]
 
     def trainer(e, tid, k):
         t = Hk[tid]
@@ -615,9 +585,9 @@ def build(D):
                 t['k'] = remap[t['k']]
     for st in allstops:
         st[2] = [remap[k] for k in st[2]]
-    g, targets, legacy = trainer_splits(g, caps, flat)
+    g, targets = trainer_splits(g, caps, flat)
     D['TR'] = {'caps': [[f"{c['n']} ({c['w']})", c['l']] for c in caps],
-               'fix': [], 'src': 'game data + Bulbapedia places', 'g': g, 'legacySections': legacy}
+               'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
     D['_cap_splits'], D['_trainer_splits'] = caps, targets
     D['_stops'] = allstops
     report('trainer boxes:', ', '.join(f"{x['n']} {sum(len(s['tr']) for s in x['sec'])}" for x in g))

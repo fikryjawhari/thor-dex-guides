@@ -15,12 +15,8 @@ header .bar{margin:0;gap:var(--g)}
 header #filters:empty{display:none}
 header select{height:var(--sbh);padding:0 6px;font-size:var(--sbf);border-radius:6px}
 .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:960px;margin:0 auto}
-.tabs{display:flex;gap:4px}
-.tabs a{padding:6px 12px;border-radius:8px;background:var(--panel2);color:var(--fg);font-weight:600;font-size:14px}
-.tabs a.on{background:var(--acc);color:#111}
 input,select{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:15px}
 input[type=search]{flex:1;min-width:140px}
-label.chk{font-size:13px;color:var(--mut);display:flex;gap:4px;align-items:center}
 main{padding:var(--g) var(--g) 60px;max-width:960px;margin:0 auto}
 /* Boxes on every page are one gap apart (their own margins don't count) */
 main#app{display:flex;flex-direction:column;gap:var(--g)}
@@ -38,7 +34,7 @@ details.split[open]>.body,details.stopd[open]>.stop,.trd[open]>.trb{content-visi
 .sprph{border-radius:50%;display:flex;align-items:center;justify-content:center;container-type:size}
 .sprph span{font-weight:700;font-size:38cqh;line-height:1;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35)}
 .ty.bt,.sprph.bt span{color:#000;text-shadow:none}
-.s40{width:40px;height:40px}.s56{width:56px;height:56px}.s112{width:112px;height:112px}
+.s40{width:40px;height:40px}.s112{width:112px;height:112px}
 .ty{display:inline-block;padding:1px 7px;border-radius:10px;font-size:12px;font-weight:700;color:#fff;margin-right:3px;text-shadow:0 1px 1px rgba(0,0,0,.35);white-space:nowrap}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
 .card h3{margin:0 0 8px;font-size:15px;color:var(--acc)}
@@ -68,9 +64,6 @@ ul{margin:0;padding-left:18px}
 .chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:3px 6px 3px 10px;font-size:13px}
 .chip b{color:var(--mut);font-weight:600}
 .chip button{background:none;border:0;color:var(--mut);font-size:16px;line-height:1;padding:0 4px}
-#sugg{max-width:960px;margin:6px auto 0;display:none;background:var(--panel);border:1px solid var(--line);border-radius:10px;max-height:50vh;overflow:auto}
-#sugg div.s{padding:8px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
-#sugg div.s span.k{color:var(--mut);font-size:12px}
 .trn{font-weight:700;margin-bottom:6px}
 .dot{display:inline-block;width:8px;height:8px;border-radius:4px;margin-right:4px;vertical-align:middle}
 details.split{margin:8px 0}
@@ -83,7 +76,6 @@ details.split[open]>summary::after{content:' ▾'}
 .calc td,.calc th{padding:4px 4px;text-align:center}.calc .res{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
 .lvrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.lvrow span{background:var(--panel2);border-radius:8px;padding:4px 8px;font-size:13px;font-variant-numeric:tabular-nums}.lvrow span.cur{outline:2px solid var(--acc)}
 .itbl td:first-child{font-weight:600;width:38%}.itbl td{font-size:13px}.warn{color:#e0a030;font-size:11px;font-weight:700;margin-left:4px}
-.tabs{flex-wrap:wrap}.tabs a{padding:6px 9px;font-size:13px}
 .trk{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}.trk select{flex:1;min-width:150px}
 .tk-x{background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:8px;font-size:18px;line-height:1;padding:4px 10px}
 .tk-other{width:100%}.tk-other input{width:100%}.tk-opt{display:flex;align-items:center;gap:8px;padding:4px 6px;border-bottom:1px solid var(--line);cursor:pointer}
@@ -188,13 +180,11 @@ body:is([data-v=p],[data-v=m],[data-v=a],[data-v=tr]) header{display:none}
 /* In-page keyboard (Dex Viewer only; see IN-PAGE KEYBOARD in the script). The search box and number boxes are buttons
    there, and the keyboard is fixed to the bottom of the window, over the rail. */
 .disp{flex:1;min-width:140px;display:flex;align-items:center;gap:4px;min-height:var(--sbh);background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:0 0 0 8px;font:inherit;font-size:var(--sbf);text-align:left;cursor:text;touch-action:manipulation}
-.disp.open{border-color:var(--acc)}
 .disp .tx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .disp .tx:empty::before{content:attr(data-ph);color:var(--mut)}
-.disp.open .tx:empty::before{content:none}
-.disp.open .tx::after,.kq::after{content:'';display:inline-block;width:2px;height:18px;background:var(--acc);vertical-align:-3px;margin-left:1px;animation:kbblink 1s steps(1) infinite}
+.kq::after{content:'';display:inline-block;width:2px;height:18px;background:var(--acc);vertical-align:-3px;margin-left:1px;animation:kbblink 1s steps(1) infinite}
 @keyframes kbblink{50%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.disp.open .tx::after,.kq::after{animation:none}}
+@media (prefers-reduced-motion:reduce){.kq::after{animation:none}}
 .disp .x{flex:none;width:var(--sbh);height:var(--sbh);display:none;align-items:center;justify-content:center;border-radius:6px;color:var(--mut);font-size:18px}
 .disp.has .x{display:flex}
 .nv{min-width:44px;min-height:40px;padding:0 6px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:6px;font:inherit;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;cursor:text;touch-action:manipulation}
@@ -225,7 +215,6 @@ body:is([data-v=p],[data-v=m],[data-v=a],[data-v=tr]) header{display:none}
 .kpick{flex:none;display:flex;align-items:center;gap:4px;height:38px;padding:0 8px 0 2px;background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:8px;font:inherit;font-size:13px;cursor:pointer;touch-action:manipulation}
 body.kbopen main{padding-bottom:calc(var(--kbh,0px) + 16px)}
 body.kbopen #filters{display:none}
-body.kbopen #sugg{max-height:calc(100vh - var(--kbh,0px) - 64px)}
 .kb .r.r9{grid-template-columns:repeat(9,minmax(0,1fr));padding:0 5%}
 .kb .r.r3{grid-template-columns:minmax(0,1.5fr) repeat(7,minmax(0,1fr)) minmax(0,1.5fr)}
 .kb .r.rb{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}
@@ -377,11 +366,10 @@ table.lt td.n{vertical-align:top}table.lt .rt{display:block;white-space:nowrap}
 table.lrn td:nth-child(2){overflow-wrap:anywhere}
 /* The starter picker shrinks instead of running out of the tracker bar at 260 */
 .tkbar select{min-width:0;max-width:100%}.trk .st-pick{min-width:0}
-/* Trainers: battle format and version tags, partner drop-down, level caps (tag in the sticky place header, a line
-   under it with who and how many battles before it, the set switch in the header), per-place expand / collapse */
+/* Trainers: battle format and version tags, partner drop-down, count/cap button in the sticky place header,
+   cap line under it with who and how many battles before it, per-place expand / collapse */
 .tag.fmt{background:#24435e;color:#d4e8fb}
 .tag.moon{background:var(--panel2);color:var(--mut);font-style:italic;font-weight:500}
-.tag.capg{background:var(--acc);color:#1b1608;margin-left:6px}
 .capl{font-size:12px;color:var(--mut);margin:2px 0 6px;padding:3px 8px;border-radius:6px;background:var(--panel2)}
 .capl b{color:var(--acc)}
 .stop>.seg{margin:4px 0 6px}.stop>.seg button{min-height:26px;color:var(--mut)}

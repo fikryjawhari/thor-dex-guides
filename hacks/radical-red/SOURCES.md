@@ -15,6 +15,8 @@ supplied.
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py radical-red`).
+
 ```bash
 D=hacks/radical-red/.src
 python -I tools/mirror.py https://romhackdex.net/radical-red/ $D/romhackdex 4000 team-builder compare /moves/ /abilities/

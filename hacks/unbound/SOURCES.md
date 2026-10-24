@@ -14,6 +14,8 @@ missions, walkthrough and extras from [unboundwiki.com](https://unboundwiki.com/
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py unbound`).
+
 ```bash
 D=hacks/unbound/.src
 python -I tools/mirror.py https://romhackdex.net/unbound/ $D/romhackdex 4000 team-builder compare /moves/ /abilities/

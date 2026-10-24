@@ -1,0 +1,62 @@
+{
+  "sources": [
+    {
+      "name": "Documentation dates",
+      "type": "drive",
+      "id": "1uRbqLFS-WALuT_mGmcFoM_bvmfjKGanE",
+      "state": {
+        "1sSNtpBlwHDPZTAMBVKmfXFEs3GhMm5pgYNUys768Fs0": {
+          "name": "Meissa Moon Learnsets",
+          "modified": "2026-08-23"
+        },
+        "1qHNtIWLU_DyrTFxm6fbP3SBT_k1zTjfz_mYL_IfvLZo": {
+          "name": "Meissa Moon Mastersheet",
+          "modified": "2026-10-13"
+        },
+        "1t9TMlABXyW0s9idlNctVFmIY63v35QSC-LH-sp_29sc": {
+          "name": "Meissa Moon Move Changes",
+          "modified": "2025-12-23"
+        },
+        "1c0aDJ_nYZWHQffgQmt-crqsqa8MWj8UjqzdmGM_fc-0": {
+          "name": "Meissa Moon Pokemon Changes",
+          "modified": "2026-08-23"
+        },
+        "1a0ZHdUxJeBFu43Hq3ShLw71ZNm9M_btz-zBaPXrx4OY": {
+          "name": "Meissa Moon Teams",
+          "modified": "2026-06-01"
+        },
+        "1dt9UDUdiQbUyXlup-rkUIJ97NwWTUubv6Mxp_y-KGT8": {
+          "name": "Meissa Moon Wild Pokemon and Item Locations Documentation",
+          "modified": "2025-12-27"
+        }
+      },
+      "baseline_note": "Seeded current Drive dates 2026-10-24; original modified dates were not saved with the 2026-10-18 downloads."
+    },
+    {
+      "name": "Patch and changelog dates (romfs update signal)",
+      "type": "drive",
+      "id": "1UlUAqWY8wq0VbGPlDQTR7s3-Gnn0Pfkf",
+      "state": {
+        "1dTs_Ppx4bgb2tRa7FuyX0XT8a964pZao": {
+          "name": "Citra.zip",
+          "modified": "2024-05-23"
+        },
+        "1dY0xC71JWCLwJKuU_shOakncKSKWDf9BUc8qVBvFLpo": {
+          "name": "How to Install Meissa Moon",
+          "modified": "2025-02-03"
+        },
+        "1MhTTXXQThFFXtNMCfU3NQE5UCVMTrDtT": {
+          "name": "Meissa Moon v2.2.2.zip",
+          "modified": "2026-01-17"
+        }
+      },
+      "baseline_note": "Seeded current Drive dates 2026-10-24; original modified dates were not saved with the 2026-10-18 downloads."
+    },
+    {
+      "name": "3DS game data",
+      "type": "manual",
+      "note": "Drive changes signal updates; obtain the new patch and dump/extract the romfs by hand, never fetch a ROM.",
+      "state": null
+    }
+  ]
+}

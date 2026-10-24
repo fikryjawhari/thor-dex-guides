@@ -45,7 +45,7 @@ Also look for: a dex site's GitHub repo (EI's site is built from JSON in `src/da
 
 ## Workflow
 
-1. **Inventory** every source: sheets and tab names (including hidden and outdated duplicate tabs, which you skip), doc site data files, calc data, PDFs, walkthrough pages. Match the target version and documented source precedence (public game source code wins over docs).
+1. **Inventory** every source: sheets and tab names (including hidden and outdated duplicate tabs, which you skip), doc site data files, calc data, PDFs, walkthrough pages. Match the target version and documented source precedence (public game source code wins over docs); write its `watch.json` with the fetched state (`tools/README.md` → Source update checks).
 2. **Scope before building:** which species are obtainable (a locations or availability doc is the source of truth, not a dex site's wild data), what trainer data exists (IVs, EVs, natures, cell notes, relative levels), level-cap splits, item locations, the official tracker area order. Tell the user what you found and any gaps before the big build.
 3. **Extract** with the hack's `extract/build.py` (copy a built hack's layout) into `data.json`; `assemble.py`
    inlines it, the template and the sprites. Never hand-edit a built file.

@@ -1,0 +1,54 @@
+{
+  "sources": [
+    {
+      "name": "Documentation and patch dates",
+      "type": "drive",
+      "id": "1E07E8tvmdXuYeOJ51VDQwGqtN_qCEyH3",
+      "state": {
+        "1Dc8bjF7WQ76t5-TaXaZGhnZBhonOXH-C": {
+          "name": "Citra.zip",
+          "modified": "2024-06-22"
+        },
+        "1UDf0GRLHEN1jcyYBKSmXHKi1w-GrRuyCyEGArkP1Ed8": {
+          "name": "Move Changes",
+          "modified": "2026-05-11"
+        },
+        "1_NDFj-I_ptbXutXIOxnE_n6NftD4alCCFER0lmcp13o": {
+          "name": "Navy Sapphire - Gift Pokemon/Static Encounters",
+          "modified": "2026-04-13"
+        },
+        "1i5EN1VNerecaE86Lzks5k9NS3qPYany2tAf8oyjSdos": {
+          "name": "Navy Sapphire - Important Trainers",
+          "modified": "2026-08-23"
+        },
+        "1HuuuDCgtlSbDPaVBVInXfzdzOQ0vfniaYhK1zdNE7KM": {
+          "name": "Navy Sapphire - Pokemon Changes",
+          "modified": "2026-05-11"
+        },
+        "1PkiAaD622gU27Oa7yD9D3F0XKqzFsdQO_vGpvQREtM4": {
+          "name": "Navy Sapphire Installation Steps",
+          "modified": "2026-04-15"
+        },
+        "1nuOwFgRT_B_y3A7o_cQQo1I-Di5TxmFspbqXYkRkHGU": {
+          "name": "Navy Sapphire Mart Items, Item Changes and Locations",
+          "modified": "2026-05-11"
+        },
+        "1M--AdBJd7Ftvkpp-Fm98uwZOsa11NeOB": {
+          "name": "Navy Sapphire v2.1.5.zip",
+          "modified": "2026-05-11"
+        },
+        "1cRgYLf3usG-wfTT7OXZGiHeIjP9YleserLUJBNZpqok": {
+          "name": "Wild Pokemon and Route Trainer Pokemon",
+          "modified": "2026-08-23"
+        }
+      },
+      "baseline_note": "Seeded current Drive dates 2026-10-24; original modified dates were not saved with the 2026-10-18 downloads."
+    },
+    {
+      "name": "3DS game data",
+      "type": "manual",
+      "note": "Drive changes signal updates; obtain the new patch and dump/extract the romfs by hand, never fetch a ROM.",
+      "state": null
+    }
+  ]
+}

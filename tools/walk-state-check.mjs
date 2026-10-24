@@ -1,10 +1,17 @@
+// Walkthrough saved-state migration check (template/dex.js migrateWalkState), then a browser run per guide and mode.
+//   node tools/walk-state-check.mjs <old.html> <new.html> <legacy-stop-key>
+//   node tools/walk-state-check.mjs                  (each .tmp/state-before/<hack>.html against dist/<hack>.html, key 0.0)
+// <old.html> is an earlier build of the guide, <new.html> the build to check. <legacy-stop-key> is a stop's position
+// in the old layout whose key the new data still carries (e.g. 1.8 Eternal X, 1.0 Photonic Sun against a build from
+// before the stop keys were stamped; 0.0 always exists). The same build on both sides also passes (old keys that are
+// not positions are read as the positions of the old layout), so a fresh baseline build against dist/ works too.
+// The synthetic cases at the top run on template/dex.js; each guide's all-stop cases run its built migration.
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import vm from 'node:vm';
+import { startBrowser } from './browser.mjs';
 
 const source = readFileSync('template/dex.js', 'utf8');
 const migration = source.slice(source.indexOf('function migrateWalkState(){'), source.indexOf('\nmigrateWalkState();'));
@@ -75,63 +82,51 @@ assert(args.length === 0 || args.length === 3, 'Usage: node tools/walk-state-che
 const guides = args.length ? [args] : readdirSync('.tmp/state-before').filter(f => f.endsWith('.html')).map(f => f.slice(0, -5))
   .filter(hack => existsSync('dist/' + hack + '.html'))
   .map(hack => ['.tmp/state-before/' + hack + '.html', 'dist/' + hack + '.html', '0.0']);
-const chromePath = process.env.CHROME || ['C:/Program Files/Google/Chrome/Application/chrome.exe',
-  'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(existsSync);
-assert(chromePath, 'Chrome or Edge required');
 mkdirSync('.tmp/walk-state', { recursive: true });
-const profile = mkdtempSync(join(tmpdir(), 'walk-state-'));
-const chrome = spawn(chromePath, ['--headless=new', '--remote-debugging-port=0', `--user-data-dir=${profile}`,
-  '--allow-file-access-from-files', '--disable-ipc-flooding-protection', 'about:blank'], { stdio: 'ignore' });
 const sleep = milliseconds => new Promise(done => setTimeout(done, milliseconds));
-const pending = new Map();
-let socket, sequence = 0;
+const browser = await startBrowser({ profilePrefix: 'walk-state-', flags: ['--disable-ipc-flooding-protection'] });
+const { send } = browser;
 try {
-  for (let attempt = 0; attempt < 100; attempt++) {
-    try {
-      const port = readFileSync(join(profile, 'DevToolsActivePort'), 'utf8').split('\n')[0];
-      const version = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json();
-      socket = new WebSocket(version.webSocketDebuggerUrl);
-      await new Promise((done, fail) => { socket.onopen = done; socket.onerror = fail; });
-      break;
-    } catch { await sleep(100); }
-  }
-  assert(socket, 'Chrome connection');
-  socket.onmessage = event => {
-    const message = JSON.parse(event.data);
-    if (pending.has(message.id)) { pending.get(message.id)(message); pending.delete(message.id); }
-  };
-  const send = (method, params = {}, sessionId) => new Promise(done => {
-    const commandId = ++sequence;
-    pending.set(commandId, done);
-    socket.send(JSON.stringify({ id: commandId, method, params, sessionId }));
-  });
   for (const [before, after, legacyKey] of guides) for (const keyboard of [false, true]) {
     const readData = file => JSON.parse(readFileSync(file, 'utf8').match(/<script id="data" type="application\/json">([\s\S]*?)<\/script>/)[1]);
     const originalData = readData(before), updatedData = readData(after);
+    const updatedSource = readFileSync(after, 'utf8');
+    const updatedMigration = updatedSource.slice(updatedSource.indexOf('function migrateWalkState(){'), updatedSource.indexOf('\nmigrateWalkState();'));
+    assert(updatedMigration.startsWith('function migrateWalkState(){'), 'built migration function found');
     const identities=updatedData.WK.splits.flatMap((split,splitIndex)=>split.st.map((stop,stopIndex)=>stop.k));
     assert.equal(new Set(identities).size, identities.length, 'all walkthrough fragment identities must be unique');
+    // An unstamped save (no layout) names stops by the keys the new data carries, minus .fN (the old positions);
+    // a stamped save names them by position in its own layout. Parity of a source's split / stop number picks what was
+    // seeded, so the expectation holds when the old build's keys are not its positions (e.g. baseline against itself).
+    const legacyOf = (splitIndex, stopIndex, stop) => String(stop.k ?? (splitIndex + '.' + stopIndex)).replace(/\.f\d+$/, '');
     for (const stamped of [false, true]) {
       const baselineState = { c: {}, o: { gi: 1 }, x: { doc0: 1 }, s: {} };
-      originalData.WK.splits.forEach((split, splitIndex) => {
-        if (splitIndex % 2 === 0) baselineState.o[splitIndex] = 1;
-        split.st.forEach((stop, stopIndex) => {
-          const key = splitIndex + '.' + stopIndex;
-          baselineState.c[key + '.0'] = 1;
-          if (stopIndex % 2 === 0) baselineState.x[key] = 0;
-          for (const section of ['c', 'e', 'i', 't']) baselineState.s[key + '.' + section] = stopIndex % 2;
-        });
-      });
-      if (stamped) baselineState.layout = originalData.WK.splits.map((split, splitIndex) =>
+      const seedKey = key => {
+        const [seedSplit, seedStop] = key.split('.').map(Number);
+        if (seedSplit % 2 === 0) baselineState.o[seedSplit] = 1;
+        baselineState.c[key + '.0'] = 1;
+        if (seedStop % 2 === 0) baselineState.x[key] = 0;
+        for (const section of ['c', 'e', 'i', 't']) baselineState.s[key + '.' + section] = seedStop % 2;
+      };
+      originalData.WK.splits.forEach((split, splitIndex) => split.st.forEach((stop, stopIndex) => seedKey(splitIndex + '.' + stopIndex)));
+      if (!stamped) updatedData.WK.splits.forEach((split, splitIndex) => split.st.forEach((stop, stopIndex) => seedKey(legacyOf(splitIndex, stopIndex, stop))));
+      let previousLayout;
+      if (stamped) previousLayout = baselineState.layout = originalData.WK.splits.map((split, splitIndex) =>
         split.st.map((stop, stopIndex) => String(stop.k ?? (splitIndex + '.' + stopIndex)))); // the old build may have no keys
-      vm.runInNewContext('(' + migration + ')()', { ...context, WO: baselineState, D: updatedData });
+      vm.runInNewContext('(' + updatedMigration + ')()', { ...context, WO: baselineState, D: updatedData });
       updatedData.WK.splits.forEach((split, splitIndex) => split.st.forEach((stop, stopIndex) => {
         const position = splitIndex + '.' + stopIndex;
-        const oldKey = stop.k.replace(/\.f\d+$/, '');
-        const [oldSplit, oldStop] = oldKey.split('.').map(Number);
+        const legacy = legacyOf(splitIndex, stopIndex, stop);
+        const find = wanted => previousLayout.flatMap((oldSplit, oldSplitIndex) => oldSplit.flatMap((key, oldStopIndex) =>
+          key === wanted ? [oldSplitIndex + '.' + oldStopIndex] : []));
+        const sourceList = !stamped ? [legacy] : find(String(stop.k ?? position)).length ? find(String(stop.k ?? position)) : find(legacy);
+        const parts = sourceList.map(source => source.split('.').map(Number));
+        assert(parts.length, 'old position known for ' + position);
         assert.equal(baselineState.c[position + '.0'], 1, 'tick ' + position);
-        assert.equal(baselineState.x[position], oldStop % 2 === 0 ? 0 : undefined, 'stop ' + position);
-        for (const section of ['c', 'e', 'i', 't']) assert.equal(baselineState.s[position + '.' + section], oldStop % 2, 'section ' + position);
-        if (oldSplit % 2 === 0) assert.equal(baselineState.o[splitIndex], 1);
+        assert.equal(baselineState.x[position], parts.some(([, oldStop]) => oldStop % 2 === 0) ? 0 : undefined, 'stop ' + position);
+        for (const section of ['c', 'e', 'i', 't']) assert.equal(baselineState.s[position + '.' + section],
+          parts.some(([, oldStop]) => oldStop % 2 === 0) ? 0 : 1, 'section ' + position);
+        if (parts.some(([oldSplit]) => oldSplit % 2 === 0)) assert.equal(baselineState.o[splitIndex], 1);
       }));
       const preferences=new Map();
       baselineState.layout.forEach((split,splitIndex)=>split.forEach((key,stopIndex)=>{
@@ -142,7 +137,7 @@ try {
       }));
       const laterData=JSON.parse(JSON.stringify(updatedData));
       laterData.WK.splits[0].st.push({k:'unrelated-stop',s:[],tr:[]});
-      vm.runInNewContext('(' + migration + ')()', { ...context, WO: baselineState, D: laterData });
+      vm.runInNewContext('(' + updatedMigration + ')()', { ...context, WO: baselineState, D: laterData });
       baselineState.layout.forEach((split,splitIndex)=>split.forEach((key,stopIndex)=>{
         if(!preferences.has(key))return;
         const position=splitIndex+'.'+stopIndex,expected=preferences.get(key);
@@ -234,6 +229,5 @@ try {
     await send('Target.disposeBrowserContext', { browserContextId });
   }
 } finally {
-  socket?.close();
-  chrome.kill();
+  await browser.close();
 }

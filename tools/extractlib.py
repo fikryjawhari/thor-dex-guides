@@ -36,6 +36,14 @@ def report(*a):
     REPORT.append(' '.join(str(x) for x in a))
 
 
+def filter_species_links(species, kept_ids):
+    """Remove links to pruned species in place, preserving species and edge order."""
+    for entry in species:
+        for field in ('et', 'ef'):
+            entry[field] = [edge for edge in entry[field] if edge[1] in kept_ids]
+        entry['of'] = [target for target in entry['of'] if target in kept_ids]
+
+
 class Hack:
     """Paths of one hack (hacks/<name>/) and loaders for its raw sources."""
 

@@ -17,18 +17,10 @@ Ability slot 1/2/3 is ability 1/2/hidden; 0 means the game picks 1 or 2, shown a
 import json, os, struct, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from garc import entry, read_garc, text
+from garc import entry, read_archive, text
 
 BATTLE = {0: "Single", 1: "Double", 2: "Triple", 3: "Rotation", 4: "Horde"}
 GENDER = {0: "random", 1: "male", 2: "female"}
-
-
-def archive(roots, path):
-    for r in roots:
-        p = os.path.join(r, path)
-        if os.path.exists(p):
-            return read_garc(p)
-    raise FileNotFoundError(path)
 
 
 XY = dict(trdata="a/0/3/8", trpoke="a/0/4/0", text="a/0/7/4", personal="a/2/1/8", T=(21, 20, 80, 13, 96, 34))
@@ -40,10 +32,10 @@ def main(*args):
     romfs, out, *fallback = args[1:] if oras else args
     g = ORAS if oras else XY
     roots = [romfs, *fallback]
-    trdata = archive(roots, g["trdata"])
-    trpoke = archive(roots, g["trpoke"])
-    gt = archive(roots, g["text"])
-    personal = archive(roots, g["personal"])  # trainer and personal archives are never LZ11-compressed
+    trdata = read_archive(roots, g["trdata"])[0]
+    trpoke = read_archive(roots, g["trpoke"])[0]
+    gt = read_archive(roots, g["text"])[0]
+    personal = read_archive(roots, g["personal"])[0]  # trainer and personal archives are never LZ11-compressed
     T = lambda i: text(entry(gt[i]))
     names, classes, species, moves, items, abilities = (T(i) for i in g["T"])
 

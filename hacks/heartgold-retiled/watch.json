@@ -1,0 +1,76 @@
+{
+  "sources": [
+    {
+      "name": "Retiled guides and changed game tables",
+      "type": "github",
+      "repo": "Trinsic64/Heart-Gold-Retiled",
+      "ref": "HEAD",
+      "paths": [
+        "Docs/Guides/Evolution-Guide.md",
+        "Docs/Guides/HG-Engine-Features.md",
+        "Docs/Guides/Item-Locations.md",
+        "Docs/Guides/README.md",
+        "Docs/Guides/Trainer-Guide.md",
+        "Docs/Guides/Walkthrough.md",
+        "Docs/Guides/Wild-Encounter-Guide.md",
+        "HG-Engine/data/Trainers.c",
+        "HG-Engine/data/Encounters.c",
+        "HG-Engine/data/Evolutions.c",
+        "HG-Engine/src/field/mart.c"
+      ],
+      "state": {
+        "sha": "8ce1a5033d865baa866c2fe86cd4ea608357f08c",
+        "files": {
+          "Docs/Guides/Evolution-Guide.md": "d1de5395a95d1d29e0545b67bf0a0429e5d26d11",
+          "Docs/Guides/HG-Engine-Features.md": "62ea8da37f6687b1952f9f93644778b42f51289f",
+          "Docs/Guides/Item-Locations.md": "d3abf39681c98512b0ae9e6614bafcb9647fedfc",
+          "Docs/Guides/README.md": "716473c16342a7799cbbc55e456c2675b9b200ac",
+          "Docs/Guides/Trainer-Guide.md": "310e9c92427bc5098a7fe99bd65d5bfa6f0a6740",
+          "Docs/Guides/Walkthrough.md": "08b9f530c5ba38f5eacb2fcddf551c2a21460244",
+          "Docs/Guides/Wild-Encounter-Guide.md": "15ed3ad8aeff58883d3e13d87ce27c9ef0f228e4",
+          "HG-Engine/data/Encounters.c": "c5c03f455ea923d00942acf2d90ca0a088da76d4",
+          "HG-Engine/data/Evolutions.c": "677cded109b4ea4d82a4ceef9e06f6326787e2c3",
+          "HG-Engine/data/Trainers.c": "a579ec242820e0d714ef387e42120879e3a8938a",
+          "HG-Engine/src/field/mart.c": "2ce8436f5d50fbcf0d21093c6a59c0117a047cc2"
+        }
+      }
+    },
+    {
+      "name": "Release version",
+      "type": "version",
+      "url": "https://raw.githubusercontent.com/Trinsic64/Heart-Gold-Retiled/main/README.md",
+      "pattern": "\\[v([0-9.]+) player-guide index\\]",
+      "state": "6.12.1"
+    },
+    {
+      "name": "Release-matched upstream engine",
+      "type": "github",
+      "repo": "BluRosie/hg-engine",
+      "ref": "dcbe17a7fbcd447ab4258f6b8dbe5ce8659e5cd1",
+      "paths": [
+        "data/Species.c",
+        "data/HiddenAbilityTable.c",
+        "data/learnsets/learnsets.json",
+        "data/Moves.c",
+        "data/text/720.txt",
+        "data/text/722.txt"
+      ],
+      "release": {
+        "url": "https://raw.githubusercontent.com/Trinsic64/Heart-Gold-Retiled/main/README.md",
+        "pattern": "\\[v([0-9.]+) player-guide index\\]",
+        "version": "6.12.1"
+      },
+      "state": {
+        "sha": "dcbe17a7fbcd447ab4258f6b8dbe5ce8659e5cd1",
+        "files": {
+          "data/Species.c": "5825c61405a2496429cc7c22074337b8ecf32644",
+          "data/HiddenAbilityTable.c": "65eb2f776f6596813413e98746482060eb637354",
+          "data/learnsets/learnsets.json": "67239b39435abcac1b079922c5a6a28980e8b8e7",
+          "data/Moves.c": "9d4119d481b9855babab61f2f1a5e7e7f94a129a",
+          "data/text/720.txt": "7e0cfc15a780eb6e2fd08d1e8692c83e357d74dc",
+          "data/text/722.txt": "c0589d76355a504fe30e1bfdd7f043ccecefd819"
+        }
+      }
+    }
+  ]
+}

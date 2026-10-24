@@ -20,6 +20,8 @@ Fetched 2026-10-18 (v1.3.0) from the Documentation folder in
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py renegade-platinum`).
+
 ```bash
 python -I tools/drive_ls.py 1YZl5iShTdRwQIQ7FO1hAJaYBryWxxHwE hacks/renegade-platinum/.src
 D=hacks/renegade-platinum/.src/romhackdex

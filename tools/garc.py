@@ -4,7 +4,16 @@ Ported from pk3DS (GARC.cs, LZSS.cs, Mini.cs, TextFile.cs). Import it, or run it
   python -I garc.py ls <garc>                  # entry count and per-entry sizes
   python -I garc.py text <garc> <file#>        # print one text file from a text GARC, line = ID
 """
-import struct, sys
+import os, struct, sys
+
+
+def read_archive(roots, path):
+    """Return raw GARC entries and the first root containing the archive."""
+    for root in roots:
+        archive_path = os.path.join(root, path)
+        if os.path.exists(archive_path):
+            return read_garc(archive_path), root
+    raise FileNotFoundError(path)
 
 
 def read_garc(path):

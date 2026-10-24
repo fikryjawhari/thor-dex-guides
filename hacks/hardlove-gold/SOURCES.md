@@ -31,6 +31,8 @@ sets, commit `4c171c8d91`), so those sets were patched into the guide on 2026-10
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py hardlove-gold`).
+
 ```bash
 D=hacks/hardlove-gold/.src
 SHA=f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b   # 0.8.3; update to the commit of the release you want

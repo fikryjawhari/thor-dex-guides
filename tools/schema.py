@@ -8,7 +8,6 @@ every hack's data.json, so the four files look like one template with only the d
 What the template reads is in hacks/emerald-imperium/notes.md (Data schema). A key that is not in ORDER raises: add it
 there (and to the notes) when a hack gets a new field.
 """
-import re
 
 # Canonical key order per object kind. Optional fields (omitted when empty) are marked in the notes, not here.
 ORDER = {

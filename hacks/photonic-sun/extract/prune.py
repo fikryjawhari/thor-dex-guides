@@ -1,5 +1,6 @@
 """Species kept in P: obtainable species and forms, the species shown trainers use, and their Megas."""
 from common import report
+from extractlib import filter_species_links
 
 
 def build(data):
@@ -11,10 +12,7 @@ def build(data):
     keep = obtainable | used | {entry['id'] for entry in pokemon if entry['g'] == 1 and entry['dex'] in obtainable_dex}
     removed = [entry['id'] for entry in pokemon if entry['id'] not in keep]
     data['P'] = [entry for entry in pokemon if entry['id'] in keep]
-    for entry in data['P']:
-        entry['of'] = [other for other in entry['of'] if other in keep]
-        for direction in ('ef', 'et'):
-            entry[direction] = [edge for edge in entry[direction] if edge[1] in keep]
+    filter_species_links(data['P'], keep)
     report('species pruned:', len(removed), ', '.join(removed))
     report('species retained:', len(data['P']), 'obtainable:', len(obtainable), 'trainer-only:',
            sum(entry['g'] == 3 for entry in data['P']), 'Megas/Primals:', sum(entry['g'] == 1 for entry in data['P']))

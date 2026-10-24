@@ -8,7 +8,8 @@ after the stop of the area before them (in the Locations order). Items are filed
 location text (items.py's place list for rows with Found / Shop lines); the rest are listed in Guide info. Game docs are the hack's own change docs and changelog.
 """
 import os, re
-from common import SRC, TXT, norm, report, split_name
+from common import SRC, TXT, report, split_name
+from ctrguide import walk_same as same, walk_stops
 
 ALIAS = {'Starter': ['Route 1'], 'Routes 15 and 16': ['Route 15', 'Route 16'],"Trainers' School": ["Trainer's School"],
          'Altar of the Sunne': ['Altar of the Sunne'], 'Ultra Space Wilds': ['Ultra Warp Ride']}
@@ -28,24 +29,10 @@ DOCS = [('Evolution Changes', 'Evolution Changes'), ('Type Changes', 'Type Chang
         ('Totem Battles', 'Totem Battles'), ('How to Enable Mega Evolution', 'How to Enable Mega Evolution')]
 
 
-def key(s):
-    return norm(re.sub(r'\s*\(.*?\)', '', s))
-
-
-def same(area, stop):
-    """Names match whole, or one starts the other (not "Route 1" for "Route 10")."""
-    a, s = key(area), key(stop)
-    if a == s:
-        return True
-    short, long_ = sorted((a, s), key=len)
-    return len(short) > 5 and long_.startswith(short) and not long_[len(short)].isdigit()
-
-
 def walkthrough_splits(data, old_splits):
     caps, targets = data['_cap_splits'], data['_trainer_splits']
     stop_order = {(part, name): index for index, (part, name, _) in enumerate(data['_stops'])}
     out = [{'n': group['n'], 'cap': group['cap'], 'note': '', 'st': []} for group in data['TR']['g']]
-    legacy = {}
     previous_at = 0
     for old_split, split in enumerate(old_splits):
         for old_stop, stop in enumerate(split['st']):
@@ -69,45 +56,13 @@ def walkthrough_splits(data, old_splits):
                 copy['tr'] = buckets[destination]
                 if fragment:
                     copy.update(a=[], it=[], note='')
-                new_key = f'{destination}.{len(out[destination]["st"])}'
-                legacy[new_key] = old_key
                 out[destination]['st'].append(copy)
     return out
 
 
 def build(D):
-    AR, stops = D['AR'], D['_stops']
-    st = [{'part': p, 'n': n, 'a': [], 's': [], 'note': '', 'it': [], 'tr': tr} for p, n, tr in stops]
     TRN = {t['k']: t['n'] for g in D['TR']['g'] for s in g['sec'] for t in s['tr']}
-    for part, n, first, new in NEW_STOP:
-        j = next(j for j, s in enumerate(st) if s['part'] == part and s['n'] == n)
-        k = next(k for k, t in enumerate(st[j]['tr']) if TRN[t] == first)
-        st.insert(j + 1, {'part': part, 'n': new, 'a': [], 's': [], 'note': '', 'it': [], 'tr': st[j]['tr'][k:]})
-        st[j]['tr'] = st[j]['tr'][:k]
-    where = {}
-    for i, A in enumerate(AR):
-        names = [A['n']] + ALIAS.get(A['n'], [])
-        if A['n'] in PLACE:
-            part, n = PLACE[A['n']]
-            hit = next(j for j, s in enumerate(st) if s['part'] == part and s['n'] == n)
-        else:
-            hit = next((j for j, s in enumerate(st) if any(same(x, s['n']) for x in names)), None)
-        if hit is not None:
-            st[hit]['a'].append(i)
-            where[i] = hit
-    # Areas with no stop: "on the way", after the stop holding the area before them
-    extra = {}
-    for i, A in enumerate(AR):
-        if i in where or A.get('ns'):
-            continue
-        prev = max((where[j] for j in range(i) if j in where), default=0)
-        extra.setdefault(prev, []).append(i)
-    out = []
-    for j, s in enumerate(st):
-        out.append(s)
-        for i in extra.get(j, []):
-            out.append({'part': s['part'], 'n': AR[i]['n'], 'a': [i], 's': [], 'note': '', 'it': [], 'tr': [], 'x': 1})
-    report('walkthrough: on the way stops', sum(len(v) for v in extra.values()), ':', ', '.join(AR[i]['n'] for v in extra.values() for i in v))
+    out = walk_stops(D['AR'], D['_stops'], TRN, aliases=ALIAS, placements=PLACE, new_stops=NEW_STOP)
     # Items
     np = []
     for sec in D['IT']:

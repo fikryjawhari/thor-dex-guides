@@ -17,6 +17,8 @@ from JSON data files. We keep the JSON.
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py soulgold`).
+
 ```bash
 mkdir -p hacks/soulgold/.src/data
 for f in abilities ability-index ability-usage encounters guides items machines move-index moves species-meta species trainers ui; do

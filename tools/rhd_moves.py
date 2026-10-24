@@ -2,8 +2,11 @@
 Usage: python -I rhd_moves.py <moves/index.html> <hack-slug> <out.json>
 Reads the index (name, type, category, power, accuracy, PP), fetches each move's own page and keeps only the
 numbers and the description: the pages themselves (~350 KB each, mostly the learner list) are not saved."""
-import html, json, re, sys, time, urllib.request
+import html, json, os, re, sys
 from concurrent.futures import ThreadPoolExecutor
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from source_http import fetch_bytes
 
 index, slug, out = sys.argv[1:4]
 
@@ -13,15 +16,9 @@ def clean(s):
 
 
 def fetch(url):
-    for attempt in range(4):
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept-Encoding": "identity"})
-            return urllib.request.urlopen(req, timeout=60).read().decode("utf-8", "replace")
-        except Exception as e:
-            err = e
-            time.sleep(2 + 2 * attempt)
-    print("FAIL", url, err, flush=True)
-    return None
+    data = fetch_bytes(url, headers={"User-Agent": "Mozilla/5.0", "Accept-Encoding": "identity"},
+                       timeout=60, attempts=4, delay=lambda attempt: 2 + 2 * attempt)
+    return data.decode("utf-8", "replace") if data is not None else None
 
 
 def num(s):

@@ -17,6 +17,7 @@ the walkthrough's stops, so order(D) runs after walk.py; the other boxes are A t
 import glob, os, re
 from collections import OrderedDict
 from common import BULBA, load, report, fix, text
+from wikitext import split_args
 
 # ---- the doc (Item Changes _ Locations.pdf), transcribed ------------------------------------------------------------
 TM_WAS = {'TM48': 'Round', 'TM60': 'Quash', 'TM49': 'Echoed Voice', 'TM58': 'Sky Drop', 'TM100': 'Confide',
@@ -123,20 +124,6 @@ def templates(t, starts):
         i = k
 
 
-def split_args(s):
-    out, d, cur, i = [], 0, '', 0
-    while i < len(s):
-        two = s[i:i + 2]
-        if two in ('{{', '[['):
-            d += 1; cur += two; i += 2
-        elif two in ('}}', ']]'):
-            d -= 1; cur += two; i += 2
-        elif s[i] == '|' and d == 0:
-            out.append(cur); cur = ''; i += 1
-        else:
-            cur += s[i]; i += 1
-    out.append(cur)
-    return out
 
 
 def args(s):
