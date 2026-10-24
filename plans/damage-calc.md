@@ -432,11 +432,20 @@ save headless and compares the party / boxes: the done-check for a reader sessio
 1. The framework (above): engine, base profiles, page, import pipeline with the test reader, checks, and the docs a later
    session needs (CLAUDE.md → Making a new guide step, a reference for "calc data for a hack" and "a save reader for a
    family", template/README.md, extractlib docstring).
-2. EI's calc data (mechanics, in-game test); Gen 3 save reader and EI's ID tables, tested against the user's save.
-3. Viewer file picker (app repo).
-4. Gen 4 reader (Hardlove Gold), then Gen 5 (BB2R) when its guide is built.
-5. Gen 6/7 reader (Photonic Sun, then Eternal X).
-6. Each new guide's extract step writes its ID tables and `cfg.calc` from then on (add it to CLAUDE.md → Making a new guide and the skill).
+2. **Mechanics pass for the four built guides** (decided with the user 2026-10-25), one Sol agent per hack, one at a time,
+   after step 1's engine is merged: Emerald Imperium, Hardlove Gold, Photonic Sun, Eternal X. Each agent finds what
+   hzla's calc (or the hack's own dedicated calc) sets for that hack (mechanics gen, type chart, crit, changed abilities /
+   items / moves, any profile), checks it against the hack's docs and source (expansion `battle.h`, hg-engine's changes,
+   the 3DS game data), writes the hack's `cfg.calc` (base + `over`) and a notes.md line on how it was checked, then runs
+   a fixed matchup list through our engine (`tools/calc/run.mjs`) and through hzla's calc run locally, and the 16 rolls
+   must match. hzla's code is never copied or shipped (Licenses): his settings are facts, his calc is a local oracle.
+   The in-game test (How to check a hack's mechanics, 4) only where his calc and the docs disagree.
+   Every guide built after this does the same as part of its setup (CLAUDE.md → Making a new guide).
+3. Gen 3 save reader and EI's ID tables, tested against the user's save.
+4. Viewer file picker (app repo).
+5. Gen 4 reader (Hardlove Gold), then Gen 5 (BB2R) when its guide is built.
+6. Gen 6/7 reader (Photonic Sun, then Eternal X).
+7. Each new guide's extract step writes its ID tables (and its `cfg.calc`, step 2) from then on (add it to CLAUDE.md → Making a new guide and the skill).
 
 ## Not doing
 
