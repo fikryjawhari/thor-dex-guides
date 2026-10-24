@@ -251,6 +251,10 @@ SoulGold; CFRU Radical Red + Unbound; NDS Renegade Platinum, BB2 Redux, HG Retil
 into `main` for these branches, each after its gates pass. Pushes still need a yes each time.** New-hack data
 collection (Sol after the Codex reset) and the calc (its own decide session, `worktree-damage-calc`) are out of scope.
 
+**Models from the Codex reset (user, 2026-10-24):** every new worker on gpt-6.1-sol again (unit I, the update
+checker, any fix rounds); audits (H and later ones) on Haiku. G and the text-zoom fix finish on Sonnet as launched.
+No new worker before the reset (~15 min timer started at the request).
+
 **Order agreed 2026-10-24** (Codex usage ~18% before F, ~6% per unit so far; Claude ~44%): F and G on Codex
 (gpt-6.1-sol), H on Haiku, merge, then I on Sonnet. If G runs out partway, recover from its commits and finish the
 small remainder on Sonnet (section 4).
