@@ -442,7 +442,8 @@ save headless and compares the party / boxes: the done-check for a reader sessio
    must match. hzla's code is never copied or shipped (Licenses): his settings are facts, his calc is a local oracle.
    The in-game test (How to check a hack's mechanics, 4) only where his calc and the docs disagree.
    Every guide built after this does the same as part of its setup (CLAUDE.md → Making a new guide).
-   This first pass is good enough to ship; each hack then gets a refinement pass in its own session (user, 2026-10-25).
+   **Done in the build session: Emerald Imperium only.** Hardlove Gold, Photonic Sun and Eternal X each get their own
+   session later (user, 2026-10-25), starting from Calc references per hack below. This first pass is good enough to ship; each hack then gets a refinement pass in its own session (user, 2026-10-25).
    References per hack: "Calc references per hack" below.
 3. Gen 3 save reader and EI's ID tables, tested against the user's save.
 4. Viewer file picker (app repo).
