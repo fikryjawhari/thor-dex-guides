@@ -20,6 +20,8 @@ Fetched 2026-10-18 (v1.4.1) from the Documentation folder in
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py blaze-black-2-redux`).
+
 ```bash
 python -I tools/drive_ls.py 1wVz7qTdZh8kn0Du9bmMKuXlrQRBeF01d hacks/blaze-black-2-redux/.src
 D=hacks/blaze-black-2-redux/.src/romhackdex; S=blaze-black-2-volt-white-2-redux

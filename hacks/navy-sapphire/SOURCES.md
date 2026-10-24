@@ -16,6 +16,8 @@ read through the Wayback Machine (see `tools/README.md`).
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py navy-sapphire`).
+
 ```bash
 python -I tools/drive_ls.py 1E07E8tvmdXuYeOJ51VDQwGqtN_qCEyH3 hacks/navy-sapphire/.src
 ```

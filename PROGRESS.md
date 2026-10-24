@@ -37,7 +37,6 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
 5. **Skill:** the repo copy (`.agents/skills/rom-hack-offline-dex/`) is current; the claude.ai account skill Claude
    sessions load is the 2026-10-18 hand-build version. Re-upload the repo copy (zip with forward-slash paths).
 6. **Code cleanup** (`plans/code-cleanup.md`): a quality pass (dead code, repeated logic into shared helpers), for a Codex session. Phase 1 is a read-only findings list.
-7. **Update checker** (`plans/update-checker.md`): one command reporting which hacks' sources changed. Run by hand.
 
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 

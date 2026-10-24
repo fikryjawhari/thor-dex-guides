@@ -22,6 +22,8 @@ Fetched 2026-10-18 (v1.3 / 1.3.1) from the official docs folder linked from [eme
 
 ## Re-fetch
 
+Source updates: `watch.json` (`uv run python -I tools/check_updates.py emerald-imperium`).
+
 ```bash
 D=hacks/emerald-imperium/.src
 python -I tools/drive_ls.py 1auRPBg8Ts50NByIskMy6b2XHnmNqIKtV $D

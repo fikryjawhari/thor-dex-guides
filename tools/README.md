@@ -18,6 +18,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `drive_ls.py <folder-id> [out-dir]` | Lists a public Google Drive folder; with `out-dir`, downloads every file in it (Sheets as .xlsx, Docs as .txt, other files as-is). Skips subfolders and archives (.zip etc.). |
 | `mirror.py <start-url> <out-dir> [max-pages] [skip ...]` | Mirrors a static site's pages under the start URL's folder. URLs containing any `skip` substring are not followed. |
 | `source_http.py` | Shared retrying byte reads for `mirror.py` and `rhd_moves.py`; each caller keeps its headers, timeout and delay policy. |
+| `check_updates.py [hack]` | Reports source changes against each hack's `watch.json`; `--accept <hack>` saves checked state after updating the guide/sources. No rebuilds or patch downloads. |
 | `wp_dump.py <site> <out.json> [types ...]` | Dumps a WordPress site (pages and custom post types) through its REST API into one JSON file. |
 | `wiki_dump.py <api.php> <out-dir>` | Dumps every page of a MediaWiki as wikitext. Not used by any hack right now. |
 | `rp_item_locations.py` | Builds Renegade Platinum's `item-locations.csv` from its docs plus vanilla Platinum (pret decomp). |
@@ -64,8 +65,7 @@ One-time setup per PC (serve keeps running across reboots):
 
 When each hack's sources were compiled, and the version they cover. **Whenever a hack's sources are fetched again,
 update its row here and the "Fetched <date> (<version>)" line at the top of its `SOURCES.md`.** To spot an update,
-compare the hack's current version (its thread, Drive file names or changelog) with this table; for repos, compare
-`curl -s "https://api.github.com/repos/<repo>/commits?per_page=1"` with the commit pinned in `SOURCES.md`.
+run `uv run python -I tools/check_updates.py [hack]`; its pins and coverage are described below.
 
 | Hack | Version | Sources compiled | Guide built | Where to look for updates |
 | --- | --- | --- | --- | --- |
@@ -81,6 +81,49 @@ compare the hack's current version (its thread, Drive file names or changelog) w
 | Renegade Platinum | v1.3.0 | 2026-10-18 (docs), 2026-10-19 (RomHackDex) | – | Drayano's Drive (Documentation folder), RomHackDex |
 | SoulGold | no version number | 2026-10-18, species details 2026-10-19 | – | eemeliri.github.io/soulgold data files |
 | Unbound | – | 2026-10-18, move details 2026-10-19 | – | RomHackDex, unboundwiki.com; the three trainer sheets |
+
+## Source update checks
+
+`uv run python -I tools/check_updates.py` checks all twelve hacks; give one hack name for a smaller run.
+Exit 0 means unchanged, 1 changed, 2 a failed check. Manual entries always print a reminder: they are not checked.
+After updating the guide or compiled sources, run `uv run python -I tools/check_updates.py --accept <hack>`.
+Acceptance is atomic per hack and refused if any automatic check fails. It does not update this source log,
+the fetched version in `SOURCES.md`, the guide, or local baseline files. Review those separately.
+
+Each `hacks/<hack>/watch.json` has a `sources` list. Every entry has `name`, `type`, `state` and its configuration:
+
+| Type | Configuration | State / report |
+| --- | --- | --- |
+| `github` | `repo`, `ref`, `paths` (exact files or directory prefixes ending `/`); optional `release` guard | Commit SHA and watched blob SHAs; exact watched-file text diffs, including additions/deletions. Unrelated files and commit-only changes are ignored. |
+| `drive` | `id` of a folder; optional `ids` or `exclude_ids` | File IDs, names and modified dates from `embeddedfolderview`. Includes patch archives; skips subfolders (watch their IDs separately). |
+| `sheet` | `id`; optional `baseline` xlsx path relative to the hack | Hash per tab of cell values and cell notes, using Hardlove's existing stdlib xlsx reader. Shows cell diffs if a local baseline tab matches the saved hash, otherwise names the changed tabs. |
+| `version` | `url`, regex `pattern` with one capturing group; optional `select: "latest"` for numeric dotted versions | Version string. No match or ambiguous matches fail instead of silently accepting. |
+| `page` | `url`; optional `baseline` path relative to the hack | Normalised page-text hash; text diff when a matching local baseline is present. A map state checks every relative page in that map with six workers. `projection: "move-details"` checks only RomHackDex move priority/description, matching `rhd_moves.py`. |
+| `sitemap` | `url`; optional URL `prefix` | Each URL's lastmod. Without lastmod it checks membership only, explicitly labelled in state. |
+| `manual` | One-line `note` | Reminder only, never a claim of unchanged data. |
+
+Initial states use fetched files and published pins; `baseline_note` marks exceptions seeded from current metadata
+on 2026-10-24 (Drive dates and sitemaps were not retained with the original downloads). No downloaded document text
+is committed. Sheet hashes include hidden tabs and notes, but ignore formatting and ZIP metadata: two exports of
+the same Sheet can have different bytes. Update local baseline files only after checking the reported diff.
+
+GitHub allows 60 unauthenticated requests/hour. A full check uses fourteen API requests (two per repository/ref),
+plus raw-file requests for diffs. A run caps itself at fifty; that is not an hourly allowance, so count earlier
+runs too. Recursive trees avoid one request per watched path and the compare API's 300-file truncation; a truncated
+tree fails loudly. No token is required. No release tags are assumed.
+
+Hardlove watches its reviewed 0.8.3 release commit, not `beta_hardlove` head. Its Drive patch filenames guard that
+pin. A new version blocks accepting the source until the release commit is matched by UTC date and changelog;
+then update `ref` and `release.version`. Retiled's upstream engine is likewise release-matched, never upstream
+main; its own guides/tables may be checked on head. Code wins over docs; docs' Drive dates independently signal
+trainer order/split/location changes, since code and docs can update at different times.
+
+RomHackDex's sitemap has no lastmod on most data pages. The checks also hash every mirrored HTML page and compare
+move priority/description against the fetched `moves.json`; this downloads thousands of pages and can take minutes.
+Sitemap additions/removals signal when to re-mirror and add/drop content hashes. Sitemap timestamps are supplied by
+the publisher, not a guarantee. Unbound's wiki uses its page/wiki sitemap index dates. Drive dates are day-resolution
+(today's clock is normalised to the date); edits on the same day can be missed. 3DS patch archives are watched in
+their actual folders, but a changed patch still needs manual romfs extraction, not an automatic ROM download.
 
 ## Timing `domcompare.mjs` (choosing `--jobs`)
 

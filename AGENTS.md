@@ -42,7 +42,7 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - `sprites/` the shared sprite set (pokeemerald-expansion, 64×64, `png/<key>.png`; README has the key scheme,
   SOURCES.md the pin and credits).
 - `tools/` source fetchers, extract helpers and checks (README), `mockup/` (the Thor frame and the page behaviour
-  checks). `plans/` work not done yet only (now: the damage calc, the code cleanup, the update checker).
+  checks). `plans/` work not done yet only (now: the damage calc and the code cleanup).
 - `dist/` built output (git-ignored); the Pages workflow builds and deploys it.
 
 ## Commands
@@ -54,7 +54,7 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - In Git Bash, prefix commands that take `/`-paths as arguments with `MSYS_NO_PATHCONV=1`.
 
 ## Making a new guide
-1. Fetch the sources into `hacks/<hack>/.src/` with its `SOURCES.md` (3DS hacks also need the user's vanilla romfs
+1. Fetch the sources into `hacks/<hack>/.src/` with its `SOURCES.md`; write its `watch.json` (3DS hacks also need the user's vanilla romfs
    dumps: `tools/README.md` → 3DS game data). Update its "Fetched" line and the source log in `tools/README.md`.
 2. Write `hacks/<hack>/extract/` scripts (the shared layout: `tools/extractlib.py` docstring; copy a built hack's) that
    turn them into `hacks/<hack>/data.json`, in the schema in `hacks/emerald-imperium/notes.md` (Data schema).
