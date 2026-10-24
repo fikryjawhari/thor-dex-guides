@@ -13,6 +13,7 @@ Rival and other starter-dependent teams: Bulbapedia's "If the player chose X" (P
 import json, os, re
 from collections import defaultdict
 from common import BULBA, load, norm, report, fix, split_name
+from wikitext import split_args
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon Ultra Sun and Ultra Moon-Part {}.wiki')
 # Boxes: (walkthrough parts, name). Aether Paradise's second visit (Part 21) is its own box; the first (Part 14, no
@@ -73,21 +74,6 @@ TY = ['Fighting', 'Flying', 'Poison', 'Ground', 'Rock', 'Bug', 'Ghost', 'Steel',
       'Psychic', 'Ice', 'Dragon', 'Dark']
 
 
-def split_top(s):
-    out, cur, d = [], '', 0
-    i = 0
-    while i < len(s):
-        two = s[i:i + 2]
-        if two in ('{{', '[['):
-            d += 1; cur += two; i += 2; continue
-        if two in ('}}', ']]'):
-            d -= 1; cur += two; i += 2; continue
-        if s[i] == '|' and d == 0:
-            out.append(cur); cur = ''
-        else:
-            cur += s[i]
-        i += 1
-    return out + [cur]
 
 
 def clean(s):
@@ -141,7 +127,7 @@ def events():
                 continue
             sub = (h3 + (' · ' + h4 if h4 else '')) if n in SUB else ''
             if m.group(6):
-                c = split_top(m.group(7)[:-2] if m.group(7).endswith('}}') else m.group(7))
+                c = split_args(m.group(7)[:-2] if m.group(7).endswith('}}') else m.group(7))
                 cond = clean(c[1]) if m.group(6) == 'div' and len(c) > 1 else ''
             elif m.group(3):
                 es = entry_events(m.group(3), n, h2)
@@ -168,7 +154,7 @@ def events():
 
 
 def entry_events(raw, part, place):
-    p = [x for x in split_top(raw) if not re.match(r'^\w+=', x)]
+    p = [x for x in split_args(raw) if not re.match(r'^\w+=', x)]
     if len(p) < 5:
         return []
     st = starter_of(p[3])

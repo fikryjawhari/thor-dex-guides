@@ -17,6 +17,7 @@ the boy, Calem: you fight Serena; "f" = the girl, Serena: you fight Calem).
 import json, os, re
 from collections import defaultdict
 from common import BULBA, load, norm, report, fix, split_name
+from wikitext import split_args
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon X and Y-Part {}.wiki')
 NPARTS = 17
@@ -53,21 +54,6 @@ HOTEL = ((280, 298), (440, 458))  # Owner / Waitress / Garcon / Furisode Girl / 
 MAISON = 614  # nameless trainers from this id up: the Battle Maison's pool
 
 
-def split_top(s):
-    out, cur, d = [], '', 0
-    i = 0
-    while i < len(s):
-        two = s[i:i + 2]
-        if two in ('{{', '[['):
-            d += 1; cur += two; i += 2; continue
-        if two in ('}}', ']]'):
-            d -= 1; cur += two; i += 2; continue
-        if s[i] == '|' and d == 0:
-            out.append(cur); cur = ''
-        else:
-            cur += s[i]
-        i += 1
-    return out + [cur]
 
 
 def clean(s):
@@ -92,7 +78,7 @@ def starter_of(text):
 
 def entry_events(raw, part, place):
     """A Trainerentry: |game=6|image|class|name|prize|count|(dex|species|gender|level|item) x count."""
-    p = [x for x in split_top(raw) if not re.match(r'^\w+=', x)]
+    p = [x for x in split_args(raw) if not re.match(r'^\w+=', x)]
     # location pages put the image first or after game=6; the image is the part with ".png"
     img = [i for i, x in enumerate(p) if '.png' in x]
     if img:
