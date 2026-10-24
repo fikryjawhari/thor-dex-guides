@@ -9,6 +9,11 @@ Sprites: each guide's #spr maps its own species ids to data URIs. Every species 
 the shared set's sprites/png/<key>.png (sprites/README.md). A hack's sprites.json is only a supplement, keyed by
 species id or sprite key, for forms the shared set lacks; an entry there wins. Only the sprites a guide uses are
 inlined, each cropped to its visible area. Species with no sprite from either are reported, never silently dropped.
+
+Damage calc: only a hack whose cfg has `calc` gets it. Its profile is the base template/calc/profiles/<base>.json with
+the hack's own keys laid over it (dicts merge key by key, anything else replaces), written to the page as cfg.calc. The
+page then also inlines template/calc/engine.js, the save reader template/calc/readers/<save>.js when the profile names
+one, template/calc.js after dex.js and template/calc.css after dex.css. Guides without `calc` are built as before.
 """
 import base64, html, json, os, sys
 
@@ -52,11 +57,39 @@ def cropped(uri):
         return uri
 
 
+def merged(base, over):
+    """`over` laid over `base`: dicts merge key by key, anything else replaces."""
+    out = dict(base)
+    for k, v in over.items():
+        out[k] = merged(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
+    return out
+
+
+def calc_profile(c):
+    """A hack's cfg.calc resolved against its base profile."""
+    base = json.loads(read('template', 'calc', 'profiles', c['base'] + '.json'))
+    return merged(base, c)
+
+
+def calc_parts(prof):
+    """(js, css) the calc adds to a guide: engine, save reader, page."""
+    js = [read('template', 'calc', 'engine.js')]
+    if prof.get('save'):
+        js.append(read('template', 'calc', 'readers', prof['save'] + '.js'))
+    js.append(read('template', 'calc.js'))
+    return '\n'.join(js), read('template', 'calc.css')
+
+
 def build(hid):
     h = json.loads(read('hacks', hid, 'hack.json'))
     keys, data = keys_for(hid)
     own = json.loads(read('hacks', hid, 'sprites.json')) if os.path.exists(os.path.join(ROOT, 'hacks', hid, 'sprites.json')) else {}
-    data['cfg'] = h['cfg']
+    data['cfg'] = dict(h['cfg'])
+    js, css = read('template', 'dex.js'), read('template', 'dex.css')
+    if 'calc' in h['cfg']:
+        data['cfg']['calc'] = calc_profile(h['cfg']['calc'])
+        cjs, ccss = calc_parts(data['cfg']['calc'])
+        js, css = js + '\n' + cjs, css + '\n' + ccss
     spr, missing, shared = {}, [], 0
     for p in data['P']:
         k = keys[p['id']]
@@ -77,7 +110,7 @@ def build(hid):
     for k, v in vals.items():
         out = out.replace('{{' + k + '}}', html.escape(v))
     # Big parts last, so a "{{" inside them is never treated as a placeholder.
-    out = out.replace('{{css}}', read('template', 'dex.css')).replace('{{js}}', read('template', 'dex.js'))
+    out = out.replace('{{css}}', css).replace('{{js}}', js)
     out = out.replace('{{data}}', script_json(data)).replace('{{spr}}', script_json(spr))
     os.makedirs(os.path.join(ROOT, 'dist'), exist_ok=True)
     open(os.path.join(ROOT, 'dist', hid + '.html'), 'w', encoding='utf-8', newline='\n').write(out)

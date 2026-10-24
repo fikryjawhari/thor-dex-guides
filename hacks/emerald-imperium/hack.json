@@ -18,6 +18,9 @@
    "bosses",
    "boss trainers"
   ],
+  "calc": {
+   "base": "expansion"
+  },
   "ls": {
    "dex": "eidex1",
    "calc": "eicalc",
@@ -29,7 +32,8 @@
    "pos": "eipos",
    "mgm": "eimgm",
    "loc": "eiloc",
-   "items": "eiitems"
+   "items": "eiitems",
+   "dmg": "eidmg"
   },
   "txt": {
    "obt": "Wild + evolutions",

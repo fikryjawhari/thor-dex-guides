@@ -384,12 +384,55 @@ asserts: no page errors and `documentElement.scrollWidth` equals the viewport wi
 26. **Persistence:** after changing foe, dir, field, crit, a hit count, a power override, an edit and a saved change, reload:
     all restored. `Clear saved state` in the frame: back to defaults.
 
+## Build step 1: the framework (2026-10-25)
+
+Scope, from the user: everything set up so that a later session only has to (a) "generate the calc data for hack X"
+or (b) "write the save reader for game X, here's the save". **Not in this step:** any hack's real mechanics (EI's
+`battle.h` values, the in-game test) and any real save reader. EI carries `cfg.calc = {base: "expansion"}` on this
+branch only so the page can be seen; it is unchecked (decide at the merge whether it stays, with an "unchecked" note).
+
+**Files** (assemble.py already inlines them for guides with `cfg.calc` only; see its docstring):
+| File | What | Owner unit |
+| --- | --- | --- |
+| `tools/calc/` (`package.json` pinned, `build.mjs`, `src/adapter.js`, `test.mjs`) | builds `template/calc/engine.js` (esbuild, minified, MIT notice kept). npm only to rebuild; the output is committed so assemble.py stays stdlib | A |
+| `template/calc/engine.js` | `@smogon/calc` + our adapter, exposes `window.DMG` | A |
+| `template/calc/profiles/<base>.json` | shared bases: `expansion`, `cfru`, `gen4`, `gen5`, `gen6`, `gen7` (generation defaults, nothing hack-specific) | A |
+| `template/calc.js`, `template/calc.css` | the page (UI spec above), import pipeline | B |
+| `template/dex.js`, `template/dex.css` | hooks only: rail tab hidden / `#/calc` redirect without `cfg.calc`, `Calc vs ▸`, `Use in calc ▸`, rjump stops | B |
+| `template/calc/readers/test.js` | the fake reader for checks (below) | B |
+| `tools/scenarios/calc-*.mjs`, `tools/calc_save_check.mjs` | the spec's checks; the save check for later reader sessions | B |
+
+**Profile** (`cfg.calc` after assemble.py merges the base under the hack's keys): `base`, `gen` (the `@smogon/calc`
+generation), `save` (reader family or absent → Import hidden), `lv [min,max]`, `stages [min,max]`, `status [[key,label]]`,
+`natures` / `abilities` / `items` (booleans), `field [entry]`, `multihit {moveName: [min,max,default]}`, `varpow [moveName]`,
+`over` (engine overrides, format chosen by unit A: changed abilities / items / moves / species, crit multiplier and stages,
+type chart). Field entry: `{k, l label, type: "select"|"toggle", o [[value,label]] for selects, side: "field"|"atk"|"def",
+to: what the adapter sets on the engine}`. The UI draws exactly this list and stores values under `field[k]`.
+
+**`window.DMG`** (unit A builds it; unit B codes against it and writes a stub with the mockup's rough maths in
+`template/calc/engine.js` on its own branch, which A's file replaces at the merge):
+- `DMG.init(D, prof)` once (D = the parsed `#data`).
+- `DMG.stats(set)` → `[HP, Atk, Def, SpA, SpD, Spe]` without stages.
+- `DMG.calc(atk, def, slot, field)` → `null` for status moves / no power, else `{cat, rolls [16 per hit], hits, min, max
+  (per hit), pmin, pmax (% of def's max HP, all hits), ko {n (1–4 uses, 0 = 5+), p (0–1)} against def.hp, eff (0 = no
+  effect), notes [strings for the modifiers line]}`.
+- set: `{id (species id), lv, nat (name), ab (index into AB), it (item name or ""), st (status key or ""), iv [6], ev [6],
+  stg [6] (index 0 unused), hp (current)}`; slot: `{mv (index into M), t?, bp?, hits?, crit?}`; field: `{k: value}`.
+
+**Save readers** (`template/calc/readers/<family>.js`, one picked by `prof.save`): `READERS[family] = (bytes, D) =>
+{game, party [mon], boxes [[mon]]}` or throws `{code: "wrong"|"state"|"unreadable"|"empty", game?}` (the four banners).
+mon: `{pid, sp, lv, nat (0–24), ab or abs (ability id, or slot 0/1/2), it, mv [4], iv [6], ev [6]}` in game IDs, mapped
+by the template through `data.json` → `GID {sp, mv, ab, it}` (game id → our species id / M index / AB index / item name;
+written by the hack's extract). The `test` reader reads a JSON file in this format with `ids: "ours"` (no mapping) or
+`{error: code}`; scenario builds set `save: "test"`. `tools/calc_save_check.mjs <guide> <save> <expected.json>` imports a
+save headless and compares the party / boxes: the done-check for a reader session.
+
 ## Order
 
-1. Bundle `@smogon/calc` into the template (size check: guides stay one file; see how much of its data we can drop, since
-   our `data.json` provides species and moves). Build the calc page from the UI spec above (custom sets and the trainer side
-   first; no import yet), EI first. In-game test of EI's mechanics.
-2. Gen 3 save reader and EI's ID tables, tested against the user's save.
+1. The framework (above): engine, base profiles, page, import pipeline with the test reader, checks, and the docs a later
+   session needs (CLAUDE.md → Making a new guide step, a reference for "calc data for a hack" and "a save reader for a
+   family", template/README.md, extractlib docstring).
+2. EI's calc data (mechanics, in-game test); Gen 3 save reader and EI's ID tables, tested against the user's save.
 3. Viewer file picker (app repo).
 4. Gen 4 reader (Hardlove Gold), then Gen 5 (BB2R) when its guide is built.
 5. Gen 6/7 reader (Photonic Sun, then Eternal X).
