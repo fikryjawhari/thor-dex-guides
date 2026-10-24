@@ -257,13 +257,12 @@ def trainer_splits(groups, caps, battles):
     out.extend({'n': split_name(name), 'tab': name, 'cap': 0, 'note': [], 'sec': []}
                for name in ('Post-game: Episode RR', 'Post-game'))
     battle_of = {trainer_id: index for index, battle in enumerate(battles) for trainer_id in battle[2]}
-    targets, legacy = {}, {}
-    for old_group, group in enumerate(groups):
+    targets = {}
+    for group in groups:
         for old_section, section in enumerate(group['sec']):
             if group['n'].startswith('Post-game') or group['n'] == 'Other trainers':
                 target = len(caps) if group['n'] == 'Post-game: Episode RR' else len(caps) + 1
                 copy = {key: value for key, value in section.items() if key not in ('at', 'cap')}
-                legacy[f'{target}.{len(out[target]["sec"])}'] = f'{old_group}.{old_section}'
                 out[target]['sec'].append(copy)
                 targets.update((trainer['k'], target) for trainer in section['tr'])
                 continue
@@ -286,9 +285,8 @@ def trainer_splits(groups, caps, battles):
                     copy['note'] = group['note'] + copy.get('note', [])
                 copy['tr'] = trainers
                 copy['cap'] = [cap['l'], cap['n'], cap['w'], sum(battle[3] for battle in battles[first:cap['cut']])]
-                legacy[f'{target}.{len(out[target]["sec"])}'] = f'{old_group}.{old_section}'
                 out[target]['sec'].append(copy)
-    return out, targets, legacy
+    return out, targets
 
 
 def build(D):
@@ -615,9 +613,9 @@ def build(D):
                 t['k'] = remap[t['k']]
     for st in allstops:
         st[2] = [remap[k] for k in st[2]]
-    g, targets, legacy = trainer_splits(g, caps, flat)
+    g, targets = trainer_splits(g, caps, flat)
     D['TR'] = {'caps': [[f"{c['n']} ({c['w']})", c['l']] for c in caps],
-               'fix': [], 'src': 'game data + Bulbapedia places', 'g': g, 'legacySections': legacy}
+               'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
     D['_cap_splits'], D['_trainer_splits'] = caps, targets
     D['_stops'] = allstops
     report('trainer boxes:', ', '.join(f"{x['n']} {sum(len(s['tr']) for s in x['sec'])}" for x in g))

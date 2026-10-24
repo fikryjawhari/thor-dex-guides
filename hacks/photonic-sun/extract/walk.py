@@ -45,7 +45,6 @@ def walkthrough_splits(data, old_splits):
     caps, targets = data['_cap_splits'], data['_trainer_splits']
     stop_order = {(part, name): index for index, (part, name, _) in enumerate(data['_stops'])}
     out = [{'n': group['n'], 'cap': group['cap'], 'note': '', 'st': []} for group in data['TR']['g']]
-    legacy = {}
     previous_at = 0
     for old_split, split in enumerate(old_splits):
         for old_stop, stop in enumerate(split['st']):
@@ -69,8 +68,6 @@ def walkthrough_splits(data, old_splits):
                 copy['tr'] = buckets[destination]
                 if fragment:
                     copy.update(a=[], it=[], note='')
-                new_key = f'{destination}.{len(out[destination]["st"])}'
-                legacy[new_key] = old_key
                 out[destination]['st'].append(copy)
     return out
 
