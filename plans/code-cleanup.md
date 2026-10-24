@@ -227,12 +227,15 @@ Path `C:\Users\fikry\.t3\worktrees\thor-dex-guides\worktree-code-cleanup` (T3 th
 - Reproducible at base: EX and PS `extract/build.py` (raw, from `.src/`), HG `build.py --published`, EI
   `tools/itemstd.py emerald-imperium`: all four identical, reports identical. `tabs_check.py`: 0 problems.
 - Template gate at base: `domcompare` baseline vs fresh build, all four, normal and `--kb`, and
-  `consistency-check.mjs`: results in `.tmp/cleanup-baseline/gates/` (see the Kickoff row).
+  `consistency-check.mjs`: results in `.tmp/cleanup-baseline/gates/`. The EI `--kb` self-compare flagged 15
+  `#/l/…` routes with no visible difference while unit A's worker was sweeping at the same time (CPU contention);
+  unit A's own EI runs were clean. **Never run two domcompare sweeps at once.**
+- HG `build.py --published` also needs `hacks/hardlove-gold/.src/` (copy it into worker worktrees).
 
 | Unit / IDs | Status | Accepted SHA | Worker task / branch / path | Checks / evidence | Next action |
 | --- | --- | --- | --- | --- | --- |
 | Kickoff / baseline | verified | (this commit) | orchestrator | Data rebuilds identical ×4; tabs 0 problems; dom/consistency at base: see gates/ | Delegate unit A. |
-| A [09] [16] [17] [18] [20] [21] | in progress | — | gpt-6.1-sol, task `cleanup-unit-A-r1`, worktree from `7145ef9` | — | Review its commits, merge into the cleanup branch. |
+| A [09] [16] [17] [18] [20] [21] | verified | `42cac28` (ff: `e60a330` extract, `42cac28` template) | gpt-6.1-sol, task `cleanup-unit-A-r1`, branch `t3/cleanup-dead-code`, `C:\Users\fikry\.t3\worktrees\thor-dex-guides\t3-c61d84de` | datacmp ×4 identical; domcompare ×4 normal + kb: 0 differing, 0 page errors; consistency + tabs pass. Log: that worktree's `.tmp/unitA-logs/report.md` | — |
 | B [04] [19] | pending | — | — | — | — |
 | C [02] [03] | pending | — | — | — | — |
 | D [01] | pending | — | — | — | — |
