@@ -13,7 +13,7 @@ const defaults=()=>({dir:'out',mine:{src:'party',b:0,i:0},foe:{k:'',i:0},field:{
 let ST=defaults();try{const stored=JSON.parse(localStorage.getItem(KEY)||'null');if(stored&&typeof stored==='object')ST={...ST,...stored};}catch(error){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(error){BAN={ok:0,h:'Storage full',t:'The current changes could not be remembered.'};}};
 window.DMG.init(sourceData,prof);
-const toEngine=mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i||'',st:mon.status||'',iv:mon.iv,ev:mon.ev,stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp});
+const toEngine=mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i||'',st:mon.status||'',iv:mon.iv,ev:EVS?mon.ev:[0,0,0,0,0,0],stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp});
 const koTxt=ko=>!ko.n?'5+ hits':(ko.n===1?'OHKO':ko.n+'HKO')+(ko.p<1?' '+Math.min(99,Math.max(1,Math.round(ko.p*100)))+'%':'');
 
 const trByK=TRK;
@@ -62,7 +62,7 @@ function editor(r,side){const custom=side==='mine'&&ST.mine.src==='custom';const
  <div class="e2">${prof.items!==false?sel('it',[['','No item'],...D.IT.map(x=>[x,x])],r.i):''}${sel('status',prof.status||[['','No status']],r.status||'')}</div>
  <table><tr><th></th>${SN.map(n=>`<th>${n}</th>`).join('')}</tr>
  ${row('IV',i=>nb(`data-e="iv" data-x="${i}" data-s="${side}"`,r.iv[i],{min:0,max:31,label:'IV '+SN[i]}))}
- ${row('EV',i=>nb(`data-e="ev" data-x="${i}" data-s="${side}"`,r.ev[i],{min:0,max:252,step:4,label:'EV '+SN[i]}))}
+ ${EVS?row('EV',i=>nb(`data-e="ev" data-x="${i}" data-s="${side}"`,r.ev[i],{min:0,max:252,step:4,label:'EV '+SN[i]})):''}
  ${row('Stat',i=>`<b>${r.stats?r.stats[i]:'?'}</b>`)}
  ${row('Stg',i=>i===0?`<button class="z" data-a="sreset" data-s="${side}" aria-label="Reset stages">0</button>`:`<button class="sc ${r.stg[i-1]>0?'up':r.stg[i-1]<0?'dn':''}" data-a="sstep" data-s="${side}" data-x="${i-1}">${r.stg[i-1]>0?'+':''}${r.stg[i-1]}</button>`).replace('<td class="l">Stg</td>',`<td class="l"><button class="sm" data-a="smode" aria-label="Raise or lower">${SMODE==='+'?'+':'−'}</button></td>`)}</table>
  <div class="e3">${side==='mine'&&!custom?`<button class="dbtn" data-a="esave" data-s="${side}" ${w?'':'disabled'}>Save</button>`:''}${custom?'':`<button class="dbtn" data-a="ereset" data-s="${side}" ${w||sv?'':'disabled'}>${w?'Reset':sv?'Original':'Reset'}</button>`}${custom?`<button class="dbtn" data-a="edel">Delete</button>`:''}</div></div>`;}

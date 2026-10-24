@@ -62,6 +62,8 @@ These came out of the consistency pass (2026-10-23/24); the extract helpers appl
 field entries, multi-hit ranges and variable-power moves. The page calls `DMG.init`, `DMG.stats` and `DMG.calc`;
 damage rolls and KO probabilities come from the adapter, not page-side mechanics. The committed unit-B engine is a
 temporary, explicitly marked stub and must be replaced by unit A before release.
+Effective Speed uses the optional `DMG.speed(set, field)` hook; without it, the fallback applies stages only.
+The real adapter must provide that hook for paralysis and other game-specific Speed modifiers.
 When the adapter returns `per`, the expander shows each hit's rolls; aggregate HP subtraction and best-move ranking
 sum those per-hit ranges, while percentages and KO text use the adapter's already aggregated values.
 
