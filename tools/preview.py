@@ -1,4 +1,5 @@
-"""Put a page on the phone preview: python -I tools/preview.py <page.html> [name.html] [--rm name.html ...]
+"""Put a page on the phone preview: python -I tools/preview.py <page.html> [name.html] [--frame] [--title T]
+[--rm name.html ...]
 
 Copies the page into `preview/` in the main checkout (git-ignored; also from a worktree, so every session shares one
 folder) and rewrites `preview/index.html`, the list of pages, newest first. `tailscale serve` serves that folder on
@@ -6,7 +7,8 @@ the tailnet only, so the phone and the Thor open it over Tailscale from anywhere
 
 Use a built guide, a Thor-frame build (tools/mockup/thor-frame/build.py) or a mockup page; it must be one
 self-contained file. The name defaults to the file's own; the same name replaces the page (reload it on the phone).
---rm drops pages from the folder. One-time setup on a machine: README "Phone preview"."""
+--frame wraps the page in the Thor frame first; --title sets its title. --rm drops pages from the folder.
+One-time setup on a machine: README "Phone preview"."""
 import argparse, datetime, html, json, shutil, subprocess, sys, tempfile
 from pathlib import Path
 

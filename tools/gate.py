@@ -85,11 +85,11 @@ class Gate:
                                        encoding='utf-8', errors='replace', timeout=1800)
             text = completed.stdout
             logfile.write_text(' '.join(map(str, command)) + '\n' + text, encoding='utf-8')
-            diagnostics = bool(re.search(r'(?im)^page errors:|^ERRS (?!none)|RJ WRONG|tried \d+, bad [1-9]', text))
+            diagnostics = bool(re.search(r'(?im)^0 routes|^page errors:|^ERRS (?!none)|RJ WRONG|tried \d+, bad [1-9]', text))
             tail = ' | '.join(text.strip().splitlines()[-2:])[-500:]
             if any(str(part).endswith('domcompare.mjs') for part in command):
                 tail = ' | '.join(line for line in text.splitlines()
-                                  if re.match(r'^\d+ routes|^page errors old:|^differing routes:', line))
+                                  if re.match(r'^\d+ routes|^page errors old:|^differing routes:', line)) or tail
             return self.result(label, completed.returncode == 0 and not diagnostics,
                                f'{time.monotonic() - started:.1f}s; {tail}; log={logfile.relative_to(ROOT)}')
         except (OSError, subprocess.SubprocessError, RuntimeError) as error:
