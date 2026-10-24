@@ -4,7 +4,7 @@ const D=JSON.parse(document.getElementById('data').textContent);
 const SPR=JSON.parse(document.getElementById('spr').textContent);
 // Per-hack settings from hacks/<hack>/hack.json (assemble.py puts them in D.cfg): names, storage keys, wording.
 const CF=D.cfg,LS=CF.ls,TX=CF.txt;
-const M=D.M,MV=D.MV,AB=D.AB,P=D.P,LOC=D.LOC,byId={};P.forEach((p,i)=>{p.tu=p.tu||[];p.i=i;p.bst=p.s.reduce((a,b)=>a+b,0);p.name=p.n;p.key=(p.n+' '+p.dex).toLowerCase();byId[p.id]=p;});
+const M=D.M,MV=D.MV,AB=D.AB,P=D.P,LOC=D.LOC,byId={};P.forEach((p,i)=>{p.tu=p.tu||[];p.i=i;p.name=p.n;p.key=(p.n+' '+p.dex).toLowerCase();byId[p.id]=p;});
 const TC={normal:'#9fa19f',fire:'#e62829',water:'#2980ef',electric:'#d8b000',grass:'#3fa129',ice:'#3dcef3',fighting:'#ff8000',poison:'#9141cb',ground:'#915121',flying:'#81b9ef',psychic:'#ef4179',bug:'#91a119',rock:'#afa981',ghost:'#704170',dragon:'#5060e1',dark:'#624d4e',steel:'#60a1b8',fairy:'#ef70ef'};
 const tcol=t=>TC[(t||'').toLowerCase()]||'#777';
 const SN=['HP','Atk','Def','SpA','SpD','Spe'];
@@ -710,11 +710,11 @@ function listTrainers(){fil.innerHTML='';sug.style.display='none';const s=st.q;
 // x are from before the boxes were mini-splits, and no longer read.)
 TOPEN.o=TOPEN.o||{};TOPEN.p=TOPEN.p||{};TOPEN.t=TOPEN.t||{};
 const trSave=()=>{try{localStorage.setItem(LS.tr,JSON.stringify(TOPEN))}catch(e){}};
-function trGroup(gi){const g=TRD.g[gi];let n=0;
+function trGroup(gi){const g=TRD.g[gi];
  const secs=g.sec.map((s,si)=>{const ts=s.tr.filter(t=>!rivalHidden(t));
   const head=((s.note||[]).length?`<div class="trnote">${s.note.map(esc).join('<br>')}</div>`:'')+(s.rw?`<div class="trnote"><b>Reward, pick one:</b> ${s.rw.map(z=>{const p=P.find(q=>q.name===z||q.name.startsWith(z+' ('));return p?plink(p.id):esc(z);}).join(', ')}</div>`:'');
-  const rows=trRows(ts,t=>TOPEN.t[t.k]!==0,!s.h);if(!s.h){n+=ts.length;return head+rows;}
-  n++;const k=gi+'.'+si;return `<details class="stopd" data-k="${k}" ${TOPEN.p[k]===0?'':'open'}><summary class="stoph"><span class="pn">${esc(s.h)}</span>${s.opt?'<span class="tag">optional</span>':''}<button class="pt" type="button" data-cap="${capOfSec(s)?capOfSec(s)[0]:g.cap||''}"></button></summary><div class="stop">${capLine(s)}${head}${rows}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.h)}</span></button></div></details>`;}).join('');
+  const rows=trRows(ts,t=>TOPEN.t[t.k]!==0,!s.h);if(!s.h){return head+rows;}
+  const k=gi+'.'+si;return `<details class="stopd" data-k="${k}" ${TOPEN.p[k]===0?'':'open'}><summary class="stoph"><span class="pn">${esc(s.h)}</span>${s.opt?'<span class="tag">optional</span>':''}<button class="pt" type="button" data-cap="${capOfSec(s)?capOfSec(s)[0]:g.cap||''}"></button></summary><div class="stop">${capLine(s)}${head}${rows}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.h)}</span></button></div></details>`;}).join('');
  return trSwitch(g.sec.some(s=>s.h))+(g.note&&g.note.length?`<div class="trnote" style="margin:8px 2px">${g.note.map(esc).join('<br>')}</div>`:'')+secs+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
 TOG.trainers=d=>{if(st.q)return;const k=d.dataset.k;
  if(d.matches('details.split[data-gi]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=trGroup(+d.dataset.gi);colBind(b);bindTrd(b);trObs(d);trSync(d);}if(d.open)TOPEN.o[d.dataset.gi]=1;else delete TOPEN.o[d.dataset.gi];}
@@ -787,8 +787,8 @@ function trRows(ts,open,loc){
  const moon=gs.filter(g=>g[0].tags.includes(MOON));
  return gs.filter(g=>!moon.includes(g)).map(row).join('')+(moon.length?`<details class="moond"><summary>${MOON} only <span class="tag">${moon.length}</span> <span class="mut small">the other version's teams</span></summary>${moon.map(row).join('')}</details>`:'');}
 const walkTrainers=ts=>trRows(ts,t=>TRDO.has(t.k),false);
-// A walkthrough stop with trainers: "n/N | cap" in its header (open cards / rows, the highest level cap of their places in
-// the current cap set). It opens or closes all the stop's cards, like a Trainers place's (walkTeams); walkPtSync keeps
+// A walkthrough stop with trainers: "n/N | cap" in its header (open cards / rows, the highest level cap of their places).
+// It opens or closes all the stop's cards, like a Trainers place's (walkTeams); walkPtSync keeps
 // it in step, touching the text only when it changed.
 const trCapOf=t=>{const g=TRD.g[t.at[0]],c=capOfSec(g.sec[t.at[1]]);return c?c[0]:g.cap||t.cap||0;};
 function walkPt(ts,fallback=0){const gs=trGroups(ts),n=gs.filter(g=>TRDO.has(g[0].k)).length,cap=fallback||Math.max(0,...ts.map(trCapOf));
@@ -949,8 +949,6 @@ function land(el){if(!el)return;const st0=el.tagName==='SUMMARY'?el.parentElemen
 
 // ===== CALC (empty for now; the stat calculator is on each Pokemon page)
 function calcPage(){fil.innerHTML='';sug.style.display='none';app.innerHTML=`<div class="card"><h3>Calc</h3><p style="margin:0">Coming soon. Each Pokémon page has a stat calculator in the meantime.</p></div>`;}
-// ===== TABS NOT BUILT YET (later batches)
-function soon(name,what){fil.innerHTML='';sug.style.display='none';app.innerHTML=`<div class="card"><h3>${name}</h3><p style="margin:0">Coming in a later batch: ${what}</p></div>`;}
 // ===== ROUTER
 function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).split('/');const v=parts[0]||'';
  if(st.view===''&&v!==''&&!fromInput)st.listScroll=Object.assign(keepAnchor(),{z:cvSizes()});

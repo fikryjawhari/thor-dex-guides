@@ -377,8 +377,8 @@ table.lt td.n{vertical-align:top}table.lt .rt{display:block;white-space:nowrap}
 table.lrn td:nth-child(2){overflow-wrap:anywhere}
 /* The starter picker shrinks instead of running out of the tracker bar at 260 */
 .tkbar select{min-width:0;max-width:100%}.trk .st-pick{min-width:0}
-/* Trainers: battle format and version tags, partner drop-down, level caps (tag in the sticky place header, a line
-   under it with who and how many battles before it, the set switch in the header), per-place expand / collapse */
+/* Trainers: battle format and version tags, partner drop-down, count/cap button in the sticky place header,
+   cap line under it with who and how many battles before it, per-place expand / collapse */
 .tag.fmt{background:#24435e;color:#d4e8fb}
 .tag.moon{background:var(--panel2);color:var(--mut);font-style:italic;font-weight:500}
 .tag.capg{background:var(--acc);color:#1b1608;margin-left:6px}
