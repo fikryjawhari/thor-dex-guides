@@ -244,6 +244,13 @@ Path `C:\Users\fikry\.t3\worktrees\thor-dex-guides\worktree-code-cleanup` (T3 th
 | H final audit | pending | — | — | — | Haiku worker after G: every gate on the integrated branch vs the baseline (datacmp ×4, domcompare ×4 normal + kb one at a time, consistency, tabs, mockup checks, walk-state if G fixed it), pass/fail with evidence. Each unit's diff was already reviewed by the orchestrator before merging. Then ask the user to merge to `main`. |
 | I standard-work tooling (added 2026-10-24, user approved) | pending | — | — | — | **Not on this branch:** after the cleanup merges, its own branch `worktree-standard-tooling` from `main`, Sonnet worker. Spec below. |
 
+**Close-out agreed 2026-10-24 (user):** this session finishes G → H → merge the cleanup into `main` → the text-zoom
+fix (Sonnet task `text-zoom-bars-r1`, branched from `7032a38`) → unit I (own branch) → the update checker
+(`plans/update-checker.md`, subagent) → PROGRESS.md handover (hack families: 3DS done; pokeemerald-expansion EI +
+SoulGold; CFRU Radical Red + Unbound; NDS Renegade Platinum, BB2 Redux, HG Retiled). **The user authorised local merges
+into `main` for these branches, each after its gates pass. Pushes still need a yes each time.** New-hack data
+collection (Sol after the Codex reset) and the calc (its own decide session, `worktree-damage-calc`) are out of scope.
+
 **Order agreed 2026-10-24** (Codex usage ~18% before F, ~6% per unit so far; Claude ~44%): F and G on Codex
 (gpt-6.1-sol), H on Haiku, merge, then I on Sonnet. If G runs out partway, recover from its commits and finish the
 small remainder on Sonnet (section 4).
