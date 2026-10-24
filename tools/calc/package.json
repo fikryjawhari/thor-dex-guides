@@ -1,0 +1,15 @@
+{
+  "name": "thor-dex-calc-engine",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node test.mjs"
+  },
+  "dependencies": {
+    "@smogon/calc": "0.12.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

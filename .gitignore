@@ -14,3 +14,4 @@ __pycache__/
 .codex/config.local.toml
 # uv environment (pyproject.toml + uv.lock are committed; run `uv sync` to recreate it)
 .venv/
+tools/calc/node_modules/
