@@ -6,6 +6,14 @@ the split is in that repo's git log.
 
 ## Current status
 
+- **Walkthrough / Trainers agreement (2026-10-24), branch `worktree-ei-hg-fixes`** (worktree `.claude/worktrees/ei-hg-fixes`,
+  not merged, not pushed). Template: Trainers "Expand all / Collapse all", place buttons `n/N | cap` (box cap fallback),
+  walkthrough Starter above Next step. EI walkthrough splits = the Trainers boxes (Hot House its own split, Gardenia at
+  Mauville); Trainers boxes in walkthrough order in every guide (`extractlib.trainers_follow_walk`); HG Starter box first
+  on Locations (`ARO`); PS Ultra Necrozma cap 95. New `tools/tabs_check.py` (same trainers, same order, caps never go
+  down). Two Haiku audits passed (domcompare, consistency / walk / page / walk-state checks, viewer sizes, saved ticks carry
+  over). Phone previews `ei-hg-fixes-<hack>.html`. Next: the user's look, then merge into `main`.
+
 - **Codex setup (2026-10-23):** added `AGENTS.md` and a repo-local `rom-hack-offline-dex` skill under
   `.agents/skills/`, adapted to the shared-template build. Claude originals are unchanged. Codex uses 6.1 sol
   throughout, without Claude model routing. Both use `.claude/claim` for worktree ownership. Switching and
