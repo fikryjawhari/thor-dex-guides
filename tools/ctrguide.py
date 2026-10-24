@@ -1,7 +1,7 @@
-"""Shared conversion and trainer helpers for the 3DS guides' source extracts."""
+"""Shared conversion, trainer and walkthrough helpers for the 3DS guides' source extracts."""
 
 import re
-from extractlib import fix, norm, slug
+from extractlib import fix, norm, report, slug
 
 
 TYPES = ['Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying', 'Psychic',
@@ -199,3 +199,52 @@ def default_moves(species, level):
         if learned_level <= level and move not in moves:
             moves.append(move)
     return moves[-4:]
+
+
+def walk_same(area, stop):
+    """Match place names whole or by prefix, without matching Route 1 to Route 10."""
+    area_key, stop_key = [norm(re.sub(r'\s*\(.*?\)', '', name)) for name in (area, stop)]
+    if area_key == stop_key:
+        return True
+    short, long_name = sorted((area_key, stop_key), key=len)
+    return len(short) > 5 and long_name.startswith(short) and not long_name[len(short)].isdigit()
+
+
+def walk_stops(areas, stops, trainer_names, *, aliases, placements, new_stops):
+    """Build ordered 3DS walkthrough stops, attaching areas and inserting on-the-way stops."""
+    attached = [{'part': part, 'n': name, 'a': [], 's': [], 'note': '', 'it': [], 'tr': trainers}
+                for part, name, trainers in stops]
+    for part, name, first, new_name in new_stops:
+        stop_index = next(index for index, stop in enumerate(attached) if stop['part'] == part and stop['n'] == name)
+        trainer_index = next(index for index, trainer in enumerate(attached[stop_index]['tr'])
+                             if trainer_names[trainer] == first)
+        attached.insert(stop_index + 1, {'part': part, 'n': new_name, 'a': [], 's': [], 'note': '', 'it': [],
+                                         'tr': attached[stop_index]['tr'][trainer_index:]})
+        attached[stop_index]['tr'] = attached[stop_index]['tr'][:trainer_index]
+    where = {}
+    for area_index, area in enumerate(areas):
+        names = [area['n']] + aliases.get(area['n'], [])
+        if area['n'] in placements:
+            part, name = placements[area['n']]
+            hit = next(index for index, stop in enumerate(attached) if stop['part'] == part and stop['n'] == name)
+        else:
+            hit = next((index for index, stop in enumerate(attached)
+                        if any(walk_same(name, stop['n']) for name in names)), None)
+        if hit is not None:
+            attached[hit]['a'].append(area_index)
+            where[area_index] = hit
+    extra = {}
+    for area_index, area in enumerate(areas):
+        if area_index in where or area.get('ns'):
+            continue
+        previous = max((where[index] for index in range(area_index) if index in where), default=0)
+        extra.setdefault(previous, []).append(area_index)
+    out = []
+    for stop_index, stop in enumerate(attached):
+        out.append(stop)
+        for area_index in extra.get(stop_index, []):
+            out.append({'part': stop['part'], 'n': areas[area_index]['n'], 'a': [area_index], 's': [], 'note': '',
+                        'it': [], 'tr': [], 'x': 1})
+    report('walkthrough: on the way stops', sum(len(indices) for indices in extra.values()), ':',
+           ', '.join(areas[index]['n'] for indices in extra.values() for index in indices))
+    return out
