@@ -172,8 +172,33 @@ verified EI profile. Baseline: `820e5a42e5c472ea7483a3b45caf16e8d2d12eb7`; gate 
   `516eca76fcb3dd79d8b13fcb8d069581c9164c6b` (2025-02-26). It predates the release source
   and the 1.3.1 workbook and is not linked by the official site.
 
-Remaining: finish source/doc audit, implement oracle comparison and fixed cases, write overrides,
-resolve differences and run engine/build checks. No in-game test yet.
+**Stopped at an engine boundary, not a verified profile.** The independently written local-oracle tool
+and 34 fixtures are committed. Initial comparison: 29 matches, five unexplained differences
+(`iron-fist-changed`, `emperor-presence`, `draco-barrage-fairy`, `frostbite-special`,
+`ora-punch-second-hit`). Full input/settings/rolls are in `.tmp/calc-emerald-imperium/initial.json`.
+The data-sharing mode isolates mechanics; it does not audit oracle species tables or run its UI patches.
+
+ORAORAORAORA is the blocking case: release `src/battle_util.c`, `GetOraOraOraOraModifier`, applies
+0.5 to the second punching hit's base damage **before weather, crit and random rolls**. Ordinary
+Parental Bond applies 0.25 there. Our exposed `beforeWeather` phase is mutation-only, before the raw
+base damage exists; `baseDamage` receives the value only after weather/crit. There is no scalar phase
+at the child-hit multiplier. Aliasing to Parental Bond gives second-hit rolls `[6,...,7]` instead of
+hzla's `[12,...,15]` for Hitmonchan Mach Punch into Blastoise (both Lv50). Doubling final rolls gives
+`[12,...,14]`, still wrong: lost integer rounding cannot be restored by scaling. Reproduction with
+both full per-hit arrays: `.tmp/calc-emerald-imperium/ora-blocker.json`. Do not ship an approximate
+alias or reproduce the whole damage formula in declarative JSON to work around the missing hook.
+The parent needs to choose an exact child-base-damage multiplier hook (and punch-only activation)
+or another tested engine extension; this worker has not touched the engine or profile files.
+
+Checks after the harness checkpoint: `node tools/calc/test.mjs`, 75 passed, zero failed (41 direct
+Smogon parity cases); `python assemble.py`, all four guides built. Logs:
+`.tmp/calc-emerald-imperium/engine-test.log` and `assemble.log`.
+
+Remaining after the parent's engine decision: finish the workbook/source audit, add the missing
+Feline Prowess fixture and additional changed-effect coverage, implement source-backed overrides,
+resolve/retest every difference, validate the harness's negative cases, write the general mechanics
+procedure, and repeat engine/build checks. `cfg.calc` remains the unchanged, unchecked expansion base;
+`cfg.ls.dmg` remains `eidmg`. No in-game test yet.
 
 ## Checks
 
