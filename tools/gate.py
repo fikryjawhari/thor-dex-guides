@@ -87,7 +87,7 @@ class Gate:
             logfile.write_text(' '.join(map(str, command)) + '\n' + text, encoding='utf-8')
             diagnostics = bool(re.search(r'(?im)^page errors:|^ERRS (?!none)|RJ WRONG|tried \d+, bad [1-9]', text))
             tail = ' | '.join(text.strip().splitlines()[-2:])[-500:]
-            if 'domcompare.mjs' in command:
+            if any(str(part).endswith('domcompare.mjs') for part in command):
                 tail = ' | '.join(line for line in text.splitlines()
                                   if re.match(r'^\d+ routes|^page errors old:|^differing routes:', line))
             return self.result(label, completed.returncode == 0 and not diagnostics,
@@ -131,6 +131,8 @@ def baseline(gate, ref):
         (output / 'manifest.json').write_text(json.dumps(dict(ref=ref, sha=sha, guides=names, hashes=hashes,
             created=datetime.datetime.now(datetime.timezone.utc).isoformat()), indent=2) + '\n', encoding='utf-8')
         if BASE.exists():
+            if BASE.is_symlink() or BASE.resolve().parent != (ROOT / '.tmp').resolve():
+                raise ValueError('baseline path must remain inside this workspace .tmp directory')
             shutil.rmtree(BASE)
         shutil.move(str(output), BASE)
         gate.result('baseline', True, f'{ref} {sha}; {len(names)} guides; git archive; {BASE.relative_to(ROOT)}')
