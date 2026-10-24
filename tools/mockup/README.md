@@ -2,7 +2,7 @@
 
 Need Chrome or Edge (or `CHROME=<exe>`) and Node 22+.
 
-The three checks below use `../browser.mjs` for browser discovery, CDP transport and profile cleanup. Their
+The four checks below use `../browser.mjs` for browser discovery, CDP transport and profile cleanup. Their
 scenario code, waits, exception reporting, hidden scrollbars and 260 × 316 viewport at scale factor 2 stay local.
 Run browser sweeps one at a time so CPU contention does not change layout timing.
 

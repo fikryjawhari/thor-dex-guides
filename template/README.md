@@ -66,7 +66,8 @@ dex.css):
    only open or close their own level and never move the bar.
 4. Collapse bars at the bottom of a block only when it is taller than the window (`bars()`); a pinned block collapses
    in place and flashes (inset accent ring). Rechecked on toggles, resizes, content-visibility renders and any change
-   of the page height (a ResizeObserver on `#app`: the viewer's text zoom fires no resize but changes the height).
+   of the page size (a ResizeObserver on `#app`: the viewer's text zoom fires no resize but changes the height).
+   Size changes clear cached bar heights and coalesce into one animation-frame check; no polling or extra elements.
 5. Jump buttons in the rail (`.rjump`): up / down between boxes, landing at `T()` under the search bar.
 6. Stacked sticky headers: paint `--bg` above the lower header so no gap shows on the phone, and pin only what's asked.
 7. The level row ("Level cap 15 · yours 17") is closed by default.

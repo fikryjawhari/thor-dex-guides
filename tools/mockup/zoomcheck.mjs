@@ -1,28 +1,20 @@
 // node tools/mockup/zoomcheck.mjs <guide.html> [kb]: text zoom vs collapse bars, at 260x316 and 480x392 (kb = `dvkb` set).
 // Android WebView textZoom (the viewer's A-/A+) scales text, not the viewport, and fires no resize. Headless Chrome has no
-// such setting, so zoom() scales every px font-size in the page's rules (and inline styles) by a factor: text size changes,
+// such setting, so zoom() scales every px font-size in the page's rules by a factor: text size changes,
 // the viewport and window.resize don't. Limit: only font sizes scale (as in the WebView); px-sized boxes stay.
 // For Locations, Trainers and Items (a few block states each), at zoom 1 -> 2 -> .5 -> 1 -> 2 (no toggle in between) it
 // compares each bar's shown / hidden state a few frames after the change with what bars() decides after a forced resize.
 // Prints the mismatching bars per step and a final pass / fail; page errors too.
-import { spawn } from 'node:child_process';
-import { mkdtempSync, existsSync, readFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { startBrowser } from '../browser.mjs';
 const [file, kb] = process.argv.slice(2);
-const CHROME = process.env.CHROME || ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(existsSync);
-const prof = mkdtempSync(join(tmpdir(), 'tw-'));
-const chrome = spawn(CHROME, ['--headless=new', '--remote-debugging-port=0', `--user-data-dir=${prof}`, '--allow-file-access-from-files', '--hide-scrollbars', 'about:blank'], { stdio: 'ignore' });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-let ws, id = 0; const pending = new Map();
-for (let i = 0; i < 100; i++) { try { const port = readFileSync(join(prof, 'DevToolsActivePort'), 'utf8').split('\n')[0];
-  const v = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json(); ws = new WebSocket(v.webSocketDebuggerUrl);
-  await new Promise((r, j) => { ws.onopen = r; ws.onerror = j; }); break; } catch { } await sleep(100); }
 const errs = [];
-ws.onmessage = e => { const m = JSON.parse(e.data); if (m.id && pending.has(m.id)) { pending.get(m.id)(m); pending.delete(m.id); }
-  if (m.method === 'Runtime.exceptionThrown') errs.push(JSON.stringify(m.params.exceptionDetails).slice(0, 600)); };
-const send = (method, params = {}, sessionId) => new Promise(r => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({ id: i, method, params, sessionId })); });
+const browser = await startBrowser({ profilePrefix: 'zoom-', flags: ['--hide-scrollbars'],
+  onEvent: message => { if (message.method === 'Runtime.exceptionThrown') errs.push(JSON.stringify(message.params.exceptionDetails).slice(0, 600)); } });
+const { send } = browser;
+try {
 const { result: { targetId } } = await send('Target.createTarget', { url: 'about:blank' });
 const { result: { sessionId } } = await send('Target.attachToTarget', { targetId, flatten: true });
 const ev = async expr => { const m = await send('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true }, sessionId);
@@ -62,4 +54,5 @@ for (const [w, h] of [[260, 316], [480, 392]]) {
 }
 console.log(errs.length ? 'PAGE ERRORS:\n' + errs.join('\n') : 'no page errors');
 console.log(fails ? `FAIL: ${fails} page states with stale bars` : 'PASS: bars follow text zoom');
-chrome.kill(); process.exit(fails || errs.length ? 1 : 0);
+process.exitCode = fails || errs.length ? 1 : 0;
+} finally { await browser.close(); }
