@@ -497,6 +497,288 @@
        "value.isBurned": true
       },
       "note": "Frostbite"
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Feline Prowess"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.category"
+          },
+          "Special"
+         ]
+        }
+       ]
+      },
+      "append": [
+       8192
+      ],
+      "note": "Feline Prowess"
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Sage Power"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.category"
+          },
+          "Special"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Sage Power"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Striker"
+         ]
+        },
+        {
+         "ref": "move.flags.kicking"
+        }
+       ]
+      },
+      "append": [
+       5325
+      ],
+      "note": "Striker"
+     },
+     {
+      "phase": "finalMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Fatal Precision"
+         ]
+        },
+        {
+         "op": "gte",
+         "args": [
+          {
+           "ref": "state.typeEffectiveness"
+          },
+          2
+         ]
+        }
+       ]
+      },
+      "append": [
+       4915
+      ],
+      "note": "Fatal Precision"
+     },
+     {
+      "phase": "effectiveness",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Bone Zone"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Bone Club",
+           "Bonemerang",
+           "Bone Rush",
+           "Shadow Bone"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "value"
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "value": 1,
+      "note": "Bone Zone"
+     },
+     {
+      "phase": "finalMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Bone Zone"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Bone Club",
+           "Bonemerang",
+           "Bone Rush",
+           "Shadow Bone"
+          ]
+         ]
+        },
+        {
+         "op": "lte",
+         "args": [
+          {
+           "ref": "state.typeEffectiveness"
+          },
+          0.5
+         ]
+        }
+       ]
+      },
+      "append": [
+       8192
+      ],
+      "note": "Bone Zone"
+     },
+     {
+      "phase": "effectiveness",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.defAbility"
+          },
+          "Mountaineer"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Rock"
+         ]
+        }
+       ]
+      },
+      "value": 0,
+      "note": "Mountaineer"
+     },
+     {
+      "phase": "finalMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.defAbility"
+          },
+          "Primal Armor"
+         ]
+        },
+        {
+         "op": "gte",
+         "args": [
+          {
+           "ref": "state.typeEffectiveness"
+          },
+          2
+         ]
+        }
+       ]
+      },
+      "append": [
+       2048
+      ],
+      "note": "Primal Armor"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Liquid Voice"
+         ]
+        },
+        {
+         "ref": "move.flags.sound"
+        }
+       ]
+      },
+      "append": [
+       4915
+      ],
+      "note": "Liquid Voice"
      }
     ]
    }

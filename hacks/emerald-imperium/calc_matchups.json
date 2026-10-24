@@ -667,6 +667,142 @@
       "field": {}
     },
     {
+      "name": "feline-prowess-special",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 56
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "liquid-voice-sound",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 125
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 186
+      },
+      "field": {}
+    },
+    {
+      "name": "sage-power-special",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 196
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "striker-kick",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 109
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 487
+      },
+      "field": {}
+    },
+    {
+      "name": "fatal-precision-super-effective",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 168
+      },
+      "def": {
+        "id": "107",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "bone-zone-immune",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 107
+      },
+      "def": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 539
+      },
+      "field": {}
+    },
+    {
+      "name": "mountaineer-rock",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 242
+      },
+      "slot": {
+        "mv": 93
+      },
+      "field": {}
+    },
+    {
+      "name": "primal-armor-super-effective",
+      "atk": {
+        "id": "25",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 192
+      },
+      "slot": {
+        "mv": 227
+      },
+      "field": {}
+    },
+    {
       "name": "boss-roxanne",
       "atk": {
         "id": "111",
