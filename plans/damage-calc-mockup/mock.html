@@ -302,6 +302,22 @@ details.dfield>summary{min-height:30px;font-size:12px;padding:0 8px}
  .ft .l1t em{font-style:normal;color:var(--mut);font-size:10.5px;margin-left:auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
  .ft .l2t{display:block;font-size:10px;line-height:1.25;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
+/* v8 */
+.fit{display:flex;flex-direction:column;gap:2px}
+@media (min-width:480px){
+ main#app{height:auto;display:block;padding-bottom:4px}
+ main#app>*+*{margin-top:4px!important}
+ .fit{height:calc(100vh - 8px);gap:4px}
+ .fit>.ban{flex:none}
+ .top>.dside:not(.mg){align-self:start}
+ .top>.dside:not(.mg) .dstrip{display:grid}
+ .fteam{display:none}
+ #app.tl .top>.dside:not(.mg) .dstrip{display:none}
+ #app.tl .fteam{display:flex;flex:none;overflow:visible}
+ .dside.mg .dstrip{grid-template-columns:repeat(auto-fill,minmax(34px,1fr))}
+ .ft{min-height:29px;padding:0 4px}
+ .ft .l1t{line-height:1.2}.ft .l2t{line-height:1.2}
+}
 </style></head><body>
 <nav id="rail"></nav>
 <main id="app"></main>
@@ -510,13 +526,20 @@ function calcPage(){const A0=getMon('mine'),B0=getMon('foe');const a=A0&&resolve
  else{ra=movesHTML(a,b,'mine',F);rb=movesHTML(b,a,'foe',F);}
  const fs=[F.w&&F.w,F.t&&F.t+' Terrain',F.ref&&'Reflect',F.ls&&'Light Screen'].filter(Boolean);
  const ban=BAN?`<div class="ban ${BAN.ok?'ok':'bad'}"><button class="bx" data-a="bandis" aria-label="Dismiss">×</button><b>${esc(BAN.h)}</b>${esc(BAN.t)}</div>`:'';
- html($('#app'),`${ban}<div class="top"><div class="dside mg">${mineGrid()}</div><div class="dside">${foeSide()}</div></div>
- <div class="dmatch">${chip(a,out,'mine',sa>sb)}${chip(b,!out,'foe',sb>sa)}<div class="dres ${out?'':'na'}">${ra}</div><div class="dres ${out?'na':''}">${rb}</div></div>
+ html($('#app'),`<div class="fit">${ban}<div class="top"><div class="dside mg">${mineGrid()}</div><div class="dside">${foeSide()}</div></div>
+ <div class="dmatch">${chip(a,out,'mine',sa>sb)}${chip(b,!out,'foe',sb>sa)}<div class="dres ${out?'':'na'}">${ra}</div><div class="dres ${out?'na':''}">${rb}</div></div></div>
  <details class="dfield" ${window.__fo?'open':''}><summary>Field <span class="mut">${esc(fs.join(' · ')||'none')}</span></summary><div class="dfb">
   <div class="dfr"><label>Weather<select data-f="w">${['','Sun','Rain','Sand','Hail'].map(x=>`<option ${F.w===x?'selected':''} value="${x}">${x||'None'}</option>`).join('')}</select></label>
   <label>Terrain<select data-f="t">${['','Electric','Grassy','Misty','Psychic'].map(x=>`<option ${F.t===x?'selected':''} value="${x}">${x||'None'}</option>`).join('')}</select></label></div>
   <div class="dtg"><button data-f="ref" aria-pressed="${!!F.ref}">Reflect</button><button data-f="ls" aria-pressed="${!!F.ls}">Light Scr.</button></div></div></details>`);
- bindCap();bindMain();bindEd();}
+ bindCap();bindMain();bindEd();fitTeam();}
+/* Wide windows show the foe's whole team as a list only when all six rows fit under the card's header;
+   otherwise the strip (which always shows all six) stays. avail = the top row's height once the cards and the four
+   move rows have taken theirs. */
+const TEAMNEED=222;
+function fitTeam(){const app=$('#app');if(!app)return;const fit=app.querySelector('.fit'),dm=app.querySelector('.dmatch');if(!fit||!dm||innerWidth<480){app.classList.remove('tl');return;}
+ const ban=fit.querySelector('.ban');const avail=fit.clientHeight-dm.offsetHeight-4-(ban?ban.offsetHeight+4:0);app.classList.toggle('tl',avail>=TEAMNEED);app.dataset.avail=Math.round(avail);}
+window.addEventListener('resize',()=>fitTeam());
 function bindMain(){document.querySelectorAll('[data-lv],[data-hp]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const side=i.dataset.lv||i.dataset.hp,f=i.dataset.lv?'l':'hp';const v=parseInt(i.value);if(isNaN(v))return;
   setField(side,f,f==='l'?Math.max(1,Math.min(100,v)):Math.max(0,v));refresh();};});
  document.querySelectorAll('[data-mo]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const mi=+i.dataset.mi,k=i.dataset.mo;

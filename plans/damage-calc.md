@@ -142,16 +142,27 @@ Top to bottom, one column beside the 44 px rail:
 6. **Field** (collapsed, one summary line) and nothing else.
 7. **Rail jump buttons** (the `.rjump` pair under the tabs): see Scroll stops.
 
-From 480 px (the default first-open window, 480 × 392, up to 537 × 424 and 832 × 424; each column is then at least the
-208 px of the minimum layout) the Mine card and Foe card sit in two columns of identical width (`minmax(0,1fr)`, so content never
-unbalances them) and the same height, the two Pokémon cards in two columns of the same widths, the Foe card shows the trainer's **whole team as a list in place of the strip** (one row per Pokémon: sprite,
-name, level, item, moves; the selected one has the accent outline; scrolls inside the card if the team is taller than the
-space), so the card looks full however tall the Mine grid gets; and **both** movesets are shown, each under its own card and each calculated against the other Pokémon (like
-the Showdown calc). Move rows are 31 px in both columns, status and empty slots included, so the rows line up. **The page
-never scrolls at these widths:** the page is exactly the window's height; the Mine card's grid takes whatever height is left
-and scrolls inside itself (about 5 rows at 424 px), so the matchup, both movesets and the Field row are always all on screen
-(an open Edit dropdown or Field box can push past that: then the page scrolls). Tapping a card still moves the accent
-outline but changes nothing else there. Extra features for these widths come after the minimum size is final.
+**Wide windows (from 480 px: the default first-open window 480 × 392, 537 × 424, 832 × 424, and anything wider or taller,
+down to the minimum height 316).** Everything of the single-column block is on screen at once, never scrolling:
+- Two columns of **identical width** (`minmax(0,1fr)`): the Mine card and Foe card on top, the two Pokémon cards under
+  them, then each Pokémon's four move rows (**both** movesets at once, each calculated against the other Pokémon, like
+  the Showdown calc; 31 px rows in both columns, status and empty slots included, so rows line up).
+- The block is exactly the window's height (`100vh` minus the page padding). **The Field row sits under it, below the
+  fold** (scroll to it), so the block gets its height; nothing else follows it.
+- The Foe card is as tall as its content (it is not stretched to the Mine card); the **Mine card's grid takes all the
+  height that is left** and scrolls inside itself. Its columns are `auto-fill, min 34 px`: 6 at 480–537 px, 11 at 832 px.
+- **Foe team gate (vertical).** The Foe card shows the trainer's whole team as a **list** (one 29 px row per Pokémon:
+  sprite, name, level, item, moves; the selected one outlined; tapping selects) only when all six rows fit:
+  `available >= 222`, where available = the top row's height once the cards and four move rows have taken theirs
+  (`innerHeight - 8 - cards - moves - gaps`; 222 = the card's 35 px header + 6 × 29 + 5 × 2 gaps). Below that the Foe card
+  keeps the **strip**, which always shows the whole team (up to six) at any height. The gate is measured, so it follows
+  the window and the banner above; it never shows a half-visible list and the list never scrolls. Results of the
+  mockup: 537 × 424 and 832 × 424 list (231 available), 480 × 392 strip (199), 832 × 316 strip (123). Below 480 px width
+  the strip is always used.
+- At the minimum height (316) a wide window shows: both grids' tool strip and a couple of grid rows, the foe bar and its
+  strip, both cards, four rows each: the "standard" view of the single-column layout, side by side.
+Tapping a card still moves the accent outline but changes nothing else there. Extra features for these widths come after
+the minimum size is final.
 
 ### Controls, in every state
 **Mine grid.** Tap a cell: select it (also from a box). `↻ Import` opens the file picker (below). `+ New` opens the species
@@ -315,9 +326,12 @@ asserts: no page errors and `documentElement.scrollWidth` equals the viewport wi
     of the box visible above), `↓` again to stop 3 (trainer bar at the top), `↓` again stays; `↑` returns through the same
     stops. With a short page the stops collapse (no two within 24 px).
 19. **Box size:** the grid cells match the trainer strip (same height and sprite size); six per row; no divider lines.
-20. **Wide ★:** at 480 × 392, 537 × 424 and 832 × 424 two columns of identical width (assert equal `getBoundingClientRect().width`) and equal-height top cards, the foe team as a list, both movesets visible with correct
-    per-side results, move rows aligned across the columns, the Mine grid scrolling inside its card; the document is exactly
-    the window height (`scrollHeight === innerHeight`) with 61 Pokémon imported; no overflow. Open the Field box: the page may scroll.
+20. **Wide ★:** at 480 × 392, 537 × 424, 832 × 424 and 832 × 316: two columns of identical width (assert equal
+    `getBoundingClientRect().width`), both movesets visible with correct per-side results and aligned rows, the Mine grid
+    scrolling inside its card, the block exactly the window height (`.fit` height = `innerHeight - 8`), the Field row only
+    below the fold, no overflow. With six foe Pokémon (Flannery): list at 537 × 424 and 832 × 424 (all six rows inside the
+    card, none clipped), strip at 480 × 392 and 832 × 316 (all six sprites visible). Resize the window across 222 px of
+    availability: the card switches once, with no flicker loop.
 21. **Entry points:** `Calc vs <name> ▸` on a trainer card lands on `#/calc` with that foe selected; `Use in calc ▸` from a
     Pokémon page lands with a custom set selected.
 22. **Big box (single column):** import 61 Pokémon (6 party, 55 boxed). The grid card is at most 136 px tall and scrolls by
