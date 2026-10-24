@@ -320,16 +320,17 @@ body.calc-route .foot{display:none}
 body.calc-route .ft .l1t b{min-width:0;overflow:hidden;text-overflow:ellipsis}
 body.calc-route .dempty [hidden],body.calc-route .tools [hidden]{display:none}
 body.calc-route #app{padding:4px;margin-top:0;min-width:0}
-body.calc-route .mg .dstrip button,body.calc-route .dside:not(.mg) .dstrip button{height:28px;min-height:28px;padding:1px 0;border:1px solid var(--line);font-size:9px;line-height:10px;box-sizing:border-box}
+body.calc-route .mg .dstrip button,body.calc-route .dside:not(.mg) .dstrip button{height:28px;min-height:28px;padding:0;border:1px solid var(--line);font-size:9px;line-height:9px;box-sizing:border-box}
 body.calc-route .mg .dstrip button.on,body.calc-route .dside:not(.mg) .dstrip button.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
-body.calc-route .mg .dstrip .spr,body.calc-route .dside:not(.mg) .dstrip .spr{width:16px;height:14px;min-height:14px;aspect-ratio:auto;background-size:contain}
-body.calc-route .dstrip button span{position:relative;line-height:10px;padding-bottom:1px}
+body.calc-route .mg .dstrip .spr,body.calc-route .dside:not(.mg) .dstrip .spr{width:16px;height:16px;min-height:16px;aspect-ratio:auto;background-size:contain}
+body.calc-route .dstrip button span{position:relative;line-height:9px;padding-bottom:1px}
 body.calc-route .mg .dstrip button.cu{border-style:dashed}
 body.calc-route .sheet{z-index:80}
 body.calc-route .kb{z-index:100}
 body.calc-route .dres .mr .rcol{align-self:flex-start}
 body.calc-route .dres .mr .mm{min-width:0}
-body.calc-route .dside.mg .dstrip{max-height:136px}
+body.calc-route .dside.mg .dstrip{max-height:121px}
+body.calc-route .dempty:has([hidden]){grid-template-columns:1fr}
 body.calc-route .dfield .dfb .dtg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
 body.calc-route .ed table{table-layout:fixed;width:100%}
 body.calc-route .ed .nv{width:100%;min-width:0}
