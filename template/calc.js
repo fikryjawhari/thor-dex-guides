@@ -171,7 +171,7 @@ function refreshMainOnly(){calcPage();}
 
 function defMoves(p,l){const m=(p.lv||[]).filter(x=>x[0]<=l).map(x=>x[1]);return [...new Set(m)].slice(-4);}
 function newMon(){picker({title:'New Pokémon',items:P.map(p=>({label:p.n,sub:p.t.join(' / '),id:p.id,v:p.id})),onPick:id=>{const p=byId[id];let l=50;try{l=capOf(trByK[ST.foe.k])||50}catch(e){}
-  const m={id,l,na:'Hardy',a:p.a[0],i:'',m:defMoves(p,l),iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0],pid:'c'+Date.now()};ST.custom.push(m);ST.mine={src:'custom',b:0,i:ST.custom.length-1};save();
+  l=Math.max(range[0],Math.min(range[1],l));const m={id,l,na:'Hardy',a:p.a[0],i:'',m:defMoves(p,l),iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0],pid:'c'+Date.now()};ST.custom.push(m);ST.mine={src:'custom',b:0,i:ST.custom.length-1};save();
   dismissSheets();EDITOPEN.mine=true;refreshMainOnly();}});}
 
 const trCap=t=>capOf(t)?'Cap '+capOf(t):'';

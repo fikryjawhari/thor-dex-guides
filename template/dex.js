@@ -948,7 +948,7 @@ function land(el){if(!el)return;const st0=el.tagName==='SUMMARY'?el.parentElemen
  const f=()=>{if(stop||performance.now()-t0>700){html.style.overflowAnchor='';cv.forEach(p=>p.style.contentVisibility='');jumpState();return;}to();requestAnimationFrame(f);};requestAnimationFrame(f);}
 
 document.addEventListener('click',event=>{const button=CF.calc&&event.target.closest('.calc-versus');if(button)window.CALC?.enter(button.dataset.trainer,+button.dataset.index);});
-// ===== CALC (empty for now; the stat calculator is on each Pokemon page)
+// ===== CALC
 function calcPage(){if(window.CALC)window.CALC.render();}
 // ===== ROUTER
 function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).split('/');const v=parts[0]||'';
