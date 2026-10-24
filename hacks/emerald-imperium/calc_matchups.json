@@ -1,0 +1,926 @@
+{
+  "oracle": {
+    "title": "Emerald Imperium 1.3",
+    "gen": 8,
+    "damageGen": 8,
+    "types": 6,
+    "critGen": 6,
+    "backup": "imp_1-3",
+    "names": {
+      "abilities": {
+        "Emperor's Presence": "Emperor's Prescence",
+        "ORAORAORAORA!": "ORAORAORAORA"
+      },
+      "species": {},
+      "moves": {},
+      "items": {}
+    }
+  },
+  "matchups": [
+    {
+      "name": "physical-neutral",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "special-neutral",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "super-effective-stab",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "3",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "type-immunity",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "94",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "levitate-immunity",
+      "atk": {
+        "id": "445",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "94",
+        "lv": 50,
+        "ab": 97
+      },
+      "slot": {
+        "mv": 66
+      },
+      "field": {}
+    },
+    {
+      "name": "critical",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80,
+        "crit": true
+      },
+      "field": {}
+    },
+    {
+      "name": "burn",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "st": "brn"
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "reflect",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "defReflect": true
+      }
+    },
+    {
+      "name": "light-screen",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {
+        "defLightScreen": true
+      }
+    },
+    {
+      "name": "sun",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {
+        "weather": "Sun"
+      }
+    },
+    {
+      "name": "rain",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "weather": "Rain"
+      }
+    },
+    {
+      "name": "electric-terrain",
+      "atk": {
+        "id": "26",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 227
+      },
+      "field": {
+        "terrain": "Electric"
+      }
+    },
+    {
+      "name": "stat-stages",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "multi-hit",
+      "atk": {
+        "id": "91",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 294,
+        "hits": 5
+      },
+      "field": {}
+    },
+    {
+      "name": "hit-dependent-triple-axel",
+      "atk": {
+        "id": "237",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 325,
+        "hits": 3
+      },
+      "field": {}
+    },
+    {
+      "name": "item-choice-band",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1,
+        "it": "Choice Band"
+      },
+      "def": {
+        "id": "3",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 95
+      },
+      "field": {}
+    },
+    {
+      "name": "item-life-orb",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1,
+        "it": "Life Orb"
+      },
+      "def": {
+        "id": "3",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "item-expert-belt",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1,
+        "it": "Expert Belt"
+      },
+      "def": {
+        "id": "3",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "item-charcoal",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1,
+        "it": "Charcoal"
+      },
+      "def": {
+        "id": "3",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "huge-power",
+      "atk": {
+        "id": "184",
+        "lv": 50,
+        "ab": 140
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 150
+      },
+      "field": {}
+    },
+    {
+      "name": "technician",
+      "atk": {
+        "id": "212",
+        "lv": 50,
+        "ab": 24
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 412
+      },
+      "field": {}
+    },
+    {
+      "name": "adaptability",
+      "atk": {
+        "id": "474",
+        "lv": 50,
+        "ab": 18
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 251
+      },
+      "field": {}
+    },
+    {
+      "name": "mega-aerilate",
+      "atk": {
+        "id": "942",
+        "lv": 50,
+        "ab": 124,
+        "it": "Salamencite"
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 10
+      },
+      "field": {}
+    },
+    {
+      "name": "thick-fat",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": 2
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "iron-fist-changed",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 110
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 459
+      },
+      "field": {}
+    },
+    {
+      "name": "emperor-presence",
+      "atk": {
+        "id": "395",
+        "lv": 50,
+        "ab": 183
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {}
+    },
+    {
+      "name": "custom-aqua-fang",
+      "atk": {
+        "id": "160",
+        "lv": 50,
+        "ab": 27
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 571
+      },
+      "field": {}
+    },
+    {
+      "name": "custom-dark-hole",
+      "atk": {
+        "id": "94",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 508
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-barrage-fairy",
+      "atk": {
+        "id": "887",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "36",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130
+      },
+      "field": {}
+    },
+    {
+      "name": "frostbite-special",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": -1,
+        "st": "frz"
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "ora-punch-second-hit",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 73
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 459
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-barrage-special",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130
+      },
+      "field": {}
+    },
+    {
+      "name": "emperor-presence-steel",
+      "atk": {
+        "id": "395",
+        "lv": 50,
+        "ab": 183
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 167
+      },
+      "field": {}
+    },
+    {
+      "name": "iron-fist-non-punch",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 110
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "ora-non-punch",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 73
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "frostbite-physical",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "st": "frz"
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "feline-prowess-special",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 56
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "liquid-voice-sound",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 125
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 186
+      },
+      "field": {}
+    },
+    {
+      "name": "sage-power-special",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 196
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "striker-kick",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 109
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 487
+      },
+      "field": {}
+    },
+    {
+      "name": "fatal-precision-super-effective",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 168
+      },
+      "def": {
+        "id": "107",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "bone-zone-immune",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 107
+      },
+      "def": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 539
+      },
+      "field": {}
+    },
+    {
+      "name": "mountaineer-rock",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 242
+      },
+      "slot": {
+        "mv": 93
+      },
+      "field": {}
+    },
+    {
+      "name": "primal-armor-super-effective",
+      "atk": {
+        "id": "25",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 192
+      },
+      "slot": {
+        "mv": 227
+      },
+      "field": {}
+    },
+    {
+      "name": "boss-roxanne",
+      "atk": {
+        "id": "111",
+        "lv": 14,
+        "ab": 29,
+        "it": "Rindo Berry",
+        "nat": "Adamant",
+        "iv": [
+          31,
+          31,
+          31,
+          31,
+          31,
+          31
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "9",
+        "lv": 15,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 86
+      },
+      "field": {},
+      "trainer": {
+        "key": "0.0.4",
+        "slot": 0,
+        "source": "data.json TR"
+      }
+    },
+    {
+      "name": "boss-wattson",
+      "atk": {
+        "id": "702",
+        "lv": 34,
+        "ab": 218,
+        "it": "Terrain Extender",
+        "nat": "Timid",
+        "iv": [
+          31,
+          31,
+          31,
+          31,
+          31,
+          30
+        ],
+        "ev": [
+          6,
+          0,
+          0,
+          252,
+          0,
+          252
+        ]
+      },
+      "def": {
+        "id": "9",
+        "lv": 34,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 600
+      },
+      "field": {},
+      "trainer": {
+        "key": "3.0.14",
+        "slot": 0,
+        "source": "data.json TR"
+      }
+    },
+    {
+      "name": "boss-norman",
+      "atk": {
+        "id": "1003",
+        "lv": 59,
+        "ab": 204,
+        "it": "Focus Sash",
+        "nat": "Timid",
+        "iv": [
+          31,
+          31,
+          31,
+          31,
+          31,
+          31
+        ],
+        "ev": [
+          6,
+          0,
+          0,
+          252,
+          0,
+          252
+        ]
+      },
+      "def": {
+        "id": "9",
+        "lv": 59,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 672
+      },
+      "field": {},
+      "trainer": {
+        "key": "5.0.17",
+        "slot": 0,
+        "source": "data.json TR"
+      }
+    }
+  ]
+}

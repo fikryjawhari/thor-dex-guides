@@ -50,9 +50,14 @@ export function getMoveEffectiveness(gen: any, move: any, type: any, revealed?: 
     if (modern) body = body.replaceAll('getFinalDamage(', 'guideRoll(gen, getFinalDamage, ');
     if (suffix === 'BWXY') {
       body = once(body, '      const newBaseDamage = getBaseDamage(attacker.level, newBasePower, newAtk, newDef);',
-        `      const useGuideDamage = (gen as any).critMultiplier !== undefined || ['critical','beforeWeather','baseDamage'].some(phase => (gen as any).guideRules[phase]?.length);\n      const newBaseDamage = useGuideDamage\n        ? calculateBaseDamageBWXY(gen, attacker, newBasePower, newAtk, newDef, move, field, desc, isCritical)\n        : getBaseDamage(attacker.level, newBasePower, newAtk, newDef);`);
+        `      const useGuideDamage = (gen as any).critMultiplier !== undefined || ['critical','beforeWeather','hitBaseDamage','baseDamage'].some(phase => (gen as any).guideRules[phase]?.length);\n      const newBaseDamage = useGuideDamage\n        ? calculateBaseDamageBWXY(gen, attacker, newBasePower, newAtk, newDef, move, field, desc, isCritical)\n        : getBaseDamage(attacker.level, newBasePower, newAtk, newDef);`);
     }
     if (!modern) {
+      // Per-hit base damage after the native division, before Gen 4 burn and final mods (first hit, then loop).
+      body = once(body, "  );\n\n  if (attacker.hasStatus('brn') && isPhysical && !attacker.hasAbility('Guts')) {",
+        `  );\n  baseDamage = ${invocation(body, 'hitBaseDamage', 'baseDamage')};\n\n  if (attacker.hasStatus('brn') && isPhysical && !attacker.hasAbility('Guts')) {`);
+      body = once(body, "      );\n      if (attacker.hasStatus('brn') && isPhysical && !attacker.hasAbility('Guts')) {",
+        `      );\n      baseDamage = ${invocation(body, 'hitBaseDamage', 'baseDamage')};\n      if (attacker.hasStatus('brn') && isPhysical && !attacker.hasAbility('Guts')) {`);
       body = once(body, 'let newBasePower = calculateBasePowerDPP(gen, attacker, defender, move, field, desc);',
         'let newBasePower = calculateBasePowerDPP(gen, attacker, defender, move, field, desc, times + 1);');
       body = once(body, '        ) / defense',
@@ -106,6 +111,11 @@ export function getMoveEffectiveness(gen: any, move: any, type: any, revealed?: 
     const before = modern ? '  let baseDamage = getBaseDamage(attacker.level, basePower, attack, defense);'
       : "  const isPhysical = move.category === 'Physical';";
     body = once(body, before, `  ${invocation(body, 'beforeWeather', 'undefined')};\n${before}`);
+    if (modern) {
+      // Per-hit base damage after the native spread step, before Parental Bond (Child), weather and crit.
+      body = once(body, "  if (attacker.hasAbility('Parental Bond (Child)')) {",
+        `  baseDamage = ${invocation(body, 'hitBaseDamage', 'baseDamage')};\n  if (attacker.hasAbility('Parental Bond (Child)')) {`);
+    }
     return once(body, '  return baseDamage;', `  return ${invocation(body, 'baseDamage', 'baseDamage', 'isCritical')};`);
   });
   return `import {applyPhase, legacyMods, guideRoll} from 'guide-calc-rules';\n${source}`;

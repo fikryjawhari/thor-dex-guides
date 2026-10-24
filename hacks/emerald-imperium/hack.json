@@ -19,7 +19,769 @@
    "boss trainers"
   ],
   "calc": {
-   "base": "expansion"
+   "base": "expansion",
+   "status": [
+    [
+     "",
+     "Healthy"
+    ],
+    [
+     "brn",
+     "Burn"
+    ],
+    [
+     "par",
+     "Paralysis"
+    ],
+    [
+     "psn",
+     "Poison"
+    ],
+    [
+     "tox",
+     "Bad poison"
+    ],
+    [
+     "slp",
+     "Sleep"
+    ],
+    [
+     "frz",
+     "Frostbite"
+    ]
+   ],
+   "over": {
+    "abilities": {
+     "Iron Fist": {
+      "effect": ""
+     },
+     "ORAORAORAORA!": {
+      "effect": ""
+     }
+    },
+    "rules": [
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "names.move"
+        },
+        "Draco Barrage"
+       ]
+      },
+      "set": {
+       "move.category": {
+        "op": "if",
+        "args": [
+         {
+          "op": "gt",
+          "args": [
+           {
+            "op": "div",
+            "args": [
+             {
+              "op": "mul",
+              "args": [
+               {
+                "ref": "atk.rawStats.atk"
+               },
+               {
+                "op": "if",
+                "args": [
+                 {
+                  "op": "gte",
+                  "args": [
+                   {
+                    "ref": "atk.boosts.atk"
+                   },
+                   0
+                  ]
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "op": "add",
+                    "args": [
+                     2,
+                     {
+                      "ref": "atk.boosts.atk"
+                     }
+                    ]
+                   },
+                   2
+                  ]
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   2,
+                   {
+                    "op": "sub",
+                    "args": [
+                     2,
+                     {
+                      "ref": "atk.boosts.atk"
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             },
+             {
+              "op": "mul",
+              "args": [
+               {
+                "ref": "def.rawStats.def"
+               },
+               {
+                "op": "if",
+                "args": [
+                 {
+                  "op": "gte",
+                  "args": [
+                   {
+                    "ref": "def.boosts.def"
+                   },
+                   0
+                  ]
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "op": "add",
+                    "args": [
+                     2,
+                     {
+                      "ref": "def.boosts.def"
+                     }
+                    ]
+                   },
+                   2
+                  ]
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   2,
+                   {
+                    "op": "sub",
+                    "args": [
+                     2,
+                     {
+                      "ref": "def.boosts.def"
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "op": "div",
+            "args": [
+             {
+              "op": "mul",
+              "args": [
+               {
+                "ref": "atk.rawStats.spa"
+               },
+               {
+                "op": "if",
+                "args": [
+                 {
+                  "op": "gte",
+                  "args": [
+                   {
+                    "ref": "atk.boosts.spa"
+                   },
+                   0
+                  ]
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "op": "add",
+                    "args": [
+                     2,
+                     {
+                      "ref": "atk.boosts.spa"
+                     }
+                    ]
+                   },
+                   2
+                  ]
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   2,
+                   {
+                    "op": "sub",
+                    "args": [
+                     2,
+                     {
+                      "ref": "atk.boosts.spa"
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             },
+             {
+              "op": "mul",
+              "args": [
+               {
+                "ref": "def.rawStats.spd"
+               },
+               {
+                "op": "if",
+                "args": [
+                 {
+                  "op": "gte",
+                  "args": [
+                   {
+                    "ref": "def.boosts.spd"
+                   },
+                   0
+                  ]
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "op": "add",
+                    "args": [
+                     2,
+                     {
+                      "ref": "def.boosts.spd"
+                     }
+                    ]
+                   },
+                   2
+                  ]
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   2,
+                   {
+                    "op": "sub",
+                    "args": [
+                     2,
+                     {
+                      "ref": "def.boosts.spd"
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "Physical",
+         "Special"
+        ]
+       }
+      },
+      "note": "Better attacking stat"
+     },
+     {
+      "phase": "hits",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "ORAORAORAORA!"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "value"
+          },
+          1
+         ]
+        },
+        {
+         "ref": "move.flags.punch"
+        }
+       ]
+      },
+      "set": {
+       "state.oraSecond": true
+      },
+      "value": 2,
+      "note": "ORAORAORAORA!"
+     },
+     {
+      "phase": "hitBaseDamage",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "ref": "state.oraSecond"
+        },
+        {
+         "op": "gte",
+         "args": [
+          {
+           "ref": "state.hit"
+          },
+          2
+         ]
+        }
+       ]
+      },
+      "value": {
+       "op": "floor",
+       "args": [
+        {
+         "op": "mul",
+         "args": [
+          {
+           "ref": "value"
+          },
+          0.5
+         ]
+        }
+       ]
+      },
+      "note": "ORAORAORAORA! second hit 50%"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Iron Fist"
+         ]
+        },
+        {
+         "ref": "move.flags.punch"
+        }
+       ]
+      },
+      "append": [
+       5325
+      ],
+      "note": "Iron Fist"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Emperor's Presence"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          [
+           "Water",
+           "Steel"
+          ]
+         ]
+        }
+       ]
+      },
+      "append": [
+       5325
+      ],
+      "note": "Emperor's Presence"
+     },
+     {
+      "phase": "effectiveness",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          "Draco Barrage"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "state.effectivenessType"
+          },
+          "Fairy"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "value"
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "value": 1,
+      "note": "Ignores Fairy immunity"
+     },
+     {
+      "phase": "beforeRolls",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "input.atk.st"
+          },
+          "frz"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.category"
+          },
+          "Special"
+         ]
+        }
+       ]
+      },
+      "set": {
+       "value.isBurned": true
+      },
+      "note": "Frostbite"
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Feline Prowess"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.category"
+          },
+          "Special"
+         ]
+        }
+       ]
+      },
+      "append": [
+       8192
+      ],
+      "note": "Feline Prowess"
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Sage Power"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.category"
+          },
+          "Special"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Sage Power"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Striker"
+         ]
+        },
+        {
+         "ref": "move.flags.kicking"
+        }
+       ]
+      },
+      "append": [
+       5325
+      ],
+      "note": "Striker"
+     },
+     {
+      "phase": "finalMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Fatal Precision"
+         ]
+        },
+        {
+         "op": "gte",
+         "args": [
+          {
+           "ref": "state.typeEffectiveness"
+          },
+          2
+         ]
+        }
+       ]
+      },
+      "append": [
+       4915
+      ],
+      "note": "Fatal Precision"
+     },
+     {
+      "phase": "effectiveness",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Bone Zone"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Bone Club",
+           "Bonemerang",
+           "Bone Rush",
+           "Shadow Bone"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "value"
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "value": 1,
+      "note": "Bone Zone"
+     },
+     {
+      "phase": "finalMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Bone Zone"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Bone Club",
+           "Bonemerang",
+           "Bone Rush",
+           "Shadow Bone"
+          ]
+         ]
+        },
+        {
+         "op": "lte",
+         "args": [
+          {
+           "ref": "state.typeEffectiveness"
+          },
+          0.5
+         ]
+        }
+       ]
+      },
+      "append": [
+       8192
+      ],
+      "note": "Bone Zone"
+     },
+     {
+      "phase": "effectiveness",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.defAbility"
+          },
+          "Mountaineer"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Rock"
+         ]
+        }
+       ]
+      },
+      "value": 0,
+      "note": "Mountaineer"
+     },
+     {
+      "phase": "finalMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.defAbility"
+          },
+          "Primal Armor"
+         ]
+        },
+        {
+         "op": "gte",
+         "args": [
+          {
+           "ref": "state.typeEffectiveness"
+          },
+          2
+         ]
+        }
+       ]
+      },
+      "append": [
+       2048
+      ],
+      "note": "Primal Armor"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Liquid Voice"
+         ]
+        },
+        {
+         "ref": "move.flags.sound"
+        }
+       ]
+      },
+      "append": [
+       4915
+      ],
+      "note": "Liquid Voice"
+     }
+    ]
+   }
   },
   "ls": {
    "dex": "eidex1",

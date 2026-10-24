@@ -53,6 +53,12 @@ function effectName(collection, name, original = false) {
   return original ? '' : name;
 }
 
+function hitCount(value) {
+  const count = Math.max(1, Math.min(10, Math.trunc(Number(value))));
+  if (!Number.isFinite(count)) throw new Error('DMG: hit count must be a number');
+  return count;
+}
+
 function init(guide, configuration) {
   if (![4, 5, 6, 7, 8, 9].includes(configuration.gen)) throw new Error('DMG: supported generations are 4-9');
   if (configuration.over?.typeGen !== undefined && ![4, 5, 6, 7, 8, 9].includes(configuration.over.typeGen)) {
@@ -226,11 +232,11 @@ function calc(atk, def, slot, values = {}) {
   const hitRange = profile.multihit?.[name];
   const stockHits = moveData.multihit;
   const defaultHits = hitRange?.[2] ?? (typeof stockHits === 'number' ? stockHits : Array.isArray(stockHits) ? stockHits[0] + 1 : 1);
-  const hits = Math.max(1, Math.min(10, Math.trunc(slot.hits ?? defaultHits)));
+  const selected = hitCount(slot.hits ?? defaultHits);
   const move = new Move(generation, moveData.name, {
-    overrides, isCrit: !!slot.crit, hits, ability: attacker.ability, item: attacker.item,
+    overrides, isCrit: !!slot.crit, hits: selected, ability: attacker.ability, item: attacker.item,
   });
-  move.hits = hits;
+  move.hits = selected;
   const context = {
     atk: attacker, def: defender, move, field, desc: {}, notes: new Set(),
     input: {atk, def, slot, field: values},
@@ -241,9 +247,12 @@ function calc(atk, def, slot, values = {}) {
       def: data.P.find(entry => String(entry.id) === String(def.id)).n,
       atkAbility: data.AB[atk.ab]?.[0] || '', defAbility: data.AB[def.ab]?.[0] || '',
       atkItem: atk.it || '', defItem: def.it || '', move: name},
-    state: {hit: 1, hitCount: 0, hits, originalPower: Number(power)},
+    state: {hit: 1, hitCount: 0, hits: selected, originalPower: Number(power)},
   };
   generation.guideContext = context;
+  const hits = hitCount(applyPhase(generation, 'hits', {}, selected));
+  move.hits = hits;
+  context.state.hits = hits;
   applyPhase(generation, 'beforeStats', {}, undefined);
   const calculate = profile.gen === 4 ? calculateDPP : profile.gen <= 6 ? calculateBWXY : calculateSMSSSV;
   const result = calculate(generation, attacker, defender, move, field);

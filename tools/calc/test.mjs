@@ -408,6 +408,72 @@ await test('node entry handles single/batch requests and merged profiles', async
   assert.deepEqual(JSON.parse(cli.stdout), single);
 });
 
+// Hand-checked: Charizard Tackle into Blastoise at 104 Attack. Gen 5+ base damage is
+// floor(floor(22*40*104/120)/50)+2 = 17. Rolls are floor(base*(85+i)/100).
+const secondHalf = {phase: 'hitBaseDamage', when: operation('gte', ref('state.hit'), 2),
+  value: operation('floor', operation('mul', ref('value'), 0.5))};
+const extraHit = {phase: 'hits', when: operation('eq', ref('value'), 1), value: 2};
+
+await test('hand-checked second hit: base 17 on hit 1, floor(17 / 2) = 8 on hit 2', () => {
+  for (const base of [profiles.expansion, profiles.gen5]) {
+    const result = withOverrides({rules: [extraHit, secondHalf]}, slot('Tackle'), undefined, undefined, base);
+    assert.equal(result.hits, 2);
+    assert.deepEqual(result.per, [
+      [...Array(4).fill(14), ...Array(6).fill(15), ...Array(5).fill(16), 17],
+      [...Array(3).fill(6), ...Array(12).fill(7), 8],
+    ]);
+    assert.deepEqual(result.rolls, result.per[0]);
+  }
+});
+
+await test('hand-checked Gen 4 second hit: the hook sees 15 before the +2, so hit 2 is 7 + 2 = 9', () => {
+  // Gen 4 adds its +2 inside the DPP final modifiers, after screens, spread and weather.
+  const result = withOverrides({rules: [extraHit, secondHalf]}, slot('Tackle'), undefined, undefined, profiles.gen4);
+  assert.deepEqual(result.per, [
+    [...Array(4).fill(14), ...Array(6).fill(15), ...Array(5).fill(16), 17],
+    [...Array(4).fill(7), ...Array(11).fill(8), 9],
+  ]);
+});
+
+await test('hand-checked burn input halves each physical roll once', () => {
+  const result = withOverrides({rules: [{phase: 'beforeRolls', set: {'value.isBurned': true}}]}, slot('Tackle'));
+  assert.deepEqual(result.rolls, [...Array(10).fill(7), ...Array(6).fill(8)]);
+});
+
+await test('frostbite-style status halves special rolls only, after type effectiveness', () => {
+  const profile = {...structuredClone(profiles.expansion),
+    status: [...profiles.expansion.status.filter(([key]) => key !== 'frz'), ['frz', 'Frostbite']]};
+  const over = {rules: [{phase: 'beforeRolls', when: operation('and', operation('eq', ref('input.atk.st'), 'frz'),
+    operation('eq', ref('move.category'), 'Special')), set: {'value.isBurned': true}}]};
+  const attacker = set('Snorlax', {st: 'frz'});
+  const halved = withOverrides(over, slot('Flamethrower'), attacker, set('Blastoise'), profile);
+  const normal = withOverrides({}, slot('Flamethrower'), set('Snorlax'), set('Blastoise'), profile);
+  assert.deepEqual(halved.rolls, normal.rolls.map(value => Math.floor(value / 2)));
+  assert.equal(halved.eff, normal.eff);
+  const physical = withOverrides(over, slot('Tackle'), attacker, set('Blastoise'), profile);
+  assert.deepEqual(physical.rolls, withOverrides({}, slot('Tackle'), set('Snorlax'), set('Blastoise'), profile).rolls);
+});
+
+await test('hit rules reproduce the native Parental Bond second hit (0.25, half down)', () => {
+  const attacker = set('Snorlax', {ab: ability('Parental Bond')});
+  const hitsOf = result => result.per || Array.from({length: result.hits}, () => result.rolls);
+  const native = withOverrides({}, slot('Tackle'), attacker);
+  const ruled = withOverrides({abilities: {'Parental Bond': {effect: ''}}, rules: [
+    {phase: 'hits', when: operation('and', operation('eq', ref('names.atkAbility'), 'Parental Bond'),
+      operation('eq', ref('value'), 1)), value: 2},
+    {phase: 'hitBaseDamage', when: operation('and', operation('eq', ref('names.atkAbility'), 'Parental Bond'),
+      operation('gte', ref('state.hit'), 2)), value: operation('floor', operation('div',
+      operation('add', operation('mul', ref('value'), 1024), 2047), 4096))},
+  ]}, slot('Tackle'), attacker);
+  assert.equal(ruled.hits, 2);
+  assert.deepEqual(hitsOf(ruled), hitsOf(native));
+});
+
+await test('a hit-count rule that returns a non-number fails explicitly', () => {
+  engine.init(data, {...structuredClone(profiles.expansion), over: {rules: [{phase: 'hits', value: operation('mul', ref('value'), 'x')}]}});
+  assert.throws(() => engine.calc(set('Charizard'), set('Blastoise'), slot('Tackle'), {}), /hit count must be a number/);
+});
+
 await test('initialisation and calculations leave guide/profile inputs unchanged', () => {
   assert.equal(JSON.stringify({data, profiles}), unchanged);
 });
