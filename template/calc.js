@@ -20,8 +20,8 @@ const trByK=TRK;
 const isRel=t=>t.p.some(x=>x.l==null);
 function curMine(){const imp=ST.imp,m=ST.mine;if(m.src==='party'&&imp&&imp.party)return imp.party[m.i]||null;if(m.src==='box'&&imp&&imp.boxes&&imp.boxes[m.b])return imp.boxes[m.b][m.i]||null;if(m.src==='custom')return ST.custom[m.i]||null;return null;}
 function applyEdits(base,key){ST.saved=ST.saved||{};const sv=key&&ST.saved[key],e=key&&ST.edits[key];const w=!!e&&Object.keys(e).length>0;if(!sv&&!w)return {...base};return {...base,...sv,...e,edited:w,saved:!!sv};}
-function foeBase(t,i){const x=t.p[i];if(!x)return null;const p=byId[x.id];const cap=capOf(t),l=monLv(x,cap);
- return {id:x.id,l,na:x.na||'Hardy',a:x.a!=null?x.a:p.a[0],aGuess:x.a==null,i:x.i||'',m:(x.m||[]).slice(),iv:x.iv||[31,31,31,31,31,31],ev:x.ev||[0,0,0,0,0,0],foe:true};}
+function foeBase(t,i){const x=t.p[i];if(!x)return null;const p=byId[x.id];const cap=capOf(t),level=monLv(x,cap),knownAbility=Number.isInteger(x.a)&&x.a>=0;
+ return {id:x.id,l:Number.isFinite(level)?Math.max(range[0],Math.min(range[1],level)):NaN,na:x.na||'Hardy',a:knownAbility?x.a:p.a[0],aGuess:!knownAbility,i:x.i||'',m:(x.m||[]).slice(),iv:x.iv||[31,31,31,31,31,31],ev:x.ev||[0,0,0,0,0,0],foe:true};}
 function resolve(m){const p=byId[m.id],l=isNaN(m.l)?null:m.l;const st=l==null?null:window.DMG.stats(toEngine(m));
  return {...m,p,name:p.n,types:p.t,lv:l,stats:st,abil:AB[m.a]||'',stg:m.stg||[0,0,0,0,0],status:m.status||'',hp:st?Math.min(m.hp==null?st[0]:m.hp,st[0]):null};}
 
@@ -76,7 +76,7 @@ function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
  const total=(result,mode)=>result.per?result.per.reduce((sum,rolls)=>sum+(mode==='min'?Math.min(...rolls):Math.max(...rolls)),0):result[mode]*result.hits;
  const best=Math.max(0,...D0.map(entry=>entry.r?total(entry.r,'max'):0));
  return D0.map(x=>{const {slot,mi,ck,mv,crit,n,r}=x;
-  if(mi==null)return `<div class="mr em"><div class="mm" data-a="addmv" data-slot="${slot}" data-side="${side}">+ Move</div></div>`;
+  if(mi==null)return `<div class="mr em"><div class="mm" data-a="addmv" data-slot="${slot}" data-side="${side}">${slot===0&&side==='foe'&&ST.dir==='in'&&!att.m.some(move=>move!=null)?'No moves listed · ':''}+ Move</div></div>`;
   const open=ROWOPEN.has(ck),mh=MH[mi],ov=ST.mvo[ck];
   const types=`<label>Type<select data-mo="t" data-mi="${mi}" data-ck="${ck}">${TNAMES.map(t=>`<option ${t===mv.t?'selected':''}>${t}</option>`).join('')}</select></label>`;
   const bp=r||mv.c!=='Status'?`<label>Power${nb(`data-mo="bp" data-mi="${mi}" data-ck="${ck}"`,Number(mv.bp)||0,{min:0,max:250,label:'Power'})}</label>`:'';
@@ -173,7 +173,7 @@ function newMon(){picker({title:'New Pokémon',items:P.map(p=>({label:p.n,sub:p.
   const m={id,l,na:'Hardy',a:p.a[0],i:'',m:defMoves(p,l),iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0],pid:'c'+Date.now()};ST.custom.push(m);ST.mine={src:'custom',b:0,i:ST.custom.length-1};save();
   dismissSheets();EDITOPEN.mine=true;refreshMainOnly();}});}
 
-const trCap=t=>t.cap?'Cap '+t.cap:'';
+const trCap=t=>capOf(t)?'Cap '+capOf(t):'';
 function trRow(t,sel){return `<div role="button" tabindex="0" class="mrow ${sel?'sel':''}" data-s="pickfoe" data-k="${t.k}"><span class="tx"><b>${esc(t.n)}</b><small>${esc([t.loc,trCap(t)].filter(Boolean).join(' · '))}</small><span class="mini">${t.p.map(x=>spr(x.id,'s24')).join('')}</span></span></div>`;}
 function foeSheet(){return {title:()=>'Foe',
  body(){const groups=[];D.TR.forEach(t=>{let g=groups[groups.length-1];if(!g||g.n!==t.g){g={n:t.g,t:[]};groups.push(g);}g.t.push(t);});
