@@ -241,10 +241,15 @@ Path `C:\Users\fikry\.t3\worktrees\thor-dex-guides\worktree-code-cleanup` (T3 th
 | E [11] [10] | verified | `4850b90` (ff: `27c6926` [11], `0f557ea` + `4850b90` [10]) | gpt-6.1-sol, task `cleanup-unit-E-r1`, branch `t3/shared-3ds-extract-helpers`, `C:\Users\fikry\.t3\worktrees\thor-dex-guides\t3-2f66f4f4` | `extractlib.filter_species_links`, `ctrguide.walk_same` / `walk_stops`; +70/−100. EX/PS data + reports byte-identical (stamps too), check.py, tabs 0 problems. HTML equals baseline once unit A's template is substituted. Logs: that worktree's `.tmp/unitE/SUMMARY.md` | — |
 | F [12] [07] [06] [13] [14] [15] [08 minus node] | in progress | — | gpt-6.1-sol, task `cleanup-unit-F-r1` | — | Review, merge. |
 | G [05] | pending | — | — | **Pre-existing:** `walk-state-check.mjs <old> <new> 0.0` fails at base too (EX `tick 2.0`, PS `tick 1.3`, `undefined !== 1` at line 131; identical on baseline-vs-baseline). Not a cleanup regression. | Diagnose and fix the check (or its invocation) in G, before refactoring it. |
-| I standard-work tooling (added 2026-10-24, user approved) | pending | — | — | — | After G (builds on `tools/browser.mjs`); spec below. |
-| H final audit | pending | — | — | — | Runs on `gate.py` from I. |
+| H final audit | pending | — | — | — | Haiku worker after G: every gate on the integrated branch vs the baseline (datacmp ×4, domcompare ×4 normal + kb one at a time, consistency, tabs, mockup checks, walk-state if G fixed it), pass/fail with evidence. Each unit's diff was already reviewed by the orchestrator before merging. Then ask the user to merge to `main`. |
+| I standard-work tooling (added 2026-10-24, user approved) | pending | — | — | — | **Not on this branch:** after the cleanup merges, its own branch `worktree-standard-tooling` from `main`, Sonnet worker. Spec below. |
 
-**Unit I scope** (user approved 2026-10-24; touches `tools/`, `.agents/`, docs only, no template):
+**Order agreed 2026-10-24** (Codex usage ~18% before F, ~6% per unit so far; Claude ~44%): F and G on Codex
+(gpt-6.1-sol), H on Haiku, merge, then I on Sonnet. If G runs out partway, recover from its commits and finish the
+small remainder on Sonnet (section 4).
+
+**Unit I scope** (user approved 2026-10-24; touches `tools/`, `.agents/`, docs only, no template; carry this block
+into `plans/standard-tooling.md` when the cleanup merges and this file is deleted):
 1. `tools/gate.py`: `baseline [ref]` builds every guide at a git ref (default `main`) into `.tmp/baseline/`
    (dist, data.json, report.txt); `check [hacks] [--data] [--template]` rebuilds each hack by its reproducible path
    (EX/PS raw, HG `--published`, EI `itemstd.py`; the table lives in the script), compares data ignoring `built`,
