@@ -7,12 +7,11 @@
 // not positions are read as the positions of the old layout), so a fresh baseline build against dist/ works too.
 // The synthetic migration cases at the top run on template/dex.js alone.
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import vm from 'node:vm';
+import { startBrowser } from './browser.mjs';
 
 const source = readFileSync('template/dex.js', 'utf8');
 const migration = source.slice(source.indexOf('function migrateWalkState(){'), source.indexOf('\nmigrateWalkState();'));
@@ -83,36 +82,11 @@ assert(args.length === 0 || args.length === 3, 'Usage: node tools/walk-state-che
 const guides = args.length ? [args] : readdirSync('.tmp/state-before').filter(f => f.endsWith('.html')).map(f => f.slice(0, -5))
   .filter(hack => existsSync('dist/' + hack + '.html'))
   .map(hack => ['.tmp/state-before/' + hack + '.html', 'dist/' + hack + '.html', '0.0']);
-const chromePath = process.env.CHROME || ['C:/Program Files/Google/Chrome/Application/chrome.exe',
-  'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(existsSync);
-assert(chromePath, 'Chrome or Edge required');
 mkdirSync('.tmp/walk-state', { recursive: true });
-const profile = mkdtempSync(join(tmpdir(), 'walk-state-'));
-const chrome = spawn(chromePath, ['--headless=new', '--remote-debugging-port=0', `--user-data-dir=${profile}`,
-  '--allow-file-access-from-files', '--disable-ipc-flooding-protection', 'about:blank'], { stdio: 'ignore' });
 const sleep = milliseconds => new Promise(done => setTimeout(done, milliseconds));
-const pending = new Map();
-let socket, sequence = 0;
+const browser = await startBrowser({ profilePrefix: 'walk-state-', flags: ['--disable-ipc-flooding-protection'] });
+const { send } = browser;
 try {
-  for (let attempt = 0; attempt < 100; attempt++) {
-    try {
-      const port = readFileSync(join(profile, 'DevToolsActivePort'), 'utf8').split('\n')[0];
-      const version = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json();
-      socket = new WebSocket(version.webSocketDebuggerUrl);
-      await new Promise((done, fail) => { socket.onopen = done; socket.onerror = fail; });
-      break;
-    } catch { await sleep(100); }
-  }
-  assert(socket, 'Chrome connection');
-  socket.onmessage = event => {
-    const message = JSON.parse(event.data);
-    if (pending.has(message.id)) { pending.get(message.id)(message); pending.delete(message.id); }
-  };
-  const send = (method, params = {}, sessionId) => new Promise(done => {
-    const commandId = ++sequence;
-    pending.set(commandId, done);
-    socket.send(JSON.stringify({ id: commandId, method, params, sessionId }));
-  });
   for (const [before, after, legacyKey] of guides) for (const keyboard of [false, true]) {
     const readData = file => JSON.parse(readFileSync(file, 'utf8').match(/<script id="data" type="application\/json">([\s\S]*?)<\/script>/)[1]);
     const originalData = readData(before), updatedData = readData(after);
@@ -252,6 +226,5 @@ try {
     await send('Target.disposeBrowserContext', { browserContextId });
   }
 } finally {
-  socket?.close();
-  chrome.kill();
+  await browser.close();
 }
