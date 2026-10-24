@@ -307,6 +307,41 @@ rather than claim parity through an approximate final-roll multiplier.
 
 ## Node runner and comparison harness
 
+### Local hzla oracle
+
+`node tools/calc/hzla_compare.mjs emerald-imperium --fetch` creates/uses the ignored
+`.tmp/hzla/` checkout of `https://github.com/hzla/Dynamic-Calc-Decomps.git`, pinned to
+`ff6c3e339e276e6b4e8e44db58750b6534bc26aa`. Later runs omit `--fetch`; no npm build
+or browser is needed. `--repo <path>` selects another clean clone at that same SHA;
+the tool rejects another HEAD or tracked edits. Never stage/vendor its unlicensed
+code or generated tables. Our loader and comparison code are independently written.
+
+Fixtures are `hacks/<hack>/calc_matchups.json`: `{oracle, matchups}`. `oracle` sets
+`title`, data `gen`, formula `damageGen`, `types`, `critGen`, optional `backup`
+basename and `settings`. `names` has explicit `species`, `moves`, `abilities` and
+`items` display-name translations. Mega/Primal and Alolan/Galarian/Hisuian/Paldean
+prefixes are translated by `oracleName`; other aliases must be listed, never guessed.
+Each named case contains the runner's `atk`, `def`, `slot`, `field` in guide IDs.
+Optional `trainer` records the original TR key/slot. CLI selectors: `--case <name>`,
+`--output .tmp/<path>.json`. Duplicate names, invalid inputs and oracle errors fail.
+
+This is a **mechanics isolation** comparison, not a byte-for-byte reconstruction
+of the web UI: both sides receive the guide's species stats/types and move
+power/type/category. Oracle move metadata/flags and effects come independently
+from its local stock/backup data, not our `over`. Its UI-only adjustments are not
+executed; investigate those when attributing a disagreement. This avoids hiding
+mechanics differences by passing our rules to both engines, but does not validate
+the species/move data against the web calculator. Unknown oracle species weights
+fall back to 1 kg, so do not use weight moves until the mapping/weights are audited.
+
+The report saves both full per-hit 16-roll arrays, settings, SHA, descriptions and
+oracle KO text. OHKO probabilities are compared only for eligible single-hit
+cases; residual/multi-turn KO text is not equivalent to our no-residual convolution.
+Exit 1 means an error or unexplained mismatch. A case's `difference: {source,
+reason}` records an explained disagreement; these remain visible as
+`known-difference`, never matches. Review every reason against the game's source
+or docs rather than adding an exception merely to get a green exit code.
+
 The committed engine runs in a Node VM without jsdom or installed packages:
 
 ```sh
