@@ -454,11 +454,16 @@ function flip(d,open){const sm=d.querySelector(':scope>summary'),y=sm.getBoundin
 // Collapse bars (.endbar, inside their details) show only where the open block, with its header and the bar itself,
 // doesn't fit under the search bar. Blocks inside a skipped content-visibility block are left until they render.
 const BH={};const barH=b=>{const k=b.className;if(BH[k]==null){b.hidden=false;const cs=getComputedStyle(b);BH[k]=b.offsetHeight+parseFloat(cs.marginTop)+parseFloat(cs.marginBottom);b.hidden=true;}return BH[k];};
-function bars(){const room=innerHeight-hdrH(),bs=[...app.querySelectorAll('.endbar')].map(b=>[b,b.closest('details')]).filter(([b,d])=>d&&!inSkip(d));
+let barsAt=0;
+function bars(){barsAt=performance.now();const room=innerHeight-hdrH(),bs=[...app.querySelectorAll('.endbar')].map(b=>[b,b.closest('details')]).filter(([b,d])=>d&&!inSkip(d));
  bs.forEach(([b])=>b.hidden=true);bs.filter(([b,d])=>d.open&&d.offsetHeight+barH(b)>room).forEach(([b])=>b.hidden=false);}
 let bq=0;const barsSoon=()=>{if(!bq)bq=requestAnimationFrame(()=>{bq=0;bars();});};
 document.addEventListener('contentvisibilityautostatechange',e=>{if(!e.skipped&&app.querySelector('.endbar'))barsSoon();},true);
 addEventListener('resize',()=>{if(app.querySelector('.endbar'))barsSoon();});
+// The viewer's A-/A+ text zoom changes text, not the viewport: no resize fires, but the page height does. So a height
+// change rechecks the bars; one that no bars() run just before explains (a toggle, or the bars flipping) also means
+// the text size may have changed, so the cached bar heights go too.
+new ResizeObserver(()=>{if(!app.querySelector('.endbar'))return;if(performance.now()-barsAt>100)for(const k in BH)delete BH[k];barsSoon();}).observe(app);
 // Height of the Show row pinned above a Trainers-page element (less the 2px the place header overlaps it: dex.css).
 const trPinH=el=>{const bx=document.body.dataset.v==='trainers'&&!el.matches('details.split')&&el.closest('details.split');const w=bx&&bx.querySelector('.trsw');return w?w.getBoundingClientRect().height-2:0;};
 // A collapse bar. Anything but a split lands right under the headers pinned above it (the search bar, its stop's and

@@ -19,6 +19,10 @@ Run browser sweeps one at a time so CPU contention does not change layout timing
   stop, item, place) from another page with a search set; lists any that don't end open and on screen under the
   pinned headers.
 
+- `zoomcheck.mjs <guide.html> [kb]`: text zoom vs collapse bars at 260 × 316 and 480 × 392. Headless Chrome has no
+  WebView textZoom, so it scales every px font size in the page's rules (no resize fires, as in the viewer) and compares
+  each bar a few frames later with what `bars()` decides after a forced resize; exits 1 on any stale bar.
+
 To check motion, sample `getBoundingClientRect()` once per animation frame (how the overshoot in the rejected
 collapse animations was found). Finished mockups are not kept: the decision goes in `template/README.md` or the
 hack's notes, and git history has the mockup.
