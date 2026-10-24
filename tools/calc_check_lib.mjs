@@ -48,6 +48,20 @@ export function prepareGuide(file, { tag, edit } = {}) {
   return out;
 }
 
+// Fixture patches to the EI data copy the checks run on (never the dist): the sheet-only trainer loses its first
+// Pokémon's moves and ability (the EI data has no Pokémon with missing sets, so the unknown-set rules need one), and two
+// trainers get the spec's long names (the data has none that long). Every scenario applies this to its copy.
+export function fixturePatches(data) {
+  for (const group of data.TR.g) for (const section of group.sec) for (const trainer of section.tr) {
+    if (trainer.k === '0.0.0') {
+      trainer.n = 'Rival Brendan (sheet only)';
+      trainer.p[0].m = [];
+      delete trainer.p[0].a;
+    }
+    if (trainer.k === '3.0.0') trainer.n = 'Team Aqua Grunt Petalburg Woods';
+  }
+}
+
 // Trainer keys in the EI data that the checks name (checked against the data by runChecks, so a data rebuild that moves
 // one fails loudly instead of testing the wrong trainer).
 export const EI_TRAINERS = {
