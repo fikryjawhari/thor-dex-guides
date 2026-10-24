@@ -1,0 +1,98 @@
+function once(source, before, after) {
+  if (source.split(before).length !== 2) throw new Error(`Upstream hook drift: ${before}`);
+  return source.replace(before, after);
+}
+
+function editFunction(source, name, edit) {
+  const start = source.indexOf(`function ${name}(`);
+  if (start === -1) throw new Error(`Missing upstream function ${name}`);
+  const following = source.slice(start + 1).search(/\n(?:export )?function /);
+  const end = following === -1 ? source.length : start + 1 + following;
+  return source.slice(0, start) + edit(source.slice(start, end)) + source.slice(end);
+}
+
+function invocation(source, phase, value, state = '') {
+  const header = source.slice(0, source.indexOf(') {'));
+  const has = name => new RegExp(`\\b${name}\\s*:`).test(header);
+  const locals = ['attacker', 'defender', 'move', 'field', 'desc'].filter(has);
+  if (state) locals.push(`state: {${state}}`);
+  return `applyPhase(${has('gen') ? 'gen' : 'attacker.gen'}, '${phase}', {${locals.join(',')}}, ${value})`;
+}
+
+export function instrument(source, filename) {
+  if (filename === 'util.ts') {
+    source = once(source, 'export function getMoveEffectiveness(', 'function guideOriginalEffectiveness(');
+    return `import {applyPhase} from 'guide-calc-rules';\n${source}\n
+export function getMoveEffectiveness(gen: any, move: any, type: any, revealed?: boolean, gravity?: boolean, ring?: boolean) {
+  const value = guideOriginalEffectiveness(gen, move, type, revealed, gravity, ring);
+  return applyPhase(gen, 'effectiveness', {move, state: {effectivenessType: type}}, value);
+}\n`;
+  }
+  const suffix = filename === 'gen4.ts' ? 'DPP' : filename === 'gen56.ts' ? 'BWXY' : 'SMSSSV';
+  const modern = suffix !== 'DPP';
+  source = editFunction(source, `calculate${suffix}`, body => {
+    const criticalStart = body.indexOf('  const isCritical');
+    const criticalEnd = body.indexOf(';', criticalStart) + 1;
+    if (criticalStart === -1 || !criticalEnd) throw new Error('Missing critical point');
+    body = body.slice(0, criticalStart) + body.slice(criticalStart, criticalEnd).replace('const isCritical', 'let isCritical')
+      + `\n  const guideNativeCrit = isCritical;\n  isCritical = ${invocation(body, 'critical', 'isCritical')};` + body.slice(criticalEnd);
+    body = once(body, '  const isGhostRevealed', `  ${invocation(body, 'afterMoveType', 'undefined')};\n  const isGhostRevealed`);
+    body = once(body, '  let typeEffectiveness = type1Effectiveness * type2Effectiveness;',
+      `  let typeEffectiveness = type1Effectiveness * type2Effectiveness;\n  (gen as any).guideContext.state.typeEffectiveness = typeEffectiveness;`);
+    body = once(body, '    for (let times = 1; times < numAttacks; times++) {',
+      `    for (let times = 1; times < numAttacks; times++) {\n      (gen as any).guideContext.state.hit = times + 1;\n      (gen as any).guideContext.state.hitCount = times;\n      isCritical = ${invocation(body, 'critical', 'guideNativeCrit')};`);
+    if (modern) body = body.replaceAll('getFinalDamage(', 'guideRoll(gen, getFinalDamage, ');
+    if (!modern) {
+      body = once(body, 'let newBasePower = calculateBasePowerDPP(gen, attacker, defender, move, field, desc);',
+        'let newBasePower = calculateBasePowerDPP(gen, attacker, defender, move, field, desc, times + 1);');
+      body = once(body, '  const damage: number[] = [];',
+        `  const guideFinalMods = ${invocation(body, 'finalMods', '[]', 'typeEffectiveness, isCritical')};\n  const guideInputs = ${invocation(body, 'beforeRolls', '{baseDamage,stabMod,type1Effectiveness,type2Effectiveness,filterMod,ebeltMod,metronomeMod,tintedMod,berryMod}')};\n  ({baseDamage,stabMod,type1Effectiveness,type2Effectiveness,filterMod,ebeltMod,metronomeMod,tintedMod,berryMod}=guideInputs);\n  const damage: number[] = [];`);
+      body = once(body, '    damage[i] = Math.max(1, damage[i]);',
+        `    damage[i] = ${invocation(body, 'roll', 'Math.max(1, guideFinalMods.reduce((value, mod) => Math.floor(value * mod), damage[i]))', 'rollIndex:i')};`);
+      body = once(body, '        damageArray[i] = newFinalDamage;',
+        `        const perHitFinalMods = ${invocation(body, 'finalMods', '[]', 'typeEffectiveness, isCritical')};\n        damageArray[i] = ${invocation(body, 'roll', 'Math.max(1, perHitFinalMods.reduce((value, mod) => Math.floor(value * mod), newFinalDamage))', 'rollIndex:i')};`);
+    }
+    return body;
+  });
+  source = editFunction(source, `calculateBasePower${suffix}`, body => {
+    const before = modern ? '  if (basePower === 0) {' : '  return basePower;';
+    body = once(body, before, `  basePower = ${invocation(body, 'movePower', 'basePower', 'hit')};\n${before}`);
+    return once(body, "  const turnOrder = attacker.stats.spe > defender.stats.spe ? 'first' : 'last';",
+      `  const turnOrder = ${invocation(body, 'turnOrder', "attacker.stats.spe > defender.stats.spe ? 'first' : 'last'")};`);
+  });
+  for (const [functionPart, phase, variable] of modern
+    ? [['BPMods', 'powerMods', 'bpMods'], ['AtMods', 'attackMods', 'atMods'], ['DfMods', 'defenseMods', 'dfMods'], ['FinalMods', 'finalMods', 'finalMods']]
+    : [['BPMods', 'powerMods', 'basePower']]) {
+    source = editFunction(source, `calculate${functionPart}${suffix}`, body => {
+      const state = ['basePower', 'hitsPhysical', 'isCritical', 'typeEffectiveness', 'hitCount', 'hit'].filter(name => {
+        const header = body.slice(0, body.indexOf(') {'));
+        return new RegExp(`\\b${name}\\s*[:=]`).test(header);
+      }).join(',');
+      const call = modern ? invocation(body, phase, variable, state)
+        : invocation(body, phase, variable, state).replace('applyPhase(', 'legacyMods(');
+      return once(body, `  return ${variable};`, `  return ${call};`);
+    });
+  }
+  for (const [part, phase, value] of [['Attack', 'attack', 'attack'], ['Defense', 'defense', 'defense']]) {
+    source = editFunction(source, `calculate${part}${suffix}`, body => {
+      const before = modern && suffix === 'SMSSSV' && phase === 'defense'
+        ? '  return OF16(Math.max(1, pokeRound((defense * chainMods(dfMods, 410, 131072)) / 4096)));'
+        : `  return ${value};`;
+      const original = before.trim().slice(7, -1);
+      let call = invocation(body, phase, original, 'isCritical');
+      if (!modern) {
+        const mods = invocation(body, `${phase}Mods`, original, 'isCritical').replace('applyPhase(', 'legacyMods(');
+        call = invocation(body, phase, mods, 'isCritical');
+      }
+      return once(body, before, `  return ${call};`);
+    });
+  }
+  const damageFunction = modern ? `calculateBaseDamage${suffix}` : 'calculateFinalModsDPP';
+  source = editFunction(source, damageFunction, body => {
+    const before = modern ? '  let baseDamage = getBaseDamage(attacker.level, basePower, attack, defense);'
+      : "  const isPhysical = move.category === 'Physical';";
+    body = once(body, before, `  ${invocation(body, 'beforeWeather', 'undefined')};\n${before}`);
+    return once(body, '  return baseDamage;', `  return ${invocation(body, 'baseDamage', 'baseDamage', 'isCritical')};`);
+  });
+  return `import {applyPhase, legacyMods, guideRoll} from 'guide-calc-rules';\n${source}`;
+}

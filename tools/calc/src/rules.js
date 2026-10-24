@@ -1,0 +1,130 @@
+const phases = new Set(['beforeStats', 'afterMoveType', 'effectiveness', 'critical', 'turnOrder',
+  'movePower', 'powerMods', 'attackMods', 'defenseMods', 'attack', 'defense',
+  'beforeWeather', 'baseDamage', 'finalMods', 'beforeRolls', 'roll']);
+const forbidden = new Set(['__proto__', 'prototype', 'constructor', 'gen']);
+const writeRoots = new Set(['atk', 'def', 'move', 'field', 'state', 'desc', 'value']);
+
+function parts(path) {
+  if (typeof path !== 'string' || !path.length) throw new Error('DMG rule: expected a path');
+  const keys = path.split('.');
+  if (keys.some(key => forbidden.has(key))) throw new Error(`DMG rule: forbidden path ${path}`);
+  return keys;
+}
+
+function read(context, path) {
+  return parts(path).reduce((value, key) => value == null ? undefined : value[key], context);
+}
+
+function write(context, path, value) {
+  const keys = parts(path);
+  if (!writeRoots.has(keys[0])) throw new Error(`DMG rule: read-only root ${keys[0]}`);
+  let target = context;
+  for (const key of keys.slice(0, -1)) {
+    if (target[key] == null) target[key] = {};
+    target = target[key];
+  }
+  target[keys[keys.length - 1]] = value;
+}
+
+function expression(node, context, depth = 0) {
+  if (depth > 40) throw new Error('DMG rule: expression too deep');
+  if (node === null || typeof node !== 'object') return node;
+  if (Array.isArray(node)) return node.map(value => expression(value, context, depth + 1));
+  if ('ref' in node) return read(context, node.ref);
+  if ('literal' in node) return node.literal;
+  const evaluate = value => expression(value, context, depth + 1);
+  const args = node.args || [];
+  if (node.op === 'and') return args.every(value => !!evaluate(value));
+  if (node.op === 'or') return args.some(value => !!evaluate(value));
+  if (node.op === 'if') return evaluate(args[0]) ? evaluate(args[1]) : evaluate(args[2]);
+  const values = args.map(evaluate);
+  const [left, right] = values;
+  switch (node.op) {
+  case 'eq': return left === right;
+  case 'ne': return left !== right;
+  case 'gt': return left > right;
+  case 'gte': return left >= right;
+  case 'lt': return left < right;
+  case 'lte': return left <= right;
+  case 'not': return !left;
+  case 'in': return right?.includes(left) || false;
+  case 'includes': return left?.includes(right) || false;
+  case 'startsWith': return typeof left === 'string' && left.startsWith(right);
+  case 'intersects': return Array.isArray(left) && left.some(value => right?.includes(value));
+  case 'add': return values.reduce((total, value) => total + value, 0);
+  case 'sub': return left - right;
+  case 'mul': return values.reduce((total, value) => total * value, 1);
+  case 'div': return left / right;
+  case 'mod': return left % right;
+  case 'min': return Math.min(...values);
+  case 'max': return Math.max(...values);
+  case 'floor': return Math.floor(left);
+  case 'ceil': return Math.ceil(left);
+  case 'round': return Math.round(left);
+  case 'pokeRound': return Math.ceil(left - 0.5);
+  case 'of32': return left >>> 0;
+  case 'of16': return left & 65535;
+  case 'coalesce': return values.find(value => value !== null && value !== undefined);
+  case 'lookup': return left?.[String(right)];
+  case 'positiveSum': return Object.values(left || {}).reduce((total, value) => total + Math.max(0, value), 0);
+  default: throw new Error(`DMG rule: unknown expression ${node.op}`);
+  }
+}
+
+export function prepareRules(over = {}) {
+  if (!Array.isArray(over.rules || [])) throw new Error('DMG: over.rules must be an array');
+  const result = {};
+  for (const rule of over.rules || []) {
+    if (!phases.has(rule.phase)) throw new Error(`DMG: unknown rule phase ${rule.phase}`);
+    (result[rule.phase] ||= []).push(rule);
+    for (const path of Object.keys(rule.set || {})) {
+      const root = parts(path)[0];
+      if (!writeRoots.has(root)) throw new Error(`DMG rule: read-only root ${root}`);
+    }
+  }
+  return result;
+}
+
+export function applyPhase(gen, phase, local, value) {
+  const base = gen.guideContext;
+  if (!base) return value;
+  const state = Object.assign(base.state, local?.state || {});
+  const context = {...base, ...local, state, value};
+  context.atk = context.attacker || base.atk;
+  context.def = context.defender || base.def;
+  if (phase === 'afterMoveType') base.move = context.move;
+  for (const rule of gen.guideRules?.[phase] || []) {
+    if (rule.when !== undefined && !expression(rule.when, context)) continue;
+    for (const [path, node] of Object.entries(rule.set || {})) write(context, path, expression(node, context));
+    if ('value' in rule) context.value = expression(rule.value, context);
+    for (const node of rule.remove || []) {
+      const index = context.value.indexOf(expression(node, context));
+      if (index !== -1) context.value.splice(index, 1);
+    }
+    for (const replacement of rule.replace || []) {
+      const index = context.value.lastIndexOf(expression(replacement.from, context));
+      if (index !== -1) context.value[index] = expression(replacement.to, context);
+    }
+    for (const node of rule.append || []) context.value.push(expression(node, context));
+    if (rule.note) base.notes.add(String(expression(rule.note, context)));
+  }
+  if (phase === 'critical') state.isCritical = context.value;
+  if (phase === 'movePower') state.basePower = context.value;
+  if (phase === 'effectiveness') state.effectivenessType = local.state.effectivenessType;
+  return context.value;
+}
+
+export function legacyMods(gen, phase, local, value) {
+  const modifiers = applyPhase(gen, phase, local, []);
+  return modifiers.reduce((amount, multiplier) => Math.floor(amount * multiplier), value);
+}
+
+export function guideRoll(gen, calculate, baseDamage, rollIndex, effectiveness, isBurned, stabMod, finalMod, protect) {
+  const context = gen.guideContext;
+  if (rollIndex === 0) {
+    context.state.rollInputs = applyPhase(gen, 'beforeRolls', {}, {baseDamage, effectiveness, isBurned, stabMod, finalMod, protect});
+  }
+  const inputs = context.state.rollInputs;
+  return applyPhase(gen, 'roll', {state: {rollIndex}}, calculate(inputs.baseDamage, rollIndex,
+    inputs.effectiveness, inputs.isBurned, inputs.stabMod, inputs.finalMod, inputs.protect));
+}

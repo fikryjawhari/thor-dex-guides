@@ -6,6 +6,7 @@ import {calculateDPP} from '@smogon/calc/src/mechanics/gen4';
 import {calculateBWXY} from '@smogon/calc/src/mechanics/gen56';
 import {calculateSMSSSV} from '@smogon/calc/src/mechanics/gen789';
 import {getMoveEffectiveness} from '@smogon/calc/src/mechanics/util';
+import {applyPhase, prepareRules} from './rules.js';
 
 const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 const toID = value => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -101,13 +102,14 @@ function init(guide, configuration) {
   for (const [name, overrides] of Object.entries(profile.over?.items || {})) {
     items[toID(overrides.effect || name)] = mergeRecord(items[toID(overrides.effect || name)] || {name}, overrides);
   }
+  const chart = profile.over?.typeGen ? stockData(profile.over.typeGen).types : stock.types;
   const types = {};
-  const typeNames = new Set([...Object.values(stock.types).map(entry => entry.name), ...Object.keys(data.TC || {})]);
+  const typeNames = new Set([...Object.values(chart).map(entry => entry.name), ...Object.keys(data.TC || {})]);
   for (const name of typeNames) {
-    const effectiveness = {...stock.types[toID(name)]?.effectiveness};
+    const effectiveness = {...chart[toID(name)]?.effectiveness};
     for (const target of typeNames) {
       effectiveness[target] = profile.over?.typeChart?.[name]?.[target]
-        ?? (data.TC?.[name]?.[target] === undefined ? effectiveness[target] ?? 1 : data.TC[name][target] / 10);
+        ?? (profile.over?.typeGen || data.TC?.[name]?.[target] === undefined ? effectiveness[target] ?? 1 : data.TC[name][target] / 10);
     }
     types[toID(name)] = {id: toID(name), name, kind: 'Type', effectiveness};
   }
@@ -116,6 +118,7 @@ function init(guide, configuration) {
     species: table(species), moves: table({...stock.moves, ...moves}),
     items: table(items), abilities: table({...modern.abilities, ...stock.abilities}),
     natures: table(stock.natures), types: table(types),
+    guideRules: prepareRules(profile.over),
   };
 }
 
@@ -153,32 +156,42 @@ function battleField(values) {
     const target = entry.side === 'atk' ? options.attackerSide : entry.side === 'def' ? options.defenderSide : options;
     target[entry.to] = entry.type === 'toggle' ? !!value : value;
   }
-  return new Field(options);
+  const result = new Field(options);
+  for (const entry of profile.field || []) {
+    const target = entry.side === 'atk' ? result.attackerSide : entry.side === 'def' ? result.defenderSide : result;
+    const source = entry.side === 'atk' ? options.attackerSide : entry.side === 'def' ? options.defenderSide : options;
+    if (!(entry.to in target) && Object.hasOwn(source, entry.to)) target[entry.to] = source[entry.to];
+  }
+  return result;
 }
 
-function knockout(rolls, hits, hp) {
+function knockout(per, hp) {
   if (hp <= 0) return {n: 0, p: 0};
-  if (rolls[15] * hits * 4 < hp || !rolls[15]) return {n: 0, p: 0};
-  const key = `${rolls.join(',')};${hits};${hp}`;
+  const max = per.reduce((sum, rolls) => sum + Math.max(...rolls), 0);
+  if (max * 4 < hp || !max) return {n: 0, p: 0};
+  const key = `${per.map(rolls => rolls.join(',')).join(';')};${hp}`;
   if (koCache.has(key)) return {...koCache.get(key)};
-  const frequencies = new Map();
-  for (const roll of rolls) frequencies.set(roll, (frequencies.get(roll) || 0) + 1 / 16);
+  const frequencies = per.map(rolls => {
+    const counts = new Map();
+    for (const roll of rolls) counts.set(roll, (counts.get(roll) || 0) + 1 / 16);
+    return counts;
+  });
   let distribution = new Float64Array(hp);
   distribution[0] = 1;
   let probability = 0;
   let result = {n: 0, p: 0};
-  for (let hit = 1; hit <= hits * 4; hit++) {
+  for (let hit = 1; hit <= per.length * 4; hit++) {
     const next = new Float64Array(hp);
     for (let damage = 0; damage < hp; damage++) {
       if (!distribution[damage]) continue;
-      for (const [roll, chance] of frequencies) {
+      for (const [roll, chance] of frequencies[(hit - 1) % per.length]) {
         if (damage + roll >= hp) probability += distribution[damage] * chance;
         else next[damage + roll] += distribution[damage] * chance;
       }
     }
     distribution = next;
-    if (hit % hits === 0 && probability > 0) {
-      result = {n: hit / hits, p: Math.min(1, probability)};
+    if (hit % per.length === 0 && probability > 0) {
+      result = {n: hit / per.length, p: Math.min(1, probability)};
       break;
     }
   }
@@ -210,27 +223,35 @@ function calc(atk, def, slot, values = {}) {
   const defaultHits = hitRange?.[2] ?? (typeof stockHits === 'number' ? stockHits : Array.isArray(stockHits) ? stockHits[0] + 1 : 1);
   const hits = Math.max(1, Math.min(10, Math.trunc(slot.hits ?? defaultHits)));
   const move = new Move(generation, name, {
-    overrides, isCrit: !!slot.crit, hits: 1, ability: attacker.ability, item: attacker.item,
+    overrides, isCrit: !!slot.crit, hits, ability: attacker.ability, item: attacker.item,
   });
-  move.hits = 1;
+  move.hits = hits;
+  const context = {
+    atk: attacker, def: defender, move, field, desc: {}, notes: new Set(),
+    input: {atk, def, slot, field: values},
+    names: {atk: data.P.find(entry => String(entry.id) === String(atk.id)).n,
+      def: data.P.find(entry => String(entry.id) === String(def.id)).n,
+      atkAbility: data.AB[atk.ab]?.[0] || '', defAbility: data.AB[def.ab]?.[0] || '',
+      atkItem: atk.it || '', defItem: def.it || '', move: name},
+    state: {hit: 1, hitCount: 0, hits, originalPower: Number(power)},
+  };
+  generation.guideContext = context;
+  applyPhase(generation, 'beforeStats', {}, undefined);
   const calculate = profile.gen === 4 ? calculateDPP : profile.gen <= 6 ? calculateBWXY : calculateSMSSSV;
   const result = calculate(generation, attacker, defender, move, field);
-  let rolls = result.damage;
-  if (typeof rolls === 'number') rolls = Array(16).fill(rolls);
-  if (!Array.isArray(rolls) || rolls.length !== 16 || !rolls.every(Number.isFinite)) {
-    throw new Error(`DMG: ${name} has non-uniform per-hit damage`);
+  const normalise = damage => typeof damage === 'number' ? Array(16).fill(damage) : [...damage];
+  let per = Array.isArray(result.damage) && (Array.isArray(result.damage[0]) || result.damage.length === 2)
+    ? result.damage.map(normalise) : Array.from({length: hits}, () => normalise(result.damage));
+  if (!per.every(rolls => rolls.length === 16 && rolls.every(value => Number.isInteger(value) && value >= 0))) {
+    throw new Error(`DMG: invalid damage rolls for ${name}`);
   }
+  const rolls = per[0];
   const min = Math.min(...rolls);
   const max = Math.max(...rolls);
-  let eff = 1;
-  for (const type of defender.types) {
-    eff *= getMoveEffectiveness(generation, move, type,
-      attacker.hasAbility('Scrappy', "Mind's Eye") || field.defenderSide.isForesight,
-      field.isGravity, defender.hasItem('Ring Target'));
-  }
+  let eff = context.state.typeEffectiveness ?? 1;
   if (!max) eff = 0;
   const description = result.rawDesc;
-  const notes = [];
+  const notes = [...context.notes];
   if (attacker.hasType(move.type) && max) notes.push('STAB');
   if (!eff) notes.push('No effect');
   else if (eff > 1) notes.push('Super effective');
@@ -243,9 +264,11 @@ function calc(atk, def, slot, values = {}) {
     if (description[key]) notes.push(description[key]);
   }
   return {
-    cat: move.category, rolls: [...rolls], hits, min, max,
-    pmin: min * hits * 100 / defender.maxHP(), pmax: max * hits * 100 / defender.maxHP(),
-    ko: knockout(rolls, hits, def.hp ?? defender.maxHP()), eff, notes: [...new Set(notes)],
+    cat: move.category, rolls: [...rolls], hits: per.length, min, max,
+    ...(per.some(hit => hit.some((value, index) => value !== rolls[index])) ? {per} : {}),
+    pmin: per.reduce((sum, hit) => sum + Math.min(...hit), 0) * 100 / defender.maxHP(),
+    pmax: per.reduce((sum, hit) => sum + Math.max(...hit), 0) * 100 / defender.maxHP(),
+    ko: knockout(per, def.hp ?? defender.maxHP()), eff, notes: [...new Set(notes)],
   };
 }
 

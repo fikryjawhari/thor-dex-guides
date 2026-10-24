@@ -3,6 +3,7 @@ import {createRequire} from 'node:module';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {gzipSync} from 'node:zlib';
+import {instrument} from './instrument.mjs';
 
 const require = createRequire(import.meta.url);
 const {Generations} = require('@smogon/calc');
@@ -102,16 +103,18 @@ const result = await build({
     name: 'guide-data-and-critical-multiplier',
     setup(builder) {
       builder.onResolve({filter: /^guide-calc-data$/}, () => ({path: 'data', namespace: 'guide'}));
+      builder.onResolve({filter: /^guide-calc-rules$/}, () => ({path: `${root}tools/calc/src/rules.js`}));
       builder.onLoad({filter: /.*/, namespace: 'guide'}, () => ({
         contents: `export default ${JSON.stringify(records)}`, loader: 'js',
       }));
-      builder.onLoad({filter: /[\\/]mechanics[\\/]gen(?:4|56|789)\.ts$/}, async ({path}) => {
+      builder.onLoad({filter: /[\\/]mechanics[\\/](?:gen4|gen56|gen789|util)\.ts$/}, async ({path}) => {
         let contents = await readFile(path, 'utf8');
-        for (const [before, after] of patches[path.split(/[\\/]/).pop()]) {
+        const filename = path.split(/[\\/]/).pop();
+        for (const [before, after] of patches[filename] || []) {
           if (contents.split(before).length !== 2) throw new Error(`Upstream patch drift: ${path}: ${before}`);
           contents = contents.replace(before, after);
         }
-        return {contents, loader: 'ts', resolveDir: upstream + 'mechanics'};
+        return {contents: instrument(contents, filename), loader: 'ts', resolveDir: upstream + 'mechanics'};
       });
     },
   }],

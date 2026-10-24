@@ -413,9 +413,10 @@ to: what the adapter sets on the engine}`. The UI draws exactly this list and st
 `template/calc/engine.js` on its own branch, which A's file replaces at the merge):
 - `DMG.init(D, prof)` once (D = the parsed `#data`).
 - `DMG.stats(set)` → `[HP, Atk, Def, SpA, SpD, Spe]` without stages.
-- `DMG.calc(atk, def, slot, field)` → `null` for status moves / no power, else `{cat, rolls [16 per hit], hits, min, max
-  (per hit), pmin, pmax (% of def's max HP, all hits), ko {n (1–4 uses, 0 = 5+), p (0–1)} against def.hp, eff (0 = no
-  effect), notes [strings for the modifiers line]}`.
+- `DMG.calc(atk, def, slot, field)` → `null` for status moves / no power, else `{cat, rolls [16 rolls of hit 1], hits, min, max
+  (hit 1), per? [one 16-roll array per hit, present only when hits differ], pmin, pmax (% of def's max HP, all hits),
+  ko {n (1–4 uses, 0 = 5+), p (0–1)} against def.hp, eff (0 = no effect), notes [strings for the modifiers line]}`.
+  `pmin` / `pmax` and exact KO convolution use all per-hit distributions, including hit-dependent power and effects.
 - set: `{id (species id), lv, nat (name), ab (index into AB), it (item name or ""), st (status key or ""), iv [6], ev [6],
   stg [6] (index 0 unused), hp (current)}`; slot: `{mv (index into M), t?, bp?, hits?, crit?}`; field: `{k: value}`.
 
