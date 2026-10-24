@@ -398,7 +398,7 @@ against a specific hack's local hzla calculator remains a per-hack audit.
   and the Parental Bond equivalence.
 - Bundle: **375,315 bytes**, **88,389 bytes gzip** (the hit phases add 493 bytes).
   Fallback metadata dominates (249,186 attributed bytes); modern mechanics are next.
-- Emerald Imperium against the pinned hzla oracle: **39/39** matches, no known
+- Emerald Imperium against the pinned hzla oracle: **47/47** matches, no known
   differences (`hacks/emerald-imperium/notes.md` → Damage calc).
 - `python assemble.py`: all four guides built; assembly needs no npm packages.
   Browser/Thor sweeps are deliberately deferred to integration, not claimed here.

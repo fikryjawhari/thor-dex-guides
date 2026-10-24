@@ -153,52 +153,68 @@ WK.cheats (+ `cnote`), trainer `c` (calc trainer names), `pp` (pokepaste), mon `
 
 ### Damage calc
 
-Mechanics audit in progress (2026-10-25). The starting `cfg.calc = {base: "expansion"}` is not yet a
-verified EI profile. Baseline: `820e5a42e5c472ea7483a3b45caf16e8d2d12eb7`; gate logs in
-`.tmp/gate/20261025-091923-768412/` (baseline assembly passed).
+Profile: `cfg.calc` in `hack.json` over `template/calc/profiles/expansion.json` (Gen 9 mechanics). Settings
+checked: EI's own `include/config/battle.h` sets every damage switch used here to `GEN_LATEST`, which is `GEN_9`
+in this release (`iriv24/pokeemerald-expansion` at `2576d0f3…`). hzla's pinned profile uses dmgGen 8 for the same
+hack, but no fixture separates Gen 8 from Gen 9, so the Gen 9 base stays. `Frostbite` is on `frz` (see the status
+note below). `ls.dmg` (`eidmg`) is unchanged.
 
-- Official site links hzla's Dynamic-Calc-Decomps. Read-only oracle pinned at
-  `ff6c3e339e276e6b4e8e44db58750b6534bc26aa`; `index.html`, `js/romhack_catalog.js` and
-  `backups/title_to_backup_mappings.js` select `data=imp13`, `dmgGen=8`, `gen=8`, `types=6`,
-  `noSwitch=1`, and `evs=0` or `1`. EI 1.3 uses `backups/imp_1-3.js`; `imp` is EI 1.2.
-  No EI profile is registered under `calc/mechanics/romhacks/`; behaviour also lives in shared
-  `gen789.js`, `util.js` and UI data-loading adjustments. Never copy that code or its tables.
-- Game source located: `iriv24/pokeemerald-expansion`, `release` at
-  `2576d0f3f4c861c760f0c55198e37e6d7b91683e` (also available from the aki-mizu fork).
-  `include/config/battle.h` sets modern critical damage/chance, type matchups, split, terrain,
-  Transistor and Snow Warning; Frostbite is enabled; Protean/Libero activates repeatedly.
-  `src/battle_util.c` contains custom damage abilities. Exact ROM/source correspondence needs checking.
-- Another dedicated calc: `harryjowright/emerald-imperium-damage-calc`, locally pinned at
-  `516eca76fcb3dd79d8b13fcb8d069581c9164c6b` (2025-02-26). It predates the release source
-  and the 1.3.1 workbook and is not linked by the official site.
+Sources: the mechanics are read from the release's `src/battle_util.c` and `include/config/battle.h` (a shallow
+fetch into `.tmp/source/`, never shipped). The oracle is hzla's Dynamic-Calc-Decomps, pinned at `ff6c3e3…`, run
+locally from `.tmp/hzla/` (`hzla_compare.mjs`); its code and tables are not copied. Where hzla and the source
+differ, the source wins and the difference goes in the list below. None so far.
 
-**Stopped at an engine boundary, not a verified profile.** The independently written local-oracle tool
-and 34 fixtures are committed. Initial comparison: 29 matches, five unexplained differences
-(`iron-fist-changed`, `emperor-presence`, `draco-barrage-fairy`, `frostbite-special`,
-`ora-punch-second-hit`). Full input/settings/rolls are in `.tmp/calc-emerald-imperium/initial.json`.
-The data-sharing mode isolates mechanics; it does not audit oracle species tables or run its UI patches.
+| Mechanic | Profile entry | Source (release) | Fixtures |
+| --- | --- | --- | --- |
+| Iron Fist 1.3× on punches (Iron Fist's native effect disabled) | `powerMods` | `battle_util.c` 9173 | iron-fist-changed, iron-fist-non-punch |
+| Emperor's Presence 1.3× Water and Steel (singles) | `powerMods` | 9252 | emperor-presence, emperor-presence-steel |
+| Striker 1.3× kicking moves | `powerMods` | 9177 | striker-kick |
+| Liquid Voice 1.2× sound moves (type change is native) | `powerMods` | 9240 | liquid-voice-sound |
+| Feline Prowess 2× Sp. Atk (special moves) | `attackMods` | 9527 | feline-prowess-special |
+| Sage Power 1.5× Sp. Atk (special moves) | `attackMods` | 9609 | sage-power-special |
+| Fatal Precision 1.2× when super effective | `finalMods` | 10060 | fatal-precision-super-effective |
+| Bone Zone: bone moves ignore immunity; 2× when resisted to ≤ 0.5 | `effectiveness`, `finalMods` (EI's four bone moves) | 10074, 10465 | bone-zone-immune |
+| Mountaineer: immune to Rock (defender) | `effectiveness` | 10574 | mountaineer-rock |
+| Primal Armor 0.5× when super effective (defender) | `finalMods` | 10097 | primal-armor-super-effective |
+| ORAORAORAORA!: second punch 50% of its base damage | `hits` (count 2 for a single-strike punch) and `hitBaseDamage` (`floor`, half down) | `battle_script_commands.c` 1240, `battle_util.c` 9914, 10277 | ora-punch-second-hit, ora-non-punch |
+| Draco Barrage ignores Fairy immunity | `effectiveness` (Fairy 0 → 1) | 10482 | draco-barrage-fairy |
+| Draco Barrage takes the better of Atk and Sp. Atk | `beforeStats` sets the category from staged ratios | 12004–12013 (`EFFECT_SHELL_SIDE_ARM`), `battle_script_commands.c` 2161 | draco-barrage-fairy (Physical), draco-barrage-special (Special) |
+| Frostbite halves special damage | `beforeRolls` sets `isBurned` for special moves when the attacker's status is `frz` | 9975, applied 10308 | frostbite-special, frostbite-physical |
 
-ORAORAORAORA is the blocking case: release `src/battle_util.c`, `GetOraOraOraOraModifier`, applies
-0.5 to the second punching hit's base damage **before weather, crit and random rolls**. Ordinary
-Parental Bond applies 0.25 there. Our exposed `beforeWeather` phase is mutation-only, before the raw
-base damage exists; `baseDamage` receives the value only after weather/crit. There is no scalar phase
-at the child-hit multiplier. Aliasing to Parental Bond gives second-hit rolls `[6,...,7]` instead of
-hzla's `[12,...,15]` for Hitmonchan Mach Punch into Blastoise (both Lv50). Doubling final rolls gives
-`[12,...,14]`, still wrong: lost integer rounding cannot be restored by scaling. Reproduction with
-both full per-hit arrays: `.tmp/calc-emerald-imperium/ora-blocker.json`. Do not ship an approximate
-alias or reproduce the whole damage formula in declarative JSON to work around the missing hook.
-The parent needs to choose an exact child-base-damage multiplier hook (and punch-only activation)
-or another tested engine extension; this worker has not touched the engine or profile files.
+Status: EI's `B_USE_FROSTBITE` makes frostbite replace freeze in most cases (`include/config/battle.h`), and a few
+moves still freeze. A frozen attacker cannot act, and a frozen defender has no damage effect here, so only frostbite
+changes a result. The `frz` key is labelled Frostbite; no Freeze option is shown.
 
-Checks after the harness checkpoint: `node tools/calc/test.mjs`, 75 passed, zero failed (41 direct
-Smogon parity cases); `python assemble.py`, all four guides built. Logs:
-`.tmp/calc-emerald-imperium/engine-test.log` and `assemble.log`.
+Not changed from native: Defeatist, Toxic Boost, Flare Boost, Water Compaction, Adaptability, Technician and the
+other vanilla abilities use the Smogon/expansion behaviour. Checked against source: Toxic Boost (physical, 1.5×),
+Flare Boost (special, 1.5×), Defeatist (≤ 1/3 HP, 0.5×). The rest are not audited line by line.
 
-Remaining after the parent's engine decision: finish the workbook/source audit, add the missing
-Feline Prowess fixture and additional changed-effect coverage, implement source-backed overrides,
-resolve/retest every difference, validate the harness's negative cases, write the general mechanics
-procedure, and repeat engine/build checks. `cfg.calc` remains the unchanged, unchecked expansion base;
-`cfg.ls.dmg` remains `eidmg`. No in-game test yet.
+Disagreements between the changes doc or the Known Bugs file and the source (source followed):
+- Flare Boost: the doc says Attack; the source boosts Sp. Atk while burned (9161).
+- Bone Zone: the doc says it ignores resistances and immunities; the source ignores only immunity, and doubles
+  damage only when the resisted multiplier is ≤ 0.5, so ×0.25 becomes ×0.5 rather than ×1.
+- Flower Gift: the doc says Atk and Spe in sun; the Known Bugs file says the game gives Atk and SpD to the user
+  and its ally. The calc uses the vanilla Atk boost, which matches the game as the bug list describes it.
+- Emperor's Presence: the doc and source include the ally in doubles; the calc is singles only (below).
+
+Known gaps (not modelled):
+- Bull Rush and Quill Rush (1.2× Attack on the first turn out): needs a first-turn control.
+- Illusion (+30% while disguised): a battle state with no control.
+- Emperor's Presence on an ally in doubles; the calc has no ally slot.
+- Draco Barrage at an exact tie between the Atk and Sp. Atk ratios: the source randomises; the calc gives Special.
+  The source compares integer-divided stats, so a near-tie can differ by one step.
+- Ice Eater, Self Sufficient, Parasitic Waste and Blazing Soul change healing, drain or priority, not damage here.
+- A frozen or otherwise unable attacker is still calculated.
+- Spread, weather and screens are the expansion base; EI's switches for them are `GEN_LATEST`, but no EI fixture
+  exercises them beyond the base.
+
+Checks:
+- `node tools/calc/hzla_compare.mjs emerald-imperium`: 47/47 match against the pinned oracle, zero known differences.
+  Log `.tmp/calc-emerald-imperium/final.log`.
+- `node tools/calc/test.mjs`: 81 passed, 0 failed (`.tmp/calc-emerald-imperium/engine-test.log`).
+- `python assemble.py`: all four guides built (`.tmp/calc-emerald-imperium/assemble.log`).
+- Not done: an in-game test (a save state and one known move, per `plans/damage-calc.md` → How to check); no
+  browser sweep or Thor check of the calc page.
 
 ## Checks
 
