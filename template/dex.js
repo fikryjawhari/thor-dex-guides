@@ -564,7 +564,7 @@ function starterRow(){let sel='';
 // Sections inside a stop, opened and closed from their yellow header; the header shows a summary.
 const SECN={c:'Checklist',e:'Encounters',i:'Items',t:'Trainers'};
 function walkSec(k,t,tags,body){const sk=k+'.'+t,v=WO.s[sk],open=v===undefined?t!=='c':!!v;
- return `<details class="sec" data-s="${sk}" ${open?'open':''}><summary><span class="sn">${SECN[t]}</span>${tags}</summary><div class="secb">${body}</div><button class="endbar sb" hidden>${UPI}<span>${SECN[t]}</span></button></details>`;}
+ return sectionHTML(sk,SECN[t],tags,body,open);}
 function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;
  const ss=s.s||[],nd=ss.filter((x,j)=>WO.c[k+'.'+j]).length;
  const steps=ss.map((x,j)=>{const sk=k+'.'+j;const done=!!WO.c[sk];return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-sk="${sk}" ${done?'checked':''}><span>${esc(x[0])}${x[1]?`<div class="mut small">${esc(x[1])}</div>`:''}</span></label>`;}).join('');
