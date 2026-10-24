@@ -2,6 +2,10 @@
 
 Need Chrome or Edge (or `CHROME=<exe>`) and Node 22+.
 
+The three checks below use `../browser.mjs` for browser discovery, CDP transport and profile cleanup. Their
+scenario code, waits, exception reporting, hidden scrollbars and 260 × 316 viewport at scale factor 2 stay local.
+Run browser sweeps one at a time so CPU contention does not change layout timing.
+
 - `thor-frame/build.py <page.html> <out.html> [--title] [--sub] [--panel]`: wraps a built guide or a mockup's inner page
   in a Thor-sized screen (the viewer sizes, fit to screen, `dvkb`, tabs, reload / clear saved state, error and width
   readout; pinned on a phone). Put the output on the phone preview (`tools/preview.py`). Mockups write only the inner
