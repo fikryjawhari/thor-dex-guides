@@ -79,9 +79,10 @@ export class Page {
     return page;
   }
 
-  constructor(browser, { file, width, height, dvkb = false }) {
+  constructor(browser, { file, width, height, dvkb = false, ready }) {
     this.browser = browser;
     this.file = file;
+    this.ready = ready || Page.booted;
     this.width = width;
     this.height = height;
     this.dvkb = dvkb;
@@ -100,7 +101,7 @@ export class Page {
     await this.send('Log.enable');
     await this.send('Emulation.setDeviceMetricsOverride', { width: this.width, height: this.height, deviceScaleFactor: 1, mobile: false });
     await this.send('Page.addScriptToEvaluateOnNewDocument', { source: `try{localStorage.setItem('dvkb',${JSON.stringify(this.dvkb ? '1' : '0')});}catch(e){}` });
-    await this.goto('#/');
+    await this.goto('#/', this.ready);
   }
 
   send(method, params = {}) {
@@ -133,9 +134,9 @@ export class Page {
   // Rendered: the route's first paint (window.CALC only exists in guides with cfg.calc, so it is not waited for).
   static booted = 'document.readyState==="complete"&&typeof P!=="undefined"&&document.querySelector("#app").children.length>0';
 
-  async goto(hash = '') {
+  async goto(hash = '', ready = this.ready) {
     await this.send('Page.navigate', { url: pathToFileURL(this.file).href + hash });
-    await this.waitFor(Page.booted, 'the guide to boot');
+    await this.waitFor(ready, 'the guide to boot');
     await this.settle();
   }
 
@@ -307,7 +308,8 @@ export async function openBrowser(name) {
   };
 }
 
-// checks: [{ id, title, sizes?, modes?, run(page, info) }]. Sizes default to 260 x 316; modes to normal and dvkb.
+// checks: [{ id, title, sizes?, modes?, run(page, info), file?, ready?, fit? }]. Sizes default to 260 x 316; modes to normal
+// and dvkb. file / ready: another page than the run's (a frame around the guide); fit: false skips the overflow assertion.
 export const SIZE_SMALL = [[260, 316]];
 export const SIZE_STAR = [[260, 316], [537, 424], [832, 424]];
 export const MODES = ['normal', 'dvkb'];
@@ -326,18 +328,19 @@ export async function runChecks({ name, file, checks, expectTrainers = true }) {
       for (const [width, height] of check.sizes || SIZE_SMALL) {
         for (const mode of check.modes || MODES) {
           const label = `${check.id} ${width}x${height} ${mode}`;
-          const page = await Page.open(browser, { file, width, height, dvkb: mode === 'dvkb' });
           const shot = `${name}-${check.id}-${width}x${height}-${mode}`;
           let message = null;
+          let page = null;
           try {
+            page = await Page.open(browser, { file: check.file || file, width, height, dvkb: mode === 'dvkb', ready: check.ready });
             await check.run(page, { width, height, mode, dvkb: mode === 'dvkb' });
-            await page.assertFits(label);
+            if (check.fit !== false) await page.assertFits(label);
             if (page.errors.length) throw new Error(`page errors: ${page.errors.join(' | ').slice(0, 600)}`);
           } catch (error) {
             message = error.message;
           } finally {
-            if (message) await page.screenshot(shot + '-FAIL').catch(() => {});
-            await page.close();
+            if (message && page) await page.screenshot(shot + '-FAIL').catch(() => {});
+            await page?.close();
           }
           const ok = !message;
           if (!ok) failed++;
@@ -382,3 +385,56 @@ export function skipWithoutCalc(file, name) {
 }
 
 export { sleep, pathToFileURL };
+
+// Flows shared by the calc scenarios. They drive the page the way a user does (taps, number boxes, the picker); setup
+// seeds through the same calls the entry points make (CALC.enter), so a check that is about one control never depends on
+// another control being right.
+export const calcState = page => page.value('(()=>{const s=CALC.state();return {dir:s.dir,mine:s.mine,foe:s.foe,recent:s.recent,custom:s.custom,field:s.field,mvo:s.mvo,crit:s.crit,hits:s.hits};})()');
+export const attackerSide = page => page.value(`document.querySelector('.dmatch .cc.att')?.dataset.s ?? null`);
+// The attacker's non-empty rows as the page shows them: name, damage per hit, percent line, KO text.
+export const attackerRows = page => page.value(`[...document.querySelectorAll('.dres:not(.na) .mr:not(.em)')].map(r=>({name:r.querySelector('.mv')?.textContent.trim(),hp:r.querySelector('.r1 .hp')?.textContent.trim(),pct:r.querySelector('.r2 span')?.textContent.trim(),ko:r.querySelector('.r2 .ko')?.textContent.trim()}))`);
+export const attackerCrit = page => page.value(`[...document.querySelectorAll('.dres:not(.na) .rc')].map(b=>b.getAttribute('aria-pressed'))`);
+export const pickCell = (page, src, index) => page.tap(`[data-a="mpick"][data-src="${src}"][data-i="${index}"]`);
+
+// The imported party is the attacker's pool. Default: Cloyster (party slot 5) against a trainer, the Mine side attacking.
+export async function setupCalc(page, { save = 'good.json', mine = ['party', 5], trainer = EI_TRAINERS.candice } = {}) {
+  await page.route('#/calc');
+  if (save) {
+    await page.importSave(save);
+    if (await page.count('.ban .bx')) await page.tap('.ban .bx');
+  }
+  if (mine) await pickCell(page, mine[0], mine[1]);
+  if (trainer) await page.value(`CALC.enter(${JSON.stringify(trainer)},0)`);
+  await page.settle();
+}
+
+// Opens the attacker's row in a slot (Change move, power, type, crit live in the row's details). Open rows stay open.
+export async function openSlot(page, slot) {
+  const open = await page.value(`!!document.querySelector('.dres:not(.na) [data-a="chmv"][data-slot="${slot}"]')?.closest('.mr').classList.contains('open')`);
+  if (!open) await page.tap(`.dres:not(.na) .mr:has([data-slot="${slot}"]) > .mm`);
+}
+
+// Change move on the attacker's slot: the row opens, the picker takes the search, the first match.
+export async function changeMove(page, slot, name) {
+  await openSlot(page, slot);
+  await page.tap(`.dres:not(.na) [data-a="chmv"][data-slot="${slot}"]`);
+  await page.typeSearch(name);
+  await page.tap('.mrow[data-i="0"]');
+}
+
+// A number box touched but not changed: a browser input is only focused; dvkb opens the pad, closed with Done.
+export async function touchBox(page, selector) {
+  await page.tap(selector);
+  if (page.dvkb) await page.tap('.kb .k[data-a="done"]');
+}
+
+// One step of the cap box: ArrowUp / ArrowDown on the input in a browser, the pad's + / − in dvkb.
+export async function spinCap(page, direction, key = '1.0.0') {
+  const selector = `[data-cap="${key}"]`;
+  if (page.dvkb) return page.padStep(selector, direction);
+  const keyName = direction > 0 ? 'ArrowUp' : 'ArrowDown', code = direction > 0 ? 38 : 40;
+  await page.tap(selector);
+  await page.send('Input.dispatchKeyEvent', { type: 'keyDown', key: keyName, code: keyName, windowsVirtualKeyCode: code });
+  await page.send('Input.dispatchKeyEvent', { type: 'keyUp', key: keyName, code: keyName, windowsVirtualKeyCode: code });
+  await page.tap('.dmatch .cc[data-s="mine"] .cl > span'); // focus leaves the input: the change event
+}
