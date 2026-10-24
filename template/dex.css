@@ -413,3 +413,4 @@ details.stopd>summary.stoph{padding-top:2px;padding-bottom:2px}
 .pt[hidden]{display:none}
 .pt.part{background:none;border-color:var(--acc);color:var(--acc)}
 .pt.on{background:var(--acc);border-color:var(--acc);color:#1b1608}
+.calc-use,.calc-versus{display:block;min-height:32px;margin-top:6px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--acc);font:600 12px system-ui;cursor:pointer}
