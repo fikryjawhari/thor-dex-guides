@@ -35,7 +35,7 @@ const effMv=(mi,ck)=>({...MV[mi],...((prof.varpow||[]).includes(M[mi])?{bp:null}
 function sideInfo(side){const isM=side==='mine';const t=trByK[ST.foe.k];const base=isM?curMine():(t?foeBase(t,ST.foe.i):null);const custom=isM&&ST.mine.src==='custom';const key=isM?'mine:'+(base||{}).pid:'foe:'+ST.foe.k+':'+ST.foe.i;return {isM,key,base,custom};}
 function getMon(side){const i=sideInfo(side);if(!i.base)return null;return i.custom?{...i.base}:applyEdits(i.base,i.key);}
 function setField(side,f,v){const i=sideInfo(side);if(i.custom){if(v===undefined)delete i.base[f];else i.base[f]=v;}else{const e=(ST.edits[i.key]=ST.edits[i.key]||{});if(v===undefined)delete e[f];else e[f]=v;}save();}
-const effSpe=r=>r.stats?Math.floor(r.stats[5]*stageMul(r.stg[4])*(r.status==='Paralysis'?.5:1)):null;
+const effSpe=r=>r.stats?(window.DMG.speed?window.DMG.speed(toEngine(r),ST.field):Math.floor(r.stats[5]*stageMul(r.stg[4]))):null;
 function mineList(){const imp=ST.imp,L=[];if(imp){imp.party.forEach((m,i)=>L.push({g:0,src:'party',b:0,i,m}));imp.boxes.forEach((bx,b)=>bx.forEach((m,i)=>L.push({g:1,src:'box',b,i,m})));}ST.custom.forEach((m,i)=>L.push({g:2,src:'custom',b:0,i,m}));return L;}
 const isSel=x=>ST.mine.src===x.src&&(x.src!=='box'||ST.mine.b===x.b)&&ST.mine.i===x.i;
 function mineGrid(){const L=mineList();
@@ -51,8 +51,8 @@ function foeSide(){const t=trByK[ST.foe.k];if(!t)return `<div class="fbar"><butt
  <div class="dstrip fs">${[0,1,2,3,4,5].map(i=>t.p[i]?`<button data-a="fpick" data-i="${i}" class="${i===ST.foe.i?'on':''}" aria-label="${esc(byId[t.p[i].id].n)}">${spr(t.p[i].id,'s28')}<span>${lvl(i)}</span></button>`:`<button class="ph" disabled></button>`).join('')}</div>`;}
 const EDITOPEN={mine:false,foe:false};
 const MEGA={};P.forEach(species=>{const forms=(species.of||[]).filter(id=>byId[id]?.g===1);if(species.g!==1&&forms.length)MEGA[species.id]=forms;});
-function megaToggle(side){const m=getMon(side);const set=(id,a,i)=>{setField(side,'id',id);setField(side,'a',a);setField(side,'i',i);};
- if(m.pre){const L=MEGA[m.pre.id]||[],ix=L.indexOf(m.id);if(ix>=0&&ix<L.length-1){const n=byId[L[ix+1]];set(n.id,n.a[0],n.stone||m.pre.i);}else{set(m.pre.id,m.pre.a,m.pre.i);setField(side,'pre',undefined);}}
+function megaToggle(side){const m=getMon(side);const set=(id,a,i)=>{setField(side,'id',id);setField(side,'a',a);setField(side,'aGuess',false);setField(side,'i',i);};
+ if(m.pre){const L=MEGA[m.pre.id]||[],ix=L.indexOf(m.id);if(ix>=0&&ix<L.length-1){const n=byId[L[ix+1]];set(n.id,n.a[0],n.stone||m.pre.i);}else{set(m.pre.id,m.pre.a,m.pre.i);setField(side,'pre',null);}}
  else if(MEGA[m.id]){const n=byId[MEGA[m.id][0]];setField(side,'pre',{id:m.id,a:m.a,i:m.i});set(n.id,n.a[0],n.stone||m.i);}}
 function editor(r,side){const custom=side==='mine'&&ST.mine.src==='custom';const p=r.p,abils=[...new Set([...p.a,...(p.ha!=null?[p.ha]:[])])];
  const sel=(k,opts,cur)=>`<select data-e="${k}" data-s="${side}">${opts.map(([v,l])=>`<option value="${esc(v)}" ${String(v)===String(cur)?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
@@ -114,7 +114,7 @@ function bindMain(){document.querySelectorAll('[data-lv],[data-hp]').forEach(i=>
   const ck=i.dataset.ck;if(k==='t'){(ST.mvo[ck]=ST.mvo[ck]||{}).t=i.value;}else if(k==='bp'){const v=parseInt(i.value);(ST.mvo[ck]=ST.mvo[ck]||{}).bp=isNaN(v)?undefined:v;}else if(k==='hits'){ST.hits[ck]=parseInt(i.value)||1;}
   save();refresh();};});}
 function bindEd(){document.querySelectorAll('[data-e]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const side=i.dataset.s,k=i.dataset.e,m=getMon(side);
-  if(k==='na')setField(side,'na',i.value);else if(k==='ab')setField(side,'a',+i.value);else if(k==='it')setField(side,'i',i.value);else if(k==='status')setField(side,'status',i.value);
+  if(k==='na')setField(side,'na',i.value);else if(k==='ab'){setField(side,'a',+i.value);setField(side,'aGuess',false);}else if(k==='it')setField(side,'i',i.value);else if(k==='status')setField(side,'status',i.value);
   else if(k==='iv'||k==='ev'){const a=m[k].slice(),v=parseInt(i.value)||0;a[+i.dataset.x]=Math.max(0,Math.min(k==='iv'?31:252,v));setField(side,k,a);}
   refresh();};});}
 function bindCap(root){(root||document).querySelectorAll('[data-cap]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const v=parseInt(i.value);const t=trByK[i.dataset.cap];if(v>=range[0]&&v<=range[1]&&v!==t.cap){TCAP[t.k]=v;if(CF.capLast)TCAP._last=v;}else delete TCAP[t.k];try{localStorage.setItem(LS.cap,JSON.stringify(TCAP));}catch(error){}save();refresh();};});}
