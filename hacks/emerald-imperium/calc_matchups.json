@@ -581,6 +581,92 @@
       "field": {}
     },
     {
+      "name": "draco-barrage-special",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130
+      },
+      "field": {}
+    },
+    {
+      "name": "emperor-presence-steel",
+      "atk": {
+        "id": "395",
+        "lv": 50,
+        "ab": 183
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 167
+      },
+      "field": {}
+    },
+    {
+      "name": "iron-fist-non-punch",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 110
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "ora-non-punch",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 73
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "frostbite-physical",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "st": "frz"
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
       "name": "boss-roxanne",
       "atk": {
         "id": "111",
