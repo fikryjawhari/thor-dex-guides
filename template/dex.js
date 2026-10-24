@@ -102,7 +102,7 @@ window.addEventListener('resize',()=>{if(KB.o)KB.draw();});
 // opens the full-window search, in the viewer and in a browser alike.
 function searchDisp(inp){const b=document.createElement('button');b.type='button';b.id='q';b.className='disp';b.setAttribute('aria-label','Search');
  b.innerHTML='<span class="tx"></span><span class="x" aria-label="Clear search">×</span>';let val='',ph=inp.placeholder||'';
- const show=()=>{const t=b.firstChild;t.textContent=val;t.dataset.ph=ph;b.classList.toggle('has',!!val);if(KB.o&&KB.o.disp)KB.buf=val;};
+ const show=()=>{const t=b.firstChild;t.textContent=val;t.dataset.ph=ph;b.classList.toggle('has',!!val);};
  Object.defineProperty(b,'value',{get:()=>val,set:v=>{val=String(v);show();}});
  Object.defineProperty(b,'placeholder',{get:()=>ph,set:v=>{ph=v;show();}});
  inp.replaceWith(b);show();

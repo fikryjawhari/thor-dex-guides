@@ -183,13 +183,11 @@ body:is([data-v=p],[data-v=m],[data-v=a],[data-v=tr]) header{display:none}
 /* In-page keyboard (Dex Viewer only; see IN-PAGE KEYBOARD in the script). The search box and number boxes are buttons
    there, and the keyboard is fixed to the bottom of the window, over the rail. */
 .disp{flex:1;min-width:140px;display:flex;align-items:center;gap:4px;min-height:var(--sbh);background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:0 0 0 8px;font:inherit;font-size:var(--sbf);text-align:left;cursor:text;touch-action:manipulation}
-.disp.open{border-color:var(--acc)}
 .disp .tx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .disp .tx:empty::before{content:attr(data-ph);color:var(--mut)}
-.disp.open .tx:empty::before{content:none}
-.disp.open .tx::after,.kq::after{content:'';display:inline-block;width:2px;height:18px;background:var(--acc);vertical-align:-3px;margin-left:1px;animation:kbblink 1s steps(1) infinite}
+.kq::after{content:'';display:inline-block;width:2px;height:18px;background:var(--acc);vertical-align:-3px;margin-left:1px;animation:kbblink 1s steps(1) infinite}
 @keyframes kbblink{50%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.disp.open .tx::after,.kq::after{animation:none}}
+@media (prefers-reduced-motion:reduce){.kq::after{animation:none}}
 .disp .x{flex:none;width:var(--sbh);height:var(--sbh);display:none;align-items:center;justify-content:center;border-radius:6px;color:var(--mut);font-size:18px}
 .disp.has .x{display:flex}
 .nv{min-width:44px;min-height:40px;padding:0 6px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:6px;font:inherit;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;cursor:text;touch-action:manipulation}
