@@ -237,8 +237,8 @@ Path `C:\Users\fikry\.t3\worktrees\thor-dex-guides\worktree-code-cleanup` (T3 th
 | Kickoff / baseline | verified | (this commit) | orchestrator | Data rebuilds identical ×4; tabs 0 problems; dom/consistency at base: see gates/ | Delegate unit A. |
 | A [09] [16] [17] [18] [20] [21] | verified | `42cac28` (ff: `e60a330` extract, `42cac28` template) | gpt-6.1-sol, task `cleanup-unit-A-r1`, branch `t3/cleanup-dead-code`, `C:\Users\fikry\.t3\worktrees\thor-dex-guides\t3-c61d84de` | datacmp ×4 identical; domcompare ×4 normal + kb: 0 differing, 0 page errors; consistency + tabs pass. Log: that worktree's `.tmp/unitA-logs/report.md` | — |
 | B [04] [19] | verified | `8b6078a` (ff: `296ff0d` [04], `8b6078a` [19]) | gpt-6.1-sol, task `cleanup-unit-B-r1`, branch `t3/share-garc-http-tools`, `C:\Users\fikry\.t3\worktrees\thor-dex-guides\t3-f91b8296` | 13 base/new reader JSON pairs byte-identical (EX ×2 variants + Viola Nerf, PS, MM, NS); not-found exception identical; EX/PS datacmp identical; 29 mocked HTTP scenarios identical. Logs: that worktree's `.tmp/unitB/` | — |
-| C+D [02] [03] [01] | in progress | — | gpt-6.1-sol, task `cleanup-unit-CD-r1` (one worker: both create/extend `tools/ctrguide.py`) | — | Review, merge. |
-| E [11] [10] | pending | — | — | — | — |
+| C+D [02] [03] [01] | verified | `e1d9824` (ff: `0c00722` [02], `998f60c` [03], `d52f70f` + `e1d9824` [01]) | gpt-6.1-sol, task `cleanup-unit-CD-r1`, branch `t3/cleanup-units-cd`, `C:\Users\fikry\.t3\worktrees\thor-dex-guides\t3-b196c976` | New `tools/wikitext.py` (23 lines), `tools/ctrguide.py` (201); 447 caller lines out, net −181. EX/PS datacmp identical + check.py pass after every commit; differential checks on splitter, scoring, learnsets, intermediate dex. Logs: that worktree's `.tmp/unitCD/` | — |
+| E [11] [10] | in progress | — | gpt-6.1-sol, task `cleanup-unit-E-r1` | — | Review, merge. |
 | F [12] [07] [06] [13] [14] [15] [08 minus node] | pending | — | — | — | — |
 | G [05] | pending | — | — | — | — |
 | H final audit | pending | — | — | — | — |
