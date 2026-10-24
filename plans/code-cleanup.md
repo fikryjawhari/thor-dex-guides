@@ -251,6 +251,13 @@ SoulGold; CFRU Radical Red + Unbound; NDS Renegade Platinum, BB2 Redux, HG Retil
 into `main` for these branches, each after its gates pass. Pushes still need a yes each time.** New-hack data
 collection (Sol after the Codex reset) and the calc (its own decide session, `worktree-damage-calc`) are out of scope.
 
+**Side branches waiting to merge into `main` after the cleanup** (one at a time, each rechecked after merging):
+- `t3/text-zoom-collapse-bars` (Sonnet task `text-zoom-bars-r1`, worktree `t3-d056c528`): still running its gates.
+- `t3/source-update-checker` (Sol task `update-checker-r1`, worktree `t3-42143025`, `23c3cc4`…`c3ad6cb`): reviewed.
+  `tools/check_updates.py` + 12 `watch.json`; deletes `plans/update-checker.md`, edits PROGRESS.md (Open 7 removed;
+  expect a small conflict with the text-zoom branch's renumbering). Live run: everything unchanged except EI (calc
+  backup index) and SoulGold (six data files); left unaccepted for the user.
+
 **Models from the Codex reset (user, 2026-10-24):** every new worker on gpt-6.1-sol again (unit I, the update
 checker, any fix rounds); audits (H and later ones) on Haiku. G and the text-zoom fix finish on Sonnet as launched.
 No new worker before the reset (~15 min timer started at the request).
