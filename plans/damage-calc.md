@@ -442,11 +442,40 @@ save headless and compares the party / boxes: the done-check for a reader sessio
    must match. hzla's code is never copied or shipped (Licenses): his settings are facts, his calc is a local oracle.
    The in-game test (How to check a hack's mechanics, 4) only where his calc and the docs disagree.
    Every guide built after this does the same as part of its setup (CLAUDE.md → Making a new guide).
+   This first pass is good enough to ship; each hack then gets a refinement pass in its own session (user, 2026-10-25).
+   References per hack: "Calc references per hack" below.
 3. Gen 3 save reader and EI's ID tables, tested against the user's save.
 4. Viewer file picker (app repo).
 5. Gen 4 reader (Hardlove Gold), then Gen 5 (BB2R) when its guide is built.
 6. Gen 6/7 reader (Photonic Sun, then Eternal X).
 7. Each new guide's extract step writes its ID tables (and its `cfg.calc`, step 2) from then on (add it to CLAUDE.md → Making a new guide and the skill).
+
+## Calc references per hack (from the user, 2026-10-25)
+
+A hzla calc link names the hack's data set and its mechanics: `data` = the hack's data, `dmgGen` = the damage
+mechanics generation, `gen` = the game generation, `types` = the type chart generation. hzla has a calc for every hack
+on our list except the two hg-engine ones (Hardlove Gold, HeartGold Retiled). For Gen 3 / 4 games without one, his
+importer https://ddex-chi.vercel.app reads the ROM and builds a calc from it (a possible oracle for those).
+
+| Hack | Calc | Mechanics |
+| --- | --- | --- |
+| Emerald Imperium 1.3 | https://hzla.github.io/Dynamic-Calc-Decomps/?data=imp13&dmgGen=8&gen=8&types=6&noSwitch=1&evs=0&view=calculator | Gen 8 damage, Gen 6 types. `evs=0` looks like MGM (no EVs) by default; `noSwitch` unknown (find out in the refinement pass). |
+| Photonic Sun | https://hzla.github.io/Dynamic-Calc-Decomps/?data=pspm&dmgGen=7&gen=7&types=6&view=calculator | Gen 7 damage, Gen 6 types. |
+| Eternal X | https://hzla.github.io/Dynamic-Calc/?data=8d1ab90a3b3c494d8485&dmgGen=6&gen=6 | Gen 6 damage and types. Note: the older hzla/Dynamic-Calc, not Decomps. |
+| Hardlove Gold | none (hg-engine) | The hack's own rules, below. |
+
+**Hardlove Gold's battle rules** (the hack's docs, given by the user). Anything not listed: Gen 9 mechanics.
+- Critical hit chance 1/16, damage ×1.5. Gem boosts ×1.5.
+- Unseen Fist ignores Protect completely. Protean as in Gen 9, Libero as in Gen 8. Battle Bond: +1 Attack and Speed
+  after a KO. Moody can change accuracy and evasion.
+- Hail replaced by Snow. Weather and terrain from abilities / moves are permanent (terrain can't be removed by Defog).
+- Lock On and No Guard ignore the hit chance and level check of OHKO moves. Sleep as in Gen 4 (2–5 turns).
+- EVs are removed from the game. Consumed or removed held items are not restored after battle.
+- Easy mode (toggled by talking to Mom) lowers enemy trainer levels by 1 + floor(x / 25), x = the enemy's level: a
+  possible calc option later.
+- Not damage-related: set battle style forced, no bag in trainer battles, gym trainers / leaders heal your party, L
+  toggles Repel, R opens the PC (not in Gauntlets), TMs are consumed, HMs need no teaching, Rock Climb needs no badge,
+  Fly between Johto and Kanto, Safari Balls always catch.
 
 ## Not doing
 
