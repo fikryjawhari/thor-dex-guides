@@ -335,7 +335,7 @@ const LGRP=(()=>{const out=[],two=n=>n.split(' ').length>2?n.split(' ').slice(0,
  ARO.forEach(i=>{const A=AR[i];if(A.in!=null)return;const k=two(A.n),one=places(i).length===1,p=out[out.length-1];
   if(k&&one&&p&&p.one&&p.k===k)p.a.push(i);else out.push({k,one,a:[i]});});
  out.forEach(g=>g.n=g.a.length>1?g.k:AR[g.a[0]].n);return out;})();
-const LSEC=(k,m,tags,body)=>`<details class="sec" data-s="${esc(k+'.'+m)}" ${LO.s[k+'.'+m]===0?'':'open'}><summary><span class="sn">${esc(m)}</span>${tags}</summary><div class="secb">${body}</div><button class="endbar sb" hidden>${UPI}<span>${esc(m)}</span></button></details>`;
+const LSEC=(k,m,tags,body)=>sectionHTML(esc(k+'.'+m),esc(m),tags,body,LO.s[k+'.'+m]!==0);
 const encTable=(rows,note)=>(note?`<div class="mut small" style="margin:4px 0 2px">${esc(note)}</div>`:'')+`<table class="enc">${rows.map(x=>`<tr class="${x.d?'dupe':''}"><td style="width:44px">${spr(x.p.id,'s40')}</td><td>${plink(x.p.id)}<div>${x.p.t.map(ty).join('')}</div>${x.note&&!note?`<div class="mut small">${esc(x.note)}</div>`:''}</td><td class="n">${esc(x.show)}${x.chg?'<div class="mut small">was '+(x.r?x.r+'%':esc(x.rs))+'</div>':''}</td><td class="n">${x.lv.size?'Lv '+esc([...x.lv].join(', ')):''}</td></tr>`).join('')}</table>`;
 const mTags=(rows,allD)=>allD?'<span class="tag">all dupes</span>':`<span class="mut small">${rows.length}</span>`;
 const locStop=(k,n,tags,body)=>`<details class="stopd" data-k="${k}" ${LO.x[k]===0&&!st.q?'':'open'}><summary class="stoph"><span class="pn">${esc(n)}</span>${tags}</summary><div class="stop">${body}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(n)}</span></button></div></details>`;
@@ -418,7 +418,7 @@ function itemBox(si){const sec=D.IT[si],tbl=rs=>`<table class="itbl ix">${rs.map
  // No stop header: the box's sub-headings (every row has one) pin straight under the search bar.
  return (sec.note?`<div class="mut small" style="margin:6px 0">${esc(sec.note)}</div>`:'')+
   (subs.filter(([g])=>g).length>1?segBar('it-sp'):'')+
-  subs.map(([g,rs])=>g?`<details class="sec" data-s="${esc(si+'.'+g)}" ${IO.s[si+'.'+g]===0?'':'open'}><summary><span class="sn">${esc(g)}</span><span class="mut small">${rs.length}</span></summary><div class="secb">${tbl(rs)}</div><button class="endbar sb" hidden>${UPI}<span>${esc(g)}</span></button></details>`:tbl(rs)).join('')+
+  subs.map(([g,rs])=>g?sectionHTML(esc(si+'.'+g),esc(g),`<span class="mut small">${rs.length}</span>`,tbl(rs),IO.s[si+'.'+g]!==0):tbl(rs)).join('')+
   `<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(sec.n)}</span></button>`;}
 TOG.items=d=>{if(st.q)return;const iS=()=>{try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}};
  if(d.matches('details.split[data-si]')){const si=+d.dataset.si,b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=itemBox(si);colBind(b);}if(d.open)IO.o[si]=1;else delete IO.o[si];}
@@ -487,6 +487,7 @@ function jumpState(){if(!RJ||RJ.hidden)return;const t=T(),atEnd=scrollY+innerHei
 if(RJ){RJ.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>jump(+b.dataset.j));
  let raf=0;addEventListener('scroll',()=>{if(!raf&&!RJ.hidden)raf=requestAnimationFrame(()=>{raf=0;jumpState();});},{passive:true});}
 const UPI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14l5-5 5 5"/></svg>';
+const sectionHTML=(key,label,tags,body,open)=>`<details class="sec" data-s="${key}" ${open?'open':''}><summary><span class="sn">${label}</span>${tags}</summary><div class="secb">${body}</div><button class="endbar sb" hidden>${UPI}<span>${label}</span></button></details>`;
 const segBar=(cls,a='Expand all',c='Collapse all')=>`<div class="seg ${cls}"><button data-a="1">${a}</button><button data-a="0">${c}</button></div>`;
 
 // ===== WALKTHROUGH TAB (D.WK; state in localStorage LS.walk {c:{stepKey:1}, o:{splitIdx:1, gi:1 Guide info},
