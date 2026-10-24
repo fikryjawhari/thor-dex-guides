@@ -84,8 +84,8 @@ def main():
     assert {key.split('.f', 1)[0] for key in new_stops} == set(old_stops), 'Every walkthrough stop key is kept'
     for key, old_stop in old_stops.items():
         assert new_stops[key]['n'].startswith(old_stop['n']), key     # Hot House parts take their badge section's name
-        assert {k: v for k, v in old_stop.items() if k not in ('n', 'it', 'tr')} == {
-            k: v for k, v in new_stops[key].items() if k not in ('n', 'it', 'tr')}, key
+        assert {k: v for k, v in old_stop.items() if k not in ('n', 'x', 'it', 'tr')} == {
+            k: v for k, v in new_stops[key].items() if k not in ('n', 'x', 'it', 'tr')}, key
     old_tr = [k for stop in old_stops.values() for k in stop['tr']]
     new_tr = [k for stop in new_stops.values() for k in stop['tr']]
     assert sorted(old_tr) == sorted(new_tr), 'Every trainer stays in the walkthrough once'

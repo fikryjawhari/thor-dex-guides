@@ -149,6 +149,7 @@ def name_splits(D):
                     part.pop('x', None)
                 if j is not None:
                     part['n'] = G[b]['sec'][j]['h']
+                    part.pop('x', None)
                 if not out[b]['st']:
                     first[b] = si
                 out[b]['st'].append(part)
