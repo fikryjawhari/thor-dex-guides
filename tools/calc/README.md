@@ -336,3 +336,21 @@ separate direct Smogon oracle and synthetic hand-checked overrides, not hzla
 code. It covers Gen 4/5 and modern mechanics, per-hit effects, exact KO
 convolution, runner single/batch input, and input immutability. Reference parity
 against a specific hack's local hzla calculator remains a per-hack audit.
+
+## Validation snapshot (2026-10-25)
+
+- Clean `npm ci --prefix tools/calc --ignore-scripts`: 6 packages audited,
+  zero reported vulnerabilities.
+- `node tools/calc/build.mjs` twice: identical SHA-256
+  `413672727f4d82acb41d39671f300a466a7b489abb8cb9a45e6e208e56e45a47`.
+- `node tools/calc/test.mjs`: **75 passed, 0 failed**, including 41 direct
+  Smogon parity matchups. Synthetic overrides exercise every exposed phase.
+- Bundle: **374,822 bytes**, **88,240 bytes gzip**. Fallback metadata dominates
+  (249,186 attributed bytes); modern mechanics are next (32,296 bytes).
+- `python assemble.py`: all four guides built; assembly needs no npm packages.
+  Browser/Thor sweeps are deliberately deferred to integration, not claimed here.
+
+These are framework checks, not a declaration that Emerald Imperium or any
+other hack's mechanics profile is verified. Logs are local in
+`.tmp/calc-engine/`; the baseline against `f44f780` was built separately under
+`.tmp/baseline/` by the repository gate.
