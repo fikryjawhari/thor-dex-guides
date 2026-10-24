@@ -38,10 +38,6 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    sessions load is the 2026-10-18 hand-build version. Re-upload the repo copy (zip with forward-slash paths).
 6. **Code cleanup** (`plans/code-cleanup.md`): a quality pass (dead code, repeated logic into shared helpers), for a Codex session. Phase 1 is a read-only findings list.
 7. **Update checker** (`plans/update-checker.md`): one command reporting which hacks' sources changed. Run by hand.
-8. **Items box named like its only sub-heading** (Key Items, Evolution Items, Mega Stones, Fossils, Move Tutors,
-   Useful NPCs, Z-Crystals): the name shows twice at the top (grey box header + yellow sub-heading) and again in the two
-   end bars at the bottom; only the sub-heading pins. Options: merge the two headers for that case (the box header
-   pins), relabel the lone sub-heading, or only drop the duplicate end bar. Needs a mockup and the user's pick.
 
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 

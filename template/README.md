@@ -69,6 +69,8 @@ dex.css):
 5. Jump buttons in the rail (`.rjump`): up / down between boxes, landing at `T()` under the search bar.
 6. Stacked sticky headers: paint `--bg` above the lower header so no gap shows on the phone, and pin only what's asked.
 7. The level row ("Level cap 15 · yours 17") is closed by default.
+8. Items: boxes don't pin, their sub-headings do. A box with one sub-heading named like itself shows the name twice
+   (box header + sub-heading) on purpose: the user wants it that way so the box header never becomes sticky.
 
 **Walkthrough:** Guide info → Starter → Next step → Expand / Collapse all, nothing else above the splits. Inside a stop:
 note, then Checklist / Encounters / Items / Trainers sections. Stops with trainers show `n/N | cap` (the split's cap
