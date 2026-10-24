@@ -953,7 +953,7 @@ function calcPage(){if(window.CALC)window.CALC.render();}
 // ===== ROUTER
 function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).split('/');const v=parts[0]||'';
  if(v==='calc'&&!CF.calc){history.replaceState(history.state,'','#/');render(fromInput);return;}
- document.body.classList.toggle('calc-route',!!CF.calc&&v==='calc');
+ if(CF.calc){document.body.classList.toggle('calc-route',v==='calc');if(v!=='calc')window.CALC?.leave();}
  if(st.view===''&&v!==''&&!fromInput)st.listScroll=Object.assign(keepAnchor(),{z:cvSizes()});
  // The search stays set from page to page, except into a place (#/l/, a link from a Pokemon page): that's a jump to it.
  if(v==='l'&&!fromInput){q.value='';st.q='';}
