@@ -151,6 +151,30 @@ AR.ns, P.w methods `Hot House (N+ badges)`, `Choice (...)`, `Starter egg`, `Pseu
 WK.cheats (+ `cnote`), trainer `c` (calc trainer names), `pp` (pokepaste), mon `a0` / `ld` / `pre` / `x` / `cf` /
 `src`, and the Hot House tiers in the caps list. No WK.docs, no WK.ko.
 
+### Damage calc
+
+Mechanics audit in progress (2026-10-25). The starting `cfg.calc = {base: "expansion"}` is not yet a
+verified EI profile. Baseline: `820e5a42e5c472ea7483a3b45caf16e8d2d12eb7`; gate logs in
+`.tmp/gate/20261025-091923-768412/` (baseline assembly passed).
+
+- Official site links hzla's Dynamic-Calc-Decomps. Read-only oracle pinned at
+  `ff6c3e339e276e6b4e8e44db58750b6534bc26aa`; `index.html`, `js/romhack_catalog.js` and
+  `backups/title_to_backup_mappings.js` select `data=imp13`, `dmgGen=8`, `gen=8`, `types=6`,
+  `noSwitch=1`, and `evs=0` or `1`. EI 1.3 uses `backups/imp_1-3.js`; `imp` is EI 1.2.
+  No EI profile is registered under `calc/mechanics/romhacks/`; behaviour also lives in shared
+  `gen789.js`, `util.js` and UI data-loading adjustments. Never copy that code or its tables.
+- Game source located: `iriv24/pokeemerald-expansion`, `release` at
+  `2576d0f3f4c861c760f0c55198e37e6d7b91683e` (also available from the aki-mizu fork).
+  `include/config/battle.h` sets modern critical damage/chance, type matchups, split, terrain,
+  Transistor and Snow Warning; Frostbite is enabled; Protean/Libero activates repeatedly.
+  `src/battle_util.c` contains custom damage abilities. Exact ROM/source correspondence needs checking.
+- Another dedicated calc: `harryjowright/emerald-imperium-damage-calc`, locally pinned at
+  `516eca76fcb3dd79d8b13fcb8d069581c9164c6b` (2025-02-26). It predates the release source
+  and the 1.3.1 workbook and is not linked by the official site.
+
+Remaining: finish source/doc audit, implement oracle comparison and fixed cases, write overrides,
+resolve differences and run engine/build checks. No in-game test yet.
+
 ## Checks
 
 `check.py` [baseline.json [current.json]]: the Locations PDF's wild tables against the dex data slot by slot; given a
