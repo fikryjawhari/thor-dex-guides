@@ -252,7 +252,17 @@ into `main` for these branches, each after its gates pass. Pushes still need a y
 collection (Sol after the Codex reset) and the calc (its own decide session, `worktree-damage-calc`) are out of scope.
 
 **Side branches waiting to merge into `main` after the cleanup** (one at a time, each rechecked after merging):
-- `t3/text-zoom-collapse-bars` (Sonnet task `text-zoom-bars-r1`, worktree `t3-d056c528`): still running its gates.
+- `t3/text-zoom-collapse-bars` (Sonnet task `text-zoom-bars-r1`, worktree `t3-d056c528`): stopped by the user's
+  request to save Claude usage. Its one commit `2a9718f` has the fix (`dex.js` recheck on page height change),
+  `tools/mockup/zoomcheck.mjs` and docs; pagecheck / walkcheck logs exist, the domcompare sweeps were unfinished.
+  **Next:** after G merges, a Sol worker reruns its gates (domcompare ×4 normal + kb vs a build of its base, consistency,
+  zoomcheck before / after, the Thor-frame preview link).
+
+**G swap (user, 2026-10-24):** the Sonnet G worker (`cleanup-unit-G-r1`, branch `t3/browser-check-harnesses`,
+worktree `t3-8e7ab092`) was stopped after ~3 h, mostly waiting on sweeps. Committed: `e256588` walk-state fix,
+`691b2f7` + `6ebbe0d` domcompare flake fix, `daff9e1` / `cdfd2eb` / `c372e2a` [05] for three harnesses; the
+orchestrator committed the uncommitted mockup-check switches as **WIP `3a7166c`**. Remainder on Sol task
+`cleanup-unit-G-r2`: verify the WIP, prove the walk-state and domcompare fixes still catch real breakage, final gates.
 - `t3/source-update-checker` (Sol task `update-checker-r1`, worktree `t3-42143025`, `23c3cc4`…`c3ad6cb`): reviewed.
   `tools/check_updates.py` + 12 `watch.json`; deletes `plans/update-checker.md`, edits PROGRESS.md (Open 7 removed;
   expect a small conflict with the text-zoom branch's renumbering). Live run: everything unchanged except EI (calc
