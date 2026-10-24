@@ -315,11 +315,12 @@ function cvApply(z){if(!z)return;CVB.forEach(([sel,k])=>app.querySelectorAll(sel
  const l=app.querySelector('.list');if(l&&z.row)l.style.setProperty('--rowh',z.row+'px');}
 function rerender(){if(PICK){syncStarter();tkSave();}const a=keepAnchor(),z=cvSizes();render(true);cvApply(z);toAnchor(a);}
 const starterSel=(c,none='Not chosen')=>`<select class="${c}"><option value="">${none}</option>${STARTERS.map(s=>`<option ${TK.s===s?'selected':''}>${esc(s)}</option>`).join('')}</select>`;
-function tkBar(){const n=Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length,f=Object.values(TK.e).filter(e=>e&&e.f).length;
+const trackerButtons=()=>'<button class="btn tk-export">Export</button><button class="btn tk-import">Import</button><button class="btn danger tk-reset">Reset all</button>';
+function tkBar(){const [n,f]=tkCounts();
  const cnt=`${n} caught · ${f} failed`;
  return `<div class="card tkbar">${PICK?`<div class="bar tkchoices" style="margin:0"><label><span class="mut small">Starter</span>${starterSel('tk-starter')}</label>${PLAYER?`<label><span class="mut small">Player</span>${playerSel('tk-player')}</label>`:''}</div>
  <div class="mut small" style="margin-top:6px">${cnt}</div>`:`<div class="bar" style="margin:0"><span class="mut small">${cnt}</span></div>`}
- <div class="bar" style="margin:8px 0 0"><button class="btn tk-export">Export</button><button class="btn tk-import">Import</button><button class="btn danger tk-reset">Reset all</button></div></div>`;}
+ <div class="bar" style="margin:8px 0 0">${trackerButtons()}</div></div>`;}
 const encAll=a=>ARS(a).map(encSummary).join('');
 function encSummary(a){const e=TK.e[a];if(!e)return '';if(e.f)return '<span class="tag">failed</span>';const p=byId[e.p];return p?`<span class="tag got">${esc(p.name)}</span>`:'';}
 // The page is boxes (one area, or next-to-each-other areas whose names share their first two words: Granite Cave 1F,
@@ -547,7 +548,7 @@ function guideInfoHTML(){const W=D.WK,[n,f]=tkCounts();
   (W.ko?doc('docko','Post-KO switch-in AI',`<table class="itbl">${W.ko.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</table>${W.ko.note.map(x=>`<div class="mut small" style="margin-top:6px">${esc(x)}</div>`).join('')}`):'')+
   (W.np.length?doc('docnp',`Items with no walkthrough place <span class="mut small">${W.np.length}</span>`,`<table class="itbl wt">${W.np.map(i=>`<tr><td>${esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2])}</td></tr>`).join('')}</table>`):'');
  return (HAS_MGM?`<label class="mgm"><input type="checkbox" class="mgm-toggle" ${MGM?'checked':''}> MGM</label>`:'')+`<div class="psec">Encounter tracker</div><div class="mut small">${n} caught · ${f} failed</div>`+
-  `<div class="bar pbar"><button class="btn tk-export">Export</button><button class="btn tk-import">Import</button><button class="btn danger tk-reset">Reset all</button>${CHK?'<button class="btn danger wk-reset">Reset checklist</button>':''}</div>`+
+  `<div class="bar pbar">${trackerButtons()}${CHK?'<button class="btn danger wk-reset">Reset checklist</button>':''}</div>`+
   (docs?`<div class="psec">Game docs</div>`+docs:'')+`<div class="mut small" style="margin:12px 0 4px">${TX.walk}</div>`;}
 // Next step: the first unticked checklist step, in walkthrough order.
 function nextStep(){const W=D.WK;for(let si=0;si<W.splits.length;si++){const sp=W.splits[si];for(let ti=0;ti<sp.st.length;ti++){const s=sp.st[ti];for(let j=0;j<(s.s||[]).length;j++)if(!WO.c[si+'.'+ti+'.'+j])return {si,ti,j,s};}}return null;}
