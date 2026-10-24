@@ -17,6 +17,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `showdown.js <dist/data dir> <out.json>` | pokemon-showdown data files (moves, texts, dex, abilities) as one JSON. |
 | `drive_ls.py <folder-id> [out-dir]` | Lists a public Google Drive folder; with `out-dir`, downloads every file in it (Sheets as .xlsx, Docs as .txt, other files as-is). Skips subfolders and archives (.zip etc.). |
 | `mirror.py <start-url> <out-dir> [max-pages] [skip ...]` | Mirrors a static site's pages under the start URL's folder. URLs containing any `skip` substring are not followed. |
+| `source_http.py` | Shared retrying byte reads for `mirror.py` and `rhd_moves.py`; each caller keeps its headers, timeout and delay policy. |
 | `wp_dump.py <site> <out.json> [types ...]` | Dumps a WordPress site (pages and custom post types) through its REST API into one JSON file. |
 | `wiki_dump.py <api.php> <out-dir>` | Dumps every page of a MediaWiki as wikitext. Not used by any hack right now. |
 | `rp_item_locations.py` | Builds Renegade Platinum's `item-locations.csv` from its docs plus vanilla Platinum (pret decomp). |
