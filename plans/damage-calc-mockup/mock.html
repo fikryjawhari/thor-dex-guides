@@ -222,6 +222,38 @@ body.kbopen .shb{padding-bottom:calc(var(--kbh,0px) + 12px)}
 .mr .mm{padding:1px 6px}.mr .r1{line-height:1.15}.mr .r2{line-height:1.1;font-size:10px}
 .dres{gap:2px}
 .mr .rh,.mr .rc{align-self:flex-start;height:32px}.mr .dd .eg{grid-template-columns:repeat(auto-fit,minmax(58px,1fr))}
+/* v4 */
+#app{gap:2px!important}
+.dside{padding:1px 2px 2px}
+.fbar{min-height:28px}.fbar .nav{height:26px;width:30px;font-size:16px}.fbar .dsrc{min-height:26px}
+.dstrip.fs button{min-height:28px;padding:1px 0}.dstrip.fs button .spr{width:min(18px,100%)}
+.cc{padding:1px 4px}.cc .l1{gap:3px}.cc .l1 .cn{min-height:18px}.stb{height:18px;padding:0 5px}
+.cc .cl{min-height:24px}.cc .cl .nv{min-height:22px}.cc .cl input{height:22px}.cc .pill{height:22px}
+.cc .mg{flex:none;width:20px;height:18px;padding:0;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--mut);font:800 10px system-ui;cursor:pointer}
+.cc .mg.on{background:var(--acc);border-color:var(--acc);color:#111}
+.mr .mm{padding:0 6px}
+.rcol{flex:none;width:28px;display:flex;flex-direction:column;gap:2px;align-self:flex-start;height:31px}
+.rcol button{flex:1;min-height:0;width:100%;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--fg);font:700 10px/1 system-ui;cursor:pointer;touch-action:manipulation;padding:0}
+.rcol .rc{color:var(--mut)}.rcol .rc[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#111}
+.mr .ab1{margin-top:3px}.mr .ab1 .dbtn{width:100%}
+details.dfield>summary{min-height:30px;font-size:12px;padding:0 8px}
+.dfb{padding:0 6px 6px;gap:4px}.dfr select{height:32px}.dtg button{min-height:32px}
+.ed{display:flex;flex-direction:column;gap:3px;margin:2px 0 3px;padding-top:3px;border-top:1px solid var(--line)}
+.ed .e2{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.ed select{width:100%;min-width:0;height:30px;font-size:12px;padding:0 3px}
+.ed table{table-layout:fixed;width:100%}.ed td,.ed th{padding:1px;text-align:center;font-size:11px;border:0}
+.ed th{font-size:10px;color:var(--mut)}.ed td.l{width:22px;font-size:9.5px;color:var(--mut);text-align:left}
+.ed .nv{width:100%;min-width:0;min-height:26px;padding:0;font-size:12px}.ed input{width:100%;min-width:0;height:26px;padding:0 1px;text-align:center;font-size:12px;-moz-appearance:textfield}
+.ed input::-webkit-inner-spin-button,.ed input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.ed .sc{width:100%;height:28px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--fg);font:700 12px system-ui;padding:0;cursor:pointer;touch-action:manipulation}
+.ed .sc.up{color:#6fcf97}.ed .sc.dn{color:#ff7b6b}
+.ed .sm{width:100%;height:28px;border:0;border-radius:5px;background:var(--acc);color:#111;font:800 14px system-ui;padding:0;cursor:pointer}
+.ed .z{width:100%;height:28px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--mut);font:700 11px system-ui;padding:0;cursor:pointer}
+.ed .e3{display:flex;gap:3px}.ed .e3 .dbtn{flex:1;min-height:30px;font-size:12px;padding:0 4px}.ed .e3 .dbtn:disabled{opacity:.4}
+.mrow{align-items:center}.mrow .tx{display:block}.mrow .mini{display:flex;gap:1px;flex-wrap:wrap;margin-top:3px}.mrow .mini .spr{width:24px;height:24px}
+.mrow .tx b{display:block}
+.shb>*{flex:none}
+.dcap .nv{min-height:26px;min-width:40px}.dcap input{height:26px;padding:0 3px;font-size:13px}
 </style></head><body>
 <nav id="rail"></nav>
 <main id="app"></main>
@@ -281,7 +313,7 @@ const capOf=t=>+ST.cap[t.k]||capDef(t);
 const monLv=(x,cap)=>x.l!=null?x.l:x.r!=null&&cap?cap+x.r:NaN;
 function curMine(){const imp=ST.imp,m=ST.mine;if(m.src==='party'&&imp&&imp.party)return imp.party[m.i]||null;if(m.src==='box'&&imp&&imp.boxes&&imp.boxes[m.b])return imp.boxes[m.b][m.i]||null;if(m.src==='custom')return ST.custom[m.i]||null;return null;}
 const mineKey=()=>{const m=ST.mine;return m.src==='custom'?null:'mine:'+(curMine()||{}).pid;};
-function applyEdits(base,key){const e=key&&ST.edits[key];return e?{...base,...e,edited:true}:{...base};}
+function applyEdits(base,key){ST.saved=ST.saved||{};const sv=key&&ST.saved[key],e=key&&ST.edits[key];const w=!!e&&Object.keys(e).length>0;if(!sv&&!w)return {...base};return {...base,...sv,...e,edited:w,saved:!!sv};}
 function mineMon(){const b=curMine();return b?applyEdits(b,mineKey()):null;}
 function foeBase(t,i){const x=t.p[i];if(!x)return null;const p=byId[x.id];const cap=capOf(t),l=monLv(x,cap);
  return {id:x.id,l,na:x.na||'Hardy',a:x.a!=null?x.a:p.a[0],aGuess:x.a==null,i:x.i||'',m:(x.m||[]).slice(),iv:x.iv,ev:x.ev,foe:true};}
@@ -352,7 +384,7 @@ window.addEventListener('hashchange',route);
 const go=h=>{if(location.hash===h)route();else location.hash=h;};
 
 /* ---------------- calc page ---------------- */
-let BAN=null;const ROWOPEN=new Set();const STGOPEN={mine:false,foe:false};let SMODE='+';
+let BAN=null;const ROWOPEN=new Set();let SMODE='+';
 ST.crit=ST.crit||{};ST.mvo=ST.mvo||{};ST.hits=ST.hits||{};
 const MH={};[['Bullet Seed',2,5,3],['Icicle Spear',2,5,3],['Rock Blast',2,5,3],['Pin Missile',2,5,3],['Double Slap',2,5,3],['Fury Attack',2,5,3],['Fury Swipes',2,5,3],['Arm Thrust',2,5,3],['Tail Slap',2,5,3],['Spike Cannon',2,5,3],['Comet Punch',2,5,3],['Bone Rush',2,5,3],['Water Shuriken',2,5,3],['Scale Shot',2,5,3],['Double Kick',2,2,2],['Bonemerang',2,2,2],['Dual Chop',2,2,2],['Double Hit',2,2,2],['Twineedle',2,2,2],['Dual Wingbeat',2,2,2],['Surging Strikes',3,3,3]].forEach(([n,lo,hi,d])=>{const i=M.indexOf(n);if(i>=0)MH[i]=[lo,hi,d];});
 const hitsOf=mi=>{const m=MH[mi];return m?Math.max(m[0],Math.min(m[1],ST.hits[mi]||m[2])):1;};
@@ -374,11 +406,28 @@ function foeSide(){const t=trByK[ST.foe.k];if(!t)return `<div class="fbar"><butt
  const lvl=i=>{const m=applyEdits(foeBase(t,i),'foe:'+t.k+':'+i);return isNaN(m.l)?'?':m.l;};
  return `<div class="fbar"><button class="nav" data-a="tprev" aria-label="Previous trainer" ${ti>0?'':'disabled'}>‹</button><button class="dsrc" data-a="foesheet"><span class="nm">${esc(t.n)}</span></button><button class="nav" data-a="tnext" aria-label="Next trainer" ${ti<D.TR.length-1?'':'disabled'}>›</button>${rel?`<span class="dcap ${own?'own':''} ${cap?'':'need'}">Cap ${nb(`data-cap="${t.k}" data-clr="1"`,cap||'',{min:1,max:100,label:'Level cap'})}</span>`:''}</div>
  <div class="dstrip fs">${[0,1,2,3,4,5].map(i=>t.p[i]?`<button data-a="fpick" data-i="${i}" class="${i===ST.foe.i?'on':''}" aria-label="${esc(byId[t.p[i].id].n)}">${spr(t.p[i].id,'s28')}<span>${lvl(i)}</span></button>`:`<button class="ph" disabled></button>`).join('')}</div>`;}
-function stagePanel(r,side){const lab=['Atk','Def','SpA','SpD','Spe'];return `<div class="sp5"><button class="sm" data-a="smode" aria-label="Raise or lower">${SMODE==='+'?'+':'−'}</button>${lab.map((l,i)=>`<button class="sc ${r.stg[i]>0?'up':r.stg[i]<0?'dn':''}" data-a="sstep" data-s="${side}" data-x="${i}"><small>${l}</small><b>${r.stg[i]>0?'+':''}${r.stg[i]}</b></button>`).join('')}<button class="sm" data-a="sreset" data-s="${side}" aria-label="Reset stages">0</button></div>`;}
+const EDITOPEN={mine:false,foe:false};
+const MEGA={};P.forEach(p=>{if(/^Mega /.test(p.n)){const base=p.n.replace(/^Mega /,'').replace(/ [XY]$/,'');const b=P.find(x=>x.n===base);if(b)(MEGA[b.id]=MEGA[b.id]||[]).push(p.id);}});
+function megaToggle(side){const m=getMon(side);const set=(id,a,i)=>{setField(side,'id',id);setField(side,'a',a);setField(side,'i',i);};
+ if(m.pre){const L=MEGA[m.pre.id]||[],ix=L.indexOf(m.id);if(ix>=0&&ix<L.length-1){const n=byId[L[ix+1]];set(n.id,n.a[0],n.stone||m.pre.i);}else{set(m.pre.id,m.pre.a,m.pre.i);setField(side,'pre',undefined);}}
+ else if(MEGA[m.id]){const n=byId[MEGA[m.id][0]];setField(side,'pre',{id:m.id,a:m.a,i:m.i});set(n.id,n.a[0],n.stone||m.i);}}
+function editor(r,side){const custom=side==='mine'&&ST.mine.src==='custom';const p=r.p,abils=[...new Set([...p.a,...(p.ha!=null?[p.ha]:[])])];
+ const sel=(k,opts,cur)=>`<select data-e="${k}" data-s="${side}">${opts.map(([v,l])=>`<option value="${esc(v)}" ${String(v)===String(cur)?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
+ const row=(lab,fn)=>`<tr><td class="l">${lab}</td>${SN.map((n,i)=>`<td>${fn(i)}</td>`).join('')}</tr>`;
+ const si=sideInfo(side),w=ST.edits[si.key]&&Object.keys(ST.edits[si.key]).length,sv=ST.saved&&ST.saved[si.key];
+ return `<div class="ed"><div class="e2">${sel('na',NATS.map(n=>[n,n]),r.na)}${sel('ab',abils.map(a=>[a,AB[a]]),r.a)}</div>
+ <div class="e2">${sel('it',[['','No item'],...D.IT.map(x=>[x,x])],r.i)}${sel('status',[['','No status'],'Burn','Paralysis','Poison','Sleep'].map(x=>Array.isArray(x)?x:[x,x]),r.status||'')}</div>
+ <table><tr><th></th>${SN.map(n=>`<th>${n}</th>`).join('')}</tr>
+ ${row('IV',i=>nb(`data-e="iv" data-x="${i}" data-s="${side}"`,r.iv[i],{min:0,max:31,label:'IV '+SN[i]}))}
+ ${row('EV',i=>nb(`data-e="ev" data-x="${i}" data-s="${side}"`,r.ev[i],{min:0,max:252,step:4,label:'EV '+SN[i]}))}
+ ${row('Stat',i=>`<b>${r.stats?r.stats[i]:'?'}</b>`)}
+ ${row('Stg',i=>i===0?`<button class="z" data-a="sreset" data-s="${side}" aria-label="Reset stages">0</button>`:`<button class="sc ${r.stg[i-1]>0?'up':r.stg[i-1]<0?'dn':''}" data-a="sstep" data-s="${side}" data-x="${i-1}">${r.stg[i-1]>0?'+':''}${r.stg[i-1]}</button>`).replace('<td class="l">Stg</td>',`<td class="l"><button class="sm" data-a="smode" aria-label="Raise or lower">${SMODE==='+'?'+':'−'}</button></td>`)}</table>
+ <div class="e3">${side==='mine'&&!custom?`<button class="dbtn" data-a="esave" data-s="${side}" ${w?'':'disabled'}>Save</button>`:''}<button class="dbtn" data-a="ereset" data-s="${side}" ${w||sv?'':'disabled'}>${w?'Reset':sv?'Original':'Reset'}</button>${custom?`<button class="dbtn" data-a="edel">Delete</button>`:''}</div></div>`;}
 function chip(r,att,side,fast){if(!r)return `<div class="cc"><button class="cn" data-a="${side==='mine'?'findmine':'foesheet'}"><b class="mut">${side==='mine'?'Pick yours':'Pick foe'}</b></button></div>`;
  const spe=effSpe(r),mx=r.stats&&r.stats[0],mod=r.stg[4]?(r.stg[4]>0?'↑':'↓'):'',sg=r.stg.some(x=>x);
- return `<div class="cc ${att?'att':''}"><div class="l1"><button class="cn" data-a="edit" data-s="${side}"><b>${esc(r.name)}${r.edited?' *':''}</b> <span class="mut" style="font-size:10px">✎</span></button><button class="stb ${sg?'on':''}" data-a="stg" data-s="${side}">Stg${sg?' •':''}</button><span class="sp">Spe <i class="${fast?'f':''}">${spe??'?'}${mod}</i></span></div>
-  ${STGOPEN[side]?stagePanel(r,side):''}<div class="cl"><span>Lv</span>${nb(`data-lv="${side}"`,r.lv??'',{min:1,max:100,label:'Level'})}<button class="hpl" data-a="hpfull" data-s="${side}" title="Full HP">HP</button>${nb(`data-hp="${side}"`,r.hp??'',{min:0,max:mx||999,label:'HP now'})}<span class="mx">/${mx??'?'}</span><button class="pill" data-a="swap" aria-label="Swap attacker">${att?'ATK':'DEF'}</button></div></div>`;}
+ const open=EDITOPEN[side],mega=r.pre||MEGA[r.id];
+ return `<div class="cc ${att?'att':''}"><div class="l1"><button class="cn" data-a="eopen" data-s="${side}"><b>${esc(r.name)}${r.edited?' *':r.saved?' •':''}</b></button>${mega?`<button class="mg ${r.pre?'on':''}" data-a="mega" data-s="${side}" aria-label="Mega">M</button>`:''}<button class="stb ${open||sg?'on':''}" data-a="eopen" data-s="${side}">Edit ${open?'▴':'▾'}</button><span class="sp">Spe <i class="${fast?'f':''}">${spe??'?'}${mod}</i></span></div>
+  <div class="cl"><span>Lv</span>${nb(`data-lv="${side}"`,r.lv??'',{min:1,max:100,label:'Level'})}<button class="hpl" data-a="hpfull" data-s="${side}" title="Full HP">HP</button>${nb(`data-hp="${side}"`,r.hp??'',{min:0,max:mx||999,label:'HP now'})}<span class="mx">/${mx??'?'}</span><button class="pill" data-a="swap" aria-label="Swap attacker">${att?'ATK':'DEF'}</button></div>${open?editor(r,side):''}</div>`;}
 function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
  const D0=[0,1,2,3].map(slot=>{const mi=att.m[slot];if(mi==null)return {slot};const crit=!!ST.crit[mi],n=hitsOf(mi),mv=effMv(mi);return {slot,mi,mv,crit,n,r:damage(att,def,mi,F,crit,ST.mvo[mi])};});
  const best=Math.max(0,...D0.map(x=>x.r?x.r.max*x.n:0));
@@ -389,14 +438,14 @@ function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
   const types=`<label>Type<select data-mo="t" data-mi="${mi}">${TNAMES.map(t=>`<option ${t===mv.t?'selected':''}>${t}</option>`).join('')}</select></label>`;
   const bp=r||mv.c!=='Status'?`<label>Power${nb(`data-mo="bp" data-mi="${mi}"`,Number(mv.bp)||0,{min:0,max:250,label:'Power'})}</label>`:'';
   const hits=mh?`<label>Hits${nb(`data-mo="hits" data-mi="${mi}"`,n,{min:mh[0],max:mh[1],label:'Hits'})}</label>`:'';
-  const tail=`<div class="ab"><button class="dbtn sm" data-a="chmv" data-slot="${slot}" data-side="${side}">Change move</button><button class="dbtn sm" data-a="${ov?'mvreset':'rmmv'}" data-mi="${mi}" data-slot="${slot}" data-side="${side}">${ov?'Reset power / type':'Remove'}</button></div>`;
+  const tail=`<div class="ab1"><button class="dbtn sm" data-a="chmv" data-slot="${slot}" data-side="${side}">Change move</button></div>${ov?`<div class="ab1"><button class="dbtn sm" data-a="mvreset" data-mi="${mi}">Reset power / type</button></div>`:''}`;
   if(!r)return `<div class="mr st ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">—</span></div><div class="dd"><div class="eg">${types}${bp}</div>${tail}</div></div></div>`;
   const imm=r.max===0,ko=koOf(r.rolls,Math.max(1,hpNow),n);
   return `<div class="mr ${r.max*n===best&&best>0?'best':''} ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">${imm?'No effect':r.min+'–'+r.max}</span></div>
    <div class="r2"><span>${imm?'':(n>1?'×'+n+' · ':'')+pc(r.min*n)+'–'+pc(r.max*n)+'%'}</span><span class="ko k${ko.n}">${imm?'':hpNow<=0?'fainted':koTxt(ko)}</span></div>
    <div class="dd"><div class="eg">${types}${bp}${hits}</div><div>${esc(mv.c)} · vs ${hpNow}/${mx} HP${n>1?` · ${n} hits: ${r.min*n}–${r.max*n}`:''}</div><div class="rolls">${r.rolls.join(' ')}</div>${r.notes.length?`<div>${r.notes.map(esc).join(' · ')}</div>`:''}
    <div class="ab"><button class="dbtn sm" data-a="sub" data-v="${r.min*n}">HP −${r.min*n}</button><button class="dbtn sm" data-a="sub" data-v="${r.max*n}">HP −${r.max*n}</button></div>${tail}</div></div>
-   ${mh?`<button class="rh" data-a="hits" data-mi="${mi}" aria-label="Hits">×${n}</button>`:''}<button class="rc" data-a="crit" data-mi="${mi}" aria-pressed="${crit}" aria-label="Crit">Crit</button></div>`;}).join('');}
+   <div class="rcol">${mh?`<button class="rh" data-a="hits" data-mi="${mi}" aria-label="Hits">×${n}</button>`:''}<button class="rc" data-a="crit" data-mi="${mi}" aria-pressed="${crit}" aria-label="Crit">C</button></div></div>`;}).join('');}
 function calcPage(){const A0=getMon('mine'),B0=getMon('foe');const a=A0&&resolve(A0),b=B0&&resolve(B0);const out=ST.dir==='out';
  const F=ST.field;const sa=a&&effSpe(a),sb=b&&effSpe(b);
  let ra='',rb='';
@@ -411,12 +460,16 @@ function calcPage(){const A0=getMon('mine'),B0=getMon('foe');const a=A0&&resolve
   <div class="dfr"><label>Weather<select data-f="w">${['','Sun','Rain','Sand','Hail'].map(x=>`<option ${F.w===x?'selected':''} value="${x}">${x||'None'}</option>`).join('')}</select></label>
   <label>Terrain<select data-f="t">${['','Electric','Grassy','Misty','Psychic'].map(x=>`<option ${F.t===x?'selected':''} value="${x}">${x||'None'}</option>`).join('')}</select></label></div>
   <div class="dtg"><button data-f="ref" aria-pressed="${!!F.ref}">Reflect</button><button data-f="ls" aria-pressed="${!!F.ls}">Light Scr.</button></div></div></details>`);
- bindCap();bindMain();}
+ bindCap();bindMain();bindEd();}
 function bindMain(){document.querySelectorAll('[data-lv],[data-hp]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const side=i.dataset.lv||i.dataset.hp,f=i.dataset.lv?'l':'hp';const v=parseInt(i.value);if(isNaN(v))return;
   setField(side,f,f==='l'?Math.max(1,Math.min(100,v)):Math.max(0,v));refresh();};});
  document.querySelectorAll('[data-mo]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const mi=+i.dataset.mi,k=i.dataset.mo;
   if(k==='t'){(ST.mvo[mi]=ST.mvo[mi]||{}).t=i.value;}else if(k==='bp'){const v=parseInt(i.value);(ST.mvo[mi]=ST.mvo[mi]||{}).bp=isNaN(v)?undefined:v;}else if(k==='hits'){ST.hits[mi]=parseInt(i.value)||1;}
   save();refresh();};});}
+function bindEd(){document.querySelectorAll('[data-e]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const side=i.dataset.s,k=i.dataset.e,m=getMon(side);
+  if(k==='na')setField(side,'na',i.value);else if(k==='ab')setField(side,'a',+i.value);else if(k==='it')setField(side,'i',i.value);else if(k==='status')setField(side,'status',i.value);
+  else if(k==='iv'||k==='ev'){const a=m[k].slice(),v=parseInt(i.value)||0;a[+i.dataset.x]=Math.max(0,Math.min(k==='iv'?31:252,v));setField(side,k,a);}
+  refresh();};});}
 function bindCap(root){(root||document).querySelectorAll('[data-cap]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const v=parseInt(i.value);const t=trByK[i.dataset.cap];if(v>0&&v<=100&&v!==t.cap)ST.cap[t.k]=v;else delete ST.cap[t.k];save();refresh();};});}
 function setMove(side,slot,mi){const arr=getMon(side).m.slice();if(mi==null)arr.splice(slot,1);else arr[slot]=mi;setField(side,'m',arr.filter(x=>x!=null));}
 function pickMove(side,slot){picker({title:'Move '+(slot+1),items:M.map((n,i)=>({label:n,sub:MV[i].t+' · '+MV[i].c+' · '+(MV[i].bp||'—'),v:i})),onPick:v=>{setMove(side,slot,v);refreshMainOnly();}});}
@@ -434,19 +487,21 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-
  else if(a==='hits'){const mi=+el.dataset.mi,m=MH[mi],n=hitsOf(mi);ST.hits[mi]=n>=m[1]?m[0]:n+1;save();refresh();}
  else if(a==='sub'){const side=ST.dir==='out'?'foe':'mine',r=resolve(getMon(side));setField(side,'hp',Math.max(0,r.hp-(+el.dataset.v)));refresh();}
  else if(a==='hpfull'){setField(el.dataset.s,'hp',undefined);refresh();}
- else if(a==='stg'){STGOPEN[el.dataset.s]=!STGOPEN[el.dataset.s];refresh();}
+ else if(a==='eopen'){EDITOPEN[el.dataset.s]=!EDITOPEN[el.dataset.s];refresh();}
+ else if(a==='mega'){megaToggle(el.dataset.s);refresh();}
+ else if(a==='esave'){const k=sideInfo(el.dataset.s).key;ST.saved=ST.saved||{};ST.saved[k]={...ST.saved[k],...ST.edits[k]};delete ST.edits[k];save();refresh();}
+ else if(a==='ereset'){const k=sideInfo(el.dataset.s).key;if(ST.edits[k]&&Object.keys(ST.edits[k]).length)delete ST.edits[k];else if(ST.saved&&ST.saved[k])delete ST.saved[k];save();refresh();}
+ else if(a==='edel'){ST.custom.splice(ST.mine.i,1);ST.mine={src:'party',b:0,i:0};EDITOPEN.mine=false;save();refresh();}
  else if(a==='smode'){SMODE=SMODE==='+'?'-':'+';refresh();}
  else if(a==='sstep'){const side=el.dataset.s,x=+el.dataset.x,arr=resolve(getMon(side)).stg.slice();arr[x]=Math.max(-6,Math.min(6,arr[x]+(SMODE==='+'?1:-1)));setField(side,'stg',arr);refresh();}
  else if(a==='sreset'){setField(el.dataset.s,'stg',undefined);refresh();}
  else if(a==='chmv'||a==='addmv'){pickMove(el.dataset.side,+el.dataset.slot);}
- else if(a==='rmmv'){setMove(el.dataset.side,+el.dataset.slot,null);refresh();}
  else if(a==='mvreset'){delete ST.mvo[+el.dataset.mi];save();refresh();}
  else if(a==='tprev'||a==='tnext'){const ti=D.TR.findIndex(x=>x.k===ST.foe.k)+(a==='tnext'?1:-1);if(D.TR[ti]){ST.foe={k:D.TR[ti].k,i:0};recent(D.TR[ti].k);save();refresh();}}
  else if(a==='bandis'){BAN=null;refresh();}
  else if(a==='foesheet'){SH.foe();}
  else if(a==='import'){startImport();}else if(a==='newmon'){newMon();}
  else if(a==='findmine'){findMine();}
- else if(a==='edit'){SH.edit(el.dataset.s);}
  else if(a==='tmon'){TI=+el.dataset.i;trainerPage();}
  else if(a==='tcalc'){ST.foe={k:TK,i:TI};ST.dir='out';recent(TK);save();go('#/calc');}
  else if(a==='usecalc'){useInCalc();}
@@ -464,32 +519,32 @@ function popSheet(){KB.close();SHEETS.pop();SH.redraw();}
 const SH={redraw(){const host=$('#sheets');if(!SHEETS.length){host.innerHTML='';return;}
   host.innerHTML='';SHEETS.forEach((s,i)=>{const d=document.createElement('div');d.className='sheet';d.innerHTML=`<div class="shh"><button class="bk" data-s="back">‹ ${i?'Back':'Done'}</button><div class="tt">${esc(s.title())}</div>${s.actions?s.actions():''}</div><div class="shb">${s.body()}</div>`;host.appendChild(d);if(s.bind)s.bind(d);});
   host.querySelectorAll('[data-s="back"]').forEach(b=>b.onclick=()=>{popSheet();refreshMainOnly();});},
- mine(){pushSheet(mineSheet());},foe(){pushSheet(foeSheet());},edit(side){pushSheet(editSheet(side));}};
+ foe(){pushSheet(foeSheet());}};
 function refreshMainOnly(){const h=location.hash||'#/calc';if(h.startsWith('#/tr'))trainerPage();else if(h.startsWith('#/p'))pokePage();else calcPage();}
 /* a sheet's body repaint without losing scroll */
 function repaint(){const b=$('#sheets .sheet:last-child .shb');const y=b?b.scrollTop:0;SH.redraw();const b2=$('#sheets .sheet:last-child .shb');if(b2)b2.scrollTop=y;}
 
 /* -- rows -- */
-function monRow(m,sel,attrs){const p=byId[m.id];return `<button class="mrow ${sel?'sel':''}" ${attrs}>${spr(m.id,'s32')}<span class="tx"><b>${esc(p.n)}</b><small>${esc([m.na,m.i,AB[m.a]].filter(Boolean).join(' · '))}</small></span><span class="lv">Lv ${m.l}</span></button>`;}
+function monRow(m,sel,attrs){const p=byId[m.id];return `<div role="button" tabindex="0" class="mrow ${sel?'sel':''}" ${attrs}>${spr(m.id,'s32')}<span class="tx"><b>${esc(p.n)}</b><small>${esc([m.na,m.i,AB[m.a]].filter(Boolean).join(' · '))}</small></span><span class="lv">Lv ${m.l}</span></div>`;}
 /* -- Import (fake system picker) -- */
-function startImport(){pushSheet({title:()=>'Choose a file',body(){return `<div class="dfake"><div class="mut small" style="padding:2px 4px 6px;font-size:11px">Android file picker (stand-in)</div>${Object.entries(FILES).map(([f,F])=>`<button class="mrow" data-file="${esc(f)}"><span class="tx"><b>${esc(f)}</b><small>${F.size}</small></span></button>`).join('')}</div>`;},
+function startImport(){pushSheet({title:()=>'Choose a file',body(){return `<div class="dfake"><div class="mut small" style="padding:2px 4px 6px;font-size:11px">Android file picker (stand-in)</div>${Object.entries(FILES).map(([f,F])=>`<div role="button" tabindex="0" class="mrow" data-file="${esc(f)}"><span class="tx"><b>${esc(f)}</b><small>${F.size}</small></span></div>`).join('')}</div>`;},
  bind(d){d.querySelectorAll('[data-file]').forEach(x=>x.onclick=()=>{const f=x.dataset.file,F=FILES[f];SHEETS.length=0;KB.close();
   if(F.err){BAN={ok:0,h:F.err[0],t:F.err[1]};}
-  else{const ed=Object.keys(ST.edits).filter(k=>k.startsWith('mine:'));ed.forEach(k=>delete ST.edits[k]);ST.imp=importOf(f);if(ST.mine.src!=='custom')ST.mine={src:'party',b:0,i:0};
+  else{const ed=Object.keys(ST.edits).concat(Object.keys(ST.saved||{})).filter(k=>k.startsWith('mine:'));ed.forEach(k=>{delete ST.edits[k];delete (ST.saved||{})[k];});ST.imp=importOf(f);if(ST.mine.src!=='custom')ST.mine={src:'party',b:0,i:0};
    BAN={ok:1,h:'Imported '+f,t:`${F.party.length} in the party, ${F.boxes.reduce((a,b)=>a+b.length,0)} in boxes.`+(ed.length?` ${ed.length} edited reset to the save.`:'')};save();}
   SH.redraw();refreshMainOnly();});}});}
 /* -- New Pokémon -- */
 function defMoves(p,l){const m=(p.lv||[]).filter(x=>x[0]<=l).map(x=>x[1]);return [...new Set(m)].slice(-4);}
 function newMon(){picker({title:'New Pokémon',items:P.map(p=>({label:p.n,sub:p.t.join(' / '),id:p.id,v:p.id})),onPick:id=>{const p=byId[id];let l=50;try{l=capOf(trByK[ST.foe.k])||50}catch(e){}
   const m={id,l,na:'Hardy',a:p.a[0],i:'',m:defMoves(p,l),iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0],pid:'c'+Date.now()};ST.custom.push(m);ST.mine={src:'custom',b:0,i:ST.custom.length-1};save();
-  SHEETS.length=0;KB.close();SH.redraw();refreshMainOnly();SH.edit('mine');}});}
+  SHEETS.length=0;KB.close();SH.redraw();EDITOPEN.mine=true;refreshMainOnly();}});}
 /* -- Foe sheet -- */
 const trCap=t=>t.cap?'Cap '+t.cap:'';
-function trRow(t,sel){return `<button class="mrow ${sel?'sel':''}" data-s="pickfoe" data-k="${t.k}"><span class="tx"><b>${esc(t.n)}</b><small>${esc([t.loc,trCap(t)].filter(Boolean).join(' · '))}</small><span class="mini">${t.p.map(x=>spr(x.id,'s24')).join('')}</span></span></button>`;}
+function trRow(t,sel){return `<div role="button" tabindex="0" class="mrow ${sel?'sel':''}" data-s="pickfoe" data-k="${t.k}"><span class="tx"><b>${esc(t.n)}</b><small>${esc([t.loc,trCap(t)].filter(Boolean).join(' · '))}</small><span class="mini">${t.p.map(x=>spr(x.id,'s24')).join('')}</span></span></div>`;}
 function foeSheet(){return {title:()=>'Foe',
  body(){const groups=[];D.TR.forEach(t=>{let g=groups[groups.length-1];if(!g||g.n!==t.g){g={n:t.g,t:[]};groups.push(g);}g.t.push(t);});
   const rec=ST.recent.map(k=>trByK[k]).filter(Boolean);
-  return `<button class="fbtn" data-s="findtr"><span>Find trainer…</span></button>`+(rec.length?`<div class="sec2">Recent</div>`+rec.map(t=>trRow(t,t.k===ST.foe.k)).join(''):'')+`<div class="sec2">All trainers</div>`+
+  return `<div role="button" tabindex="0" class="fbtn" data-s="findtr"><span>Find trainer…</span></div>`+(trByK[ST.foe.k]?trRow(trByK[ST.foe.k],true):'')+(rec.length?`<div class="sec2">Recent</div>`+rec.map(t=>trRow(t,t.k===ST.foe.k)).join(''):'')+`<div class="sec2">All trainers</div>`+
    groups.map(g=>`<details class="grp" ${g.t.some(t=>t.k===ST.foe.k)?'open':''}><summary>${esc(g.n)} <span class="mut small">${g.t.length}</span></summary><div class="gb">${g.t.map(t=>trRow(t,t.k===ST.foe.k)).join('')}</div></details>`).join('');},
  bind(d){d.querySelectorAll('[data-s="pickfoe"]').forEach(x=>x.onclick=()=>pickFoe(x.dataset.k));
   const f=$('[data-s="findtr"]',d);if(f)f.onclick=()=>picker({title:'Find trainer',items:D.TR.map(t=>({label:t.n,sub:[t.loc,trCap(t),t.g.replace(/ Split.*/,'')].filter(Boolean).join(' · '),id:t.p[0].id,v:t.k})),onPick:pickFoe});}};}
@@ -503,7 +558,7 @@ function picker({title,items,onPick,none}){let q='';
    box.innerHTML=INV?`<div class="disp2"><span class="q" data-ph="Search"></span><button class="x" aria-label="Clear">×</button></div>`:`<input type="search" placeholder="Search" autocomplete="off">`;
    hd.insertBefore(box,$('.tt',hd));$('.tt',hd).style.display='none';
    const paint=()=>{const n=norm(q);let L=items;if(n){L=items.filter(it=>norm(it.label).includes(n)).sort((a,b)=>(norm(b.label).startsWith(n)-norm(a.label).startsWith(n))||a.label.length-b.label.length);}
-    const tot=L.length;L=L.slice(0,60);body.innerHTML=(none?`<button class="mrow" data-n="1"><span class="tx"><b>${esc(none)}</b></span></button>`:'')+L.map((it,i)=>`<button class="mrow" data-i="${i}">${it.id?spr(it.id,'s32'):''}<span class="tx"><b>${esc(it.label)}</b>${it.sub?`<small>${esc(it.sub)}</small>`:''}</span></button>`).join('')+(tot>60?`<div class="dnote">${tot-60} more · keep typing</div>`:'')+(!tot?'<div class="dnote">No match</div>':'');
+    const tot=L.length;L=L.slice(0,60);body.innerHTML=(none?`<div role="button" tabindex="0" class="mrow" data-n="1"><span class="tx"><b>${esc(none)}</b></span></div>`:'')+L.map((it,i)=>`<div role="button" tabindex="0" class="mrow" data-i="${i}">${it.id?spr(it.id,'s32'):''}<span class="tx"><b>${esc(it.label)}</b>${it.sub?`<small>${esc(it.sub)}</small>`:''}</span></div>`).join('')+(tot>60?`<div class="dnote">${tot-60} more · keep typing</div>`:'')+(!tot?'<div class="dnote">No match</div>':'');
     body.querySelectorAll('[data-i]').forEach(x=>x.onclick=()=>{const it=L[+x.dataset.i];KB.close();SHEETS.pop();SH.redraw();onPick(it.v);});
     const nn=$('[data-n]',body);if(nn)nn.onclick=()=>{KB.close();SHEETS.pop();SH.redraw();onPick(null);};};
    const upd=()=>{const e=$('.q',box);if(e)e.textContent=q;paint();};
@@ -511,46 +566,6 @@ function picker({title,items,onPick,none}){let q='';
    else{const inp=$('input',box);inp.oninput=()=>{q=inp.value;paint();};setTimeout(()=>inp.focus(),30);}
    paint();}};
  pushSheet(s);}
-
-/* -- Edit sheet -- */
-function editSheet(side){const isM=side==='mine';
- const key=()=>isM?mineKey():'foe:'+ST.foe.k+':'+ST.foe.i;
- const base=()=>isM?curMine():foeBase(trByK[ST.foe.k],ST.foe.i);
- const cur=()=>{const b=base();if(!b)return null;if(isM&&ST.mine.src==='custom')return b;return applyEdits(b,key());};
- const setF=(f,v)=>setField(side,f,v);
- return {title:()=>{const m=cur();return m?byId[m.id].n+(m.edited?' *':''):'Edit';},
- actions(){const m=cur();if(isM&&ST.mine.src==='custom')return `<button class="ac" data-e="del">Delete</button>`;if(m&&m.edited)return `<button class="ac" data-e="reset">${isM?'Reset to save':'Reset'}</button>`;return '';},
- body(){const m=cur();if(!m)return '';const p=byId[m.id],r=resolve(m);const lvKnown=!isNaN(m.l);
-  const abils=[...new Set([...p.a,...(p.ha!=null?[p.ha]:[])])];
-  const mv=[0,1,2,3].map(i=>{const x=m.m[i];return `<button class="fbtn ${x==null?'empty':''}" data-e="mv" data-i="${i}">${x==null?'<span>Move '+(i+1)+'</span>':`<span>${ty(MV[x].t)}</span><span>${esc(M[x])}</span><span class="mut small" style="margin-left:auto">${MV[x].bp||'—'}</span>`}</button>`}).join('');
-  const nbx=(a,v,o)=>nb(a,v,o);
-  return `<button class="fbtn" data-e="sp">${spr(m.id,'s28')}<span>${esc(p.n)}</span><span class="ar">▾</span></button>
-  <div class="frow"><span>Level</span>${nbx('data-e="lv"',lvKnown?m.l:'',{min:1,max:100,steppers:true,label:'Level',ph:'?'})}
-   <select class="grow" data-e="na" style="height:42px">${NATS.map(n=>`<option ${n===m.na?'selected':''}>${n}</option>`).join('')}</select></div>
-  <div class="frow"><span>Ability</span><select class="grow" data-e="ab" style="height:42px">${abils.map(a=>`<option value="${a}" ${a===m.a?'selected':''}>${esc(AB[a])}${m.aGuess&&a===m.a?' ?':''}</option>`).join('')}</select></div>
-  <div class="frow"><span>Item</span><button class="fbtn grow ${m.i?'':'empty'}" data-e="it"><span>${esc(m.i||'None')}</span><span class="ar">▾</span></button></div>
-  <div class="sec2">Moves</div>${mv}
-  <div class="sec2">Stats</div><table class="stt"><tr><th class="l"></th>${SN.map(n=>`<th>${n}</th>`).join('')}</tr>
-   <tr><td class="l">IV</td>${SN.map((n,i)=>`<td>${nbx(`data-e="iv" data-x="${i}"`,m.iv[i],{min:0,max:31,label:'IV '+n})}</td>`).join('')}</tr>
-   <tr><td class="l">EV</td>${SN.map((n,i)=>`<td>${nbx(`data-e="ev" data-x="${i}"`,m.ev[i],{min:0,max:252,step:4,label:'EV '+n})}</td>`).join('')}</tr>
-   <tr><td class="l">Stat</td>${SN.map((n,i)=>`<td><b>${r.stats?r.stats[i]:'?'}</b></td>`).join('')}</tr>
-   <tr><td class="l">Stage</td><td></td>${[0,1,2,3,4].map(i=>`<td>${nbx(`data-e="stg" data-x="${i}"`,(m.stg||[0,0,0,0,0])[i],{min:-6,max:6,label:'Stage '+SN[i+1]})}</td>`).join('')}</tr></table>
-  <div class="frow"><span>Status</span><select class="grow" data-e="status" style="height:42px">${['','Burn','Paralysis','Poison','Sleep'].map(x=>`<option value="${x}" ${(m.status||'')===x?'selected':''}>${x||'None'}</option>`).join('')}</select></div>`;},
- bind(d){const m=cur();if(!m)return;const rp=()=>{repaintKeep();refreshMainOnly();};
-  const num=(sel,fn)=>d.querySelectorAll(sel).forEach(i=>i.onchange=()=>fn(i,parseInt(i.value)));
-  num('[data-e=lv]',(i,v)=>{if(v>0)setF('l',Math.min(100,v));rp();});
-  num('[data-e=iv]',(i,v)=>{const a=cur().iv.slice();a[+i.dataset.x]=Math.max(0,Math.min(31,v||0));setF('iv',a);rp();});
-  num('[data-e=ev]',(i,v)=>{const a=cur().ev.slice();a[+i.dataset.x]=Math.max(0,Math.min(252,v||0));setF('ev',a);rp();});
-  num('[data-e=stg]',(i,v)=>{const a=(cur().stg||[0,0,0,0,0]).slice();a[+i.dataset.x]=Math.max(-6,Math.min(6,v||0));setF('stg',a);rp();});
-  const sel=(s,f,cv)=>{const e=$(s,d);if(e)e.onchange=()=>{setF(f,cv?cv(e.value):e.value);rp();};};
-  sel('[data-e=na]','na');sel('[data-e=ab]','a',v=>+v);sel('[data-e=status]','status');
-  d.querySelectorAll('[data-e=mv]').forEach(b=>b.onclick=()=>picker({title:'Move '+(+b.dataset.i+1),none:'(empty)',items:M.map((n,i)=>({label:n,sub:MV[i].t+' · '+MV[i].c+' · '+(MV[i].bp||'—'),v:i})),onPick:v=>{const a=cur().m.slice();if(v==null)a.splice(+b.dataset.i,1);else a[+b.dataset.i]=v;setF('m',a.filter(x=>x!=null));rp();}}));
-  const it=$('[data-e=it]',d);if(it)it.onclick=()=>picker({title:'Item',none:'None',items:D.IT.map(n=>({label:n,v:n})),onPick:v=>{setF('i',v||'');rp();}});
-  const sp=$('[data-e=sp]',d);if(sp)sp.onclick=()=>picker({title:'Species',items:P.map(p=>({label:p.n,sub:p.t.join(' / '),id:p.id,v:p.id})),onPick:v=>{setF('id',v);setF('a',byId[v].a[0]);rp();}});
-  const del=$('[data-e=del]',d),rs=$('[data-e=reset]',d);
-  if(del)del.onclick=()=>{ST.custom.splice(ST.mine.i,1);ST.mine={src:'party',b:0,i:0};save();SHEETS.length=0;KB.close();SH.redraw();refreshMainOnly();};
-  if(rs)rs.onclick=()=>{delete ST.edits[key()];save();rp();};}};}
-function repaintKeep(){repaint();}
 
 /* ---------------- entry points: trainer card, Pokémon page ---------------- */
 let TK=null,TI=0;

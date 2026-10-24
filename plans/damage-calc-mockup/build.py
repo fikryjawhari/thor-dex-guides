@@ -32,7 +32,7 @@ trs.insert(3, {'g': 'Roxanne Split [Cap 15]', 's': 'Route 104', 'k': 'x.1', 'n':
                'p': [{'id': '252', 'r': 0, 'i': '', 'a': None, 'na': '', 'iv': [31] * 6, 'ev': [0] * 6, 'm': []},
                      {'id': '255', 'r': -1, 'i': '', 'a': None, 'na': '', 'iv': [31] * 6, 'ev': [0] * 6, 'm': [70]}]})
 items = sorted({x['i'] for t in trs for x in t['p'] if x['i']} | {'Leftovers', 'Choice Band', 'Choice Specs', 'Choice Scarf', 'Life Orb', 'Expert Belt', 'Assault Vest', 'Focus Sash'})
-data = {'P': [{'id': p['id'], 'n': p['n'], 't': p['t'], 'a': p['a'], 'ha': p.get('ha'), 's': p['s'], 'lv': p.get('lv')} for p in P],
+data = {'P': [{'id': p['id'], 'n': p['n'], 't': p['t'], 'a': p['a'], 'ha': p.get('ha'), 's': p['s'], 'lv': p.get('lv'), 'stone': p.get('stone')} for p in P],
         'M': d['M'], 'MV': [{'t': m['t'], 'c': m['c'], 'bp': m['bp']} for m in d['MV']], 'AB': [a[0] for a in d['AB']],
         'TC': d['TC'], 'TR': trs, 'IT': items, 'SPR': spr}
 html = open(os.path.join(HERE, 'mock.html'), encoding='utf8').read()
