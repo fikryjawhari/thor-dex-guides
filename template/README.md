@@ -15,7 +15,7 @@ lag rules, scroll restore) are the viewer contract: `.agents/skills/rom-hack-off
 | `name` | The hack's name in wording. |
 | `orig` | Tag for hack-original moves / abilities (`''` = none). |
 | `evs` | `false` = no EV inputs or EV speeds. MGM shows only when this is on **and** some trainer Pokémon has EVs. |
-| `starter` | `pick` = named starter picker (tracker bar, Trainers header, walkthrough) stored in `TK.s`; `type` = the same picker for guides whose rivals follow a type (`t.st` = Grass / Fire / Water); `slot` = the older form (the rival follows the type caught in area 0, no named picker; no guide uses it now). |
+| `starter` | `pick` = named starter picker (tracker bar, Trainers header, walkthrough) stored in `TK.s`; `type` = the same picker for guides whose rivals follow a type (`t.st` = Grass / Fire / Water). |
 | `orbs` | Primal / Rayquaza Mega pages point at Useful NPCs. |
 | `g3trainer` | Unobtainable species are tagged Trainer only. |
 | `capLast` | The trainer cap box remembers the last cap set, for trainers with no cap. |

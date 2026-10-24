@@ -554,12 +554,9 @@ function guideInfoHTML(){const W=D.WK,[n,f]=tkCounts();
 // Next step: the first unticked checklist step, in walkthrough order.
 function nextStep(){const W=D.WK;for(let si=0;si<W.splits.length;si++){const sp=W.splits[si];for(let ti=0;ti<sp.st.length;ti++){const s=sp.st[ti];for(let j=0;j<(s.s||[]).length;j++)if(!WO.c[si+'.'+ti+'.'+j])return {si,ti,j,s};}}return null;}
 const nextInner=()=>{const n=nextStep();return n?`<b>Next step</b><span>${esc(n.s.n)} · ${esc(n.s.s[n.j][0])}</span>`:'<b>Checklist done</b>';};
-// Starter picker: pick guides choose TK.s; slot guides (the rival follows the starter caught in tracker area 0) pick
-// area 0's starter here, the same value as that area's tracker.
+// Starter picker: named choices stored in TK.s, shared with the tracker bar and Trainers.
 function starterRow(){let sel='';
  if(PICK)sel=starterSel('tk-starter','Not chosen (show all)');
- else if(CF.starter==='slot'&&AR[0]&&!AR[0].ns){const cur=(TK.e[0]||{}).p||'';const g=[];(AR[0].l).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]==='Starter choice'&&!g.includes(p))g.push(p);}));
-  sel=`<select class="wk-starter"><option value="">Not chosen</option>${(g.length?g:areaSpecies(0)).map(p=>`<option value="${p.id}" ${cur===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;}
  return (sel?`<div class="card strow"><span class="mut small">Starter</span>${sel}</div>`:'')+(PLAYER?`<div class="card strow"><span class="mut small">Player</span>${playerSel('tk-player','Not chosen (show all)')}</div>`:'');}
 // Sections inside a stop, opened and closed from their yellow header; the header shows a summary.
 const SECN={c:'Checklist',e:'Encounters',i:'Items',t:'Trainers'};
@@ -599,7 +596,6 @@ function listWalk(){fil.innerHTML='';sug.style.display='none';const W=D.WK;const
  app.querySelectorAll('details.split[data-wo]').forEach(d=>{const fill=()=>{const b=d.querySelector('.body');if(b&&d.open&&!b.innerHTML){if(b.dataset.gi){b.innerHTML=guideInfoHTML();bindWalk();return;}const si=+b.dataset.si;
    b.innerHTML=segBar('wk-sp')+W.splits[si].st.map((s,ti)=>walkStop(s,si,ti,cf,shown)).join('')+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(W.splits[si].n)}</span></button>`;bindWalk();}};
   d.addEventListener('toggle',()=>{if(d.open)WO.o[d.dataset.wo]=1;else delete WO.o[d.dataset.wo];woSave();fill();barsSoon();});fill();});
- const ws=app.querySelector('.wk-starter');if(ws)ws.onchange=()=>{if(ws.value)TK.e[0]={p:ws.value};else delete TK.e[0];tkSave();rerender();};
  bindWalk();bars();}
 function bindWalk(){bindTrackers();bindTrd();bindHead();app.querySelectorAll('.wstep input').forEach(c=>{if(c.dataset.b)return;c.dataset.b=1;c.onchange=()=>{if(c.checked)WO.c[c.dataset.sk]=1;else delete WO.c[c.dataset.sk];woSave();c.closest('.wstep').classList.toggle('done',c.checked);
   const tag=d=>{if(!d)return;const all=[...d.querySelectorAll('.wstep input')],n=all.filter(x=>x.checked).length,t=d.querySelector(':scope>summary .tag');if(t){t.textContent=n+'/'+all.length;t.classList.toggle('got',n===all.length);}};
