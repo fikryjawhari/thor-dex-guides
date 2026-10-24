@@ -126,7 +126,8 @@ function otherKb(a){const A=AR[a];const res=x=>{const n=norm(x);return n.length<
  KB.open({mode:'abc',value:'',label:A?A.n:'Name',strip:x=>{const r=res(x);return r.length?r.map(p=>`<button type="button" class="kpick" data-id="${esc(p.id)}">${spr(p.id,'s32')}<span>${esc(p.name)}</span></button>`).join('')
    :`<span class="mut small">${norm(x).length<2?'Type a Pokémon name':'No match'}</span>`;},
   pick:id=>{TK.e[a]={p:id};tkSave();KB.close();rerender();},onClose(quiet){if(!quiet&&!this.picked)rerender();}});}
-const app=document.getElementById('app'),q=searchDisp(document.getElementById('q')),fil=document.getElementById('filters'),sug=document.getElementById('sugg');
+const app=document.getElementById('app'),q=searchDisp(document.getElementById('q')),fil=document.getElementById('filters');
+document.getElementById('sugg').style.display='none';
 // Typing on a page with no list (Pokemon, move, ability or trainer page) goes to its section's list as a new history
 // entry, so the results show and Back returns to the page. The keyboard stays open (see hashchange).
 const UP={p:'#/',m:'#/',a:'#/',tr:'#/trainers'};let searchNav=false;
@@ -140,8 +141,6 @@ function setTab(t){['p','l','t','i','w','c'].forEach(x=>document.getElementById(
 // ===== POKEMON TAB: chip filters (type / ability / move / location)
 const FL={type:'Type',ab:'Ability',mv:'Move',loc:'Found at'};
 const fval=f=>f.k==='mv'?M[f.v]:f.k==='loc'?LOC[f.v]:f.k==='ab'?AB[f.v][0]:f.v;
-// Filters are added from the full-window search; the old typed-suggestions dropdown (#sugg) stays hidden.
-function suggestions(){sug.style.display='none';}
 function filtersPokemon(){fil.innerHTML=`<div class="chips">${st.f.map((f,j)=>`<span class="chip"><b>${FL[f.k]}</b>${f.k==='type'?ty(f.v):esc(fval(f))}<button data-j="${j}" aria-label="Remove">×</button></span>`).join('')}</div>
 <div class="sorts"><select id="fs">${[['dex','Dex order'],['name','Name'],...SN.map((s,i)=>['s'+i,s])].map(([v,l])=>`<option value="${v}" ${st.sort===v?'selected':''}>${l}</option>`).join('')}</select>
 <select id="fa">${[['all','All Pokémon'],['obt',TX.obt],['nomega','Hide Megas'],['nw',TX.nw]].map(([v,l])=>`<option value="${v}" ${st.av===v?'selected':''}>${l}</option>`).join('')}</select></div>`;
@@ -156,7 +155,7 @@ function listPokemon(){const typeF=st.f.filter(f=>f.k==='type').map(f=>f.v),abF=
  const s=st.sort;if(s==='name')a=[...a].sort((x,y)=>x.name.localeCompare(y.name));else if(s[0]==='s'&&s!=='dex'){const k=+s.slice(1);a=[...a].sort((x,y)=>y.s[k]-x.s[k]);}
  const extra=p=>{let r=(s[0]==='s'&&s!=='dex')?SN[+s.slice(1)]+' '+p.s[+s.slice(1)]:'';if(mvF.length===1)r=esc(howLearn(p,mvF[0]))+(r?'<br>'+r:'');return r?`<span class="bst">${r}</span>`:'';};
  app.innerHTML=`<div class="list">${a.map(p=>`<a class="row" href="#/p/${p.id}">${spr(p.id,'s40')}<span class="rt"><span class="nm">${esc(p.name)}${tag(p)}</span><span>${p.t.map(ty).join('')}</span></span>${extra(p)}</a>`).join('')}</div>`;
- suggestions();}
+}
 // ===== POKEMON PAGE
 function whereTable(p){let h='';
  if(p.g===1)h=p.nu?`<div class="mut">Mega form. ${p.stone?esc(p.stone)+' is':'Its stone is'} not obtainable in ${esc(CF.name)}; listed because trainers use it.</div>`:`<div class="mut">Mega form. ${p.stone?(p.sloc?esc(p.stone)+': '+esc(p.sloc):'Mega Stone: '+esc(p.stone)+'.'):CF.orbs&&(p.n.startsWith('Primal')||/Rayquaza/.test(p.n))?'Orb or move based (see Useful NPCs in Items).':'No stone location in the items sheet.'}</div>`;
@@ -179,7 +178,7 @@ const mcells=i=>{const v=MV[i]||{};return `<td>${mlink(i)}${v.x?` <span class="t
 const mhead='<th>Move</th><th>Type</th><th>Cat</th><th>Pow</th><th>Acc</th>';
 let moveTab='lv';
 const abLine=i=>`${alink(i)}${AB[i][2]?` <span class="tag">${CF.orig}</span>`:AB[i][3]?' <span class="tag">changed</span>':''}<div class="mut small">${esc(AB[i][3]||AB[i][1])}</div>`;
-function detail(id){const p=byId[id];if(!p){app.innerHTML='<p>Not found.</p>';return;}fil.innerHTML='';sug.style.display='none';
+function detail(id){const p=byId[id];if(!p){app.innerHTML='<p>Not found.</p>';return;}fil.innerHTML='';
  const byName=a=>[...a].sort((x,y)=>M[x].localeCompare(M[y]));
  const tbl=(a,lv)=>a.length?`<table><tr>${lv?'<th>Lv</th>':''}${mhead}</tr>${a.map(x=>lv?`<tr><td class="n">${x[0]||'Evo'}</td>${mcells(x[1])}</tr>`:`<tr>${mcells(x)}</tr>`).join('')}</table>`:'<div class="mut">None</div>';
  const mv={lv:['Level-up',p.lv.length,()=>tbl(p.lv,true)],tm:['TM/HM',p.tm.length,()=>tbl(byName(p.tm))],...HASTU?{tu:['Tutor',p.tu.length,()=>tbl(byName(p.tu))]}:{},eg:['Egg',p.eg.length,()=>tbl(byName(p.eg))]};
@@ -211,7 +210,7 @@ function bindCalc(p){const g=id=>app.querySelector(id);if(!g('#c-l'))return;
   try{localStorage.setItem(LS.calc+':'+p.id,JSON.stringify(s));localStorage.setItem(LS.calc+':lastlv',s.l);}catch(e){}};
  app.querySelectorAll('.calc input,.calc select,.calc .nv').forEach(e=>e.addEventListener('input',upd));upd();}
 // ===== MOVE PAGE
-function moveDetail(i){fil.innerHTML='';sug.style.display='none';const v=MV[i]||{};const r=(learn[i]||[]);const tms=(D.IT||[]).filter(s=>s.k==='tm').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>[s.n==='Move Tutors'?'Tutor':x[0].split(' ')[0],x[1]]));
+function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const r=(learn[i]||[]);const tms=(D.IT||[]).filter(s=>s.k==='tm').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>[s.n==='Move Tutors'?'Tutor':x[0].split(' ')[0],x[1]]));
  const order={Evo:0,Lv:0,TM:1,Tutor:2,Egg:3};r.sort((a,b)=>(order[a[1].split(' ')[0]]-order[b[1].split(' ')[0]])||a[0].i-b[0].i);
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
  <div class="card"><h2 style="margin:0 0 6px">${esc(M[i])}${v.x?` <span class="tag">${CF.orig} original</span>`:''}</h2><div>${v.t?ty(v.t):''} ${cat(v.c)}</div>
@@ -224,7 +223,7 @@ function moveDetail(i){fil.innerHTML='';sug.style.display='none';const v=MV[i]||
  <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'mv',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
 // ===== ABILITY PAGE
 const abSlot=(p,i)=>{const n=new Set(p.a).size,r=[];if(p.a.includes(i))r.push(n===1?'Only ability':'Ability '+(p.a.indexOf(i)+1));if(p.ha===i)r.push('Hidden ability');return r.join(', ');};
-function abilityDetail(i){fil.innerHTML='';sug.style.display='none';const a=AB[i];if(!a){app.innerHTML='<p>Not found.</p>';return;}const us=abUsers[i]||[];
+function abilityDetail(i){fil.innerHTML='';const a=AB[i];if(!a){app.innerHTML='<p>Not found.</p>';return;}const us=abUsers[i]||[];
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
  <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2><p style="margin:0">${esc(a[1]||'No description.')}</p>${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
  <div class="card"><h3>Pokémon with it (${us.length})</h3><table class="lrn">${us.map(p=>`<tr><td style="width:44px">${spr(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>
@@ -390,7 +389,7 @@ TOG.locs=TOG.l=d=>{if(d.matches('details.split[data-a]')){const b=d.querySelecto
   if(!st.q){if(d.open)LO.o[d.dataset.a]=1;else delete LO.o[d.dataset.a];loSave();}}
  else if(st.q)return;else if(d.matches('details.stopd')){if(d.open)delete LO.x[d.dataset.k];else LO.x[d.dataset.k]=0;loSave();}
  else if(d.matches('details.sec')){if(d.open)delete LO.s[d.dataset.s];else LO.s[d.dataset.s]=0;loSave();}};
-function listLocs2(scroll){fil.innerHTML='';sug.style.display='none';const s=st.q;const li=st.lopenLi;st.lopenLi=null;
+function listLocs2(scroll){fil.innerHTML='';const s=st.q;const li=st.lopenLi;st.lopenLi=null;
  // Opened from a Pokemon page (#/l/<place>): open its box and place, then scroll it under the search bar.
  let tk=null;if(li!=null&&LOC2A[li]!=null){const a=LOC2A[li];LO.o[LGRP.find(g=>g.a.includes(AR[a].in??a)).a[0]]=1;tk=AR[a].in!=null?AR[a].in+'.0':a+'.'+places(a).find(p=>p.ls.includes(li)).j;delete LO.x[tk];loSave();}
  const hit=i=>ARS(i).some(i=>AR[i].n.toLowerCase().includes(s)||AR[i].l.some(li=>LOC[li].toLowerCase().includes(s)||(locs[li]||[]).some(([p])=>p.key.includes(s))));
@@ -404,7 +403,7 @@ function listLocs2(scroll){fil.innerHTML='';sug.style.display='none';const s=st.
 // ===== ITEMS TAB (D.IT sections from the items xlsx; r = [item, text, link, missable?])
 function itemRow(sec,r){const nm=sec.k==='tm'&&r[2]!=null?`<a href="#/m/${r[2]}">${esc(r[0])}</a>`:sec.k==='mega'&&r[2]?`<a href="#/p/${r[2]}">${esc(r[0])}</a>`:esc(r[0]);
  return `<tr><td>${nm}</td><td>${esc(r[1]).replace(/\n/g,'<br>')}${r[3]?'<span class="warn">MISSABLE</span>':''}</td></tr>`;}
-function listItems(){fil.innerHTML='';sug.style.display='none';const s=st.q;const IT=D.IT||[];
+function listItems(){fil.innerHTML='';const s=st.q;const IT=D.IT||[];
  if(s){const html=IT.map(sec=>{const rows=sec.r.filter(r=>(r[0]+' '+r[1]).toLowerCase().includes(s));return rows.length?`<div class="sech">${esc(sec.n)}</div><table class="itbl ix">${rows.map(r=>itemRow(sec,r)).join('')}</table>`:'';}).join('');
   app.innerHTML=html;return;}
  app.innerHTML=segBar('it-all all')+IT.map((sec,si)=>`<details class="split jt" data-si="${si}" ${IO.o[si]?'open':''}><summary>${esc(sec.n)} <span class="mut small">${sec.r.length}</span></summary><div class="body"></div></details>`).join('');
@@ -584,7 +583,7 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;
  return h+`<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.n)}</span></button></div></details>`;}
 // What a walkthrough search matches: the stop's name, notes, steps, items, areas (and their Pokemon) and trainers.
 const stopText=s=>s.tx??=(s.n+' '+(s.note?s.note+' ':'')+(s.s||[]).map(x=>x.join(' ')).join(' ')+' '+s.it.map(i=>i[1]+' '+i[2]).join(' ')+' '+s.a.flatMap(ARS).map(ai=>AR[ai].n+' '+areaSpecies(ai).map(p=>p.name).join(' ')).join(' ')+' '+(s.tr||[]).map(k=>TRK[k]?TRK[k].key:'').join(' ')).toLowerCase();
-function listWalk(){fil.innerHTML='';sug.style.display='none';const W=D.WK;const cf=caughtFams(-1);const shown=new Set();const q=st.q;
+function listWalk(){fil.innerHTML='';const W=D.WK;const cf=caughtFams(-1);const shown=new Set();const q=st.q;
  if(q){const hits=[];W.splits.forEach((sp,si)=>sp.st.forEach((s,ti)=>{if(stopText(s).includes(q))hits.push([si,ti]);}));
   app.innerHTML=hits.map(([si,ti])=>`<div class="sech">${esc(W.splits[si].n)}</div>`+walkStop(W.splits[si].st[ti],si,ti,cf,shown)).join('');bindWalk();return;}
  const [n,f]=tkCounts();
@@ -698,7 +697,7 @@ const capLine=s=>{const c=capOfSec(s);if(!c)return '';const n=c[3];
  return `<div class="capl">Level cap <b>${c[0]}</b>${c[1]?` · ${esc(c[1])}${c[2]?', '+esc(c[2]):''} · ${n?`${n} battle${n===1?'':'s'}`:'next'}`:''}</div>`;};
 function bindHead(){app.querySelectorAll('.mgm-toggle').forEach(m=>{m.onchange=()=>{MGM=m.checked;try{localStorage.setItem(LS.mgm,MGM?'1':'0')}catch(e){}rerender();};});
  const d=app.querySelector('details.capsd');if(d)d.addEventListener('toggle',()=>{CAPSO=d.open;});}
-function listTrainers(){fil.innerHTML='';sug.style.display='none';const s=st.q;
+function listTrainers(){fil.innerHTML='';const s=st.q;
  if(s){const a=TRS.filter(t=>t.key.includes(s)&&!rivalHidden(t));app.innerHTML=a.map(t=>`<div class="mut small" style="margin-top:10px">${esc(t.g)}${t.h?' · '+esc(t.h):''}</div>`+trainerBlock(t)).join('');bindTrainers();return;}
  app.innerHTML=trHead()+segBar('tr-all all')+TRD.g.map((g,gi)=>{const n=g.sec.reduce((a,x)=>a+x.tr.filter(t=>!rivalHidden(t)).length,0);return `<details class="split jt" data-gi="${gi}" ${TOPEN.o[gi]?'open':''}><summary>${esc(g.n)} <span class="mut small">${n} trainers</span></summary><div class="body"></div></details>`;}).join('');
  bindHead();bindTrackers();app.querySelectorAll('details.split[data-gi][open]').forEach(d=>TOG.trainers(d));bars();}
@@ -765,7 +764,7 @@ function trTeams(p,btn){const r=trRowsOf(p),full=r.every(d=>d.open),g=trGrab(btn
  trOpenP(p,true);r.forEach(d=>trSet(d,!full));trSave();trSync(p.closest('details.split'));bars();trRestore(g);}
 function trAll(btn){const open=btn.dataset.a==='1',g=trGrab(btn);noAnchor();
  app.querySelectorAll('details.split.jt').forEach(d=>{if(d.open!==open){d.open=open;TOG.trainers(d);}});bars();trRestore(g);}
-function trainerDetail(k){fil.innerHTML='';sug.style.display='none';const t=TRK[k];if(!t){app.innerHTML='<p>Not found.</p>';return;}
+function trainerDetail(k){fil.innerHTML='';const t=TRK[k];if(!t){app.innerHTML='<p>Not found.</p>';return;}
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a><div class="mut small" style="margin-top:6px">${esc(t.g)}${t.h?' · '+esc(t.h):''}${t.c&&t.c.length?' · calc: '+t.c.map(esc).join(', '):''}</div>`+trainerBlock(t,true);bindTrainers();window.scrollTo(0,0);}
 // Trainer rows (Trainers page and walkthrough stops): name, tags (and the place, where no heading gives it) and the
 // team preview; open, the full card, built when first opened (bindTrd), with Collapse on its bottom line. open(t):
@@ -946,7 +945,7 @@ function land(el){if(!el)return;const st0=el.tagName==='SUMMARY'?el.parentElemen
  const f=()=>{if(stop||performance.now()-t0>700){html.style.overflowAnchor='';cv.forEach(p=>p.style.contentVisibility='');jumpState();return;}to();requestAnimationFrame(f);};requestAnimationFrame(f);}
 
 // ===== CALC (empty for now; the stat calculator is on each Pokemon page)
-function calcPage(){fil.innerHTML='';sug.style.display='none';app.innerHTML=`<div class="card"><h3>Calc</h3><p style="margin:0">Coming soon. Each Pokémon page has a stat calculator in the meantime.</p></div>`;}
+function calcPage(){fil.innerHTML='';app.innerHTML=`<div class="card"><h3>Calc</h3><p style="margin:0">Coming soon. Each Pokémon page has a stat calculator in the meantime.</p></div>`;}
 // ===== ROUTER
 function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).split('/');const v=parts[0]||'';
  if(st.view===''&&v!==''&&!fromInput)st.listScroll=Object.assign(keepAnchor(),{z:cvSizes()});

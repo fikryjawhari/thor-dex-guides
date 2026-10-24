@@ -64,9 +64,6 @@ ul{margin:0;padding-left:18px}
 .chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:3px 6px 3px 10px;font-size:13px}
 .chip b{color:var(--mut);font-weight:600}
 .chip button{background:none;border:0;color:var(--mut);font-size:16px;line-height:1;padding:0 4px}
-#sugg{max-width:960px;margin:6px auto 0;display:none;background:var(--panel);border:1px solid var(--line);border-radius:10px;max-height:50vh;overflow:auto}
-#sugg div.s{padding:8px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
-#sugg div.s span.k{color:var(--mut);font-size:12px}
 .trn{font-weight:700;margin-bottom:6px}
 .dot{display:inline-block;width:8px;height:8px;border-radius:4px;margin-right:4px;vertical-align:middle}
 details.split{margin:8px 0}
@@ -218,7 +215,6 @@ body:is([data-v=p],[data-v=m],[data-v=a],[data-v=tr]) header{display:none}
 .kpick{flex:none;display:flex;align-items:center;gap:4px;height:38px;padding:0 8px 0 2px;background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:8px;font:inherit;font-size:13px;cursor:pointer;touch-action:manipulation}
 body.kbopen main{padding-bottom:calc(var(--kbh,0px) + 16px)}
 body.kbopen #filters{display:none}
-body.kbopen #sugg{max-height:calc(100vh - var(--kbh,0px) - 64px)}
 .kb .r.r9{grid-template-columns:repeat(9,minmax(0,1fr));padding:0 5%}
 .kb .r.r3{grid-template-columns:minmax(0,1.5fr) repeat(7,minmax(0,1fr)) minmax(0,1.5fr)}
 .kb .r.rb{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}
