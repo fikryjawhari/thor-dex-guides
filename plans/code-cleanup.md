@@ -270,6 +270,10 @@ orchestrator committed the uncommitted mockup-check switches as **WIP `3a7166c`*
   backup index) and SoulGold (six data files); left unaccepted for the user. **Merged into `main`** (cherry-picked
   `11a664e`…`9c4f2c0`; checker and manifests identical to the worker tip; smoke run on eternal-x unchanged).
 
+**State 2026-10-24 evening:** cleanup, update checker and text-zoom fix (`cd88c66`, `d0894f3`) merged into `main`;
+unit I on Sol task `standard-tooling-r1` (own branch from `d0894f3`). **The user authorised pushing `main` once unit I
+is merged and the handover (PROGRESS.md, this plan deleted, worktrees removed) is done**; then check the Pages run.
+
 **Last close-out step (user, 2026-10-24): remove the worker worktrees.** After every merge into `main` is done:
 `git worktree remove` + `git branch -D` for each `t3-*` worktree / `t3/*` branch and for `worktree-code-cleanup`,
 each only after confirming its commits are in `main` (by content where cherry-picked) or superseded (the stopped
