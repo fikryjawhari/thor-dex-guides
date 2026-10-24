@@ -249,6 +249,150 @@ await test('notes identify modifiers and immunity', () => {
   assert.ok(immune.notes.includes('No effect'));
 });
 
+const ref = path => ({ref: path});
+const operation = (op, ...args) => ({op, args});
+function withOverrides(over, selected = slot('Tackle'), attacker = set('Charizard'), defender = set('Blastoise'), base = profiles.expansion, field = {}) {
+  engine.init(data, {...structuredClone(base), over});
+  return plain(engine.calc(attacker, defender, selected, field));
+}
+
+await test('hand-checked attack modifier: 104 attack becomes 208, base damage 32', () => {
+  const result = withOverrides({rules: [{phase: 'attackMods', append: [8192], note: 'Test strength'}]});
+  assert.deepEqual(result.rolls, [27, 27, 27, 28, 28, 28, 29, 29, 29, 30, 30, 30, 31, 31, 31, 32]);
+  assert.ok(result.notes.includes('Test strength'));
+});
+
+for (const base of [profiles.gen4, profiles.gen5, profiles.expansion]) {
+  await test(`generation ${base.gen} power and stat modifier phases`, () => {
+    const multiplier = base.gen === 4 ? 2 : 8192;
+    const power = withOverrides({rules: [{phase: 'movePower', value: operation('mul', ref('value'), 2)}]}, slot('Tackle'), undefined, undefined, base);
+    assert.deepEqual(withOverrides({rules: [{phase: 'powerMods', append: [multiplier]}]}, slot('Tackle'), undefined, undefined, base).rolls, power.rolls);
+    const attack = withOverrides({rules: [{phase: 'attack', value: operation('mul', ref('value'), 2)}]}, slot('Tackle'), undefined, undefined, base);
+    assert.deepEqual(withOverrides({rules: [{phase: 'attackMods', append: [multiplier]}]}, slot('Tackle'), undefined, undefined, base).rolls, attack.rolls);
+    const defense = withOverrides({rules: [{phase: 'defense', value: operation('mul', ref('value'), 2)}]}, slot('Tackle'), undefined, undefined, base);
+    assert.deepEqual(withOverrides({rules: [{phase: 'defenseMods', append: [multiplier]}]}, slot('Tackle'), undefined, undefined, base).rolls, defense.rolls);
+    assert.ok(defense.max < withOverrides({}, slot('Tackle'), undefined, undefined, base).max);
+  });
+  await test(`generation ${base.gen} final modifier and roll phases`, () => {
+    const baseline = withOverrides({}, slot('Tackle'), undefined, undefined, base);
+    const expected = baseline.rolls.map(value => value * 2);
+    const final = withOverrides({rules: [{phase: 'finalMods', append: [base.gen === 4 ? 2 : 8192]}]}, slot('Tackle'), undefined, undefined, base);
+    assert.deepEqual(final.rolls, expected);
+    const roll = withOverrides({rules: [{phase: 'roll', value: operation('mul', ref('value'), 2)}]}, slot('Tackle'), undefined, undefined, base);
+    assert.deepEqual(roll.rolls, expected);
+  });
+  await test(`generation ${base.gen} hit-dependent power, base damage and crit`, () => {
+    const selected = slot('Tackle', {hits: 3});
+    const power = withOverrides({rules: [{phase: 'movePower', value: operation('mul', 40, ref('state.hit'))}]}, selected, undefined, undefined, base);
+    assert.equal(power.per.length, 3);
+    for (let hit = 1; hit <= 3; hit++) {
+      assert.deepEqual(power.per[hit - 1], withOverrides({}, slot('Tackle', {bp: 40 * hit}), undefined, undefined, base).rolls);
+    }
+    const baseDamage = withOverrides({rules: [{phase: 'baseDamage', value: operation('add', ref('value'), 10)}]}, selected, undefined, undefined, base);
+    assert.equal(baseDamage.per, undefined);
+    const crit = withOverrides({rules: [{phase: 'critical', value: operation('eq', ref('state.hit'), 2)}]}, selected, undefined, undefined, base);
+    const normalRolls = withOverrides({}, slot('Tackle'), undefined, undefined, base).rolls;
+    const critRolls = withOverrides({}, slot('Tackle', {crit: true}), undefined, undefined, base).rolls;
+    assert.deepEqual(crit.per, [normalRolls, critRolls, normalRolls]);
+  });
+  await test(`generation ${base.gen} before-roll inputs apply per hit`, () => {
+    const result = withOverrides({rules: [{phase: 'beforeRolls', set: {'value.baseDamage': 40}}]}, slot('Tackle', {hits: 2}), undefined, undefined, base);
+    assert.deepEqual(result.rolls, Array.from({length: 16}, (_, index) => Math.floor(40 * (85 + index) / 100)));
+    assert.equal(result.per, undefined);
+  });
+}
+
+await test('modifier lists can replace, remove and replace the whole list', () => {
+  const attacker = set('Charizard', {it: 'Choice Band'});
+  const replaced = withOverrides({rules: [{phase: 'attackMods', when: operation('eq', ref('names.atkItem'), 'Choice Band'),
+    replace: [{from: 6144, to: 8192}]}]}, slot('Tackle'), attacker);
+  assert.deepEqual(replaced.rolls, withOverrides({rules: [{phase: 'attackMods', append: [8192]}]}).rolls);
+  for (const action of [{remove: [6144]}, {value: []}]) {
+    assert.deepEqual(withOverrides({rules: [{phase: 'attackMods', ...action}]}, slot('Tackle'), attacker).rolls, withOverrides({}).rolls);
+  }
+});
+
+await test('beforeStats applies boosts before native stat computation', () => {
+  const actual = withOverrides({rules: [{phase: 'beforeStats', set: {'atk.boosts.atk': 2}}]});
+  const expected = reference(set('Charizard', {stg: [0, 2, 0, 0, 0, 0]}), set('Blastoise'), slot('Tackle')).result.damage;
+  assert.deepEqual(actual.rolls, expected);
+});
+
+await test('afterMoveType and per-target effectiveness rules', () => {
+  const electric = withOverrides({rules: [{phase: 'afterMoveType', set: {'move.type': 'Electric'}}]});
+  assert.deepEqual(electric.rolls, withOverrides({}, slot('Tackle', {t: 'Electric'})).rolls);
+  const immune = withOverrides({}, slot('Tackle'), set('Snorlax'), set('Gengar'));
+  const changed = withOverrides({rules: [{phase: 'effectiveness', when: operation('eq', ref('state.effectivenessType'), 'Ghost'), value: 1}]},
+    slot('Tackle'), set('Snorlax'), set('Gengar'));
+  assert.equal(immune.max, 0);
+  assert.ok(changed.max > 0);
+  assert.equal(changed.eff, 1);
+});
+
+await test('type chart and chart-generation overrides have precedence', () => {
+  const result = withOverrides({typeChart: {Electric: {Water: 0}}}, slot('Thunderbolt'), set('Pikachu'));
+  assert.equal(result.eff, 0);
+  assert.equal(result.max, 0);
+  assert.equal(withOverrides({typeGen: 4}, slot('Shadow Ball'), set('Gengar'), set('Scizor')).eff, 0.5);
+});
+
+await test('critical multiplier changes the base step rather than final rolls', () => {
+  const actual = withOverrides({critMultiplier: 2}, slot('Tackle', {crit: true}));
+  const expected = Array.from({length: 16}, (_, index) => Math.floor(34 * (85 + index) / 100));
+  assert.deepEqual(actual.rolls, expected);
+  for (const base of [profiles.gen4, profiles.gen5]) {
+    const rolls = withOverrides({critMultiplier: 1.5}, slot('Tackle', {crit: true}), undefined, undefined, base).rolls;
+    assert.deepEqual(rolls, withOverrides({}, slot('Tackle', {crit: true})).rolls);
+  }
+});
+
+await test('turn order phase affects speed-dependent move power', () => {
+  const basePower = data.MV[data.M.indexOf('Payback')].bp;
+  const actual = withOverrides({rules: [{phase: 'turnOrder', value: 'last'}]}, slot('Payback'));
+  const expected = withOverrides({}, slot('Payback', {bp: basePower * 2}));
+  assert.deepEqual(actual.rolls, expected.rolls);
+});
+
+await test('beforeWeather can suppress just the weather damage modifier', () => {
+  const selected = slot('Surf');
+  const attacker = set('Blastoise');
+  const defender = set('Snorlax');
+  const actual = withOverrides({rules: [{phase: 'beforeWeather', set: {'field.weather': ''}}]}, selected, attacker, defender, profiles.expansion, {weather: 'Rain'});
+  assert.deepEqual(actual.rolls, withOverrides({}, selected, attacker, defender).rolls);
+});
+
+await test('effect aliases, move/species metadata and status mappings', () => {
+  const attacker = set('Charizard', {ab: ability('Feline Prowess'), it: 'Test Band'});
+  const actual = withOverrides({abilities: {'Feline Prowess': {effect: 'Huge Power'}}, items: {'Test Band': {effect: 'Choice Band'}}}, slot('Tackle'), attacker);
+  const expected = withOverrides({}, slot('Tackle'), {...attacker, ab: ability('Huge Power'), it: 'Choice Band'});
+  assert.deepEqual(actual.rolls, expected.rolls);
+  const custom = withOverrides({moves: {Tackle: {basePower: 80}}, species: {'6': {baseStats: {atk: 188}}}});
+  assert.deepEqual(custom.rolls, withOverrides({rules: [{phase: 'attackMods', append: [8192]}]}, slot('Tackle', {bp: 80})).rolls);
+  const alias = withOverrides({moves: {'Aqua Fang': {effect: 'Weather Ball'}}}, slot('Aqua Fang'), undefined, undefined, profiles.expansion, {weather: 'Rain'});
+  const weatherBall = withOverrides({moves: {'Weather Ball': {category: 'Physical'}}}, slot('Weather Ball', {bp: 80}), undefined, undefined, profiles.expansion, {weather: 'Rain'});
+  assert.deepEqual(alias.rolls, weatherBall.rolls);
+  const profile = {...structuredClone(profiles.expansion), status: [...profiles.expansion.status, ['custom', 'Custom burn']], over: {status: {custom: 'brn'}}};
+  assert.deepEqual(withOverrides(profile.over, slot('Tackle'), set('Charizard', {st: 'custom'}), undefined, profile).rolls,
+    withOverrides({}, slot('Tackle'), set('Charizard', {st: 'brn'})).rolls);
+});
+
+await test('custom field flags and hit-dependent final shields', () => {
+  const profile = {...structuredClone(profiles.expansion), field: [...profiles.expansion.field,
+    {k: 'shield', l: 'Shield', type: 'toggle', side: 'field', to: 'customShield'}]};
+  const over = {rules: [{phase: 'finalMods', when: operation('and', ref('field.customShield'), operation('eq', ref('state.hitCount'), 0)), append: [2048], note: 'Custom shield'}]};
+  const actual = withOverrides(over, slot('Icicle Spear', {hits: 2}), set('Cloyster'), set('Snorlax'), profile, {shield: true});
+  const base = withOverrides({}, slot('Icicle Spear', {hits: 2}), set('Cloyster'), set('Snorlax'), profile);
+  assert.ok(actual.per[0][15] < base.max);
+  assert.deepEqual(actual.per[1], base.rolls);
+  assert.ok(actual.notes.includes('Custom shield'));
+});
+
+await test('bad rule phases, unsafe paths and invalid mechanics options fail explicitly', () => {
+  for (const over of [{rules: [{phase: 'typo'}]}, {rules: [{phase: 'beforeStats', set: {'atk.__proto__.test': 1}}]}, {typeGen: 0}, {critMultiplier: -1}]) {
+    assert.throws(() => engine.init(data, {...profiles.expansion, over}));
+  }
+});
+
 await test('node entry handles single/batch requests and merged profiles', async () => {
   const matchup = {atk: set('Charizard'), def: set('Blastoise'), slot: slot('Tackle'), field: {}};
   const profile = await resolveProfile({base: 'expansion'});

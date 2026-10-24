@@ -55,6 +55,12 @@ function effectName(collection, name, original = false) {
 
 function init(guide, configuration) {
   if (![4, 5, 6, 7, 8, 9].includes(configuration.gen)) throw new Error('DMG: supported generations are 4-9');
+  if (configuration.over?.typeGen !== undefined && ![4, 5, 6, 7, 8, 9].includes(configuration.over.typeGen)) {
+    throw new Error('DMG: typeGen must be 4-9');
+  }
+  if (configuration.over?.critMultiplier !== undefined && !(Number.isFinite(configuration.over.critMultiplier) && configuration.over.critMultiplier > 0)) {
+    throw new Error('DMG: critMultiplier must be positive');
+  }
   data = guide;
   profile = configuration;
   koCache = new Map();
@@ -159,7 +165,7 @@ function battleField(values) {
   for (const entry of profile.field || []) {
     const target = entry.side === 'atk' ? result.attackerSide : entry.side === 'def' ? result.defenderSide : result;
     const source = entry.side === 'atk' ? options.attackerSide : entry.side === 'def' ? options.defenderSide : options;
-    if (!(entry.to in target) && Object.hasOwn(source, entry.to)) target[entry.to] = source[entry.to];
+    if (!(entry.to in target) && Object.prototype.hasOwnProperty.call(source, entry.to)) target[entry.to] = source[entry.to];
   }
   return result;
 }
@@ -221,13 +227,16 @@ function calc(atk, def, slot, values = {}) {
   const stockHits = moveData.multihit;
   const defaultHits = hitRange?.[2] ?? (typeof stockHits === 'number' ? stockHits : Array.isArray(stockHits) ? stockHits[0] + 1 : 1);
   const hits = Math.max(1, Math.min(10, Math.trunc(slot.hits ?? defaultHits)));
-  const move = new Move(generation, name, {
+  const move = new Move(generation, moveData.name, {
     overrides, isCrit: !!slot.crit, hits, ability: attacker.ability, item: attacker.item,
   });
   move.hits = hits;
   const context = {
     atk: attacker, def: defender, move, field, desc: {}, notes: new Set(),
     input: {atk, def, slot, field: values},
+    mechanics: profile.gen,
+    meta: {atkItem: generation.items.get(toID(attacker.item || '')),
+      defItem: generation.items.get(toID(defender.item || '')), move: moveData},
     names: {atk: data.P.find(entry => String(entry.id) === String(atk.id)).n,
       def: data.P.find(entry => String(entry.id) === String(def.id)).n,
       atkAbility: data.AB[atk.ab]?.[0] || '', defAbility: data.AB[def.ab]?.[0] || '',

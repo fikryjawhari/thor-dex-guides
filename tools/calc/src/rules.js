@@ -31,7 +31,7 @@ function expression(node, context, depth = 0) {
   if (node === null || typeof node !== 'object') return node;
   if (Array.isArray(node)) return node.map(value => expression(value, context, depth + 1));
   if ('ref' in node) return read(context, node.ref);
-  if ('literal' in node) return node.literal;
+  if ('literal' in node) return JSON.parse(JSON.stringify(node.literal));
   const evaluate = value => expression(value, context, depth + 1);
   const args = node.args || [];
   if (node.op === 'and') return args.every(value => !!evaluate(value));
@@ -65,7 +65,10 @@ function expression(node, context, depth = 0) {
   case 'of32': return left >>> 0;
   case 'of16': return left & 65535;
   case 'coalesce': return values.find(value => value !== null && value !== undefined);
-  case 'lookup': return left?.[String(right)];
+  case 'lookup': {
+    if (forbidden.has(String(right))) throw new Error('DMG rule: forbidden lookup');
+    return left?.[String(right)];
+  }
   case 'positiveSum': return Object.values(left || {}).reduce((total, value) => total + Math.max(0, value), 0);
   default: throw new Error(`DMG rule: unknown expression ${node.op}`);
   }

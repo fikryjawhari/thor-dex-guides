@@ -39,24 +39,38 @@ export function getMoveEffectiveness(gen: any, move: any, type: any, revealed?: 
     body = once(body, '  const isGhostRevealed', `  ${invocation(body, 'afterMoveType', 'undefined')};\n  const isGhostRevealed`);
     body = once(body, '  let typeEffectiveness = type1Effectiveness * type2Effectiveness;',
       `  let typeEffectiveness = type1Effectiveness * type2Effectiveness;\n  (gen as any).guideContext.state.typeEffectiveness = typeEffectiveness;`);
+    const powerMarker = modern ? `  const basePower = calculateBasePower${suffix}(` : '  let basePower = calculateBasePowerDPP(';
+    body = once(body, powerMarker, `  (gen as any).guideContext.state.typeEffectiveness = typeEffectiveness;\n${powerMarker}`);
+    if (body.includes("  const turnOrder = attacker.stats.spe > defender.stats.spe ? 'first' : 'last';")) {
+      body = once(body, "  const turnOrder = attacker.stats.spe > defender.stats.spe ? 'first' : 'last';",
+        `  const turnOrder = ${invocation(body, 'turnOrder', "attacker.stats.spe > defender.stats.spe ? 'first' : 'last'")};`);
+    }
     body = once(body, '    for (let times = 1; times < numAttacks; times++) {',
       `    for (let times = 1; times < numAttacks; times++) {\n      (gen as any).guideContext.state.hit = times + 1;\n      (gen as any).guideContext.state.hitCount = times;\n      isCritical = ${invocation(body, 'critical', 'guideNativeCrit')};`);
     if (modern) body = body.replaceAll('getFinalDamage(', 'guideRoll(gen, getFinalDamage, ');
+    if (suffix === 'BWXY') {
+      body = once(body, '      const newBaseDamage = getBaseDamage(attacker.level, newBasePower, newAtk, newDef);',
+        `      const useGuideDamage = (gen as any).critMultiplier !== undefined || ['critical','beforeWeather','baseDamage'].some(phase => (gen as any).guideRules[phase]?.length);\n      const newBaseDamage = useGuideDamage\n        ? calculateBaseDamageBWXY(gen, attacker, newBasePower, newAtk, newDef, move, field, desc, isCritical)\n        : getBaseDamage(attacker.level, newBasePower, newAtk, newDef);`);
+    }
     if (!modern) {
       body = once(body, 'let newBasePower = calculateBasePowerDPP(gen, attacker, defender, move, field, desc);',
         'let newBasePower = calculateBasePowerDPP(gen, attacker, defender, move, field, desc, times + 1);');
+      body = once(body, '        ) / defense',
+        '        ) / (isCritical === guideNativeCrit ? defense : calculateDefenseDPP(gen, attacker, defender, move, field, desc, isCritical))');
       body = once(body, '  const damage: number[] = [];',
         `  const guideFinalMods = ${invocation(body, 'finalMods', '[]', 'typeEffectiveness, isCritical')};\n  const guideInputs = ${invocation(body, 'beforeRolls', '{baseDamage,stabMod,type1Effectiveness,type2Effectiveness,filterMod,ebeltMod,metronomeMod,tintedMod,berryMod}')};\n  ({baseDamage,stabMod,type1Effectiveness,type2Effectiveness,filterMod,ebeltMod,metronomeMod,tintedMod,berryMod}=guideInputs);\n  const damage: number[] = [];`);
       body = once(body, '    damage[i] = Math.max(1, damage[i]);',
         `    damage[i] = ${invocation(body, 'roll', 'Math.max(1, guideFinalMods.reduce((value, mod) => Math.floor(value * mod), damage[i]))', 'rollIndex:i')};`);
       body = once(body, '        damageArray[i] = newFinalDamage;',
-        `        const perHitFinalMods = ${invocation(body, 'finalMods', '[]', 'typeEffectiveness, isCritical')};\n        damageArray[i] = ${invocation(body, 'roll', 'Math.max(1, perHitFinalMods.reduce((value, mod) => Math.floor(value * mod), newFinalDamage))', 'rollIndex:i')};`);
+        `        damageArray[i] = ${invocation(body, 'roll', 'Math.max(1, perHitFinalMods.reduce((value, mod) => Math.floor(value * mod), newFinalDamage))', 'rollIndex:i')};`);
+      body = once(body, '      const damageArray = [];',
+        `      const perHitFinalMods = ${invocation(body, 'finalMods', '[]', 'typeEffectiveness, isCritical')};\n      const perHitInputs = ${invocation(body, 'beforeRolls', '{baseDamage,stabMod,type1Effectiveness,type2Effectiveness,filterMod,ebeltMod,metronomeMod,tintedMod,berryMod}')};\n      ({baseDamage,stabMod,type1Effectiveness,type2Effectiveness,filterMod,ebeltMod,metronomeMod,tintedMod,berryMod}=perHitInputs);\n      const damageArray = [];`);
     }
     return body;
   });
   source = editFunction(source, `calculateBasePower${suffix}`, body => {
     const before = modern ? '  if (basePower === 0) {' : '  return basePower;';
-    body = once(body, before, `  basePower = ${invocation(body, 'movePower', 'basePower', 'hit')};\n${before}`);
+    body = once(body, before, `  basePower = ${invocation(body, 'movePower', 'basePower', 'hit:(gen as any).guideContext.state.hit')};\n${before}`);
     return once(body, "  const turnOrder = attacker.stats.spe > defender.stats.spe ? 'first' : 'last';",
       `  const turnOrder = ${invocation(body, 'turnOrder', "attacker.stats.spe > defender.stats.spe ? 'first' : 'last'")};`);
   });
