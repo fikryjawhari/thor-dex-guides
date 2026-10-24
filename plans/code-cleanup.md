@@ -241,7 +241,7 @@ Path `C:\Users\fikry\.t3\worktrees\thor-dex-guides\worktree-code-cleanup` (T3 th
 | E [11] [10] | verified | `4850b90` (ff: `27c6926` [11], `0f557ea` + `4850b90` [10]) | gpt-6.1-sol, task `cleanup-unit-E-r1`, branch `t3/shared-3ds-extract-helpers`, `C:\Users\fikry\.t3\worktrees\thor-dex-guides\t3-2f66f4f4` | `extractlib.filter_species_links`, `ctrguide.walk_same` / `walk_stops`; +70/−100. EX/PS data + reports byte-identical (stamps too), check.py, tabs 0 problems. HTML equals baseline once unit A's template is substituted. Logs: that worktree's `.tmp/unitE/SUMMARY.md` | — |
 | F [12] [07] [06] [13] [14] [15] [08 minus node] | verified | `225c9b0` (cherry-picked onto the ledger commits: `51030a2`…`e0de2f1` → … `225c9b0`; template files identical to the worker's tip) | gpt-6.1-sol, task `cleanup-unit-F-r1`, branch `t3/template-code-cleanup`, `C:\Users\fikry\.t3\worktrees\thor-dex-guides\t3-a452e602` | Full gate after [14], [15], [08]: EI 2,649 / HG 2,482 / EX 2,312 / PS 2,464 routes per mode, 0 differing, 0 page errors, no `--ignore`; consistency + tabs pass; EI kb pagecheck / walkcheck / jumpcheck match baseline (200 jumps, 0 bad). [08] kept the `#sugg` node and one startup `style.display='none'` (removing it changes the node's inline style). dex.js 123,852 → 122,188 B, dex.css 37,723 → 36,784 B. Log: that worktree's `.tmp/unitF/report.md` | — |
 | G [05] + check fixes | verified | `01ca1be` (cherry-picked `f3056bb`…`01ca1be`; tools identical to the worker tip) | Sonnet `cleanup-unit-G-r1` (stopped, `t3-8e7ab092`) then Sol `cleanup-unit-G-r2`, branch `t3/browser-check-harnesses-1`, `C:\Users\fikry\.t3\worktrees\thor-dex-guides\t3-a49abc91` | walk-state check: stale fixtures fixed (stop keys are identities, not positions), and its assertions now run against each build's own `migrateWalkState` (before, they ran against the working template, so a broken build could pass); EX/PS pass, deliberately broken builds fail (EX `undefined !== 1` line 129, PS `stop 0.7`). domcompare flake: `content-visibility:auto` parts weren't rendered in every tab; now rendered + settle wait; EI kb self-compare 0 flags; a one-route DOM change is flagged on exactly that route. `tools/browser.mjs` (57 lines) for all six harnesses, net −43. Final: domcompare ×4 normal + kb vs baseline 0 differing / 0 errors (EI 2,649 routes ~150 s per mode); consistency, tabs, walkcheck / pagecheck (22 screenshots pixel-identical) / jumpcheck (200, 0 bad) match base tools. Log: `t3-a49abc91/.tmp/unitG2/report.md` | — |
-| H final audit | in progress | — | Haiku task `cleanup-unit-H-r1` | — | Every gate on the integrated branch vs the baseline, pass/fail with evidence. Each unit's diff was already reviewed by the orchestrator before merging. Then merge to `main` (user-authorised). |
+| H final audit | verified; **merged** | `main` fast-forwarded to `b7e4e0c` | Haiku task `cleanup-unit-H-r1`, branch `t3/audit-code-cleanup` | At `c114d0e`: 43 commits, `diff --check` clean, no data.json changes; datacmp ×4 identical + check.py ×2; domcompare ×4 normal + kb 0 differing / 0 errors; consistency, tabs, walk-state (EX/PS, key `0.0`), pagecheck / walkcheck / jumpcheck (200, 0 bad) all pass. Log: `t3-*/.tmp/unitH/` of its worktree | — |
 | I standard-work tooling (added 2026-10-24, user approved) | pending | — | — | — | **Not on this branch:** after the cleanup merges, its own branch `worktree-standard-tooling` from `main`, Sonnet worker. Spec below. |
 
 **Close-out agreed 2026-10-24 (user):** this session finishes G → H → merge the cleanup into `main` → the text-zoom
@@ -255,8 +255,9 @@ collection (Sol after the Codex reset) and the calc (its own decide session, `wo
 - `t3/text-zoom-collapse-bars` (Sonnet task `text-zoom-bars-r1`, worktree `t3-d056c528`): stopped by the user's
   request to save Claude usage. Its one commit `2a9718f` has the fix (`dex.js` recheck on page height change),
   `tools/mockup/zoomcheck.mjs` and docs; pagecheck / walkcheck logs exist, the domcompare sweeps were unfinished.
-  **Next:** after G merges, a Sol worker reruns its gates (domcompare ×4 normal + kb vs a build of its base, consistency,
-  zoomcheck before / after, the Thor-frame preview link).
+  **Now:** Sol task `text-zoom-bars-r2` cherry-picks `2a9718f` onto `main` `b7e4e0c` and reruns the gates against a
+  build of `main` (domcompare ×4 normal + kb, consistency, tabs, mockup checks, zoomcheck before / after, the
+  Thor-frame preview link). Expect a PROGRESS.md conflict with the update checker's Open renumbering at merge.
 
 **G swap (user, 2026-10-24):** the Sonnet G worker (`cleanup-unit-G-r1`, branch `t3/browser-check-harnesses`,
 worktree `t3-8e7ab092`) was stopped after ~3 h, mostly waiting on sweeps. Committed: `e256588` walk-state fix,
@@ -266,7 +267,8 @@ orchestrator committed the uncommitted mockup-check switches as **WIP `3a7166c`*
 - `t3/source-update-checker` (Sol task `update-checker-r1`, worktree `t3-42143025`, `23c3cc4`…`c3ad6cb`): reviewed.
   `tools/check_updates.py` + 12 `watch.json`; deletes `plans/update-checker.md`, edits PROGRESS.md (Open 7 removed;
   expect a small conflict with the text-zoom branch's renumbering). Live run: everything unchanged except EI (calc
-  backup index) and SoulGold (six data files); left unaccepted for the user.
+  backup index) and SoulGold (six data files); left unaccepted for the user. **Merged into `main`** (cherry-picked
+  `11a664e`…`9c4f2c0`; checker and manifests identical to the worker tip; smoke run on eternal-x unchanged).
 
 **Last close-out step (user, 2026-10-24): remove the worker worktrees.** After every merge into `main` is done:
 `git worktree remove` + `git branch -D` for each `t3-*` worktree / `t3/*` branch and for `worktree-code-cleanup`,
