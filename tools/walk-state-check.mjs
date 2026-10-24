@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -72,7 +72,8 @@ console.log('PASS: position-keyed guides keep an old save untouched');
 
 const args = process.argv.slice(2);
 assert(args.length === 0 || args.length === 3, 'Usage: node tools/walk-state-check.mjs [old.html new.html legacy-stop-key]');
-const guides = args.length ? [args] : ['emerald-imperium', 'hardlove-gold', 'eternal-x', 'photonic-sun']
+const guides = args.length ? [args] : readdirSync('.tmp/state-before').filter(f => f.endsWith('.html')).map(f => f.slice(0, -5))
+  .filter(hack => existsSync('dist/' + hack + '.html'))
   .map(hack => ['.tmp/state-before/' + hack + '.html', 'dist/' + hack + '.html', '0.0']);
 const chromePath = process.env.CHROME || ['C:/Program Files/Google/Chrome/Application/chrome.exe',
   'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(existsSync);

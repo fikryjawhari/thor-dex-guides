@@ -14,17 +14,17 @@ Dark by default, touch only, Australian spelling, no em or en dashes in text.
 
 ## Repository build: reuse the shared template
 
-Copied from the synced Claude skill on 2026-10-23; the source stays unchanged. Read `AGENTS.md`, `PROGRESS.md`,
-the hack's `SOURCES.md` and `notes.md`. Current decisions and accepted specs supersede historical behaviour below.
-Use 6.1 sol throughout, without Claude model routing.
+This is the repo's copy of the skill (Claude and Codex); when it changes, the claude.ai account copy needs a
+re-upload. Read `CLAUDE.md` / `AGENTS.md`, `PROGRESS.md`, `template/README.md`, the hack's `SOURCES.md` and
+`notes.md`. Model choice is in those instruction files, not here.
 
 The reference is Emerald Imperium's data and `template/shell.html`, `template/dex.css`, `template/dex.js`.
 Do not hand-build an old standalone guide or implement guide UI in the sibling Android app.
 
 - Raw docs belong in `hacks/<hack>/.src/` (git-ignored); fetch with `SOURCES.md` and existing tools.
 - `hacks/<hack>/extract/` generates `hacks/<hack>/data.json` in the shared layout (`tools/extractlib.py` docstring;
-  `check.py` checks the result). Follow `hacks/emerald-imperium/notes.md`'s schema
-  and the existing one-entry-per-line layout.
+  `check.py` checks the result). Follow `hacks/emerald-imperium/notes.md`'s schema; `extractlib.finalise()` applies
+  the shared rules (Items standard, cap split names, Trainers in walkthrough order, key order).
 - Wording, feature switches and storage keys belong in `hacks/<hack>/hack.json` (`cfg`). Preserve published keys.
   Adapt Emerald Imperium-only features through existing configuration and schema.
 - Shared sprites live in `sprites/`; hack-specific additions go in `hacks/<hack>/sprites.json`.
@@ -32,8 +32,8 @@ Do not hand-build an old standalone guide or implement guide UI in the sibling A
   checks on every guide, including `tools/domcompare.mjs` against a baseline built before the change.
 - Use `uv run python -I` for tools needing dependencies; keep `assemble.py` stdlib-only.
 
-**Read `references/viewer-ui.md` before UI code.** Device constraints still apply; current specs and template win
-where historical function names or behaviour have evolved.
+**Read `references/viewer-ui.md` before UI code**, and `template/README.md` for the page design and what was
+rejected.
 
 ## Getting the sources (in order of preference)
 
@@ -47,14 +47,20 @@ Also look for: a dex site's GitHub repo (EI's site is built from JSON in `src/da
 
 1. **Inventory** every source: sheets and tab names (including hidden and outdated duplicate tabs, which you skip), doc site data files, calc data, PDFs, walkthrough pages. Match the target version and documented source precedence (public game source code wins over docs).
 2. **Scope before building:** which species are obtainable (a locations or availability doc is the source of truth, not a dex site's wild data), what trainer data exists (IVs, EVs, natures, cell notes, relative levels), level-cap splits, item locations, the official tracker area order. Tell the user what you found and any gaps before the big build.
-3. **Build a JSON dataset** with a Python builder, then fill the template's `<script id="data">` and `<script id="spr">`. Replace via the exact script tag, because the notes comment also contains the placeholder text. Sprites: palette PNGs (most 64x64 sprites have 16 colours or fewer, so the conversion is lossless and about half the size) as base64 in `#spr`; the app turns them into blob URLs at runtime (see the reference file).
-4. **Update the head:** `<title>`, `<meta name="color-scheme" content="dark light">`, `<meta name="dex-viewer:game" content="<Hack name>">`, `<meta name="dex-viewer:platform" content="GBA|NDS|3DS">` (the app fills its library entry from these), and the footer line.
-5. **Rename every localStorage key** to the hack's own prefix (EI uses `ei*`: `eidex1`, `eitrack`, `eiwalk`, `eipos`, `eirecent`, `eicalc:*`, `eicap`, `eitr`, `eimgm`). Keep `dvkb` as is: it's the shared "force the in-page keyboard" test switch.
-6. **Test** (see the reference file): headless Chromium at the viewer sizes, normal mode and keyboard mode, every route, no console errors, no horizontal overflow at 260 wide. On the Thor too when adb is available.
-7. **Write the notes** in `hacks/<hack>/notes.md` (headings: Build, Sources and rules, Local storage, Hack-only data, Checks, History), not in the built file, so a later session can extend it.
-8. **Deliver** after every batch without asking. In the repo, save to `guides/` and offer to push it to the Thor (PROGRESS.md: "Testing a guide edit without the library").
+3. **Extract** with the hack's `extract/build.py` (copy a built hack's layout) into `data.json`; `assemble.py`
+   inlines it, the template and the sprites. Never hand-edit a built file.
+4. **`hack.json`:** title, game, platform, version (the `dex-viewer:` meta tags come from it), a new localStorage
+   prefix in `cfg.ls` (`dvkb` stays shared: the "force the in-page keyboard" test switch), the hack's wording in
+   `cfg.txt`, feature switches (`template/README.md`).
+5. **Sprites:** the shared set; `tools/sprite_keys.py <hack>` lists the forms only the hack has, which go in its
+   `sprites.json`.
+6. **Test** (`CLAUDE.md` → Making a new guide): `check.py`, `tools/tabs_check.py`, `tools/consistency-check.mjs`,
+   `walkcheck` / `pagecheck`, page errors on every route, nothing wider than 260. On the Thor when adb is available.
+7. **Write the notes** in `hacks/<hack>/notes.md` (headings: Build, Sources and rules, Local storage, Hack-only data,
+   Checks, History) so a later session can extend it.
+8. **Deliver** the build in the Thor frame on the phone preview (`tools/preview.py`) for the user's review.
 
-With the template in hand, aim for: batch 1 Pokémon + moves + abilities, batch 2 Locations + tracker, batch 3 Items + Walkthrough, batch 4 Trainers (in walkthrough stops and on Pokémon pages). Combine batches when the sources are small.
+With the template in hand, aim for: batch 1 Pokémon + moves + abilities, batch 2 Locations + tracker, batch 3 Items + Walkthrough, batch 4 Trainers (in walkthrough stops and on Pokémon pages). Trainers boxes and walkthrough splits are the same cap splits. Combine batches when the sources are small.
 
 ## Chrome fallback tricks
 
@@ -80,17 +86,17 @@ With the template in hand, aim for: batch 1 Pokémon + moves + abilities, batch 
 ## Features the user wants
 
 - **Pokémon list** with chip filters from search results (type, ability, move, location), sort by dex or a stat (the row then shows that stat), Megas right after their base form, trainer-only species included and tagged, fully unavailable species dropped. **No BST anywhere.**
-- **Pokémon page:** types, abilities, stats, stat calculator (level, nature, IVs, EVs) with a speed-by-level row for rare candy planning, where to find, evolutions, move tables with type, category, power and accuracy, vanilla changes and source conflicts, trainers who use it. Move and ability pages list their users.
-- **Trainers** by split: cards with sprite, level, types, speed stat (with and without EVs), ability, item, nature, moves, and notes (guards or gives an item, partner or back-to-back battles, weather, lead slot, pre-status). Team grid `minmax(116px,1fr)`: 6 across on the top screen maximised, 3 on the bottom, 1 at the minimum width.
-- **Items** mirroring the item sheet, missable items flagged, TMs and Mega stones linked to their move or Pokémon.
-- **Locations and Walkthrough** as collapsible sections that remember their state; walkthrough grouped by level-cap split, then place (steps, items, compact encounters, trainers built on first open).
+- **Pokémon page:** types, abilities, stats, stat calculator (level, nature, IVs, EVs) with a speed-by-level row for rare candy planning, where to find, evolutions, move tables with type, category, power and accuracy, source conflicts, trainers who use it. Move and ability pages list their users (ability slot per Pokémon). No "changes from vanilla" card, no evo/breed tags.
+- **Trainers** by cap split (`<Boss> Split [Cap N]`), in walkthrough order: cards with sprite, level, types, one speed (with EVs, or without under MGM), ability, item, nature, moves, and notes (guards or gives an item, partner or back-to-back battles, weather, lead slot, pre-status). No IVs. Below 500 px a sprite strip and one Pokémon at a time; wider, blocks three across at most.
+- **Items** in the shared box set (`tools/itemstd.py`), missable items flagged, TMs and Mega stones linked to their move or Pokémon.
+- **Locations and Walkthrough** as collapsible sections that remember their state; a Starter area first; walkthrough grouped by the same cap splits as Trainers, then place (steps, items, compact encounters, trainers built on first open).
 - **Encounter tracker** shared by both tabs: dropdown per area, "Other..." opens a Pokémon picker (keyboard strip in the viewer), small clear button, reset all with confirm, export code, starter selector, dupes clause on whole evolution lines (regional forms separate), failed entries do not count, trades recorded separately, rates rescaled live, roamers have no slot. Import by pasting a code can't work in the viewer (no typing into `prompt`); keep it for the browser and don't depend on it.
 - **Calc** rail entry: a placeholder page until the damage calc exists; the stat calculator lives on each Pokémon page.
 - **Viewer behaviour** (details in `references/viewer-ui.md`): left icon rail, in-page keyboard, full-window search across every section, number pad, reopen on the last page and place.
 
 ## UI changes
 
-The user wants a mockup before any UI change that isn't already in the reference: a plain interactive HTML page at the window's real size. Wrap with `tools/mockup/thor-frame/build.py`, publish with `python -I tools/preview.py <page.html> [name.html]`, and give the phone-preview link. Then build the agreed design.
+The user wants a mockup before any UI change that isn't already in the template: a plain interactive HTML page at the window's real size. Wrap with `tools/mockup/thor-frame/build.py`, publish with `python -I tools/preview.py <page.html> [name.html]`, and give the phone-preview link. Then build the agreed design and record the decision in `template/README.md`.
 
 ## Planned work
 

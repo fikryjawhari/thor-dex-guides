@@ -15,7 +15,7 @@ Output, names from the romfs's own text (so a hack's renames come through):
   moves      type, category, power, accuracy (101 = never misses), PP, priority, hits, flags, description
   abilities  name and description;  tms  TM/HM number to move;  encounters  wild tables per zone (see below)
 Record layouts: pk3DS (PersonalInfo*, Learnset6, EggMoves6/7, EvolutionSet6/7, MegaEvolutions, Move6/7,
-XYWE/RSWE, Area7/EncounterTable/ZoneData7), pinned in plans/romfs-extraction.md. Vanilla TM and tutor lists: PKHeX.
+XYWE/RSWE, Area7/EncounterTable/ZoneData7), pinned in tools/romfs-extraction.md. Vanilla TM and tutor lists: PKHeX.
 """
 import json, os, struct, sys
 

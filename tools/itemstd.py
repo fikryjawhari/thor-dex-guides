@@ -1,7 +1,20 @@
-"""Items tab standard (plans/items-standard.md): one box set, order, sub-headings and row style for every guide.
+"""Items tab standard: one box set, order, sub-headings and row style for every guide (decided with the user 2026-10-23).
 
-    import itemstd; itemstd.standardise(D, itemstd.RULES['<hack>'])      # D = the hack's data dict; changes D['IT'] and D['WK']
-    python -I tools/itemstd.py <hack> [data.json]                     # the same on a published data.json
+    import itemstd; itemstd.standardise(D, itemstd.RULES.get('<hack>', {}))   # changes D['IT'] and D['WK']; extractlib.finalise runs it
+    python -I tools/itemstd.py <hack> [data.json]                          # the same on a published data.json
+
+The standard:
+- Boxes in BOXES order, a box only when the hack has rows for it; no per-hack box names. Mega Stones only where the
+  hack places its stones (not Photonic Sun: generated stones), Z-Crystals for Gen 7.
+- Every box has at least one yellow sub-heading (r[4]); a box with no natural groups gets one named after itself.
+  Shops by item kind (SHOP_KINDS; one row per item, every shop that sells it one per line), Held Items by class
+  (HELD_CLASSES), Stats and Abilities by STATS_SUBS, TMs and HMs as TMs / HMs.
+- Rows are `Found:` / `Wild:` / `Also:` (gifts, rewards) / `Shop:` lines, in that order; TMs, tutors, Mega Stones and
+  Useful NPCs keep their place text and links.
+- Game order (earliest walkthrough stop) for GAME_ORDER_BOXES when a hack's RULES ask for it, A to Z otherwise.
+- Each item once (PRECEDENCE), except Shops and Valuables. Key Items keep only what unlocks something or has story /
+  QoL / gameplay value (no Town Map, Running Shoes, Holo Caster and the like).
+A new hack needs a RULES entry only for its quirks (renames, dropped rows, its own box names in route()).
 
 standardise() is idempotent: data already in the standard comes out unchanged. It reads whatever boxes the hack's own
 extract wrote (the old names are handled in route()), files every row in the standard box with its sub-heading in
@@ -401,6 +414,6 @@ if __name__ == '__main__':
     hack = sys.argv[1]
     path = sys.argv[2] if len(sys.argv) > 2 else os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'hacks', hack, 'data.json')
     data, raw = datajson.load(path)
-    standardise(data, RULES[hack], print)
+    standardise(data, RULES.get(hack, {}), print)
     datajson.save(path, data, raw)
     print(hack, [(b['n'], len(b['r'])) for b in data['IT']])

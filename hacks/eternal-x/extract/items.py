@@ -8,7 +8,7 @@ after five badges, the Incense Shop and the five TM changes are applied to the B
 P.hi (the hack's own data; the doc's "Wild Hold Items" list is cross-checked against it). TM moves come from
 dex-rebalanced.json (code.ips already applied).
 
-Boxes (plans/ps-items.md, as Photonic Sun): Shops (a row per item under its kind, every shop that sells it), TMs,
+Boxes (as Photonic Sun; tools/itemstd.py finishes them): Shops (a row per item under its kind, every shop that sells it), TMs,
 Evolution Items, Held Items (sub-headings by class, Mega Stones among them), Stats and Abilities, Fossils (the hack
 makes wild Pokemon hold them), Key Items. Rows say Found / Wild / Also / Shop on their own lines; the walkthrough
 stage files them by D['_itp'] (their places as a '; ' list). Game order (Key Items, Stats and Abilities, TMs) needs

@@ -160,7 +160,7 @@ def trainers_follow_walk(D):
 def finalise(D, hack, prune=None):
     """The end of every build: Items standard (tools/itemstd.py), the hack's species prune, Trainers page in walkthrough
     order, shared split names, the data schema (tools/schema.py: dead fields dropped, stop keys, key order). Idempotent."""
-    itemstd.standardise(D, itemstd.RULES[hack], report)    # plans/items-standard.md
+    itemstd.standardise(D, itemstd.RULES.get(hack, {}), report)
     if prune:
         prune(D)
     trainers_follow_walk(D)

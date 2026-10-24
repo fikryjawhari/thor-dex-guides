@@ -224,7 +224,7 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
   P.w methods: Grass/cave, Surf, Old/Good/Super Rod, Rock Smash (rates are %), Static, Gift, Egg / Starter egg /
   Pseudo egg, Starter choice, Hot House (N+ badges), Choice (...), Roaming (rates "1 of N"); w[4] = how to get it.
   IT  [{n section, k tm|mega|gen|npc, note, r:[[item, text, link (move idx or mega id), missable 1?, sub-heading]]}]
-      (the Items standard: plans/items-standard.md)
+      (the Items standard: tools/itemstd.py)
   WK  {splits:[{n "Name Split [Cap N]" (the cap is read from the name; none after the League), [note],
        st:[{k stop key, n place, a[AR idx], s:[[step, note]], [note], it:[[section, item, text, link]],
        tr [trainer keys], [x 1 = "on the way" stop]}]}], np unplaced items, [docs [[title, text]]],

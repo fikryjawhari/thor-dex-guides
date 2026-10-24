@@ -1,9 +1,14 @@
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import assert from 'node:assert/strict';
+
+// node tools/consistency-check.mjs [hack ...]: after python assemble.py, the shared behaviour checks on every built guide
+// (or the ones named): saved state, starter / player pickers, single caps, MGM, five viewer sizes, expanded pages, light
+// theme, normal and dvkb. A guide is checked when hacks/<hack>/hack.json and dist/<hack>.html both exist.
+const ARGS = process.argv.slice(2);
 
 const chromePath = process.env.CHROME || ['C:/Program Files/Google/Chrome/Application/chrome.exe',
   'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(existsSync);
@@ -34,7 +39,8 @@ try {
     pending.set(commandId, done);
     socket.send(JSON.stringify({ id: commandId, method, params, sessionId }));
   });
-  const hacks = ['emerald-imperium', 'eternal-x', 'hardlove-gold', 'photonic-sun'];
+  const hacks = ARGS.length ? ARGS : readdirSync('hacks').filter(hack => existsSync(`hacks/${hack}/hack.json`) && existsSync(`dist/${hack}.html`));
+  let shot = false;
   for (const hack of hacks) for (const keyboard of [false, true]) {
     const { result: { browserContextId } } = await send('Target.createBrowserContext');
     const { result: { targetId } } = await send('Target.createTarget', { url: 'about:blank', browserContextId });
@@ -48,8 +54,11 @@ try {
     const config = JSON.parse(readFileSync(`hacks/${hack}/hack.json`, 'utf8')).cfg;
     const data = JSON.parse(readFileSync(`hacks/${hack}/data.json`, 'utf8'));
     const starter = data.P.find(pokemon => pokemon.n === 'Treecko');
+    const evOn = mons => (mons || []).some(mon => mon.ev?.some(value => value > 0));
+    const mgm = config.evs !== false && (data.TR?.g || []).some(group => group.sec.some(section => section.tr.some(trainer =>
+      evOn(trainer.p) || (trainer.pt || []).some(partner => evOn(partner.p)))));
     const seed = { [config.ls.dex]: JSON.stringify({ av: 'chg' }), [config.ls.walk]: JSON.stringify({c:{'0.0.0':1}}), dvkb: keyboard ? '1' : '0' };
-    if (hack === 'emerald-imperium') seed[config.ls.track] = JSON.stringify({ e: { 0: { p: starter.id }, 1: { f: 1 } }, t: {} });
+    if (config.starter === 'type' && starter) seed[config.ls.track] = JSON.stringify({ e: { 0: { p: starter.id }, 1: { f: 1 } }, t: {} });
     await send('Page.addScriptToEvaluateOnNewDocument', { source: `for (const [key,value] of Object.entries(${JSON.stringify(seed)}))localStorage.setItem(key,value); window.checkErrors=[];addEventListener('error',event=>checkErrors.push(event.message));` }, sessionId);
     await send('Page.navigate', { url: pathToFileURL(resolve(`dist/${hack}.html`)).href + '#/trainers' }, sessionId);
     for (let attempt = 0; attempt < 100; attempt++) {
@@ -61,15 +70,15 @@ try {
       const check=(value,label)=>{if(!value)throw Error(label);checks.push(label);};
       const go=async hash=>{history.replaceState(null,'',hash);render();await new Promise(requestAnimationFrame);};
       check(st.av==='all','obsolete changed filter restored');
-      check(HAS_MGM===${['emerald-imperium','photonic-sun'].includes(hack)},'MGM availability');
+      check(HAS_MGM===${mgm},'MGM availability');
       check(!document.querySelector('.capsw,.capt'),'single cap UI');
       check(!TRD.mini&&TRD.g.every(group=>group.sec.every(section=>!Array.isArray(section.cap?.[0]))),'legacy caps normalized');
       check(WO.c['0.0.0']===1,'saved walkthrough ticks retained');
       check(document.querySelector('.tr-all')?.textContent==='Expand allCollapse all','split wording');
       check(capOfSec({cap:40})[0]===40&&capOfSec({cap:[42,'Boss','Place',2]})[0]===42,'both single cap schemas');
-      if(CF.starter==='type'){
-        check(TK.s==='Treecko'&&starterType()==='Grass'&&TK.e[1].f,'old EI starter migrated without shifting tracker');
-        check(TRS.filter(trainer=>trainer.st&&!rivalHidden(trainer)).every(trainer=>trainer.st==='Grass'),'EI rivals follow type');
+      if(CF.starter==='type'&&${!!starter}){
+        check(TK.s==='Treecko'&&starterType()==='Grass'&&TK.e[1].f,'old type-starter save migrated without shifting tracker');
+        check(TRS.filter(trainer=>trainer.st&&!rivalHidden(trainer)).every(trainer=>trainer.st==='Grass'),'rivals follow starter type');
       }
       if(PICK){
         const select=document.querySelector('.tk-starter');select.value=STARTERS[1];select.onchange();
@@ -106,7 +115,7 @@ try {
     }
     await send('Emulation.setEmulatedMedia', { features: [{ name:'prefers-color-scheme', value:'light' }] }, sessionId);
     await evaluate(`history.replaceState(null,'','#/locs');render();if(document.documentElement.scrollWidth>832)throw Error('light overflow');true`);
-    if (hack === 'eternal-x') await evaluate(`(()=>{const labels=[...document.querySelectorAll('.tkchoices label')];if(labels.length!==2||Math.abs(labels[0].getBoundingClientRect().top-labels[1].getBoundingClientRect().top)>2)throw Error('pickers do not share wide row');return true})()`);
+    await evaluate(`(()=>{if(!(PLAYER&&PICK))return true;const labels=[...document.querySelectorAll('.tkchoices label')];if(labels.length!==2||Math.abs(labels[0].getBoundingClientRect().top-labels[1].getBoundingClientRect().top)>2)throw Error('pickers do not share wide row');return true})()`);
     await send('Emulation.setDeviceMetricsOverride', { width:260, height:316, deviceScaleFactor:2.3, mobile:true }, sessionId);
     await evaluate(`(async()=>{
       for(const route of ['#/locs','#/trainers','#/walk']){
@@ -119,10 +128,11 @@ try {
       }
       return true;
     })()`);
-    if (hack === 'emerald-imperium' && keyboard) {
+    if (!shot && keyboard) {
+      shot = true;
       await evaluate(`history.replaceState(null,'','#/trainers');render();true`);
       const { result: { data: screenshot } } = await send('Page.captureScreenshot', { format:'png' }, sessionId);
-      writeFileSync('.tmp/consistency-ei.png', Buffer.from(screenshot, 'base64'));
+      writeFileSync(`.tmp/consistency-${hack}.png`, Buffer.from(screenshot, 'base64'));
     }
     assert.deepEqual(await evaluate('checkErrors'), [], `${hack} page errors`);
     console.log(hack, keyboard ? 'dvkb' : 'normal', 'five viewer sizes and light theme PASS');

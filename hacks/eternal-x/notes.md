@@ -2,7 +2,7 @@
 
 Eternal X 2.67 (Buffel Saft), **Rebalanced** version, a 3DS hack of Pokémon X. 782 Pokémon and forms (29 Megas, 23 form
 changes), 617 moves (38 changed), 39 areas, 680 trainer cards, 7 item boxes, 21 walkthrough splits with 74 stop
-fragments (retaining 69 original stop keys). Plan and open items: `plans/eternal-x.md`.
+fragments (retaining 69 original stop keys).
 
 ## Build
 

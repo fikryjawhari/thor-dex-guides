@@ -326,7 +326,7 @@ function encSummary(a){const e=TK.e[a];if(!e)return '';if(e.f)return '<span clas
 // B1F...) → places (an area's own places, same names merged; one place = the area's own name) → methods. One area: its
 // tracker sits above its places; a box of several areas: each place is one area and carries its tracker. An area with
 // several places of its own never joins a box. State in LS.loc {o:{<first area>:1 open}, x:{<area>.<place>:0 closed},
-// s:{<area>.<place>.<method>:0 closed}}: boxes start closed, places and methods open. Layout: plans/split-ui.md.
+// s:{<area>.<place>.<method>:0 closed}}: boxes start closed, places and methods open. Layout: template/README.md.
 const LO=(()=>{try{return Object.assign({o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.loc)||'{}'))}catch(e){return {o:{},x:{},s:{}}}})();
 const loSave=()=>{try{localStorage.setItem(LS.loc,JSON.stringify(LO))}catch(e){}};
 const places=a=>{const m=new Map();AR[a].l.forEach(li=>{const n=LOC[li];if(!m.has(n))m.set(n,[]);m.get(n).push(li);});return [...m].map(([n,ls],j)=>({n,ls,j}));};
@@ -424,7 +424,7 @@ TOG.items=d=>{if(st.q)return;const iS=()=>{try{localStorage.setItem(LS.items,JSO
  else if(d.matches('details.sec')){if(d.open)delete IO.s[d.dataset.s];else IO.s[d.dataset.s]=0;}else return;iS();};
 
 
-// ===== COLLAPSIBLE PAGES (plans/split-ui.md). Pages built from details.split use these: header taps that never
+// ===== COLLAPSIBLE PAGES (template/README.md). Pages built from details.split use these: header taps that never
 // scroll, collapse bars at the bottom of blocks taller than the window, the rail's jump buttons (to details.split.jt),
 // sticky stop and section headers (CSS, --hh and --sh) and the flash on a header you land on.
 const hdr=document.querySelector('header'),html=document.documentElement,GAP=8;
@@ -464,7 +464,7 @@ const trPinH=el=>{const bx=document.body.dataset.v==='trainers'&&!el.matches('de
 // A collapse bar. Anything but a split lands right under the headers pinned above it (the search bar, its stop's and
 // section's): a stop's or section's own header is pinned there already, so it closes in place; a trainer row's (not
 // sticky) is scrolled there if it's off the top. A split closes and its header goes to the top. All flash.
-// (Animated versions were tried and rejected: plans/split-ui.md.)
+// (Animated versions were tried and rejected: template/README.md.)
 function pinTop(d){let y=hdrH()+trPinH(d);for(let p=d.parentElement.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))
  if(p.open&&p.matches('details.stopd,details.sec'))y+=p.querySelector(':scope>summary').offsetHeight;return y;}
 function foldUp(d){const sm=d.querySelector(':scope>summary'),split=d.matches('details.split'),t=split?T():pinTop(d);
@@ -490,7 +490,7 @@ const segBar=(cls,a='Expand all',c='Collapse all')=>`<div class="seg ${cls}"><bu
 
 // ===== WALKTHROUGH TAB (D.WK; state in localStorage LS.walk {c:{stepKey:1}, o:{splitIdx:1, gi:1 Guide info},
 // x:{stopKey:0 closed, doc*:1 open}, s:{stopKey.c/e/i/t: 1 open, 0 closed}}; sections c checklist, e encounters,
-// i items, t trainers; the checklist starts closed, the rest open). Layout and behaviour: plans/split-ui.md.
+// i items, t trainers; the checklist starts closed, the rest open). Layout and behaviour: template/README.md.
 // Optional parts, each shown when the data has it: cheat codes (WK.cheats), checklist steps (stop.s), stop notes
 // (stop.note), game docs (WK.docs, WK.ko), items with no place (WK.np).
 const WO=(()=>{try{return Object.assign({c:{},o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.walk)||'{}'))}catch(e){return {c:{},o:{},x:{},s:{}}}})();
@@ -642,7 +642,7 @@ const PRE={Burned:'BRN',Poisoned:'PSN',Frostbitten:'FRB',Burn:'BRN',Poison:'PSN'
 const evTxt=ev=>ev.map((v,i)=>v?v+' '+SN[i]:'').filter(Boolean).join(' / ');
 // A Pokemon's level: its own, or the trainer's cap plus its offset (r) for relative levels.
 const monLv=(x,cap)=>x.l!=null?x.l:x.r!=null&&cap?cap+x.r:NaN;
-// One Pokemon (plans/trainer-cards.md): sprite, name and level; types, tags and speed; ability · item · nature; moves
+// One Pokemon (template/README.md): sprite, name and level; types, tags and speed; ability · item · nature; moves
 // two across; EVs. No IVs (speeds still use them).
 function monCard(x,cap,sel){const p=byId[x.id];const lv=monLv(x,cap);
  const main=p&&lv?stat(p.s[5],5,x.iv[5],EVS&&!MGM?x.ev[5]:0,lv,x.na):null;
@@ -721,7 +721,7 @@ TOG.trainers=d=>{if(st.q)return;const k=d.dataset.k;
  else if(d.matches('details.stopd')){if(d.open)delete TOPEN.p[k];else TOPEN.p[k]=0;}
  else if(d.matches('details.trd')){if(d.open)delete TOPEN.t[k];else TOPEN.t[k]=0;}else return;trSave();
  if(!d.matches('details.split')){const bx=d.closest('details.split');if(bx&&bx.querySelector('.trsw'))trSyncSoon(bx);}};
-// Trainers page controls (plans/trainers-show-switch.md). State is read from the page: the Show switch from which places and
+// Trainers page controls (template/README.md). State is read from the page: the Show switch from which places and
 // cards are open (0 Places, 1 Trainers, 2 Teams, -1 mixed), the place buttons from their cards. Rows are the cards (one per
 // battle where trainers share one). Actions change the DOM in place (cards built at once: d._f) and keep TOPEN.p / TOPEN.t.
 // The Show row is pinned under the search bar and the place header under it (--sw measured below).

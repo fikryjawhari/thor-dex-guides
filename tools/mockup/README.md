@@ -1,31 +1,20 @@
-# Mockup tools
+# Mockup and behaviour checks
 
-How the walkthrough split UI was mocked up and checked (plans/split-ui.md). Reuse them for the next page. They need
-Chrome or Edge, and Node 22+.
+Need Chrome or Edge (or `CHROME=<exe>`) and Node 22+.
 
-- `snap.mjs <guide.html> <out.json>`: loads a built guide at `#/walk` in headless Chrome, opens every split and saves
-  `#app`'s HTML (sprites turned into data URIs) as a JSON string. For another page, change the route and what it opens.
-- `gen.py <repo> <dir>`: builds `walkthrough-mockup.html` in `<dir>` from `outer.html` (the page around the frame:
-  guide, viewport size, collapse style, theme), `inner.js` and `inner.css` (the mockup layer over the snapshot) and the
-  snapshots `<dir>/ei.json`, `<dir>/hg.json`, plus `template/dex.css` and the rail from `template/shell.html`. The
-  frame is an `iframe srcdoc`, so the guide's own CSS and media queries apply at the chosen size. Put the result on
-  the phone preview (`tools/preview.py`).
-- `inner.js` / `inner.css` are the state of the mockup when the user signed it off (mockup link in
-  plans/split-ui.md). They rebuild the snapshot's DOM at runtime; the template builds the same thing directly.
-- `walkcheck.mjs <guide.html> <shot-prefix> [kb]`: behaviour test of the built walkthrough at 260 × 316 (`kb` = with
-  `dvkb` set). Prints each check and any page errors, and saves a screenshot.
+- `thor-frame/build.py <page.html> <out.html> [--title] [--sub] [--panel]`: wraps a built guide or a mockup's inner page
+  in a Thor-sized screen (the viewer sizes, fit to screen, `dvkb`, tabs, reload / clear saved state, error and width
+  readout; pinned on a phone). Put the output on the phone preview (`tools/preview.py`). Mockups write only the inner
+  page (a small standalone HTML with data sampled from `data.json`) and an optional `--panel` of options, never a frame.
+- `walkcheck.mjs <guide.html> <shot-prefix> [kb]`: the walkthrough at 260 × 316 (`kb` = `dvkb` set): taps hold the
+  header, bars, jumps, Next step, starter, state after a reload, other routes; prints each check and page errors and
+  saves a screenshot.
+- `pagecheck.mjs <guide.html> <shot-prefix> [kb]`: the same for Locations, Trainers and Items (boxes, places, sticky
+  headers, bars, jumps, state after a reload, place links).
+- `jumpcheck.mjs <guide.html> [kb] [N]`: N (default 40) of each full-window search jump (trainer, walkthrough trainer,
+  stop, item, place) from another page with a search set; lists any that don't end open and on screen under the
+  pinned headers.
 
-Work in a scratch folder: copy these files there, put the snapshots next to them, run `gen.py` with the repo path.
-To check motion, sample `getBoundingClientRect()` once per animation frame (this is how the overshoot in the rejected
-collapse animations was found).
-
-Locations, Trainers and Items (second mockup):
-- `pages.py <repo> <out.html>` wraps the built guides (`dist/`, run `assemble.py` first) in `pages-outer.html`: each
-  guide in an iframe srcdoc, with a hook that sets the route and the mockup switches (`data-wt`, `data-mi` on `<html>`)
-  and `<base href="about:srcdoc">` so the guide's own links stay in the frame. The mockup is the real build, so it
-  shows exactly what ships.
-- `pagecheck.mjs <guide.html> <shot-prefix> [kb]`: behaviour test of Locations, Trainers and Items at 260 × 316 (boxes,
-  places, taps, sticky headers, bars, jumps, state after a reload, place links), like `walkcheck.mjs`.
-- `jumpcheck.mjs <guide.html> [kb] [N]`: runs N (default 40) of each full-window search jump (trainer, walkthrough
-  trainer, stop, item, place) at 260 × 316 from another page with a search set, and lists any that don't end open and on
-  screen under the pinned headers.
+To check motion, sample `getBoundingClientRect()` once per animation frame (how the overshoot in the rejected
+collapse animations was found). Finished mockups are not kept: the decision goes in `template/README.md` or the
+hack's notes, and git history has the mockup.

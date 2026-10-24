@@ -1,7 +1,7 @@
 :root{--bg:#121417;--panel:#1b1e23;--panel2:#23272e;--line:#2e333b;--fg:#e8eaed;--mut:#9aa0a8;--acc:#f0b429;--link:#8ab4f8;--rail:#181a1e;--railon:rgba(240,180,41,.14);--key:#2b3038}
 @media (prefers-color-scheme:light){:root{--bg:#f4f5f7;--panel:#fff;--panel2:#eef0f3;--line:#d9dce1;--fg:#1d2126;--mut:#5f6670;--acc:#b7791f;--link:#1a56db;--rail:#e7e9ed;--railon:rgba(183,121,31,.14);--key:#fff}}
 /* --g: the one gap (page sides, under the header, between boxes, the header's padding); --sbh / --sbf: the search bar's
-   height and font (plans/trainer-cards.md) */
+   height and font (template/README.md, Page design) */
 :root{--g:4px;--sbh:26px;--sbf:14px}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -126,7 +126,7 @@ body:is([data-v=p],[data-v=m],[data-v=a],[data-v=tr]) header{display:none}
 /* Pokemon rows: types drop under the name when the row is narrow */
 .row .rt{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:2px 8px}
 .row .rt .nm{flex:1 1 auto}
-/* Trainer cards (plans/trainer-cards.md). An opened card in a trainer row starts at its team (the row says the rest). */
+/* Trainer cards (template/README.md, Page design). An opened card in a trainer row starts at its team (the row says the rest). */
 .card.trc{padding:6px 8px}
 .trc .trnote,.trc .capd{font-size:12px}
 .trn2{font-size:12px;margin-bottom:3px}
@@ -270,7 +270,7 @@ body.kbopen .sres{padding-bottom:calc(var(--kbh,0px) + 8px)}
 /* long single-word item names (Blastoisinite, Weakness Policy) wrap instead of widening the page at 260 */
 .itbl td{overflow-wrap:anywhere}
 .dpre{font:12px/1.4 ui-monospace,Consolas,monospace;white-space:pre;overflow-x:auto;max-width:100%;background:var(--panel2);border-radius:8px;padding:6px 8px;margin:6px 0;tab-size:8}
-/* ===== Collapsible pages (plans/split-ui.md) */
+/* ===== Collapsible pages (template/README.md, Page design) */
 /* Rail jump buttons: the rail's spare height under the icons (about 26px each at 316 tall, 44px from about 350) */
 .rjump{margin-top:auto;flex:1 0 52px;max-height:89px;display:flex;flex-direction:column;border-top:1px solid var(--line)}
 .rjump[hidden]{display:none}
@@ -401,7 +401,7 @@ table.lrn td:nth-child(2){overflow-wrap:anywhere}
 .tkchoices label{display:flex;align-items:center;gap:5px;flex:1 1 150px;min-width:0}
 .tkchoices select{flex:1;min-width:0}
 
-/* Trainers page (plans/trainers-show-switch.md): the Show row pinned under the search bar, the place header under it (--sw
+/* Trainers page (template/README.md, Page design): the Show row pinned under the search bar, the place header under it (--sw
    is the row's measured height, set on the box). The place header paints the page background a few px above itself, so
    no rounding can show content between the two (the Show row, painted above it, covers that band) */
 .trsw{position:sticky;top:calc(var(--hh,0px) - 1px);z-index:4;display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px;color:var(--mut);background:var(--bg)}

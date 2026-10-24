@@ -1,6 +1,6 @@
 # Dex Viewer UI contract
 
-Copied from the Claude skill on 2026-10-23. Reuse the current `template/` implementation. Device constraints still apply; names in `code` describe the historical reference and may have evolved. Read `AGENTS.md`, `PROGRESS.md` and accepted specs for current behaviour.
+The device contract every guide meets; `template/` implements all of it (names in `code` are the template's). Page design decisions: `template/README.md`.
 
 ## The window
 
@@ -35,8 +35,8 @@ The guide loads at `https://<id>.appassets.androidplatform.net/guides/<id>/index
   - List rows put the types under the name when narrow, so badges never cover names.
   - Encounter tables (`table.enc`) and "Where to find" (`table.wh`) restack into a grid below 420 px.
   - The Pokémon page hero shrinks; selects can shrink (`min-width:0`).
-  - Trainer team grid `minmax(116px,1fr)`; trainer move lists go to one column below 200 px with a container query.
-- Sprites 32 px in walkthrough minis and trainer cards, 40 px in list rows, 112 px on the Pokémon page. `image-rendering: pixelated`.
+  - Trainer cards: below 500 px a strip of up to six sprite buttons above one Pokémon; from 500 px every Pokémon as a block, three across at most.
+- Sprites 24 px in closed trainer rows, 30 px in trainer cards, 32 px in walkthrough minis, 40 px in list rows, 112 px on the Pokémon page. `image-rendering: pixelated`.
 
 ## Viewer detection
 
@@ -44,7 +44,7 @@ The guide loads at `https://<id>.appassets.androidplatform.net/guides/<id>/index
 const INV=/\.appassets\.androidplatform\.net$/.test(location.hostname)||(()=>{try{return localStorage.getItem('dvkb')==='1'}catch(e){return false}})();
 ```
 
-Inside the viewer (`INV`) the page swaps in the keyboard controls below. Outside it, the page keeps its real `<input>`s and the old typed-suggestion dropdown (`#sugg`), unchanged. `localStorage.dvkb = '1'` forces viewer mode in any browser for testing.
+Inside the viewer (`INV`) the page swaps in the keyboard controls below. Outside it, number boxes stay real `<input>`s and the full-window search uses a real input with the device's keyboard. `localStorage.dvkb = '1'` forces viewer mode in any browser for testing.
 
 ## In-page keyboard (`KB`)
 
@@ -57,17 +57,17 @@ One keyboard at a time, `position:fixed` to the bottom, over the rail, max 560 p
 - **Number boxes** (`numBox`, `setNum`, `clampNum`): outside the viewer an `<input type=number>`; inside, a button showing the value, with − / + beside it where stepping helps (trainer "Your highest level", calc Level) and value-only in tight tables (calc IV/EV). Tapping the value opens the pad: a line naming the box and range, `1-0`, then `Clear − + ⌫ Done` (Done double width). Done clamps; EVs snap to 4. `setNum` fires `input` and `change`, so existing handlers just work.
 - While the keyboard is open, `body.kbopen`: the filter row hides and `main` gets bottom padding of the keyboard height (`--kbh`). Navigation closes the keyboard. Redraw on resize.
 
-## Full-window search (`SR`), viewer only
+## Full-window search (`SR`), every device
 
-Tapping the search box covers the whole guide viewport (rail included, z-index 19, under the keyboard) with:
+The search box is always a button (`searchDisp`). Tapping it covers the whole guide viewport (rail included, z-index 19, under the keyboard) with:
 
-- A 44 px strip: ‹ back, the query, × clear, ⌄ hide/show keyboard.
+- A 44 px strip: ‹ back, the query, × clear, ⌄ hide/show keyboard (viewer only; outside it the strip holds a real input, Enter = Done, Esc = back).
 - Scrolling results.
 - The keyboard in `full` mode: 4 rows (QWERTY / ASDF / `123` Z-M ⌫ / Space + Done); `123` swaps the top row for digits; keys up to 46 px.
 
-**Result order (the user's rule):** the current page's section first, in full (up to 100, then "Show all"), then the others in the order Pokémon, Filters, Locations, Trainers, Items, Walkthrough, 8 each with "Show all N". Detail pages count as their section (Pokémon, move, ability → Pokémon; trainer → Trainers; Calc → Pokémon). Filters are types, abilities, moves and locations that match. Locations match by name or by a Pokémon found there.
+**Result order (the user's rule):** the current page's section first, in full (up to 100, then "Show all"), then the others in the order Pokémon, Filters, Locations, Trainers, Items, Walkthrough, 8 each with "Show all N". Detail pages count as their section (Pokémon, move, ability → Pokémon; trainer → Trainers; Calc → Pokémon). Filters are types, abilities, moves and locations that match. Trainers, items and places match by name only (a Pokémon's Places button covers where it lives).
 
-**Picks:** Pokémon or trainer → its page; filter → added as a chip on the Pokémon list; location → that location opened; item or walkthrough stop → that list searched for its name. **Done** puts the query in the page's search box (on a detail page, its section's list). The last 6 picks show as Recent when the query is empty (`<prefix>recent`). The user called searching everything "perfect".
+**Results with actions:** each result has buttons that jump to it or search a page for its full name (Pokémon: Dex · Trainers · Places · Walk; place: Places · Walk; trainer: Trainers / Walk · Full page; item: Items · Walk · Trainers; move / ability / type: Filter · page). Tapping the row does the first. **Enter / Done** (or the first row) searches the current page for the raw text. The search stays set from page to page until its × or a tap on the current rail tab. Jumps (`land()`) lay out content-visibility-skipped ancestors so the target ends under the pinned headers. The last 6 picks show as Recent when the query is empty (`<prefix>recent`).
 
 **Typing on a detail page** (Pokémon, move, ability, trainer) goes to the section's list as a new history entry (`UP` map, `searchNav` flag keeps the keyboard open for that one navigation); Back returns to the page.
 

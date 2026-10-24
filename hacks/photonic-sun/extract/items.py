@@ -5,7 +5,7 @@ from Serebii's Ultra Sun lists (item-locations.csv). Marts are the hack's own (V
 SHOPS); Serebii's vanilla mart rows are dropped, except the Battle Tree's BP shop, which the doc doesn't change.
 The five changed TMs teach the hack's move (code.ips, via dex-rebalanced.json's TM list).
 
-Boxes (plans/ps-items.md): Shops (a row per item under its kind, every shop that sells it), TMs, Z-Crystals,
+Boxes (tools/itemstd.py finishes them): Shops (a row per item under its kind, every shop that sells it), TMs, Z-Crystals,
 Evolution Items, Held Items (sub-headings by class), Stats and Abilities, Key Items. Each item is in one box (plus
 Shops). Rows say Found / Wild / Also / Shop on their own lines; the walkthrough files them by D['_itp'] (their places
 as a '; ' list, like the old row text). Game order (Key Items, Stats and Abilities, TMs, Z-Crystals) needs the

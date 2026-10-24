@@ -17,7 +17,7 @@ Setup and maintenance: `tools/agent-setup.md`.
 
 Offline, single-file dex guides for ROM hacks, built for Dex Viewer on the AYN Thor (the app lives in the sibling repo
 `../thor-dex-viewer`, private) and also usable in any phone browser. This repo is **public** and served by GitHub
-Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every session.
+Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of every session.
 
 ## Hard rules
 - Every guide stays ONE self-contained HTML file: all CSS, JS, data and sprites inline, no network requests. Sharing
@@ -27,21 +27,22 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
 - Keep each hack's localStorage keys (`hack.json` → `cfg.ls`) once a guide is published: changing one throws away
   people's saved trackers, checklists and positions.
 - The guide must work at the viewer sizes (PROGRESS.md → Viewer sizes), especially 260 × 316, in normal and `dvkb` mode.
-  The full viewer contract is the `rom-hack-offline-dex` skill's `references/viewer-ui.md`.
+  The full viewer contract is `.agents/skills/rom-hack-offline-dex/references/viewer-ui.md` (the repo's copy of the
+  `rom-hack-offline-dex` skill).
 - No explanatory or provenance text at the top of pages (where the data came from, how search works, rules of the
   tracker): the user doesn't want it, in any guide. Credits go in the footer.
 - Template changes are shared by every guide: after one, run `assemble.py` and check every guide, not just the one
   you were working on (`tools/domcompare.mjs` shows exactly what changed).
 
 ## Layout
-- `template/` shell.html, dex.css, dex.js: the one template (Emerald Imperium is the reference build).
+- `template/` shell.html, dex.css, dex.js: the one template (Emerald Imperium is the reference build). Its README:
+  what `hack.json` sets, what the data switches on, the shared rules and the page design (with what was rejected).
 - `hacks/<hack>/` hack.json (title, version, `cfg` = wording, storage keys, feature switches), data.json (`#data`),
   sprites.json (only forms the shared set lacks), notes.md (build notes and schema), extract/ (the scripts that made data.json), SOURCES.md.
 - `sprites/` the shared sprite set (pokeemerald-expansion, 64×64, `png/<key>.png`; README has the key scheme,
   SOURCES.md the pin and credits).
-- `tools/` source fetchers and extract helpers (README), `domcompare.mjs`, `mockup/` (page snapshots for mockups, the
-  walkthrough check). `plans/` work not done yet, plus `split-ui.md` (the collapsible-page design, done for the
-  walkthrough, next for the other pages).
+- `tools/` source fetchers, extract helpers and checks (README), `mockup/` (the Thor frame and the page behaviour
+  checks). `plans/` work not done yet only (now: the damage calc, the update checker).
 - `dist/` built output (git-ignored); the Pages workflow builds and deploys it.
 
 ## Commands
@@ -54,20 +55,26 @@ Pages. Status, decisions and history: PROGRESS.md. Read it at the start of every
 
 ## Making a new guide
 1. Fetch the sources into `hacks/<hack>/.src/` with its `SOURCES.md` (3DS hacks also need the user's vanilla romfs
-   dumps: `plans/romfs-extraction.md`). Update its "Fetched" line and the source log in `tools/README.md`.
+   dumps: `tools/README.md` → 3DS game data). Update its "Fetched" line and the source log in `tools/README.md`.
 2. Write `hacks/<hack>/extract/` scripts (the shared layout: `tools/extractlib.py` docstring; copy a built hack's) that
-   turn them into `hacks/<hack>/data.json`, in the schema in `hacks/emerald-imperium/notes.md` (Data schema). Optional parts the template shows when present are listed in
-   PROGRESS.md → Split results (tutor moves, trades, game docs...). Write it one entry per line like the existing ones.
-   For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences).
+   turn them into `hacks/<hack>/data.json`, in the schema in `hacks/emerald-imperium/notes.md` (Data schema).
+   `build.py` ends with `extractlib.finalise()`, which applies the shared rules (`template/README.md` → Shared rules:
+   Items standard, cap split names, Trainers in walkthrough order, schema); a hack only adds an `itemstd.RULES` entry
+   for its quirks. What the template shows when the data has it: `template/README.md` → What the data switches on.
+   For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences); 3DS hacks take
+   the game data over the docs ("Doc says ...").
 3. `hacks/<hack>/hack.json`: copy an existing one; new localStorage prefix in `cfg.ls`, the hack's wording in
    `cfg.txt`, feature switches. `notes.md`: the same headings as the existing ones (Build, Sources and rules, Local storage, Hack-only data, Checks,
-   History); `SOURCES.md` likewise (Files, Re-fetch, Game files, Source checks). Add `extract/check.py`.
+   History); `SOURCES.md` likewise (Files, Re-fetch, Game files, Source checks). Add `extract/check.py`. Add the
+   guide to PROGRESS.md → Current status.
 4. Sprites: every guide uses the shared set (`sprites/README.md`); keys are worked out from dex number and name.
    `python -I tools/sprite_keys.py <hack>` lists the forms it matched (check once) and the species it couldn't place:
    those are the hack's own additions and go in its `sprites.json`, the only art a hack keeps. `assemble.py` lists
    species with no sprite; they show as a type-coloured circle with the name's first letter.
-5. `python assemble.py <hack>`, then check `dist/<hack>.html` at 260 × 316 and maximised, normal and `dvkb` mode
-   (headless Chrome over CDP, or on the Thor), and that every route renders without errors.
+5. `python assemble.py <hack>`, then the checks: `extract/check.py`, `python -I tools/tabs_check.py <hack>`,
+   `node tools/consistency-check.mjs <hack>` (viewer sizes, normal and `dvkb`, light theme), `walkcheck.mjs` and
+   `pagecheck.mjs` (`tools/mockup/README.md`), and a `domcompare.mjs` of the build against itself for page errors on
+   every route. Then the Thor frame on the phone preview for the user's review.
 
 ## Git
 - Parallel work goes on a branch in a worktree. Codex may use `.codex/worktrees/<name>` (git-ignored), or the workspace supplied by T3;
@@ -139,13 +146,16 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
   1. *Decide* (a 6.1 sol session the user talks to directly, in a worktree): cheap mockups only (a small standalone
      page with sampled data from data.json, not the full build), wrapped in the Thor frame. Settle every behaviour,
      then write the spec to `plans/<thing>.md`: what goes, what each control does in every state, edge cases, checks.
-     Example: `plans/trainers-show-switch.md`. No template or extract changes in this step.
+     No template or extract changes in this step.
   2. *Build* (6.1 sol): read the spec and implement the agreed UI and mechanical changes. Delegate only when
      useful and supported, using the same model. End with the guide in the Thor frame on the phone preview.
   3. *Fix* in the main chat (the user's feedback after testing on the phone / Thor).
   4. *Audit* (6.1 sol, in this session or a separate review when useful): `assemble.py`, `domcompare` against main, the viewer-size checks, scenario runs from
      the spec; reports pass / fail with evidence.
   Template builds are one at a time (Parallel sessions); decide steps can run in parallel.
+- **When a plan is built and merged, delete it.** Lasting decisions go in `template/README.md` (template / UI) or the
+  hack's `notes.md` (data), the status in PROGRESS.md; git history keeps the plan and its mockup. `plans/` only ever
+  holds work not done yet.
 - **Model:** 6.1 sol throughout; respect the user's current effort and runtime settings.
 - **Thor frame** (`tools/mockup/thor-frame/`): `python -I tools/mockup/thor-frame/build.py <page.html> <out.html>
   [--title] [--sub] [--panel]` wraps a built guide or a mockup's inner page in a Thor-sized screen (the viewer sizes,

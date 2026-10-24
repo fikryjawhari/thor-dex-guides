@@ -1,6 +1,6 @@
-# Plan: Photonic Sun items and Eternal X rival teams from romfs
+# 3DS romfs extraction (reference)
 
-**Done 2026-10-18.** Results, commands and checks are in `hacks/eternal-x/SOURCES.md` and
+Done 2026-10-18 for Photonic Sun items and Eternal X rival teams. Results, commands and checks are in `hacks/eternal-x/SOURCES.md` and
 `hacks/photonic-sun/SOURCES.md`; the scripts are in `tools/`. Kept as the format reference (archive numbers,
 record layouts, text encryption). Found while doing it: trainer and personal archives must be read without the LZ11
 check (a record can start with 0x11), Gen 6 trainer IVs are the byte / 8, and four of the Serena/Calem sets are
