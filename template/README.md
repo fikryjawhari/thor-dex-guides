@@ -55,6 +55,34 @@ These came out of the consistency pass (2026-10-23/24); the extract helpers appl
 
 ## Page design
 
+### Damage calculator
+
+`#/calc` is implemented by `calc.js` and `calc.css`; `assemble.py` includes these and `calc/engine.js` only with
+`cfg.calc`. The resolved profile supplies the level and stage bounds, status choices, nature/ability/item switches,
+field entries, multi-hit ranges and variable-power moves. The page calls `DMG.init`, `DMG.stats` and `DMG.calc`;
+damage rolls and KO probabilities come from the adapter, not page-side mechanics. The committed unit-B engine is a
+temporary, explicitly marked stub and must be replaced by unit A before release.
+Effective Speed uses the optional `DMG.speed(set, field)` hook; without it, the fallback applies stages only.
+The real adapter must provide that hook for paralysis and other game-specific Speed modifiers.
+When the adapter returns `per`, the expander shows each hit's rolls; aggregate HP subtraction and best-move ranking
+sum those per-hit ranges, while percentages and KO text use the adapter's already aggregated values.
+
+Mine (party, boxes, custom sets), selection, unsaved/saved edits and per-slot overrides are one object in `cfg.ls.dmg`.
+Internal set aliases follow trainer data (`l`, `na`, `a`, `i`, `m`); the engine boundary converts them to its
+`lv`, `nat`, `ab`, `it`, `st`, six-element `stg` contract. Caps stay in the existing `TCAP` store. Sheets and expanders
+are transient; pickers use the shared keyboard/number pad and the viewer's normal select shim.
+
+Import exists only with `profile.save`: a file input calls `READERS[profile.save](bytes, D)` and maps game IDs through
+`D.GID` (bypassed with `ids: "ours"`). Success atomically replaces the import and clears imported edits/slot overrides;
+errors retain the old import. `calc/readers/test.js` and `tools/scenarios/fixtures/calc/` supply synthetic JSON saves.
+`node tools/scenarios/calc-smoke.mjs dist/emerald-imperium.html` patches only a temporary built page to select that reader.
+
+`dex.js` owns guarded rail, trainer-card and stat-calculator entry hooks and delegates the calc's three scroll stops.
+Below 480px, one moveset is shown; from 480px, equal columns show both and keep Field below the viewport-height block.
+The Mine grid scrolls internally; the foe list replaces its strip only at 222px of measured availability. Both strips
+share 28px cells with the level safely inside the selection border. Without `cfg.calc`, only removal of the Calc tab
+changes the other pages' DOM, and `#/calc` redirects to the Pokémon list.
+
 Built with the user over many mockup rounds; keep to it and don't retry what's listed as rejected.
 
 **Collapsible pages** (walkthrough, Locations, Trainers, Items; `COLLAPSIBLE PAGES` in dex.js, "Collapsible pages" in
