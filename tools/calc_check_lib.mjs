@@ -225,13 +225,25 @@ export class Page {
     await this.tap('.kb .k[data-a="done"]');
   }
 
+  // A fixture by name (tools/scenarios/fixtures/calc/), or any file by absolute path.
   async importSave(name) {
+    await this.importPath(join(FIXTURES, name), name);
+  }
+
+  // Every import ends in a re-render of #app (a green or red banner, with or without a new grid). A banner from an earlier
+  // import can't stand in for the new one, so the wait counts re-renders from the moment the file is set.
+  async importPath(path, label = path) {
+    await this.value(`(()=>{window.__importRenders=0;window.__importWatch?.disconnect();window.__importWatch=new MutationObserver(()=>window.__importRenders++);window.__importWatch.observe(document.getElementById('app'),{childList:true,subtree:true});})()`);
     const { root } = await this.send('DOM.getDocument', { depth: -1 });
     const { nodeId } = await this.send('DOM.querySelector', { nodeId: root.nodeId, selector: '#calc-file' });
     assert(nodeId, 'missing #calc-file: the guide has no save reader');
-    await this.send('DOM.setFileInputFiles', { nodeId, files: [join(FIXTURES, name)] });
-    await this.waitFor(`!!document.querySelector('.ban')`, `the banner after ${name}`);
+    await this.send('DOM.setFileInputFiles', { nodeId, files: [path] });
+    await this.waitFor('window.__importRenders>0', `the import of ${label}`);
     await this.settle();
+  }
+
+  async banner() {
+    return this.value(`(()=>{const b=document.querySelector('.ban');return b?{ok:b.classList.contains('ok'),text:b.textContent.replace(/\\s+/g,' ').trim()}:null;})()`);
   }
 
   async assertFits(label = 'page') {
