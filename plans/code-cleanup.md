@@ -232,7 +232,7 @@ Path `C:\Users\fikry\.t3\worktrees\thor-dex-guides\worktree-code-cleanup` (T3 th
 | Unit / IDs | Status | Accepted SHA | Worker task / branch / path | Checks / evidence | Next action |
 | --- | --- | --- | --- | --- | --- |
 | Kickoff / baseline | verified | (this commit) | orchestrator | Data rebuilds identical ×4; tabs 0 problems; dom/consistency at base: see gates/ | Delegate unit A. |
-| A [09] [16] [17] [18] [20] [21] | pending | — | — | — | Sol worker, worktree from the kickoff commit. |
+| A [09] [16] [17] [18] [20] [21] | in progress | — | gpt-6.1-sol, task `cleanup-unit-A-r1`, worktree from `7145ef9` | — | Review its commits, merge into the cleanup branch. |
 | B [04] [19] | pending | — | — | — | — |
 | C [02] [03] | pending | — | — | — | — |
 | D [01] | pending | — | — | — | — |
