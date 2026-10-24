@@ -118,14 +118,16 @@ spec and the mockup differ, ask. Delete the mockup folder when the build is merg
   lines. Names truncate with an ellipsis in the main block and show in full where there's room (trainer sheet, expanders).
 - **Never overflow 260 px** (`documentElement.scrollWidth === 260`), in normal and `dvkb` mode, with every expander open.
 
-### Layout (route `#/calc`, below 500 px wide)
+### Layout (route `#/calc`, below 480 px wide)
 Top to bottom, one column beside the 44 px rail:
 1. **Import banner** (only after an import attempt; × dismisses it). Green: `Imported <file>` + counts + how many edited
    Pokémon were reset. Red: the error (below).
 2. **Mine card.** A 3-button strip `↻ Import · + New · ⌕ Find` (28 px high), then one grid of all the user's Pokémon:
    party first, then the boxes in box order, then custom sets (dashed border). Six columns, cells the same size as the
    trainer's team strip (a 16 px sprite with the level under it). No dividers or headings between the groups. The selected
-   Pokémon has the accent outline. A full box just makes the card taller (about 8 rows, 48 Pokémon, fit one 316 px screen).
+   Pokémon has the accent outline. **The grid scrolls inside its card** (touch scroll, no scrollbar chrome needed): in one
+   column it is at most 4 rows (136 px) tall, so the page never grows with the box and, at the top of the page, the box, the
+   whole foe bar and the foe's full team strip are on screen together; fewer Pokémon make it shorter.
    With nothing imported and no custom sets the grid is replaced by two buttons, `Import save` and `New Pokémon`.
 3. **Foe card.** One bar: `‹` previous trainer, the trainer's name (one line, truncated; tap opens the trainer sheet), `›`
    next trainer, then `Cap [n]` when the trainer's levels are relative to the cap. Under it the strip of the trainer's
@@ -140,10 +142,14 @@ Top to bottom, one column beside the 44 px rail:
 6. **Field** (collapsed, one summary line) and nothing else.
 7. **Rail jump buttons** (the `.rjump` pair under the tabs): see Scroll stops.
 
-At 500 px and wider (537 × 424, 832 × 424) the Mine card and Foe card sit in two columns, the two Pokémon cards in two
-columns, and **both** movesets are shown, each under its own card and each calculated against the other Pokémon
-(like the Showdown calc). Tapping a card still moves the accent outline but changes nothing else there. Polish for these
-widths comes after the minimum size is final (the user's call): they get extra features, not extra rows.
+From 480 px (the default first-open window, 480 × 392, up to 537 × 424 and 832 × 424; each column is then at least the
+208 px of the minimum layout) the Mine card and Foe card sit in two columns of equal height, the two Pokémon cards in two
+columns, and **both** movesets are shown, each under its own card and each calculated against the other Pokémon (like
+the Showdown calc). Move rows are 31 px in both columns, status and empty slots included, so the rows line up. **The page
+never scrolls at these widths:** the page is exactly the window's height; the Mine card's grid takes whatever height is left
+and scrolls inside itself (about 5 rows at 424 px), so the matchup, both movesets and the Field row are always all on screen
+(an open Edit dropdown or Field box can push past that: then the page scrolls). Tapping a card still moves the accent
+outline but changes nothing else there. Extra features for these widths come after the minimum size is final.
 
 ### Controls, in every state
 **Mine grid.** Tap a cell: select it (also from a box). `↻ Import` opens the file picker (below). `+ New` opens the species
@@ -189,8 +195,8 @@ sheet. Trainers whose starter / player variant doesn't match the user's pick are
 (multi-hit moves only), the move's category and the damage in HP against the defender's current HP, the 16 rolls, the
 modifiers (STAB, super effective, crit, weather...), `HP −min` / `HP −max` (subtract that damage, for all hits, from the
 defender's current HP: the user's per-HP workflow), a full-width `Change move` (move sheet, then the slot is replaced),
-and `Reset power / type` once either was edited. Type / power overrides are per move (all Pokémon that know it), reset
-on request. Variable-power moves (no fixed power in the data) show `—` until a Power is entered. `+ Move` opens the same
+and `Reset power / type` once either was edited. Type, power, hit count and crit belong to that Pokémon's slot (not to the move: the same move on another Pokémon is
+independent), and are cleared when the slot's move is changed or removed; `Reset power / type` clears the first two. Variable-power moves (no fixed power in the data) show `—` until a Power is entered. `+ Move` opens the same
 move sheet to fill an empty slot. The move list of an imported Pokémon is edited like any other field (unsaved until Save).
 - **Right column (26 px, always):** `C` toggles a critical hit for that move (accent when on; recomputes damage, ignores
   screens and negative offence stages / positive defence stages as the engine does). Multi-hit moves (Bullet Seed, Icicle
@@ -222,12 +228,11 @@ previous one above it, with a 3 px tolerance. Pages too short to scroll to a sto
   step only.
 
 ### What is remembered (new `cfg.ls` key, e.g. `<prefix>dmg`; never rename existing keys)
-One object: `dir` (who attacks), `mine {src, b, i}`, `foe {k, i}`, `field`, `crit {moveId: 1}`, `hits {moveId: n}`,
-`mvo {moveId: {t, bp}}`, `edits {key: fields}` (unsaved changes), `saved {key: fields}`, `custom [sets]`, `recent [6 trainer keys]`,
+One object: `dir` (who attacks), `mine {src, b, i}`, `foe {k, i}`, `field`, `crit {slotKey: 1}`, `hits {slotKey: n}`,
+`mvo {slotKey: {t, bp}}` (slotKey = the Pokémon's edit key + `:` + slot 0–3), `edits {key: fields}` (unsaved changes), `saved {key: fields}`, `custom [sets]`, `recent [6 trainer keys]`,
 `imp {file, at, party, boxes}` (the imported sets: species, level, nature, ability, item, moves, IVs, EVs, stages = none,
 a stable id such as the personality value for the `edits` / `saved` keys). Foe changes are keyed `foe:<trainer key>:<index>`,
-the user's: `mine:<id>`. The cap override stays in the existing cap store (shared with the trainer card). The mockup keys
-crit / hits / power overrides by move id, so they follow the move to every Pokémon; say so if per-slot is wanted.
+the user's: `mine:<id>`. The cap override stays in the existing cap store (shared with the trainer card).
 Open expanders and the open Edit dropdowns are not stored.
 
 ### Entry points
@@ -304,15 +309,21 @@ asserts: no page errors and `documentElement.scrollWidth` equals the viewport wi
 16. **Unknown set:** the sheet-only trainer: its first Pokémon has no moves (`+ Move` rows when it attacks), ability shows `?`.
 17. **Long names:** each name in Edge cases truncates on one line with no horizontal scroll; the descender of `g` / `y` is
     visible (row text box is at least 1.2 line-height).
-18. **Scroll stops:** with a box of 30+ Pokémon: `↓` from the top goes to stop 2 (last move row at the viewport bottom, part
+18. **Scroll stops (single column):** with a box of 60+ Pokémon: `↓` from the top goes to stop 2 (last move row at the viewport bottom, part
     of the box visible above), `↓` again to stop 3 (trainer bar at the top), `↓` again stays; `↑` returns through the same
     stops. With a short page the stops collapse (no two within 24 px).
 19. **Box size:** the grid cells match the trainer strip (same height and sprite size); six per row; no divider lines.
-20. **Wide ★:** at 537 × 424 and 832 × 424 two columns, both movesets visible with correct per-side results; no ATK / DEF
-    controls; no overflow.
+20. **Wide ★:** at 480 × 392, 537 × 424 and 832 × 424 two columns of equal-height cards, both movesets visible with correct
+    per-side results, move rows aligned across the columns, the Mine grid scrolling inside its card; the document is exactly
+    the window height (`scrollHeight === innerHeight`) with 61 Pokémon imported; no overflow. Open the Field box: the page may scroll.
 21. **Entry points:** `Calc vs <name> ▸` on a trainer card lands on `#/calc` with that foe selected; `Use in calc ▸` from a
     Pokémon page lands with a custom set selected.
-22. **Persistence:** after changing foe, dir, field, crit, a hit count, a power override, an edit and a saved change, reload:
+22. **Big box (single column):** import 61 Pokémon (6 party, 55 boxed). The grid card is at most 136 px tall and scrolls by
+    touch; the page is not longer than with 11 Pokémon; at the top of the page the foe bar and all of the foe's team are
+    visible with the grid's first four rows.
+23. **Per-slot crit:** turn crit on for Earthquake on Garchomp; the same move on another Pokémon is unaffected; change the
+    slot's move: crit is off again.
+24. **Persistence:** after changing foe, dir, field, crit, a hit count, a power override, an edit and a saved change, reload:
     all restored. `Clear saved state` in the frame: back to defaults.
 
 ## Order

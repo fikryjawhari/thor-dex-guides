@@ -208,7 +208,7 @@ body.kbopen .shb{padding-bottom:calc(var(--kbh,0px) + 12px)}
 .mr .dd .ab{margin-top:3px}
 .mr .dd .dbtn{min-height:34px;font-size:12px}
 .dres.na{display:none}
-@media (min-width:500px){
+@media (min-width:480px){
  .top{display:grid;grid-template-columns:1fr 1fr;align-items:start}
  .dmatch{display:grid;grid-template-columns:1fr 1fr;gap:4px 4px}
  .dres.na{display:flex}
@@ -276,6 +276,18 @@ details.dfield>summary{min-height:30px;font-size:12px;padding:0 8px}
 .cc .cl{min-height:22px}.cc .cl .nv{min-height:20px}.cc .cl input{height:20px}
 .dstrip.fs button{min-height:26px;font-size:9px}.dstrip.fs button .spr{width:min(16px,100%)}
 .mr.st .mm{min-height:26px}
+/* v6 */
+.dside.mg .dstrip{max-height:136px;overflow-y:auto;overscroll-behavior:contain}
+@media (min-width:480px){
+ main#app{height:100vh;display:flex;flex-direction:column;padding-bottom:4px;box-sizing:border-box;gap:4px!important}
+ .top{flex:1 1 auto;min-height:76px;align-items:stretch;grid-template-rows:minmax(0,1fr)}
+ .top>.dside{min-height:0;overflow:hidden;display:flex;flex-direction:column}
+ .top>.dside .dstrip{min-height:0}
+ .dside.mg .dstrip{flex:1 1 auto;max-height:none}
+ .dmatch,.dfield,.ban{flex:none}
+ .dmatch .dres{align-self:start}
+ .dmatch .mr .mm,.dmatch .mr.st .mm,.dmatch .mr.em .mm{min-height:31px}
+}
 </style></head><body>
 <nav id="rail"></nav>
 <main id="app"></main>
@@ -301,7 +313,7 @@ const $=(s,r)=>(r||document).querySelector(s);
 const html=(el,h)=>{el.innerHTML=h;return el;};
 
 /* ---------------- state ---------------- */
-const KEY='dcmock1';
+const KEY='dcmock2';
 const mon=(n,l,na,it,mv,ev)=>{const id=S(n);return {id,l,na,a:byId[id].a[0],i:it,m:mv.map(MI),iv:[31,31,31,31,31,31],ev:ev||[0,0,0,0,0,0],pid:n+na}};
 const FILES={
  'Emerald_Imperium.sav':{size:'128 KB',at:'24 Oct 14:02',party:[
@@ -319,6 +331,8 @@ const FILES={
  'corrupt.sav':{size:'128 KB',err:['Unreadable','Both save slots fail their checksum. Save again in the game and retry.']},
  'new_game.sav':{size:'128 KB',err:['No Pokémon yet','This save has no party. Get your starter and save first.']}};
 (()=>{const a=FILES['Emerald_Imperium.sav'],b=FILES['Emerald_Imperium_2.sav'];const q=a.party.map(m=>({...m}));q[0].l=35;q[5]=mon('Glaceon',33,'Modest','',['Ice Beam','Blizzard','Shadow Ball','Ice Shard']);b.party=q;b.boxes=[[a.party[5],...a.boxes[0].slice(0,2)],a.boxes[1]];})();
+(()=>{const f=FILES['Emerald_Imperium.sav'];const pool=P.filter(p=>SPR[p.id]&&p.lv&&p.lv.length>5&&!/^Mega /.test(p.n)&&!/ \(/.test(p.n));const mk=(k)=>{const p=pool[(k*13+5)%pool.length],l=14+(k*7)%22;return {id:p.id,l,na:NATS[(k*3)%NATS.length],a:p.a[0],i:'',m:defMoves(p,l),iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0],pid:'f'+k+p.n};};
+ let k=0;for(let b=0;b<2;b++){const bx=[];for(let i=0;i<28;i++)bx.push(mk(k++));f.boxes.push(bx);}})();
 const WATT=D.TR.find(t=>t.n==='Wattson').k;
 const REL=D.TR.find(t=>t.g.includes('Cap 34')&&t.p.some(x=>x.l==null)&&t.p.length>=4);
 function defaults(){return {dir:'out',mine:{src:'party',b:0,i:0},foe:{k:(REL||{k:WATT}).k,i:0},field:{w:'',t:'',crit:0,ref:0,ls:0},cap:{},custom:[],imp:null,edits:{},recent:[],pk:{id:S('Garchomp'),l:50,na:'Jolly',iv:[31,31,31,31,31,31],ev:[0,252,0,0,4,252]},tab:'party'};}
@@ -414,9 +428,9 @@ const go=h=>{if(location.hash===h)route();else location.hash=h;};
 let BAN=null;const ROWOPEN=new Set();let SMODE='+';
 ST.crit=ST.crit||{};ST.mvo=ST.mvo||{};ST.hits=ST.hits||{};
 const MH={};[['Bullet Seed',2,5,3],['Icicle Spear',2,5,3],['Rock Blast',2,5,3],['Pin Missile',2,5,3],['Double Slap',2,5,3],['Fury Attack',2,5,3],['Fury Swipes',2,5,3],['Arm Thrust',2,5,3],['Tail Slap',2,5,3],['Spike Cannon',2,5,3],['Comet Punch',2,5,3],['Bone Rush',2,5,3],['Water Shuriken',2,5,3],['Scale Shot',2,5,3],['Double Kick',2,2,2],['Bonemerang',2,2,2],['Dual Chop',2,2,2],['Double Hit',2,2,2],['Twineedle',2,2,2],['Dual Wingbeat',2,2,2],['Surging Strikes',3,3,3]].forEach(([n,lo,hi,d])=>{const i=M.indexOf(n);if(i>=0)MH[i]=[lo,hi,d];});
-const hitsOf=mi=>{const m=MH[mi];return m?Math.max(m[0],Math.min(m[1],ST.hits[mi]||m[2])):1;};
+const hitsOf=(mi,ck)=>{const m=MH[mi];return m?Math.max(m[0],Math.min(m[1],ST.hits[ck]||m[2])):1;};
 const TNAMES=Object.keys(D.TC);
-const effMv=mi=>({...MV[mi],...Object.fromEntries(Object.entries(ST.mvo[mi]||{}).filter(([,v])=>v!=null))});
+const effMv=(mi,ck)=>({...MV[mi],...Object.fromEntries(Object.entries(ST.mvo[ck]||{}).filter(([,v])=>v!=null))});
 function sideInfo(side){const isM=side==='mine';const t=trByK[ST.foe.k];const base=isM?curMine():(t?foeBase(t,ST.foe.i):null);const custom=isM&&ST.mine.src==='custom';const key=isM?'mine:'+(base||{}).pid:'foe:'+ST.foe.k+':'+ST.foe.i;return {isM,key,base,custom};}
 function getMon(side){const i=sideInfo(side);if(!i.base)return null;return i.custom?{...i.base}:applyEdits(i.base,i.key);}
 function setField(side,f,v){const i=sideInfo(side);if(i.custom){if(v===undefined)delete i.base[f];else i.base[f]=v;}else{const e=(ST.edits[i.key]=ST.edits[i.key]||{});if(v===undefined)delete e[f];else e[f]=v;}save();}
@@ -456,23 +470,23 @@ function chip(r,att,side,fast){if(!r)return `<div class="cc"><button class="cn" 
  return `<div class="cc ${att?'att':''}" data-a="sel" data-s="${side}"><div class="l1"><button class="cn" data-a="sel" data-s="${side}"><b>${esc(r.name)}${r.edited?' *':r.saved?' •':''}</b></button>${mega?`<button class="mg ${r.pre?'on':''}" data-a="mega" data-s="${side}" aria-label="Mega">M</button>`:''}<button class="stb ${open||sg?'on':''}" data-a="eopen" data-s="${side}">Edit ${open?'▴':'▾'}</button><span class="sp">Spe <i class="${fast?'f':''}">${spe??'?'}${mod}</i></span></div>
   <div class="cl"><span>Lv</span>${nb(`data-lv="${side}"`,r.lv??'',{min:1,max:100,label:'Level'})}<button class="hpl" data-a="hpfull" data-s="${side}" title="Full HP">HP</button>${nb(`data-hp="${side}"`,r.hp??'',{min:0,max:mx||999,label:'HP now'})}<span class="mx">/${mx??'?'}</span></div>${open?editor(r,side):''}</div>`;}
 function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
- const D0=[0,1,2,3].map(slot=>{const mi=att.m[slot];if(mi==null)return {slot};const crit=!!ST.crit[mi],n=hitsOf(mi),mv=effMv(mi);return {slot,mi,mv,crit,n,r:damage(att,def,mi,F,crit,ST.mvo[mi])};});
+ const D0=[0,1,2,3].map(slot=>{const mi=att.m[slot];if(mi==null)return {slot};const ck=sideInfo(side).key+':'+slot,crit=!!ST.crit[ck],n=hitsOf(mi,ck),mv=effMv(mi,ck);return {slot,mi,ck,mv,crit,n,r:damage(att,def,mi,F,crit,ST.mvo[ck])};});
  const best=Math.max(0,...D0.map(x=>x.r?x.r.max*x.n:0));
  const pc=x=>(x/mx*100).toFixed(1).replace(/\.0$/,'');
- return D0.map(x=>{const {slot,mi,mv,crit,n,r}=x;
+ return D0.map(x=>{const {slot,mi,ck,mv,crit,n,r}=x;
   if(mi==null)return `<div class="mr em"><div class="mm" data-a="addmv" data-slot="${slot}" data-side="${side}">+ Move</div></div>`;
-  const open=ROWOPEN.has(mi),mh=MH[mi],ov=ST.mvo[mi];
-  const types=`<label>Type<select data-mo="t" data-mi="${mi}">${TNAMES.map(t=>`<option ${t===mv.t?'selected':''}>${t}</option>`).join('')}</select></label>`;
-  const bp=r||mv.c!=='Status'?`<label>Power${nb(`data-mo="bp" data-mi="${mi}"`,Number(mv.bp)||0,{min:0,max:250,label:'Power'})}</label>`:'';
-  const hits=mh?`<label>Hits${nb(`data-mo="hits" data-mi="${mi}"`,n,{min:mh[0],max:mh[1],label:'Hits'})}</label>`:'';
-  const tail=`<div class="ab1"><button class="dbtn sm" data-a="chmv" data-slot="${slot}" data-side="${side}">Change move</button></div>${ov?`<div class="ab1"><button class="dbtn sm" data-a="mvreset" data-mi="${mi}">Reset power / type</button></div>`:''}`;
-  if(!r)return `<div class="mr st ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">—</span></div><div class="dd"><div class="eg">${types}${bp}</div>${tail}</div></div></div>`;
+  const open=ROWOPEN.has(ck),mh=MH[mi],ov=ST.mvo[ck];
+  const types=`<label>Type<select data-mo="t" data-mi="${mi}" data-ck="${ck}">${TNAMES.map(t=>`<option ${t===mv.t?'selected':''}>${t}</option>`).join('')}</select></label>`;
+  const bp=r||mv.c!=='Status'?`<label>Power${nb(`data-mo="bp" data-mi="${mi}" data-ck="${ck}"`,Number(mv.bp)||0,{min:0,max:250,label:'Power'})}</label>`:'';
+  const hits=mh?`<label>Hits${nb(`data-mo="hits" data-mi="${mi}" data-ck="${ck}"`,n,{min:mh[0],max:mh[1],label:'Hits'})}</label>`:'';
+  const tail=`<div class="ab1"><button class="dbtn sm" data-a="chmv" data-slot="${slot}" data-side="${side}">Change move</button></div>${ov?`<div class="ab1"><button class="dbtn sm" data-a="mvreset" data-mi="${mi}" data-ck="${ck}">Reset power / type</button></div>`:''}`;
+  if(!r)return `<div class="mr st ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}" data-ck="${ck}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">—</span></div><div class="dd"><div class="eg">${types}${bp}</div>${tail}</div></div></div>`;
   const imm=r.max===0,ko=koOf(r.rolls,Math.max(1,hpNow),n);
-  return `<div class="mr ${r.max*n===best&&best>0?'best':''} ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">${imm?'No effect':r.min+'–'+r.max}</span></div>
+  return `<div class="mr ${r.max*n===best&&best>0?'best':''} ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}" data-ck="${ck}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">${imm?'No effect':r.min+'–'+r.max}</span></div>
    <div class="r2"><span>${imm?'':(n>1?'×'+n+' · ':'')+pc(r.min*n)+'–'+pc(r.max*n)+'%'}</span><span class="ko k${ko.n}">${imm?'':hpNow<=0?'fainted':koTxt(ko)}</span></div>
    <div class="dd"><div class="eg">${types}${bp}${hits}</div><div>${esc(mv.c)} · vs ${hpNow}/${mx} HP${n>1?` · ${n} hits: ${r.min*n}–${r.max*n}`:''}</div><div class="rolls">${r.rolls.join(' ')}</div>${r.notes.length?`<div>${r.notes.map(esc).join(' · ')}</div>`:''}
    <div class="ab"><button class="dbtn sm" data-a="sub" data-v="${r.min*n}">HP −${r.min*n}</button><button class="dbtn sm" data-a="sub" data-v="${r.max*n}">HP −${r.max*n}</button></div>${tail}</div></div>
-   <div class="rcol ${mh?'two':''}">${mh?`<button class="rh" data-a="hits" data-mi="${mi}" aria-label="Hits">×${n}</button>`:''}<button class="rc" data-a="crit" data-mi="${mi}" aria-pressed="${crit}" aria-label="Crit">C</button></div></div>`;}).join('');}
+   <div class="rcol ${mh?'two':''}">${mh?`<button class="rh" data-a="hits" data-mi="${mi}" data-ck="${ck}" aria-label="Hits">×${n}</button>`:''}<button class="rc" data-a="crit" data-mi="${mi}" data-ck="${ck}" aria-pressed="${crit}" aria-label="Crit">C</button></div></div>`;}).join('');}
 function calcPage(){const A0=getMon('mine'),B0=getMon('foe');const a=A0&&resolve(A0),b=B0&&resolve(B0);const out=ST.dir==='out';
  const F=ST.field;const sa=a&&effSpe(a),sb=b&&effSpe(b);
  let ra='',rb='';
@@ -491,14 +505,14 @@ function calcPage(){const A0=getMon('mine'),B0=getMon('foe');const a=A0&&resolve
 function bindMain(){document.querySelectorAll('[data-lv],[data-hp]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const side=i.dataset.lv||i.dataset.hp,f=i.dataset.lv?'l':'hp';const v=parseInt(i.value);if(isNaN(v))return;
   setField(side,f,f==='l'?Math.max(1,Math.min(100,v)):Math.max(0,v));refresh();};});
  document.querySelectorAll('[data-mo]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const mi=+i.dataset.mi,k=i.dataset.mo;
-  if(k==='t'){(ST.mvo[mi]=ST.mvo[mi]||{}).t=i.value;}else if(k==='bp'){const v=parseInt(i.value);(ST.mvo[mi]=ST.mvo[mi]||{}).bp=isNaN(v)?undefined:v;}else if(k==='hits'){ST.hits[mi]=parseInt(i.value)||1;}
+  const ck=i.dataset.ck;if(k==='t'){(ST.mvo[ck]=ST.mvo[ck]||{}).t=i.value;}else if(k==='bp'){const v=parseInt(i.value);(ST.mvo[ck]=ST.mvo[ck]||{}).bp=isNaN(v)?undefined:v;}else if(k==='hits'){ST.hits[ck]=parseInt(i.value)||1;}
   save();refresh();};});}
 function bindEd(){document.querySelectorAll('[data-e]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const side=i.dataset.s,k=i.dataset.e,m=getMon(side);
   if(k==='na')setField(side,'na',i.value);else if(k==='ab')setField(side,'a',+i.value);else if(k==='it')setField(side,'i',i.value);else if(k==='status')setField(side,'status',i.value);
   else if(k==='iv'||k==='ev'){const a=m[k].slice(),v=parseInt(i.value)||0;a[+i.dataset.x]=Math.max(0,Math.min(k==='iv'?31:252,v));setField(side,k,a);}
   refresh();};});}
 function bindCap(root){(root||document).querySelectorAll('[data-cap]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const v=parseInt(i.value);const t=trByK[i.dataset.cap];if(v>0&&v<=100&&v!==t.cap)ST.cap[t.k]=v;else delete ST.cap[t.k];save();refresh();};});}
-function setMove(side,slot,mi){const arr=getMon(side).m.slice();if(mi==null)arr.splice(slot,1);else arr[slot]=mi;setField(side,'m',arr.filter(x=>x!=null));}
+function setMove(side,slot,mi){const ck=sideInfo(side).key+':'+slot;delete ST.crit[ck];delete ST.hits[ck];delete ST.mvo[ck];const arr=getMon(side).m.slice();if(mi==null)arr.splice(slot,1);else arr[slot]=mi;setField(side,'m',arr.filter(x=>x!=null));}
 function pickMove(side,slot){picker({title:'Move '+(slot+1),items:M.map((n,i)=>({label:n,sub:MV[i].t+' · '+MV[i].c+' · '+(MV[i].bp||'—'),v:i})),onPick:v=>{setMove(side,slot,v);refreshMainOnly();}});}
 const refresh=()=>{const y=scrollY;route2();scrollTo(0,y);};
 function route2(){const h=location.hash||'#/calc';if(h.startsWith('#/tr'))trainerPage();else if(h.startsWith('#/p'))pokePage();else calcPage();SH.redraw();}
@@ -509,9 +523,9 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-
  if(a==='mpick'){ST.mine={src:el.dataset.src,b:+el.dataset.b,i:+el.dataset.i};save();refresh();}
  else if(a==='fpick'){ST.foe.i=+el.dataset.i;save();refresh();}
  else if(a==='sel'){if(e.target.closest('input,select,.nv,.num,.ed,.stb,.mg,.hpl'))return;ST.dir=el.dataset.s==='mine'?'out':'in';save();refresh();}
- else if(a==='row'){const mi=+el.dataset.mi;ROWOPEN.has(mi)?ROWOPEN.delete(mi):ROWOPEN.add(mi);el.closest('.mr').classList.toggle('open');}
- else if(a==='crit'){const mi=+el.dataset.mi;ST.crit[mi]=ST.crit[mi]?0:1;save();refresh();}
- else if(a==='hits'){const mi=+el.dataset.mi,m=MH[mi],n=hitsOf(mi);ST.hits[mi]=n>=m[1]?m[0]:n+1;save();refresh();}
+ else if(a==='row'){const ck=el.dataset.ck;ROWOPEN.has(ck)?ROWOPEN.delete(ck):ROWOPEN.add(ck);el.closest('.mr').classList.toggle('open');}
+ else if(a==='crit'){const ck=el.dataset.ck;ST.crit[ck]=ST.crit[ck]?0:1;save();refresh();}
+ else if(a==='hits'){const mi=+el.dataset.mi,ck=el.dataset.ck,m=MH[mi],n=hitsOf(mi,ck);ST.hits[ck]=n>=m[1]?m[0]:n+1;save();refresh();}
  else if(a==='sub'){const side=ST.dir==='out'?'foe':'mine',r=resolve(getMon(side));setField(side,'hp',Math.max(0,r.hp-(+el.dataset.v)));refresh();}
  else if(a==='hpfull'){setField(el.dataset.s,'hp',undefined);refresh();}
  else if(a==='eopen'){EDITOPEN[el.dataset.s]=!EDITOPEN[el.dataset.s];refresh();}
@@ -523,7 +537,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-
  else if(a==='sstep'){const side=el.dataset.s,x=+el.dataset.x,arr=resolve(getMon(side)).stg.slice();arr[x]=Math.max(-6,Math.min(6,arr[x]+(SMODE==='+'?1:-1)));setField(side,'stg',arr);refresh();}
  else if(a==='sreset'){setField(el.dataset.s,'stg',undefined);refresh();}
  else if(a==='chmv'||a==='addmv'){pickMove(el.dataset.side,+el.dataset.slot);}
- else if(a==='mvreset'){delete ST.mvo[+el.dataset.mi];save();refresh();}
+ else if(a==='mvreset'){delete ST.mvo[el.dataset.ck];save();refresh();}
  else if(a==='tprev'||a==='tnext'){const ti=D.TR.findIndex(x=>x.k===ST.foe.k)+(a==='tnext'?1:-1);if(D.TR[ti]){ST.foe={k:D.TR[ti].k,i:0};recent(D.TR[ti].k);save();refresh();}}
  else if(a==='bandis'){BAN=null;refresh();}
  else if(a==='foesheet'){SH.foe();}
