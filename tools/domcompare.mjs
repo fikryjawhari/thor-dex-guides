@@ -12,6 +12,7 @@
 // that still differ are replayed with their chunk's history and printed (SHOW=n of them, default 2; LIST=1 lists every differing route). Exit code 0: identical and no page errors, 1: not, 2: Chrome failed.
 // Needs Chrome or Edge (CHROME env var, or the usual Windows install paths). Node 22+ (fetch, WebSocket).
 // Picks a free debugging port, so several runs (both guides, normal and --kb) can go at once.
+// content-visibility is forced to visible in every tab (see tab()): offscreen skipped parts are not observed or measured, so DOM that depends on them varied from run to run.
 // IPC flooding protection is off: each route makes 2 history updates and Chrome stalls a tab for ~10 s after 200.
 // Timing --jobs: tools/README.md.
 import { spawn } from 'node:child_process';
@@ -58,6 +59,13 @@ async function tab() {
   const { result: { browserContextId } } = await send('Target.createBrowserContext');
   const { result: { targetId } } = await send('Target.createTarget', { url: 'about:blank', browserContextId, width: 480, height: 800 });
   const { result: { sessionId } } = await send('Target.attachToTarget', { targetId, flatten: true });
+  // content-visibility:auto skips what is off screen, and nothing inside a skipped subtree is observed (ResizeObserver: the
+  // guide's --sh / --ch header heights) or measured (the collapse bars): which parts were rendered at snapshot time depended
+  // on scroll and timing, so identical builds differed from run to run. Render everything in the harness.
+  await send('Page.enable', {}, sessionId);
+  await send('Page.addScriptToEvaluateOnNewDocument', { source: `new MutationObserver((m, o) => { if (document.head) {
+    document.head.appendChild(document.createElement('style')).textContent = '*{content-visibility:visible!important}'; o.disconnect(); } })
+    .observe(document, { childList: true, subtree: true })` }, sessionId);
   const ev = async expr => {
     const m = await send('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true }, sessionId);
     if (m.error || m.result?.exceptionDetails) throw new Error(JSON.stringify(m.error || m.result.exceptionDetails).slice(0, 800));
