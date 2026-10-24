@@ -141,6 +141,10 @@ earlier data.json, that species order, move / ability tables, area names, traine
 
 ## History
 
+- **2026-10-24, Charcoal reads `Also:`.** The Azalea Cutters' Charcoal (after Bugsy and getting Cut) was a `Found:` line, so
+  it looked like it lay on the ground; it is a reward. `itemstd.RULES['hardlove-gold']['also']` relabels it (Items and the
+  walkthrough stop); `_ALSO` also knows "after <Leader> and getting/beating".
+
 - **2026-10-24, Starter box first.** `locs.starter` writes `ARO`: the Starter area first on the Locations page, like the
   other guides (area indices unchanged). The Morty box lists its places in walkthrough order (Route 37, Ecruteak City
   Theater, Burned Tower, Route 38, Gym; shared finaliser `trainers_follow_walk`). Template, same day: a Trainers place's
