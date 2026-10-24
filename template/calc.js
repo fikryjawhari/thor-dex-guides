@@ -75,6 +75,7 @@ function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
  const D0=[0,1,2,3].map(slot=>{const mi=att.m[slot];if(mi==null)return {slot};const ck=sideInfo(side).key+':'+slot,crit=!!ST.crit[ck],n=hitsOf(mi,ck),mv=effMv(mi,ck);return {slot,mi,ck,mv,crit,n,r:((prof.varpow||[]).includes(M[mi])&&ST.mvo[ck]?.bp==null)?null:window.DMG.calc(toEngine(att),toEngine(def),{mv:mi,...ST.mvo[ck],hits:n,crit},F)};});
  const total=(result,mode)=>result.per?result.per.reduce((sum,rolls)=>sum+(mode==='min'?Math.min(...rolls):Math.max(...rolls)),0):result[mode]*result.hits;
  const best=Math.max(0,...D0.map(entry=>entry.r?total(entry.r,'max'):0));
+ const percent=value=>Number(Number(value).toFixed(1));
  return D0.map(x=>{const {slot,mi,ck,mv,crit,n,r}=x;
   if(mi==null)return `<div class="mr em"><div class="mm" data-a="addmv" data-slot="${slot}" data-side="${side}">${slot===0&&side==='foe'&&ST.dir==='in'&&!att.m.some(move=>move!=null)?'No moves listed · ':''}+ Move</div></div>`;
   const open=ROWOPEN.has(ck),mh=MH[mi],ov=ST.mvo[ck];
@@ -85,7 +86,7 @@ function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
   if(!r)return `<div class="mr st ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}" data-ck="${ck}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">—</span></div><div class="dd"><div class="eg">${types}${bp}</div>${tail}</div></div></div>`;
   const imm=r.eff===0,ko=r.ko,minTotal=total(r,'min'),maxTotal=total(r,'max');
   return `<div class="mr ${maxTotal===best&&best>0?'best':''} ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}" data-ck="${ck}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">${imm?'No effect':r.min+'–'+r.max}</span></div>
-   <div class="r2"><span>${imm?'':(n>1?'×'+n+' · ':'')+r.pmin+'–'+r.pmax+'%'}</span><span class="ko k${ko.n}">${imm?'':hpNow<=0?'fainted':koTxt(ko)}</span></div>
+   <div class="r2"><span>${imm?'':(n>1?'×'+n+' · ':'')+percent(r.pmin)+'–'+percent(r.pmax)+'%'}</span><span class="ko k${ko.n}">${imm?'':hpNow<=0?'fainted':koTxt(ko)}</span></div>
    <div class="dd"><div class="eg">${types}${bp}${hits}</div><div>${esc(mv.c)} · vs ${hpNow}/${mx} HP${n>1?` · ${n} hits: ${minTotal}–${maxTotal}`:''}</div>${r.per?r.per.map((rolls,index)=>`<div class="rolls">Hit ${index+1}: ${Math.min(...rolls)}–${Math.max(...rolls)}<br>${rolls.join(' ')}</div>`).join(''):`<div class="rolls">${r.rolls.join(' ')}</div>`}${r.notes.length?`<div>${r.notes.map(esc).join(' · ')}</div>`:''}
    <div class="ab"><button class="dbtn sm" data-a="sub" data-side="${side}" data-v="${minTotal}">HP −${minTotal}</button><button class="dbtn sm" data-a="sub" data-side="${side}" data-v="${maxTotal}">HP −${maxTotal}</button></div>${tail}</div></div>
    <div class="rcol ${mh?'two':''}">${mh?`<button class="rh" data-a="hits" data-mi="${mi}" data-ck="${ck}" aria-label="Hits">×${n}</button>`:''}<button class="rc" data-a="crit" data-mi="${mi}" data-ck="${ck}" aria-pressed="${crit}" aria-label="Crit">C</button></div></div>`;}).join('');}
@@ -118,7 +119,7 @@ function bindEd(){document.querySelectorAll('[data-e]').forEach(i=>{if(i.dataset
   refresh();};});}
 function bindCap(root){(root||document).querySelectorAll('[data-cap]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const v=parseInt(i.value);const t=trByK[i.dataset.cap];if(v>=range[0]&&v<=range[1]&&v!==t.cap){TCAP[t.k]=v;if(CF.capLast)TCAP._last=v;}else delete TCAP[t.k];try{localStorage.setItem(LS.cap,JSON.stringify(TCAP));}catch(error){}save();refresh();};});}
 function setMove(side,slot,mi){const ck=sideInfo(side).key+':'+slot;delete ST.crit[ck];delete ST.hits[ck];delete ST.mvo[ck];const arr=getMon(side).m.slice();arr[slot]=mi;setField(side,'m',arr);}
-function pickMove(side,slot){picker({title:'Move '+(slot+1),items:M.map((n,i)=>({label:n,sub:MV[i].t+' · '+MV[i].c+' · '+(MV[i].bp||'—'),v:i})),onPick:v=>{setMove(side,slot,v);refreshMainOnly();}});}
+function pickMove(side,slot){picker({title:'Move '+(slot+1),none:getMon(side).m[slot]!=null?'Remove move':undefined,items:M.map((n,i)=>({label:n,sub:MV[i].t+' · '+MV[i].c+' · '+(MV[i].bp||'—'),v:i})),onPick:v=>{setMove(side,slot,v);refreshMainOnly();}});}
 const refresh=()=>{const y=scrollY;route2();scrollTo(0,y);};
 function route2(){calcPage();SH.redraw();}
 document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const el=e.target.closest('[data-a],[data-f]');if(!el||!el.closest('#app'))return;
