@@ -14,6 +14,7 @@ import json, os, re
 from collections import defaultdict
 from common import BULBA, load, norm, report, fix, split_name
 from wikitext import split_args
+from ctrguide import default_moves, trainer_match_score
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon Ultra Sun and Ultra Moon-Part {}.wiki')
 # Boxes: (walkthrough parts, name). Aether Paradise's second visit (Part 21) is its own box; the first (Part 14, no
@@ -221,15 +222,6 @@ def location_entries():
     return out
 
 
-def score(e, t):
-    vs = [(m['species'], m['level']) for m in t['team']]
-    sc = 0
-    for x in e['mons']:
-        if x in vs:
-            sc += 3
-        elif x[0] in [v[0] for v in vs]:
-            sc += 1
-    return sc - abs(len(vs) - len(e['mons']))
 
 
 def dummy(t):
@@ -297,8 +289,8 @@ def build(D):
         gives up to two trainers, whichever of its names share its Pokemon."""
         if not e['key']:
             c = [t for n in e['names'] for t in byn.get(n, []) if t['id'] not in used]
-            hits = sorted((t for t in c if score(dict(mons=e['mons']), t) + abs(len(t['team']) - len(e['mons'])) > 0),
-                          key=lambda t: -score(e, t))
+            hits = sorted((t for t in c if trainer_match_score(dict(mons=e['mons']), t) + abs(len(t['team']) - len(e['mons'])) > 0),
+                          key=lambda t: -trainer_match_score(e, t))
             out, seen = [], set()
             for t in hits:
                 if norm(t['name']) not in seen:
@@ -307,13 +299,13 @@ def build(D):
             return out
         c = [t for t in byk.get(e['key'], []) if t['id'] not in used]
         if c:
-            best = max(c, key=lambda t: score(e, t))
-            if score(e, best) > 0:
+            best = max(c, key=lambda t: trainer_match_score(e, t))
+            if trainer_match_score(e, best) > 0:
                 return [best]
         c = [t for t in byn.get(e.get('name', ''), []) if t['id'] not in used]
         if c:
-            best = max(c, key=lambda t: score(e, t))
-            if score(e, best) >= 2:
+            best = max(c, key=lambda t: trainer_match_score(e, t))
+            if trainer_match_score(e, best) >= 2:
                 return [best]
         return []
     evs = events()
@@ -339,7 +331,7 @@ def build(D):
             report('  walkthrough trainer not matched:', e['part'], e['place'], e['key'] or e['names'], e['mons'][:3])
     # Second pass: location pages, exact teams first (Route 17's Ekans 36 grunt would take Ancient Poni Path's Ekans 45)
     extra, ents = [], location_entries()
-    exact = lambda e, t: score(e, t) == 3 * len(e['mons']) == 3 * len(t['team'])
+    exact = lambda e, t: trainer_match_score(e, t) == 3 * len(e['mons']) == 3 * len(t['team'])
     for strict in (True, False):
         for e in ents:
             if e.get('done'):
@@ -384,12 +376,6 @@ def build(D):
         a = m['ability']
         return ABI.get(a) if ' or ' not in a else None
 
-    def default_moves(p, lv):
-        ms = []
-        for l, mv in p['lv']:
-            if l <= lv and mv not in ms:
-                ms.append(mv)
-        return ms[-4:]
 
     def trainer(e, tid, k):
         t = Hk[tid]

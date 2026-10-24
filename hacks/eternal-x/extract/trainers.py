@@ -18,6 +18,7 @@ import json, os, re
 from collections import defaultdict
 from common import BULBA, load, norm, report, fix, split_name
 from wikitext import split_args
+from ctrguide import default_moves, trainer_match_score
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon X and Y-Part {}.wiki')
 NPARTS = 17
@@ -191,15 +192,6 @@ def location_entries():
     return out
 
 
-def score(e, t):
-    vs = [(m['species'], m['level']) for m in t['team']]
-    sc = 0
-    for x in e['mons']:
-        if x in vs:
-            sc += 3
-        elif x[0] in [v[0] for v in vs]:
-            sc += 1
-    return sc - abs(len(vs) - len(e['mons']))
 
 
 def prep(T):
@@ -210,13 +202,6 @@ def prep(T):
     return T
 
 
-def default_moves(p, lv):
-    """The last four level-up moves at that level (the game's default when a set lists none)."""
-    ms = []
-    for l, mv in p['lv']:
-        if l <= lv and mv not in ms:
-            ms.append(mv)
-    return ms[-4:]
 
 # Level caps, story order: (section head contains, trainer name contains, kind). 'trial' (the template's word for the
 # main set) = the Gym Leaders, then the Elite Four's highest level (not the Champion); 'mini' = rivals, friends,
@@ -306,13 +291,13 @@ def build(D):
     def match(e):
         c = [t for t in byk.get(e['key'], []) if t['id'] not in used]
         if c:
-            best = max(c, key=lambda t: score(e, t))
-            if score(e, best) > 0:
+            best = max(c, key=lambda t: trainer_match_score(e, t))
+            if trainer_match_score(e, best) > 0:
                 return best
         c = [t for t in byn.get(e.get('name', ''), []) if t['id'] not in used and e.get('name')]
         if c:
-            best = max(c, key=lambda t: score(e, t))
-            if score(e, best) >= 2:
+            best = max(c, key=lambda t: trainer_match_score(e, t))
+            if trainer_match_score(e, best) >= 2:
                 return best
         return None
 
@@ -385,7 +370,7 @@ def build(D):
 
     # --- second pass: location pages (exact teams first)
     extra, ents_ = [], location_entries()
-    exact = lambda e, t: score(e, t) == 3 * len(e['mons']) == 3 * len(t['team'])
+    exact = lambda e, t: trainer_match_score(e, t) == 3 * len(e['mons']) == 3 * len(t['team'])
     for strict in (True, False):
         for e in ents_:
             if e.get('done'):
