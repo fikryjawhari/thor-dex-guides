@@ -1,0 +1,110 @@
+{
+  "sources": [
+    {
+      "name": "Documentation dates",
+      "type": "drive",
+      "id": "1W-TbF-XashTxOjQj6A4jdj4IkYFBEBVD",
+      "state": {
+        "1fV4OX_c7WHncpZPMjpc-Q2OCmxUnWOM4": {
+          "name": "Evolution Changes.pdf",
+          "modified": "2020-05-29"
+        },
+        "1zaDNLZY0pTr7GLsgrUlzVx9E-2Phtiel": {
+          "name": "How to Enable Mega Evolution.pdf",
+          "modified": "2020-12-10"
+        },
+        "19aICc27ZK5kNX-KMd5bPiTuQnNFd-E4N": {
+          "name": "Important Trainers, Rebalanced.pdf",
+          "modified": "2020-07-10"
+        },
+        "1o8a1naLZL4VAHPlb0mGSzl5CDTstDKpu": {
+          "name": "Important Trainers, Standard.pdf",
+          "modified": "2020-07-10"
+        },
+        "1e6CJcKzRU4n1NSVAJXYiy7M9aK5zZo3w": {
+          "name": "Level Up Moves, Rebalanced.txt",
+          "modified": "2020-07-23"
+        },
+        "1H3XT5OsDqt6cdvEr9Dupgm2YonxGN_du": {
+          "name": "Level Up Moves, Standard.txt",
+          "modified": "2020-07-23"
+        },
+        "1h4XUX3_4GfB8wXmStE3zQwMULtVV13l0": {
+          "name": "Move Changes.pdf",
+          "modified": "2020-05-29"
+        },
+        "1DJJkGgxr_aTvjPux7rMqsucN4zyCWY6Z": {
+          "name": "Pokemon Changes.pdf",
+          "modified": "2021-05-20"
+        },
+        "1-3SKr9UYvwB9_CfoQ_j3Io2xP6BDgKxw": {
+          "name": "Special Encounters.pdf",
+          "modified": "2018-11-26"
+        },
+        "1WIK3RBPHRwk7_BUQ3ZZlyflgUU2my8S1": {
+          "name": "Totem Battles.pdf",
+          "modified": "2020-05-29"
+        },
+        "1KRc4YsnJtVyXTWjhSsJ0Agf_xXj8xLg8": {
+          "name": "Type Changes.pdf",
+          "modified": "2020-07-10"
+        },
+        "12YsIQwV_nTphy4-2k7VhuThEeD8qwrOo": {
+          "name": "Vendor Changes.pdf",
+          "modified": "2019-11-14"
+        },
+        "1nG1HU1UkOsY2SXotxYeXaYseatDZYv5s": {
+          "name": "Wild Pokemon Locations.pdf",
+          "modified": "2020-06-14"
+        }
+      },
+      "baseline_note": "Seeded current Drive dates 2026-10-24; original modified dates were not saved with the 2026-10-18 downloads."
+    },
+    {
+      "name": "Patch and changelog dates (romfs update signal)",
+      "type": "drive",
+      "id": "1zU-yEwI-JoFiF6yHT9qFy_Y5JFAvEi70",
+      "state": {
+        "1lf_PbxiaTTvP4A10fgMcVIQloDed4UzY": {
+          "name": "3DS Install Guide.pdf",
+          "modified": "2020-04-22"
+        },
+        "1GENam4YptDDeoqGrCIYF1JAHt_ALnUtE": {
+          "name": "Android Install Guide.pdf",
+          "modified": "2021-06-17"
+        },
+        "1SicZJYkSF5LcBjvLtZqr6bmO9_vXUQnu": {
+          "name": "Changelog.txt",
+          "modified": "2026-07-22"
+        },
+        "1FcyEN-TAXQCtgM2JrXVoQ5esjXhfCuGq": {
+          "name": "Citra Install Guide.pdf",
+          "modified": "2020-07-07"
+        }
+      },
+      "baseline_note": "Seeded current Drive dates 2026-10-24; original modified dates were not saved with the 2026-10-18 downloads."
+    },
+    {
+      "name": "Photonic Sun patch archives",
+      "type": "drive",
+      "id": "1aJ-ldxyJXx93-5KflqW-K453r4ec5grQ",
+      "state": {
+        "14vNSGKhl9Z80PLhrT2D4ClskfTt9b6Pn": {
+          "name": "Rebalanced.zip",
+          "modified": "2026-07-22"
+        },
+        "1-oh6h4e6EA5hdmdh0ntoEcHS6Kih3eVN": {
+          "name": "Standard.zip",
+          "modified": "2026-07-22"
+        }
+      },
+      "baseline_note": "Seeded current Drive dates 2026-10-24; original modified dates were not saved with the 2026-10-18 downloads."
+    },
+    {
+      "name": "3DS game data",
+      "type": "manual",
+      "note": "Drive changes signal updates; obtain the new patch and dump/extract the romfs by hand, never fetch a ROM.",
+      "state": null
+    }
+  ]
+}

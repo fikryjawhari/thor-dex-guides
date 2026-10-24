@@ -1,0 +1,110 @@
+{
+  "sources": [
+    {
+      "name": "Documentation dates",
+      "type": "drive",
+      "id": "1T0WiSuU618qG397BHKhlJ6REEBbdIi_P",
+      "state": {
+        "1eNUGPCtqO2ZHTs815oo9cmZGzsG9t2U5": {
+          "name": "3DS Install Guide.pdf",
+          "modified": "2020-04-21"
+        },
+        "1xkpC52l8FMhHmRMVFA0yGT3RoZmWVNWv": {
+          "name": "Citra Install Guide.pdf",
+          "modified": "2020-10-25"
+        },
+        "1iAcOPtSugOoaKp91RATUWaRkBsuMxTvn": {
+          "name": "Evolution Changes.pdf",
+          "modified": "2019-12-23"
+        },
+        "1WdYatNEG2iIUg5Vn9EC3rDW-xHsntOx_": {
+          "name": "Important Trainer Parties, Insanity.pdf",
+          "modified": "2019-12-23"
+        },
+        "1JHq95ZhGiPj9MyPT3z9dJxhOBwzNyeUc": {
+          "name": "Important Trainer Parties, Legal Insanity.pdf",
+          "modified": "2019-12-23"
+        },
+        "1Y_MbWVn5hUIYv8N-BKEFMnU-f_oV7Uq-": {
+          "name": "Important Trainer Parties, Legal.pdf",
+          "modified": "2019-12-23"
+        },
+        "1xNjji5JHPIZvykMFuGBWixW-JaOlm3Fi": {
+          "name": "Important Trainer Parties, Rebalanced.pdf",
+          "modified": "2019-12-23"
+        },
+        "16ykLDdgfZHA_ZmbKQnUq9ZvAwtkXs49-": {
+          "name": "Item Changes _ Locations.pdf",
+          "modified": "2019-12-23"
+        },
+        "19Kbldk3Xy-It76zlBvF8KA540iE9NFsZ": {
+          "name": "Level Up Moves, Legal.txt",
+          "modified": "2020-07-23"
+        },
+        "1JkEhRUtoxuYZYb75nOgQSOd0UVXOEdnD": {
+          "name": "Level Up Moves, Rebalanced.txt",
+          "modified": "2021-06-20"
+        },
+        "1HyWps3r8AGsrVYLMU7076X3jwIY2AUbm": {
+          "name": "Move Changes.pdf",
+          "modified": "2019-12-23"
+        },
+        "1a83Lsu6zOCrJyb0Hd5YEbqzE7jHzXFyI": {
+          "name": "Pokemon Changes.pdf",
+          "modified": "2019-12-23"
+        },
+        "1AY7268wbNkLELfHpxLN9Y0PCHnOqbe9W": {
+          "name": "Wild Pokemon Locations.pdf",
+          "modified": "2021-04-26"
+        },
+        "1quJdOHSNF-9RKhmHjue8EafOxgq-Q_7p": {
+          "name": "XY AI Values, optional info.txt",
+          "modified": "2016-08-26"
+        }
+      },
+      "baseline_note": "Seeded current Drive dates 2026-10-24; original modified dates were not saved with the 2026-10-18 downloads."
+    },
+    {
+      "name": "Patch and changelog dates (romfs update signal)",
+      "type": "drive",
+      "id": "1K8KcX7E0f0H39TjQsUzk_mNb9_bMniL8",
+      "state": {
+        "10j_-m-Ppoqv1UDoAu4xo_LMelB1qPheM": {
+          "name": "3DS Install Guide.pdf",
+          "modified": "2020-04-21"
+        },
+        "1pE-VhmzCT21ALyKy7Vmhy47QZaM6kWZa": {
+          "name": "Changelog.txt",
+          "modified": "2021-04-26"
+        },
+        "1zYIxquTuTW-P9-tl6jzJWRMIOXDSb5ND": {
+          "name": "Citra Install Guide.pdf",
+          "modified": "2023-07-07"
+        },
+        "1oLGsfL4PS7jggtbiM-qtpP3z67ftRENI": {
+          "name": "Eternal X 2.67.zip",
+          "modified": "2023-07-07"
+        },
+        "101CvdIrLwKKTPyauSpn8rbnEOsJWxgu3": {
+          "name": "EXWY Online version.zip",
+          "modified": "2020-10-06"
+        },
+        "1F-sLHkQQM456cZPnEqrK2jTy-2vT848x": {
+          "name": "Stronger Gift Mon files.zip",
+          "modified": "2017-11-21"
+        },
+        "11jn1qw5QnNVoWVwrLOk87UheeJDPTTmk": {
+          "name": "Wilting Y 2.67.zip",
+          "modified": "2023-07-07"
+        }
+      },
+      "baseline_note": "Seeded current Drive dates 2026-10-24; original modified dates were not saved with the 2026-10-18 downloads."
+    },
+    {
+      "name": "3DS game data",
+      "type": "manual",
+      "note": "Drive changes signal updates; obtain the new patch and dump/extract the romfs by hand, never fetch a ROM.",
+      "state": null
+    }
+  ]
+}
