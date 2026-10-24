@@ -91,7 +91,10 @@ export function prepareRules(over = {}) {
 export function applyPhase(gen, phase, local, value) {
   const base = gen.guideContext;
   if (!base) return value;
-  const state = Object.assign(base.state, local?.state || {});
+  // The loop's hit counters are authoritative. Native functions can carry their own hit parameter
+  // (Gen 5 base-power modifiers default it to 1), which must not overwrite the current hit.
+  const {hit, hitCount, ...native} = local?.state || {};
+  const state = Object.assign(base.state, native);
   const context = {...base, ...local, state, value};
   context.atk = context.attacker || base.atk;
   context.def = context.defender || base.def;
