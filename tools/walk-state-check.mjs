@@ -5,7 +5,7 @@
 // in the old layout whose key the new data still carries (e.g. 1.8 Eternal X, 1.0 Photonic Sun against a build from
 // before the stop keys were stamped; 0.0 always exists). The same build on both sides also passes (old keys that are
 // not positions are read as the positions of the old layout), so a fresh baseline build against dist/ works too.
-// The synthetic migration cases at the top run on template/dex.js alone.
+// The synthetic cases at the top run on template/dex.js; each guide's all-stop cases run its built migration.
 import assert from 'node:assert/strict';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -90,6 +90,9 @@ try {
   for (const [before, after, legacyKey] of guides) for (const keyboard of [false, true]) {
     const readData = file => JSON.parse(readFileSync(file, 'utf8').match(/<script id="data" type="application\/json">([\s\S]*?)<\/script>/)[1]);
     const originalData = readData(before), updatedData = readData(after);
+    const updatedSource = readFileSync(after, 'utf8');
+    const updatedMigration = updatedSource.slice(updatedSource.indexOf('function migrateWalkState(){'), updatedSource.indexOf('\nmigrateWalkState();'));
+    assert(updatedMigration.startsWith('function migrateWalkState(){'), 'built migration function found');
     const identities=updatedData.WK.splits.flatMap((split,splitIndex)=>split.st.map((stop,stopIndex)=>stop.k));
     assert.equal(new Set(identities).size, identities.length, 'all walkthrough fragment identities must be unique');
     // An unstamped save (no layout) names stops by the keys the new data carries, minus .fN (the old positions);
@@ -110,7 +113,7 @@ try {
       let previousLayout;
       if (stamped) previousLayout = baselineState.layout = originalData.WK.splits.map((split, splitIndex) =>
         split.st.map((stop, stopIndex) => String(stop.k ?? (splitIndex + '.' + stopIndex)))); // the old build may have no keys
-      vm.runInNewContext('(' + migration + ')()', { ...context, WO: baselineState, D: updatedData });
+      vm.runInNewContext('(' + updatedMigration + ')()', { ...context, WO: baselineState, D: updatedData });
       updatedData.WK.splits.forEach((split, splitIndex) => split.st.forEach((stop, stopIndex) => {
         const position = splitIndex + '.' + stopIndex;
         const legacy = legacyOf(splitIndex, stopIndex, stop);
@@ -134,7 +137,7 @@ try {
       }));
       const laterData=JSON.parse(JSON.stringify(updatedData));
       laterData.WK.splits[0].st.push({k:'unrelated-stop',s:[],tr:[]});
-      vm.runInNewContext('(' + migration + ')()', { ...context, WO: baselineState, D: laterData });
+      vm.runInNewContext('(' + updatedMigration + ')()', { ...context, WO: baselineState, D: laterData });
       baselineState.layout.forEach((split,splitIndex)=>split.forEach((key,stopIndex)=>{
         if(!preferences.has(key))return;
         const position=splitIndex+'.'+stopIndex,expected=preferences.get(key);
