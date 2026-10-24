@@ -158,7 +158,8 @@ def drive_date(value, today):
         return today.date().isoformat()
     for pattern in ('%m/%d/%y', '%b %d, %Y', '%b %d'):
         try:
-            parsed = datetime.strptime(value, pattern)
+            dated = value + ' ' + str(today.year) if pattern == '%b %d' else value
+            parsed = datetime.strptime(dated, '%b %d %Y' if pattern == '%b %d' else pattern)
         except ValueError:
             continue
         if pattern == '%b %d':

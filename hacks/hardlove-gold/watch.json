@@ -5,6 +5,7 @@
       "type": "github",
       "repo": "kumakuma1/hardlove",
       "ref": "f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b",
+      "baseline_note": "Published 0.8.3 pin. The local snapshot still had 0.8.2 Trainers.c; its hash uses the reviewed 0.8.3 source, matching the guide's patched sets.",
       "paths": [
         "asm/include/items.inc",
         "asm/include/species.inc",
