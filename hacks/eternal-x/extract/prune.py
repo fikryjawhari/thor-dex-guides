@@ -1,5 +1,6 @@
 """Species kept in P: obtainable species and forms, plus the species shown trainers and partners use."""
 from common import report
+from extractlib import filter_species_links
 
 
 def build(data):
@@ -26,10 +27,8 @@ def build(data):
     kept = obtainable | used
     removed = [entry['id'] for entry in species if entry['id'] not in kept]
     data['P'] = [entry for entry in species if entry['id'] in kept]
+    filter_species_links(data['P'], kept)
     for entry in data['P']:
-        for field in ('et', 'ef'):
-            entry[field] = [edge for edge in entry[field] if edge[1] in kept]
-        entry['of'] = [target for target in entry['of'] if target in kept]
         if entry['id'] not in obtainable:
             if entry['g'] == 1:
                 entry['nu'] = 1
