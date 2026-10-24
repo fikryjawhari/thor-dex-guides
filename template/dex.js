@@ -555,7 +555,7 @@ const nextInner=()=>{const n=nextStep();return n?`<b>Next step</b><span>${esc(n.
 // Starter picker: pick guides choose TK.s; slot guides (the rival follows the starter caught in tracker area 0) pick
 // area 0's starter here, the same value as that area's tracker.
 function starterRow(){let sel='';
- if(PICK)sel=`<select class="tk-starter"><option value="">Not chosen (show all)</option>${STARTERS.map(s=>`<option ${TK.s===s?'selected':''}>${esc(s)}</option>`).join('')}</select>`;
+ if(PICK)sel=starterSel('tk-starter','Not chosen (show all)');
  else if(CF.starter==='slot'&&AR[0]&&!AR[0].ns){const cur=(TK.e[0]||{}).p||'';const g=[];(AR[0].l).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]==='Starter choice'&&!g.includes(p))g.push(p);}));
   sel=`<select class="wk-starter"><option value="">Not chosen</option>${(g.length?g:areaSpecies(0)).map(p=>`<option value="${p.id}" ${cur===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;}
  return (sel?`<div class="card strow"><span class="mut small">Starter</span>${sel}</div>`:'')+(PLAYER?`<div class="card strow"><span class="mut small">Player</span>${playerSel('tk-player','Not chosen (show all)')}</div>`:'');}
