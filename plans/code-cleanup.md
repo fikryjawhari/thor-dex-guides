@@ -268,6 +268,13 @@ orchestrator committed the uncommitted mockup-check switches as **WIP `3a7166c`*
   expect a small conflict with the text-zoom branch's renumbering). Live run: everything unchanged except EI (calc
   backup index) and SoulGold (six data files); left unaccepted for the user.
 
+**Last close-out step (user, 2026-10-24): remove the worker worktrees.** After every merge into `main` is done:
+`git worktree remove` + `git branch -D` for each `t3-*` worktree / `t3/*` branch and for `worktree-code-cleanup`,
+each only after confirming its commits are in `main` (by content where cherry-picked) or superseded (the stopped
+Sonnet G and text-zoom branches). None were pushed, so nothing on `origin`. Leave `worktree-damage-calc` (the calc
+session's) and any worktree with a live `.claude/claim`. Discard the stale uncommitted `plans/code-cleanup.md` edit
+in the main checkout. Then `git worktree prune`.
+
 **Models from the Codex reset (user, 2026-10-24):** every new worker on gpt-6.1-sol again (unit I, the update
 checker, any fix rounds); audits (H and later ones) on Haiku. G and the text-zoom fix finish on Sonnet as launched.
 No new worker before the reset (~15 min timer started at the request).
