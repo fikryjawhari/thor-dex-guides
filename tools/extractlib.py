@@ -121,12 +121,49 @@ def split_names(D):
             group['n'] = split_name(group['n'])
 
 
+def trainers_follow_walk(D):
+    """The Trainers page lists each box's trainers in walkthrough order (a trainer at its last walkthrough visit; one
+    the walkthrough doesn't place stays after the trainer before it). A place whose trainers the walkthrough meets apart
+    is listed at each (its header repeats); two places with the same header that end up side by side become one. Boxes
+    already in order are left as they are."""
+    pos, n = {}, 0
+    for split in D['WK']['splits']:
+        for stop in split['st']:
+            for k in stop.get('tr', []):
+                pos[k] = n
+                n += 1
+    moved = []
+    for group in D['TR']['g']:
+        rows, last = [], -1
+        for si, section in enumerate(group['sec']):
+            for trainer in section['tr']:
+                last = pos.get(trainer['k'], last)
+                rows.append((last, len(rows), si, trainer))
+        if not rows:
+            continue
+        rows.sort(key=lambda r: r[:2])
+        if [r[1] for r in rows] == list(range(len(rows))):
+            continue
+        out = []
+        same = lambda a, b: {k: v for k, v in a.items() if k != 'tr'} == {k: v for k, v in b.items() if k != 'tr'}
+        for _, _, si, trainer in rows:
+            if not out or out[-1][0] != si and not same(out[-1][1], group['sec'][si]):
+                out.append((si, dict(group['sec'][si], tr=[])))
+            out[-1][1]['tr'].append(trainer)
+        empty = [s for s in group['sec'] if not s['tr']]
+        group['sec'] = [s for _, s in out] + empty
+        moved.append(group['n'])
+    if moved:
+        report('trainers put in walkthrough order:', ', '.join(moved))
+
+
 def finalise(D, hack, prune=None):
-    """The end of every build: Items standard (tools/itemstd.py), the hack's species prune, shared split names, the data
-    schema (tools/schema.py: dead fields dropped, stop keys, key order). Idempotent."""
+    """The end of every build: Items standard (tools/itemstd.py), the hack's species prune, Trainers page in walkthrough
+    order, shared split names, the data schema (tools/schema.py: dead fields dropped, stop keys, key order). Idempotent."""
     itemstd.standardise(D, itemstd.RULES[hack], report)    # plans/items-standard.md
     if prune:
         prune(D)
+    trainers_follow_walk(D)
     split_names(D)
     schema.standardise(D)
 

@@ -65,7 +65,7 @@ CAPS = [(2, "Hau'oli City", 'Captain Ilima', 52, 'trial'), (3, 'Verdant Cavern',
         (19, 'Route 15', 'Plumeria', 'Plumeria', 'mini'), (20, 'Po Town', 'Guzma', 'Guzma', 'mini'),
         (20, 'Route 15', 'Gladion', 'Gladion', 'mini'), (20, 'Malie City', 'Kahuna Nanu', 154, 'trial'),
         (21, 'Aether Paradise', 'Lusamine', 131, 'mini'), (24, 'Vast Poni Canyon', 'Ultra Recon Squad Dulse', 501, 'mini'),
-        (24, 'Vast Poni Canyon', 'Totem Kommo-o', -92, 'trial'), (25, 'Megalo Tower', 'Ultra Necrozma', -100, 'mini'),
+        (24, 'Vast Poni Canyon', 'Totem Kommo-o', -92, 'trial'), (25, 'Megalo Tower', 'Ultra Necrozma', -95, 'mini'),
         (26, "Mina's trial", 'Totem Ribombee', -95, 'trial'), (26, 'Exeggutor Island (Revisited)', 'Kahuna Hapu', 497, 'trial'),
         (27, 'Mount Lanakila', 'Gladion', 'Gladion', 'mini'), (28, 'The Pokémon League', 'Elite Four and Champion', -100, 'trial')]
 STARTERS = ('Rowlet', 'Litten', 'Popplio')

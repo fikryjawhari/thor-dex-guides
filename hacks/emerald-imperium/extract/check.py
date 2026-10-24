@@ -75,17 +75,20 @@ def main():
     for group in expected_trainers['g']:
         if group.get('cap') == 85:
             group['n'] = 'Elite Four Split [Cap 85]'
-    assert after['TR'] == expected_trainers
+    extractlib.trainers_follow_walk({'WK': after['WK'], 'TR': expected_trainers})
+    assert after['TR'] == expected_trainers, 'Trainers: the baseline in walkthrough order'
     assert [split['n'] for split in after['WK']['splits']] == [
-        group['n'] for group in after['TR']['g'] if group.get('cap')], 'Walkthrough splits are the trainer cap boxes'
+        group['n'] for group in after['TR']['g']], 'Walkthrough splits are the trainer boxes'
     old_stops = {stop['k']: stop for split in before['WK']['splits'] for stop in split['st']}
     new_stops = {stop['k']: stop for split in after['WK']['splits'] for stop in split['st']}
     assert {key.split('.f', 1)[0] for key in new_stops} == set(old_stops), 'Every walkthrough stop key is kept'
     for key, old_stop in old_stops.items():
-        assert {k: v for k, v in old_stop.items() if k not in ('it', 'tr')} == {
-            k: v for k, v in new_stops[key].items() if k not in ('it', 'tr')}, key
-        parts = [new_stops[key]['tr']] + [stop['tr'] for k, stop in new_stops.items() if k.startswith(key + '.f')]
-        assert sum(parts, []) == old_stop['tr'], key
+        assert new_stops[key]['n'].startswith(old_stop['n']), key     # Hot House parts take their badge section's name
+        assert {k: v for k, v in old_stop.items() if k not in ('n', 'it', 'tr')} == {
+            k: v for k, v in new_stops[key].items() if k not in ('n', 'it', 'tr')}, key
+    old_tr = [k for stop in old_stops.values() for k in stop['tr']]
+    new_tr = [k for stop in new_stops.values() for k in stop['tr']]
+    assert sorted(old_tr) == sorted(new_tr), 'Every trainer stays in the walkthrough once'
     mega_sections = {section['n'] for section in after['IT'] if section['k'] == 'mega'}
     standard = deepcopy(before)      # items and walkthrough item rows are expected in the Items standard (tools/itemstd.py)
     itemstd.standardise(standard, itemstd.RULES['emerald-imperium'])

@@ -270,7 +270,7 @@ def split(D):
     def place(sec, h, t):
         if not sec or sec[-1]['h'] != h: sec.append({'h': h, 'tr': []})
         sec[-1]['tr'].append(t)
-    MOVE = {('Gardenia', 20): (34, 'Mauville City')}   # (name, sheet cap): (new cap, goes before the first trainer at)
+    MOVE = {('Gardenia', 20): (34, 'Mauville City')}   # (name, sheet cap): (new cap, goes before the first trainer at; the walkthrough follows: walk.name_splits)
     moved = []
     for g in D['TR']['g']:
         for s in g['sec']:

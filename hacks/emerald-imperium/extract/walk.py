@@ -93,47 +93,70 @@ def build(D):
     report('walkthrough: unplaced', [(x[0], x[1], x[2][:50]) for x in nop[:15]])
 
 def name_splits(D):
-    """The page's nine gym splits become the Trainers page's level cap splits (one per cap box, same names), like the
-    other guides. Stops keep the key of their place in the nine (dex.js migrateWalkState carries saved ticks and open
-    state over); a stop whose trainers span two caps is cut in two, the second part keyed '<key>.f1' with only its
-    trainers. A stop goes with its trainers' cap box; a trainer from a box further ahead than the next one (Gardenia at
-    Rustboro, the Hot House) stays with the stop's current split. Stops with no trainers stay in the current split, which
-    moves on after a box's last trainer and never goes back (Roark after Tate & Liza joins their split, the stops after
-    him the next). Each split note goes to the first new split starting inside its old split.
-    Idempotent."""
-    W, G = D['WK'], [g for g in D['TR']['g'] if g.get('cap')]
+    """The page's nine gym splits become the Trainers page's boxes, same names and order (one split per level cap, plus
+    the optional Hot House where its box sits), like the other guides. Stops keep the key of their place in the nine
+    (dex.js migrateWalkState carries saved ticks and open state over); a stop whose trainers span two boxes is cut, the
+    later parts keyed '<key>.f1'... with only their trainers. A stop goes with its trainers' box; a trainer from a cap box
+    further ahead than the next one stays with the stop's current split. The Hot House stop goes to the Hot House split,
+    one part per badge section, named like it. Stops with no trainers stay in the current split, which moves on after a
+    cap box's last trainer and never goes back (Roark after Tate & Liza joins their split, the stops after him the
+    next). Each split note goes to the first new split starting inside its old split. Idempotent."""
+    W, G = D['WK'], D['TR']['g']
     names = [g['n'] for g in G]
     if [s['n'] for s in W['splits']] == names:
         return
     if len(W['splits']) != len(GYMS):
         raise ValueError('Expected nine gym/league walkthrough splits')
-    box = {t['k']: i for i, g in enumerate(G) for s in g['sec'] for t in s['tr']}
-    ends = {g['sec'][-1]['tr'][-1]['k']: i for i, g in enumerate(G)}
+    caps = [i for i, g in enumerate(G) if g.get('cap')]
+    nxt = dict(zip(caps, caps[1:]))
+    # A trainer the page meets before the previous cap box is done (Gardenia: "fight her at any time", the Trainers page
+    # puts her in Wattson's box) moves to the stop of the trainer after them in their box, just before them.
+    stops = [st for sp in W['splits'] for st in sp['st']]
+    at = {k: i for i, st in enumerate(stops) for k in st['tr']}
+    for p, i in zip(caps, caps[1:]):
+        ks = [t['k'] for s in G[i]['sec'] for t in s['tr']]
+        done = max(at[t['k']] for s in G[p]['sec'] for t in s['tr'])
+        for n in range(len(ks) - 1):
+            k = ks[n]
+            if at[k] < done:
+                stops[at[k]]['tr'].remove(k)
+                nx = stops[at[ks[n + 1]]]['tr']
+                nx.insert(nx.index(ks[n + 1]), k)
+                at[k] = at[ks[n + 1]]
+                report('walkthrough: moved into its box', k, '->', stops[at[k]]['n'])
+    where = {t['k']: (i, j) for i, g in enumerate(G) for j, s in enumerate(g['sec']) for t in s['tr']}
+    ends = {g['sec'][-1]['tr'][-1]['k']: i for i, g in enumerate(G) if g.get('cap')}
     out = [{'n': n, 'st': []} for n in names]
-    cur, first = 0, {}
+    cur, first = caps[0], {}
     for si, split in enumerate(W['splits']):
         for ti, stop in enumerate(split['st']):
             stop.setdefault('k', f'{si}.{ti}')
             parts = []
             for k in stop['tr']:
-                b = box.get(k, cur)
-                if b > cur + 1:
-                    b = cur
-                if not parts or parts[-1][0] != b:
-                    parts.append((b, []))
+                b, j = where[k]
+                if G[b].get('cap'):
+                    j = None
+                    if b > cur and b != nxt.get(cur):
+                        b = cur
+                if not parts or parts[-1][0] != (b, j):
+                    parts.append(((b, j), []))
                 parts[-1][1].append(k)
-            for j, (b, ks) in enumerate(parts or [(cur, [])]):
+            for n, ((b, j), ks) in enumerate(parts or [((cur, None), [])]):
                 part = dict(stop, tr=ks)
-                if j:
-                    part.update(k=f"{stop['k']}.f{j}", a=[], s=[], it=[])
+                if n:
+                    part.update(k=f"{stop['k']}.f{n}", a=[], s=[], it=[])
                     part.pop('note', None)
                     part.pop('x', None)
+                if j is not None:
+                    part['n'] = G[b]['sec'][j]['h']
                 if not out[b]['st']:
                     first[b] = si
                 out[b]['st'].append(part)
-                cur = max(cur, b)
-                if any(k in ends for k in ks):
-                    cur = max(cur, min(max(ends[k] for k in ks if k in ends) + 1, len(out) - 1))
+                if G[b].get('cap'):
+                    cur = max(cur, b)
+                for k in ks:
+                    if k in ends:
+                        cur = max(cur, nxt.get(ends[k], ends[k]))
     lost = [n for n in out if not n['st']]
     if lost:
         raise ValueError(f'Empty walkthrough splits: {[n["n"] for n in lost]}')
@@ -141,4 +164,4 @@ def name_splits(D):
         if split.get('note'):
             out[min(b for b, s in first.items() if s == si)]['note'] = split['note']
     W['splits'] = out
-    report('walkthrough splits by cap:', ', '.join(f"{s['n']} {len(s['st'])}" for s in out))
+    report('walkthrough splits = trainer boxes:', ', '.join(f"{s['n']} {len(s['st'])}" for s in out))

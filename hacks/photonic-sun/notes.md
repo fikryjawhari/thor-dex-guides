@@ -90,8 +90,8 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   Mega stone holder is shown as its Mega with a0 = the base ability. Bag items are a note. CHAPTERS is a placement /
   keying scaffold only: trainer keys are assigned by it, then sections and trainer runs are regrouped by cap without
   renumbering. Episode RR keeps its rooms; all other post-game sections share the final Post-game box.
-- **Level caps** (CAPS in trainers.py): one list including all mini caps, except Dexio (Heahea) and Battle Royal. Equal,
-  decreasing and immediately adjacent caps stay, including Ultra Necrozma 100 before Ribombee 95. Totem levels come from
+- **Level caps** (CAPS in trainers.py): one list including all mini caps, except Dexio (Heahea) and Battle Royal. Equal
+  and immediately adjacent caps stay. Ultra Necrozma is 95 (was 100, the user 2026-10-24), so caps never go down. Totem levels come from
   Totem Battles.pdf. Each place shows its next cap and the battles left before it: one per battle (t.bt), one starter's
   rival fight, no optional places, Kantonian Gym, Battle Buffet or Prismatic Moon teams. Route trainers you can walk
   around all count: no source marks them (Bulbapedia's walkthrough and location pages don't, Serebii doesn't), so there's
@@ -164,6 +164,8 @@ keys and teams, all 73 area indices and indexed tables, the species kept, the le
 
 ## History
 
+- **2026-10-24, Ultra Necrozma cap 95** (was 100; `CAPS` in trainers.py). `.src/dex-rebalanced.json` regenerated with
+  `ctr_dex.py` (SOURCES.md) first: the raw build now reproduces the published data.json exactly.
 - **2026-10-23, Items standard.** `tools/itemstd.py` (shared, idempotent; run by `finalise()`) puts Items in the shared
   box set (rules: `itemstd.RULES['photonic-sun']`; `python -I tools/itemstd.py photonic-sun` on a published data.json).
   TMs -> TMs and HMs (no HMs: TMs sub-heading only); Z-Crystals text is `Found:` lines; Silvally Memories, Genesect

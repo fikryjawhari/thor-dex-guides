@@ -142,7 +142,9 @@ earlier data.json, that species order, move / ability tables, area names, traine
 ## History
 
 - **2026-10-24, Starter box first.** `locs.starter` writes `ARO`: the Starter area first on the Locations page, like the
-  other guides (area indices unchanged). Template, same day: a Trainers place's button shows its box's cap, `n/N | cap`.
+  other guides (area indices unchanged). The Morty box lists its places in walkthrough order (Route 37, Ecruteak City
+  Theater, Burned Tower, Route 38, Gym; shared finaliser `trainers_follow_walk`). Template, same day: a Trainers place's
+  button shows its box's cap, `n/N | cap`.
 - **2026-10-23, Items standard.** `tools/itemstd.py` (shared, idempotent; run by `finalise()`) puts Items in the shared
   box set (rules: `itemstd.RULES['hardlove-gold']`, the `Other` box mapped in `HG_OTHER`). Held Items classes renamed (Type
   boosting -> Type boosters, Battle -> Battle gear, Consumable -> One-use items); the four evolution items (Metal Coat,
