@@ -14,7 +14,9 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
   consistency pass (2026-10-24) and the walkthrough / Trainers agreement (2026-10-24: walkthrough splits = Trainers
   boxes, same order, caps never go down, `tools/tabs_check.py`). Audits passed headless; the user approved the phone
   previews.
-- No branches or worktrees open.
+- Open branch: `worktree-damage-calc` (decide session done 2026-10-24: UI spec in `plans/damage-calc.md`, interactive mockup in
+  `plans/damage-calc-mockup/`; not merged, not yet pushed to `origin`; no template or extract changes on it). The build
+  session (Opus) starts from it.
 - **Shipping a guide update:** push `main`, wait for the Pages Action, then on the Thor long-press the guide → Update
   from link. Same library id, so saved state (tracker, ticks, calc) is kept.
 - The other eight hacks in `hacks/` have sources compiled (`SOURCES.md`; complete `.src/` on the PC, checked
@@ -25,9 +27,10 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
 
 1. **Test on the Thor.** Nothing since the consistency pass has been on the device (EI and HG were last checked there
    2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs).
-2. **Damage calc with save import** (`plans/damage-calc.md`): `@smogon/calc` (MIT) as the engine, our own save readers
+2. **Damage calc with save import** (`plans/damage-calc.md`; **UI spec and mockup are done**, build is next, on `worktree-damage-calc`;
+   see its Order): `@smogon/calc` (MIT) as the engine, our own save readers
    (Gen 3, 4/5, 6/7) written from format notes, never from hzla's unlicensed code; each hack's extract writes its game
-   ID tables. Also needs the app's file picker (app repo). PokeDaisy (GPLv3) is read-only reference. Not started.
+   ID tables. Also needs the app's file picker (app repo). PokeDaisy (GPLv3) is read-only reference. Build not started.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
    calc as a reference once the calc exists. Agreed, not done.
