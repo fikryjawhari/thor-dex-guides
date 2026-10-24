@@ -241,7 +241,27 @@ Path `C:\Users\fikry\.t3\worktrees\thor-dex-guides\worktree-code-cleanup` (T3 th
 | E [11] [10] | verified | `4850b90` (ff: `27c6926` [11], `0f557ea` + `4850b90` [10]) | gpt-6.1-sol, task `cleanup-unit-E-r1`, branch `t3/shared-3ds-extract-helpers`, `C:\Users\fikry\.t3\worktrees\thor-dex-guides\t3-2f66f4f4` | `extractlib.filter_species_links`, `ctrguide.walk_same` / `walk_stops`; +70/−100. EX/PS data + reports byte-identical (stamps too), check.py, tabs 0 problems. HTML equals baseline once unit A's template is substituted. Logs: that worktree's `.tmp/unitE/SUMMARY.md` | — |
 | F [12] [07] [06] [13] [14] [15] [08 minus node] | in progress | — | gpt-6.1-sol, task `cleanup-unit-F-r1` | — | Review, merge. |
 | G [05] | pending | — | — | **Pre-existing:** `walk-state-check.mjs <old> <new> 0.0` fails at base too (EX `tick 2.0`, PS `tick 1.3`, `undefined !== 1` at line 131; identical on baseline-vs-baseline). Not a cleanup regression. | Diagnose and fix the check (or its invocation) in G, before refactoring it. |
-| H final audit | pending | — | — | — | — |
+| I standard-work tooling (added 2026-10-24, user approved) | pending | — | — | — | After G (builds on `tools/browser.mjs`); spec below. |
+| H final audit | pending | — | — | — | Runs on `gate.py` from I. |
+
+**Unit I scope** (user approved 2026-10-24; touches `tools/`, `.agents/`, docs only, no template):
+1. `tools/gate.py`: `baseline [ref]` builds every guide at a git ref (default `main`) into `.tmp/baseline/`
+   (dist, data.json, report.txt); `check [hacks] [--data] [--template]` rebuilds each hack by its reproducible path
+   (EX/PS raw, HG `--published`, EI `itemstd.py`; the table lives in the script), compares data ignoring `built`,
+   prints data counts (species, trainers, items, stops) against the baseline, runs `assemble.py`, domcompare per guide
+   normal + `--kb` strictly one at a time, consistency, tabs, walk-state, and every scenario in `tools/scenarios/`;
+   one pass/fail line per check, logs in `.tmp/gate/`. Replaces `.tmp/cleanup-baseline/datacmp.py`.
+2. `tools/scenarios/`: spec checks as small scripts on `tools/browser.mjs` (seeded state, clicks, assertions); the
+   existing pagecheck / walkcheck / jumpcheck runs become the first entries or are called from there.
+3. Worktree setup: `tools/worktree_setup.py` (claim, `uv sync`, `.src/` linked to the main checkout instead of
+   copied); wire it as the T3 project setup script if T3 allows.
+4. `.agents/references/worker-brief.md`: the standard delegated-worker brief (setup, read-only worktrees, gates,
+   commits, report format), so a task only adds its findings / files / checks.
+5. `preview.py --frame` (Thor frame + phone preview in one command).
+6. Spec skeleton in the workflow docs (What changes / out of scope; each control in every state; edge cases; checks
+   as `tools/scenarios/` entries) and a big-job reference (units table, ledger, quota recovery) from this plan.
+Not in I: the new-guide scaffold (`tools/new_hack.py`), built at the first new guide; the "write a family's first
+guide with its sibling in mind" habit, proposed as a CLAUDE.md line at handover.
 
 ## Findings
 
