@@ -92,6 +92,7 @@ export function applyPhase(gen, phase, local, value) {
   const context = {...base, ...local, state, value};
   context.atk = context.attacker || base.atk;
   context.def = context.defender || base.def;
+  if (local?.desc) base.desc = local.desc;
   if (phase === 'afterMoveType') base.move = context.move;
   for (const rule of gen.guideRules?.[phase] || []) {
     if (rule.when !== undefined && !expression(rule.when, context)) continue;

@@ -5,7 +5,6 @@ import {Field} from '@smogon/calc/src/field';
 import {calculateDPP} from '@smogon/calc/src/mechanics/gen4';
 import {calculateBWXY} from '@smogon/calc/src/mechanics/gen56';
 import {calculateSMSSSV} from '@smogon/calc/src/mechanics/gen789';
-import {getMoveEffectiveness} from '@smogon/calc/src/mechanics/util';
 import {applyPhase, prepareRules} from './rules.js';
 
 const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
@@ -240,7 +239,7 @@ function calc(atk, def, slot, values = {}) {
   const calculate = profile.gen === 4 ? calculateDPP : profile.gen <= 6 ? calculateBWXY : calculateSMSSSV;
   const result = calculate(generation, attacker, defender, move, field);
   const normalise = damage => typeof damage === 'number' ? Array(16).fill(damage) : [...damage];
-  let per = Array.isArray(result.damage) && (Array.isArray(result.damage[0]) || result.damage.length === 2)
+  const per = Array.isArray(result.damage) && (Array.isArray(result.damage[0]) || result.damage.length === 2)
     ? result.damage.map(normalise) : Array.from({length: hits}, () => normalise(result.damage));
   if (!per.every(rolls => rolls.length === 16 && rolls.every(value => Number.isInteger(value) && value >= 0))) {
     throw new Error(`DMG: invalid damage rolls for ${name}`);
