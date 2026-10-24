@@ -1,6 +1,6 @@
-const phases = new Set(['beforeStats', 'afterMoveType', 'effectiveness', 'critical', 'turnOrder',
+const phases = new Set(['hits', 'beforeStats', 'afterMoveType', 'effectiveness', 'critical', 'turnOrder',
   'movePower', 'powerMods', 'attackMods', 'defenseMods', 'attack', 'defense',
-  'beforeWeather', 'baseDamage', 'finalMods', 'beforeRolls', 'roll']);
+  'hitBaseDamage', 'beforeWeather', 'baseDamage', 'finalMods', 'beforeRolls', 'roll']);
 const forbidden = new Set(['__proto__', 'prototype', 'constructor', 'gen']);
 const writeRoots = new Set(['atk', 'def', 'move', 'field', 'state', 'desc', 'value']);
 
