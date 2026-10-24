@@ -454,6 +454,21 @@ await test('frostbite-style status halves special rolls only, after type effecti
   assert.deepEqual(physical.rolls, withOverrides({}, slot('Tackle'), set('Snorlax'), set('Blastoise'), profile).rolls);
 });
 
+await test('hit rules reproduce the native Parental Bond second hit (0.25, half down)', () => {
+  const attacker = set('Snorlax', {ab: ability('Parental Bond')});
+  const hitsOf = result => result.per || Array.from({length: result.hits}, () => result.rolls);
+  const native = withOverrides({}, slot('Tackle'), attacker);
+  const ruled = withOverrides({abilities: {'Parental Bond': {effect: ''}}, rules: [
+    {phase: 'hits', when: operation('and', operation('eq', ref('names.atkAbility'), 'Parental Bond'),
+      operation('eq', ref('value'), 1)), value: 2},
+    {phase: 'hitBaseDamage', when: operation('and', operation('eq', ref('names.atkAbility'), 'Parental Bond'),
+      operation('gte', ref('state.hit'), 2)), value: operation('floor', operation('div',
+      operation('add', operation('mul', ref('value'), 1024), 2047), 4096))},
+  ]}, slot('Tackle'), attacker);
+  assert.equal(ruled.hits, 2);
+  assert.deepEqual(hitsOf(ruled), hitsOf(native));
+});
+
 await test('a hit-count rule that returns a non-number fails explicitly', () => {
   engine.init(data, {...structuredClone(profiles.expansion), over: {rules: [{phase: 'hits', value: operation('mul', ref('value'), 'x')}]}});
   assert.throws(() => engine.calc(set('Charizard'), set('Blastoise'), slot('Tackle'), {}), /hit count must be a number/);

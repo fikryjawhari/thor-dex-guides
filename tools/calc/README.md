@@ -119,6 +119,10 @@ override entries use **display names**, except species may use their guide ID:
   `effect: ""` disables a named ability/item/move effect. Unknown moves already
   behave as plain attacks. New effects use the declarative rules below, never
   JavaScript embedded in JSON. Guide display labels and IDs remain unchanged.
+  An alias takes the engine record of its target name, so do not alias a move to
+  a name another guide move already uses (EI's Draco Barrage and its own Shell
+  Side Arm would share one record, and Smogon's merge leaks flags between them).
+  Express that move's behaviour with a rule on `names.*` instead.
 - `status` maps declared profile status keys to upstream status keys. Only
   statuses present in `profile.status` are accepted.
 - `critStages` is reserved metadata for a future crit-probability control; the
@@ -172,6 +176,7 @@ type change, or `value: false` at `critical` to suppress a selected critical hit
 
 | Phase | `value` and placement |
 | --- | --- |
+| `hits` | Integer hit count, once per calculation, after the requested or default count and before final-stat preparation. Rules may change it (a Parental Bond-like extra punch); the result is clamped to 1-10 and a non-number throws. `state.hits` follows it. |
 | `beforeStats` | Mutation only, before native final-stat preparation; edit boosts, status, effects or field flags here. |
 | `afterMoveType` | Mutation only, after native initial move-type changes. |
 | `effectiveness` | Scalar for each defender type; `state.effectivenessType` identifies that type. Runs before native immunity exits. |
@@ -183,6 +188,7 @@ type change, or `value: false` at `critical` to suppress a selected critical hit
 | `defenseMods` | Native defending-stat modifier list, before chaining. |
 | `attack` | Scalar attacking stat after native modifiers. |
 | `defense` | Scalar defending stat after native modifiers. |
+| `hitBaseDamage` | Scalar base damage for each hit, after the native base damage and the spread step, before Parental Bond (Child), weather and crit. Hit-aware: `state.hit` is 1 for the first hit. Rules own rounding; `floor(value * 0.5)` is EI's half-down for ×0.5. Gen 4 sees the value before its `+2` constant, which Smogon adds with its final modifiers, so a Gen 4 rule halves 15 (not 17) to get 7 + 2. |
 | `beforeWeather` | Mutation only, immediately before weather's damage adjustment. |
 | `baseDamage` | Scalar at the end of native base-damage processing, including critical rounding. |
 | `finalMods` | Native final-damage modifier list before chaining. |
@@ -230,10 +236,14 @@ Paths are dot-separated, including array indices. Available roots:
 - `mechanics`: numeric profile generation. `meta` contains `atkItem`, `defItem`
   and `move` metadata, including profile-added properties for classification.
 - `state`: mutable scratch data per calculation; `hit` is 1-based, `hitCount`
-  is 0-based, `hits` is the selected count, `originalPower` is supplied power.
-  Phase-dependent keys include `isCritical`, `basePower`, `typeEffectiveness`,
-  `effectivenessType`, `hitsPhysical`, `rollIndex`. Do not assume every key is
-  available in every phase. Scratch state survives between hits, not matchups.
+  is 0-based, `hits` is the count after the `hits` phase, `originalPower` is
+  supplied power. Phase-dependent keys include `isCritical`, `basePower`,
+  `typeEffectiveness`, `effectivenessType`, `hitsPhysical`, `rollIndex`. Do not
+  assume every key is available in every phase. Scratch state survives between
+  hits, not matchups. The loop's `hit`/`hitCount` are authoritative: a native
+  function's own parameter of the same name (Gen 5 base-power modifiers default
+  `hit` to 1) does not overwrite them. A rule can set a flag at `hits` and read
+  it later, which is how the ORA rule keeps the second hit to single-strike moves.
 - `value`: the current phase value.
 
 Writable roots for `set` are `atk`, `def`, `move`, `field`, `state`, `desc`,
@@ -296,6 +306,10 @@ reference before marking a hack verified.
 | Final modifier hooks (`finalMods`) | `finalMods` rule array, native chaining in modern generations. |
 | Before-final-damage hooks (`beforeFinalDamage`) | `beforeRolls` object's damage/STAB/burn/effectiveness inputs; `roll` for final per-roll operations. |
 | Hit-index effects and damage arrays | `state.hit` / `hitCount` plus phase rules; additive result `per` preserves different distributions. |
+| Extra hits from an ability (Parental Bond-like, ORAORAORAORA!) | `hits` rule sets the count (with a flag if the extra hit depends on the move); `hitBaseDamage` rule scales the base damage for `state.hit >= 2`. Tested against the native Parental Bond second hit. |
+| Per-type immunity bypass (Draco Barrage ignores Fairy) | `effectiveness` rule on `state.effectivenessType`, returning 1 where the value was 0. |
+| Best of physical or special (Shell Side Arm-like) | `beforeStats` rule setting `move.category` from the staged Atk/SpA against Def/SpD ratios. Ties go to Special here; the source randomises them. |
+| Frostbite-style special halving | `beforeRolls` rule setting `value.isBurned` for the attacker's status and move category. The burn input halves after type effectiveness, as the source does. |
 | Global/UI-only field options | Declare `{k,l,type,o,side,to}` in profile `field`; consume via `field`/`input.field`, never DOM/global reads. |
 | Utility arithmetic and helper tests | Declarative expression operators; expand named helper behaviour into independently authored data expressions. |
 
@@ -377,11 +391,15 @@ against a specific hack's local hzla calculator remains a per-hack audit.
 - Clean `npm ci --prefix tools/calc --ignore-scripts`: 6 packages audited,
   zero reported vulnerabilities.
 - `node tools/calc/build.mjs` twice: identical SHA-256
-  `413672727f4d82acb41d39671f300a466a7b489abb8cb9a45e6e208e56e45a47`.
-- `node tools/calc/test.mjs`: **75 passed, 0 failed**, including 41 direct
-  Smogon parity matchups. Synthetic overrides exercise every exposed phase.
-- Bundle: **374,822 bytes**, **88,240 bytes gzip**. Fallback metadata dominates
-  (249,186 attributed bytes); modern mechanics are next (32,296 bytes).
+  `009b0e716cf416c67e5a888e73948aefafc9ccf45780aceb38bb08e405e031c3`.
+- `node tools/calc/test.mjs`: **81 passed, 0 failed**, including 41 direct
+  Smogon parity matchups. Synthetic overrides exercise every exposed phase; the
+  hit-phase tests use hand-checked rolls (base 17, Gen 4 base 15 before its +2)
+  and the Parental Bond equivalence.
+- Bundle: **375,315 bytes**, **88,389 bytes gzip** (the hit phases add 493 bytes).
+  Fallback metadata dominates (249,186 attributed bytes); modern mechanics are next.
+- Emerald Imperium against the pinned hzla oracle: **39/39** matches, no known
+  differences (`hacks/emerald-imperium/notes.md` → Damage calc).
 - `python assemble.py`: all four guides built; assembly needs no npm packages.
   Browser/Thor sweeps are deliberately deferred to integration, not claimed here.
 
