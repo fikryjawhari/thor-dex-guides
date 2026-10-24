@@ -42,7 +42,7 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - `sprites/` the shared sprite set (pokeemerald-expansion, 64×64, `png/<key>.png`; README has the key scheme,
   SOURCES.md the pin and credits).
 - `tools/` source fetchers, extract helpers and checks (README), `mockup/` (the Thor frame and the page behaviour
-  checks). `plans/` work not done yet only (now: the damage calc and the code cleanup).
+  checks). `plans/` work not done yet only (now: the damage calc).
 - `dist/` built output (git-ignored); the Pages workflow builds and deploys it.
 
 ## Commands
@@ -63,6 +63,8 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
    for its quirks. What the template shows when the data has it: `template/README.md` → What the data switches on.
    For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences); 3DS hacks take
    the game data over the docs ("Doc says ...").
+   Hacks come in families (PROGRESS.md → Hack families): reuse the family's shared code (3DS: `tools/ctrguide.py`),
+   write a family's first guide so its siblings can reuse it, and lift the shared part out when the second one comes.
 3. `hacks/<hack>/hack.json`: copy an existing one; new localStorage prefix in `cfg.ls`, the hack's wording in
    `cfg.txt`, feature switches. `notes.md`: the same headings as the existing ones (Build, Sources and rules, Local storage, Hack-only data, Checks,
    History); `SOURCES.md` likewise (Files, Re-fetch, Game files, Source checks). Add `extract/check.py`. Add the

@@ -14,7 +14,19 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
   consistency pass (2026-10-24) and the walkthrough / Trainers agreement (2026-10-24: walkthrough splits = Trainers
   boxes, same order, caps never go down, `tools/tabs_check.py`). Audits passed headless; the user approved the phone
   previews.
-- No branches or worktrees open.
+- Done and merged 2026-10-24 (data byte-identical and pages DOM-identical where nothing was meant to change):
+  - **Code cleanup:** dead template code out, shared 3DS extract code in `tools/ctrguide.py` (dex conversion,
+    trainer matching, walkthrough stops) and `tools/wikitext.py`, shared `tools/browser.mjs` for every browser check;
+    domcompare's EI `--kb` flake and the walk-state check (stale fixtures, checked the wrong migration) fixed.
+  - **Text zoom vs collapse bars:** a ResizeObserver on `#app` rechecks the bars (`tools/mockup/zoomcheck.mjs`).
+  - **Update checker:** `tools/check_updates.py` + `hacks/<hack>/watch.json` for all twelve hacks.
+  - **Standard tooling:** `tools/gate.py` (baseline + every check in one command), `tools/scenarios/`,
+    `tools/worktree_setup.py` (claim, `uv sync`, `.src/` junctions to the main checkout), `preview.py --frame`, and
+    `.agents/references/` (worker brief, spec skeleton, big-job ledger).
+- Open elsewhere: `worktree-damage-calc` (the calc decide session).
+- **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
+  3DS (done: `ctrguide.py`; next Meissa Moon, Navy Sapphire), pokeemerald-expansion (Emerald Imperium, SoulGold),
+  CFRU (Radical Red, Unbound), NDS (Hardlove Gold built; Renegade Platinum, Blaze Black 2 Redux, HeartGold Retiled).
 - **Shipping a guide update:** push `main`, wait for the Pages Action, then on the Thor long-press the guide → Update
   from link. Same library id, so saved state (tracker, ticks, calc) is kept.
 - The other eight hacks in `hacks/` have sources compiled (`SOURCES.md`; complete `.src/` on the PC, checked
@@ -24,16 +36,25 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
 ## Open, in order
 
 1. **Test on the Thor.** Nothing since the consistency pass has been on the device (EI and HG were last checked there
-   2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs).
+   2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
+   text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
 2. **Damage calc with save import** (`plans/damage-calc.md`): `@smogon/calc` (MIT) as the engine, our own save readers
    (Gen 3, 4/5, 6/7) written from format notes, never from hzla's unlicensed code; each hack's extract writes its game
-   ID tables. Also needs the app's file picker (app repo). PokeDaisy (GPLv3) is read-only reference. Not started.
+   ID tables. Also needs the app's file picker (app repo). PokeDaisy (GPLv3) is read-only reference. Decide session
+   running (`worktree-damage-calc`). The Gen 3 reader must cover pokeemerald-expansion and CFRU saves. `domcompare`
+   skips `#/calc` today: add it to its routes when the calc page is built.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
    calc as a reference once the calc exists. Agreed, not done.
 4. **Skill:** the repo copy (`.agents/skills/rom-hack-offline-dex/`) is current; the claude.ai account skill Claude
    sessions load is the 2026-10-18 hand-build version. Re-upload the repo copy (zip with forward-slash paths).
-5. **Code cleanup** (`plans/code-cleanup.md`): a quality pass (dead code, repeated logic into shared helpers), for a Codex session. Phase 1 is a read-only findings list.
+5. **T3 worktree setup hook** (the user, in T3's project settings; sessions can't change them): a project script
+   `python -I tools/worktree_setup.py`, icon Configure, run on worktree create. Until then run it by hand (CLAUDE.md → Git).
+6. **Source updates found 2026-10-24** (`check_updates.py`, not accepted): Emerald Imperium's calc backup index
+   changed (its trainer backup didn't; check whether the guide needs it); SoulGold's data files changed (Mega Lopunny
+   innates, Clefable / Mega Clefable and Unown learnsets, ability usage): re-fetch before its guide.
+7. **New-guide scaffold** (`tools/new_hack.py <hack> --like <built hack>`): build it during the first new guide, from
+   what that session actually copies.
 
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
