@@ -16,18 +16,12 @@ window.DMG.init(sourceData,prof);
 const toEngine=mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i||'',st:mon.status||'',iv:mon.iv,ev:mon.ev,stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp});
 const koTxt=ko=>!ko.n?'5+ hits':(ko.n===1?'OHKO':ko.n+'HKO')+(ko.p<1?' '+Math.min(99,Math.max(1,Math.round(ko.p*100)))+'%':'');
 
-const trByK={};TRS.forEach(t=>trByK[t.k]=t);
+const trByK=TRK;
 const isRel=t=>t.p.some(x=>x.l==null);
-const capDef=t=>t.cap||0;
-const capOf=t=>+TCAP[t.k]||capDef(t)||(CF.capLast&&+TCAP._last)||0;
-const monLv=(x,cap)=>x.l!=null?x.l:x.r!=null&&cap?cap+x.r:NaN;
 function curMine(){const imp=ST.imp,m=ST.mine;if(m.src==='party'&&imp&&imp.party)return imp.party[m.i]||null;if(m.src==='box'&&imp&&imp.boxes&&imp.boxes[m.b])return imp.boxes[m.b][m.i]||null;if(m.src==='custom')return ST.custom[m.i]||null;return null;}
-const mineKey=()=>{const m=ST.mine;return m.src==='custom'?null:'mine:'+(curMine()||{}).pid;};
 function applyEdits(base,key){ST.saved=ST.saved||{};const sv=key&&ST.saved[key],e=key&&ST.edits[key];const w=!!e&&Object.keys(e).length>0;if(!sv&&!w)return {...base};return {...base,...sv,...e,edited:w,saved:!!sv};}
-function mineMon(){const b=curMine();return b?applyEdits(b,mineKey()):null;}
 function foeBase(t,i){const x=t.p[i];if(!x)return null;const p=byId[x.id];const cap=capOf(t),l=monLv(x,cap);
  return {id:x.id,l,na:x.na||'Hardy',a:x.a!=null?x.a:p.a[0],aGuess:x.a==null,i:x.i||'',m:(x.m||[]).slice(),iv:x.iv||[31,31,31,31,31,31],ev:x.ev||[0,0,0,0,0,0],foe:true};}
-function foeMon(){const t=trByK[ST.foe.k];if(!t)return null;const b=foeBase(t,ST.foe.i);return b?applyEdits(b,'foe:'+t.k+':'+ST.foe.i):null;}
 function resolve(m){const p=byId[m.id],l=isNaN(m.l)?null:m.l;const st=l==null?null:window.DMG.stats(toEngine(m));
  return {...m,p,name:p.n,types:p.t,lv:l,stats:st,abil:AB[m.a]||'',stg:m.stg||[0,0,0,0,0],status:m.status||'',hp:st?Math.min(m.hp==null?st[0]:m.hp,st[0]):null};}
 
@@ -157,7 +151,7 @@ document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const e
 
 });
 function findMine(){const L=mineList().map(entry=>({...entry,m:entry.src==='custom'?entry.m:applyEdits(entry.m,'mine:'+entry.m.pid)}));picker({title:'Find yours',items:L.map(x=>({label:byId[x.m.id].n,sub:(x.src==='party'?'Party':x.src==='box'?'Box '+(x.b+1):'Custom')+' · Lv '+x.m.l,id:x.m.id,v:x})),onPick:x=>{ST.mine={src:x.src,b:x.b,i:x.i};save();refreshMainOnly();}});}
-document.addEventListener('change',e=>{const s=e.target.closest('select[data-f]');if(s){ST.field[s.dataset.f]=s.value;window.__fo=1;save();refresh();}});
+document.addEventListener('change',e=>{if(location.hash!=='#/calc')return;const s=e.target.closest('select[data-f]');if(s){ST.field[s.dataset.f]=s.value;window.__fo=1;save();refresh();}});
 document.addEventListener('toggle',e=>{if(e.target.matches('details.dfield'))window.__fo=e.target.open;},true);
 const recent=k=>{ST.recent=[k,...ST.recent.filter(x=>x!==k)].slice(0,6);};
 
@@ -172,10 +166,8 @@ const SH={redraw(){const host=$('#sheets');if(!SHEETS.length){host.innerHTML='';
  foe(){pushSheet(foeSheet());}};
 function refreshMainOnly(){calcPage();}
 
-function repaint(){const b=$('#sheets .sheet:last-child .shb');const y=b?b.scrollTop:0;SH.redraw();const b2=$('#sheets .sheet:last-child .shb');if(b2)b2.scrollTop=y;}
 
 
-function monRow(m,sel,attrs){const p=byId[m.id];return `<div role="button" tabindex="0" class="mrow ${sel?'sel':''}" ${attrs}>${spr(m.id,'s32')}<span class="tx"><b>${esc(p.n)}</b><small>${esc([m.na,m.i,AB[m.a]].filter(Boolean).join(' · '))}</small></span><span class="lv">Lv ${m.l}</span></div>`;}
 function defMoves(p,l){const m=(p.lv||[]).filter(x=>x[0]<=l).map(x=>x[1]);return [...new Set(m)].slice(-4);}
 function newMon(){picker({title:'New Pokémon',items:P.map(p=>({label:p.n,sub:p.t.join(' / '),id:p.id,v:p.id})),onPick:id=>{const p=byId[id];let l=50;try{l=capOf(trByK[ST.foe.k])||50}catch(e){}
   const m={id,l,na:'Hardy',a:p.a[0],i:'',m:defMoves(p,l),iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0],pid:'c'+Date.now()};ST.custom.push(m);ST.mine={src:'custom',b:0,i:ST.custom.length-1};save();
@@ -215,7 +207,7 @@ const host=document.createElement('div');host.id='sheets';
 const input=document.createElement('input');input.type='file';input.accept='.sav,.dsv,.bin,main';input.hidden=true;input.id='calc-file';
 function startImport(){if(prof.save)input.click();}
 const natureOrder=['Hardy','Lonely','Brave','Adamant','Naughty','Bold','Docile','Relaxed','Impish','Lax','Timid','Hasty','Serious','Jolly','Naive','Modest','Mild','Quiet','Bashful','Rash','Calm','Gentle','Sassy','Careful','Quirky'];
-function importMon(mon,ours,index){const tables=sourceData.GID||{},lookup=(kind,value)=>ours?value:tables[kind]?.[value];const id=lookup('sp',mon.sp);if(!byId[id])throw {code:'wrong',game:'Unmapped species '+mon.sp};const species=byId[id];const ability=mon.abs!=null?(mon.abs===2?species.ha:species.a[mon.abs]):lookup('ab',mon.ab);return {pid:String(mon.pid??index),id,l:Math.max(range[0],Math.min(range[1],Number(mon.lv)||range[0])),na:typeof mon.nat==='string'?mon.nat:natureOrder[mon.nat||0],a:ability??species.a[0],i:lookup('it',mon.it)||'',m:(mon.mv||[]).map(move=>lookup('mv',move)??null),iv:(mon.iv||[31,31,31,31,31,31]).map(value=>Math.max(0,Math.min(31,Number(value)||0))),ev:(mon.ev||[0,0,0,0,0,0]).map(value=>Math.max(0,Math.min(252,Number(value)||0)))};}
+function importMon(mon,ours,index){const tables=sourceData.GID||{},lookup=(kind,value)=>ours?value:tables[kind]?.[value];const id=lookup('sp',mon.sp);if(!byId[id])throw {code:'wrong',game:'Unmapped species '+mon.sp};const species=byId[id];const ability=mon.abs!=null?(mon.abs===2?species.ha:species.a[mon.abs]):lookup('ab',mon.ab);return {pid:encodeURIComponent(String(mon.pid??index)),id,l:Math.max(range[0],Math.min(range[1],Number(mon.lv)||range[0])),na:typeof mon.nat==='string'?mon.nat:natureOrder[mon.nat||0],a:Number.isInteger(ability)&&sourceData.AB[ability]?ability:species.a[0],i:lookup('it',mon.it)||'',m:(mon.mv||[]).slice(0,4).map(move=>{const mapped=lookup('mv',move);return Number.isInteger(mapped)&&MV[mapped]?mapped:null;}),iv:Array.from({length:6},(_,slot)=>Math.max(0,Math.min(31,Number(mon.iv?.[slot]??31)||0))),ev:Array.from({length:6},(_,slot)=>Math.max(0,Math.min(252,Number(mon.ev?.[slot])||0)))};}
 async function importFile(file){try{const reader=window.READERS?.[prof.save];if(!reader)throw {code:'unreadable'};const result=reader(new Uint8Array(await file.arrayBuffer()),sourceData);if(!result.party?.length)throw {code:'empty'};const ours=result.ids==='ours';const party=result.party.map((mon,index)=>importMon(mon,ours,'p'+index));const boxes=(result.boxes||[]).map((box,boxIndex)=>box.map((mon,index)=>importMon(mon,ours,boxIndex+':'+index)));const keys=new Set([...Object.keys(ST.edits),...Object.keys(ST.saved)].filter(key=>key.startsWith('mine:')&&!ST.custom.some(mon=>key==='mine:'+mon.pid)));keys.forEach(key=>{delete ST.edits[key];delete ST.saved[key];});for(const container of [ST.crit,ST.hits,ST.mvo])Object.keys(container).filter(key=>key.startsWith('mine:')&&!ST.custom.some(mon=>key.startsWith('mine:'+mon.pid+':'))).forEach(key=>delete container[key]);ST.imp={file:file.name,at:Date.now(),party,boxes};if(ST.mine.src!=='custom')ST.mine={src:'party',b:0,i:0};BAN={ok:1,h:'Imported '+file.name,t:party.length+' in the party, '+boxes.reduce((count,box)=>count+box.length,0)+' in boxes'+(keys.size?' · '+keys.size+' edited Pokémon reset':'')};save();}catch(error){const messages={wrong:['Wrong game',error.game?String(error.game):'This save is for a different game or platform.'],state:['Save state','Pick the battery .sav file, not an emulator save state.'],unreadable:['Unreadable','Both save slots fail their checksum. Save again in-game.'],empty:['No Pokémon yet','This save has no party. Get your starter and save first.']};const message=messages[error.code]||messages.unreadable;BAN={ok:0,h:message[0],t:message[1]};}calcPage();}
 input.onchange=async()=>{if(input.files[0])await importFile(input.files[0]);input.value='';};
 document.addEventListener('keydown',event=>{if(location.hash!=='#/calc'||!['Enter',' '].includes(event.key))return;const target=event.target.closest('[role="button"]');if(target){event.preventDefault();target.click();}});
