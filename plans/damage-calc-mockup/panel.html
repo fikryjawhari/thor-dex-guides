@@ -1,0 +1,10 @@
+<fieldset><legend>Calc mockup</legend>
+ <div class="chips" id="mk1"></div><div class="chips" style="margin-top:6px" id="mk2"></div><div class="chips" style="margin-top:6px" id="mk3"></div>
+ <p class="hint">State: imported or nothing imported. Foe: fixed levels (Wattson), levels off the cap (Candice-style, has the Cap box), Hot House (same names, other caps), an incomplete set. Page: the calc, a trainer card and a Pokémon page (the two entry points).</p>
+</fieldset>
+<script>
+(function(){const B=(id,list)=>{const el=document.getElementById(id);list.forEach(([l,n,v])=>{const b=document.createElement('button');b.textContent=l;b.onclick=()=>thorFrame().setOption(n,v);el.appendChild(b);});};
+ B('mk1',[['Imported','state','imp'],['Nothing imported','state','fresh']]);
+ B('mk2',[['Foe: fixed','foe','fixed'],['Foe: off cap','foe','rel'],['Foe: Hot House','foe','hot'],['Foe: incomplete','foe','unknown']]);
+ B('mk3',[['Calc','page','calc'],['Trainer card','page','tr'],['Pokémon page','page','p'],['Mine attacks','dir','out'],['Foe attacks','dir','in']]);})();
+</script>
