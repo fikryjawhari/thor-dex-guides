@@ -589,9 +589,9 @@ function listWalk(){fil.innerHTML='';sug.style.display='none';const W=D.WK;const
  if(q){const hits=[];W.splits.forEach((sp,si)=>sp.st.forEach((s,ti)=>{if(stopText(s).includes(q))hits.push([si,ti]);}));
   app.innerHTML=hits.map(([si,ti])=>`<div class="sech">${esc(W.splits[si].n)}</div>`+walkStop(W.splits[si].st[ti],si,ti,cf,shown)).join('');bindWalk();return;}
  const [n,f]=tkCounts();
- // Top: Guide info, Next step, Starter, then Expand / Collapse all for the splits.
+ // Top: Guide info, Starter, Next step, then Expand / Collapse all for the splits.
  app.innerHTML=`<div class="wtool"><details class="split" data-wo="gi" ${WO.o.gi?'open':''}><summary>Guide info <span class="mut small">${n} caught · ${f} failed</span></summary><div class="body pbody" data-gi="1"></div></details>`+
-  (CHK?`<button class="resume wk-next">${nextInner()}</button>`:'')+starterRow()+segBar('wk-all all')+`</div>`+
+  starterRow()+(CHK?`<button class="resume wk-next">${nextInner()}</button>`:'')+segBar('wk-all all')+`</div>`+
   W.splits.map((sp,si)=>{const all=sp.st.flatMap((s,ti)=>(s.s||[]).map((x,j)=>si+'.'+ti+'.'+j));const done=all.filter(k=>WO.c[k]).length;
    return `<details class="split jt" data-wo="${si}" ${WO.o[si]?'open':''}><summary>${esc(sp.n)} ${CHK?`<span class="tag ${done===all.length&&all.length?'got':''}">${done}/${all.length}</span>`:`<span class="mut small">${sp.st.length} stop${sp.st.length===1?'':'s'}</span>`}</summary>${sp.note?`<div class="trnote" style="margin:8px 2px">${esc(sp.note)}</div>`:''}<div class="body" data-si="${si}"></div></details>`;}).join('');
  app.querySelectorAll('details.split[data-wo]').forEach(d=>{const fill=()=>{const b=d.querySelector('.body');if(b&&d.open&&!b.innerHTML){if(b.dataset.gi){b.innerHTML=guideInfoHTML();bindWalk();return;}const si=+b.dataset.si;
@@ -693,7 +693,8 @@ function trHead(){const r1=(HAS_MGM?`<label class="mgm"><input type="checkbox" c
  return h?`<div class="card trh">${h}</div>`:'';}
 let CAPSO=false;
 const capOfSec=s=>Array.isArray(s.cap?.[0])?s.cap[1]:typeof s.cap==='number'?[s.cap]:s.cap;
-// A place's (or walkthrough stop's) trainer button: open cards / trainers, then the level cap where there is one.
+// A place's (or walkthrough stop's) trainer button: open cards / trainers, then the level cap where there is one (the
+// place's own, else its box's).
 const ptText=(n,m,cap)=>n+'/'+m+(cap?' | '+cap:'');
 const capLine=s=>{const c=capOfSec(s);if(!c)return '';const n=c[3];
  return `<div class="capl">Level cap <b>${c[0]}</b>${c[1]?` · ${esc(c[1])}${c[2]?', '+esc(c[2]):''} · ${n?`${n} battle${n===1?'':'s'}`:'next'}`:''}</div>`;};
@@ -701,7 +702,7 @@ function bindHead(){app.querySelectorAll('.mgm-toggle').forEach(m=>{m.onchange=(
  const d=app.querySelector('details.capsd');if(d)d.addEventListener('toggle',()=>{CAPSO=d.open;});}
 function listTrainers(){fil.innerHTML='';sug.style.display='none';const s=st.q;
  if(s){const a=TRS.filter(t=>t.key.includes(s)&&!rivalHidden(t));app.innerHTML=a.map(t=>`<div class="mut small" style="margin-top:10px">${esc(t.g)}${t.h?' · '+esc(t.h):''}</div>`+trainerBlock(t)).join('');bindTrainers();return;}
- app.innerHTML=trHead()+segBar('tr-all all','Open all splits','Close all')+TRD.g.map((g,gi)=>{const n=g.sec.reduce((a,x)=>a+x.tr.filter(t=>!rivalHidden(t)).length,0);return `<details class="split jt" data-gi="${gi}" ${TOPEN.o[gi]?'open':''}><summary>${esc(g.n)} <span class="mut small">${n} trainers</span></summary><div class="body"></div></details>`;}).join('');
+ app.innerHTML=trHead()+segBar('tr-all all')+TRD.g.map((g,gi)=>{const n=g.sec.reduce((a,x)=>a+x.tr.filter(t=>!rivalHidden(t)).length,0);return `<details class="split jt" data-gi="${gi}" ${TOPEN.o[gi]?'open':''}><summary>${esc(g.n)} <span class="mut small">${n} trainers</span></summary><div class="body"></div></details>`;}).join('');
  bindHead();bindTrackers();app.querySelectorAll('details.split[data-gi][open]').forEach(d=>TOG.trainers(d));bars();}
 // The page is boxes (D.TR.g: one per level cap, "Roxanne Split [Cap 15]"; Hot House, Mini Bosses) → places (the
 // box's locations) → trainers (name, tags and team preview; open, the full card). State in LS.tr {o:{<box>:1 open},
@@ -713,7 +714,7 @@ function trGroup(gi){const g=TRD.g[gi];let n=0;
  const secs=g.sec.map((s,si)=>{const ts=s.tr.filter(t=>!rivalHidden(t));
   const head=((s.note||[]).length?`<div class="trnote">${s.note.map(esc).join('<br>')}</div>`:'')+(s.rw?`<div class="trnote"><b>Reward, pick one:</b> ${s.rw.map(z=>{const p=P.find(q=>q.name===z||q.name.startsWith(z+' ('));return p?plink(p.id):esc(z);}).join(', ')}</div>`:'');
   const rows=trRows(ts,t=>TOPEN.t[t.k]!==0,!s.h);if(!s.h){n+=ts.length;return head+rows;}
-  n++;const k=gi+'.'+si;return `<details class="stopd" data-k="${k}" ${TOPEN.p[k]===0?'':'open'}><summary class="stoph"><span class="pn">${esc(s.h)}</span>${s.opt?'<span class="tag">optional</span>':''}<button class="pt" type="button" data-cap="${capOfSec(s)?capOfSec(s)[0]:''}"></button></summary><div class="stop">${capLine(s)}${head}${rows}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.h)}</span></button></div></details>`;}).join('');
+  n++;const k=gi+'.'+si;return `<details class="stopd" data-k="${k}" ${TOPEN.p[k]===0?'':'open'}><summary class="stoph"><span class="pn">${esc(s.h)}</span>${s.opt?'<span class="tag">optional</span>':''}<button class="pt" type="button" data-cap="${capOfSec(s)?capOfSec(s)[0]:g.cap||''}"></button></summary><div class="stop">${capLine(s)}${head}${rows}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.h)}</span></button></div></details>`;}).join('');
  return trSwitch(g.sec.some(s=>s.h))+(g.note&&g.note.length?`<div class="trnote" style="margin:8px 2px">${g.note.map(esc).join('<br>')}</div>`:'')+secs+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
 TOG.trainers=d=>{if(st.q)return;const k=d.dataset.k;
  if(d.matches('details.split[data-gi]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=trGroup(+d.dataset.gi);colBind(b);bindTrd(b);trObs(d);trSync(d);}if(d.open)TOPEN.o[d.dataset.gi]=1;else delete TOPEN.o[d.dataset.gi];}

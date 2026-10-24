@@ -21,12 +21,12 @@ from walk import GYMS  # noqa: E402
 def finalise(data):
     """The build's finalisers on a finished data.json; returns the species ids pruned."""
     before = [pokemon['id'] for pokemon in data['P']]
-    extractlib.finalise(data, 'emerald-imperium', prune.build)
-    walk.name_splits(data)
-    data['AR'][0].update(n='Starter', st=1)
     for group in data['TR']['g']:
         if group.get('cap') == 85:
             group['n'] = split_name('Elite Four', 85)
+    walk.name_splits(data)
+    extractlib.finalise(data, 'emerald-imperium', prune.build)
+    data['AR'][0].update(n='Starter', st=1)
     kept = {pokemon['id'] for pokemon in data['P']}
     return [i for i in before if i not in kept]
 
@@ -77,12 +77,15 @@ def main():
             group['n'] = 'Elite Four Split [Cap 85]'
     assert after['TR'] == expected_trainers
     assert [split['n'] for split in after['WK']['splits']] == [
-        f'{boss} Split [Cap {cap}]' for boss, cap in GYMS]
-    for old_split, new_split in zip(before['WK']['splits'], after['WK']['splits']):
-        assert len(old_split['st']) == len(new_split['st'])
-        for old_stop, new_stop in zip(old_split['st'], new_split['st']):
-            assert {key: value for key, value in old_stop.items() if key != 'it'} == {
-                key: value for key, value in new_stop.items() if key != 'it'}
+        group['n'] for group in after['TR']['g'] if group.get('cap')], 'Walkthrough splits are the trainer cap boxes'
+    old_stops = {stop['k']: stop for split in before['WK']['splits'] for stop in split['st']}
+    new_stops = {stop['k']: stop for split in after['WK']['splits'] for stop in split['st']}
+    assert {key.split('.f', 1)[0] for key in new_stops} == set(old_stops), 'Every walkthrough stop key is kept'
+    for key, old_stop in old_stops.items():
+        assert {k: v for k, v in old_stop.items() if k not in ('it', 'tr')} == {
+            k: v for k, v in new_stops[key].items() if k not in ('it', 'tr')}, key
+        parts = [new_stops[key]['tr']] + [stop['tr'] for k, stop in new_stops.items() if k.startswith(key + '.f')]
+        assert sum(parts, []) == old_stop['tr'], key
     mega_sections = {section['n'] for section in after['IT'] if section['k'] == 'mega'}
     standard = deepcopy(before)      # items and walkthrough item rows are expected in the Items standard (tools/itemstd.py)
     itemstd.standardise(standard, itemstd.RULES['emerald-imperium'])
@@ -94,8 +97,10 @@ def main():
                     row[2] = None
     assert after['IT'] == expected_items, 'Items must be the Items standard of the baseline'
     expected_walk = deepcopy(standard['WK'])
-    for split, (boss, cap) in zip(expected_walk['splits'], GYMS):
-        split['n'] = f'{boss} Split [Cap {cap}]'
+    if len(expected_walk['splits']) == len(GYMS):
+        for split, (boss, cap) in zip(expected_walk['splits'], GYMS):
+            split['n'] = f'{boss} Split [Cap {cap}]'
+    walk.name_splits({'WK': expected_walk, 'TR': after['TR']})
     for row in expected_walk['np'] + [row for split in expected_walk['splits']
                                     for stop in split['st'] for row in stop['it']]:
         if row[0] in mega_sections and row[3] and row[3] not in expected:
@@ -115,7 +120,7 @@ def main():
     assert regenerated == after, 'Finaliser must reproduce the published data from the baseline'
     assert finalise(regenerated) == [] and regenerated == after, 'Finaliser must be idempotent'
     print(f'PASS: {len(before["P"])} -> {len(species)} species; {len(used)} trainer species preserved; '
-          f'{len(after["AR"])} area indices, 20 trainer boxes and all walkthrough stop/tick keys preserved')
+          f'{len(after["AR"])} area indices, 20 trainer boxes and all walkthrough stop/tick keys preserved (cap splits)')
     print('PASS: stable species/move/ability/location IDs, valid references, reproducible and idempotent finalisation')
     print('Removed IDs:', ', '.join(removed))
 

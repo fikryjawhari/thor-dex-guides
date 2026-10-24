@@ -161,6 +161,12 @@ against the previous build, and the viewer-size checks (CLAUDE.md).
 
 ## History
 
+- **2026-10-24, walkthrough by level cap.** The nine gym splits became the Trainers page's 19 cap splits, same names
+  (`walk.name_splits`): each stop goes with its trainers' cap box; Route 110 and Victory Road span two caps and are cut in
+  two (the second part keyed `2.3.f1` / `8.1.f1`, trainers only). Stops keep their keys, so saved ticks and open state
+  carry over (dex.js `migrateWalkState`); the Norman split's desert note moved to the Trick House split. Gardenia stays
+  in the Rustboro stop and the Hot House stop in Aqua Museum (their boxes aren't the next cap). Template, same day:
+  Starter above Next step on the walkthrough, and the Trainers place buttons show their box's cap (`n/N | cap`).
 - **2026-10-23, Items standard.** `tools/itemstd.py` (shared, idempotent; run by `finalise()`) puts Items in the shared
   box set (rules: `itemstd.RULES['emerald-imperium']`). TMs + HMs are one box (182, game order); Shops is one row per item
   (shops one per line, price after the shop; the six berry lists split into single berries; the stray Pomeg Berry row

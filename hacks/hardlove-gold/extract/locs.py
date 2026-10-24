@@ -200,7 +200,8 @@ def verify(D):
     X.REV, X.TRONLY = REV, TRONLY
 
 def starter(D):
-    """The three starter encounters get their own Starter area (appended, so published indexes stay), first in New Bark Town's stop."""
+    """The three starter encounters get their own Starter area (appended, so published indexes stay), first in New Bark Town's
+    stop and first on the Locations page (ARO)."""
     starters = [(pokemon, encounter) for pokemon in D['P'] for encounter in pokemon['w']
                 if encounter[1] == 'Starter choice']
     assert {pokemon['id'] for pokemon, encounter in starters} == {'turtwig', 'litten', 'froakie'}
@@ -223,3 +224,5 @@ def starter(D):
     first_stop = next(stop for split in D['WK']['splits'] for stop in split['st'] if new_bark in stop['a'])
     if starter_area not in first_stop['a']:
         first_stop['a'].insert(0, starter_area)
+    # Locations order: the Starter box first, like every guide (it sits at the end of AR so saved trackers keep their slots)
+    D['ARO'] = [starter_area] + [index for index in range(len(areas)) if index != starter_area]

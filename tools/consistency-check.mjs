@@ -65,7 +65,7 @@ try {
       check(!document.querySelector('.capsw,.capt'),'single cap UI');
       check(!TRD.mini&&TRD.g.every(group=>group.sec.every(section=>!Array.isArray(section.cap?.[0]))),'legacy caps normalized');
       check(WO.c['0.0.0']===1,'saved walkthrough ticks retained');
-      check(document.body.textContent.includes('Open all splits'),'split wording');
+      check(document.querySelector('.tr-all')?.textContent==='Expand allCollapse all','split wording');
       check(capOfSec({cap:40})[0]===40&&capOfSec({cap:[42,'Boss','Place',2]})[0]===42,'both single cap schemas');
       if(CF.starter==='type'){
         check(TK.s==='Treecko'&&starterType()==='Grass'&&TK.e[1].f,'old EI starter migrated without shifting tracker');

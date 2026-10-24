@@ -88,7 +88,7 @@ Data rules:
 - **Locations**: order = Encounter Tables column order, Safari areas after the gate, Blackthorn City after Ice Path.
   Areas merge sub-locations (`areaOf` in walk.py); the area list is unchanged from the first build, so tracker slots
   carry over. The Starter area (AR 61, LOC 95) is appended last; only the three Turtwig / Litten / Froakie `Starter
-  choice` encounters sit there. Wild tables are checked against the game slot by slot (85 locations, 11 with differences;
+  choice` encounters sit there. `ARO` (Locations order) puts it first on the Locations page, above New Bark Town. Wild tables are checked against the game slot by slot (85 locations, 11 with differences;
   the game wins and replaces Route 46, Violet City, Route 5, Mt. Mortar 1F (Entrance) and 2F, Lake of Rage, Whirl Islands
   1F and B2F, Mt. Silver (Snowy Area); Ice Path 1F and Mt. Silver (Moltres Room) match no game table: statics / gifts).
 - **Walkthrough**: no written walkthrough exists. Stops come from the trainer sheet's sections in order, split by level
@@ -141,6 +141,8 @@ earlier data.json, that species order, move / ability tables, area names, traine
 
 ## History
 
+- **2026-10-24, Starter box first.** `locs.starter` writes `ARO`: the Starter area first on the Locations page, like the
+  other guides (area indices unchanged). Template, same day: a Trainers place's button shows its box's cap, `n/N | cap`.
 - **2026-10-23, Items standard.** `tools/itemstd.py` (shared, idempotent; run by `finalise()`) puts Items in the shared
   box set (rules: `itemstd.RULES['hardlove-gold']`, the `Other` box mapped in `HG_OTHER`). Held Items classes renamed (Type
   boosting -> Type boosters, Battle -> Battle gear, Consumable -> One-use items); the four evolution items (Metal Coat,
