@@ -254,6 +254,28 @@ details.dfield>summary{min-height:30px;font-size:12px;padding:0 8px}
 .mrow .tx b{display:block}
 .shb>*{flex:none}
 .dcap .nv{min-height:26px;min-width:40px}.dcap input{height:26px;padding:0 3px;font-size:13px}
+/* v5 */
+.rcol{flex:none;width:26px;display:block;align-self:flex-start;height:auto}
+.rcol button{display:block;width:100%;height:31px;padding:0;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--fg);font:700 10px/1 system-ui;cursor:pointer;touch-action:manipulation}
+.rcol.two button{height:15.5px}
+.rcol.two button:first-child{border-radius:6px 6px 0 0}
+.rcol.two button:last-child{border-radius:0 0 6px 6px;margin-top:-1px}
+.mr{gap:2px}
+.mr .mv{line-height:1.3;padding-bottom:1px}.mr .r1{line-height:1.25}
+.cc .cn b{line-height:1.3}.fbar .dsrc .nm{line-height:1.3}
+.mr.st .mm{min-height:28px;padding:3px 6px;display:flex;flex-direction:column;justify-content:center}
+.mr.st.open .mm{display:block}
+.cc{cursor:pointer}
+.dstrip.fs{gap:3px}
+/* v5b */
+.mr .rcol{width:26px}
+.mr .rcol button{display:block;width:100%;height:30px;padding:0;margin:0;align-self:auto;font:700 10px/1 system-ui}
+.mr .rcol.two button{height:14.5px}
+.mr .rcol.two button:last-child{margin-top:-1px}
+.mr .mv{line-height:1.2;padding-bottom:2px}.mr .r1{line-height:1.2}.mr .r2{line-height:1.1}
+.cc .cl{min-height:22px}.cc .cl .nv{min-height:20px}.cc .cl input{height:20px}
+.dstrip.fs button{min-height:26px;font-size:9px}.dstrip.fs button .spr{width:min(16px,100%)}
+.mr.st .mm{min-height:26px}
 </style></head><body>
 <nav id="rail"></nav>
 <main id="app"></main>
@@ -377,7 +399,12 @@ function setNum(b,v){b.value=String(v);b.textContent=v===''?(b.dataset.ph||'–'
 
 /* ---------------- routing ---------------- */
 const ICONS={p:['#/p','Pokémon','M4 12a8 8 0 1 0 16 0a8 8 0 1 0 -16 0 M4 12h5 M15 12h5 M9.5 12a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0'],l:['#/x','Locations','M12 21s-6-5.6-6-10a6 6 0 0 1 12 0c0 4.4-6 10-6 10z M10 11a2 2 0 1 0 4 0a2 2 0 1 0 -4 0'],t:['#/tr','Trainers','M5 15a7 7 0 0 1 14 0z M5 15h14.5a1.5 1.5 0 0 1 0 3H5z M12 8v3'],i:['#/x','Items','M6 8h12l-1 12H7z M9 8V6a3 3 0 0 1 6 0v2'],w:['#/x','Walkthrough','M12 6.5C10.5 5 8 4.5 4 4.5v14c4 0 6.5.5 8 2c1.5-1.5 4-2 8-2v-14c-4 0-6.5.5-8 2z M12 6.5v14'],c:['#/calc','Calc','M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z M8 6h8v4H8z M8.5 14h.01 M12 14h.01 M15.5 14h.01 M8.5 17.5h.01 M12 17.5h.01 M15.5 17.5h.01']};
-function rail(on){html($('#rail'),Object.entries(ICONS).map(([k,[h,l,d]])=>`<a href="${h}" class="${k===on?'on':''}" aria-label="${l}" title="${l}"><svg viewBox="0 0 24 24"><path d="${d}"/></svg></a>`).join(''));}
+const JUMPSVG=['M5 4.5h14 M12 9v11 M7 14l5-5 5 5','M5 19.5h14 M12 4v11 M7 10l5 5 5-5'];
+function stops(){const f=document.querySelector('.fbar'),d=f&&f.closest('.dside');if(!d)return [0];const rs=[...document.querySelectorAll('.dres:not(.na) .mr')],last=rs.length?rs[rs.length-1]:d,vh=innerHeight,max=Math.max(0,document.documentElement.scrollHeight-vh);
+ const top=d.getBoundingClientRect().top+scrollY-2,bot=last.getBoundingClientRect().bottom+scrollY;const a=[0,Math.min(max,Math.max(0,Math.round(bot-vh+3))),Math.min(max,Math.max(0,Math.round(top)))].sort((x,y)=>x-y);return a.filter((v,i)=>i===0||v-a[i-1]>=24);}
+function jump(dir){const S=stops(),y=scrollY;let t;if(dir>0){t=S.find(x=>x>y+3);if(t==null)t=S[S.length-1];}else{t=[...S].reverse().find(x=>x<y-3);if(t==null)t=0;}scrollTo(0,t);}
+document.addEventListener('click',e=>{const j=e.target.closest('.rjump button');if(j)jump(+j.dataset.j);});
+function rail(on){html($('#rail'),Object.entries(ICONS).map(([k,[h,l,d]])=>`<a href="${h}" class="${k===on?'on':''}" aria-label="${l}" title="${l}"><svg viewBox="0 0 24 24"><path d="${d}"/></svg></a>`).join('')+`<div class="rjump" ${on==='c'?'':'hidden'}><button data-j="-1" aria-label="Up"><svg viewBox="0 0 24 24"><path d="${JUMPSVG[0]}"/></svg></button><button data-j="1" aria-label="Down"><svg viewBox="0 0 24 24"><path d="${JUMPSVG[1]}"/></svg></button></div>`);}
 function route(){closeAll();const h=location.hash||'#/calc';
  if(h.startsWith('#/tr')){rail('t');trainerPage();}else if(h.startsWith('#/p')){rail('p');pokePage();}else if(h==='#/x'){rail('');html($('#app'),'<div class="dnote">Not in this mockup</div>');}else{rail('c');calcPage();}}
 window.addEventListener('hashchange',route);
@@ -398,9 +425,9 @@ function mineList(){const imp=ST.imp,L=[];if(imp){imp.party.forEach((m,i)=>L.pus
 const isSel=x=>ST.mine.src===x.src&&(x.src!=='box'||ST.mine.b===x.b)&&ST.mine.i===x.i;
 function mineGrid(){const L=mineList();
  if(!L.length)return `<div class="dempty"><button class="dbtn pri" data-a="import">Import save</button><button class="dbtn" data-a="newmon">New Pokémon</button></div>`;
- let h='',g=-1;L.forEach(x=>{if(x.g!==g){if(g>=0)h+='<i class="dsep"></i>';g=x.g;}const m=x.src==='custom'?x.m:applyEdits(x.m,'mine:'+x.m.pid);
+ let h='',g=-1;L.forEach(x=>{g=x.g;const m=x.src==='custom'?x.m:applyEdits(x.m,'mine:'+x.m.pid);
   h+=`<button data-a="mpick" data-src="${x.src}" data-b="${x.b}" data-i="${x.i}" class="${isSel(x)?'on':''} ${x.src==='custom'?'cu':''}" aria-label="${esc(byId[m.id].n)}">${spr(m.id,'s28')}<span>${m.l}</span></button>`;});
- return `<div class="tools"><button data-a="import">↻ Import</button><button data-a="newmon">+ New</button><button data-a="findmine">⌕ Find</button></div><div class="dstrip">${h}</div>`;}
+ return `<div class="tools"><button data-a="import">↻ Import</button><button data-a="newmon">+ New</button><button data-a="findmine">⌕ Find</button></div><div class="dstrip fs">${h}</div>`;}
 function foeSide(){const t=trByK[ST.foe.k];if(!t)return `<div class="fbar"><button class="dsrc" data-a="foesheet"><span class="nm mut">Pick a trainer</span></button></div>`;
  const rel=isRel(t),cap=capOf(t),own=+ST.cap[t.k]>0,ti=D.TR.indexOf(t);
  const lvl=i=>{const m=applyEdits(foeBase(t,i),'foe:'+t.k+':'+i);return isNaN(m.l)?'?':m.l;};
@@ -426,8 +453,8 @@ function editor(r,side){const custom=side==='mine'&&ST.mine.src==='custom';const
 function chip(r,att,side,fast){if(!r)return `<div class="cc"><button class="cn" data-a="${side==='mine'?'findmine':'foesheet'}"><b class="mut">${side==='mine'?'Pick yours':'Pick foe'}</b></button></div>`;
  const spe=effSpe(r),mx=r.stats&&r.stats[0],mod=r.stg[4]?(r.stg[4]>0?'↑':'↓'):'',sg=r.stg.some(x=>x);
  const open=EDITOPEN[side],mega=r.pre||MEGA[r.id];
- return `<div class="cc ${att?'att':''}"><div class="l1"><button class="cn" data-a="eopen" data-s="${side}"><b>${esc(r.name)}${r.edited?' *':r.saved?' •':''}</b></button>${mega?`<button class="mg ${r.pre?'on':''}" data-a="mega" data-s="${side}" aria-label="Mega">M</button>`:''}<button class="stb ${open||sg?'on':''}" data-a="eopen" data-s="${side}">Edit ${open?'▴':'▾'}</button><span class="sp">Spe <i class="${fast?'f':''}">${spe??'?'}${mod}</i></span></div>
-  <div class="cl"><span>Lv</span>${nb(`data-lv="${side}"`,r.lv??'',{min:1,max:100,label:'Level'})}<button class="hpl" data-a="hpfull" data-s="${side}" title="Full HP">HP</button>${nb(`data-hp="${side}"`,r.hp??'',{min:0,max:mx||999,label:'HP now'})}<span class="mx">/${mx??'?'}</span><button class="pill" data-a="swap" aria-label="Swap attacker">${att?'ATK':'DEF'}</button></div>${open?editor(r,side):''}</div>`;}
+ return `<div class="cc ${att?'att':''}" data-a="sel" data-s="${side}"><div class="l1"><button class="cn" data-a="sel" data-s="${side}"><b>${esc(r.name)}${r.edited?' *':r.saved?' •':''}</b></button>${mega?`<button class="mg ${r.pre?'on':''}" data-a="mega" data-s="${side}" aria-label="Mega">M</button>`:''}<button class="stb ${open||sg?'on':''}" data-a="eopen" data-s="${side}">Edit ${open?'▴':'▾'}</button><span class="sp">Spe <i class="${fast?'f':''}">${spe??'?'}${mod}</i></span></div>
+  <div class="cl"><span>Lv</span>${nb(`data-lv="${side}"`,r.lv??'',{min:1,max:100,label:'Level'})}<button class="hpl" data-a="hpfull" data-s="${side}" title="Full HP">HP</button>${nb(`data-hp="${side}"`,r.hp??'',{min:0,max:mx||999,label:'HP now'})}<span class="mx">/${mx??'?'}</span></div>${open?editor(r,side):''}</div>`;}
 function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
  const D0=[0,1,2,3].map(slot=>{const mi=att.m[slot];if(mi==null)return {slot};const crit=!!ST.crit[mi],n=hitsOf(mi),mv=effMv(mi);return {slot,mi,mv,crit,n,r:damage(att,def,mi,F,crit,ST.mvo[mi])};});
  const best=Math.max(0,...D0.map(x=>x.r?x.r.max*x.n:0));
@@ -445,7 +472,7 @@ function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
    <div class="r2"><span>${imm?'':(n>1?'×'+n+' · ':'')+pc(r.min*n)+'–'+pc(r.max*n)+'%'}</span><span class="ko k${ko.n}">${imm?'':hpNow<=0?'fainted':koTxt(ko)}</span></div>
    <div class="dd"><div class="eg">${types}${bp}${hits}</div><div>${esc(mv.c)} · vs ${hpNow}/${mx} HP${n>1?` · ${n} hits: ${r.min*n}–${r.max*n}`:''}</div><div class="rolls">${r.rolls.join(' ')}</div>${r.notes.length?`<div>${r.notes.map(esc).join(' · ')}</div>`:''}
    <div class="ab"><button class="dbtn sm" data-a="sub" data-v="${r.min*n}">HP −${r.min*n}</button><button class="dbtn sm" data-a="sub" data-v="${r.max*n}">HP −${r.max*n}</button></div>${tail}</div></div>
-   <div class="rcol">${mh?`<button class="rh" data-a="hits" data-mi="${mi}" aria-label="Hits">×${n}</button>`:''}<button class="rc" data-a="crit" data-mi="${mi}" aria-pressed="${crit}" aria-label="Crit">C</button></div></div>`;}).join('');}
+   <div class="rcol ${mh?'two':''}">${mh?`<button class="rh" data-a="hits" data-mi="${mi}" aria-label="Hits">×${n}</button>`:''}<button class="rc" data-a="crit" data-mi="${mi}" aria-pressed="${crit}" aria-label="Crit">C</button></div></div>`;}).join('');}
 function calcPage(){const A0=getMon('mine'),B0=getMon('foe');const a=A0&&resolve(A0),b=B0&&resolve(B0);const out=ST.dir==='out';
  const F=ST.field;const sa=a&&effSpe(a),sb=b&&effSpe(b);
  let ra='',rb='';
@@ -481,7 +508,7 @@ document.addEventListener('click',e=>{const el=e.target.closest('[data-a],[data-
  if(a==='row'&&e.target.closest('.dd'))return;
  if(a==='mpick'){ST.mine={src:el.dataset.src,b:+el.dataset.b,i:+el.dataset.i};save();refresh();}
  else if(a==='fpick'){ST.foe.i=+el.dataset.i;save();refresh();}
- else if(a==='swap'){ST.dir=ST.dir==='out'?'in':'out';save();refresh();}
+ else if(a==='sel'){if(e.target.closest('input,select,.nv,.num,.ed,.stb,.mg,.hpl'))return;ST.dir=el.dataset.s==='mine'?'out':'in';save();refresh();}
  else if(a==='row'){const mi=+el.dataset.mi;ROWOPEN.has(mi)?ROWOPEN.delete(mi):ROWOPEN.add(mi);el.closest('.mr').classList.toggle('open');}
  else if(a==='crit'){const mi=+el.dataset.mi;ST.crit[mi]=ST.crit[mi]?0:1;save();refresh();}
  else if(a==='hits'){const mi=+el.dataset.mi,m=MH[mi],n=hitsOf(mi);ST.hits[mi]=n>=m[1]?m[0]:n+1;save();refresh();}
