@@ -87,10 +87,13 @@ function init(guide, configuration) {
     const engineName = effectName('moves', name, !!entry.x) || `Guide move ${index}`;
     const id = toID(engineName);
     const known = stock.moves[id] || modern.moves[id] || {};
+    const flagNames = {ballistic: 'bullet', biting: 'bite', punching: 'punch'};
+    const flags = entry.f === undefined ? {...known.flags} : Object.fromEntries(
+      entry.f.map(flag => [flagNames[flag] || flag, 1]));
     moves[toID(name)] = mergeRecord({
       ...known, id, kind: 'Move', name: engineName,
       basePower: Number(entry.bp) || 0, type: entry.t, category: entry.c,
-      priority: entry.pr ?? known.priority ?? 0, flags: {...known.flags},
+      priority: entry.pr ?? known.priority ?? 0, flags,
     }, profile.over?.moves?.[name]);
     moves[id] = moves[toID(name)];
   }
@@ -187,15 +190,16 @@ function knockout(rolls, hits, hp) {
 function calc(atk, def, slot, values = {}) {
   const entry = data.MV[slot.mv];
   const name = data.M[slot.mv];
-  if (!entry || entry.c === 'Status') return null;
+  if (!entry) return null;
+  const moveData = generation.moves.get(toID(name));
+  if (moveData.category === 'Status') return null;
   const variable = entry.bp === 'Varies' || profile.varpow?.includes(name);
   if (variable && slot.bp === undefined) return null;
-  const power = slot.bp ?? entry.bp;
+  const power = slot.bp ?? moveData.basePower;
   if (!(Number(power) > 0)) return null;
   const attacker = pokemon(atk);
   const defender = pokemon(def);
   const field = battleField(values);
-  const moveData = generation.moves.get(toID(name));
   const overrides = {...moveData, basePower: Number(power), type: slot.t || moveData.type};
   if (variable && slot.bp !== undefined) {
     overrides.name = 'Guide fixed power';
