@@ -43,7 +43,9 @@ the supplied data/profile. `stats` returns unstaged `[HP, Atk, Def, SpA, SpD, Sp
 An absent ability means none, not the species' default. Defaults are level 50,
 31 IVs, zero EVs/stages, neutral nature and full HP. `hp: 0` is retained.
 
-Damage `rolls`, `min`, `max` are **per hit**; `pmin`/`pmax` cover all selected hits
+Damage `rolls`, `min`, `max` describe **hit 1**. Optional `per` contains one
+16-roll array per hit, and is present only when the hits differ. When absent,
+repeat `rolls` exactly `hits` times. `pmin`/`pmax` cover all selected hits
 as a percentage of maximum defender HP. The result's `cat` is `Physical` or
 `Special`. Status, absent/zero power and variable power without an explicit
 positive `slot.bp` return null. `slot.t` changes the type. Explicit power on a
@@ -55,10 +57,10 @@ otherwise `{n:0,p:0}` (5+). It convolves independent equiprobable rolls per hit,
 not correlated per-use totals. No between-turn healing, hazards, poison, recoil,
 accuracy or crit probability is included. Zero current HP returns `{n:0,p:0}`;
 the UI supplies the separate fainted label. Percentages can exceed 100.
-Every use repeats the returned per-hit distribution: sequential hit effects
-(Triple Axel/Kick scaling, defensive changes, Parental Bond) are not represented
-by this uniform-per-hit contract. Nonuniform upstream results are rejected
-instead of silently flattening them into incorrect rolls.
+Every use repeats the returned set of per-hit distributions. Sequential effects
+within a use (Triple Axel/Kick scaling, defensive changes, Parental Bond) retain
+their own distributions. Changes between uses are not simulated. `eff: 0` means
+immune, and `notes` contains short modifier labels including declarative rule notes.
 
 ## Base profiles and fields
 
@@ -107,19 +109,230 @@ override entries use **display names**, except species may use their guide ID:
   behaviour is unchanged. Sniper remains an additional 1.5 multiplier.
 - `typeChart` uses ordinary multipliers (0, 0.5, 1, 2), unlike `D.TC`'s x10
   encoding; it has precedence over `TC` and stock data. Additional guide types
-  are supported through `TC` rows.
+  are supported through `TC` rows. `typeGen: 4..9` explicitly selects a stock
+  chart instead of `TC`, independently of `gen`; `typeChart` still wins.
 - `moves`, `species` and `items` recursively overlay the upstream data shape
   after guide data. For species this includes `baseStats`, `types`, `weightkg`,
   `nfe`; for moves `basePower`, `type`, `category`, `flags`, `multihit`, `willCrit`,
   `overrideDefensiveStat`, etc. Arrays replace rather than merge.
 - `effect` aliases abilities/items/moves/species to an existing engine effect;
   `effect: ""` disables a named ability/item/move effect. Unknown moves already
-  behave as plain attacks. Arbitrary new effect code is **not** accepted in JSON.
-  Guide display labels and IDs remain unchanged.
+  behave as plain attacks. New effects use the declarative rules below, never
+  JavaScript embedded in JSON. Guide display labels and IDs remain unchanged.
 - `status` maps declared profile status keys to upstream status keys. Only
   statuses present in `profile.status` are accepted.
 - `critStages` is reserved metadata for a future crit-probability control; the
   current contract selects crit explicitly per slot and does not sample rates.
-  Arbitrary custom ability/item effects, rounding rules, stat formulas, new
-  generation mechanics and residual-damage simulations need later engine work,
-  not pretend data-only support.
+  Stat-formula changes outside the exposed phases, new generation mechanics
+  and residual-damage simulations require engine work.
+
+### Ordered modifier rules
+
+`over.rules` is an ordered array of rules. Each rule selects a `phase`, optionally
+tests `when`, then performs actions in this order: `set`, `value`, `remove`,
+`replace`, `append`, `note`. Rules at the same phase run in array order. Omitted
+`when` means always. Actions are optional; `value` replaces the phase's scalar,
+array or object, while `set` mutates selected context paths. `remove`, `replace`
+and `append` are only valid on array-valued phases. `remove` removes the first
+matching value; `replace` replaces the last matching value, doing nothing if
+absent. Unknown phases/operators fail explicitly rather than returning vanilla
+damage. These profiles are trusted build inputs, not a general sandbox for
+untrusted JSON.
+
+Synthetic example, not a port of any hack's profile:
+
+```json
+{
+  "items": {"Practice Band": {"effect": ""}},
+  "rules": [
+    {
+      "phase": "attackMods",
+      "when": {"op": "and", "args": [
+        {"op": "eq", "args": [{"ref": "names.atkItem"}, "Practice Band"]},
+        {"op": "eq", "args": [{"ref": "move.category"}, "Physical"]}
+      ]},
+      "append": [8192],
+      "note": "Practice strength"
+    },
+    {
+      "phase": "movePower",
+      "when": {"op": "eq", "args": [{"ref": "names.move"}, "Practice Strike"]},
+      "value": {"op": "mul", "args": [{"ref": "value"}, {"ref": "state.hit"}]}
+    }
+  ]
+}
+```
+
+This example doubles physical Attack in modern mechanics, and gives a custom
+move linearly increasing per-hit power. Use `append: [2]` for the Gen 4 attack
+modifier equivalent. Use `set: {"move.type": "Fire"}` at `afterMoveType` for a
+type change, or `value: false` at `critical` to suppress a selected critical hit.
+
+#### Phases and rounding
+
+| Phase | `value` and placement |
+| --- | --- |
+| `beforeStats` | Mutation only, before native final-stat preparation; edit boosts, status, effects or field flags here. |
+| `afterMoveType` | Mutation only, after native initial move-type changes. |
+| `effectiveness` | Scalar for each defender type; `state.effectivenessType` identifies that type. Runs before native immunity exits. |
+| `critical` | Boolean after native critical eligibility; may differ by hit. |
+| `turnOrder` | `"first"` or `"last"` in speed-dependent base-power selection. |
+| `movePower` | Scalar move-specific base power before power modifiers; hit-aware. |
+| `powerMods` | Native base-power modifier list, before chaining. |
+| `attackMods` | Native attacking-stat modifier list, before chaining. |
+| `defenseMods` | Native defending-stat modifier list, before chaining. |
+| `attack` | Scalar attacking stat after native modifiers. |
+| `defense` | Scalar defending stat after native modifiers. |
+| `beforeWeather` | Mutation only, immediately before weather's damage adjustment. |
+| `baseDamage` | Scalar at the end of native base-damage processing, including critical rounding. |
+| `finalMods` | Native final-damage modifier list before chaining. |
+| `beforeRolls` | Mutable damage-input object before random rolls, once per hit. |
+| `roll` | Final integer for one random roll; `state.rollIndex` is 0-15. |
+
+These are semantic insertion points in our pinned Smogon engine, not promises
+that another calculator has identical intermediate state or ordering. Inspect
+`instrument.mjs` and compare final rolls when translating a profile.
+
+In Gen 5-9 the four `*Mods` phases use fixed-point numbers, **4096 = 1x**.
+Native chaining, clamping and generation rounding remain in Smogon code. Gen 4
+inlines its native modifiers instead of collecting lists: our four custom lists
+start empty and use ordinary multipliers, applied sequentially with `floor`.
+Its native inline modifiers have already run at the corresponding custom phase.
+For a changed Gen 4 effect, suppress that native effect first, then add the new
+one; do not assume a native array entry exists to replace. Use scalar phases
+and explicit rounding expressions if the hack needs a different operation order.
+
+Numeric modifier replacement can collide with an unrelated equal multiplier.
+Prefer disabling a changed named effect with `effect: ""` (or changing the live
+effect in `beforeStats`) and supplying its replacement with a rule conditioned
+on `names.*`. This is our equivalent of an explicit named-effect handoff; there
+is no synthetic `modifierId` injected into every native effect block.
+
+`beforeRolls.value` in Gen 5-9 has `baseDamage`, `effectiveness`, `isBurned`,
+`stabMod`, `finalMod`, `protect`. Gen 4 has `baseDamage`, `stabMod`,
+`type1Effectiveness`, `type2Effectiveness`, `filterMod`, `ebeltMod`,
+`metronomeMod`, `tintedMod`, `berryMod`. These are native internal units, not
+interchangeable across generations. Rule writers own integer rounding when
+replacing a scalar; the adapter does not silently round a custom `roll` value.
+Native early exits (status, zero power, immunity, fixed damage) may bypass
+later phases. Variable-power input is still required before rules execute.
+
+#### Context, expressions and actions
+
+Paths are dot-separated, including array indices. Available roots:
+
+- `atk`, `def`: live engine Pokemon, including `rawStats`, `stats`, `boosts`,
+  `types`, `status`, `item`, `ability`, `species`, `originalCurHP`.
+- `move`, `field`, `desc`: live engine objects and description metadata.
+- `names`: original guide names `atk`, `def`, `atkAbility`, `defAbility`,
+  `atkItem`, `defItem`, `move`. Match custom names here, not engine effect aliases.
+- `input`: original `{atk,def,slot,field}`; read-only, with guide IDs/indices.
+- `mechanics`: numeric profile generation. `meta` contains `atkItem`, `defItem`
+  and `move` metadata, including profile-added properties for classification.
+- `state`: mutable scratch data per calculation; `hit` is 1-based, `hitCount`
+  is 0-based, `hits` is the selected count, `originalPower` is supplied power.
+  Phase-dependent keys include `isCritical`, `basePower`, `typeEffectiveness`,
+  `effectivenessType`, `hitsPhysical`, `rollIndex`. Do not assume every key is
+  available in every phase. Scratch state survives between hits, not matchups.
+- `value`: the current phase value.
+
+Writable roots for `set` are `atk`, `def`, `move`, `field`, `state`, `desc`,
+`value`. Input/data/profile objects are not modified. Mutate properties, not an
+entire context root, when the change must reach native mechanics. Forbidden
+path components are `__proto__`, `prototype`, `constructor`, `gen`. Expressions
+have a depth limit of 40; no function calls, code strings or `eval` are accepted.
+
+Expressions are JSON primitives, recursively evaluated arrays, `{ "ref": "path" }`,
+`{ "literal": <JSON> }` for deep-cloned object/array literals, or
+`{ "op": "name", "args": [<expressions>] }`:
+
+| Operators | Meaning |
+| --- | --- |
+| `and`, `or`, `if` | Short-circuit boolean combination; `if` has condition/yes/no arguments. |
+| `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `not` | Strict equality/comparison and boolean negation. |
+| `in`, `includes`, `startsWith`, `intersects` | Membership (`in`: right contains left), containment, prefix and array overlap. |
+| `add`, `sub`, `mul`, `div`, `mod`, `min`, `max` | Arithmetic; `add`/`mul`/`min`/`max` accept multiple arguments. |
+| `floor`, `ceil`, `round`, `pokeRound` | Explicit rounding; `pokeRound(x)` is `ceil(x - 0.5)`. |
+| `of32`, `of16` | Native unsigned 32-bit / low 16-bit arithmetic. |
+| `coalesce`, `lookup`, `positiveSum` | First non-nullish argument; object/key lookup; sum of positive object values (boosts). |
+
+`set` is a path-to-expression object, evaluated in insertion order. `value` is
+one expression. `remove`/`append` contain expression arrays; `replace` contains
+`{"from": <expression>, "to": <expression>}` entries. `note` is an expression
+converted to a short string and deduplicated in the result's notes.
+
+### hzla profile concept → our over key
+
+Reference reviewed: hzla/Dynamic-Calc-Decomps, branch `decomp`,
+`agent_notes/romhack_modifier_config.md`, profile registry and selected profiles
+under `calc/mechanics/romhacks/`, plus generation/type settings. That repository
+has no licence for its changes. This engine contains **no copied or translated
+hzla implementation or profile tables**. The table describes independent
+configuration concepts, not drop-in source compatibility. Per-hack sessions
+must derive their own data and compare all 16 rolls against a locally run
+reference before marking a hack verified.
+
+| hzla profile concept | Our profile / `over` key |
+| --- | --- |
+| Title matchers, profile id, supported gens, registry ordering | Explicit hack `cfg.calc.base`, `gen`, `over`; no title matching or browser globals. |
+| Species/move data generation (`gen`) | Guide `D.P`, `D.M/MV/AB`; metadata overlays `over.species/moves/abilities/items`. Our `gen` selects mechanics, not guide species data. |
+| Damage-mechanics generation (`dmgGen`) | Top-level profile `gen` (4-9), independent of guide data. |
+| Type-generation setting (`types`) | `over.typeGen`; normally guide `D.TC`, then `over.typeChart` per-pair changes. |
+| Critical multiplier / critical-rate stages | `over.critMultiplier` / `over.critStages` (rates metadata only); explicit slot crit. |
+| Shared context, temporary state, description annotations | Rules read live `atk/def/move/field`, scratch `state`, and `desc`; `note` labels the result. |
+| Pre-stat/switch-in adjustments | `beforeStats` rules and declared field flags for external switch-in state. |
+| Move-type conversion / custom weather types | `afterMoveType` rules; `move.type`, `field.weather`, original-name tests. |
+| Per-type effectiveness / immunity | `effectiveness` rules; `state.effectivenessType`; static `over.typeChart`. |
+| Critical eligibility hooks (`criticalHit`) | `critical` rule value, optionally conditioned on hit. |
+| Turn-order hooks | `turnOrder` rule value; `field` flags / input state as needed. |
+| Move base-power hooks (`moveBasePower`) | `movePower` scalar rules; `state.hit`/`originalPower` for per-hit formulae. |
+| Base-power modifiers (`basePowerMods`) | `powerMods` rules, `append` / `remove` / `replace` / complete `value`. |
+| Attack / defence modifier hooks | `attackMods` / `defenseMods` rules; scalar `attack` / `defense` for post-chain adjustments. |
+| Named modifier handoffs, skip-default markers | Disable native named effect via overlay/`beforeStats`, then condition custom rule on original `names.*`; no ambiguous numeric replacement needed. |
+| HP-, status-, boost-, shared-type-, species-dependent conditions | `when` expressions over live context, `positiveSum`, `intersects`, comparisons and scratch state. |
+| Ability/item rewrites and absent/new named effects | `over.abilities/items.*.effect` alias or suppress, plus phase rules. |
+| Item classifications, special stones, NFE and species exceptions | Metadata overlays, `meta.atkItem/defItem/move`, `atk/def.species.nfe`, guide-ID/name keyed species overrides. |
+| Base damage / weather-stage changes | `beforeWeather` mutation and `baseDamage` scalar rules; use explicit arithmetic/rounding. |
+| Final modifier hooks (`finalMods`) | `finalMods` rule array, native chaining in modern generations. |
+| Before-final-damage hooks (`beforeFinalDamage`) | `beforeRolls` object's damage/STAB/burn/effectiveness inputs; `roll` for final per-roll operations. |
+| Hit-index effects and damage arrays | `state.hit` / `hitCount` plus phase rules; additive result `per` preserves different distributions. |
+| Global/UI-only field options | Declare `{k,l,type,o,side,to}` in profile `field`; consume via `field`/`input.field`, never DOM/global reads. |
+| Utility arithmetic and helper tests | Declarative expression operators; expand named helper behaviour into independently authored data expressions. |
+
+Arbitrary JavaScript profiles are not automatically convertible. This vocabulary
+covers the reviewed modifier concepts, but not every possible future hook or
+full battle simulation. A translation needing an unavailable intermediate value,
+early-exit change or new insertion point must extend the engine with tests,
+rather than claim parity through an approximate final-roll multiplier.
+
+## Node runner and comparison harness
+
+The committed engine runs in a Node VM without jsdom or installed packages:
+
+```sh
+node tools/calc/run.mjs hacks/emerald-imperium/data.json template/calc/profiles/expansion.json matchups.json
+node tools/calc/run.mjs hacks/emerald-imperium/data.json profile.json - < matchups.json
+```
+
+`profile.json` can be a full profile or `{"base":"expansion","over":{...}}`;
+the runner merges a base recursively like assembly (arrays replace). Matchup
+input is one `{atk,def,slot,field?}` or an array of those. Output is a result/null
+or an equally ordered array. Species, move, ability and item selectors retain
+the plan's guide IDs/indices. Errors go to stderr with a nonzero exit status.
+
+For a local diff tool:
+
+```js
+import {createEngine, resolveProfile, runMatchups} from './tools/calc/run.mjs';
+const results = await runMatchups(data, profile, matchups);
+const engine = await createEngine(data, await resolveProfile(profile));
+const stats = engine.stats(matchups[0].atk);
+```
+
+Compare `rolls` for hit 1 and expand `per || Array(hits).fill(rolls)` for every
+hit. A separate reference adapter must apply the same guide data, settings,
+current HP, hit count and field; do not compare only min/max. `test.mjs` uses a
+separate direct Smogon oracle and synthetic hand-checked overrides, not hzla
+code. It covers Gen 4/5 and modern mechanics, per-hit effects, exact KO
+convolution, runner single/batch input, and input immutability. Reference parity
+against a specific hack's local hzla calculator remains a per-hack audit.
