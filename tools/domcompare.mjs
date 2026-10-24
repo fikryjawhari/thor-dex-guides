@@ -15,45 +15,27 @@
 // content-visibility is forced to visible in every tab (see tab()): offscreen skipped parts are not observed or measured, so DOM that depends on them varied from run to run.
 // IPC flooding protection is off: each route makes 2 history updates and Chrome stalls a tab for ~10 s after 200.
 // Timing --jobs: tools/README.md.
-import { spawn } from 'node:child_process';
-import { mkdtempSync, existsSync, readFileSync, rmSync } from 'node:fs';
-import { tmpdir, availableParallelism } from 'node:os';
-import { join, resolve } from 'node:path';
+import { availableParallelism } from 'node:os';
+import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { startBrowser } from './browser.mjs';
 
 const args = process.argv.slice(2);
 const files = args.filter(a => !a.startsWith('--')).map(f => pathToFileURL(resolve(f)).href);
 const opt = k => (args.find(a => a.startsWith(`--${k}=`)) || '').slice(k.length + 3);
 const KB = args.includes('--kb'), PAT = opt('routes'), JOBS = Math.max(1, +opt('jobs') || Math.max(2, availableParallelism() >> 2));
 const IGN = args.filter(a => a.startsWith('--ignore=')).map(a => a.slice(9));
-const CHROME = process.env.CHROME || ['C:/Program Files/Google/Chrome/Application/chrome.exe',
-  'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(existsSync);
-const prof = mkdtempSync(join(tmpdir(), 'domcmp-'));
-const chrome = spawn(CHROME, ['--headless=new', '--remote-debugging-port=0', `--user-data-dir=${prof}`,
-  '--allow-file-access-from-files', '--disable-background-timer-throttling', '--disable-renderer-backgrounding',
-  '--disable-backgrounding-occluded-windows', '--disable-ipc-flooding-protection', 'about:blank'], { stdio: 'ignore' });
-let closing = false;
+let closing = false, browser;
 const fail = msg => { if (!closing) { console.log(msg); cleanup().then(() => process.exit(2)); } };
-chrome.on('exit', c => fail('Chrome exited ' + c));
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const t0 = Date.now(), secs = () => ((Date.now() - t0) / 1000).toFixed(1) + 's';
 
 // One browser-level connection; each tab is a flat session on it.
-let ws, id = 0; const pending = new Map();
-async function connect() {
-  for (let i = 0; i < 100; i++) {
-    try {
-      const port = readFileSync(join(prof, 'DevToolsActivePort'), 'utf8').split('\n')[0];
-      const v = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json();
-      ws = new WebSocket(v.webSocketDebuggerUrl); await new Promise((r, j) => { ws.onopen = r; ws.onerror = j; });
-      ws.onclose = () => fail('Chrome connection closed: aborting');
-      ws.onmessage = e => { const m = JSON.parse(e.data); if (m.id && pending.has(m.id)) { pending.get(m.id)(m); pending.delete(m.id); } };
-      return;
-    } catch { } await sleep(100);
-  }
-  throw new Error('no Chrome');
-}
-const send = (method, params = {}, sessionId) => new Promise(r => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({ id: i, method, params, sessionId })); });
+const connect = async () => {
+  browser = await startBrowser({ profilePrefix: 'domcmp-', onDisconnect: fail, flags: ['--disable-background-timer-throttling',
+    '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows', '--disable-ipc-flooding-protection'] });
+};
+const send = (method, params, sessionId) => browser.send(method, params, sessionId);
 
 async function tab() {
   const { result: { browserContextId } } = await send('Target.createBrowserContext');
@@ -127,11 +109,7 @@ async function run(t, url, routes, want = []) {
   return t.ev(`(${PAGE})(${JSON.stringify(routes)}, ${JSON.stringify(want)}, ${JSON.stringify(IGN)})`);
 }
 
-async function cleanup() {
-  closing = true;
-  if (chrome.exitCode === null) { const gone = new Promise(r => chrome.once('exit', r)); chrome.kill(); await Promise.race([gone, sleep(3000)]); }
-  for (let i = 0; i < 10; i++) { try { rmSync(prof, { recursive: true, force: true }); return; } catch { await sleep(300); } }
-}
+async function cleanup() { closing = true; await browser?.close(); }
 
 let code = 0;
 try {
