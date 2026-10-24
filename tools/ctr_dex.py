@@ -20,7 +20,7 @@ XYWE/RSWE, Area7/EncounterTable/ZoneData7), pinned in tools/romfs-extraction.md.
 import json, os, struct, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from garc import entry, mini, read_garc, text
+from garc import entry, mini, read_archive, text
 
 TM6 = [468, 337, 473, 347, 46, 92, 258, 339, 474, 237, 241, 269, 58, 59, 63, 113, 182, 240, 355, 219,
           218, 76, 479, 85, 87, 89, 216, 91, 94, 247, 280, 104, 115, 482, 53, 188, 201, 126, 317, 332,
@@ -116,14 +116,6 @@ def bits(data):
     return [i for i in range(len(data) * 8) if data[i >> 3] >> (i & 7) & 1]
 
 
-def archive(roots, path):
-    for r in roots:
-        p = os.path.join(r, path)
-        if os.path.exists(p):
-            return read_garc(p), r
-    raise FileNotFoundError(path)
-
-
 def apply_ips(base, patch, start):
     """Apply the parts of an IPS patch that fall inside a table of bytes that starts at code offset `start`."""
     out = bytearray(base)
@@ -184,7 +176,7 @@ def main(game, out, *args):
     used = {}
 
     def arc(key):
-        es, root = archive(roots, g[key])
+        es, root = read_archive(roots, g[key])
         used[g[key]] = "hack" if root == roots[0] else root
         return es
 
