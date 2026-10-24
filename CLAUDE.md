@@ -132,25 +132,28 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
   the link; give me that link. Same name = same link, I reload. Not artifacts: T3 Code sessions can't make them.
 - **Complex UI work (several linked decisions) goes in steps, each its own small context** (trial since 2026-10-20;
   revise it, and add workflows for other kinds of work, once a few runs show what works):
-  1. *Decide* (a Sonnet session the user talks to directly, in a worktree): cheap mockups only (a small standalone
+  1. *Decide* (a Sol session the user talks to directly, in a worktree; Haiku xhigh when Sol is low): cheap mockups only (a small standalone
      page with sampled data from data.json, not the full build), wrapped in the Thor frame. Settle every behaviour,
      then write the spec to `plans/<thing>.md`: what goes, what each control does in every state, edge cases, checks.
      No template or extract changes in this step.
-  2. *Build* (the Opus main chat reads the spec, then dispatches a Sonnet subagent in the worktree for template / UI
-     logic, or a Haiku one for mechanical work: extract rules, notes; or builds it itself if the spec is already
-     "this code in this place"). The build ends with the guide in the Thor frame put on the phone preview.
+  2. *Build* (the Opus main chat reads the spec, then dispatches agents (Which model) for template / UI logic and for
+     mechanical work: extract rules, notes; or builds it itself if the spec is already "this code in this place"). The build ends with the guide in the Thor frame put on the phone preview.
   3. *Fix* in the main chat (the user's feedback after testing on the phone / Thor).
-  4. *Audit* (a Haiku subagent): `assemble.py`, `domcompare` against main, the viewer-size checks, scenario runs from
+  4. *Audit* (a Haiku xhigh agent): `assemble.py`, `domcompare` against main, the viewer-size checks, scenario runs from
      the spec; reports pass / fail with evidence.
   Template builds are one at a time (Parallel sessions); decide steps can run in parallel.
 - **When a plan is built and merged, delete it.** Lasting decisions go in `template/README.md` (template / UI) or the
   hack's `notes.md` (data), the status in PROGRESS.md; git history keeps the plan and its mockup. `plans/` only ever
   holds work not done yet.
-- **Which model** (the session's own; agents it dispatches pick theirs, see Build above):
-  - Opus: building a spec, fixing after my tests, merges, anything that picks branches or dispatches agents; a new
-    hack's first build; anything unclear or touching data rules across tabs.
-  - Sonnet: decide sessions (mockups and specs with me); a small, fully specified change to one tab's extract script.
-  - Haiku: never a session I start; only agents an Opus session dispatches (audits, mechanical jobs).
+- **Which model** (ladder: Sol, Haiku, Opus; no Sonnet: it scores like Opus low and Haiku xhigh at a higher cost):
+  - Opus (medium): the main chat: building a spec, fixing after my tests, merges, anything that picks branches or
+    dispatches agents; a new hack's first build; anything unclear or touching data rules across tabs; and an agent
+    job Haiku can't do.
+  - Sol (`gpt-6.1-sol` via T3 `delegate_task`): first choice for dispatched agents and decide sessions (about Opus
+    quality at xhigh, a third of the cost). I say when my Sol usage is low.
+  - Haiku: effort xhigh when Sol is low (about Sol low / Sonnet medium, a quarter of Sonnet's cost); high or medium for
+    mechanical jobs (audits, extract rules, notes).
+  - Every agent commits after each working sub-step (`WIP:` when incomplete), so another can take over on a usage limit.
   - Effort: medium unless I say otherwise.
 - **Thor frame** (`tools/mockup/thor-frame/`): `python -I tools/mockup/thor-frame/build.py <page.html> <out.html>
   [--title] [--sub] [--panel]` wraps a built guide or a mockup's inner page in a Thor-sized screen (the viewer sizes,
