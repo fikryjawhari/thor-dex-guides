@@ -36,8 +36,9 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    Likely fix: a ResizeObserver on a hidden 1em probe calling `barsSoon()`.
 5. **Skill:** the repo copy (`.agents/skills/rom-hack-offline-dex/`) is current; the claude.ai account skill Claude
    sessions load is the 2026-10-18 hand-build version. Re-upload the repo copy (zip with forward-slash paths).
-6. **Update checker** (`plans/update-checker.md`): one command reporting which hacks' sources changed. Run by hand.
-7. Small known issues: HG's Charcoal item row reads `Found:` (looks like a gift); an Items box whose only sub-heading
+6. **Code cleanup** (`plans/code-cleanup.md`): a quality pass (dead code, repeated logic into shared helpers), for a Codex session. Phase 1 is a read-only findings list.
+7. **Update checker** (`plans/update-checker.md`): one command reporting which hacks' sources changed. Run by hand.
+8. Small known issues: HG's Charcoal item row reads `Found:` (looks like a gift); an Items box whose only sub-heading
    is named like the box shows the name three times at 260 × 316 (raised, not redesigned); HG's Infiltrator ability
    page was 262 px wide at 260 (probably the footer; recheck).
 
