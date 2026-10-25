@@ -136,6 +136,13 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
   PENDING until U4 (then remove it). The 33 failing cases are U4a damage twins waiting for U4 (Simple on seeds /
   theft, Download eligibility, H theft off, Sword / Shield gate). **Next: U4** in the adapter (result `pre`, the
   `beforeStats` fixes), then U7.
+- U4a done (`c6fbc7d`; E +96, P +302, H +456, I +448 cases; boundary section in `plans/calc-state-engine.md` → "U4a:
+  A fixture boundary"). state_check now: 33 damage-twin failures + 651 pending `pre`, all for U4.
+- **Handover 2026-10-26 (session 1 ends here):** last commit = this one; claim deleted. Next session: U4 (Opus, the
+  orchestrator writes it: read the U4a section and a sample of `a-*` cases per hack, then `adapter.js`:
+  `beforeStats` + result `pre`; remove `pre` from state_check PENDING), then U7. Open with the user: Focus keys
+  (`atkFocus` / `defFocus`, built that way), the Hardlove rebuild drift, the two hack.json profile additions (H
+  `over.state`, EI `over.critItems`). Nothing pushed yet in this pass: ask before pushing `worktree-damage-calc`.
 
 ## Next session prompt
 ```
@@ -145,5 +152,5 @@ plans/calc-dynamic-power.md → "Engine pass 2026-10-26" (findings, input contra
 read-only: git show origin/worktree-damage-calc-toggles:plans/calc-state-toggles.md. Write your claim.
 Start at the first unit not marked done in the unit table (U1 if none): check the Sol model ID with
 orchestrator_capabilities, then dispatch it per the brief. Confirm the Focus Energy field keys with me when U6 starts.
-Ask me before every push.
+Ask me before every push. Keep the Progress log up to date and commit often.
 ```
