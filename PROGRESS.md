@@ -47,7 +47,11 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    EVs blocked in direct engine calls, Gems x1.5, source contact flags restored; 53 source/stock checks and 10
    viewer-size/mode checks pass. No independent hack oracle: in-game tests and Protean/type-history states remain
    open (its notes.md → Damage calc). Copied 0.8.4 importer exports to ignored `.src/calc-import/`; guide stays
-   0.8.3. Photonic Sun / Eternal X still hide the calc. Not merged until trusted. Next, each in its own session:
+   0.8.3. Photonic Sun now has a Gen 7 field profile (2026-10-25): every requested standard field plus inverse,
+   Flower Gift and Battery; 107 fixtures (101 exact hzla matches, 6 documented Wonder Room / defensive Flower
+   Gift oracle defects retained as stock Gen 7), 10 viewer-size/mode passes. Notes list the remaining individual
+   effect/in-game checks. Phone preview: `calc-photonic.html`. Eternal X still hides the calc. Not merged until
+   trusted. Next, each in its own session:
    - Mechanics for Hardlove Gold, Photonic Sun, Eternal X (`.agents/references/calc-mechanics.md`; links and HG's rules
      in the plan → Calc references per hack), then a refinement pass per hack (EI's open points in its notes).
    - Save readers: Gen 3 + EI's ID tables first (`.agents/references/calc-save-reader.md`), then the app's file picker

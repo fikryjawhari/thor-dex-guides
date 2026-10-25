@@ -26,6 +26,18 @@ An explicit profile `evs: false` ignores supplied EVs in both `stats` and `calc`
 omitting it preserves EV-aware behaviour. This is independent of the guide's
 `cfg.evs` UI switch so direct engine calls cannot accidentally add EVs.
 
+## Photonic Sun validation
+
+`node photonic_check.mjs` (also in `npm test`) validates the Photonic Gen 7 field profile:
+107 fixtures, direct stock Gen 7 parity for non-inverse cases, explicit inverse effectiveness and positive/negative
+field assertions. `node tools/calc/hzla_compare.mjs photonic-sun` from the repository root compares against the
+pinned `pspm` oracle: 101 exact matches and 6 documented differences (Wonder Room and defensive Flower Gift).
+These differences retain stock Gen 7, not oracle bugs; see the hack's notes. No shared engine change is needed.
+`node tools/scenarios/calc-photonic.mjs dist/photonic-sun.html` checks actual controls/options and persistence at
+five viewer sizes in normal/dvkb modes. Its profile adds inverse, Flower Gift and Battery to the Gen 7 fields
+without altering another guide's field list. Inverse is expressed as a per-defending-type effectiveness rule;
+ability immunities still apply. This is a field pass, not a complete audit of Photonic's individual effects.
+
 ## Data ownership and size
 
 The adapter supplies its own Generation interface to Smogon's Gen 4, Gen 5/6 and

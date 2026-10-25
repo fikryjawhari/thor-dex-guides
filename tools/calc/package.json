@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
-    "test": "node test.mjs && node hardlove_check.mjs"
+    "test": "node test.mjs && node hardlove_check.mjs && node photonic_check.mjs"
   },
   "dependencies": {
     "@smogon/calc": "0.12.0"

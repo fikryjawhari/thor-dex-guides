@@ -18,6 +18,273 @@
    "trainers",
    "trainers"
   ],
+  "calc": {
+   "base": "gen7",
+   "field": [
+    {
+     "k": "gameType",
+     "l": "Battle",
+     "type": "select",
+     "o": [
+      [
+       "Singles",
+       "Singles"
+      ],
+      [
+       "Doubles",
+       "Doubles"
+      ]
+     ],
+     "side": "field",
+     "to": "gameType"
+    },
+    {
+     "k": "weather",
+     "l": "Weather",
+     "type": "select",
+     "o": [
+      [
+       "",
+       "None"
+      ],
+      [
+       "Sun",
+       "Sun"
+      ],
+      [
+       "Rain",
+       "Rain"
+      ],
+      [
+       "Sand",
+       "Sandstorm"
+      ],
+      [
+       "Hail",
+       "Hail"
+      ],
+      [
+       "Harsh Sunshine",
+       "Harsh sunshine"
+      ],
+      [
+       "Heavy Rain",
+       "Heavy rain"
+      ],
+      [
+       "Strong Winds",
+       "Strong winds"
+      ]
+     ],
+     "side": "field",
+     "to": "weather"
+    },
+    {
+     "k": "terrain",
+     "l": "Terrain",
+     "type": "select",
+     "o": [
+      [
+       "",
+       "None"
+      ],
+      [
+       "Electric",
+       "Electric"
+      ],
+      [
+       "Grassy",
+       "Grassy"
+      ],
+      [
+       "Misty",
+       "Misty"
+      ],
+      [
+       "Psychic",
+       "Psychic"
+      ]
+     ],
+     "side": "field",
+     "to": "terrain"
+    },
+    {
+     "k": "gravity",
+     "l": "Gravity",
+     "type": "toggle",
+     "side": "field",
+     "to": "isGravity"
+    },
+    {
+     "k": "wonderRoom",
+     "l": "Wonder Room",
+     "type": "toggle",
+     "side": "field",
+     "to": "isWonderRoom"
+    },
+    {
+     "k": "magicRoom",
+     "l": "Magic Room",
+     "type": "toggle",
+     "side": "field",
+     "to": "isMagicRoom"
+    },
+    {
+     "k": "inverse",
+     "l": "Inverse battle",
+     "type": "toggle",
+     "side": "field",
+     "to": "isInverse"
+    },
+    {
+     "k": "atkReflect",
+     "l": "Attacker Reflect",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isReflect"
+    },
+    {
+     "k": "atkLightScreen",
+     "l": "Attacker Light Screen",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isLightScreen"
+    },
+    {
+     "k": "atkAuroraVeil",
+     "l": "Attacker Aurora Veil",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isAuroraVeil"
+    },
+    {
+     "k": "atkTailwind",
+     "l": "Attacker Tailwind",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isTailwind"
+    },
+    {
+     "k": "atkHelpingHand",
+     "l": "Attacker Helping Hand",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isHelpingHand"
+    },
+    {
+     "k": "atkFriendGuard",
+     "l": "Attacker Friend Guard",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFriendGuard"
+    },
+    {
+     "k": "defReflect",
+     "l": "Defender Reflect",
+     "type": "toggle",
+     "side": "def",
+     "to": "isReflect"
+    },
+    {
+     "k": "defLightScreen",
+     "l": "Defender Light Screen",
+     "type": "toggle",
+     "side": "def",
+     "to": "isLightScreen"
+    },
+    {
+     "k": "defAuroraVeil",
+     "l": "Defender Aurora Veil",
+     "type": "toggle",
+     "side": "def",
+     "to": "isAuroraVeil"
+    },
+    {
+     "k": "defTailwind",
+     "l": "Defender Tailwind",
+     "type": "toggle",
+     "side": "def",
+     "to": "isTailwind"
+    },
+    {
+     "k": "defHelpingHand",
+     "l": "Defender Helping Hand",
+     "type": "toggle",
+     "side": "def",
+     "to": "isHelpingHand"
+    },
+    {
+     "k": "defFriendGuard",
+     "l": "Defender Friend Guard",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFriendGuard"
+    },
+    {
+     "k": "atkFlowerGift",
+     "l": "Attacker Flower Gift",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFlowerGift"
+    },
+    {
+     "k": "atkBattery",
+     "l": "Attacker Battery",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isBattery"
+    },
+    {
+     "k": "defFlowerGift",
+     "l": "Defender Flower Gift",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFlowerGift"
+    },
+    {
+     "k": "defBattery",
+     "l": "Defender Battery",
+     "type": "toggle",
+     "side": "def",
+     "to": "isBattery"
+    }
+   ],
+   "over": {
+    "rules": [
+     {
+      "phase": "effectiveness",
+      "when": {
+       "ref": "input.field.inverse"
+      },
+      "value": {
+       "op": "if",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "value"
+          },
+          0
+         ]
+        },
+        2,
+        {
+         "op": "div",
+         "args": [
+          1,
+          {
+           "ref": "value"
+          }
+         ]
+        }
+       ]
+      },
+      "note": "Inverse battle: invert each defending type; type immunities become weaknesses. Ability immunities remain."
+     }
+    ]
+   }
+  },
   "ls": {
    "dex": "psdex",
    "calc": "pscalc",

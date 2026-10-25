@@ -152,6 +152,59 @@ carry one `cap` [level, who, where, battles left] or no cap after the League, an
 [name, level] list and TR.mini is absent; mons carry `ao` ("Stakeout / Strong Jaw") when the ability slot is random; WK
 has no cheats or checklist steps, and WK.docs holds the game docs.
 
+### Damage calc
+
+2026-10-25: field-mechanics pass for 2.38 Rebalanced. `cfg.calc.base = "gen7"`; species stats/types and move
+power/category come from this guide's game data, not the oracle's backup. EVs remain enabled. The oracle is
+hzla Dynamic-Calc-Decomps, `data=pspm`, `gen=7`, `dmgGen=7`, `types=6`, `critGen=7`, title
+`Photonic Sun/Prismatic Moon`, backup `pspm`, pinned commit `ff6c3e339e276e6b4e8e44db58750b6534bc26aa`.
+Gen 6 and Gen 7 use the same type chart; no type-chart override is needed. No hzla code or tables are shipped.
+
+The profile keeps the standard Gen 7 fields, including Singles/Doubles, all four terrains, Sun/Rain/Sand/Hail,
+Harsh Sunshine/Heavy Rain/Strong Winds, Gravity, Magic Room, Wonder Room, both sides' Reflect/Light Screen,
+Aurora Veil, Helping Hand, Tailwind and Friend Guard. It adds both sides' Flower Gift and Battery plus an
+optional inverse-battle scenario toggle. These are calculator scenario inputs, not claims that every condition
+can be encountered in Photonic Sun's story. No shared template, shared base profile or storage key changed.
+
+| Setting / rule | Evidence and checks |
+| --- | --- |
+| Gen 7 field mechanics | `@smogon/calc` 0.12.0, `src/mechanics/gen789.ts`; fixtures cover spread versus single-target damage, physical/special screens and critical bypass, non-stacking screens, support and negative/opposite-side controls. |
+| Weather / terrain | Every weather option with Fire and Water; harsh-weather nullification; sand Rock Sp. Def; strong winds on single/dual-type Flying targets; grounded/airborne terrain and priority blocking; Grassy Earthquake. Gen 7 terrain boosts, not Gen 8's weaker boosts. |
+| Magic Room | Choice Band and Eviolite baselines versus disabled items. |
+| Wonder Room | Raw Defense and Sp. Def swap once, including Psyshock; `@smogon/calc` `src/mechanics/util.ts:214`, `src/mechanics/gen789.ts:1524`. |
+| Flower Gift | Attack and Sp. Def in Sun/Harsh Sunshine, no boost in rain/no weather or to the wrong category; defensive implementation at `src/mechanics/gen789.ts:1604`. |
+| Tailwind | Payback changes power when attacker Tailwind reverses turn order; both sides' Tailwind preserves it. |
+| Inverse | Declarative `effectiveness` rule: invert each defending type's multiplier (0 becomes 2); no ability-immunity bypass. Fixtures cover weakness, resistance, type immunity, dual types, Levitate, Freeze-Dry and Flying Press. |
+
+`calc_matchups.json` has 107 cases: **101 match all 16 hzla rolls; 6 known differences; no unexplained mismatches**.
+The six differences deliberately retain stock Gen 7 behaviour:
+- Wonder Room (Tackle, Psychic, Psyshock): the pinned oracle's active `calc/mechanics/gen789.js:54-57` swaps raw
+  defenses twice (`checkRawStatChanges`, then `checkWonderRoom`), and line 1076 selects the opposite attacking
+  stat for physical moves. Ours swaps defenses once and does not change the attacking stat.
+- Defensive ally Flower Gift (Sun, Harsh Sunshine, combined Doubles support): the active oracle's
+  `calculateDfModsSMSSSV` omits it, although its separate `calc/mechanics/vanilla/gen789.js:1231` includes it.
+  Ours applies the normal x1.5 Sp. Def modifier. Do not remove the modifier just to match the broken oracle path.
+
+Checks: `node tools/calc/photonic_check.mjs` runs all 107 fixtures, compares every non-inverse case's 16 rolls
+directly with uninstrumented stock Gen 7 using guide stat/move overrides, and asserts inverse effectiveness plus
+positive/negative field relationships. Hand-checked base damage for the divergent singles cases: Wonder Room
+Tackle = 20 before STAB (130 Attack / 125 swapped Defense), Psychic = 136 (85 Sp. Atk / 25 swapped Sp. Def),
+Psyshock = 25 (85 Sp. Atk / 125 swapped Defense); defensive Flower Gift Psychic = 20 (85 Sp. Atk / 187 boosted
+Sp. Def, half-down rounding from 125 x1.5). All five 16-roll arrays are asserted independently of the stock API.
+Included in `npm test --prefix tools/calc` (81 shared + 53 Hardlove + 107
+Photonic checks pass). `node tools/calc/hzla_compare.mjs photonic-sun` writes its report under
+`.tmp/calc-photonic-sun/compare.json`. `python assemble.py` builds all four guides.
+`node tools/scenarios/calc-photonic.mjs dist/photonic-sun.html`: all controls/options, rendered damage, stored field
+values and reload persistence pass at 260x316, 480x392, 537x424, 832x424 and 832x316, normal and dvkb (10 passes).
+Phone preview: `calc-photonic.html` (Thor frame). The older shared `calc-controls.mjs` cannot run against this
+guide: its harness requires Emerald Imperium's Flannery trainer key `4.0.15`; it aborts before its assertions.
+The Photonic-specific scenario above covers this session's field controls without changing that unrelated suite.
+
+Not checked: in-game damage on the Thor, a full audit of every changed move/ability/item, Z-moves, Totem aura
+automation, switch-in/history-dependent states, residual-damage KO modelling or save import. The fixture oracle
+shares guide stats/types/power/category, so agreement does not independently validate the extracted data. Future
+mechanics refinements should add fixtures here rather than change other guides' base profiles.
+
 ## Checks
 
 `check.py` [baseline.json]: references (species, evolution and form links, trainer and partner teams), 29 caps, the 31
