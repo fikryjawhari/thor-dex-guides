@@ -5,7 +5,7 @@ import {Field} from '@smogon/calc/src/field';
 import {calculateDPP} from '@smogon/calc/src/mechanics/gen4';
 import {calculateBWXY} from '@smogon/calc/src/mechanics/gen56';
 import {calculateSMSSSV} from '@smogon/calc/src/mechanics/gen789';
-import {isGrounded} from '@smogon/calc/src/mechanics/util';
+import {getModifiedStat, isGrounded} from '@smogon/calc/src/mechanics/util';
 import {applyPhase, prepareRules} from './rules.js';
 import {speciesName, weightNames} from './names.js';
 
@@ -402,6 +402,121 @@ function critChance(entry, moveData, attacker, defender, values) {
   return {stage, p: blocked ? 0 : forced ? 1 : table[stage], forced};
 }
 
+// Stat changes before the hit (`pre`: [{who, stat, by, src, hit?}], actual changes only). The input stages are the
+// starting point, never a trigger of their own; Simple doubles and Contrary reverses each change on the battler that
+// receives it. First-hit events change the stages the hit uses: a held terrain seed (consumed), Dauntless Shield,
+// Download and Intrepid Sword on a fresh entry (the set's `abilityOn`; stock's own copies are switched off), the charge
+// turn of Skull Bash / Meteor Beam / Electro Shot, and Spectral Thief (target's losses, then the attacker's gains; a
+// hack's `over.state['Spectral Thief']`: `false` = no theft, `{theft: 'headroom'}` = expansion's: a stat at +6 is
+// skipped, the gain is cut to the room left before Simple / Contrary). Between-hit events (after each strike that
+// reaches the target, before the next: `hit` = that next hit) are listed; stock works the stage changes it knows into
+// the later hits' damage (Stamina, Water Compaction, Weak Armor, Kee / Maranga, Luminous Moss).
+const STAGES = ['atk', 'def', 'spa', 'spd', 'spe'];
+const SEEDS = {'Electric Seed': ['Electric', 'def'], 'Grassy Seed': ['Grassy', 'def'],
+  'Misty Seed': ['Misty', 'spd'], 'Psychic Seed': ['Psychic', 'spd']};
+const ENTRY = {'Dauntless Shield': [8, 'def'], 'Intrepid Sword': [8, 'atk']};
+const CHARGE = {'Skull Bash': 'def', 'Meteor Beam': 'spa', 'Electro Shot': 'spa'};
+// Between-hit items: [first generation, condition, stat, stages], consumed once.
+const HIT_ITEMS = {
+  'Weakness Policy': [6, hit => hit.eff > 1, ['atk', 'spa'], 2],
+  'Kee Berry': [6, hit => hit.cat === 'Physical', ['def'], 1],
+  'Maranga Berry': [6, hit => hit.cat === 'Special', ['spd'], 1],
+  'Luminous Moss': [6, hit => hit.type === 'Water', ['spd'], 1],
+  'Absorb Bulb': [5, hit => hit.type === 'Water', ['spa'], 1],
+  'Cell Battery': [5, hit => hit.type === 'Electric', ['atk'], 1],
+  'Snowball': [6, hit => hit.type === 'Ice', ['atk'], 1],
+};
+
+function stageChanger(pre) {
+  return (mon, who, stat, amount, src, hit) => {
+    const by = amount * (mon.hasAbility('Simple') ? 2 : 1) * (mon.hasAbility('Contrary') ? -1 : 1);
+    const before = mon.boosts[stat];
+    mon.boosts[stat] = Math.max(-6, Math.min(6, before + by));
+    if (mon.boosts[stat] !== before) pre.push({who, stat, by: mon.boosts[stat] - before, src, ...(hit ? {hit} : {})});
+  };
+}
+
+const holdsItem = (mon, field) => !!mon.item && !field.isMagicRoom && !mon.hasAbility('Klutz');
+
+// First-hit events, applied to the battlers' stages before the calculation.
+function firstHitStages(attacker, defender, atk, def, move, field, own) {
+  const pre = [];
+  const change = stageChanger(pre);
+  const sides = [[attacker, 'atk', atk, defender], [defender, 'def', def, attacker]];
+  for (const [mon, who] of sides) {
+    const seed = SEEDS[mon.item];
+    if (profile.gen >= 7 && seed && holdsItem(mon, field) && field.hasTerrain(seed[0])) {
+      change(mon, who, seed[1], 1, mon.item);
+      mon.item = '';
+    }
+  }
+  for (const [mon, who, set, other] of sides) {
+    const entry = ENTRY[mon.ability];
+    const fresh = set.abilityOn === true;
+    if (entry && fresh && profile.gen >= entry[0]) change(mon, who, entry[1], 1, mon.ability);
+    if (mon.hasAbility('Download') && fresh) {
+      // The target's Defense and Special Defense with their stages (Wonder Room doesn't swap them for Download).
+      const [defense, special] = ['def', 'spd'].map(stat => getModifiedStat(other.rawStats[stat], other.boosts[stat], generation));
+      change(mon, who, special <= defense ? 'spa' : 'atk', 1, 'Download');
+    }
+    if (entry || mon.hasAbility('Download')) mon.ability = 'Guide no ability';
+  }
+  const charge = CHARGE[move.name];
+  if (charge) {
+    // Stock's Gen 7+ code raises Meteor Beam / Electro Shot itself: only reported there.
+    change(profile.gen >= 7 && charge === 'spa' ? snapshot(attacker, field) : attacker, 'atk', charge, 1, move.name);
+  }
+  if (move.name === 'Spectral Thief') {
+    const theft = own?.['Spectral Thief'];
+    const immune = defender.types.some(type => generation.types.get(toID(move.type))?.effectiveness[type] === 0);
+    if (theft === false || immune) move.name = 'Guide Spectral Thief';
+    else {
+      const stolen = [];
+      for (const stat of STAGES) {
+        const amount = defender.boosts[stat];
+        if (amount <= 0 || (theft?.theft === 'headroom' && attacker.boosts[stat] >= 6)) continue;
+        stolen.push([stat, theft?.theft === 'headroom' ? Math.min(amount, 6 - attacker.boosts[stat]) : amount]);
+        pre.push({who: 'def', stat, by: -amount, src: 'Spectral Thief'});
+        defender.boosts[stat] = 0;
+      }
+      for (const [stat, amount] of stolen) change(attacker, 'atk', stat, amount, 'Spectral Thief');
+    }
+  }
+  return pre;
+}
+
+// A battler's stages and the ability / item that react to them, before the calculation changes them.
+const snapshot = (mon, field) => ({ability: mon.ability, item: holdsItem(mon, field) ? mon.item : '', boosts: {...mon.boosts},
+  hasAbility: (...names) => names.includes(mon.ability)});
+
+// Between-hit events for hits 2..n (`hit`: the strike's type, category and effectiveness).
+function betweenHitStages(atk, def, hits, hit) {
+  const pre = [];
+  const change = stageChanger(pre);
+  const item = HIT_ITEMS[def.item];
+  let used = !(item && profile.gen >= item[0]);
+  for (let next = 2; next <= hits; next++) {
+    if (profile.gen >= 7 && def.hasAbility('Stamina')) change(def, 'def', 'def', 1, 'Stamina', next);
+    if (profile.gen >= 7 && def.hasAbility('Water Compaction') && hit.type === 'Water') {
+      change(def, 'def', 'def', 2, 'Water Compaction', next);
+    }
+    if (profile.gen >= 5 && def.hasAbility('Weak Armor') && hit.cat === 'Physical') {
+      change(def, 'def', 'def', -1, 'Weak Armor', next);
+      change(def, 'def', 'spe', profile.gen >= 7 ? 2 : 1, 'Weak Armor', next);
+    }
+    if (profile.gen >= 5 && def.hasAbility('Justified') && hit.type === 'Dark') change(def, 'def', 'atk', 1, 'Justified', next);
+    if (profile.gen >= 8 && def.hasAbility('Steam Engine') && ['Fire', 'Water'].includes(hit.type)) {
+      change(def, 'def', 'spe', 6, 'Steam Engine', next);
+    }
+    if (profile.gen >= 8 && def.hasAbility('Cotton Down')) change(atk, 'atk', 'spe', -1, 'Cotton Down', next);
+    if (!used && item[1](hit)) {
+      for (const stat of item[2]) change(def, 'def', stat, item[3], def.item, next);
+      used = true;
+    }
+  }
+  return pre;
+}
+
 function calc(atk, def, slot, values = {}) {
   const entry = data.MV[slot.mv];
   const name = data.M[slot.mv];
@@ -464,7 +579,9 @@ function calc(atk, def, slot, values = {}) {
   const hits = hitCount(applyPhase(generation, 'hits', {}, selected));
   move.hits = hits;
   context.state.hits = hits;
+  const pre = firstHitStages(attacker, defender, atk, def, move, field, profile.over?.state);
   applyPhase(generation, 'beforeStats', {}, undefined);
+  const before = [snapshot(attacker, field), snapshot(defender, field)];
   const calculate = profile.gen === 4 ? calculateDPP : profile.gen <= 6 ? calculateBWXY : calculateSMSSSV;
   const result = calculate(generation, attacker, defender, move, field);
   const normalise = damage => typeof damage === 'number' ? Array(16).fill(damage) : [...damage];
@@ -484,6 +601,7 @@ function calc(atk, def, slot, values = {}) {
   const max = Math.max(...rolls);
   let eff = context.state.typeEffectiveness ?? 1;
   if (!max) eff = 0;
+  if (per.length > 1 && eff) pre.push(...betweenHitStages(...before, per.length, {type: move.type, cat: move.category, eff}));
   const description = result.rawDesc;
   const notes = [...context.notes];
   // Residual damage / recovery counts in the KO text only, never in the rolls or percentages.
@@ -515,6 +633,7 @@ function calc(atk, def, slot, values = {}) {
     pmax: per.reduce((sum, hit) => sum + Math.max(...hit), 0) * 100 / defender.maxHP(),
     ko: knockout(per, current, eot, defender.maxHP() - current), eff, notes: [...new Set(notes)],
     ...(parts.length ? {eot: parts} : {}),
+    ...(pre.length ? {pre} : {}),
   };
 }
 

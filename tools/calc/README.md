@@ -147,8 +147,28 @@ ordinary hit. Laser Focus, Lucky Chant and Dragon Cheer have no input yet.
 `over.state` (per hack) changes a move whose source differs: `false` = the state
 input does nothing, `{curl: false}` = Defense Curl doesn't double it, `{vol: false}`
 / `{vol: "power"}` = the target's state doesn't double it / doubles its power
-instead of its damage. Fixtures: `hacks/<hack>/calc_states.json`, checked by
-`state_check.mjs` (in `npm test`); each case cites its rule.
+instead of its damage, `"Spectral Thief": false` = no theft (Hardlove), `{theft:
+"headroom"}` = expansion's theft (Imperium: a stat at +6 is skipped, the gain is cut
+to the room left before Simple / Contrary). Fixtures: `hacks/<hack>/calc_states.json`,
+checked by `state_check.mjs` (in `npm test`); each case cites its rule.
+
+### Stat changes before the hit
+
+A result has `pre: [{who, stat, by, src, hit?}]` when the hit changes a stage before
+it lands (absent = none; actual changes only, after Simple / Contrary and the ±6 cap;
+the input stages are the starting point, never a trigger of their own). First-hit
+events change the stages the hit uses: a held terrain seed in its terrain (consumed;
+not under Magic Room or Klutz), Dauntless Shield, Download (the target's staged
+Defense vs Special Defense; tie = SpA) and Intrepid Sword on a fresh entry (the set's
+`abilityOn`; stock's own copies never fire), the charge turn of Skull Bash (Def) /
+Meteor Beam / Electro Shot (SpA), and Spectral Thief (the target's losses, then the
+attacker's gains; none against an immune target). Between-hit events carry `hit`, the
+next hit they come before: Stamina, Water Compaction, Weak Armor (Spe +1 before Gen
+7), Justified, Steam Engine, Cotton Down (the attacker's Speed), and once per item
+Weakness Policy, Kee / Maranga Berry, Luminous Moss, Absorb Bulb, Cell Battery,
+Snowball. Stock works the Defense ones into the later hits; a later hit of Foul Play
+does not read the target's new Attack. Post-move events (Berserk, Anger Shell, KOs),
+random secondaries and history (Intimidate, Rage, Charge) stay manual stages.
 
 ## Base profiles and fields
 

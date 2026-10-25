@@ -51,6 +51,7 @@
     ]
    ],
    "over": {
+    "state": {"Spectral Thief": {"theft": "headroom"}},
     "critItems": {"Leek": {"Farfetch'd": 1, "Sirfetch'd": 2}},
     "species": {
      "1168": {

@@ -5,8 +5,8 @@ import {readdir, readFile} from 'node:fs/promises';
 import {createEngine} from './run.mjs';
 
 const root = new URL('../../hacks/', import.meta.url);
-// Expectation kinds the engine does not produce yet: counted, not failed (U4 adds pre).
-const PENDING = new Set(['pre']);
+// Expectation kinds the engine does not produce yet: counted, not failed.
+const PENDING = new Set();
 // Results come from the engine's vm context (other-realm arrays), so compare as JSON.
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 // Every hit's rolls (`per`, or `hits` copies of `rolls`).
