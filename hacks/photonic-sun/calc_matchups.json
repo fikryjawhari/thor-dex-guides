@@ -111,6 +111,16 @@
     {"name":"tailwind-payback-atkTailwind","atk":{"id":"blastoise","lv":50,"ab":-1},"def":{"id":"charizard","lv":50,"ab":-1},"slot":{"mv":370},"field":{"atkTailwind":1}},
     {"name":"tailwind-payback-defTailwind","atk":{"id":"blastoise","lv":50,"ab":-1},"def":{"id":"charizard","lv":50,"ab":-1},"slot":{"mv":370},"field":{"defTailwind":1}},
     {"name":"tailwind-payback-atkTailwind-defTailwind","atk":{"id":"blastoise","lv":50,"ab":-1},"def":{"id":"charizard","lv":50,"ab":-1},"slot":{"mv":370},"field":{"atkTailwind":1,"defTailwind":1}},
-    {"name":"doubles-combined-support","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":93},"field":{"gameType":"Doubles","weather":"Sun","terrain":"Psychic","atkBattery":1,"atkHelpingHand":1,"defFriendGuard":1,"defLightScreen":1,"defFlowerGift":1},"difference":{"source":"@smogon/calc 0.12.0 src/mechanics/gen789.ts calculateDfModsSMSSSV; hzla ff6c3e33 calc/mechanics/gen789.js calculateDfModsSMSSSV versus calc/mechanics/vanilla/gen789.js:1231","reason":"Keep Gen 7 ally Flower Gift: Sp. Def x1.5 in sun/harsh sunshine. The active pinned hzla non-vanilla path omits defensive Flower Gift, although its vanilla path includes it."}}
+    {"name":"doubles-combined-support","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":93},"field":{"gameType":"Doubles","weather":"Sun","terrain":"Psychic","atkBattery":1,"atkHelpingHand":1,"defFriendGuard":1,"defLightScreen":1,"defFlowerGift":1},"difference":{"source":"@smogon/calc 0.12.0 src/mechanics/gen789.ts calculateDfModsSMSSSV; hzla ff6c3e33 calc/mechanics/gen789.js calculateDfModsSMSSSV versus calc/mechanics/vanilla/gen789.js:1231","reason":"Keep Gen 7 ally Flower Gift: Sp. Def x1.5 in sun/harsh sunshine. The active pinned hzla non-vanilla path omits defensive Flower Gift, although its vanilla path includes it."}},
+    {"name":"w2-low-kick","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":66},"field":{}},
+    {"name":"w2-grass-knot","atk":{"id":"blastoise","lv":50,"ab":-1},"def":{"id":"minior-red-core","lv":50,"ab":-1},"slot":{"mv":446},"field":{}},
+    {"name":"w2-heavy-slam","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":483},"field":{}},
+    {"name":"w2-heat-crash","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":534},"field":{}},
+    {"name":"w2-flail","atk":{"id":"snorlax","lv":50,"ab":-1,"hp":1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":174},"field":{}},
+    {"name":"w2-reversal","atk":{"id":"snorlax","lv":50,"ab":-1,"hp":1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":178},"field":{}},
+    {"name":"w2-gyro-ball","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"electrode","lv":50,"ab":-1},"slot":{"mv":359},"field":{}},
+    {"name":"w2-electro-ball","atk":{"id":"electrode","lv":50,"ab":-1},"def":{"id":"snorlax","lv":50,"ab":-1},"slot":{"mv":485},"field":{}},
+    {"name":"w2-regional-raichu","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"raichu-alola","lv":50,"ab":-1},"slot":{"mv":66},"field":{}},
+    {"name":"w2-mega-steelix","atk":{"id":"mega-steelix","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":483},"field":{}}
   ]
 }

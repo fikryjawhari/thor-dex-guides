@@ -43,6 +43,18 @@ Z-Move power changes appear on about 20 moves in the doc. They are power values;
 
 ## Needs Opus
 
+6. **W2 shared oracle harness (new):** `tools/calc/hzla_compare.mjs:168-169` rejects all variable-power
+   fixtures without `slot.bp` and lines 180-182 rename them `Guide fixed power`. W2 deliberately does not
+   set power, so its ten new fixtures report `needs explicit power` errors, not damage mismatches. The same
+   helper's `oracleGeneration()` uses 1 kg for unknown form names rather than `weightNames()`; preserve real
+   form weights when adding native auto-power support. This is shared code outside this unit's ownership.
+   Evidence: `.tmp/calc-refine/w2-photonic-oracle.mjs` loads the pinned oracle through the existing loader,
+   retains native move names and verified stock weights, and compares **872 cases**, each automatic BP and
+   all 16 rolls: ten fixtures, 54 weight/ratio boundary cases, 470 HP cases and 338 speed-stage cases. All
+   agree. No oracle code or tables copied or shipped. The official comparator still has 101 matches,
+   10 pre-existing known differences, zero mismatches and 10 W2 harness errors. Next: extend that shared
+   adapter to native automatic power, then rerun the official command; do not add manual powers to W2.
+
 5. **Self-Destruct / Explosion Defense halving (new, found in batch 1)**: the pinned oracle halves the target's Defense
    (`.tmp/hzla/calc/mechanics/vanilla/gen789.js` ~1273, `move.named('Explosion', 'Self-Destruct', 'Misty Explosion')`,
    `pokeRound(defense / 2)`; not the " Null" branch). Oracle neutral Self-Destruct on Snorlax vs Blastoise: 244-250;
@@ -135,6 +147,21 @@ unchanged Gen 7 weight checked against the reference, not a hack-weight modifica
 | Ultra Necrozma | Necrozma-Ultra | 230 | 230 | Keep (fallback) |
 
 Probe and complete audit: `.tmp/calc-refine/w2-photonic-probe.mjs` and `w2-photonic-weights.json`.
+
+**Fixtures:** `w2-low-kick`, `w2-grass-knot`, `w2-heavy-slam`, `w2-heat-crash`, `w2-flail`,
+`w2-reversal`, `w2-gyro-ball`, `w2-electro-ball`, `w2-regional-raichu`, `w2-mega-steelix`.
+None sets `slot.bp`. Mega Steelix is a stock Mega (Photonic adds no hack-only Mega).
+
+**Stock Gen 7 formulas confirmed, no profile rules added:** Low Kick / Grass Knot use >=10/25/50/100/200 kg
+for 40/60/80/100/120 BP (otherwise 20); Heavy Slam / Heat Crash use attacker/defender weight ratios
+>=2/3/4/5 for 60/80/100/120 (otherwise 40). Flail / Reversal use `p=floor(48*HP/maxHP)`,
+p<=1/4/9/16/32 for 200/150/100/80/40 (otherwise 20), including p=32 at 40 BP. Gyro Ball is
+`min(150,floor(25*defSpeed/atkSpeed)+1)`; Electro Ball uses floor(atkSpeed/defSpeed) 0/1/2/3/4+
+for 40/60/80/120/150. Do not import Hardlove's non-stock inequalities or Gyro Ball rule here.
+
+Sources: `@smogon/calc` 0.12.0 `dist/mechanics/gen789.js:537-576,633-637`; pinned hzla
+`ff6c3e339e276e6b4e8e44db58750b6534bc26aa` `calc/mechanics/gen789.js:603-662,717-721`
+(read/run locally only). No hack source claims changed bands. Native-oracle results above confirm them.
 
 ### Orchestrator answers
 1, 2. Settled: 3DS hacks take the game data over the doc (notes.md → Conflicts and findings already lists Triple
