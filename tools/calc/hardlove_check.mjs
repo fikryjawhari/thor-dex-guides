@@ -25,8 +25,9 @@ function reference(matchup) {
     return new Pokemon(gen, entry.n, {
       level: set.lv, nature: set.nat || 'Serious', ability: (attacking && adjustments.ability !== undefined ? adjustments.ability : data.AB[set.ab]?.[0]) || 'Guide no ability',
       item: attacking ? adjustments.item ?? set.it : set.it, status: set.st,
-      ivs: statObject(set.iv, 31), evs: statObject(undefined, 0), boosts: statObject(set.stg, 0),
-      overrides: {baseStats: statObject(entry.s, 1), types: entry.t, nfe: !!entry.et?.length},
+      ivs: statObject(set.iv, 31), evs: statObject(undefined, 0), boosts: statObject(set.stg, 0), curHP: set.hp,
+      overrides: {baseStats: statObject(entry.s, 1), types: entry.t, nfe: !!entry.et?.length,
+        ...configuration.cfg.calc.over.species?.[entry.id]},
     });
   };
   const name = data.M[matchup.slot.mv];
@@ -42,7 +43,7 @@ function reference(matchup) {
   if (adjustments.plainMove) overrides.name = 'Reference fixed power';
   const move = new Move(gen, name, {overrides, isCrit: !!matchup.slot.crit, hits: matchup.slot.hits || 1});
   move.hits = matchup.slot.hits || 1;
-  const values = matchup.field;
+  const values = {...matchup.field, ...adjustments.field};
   const side = prefix => ({isReflect: !!values[prefix + 'Reflect'], isLightScreen: !!values[prefix + 'LightScreen'],
     isAuroraVeil: !!values[prefix + 'AuroraVeil'], isTailwind: !!values[prefix + 'Tailwind'],
     isHelpingHand: !!values[prefix + 'HelpingHand'], isFlowerGift: !!values[prefix + 'FlowerGift'],
@@ -62,7 +63,8 @@ for (const matchup of fixtures.matchups) {
     const result = plain(engine.calc(matchup.atk, matchup.def, matchup.slot, matchup.field));
     const expected = plain(reference(matchup));
     assert.deepEqual(hitsOf(result), expected);
-    results.push({name: matchup.name, status: 'pass', per: hitsOf(result)});
+    if (matchup.expectedBP !== undefined) assert.equal(result.bp, matchup.expectedBP);
+    results.push({name: matchup.name, status: 'pass', per: hitsOf(result), ...(result.bp ? {bp: result.bp} : {})});
     console.log(`PASS ${matchup.name}`);
   } catch (error) {
     results.push({name: matchup.name, status: 'fail', error: error.stack});
@@ -82,6 +84,44 @@ const check = (name, run) => {
     console.error(`FAIL ${name}\n${error.stack}`);
   }
 };
+const weightEngine = await createEngine(data, {...configuration.cfg.calc, over: {
+  ...configuration.cfg.calc.over,
+  rules: [...configuration.cfg.calc.over.rules, {phase: 'movePower', note: {ref: 'def.weightkg'}}],
+}});
+check('w2-source-species-weights-reach-engine', () => {
+  const sample = caseByName('w2-inclusive-10kg');
+  const weights = {mega_absol_z: 49, mega_garchomp_z: 99, mega_lucario_z: 49.4, maushold: 2.8,
+    golem_alolan: 316, growlithe_hisuian: 22.7};
+  for (const [id, weightkg] of Object.entries(weights)) {
+    const result = weightEngine.calc(sample.atk, {id, lv: 50, ab: -1}, sample.slot, {});
+    assert.ok(result.notes.includes(String(weightkg)), `${id}: expected ${weightkg} kg`);
+  }
+});
+check('w2-hp-bands-and-manual-power-override', () => {
+  const sample = caseByName('w2-flail-p32');
+  const maximum = engine.stats(sample.atk)[0];
+  for (let hp = 1; hp <= maximum; hp++) {
+    const band = Math.floor(48 * hp / maximum);
+    const power = band >= 32 ? 20 : band >= 17 ? 40 : band >= 10 ? 80 : band >= 5 ? 100 : band >= 2 ? 150 : 200;
+    assert.equal(engine.calc({...sample.atk, hp}, sample.def, sample.slot, {}).bp, power, `Flail HP ${hp}/${maximum}`);
+  }
+  for (const name of ['weight-low-kick-exact-10kg-source-boundary', 'weight-heavy-slam-mega-aggron',
+    'w2-flail-p32', 'w2-gyro-ball-equal-speed']) {
+    const matchup = caseByName(name);
+    const slot = {...matchup.slot, bp: 77};
+    const actual = engine.calc(matchup.atk, matchup.def, slot, {});
+    assert.deepEqual(plain(hitsOf(actual)), plain(reference({...matchup, slot, reference: {power: 77, plainMove: true}})));
+    assert.ok(!actual.notes.some(note => note.startsWith('Hardlove ')));
+  }
+});
+check('w2-hard-press-source-minimum-at-full-hp', () => {
+  const matchup = caseByName('w2-hard-press-zero-power-before-modifiers');
+  const defender = {...matchup.def};
+  delete defender.hp;
+  const result = engine.calc(matchup.atk, defender, matchup.slot, matchup.field);
+  assert.equal(result.bp, 1);
+  assert.deepEqual(plain(hitsOf(result)), plain(reference({...matchup, def: defender})));
+});
 check('hand-calculated-neutral-gem-and-critical-rolls', () => {
   const sample = caseByName('physical-neutral');
   assert.equal(engine.stats(sample.atk)[1], 130);

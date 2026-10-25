@@ -1228,8 +1228,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 408,
-        "bp": 120
+        "mv": 408
       },
       "field": {},
       "def": {
@@ -1240,7 +1239,8 @@
       "reference": {
         "power": 120,
         "plainMove": true
-      }
+      },
+      "expectedBP": 120
     },
     {
       "name": "weight-grass-knot-mega-sableye",
@@ -1250,8 +1250,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141,
-        "bp": 100
+        "mv": 141
       },
       "field": {},
       "def": {
@@ -1262,7 +1261,8 @@
       "reference": {
         "power": 100,
         "plainMove": true
-      }
+      },
+      "expectedBP": 100
     },
     {
       "name": "weight-heavy-slam-mega-aggron",
@@ -1272,8 +1272,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 452,
-        "bp": 40
+        "mv": 452
       },
       "field": {},
       "def": {
@@ -1284,7 +1283,8 @@
       "reference": {
         "power": 40,
         "plainMove": true
-      }
+      },
+      "expectedBP": 40
     },
     {
       "name": "weight-heat-crash-mega-camerupt",
@@ -1294,8 +1294,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 428,
-        "bp": 120
+        "mv": 428
       },
       "field": {},
       "def": {
@@ -1306,7 +1305,8 @@
       "reference": {
         "power": 120,
         "plainMove": true
-      }
+      },
+      "expectedBP": 120
     },
     {
       "name": "weight-grass-knot-alolan-golem-source-power",
@@ -1316,8 +1316,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141,
-        "bp": 120
+        "mv": 141
       },
       "field": {},
       "def": {
@@ -1328,7 +1327,8 @@
       "reference": {
         "power": 120,
         "plainMove": true
-      }
+      },
+      "expectedBP": 120
     },
     {
       "name": "weight-grass-knot-mega-absol-z-source-power",
@@ -1338,8 +1338,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141,
-        "bp": 60
+        "mv": 141
       },
       "field": {},
       "def": {
@@ -1350,7 +1349,8 @@
       "reference": {
         "power": 60,
         "plainMove": true
-      }
+      },
+      "expectedBP": 60
     },
     {
       "name": "weight-low-kick-exact-10kg-source-boundary",
@@ -1360,8 +1360,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 408,
-        "bp": 20
+        "mv": 408
       },
       "field": {},
       "def": {
@@ -1372,6 +1371,617 @@
       "reference": {
         "power": 20,
         "plainMove": true
+      },
+      "expectedBP": 20
+    },
+    {
+      "name": "w2-inclusive-10kg",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "kakuna",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 141
+      },
+      "field": {},
+      "expectedBP": 20,
+      "reference": {
+        "power": 20,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-inclusive-25kg",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "seadra",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 141
+      },
+      "field": {},
+      "expectedBP": 40,
+      "reference": {
+        "power": 40,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-inclusive-50kg",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "mega_staraptor",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 141
+      },
+      "field": {},
+      "expectedBP": 60,
+      "reference": {
+        "power": 60,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-inclusive-100kg",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "venusaur",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 141
+      },
+      "field": {},
+      "expectedBP": 80,
+      "reference": {
+        "power": 80,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-inclusive-200kg",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "crustle",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 141
+      },
+      "field": {},
+      "expectedBP": 100,
+      "reference": {
+        "power": 100,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-maushold-source-weight",
+      "atk": {
+        "id": "maushold",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "pichu",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 452
+      },
+      "field": {},
+      "expectedBP": 40,
+      "reference": {
+        "power": 40,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-mega-garchomp-z-source-weight",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "mega_garchomp_z",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 141
+      },
+      "field": {},
+      "expectedBP": 80,
+      "reference": {
+        "power": 80,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-mega-lucario-z-source-weight",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "mega_lucario_z",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 141
+      },
+      "field": {},
+      "expectedBP": 60,
+      "reference": {
+        "power": 60,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-flail-p32",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 157
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 338
+      },
+      "field": {},
+      "expectedBP": 20,
+      "reference": {
+        "power": 20,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-flail-p31",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 156
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 338
+      },
+      "field": {},
+      "expectedBP": 40,
+      "reference": {
+        "power": 40,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-flail-one-hp",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 338
+      },
+      "field": {},
+      "expectedBP": 200,
+      "reference": {
+        "power": 200,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-reversal-p32",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 157
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 176
+      },
+      "field": {},
+      "expectedBP": 20,
+      "reference": {
+        "power": 20,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-reversal-p31",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 156
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 176
+      },
+      "field": {},
+      "expectedBP": 40,
+      "reference": {
+        "power": 40,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-reversal-one-hp",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 176
+      },
+      "field": {},
+      "expectedBP": 200,
+      "reference": {
+        "power": 200,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-gyro-ball-equal-speed",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 212
+      },
+      "field": {},
+      "expectedBP": 25,
+      "reference": {
+        "power": 25,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-electro-ball-equal-speed",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 207
+      },
+      "field": {},
+      "expectedBP": 60,
+      "reference": {
+        "power": 60,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-punishment-positive-and-negative-boosts",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          2,
+          -1,
+          1,
+          0,
+          2
+        ]
+      },
+      "slot": {
+        "mv": 420
+      },
+      "field": {},
+      "expectedBP": 160,
+      "reference": {
+        "power": 160,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "w2-crush-grip-half-hp",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 117
+      },
+      "slot": {
+        "mv": 625
+      },
+      "field": {},
+      "expectedBP": 59
+    },
+    {
+      "name": "w2-wring-out-one-hp",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1
+      },
+      "slot": {
+        "mv": 456
+      },
+      "field": {},
+      "expectedBP": 1
+    },
+    {
+      "name": "w2-gyro-ball-zero-power-before-modifiers",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1,
+        "it": "Steel Gem",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ]
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          -6
+        ]
+      },
+      "slot": {
+        "mv": 212
+      },
+      "field": {
+        "atkHelpingHand": true
+      },
+      "expectedBP": 1,
+      "reference": {
+        "power": 1,
+        "plainMove": true,
+        "item": "",
+        "field": {
+          "atkHelpingHand": false
+        }
+      }
+    },
+    {
+      "name": "w2-crush-grip-zero-power-before-modifiers",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1,
+        "it": "Normal Gem",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ]
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          -6
+        ]
+      },
+      "slot": {
+        "mv": 625
+      },
+      "field": {
+        "atkHelpingHand": true
+      },
+      "expectedBP": 1,
+      "reference": {
+        "power": 1,
+        "plainMove": true,
+        "item": "",
+        "field": {
+          "atkHelpingHand": false
+        }
+      }
+    },
+    {
+      "name": "w2-wring-out-zero-power-before-modifiers",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1,
+        "it": "Normal Gem",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ]
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          -6
+        ]
+      },
+      "slot": {
+        "mv": 456
+      },
+      "field": {
+        "atkHelpingHand": true
+      },
+      "expectedBP": 1,
+      "reference": {
+        "power": 1,
+        "plainMove": true,
+        "item": "",
+        "field": {
+          "atkHelpingHand": false
+        }
+      }
+    },
+    {
+      "name": "w2-hard-press-zero-power-before-modifiers",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1,
+        "it": "Steel Gem",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          6
+        ]
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          -6
+        ]
+      },
+      "slot": {
+        "mv": 464
+      },
+      "field": {
+        "atkHelpingHand": true
+      },
+      "expectedBP": 1,
+      "reference": {
+        "power": 1,
+        "plainMove": true,
+        "item": "",
+        "field": {
+          "atkHelpingHand": false
+        }
       }
     }
   ]

@@ -529,8 +529,1029 @@
        4915
       ],
       "note": "Reckless"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Low Kick",
+           "Grass Knot"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "set": {
+       "state.hardloveDefWeight": {
+        "op": "floor",
+        "args": [
+         {
+          "op": "div",
+          "args": [
+           {
+            "op": "mul",
+            "args": [
+             {
+              "ref": "def.weightkg"
+             },
+             10,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.ability"
+                 },
+                 "Heavy Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           },
+           {
+            "op": "mul",
+            "args": [
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.ability"
+                 },
+                 "Light Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             },
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.item"
+                 },
+                 "Float Stone"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "state.hardlovePower": {
+        "op": "if",
+        "args": [
+         {
+          "op": "lte",
+          "args": [
+           {
+            "ref": "state.hardloveDefWeight"
+           },
+           100
+          ]
+         },
+         20,
+         {
+          "op": "if",
+          "args": [
+           {
+            "op": "lte",
+            "args": [
+             {
+              "ref": "state.hardloveDefWeight"
+             },
+             250
+            ]
+           },
+           40,
+           {
+            "op": "if",
+            "args": [
+             {
+              "op": "lte",
+              "args": [
+               {
+                "ref": "state.hardloveDefWeight"
+               },
+               500
+              ]
+             },
+             60,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "lte",
+                "args": [
+                 {
+                  "ref": "state.hardloveDefWeight"
+                 },
+                 1000
+                ]
+               },
+               80,
+               {
+                "op": "if",
+                "args": [
+                 {
+                  "op": "lte",
+                  "args": [
+                   {
+                    "ref": "state.hardloveDefWeight"
+                   },
+                   2000
+                  ]
+                 },
+                 100,
+                 120
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "desc.moveBP": {
+        "ref": "state.hardlovePower"
+       }
+      },
+      "value": {
+       "ref": "state.hardlovePower"
+      },
+      "note": "Hardlove inclusive weight bands (CalcBaseDamage.c:131-145; weights in hectograms)"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Heavy Slam",
+           "Heat Crash"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "set": {
+       "state.hardloveDefWeight": {
+        "op": "floor",
+        "args": [
+         {
+          "op": "div",
+          "args": [
+           {
+            "op": "mul",
+            "args": [
+             {
+              "ref": "def.weightkg"
+             },
+             10,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.ability"
+                 },
+                 "Heavy Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           },
+           {
+            "op": "mul",
+            "args": [
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.ability"
+                 },
+                 "Light Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             },
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.item"
+                 },
+                 "Float Stone"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "state.hardloveAtkWeight": {
+        "op": "floor",
+        "args": [
+         {
+          "op": "div",
+          "args": [
+           {
+            "op": "mul",
+            "args": [
+             {
+              "ref": "atk.weightkg"
+             },
+             10,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "atk.ability"
+                 },
+                 "Heavy Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           },
+           {
+            "op": "mul",
+            "args": [
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "atk.ability"
+                 },
+                 "Light Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             },
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "atk.item"
+                 },
+                 "Float Stone"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "state.hardlovePower": {
+        "op": "if",
+        "args": [
+         {
+          "op": "eq",
+          "args": [
+           {
+            "ref": "state.hardloveDefWeight"
+           },
+           0
+          ]
+         },
+         120,
+         {
+          "op": "if",
+          "args": [
+           {
+            "op": "lte",
+            "args": [
+             {
+              "op": "floor",
+              "args": [
+               {
+                "op": "div",
+                "args": [
+                 {
+                  "ref": "state.hardloveAtkWeight"
+                 },
+                 {
+                  "ref": "state.hardloveDefWeight"
+                 }
+                ]
+               }
+              ]
+             },
+             1
+            ]
+           },
+           40,
+           {
+            "op": "if",
+            "args": [
+             {
+              "op": "lte",
+              "args": [
+               {
+                "op": "floor",
+                "args": [
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "ref": "state.hardloveAtkWeight"
+                   },
+                   {
+                    "ref": "state.hardloveDefWeight"
+                   }
+                  ]
+                 }
+                ]
+               },
+               2
+              ]
+             },
+             60,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "lte",
+                "args": [
+                 {
+                  "op": "floor",
+                  "args": [
+                   {
+                    "op": "div",
+                    "args": [
+                     {
+                      "ref": "state.hardloveAtkWeight"
+                     },
+                     {
+                      "ref": "state.hardloveDefWeight"
+                     }
+                    ]
+                   }
+                  ]
+                 },
+                 3
+                ]
+               },
+               80,
+               {
+                "op": "if",
+                "args": [
+                 {
+                  "op": "lte",
+                  "args": [
+                   {
+                    "op": "floor",
+                    "args": [
+                     {
+                      "op": "div",
+                      "args": [
+                       {
+                        "ref": "state.hardloveAtkWeight"
+                       },
+                       {
+                        "ref": "state.hardloveDefWeight"
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   4
+                  ]
+                 },
+                 100,
+                 120
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "desc.moveBP": {
+        "ref": "state.hardlovePower"
+       }
+      },
+      "value": {
+       "ref": "state.hardlovePower"
+      },
+      "note": "Hardlove effective integer weights and ratio bands (CalcBaseDamage.c:146-172; GetPokemonWeight)"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Flail",
+           "Reversal"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "set": {
+       "state.hardlovePower": {
+        "op": "if",
+        "args": [
+         {
+          "op": "lte",
+          "args": [
+           {
+            "op": "floor",
+            "args": [
+             {
+              "op": "div",
+              "args": [
+               {
+                "op": "mul",
+                "args": [
+                 48,
+                 {
+                  "ref": "atk.originalCurHP"
+                 }
+                ]
+               },
+               {
+                "ref": "atk.rawStats.hp"
+               }
+              ]
+             }
+            ]
+           },
+           1
+          ]
+         },
+         200,
+         {
+          "op": "if",
+          "args": [
+           {
+            "op": "lte",
+            "args": [
+             {
+              "op": "floor",
+              "args": [
+               {
+                "op": "div",
+                "args": [
+                 {
+                  "op": "mul",
+                  "args": [
+                   48,
+                   {
+                    "ref": "atk.originalCurHP"
+                   }
+                  ]
+                 },
+                 {
+                  "ref": "atk.rawStats.hp"
+                 }
+                ]
+               }
+              ]
+             },
+             4
+            ]
+           },
+           150,
+           {
+            "op": "if",
+            "args": [
+             {
+              "op": "lte",
+              "args": [
+               {
+                "op": "floor",
+                "args": [
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "op": "mul",
+                    "args": [
+                     48,
+                     {
+                      "ref": "atk.originalCurHP"
+                     }
+                    ]
+                   },
+                   {
+                    "ref": "atk.rawStats.hp"
+                   }
+                  ]
+                 }
+                ]
+               },
+               9
+              ]
+             },
+             100,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "lte",
+                "args": [
+                 {
+                  "op": "floor",
+                  "args": [
+                   {
+                    "op": "div",
+                    "args": [
+                     {
+                      "op": "mul",
+                      "args": [
+                       48,
+                       {
+                        "ref": "atk.originalCurHP"
+                       }
+                      ]
+                     },
+                     {
+                      "ref": "atk.rawStats.hp"
+                     }
+                    ]
+                   }
+                  ]
+                 },
+                 16
+                ]
+               },
+               80,
+               {
+                "op": "if",
+                "args": [
+                 {
+                  "op": "lte",
+                  "args": [
+                   {
+                    "op": "floor",
+                    "args": [
+                     {
+                      "op": "div",
+                      "args": [
+                       {
+                        "op": "mul",
+                        "args": [
+                         48,
+                         {
+                          "ref": "atk.originalCurHP"
+                         }
+                        ]
+                       },
+                       {
+                        "ref": "atk.rawStats.hp"
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   31
+                  ]
+                 },
+                 40,
+                 20
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "desc.moveBP": {
+        "ref": "state.hardlovePower"
+       }
+      },
+      "value": {
+       "ref": "state.hardlovePower"
+      },
+      "note": "Hardlove Flail/Reversal p >= 32 gives 20 BP (CalcBaseDamage.c:177-204)"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Gyro Ball"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "set": {
+       "state.hardlovePower": {
+        "op": "if",
+        "args": [
+         {
+          "op": "eq",
+          "args": [
+           {
+            "ref": "atk.stats.spe"
+           },
+           0
+          ]
+         },
+         1,
+         {
+          "op": "max",
+          "args": [
+           1,
+           {
+            "op": "min",
+            "args": [
+             150,
+             {
+              "op": "floor",
+              "args": [
+               {
+                "op": "div",
+                "args": [
+                 {
+                  "op": "mul",
+                  "args": [
+                   25,
+                   {
+                    "ref": "def.stats.spe"
+                   }
+                  ]
+                 },
+                 {
+                  "ref": "atk.stats.spe"
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "desc.moveBP": {
+        "ref": "state.hardlovePower"
+       }
+      },
+      "value": {
+       "ref": "state.hardlovePower"
+      },
+      "note": "Hardlove Gyro Ball has no stock +1 (CalcBaseDamage.c:98-105; minimum at :958)"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          "Hard Press"
+         ]
+        }
+       ]
+      },
+      "set": {
+       "desc.moveBP": 1
+      },
+      "value": 1,
+      "note": "Hardlove Hard Press has zero data power and no special formula; final minimum is 1 (Moves.c:24709; CalcBaseDamage.c:958)"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        },
+        {
+         "op": "or",
+         "args": [
+          {
+           "op": "eq",
+           "args": [
+            {
+             "ref": "names.move"
+            },
+            "Hard Press"
+           ]
+          },
+          {
+           "op": "and",
+           "args": [
+            {
+             "op": "eq",
+             "args": [
+              {
+               "ref": "names.move"
+              },
+              "Gyro Ball"
+             ]
+            },
+            {
+             "op": "gt",
+             "args": [
+              {
+               "ref": "atk.stats.spe"
+              },
+              0
+             ]
+            },
+            {
+             "op": "lt",
+             "args": [
+              {
+               "op": "mul",
+               "args": [
+                25,
+                {
+                 "ref": "def.stats.spe"
+                }
+               ]
+              },
+              {
+               "ref": "atk.stats.spe"
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "op": "and",
+           "args": [
+            {
+             "op": "in",
+             "args": [
+              {
+               "ref": "names.move"
+              },
+              [
+               "Crush Grip",
+               "Wring Out"
+              ]
+             ]
+            },
+            {
+             "op": "eq",
+             "args": [
+              {
+               "op": "floor",
+               "args": [
+                {
+                 "op": "div",
+                 "args": [
+                  {
+                   "op": "floor",
+                   "args": [
+                    {
+                     "op": "div",
+                     "args": [
+                      {
+                       "op": "add",
+                       "args": [
+                        {
+                         "op": "mul",
+                         "args": [
+                          12000,
+                          {
+                           "op": "floor",
+                           "args": [
+                            {
+                             "op": "div",
+                             "args": [
+                              {
+                               "op": "mul",
+                               "args": [
+                                4096,
+                                {
+                                 "ref": "def.originalCurHP"
+                                }
+                               ]
+                              },
+                              {
+                               "ref": "def.rawStats.hp"
+                              }
+                             ]
+                            }
+                           ]
+                          }
+                         ]
+                        },
+                        2047
+                       ]
+                      },
+                      4096
+                     ]
+                    }
+                   ]
+                  },
+                  100
+                 ]
+                }
+               ]
+              },
+              0
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "value": [],
+      "note": "Hardlove clamps zero power to 1 after power modifiers, not before (CalcBaseDamage.c:957-958)"
      }
-    ]
+    ],
+    "species": {
+     "mega_garchomp_z": {
+      "weightkg": 99
+     },
+     "mega_lucario_z": {
+      "weightkg": 49.4
+     },
+     "maushold": {
+      "weightkg": 2.8
+     }
+    }
    }
   },
   "ls": {

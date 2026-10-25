@@ -197,13 +197,13 @@ against stock Gen 9 built with guide stats. These are manual-power checks, NOT a
 
 ### Needs Opus (Unit W)
 
-- **Automatic weight moves are not enabled.** All four are in the base profile's `varpow`;
+- [x] **Historical: automatic weight moves were not enabled.** Resolved by e8cb822 and W2 below. All four were in the base profile's `varpow`;
   `adapter.js:309-326` returns null without `slot.bp`, then renames an explicit-power move to
   `Guide fixed power`, bypassing stock's weight calculation. All seven tested calls return null when BP is
   omitted (`.tmp/calc-refine/W-fixtures.json`). Decide whether to retain manual power or enable native/custom
   weight calculation; the latter must address the source's inclusive Low Kick / Grass Knot boundaries too.
   No shared engine, template or profile behaviour was changed in this unit.
-- **65 incorrect stored weights:** 64 species names miss stock lookup and fall back to 1 kg; Maushold
+- [x] **Historical: 65 incorrect lookup weights.** Resolved by e8cb822 and W2's three overrides; live identity exceptions remain open below. Previously, 64 species names missed stock lookup and fell back to 1 kg; Maushold
   resolves but source is **2.8 kg**, stock **2.3 kg** (`Species.c:55579`, species block start).
   These do not affect the explicit-power fixtures, but would affect automatic weight moves and other native
   weight consumers (e.g. Sky Drop). Consider source-backed `cfg.calc.over.species[id].weightkg` overrides and
@@ -233,3 +233,72 @@ Eternal 109 checks); `node tools/calc/hardlove_check.mjs` PASS (79/79);
 `python -I tools/datajson.py hacks/hardlove-gold/hack.json` PASS. Seven fixtures all deal non-zero damage;
 all seven omitted-power calls return null. Logs `.tmp/calc-refine/W-{npmtest,hardlove,datajson,fixtures}.log`.
 No independent hack oracle or in-game test.
+
+### W2
+
+2026-10-25; pinned 0.8.3 source `f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b`, stock Gen 9 only as a
+reference (never hzla). Re-ran the full 986-species comparison against `Species.c` and e8cb822's actual
+`speciesName()` / `weightNames()` lookup. Only three lookup-level differences remain, now overridden by
+**guide ID**, not display name:
+
+| Guide ID | Lookup kg | Source kg |
+| --- | --- | --- |
+| `mega_garchomp_z` | 95 | 99 |
+| `mega_lucario_z` | 57.5 | 49.4 |
+| `maushold` | 2.3 | 2.8 |
+
+Mega Absol Z already resolves to its correct 49 kg; no redundant override. All regional/Hisuian forms match
+the source lookup. Audit `.tmp/calc-refine/W2-weights.json`; live engine probes confirm all three overrides,
+the regional forms and Mega Absol Z. The stock checker now passes profile species overrides and current HP
+into reference Pokemon, and accepts a reference-only field adjustment for the late zero-power clamp cases.
+
+**Source formulas and profile rules (no engine/template changes):**
+- Low Kick / Grass Knot: `movePower` can read live `def.weightkg`, `def.ability`, `def.item` and the stock
+  computed `value`. Rules reconstruct effective integer hectograms (`GetPokemonWeight`,
+  `battle_script_commands.c:1866-1892`) and use **<=100/250/500/1000/2000 hg**, rather than stock's strict
+  bands. Fixtures cover all five exact boundaries, plus the seven converted W fixtures without `slot.bp`.
+- Heavy Slam / Heat Crash: integer effective-weight ratios 0-1/2/3/4/5+ give 40/60/80/100/120 BP; zero
+  defender weight gives 120 (`CalcBaseDamage.c:146-172`). Rules preserve this, including integer rounding
+  and zero-weight semantics rather than stock's minimum-one-hectogram weight adjustment.
+- Flail / Reversal: `p=floor(48*currentHP/maxHP)`; source **p>=32 is 20 BP**, unlike stock's p<=32 ->40.
+  Other bands agree (`CalcBaseDamage.c:177-204`). Both moves have p31/p32/one-HP fixtures; the checker sweeps
+  every positive HP for Snorlax (235 values).
+- Gyro Ball: `min(150,floor(25*defSpeed/atkSpeed))`, **without stock's +1**; zero attacking Speed gives 1
+  (`CalcBaseDamage.c:98-105`). Rule uses the live effective speeds and preserves the final minimum.
+- Electro Ball agrees with stock: floor(attackerSpeed/defenderSpeed) 0/1/2/3/4+ ->40/60/80/120/150;
+  defender Speed zero ->40 (`CalcBaseDamage.c:106-129`; effective speeds in `battle_calc_damage.c:106`).
+- Crush Grip / Wring Out use `floor(floor((12000*floor(4096*defHP/defMaxHP)+2047)/4096)/100)`;
+  this is algebraically the stock formula (`CalcBaseDamage.c:205-209`; `asm/qmath.s:17-40`, half down).
+  Source clamps zero to 1 **after** power modifiers (`CalcBaseDamage.c:957-958`), whereas stock starts at 1.
+  A final `powerMods` rule clears modifiers when the source raw power was zero; same handling for zero-power
+  Gyro Ball. Gem + Helping Hand fixtures exercise the ordering, not merely displayed BP.
+- **Hard Press is not the stock 100*HP formula in this pin:** `Moves.c:24709-24720` gives power 0 / HIT;
+  `move_script_0915_HARD_PRESS.s` only goes to the effect script; `CalcBaseDamage.c` has no Hard Press case.
+  The source's final minimum therefore gives **1 BP even at full HP**, after modifiers. Two profile phases
+  implement that literal source behaviour; full-HP and Gem + Helping Hand checks distinguish it from stock.
+- Punishment agrees for the exposed five combat boosts: min(200,60+20*sum(positive defender stages))
+  (`CalcBaseDamage.c:243-246`; source sums states in `battle_calc_damage.c:91-95`). Accuracy/evasion stage
+  controls remain outside the current input contract, not silently simulated.
+- Every custom automatic-power rule leaves an explicit `slot.bp` alone. Four manual-override regression
+  cases compare exact rolls with fixed 77 BP. `desc.moveBP` is updated alongside the rule power so the
+  engine's returned `bp` does not retain the stock pre-rule value.
+
+**Needs Opus (open, shared identity bugs):**
+- `nidoran_f`: lookup correctly finds 7 kg, but both guide names `Nidoran♀` / `Nidoran♂` normalize to the
+  same stored engine key `nidoran`; the later male overwrites the female. Live female probe reads **9 kg**.
+  A weight-only override cannot disambiguate that shared key. Needs canonical, distinct species names in
+  shared adapter naming (or an explicitly approved profile effect-name workaround). No source data edited.
+- `flabebe`: lookup correctly finds 0.1 kg, but constructing the guide's accented `Flabébé` throws
+  `Cannot read properties of undefined (reading 'hp')` in stock Pokemon construction. Needs consistent
+  engine species identity normalization, not a weight table change.
+- These were found by probing **all 986 guide IDs through the built engine**: **984/986** source weights
+  and Grass Knot powers pass; the two exceptions above are recorded, not hidden. Evidence:
+  `.tmp/calc-refine/W2-engine-weights.json` and `W2-audit.log`. The old Unit W lookup rows are closed; full
+  live-engine weight coverage remains open for these two shared-name fixes.
+
+**Checks:** `npm test --prefix tools/calc`, `node tools/calc/hardlove_check.mjs`,
+`uv run python -I tools/datajson.py hacks/hardlove-gold/hack.json`, and final
+`python assemble.py hardlove-gold`. Logs `.tmp/calc-refine/W2-{npmtest,hardlove,datajson,assemble}.log`.
+All pass: engine 86/86 (41 direct stock parity cases), EI 109 fixtures, Hardlove **105/105 checks**,
+Photonic 111 fixtures, Eternal 109 fixtures; Hardlove-only build 2.86 MB / 986 species and sprites.
+No all-guide assembly, domcompare, browser sweep, independent hack oracle or in-game test in this unit.

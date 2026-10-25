@@ -145,7 +145,7 @@ UI handoff: `plans/trainer-field-conditions.md`. No calc defaults, mechanics or 
 
 ### Damage calc (2026-10-25, provisional first pass)
 
-Unit W (2026-10-25): seven source-derived manual-power weight-move fixtures cover Megas, Alolan and hack forms plus the inclusive 10 kg boundary; 986-species audit finds 64 stock-name fallback weights and Maushold 2.8 vs 2.3 kg. Automatic weight moves remain manual `varpow`; gaps and source evidence: `plans/calc-refine-hardlove.md` → Unit W.
+Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (Nidoran♀ identity collision and Flabébé construction remain shared-engine gaps). Evidence: `plans/calc-refine-hardlove.md` → Unit W → W2.
 
 Enabled on `worktree-damage-calc`, **not merged or independently verified against the ROM**. Base `expansion`
 means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide remains **0.8.3**: the 0.8.4 downloads did
