@@ -20,6 +20,7 @@ let speciesByID;
 let speciesNames;
 let koCache;
 let stockMoves;
+let dataCrit;
 
 function mergeRecord(base, override) {
   const result = {...base};
@@ -70,6 +71,8 @@ function init(guide, configuration) {
   koCache = new Map();
   const stock = stockData(profile.gen);
   stockMoves = stock.moves;
+  // The hack's data gives every move's crit stage (MV.cr); without it, stock's high-crit and always-crit moves.
+  dataCrit = data.MV.some(entry => entry?.cr);
   const modern = stockData(9);
   const species = {};
   speciesByID = new Map(data.P.map(entry => [String(entry.id), entry]));
@@ -371,6 +374,34 @@ function statePower(name, power, def, slot, fixed) {
   return {power: result, double};
 }
 
+// Crit chance by counted stage (Bulbapedia, Critical hit): Gen 4-5, Gen 6, Gen 7+; a profile's `critStages` replaces
+// it (Hardlove's five-entry table). The stage counts the move's `cr` (data.json; 6+ = always a crit, not a stage), the
+// pumped state (field `atkFocus`: Focus Energy, Dire Hit or an eaten Lansat, +2), one held item and Super Luck, capped
+// at the table's last index. `over.critItems` changes an item ({Leek: {"Farfetch'd": 1}}: by species name).
+const CRIT_TABLES = {4: [1 / 16, 1 / 8, 1 / 4, 1 / 3, 1 / 2], 6: [1 / 16, 1 / 8, 1 / 2, 1], 7: [1 / 24, 1 / 8, 1 / 2, 1]};
+const CRIT_ITEMS = {'Scope Lens': 1, 'Razor Claw': 1, 'Leek': {"Farfetch'd": 2, "Sirfetch'd": 2},
+  'Stick': {"Farfetch'd": 2, "Sirfetch'd": 2}, 'Lucky Punch': {'Chansey': 2}};
+const FOCUS = {atk: 'atkFocus', def: 'defFocus'};
+
+// {stage, p, forced}: forced = always-crit move, Merciless on a poisoned target or a stage the table makes certain;
+// Battle Armor / Shell Armor (unless the attacker breaks molds) make it p 0 and not forced.
+function critChance(entry, moveData, attacker, defender, values) {
+  const table = profile.critStages || profile.over?.critStages
+    || CRIT_TABLES[profile.gen >= 7 ? 7 : profile.gen === 6 ? 6 : 4];
+  const own = dataCrit ? entry.cr || 0 : moveData.willCrit ? 6 : (moveData.critRatio || 1) - 1;
+  const item = {...CRIT_ITEMS, ...profile.over?.critItems}[attacker.item];
+  const species = toID(attacker.name);
+  const itemStage = typeof item === 'number' ? item
+    : Object.entries(item || {}).find(([name]) => species.includes(toID(name)))?.[1] || 0;
+  const counted = (own < 6 ? own : 0) + (values[FOCUS.atk] ? 2 : 0) + itemStage + (attacker.hasAbility('Super Luck') ? 1 : 0);
+  const stage = Math.min(table.length - 1, counted);
+  const blocked = defender.hasAbility('Battle Armor', 'Shell Armor')
+    && !attacker.hasAbility('Mold Breaker', 'Teravolt', 'Turboblaze');
+  const forced = !blocked && (own >= 6 || table[stage] >= 1
+    || (attacker.hasAbility('Merciless') && defender.hasStatus('psn', 'tox')));
+  return {stage, p: blocked ? 0 : forced ? 1 : table[stage], forced};
+}
+
 function calc(atk, def, slot, values = {}) {
   const entry = data.MV[slot.mv];
   const name = data.M[slot.mv];
@@ -399,6 +430,8 @@ function calc(atk, def, slot, values = {}) {
   const field = battleField(values);
   if (def.vol === 'switch') field.defenderSide.isSwitching = 'out';
   const overrides = {...moveData, basePower: Number(power), type: moveType};
+  if (dataCrit) overrides.willCrit = false;
+  const crit = critChance(entry, moveData, attacker, defender, values);
   const useZ = !!(profile.zmove && slot.z && moveData.category !== 'Status');
   if (useZ) overrides.zMove = {basePower: zPower(moveData, Number(power), listed)};
   if (listed && slot.bp !== undefined) {
@@ -410,7 +443,7 @@ function calc(atk, def, slot, values = {}) {
   const defaultHits = hitRange?.[2] ?? (typeof stockHits === 'number' ? stockHits : Array.isArray(stockHits) ? stockHits[0] + 1 : 1);
   const selected = useZ ? 1 : hitCount(slot.hits ?? defaultHits);
   const move = new Move(generation, moveData.name, {
-    overrides, isCrit: !!slot.crit, hits: selected, ability: attacker.ability, item: attacker.item, useZ,
+    overrides, isCrit: crit.forced || (!!slot.crit && crit.p > 0), hits: selected, ability: attacker.ability, item: attacker.item, useZ,
     ...(slot.met > 0 ? {timesUsedWithMetronome: Math.trunc(slot.met)} : {}),
   });
   move.hits = selected;
@@ -469,7 +502,7 @@ function calc(atk, def, slot, values = {}) {
     if (description[key]) notes.push(description[key]);
   }
   return {
-    cat: move.category, rolls: [...rolls], hits: per.length, min, max,
+    cat: move.category, rolls: [...rolls], hits: per.length, min, max, crit,
     ...((auto || HP_POWER.has(moveData.name)) && slot.bp === undefined && description.moveBP
       ? {bp: description.moveBP} : !listed && !useZ && slot.bp === undefined && !perHit && shownPower !== moveData.basePower
         ? {bp: shownPower} : {}),

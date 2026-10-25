@@ -128,6 +128,22 @@ Optional inputs; a page that passes none gets the same rolls as before.
 | `atk.fnt` | Fainted allies, 0-5 (Supreme Overlord, stock `alliesFainted`). |
 | `def.vol` | `dig` (Earthquake, Magnitude), `dive` (Surf, Whirlpool), `fly` (Gust, Twister), `min` (Stomp, Steamroller, Body Slam, Dragon Rush, Flying Press, Heat Crash, Heavy Slam from Gen 7, Malicious Moonsault, Supercell Slam; Phantom / Shadow Force in Gen 6 only): damage ×2 (a built-in `finalMods` rule ahead of the hack's, note `Dig` / `Dive` / `Fly` / `Minimize`); before Gen 5 (Gen 6 for `min`) the power doubles instead. `switch`: Pursuit's switching target (stock `isSwitching: 'out'`). |
 
+### Crit
+
+Every result has `crit: {stage, p, forced}`. `stage` counts the move's `MV.cr`
+(data.json; 6 = always a crit, a guarantee rather than six stages; without any `cr`
+in the data, stock's high-crit and always-crit moves), the pumped state (field
+`atkFocus`: Focus Energy, Dire Hit or an eaten Lansat Berry, +2; `defFocus` is the
+other side's), one held item (Scope Lens / Razor Claw +1, Leek / Stick +2 for
+Farfetch'd / Sirfetch'd, Lucky Punch +2 for Chansey; `over.critItems` changes one,
+by species name) and Super Luck +1, capped at the table's last index. `p` is the
+table's chance (Gen 4-5 1/16 1/8 1/4 1/3 1/2, Gen 6 1/16 1/8 1/2 1, Gen 7+ 1/24
+1/8 1/2 1, or the profile's `critStages`). `forced` (always-crit move, Merciless on
+a poisoned target, a stage the table makes certain) makes the hit a crit whatever
+`slot.crit` says, p 1; Battle Armor / Shell Armor (unless the attacker breaks molds)
+make p 0, not forced, and no crit. `slot.crit` still picks crit damage for an
+ordinary hit. Laser Focus, Lucky Chant and Dragon Cheer have no input yet.
+
 `over.state` (per hack) changes a move whose source differs: `false` = the state
 input does nothing, `{curl: false}` = Defense Curl doesn't double it, `{vol: false}`
 / `{vol: "power"}` = the target's state doesn't double it / doubles its power
@@ -206,8 +222,8 @@ override entries use **display names**, except species may use their guide ID:
   Express that move's behaviour with a rule on `names.*` instead.
 - `status` maps declared profile status keys to upstream status keys. Only
   statuses present in `profile.status` are accepted.
-- `critStages` is reserved metadata for a future crit-probability control; the
-  current contract selects crit explicitly per slot and does not sample rates.
+- `critStages` (or `over.critStages`) is the crit chance per counted stage when the
+  hack's table differs from its generation's (Hardlove's five entries); see Crit.
   Stat-formula changes outside the exposed phases and new generation mechanics
   require engine work.
 - `residual` adds a hack's own end-of-turn effects to `DMG.residual` / the KO text:

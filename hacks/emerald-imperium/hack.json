@@ -51,6 +51,7 @@
     ]
    ],
    "over": {
+    "critItems": {"Leek": {"Farfetch'd": 1, "Sirfetch'd": 2}},
     "species": {
      "1168": {
       "weightkg": 49
