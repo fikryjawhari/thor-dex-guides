@@ -75,7 +75,7 @@ for (const matchup of fixtures.matchups) {
   assert.equal(result.rolls.length, 16, matchup.name);
   // Always-critical moves (over.rules critical rule): the stock reference has no such rule, so the neutral
   // fixture is checked against the crit fixture below instead of the reference.
-  if (!matchup.field.inverse && !alwaysCrit.has(matchup.name)) assert.deepEqual(result.rolls, plain(reference(matchup)), matchup.name);
+  if (!matchup.slot.z && !matchup.field.inverse && !alwaysCrit.has(matchup.name)) assert.deepEqual(result.rolls, plain(reference(matchup)), matchup.name);
   results.set(matchup.name, result);
 }
 const same = (first, second) => assert.deepEqual(results.get(first).rolls, results.get(second).rolls, first);
@@ -113,7 +113,7 @@ assert.ok(results.get('psychic-priority-airborne').max > 0);
 assert.equal(new Set(profile.field.map(entry => entry.k)).size, profile.field.length);
 assert.deepEqual(profile.field.find(entry => entry.k === 'weather').o.map(([value]) => value),
   ['', 'Sun', 'Rain', 'Sand', 'Hail', 'Harsh Sunshine', 'Heavy Rain', 'Strong Winds']);
-console.log(`PASS Photonic Sun: ${fixtures.matchups.length} fixtures; non-inverse rolls versus stock Gen 7 with guide stats; inverse effectiveness and field-effect assertions`);
+console.log(`PASS Photonic Sun: ${fixtures.matchups.length} fixtures; non-Z non-inverse rolls versus stock Gen 7 with guide stats; inverse effectiveness and field-effect assertions`);
 
 const weightPower = weight => weight >= 200 ? 120 : weight >= 100 ? 100 : weight >= 50 ? 80
   : weight >= 25 ? 60 : weight >= 10 ? 40 : 20;
@@ -201,3 +201,84 @@ for (const [name, power] of Object.entries(automaticPowers)) {
   assert.equal(results.get(name).bp, power, name);
 }
 console.log(`PASS Photonic W2: ${data.P.length} species weight bands, ${specialForms.length} exact form/Mega/Primal/regional weights, ${boundaryCases} weight/ratio boundaries, ${maximumHP * 2} HP cases, 338 speed cases, 10 automatic fixtures`);
+
+const documentedZPowers = new Map([
+  ['Wing Attack', [160, 'Supersonic Skystrike', 6]],
+  ['Submission', [175, 'All-Out Pummeling', 9]],
+  ['Chatter', [175, 'Supersonic Skystrike', 10]],
+  ['Shadow Punch', [160, 'Never-Ending Nightmare', 12]],
+  ['Water Pulse', [160, 'Hydro Vortex', 13]],
+  ['Arm Thrust', [140, 'All-Out Pummeling', 15]],
+  ['Mystical Fire', [170, 'Inferno Overdrive', 21]],
+  ['Parabolic Charge', [175, 'Gigavolt Havoc', 23]],
+  ['Horn Leech', [175, 'Bloom Doom', 25]],
+  ['Draining Kiss', [140, 'Twinkle Tackle', 26]],
+  ['Freeze-Dry', [180, 'Subzero Slammer', 31]],
+  ['Twineedle', [175, 'Savage Spin-Out', 34]],
+  ['Steel Wing', [175, 'Corkscrew Crash', 38]],
+  ['Power Gem', [175, 'Continental Crush', 39]],
+  ['Needle Arm', [175, 'Bloom Doom', 40]],
+  ['Cross Poison', [175, 'Acid Downpour', 41]],
+]);
+const otherZPowers = new Map([
+  ['z2-absorb-band-100', [100, 'Bloom Doom']],
+  ['z2-mega-drain-band-120', [120, 'Bloom Doom']],
+  ['z2-sparkling-aria-band-180', [180, 'Hydro Vortex']],
+  ['z2-multi-attack-band-190', [190, 'Breakneck Blitz']],
+  ['z2-earthquake', [180, 'Tectonic Rage']],
+  ['z2-weather-ball-stock-exception', [160, 'Breakneck Blitz']],
+  ['z2-low-kick-variable', [160, 'All-Out Pummeling']],
+  ['z2-double-kick-one-hit', [100, 'All-Out Pummeling']],
+  ['z2-catastropika', [210, 'Catastropika']],
+]);
+const zFixtures = fixtures.matchups.filter(matchup => matchup.name.startsWith('z2-'));
+assert.equal(zFixtures.length, documentedZPowers.size + otherZPowers.size);
+assert.equal(data.MV[data.M.indexOf('Catastropika')].bp, 210);
+assert.equal(data.MV[data.M.indexOf('Weather Ball')].bp, 50);
+assert.equal(data.MV[data.M.indexOf('Mega Drain')].bp, 60);
+const fixedZRolls = (matchup, power) => {
+  const entry = data.MV[matchup.slot.mv];
+  const control = {mv: data.M.indexOf(entry.c === 'Physical' ? 'Tackle' : 'Psychic'),
+    bp: power, t: entry.t, hits: 1};
+  const result = plain(engine.calc(matchup.atk, matchup.def, control, matchup.field));
+  assert.equal(result.z, undefined);
+  assert.equal(result.cat, entry.c);
+  assert.equal(result.hits, 1);
+  return result.rolls;
+};
+const zPowerFailures = [];
+const checkZPower = (matchup, power, name, source) => {
+  assert.equal(matchup.slot.z, 1, matchup.name);
+  assert.equal(matchup.slot.bp, undefined, `${matchup.name} must not set power`);
+  const result = results.get(matchup.name);
+  assert.equal(result.z, name, `${matchup.name} Z name`);
+  assert.equal(result.cat, data.MV[matchup.slot.mv].c, `${matchup.name} category`);
+  assert.equal(result.hits, 1, `${matchup.name} one hit`);
+  assert.ok(result.max > 0, `${matchup.name} must deal damage`);
+  try {
+    assert.deepEqual(result.rolls, fixedZRolls(matchup, power), `${matchup.name}: ${power} BP; ${source}`);
+  } catch (error) {
+    zPowerFailures.push(error);
+    const observed = [100, 120, 140, 160, 170, 175, 180, 185, 190, 195, 200, 210]
+      .find(candidate => JSON.stringify(result.rolls) === JSON.stringify(fixedZRolls(matchup, candidate)));
+    console.error(`FAIL Photonic Z2 ${matchup.name}: doc ${power}, engine ${observed ?? 'unknown'} BP; ${source}`);
+  }
+};
+for (const [move, [power, name, line]] of documentedZPowers) {
+  const matchup = zFixtures.find(fixture => data.M[fixture.slot.mv] === move);
+  assert.ok(matchup, `Missing documented Z fixture: ${move}`);
+  checkZPower(matchup, power, name, `Move Changes.txt:${line}`);
+}
+for (const [fixtureName, [power, name]] of otherZPowers) {
+  const matchup = zFixtures.find(fixture => fixture.name === fixtureName);
+  assert.ok(matchup, `Missing Z fixture: ${fixtureName}`);
+  checkZPower(matchup, power, name, 'guide power / stock Gen 7 Z exception');
+}
+for (const move of ['Arm Thrust', 'Twineedle', 'Double Kick']) {
+  const matchup = zFixtures.find(fixture => data.M[fixture.slot.mv] === move);
+  const forcedHits = plain(engine.calc(matchup.atk, matchup.def, {...matchup.slot, hits: 5}, matchup.field));
+  assert.equal(forcedHits.hits, 1, `${move} Z ignores an explicit multi-hit count`);
+  assert.deepEqual(forcedHits.rolls, results.get(matchup.name).rolls, `${move} Z is one hit`);
+}
+console.log(`Photonic Z2: ${zFixtures.length} Z names/categories/single-hit checks; ${documentedZPowers.size} doc powers; ${zPowerFailures.length} power failures`);
+assert.equal(zPowerFailures.length, 0, 'Needs Opus 4: documented Z powers must all match; see FAIL Photonic Z2 lines');
