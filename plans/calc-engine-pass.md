@@ -99,6 +99,10 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
   (taskId `node:delegated-task:command%3Amcp%3A450c7400-d4aa-4cdf-b8e1-87ae4b06d223%3Adelegate-task%3Acalc-engine-U1-r1`,
   clientRequestId `calc-engine-U1-r1`). A new session can't read that task: check `git log` for its `U1` commits; if
   U1 stopped at a `WIP:` commit, redispatch from it (`calc-engine-U1-r2`).
+- U1 done (`e900122`, `plans/calc-state-engine.md`), reviewed: good. Contract extended (`612935e`: `slot.curl`,
+  `atk.fnt`, pledge partner name). U2 dispatched (clientRequestId `calc-engine-U2-r1`), also asked to settle U1's
+  three open Hardlove traces (Revenge / Avalanche, Defense Curl in Rollout, Magnitude vs Dig) before the H fixtures.
+  Redispatch from its last `WIP:` as `calc-engine-U2-r2` if it stops.
 
 ## Next session prompt
 ```
