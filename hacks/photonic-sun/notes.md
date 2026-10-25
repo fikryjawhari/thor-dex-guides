@@ -203,6 +203,8 @@ Phone preview: `calc-photonic.html` (Thor frame). The older shared `calc-control
 guide: its harness requires Emerald Imperium's Flannery trainer key `4.0.15`; it aborts before its assertions.
 The Photonic-specific scenario above covers this session's field controls without changing that unrelated suite.
 
+Unit Z (2026-10-25): Z-move conversion is deferred (UI + engine; the user leaves Z moves out for now); `plans/calc-refine-photonic.md` Needs Opus 4 records all 16 doc Z-power changes and why standalone named Z entries do not test conversion. No Z fixtures added. Totem aura boosts are covered by manual stat stages; no work.
+
 Not checked: in-game damage on the Thor, a full audit of every changed move/ability/item, Z-moves, Totem aura
 automation, switch-in/history-dependent states or save import. The fixture oracle
 shares guide stats/types/power/category, so agreement does not independently validate the extracted data. Future
