@@ -27,8 +27,10 @@ Hacks, in order: Hardlove Gold, Photonic Sun, Eternal X (Emerald Imperium is don
 - **Eternal X** uses the older hzla/Dynamic-Calc, not Decomps.
 
 ## "Let's refine <hack> calc mechanics"
-After all four first passes. Start from the hack's notes.md → Damage calc open points (EI: `noSwitch`, `evs=0`,
-and the rest listed there). Same procedure, same checks; add fixtures for each point settled.
+After all four first passes. Start from the hack's notes.md → Damage calc open points. EI's 2026-10-25
+refinement dispositions settle `noSwitch`, `evs=0` and the original gaps, with individual controls built;
+turn-order / trainer-field UI, healing simulation and in-game confirmation remain explicitly separate.
+Same procedure, same checks; add fixtures for each point settled.
 
 Trainer field preparation is separate from mechanics refinement: `plans/trainer-field-conditions.md` records
 the data-only pass. Trainer `field` evidence is rebuild-safe; no UI applies it. Settle the field UI in a later
@@ -66,7 +68,13 @@ the calc scenarios for the hack. Put the build on the phone preview (`python -I 
 calc-build.html --frame`) when the page changed.
 
 ## Status
-- Mechanics: Emerald Imperium done (47/47). Hardlove Gold provisional/source-checked (53 checks, 10 UI passes),
+- Mechanics: Emerald Imperium refined 2026-10-25 (109 fixtures: 100 exact hzla matches, nine documented differences).
+  Conditional Bull/Quill Rush and Illusion, allied Emperor's Presence, integer Draco category selection/inversion,
+  Blazing Soul priority, Ice Eater immunity and Defeatist's one-third threshold are covered. Individual checkboxes,
+  visible Auto/Inverted category state and the allied field control pass all five viewer sizes in normal/dvkb mode.
+  `noSwitch` is AI switch prediction, not damage; `evs=0` is the no-EVs catalog variant, not an EI-wide EV ban.
+  Source/stock checks pass; broader turn-order / trainer-field UI, healing simulation and in-game tests remain.
+  Phone preview: `calc-imperium-refined.html`. Hardlove Gold provisional/source-checked (53 checks, 10 UI passes),
   no independent oracle; in-game tests and type-history states open (notes.md → Damage calc). Photonic Sun field
   pass done (107 cases: 101 exact hzla matches, 6 documented oracle defects; stock Gen 7 checks and 10 UI passes).
   Eternal X field pass done (97/97 exact legacy Dynamic-Calc matches; stock Gen 6 checks, 10 UI passes,

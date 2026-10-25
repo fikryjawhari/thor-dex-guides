@@ -83,6 +83,10 @@ assert.equal(result('blazing-soul-psychic-terrain').max, 0);
 assert.ok(result('unable-attacker-slp').max > 0);
 assert.ok(result('unable-attacker-frz').max > 0);
 assert.ok(result('evs-enabled').max > result('bull-rush-physical-off').max);
+for (const suffix of ['half-no-penalty', 'third-plus-one', 'third-physical', 'third-special']) {
+  const name = 'defeatist-' + suffix;
+  assert.deepEqual(result(name).rolls, handDamage(fixture(name), suffix.startsWith('third-') && suffix !== 'third-plus-one' ? 2048 : 4096), name);
+}
 assert.ok(result('spread-doubles').max < result('spread-singles').max);
 same('doubles-veil', 'doubles-light-screen');
 same('doubles-screens-not-stacked', 'doubles-light-screen');

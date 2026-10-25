@@ -43,7 +43,12 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    Built 2026-10-25 (step 1 of its Order): `@smogon/calc` engine using each guide's own data (`tools/calc/`, 81 tests),
    six base profiles, the calc page from the UI spec (all 26 spec checks pass: `tools/scenarios/calc-*.mjs`), the import
    flow with a fake `test` reader, `tools/calc_save_check.mjs`, `#/calc` in domcompare. Emerald Imperium has
-   `cfg.calc` (47/47 matchups match hzla). Hardlove Gold now has a **provisional** Gen 9 profile (2026-10-25):
+   `cfg.calc`, refined 2026-10-25: 109 fixtures (100 exact hzla matches, nine documented differences), source/stock
+   cross-checks and 10 five-size/mode UI passes. First-turn / disguise checkboxes, allied Emperor field effect and
+   visible Draco Auto/Inverted category controls are built. Correctness fixes include integer Draco selection,
+   special Bull/Quill Rush, Blazing Soul priority, Ice Eater immunity and Defeatist at one-third HP. `noSwitch` and
+   `evs=0` are dispositioned in its notes. Turn-order / trainer-field UI, healing simulation and in-game tests stay
+   separate. Phone preview: `calc-imperium-refined.html`. Hardlove Gold now has a **provisional** Gen 9 profile (2026-10-25):
    EVs blocked in direct engine calls, Gems x1.5, source contact flags restored; 53 source/stock checks and 10
    viewer-size/mode checks pass. No independent hack oracle: in-game tests and Protean/type-history states remain
    open (its notes.md → Damage calc). Copied 0.8.4 importer exports to ignored `.src/calc-import/`; guide stays

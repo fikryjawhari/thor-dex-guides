@@ -2081,6 +2081,74 @@
       "slot": {
         "mv": 149
       }
+    },
+    {
+      "name": "defeatist-half-no-penalty",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 202,
+        "hp": 117
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      }
+    },
+    {
+      "name": "defeatist-third-plus-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 202,
+        "hp": 79
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      }
+    },
+    {
+      "name": "defeatist-third-physical",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 202,
+        "hp": 78
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      }
+    },
+    {
+      "name": "defeatist-third-special",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 202,
+        "hp": 78
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      }
     }
   ]
 }

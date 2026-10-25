@@ -462,7 +462,7 @@ importer https://ddex-chi.vercel.app reads the ROM and builds a calc from it (a 
 
 | Hack | Calc | Mechanics |
 | --- | --- | --- |
-| Emerald Imperium 1.3 | https://hzla.github.io/Dynamic-Calc-Decomps/?data=imp13&dmgGen=8&gen=8&types=6&noSwitch=1&evs=0&view=calculator | Gen 8 damage, Gen 6 types. `evs=0` looks like MGM (no EVs) by default; `noSwitch` unknown (find out in the refinement pass). |
+| Emerald Imperium 1.3 | https://hzla.github.io/Dynamic-Calc-Decomps/?data=imp13&dmgGen=8&gen=8&types=6&noSwitch=1&evs=0&view=calculator | Gen 8 damage, Gen 6 types in the oracle; source uses Gen 9. Refined 2026-10-25: `evs=0` selects the catalog's No EVs variant (`evs=1` also exists), not an EI-wide ban; `noSwitch` disables AI switch prediction/ranking, not a damage mechanic. See EI notes for all dispositions and fixtures. |
 | Photonic Sun | https://hzla.github.io/Dynamic-Calc-Decomps/?data=pspm&dmgGen=7&gen=7&types=6&view=calculator | Gen 7 damage, Gen 6 types. |
 | Eternal X | https://hzla.github.io/Dynamic-Calc/?data=8d1ab90a3b3c494d8485&dmgGen=6&gen=6 | Gen 6 damage and types. Note: the older hzla/Dynamic-Calc, not Decomps. |
 | Hardlove Gold | none (hg-engine) | The hack's own rules, below. |

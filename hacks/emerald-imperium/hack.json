@@ -1238,6 +1238,64 @@
       },
       "value": 0,
       "note": "Ice Eater immunity"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.ability"
+        },
+        "Defeatist"
+       ]
+      },
+      "set": {
+       "atk.ability": "Guide Defeatist"
+      }
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.ability"
+          },
+          "Guide Defeatist"
+         ]
+        },
+        {
+         "op": "lte",
+         "args": [
+          {
+           "ref": "atk.originalCurHP"
+          },
+          {
+           "op": "floor",
+           "args": [
+            {
+             "op": "div",
+             "args": [
+              {
+               "ref": "atk.rawStats.hp"
+              },
+              3
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "append": [
+       2048
+      ],
+      "note": "Defeatist"
      }
     ]
    },

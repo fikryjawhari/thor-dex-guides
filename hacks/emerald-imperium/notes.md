@@ -183,15 +183,17 @@ differ, the source wins. The 2026-10-25 refinement has nine explained roll diffe
 | Illusion 1.3× selected attacking stat while disguised | `attackMods`, explicit per-mon `abilityOn` | 9647–9652 | illusion-*; physical and special, on/off |
 | Blazing Soul +1 Fire priority at full HP | `afterMoveType`, result `priority`; does not infer move order | `battle_main.c` 5030–5032 | blazing-soul-*: full, hurt, not-fire, psychic-terrain |
 | Ice Eater absorbs Ice attacks | `effectiveness`, including Mold Breaker, Ability Shield and Neutralizing Gas boundaries | 4112–4115, 10700 | ice-eater-* |
+| Defeatist halves the attacking stat only at or below one-third HP | `beforeStats` suppresses the stock half-HP trigger, `attackMods` applies EI's threshold | 9539–9542 | defeatist-*: half HP, third+1, third physical/special |
 | Frostbite halves special damage | `beforeRolls` sets `isBurned` for special moves when the attacker's status is `frz` | 9975, applied 10308 | frostbite-special, frostbite-physical |
 
 Status: EI's `B_USE_FROSTBITE` makes frostbite replace freeze in most cases (`include/config/battle.h`), and a few
 moves still freeze. A frozen attacker cannot act, and a frozen defender has no damage effect here, so only frostbite
 changes a result. The `frz` key is labelled Frostbite; no Freeze option is shown.
 
-Not changed from native: Defeatist, Toxic Boost, Flare Boost, Water Compaction, Adaptability, Technician and the
-other vanilla abilities use the Smogon/expansion behaviour. Checked against source: Toxic Boost (physical, 1.5×),
-Flare Boost (special, 1.5×), Defeatist (≤ 1/3 HP, 0.5×). The rest are not audited line by line.
+Not changed from native: Toxic Boost, Flare Boost, Water Compaction, Adaptability, Technician and the other vanilla
+abilities use the Smogon/expansion behaviour. Checked against source: Toxic Boost (physical, 1.5×), Flare Boost
+(special, 1.5×). The first pass incorrectly described Defeatist as native-correct: stock triggers at half HP;
+the refinement explicitly fixes EI's one-third threshold. The rest are not audited line by line.
 
 Disagreements between the changes doc or the Known Bugs file and the source (source followed):
 - Flare Boost: the doc says Attack; the source boosts Sp. Atk while burned (9161).
@@ -214,6 +216,7 @@ are separate from correctness. No trainer `field` evidence is consumed automatic
 | Oracle `noSwitch=1` | Switch-in prediction / AI ranking and associated preview controls, not a damage-generation setting. Read `js/calc_ui/switch_preview/g3.js`, `g4.js`, `g5.js`, and `menu_settings.js` in the pinned oracle; no damage-core use. No engine override or damage fixture is appropriate. |
 | Oracle `evs=0` | The catalog explicitly offers No EVs and w/ EVs variants (`js/romhack_catalog.js` 182–191). It is not a universal EI ban. Preserve guide EV support and existing MGM zero-EV selection; `evs-enabled` and the shared UI scenarios guard this. |
 | Individual ability state | `monControls` declares per-Pokémon First turn out (Bull/Quill Rush) or Disguised (Illusion). Missing/false `abilityOn` means off; no switch history is guessed. Controls must remain on their own Pokémon, not global. Other abilities are not silently redefined. |
+| Defeatist threshold discovered during refinement | Correctness fix, no extra checkbox: current HP automatically determines the one-third trigger. Four boundary fixtures and hand-calculated rolls; matches the hack oracle. |
 | Ally Emperor's Presence | Explicit `atkEmperorPresence` field effect, attacking ally only, Doubles only. Own ability remains automatic; own plus ally stacks. No ally slot or trainer-field inference is needed. Water, Steel, off, other type, singles and stacking fixtures. |
 | Draco Barrage | Compares floor-staged Atk/Def versus SpA/SpD damage estimates using the source's fixed Shell Side Arm power (100) and level term. It does not compare attacking stats alone or simulate final damage, items, ability multipliers, weather or screens. Source randomises integer ties; use deterministic Special as the automatic tie default and an explicit invert toggle for either result. Inversion is also allowed in non-ties. Result exposes automatic category, tie and inversion; chosen category controls contact. |
 | Ice Eater | Correctness fix: explicitly implement Ice immunity, which the stock engine did not provide. Five fixtures cover Ice/non-Ice, Mold Breaker, Ability Shield and Neutralizing Gas. Healing is outside this single-attack damage result; recovery / multi-turn simulation deferred. |
@@ -225,6 +228,8 @@ are separate from correctness. No trainer `field` evidence is consumed automatic
 Independent validation: `tools/calc/imperium_check.mjs` checks source-derived integer category estimates,
 hand-calculated ability modifier placement/rounding, native Gen 9 field rolls and Gen 8/9 parity for unchanged
 fields, effective priority, explicit order, EVs and immutable inputs. Included in `npm test`.
+KO estimates repeat the displayed attack under fixed inputs, not a turn-state simulation: they do not expire
+First turn out, break disguise, apply healing or decide subsequent move order.
 
 Still requires in-game confirmation: Bull/Quill Rush on a special attack, integer-tied Draco Barrage category
 distribution, allied Emperor stacking and Blazing Soul into Psychic Terrain. Source-backed fixtures are not an
@@ -235,7 +240,7 @@ trainer-field UI are deferred. At wide sizes the match block grows when these co
 Field reachable rather than allowing an overflowing match block to cover it.
 
 Checks:
-- `node tools/calc/hzla_compare.mjs emerald-imperium`: 105 cases, 96 exact matches, nine source/UI-choice differences,
+- `node tools/calc/hzla_compare.mjs emerald-imperium`: 109 cases, 100 exact matches, nine source/UI-choice differences,
   zero unexplained mismatches. Report `.tmp/calc-emerald-imperium/compare.json`.
 - `node tools/calc/test.mjs`: 81 passed, 0 failed (`.tmp/calc-emerald-imperium/engine-test.log`).
 - `python assemble.py`: all four guides built (`.tmp/calc-emerald-imperium/assemble.log`).
