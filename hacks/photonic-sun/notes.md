@@ -223,6 +223,28 @@ automation, switch-in/history-dependent states or save import. The fixture oracl
 shares guide stats/types/power/category, so agreement does not independently validate the extracted data. Future
 mechanics refinements should add fixtures here rather than change other guides' base profiles.
 
+#### In-game tests
+
+Rolls are the engine's 16 rolls. Level as stated, Serious nature, 31 IVs, 0 EVs, no item unless stated, no field.
+
+- **Z-Wing Attack uses the doc power (160), not stock (120).** Settles: the Z-move power for Wing Attack.
+  - Attacker: Pidgeot Lv 50 (Atk 90), Flying-type STAB, holding the Flying Z-Crystal, using Wing Attack as the Z-move.
+    Defender: Blastoise Lv 50 (HP 154, Def 120).
+  - Expected (doc 160): `67 69 69 70 72 72 73 73 75 75 76 76 78 78 79 81`.
+  - Other way (stock 120): `51 52 52 54 54 54 55 55 57 57 57 58 58 60 60 61`.
+- **Totem aura: Gumshoos Def +1.** Settles: the Totem's aura stage applies to its Defense (Totem Gumshoos, TR data: `au` Def +1).
+  - Attacker: Snorlax Lv 16 (Atk 45), Tackle (Normal, STAB).
+    Defender: Totem Gumshoos Lv 16, Adamant, EVs 200 / 100 / 100 / 0 / 100 / 0, Sitrus Berry, aura Def +1 (the first mon of the Totem card).
+  - Expected with the aura: `7 9 9 9 9 9 9 9 9 9 9 9 9 9 9 10`.
+  - Expected without it (Def +0): `12 12 12 12 12 13 13 13 13 13 13 13 13 13 13 15`.
+- **Self-Destruct always crits.** Settles: a critical hit on every use (Photonic Move Changes); the oracle does not crit it.
+  - Attacker: Snorlax Lv 50. Defender: Blastoise Lv 50. Move: Self-Destruct (power 200), no crit flag.
+  - Expected on every use: `184 186 189 190 193 195 196 199 201 204 205 208 210 213 214 217`.
+  - Other way (ordinary hit): `123 124 126 127 129 130 132 133 135 136 138 139 141 142 144 145`.
+- **Explosion always crits.** Same setup with Explosion (power 250, faints the user). Settles: as Self-Destruct.
+  - Expected on every use: `229 232 235 238 241 243 246 249 252 255 256 259 262 265 268 271`.
+  - Other way (ordinary hit): `153 156 157 159 160 162 165 166 168 169 171 174 175 177 178 181`.
+
 ## Checks
 
 `check.py` [baseline.json]: references (species, evolution and form links, trainer and partner teams), 29 caps, the 31
