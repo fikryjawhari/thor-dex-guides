@@ -1,0 +1,1779 @@
+{
+ "party": [
+  {
+   "species": "Garchomp",
+   "level": 34,
+   "nature": "Hardy",
+   "ability": "Sand Veil",
+   "item": "",
+   "moves": [
+    "Take Down",
+    "Sand Tomb",
+    "Slash",
+    "Dragon Claw"
+   ],
+   "ivs": [
+    31,
+    31,
+    31,
+    31,
+    31,
+    31
+   ],
+   "evs": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "species": "Swampert",
+   "level": 34,
+   "nature": "Hardy",
+   "ability": "Torrent",
+   "item": "",
+   "moves": [
+    "Bide",
+    "Mud Bomb",
+    "Rock Slide",
+    "Protect"
+   ],
+   "ivs": [
+    31,
+    31,
+    31,
+    31,
+    31,
+    31
+   ],
+   "evs": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "species": "Gardevoir",
+   "level": 34,
+   "nature": "Hardy",
+   "ability": "Synchronize",
+   "item": "",
+   "moves": [
+    "Magical Leaf",
+    "Heal Pulse",
+    "Draining Kiss",
+    "Psychic Noise"
+   ],
+   "ivs": [
+    31,
+    31,
+    31,
+    31,
+    31,
+    31
+   ],
+   "evs": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "species": "Lucario",
+   "level": 34,
+   "nature": "Hardy",
+   "ability": "Steadfast",
+   "item": "",
+   "moves": [
+    "Metal Sound",
+    "Extreme Speed",
+    "Bone Rush",
+    "Quick Guard"
+   ],
+   "ivs": [
+    31,
+    31,
+    31,
+    31,
+    31,
+    31
+   ],
+   "evs": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "species": "Salamence",
+   "level": 34,
+   "nature": "Hardy",
+   "ability": "Intimidate",
+   "item": "",
+   "moves": [
+    "Headbutt",
+    "Focus Energy",
+    "Crunch",
+    "Dragon Claw"
+   ],
+   "ivs": [
+    31,
+    31,
+    31,
+    31,
+    31,
+    31
+   ],
+   "evs": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "species": "Cloyster",
+   "level": 33,
+   "nature": "Hardy",
+   "ability": "Shell Armor",
+   "item": "",
+   "moves": [
+    "Icicle Spear",
+    "Rock Blast",
+    "Surf",
+    "Ice Beam"
+   ],
+   "ivs": [
+    31,
+    31,
+    31,
+    31,
+    31,
+    31
+   ],
+   "evs": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ ],
+ "boxes": [
+  [
+   {
+    "species": "Charmeleon",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Blaze",
+    "item": "",
+    "moves": [
+     "Fire Fang",
+     "Scary Face",
+     "Thunder Punch",
+     "Flame Burst"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Kakuna",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Shed Skin",
+    "item": "",
+    "moves": [
+     "Harden",
+     "Bug Bite",
+     "",
+     ""
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Ekans",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Intimidate",
+    "item": "",
+    "moves": [
+     "Swallow",
+     "Spit Up",
+     "Poison Fang",
+     "Coil"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Sandshrew",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Sand Veil",
+    "item": "",
+    "moves": [
+     "Sand Tomb",
+     "Slash",
+     "Dig",
+     "Gyro Ball"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Alolan Vulpix",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Serene Grace",
+    "item": "",
+    "moves": [
+     "Extrasensory",
+     "Hex",
+     "Freeze-Dry",
+     "Safeguard"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Venomoth",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Shield Dust",
+    "item": "",
+    "moves": [
+     "Psybeam",
+     "Stun Spore",
+     "Signal Beam",
+     "Sleep Powder"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Primeape",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Vital Spirit",
+    "item": "",
+    "moves": [
+     "Swagger",
+     "Brick Break",
+     "Assurance",
+     "Punishment"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Machoke",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Guts",
+    "item": "",
+    "moves": [
+     "Knock Off",
+     "Vital Throw",
+     "Wake-Up Slap",
+     "Dual Chop"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Alolan Golem",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Rock Head",
+    "item": "",
+    "moves": [
+     "Thunder Punch",
+     "Self-Destruct",
+     "Stealth Rock",
+     "Rock Blast"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Galarian Farfetch'd",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Steadfast",
+    "item": "",
+    "moves": [
+     "Rock Smash",
+     "Brutal Swing",
+     "Detect",
+     "Knock Off"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Gengar",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Levitate",
+    "item": "",
+    "moves": [
+     "Night Shade",
+     "Confuse Ray",
+     "Sucker Punch",
+     "Shadow Ball"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Exeggutor",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Chlorophyll",
+    "item": "",
+    "moves": [
+     "Hypnosis",
+     "Confusion",
+     "Psyshock",
+     "Egg Bomb"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Chansey",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Natural Cure",
+    "item": "",
+    "moves": [
+     "Bestow",
+     "Baby-Doll Eyes",
+     "Take Down",
+     "Sing"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Jynx",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Dry Skin",
+    "item": "",
+    "moves": [
+     "Psybeam",
+     "Mean Look",
+     "Fake Tears",
+     "Wake-Up Slap"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Mega Lapras",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Liquid Voice",
+    "item": "",
+    "moves": [
+     "Body Slam",
+     "Rain Dance",
+     "Perish Song",
+     "Ice Beam"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Snorlax",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Immunity",
+    "item": "",
+    "moves": [
+     "Body Slam",
+     "Rest",
+     "Snore",
+     "Sleep Talk"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Meganium",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Overgrow",
+    "item": "",
+    "moves": [
+     "Reflect",
+     "Magical Leaf",
+     "Natural Gift",
+     "Sweet Scent"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Ledian",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Swarm",
+    "item": "",
+    "moves": [
+     "Bug Bite",
+     "Comet Punch",
+     "Thunder Punch",
+     "Agility"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Mareep",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Static",
+    "item": "",
+    "moves": [
+     "Electro Ball",
+     "Confuse Ray",
+     "Power Gem",
+     "Discharge"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Sunkern",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Chlorophyll",
+    "item": "",
+    "moves": [
+     "Endeavor",
+     "Synthesis",
+     "Natural Gift",
+     "Solar Beam"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Wobbuffet",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Shadow Tag",
+    "item": "",
+    "moves": [
+     "Counter",
+     "Mirror Coat",
+     "Safeguard",
+     "Destiny Bond"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Mega Scizor",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Technician",
+    "item": "",
+    "moves": [
+     "Metal Claw",
+     "Fury Cutter",
+     "Slash",
+     "Razor Wind"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Galarian Corsola",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Weak Armor",
+    "item": "",
+    "moves": [
+     "Spite",
+     "Ancient Power",
+     "Hex",
+     "Curse"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Stantler",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Intimidate",
+    "item": "",
+    "moves": [
+     "Psyshield Bash",
+     "Take Down",
+     "Confuse Ray",
+     "Horn Leech"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Pupitar",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Shed Skin",
+    "item": "",
+    "moves": [
+     "Rock Slide",
+     "Scary Face",
+     "Thrash",
+     "Dark Pulse"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Marshtomp",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Torrent",
+    "item": "",
+    "moves": [
+     "Bide",
+     "Ice Punch",
+     "Rock Slide",
+     "Protect"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Dustox",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Shield Dust",
+    "item": "",
+    "moves": [
+     "Silver Wind",
+     "Light Screen",
+     "Whirlwind",
+     "Sludge Bomb"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Gardevoir",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Synchronize",
+    "item": "",
+    "moves": [
+     "Magical Leaf",
+     "Heal Pulse",
+     "Draining Kiss",
+     "Psychic Noise"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Whismur",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Soundproof",
+    "item": "",
+    "moves": [
+     "Stomp",
+     "Uproar",
+     "Roar",
+     "Rest"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Aron",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Sturdy",
+    "item": "",
+    "moves": [
+     "Rock Slide",
+     "Take Down",
+     "Metal Sound",
+     "Iron Tail"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  ],
+  [
+   {
+    "species": "Mega Charizard X",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Tough Claws",
+    "item": "",
+    "moves": [
+     "Dragon Rage",
+     "Scary Face",
+     "Thunder Punch",
+     "Flame Burst"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Mega Pidgeot",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "No Guard",
+    "item": "",
+    "moves": [
+     "Whirlwind",
+     "Return",
+     "Roost",
+     "Agility"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Pikachu (Flying)",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Static",
+    "item": "",
+    "moves": [
+     "Feint",
+     "Spark",
+     "Nuzzle",
+     "Discharge"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Ninetales",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Flash Fire",
+    "item": "",
+    "moves": [
+     "Flamethrower",
+     "Quick Attack",
+     "Confuse Ray",
+     "Safeguard"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Meowth",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Pickup",
+    "item": "",
+    "moves": [
+     "Taunt",
+     "Shock Wave",
+     "Pay Day",
+     "Slash"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Kadabra",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Synchronize",
+    "item": "",
+    "moves": [
+     "Miracle Eye",
+     "Reflect",
+     "Energy Ball",
+     "Recover"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Alolan Golem",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Rock Head",
+    "item": "",
+    "moves": [
+     "Thunder Punch",
+     "Self-Destruct",
+     "Stealth Rock",
+     "Rock Blast"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Dewgong",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Thick Fat",
+    "item": "",
+    "moves": [
+     "Rest",
+     "Aurora Beam",
+     "Aqua Jet",
+     "Brine"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Voltorb",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Soundproof",
+    "item": "",
+    "moves": [
+     "Electro Ball",
+     "Self-Destruct",
+     "Light Screen",
+     "Magnet Rise"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Rhydon",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Lightning Rod",
+    "item": "",
+    "moves": [
+     "Bulldoze",
+     "Chip Away",
+     "Rock Blast",
+     "Drill Run"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Pinsir",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Hyper Cutter",
+    "item": "",
+    "moves": [
+     "Double Hit",
+     "Brick Break",
+     "X-Scissor",
+     "Submission"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Omanyte",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Swift Swim",
+    "item": "",
+    "moves": [
+     "Leer",
+     "Mud Shot",
+     "Brine",
+     "Detect"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Chikorita",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Overgrow",
+    "item": "",
+    "moves": [
+     "Natural Gift",
+     "Sweet Scent",
+     "Light Screen",
+     "Body Slam"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Ariados",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Swarm",
+    "item": "",
+    "moves": [
+     "Poison Fang",
+     "Sucker Punch",
+     "Spider Web",
+     "Pin Missile"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Azumarill",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Thick Fat",
+    "item": "",
+    "moves": [
+     "Helping Hand",
+     "Aqua Tail",
+     "Play Rough",
+     "Aqua Ring"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Galarian Slowking",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Oblivious",
+    "item": "",
+    "moves": [
+     "Zen Headbutt",
+     "Amnesia",
+     "Surf",
+     "Slack Off"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Shuckle",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Sturdy",
+    "item": "",
+    "moves": [
+     "Rock Throw",
+     "Gastro Acid",
+     "Power Trick",
+     "Shell Smash"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Skarmory",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Frisk",
+    "item": "",
+    "moves": [
+     "Feint",
+     "Swift",
+     "Agility",
+     "Steel Wing"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Raikou",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Pressure",
+    "item": "",
+    "moves": [
+     "Thunder Shock",
+     "Roar",
+     "Quick Attack",
+     "Spark"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Marshtomp",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Torrent",
+    "item": "",
+    "moves": [
+     "Bide",
+     "Ice Punch",
+     "Rock Slide",
+     "Protect"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Seedot",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Chlorophyll",
+    "item": "",
+    "moves": [
+     "Nature Power",
+     "Synthesis",
+     "Sunny Day",
+     "Explosion"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Slaking",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Truant",
+    "item": "",
+    "moves": [
+     "Amnesia",
+     "Covet",
+     "Chip Away",
+     "Counter"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Mega Mawile",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Huge Power",
+    "item": "",
+    "moves": [
+     "Metal Claw",
+     "Feint Attack",
+     "Crunch",
+     "Iron Defense"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Swalot",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Liquid Ooze",
+    "item": "",
+    "moves": [
+     "Stockpile",
+     "Spit Up",
+     "Swallow",
+     "Sludge Bomb"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "species": "Cacturne",
+    "level": 34,
+    "nature": "Hardy",
+    "ability": "Sand Veil",
+    "item": "",
+    "moves": [
+     "Ingrain",
+     "Payback",
+     "Spikes",
+     "Sucker Punch"
+    ],
+    "ivs": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "evs": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  ]
+ ]
+}

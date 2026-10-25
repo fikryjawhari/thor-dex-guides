@@ -105,7 +105,7 @@ async function run(t, url, routes, want = []) {
   if (!routes) return t.ev(`(()=>{const r=[];
     P.forEach(p=>r.push('#/p/'+p.id));M.forEach((m,i)=>r.push('#/m/'+i));AB.forEach((a,i)=>r.push('#/a/'+i));
     LOC.forEach((l,i)=>r.push('#/l/'+i));TRS.forEach(t=>r.push('#/tr/'+t.k));
-    return r.concat(['#/','#/locs','#/trainers','#/items','#/walk']);})()`);
+    return r.concat(['#/','#/locs','#/trainers','#/items','#/walk','#/calc']);})()`);
   return t.ev(`(${PAGE})(${JSON.stringify(routes)}, ${JSON.stringify(want)}, ${JSON.stringify(IGN)})`);
 }
 
