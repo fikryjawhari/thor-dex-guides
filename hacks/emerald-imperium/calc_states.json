@@ -12289,6 +12289,2170 @@
         "bp": 620
       },
       "src": "U1 D: Stored Power; I iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e; https://bulbapedia.bulbagarden.net/wiki/Stored_Power_(move). 20+20*sum(positive stages), never subtract negative stages. H base:246-249; visible five stats at+6 sum30, not the full seven-stage battle-state maximum."
+    },
+    {
+      "name": "crit-stage-0",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. No move/item/ability/pumped bonus."
+    },
+    {
+      "name": "crit-stage-0-manual-crit-selected",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual damage selector is not a probability guarantee."
+    },
+    {
+      "name": "crit-opponent-focus-does-not-boost-attacker",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "defFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Only attacker-side atkFocus counts."
+    },
+    {
+      "name": "crit-move-karate-chop",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 427,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:167, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-razor-wind",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 254,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:433, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-razor-leaf",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 388,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:1955, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-sky-attack",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 253,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:3634, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-crabhammer",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 396,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:3864, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-slash",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 79,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4130, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-aeroblast",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 633,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4501, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-cross-chop",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 421,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:6003, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-blaze-kick",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 128,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:7531, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-air-cutter",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 111,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:7914, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-poison-tail",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 258,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:8598, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-leaf-blade",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 395,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:8754, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-night-slash",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 316,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:10004, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-shadow-claw",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 92,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:10501, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-psycho-cut",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 525,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:10689, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-cross-poison",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 200,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:11006, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-stone-edge",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 329,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:11107, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-attack-order",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 664,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:11357, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-spacial-rend",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 674,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:11495, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-storm-throw",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 566,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:12007, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-frost-breath",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 373,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:13056, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-drill-run",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 213,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:13169, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-razor-shell",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 510,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:13283, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-zippy-zap",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 280,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:16802, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-snipe-shot",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 623,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:17162, source cr=2. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-wicked-blow",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 667,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:18503, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-surging-strikes",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 448,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:18528, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-esper-wing",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 593,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:19031, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-triple-arrows",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 637,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:19097, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-flower-trick",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 690,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:19678, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-aqua-cutter",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 580,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:20158, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-ivy-cudgel",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 785,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:20426, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-focus-energy",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Focus establishes +2 pumped state."
+    },
+    {
+      "name": "crit-dire-hit-active",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Dire Hit already used; same single pumped state as Focus, NOT a held-item bonus."
+    },
+    {
+      "name": "crit-lansat-held-unactivated",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lansat Berry"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Full HP, unactivated berry: no pumped state, no permanent held-item boost."
+    },
+    {
+      "name": "crit-dire-hit-held-unused",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "it": "Dire Hit"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Unused bag item is not an eligible held-crit effect."
+    },
+    {
+      "name": "crit-lansat-active-pumped",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Lansat already consumed, establishes the same +2 pumped state; no berry remains held."
+    },
+    {
+      "name": "crit-pumped-sources-do-not-stack",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Focus/Dire Hit/activated Lansat describe ONE established pumped state, not three bonuses."
+    },
+    {
+      "name": "crit-scope-lens",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Eligible held effect adds +1."
+    },
+    {
+      "name": "crit-scope-lens-with-focus",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Item +1 plus pumped +2 reaches guaranteed-crit threshold."
+    },
+    {
+      "name": "crit-razor-claw",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "it": "Razor Claw"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Eligible held effect adds +1."
+    },
+    {
+      "name": "crit-razor-claw-with-focus",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "it": "Razor Claw"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Item +1 plus pumped +2 reaches guaranteed-crit threshold."
+    },
+    {
+      "name": "crit-super-luck",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 137
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Ability adds one stage."
+    },
+    {
+      "name": "crit-super-luck-with-focus",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 137
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Super Luck +1 and pumped +2 guarantee this hit."
+    },
+    {
+      "name": "crit-sniper-not-a-stage-source",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 17
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Sniper changes critical damage, not the crit probability."
+    },
+    {
+      "name": "crit-move-plus-scope-lens",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 79,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4130, source cr=1. Move +1 and held item +1: stage2, p1/2."
+    },
+    {
+      "name": "crit-move-plus-super-luck",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 137
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 79,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4130, source cr=1. Move +1 and ability +1: stage2, p1/2."
+    },
+    {
+      "name": "crit-move-plus-focus",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 79,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4130, source cr=1. Move +1 and pumped +2: stage3, guaranteed."
+    },
+    {
+      "name": "crit-stack-four-stages",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 137,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. 0+1+1+2=4 counted before cap; H retains index4, I/P/E cap3. Both tables give probability1."
+    },
+    {
+      "name": "crit-stack-beyond-cap",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 137,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 79,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4130, source cr=1. 1+1+1+2=5 before cap; top index H4 or I/P/E3. Guaranteed even with slot.crit=false."
+    },
+    {
+      "name": "crit-lucky-punch-chansey",
+      "atk": {
+        "id": "113",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lucky Punch"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Chansey-only +2."
+    },
+    {
+      "name": "crit-lucky-punch-blissey-ineligible",
+      "atk": {
+        "id": "242",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lucky Punch"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. The restriction is Chansey itself, not its evolution family."
+    },
+    {
+      "name": "crit-lucky-punch-with-move",
+      "atk": {
+        "id": "113",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lucky Punch"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 79,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4130, source cr=1. Punch +2 and move +1 guarantee a crit."
+    },
+    {
+      "name": "crit-duck-item-farfetchd",
+      "atk": {
+        "id": "83",
+        "lv": 50,
+        "ab": -1,
+        "it": "Leek"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. EI GetHoldEffectCritChanceIncrease gives Farfetchd only +1; all other hacks here give +2."
+    },
+    {
+      "name": "crit-duck-item-with-move",
+      "atk": {
+        "id": "83",
+        "lv": 50,
+        "ab": -1,
+        "it": "Leek"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 79,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4130, source cr=1. Move +1 plus eligible duck item. EI reaches stage2, NOT guaranteed; others reach3."
+    },
+    {
+      "name": "crit-duck-item-ineligible-holder",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "it": "Leek"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Non-duck holder gets no item crit stages."
+    },
+    {
+      "name": "crit-duck-item-sirfetchd",
+      "atk": {
+        "id": "865",
+        "lv": 50,
+        "ab": -1,
+        "it": "Leek"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Sirfetchd gets +2, including EI."
+    },
+    {
+      "name": "crit-duck-item-sirfetchd-with-move",
+      "atk": {
+        "id": "865",
+        "lv": 50,
+        "ab": -1,
+        "it": "Leek"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 79,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4130, source cr=1. Sirfetchd item +2 and move +1 guarantee."
+    },
+    {
+      "name": "crit-duck-item-galarian-farfetchd",
+      "atk": {
+        "id": "979",
+        "lv": 50,
+        "ab": -1,
+        "it": "Leek"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. EI checks GET_BASE_SPECIES_ID: Galarian Farfetchd also gets only +1."
+    },
+    {
+      "name": "crit-stage-two-move-with-scope-lens",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 623,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:17162, source cr=2. EI source move +2 and item +1 guarantee."
+    },
+    {
+      "name": "crit-always-crit-plus-counted-bonuses",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 566,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:12007, source cr=6. cr6 supplies forced only; Focus2+Lens1 supplies counted3, not6+2+1."
+    },
+    {
+      "name": "crit-battle-armor-base",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": 106
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor prevents crits at stage0."
+    },
+    {
+      "name": "crit-battle-armor-stage-cap",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 137,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": 106
+      },
+      "slot": {
+        "mv": 79,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4130, source cr=1. Armor overrides table guarantee; preserve capped counted stage, p0 and forcedfalse."
+    },
+    {
+      "name": "crit-battle-armor-always-crit",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": 106
+      },
+      "slot": {
+        "mv": 566,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:12007, source cr=6. Armor overrides willCrit/cr6; counted stage remains0."
+    },
+    {
+      "name": "crit-battle-armor-manual-crit-selected",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": 106
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual critical-damage scenario does not change blocked probability."
+    },
+    {
+      "name": "crit-shell-armor-base",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": 86
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor prevents crits at stage0."
+    },
+    {
+      "name": "crit-shell-armor-stage-cap",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 137,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": 86
+      },
+      "slot": {
+        "mv": 79,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4130, source cr=1. Armor overrides table guarantee; preserve capped counted stage, p0 and forcedfalse."
+    },
+    {
+      "name": "crit-shell-armor-always-crit",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": 86
+      },
+      "slot": {
+        "mv": 566,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:12007, source cr=6. Armor overrides willCrit/cr6; counted stage remains0."
+    },
+    {
+      "name": "crit-shell-armor-manual-crit-selected",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": 86
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual critical-damage scenario does not change blocked probability."
+    },
+    {
+      "name": "crit-merciless-not-poisoned",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 167
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. No poison on defender, no guarantee."
+    },
+    {
+      "name": "crit-merciless-psn",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 167
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "st": "psn"
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Poisoned target forces a crit; counted stage remains0."
+    },
+    {
+      "name": "crit-merciless-tox",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 167
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "st": "tox"
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Badly poisoned target also forces a crit."
+    },
+    {
+      "name": "crit-merciless-burn-not-poison",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 167
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "st": "brn"
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Burn is not poison."
+    },
+    {
+      "name": "crit-merciless-attacker-poison-does-not-trigger",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 167,
+        "st": "psn"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Only target poison triggers Merciless."
+    },
+    {
+      "name": "crit-merciless-keeps-counted-stage",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 167,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1,
+        "st": "psn"
+      },
+      "slot": {
+        "mv": 79,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. src/data/moves_info.h:4130, source cr=1. Forced source changes p but not move1+item1 count."
+    },
+    {
+      "name": "crit-merciless-blocked-by-battle-armor",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 167
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": 106,
+        "st": "psn"
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor blocks Merciless, forcedfalse and p0."
+    },
+    {
+      "name": "crit-merciless-blocked-by-shell-armor",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": 167
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": 86,
+        "st": "psn"
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor blocks Merciless, forcedfalse and p0."
+    },
+    {
+      "name": "crit-aqua-tail-doc-not-source",
+      "atk": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "490",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 137,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.041666666666666664,
+          "forced": false
+        }
+      },
+      "src": "U5 C: iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e src/battle_script_commands.c:1930-2027; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Doc says +1; pinned moves_info.h:10018-10038 has no crit field, so counted0."
     }
   ]
 }
