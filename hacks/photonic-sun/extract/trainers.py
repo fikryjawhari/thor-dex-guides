@@ -15,6 +15,7 @@ from collections import defaultdict
 from common import BULBA, load, norm, report, fix, split_name
 from wikitext import split_args
 from ctrguide import default_moves, trainer_match_score
+import totems
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon Ultra Sun and Ultra Moon-Part {}.wiki')
 # Boxes: (walkthrough parts, name). Aether Paradise's second visit (Part 21) is its own box; the first (Part 14, no
@@ -586,6 +587,7 @@ def build(D):
     for st in allstops:
         st[2] = [remap[k] for k in st[2]]
     g, targets = trainer_splits(g, caps, flat)
+    totems.add(D, g, targets, allstops, caps)
     D['TR'] = {'caps': [[f"{c['n']} ({c['w']})", c['l']] for c in caps],
                'fix': [], 'src': 'game data + Bulbapedia places', 'g': g}
     D['_cap_splits'], D['_trainer_splits'] = caps, targets

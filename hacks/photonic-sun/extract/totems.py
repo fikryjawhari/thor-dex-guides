@@ -3,7 +3,7 @@
 Rows: species key, level, ability, item, nature, HP/Atk/Def/SpA/SpD/Spe EVs, moves.
 These wild/SOS encounters have no matching entries in trainers-rebalanced.json.
 """
-from common import report
+from common import report, slug
 
 
 BATTLES = [
@@ -42,12 +42,12 @@ BATTLES = [
     ('Togedemaru', [2, 2, 2, 2, 2], [
         ('togedemaru', 59, 'Lightning Rod', 'Sitrus Berry', 'Impish', [252, 0, 252, 0, 0, 0],
          'Zing Zap/Spiky Shield/Iron Head/Bounce'),
-        ('rotom', 57, 'Levitate', 'Light Clay', 'Modest', [252, 0, 0, 252, 0, 0],
+        ('wash-rotom', 57, 'Levitate', 'Light Clay', 'Modest', [252, 0, 0, 252, 0, 0],
          'Discharge/Hydro Pump/Will-O-Wisp/Light Screen'),
         ('skarmory', 57, 'Sturdy', 'Rocky Helmet', 'Impish', [252, 0, 252, 0, 0, 0],
          'Stealth Rock/Drill Peck/Tailwind/Torment')]),
     ('Mimikyu', [2, 2, 2, 2, 2], [
-        ('mimikyu', 66, 'Disguise', 'Lum Berry', 'Impish', [198, 0, 124, 0, 104, 0],
+        ('mimikyu-disguised', 66, 'Disguise', 'Lum Berry', 'Impish', [198, 0, 124, 0, 104, 0],
          'Shadow Claw/Play Rough/Drain Punch/Bulk Up'),
         ('jellicent', 65, 'Cursed Body', '', 'Modest', [252, 0, 0, 252, 0, 0],
          'Scald/Ice Beam/Spite/Night Shade'),
@@ -87,3 +87,67 @@ BATTLES = [
         ('excadrill', 98, 'Mold Breaker', 'Scope Lens', 'Jolly', [252, 0, 0, 0, 0, 252],
          'Drill Run/Iron Head/Rock Slide/Mud-Slap')]),
 ]
+
+
+def add(data, groups, targets, stops, caps):
+    for name, aura, rows in BATTLES:
+        rematch = name.endswith('(Rematch)')
+        moon = name.startswith('Raticate')
+        boss = 'Totem ' + name if name not in ('Nihilego', 'Ultra Necrozma') else name
+        if rematch:
+            target = len(caps) + 1
+            part, anchor, place = 34, "Hau'oli City", 'Verdant Cavern'
+            heading = 'Verdant Cavern (Rematch)'
+        else:
+            cap_name = 'Totem Gumshoos' if moon else boss
+            target = next(index for index, cap in enumerate(caps) if cap['n'] == cap_name)
+            anchor = place = caps[target]['w']
+            part = stops[caps[target]['at']][0]
+            heading = 'Aether Paradise (first visit)' if name == 'Nihilego' else place
+        group = groups[target]
+        section = next((section for section in group['sec'] if section['h'] == heading), None)
+        if section is None:
+            section = {'h': heading, 'note': [], 'tr': []}
+            if not rematch:
+                section['cap'] = [caps[target]['l'], caps[target]['n'], anchor, 0]
+            if rematch:
+                position = next(index for index, section in enumerate(group['sec'])
+                                if section['h'] == "Hau'oli City") + 1
+                group['sec'].insert(position, section)
+            else:
+                group['sec'].append(section)
+        team = []
+        for species, level, ability, item, nature, evs, moves in rows:
+            assert species in data['_byid'], (name, species)
+            team.append({'id': species, 'l': level, 'a': data['_ABI'][ability], 'i': item,
+                         'na': nature, 'iv': [31] * 6, 'ev': list(evs),
+                         'm': [data['M'].index(move) for move in moves.split('/')], 'src': 's'})
+        if aura is not None:
+            team[0]['au'] = list(aura)
+        note = ['IVs not in the doc: 31 assumed']
+        if len(team) > 1:
+            note.append('The first PokÃ©mon is the Totem; the others are its SOS allies, not a sequential team.')
+        if name == 'Togedemaru':
+            note.append('Doc says Rotom; Hydro Pump identifies Wash Rotom.')
+        if name == 'Ultra Necrozma':
+            note.append('Doc says level 100; the chosen progression cap is 95.')
+        if rematch:
+            note.append("After Ilima's post-game battle, take his Normalium Z to the pedestal in Verdant Cavern.")
+        tags = ['Totem']
+        if moon:
+            tags.append('Prismatic Moon')
+        elif name.startswith('Gumshoos'):
+            tags.append('Photonic Sun')
+        key = 'totem-' + slug(name)
+        trainer = {'k': key, 'n': boss, 'loc': place, 'tags': tags, 'st': '',
+                   'cap': group['cap'], 'note': note, 'p': team}
+        existing = next((trainer for candidate in groups for section in candidate['sec']
+                         for trainer in section['tr'] if trainer['n'] == boss), None)
+        if existing is not None:
+            raise ValueError(f'Totem already exists; enrich instead of duplicating: {boss}')
+        section['tr'].append(trainer)
+        targets[key] = target
+        stop = next(stop for stop in stops if stop[:2] == [part, anchor])
+        stop[2].append(key)
+    report('totem battles:', len(BATTLES), 'mons:', sum(len(rows) for _, _, rows in BATTLES),
+           '(doc sets; 31 IV assumed; allies in foe roster)')

@@ -536,7 +536,7 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
        mon {id speciesId (Mega/Primal form when it holds the stone), l absolute level OR r relative to the cap, i item,
        [a0 ability before Mega Evolution], a ability idx (Mega ability for Megas), [ao "A / B" when the slot is random],
        [na nature], iv[6], [ev[6]] (HP,Atk,Def,SpA,SpD,Spe), m[moveIdx], [hp Hidden Power type (from IVs)], [ld lead
-       slot], [pre[status]], [x[sheet extra speed lines]], [cf[sheet values that differ from the calc]],
+       slot], [au[5] Totem aura stages Atk,Def,SpA,SpD,Spe], [pre[status]], [x[sheet extra speed lines]], [cf[sheet values that differ from the calc]],
        [src "s" = sheet only]}
   WK stop .tr [trainer keys]: placed by location name within the walkthrough split (gym leaders take the last matching
        stop, others a forward pointer; Route 111 desert fights in Split 5 sit with Mirage Tower; Elite Four with Victory

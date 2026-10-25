@@ -11,6 +11,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import HACK, split_name
 from trainers import CAPS
+from totems import BATTLES
 
 
 def trainers(data):
@@ -52,8 +53,59 @@ def check_current(new):
     new_stops = stops(new)
     assert len({stop['k'] for stop in new_stops.values()}) == len(new_stops), 'duplicate stop keys'
     assert all(key in cards for stop in new_stops.values() for key in stop['tr'])
+    check_totems(new, cards)
     print(f"PASS: {len(new_pokemon)} species, {len(cards)} trainer cards, {len(new['TR']['caps'])} caps, "
           f"{len(new['WK']['splits'])} walkthrough splits, {len(new_stops)} stops")
+
+
+def check_totems(data, cards):
+    expected = {
+        'Totem Gumshoos': [0, 1, 0, 0, 0], 'Totem Raticate': [0, 1, 0, 0, 0],
+        'Totem Araquanid': [0, 0, 0, 0, 2], 'Totem Marowak': [1] * 5,
+        'Totem Lurantis': [1] * 5, 'Nihilego': [0, 0, 3, 0, 0],
+        'Totem Togedemaru': [2] * 5, 'Totem Mimikyu': [2] * 5, 'Totem Kommo-o': [2] * 5,
+        'Ultra Necrozma': [2] * 5, 'Totem Ribombee': [3] * 5,
+        'Totem Gumshoos (Rematch)': [3] * 5, 'Totem Raticate (Rematch)': [3] * 5,
+    }
+    totems = [trainer for trainer in cards.values() if 'Totem' in trainer['tags']]
+    assert len(totems) == len(expected) == 13
+    assert {trainer['n'] for trainer in totems} == expected.keys()
+    source = {('Totem ' + name if name not in ('Nihilego', 'Ultra Necrozma') else name): rows
+              for name, _, rows in BATTLES}
+    placements = {trainer['k']: index for index, group in enumerate(data['TR']['g'])
+                  for section in group['sec'] for trainer in section['tr']}
+    occurrences = Counter(key for stop in stops(data).values() for key in stop['tr'])
+    for trainer in totems:
+        name, team = trainer['n'], trainer['p']
+        assert 'pt' not in trainer
+        assert team[0]['au'] == expected[name], name
+        assert len(team[0]['au']) == 5 and all(type(stage) is int and -6 <= stage <= 6
+                                             for stage in team[0]['au']), name
+        assert all('au' not in mon for mon in team[1:]), name
+        assert occurrences[trainer['k']] == 1, name
+        assert len(team) == len(source[name]), name
+        for mon, row in zip(team, source[name]):
+            species, level, ability, item, nature, evs, moves = row
+            assert (mon['id'], mon['l'], mon['i'], mon['na'], mon['ev']) == (species, level, item, nature, evs)
+            assert mon['iv'] == [31] * 6
+            assert data['AB'][mon['a']][0] == ability
+            assert [data['M'][index] for index in mon['m']] == moves.split('/')
+        assert trainer['note'].count('IVs not in the doc: 31 assumed') == 1
+        if 'Raticate' in name:
+            assert 'Prismatic Moon' in trainer['tags'] and not trainer.get('st')
+        if 'Gumshoos' in name:
+            assert 'Photonic Sun' in trainer['tags'] and not trainer.get('st')
+        if '(Rematch)' in name:
+            assert placements[trainer['k']] == len(CAPS) + 1 and trainer['cap'] == 0
+            assert trainer['loc'] == 'Verdant Cavern'
+        else:
+            cap_name = 'Totem Gumshoos' if name == 'Totem Raticate' else name
+            target = next(index for index, cap in enumerate(CAPS) if cap[2] == cap_name)
+            assert placements[trainer['k']] == target
+            assert trainer['loc'] == CAPS[target][1]
+            assert trainer['cap'] == data['TR']['g'][target]['cap']
+    assert next(trainer for trainer in totems if trainer['n'] == 'Ultra Necrozma')['p'][0]['l'] == 100
+    print('PASS: all 13 Totem battles, exact auras/sets, foe allies, version tags, cap boxes and walkthrough links')
 
 
 def check(baseline_path):

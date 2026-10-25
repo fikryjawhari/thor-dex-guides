@@ -2,7 +2,7 @@
 
 Photonic Sun 2.38 (Buffel Saft), **Rebalanced** version, a 3DS hack of Ultra Sun. 928 Pokémon and forms (876 obtainable,
 50 Megas / Primals, 2 trainer-only), 728 moves (38 changed), 233 abilities, 73 encounter areas (72 tracker slots), 497
-trainers, 29 caps and 31 trainer / walkthrough splits. The 137 published walkthrough stops are 148 cap-aligned
+trainers plus 13 Totem encounter cards, 29 caps and 31 trainer / walkthrough splits. The 137 published walkthrough stops are 148 cap-aligned
 fragments.
 
 ## Build
@@ -128,8 +128,21 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   Coast, Malie Garden (Goldeen and Seaking swap by spot); grass rates on Route 5, Brooklet Hill, Ula'ula Meadow, Vast Poni
   Canyon (plus Boldore), Poni Meadow, Route 16, Ancient Poni Path, Thrifty Megamart; levels at Verdant Cavern, Route 3
   shadows, Route 8 surfing and most bubbling spots; Poni Wilds berry piles are half Crabrawler; Poni Grove's Stakataka /
-  Blacephalon slots are 0%. Not in the hack's sources at all: totem battle sets (Totem Battles.pdf is a game doc, not
-  trainer cards).
+  Blacephalon slots are 0%.
+- **Totem encounters (2026-10-25):** `extract/totems.py` hand-transcribes all 13 `Totem Battles.pdf` tables
+  (33 mons), including Nihilego, Ultra Necrozma and both Verdant Cavern rematches. The two-column text dump shifts
+  item/aura, nature/EV and move labels; tables were checked by column rather than blindly parsed by row label.
+  All 653 `trainers-rebalanced.json` records were checked (38 teams contain listed Totem species); none is a Totem
+  fight, so no game-trainer set overrides the doc. The first mon carries `au[5]` (Atk, Def, SpA, SpD, Spe); all
+  allies have N/A auras and omit `au`. Allies follow the Totem in `p` because they are foes: `pt` renders a partner
+  on the player's side. SOS allies are possible calls, not a sequential party or an ordinary Double Battle.
+  Each story fight joins its existing CAPS box/place; Raticate uses the Gumshoos box with `Prismatic Moon`, while
+  Gumshoos is tagged `Photonic Sun`. Stable `totem-*` keys leave all existing trainer identities intact. Rematches
+  join Post-game at Verdant Cavern, reached from Part 34's Hau'oli City stop after Ilima; no new stop keys needed.
+  Orchestrator verdicts: Hydro Pump identifies **Wash Rotom** (`wash-rotom`); its trainer note says "Doc says Rotom".
+  The doc has no IVs: each encounter has one note "IVs not in the doc: 31 assumed", and all mons use `[31]*6`.
+  Ultra Necrozma retains its doc level **100**, separately from the chosen progression cap **95**.
+  No other doc-vs-game set differences were found because the game trainer archive does not contain these fights.
 
 ## Local storage (prefix ps)
 
@@ -222,6 +235,8 @@ keys and teams, all 73 area indices and indexed tables, the species kept, the le
 
 ## History
 
+- **2026-10-25, Totem data (calc step 7).** Added 13 encounter cards with doc auras, 20 SOS allies, version tags,
+  cap-aligned trainer/walkthrough placement and set/aura assertions in `extract/check.py`; schema `au` documented.
 - **2026-10-24, Ultra Necrozma cap 95** (was 100; `CAPS` in trainers.py). `.src/dex-rebalanced.json` regenerated with
   `ctr_dex.py` (SOURCES.md) first: the raw build now reproduces the published data.json exactly.
 - **2026-10-23, Items standard.** `tools/itemstd.py` (shared, idempotent; run by `finalise()`) puts Items in the shared

@@ -127,13 +127,13 @@ Could not classify: none.
   No hzla code or tables copied.
 - Allies follow the lead in `p`, not `pt`: `template/dex.js` line 664 reserves `pt` for the player's partner.
   Use the existing `Prismatic Moon` version tag for Raticate.
-- Initial data table only; integration, schema, source notes and assertions follow in checkpoint 2.
+- Checkpoint 2: integrated all 13 cards / 33 mons, exact aura/set and placement assertions, source/schema notes.
+  Existing trainer keys and walkthrough stop identities are preserved. Shared schema `au` support is orchestrator commit `080a5c2`.
 - Checkpoint 1 gates: npm test, photonic_check, hzla_compare (118 matches / 28 known / 0 mismatches / 0 errors),
   extract/check.py and datajson hack canonicalisation all exit 0. Log: `.tmp/calc-refine/totem.log`.
-- Needs Opus (step 7): the doc calls Togedemaru's ally only "Rotom" but gives Hydro Pump. Preserve base Rotom
-  pending a verdict on Wash Rotom; trainer archives do not resolve the form. IVs are absent from the doc;
-  rendering requires `iv[6]`, so label 31-IV assumptions explicitly rather than claim game evidence.
-- Ultra Necrozma's doc level 100 stays separate from the user-selected cap 95.
+- Orchestrator verdicts (settled): Hydro Pump identifies Wash Rotom (`wash-rotom`), with "Doc says Rotom" on the trainer.
+  Emit `iv: [31]*6` and one "IVs not in the doc: 31 assumed" note per encounter. Ultra Necrozma's doc level 100
+  stays separate from the user-selected cap 95. No outstanding Needs Opus rows for step 7.
 - Rematches follow Ilima's post-game battle: walkthrough Part 34 describes taking his Normalium Z to Verdant Cavern.
 
 ## Unit Z
