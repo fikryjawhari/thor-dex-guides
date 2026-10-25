@@ -161,6 +161,7 @@ const automaticPowers = new Map([
   ['w2-mega-infernape', 80], ['w2-mega-empoleon-d', 100], ['w2-mega-luxray', 60],
   ['w2-mega-roserade', 40], ['w2-mega-orbeetle', 60], ['w2-minior-core', 20],
   ['w2-nidoran-f', 20], ['w2-nidoran-m', 20],
+  ['w2-heavy-slam', 120], ['w2-heat-crash-mega', 120],
 ]);
 for (const [name, power] of automaticPowers) {
   assert.ok(fixture(name), `${name} fixture exists`);
@@ -185,5 +186,17 @@ for (const boundary of [10, 25, 50, 100, 200]) {
   }
 }
 console.log(`PASS EI W2 automatic weight: ${automaticPowers.size} fixtures; ${weightBoundaries} strict-boundary cases`);
+let ratioBoundaries = 0;
+for (const boundary of [2, 3, 4, 5]) {
+  for (const attackerWeight of [boundary * 10 - 0.1, boundary * 10, boundary * 10 + 0.1]) {
+    const ratio = Math.floor(attackerWeight / 10);
+    const power = ratio >= 5 ? 120 : ratio >= 4 ? 100 : ratio >= 3 ? 80 : ratio >= 2 ? 60 : 40;
+    for (const move of ['Heavy Slam', 'Heat Crash']) {
+      assert.equal(boundaryPower(move, attackerWeight, 10), power, `${move} ${attackerWeight}:10 ratio boundary`);
+      ratioBoundaries++;
+    }
+  }
+}
+console.log(`PASS EI W2 weight ratio: ${ratioBoundaries} integer-ratio boundaries; corrected Mega attacker fixture`);
 assert.equal(JSON.stringify({data, profile, fixtures}), unchanged, 'inputs untouched');
 console.log(`Emerald Imperium: ${results.size} fixtures; source modifier/category checks, field parity and priority/order checks passed`);
