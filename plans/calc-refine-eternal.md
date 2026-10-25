@@ -161,3 +161,18 @@ Execution/check log: .tmp/calc-refine/w2-eternal.log. No source tables or oracle
 #### W2 Needs Opus
 
 None from the weight audit. Regional-form fixture is not applicable: none exists in the guide.
+
+#### W2 weight fixture group
+
+Six fixtures, none with slot.bp: w2-low-kick (80), w2-grass-knot (20), w2-heavy-slam (120),
+w2-heat-crash (120), w2-form-floette (20), w2-mega-venusaur (120). Floette (Yellow) exercises
+a cosmetic-form fallback; Mega Venusaur exercises its own 155.5 kg stock weight rather than
+Venusaur's 100 kg (against 29.9 kg Gastrodon, 120 BP rather than 80).
+
+Stock Gen 6 weight bands confirmed: Low Kick/Grass Knot use >=10/25/50/100/200 kg for
+40/60/80/100/120 BP, otherwise 20. Heavy Slam/Heat Crash use attacker/defender weight
+ratios >=2/3/4/5 for 60/80/100/120 BP, otherwise 40. No hack-specific rule is justified.
+Source: @smogon/calc 0.12.0 src/mechanics/gen56.ts:489-505 (stock XY mechanics), checked
+against the legacy Dynamic-Calc Gen 6 oracle. The checker tests all 782 species' weight
+bands, 67 exact form/Mega weights at adjacent Heavy Slam ratio boundaries, and 54
+synthetic below/at/above weight and ratio cases; each boundary also checks all 16 stock rolls.

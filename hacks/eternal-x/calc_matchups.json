@@ -109,6 +109,12 @@
     {"name":"weather-air-lock-neutral","atk":{"id":"snorlax","lv":50,"ab":75},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":52},"field":{}},
     {"name":"weather-air-lock-harsh-sunshine","atk":{"id":"snorlax","lv":50,"ab":75},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":52},"field":{"weather":"Harsh Sunshine"}},
     {"name":"doubles-combined-physical","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":32},"field":{"gameType":"Doubles","weather":"Sun","atkHelpingHand":1,"atkFlowerGift":1,"defReflect":1,"defFriendGuard":1}},
-    {"name":"doubles-combined-special-harsh","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":93},"field":{"gameType":"Doubles","weather":"Harsh Sunshine","atkHelpingHand":1,"defFlowerGift":1,"defLightScreen":1,"defFriendGuard":1}}
+    {"name":"doubles-combined-special-harsh","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":93},"field":{"gameType":"Doubles","weather":"Harsh Sunshine","atkHelpingHand":1,"defFlowerGift":1,"defLightScreen":1,"defFriendGuard":1}},
+    {"name":"w2-low-kick","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":66},"field":{}},
+    {"name":"w2-grass-knot","atk":{"id":"blastoise","lv":50,"ab":-1},"def":{"id":"castform-normal","lv":50,"ab":-1},"slot":{"mv":446},"field":{}},
+    {"name":"w2-heavy-slam","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":483},"field":{}},
+    {"name":"w2-heat-crash","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":534},"field":{}},
+    {"name":"w2-form-floette","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"floette-yellow","lv":50,"ab":-1},"slot":{"mv":66},"field":{}},
+    {"name":"w2-mega-venusaur","atk":{"id":"mega-venusaur","lv":50,"ab":-1},"def":{"id":"gastrodon-west-sea","lv":50,"ab":-1},"slot":{"mv":483},"field":{}}
   ]
 }
