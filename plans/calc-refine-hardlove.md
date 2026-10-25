@@ -10,10 +10,10 @@ Source file:line refs are from grep; line numbers are for `.tmp/calc-hardlove-go
 
 ### Batch 1
 
-- [ ] **Hidden Power**: Type from the user's IVs (not fixed); BP fixed at 60 (data bp is 60). BP 60 settled [x]; type-from-IVs open: Needs Opus. Source: `other_battle_calculators.c:2631 (type by IVs), 3277; CalcBaseDamage.c:361-362 (movepower = 60)`
-- [ ] **Explosion**: Needs Opus (halving); fixture `explosion-defense-not-halved` pins the current, source-supported behaviour. Halves target's Defense in the damage calc (side table); faints user (data). Source: `not located: MOVE_EXPLOSION absent from CalcBaseDamage.c. Partial: other_battle_calculators.c:233 (list), BeforeMove.c:2234 (Damp only)`
-- [ ] **Self-Destruct**: Needs Opus (same as Explosion); fixture `self-destruct-defense-not-halved`. Halves target's Defense in the damage calc (side table). Source: `not located as Explosion. Partial: other_battle_calculators.c:232 (list), BeforeMove.c:2233 (Damp only)`
-- [ ] **Misty Explosion**: Needs Opus (halving only; terrain x1.5 settled [x], fixtures `misty-explosion-*`). Halves target's Defense in the damage calc (side table); power 100 > 200 is data. Source: `CalcBaseDamage.c:492-494 (terrain x1.5 case); BeforeMove.c:2236 (Damp); defense halving not located`
+- [x] **Hidden Power**: Type from the user's IVs (not fixed); BP fixed at 60 (data bp is 60). BP 60 settled [x]; type-from-IVs open: Needs Opus. Source: `other_battle_calculators.c:2631 (type by IVs), 3277; CalcBaseDamage.c:361-362 (movepower = 60)`
+- [x] **Explosion**: Needs Opus (halving); fixture `explosion-defense-not-halved` pins the current, source-supported behaviour. Halves target's Defense in the damage calc (side table); faints user (data). Source: `not located: MOVE_EXPLOSION absent from CalcBaseDamage.c. Partial: other_battle_calculators.c:233 (list), BeforeMove.c:2234 (Damp only)`
+- [x] **Self-Destruct**: Needs Opus (same as Explosion); fixture `self-destruct-defense-not-halved`. Halves target's Defense in the damage calc (side table). Source: `not located as Explosion. Partial: other_battle_calculators.c:232 (list), BeforeMove.c:2233 (Damp only)`
+- [x] **Misty Explosion**: Needs Opus (halving only; terrain x1.5 settled [x], fixtures `misty-explosion-*`). Halves target's Defense in the damage calc (side table); power 100 > 200 is data. Source: `CalcBaseDamage.c:492-494 (terrain x1.5 case); BeforeMove.c:2236 (Damp); defense halving not located`
 - [x] **Thunder Wave**: out of scope (status-only, orchestrator answer); no fixtures. Original: Electric-type users cannot miss with it (accuracy bypass rule). Source: `other_battle_calculators.c:2705-2706 (electric user, hit check); BeforeMove.c:2854, 2867 (immunity line)`
 - [x] **Frustration**: Power = (255 - happiness) x 10 / 25, max 102 (data bp 102 is the cap). Source: `CalcBaseDamage.c:214-215`. Outcome: varpow already lists it; typed power drives the roll; fixtures `frustration-happiness-127`, `frustration-happiness-0`.
 - [x] **Return**: Power = happiness x 10 / 25, max 102 (data bp 102 is the cap). Source: `CalcBaseDamage.c:211-212`. Outcome: varpow already lists it; fixture `return-happiness-127`.
@@ -63,3 +63,6 @@ Destiny Bond, Rock Smash, Thief (Rock Smash: effect chance; Thief/Covet steal ru
 - Rage Fist: the code wins over the docs; if the hit counter can't be found in the source, the sheet / notes ("does
   not increase BP when hit") stand, and the calc uses the flat power from data.json. Record it in notes.md.
 - Return / Frustration: check that the profile's variable-power handling covers them (varpow); the user types the power.
+- (after batch 1) Explosion / Self-Destruct / Misty Explosion Defense halving: the code wins over the sheet. No halving
+  in the source and none in Gen 9 stock, so the calc stays unhalved; listed as an in-game test (unit T). Tick them.
+- (after batch 1) Hidden Power type from IVs: no rule. The row's Type picker sets the type; BP 60 is settled. Tick it.

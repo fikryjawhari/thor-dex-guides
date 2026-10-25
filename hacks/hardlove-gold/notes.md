@@ -173,7 +173,7 @@ User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 | Thunder Wave | Status-only (accuracy bypass for Electric users, no damage rule): out of scope for the damage calc. No fixtures. |
 | Pain Split | Status-only (HP averaging): out of scope for the damage calc. No fixtures. |
 | Misty Explosion | Power 200 is data; Misty Terrain x1.5 is stock Gen 9 (`CalcBaseDamage.c:492-494`, applied to base power). Fixtures: `misty-explosion-misty-terrain`, `misty-explosion-no-terrain`. Defense halving: see Needs Opus in the calc plan. |
-| Explosion / Self-Destruct | Power 250 / 200 are data. No Defense halving in source (`CalcBaseDamage.c` has no Explosion case; the sheet's "Halves target's defense" is not implemented) and none in Gen 9 stock (Gen 1-4 only). Current calc: not halved. Fixtures: `explosion-defense-not-halved`, `self-destruct-defense-not-halved`. Open: see Needs Opus. |
+| Explosion / Self-Destruct | Power 250 / 200 are data. No Defense halving in source (`CalcBaseDamage.c` has no Explosion case; the sheet's "Halves target's defense" is not implemented) and none in Gen 9 stock (Gen 1-4 only). Current calc: not halved. Fixtures: `explosion-defense-not-halved`, `self-destruct-defense-not-halved`. Decision: the code wins, no halving; check in game (In-game tests). |
 | Hidden Power | BP 60 is data (`CalcBaseDamage.c:361-362`). Type from IVs (`other_battle_calculators.c:3277`) is not derived: the user types the type. Fixtures: `hidden-power-fire-typed`, `hidden-power-data-type-normal`. Open: see Needs Opus. |
 
 Gem replacement intentionally takes the **last** native 5325: in pinned `@smogon/calc 0.12.0`
