@@ -430,6 +430,8 @@ save headless and compares the party / boxes: the done-check for a reader sessio
 
 ## Order
 
+Which session does what: `damage-calc-sessions.md`.
+
 1. The framework (above): engine, base profiles, page, import pipeline with the test reader, checks, and the docs a later
    session needs (CLAUDE.md → Making a new guide step, a reference for "calc data for a hack" and "a save reader for a
    family", template/README.md, extractlib docstring).
