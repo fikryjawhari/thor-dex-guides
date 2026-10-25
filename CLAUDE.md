@@ -40,6 +40,8 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - In Git Bash, prefix commands that take `/`-paths as arguments with `MSYS_NO_PATHCONV=1`.
 
 ## Making a new guide
+The main chat writes the unit list (`plans/<hack>.md`: one unit per step / tab, with the sibling hack's script to
+adapt); agents build the units (Workflow → Which model).
 1. Fetch the sources into `hacks/<hack>/.src/` with its `SOURCES.md`; write its `watch.json` (3DS hacks also need the user's vanilla romfs
    dumps: `tools/README.md` → 3DS game data). Update its "Fetched" line and the source log in `tools/README.md`.
 2. Write `hacks/<hack>/extract/` scripts (the shared layout: `tools/extractlib.py` docstring; copy a built hack's) that
@@ -154,10 +156,16 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
     job Haiku can't do.
   - Sol (`gpt-6.1-sol` via T3 `delegate_task`): first choice for dispatched agents and decide sessions (about Opus
     quality at xhigh, a third of the cost). I say when my Sol usage is low.
-  - Haiku: effort xhigh when Sol is low (about Sol low / Sonnet medium, a quarter of Sonnet's cost); high or medium for
-    mechanical jobs (audits, extract rules, notes).
+  - Haiku: medium for mechanical jobs (audits, extract rules, notes, ingestion); xhigh only when Sol is low, and then
+    only for jobs that stay under 100k context (above it every token costs 5x; xhigh agents spent ~90% of their
+    requests there). A bigger Haiku job is split into parts, not run at xhigh.
   - Every agent commits after each working sub-step (`WIP:` when incomplete), so another can take over on a usage limit.
-  - Effort: medium unless I say otherwise.
+  - Effort: medium unless I say otherwise. Opus low for question / analysis / docs sessions. Effort costs twice:
+    thinking stays in context and is re-read on every later request, so high / xhigh only for short, reasoning-heavy jobs.
+  - Size: brief an agent for one unit that ends at a commit, roughly 60-80 requests / 150k context (Haiku: 100k).
+    More work = more agents in sequence, each handed the previous commit and a short findings note.
+  - Main chat: past ~120 requests or ~250k context a session costs 2-3x per request what a fresh one does. At a
+    natural break (merge done, spec built), write the handover in PROGRESS.md and start a new session.
 - **Thor frame** (`tools/mockup/thor-frame/`): `python -I tools/mockup/thor-frame/build.py <page.html> <out.html>
   [--title] [--sub] [--panel]` wraps a built guide or a mockup's inner page in a Thor-sized screen (the viewer sizes,
   fit to screen, dvkb, tabs, reload / clear saved state, error and width readout; pinned on a phone). Put the

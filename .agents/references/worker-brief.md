@@ -13,6 +13,19 @@ explicit task authorisation and provider-specific instructions still win.
   Existing source copies are not replaced automatically. Ask before removing or replacing them.
 - Run `uv run python -I tools/gate.py baseline <accepted-ref>` once before edits; record its SHA and path.
   `git archive` captures committed data/reports and builds HTML without switching checkouts or needing raw inputs.
+- Briefs (the parent's side) give the task, owned files, the exact line ranges / functions to read, checks and the
+  stop point; not background the agent can read itself, and not whole prior reports (pass the findings list only).
+
+## Context budget
+- Every token read stays in context and is re-read on each later request. Read sections, not files:
+  `sed -n` / Read with offset+limit, `git show <ref>:<path> | sed -n`, grep for the function first.
+  Never cat dex.js, dex.css, shell.html, data.json, built HTML or whole notes / PROGRESS / plans.
+- Don't re-read a file you already read or just edited; note line numbers once and reuse them.
+- Command output: redirect to `.tmp/<unit>/*.log` and print only the summary (`tail -20`, `grep -c`, the failing
+  lines). Same for gate, domcompare, node and test runs.
+- Screenshots: look at them only when the check is visual, one at a time, and late in the job.
+- At ~150k context (Haiku: ~90k), or on finishing a unit: commit, write the next step in the report and stop,
+  rather than carrying on; the parent starts a fresh agent.
 
 ## Work and gates
 - Own only the task's files. No template/extract/data edits outside the stated scope. Raise shared-file conflicts.
