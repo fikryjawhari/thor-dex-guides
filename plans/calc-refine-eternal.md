@@ -100,7 +100,8 @@ always-crit part of Cut is a rule).
 
 - [x] Weight audit: all 782 guide species, including 29 stock XY Megas.
 - [x] Automatic-power fixtures and boundary checks.
-- [ ] Final checks and Damage calc notes.
+- [x] Final checks and Damage calc notes.
+- [x] W2 Weight / auto-power moves complete.
 
 Eternal X changes no weights (user's binding scope: unchanged Gen 6 data). The engine lookup probe
 finds 746 direct stock matches, 36 weightNames() fallbacks and zero 1 kg defaults. Nidoran-F and
@@ -191,3 +192,17 @@ stock Gen 6 source and the legacy oracle are followed, not Hardlove's custom pow
 Checks cover all 235 positive Snorlax HP values for both HP moves (470 cases), plus all
 13x13 stage pairings for both speed moves (338 cases), with independent power formulas
 and all 16 rolls against stock Gen 6 using the guide stats.
+
+#### W2 final validation
+
+All four required commands pass before every sub-step commit: npm test --prefix tools/calc;
+node tools/calc/eternal_check.mjs; node tools/calc/hzla_compare.mjs eternal-x;
+python -I tools/datajson.py hacks/eternal-x/hack.json. Final oracle: 119 fixtures,
+116 exact matches, 3 pre-existing always-critical known differences, zero mismatches/errors.
+All ten new automatic-power fixtures match; no new known differences and no W2 Needs Opus rows.
+Oracle checkout SHA: 42b4cdc0f11de43ecabf3a5d2c1aba67e46e2f74, legacy Dynamic-Calc Gen 6.
+The source is run locally only, not copied or bundled. No engine/template/extract changes,
+profile overrides, build output edits or pushes. In-game verification remains outside this unit.
+Full command output: .tmp/calc-refine/w2-eternal.log; final oracle report:
+.tmp/calc-eternal-x/compare.json. The orchestrator should tick step 2 in calc-refine.md;
+that shared plan is outside this worker's owned files.
