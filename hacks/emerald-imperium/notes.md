@@ -231,7 +231,11 @@ are separate from correctness. No trainer `field` evidence is consumed automatic
 Engine pass (2026-10-26, `plans/calc-engine-pass.md`): crit stages are `MV.cr` from the release's
 `src/data/moves_info.h` (`.src/repos/expansion/`, 32 moves: Snipe Shot 2, Razor Shell 1, Zippy Zap always; **Doc
 says** Aqua Tail +1, the source has none). `cfg.calc.over.critItems` gives EI's Leek: +1 for Farfetch'd (Galarian too),
-+2 for Sirfetch'd (`battle_script_commands.c:1956-1979`; elsewhere +2 for both). `plans/calc-crit.md` → I.
++2 for Sirfetch'd (`battle_script_commands.c:1956-1979`; elsewhere +2 for both). `plans/calc-crit.md` → I. Spectral Thief
+is expansion's (`over.state`: `{theft: "headroom"}`, `battle_script_commands.c:17783/17837`): a stat already at +6
+isn't taken, and the gain is cut to the room left before Simple / Contrary. Intrepid Sword / Dauntless Shield fire on
+every entry here (`battle.h:152-153`); the calc fires them when the set's `abilityOn` is on. Fixtures:
+`calc_states.json` (725 cases).
 
 Independent validation: `tools/calc/imperium_check.mjs` checks source-derived integer category estimates,
 hand-calculated ability modifier placement/rounding, native Gen 9 field rolls and Gen 8/9 parity for unchanged

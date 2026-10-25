@@ -244,6 +244,13 @@ Rolls are the engine's 16 rolls. Level as stated, Serious nature, 31 IVs, 0 EVs,
   - Expected on every use: `229 232 235 238 241 243 246 249 252 255 256 259 262 265 268 271`.
   - Other way (ordinary hit): `153 156 157 159 160 162 165 166 168 169 171 174 175 177 178 181`.
 
+Engine pass (2026-10-26, `plans/calc-engine-pass.md`): crit stages are `MV.cr` from the game data's per-move `crit`
+(`tools/ctrguide.py`, 26 moves; Self-Destruct / Explosion 6, so the always-critical rule above now repeats what `cr`
+says: harmless, kept). Battle state (`slot.st`, `def.vol`, ...), crit chance (`crit`) and stat changes before the hit
+(`pre`) follow stock Gen 7 (`tools/calc/README.md`); Spectral Thief steals before the hit, Simple doubling the gain.
+**Doc says** Triple Kick 20 and Power Gem 90; the game data (the patched dump: Power Gem's PP 15 change is in it) has
+10 / 80, which the guide and calc use. Fixtures: `calc_states.json` (541 cases).
+
 ## Checks
 
 `check.py` [baseline.json]: references (species, evolution and form links, trainer and partner teams), 29 caps, the 31

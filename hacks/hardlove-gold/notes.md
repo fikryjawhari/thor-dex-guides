@@ -145,7 +145,7 @@ UI handoff: `plans/trainer-field-conditions.md`. No calc defaults, mechanics or 
 
 ### Damage calc (2026-10-25, provisional first pass)
 
-Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (Nidoran♀ identity collision and Flabébé construction remain shared-engine gaps). Evidence: `plans/calc-refine-hardlove.md` → Unit W → W2.
+Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (the Nidoran♀ identity collision and Flabébé construction were fixed since: `tools/calc/test.mjs`). Evidence: `plans/calc-refine-hardlove.md` → Unit W → W2.
 
 Enabled on `worktree-damage-calc`, **not merged or independently verified against the ROM**. Base `expansion`
 means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide remains **0.8.3**: the 0.8.4 downloads did
@@ -173,6 +173,11 @@ User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 | Return / Frustration | Power from happiness (`CalcBaseDamage.c:211-215`, integer `*10/25`); the user types the power (`expansion` varpow), so the calc takes the typed value. Fixtures: `frustration-happiness-127`, `frustration-happiness-0`, `return-happiness-127`. |
 | Rage Fist | Flat data power 100 (sheet's +50 per hit taken not modelled): no hit-taken counter is in the source (only the punch list, `other_battle_calculators.c:441`), so the sheet/notes stand as the orchestrator directed. Fixtures: `rage-fist-flat-100`, `rage-fist-normal-target-immune`. |
 | Thunder Wave | Status-only (accuracy bypass for Electric users, no damage rule): out of scope for the damage calc. No fixtures. |
+| Pain Split | Status-only (HP averaging): out of scope for the damage calc. No fixtures. |
+| Misty Explosion | Power 200 is data; Misty Terrain x1.5 is stock Gen 9 (`CalcBaseDamage.c:492-494`, applied to base power). Fixtures: `misty-explosion-misty-terrain`, `misty-explosion-no-terrain`. Defense halving: see Needs Opus in the calc plan. |
+| Explosion / Self-Destruct | Power 250 / 200 are data. No Defense halving in source (`CalcBaseDamage.c` has no Explosion case; the sheet's "Halves target's defense" is not implemented) and none in Gen 9 stock (Gen 1-4 only). Current calc: not halved. Fixtures: `explosion-defense-not-halved`, `self-destruct-defense-not-halved`. Decision: the code wins, no halving; check in game (In-game tests). |
+| Hidden Power | BP 60 is data (`CalcBaseDamage.c:361-362`). Type from IVs (`other_battle_calculators.c:3277`) is not derived: the user types the type. Fixtures: `hidden-power-fire-typed`, `hidden-power-data-type-normal`. Open: see Needs Opus. |
+| Double Shock | Not a punching move: neither data.json nor stock flags it, so Iron Fist never boosts it. "Must be Electric" is a usability rule, not damage. Pain Split: HP averaging, out of scope. |
 
 Engine pass (2026-10-26, `plans/calc-engine-pass.md`): `cfg.calc.over.state` keeps the battle-state inputs off
 where the source ignores them (`plans/calc-state-engine.md` → "U2: Hardlove traces"): Echoed Voice, Rage Fist, Last
@@ -180,12 +185,10 @@ Respects, Avalanche, Round, Fusion Flare / Bolt and the pledges stay flat; Defen
 Ball (lost in the replacement damage path); Magnitude isn't doubled against Dig (only Earthquake is); Gust / Twister
 against Fly double their power, not their damage. Revenge's toggle means "the target was already damaged this turn"
 (the source's condition). Crit stages: `MV.cr` from the move effects in `data/Moves.c` (28 moves; Dragon Cheer and
-Ivy Cudgel have none at this pin), the five-entry `critStages` table caps the stage at 4 (`plans/calc-crit.md` → H).
-| Pain Split | Status-only (HP averaging): out of scope for the damage calc. No fixtures. |
-| Misty Explosion | Power 200 is data; Misty Terrain x1.5 is stock Gen 9 (`CalcBaseDamage.c:492-494`, applied to base power). Fixtures: `misty-explosion-misty-terrain`, `misty-explosion-no-terrain`. Defense halving: see Needs Opus in the calc plan. |
-| Explosion / Self-Destruct | Power 250 / 200 are data. No Defense halving in source (`CalcBaseDamage.c` has no Explosion case; the sheet's "Halves target's defense" is not implemented) and none in Gen 9 stock (Gen 1-4 only). Current calc: not halved. Fixtures: `explosion-defense-not-halved`, `self-destruct-defense-not-halved`. Decision: the code wins, no halving; check in game (In-game tests). |
-| Hidden Power | BP 60 is data (`CalcBaseDamage.c:361-362`). Type from IVs (`other_battle_calculators.c:3277`) is not derived: the user types the type. Fixtures: `hidden-power-fire-typed`, `hidden-power-data-type-normal`. Open: see Needs Opus. |
-| Double Shock | Not a punching move: neither data.json nor stock flags it, so Iron Fist never boosts it. "Must be Electric" is a usability rule, not damage. Pain Split: HP averaging, out of scope. |
+Ivy Cudgel have none at this pin), the five-entry `critStages` table caps the stage at 4 (`plans/calc-crit.md` → H). Spectral Thief doesn't steal (`over.state`: `false`; its HIT script at this pin has no theft, U1: moves:19309,
+move0715:7): plain 90 power. **Doc says** it steals boosts. Intrepid Sword / Dauntless Shield are once per battle in
+the source; the calc fires them when the set's `abilityOn` is on (the caller says the entry counts). Fixtures:
+`calc_states.json` (736 cases).
 
 Gem replacement intentionally takes the **last** native 5325: in pinned `@smogon/calc 0.12.0`
 `calculateBPModsSMSSSV`, the Gem item branch follows ability modifiers and no later branch adds 5325. First-match
