@@ -281,6 +281,23 @@
        ]
       },
       "note": "Inverse battle: invert each defending type; type immunities become weaknesses. Ability immunities remain."
+     },
+     {
+      "phase": "critical",
+      "when": {
+       "op": "in",
+       "args": [
+        {
+         "ref": "names.move"
+        },
+        [
+         "Self-Destruct",
+         "Explosion"
+        ]
+       ]
+      },
+      "value": true,
+      "note": "Photonic Move Changes (Rebalanced): Self-Destruct and Explosion always result in a critical hit."
      }
     ]
    }

@@ -17,6 +17,7 @@ const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 const stats = (values, fallback) => Object.fromEntries(statNames.map((name, index) => [name, values?.[index] ?? fallback]));
 const plain = value => JSON.parse(JSON.stringify(value));
 const results = new Map();
+const alwaysCrit = new Set(['self-destruct-neutral', 'explosion-neutral']);
 
 function reference(matchup) {
   const mon = set => {
@@ -43,7 +44,9 @@ function reference(matchup) {
 for (const matchup of fixtures.matchups) {
   const result = plain(engine.calc(matchup.atk, matchup.def, matchup.slot, matchup.field));
   assert.equal(result.rolls.length, 16, matchup.name);
-  if (!matchup.field.inverse) assert.deepEqual(result.rolls, plain(reference(matchup)), matchup.name);
+  // Always-critical moves (over.rules critical rule): the stock reference has no such rule, so the neutral
+  // fixture is checked against the crit fixture below instead of the reference.
+  if (!matchup.field.inverse && !alwaysCrit.has(matchup.name)) assert.deepEqual(result.rolls, plain(reference(matchup)), matchup.name);
   results.set(matchup.name, result);
 }
 const same = (first, second) => assert.deepEqual(results.get(first).rolls, results.get(second).rolls, first);
@@ -57,6 +60,8 @@ assert.deepEqual(results.get('wonder-room-Psychic').rolls, handRolls(136));
 assert.deepEqual(results.get('wonder-room-Psyshock').rolls, handRolls(25));
 assert.deepEqual(results.get('flower-gift-defense-Sun').rolls, handRolls(20));
 assert.deepEqual(results.get('flower-gift-defense-Harsh Sunshine').rolls, handRolls(20));
+same('self-destruct-neutral', 'self-destruct-critical');
+same('explosion-neutral', 'explosion-critical');
 same('magic-room-choice-band-disabled', 'physical-neutral');
 lower('wonder-room-Tackle', 'wonder-room-Tackle-baseline');
 lower('wonder-room-Psychic-baseline', 'wonder-room-Psychic');

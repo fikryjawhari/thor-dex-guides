@@ -3,6 +3,10 @@
   "matchups": [
     {"name":"physical-neutral","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":32},"field":{}},
     {"name":"special-neutral","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":93},"field":{}},
+    {"name":"self-destruct-neutral","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":119},"field":{}},
+    {"name":"self-destruct-critical","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":119,"crit":true},"field":{}},
+    {"name":"explosion-neutral","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":152},"field":{}},
+    {"name":"explosion-critical","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":152,"crit":true},"field":{}},
     {"name":"Singles-spread","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":56},"field":{"gameType":"Singles"}},
     {"name":"Singles-single-target","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":93},"field":{"gameType":"Singles"}},
     {"name":"Singles-Reflect-Tackle","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":32},"field":{"gameType":"Singles","defReflect":1}},

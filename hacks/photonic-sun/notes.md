@@ -175,8 +175,9 @@ can be encountered in Photonic Sun's story. No shared template, shared base prof
 | Flower Gift | Attack and Sp. Def in Sun/Harsh Sunshine, no boost in rain/no weather or to the wrong category; defensive implementation at `src/mechanics/gen789.ts:1604`. |
 | Tailwind | Payback changes power when attacker Tailwind reverses turn order; both sides' Tailwind preserves it. |
 | Inverse | Declarative `effectiveness` rule: invert each defending type's multiplier (0 becomes 2); no ability-immunity bypass. Fixtures cover weakness, resistance, type immunity, dual types, Levitate, Freeze-Dry and Flying Press. |
+| Always-critical moves | Declarative `critical` rule (`value: true`) for Self-Destruct and Explosion (Photonic Move Changes, Rebalanced; data `h`/`e` notes agree). Fixtures `self-destruct-neutral` / `-critical`, `explosion-neutral` / `-critical`: the no-flag case rolls equal the crit-flag case. Oracle does not crit them (neutral 244 vs crit 366 on Self-Destruct, a 1.5 ratio), so the doc decides and these rows are not `match`. Defense halving conflict: see Needs Opus in `plans/calc-refine-photonic.md`. |
 
-`calc_matchups.json` has 107 cases: **101 match all 16 hzla rolls; 6 known differences; no unexplained mismatches**.
+`calc_matchups.json` has 111 cases: **101 match all 16 hzla rolls; 6 known differences; 4 mismatches (Self-Destruct and Explosion, both crit fixtures and both neutral fixtures), explained in the Always-critical row above and open under Needs Opus**.
 The six differences deliberately retain stock Gen 7 behaviour:
 - Wonder Room (Tackle, Psychic, Psyshock): the pinned oracle's active `calc/mechanics/gen789.js:54-57` swaps raw
   defenses twice (`checkRawStatChanges`, then `checkWonderRoom`), and line 1076 selects the opposite attacking
@@ -185,13 +186,13 @@ The six differences deliberately retain stock Gen 7 behaviour:
   `calculateDfModsSMSSSV` omits it, although its separate `calc/mechanics/vanilla/gen789.js:1231` includes it.
   Ours applies the normal x1.5 Sp. Def modifier. Do not remove the modifier just to match the broken oracle path.
 
-Checks: `node tools/calc/photonic_check.mjs` runs all 107 fixtures, compares every non-inverse case's 16 rolls
+Checks: `node tools/calc/photonic_check.mjs` runs all 111 fixtures, compares every non-inverse case's 16 rolls
 directly with uninstrumented stock Gen 7 using guide stat/move overrides, and asserts inverse effectiveness plus
 positive/negative field relationships. Hand-checked base damage for the divergent singles cases: Wonder Room
 Tackle = 20 before STAB (130 Attack / 125 swapped Defense), Psychic = 136 (85 Sp. Atk / 25 swapped Sp. Def),
 Psyshock = 25 (85 Sp. Atk / 125 swapped Defense); defensive Flower Gift Psychic = 20 (85 Sp. Atk / 187 boosted
 Sp. Def, half-down rounding from 125 x1.5). All five 16-roll arrays are asserted independently of the stock API.
-Included in `npm test --prefix tools/calc` (81 shared + 53 Hardlove + 107
+Included in `npm test --prefix tools/calc` (81 shared + 53 Hardlove + 111
 Photonic checks pass). `node tools/calc/hzla_compare.mjs photonic-sun` writes its report under
 `.tmp/calc-photonic-sun/compare.json`. `python assemble.py` builds all four guides.
 `node tools/scenarios/calc-photonic.mjs dist/photonic-sun.html`: all controls/options, rendered damage, stored field
