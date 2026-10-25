@@ -59,6 +59,6 @@ await shot('a');
 await go('#/walk');
 console.log(await ev(`'after reload: open splits '+[...document.querySelectorAll('details.split.jt[open]')].length+' gi open '+document.querySelector('details[data-wo=gi]').open+' docW '+document.documentElement.scrollWidth`));
 // other routes still render
-for (const h of ['#/', '#/locs', '#/trainers', '#/items', '#/calc', '#/p/1']) { await go(h); const r = await ev(`(document.querySelector('.rjump').hidden===!['#/locs','#/trainers','#/items'].includes(location.hash)?'':'RJ WRONG ')+document.getElementById('app').children.length+' w'+document.documentElement.scrollWidth`); console.log(h, r); }
+for (const h of ['#/', '#/locs', '#/trainers', '#/items', '#/calc', '#/p/1']) { await go(h); const r = await ev(`(document.querySelector('.rjump').hidden===!['#/locs','#/trainers','#/items',...(typeof CF!=='undefined'&&CF.calc?['#/calc']:[])].includes(location.hash)?'':'RJ WRONG ')+document.getElementById('app').children.length+' w'+document.documentElement.scrollWidth`); console.log(h, r); }
 console.log('ERRS', errs.length ? errs : 'none');
 await browser.close(); process.exit(0);

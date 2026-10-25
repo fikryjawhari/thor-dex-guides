@@ -24,6 +24,17 @@ async function scrollStops(page) {
   await page.settle();
   const stops = await page.value('CALC.stops()');
   const geometry = await page.value(`(()=>{const bar=document.querySelector('.fbar').getBoundingClientRect().top+scrollY;const last=[...document.querySelectorAll('.dres:not(.na) .mr')].at(-1).getBoundingClientRect().bottom+scrollY;return {bar:Math.round(bar),last:Math.round(last),window:innerHeight};})()`);
+  // Stops 2 and 3 closer than 24 px collapse into one, and the trainer bar (the default view) is the one kept.
+  const s2 = geometry.last - geometry.window + 3, s3 = geometry.bar - 2;
+  if (Math.abs(s3 - s2) < 24) {
+    assert.equal(stops.length, 2, `stops ${JSON.stringify(stops)}: stop 2 (${s2}) and the trainer bar (${s3}) are within 24 px and collapse`);
+    assert(Math.abs(stops[1] - s3) <= 1, `the collapsed stop keeps the trainer bar at the top: ${stops[1]} vs ${s3}`);
+    await page.tap('.rjump [data-j="1"]');
+    assert(Math.abs((await page.value('scrollY')) - stops[1]) <= 1, 'down lands on the trainer bar');
+    await page.tap('.rjump [data-j="-1"]');
+    assert.equal(await page.value('scrollY'), 0, 'up returns to the top');
+    return;
+  }
   assert.equal(stops.length, 3, `stops ${JSON.stringify(stops)}: last row at the bottom would be ${geometry.last - geometry.window + 3}, trainer bar at the top ${geometry.bar - 2}; the 24 px rule keeps one of them (trainer block ${geometry.last - geometry.bar} px in a ${geometry.window} px window)`);
   assert.equal(stops[0], 0);
   await page.tap('.rjump [data-j="1"]');
@@ -197,24 +208,24 @@ const checks = [
   },
   {
     id: '22 big box',
-    title: '61 Pokémon: the grid card is at most 136 px and scrolls; the page is no longer than with 11',
+    title: '61 Pokémon: the grid card is at most 136 px and scrolls; the page grows only by the grid, up to its cap',
     sizes: SIZE_SMALL,
     run: async page => {
       await setupCalc(page, { trainer: EI_TRAINERS.candice, save: 'eleven.json' });
       await page.value('scrollTo(0,0)');
-      const eleven = await page.value(`({doc:document.documentElement.scrollHeight})`);
+      const eleven = await page.value(`({doc:document.documentElement.scrollHeight,gridH:document.querySelector('.mg .dstrip').getBoundingClientRect().height})`);
       await page.importSave('good.json');
       await dismissBanner(page);
       await page.value('scrollTo(0,0)');
       await page.settle();
       const m = await page.value(`(()=>{const grid=document.querySelector('.mg .dstrip');const cells=[...document.querySelectorAll('.mg .dstrip button')];const bottom=i=>cells[i]?.getBoundingClientRect().bottom??null;return {doc:document.documentElement.scrollHeight,gridH:grid.getBoundingClientRect().height,overflow:getComputedStyle(grid).overflowY,scrolls:grid.scrollHeight>grid.clientHeight,cells:cells.length,fourthRow:bottom(23)??bottom(cells.length-1),foeBar:document.querySelector('.fbar').getBoundingClientRect().bottom,foeTeam:document.querySelector('.dside:not(.mg) .dstrip').getBoundingClientRect().bottom,h:innerHeight};})()`);
-      // The Layout section says fewer Pokémon make the grid shorter (11 is two rows), so the 61 page is taller by design,
-      // up to the 136 px cap. Check 22 says "not longer than with 11": the two can't both hold; this fails on that line.
+      // Fewer Pokémon make the grid shorter (Layout: 11 is two rows), so the page may only grow by the grid's own growth
+      // up to its 136 px cap: the box never lengthens the page beyond four rows.
       allOf([
         [m.cells === 61, `grid cells ${m.cells}`],
         [m.gridH <= 136, `grid card ${m.gridH}px, want at most 136`],
         [['auto', 'scroll'].includes(m.overflow) && m.scrolls, 'the grid scrolls by touch'],
-        [m.doc <= eleven.doc, `page ${m.doc}px tall with 61 (the grid is ${m.gridH}px), ${eleven.doc}px with 11 (two grid rows); the Layout section says fewer Pokémon make it shorter`],
+        [m.doc - eleven.doc <= m.gridH - eleven.gridH + 1, `page ${m.doc}px with 61 vs ${eleven.doc}px with 11 grows more than the grid (${eleven.gridH} → ${m.gridH}px)`],
         [m.foeBar <= m.h && m.foeTeam <= m.h, `foe bar ${m.foeBar} / team ${m.foeTeam} should be on screen (${m.h})`],
         [m.fourthRow <= m.h, `the grid's fourth row ends at ${m.fourthRow}, past ${m.h}`],
       ]);

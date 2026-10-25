@@ -261,7 +261,7 @@ selects per row (weather, terrain...) and three toggles per row (Reflect, Light 
 terrain, Reflect, Light Screen) is a placeholder. Crit is per move, not a field option. The chosen values are stored under
 `field` and passed to the engine by key.
 
-**Scroll stops (rail `↑ ↓`).** Three stops, computed when pressed and de-duplicated within 24 px: (1) the top of the page,
+**Scroll stops (rail `↑ ↓`).** Three stops, computed when pressed and de-duplicated within 24 px (when stops 2 and 3 collapse, the trainer bar is kept): (1) the top of the page,
 (2) the trainer block's last move row at the bottom of the viewport (so a full box stays visible above it), (3) the trainer
 bar at the top of the viewport (the default view). `↓` goes to the next stop below the current scroll position, `↑` to the
 previous one above it, with a 3 px tolerance. Pages too short to scroll to a stop use the nearest reachable one.
@@ -373,7 +373,7 @@ asserts: no page errors and `documentElement.scrollWidth` equals the viewport wi
 21. **Entry points:** `Calc vs <name> ▸` on a trainer card lands on `#/calc` with that foe selected; `Use in calc ▸` from a
     Pokémon page lands with a custom set selected.
 22. **Big box (single column):** import 61 Pokémon (6 party, 55 boxed). The grid card is at most 136 px tall and scrolls by
-    touch; the page is not longer than with 11 Pokémon; at the top of the page the foe bar and all of the foe's team are
+    touch; the page grows only by the grid (11 Pokémon = two rows); at the top of the page the foe bar and all of the foe's team are
     visible with the grid's first four rows.
 23. **Per-slot crit:** turn crit on for Earthquake on Garchomp; the same move on another Pokémon is unaffected; change the
     slot's move: crit is off again.
