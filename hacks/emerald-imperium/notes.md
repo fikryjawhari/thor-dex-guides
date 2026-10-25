@@ -153,6 +153,9 @@ WK.cheats (+ `cnote`), trainer `c` (calc trainer names), `pp` (pokepaste), mon `
 
 ### Damage calc
 
+W2 complete (2026-10-25): 1,208 species audited, five source weight overrides, 23 automatic-power fixtures;
+two Needs Opus rows (Hoopa source/scope conflict and Eruption/Water Spout power-display metadata).
+
 Profile: `cfg.calc` in `hack.json` over `template/calc/profiles/expansion.json` (Gen 9 mechanics). Settings
 checked: EI's own `include/config/battle.h` sets every damage switch used here to `GEN_LATEST`, which is `GEN_9`
 in this release (`iriv24/pokeemerald-expansion` at `2576d0f3…`). hzla's pinned profile uses dmgGen 8 for the same
@@ -240,7 +243,7 @@ trainer-field UI are deferred. At wide sizes the match block grows when these co
 Field reachable rather than allowing an overflowing match block to cover it.
 
 Checks:
-- `node tools/calc/hzla_compare.mjs emerald-imperium`: 109 cases, 100 exact matches, nine source/UI-choice differences,
+- `node tools/calc/hzla_compare.mjs emerald-imperium`: 132 cases, 123 exact matches, nine source/UI-choice differences,
   zero unexplained mismatches. Report `.tmp/calc-emerald-imperium/compare.json`.
 - `node tools/calc/test.mjs`: 81 passed, 0 failed (`.tmp/calc-emerald-imperium/engine-test.log`).
 - `python assemble.py`: all four guides built (`.tmp/calc-emerald-imperium/assemble.log`).
@@ -331,11 +334,11 @@ All requested forms have an EI source weight: none needs an online weight or und
 | 1527 | Mega Slaking | 130.5 | 130.5 | `species_info.h:626` | Keep; exact source weight |
 | 351 | Castform (Normal) | 0.8 | 0.8 | `gen_3_families.h:7986` | Keep; exact source weight |
 | 1490 | Mega Torterra | 310 | 310 | `species_info.h:375` | Keep; exact source weight |
-| 1493 | Mega Infernape | 55 | 70 | `species_info.h:564` | Set `over.species` weight |
+| 1493 | Mega Infernape | 55 | 70 | `species_info.h:564` | `over.species` override applied |
 | 1491 | Mega Empoleon O | 84.5 | 84.5 | `species_info.h:437` | Keep; exact source weight |
-| 1492 | Mega Empoleon D | 84.5 | 160 | `species_info.h:499` | Set `over.species` weight |
-| 1489 | Mega Luxray | 42 | 46 | `species_info.h:306` | Set `over.species` weight |
-| 1531 | Mega Roserade | 14.5 | 20 | `species_info.h:692` | Set `over.species` weight |
+| 1492 | Mega Empoleon D | 84.5 | 160 | `species_info.h:499` | `over.species` override applied |
+| 1489 | Mega Luxray | 42 | 46 | `species_info.h:306` | `over.species` override applied |
+| 1531 | Mega Roserade | 14.5 | 20 | `species_info.h:692` | `over.species` override applied |
 | 413 | Wormadam (Plant) | 6.5 | 6.5 | `gen_4_families.h:1846` | Keep; exact source weight |
 | 1532 | Mega Dusknoir | 106.6 | 106.6 | `species_info.h:762` | Keep; exact source weight |
 | 1529 | Primal Dialga | 683 | 683 | `species_info.h:874` | Keep; exact source weight |
@@ -374,7 +377,7 @@ All requested forms have an EI source weight: none needs an online weight or und
 | 745 | Lycanroc (Midday) | 25 | 25 | `gen_7_families.h:2000` | Keep; exact source weight |
 | 746 | Wishiwashi (Solo) | 0.3 | 0.3 | `gen_7_families.h:2191` | Keep; exact source weight |
 | 773 | Silvally (Normal) | 100.5 | 100.5 | `gen_7_families.h:4161` | Keep; exact source weight |
-| 774 | Minior (Meteor Red) | 0.3 | 40 | `gen_7_families.h:4259` | Set `over.species` weight |
+| 774 | Minior (Meteor Red) | 0.3 | 40 | `gen_7_families.h:4259` | `over.species` override applied |
 | 1199 | Minior (Core Red) | 0.3 | 0.3 | `gen_7_families.h:4297` | Keep; exact source weight |
 | 1512 | Mega Orbeetle | 40.8 | 40.8 | `gen_8_families.h:1344` | Keep; exact source weight |
 | 1513 | Mega Drednaw | 115.5 | 115.5 | `gen_8_families.h:1907` | Keep; exact source weight |
@@ -412,7 +415,8 @@ Gyro Ball (8950–8953) uses `min(150, floor(25 * defenderSpeed / attackerSpeed)
 These are the native Gen 9 engine rules: no shared engine phase or profile power rule is needed.
 
 **Needs Opus — W2 Hoopa Unbound (`1168`).** EI `gen_6_families.h:6143` says `.weight = 490`
-(49 kg), while stock and the shared expansion header say 490 kg (`.weight = 4900`). This conflicts
+(49 kg); the shared expansion header at the sprite pin has the same `.weight = 490`
+(`gen_6_families.h:7417`), while stock is 490 kg. This inherited source discrepancy conflicts
 with the binding scope note that EI changes no existing-species weights. Retain stock 490 kg;
 the orchestrator must decide whether the release-source typo should override that scope note.
 This is not an undocumented form and is not silently treated as a confirmed 49 kg change.
@@ -424,8 +428,20 @@ results omit the computed `bp` even at full HP. At 1/235 HP the roll is correctl
 Eruption versus Blastoise gives 19–23, but neither result has `bp`. Shared adapter/UI changes are not
 W2 worker-owned. The fixtures test damage rather than claiming that missing metadata is power 1 or 150.
 
-W2 implementation checkpoint: source audit, five weight overrides and weight/ratio/HP fixtures complete;
-speed fixtures and final notes/check summary follow.
+**W2 final checks.** `npm test --prefix tools/calc`, `node tools/calc/imperium_check.mjs`,
+`node tools/calc/hzla_compare.mjs emerald-imperium` and
+`python -I tools/datajson.py hacks/emerald-imperium/hack.json` pass before every W2 commit.
+The comparison now has 132 fixtures: 123 exact matches (all 23 W2 cases included), nine pre-existing
+documented differences, zero unexplained mismatches/errors. W2 adds 1,208 species weight-band checks,
+30 strict weight-boundary checks, 24 integer-ratio boundary checks, 940 exhaustive HP checks and
+338 speed-stage checks. Fixed-power reference calculations disable native variable-power recalculation,
+so the source HP and speed formulas are checked independently of that recalculation.
+The 23 persisted W2 fixtures never set `slot.bp`: 11 weight/form cases, two weight-ratio cases,
+eight HP cases and two speed cases. Logs and the full source audit remain in
+`.tmp/calc-refine/w2-ei.log` and `.tmp/calc-refine/w2-ei-audit.json` (not shipped).
+No source weights were missing/undocumented; no new oracle differences or engine rules were added.
+No template, engine source, extract scripts, other hacks, storage keys or orchestrator claim were changed.
+No viewer/Thor or in-game testing was performed for this data/fixture-only unit.
 
 ## Checks
 
