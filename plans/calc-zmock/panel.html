@@ -1,0 +1,9 @@
+<fieldset><legend>Z button / Totem aura mockup</legend>
+ <div class="chips" id="zk1"></div><div class="chips" style="margin-top:6px" id="zk2"></div>
+ <p class="hint">Calc opens on a custom Decidueye vs Totem Gumshoos (Def +1 aura). Z on a row turns the move into its Z-move (engine damage, name in gold; ×n hidden: Z hits once). Z place: before the move name, or on the % line. Aura mark: on the name line, or at the end of the Lv / HP line; it goes when the stages are changed. Trainers → Verdant Cavern shows both Totem cards with their aura tag (Totem Marowak, all +1, sits there only for the mockup).</p>
+</fieldset>
+<script>
+(function(){const B=(id,list)=>{const el=document.getElementById(id);list.forEach(([l,n,v])=>{const b=document.createElement('button');b.textContent=l;b.onclick=()=>thorFrame().setOption(n,v);el.appendChild(b);});};
+ B('zk1',[['Z: before name','zpos','1'],['Z: % line','zpos','2']]);
+ B('zk2',[['Aura mark: name line','aum','1'],['Aura mark: Lv line','aum','2']]);})();
+</script>
