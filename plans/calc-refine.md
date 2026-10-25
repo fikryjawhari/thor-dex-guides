@@ -34,8 +34,14 @@ Also `7b93a0f` (Fling / Natural Gift automatic, `plans/calc-dynamic-power.md`); 
 ratio / Flail / Gyro Ball / Hard Press source rules, 105 checks); its Needs Opus rows fixed by the orchestrator (species
 names: accents and ♀ / ♂, which had merged Nidoran-F into -M in every guide). The user takes the rest of the
 dynamic-power engine work (state toggles, pre-hit stat changes) to its own session: `plans/calc-dynamic-power.md`.
-Open, in order: **W2** for Photonic, Eternal X, EI (one Sol agent each, the W2 row plus that hack's list in
-`plans/calc-dynamic-power.md`), **Z**, **T**, then **A**. Rows below.
+**Open steps (session 3 onward), in order** (rows in the Units table below; tick each when its commit lands):
+1. [ ] W2 Photonic (Sol: the W2 row, the scope note below, Photonic's list in `plans/calc-dynamic-power.md`).
+2. [ ] W2 Eternal X (Sol, likewise).
+3. [ ] W2 EI (Sol, likewise).
+4. [ ] Z Photonic Z-moves / Totem (Sol).
+5. [ ] T In-game test cards, all four hacks (Haiku medium).
+6. [ ] A Audit (Haiku medium).
+7. [ ] Finish: notes / `plans/damage-calc-sessions.md` → Status / PROGRESS.md, delete this plan if all done.
 User (2026-10-25): Photonic and Eternal X change no weights, so their W2 is a check (stock weights, forms only), and any
 form with no stock weight is looked up online (Bulbapedia; cite it). EI changes none either but has custom forms
 (hack Megas, Pikachu costumes...): use the expansion source's `species_info` weight where it has one, else online, else
