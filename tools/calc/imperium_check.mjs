@@ -164,6 +164,7 @@ const automaticPowers = new Map([
   ['w2-heavy-slam', 120], ['w2-heat-crash-mega', 120],
   ['w2-flail-one', 200], ['w2-flail-full', 20], ['w2-reversal-one', 200], ['w2-reversal-full', 20],
   ['w2-eruption-one', 1], ['w2-eruption-full', 150], ['w2-water-spout-one', 1], ['w2-water-spout-full', 150],
+  ['w2-gyro-ball', 86], ['w2-electro-ball', 120],
 ]);
 const manualPowerEngine = await createEngine(data, {...profile,
   varpow: [...(profile.varpow || []), 'Eruption', 'Water Spout']});
@@ -229,5 +230,28 @@ for (let currentHP = 1; currentHP <= maximumHP; currentHP++) {
   }
 }
 console.log(`PASS EI W2 HP: ${maximumHP * 4} exhaustive HP cases; Flail/Reversal bands and Eruption/Water Spout floor`);
+const attackerSpeed = engine.stats({id: '143', lv: 50, ab: -1})[5];
+const defenderSpeed = engine.stats({id: '101', lv: 50, ab: -1})[5];
+let speedCases = 0;
+for (let attackerStage = -6; attackerStage <= 6; attackerStage++) {
+  for (let defenderStage = -6; defenderStage <= 6; defenderStage++) {
+    const attackSpeed = staged(attackerSpeed, attackerStage);
+    const defendSpeed = staged(defenderSpeed, defenderStage);
+    const ratio = Math.floor(attackSpeed / defendSpeed);
+    const powers = [['Gyro Ball', Math.min(150, Math.floor(25 * defendSpeed / attackSpeed) + 1)],
+      ['Electro Ball', ratio >= 4 ? 150 : ratio >= 3 ? 120 : ratio >= 2 ? 80 : ratio >= 1 ? 60 : 40]];
+    for (const [move, power] of powers) {
+      const attacker = {id: '143', lv: 50, ab: -1, stg: [0, 0, 0, 0, 0, attackerStage]};
+      const defender = {id: '101', lv: 50, ab: -1, stg: [0, 0, 0, 0, 0, defenderStage]};
+      const slot = {mv: data.M.indexOf(move)};
+      const actual = engine.calc(attacker, defender, slot, {});
+      const manual = manualPowerEngine.calc(attacker, defender, {...slot, bp: power}, {});
+      assert.equal(actual.bp, power, `${move} stages ${attackerStage}/${defenderStage} source power`);
+      assert.deepEqual(plain(actual.rolls), plain(manual.rolls), `${move} stages ${attackerStage}/${defenderStage} rolls`);
+      speedCases++;
+    }
+  }
+}
+console.log(`PASS EI W2 speed: ${speedCases} stage combinations; ${automaticPowers.size} total no-power fixtures`);
 assert.equal(JSON.stringify({data, profile, fixtures}), unchanged, 'inputs untouched');
 console.log(`Emerald Imperium: ${results.size} fixtures; source modifier/category checks, field parity and priority/order checks passed`);
