@@ -205,7 +205,7 @@ unlicensed importer code/tables were copied into tracked runtime files.
 
 #### Validation and open in-game tests
 
-`npm test --prefix tools/calc`: 81 existing engine tests plus 53 Hardlove checks (48 matchups, five focused checks).
+`npm test --prefix tools/calc`: 81 existing engine tests plus 66 Hardlove checks (59 matchups, seven focused checks).
 `hardlove_check.mjs` compares all 16 rolls/hit with stock Gen 9 and guide numbers, explicit reference Gem powers,
 and a hand-derived example: level 50, Atk 130, Def 120, Tackle 40 -> base 21; Gem power 60 -> 30; crit base 31.
 Report `.tmp/calc-hardlove-gold/check.json` explicitly says `independentHackOracle: false`. Fixtures intentionally
