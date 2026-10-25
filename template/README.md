@@ -86,8 +86,9 @@ marks the card. Stored as `pty` in the existing edits; ability / Mega change cle
 row's type dot (the dot and the Z share a 20 px column, so the name and the % text start at the same x; the user rejected
 Z before the name: it cut long names at 260 px). On: the row shows the Z-move's name in the accent colour and its damage
 (slot `z`, one hit: no ×n / Hits), the opened row says "Z-move of <move>". Stored per slot in `ST.z` (the calc's one key),
-cleared with the slot's move. Rows are 36 px instead of 31 so the toggle fits; trainer bar to the fourth move is 313 px,
-still inside 316. Status rows have no Z. Guides without `zmove` render exactly as before (no `zm` class, no `pc` span class).
+cleared with the slot's move. Rows are 36 px instead of 31 so the toggle fits (the % line sits 2 px up inside the row);
+the trainer bar's arrows are drawn chevrons centred in their buttons (the ‹ › glyphs sat low), and below 480 px the buttons
+are 24 × 22 and the bar 24 px tall (was 30 × 26, 28): trainer bar to the fourth move is 309 px of 316. Status rows have no Z. Guides without `zmove` render exactly as before (no `zm` class, no `pc` span class).
 **Totem auras** (data `au`, five stages): the Trainers card tags the Totem ("Aura Def +1", "Aura +2 all"); in the calc
 its stages start at the aura and an "Aura" mark sits at the end of the Lv / HP line while they are unchanged (Reset
 brings it back). Scenario: `tools/scenarios/calc-zmove.mjs`.
