@@ -158,3 +158,78 @@ Destiny Bond, Rock Smash, Thief (Rock Smash: effect chance; Thief/Covet steal ru
 - (after batch 1) Explosion / Self-Destruct / Misty Explosion Defense halving: the code wins over the sheet. No halving
   in the source and none in Gen 9 stock, so the calc stays unhalved; listed as an in-game test (unit T). Tick them.
 - (after batch 1) Hidden Power type from IVs: no rule. The row's Type picker sets the type; BP 60 is settled. Tick it.
+
+## Unit W: weight moves
+
+Completed 2026-10-25; source is the same 0.8.3 pin as Unit F, never the 0.8.4 importer or hzla.
+Pinned `data/Species.c` is cached as `.tmp/calc-refine/W-Species.c`; the full 986-species comparison is
+`.tmp/calc-refine/W-weights.json`. All guide species map to source constants (`wormadam_trashy` maps to
+`SPECIES_WORMADAM_TRASH`). No source weights are missing.
+
+**Weight source.** `tools/calc/src/adapter.js:79-91` takes `weightkg` from the stock generation species record,
+falling back to 1 kg, with optional profile species overrides (Hardlove has none). `data.json` P entries have no
+weight field; `w` is encounters, not weight. Source `data/Species.c` supplies `weightHectograms` (divide by ten
+for kg). `src/battle/battle_pokemon.c:998-1000` reloads form-specific weight from the dex NARC on form change;
+`src/battle/battle_script_commands.c:1866-1892` applies Heavy Metal, Light Metal and Float Stone, using integer
+hectograms; `src/battle/battle_calc_damage.c:107` passes that effective weight to the damage calculation.
+
+**Bands.** `src/individual/CalcBaseDamage.c:131-177` and
+`src/battle/other_battle_calculators.c:736-743` use **<=10/25/50/100/200 kg** for 20/40/60/80/100 BP,
+then 120. This is NOT stock at exact thresholds: stock uses **<** thresholds (10 kg Kakuna is 20 BP in source,
+40 in stock). For Heavy Slam / Heat Crash, integer attacker/defender weight ratios 0-1/2/3/4/5+ yield
+40/60/80/100/120 BP, matching stock; zero defender weight yields 120. The separate battle-script helper
+`battle_script_commands.c:2081-2105` uses floor(defender * 10000 / attacker) <=2000/2500/3334/5000;
+its rounded one-third boundary differs slightly from the exact ratio used in CalcBaseDamage. Do not mistake
+the helper's comments for the damage function actually calculating these moves.
+
+**Fixtures.** Seven source-derived, explicit-power cases; `reference.power` + `plainMove` compare damage
+against stock Gen 9 built with guide stats. These are manual-power checks, NOT automatic-weight parity:
+
+| Fixture suffix (`weight-`) | Source weights (kg) | BP |
+| --- | --- | --- |
+| low-kick-mega-steelix | Mega Steelix 740 | 120 |
+| grass-knot-mega-sableye | Mega Sableye 161 | 100 |
+| heavy-slam-mega-aggron | Mega Aggron 395 / Snorlax 460 | 40 |
+| heat-crash-mega-camerupt | Mega Camerupt 320.5 / Mega Mawile 23.5 | 120 |
+| grass-knot-alolan-golem-source-power | Golem Alolan 316 | 120 |
+| grass-knot-mega-absol-z-source-power | Mega Absol Z 49 | 60 |
+| low-kick-exact-10kg-source-boundary | Kakuna 10 | 20 |
+
+### Needs Opus (Unit W)
+
+- **Automatic weight moves are not enabled.** All four are in the base profile's `varpow`;
+  `adapter.js:309-326` returns null without `slot.bp`, then renames an explicit-power move to
+  `Guide fixed power`, bypassing stock's weight calculation. All seven tested calls return null when BP is
+  omitted (`.tmp/calc-refine/W-fixtures.json`). Decide whether to retain manual power or enable native/custom
+  weight calculation; the latter must address the source's inclusive Low Kick / Grass Knot boundaries too.
+  No shared engine, template or profile behaviour was changed in this unit.
+- **65 incorrect stored weights:** 64 species names miss stock lookup and fall back to 1 kg; Maushold
+  resolves but source is **2.8 kg**, stock **2.3 kg** (`Species.c:55579`, species block start).
+  These do not affect the explicit-power fixtures, but would affect automatic weight moves and other native
+  weight consumers (e.g. Sky Drop). Consider source-backed `cfg.calc.over.species[id].weightkg` overrides and
+  canonical-name resolution; do not alias forms onto another guide species' name. All missing stock names
+  are listed below as **source kg [Species.c species-block line]**; their current engine weight is always 1 kg.
+  - Nidoranâ™€ 7 [1657]; Nidoranâ™‚ 9 [1828]; Mega Absol Z 49 [81913]; Mega Garchomp Z 99 [82027].
+  - Mega Lucario Z 49.4 [82084]; Wormadam Trashy 6.5 [84364]; FlabÃ©bÃ© 0.1 [40987]; Raticate Alolan 25.5 [64243].
+  - Raichu Alolan 21 [64300]; Sandshrew Alolan 40 [64357]; Sandslash Alolan 55 [64414]; Ninetales Alolan 19.9 [64528].
+  - Geodude Alolan 20.3 [64813]; Graveler Alolan 110 [64870]; Golem Alolan 316 [64927]; Grimer Alolan 42 [64984].
+  - Muk Alolan 52 [65041]; Exeggutor Alolan 415.6 [65098]; Marowak Alolan 34 [65155]; Meowth Galarian 7.5 [65896].
+  - Rapidash Galarian 80 [66010]; Farfetchd Galarian 42 [66181]; Weezing Galarian 16 [66238]; Mr Mime Galarian 56.8 [66295].
+  - Zapdos Galarian 58.2 [66409]; Slowking Galarian 79.5 [66523]; Corsola Galarian 0.5 [66580]; Zigzagoon Galarian 17.5 [66637].
+  - Linoone Galarian 32.5 [66694]; Darmanitan Galarian 120 [66808]; Yamask Galarian 1.5 [66865]; Shellos East Sea 6.3 [68005].
+  - Deerling Summer 19.5 [68461]; Deerling Autumn 19.5 [68518]; Deerling Winter 19.5 [68575]; Flabebe Yellow Flower 0.1 [70627].
+  - Flabebe Orange Flower 0.1 [70684]; Flabebe Blue Flower 0.1 [70741]; Flabebe White Flower 0.1 [70798]; Floette Yellow Flower 0.9 [70855].
+  - Floette Orange Flower 0.9 [70912]; Floette Blue Flower 0.9 [70969]; Floette White Flower 0.9 [71026]; Floette Eternal Flower 0.9 [71083].
+  - Rockruff Own Tempo 9.2 [72850]; Growlithe Hisuian 22.7 [75586]; Arcanine Hisuian 168 [75643]; Voltorb Hisuian 13 [75700].
+  - Electrode Hisuian 71 [75757]; Typhlosion Hisuian 69.8 [75814]; Qwilfish Hisuian 3.9 [75871]; Sneasel Hisuian 27 [75928].
+  - Samurott Hisuian 58.2 [75985]; Lilligant Hisuian 19.2 [76042]; Zorua Hisuian 12.5 [76099]; Zoroark Hisuian 73 [76156].
+  - Braviary Hisuian 43.4 [76213]; Sliggoo Hisuian 68.5 [76270]; Goodra Hisuian 334.1 [76327]; Avalugg Hisuian 262.4 [76384].
+  - Decidueye Hisuian 37 [76441]; Pyroar Female 81.5 [76954]; Indeedee Female 28 [77068]; Basculegion Female 110 [77125].
+- **Ratio helper disagreement:** keep the integer-ratio CalcBaseDamage behaviour authoritative; if automatic
+  calculation is introduced, verify call routing/in-game results before adopting the script's 3334 boundary.
+
+Validation: `npm test --prefix tools/calc` PASS (85 engine tests, EI 109 / Hardlove 79 / Photonic 111 /
+Eternal 109 checks); `node tools/calc/hardlove_check.mjs` PASS (79/79);
+`python -I tools/datajson.py hacks/hardlove-gold/hack.json` PASS. Seven fixtures all deal non-zero damage;
+all seven omitted-power calls return null. Logs `.tmp/calc-refine/W-{npmtest,hardlove,datajson,fixtures}.log`.
+No independent hack oracle or in-game test.

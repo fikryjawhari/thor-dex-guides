@@ -1219,6 +1219,160 @@
         "lv": 50,
         "ab": -1
       }
+    },
+    {
+      "name": "weight-low-kick-mega-steelix",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 408,
+        "bp": 120
+      },
+      "field": {},
+      "def": {
+        "id": "mega_steelix",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "power": 120,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "weight-grass-knot-mega-sableye",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 141,
+        "bp": 100
+      },
+      "field": {},
+      "def": {
+        "id": "mega_sableye",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "power": 100,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "weight-heavy-slam-mega-aggron",
+      "atk": {
+        "id": "mega_aggron",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 452,
+        "bp": 40
+      },
+      "field": {},
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "power": 40,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "weight-heat-crash-mega-camerupt",
+      "atk": {
+        "id": "mega_camerupt",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 428,
+        "bp": 120
+      },
+      "field": {},
+      "def": {
+        "id": "mega_mawile",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "power": 120,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "weight-grass-knot-alolan-golem-source-power",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 141,
+        "bp": 120
+      },
+      "field": {},
+      "def": {
+        "id": "golem_alolan",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "power": 120,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "weight-grass-knot-mega-absol-z-source-power",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 141,
+        "bp": 60
+      },
+      "field": {},
+      "def": {
+        "id": "mega_absol_z",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "power": 60,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "weight-low-kick-exact-10kg-source-boundary",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 408,
+        "bp": 20
+      },
+      "field": {},
+      "def": {
+        "id": "kakuna",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "power": 20,
+        "plainMove": true
+      }
     }
   ]
 }
