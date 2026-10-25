@@ -153,11 +153,9 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
   only through `monControls` (none list Download / Sword / Shield yet: the UI build adds them). Known limit (README):
   a later hit of Foul Play doesn't read Justified / Weakness Policy's new target Attack. Next: U7.
 
-- Hardlove drift settled (drift session, 2026-10-26): the raw-run artefact in its notes.md → Build (0.8.2 Trainers.c
-  in .src), not new data; the committed data.json (committed data + `MV.cr`) is right. `worktree-hardlove-084` (from
-  main) moves Hardlove to 0.8.4 with the raw build.py as the real build. Here: no hardlove-gold/extract change beyond
-  the `cr` code. On merge, data.json conflict: take either side, rerun `uv run python -I
-  hacks/hardlove-gold/extract/build.py` (fills `MV.cr`), then assemble.py.
+- Hardlove drift settled: a stale 0.8.2 `.src` here, not new data. Main moved Hardlove to 0.8.4 with the raw
+  build.py as the only build; merged into this branch 2026-10-26 (`.src` copied from main's checkout, raw rebuild:
+  data = main's + this branch's `MV.cr`, `MV.f` and trainer `field`).
 
 ## Next session prompt
 ```

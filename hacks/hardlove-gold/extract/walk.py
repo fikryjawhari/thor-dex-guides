@@ -5,6 +5,32 @@ from common import (X, S, SRC, collections, datetime, fid, json, key, lev, note1
                     CALC, OLDP, SD, dexsite, enccheck, hgsource, xlsx)  # noqa: F401
 
 
+def md_text(md):
+    """The AI doc (Markdown since 0.8.4) as the plain text the template's doc view shows: blank lines between paragraphs,
+    headings as their own paragraph, table rows as "cell: value" lines, list items as bullets (nested ones indented with
+    no-break spaces). Dropped: the title, the Contents list, rules and the embedded diagram (the text after it explains it)."""
+    out, skip, fence = [], False, False
+    for line in md.splitlines():
+        if line.startswith('```'): fence = not fence; continue
+        if fence: out.append(line.strip()); continue
+        if re.match(r'\|[\s:|-]+\|\s*$', line): out.pop(); continue  # header row: the line above the separator
+        if re.match(r'#\s|\[[^\]]+\]:\s|!\[|-{3,}\s*$', line): continue
+        if re.match(r'##\s+Contents\s*$', line): skip = True; continue
+        if line.startswith('#'): skip = False
+        if skip: continue
+        line = re.sub(r'^>\s?', '', line)
+        line = re.sub(r'\*\*(.+?)\*\*', r'\1', line)
+        line = re.sub(r'\[([^\]]+)\]\([^)]*\)', r'\1', line).replace('\\*', '*')
+        if m := re.match(r'#{2,}\s+(.*)', line): out += ['', m.group(1).strip(), '']; continue
+        if line.startswith('|'):
+            cells = [c.strip() for c in line.strip().strip('|').split('|')]
+            out.append(cells[0] + ': ' + ', '.join(cells[1:])); continue
+        if m := re.match(r'(\s*)[-*]\s+(.*)', line):
+            out.append(' ' * (len(m.group(1)) // 2 * 3) + '• ' + re.sub(r' {2,}', ' ', m.group(2))); continue
+        out.append(re.sub(r' {2,}', ' ', line.strip()))
+    return re.sub(r'\n{3,}', '\n\n', '\n'.join(out)).strip()
+
+
 def build(D):
     """AR and WK: the areas, the walkthrough from the trainer boxes, items and docs."""
     G, GCNOTE, IT, LOC, LOCNOTE, ROAMNOTE, SAFNOTE, rows_ = X.G, X.GCNOTE, X.IT, X.LOC, X.LOCNOTE, X.ROAMNOTE, X.SAFNOTE, X.rows_
@@ -108,9 +134,10 @@ def build(D):
     # game docs shown in the walkthrough tab
     def txt(f): return open(os.path.join(SRC, f), encoding='utf-8-sig').read().strip()
     ko = {s.name: s for s in xlsx.load(os.path.join(SRC, 'Post-KO Switch-in AI.xlsx'))}['Switch Scores']
-    KO = [[S(r.get(1)), S(r.get(2))] for n, r in rows_(ko) if S(r.get(1)) or S(r.get(2))]
+    ko_s = lambda v: S(v).replace('Pok�mon', 'Pokémon')   # the sheet's own broken é (since 2026-10-24)
+    KO = [[ko_s(r.get(1)), ko_s(r.get(2))] for n, r in rows_(ko) if S(r.get(1)) or S(r.get(2))]
     KONOTE = [note1(t) for t in ko.notes.values()]
-    WK['docs'] = [['Mechanics', re.sub(r'^-+\s*\nMechanic Changes\s*\n-+\s*', '', txt('Mechanics.txt'))], ['Trainer AI (work in progress)', txt('Hardlove Gold AI document_WIP.txt')]]
+    WK['docs'] = [['Mechanics', re.sub(r'^-+\s*\nMechanic Changes\s*\n-+\s*', '', txt('Mechanics.txt'))], ['Trainer AI (work in progress)', md_text(txt('Hardlove Gold AI document_WIP.md'))]]
     WK['ko'] = {'rows': KO, 'note': KONOTE}
     WK['gc'] = GCNOTE
     D['AR'] = AR

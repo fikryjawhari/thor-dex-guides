@@ -169,7 +169,7 @@ def verify(D):
         if t is None:
             for ws in FIND.values():
                 for w in ws:
-                    if w[0] == li and w[1] in WM: w[4] = (w[4] + ' ' if w[4] else '') + "Not in the game's wild data (0.8.3 source), so the sheet may be out of date."
+                    if w[0] == li and w[1] in WM: w[4] = (w[4] + ' ' if w[4] else '') + "Not in the game's wild data, so the sheet may be out of date."
             continue
         if all('time of day' in x for x in dd): continue
         g = enccheck.game_rates(HG.ENC[t], SIDG, enccheck.TOD.get(ln, 'speciesDay'))
@@ -184,6 +184,34 @@ def verify(D):
                 add(f, [li, mm, '%s%%' % r, '-'.join(str(x) for x in sorted({min(lvs), max(lvs)})), ''])
                 if f not in OBT and f not in un: OBT.add(f); report("obtainable from the game's wild data:", i)
         PATCHED.append(ln)
+    # Safari areas against SafariEncounters.c: 10 equal slots per method (the day list; bonus species need placed objects
+    # and are not in the sheet). A method that differs is replaced from the game, as above.
+    saf = open(os.path.join(SRC, 'repos', 'hardlove', 'data', 'SafariEncounters.c'), encoding='utf-8').read()
+    SAFM = {'land': 'Land', 'surf': 'Surf', 'oldRod': 'Fishing'}
+    for area, body in re.findall(r'\[SAFARI_ZONE_AREA_(\w+)\]\s*=\s*\{(.*?)\n    \},', saf, re.S):
+        ln = 'Safari Zone: ' + area.replace('_', ' ').title()
+        if ln not in LOC: report('safari area not in the sheet:', ln); continue
+        li = LOC.index(ln)
+        for m, block in re.findall(r'\.(land|surf|oldRod)\s*=\s*\{(.*?)\n        \},', body, re.S):
+            day = re.search(r'\.speciesDay\s*=\s*\{(.*?)\}\s*,\s*\.speciesNight', block, re.S)
+            slots = re.findall(r'\{\s*((?:MON_WITH_FORM\(\s*)?SPECIES_\w+(?:\s*,\s*\d+\s*\))?)\s*,\s*(\d+)\s*\}', day.group(1)) if day else []
+            if not slots: continue
+            g = collections.defaultdict(list)
+            for v, lv in slots: g[SIDG(re.sub(r'\s*([(),])\s*', r' \1 ', v).strip())].append(int(lv))   # the parser's token spacing
+            if m != 'land' and set(g) == {'goldeen'}: continue   # placeholder water tables, as in Encounters.c
+            game = {i: round(100 * len(l) / len(slots), 1) for i, l in g.items()}
+            sheet = SHEETW.get(ln, {}).get(SAFM[m], {})
+            if {i: float(r) for i, r in game.items()} == {i: float(r) for i, r in sheet.items()}: continue
+            report('wild table %s %s: sheet %s; game %s' % (ln, SAFM[m], sorted(set(sheet) - set(game)), sorted(set(game) - set(sheet))))
+            for f in list(FIND):
+                FIND[f] = [w for w in FIND[f] if not (w[0] == li and w[1] == SAFM[m])]
+            for i, lvs in g.items():
+                f = i + '.html'
+                if f not in F: report('game wild species without a page:', ln, i); continue
+                r = game[i]; r = int(r) if r == int(r) else r
+                add(f, [li, SAFM[m], '%s%%' % r, '-'.join(str(x) for x in sorted({min(lvs), max(lvs)})), ''])
+                if f not in OBT and f not in un: OBT.add(f); report("obtainable from the game's wild data:", i)
+            PATCHED.append('%s (%s)' % (ln, SAFM[m]))
     report('wild tables checked against the game:', len(SHEETW), 'locations,', len(ENCDIFF), 'with differences; replaced from the game:', ', '.join(PATCHED))
     # the obtainable set follows the game's evolutions too (both directions)
     REV = collections.defaultdict(list)

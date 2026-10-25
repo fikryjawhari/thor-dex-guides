@@ -7,7 +7,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
 ## Current status (2026-10-24)
 
 - **Live on GitHub Pages** (https://fikryjawhari.github.io/thor-dex-guides/), built by the Action from `main`:
-  Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.3 (NDS), Photonic Sun 2.38 Rebalanced (3DS), Eternal X 2.67
+  Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.4 (NDS), Photonic Sun 2.38 Rebalanced (3DS), Eternal X 2.67
   Rebalanced (3DS). All four share one template, one extract layout (`tools/extractlib.py`), one data schema
   (`tools/schema.py`), one Items standard (`tools/itemstd.py`) and one notes / SOURCES layout.
 - Done and merged: the split UI, search (full-window, results with actions, search stays set), trainer cards, the

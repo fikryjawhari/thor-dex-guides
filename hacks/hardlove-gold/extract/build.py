@@ -7,10 +7,8 @@ is called several times; they share the working state X (common.py). Then the sp
 split()), the Starter area (locs.starter) and the shared finalisers (tools/extractlib.py finalise: Items standard, split
 names). The report goes to hacks/hardlove-gold/extract/report.txt.
 
-Source-free path (keeps the published 0.8.3 corrections to WK and TR, which the 0.8.2 raw sources cannot reproduce):
-    uv run python -I hacks/hardlove-gold/extract/build.py --published [data.json]
-loads the committed data.json and re-applies only the finishing steps (Starter area, the shared finalisers). Idempotent. This is how the published data.json is produced now;
-the plain raw run is the check that the extract scripts still agree with the old pipeline.
+The raw build is the only build: data.json is always made from .src. It stops when .src is not the release that watch.json
+pins (repos/hardlove/COMMIT against the "Released game source" ref), so stale sources can't quietly rebuild older data.
 """
 import os, sys
 
@@ -18,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import H, report  # noqa: E402
 from extractlib import finalise, write_data  # noqa: E402
 import dex, locs, trainers, items, walk  # noqa: E402
-import datajson  # noqa: E402
+import json  # noqa: E402
 
 
 def main():
@@ -51,17 +49,16 @@ def main():
     write_data(D, H)
 
 
-def published(path):
-    """Finish a published data.json without the raw sources."""
-    D, _ = datajson.load(path)
-    locs.starter(D)
-    finalise(D, H.name)
-    write_data(D, H, report_file=False)
+def check_pin():
+    """.src must hold the release watch.json pins: re-fetch it with SOURCES.md otherwise."""
+    pin = next(s['ref'] for s in json.load(open(os.path.join(H.dir, 'watch.json'), encoding='utf-8'))['sources']
+               if s['name'] == 'Released game source')
+    path = os.path.join(H.dir, '.src', 'repos', 'hardlove', 'COMMIT')
+    have = open(path, encoding='utf-8').read().strip() if os.path.exists(path) else 'nothing'
+    if have != pin:
+        sys.exit('hardlove-gold/.src holds %s, watch.json pins %s: re-fetch the sources (SOURCES.md) before building' % (have[:10], pin[:10]))
 
 
 if __name__ == '__main__':
-    if '--published' in sys.argv:
-        rest = [a for a in sys.argv[1:] if a != '--published']
-        published(rest[0] if rest else os.path.join(H.dir, 'data.json'))
-    else:
-        main()
+    check_pin()
+    main()
