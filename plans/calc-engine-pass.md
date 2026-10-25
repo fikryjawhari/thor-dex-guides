@@ -143,6 +143,15 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
   `beforeStats` + result `pre`; remove `pre` from state_check PENDING), then U7. Settled with the user: Focus keys
   `atkFocus` / `defFocus`; the two hack.json profile additions (H `over.state`, EI `over.critItems`) are documented in
   each hack's notes.md → Damage calc. The Hardlove rebuild drift goes to its own session (prompt given to the user). Nothing pushed yet in this pass: ask before pushing `worktree-damage-calc`.
+- 2026-10-26, session 2: claim written. **U4 done** (`a7acae2` adapter, `48363ac` engine.js): result `pre`;
+  first-hit events applied to the stages (seeds with Simple, Download / Intrepid Sword / Dauntless Shield gated on
+  `abilityOn` with stock's copies off, Skull Bash / Meteor Beam / Electro Shot, Spectral Thief), between-hit events
+  listed by `hit`. Spectral Thief per hack in `over.state`: H `false`, EI `{theft: 'headroom'}` (hack.json, profile
+  config like U3's). state_check: all 2322 cases pass, `pre` out of PENDING; the 1512 old matchup / state cases give
+  byte-identical output; npm test green; hzla unchanged (EI 123 + 9, P 118 + 28, E 116 + 3). **Behaviour change to
+  flag:** Download used to fire on every calc (stock has no gate); now only with `abilityOn`, which the page offers
+  only through `monControls` (none list Download / Sword / Shield yet: the UI build adds them). Known limit (README):
+  a later hit of Foul Play doesn't read Justified / Weakness Policy's new target Attack. Next: U7.
 
 ## Next session prompt
 ```

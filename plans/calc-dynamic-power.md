@@ -66,7 +66,7 @@ after U5. Sol units are about 60-80 requests each; U1 and U5 split per hack if S
 with a `hack.json` `critStage` list as the per-hack fallback; the extract `cr` change is the orchestrator's, before U6.
 Focus Energy as `atkFocus` / `defFocus`: confirmed 2026-10-26. How the units run: `plans/calc-engine-pass.md`.
 
-Done so far: U1, U2, U3, U5, extract `cr`, U6 and U4a (the A fixtures for U4) done; **U4 next**, then U7. Commits and
+Done so far: U1, U2, U3, U5, extract `cr`, U6, U4a (the A fixtures for U4) and U4 done; **U7 next**. Commits and
 details: `plans/calc-engine-pass.md` → Progress.
 
 ## Already dynamic (engine works it out from what the page passes)
