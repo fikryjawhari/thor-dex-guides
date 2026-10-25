@@ -162,11 +162,20 @@ const automaticPowers = new Map([
   ['w2-mega-roserade', 40], ['w2-mega-orbeetle', 60], ['w2-minior-core', 20],
   ['w2-nidoran-f', 20], ['w2-nidoran-m', 20],
   ['w2-heavy-slam', 120], ['w2-heat-crash-mega', 120],
+  ['w2-flail-one', 200], ['w2-flail-full', 20], ['w2-reversal-one', 200], ['w2-reversal-full', 20],
+  ['w2-eruption-one', 1], ['w2-eruption-full', 150], ['w2-water-spout-one', 1], ['w2-water-spout-full', 150],
 ]);
 for (const [name, power] of automaticPowers) {
   assert.ok(fixture(name), `${name} fixture exists`);
   assert.equal(fixture(name).slot.bp, undefined, `${name} must not set power`);
-  assert.equal(result(name).bp, power, `${name} source automatic power`);
+  const matchup = fixture(name);
+  if (['Eruption', 'Water Spout'].includes(data.M[matchup.slot.mv])) {
+    const manual = engine.calc(matchup.atk, matchup.def, {...matchup.slot, bp: power}, matchup.field);
+    assert.deepEqual(result(name).rolls, plain(manual.rolls), `${name} source HP power rolls`);
+    if (result(name).bp !== undefined) assert.equal(result(name).bp, power, `${name} source automatic power`);
+  } else {
+    assert.equal(result(name).bp, power, `${name} source automatic power`);
+  }
 }
 assert.equal(fixtures.matchups.filter(entry => entry.name.startsWith('w2-')).length, automaticPowers.size);
 const boundaryEngine = await createEngine(data, profile);
@@ -198,5 +207,25 @@ for (const boundary of [2, 3, 4, 5]) {
   }
 }
 console.log(`PASS EI W2 weight ratio: ${ratioBoundaries} integer-ratio boundaries; corrected Mega attacker fixture`);
+const maximumHP = engine.stats({id: '143', lv: 50, ab: -1})[0];
+for (let currentHP = 1; currentHP <= maximumHP; currentHP++) {
+  const fraction = Math.floor(48 * currentHP / maximumHP);
+  const flailPower = fraction <= 1 ? 200 : fraction <= 4 ? 150 : fraction <= 9 ? 100
+    : fraction <= 16 ? 80 : fraction <= 32 ? 40 : 20;
+  const eruptionPower = Math.max(1, Math.floor(150 * currentHP / maximumHP));
+  for (const [move, power] of [['Flail', flailPower], ['Reversal', flailPower],
+    ['Eruption', eruptionPower], ['Water Spout', eruptionPower]]) {
+    const attacker = {id: '143', lv: 50, ab: -1, hp: currentHP};
+    const defender = {id: '9', lv: 50, ab: -1};
+    const slot = {mv: data.M.indexOf(move)};
+    const actual = engine.calc(attacker, defender, slot, {});
+    const manual = engine.calc(attacker, defender, {...slot, bp: power}, {});
+    assert.deepEqual(plain(actual.rolls), plain(manual.rolls), `${move} ${currentHP}/${maximumHP} HP source rolls`);
+    if (['Flail', 'Reversal'].includes(move) || actual.bp !== undefined) {
+      assert.equal(actual.bp, power, `${move} ${currentHP}/${maximumHP} HP source band`);
+    }
+  }
+}
+console.log(`PASS EI W2 HP: ${maximumHP * 4} exhaustive HP cases; Flail/Reversal bands and Eruption/Water Spout floor`);
 assert.equal(JSON.stringify({data, profile, fixtures}), unchanged, 'inputs untouched');
 console.log(`Emerald Imperium: ${results.size} fixtures; source modifier/category checks, field parity and priority/order checks passed`);

@@ -2370,6 +2370,146 @@
         "mv": 124
       },
       "field": {}
+    },
+    {
+      "name": "w2-flail-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 155
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-flail-full",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 155
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-reversal-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 235
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-reversal-full",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 235
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-eruption-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 588
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-eruption-full",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 588
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-water-spout-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 162
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-water-spout-full",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 162
+      },
+      "field": {}
     }
   ]
 }

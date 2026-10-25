@@ -417,7 +417,15 @@ with the binding scope note that EI changes no existing-species weights. Retain 
 the orchestrator must decide whether the release-source typo should override that scope note.
 This is not an undocumented form and is not silently treated as a confirmed 49 kg change.
 
-W2 implementation checkpoint: source audit complete; weight overrides and automatic-power fixtures follow.
+**Needs Opus — W2 HP-power display metadata.** Eruption/Water Spout damage scales correctly without
+`slot.bp` and matches both the oracle and forced-power source-formula rolls at every Snorlax HP value.
+However, `tools/calc/src/adapter.js:300–311` excludes these fixed-nominal-power moves from `AUTO_POWER`;
+results omit the computed `bp` even at full HP. At 1/235 HP the roll is correctly 1 damage and at full HP
+Eruption versus Blastoise gives 19–23, but neither result has `bp`. Shared adapter/UI changes are not
+W2 worker-owned. The fixtures test damage rather than claiming that missing metadata is power 1 or 150.
+
+W2 implementation checkpoint: source audit, five weight overrides and weight/ratio/HP fixtures complete;
+speed fixtures and final notes/check summary follow.
 
 ## Checks
 
