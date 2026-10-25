@@ -12578,6 +12578,2064 @@
         "bp": 620
       },
       "src": "U1 D: Stored Power; H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; https://bulbapedia.bulbagarden.net/wiki/Stored_Power_(move). 20+20*sum(positive stages), never subtract negative stages. H base:246-249; visible five stats at+6 sum30, not the full seven-stage battle-state maximum."
+    },
+    {
+      "name": "crit-stage-0",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. No move/item/ability/pumped bonus."
+    },
+    {
+      "name": "crit-stage-0-manual-crit-selected",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual damage selector is not a probability guarantee."
+    },
+    {
+      "name": "crit-opponent-focus-does-not-boost-attacker",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "defFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Only attacker-side atkFocus counts."
+    },
+    {
+      "name": "crit-move-karate-chop",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 419,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:65, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-razor-wind",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 363,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:362, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-razor-leaf",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 7,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:2036, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-sky-attack",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 184,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:3872, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-crabhammer",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 512,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4115, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-slash",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 33,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4412, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-aeroblast",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 595,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4790, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-cross-chop",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 414,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:6437, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-blaze-kick",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 470,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:8084, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-air-cutter",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 115,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:8489, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-poison-tail",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 237,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:9245, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-leaf-blade",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 455,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:9407, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-night-slash",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 211,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:10811, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-shadow-claw",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 230,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:11378, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-psycho-cut",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 450,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:11540, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-cross-poison",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 359,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:11891, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-stone-edge",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 256,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:11999, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-attack-order",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 616,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:12269, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-spacial-rend",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 624,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:12431, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-storm-throw",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 544,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:13052, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-frost-breath",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 490,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:14240, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-drill-run",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 105,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:14375, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-snipe-shot",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 699,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:20207, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-wicked-blow",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 715,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:22151, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-surging-strikes",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 763,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:22178, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-esper-wing",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 764,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:22772, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-flower-trick",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 717,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:23582, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-aqua-cutter",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 641,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:24257, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-focus-energy",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Focus establishes +2 pumped state."
+    },
+    {
+      "name": "crit-dire-hit-active",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Dire Hit already used; same single pumped state as Focus, NOT a held-item bonus."
+    },
+    {
+      "name": "crit-lansat-held-unactivated",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lansat Berry"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Full HP, unactivated berry: no pumped state, no permanent held-item boost."
+    },
+    {
+      "name": "crit-dire-hit-held-unused",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Dire Hit"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Unused bag item is not an eligible held-crit effect."
+    },
+    {
+      "name": "crit-lansat-active-pumped",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Lansat state already established through stolen/Fling berry path; battle_item.c:815-818 selects HELD_ITEM_RAISE_CRIT. Native held activation defect is not simulated."
+    },
+    {
+      "name": "crit-pumped-sources-do-not-stack",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Focus/Dire Hit/activated Lansat describe ONE established pumped state, not three bonuses."
+    },
+    {
+      "name": "crit-scope-lens",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Eligible held effect adds +1."
+    },
+    {
+      "name": "crit-scope-lens-with-focus",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Item +1 plus pumped +2 reaches guaranteed-crit threshold."
+    },
+    {
+      "name": "crit-razor-claw",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Razor Claw"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Eligible held effect adds +1."
+    },
+    {
+      "name": "crit-razor-claw-with-focus",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Razor Claw"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Item +1 plus pumped +2 reaches guaranteed-crit threshold."
+    },
+    {
+      "name": "crit-super-luck",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 115
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Ability adds one stage."
+    },
+    {
+      "name": "crit-super-luck-with-focus",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 115
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Super Luck +1 and pumped +2 guarantee this hit."
+    },
+    {
+      "name": "crit-sniper-not-a-stage-source",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 14
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Sniper changes critical damage, not the crit probability."
+    },
+    {
+      "name": "crit-move-plus-scope-lens",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 33,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4412, source cr=1. Move +1 and held item +1: stage2, p1/2."
+    },
+    {
+      "name": "crit-move-plus-super-luck",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 115
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 33,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4412, source cr=1. Move +1 and ability +1: stage2, p1/2."
+    },
+    {
+      "name": "crit-move-plus-focus",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 33,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4412, source cr=1. Move +1 and pumped +2: stage3, guaranteed."
+    },
+    {
+      "name": "crit-stack-four-stages",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 115,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 4,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. 0+1+1+2=4 counted before cap; H retains index4, I/P/E cap3. Both tables give probability1."
+    },
+    {
+      "name": "crit-stack-beyond-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 115,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 33,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 4,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4412, source cr=1. 1+1+1+2=5 before cap; top index H4 or I/P/E3. Guaranteed even with slot.crit=false."
+    },
+    {
+      "name": "crit-lucky-punch-chansey",
+      "atk": {
+        "id": "chansey",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lucky Punch"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Chansey-only +2."
+    },
+    {
+      "name": "crit-lucky-punch-blissey-ineligible",
+      "atk": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lucky Punch"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. The restriction is Chansey itself, not its evolution family."
+    },
+    {
+      "name": "crit-lucky-punch-with-move",
+      "atk": {
+        "id": "chansey",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lucky Punch"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 33,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4412, source cr=1. Punch +2 and move +1 guarantee a crit."
+    },
+    {
+      "name": "crit-duck-item-farfetchd",
+      "atk": {
+        "id": "farfetchd",
+        "lv": 50,
+        "ab": -1,
+        "it": "Leek"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. EI GetHoldEffectCritChanceIncrease gives Farfetchd only +1; all other hacks here give +2."
+    },
+    {
+      "name": "crit-duck-item-with-move",
+      "atk": {
+        "id": "farfetchd",
+        "lv": 50,
+        "ab": -1,
+        "it": "Leek"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 33,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4412, source cr=1. Move +1 plus eligible duck item. EI reaches stage2, NOT guaranteed; others reach3."
+    },
+    {
+      "name": "crit-duck-item-ineligible-holder",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Leek"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Non-duck holder gets no item crit stages."
+    },
+    {
+      "name": "crit-duck-item-sirfetchd",
+      "atk": {
+        "id": "sirfetchd",
+        "lv": 50,
+        "ab": -1,
+        "it": "Leek"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Sirfetchd gets +2, including EI."
+    },
+    {
+      "name": "crit-duck-item-sirfetchd-with-move",
+      "atk": {
+        "id": "sirfetchd",
+        "lv": 50,
+        "ab": -1,
+        "it": "Leek"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 33,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4412, source cr=1. Sirfetchd item +2 and move +1 guarantee."
+    },
+    {
+      "name": "crit-always-crit-plus-counted-bonuses",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 544,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:13052, source cr=6. cr6 supplies forced only; Focus2+Lens1 supplies counted3, not6+2+1."
+    },
+    {
+      "name": "crit-battle-armor-base",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 81
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor prevents crits at stage0."
+    },
+    {
+      "name": "crit-battle-armor-stage-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 115,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 81
+      },
+      "slot": {
+        "mv": 33,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 4,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4412, source cr=1. Armor overrides table guarantee; preserve capped counted stage, p0 and forcedfalse."
+    },
+    {
+      "name": "crit-battle-armor-always-crit",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 81
+      },
+      "slot": {
+        "mv": 544,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:13052, source cr=6. Armor overrides willCrit/cr6; counted stage remains0."
+    },
+    {
+      "name": "crit-battle-armor-manual-crit-selected",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 81
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual critical-damage scenario does not change blocked probability."
+    },
+    {
+      "name": "crit-shell-armor-base",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 65
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor prevents crits at stage0."
+    },
+    {
+      "name": "crit-shell-armor-stage-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 115,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 65
+      },
+      "slot": {
+        "mv": 33,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 4,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4412, source cr=1. Armor overrides table guarantee; preserve capped counted stage, p0 and forcedfalse."
+    },
+    {
+      "name": "crit-shell-armor-always-crit",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 65
+      },
+      "slot": {
+        "mv": 544,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:13052, source cr=6. Armor overrides willCrit/cr6; counted stage remains0."
+    },
+    {
+      "name": "crit-shell-armor-manual-crit-selected",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 65
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual critical-damage scenario does not change blocked probability."
+    },
+    {
+      "name": "crit-merciless-not-poisoned",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 196
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. No poison on defender, no guarantee."
+    },
+    {
+      "name": "crit-merciless-psn",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 196
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "st": "psn"
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Poisoned target forces a crit; counted stage remains0."
+    },
+    {
+      "name": "crit-merciless-tox",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 196
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "st": "tox"
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Badly poisoned target also forces a crit."
+    },
+    {
+      "name": "crit-merciless-burn-not-poison",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 196
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "st": "brn"
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Burn is not poison."
+    },
+    {
+      "name": "crit-merciless-attacker-poison-does-not-trigger",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 196,
+        "st": "psn"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Only target poison triggers Merciless."
+    },
+    {
+      "name": "crit-merciless-keeps-counted-stage",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 196,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "st": "psn"
+      },
+      "slot": {
+        "mv": 33,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:4412, source cr=1. Forced source changes p but not move1+item1 count."
+    },
+    {
+      "name": "crit-merciless-blocked-by-battle-armor",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 196
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 81,
+        "st": "psn"
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor blocks Merciless, forcedfalse and p0."
+    },
+    {
+      "name": "crit-merciless-blocked-by-shell-armor",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 196
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 65,
+        "st": "psn"
+      },
+      "slot": {
+        "mv": 0,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor blocks Merciless, forcedfalse and p0."
+    },
+    {
+      "name": "crit-ivy-cudgel-source-stage-zero",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 750,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:24500: no high-crit/always-crit effect. Do not import unrelated modern or EI behaviour."
+    },
+    {
+      "name": "crit-zippy-zap-source-stage-zero",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 775,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:19775: no high-crit/always-crit effect. Do not import unrelated modern or EI behaviour."
+    },
+    {
+      "name": "crit-razor-shell-source-stage-zero",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 73,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b src/battle/other_battle_calculators.c:1720-1787; plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. data/Moves.c:14510: no high-crit/always-crit effect. Do not import unrelated modern or EI behaviour."
     }
   ]
 }
