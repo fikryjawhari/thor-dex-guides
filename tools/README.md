@@ -1,5 +1,12 @@
 # Tools
 
+Trainer field preparation: `python -I tools/trainer_fields.py` checks derived trainer `field` records; `--write`
+refreshes them without changing existing notes, teams, keys or build dates. `extractlib.finalise()` does this
+automatically on rebuild. `python -I tools/trainer_fields_check.py` checks parsing, inheritance, unresolved labels,
+schema compatibility and idempotence. Add `--sources` under the project Python environment to check every field
+comment in Hardlove's active Trainer Battles tabs (requires local `.src/` and openpyxl). Future UI handoff and
+coverage limits: `plans/trainer-field-conditions.md`. No UI consumes this data yet.
+
 Each hack's downloaded docs go in `hacks/<hack>/.src/` (git-ignored: raw docs from hack authors are never committed to
 this public repo), and its `SOURCES.md` says exactly how to fetch them again. Run its commands from the repo root in Git Bash.
 

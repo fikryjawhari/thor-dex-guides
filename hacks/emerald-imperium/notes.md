@@ -304,7 +304,7 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
        (boxes are level cap runs named from caps, places runs of one location; Hot House stays one box)
        trainer {k "g.s.t" key, n name, loc place, tags[] (Optional, Double Battle, Back to Back #1, Permanent Rain, Trick
        Room...), [st "Water"/"Grass"/"Fire" or the starter's name = shown if that is YOUR starter], [cap default level
-       cap], note[], [rw rewards], [pp pokepast url], [c calc trainer names], [bt battle id shared by trainers fought at
+       cap], note[], [field evidence records], [rw rewards], [pp pokepast url], [c calc trainer names], [bt battle id shared by trainers fought at
        once], [pl "m"/"f" = shown for that player character], [pt partners [{n, st, pl, p}]], p:[mon]}
        mon {id speciesId (Mega/Primal form when it holds the stone), l absolute level OR r relative to the cap, i item,
        [a0 ability before Mega Evolution], a ability idx (Mega ability for Megas), [ao "A / B" when the slot is random],
@@ -323,3 +323,14 @@ STAT FORMULA (Gen 3+)
   HP    = floor((2B + IV + floor(EV/4)) x L / 100) + L + 10
   Other = floor((floor((2B + IV + floor(EV/4)) x L / 100) + 5) x nature)
 ```
+
+Trainer `field` is optional, data-only preparation for a later field UI. Shared finalisation regenerates it from
+group/section/trainer notes and trainer tags (`tools/trainer_fields.py`); it never inspects team moves, abilities
+or held items. Each record is `{scope, text, effects, review}`: scope identifies the original note/tag level,
+text is the complete existing wording, effects holds conservative normalisations, and review marks unresolved
+labels or incomplete targeting/outcomes. Effects use `{kind, value, [duration], [side], [timing], [layers]}`;
+absent properties are unknown, not defaults. Kinds: weather, terrain, room, side-condition, hazard, critical-bonus.
+Side is player or opponent; weather/terrain/rooms are global. Duration `permanent` records the doc wording, not
+a claim that an effect cannot be replaced. Timing is battle-start or after-first-send-out when documented.
+Repeated section/trainer evidence describes one effect, not stacked applications. No template or calc consumer
+applies these records yet; `review: false` does not mean the engine supports the effect or its special rules.

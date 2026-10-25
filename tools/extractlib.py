@@ -29,6 +29,7 @@ sys.path.insert(0, os.path.join(ROOT, 'tools'))
 import datajson  # noqa: E402
 import itemstd  # noqa: E402
 import schema  # noqa: E402
+import trainer_fields  # noqa: E402
 from splits import split_name  # noqa: E402,F401  (re-exported for the hacks' modules)
 
 sys.stdout.reconfigure(encoding='utf-8')
@@ -177,6 +178,7 @@ def finalise(D, hack, prune=None):
         prune(D)
     trainers_follow_walk(D)
     split_names(D)
+    trainer_fields.annotate(D)
     schema.standardise(D)
 
 

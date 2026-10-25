@@ -131,6 +131,18 @@ bar (filters rival teams, trades, starter-only items), trade slots in the tracke
 "Level cap" box for cap-relative teams, availability filter "Trainer only" instead of "Changed from vanilla". No
 Minimal Grinding Mode, Hot House, changes doc or conflict cards.
 
+### Trainer field preparation (2026-10-25)
+
+All 75 field-condition comments in the active Trainer Battles tabs are retained in existing notes and new shared
+trainer `field` evidence metadata (65 cards, 110 records including section inheritance). Run
+`tools/trainer_fields_check.py --sources` to check this against the local workbook. Thunderstorm records both
+permanent Rain and Electric Terrain. Also retained: permanent Rain/Sun/Sandstorm/Snow/Fog, Lt. Surge's permanent
+Trick Room, enemy-side permanent Tailwind, random terrain at battle start, one layer each of player Spikes and
+Toxic Spikes after first send-out, and +1 critical chance. The critical bonus's target and random terrain pool
+remain unspecified. Full original wording and scope survive. Shared schema: Emerald Imperium's notes;
+UI handoff: `plans/trainer-field-conditions.md`. No calc defaults, mechanics or visible UI changed. The guide stays
+0.8.3; this does not replace corrected published trainers with the older extraction or newer 0.8.4 importer.
+
 ### Damage calc (2026-10-25, provisional first pass)
 
 Enabled on `worktree-damage-calc`, **not merged or independently verified against the ROM**. Base `expansion`

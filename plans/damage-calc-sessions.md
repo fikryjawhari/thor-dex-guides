@@ -30,6 +30,10 @@ Hacks, in order: Hardlove Gold, Photonic Sun, Eternal X (Emerald Imperium is don
 After all four first passes. Start from the hack's notes.md → Damage calc open points (EI: `noSwitch`, `evs=0`,
 and the rest listed there). Same procedure, same checks; add fixtures for each point settled.
 
+Trainer field preparation is separate from mechanics refinement: `plans/trainer-field-conditions.md` records
+the data-only pass. Trainer `field` evidence is rebuild-safe; no UI applies it. Settle the field UI in a later
+decide session; preserve random/unknown conditions rather than silently choosing calc defaults.
+
 ## "Let's do the Gen <n> save reader"
 Order: Gen 3 + Emerald Imperium's ID tables, then (after the app's file picker) Gen 4 (Hardlove Gold), Gen 6/7
 (Photonic Sun, then Eternal X). Gen 5 waits for the Blaze Black 2 Redux guide.

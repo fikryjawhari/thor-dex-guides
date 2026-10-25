@@ -23,7 +23,7 @@ ORDER = {
     'TR': ['g', 'caps'],
     'group': ['n', 'cap', 'tab', 'note', 'sec'],
     'section': ['h', 'cap', 'note', 'opt', 'rw', 'tr'],
-    'trainer': ['k', 'n', 'loc', 'tags', 'st', 'cap', 'note', 'rw', 'pp', 'c', 'bt', 'pl', 'pt', 'p'],
+    'trainer': ['k', 'n', 'loc', 'tags', 'st', 'cap', 'note', 'field', 'rw', 'pp', 'c', 'bt', 'pl', 'pt', 'p'],
     'partner': ['n', 'st', 'pl', 'p'],
     'mon': ['id', 'l', 'r', 'i', 'a0', 'a', 'ao', 'na', 'iv', 'ev', 'm', 'hp', 'ld', 'pre', 'x', 'cf', 'src'],
 }

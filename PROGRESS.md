@@ -58,6 +58,11 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    trusted. Next, each in its own session:
    - Mechanics refinement per hack (`.agents/references/calc-mechanics.md`; each hack's notes → Damage calc).
      All four first passes are done; Hardlove remains provisional without an independent oracle/in-game tests.
+   - Trainer area fields prepared 2026-10-25, data-only: trainer `field` evidence preserves original text, section
+     inheritance and conservative effects. Hardlove: all 75 workbook field comments retained, 65 cards; EI: 20 cards
+     including unresolved strategy labels. No existing fields changed, no auto-application or UI. Future decide
+     session: `plans/trainer-field-conditions.md`. Unknown/random effects remain explicit. Broader UI refinements
+     and bug fixes are deferred until after hack/mechanics work and before publication.
    - Save readers: Gen 3 + EI's ID tables first (`.agents/references/calc-save-reader.md`), then the app's file picker
      (app repo), Gen 4, Gen 5, Gen 6/7. hzla's readers and PKHeX are read-only references; PokeDaisy (GPLv3) too.
    - Test the page on the Thor (phone preview: `calc-build.html`).
