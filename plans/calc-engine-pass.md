@@ -118,6 +118,24 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
   forced, 0 under Battle / Shell Armor (forced false); a table chance of 1 also sets forced (U5's refinement).
 - U4 needs A fixtures (`expect.pre`): none exist (U2 covered D). Next after U5: a Sol fixture job "U4a" from U1's A
   table, then U4 in the adapter.
+- U5 done (`b12282d`, `plans/calc-crit.md`, 291 crit cases): option (a) for every hack. Hail fixtures fixed to Snow
+  (`9f0f427`).
+- Extract `cr` done: P / E via `tools/ctrguide.py` (26 each, `50d6d0b`), H from Moves.c effects (28, `5acc422`), EI
+  from the release's `moves_info.h`, now fetched to `.src/repos/expansion/` (SOURCES.md re-fetch; 32, `2427159`);
+  schema + Data schema notes. Every data.json change is `cr` only (checked against HEAD). **Hardlove drift:** a full
+  rebuild in this worktree also adds unrelated changes (Morty split +2 trainers, two `cf` notes): its data.json was
+  written as committed data + `cr` only; tell the user, rebuild Hardlove for real only with their OK.
+- U6 done (`6558a80` adapter, `6e5b6c6` engine.js): result `crit {stage, p, forced}`; all 291 crit cases pass; old
+  matchups same rolls; hzla unchanged. EI Leek quirk in its hack.json `over.critItems`. Focus keys `atkFocus` /
+  `defFocus` used as in the brief; the confirm question to the user didn't go through: ask again. Photonic's
+  hack.json still has its always-crit rule for Self-Destruct / Explosion, now redundant with `cr` 6 (harmless; U7
+  may drop it).
+- U4a (Sol, `calc-engine-U4a-r1`): E / P / H / I pre-hit cases committed (`8b57725` .. `0116ac5`), boundary section
+  pending at the time of writing. Contract answered: `pre: []` = none; extended `ref` `{slot, atk, def, field}`;
+  per-hit comparison; Spectral Thief lists the target's losses then the attacker's gains. state_check has `pre` in
+  PENDING until U4 (then remove it). The 33 failing cases are U4a damage twins waiting for U4 (Simple on seeds /
+  theft, Download eligibility, H theft off, Sword / Shield gate). **Next: U4** in the adapter (result `pre`, the
+  `beforeStats` fixes), then U7.
 
 ## Next session prompt
 ```
