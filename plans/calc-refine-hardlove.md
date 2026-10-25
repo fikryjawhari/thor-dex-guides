@@ -21,8 +21,8 @@ Source file:line refs are from grep; line numbers are for `.tmp/calc-hardlove-go
 
 ### Batch 2
 
-- [ ] **Pain Split**: Sheet: Power ?? > 1, Normal > Dark, Physical (game data 'varies'). Data has bp null and category Physical: the power rule is not in the engine. Source: `not located: no PAIN_SPLIT / painsplit in src/ or include/`
-- [ ] **Double Shock**: Not a punching move (no Iron Fist boost); typeless, must be Electric (data flags already match: no 'punch' flag). Source: `other_battle_calculators.c:447 (removed from punch list, comment), BeforeMove.c:1890-1891 (typeToCheck Electric)`
+- [x] **Pain Split** (out of scope: HP averaging, no damage): Sheet: Power ?? > 1, Normal > Dark, Physical (game data 'varies'). Data has bp null and category Physical: the power rule is not in the engine. Source: `not located: no PAIN_SPLIT / painsplit in src/ or include/`
+- [x] **Double Shock** (data and stock have no punch flag: no Iron Fist boost; the Electric-user rule is a usability check, not damage): Not a punching move (no Iron Fist boost); typeless, must be Electric (data flags already match: no 'punch' flag). Source: `other_battle_calculators.c:447 (removed from punch list, comment), BeforeMove.c:1890-1891 (typeToCheck Electric)`
 
 ## Data moves (nothing to do)
 
