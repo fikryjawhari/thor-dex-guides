@@ -29,6 +29,13 @@ Type match-up: Collision Course, Electro Drift. Hits: Triple Kick, Triple Axel.
 Proposal: a per-row "state" toggle / counter where the move needs one (like the Triple Kick hit button), set in a
 decide session; the engine side mostly maps to existing stock fields.
 
+## Stat changes before the hit (user, 2026-10-25: count them automatically, or the user will misread rolls)
+Moves that change the attacker's or the target's stats before damage (Meteor Beam and Electro Shot +1 Sp. Atk on the
+charge turn, Skull Bash +1 Def, Spectral Thief taking the target's boosts) and abilities or items that fire on the hit
+or on entry (Intimidate is already a manual stage). Survey the whole set (Bulbapedia categories, the hack's source) in
+the same session as the state toggles: apply automatically where the game always does it, otherwise a row toggle.
+Stock already reads the target's stats for Foul Play / Body Press / Psyshock style moves.
+
 ## Manual by nature (Power box stays)
 Beat Up (party), Magnitude (random), Present (random), Spit Up (stockpile), Trump Card (PP), Hidden Power (IVs; type
 via the row's Type picker), Return / Frustration / Pika Papow / Veevee Volley (happiness; Hardlove typed power).
