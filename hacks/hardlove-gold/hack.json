@@ -1565,7 +1565,8 @@
    "pos": "hgpos",
    "mgm": "hgmgm",
    "loc": "hgloc",
-   "items": "hgitems"
+   "items": "hgitems",
+   "dmg": "hgdmg"
   },
   "txt": {
    "obt": "Obtainable only",

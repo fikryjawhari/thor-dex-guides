@@ -22,7 +22,8 @@ The engine and its phases: `tools/calc/README.md`. The EI example, with every so
    `oracle`. Check the hack's own config (`battle.h` or equivalent): if its switches are `GEN_LATEST`, the base is
    the latest generation (`expansion`, Gen 9) whatever the oracle says. A difference that no fixture exercises is
    recorded, not forced.
-2. **Profile.** `hack.json` → `cfg.calc = {base, ...}`. Keep only what the hack changes:
+2. **Profile.** `hack.json` → `cfg.calc = {base, ...}`, plus the calc's own storage key `cfg.ls.dmg` (`<prefix>dmg`;
+   `assemble.py` stops without it). Keep only what the hack changes:
    - `status` when a label or key differs (restate the whole list: arrays replace).
    - `over.abilities` / `over.items` `{effect: ""}` to disable a native effect the hack changes, and `effect: "<name>"`
      only when the same effect exists under another name. Never alias a move to a name another guide move uses.

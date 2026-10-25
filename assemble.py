@@ -87,6 +87,8 @@ def build(hid):
     data['cfg'] = dict(h['cfg'])
     js, css = read('template', 'dex.js'), read('template', 'dex.css')
     if 'calc' in h['cfg']:
+        if not h['cfg'].get('ls', {}).get('dmg'):
+            sys.exit(f'{hid}: cfg.calc needs its own storage key cfg.ls.dmg')
         data['cfg']['calc'] = calc_profile(h['cfg']['calc'])
         cjs, ccss = calc_parts(data['cfg']['calc'])
         js, css = js + '\n' + cjs, css + '\n' + ccss

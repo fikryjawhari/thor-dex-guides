@@ -283,7 +283,8 @@
    "mgm": "exmgm",
    "loc": "exloc",
    "items": "exitems",
-   "capset": "excapset"
+   "capset": "excapset",
+   "dmg": "exdmg"
   },
   "txt": {
    "obt": "Obtainable only",
