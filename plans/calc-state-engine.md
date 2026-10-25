@@ -38,7 +38,21 @@ Absent guide entries must not be enabled just because upstream source defines th
   Gen 7 Weak Armor raises Speed two stages (E's Gen 6 raises one). Spectral Thief is already partly stock:
   `mechanics/gen789.ts:552`; its Simple interaction needs correction, not a second whole theft.
 
+### E checkpoint: Eternal X
+
+- Game dump rows: Skull Bash `1022`; Rollout `1097`; Fury Cutter `1102`; Pursuit `1120`; Revenge `1171`;
+  Ice Ball `1193`; Assurance `1264`; Avalanche `1311`; Round `1388`; Echoed Voice `1389`; Retaliate `1406`;
+  Water/Fire/Grass Pledge `1410/1411/1412`; Fusion Flare/Bolt `1450/1451`. Powers agree with P's corresponding
+  entries. A grep of Move Changes found no changed-state entry for these names.
+- Spectral Thief, Stomping Tantrum and all later-generation A/D moves are absent. Weakness Policy and Metronome
+  exist; terrain seeds, Stamina, Water Compaction, Berserk and Intrepid Sword / Dauntless Shield do not.
+- Use Gen 6 rules, not the modern rules of H/I: Minimize doubles Stomp, Steamroller, Body Slam, Dragon Rush,
+  Flying Press, Heat Crash, Phantom Force and Shadow Force; **not Heavy Slam**. Weak Armor gives -1 Def / +1 Spe.
+  Gen 6 Fury Cutter already starts at 40 (max 160), Echoed Voice at 40 (max 200), and combined pledges at 150.
+- Stock Download is automatic in `mechanics/gen56.ts:65`; Weak Armor's shared helper hard-codes +2 Spe, so its
+  mere presence is not proof of Gen 6 correctness (`mechanics/util.ts:411`).
+
 ## Work remaining
 
-E/H/I source checkpoints, consolidated A/D tables and implementation boundaries are pending.
+H/I source checkpoints, consolidated A/D tables and implementation boundaries are pending.
 Do not implement from this partial checkpoint alone.
