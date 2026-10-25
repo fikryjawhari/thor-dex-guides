@@ -190,7 +190,10 @@ and other flag-sensitive effects. `hgengine.move_flags()` starts with pinned Sho
 with the same helper. Source-free `--published` rebuilds preserve it. Only flags changed: 774 entries, 255 contact
 moves; IDs/order, stats, moves' numbers, trainer teams and storage keys unchanged. Source removes standard contact
 from Sunsteel Strike, Collision Course, Electro Drift, Thunderous Kick and Behemoth Blade (fixtures cover all five).
-Other flag classes follow the declared Gen 9 default, not an individual audit of every hack ability's move list.
+Unit F (2026-10-25) audited punch/bite/pulse/sound/slicing against the pinned 0.8.3 tables: restored Growl's punch
+flag and slicing on Crush Claw, Dire Claw, Dragon Claw, Metal Claw and Shadow Claw; three source-formula fixtures.
+Reckless (Chloroblast) and Sheer Force membership differences need non-flag engine metadata decisions and remain
+provisional Gen 9 defaults; exact diffs/evidence are in `plans/calc-refine-hardlove.md` → Unit F → Needs Opus.
 
 #### Importer downloads
 

@@ -6,6 +6,93 @@ Counts: 223 changed moves after merging name variants (Precicipe/Precipice, Sand
 
 Source file:line refs are from grep; line numbers are for `.tmp/calc-hardlove-gold/source/src/`, relative to that tree.
 
+## Unit F: move flags
+
+Completed 2026-10-25 on `worktree-damage-calc`. Authority is the guide's 0.8.3 pin
+`f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b`, never the 0.8.4 importer or hzla. Battle files already cached under
+`.tmp/calc-hardlove-gold/source/`; additional pinned `src/battle/battle_pokemon.c` and `data/Moves.c` fetched into
+`.tmp/calc-refine/F-battle_pokemon.c` and `F-Moves.c`. The raw `.src/repos/hardlove/COMMIT` is actually
+`8ac661afdaba3c9bc60d39c1f0cc22a8a5ad63c8` (older raw inputs), so those inputs were not mistaken for the 0.8.3 pin.
+
+### Source versus pre-unit MV.f
+
+Names below are guide display names, restricted to moves present in this guide. No class is assumed to have no
+source list: all seven were located, either as explicit move tables or as an effect-code selector.
+
+| Class | Source evidence (paths relative to pinned source) | Source has, MV.f lacked | MV.f had, source lacks |
+| --- | --- | --- | --- |
+| Punch | `src/battle/other_battle_calculators.c:422-448`, `src/individual/CalcBaseDamage.c:685-688` | Growl | None |
+| Bite | `src/battle/other_battle_calculators.c:450-461`, `src/individual/CalcBaseDamage.c:766-769` | None | None |
+| Pulse | `src/battle/other_battle_calculators.c:463-471`, `src/individual/CalcBaseDamage.c:773-776` | None | None |
+| Sound | `src/battle/battle_pokemon.c:1229-1264,1302,1338-1340`; Punk Rock: `src/individual/CalcBaseDamage.c:794` | None | None |
+| Slicing | `src/battle/other_battle_calculators.c:473-505`, `src/individual/CalcBaseDamage.c:780-783` | Crush Claw, Dire Claw, Dragon Claw, Metal Claw, Shadow Claw | None |
+| Recoil / crash (Reckless) | `src/individual/CalcBaseDamage.c:691-701`, joined to pinned `data/Moves.c` effect codes | All 17 listed below (not represented by MV.f) | None |
+| Secondary-effect (Sheer Force) | `src/battle/battle_script_commands.c:1039-1130`, joined to pinned `data/Moves.c` effect codes and six explicit move exceptions | All 167 listed below (not represented by MV.f) | None |
+
+Recoil source members absent from literal `MV.f`: Axe Kick, Brave Bird, Chloroblast, Double-Edge, Flare Blitz, Head Charge, Head Smash, High Jump Kick, Jump Kick, Light of Ruin, Submission, Supercell Slam, Take Down, Volt Tackle, Wave Crash, Wild Charge, Wood Hammer.
+
+Secondary-effect source members absent from literal `MV.f`: Acid, Acid Spray, Air Slash, Anchor Shot, Ancient Power, Apple Acid, Aqua Step, Astonish, Aurora Beam, Bite, Bitter Malice, Blaze Kick, Blizzard, Blue Flare, Body Slam, Bolt Strike, Bone Club, Breaking Swipe, Bubble, Bubble Beam, Bug Buzz, Bulldoze, Burning Jealousy, Ceaseless Edge, Charge Beam, Chatter, Chilling Water, Confusion, Constrict, Cross Poison, Crunch, Crush Claw, Dark Pulse, Discharge, Dizzy Punch, Dragon Breath, Dragon Rush, Drum Beating, Dynamic Punch, Earth Power, Electro Shot, Electroweb, Ember, Energy Ball, Extrasensory, Fake Out, Fiery Dance, Fire Blast, Fire Fang, Fire Lash, Fire Punch, Flame Charge, Flame Wheel, Flamethrower, Flare Blitz, Flash Cannon, Floaty Fall, Focus Blast, Force Palm, Freeze-Dry, Glaciate, Grav Apple, Gunk Shot, Headbutt, Heart Stamp, Heat Wave, Hurricane, Hyper Fang, Ice Beam, Ice Fang, Ice Punch, Icicle Crash, Icy Wind, Inferno, Iron Head, Iron Tail, Lava Plume, Leaf Tornado, Lick, Liquidation, Low Sweep, Lumina Crash, Lunge, Luster Purge, Metal Claw, Meteor Mash, Mirror Shot, Mist Ball, Moonblast, Mountain Gale, Mud Bomb, Mud Shot, Mud-Slap, Muddy Water, Mystical Fire, Mystical Power, Needle Arm, Night Daze, Nuzzle, Octazooka, Ominous Wind, Play Rough, Poison Fang, Poison Jab, Poison Sting, Poison Tail, Pounce, Powder Snow, Power-Up Punch, Psybeam, Psychic, Psychic Noise, Psyshield Bash, Pyro Ball, Razor Shell, Rock Climb, Rock Slide, Rock Smash, Rock Tomb, Rolling Kick, Sacred Fire, Scald, Scorching Sands, Searing Shot, Seed Flare, Shadow Ball, Shadow Bone, Signal Beam, Silver Wind, Skitter Smack, Sludge, Sludge Bomb, Sludge Wave, Smog, Snarl, Spark, Sparkling Aria, Spirit Break, Spirit Shackle, Splishy Splash, Steam Eruption, Steamroller, Steel Wing, Stomp, Stone Axe, Strange Steam, Struggle Bug, Thousand Waves, Throat Chop, Thunder, Thunder Fang, Thunder Punch, Thunder Shock, Thunderbolt, Thunderous Kick, Torch Song, Trailblaze, Tri Attack, Trop Kick, Twineedle, Twister, Volt Tackle, Water Pulse, Waterfall, Zap Cannon, Zen Headbutt, Zing Zap.
+
+The explicit source tables have 25 punch, 10 bite, 7 pulse, 31 slicing and 33 sound entries. Their exported guide
+intersections are 25/10/7/30/32 after the fix. `MOVE_KOWTOW_CLEAVE` (slicing) and
+`MOVE_CLANGOROUS_SOULBLAZE` (sound; source display name `Soulblaze`) are not in guide M, not missing flags on an
+exported move. Growl is genuinely in PunchingMoveTable: its comment says it replaces Double Shock; it remains
+status-only and gets no damage or extra power. The existing Gen 9 flags already matched all other explicit members.
+
+### Implemented and hand checks
+
+`hgengine.move_flags()` restores Growl's `punch` and those five claws' `slicing`, in addition to the prior contact
+corrections. Grepping all Python callers finds only Hardlove's `extract/dex.py:428`; no other guide uses this helper,
+so no other hack requires a rebuild. No shared engine/template changes and no cfg.calc changes.
+
+The existing published rebuild path is required to preserve guide 0.8.3's trainer/walkthrough corrections. The
+replay driver `.tmp/calc-refine/F-rebuild.py` applies this helper to the published MV against pinned Moves.c, then
+calls `extract/build.py`'s `published()` path. It changes exactly six MV.f entries and the build date; every other
+data key, move ID/order, stat, power, description, team and field compares equal. Normal future raw builds call the
+same helper via `dex.movetable`. `python assemble.py hardlove-gold` regenerates the self-contained guide.
+
+Fixtures added (Serious, level 50, IVs 31, no EVs/items; Snorlax Attack 130, Blastoise Defense 120):
+- `source-slicing-crush-claw-sharpness`: source Sharpness x1.5 changes BP 75 to 112 (half down).
+  Base `floor(floor(22*112*130/120)/50)+2 = 55`; after random 85..100 and Normal STAB (half down),
+  rolls `[69,70,70,72,72,73,75,75,76,76,78,78,79,79,81,82]`.
+- `source-slicing-crush-claw-no-ability`: BP 75, base 37, same random/STAB:
+  `[46,46,48,48,48,49,49,51,51,51,52,52,52,54,54,55]`.
+- `source-punch-fire-punch-iron-fist`: source Iron Fist x1.2 changes BP 75 to 90, base 44, no STAB, Water resistance:
+  `[18,18,19,19,19,19,20,20,20,20,20,21,21,21,21,22]`. Growl cannot be a damage fixture because the engine
+  correctly returns null for status moves; a separate direct check verifies both its restored punch flag and null.
+
+The five full exported class memberships and all three roll arrays were independently asserted by
+`.tmp/calc-refine/F-verify.py` (not computed by the engine under test). Growl's status boundary is asserted by
+`.tmp/calc-refine/F-status.mjs`. These checks do not constitute an independent ROM oracle.
+
+### Needs Opus
+
+- **Reckless / recoil metadata:** `MV.f` cannot implement this selector. `tools/calc/src/adapter.js:104-110` maps
+  MV.f only into `move.flags`, whereas native Gen 9 Reckless reads `move.recoil || move.hasCrashDamage`
+  (`@smogon/calc/dist/mechanics/gen789.js:895`). Effective Gen 9 membership agrees for 16 of the 17 source moves;
+  **Chloroblast** is missing (source includes `MOVE_EFFECT_RECOIL_HALF_MAX_HP`, native metadata instead uses
+  `mindBlownRecoil`). Reverse difference: none. Requires a profile/engine metadata decision beyond `move_flags()`;
+  left on existing Gen 9 metadata, not given an inert fake recoil flag.
+- **Sheer Force / secondary metadata:** source selector is the effect-code switch and six move exceptions at
+  `src/battle/battle_script_commands.c:1055-1130`; Gen 9 native reads `move.secondaries` and hard-codes Electro Shot
+  / Order Up (`@smogon/calc/dist/mechanics/gen789.js:862-863`), not `move.flags`. Effective source-only members:
+  **Floaty Fall, Splishy Splash, Thousand Waves**. Effective Gen 9-only members: Rapid Spin, Secret Power, Snore, Sky Attack, Alluring Voice, Bounce, Upper Hand, Barb Barrage, Relic Song, Diamond Storm, Double Iron Bash, Aura Wheel, Axe Kick, Salt Cure, Mortal Spin, Order Up, Matcha Gotcha, Eerie Spell, Esper Wing, Infernal Parade, Dire Claw.
+  These differences are not fixed by adding a secondary flag to MV.f. Some require suppressing native hard-coded
+  handling (Order Up); decide profile metadata overrides / engine support as a separate owned unit. Existing Gen 9
+  behaviour remains, explicitly provisional. Full selector/diff is `.tmp/calc-refine/F-diff.json`; no hzla run.
+
+### Validation
+
+- `npm test --prefix tools/calc`: pass (85 engine tests / 41 direct parity cases; EI 109 fixtures, Hardlove 69
+  source/stock checks, Photonic 111 and Eternal X 109 fixtures). Log `.tmp/calc-refine/F-tests.log`.
+- `node tools/calc/hardlove_check.mjs`: 69 passed, 0 failed. Log `.tmp/calc-refine/F-hardlove.log`.
+- `python -I tools/datajson.py hacks/hardlove-gold/hack.json`: exit 0, unchanged configuration.
+  Log `.tmp/calc-refine/F-datajson.log`.
+- `python assemble.py hardlove-gold`: pass, 2.85 MB, 986 species and shared sprites.
+  Log `.tmp/calc-refine/F-assemble.log`.
+- Source-table parity, data-boundary and hand-roll assertions: 9 passed (`F-verify.log`); Growl status assertion:
+  passed (`F-status.log`), all under `.tmp/calc-refine/`. `git diff --check` on the five owned files: pass.
+
 ## Damage-effect moves
 
 ### Batch 1

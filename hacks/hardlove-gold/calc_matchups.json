@@ -11,6 +11,27 @@
   },
   "matchups": [
     {
+      "name": "source-punch-fire-punch-iron-fist",
+      "atk": {"id": "snorlax", "lv": 50, "ab": 85},
+      "slot": {"mv": 36},
+      "field": {},
+      "def": {"id": "blastoise", "lv": 50, "ab": -1}
+    },
+    {
+      "name": "source-slicing-crush-claw-sharpness",
+      "atk": {"id": "snorlax", "lv": 50, "ab": 152},
+      "slot": {"mv": 531},
+      "field": {},
+      "def": {"id": "blastoise", "lv": 50, "ab": -1}
+    },
+    {
+      "name": "source-slicing-crush-claw-no-ability",
+      "atk": {"id": "snorlax", "lv": 50, "ab": -1},
+      "slot": {"mv": 531},
+      "field": {},
+      "def": {"id": "blastoise", "lv": 50, "ab": -1}
+    },
+    {
       "name": "physical-neutral",
       "atk": {
         "id": "snorlax",
