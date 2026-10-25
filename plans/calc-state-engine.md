@@ -95,7 +95,41 @@ Absent guide entries must not be enabled just because upstream source defines th
   its item-location index. Kee/Maranga/Luminous Moss also exist in source (`itemdata.c:44669/44734/42134`)
   without guide item entries: distinguish mechanics support from item acquisition documentation.
 
+### I checkpoint: Emerald Imperium
+
+- Current source switches: `include/config/battle.h:65/67/150` use latest move data/flags and +2 Spe Weak Armor;
+  **152/153 explicitly set Intrepid Sword / Dauntless Shield to GEN_1**, so they activate on every entry, not
+  just once per battle. `src/battle_util.c:4810/4824` tests once-per-battle flags only when configured GEN_9.
+- Only Skull Bash / Meteor Beam / Electro Shot have `onChargeTurnOnly` stat effects in the pinned move table
+  (`src/data/moves_info.h:3321/18082/20452`). Generic timing guard:
+  `src/battle_script_commands.c:4186`. No other damaging move was found with that pre-hit stage flag.
+- Spectral Thief executes theft before crit/damage (`data/battle_scripts_1.s:1306`,
+  `src/battle_script_commands.c:17783/17837`); unlike stock it passes boosts through `ChangeStatBuffs` (Simple).
+  Source oddity: it skips stealing a stat when the attacker's corresponding stage is already +6, and truncates
+  stolen positive stages before passing them through Contrary/Simple. Preserve/fixture the source instead of
+  claiming all canonical edge cases are identical.
+- `src/battle_util.c`: Rollout/Ice Ball + Defense Curl `8789`; Fury Cutter `8799/8850` (cap current use 3 in
+  `src/battle_script_commands.c:13698`); Revenge/Avalanche `8868`; Assurance `8897`; Echoed Voice `8955`;
+  Round `8979`; fusions `8989`; Rage Fist `9048` (50 + 50 per hit, max 350); Fickle Beam `9052`;
+  Last Respects `9060` (50 + 50 per faint event, **100 events / 5050 max**, not five allies);
+  Retaliate `9104`; Stomping Tantrum/Temper Flare `9112`; held Metronome `10139` (five earlier uses).
+- Echoed Voice source counts **this battler's** repeated same move, shared with Metronome
+  (`battle_script_commands.c:1899/6832`), unlike canonical field-wide consecutive-turn Echoed Voice. State input
+  must represent the source counter, not infer it from the other battler's action. Round/fusion source also
+  checks last-used move (`8979/8989`), not a simulated turn history; explicit scenario toggle is appropriate.
+- Fickle Beam's boost chance is 30% (`battle_script_commands.c:17478`). Supreme Overlord snapshots
+  `min(5, side faint-event counter)` on entry (`battle_util.c:4915`), then adds 10% per count (`3970/9260`).
+  It is not a +Attack/+SpAtk stage and does not continuously recompute living teammates.
+- Target-state **damage** doubles live in `battle_util.c:10005/10012/10019/10026`, not the BP calculation;
+  corresponding move flags were checked individually, including generation-conditional false flags.
+  Current Minimize list adds Supercell Slam; excludes Phantom/Shadow Force, Double Iron Bash,
+  Needle Arm, Astonish and Extrasensory. Fissure can hit Dig but remains OHKO: do not double OHKO damage.
+- Despite upstream definitions, this guide has **no Lash Out or pledge moves**, and no Rattled / Costar /
+  Opportunist / Mirror Armor / Wind Power in `AB`. Conversely, Wind Rider and Supreme Overlord are present.
+- Triple Arrows is modern 90 BP, normal **post-hit** 50% Defense drop (`moves_info.h:19086`), not the Legends:
+  Arceus pre-damage mechanic. Berserk explicitly waits for the last strike (`battle_util.c:5474`).
+
 ## Work remaining
 
-I source checkpoint, consolidated A/D tables and implementation boundaries are pending.
+All four source checkpoints are complete; consolidated A/D tables and implementation boundaries are pending.
 Do not implement from this partial checkpoint alone.
