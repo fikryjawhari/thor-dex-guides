@@ -39,7 +39,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
 1. **Test on the Thor.** Nothing since the consistency pass has been on the device (EI and HG were last checked there
    2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
-2. **Damage calc with save import** (`plans/damage-calc.md`; branch `worktree-damage-calc`, pushed, not merged).
+2. **Damage calc with save import** (start every calc session from `plans/damage-calc-sessions.md`; `plans/damage-calc.md`; branch `worktree-damage-calc`, pushed, not merged).
    Built 2026-10-25 (step 1 of its Order): `@smogon/calc` engine using each guide's own data (`tools/calc/`, 81 tests),
    six base profiles, the calc page from the UI spec (all 26 spec checks pass: `tools/scenarios/calc-*.mjs`), the import
    flow with a fake `test` reader, `tools/calc_save_check.mjs`, `#/calc` in domcompare. Only Emerald Imperium has
