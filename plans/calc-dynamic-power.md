@@ -103,3 +103,12 @@ need the game files (expansion `species_info`, hg-engine `Species.c`) or Bulbape
   Floette (Red) (Floette 0.9 kg); Floette (Yellow) (Floette 0.9 kg); Florges (Red) (Florges 10 kg); Furfrou (Natural)
   (Furfrou 28 kg); Meowstic (Male) (Meowstic 8.5 kg); Meowstic (Female) (Meowstic 8.5 kg); Pumpkaboo (Average)
   (Pumpkaboo 5 kg); Gourgeist (Average) (Gourgeist 12.5 kg); Xerneas (Neutral) (Xerneas 215 kg).
+
+## Left over from the calc refinement (2026-10-26; `plans/calc-refine*.md` are in git history)
+Small items for the next engine session:
+- Photonic: the doc gives Triple Kick power 20 and Power Gem power 90 (PP 15), but `data.json` has 10 and 80. Check the
+  extract first (Move Changes parsing), not the calc.
+- Photonic and Eternal X: Drill Peck's crit-stage change. It doesn't change deterministic damage; decide whether the
+  engine takes a crit stage (a phase) or a unit table checks the rule.
+- Eternal X: Changelog V2.4 says Frost Breath was buffed (Rebalanced), but neither the PDF nor `data.json` shows it.
+  The brief expected 38 move notes; the PDF and `data.json` both have 28. Confirm both against the docs.

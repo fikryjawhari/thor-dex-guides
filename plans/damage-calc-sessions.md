@@ -27,9 +27,9 @@ Hacks, in order: Hardlove Gold, Photonic Sun, Eternal X (Emerald Imperium is don
 - **Eternal X** uses the older hzla/Dynamic-Calc, not Decomps.
 
 ## "Let's refine <hack> calc mechanics"
-Now one Opus-orchestrated session with Haiku agents for all three remaining hacks: `plans/calc-refine.md` (units,
-briefs and the user's 2026-10-25 decisions on Protean / Libero, Battle Bond and residual damage). The rest of
-this heading is background. After all four first passes. Start from the hack's notes.md → Damage calc open points. EI's 2026-10-25
+Done 2026-10-26 for all four guides (`plans/calc-refine.md`, deleted; in git history: units, briefs and the user's
+2026-10-25 decisions on Protean / Libero, Battle Bond and residual damage). Its leftovers are in
+`plans/calc-dynamic-power.md`. The rest of this heading is background. After all four first passes. Start from the hack's notes.md → Damage calc open points. EI's 2026-10-25
 refinement dispositions settle `noSwitch`, `evs=0` and the original gaps, with individual controls built;
 turn-order / trainer-field UI, healing simulation and in-game confirmation remain explicitly separate.
 Same procedure, same checks; add fixtures for each point settled.
@@ -85,6 +85,14 @@ calc-build.html --frame`) when the page changed.
   guide remains 0.8.3.
 - Refinement session 1 (2026-10-25, `plans/calc-refine.md` → Where things stand): move surveys and batches for Hardlove /
   Photonic / Eternal X, Triple Kick engine fix, residual per turn in the KO text with the Turn end strip, Protean / Libero
-  (every-move STAB, chosen defending type), HP ↺ reset, Field-under-the-rows fix. Open: units F, W, Z, T, A.
+  (every-move STAB, chosen defending type), HP ↺ reset, Field-under-the-rows fix.
+- Refinement sessions 2-4 (2026-10-25 / 26, done): Hardlove flag lists (F); automatic weight / HP / speed power with
+  source weights for all four guides (W2); Photonic Z-moves (engine `zmove` + the doc's 16 `zpow` values) and a Z toggle
+  per damaging row; Photonic's 13 Totem battles in TR with their auras (`au`), applied as the Totem's stages in the
+  calc; Triple Kick hit button; trainer bar chevrons, smaller below 480 px; each guide's own calc storage key
+  (`cfg.ls.dmg`, `assemble.py` requires it); "In-game tests" cards in every guide's notes. Audit 2026-10-26: everything
+  passes (hzla: EI 123 + 9 known, Photonic 118 + 28, Eternal X 116 + 3; Hardlove 105 checks; every calc scenario;
+  domcompare clean on the other guides). Next: `plans/calc-dynamic-power.md` (engine), then the trainer-field /
+  turn-order UI decide sessions, merge, then save readers and the file picker.
 - Readers: none (only the `test` reader). File picker: not started.
 - Merge: not merged; waiting on the mechanics.
