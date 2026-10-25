@@ -165,12 +165,14 @@ const automaticPowers = new Map([
   ['w2-flail-one', 200], ['w2-flail-full', 20], ['w2-reversal-one', 200], ['w2-reversal-full', 20],
   ['w2-eruption-one', 1], ['w2-eruption-full', 150], ['w2-water-spout-one', 1], ['w2-water-spout-full', 150],
 ]);
+const manualPowerEngine = await createEngine(data, {...profile,
+  varpow: [...(profile.varpow || []), 'Eruption', 'Water Spout']});
 for (const [name, power] of automaticPowers) {
   assert.ok(fixture(name), `${name} fixture exists`);
   assert.equal(fixture(name).slot.bp, undefined, `${name} must not set power`);
   const matchup = fixture(name);
   if (['Eruption', 'Water Spout'].includes(data.M[matchup.slot.mv])) {
-    const manual = engine.calc(matchup.atk, matchup.def, {...matchup.slot, bp: power}, matchup.field);
+    const manual = manualPowerEngine.calc(matchup.atk, matchup.def, {...matchup.slot, bp: power}, matchup.field);
     assert.deepEqual(result(name).rolls, plain(manual.rolls), `${name} source HP power rolls`);
     if (result(name).bp !== undefined) assert.equal(result(name).bp, power, `${name} source automatic power`);
   } else {
@@ -219,7 +221,7 @@ for (let currentHP = 1; currentHP <= maximumHP; currentHP++) {
     const defender = {id: '9', lv: 50, ab: -1};
     const slot = {mv: data.M.indexOf(move)};
     const actual = engine.calc(attacker, defender, slot, {});
-    const manual = engine.calc(attacker, defender, {...slot, bp: power}, {});
+    const manual = manualPowerEngine.calc(attacker, defender, {...slot, bp: power}, {});
     assert.deepEqual(plain(actual.rolls), plain(manual.rolls), `${move} ${currentHP}/${maximumHP} HP source rolls`);
     if (['Flail', 'Reversal'].includes(move) || actual.bp !== undefined) {
       assert.equal(actual.bp, power, `${move} ${currentHP}/${maximumHP} HP source band`);
