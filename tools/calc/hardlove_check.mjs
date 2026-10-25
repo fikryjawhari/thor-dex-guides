@@ -113,6 +113,45 @@ check('gem-disabled-and-negative-cases-have-no-custom-boost', () => {
   }
 });
 
+// Batch 1 (Hidden Power, Frustration, Return, Rage Fist, Explosion family): hand formula, level 50.
+const handBase = (bp, attack, defence) => Math.floor(Math.floor(Math.floor(2 * 50 / 5 + 2) * bp * attack / defence) / 50) + 2;
+const handRolls = (base, {stab = false, mult = 1} = {}) => Array.from({length: 16}, (_, index) => {
+  let damage = Math.floor(base * (85 + index) / 100);
+  if (stab) damage = Math.ceil(damage * 1.5 - 0.5);
+  return Math.floor(damage * mult);
+});
+check('batch1-hand-calculated-rolls', () => {
+  assert.equal(engine.stats(caseByName('special-neutral').atk)[3], 155);
+  assert.equal(engine.stats(caseByName('special-neutral').def)[4], 125);
+  assert.equal(handBase(60, 155, 125), 34);
+  assert.deepEqual(resultByName('hidden-power-data-type-normal').per[0], handRolls(34));
+  assert.deepEqual(resultByName('hidden-power-fire-typed').per[0], handRolls(34, {mult: 0.5}));
+  assert.equal(handBase(51, 130, 120), 26);
+  assert.deepEqual(resultByName('frustration-happiness-127').per[0], handRolls(26, {stab: true}));
+  assert.equal(handBase(102, 130, 120), 50);
+  assert.deepEqual(resultByName('frustration-happiness-0').per[0], handRolls(50, {stab: true}));
+  assert.equal(handBase(50, 130, 120), 25);
+  assert.deepEqual(resultByName('return-happiness-127').per[0], handRolls(25, {stab: true}));
+  assert.equal(handBase(100, 130, 120), 49);
+  assert.deepEqual(resultByName('rage-fist-flat-100').per[0], handRolls(49));
+  assert.equal(handBase(250, 130, 120), 121);
+  assert.deepEqual(resultByName('explosion-defense-not-halved').per[0], handRolls(121, {stab: true}));
+  assert.equal(handBase(200, 130, 120), 97);
+  assert.deepEqual(resultByName('self-destruct-defense-not-halved').per[0], handRolls(97, {stab: true}));
+  assert.equal(handBase(200, 155, 125), 111);
+  assert.deepEqual(resultByName('misty-explosion-no-terrain').per[0], handRolls(111));
+  // Misty Terrain x1.5 applies to base power (200 -> 300) before the base damage formula.
+  assert.equal(handBase(300, 155, 125), 165);
+  assert.deepEqual(resultByName('misty-explosion-misty-terrain').per[0], handRolls(165));
+});
+check('batch1-negative-and-boundary-cases', () => {
+  assert.ok(resultByName('rage-fist-normal-target-immune').per[0].every(value => value === 0));
+  assert.notDeepEqual(resultByName('frustration-happiness-0').per, resultByName('frustration-happiness-127').per);
+  assert.ok(resultByName('misty-explosion-misty-terrain').per[0][15] > resultByName('misty-explosion-no-terrain').per[0][15]);
+  // Current behaviour: no Defense halving for Explosion / Self-Destruct (source and Gen 9 stock). See Needs Opus.
+  assert.notDeepEqual(resultByName('explosion-defense-not-halved').per[0], handRolls(handBase(250, 130, 60), {stab: true}));
+});
+
 const counts = {pass: results.filter(result => result.status === 'pass').length,
   fail: results.filter(result => result.status === 'fail').length};
 await mkdir(new URL('.tmp/calc-hardlove-gold/', root), {recursive: true});

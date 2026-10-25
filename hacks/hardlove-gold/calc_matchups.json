@@ -975,6 +975,205 @@
         "item": "",
         "power": 135
       }
+    },
+    {
+      "name": "hidden-power-fire-typed",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 18,
+        "t": "Fire"
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "hidden-power-data-type-normal",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 18
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "frustration-happiness-127",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 140,
+        "bp": 51
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "power": 51
+      }
+    },
+    {
+      "name": "frustration-happiness-0",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 140,
+        "bp": 102
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "return-happiness-127",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 150,
+        "bp": 50
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "power": 50
+      }
+    },
+    {
+      "name": "rage-fist-flat-100",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 740
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "rage-fist-normal-target-immune",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 740
+      },
+      "field": {},
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "explosion-defense-not-halved",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 463
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "self-destruct-defense-not-halved",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 351
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "misty-explosion-misty-terrain",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 290
+      },
+      "field": {
+        "terrain": "Misty"
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "misty-explosion-no-terrain",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 290
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
     }
   ]
 }
