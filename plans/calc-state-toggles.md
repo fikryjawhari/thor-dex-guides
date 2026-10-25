@@ -23,9 +23,10 @@ uses. Affected: `template/calc.js` (row markup, card editor, state in `ST`), `te
    fainted); a toggle when the state is yes / no. Target states are never per row (see 4).
 3. **Power box:** yes, it shows every power the engine uses (see Power box below). Today it shows only the two kinds
    the adapter reports (`AUTO_POWER`, `HP_POWER`).
-4. **Target state (Dig, Fly, Dive, Minimized, switching out):** one select per card, not per row. The state belongs to
-   the foe, so a per-row toggle would have to be set on every move that reads it (Earthquake and Magnitude both need
-   "Dig").
+4. **Target state (Dig, Fly, Dive, Minimized, switching out):** one select per Pokémon, in its Edit menu (the card's
+   Edit editor, not on the card face), not per row. The state belongs to the Pokémon, so a per-row toggle would have
+   to be set on every move that reads it (Earthquake and Magnitude both need "Dig"). Not yet mocked: the Edit menu
+   needs a mockup before the build.
 5. **Persistence:** per slot, in the calc's one key, like `crit`, `hits` and `z`.
 
 ## Move list (what gets what)
@@ -73,7 +74,10 @@ line, like the Aura mark, while set):
 Magnitude's power is random and stays manual in the Power box (as now); Dig only changes its damage.
 
 **Not in this spec**
-- Metronome (item): a count across all of a Pokémon's moves, not one move. Deferred; no hack needs it in this pass.
+- Metronome (item): a count across all of a Pokémon's moves, not one move. Deferred. Held in battle by one trainer in
+  two guides: Hardlove Gold (Lass Krise, Pachirisu, Route 36 Schorsch Split) and Emerald Imperium (Trainer Sunbird,
+  Tate and Liza Split, Mossdeep). None in Photonic Sun or Eternal X. Emerald Imperium's Fantina gets one as a reward
+  (not held in battle).
 - Stat changes before the hit (Meteor Beam, Electro Shot, Skull Bash, Spectral Thief): the second half of
   `calc-dynamic-power.md`. Not settled here.
 - Supreme Overlord: absent from all four calc hacks.
@@ -114,13 +118,17 @@ needs the new input:
   earlier turn too. The Low toggle must replace that check, or the box and the rolls are wrong for an old drop.
 
 ## Power box
-Today the adapter copies the engine's power only for `AUTO_POWER` and `HP_POWER` (`adapter.js`, `bp` on the result).
-Every other change above reaches the rolls with the Power box still showing the listed power. Example: Facade on a
-burned attacker shows 70 and hits as 140.
+"Listed" means the move's base power in the guide's move data (`bp` in `data.json`, the same number the game's move
+table gives). Today the adapter copies the engine's power only for `AUTO_POWER` and `HP_POWER` (`adapter.js`, `bp` on
+the result). Every other change above reaches the rolls, but the Power box keeps the listed power. Example: Facade on
+a burned attacker shows 70 in the box and hits as 140.
 
-Decision: show the power the engine uses, for every move whose power differs from the listed one.
+Decision: the Power box shows the power the damage actually uses, and the row's details say what the listed power was
+when they differ.
+- Opening a row shows, for example, `Power 140 · listed 70 (burned attacker)`. The number in the box is the one the
+  rolls use. The box is still an input: typing a number sets a manual power, and "Reset power / type" removes it.
 - The result reports `bp` whenever the power used is not the listed one (stock condition, state control, or a
-  counter's formula). The Power box shows that number; the row's details add "listed 70" when they differ.
+  counter's formula). The box shows that number; the details add "listed 70" when they differ.
 - Weather Ball also changes type: the details show the type used ("Fire"), and the type dot keeps the listed type.
   Its type change is not a Power box value; that row only gets the note.
 - A typed power (the box edited by hand) still wins. While typed, the state controls show but have no effect, and the
@@ -151,8 +159,7 @@ Dir (Mine attacks / Foe attacks): the state keys include the side, so the two di
   Missing = off / 0.
 - `ST.tgt[key]`: the card's key (`mine:pid` or `foe:k:i`), value `dig` / `fly` / `dive` / `min` / `switch`. Missing = none.
 - Defaults in `defaults()`: `st:{}`, `tgt:{}`. Old saves merge in as now.
-- No new localStorage key. No global "clear states" button in this pass: each state is one tap. If the Thor test shows
-  the taps after each turn are too many, add one in the Field sheet (a decision for that test).
+- No new localStorage key. No clear-all button: each state is cleared by tapping it back off.
 
 ## Edge cases
 - Count caps: the counter stops at its max (no wrap past it); the stock formula's cap (160, 350, 250) applies.
