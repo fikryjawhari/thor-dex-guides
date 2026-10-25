@@ -384,3 +384,49 @@ path; the scalar state contract cannot identify Me First's copied move. Inventin
 160-HP OHKO result would expand U3's state-power scope. Defense Curl itself is a status move;
 its entire requested interaction is covered through both Rollout and Ice Ball. Success-only D rows
 have unchanged-power on/off cases, not claims of full action eligibility or failure simulation.
+
+## U4a: A fixture boundary
+
+2026-10-26: appended P302 / E96 / H456 / I448 cases (1,302 total), without changing any of the
+existing P239 / E224 / H280 / I277 cases, including U5's additions. New totals: P541 / E320 / H736 / I725.
+Every scenario has a `pre` assertion and an independent damage assertion: a fixed-power/stage-input
+reference for first-hit effects, or hand-worked hit-1 rolls for between-hit effects. The latter check
+the first-hit boundary, not all later damage distributions. Source/Bulbapedia citations are in each `src`.
+
+- `expect.pre: []` means absent metadata (`result.pre ?? []`), not a requirement to return an empty field.
+  Actual nonzero changes only; theft losses precede gains in Atk/Def/SpA/SpD/Spe order. Between-hit events
+  name the next hit, starting at2; no last-strike post-move event is reported as pre-hit.
+- Existing input stages are the starting point, never another trigger: input+1 plus this event+1 is+2.
+  Held seeds/Policy/berries consume once; absent items never replay historical procs. Simple/Contrary
+  apply to the receiving battler. They cannot simultaneously be that battler's Download/Stamina/Weak
+  Armor/Justified/Steam Engine; valid combinations use moves/items or the opposing Cotton Down instead.
+- Entry eligibility/history is NOT inferred. Download and H/I Sword/Shield explicitly use existing
+  `abilityOn` on/off scenarios; doubles Download has no partner input. H's once-per-battle eligibility
+  and I's every-entry config both arrive as on, not a new flag/counter. Intimidate and other historical
+  entries stay manual; no fresh-entry, prior wind absorption, Costar/Opportunist/Mirror Armor context
+  is invented. See [Download](https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)).
+- [Berserk](https://bulbapedia.bulbagarden.net/wiki/Berserk_(Ability)) and
+  [Anger Shell](https://bulbapedia.bulbagarden.net/wiki/Anger_Shell_(Ability)) wait until the whole
+  multihit move finishes, so they cannot boost the next strike here. Earlier procs remain input stages.
+- [Rage](https://bulbapedia.bulbagarden.net/wiki/Rage_(move)) requires prior active Rage state, not merely
+  selecting Rage. [Charge](https://bulbapedia.bulbagarden.net/wiki/Charge_(move)) history and
+  Electromorphosis/Wind Power charged state require flags; they are not free SpD boosts. No such input
+  was added. Random secondaries, HP-threshold outcome branches, partner/event-vector mechanics and
+  post-hit damaging-move stages from the A completeness inventory are not certified by this unit.
+- Source wins: E Weak Armor raises Spe1, P/H/I Spe2; H Spectral Thief is plain90. **Doc says** H steals
+  boosts, but its pinned HIT script does not. I theft skips a stat at attacker+6 and truncates stolen
+  gains to positive headroom BEFORE Simple/Contrary; fixtures retain those native quirks, unlike P.
+  Kee/Maranga are H/I source-supported despite missing named guide acquisition entries.
+- Multi-hit inputs use real hack moves (Double Slap, Bullet Seed, Water Shuriken), with explicit
+  type/power overrides where stated to isolate triggers and ensure survival. Parental Bond Foul Play
+  also exercises a native Dark move whose next hit reads Justified/Policy's new target Atk. Hand-worked
+  rolls use source-backed base100 species, not engine output. Gen7/9 special cases keep native Water
+  Shuriken15 because stock gen789 forces15/20; they do not certify arbitrary Shuriken power overrides.
+
+Checks: `.tmp/u4a/validate.cjs` passes JSON/schema, unique names, actual stage deltas/caps, move/ability/
+species presence and exact preservation of all1,020 old cases. Every new case runs without an exception
+or null result; all hand-worked first-hit rolls pass. Pre-U4 observations (not acceptance): E209 pass /
+1 expected damage-twin failure /110 pending; P313/6/222; H416/15/305; I409/11/305. Pending includes new
+`pre` and old `crit` metadata. Logs: `.tmp/u4a/eternal-x-check.log`, `ph-check.log`,
+`emerald-imperium-check.log`. U4 must implement events/metadata, remove their pending treatment and
+rerun `node tools/calc/state_check.mjs`; no engine/template/extract/data/profile files changed by U4a.
