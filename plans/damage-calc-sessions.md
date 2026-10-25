@@ -27,7 +27,9 @@ Hacks, in order: Hardlove Gold, Photonic Sun, Eternal X (Emerald Imperium is don
 - **Eternal X** uses the older hzla/Dynamic-Calc, not Decomps.
 
 ## "Let's refine <hack> calc mechanics"
-After all four first passes. Start from the hack's notes.md → Damage calc open points. EI's 2026-10-25
+Now one Opus-orchestrated session with Haiku agents for all three remaining hacks: `plans/calc-refine.md` (units,
+briefs and the user's 2026-10-25 decisions on Protean / Libero, Battle Bond and residual damage). The rest of
+this heading is background. After all four first passes. Start from the hack's notes.md → Damage calc open points. EI's 2026-10-25
 refinement dispositions settle `noSwitch`, `evs=0` and the original gaps, with individual controls built;
 turn-order / trainer-field UI, healing simulation and in-game confirmation remain explicitly separate.
 Same procedure, same checks; add fixtures for each point settled.
