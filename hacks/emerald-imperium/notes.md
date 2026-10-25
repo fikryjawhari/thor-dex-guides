@@ -370,7 +370,7 @@ All requested forms have an EI source weight: none needs an online weight or und
 | 711 | Gourgeist (Average) | 12.5 | 12.5 | `gen_6_families.h:4839` | Keep; exact source weight |
 | 1007 | Hisuian Avalugg | 262.4 | 262.4 | `gen_6_families.h:5228` | Keep; exact source weight |
 | 720 | Hoopa (Confined) | 9 | 9 | `gen_6_families.h:6076` | Keep; exact source weight |
-| 1168 | Hoopa (Unbound) | 490 | 49 | `gen_6_families.h:6143` | Needs Opus; retain stock pending scope decision |
+| 1168 | Hoopa (Unbound) | 490 | 49 | `gen_6_families.h:6143` | Set 49 kg (orchestrator: the game's own value wins) |
 | 1008 | Hisuian Decidueye | 37 | 37 | `gen_7_families.h:221` | Keep; exact source weight |
 | 741 | Oricorio (Baile) | 3.4 | 3.4 | `gen_7_families.h:1421` | Keep; exact source weight |
 | 1172 | Rockruff (Own Tempo) | 9.2 | 9.2 | `gen_7_families.h:1939` | Keep; exact source weight |
@@ -414,14 +414,14 @@ Electro Ball (8944–8948) uses integer speed ratio <1/1/2/3/≥4 → 40/60/80/1
 Gyro Ball (8950–8953) uses `min(150, floor(25 * defenderSpeed / attackerSpeed) + 1)`.
 These are the native Gen 9 engine rules: no shared engine phase or profile power rule is needed.
 
-**Needs Opus — W2 Hoopa Unbound (`1168`).** EI `gen_6_families.h:6143` says `.weight = 490`
+**Decided (orchestrator, session 3): `over.species[1168].weightkg = 49`**, the weight the game uses (an expansion typo it inherits; Bulbapedia's 490 kg is the official one). Was: **Needs Opus — W2 Hoopa Unbound (`1168`).** EI `gen_6_families.h:6143` says `.weight = 490`
 (49 kg); the shared expansion header at the sprite pin has the same `.weight = 490`
 (`gen_6_families.h:7417`), while stock is 490 kg. This inherited source discrepancy conflicts
 with the binding scope note that EI changes no existing-species weights. Retain stock 490 kg;
 the orchestrator must decide whether the release-source typo should override that scope note.
 This is not an undocumented form and is not silently treated as a confirmed 49 kg change.
 
-**Needs Opus — W2 HP-power display metadata.** Eruption/Water Spout damage scales correctly without
+**Done (orchestrator, session 3):** the result now reports Eruption / Water Spout / Dragon Energy's power (`HP_POWER` in `tools/calc/src/adapter.js`), so the Power box shows it. Was: **Needs Opus — W2 HP-power display metadata.** Eruption/Water Spout damage scales correctly without
 `slot.bp` and matches both the oracle and forced-power source-formula rolls at every Snorlax HP value.
 However, `tools/calc/src/adapter.js:300–311` excludes these fixed-nominal-power moves from `AUTO_POWER`;
 results omit the computed `bp` even at full HP. At 1/235 HP the roll is correctly 1 damage and at full HP

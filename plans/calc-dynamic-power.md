@@ -15,6 +15,11 @@ Type match-up: Collision Course, Electro Drift. Hits: Triple Kick, Triple Axel.
 (The first nine moves of the weight / HP / speed groups plus Fling / Natural Gift were manual-power before
 2026-10-25: `AUTO_POWER` in `tools/calc/src/adapter.js`; the rest were always stock.)
 
+Power box readout (session 3): the result reports the power used (`bp`, shown in the row's Power box) only for
+`AUTO_POWER` and the HP-scaled `HP_POWER` (Eruption, Water Spout, Dragon Energy). The other moves above work it out
+but the box keeps the listed power (Facade, Hex, Acrobatics, Knock Off, Weather Ball, Stored Power...); decide
+whether every stock `desc.moveBP` change should show, alongside the state toggles.
+
 ## Needs battle state the page has no control for (engine + a decide session for the UI)
 - Last turn / this turn: Stomping Tantrum, Temper Flare (last move failed); Revenge, Avalanche (hit first this turn);
   Assurance (target already damaged); Lash Out (stats dropped this turn); Retaliate (ally fainted last turn).

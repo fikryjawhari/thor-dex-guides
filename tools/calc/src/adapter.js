@@ -299,6 +299,8 @@ function turnKnockout(per, hp, eot, room) {
 
 const AUTO_POWER = new Set(['Low Kick', 'Grass Knot', 'Heavy Slam', 'Heat Crash', 'Flail', 'Reversal', 'Gyro Ball',
   'Electro Ball', 'Crush Grip', 'Wring Out', 'Hard Press', 'Punishment', 'Fling', 'Natural Gift']);
+// Moves with a listed power that stock scales by HP: the result reports the power used, as for AUTO_POWER.
+const HP_POWER = new Set(['Eruption', 'Water Spout', 'Dragon Energy']);
 
 function calc(atk, def, slot, values = {}) {
   const entry = data.MV[slot.mv];
@@ -382,7 +384,8 @@ function calc(atk, def, slot, values = {}) {
   }
   return {
     cat: move.category, rolls: [...rolls], hits: per.length, min, max,
-    ...(auto && slot.bp === undefined && description.moveBP ? {bp: description.moveBP} : {}),
+    ...((auto || HP_POWER.has(moveData.name)) && slot.bp === undefined && description.moveBP
+      ? {bp: description.moveBP} : {}),
     priority: context.move.priority,
     ...(context.state.categoryAuto ? {categoryChoice: {automatic: context.state.categoryAuto,
       inverted: context.state.categoryInverted, tie: context.state.categoryTie}} : {}),

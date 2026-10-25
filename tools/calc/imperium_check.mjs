@@ -138,11 +138,10 @@ for (const matchup of fixtures.matchups.filter(entry => entry.name.startsWith('e
 const orderCase = {...fixture('physical-neutral'), slot: {mv: data.M.indexOf('Payback')}};
 const order = value => engine.calc(orderCase.atk, orderCase.def, {...orderCase.slot, order: value}, {});
 assert.ok(order('last').max > order('first').max, 'explicit order feeds order-dependent base power');
-const sourceWeightOverrides = new Map([['1493', 70], ['1492', 160], ['1489', 46], ['1531', 20], ['774', 40]]);
+const sourceWeightOverrides = new Map([['1493', 70], ['1492', 160], ['1489', 46], ['1531', 20], ['774', 40], ['1168', 49]]);
 for (const [id, weight] of sourceWeightOverrides) {
   assert.equal(profile.over.species[id].weightkg, weight, `EI source weight ${id}`);
 }
-assert.equal(profile.over.species['1168']?.weightkg, undefined, 'Hoopa source/scope conflict stays with Opus');
 const stockSpecies = name => Generations.get(9).species.get(name.toLowerCase().replace(/[^a-z0-9]/g, ''));
 const sourceWeight = entry => sourceWeightOverrides.get(entry.id) ?? stockSpecies(speciesName(entry.n))?.weightkg
   ?? weightNames(entry.n).map(stockSpecies).find(species => species?.weightkg)?.weightkg ?? 1;
@@ -153,7 +152,7 @@ for (const entry of data.P) {
     {mv: data.M.indexOf('Grass Knot')}, {}).bp;
   assert.equal(power, weightPower(sourceWeight(entry)), `EI source weight band ${entry.id} ${entry.n}`);
 }
-console.log(`PASS EI W2 weights: ${data.P.length} species bands; five source overrides; Hoopa deferred`);
+console.log(`PASS EI W2 weights: ${data.P.length} species bands; six source overrides (Hoopa Unbound 49 kg)`);
 assert.equal(sourceWeight(data.P.find(entry => entry.id === '29')), 7, 'Nidoran female stays distinct');
 assert.equal(sourceWeight(data.P.find(entry => entry.id === '32')), 9, 'Nidoran male stays distinct');
 const automaticPowers = new Map([
@@ -175,10 +174,8 @@ for (const [name, power] of automaticPowers) {
   if (['Eruption', 'Water Spout'].includes(data.M[matchup.slot.mv])) {
     const manual = manualPowerEngine.calc(matchup.atk, matchup.def, {...matchup.slot, bp: power}, matchup.field);
     assert.deepEqual(result(name).rolls, plain(manual.rolls), `${name} source HP power rolls`);
-    if (result(name).bp !== undefined) assert.equal(result(name).bp, power, `${name} source automatic power`);
-  } else {
-    assert.equal(result(name).bp, power, `${name} source automatic power`);
   }
+  assert.equal(result(name).bp, power, `${name} source automatic power`);
 }
 assert.equal(fixtures.matchups.filter(entry => entry.name.startsWith('w2-')).length, automaticPowers.size);
 const boundaryEngine = await createEngine(data, profile);
