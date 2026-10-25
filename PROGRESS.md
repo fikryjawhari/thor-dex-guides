@@ -45,7 +45,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    result `bp` / `crit {stage, p, forced}` / `pre`, `MV.cr` in every calc guide's data, 2322 state fixtures
    (`calc_states.json`, in `npm test`); contract in `tools/calc/README.md`. The page doesn't use the new inputs or
    results yet: that is the toggle UI build (`plans/calc-state-toggles.md` on `worktree-damage-calc-toggles`), which
-   also adds Download / Intrepid Sword / Dauntless Shield to `monControls` (they now fire only with `abilityOn`).
+   also adds the per-Pokémon Download choice and the Intrepid Sword / Dauntless Shield off switch (`dl`, `entry`).
    Then trainer-field / turn-order UI decide sessions, merge, then save readers.
    In-game tests to run on the Thor: each guide's notes.md → Damage calc → In-game tests.
    Built 2026-10-25 (step 1 of its Order): `@smogon/calc` engine using each guide's own data (`tools/calc/`, 81 tests),

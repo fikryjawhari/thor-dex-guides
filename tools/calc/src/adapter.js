@@ -404,13 +404,14 @@ function critChance(entry, moveData, attacker, defender, values) {
 
 // Stat changes before the hit (`pre`: [{who, stat, by, src, hit?}], actual changes only). The input stages are the
 // starting point, never a trigger of their own; Simple doubles and Contrary reverses each change on the battler that
-// receives it. First-hit events change the stages the hit uses: a held terrain seed (consumed), Dauntless Shield,
-// Download and Intrepid Sword on a fresh entry (the set's `abilityOn`; stock's own copies are switched off), the charge
-// turn of Skull Bash / Meteor Beam / Electro Shot, and Spectral Thief (target's losses, then the attacker's gains; a
-// hack's `over.state['Spectral Thief']`: `false` = no theft, `{theft: 'headroom'}` = expansion's: a stat at +6 is
-// skipped, the gain is cut to the room left before Simple / Contrary). Between-hit events (after each strike that
-// reaches the target, before the next: `hit` = that next hit) are listed; stock works the stage changes it knows into
-// the later hits' damage (Stamina, Water Compaction, Weak Armor, Kee / Maranga, Luminous Moss).
+// receives it. First-hit events change the stages the hit uses: a held terrain seed (consumed); on entry Dauntless
+// Shield and Intrepid Sword (unless the set's `entry` is false) and Download (the set's `dl`: missing = from the target's
+// stats, 'atk' / 'spa' = the boost it got, 'off' = none); stock's own copies are switched off. The move's own: the
+// charge turn of Skull Bash / Meteor Beam / Electro Shot and Spectral Thief (target's losses, then the attacker's gains;
+// a hack's `over.state['Spectral Thief']`: `false` = no theft, `{theft: 'headroom'}` = expansion's: a stat at +6 is
+// skipped, the gain is cut to the room left before Simple / Contrary); `slot.pre: false` leaves them out. Between-hit
+// events (after each strike that reaches the target, before the next: `hit` = that next hit) are listed; stock works the
+// stage changes it knows into the later hits' damage (Stamina, Water Compaction, Weak Armor, Kee / Maranga, Luminous Moss).
 const STAGES = ['atk', 'def', 'spa', 'spd', 'spe'];
 const SEEDS = {'Electric Seed': ['Electric', 'def'], 'Grassy Seed': ['Grassy', 'def'],
   'Misty Seed': ['Misty', 'spd'], 'Psychic Seed': ['Psychic', 'spd']};
@@ -439,7 +440,7 @@ function stageChanger(pre) {
 const holdsItem = (mon, field) => !!mon.item && !field.isMagicRoom && !mon.hasAbility('Klutz');
 
 // First-hit events, applied to the battlers' stages before the calculation.
-function firstHitStages(attacker, defender, atk, def, move, field, own) {
+function firstHitStages(attacker, defender, atk, def, slot, move, field, own) {
   const pre = [];
   const change = stageChanger(pre);
   const sides = [[attacker, 'atk', atk, defender], [defender, 'def', def, attacker]];
@@ -452,21 +453,21 @@ function firstHitStages(attacker, defender, atk, def, move, field, own) {
   }
   for (const [mon, who, set, other] of sides) {
     const entry = ENTRY[mon.ability];
-    const fresh = set.abilityOn === true;
-    if (entry && fresh && profile.gen >= entry[0]) change(mon, who, entry[1], 1, mon.ability);
-    if (mon.hasAbility('Download') && fresh) {
+    if (entry && set.entry !== false && profile.gen >= entry[0]) change(mon, who, entry[1], 1, mon.ability);
+    if (mon.hasAbility('Download') && set.dl !== 'off') {
       // The target's Defense and Special Defense with their stages (Wonder Room doesn't swap them for Download).
       const [defense, special] = ['def', 'spd'].map(stat => getModifiedStat(other.rawStats[stat], other.boosts[stat], generation));
-      change(mon, who, special <= defense ? 'spa' : 'atk', 1, 'Download');
+      change(mon, who, ['atk', 'spa'].includes(set.dl) ? set.dl : special <= defense ? 'spa' : 'atk', 1, 'Download');
     }
     if (entry || mon.hasAbility('Download')) mon.ability = 'Guide no ability';
   }
   const charge = CHARGE[move.name];
-  if (charge) {
+  if ((charge || move.name === 'Spectral Thief') && slot.pre === false) move.name = `Guide ${move.name}`;
+  else if (charge) {
     // Stock's Gen 7+ code raises Meteor Beam / Electro Shot itself: only reported there.
     change(profile.gen >= 7 && charge === 'spa' ? snapshot(attacker, field) : attacker, 'atk', charge, 1, move.name);
   }
-  if (move.name === 'Spectral Thief') {
+  else if (move.name === 'Spectral Thief') {
     const theft = own?.['Spectral Thief'];
     const immune = defender.types.some(type => generation.types.get(toID(move.type))?.effectiveness[type] === 0);
     if (theft === false || immune) move.name = 'Guide Spectral Thief';
@@ -579,7 +580,7 @@ function calc(atk, def, slot, values = {}) {
   const hits = hitCount(applyPhase(generation, 'hits', {}, selected));
   move.hits = hits;
   context.state.hits = hits;
-  const pre = firstHitStages(attacker, defender, atk, def, move, field, profile.over?.state);
+  const pre = firstHitStages(attacker, defender, atk, def, slot, move, field, profile.over?.state);
   applyPhase(generation, 'beforeStats', {}, undefined);
   const before = [snapshot(attacker, field), snapshot(defender, field)];
   const calculate = profile.gen === 4 ? calculateDPP : profile.gen <= 6 ? calculateBWXY : calculateSMSSSV;

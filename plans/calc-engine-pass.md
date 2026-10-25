@@ -156,6 +156,12 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
 - Hardlove drift settled: a stale 0.8.2 `.src` here, not new data. Main moved Hardlove to 0.8.4 with the raw
   build.py as the only build; merged into this branch 2026-10-26 (`.src` copied from main's checkout, raw rebuild:
   data = main's + this branch's `MV.cr`, `MV.f` and trainer `field`).
+- 2026-10-26, session 2, after the merge (`bb65ad0`): engine inputs from the user's toggle decisions. Intrepid
+  Sword / Dauntless Shield on unless the set's `entry` is `false`; Download from the set's `dl` (missing = auto from
+  the target, `atk` / `spa` = locked, `off`); `slot.pre: false` drops the move's own changes (charge turn, Spectral
+  Thief; the row's "without" view). This replaces the `abilityOn` gate above (Download is on by default again). 112
+  entry-ability fixtures converted, 36 new cases; state_check 2358 / 2358; old cases same output; npm test green;
+  hzla unchanged. Toggle spec on `worktree-damage-calc-toggles` updated with the settled UI choices.
 
 ## Next session prompt
 ```

@@ -234,7 +234,7 @@ says** Aqua Tail +1, the source has none). `cfg.calc.over.critItems` gives EI's 
 +2 for Sirfetch'd (`battle_script_commands.c:1956-1979`; elsewhere +2 for both). `plans/calc-crit.md` → I. Spectral Thief
 is expansion's (`over.state`: `{theft: "headroom"}`, `battle_script_commands.c:17783/17837`): a stat already at +6
 isn't taken, and the gain is cut to the room left before Simple / Contrary. Intrepid Sword / Dauntless Shield fire on
-every entry here (`battle.h:152-153`); the calc fires them when the set's `abilityOn` is on. Fixtures:
+every entry here (`battle.h:152-153`); the calc fires them unless the set's `entry` is `false`. Fixtures:
 `calc_states.json` (725 cases).
 
 Independent validation: `tools/calc/imperium_check.mjs` checks source-derived integer category estimates,

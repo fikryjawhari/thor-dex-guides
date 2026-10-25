@@ -26641,7 +26641,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -26695,7 +26694,7 @@
           }
         ]
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-atk-tie-special-damage-twin",
@@ -26720,7 +26719,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -26780,7 +26778,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-atk-lower-defense-physical",
@@ -26805,7 +26803,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -26859,7 +26856,7 @@
           }
         ]
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-atk-lower-defense-physical-damage-twin",
@@ -26884,7 +26881,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -26944,7 +26940,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-atk-lower-special-defense",
@@ -26969,7 +26965,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -27023,7 +27018,7 @@
           }
         ]
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-atk-lower-special-defense-damage-twin",
@@ -27048,7 +27043,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -27108,7 +27102,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-atk-given-stage-never-twice",
@@ -27133,7 +27127,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -27187,7 +27180,7 @@
           }
         ]
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-atk-given-stage-never-twice-damage-twin",
@@ -27212,7 +27205,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -27272,7 +27264,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-atk-cap",
@@ -27297,7 +27289,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -27344,7 +27335,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-atk-cap-damage-twin",
@@ -27369,7 +27360,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -27429,7 +27419,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-atk-eligibility-off",
@@ -27454,7 +27444,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": false,
         "stg": [
           0,
           0,
@@ -27462,7 +27451,8 @@
           1,
           0,
           0
-        ]
+        ],
+        "dl": "off"
       },
       "def": {
         "id": "manaphy",
@@ -27501,7 +27491,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-atk-eligibility-off-damage-twin",
@@ -27526,7 +27516,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": false,
         "stg": [
           0,
           0,
@@ -27534,7 +27523,8 @@
           1,
           0,
           0
-        ]
+        ],
+        "dl": "off"
       },
       "def": {
         "id": "manaphy",
@@ -27586,7 +27576,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-tie-special",
@@ -27641,7 +27631,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -27665,7 +27654,7 @@
           }
         ]
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-tie-special-damage-twin",
@@ -27720,7 +27709,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -27750,7 +27738,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-lower-defense-physical",
@@ -27805,7 +27793,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -27829,7 +27816,7 @@
           }
         ]
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-lower-defense-physical-damage-twin",
@@ -27884,7 +27871,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -27914,7 +27900,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-lower-special-defense",
@@ -27969,7 +27955,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -27993,7 +27978,7 @@
           }
         ]
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-lower-special-defense-damage-twin",
@@ -28048,7 +28033,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -28078,7 +28062,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-given-stage-never-twice",
@@ -28133,7 +28117,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -28157,7 +28140,7 @@
           }
         ]
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-given-stage-never-twice-damage-twin",
@@ -28212,7 +28195,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -28242,7 +28224,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-cap",
@@ -28297,7 +28279,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -28314,7 +28295,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-cap-damage-twin",
@@ -28369,7 +28350,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": true,
         "stg": [
           0,
           0,
@@ -28399,7 +28379,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-eligibility-off",
@@ -28454,7 +28434,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": false,
         "stg": [
           0,
           0,
@@ -28462,7 +28441,8 @@
           1,
           0,
           0
-        ]
+        ],
+        "dl": "off"
       },
       "slot": {
         "mv": 128
@@ -28471,7 +28451,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-download-def-eligibility-off-damage-twin",
@@ -28526,7 +28506,6 @@
           0
         ],
         "nat": "Serious",
-        "abilityOn": false,
         "stg": [
           0,
           0,
@@ -28534,7 +28513,8 @@
           1,
           0,
           0
-        ]
+        ],
+        "dl": "off"
       },
       "slot": {
         "mv": 128
@@ -28556,7 +28536,7 @@
           }
         }
       },
-      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+      "src": "U4a A: Download. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability) (2026-10-26 inputs: on by default; `entry: false` / `dl: \"off\"` replace abilityOn off.)"
     },
     {
       "name": "a-stamina-physical",
@@ -35171,6 +35151,653 @@
         ]
       },
       "src": "U4a A: Weakness Policy. hacks/photonic-sun/.src/dex-rebalanced.json, game-data authority; unchanged Gen 7 turn-based effect rules. Native Dark Foul Play vs Psychic/Grass Celebi is super-effective; Parental Bond provides hit2 after consuming Policy. Both species have base100 stats, IV0 EV0 Lv50 Serious. First-hit target Atk105 (157 at +1), Def105, x2 effectiveness; later hit must use Policy-boosted target Atk, not retroactively boost hit1. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 base100-stat Manaphy (or stated Jirachi/Celebi) IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then floor(type effectiveness). Normal override removes STAB; other types/species are stated explicitly. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-download-lock-atk-tie-special",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "dl": "atk"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "atk",
+            "by": 1,
+            "src": "Download"
+          }
+        ]
+      },
+      "src": "2026-10-26 engine inputs (user decision): set `dl` locks the Download boost it got (atk / spa) whatever the current target; `slot.pre: false` leaves out the move's own stat changes (charge turn, Spectral Thief). tools/calc/README.md -> Stat changes before the hit."
+    },
+    {
+      "name": "a-download-lock-atk-tie-special-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "dl": "atk"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "2026-10-26 engine inputs (user decision): set `dl` locks the Download boost it got (atk / spa) whatever the current target; `slot.pre: false` leaves out the move's own stat changes (charge turn, Spectral Thief). tools/calc/README.md -> Stat changes before the hit."
+    },
+    {
+      "name": "a-download-lock-spa-lower-defense-physical",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "dl": "spa"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "spa",
+            "by": 1,
+            "src": "Download"
+          }
+        ]
+      },
+      "src": "2026-10-26 engine inputs (user decision): set `dl` locks the Download boost it got (atk / spa) whatever the current target; `slot.pre: false` leaves out the move's own stat changes (charge turn, Spectral Thief). tools/calc/README.md -> Stat changes before the hit."
+    },
+    {
+      "name": "a-download-lock-spa-lower-defense-physical-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "dl": "spa"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "2026-10-26 engine inputs (user decision): set `dl` locks the Download boost it got (atk / spa) whatever the current target; `slot.pre: false` leaves out the move's own stat changes (charge turn, Spectral Thief). tools/calc/README.md -> Stat changes before the hit."
+    },
+    {
+      "name": "a-skull-bash-pre-off",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal",
+        "pre": false
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "2026-10-26 engine inputs (user decision): set `dl` locks the Download boost it got (atk / spa) whatever the current target; `slot.pre: false` leaves out the move's own stat changes (charge turn, Spectral Thief). tools/calc/README.md -> Stat changes before the hit."
+    },
+    {
+      "name": "a-skull-bash-pre-off-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal",
+        "pre": false
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "it": "",
+            "stg": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "slot": {
+            "mv": 0,
+            "bp": 130,
+            "t": "Normal"
+          }
+        }
+      },
+      "src": "2026-10-26 engine inputs (user decision): set `dl` locks the Download boost it got (atk / spa) whatever the current target; `slot.pre: false` leaves out the move's own stat changes (charge turn, Spectral Thief). tools/calc/README.md -> Stat changes before the hit."
+    },
+    {
+      "name": "a-spectral-thief-pre-off",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          1,
+          2,
+          -1,
+          1,
+          2
+        ]
+      },
+      "slot": {
+        "mv": 711,
+        "pre": false
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "2026-10-26 engine inputs (user decision): set `dl` locks the Download boost it got (atk / spa) whatever the current target; `slot.pre: false` leaves out the move's own stat changes (charge turn, Spectral Thief). tools/calc/README.md -> Stat changes before the hit."
+    },
+    {
+      "name": "a-spectral-thief-pre-off-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          1,
+          2,
+          -1,
+          1,
+          2
+        ]
+      },
+      "slot": {
+        "mv": 711,
+        "pre": false
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "stg": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "def": {
+            "stg": [
+              0,
+              1,
+              2,
+              -1,
+              1,
+              2
+            ]
+          },
+          "slot": {
+            "mv": 0,
+            "bp": 90,
+            "t": "Ghost"
+          }
+        }
+      },
+      "src": "2026-10-26 engine inputs (user decision): set `dl` locks the Download boost it got (atk / spa) whatever the current target; `slot.pre: false` leaves out the move's own stat changes (charge turn, Spectral Thief). tools/calc/README.md -> Stat changes before the hit."
     }
   ]
 }

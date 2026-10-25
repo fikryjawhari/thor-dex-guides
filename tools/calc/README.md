@@ -158,11 +158,14 @@ A result has `pre: [{who, stat, by, src, hit?}]` when the hit changes a stage be
 it lands (absent = none; actual changes only, after Simple / Contrary and the ±6 cap;
 the input stages are the starting point, never a trigger of their own). First-hit
 events change the stages the hit uses: a held terrain seed in its terrain (consumed;
-not under Magic Room or Klutz), Dauntless Shield, Download (the target's staged
-Defense vs Special Defense; tie = SpA) and Intrepid Sword on a fresh entry (the set's
-`abilityOn`; stock's own copies never fire), the charge turn of Skull Bash (Def) /
-Meteor Beam / Electro Shot (SpA), and Spectral Thief (the target's losses, then the
-attacker's gains; none against an immune target). Between-hit events carry `hit`, the
+not under Magic Room or Klutz); on entry Dauntless Shield and Intrepid Sword (on unless
+the set's `entry` is `false`) and Download (the set's `dl`: missing = from the target's
+staged Defense vs Special Defense, tie = SpA; `"atk"` / `"spa"` = the boost it got,
+kept whatever the target; `"off"` = none); stock's own copies never fire. The move's
+own: the charge turn of Skull Bash (Def) / Meteor Beam / Electro Shot (SpA) and
+Spectral Thief (the target's losses, then the attacker's gains; none against an immune
+target); `slot.pre: false` leaves them out (the row's "without" view). Between-hit
+events carry `hit`, the
 next hit they come before: Stamina, Water Compaction, Weak Armor (Spe +1 before Gen
 7), Justified, Steam Engine, Cotton Down (the attacker's Speed), and once per item
 Weakness Policy, Kee / Maranga Berry, Luminous Moss, Absorb Bulb, Cell Battery,

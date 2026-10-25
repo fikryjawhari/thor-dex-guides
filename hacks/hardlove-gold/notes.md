@@ -191,7 +191,7 @@ against Fly double their power, not their damage. Revenge's toggle means "the ta
 (the source's condition). Crit stages: `MV.cr` from the move effects in `data/Moves.c` (28 moves; Dragon Cheer and
 Ivy Cudgel have none at this pin), the five-entry `critStages` table caps the stage at 4 (`plans/calc-crit.md` → H). Spectral Thief doesn't steal (`over.state`: `false`; its HIT script at this pin has no theft, U1: moves:19309,
 move0715:7): plain 90 power. **Doc says** it steals boosts. Intrepid Sword / Dauntless Shield are once per battle in
-the source; the calc fires them when the set's `abilityOn` is on (the caller says the entry counts). Fixtures:
+the source; the calc fires them unless the set's `entry` is `false` (the page says the entry doesn't count). Fixtures:
 `calc_states.json` (736 cases).
 
 Gem replacement intentionally takes the **last** native 5325: in pinned `@smogon/calc 0.12.0`
