@@ -66,7 +66,7 @@ after U5. Sol units are about 60-80 requests each; U1 and U5 split per hack if S
 with a `hack.json` `critStage` list as the per-hack fallback; the extract `cr` change is the orchestrator's, before U6.
 Focus Energy as `atkFocus` / `defFocus`: confirm when U6 starts. How the units run: `plans/calc-engine-pass.md`.
 
-Done so far: U1 done (plans/calc-state-engine.md: A/D per-hack survey, caps, source exceptions and input gaps); U2 next.
+Done so far: U1, U2 done (plans/calc-state-engine.md: A/D survey and Hardlove native traces; four calc_states.json files, 729 source-derived D fixtures); U3 next.
 
 ## Already dynamic (engine works it out from what the page passes)
 Weight: Low Kick, Grass Knot, Heavy Slam, Heat Crash (stock `getWeight`: Float Stone, Light / Heavy Metal).

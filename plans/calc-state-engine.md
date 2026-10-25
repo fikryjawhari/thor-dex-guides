@@ -366,3 +366,21 @@ no `.src/` files were changed.
   **Doc says** double during Dig (vanilla); H's pinned implementation does not.
 
 All three source traces are settled at this pin; no emulator claims or guessed missing cases.
+
+U2 fixture handoff (2026-10-26): `hacks/<hack>/calc_states.json` now has P168 / E162 / H203 / I196
+cases (729 total), all JSON-valid with nonempty `src`. Expectations come from the rules/source, never
+from the engine. Hand-worked rolls state their Lv50 Manaphy / IV0 / EV0 arithmetic in `src`; `ref`
+overrides select a fixed-power, same-category/type twin and must match all 16 rolls and the hit count.
+For an off/flat `{bp}` case, compare `result.bp` when present, otherwise the listed move power;
+the contract requires changed-power metadata, not redundant metadata on every ordinary hit.
+
+Current-engine input probes (`node .tmp/u2/check_states.mjs <hack>`, logs `.tmp/u2/<hack>-check.log`):
+P77 pass /91 expected failures, E71/91, H129/74, I90/106; no exceptions or null results.
+These are pre-U3 observations, not a passing engine gate. No template/data/extract files changed.
+
+Explicit D-table boundaries: Fissure's OHKO outcome and Me First's copied-action identity are not
+fixture assertions here: the current engine puts Fissure in manual `varpow` and has no OHKO damage
+path; the scalar state contract cannot identify Me First's copied move. Inventing BP or a supported
+160-HP OHKO result would expand U3's state-power scope. Defense Curl itself is a status move;
+its entire requested interaction is covered through both Rollout and Ice Ball. Success-only D rows
+have unchanged-power on/off cases, not claims of full action eligibility or failure simulation.
