@@ -39,7 +39,7 @@ Secondary effects, status chance, healing, stat drops, learnsets. The power / PP
 - Toxic Thread (stat drops and poison: pure out of scope)
 - TM-only learnset changes: Quash (TM60), Frost Breath (TM79), Confide (TM100), Brutal Swing (TM59), Smart Strike (TM67)
 
-The doc explicitly changes Z-Move power for 16 moves. The deferred values and conversion-support finding are in Needs Opus 4.
+The doc explicitly changes Z-Move power for 16 moves. Z2 tests every target; five need an orchestrator verdict (Needs Opus 4).
 
 ## Needs Opus
 
@@ -67,26 +67,33 @@ The doc explicitly changes Z-Move power for 16 moves. The deferred values and co
 1. **Triple Kick**: the doc says power 10 to 20; `data.json` has bp 10 and no MV.h note. Check the extract, not the calc.
 2. **Power Gem**: the doc says power 80 to 90 and PP 20 to 15; `data.json` has bp 80 (the MV.h note lists PP only). Same check as item 1.
 3. **Drill Peck**: no damage-level oracle test for a crit-stage change. Decide whether the engine takes a crit-stage input (an engine phase) or the rule is checked only by a unit table.
-4. **Z-Move conversion (UI + engine, deferred per the user, 2026-10-25):** `plans/calc-dynamic-power.md`
-   explicitly leaves Max / Z moves out for now. The stock Gen 7 `Move` constructor supports `useZ` and
-   `zMove.basePower` (`tools/calc/node_modules/@smogon/calc/src/move.ts:89`), but the guide adapter's
-   constructor (`tools/calc/src/adapter.js:334`) passes only overrides, crit, hits, ability and item, not
-   `useZ`. The page's move slot (`template/calc.js:81`) has no Z-conversion control or flag, and the oracle
-   constructor (`tools/calc/hzla_compare.mjs:185`) also does not pass `useZ`. A local probe of Wing Attack,
-   Earthquake and Sky Attack confirms that each of `slot.useZ`, `slot.isZ` and `slot.zMove` is ignored
-   (nine identical-roll assertions). Stock Gen 7 converts these to 120 / 180 / 200 BP respectively.
-   Evidence: `.tmp/calc-refine/z-photonic.log`.
+4. **Needs Opus (Z2 doc-power verdict, 2026-10-25):** conversion support is implemented in engine
+   `580f021`; fixtures `b73d0ab`, `3ffed9b` and checks `e0d94c1` exercise `slot.z: 1` without `slot.bp`.
+   This supersedes the earlier Z deferral. All 25 conversion names, categories and single-hit results pass,
+   including Pikachu + Pikanium Z + Volt Tackle = Catastropika (guide power 210). Eleven of the sixteen
+   explicit doc powers pass, but the five rows below fail. Do not mark this item Done or call the unit
+   all-green until the orchestrator settles those rows. No shared engine, profile, extract or UI changes
+   were made by this test worker. The per-move Z button belongs to the UI step.
 
-   Important distinction: the all-moves picker (`template/calc.js:136`) does expose standalone named
-   Z moves from the guide data. Catastropika (ID 657) calculates at its fixed 210 BP, but Breakneck Blitz
-   (ID 621) calculates at its placeholder 1 BP rather than deriving power from a base move. Selecting a
-   named Z move is not base-move conversion; overriding `slot.bp` would only supply a manual power and
-   would not test the conversion bands or the doc's per-base-move overrides. No Z fixtures, profile
-   changes, engine support or UI changes added in this unit, consistent with the user's deferral.
+   | Move | Engine BP | Doc target BP | Oracle BP | Evidence / judgement needed |
+   | --- | --- | --- | --- | --- |
+   | Arm Thrust | 100 | 140 | 100 | Text line 15; guide power 25 uses the 100 band, not the doc's explicit 140. |
+   | Mystical Fire | 160 | 170 | 140 | Text line 21; guide power 85 uses the 160 band; 170 is not a band. |
+   | Freeze-Dry | 175 | 180 | 140 | Text line 31; guide power 95 uses the 175 band, not 180. |
+   | Twineedle | 100 | 175 | 100 | Text line 34; guide power 45 uses the 100 band; Z is one hit. |
+   | Power Gem | 160 | 175 | 160 | Text line 39; game power 80 is authoritative (answers 1, 2 below), unlike doc power 90. Decide Z separately; do not change extracted data to make a test pass. |
 
-   Deferred data, transcribed from `Move Changes.pdf`, Rebalanced, printed pages 1-2
+   Evidence: `tools/calc/photonic_check.mjs` -> `documentedZPowers` and the five `FAIL Photonic Z2`
+   lines in `.tmp/calc-refine/z2-photonic.log`. Damage is compared with a fixed-power, single-hit control
+   of the same type/category (Tackle or Psychic with `bp`/`t`, no `z`). A neutral move avoids carrying
+   Freeze-Dry's Water effectiveness, multi-hit behaviour or other base-move mechanics into the Z control.
+   Z fixtures never set power. Arm Thrust, Twineedle and Double Kick set `hits: 1` only because the shared
+   oracle wrapper reapplies the original hit count after conversion; separate engine assertions force
+   `hits: 5` and require one hit with unchanged rolls. No harness change or copied oracle tables.
+
+   Doc data, transcribed from `Move Changes.pdf`, Rebalanced, printed pages 1-2
    (`.src/txt/Move Changes.txt` lines below). These are the doc's before/after values, not independently
-   verified stock powers; preserve even surprising before values. Nothing is applied to the calc yet.
+   verified stock powers; preserve even surprising before values. All sixteen after values are asserted.
 
    | Base move | Doc Z power, before -> after | Text line |
    | --- | --- | --- |
@@ -113,9 +120,34 @@ Could not classify: none.
 
 ## Unit Z
 
-- [x] **Z-move power:** support inspection complete; conversion bands and signature-Z fixture group deferred
-  with Z moves out for now. Needs Opus 4 holds the evidence and all 16 explicit doc changes; no fixtures added.
+- [x] **Z2 conversion fixtures/check block:** engine `580f021`; fixture commits `b73d0ab`, `3ffed9b`;
+  check block `e0d94c1`. Added 25 no-power Z fixtures (all 16 doc moves plus nine band/stock/edge cases).
+- [ ] **Z2 doc-power acceptance:** Needs Opus 4 has five failures; not Done and not eligible for an all-green merge.
 - [x] **Totem aura:** covered by manual stat stages; no aura automation or other work.
+
+### Z2 checks (2026-10-25)
+
+Changed-move bands covered: 100 (Absorb), 120 (Mega Drain, changed from stock 40 to 60), 140 (Draining Kiss),
+160 (Wing Attack), 175 (Chatter), 180 (Sparkling Aria), 190 (Multi-Attack). Earthquake stays 180;
+Weather Ball is the unchanged-power stock exception (base 50, Z 160, not the 100 band); Low Kick is 160
+without a manual power; Double Kick converts to one hit; Catastropika is 210. All use `z: 1`, no `bp`.
+
+The oracle reports 121 matches, 25 known differences, zero unannotated mismatches/errors across 146
+fixtures. Z2 adds 10 matches and 15 source-annotated oracle differences; the older 121 cases remain
+111 matches plus 10 known differences after the orchestrator's W2 harness fix. The oracle uses stock
+Z powers for these 15: Wing Attack, Submission, Chatter, Shadow Punch, Water Pulse, Mystical Fire,
+Parabolic Charge, Horn Leech, Draining Kiss, Freeze-Dry, Steel Wing, Needle Arm, Cross Poison,
+Sparkling Aria and Multi-Attack. Each fixture cites its doc text line. Mystical Fire and Freeze-Dry
+disagree with the doc on both sides, explicitly recorded rather than accepted as correct engine output.
+
+Before every Z2 commit: `npm test --prefix tools/calc` and `node tools/calc/photonic_check.mjs` exit 1
+(first fixture checkpoints lacked the new Z reference block; the finished block reports precisely the
+five doc-power failures above). Existing Photonic field/W2 checks and the 25 Z name/category/hit checks
+pass. The aggregate npm command stops at Photonic, so Eternal is not reached by that command.
+`node tools/calc/hzla_compare.mjs photonic-sun` and
+`python -I tools/datajson.py hacks/photonic-sun/hack.json` exit 0 after each annotated fixture group.
+`git diff --check` passes. Full log: `.tmp/calc-refine/z2-photonic.log`;
+oracle details: `.tmp/calc-photonic-sun/compare.json`. No push; orchestrator's claim untouched.
 
 ## Unit W
 
