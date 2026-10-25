@@ -46,7 +46,7 @@ dynamic-power engine work (state toggles, pre-hit stat changes) to its own sessi
 7. [x] Totem data (Sol `40d1ace`, finished by the orchestrator `3e0b704`: 13 battles, 33 mons; schema `au` `080a5c2`): Totem Battles.txt (cross-checked with the game files where they have it) → Photonic TR as
    Totem battles in walkthrough order, totem with `au` (aura stages Atk, Def, SpA, SpD, Spe), allies as its partners.
    Photonic extract on this branch (its guide is merged; the calc is the consumer). Schema line in EI notes → Data schema.
-8. [ ] UI (orchestrator, template; mockup first, user approves): a Z button on each damaging move row (Photonic
+8. [x] UI (orchestrator `04432da`; Z on the % line, aura mark on the Lv / HP line; calc-zmove 20/20, domcompare: other guides identical) (orchestrator, template; mockup first, user approves): a Z button on each damaging move row (Photonic
    only, not in the crit / multi-hit area); Totem cards show the aura; importing a Totem into the calc applies `au`
    as its stages, with a "Totem aura" mark. Scenario at every size, normal / dvkb; domcompare for all guides.
 9. [x] T In-game test cards, all four hacks (Haiku `ec479fd`..`703ab25`: EI 5, Hardlove 5, Photonic 4, Eternal X 4).
