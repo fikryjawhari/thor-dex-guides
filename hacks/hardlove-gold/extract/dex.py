@@ -382,6 +382,13 @@ def abilities(D):
     D['AB'] = AB
 
 
+# Crit stage per move effect (the damage calc's MV.cr): each of these scripts adds one to the crit boosts before CalcCrit
+# (the burn / poison variants map to HIGH_CRITICAL); the always-crit ones are 6. plans/calc-crit.md → H.
+CRIT_EFFECTS = {'MOVE_EFFECT_' + e: 1 for e in ('HIGH_CRITICAL', 'HIGH_CRITICAL_BURN_HIT', 'HIGH_CRITICAL_POISON_HIT',
+                'CHARGE_TURN_HIGH_CRIT', 'CHARGE_TURN_HIGH_CRIT_FLINCH', 'HIGH_CRITICAL_RAISE_SPEED_HIT')}
+CRIT_EFFECTS |= {'MOVE_EFFECT_ALWAYS_CRITICAL': 6, 'MOVE_EFFECT_HIT_THREE_TIMES_ALWAYS_CRITICAL': 6}
+
+
 def movetable(D):
     """MV: move data from the game (Moves.c) with the sheet's change notes."""
     FZM, HG, M, SDM, cname = X.FZM, X.HG, X.M, X.SDM, X.cname
@@ -438,6 +445,7 @@ def movetable(D):
         extra = [k_ for k_ in gv if sd and str(gv[k_]) != str(sd.get(k_)) and str(sheet[k_]) == str(sd.get(k_))]
         if extra: o['h'].append('Not in the Move Changes sheet: %s (game data vs standard Gen 9).' % '; '.join('%s %s → %s' % (lab[k_], shw(k_, sd[k_]), shw(k_, gv[k_])) for k_ in extra)); MVSTAT['changed in game, not in the sheet'] += 1
         o.update(gv)
+        if d['effect'] in CRIT_EFFECTS: o['cr'] = CRIT_EFFECTS[d['effect']]
     report('moves vs the game data:', dict(MVSTAT), '; sheet values the game contradicts:', ', '.join(MVX))
     applied = sum(1 for k in list(chg) + list(eff) if k in {key(m) for m in M})
     report('move changes in the sheet:', len(chg) + len(eff), 'on moves in the data:', applied, '; not learned or used by anyone:', ', '.join(sorted({k for k in list(chg) + list(eff)} - {key(m) for m in M})))
