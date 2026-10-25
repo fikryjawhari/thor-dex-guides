@@ -61,6 +61,81 @@ Minor: Horn Leech starts at 65 in the doc and 75 in the MV.h note; both end at 9
 
 Could not classify: none.
 
+## Unit W
+
+### W2: stock weights and automatic power (2026-10-25)
+
+- [ ] Weight / auto-power moves: weight audit complete; fixtures and formula checks next.
+
+Photonic Sun uses unchanged Gen 7 weights. No species weight override is needed. The full 928-species
+probe finds 878 direct stock lookups, 50 `weightNames()` fallbacks and zero 1 kg defaults. All 48 Megas
+and both Primals resolve directly to stock forms; no hack-only Mega exists here. Nidoran gender IDs
+remain distinct. Additional fallbacks beyond the supplied list are the five appliance Rotom forms,
+White/Black Kyurem, Ash-Greninja, Flabebe (Red) and Ultra Necrozma.
+
+Online weight reference checked 2026-10-25: [Bulbapedia, List of Pokemon by weight](https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_weight).
+In particular [Minior](https://bulbapedia.bulbagarden.net/wiki/Minior_(Pok%C3%A9mon)) is **0.3 kg in Core
+form**, not its 40 kg Meteor form. The engine already selects 0.3 kg for Red Core. No redundant override.
+The following table includes every requested form plus every additional fallback; stock kg is the
+unchanged Gen 7 weight checked against the reference, not a hack-weight modification.
+
+| Guide form | Engine lookup | Engine kg | Stock kg | Verdict |
+| --- | --- | --- | --- | --- |
+| Nidoran♀ | Nidoran-F | 7 | 7 | Keep (stock) |
+| Nidoran♂ | Nidoran-M | 9 | 9 | Keep (stock) |
+| Castform (Normal) | Castform | 0.8 | 0.8 | Keep (fallback) |
+| Deoxys (Normal) | Deoxys | 60.8 | 60.8 | Keep (fallback) |
+| Burmy (Plant) | Burmy | 3.4 | 3.4 | Keep (fallback) |
+| Wormadam (Plant) | Wormadam | 6.5 | 6.5 | Keep (fallback) |
+| Cherrim (Overcast) | Cherrim | 9.3 | 9.3 | Keep (fallback) |
+| Shellos (West Sea) | Shellos | 6.3 | 6.3 | Keep (fallback) |
+| Shellos (East Sea) | Shellos | 6.3 | 6.3 | Keep (fallback) |
+| Gastrodon (West Sea) | Gastrodon | 29.9 | 29.9 | Keep (fallback) |
+| Gastrodon (East Sea) | Gastrodon | 29.9 | 29.9 | Keep (fallback) |
+| Heat Rotom | Rotom-Heat | 0.3 | 0.3 | Keep (fallback) |
+| Wash Rotom | Rotom-Wash | 0.3 | 0.3 | Keep (fallback) |
+| Frost Rotom | Rotom-Frost | 0.3 | 0.3 | Keep (fallback) |
+| Fan Rotom | Rotom-Fan | 0.3 | 0.3 | Keep (fallback) |
+| Mow Rotom | Rotom-Mow | 0.3 | 0.3 | Keep (fallback) |
+| Giratina (Altered) | Giratina | 750 | 750 | Keep (fallback) |
+| Shaymin (Land) | Shaymin | 2.1 | 2.1 | Keep (fallback) |
+| Basculin (Red-Striped) | Basculin | 18 | 18 | Keep (fallback) |
+| Darmanitan (Standard) | Darmanitan | 92.9 | 92.9 | Keep (fallback) |
+| Deerling (Spring) | Deerling | 19.5 | 19.5 | Keep (fallback) |
+| Sawsbuck (Spring) | Sawsbuck | 92.5 | 92.5 | Keep (fallback) |
+| Tornadus (Incarnate) | Tornadus | 63 | 63 | Keep (fallback) |
+| Thundurus (Incarnate) | Thundurus | 61 | 61 | Keep (fallback) |
+| Landorus (Incarnate) | Landorus | 68 | 68 | Keep (fallback) |
+| White Kyurem | Kyurem-White | 325 | 325 | Keep (fallback) |
+| Black Kyurem | Kyurem-Black | 325 | 325 | Keep (fallback) |
+| Keldeo (Ordinary) | Keldeo | 48.5 | 48.5 | Keep (fallback) |
+| Meloetta (Aria) | Meloetta | 6.5 | 6.5 | Keep (fallback) |
+| Ash-Greninja | Greninja-Ash | 40 | 40 | Keep (fallback) |
+| Vivillon (Icy Snow) | Vivillon | 17 | 17 | Keep (fallback) |
+| Flabébé (Red) | Flabébé | 0.1 | 0.1 | Keep (fallback) |
+| Floette (Red) | Floette | 0.9 | 0.9 | Keep (fallback) |
+| Floette (Orange) | Floette | 0.9 | 0.9 | Keep (fallback) |
+| Floette (White) | Floette | 0.9 | 0.9 | Keep (fallback) |
+| Florges (Red) | Florges | 10 | 10 | Keep (fallback) |
+| Furfrou (Natural) | Furfrou | 28 | 28 | Keep (fallback) |
+| Meowstic (Male) | Meowstic | 8.5 | 8.5 | Keep (fallback) |
+| Meowstic (Female) | Meowstic | 8.5 | 8.5 | Keep (fallback) |
+| Pumpkaboo (Average) | Pumpkaboo | 5 | 5 | Keep (fallback) |
+| Gourgeist (Average) | Gourgeist | 12.5 | 12.5 | Keep (fallback) |
+| Xerneas (Neutral) | Xerneas | 215 | 215 | Keep (fallback) |
+| Zygarde (50%) | Zygarde | 305 | 305 | Keep (fallback) |
+| Zygarde (50%, Power Construct) | Zygarde | 305 | 305 | Keep (fallback) |
+| Hoopa Confined | Hoopa | 9 | 9 | Keep (fallback) |
+| Oricorio (Baile) | Oricorio | 3.4 | 3.4 | Keep (fallback) |
+| Rockruff (Own Tempo) | Rockruff | 9.2 | 9.2 | Keep (fallback) |
+| Lycanroc (Midday) | Lycanroc | 25 | 25 | Keep (fallback) |
+| Wishiwashi (Solo) | Wishiwashi | 0.3 | 0.3 | Keep (fallback) |
+| Minior (Red Core) | Minior | 0.3 | 0.3 | Keep (fallback) |
+| Mimikyu (Disguised) | Mimikyu | 0.7 | 0.7 | Keep (fallback) |
+| Ultra Necrozma | Necrozma-Ultra | 230 | 230 | Keep (fallback) |
+
+Probe and complete audit: `.tmp/calc-refine/w2-photonic-probe.mjs` and `w2-photonic-weights.json`.
+
 ### Orchestrator answers
 1, 2. Settled: 3DS hacks take the game data over the doc (notes.md → Conflicts and findings already lists Triple
    Kick); Power Gem is the same case (game bp 80, PP 15). No calc or extract work.
