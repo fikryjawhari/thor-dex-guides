@@ -1,13 +1,16 @@
 // Battle-state fixtures: runs every hacks/<hack>/calc_states.json through the built engine and checks each `expect`
-// ({bp}, {ref: slot overrides}, {rolls: [16]}, {pre}, {crit: {stage, p, forced}}). Usage: node state_check.mjs [hack ...]
+// ({bp}, {ref: slot overrides or {slot, atk, def, field}}, {rolls: [16]}, {pre: [...]}, {crit: {stage, p, forced}}).
+// Usage: node state_check.mjs [hack ...]
 import {readdir, readFile} from 'node:fs/promises';
 import {createEngine} from './run.mjs';
 
 const root = new URL('../../hacks/', import.meta.url);
-// Expectation kinds the engine does not produce yet: counted, not failed (U6 adds crit).
-const PENDING = new Set(['crit']);
+// Expectation kinds the engine does not produce yet: counted, not failed (U4 adds pre, U6 crit).
+const PENDING = new Set(['crit', 'pre']);
 // Results come from the engine's vm context (other-realm arrays), so compare as JSON.
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+// Every hit's rolls (`per`, or `hits` copies of `rolls`).
+const hits = result => result.per ?? Array.from({length: result.hits}, () => result.rolls);
 const load = async (hack, name) => JSON.parse(await readFile(new URL(`${hack}/${name}.json`, root), 'utf8'));
 const hacks = process.argv.slice(2).length ? process.argv.slice(2) : (await Promise.all((await readdir(root))
   .map(async hack => (await readFile(new URL(`${hack}/calc_states.json`, root)).then(() => hack, () => null)))))
@@ -42,12 +45,15 @@ for (const hack of hacks) {
       }
       if (kind === 'rolls') return same(result.rolls, want) ? '' : `rolls ${result.rolls}, want ${want}`;
       if (kind === 'ref') {
-        const twin = engine.calc(fixture.atk, fixture.def, {...fixture.slot, ...want}, fixture.field || {});
+        // Slot overrides, or {slot, atk, def, field}: each merged over the case's own.
+        const parts = ['slot', 'atk', 'def', 'field'].some(key => key in want) ? want : {slot: want};
+        const twin = engine.calc({...fixture.atk, ...parts.atk}, {...fixture.def, ...parts.def},
+          {...fixture.slot, ...parts.slot}, {...fixture.field, ...parts.field});
         if (!twin) return 'twin is null';
-        return same(result.rolls, twin.rolls) && result.hits === twin.hits ? ''
-          : `rolls ${result.rolls} x${result.hits}, twin ${twin.rolls} x${twin.hits}`;
+        return same(hits(result), hits(twin)) ? '' : `per ${JSON.stringify(hits(result))}, twin ${JSON.stringify(hits(twin))}`;
       }
-      if (kind === 'pre' || kind === 'crit') {
+      if (kind === 'pre') return same(result.pre ?? [], want) ? '' : `pre ${JSON.stringify(result.pre)}, want ${JSON.stringify(want)}`;
+      if (kind === 'crit') {
         return same(result[kind], want) ? '' : `${kind} ${JSON.stringify(result[kind])}, want ${JSON.stringify(want)}`;
       }
       return `unknown expect ${kind}`;
