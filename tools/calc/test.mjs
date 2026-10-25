@@ -205,6 +205,66 @@ await test('Triple Kick and Triple Axel scale a changed power per hit', () => {
   }
 });
 
+await test('residual parts: weather, items, status, terrain, profile abilities', () => {
+  engine.init(data, profiles.expansion);
+  const snorlax = set('Snorlax', {it: 'Leftovers'});
+  const max = engine.stats(snorlax)[0];
+  const sixteenth = Math.floor(max / 16);
+  const parts = plain(engine.residual(snorlax, {weather: 'Sand'}));
+  assert.deepEqual(parts, [{l: 'Sandstorm', v: Array(4).fill(-sixteenth)}, {l: 'Leftovers', v: Array(4).fill(sixteenth)}]);
+  assert.deepEqual(plain(engine.residual(set('Garchomp'), {weather: 'Sand'})), [], 'Ground is immune to sand');
+  const toxic = plain(engine.residual(set('Snorlax', {st: 'tox', toxn: 2}), {}));
+  assert.deepEqual(toxic[0].v, [2, 3, 4, 5].map(n => -Math.floor(max * n / 16)), 'toxic rises from the counter');
+  assert.deepEqual(plain(engine.residual(set('Snorlax', {st: 'brn'}), {}))[0].v[0], -Math.floor(max / 16), 'Gen 7+ burn');
+  engine.init(data, profiles.gen6);
+  assert.deepEqual(plain(engine.residual(set('Snorlax', {st: 'brn'}), {}))[0].v[0], -Math.floor(max / 8), 'Gen 6 burn');
+  engine.init(data, {...profiles.expansion, residual: {abilities: {'Huge Power': [1, 16]}, status: {frz: [-1, 16, 'Frostbite']}}});
+  assert.deepEqual(plain(engine.residual(set('Snorlax', {ab: ability('Huge Power'), st: 'frz'}), {})).map(part => [part.l, part.v[0]]),
+    [['Frostbite', -sixteenth], ['Huge Power', sixteenth]]);
+});
+
+await test('KO text counts the defender residual each turn; rolls and percentages do not', () => {
+  engine.init(data, profiles.expansion);
+  const attacker = set('Charizard');
+  const plainDefender = set('Snorlax');
+  const sludge = set('Snorlax', {it: 'Black Sludge'});
+  const base = plain(engine.calc(attacker, plainDefender, slot('Tackle'), {}));
+  const withSludge = plain(engine.calc(attacker, sludge, slot('Tackle'), {}));
+  assert.deepEqual(withSludge.rolls, base.rolls);
+  assert.equal(withSludge.pmax, base.pmax);
+  assert.deepEqual(withSludge.eot, [{l: 'Black Sludge', v: Array(4).fill(-Math.floor(engine.stats(sludge)[0] / 8))}]);
+  // Brute force over two turns at an HP where two plain hits rarely KO.
+  const loss = -withSludge.eot[0].v[0];
+  const hp = base.rolls[3] * 2 + loss;
+  let hits = 0;
+  for (const first of base.rolls) for (const second of base.rolls) {
+    if (first + loss + second + loss >= hp) hits++; // KO on the second hit or the second end of turn
+  }
+  const actual = plain(engine.calc(attacker, {...sludge, hp}, slot('Tackle'), {}));
+  assert.equal(actual.ko.n, 2);
+  assert.ok(Math.abs(actual.ko.p - hits / 256) < 1e-12, `${actual.ko.p} vs ${hits / 256}`);
+  const recovery = plain(engine.calc(attacker, {...set('Snorlax', {it: 'Leftovers'}), hp}, slot('Tackle'), {}));
+  assert.ok(recovery.ko.n > 2 || recovery.ko.p < actual.ko.p, 'Leftovers makes the KO later or less likely');
+});
+
+await test('Protean / Libero: STAB on every move in Gen 4, 6, 7 and 9; a defender takes the chosen type', () => {
+  for (const base of ['gen4', 'gen6', 'gen7', 'expansion']) {
+    engine.init(data, profiles[base]);
+    for (const name of ['Protean', 'Libero']) {
+      const plainHit = plain(engine.calc(set('Charizard'), set('Snorlax'), slot('Tackle'), {}));
+      const changer = plain(engine.calc(set('Charizard', {ab: ability(name)}), set('Snorlax'), slot('Tackle'), {}));
+      assert.ok(changer.notes.includes('STAB'), `${base} ${name} STAB note`);
+      assert.ok(changer.max > plainHit.max, `${base} ${name} STAB damage`);
+    }
+    const immune = engine.calc(set('Snorlax'), set('Charizard', {ab: ability('Protean')}), slot('Earthquake'), {});
+    const chosen = plain(engine.calc(set('Snorlax'), set('Charizard', {ab: ability('Protean'), pty: 'Fire'}), slot('Earthquake'), {}));
+    const ignored = plain(engine.calc(set('Snorlax'), set('Charizard', {ab: ability('Blaze'), pty: 'Fire'}), slot('Earthquake'), {}));
+    assert.equal(immune.max, 0, `${base} Flying stays immune by default`);
+    assert.equal(chosen.eff, 2, `${base} chosen Fire type takes Ground super effectively`);
+    assert.equal(ignored.max, 0, `${base} the type choice needs Protean / Libero`);
+  }
+});
+
 await test('unknown moves, species, abilities and items do not throw', () => {
   const guide = structuredClone(data);
   guide.M.push('A wholly new move');

@@ -1316,6 +1316,21 @@
      ]
     }
    ],
+   "residual": {
+    "abilities": {
+     "Self Sufficient": [
+      1,
+      16
+     ]
+    },
+    "status": {
+     "frz": [
+      -1,
+      16,
+      "Frostbite"
+     ]
+    }
+   },
    "categoryInvert": [
     "Draco Barrage"
    ],
