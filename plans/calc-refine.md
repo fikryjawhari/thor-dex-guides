@@ -36,7 +36,7 @@ names: accents and ♀ / ♂, which had merged Nidoran-F into -M in every guide)
 dynamic-power engine work (state toggles, pre-hit stat changes) to its own session: `plans/calc-dynamic-power.md`.
 **Open steps (session 3 onward), in order** (rows in the Units table below; tick each when its commit lands):
 1. [x] W2 Photonic (Sol `bd400a6`..`476a447`, no weight changes; oracle harness auto power `cc7133d`) (Sol: the W2 row, the scope note below, Photonic's list in `plans/calc-dynamic-power.md`).
-2. [ ] W2 Eternal X (Sol, likewise).
+2. [x] W2 Eternal X (Sol `bed8ae8`..`593e1c5`, no weight changes, 116 oracle matches + 3 known).
 3. [ ] W2 EI (Sol, likewise).
 4. [ ] Z Photonic Z-moves / Totem (Sol).
 5. [ ] T In-game test cards, all four hacks (Haiku medium).
