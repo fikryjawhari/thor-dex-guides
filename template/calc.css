@@ -373,4 +373,6 @@ body .dres.zm .mr .rcol button{height:auto;flex:1 1 0;min-height:0}
    bar are smaller, which gives the move rows their room */
 body.calc-route .fbar .nav{display:flex;align-items:center;justify-content:center}
 body.calc-route .fbar .nav svg{display:block;width:10px;height:10px}
+/* From 480 px the rows keep their old height (the foe team list needs 222 px under the cards): a smaller Z, no extra line */
+@media (min-width:480px){body .dres.zm .mr .r2{min-height:0;margin:0}body .dres.zm .mr .rz{height:12px;font-size:8.5px;line-height:10px;border-radius:4px}}
 @media (max-width:479.98px){body.calc-route .fbar{min-height:24px}body.calc-route .fbar .nav{height:22px;width:24px;border-radius:7px}body.calc-route .fbar .dsrc{min-height:22px}}

@@ -59,6 +59,10 @@ const checks = [{
     await page.tap(`.dres:not(.na) .mr:nth-child(${i + 1}) .rz`);
     assert.equal(await page.value(`${rows}[${i}].querySelector('.mv').textContent`), before[i].mv, 'Z off: the move again');
     assert.equal(await page.value(`${rows}[${i}].querySelector('.hp').textContent`), before[i].hp, 'Z off: the same damage');
+    if (page.width >= 537 && page.height >= 424) {
+      assert.ok(await page.value(`document.querySelector('#app').classList.contains('tl')`),
+        `foe team list shown (room ${await page.value(`document.querySelector('#app').dataset.avail`)}, needs 222)`);
+    }
     if (page.width < 480) {
       const span = await page.value(`(()=>{const f=document.querySelector('.fbar').getBoundingClientRect().top;return ${rows}.at(-1).getBoundingClientRect().bottom-f;})()`);
       assert.ok(span <= page.height, `trainer bar to the last move fits the window (${Math.round(span)} / ${page.height})`);
