@@ -319,3 +319,50 @@ Survey complete: four hack checkpoints and both A/D matrices delivered; this is 
 **Next step:** orchestrator reviews source exceptions and independent-state extensions, then dispatches U2 with
 this report and the engine input contract. Remaining uncertainty is explicitly isolated above, not silently
 turned into canonical mechanics.
+
+## U2: Hardlove traces
+
+Pinned source: `kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b`.
+Native command bodies are identified by the original HeartGold implementation at
+`pret/pokeheartgold@29282f7bb45946dee63475022a8d506092bc3748:src/battle/battle_command.c`,
+the same reference linked by H `src/individual/CalcBaseDamage.c:230`. This is source tracing, not an emulator test.
+The orchestrator's shared claim remains untouched. Downloaded evidence is ignored under `.tmp/u2/`;
+no `.src/` files were changed.
+
+- **Common replacement path:** H `hooks:73-74` replaces both `CalcBaseDamage` and `CalcDamageOverall`;
+  command hooks `hooks:108-129` do not replace native commands 15, 110, 115 or 132. H
+  `asm/include/battle_commands.inc:80/651/674/757` maps CalcDamage / CalcRolloutPower /
+  CalcMagnitudePower / CalcRevengePowerMul to those commands. Native CalcDamage (`battle_command.c:744-750`)
+  invokes DamageCalcDefault, i.e. the replaced overall calculation. H `battle_calc_damage.c:282-293`
+  calls the replaced base function. H `include/battle.h:958-959` identifies `damage_power` at 0x2154
+  and `damage_value` at 0x2158. The replacement copies both (`battle_calc_damage.c:51-52`), but
+  `CalcBaseDamage.c:48/399` comments out the `damage_value` read and its multiplication. Native
+  power-multiplier writes therefore do not survive this path.
+- **Revenge / Avalanche:** H `effect_script_0185_DOUBLE_DAMAGE_IF_HIT.s:7-9` invokes the native
+  Revenge command before CalcDamage. Its body (`battle_command.c:3926-3934`) sets 0x2158 to 20
+  when this target damaged the attacker, else 10. That multiplier is discarded above. H
+  `CalcBaseDamage.c:257-261` separately doubles **Revenge only**, alongside Assurance, if the
+  **defender's** `assuranceDamage` is nonzero; Avalanche has no such case. Thus Avalanche stays
+  60 even with the native revenge condition. Revenge is 60/120 for **target previously damaged
+  this turn**, not the vanilla user-was-hit condition. H fixtures name that distinction explicitly;
+  `slot.st:true` means H's target-damaged condition for Revenge. A separate native-only scenario
+  cannot be expressed independently with this boolean contract and is not claimed by those fixtures.
+  **Doc says** double after the user is hit; the executable replacement has the above exception.
+- **Defense Curl through Rollout / Ice Ball:** H `effect_script_0156_DEF_UP_DOUBLE_ROLLOUT_POWER.s:7`
+  sets STATUS2_DEFENSE_CURL. `effect_script_0117_DOUBLE_POWER_EACH_TURN_LOCK_INTO.s:7-9` calls
+  native CalcRolloutPower, which computes chain power then doubles `movePower` for that flag
+  (`battle_command.c:3391-3416`). However, H `battle_calc_damage.c:50-51` starts `movepower` from
+  the move table and copies native `movePower` only to `damage_power`. H `CalcBaseDamage.c:228-234`
+  recomputes both moves from the remaining rollout count, never reads that `damage_power`, and
+  never tests curl. Both retain 30/60/120/240/480 **with or without curl**, including clamped count5.
+  **Doc says** Defense Curl doubles Rollout / Ice Ball; this source path loses the multiplier.
+- **Magnitude during Dig:** H `effect_script_0126_RANDOM_POWER_10_CASES.s:7-11` sets the native
+  multiplier to 10 or 20 depending on Dig, then calls CalcMagnitudePower and CalcDamage (`:15-17`).
+  Native magnitude command `battle_command.c:3493-3523` selects 10/30/50/70/90/110/150 BP without
+  consulting Dig. H `CalcBaseDamage.c:364-365` preserves that chosen `damage_power`, but drops the
+  native multiplier above. H `battle_calc_damage.c:598-601` applies the replacement Dig modifier
+  **only to Earthquake**. Magnitude therefore keeps its selected power and ordinary rolls during Dig;
+  fixtures explicitly choose BP70 rather than pretend to simulate the random magnitude outcome.
+  **Doc says** double during Dig (vanilla); H's pinned implementation does not.
+
+All three source traces are settled at this pin; no emulator claims or guessed missing cases.
