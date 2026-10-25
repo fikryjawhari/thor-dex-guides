@@ -10223,6 +10223,1664 @@
         "bp": 620
       },
       "src": "U1 D: Stored Power; hacks/eternal-x/.src/dex-rebalanced.json (game data, Gen 6); https://bulbapedia.bulbagarden.net/wiki/Stored_Power_(move). 20+20*sum(positive stages), never subtract negative stages. H base:246-249; visible five stats at+6 sum30, not the full seven-stage battle-state maximum."
+    },
+    {
+      "name": "crit-stage-0",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. No move/item/ability/pumped bonus."
+    },
+    {
+      "name": "crit-stage-0-manual-crit-selected",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": true
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual damage selector is not a probability guarantee."
+    },
+    {
+      "name": "crit-opponent-focus-does-not-boost-attacker",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {
+        "defFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Only attacker-side atkFocus counts."
+    },
+    {
+      "name": "crit-move-karate-chop",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 1,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:894, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-razor-wind",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 12,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:905, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-cut",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 14,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:907, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-drill-peck",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 64,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:957, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-razor-leaf",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 74,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:967, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-self-destruct",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 119,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1012, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-sky-attack",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 142,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1035, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-crabhammer",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 151,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1044, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-explosion",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 152,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1045, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-slash",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 162,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1055, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-aeroblast",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 176,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1069, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-cross-chop",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 237,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1130, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-blaze-kick",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 298,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1191, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-air-cutter",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 313,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1206, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-poison-tail",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 341,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1234, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-leaf-blade",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 347,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1240, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-night-slash",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 399,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1292, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-shadow-claw",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 420,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1313, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-psycho-cut",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 426,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1319, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-cross-poison",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 439,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1332, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-stone-edge",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 443,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1336, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-attack-order",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 453,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1346, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-spacial-rend",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 459,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1352, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-storm-throw",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 479,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1372, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-frost-breath",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 523,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1416, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-move-drill-run",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 528,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1421, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+    },
+    {
+      "name": "crit-focus-energy",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Focus establishes +2 pumped state."
+    },
+    {
+      "name": "crit-dire-hit-active",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Dire Hit already used; same single pumped state as Focus, NOT a held-item bonus."
+    },
+    {
+      "name": "crit-lansat-held-unactivated",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lansat Berry"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Full HP, unactivated berry: no pumped state, no permanent held-item boost."
+    },
+    {
+      "name": "crit-dire-hit-held-unused",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Dire Hit"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Unused bag item is not an eligible held-crit effect."
+    },
+    {
+      "name": "crit-lansat-active-pumped",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Lansat already consumed, establishes the same +2 pumped state; no berry remains held."
+    },
+    {
+      "name": "crit-pumped-sources-do-not-stack",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Focus/Dire Hit/activated Lansat describe ONE established pumped state, not three bonuses."
+    },
+    {
+      "name": "crit-scope-lens",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Eligible held effect adds +1."
+    },
+    {
+      "name": "crit-scope-lens-with-focus",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Item +1 plus pumped +2 reaches guaranteed-crit threshold."
+    },
+    {
+      "name": "crit-razor-claw",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Razor Claw"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Eligible held effect adds +1."
+    },
+    {
+      "name": "crit-razor-claw-with-focus",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Razor Claw"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Item +1 plus pumped +2 reaches guaranteed-crit threshold."
+    },
+    {
+      "name": "crit-super-luck",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 104
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Ability adds one stage."
+    },
+    {
+      "name": "crit-super-luck-with-focus",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 104
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Super Luck +1 and pumped +2 guarantee this hit."
+    },
+    {
+      "name": "crit-sniper-not-a-stage-source",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 96
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Sniper changes critical damage, not the crit probability."
+    },
+    {
+      "name": "crit-move-plus-scope-lens",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 162,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1055, source cr=1. Move +1 and held item +1: stage2, p1/2."
+    },
+    {
+      "name": "crit-move-plus-super-luck",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 104
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 162,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1055, source cr=1. Move +1 and ability +1: stage2, p1/2."
+    },
+    {
+      "name": "crit-move-plus-focus",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 162,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1055, source cr=1. Move +1 and pumped +2: stage3, guaranteed."
+    },
+    {
+      "name": "crit-stack-four-stages",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 104,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. 0+1+1+2=4 counted before cap; H retains index4, I/P/E cap3. Both tables give probability1."
+    },
+    {
+      "name": "crit-stack-beyond-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 104,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 162,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1055, source cr=1. 1+1+1+2=5 before cap; top index H4 or I/P/E3. Guaranteed even with slot.crit=false."
+    },
+    {
+      "name": "crit-lucky-punch-chansey",
+      "atk": {
+        "id": "chansey",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lucky Punch"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Chansey-only +2."
+    },
+    {
+      "name": "crit-lucky-punch-blissey-ineligible",
+      "atk": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lucky Punch"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. The restriction is Chansey itself, not its evolution family."
+    },
+    {
+      "name": "crit-lucky-punch-with-move",
+      "atk": {
+        "id": "chansey",
+        "lv": 50,
+        "ab": -1,
+        "it": "Lucky Punch"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 162,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1055, source cr=1. Punch +2 and move +1 guarantee a crit."
+    },
+    {
+      "name": "crit-duck-item-farfetchd",
+      "atk": {
+        "id": "farfetch-d",
+        "lv": 50,
+        "ab": -1,
+        "it": "Stick"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 2,
+          "p": 0.5,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. EI GetHoldEffectCritChanceIncrease gives Farfetchd only +1; all other hacks here give +2."
+    },
+    {
+      "name": "crit-duck-item-with-move",
+      "atk": {
+        "id": "farfetch-d",
+        "lv": 50,
+        "ab": -1,
+        "it": "Stick"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 162,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1055, source cr=1. Move +1 plus eligible duck item. EI reaches stage2, NOT guaranteed; others reach3."
+    },
+    {
+      "name": "crit-duck-item-ineligible-holder",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Stick"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Non-duck holder gets no item crit stages."
+    },
+    {
+      "name": "crit-always-crit-plus-counted-bonuses",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 14,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:907, source cr=6. cr6 supplies forced only; Focus2+Lens1 supplies counted3, not6+2+1."
+    },
+    {
+      "name": "crit-battle-armor-base",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 3
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor prevents crits at stage0."
+    },
+    {
+      "name": "crit-battle-armor-stage-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 104,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 3
+      },
+      "slot": {
+        "mv": 162,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1055, source cr=1. Armor overrides table guarantee; preserve capped counted stage, p0 and forcedfalse."
+    },
+    {
+      "name": "crit-battle-armor-always-crit",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 3
+      },
+      "slot": {
+        "mv": 14,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:907, source cr=6. Armor overrides willCrit/cr6; counted stage remains0."
+    },
+    {
+      "name": "crit-battle-armor-manual-crit-selected",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 3
+      },
+      "slot": {
+        "mv": 32,
+        "crit": true
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual critical-damage scenario does not change blocked probability."
+    },
+    {
+      "name": "crit-shell-armor-base",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 74
+      },
+      "slot": {
+        "mv": 32,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor prevents crits at stage0."
+    },
+    {
+      "name": "crit-shell-armor-stage-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 104,
+        "it": "Scope Lens"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 74
+      },
+      "slot": {
+        "mv": 162,
+        "crit": false
+      },
+      "field": {
+        "atkFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 3,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:1055, source cr=1. Armor overrides table guarantee; preserve capped counted stage, p0 and forcedfalse."
+    },
+    {
+      "name": "crit-shell-armor-always-crit",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 74
+      },
+      "slot": {
+        "mv": 14,
+        "crit": false
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/eternal-x/.src/dex-rebalanced.json:907, source cr=6. Armor overrides willCrit/cr6; counted stage remains0."
+    },
+    {
+      "name": "crit-shell-armor-manual-crit-selected",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 74
+      },
+      "slot": {
+        "mv": 32,
+        "crit": true
+      },
+      "field": {},
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual critical-damage scenario does not change blocked probability."
     }
   ]
 }
