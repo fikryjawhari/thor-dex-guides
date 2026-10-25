@@ -25,7 +25,7 @@ ORDER = {
     'section': ['h', 'cap', 'note', 'opt', 'rw', 'tr'],
     'trainer': ['k', 'n', 'loc', 'tags', 'st', 'cap', 'note', 'field', 'rw', 'pp', 'c', 'bt', 'pl', 'pt', 'p'],
     'partner': ['n', 'st', 'pl', 'p'],
-    'mon': ['id', 'l', 'r', 'i', 'a0', 'a', 'ao', 'na', 'iv', 'ev', 'm', 'hp', 'ld', 'pre', 'x', 'cf', 'src'],
+    'mon': ['id', 'l', 'r', 'i', 'a0', 'a', 'ao', 'na', 'iv', 'ev', 'm', 'hp', 'ld', 'au', 'pre', 'x', 'cf', 'src'],
 }
 
 
