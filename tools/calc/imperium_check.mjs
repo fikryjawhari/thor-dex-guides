@@ -154,5 +154,36 @@ for (const entry of data.P) {
   assert.equal(power, weightPower(sourceWeight(entry)), `EI source weight band ${entry.id} ${entry.n}`);
 }
 console.log(`PASS EI W2 weights: ${data.P.length} species bands; five source overrides; Hoopa deferred`);
+assert.equal(sourceWeight(data.P.find(entry => entry.id === '29')), 7, 'Nidoran female stays distinct');
+assert.equal(sourceWeight(data.P.find(entry => entry.id === '32')), 9, 'Nidoran male stays distinct');
+const automaticPowers = new Map([
+  ['w2-low-kick', 80], ['w2-grass-knot', 60], ['w2-regional-raticate', 60],
+  ['w2-mega-infernape', 80], ['w2-mega-empoleon-d', 100], ['w2-mega-luxray', 60],
+  ['w2-mega-roserade', 40], ['w2-mega-orbeetle', 60], ['w2-minior-core', 20],
+  ['w2-nidoran-f', 20], ['w2-nidoran-m', 20],
+]);
+for (const [name, power] of automaticPowers) {
+  assert.ok(fixture(name), `${name} fixture exists`);
+  assert.equal(fixture(name).slot.bp, undefined, `${name} must not set power`);
+  assert.equal(result(name).bp, power, `${name} source automatic power`);
+}
+assert.equal(fixtures.matchups.filter(entry => entry.name.startsWith('w2-')).length, automaticPowers.size);
+const boundaryEngine = await createEngine(data, profile);
+const boundaryPower = (move, attackerWeight, defenderWeight) => {
+  boundaryEngine.init(data, {...profile, over: {...profile.over, species: {...profile.over.species,
+    '143': {weightkg: attackerWeight}, '9': {weightkg: defenderWeight}}}});
+  return boundaryEngine.calc({id: '143', lv: 50, ab: -1}, {id: '9', lv: 50, ab: -1},
+    {mv: data.M.indexOf(move)}, {}).bp;
+};
+let weightBoundaries = 0;
+for (const boundary of [10, 25, 50, 100, 200]) {
+  for (const weight of [boundary - 0.1, boundary, boundary + 0.1]) {
+    for (const move of ['Low Kick', 'Grass Knot']) {
+      assert.equal(boundaryPower(move, 460, weight), weightPower(weight), `${move} ${weight} kg boundary`);
+      weightBoundaries++;
+    }
+  }
+}
+console.log(`PASS EI W2 automatic weight: ${automaticPowers.size} fixtures; ${weightBoundaries} strict-boundary cases`);
 assert.equal(JSON.stringify({data, profile, fixtures}), unchanged, 'inputs untouched');
 console.log(`Emerald Imperium: ${results.size} fixtures; source modifier/category checks, field parity and priority/order checks passed`);

@@ -2149,6 +2149,193 @@
       "slot": {
         "mv": 190
       }
+    },
+    {
+      "name": "w2-low-kick",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 425
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-grass-knot",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "774",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-regional-raticate",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "957",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-mega-infernape",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1493",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-mega-empoleon-d",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1492",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-mega-luxray",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1489",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-mega-roserade",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1531",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-mega-orbeetle",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1512",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-minior-core",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1199",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-nidoran-f",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "29",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-nidoran-m",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "32",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
     }
   ]
 }
