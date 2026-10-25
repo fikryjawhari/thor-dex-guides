@@ -1,0 +1,9 @@
+<fieldset><legend>Calc refine mockup</legend>
+ <div class="chips" id="rk1"></div><div class="chips" style="margin-top:6px" id="rk2"></div>
+ <p class="hint">Turn end: Off; Leftovers / sand; Black Sludge / toxic; EI's Self Sufficient / Grassy + poison. The amounts are fixed per scenario; KO text is recomputed from the real rolls. Protean: on Mine, on Foe, or off (Edit opens the Type choice; the dot shows a changed type).</p>
+</fieldset>
+<script>
+(function(){const B=(id,list)=>{const el=document.getElementById(id);list.forEach(([l,n,v])=>{const b=document.createElement('button');b.textContent=l;b.onclick=()=>thorFrame().setOption(n,v);el.appendChild(b);});};
+ B('rk1',[['Turn end: off','eot','off'],['Leftovers / sand','eot','sand'],['Sludge / toxic','eot','toxic'],['Self Sufficient','eot','hack']]);
+ B('rk2',[['Protean: Mine','pro','mine'],['Protean: Foe','pro','foe'],['Protean: off','pro','']]);})();
+</script>
