@@ -163,14 +163,26 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
   entry-ability sets in the fixtures converted, 36 new cases; state_check 2358 / 2358; old cases same output; npm test green;
   hzla unchanged. Toggle spec on `worktree-damage-calc-toggles` updated with the settled UI choices.
 
-## Next session prompt
+## Next session prompt (the engine pass is done; the next session builds the state toggles)
 ```
-Damage calc engine pass, continue. Worktree .claude/worktrees/damage-calc (worktree-damage-calc), orchestrator on
-Opus medium. Read first: plans/calc-engine-pass.md (the brief: decisions, roles, order, steps), then
-plans/calc-dynamic-power.md → "Engine pass 2026-10-26" (findings, input contract, unit table). The UI spec is
-read-only: git show origin/worktree-damage-calc-toggles:plans/calc-state-toggles.md. Write your claim.
-Start at the first unit not marked done in the unit table (U1 if none): check the Sol model ID with
-orchestrator_capabilities, then dispatch it per the brief (U4 and U7 are the orchestrator's own: Progress says
-where to pick up).
-Ask me before every push. Keep the Progress log up to date and commit often.
+Calc state toggles: build. Opus medium, main chat; keep the back and forth short. Worktree:
+C:\Users\fikry\.t3\worktrees\thor-dex-guides\worktree-damage-calc-toggles (branch worktree-damage-calc-toggles,
+a tab of worktree-damage-calc). Busy check, write your claim.
+1. Merge first: `git merge worktree-damage-calc` (the engine pass and Hardlove 0.8.4 from main). That worktree has no
+   hacks/*/.src: copy main's checkout's hacks/hardlove-gold/.src in before any Hardlove build. data.json / dist
+   conflicts: take either side, rerun that hack's extract build.py and assemble.py.
+2. Read: plans/calc-state-toggles.md (the spec; "Settled with the user" is final), tools/calc/README.md → Battle
+   state, Crit, Stat changes before the hit (the engine contract: every input and result is already built),
+   template/README.md → Damage calculator, CLAUDE.md → Workflow (UI: mockup first, phone preview, Thor frame).
+3. Mock the Edit-menu controls (target state, Download Auto / Atk / SpA / Off, Sword / Shield off) at the viewer
+   sizes and put them on the phone preview; settle them with me, then build the page (template/calc.js, calc.css,
+   the Focus Energy fields in template/calc/profiles/). The engine should need no change; if it does, say so first.
+4. Checks: the spec's Checks table (new tools/scenarios/calc-state.mjs), npm test --prefix tools/calc, assemble.py,
+   gate.py check for the four calc guides, domcompare with --ignore="built 2026-10-2[0-9]" (one browser sweep at a
+   time), the built guide in the Thor frame on the phone preview.
+5. Commit after every sub-step; keep the spec's status and PROGRESS.md → Open 2 current. Ask me before every push.
+Later, on this same branch, one at a time: the trainer-field and turn-order UI (decide step, then build;
+plans/trainer-field-conditions.md is the trainer-field handoff). Then this branch merges into worktree-damage-calc,
+and that into main.
+<my UI notes, if any>
 ```
