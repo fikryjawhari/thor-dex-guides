@@ -43,7 +43,7 @@ dynamic-power engine work (state toggles, pre-hit stat changes) to its own sessi
 5. [x] Z engine (orchestrator `580f021`): profile `zmove`, slot `z`, band power + stock exceptions (`catalog.zpow`),
    result `z` name, oracle `useZ`. Photonic `zmove: true`.
 6. [x] Z fixtures (Sol `b73d0ab`..`d4e0896`, 25 fixtures; orchestrator: profile `zpow`, Photonic's 16 doc Z powers, all pass; oracle 118 + 28 known).
-7. [ ] Totem data (Sol): Totem Battles.txt (cross-checked with the game files where they have it) → Photonic TR as
+7. [x] Totem data (Sol `40d1ace`, finished by the orchestrator `3e0b704`: 13 battles, 33 mons; schema `au` `080a5c2`): Totem Battles.txt (cross-checked with the game files where they have it) → Photonic TR as
    Totem battles in walkthrough order, totem with `au` (aura stages Atk, Def, SpA, SpD, Spe), allies as its partners.
    Photonic extract on this branch (its guide is merged; the calc is the consumer). Schema line in EI notes → Data schema.
 8. [ ] UI (orchestrator, template; mockup first, user approves): a Z button on each damaging move row (Photonic
