@@ -154,6 +154,8 @@ has no cheats or checklist steps, and WK.docs holds the game docs.
 
 ### Damage calc
 
+**2026-10-25 / W2:** unchanged Gen 7 weights stand: all 928 lookups checked (50 form fallbacks, zero 1 kg defaults), including 48 Megas, both Primals and distinct Nidoran genders; no weight override or power rule added. The 52-row form verdict table and stock power formulas are in `plans/calc-refine-photonic.md` -> W2. [Bulbapedia weights](https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_weight) and [Minior](https://bulbapedia.bulbagarden.net/wiki/Minior_(Pok%C3%A9mon)) confirm Core is 0.3 kg, already correct. Ten fixtures have no set power (all eight weight/HP/speed moves, Alolan Raichu and stock Mega Steelix); stock checks and 872 native-oracle BP/16-roll comparisons pass. Official comparator's automatic-power adapter is still Needs Opus 6, not a mechanics disagreement.
+
 2026-10-25: field-mechanics pass for 2.38 Rebalanced. `cfg.calc.base = "gen7"`; species stats/types and move
 power/category come from this guide's game data, not the oracle's backup. EVs remain enabled. The oracle is
 hzla Dynamic-Calc-Decomps, `data=pspm`, `gen=7`, `dmgGen=7`, `types=6`, `critGen=7`, title
@@ -177,7 +179,7 @@ can be encountered in Photonic Sun's story. No shared template, shared base prof
 | Inverse | Declarative `effectiveness` rule: invert each defending type's multiplier (0 becomes 2); no ability-immunity bypass. Fixtures cover weakness, resistance, type immunity, dual types, Levitate, Freeze-Dry and Flying Press. |
 | Always-critical moves | Declarative `critical` rule (`value: true`) for Self-Destruct and Explosion (Photonic Move Changes, Rebalanced; data `h`/`e` notes agree). Fixtures `self-destruct-neutral` / `-critical`, `explosion-neutral` / `-critical`: the no-flag case rolls equal the crit-flag case. Oracle does not crit them (neutral 244 vs crit 366 on Self-Destruct, a 1.5 ratio), so the doc decides and these rows are not `match`. Defense halving conflict: see Needs Opus in `plans/calc-refine-photonic.md`. |
 
-`calc_matchups.json` has 111 cases: **101 match all 16 hzla rolls; 6 known differences; 4 mismatches (Self-Destruct and Explosion, both crit fixtures and both neutral fixtures), explained in the Always-critical row above and open under Needs Opus**.
+`calc_matchups.json` has 121 cases: **101 match all 16 hzla rolls; 10 known differences; zero damage mismatches; 10 W2 harness errors**. The shared oracle wrapper rejects moves without an explicit power, so W2 is independently checked against the native pinned oracle; see Needs Opus 6 in `plans/calc-refine-photonic.md`. The earlier four Self-Destruct/Explosion cases now carry their documented differences in the fixtures.
 The six differences deliberately retain stock Gen 7 behaviour:
 - Wonder Room (Tackle, Psychic, Psyshock): the pinned oracle's active `calc/mechanics/gen789.js:54-57` swaps raw
   defenses twice (`checkRawStatChanges`, then `checkWonderRoom`), and line 1076 selects the opposite attacking

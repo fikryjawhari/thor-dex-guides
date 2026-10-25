@@ -77,7 +77,8 @@ Could not classify: none.
 
 ### W2: stock weights and automatic power (2026-10-25)
 
-- [ ] Weight / auto-power moves: weight audit complete; fixtures and formula checks next.
+- [x] Weight / auto-power moves: scoped audit, fixtures and formula checks complete; official comparator
+  support for native automatic power remains **Needs Opus 6**, not an accepted all-green integration gate.
 
 Photonic Sun uses unchanged Gen 7 weights. No species weight override is needed. The full 928-species
 probe finds 878 direct stock lookups, 50 `weightNames()` fallbacks and zero 1 kg defaults. All 48 Megas
@@ -162,6 +163,17 @@ for 40/60/80/120/150. Do not import Hardlove's non-stock inequalities or Gyro Ba
 Sources: `@smogon/calc` 0.12.0 `dist/mechanics/gen789.js:537-576,633-637`; pinned hzla
 `ff6c3e339e276e6b4e8e44db58750b6534bc26aa` `calc/mechanics/gen789.js:603-662,717-721`
 (read/run locally only). No hack source claims changed bands. Native-oracle results above confirm them.
+
+**Final checks (2026-10-25):** `npm test --prefix tools/calc`, `node tools/calc/photonic_check.mjs` and
+`python -I tools/datajson.py hacks/photonic-sun/hack.json` pass. The Photonic checker verifies 928 weight
+bands, 120 exact form/Mega/Primal/Alolan weights using adjacent Heavy Slam ratio boundaries, 54 synthetic
+weight/ratio boundary cases, all 235 positive Snorlax HP values for both Flail/Reversal (470 cases), all
+13x13 Speed-stage combinations for both Gyro/Electro Ball (338 cases), and ten no-power fixtures.
+`node tools/calc/hzla_compare.mjs photonic-sun` exits 1 solely on the ten native-power harness errors
+listed in Needs Opus 6; its original 111 rows retain 101 matches and 10 known differences. The independent
+native-oracle probe passes all 872 cases. `git diff --check` passes. Logs: `.tmp/calc-refine/w2-photonic.log`;
+official report: `.tmp/calc-photonic-sun/compare.json`. No weight/profile changes, shared engine changes,
+template changes or raw author documents committed. Orchestrator's claim left untouched; never pushed.
 
 ### Orchestrator answers
 1, 2. Settled: 3DS hacks take the game data over the doc (notes.md → Conflicts and findings already lists Triple
