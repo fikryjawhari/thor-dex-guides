@@ -56,6 +56,17 @@ for that count, which the build confirms with the probe):
 | Rollout, Ice Ball | earlier turns in a row | 4 | P E H I |
 | Rage Fist | times hit (power 50 + 50 per hit, cap 350) | 6 | H I |
 | Last Respects | allies fainted | 5 | H I |
+| Metronome (item) | consecutive uses of this move | 10 | any Pokémon holding it; in data: H (Pachirisu), I (Tyrantrum) |
+
+Metronome is a damage multiplier, not a power: the Power box doesn't change, and the details show it as "Metronome
+×1.3". It shows only on the rows of a Pokémon that holds the item, on every damaging row (the item covers all moves),
+so those rows get the two-button column. Holders' moves: Pachirisu's data set has only Discharge; Tyrantrum's has Poison
+Fang, Rock Slide, Crunch and Dragon Claw. None of them is multi-hit or a state move, so none conflicts.
+
+**Conflict rule:** a row takes one top-slot control. If a move on a holder needs one of its own (a multi-hit move, or a
+state move from the tables above), that row shows the move's control and the Metronome counter is hidden there (its
+count stays 0 for that move). The build check (below) catches this in the data; a move the player adds to their own
+Pokémon is handled by this rule.
 
 The counter holds the earlier count, so 0 is the first use, which is the stock default. The adapter passes the stock
 field as stock counts it (`timesUsed` = count + 1).
@@ -74,10 +85,6 @@ line, like the Aura mark, while set):
 Magnitude's power is random and stays manual in the Power box (as now); Dig only changes its damage.
 
 **Not in this spec**
-- Metronome (item): a count across all of a Pokémon's moves, not one move. Deferred. Held in battle by one trainer in
-  two guides: Hardlove Gold (Lass Krise, Pachirisu, Route 36 Schorsch Split) and Emerald Imperium (Trainer Sunbird,
-  Tate and Liza Split, Mossdeep). None in Photonic Sun or Eternal X. Emerald Imperium's Fantina gets one as a reward
-  (not held in battle).
 - Stat changes before the hit (Meteor Beam, Electro Shot, Skull Bash, Spectral Thief): the second half of
   `calc-dynamic-power.md`. Not settled here.
 - Supreme Overlord: absent from all four calc hacks.
@@ -182,6 +189,7 @@ Dir (Mine attacks / Foe attacks): the state keys include the side, so the two di
 | Card state | same | Dig on the foe card | Earthquake doubles; the mark shows; the mark is gone at None |
 | Engine values | `tools/calc/*_check.mjs` (add a state case per move) | fixtures from `probe.mjs` | each row of the stock table and each engine state gives the expected roll range |
 | Power box shows the engine's power | `calc-state.mjs` and existing `calc-*` scenarios | Photonic Facade on a burned attacker | box shows 140 and "listed 70" |
+| Metronome holders have no conflicting row | build check, a new step in the Hardlove Gold and Emerald Imperium `extract/check.py` (or a shared helper) | the two holders from data | fails if a holder's set has a multi-hit or state move; lists the holders and their moves |
 | Nothing else changes | `gate.py check` for every calc guide against the recorded baseline; `domcompare` (template changes) | photonic-sun, eternal-x, hardlove-gold, emerald-imperium | only the intended differences |
 
 Build order (one template session, `template/` is shared): engine and adapter first (so the page can read the result),
