@@ -183,7 +183,7 @@ function oracleMatchup(oracle, gen, data, profile, options, matchup) {
     if (imported?.[source] || imported?.flags?.[source] || imported?.flags?.[target]) flags[target] = 1;
   }
   const move = new calc.Move(gen, name, {ability: attacker.ability, item: attacker.item,
-    hits, isCrit: !!matchup.slot.crit, overrides: {
+    hits, isCrit: !!matchup.slot.crit, useZ: !!(profile.zmove && matchup.slot.z), overrides: {
       ...known, ...imported, name, flags, basePower: matchup.slot.bp ?? (variable ? known?.basePower ?? imported?.basePower : entry.bp),
       type: matchup.slot.t || entry.t, category: entry.c,
       ...(fixed ? {name: 'Guide fixed power', id: 'guidefixedpower'} : {}),

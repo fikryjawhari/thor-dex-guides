@@ -19,6 +19,7 @@ let generation;
 let speciesByID;
 let speciesNames;
 let koCache;
+let stockMoves;
 
 function mergeRecord(base, override) {
   const result = {...base};
@@ -68,6 +69,7 @@ function init(guide, configuration) {
   profile = configuration;
   koCache = new Map();
   const stock = stockData(profile.gen);
+  stockMoves = stock.moves;
   const modern = stockData(9);
   const species = {};
   speciesByID = new Map(data.P.map(entry => [String(entry.id), entry]));
@@ -302,6 +304,15 @@ const AUTO_POWER = new Set(['Low Kick', 'Grass Knot', 'Heavy Slam', 'Heat Crash'
 // Moves with a listed power that stock scales by HP: the result reports the power used, as for AUTO_POWER.
 const HP_POWER = new Set(['Eruption', 'Water Spout', 'Dragon Energy']);
 
+// Z-move power (Gen 7, profile `zmove`): the game's band for the move's power (a hack's Z-power changes all follow
+// it), or stock's own Z power for a move the hack leaves alone where that is not the band (`catalog.zpow`).
+function zPower(moveData, power, listed) {
+  const id = toID(moveData.name);
+  if (catalog.zpow[id] && (listed || stockMoves[id]?.basePower === moveData.basePower)) return catalog.zpow[id];
+  return power <= 55 ? 100 : power <= 65 ? 120 : power <= 75 ? 140 : power <= 85 ? 160 : power <= 95 ? 175
+    : power <= 100 ? 180 : power <= 110 ? 185 : power <= 125 ? 190 : power <= 130 ? 195 : 200;
+}
+
 function calc(atk, def, slot, values = {}) {
   const entry = data.MV[slot.mv];
   const name = data.M[slot.mv];
@@ -323,6 +334,8 @@ function calc(atk, def, slot, values = {}) {
   if (def.pty && changesType(defender, def)) defender.types = [def.pty];
   const field = battleField(values);
   const overrides = {...moveData, basePower: Number(power), type: slot.t || moveData.type};
+  const useZ = !!(profile.zmove && slot.z && moveData.category !== 'Status');
+  if (useZ) overrides.zMove = {basePower: zPower(moveData, Number(power), listed)};
   if (listed && slot.bp !== undefined) {
     overrides.name = 'Guide fixed power';
     overrides.id = 'guidefixedpower';
@@ -330,9 +343,9 @@ function calc(atk, def, slot, values = {}) {
   const hitRange = profile.multihit?.[name];
   const stockHits = moveData.multihit;
   const defaultHits = hitRange?.[2] ?? (typeof stockHits === 'number' ? stockHits : Array.isArray(stockHits) ? stockHits[0] + 1 : 1);
-  const selected = hitCount(slot.hits ?? defaultHits);
+  const selected = useZ ? 1 : hitCount(slot.hits ?? defaultHits);
   const move = new Move(generation, moveData.name, {
-    overrides, isCrit: !!slot.crit, hits: selected, ability: attacker.ability, item: attacker.item,
+    overrides, isCrit: !!slot.crit, hits: selected, ability: attacker.ability, item: attacker.item, useZ,
   });
   move.hits = selected;
   const context = {
@@ -387,6 +400,7 @@ function calc(atk, def, slot, values = {}) {
     ...((auto || HP_POWER.has(moveData.name)) && slot.bp === undefined && description.moveBP
       ? {bp: description.moveBP} : {}),
     priority: context.move.priority,
+    ...(context.move.useZ ? {z: context.move.name} : {}),
     ...(context.state.categoryAuto ? {categoryChoice: {automatic: context.state.categoryAuto,
       inverted: context.state.categoryInverted, tie: context.state.categoryTie}} : {}),
     ...(per.some(hit => hit.some((value, index) => value !== rolls[index])) ? {per} : {}),
