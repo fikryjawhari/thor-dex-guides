@@ -56,3 +56,6 @@ The engine and its phases: `tools/calc/README.md`. The EI example, with every so
 - An alias to `Shell Side Arm` (Smogon's category rule) shares one engine record with a hack's own move of that name;
   EI has one, so Draco Barrage uses a `beforeStats` rule instead.
 - The docs can disagree with the source. Read the source's function for each entry before writing a rule.
+- Species names reach the engine only through `speciesName()` (`tools/calc/src/adapter.js`: accents stripped,
+  ♀ / ♂ → -F / -M, Mega / Primal reordered). Never match raw guide names against stock or source names (a raw
+  "Nidoran♀" merged into Nidoran-M in every guide); run them through `speciesName()` first.
