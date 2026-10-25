@@ -13,6 +13,9 @@ The engine and its phases: `tools/calc/README.md`. The EI example, with every so
 - The oracle: hzla's Dynamic-Calc-Decomps. Find the hack's entry in `js/romhack_catalog.js` and its backup in
   `backups/title_to_backup_mappings.js` (the `data`, `gen`, `dmgGen`, `types` and `noSwitch` values). Pin the SHA there.
   Read and run it locally only; never copy its code or tables into the repo.
+  Each built hack's hzla link and what it means: `plans/damage-calc.md` → Calc references per hack (Eternal X is on
+  the older hzla/Dynamic-Calc). The hg-engine hacks have no hzla calc: use the hack's own rules (Hardlove Gold's are
+  there), hzla's ROM importer (https://ddex-chi.vercel.app) as an oracle if it reads the ROM, and the in-game test.
 
 ## Procedure
 1. **Settings.** Note the oracle's `gen`, `dmgGen`, `types`, `critGen`, backup and title in `calc_matchups.json` →

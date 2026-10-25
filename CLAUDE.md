@@ -20,7 +20,8 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
   you were working on (`tools/domcompare.mjs` shows exactly what changed).
 
 ## Layout
-- `template/` shell.html, dex.css, dex.js: the one template (Emerald Imperium is the reference build). Its README:
+- `template/` shell.html, dex.css, dex.js, and the damage calc (calc.js / calc.css, `calc/` engine, base profiles, save
+  readers; inlined only for hacks with `cfg.calc`): the one template (Emerald Imperium is the reference build). Its README:
   what `hack.json` sets, what the data switches on, the shared rules and the page design (with what was rejected).
 - `hacks/<hack>/` hack.json (title, version, `cfg` = wording, storage keys, feature switches), data.json (`#data`),
   sprites.json (only forms the shared set lacks), notes.md (build notes and schema), extract/ (the scripts that made data.json), SOURCES.md.
@@ -58,7 +59,9 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
    `python -I tools/sprite_keys.py <hack>` lists the forms it matched (check once) and the species it couldn't place:
    those are the hack's own additions and go in its `sprites.json`, the only art a hack keeps. `assemble.py` lists
    species with no sprite; they show as a type-coloured circle with the name's first letter.
-5. `uv run python -I tools/gate.py check <hack>` (baseline setup: `tools/README.md` → Standard gates).
+5. Damage calc: `hack.json` → `cfg.calc` from the hack's mechanics ([calc mechanics](.agents/references/calc-mechanics.md));
+   once the hack's save family has a reader, its ID tables and `save` ([save reader](.agents/references/calc-save-reader.md)).
+6. `uv run python -I tools/gate.py check <hack>` (baseline setup: `tools/README.md` → Standard gates).
    Then `python -I tools/preview.py dist/<hack>.html --frame` for Thor-frame review on the phone preview.
 
 ## Git
@@ -124,7 +127,7 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
   which branch the work is on and what merges next.
 
 ## Workflow
-- References: [worker brief](.agents/references/worker-brief.md), [spec skeleton](.agents/references/spec-skeleton.md), [big jobs](.agents/references/big-job.md).
+- References: [worker brief](.agents/references/worker-brief.md), [spec skeleton](.agents/references/spec-skeleton.md), [big jobs](.agents/references/big-job.md), [calc mechanics](.agents/references/calc-mechanics.md), [save reader](.agents/references/calc-save-reader.md).
 - I test on the Thor. Testing a guide there without the library: PROGRESS.md → Testing on the Thor.
 - UI changes: mockup first as a plain interactive HTML page at the viewer's real size, then build it.
 - **Showing pages to me** (mockups, unmerged builds): `python -I tools/preview.py <page.html> [name.html]` puts it on

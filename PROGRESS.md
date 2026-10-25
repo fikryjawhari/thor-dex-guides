@@ -23,8 +23,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
   - **Standard tooling:** `tools/gate.py` (baseline + every check in one command), `tools/scenarios/`,
     `tools/worktree_setup.py` (claim, `uv sync`, `.src/` junctions to the main checkout), `preview.py --frame`, and
     `.agents/references/` (worker brief, spec skeleton, big-job ledger).
-- Open elsewhere: `worktree-damage-calc` (decide session done 2026-10-24: UI spec in `plans/damage-calc.md`, mockup in
-  `plans/damage-calc-mockup/`). Build session (Opus) running there since 2026-10-25.
+- Open elsewhere: `worktree-damage-calc` (damage calc framework built 2026-10-25, **not merged**: the user wants the
+  mechanics confirmed first; pushed to `origin`). See Open → Damage calc.
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
   3DS (done: `ctrguide.py`; next Meissa Moon, Navy Sapphire), pokeemerald-expansion (Emerald Imperium, SoulGold),
   CFRU (Radical Red, Unbound), NDS (Hardlove Gold built; Renegade Platinum, Blaze Black 2 Redux, HeartGold Retiled).
@@ -39,11 +39,18 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
 1. **Test on the Thor.** Nothing since the consistency pass has been on the device (EI and HG were last checked there
    2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
-2. **Damage calc with save import** (`plans/damage-calc.md`): `@smogon/calc` (MIT) as the engine, our own save readers
-   (Gen 3, 4/5, 6/7) written from format notes, never from hzla's unlicensed code; each hack's extract writes its game
-   ID tables. Also needs the app's file picker (app repo). PokeDaisy (GPLv3) is read-only reference. UI spec and
-   mockup done; build running on `worktree-damage-calc`. The Gen 3 reader must cover pokeemerald-expansion and CFRU saves. `domcompare`
-   skips `#/calc` today: add it to its routes when the calc page is built.
+2. **Damage calc with save import** (`plans/damage-calc.md`; branch `worktree-damage-calc`, pushed, not merged).
+   Built 2026-10-25 (step 1 of its Order): `@smogon/calc` engine using each guide's own data (`tools/calc/`, 81 tests),
+   six base profiles, the calc page from the UI spec (all 26 spec checks pass: `tools/scenarios/calc-*.mjs`), the import
+   flow with a fake `test` reader, `tools/calc_save_check.mjs`, `#/calc` in domcompare. Only Emerald Imperium has
+   `cfg.calc` (first mechanics pass: 47/47 matchups match hzla's calc; notes.md → Damage calc); the other guides hide
+   the calc. Not merged until the mechanics are trusted. Next, each in its own session:
+   - Mechanics for Hardlove Gold, Photonic Sun, Eternal X (`.agents/references/calc-mechanics.md`; links and HG's rules
+     in the plan → Calc references per hack), then a refinement pass per hack (EI's open points in its notes).
+   - Save readers: Gen 3 + EI's ID tables first (`.agents/references/calc-save-reader.md`), then the app's file picker
+     (app repo), Gen 4, Gen 5, Gen 6/7. hzla's readers and PKHeX are read-only references; PokeDaisy (GPLv3) too.
+   - Test the page on the Thor (phone preview: `calc-build.html`).
+   - Token-spend analysis session (prompt given 2026-10-25): agent cost by model / effort / length, rules for briefs.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
    calc as a reference once the calc exists. Agreed, not done.

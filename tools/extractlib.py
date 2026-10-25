@@ -11,6 +11,10 @@ Layout of every hack's extract/ (run from the repo root: uv run python -I hacks/
     check.py     checks on a built data.json (optional baseline to compare)
     + helper modules that only one hack needs (format readers, source parsers), named for what they read.
 build.py ends with finalise(): Items standard (tools/itemstd.py), the hack's prune, shared split names.
+
+Damage calc: a hack's battle mechanics are hack.json -> cfg.calc (.agents/references/calc-mechanics.md), not data.json.
+When its save family has a reader, the extract also writes data.json -> GID {sp, mv, ab, it}: game id -> our species
+id / M index / AB index / item name (.agents/references/calc-save-reader.md).
 """
 import datetime
 import json
