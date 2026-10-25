@@ -39,7 +39,7 @@ Secondary effects, status chance, healing, stat drops, learnsets. The power / PP
 - Toxic Thread (stat drops and poison: pure out of scope)
 - TM-only learnset changes: Quash (TM60), Frost Breath (TM79), Confide (TM100), Brutal Swing (TM59), Smart Strike (TM67)
 
-Z-Move power changes appear on about 20 moves in the doc. They are power values; they go to Needs Opus 4 if the calc models Z moves at all.
+The doc explicitly changes Z-Move power for 16 moves. The deferred values and conversion-support finding are in Needs Opus 4.
 
 ## Needs Opus
 
@@ -67,11 +67,55 @@ Z-Move power changes appear on about 20 moves in the doc. They are power values;
 1. **Triple Kick**: the doc says power 10 to 20; `data.json` has bp 10 and no MV.h note. Check the extract, not the calc.
 2. **Power Gem**: the doc says power 80 to 90 and PP 20 to 15; `data.json` has bp 80 (the MV.h note lists PP only). Same check as item 1.
 3. **Drill Peck**: no damage-level oracle test for a crit-stage change. Decide whether the engine takes a crit-stage input (an engine phase) or the rule is checked only by a unit table.
-4. **Z-Move power**: `calc-mechanics.md` says nothing about Z moves. Decide if the calc models them; if not, these stay out.
+4. **Z-Move conversion (UI + engine, deferred per the user, 2026-10-25):** `plans/calc-dynamic-power.md`
+   explicitly leaves Max / Z moves out for now. The stock Gen 7 `Move` constructor supports `useZ` and
+   `zMove.basePower` (`tools/calc/node_modules/@smogon/calc/src/move.ts:89`), but the guide adapter's
+   constructor (`tools/calc/src/adapter.js:334`) passes only overrides, crit, hits, ability and item, not
+   `useZ`. The page's move slot (`template/calc.js:81`) has no Z-conversion control or flag, and the oracle
+   constructor (`tools/calc/hzla_compare.mjs:185`) also does not pass `useZ`. A local probe of Wing Attack,
+   Earthquake and Sky Attack confirms that each of `slot.useZ`, `slot.isZ` and `slot.zMove` is ignored
+   (nine identical-roll assertions). Stock Gen 7 converts these to 120 / 180 / 200 BP respectively.
+   Evidence: `.tmp/calc-refine/z-photonic.log`.
+
+   Important distinction: the all-moves picker (`template/calc.js:136`) does expose standalone named
+   Z moves from the guide data. Catastropika (ID 657) calculates at its fixed 210 BP, but Breakneck Blitz
+   (ID 621) calculates at its placeholder 1 BP rather than deriving power from a base move. Selecting a
+   named Z move is not base-move conversion; overriding `slot.bp` would only supply a manual power and
+   would not test the conversion bands or the doc's per-base-move overrides. No Z fixtures, profile
+   changes, engine support or UI changes added in this unit, consistent with the user's deferral.
+
+   Deferred data, transcribed from `Move Changes.pdf`, Rebalanced, printed pages 1-2
+   (`.src/txt/Move Changes.txt` lines below). These are the doc's before/after values, not independently
+   verified stock powers; preserve even surprising before values. Nothing is applied to the calc yet.
+
+   | Base move | Doc Z power, before -> after | Text line |
+   | --- | --- | --- |
+   | Wing Attack | 120 -> 160 | 6 |
+   | Submission | 160 -> 175 | 9 |
+   | Chatter | 120 -> 175 | 10 |
+   | Shadow Punch | 120 -> 160 | 12 |
+   | Water Pulse | 120 -> 160 | 13 |
+   | Arm Thrust | 100 -> 140 | 15 |
+   | Mystical Fire | 120 -> 170 | 21 |
+   | Parabolic Charge | 120 -> 175 | 23 |
+   | Horn Leech | 120 -> 175 | 25 |
+   | Draining Kiss | 100 -> 140 | 26 |
+   | Freeze-Dry | 140 -> 180 | 31 |
+   | Twineedle | 100 -> 175 | 34 |
+   | Steel Wing | 140 -> 175 | 38 |
+   | Power Gem | 120 -> 175 | 39 |
+   | Needle Arm | 120 -> 175 | 40 |
+   | Cross Poison | 140 -> 175 | 41 |
 
 Minor: Horn Leech starts at 65 in the doc and 75 in the MV.h note; both end at 90, so nothing changes in the data.
 
 Could not classify: none.
+
+## Unit Z
+
+- [x] **Z-move power:** support inspection complete; conversion bands and signature-Z fixture group deferred
+  with Z moves out for now. Needs Opus 4 holds the evidence and all 16 explicit doc changes; no fixtures added.
+- [x] **Totem aura:** covered by manual stat stages; no aura automation or other work.
 
 ## Unit W
 
