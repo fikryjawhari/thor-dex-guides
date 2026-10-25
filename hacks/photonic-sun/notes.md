@@ -179,7 +179,7 @@ can be encountered in Photonic Sun's story. No shared template, shared base prof
 | Inverse | Declarative `effectiveness` rule: invert each defending type's multiplier (0 becomes 2); no ability-immunity bypass. Fixtures cover weakness, resistance, type immunity, dual types, Levitate, Freeze-Dry and Flying Press. |
 | Always-critical moves | Declarative `critical` rule (`value: true`) for Self-Destruct and Explosion (Photonic Move Changes, Rebalanced; data `h`/`e` notes agree). Fixtures `self-destruct-neutral` / `-critical`, `explosion-neutral` / `-critical`: the no-flag case rolls equal the crit-flag case. Oracle does not crit them (neutral 244 vs crit 366 on Self-Destruct, a 1.5 ratio), so the doc decides and these rows are not `match`. Defense halving conflict: see Needs Opus in `plans/calc-refine-photonic.md`. |
 
-`calc_matchups.json` has 121 cases: **101 match all 16 hzla rolls; 10 known differences; zero damage mismatches; 10 W2 harness errors**. The shared oracle wrapper rejects moves without an explicit power, so W2 is independently checked against the native pinned oracle; see Needs Opus 6 in `plans/calc-refine-photonic.md`. The earlier four Self-Destruct/Explosion cases now carry their documented differences in the fixtures.
+`calc_matchups.json` has 146 cases: **121 match all 16 hzla rolls; 25 known differences; zero unannotated damage mismatches or harness errors**. The orchestrator resolved the W2 automatic-power harness gap (Needs Opus 6); Z2 adds 25 Z-conversion cases, including 15 documented stock-Z oracle differences. Five doc-power assertions still fail independently of the oracle (Needs Opus 4); oracle agreement is not an all-green mechanics gate. The earlier four Self-Destruct/Explosion cases retain their documented differences.
 The six differences deliberately retain stock Gen 7 behaviour:
 - Wonder Room (Tackle, Psychic, Psyshock): the pinned oracle's active `calc/mechanics/gen789.js:54-57` swaps raw
   defenses twice (`checkRawStatChanges`, then `checkWonderRoom`), and line 1076 selects the opposite attacking
@@ -203,9 +203,9 @@ Phone preview: `calc-photonic.html` (Thor frame). The older shared `calc-control
 guide: its harness requires Emerald Imperium's Flannery trainer key `4.0.15`; it aborts before its assertions.
 The Photonic-specific scenario above covers this session's field controls without changing that unrelated suite.
 
-Unit Z (2026-10-25): Z-move conversion is deferred (UI + engine; the user leaves Z moves out for now); `plans/calc-refine-photonic.md` Needs Opus 4 records all 16 doc Z-power changes and why standalone named Z entries do not test conversion. No Z fixtures added. Totem aura boosts are covered by manual stat stages; no work.
+Z-moves (Z2, 2026-10-25): conversion engine `580f021` and 25 no-power fixtures are implemented (`b73d0ab`, `3ffed9b`; checks `e0d94c1`); the per-move Z button comes in the UI step. All Z names/categories/single-hit checks pass, including Catastropika 210; 11/16 doc powers pass. Needs Opus 4 remains open for Arm Thrust 100 vs 140, Mystical Fire 160 vs 170, Freeze-Dry 175 vs 180, Twineedle 100 vs 175 and Power Gem 160 vs 175 (engine vs doc; Power Gem retains authoritative game power 80). No shared mechanics changed. Totem aura boosts remain manual stat stages.
 
-Not checked: in-game damage on the Thor, a full audit of every changed move/ability/item, Z-moves, Totem aura
+Not checked: in-game damage on the Thor, a full audit of every changed move/ability/item, the Z-button UI, Totem aura
 automation, switch-in/history-dependent states or save import. The fixture oracle
 shares guide stats/types/power/category, so agreement does not independently validate the extracted data. Future
 mechanics refinements should add fixtures here rather than change other guides' base profiles.
