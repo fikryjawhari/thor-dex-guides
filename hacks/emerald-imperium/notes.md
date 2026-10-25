@@ -249,6 +249,176 @@ Checks:
 - Not done: an in-game test (a save state and one known move, per `plans/damage-calc.md` → How to check) or a
   physical Thor check. Browser regression results are recorded in the session status.
 
+#### W2 weight / automatic-power audit (2026-10-25)
+
+All 1,208 guide species were compared with EI source weights: 1,080 stock-name lookups,
+128 `weightNames()` fallbacks and no 1 kg defaults. All 128 fallback rows (including the
+regional forms omitted from the brief), both Nidoran and the additional Hoopa discrepancy appear below.
+Weights are hectograms divided by ten. No hzla weight data was used.
+
+Source **EI**: `iriv24/pokeemerald-expansion` commit
+`2576d0f3f4c861c760f0c55198e37e6d7b91683e`, `src/data/pokemon/species_info.h` and
+`src/data/pokemon/species_info/gen_1_families.h` through `gen_9_families.h`.
+The parent `species_info.h` supplies the additional hack Megas: do not substitute a base species
+or a Gigantamax form. Source paths/lines below are relative to these locations; macro line numbers
+identify the actual `.weight` initializer. The shared sprite-source expansion pin
+`73b3fbeb574327cd9420c89e56bef5aa3c08fead` was also fetched for cross-reference; EI values win.
+The local read-only `repos/eidex.zip` (`361c7d51bb5c301d9917f22222703db2a36e908a`)
+has species IDs/labels but no weight fields. Its labels map guide IDs to source symbols.
+All requested forms have an EI source weight: none needs an online weight or undocumented fallback.
+
+| ID | Form | Engine before (kg) | EI source (kg) | Source EI | Verdict |
+| --- | --- | ---: | ---: | --- | --- |
+| 1497 | Mega Butterfree | 32 | 32 | `gen_1_families.h:1264` | Keep; exact source weight |
+| 956 | Alolan Rattata | 3.8 | 3.8 | `gen_1_families.h:2003` | Keep; exact source weight |
+| 957 | Alolan Raticate | 25.5 | 25.5 | `gen_1_families.h:2070` | Keep; exact source weight |
+| 1009 | Pikachu (Cosplay) | 6 | 6 | `gen_1_families.h:2672` | Keep; exact source weight |
+| 1010 | Pikachu (Rock Star) | 6 | 6 | `gen_1_families.h:2723` | Keep; exact source weight |
+| 1011 | Pikachu (Belle) | 6 | 6 | `gen_1_families.h:2775` | Keep; exact source weight |
+| 1012 | Pikachu (Pop Star) | 6 | 6 | `gen_1_families.h:2827` | Keep; exact source weight |
+| 1013 | Pikachu (PhD) | 6 | 6 | `gen_1_families.h:2878` | Keep; exact source weight |
+| 1014 | Pikachu (Libre) | 6 | 6 | `gen_1_families.h:2929` | Keep; exact source weight |
+| 1533 | Pikachu (Surfing) | 6 | 6 | `gen_1_families.h:2981` | Keep; exact source weight |
+| 1534 | Pikachu (Flying) | 6 | 6 | `gen_1_families.h:3033` | Keep; exact source weight |
+| 958 | Alolan Raichu | 21 | 21 | `gen_1_families.h:3755` | Keep; exact source weight |
+| 959 | Alolan Sandshrew | 40 | 40 | `gen_1_families.h:3952` | Keep; exact source weight |
+| 960 | Alolan Sandslash | 55 | 55 | `gen_1_families.h:4018` | Keep; exact source weight |
+| 29 | Nidoran♀ | 7 | 7 | `gen_1_families.h:4084` | Keep; exact source weight |
+| 32 | Nidoran♂ | 9 | 9 | `gen_1_families.h:4279` | Keep; exact source weight |
+| 961 | Alolan Vulpix | 9.9 | 9.9 | `gen_1_families.h:4817` | Keep; exact source weight |
+| 962 | Alolan Ninetales | 19.9 | 19.9 | `gen_1_families.h:4884` | Keep; exact source weight |
+| 963 | Alolan Diglett | 1 | 1 | `gen_1_families.h:6082` | Keep; exact source weight |
+| 964 | Alolan Dugtrio | 66.6 | 66.6 | `gen_1_families.h:6149` | Keep; exact source weight |
+| 965 | Alolan Meowth | 4.2 | 4.2 | `gen_1_families.h:6348` | Keep; exact source weight |
+| 974 | Galarian Meowth | 7.5 | 7.5 | `gen_1_families.h:6479` | Keep; exact source weight |
+| 966 | Alolan Persian | 33 | 33 | `gen_1_families.h:6414` | Keep; exact source weight |
+| 993 | Hisuian Growlithe | 22.7 | 22.7 | `gen_1_families.h:7114` | Keep; exact source weight |
+| 994 | Hisuian Arcanine | 168 | 168 | `gen_1_families.h:7179` | Keep; exact source weight |
+| 1500 | Mega Machamp | 130 | 130 | `gen_1_families.h:8035` | Keep; exact source weight |
+| 967 | Alolan Geodude | 20.3 | 20.3 | `gen_1_families.h:8637` | Keep; exact source weight |
+| 968 | Alolan Graveler | 110 | 110 | `gen_1_families.h:8704` | Keep; exact source weight |
+| 969 | Alolan Golem | 316 | 316 | `gen_1_families.h:8770` | Keep; exact source weight |
+| 975 | Galarian Ponyta | 24 | 24 | `gen_1_families.h:8964` | Keep; exact source weight |
+| 976 | Galarian Rapidash | 80 | 80 | `gen_1_families.h:9029` | Keep; exact source weight |
+| 977 | Galarian Slowpoke | 36 | 36 | `gen_1_families.h:9352` | Keep; exact source weight |
+| 978 | Galarian Slowbro | 70.5 | 70.5 | `gen_1_families.h:9419` | Keep; exact source weight |
+| 979 | Galarian Farfetch'd | 42 | 42 | `gen_1_families.h:9828` | Keep; exact source weight |
+| 970 | Alolan Grimer | 42 | 42 | `gen_1_families.h:10374` | Keep; exact source weight |
+| 971 | Alolan Muk | 52 | 52 | `gen_1_families.h:10442` | Keep; exact source weight |
+| 1502 | Mega Kingler | 60 | 60 | `gen_1_families.h:11432` | Keep; exact source weight |
+| 995 | Hisuian Voltorb | 13 | 13 | `gen_1_families.h:11629` | Keep; exact source weight |
+| 996 | Hisuian Electrode | 71 | 71 | `gen_1_families.h:11694` | Keep; exact source weight |
+| 972 | Alolan Exeggutor | 415.6 | 415.6 | `gen_1_families.h:11896` | Keep; exact source weight |
+| 973 | Alolan Marowak | 34 | 34 | `gen_1_families.h:12094` | Keep; exact source weight |
+| 980 | Galarian Weezing | 16 | 16 | `gen_1_families.h:12738` | Keep; exact source weight |
+| 981 | Galarian Mr. Mime | 56.8 | 56.8 | `gen_1_families.h:14113` | Keep; exact source weight |
+| 1402 | Paldean Tauros (Combat) | 115 | 115 | `gen_1_families.h:15246` | Keep; exact source weight |
+| 1403 | Paldean Tauros (Blaze) | 85 | 85 | `gen_1_families.h:15311` | Keep; exact source weight |
+| 1404 | Paldean Tauros (Aqua) | 110 | 110 | `gen_1_families.h:15376` | Keep; exact source weight |
+| 1503 | Mega Lapras | 220 | 220 | `gen_1_families.h:15725` | Keep; exact source weight |
+| 1505 | Mega Snorlax | 460 | 460 | `gen_1_families.h:17289` | Keep; exact source weight |
+| 982 | Galarian Articuno | 50.9 | 50.9 | `gen_1_families.h:17422` | Keep; exact source weight |
+| 983 | Galarian Zapdos | 58.2 | 58.2 | `gen_1_families.h:17563` | Keep; exact source weight |
+| 984 | Galarian Moltres | 66 | 66 | `gen_1_families.h:17703` | Keep; exact source weight |
+| 997 | Hisuian Typhlosion | 69.8 | 69.8 | `gen_2_families.h:438` | Keep; exact source weight |
+| 1405 | Paldean Wooper | 11 | 11 | `gen_2_families.h:3072` | Keep; exact source weight |
+| 985 | Galarian Slowking | 79.5 | 79.5 | `gen_1_families.h:9484` | Keep; exact source weight |
+| 998 | Hisuian Qwilfish | 3.9 | 3.9 | `gen_2_families.h:4529` | Keep; exact source weight |
+| 999 | Hisuian Sneasel | 27 | 27 | `gen_2_families.h:5022` | Keep; exact source weight |
+| 986 | Galarian Corsola | 0.5 | 0.5 | `gen_2_families.h:5849` | Keep; exact source weight |
+| 987 | Galarian Zigzagoon | 17.5 | 17.5 | `gen_3_families.h:1102` | Keep; exact source weight |
+| 988 | Galarian Linoone | 32.5 | 32.5 | `gen_3_families.h:1167` | Keep; exact source weight |
+| 1527 | Mega Slaking | 130.5 | 130.5 | `species_info.h:626` | Keep; exact source weight |
+| 351 | Castform (Normal) | 0.8 | 0.8 | `gen_3_families.h:7986` | Keep; exact source weight |
+| 1490 | Mega Torterra | 310 | 310 | `species_info.h:375` | Keep; exact source weight |
+| 1493 | Mega Infernape | 55 | 70 | `species_info.h:564` | Set `over.species` weight |
+| 1491 | Mega Empoleon O | 84.5 | 84.5 | `species_info.h:437` | Keep; exact source weight |
+| 1492 | Mega Empoleon D | 84.5 | 160 | `species_info.h:499` | Set `over.species` weight |
+| 1489 | Mega Luxray | 42 | 46 | `species_info.h:306` | Set `over.species` weight |
+| 1531 | Mega Roserade | 14.5 | 20 | `species_info.h:692` | Set `over.species` weight |
+| 413 | Wormadam (Plant) | 6.5 | 6.5 | `gen_4_families.h:1846` | Keep; exact source weight |
+| 1532 | Mega Dusknoir | 106.6 | 106.6 | `species_info.h:762` | Keep; exact source weight |
+| 1529 | Primal Dialga | 683 | 683 | `species_info.h:874` | Keep; exact source weight |
+| 1530 | Primal Palkia | 336 | 336 | `species_info.h:931` | Keep; exact source weight |
+| 492 | Shaymin (Land) | 2.1 | 2.1 | `gen_4_families.h:6580` | Keep; exact source weight |
+| 1000 | Hisuian Samurott | 58.2 | 58.2 | `gen_5_families.h:663` | Keep; exact source weight |
+| 1001 | Hisuian Lilligant | 19.2 | 19.2 | `gen_5_families.h:3778` | Keep; exact source weight |
+| 550 | Basculin (Red Striped) | 18 | 18 | `gen_5_families.h:3845` | Keep; exact source weight |
+| 989 | Galarian Darumaka | 40 | 40 | `gen_5_families.h:4556` | Keep; exact source weight |
+| 555 | Darmanitan (Standard) | 92.9 | 92.9 | `gen_5_families.h:4437` | Keep; exact source weight |
+| 990 | Galarian Darmanitan (Standard) | 120 | 120 | `gen_5_families.h:4621` | Keep; exact source weight |
+| 1093 | Galarian Darmanitan (Zen) | 120 | 120 | `gen_5_families.h:4685` | Keep; exact source weight |
+| 991 | Galarian Yamask | 1.5 | 1.5 | `gen_5_families.h:5261` | Keep; exact source weight |
+| 1506 | Mega Garbodor | 107.3 | 107.3 | `gen_5_families.h:5778` | Keep; exact source weight |
+| 1002 | Hisuian Zorua | 12.5 | 12.5 | `gen_5_families.h:5965` | Keep; exact source weight |
+| 1003 | Hisuian Zoroark | 73 | 73 | `gen_5_families.h:6030` | Keep; exact source weight |
+| 992 | Galarian Stunfisk | 20.5 | 20.5 | `gen_5_families.h:9511` | Keep; exact source weight |
+| 1004 | Hisuian Braviary | 43.4 | 43.4 | `gen_5_families.h:10279` | Keep; exact source weight |
+| 641 | Tornadus (Incarnate) | 63 | 63 | `gen_5_families.h:11112` | Keep; exact source weight |
+| 642 | Thundurus (Incarnate) | 61 | 61 | `gen_5_families.h:11246` | Keep; exact source weight |
+| 645 | Landorus (Incarnate) | 68 | 68 | `gen_5_families.h:11513` | Keep; exact source weight |
+| 648 | Meloetta (Aria) | 6.5 | 6.5 | `gen_5_families.h:12000` | Keep; exact source weight |
+| 670 | Floette (Red) | 0.9 | 0.9 | `gen_6_families.h:1688` | Keep; exact source weight |
+| 678 | Meowstic (Male) | 8.5 | 8.5 | `gen_6_families.h:2336` | Keep; exact source weight |
+| 1155 | Meowstic (Female) | 8.5 | 8.5 | `gen_6_families.h:2398` | Keep; exact source weight |
+| 1005 | Hisuian Sliggoo | 68.5 | 68.5 | `gen_6_families.h:4250` | Keep; exact source weight |
+| 1006 | Hisuian Goodra | 334.1 | 334.1 | `gen_6_families.h:4315` | Keep; exact source weight |
+| 710 | Pumpkaboo (Average) | 5 | 5 | `gen_6_families.h:4575` | Keep; exact source weight |
+| 711 | Gourgeist (Average) | 12.5 | 12.5 | `gen_6_families.h:4839` | Keep; exact source weight |
+| 1007 | Hisuian Avalugg | 262.4 | 262.4 | `gen_6_families.h:5228` | Keep; exact source weight |
+| 720 | Hoopa (Confined) | 9 | 9 | `gen_6_families.h:6076` | Keep; exact source weight |
+| 1168 | Hoopa (Unbound) | 490 | 49 | `gen_6_families.h:6143` | Needs Opus; retain stock pending scope decision |
+| 1008 | Hisuian Decidueye | 37 | 37 | `gen_7_families.h:221` | Keep; exact source weight |
+| 741 | Oricorio (Baile) | 3.4 | 3.4 | `gen_7_families.h:1421` | Keep; exact source weight |
+| 1172 | Rockruff (Own Tempo) | 9.2 | 9.2 | `gen_7_families.h:1939` | Keep; exact source weight |
+| 745 | Lycanroc (Midday) | 25 | 25 | `gen_7_families.h:2000` | Keep; exact source weight |
+| 746 | Wishiwashi (Solo) | 0.3 | 0.3 | `gen_7_families.h:2191` | Keep; exact source weight |
+| 773 | Silvally (Normal) | 100.5 | 100.5 | `gen_7_families.h:4161` | Keep; exact source weight |
+| 774 | Minior (Meteor Red) | 0.3 | 40 | `gen_7_families.h:4259` | Set `over.species` weight |
+| 1199 | Minior (Core Red) | 0.3 | 0.3 | `gen_7_families.h:4297` | Keep; exact source weight |
+| 1512 | Mega Orbeetle | 40.8 | 40.8 | `gen_8_families.h:1344` | Keep; exact source weight |
+| 1513 | Mega Drednaw | 115.5 | 115.5 | `gen_8_families.h:1907` | Keep; exact source weight |
+| 1514 | Mega Coalossal | 310.5 | 310.5 | `gen_8_families.h:2281` | Keep; exact source weight |
+| 1515 | Mega Flapple | 1 | 1 | `gen_8_families.h:2471` | Keep; exact source weight |
+| 1516 | Mega Appletun | 13 | 13 | `gen_8_families.h:2592` | Keep; exact source weight |
+| 1517 | Mega Sandaconda | 65.5 | 65.5 | `gen_8_families.h:2902` | Keep; exact source weight |
+| 849 | Toxtricity (Amped) | 40 | 40 | `gen_8_families.h:3331` | Keep; exact source weight |
+| 1518 | Mega Toxtricity | 40 | 40 | `gen_8_families.h:3395` | Keep; exact source weight |
+| 1519 | Mega Centiskorch | 120 | 120 | `gen_8_families.h:3640` | Keep; exact source weight |
+| 1521 | Mega Grimmsnarl | 61 | 61 | `gen_8_families.h:4520` | Keep; exact source weight |
+| 875 | Eiscue (Ice) | 89 | 89 | `gen_8_families.h:5139` | Keep; exact source weight |
+| 876 | Indeedee (Male) | 28 | 28 | `gen_8_families.h:5262` | Keep; exact source weight |
+| 1225 | Indeedee (Female) | 28 | 28 | `gen_8_families.h:5325` | Keep; exact source weight |
+| 1523 | Mega Copperajah | 650 | 650 | `gen_8_families.h:5643` | Keep; exact source weight |
+| 892 | Urshifu (Single Strike) | 105 | 105 | `gen_8_families.h:6794` | Keep; exact source weight |
+| 902 | Basculegion (Male) | 110 | 110 | `gen_5_families.h:4048` | Keep; exact source weight |
+| 1234 | Basculegion (Female) | 110 | 110 | `gen_5_families.h:4111` | Keep; exact source weight |
+| 905 | Enamorus (Incarnate) | 48 | 48 | `gen_8_families.h:7636` | Keep; exact source weight |
+| 1299 | Oinkologne (Male) | 120 | 120 | `gen_9_families.h:659` | Keep; exact source weight |
+| 1300 | Oinkologne (Female) | 120 | 120 | `gen_9_families.h:721` | Keep; exact source weight |
+| 1316 | Squawkabilly (Green) | 2.4 | 2.4 | `gen_9_families.h:1731` | Keep; exact source weight |
+| 1352 | Palafin (Zero) | 60.2 | 60.2 | `gen_9_families.h:4011` | Keep; exact source weight |
+| 1391 | Gimmighoul (Chest) | 5 | 5 | `gen_9_families.h:6132` | Keep; exact source weight |
+| 1416 | Ogerpon (Teal) | 39.8 | 39.8 | `gen_9_families.h:7414` | Keep; exact source weight |
+
+**Power bands (EI `src/battle_util.c`).** Lines 8693–8717 define Flail/Reversal and weight tables;
+8832–8843 use `floor(48 * currentHP / maxHP)` with inclusive thresholds 1/4/9/16/32/48
+and powers 200/150/100/80/40/20. Low Kick/Grass Knot (8917–8929) use strict weight comparisons:
+<10/<25/<50/<100/<200/≥200 kg gives 20/40/60/80/100/120. Heavy Slam/Heat Crash (8930–8935)
+use the integer attacker/defender ratio: <2/2/3/4/≥5 gives 40/60/80/100/120.
+Eruption/Water Spout (8832–8834) floor move power times currentHP/maxHP; the final minimum is 1.
+Electro Ball (8944–8948) uses integer speed ratio <1/1/2/3/≥4 → 40/60/80/120/150;
+Gyro Ball (8950–8953) uses `min(150, floor(25 * defenderSpeed / attackerSpeed) + 1)`.
+These are the native Gen 9 engine rules: no shared engine phase or profile power rule is needed.
+
+**Needs Opus — W2 Hoopa Unbound (`1168`).** EI `gen_6_families.h:6143` says `.weight = 490`
+(49 kg), while stock and the shared expansion header say 490 kg (`.weight = 4900`). This conflicts
+with the binding scope note that EI changes no existing-species weights. Retain stock 490 kg;
+the orchestrator must decide whether the release-source typo should override that scope note.
+This is not an undocumented form and is not silently treated as a confirmed 49 kg change.
+
+W2 implementation checkpoint: source audit complete; weight overrides and automatic-power fixtures follow.
+
 ## Checks
 
 `check.py` [baseline.json [current.json]]: the Locations PDF's wild tables against the dex data slot by slot; given a
