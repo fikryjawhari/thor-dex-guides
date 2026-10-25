@@ -38,10 +38,20 @@ dynamic-power engine work (state toggles, pre-hit stat changes) to its own sessi
 1. [x] W2 Photonic (Sol `bd400a6`..`476a447`, no weight changes; oracle harness auto power `cc7133d`) (Sol: the W2 row, the scope note below, Photonic's list in `plans/calc-dynamic-power.md`).
 2. [x] W2 Eternal X (Sol `bed8ae8`..`593e1c5`, no weight changes, 116 oracle matches + 3 known).
 3. [x] W2 EI (Sol `eb20ff2`..`4044033`: Megas Infernape / Empoleon D / Luxray / Roserade, Minior Meteor from the source; orchestrator: Hoopa Unbound 49 kg, Eruption power readout).
-4. [ ] Z Photonic Z-moves / Totem (Sol).
-5. [ ] T In-game test cards, all four hacks (Haiku medium).
-6. [ ] A Audit (Haiku medium).
-7. [ ] Finish: notes / `plans/damage-calc-sessions.md` → Status / PROGRESS.md, delete this plan if all done.
+4. [x] Z survey (Sol `f938419`, `058e68a`: no engine path then; 16 doc Z-power changes, all the Gen 7 band of the new power).
+   User (2026-10-25): Z-moves back in scope, Photonic only; Totem auras automatic.
+5. [x] Z engine (orchestrator `580f021`): profile `zmove`, slot `z`, band power + stock exceptions (`catalog.zpow`),
+   result `z` name, oracle `useZ`. Photonic `zmove: true`.
+6. [ ] Z fixtures (Sol): band, exception, variable, multi-hit, signature; the 16 doc changes in photonic_check.
+7. [ ] Totem data (Sol): Totem Battles.txt (cross-checked with the game files where they have it) → Photonic TR as
+   Totem battles in walkthrough order, totem with `au` (aura stages Atk, Def, SpA, SpD, Spe), allies as its partners.
+   Photonic extract on this branch (its guide is merged; the calc is the consumer). Schema line in EI notes → Data schema.
+8. [ ] UI (orchestrator, template; mockup first, user approves): a Z button on each damaging move row (Photonic
+   only, not in the crit / multi-hit area); Totem cards show the aura; importing a Totem into the calc applies `au`
+   as its stages, with a "Totem aura" mark. Scenario at every size, normal / dvkb; domcompare for all guides.
+9. [ ] T In-game test cards, all four hacks (Haiku medium).
+10. [ ] A Audit (Haiku medium).
+11. [ ] Finish: notes / `plans/damage-calc-sessions.md` → Status / PROGRESS.md, delete this plan if all done.
 User (2026-10-25): Photonic and Eternal X change no weights, so their W2 is a check (stock weights, forms only), and any
 form with no stock weight is looked up online (Bulbapedia; cite it). EI changes none either but has custom forms
 (hack Megas, Pikachu costumes...): use the expansion source's `species_info` weight where it has one, else online, else
