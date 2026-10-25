@@ -49,7 +49,7 @@ dynamic-power engine work (state toggles, pre-hit stat changes) to its own sessi
 8. [ ] UI (orchestrator, template; mockup first, user approves): a Z button on each damaging move row (Photonic
    only, not in the crit / multi-hit area); Totem cards show the aura; importing a Totem into the calc applies `au`
    as its stages, with a "Totem aura" mark. Scenario at every size, normal / dvkb; domcompare for all guides.
-9. [ ] T In-game test cards, all four hacks (Haiku medium).
+9. [x] T In-game test cards, all four hacks (Haiku `ec479fd`..`703ab25`: EI 5, Hardlove 5, Photonic 4, Eternal X 4).
 10. [ ] A Audit (Haiku medium).
 11. [ ] Finish: notes / `plans/damage-calc-sessions.md` → Status / PROGRESS.md, delete this plan if all done.
 
