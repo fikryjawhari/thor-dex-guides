@@ -15,7 +15,7 @@ plans hold work not done yet).
   in that hack's `hack.json`, with the reason in its notes.md. Extract and data changes for `cr` are approved; any
   other extract or data change still needs the user first.
 - Focus Energy: field keys `atkFocus` / `defFocus`, read by the adapter; the UI build declares them in
-  `template/calc/profiles/` (not this pass). Not answered explicitly: confirm with the user when U6 starts.
+  `template/calc/profiles/` (not this pass). Confirmed by the user 2026-10-26 (built that way in U6).
 - A guaranteed crit (stage at the generation's always-crit threshold, `willCrit`, Merciless on a poisoned target,
   Laser Focus) is applied whatever `slot.crit` says, and the result says so (`crit.forced`) so the UI can lock C on.
 
@@ -140,9 +140,9 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
   A fixture boundary"). state_check now: 33 damage-twin failures + 651 pending `pre`, all for U4.
 - **Handover 2026-10-26 (session 1 ends here):** last commit = this one; claim deleted. Next session: U4 (Opus, the
   orchestrator writes it: read the U4a section and a sample of `a-*` cases per hack, then `adapter.js`:
-  `beforeStats` + result `pre`; remove `pre` from state_check PENDING), then U7. Open with the user: Focus keys
-  (`atkFocus` / `defFocus`, built that way), the Hardlove rebuild drift, the two hack.json profile additions (H
-  `over.state`, EI `over.critItems`). Nothing pushed yet in this pass: ask before pushing `worktree-damage-calc`.
+  `beforeStats` + result `pre`; remove `pre` from state_check PENDING), then U7. Settled with the user: Focus keys
+  `atkFocus` / `defFocus`; the two hack.json profile additions (H `over.state`, EI `over.critItems`) are documented in
+  each hack's notes.md → Damage calc. The Hardlove rebuild drift goes to its own session (prompt given to the user). Nothing pushed yet in this pass: ask before pushing `worktree-damage-calc`.
 
 ## Next session prompt
 ```
@@ -151,6 +151,7 @@ Opus medium. Read first: plans/calc-engine-pass.md (the brief: decisions, roles,
 plans/calc-dynamic-power.md → "Engine pass 2026-10-26" (findings, input contract, unit table). The UI spec is
 read-only: git show origin/worktree-damage-calc-toggles:plans/calc-state-toggles.md. Write your claim.
 Start at the first unit not marked done in the unit table (U1 if none): check the Sol model ID with
-orchestrator_capabilities, then dispatch it per the brief. Confirm the Focus Energy field keys with me when U6 starts.
+orchestrator_capabilities, then dispatch it per the brief (U4 and U7 are the orchestrator's own: Progress says
+where to pick up).
 Ask me before every push. Keep the Progress log up to date and commit often.
 ```

@@ -173,6 +173,14 @@ User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 | Return / Frustration | Power from happiness (`CalcBaseDamage.c:211-215`, integer `*10/25`); the user types the power (`expansion` varpow), so the calc takes the typed value. Fixtures: `frustration-happiness-127`, `frustration-happiness-0`, `return-happiness-127`. |
 | Rage Fist | Flat data power 100 (sheet's +50 per hit taken not modelled): no hit-taken counter is in the source (only the punch list, `other_battle_calculators.c:441`), so the sheet/notes stand as the orchestrator directed. Fixtures: `rage-fist-flat-100`, `rage-fist-normal-target-immune`. |
 | Thunder Wave | Status-only (accuracy bypass for Electric users, no damage rule): out of scope for the damage calc. No fixtures. |
+
+Engine pass (2026-10-26, `plans/calc-engine-pass.md`): `cfg.calc.over.state` keeps the battle-state inputs off
+where the source ignores them (`plans/calc-state-engine.md` → "U2: Hardlove traces"): Echoed Voice, Rage Fist, Last
+Respects, Avalanche, Round, Fusion Flare / Bolt and the pledges stay flat; Defense Curl doesn't double Rollout / Ice
+Ball (lost in the replacement damage path); Magnitude isn't doubled against Dig (only Earthquake is); Gust / Twister
+against Fly double their power, not their damage. Revenge's toggle means "the target was already damaged this turn"
+(the source's condition). Crit stages: `MV.cr` from the move effects in `data/Moves.c` (28 moves; Dragon Cheer and
+Ivy Cudgel have none at this pin), the five-entry `critStages` table caps the stage at 4 (`plans/calc-crit.md` → H).
 | Pain Split | Status-only (HP averaging): out of scope for the damage calc. No fixtures. |
 | Misty Explosion | Power 200 is data; Misty Terrain x1.5 is stock Gen 9 (`CalcBaseDamage.c:492-494`, applied to base power). Fixtures: `misty-explosion-misty-terrain`, `misty-explosion-no-terrain`. Defense halving: see Needs Opus in the calc plan. |
 | Explosion / Self-Destruct | Power 250 / 200 are data. No Defense halving in source (`CalcBaseDamage.c` has no Explosion case; the sheet's "Halves target's defense" is not implemented) and none in Gen 9 stock (Gen 1-4 only). Current calc: not halved. Fixtures: `explosion-defense-not-halved`, `self-destruct-defense-not-halved`. Decision: the code wins, no halving; check in game (In-game tests). |

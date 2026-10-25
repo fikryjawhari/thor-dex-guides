@@ -64,9 +64,10 @@ after U5. Sol units are about 60-80 requests each; U1 and U5 split per hack if S
 
 **Answered (user, 2026-10-26):** crit stages as a `cr` field per move in `data.json` from each hack's extract (approved),
 with a `hack.json` `critStage` list as the per-hack fallback; the extract `cr` change is the orchestrator's, before U6.
-Focus Energy as `atkFocus` / `defFocus`: confirm when U6 starts. How the units run: `plans/calc-engine-pass.md`.
+Focus Energy as `atkFocus` / `defFocus`: confirmed 2026-10-26. How the units run: `plans/calc-engine-pass.md`.
 
-Done so far: U1, U2, U5 done (plans/calc-state-engine.md: A/D survey and Hardlove native traces, 729 source-derived D fixtures; plans/calc-crit.md: crit survey and 291 crit fixtures, all four hacks choose extract cr); next for crit: extract cr and U6, with engine integration tracked by the orchestrator.
+Done so far: U1, U2, U3, U5, extract `cr`, U6 and U4a (the A fixtures for U4) done; **U4 next**, then U7. Commits and
+details: `plans/calc-engine-pass.md` → Progress.
 
 ## Already dynamic (engine works it out from what the page passes)
 Weight: Low Kick, Grass Knot, Heavy Slam, Heat Crash (stock `getWeight`: Float Stone, Light / Heavy Metal).

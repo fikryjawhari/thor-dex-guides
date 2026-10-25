@@ -228,6 +228,11 @@ are separate from correctness. No trainer `field` evidence is consumed automatic
 | Frozen / otherwise unable attacker | Accepted user decision: calculate hypothetical damage, do not prevent the action. `unable-attacker-slp` and `unable-attacker-frz`; `frz` still means Frostbite. |
 | Spread / weather / screens | Added singles/doubles spread, sun/rain, Reflect/Light Screen/Aurora Veil, non-stacking screens, critical bypass, snow and hail fixtures. Source `GetScreensModifier` (10031+) uses 0.5 singles / 0.667 doubles; spread and ordinary sun/rain/screens do not change between Gen 8 and Gen 9 (direct stock parity checked). Snow is the notable Gen 9 difference: Ice-type Defence ×1.5 (`battle_util.c` 9881); hail has no such defence boost. Weather chip/healing is outside these per-hit rolls. |
 
+Engine pass (2026-10-26, `plans/calc-engine-pass.md`): crit stages are `MV.cr` from the release's
+`src/data/moves_info.h` (`.src/repos/expansion/`, 32 moves: Snipe Shot 2, Razor Shell 1, Zippy Zap always; **Doc
+says** Aqua Tail +1, the source has none). `cfg.calc.over.critItems` gives EI's Leek: +1 for Farfetch'd (Galarian too),
++2 for Sirfetch'd (`battle_script_commands.c:1956-1979`; elsewhere +2 for both). `plans/calc-crit.md` → I.
+
 Independent validation: `tools/calc/imperium_check.mjs` checks source-derived integer category estimates,
 hand-calculated ability modifier placement/rounding, native Gen 9 field rolls and Gen 8/9 parity for unchanged
 fields, effective priority, explicit order, EVs and immutable inputs. Included in `npm test`.
