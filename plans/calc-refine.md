@@ -36,6 +36,10 @@ names: accents and ♀ / ♂, which had merged Nidoran-F into -M in every guide)
 dynamic-power engine work (state toggles, pre-hit stat changes) to its own session: `plans/calc-dynamic-power.md`.
 Open, in order: **W2** for Photonic, Eternal X, EI (one Sol agent each, the W2 row plus that hack's list in
 `plans/calc-dynamic-power.md`), **Z**, **T**, then **A**. Rows below.
+User (2026-10-25): Photonic and Eternal X change no weights, so their W2 is a check (stock weights, forms only), and any
+form with no stock weight is looked up online (Bulbapedia; cite it). EI changes none either but has custom forms
+(hack Megas, Pikachu costumes...): use the expansion source's `species_info` weight where it has one, else online, else
+list it as undocumented in its notes (stays on the base weight).
 Dynamic power beyond weight / HP / speed (state toggles, counters) and the full form-weight pass: `plans/calc-dynamic-power.md`
 (later sessions; W2 uses its weight list).
 Session 2 models: Sol (`delegate_task`, T3 worktrees start from main, so give it this branch's worktree path or use
