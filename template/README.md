@@ -57,6 +57,17 @@ These came out of the consistency pass (2026-10-23/24); the extract helpers appl
 
 ### Damage calculator
 
+Profiles may declare `monControls` (`k`, `l`, `abilities`) for per-Pokémon battle-state checkboxes. EI uses
+`abilityOn` for First turn out (Bull/Quill Rush) and Disguised (Illusion); off is the default. Changing ability or
+Mega form clears this state. Controls do not change the attack direction. `categoryInvert` names moves with an
+Invert category checkbox in their move details: the current category and Auto/Inverted/tie state remain visible
+when collapsed. These flags persist inside existing edited/custom Pokémon and per-slot move overrides, never
+under new storage keys. EI also exposes allied Emperor's Presence as an explicit attacking-ally field toggle;
+it only affects doubles. Trainer `field` evidence is still not automatically consumed. Effective priority is an
+engine result, not a claim about which move should happen first; the turn-order UI is separate future work.
+Match blocks with extra individual controls may grow past the nominal viewport-height block so Field stays
+reachable. No condition labels or category controls appear in profiles that do not declare them.
+
 `#/calc` is implemented by `calc.js` and `calc.css`; `assemble.py` includes these and `calc/engine.js` only with
 `cfg.calc`. The resolved profile supplies the level and stage bounds, status choices, nature/ability/item switches,
 field entries, multi-hit ranges and variable-power moves. The page calls `DMG.init`, `DMG.stats` and `DMG.calc`;

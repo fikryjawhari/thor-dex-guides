@@ -57,6 +57,24 @@
      },
      "ORAORAORAORA!": {
       "effect": ""
+     },
+     "Bull Rush": {
+      "effect": "Bull Rush"
+     },
+     "Quill Rush": {
+      "effect": "Quill Rush"
+     },
+     "Illusion": {
+      "effect": "Illusion"
+     },
+     "Blazing Soul": {
+      "effect": "Blazing Soul"
+     },
+     "Ice Eater": {
+      "effect": "Ice Eater"
+     },
+     "Emperor's Presence": {
+      "effect": "Emperor's Presence"
      }
     },
     "rules": [
@@ -592,7 +610,7 @@
          "op": "eq",
          "args": [
           {
-           "ref": "names.atkAbility"
+           "ref": "atk.ability"
           },
           "Emperor's Presence"
          ]
@@ -974,7 +992,7 @@
          "op": "in",
          "args": [
           {
-           "ref": "names.atkAbility"
+           "ref": "atk.ability"
           },
           [
            "Bull Rush",
@@ -1007,7 +1025,7 @@
          "op": "eq",
          "args": [
           {
-           "ref": "names.atkAbility"
+           "ref": "atk.ability"
           },
           "Illusion"
          ]
@@ -1073,7 +1091,7 @@
          "op": "eq",
          "args": [
           {
-           "ref": "names.atkAbility"
+           "ref": "atk.ability"
           },
           "Blazing Soul"
          ]
@@ -1131,6 +1149,95 @@
        "ref": "input.slot.order"
       },
       "note": "Explicit move order"
+     },
+     {
+      "phase": "effectiveness",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "def.ability"
+          },
+          "Ice Eater"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Ice"
+         ]
+        },
+        {
+         "op": "or",
+         "args": [
+          {
+           "op": "eq",
+           "args": [
+            {
+             "ref": "def.item"
+            },
+            "Ability Shield"
+           ]
+          },
+          {
+           "op": "and",
+           "args": [
+            {
+             "op": "not",
+             "args": [
+              {
+               "op": "in",
+               "args": [
+                {
+                 "ref": "atk.ability"
+                },
+                [
+                 "Mold Breaker",
+                 "Teravolt",
+                 "Turboblaze"
+                ]
+               ]
+              }
+             ]
+            },
+            {
+             "op": "not",
+             "args": [
+              {
+               "op": "in",
+               "args": [
+                {
+                 "ref": "names.move"
+                },
+                [
+                 "G-Max Drum Solo",
+                 "G-Max Fire Ball",
+                 "G-Max Hydrosnipe",
+                 "Light That Burns the Sky",
+                 "Menacing Moonraze Maelstrom",
+                 "Moongeist Beam",
+                 "Photon Geyser",
+                 "Searing Sunraze Smash",
+                 "Sunsteel Strike"
+                ]
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "value": 0,
+      "note": "Ice Eater immunity"
      }
     ]
    },

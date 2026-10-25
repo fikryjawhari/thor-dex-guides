@@ -1915,6 +1915,172 @@
       "field": {
         "weather": "Hail"
       }
+    },
+    {
+      "name": "ice-eater-immune",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 182
+      },
+      "slot": {
+        "mv": 143
+      }
+    },
+    {
+      "name": "ice-eater-other-type",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 182
+      },
+      "slot": {
+        "mv": 190
+      }
+    },
+    {
+      "name": "ice-eater-mold-breaker",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 122
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 182
+      },
+      "slot": {
+        "mv": 143
+      }
+    },
+    {
+      "name": "ice-eater-ability-shield",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 122
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 182,
+        "it": "Ability Shield"
+      },
+      "slot": {
+        "mv": 143
+      }
+    },
+    {
+      "name": "ice-eater-neutralizing-gas",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 111
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 182
+      },
+      "slot": {
+        "mv": 143
+      }
+    },
+    {
+      "name": "gas-suppresses-bullrush",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 148,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 111
+      },
+      "slot": {
+        "mv": 190
+      }
+    },
+    {
+      "name": "gas-suppresses-quillrush",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 223,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 111
+      },
+      "slot": {
+        "mv": 190
+      }
+    },
+    {
+      "name": "gas-suppresses-illusion",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 111
+      },
+      "slot": {
+        "mv": 190
+      }
+    },
+    {
+      "name": "gas-suppresses-blazingsoul",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 82,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 111
+      },
+      "slot": {
+        "mv": 80
+      }
+    },
+    {
+      "name": "gas-suppresses-emperorspresence",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 183,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 111
+      },
+      "slot": {
+        "mv": 149
+      }
     }
   ]
 }

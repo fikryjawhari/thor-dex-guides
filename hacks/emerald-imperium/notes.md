@@ -182,6 +182,7 @@ differ, the source wins. The 2026-10-25 refinement has nine explained roll diffe
 | Bull Rush / Quill Rush 1.2× selected attacking stat on first turn out | `attackMods`, explicit per-mon `abilityOn` | 9522–9526 | bull-rush-*, quill-rush-*; physical and special, on/off |
 | Illusion 1.3× selected attacking stat while disguised | `attackMods`, explicit per-mon `abilityOn` | 9647–9652 | illusion-*; physical and special, on/off |
 | Blazing Soul +1 Fire priority at full HP | `afterMoveType`, result `priority`; does not infer move order | `battle_main.c` 5030–5032 | blazing-soul-*: full, hurt, not-fire, psychic-terrain |
+| Ice Eater absorbs Ice attacks | `effectiveness`, including Mold Breaker, Ability Shield and Neutralizing Gas boundaries | 4112–4115, 10700 | ice-eater-* |
 | Frostbite halves special damage | `beforeRolls` sets `isBurned` for special moves when the attacker's status is `frz` | 9975, applied 10308 | frostbite-special, frostbite-physical |
 
 Status: EI's `B_USE_FROSTBITE` makes frostbite replace freeze in most cases (`include/config/battle.h`), and a few
@@ -215,7 +216,7 @@ are separate from correctness. No trainer `field` evidence is consumed automatic
 | Individual ability state | `monControls` declares per-Pokémon First turn out (Bull/Quill Rush) or Disguised (Illusion). Missing/false `abilityOn` means off; no switch history is guessed. Controls must remain on their own Pokémon, not global. Other abilities are not silently redefined. |
 | Ally Emperor's Presence | Explicit `atkEmperorPresence` field effect, attacking ally only, Doubles only. Own ability remains automatic; own plus ally stacks. No ally slot or trainer-field inference is needed. Water, Steel, off, other type, singles and stacking fixtures. |
 | Draco Barrage | Compares floor-staged Atk/Def versus SpA/SpD damage estimates using the source's fixed Shell Side Arm power (100) and level term. It does not compare attacking stats alone or simulate final damage, items, ability multipliers, weather or screens. Source randomises integer ties; use deterministic Special as the automatic tie default and an explicit invert toggle for either result. Inversion is also allowed in non-ties. Result exposes automatic category, tie and inversion; chosen category controls contact. |
-| Ice Eater | Ice immunity is native and remains enabled. Healing is outside this single-attack damage result; recovery / multi-turn simulation deferred. |
+| Ice Eater | Correctness fix: explicitly implement Ice immunity, which the stock engine did not provide. Five fixtures cover Ice/non-Ice, Mold Breaker, Ability Shield and Neutralizing Gas. Healing is outside this single-attack damage result; recovery / multi-turn simulation deferred. |
 | Self Sufficient / Parasitic Waste | End-turn healing/drain, not this hit's damage. Explicitly outside scope; do not silently add recovery to KO estimates. |
 | Blazing Soul / priority | Correct effective priority is implemented now, including Psychic Terrain blocking. `slot.order` accepts first/last and feeds existing order-dependent power hooks. The UI still needs a separate decide step for move-vs-move order, ties, Trick Room and single-column direction. A Speed highlight is not a turn-order promise. |
 | Frozen / otherwise unable attacker | Accepted user decision: calculate hypothetical damage, do not prevent the action. `unable-attacker-slp` and `unable-attacker-frz`; `frz` still means Frostbite. |
@@ -227,15 +228,21 @@ fields, effective priority, explicit order, EVs and immutable inputs. Included i
 
 Still requires in-game confirmation: Bull/Quill Rush on a special attack, integer-tied Draco Barrage category
 distribution, allied Emperor stacking and Blazing Soul into Psychic Terrain. Source-backed fixtures are not an
-in-game test. The control UI is the next sub-step; broader turn-order and trainer-field UI are deferred.
+in-game test. First-turn/disguise checkboxes, an allied Emperor field effect and per-move category inversion are
+wired and persisted in the existing storage object. Category and Auto/Inverted state remain visible when the
+move is collapsed. Changing an ability or Mega form clears its conditional state. Broader turn-order and
+trainer-field UI are deferred. At wide sizes the match block grows when these controls need more room, keeping
+Field reachable rather than allowing an overflowing match block to cover it.
 
 Checks:
-- `node tools/calc/hzla_compare.mjs emerald-imperium`: 95 cases, 86 exact matches, nine source/UI-choice differences,
+- `node tools/calc/hzla_compare.mjs emerald-imperium`: 105 cases, 96 exact matches, nine source/UI-choice differences,
   zero unexplained mismatches. Report `.tmp/calc-emerald-imperium/compare.json`.
 - `node tools/calc/test.mjs`: 81 passed, 0 failed (`.tmp/calc-emerald-imperium/engine-test.log`).
 - `python assemble.py`: all four guides built (`.tmp/calc-emerald-imperium/assemble.log`).
-- Not done: an in-game test (a save state and one known move, per `plans/damage-calc.md` → How to check); no
-  browser sweep or Thor check of the calc page.
+- `node tools/scenarios/calc-imperium.mjs`: 10 passes (all five viewer sizes, normal/dvkb), real checkbox clicks,
+  inversion/collapsed indication, field propagation, reload persistence and ability-state clearing.
+- Not done: an in-game test (a save state and one known move, per `plans/damage-calc.md` → How to check) or a
+  physical Thor check. Browser regression results are recorded in the session status.
 
 ## Checks
 

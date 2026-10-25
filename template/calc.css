@@ -334,4 +334,8 @@ body.calc-route .dempty:has([hidden]){grid-template-columns:1fr}
 body.calc-route .dfield .dfb .dtg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
 body.calc-route .ed table{table-layout:fixed;width:100%}
 body.calc-route .ed .nv{width:100%;min-width:0}
+body.calc-route .dmonstate{display:flex;align-items:center;gap:5px;min-height:32px;max-width:100%;font-size:12px;cursor:pointer;overflow-wrap:anywhere}
+body.calc-route .dmonstate input{flex:none;width:16px;height:16px;margin:4px;accent-color:var(--acc)}
+body.calc-route .dcategory{font-size:11px;font-weight:700;color:var(--acc);padding-top:3px}
 @media(min-width:480px){body.calc-route .dside.mg .dstrip{max-height:none}body.calc-route .dmatch{min-height:0}}
+@media(min-width:480px){body.calc-route .fit:has(.dmonstate){height:auto;min-height:calc(100vh - 8px)}}

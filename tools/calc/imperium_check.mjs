@@ -87,10 +87,18 @@ assert.ok(result('spread-doubles').max < result('spread-singles').max);
 same('doubles-veil', 'doubles-light-screen');
 same('doubles-screens-not-stacked', 'doubles-light-screen');
 assert.ok(result('snow-ice-defense').max < result('hail-no-ice-defense').max);
+assert.equal(result('ice-eater-immune').max, 0);
+assert.equal(result('ice-eater-ability-shield').max, 0);
+for (const name of ['ice-eater-other-type', 'ice-eater-mold-breaker', 'ice-eater-neutralizing-gas']) assert.ok(result(name).max > 0, name);
+for (const matchup of fixtures.matchups.filter(entry => entry.name.startsWith('gas-suppresses-'))) {
+  const baseline = engine.calc({...matchup.atk, ab: -1}, matchup.def, matchup.slot, {});
+  assert.deepEqual(result(matchup.name).rolls, plain(baseline.rolls), matchup.name);
+  assert.equal(result(matchup.name).priority, baseline.priority, matchup.name + ' priority');
+}
 
 const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 const statTable = (values, fallback) => Object.fromEntries(statNames.map((name, index) => [name, values?.[index] ?? fallback]));
-function stock(matchup, generation = 9) {
+function stock(matchup, generation = 9, powerModifier = 4096) {
   const gen = Generations.get(generation);
   const mon = set => {
     const entry = data.P.find(species => species.id === set.id);
@@ -100,7 +108,7 @@ function stock(matchup, generation = 9) {
   };
   const entry = data.MV[matchup.slot.mv];
   const move = new Move(gen, data.M[matchup.slot.mv], {isCrit: !!matchup.slot.crit,
-    overrides: {basePower: entry.bp, type: entry.t, category: entry.c}});
+    overrides: {basePower: round(entry.bp * powerModifier / 4096), type: entry.t, category: entry.c}});
   const field = matchup.field || {};
   const damage = calculate(gen, mon(matchup.atk), mon(matchup.def), move, new Field({gameType: field.gameType,
     weather: field.weather, defenderSide: {isReflect: !!field.defReflect, isLightScreen: !!field.defLightScreen,
@@ -113,6 +121,14 @@ const fieldCases = ['spread-singles', 'spread-doubles', 'doubles-sun', 'doubles-
 for (const name of fieldCases) {
   assert.deepEqual(result(name).rolls, plain(stock(fixture(name))), name);
   if (!name.startsWith('snow-')) assert.deepEqual(stock(fixture(name), 8), stock(fixture(name), 9), name + ' Gen 8/9');
+}
+for (const matchup of fixtures.matchups.filter(entry => entry.name.startsWith('emperor-ally-'))) {
+  const affected = ['Water', 'Steel'].includes(data.MV[matchup.slot.mv].t);
+  const own = data.AB[matchup.atk.ab]?.[0] === "Emperor's Presence";
+  const ally = matchup.field?.gameType === 'Doubles' && matchup.field.atkEmperorPresence;
+  const count = affected ? Number(own) + Number(!!ally) : 0;
+  const modifier = count === 2 ? Math.floor((5325 * 5325 + 2048) / 4096) : count === 1 ? 5325 : 4096;
+  assert.deepEqual(result(matchup.name).rolls, plain(stock(matchup, 9, modifier)), matchup.name + ' source power chain');
 }
 const orderCase = {...fixture('physical-neutral'), slot: {mv: data.M.indexOf('Payback')}};
 const order = value => engine.calc(orderCase.atk, orderCase.def, {...orderCase.slot, order: value}, {});
