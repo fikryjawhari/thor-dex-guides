@@ -139,7 +139,7 @@ await compare('variable power with explicit input', set('Charizard'), set('Snorl
 await compare('type and power input', set('Charizard'), set('Blastoise'), slot('Tackle', {bp: 75, t: 'Electric'}));
 await compare('nature, IVs and EVs', set('Charizard', {nat: 'Modest', iv: [19, 22, 25, 31, 21, 26], ev: [0, 0, 0, 252, 4, 252]}), set('Snorlax'), slot('Flamethrower'));
 await compare('nonuniform Triple Axel', set('Cloyster'), set('Snorlax'), slot('Triple Axel', {hits: 3}));
-await compare('nonuniform Triple Kick', set('Machamp'), set('Blastoise'), slot('Triple Kick', {hits: 3}));
+await compare('nonuniform Triple Kick', set('Machamp'), set('Blastoise'), slot('Triple Kick', {hits: 3, bp: 10}));
 await compare('Parental Bond', set('Snorlax', {ab: ability('Parental Bond')}), set('Blastoise'), slot('Tackle'));
 await compare('Helping Hand and doubles spread', set('Blastoise'), set('Snorlax'), slot('Surf'),
   {gameType: 'Doubles', atkHelpingHand: true}, {gameType: 'Doubles', attackerSide: {isHelpingHand: true}});
@@ -194,6 +194,15 @@ await test('nonuniform KO probability uses all three hit distributions', () => {
   }
   const actual = plain(engine.calc(attacker, {...defender, hp}, slot('Triple Axel', {hits: 3}), {}));
   assert.deepEqual(actual.ko, {n: 1, p: success / 4096});
+});
+
+await test('Triple Kick and Triple Axel scale a changed power per hit', () => {
+  for (const [base, move] of [['gen6', 'Triple Kick'], ['gen7', 'Triple Kick'], ['expansion', 'Triple Axel']]) {
+    engine.init(data, profiles[base]);
+    const hit = bp => plain(engine.calc(set('Machamp'), set('Blastoise'), slot(move, {bp, hits: 1}), {})).rolls;
+    const three = plain(engine.calc(set('Machamp'), set('Blastoise'), slot(move, {bp: 25, hits: 3}), {}));
+    assert.deepEqual(three.per, [hit(25), hit(50), hit(75)], `${base} ${move}`);
+  }
 });
 
 await test('unknown moves, species, abilities and items do not throw', () => {

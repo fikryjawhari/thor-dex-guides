@@ -49,6 +49,8 @@ export function getMoveEffectiveness(gen: any, move: any, type: any, revealed?: 
       `    for (let times = 1; times < numAttacks; times++) {\n      (gen as any).guideContext.state.hit = times + 1;\n      (gen as any).guideContext.state.hitCount = times;\n      isCritical = ${invocation(body, 'critical', 'guideNativeCrit')};`);
     if (modern) body = body.replaceAll('getFinalDamage(', 'guideRoll(gen, getFinalDamage, ');
     if (suffix === 'BWXY') {
+      // Stock omits the hit number in the multi-hit loop, so Triple Kick stayed at its first-hit power.
+      body = once(body, '        hasAteAbilityTypeChange,\n        desc\n      );', '        hasAteAbilityTypeChange,\n        desc,\n        times + 1\n      );');
       body = once(body, '      const newBaseDamage = getBaseDamage(attacker.level, newBasePower, newAtk, newDef);',
         `      const useGuideDamage = (gen as any).critMultiplier !== undefined || ['critical','beforeWeather','hitBaseDamage','baseDamage'].some(phase => (gen as any).guideRules[phase]?.length);\n      const newBaseDamage = useGuideDamage\n        ? calculateBaseDamageBWXY(gen, attacker, newBasePower, newAtk, newDef, move, field, desc, isCritical)\n        : getBaseDamage(attacker.level, newBasePower, newAtk, newDef);`);
     }
@@ -76,6 +78,11 @@ export function getMoveEffectiveness(gen: any, move: any, type: any, revealed?: 
   source = editFunction(source, `calculateBasePower${suffix}`, body => {
     const before = modern ? '  if (basePower === 0) {' : '  return basePower;';
     body = once(body, before, `  basePower = ${invocation(body, 'movePower', 'basePower', 'hit:(gen as any).guideContext.state.hit')};\n${before}`);
+    if (modern) {
+      // Triple Kick / Axel scale the move's own power per hit (a hack that changes it keeps 1x / 2x / 3x).
+      body = once(body, '    basePower = hit * 10;', '    basePower = hit * move.bp;');
+      if (suffix === 'SMSSSV') body = once(body, '    basePower = hit * 20;', '    basePower = hit * move.bp;');
+    }
     return once(body, "  const turnOrder = attacker.stats.spe > defender.stats.spe ? 'first' : 'last';",
       `  const turnOrder = ${invocation(body, 'turnOrder', "attacker.stats.spe > defender.stats.spe ? 'first' : 'last'")};`);
   });

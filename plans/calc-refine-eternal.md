@@ -42,7 +42,7 @@ Items: 0 damage-relevant changes in the PDF. Item rows below are none.
   damage should equal the oracle's crit damage against any neutral target.
 - [x] **Explosion**: done, same rule and fixtures (`explosion-neutral` known difference, `-critical` matches).
   Was:  always a critical hit (power 250 is data). Oracle test: same as Self-Destruct.
-- [ ] **Triple Kick**: NOT DONE, Needs Opus 4 (engine ignores the data power; scaling undecided). Was:  power 10 → 20 per hit (three hits: 20 / 40 / 60 if scaled). Oracle test: multi-hit total against a
+- [x] **Triple Kick**: engine fixed (Opus): power x hit number, so 20 / 40 / 60 (tools/calc/test.mjs). In-game test. Was:  power 10 → 20 per hit (three hits: 20 / 40 / 60 if scaled). Oracle test: multi-hit total against a
   neutral target equals the sum of three hits at bp 20, 40 and 60; check the engine reads the power field, not a
   hard-coded 10.
 
@@ -90,3 +90,7 @@ Metal Coat are held and used as before; only where they are found changed.
 3. 38 vs 28: a miscount in the brief; 28 is right.
 Batch note: Cut's and Strength's types come from data.json (check that they read Grass / Rock there, then only the
 always-crit part of Cut is a rule).
+- (after batch 1) Triple Kick: shared engine fix in tools/calc/instrument.mjs. Power = the move's own power x the hit
+  number (EI's expansion source does exactly this: battle_util.c EFFECT_TRIPLE_KICK), and Gen 5/6 now passes the hit
+  number (stock left every hit at the first-hit power). Eternal X: 20 / 40 / 60; the oracle's flat 20 is wrong for
+  hits 2-3. No oracle fixture (the stock reference loop can't express it); covered by test.mjs.
