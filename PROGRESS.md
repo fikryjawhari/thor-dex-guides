@@ -41,8 +41,12 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
 2. **Damage calc with save import** (start every calc session from `plans/damage-calc-sessions.md`; `plans/damage-calc.md`; branch `worktree-damage-calc`, pushed, not merged).
    Refinement done 2026-10-26 (`plans/damage-calc-sessions.md` → Status). Engine pass (`plans/calc-engine-pass.md`,
-   brief + Progress log) 2026-10-26: U1-U3, U5, extract `cr`, U6 and U4a done; **next U4** (pre-hit stat changes,
-   result `pre`), then U7 close-out; start with the brief's "Next session prompt". Then trainer-field / turn-order UI decide sessions, merge, then save readers.
+   brief + Progress log) done 2026-10-26: battle-state inputs (`slot.st`, `slot.curl`, `slot.met`, `atk.fnt`, `def.vol`),
+   result `bp` / `crit {stage, p, forced}` / `pre`, `MV.cr` in every calc guide's data, 2322 state fixtures
+   (`calc_states.json`, in `npm test`); contract in `tools/calc/README.md`. The page doesn't use the new inputs or
+   results yet: that is the toggle UI build (`plans/calc-state-toggles.md` on `worktree-damage-calc-toggles`), which
+   also adds Download / Intrepid Sword / Dauntless Shield to `monControls` (they now fire only with `abilityOn`).
+   Then trainer-field / turn-order UI decide sessions, merge, then save readers.
    In-game tests to run on the Thor: each guide's notes.md → Damage calc → In-game tests.
    Built 2026-10-25 (step 1 of its Order): `@smogon/calc` engine using each guide's own data (`tools/calc/`, 81 tests),
    six base profiles, the calc page from the UI spec (all 26 spec checks pass: `tools/scenarios/calc-*.mjs`), the import
