@@ -25,19 +25,24 @@ Items: 0 damage-relevant changes in the PDF. Item rows below are none.
 
 ### Batch 1
 
-- [ ] **Cut**: type Normal → Grass; always a critical hit (PP 30 → 20 is data). Oracle test: Cut vs a Rock-type
+- [x] **Cut**: done. Type already Grass in data (no rule); always-crit critical rule added. Oracle does not crit without the flag: neutral is a known difference (doc decides); `cut-critical` matches. Type fixtures carry the crit flag.
+  Was:  type Normal → Grass; always a critical hit (PP 30 → 20 is data). Oracle test: Cut vs a Rock-type
   defender should be 2x (Normal would be 0.5x), vs Ghost neutral (Normal immune), vs Water 2x; with the crit setting
   off, damage should equal the crit value (x1.5 in gen 6).
-- [ ] **Strength**: type Normal → Rock (power 100 is data; the self Def / Sp. Def drop is out of scope). Oracle test:
+- [x] **Strength**: done, no rule: Rock type in data; matches the oracle on Fire, Rock-user STAB (`strength-rock-user-stab`).
+  Was:  type Normal → Rock (power 100 is data; the self Def / Sp. Def drop is out of scope). Oracle test:
   Strength vs Fire, Flying, Bug (2x), Fighting, Ground, Steel (0.5x), Ghost (neutral); a Rock-type user with Strength
   should get STAB.
-- [ ] **Drill Peck**: critical hit ratio +1 (same as Slash / Leaf Blade). Oracle test: compare the calc's crit-chance
+- [x] **Drill Peck**: no work (orchestrator answer 2).
+  Was:  critical hit ratio +1 (same as Slash / Leaf Blade). Oracle test: compare the calc's crit-chance
   output (if it shows one) for Drill Peck against Tackle. Damage on a fixed crit is unchanged, so if the oracle gives
   no ratio output, this row is a no-op for the calc (see Needs Opus).
-- [ ] **Self-Destruct**: always a critical hit (power 200 is data). Oracle test: with the crit setting off, the calc's
+- [x] **Self-Destruct**: done. Critical rule (Cut / Self-Destruct / Explosion); `self-destruct-neutral` is a known difference, `-critical` matches. No defense-halving conflict in gen 6 (oracle neutral = ours without the rule).
+  Was:  always a critical hit (power 200 is data). Oracle test: with the crit setting off, the calc's
   damage should equal the oracle's crit damage against any neutral target.
-- [ ] **Explosion**: always a critical hit (power 250 is data). Oracle test: same as Self-Destruct.
-- [ ] **Triple Kick**: power 10 → 20 per hit (three hits: 20 / 40 / 60 if scaled). Oracle test: multi-hit total against a
+- [x] **Explosion**: done, same rule and fixtures (`explosion-neutral` known difference, `-critical` matches).
+  Was:  always a critical hit (power 250 is data). Oracle test: same as Self-Destruct.
+- [ ] **Triple Kick**: NOT DONE, Needs Opus 4 (engine ignores the data power; scaling undecided). Was:  power 10 → 20 per hit (three hits: 20 / 40 / 60 if scaled). Oracle test: multi-hit total against a
   neutral target equals the sum of three hits at bp 20, 40 and 60; check the engine reads the power field, not a
   hard-coded 10.
 
@@ -60,6 +65,16 @@ the trade items, the fossils), Big Root (out of scope, see above), Mega Stone av
 Metal Coat are held and used as before; only where they are found changed.
 
 ## Needs Opus
+
+4. **Triple Kick (found in batch 1)**: data.json MV 166 bp 20 (doc: 10 => 20). The engine ignores it: with a
+   1-, 2- or 3-hit slot, every hit is 5-6 damage (rolls for bp 10 on Snorlax vs Blastoise, Lv 50, 0 EVs), not 13-16
+   (bp 20). The oracle gives 13-16 on each of 3 hits, so it uses bp 20 flat, no scaling. The oracle's gen 6 path
+   hardcodes `hitIndex * 10` (`.tmp/hzla/calc/mechanics/gen56.js:438-441`); where our engine's 10 comes from is not traced.
+   Decide: (a) flat 20 on every hit (the oracle; a `movePower` rule `value: 20` would do it, if the engine lets it
+   override), or (b) scaling 20 / 40 / 60 (the stock Gen 5-6 shape with the new base). The doc does not say which.
+   The fixture was removed while undecided (it fails the reference check, which uses the data power).
+   Also an engine question: the stock hardcoded base power overriding the data field needs a fix in the engine,
+   which is not this unit's file (tools/calc/src).
 
 - **Frost Breath**: Changelog V2.4 says it was buffed (Rebalanced), but neither the PDF nor data.json shows a change.
   data.json has bp 60 / ac 90 / pp 10 (the vanilla values). Evidence: `Changelog.txt` line 151; `data.json` moves

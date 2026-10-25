@@ -108,6 +108,9 @@ No shared template, engine or base-profile change was needed.
 | Gen 6 damage/types/critical damage | User's standard Gen 6 requirement; older hzla link `data=8d1ab90a3b3c494d8485&dmgGen=6&gen=6`, not Decomps. `backups/title_to_backup_mappings.js:15,59` identifies `exwy`, Eternal X/Wilting Y Insanity Rebalanced. |
 | Inverse effectiveness rule | Per defending type: immunity becomes x2, otherwise reciprocal. Oracle `calc/mechanics/gen56.js:119-134`; ability immunities remain, with Levitate tested. Freeze-Dry/Flying Press special effectiveness is inverted too. |
 | Ally Flower Gift toggles | Standard x1.5 Attack / Sp. Def in Sun and Harsh Sunshine; oracle `calc/mechanics/gen56.js:871-876,944-949`. Rain/no-weather and wrong-category negative cases included. |
+| Always-critical moves | Declarative `critical` rule (`value: true`) for Cut, Self-Destruct and Explosion (Move Changes, Rebalanced; data `h`/`e` notes agree). The oracle (gen 6) crits them only with the crit flag: its no-flag rolls are 1/1.5 of its crit rolls. Fixtures `cut-neutral`, `self-destruct-neutral`, `explosion-neutral` are known differences (source: the doc; the oracle lacks the rule), their `-critical` pairs and the Cut type fixtures (`cut-rock-defender`, `cut-ghost-defender`, both with the crit flag) match. Check: neutral rolls equal crit rolls. |
+| Cut / Strength types | Types come from the guide data (Grass / Rock, `MV` 14 / 69), no rule needed: Cut vs Rock 2x; Strength vs Fire 2x; Rock-type user gets STAB (`strength-rock-user-stab`). Matches the oracle. |
+| Drill Peck | No work: the calc shows damage with and without a crit, not the crit chance, so the higher crit ratio changes nothing the calc displays. |
 | Remaining field controls | Native Gen 6 mechanics; oracle `calc/mechanics/gen56.js`, `calc/mechanics/util.js` and independent stock `@smogon/calc` 0.12.0 Gen 6 comparisons. |
 
 Oracle: `hzla/Dynamic-Calc`, pinned at `42b4cdc0f11de43ecabf3a5d2c1aba67e46e2f74` in ignored
@@ -118,7 +121,7 @@ browser shim. This is necessary because its CommonJS gen78 dependency references
 no oracle source was edited, copied into tracked files or bundled. Legacy-only UI defaults: `invert=false` (inverse
 uses `field.isInverseBattle`), `switchIn=0`, `challengeMode=false`; `npoint_data` / `backup_moves` use `backup_data`.
 
-`calc_matchups.json`: **97/97 cases match all 16 oracle rolls, no known differences or unexplained mismatches**.
+`calc_matchups.json`: **109 cases: 106 match all 16 oracle rolls; 3 known differences (always-critical neutral fixtures, see the Always-critical row); no unexplained mismatches**.
 Includes singles/doubles spread and single-target attacks; screens and critical bypass; Helping Hand/Friend Guard;
 all weather choices, harsh-weather immunities, Strong Winds, sand's Rock Sp. Def boost and Air Lock; each terrain
 with grounded/airborne cases; Magic Room suppressing Choice Band/Eviolite; Wonder Room physical/special/Psyshock;
@@ -129,7 +132,7 @@ power; Gravity removing Flying/Levitate immunity and grounding terrain recipient
 asserts inverse effectiveness and positive/negative field relationships, and hand-checks the Wonder Room/defensive
 Flower Gift rolls. Those fixtures share the Photonic check's relevant stats: base damage 20 before STAB for Wonder
 Room Tackle, 136 for Psychic, 25 for Psyshock, and 20 for defensive Flower Gift Psychic. Included in
-`npm test --prefix tools/calc`: 81 shared + 53 Hardlove + 107 Photonic + 97 Eternal fixtures/checks pass.
+`npm test --prefix tools/calc`: 81 shared + 53 Hardlove + 111 Photonic + 109 Eternal fixtures/checks pass.
 Existing oracle comparisons remain 47/47 Emerald Imperium and 101 matches / 6 documented differences Photonic Sun.
 
 Validation: all four guides assemble; the other three built HTML files are byte-identical to before this pass.
