@@ -10,14 +10,14 @@ Source file:line refs are from grep; line numbers are for `.tmp/calc-hardlove-go
 
 ### Batch 1
 
-- [ ] **Hidden Power**: Type from the user's IVs (not fixed); BP fixed at 60 (data bp is 60). Source: `other_battle_calculators.c:2631 (type by IVs), 3277; CalcBaseDamage.c:361-362 (movepower = 60)`
-- [ ] **Explosion**: Halves target's Defense in the damage calc (side table); faints user (data). Source: `not located: MOVE_EXPLOSION absent from CalcBaseDamage.c. Partial: other_battle_calculators.c:233 (list), BeforeMove.c:2234 (Damp only)`
-- [ ] **Self-Destruct**: Halves target's Defense in the damage calc (side table). Source: `not located as Explosion. Partial: other_battle_calculators.c:232 (list), BeforeMove.c:2233 (Damp only)`
-- [ ] **Misty Explosion**: Halves target's Defense in the damage calc (side table); power 100 > 200 is data. Source: `CalcBaseDamage.c:492-494 (terrain x1.5 case); BeforeMove.c:2236 (Damp); defense halving not located`
-- [ ] **Thunder Wave**: Electric-type users cannot miss with it (accuracy bypass rule). Source: `other_battle_calculators.c:2705-2706 (electric user, hit check); BeforeMove.c:2854, 2867 (immunity line)`
-- [ ] **Frustration**: Power = (255 - happiness) x 10 / 25, max 102 (data bp 102 is the cap). Source: `CalcBaseDamage.c:214-215`
-- [ ] **Return**: Power = happiness x 10 / 25, max 102 (data bp 102 is the cap). Source: `CalcBaseDamage.c:211-212`
-- [ ] **Rage Fist**: Sheet and notes say 'Does not increase BP when being hit' (power 50 > 100 is data); data text says '+50 per hit taken, max 6'. Conflict: decide which the hack uses. Source: `other_battle_calculators.c:441 (PunchingMoveTable entry); hit counter not located`
+- [ ] **Hidden Power**: Type from the user's IVs (not fixed); BP fixed at 60 (data bp is 60). BP 60 settled [x]; type-from-IVs open: Needs Opus. Source: `other_battle_calculators.c:2631 (type by IVs), 3277; CalcBaseDamage.c:361-362 (movepower = 60)`
+- [ ] **Explosion**: Needs Opus (halving); fixture `explosion-defense-not-halved` pins the current, source-supported behaviour. Halves target's Defense in the damage calc (side table); faints user (data). Source: `not located: MOVE_EXPLOSION absent from CalcBaseDamage.c. Partial: other_battle_calculators.c:233 (list), BeforeMove.c:2234 (Damp only)`
+- [ ] **Self-Destruct**: Needs Opus (same as Explosion); fixture `self-destruct-defense-not-halved`. Halves target's Defense in the damage calc (side table). Source: `not located as Explosion. Partial: other_battle_calculators.c:232 (list), BeforeMove.c:2233 (Damp only)`
+- [ ] **Misty Explosion**: Needs Opus (halving only; terrain x1.5 settled [x], fixtures `misty-explosion-*`). Halves target's Defense in the damage calc (side table); power 100 > 200 is data. Source: `CalcBaseDamage.c:492-494 (terrain x1.5 case); BeforeMove.c:2236 (Damp); defense halving not located`
+- [x] **Thunder Wave**: out of scope (status-only, orchestrator answer); no fixtures. Original: Electric-type users cannot miss with it (accuracy bypass rule). Source: `other_battle_calculators.c:2705-2706 (electric user, hit check); BeforeMove.c:2854, 2867 (immunity line)`
+- [x] **Frustration**: Power = (255 - happiness) x 10 / 25, max 102 (data bp 102 is the cap). Source: `CalcBaseDamage.c:214-215`. Outcome: varpow already lists it; typed power drives the roll; fixtures `frustration-happiness-127`, `frustration-happiness-0`.
+- [x] **Return**: Power = happiness x 10 / 25, max 102 (data bp 102 is the cap). Source: `CalcBaseDamage.c:211-212`. Outcome: varpow already lists it; fixture `return-happiness-127`.
+- [x] **Rage Fist**: outcome: flat data power 100, the sheet/notes stand (no hit-taken counter in source). Fixtures `rage-fist-flat-100`, `rage-fist-normal-target-immune`. Original text: Sheet and notes say 'Does not increase BP when being hit' (power 50 > 100 is data); data text says '+50 per hit taken, max 6'. Conflict: decide which the hack uses. Source: `other_battle_calculators.c:441 (PunchingMoveTable entry); hit counter not located`
 
 ### Batch 2
 
@@ -39,6 +39,20 @@ Destiny Bond, Rock Smash, Thief (Rock Smash: effect chance; Thief/Covet steal ru
 - Rage Fist: power doubling per hit taken; the hit counter location is not found.
 - Thunder Wave: accuracy bypass for Electric users, whether the calc models accuracy at all (judgement).
 - Unclassified: none. Parse artefacts: none found.
+
+- Batch 1 (Explosion family, Hidden Power), hand-checked from `hardlove_check.mjs` (level 50, `base = floor(floor(22*BP*Atk/Def)/50)+2`):
+  - Explosion / Self-Destruct / Misty Explosion: source has no Defense halving (`CalcBaseDamage.c` has no Explosion or
+    Self-Destruct case; its only Explosion-family line is the Misty terrain case at 492-494; `BeforeMove.c:2233-2236` is Damp only).
+    Gen 9 stock does not halve either (halving exists only in gen 1-4: `@smogon/calc` gen12.js:150, gen3.js:305, gen4.js:560). So the current calc
+    does not halve, and the sheet and data note ("Halves target's defense") is a doc claim the code does not show.
+    Decision needed: keep no halving (source wins), or add a Defense-halving rule for these three moves.
+    Expected rolls if halved: Explosion (Snorlax, Atk 130 vs
+    Blastoise Def 120 -> 60): base 240, rolls 306..360 (STAB); not halved: base 121, rolls 153..181. Misty Explosion
+    (Alakazam SpA 155 vs SpD 125 -> 62): base 222, not halved 111. Self-Destruct (halved, Def 60): base 192.
+  - Hidden Power: `other_battle_calculators.c:3277` derives the type from the six IV low bits. The engine takes the type
+    from the user (`slot.t`); no phase derives a type from IVs. A rule shape for that is new: needs a decision on
+    whether the calc takes IVs (it has no IV input today). Hand roll for a typed Fire Hidden Power (Alakazam SpA 155 vs
+    Blastoise SpD 125, BP 60): base 34, rolls `floor(floor(34*r/100)/2)`; Normal-typed: `floor(34*r/100)`.
 
 ### Orchestrator answers
 - Thunder Wave, Pain Split: status-only effects for the calc (accuracy, HP averaging); no damage rule. Tick them as
