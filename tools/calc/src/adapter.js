@@ -48,6 +48,30 @@ function speciesName(name) {
     .replace(/^Primal (.+)$/, '$1-Primal');
 }
 
+// Stock names to try for a guide form's weight when its own name is not a stock species ("Alolan Raichu",
+// "Raichu Alolan", "Heat Rotom", "Shellos (East Sea)", "Pyroar Female", "Mega Absol Z"): most specific first, then the
+// base species (cosmetic forms and a hack's own Megas take its weight unless the profile sets `weightkg`).
+function weightNames(name) {
+  const regions = {Alolan: 'Alola', Galarian: 'Galar', Hisuian: 'Hisui', Paldean: 'Paldea'};
+  const plain = name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace('♀', '-F').replace('♂', '-M');
+  const paren = plain.match(/^(.*?) \((.+)\)$/);
+  const forms = paren ? paren[2].split(/,\s*/) : [];
+  let region = '', gender = '';
+  const words = (paren ? paren[1] : plain).split(' ').filter(word => {
+    if (regions[word]) region = regions[word];
+    else if (word === 'Female' || word === 'Male') gender = word[0];
+    else return true;
+    return false;
+  });
+  const join = (...parts) => parts.filter(Boolean).join('-');
+  const tail = [region, ...forms, gender];
+  const mega = ['Mega', 'Primal'].includes(words[0]);
+  const base = mega ? words[1] : words[0];
+  return [join(words.join(' '), ...tail), join(words.slice(1).join(' '), words[0], ...tail), join(...words, ...tail),
+    mega ? join(base, words[0], region) : '', join(words.join(' '), region, gender), join(base, region, gender),
+    plain.split('-').reverse().join('-'), words.join(' '), base].filter(Boolean);
+}
+
 function effectName(collection, name, original = false) {
   const effect = profile.over?.[collection]?.[name]?.effect;
   if (effect !== undefined) return effect;
@@ -86,7 +110,8 @@ function init(guide, configuration) {
     species[id] = mergeRecord({
       ...known, id, kind: 'Species', name,
       baseStats: statTable(entry.s, 1), types: entry.t,
-      weightkg: known.weightkg ?? 1,
+      weightkg: known.weightkg ?? weightNames(entry.n).map(form => stock.species[toID(form)] || modern.species[toID(form)])
+        .find(form => form?.weightkg)?.weightkg ?? 1,
       nfe: !!entry.et?.length,
       abilities: {0: ''},
     }, overrides);
@@ -300,15 +325,21 @@ function turnKnockout(per, hp, eot, room) {
   return {n: 0, p: 0};
 }
 
+const AUTO_POWER = new Set(['Low Kick', 'Grass Knot', 'Heavy Slam', 'Heat Crash', 'Flail', 'Reversal', 'Gyro Ball',
+  'Electro Ball', 'Crush Grip', 'Wring Out', 'Hard Press', 'Punishment']);
+
 function calc(atk, def, slot, values = {}) {
   const entry = data.MV[slot.mv];
   const name = data.M[slot.mv];
   if (!entry) return null;
   const moveData = generation.moves.get(toID(name));
   if (moveData.category === 'Status') return null;
-  const variable = entry.bp === 'Varies' || profile.varpow?.includes(name);
+  const listed = entry.bp === 'Varies' || profile.varpow?.includes(name);
+  // Power from the battle state (weights, HP, speeds, boosts): stock works it out unless the page sets a power.
+  const auto = listed && AUTO_POWER.has(moveData.name);
+  const variable = listed && !auto;
   if (variable && slot.bp === undefined) return null;
-  const power = slot.bp ?? moveData.basePower;
+  const power = slot.bp ?? (auto ? 1 : moveData.basePower);
   if (!(Number(power) > 0)) return null;
   const attacker = pokemon(atk);
   const defender = pokemon(def);
@@ -318,7 +349,7 @@ function calc(atk, def, slot, values = {}) {
   if (def.pty && changesType(defender, def)) defender.types = [def.pty];
   const field = battleField(values);
   const overrides = {...moveData, basePower: Number(power), type: slot.t || moveData.type};
-  if (variable && slot.bp !== undefined) {
+  if (listed && slot.bp !== undefined) {
     overrides.name = 'Guide fixed power';
     overrides.id = 'guidefixedpower';
   }
@@ -379,6 +410,7 @@ function calc(atk, def, slot, values = {}) {
   }
   return {
     cat: move.category, rolls: [...rolls], hits: per.length, min, max,
+    ...(auto && slot.bp === undefined && description.moveBP ? {bp: description.moveBP} : {}),
     priority: context.move.priority,
     ...(context.state.categoryAuto ? {categoryChoice: {automatic: context.state.categoryAuto,
       inverted: context.state.categoryInverted, tie: context.state.categoryTie}} : {}),

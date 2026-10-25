@@ -86,7 +86,9 @@ marks the card. Stored as `pty` in the existing edits; ability / Mega change cle
 `#/calc` is implemented by `calc.js` and `calc.css`; `assemble.py` includes these and `calc/engine.js` only with
 `cfg.calc`. The resolved profile supplies the level and stage bounds, status choices, nature/ability/item switches,
 field entries, multi-hit ranges and variable-power moves. The page calls `DMG.init`, `DMG.stats` and `DMG.calc`;
-damage rolls and KO probabilities come from the adapter, not page-side mechanics. The committed unit-B engine is a
+damage rolls and KO probabilities come from the adapter, not page-side mechanics. Weight / HP / speed moves (Low Kick, Flail, Gyro
+Ball, ...) get their power from the engine (`r.bp`, shown in the row's Power box, which still overrides); the other
+variable-power moves show — until a power is set. The committed unit-B engine is a
 temporary, explicitly marked stub and must be replaced by unit A before release.
 Effective Speed uses the optional `DMG.speed(set, field)` hook; without it, the fallback applies stages only.
 The real adapter must provide that hook for paralysis and other game-specific Speed modifiers.

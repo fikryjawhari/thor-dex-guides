@@ -153,7 +153,7 @@ for (const base of ['gen4', 'gen5', 'gen6', 'gen7', 'cfru']) {
 
 await test('variable power without input and status moves return null', () => {
   engine.init(data, profiles.expansion);
-  assert.equal(engine.calc(set('Charizard'), set('Blastoise'), slot('Grass Knot'), {}), null);
+  assert.equal(engine.calc(set('Charizard'), set('Blastoise'), slot('Return'), {}), null);
   assert.equal(engine.calc(set('Charizard'), set('Blastoise'), slot('Growl'), {}), null);
   assert.equal(engine.calc(set('Charizard'), set('Blastoise'), slot('Tackle', {bp: 0}), {}), null);
 });
@@ -263,6 +263,30 @@ await test('Protean / Libero: STAB on every move in Gen 4, 6, 7 and 9; a defende
     assert.equal(chosen.eff, 2, `${base} chosen Fire type takes Ground super effectively`);
     assert.equal(ignored.max, 0, `${base} the type choice needs Protean / Libero`);
   }
+});
+
+await test('weight, HP, speed and boost powers are automatic; a set power still wins', () => {
+  for (const base of ['gen4', 'gen5', 'gen6', 'gen7', 'expansion']) {
+    engine.init(data, profiles[base]);
+    const power = (atk, def, move, extra = {}) => plain(engine.calc(atk, def, slot(move, extra), {}))?.bp;
+    assert.equal(power(set('Pikachu'), set('Snorlax'), 'Low Kick'), 120, `${base} Low Kick vs 460 kg`);
+    assert.equal(power(set('Snorlax'), set('Pikachu'), 'Grass Knot'), 20, `${base} Grass Knot vs 6 kg`);
+    assert.equal(power(set('Snorlax', {hp: 1}), set('Pikachu'), 'Flail'), 200, `${base} Flail at 1 HP`);
+    assert.equal(power(set('Snorlax'), set('Pikachu'), 'Reversal'), 20, `${base} Reversal at full HP`);
+    assert.ok(power(set('Snorlax'), set('Pikachu'), 'Gyro Ball') >= 55, `${base} slow Gyro Ball (25 x 110 / 50)`);
+    assert.equal(power(set('Snorlax'), set('Pikachu', {stg: [0, 0, 0, 0, 0, 2]}), 'Punishment'), 100, `${base} Punishment +2`);
+    if (base !== 'gen4') {
+      assert.equal(power(set('Snorlax'), set('Pikachu'), 'Heavy Slam'), 120, `${base} Heavy Slam 460 / 6 kg`);
+      assert.equal(power(set('Pikachu'), set('Snorlax'), 'Electro Ball'), 80, `${base} Electro Ball 110 / 50 speed`);
+    }
+    const fixed = plain(engine.calc(set('Pikachu'), set('Snorlax'), slot('Low Kick', {bp: 60}), {}));
+    assert.equal(fixed.bp, undefined, `${base} a set power is not reported back`);
+    assert.ok(fixed.max < plain(engine.calc(set('Pikachu'), set('Snorlax'), slot('Low Kick'), {})).max, `${base} set power 60 < 120`);
+    assert.equal(engine.calc(set('Snorlax'), set('Pikachu'), slot('Return'), {}), null, `${base} Return still needs a power`);
+    assert.equal(power(set('Snorlax'), set('Alolan Golem'), 'Low Kick'), 120, `${base} a regional form takes its stock weight (316 kg)`);
+    assert.equal(power(set('Snorlax'), set('Mega Butterfree'), 'Low Kick'), 60, `${base} a hack Mega takes its base species' weight (32 kg)`);
+  }
+  engine.init(data, profiles.expansion);
 });
 
 await test('unknown moves, species, abilities and items do not throw', () => {

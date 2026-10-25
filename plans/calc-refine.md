@@ -25,7 +25,11 @@ Done and committed on `worktree-damage-calc` (pushed):
 - Checks at the end: `npm test` (85 shared + hack suites), imperium 109, hardlove 66, photonic 111, eternal 109;
   hzla: EI 100 + 9 known, Photonic 101 + 10 known, Eternal X 106 + 3 known, 0 mismatches.
 
-Open, in order (next session): **F**, **W** (x3 hacks, EI too if cheap), **Z**, **T**, then **A**. Rows below.
+Session 2 (2026-10-25): **F** done (Sol `6a80e17`; Opus rows `2f125af`: Hardlove Reckless / Sheer Force lists). **U3** built
+(`40360db`, with the user's toxic turn box and Turn label fix). **W Hardlove** first pass done (Sol `60d3c2b`, manual-power
+fixtures) and found weight moves were manual everywhere: the user chose **automatic power** (weight, HP, speed, boosts;
+engine `AUTO_POWER` + form-name weight fallback, Opus). W continues as "W2" below.
+Open, in order: **W2** (x4 hacks), **Z**, **T**, then **A**. Rows below.
 Session 2 models: Sol (`delegate_task`, T3 worktrees start from main, so give it this branch's worktree path or use
 the Agent tool) for F / W / Z; Haiku medium (Agent tool) for T and A; U3 is the orchestrator's (mockup first). The shared
 Haiku brief below works for Sol too. `calc-residual.mjs` runs on EI only (the others SKIP: EI fixtures).
@@ -93,7 +97,7 @@ EI `node tools/calc/imperium_check.mjs` + `node tools/calc/hzla_compare.mjs emer
 | Unit | Model | Job |
 | --- | --- | --- |
 | F Hardlove flags | Haiku | Compare the hack's punch, bite, pulse, sound, slicing, recoil and secondary-effect move lists in the hg-engine source (grep the ability handlers: Iron Fist, Strong Jaw, Mega Launcher, Punk Rock / Liquid Voice, Sharpness, Reckless, Sheer Force) with `MV.f`. Write the diff to the plan file. Fixes go through `hgengine.move_flags()` (extract, owned for this unit only) and a rebuild of data.json; one fixture per flag class that changed. If the source has no list for a class, say so: it stays on the Gen 9 default. |
-| W Weight moves | Haiku, one agent per hack | Low Kick, Grass Knot, Heavy Slam, Heat Crash fixtures against forms and species whose weight could differ from stock (Megas, regional and hack forms). List species the engine has no weight for under Needs Opus. |
+| W2 Weight / auto-power moves | Sol, one agent per hack | Weights and power are now automatic (tools/calc/README → `varpow`, species weights). Compare every guide species' engine weight (stock name, `weightNames()` fallback, or 1 kg) with the hack's own source weights where it has them (Hardlove: Species.c, W's list in its plan file; EI: expansion species_info; Photonic / Eternal X: stock games, so only hack forms and Megas); set `over.species[id].weightkg` for each difference (hack Megas first). Check the hack's weight / HP / speed power bands against its source (Hardlove: inclusive Low Kick / Grass Knot thresholds, a `movePower` rule if the engine context exposes weights, else Needs Opus; Maushold 2.8 kg). Fixtures without a set power: one per move class (weight, weight ratio, HP, speed), plus one regional form and one hack Mega. Convert Hardlove's W manual-power fixtures where they now duplicate. |
 | Z Photonic Z-moves / Totem | Haiku | Z-move power fixtures (a few base-power bands, a signature Z) against the oracle; if the calc page has no way to pick a Z-move, Needs Opus (UI). Totem aura: a disposition line only (manual stat stages cover it). |
 | T In-game test cards | Haiku, all four hacks in one agent | From each hack's notes (open in-game points) and its existing fixtures, write exact setups (species, level, nature, IVs, move, field) with the expected 16 rolls, as a "In-game tests" list in each notes.md → Damage calc. Text only. |
 | A Audit | Haiku | `plans/damage-calc-sessions.md` → "Audit the calc", plus the hack checks above. Pass / fail with evidence. |

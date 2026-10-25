@@ -74,8 +74,11 @@ delta-encodes the six generations, and tree-shakes away Gen 1/2/3/Champions
 mechanics and the stock generation API. This is smaller than shipping stock
 species tables plus the guide's existing tables. Build output reports byte/gzip
 sizes and the largest contributors; retained fallback metadata dominates.
-Missing weights fall back to 1 kg; exact weight-based moves need species
-`weightkg` overrides. Missing move metadata falls back to a plain attack.
+A guide form whose name is not a stock species ("Raichu Alolan", "Heat Rotom",
+"Shellos (East Sea)", "Pyroar Female") takes the weight of the first stock spelling
+`weightNames()` finds, most specific first, then its base species (a hack's own
+Megas: the base species until the profile sets `over.species[id].weightkg`); only
+an unplaceable name falls back to 1 kg. Missing move metadata falls back to a plain attack.
 Hack-original `x` moves and `AB[i][2]` abilities have no special effect unless
 explicitly mapped in `over`. Unrecognised item/ability names have no effect.
 
@@ -117,7 +120,11 @@ must pin family configuration differences. They deliberately omit save readers.
 `varpow` are the renderer's capability/control declarations. `multihit` is keyed
 by move name with `[minimum,maximum,default]`; fixed-hit moves have equal values.
 `varpow` lists upstream attacks lacking a fixed base power; `MV.bp === "Varies"`
-also always requires a power input.
+counts the same. Those stock can work out from the battle state (`AUTO_POWER` in
+`adapter.js`: Low Kick, Grass Knot, Heavy Slam, Heat Crash, Flail, Reversal, Gyro
+Ball, Electro Ball, Crush Grip, Wring Out, Hard Press, Punishment) get it
+automatically and return it as `bp`; a slot `bp` still overrides (as a plain
+fixed-power move). The rest return null until the page sets a power.
 
 Field entries are `{k,l,type,o?,side,to}`. The UI stores `field[k]`; `to` names a
 Smogon Field property for `side: "field"`, or a Side property for `atk`/`def`.

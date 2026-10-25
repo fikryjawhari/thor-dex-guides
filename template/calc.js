@@ -78,7 +78,7 @@ function chip(r,att,side,fast){if(!r)return `<div class="cc"><button class="cn" 
  return `<div class="cc ${att?'att':''}" data-a="sel" data-s="${side}"><div class="l1"><button class="cn" data-a="sel" data-s="${side}"><b>${r.pty&&changesType(r)?`<i class="td" style="background:${tcol(r.pty)}"></i>`:''}${esc(r.name)}${r.edited?' *':r.saved?' •':''}</b></button>${mega?`<button class="mg ${r.pre?'on':''}" data-a="mega" data-s="${side}" aria-label="Mega">M</button>`:''}<button class="stb ${open||sg?'on':''}" data-a="eopen" data-s="${side}">Edit ${open?'▴':'▾'}</button><span class="sp">Spe <i class="${fast?'f':''}">${spe??'?'}${mod}</i></span></div>
   <div class="cl"><span>Lv</span>${nb(`data-lv="${side}"`,r.lv??'',{min:range[0],max:range[1],label:'Level'})}<button class="hpl ${mx&&r.hp<mx?'rs':''}" data-a="hpfull" data-s="${side}" title="Full HP" aria-label="${mx&&r.hp<mx?'Full HP':'HP'}">${mx&&r.hp<mx?'↺':'HP'}</button>${nb(`data-hp="${side}"`,r.hp??'',{min:0,max:mx||999,label:'HP now'})}<span class="mx">/${mx??'?'}</span></div>${controls}${open?editor(r,side):''}</div>`;}
 function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
- const D0=[0,1,2,3].map(slot=>{const mi=att.m[slot];if(mi==null)return {slot};const ck=sideInfo(side).key+':'+slot,crit=!!ST.crit[ck],n=hitsOf(mi,ck),mv=effMv(mi,ck);return {slot,mi,ck,mv,crit,n,r:((prof.varpow||[]).includes(M[mi])&&ST.mvo[ck]?.bp==null)?null:window.DMG.calc(toEngine(att),toEngine(def),{mv:mi,...ST.mvo[ck],hits:n,crit},F)};});
+ const D0=[0,1,2,3].map(slot=>{const mi=att.m[slot];if(mi==null)return {slot};const ck=sideInfo(side).key+':'+slot,crit=!!ST.crit[ck],n=hitsOf(mi,ck),mv=effMv(mi,ck);return {slot,mi,ck,mv,crit,n,r:window.DMG.calc(toEngine(att),toEngine(def),{mv:mi,...ST.mvo[ck],hits:n,crit},F)};});
  const total=(result,mode)=>result.per?result.per.reduce((sum,rolls)=>sum+(mode==='min'?Math.min(...rolls):Math.max(...rolls)),0):result[mode]*result.hits;
  const best=Math.max(0,...D0.map(entry=>entry.r?total(entry.r,'max'):0));
  const percent=value=>Number(Number(value).toFixed(1));
@@ -86,7 +86,7 @@ function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
   if(mi==null)return `<div class="mr em"><div class="mm" data-a="addmv" data-slot="${slot}" data-side="${side}">${slot===0&&side==='foe'&&ST.dir==='in'&&!att.m.some(move=>move!=null)?'No moves listed · ':''}+ Move</div></div>`;
   const open=ROWOPEN.has(ck),mh=MH[mi],ov=ST.mvo[ck];
   const types=`<label>Type<select data-mo="t" data-mi="${mi}" data-ck="${ck}">${TNAMES.map(t=>`<option ${t===mv.t?'selected':''}>${t}</option>`).join('')}</select></label>`;
-  const bp=r||mv.c!=='Status'?`<label>Power${nb(`data-mo="bp" data-mi="${mi}" data-ck="${ck}"`,Number(mv.bp)||0,{min:0,max:250,label:'Power'})}</label>`:'';
+  const bp=r||mv.c!=='Status'?`<label>Power${nb(`data-mo="bp" data-mi="${mi}" data-ck="${ck}"`,ov?.bp??r?.bp??(Number(mv.bp)||0),{min:0,max:250,label:'Power'})}</label>`:'';
   const hits=mh&&!TRI.has(mi)?`<label>Hits${nb(`data-mo="hits" data-mi="${mi}" data-ck="${ck}"`,n,{min:mh[0],max:mh[1],label:'Hits'})}</label>`:'';
   const choice=r?.categoryChoice,category=choice?`${r.cat} · ${choice.inverted?'Inverted':'Auto'}${choice.tie?' · tie':''}`:'';
   const invert=(prof.categoryInvert||[]).includes(M[mi])?`<label class="dmonstate"><input type="checkbox" data-mo="invert" data-mi="${mi}" data-ck="${ck}" ${ov?.invert===true?'checked':''}>Invert category</label>`:'';

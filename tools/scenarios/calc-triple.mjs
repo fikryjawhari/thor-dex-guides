@@ -1,5 +1,6 @@
-// Calc Triple Kick / Triple Axel hit button: ×n (total) → H1 → H2 → H3 → ×n, the row's outside number follows it,
-// percent and KO text stay on the total, the choice persists. Every viewer size, normal and dvkb. Without cfg.calc: skip.
+// Calc move rows. Triple Kick / Triple Axel hit button: ×n (total) → H1 → H2 → H3 → ×n, the row's outside number follows it,
+// percent and KO text stay on the total, the choice persists. Weight / HP / speed moves get their power automatically,
+// shown in the Power box, which still overrides. Every viewer size, normal and dvkb. Without cfg.calc: skip.
 import assert from 'node:assert/strict';
 import {changeMove, fixturePatches, guideArg, prepareGuide, readGuide, runChecks, setupCalc} from '../calc_check_lib.mjs';
 
@@ -38,6 +39,25 @@ const checks = [{
     await page.tap('.dres:not(.na) .mr:has(.rh[data-a="hitv"]) .rh');
     assert.equal((await read(page)).btn, '×3', 'wraps to the total');
     assert.equal(await page.value(`Object.values(CALC.state().hits).includes(0)`), true, 'kept in ST.hits');
+  },
+}, {
+  id: 'automatic power',
+  title: 'Low Kick has rolls without a set power; the Power box shows it and overrides it',
+  sizes,
+  run: async page => {
+    await setupCalc(page, {mine: ['party', 0]});
+    await changeMove(page, 0, 'Low Kick');
+    const kick = `[...document.querySelectorAll('.dres:not(.na) .mr')].find(r=>r.querySelector('.mv')?.textContent.trim()==='Low Kick')`;
+    const hp = () => page.value(`${kick}.querySelector('.r1 .hp').textContent`);
+    const auto = await hp();
+    assert.match(auto, /^\d+–\d+$/, 'rolls without a set power');
+    const box = `.dres:not(.na) .mr.open [data-mo="bp"]`;
+    const shown = Number(await page.value(`(()=>{const b=document.querySelector('${box}');return b.value;})()`));
+    assert.ok([20, 40, 60, 80, 100, 120].includes(shown), `weight band power shown (${shown})`);
+    await page.setBox(box, shown === 20 ? 120 : 20);
+    assert.notEqual(await hp(), auto, 'a set power changes the rolls');
+    await page.tap('.dres:not(.na) .mr.open [data-a="mvreset"]');
+    assert.equal(await hp(), auto, 'reset goes back to the automatic power');
   },
 }];
 
