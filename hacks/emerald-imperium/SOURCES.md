@@ -18,6 +18,7 @@ Fetched 2026-10-18 (v1.3 / 1.3.1) from the official docs folder linked from [eme
 | `site/walkthrough.html` | [emeraldimperium.info/walkthrough.html](https://emeraldimperium.info/walkthrough.html), transcribed by hand into `extract/walk.txt` |
 | `repos/eidex.zip` | [miriamlefae/eidex](https://github.com/miriamlefae/eidex) (source of dex.emeraldimperium.net) at `361c7d5` (2026-03-14; `src/data` last changed 2025-08-03). Species, moves, abilities, items, types, wild tables, sprites |
 | `repos/hzla/imp_1-3.js`, `title_to_backup_mappings.js` | [hzla/Dynamic-Calc-Decomps](https://github.com/hzla/Dynamic-Calc-Decomps) `backups/` at `f3f4140` (2026-04-05, the last change to `imp_1-3.js`). The game's own trainer sets: **the authority for boss sets** |
+| `repos/expansion/moves_info.h` | [iriv24/pokeemerald-expansion](https://github.com/iriv24/pokeemerald-expansion) at `2576d0f` (the release's source, notes.md → Damage calc): each move's crit stage (`MV.cr`; eidex has none) |
 | `repos/showdown/moves.js`, `abilities.js` | pokemon-showdown 0.11.11 `dist/data`: move priority, and flags for EI changes and originals |
 
 ## Re-fetch
@@ -33,6 +34,8 @@ curl -sL https://codeload.github.com/miriamlefae/eidex/zip/361c7d51bb5c301d9917f
 for f in imp_1-3.js title_to_backup_mappings.js; do
   curl -sL "https://raw.githubusercontent.com/hzla/Dynamic-Calc-Decomps/f3f4140feb2458bb9f9aecbeb06d6ced6b217ee0/backups/$f" -o $D/repos/hzla/$f
 done
+mkdir -p $D/repos/expansion
+curl -sL https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/src/data/moves_info.h -o $D/repos/expansion/moves_info.h
 for f in moves.js abilities.js; do curl -sL https://cdn.jsdelivr.net/npm/pokemon-showdown@0.11.11/dist/data/$f -o $D/repos/showdown/$f; done
 ```
 

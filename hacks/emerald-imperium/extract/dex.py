@@ -8,7 +8,7 @@ abilities' effect text. P.w and P.g are filled by locs.py.
 import re
 import changes
 from common import key, report
-from eidex import AD, MD, SD, SDA, TD, TN, FC, MEGA, NAME, canon, item, keep, sp
+from eidex import AD, CR, MD, SD, SDA, TD, TN, FC, MEGA, NAME, canon, item, keep, sp
 
 mvname = lambda i: MD.get(str(i), {}).get('name', f'move {i}')
 spname = lambda i: NAME.get(canon(i), sp.get(i, {}).get('speciesName', f'#{i}'))
@@ -57,6 +57,7 @@ def build(D):
         bp = d['power'] or None
         o = {'t': TN.get(d['type'], ''), 'c': CAT[d['cat']], 'bp': ('Varies' if bp == 1 else bp), 'ac': ac, 'pp': d['pp'],
              'pr': sd['pr'] if sd else 0, 'd': (d['description'] or '').replace('- ', ''), 'f': d.get('properties') or []}
+        if CR.get(key(d['name'])): o['cr'] = CR[key(d['name'])]
         # changes versus standard Gen 9 (Showdown); EI originals have no Showdown entry
         h = []
         if not sd: o['x'] = 1

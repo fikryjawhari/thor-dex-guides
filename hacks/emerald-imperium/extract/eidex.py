@@ -18,6 +18,23 @@ SD = {key(m['name']): {'pr': m['priority'], 'bp': m['basePower'], 'ac': None if 
                        'pp': m['pp'], 't': m['type'], 'c': m['category']} for m in _sd['moves'].values()}
 SDA = {key(a['name']): a['name'] for a in _sd['abilities'].values()}
 TN = {int(k): v['typeName'] for k, v in TD.items()}
+
+
+def _crit_stages():
+    """Crit stage per move name from the game's source (.src/repos/expansion/moves_info.h at the release's pin; eidex
+    has no crit field): .criticalHitStage, 6 for .alwaysCriticalHit. The one config condition (Sky Attack,
+    B_UPDATED_MOVE_DATA >= GEN_3) is true: the release sets GEN_LATEST."""
+    out = {}
+    for entry in open(SRC + '/repos/expansion/moves_info.h', encoding='utf-8').read().split('\n    [MOVE_')[1:]:
+        name = re.search(r'\.name = COMPOUND_STRING\("([^"]*)"\)', entry)
+        stage = re.search(r'\.criticalHitStage = ([^,]+),', entry)
+        cr = 6 if '.alwaysCriticalHit = TRUE' in entry else (
+            1 if stage and stage[1] == 'B_UPDATED_MOVE_DATA >= GEN_3' else int(stage[1]) if stage else 0)
+        if name and cr: out[key(name[1])] = cr
+    return out
+
+
+CR = _crit_stages()
 item = lambda i: ID.get(str(i), {}).get('Name', f'item {i}')
 
 # ---------- 1. choose which species/forms to keep
