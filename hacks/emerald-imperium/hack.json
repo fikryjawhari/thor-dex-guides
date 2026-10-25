@@ -51,6 +51,23 @@
     ]
    ],
    "over": {
+    "species": {
+     "1493": {
+      "weightkg": 70
+     },
+     "1492": {
+      "weightkg": 160
+     },
+     "1489": {
+      "weightkg": 46
+     },
+     "1531": {
+      "weightkg": 20
+     },
+     "774": {
+      "weightkg": 40
+     }
+    },
     "abilities": {
      "Iron Fist": {
       "effect": ""

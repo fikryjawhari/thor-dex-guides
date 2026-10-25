@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {createEngine, resolveProfile} from './run.mjs';
+import {speciesName, weightNames} from './src/names.js';
 
 const require = createRequire(import.meta.url);
 const {Generations, Pokemon, Move, Field, calculate} = require('@smogon/calc');
@@ -137,5 +138,21 @@ for (const matchup of fixtures.matchups.filter(entry => entry.name.startsWith('e
 const orderCase = {...fixture('physical-neutral'), slot: {mv: data.M.indexOf('Payback')}};
 const order = value => engine.calc(orderCase.atk, orderCase.def, {...orderCase.slot, order: value}, {});
 assert.ok(order('last').max > order('first').max, 'explicit order feeds order-dependent base power');
+const sourceWeightOverrides = new Map([['1493', 70], ['1492', 160], ['1489', 46], ['1531', 20], ['774', 40]]);
+for (const [id, weight] of sourceWeightOverrides) {
+  assert.equal(profile.over.species[id].weightkg, weight, `EI source weight ${id}`);
+}
+assert.equal(profile.over.species['1168']?.weightkg, undefined, 'Hoopa source/scope conflict stays with Opus');
+const stockSpecies = name => Generations.get(9).species.get(name.toLowerCase().replace(/[^a-z0-9]/g, ''));
+const sourceWeight = entry => sourceWeightOverrides.get(entry.id) ?? stockSpecies(speciesName(entry.n))?.weightkg
+  ?? weightNames(entry.n).map(stockSpecies).find(species => species?.weightkg)?.weightkg ?? 1;
+const weightPower = weight => weight >= 200 ? 120 : weight >= 100 ? 100 : weight >= 50 ? 80
+  : weight >= 25 ? 60 : weight >= 10 ? 40 : 20;
+for (const entry of data.P) {
+  const power = engine.calc({id: '9', lv: 50, ab: -1}, {id: entry.id, lv: 50, ab: -1},
+    {mv: data.M.indexOf('Grass Knot')}, {}).bp;
+  assert.equal(power, weightPower(sourceWeight(entry)), `EI source weight band ${entry.id} ${entry.n}`);
+}
+console.log(`PASS EI W2 weights: ${data.P.length} species bands; five source overrides; Hoopa deferred`);
 assert.equal(JSON.stringify({data, profile, fixtures}), unchanged, 'inputs untouched');
 console.log(`Emerald Imperium: ${results.size} fixtures; source modifier/category checks, field parity and priority/order checks passed`);
