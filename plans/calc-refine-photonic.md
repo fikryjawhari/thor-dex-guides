@@ -118,6 +118,24 @@ Minor: Horn Leech starts at 65 in the doc and 75 in the MV.h note; both end at 9
 
 Could not classify: none.
 
+## Totem data (step 7)
+
+- 2026-10-25 checkpoint 1: hand-checked all 13 tables (33 mons) in the local `Totem Battles.txt`;
+  shifted row labels make automatic parsing unsafe. `.src/` already exists here; no main-checkout copy needed.
+- Cross-check: all 653 game trainer records, including 38 teams using listed Totem species, contain no
+  matching Totem encounter. No existing TR Totems to enrich. The doc supplies these wild/SOS sets and auras.
+  No hzla code or tables copied.
+- Allies follow the lead in `p`, not `pt`: `template/dex.js` line 664 reserves `pt` for the player's partner.
+  Use the existing `Prismatic Moon` version tag for Raticate.
+- Initial data table only; integration, schema, source notes and assertions follow in checkpoint 2.
+- Checkpoint 1 gates: npm test, photonic_check, hzla_compare (118 matches / 28 known / 0 mismatches / 0 errors),
+  extract/check.py and datajson hack canonicalisation all exit 0. Log: `.tmp/calc-refine/totem.log`.
+- Needs Opus (step 7): the doc calls Togedemaru's ally only "Rotom" but gives Hydro Pump. Preserve base Rotom
+  pending a verdict on Wash Rotom; trainer archives do not resolve the form. IVs are absent from the doc;
+  rendering requires `iv[6]`, so label 31-IV assumptions explicitly rather than claim game evidence.
+- Ultra Necrozma's doc level 100 stays separate from the user-selected cap 95.
+- Rematches follow Ilima's post-game battle: walkthrough Part 34 describes taking his Normalium Z to Verdant Cavern.
+
 ## Unit Z
 
 - [x] **Z2 conversion fixtures/check block:** engine `580f021`; fixture commits `b73d0ab`, `3ffed9b`;
