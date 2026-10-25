@@ -284,6 +284,9 @@ await test('weight, HP, speed and boost powers are automatic; a set power still 
     assert.equal(fixed.bp, undefined, `${base} a set power is not reported back`);
     assert.ok(fixed.max < plain(engine.calc(set('Pikachu'), set('Snorlax'), slot('Low Kick'), {})).max, `${base} set power 60 < 120`);
     assert.equal(engine.calc(set('Snorlax'), set('Pikachu'), slot('Return'), {}), null, `${base} Return still needs a power`);
+    assert.equal(power(set('Snorlax'), set('Nidoran♀'), 'Low Kick'), 20, `${base} Nidoran-F keeps its own entry (7 kg)`);
+    assert.ok(engine.stats(set('Nidoran♀'))[1] < engine.stats(set('Nidoran♂'))[1], `${base} Nidoran-F and -M keep their own stats`);
+    assert.equal(power(set('Snorlax'), set('Flabébé'), 'Low Kick'), 20, `${base} an accented name builds`);
     assert.equal(power(set('Snorlax'), set('Alolan Golem'), 'Low Kick'), 120, `${base} a regional form takes its stock weight (316 kg)`);
     assert.equal(power(set('Snorlax'), set('Mega Butterfree'), 'Low Kick'), 60, `${base} a hack Mega takes its base species' weight (32 kg)`);
   }

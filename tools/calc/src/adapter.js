@@ -44,7 +44,9 @@ function stockData(number) {
 }
 
 function speciesName(name) {
-  return name.replace(/^Mega (.+?)(?: ([XY]))?$/, (_, base, suffix) => `${base}-Mega${suffix ? '-' + suffix : ''}`)
+  // Accents and gender signs would vanish in the engine's ids (Nidoran-F / -M must stay apart; Flabebe is stock's).
+  return name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace('♀', '-F').replace('♂', '-M')
+    .replace(/^Mega (.+?)(?: ([XY]))?$/, (_, base, suffix) => `${base}-Mega${suffix ? '-' + suffix : ''}`)
     .replace(/^Primal (.+)$/, '$1-Primal');
 }
 

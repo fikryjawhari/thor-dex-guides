@@ -209,8 +209,8 @@ against stock Gen 9 built with guide stats. These are manual-power checks, NOT a
   weight consumers (e.g. Sky Drop). Consider source-backed `cfg.calc.over.species[id].weightkg` overrides and
   canonical-name resolution; do not alias forms onto another guide species' name. All missing stock names
   are listed below as **source kg [Species.c species-block line]**; their current engine weight is always 1 kg.
-  - Nidoranâ™€ 7 [1657]; Nidoranâ™‚ 9 [1828]; Mega Absol Z 49 [81913]; Mega Garchomp Z 99 [82027].
-  - Mega Lucario Z 49.4 [82084]; Wormadam Trashy 6.5 [84364]; FlabÃ©bÃ© 0.1 [40987]; Raticate Alolan 25.5 [64243].
+  - Nidoran♀ 7 [1657]; Nidoran♂ 9 [1828]; Mega Absol Z 49 [81913]; Mega Garchomp Z 99 [82027].
+  - Mega Lucario Z 49.4 [82084]; Wormadam Trashy 6.5 [84364]; Flabébé 0.1 [40987]; Raticate Alolan 25.5 [64243].
   - Raichu Alolan 21 [64300]; Sandshrew Alolan 40 [64357]; Sandslash Alolan 55 [64414]; Ninetales Alolan 19.9 [64528].
   - Geodude Alolan 20.3 [64813]; Graveler Alolan 110 [64870]; Golem Alolan 316 [64927]; Grimer Alolan 42 [64984].
   - Muk Alolan 52 [65041]; Exeggutor Alolan 415.6 [65098]; Marowak Alolan 34 [65155]; Meowth Galarian 7.5 [65896].
@@ -283,7 +283,9 @@ into reference Pokemon, and accepts a reference-only field adjustment for the la
   cases compare exact rolls with fixed 77 BP. `desc.moveBP` is updated alongside the rule power so the
   engine's returned `bp` does not retain the stock pre-rule value.
 
-**Needs Opus (open, shared identity bugs):**
+**Needs Opus (shared identity bugs): done by the orchestrator** (`speciesName()` strips accents and maps ♀ / ♂ to
+-F / -M, so Nidoran-F keeps its own stats and 7 kg and Flabébé builds; tests in `tools/calc/test.mjs`; no id collisions
+left in any guide). Original rows:
 - `nidoran_f`: lookup correctly finds 7 kg, but both guide names `Nidoran♀` / `Nidoran♂` normalize to the
   same stored engine key `nidoran`; the later male overwrites the female. Live female probe reads **9 kg**.
   A weight-only override cannot disambiguate that shared key. Needs canonical, distinct species names in

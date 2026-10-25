@@ -30,13 +30,12 @@ Session 2 (2026-10-25): **F** done (Sol `6a80e17`; Opus rows `2f125af`: Hardlove
 fixtures) and found weight moves were manual everywhere: the user chose **automatic power** (weight, HP, speed, boosts;
 engine `AUTO_POWER` + form-name weight fallback, Opus). W continues as "W2" below.
 Also `7b93a0f` (Fling / Natural Gift automatic, `plans/calc-dynamic-power.md`); pushed up to `e8cb822`.
-**Handover (end of session 2, 154 requests / 246k context):** W2 Hardlove was dispatched to Sol (T3 `delegate_task`,
-shared checkout, `clientRequestId` `calc-refine-2-W2-hardlove`); if it has committed, review its diff and the
-`### W2` heading in `plans/calc-refine-hardlove.md`, do its Needs Opus rows, then dispatch W2 for Photonic, Eternal X
-and EI one at a time (the W2 row below plus that hack's weight list in `plans/calc-dynamic-power.md`). If it did not
-finish, its WIP commits say where it stopped. The user takes the rest of the dynamic-power engine work (state toggles,
-pre-hit stat changes) to its own session: `plans/calc-dynamic-power.md`.
-Open, in order: **W2** (Hardlove running; then Photonic, Eternal X, EI), **Z**, **T**, then **A**. Rows below.
+**Handover (end of session 2):** W2 Hardlove done (Sol `83e9b39`: Megas Z / Maushold weights, inclusive weight bands,
+ratio / Flail / Gyro Ball / Hard Press source rules, 105 checks); its Needs Opus rows fixed by the orchestrator (species
+names: accents and ♀ / ♂, which had merged Nidoran-F into -M in every guide). The user takes the rest of the
+dynamic-power engine work (state toggles, pre-hit stat changes) to its own session: `plans/calc-dynamic-power.md`.
+Open, in order: **W2** for Photonic, Eternal X, EI (one Sol agent each, the W2 row plus that hack's list in
+`plans/calc-dynamic-power.md`), **Z**, **T**, then **A**. Rows below.
 Dynamic power beyond weight / HP / speed (state toggles, counters) and the full form-weight pass: `plans/calc-dynamic-power.md`
 (later sessions; W2 uses its weight list).
 Session 2 models: Sol (`delegate_task`, T3 worktrees start from main, so give it this branch's worktree path or use
