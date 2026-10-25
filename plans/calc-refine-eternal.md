@@ -94,3 +94,70 @@ always-crit part of Cut is a rule).
   number (EI's expansion source does exactly this: battle_util.c EFFECT_TRIPLE_KICK), and Gen 5/6 now passes the hit
   number (stock left every hit at the first-hit power). Eternal X: 20 / 40 / 60; the oracle's flat 20 is wrong for
   hits 2-3. No oracle fixture (the stock reference loop can't express it); covered by test.mjs.
+
+
+### W2: stock weights and automatic power (2026-10-25)
+
+- [x] Weight audit: all 782 guide species, including 29 stock XY Megas.
+- [ ] Automatic-power fixtures and boundary checks.
+- [ ] Final checks and Damage calc notes.
+
+Eternal X changes no weights (user's binding scope: unchanged Gen 6 data). The engine lookup probe
+finds 746 direct stock matches, 36 weightNames() fallbacks and zero 1 kg defaults. Nidoran-F and
+Nidoran-M resolve directly and remain distinct (7 and 9 kg). No weight override is needed; cfg.calc
+is unchanged. Every directly named species, including all 29 Megas, uses its stock Gen 6 weight.
+There are no regional forms, Primals or undocumented hack-only species in this guide.
+
+Online reference checked 2026-10-25: [Bulbapedia, List of Pokemon by weight](https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_weight).
+The complete form verdict table includes the supplied list plus eight additional fallback names:
+five appliance Rotom, White/Black Kyurem and Flabebe (Red). These are stock forms, not hack additions.
+Weights are kilograms; reference and engine columns agree in every row. Cosmetic/default forms
+retain their stock base weight; specific Rotom/Kyurem stock forms are found before the base fallback.
+
+| Guide species | Engine stock lookup | Reference kg | Engine kg | Verdict |
+| --- | --- | ---: | ---: | --- |
+| Nidoran♀ | Nidoran-F | 7 | 7 | Correct; stock, unchanged |
+| Nidoran♂ | Nidoran-M | 9 | 9 | Correct; stock, unchanged |
+| Castform (Normal) | Castform | 0.8 | 0.8 | Correct; fallback, unchanged |
+| Deoxys (Normal) | Deoxys | 60.8 | 60.8 | Correct; fallback, unchanged |
+| Burmy (Plant) | Burmy | 3.4 | 3.4 | Correct; fallback, unchanged |
+| Wormadam (Plant) | Wormadam | 6.5 | 6.5 | Correct; fallback, unchanged |
+| Cherrim (Overcast) | Cherrim | 9.3 | 9.3 | Correct; fallback, unchanged |
+| Shellos (West Sea) | Shellos | 6.3 | 6.3 | Correct; fallback, unchanged |
+| Gastrodon (West Sea) | Gastrodon | 29.9 | 29.9 | Correct; fallback, unchanged |
+| Heat Rotom | Rotom-Heat | 0.3 | 0.3 | Correct; fallback, unchanged |
+| Wash Rotom | Rotom-Wash | 0.3 | 0.3 | Correct; fallback, unchanged |
+| Frost Rotom | Rotom-Frost | 0.3 | 0.3 | Correct; fallback, unchanged |
+| Fan Rotom | Rotom-Fan | 0.3 | 0.3 | Correct; fallback, unchanged |
+| Mow Rotom | Rotom-Mow | 0.3 | 0.3 | Correct; fallback, unchanged |
+| Giratina (Altered) | Giratina | 750 | 750 | Correct; fallback, unchanged |
+| Shaymin (Land) | Shaymin | 2.1 | 2.1 | Correct; fallback, unchanged |
+| Basculin (Red-Striped) | Basculin | 18 | 18 | Correct; fallback, unchanged |
+| Darmanitan (Standard) | Darmanitan | 92.9 | 92.9 | Correct; fallback, unchanged |
+| Deerling (Spring) | Deerling | 19.5 | 19.5 | Correct; fallback, unchanged |
+| Sawsbuck (Spring) | Sawsbuck | 92.5 | 92.5 | Correct; fallback, unchanged |
+| Tornadus (Incarnate) | Tornadus | 63 | 63 | Correct; fallback, unchanged |
+| Thundurus (Incarnate) | Thundurus | 61 | 61 | Correct; fallback, unchanged |
+| Landorus (Incarnate) | Landorus | 68 | 68 | Correct; fallback, unchanged |
+| White Kyurem | Kyurem-White | 325 | 325 | Correct; fallback, unchanged |
+| Black Kyurem | Kyurem-Black | 325 | 325 | Correct; fallback, unchanged |
+| Keldeo (Ordinary) | Keldeo | 48.5 | 48.5 | Correct; fallback, unchanged |
+| Meloetta (Aria) | Meloetta | 6.5 | 6.5 | Correct; fallback, unchanged |
+| Vivillon (Icy Snow) | Vivillon | 17 | 17 | Correct; fallback, unchanged |
+| Flabébé (Red) | Flabébé | 0.1 | 0.1 | Correct; fallback, unchanged |
+| Floette (Red) | Floette | 0.9 | 0.9 | Correct; fallback, unchanged |
+| Floette (Yellow) | Floette | 0.9 | 0.9 | Correct; fallback, unchanged |
+| Florges (Red) | Florges | 10 | 10 | Correct; fallback, unchanged |
+| Furfrou (Natural) | Furfrou | 28 | 28 | Correct; fallback, unchanged |
+| Meowstic (Male) | Meowstic | 8.5 | 8.5 | Correct; fallback, unchanged |
+| Meowstic (Female) | Meowstic | 8.5 | 8.5 | Correct; fallback, unchanged |
+| Pumpkaboo (Average) | Pumpkaboo | 5 | 5 | Correct; fallback, unchanged |
+| Gourgeist (Average) | Gourgeist | 12.5 | 12.5 | Correct; fallback, unchanged |
+| Xerneas (Neutral) | Xerneas | 215 | 215 | Correct; fallback, unchanged |
+
+Probe and full 782-row audit: .tmp/calc-refine/w2-eternal-probe.mjs and w2-eternal-weights.json.
+Execution/check log: .tmp/calc-refine/w2-eternal.log. No source tables or oracle code were copied.
+
+#### W2 Needs Opus
+
+None from the weight audit. Regional-form fixture is not applicable: none exists in the guide.
