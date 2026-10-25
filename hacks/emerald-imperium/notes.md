@@ -526,9 +526,9 @@ The JSON in #data, the same for every guide. Key order and what is dropped: tool
 extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides that have that data, the others omit it.
   Top level, in order: M MV AB P LOC AR [ARO] IT WK TR TC built   (no build markers, no source strings)
   M   [moveName]
-  MV  [{t type, c category, bp power or "Varies", ac accuracy or null, pp, pr priority, d description, f flags[],
-        h change notes[], [dc 1 = the changes doc lists it, e the doc's paragraph], [cf doc-vs-data conflicts[]],
-        [x 1 = hack original]}]
+  MV  [{t type, c category, bp power or "Varies", ac accuracy or null, pp, pr priority, [cr crit stage when not 0,
+        6 = always a crit (the damage calc)], d description, f flags[], h change notes[], [dc 1 = the changes doc
+        lists it, e the doc's paragraph], [cf doc-vs-data conflicts[]], [x 1 = hack original]}]
   AB  [[name, description, [1 if hack original, [changed]]]]   (trailing falsy values are not written)
   P   [{id speciesId string, n display name, dex, t[types], a[abilityIdx], ha hidden abilityIdx or -1,
         s[HP,Atk,Def,SpA,SpD,Spe], ef/et [[how, id]] evolves from/into, of[ids] other forms, lv[[level, moveIdx]]
