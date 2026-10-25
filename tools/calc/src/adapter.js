@@ -131,6 +131,8 @@ function init(guide, configuration) {
     natures: table(stock.natures), types: table(types),
     guideRules: prepareRules(profile.over),
   };
+  // A target in the state a move punishes (`def.vol`, Gen 5+): double damage, ahead of the hack's own final rules.
+  (generation.guideRules.finalMods ||= []).unshift({phase: 'finalMods', when: {ref: 'state.volDouble'}, append: [8192]});
 }
 
 function pokemon(set) {
@@ -314,6 +316,61 @@ function zPower(moveData, power, listed) {
     : power <= 100 ? 180 : power <= 110 ? 185 : power <= 125 ? 190 : power <= 130 ? 195 : 200;
 }
 
+// Battle state the page passes per row (README → Battle state): `slot.st` is a toggle or the earlier count,
+// `slot.curl` Defense Curl before Rollout / Ice Ball, `slot.met` earlier uses with a held Metronome, `atk.fnt` fainted
+// allies (Supreme Overlord), `def.vol` the target's state. Stock has none of these counters (its `timesUsed` repeats
+// the whole hit over turns). A hack's `over.state` changes one move: `false` = the state does nothing (flat in its
+// source), `{curl: false}` = Defense Curl doesn't double it, `{vol: false}` / `{vol: 'power'}` = the target's state
+// doesn't double it / doubles its power instead of its damage.
+const COUNTERS = {
+  'Fury Cutter': [4, (power, count) => Math.min(160, power * 2 ** count)],
+  'Echoed Voice': [4, (power, count) => Math.min(200, power * (count + 1))],
+  'Rollout': [4, (power, count) => power * 2 ** count],
+  'Ice Ball': [4, (power, count) => power * 2 ** count],
+  'Rage Fist': [6, (power, count) => power + 50 * count],
+  'Last Respects': [100, (power, count) => power + 50 * count],
+};
+// Doubled power when the row's toggle is on (Revenge / Avalanche: hit by this target first; Lash Out: a stat dropped
+// this turn; Fusion / Round: the partner move went just before; Fickle Beam: the 30% double).
+const TOGGLES = new Set(['Assurance', 'Revenge', 'Avalanche', 'Retaliate', 'Stomping Tantrum', 'Temper Flare',
+  'Lash Out', 'Fusion Flare', 'Fusion Bolt', 'Round', 'Fickle Beam']);
+// Pledge combos (`slot.st` = the partner's pledge): power 150, the pair's type, always STAB.
+const PLEDGES = {'Fire Pledge': 'Fire', 'Water Pledge': 'Water', 'Grass Pledge': 'Grass'};
+const pledgeType = pair => pair.includes('Water') ? (pair.includes('Fire') ? 'Water' : 'Grass') : 'Fire';
+// Double damage against a target in that state (`def.vol`): [first generation, last generation]. Before Gen 5 (Gen 6
+// for Minimize) the power doubles instead.
+const VOLATILE = {
+  dig: {'Earthquake': [4], 'Magnitude': [4]},
+  dive: {'Surf': [4], 'Whirlpool': [4]},
+  fly: {'Gust': [4], 'Twister': [4]},
+  min: {'Stomp': [4], 'Steamroller': [5], 'Body Slam': [6], 'Dragon Rush': [6], 'Flying Press': [6],
+    'Phantom Force': [6, 6], 'Shadow Force': [6, 6], 'Heat Crash': [6], 'Heavy Slam': [7], 'Malicious Moonsault': [7],
+    'Supercell Slam': [9]},
+};
+const VOLATILE_NOTES = {dig: 'Dig', dive: 'Dive', fly: 'Fly', min: 'Minimize'};
+
+// The move's power from the row's state, and whether the target's state doubles the damage. A power the page sets
+// (variable moves) keeps only the target's state.
+function statePower(name, power, def, slot, fixed) {
+  const own = profile.over?.state?.[name];
+  let result = power;
+  let double = false;
+  if (!fixed && own !== false && slot.st !== undefined && slot.st !== false) {
+    const counter = COUNTERS[name];
+    if (counter) {
+      const count = Math.max(0, Math.min(counter[0], Math.trunc(Number(slot.st)) || 0));
+      result = counter[1](power, count);
+    } else if (TOGGLES.has(name) && slot.st === true) result = power * 2;
+  }
+  if (!fixed && (name === 'Rollout' || name === 'Ice Ball') && slot.curl && own?.curl !== false) result *= 2;
+  const range = VOLATILE[def.vol]?.[name];
+  if (range && own?.vol !== false && profile.gen >= range[0] && profile.gen <= (range[1] ?? 9)) {
+    if (own?.vol === 'power' || profile.gen < (def.vol === 'min' ? 6 : 5)) result *= 2;
+    else double = true;
+  }
+  return {power: result, double};
+}
+
 function calc(atk, def, slot, values = {}) {
   const entry = data.MV[slot.mv];
   const name = data.M[slot.mv];
@@ -325,16 +382,23 @@ function calc(atk, def, slot, values = {}) {
   const auto = listed && AUTO_POWER.has(moveData.name);
   const variable = listed && !auto;
   if (variable && slot.bp === undefined) return null;
-  const power = slot.bp ?? (auto ? 1 : moveData.basePower);
+  const state = statePower(name, slot.bp ?? (auto ? 1 : moveData.basePower), def, slot, slot.bp !== undefined || listed);
+  const pledge = PLEDGES[name] && PLEDGES[slot.st] && slot.st !== name && slot.bp === undefined
+    && profile.over?.state?.[name] !== false ? pledgeType([PLEDGES[name], PLEDGES[slot.st]]) : '';
+  const power = pledge ? 150 : state.power;
   if (!(Number(power) > 0)) return null;
   const attacker = pokemon(atk);
   const defender = pokemon(def);
+  const moveType = slot.t || pledge || moveData.type;
   // Protean / Libero: the attacker turns into the move's type (STAB and anything reading its type); a defender keeps
   // the type the page chose for it.
-  if (changesType(attacker, atk)) attacker.types = [slot.t || moveData.type];
+  if (changesType(attacker, atk)) attacker.types = [moveType];
   if (def.pty && changesType(defender, def)) defender.types = [def.pty];
+  if (pledge && !attacker.hasType(pledge)) attacker.types = [...attacker.types, pledge];
+  if (atk.fnt > 0) attacker.alliesFainted = Math.min(5, Math.trunc(atk.fnt));
   const field = battleField(values);
-  const overrides = {...moveData, basePower: Number(power), type: slot.t || moveData.type};
+  if (def.vol === 'switch') field.defenderSide.isSwitching = 'out';
+  const overrides = {...moveData, basePower: Number(power), type: moveType};
   const useZ = !!(profile.zmove && slot.z && moveData.category !== 'Status');
   if (useZ) overrides.zMove = {basePower: zPower(moveData, Number(power), listed)};
   if (listed && slot.bp !== undefined) {
@@ -347,6 +411,7 @@ function calc(atk, def, slot, values = {}) {
   const selected = useZ ? 1 : hitCount(slot.hits ?? defaultHits);
   const move = new Move(generation, moveData.name, {
     overrides, isCrit: !!slot.crit, hits: selected, ability: attacker.ability, item: attacker.item, useZ,
+    ...(slot.met > 0 ? {timesUsedWithMetronome: Math.trunc(slot.met)} : {}),
   });
   move.hits = selected;
   const context = {
@@ -359,8 +424,9 @@ function calc(atk, def, slot, values = {}) {
       def: data.P.find(entry => String(entry.id) === String(def.id)).n,
       atkAbility: data.AB[atk.ab]?.[0] || '', defAbility: data.AB[def.ab]?.[0] || '',
       atkItem: atk.it || '', defItem: def.it || '', move: name},
-    state: {hit: 1, hitCount: 0, hits: selected, originalPower: Number(power)},
+    state: {hit: 1, hitCount: 0, hits: selected, originalPower: Number(power), volDouble: state.double},
   };
+  if (state.double) context.notes.add(VOLATILE_NOTES[def.vol]);
   generation.guideContext = context;
   const hits = hitCount(applyPhase(generation, 'hits', {}, selected));
   move.hits = hits;
@@ -375,6 +441,12 @@ function calc(atk, def, slot, values = {}) {
     throw new Error(`DMG: invalid damage rolls for ${name}`);
   }
   const rolls = per[0];
+  const perHit = per.some(hit => hit.some((value, index) => value !== rolls[index]));
+  // The power the hit used (state, stock power changes like Facade or Hex, the hack's own power rules), reported
+  // whenever it differs from the listed power; moves whose power changes hit by hit keep their per-hit rolls instead.
+  // Stock reports a power modifier unrounded (Knock Off 97.5); the game rounds it (Gen 5+ half down, Gen 4 floor).
+  const rawPower = result.rawDesc.moveBP ?? context.state.firstPower ?? Number(power);
+  const shownPower = Number.isInteger(rawPower) ? rawPower : profile.gen >= 5 ? Math.ceil(rawPower - 0.5) : Math.floor(rawPower);
   const min = Math.min(...rolls);
   const max = Math.max(...rolls);
   let eff = context.state.typeEffectiveness ?? 1;
@@ -399,12 +471,13 @@ function calc(atk, def, slot, values = {}) {
   return {
     cat: move.category, rolls: [...rolls], hits: per.length, min, max,
     ...((auto || HP_POWER.has(moveData.name)) && slot.bp === undefined && description.moveBP
-      ? {bp: description.moveBP} : {}),
+      ? {bp: description.moveBP} : !listed && !useZ && slot.bp === undefined && !perHit && shownPower !== moveData.basePower
+        ? {bp: shownPower} : {}),
     priority: context.move.priority,
     ...(context.move.useZ ? {z: context.move.name} : {}),
     ...(context.state.categoryAuto ? {categoryChoice: {automatic: context.state.categoryAuto,
       inverted: context.state.categoryInverted, tie: context.state.categoryTie}} : {}),
-    ...(per.some(hit => hit.some((value, index) => value !== rolls[index])) ? {per} : {}),
+    ...(perHit ? {per} : {}),
     pmin: per.reduce((sum, hit) => sum + Math.min(...hit), 0) * 100 / defender.maxHP(),
     pmax: per.reduce((sum, hit) => sum + Math.max(...hit), 0) * 100 / defender.maxHP(),
     ko: knockout(per, current, eot, defender.maxHP() - current), eff, notes: [...new Set(notes)],

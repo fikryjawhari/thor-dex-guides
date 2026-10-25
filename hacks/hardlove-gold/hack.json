@@ -266,6 +266,23 @@
    ],
    "over": {
     "critMultiplier": 1.5,
+    "state": {
+     "Echoed Voice": false,
+     "Rage Fist": false,
+     "Last Respects": false,
+     "Avalanche": false,
+     "Round": false,
+     "Fusion Flare": false,
+     "Fusion Bolt": false,
+     "Fire Pledge": false,
+     "Water Pledge": false,
+     "Grass Pledge": false,
+     "Rollout": {"curl": false},
+     "Ice Ball": {"curl": false},
+     "Magnitude": {"vol": false},
+     "Gust": {"vol": "power"},
+     "Twister": {"vol": "power"}
+    },
     "rules": [
      {
       "phase": "powerMods",

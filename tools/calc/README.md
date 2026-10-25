@@ -110,6 +110,30 @@ within a use (Triple Axel/Kick scaling, defensive changes, Parental Bond) retain
 their own distributions. Changes between uses are not simulated. `eff: 0` means
 immune, and `notes` contains short modifier labels including declarative rule notes.
 
+`bp` is present whenever the first hit's power differs from the listed power:
+state counters, stock power changes (Facade, Hex, Brine, Knock Off, Weather
+Ball, Payback, Acrobatics), the hack's own `movePower` rules, rounded as the
+game does (Gen 5+ half down, Gen 4 floor). Not for a power the page sets, Z-moves
+or moves whose power changes hit by hit (they return `per`).
+
+### Battle state
+
+Optional inputs; a page that passes none gets the same rolls as before.
+
+| Input | Meaning |
+| --- | --- |
+| `slot.st` | The row's state. Counters take the earlier count (0 = first use), clamped: Fury Cutter (power doubles to 160), Echoed Voice (+listed per turn, 200), Rollout / Ice Ball (×2 per hit, 4), Rage Fist (+50 per hit, 6), Last Respects (+50 per faint, 100). Toggles take `true` (power ×2): Assurance, Revenge, Avalanche, Retaliate, Stomping Tantrum, Temper Flare, Lash Out, Fusion Flare / Bolt, Round, Fickle Beam. Pledges take the partner pledge's name: power 150, the pair's type, always STAB. Never stock `timesUsed`, which repeats the hit over turns. |
+| `slot.curl` | Defense Curl used earlier: Rollout / Ice Ball power ×2. |
+| `slot.met` | Earlier consecutive uses with a held Metronome (stock `timesUsedWithMetronome`). |
+| `atk.fnt` | Fainted allies, 0-5 (Supreme Overlord, stock `alliesFainted`). |
+| `def.vol` | `dig` (Earthquake, Magnitude), `dive` (Surf, Whirlpool), `fly` (Gust, Twister), `min` (Stomp, Steamroller, Body Slam, Dragon Rush, Flying Press, Heat Crash, Heavy Slam from Gen 7, Malicious Moonsault, Supercell Slam; Phantom / Shadow Force in Gen 6 only): damage ×2 (a built-in `finalMods` rule ahead of the hack's, note `Dig` / `Dive` / `Fly` / `Minimize`); before Gen 5 (Gen 6 for `min`) the power doubles instead. `switch`: Pursuit's switching target (stock `isSwitching: 'out'`). |
+
+`over.state` (per hack) changes a move whose source differs: `false` = the state
+input does nothing, `{curl: false}` = Defense Curl doesn't double it, `{vol: false}`
+/ `{vol: "power"}` = the target's state doesn't double it / doubles its power
+instead of its damage. Fixtures: `hacks/<hack>/calc_states.json`, checked by
+`state_check.mjs` (in `npm test`); each case cites its rule.
+
 ## Base profiles and fields
 
 The six committed JSON bases contain generation defaults, not verified hack

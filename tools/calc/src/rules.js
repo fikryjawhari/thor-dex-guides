@@ -116,7 +116,10 @@ export function applyPhase(gen, phase, local, value) {
     if (rule.note) base.notes.add(String(expression(rule.note, context)));
   }
   if (phase === 'critical') state.isCritical = context.value;
-  if (phase === 'movePower') state.basePower = context.value;
+  if (phase === 'movePower') {
+    state.basePower = context.value;
+    if (state.hit === 1) state.firstPower = context.value;
+  }
   if (phase === 'effectiveness') state.effectivenessType = local.state.effectivenessType;
   return context.value;
 }

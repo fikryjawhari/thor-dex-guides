@@ -1,12 +1,13 @@
 // Battle-state fixtures: runs every hacks/<hack>/calc_states.json through the built engine and checks each `expect`
 // ({bp}, {ref: slot overrides}, {rolls: [16]}, {pre}, {crit: {stage, p, forced}}). Usage: node state_check.mjs [hack ...]
 import {readdir, readFile} from 'node:fs/promises';
-import {isDeepStrictEqual} from 'node:util';
 import {createEngine} from './run.mjs';
 
 const root = new URL('../../hacks/', import.meta.url);
 // Expectation kinds the engine does not produce yet: counted, not failed (U6 adds crit).
 const PENDING = new Set(['crit']);
+// Results come from the engine's vm context (other-realm arrays), so compare as JSON.
+const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const load = async (hack, name) => JSON.parse(await readFile(new URL(`${hack}/${name}.json`, root), 'utf8'));
 const hacks = process.argv.slice(2).length ? process.argv.slice(2) : (await Promise.all((await readdir(root))
   .map(async hack => (await readFile(new URL(`${hack}/calc_states.json`, root)).then(() => hack, () => null)))))
@@ -39,15 +40,15 @@ for (const hack of hacks) {
         const got = result.bp ?? Number(data.MV[fixture.slot.mv].bp);
         return got === want ? '' : `bp ${got}, want ${want}`;
       }
-      if (kind === 'rolls') return isDeepStrictEqual(result.rolls, want) ? '' : `rolls ${result.rolls}, want ${want}`;
+      if (kind === 'rolls') return same(result.rolls, want) ? '' : `rolls ${result.rolls}, want ${want}`;
       if (kind === 'ref') {
         const twin = engine.calc(fixture.atk, fixture.def, {...fixture.slot, ...want}, fixture.field || {});
         if (!twin) return 'twin is null';
-        return isDeepStrictEqual(result.rolls, twin.rolls) && result.hits === twin.hits ? ''
+        return same(result.rolls, twin.rolls) && result.hits === twin.hits ? ''
           : `rolls ${result.rolls} x${result.hits}, twin ${twin.rolls} x${twin.hits}`;
       }
       if (kind === 'pre' || kind === 'crit') {
-        return isDeepStrictEqual(result[kind], want) ? '' : `${kind} ${JSON.stringify(result[kind])}, want ${JSON.stringify(want)}`;
+        return same(result[kind], want) ? '' : `${kind} ${JSON.stringify(result[kind])}, want ${JSON.stringify(want)}`;
       }
       return `unknown expect ${kind}`;
     })();
