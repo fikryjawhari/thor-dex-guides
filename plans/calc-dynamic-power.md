@@ -4,6 +4,65 @@ Status 2026-10-25 (`worktree-damage-calc`, session 2 of `plans/calc-refine.md`).
 depends on the battle state to work dynamically (HP, speed, ability, item, Float Stone and the like). Max / Z moves are
 out for now. A hack that changes or adds one documents it in its notes (handled per hack, as a rule).
 
+## Engine pass 2026-10-26: unit list (waiting for the user's OK)
+Orchestrator: Opus main chat on `worktree-damage-calc` (`.claude/worktrees/damage-calc`, shared by every unit). Sol =
+`gpt-6.1-sol` via `delegate_task`; Sol writes only `plans/` notes and fixture files, never `tools/calc/src` or
+`template/`. Haiku medium (under 100k) finishes a Sol unit from its last `WIP:` commit if Sol runs out. Every unit
+commits per sub-step.
+
+**What the survey already found (orchestrator, before the units):**
+- Stock 0.12.0 handles only three of D's inputs: Pursuit (`defenderSide.isSwitching`), the Metronome item
+  (`move.timesUsedWithMetronome`) and Supreme Overlord (`attacker.alliesFainted`). Nothing else in D has a stock
+  condition (no Fury Cutter, Echoed Voice, Rollout, Ice Ball, Rage Fist, Last Respects, Assurance state, Revenge /
+  Avalanche, Retaliate, Stomping Tantrum / Temper Flare, combos, Fickle Beam, Dig / Fly / Dive / Minimize).
+- Stock's `move.timesUsed` is **not** a Fury Cutter counter: it repeats the whole hit "over N turns" (gen3/4/789
+  `numAttacks`). Passing it would multiply damage. The counters become our own `movePower` phase on a slot input
+  (below); the toggle spec's "`timesUsed` = count + 1" line is corrected by U2.
+- B (form weights): all four W2 audits are done and every listed form was checked; the overrides are in. Hardlove's
+  two open identity bugs (Nidoran♀/♂ sharing a key, Flabébé throwing) were fixed since (`tools/calc/test.mjs`
+  287-289); Hardlove's notes still call them open. Photonic's oracle blocker (Needs Opus 6) is closed:
+  `hzla_compare photonic-sun` today gives 118 match / 28 known / 0 mismatch / 0 error. Nothing is still open in B
+  except stale text; if "Photonic's blocker" meant something else, say which.
+- C, Photonic Triple Kick 20 / Power Gem 90: the game data (`.src/dex-rebalanced.json`, the 3DS authority) has 10 / 80
+  (Power Gem's PP 15 change *is* in the game, so the dump is the patched one). `data.json` matches the game; only a
+  "Doc says" note is missing. Eternal X has 20 / 90 in its game data, as in its doc.
+- C, Eternal X Frost Breath: game data is identical to vanilla X (60 power, 90 acc, crit stage 6 = always crit);
+  vanilla X already had the Gen 6 buff 40 → 60, which is likely what the changelog means. No data change; a note.
+- C, Drill Peck: both 3DS dumps carry a per-move `crit` field (Drill Peck 0 → 1; Frost Breath 6). So crit stages come
+  from game data for Photonic / Eternal X, from `moves_info.h` `.criticalHitStage` for EI and from hg-engine's move
+  data for Hardlove.
+
+**Input contract added by U2 / U3 / U5** (slot / set / field fields, all optional; old pages pass none and get today's
+results):
+- `slot.st`: the row's state. Toggle moves: `true`. Counter moves: the earlier count (0 = first use).
+- `slot.met`: consecutive uses with a held Metronome (passed to stock `timesUsedWithMetronome`).
+- `def.vol` (and `atk.vol` for symmetry): `dig` / `fly` / `dive` / `min` / `switch` (`switch` → stock
+  `isSwitching: 'out'`).
+- Field keys read straight by the adapter (no stock property): `atkFocus` / `defFocus` (Focus Energy, U5); the UI
+  build declares them in the base profiles (out of scope here).
+- Result: `bp` whenever the power used differs from the listed power, for every move; `pre` (stat changes the adapter
+  applied before the hit, for the details line); `crit: {stage, p, forced}` (U5).
+
+| Unit | Scope | Who | Files | Checks | Commit |
+| --- | --- | --- | --- | --- | --- |
+| U1 Survey: state moves and pre-hit stat changes | A, D | Sol | `plans/calc-state-engine.md` (new): per move, which hacks have it (data.json + each hack's source: EI expansion, Hardlove hg-engine, Photonic / Eternal X game data and docs), the rule per generation (Bulbapedia), any hack change, automatic or flag; A's full set (Meteor Beam, Electro Shot, Skull Bash, Spectral Thief, plus entry / on-hit effects that change a stat before *this* hit: Download, Intrepid Sword / Dauntless Shield, terrain seeds, Weakness Policy / Stamina / Weak Armor between hits of a multi-hit move, and the like) | none (notes only) | one per hack, then `U1 done` |
+| U2 Fixtures: state moves | D | Sol | `hacks/<hack>/calc_states.json` (new, all four): per case the fixture input (as `calc_matchups.json`) plus `expect` (`bp`, or `ref`: a fixed-power twin whose rolls must match, or hand-worked `rolls` for damage multipliers like Dig, Metronome); one case per move per hack that has it, the on / off pair, the caps (Fury Cutter 160, Echoed Voice 200, Rage Fist 350), Rollout + Defense Curl, Lash Out's old drop vs this-turn drop, Pursuit, `bp` for stock power changes (Facade burned, Hex, Brine, Knock Off, Acrobatics, Weather Ball, Stored Power) | files are JSON-valid; each case names its rule source | one per hack |
+| U3 Adapter: state inputs and power reporting | D | Opus | `tools/calc/src/adapter.js` (+ `rules.js` if a phase is missing), `tools/calc/state_check.mjs` (new, runs every `calc_states.json`; added to `npm test`), `tools/calc/README.md` (contract), `template/calc/engine.js` | `npm test`, `state_check`, all four hack checks, `hzla_compare` ×4 unchanged | adapter, then engine.js |
+| U4 Adapter: pre-hit stat changes | A | Opus | `adapter.js` (`beforeStats`: automatic ones; result `pre`), A cases appended to `calc_states.json` by U1/U2 | same as U3 | adapter + engine.js |
+| U5 Survey and fixtures: crit stages | C | Sol | `plans/calc-crit.md` (new): stage → chance per generation (Gen 4-5, 6, 7+), every source (move stage, Focus Energy, Dire Hit, Dragon Cheer, Scope Lens, Razor Claw, Leek / Stick, Lucky Punch, Super Luck, Lansat Berry, Laser Focus, Merciless; Battle / Shell Armor, Lucky Chant), which stack, each hack's differences from its source, and every move whose crit stage the hack changes or that is now always a crit (all four hacks, with source lines); crit cases appended to `calc_states.json` (`expect.crit`) | JSON-valid; sources cited | one per hack |
+| U6 Engine: crit stages | C | Opus | `adapter.js`: count the stage from the move, item, ability and `atkFocus`; result `crit {stage, p, forced}`; `forced` (stage at the always-crit threshold, `willCrit`, Merciless on a poisoned target, Laser Focus) makes the hit a crit whatever `slot.crit` says, so the UI can lock C on; per-move stages from the source U5 picks (question 1 below) | same as U3, plus U5's cases | adapter + engine.js |
+| U7 Close-out | B, C, docs | Opus | delete the form-weight list and the leftovers here; Photonic "Doc says" note for Triple Kick / Power Gem and Eternal X's Frost Breath note (notes.md only, no extract change); Hardlove's stale W2 line; each hack's notes.md → Damage calc; `damage-calc-sessions.md` Status; PROGRESS.md → Open 2; the toggle spec's `timesUsed` correction goes to its own branch's owner as a note here (that file is read-only in this session) | `python assemble.py`, the four hack checks, the calc scenarios, `gate.py check` ×4, `domcompare` where a page changed (engine.js changes reach every calc guide) | docs |
+
+Order: U1 → U2 (Sol, sequential), U5 can run after U2 in the same Sol chain; U3 starts when U2 lands, U4 after U3, U6
+after U5. Sol units are about 60-80 requests each; U1 and U5 split per hack if Sol's context passes ~150k.
+
+**Questions before dispatch:**
+1. Per-move crit stages: (a, recommended) a `cr` field per move in `data.json`, written by each hack's extract from
+   its game data / source (an extract + data change: needs your yes), or (b) a generated list in each `hack.json` →
+   `cfg.calc.over.moves[name].critStage` (no extract change, but ~100 entries per hack in hand-kept config).
+2. Focus Energy as field keys `atkFocus` / `defFocus` the adapter reads; the base profiles (`template/calc/profiles/`)
+   declare them in the UI build, not now. OK?
+
 ## Already dynamic (engine works it out from what the page passes)
 Weight: Low Kick, Grass Knot, Heavy Slam, Heat Crash (stock `getWeight`: Float Stone, Light / Heavy Metal).
 HP: Eruption, Water Spout, Dragon Energy, Flail, Reversal, Crush Grip, Wring Out, Hard Press, Brine.
