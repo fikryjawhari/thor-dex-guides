@@ -15,6 +15,13 @@ are exact versions, with npm's integrity hashes in `package-lock.json`.
 
 ## Hardlove Gold validation
 
+Emerald Imperium's `imperium_check.mjs` is also included in `npm test`. It checks source-derived category
+estimates and conditional attack modifiers independently of hzla, plus field parity and priority/order contracts.
+Per-mon `abilityOn` is opt-in for the profile's `monControls`; `categoryInvert` names moves whose `slot.invert`
+swaps automatic category. Such results expose `categoryChoice: {automatic, inverted, tie}` and all results expose
+effective `priority`. EI's `slot.order: "first" | "last"` feeds order-dependent power without guessing a foe's move.
+These are battle inputs, not save/import facts; absent states stay off. See EI notes for source rules and differences.
+
 Hardlove Gold has a provisional source/stock suite in `hardlove_check.mjs`, included
 in `npm test`. Its fixtures use `oracle.kind: "source-and-stock-reference"`, not
 runnable hzla settings; do not pass them to `hzla_compare.mjs`. Reports explicitly

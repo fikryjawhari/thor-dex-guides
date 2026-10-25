@@ -156,18 +156,18 @@ WK.cheats (+ `cnote`), trainer `c` (calc trainer names), `pp` (pokepaste), mon `
 Profile: `cfg.calc` in `hack.json` over `template/calc/profiles/expansion.json` (Gen 9 mechanics). Settings
 checked: EI's own `include/config/battle.h` sets every damage switch used here to `GEN_LATEST`, which is `GEN_9`
 in this release (`iriv24/pokeemerald-expansion` at `2576d0f3…`). hzla's pinned profile uses dmgGen 8 for the same
-hack, but no fixture separates Gen 8 from Gen 9, so the Gen 9 base stays. `Frostbite` is on `frz` (see the status
+hack; the source-backed Gen 9 base stays, with explicit field fixtures added in the refinement. `Frostbite` is on `frz` (see the status
 note below). `ls.dmg` (`eidmg`) is unchanged.
 
 Sources: the mechanics are read from the release's `src/battle_util.c` and `include/config/battle.h` (a shallow
 fetch into `.tmp/source/`, never shipped). The oracle is hzla's Dynamic-Calc-Decomps, pinned at `ff6c3e3…`, run
 locally from `.tmp/hzla/` (`hzla_compare.mjs`); its code and tables are not copied. Where hzla and the source
-differ, the source wins and the difference goes in the list below. None so far.
+differ, the source wins. The 2026-10-25 refinement has nine explained roll differences, listed in the fixtures.
 
 | Mechanic | Profile entry | Source (release) | Fixtures |
 | --- | --- | --- | --- |
 | Iron Fist 1.3× on punches (Iron Fist's native effect disabled) | `powerMods` | `battle_util.c` 9173 | iron-fist-changed, iron-fist-non-punch |
-| Emperor's Presence 1.3× Water and Steel (singles) | `powerMods` | 9252 | emperor-presence, emperor-presence-steel |
+| Emperor's Presence 1.3× Water and Steel, own and allied effects stack | `powerMods`; `atkEmperorPresence` for the attacking ally in doubles | 9252, 9299 | emperor-presence, emperor-presence-steel, emperor-ally-* |
 | Striker 1.3× kicking moves | `powerMods` | 9177 | striker-kick |
 | Liquid Voice 1.2× sound moves (type change is native) | `powerMods` | 9240 | liquid-voice-sound |
 | Feline Prowess 2× Sp. Atk (special moves) | `attackMods` | 9527 | feline-prowess-special |
@@ -178,7 +178,10 @@ differ, the source wins and the difference goes in the list below. None so far.
 | Primal Armor 0.5× when super effective (defender) | `finalMods` | 10097 | primal-armor-super-effective |
 | ORAORAORAORA!: second punch 50% of its base damage | `hits` (count 2 for a single-strike punch) and `hitBaseDamage` (`floor`, half down) | `battle_script_commands.c` 1240, `battle_util.c` 9914, 10277 | ora-punch-second-hit, ora-non-punch |
 | Draco Barrage ignores Fairy immunity | `effectiveness` (Fairy 0 → 1) | 10482 | draco-barrage-fairy |
-| Draco Barrage takes the better of Atk and Sp. Atk | `beforeStats` sets the category from staged ratios | 12004–12013 (`EFFECT_SHELL_SIDE_ARM`), `battle_script_commands.c` 2161 | draco-barrage-fairy (Physical), draco-barrage-special (Special) |
+| Draco Barrage estimates physical and special damage against the target | `beforeStats`: integer-truncated staged stats and damage estimates; `slot.invert` swaps the selected category | 11968–12017 (`EFFECT_SHELL_SIDE_ARM`), `battle_script_commands.c` 2161 | draco-*: lower/higher attacking stat, tie, integer near-tie, stages and inversions |
+| Bull Rush / Quill Rush 1.2× selected attacking stat on first turn out | `attackMods`, explicit per-mon `abilityOn` | 9522–9526 | bull-rush-*, quill-rush-*; physical and special, on/off |
+| Illusion 1.3× selected attacking stat while disguised | `attackMods`, explicit per-mon `abilityOn` | 9647–9652 | illusion-*; physical and special, on/off |
+| Blazing Soul +1 Fire priority at full HP | `afterMoveType`, result `priority`; does not infer move order | `battle_main.c` 5030–5032 | blazing-soul-*: full, hurt, not-fire, psychic-terrain |
 | Frostbite halves special damage | `beforeRolls` sets `isBurned` for special moves when the attacker's status is `frz` | 9975, applied 10308 | frostbite-special, frostbite-physical |
 
 Status: EI's `B_USE_FROSTBITE` makes frostbite replace freeze in most cases (`include/config/battle.h`), and a few
@@ -195,22 +198,40 @@ Disagreements between the changes doc or the Known Bugs file and the source (sou
   damage only when the resisted multiplier is ≤ 0.5, so ×0.25 becomes ×0.5 rather than ×1.
 - Flower Gift: the doc says Atk and Spe in sun; the Known Bugs file says the game gives Atk and SpD to the user
   and its ally. The calc uses the vanilla Atk boost, which matches the game as the bug list describes it.
-- Emperor's Presence: the doc and source include the ally in doubles; the calc is singles only (below).
+- Bull Rush / Quill Rush: the release source has no physical-category guard, so special damage also gets 1.2×.
+  hzla restricts it to physical damage; our two special-on fixtures intentionally differ.
+- Illusion modifies the attacking stat in the release, not move power (as hzla does). Hand-calculated tests at
+  powers 7, 17, 25 and 41 protect the rounding point even when ordinary fixtures happen to match.
 
-Known gaps (not modelled):
-- Bull Rush and Quill Rush (1.2× Attack on the first turn out): needs a first-turn control.
-- Illusion (+30% while disguised): a battle state with no control.
-- Emperor's Presence on an ally in doubles; the calc has no ally slot.
-- Draco Barrage at an exact tie between the Atk and Sp. Atk ratios: the source randomises; the calc gives Special.
-  The source compares integer-divided stats, so a near-tie can differ by one step.
-- Ice Eater, Self Sufficient, Parasitic Waste and Blazing Soul change healing, drain or priority, not damage here.
-- A frozen or otherwise unable attacker is still calculated.
-- Spread, weather and screens are the expansion base; EI's switches for them are `GEN_LATEST`, but no EI fixture
-  exercises them beyond the base.
+#### Refinement dispositions (2026-10-25)
+
+Every original open point is closed mechanically or explicitly scoped below. UI and trainer-field preparation
+are separate from correctness. No trainer `field` evidence is consumed automatically.
+
+| Point | Disposition |
+| --- | --- |
+| Oracle `noSwitch=1` | Switch-in prediction / AI ranking and associated preview controls, not a damage-generation setting. Read `js/calc_ui/switch_preview/g3.js`, `g4.js`, `g5.js`, and `menu_settings.js` in the pinned oracle; no damage-core use. No engine override or damage fixture is appropriate. |
+| Oracle `evs=0` | The catalog explicitly offers No EVs and w/ EVs variants (`js/romhack_catalog.js` 182–191). It is not a universal EI ban. Preserve guide EV support and existing MGM zero-EV selection; `evs-enabled` and the shared UI scenarios guard this. |
+| Individual ability state | `monControls` declares per-Pokémon First turn out (Bull/Quill Rush) or Disguised (Illusion). Missing/false `abilityOn` means off; no switch history is guessed. Controls must remain on their own Pokémon, not global. Other abilities are not silently redefined. |
+| Ally Emperor's Presence | Explicit `atkEmperorPresence` field effect, attacking ally only, Doubles only. Own ability remains automatic; own plus ally stacks. No ally slot or trainer-field inference is needed. Water, Steel, off, other type, singles and stacking fixtures. |
+| Draco Barrage | Compares floor-staged Atk/Def versus SpA/SpD damage estimates using the source's fixed Shell Side Arm power (100) and level term. It does not compare attacking stats alone or simulate final damage, items, ability multipliers, weather or screens. Source randomises integer ties; use deterministic Special as the automatic tie default and an explicit invert toggle for either result. Inversion is also allowed in non-ties. Result exposes automatic category, tie and inversion; chosen category controls contact. |
+| Ice Eater | Ice immunity is native and remains enabled. Healing is outside this single-attack damage result; recovery / multi-turn simulation deferred. |
+| Self Sufficient / Parasitic Waste | End-turn healing/drain, not this hit's damage. Explicitly outside scope; do not silently add recovery to KO estimates. |
+| Blazing Soul / priority | Correct effective priority is implemented now, including Psychic Terrain blocking. `slot.order` accepts first/last and feeds existing order-dependent power hooks. The UI still needs a separate decide step for move-vs-move order, ties, Trick Room and single-column direction. A Speed highlight is not a turn-order promise. |
+| Frozen / otherwise unable attacker | Accepted user decision: calculate hypothetical damage, do not prevent the action. `unable-attacker-slp` and `unable-attacker-frz`; `frz` still means Frostbite. |
+| Spread / weather / screens | Added singles/doubles spread, sun/rain, Reflect/Light Screen/Aurora Veil, non-stacking screens, critical bypass, snow and hail fixtures. Source `GetScreensModifier` (10031+) uses 0.5 singles / 0.667 doubles; spread and ordinary sun/rain/screens do not change between Gen 8 and Gen 9 (direct stock parity checked). Snow is the notable Gen 9 difference: Ice-type Defence ×1.5 (`battle_util.c` 9881); hail has no such defence boost. Weather chip/healing is outside these per-hit rolls. |
+
+Independent validation: `tools/calc/imperium_check.mjs` checks source-derived integer category estimates,
+hand-calculated ability modifier placement/rounding, native Gen 9 field rolls and Gen 8/9 parity for unchanged
+fields, effective priority, explicit order, EVs and immutable inputs. Included in `npm test`.
+
+Still requires in-game confirmation: Bull/Quill Rush on a special attack, integer-tied Draco Barrage category
+distribution, allied Emperor stacking and Blazing Soul into Psychic Terrain. Source-backed fixtures are not an
+in-game test. The control UI is the next sub-step; broader turn-order and trainer-field UI are deferred.
 
 Checks:
-- `node tools/calc/hzla_compare.mjs emerald-imperium`: 47/47 match against the pinned oracle, zero known differences.
-  Log `.tmp/calc-emerald-imperium/final.log`.
+- `node tools/calc/hzla_compare.mjs emerald-imperium`: 95 cases, 86 exact matches, nine source/UI-choice differences,
+  zero unexplained mismatches. Report `.tmp/calc-emerald-imperium/compare.json`.
 - `node tools/calc/test.mjs`: 81 passed, 0 failed (`.tmp/calc-emerald-imperium/engine-test.log`).
 - `python assemble.py`: all four guides built (`.tmp/calc-emerald-imperium/assemble.log`).
 - Not done: an in-game test (a save state and one known move, per `plans/damage-calc.md` → How to check); no

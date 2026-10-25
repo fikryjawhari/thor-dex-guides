@@ -128,6 +128,7 @@ function oracleSet(calc, gen, data, set, translations) {
     ability: set.ab >= 0 ? oracleName(data.AB[set.ab][0], 'abilities', translations) : 'Guide no ability',
     item: oracleName(set.it || '', 'items', translations), status: set.st || '', curHP: set.hp,
     ivs: statObject(set.iv, 31), evs: statObject(set.ev, 0), boosts: statObject(set.stg, 0),
+    abilityOn: set.abilityOn === true,
   });
 }
 

@@ -921,6 +921,1000 @@
         "slot": 0,
         "source": "data.json TR"
       }
+    },
+    {
+      "name": "bull-rush-physical-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 148,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "bull-rush-special-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 148,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "bull-rush-physical-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 148,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "bull-rush-special-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 148,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9522-9526",
+        "reason": "Release source boosts the selected attacking stat on the first turn without a physical-category guard; oracle incorrectly limits this to physical moves."
+      }
+    },
+    {
+      "name": "quill-rush-physical-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 223,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "quill-rush-special-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 223,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "quill-rush-physical-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 223,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "quill-rush-special-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 223,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9522-9526",
+        "reason": "Release source boosts the selected attacking stat on the first turn without a physical-category guard; oracle incorrectly limits this to physical moves."
+      }
+    },
+    {
+      "name": "illusion-physical-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "illusion-special-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "illusion-physical-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "illusion-special-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "ability-toggle-unrelated",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "ability-toggle-defender-only",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": true
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "emperor-ally-off",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "gameType": "Doubles"
+      }
+    },
+    {
+      "name": "emperor-ally-water",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkEmperorPresence": true
+      },
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9299-9302",
+        "reason": "Release source applies a separate allied Emperor modifier in doubles, stacking with the attacker. The pinned oracle has no allied Emperor field input."
+      }
+    },
+    {
+      "name": "emperor-ally-steel",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 167
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkEmperorPresence": true
+      },
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9299-9302",
+        "reason": "Release source applies a separate allied Emperor modifier in doubles, stacking with the attacker. The pinned oracle has no allied Emperor field input."
+      }
+    },
+    {
+      "name": "emperor-ally-other-type",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkEmperorPresence": true
+      }
+    },
+    {
+      "name": "emperor-ally-singles-ignored",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "atkEmperorPresence": true
+      }
+    },
+    {
+      "name": "emperor-ally-stack",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": 183
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkEmperorPresence": true
+      },
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9299-9302",
+        "reason": "Release source applies a separate allied Emperor modifier in doubles, stacking with the attacker. The pinned oracle has no allied Emperor field input."
+      }
+    },
+    {
+      "name": "draco-lower-atk-physical-auto",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "242",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": false
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-lower-atk-physical-inverted",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "242",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": true
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:11968-12017",
+        "reason": "Explicit user-selected inversion models the other category, including non-ties. The oracle cannot force an alternate Draco Barrage category. Equal damage can mask the choice."
+      }
+    },
+    {
+      "name": "draco-higher-atk-special-auto",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "713",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": false
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-higher-atk-special-inverted",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "713",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": true
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:11968-12017",
+        "reason": "Explicit user-selected inversion models the other category, including non-ties. The oracle cannot force an alternate Draco Barrage category. Equal damage can mask the choice."
+      }
+    },
+    {
+      "name": "draco-tie-auto",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": false
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-tie-inverted",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": true
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:11968-12017",
+        "reason": "Explicit user-selected inversion models the other category, including non-ties. The oracle cannot force an alternate Draco Barrage category. Equal damage can mask the choice."
+      }
+    },
+    {
+      "name": "draco-integer-near-tie-auto",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "ev": [
+          0,
+          4,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": false
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:12004-12017",
+        "reason": "Release source truncates the two damage estimates to integers, then randomises ties. Our deterministic Special default plus inversion exposes both outcomes; equal rolls may mask the oracle ratio-only choice."
+      }
+    },
+    {
+      "name": "draco-integer-near-tie-inverted",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "ev": [
+          0,
+          4,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": true
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:11968-12017",
+        "reason": "Explicit user-selected inversion models the other category, including non-ties. The oracle cannot force an alternate Draco Barrage category. Equal damage can mask the choice."
+      }
+    },
+    {
+      "name": "draco-staged-auto",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          -1,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 130,
+        "invert": false
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-staged-inverted",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          -1,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 130,
+        "invert": true
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:11968-12017",
+        "reason": "Explicit user-selected inversion models the other category, including non-ties. The oracle cannot force an alternate Draco Barrage category. Equal damage can mask the choice."
+      }
+    },
+    {
+      "name": "blazing-soul-full",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": 82
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "blazing-soul-hurt",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": 82,
+        "hp": 1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "blazing-soul-not-fire",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": 82
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "blazing-soul-psychic-terrain",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 82
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {
+        "terrain": "Psychic"
+      },
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_main.c:5030-5032",
+        "reason": "At full HP Blazing Soul raises Fire priority, so grounded defenders are protected by Psychic Terrain. The oracle omits the priority boost."
+      }
+    },
+    {
+      "name": "unable-attacker-slp",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "st": "slp"
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "unable-attacker-frz",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "st": "frz"
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "evs-enabled",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "ev": [
+          0,
+          252,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "spread-singles",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {}
+    },
+    {
+      "name": "spread-doubles",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "gameType": "Doubles"
+      }
+    },
+    {
+      "name": "doubles-sun",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {
+        "gameType": "Doubles",
+        "weather": "Sun"
+      }
+    },
+    {
+      "name": "doubles-rain",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "gameType": "Doubles",
+        "weather": "Rain"
+      }
+    },
+    {
+      "name": "doubles-reflect",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defReflect": true
+      }
+    },
+    {
+      "name": "doubles-light-screen",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defLightScreen": true
+      }
+    },
+    {
+      "name": "doubles-veil",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defAuroraVeil": true
+      }
+    },
+    {
+      "name": "doubles-screens-not-stacked",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defLightScreen": true,
+        "defAuroraVeil": true
+      }
+    },
+    {
+      "name": "doubles-screen-crit",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defReflect": true
+      }
+    },
+    {
+      "name": "snow-ice-defense",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "weather": "Snow"
+      }
+    },
+    {
+      "name": "hail-no-ice-defense",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "weather": "Hail"
+      }
     }
   ]
 }

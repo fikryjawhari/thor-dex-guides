@@ -282,6 +282,9 @@ function calc(atk, def, slot, values = {}) {
   }
   return {
     cat: move.category, rolls: [...rolls], hits: per.length, min, max,
+    priority: context.move.priority,
+    ...(context.state.categoryAuto ? {categoryChoice: {automatic: context.state.categoryAuto,
+      inverted: context.state.categoryInverted, tie: context.state.categoryTie}} : {}),
     ...(per.some(hit => hit.some((value, index) => value !== rolls[index])) ? {per} : {}),
     pmin: per.reduce((sum, hit) => sum + Math.min(...hit), 0) * 100 / defender.maxHP(),
     pmax: per.reduce((sum, hit) => sum + Math.max(...hit), 0) * 100 / defender.maxHP(),
