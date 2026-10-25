@@ -83,5 +83,8 @@ calc-build.html --frame`) when the page changed.
   data gate 5/5, consistency normal/dvkb). Phone preview: `calc-eternal.html`. Individual-effect refinements
   and in-game checks remain for Photonic/Eternal X; other refinements to do. Hardlove imports are 0.8.4;
   guide remains 0.8.3.
+- Refinement session 1 (2026-10-25, `plans/calc-refine.md` → Where things stand): move surveys and batches for Hardlove /
+  Photonic / Eternal X, Triple Kick engine fix, residual per turn in the KO text with the Turn end strip, Protean / Libero
+  (every-move STAB, chosen defending type), HP ↺ reset, Field-under-the-rows fix. Open: units F, W, Z, T, A.
 - Readers: none (only the `test` reader). File picker: not started.
 - Merge: not merged; waiting on the mechanics.

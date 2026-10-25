@@ -338,4 +338,19 @@ body.calc-route .dmonstate{display:flex;align-items:center;gap:5px;min-height:32
 body.calc-route .dmonstate input{flex:none;width:16px;height:16px;margin:4px;accent-color:var(--acc)}
 body.calc-route .dcategory{font-size:11px;font-weight:700;color:var(--acc);padding-top:3px}
 @media(min-width:480px){body.calc-route .dside.mg .dstrip{max-height:none}body.calc-route .dmatch{min-height:0}}
-@media(min-width:480px){body.calc-route .fit:has(.dmonstate){height:auto;min-height:calc(100vh - 8px)}}
+@media(min-width:480px){body.calc-route .fit:has(.dmonstate),body.calc-route .fit:has(.ed),body.calc-route .fit:has(.dqp){height:auto;min-height:calc(100vh - 8px)}}
+/* Turn end (residual per side, under its own card), Protean / Libero type, HP reset */
+.deot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:3px}
+.dq{min-width:0}.dqb{display:flex;min-width:0}
+.dqa{flex:1;min-width:0;display:flex;align-items:center;gap:4px;height:26px;padding:0 6px;border:1px solid var(--line);border-right:0;border-radius:6px 0 0 6px;background:var(--panel2);color:var(--fg);font:600 12px system-ui;cursor:pointer;touch-action:manipulation}
+.dqa .l{flex:none;color:var(--mut);font-size:10px}.dqa .v{flex:none;font-weight:700}
+.dqa .n{display:none;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--mut);font-size:11px}
+.dqx{flex:none;width:26px;height:26px;padding:0;border:1px solid var(--line);border-radius:0 6px 6px 0;background:var(--panel2);color:var(--mut);font:600 10px system-ui;cursor:pointer;touch-action:manipulation}
+.deot .dn{color:#ff7b6b}.deot .up{color:#3fb760}
+.dqp{margin-top:2px;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-size:11px}
+.dqp div{display:flex;justify-content:space-between;gap:6px}.dqp span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mr .dd .eotl{color:var(--mut)}
+.ed .e2.pty{display:flex;align-items:center;gap:4px}.ed .e2.pty>span{flex:none;color:var(--mut);font:600 11px system-ui}.ed .e2.pty>select{flex:1;min-width:0}
+.cc .cn .td{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:1px}
+.cc .hpl.rs{min-width:20px;color:var(--acc);border:1px solid var(--acc);border-radius:6px;font-weight:700}
+@media (min-width:480px){.deot{grid-column:1/-1;gap:4px}.dqa .n{display:block}}

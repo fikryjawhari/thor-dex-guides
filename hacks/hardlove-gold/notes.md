@@ -162,7 +162,7 @@ User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 | Gems | Matching live item/type: replace native last 5325 power modifier with 6144 (x1.5), `src/individual/CalcBaseDamage.c:915-918`. Item identity retained for Flying Gem + Acrobatics. Magic Room, Klutz and wrong-type Gems do not boost. |
 | Gem exclusions | No boost for Struggle, Pledges or OHKO moves: `src/individual/BattleController_BeforeMove.c:5166-5188`. Consumption precedes damage: `data/battle_scripts/subscripts/subscript_0452_HANDLE_GEM_ACTIVATION_MESSAGE.s`. |
 | Unseen Fist | Native contact-only Protect bypass at full damage. Docs' "completely" does not mean non-contact moves: `CanHitThroughProtect`, `src/individual/BattleController_BeforeMove.c:2556-2567`, checks contact. Punching Glove prevents contact. |
-| Protean / Libero | Native fresh-activation STAB. Source once-per-switch Protean vs repeated Libero: `src/individual/BattleController_BeforeMove.c:620-645`. Prior activation and resulting defensive type are **not represented**. |
+| Protean / Libero | Native fresh-activation STAB. Source once-per-switch Protean vs repeated Libero: `src/individual/BattleController_BeforeMove.c:620-645`. Decision (user, 2026-10-25): every-move STAB, accepted although the source is once per switch-in for Protean; the edit menu sets the defending type (no type history). |
 | Battle Bond | Manually select +1 Atk and +1 Spe after KO, no SpA: `data/battle_scripts/subscripts/subscript_0515_BATTLE_BOND_BOOST.s:11-16`. No automatic post-KO simulation. |
 | Snow | Gen 9 Snow (no Hail): Ice physical Defense x1.5, not SpD, `src/individual/CalcBaseDamage.c:1400-1408`. |
 | Fields | Existing Gen 9 fields retained; add per-side Flower Gift, Power Trick, Protect using existing renderer/native engine. Importer's limited field list is not an availability specification. |
@@ -226,9 +226,8 @@ Phone preview: `hardlove-calc.html` (Thor frame). No independent ROM-oracle comp
    hit cannot prove all 16 rolls.
 2. Against Protect with Unseen Fist: contact full damage; same punch with Punching Glove blocked; Dark Pulse blocked.
    Test the five source-specific non-contact moves when available.
-3. Two different off-type moves without switching: record type/damage for Protean, repeat with Libero. Current calc
-   handles a fresh activation only, not Protean already used, changed defensive typing or successive turn history.
-   A state/UI refinement is required for those states; every row is an alternative attack, not a turn sequence.
+3. Two different off-type moves without switching: record type/damage for Protean, repeat with Libero. The calc gives
+   STAB on every move (user decision); if the game drops it on the second move, that is the accepted difference.
 4. Battle Bond: compare all stats before/after KO, after a second KO, and after switching. Atk/Spe only, no SpA.
    Use manual stages in the calc; repeated-trigger behaviour is not certified.
 5. Ice defender with Snow: physical vs special damage. Also check permanent weather/terrain beyond normal duration,

@@ -144,7 +144,7 @@ actual field controls/options, damage rendering and reload persistence at five v
 `calc-eternal.html` (Thor frame); manually checked the fields at 260x316, with no horizontal overflow.
 
 Not checked: in-game damage on the Thor, exhaustive individual move/ability/item effects, weight-based data,
-switch-in/history automation, residual-damage KO modelling or save import. Oracle agreement isolates mechanics:
+switch-in/history automation or save import. Oracle agreement isolates mechanics:
 sharing guide stats/types/power does not independently validate extracted data. The hack's Pokemon Changes doc
 describes changed stats/types/ability assignments/movepools, including later-generation additions; those do not
 upgrade the requested battle mechanics to Gen 7. Future refinements add fixtures here rather than change other

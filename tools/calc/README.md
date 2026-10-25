@@ -28,7 +28,7 @@ Hardlove Gold has a provisional source/stock suite in `hardlove_check.mjs`, incl
 in `npm test`. Its fixtures use `oracle.kind: "source-and-stock-reference"`, not
 runnable hzla settings; do not pass them to `hzla_compare.mjs`. Reports explicitly
 say `independentHackOracle: false`. Hack notes list in-game checks and unsupported
-Protean/type-history states. `node tools/scenarios/calc-hardlove.mjs` checks its
+type-history states (Protean / Libero: every-move STAB, a chosen defending type). `node tools/scenarios/calc-hardlove.mjs` checks its
 actual controls and persistence at every viewer size/mode.
 
 An explicit profile `evs: false` ignores supplied EVs in both `stats` and `calc`;
@@ -172,8 +172,10 @@ override entries use **display names**, except species may use their guide ID:
   statuses present in `profile.status` are accepted.
 - `critStages` is reserved metadata for a future crit-probability control; the
   current contract selects crit explicitly per slot and does not sample rates.
-  Stat-formula changes outside the exposed phases, new generation mechanics
-  and residual-damage simulations require engine work.
+  Stat-formula changes outside the exposed phases and new generation mechanics
+  require engine work.
+- `residual` adds a hack's own end-of-turn effects to `DMG.residual` / the KO text:
+  `{abilities: {Name: [sign, divisor]}, status: {key: [sign, divisor, label]}}` (EI: Self Sufficient, Frostbite).
 
 ### Ordered modifier rules
 
@@ -403,7 +405,7 @@ fall back to 1 kg, so do not use weight moves until the mapping/weights are audi
 
 The report saves both full per-hit 16-roll arrays, settings, SHA, descriptions and
 oracle KO text. OHKO probabilities are compared only for eligible single-hit
-cases; residual/multi-turn KO text is not equivalent to our no-residual convolution.
+cases; the oracle's multi-turn KO text is not compared (ours counts the defender's residual per turn).
 Exit 1 means an error or unexplained mismatch. A case's `difference: {source,
 reason}` records an explained disagreement; these remain visible as
 `known-difference`, never matches. Review every reason against the game's source

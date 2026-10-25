@@ -202,7 +202,7 @@ guide: its harness requires Emerald Imperium's Flannery trainer key `4.0.15`; it
 The Photonic-specific scenario above covers this session's field controls without changing that unrelated suite.
 
 Not checked: in-game damage on the Thor, a full audit of every changed move/ability/item, Z-moves, Totem aura
-automation, switch-in/history-dependent states, residual-damage KO modelling or save import. The fixture oracle
+automation, switch-in/history-dependent states or save import. The fixture oracle
 shares guide stats/types/power/category, so agreement does not independently validate the extracted data. Future
 mechanics refinements should add fixtures here rather than change other guides' base profiles.
 

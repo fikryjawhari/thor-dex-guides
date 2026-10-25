@@ -68,6 +68,18 @@ engine result, not a claim about which move should happen first; the turn-order 
 Match blocks with extra individual controls may grow past the nominal viewport-height block so Field stays
 reachable. No condition labels or category controls appear in profiles that do not declare them.
 
+**Turn end** (residual, 2026-10-25): `DMG.residual(set, field)` gives each side's end-of-turn parts (weather, Leftovers / Black
+Sludge / Sticky Barb, status incl. rising toxic, Grassy Terrain, Dry Skin / Rain Dish / Ice Body / Solar Power / Poison Heal,
+plus the profile's `residual`). The KO text counts the defender's per-turn change; rolls, percentages and HP buttons never do.
+A strip under the cards (`.deot`) has one cell per affected side, always in that side's column (at ≥480 px aligned with its
+card, the name shown; below 480 px no name). Tap the amount: one turn applied to current HP (toxic then rises; the counter
+is transient). The arrow lists the parts. An opened row repeats them (`Turn end: −2 Sandstorm`). Leech Seed is not offered
+(no control says who is seeded). When HP is not full, the HP label becomes an accent ↺ button (tap: full HP); the Lv / HP
+row has no room for a separate button at 260 px. An open editor or parts list lets the ≥480 px block grow past the viewport
+(Field stays below the rows). **Protean / Libero**: the attacker takes each move's type (STAB in every base); the edit menu
+of a Pokémon with either ability has a Type row (own types or one of the 18) used when it defends; a dot in that type's colour
+marks the card. Stored as `pty` in the existing edits; ability / Mega change clears it. Scenario: `tools/scenarios/calc-residual.mjs`.
+
 `#/calc` is implemented by `calc.js` and `calc.css`; `assemble.py` includes these and `calc/engine.js` only with
 `cfg.calc`. The resolved profile supplies the level and stage bounds, status choices, nature/ability/item switches,
 field entries, multi-hit ranges and variable-power moves. The page calls `DMG.init`, `DMG.stats` and `DMG.calc`;

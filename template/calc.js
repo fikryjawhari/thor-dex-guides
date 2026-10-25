@@ -13,7 +13,7 @@ const defaults=()=>({dir:'out',mine:{src:'party',b:0,i:0},foe:{k:'',i:0},field:{
 let ST=defaults();try{const stored=JSON.parse(localStorage.getItem(KEY)||'null');if(stored&&typeof stored==='object')ST={...ST,...stored};}catch(error){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(error){BAN={ok:0,h:'Storage full',t:'The current changes could not be remembered.'};}};
 window.DMG.init(sourceData,prof);
-const toEngine=mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i||'',st:mon.status||'',iv:mon.iv,ev:EVS?mon.ev:[0,0,0,0,0,0],stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp,abilityOn:mon.abilityOn===true});
+const toEngine=mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i||'',st:mon.status||'',iv:mon.iv,ev:EVS?mon.ev:[0,0,0,0,0,0],stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp,abilityOn:mon.abilityOn===true,pty:mon.pty||'',toxn:mon.toxn||1});
 const koTxt=ko=>!ko.n?'5+ hits':(ko.n===1?'OHKO':ko.n+'HKO')+(ko.p<1?' '+Math.min(99,Math.max(1,Math.round(ko.p*100)))+'%':'');
 
 const trByK=TRK;
@@ -49,9 +49,12 @@ function foeSide(){const t=trByK[ST.foe.k];if(!t)return `<div class="fbar"><butt
  return `<div class="fbar"><button class="nav" data-a="tprev" aria-label="Previous trainer" ${ti>0?'':'disabled'}>‹</button><button class="dsrc" data-a="foesheet"><span class="nm">${esc(t.n)}</span></button><button class="nav" data-a="tnext" aria-label="Next trainer" ${ti<D.TR.length-1?'':'disabled'}>›</button>${rel?`<span class="dcap ${own?'own':''} ${cap?'':'need'}">Cap ${nb(`data-cap="${t.k}" data-clr="1"`,cap||'',{min:range[0],max:range[1],label:'Level cap'})}</span>`:''}</div>
  <div class="fteam">${t.p.map((x,i)=>{const m=applyEdits(foeBase(t,i),'foe:'+t.k+':'+i);return `<div role="button" tabindex="0" class="ft ${i===ST.foe.i?'on':''}" data-a="fpick" data-i="${i}">${spr(m.id,'s24')}<span class="tx"><span class="l1t"><b>${esc(byId[m.id].n)}</b><i>${isNaN(m.l)?'?':m.l}</i><em>${esc(m.i||'')}</em></span><span class="l2t">${m.m.length?m.m.map(k=>esc(M[k])).join(' · '):'No moves listed'}</span></span></div>`;}).join('')}</div>
  <div class="dstrip fs">${[0,1,2,3,4,5].map(i=>t.p[i]?`<button data-a="fpick" data-i="${i}" class="${i===ST.foe.i?'on':''}" aria-label="${esc(byId[t.p[i].id].n)}">${spr(t.p[i].id,'s28')}<span>${lvl(i)}</span></button>`:`<button class="ph" disabled></button>`).join('')}</div>`;}
-const EDITOPEN={mine:false,foe:false};
+const EDITOPEN={mine:false,foe:false},EOTOPEN={mine:false,foe:false},TOX={};
+const TYPECHANGE=['Protean','Libero'],changesType=r=>TYPECHANGE.includes(r.abil);
+const signed=v=>(v>0?'+':'−')+Math.abs(v);
+const eotTotal=parts=>parts.reduce((sum,part)=>sum+part.v[0],0);
 const MEGA={};P.forEach(species=>{const forms=(species.of||[]).filter(id=>byId[id]?.g===1);if(species.g!==1&&forms.length)MEGA[species.id]=forms;});
-function megaToggle(side){const m=getMon(side);const set=(id,a,i)=>{setField(side,'id',id);setField(side,'a',a);setField(side,'aGuess',false);setField(side,'abilityOn',false);setField(side,'i',i);};
+function megaToggle(side){const m=getMon(side);const set=(id,a,i)=>{setField(side,'id',id);setField(side,'a',a);setField(side,'aGuess',false);setField(side,'abilityOn',false);setField(side,'pty',undefined);setField(side,'i',i);};
  if(m.pre){const L=MEGA[m.pre.id]||[],ix=L.indexOf(m.id);if(ix>=0&&ix<L.length-1){const n=byId[L[ix+1]];set(n.id,n.a[0],n.stone||m.pre.i);}else{set(m.pre.id,m.pre.a,m.pre.i);setField(side,'pre',null);}}
  else if(MEGA[m.id]){const n=byId[MEGA[m.id][0]];setField(side,'pre',{id:m.id,a:m.a,i:m.i});set(n.id,n.a[0],n.stone||m.i);}}
 function editor(r,side){const custom=side==='mine'&&ST.mine.src==='custom';const p=r.p,abils=[...new Set([...p.a,...(p.ha!=null?[p.ha]:[])])];
@@ -60,6 +63,7 @@ function editor(r,side){const custom=side==='mine'&&ST.mine.src==='custom';const
  const si=sideInfo(side),w=ST.edits[si.key]&&Object.keys(ST.edits[si.key]).length,sv=ST.saved&&ST.saved[si.key];
  return `<div class="ed"><div class="e2">${prof.natures!==false?sel('na',NATS.map(n=>[n,n]),r.na):''}${prof.abilities!==false?sel('ab',abils.filter(a=>a>=0).map(a=>[a,AB[a]+(r.aGuess&&a===r.a?' ?':'')]),r.a):''}</div>
  <div class="e2">${prof.items!==false?sel('it',[['','No item'],...D.IT.map(x=>[x,x])],r.i):''}${sel('status',prof.status||[['','No status']],r.status||'')}</div>
+ ${changesType(r)?`<div class="e2 pty"><span>Type</span>${sel('pty',[['',r.types.join('/')+' (own)'],...TNAMES.map(t=>[t,t])],r.pty||'')}</div>`:''}
  <table><tr><th></th>${SN.map(n=>`<th>${n}</th>`).join('')}</tr>
  ${row('IV',i=>nb(`data-e="iv" data-x="${i}" data-s="${side}"`,r.iv[i],{min:0,max:31,label:'IV '+SN[i]}))}
  ${EVS?row('EV',i=>nb(`data-e="ev" data-x="${i}" data-s="${side}"`,r.ev[i],{min:0,max:252,step:4,label:'EV '+SN[i]})):''}
@@ -70,8 +74,8 @@ function chip(r,att,side,fast){if(!r)return `<div class="cc"><button class="cn" 
  const spe=effSpe(r),mx=r.stats&&r.stats[0],mod=r.stg[4]?(r.stg[4]>0?'↑':'↓'):'',sg=r.stg.some(x=>x);
  const open=EDITOPEN[side],mega=r.pre||MEGA[r.id];
  const controls=(prof.monControls||[]).filter(control=>control.abilities.includes(r.abil)).map(control=>`<label class="dmonstate"><input type="checkbox" data-ms="${esc(control.k)}" data-s="${side}" ${r[control.k]===true?'checked':''}>${esc(control.l)}</label>`).join('');
- return `<div class="cc ${att?'att':''}" data-a="sel" data-s="${side}"><div class="l1"><button class="cn" data-a="sel" data-s="${side}"><b>${esc(r.name)}${r.edited?' *':r.saved?' •':''}</b></button>${mega?`<button class="mg ${r.pre?'on':''}" data-a="mega" data-s="${side}" aria-label="Mega">M</button>`:''}<button class="stb ${open||sg?'on':''}" data-a="eopen" data-s="${side}">Edit ${open?'▴':'▾'}</button><span class="sp">Spe <i class="${fast?'f':''}">${spe??'?'}${mod}</i></span></div>
-  <div class="cl"><span>Lv</span>${nb(`data-lv="${side}"`,r.lv??'',{min:range[0],max:range[1],label:'Level'})}<button class="hpl" data-a="hpfull" data-s="${side}" title="Full HP">HP</button>${nb(`data-hp="${side}"`,r.hp??'',{min:0,max:mx||999,label:'HP now'})}<span class="mx">/${mx??'?'}</span></div>${controls}${open?editor(r,side):''}</div>`;}
+ return `<div class="cc ${att?'att':''}" data-a="sel" data-s="${side}"><div class="l1"><button class="cn" data-a="sel" data-s="${side}"><b>${r.pty&&changesType(r)?`<i class="td" style="background:${tcol(r.pty)}"></i>`:''}${esc(r.name)}${r.edited?' *':r.saved?' •':''}</b></button>${mega?`<button class="mg ${r.pre?'on':''}" data-a="mega" data-s="${side}" aria-label="Mega">M</button>`:''}<button class="stb ${open||sg?'on':''}" data-a="eopen" data-s="${side}">Edit ${open?'▴':'▾'}</button><span class="sp">Spe <i class="${fast?'f':''}">${spe??'?'}${mod}</i></span></div>
+  <div class="cl"><span>Lv</span>${nb(`data-lv="${side}"`,r.lv??'',{min:range[0],max:range[1],label:'Level'})}<button class="hpl ${mx&&r.hp<mx?'rs':''}" data-a="hpfull" data-s="${side}" title="Full HP" aria-label="${mx&&r.hp<mx?'Full HP':'HP'}">${mx&&r.hp<mx?'↺':'HP'}</button>${nb(`data-hp="${side}"`,r.hp??'',{min:0,max:mx||999,label:'HP now'})}<span class="mx">/${mx??'?'}</span></div>${controls}${open?editor(r,side):''}</div>`;}
 function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
  const D0=[0,1,2,3].map(slot=>{const mi=att.m[slot];if(mi==null)return {slot};const ck=sideInfo(side).key+':'+slot,crit=!!ST.crit[ck],n=hitsOf(mi,ck),mv=effMv(mi,ck);return {slot,mi,ck,mv,crit,n,r:((prof.varpow||[]).includes(M[mi])&&ST.mvo[ck]?.bp==null)?null:window.DMG.calc(toEngine(att),toEngine(def),{mv:mi,...ST.mvo[ck],hits:n,crit},F)};});
  const total=(result,mode)=>result.per?result.per.reduce((sum,rolls)=>sum+(mode==='min'?Math.min(...rolls):Math.max(...rolls)),0):result[mode]*result.hits;
@@ -90,10 +94,15 @@ function movesHTML(att,def,side,F){const hpNow=def.hp,mx=def.stats[0];
   const imm=r.eff===0,ko=r.ko,minTotal=total(r,'min'),maxTotal=total(r,'max');
   return `<div class="mr ${maxTotal===best&&best>0?'best':''} ${open?'open':''}"><div class="mm" data-a="row" data-mi="${mi}" data-ck="${ck}"><div class="r1"><span class="mv"><i class="td" style="background:${tcol(mv.t)}"></i>${esc(M[mi])}</span><span class="hp">${imm?'No effect':r.min+'–'+r.max}</span></div>
    ${category?`<div class="dcategory">${esc(category)}</div>`:''}<div class="r2"><span>${imm?'':(n>1?'×'+n+' · ':'')+percent(r.pmin)+'–'+percent(r.pmax)+'%'}</span><span class="ko k${ko.n}">${imm?'':hpNow<=0?'fainted':koTxt(ko)}</span></div>
-   <div class="dd"><div class="eg">${types}${bp}${hits}</div>${invert}<div>${esc(r.cat)} · vs ${hpNow}/${mx} HP${n>1?` · ${n} hits: ${minTotal}–${maxTotal}`:''}</div>${r.per?r.per.map((rolls,index)=>`<div class="rolls">Hit ${index+1}: ${Math.min(...rolls)}–${Math.max(...rolls)}<br>${rolls.join(' ')}</div>`).join(''):`<div class="rolls">${r.rolls.join(' ')}</div>`}${r.notes.length?`<div>${r.notes.map(esc).join(' · ')}</div>`:''}
+   <div class="dd"><div class="eg">${types}${bp}${hits}</div>${invert}<div>${esc(r.cat)} · vs ${hpNow}/${mx} HP${n>1?` · ${n} hits: ${minTotal}–${maxTotal}`:''}</div>${r.per?r.per.map((rolls,index)=>`<div class="rolls">Hit ${index+1}: ${Math.min(...rolls)}–${Math.max(...rolls)}<br>${rolls.join(' ')}</div>`).join(''):`<div class="rolls">${r.rolls.join(' ')}</div>`}${r.eot?`<div class="eotl">Turn end: ${r.eot.map(part=>signed(part.v[0])+' '+esc(part.l)).join(', ')}${r.eot.some(part=>part.v[1]!==part.v[0])?' (rising)':''}</div>`:''}${r.notes.length?`<div>${r.notes.map(esc).join(' · ')}</div>`:''}
    <div class="ab"><button class="dbtn sm" data-a="sub" data-side="${side}" data-v="${minTotal}">HP −${minTotal}</button><button class="dbtn sm" data-a="sub" data-side="${side}" data-v="${maxTotal}">HP −${maxTotal}</button></div>${tail}</div></div>
    <div class="rcol ${mh?'two':''}">${mh?`<button class="rh" data-a="hits" data-mi="${mi}" data-ck="${ck}" aria-label="Hits">×${n}</button>`:''}<button class="rc" data-a="crit" data-mi="${mi}" data-ck="${ck}" aria-pressed="${crit}" aria-label="Crit">C</button></div></div>`;}).join('');}
-function calcPage(){if(!host.isConnected)document.body.appendChild(host);if(prof.save&&!input.isConnected)document.body.appendChild(input);const gridScroll=$('.mg .dstrip')?.scrollTop||0;fil.innerHTML='';const A0=getMon('mine'),B0=getMon('foe');const a=A0&&resolve(A0),b=B0&&resolve(B0);const out=ST.dir==='out';
+// Turn end: each side's end-of-turn HP change (tap: apply one turn; arrow: the parts). Shown under its own card.
+function turnEnd(a,b,F){const cell=(r,side)=>{if(!r||r.lv==null)return '<div></div>';const parts=window.DMG.residual(toEngine(r),F);if(!parts.length)return '<div></div>';
+ const v=eotTotal(parts),open=EOTOPEN[side];
+ return `<div class="dq"><div class="dqb"><button class="dqa" data-a="eot" data-s="${side}" aria-label="Apply turn end to ${esc(r.name)}"><span class="l">Turn</span><span class="v ${v<0?'dn':v>0?'up':''}">${v?signed(v):'±0'}</span><span class="n">${esc(r.name)}</span></button><button class="dqx" data-a="eotx" data-s="${side}" aria-expanded="${open}" aria-label="Turn end parts">${open?'▴':'▾'}</button></div>${open?`<div class="dqp">${parts.map(part=>`<div><span>${esc(part.l)}</span><b class="${part.v[0]<0?'dn':'up'}">${signed(part.v[0])}</b></div>`).join('')}</div>`:''}</div>`;};
+ const cells=[cell(a,'mine'),cell(b,'foe')];return cells.every(c=>c==='<div></div>')?'':`<div class="deot">${cells.join('')}</div>`;}
+function calcPage(){if(!host.isConnected)document.body.appendChild(host);if(prof.save&&!input.isConnected)document.body.appendChild(input);const gridScroll=$('.mg .dstrip')?.scrollTop||0;fil.innerHTML='';const A0=getMon('mine'),B0=getMon('foe');const a=A0&&resolve(A0),b=B0&&resolve(B0);if(a)a.toxn=TOX[sideInfo('mine').key];if(b)b.toxn=TOX[sideInfo('foe').key];const out=ST.dir==='out';
  const F=ST.field;const sa=a&&effSpe(a),sb=b&&effSpe(b);
  let ra='',rb='';
  if(!a||!b)ra=rb=`<div class="dnote">${!a?'Pick one of yours':'Pick a foe'}</div>`;
@@ -102,7 +111,7 @@ function calcPage(){if(!host.isConnected)document.body.appendChild(host);if(prof
  const fs=(prof.field||[]).filter(entry=>F[entry.k]).map(entry=>entry.type==='toggle'?entry.l:(entry.o||[]).find(option=>option[0]===F[entry.k])?.[1]||F[entry.k]);
  const ban=BAN?`<div class="ban ${BAN.ok?'ok':'bad'}"><button class="bx" data-a="bandis" aria-label="Dismiss">×</button><b>${esc(BAN.h)}</b>${esc(BAN.t)}</div>`:'';
  html($('#app'),`<div class="fit">${ban}<div class="top"><div class="dside mg">${mineGrid()}</div><div class="dside">${foeSide()}</div></div>
- <div class="dmatch">${chip(a,out,'mine',sa>sb)}${chip(b,!out,'foe',sb>sa)}<div class="dres ${out?'':'na'}">${ra}</div><div class="dres ${out?'na':''}">${rb}</div></div></div>
+ <div class="dmatch">${chip(a,out,'mine',sa>sb)}${chip(b,!out,'foe',sb>sa)}${turnEnd(a,b,F)}<div class="dres ${out?'':'na'}">${ra}</div><div class="dres ${out?'na':''}">${rb}</div></div></div>
  <details class="dfield" ${window.__fo?'open':''}><summary>Field <span class="mut">${esc(fs.join(' · ')||'none')}</span></summary><div class="dfb">
   ${fieldHTML(F)}</div></details>`);
  bindCap();bindMain();bindEd();fitTeam();if($('.mg .dstrip'))$('.mg .dstrip').scrollTop=gridScroll;jumpState();}
@@ -117,7 +126,7 @@ function bindMain(){document.querySelectorAll('[data-ms]').forEach(i=>{i.onchang
   const ck=i.dataset.ck;if(k==='t'){(ST.mvo[ck]=ST.mvo[ck]||{}).t=i.value;}else if(k==='bp'){const v=parseInt(i.value);(ST.mvo[ck]=ST.mvo[ck]||{}).bp=isNaN(v)?undefined:v;}else if(k==='hits'){ST.hits[ck]=parseInt(i.value)||1;}else if(k==='invert'){(ST.mvo[ck]=ST.mvo[ck]||{}).invert=i.checked;}
   save();refresh();};});}
 function bindEd(){document.querySelectorAll('[data-e]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const side=i.dataset.s,k=i.dataset.e,m=getMon(side);
-  if(k==='na')setField(side,'na',i.value);else if(k==='ab'){setField(side,'a',+i.value);setField(side,'aGuess',false);setField(side,'abilityOn',false);}else if(k==='it')setField(side,'i',i.value);else if(k==='status')setField(side,'status',i.value);
+  if(k==='na')setField(side,'na',i.value);else if(k==='ab'){setField(side,'a',+i.value);setField(side,'aGuess',false);setField(side,'abilityOn',false);setField(side,'pty',undefined);}else if(k==='it')setField(side,'i',i.value);else if(k==='status'){setField(side,'status',i.value);delete TOX[sideInfo(side).key];}else if(k==='pty')setField(side,'pty',i.value||undefined);
   else if(k==='iv'||k==='ev'){const a=m[k].slice(),v=parseInt(i.value)||0;a[+i.dataset.x]=Math.max(0,Math.min(k==='iv'?31:252,v));setField(side,k,a);}
   refresh();};});}
 function bindCap(root){(root||document).querySelectorAll('[data-cap]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const v=parseInt(i.value);const t=trByK[i.dataset.cap];if(v>=range[0]&&v<=range[1]&&v!==t.cap){TCAP[t.k]=v;if(CF.capLast)TCAP._last=v;}else delete TCAP[t.k];try{localStorage.setItem(LS.cap,JSON.stringify(TCAP));}catch(error){}save();refresh();};});}
@@ -136,6 +145,8 @@ document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const e
  else if(a==='crit'){const ck=el.dataset.ck;ST.crit[ck]=ST.crit[ck]?0:1;save();refresh();}
  else if(a==='hits'){const mi=+el.dataset.mi,ck=el.dataset.ck,m=MH[mi],n=hitsOf(mi,ck);ST.hits[ck]=n>=m[1]?m[0]:n+1;save();refresh();}
  else if(a==='sub'){const side=el.dataset.side==='mine'?'foe':'mine',r=resolve(getMon(side));setField(side,'hp',Math.max(0,r.hp-(+el.dataset.v)));refresh();}
+ else if(a==='eot'){const side=el.dataset.s,r=resolve(getMon(side)),key=sideInfo(side).key;r.toxn=TOX[key];const parts=window.DMG.residual(toEngine(r),ST.field);setField(side,'hp',Math.max(0,Math.min(r.stats?.[0]||0,r.hp+eotTotal(parts))));if(parts.some(part=>part.v[1]!==part.v[0]))TOX[key]=(TOX[key]||1)+1;refresh();}
+ else if(a==='eotx'){EOTOPEN[el.dataset.s]=!EOTOPEN[el.dataset.s];refresh();}
  else if(a==='hpfull'){const mon=resolve(getMon(el.dataset.s));setField(el.dataset.s,'hp',mon.stats?.[0]||0);refresh();}
  else if(a==='eopen'){EDITOPEN[el.dataset.s]=!EDITOPEN[el.dataset.s];refresh();}
  else if(a==='mega'){megaToggle(el.dataset.s);refresh();}
