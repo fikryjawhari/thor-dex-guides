@@ -11881,6 +11881,7560 @@
         }
       },
       "src": "U5 C: hacks/eternal-x/.src/dex-rebalanced.json (XY Gen 6 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual critical-damage scenario does not change blocked probability."
+    },
+    {
+      "name": "a-skull-bash-ordinary",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "def",
+            "by": 1,
+            "src": "Skull Bash"
+          }
+        ]
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-ordinary-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "it": "",
+            "stg": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          "slot": {
+            "mv": 0,
+            "bp": 130,
+            "t": "Normal"
+          }
+        }
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-simple",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 85,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "def",
+            "by": 2,
+            "src": "Skull Bash"
+          }
+        ]
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-simple-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 85,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "it": "",
+            "stg": [
+              0,
+              0,
+              2,
+              0,
+              0,
+              0
+            ]
+          },
+          "slot": {
+            "mv": 0,
+            "bp": 130,
+            "t": "Normal"
+          }
+        }
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-contrary",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 125,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "def",
+            "by": -1,
+            "src": "Skull Bash"
+          }
+        ]
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-contrary-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 125,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "it": "",
+            "stg": [
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0
+            ]
+          },
+          "slot": {
+            "mv": 0,
+            "bp": 130,
+            "t": "Normal"
+          }
+        }
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-given-stage-never-twice",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "def",
+            "by": 1,
+            "src": "Skull Bash"
+          }
+        ]
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-given-stage-never-twice-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "it": "",
+            "stg": [
+              0,
+              0,
+              2,
+              0,
+              0,
+              0
+            ]
+          },
+          "slot": {
+            "mv": 0,
+            "bp": 130,
+            "t": "Normal"
+          }
+        }
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-simple-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 85,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "def",
+            "by": 1,
+            "src": "Skull Bash"
+          }
+        ]
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-simple-cap-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 85,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          5,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "it": "",
+            "stg": [
+              0,
+              0,
+              6,
+              0,
+              0,
+              0
+            ]
+          },
+          "slot": {
+            "mv": 0,
+            "bp": 130,
+            "t": "Normal"
+          }
+        }
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-at-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          6,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-at-cap-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          6,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "it": "",
+            "stg": [
+              0,
+              0,
+              6,
+              0,
+              0,
+              0
+            ]
+          },
+          "slot": {
+            "mv": 0,
+            "bp": 130,
+            "t": "Normal"
+          }
+        }
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-contrary-lower-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 125,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -6,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-contrary-lower-cap-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 125,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -6,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "it": "",
+            "stg": [
+              0,
+              0,
+              -6,
+              0,
+              0,
+              0
+            ]
+          },
+          "slot": {
+            "mv": 0,
+            "bp": 130,
+            "t": "Normal"
+          }
+        }
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-power-herb",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "it": "Power Herb"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "def",
+            "by": 1,
+            "src": "Skull Bash"
+          }
+        ]
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-skull-bash-power-herb-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "it": "Power Herb"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "slot": {
+        "mv": 129,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "it": "",
+            "stg": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          "slot": {
+            "mv": 0,
+            "bp": 130,
+            "t": "Normal"
+          }
+        }
+      },
+      "src": "U4a A: Skull Bash. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Charge-stage event occurs once before the damaging hit; pre-charge stages are input. Simple/Contrary and caps apply to the event, not the already-entered stage. Power Herb/rain removes delay, not the stage change. Skull Bash raises Def, never Atk. https://bulbapedia.bulbagarden.net/wiki/Skull_Bash_(move)"
+    },
+    {
+      "name": "a-download-atk-tie-special",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "spa",
+            "by": 1,
+            "src": "Download"
+          }
+        ]
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-atk-tie-special-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-atk-lower-defense-physical",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "atk",
+            "by": 1,
+            "src": "Download"
+          }
+        ]
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-atk-lower-defense-physical-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-atk-lower-special-defense",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "spa",
+            "by": 1,
+            "src": "Download"
+          }
+        ]
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-atk-lower-special-defense-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-atk-given-stage-never-twice",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "atk",
+            "stat": "spa",
+            "by": 1,
+            "src": "Download"
+          }
+        ]
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-atk-given-stage-never-twice-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              0,
+              0,
+              2,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-atk-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          6,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-atk-cap-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          6,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              0,
+              0,
+              6,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-atk-eligibility-off",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": false,
+        "stg": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-atk-eligibility-off-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": false,
+        "stg": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "atk": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-tie-special",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "spa",
+            "by": 1,
+            "src": "Download"
+          }
+        ]
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-tie-special-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "def": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-lower-defense-physical",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Download"
+          }
+        ]
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-lower-defense-physical-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "def": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-lower-special-defense",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          -1,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "spa",
+            "by": 1,
+            "src": "Download"
+          }
+        ]
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-lower-special-defense-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          -1,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "def": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-given-stage-never-twice",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "spa",
+            "by": 1,
+            "src": "Download"
+          }
+        ]
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-given-stage-never-twice-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "def": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              0,
+              0,
+              2,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          6,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-cap-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": true,
+        "stg": [
+          0,
+          0,
+          0,
+          6,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "def": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              0,
+              0,
+              6,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-eligibility-off",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": false,
+        "stg": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-download-def-eligibility-off-damage-twin",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 87,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "abilityOn": false,
+        "stg": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 128
+      },
+      "field": {},
+      "expect": {
+        "ref": {
+          "def": {
+            "ab": -1,
+            "abilityOn": false,
+            "stg": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "U4a A: Download. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Fresh/eligible singles entry is explicitly abilityOn=true, false never replays it. Compare opposing staged Def/SpD; lower Def gives Atk+1, otherwise SpA+1 (including tie). Existing stages are retained and only this event is added. H SwitchInAbilityCheck:430; I util:4582. No invented doubles partner. https://bulbapedia.bulbagarden.net/wiki/Download_(Ability)"
+    },
+    {
+      "name": "a-weak-armor-physical",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "def",
+            "by": -1,
+            "src": "Weak Armor",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "spe",
+            "by": 1,
+            "src": "Weak Armor",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "def",
+            "by": -1,
+            "src": "Weak Armor",
+            "hit": 3
+          },
+          {
+            "who": "def",
+            "stat": "spe",
+            "by": 1,
+            "src": "Weak Armor",
+            "hit": 3
+          }
+        ]
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability)"
+    },
+    {
+      "name": "a-weak-armor-physical-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          6
+        ]
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weak-armor-special-no-proc",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 593,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability)"
+    },
+    {
+      "name": "a-weak-armor-special-no-proc-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 593,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          6
+        ]
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weak-armor-single-no-pre",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 1,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability)"
+    },
+    {
+      "name": "a-weak-armor-single-no-pre-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 1,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          6
+        ]
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weak-armor-given-stage-never-twice",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "def",
+            "by": -1,
+            "src": "Weak Armor",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "spe",
+            "by": 1,
+            "src": "Weak Armor",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "def",
+            "by": -1,
+            "src": "Weak Armor",
+            "hit": 3
+          },
+          {
+            "who": "def",
+            "stat": "spe",
+            "by": 1,
+            "src": "Weak Armor",
+            "hit": 3
+          }
+        ]
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability)"
+    },
+    {
+      "name": "a-weak-armor-given-stage-never-twice-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ]
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weak-armor-caps-independent",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -5,
+          0,
+          0,
+          5
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "def",
+            "by": -1,
+            "src": "Weak Armor",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "spe",
+            "by": 1,
+            "src": "Weak Armor",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability)"
+    },
+    {
+      "name": "a-weak-armor-caps-independent-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -5,
+          0,
+          0,
+          5
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          14,
+          14,
+          14,
+          14,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          16,
+          16,
+          16,
+          16,
+          16,
+          17
+        ]
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weak-armor-both-capped",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -6,
+          0,
+          0,
+          6
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability)"
+    },
+    {
+      "name": "a-weak-armor-both-capped-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 132,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          -6,
+          0,
+          0,
+          6
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          17,
+          17,
+          17,
+          17,
+          17,
+          18,
+          18,
+          18,
+          18,
+          18,
+          19
+        ]
+      },
+      "src": "U4a A: Weak Armor. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Gen6 E Def-1/Spe+1 per PHYSICAL strike; special strike never triggers. H subscript0307:12; I battle.h:150/util:5509. Independent cap clipping and existing input stages; changes only before later hits. https://bulbapedia.bulbagarden.net/wiki/Weak_Armor_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-super-effective-consumed-once",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 5,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 2,
+            "src": "Weakness Policy",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "spa",
+            "by": 2,
+            "src": "Weakness Policy",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-super-effective-consumed-once-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 5,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          12
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-simple-consumed-once",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 85,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 4,
+            "src": "Weakness Policy",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "spa",
+            "by": 4,
+            "src": "Weakness Policy",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-simple-consumed-once-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 85,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          12
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-contrary-consumed-once",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 125,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": -2,
+            "src": "Weakness Policy",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "spa",
+            "by": -2,
+            "src": "Weakness Policy",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-contrary-consumed-once-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 125,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          12
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-given-stage-never-twice",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          2,
+          0,
+          2,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 2,
+            "src": "Weakness Policy",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "spa",
+            "by": 2,
+            "src": "Weakness Policy",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-given-stage-never-twice-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          2,
+          0,
+          2,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          12
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-independent-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          5,
+          0,
+          6,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Weakness Policy",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-independent-cap-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          5,
+          0,
+          6,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          12
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-simple-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 85,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          5,
+          0,
+          5,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Weakness Policy",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "spa",
+            "by": 1,
+            "src": "Weakness Policy",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-simple-cap-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 85,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          5,
+          0,
+          5,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          12
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-both-capped",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          6,
+          0,
+          6,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-both-capped-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          6,
+          0,
+          6,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          12
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-contrary-lower-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 125,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          -6,
+          0,
+          -6,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-contrary-lower-cap-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 125,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          -6,
+          0,
+          -6,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          12
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-neutral-no-proc",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-neutral-no-proc-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          6
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-single-no-pre",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 1,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-single-no-pre-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 1,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          12
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Super-effective Grass Bullet Seed vs Water Manaphy; consume Policy once, Atk then SpA, before hit2 only. Native BP overridden to10 to ensure survival; no Grass STAB. Existing stages are not separate historical triggers. H CheckDefenderItemEffectOnHit:180; I util:8107/scripts:6104. Neutral hit never triggers. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-magic-room",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy"
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {
+        "magicRoom": true
+      },
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Magic Room suppresses the held Policy; super-effective strikes alone cannot activate the suppressed item. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-magic-room-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy"
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {
+        "magicRoom": true
+      },
+      "expect": {
+        "rolls": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          12
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Magic Room suppresses the held Policy; super-effective strikes alone cannot activate the suppressed item. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-already-consumed",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          2,
+          0,
+          2,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. No currently held Policy: previously entered +2 stages remain, with no repeated item event. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-already-consumed-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          2,
+          0,
+          2,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 330,
+        "hits": 3,
+        "bp": 10,
+        "t": "Grass"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10,
+          12
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. No currently held Policy: previously entered +2 stages remain, with no repeated item event. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-justified-dark-each-hit",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Dark"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Justified",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Justified",
+            "hit": 3
+          }
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability)"
+    },
+    {
+      "name": "a-justified-dark-each-hit-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Dark"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          6
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-justified-given-stage-never-twice",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Dark"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Justified",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Justified",
+            "hit": 3
+          }
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability)"
+    },
+    {
+      "name": "a-justified-given-stage-never-twice-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Dark"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          6
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-justified-cap-crossing",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Dark"
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Justified",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability)"
+    },
+    {
+      "name": "a-justified-cap-crossing-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Dark"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          6
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-justified-at-cap",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          6,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Dark"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability)"
+    },
+    {
+      "name": "a-justified-at-cap-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          6,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Dark"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          6
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-justified-single-no-pre",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 1,
+        "bp": 10,
+        "t": "Dark"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability)"
+    },
+    {
+      "name": "a-justified-single-no-pre-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 1,
+        "bp": 10,
+        "t": "Dark"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          6
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-justified-non-dark",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "pre": []
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability)"
+    },
+    {
+      "name": "a-justified-non-dark-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 2,
+        "hits": 3,
+        "bp": 10,
+        "t": "Normal"
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          6
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Dark-type override is a legal public move-type scenario, not a new move. Each Dark strike raises holder Atk+1 before next strike, not once per move; non-Dark never triggers. I util:5418; H MoveHitDefenderAbilityCheck:271. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-justified-foul-play-parental-bond-0",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 184,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 491
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Justified",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Native Dark Foul Play plus Parental Bond gives a genuine later hit using the defender's boosted Atk. First-hit rolls use initial target Atk105 (or157 at +1), not the new stage. I util:5418; H handler:271. Selected move has no type/power override. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability)"
+    },
+    {
+      "name": "a-justified-foul-play-parental-bond-0-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 184,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 491
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          36,
+          36,
+          37,
+          37,
+          38,
+          38,
+          39,
+          39,
+          39,
+          40,
+          40,
+          41,
+          41,
+          42,
+          42,
+          43
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Native Dark Foul Play plus Parental Bond gives a genuine later hit using the defender's boosted Atk. First-hit rolls use initial target Atk105 (or157 at +1), not the new stage. I util:5418; H handler:271. Selected move has no type/power override. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-foul-play-parental-bond-0",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 184,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "celebi",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 491
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 2,
+            "src": "Weakness Policy",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "spa",
+            "by": 2,
+            "src": "Weakness Policy",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Native Dark Foul Play vs Psychic/Grass Celebi is super-effective; Parental Bond provides hit2 after consuming Policy. Both species have base100 stats, IV0 EV0 Lv50 Serious. First-hit target Atk105 (157 at +1), Def105, x2 effectiveness; later hit must use Policy-boosted target Atk, not retroactively boost hit1. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-foul-play-parental-bond-0-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 184,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "celebi",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 491
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          72,
+          72,
+          74,
+          74,
+          76,
+          76,
+          78,
+          78,
+          78,
+          80,
+          80,
+          82,
+          82,
+          84,
+          84,
+          86
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Native Dark Foul Play vs Psychic/Grass Celebi is super-effective; Parental Bond provides hit2 after consuming Policy. Both species have base100 stats, IV0 EV0 Lv50 Serious. First-hit target Atk105 (157 at +1), Def105, x2 effectiveness; later hit must use Policy-boosted target Atk, not retroactively boost hit1. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-justified-foul-play-parental-bond-1",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 184,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 491
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Justified",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Native Dark Foul Play plus Parental Bond gives a genuine later hit using the defender's boosted Atk. First-hit rolls use initial target Atk105 (or157 at +1), not the new stage. I util:5418; H handler:271. Selected move has no type/power override. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability)"
+    },
+    {
+      "name": "a-justified-foul-play-parental-bond-1-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 184,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 153,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "stg": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 491
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          54,
+          55,
+          55,
+          56,
+          56,
+          57,
+          58,
+          58,
+          59,
+          60,
+          60,
+          61,
+          62,
+          62,
+          63,
+          64
+        ]
+      },
+      "src": "U4a A: Justified. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Native Dark Foul Play plus Parental Bond gives a genuine later hit using the defender's boosted Atk. First-hit rolls use initial target Atk105 (or157 at +1), not the new stage. I util:5418; H handler:271. Selected move has no type/power override. https://bulbapedia.bulbagarden.net/wiki/Justified_(Ability) Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
+    },
+    {
+      "name": "a-weakness-policy-foul-play-parental-bond-1",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 184,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "celebi",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 491
+      },
+      "field": {},
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 2,
+            "src": "Weakness Policy",
+            "hit": 2
+          },
+          {
+            "who": "def",
+            "stat": "spa",
+            "by": 2,
+            "src": "Weakness Policy",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Native Dark Foul Play vs Psychic/Grass Celebi is super-effective; Parental Bond provides hit2 after consuming Policy. Both species have base100 stats, IV0 EV0 Lv50 Serious. First-hit target Atk105 (157 at +1), Def105, x2 effectiveness; later hit must use Policy-boosted target Atk, not retroactively boost hit1. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy"
+    },
+    {
+      "name": "a-weakness-policy-foul-play-parental-bond-1-first-hit-rolls",
+      "atk": {
+        "id": "manaphy",
+        "lv": 50,
+        "ab": 184,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious"
+      },
+      "def": {
+        "id": "celebi",
+        "lv": 50,
+        "ab": -1,
+        "iv": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "nat": "Serious",
+        "it": "Weakness Policy",
+        "stg": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 491
+      },
+      "field": {},
+      "expect": {
+        "rolls": [
+          108,
+          110,
+          110,
+          112,
+          112,
+          114,
+          116,
+          116,
+          118,
+          120,
+          120,
+          122,
+          124,
+          124,
+          126,
+          128
+        ]
+      },
+      "src": "U4a A: Weakness Policy. hacks/eternal-x/.src/dex-rebalanced.json, game-data authority; unchanged Gen 6 turn-based effect rules. Native Dark Foul Play vs Psychic/Grass Celebi is super-effective; Parental Bond provides hit2 after consuming Policy. Both species have base100 stats, IV0 EV0 Lv50 Serious. First-hit target Atk105 (157 at +1), Def105, x2 effectiveness; later hit must use Policy-boosted target Atk, not retroactively boost hit1. https://bulbapedia.bulbagarden.net/wiki/Weakness_Policy Hand-worked first hit: Lv50 Manaphy IV0 EV0 Serious, HP160 and all other stats105; stage formula floor(105*(2+s)/2) for s>=0, floor(210/(2-s)) otherwise. Base=floor(floor(22*BP*A/D)/50)+2; floor(base*r/100), r=85..100, then type effectiveness. Normal override removes STAB. No later-strike change may affect hit 1."
     }
   ]
 }
