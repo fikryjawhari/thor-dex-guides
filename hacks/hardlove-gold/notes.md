@@ -247,6 +247,31 @@ uses, ability activation counters or post-KO changes. Speed label handles stages
 modifier (damage engine turn-order logic is separate). Unknown weights, hack-specific move effects and other flag
 classes still need refinement. Do not merge based on stock-engine parity alone.
 
+#### In-game tests
+
+Rolls are the engine's 16 rolls. Level 50, Serious nature, 31 IVs, 0 EVs, no item, no field unless stated. "Other way"
+is what the game shows if the point goes the other way.
+
+- **Explosion is not halved.** Settles: the target's Defense is not halved for Explosion (the sheet says halved; the source has no halving).
+  - Attacker: Snorlax (Atk 130), no ability effect. Defender: Blastoise (HP 154, Def 120). Move: Explosion (power 250, STAB).
+  - Expected: `153 156 157 159 160 162 165 166 168 169 171 174 175 177 178 181`.
+  - Other way (halved): `306 309 312 316 319 324 327 330 334 337 342 345 348 352 355 360`. Halved Def equals doubled Atk here (Def 120 is even).
+- **Self-Destruct is not halved.** Same setup with Self-Destruct (power 200).
+  - Expected: `123 124 126 127 129 130 132 133 135 136 138 139 141 142 144 145`.
+  - Other way (halved): `244 247 250 252 255 258 261 264 267 270 273 276 279 282 285 288`.
+- **Rage Fist has flat power 100.** Settles: no +50 per hit taken (the sheet's rule is not modelled).
+  - Attacker: Snorlax with Rage Fist, no hits taken. Defender: Blastoise.
+  - Expected: `41 42 42 43 43 44 44 45 45 46 46 47 47 48 48 49`.
+  - Other way (one hit taken, power 150): `62 62 63 64 64 65 66 67 67 68 69 70 70 71 72 73`.
+- **Protean on a second off-type move.** Settles: the calc gives STAB to every off-type move (an accepted decision); the source gives it once per switch-in.
+  - Attacker: Greninja (Protean). Defender: Snorlax. Move 1: Ice Beam. Move 2, same switch-in: Flamethrower (Fire).
+  - Expected in the calc (STAB on both moves): `49 49 49 51 51 52 52 52 54 54 55 55 55 57 57 58`.
+  - Other way (no STAB on move 2, the source rule): `33 33 33 34 34 35 35 35 36 36 37 37 37 38 38 39` (Greninja without Protean, Flamethrower).
+- **Snow raises Ice Defense against physical moves only.** Settles: Snow does not change special damage.
+  - Defender: Abomasnow (Ice/Grass, Lv 50). Physical attacker: Snorlax, Tackle. Special attacker: Alakazam, Psychic (power 90).
+  - Physical in Snow: `22 22 22 22 24 24 24 24 24 24 25 25 25 25 25 27`. Other way (no Snow): `33 33 33 33 34 34 34 34 36 36 36 36 37 37 37 39`.
+  - Special in Snow: `76 76 78 78 79 81 81 82 82 84 85 85 87 87 88 90`, the same with no Snow.
+
 ## Checks
 
 `check.py` [baseline.json]: reference integrity (species, trainer teams, area rows), the Starter area, Trainers / Walkthrough
