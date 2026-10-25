@@ -216,10 +216,9 @@ Phone preview: `calc-photonic.html` (Thor frame). The older shared `calc-control
 guide: its harness requires Emerald Imperium's Flannery trainer key `4.0.15`; it aborts before its assertions.
 The Photonic-specific scenario above covers this session's field controls without changing that unrelated suite.
 
-Z-moves (Z2, 2026-10-25): conversion engine `580f021` and 25 no-power fixtures are implemented (`b73d0ab`, `3ffed9b`; checks `e0d94c1`); the per-move Z button comes in the UI step. All Z names/categories/single-hit checks pass, including Catastropika 210; 11/16 doc powers pass. Needs Opus 4 remains open for Arm Thrust 100 vs 140, Mystical Fire 160 vs 170, Freeze-Dry 175 vs 180, Twineedle 100 vs 175 and Power Gem 160 vs 175 (engine vs doc; Power Gem retains authoritative game power 80). No shared mechanics changed. Totem aura boosts remain manual stat stages.
+Z-moves (2026-10-25): profile `zmove: true` (engine `580f021`) and `zpow`, the 16 Z powers the Move Changes doc gives (`50b3e2d`; they win over the band and stock's own Z powers); 25 no-power fixtures (`b73d0ab`, `3ffed9b`; checks `e0d94c1`), all pass, including Catastropika 210. In the calc each damaging row has a Z toggle on its % line (template README → Damage calculator, "Z-moves"). Totem auras: TR mons carry `au` (`extract/totems.py`); the calc takes it as the Totem's stat stages with an "Aura" mark. Scenario: `tools/scenarios/calc-zmove.mjs` (20/20, every size, normal / dvkb).
 
-Not checked: in-game damage on the Thor, a full audit of every changed move/ability/item, the Z-button UI, Totem aura
-automation, switch-in/history-dependent states or save import. The fixture oracle
+Not checked: in-game damage on the Thor, a full audit of every changed move/ability/item, switch-in/history-dependent states or save import. The fixture oracle
 shares guide stats/types/power/category, so agreement does not independently validate the extracted data. Future
 mechanics refinements should add fixtures here rather than change other guides' base profiles.
 

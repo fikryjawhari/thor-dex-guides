@@ -644,11 +644,13 @@ const evTxt=ev=>ev.map((v,i)=>v?v+' '+SN[i]:'').filter(Boolean).join(' / ');
 const monLv=(x,cap)=>x.l!=null?x.l:x.r!=null&&cap?cap+x.r:NaN;
 // One Pokemon (template/README.md): sprite, name and level; types, tags and speed; ability · item · nature; moves
 // two across; EVs. No IVs (speeds still use them).
+// A Totem's aura (mon.au: stages Atk, Def, SpA, SpD, Spe): "Aura Def +1", "Aura +2 all".
+const auTxt=au=>{const n=['Atk','Def','SpA','SpD','Spe'],s=v=>(v>0?'+':'−')+Math.abs(v);return 'Aura '+(au.every(v=>v===au[0])?s(au[0])+' all':au.map((v,i)=>v?n[i]+' '+s(v):'').filter(Boolean).join(' '));};
 function monCard(x,cap,sel,trainerKey,index){const p=byId[x.id];const lv=monLv(x,cap);
  const main=p&&lv?stat(p.s[5],5,x.iv[5],EVS&&!MGM?x.ev[5]:0,lv,x.na):null;
  const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b></span>${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
  const lvs=x.l!=null||x.r==null?`Lv ${x.l??'?'}`:`Lv ${lv||'?'} <span class="mut small">cap${x.r?(x.r>0?'+':'−')+Math.abs(x.r):''}</span>`;
- const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'');
+ const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'')+(x.au?`<span class="tag aura">${auTxt(x.au)}</span>`:'');
  const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');const ev=EVS&&!MGM&&x.ev?evTxt(x.ev):'';
  return `<div class="mon${sel?' sel':''}"><div class="mh">${spr(x.id,'s32')}<div class="mt"><div class="l1"><span class="mn">${p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:'?'}</span><b>${lvs}</b></div><div class="l2">${p?p.t.map(ty).join(''):''}${tags} ${spd}</div></div></div>
  <div class="small ab">${ab}${x.i?' · '+esc(x.i):''}${x.na?` · <span title="${esc(natLabel(x.na))}">${esc(x.na)}</span>`:''}</div>

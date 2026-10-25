@@ -97,6 +97,7 @@ details.stopd>.stop::before{content:'';position:absolute;left:0;top:0;bottom:12p
 .wstep{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}.wstep input{width:20px;height:20px;margin-top:1px;flex:none;accent-color:var(--acc)}.wstep.done>span{opacity:.5;text-decoration:line-through}
 .cfx{font-size:11px;color:#e0a030;margin-top:4px;line-height:1.35}
 .tag.warnb{background:#5e2e2e;color:#f5d8d8}
+.tag.aura{background:#4a3d12;color:#f3e3a6}
 .trd{margin:2px 0}.trd>summary{cursor:pointer;padding:5px 4px;list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:1px 4px;line-height:1.25;font-size:14px;border-bottom:1px solid var(--line)}
 .trd>summary::-webkit-details-marker{display:none}.trd[open]>summary{color:var(--acc)}
 /* A closed trainer row's team: 24 px sprites, six to a line at most, beside the name when it leaves room, else under it

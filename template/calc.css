@@ -356,3 +356,16 @@ body.calc-route .dcategory{font-size:11px;font-weight:700;color:var(--acc);paddi
 .cc .cn .td{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:1px}
 .cc .hpl.rs{min-width:20px;color:var(--acc);border:1px solid var(--acc);border-radius:6px;font-weight:700}
 @media (min-width:480px){.deot{grid-column:1/-1;gap:4px}.dqa .n{display:block}}
+/* Z-moves (profile zmove): a Z toggle opens each damaging row's % line, centred under the type dot (same 20 px column),
+   so the move name and the % text start at the same x; the rows grow a little and the C column follows them. */
+.dres.zm .mr .td{margin:0 12px 0 6px}
+.dres.zm .mr .r2{align-items:center;min-height:16px}
+.dres.zm .mr .rz{flex:none;width:20px;height:15px;margin:0;padding:0;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--mut);font:800 10px/13px system-ui;cursor:pointer;touch-action:manipulation}
+.dres.zm .mr .rz[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#111}
+.dres.zm .mr .pc{flex:1 1 auto;min-width:0}
+.dres.zm .mr.zon .mv{color:var(--acc)}
+body .dres.zm .mr .rcol{display:flex;flex-direction:column;align-self:stretch;height:auto}
+body .dres.zm .mr .rcol button{height:auto;flex:1 1 0;min-height:0}
+.mr .dd .zl{color:var(--acc);font-weight:600}
+/* Totem aura: the foe's stages are its aura while unchanged */
+.cc .aum{flex:none;margin-left:auto;align-self:center;font:700 9.5px system-ui;color:#f3e3a6;background:#4a3d12;border-radius:5px;padding:1px 4px;white-space:nowrap}
