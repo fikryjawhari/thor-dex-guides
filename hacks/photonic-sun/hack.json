@@ -333,7 +333,8 @@
    "mgm": "psmgm",
    "loc": "psloc",
    "items": "psitems",
-   "capset": "pscapset"
+   "capset": "pscapset",
+   "dmg": "psdmg"
   },
   "txt": {
    "obt": "Obtainable only",
