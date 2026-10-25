@@ -152,6 +152,27 @@ describes changed stats/types/ability assignments/movepools, including later-gen
 upgrade the requested battle mechanics to Gen 7. Future refinements add fixtures here rather than change other
 guides' base profiles.
 
+#### In-game tests
+
+Rolls are the engine's 16 rolls. Level 50, Serious nature, 31 IVs, 0 EVs, no item, no field unless stated. For the
+always-crit points, watch several uses: every use should show the crit list, never the ordinary list.
+
+- **Triple Kick scales per hit.** Settles: power 20, 40, 60 on hits 1-3 (Eternal's Triple Kick is 20 per hit, multiplied by the hit number).
+  - Attacker: Hitmontop (Atk 115), no ability effect on Triple Kick (not Technician). Defender: Blastoise (HP 154, Def 120).
+  - Expected: hit 1 `12 12 12 12 12 13 13 13 13 13 13 13 13 13 13 15`; hit 2 `22 22 22 22 24 24 24 24 24 24 25 25 25 25 25 27`;
+    hit 3 `33 34 34 34 36 36 36 36 37 37 37 37 39 39 39 40`.
+  - Other way (flat 20): all three hits show the hit 1 list.
+- **Cut always crits.** Settles: Cut is a critical hit on every use (Rebalanced move changes), without the crit roll.
+  - Attacker: Snorlax (Cut is Grass here, super effective on Blastoise). Defender: Blastoise (HP 154, Def 120).
+  - Expected on every use: `62 62 64 64 64 66 66 68 68 68 70 70 70 72 72 74`.
+  - Other way (ordinary hit): `42 42 42 44 44 44 44 46 46 46 46 48 48 48 48 50`.
+- **Self-Destruct always crits.** Same setup with Self-Destruct (power 200).
+  - Expected on every use: `184 186 189 190 193 195 196 199 201 204 205 208 210 213 214 217`.
+  - Other way (ordinary hit): `123 124 126 127 129 130 132 133 135 136 138 139 141 142 144 145`.
+- **Explosion always crits.** Same setup with Explosion (power 250, faints the user).
+  - Expected on every use: `229 232 235 238 241 243 246 249 252 255 256 259 262 265 268 271`.
+  - Other way (ordinary hit): `153 156 157 159 160 162 165 166 168 169 171 174 175 177 178 181`.
+
 ## Checks
 
 `check.py` [baseline.json]: an availability fixture (evolution / breeding, usable Mega, form change, trainers, partners,
