@@ -141,6 +141,11 @@
     {"name":"z2-absorb-band-100","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":70,"z":1},"field":{}},
     {"name":"z2-mega-drain-band-120","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":71,"z":1},"field":{}},
     {"name":"z2-sparkling-aria-band-180","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":663,"z":1},"field":{},"difference":{"source":"Photonic Sun Move Changes.pdf, Rebalanced; .src/txt/Move Changes.txt line 30","reason":"The pinned oracle uses stock Z power 175 rather than the documented changed move power/band 180. The doc decides; do not replace guide power with the stock oracle value."}},
-    {"name":"z2-multi-attack-band-190","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":717,"z":1},"field":{},"difference":{"source":"Photonic Sun Move Changes.pdf, Rebalanced; .src/txt/Move Changes.txt line 63","reason":"The pinned oracle uses stock Z power 185 rather than the documented changed move power/band 190. The doc decides; do not replace guide power with the stock oracle value."}}
+    {"name":"z2-multi-attack-band-190","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":717,"z":1},"field":{},"difference":{"source":"Photonic Sun Move Changes.pdf, Rebalanced; .src/txt/Move Changes.txt line 47","reason":"The pinned oracle uses stock Z power 185 rather than the documented changed move power/band 190. The doc decides; do not replace guide power with the stock oracle value."}},
+    {"name":"z2-earthquake","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":88,"z":1},"field":{}},
+    {"name":"z2-weather-ball-stock-exception","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":310,"z":1},"field":{}},
+    {"name":"z2-low-kick-variable","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":66,"z":1},"field":{}},
+    {"name":"z2-double-kick-one-hit","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":23,"z":1,"hits":1},"field":{}},
+    {"name":"z2-catastropika","atk":{"id":"pikachu","lv":50,"ab":-1,"it":"Pikanium Z"},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":343,"z":1},"field":{}}
   ]
 }
