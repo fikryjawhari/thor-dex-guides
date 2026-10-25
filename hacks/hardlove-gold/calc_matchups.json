@@ -1,0 +1,980 @@
+{
+  "oracle": {
+    "kind": "source-and-stock-reference",
+    "independentHackOracle": false,
+    "guideVersion": "0.8.3",
+    "sourceRepository": "kumakuma1/hardlove",
+    "sourceCommit": "f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b",
+    "reference": "@smogon/calc 0.12.0 Gen 9 with guide stats/types/moves; reference item/power adjustments are explicit, not imported rules",
+    "importVersion": "0.8.4",
+    "status": "provisional; in-game checks and turn-history states remain open"
+  },
+  "matchups": [
+    {
+      "name": "physical-neutral",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "special-neutral",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 296
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "critical",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "reflect",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "defReflect": true
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "critical-ignores-reflect",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {
+        "defReflect": true
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "critical-ignores-negative-attack-positive-defense",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          -2,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "normal-gem",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "it": "Normal Gem"
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "item": "",
+        "power": 60
+      }
+    },
+    {
+      "name": "wrong-gem",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "it": "Water Gem"
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "no-gem",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "it": ""
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "special-gem",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1,
+        "it": "Psychic Gem"
+      },
+      "slot": {
+        "mv": 296
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "item": "",
+        "power": 135
+      }
+    },
+    {
+      "name": "flying-gem-acrobatics",
+      "atk": {
+        "id": "crobat",
+        "lv": 50,
+        "ab": -1,
+        "it": "Flying Gem"
+      },
+      "slot": {
+        "mv": 360
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "item": "",
+        "power": 165,
+        "plainMove": true
+      }
+    },
+    {
+      "name": "gem-multihit",
+      "atk": {
+        "id": "breloom",
+        "lv": 50,
+        "ab": -1,
+        "it": "Grass Gem"
+      },
+      "slot": {
+        "mv": 14,
+        "hits": 3
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "item": "",
+        "power": 37
+      }
+    },
+    {
+      "name": "gem-klutz",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": 164,
+        "it": "Normal Gem"
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "gem-magic-room",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "it": "Normal Gem"
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "magicRoom": true
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "gem-pledge-excluded",
+      "atk": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1,
+        "it": "Water Gem"
+      },
+      "slot": {
+        "mv": 565
+      },
+      "field": {},
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "reference": {
+        "item": ""
+      }
+    },
+    {
+      "name": "protean-fresh-off-type",
+      "atk": {
+        "id": "greninja",
+        "lv": 50,
+        "ab": 151
+      },
+      "slot": {
+        "mv": 75
+      },
+      "field": {},
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "libero-fresh-off-type",
+      "atk": {
+        "id": "cinderace",
+        "lv": 50,
+        "ab": 219
+      },
+      "slot": {
+        "mv": 75
+      },
+      "field": {},
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "battle-bond-attack-manual",
+      "atk": {
+        "id": "greninja",
+        "lv": 50,
+        "ab": 180,
+        "stg": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "slot": {
+        "mv": 85
+      },
+      "field": {},
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "battle-bond-no-special-boost",
+      "atk": {
+        "id": "greninja",
+        "lv": 50,
+        "ab": 180,
+        "stg": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "slot": {
+        "mv": 76
+      },
+      "field": {},
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "protect-blocks",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "defProtected": true
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "unseen-fist-contact",
+      "atk": {
+        "id": "urshifu",
+        "lv": 50,
+        "ab": 173
+      },
+      "slot": {
+        "mv": 282
+      },
+      "field": {
+        "defProtected": true
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "unseen-fist-noncontact-still-blocked",
+      "atk": {
+        "id": "urshifu",
+        "lv": 50,
+        "ab": 173
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {
+        "defProtected": true
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "snow-ice-physical",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "weather": "Snow"
+      },
+      "def": {
+        "id": "abomasnow",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "snow-ice-special",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 296
+      },
+      "field": {
+        "weather": "Snow"
+      },
+      "def": {
+        "id": "abomasnow",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "snow-non-ice",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "weather": "Snow"
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "sand-rock-special",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 296
+      },
+      "field": {
+        "weather": "Sand"
+      },
+      "def": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "sun",
+      "atk": {
+        "id": "garchomp",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 38
+      },
+      "field": {
+        "weather": "Sun"
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "rain",
+      "atk": {
+        "id": "garchomp",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 38
+      },
+      "field": {
+        "weather": "Rain"
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "electric-terrain",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 163
+      },
+      "field": {
+        "terrain": "Electric"
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "psychic-terrain",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 296
+      },
+      "field": {
+        "terrain": "Psychic"
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "doubles-spread",
+      "atk": {
+        "id": "garchomp",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 28
+      },
+      "field": {
+        "gameType": "Doubles"
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "doubles-reflect",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defReflect": true
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "light-screen",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 296
+      },
+      "field": {
+        "defLightScreen": true
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "helping-hand",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "atkHelpingHand": true
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "gravity-ground-flying",
+      "atk": {
+        "id": "garchomp",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 28
+      },
+      "field": {
+        "gravity": true
+      },
+      "def": {
+        "id": "crobat",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "flower-gift-sun",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "atkFlowerGift": true,
+        "weather": "Sun"
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "flower-gift-no-sun",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "atkFlowerGift": true
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "flower-gift-defense",
+      "atk": {
+        "id": "alakazam",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 296
+      },
+      "field": {
+        "defFlowerGift": true,
+        "weather": "Sun"
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "power-trick-attack",
+      "atk": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "atkPowerTrick": true
+      },
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "power-trick-defense",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "defPowerTrick": true
+      },
+      "def": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "evs-ignored",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1,
+        "ev": [
+          252,
+          252,
+          252,
+          252,
+          252,
+          252
+        ]
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {},
+      "def": {
+        "id": "blastoise",
+        "lv": 50,
+        "ab": -1,
+        "ev": [
+          252,
+          252,
+          252,
+          252,
+          252,
+          252
+        ]
+      }
+    },
+    {
+      "name": "source-noncontact-sunsteel-strike",
+      "atk": {
+        "id": "urshifu",
+        "lv": 50,
+        "ab": 173
+      },
+      "slot": {
+        "mv": 690
+      },
+      "field": {
+        "defProtected": true
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "source-noncontact-collision-course",
+      "atk": {
+        "id": "urshifu",
+        "lv": 50,
+        "ab": 173
+      },
+      "slot": {
+        "mv": 745
+      },
+      "field": {
+        "defProtected": true
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "source-noncontact-electro-drift",
+      "atk": {
+        "id": "urshifu",
+        "lv": 50,
+        "ab": 173
+      },
+      "slot": {
+        "mv": 746
+      },
+      "field": {
+        "defProtected": true
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "source-noncontact-thunderous-kick",
+      "atk": {
+        "id": "urshifu",
+        "lv": 50,
+        "ab": 173
+      },
+      "slot": {
+        "mv": 759
+      },
+      "field": {
+        "defProtected": true
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "source-noncontact-behemoth-blade",
+      "atk": {
+        "id": "urshifu",
+        "lv": 50,
+        "ab": 173
+      },
+      "slot": {
+        "mv": 780
+      },
+      "field": {
+        "defProtected": true
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "unseen-fist-punching-glove",
+      "atk": {
+        "id": "urshifu",
+        "lv": 50,
+        "ab": 173,
+        "it": "Punching Glove"
+      },
+      "slot": {
+        "mv": 282
+      },
+      "field": {
+        "defProtected": true
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      }
+    },
+    {
+      "name": "gem-with-sheer-force-equal-native-modifier",
+      "atk": {
+        "id": "garchomp",
+        "lv": 50,
+        "ab": 27,
+        "it": "Fire Gem"
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 38
+      },
+      "field": {},
+      "reference": {
+        "item": "",
+        "power": 135
+      }
+    }
+  ]
+}

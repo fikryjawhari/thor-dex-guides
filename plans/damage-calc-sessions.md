@@ -62,6 +62,8 @@ the calc scenarios for the hack. Put the build on the phone preview (`python -I 
 calc-build.html --frame`) when the page changed.
 
 ## Status
-- Mechanics: Emerald Imperium done (47/47). Hardlove Gold, Photonic Sun, Eternal X to do. Refinements to do.
+- Mechanics: Emerald Imperium done (47/47). Hardlove Gold provisional/source-checked (53 checks, 10 UI passes),
+  no independent oracle; in-game tests and type-history states open (notes.md → Damage calc). Photonic Sun and
+  Eternal X to do. Refinements to do. Hardlove imports are 0.8.4; guide remains 0.8.3.
 - Readers: none (only the `test` reader). File picker: not started.
 - Merge: not merged; waiting on the mechanics.

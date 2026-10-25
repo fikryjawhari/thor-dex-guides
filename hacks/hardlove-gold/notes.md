@@ -131,6 +131,94 @@ bar (filters rival teams, trades, starter-only items), trade slots in the tracke
 "Level cap" box for cap-relative teams, availability filter "Trainer only" instead of "Changed from vanilla". No
 Minimal Grinding Mode, Hot House, changes doc or conflict cards.
 
+### Damage calc (2026-10-25, provisional first pass)
+
+Enabled on `worktree-damage-calc`, **not merged or independently verified against the ROM**. Base `expansion`
+means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide remains **0.8.3**: the 0.8.4 downloads did
+not replace its species, moves, trainer sets or version. No Gen 4 save reader yet.
+
+#### Sources and profile
+
+Authority: `kumakuma1/hardlove` at `f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b`, this guide's existing pin.
+Battle files are cached in ignored `.tmp/calc-hardlove-gold/source/`; re-fetch those raw GitHub paths at that commit.
+User-supplied notes agree with `doc/Mechanics.txt:5-34`.
+
+| Mechanic | Implementation / source |
+| --- | --- |
+| No EVs | Existing `cfg.evs` hides editing; `cfg.calc.evs: false` also ignores supplied EVs in engine stats/damage. Other profiles keep EVs. |
+| Crits | `critStages`: 1/16, 1/8, 1/2, 1, 1 (`src/battle/other_battle_calculators.c:1720`). Explicit x1.5 damage (`src/battle/battle_calc_damage.c:424`). No crit sampling: KO odds are conditional on a hit and selected crit. |
+| Gems | Matching live item/type: replace native last 5325 power modifier with 6144 (x1.5), `src/individual/CalcBaseDamage.c:915-918`. Item identity retained for Flying Gem + Acrobatics. Magic Room, Klutz and wrong-type Gems do not boost. |
+| Gem exclusions | No boost for Struggle, Pledges or OHKO moves: `src/individual/BattleController_BeforeMove.c:5166-5188`. Consumption precedes damage: `data/battle_scripts/subscripts/subscript_0452_HANDLE_GEM_ACTIVATION_MESSAGE.s`. |
+| Unseen Fist | Native contact-only Protect bypass at full damage. Docs' "completely" does not mean non-contact moves: `CanHitThroughProtect`, `src/individual/BattleController_BeforeMove.c:2556-2567`, checks contact. Punching Glove prevents contact. |
+| Protean / Libero | Native fresh-activation STAB. Source once-per-switch Protean vs repeated Libero: `src/individual/BattleController_BeforeMove.c:620-645`. Prior activation and resulting defensive type are **not represented**. |
+| Battle Bond | Manually select +1 Atk and +1 Spe after KO, no SpA: `data/battle_scripts/subscripts/subscript_0515_BATTLE_BOND_BOOST.s:11-16`. No automatic post-KO simulation. |
+| Snow | Gen 9 Snow (no Hail): Ice physical Defense x1.5, not SpD, `src/individual/CalcBaseDamage.c:1400-1408`. |
+| Fields | Existing Gen 9 fields retained; add per-side Flower Gift, Power Trick, Protect using existing renderer/native engine. Importer's limited field list is not an availability specification. |
+| Permanent fields | Select current weather/terrain manually; no countdown or Defog simulation to incorrectly expire/clear them. |
+| Moody / sleep / OHKO | Accuracy/evasion randomness, sleep duration and OHKO chance/level checks are outside damage simulation. Current sleep status and manual stat stages remain usable. |
+
+Gem replacement intentionally takes the **last** native 5325: in pinned `@smogon/calc 0.12.0`
+`calculateBPModsSMSSSV`, the Gem item branch follows ability modifiers and no later branch adds 5325. First-match
+replacement would be ambiguous with Sheer Force. Recheck this on engine updates; source/stock parity does not
+certify every modifier-order/rounding combination in hg-engine.
+
+#### Move flags fixed
+
+Old extraction initialised every `MV.f` to `[]`, losing standard contact/punch/sound flags and breaking Unseen Fist
+and other flag-sensitive effects. `hgengine.move_flags()` starts with pinned Showdown Gen 9 flags, then takes
+**contact** from the hack's `data/Moves.c`. Fresh builds use it in `dex.movetable`; the committed data was patched
+with the same helper. Source-free `--published` rebuilds preserve it. Only flags changed: 774 entries, 255 contact
+moves; IDs/order, stats, moves' numbers, trainer teams and storage keys unchanged. Source removes standard contact
+from Sunsteel Strike, Collision Course, Electro Drift, Thunderous Kick and Behemoth Blade (fixtures cover all five).
+Other flag classes follow the declared Gen 9 default, not an individual audit of every hack ability's move list.
+
+#### Importer downloads
+
+Originals copied to ignored `.src/calc-import/`, references only, not shipped:
+- `hardlovegoldnds084_npoint_data.json`: title 0.8.4, 1,039 species, 905 moves, 690 species with sets (1,910 sets).
+  Useful for a future version-update cross-check; no damage engine or expected rolls.
+- `hardlovegoldnds084.js`: `var overrides`, species/learnsets, encounters, moves, items and abilities.
+- `hardlovegoldnds084_searchindex.js`: generated search/aliases, not mechanics.
+
+Malformed move: key `10`, type `000`, category `000 bolt`, priority 195. Item overrides contain only two records.
+These are not complete validated replacements for pinned source/guide tables or verified calc settings. No
+unlicensed importer code/tables were copied into tracked runtime files.
+
+#### Validation and open in-game tests
+
+`npm test --prefix tools/calc`: 81 existing engine tests plus 53 Hardlove checks (48 matchups, five focused checks).
+`hardlove_check.mjs` compares all 16 rolls/hit with stock Gen 9 and guide numbers, explicit reference Gem powers,
+and a hand-derived example: level 50, Atk 130, Def 120, Tackle 40 -> base 21; Gem power 60 -> 30; crit base 31.
+Report `.tmp/calc-hardlove-gold/check.json` explicitly says `independentHackOracle: false`. Fixtures intentionally
+have no runnable hzla settings: do not pass them to `hzla_compare.mjs` or call these independent oracle matches.
+`node tools/scenarios/calc-hardlove.mjs`: controls/damage/persistence pass at five viewer sizes, normal + dvkb (10/10).
+Build all guides after the shared engine change: `python assemble.py`.
+
+Session regression checks: all four guides built; Photonic Sun and Eternal X are byte-identical to HEAD builds;
+Emerald Imperium's calc DOM is identical in normal/dvkb, without page errors. Hardlove's extract checker and
+Trainers/Walkthrough check pass (986 species, 329 trainer cards, 18 splits, 94 stops); consistency checks pass in
+both modes, five viewer sizes and light theme. Data comparison against HEAD confirms only `MV.f` changed.
+Phone preview: `hardlove-calc.html` (Thor frame). No independent ROM-oracle comparison or full gate claimed.
+
+**Stop before declaring the mechanics trusted. User's in-game checks:**
+1. Known level/nature/IV and zero-EV sets: record starting/ending HP for a neutral move, matching Gem, guaranteed
+   crit, Flying Gem + Acrobatics and a multi-hit Gem attack. Multiple observed hits can challenge the range; one
+   hit cannot prove all 16 rolls.
+2. Against Protect with Unseen Fist: contact full damage; same punch with Punching Glove blocked; Dark Pulse blocked.
+   Test the five source-specific non-contact moves when available.
+3. Two different off-type moves without switching: record type/damage for Protean, repeat with Libero. Current calc
+   handles a fresh activation only, not Protean already used, changed defensive typing or successive turn history.
+   A state/UI refinement is required for those states; every row is an alternative attack, not a turn sequence.
+4. Battle Bond: compare all stats before/after KO, after a second KO, and after switching. Atk/Spe only, no SpA.
+   Use manual stages in the calc; repeated-trigger behaviour is not certified.
+5. Ice defender with Snow: physical vs special damage. Also check permanent weather/terrain beyond normal duration,
+   Defog not clearing terrain, Gen 4 sleep turns and No Guard/Lock On OHKO chance in gameplay, not damage parity.
+
+Other framework limits: no switch/type history, automatic partner inference, item-consumption persistence between
+uses, ability activation counters or post-KO changes. Speed label handles stages/paralysis, not every field/ability
+modifier (damage engine turn-order logic is separate). Unknown weights, hack-specific move effects and other flag
+classes still need refinement. Do not merge based on stock-engine parity alone.
+
 ## Checks
 
 `check.py` [baseline.json]: reference integrity (species, trainer teams, area rows), the Starter area, Trainers / Walkthrough

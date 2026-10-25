@@ -1,0 +1,123 @@
+import assert from 'node:assert/strict';
+import {readFile, mkdir, writeFile} from 'node:fs/promises';
+import {createRequire} from 'node:module';
+import {createEngine} from './run.mjs';
+
+const require = createRequire(import.meta.url);
+const {Generations, Pokemon, Move, Field, calculate} = require('@smogon/calc');
+const root = new URL('../../', import.meta.url);
+const load = async path => JSON.parse(await readFile(new URL(path, root), 'utf8'));
+const data = await load('hacks/hardlove-gold/data.json');
+const configuration = await load('hacks/hardlove-gold/hack.json');
+const fixtures = await load('hacks/hardlove-gold/calc_matchups.json');
+const engine = await createEngine(data, configuration.cfg.calc);
+const gen = Generations.get(9);
+const stats = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
+const statObject = (values, fallback) => Object.fromEntries(stats.map((name, index) => [name, values?.[index] ?? fallback]));
+const plain = value => JSON.parse(JSON.stringify(value));
+const toID = name => name.toLowerCase().replace(/[^a-z0-9]/g, '');
+const hitsOf = result => result.per || Array.from({length: result.hits}, () => result.rolls);
+
+function reference(matchup) {
+  const adjustments = matchup.reference || {};
+  const mon = (set, attacking) => {
+    const entry = data.P.find(species => species.id === set.id);
+    return new Pokemon(gen, entry.n, {
+      level: set.lv, nature: set.nat || 'Serious', ability: data.AB[set.ab]?.[0] || 'Guide no ability',
+      item: attacking ? adjustments.item ?? set.it : set.it, status: set.st,
+      ivs: statObject(set.iv, 31), evs: statObject(undefined, 0), boosts: statObject(set.stg, 0),
+      overrides: {baseStats: statObject(entry.s, 1), types: entry.t, nfe: !!entry.et?.length},
+    });
+  };
+  const name = data.M[matchup.slot.mv];
+  const entry = data.MV[matchup.slot.mv];
+  const upstream = gen.moves.get(toID(name));
+  const flagNames = {ballistic: 'bullet', biting: 'bite', punching: 'punch'};
+  const flags = entry.f === undefined ? upstream?.flags : {
+    ...Object.fromEntries(Object.keys(upstream?.flags || {}).map(flag => [flag, 0])),
+    ...Object.fromEntries(entry.f.map(flag => [flagNames[flag] || flag, 1])),
+  };
+  const overrides = {basePower: adjustments.power ?? Number(entry.bp), type: matchup.slot.t || entry.t,
+    category: entry.c, priority: entry.pr ?? upstream?.priority ?? 0, flags};
+  if (adjustments.plainMove) overrides.name = 'Reference fixed power';
+  const move = new Move(gen, name, {overrides, isCrit: !!matchup.slot.crit, hits: matchup.slot.hits || 1});
+  move.hits = matchup.slot.hits || 1;
+  const values = matchup.field;
+  const side = prefix => ({isReflect: !!values[prefix + 'Reflect'], isLightScreen: !!values[prefix + 'LightScreen'],
+    isAuroraVeil: !!values[prefix + 'AuroraVeil'], isTailwind: !!values[prefix + 'Tailwind'],
+    isHelpingHand: !!values[prefix + 'HelpingHand'], isFlowerGift: !!values[prefix + 'FlowerGift'],
+    isPowerTrick: !!values[prefix + 'PowerTrick'], isProtected: !!values[prefix + 'Protected']});
+  const field = new Field({gameType: values.gameType || 'Singles', weather: values.weather,
+    terrain: values.terrain, isGravity: !!values.gravity, isMagicRoom: !!values.magicRoom,
+    isWonderRoom: !!values.wonderRoom, attackerSide: side('atk'), defenderSide: side('def')});
+  const damage = calculate(gen, mon(matchup.atk, true), mon(matchup.def, false), move, field).damage;
+  const normalise = rolls => typeof rolls === 'number' ? Array(16).fill(rolls) : rolls;
+  return Array.isArray(damage) && (Array.isArray(damage[0]) || damage.length === 2)
+    ? damage.map(normalise) : Array.from({length: move.hits}, () => normalise(damage));
+}
+
+const results = [];
+for (const matchup of fixtures.matchups) {
+  try {
+    const result = plain(engine.calc(matchup.atk, matchup.def, matchup.slot, matchup.field));
+    const expected = plain(reference(matchup));
+    assert.deepEqual(hitsOf(result), expected);
+    results.push({name: matchup.name, status: 'pass', per: hitsOf(result)});
+    console.log(`PASS ${matchup.name}`);
+  } catch (error) {
+    results.push({name: matchup.name, status: 'fail', error: error.stack});
+    console.error(`FAIL ${matchup.name}\n${error.stack}`);
+  }
+}
+
+const caseByName = name => fixtures.matchups.find(matchup => matchup.name === name);
+const resultByName = name => results.find(result => result.name === name);
+const check = (name, run) => {
+  try {
+    run();
+    results.push({name, status: 'pass'});
+    console.log(`PASS ${name}`);
+  } catch (error) {
+    results.push({name, status: 'fail', error: error.stack});
+    console.error(`FAIL ${name}\n${error.stack}`);
+  }
+};
+check('hand-calculated-neutral-gem-and-critical-rolls', () => {
+  const sample = caseByName('physical-neutral');
+  assert.equal(engine.stats(sample.atk)[1], 130);
+  assert.equal(engine.stats(sample.def)[2], 120);
+  const expected = baseDamage => Array.from({length: 16}, (_, index) =>
+    Math.ceil(Math.floor(baseDamage * (85 + index) / 100) * 1.5 - 0.5));
+  assert.deepEqual(resultByName('physical-neutral').per[0], expected(21));
+  assert.deepEqual(resultByName('normal-gem').per[0], expected(30));
+  assert.deepEqual(resultByName('critical').per[0], expected(31));
+});
+check('evs-ignored-by-stats-and-damage', () => {
+  const sample = caseByName('evs-ignored');
+  assert.deepEqual(plain(engine.stats(sample.atk)), plain(engine.stats({...sample.atk, ev: [0, 0, 0, 0, 0, 0]})));
+  assert.deepEqual(resultByName('evs-ignored').per, resultByName('physical-neutral').per);
+});
+check('battle-bond-does-not-boost-special-attack', () => {
+  const sample = caseByName('battle-bond-no-special-boost');
+  const unboosted = engine.calc({...sample.atk, stg: [0, 0, 0, 0, 0, 0]}, sample.def, sample.slot, {});
+  assert.deepEqual(resultByName(sample.name).per, plain(hitsOf(unboosted)));
+});
+check('protect-contact-boundary', () => {
+  assert.ok(resultByName('protect-blocks').per[0].every(value => value === 0));
+  assert.ok(resultByName('unseen-fist-contact').per[0].every(value => value > 0));
+  assert.ok(resultByName('unseen-fist-noncontact-still-blocked').per[0].every(value => value === 0));
+});
+check('gem-disabled-and-negative-cases-have-no-custom-boost', () => {
+  for (const name of ['wrong-gem', 'gem-klutz', 'gem-magic-room']) {
+    assert.deepEqual(resultByName(name).per, resultByName('physical-neutral').per);
+  }
+});
+
+const counts = {pass: results.filter(result => result.status === 'pass').length,
+  fail: results.filter(result => result.status === 'fail').length};
+await mkdir(new URL('.tmp/calc-hardlove-gold/', root), {recursive: true});
+await writeFile(new URL('.tmp/calc-hardlove-gold/check.json', root), JSON.stringify({
+  guideVersion: configuration.version, independentHackOracle: false, oracle: fixtures.oracle, counts, results,
+}, null, 2) + '\n');
+console.log(`Hardlove source/stock checks: ${counts.pass} passed; ${counts.fail} failed; NOT an independent hack oracle`);
+if (counts.fail) process.exitCode = 1;

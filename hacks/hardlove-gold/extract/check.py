@@ -21,6 +21,11 @@ def stops(data):
 
 
 def check(data, baseline=None):
+    flags = {name: data['MV'][index]['f'] for index, name in enumerate(data['M'])}
+    assert 'contact' in flags['Drain Punch'] and 'punch' in flags['Drain Punch']
+    assert 'sound' in flags['Boomburst']
+    for name in ['Dark Pulse', 'Sunsteel Strike', 'Collision Course', 'Electro Drift', 'Thunderous Kick', 'Behemoth Blade']:
+        assert 'contact' not in flags[name], name
     species = {entry['id']: entry for entry in data['P']}
     assert len(species) == len(data['P'])
     assert not any('vc' in entry for entry in data['P'])

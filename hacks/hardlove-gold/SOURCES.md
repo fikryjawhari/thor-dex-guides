@@ -29,6 +29,22 @@ sets, commit `4c171c8d91`), so those sets were patched into the guide on 2026-10
 | `Hardlove Gold AI document_WIP.txt`, `Post-KO Switch-in AI.xlsx` | Trainer AI. Shown in the guide's Walkthrough tab |
 | `Move Performance.txt` | Generic move-order notes copied from a wiki; not used |
 
+## Calc references (2026-10-25)
+
+User-exported `hardlovegoldnds084_npoint_data.json`, `hardlovegoldnds084.js` and
+`hardlovegoldnds084_searchindex.js` are copied from Downloads into ignored `.src/calc-import/`.
+They describe 0.8.4, not this guide's pinned 0.8.3, and contain data/search metadata rather than a damage engine.
+Keep as local references only; re-export from hzla's Dynamic Dex importer to obtain them again.
+SHA-256 respectively: `8e32f6dd6cf575fe9ecf56ca9f87b813e5240600ac76fbd51694bef2719ab449`,
+`58fd68c1fa8182026f161e333c5e1a28ad2eae3f76d74cb54edbe6f31e9353a8`,
+`a833693d67009d54dd4328118af48c4b6163f288c81bc18079a63f2af43dc2cb`.
+
+Calc source evidence uses the existing `f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b` release pin:
+`src/individual/{CalcBaseDamage,BattleController_BeforeMove}.c`,
+`src/battle/{battle_calc_damage,other_battle_calculators,ability}.c`, `include/config.h`, `doc/Mechanics.txt`,
+and `data/battle_scripts/subscripts/subscript_{0452_HANDLE_GEM_ACTIVATION_MESSAGE,0515_BATTLE_BOND_BOOST}.s`.
+Read only; never copied into runtime. Paths/line evidence and test limits: notes.md → Damage calc.
+
 ## Re-fetch
 
 Source updates: `watch.json` (`uv run python -I tools/check_updates.py hardlove-gold`).

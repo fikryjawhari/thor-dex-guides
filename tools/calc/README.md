@@ -13,6 +13,19 @@ adapter/dependency change. `assemble.py` inlines this committed, minified IIFE
 without Node or a network. The banner preserves Smogon's MIT notice. Dependencies
 are exact versions, with npm's integrity hashes in `package-lock.json`.
 
+## Hardlove Gold validation
+
+Hardlove Gold has a provisional source/stock suite in `hardlove_check.mjs`, included
+in `npm test`. Its fixtures use `oracle.kind: "source-and-stock-reference"`, not
+runnable hzla settings; do not pass them to `hzla_compare.mjs`. Reports explicitly
+say `independentHackOracle: false`. Hack notes list in-game checks and unsupported
+Protean/type-history states. `node tools/scenarios/calc-hardlove.mjs` checks its
+actual controls and persistence at every viewer size/mode.
+
+An explicit profile `evs: false` ignores supplied EVs in both `stats` and `calc`;
+omitting it preserves EV-aware behaviour. This is independent of the guide's
+`cfg.evs` UI switch so direct engine calls cannot accidentally add EVs.
+
 ## Data ownership and size
 
 The adapter supplies its own Generation interface to Smogon's Gen 4, Gen 5/6 and

@@ -42,9 +42,12 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
 2. **Damage calc with save import** (start every calc session from `plans/damage-calc-sessions.md`; `plans/damage-calc.md`; branch `worktree-damage-calc`, pushed, not merged).
    Built 2026-10-25 (step 1 of its Order): `@smogon/calc` engine using each guide's own data (`tools/calc/`, 81 tests),
    six base profiles, the calc page from the UI spec (all 26 spec checks pass: `tools/scenarios/calc-*.mjs`), the import
-   flow with a fake `test` reader, `tools/calc_save_check.mjs`, `#/calc` in domcompare. Only Emerald Imperium has
-   `cfg.calc` (first mechanics pass: 47/47 matchups match hzla's calc; notes.md → Damage calc); the other guides hide
-   the calc. Not merged until the mechanics are trusted. Next, each in its own session:
+   flow with a fake `test` reader, `tools/calc_save_check.mjs`, `#/calc` in domcompare. Emerald Imperium has
+   `cfg.calc` (47/47 matchups match hzla). Hardlove Gold now has a **provisional** Gen 9 profile (2026-10-25):
+   EVs blocked in direct engine calls, Gems x1.5, source contact flags restored; 53 source/stock checks and 10
+   viewer-size/mode checks pass. No independent hack oracle: in-game tests and Protean/type-history states remain
+   open (its notes.md → Damage calc). Copied 0.8.4 importer exports to ignored `.src/calc-import/`; guide stays
+   0.8.3. Photonic Sun / Eternal X still hide the calc. Not merged until trusted. Next, each in its own session:
    - Mechanics for Hardlove Gold, Photonic Sun, Eternal X (`.agents/references/calc-mechanics.md`; links and HG's rules
      in the plan → Calc references per hack), then a refinement pass per hack (EI's open points in its notes).
    - Save readers: Gen 3 + EI's ID tables first (`.agents/references/calc-save-reader.md`), then the app's file picker

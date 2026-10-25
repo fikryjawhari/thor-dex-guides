@@ -146,7 +146,7 @@ function pokemon(set) {
     level: set.lv ?? 50,
     nature: profile.natures === false ? 'Serious' : set.nat || 'Serious',
     ability: abilityName || 'Guide no ability', item: itemName,
-    status, ivs: statTable(set.iv, 31), evs: statTable(set.ev, 0),
+    status, ivs: statTable(set.iv, 31), evs: statTable(profile.evs === false ? undefined : set.ev, 0),
     boosts: statTable(set.stg, 0), curHP: set.hp,
   });
   if (set.hp !== undefined) result.originalCurHP = Math.max(0, Math.min(result.maxHP(), set.hp));

@@ -2,6 +2,14 @@
 initialisers like [SPECIES_X] = { .field = value, ... } become nested dicts/lists of strings and ints."""
 import re, json, os
 
+def move_flags(move, standard):
+    flags = set(standard.get('flags', []))
+    if 'FLAG_CONTACT' in str(move['battle']['flags']).split():
+        flags.add('contact')
+    else:
+        flags.discard('contact')
+    return sorted(flags)
+
 def strip_comments(t):
     t = re.sub(r'/\*.*?\*/', '', t, flags=re.S)
     t = re.sub(r'//[^\n]*', '', t)

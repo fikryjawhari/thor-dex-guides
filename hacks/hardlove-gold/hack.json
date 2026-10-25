@@ -18,6 +18,405 @@
    "trainers",
    "trainers"
   ],
+  "calc": {
+   "base": "expansion",
+   "evs": false,
+   "critStages": [
+    0.0625,
+    0.125,
+    0.5,
+    1,
+    1
+   ],
+   "field": [
+    {
+     "k": "gameType",
+     "l": "Battle",
+     "type": "select",
+     "o": [
+      [
+       "Singles",
+       "Singles"
+      ],
+      [
+       "Doubles",
+       "Doubles"
+      ]
+     ],
+     "side": "field",
+     "to": "gameType"
+    },
+    {
+     "k": "weather",
+     "l": "Weather",
+     "type": "select",
+     "o": [
+      [
+       "",
+       "None"
+      ],
+      [
+       "Sun",
+       "Sun"
+      ],
+      [
+       "Rain",
+       "Rain"
+      ],
+      [
+       "Sand",
+       "Sandstorm"
+      ],
+      [
+       "Snow",
+       "Snow"
+      ],
+      [
+       "Harsh Sunshine",
+       "Harsh sunshine"
+      ],
+      [
+       "Heavy Rain",
+       "Heavy rain"
+      ],
+      [
+       "Strong Winds",
+       "Strong winds"
+      ]
+     ],
+     "side": "field",
+     "to": "weather"
+    },
+    {
+     "k": "terrain",
+     "l": "Terrain",
+     "type": "select",
+     "o": [
+      [
+       "",
+       "None"
+      ],
+      [
+       "Electric",
+       "Electric"
+      ],
+      [
+       "Grassy",
+       "Grassy"
+      ],
+      [
+       "Misty",
+       "Misty"
+      ],
+      [
+       "Psychic",
+       "Psychic"
+      ]
+     ],
+     "side": "field",
+     "to": "terrain"
+    },
+    {
+     "k": "gravity",
+     "l": "Gravity",
+     "type": "toggle",
+     "side": "field",
+     "to": "isGravity"
+    },
+    {
+     "k": "wonderRoom",
+     "l": "Wonder Room",
+     "type": "toggle",
+     "side": "field",
+     "to": "isWonderRoom"
+    },
+    {
+     "k": "magicRoom",
+     "l": "Magic Room",
+     "type": "toggle",
+     "side": "field",
+     "to": "isMagicRoom"
+    },
+    {
+     "k": "atkReflect",
+     "l": "Attacker Reflect",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isReflect"
+    },
+    {
+     "k": "atkLightScreen",
+     "l": "Attacker Light Screen",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isLightScreen"
+    },
+    {
+     "k": "atkAuroraVeil",
+     "l": "Attacker Aurora Veil",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isAuroraVeil"
+    },
+    {
+     "k": "atkTailwind",
+     "l": "Attacker Tailwind",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isTailwind"
+    },
+    {
+     "k": "atkHelpingHand",
+     "l": "Attacker Helping Hand",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isHelpingHand"
+    },
+    {
+     "k": "atkFriendGuard",
+     "l": "Attacker Friend Guard",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFriendGuard"
+    },
+    {
+     "k": "defReflect",
+     "l": "Defender Reflect",
+     "type": "toggle",
+     "side": "def",
+     "to": "isReflect"
+    },
+    {
+     "k": "defLightScreen",
+     "l": "Defender Light Screen",
+     "type": "toggle",
+     "side": "def",
+     "to": "isLightScreen"
+    },
+    {
+     "k": "defAuroraVeil",
+     "l": "Defender Aurora Veil",
+     "type": "toggle",
+     "side": "def",
+     "to": "isAuroraVeil"
+    },
+    {
+     "k": "defTailwind",
+     "l": "Defender Tailwind",
+     "type": "toggle",
+     "side": "def",
+     "to": "isTailwind"
+    },
+    {
+     "k": "defHelpingHand",
+     "l": "Defender Helping Hand",
+     "type": "toggle",
+     "side": "def",
+     "to": "isHelpingHand"
+    },
+    {
+     "k": "defFriendGuard",
+     "l": "Defender Friend Guard",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFriendGuard"
+    },
+    {
+     "k": "atkFlowerGift",
+     "l": "Attacker Flower Gift",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFlowerGift"
+    },
+    {
+     "k": "atkPowerTrick",
+     "l": "Attacker Power Trick",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isPowerTrick"
+    },
+    {
+     "k": "atkProtected",
+     "l": "Attacker Protect",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isProtected"
+    },
+    {
+     "k": "defFlowerGift",
+     "l": "Defender Flower Gift",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFlowerGift"
+    },
+    {
+     "k": "defPowerTrick",
+     "l": "Defender Power Trick",
+     "type": "toggle",
+     "side": "def",
+     "to": "isPowerTrick"
+    },
+    {
+     "k": "defProtected",
+     "l": "Defender Protect",
+     "type": "toggle",
+     "side": "def",
+     "to": "isProtected"
+    }
+   ],
+   "over": {
+    "critMultiplier": 1.5,
+    "rules": [
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          {
+           "op": "lookup",
+           "args": [
+            {
+             "literal": {
+              "Normal": "Normal Gem",
+              "Fire": "Fire Gem",
+              "Water": "Water Gem",
+              "Electric": "Electric Gem",
+              "Grass": "Grass Gem",
+              "Ice": "Ice Gem",
+              "Fighting": "Fighting Gem",
+              "Poison": "Poison Gem",
+              "Ground": "Ground Gem",
+              "Flying": "Flying Gem",
+              "Psychic": "Psychic Gem",
+              "Bug": "Bug Gem",
+              "Rock": "Rock Gem",
+              "Ghost": "Ghost Gem",
+              "Dragon": "Dragon Gem",
+              "Dark": "Dark Gem",
+              "Steel": "Steel Gem",
+              "Fairy": "Fairy Gem"
+             }
+            },
+            {
+             "ref": "move.type"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "op": "in",
+           "args": [
+            {
+             "ref": "names.move"
+            },
+            [
+             "Struggle",
+             "Water Pledge",
+             "Fire Pledge",
+             "Grass Pledge",
+             "Fissure",
+             "Guillotine",
+             "Horn Drill",
+             "Sheer Cold"
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "replace": [
+       {
+        "from": 5325,
+        "to": 6144
+       }
+      ],
+      "note": "Gem ×1.5"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          {
+           "op": "lookup",
+           "args": [
+            {
+             "literal": {
+              "Normal": "Normal Gem",
+              "Fire": "Fire Gem",
+              "Water": "Water Gem",
+              "Electric": "Electric Gem",
+              "Grass": "Grass Gem",
+              "Ice": "Ice Gem",
+              "Fighting": "Fighting Gem",
+              "Poison": "Poison Gem",
+              "Ground": "Ground Gem",
+              "Flying": "Flying Gem",
+              "Psychic": "Psychic Gem",
+              "Bug": "Bug Gem",
+              "Rock": "Rock Gem",
+              "Ghost": "Ghost Gem",
+              "Dragon": "Dragon Gem",
+              "Dark": "Dark Gem",
+              "Steel": "Steel Gem",
+              "Fairy": "Fairy Gem"
+             }
+            },
+            {
+             "ref": "move.type"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Struggle",
+           "Water Pledge",
+           "Fire Pledge",
+           "Grass Pledge",
+           "Fissure",
+           "Guillotine",
+           "Horn Drill",
+           "Sheer Cold"
+          ]
+         ]
+        }
+       ]
+      },
+      "replace": [
+       {
+        "from": 5325,
+        "to": 4096
+       }
+      ],
+      "note": "Gem does not activate on this move"
+     }
+    ]
+   }
+  },
   "ls": {
    "dex": "hgdex4",
    "calc": "hgcalc",
