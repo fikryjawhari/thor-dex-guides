@@ -92,7 +92,8 @@ calc-build.html --frame`) when the page changed.
   calc; Triple Kick hit button; trainer bar chevrons, smaller below 480 px; each guide's own calc storage key
   (`cfg.ls.dmg`, `assemble.py` requires it); "In-game tests" cards in every guide's notes. Audit 2026-10-26: everything
   passes (hzla: EI 123 + 9 known, Photonic 118 + 28, Eternal X 116 + 3; Hardlove 105 checks; every calc scenario;
-  domcompare clean on the other guides). Next: `plans/calc-dynamic-power.md` (engine), then the trainer-field /
+  domcompare clean on the other guides). Next: `plans/calc-dynamic-power.md` (engine; unit list approved
+  2026-10-26, run per `plans/calc-engine-pass.md`, U1 next), then the trainer-field /
   turn-order UI decide sessions, merge, then save readers and the file picker.
 - Readers: none (only the `test` reader). File picker: not started.
 - Merge: not merged; waiting on the mechanics.

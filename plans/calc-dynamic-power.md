@@ -4,7 +4,7 @@ Status 2026-10-25 (`worktree-damage-calc`, session 2 of `plans/calc-refine.md`).
 depends on the battle state to work dynamically (HP, speed, ability, item, Float Stone and the like). Max / Z moves are
 out for now. A hack that changes or adds one documents it in its notes (handled per hack, as a rule).
 
-## Engine pass 2026-10-26: unit list (waiting for the user's OK)
+## Engine pass 2026-10-26: unit list (approved; brief: `plans/calc-engine-pass.md`)
 Orchestrator: Opus main chat on `worktree-damage-calc` (`.claude/worktrees/damage-calc`, shared by every unit). Sol =
 `gpt-6.1-sol` via `delegate_task`; Sol writes only `plans/` notes and fixture files, never `tools/calc/src` or
 `template/`. Haiku medium (under 100k) finishes a Sol unit from its last `WIP:` commit if Sol runs out. Every unit
@@ -56,12 +56,11 @@ results):
 Order: U1 → U2 (Sol, sequential), U5 can run after U2 in the same Sol chain; U3 starts when U2 lands, U4 after U3, U6
 after U5. Sol units are about 60-80 requests each; U1 and U5 split per hack if Sol's context passes ~150k.
 
-**Questions before dispatch:**
-1. Per-move crit stages: (a, recommended) a `cr` field per move in `data.json`, written by each hack's extract from
-   its game data / source (an extract + data change: needs your yes), or (b) a generated list in each `hack.json` →
-   `cfg.calc.over.moves[name].critStage` (no extract change, but ~100 entries per hack in hand-kept config).
-2. Focus Energy as field keys `atkFocus` / `defFocus` the adapter reads; the base profiles (`template/calc/profiles/`)
-   declare them in the UI build, not now. OK?
+**Answered (user, 2026-10-26):** crit stages as a `cr` field per move in `data.json` from each hack's extract (approved),
+with a `hack.json` `critStage` list as the per-hack fallback; the extract `cr` change is the orchestrator's, before U6.
+Focus Energy as `atkFocus` / `defFocus`: confirm when U6 starts. How the units run: `plans/calc-engine-pass.md`.
+
+Done so far: none (U1 next).
 
 ## Already dynamic (engine works it out from what the page passes)
 Weight: Low Kick, Grass Knot, Heavy Slam, Heat Crash (stock `getWeight`: Float Stone, Light / Heavy Metal).
