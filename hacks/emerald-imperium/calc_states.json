@@ -11982,7 +11982,7 @@
       "src": "U1 D: Weather Ball; I iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e; https://bulbapedia.bulbagarden.net/wiki/Weather_Ball_(move). Weather doubles listed50->100 before weather damage/STAB/type modifiers; H base:310."
     },
     {
-      "name": "weather-ball-hail",
+      "name": "weather-ball-snow",
       "atk": {
         "id": "490",
         "lv": 50,
@@ -12031,7 +12031,7 @@
         "mv": 17
       },
       "field": {
-        "weather": "Hail"
+        "weather": "Snow"
       },
       "expect": {
         "bp": 100

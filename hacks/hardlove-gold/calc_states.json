@@ -12271,7 +12271,7 @@
       "src": "U1 D: Weather Ball; H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; https://bulbapedia.bulbagarden.net/wiki/Weather_Ball_(move). Weather doubles listed50->100 before weather damage/STAB/type modifiers; H base:310."
     },
     {
-      "name": "weather-ball-hail",
+      "name": "weather-ball-snow",
       "atk": {
         "id": "manaphy",
         "lv": 50,
@@ -12320,7 +12320,7 @@
         "mv": 26
       },
       "field": {
-        "weather": "Hail"
+        "weather": "Snow"
       },
       "expect": {
         "bp": 100
