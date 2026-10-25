@@ -107,11 +107,11 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
   = target-damaged, H curl and Magnitude-vs-Dig lost in the replacement path). U5 dispatched in parallel
   (`calc-engine-U5-r1`; told to keep off tools/calc). Orchestrator on U3 (adapter state inputs + `state_check.mjs`;
   `expect.crit` cases count as pending until U6).
-- U3 code done (`cf7c89c` adapter, `eaf8d90` engine.js): state_check 726 / 729 pass; old matchups give identical
+- U3 code done (`cf7c89c` adapter, `eaf8d90` engine.js): state_check 727 / 729 pass (only the two Hail fixtures fail); old matchups give identical
   rolls (only the new `bp` field differs: Payback, Acrobatics + gem, Misty Explosion and the like); hzla counts
   unchanged (EI 123 + 9, P 118 + 28, E 116 + 3); npm test green before state_check was added to it. Left: the two
   `weather-ball-hail` fixtures (EI, H) pass `weather: 'Hail'`, which Gen 9 profiles don't offer (Snow): fix them to
-  Snow once U5 is done with the fixture files (orchestrator, fixture-only edit); calc scenarios (running).
+  Snow once U5 is done with the fixture files (orchestrator, fixture-only edit). Calc scenarios: all 15 pass.
   Hardlove `cfg.calc.over.state` added (flat moves per U2's traces): engine profile config, flagged to the user.
 - U5 crit convention (sent to U5): `crit.stage` = counted stage capped at the top index of the hack's rate table
   (I / P / E 3, H 4: H's table {16, 8, 2, 1, 1}); `cr` >= 6 sets forced, not counted; p = table chance, 1 when
