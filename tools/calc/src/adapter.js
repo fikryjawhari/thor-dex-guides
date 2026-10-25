@@ -326,7 +326,7 @@ function turnKnockout(per, hp, eot, room) {
 }
 
 const AUTO_POWER = new Set(['Low Kick', 'Grass Knot', 'Heavy Slam', 'Heat Crash', 'Flail', 'Reversal', 'Gyro Ball',
-  'Electro Ball', 'Crush Grip', 'Wring Out', 'Hard Press', 'Punishment']);
+  'Electro Ball', 'Crush Grip', 'Wring Out', 'Hard Press', 'Punishment', 'Fling', 'Natural Gift']);
 
 function calc(atk, def, slot, values = {}) {
   const entry = data.MV[slot.mv];

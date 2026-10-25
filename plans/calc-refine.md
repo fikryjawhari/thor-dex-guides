@@ -30,6 +30,8 @@ Session 2 (2026-10-25): **F** done (Sol `6a80e17`; Opus rows `2f125af`: Hardlove
 fixtures) and found weight moves were manual everywhere: the user chose **automatic power** (weight, HP, speed, boosts;
 engine `AUTO_POWER` + form-name weight fallback, Opus). W continues as "W2" below.
 Open, in order: **W2** (x4 hacks), **Z**, **T**, then **A**. Rows below.
+Dynamic power beyond weight / HP / speed (state toggles, counters) and the full form-weight pass: `plans/calc-dynamic-power.md`
+(later sessions; W2 uses its weight list).
 Session 2 models: Sol (`delegate_task`, T3 worktrees start from main, so give it this branch's worktree path or use
 the Agent tool) for F / W / Z; Haiku medium (Agent tool) for T and A; U3 is the orchestrator's (mockup first). The shared
 Haiku brief below works for Sol too. `calc-residual.mjs` runs on EI only (the others SKIP: EI fixtures).

@@ -279,6 +279,7 @@ await test('weight, HP, speed and boost powers are automatic; a set power still 
       assert.equal(power(set('Snorlax'), set('Pikachu'), 'Heavy Slam'), 120, `${base} Heavy Slam 460 / 6 kg`);
       assert.equal(power(set('Pikachu'), set('Snorlax'), 'Electro Ball'), 80, `${base} Electro Ball 110 / 50 speed`);
     }
+    assert.equal(power(set('Snorlax', {it: 'Iron Ball'}), set('Pikachu'), 'Fling'), 130, `${base} Fling Iron Ball`);
     const fixed = plain(engine.calc(set('Pikachu'), set('Snorlax'), slot('Low Kick', {bp: 60}), {}));
     assert.equal(fixed.bp, undefined, `${base} a set power is not reported back`);
     assert.ok(fixed.max < plain(engine.calc(set('Pikachu'), set('Snorlax'), slot('Low Kick'), {})).max, `${base} set power 60 < 120`);
