@@ -52,6 +52,17 @@ dynamic-power engine work (state toggles, pre-hit stat changes) to its own sessi
 9. [ ] T In-game test cards, all four hacks (Haiku medium).
 10. [ ] A Audit (Haiku medium).
 11. [ ] Finish: notes / `plans/damage-calc-sessions.md` → Status / PROGRESS.md, delete this plan if all done.
+
+**Handover (end of session 3, 2026-10-25; usage limits, not context):** steps 1-5 done, plus `d8ee6e1` (calc-mechanics:
+names only through `speciesName()`, now in `tools/calc/src/names.js`, shared with `hzla_compare.mjs`) and `cc7133d`
+(oracle computes variable power natively for fixtures without `bp`, with the engine's weights). Step 6 was dispatched
+to Sol (T3 task "Calc Z fixtures Photonic") as session 3 ended: check `git log` for its commits (`WIP:` = unfinished;
+continue from its last commit with the step 6 row; its brief is the step plus the shared brief). Start session 4 at
+the first unticked step. Checks at the end of session 3: `npm test` passes; photonic / eternal / imperium / hardlove
+checks pass; hzla: Photonic 111 + 10 known, Eternal X 116 + 3 known, EI 123 + 9 known, 0 mismatches / errors.
+Step 7 notes: `Totem Battles.txt` is in the main checkout's `hacks/photonic-sun/.src/txt/` (two-column PDF layout:
+two battles side by side; Aura row like "Defense +1", "Speed +2", "All stats +1"); the calc's trainer import
+(`toEngine` in `template/calc.js`) already reads a trainer mon's `stg` (5 entries), so step 8 maps `au` onto it.
 User (2026-10-25): Photonic and Eternal X change no weights, so their W2 is a check (stock weights, forms only), and any
 form with no stock weight is looked up online (Bulbapedia; cite it). EI changes none either but has custom forms
 (hack Megas, Pikachu costumes...): use the expansion source's `species_info` weight where it has one, else online, else
