@@ -26,6 +26,9 @@ Done and committed on `worktree-damage-calc` (pushed):
   hzla: EI 100 + 9 known, Photonic 101 + 10 known, Eternal X 106 + 3 known, 0 mismatches.
 
 Open, in order (next session): **F**, **W** (x3 hacks, EI too if cheap), **Z**, **T**, then **A**. Rows below.
+Session 2 models: Sol (`delegate_task`, T3 worktrees start from main, so give it this branch's worktree path or use
+the Agent tool) for F / W / Z; Haiku medium (Agent tool) for T and A; U3 is the orchestrator's (mockup first). The shared
+Haiku brief below works for Sol too. `calc-residual.mjs` runs on EI only (the others SKIP: EI fixtures).
 
 **U3 (Opus, template; user request 2026-10-25)**: Triple Kick / Triple Axel rows get a hit button like the multi-hit
 moves' ×n button, cycling Hit 1 / Hit 2 / Hit 3 / Total; the row's outside damage number shows the chosen hit's range

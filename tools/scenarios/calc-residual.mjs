@@ -112,5 +112,9 @@ const checks = [{
   },
 }];
 
-if (!guide.cfg.calc) process.exit(0);
+if (!guide.cfg.calc || guide.cfg.name !== 'Emerald Imperium') {
+  // EI's save fixture and trainers drive these checks; the engine side for every base is in tools/calc/test.mjs.
+  console.log('SKIP calc-residual: Emerald Imperium fixtures only');
+  process.exit(0);
+}
 await runChecks({name: 'calc-residual', file, checks});
