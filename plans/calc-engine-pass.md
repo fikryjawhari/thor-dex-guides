@@ -94,6 +94,12 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
 - Context: past ~120 requests or ~250k context, write the handover in PROGRESS.md (unit reached, last commit, next
   step, open questions) and tell the user to start a new session with the prompt in "Next session" below.
 
+## Progress (orchestrator updates this; read it on handover)
+- 2026-10-26, session 1: claim written; Sol ID confirmed (`codex` / `gpt-6.1-sol`, no effort option). U1 dispatched
+  (taskId `node:delegated-task:command%3Amcp%3A450c7400-d4aa-4cdf-b8e1-87ae4b06d223%3Adelegate-task%3Acalc-engine-U1-r1`,
+  clientRequestId `calc-engine-U1-r1`). A new session can't read that task: check `git log` for its `U1` commits; if
+  U1 stopped at a `WIP:` commit, redispatch from it (`calc-engine-U1-r2`).
+
 ## Next session prompt
 ```
 Damage calc engine pass, continue. Worktree .claude/worktrees/damage-calc (worktree-damage-calc), orchestrator on
