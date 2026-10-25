@@ -177,7 +177,8 @@ Data is in `hacks/hardlove-gold/.src/repos/hardlove/`; COMMIT matches that pin. 
   subscript_0210_HELD_ITEM_SHARPLY_RAISE_STAT.s:17-22` updates a temporary stat, not Focus.
   `src/battle/battle_script_commands.c:5145-5148` has the same dispatch for its berry-eat path.
   The stolen/Fling effect route **does** select HELD_ITEM_RAISE_CRIT (`battle_item.c:815-818`), so use actual
-  `atkFocus` after that state is established, not automatic '+2 for holding Lansat'. Do not repair native berry AI here.
+  `atkFocus` after that state is established, not automatic '+2 for holding Lansat'. The selected
+  `subscript_0209_HELD_ITEM_RAISE_CRIT.s:13` sets STATUS2_FOCUS_ENERGY. Do not repair native berry AI here.
 - **Doc/description says** Dragon Cheer boosts crit, more for Dragon types, but `data/Moves.c:24736-24764`
   gives it MOVE_EFFECT_HIT (effect at :24743), and `moves/move_script_0916_DRAGON_CHEER.s:7` just GoToEffectScript.
   No Dragon Cheer crit state is implemented by this source path. **Description says** Ivy Cudgel is high crit;
@@ -349,3 +350,26 @@ Per-hack fixture counts and validation results are recorded on completion below.
 U6 / orchestrator next: implement sparse extracts (EI requires pinned source acquisition), rebuild data, then run
 crit cases against the adapter. Probe runs here check input acceptance only; no expected chance is taken from the
 engine. No new Laser Focus / Lucky Chant / Dragon Cheer keys are authorised by this survey.
+
+### U5 completed checks (2026-10-26)
+
+| Hack | Existing U2 cases preserved | Added crit cases | Total | Non-zero guide moves covered |
+| --- | ---: | ---: | ---: | ---: |
+| Emerald Imperium | 196 | 81 | 277 | 32 |
+| Hardlove Gold | 203 | 77 | 280 | 28 |
+| Photonic Sun | 168 | 71 | 239 | 26 |
+| Eternal X | 162 | 62 | 224 | 26 |
+| Total | 729 | 291 | 1020 | 112 |
+
+PASS: JSON parsing; nonempty src on all 1020 cases; unique names per file; valid species / move / AB indices;
+expected {stage,p,forced} shape and ranges; all 112 non-zero guide moves represented; original U2 bytes preserved
+up to the appended comma (compared with survey commit e27c0a7). `git diff --check` passes.
+Validation log: `.tmp/u5/validation.log`.
+
+Input-acceptance probes: `node .tmp/u5/probe.mjs <hack>` passes I81 / H77 / P71 / E62, zero nulls or exceptions.
+Logs: `.tmp/u5/<hack>-probe.log`. These probes NEVER read result.crit or use engine output to derive expectations.
+They are NOT a passing crit implementation gate: U6 must still assert every expect.crit after its extract/adapter work.
+No build / template gate was run: U5 changed no engine, template, extract, data.json or hack.json files.
+
+No unresolved move-stage source question remains. Open integration decisions are only the deferred state keys above,
+the unmodelled overworld/affection inputs, and EI's durable pinned source acquisition for its (a) extract.
