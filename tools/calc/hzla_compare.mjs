@@ -9,6 +9,8 @@ import {resolveProfile, runMatchups} from './run.mjs';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const pin = 'ff6c3e339e276e6b4e8e44db58750b6534bc26aa';
 const upstream = 'https://github.com/hzla/Dynamic-Calc-Decomps.git';
+const legacyPin = '42b4cdc0f11de43ecabf3a5d2c1aba67e46e2f74';
+const legacyUpstream = 'https://github.com/hzla/Dynamic-Calc.git';
 const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 const toID = name => String(name).toLowerCase().replace(/[^a-z0-9]/g, '');
 const statObject = (values, fallback) => Object.fromEntries(statNames.map((name, index) => [name, values?.[index] ?? fallback]));
@@ -29,16 +31,17 @@ function git(repo, args) {
   return result.stdout.trim();
 }
 
-async function oracleRepository(repo, fetch) {
+async function oracleRepository(repo, fetch, legacy) {
+  const expected = legacy ? legacyPin : pin;
   if (!existsSync(repo)) {
     if (!fetch) throw new Error(`Missing local oracle: ${repo}; rerun with --fetch`);
     await mkdir(dirname(repo), {recursive: true});
-    const clone = spawnSync('git', ['clone', '--filter=blob:none', '--no-checkout', upstream, repo], {encoding: 'utf8'});
+    const clone = spawnSync('git', ['clone', '--filter=blob:none', '--no-checkout', legacy ? legacyUpstream : upstream, repo], {encoding: 'utf8'});
     if (clone.status !== 0) throw new Error(clone.stderr || clone.error?.message || 'clone failed');
-    git(repo, ['checkout', '--detach', pin]);
+    git(repo, ['checkout', '--detach', expected]);
   }
   const head = git(repo, ['rev-parse', 'HEAD']);
-  if (head !== pin) throw new Error(`Oracle HEAD ${head} differs from pinned ${pin}; use a separate clean clone`);
+  if (head !== expected) throw new Error(`Oracle HEAD ${head} differs from pinned ${expected}; use a separate clean clone`);
   if (git(repo, ['status', '--porcelain', '--untracked-files=no'])) throw new Error('Oracle has tracked modifications');
   return head;
 }
@@ -74,7 +77,28 @@ function loadOracle(repo, options) {
     const filename = resolve(repo, 'backups', `${options.backup}.js`);
     runInContext(readFileSync(filename, 'utf8'), context, {filename, timeout: 10000});
   }
-  const calc = load(resolve(repo, 'calc/index.js'));
+  let calc;
+  if (options.repository === 'Dynamic-Calc') {
+    Object.assign(context, {damageGen: options.damageGen, type_chart: options.types, type_mod: '',
+      challengeMode: false, URLSearchParams,
+      window: {location: {search: `?dmgGen=${options.damageGen}&gen=${options.gen}&types=${options.types}`}}});
+    context.invert = false;
+    context.switchIn = 0;
+    context.npoint_data = context.backup_data || {moves: {}};
+    context.backup_moves = context.npoint_data.moves;
+    context.exports = {};
+    context.require = () => context.exports;
+    context.__createBinding = (target, source, key) => { target[key] = source[key]; };
+    const html = readFileSync(resolve(repo, 'index.html'), 'utf8');
+    const scripts = [...html.matchAll(/<script[^>]+src="\.\/(calc\/[^"?]+)(?:\?[^" ]*)?"/g)];
+    if (!scripts.length) throw new Error('Legacy oracle has no calc scripts');
+    for (const [, path] of scripts) {
+      const filename = resolve(repo, path);
+      if (!filename.startsWith(resolve(repo, 'calc') + sep)) throw new Error('Legacy oracle script escaped calc');
+      runInContext(readFileSync(filename, 'utf8'), context, {filename, timeout: 10000});
+    }
+    calc = context.exports;
+  } else calc = load(resolve(repo, 'calc/index.js'));
   context.typeChart = calc.TYPE_CHART[options.types];
   if (!context.typeChart) throw new Error(`Missing oracle type chart ${options.types}`);
   return {calc, context};
@@ -165,19 +189,23 @@ function oracleMatchup(oracle, gen, data, profile, options, matchup) {
     input: {attacker: attacker.name, defender: defender.name, move: name, hits}};
 }
 
-export async function compare(hack, {repo = resolve(root, '.tmp/hzla'), fetch = false, output, caseName} = {}) {
+export async function compare(hack, {repo, fetch = false, output, caseName} = {}) {
   if (!/^[a-z0-9-]+$/.test(hack)) throw new Error('Invalid hack directory');
-  repo = resolve(repo);
-  const sha = await oracleRepository(repo, fetch);
   const load = async path => JSON.parse(await readFile(resolve(root, path), 'utf8'));
   const data = await load(`hacks/${hack}/data.json`);
   const config = await load(`hacks/${hack}/hack.json`);
   const fixtures = await load(`hacks/${hack}/calc_matchups.json`);
   const options = fixtures.oracle;
+  const legacy = options?.repository === 'Dynamic-Calc';
+  if (options?.repository && !['Dynamic-Calc', 'Dynamic-Calc-Decomps'].includes(options.repository)) {
+    throw new Error('Unsupported oracle repository');
+  }
   if (!options?.title || ![4, 5, 6, 7, 8, 9].includes(options.gen)
     || ![4, 5, 6, 7, 8, 9].includes(options.damageGen) || ![4, 5, 6, 7, 8, 9].includes(options.types)) {
     throw new Error('Fixtures require oracle title, gen, damageGen and types (4-9)');
   }
+  repo = resolve(repo || resolve(root, legacy ? '.tmp/hzla-eternal-x' : '.tmp/hzla'));
+  const sha = await oracleRepository(repo, fetch, legacy);
   const profile = await resolveProfile(config.cfg.calc);
   const cases = fixtures.matchups.filter(matchup => !caseName || matchup.name === caseName);
   if (!cases.length || new Set(cases.map(matchup => matchup.name)).size !== cases.length) {

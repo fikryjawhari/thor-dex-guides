@@ -50,10 +50,14 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    0.8.3. Photonic Sun now has a Gen 7 field profile (2026-10-25): every requested standard field plus inverse,
    Flower Gift and Battery; 107 fixtures (101 exact hzla matches, 6 documented Wonder Room / defensive Flower
    Gift oracle defects retained as stock Gen 7), 10 viewer-size/mode passes. Notes list the remaining individual
-   effect/in-game checks. Phone preview: `calc-photonic.html`. Eternal X still hides the calc. Not merged until
+   effect/in-game checks. Phone preview: `calc-photonic.html`. Eternal X now has its standard Gen 6 field profile
+   (2026-10-25): singles/doubles, terrain, all weather including harsh weather, rooms, inverse, Gravity, screens,
+   Helping Hand, Tailwind, Flower Gift and Friend Guard. 97/97 exact older Dynamic-Calc matches, stock Gen 6
+   cross-checks, 10 viewer-size/mode passes, data gate 5/5 and consistency passes; other guides byte-identical.
+   Phone preview: `calc-eternal.html`. Individual-effect refinements and in-game checks remain. Not merged until
    trusted. Next, each in its own session:
-   - Mechanics for Hardlove Gold, Photonic Sun, Eternal X (`.agents/references/calc-mechanics.md`; links and HG's rules
-     in the plan → Calc references per hack), then a refinement pass per hack (EI's open points in its notes).
+   - Mechanics refinement per hack (`.agents/references/calc-mechanics.md`; each hack's notes → Damage calc).
+     All four first passes are done; Hardlove remains provisional without an independent oracle/in-game tests.
    - Save readers: Gen 3 + EI's ID tables first (`.agents/references/calc-save-reader.md`), then the app's file picker
      (app repo), Gen 4, Gen 5, Gen 6/7. hzla's readers and PKHeX are read-only references; PokeDaisy (GPLv3) too.
    - Test the page on the Thor (phone preview: `calc-build.html`).

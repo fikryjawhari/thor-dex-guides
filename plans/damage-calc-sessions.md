@@ -65,7 +65,9 @@ calc-build.html --frame`) when the page changed.
 - Mechanics: Emerald Imperium done (47/47). Hardlove Gold provisional/source-checked (53 checks, 10 UI passes),
   no independent oracle; in-game tests and type-history states open (notes.md → Damage calc). Photonic Sun field
   pass done (107 cases: 101 exact hzla matches, 6 documented oracle defects; stock Gen 7 checks and 10 UI passes).
-  Photonic individual-effect refinements and Eternal X to do. Refinements to do. Hardlove imports are 0.8.4;
+  Eternal X field pass done (97/97 exact legacy Dynamic-Calc matches; stock Gen 6 checks, 10 UI passes,
+  data gate 5/5, consistency normal/dvkb). Phone preview: `calc-eternal.html`. Individual-effect refinements
+  and in-game checks remain for Photonic/Eternal X; other refinements to do. Hardlove imports are 0.8.4;
   guide remains 0.8.3.
 - Readers: none (only the `test` reader). File picker: not started.
 - Merge: not merged; waiting on the mechanics.

@@ -38,6 +38,17 @@ five viewer sizes in normal/dvkb modes. Its profile adds inverse, Flower Gift an
 without altering another guide's field list. Inverse is expressed as a per-defending-type effectiveness rule;
 ability immunities still apply. This is a field pass, not a complete audit of Photonic's individual effects.
 
+## Eternal X validation
+
+`node eternal_check.mjs` (also in `npm test`) validates the Eternal X Gen 6 field profile: 97 fixtures,
+direct stock Gen 6 parity for every non-inverse case, hand-checked Wonder Room/defensive Flower Gift rolls,
+inverse effectiveness and positive/negative field assertions. `node tools/calc/hzla_compare.mjs eternal-x --fetch`
+from the repository root compares all 97 cases exactly against the older Dynamic-Calc, not Decomps.
+`node tools/scenarios/calc-eternal.mjs dist/eternal-x.html` checks fields/options and persistence at five viewer
+sizes in normal/dvkb modes. The profile adds inverse and both Flower Gift sides to Gen 6's existing controls;
+it does not enable Psychic terrain, Aurora Veil or Battery, or change any other guide. See Eternal X's notes
+for the pin, checks and remaining individual-effect/in-game work.
+
 ## Data ownership and size
 
 The adapter supplies its own Generation interface to Smogon's Gen 4, Gen 5/6 and
@@ -354,6 +365,14 @@ rather than claim parity through an approximate final-roll multiplier.
 or browser is needed. `--repo <path>` selects another clean clone at that same SHA;
 the tool rejects another HEAD or tracked edits. Never stage/vendor its unlicensed
 code or generated tables. Our loader and comparison code are independently written.
+
+Eternal X fixtures select `oracle.repository: "Dynamic-Calc"`. This uses `.tmp/hzla-eternal-x/` and
+`https://github.com/hzla/Dynamic-Calc.git`, pinned at `42b4cdc0f11de43ecabf3a5d2c1aba67e46e2f74`.
+`--fetch` and `--repo` work the same way, enforcing that repository's pin. The legacy loader evaluates the
+original `calc/` scripts in their `index.html` order, using its browser shared-export shim rather than its broken
+CommonJS custom-util import. Its backup becomes `npoint_data` / `backup_moves`; inverse uses the actual
+`isInverseBattle` field with the separate global `invert` left false. Switch-in/challenge defaults are off.
+Other fixtures still use Decomps; any unrecognised repository selector fails explicitly. Nothing is vendored.
 
 Fixtures are `hacks/<hack>/calc_matchups.json`: `{oracle, matchups}`. `oracle` sets
 `title`, data `gen`, formula `damageGen`, `types`, `critGen`, optional `backup`

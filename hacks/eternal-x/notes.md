@@ -93,6 +93,59 @@ Flare Secret HQ sit last in AR), AR.es (sections per area), trainer `bt` (battle
 `pl` (player character "m" / "f"), `st` (starter), `pt` partners, mon `ao`; TR.caps one list (no `TR.mini`); WK.docs holds
 the game docs; stop `k` with `.fN` fragment suffixes.
 
+### Damage calc
+
+Field mechanics pass, 2026-10-25. `cfg.calc.base = "gen6"`: standard Generation 6 singles/doubles damage and types,
+with the guide's Rebalanced species stats, types, move power/category/priority and ability assignments. The user's
+requested field list is explicit: all eight weather choices (including none and the three harsh weather states),
+Electric/Grassy/Misty terrain, Gravity, Magic Room, Wonder Room, inverse, and both sides' Reflect, Light Screen,
+Helping Hand, Tailwind, Flower Gift and Friend Guard. No Psychic terrain, Aurora Veil or Battery. Field sides are
+relative to the current attacker/defender, as in the shared calc UI; the existing `excalc` storage key is unchanged.
+No shared template, engine or base-profile change was needed.
+
+| Configuration | Source / check |
+| --- | --- |
+| Gen 6 damage/types/critical damage | User's standard Gen 6 requirement; older hzla link `data=8d1ab90a3b3c494d8485&dmgGen=6&gen=6`, not Decomps. `backups/title_to_backup_mappings.js:15,59` identifies `exwy`, Eternal X/Wilting Y Insanity Rebalanced. |
+| Inverse effectiveness rule | Per defending type: immunity becomes x2, otherwise reciprocal. Oracle `calc/mechanics/gen56.js:119-134`; ability immunities remain, with Levitate tested. Freeze-Dry/Flying Press special effectiveness is inverted too. |
+| Ally Flower Gift toggles | Standard x1.5 Attack / Sp. Def in Sun and Harsh Sunshine; oracle `calc/mechanics/gen56.js:871-876,944-949`. Rain/no-weather and wrong-category negative cases included. |
+| Remaining field controls | Native Gen 6 mechanics; oracle `calc/mechanics/gen56.js`, `calc/mechanics/util.js` and independent stock `@smogon/calc` 0.12.0 Gen 6 comparisons. |
+
+Oracle: `hzla/Dynamic-Calc`, pinned at `42b4cdc0f11de43ecabf3a5d2c1aba67e46e2f74` in ignored
+`.tmp/hzla-eternal-x/`, backup `exwy`. Its title says Insanity Rebalanced; the hack's Rebalanced and Insanity
+Rebalanced dex are identical (SOURCES.md), and the comparison supplies our guide's Rebalanced sets, not its trainers.
+`hzla_compare.mjs` loads this older calculator's original `calc/` scripts in `index.html` order with its shared-export
+browser shim. This is necessary because its CommonJS gen78 dependency references a nonexistent custom stats module;
+no oracle source was edited, copied into tracked files or bundled. Legacy-only UI defaults: `invert=false` (inverse
+uses `field.isInverseBattle`), `switchIn=0`, `challengeMode=false`; `npoint_data` / `backup_moves` use `backup_data`.
+
+`calc_matchups.json`: **97/97 cases match all 16 oracle rolls, no known differences or unexplained mismatches**.
+Includes singles/doubles spread and single-target attacks; screens and critical bypass; Helping Hand/Friend Guard;
+all weather choices, harsh-weather immunities, Strong Winds, sand's Rock Sp. Def boost and Air Lock; each terrain
+with grounded/airborne cases; Magic Room suppressing Choice Band/Eviolite; Wonder Room physical/special/Psyshock;
+inverse single/dual weakness, resistance and immunity; both Flower Gift sides; Tailwind via Payback's turn-order
+power; Gravity removing Flying/Levitate immunity and grounding terrain recipients; combined doubles support.
+
+`tools/calc/eternal_check.mjs` independently compares every non-inverse fixture to uninstrumented stock Gen 6,
+asserts inverse effectiveness and positive/negative field relationships, and hand-checks the Wonder Room/defensive
+Flower Gift rolls. Those fixtures share the Photonic check's relevant stats: base damage 20 before STAB for Wonder
+Room Tackle, 136 for Psychic, 25 for Psyshock, and 20 for defensive Flower Gift Psychic. Included in
+`npm test --prefix tools/calc`: 81 shared + 53 Hardlove + 107 Photonic + 97 Eternal fixtures/checks pass.
+Existing oracle comparisons remain 47/47 Emerald Imperium and 101 matches / 6 documented differences Photonic Sun.
+
+Validation: all four guides assemble; the other three built HTML files are byte-identical to before this pass.
+`gate.py baseline HEAD` captured pre-pass commit `32c9b80`; `gate.py check eternal-x --data` passes 5/5 (rebuilt data
+identical except timestamp, report byte-identical, counts and extract assertions pass). `calc-eternal.mjs` verifies
+actual field controls/options, damage rendering and reload persistence at five viewer sizes, normal/dvkb: 10/10.
+`consistency-check.mjs eternal-x` passes both modes, all five sizes and light theme. Phone preview:
+`calc-eternal.html` (Thor frame); manually checked the fields at 260x316, with no horizontal overflow.
+
+Not checked: in-game damage on the Thor, exhaustive individual move/ability/item effects, weight-based data,
+switch-in/history automation, residual-damage KO modelling or save import. Oracle agreement isolates mechanics:
+sharing guide stats/types/power does not independently validate extracted data. The hack's Pokemon Changes doc
+describes changed stats/types/ability assignments/movepools, including later-generation additions; those do not
+upgrade the requested battle mechanics to Gen 7. Future refinements add fixtures here rather than change other
+guides' base profiles.
+
 ## Checks
 
 `check.py` [baseline.json]: an availability fixture (evolution / breeding, usable Mega, form change, trainers, partners,
