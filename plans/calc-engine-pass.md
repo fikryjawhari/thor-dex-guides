@@ -159,8 +159,8 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
 - 2026-10-26, session 2, after the merge (`bb65ad0`): engine inputs from the user's toggle decisions. Intrepid
   Sword / Dauntless Shield on unless the set's `entry` is `false`; Download from the set's `dl` (missing = auto from
   the target, `atk` / `spa` = locked, `off`); `slot.pre: false` drops the move's own changes (charge turn, Spectral
-  Thief; the row's "without" view). This replaces the `abilityOn` gate above (Download is on by default again). 112
-  entry-ability fixtures converted, 36 new cases; state_check 2358 / 2358; old cases same output; npm test green;
+  Thief; the row's "without" view). This replaces the `abilityOn` gate above (Download is on by default again). 176
+  entry-ability sets in the fixtures converted, 36 new cases; state_check 2358 / 2358; old cases same output; npm test green;
   hzla unchanged. Toggle spec on `worktree-damage-calc-toggles` updated with the settled UI choices.
 
 ## Next session prompt
