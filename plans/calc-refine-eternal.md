@@ -99,7 +99,7 @@ always-crit part of Cut is a rule).
 ### W2: stock weights and automatic power (2026-10-25)
 
 - [x] Weight audit: all 782 guide species, including 29 stock XY Megas.
-- [ ] Automatic-power fixtures and boundary checks.
+- [x] Automatic-power fixtures and boundary checks.
 - [ ] Final checks and Damage calc notes.
 
 Eternal X changes no weights (user's binding scope: unchanged Gen 6 data). The engine lookup probe
@@ -176,3 +176,18 @@ Source: @smogon/calc 0.12.0 src/mechanics/gen56.ts:489-505 (stock XY mechanics),
 against the legacy Dynamic-Calc Gen 6 oracle. The checker tests all 782 species' weight
 bands, 67 exact form/Mega weights at adjacent Heavy Slam ratio boundaries, and 54
 synthetic below/at/above weight and ratio cases; each boundary also checks all 16 stock rolls.
+
+#### W2 HP/speed fixture group
+
+Four further fixtures without slot.bp: w2-flail (200), w2-reversal (200), w2-gyro-ball (86),
+w2-electro-ball (120). All ten W2 fixtures must match the legacy Dynamic-Calc oracle natively.
+
+Stock Gen 6 HP/speed bands confirmed, not overridden: Flail/Reversal use p=floor(48*HP/maxHP),
+with p<=1/4/9/16/32 giving 200/150/100/80/40 BP (otherwise 20). Gyro Ball is
+min(150,floor(25*defSpeed/atkSpeed)+1); Electro Ball uses floor(atkSpeed/defSpeed) bands
+0/1/2/3/4+ for 40/60/80/120/150 BP. Source: @smogon/calc 0.12.0
+src/mechanics/gen56.ts:474-484,542-547. The hack docs claim no changes to these bands;
+stock Gen 6 source and the legacy oracle are followed, not Hardlove's custom power rules.
+Checks cover all 235 positive Snorlax HP values for both HP moves (470 cases), plus all
+13x13 stage pairings for both speed moves (338 cases), with independent power formulas
+and all 16 rolls against stock Gen 6 using the guide stats.

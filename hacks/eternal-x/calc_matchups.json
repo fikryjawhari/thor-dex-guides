@@ -115,6 +115,10 @@
     {"name":"w2-heavy-slam","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":483},"field":{}},
     {"name":"w2-heat-crash","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":534},"field":{}},
     {"name":"w2-form-floette","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"floette-yellow","lv":50,"ab":-1},"slot":{"mv":66},"field":{}},
-    {"name":"w2-mega-venusaur","atk":{"id":"mega-venusaur","lv":50,"ab":-1},"def":{"id":"gastrodon-west-sea","lv":50,"ab":-1},"slot":{"mv":483},"field":{}}
+    {"name":"w2-mega-venusaur","atk":{"id":"mega-venusaur","lv":50,"ab":-1},"def":{"id":"gastrodon-west-sea","lv":50,"ab":-1},"slot":{"mv":483},"field":{}},
+    {"name":"w2-flail","atk":{"id":"snorlax","lv":50,"ab":-1,"hp":1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":174},"field":{}},
+    {"name":"w2-reversal","atk":{"id":"snorlax","lv":50,"ab":-1,"hp":1},"def":{"id":"blastoise","lv":50,"ab":-1},"slot":{"mv":178},"field":{}},
+    {"name":"w2-gyro-ball","atk":{"id":"snorlax","lv":50,"ab":-1},"def":{"id":"electrode","lv":50,"ab":-1},"slot":{"mv":359},"field":{}},
+    {"name":"w2-electro-ball","atk":{"id":"electrode","lv":50,"ab":-1},"def":{"id":"snorlax","lv":50,"ab":-1},"slot":{"mv":485},"field":{}}
   ]
 }

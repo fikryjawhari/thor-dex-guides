@@ -145,6 +145,33 @@ for (const id of formWeights.keys()) assert.ok(data.P.some(entry => entry.id ===
 for (const [id, power] of [['kakuna', 40], ['seadra', 60], ['zweilous', 80], ['venusaur', 100], ['crustle', 120]]) {
   for (const move of ['Low Kick', 'Grass Knot']) automatic(`boundary-${id}-${move}`, {id: 'snorlax'}, {id}, move, power);
 }
+const maximumHP = engine.stats({id: 'snorlax', lv: 50, ab: -1})[0];
+assert.equal(maximumHP, 235);
+for (let currentHP = 1; currentHP <= maximumHP; currentHP++) {
+  const proportion = Math.floor(48 * currentHP / maximumHP);
+  const power = proportion <= 1 ? 200 : proportion <= 4 ? 150 : proportion <= 9 ? 100
+    : proportion <= 16 ? 80 : proportion <= 32 ? 40 : 20;
+  for (const move of ['Flail', 'Reversal']) {
+    automatic(`hp-${currentHP}-${move}`, {id: 'snorlax', hp: currentHP}, {id: 'blastoise'}, move, power);
+  }
+}
+const stageSpeed = (speed, stage) => Math.floor(speed * (stage >= 0 ? (2 + stage) / 2 : 2 / (2 - stage)));
+const attackerSpeed = engine.stats({id: 'snorlax', lv: 50, ab: -1})[5];
+const defenderSpeed = engine.stats({id: 'electrode', lv: 50, ab: -1})[5];
+for (let attackerStage = -6; attackerStage <= 6; attackerStage++) {
+  for (let defenderStage = -6; defenderStage <= 6; defenderStage++) {
+    const attackSpeed = stageSpeed(attackerSpeed, attackerStage);
+    const defendSpeed = stageSpeed(defenderSpeed, defenderStage);
+    const ratio = Math.floor(attackSpeed / defendSpeed);
+    const powers = {'Gyro Ball': Math.min(150, Math.floor(25 * defendSpeed / attackSpeed) + 1),
+      'Electro Ball': ratio >= 4 ? 150 : ratio >= 3 ? 120 : ratio >= 2 ? 80 : ratio >= 1 ? 60 : 40};
+    for (const [move, power] of Object.entries(powers)) {
+      automatic(`speed-${attackerStage}-${defenderStage}-${move}`,
+        {id: 'snorlax', stg: [0, 0, 0, 0, 0, attackerStage]},
+        {id: 'electrode', stg: [0, 0, 0, 0, 0, defenderStage]}, move, power);
+    }
+  }
+}
 const boundaryEngine = await createEngine(data, profile);
 const specialForms = data.P.filter(entry => formWeights.has(entry.id) || /^Mega /.test(entry.n));
 for (const entry of specialForms) {
@@ -179,11 +206,12 @@ for (const kind of ['weight', 'ratio']) {
   }
 }
 const automaticPowers = {'w2-low-kick': 80, 'w2-grass-knot': 20, 'w2-heavy-slam': 120,
-  'w2-heat-crash': 120, 'w2-form-floette': 20, 'w2-mega-venusaur': 120};
+  'w2-heat-crash': 120, 'w2-form-floette': 20, 'w2-mega-venusaur': 120,
+  'w2-flail': 200, 'w2-reversal': 200, 'w2-gyro-ball': 86, 'w2-electro-ball': 120};
 for (const [name, power] of Object.entries(automaticPowers)) {
   const fixture = fixtures.matchups.find(matchup => matchup.name === name);
   assert.ok(fixture, `Missing fixture: ${name}`);
   assert.equal(fixture.slot.bp, undefined, `${name} must not set power`);
   assert.equal(results.get(name).bp, power, name);
 }
-console.log(`PASS Eternal W2: ${data.P.length} species weight bands, ${specialForms.length} exact form/Mega weights, ${boundaryCases} weight/ratio boundaries, 6 automatic fixtures`);
+console.log(`PASS Eternal W2: ${data.P.length} species weight bands, ${specialForms.length} exact form/Mega weights, ${boundaryCases} weight/ratio boundaries, ${maximumHP * 2} HP cases, 338 speed cases, 10 automatic fixtures`);
