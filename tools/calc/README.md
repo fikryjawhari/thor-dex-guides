@@ -122,7 +122,8 @@ by move name with `[minimum,maximum,default]`; fixed-hit moves have equal values
 `zmove: true` (Gen 7 hacks; Photonic) lets a slot's `z` turn a damaging move into its Z-move (stock `useZ`: the
 type's Z-move, or the signature one for the held Z-crystal; one hit). Z power is the game's band for the move's power,
 so a hack's changed powers carry over, except the stock Z powers that are not the band (`catalog.zpow`, built from
-stock Gen 7, used while the hack leaves the move's power alone). The result then carries `z` (the Z-move's name).
+stock Gen 7, used while the hack leaves the move's power alone); a hack that sets a move's Z power in its game data
+lists it in `zpow` (`{"Arm Thrust": 140}`), which wins. The result then carries `z` (the Z-move's name).
 `varpow` lists upstream attacks lacking a fixed base power; `MV.bp === "Varies"`
 counts the same. Those stock can work out from the battle state (`AUTO_POWER` in
 `adapter.js`: Low Kick, Grass Knot, Heavy Slam, Heat Crash, Flail, Reversal, Gyro

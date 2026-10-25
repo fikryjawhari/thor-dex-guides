@@ -21,6 +21,24 @@
   "calc": {
    "base": "gen7",
    "zmove": true,
+   "zpow": {
+    "Wing Attack": 160,
+    "Submission": 175,
+    "Chatter": 175,
+    "Shadow Punch": 160,
+    "Water Pulse": 160,
+    "Arm Thrust": 140,
+    "Mystical Fire": 170,
+    "Parabolic Charge": 175,
+    "Horn Leech": 175,
+    "Draining Kiss": 140,
+    "Freeze-Dry": 180,
+    "Twineedle": 175,
+    "Steel Wing": 175,
+    "Power Gem": 175,
+    "Needle Arm": 175,
+    "Cross Poison": 175
+   },
    "field": [
     {
      "k": "gameType",

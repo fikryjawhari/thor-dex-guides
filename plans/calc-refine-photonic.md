@@ -67,7 +67,7 @@ The doc explicitly changes Z-Move power for 16 moves. Z2 tests every target; fiv
 1. **Triple Kick**: the doc says power 10 to 20; `data.json` has bp 10 and no MV.h note. Check the extract, not the calc.
 2. **Power Gem**: the doc says power 80 to 90 and PP 20 to 15; `data.json` has bp 80 (the MV.h note lists PP only). Same check as item 1.
 3. **Drill Peck**: no damage-level oracle test for a crit-stage change. Decide whether the engine takes a crit-stage input (an engine phase) or the rule is checked only by a unit table.
-4. **Needs Opus (Z2 doc-power verdict, 2026-10-25):** conversion support is implemented in engine
+4. **Done (orchestrator, session 3):** the doc's Z powers are the hack's own per-move values, not the band: `cfg.calc.zpow` lists all 16 and wins in the engine; all 16 pass; Arm Thrust, Twineedle, Power Gem are known oracle differences (oracle uses the band). Was: **Needs Opus (Z2 doc-power verdict, 2026-10-25):** conversion support is implemented in engine
    `580f021`; fixtures `b73d0ab`, `3ffed9b` and checks `e0d94c1` exercise `slot.z: 1` without `slot.bp`.
    This supersedes the earlier Z deferral. All 25 conversion names, categories and single-hit results pass,
    including Pikachu + Pikanium Z + Volt Tackle = Catastropika (guide power 210). Eleven of the sixteen

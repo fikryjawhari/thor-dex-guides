@@ -42,7 +42,7 @@ dynamic-power engine work (state toggles, pre-hit stat changes) to its own sessi
    User (2026-10-25): Z-moves back in scope, Photonic only; Totem auras automatic.
 5. [x] Z engine (orchestrator `580f021`): profile `zmove`, slot `z`, band power + stock exceptions (`catalog.zpow`),
    result `z` name, oracle `useZ`. Photonic `zmove: true`.
-6. [ ] Z fixtures (Sol): band, exception, variable, multi-hit, signature; the 16 doc changes in photonic_check.
+6. [x] Z fixtures (Sol `b73d0ab`..`d4e0896`, 25 fixtures; orchestrator: profile `zpow`, Photonic's 16 doc Z powers, all pass; oracle 118 + 28 known).
 7. [ ] Totem data (Sol): Totem Battles.txt (cross-checked with the game files where they have it) → Photonic TR as
    Totem battles in walkthrough order, totem with `au` (aura stages Atk, Def, SpA, SpD, Spe), allies as its partners.
    Photonic extract on this branch (its guide is merged; the calc is the consumer). Schema line in EI notes → Data schema.
@@ -55,11 +55,9 @@ dynamic-power engine work (state toggles, pre-hit stat changes) to its own sessi
 
 **Handover (end of session 3, 2026-10-25; usage limits, not context):** steps 1-5 done, plus `d8ee6e1` (calc-mechanics:
 names only through `speciesName()`, now in `tools/calc/src/names.js`, shared with `hzla_compare.mjs`) and `cc7133d`
-(oracle computes variable power natively for fixtures without `bp`, with the engine's weights). Step 6 was dispatched
-to Sol (T3 task "Calc Z fixtures Photonic") as session 3 ended: check `git log` for its commits (`WIP:` = unfinished;
-continue from its last commit with the step 6 row; its brief is the step plus the shared brief). Start session 4 at
-the first unticked step. Checks at the end of session 3: `npm test` passes; photonic / eternal / imperium / hardlove
-checks pass; hzla: Photonic 111 + 10 known, Eternal X 116 + 3 known, EI 123 + 9 known, 0 mismatches / errors.
+(oracle computes variable power natively for fixtures without `bp`, with the engine's weights). Step 6 done too (see its row).
+Start session 4 at step 7. Checks at the end of session 3: `npm test` passes; photonic / eternal / imperium / hardlove
+checks pass; hzla: Photonic 118 + 28 known (Z), Eternal X 116 + 3 known, EI 123 + 9 known, 0 mismatches / errors.
 Step 7 notes: `Totem Battles.txt` is in the main checkout's `hacks/photonic-sun/.src/txt/` (two-column PDF layout:
 two battles side by side; Aura row like "Defense +1", "Speed +2", "All stats +1"); the calc's trainer import
 (`toEngine` in `template/calc.js`) already reads a trainer mon's `stg` (5 entries), so step 8 maps `au` onto it.

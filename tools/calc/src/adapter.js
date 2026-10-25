@@ -304,10 +304,11 @@ const AUTO_POWER = new Set(['Low Kick', 'Grass Knot', 'Heavy Slam', 'Heat Crash'
 // Moves with a listed power that stock scales by HP: the result reports the power used, as for AUTO_POWER.
 const HP_POWER = new Set(['Eruption', 'Water Spout', 'Dragon Energy']);
 
-// Z-move power (Gen 7, profile `zmove`): the game's band for the move's power (a hack's Z-power changes all follow
-// it), or stock's own Z power for a move the hack leaves alone where that is not the band (`catalog.zpow`).
+// Z-move power (Gen 7, profile `zmove`): the hack's own Z power (profile `zpow`, by move name), else stock's own Z power
+// for a move the hack leaves alone where that is not the band (`catalog.zpow`), else the game's band for its power.
 function zPower(moveData, power, listed) {
   const id = toID(moveData.name);
+  if (profile.zpow?.[moveData.name]) return profile.zpow[moveData.name];
   if (catalog.zpow[id] && (listed || stockMoves[id]?.basePower === moveData.basePower)) return catalog.zpow[id];
   return power <= 55 ? 100 : power <= 65 ? 120 : power <= 75 ? 140 : power <= 85 ? 160 : power <= 95 ? 175
     : power <= 100 ? 180 : power <= 110 ? 185 : power <= 125 ? 190 : power <= 130 ? 195 : 200;
