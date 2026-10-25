@@ -11,13 +11,13 @@ scripts when it lands (git history keeps them).
 spec needs and returns every value the page shows: contract in `tools/calc/README.md` → Battle state, Crit, Stat
 changes before the hit; 2322 fixtures in each calc guide's `calc_states.json` (`tools/calc/state_check.mjs`, in `npm
 test`). This branch starts from before that pass: **`git merge worktree-damage-calc` first.** What is left is the page
-(this spec) plus the open choices below. Where this file and the README differ, the README is how the engine works.
+(this spec, with the settled choices below). Where this file and the README differ, the README is how the engine works.
 
 ## What changes
 Per-row state controls for the moves whose power depends on battle state the page has no input for, a card control
 for the target's state (Dig / Fly / Dive / Minimized / switching), and a Power box that shows every power the engine
 uses. Affected: `template/calc.js` (row markup, card editor, state in `ST`, passing the inputs), `template/calc.css`,
-`template/calc/profiles/` (the Focus Energy fields and `monControls` below), `tools/scenarios/` (one new scenario).
+`template/calc/profiles/` (the Focus Energy fields), `tools/scenarios/` (one new scenario).
 The adapter and `engine.js` need no change unless the build finds a gap. Storage: the calc's existing key
 `cfg.ls.dmg`; new fields only inside `ST`, and `ST` defaults cover saves from before (no key change).
 
@@ -25,13 +25,14 @@ The adapter and `engine.js` need no change unless the build finds a gap. Storage
 
 | Control | Engine input |
 | --- | --- |
+| Row's own stat changes off | `slot.pre: false` |
 | Row toggle / counter (tables below) | `slot.st`: `true` for a toggle, the earlier count for a counter (0 = first use). Never stock `timesUsed` (it repeats the whole hit over turns). |
 | Pledge combo | `slot.st` = the partner pledge's move name (the engine sets power 150, the pair's type, STAB) |
 | Defense Curl before Rollout / Ice Ball | `slot.curl: true` |
 | Metronome counter | `slot.met`: earlier consecutive uses |
 | Card target state | `def.vol`: `dig` / `fly` / `dive` / `min` / `switch` (and `atk.vol` when the foe attacks: the state belongs to the Pokémon being hit) |
 | Focus Energy (field) | field keys `atkFocus` / `defFocus` (toggle; Focus Energy, Dire Hit or an eaten Lansat Berry) |
-| Fresh entry for Download / Intrepid Sword / Dauntless Shield | the set's `abilityOn` (a `monControls` checkbox) |
+| Download / Intrepid Sword / Dauntless Shield | the set's `dl` (`atk` / `spa` / `off`; missing = auto) and `entry: false` (Sword / Shield off) |
 
 **Hack differences the page must follow:** a move whose `cfg.calc.over.state[name]` is `false` gets no control (its
 state does nothing in that hack). Today that is Hardlove: Echoed Voice, Rage Fist, Last Respects, Avalanche, Round,
@@ -111,25 +112,33 @@ Magnitude's power is random and stays manual in the Power box (as now); Dig only
 whose source doubles only Earthquake). Before Gen 5 (Gen 6 for Minimize), and for Hardlove's Gust / Twister, the
 state doubles the power instead, so the Power box shows it.
 
-## Open choices (settle before or at the start of the build; proposals in brackets)
-These came out of the engine pass and have no settled UI yet. Small enough for the build session to settle with the
-user from a quick mockup, without a separate decide session.
-1. **Pledge partner.** The engine needs the partner's move name, not just on / off. [The Cmb control cycles off → the
-   first other pledge → the second → off, its tag showing the partner's initial (Fi / Wa / Gr).]
-2. **Defense Curl for Rollout / Ice Ball** (`slot.curl`, independent of the count). [A second state on the same row
-   would break the one-control rule: put it in the row's opened details as a checkbox.]
-3. **Focus Energy** (`atkFocus` / `defFocus`). [A per-side field toggle next to the other side toggles, in every
-   calc profile; it raises the crit stage by 2.]
-4. **Crit chance and forced crits.** Every result has `crit: {stage, p, forced}`. [Details line "Crit 1/8 (stage 1)";
-   when `forced`, the C button is locked on (an always-crit move, Merciless on a poisoned target, a certain stage) and
-   the details say why; `p` 0 (Battle / Shell Armor) disables C.]
-5. **Stat changes before the hit** (`pre: [{who, stat, by, src, hit?}]`), applied by the engine automatically: charge
-   turns (Meteor Beam, Electro Shot, Skull Bash), Spectral Thief, a held terrain seed, Download / Intrepid Sword /
-   Dauntless Shield, and between-hit events (Stamina, Weak Armor, Weakness Policy and the like). [A details line,
-   e.g. "Before the hit: Sp. Atk +1 (Meteor Beam)"; between-hit ones "before hit 2: Def +1 (Stamina)". No control.]
-6. **Download / Intrepid Sword / Dauntless Shield.** They now fire only with the set's `abilityOn`, and no profile
-   offers that checkbox for them yet, so today they never fire on the page. [Add a "Fresh entry" `monControls` entry
-   for the three abilities in every calc profile; off by default, like First turn out.]
+## Settled with the user after the engine pass (2026-10-26)
+1. **Pledge partner:** the Cmb button cycles off → the first other pledge → the second → off (Fire Pledge: off → Water
+   → Grass), its tag showing the partner (Wa / Gr). The page passes `slot.st` = the partner's move name; the details
+   spell out the result ("with Water Pledge: Water, 150"). No button in Hardlove (flat pledges).
+2. **Defense Curl:** a "Defense Curl used" checkbox in the opened details of the Rollout / Ice Ball row (`slot.curl`),
+   not on the Defense Curl move. Not in Hardlove.
+3. **Focus Energy:** a per-side field toggle with the other side toggles, in every calc profile (`atkFocus` /
+   `defFocus`); +2 crit stages.
+4. **Crit chance:** the opened row's details show the result's `crit` ("Crit 1/8, stage 1"); the chance is the game's
+   own (each hack's table, `MV.cr`, its item rules). When `forced`, C is locked on and the details say why (always-crit
+   move, Merciless on a poisoned target, a certain stage). `p` 0 (Battle / Shell Armor) disables C.
+5. **Stat changes before the hit:** the outside numbers include them by default (Meteor Beam shows its +1 damage). The
+   opened row has a details line ("Before the hit: Sp. Atk +1 (Meteor Beam)"; between hits: "before hit 2: Def +1
+   (Stamina)") and a checkbox to drop the move's own changes for that row only (`slot.pre: false`: charge turn,
+   Spectral Thief), e.g. when something lowered the stat between the boost and the hit, instead of changing the
+   Pokémon's stages (which would change every other move). Pokémon-level changes (a seed, Download, Sword / Shield)
+   are set on the Pokémon, not per row. Between-hit changes are listed but not switchable.
+6. **Intrepid Sword / Dauntless Shield:** on by default; an "off" checkbox in the Pokémon's Edit menu (`entry: false`)
+   for when the entry doesn't count (Hardlove: once per battle).
+7. **Download:** a select in the Pokémon's Edit menu: **Auto (→ SpA) / Atk / SpA / Off**, default Auto (`dl` missing).
+   Auto is what the game does on a fresh entry against the current target, and its label shows which stat that gives
+   now; Atk / SpA lock the boost it actually got, so it stays when the target changes; Off when it didn't fire. The
+   engine takes `dl: "atk" | "spa" | "off"`.
+8. Item activation checkboxes (Weakness Policy and the like, for a later Foul Play hit): not wanted.
+
+Engine inputs for 5-7 are built (`tools/calc/README.md` → Stat changes before the hit). These are behaviour
+decisions; the build still mocks the Edit-menu controls (target state, Download, Sword / Shield off) before building.
 
 **Not in this spec**
 - Supreme Overlord: absent from all four calc hacks (the engine takes `atk.fnt` if a later hack has it).
@@ -228,11 +237,11 @@ Dir (Mine attacks / Foe attacks): the state keys include the side, so the two di
 | Card state | same | Dig on the foe card | Earthquake doubles; the mark shows; the mark is gone at None |
 | Engine values | done: `tools/calc/state_check.mjs` (in `npm test`) | every `calc_states.json` | keep it green; the page passes the inputs exactly as "Engine inputs" says |
 | Hack differences | `calc-state.mjs` | hardlove-gold | no control on the `over.state: false` moves; no Defense Curl control on Rollout |
-| Open choices 1-6 | `calc-state.mjs` | as settled | each settled behaviour, incl. C locked on a forced crit and the `pre` details line |
+| Settled choices 1-7 | `calc-state.mjs` | as settled | each settled behaviour, incl. C locked on a forced crit and the `pre` details line |
 | Power box shows the engine's power | `calc-state.mjs` and existing `calc-*` scenarios | Photonic Facade on a burned attacker | box shows 140 and "listed 70" |
 | Metronome holders have no conflicting row | build check, a new step in the Hardlove Gold and Emerald Imperium `extract/check.py` (or a shared helper) | the two holders from data | fails if a holder's set has a multi-hit or state move; lists the holders and their moves |
 | Nothing else changes | `gate.py check` for every calc guide against the recorded baseline; `domcompare` (template changes) | photonic-sun, eternal-x, hardlove-gold, emerald-imperium | only the intended differences |
 
 Build order (one template session, `template/` is shared): `git merge worktree-damage-calc` into this branch (the
-engine), settle the open choices, then the page, then the checks. `npm ci --prefix tools/calc` needs the network.
+engine), mock the Edit-menu controls, then the page, then the checks. `npm ci --prefix tools/calc` needs the network.
 The phone preview of the built guide is the last step. Then this branch merges into `worktree-damage-calc`.
