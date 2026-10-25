@@ -378,13 +378,7 @@ export function guideArg(argv, fallback = 'dist/emerald-imperium.html') {
   return resolve(argv[2] || join(ROOT, fallback));
 }
 
-export function skipWithoutCalc(file, name) {
-  if (file) return false;
-  console.log(`SKIP ${name}: no cfg.calc`);
-  return true;
-}
 
-export { sleep, pathToFileURL };
 
 // Flows shared by the calc scenarios. They drive the page the way a user does (taps, number boxes, the picker); setup
 // seeds through the same calls the entry points make (CALC.enter), so a check that is about one control never depends on
