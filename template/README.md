@@ -73,7 +73,10 @@ Sludge / Sticky Barb, status incl. rising toxic, Grassy Terrain, Dry Skin / Rain
 plus the profile's `residual`). The KO text counts the defender's per-turn change; rolls, percentages and HP buttons never do.
 A strip under the cards (`.deot`) has one cell per affected side, always in that side's column (at ≥480 px aligned with its
 card, the name shown; below 480 px no name). Tap the amount: one turn applied to current HP (toxic then rises; the counter
-is transient). The arrow lists the parts. An opened row repeats them (`Turn end: −2 Sandstorm`). Leech Seed is not offered
+is transient). The arrow lists the parts; toxic's part has a turn box (1-15) that sets the counter. "Turn" and the
+amount share a baseline (`font` shorthand carries the 24px line-height). **Triple Kick / Triple Axel**: the row's ×3 button
+cycles ×3 (total, default) → H1 → H2 → H3; the outside number is the total or that hit's range, percent and KO stay on the
+total; the choice lives in `ST.hits` (0 = total); no Hits box in the editor. An opened row repeats them (`Turn end: −2 Sandstorm`). Leech Seed is not offered
 (no control says who is seeded). When HP is not full, the HP label becomes an accent ↺ button (tap: full HP); the Lv / HP
 row has no room for a separate button at 260 px. An open editor or parts list lets the ≥480 px block grow past the viewport
 (Field stays below the rows). **Protean / Libero**: the attacker takes each move's type (STAB in every base); the edit menu

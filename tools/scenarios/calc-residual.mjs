@@ -92,6 +92,28 @@ const checks = [{
     assert.equal(await page.count('.ed [data-e="pty"]'), 0);
   },
 }, {
+  id: 'toxic turn',
+  title: 'the parts list sets the toxic counter; Turn and its number share a baseline',
+  sizes,
+  run: async page => {
+    await setupCalc(page, {mine: ['party', 0]});
+    await page.tap('.dmatch .cc[data-s="foe"] [data-a="eopen"]');
+    await page.value(`(()=>{const s=document.querySelector('[data-e="status"][data-s="foe"]');s.value='tox';s.dispatchEvent(new Event('change'));})()`);
+    await page.tap('.dmatch .cc[data-s="foe"] [data-a="eopen"]');
+    const max = Number(await page.value(`document.querySelector('.cc[data-s="foe"] .mx').textContent.slice(1)`));
+    const tick = turn => '−' + Math.max(1, Math.floor(max * turn / 16));
+    assert.equal(await page.text('.deot .dqa .v'), tick(1));
+    const base = await page.value(`(()=>{const b=s=>{const r=document.createRange();r.selectNodeContents(document.querySelector(s));return r.getBoundingClientRect().bottom;};return [b('.dqa .l'),b('.dqa .v')];})()`);
+    assert.ok(Math.abs(base[0] - base[1]) <= 2, `label and number share a baseline (${base})`);
+    await page.tap('[data-a="eotx"][data-s="foe"]');
+    assert.equal(await page.count('.dqp [data-tox="foe"]'), 1, 'turn box on the toxic part');
+    await page.setBox('.dqp [data-tox="foe"]', 4);
+    assert.equal(await page.text('.deot .dqa .v'), tick(4), 'turn 4 damage');
+    await page.tap('[data-a="eot"][data-s="foe"]');
+    assert.equal(await page.text('.deot .dqa .v'), tick(5), 'applying a turn moves the counter on');
+    assert.equal(String(await page.value(`document.querySelector('.dqp [data-tox="foe"]').value`)), '5');
+  },
+}, {
   id: 'field under an open editor',
   title: 'New Pokémon (editor open) then a trainer: Field stays below the match',
   sizes,
