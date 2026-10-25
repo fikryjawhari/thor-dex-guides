@@ -11,6 +11,30 @@
   },
   "matchups": [
     {
+      "name": "source-sheer-force-thousand-waves",
+      "atk": {"id": "snorlax", "lv": 50, "ab": 27},
+      "slot": {"mv": 672},
+      "field": {},
+      "def": {"id": "blastoise", "lv": 50, "ab": -1},
+      "reference": {"item": "", "power": 117, "plainMove": true}
+    },
+    {
+      "name": "source-sheer-force-bounce-not-boosted",
+      "atk": {"id": "snorlax", "lv": 50, "ab": 27},
+      "slot": {"mv": 277},
+      "field": {},
+      "def": {"id": "blastoise", "lv": 50, "ab": -1},
+      "reference": {"item": "", "power": 85, "ability": ""}
+    },
+    {
+      "name": "source-reckless-chloroblast",
+      "atk": {"id": "snorlax", "lv": 50, "ab": 83},
+      "slot": {"mv": 772},
+      "field": {},
+      "def": {"id": "blastoise", "lv": 50, "ab": -1},
+      "reference": {"item": "", "power": 180, "plainMove": true}
+    },
+    {
       "name": "source-punch-fire-punch-iron-fist",
       "atk": {"id": "snorlax", "lv": 50, "ab": 85},
       "slot": {"mv": 36},

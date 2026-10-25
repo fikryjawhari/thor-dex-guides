@@ -67,6 +67,11 @@ The five full exported class memberships and all three roll arrays were independ
 
 ### Needs Opus
 
+Done by the orchestrator (2026-10-25): both rows below are `over.rules` `powerMods` rules in hack.json (Reckless
+append 4915 on Chloroblast; Sheer Force append 5325 on the three source-only moves, remove 5325 on the 21 stock-only
+ones), fixtures `source-sheer-force-thousand-waves`, `source-sheer-force-bounce-not-boosted`, `source-reckless-chloroblast`
+(`hardlove_check.mjs` reference now takes `reference.ability`).
+
 - **Reckless / recoil metadata:** `MV.f` cannot implement this selector. `tools/calc/src/adapter.js:104-110` maps
   MV.f only into `move.flags`, whereas native Gen 9 Reckless reads `move.recoil || move.hasCrashDamage`
   (`@smogon/calc/dist/mechanics/gen789.js:895`). Effective Gen 9 membership agrees for 16 of the 17 source moves;

@@ -413,6 +413,122 @@
        }
       ],
       "note": "Gem does not activate on this move"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Sheer Force"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Floaty Fall",
+           "Splishy Splash",
+           "Thousand Waves"
+          ]
+         ]
+        }
+       ]
+      },
+      "append": [
+       5325
+      ],
+      "note": "Sheer Force"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Sheer Force"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Rapid Spin",
+           "Secret Power",
+           "Snore",
+           "Sky Attack",
+           "Alluring Voice",
+           "Bounce",
+           "Upper Hand",
+           "Barb Barrage",
+           "Relic Song",
+           "Diamond Storm",
+           "Double Iron Bash",
+           "Aura Wheel",
+           "Axe Kick",
+           "Salt Cure",
+           "Mortal Spin",
+           "Order Up",
+           "Matcha Gotcha",
+           "Eerie Spell",
+           "Esper Wing",
+           "Infernal Parade",
+           "Dire Claw"
+          ]
+         ]
+        }
+       ]
+      },
+      "remove": [
+       5325
+      ],
+      "note": "Sheer Force does not boost this move here"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Reckless"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          "Chloroblast"
+         ]
+        }
+       ]
+      },
+      "append": [
+       4915
+      ],
+      "note": "Reckless"
      }
     ]
    }

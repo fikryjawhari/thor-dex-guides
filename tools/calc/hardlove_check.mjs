@@ -23,7 +23,7 @@ function reference(matchup) {
   const mon = (set, attacking) => {
     const entry = data.P.find(species => species.id === set.id);
     return new Pokemon(gen, entry.n, {
-      level: set.lv, nature: set.nat || 'Serious', ability: data.AB[set.ab]?.[0] || 'Guide no ability',
+      level: set.lv, nature: set.nat || 'Serious', ability: (attacking && adjustments.ability !== undefined ? adjustments.ability : data.AB[set.ab]?.[0]) || 'Guide no ability',
       item: attacking ? adjustments.item ?? set.it : set.it, status: set.st,
       ivs: statObject(set.iv, 31), evs: statObject(undefined, 0), boosts: statObject(set.stg, 0),
       overrides: {baseStats: statObject(entry.s, 1), types: entry.t, nfe: !!entry.et?.length},
