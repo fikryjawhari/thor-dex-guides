@@ -38,6 +38,12 @@ results):
 - `slot.met`: consecutive uses with a held Metronome (passed to stock `timesUsedWithMetronome`).
 - `def.vol` (and `atk.vol` for symmetry): `dig` / `fly` / `dive` / `min` / `switch` (`switch` → stock
   `isSwitching: 'out'`).
+- Added after U1 (orchestrator, 2026-10-26; `plans/calc-state-engine.md` → Handoff 4): `slot.curl` (Rollout / Ice
+  Ball: Defense Curl used earlier, independent of the `slot.st` count); `atk.fnt` 0..5 (Supreme Overlord, the
+  attacker's own counter → stock `alliesFainted`, never shared with a move's `slot.st`); pledges: `slot.st` = the
+  partner pledge's move name (the adapter derives power 150, the combined type and its STAB; a hack whose source keeps
+  pledges flat, H, ignores it). Entry boosts (Intrepid Sword, Dauntless Shield, Download) take no new input: the
+  set's `abilityOn` stays the gate. No new `vol` values.
 - Field keys read straight by the adapter (no stock property): `atkFocus` / `defFocus` (Focus Energy, U5); the UI
   build declares them in the base profiles (out of scope here).
 - Result: `bp` whenever the power used differs from the listed power, for every move; `pre` (stat changes the adapter
