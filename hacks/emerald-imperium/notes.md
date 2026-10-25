@@ -443,6 +443,35 @@ No source weights were missing/undocumented; no new oracle differences or engine
 No template, engine source, extract scripts, other hacks, storage keys or orchestrator claim were changed.
 No viewer/Thor or in-game testing was performed for this data/fixture-only unit.
 
+#### In-game tests
+
+Rolls are the engine's 16 rolls (`tools/calc`). Level 50, Serious nature, 31 IVs, 0 EVs, no item, no field, no crit
+unless stated. Multi-hit rolls are per hit.
+
+- **Triple Kick scales per hit.** Settles: power is 20, 40, 60 on hits 1-3, not 20 on each hit.
+  - Attacker: Hitmontop (Atk 115), ability Intimidate. Technician would boost these 20-power hits, so it must not be the ability.
+  - Defender: Blastoise (HP 154, Def 120). Move: Triple Kick, all three hits land.
+  - Expected: hit 1 `12 12 12 12 12 13 13 13 13 13 13 13 13 13 13 15`; hit 2 `22 22 22 22 24 24 24 24 24 24 25 25 25 25 25 27`;
+    hit 3 `33 34 34 34 36 36 36 36 37 37 37 37 39 39 39 40`.
+  - Other way (flat 20 on every hit): all three hits show the hit 1 list.
+- **Self Sufficient heals at turn end.** Settles: heal is floor(max HP / 16), minimum 1, at turn end, never in the rolls.
+  - Defender: Turtwig, ability Self Sufficient, max HP 22. No attacker needed.
+  - Expected: +1 HP at each turn end (floor(22 / 16) = 1).
+  - Other way: no heal at turn end.
+- **Frostbite costs HP at turn end.** Settles: Frostbite is 1/16 of max HP per turn.
+  - Defender: Blastoise with status Frostbite (`frz`), max HP 154.
+  - Expected: -9 HP at each turn end (floor(154 / 16)). Other way (1/8, as a burn): -19.
+- **Bull Rush boosts special moves on the first turn out.** Settles: whether the 20% Bull Rush boost applies to a special move.
+  - Attacker: Snorlax (Atk 130, SpA 65) with ability Bull Rush, first turn out. Any mon with Bull Rush; the stats are Snorlax's.
+  - Defender: Blastoise (Def 120, SpD 105). Move: Psychic (Special, power 90).
+  - Expected (Bull Rush on): `28 29 29 29 30 30 30 31 31 31 32 32 32 33 33 34`.
+  - Other way (no boost on specials): `23 24 24 24 24 25 25 25 26 26 26 26 27 27 27 28`.
+- **Draco Barrage category on an exact Atk = SpA tie.** Settles: the category the game uses when Atk and SpA are equal.
+  The calc's automatic choice is Physical.
+  - Attacker: Celebi (Atk 120, SpA 120). Defender: Snorlax (Def 85, SpD 130, HP 235). Move: Draco Barrage (Dragon, Special, power 100).
+  - Expected (calc, Physical): `54 55 55 56 56 57 58 58 59 60 60 61 62 62 63 64`.
+  - Other way (the game uses Special): `35 36 36 36 37 37 38 38 39 39 39 40 40 41 41 42`.
+
 ## Checks
 
 `check.py` [baseline.json [current.json]]: the Locations PDF's wild tables against the dex data slot by slot; given a
