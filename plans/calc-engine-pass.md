@@ -103,6 +103,10 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
   `atk.fnt`, pledge partner name). U2 dispatched (clientRequestId `calc-engine-U2-r1`), also asked to settle U1's
   three open Hardlove traces (Revenge / Avalanche, Defense Curl in Rollout, Magnitude vs Dig) before the H fixtures.
   Redispatch from its last `WIP:` as `calc-engine-U2-r2` if it stops.
+- U2 done (`4bc5bb3`; P168 / E162 / H203 / I196 cases), reviewed: good; H traces settled (H Avalanche flat, H Revenge
+  = target-damaged, H curl and Magnitude-vs-Dig lost in the replacement path). U5 dispatched in parallel
+  (`calc-engine-U5-r1`; told to keep off tools/calc). Orchestrator on U3 (adapter state inputs + `state_check.mjs`;
+  `expect.crit` cases count as pending until U6).
 
 ## Next session prompt
 ```
