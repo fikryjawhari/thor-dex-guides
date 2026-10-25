@@ -100,7 +100,7 @@ def moves(D):
     # ---------------------------------------------------------------- moves (Showdown + Move Changes sheet)
     SDM = {k: v for k, v in SD['moves'].items()}
     sdKeys = [k for k, v in SDM.items() if not v['isMax'] and not v['isZ']]
-    CANON = {}; FZM = set()
+    CANON = {'lunch': 'Lunge'}; FZM = set()   # sheet typos the fuzzy match gets wrong (Lunch is Crunch to it)
     def cname(x):
         k = key(x)
         if k.startswith('hiddenpower'): k = 'hiddenpower'

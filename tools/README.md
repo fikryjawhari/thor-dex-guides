@@ -28,7 +28,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `hge_species.py` | Extracts per-species dex data from hg-engine data files, and diffs two extracts (HeartGold Retiled). |
 | `sprites_pee.py <expansion dir> [out-dir]` | Builds the shared sprite set (`sprites/png/`, `sprites/index.json`) from a pokeemerald-expansion checkout (`sprites/SOURCES.md`). |
 | `sprite_keys.py <hack>` | Lists the sprite key each species gets (from dex number and name; `assemble.py` uses it) and the species not in the shared set, i.e. the hack's own forms. |
-| `datajson.py` | `load()` / `save()` for a hack's `data.json` in its own layout (one line per entry for M, MV, AB, P, LOC, AR); for extract steps that edit the finished file (Hardlove's `build.py --published`, `itemstd.py`). |
+| `datajson.py` | `load()` / `save()` for a hack's `data.json` in its own layout (one line per entry for M, MV, AB, P, LOC, AR); for extract steps that edit the finished file (`itemstd.py`). |
 | `splits.py` | Shared `split_name(name, cap=None)` for trainer and walkthrough split names; normalises `[Level Cap N]`, league names and post-game labels. |
 | `wikitext.py` | Shared `split_args(text)` splits template arguments around nested wikitext templates and links; each caller interprets and cleans its own fields. |
 | `ctrguide.py` | Shared 3DS guide dex conversion, form names, move-doc parsing, trainer matching, default level-up moves and initial walkthrough stop/area attachment; game-specific evolution handling, item routing and cap regrouping stay in each extract. |
@@ -67,7 +67,7 @@ Raw inputs are not needed to capture a baseline. A new guide needs a baseline re
 committed first data build; without that the gate fails explicitly rather than silently self-comparing.
 
 Neither flag means both halves; both flags also run both. No hack names means every built guide. Data rebuilds
-use the explicit `REBUILDS` table: EX/PS raw, HG `--published`, EI `itemstd.py`; unknown paths fail until added.
+use the explicit `REBUILDS` table: EX/PS/HG raw, EI `itemstd.py`; unknown paths fail until added.
 Data compares ignore only the top-level `built` stamp; reports compare byte-for-byte. Counts report species,
 trainer cards, item rows and walkthrough stops. Stamp-only rebuilds restore the original data file bytes.
 

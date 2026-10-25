@@ -4,8 +4,8 @@
       "name": "Released game source",
       "type": "github",
       "repo": "kumakuma1/hardlove",
-      "ref": "f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b",
-      "baseline_note": "Published 0.8.3 pin. The local snapshot still had 0.8.2 Trainers.c; its hash uses the reviewed 0.8.3 source, matching the guide's patched sets.",
+      "ref": "ee4518c149c34914cdadefcba9c6f4f40c78ebf5",
+      "baseline_note": "0.8.4 pin: the patch was uploaded 2026-10-24 20:55 UTC, after 'add soak tm' (this commit); the next commit ('version', 2026-10-25) is after the release.",
       "paths": [
         "asm/include/items.inc",
         "asm/include/species.inc",
@@ -35,34 +35,34 @@
         "url": "https://drive.google.com/embeddedfolderview?id=1tBVoMcm-kZdUOWL1yhkxwykvDH5o85C6&hl=en",
         "pattern": "flip-entry-title\">HardloveGold_Demo_([0-9.]+)\\.xdelta",
         "select": "latest",
-        "version": "0.8.3"
+        "version": "0.8.4"
       },
       "state": {
-        "sha": "f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b",
+        "sha": "ee4518c149c34914cdadefcba9c6f4f40c78ebf5",
         "files": {
+          "asm/include/items.inc": "8299aa49b61f2b5aa1e234c9cd95c6918e99318b",
+          "asm/include/species.inc": "0776df5d89d605ea6059905c0ae2e840b01bc79d",
           "data/Encounters.c": "cd24e5b231c717c386e516f0df12cc5c284189bb",
           "data/Evolutions.c": "c0a975ae23f5a83041b2f8c202cc27d2772211a1",
           "data/FormToSpeciesMapping.c": "5950b7b4e2cca52fc09c1c63ebd6373da5ae5618",
           "data/Headbutt.c": "73478cbb855e98850cd1a27b7c7af2e4d2d6d5dd",
           "data/HiddenAbilityTable.c": "8f6c5f96b2b7235e09ce8a66e6393cb099aa572b",
           "data/HiddenItems.c": "41fe90fc97f4e38a40fd001b118c2bd8e70d95ff",
-          "data/MachineMoves.c": "67fe0921ea191a23294de8e5cac035fce9463b6b",
+          "data/MachineMoves.c": "7a15cb0a77757d79aa0578f1ac9921441ad53597",
           "data/Moves.c": "d9a1d26d7ff58826993046d9eeac4d34493c315c",
           "data/PokeFormDataTbl.c": "6182520e3febb9eba6a4a05c9ba75b446a575ce6",
           "data/SafariEncounters.c": "e94c8bb3ecf21ed5a886867649d8f2e05abfb4e7",
           "data/Species.c": "b7e08833bf83345b98345958838dddc643c55854",
-          "data/Trainers.c": "183ab1b574b591d01c3ea4eecbf38516eaa1801d",
+          "data/Trainers.c": "17d8c0c763c3317decce49ab83c6be20f9633e59",
+          "data/itemdata/itemdata.c": "4f67d48e6f3d349f6f25061e7666f0cd0a2e11b8",
+          "data/learnsets/learnsets.json": "a6d4bc579b06945614e086a94c465fdfa17adfda",
+          "data/text/keys.csv": "92e03e07ea62ef9814c6f9f14f753f48f921774c",
           "doc/GymHealing.txt": "5ab2972da01d3de350490c353843a8ab24e08288",
           "doc/Items.txt": "469caae8d2a85557a789b729cf9df3e49bab4d0f",
           "doc/LevelCaps.txt": "f57ab02d67a25e588642b3abaff9d9892ab21337",
           "doc/Mechanics.txt": "d68da5711d68e00fee3954114e22c1a44ebe6563",
           "include/config.h": "83b8644987103822a4d3d0a560bf47da29e607ef",
-          "include/constants/species.h": "4d732affea1f920d74bcc9d94b62ee06b5e73370",
-          "data/itemdata/itemdata.c": "4f67d48e6f3d349f6f25061e7666f0cd0a2e11b8",
-          "data/learnsets/learnsets.json": "024587e149b462943786b307f6cb044e4e0ffac5",
-          "data/text/keys.csv": "92e03e07ea62ef9814c6f9f14f753f48f921774c",
-          "asm/include/items.inc": "8299aa49b61f2b5aa1e234c9cd95c6918e99318b",
-          "asm/include/species.inc": "0776df5d89d605ea6059905c0ae2e840b01bc79d"
+          "include/constants/species.h": "4d732affea1f920d74bcc9d94b62ee06b5e73370"
         }
       }
     },
@@ -72,20 +72,20 @@
       "url": "https://drive.google.com/embeddedfolderview?id=1tBVoMcm-kZdUOWL1yhkxwykvDH5o85C6&hl=en",
       "pattern": "flip-entry-title\">HardloveGold_Demo_([0-9.]+)\\.xdelta",
       "select": "latest",
-      "state": "0.8.3"
+      "state": "0.8.4"
     },
     {
       "name": "Documentation dates (trainer order, splits, locations and AI)",
       "type": "drive",
       "id": "1IltXECEUg7YKeUxO9K6g4bmg33NI4Wax",
       "state": {
-        "1oh54-_fYYbJDbtQrt8WWtIyHonDZNGiYHHf3vLgMxus": {
-          "name": "Hardlove Gold AI document_WIP.txt",
-          "modified": "2026-09-06"
+        "1AzCc5GglMaKkBWZX1AbR2NmdN8bYStxJ": {
+          "name": "Hardlove Gold AI document_WIP.md",
+          "modified": "2026-10-25"
         },
         "1ymB4zPhToZ04xX3cdYSEEGX_D66OIrd9p-krdcafdSM": {
           "name": "Item Location",
-          "modified": "2026-10-10"
+          "modified": "2026-10-24"
         },
         "14ofASQp5NGZZEpqSa-eJfyTPKZIzMdir": {
           "name": "Mechanics.txt",
@@ -101,11 +101,11 @@
         },
         "13PoaWuu8lcyTSa6iI1gz6RyQVNqaY6WvrrI18k32mys": {
           "name": "Pokemon Locations",
-          "modified": "2026-09-25"
+          "modified": "2026-10-25"
         },
         "1B5i-eP37Pi4ixHZxCHaAFbHWqrNNrzj-": {
           "name": "Post-KO Switch-in AI",
-          "modified": "2026-09-17"
+          "modified": "2026-10-24"
         },
         "1QtkxHFLeb1VVde2LEJiibGFRNoeFFcangj_OuX13OUI": {
           "name": "Trainer Battles",

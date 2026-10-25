@@ -128,7 +128,9 @@ def build(D):
     mech = open(os.path.join(SRC, 'Mechanics.txt'), encoding='utf-8-sig').read()
     for m in re.finditer(r'^(.+?)\s+lvl (\d+)\s*$', mech, re.M): CAPS.append([m.group(1).strip(), int(m.group(2))])
     NATS = {'Hardy', 'Lonely', 'Brave', 'Adamant', 'Naughty', 'Bold', 'Docile', 'Relaxed', 'Impish', 'Lax', 'Timid', 'Hasty', 'Serious', 'Jolly', 'Naive', 'Modest', 'Mild', 'Quiet', 'Bashful', 'Rash', 'Calm', 'Gentle', 'Sassy', 'Careful', 'Quirky'}
+    SAMEAB = {'purepower': 'hugepower'}   # same effect: the sheet's Pure Power on a Huge Power set is not a difference
     G = []; TRFIX = []; TRSTAT = collections.Counter(); TRCF = []
+    seen_gt = set()   # (game trainer id, name) already placed: the sheet lists Will (702) and Koga (703) [Double] twice
     cap_now = None
     for gi, sp in enumerate(SPLITS):
         g = {'n': sp['n'], 'tab': sp['n'], 'note': sp['note'], 'sec': []}
@@ -148,6 +150,9 @@ def build(D):
                 T = {'k': k, 'n': name, 'id': t_['id'], 'loc': place, 'tags': tags, 'st': st_, 'cap': cap, 'note': t_['note'], 'p': []}
                 gid_, GT = game_trainer(t_['id'], name, [fid(p['f']) for p in t_['p'] if p.get('f')])
                 if gid_ != t_['id']: TRFIX.append('%s: sheet id %s, game trainer %s' % (name, t_['id'], gid_)); T['id'] = gid_
+                if GT is not None and (gid_, name) in seen_gt:   # the key stays used, so later keys don't move
+                    report('trainer listed twice in the sheet, dropped:', k, name, gid_); continue
+                if GT is not None: seen_gt.add((gid_, name))
                 gp = [m_ for m_ in (GT or {}).get('party', []) if isinstance(m_, dict)]
                 if GT is None: TRSTAT['trainer not in the game data'] += 1; report('trainer not in the game data:', name, t_['id'])
                 elif not name_ok(name, GT.get('name', '')): report('trainer id %s: sheet "%s", game "%s"' % (t_['id'], name, GT.get('name')))
@@ -217,7 +222,8 @@ def build(D):
                     if g_na and na and g_na != na:
                         if na in NATS: cf.append('nature ' + na)
                         else: TRFIX.append('%s %s: sheet rows shifted (nature "%s")' % (name, p['s'], na))
-                    if g_ab and abl and key(g_ab) not in [key(AB[ai(a_)][0]) for a_ in abl]: cf.append('ability ' + ' / '.join(abl))
+                    same_ab = lambda a_: SAMEAB.get(key(a_), key(a_))
+                    if g_ab and abl and same_ab(g_ab) not in [same_ab(AB[ai(a_)][0]) for a_ in abl]: cf.append('ability ' + ' / '.join(abl))
                     if mvs and sorted(g_mv) != sorted(mvs): cf.append('moves ' + ', '.join(M[i] for i in mvs))
                     if 'MOVE_HIDDEN_POWER' in gm.get('moves', []):
                         iv_ = gm.get('setIvs') if isinstance(gm.get('setIvs'), list) else [31] * 6
