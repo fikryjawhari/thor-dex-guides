@@ -5,6 +5,7 @@ import {dirname, resolve, relative, sep} from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {createContext, runInContext} from 'node:vm';
 import {resolveProfile, runMatchups} from './run.mjs';
+import {speciesName, weightNames} from './src/names.js';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const pin = 'ff6c3e339e276e6b4e8e44db58750b6534bc26aa';
@@ -19,7 +20,7 @@ const plain = value => JSON.parse(JSON.stringify(value));
 export function oracleName(name, kind, translations = {}) {
   if (translations[kind]?.[name] !== undefined) return translations[kind][name];
   if (kind !== 'species') return name;
-  return name.replace(/^Mega (.+?)(?: ([XY]))?$/, (_, base, suffix) => `${base}-Mega${suffix ? '-' + suffix : ''}`)
+  return speciesName(name).replace(/^Mega (.+?)(?: ([XY]))?$/, (_, base, suffix) => `${base}-Mega${suffix ? '-' + suffix : ''}`)
     .replace(/^Primal (.+)$/, '$1-Primal')
     .replace(/^(Alolan|Galarian|Hisuian|Paldean) (.+)$/, (_, region, species) =>
       `${species}-${{Alolan: 'Alola', Galarian: 'Galar', Hisuian: 'Hisui', Paldean: 'Paldea'}[region]}`);
@@ -104,15 +105,19 @@ function loadOracle(repo, options) {
   return {calc, context};
 }
 
-function oracleGeneration(calc, data, options) {
+function oracleGeneration(calc, data, options, profile) {
   const stock = calc.Generations.get(options.gen);
   const modern = calc.Generations.get(8);
   const translations = options.names || {};
   const species = new Map(data.P.map(entry => {
     const name = oracleName(entry.n, 'species', translations);
-    const known = stock.species.get(toID(name)) || modern.species.get(toID(name));
+    const lookup = form => stock.species.get(toID(form)) || modern.species.get(toID(form));
+    const known = lookup(name);
+    // Same weight as our engine: the profile's own, the stock record, a stock form name, then the base species.
+    const weightkg = (profile.over?.species?.[entry.id] || profile.over?.species?.[entry.n])?.weightkg
+      ?? known?.weightkg ?? weightNames(entry.n).map(lookup).find(form => form?.weightkg)?.weightkg ?? 1;
     return [toID(name), {...plain(known || {}), kind: 'Species', id: toID(name), name,
-      baseStats: statObject(entry.s, 1), types: entry.t, weightkg: known?.weightkg ?? 1,
+      baseStats: statObject(entry.s, 1), types: entry.t, weightkg,
       nfe: !!entry.et?.length, abilities: {0: ''}}];
   }));
   return {...stock, species: {get: id => species.get(id)},
@@ -166,7 +171,9 @@ function oracleMatchup(oracle, gen, data, profile, options, matchup) {
   const imported = context.backup_moves?.[name];
   const known = gen.moves.get(toID(name));
   const variable = entry.bp === 'Varies' || profile.varpow?.includes(guideName);
-  if (variable && !(matchup.slot.bp > 0)) throw new Error(`${guideName} needs explicit power`);
+  // A variable-power move with no set power is worked out by the oracle's own rule for that move (weight, HP, speed).
+  const fixed = variable && matchup.slot.bp > 0;
+  if (variable && !fixed && !known && !imported) throw new Error(`${guideName} needs explicit power`);
   const hits = matchup.slot.hits ?? profile.multihit?.[guideName]?.[2] ?? 1;
   const flags = {...known?.flags};
   const flagNames = {makesContact: 'contact', isPunch: 'punch', isBite: 'bite', isBullet: 'bullet',
@@ -177,9 +184,9 @@ function oracleMatchup(oracle, gen, data, profile, options, matchup) {
   }
   const move = new calc.Move(gen, name, {ability: attacker.ability, item: attacker.item,
     hits, isCrit: !!matchup.slot.crit, overrides: {
-      ...known, ...imported, name, flags, basePower: matchup.slot.bp ?? entry.bp,
+      ...known, ...imported, name, flags, basePower: matchup.slot.bp ?? (variable ? known?.basePower ?? imported?.basePower : entry.bp),
       type: matchup.slot.t || entry.t, category: entry.c,
-      ...(variable ? {name: 'Guide fixed power', id: 'guidefixedpower'} : {}),
+      ...(fixed ? {name: 'Guide fixed power', id: 'guidefixedpower'} : {}),
     }});
   move.hits = hits;
   const result = calc.calculate(gen, attacker, defender, move, oracleField(calc, profile, matchup.field || {}));
@@ -213,7 +220,7 @@ export async function compare(hack, {repo, fetch = false, output, caseName} = {}
     throw new Error('Cases must be nonempty and have unique names');
   }
   const oracle = loadOracle(repo, options);
-  const gen = oracleGeneration(oracle.calc, data, options);
+  const gen = oracleGeneration(oracle.calc, data, options, profile);
   const results = [];
   for (const matchup of cases) {
     try {

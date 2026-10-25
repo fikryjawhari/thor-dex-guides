@@ -76,7 +76,7 @@ species tables plus the guide's existing tables. Build output reports byte/gzip
 sizes and the largest contributors; retained fallback metadata dominates.
 A guide form whose name is not a stock species ("Raichu Alolan", "Heat Rotom",
 "Shellos (East Sea)", "Pyroar Female") takes the weight of the first stock spelling
-`weightNames()` finds, most specific first, then its base species (a hack's own
+`weightNames()` (`src/names.js`, shared with `hzla_compare.mjs`) finds, most specific first, then its base species (a hack's own
 Megas: the base species until the profile sets `over.species[id].weightkg`); only
 an unplaceable name falls back to 1 kg. Missing move metadata falls back to a plain attack.
 Hack-original `x` moves and `AB[i][2]` abilities have no special effect unless

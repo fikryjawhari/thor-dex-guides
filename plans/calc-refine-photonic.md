@@ -43,7 +43,7 @@ Z-Move power changes appear on about 20 moves in the doc. They are power values;
 
 ## Needs Opus
 
-6. **W2 shared oracle harness (new):** `tools/calc/hzla_compare.mjs:168-169` rejects all variable-power
+6. **Done (orchestrator, session 3):** `hzla_compare.mjs` lets the oracle work out a variable-power move's power natively when the fixture sets none, and takes species weights the same way as the engine (`src/names.js`); Photonic 111 match + 10 known, 0 errors. Was: **W2 shared oracle harness (new):** `tools/calc/hzla_compare.mjs:168-169` rejects all variable-power
    fixtures without `slot.bp` and lines 180-182 rename them `Guide fixed power`. W2 deliberately does not
    set power, so its ten new fixtures report `needs explicit power` errors, not damage mismatches. The same
    helper's `oracleGeneration()` uses 1 kg for unknown form names rather than `weightNames()`; preserve real
