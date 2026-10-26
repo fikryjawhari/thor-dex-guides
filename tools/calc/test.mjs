@@ -153,7 +153,7 @@ for (const base of ['gen4', 'gen5', 'gen6', 'gen7', 'cfru']) {
 
 await test('variable power without input and status moves return null', () => {
   engine.init(data, profiles.expansion);
-  assert.equal(engine.calc(set('Charizard'), set('Blastoise'), slot('Return'), {}), null);
+  assert.equal(engine.calc(set('Charizard'), set('Blastoise'), slot('Present'), {}), null);
   assert.equal(engine.calc(set('Charizard'), set('Blastoise'), slot('Growl'), {}), null);
   assert.equal(engine.calc(set('Charizard'), set('Blastoise'), slot('Tackle', {bp: 0}), {}), null);
 });
@@ -283,7 +283,13 @@ await test('weight, HP, speed and boost powers are automatic; a set power still 
     const fixed = plain(engine.calc(set('Pikachu'), set('Snorlax'), slot('Low Kick', {bp: 60}), {}));
     assert.equal(fixed.bp, undefined, `${base} a set power is not reported back`);
     assert.ok(fixed.max < plain(engine.calc(set('Pikachu'), set('Snorlax'), slot('Low Kick'), {})).max, `${base} set power 60 < 120`);
-    assert.equal(engine.calc(set('Snorlax'), set('Pikachu'), slot('Return'), {}), null, `${base} Return still needs a power`);
+    for (const move of ['Return', 'Frustration']) {
+      const preset = plain(engine.calc(set('Snorlax'), set('Pikachu'), slot(move), {}));
+      assert.equal(preset.bp, 102, `${base} ${move} defaults to 102`);
+      assert.deepEqual(preset.rolls, plain(engine.calc(set('Snorlax'), set('Pikachu'), slot(move, {bp: 102}), {})).rolls,
+        `${base} ${move} default = typed 102`);
+      assert.equal(plain(engine.calc(set('Snorlax'), set('Pikachu'), slot(move, {bp: 51}), {})).bp, undefined, `${base} a typed power wins`);
+    }
     assert.equal(power(set('Snorlax'), set('Nidoran♀'), 'Low Kick'), 20, `${base} Nidoran-F keeps its own entry (7 kg)`);
     assert.ok(engine.stats(set('Nidoran♀'))[1] < engine.stats(set('Nidoran♂'))[1], `${base} Nidoran-F and -M keep their own stats`);
     assert.equal(power(set('Snorlax'), set('Flabébé'), 'Low Kick'), 20, `${base} an accented name builds`);

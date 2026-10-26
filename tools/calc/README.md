@@ -193,7 +193,8 @@ counts the same. Those stock can work out from the battle state (`AUTO_POWER` in
 `adapter.js`: Low Kick, Grass Knot, Heavy Slam, Heat Crash, Flail, Reversal, Gyro
 Ball, Electro Ball, Crush Grip, Wring Out, Hard Press, Punishment, Fling, Natural Gift) get it
 automatically and return it as `bp`; a slot `bp` still overrides (as a plain
-fixed-power move). The rest return null until the page sets a power.
+fixed-power move). Return and Frustration default to 102 (maximum happiness / none; `DEFAULT_POWER`,
+the same in all four guides' sources), reported as `bp`. The rest return null until the page sets a power.
 
 Field entries are `{k,l,type,o?,side,to}`. The UI stores `field[k]`; `to` names a
 Smogon Field property for `side: "field"`, or a Side property for `atk`/`def`.

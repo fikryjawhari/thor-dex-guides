@@ -404,6 +404,9 @@ const AUTO_POWER = new Set(['Low Kick', 'Grass Knot', 'Heavy Slam', 'Heat Crash'
   'Electro Ball', 'Crush Grip', 'Wring Out', 'Hard Press', 'Punishment', 'Fling', 'Natural Gift']);
 // Moves with a listed power that stock scales by HP: the result reports the power used, as for AUTO_POWER.
 const HP_POWER = new Set(['Eruption', 'Water Spout', 'Dragon Energy']);
+// Variable-power moves with a default when the page sets none: Return / Frustration at maximum happiness / none
+// (Gen 3+ floor(255 * 10 / 25) = 102 in every guide's source). Reported as `bp`, like AUTO_POWER; a slot `bp` overrides.
+const DEFAULT_POWER = {Return: 102, Frustration: 102};
 
 // Z-move power (Gen 7, profile `zmove`): the hack's own Z power (profile `zpow`, by move name), else stock's own Z power
 // for a move the hack leaves alone where that is not the band (`catalog.zpow`), else the game's band for its power.
@@ -624,8 +627,9 @@ function calc(atk, def, slot, values = {}) {
   // Power from the battle state (weights, HP, speeds, boosts): stock works it out unless the page sets a power.
   const auto = listed && AUTO_POWER.has(moveData.name);
   const variable = listed && !auto;
-  if (variable && slot.bp === undefined) return null;
-  const state = statePower(name, slot.bp ?? (auto ? 1 : moveData.basePower), def, slot, slot.bp !== undefined || listed);
+  const preset = variable && slot.bp === undefined ? DEFAULT_POWER[moveData.name] : undefined;
+  if (variable && slot.bp === undefined && !preset) return null;
+  const state = statePower(name, slot.bp ?? preset ?? (auto ? 1 : moveData.basePower), def, slot, slot.bp !== undefined || listed);
   const pledge = PLEDGES[name] && PLEDGES[slot.st] && slot.st !== name && slot.bp === undefined
     && profile.over?.state?.[name] !== false ? pledgeType([PLEDGES[name], PLEDGES[slot.st]]) : '';
   const power = pledge ? 150 : state.power;
@@ -645,7 +649,7 @@ function calc(atk, def, slot, values = {}) {
   const crit = critChance(entry, moveData, attacker, defender, values);
   const useZ = !!(profile.zmove && slot.z && moveData.category !== 'Status');
   if (useZ) overrides.zMove = {basePower: zPower(moveData, Number(power), listed)};
-  if (listed && slot.bp !== undefined) {
+  if (listed && (slot.bp !== undefined || preset)) {
     overrides.name = 'Guide fixed power';
     overrides.id = 'guidefixedpower';
   }
@@ -720,7 +724,7 @@ function calc(atk, def, slot, values = {}) {
   }
   return {
     cat: move.category, rolls: [...rolls], hits: per.length, min, max, crit,
-    ...((auto || HP_POWER.has(moveData.name)) && slot.bp === undefined && description.moveBP
+    ...(preset ? {bp: preset} : (auto || HP_POWER.has(moveData.name)) && slot.bp === undefined && description.moveBP
       ? {bp: description.moveBP} : !listed && !useZ && slot.bp === undefined && !perHit && shownPower !== moveData.basePower
         ? {bp: shownPower} : {}),
     priority: context.move.priority,
