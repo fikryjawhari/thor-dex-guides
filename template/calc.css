@@ -465,6 +465,9 @@ details.dfield>summary .mut{min-width:0;overflow:hidden;text-overflow:ellipsis;w
 .dfgroup>summary::-webkit-details-marker{display:none}
 .dfgroup>summary::after{content:'▸';margin-left:auto;color:var(--mut)}
 .dfgroup[open]>summary::after{content:'▾'}
+.dtg>.dffield{grid-column:auto;margin:0}
+.dtg>.dffield[open]{grid-column:1/-1}
+.dffield>summary{min-height:24px;white-space:nowrap}
 .dhapply{min-height:28px;width:100%;margin-top:3px;border:1px solid var(--line);border-radius:7px;background:var(--panel2);color:var(--fg);font:inherit;font-size:11px;cursor:pointer;touch-action:manipulation}
 .dhapply:disabled{opacity:.45;cursor:default}
 .dfside section{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;align-content:start;column-gap:3px}
