@@ -1,0 +1,9 @@
+<fieldset><legend>HP moves mockup</legend>
+ <div class="chips" id="hm1"></div><div class="chips" style="margin-top:6px" id="hm2"></div>
+ <p class="hint">Blissey vs the first trainer. Fixed: Seismic Toss / Super Fang / Endeavor now show their damage, Counter gets a Taken box. Self: the signed amount on the row is the tap. A: one tap = one use (foe loses the top roll, you get the matching change). B: the tap is only your own change; the opened row's HP −min / −max buttons also apply yours.</p>
+</fieldset>
+<script>
+(function(){const B=(id,list)=>{const el=document.getElementById(id);list.forEach(([l,n,v])=>{const b=document.createElement('button');b.textContent=l;b.onclick=()=>thorFrame().setOption(n,v);el.appendChild(b);});};
+ B('hm1',[['Fixed damage','set','fixed'],['Heal / recoil / drain / cost','set','self'],['Pain Split / Mind Blown / Wish / Explosion','set','swap']]);
+ B('hm2',[['A: tap = one use','variant','a'],['B: tap = your HP only','variant','b']]);})();
+</script>
