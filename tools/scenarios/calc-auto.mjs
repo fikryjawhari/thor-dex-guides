@@ -281,6 +281,7 @@ checks.push(
       assert.equal(await page.value('CALC.state().field.weather'), 'Sun', 'slower Torkoal wins together');
       await openField(page);
       assert.equal(await page.value(`document.querySelector('[data-f="weather"]').value`), '@auto');
+      assert.equal(await page.count('[data-a="fieldauto"]'),0,'Auto button only exists with a manual override');
       assert.match(await page.text('.dfsource'), /Sun: foe Torkoal.*Drought/s);
       await choose(page, '[data-f="weather"]', 'Rain');
       assert.equal(await page.value('CALC.state().field.weather'), 'Rain');
@@ -314,6 +315,14 @@ checks.push(
         await reloadCalc(page);
         assert.equal(await page.value('CALC.state().field.weather'),'Heavy Rain','ordinary slower setter cannot replace primal weather');
       }
+      await configure(page,{name:'Bibarel',ability:'Simple'},{name:'Torkoal',ability:'Drought',l:null});
+      await reloadCalc(page);
+      await page.value(`CALC.set('foe','l',50);CALC.render()`);
+      assert.equal(await page.value('CALC.state().field.weather'),'Sun','entry waiting for a level cap resolves when its level becomes known');
+      await configure(page,{name:'Torkoal',ability:'Drought'},{name:'Politoed',ability:'Drizzle',l:null});
+      await reloadCalc(page);
+      await page.value(`CALC.set('foe','l',50);CALC.render()`);
+      assert.equal(await page.value('CALC.state().field.weather'),'Sun','both leads still resolve slower-first priority after the missing cap is entered');
     },
   },
   {
@@ -347,6 +356,15 @@ checks.push(
       if(thunder) { await page.value(`CALC.enter(${JSON.stringify(thunder.k)},0)`); assert.equal(await page.value('CALC.state().field.weather'), 'Rain'); assert.equal(await page.value('CALC.state().field.terrain'), 'Electric'); }
       const sand = effectTrainer(trainer => /Route 111/.test(trainer.loc) && trainer.field?.some(record => /Permanent Sand/.test(record.text)));
       if(sand) { await page.value(`CALC.enter(${JSON.stringify(sand.k)},0)`); assert.equal(await page.value('CALC.state().field.weather'), 'Sand'); }
+      const hazards=effectTrainer(trainer=>trainer.field?.some(record=>record.effects?.some(effect=>effect.timing==='after-first-send-out')));
+      if(hazards){
+        await pickCell(page,'party',0);
+        await page.value(`CALC.set('mine','hp',undefined);CALC.set('mine','status',undefined);CALC.state().mine={src:'party',b:0,i:99};CALC.render();CALC.enter(${JSON.stringify(hazards.k)},0)`);
+        await reloadCalc(page);
+        await pickCell(page,'party',0);
+        assert.equal(await hpOf(page,'mine'),await maxOf(page,'mine'),'first selection is exempt even when trainer was picked before the player');
+        assert.equal(await page.value('CALC.mon("mine").status??""'),'','first selection is not poisoned');
+      }
     },
   },
   {
@@ -384,6 +402,7 @@ checks.push(
         assert.ok(result, 'engine hit result');
         await hitFirst(page);
         assert.equal(await hpOf(page,'foe'),result.def.hp);
+        if(result.def.hp===0)assert.equal(await page.value(`document.querySelector('.dres:not(.na) [data-a="sub"]').disabled`),true,'HP actions disabled on a fainted target');
         if(result.def.used)assert.equal(await page.value('CALC.mon("foe").used'),true);
         if(result.def.stg)assert.deepEqual(await page.value('CALC.mon("foe").stg'),result.def.stg.slice(1));
         if(result.atk.stg)assert.deepEqual(await page.value('CALC.mon("mine").stg'),result.atk.stg.slice(1));
