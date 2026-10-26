@@ -15,7 +15,8 @@ the player to work out a berry, a Sash or an Intimidate drop. Three ideas carry 
 
 1. **Fight state is scratch, HP is kept.** A Pokémon's battle condition (stages, used-up items, its ability
    checkboxes, target state, move counters) lives only while it is selected. Selecting another Pokémon and coming back
-   brings it back fresh: item back, stages 0, Intimidate box on. **Only HP is kept** (and status, see Open point 1).
+   brings it back fresh: item back, stages 0, Intimidate box on. **Only HP and status are kept** (non-volatile, as in
+   the game; the toxic counter restarts at 1 like the game's); everything else is volatile.
    Set edits (nature, ability, item, EVs, moves) are kept only by **Save**; unsaved set edits are dropped when the
    Pokémon is switched away. Player HP is kept across trainers; foe HP is kept for the current fight only.
 2. **Derived, not stored.** Weather / terrain from setters, the Orb status, Intimidate's −1 and the area conditions
@@ -276,7 +277,7 @@ commit; template units one at a time (Parallel sessions).
 
 Finish with `preview.py --frame` on each guide and the user's Thor test.
 
-## Open points for the user
+## Settled after the mockup
 
-1. **Status across switches** (recommended: kept like HP: burn / poison / paralysis stay on a Pokémon in game when
-   it switches out; the toxic counter resets as in game). The user said "HP is saved, nothing else"; confirm.
+- Status is kept across switches like HP (user, 2026-10-26: "everything else is generally volatile"). The toxic
+  turn counter is volatile (restarts at 1 on entry).
