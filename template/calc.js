@@ -14,7 +14,7 @@ const defaults=()=>({dir:'out',mine:{src:'party',b:0,i:0},foe:{k:'',i:0},field:{
 // FIGHT: kept for this fight on both sides (broken; mega = the Mega form's {id,a,i} over the set); SCRATCH: battle
 // condition, memory only (SC by card key) while selected.
 // Any other edit field is a set field: unsaved ones go when the Pokémon is switched away, Save keeps them.
-const KEPT=['hp','status'],FIGHT=['broken','mega'],MEGA_F=['id','a','i'],SCRATCH=new Set(['stg','abilityOn','dl','entry','pty',...(prof.monControls||[]).map(control=>control.k)]),SC={};
+const KEPT=['hp','status'],FIGHT=['broken','mega'],MEGA_F=['id','a','i','aGuess'],SCRATCH=new Set(['stg','abilityOn','dl','entry','pty',...(prof.monControls||[]).map(control=>control.k)]),SC={};
 const isSetField=f=>!KEPT.includes(f)&&!FIGHT.includes(f)&&!SCRATCH.has(f);
 let ST=defaults();try{const stored=JSON.parse(localStorage.getItem(KEY)||'null');if(stored&&typeof stored==='object')ST={...ST,...stored};}catch(error){}
 const save=()=>{try{const {st,tgt,...kept}=ST;localStorage.setItem(KEY,JSON.stringify(kept));}catch(error){BAN={ok:0,h:'Storage full',t:'The current changes could not be remembered.'};}};

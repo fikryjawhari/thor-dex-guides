@@ -280,7 +280,7 @@ const checks = [
   },
   {
     id: '11 Mega',
-    title: 'M on Garchomp: name, stats and ability change; M again restores; Save persists over a reload; Original goes back',
+    title: 'M on Garchomp: name, stats and ability change; M again restores; Mega is fight state (no set edit), kept over a reload, Reset fight ends it',
     run: async page => {
       await setupCalc(page, { mine: ['party', 0] });
       const name = () => page.value(`document.querySelector('.dmatch .cc[data-s="mine"] .cn b').textContent.trim()`);
@@ -292,24 +292,24 @@ const checks = [
       const base = { spe: await spe(), stats: await stats(), ability: await ability() };
       assert.equal(await name(), 'Garchomp');
       await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
-      assert.equal(await name(), 'Mega Garchomp *', 'the Mega name, unsaved');
+      // Mega is fight state, not a set edit (plans/calc-auto-effects.md, settled after unit C): no unsaved mark, no Save
+      assert.equal(await name(), 'Mega Garchomp', 'the Mega name, not an unsaved edit');
+      assert.ok(await page.value(`document.querySelector('[data-a="esave"][data-s="mine"]').disabled`), 'nothing to Save');
       assert.notEqual(await stats(), base.stats, 'the stats change');
       assert.notEqual(await ability(), base.ability, 'the ability changes');
       // EI's data gives Mega Garchomp the base Speed (102), so Speed can't show the change here: noted, not asserted
       console.log(`     note: Mega Garchomp Spe ${await spe()} (base ${base.spe}) in this data`);
       // M steps through every Mega the species has (Hardlove: Mega Garchomp, then Mega Garchomp Z), then the base again
       for (let step = 0; step < 4 && (await name()).startsWith('Mega '); step++) await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
-      assert.equal(await name(), 'Garchomp *', 'M again (once per Mega) restores the base');
+      assert.equal(await name(), 'Garchomp', 'M again (once per Mega) restores the base');
       assert.equal(await stats(), base.stats, 'the base stats are back');
       assert.equal(await ability(), base.ability, 'and the base ability');
       await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
-      await page.tap('[data-a="esave"][data-s="mine"]');
-      assert.equal(await name(), 'Mega Garchomp •', 'saved');
       await page.reload();
-      assert.equal(await name(), 'Mega Garchomp •', 'the Mega persists across a reload');
-      await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
-      await page.tap('[data-a="ereset"][data-s="mine"]');
-      assert.equal(await name(), 'Garchomp', 'Original: back to base');
+      assert.equal(await name(), 'Mega Garchomp', 'the Mega is kept for the fight across a reload');
+      if (!(await page.value(`document.querySelector('.dfield').open`))) await page.tap('.dfield > summary');
+      await page.tap('[data-a="fightreset"]');
+      assert.equal(await name(), 'Garchomp', 'Reset fight: back to base');
     },
   },
   {

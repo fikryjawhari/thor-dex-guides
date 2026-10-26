@@ -227,12 +227,13 @@ const checks = [
       await setupCalc(page);
       await editorOpen(page, 'foe', true);
       assert.equal(await page.count('[data-a="esave"][data-s="foe"]'), 0, 'no foe Save');
-      const field = (await page.value(`document.querySelectorAll('.cc[data-s="foe"] select[data-e="a"] option').length`)) > 1 ? 'a' : 'na';
-      const sel = `.cc[data-s="foe"] select[data-e="${field}"]`;
+      const field = (await page.value(`document.querySelectorAll('.cc[data-s="foe"] select[data-e="ab"] option').length`)) > 1 ? 'a' : 'na';
+      const sel = `.cc[data-s="foe"] select[data-e="${field === 'a' ? 'ab' : 'na'}"]`;
       const was = await page.value(`document.querySelector('${sel}').value`);
       const edited = await page.value(`[...document.querySelector('${sel}').options].map(o=>o.value).find(v=>v!==${JSON.stringify(was)})`);
       await choose(page, sel, edited);
       const now = await page.value(`String(CALC.mon('foe').${field})`);
+      console.log(`     note: foe ${field} ${was} -> ${now}`);
       await editorOpen(page, 'foe', false);
       await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 1 });
       await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 0 });
