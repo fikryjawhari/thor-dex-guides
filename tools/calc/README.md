@@ -439,22 +439,21 @@ battler's raw Attack/Defense before stages in Singles or Doubles.
 `field-states.json` gates each ally entry by its named ability in `AB` and its
 introduction generation; Plus/Minus accepts either ability. Power Trick is
 gated by its move in `M`. `assemble.py` now supports `side: "field"` entries
-without adding prefixes and preserves `doubles: true` for D3 to hide in Singles.
-The current page renders new per-side entries immediately; the engine enforces
-Doubles even before D3. Existing Flower Gift declarations are not duplicated;
+without adding prefixes and preserves `doubles: true` to hide ally controls in Singles.
+The page and engine both enforce Doubles. Existing Flower Gift declarations are not duplicated;
 Hardlove's old Flower Gift controls are omitted because its `AB` has no Flower Gift.
 Compatibility: unassembled legacy profiles that explicitly map Flower Gift with
 `to: "isFlowerGift"` and omit `doubles` retain their prior stock behavior, even
 in Singles. This keeps the committed pre-A3 source/oracle fixtures unchanged.
 Assembly adds `doubles: true` to the retained legacy declarations, so every
-actual guide enforces the new Doubles-only contract; D3 should consume that metadata.
+actual guide enforces the Doubles-only contract in both the engine and the page.
 New global capabilities use `type: "state"`, not `"toggle"`, in the generated
 profile: Water/Mud Sport, Power/Guard Split and the three ally aura keys. They are
-gated and fully supported by the engine, but deliberately not rendered by the
-old page. Adding seven always-visible global boxes made the closed Field panel
-scroll at 260x316; grouping and showing them belongs to D3, not an A3 page edit.
-D3 can render these state declarations as grouped global toggles without any
-engine or availability change. Per-side declarations remain ordinary toggles.
+rendered under the closed **Global** heading in the existing global-toggle grid.
+Its expanded body uses the same measured, word-preserving toggle columns and internal
+Field scrolling; the closed minimum-size Field needs no extra row. Manual global
+choices use `ST.field` / `ST.fman` and clear on Auto, Reset fight or trainer change.
+Per-side declarations remain ordinary toggles; no engine or availability change was needed.
 
 Current visible additions (each is Player/Foe): EI gets Power Spot, Steely
 Spirit, Flower Gift, Plus/Minus, all four Ruin abilities and Power Trick;

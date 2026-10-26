@@ -7,10 +7,7 @@ if (guide.cfg.name !== 'Hardlove Gold' || !guide.cfg.calc) {
   console.log('SKIP calc-hardlove: requires the Hardlove Gold profile');
   process.exit(0);
 }
-// A3 added field-wide battle states (side 'field', type 'state': ally Fairy / Dark Aura, Aura Break, Water / Mud
-// Sport, Power / Guard Split); their page controls come in unit D3 (plans/calc-auto-effects.md build units), so the
-// page doesn't render them yet. D3: drop this filter.
-const entries = guide.cfg.calc.field.filter(entry => !(entry.side === 'field' && entry.type === 'state'));
+const entries = guide.cfg.calc.field;
 const sizes = [[260, 316], [480, 392], [537, 424], [832, 424], [832, 316]];
 const checks = [{
   id: 'hardlove profile',
@@ -28,7 +25,7 @@ const checks = [{
     assert.ok(await page.count('.dres .mr:not(.em)'), 'damage rows rendered');
     await page.tap('.dfield > summary');
     assert.deepEqual(await page.value(`[...new Set([...document.querySelectorAll('[data-f]')].map(element=>element.dataset.f))].sort()`),
-      entries.map(entry => entry.k).sort());
+      entries.filter(entry => !entry.doubles).map(entry => entry.k).sort());
     const weather = entries.find(entry => entry.k === 'weather');
     assert.ok(weather.o.some(([value]) => value === 'Snow'));
     assert.ok(!weather.o.some(([value]) => value === 'Hail'));
@@ -36,6 +33,7 @@ const checks = [{
     // A3 gates the ally Flower Gift by the guide's abilities and Hardlove's ability list has no Flower Gift
     // (tools/calc/README.md: Ally abilities and Power Trick), so the ally check uses Power Spot (Doubles only) instead.
     await page.tap('[data-f=gameType][data-value=Doubles]');
+    assert.deepEqual(await page.value(`[...new Set([...document.querySelectorAll('[data-f]')].map(element=>element.dataset.f))].sort()`), entries.map(entry => entry.k).sort());
     for (const key of ['atkPowerSpot', 'defPowerSpot', 'atkPowerTrick', 'defPowerTrick']) {
       await tapField(page, key);
       assert.equal(await page.value(`CALC.state().field[${JSON.stringify(key)}]`), 1);

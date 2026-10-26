@@ -152,6 +152,8 @@ these keys independently of UI availability. Dig / Fly / Dive / Minimized / Swit
 Edit selection. Other states fold under States, Turn end and Hazards, with active counts; fold state is session-only.
 Laser Focus / Lucky Chant / Dragon Cheer are per-side States toggles (`atk*` Player, `def*` Foe), gated by their
 moves, generation and profile-disabled effects. Dragon Cheer is offered only in Doubles, never in Hardlove.
+Global Water/Mud Sport, Power/Guard Split and ally aura states fold under **Global** beside the existing global
+toggles; ally controls (including per-side Ruin sources) appear only in Doubles, and these global manual choices share the normal Auto / Reset fight / trainer-change lifecycle.
 The closed group headings share one row so the minimum-size Field fits without scrolling. Expanded groups stay
 inside that one-window Field, scrolling its body when needed; opening a group brings its controls into view.
 Field content does not flex-shrink; toggle rows keep their natural wrapped-label height when pressed or redrawn.

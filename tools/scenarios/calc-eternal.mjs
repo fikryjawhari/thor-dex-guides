@@ -7,10 +7,7 @@ if (guide.cfg.name !== 'Eternal X' || !guide.cfg.calc) {
   console.log('SKIP calc-eternal: requires the Eternal X profile');
   process.exit(0);
 }
-// A3 added field-wide battle states (side 'field', type 'state': ally Fairy / Dark Aura, Aura Break, Water / Mud
-// Sport, Power / Guard Split); their page controls come in unit D3 (plans/calc-auto-effects.md build units), so the
-// page doesn't render them yet. D3: drop this filter.
-const entries = guide.cfg.calc.field.filter(entry => !(entry.side === 'field' && entry.type === 'state'));
+const entries = guide.cfg.calc.field;
 const sizes = [[260, 316], [480, 392], [537, 424], [832, 424], [832, 316]];
 const checks = [{
   id: 'eternal fields',
@@ -28,8 +25,9 @@ const checks = [{
     assert.ok(await page.count('.dres .mr:not(.em)'), 'damage rows rendered');
     await page.tap('.dfield > summary');
     assert.deepEqual(await page.value(`[...new Set([...document.querySelectorAll('[data-f]')].map(element=>element.dataset.f))].sort()`),
-      entries.map(entry => entry.k).sort());
+      entries.filter(entry => !entry.doubles).map(entry => entry.k).sort());
     await page.tap('[data-f=gameType][data-value=Doubles]');
+    assert.deepEqual(await page.value(`[...new Set([...document.querySelectorAll('[data-f]')].map(element=>element.dataset.f))].sort()`), entries.map(entry => entry.k).sort());
     assert.equal(await page.value('CALC.state().field.gameType'),'Doubles');
     for (const entry of entries.filter(entry => entry.type === 'select' && entry.k !== 'gameType')) {
       assert.deepEqual(await page.value(`[...document.querySelector('[data-f="${entry.k}"]').options].map(option=>option.value)`), ['@auto', ...entry.o.map(([value]) => value)]);
@@ -37,7 +35,7 @@ const checks = [{
       await page.value(`(()=>{const control=document.querySelector('[data-f="${entry.k}"]');control.value=${JSON.stringify(value)};control.dispatchEvent(new Event('change',{bubbles:true}));})()`);
       assert.equal(await page.value(`CALC.state().field[${JSON.stringify(entry.k)}]`), value);
     }
-    for (const entry of entries.filter(entry => entry.type === 'toggle')) {
+    for (const entry of entries.filter(entry => entry.type !== 'select')) {
       await tapField(page, entry.k);
       assert.equal(await page.value(`CALC.state().field[${JSON.stringify(entry.k)}]`), 1);
     }
@@ -46,7 +44,7 @@ const checks = [{
     await page.route('#/calc');
     assert.equal(await page.value('JSON.stringify(CALC.state().field)'), before, 'all field values persisted');
     await page.tap('.dfield > summary');
-    for (const entry of entries.filter(entry => entry.type === 'toggle')) {
+    for (const entry of entries.filter(entry => entry.type !== 'select')) {
       assert.equal(await page.value(`document.querySelector('[data-f="${entry.k}"]').getAttribute('aria-pressed')`), 'true', entry.k);
     }
   },

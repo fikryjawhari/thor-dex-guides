@@ -20,7 +20,77 @@ const selectStatus = async (page, value) => {
   await page.value(`(()=>{const select=document.querySelector('.cc[data-s=mine] select[data-e=status]');select.value=${JSON.stringify(value)};select.dispatchEvent(new Event('change',{bubbles:true}));})()`);
 };
 
+const globalKeys = ['allyFairyAura','allyDarkAura','allyAuraBreak','waterSport','mudSport','powerSplit','guardSplit'];
+const engineInput = `mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i,st:mon.status,iv:mon.iv,ev:mon.ev,stg:[0,...mon.stg],hp:mon.hp})`;
+const globalEntries = guide.cfg.calc.field.filter(entry=>globalKeys.includes(entry.k));
+const openGlobals = async page => {
+  if (!await page.value('document.querySelector(".dfield").open')) await page.tap('.dfield > summary');
+  if (!await page.value('document.querySelector(".dffield").open')) await page.tap('[data-fgroup="field:battle"] > summary');
+};
+
 await runChecks({name:'calc-field-states', file, checks:[{
+  id:'global damage', title:'all global toggles match engine damage, profile and Doubles gates, measured labels and one-window Field', sizes,
+  run:async page=>{
+    await seed(page);
+    await page.tap('.dfield > summary');
+    await page.tap('[data-f=gameType][data-value=Singles]');
+    assert.deepEqual(globalEntries.map(entry=>entry.k).sort(),globalKeys.filter(key=>key!=='allyDarkAura'||guide.cfg.name!=='Hardlove Gold').sort(),'A3 profile gates remain unchanged');
+    for(const entry of guide.cfg.calc.field.filter(entry=>entry.doubles))assert.equal(await page.count(`[data-f="${entry.k}"]`),0,entry.k+' hidden in Singles');
+    await page.tap('[data-f=gameType][data-value=Doubles]');
+    assert.equal(await page.count('[data-f=allyDarkAura]'),guide.cfg.name==='Hardlove Gold'?0:1);
+    const closed=await page.value('(()=>{const body=document.querySelector(".dfb");return {height:body.closest("details").offsetHeight,scroll:body.scrollHeight,room:body.clientHeight};})()');
+    assert.ok(closed.height<=316-8,'closed groups fit the minimum-height window');
+    assert.ok(closed.scroll<=closed.room+1,'closed groups do not require Field-body scrolling');
+    const moves={waterSport:'Flamethrower',mudSport:'Thunderbolt',powerSplit:'Tackle',guardSplit:'Tackle',allyFairyAura:'Moonblast',allyDarkAura:'Dark Pulse',allyAuraBreak:'Moonblast'};
+    for(const entry of globalEntries){
+      const move=moves[entry.k];
+      assert.ok(guide.M.includes(move),move+' fixture is available');
+      await page.value(`(()=>{const state=CALC.state();state.dir='out';state.mine={src:'custom',b:0,i:0};state.fman=[];state.field={gameType:'Doubles',${entry.k==='allyAuraBreak'?'allyFairyAura:1,':''}};state.custom[0].m=[M.indexOf(${JSON.stringify(move)})];state.edits['foe:'+state.foe.k+':0'].id=P.find(mon=>mon.n==='Chansey').id;CALC.render();})()`);
+      const expected=await page.value(`(()=>{const convert=${engineInput},state=CALC.state(),att=convert(CALC.mon('mine')),def=convert(CALC.mon('foe')),slot={mv:state.custom[0].m[0]};return [0,1].map(value=>{const result=DMG.calc(att,def,slot,{...state.field,[${JSON.stringify(entry.k)}]:value});return [result.min*result.hits,result.max*result.hits];});})()`);
+      assert.notDeepEqual(expected[0],expected[1],entry.k+' fixture changes engine damage');
+      const damage='.dres:not(.na) .mr:first-child .r1 .hp';
+      assert.equal(await page.text(damage),expected[0].join('–'),entry.k+' baseline range');
+      await openGlobals(page);
+      const label=await page.value(`document.querySelector('[data-f="${entry.k}"]').title`);
+      assert.equal(label,entry.l,'full tooltip');
+      await tapField(page,entry.k);
+      assert.equal(await page.value(`CALC.state().field.${entry.k}`),1);
+      assert.ok(await page.value(`CALC.state().fman.includes('${entry.k}')`),'manual tracking');
+      assert.equal(await page.text(damage),expected[1].join('–'),entry.k+' toggled range');
+      assert.ok(await page.value('document.querySelector(".dfield").offsetHeight<=innerHeight-8'),'expanded global group stays in one window');
+      assert.match(await page.text('[data-fgroup="field:battle"] > summary'),/^Global · [12]$/);
+      const broken=await page.value(`(()=>{const buttons=[...document.querySelectorAll('[data-fgroup="field:battle"] button')];return buttons.filter(button=>{const text=button.firstChild,range=document.createRange();let start=0;return text.textContent.split(' ').some(word=>{range.setStart(text,start);range.setEnd(text,start+word.length);start+=word.length+1;return range.getClientRects().length>1;})||button.scrollHeight>button.clientHeight+1;}).map(button=>button.textContent);})()`);
+      assert.deepEqual(broken,[],'measured global labels do not break words or clip');
+      await tapField(page,entry.k);
+      assert.equal(await page.text(damage),expected[0].join('–'),entry.k+' reverses cleanly');
+    }
+    await page.tap('[data-f=gameType][data-value=Singles]');
+    for(const entry of globalEntries)assert.equal(await page.count(`[data-f="${entry.k}"]`),entry.doubles?0:1,entry.k+' Singles availability');
+    assert.doesNotMatch(await page.text('.dfield > summary'),/Ally Fairy Aura/,'inactive Doubles-only state omitted from summary');
+  },
+},{
+  id:'global lifecycle', title:'global manual state persists and Auto, Reset fight and trainer changes clear every key', sizes,
+  run:async page=>{
+    await seed(page);
+    const enable=async()=>{
+      if(!await page.value('document.querySelector(".dfield").open'))await page.tap('.dfield > summary');
+      await page.tap('[data-f=gameType][data-value=Doubles]');
+      for(const entry of globalEntries)await tapField(page,entry.k);
+    };
+    const cleared=async label=>{
+      const state=await page.value('({field:CALC.state().field,manual:CALC.state().fman})');
+      for(const entry of globalEntries){assert.ok(!state.field[entry.k],label+' clears '+entry.k);assert.ok(!state.manual.includes(entry.k),label+' clears manual '+entry.k);}
+    };
+    await enable();
+    await page.reload();await page.goto('#/calc');
+    for(const entry of globalEntries){assert.equal(await page.value(`CALC.state().field.${entry.k}`),1,'reload '+entry.k);assert.ok(await page.value(`CALC.state().fman.includes('${entry.k}')`));}
+    await openGlobals(page);
+    for(const entry of globalEntries)assert.equal(await page.value(`document.querySelector('[data-f="${entry.k}"]').getAttribute('aria-pressed')`),'true');
+    await page.tap('[data-a=fieldauto]');await cleared('Auto');
+    await enable();await page.tap('[data-a=fightreset]');await cleared('Reset fight');
+    await enable();await page.value('CALC.enter(TRS.find(trainer=>trainer.k!==CALC.state().foe.k&&trainer.p.length>=2).k,0)');await cleared('trainer change');
+  },
+},{
   id:'entry lifecycle', title:'entry once, manual HP/status/Web reapply independently, no redraw/reload damage', sizes,
   run:async page=>{
     await seed(page);
