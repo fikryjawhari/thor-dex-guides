@@ -138,7 +138,7 @@ one use given the damage dealt: `{v, l, set?, st?, later?}` or null (`set` Pain 
 `later` Wish). Recoil and drain use the move data's fractions (Gen 5+ round half up, Gen 4 floor, at least 1), Rock
 Head / Magic Guard, Big Root, Liquid Ooze, Dream Eater on a sleeper; plus Struggle, Mind Blown family, Life Orb (not
 with Sheer Force), Shell Bell, self-KO moves, heals (weather for Moonlight family, sand for Shore Up, Strength Sap =
-the target's staged Attack, Swallow at one Stockpile, Purify on a statused target), costs. Not covered: Floral Healing
+the target's staged Attack, Swallow at `slot.st` Stockpiles (1-3, default 1: quarter, half, full HP), Purify on a statused target), costs. Not covered: Floral Healing
 / Heal Pulse, crash damage, Rocky Helmet / Rough Skin. Psywave's 16 rolls are an even spread over its 101 (Gen 5+) /
 11 (Gen 4) outcomes. Tests: `test.mjs` (fixed damage, `DMG.hp`), `hardlove_check.mjs`
 (OHKO).
@@ -173,7 +173,13 @@ a poisoned target, a stage the table makes certain) makes the hit a crit whateve
 make p 0, not forced, and no crit. `slot.crit` still picks crit damage for an
 ordinary hit. `atkCritBonus` / `defCritBonus` add nonnegative integer stages before the cap;
 the current attack reads `atkCritBonus` (swap side prefixes when reversing the matchup).
-Laser Focus, Lucky Chant and Dragon Cheer have no input yet.
+`atkLaserFocus` (Gen 7+) forces a crit on the next hit; `defLuckyChant` prevents crits against the defender,
+including forced crits and Mold Breaker. `atkDragonCheer` (Gen 9+, `gameType: 'Doubles'`) gives +1 stage,
+or +2 if the attacker is Dragon-type. It shares Focus Energy's state: use the higher bonus, not both.
+The corresponding `defLaserFocus`, `atkLuckyChant`, `defDragonCheer` describe the opposite direction;
+swap prefixes when reversing the matchup. Page availability is gated by Laser Focus, Lucky Chant and
+Dragon Cheer in the guide's moves; no field catalogue changes here. `slot.st` also supplies Spit Up's
+Stockpile count (1-3, default 1): power 100 times count, with a typed `slot.bp` winning.
 
 `over.state` (per hack) changes a move whose source differs: `false` = the state
 input does nothing, `{curl: false}` = Defense Curl doesn't double it, `{vol: false}`
@@ -200,8 +206,9 @@ events carry `hit`, the
 next hit they come before: Stamina, Water Compaction, Weak Armor (Spe +1 before Gen
 7), Justified, Steam Engine, Cotton Down (the attacker's Speed), and once per item
 Weakness Policy, Kee / Maranga Berry, Luminous Moss, Absorb Bulb, Cell Battery,
-Snowball. Stock works the Defense ones into the later hits; a later hit of Foul Play
-does not read the target's new Attack. Post-move events (Berserk, Anger Shell, KOs),
+Snowball. Stock works the Defense ones into the later hits. Foul Play reads the target's current
+Attack and stages, including manual stages, derived Intimidate and between-hit Justified / Weakness Policy
+(also the child of Parental Bond). Post-move events (Berserk, Anger Shell, KOs),
 random secondaries and history (Rage, Charge) stay manual stages in `calc`; `hit` applies the automatic
 post-hit effects below. Intimidate is a derived first-hit event, not a stored stage.
 

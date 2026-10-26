@@ -1179,6 +1179,60 @@ await test('automatic KO: full-HP single-hit Sash/Sturdy and one healing berry',
   assert.equal(engine.calc({...mon, lv: 60}, {...mon, it: 'Sitrus Berry', used: true}, slot('Seismic Toss')).ko.n, 3);
 });
 
+await test('A2 Stockpile powers and healing default, clamp and typed power', () => {
+  engine.init(data, profiles.expansion);
+  const user = set('Blastoise');
+  const max = engine.stats(user)[0];
+  for (const [count, power, fraction] of [[undefined, 100, 4], [0, 100, 4], [1, 100, 4], [2, 200, 2], [3, 300, 1], [9, 300, 1]]) {
+    assert.equal(engine.calc(user, user, slot('Spit Up', {st: count})).bp, power);
+    assert.equal(engine.hp(user, user, slot('Swallow', {st: count})).v, Math.floor(max / fraction));
+  }
+  assert.equal(engine.calc(user, user, slot('Spit Up', {st: 3, bp: 42})).bp, undefined);
+  assert.deepEqual(plain(engine.calc(user, user, slot('Spit Up', {st: 3, bp: 42})).rolls),
+    plain(engine.calc(user, user, slot('Spit Up', {st: 1, bp: 42})).rolls));
+});
+
+await test('A2 crit fields: Laser Focus, Lucky Chant, Dragon Cheer and Focus exclusion', () => {
+  engine.init(data, profiles.expansion);
+  const user = set('Blastoise');
+  const selected = slot('Tackle');
+  const crit = (field, atk = user, def = user) => plain(engine.calc(atk, def, selected, field).crit);
+  assert.equal(crit({atkLaserFocus: true}).forced, true);
+  assert.equal(crit({defLaserFocus: true}).forced, false);
+  assert.equal(crit({atkLaserFocus: true, defLuckyChant: true}).p, 0);
+  assert.equal(crit({defLuckyChant: true}, {...user, ab: ability('Mold Breaker')}).p, 0);
+  assert.equal(crit({atkLuckyChant: true, atkLaserFocus: true}).p, 1);
+  assert.equal(crit({atkDragonCheer: true}).stage, 0);
+  assert.equal(crit({gameType: 'Doubles', atkDragonCheer: true}).stage, 1);
+  assert.equal(crit({gameType: 'Doubles', atkDragonCheer: true}, set('Dragonite')).stage, 2);
+  assert.equal(crit({gameType: 'Doubles', atkDragonCheer: true, atkFocus: true}).stage, 2);
+  assert.equal(crit({atkLaserFocus: true}, user, {...user, ab: ability('Battle Armor')}).p, 0);
+  engine.init(data, profiles.gen6);
+  assert.equal(crit({atkLaserFocus: true}).forced, false);
+  assert.equal(crit({gameType: 'Doubles', atkDragonCheer: true}).stage, 0);
+});
+
+await test('A2 Foul Play reads target stages and changes between Parental Bond hits', () => {
+  engine.init(data, profiles.expansion);
+  const user = set('Blastoise');
+  const target = set('Blastoise', {stg: [0, 2, 0, 0, 0, 0]});
+  const selected = slot('Foul Play');
+  assert.ok(engine.calc(user, target, selected).max > engine.calc(user, user, selected).max);
+  assert.deepEqual(plain(engine.calc({...user, stg: [0, 4, 0, 0, 0, 0]}, target, selected).rolls),
+    plain(engine.calc(user, target, selected).rolls));
+  assert.deepEqual(plain(engine.calc({...user, ab: ability('Intimidate')}, target, selected).rolls),
+    plain(engine.calc(user, {...target, stg: [0, 1, 0, 0, 0, 0]}, selected).rolls));
+  for (const extra of [{ab: ability('Justified')}, {it: 'Weakness Policy', pty: 'Ghost', ab: ability('Protean')}]) {
+    const parent = {...user, ab: ability('Parental Bond')};
+    const foe = {...target, ...extra};
+    const result = engine.calc(parent, foe, selected);
+    const unchanged = engine.calc(parent, {...foe, ab: -1, it: ''}, selected);
+    assert.ok(result.per[1][15] > unchanged.per[1][15]);
+    const action = engine.hit(parent, foe, selected);
+    assert.equal(action.dealt, Math.min(engine.stats(foe)[0], result.max + result.per[1][15]));
+  }
+});
+
 await test('initialisation and calculations leave guide/profile inputs unchanged', () => {
   assert.equal(JSON.stringify({data, profiles}), unchanged);
 });

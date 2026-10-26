@@ -502,12 +502,13 @@ function critChance(entry, moveData, attacker, defender, values) {
   const species = toID(attacker.name);
   const itemStage = typeof item === 'number' ? item
     : Object.entries(item || {}).find(([name]) => species.includes(toID(name)))?.[1] || 0;
-  const counted = (own < 6 ? own : 0) + (values[FOCUS.atk] ? 2 : 0) + itemStage + (attacker.hasAbility('Super Luck') ? 1 : 0)
+  const cheer = profile.gen >= 9 && values.gameType === 'Doubles' && values.atkDragonCheer ? (attacker.hasType('Dragon') ? 2 : 1) : 0;
+  const counted = (own < 6 ? own : 0) + Math.max(values[FOCUS.atk] ? 2 : 0, cheer) + itemStage + (attacker.hasAbility('Super Luck') ? 1 : 0)
     + Math.max(0, Math.trunc(Number(values.atkCritBonus)) || 0);
   const stage = Math.min(table.length - 1, counted);
-  const blocked = defender.hasAbility('Battle Armor', 'Shell Armor')
+  const blocked = !!values.defLuckyChant || defender.hasAbility('Battle Armor', 'Shell Armor')
     && !attacker.hasAbility('Mold Breaker', 'Teravolt', 'Turboblaze');
-  const forced = !blocked && (own >= 6 || table[stage] >= 1
+  const forced = !blocked && (profile.gen >= 7 && values.atkLaserFocus || own >= 6 || table[stage] >= 1
     || (attacker.hasAbility('Merciless') && defender.hasStatus('psn', 'tox')));
   return {stage, p: blocked ? 0 : forced ? 1 : table[stage], forced};
 }
@@ -953,6 +954,7 @@ function betweenHitStages(atk, def, hits, hit) {
 
 const isAshGreninja = set => /Greninja/.test(guideName(set)) && /\bAsh\b/.test(guideName(set));
 const guideName = set => data.P.find(entry => String(entry.id) === String(set.id))?.n || '';
+const stockpile = slot => Math.max(1, Math.min(3, Math.trunc(Number(slot.st)) || 1));
 
 function calcCore(atk, def, slot, values = {}, action = null) {
   const entry = data.MV[slot.mv];
@@ -964,7 +966,8 @@ function calcCore(atk, def, slot, values = {}, action = null) {
   // Power from the battle state (weights, HP, speeds, boosts): stock works it out unless the page sets a power.
   const auto = listed && AUTO_POWER.has(moveData.name);
   const variable = listed && !auto;
-  const preset = variable && slot.bp === undefined ? DEFAULT_POWER[moveData.name] : undefined;
+  const preset = slot.bp === undefined ? name === 'Spit Up' ? 100 * stockpile(slot)
+    : variable ? DEFAULT_POWER[moveData.name] : undefined : undefined;
   if (variable && slot.bp === undefined && !preset) return null;
   const state = statePower(name, slot.bp ?? preset ?? (auto ? 1 : moveData.basePower), def, slot, slot.bp !== undefined || listed);
   const pledge = PLEDGES[name] && PLEDGES[slot.st] && slot.st !== name && slot.bp === undefined
@@ -1049,7 +1052,25 @@ function calcCore(atk, def, slot, values = {}, action = null) {
   const max = Math.max(...rolls);
   let eff = context.state.typeEffectiveness ?? 1;
   if (!max) eff = 0;
-  if (per.length > 1 && eff) pre.push(...betweenHitStages(...before, per.length, {type: move.type, cat: move.category, eff}));
+  if (per.length > 1 && eff) {
+    const stages = before.map(mon => ({...mon.boosts}));
+    const events = betweenHitStages(...before, per.length, {type: move.type, cat: move.category, eff});
+    pre.push(...events);
+    if (name === 'Foul Play' && !action) {
+      const sets = [atk, def].map((set, index) => ({...set, entry: false, dl: 'off', intim: false,
+        stg: statNames.map(stat => stages[index][stat])}));
+      for (let index = 1; index < per.length; index++) {
+        for (const event of events.filter(event => event.hit === index + 1)) {
+          const set = sets[event.who === 'atk' ? 0 : 1];
+          set.stg[statNames.indexOf(event.stat)] += event.by;
+          if (HIT_ITEMS[set.it] && event.src === set.it) set.used = true;
+        }
+        const next = calcCore(...sets, slot, values, {hit: index + 1,
+          parental: per.length === 2 && selected === 1 && attacker.hasAbility('Parental Bond')});
+        per[index] = next.rolls;
+      }
+    }
+  }
   const description = result.rawDesc;
   const notes = [...context.notes];
   // Residual damage / recovery counts in the KO text only, never in the rolls or percentages.
@@ -1076,7 +1097,7 @@ function calcCore(atk, def, slot, values = {}, action = null) {
     ...(context.move.useZ ? {z: context.move.name} : {}),
     ...(context.state.categoryAuto ? {categoryChoice: {automatic: context.state.categoryAuto,
       inverted: context.state.categoryInverted, tie: context.state.categoryTie}} : {}),
-    ...(perHit ? {per} : {}),
+    ...(per.some(hit => hit.some((value, index) => value !== rolls[index])) ? {per} : {}),
     pmin: per.reduce((sum, hit) => sum + Math.min(...hit), 0) * 100 / defender.maxHP(),
     pmax: per.reduce((sum, hit) => sum + Math.max(...hit), 0) * 100 / defender.maxHP(),
     ko: knockout(per, current, eot, defender.maxHP() - current), eff, notes: [...new Set(notes)],
@@ -1085,7 +1106,7 @@ function calcCore(atk, def, slot, values = {}, action = null) {
   };
 }
 
-// Fixed / fraction damage (plans/calc-hp-moves.md): the move's damage from levels and HP, not from power. The type
+// Fixed / fraction damage (tools/calc/README.md, HP moves): damage from levels and HP, not from power. The type
 // chart (and immunities) come from an ordinary run of the move at power 100. Counter / Mirror Coat / Bide (2x) and
 // Metal Burst / Comeuppance (1.5x) take the damage taken in `slot.bp`.
 const FIXED = {
@@ -1195,7 +1216,7 @@ function calc(atk, def, slot, values = {}) {
   return result;
 }
 
-// The user's own HP change from one use of a move (plans/calc-hp-moves.md), given the damage it dealt: {v, l, set?,
+// The user's own HP change from one use of a move (tools/calc/README.md, HP moves), given the damage it dealt: {v, l, set?,
 // st?, later?} or null. `v` is the signed change; `set` new HPs for both (Pain Split); `st: 'slp'` (Rest); `later`: lands
 // next turn (Wish). Damage-based amounts: Gen 5+ round half up, Gen 4 floor, at least 1.
 const HEAL_HALF = new Set(['Recover', 'Soft-Boiled', 'Milk Drink', 'Slack Off', 'Heal Order', 'Roost']);
@@ -1236,7 +1257,8 @@ function hp(atk, def, slot, values = {}, dealt = 0) {
     const share = field.hasWeather('Sun', 'Harsh Sunshine') ? 2 / 3 : field.weather && !field.hasWeather('Strong Winds') ? 1 / 4 : 1 / 2;
     return {v: Math.max(1, Math.floor(max * share)), l: name};
   }
-  if (name === 'Swallow') return {v: Math.max(1, Math.floor(max / 4)), l: 'Swallow (1 Stockpile)'};
+  if (name === 'Swallow') return {v: Math.max(1, Math.floor(max / [4, 2, 1][stockpile(slot) - 1])),
+    l: `Swallow (${stockpile(slot)} Stockpile)`};
   if (name === 'Purify') return target.status ? {v: Math.max(1, Math.floor(max / 2)), l: name} : null;
   if (name === 'Curse') return user.hasType('Ghost') ? {v: -Math.max(1, Math.floor(max / 2)), l: 'Curse'} : null;
   if (COSTS[name]) return {v: -Math.max(1, Math.floor(max / COSTS[name])), l: name};
