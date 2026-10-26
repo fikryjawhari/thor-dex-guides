@@ -281,6 +281,13 @@
    ],
    "over": {
     "afterMove": ["Kee Berry", "Maranga Berry"],
+    "items": {
+     "Figy Berry": {"heal": 0.125, "threshold": 0.5},
+     "Wiki Berry": {"heal": 0.125, "threshold": 0.5},
+     "Mago Berry": {"heal": 0.125, "threshold": 0.5},
+     "Aguav Berry": {"heal": 0.125, "threshold": 0.5},
+     "Iapapa Berry": {"heal": 0.125, "threshold": 0.5}
+    },
     "critMultiplier": 1.5,
     "state": {
      "Echoed Voice": false,

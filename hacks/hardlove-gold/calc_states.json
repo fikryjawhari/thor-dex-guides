@@ -16,6 +16,11 @@
       "src": "A1: Hardlove ee4518c149 itemdata.c Sitrus param 25; battle_item.c TryUseHeldItem restores maxHP*25/100 below half."
     },
     {
+      "name": "auto-figy-hardlove", "api": "berry", "atk": {"id": "blastoise", "it": "Figy Berry", "hp": 77},
+      "expect": {"paths": {"heal": 19, "atk.hp": 96, "atk.used": true}},
+      "src": "Hardlove ee4518c149 battle_item.c TryUseHeldItem HOLD_EFFECT_HP_RESTORE_SPICY: maxhp / 8 (itemdata.c param 8) at or below half HP (over.items)."
+    },
+    {
       "name": "fury-cutter-prior-0",
       "atk": {
         "id": "manaphy",

@@ -243,8 +243,7 @@ Sword/Shield or Download stages; those are recomputed by the next calculation. A
   `over.items[originalName].heal` overrides recovery (0-1 fraction of max HP, >1 flat HP),
   `.threshold` the max-HP fraction. Original labels are retained for override lookup after effect aliases.
   Hardlove's pinned `ee4518c149` `TryUseHeldItem` instead uses Figy-group 1/8 at 1/2 HP
-  (`itemdata.c` parameter 8). Its five `over.items` entries need `heal: 0.125, threshold: 0.5`;
-  that profile change is pending owner approval (A1's owned `hack.json` line was only `setterStays`).
+  (`itemdata.c` parameter 8): its `over.items` sets `heal: 0.125, threshold: 0.5` for the five.
 - `derived(set, field)` returns `{weather?, terrain?, primal?, status?}` for an entering, non-fainted set.
   Setters use engine ability aliases and only weather/terrain offered by the profile; Snow Warning picks
   Snow when offered, otherwise Hail. `primal: true` identifies the three primal weathers. Unused Orbs
