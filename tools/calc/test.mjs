@@ -571,6 +571,236 @@ await test('a hit-count rule that returns a non-number fails explicitly', () => 
   assert.throws(() => engine.calc(set('Charizard'), set('Blastoise'), slot('Tackle'), {}), /hit count must be a number/);
 });
 
+await test('stackable residuals use the requested side and preserve the two-argument API', () => {
+  engine.init(data, profiles.expansion);
+  const target = set('Snorlax', {st: 'slp'});
+  const max = engine.stats(target)[0];
+  const field = Object.fromEntries(['Trapped', 'Seeded', 'SaltCure', 'Cursed', 'Nightmare', 'Ingrain', 'AquaRing', 'SeaOfFire']
+    .map(key => ['def' + key, true]));
+  assert.deepEqual(plain(engine.residual(target, field)), []);
+  assert.deepEqual(plain(engine.residual(target, field, null, 'def')).map(part => [part.l, part.v]), [
+    ['Trapped', -Math.floor(max / 8)], ['Leech Seed', -Math.floor(max / 8)], ['Salt Cure', -Math.floor(max / 8)],
+    ['Curse', -Math.floor(max / 4)], ['Nightmare', -Math.floor(max / 4)], ['Ingrain', Math.floor(max / 16)],
+    ['Aqua Ring', Math.floor(max / 16)], ['Sea of Fire', -Math.floor(max / 8)],
+  ].map(([label, value]) => [label, Array(4).fill(value)]));
+  assert.equal(engine.residual(set('Blastoise'), {atkSaltCure: true})[0].v[0], -Math.floor(engine.stats(set('Blastoise'))[0] / 4));
+  assert.equal(engine.residual(set('Metagross'), {atkSaltCure: true})[0].v[0], -Math.floor(engine.stats(set('Metagross'))[0] / 4));
+  assert.deepEqual(plain(engine.residual(set('Charizard'), {atkSeaOfFire: true, atkNightmare: true})), []);
+});
+
+const fieldGuide = structuredClone(data);
+const fieldAbility = name => {
+  let index = fieldGuide.AB.findIndex(entry => entry[0] === name && !entry[2]);
+  if (index < 0) index = fieldGuide.AB.push([name, '']) - 1;
+  return index;
+};
+for (const name of ['Magic Guard', 'Liquid Ooze', 'Bad Dreams', 'Comatose', 'Levitate', 'Klutz', 'Swift Swim',
+  'Clear Body', 'Contrary', 'Mirror Armor', 'Immunity', 'Leaf Guard', 'Purifying Salt', 'Full Metal Body', 'White Smoke']) fieldAbility(name);
+
+await test('opposing Binding Band and generation-specific trapping fractions', () => {
+  const target = set('Snorlax');
+  for (const gen of [4, 5, 6, 7, 8, 9]) {
+    engine.init(fieldGuide, {...profiles.expansion, gen});
+    const max = engine.stats(target)[0];
+    const hit = (other, own = target, field = {}) => engine.residual(own, {atkTrapped: true, ...field}, other)[0].v[0];
+    assert.equal(hit(set('Blastoise')), -Math.floor(max / (gen >= 6 ? 8 : 16)));
+    assert.equal(hit(set('Blastoise', {it: 'Binding Band'})), -Math.floor(max / (gen >= 6 ? 6 : gen === 5 ? 8 : 16)));
+    assert.equal(hit(set('Blastoise'), {...target, it: 'Binding Band'}), -Math.floor(max / (gen >= 6 ? 8 : 16)));
+    assert.equal(hit(set('Blastoise', {it: 'Binding Band', ab: fieldAbility('Klutz')})), -Math.floor(max / (gen >= 6 ? 8 : 16)));
+  }
+});
+
+await test('seed transfer, Big Root rounding, Liquid Ooze and Magic Guard on either side', () => {
+  engine.init(fieldGuide, profiles.expansion);
+  const seeded = set('Snorlax');
+  const healer = set('Blastoise', {it: 'Big Root', ev: [48, 0, 0, 0, 0, 0]});
+  const seed = Math.floor(engine.stats(seeded)[0] / 8);
+  assert.equal(engine.residual(healer, {defSeeded: true}, seeded)[0].v[0], Math.floor(seed * 13 / 10));
+  const ooze = {...seeded, ab: fieldAbility('Liquid Ooze')};
+  assert.equal(engine.residual(healer, {defSeeded: true}, ooze)[0].v[0], -Math.floor(seed * 13 / 10));
+  const guard = fieldAbility('Magic Guard');
+  assert.deepEqual(plain(engine.residual({...healer, ab: guard}, {defSeeded: true}, ooze)), []);
+  assert.deepEqual(plain(engine.residual(healer, {defSeeded: true}, {...seeded, ab: guard})), []);
+  assert.deepEqual(plain(engine.residual({...seeded, ab: guard}, {atkSeeded: true})), []);
+  const healing = plain(engine.residual(healer, {atkIngrain: true, atkAquaRing: true}));
+  assert.equal(engine.stats(healer)[0], 160);
+  assert.deepEqual(healing.map(part => part.v[0]), [13, 13]);
+  const blocked = plain(engine.residual({...healer, ab: guard}, {atkTrapped: true, atkSeeded: true,
+    atkSaltCure: true, atkCursed: true, atkNightmare: true, atkSeaOfFire: true, atkIngrain: true}));
+  assert.deepEqual(blocked.map(part => part.l), ['Ingrain']);
+  const asleep = set('Snorlax', {st: 'slp'});
+  assert.equal(engine.residual(asleep, {}, set('Gengar', {ab: fieldAbility('Bad Dreams')}))[0].l, 'Bad Dreams');
+  assert.equal(engine.residual({...asleep, st: '', ab: fieldAbility('Comatose')}, {}, set('Gengar', {ab: fieldAbility('Bad Dreams')}))[0].l, 'Bad Dreams');
+  assert.deepEqual(plain(engine.residual(set('Snorlax'), {}, set('Gengar', {ab: fieldAbility('Bad Dreams')}))), []);
+});
+
+await test('field speed includes stages, Swamp, Tailwind, paralysis, weather and items', () => {
+  engine.init(fieldGuide, profiles.expansion);
+  const target = set('Blastoise');
+  const raw = engine.stats(target)[5];
+  assert.equal(engine.speed(target), raw);
+  assert.equal(engine.speed(target, {atkSwamp: true}), Math.ceil(raw / 4 - 0.5));
+  assert.equal(engine.speed(target, {atkSwamp: true, atkTailwind: true}), Math.ceil(raw / 2 - 0.5));
+  assert.equal(engine.speed(target, {defSwamp: true}), raw);
+  assert.equal(engine.speed(target, {defSwamp: true}, 'def'), Math.ceil(raw / 4 - 0.5));
+  assert.equal(engine.speed({...target, ab: fieldAbility('Swift Swim')}, {weather: 'Rain', atkSwamp: true}), Math.ceil(raw / 2 - 0.5));
+  assert.equal(engine.speed({...target, st: 'par'}, {atkSwamp: true}), Math.floor(Math.ceil(raw / 4 - 0.5) / 2));
+  assert.equal(engine.speed({...target, it: 'Choice Scarf'}, {atkSwamp: true}), Math.ceil(raw * 3 / 8 - 0.5));
+  assert.equal(engine.speed({...target, stg: [0, 0, 0, 0, 0, 2]}, {atkSwamp: true}), Math.ceil(raw / 2 - 0.5));
+  const gyro = field => engine.calc(set('Snorlax'), target, slot('Gyro Ball'), field).bp;
+  assert.ok(gyro({defSwamp: true}) < gyro({}), 'Swamp changes internal speed-dependent power too');
+});
+
+await test('direct field inputs work without profile entries across all engine generations', () => {
+  for (const gen of [4, 5, 6, 7, 8, 9]) {
+    engine.init(fieldGuide, {...profiles.expansion, gen, field: []});
+    const attack = (name, defender, field, attacker = set('Snorlax')) => plain(engine.calc(attacker, defender, slot(name), field));
+    assert.equal(attack('Tackle', set('Gengar'), {}).max, 0);
+    assert.ok(attack('Tackle', set('Gengar'), {defForesight: true}).max > 0);
+    assert.equal(attack('Psychic', set('Umbreon'), {}).max, 0);
+    assert.ok(attack('Psychic', set('Umbreon'), {defMiracleEye: true}).max > 0);
+    const normal = attack('Thunderbolt', set('Blastoise'), {});
+    const charged = attack('Thunderbolt', set('Blastoise'), {atkCharge: true});
+    assert.ok(charged.min > normal.max);
+    const fire = attack('Flamethrower', set('Blastoise'), {});
+    const tar = attack('Flamethrower', set('Blastoise'), {defTarShot: true});
+    assert.equal(tar.eff, fire.eff * 2);
+    assert.ok(tar.min > fire.max);
+    const glaive = attack('Tackle', set('Blastoise'), {defGlaiveRush: true});
+    const base = attack('Tackle', set('Blastoise'), {});
+    assert.deepEqual(glaive.rolls, base.rolls.map(value => value * 2));
+    assert.equal(attack('Tackle', set('Blastoise'), {defProtect: true}).max, 0);
+    const levitate = set('Gengar', {ab: fieldAbility('Levitate')});
+    assert.equal(attack('Earthquake', levitate, {}).max, 0);
+    assert.ok(attack('Earthquake', levitate, {defGrounded: true}).max > 0);
+    assert.ok(attack('Earthquake', levitate, {defIngrain: true}).max > 0);
+    assert.equal(attack('Earthquake', set('Blastoise'), {defMagnetRise: true}).max, 0);
+    assert.equal(attack('Earthquake', set('Blastoise'), {defTelekinesis: true}).max, 0);
+    assert.ok(attack('Earthquake', set('Blastoise'), {defMagnetRise: true, defGrounded: true}).max > 0);
+    assert.ok(attack('Earthquake', set('Charizard'), {defGrounded: true}).max > 0);
+    assert.ok(attack('Earthquake', set('Charizard'), {defRoost: true}).max > 0);
+    const pureFlying = fieldGuide.P.find(species => species.t.length === 1 && species.t[0] === 'Flying');
+    assert.ok(pureFlying, 'fixture has a pure Flying species');
+    assert.ok(attack('Earthquake', {id: pureFlying.id, lv: 50, ab: -1}, {defRoost: true}).max > 0);
+    if (gen >= 6) assert.ok(attack('Thousand Arrows', set('Blastoise'), {defTelekinesis: true}).max > 0);
+    if (gen >= 5) assert.ok(attack('Earthquake', set('Blastoise', {it: 'Air Balloon'}), {defGrounded: true}).max > 0);
+  }
+});
+
+await test('volatile Ground immunity and Tar Shot survive inverse chart rules in the right order', () => {
+  engine.init(fieldGuide, {...profiles.expansion, over: {rules: [{phase: 'effectiveness',
+    when: {ref: 'input.field.inverse'}, value: {op: 'if', args: [
+      {op: 'eq', args: [{ref: 'value'}, 0]}, 2, {op: 'div', args: [1, {ref: 'value'}]},
+    ]}}]}});
+  const attack = (move, defender, values) => engine.calc(set('Snorlax'), set(defender), slot(move), {inverse: true, ...values});
+  assert.equal(attack('Earthquake', 'Blastoise', {defMagnetRise: true}).max, 0);
+  assert.equal(attack('Earthquake', 'Blastoise', {defTelekinesis: true}).max, 0);
+  assert.equal(attack('Earthquake', 'Charizard', {defGrounded: true}).eff, 0.5);
+  assert.equal(attack('Psychic', 'Umbreon', {defMiracleEye: true}).eff, 1);
+  assert.equal(attack('Tackle', 'Gengar', {defForesight: true}).eff, 1);
+  const plainFire = attack('Flamethrower', 'Blastoise', {});
+  assert.equal(attack('Flamethrower', 'Blastoise', {defTarShot: true}).eff, plainFire.eff * 2);
+});
+
+await test('hazards are pure, side-specific and generation-aware, including engine-only Steelsurge', () => {
+  const target = set('Snorlax');
+  for (const gen of [4, 5, 6, 7, 8, 9]) {
+    engine.init(fieldGuide, {...profiles.expansion, gen});
+    const max = engine.stats(target)[0];
+    const field = {defStealthRock: true, defSpikes: 3, defToxicSpikes: 2, defStickyWeb: true, defSteelsurge: true};
+    const before = JSON.stringify({target, field});
+    assert.deepEqual(plain(engine.entry(target, field)), {parts: []});
+    const result = plain(engine.entry(target, field, 'def'));
+    assert.deepEqual(result.parts, [
+      {l: 'Stealth Rock', v: -Math.floor(max / 8)},
+      ...(gen >= 8 ? [{l: 'Steelsurge', v: -Math.floor(max / 8)}] : []),
+      {l: 'Spikes', v: -Math.floor(max / 4)},
+    ]);
+    assert.equal(result.status, 'tox');
+    assert.equal(result.spe, gen >= 6 ? -1 : undefined);
+    assert.equal(JSON.stringify({target, field}), before);
+    for (const [layers, divisor] of [[1, 8], [2, 6], [3, 4]]) {
+      assert.equal(engine.entry(target, {atkSpikes: layers}).parts[0].v, -Math.floor(max / divisor));
+    }
+    assert.equal(engine.entry(target, {atkToxicSpikes: 1}).status, 'psn');
+    assert.equal(engine.entry({...target, st: 'brn'}, {atkToxicSpikes: 2}).status, undefined);
+    assert.equal(engine.entry(set('Metagross'), {atkToxicSpikes: 2}).status, undefined);
+    assert.equal(engine.entry(set('Gengar'), {atkToxicSpikes: 2}).status, undefined);
+    assert.deepEqual(plain(engine.entry(set('Charizard'), {atkSpikes: 3, atkToxicSpikes: 2, atkStickyWeb: true})), {parts: []});
+    assert.ok(engine.entry(set('Charizard'), {atkSpikes: 3, atkGrounded: true}).parts.length);
+    assert.deepEqual(plain(engine.entry({...target, ab: fieldAbility('Levitate')}, {atkSpikes: 3})), {parts: []});
+    assert.deepEqual(plain(engine.entry(target, {atkSpikes: 3, atkMagnetRise: true})), {parts: []});
+    const charizard = set('Charizard');
+    assert.equal(engine.entry(charizard, {atkStealthRock: true}).parts[0].v, -Math.floor(engine.stats(charizard)[0] / 2));
+    if (gen >= 8) assert.deepEqual(plain(engine.entry({...target, it: 'Heavy-Duty Boots'}, field, 'def')), {parts: []});
+    const guard = plain(engine.entry({...target, ab: fieldAbility('Magic Guard')}, field, 'def'));
+    assert.deepEqual(guard.parts, []);
+    assert.equal(guard.status, 'tox');
+  }
+});
+
+await test('Protect admits only quarter-strength Z damage; residual immunity respects effective held items', () => {
+  engine.init(fieldGuide, {...profiles.expansion, gen: 7, zmove: true, field: []});
+  const attacker = set('Snorlax', {it: 'Electrium Z'});
+  const defender = set('Blastoise');
+  const z = slot('Thunderbolt', {z: true});
+  const base = engine.calc(attacker, defender, z);
+  const protectedZ = engine.calc(attacker, defender, z, {defProtect: true});
+  assert.ok(protectedZ.min > 0);
+  assert.deepEqual(plain(protectedZ.rolls), plain(base.rolls).map(value => Math.max(1, Math.floor(value / 4))));
+  engine.init(fieldGuide, profiles.expansion);
+  const band = set('Snorlax', {it: 'Binding Band'});
+  const max = engine.stats(defender)[0];
+  assert.equal(engine.residual(defender, {atkTrapped: true, magicRoom: true}, band)[0].v[0], -Math.floor(max / 8));
+  const balloon = {...defender, it: 'Air Balloon'};
+  assert.deepEqual(plain(engine.residual(balloon, {terrain: 'Grassy'})), []);
+  assert.equal(engine.residual(balloon, {terrain: 'Grassy', magicRoom: true})[0].l, 'Grassy Terrain');
+  assert.equal(engine.residual(balloon, {terrain: 'Grassy', atkGrounded: true})[0].l, 'Grassy Terrain');
+  assert.deepEqual(plain(engine.residual(defender, {terrain: 'Grassy', atkTelekinesis: true})), []);
+});
+
+await test('entry immunity, grounding overrides and absolute Web stages do not invent reciprocal effects', () => {
+  engine.init(fieldGuide, profiles.expansion);
+  const field = {atkStickyWeb: true, atkToxicSpikes: 2};
+  const boosted = set('Snorlax', {stg: [0, 0, 0, 0, 0, 5]});
+  assert.equal(engine.entry(boosted, field).spe, -1);
+  assert.equal(boosted.stg[5], 5);
+  assert.equal(engine.entry({...boosted, ab: fieldAbility('Contrary')}, field).spe, 1);
+  for (const name of ['Clear Body', 'White Smoke', 'Full Metal Body', 'Mirror Armor']) {
+    assert.equal(engine.entry({...boosted, ab: fieldAbility(name)}, field).spe, undefined, name);
+  }
+  assert.equal(engine.entry({...boosted, it: 'Clear Amulet'}, field).spe, undefined);
+  assert.equal(engine.entry({...boosted, ab: fieldAbility('Immunity')}, field).status, undefined);
+  assert.equal(engine.entry({...boosted, ab: fieldAbility('Purifying Salt')}, field).status, undefined);
+  assert.equal(engine.entry({...boosted, ab: fieldAbility('Comatose')}, field).status, undefined);
+  assert.equal(engine.entry(boosted, {...field, terrain: 'Misty'}).status, undefined);
+  assert.equal(engine.entry({...boosted, ab: fieldAbility('Leaf Guard')}, {...field, weather: 'Sun'}).status, undefined);
+  assert.equal(engine.entry({...boosted, it: 'Heavy-Duty Boots', ab: fieldAbility('Klutz')}, field).spe, -1);
+  assert.equal(engine.entry({...boosted, it: 'Heavy-Duty Boots'}, {...field, magicRoom: true}).spe, -1);
+  assert.equal(engine.entry(set('Charizard', {it: 'Iron Ball'}), {...field, atkMagnetRise: true}).spe, -1);
+  assert.equal(engine.entry(boosted, {...field, atkMagnetRise: true, gravity: true}).spe, -1);
+  assert.equal(engine.entry(boosted, {...field, atkTelekinesis: true}).spe, undefined);
+  const snapshot = JSON.stringify(field);
+  engine.entry(set('Gengar'), field);
+  assert.equal(JSON.stringify(field), snapshot, 'Poison entrants do not absorb layers');
+  assert.equal(engine.entry(boosted, field).spe, -1, 'reapplication remains absolute');
+});
+
+await test('KO residuals read both cards and the defending field only', () => {
+  engine.init(fieldGuide, profiles.expansion);
+  const attacker = set('Snorlax', {it: 'Binding Band'});
+  const defender = set('Blastoise');
+  const active = engine.calc(attacker, defender, slot('Tackle'), {defTrapped: true});
+  assert.deepEqual(plain(active.eot), [{l: 'Trapped', v: Array(4).fill(-Math.floor(engine.stats(defender)[0] / 6))}]);
+  assert.equal(engine.calc(attacker, defender, slot('Tackle'), {atkTrapped: true}).eot, undefined);
+  const seeded = engine.calc(attacker, defender, slot('Tackle'), {atkSeeded: true});
+  assert.equal(seeded.eot[0].v[0], Math.floor(engine.stats(attacker)[0] / 8));
+  const original = JSON.stringify({attacker, defender});
+  engine.residual(defender, {defSeeded: true}, attacker, 'def');
+  engine.speed(attacker, {atkSwamp: true});
+  assert.equal(JSON.stringify({attacker, defender}), original);
+});
+
 await test('initialisation and calculations leave guide/profile inputs unchanged', () => {
   assert.equal(JSON.stringify({data, profiles}), unchanged);
 });

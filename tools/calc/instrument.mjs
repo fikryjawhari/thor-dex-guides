@@ -21,8 +21,14 @@ function invocation(source, phase, value, state = '') {
 
 export function instrument(source, filename) {
   if (filename === 'util.ts') {
+    source = once(source, 'export function isGrounded(pokemon: Pokemon, field: Field) {',
+      `export function isGrounded(pokemon: Pokemon, field: Field) {
+  const guideGrounded = fieldGrounded(pokemon, field);
+  if (guideGrounded !== undefined) return guideGrounded;`);
+    source = once(source, '  // Pledge swamp would get applied here when implemented',
+      '  if ((side as any).isSwamp) speedMods.push(1024);');
     source = once(source, 'export function getMoveEffectiveness(', 'function guideOriginalEffectiveness(');
-    return `import {applyPhase} from 'guide-calc-rules';\n${source}\n
+    return `import {applyPhase, fieldGrounded} from 'guide-calc-rules';\n${source}\n
 export function getMoveEffectiveness(gen: any, move: any, type: any, revealed?: boolean, gravity?: boolean, ring?: boolean) {
   const value = guideOriginalEffectiveness(gen, move, type, revealed, gravity, ring);
   return applyPhase(gen, 'effectiveness', {move, state: {effectivenessType: type}}, value);
@@ -31,6 +37,10 @@ export function getMoveEffectiveness(gen: any, move: any, type: any, revealed?: 
   const suffix = filename === 'gen4.ts' ? 'DPP' : filename === 'gen56.ts' ? 'BWXY' : 'SMSSSV';
   const modern = suffix !== 'DPP';
   source = editFunction(source, `calculate${suffix}`, body => {
+    body = once(body, "!defender.hasItem('Iron Ball') && defender.hasAbility('Levitate'",
+      "!(defender as any).guideGrounded && !defender.hasItem('Iron Ball') && defender.hasAbility('Levitate'");
+    if (modern) body = once(body, "!field.isGravity && defender.hasItem('Air Balloon')",
+      "!field.isGravity && !(defender as any).guideGrounded && defender.hasItem('Air Balloon')");
     const criticalStart = body.indexOf('  const isCritical');
     const criticalEnd = body.indexOf(';', criticalStart) + 1;
     if (criticalStart === -1 || !criticalEnd) throw new Error('Missing critical point');

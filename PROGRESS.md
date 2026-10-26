@@ -40,33 +40,38 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
 2. **Damage calc with save import** (start every calc session from `plans/damage-calc-sessions.md`; `plans/damage-calc.md`; branch `worktree-damage-calc`, pushed, not merged).
-   UI build active on `worktree-damage-calc-toggles` (Sol, 2026-10-26): engine pass merged at `f3203b1`, Hardlove
-   source inputs copied; card/layout and two-column field implementation built. Card/side-mapping scenarios (12)
-   and four guides' field/profile checks (32) pass. Move-state, total-hit damage, compact Draco and crit/pre wiring
-   implemented; state scenarios pass 24/10/10/10 across the four guides, including wide-resize paired editors.
-   Engine suite, residual (40), Imperium controls (10), layout (36), triple/power (20), Metronome-holder checks pass.
-   Full gate: 88/117 pass; eight expected Calc-only DOM differences (19,840 unaffected route/mode comparisons identical,
-   zero page errors) plus 21 EI-only fixture failures on other guides, reproduced against baseline. Details and evidence:
-   plans/calc-state-toggles.md -> Audit record. No engine edits. User approved the built UI on 2026-10-26 except
-   First turn out / Disguised checkbox: move left of Edit without increasing card height/size. Not implemented;
-   next-session handover (UI fix, original engine follow-ups, field automation, checks): plans/calc-handover.md.
+   Compact UI and field-state builds complete on `worktree-damage-calc-toggles` (Sol, 2026-10-26). The user
+   approved the corrected phone previews and requested a commit; merge happens in a separate session.
+   The earlier engine pass merged at `f3203b1`.
+   Header placement, compact editors, total-hit damage, Draco and crit/pre controls are wired. New folded States /
+   Turn end / Hazards controls stay inside the minimum window. Phone feedback fixes preserve field-toggle row
+   heights on press and top-pack player-box rows; accepted control sizes and group arrangements stay unchanged.
+   Entry damage applies once on selection; manual HP edits re-arm Apply hazards. Poison / Sticky Web reapply
+   independently without repeating damage. Steelsurge is
+   engine-only; source-gated controls and existing storage keys are preserved. Full engine suite passes (96 groups,
+   41 stock parity cases, all four hack/state suites); existing calc-state checks pass 118 across the four guides.
+   Field-state build/audit evidence: `plans/calc-field-states.md`. Earlier compact-pass gate: 88/117, with eight
+   expected Calc-only differences and 21 baseline EI-only fixture failures on other guides (details in
+   `plans/calc-state-toggles.md`). Original engine follow-ups and trainer-field automation remain separate:
+   `plans/calc-handover.md`. Merge this tab into `worktree-damage-calc` only when authorised, not directly to main.
    Built phone previews:
-   https://windows-pc.tail1846b8.ts.net/preview/calc-state-built.html (EI),
-   https://windows-pc.tail1846b8.ts.net/preview/calc-state-photonic.html (Z controls).
+   https://windows-pc.tail1846b8.ts.net/preview/calc-field-states.html (EI),
+   https://windows-pc.tail1846b8.ts.net/preview/calc-field-hardlove.html (Hardlove),
+   https://windows-pc.tail1846b8.ts.net/preview/calc-field-photonic.html (Photonic/Z),
+   https://windows-pc.tail1846b8.ts.net/preview/calc-field-eternal.html (Eternal).
    Approval mockup phone preview:
    `https://windows-pc.tail1846b8.ts.net/preview/calc-state-edit.html` (ten viewer-size/mode mock checks pass;
    fourth move at 309 px at minimum size). Tap residual amount to apply a turn directly; cycle Download; full-width
    Singles/Doubles switch above Weather/Terrain. Scope/engine triage:
    `plans/calc-state-toggles.md` -> Build status. Additional Thor feedback is recorded there; trainer-field is a
-   later sequential decide/build on this branch. No engine edits planned: Return/Frustration defaults deferred;
+   later sequential decide/build on this branch. Return/Frustration defaults deferred;
    Power-Up Punch and Stamina already affect later hits; Loaded Dice/Skill Link selection restrictions are UI;
    Emperor's Presence already has self/ally rules. Verify these in the page before treating them as engine defects.
    Refinement done 2026-10-26 (`plans/damage-calc-sessions.md` → Status). Engine pass (`plans/calc-engine-pass.md`,
    brief + Progress log) done 2026-10-26: battle-state inputs (`slot.st`, `slot.curl`, `slot.met`, `atk.fnt`, `def.vol`),
    result `bp` / `crit {stage, p, forced}` / `pre`, `MV.cr` in every calc guide's data, 2322 state fixtures
-   (`calc_states.json`, in `npm test`); contract in `tools/calc/README.md`. The page doesn't use the new inputs or
-   results yet: that is the toggle UI build (`plans/calc-state-toggles.md` on `worktree-damage-calc-toggles`), which
-   also adds the per-Pokémon Download choice and the Intrepid Sword / Dauntless Shield off switch (`dl`, `entry`).
+   (`calc_states.json`, in `npm test`); contract in `tools/calc/README.md`. The toggle UI build now uses these inputs
+   and results, including per-Pokémon Download and the Intrepid Sword / Dauntless Shield off switch (`dl`, `entry`).
    Then trainer-field / turn-order UI decide sessions, merge, then save readers.
    In-game tests to run on the Thor: each guide's notes.md → Damage calc → In-game tests.
    Built 2026-10-25 (step 1 of its Order): `@smogon/calc` engine using each guide's own data (`tools/calc/`, 81 tests),

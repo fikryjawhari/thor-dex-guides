@@ -103,10 +103,33 @@ Player/Foe columns. Stored `atk*` means Player and `def*` means Foe; the page re
 attacker-relative state migrates once, using its saved direction. Focus Energy is offered on both sides in every
 profile. Automatic trainer/ability/item field provenance remains a later decide/build, not inferred here.
 Field toggles never break a word: the narrowest box is the widest single word of any toggle (measured in the page's
-font at render, so text zoom counts), every toggle grid uses that width and fits as many columns as there is room
+font at render, so text zoom counts), each toggle grid uses its own measured width and fits as many columns as there is room
 (`auto-fit`), so a narrow grid becomes rows. Where a side column would hold one box per row (the minimum window, 206 px
 of Field), a Player | Foe switch shows one side at full width (the count of its active toggles on each button; the
 choice is not stored). Weather/Terrain have no caption: the empty choice reads "No weather" / "No terrain".
+**Stackable states** (2026-10-26): `template/calc/field-states.json` defines side controls; `assemble.py` adds only
+those supported by the guide's moves / causing abilities and generation (Protect additionally needs `zmove`). The engine accepts
+these keys independently of UI availability. Dig / Fly / Dive / Minimized / Switching out remain the exclusive
+Edit selection. Other states fold under States, Turn end and Hazards, with active counts; fold state is session-only.
+The closed group headings share one row so the minimum-size Field fits without scrolling. Expanded groups stay
+inside that one-window Field, scrolling its body when needed; opening a group brings its controls into view.
+Field content does not flex-shrink; toggle rows keep their natural wrapped-label height when pressed or redrawn.
+The player's Pokemon box packs compact rows against its top edge, leaving any spare height below the last row.
+Turn-end parts now include trapping (the opposing holder's Binding Band), Leech Seed transfer (Big Root / Liquid
+Ooze / Magic Guard), Salt Cure, Ghost Curse, sleeping Nightmare, Ingrain, Aqua Ring, pledge fire and automatic Bad
+Dreams. Speed uses the engine's final field-aware value, including Swamp. All side utilities use fixed Player/Foe
+prefixes; attack calculation still remaps them for the chosen direction.
+**Entry hazards**: Rocks and Spikes subtract HP once on team/strip selection, never on redraw, direction change
+or reload. Toxic Spikes sets Poison / Bad poison once; Poison entrants do not consume its layers. Sticky Web sets
+the absolute Speed stage to -1 (the engine respects drop immunity and Contrary), not current stage minus one.
+Manual HP entry / Full HP, status changes and stage changes independently re-arm damage, poison and Web for the
+**Apply hazards** button inside Hazards. Re-poisoning or resetting Web never subtracts already-applied Rocks again.
+Layer toggles cycle 0-3 / 0-2 and only configure the field; changing them makes the relevant component available
+to apply. Existing calc storage also keeps entry markers, so manual overrides survive reload. Hazards never appear
+in turn-end parts or the HP-line residual amount. No White Herb consumption or reciprocal stat-drop effects are
+simulated. Steelsurge is engine-only, with no control in any current or planned guide.
+Checks: `tools/scenarios/calc-field-states.mjs` (entry, reapply, persistence, side mapping, groups and availability),
+plus `tools/calc/test.mjs` (mechanics and generation splits).
 **One window**: an open card (Edit), the open Field and an open move each fit one window at the minimum height
 (316 px) at every width: the full name shares its line with Save/Reset, Type/Power/Hits share a row, the move's full
 name shares its line with Change (and Reset), per-hit range and rolls share a line. Check: `calc-state.mjs` one-window.

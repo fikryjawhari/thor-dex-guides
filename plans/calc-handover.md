@@ -5,10 +5,11 @@
 - Branch: `worktree-damage-calc-toggles`, a tab of `worktree-damage-calc`. Keep the T3 thread bound to this tree;
   do not silently change checkouts. Use Sol in the main chat, keep discussion short, check both claim paths and
   claim `.claude/claim`. Only one session edits the template or engine/shared interfaces at a time.
-- The user approved the built UI on 2026-10-26 except the single placement/height issue below. They explicitly
-  asked this session to **write the handover, commit and push, without implementing anything further**.
-- The incoming engine/Hardlove 0.8.4 pass was merged at `f3203b1`. No engine implementation was changed by this
-  UI pass. Do not repeat that merge or restart the original mockup/approval step.
+- The compact UI pass and then `plans/calc-field-states.md` were built on 2026-10-26. The user approved the
+  corrected phone previews and authorised committing the field-state build, including engine changes.
+  The user will merge in a separate session. No push or merge is authorised in this session.
+- The incoming engine/Hardlove 0.8.4 pass was merged at `f3203b1`. Do not repeat that merge or restart the
+  original mockup/approval step. The later field-state build adds its own engine mechanics and fixtures.
 - Read `AGENTS.md`, the guide skill and its viewer reference, `PROGRESS.md` Open 2, `plans/calc-state-toggles.md`
   (settled choices and Audit record), `template/README.md` Damage calculator, and the engine contract in
   `tools/calc/README.md` Battle state / Crit / Stat changes before the hit.
@@ -29,8 +30,17 @@
 - Then (same day): toxic turn box on the HP line, Edit's residual parts folded behind Turn end, stage buttons one
   size, search by move / item / ability, text-zoom refit, Find trainer guard for an empty team. The preview panel's
   All preset (also the fresh-load default) loads every preset as the team.
-- **Next session: build `plans/calc-field-states.md`** (stackable states, pledge fields, hazards; engine + UI). It
-  has one open question to ask first (how Stealth Rock / Spikes damage shows).
+- **Field states are now built**, including folded States / Turn end / Hazards, source-gated controls, entry
+  hazards and side-aware speed/residuals. Rocks / Spikes apply once on actual selection, never as residuals.
+  Direct HP / Full HP edits re-arm damage; Apply hazards explicitly reapplies it. Status and Web have separate
+  markers, so clearing poison or replaying Speed does not repeat Rocks. Web sets an absolute -1 (+1 for Contrary).
+  Steelsurge is engine-only. Reload and redraw preserve the entry markers in the existing calc storage.
+- The field build's evidence is in `plans/calc-field-states.md`. The user approved the corrected previews; next,
+  merge this tab into `worktree-damage-calc` in the separate merge session. Original verification / automation work below
+  stays separate; no new decide session is needed for the settled entry-hazard behaviour.
+- Phone feedback fixes: field children/rows keep natural heights on press/redraw, while player-box rows pack
+  to the top instead of spreading spare height between them. Existing control sizes, the three-across closed
+  headings and stacked expanded groups stay unchanged. Same preview links; reload to test on Safari/Thor.
 
 ## What is already built and accepted
 - Direct turn application by tapping the residual amount on the HP line; residual parts/toxic counter in Edit.
@@ -119,8 +129,10 @@ User requirements to settle in a mockup/spec before implementation:
   EI's missing `moves_info.h` was restored from the exact documented pinned upstream commit in ignored sources.
   Do not commit raw sources or assume another checkout has them. Use each hack's SOURCES.md if recovery is needed.
 - Built previews (not the old illustrative mockup):
-  - https://windows-pc.tail1846b8.ts.net/preview/calc-state-built.html (EI).
-  - https://windows-pc.tail1846b8.ts.net/preview/calc-state-photonic.html (Photonic/Z).
+  - https://windows-pc.tail1846b8.ts.net/preview/calc-field-states.html (EI).
+  - https://windows-pc.tail1846b8.ts.net/preview/calc-field-hardlove.html (Hardlove).
+  - https://windows-pc.tail1846b8.ts.net/preview/calc-field-photonic.html (Photonic/Z).
+  - https://windows-pc.tail1846b8.ts.net/preview/calc-field-eternal.html (Eternal).
 - Live preset panel: `plans/calc-state-toggles-mockup/built-panel.html`. Clicking a preset replaces preview test
   sets. Reload restores the calc route. Toxic has no item so its negative amount is visible. Sword uses a test
   Snorlax with Intrepid Sword; unsupported guide presets report unavailable, not an engine failure.
@@ -133,9 +145,9 @@ User requirements to settle in a mockup/spec before implementation:
 ## Commits and merge order
 - Recent checkpoints: `0d8c729` cards/layout, `4e2b3df` fields, `44a92a7` moves/hits, `2ad92ce` scenarios/docs,
   `f9ea0be` live presets, `76ad8c1` resize refinement, `ea52c35` audit, `3078493` frame/preset validation.
-- This handover is being committed and pushed with the user's explicit approval, including the UI implementation
-  and incoming engine merge. Check the actual remote head before resuming; report a failed push rather than
-  assuming this note proves it succeeded. Make frequent focused commits; ask before **every subsequent push**.
+- These checkpoints describe the earlier compact pass. The later field-state build and phone fixes are included
+  in the user-authorised field-state commit; check git log/status and the actual remote head before merging.
+  No push was requested for that commit. Ask before every push.
 - No merges/deletions now. Once the remaining UI/engine work is settled and checked: this tab branch merges into
   `worktree-damage-calc`, then that branch into `main`, with rebuild/audit and explicit push approval. Never merge
   this tab directly into main. Fold durable decisions into the READMEs; delete completed plans only when merged.

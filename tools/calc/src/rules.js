@@ -4,6 +4,30 @@ const phases = new Set(['hits', 'beforeStats', 'afterMoveType', 'effectiveness',
 const forbidden = new Set(['__proto__', 'prototype', 'constructor', 'gen']);
 const writeRoots = new Set(['atk', 'def', 'move', 'field', 'state', 'desc', 'value']);
 
+export function fieldGrounded(mon, field) {
+  if (field.isGravity || mon.guideGrounded || (mon.hasItem('Iron Ball') && !mon.hasAbility('Klutz') && !field.isMagicRoom)) return true;
+  if (mon.guideAirborne) return false;
+  return undefined;
+}
+
+function fieldPhase(gen, phase, context, after = false) {
+  const values = context.input.field;
+  if (phase === 'effectiveness') {
+    const type = context.state.effectivenessType;
+    if (context.move.hasType('Ground')) {
+      const grounded = fieldGrounded(context.def, context.field);
+      if (after && grounded === false && !context.move.named('Thousand Arrows')) context.value = 0;
+      else if (!after && grounded && type === 'Flying') context.value = 1;
+    }
+    if (!after && values.defMiracleEye && type === 'Dark' && context.move.hasType('Psychic')) context.value = 1;
+    if (after && values.defTarShot && context.move.hasType('Fire') && type === context.def.types[0]) context.value *= 2;
+  }
+  if (!after && phase === 'finalMods' && values.defGlaiveRush) {
+    context.value.push(gen.num === 4 ? 2 : 8192);
+    context.state.fieldGlaiveApplied = true;
+  }
+}
+
 function parts(path) {
   if (typeof path !== 'string' || !path.length) throw new Error('DMG rule: expected a path');
   const keys = path.split('.');
@@ -98,6 +122,7 @@ export function applyPhase(gen, phase, local, value) {
   const context = {...base, ...local, state, value};
   context.atk = context.attacker || base.atk;
   context.def = context.defender || base.def;
+  fieldPhase(gen, phase, context);
   if (local?.desc) base.desc = local.desc;
   if (phase === 'afterMoveType') base.move = context.move;
   for (const rule of gen.guideRules?.[phase] || []) {
@@ -115,6 +140,7 @@ export function applyPhase(gen, phase, local, value) {
     for (const node of rule.append || []) context.value.push(expression(node, context));
     if (rule.note) base.notes.add(String(expression(rule.note, context)));
   }
+  fieldPhase(gen, phase, context, true);
   if (phase === 'critical') state.isCritical = context.value;
   if (phase === 'movePower') {
     state.basePower = context.value;

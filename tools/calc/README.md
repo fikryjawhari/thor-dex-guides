@@ -84,8 +84,9 @@ explicitly mapped in `over`. Unrecognised item/ability names have no effect.
 
 ## Public contract
 
-`window.DMG` contains exactly `init(D, prof)`, `stats(set)` and
-`calc(atk, def, slot, field)`, as specified in `plans/damage-calc.md`.
+`window.DMG` exposes `init(D, prof)`, `stats(set)`, `calc(atk, def, slot, field)`,
+`residual(set, field = {}, otherSet = null, side = 'atk')`,
+`speed(set, field = {}, side = 'atk')` and `entry(set, field = {}, side = 'atk')`.
 Initialisation replaces all guide state and clears KO caches. It does not change
 the supplied data/profile. `stats` returns unstaged `[HP, Atk, Def, SpA, SpD, Spe]`.
 An absent ability means none, not the species' default. Defaults are level 50,
@@ -199,11 +200,83 @@ Smogon Field property for `side: "field"`, or a Side property for `atk`/`def`.
 For example `defReflect` maps to `defenderSide.isReflect`, and `atkHelpingHand`
 to `attackerSide.isHelpingHand`. These are relative to the **current attack**:
 the UI must exchange atk/def entries when calculating in the other direction.
-Select values must be in the entry's `o` list. Unknown keys are ignored.
+Select values must be in the entry's `o` list. Unknown keys are ignored, except
+the built-in side-state keys below, which work independently of profile field entries.
 No terrain/Aurora Veil is declared before its generation. Type availability is
 driven by `TC`, not the field list; without a guide chart the stock generation
-has no Fairy before Gen 6. Tailwind affects the engine's internal speed checks;
-the UI's displayed speed is outside `DMG.stats`, which is intentionally unstaged.
+has no Fairy before Gen 6. Tailwind and Swamp affect internal speed checks and
+`DMG.speed`; `DMG.stats` remains intentionally unstaged.
+
+### Stackable side states and hazards
+
+The engine accepts each of the following suffixes with `atk` or `def` prefixes,
+without requiring the profile to declare a UI control. UI availability belongs
+to the guide's generated profile; the engine does not read source-move lists.
+Fields remain relative to the current attack: exchange prefixes when reversing
+the matchup. `side` in the utility APIs selects which prefix describes `set`;
+`otherSet` uses the opposite prefix. Calls do not modify sets, field values,
+guide data or profiles.
+
+- Turn end: `Trapped`, `Seeded`, `SaltCure`, `Cursed`, `Nightmare`, `Ingrain`,
+  `AquaRing`, `SeaOfFire`. `residual` returns the existing array of
+  `{l, v: [turn1, turn2, turn3, turn4]}`; negative values are damage. Its existing
+  one/two-argument calls still describe the attacking side. The third argument
+  is now the opposing set, not an internal Smogon Pokemon. KO evaluation calls
+  `residual(def, field, atk, 'def')` and does not include entry hazards.
+- Trapping reads Binding Band from the opposing set, never the trapped set:
+  Gen 4 is 1/16, Gen 5 is 1/16 or 1/8 with the band, Gen 6+ is 1/8 or 1/6.
+  Seed damage is 1/8; the opposing seeded set supplies a matching recovery part,
+  with the recipient's active Big Root multiplying recovery by 1.3, floored
+  after the base fraction. Liquid Ooze reverses that recovery. Magic Guard
+  blocks residual damage, including Liquid Ooze, and prevents seed recovery
+  from a guarded source. Ingrain and Aqua Ring each restore 1/16, also using
+  Big Root. Salt Cure is 1/4 on Water/Steel and 1/8 otherwise; Curse/Nightmare
+  are 1/4 (Nightmare requires sleep or Comatose). Sea of Fire is 1/8 for
+  non-Fire types from Gen 5. Bad Dreams is automatic from the opposing ability
+  while asleep or Comatose. Item suppression and weather suppression apply.
+- Damage: `Charge`, `Protect`, `Foresight`, `MiracleEye`, `TarShot`,
+  `GlaiveRush`, `Roost`, `Grounded`, `MagnetRise`, `Telekinesis`. Charge and
+  Protect use the stock side flags, including quarter-strength Z damage through
+  Protect. Foresight removes Ghost's Normal/Fighting immunity; Miracle Eye
+  removes Dark's Psychic immunity. Tar Shot doubles Fire effectiveness once,
+  not once per defending type. Glaive Rush doubles damage, including the
+  reachable fixed-damage path. Roost removes Flying (pure Flying becomes Normal
+  in Gen 4, typeless thereafter). Grounded and Ingrain override Flying,
+  Levitate, Air Balloon, Magnet Rise and Telekinesis; Gravity and an effective
+  Iron Ball also ground. Magnet Rise/Telekinesis block Ground attacks unless
+  overridden or the move is Thousand Arrows. Grounding is shared by damage,
+  terrain and entry checks without changing unrelated defending types.
+  Type-removing states are applied before profile effectiveness rules; temporary
+  Ground immunity and Tar Shot's extra multiplier apply afterwards. Inverse
+  battles therefore do not turn Magnet Rise / Telekinesis into weaknesses or
+  invert Tar Shot's damage boost.
+- Speed: `Swamp` joins the stock speed-modifier chain at 1/4, so rounding,
+  Tailwind, stages, weather abilities, held items and paralysis remain stock.
+  `speed` returns the final numeric speed for display, not the unstaged stat.
+  Its single-set signature cannot inspect an opposing weather-suppressing
+  ability; callers should pass the effective weather when needed.
+- Entry: `StealthRock` (boolean), `Spikes` (0-3), `ToxicSpikes` (0-2),
+  `StickyWeb` (boolean), `Steelsurge` (boolean, engine only). `entry` returns
+  `{parts: [{l, v: number}], status?: 'psn' | 'tox', spe?: -1 | 1}`. Damage
+  is negative, separate from turn-end residuals and not applied by the engine.
+  Rock and Steel hazards use the guide chart and a 1/8 base fraction. Spikes
+  use 1/8, 1/6, 1/4 and require grounding. Effective Heavy-Duty Boots block all
+  entry effects from Gen 8; Magic Guard blocks damage, not poison or Web.
+  Toxic Spikes require grounding, an empty status, and no type/ability/terrain
+  poison immunity. Poison entrants never consume layers. Web requires grounding
+  and Gen 6+, respects stat-drop immunity and Clear Amulet, and returns an
+  **absolute** stage: -1 normally, +1 for Contrary, independent of the current
+  speed stage. There is no reciprocal/reflected Web effect and no White Herb
+  consumption. Rock/Toxic Spikes require Gen 4, Steelsurge Gen 8. Layer inputs
+  are integer-clamped; active hazards are never consumed.
+
+The engine still supports only Gen 4-9. The historical Gen 1 seed fraction and
+Gen 2-3 trapping branches are not reachable profiles and do not broaden support.
+These APIs report four static residual turns/one entry event; they do not advance
+turns, expire conditions, absorb Toxic Spikes, consume items, auto-clear trapping
+after switching/fainting, or simulate self stat-reactions such as Defiant.
+Callers apply returned parts with normal HP bounds and clear manual toggles.
+The focused field groups in `test.mjs` are included in `npm test`.
 
 ## Engine overrides (`prof.over`)
 

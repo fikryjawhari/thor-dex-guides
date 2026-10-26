@@ -5,7 +5,7 @@ import {Field} from '@smogon/calc/src/field';
 import {calculateDPP} from '@smogon/calc/src/mechanics/gen4';
 import {calculateBWXY} from '@smogon/calc/src/mechanics/gen56';
 import {calculateSMSSSV} from '@smogon/calc/src/mechanics/gen789';
-import {getModifiedStat, isGrounded} from '@smogon/calc/src/mechanics/util';
+import {getModifiedStat, getFinalSpeed, isGrounded, checkItem, checkForecast, checkAirLock} from '@smogon/calc/src/mechanics/util';
 import {applyPhase, prepareRules} from './rules.js';
 import {speciesName, weightNames} from './names.js';
 
@@ -173,6 +173,13 @@ function battleField(values) {
     target[entry.to] = entry.type === 'toggle' ? !!value : value;
   }
   const result = new Field(options);
+  for (const side of ['atk', 'def']) {
+    const target = side === 'atk' ? result.attackerSide : result.defenderSide;
+    for (const [key, property] of Object.entries({Charge: 'isCharge', Protect: 'isProtected',
+      Foresight: 'isForesight', Swamp: 'isSwamp'})) {
+      if (values[side + key] !== undefined) target[property] = !!values[side + key];
+    }
+  }
   for (const entry of profile.field || []) {
     const target = entry.side === 'atk' ? result.attackerSide : entry.side === 'def' ? result.defenderSide : result;
     const source = entry.side === 'atk' ? options.attackerSide : entry.side === 'def' ? options.defenderSide : options;
@@ -184,12 +191,75 @@ function battleField(values) {
 const typeChangers = ['Protean', 'Libero'];
 const changesType = (mon, set) => typeChangers.includes(data.AB?.[set.ab]?.[0]) || mon.hasAbility(...typeChangers);
 
-// End-of-turn HP change for one Pokémon, part by part: [{l, v: [turn 1..4]}], negative = damage. Mirrors stock
-// getEndOfTurn for the effects the page can state (no Leech Seed / trapping); the profile's `residual` adds a hack's
-// own abilities and statuses ({abilities: {Name: [sign, divisor]}, status: {key: [sign, divisor, label]}}).
-function residual(set, values = {}, mon = pokemon(set)) {
+function fieldPokemon(set, values, side) {
+  const mon = pokemon(set);
   if (set.pty && changesType(mon, set)) mon.types = [set.pty];
+  if (values[side + 'Roost'] && mon.hasType('Flying')) {
+    mon.types = mon.types.filter(type => type !== 'Flying');
+    if (!mon.types.length) mon.types = [profile.gen === 4 ? 'Normal' : '???'];
+  }
+  mon.guideGrounded = !!(values[side + 'Grounded'] || values[side + 'Ingrain']);
+  mon.guideAirborne = !!(values[side + 'MagnetRise'] || values[side + 'Telekinesis']);
+  return mon;
+}
+
+function speed(set, values = {}, side = 'atk') {
+  const mon = fieldPokemon(set, values, side);
   const field = battleField(values);
+  checkAirLock(mon, field);
+  checkForecast(mon, field.weather);
+  checkItem(mon, field.isMagicRoom);
+  return getFinalSpeed(generation, mon, field, side === 'def' ? field.defenderSide : field.attackerSide);
+}
+
+function entry(set, values = {}, side = 'atk') {
+  const mon = fieldPokemon(set, values, side);
+  const field = battleField(values);
+  checkItem(mon, field.isMagicRoom);
+  const result = {parts: []};
+  if (profile.gen >= 8 && mon.hasItem('Heavy-Duty Boots')) return result;
+  const max = mon.maxHP();
+  const damage = (label, divisor, effectiveness = 1) => {
+    if (!mon.hasAbility('Magic Guard') && effectiveness > 0) {
+      result.parts.push({l: label, v: -Math.max(1, Math.floor(max * effectiveness / divisor))});
+    }
+  };
+  const effectiveness = type => mon.types.reduce((total, target) =>
+    total * (generation.types.get(toID(type))?.effectiveness[target] ?? 1), 1);
+  const layers = (key, limit) => Math.max(0, Math.min(limit, Math.trunc(Number(values[side + key])) || 0));
+  if (profile.gen >= 4 && values[side + 'StealthRock']) damage('Stealth Rock', 8, effectiveness('Rock'));
+  if (profile.gen >= 8 && values[side + 'Steelsurge']) damage('Steelsurge', 8, effectiveness('Steel'));
+  if (!isGrounded(mon, field)) return result;
+  const spikes = layers('Spikes', 3);
+  if (spikes && profile.gen >= 2) damage('Spikes', [0, 8, 6, 4][spikes]);
+  const toxic = layers('ToxicSpikes', 2);
+  const poisonImmune = mon.hasType('Poison', 'Steel') || mon.hasAbility('Immunity', 'Pastel Veil', 'Comatose', 'Purifying Salt')
+    || (mon.hasAbility('Leaf Guard') && field.hasWeather('Sun', 'Harsh Sunshine'))
+    || (mon.hasAbility('Flower Veil') && mon.hasType('Grass'))
+    || (mon.hasAbility('Shields Down') && mon.name === 'Minior-Meteor');
+  if (profile.gen >= 4 && toxic && !mon.status && !poisonImmune && !field.hasTerrain('Misty')) {
+    result.status = toxic === 2 ? 'tox' : 'psn';
+  }
+  if (profile.gen >= 6 && values[side + 'StickyWeb']
+    && !mon.hasAbility('Clear Body', 'White Smoke', 'Full Metal Body', 'Mirror Armor')
+    && !(profile.gen >= 9 && mon.hasItem('Clear Amulet'))) result.spe = mon.hasAbility('Contrary') ? 1 : -1;
+  return result;
+}
+
+// End-of-turn HP change for one Pokémon, part by part: [{l, v: [turn 1..4]}], negative = damage. Mirrors stock
+// getEndOfTurn for the effects the page can state; the profile's `residual` adds a hack's
+// own abilities and statuses ({abilities: {Name: [sign, divisor]}, status: {key: [sign, divisor, label]}}).
+function residual(set, values = {}, otherSet = null, side = 'atk') {
+  const mon = fieldPokemon(set, values, side);
+  const otherSide = side === 'atk' ? 'def' : 'atk';
+  const other = otherSet ? fieldPokemon(otherSet, values, otherSide) : null;
+  const field = battleField(values);
+  checkAirLock(mon, field);
+  if (other) checkAirLock(other, field);
+  checkForecast(mon, field.weather);
+  if (other) checkForecast(other, field.weather);
+  checkItem(mon, field.isMagicRoom);
+  if (other) checkItem(other, field.isMagicRoom);
   const max = mon.maxHP();
   const guard = mon.hasAbility('Magic Guard');
   const items = !field.isMagicRoom && !mon.hasAbility('Klutz');
@@ -227,6 +297,32 @@ function residual(set, values = {}, mon = pokemon(set)) {
     (profile.gen > 6 ? 16 : 8) * (mon.hasAbility('Heatproof') ? 2 : 1));
   const ability = profile.residual?.abilities?.[data.AB?.[set.ab]?.[0]];
   if (ability) add(data.AB[set.ab][0], ability[0], ability[1]);
+  const active = key => !!values[side + key];
+  const root = items && mon.hasItem('Big Root');
+  const healing = label => {
+    const amount = Math.max(1, Math.floor(max / 16));
+    parts.push({l: label, v: Array(4).fill(root ? Math.floor(amount * 13 / 10) : amount)});
+  };
+  if (active('Trapped')) {
+    const band = other && holdsItem(other, field) && other.hasItem('Binding Band');
+    add('Trapped', -1, profile.gen >= 6 ? band ? 6 : 8 : profile.gen === 5 && band ? 8 : 16);
+  }
+  if (active('Seeded')) add('Leech Seed', -1, profile.gen === 1 ? 16 : 8);
+  if (other && values[otherSide + 'Seeded'] && !other.hasAbility('Magic Guard')) {
+    const amount = Math.max(1, Math.floor(other.maxHP() / (profile.gen === 1 ? 16 : 8)));
+    const value = root ? Math.floor(amount * 13 / 10) : amount;
+    if (!other.hasAbility('Liquid Ooze') || !guard) {
+      parts.push({l: other.hasAbility('Liquid Ooze') ? 'Leech Seed (Liquid Ooze)' : 'Leech Seed recovery',
+        v: Array(4).fill(other.hasAbility('Liquid Ooze') ? -value : value)});
+    }
+  }
+  if (active('SaltCure')) add('Salt Cure', -1, mon.hasType('Water', 'Steel') ? 4 : 8);
+  if (active('Cursed')) add('Curse', -1, 4);
+  if (active('Nightmare') && (mon.hasStatus('slp') || mon.hasAbility('Comatose'))) add('Nightmare', -1, 4);
+  if (active('Ingrain')) healing('Ingrain');
+  if (active('AquaRing')) healing('Aqua Ring');
+  if (profile.gen >= 5 && active('SeaOfFire') && !mon.hasType('Fire')) add('Sea of Fire', -1, 8);
+  if (other?.hasAbility('Bad Dreams') && (mon.hasStatus('slp') || mon.hasAbility('Comatose'))) add('Bad Dreams', -1, 8);
   return parts;
 }
 
@@ -534,13 +630,12 @@ function calc(atk, def, slot, values = {}) {
     && profile.over?.state?.[name] !== false ? pledgeType([PLEDGES[name], PLEDGES[slot.st]]) : '';
   const power = pledge ? 150 : state.power;
   if (!(Number(power) > 0)) return null;
-  const attacker = pokemon(atk);
-  const defender = pokemon(def);
+  const attacker = fieldPokemon(atk, values, 'atk');
+  const defender = fieldPokemon(def, values, 'def');
   const moveType = slot.t || pledge || moveData.type;
   // Protean / Libero: the attacker turns into the move's type (STAB and anything reading its type); a defender keeps
   // the type the page chose for it.
   if (changesType(attacker, atk)) attacker.types = [moveType];
-  if (def.pty && changesType(defender, def)) defender.types = [def.pty];
   if (pledge && !attacker.hasType(pledge)) attacker.types = [...attacker.types, pledge];
   if (atk.fnt > 0) attacker.alliesFainted = Math.min(5, Math.trunc(atk.fnt));
   const field = battleField(values);
@@ -588,6 +683,9 @@ function calc(atk, def, slot, values = {}) {
   const normalise = damage => typeof damage === 'number' ? Array(16).fill(damage) : [...damage];
   const per = Array.isArray(result.damage) && (Array.isArray(result.damage[0]) || result.damage.length === 2)
     ? result.damage.map(normalise) : Array.from({length: hits}, () => normalise(result.damage));
+  if (values.defGlaiveRush && !context.state.fieldGlaiveApplied) {
+    for (const hit of per) for (let index = 0; index < hit.length; index++) hit[index] *= 2;
+  }
   if (!per.every(rolls => rolls.length === 16 && rolls.every(value => Number.isInteger(value) && value >= 0))) {
     throw new Error(`DMG: invalid damage rolls for ${name}`);
   }
@@ -606,7 +704,7 @@ function calc(atk, def, slot, values = {}) {
   const description = result.rawDesc;
   const notes = [...context.notes];
   // Residual damage / recovery counts in the KO text only, never in the rolls or percentages.
-  const parts = residual(def, values);
+  const parts = residual(def, values, atk, 'def');
   const eot = [0, 1, 2, 3].map(turn => parts.reduce((sum, part) => sum + part.v[turn], 0));
   const current = Math.max(0, Math.min(defender.maxHP(), def.hp ?? defender.maxHP()));
   if (attacker.hasType(move.type) && max) notes.push('STAB');
@@ -638,4 +736,4 @@ function calc(atk, def, slot, values = {}) {
   };
 }
 
-window.DMG = {init, stats, calc, residual: (set, values) => residual(set, values)};
+window.DMG = {init, stats, calc, residual, speed, entry};
