@@ -358,6 +358,10 @@ const checks = [
     run: async page => {
       await setupCalc(page, { mine: ['party', 0] });
       await changeMove(page, 0, 'Earthquake');
+      // unsaved set edits go when the Pokémon is switched away (plans/calc-auto-effects.md): Save keeps Garchomp's move
+      await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
+      await page.tap('[data-a="esave"][data-s="mine"]');
+      await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
       await pickCell(page, 'party', 5);
       await changeMove(page, 1, 'Earthquake');
       await page.tap('.dres:not(.na) .rc', { index: 1 });

@@ -64,9 +64,12 @@ const checks = [{
       assert.equal(await page.count('.dmatch .cc[data-s="mine"] .cn .td'), 1, `${name}: dot on the name`);
       await page.reload();
       await page.route('#/calc');
-      assert.equal(await page.value(`(()=>{const s=CALC.state();return s.custom[s.custom.length-1].pty;})()`), 'Fire', `${name}: persisted`);
-      assert.equal(await page.count('.dmatch .cc[data-s="mine"] .cn .td'), 1, `${name}: dot after reload`);
+      // The chosen type is battle state (scratch, plans/calc-auto-effects.md): a reload starts fresh
+      assert.equal(await page.value(`CALC.mon('mine').pty||''`), '', `${name}: gone after a reload`);
+      assert.equal(await page.count('.dmatch .cc[data-s="mine"] .cn .td'), 0, `${name}: no dot after reload`);
       await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
+      await page.value(`(()=>{const s=document.querySelector('.ed [data-e="pty"]');s.value='Fire';s.dispatchEvent(new Event('change'));})()`);
+      assert.equal(await page.count('.dmatch .cc[data-s="mine"] .cn .td'), 1, `${name}: chosen again`);
       const other = await page.value(`[...document.querySelectorAll('.ed [data-e="ab"] option')].map(o=>o.value).find(v=>AB[v][0]!==${JSON.stringify(name)})`);
       if (other != null) {
         await page.value(`(()=>{const s=document.querySelector('.ed [data-e="ab"]');s.value=${JSON.stringify(String(other))};s.dispatchEvent(new Event('change'));})()`);

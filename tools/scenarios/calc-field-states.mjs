@@ -31,7 +31,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
     const loss=Math.floor(max/8)+Math.floor(max/6);
     assert.equal(await hp(page),max-loss,'Rocks and two Spikes layers apply once');
     assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
-    assert.equal(await page.value('CALC.state().custom[0].stg[4]'),-1,'Web replaces +5 with -1');
+    assert.equal(await page.value('CALC.mon("mine").stg[4]'),-1,'Web replaces +5 with -1');
     await page.value('CALC.render();CALC.render()');
     assert.equal(await hp(page),max-loss,'redraw does not apply entry');
     await openHazards(page);
@@ -58,10 +58,10 @@ await runChecks({name:'calc-field-states', file, checks:[{
     assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
     assert.equal(await hp(page),max-loss,'re-poisoning never reapplies damage');
     await page.tap('[data-a=sstep][data-s=mine][data-x="4"]');
-    await page.value('CALC.state().custom[0].stg[4]=5;CALC.render()');
+    await page.value('CALC.set("mine","stg",[0,0,0,0,5]);CALC.render()');
     await openHazards(page);
     await page.tap('[data-a=hazards][data-s=mine]');
-    assert.equal(await page.value('CALC.state().custom[0].stg[4]'),-1);
+    assert.equal(await page.value('CALC.mon("mine").stg[4]'),-1);
     assert.equal(await hp(page),max-loss,'Web replay never reapplies damage');
     await page.route('#/');
     await page.route('#/calc');
@@ -87,7 +87,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
       {before:"mon.a=AB.findIndex(entry=>entry[0]==='Immunity')",after:'mon.a=-1',field:{atkStealthRock:1,atkToxicSpikes:2},damage:false},
     ];
     for(const fixture of cases){
-      await page.value(`(()=>{const state=CALC.state(),mon=state.custom[0];state.mine={src:'custom',b:0,i:0};state.hazardEntry={};state.field=${JSON.stringify(fixture.field)};mon.hp=${max};mon.a=-1;mon.i='';mon.status='';mon.stg=[0,0,0,0,5];${fixture.before};CALC.render();})()`);
+      await page.value(`(()=>{const state=CALC.state(),mon=state.custom[0];state.mine={src:'custom',b:0,i:0};state.hazardEntry={};state.field=${JSON.stringify(fixture.field)};mon.hp=${max};mon.a=-1;mon.i='';mon.status='';mon.stg=[0,0,0,0,5];CALC.set('mine','stg',[0,0,0,0,5]);${fixture.before};CALC.render();})()`);
       if(fixture.legacy){
         await page.value("(()=>{const state=CALC.state();state.hazardEntry.mine={key:'mine:'+state.custom[0].pid,status:true,web:true};localStorage.setItem(LS.dmg,JSON.stringify(state));})()");
         await page.reload();await page.goto('#/calc');
@@ -103,7 +103,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
       await page.tap('[data-a=hazards][data-s=mine]');
       assert.equal(await hp(page),entered-(fixture.damage?loss:0),'only pending damage applies, not previously consumed hazards');
       if(fixture.field.atkToxicSpikes)assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
-      if(fixture.field.atkStickyWeb)assert.equal(await page.value('CALC.state().custom[0].stg[4]'),-1);
+      if(fixture.field.atkStickyWeb)assert.equal(await page.value('CALC.mon("mine").stg[4]'),-1);
       await page.value('CALC.render()');
       await openHazards(page);
       assert.equal(await page.value('document.querySelector("[data-a=hazards][data-s=mine]").disabled'),true,'applied components remain consumed');

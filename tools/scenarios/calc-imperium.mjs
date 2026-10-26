@@ -30,7 +30,7 @@ await runChecks({name: 'calc-imperium', file, checks: [{
     const mine = controls + '[data-s="mine"]';
     const foe = controls + '[data-s="foe"]';
     await page.tap(mine);
-    assert.equal(await page.value('CALC.state().custom.at(-1).abilityOn'), true);
+    assert.equal(await page.value('CALC.mon("mine").abilityOn'), true);
     assert.equal(await page.value('CALC.state().dir'), 'out', 'own checkbox does not select another attacker');
     assert.ok(await page.value('window.__calcCalls.some(call=>call.args[0].abilityOn===true&&call.result?.notes.includes("First turn out"))'));
     await page.tap(foe);
@@ -55,12 +55,14 @@ await runChecks({name: 'calc-imperium', file, checks: [{
     await page.reload();
     await page.route('#/calc');
     assert.equal(await page.value('JSON.stringify(CALC.state())'), snapshot, 'existing storage key preserves all new state');
-    assert.equal(await page.value(`document.querySelector('${mine}').checked`), true);
-    assert.equal(await page.value(`document.querySelector('${foe}').checked`), true);
+    // The ability boxes are battle state (scratch): a reload starts fresh, view choices (invert) stay
+    assert.equal(await page.value(`document.querySelector('${mine}').checked`), false);
+    assert.equal(await page.value(`document.querySelector('${foe}').checked`), false);
+    await page.tap(mine);
     assert.equal(await page.value('document.querySelector(".dres:not(.na) .dcategory").getAttribute("title")'), inverted);
     await page.tap('.cc[data-s="mine"] [data-a="eopen"]');
     await page.value(`(()=>{const input=document.querySelector('[data-e="ab"][data-s="mine"]');input.selectedIndex=0;input.dispatchEvent(new Event('change',{bubbles:true}));})()`);
     assert.equal(await page.count(mine), 0, 'irrelevant ability has no toggle');
-    assert.equal(await page.value('CALC.state().custom.at(-1).abilityOn'), false, 'changing ability clears its battle state');
+    assert.equal(await page.value('CALC.mon("mine").abilityOn'), false, 'changing ability clears its battle state');
   },
 }]});

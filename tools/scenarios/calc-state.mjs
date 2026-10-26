@@ -142,9 +142,10 @@ const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windo
       await page.tap(`${row}:nth-child(2) [data-a=zmv]`);
       assert.equal(await page.value(`document.querySelector('${row}:nth-child(2) [data-a=state]').getAttribute('aria-pressed')`),'true');
     }
-    const stored=await page.value('JSON.stringify(CALC.state().st)');
+    // Row state is battle state (scratch, plans/calc-auto-effects.md): never stored, a reload starts fresh
+    assert.notEqual(await page.value('JSON.stringify(CALC.state().st)'),'{}');
     await page.reload();
-    assert.equal(await page.value('JSON.stringify(CALC.state().st)'),stored);
+    assert.equal(await page.value('JSON.stringify(CALC.state().st)'),'{}');
     await page.value("CALC.state().custom.at(-1).status='brn';CALC.render()");
     assert.equal(Number(await page.value(`document.querySelector('${row}:nth-child(4) [data-mo=bp]').value`)),140,'Facade used power');
     assert.match(await page.text(`${row}:nth-child(4) .dd`),/listed 70/);
@@ -245,11 +246,11 @@ const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windo
     assert.match(await page.value('document.querySelector("[data-a=download]").title'),/Download: Auto → (Atk|Sp. Atk)/);
     for(const [value,label] of [['atk','M·Atk'],['spa','M·SpA'],['off','None']]){
       await page.tap('[data-a=download]');
-      assert.equal(await page.value("CALC.state().custom.at(-1).dl||''"),value);
+      assert.equal(await page.value("CALC.mon('mine').dl||''"),value);
       assert.equal(await page.text('[data-a=download]'),label);
     }
     await page.tap('[data-a=download]');
-    assert.equal(await page.value("CALC.state().custom.at(-1).dl||''"),'');
+    assert.equal(await page.value("CALC.mon('mine').dl||''"),'');
     await page.tap('[data-a=eopen][data-s=mine]');
     assert.equal(await page.count('.ed [data-a=download]'),0,'Download is not inside Edit');
     await page.tap('[data-a=eopen][data-s=mine]');
@@ -258,9 +259,9 @@ const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windo
       assert.equal(await page.value('document.querySelector(".cc[data-s=mine] .l1 [data-e=entry]").checked'),true,'on by default');
       assert.deepEqual(await headerHeight(),[mineHeader,foeHeader],'the entry box does not make the header taller');
       await page.tap('[data-e=entry][data-s=mine]');
-      assert.equal(await page.value('CALC.state().custom.at(-1).entry'),false);
+      assert.equal(await page.value('CALC.mon("mine").entry'),false);
       await page.tap('[data-e=entry][data-s=mine]');
-      assert.equal(await page.value('CALC.state().custom.at(-1).entry'),undefined);
+      assert.equal(await page.value('CALC.mon("mine").entry'),undefined);
     }
     await page.value("CALC.state().custom.at(-1).a=P.find(entry=>entry.n==='Snorlax').a[0];CALC.state().custom.at(-1).m=[M.indexOf('Frost Breath')];CALC.render()");
     const crit='.dres:not(.na) .mr:first-child .rc';
