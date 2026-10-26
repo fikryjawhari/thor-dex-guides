@@ -11,9 +11,10 @@ const range=prof.lv||[1,100],stageRange=prof.stages||[-6,6];
 const stageMul=stage=>stage>=0?(2+stage)/2:2/(2-stage);
 const defaults=()=>({dir:'out',mine:{src:'party',b:0,i:0},foe:{k:'',i:0},field:{},custom:[],imp:null,edits:{},saved:{},recent:[],crit:{},hits:{},mvo:{},z:{},tgt:{},st:{},hitv:{}});
 // Fight state (plans/calc-auto-effects.md, unit C). KEPT: HP / status (player across trainers, foe for this fight);
-// FIGHT: kept for this fight on both sides; SCRATCH: battle condition, memory only (SC by card key) while selected.
+// FIGHT: kept for this fight on both sides (broken; mega = the Mega form's {id,a,i} over the set); SCRATCH: battle
+// condition, memory only (SC by card key) while selected.
 // Any other edit field is a set field: unsaved ones go when the Pokémon is switched away, Save keeps them.
-const KEPT=['hp','status'],FIGHT=['broken'],SCRATCH=new Set(['stg','abilityOn','dl','entry','pty',...(prof.monControls||[]).map(control=>control.k)]),SC={};
+const KEPT=['hp','status'],FIGHT=['broken','mega'],MEGA_F=['id','a','i'],SCRATCH=new Set(['stg','abilityOn','dl','entry','pty',...(prof.monControls||[]).map(control=>control.k)]),SC={};
 const isSetField=f=>!KEPT.includes(f)&&!FIGHT.includes(f)&&!SCRATCH.has(f);
 let ST=defaults();try{const stored=JSON.parse(localStorage.getItem(KEY)||'null');if(stored&&typeof stored==='object')ST={...ST,...stored};}catch(error){}
 const save=()=>{try{const {st,tgt,...kept}=ST;localStorage.setItem(KEY,JSON.stringify(kept));}catch(error){BAN={ok:0,h:'Storage full',t:'The current changes could not be remembered.'};}};
@@ -57,30 +58,32 @@ function stateButton(mi,ck,att,field){const control=moveState(mi,att,field),valu
 function hitDetails(result,mi,ck,att,def){const own=['Skull Bash','Meteor Beam','Electro Shot','Spectral Thief'].includes(M[mi])&&prof.over?.state?.[M[mi]]!==false,override=ST.mvo[ck]||{},chance=result.crit,statNames={atk:'Atk',def:'Def',spa:'Sp. Atk',spd:'Sp. Def',spe:'Spe'};return (chance?`<div class="dcrit">Crit ${chance.p>0&&chance.p<1?'1/'+Math.round(1/chance.p):chance.p} · stage ${chance.stage}${chance.forced?' · guaranteed ('+esc(MV[mi].cr===6?M[mi]:att.abil==='Merciless'&&['psn','tox'].includes(def.status)?'Merciless':'crit stage '+chance.stage)+')':chance.p===0?' · blocked':''}</div>`:'')+(result.pre||[]).map(change=>`<div class="dpre">${change.hit?'Before hit '+change.hit:'Before the hit'}: ${change.who==='def'?'target':'user'} ${statNames[change.stat]||change.stat} ${signed(change.by)} (${esc(change.src)})</div>`).join('')+(own?`<label class="dmovecheck"><input type="checkbox" data-mo="pre" data-mi="${mi}" data-ck="${ck}" ${override.pre===false?'checked':''}>Without move's own stat changes</label>`:'')+(['Rollout','Ice Ball'].includes(M[mi])&&prof.over?.state?.[M[mi]]?.curl!==false?`<label class="dmovecheck"><input type="checkbox" data-mo="curl" data-mi="${mi}" data-ck="${ck}" ${override.curl?'checked':''}>Defense Curl used</label>`:'');}
 const effMv=(mi,ck)=>({...MV[mi],...((prof.varpow||[]).includes(M[mi])?{bp:null}:{}),...Object.fromEntries(Object.entries(ST.mvo[ck]||{}).filter(([,v])=>v!=null))});
 function sideInfo(side){const isM=side==='mine';const t=trByK[ST.foe.k];const base=isM?curMine():(t?foeBase(t,ST.foe.i):null);const custom=isM&&ST.mine.src==='custom';const key=isM?'mine:'+(base||{}).pid:'foe:'+ST.foe.k+':'+ST.foe.i;return {isM,key,base,custom};}
-function getMon(side){const i=sideInfo(side);if(!i.base)return null;return {...(i.custom?i.base:applyEdits(i.base,i.key)),...SC[i.key],vol:ST.tgt[i.key]||''};}
-function setField(side,f,v,manual=false){const i=sideInfo(side);if(SCRATCH.has(f)){const s=(SC[i.key]=SC[i.key]||{});if(v===undefined)delete s[f];else s[f]=v;}else if(i.custom){if(v===undefined)delete i.base[f];else i.base[f]=v;}else{const e=(ST.edits[i.key]=ST.edits[i.key]||{});if(v===undefined)delete e[f];else e[f]=v;}if(f==='hp'&&manual)rearmHazards(side,'damage');if(f==='status')rearmHazards(side,'status');if(f==='stg')rearmHazards(side,'web');save();}
+const megaView=m=>m.mega?{...m,pre:{id:m.id,a:m.a,i:m.i},...m.mega,aGuess:false}:m;
+function getMon(side){const i=sideInfo(side);if(!i.base)return null;return {...megaView(i.custom?i.base:applyEdits(i.base,i.key)),...SC[i.key],vol:ST.tgt[i.key]||''};}
+function setField(side,f,v,manual=false){const i=sideInfo(side),store=i.custom?i.base:ST.edits[i.key];if(store&&store.mega&&MEGA_F.includes(f)){store.mega={...store.mega,[f]:v};save();return;}if(SCRATCH.has(f)){const s=(SC[i.key]=SC[i.key]||{});if(v===undefined)delete s[f];else s[f]=v;}else if(i.custom){if(v===undefined)delete i.base[f];else i.base[f]=v;}else{const e=(ST.edits[i.key]=ST.edits[i.key]||{});if(v===undefined)delete e[f];else e[f]=v;}if(f==='hp'&&manual)rearmHazards(side,'damage');if(f==='status')rearmHazards(side,'status');if(f==='stg')rearmHazards(side,'web');save();}
 const fieldSide=side=>side==='foe'?'def':'atk';
 const effSpe=r=>r.stats?(window.DMG.speed?window.DMG.speed(toEngine(r),ST.field,fieldSide(r.side)):Math.floor(Math.floor(r.stats[5]*stageMul(r.stg[4]))*(r.status==='par'?(CF.calc.gen>=7?.5:.25):1))):null;
 ST.hazardEntry=ST.hazardEntry||{};
-// Lifecycle: leaving a card drops its scratch and unsaved set edits (HP / status / broken stay); a new fight (trainer
-// change, Reset fight) clears all scratch, the foe's HP / status, broken on both sides and the manual Field overrides
+// Lifecycle: leaving a card drops its scratch and the player's unsaved set edits (HP / status / FIGHT and the foe's set
+// edits stay); a new fight (trainer change, Reset fight) clears all scratch, the foe's edits, FIGHT on both sides and the manual Field overrides
 // (ST.fman: Field keys the user set this fight). entered(sides, together) is the hook for what fires on entry (D1).
 const setPart=e=>Object.fromEntries(Object.entries(e||{}).filter(([f])=>isSetField(f)));
 function dropSetEdits(key){const e=ST.edits[key];if(!e)return;for(const f of Object.keys(e))if(isSetField(f))delete e[f];if(!Object.keys(e).length)delete ST.edits[key];}
-function leaveCard(key){delete SC[key];delete ST.tgt[key];delete TOX[key];for(const ck of Object.keys(ST.st))if(ck.startsWith(key+':'))delete ST.st[ck];dropSetEdits(key);}
+function leaveCard(key){delete SC[key];delete ST.tgt[key];delete TOX[key];for(const ck of Object.keys(ST.st))if(ck.startsWith(key+':'))delete ST.st[ck];if(!key.startsWith('foe:'))dropSetEdits(key);}
 const markManual=k=>{if(k!=='gameType'&&!ST.fman.includes(k))ST.fman.push(k);};
 function entered(sides,together){}
 function newFight(reset){for(const k of Object.keys(SC))delete SC[k];for(const k of Object.keys(TOX))delete TOX[k];ST.tgt={};ST.st={};ST.hazardEntry={};
  const foeFields=[...KEPT,...FIGHT],mineFields=reset?foeFields:FIGHT,clear=(o,fields)=>{if(o)fields.forEach(f=>delete o[f]);};
- for(const [k,e] of Object.entries(ST.edits)){clear(e,k.startsWith('foe:')?foeFields:mineFields);if(!Object.keys(e).length)delete ST.edits[k];}
+ for(const [k,e] of Object.entries(ST.edits)){if(k.startsWith('foe:'))delete ST.edits[k];else{clear(e,mineFields);if(!Object.keys(e).length)delete ST.edits[k];}}
  (ST.custom||[]).forEach(mon=>clear(mon,mineFields));
  for(const k of ST.fman)delete ST.field[k];ST.fman=[];entered(['mine','foe'],true);}
 const cardKeys=()=>({mine:sideInfo('mine').key,foe:sideInfo('foe').key,tr:ST.foe.k});
 // Migration on load (older builds stored battle condition): scratch fields go everywhere, saved HP / status move to the
-// edits, cards not selected keep only HP / status, foe entries of other trainers go. Runs on every load (idempotent).
-(()=>{const cur=new Set(Object.values(cardKeys())),fight='foe:'+ST.foe.k+':',strip=o=>{if(o)for(const f of SCRATCH)delete o[f];};
- for(const [k,s] of Object.entries(ST.saved||{})){const e=ST.edits[k]=ST.edits[k]||{};for(const f of KEPT)if(f in s){if(!(f in e))e[f]=s[f];delete s[f];}strip(s);if(!Object.keys(s).length)delete ST.saved[k];}
- for(const [k,e] of Object.entries(ST.edits)){strip(e);if(k.startsWith('foe:')&&!k.startsWith(fight))delete ST.edits[k];else if(!cur.has(k))dropSetEdits(k);if(ST.edits[k]&&!Object.keys(ST.edits[k]).length)delete ST.edits[k];}
+// edits, a stored Mega (pre) becomes the FIGHT field mega, player cards not selected keep only HP / status / FIGHT, foe
+// entries of other trainers go. Runs on every load (idempotent).
+(()=>{const cur=new Set(Object.values(cardKeys())),fight='foe:'+ST.foe.k+':',strip=o=>{if(!o)return;for(const f of SCRATCH)delete o[f];if(o.pre){if(!o.mega)o.mega={id:o.id,a:o.a,i:o.i};Object.assign(o,{id:o.pre.id,a:o.pre.a,i:o.pre.i});}delete o.pre;};
+ for(const [k,s] of Object.entries(ST.saved||{})){const e=ST.edits[k]=ST.edits[k]||{};strip(s);for(const f of [...KEPT,...FIGHT])if(f in s){if(!(f in e))e[f]=s[f];delete s[f];}if(!Object.keys(s).length)delete ST.saved[k];}
+ for(const [k,e] of Object.entries(ST.edits)){strip(e);if(k.startsWith('foe:')&&!k.startsWith(fight))delete ST.edits[k];else if(!cur.has(k)&&!k.startsWith('foe:'))dropSetEdits(k);if(ST.edits[k]&&!Object.keys(ST.edits[k]).length)delete ST.edits[k];}
  (ST.custom||[]).forEach(strip);
  if(!Array.isArray(ST.fman))ST.fman=Object.keys(ST.field).filter(k=>k!=='gameType');try{if(localStorage.getItem(KEY))save();}catch(error){}})();
 let LAST=cardKeys();
@@ -115,9 +118,9 @@ const TYPECHANGE=['Protean','Libero'],changesType=r=>TYPECHANGE.includes(r.abil)
 const signed=v=>(v>0?'+':'−')+Math.abs(v);
 const eotTotal=parts=>parts.reduce((sum,part)=>sum+part.v[0],0);
 const MEGA={};P.forEach(species=>{const forms=(species.of||[]).filter(id=>byId[id]?.g===1);if(species.g!==1&&forms.length)MEGA[species.id]=forms;});
-function megaToggle(side){const m=getMon(side);const set=(id,a,i)=>{setField(side,'id',id);setField(side,'a',a);setField(side,'aGuess',false);setField(side,'abilityOn',false);setField(side,'pty',undefined);setField(side,'i',i);};
- if(m.pre){const L=MEGA[m.pre.id]||[],ix=L.indexOf(m.id);if(ix>=0&&ix<L.length-1){const n=byId[L[ix+1]];set(n.id,n.a[0],n.stone||m.pre.i);}else{set(m.pre.id,m.pre.a,m.pre.i);setField(side,'pre',null);}}
- else if(MEGA[m.id]){const n=byId[MEGA[m.id][0]];setField(side,'pre',{id:m.id,a:m.a,i:m.i});set(n.id,n.a[0],n.stone||m.i);}}
+// Mega is FIGHT state (mega: the form's {id,a,i} over the set): kept for the fight, not a set edit, not an entry.
+function megaToggle(side){const m=getMon(side),base=m.pre||m,L=MEGA[base.id]||[],ix=m.pre?L.indexOf(m.id):-1,n=(!m.pre||ix>=0)&&ix+1<L.length?byId[L[ix+1]]:null;
+ setField(side,'abilityOn',false);setField(side,'pty',undefined);setField(side,'mega',undefined);if(n)setField(side,'mega',{id:n.id,a:n.a[0],i:n.stone||base.i});}
 function editor(r,side){const custom=side==='mine'&&ST.mine.src==='custom';const p=r.p,abils=[...new Set([...p.a,...(p.ha!=null?[p.ha]:[])])];
  const sel=(k,opts,cur)=>`<select data-e="${k}" data-s="${side}">${opts.map(([v,l])=>`<option value="${esc(v)}" ${String(v)===String(cur)?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
  const row=(lab,fn)=>`<tr><td class="l">${lab}</td>${SN.map((n,i)=>`<td>${fn(i)}</td>`).join('')}</tr>`;

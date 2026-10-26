@@ -1,8 +1,8 @@
 // Calc fight state (plans/calc-auto-effects.md, unit C rows of Checks): the scratch lifecycle (battle condition lives
 // only while a Pokémon is selected; HP / status / broken are kept; unsaved set edits go on a switch, saved ones stay),
 // a trainer change (foe fresh, player HP kept, manual Field overrides cleared), Reset fight (all HP 100 %, statuses
-// cleared, same trainer and Pokémon) and reload / migration of older storage. Default foe: the guide's four-Pokémon
-// trainer (calc_check_lib trainerRoles); 260 x 316, normal and dvkb. Usage: node tools/scenarios/calc-auto.mjs [dist/<hack>.html]
+// cleared, same trainer and Pokémon), reload / migration of older storage, and (C2) Mega and foe set edits kept for
+// the fight. Default foe: the guide's four-Pokémon trainer (calc_check_lib trainerRoles); 260 x 316, normal and dvkb. Usage: node tools/scenarios/calc-auto.mjs [dist/<hack>.html]
 import assert from 'node:assert/strict';
 import { fixturePatches, guide, guideArg, pickCell, prepareGuide, runChecks, setupCalc } from '../calc_check_lib.mjs';
 
@@ -180,8 +180,9 @@ const checks = [
         [seeded.mk]: { na: 'Adamant', hp: 5, status: 'par' },
         [seeded.other]: { hp: 7, status: 'brn' },
         [seeded.fk]: { hp: 3 },
-        [seeded.fk1]: { hp: 4, status: 'slp' },
-      }, 'selected cards keep set edits; the rest HP / status; scratch and other fights gone');
+        // foe set edits are kept for the fight (C2): the other foe of this fight keeps its nature
+        [seeded.fk1]: { hp: 4, na: 'Bold', status: 'slp' },
+      }, 'selected cards and the foes of this fight keep set edits; other player cards HP / status; scratch and other fights gone');
       assert.deepEqual(after.saved, { [seeded.other]: { na: 'Timid' } }, 'saved sets keep only set fields');
       assert.deepEqual([after.st, after.tgt], [{}, {}], 'row and target state gone');
       assert.deepEqual(after.fman, ['weather'], 'an older stored Field counts as manual');
@@ -189,6 +190,61 @@ const checks = [
       assert.ok(!('st' in after.stored) && !('tgt' in after.stored), 'scratch is never stored');
       assert.equal(await hpOf(page, 'mine'), 5);
       assert.equal(await page.value(`CALC.mon('mine').na`), 'Adamant');
+    },
+  },
+  {
+    id: 'mega kept',
+    title: 'Mega is kept for the fight: survives a switch-back and reload, is no set edit, cleared by Reset fight',
+    run: async page => {
+      await setupCalc(page);
+      let slot = -1;
+      for (let i = 0; i < 6 && slot < 0; i++) {
+        await pickCell(page, 'party', i);
+        if (await page.count('.dmatch .cc[data-s="mine"] [data-a="mega"]')) slot = i;
+      }
+      if (slot < 0) return console.log('  (no party Pokémon with a Mega form in this guide)');
+      const base = await page.value(`CALC.mon('mine').id`);
+      await page.tap('.dmatch .cc[data-s="mine"] [data-a="mega"]');
+      const mega = await page.value(`CALC.mon('mine').id`);
+      assert.notEqual(mega, base, 'Mega form on');
+      assert.ok(!(await nameOf(page, 'mine')).endsWith('*'), 'Mega is not an unsaved set edit');
+      await pickCell(page, 'party', slot === 5 ? 0 : 5);
+      await pickCell(page, 'party', slot);
+      assert.equal(await page.value(`CALC.mon('mine').id`), mega, 'Mega kept after a switch-back');
+      await page.reload();
+      await page.route('#/calc');
+      assert.equal(await page.value(`CALC.mon('mine').id`), mega, 'Mega kept after reload');
+      await openField(page);
+      await page.tap('[data-a="fightreset"]');
+      assert.equal(await page.value(`CALC.mon('mine').id`), base, 'Reset fight ends the Mega');
+      assert.equal(await page.value(`CALC.mon('mine').pre??null`), null);
+    },
+  },
+  {
+    id: 'foe edits kept',
+    title: 'a foe set edit (ability, else nature) survives switching foes and reload; trainer change clears it; no foe Save',
+    run: async page => {
+      await setupCalc(page);
+      await editorOpen(page, 'foe', true);
+      assert.equal(await page.count('[data-a="esave"][data-s="foe"]'), 0, 'no foe Save');
+      const field = (await page.value(`document.querySelectorAll('.cc[data-s="foe"] select[data-e="a"] option').length`)) > 1 ? 'a' : 'na';
+      const sel = `.cc[data-s="foe"] select[data-e="${field}"]`;
+      const was = await page.value(`document.querySelector('${sel}').value`);
+      const edited = await page.value(`[...document.querySelector('${sel}').options].map(o=>o.value).find(v=>v!==${JSON.stringify(was)})`);
+      await choose(page, sel, edited);
+      const now = await page.value(`String(CALC.mon('foe').${field})`);
+      await editorOpen(page, 'foe', false);
+      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 1 });
+      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 0 });
+      assert.equal(await page.value(`String(CALC.mon('foe').${field})`), now, `foe ${field} edit kept after switching foes`);
+      await page.reload();
+      await page.route('#/calc');
+      assert.equal(await page.value(`String(CALC.mon('foe').${field})`), now, 'kept after reload');
+      // player behaviour unchanged: checked in 'scratch lifecycle' (unsaved nature dropped on a switch)
+      await page.tap('[data-a="tnext"]');
+      await page.tap('[data-a="tprev"]');
+      assert.deepEqual(await page.value('Object.keys(CALC.state().edits).filter(k=>k.startsWith("foe:"))'), [], 'trainer change clears foe edits');
+      assert.notEqual(await page.value(`String(CALC.mon('foe').${field})`), now, 'back to the trainer data');
     },
   },
 ];

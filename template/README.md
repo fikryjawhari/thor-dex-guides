@@ -179,16 +179,18 @@ are one object in `cfg.ls.dmg` (no other key).
 Download, entry box, Protean type, target state, row state incl. counters, toxic turn) is **scratch**: memory only
 (`SC[cardKey]` + `ST.st` / `ST.tgt`), alive while the card is selected. Selecting another Pokémon and coming back
 brings it fresh; only **HP and status** are kept (`hp` / `status` in `ST.edits`, a custom set's own fields), the
-toxic counter restarts at 1. **Unsaved set edits** (nature, ability, item, level, IVs / EVs, moves, Mega) go when the
-Pokémon is switched away; Save keeps set fields only, never HP / status / scratch; Edit Reset clears unsaved edits and
-scratch. `broken` (Disguise / Ice Face) is kept for the fight on both sides. Player HP is kept across trainers; foe
+toxic counter restarts at 1. The player's **unsaved set edits** (nature, ability, item, level, IVs / EVs, moves) go
+when the Pokémon is switched away; the **foe's set edits are kept for the fight** (no foe Save: trainer data stays the
+source) and go on a trainer change / Reset fight. **Mega** is fight state like `broken` (`mega`, the form laid over
+the set; ability / item edits while Mega go with it): kept across switches and reload, not a set edit, not an entry.
+Save keeps set fields only, never HP / status / scratch; Edit Reset clears unsaved edits and scratch. `broken` (Disguise / Ice Face) is kept for the fight on both sides. Player HP is kept across trainers; foe
 HP / status only for the current fight. A **trainer change** (bar arrows, Find trainer, a trainer card's Calc link)
-clears all scratch, the foe's kept state, `broken` and the manual Field overrides (`ST.fman`: Field keys the user set
+clears all scratch, the foe's kept state and set edits, `broken` / Mega and the manual Field overrides (`ST.fman`: Field keys the user set
 this fight; Singles / Doubles is not one); the foe team starts at full HP, slot 1 (or the linked Pokémon).
 **Reset fight** (Field's first row, right of Singles / Doubles): the same, plus every HP 100 % and every status
 cleared, same trainer and Pokémon. Reload keeps HP / status, the foe's of the current fight and the manual Field;
-scratch is gone. Loading older storage drops stored scratch everywhere and keeps only HP / status on cards not
-selected. Entry hazards still apply once per selection and on a new fight. Scenario: `tools/scenarios/calc-auto.mjs`.
+scratch is gone. Loading older storage drops stored scratch everywhere, turns a stored Mega (`pre`) into `mega` and
+keeps only HP / status / fight state on player cards not selected. Entry hazards still apply once per selection and on a new fight. Scenario: `tools/scenarios/calc-auto.mjs`.
 Internal set aliases follow trainer data (`l`, `na`, `a`, `i`, `m`); the engine boundary converts them to its
 `lv`, `nat`, `ab`, `it`, `st`, six-element `stg` contract. Caps stay in the existing `TCAP` store. Sheets and expanders
 are transient; pickers use the shared keyboard/number pad and the viewer's normal select shim.
