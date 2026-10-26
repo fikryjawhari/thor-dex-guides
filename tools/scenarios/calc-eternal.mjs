@@ -7,7 +7,10 @@ if (guide.cfg.name !== 'Eternal X' || !guide.cfg.calc) {
   console.log('SKIP calc-eternal: requires the Eternal X profile');
   process.exit(0);
 }
-const entries = guide.cfg.calc.field;
+// A3 added field-wide battle states (side 'field', type 'state': ally Fairy / Dark Aura, Aura Break, Water / Mud
+// Sport, Power / Guard Split); their page controls come in unit D3 (plans/calc-auto-effects.md build units), so the
+// page doesn't render them yet. D3: drop this filter.
+const entries = guide.cfg.calc.field.filter(entry => !(entry.side === 'field' && entry.type === 'state'));
 const sizes = [[260, 316], [480, 392], [537, 424], [832, 424], [832, 316]];
 const checks = [{
   id: 'eternal fields',

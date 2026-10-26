@@ -7,7 +7,10 @@ if (guide.cfg.name !== 'Hardlove Gold' || !guide.cfg.calc) {
   console.log('SKIP calc-hardlove: requires the Hardlove Gold profile');
   process.exit(0);
 }
-const entries = guide.cfg.calc.field;
+// A3 added field-wide battle states (side 'field', type 'state': ally Fairy / Dark Aura, Aura Break, Water / Mud
+// Sport, Power / Guard Split); their page controls come in unit D3 (plans/calc-auto-effects.md build units), so the
+// page doesn't render them yet. D3: drop this filter.
+const entries = guide.cfg.calc.field.filter(entry => !(entry.side === 'field' && entry.type === 'state'));
 const sizes = [[260, 316], [480, 392], [537, 424], [832, 424], [832, 316]];
 const checks = [{
   id: 'hardlove profile',
@@ -30,13 +33,16 @@ const checks = [{
     assert.ok(weather.o.some(([value]) => value === 'Snow'));
     assert.ok(!weather.o.some(([value]) => value === 'Hail'));
     assert.equal(await page.count('[data-f$="Protected"],[data-f$="Protect"]'), 0, 'Protect is reserved for Z-move profiles');
-    for (const key of ['atkFlowerGift', 'defFlowerGift', 'atkPowerTrick', 'defPowerTrick']) {
+    // A3 gates the ally Flower Gift by the guide's abilities and Hardlove's ability list has no Flower Gift
+    // (tools/calc/README.md: Ally abilities and Power Trick), so the ally check uses Power Spot (Doubles only) instead.
+    await page.tap('[data-f=gameType][data-value=Doubles]');
+    for (const key of ['atkPowerSpot', 'defPowerSpot', 'atkPowerTrick', 'defPowerTrick']) {
       await tapField(page, key);
       assert.equal(await page.value(`CALC.state().field[${JSON.stringify(key)}]`), 1);
     }
     await page.reload();
     await page.route('#/calc');
-    for (const key of ['atkFlowerGift', 'defFlowerGift', 'atkPowerTrick', 'defPowerTrick']) {
+    for (const key of ['atkPowerSpot', 'defPowerSpot', 'atkPowerTrick', 'defPowerTrick']) {
       assert.equal(await page.value(`CALC.state().field[${JSON.stringify(key)}]`), 1, key + ' persisted');
     }
   },
