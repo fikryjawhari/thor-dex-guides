@@ -6,16 +6,30 @@ const builtPresets=[
  ['Sword',{species:'Snorlax',ability:'Intrepid Sword',moves:['Iron Head','Close Combat','Crunch','Play Rough']}],
  ['Shield',{ability:'Dauntless Shield',moves:['Iron Head','Close Combat','Crunch','Body Press']}],
  ['First turn',{ability:'Bull Rush',moves:['Tackle','Head Charge','Close Combat','Earthquake']}],
- ['Disguise',{ability:'Illusion',moves:['Dark Pulse','Flamethrower','Night Daze','U-turn']}],
+ ['Illusion',{ability:'Illusion',moves:['Dark Pulse','Flamethrower','Night Daze','U-turn']}],
  ['Toxic',{species:'Snorlax',status:'tox',moves:['Facade','Tackle','Earthquake','Crunch']}],
  ['Multi-hit',{species:'Cloyster',moves:['Icicle Spear','Rock Blast','Surf','Ice Beam']}],
  ['Draco',{species:'Snorlax',moves:['Draco Barrage','Psychic','Tackle','Surf']}],
  ['Parental Bond',{species:'Mega Kangaskhan',ability:'Parental Bond',moves:['Power-Up Punch','Body Slam','Crunch','Earthquake']}],
  ['Residuals',{species:'Grotle',ability:'Self Sufficient',item:'Leftovers',status:'tox',moves:['Razor Leaf','Bite','Earthquake','Leech Seed']}],
+ ['Intimidate',{ability:'Intimidate',moves:['Waterfall','Earthquake','Crunch','Ice Fang']}],
+ ['Sash',{species:'Alakazam',item:'Focus Sash',moves:['Psychic','Shadow Ball','Focus Blast','Counter']}],
+ ['Sturdy',{ability:'Sturdy',moves:['Rock Slide','Earthquake','Iron Head','Explosion']}],
+ ['Sitrus',{species:'Snorlax',item:'Sitrus Berry',moves:['Body Slam','Earthquake','Crunch','Rest']}],
+ ['Weakness Policy',{species:'Snorlax',item:'Weakness Policy',moves:['Body Slam','Earthquake','Crunch','Curse']}],
+ ['Orb',{species:'Heracross',ability:'Guts',item:'Flame Orb',moves:['Facade','Close Combat','Megahorn','Knock Off']}],
+ ['Setter',{ability:'Drought',moves:['Flamethrower','Solar Beam','Earth Power','Weather Ball']}],
+ ['Speed Boost',{ability:'Speed Boost',moves:['Protect','U-turn','Close Combat','Swords Dance']}],
+ ['Moxie',{ability:'Moxie',moves:['Crunch','Earthquake','Waterfall','Dragon Dance']}],
+ ['Mimikyu',{species:'Mimikyu',ability:'Disguise',moves:['Play Rough','Shadow Claw','Shadow Sneak','Swords Dance']}],
+ ['Crash',{species:'Hitmonlee',ability:'Reckless',moves:['High Jump Kick','Jump Kick','Close Combat','Rock Slide']}],
+ ['Helmet',{species:'Ferrothorn',ability:'Iron Barbs',item:'Rocky Helmet',moves:['Power Whip','Gyro Ball','Leech Seed','Spikes']}],
+ ['Stockpile',{species:'Swalot',moves:['Stockpile','Swallow','Spit Up','Sludge Bomb']}],
+ ['Foul Play',{species:'Umbreon',moves:['Foul Play','Moonlight','Toxic','Protect']}],
 ];
 function builtPreset(request,all){
  const viewer=thorFrame();
- const message=viewer.eval(`(()=>{const list=${JSON.stringify(all||[request])};const state=CALC.state();state.custom=[];state.edits={};state.saved={};state.field={};state.st={};state.tgt={};state.hits={};state.hitv={};state.crit={};state.mvo={};state.z={};const made=[];for(const request of list){ability=request.ability?AB.findIndex(entry=>entry[0]===request.ability):-1;const species=request.species?P.find(entry=>entry.n===request.species):P.find(entry=>[...entry.a,entry.ha].includes(ability)&&ability>=0);if(!species||request.ability&&ability<0)continue;CALC.use(species);made.push(species.n);const mon=state.custom.at(-1);mon.l=50;mon.m=request.moves.map(name=>M.indexOf(name)).filter(index=>index>=0);mon.status=request.status||'';mon.i=request.item||'';if(ability>=0)mon.a=ability;}if(!made.length)return 'That preset is not available in this guide.';state.mine={src:'custom',b:0,i:0};const trainer=TRS.find(entry=>entry.n.includes('Flannery')&&entry.p.length===6)||TRS.find(entry=>entry.p.length===6)||TRS[0];TCAP[trainer.k]=50;CALC.enter(trainer.k,0);CALC.render();requestAnimationFrame(()=>scrollTo(0,document.querySelector('.fbar').getBoundingClientRect().top+scrollY-2));return made.length>1?made.length+' Pokémon loaded · live engine':made[0]+' · live engine';})()`);
+ const message=viewer.eval(`(()=>{const list=${JSON.stringify(all||[request])};const state=CALC.state();state.custom=[];state.edits={};state.saved={};state.field={};state.fman=[];state.st={};state.tgt={};state.hits={};state.hitv={};state.crit={};state.mvo={};state.z={};const made=[];for(const request of list){ability=request.ability?AB.findIndex(entry=>entry[0]===request.ability):-1;const species=request.species?P.find(entry=>entry.n===request.species):P.find(entry=>[...entry.a,entry.ha].includes(ability)&&ability>=0);if(!species||request.ability&&ability<0)continue;CALC.use(species);made.push(species.n);const mon=state.custom.at(-1);mon.l=50;mon.m=request.moves.map(name=>M.indexOf(name)).filter(index=>index>=0);mon.status=request.status||'';mon.i=request.item||'';if(ability>=0)mon.a=ability;}if(!made.length)return 'That preset is not available in this guide.';state.mine={src:'custom',b:0,i:0};const trainer=TRS.find(entry=>entry.n.includes('Flannery')&&entry.p.length===6)||TRS.find(entry=>entry.p.length===6)||TRS[0];TCAP[trainer.k]=50;CALC.enter(trainer.k,0);CALC.render();requestAnimationFrame(()=>scrollTo(0,document.querySelector('.fbar').getBoundingClientRect().top+scrollY-2));return made.length>1?made.length+' Pokémon loaded · live engine':made[0]+' · live engine';})()`);
  document.getElementById('calc-preset-status').textContent=message;
 }
 const allPresets=()=>builtPresets.map(([,request])=>request);
