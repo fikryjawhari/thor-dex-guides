@@ -437,6 +437,7 @@ checks.push(
         await page.tap('[data-a="berry"][data-s="mine"]');
         assert.equal(await hpOf(page,'mine'),before.atk.hp);
         assert.equal(await page.count('[data-a="berry"][data-s="mine"]'),0);
+        await page.assertFits('Toxic, turn end and Intimidate after consuming a berry');
       }
       await configure(page,{ name:'Machamp',ability:'Guts',i:'Flame Orb' },null);
       assert.equal(await page.value('CALC.mon("mine").status'),'brn');
