@@ -12,7 +12,7 @@ if (!file) {
   process.exit(0);
 }
 const data = readGuide(file).data;
-const sizes = [[260, 316], [480, 392], [832, 424]];
+const sizes = [[260, 316], [260, 350], [480, 392], [537, 424], [832, 424]];
 const has = name => data.M.includes(name);
 const ash = data.P.find(entry => /Greninja/.test(entry.n) && /\bAsh\b/.test(entry.n));
 const items = JSON.stringify(data.IT || '');
