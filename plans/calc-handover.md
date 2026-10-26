@@ -13,18 +13,19 @@
   (settled choices and Audit record), `template/README.md` Damage calculator, and the engine contract in
   `tools/calc/README.md` Battle state / Crit / Stat changes before the hit.
 
-## Next UI fix: approved feedback, not yet implemented
-The First turn out and Disguised checkboxes currently sit to the **right** of Edit and make the Pokemon card a
-little taller. Move these compact boxes to the **left of Edit**, on the existing header line. Having the control
-must not increase the card's height or otherwise change its size/layout compared with a card without it. Preserve
-the accessible label/tooltip and existing ability-conditional behaviour. No extra label row or residual row.
-
-Relevant code: `template/calc.js` card `chip()` markup / `controls`, and `template/calc.css` header/checkbox rules.
-Test First turn out (Bull Rush / Quill Rush) and Disguised (Illusion), all five viewer sizes, normal/dvkb, both
-attacking directions and paired wide Edit. Compare header/card height with and without the control. Ensure the
-minimum-size trainer and all four moves still fit at their intended scroll stop. Add regression coverage to the
-existing scenarios, rebuild all guides and refresh the built Thor previews. The user is happy with everything
-else: avoid reopening settled UI or making opportunistic changes.
+## Compact pass (2026-10-26, second session): built, awaiting the user's Thor test
+- Header controls: First turn out / Disguised, Intrepid Sword / Dauntless Shield (checkbox, checked = on by default)
+  and Download (`A·Atk` / `A·SpA`, `M·Atk`, `M·SpA`, `None`) sit left of Edit; header height unchanged (the old
+  checkbox label had a 32 px min-height, now 18). Edit is the same for every Pokémon.
+- One window at 316 px height, every width: open card (Save/Reset share the full-name line, shorter selects/boxes),
+  open move (Type/Power/Hits one row, full name + Change/Reset one line, per-hit range and rolls one line), open Field.
+- Field toggles: min box = widest single word (measured at render), `auto-fit` columns. At the minimum window each
+  side would be one box per row, so a Player | Foe switch shows one side at full width. Weather/Terrain lost their
+  captions ("No weather" / "No terrain"). EI: the Player Emperor's Presence is labelled like the Foe one and sits
+  after Focus Energy on both sides (keys unchanged).
+- Checks: `calc-state.mjs` one-window (7 sizes) and header-height asserts; `tapField` helper in calc_check_lib for
+  the narrow switch. Rules recorded in `template/README.md` → Damage calculator.
+- Engine follow-ups below are deliberately left for the merge into `worktree-damage-calc` (the user's call).
 
 ## What is already built and accepted
 - Direct turn application by tapping the residual amount on the HP line; residual parts/toxic counter in Edit.

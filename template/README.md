@@ -58,8 +58,10 @@ These came out of the consistency pass (2026-10-23/24); the extract helpers appl
 ### Damage calculator
 
 Profiles may declare `monControls` (`k`, `l`, `abilities`) for per-Pokémon battle-state checkboxes. EI uses
-`abilityOn` for First turn out (Bull/Quill Rush) and Disguised (Illusion); off is the default. The checkbox sits next
-to Edit, with an accessible label and tooltip, not on an additional card row. Changing ability or
+`abilityOn` for First turn out (Bull/Quill Rush) and Disguised (Illusion); off is the default. Ability controls sit on
+the card's header line, left of Edit, no taller than Edit (the card keeps the height of one without them), with an
+accessible label and tooltip: these checkboxes, the Intrepid Sword / Dauntless Shield box (checked = on, the default)
+and the Download button. Edit itself is the same for every Pokémon. Changing ability or
 Mega form clears this state. Controls do not change the attack direction. `categoryInvert` names moves with an
 Invert category checkbox in their move details: a compact P/S · A/I button above Crit also toggles it while collapsed.
 The tooltip spells out category, Auto/Inverted and ties. These flags persist inside existing edited/custom Pokémon
@@ -88,7 +90,8 @@ top slot above Crit, without growing the row. Hack `over.state: false` suppresse
 suppresses Defense Curl in Rollout/Ice Ball details. A move's own control wins over the item's Metronome counter.
 State is `ST.st[slotKey]`; target Dig/Fly/Dive/Minimized/Switching is `ST.tgt[cardKey]` in Edit. Changing a move clears
 that slot, import clears imported Pokémon's state, and Reset power/type clears only those two overrides.
-Download cycles Auto (with its actual stat), Atk, Sp. Atk, None; Sword/Shield have an ability-conditional off checkbox.
+Download cycles Auto (with its actual stat), Atk, Sp. Atk, None, shown as `A·Atk` / `A·SpA`, `M·Atk`, `M·SpA`, `None`
+(tooltip spells it out).
 Details show used/listed/typed power, crit chance/stage and first-/between-hit changes; the move's own changes alone
 can be omitted. Forced crit locks C on; blocked crit disables it. No new localStorage key is used.
 **Hit totals**: collapsed damage sums all selected hits, including Parental Bond. Fixed multi-hit and Parental Bond
@@ -98,6 +101,14 @@ inspection. Loaded Dice restricts standard 2-5-hit choices to 1/4/5; Skill Link 
 Player/Foe columns. Stored `atk*` means Player and `def*` means Foe; the page remaps inputs for foe attacks. Old
 attacker-relative state migrates once, using its saved direction. Focus Energy is offered on both sides in every
 profile. Automatic trainer/ability/item field provenance remains a later decide/build, not inferred here.
+Field toggles never break a word: the narrowest box is the widest single word of any toggle (measured in the page's
+font at render, so text zoom counts), every toggle grid uses that width and fits as many columns as there is room
+(`auto-fit`), so a narrow grid becomes rows. Where a side column would hold one box per row (the minimum window, 206 px
+of Field), a Player | Foe switch shows one side at full width (the count of its active toggles on each button; the
+choice is not stored). Weather/Terrain have no caption: the empty choice reads "No weather" / "No terrain".
+**One window**: an open card (Edit), the open Field and an open move each fit one window at the minimum height
+(316 px) at every width: the full name shares its line with Save/Reset, Type/Power/Hits share a row, the move's full
+name shares its line with Change (and Reset), per-hit range and rolls share a line. Check: `calc-state.mjs` one-window.
 Scenario: `tools/scenarios/calc-state.mjs`; trainer Metronome top-slot conflicts: `tools/calc_ui_check.py`.
 **Z-moves** (profile `zmove`, Photonic; 2026-10-26): each damaging row's % line opens with a Z toggle, centred under the
 row's type dot (the dot and the Z share a 20 px column, so the name and the % text start at the same x; the user rejected
