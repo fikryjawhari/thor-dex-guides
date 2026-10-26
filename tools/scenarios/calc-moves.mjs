@@ -28,13 +28,14 @@ const row = name => `[...document.querySelectorAll('.dres:not(.na) .mr')].find(r
 const rowInfo = name => `(()=>{const r=${row(name)};if(!r)return null;return {hp:r.querySelector('.r1 .hp')?.textContent.trim()||'',btn:r.querySelector('.rh')?.textContent||'',act:r.querySelector('.rh')?.dataset.a||''};})()`;
 
 // Blissey (the player, level 50) with `moves` against a level 45+ trainer's lead, whose moves can be set too.
-const duel = (moves, foeMoves) => `(()=>{
+const duel = (moves, foeMoves, foeEdit) => `(()=>{
   CALC.use(P.find(entry=>entry.n==='Blissey'));
   const state=CALC.state(),mon=state.custom.at(-1);
   mon.l=50;mon.i='';mon.m=${JSON.stringify(moves)}.map(name=>M.indexOf(name));
   const trainer=TRS.find(t=>t.p.length&&t.p.every(p=>p.l>=45))||TRS.at(-1);
   CALC.enter(trainer.k,0);state.dir='out';
   ${foeMoves ? `state.edits['foe:'+trainer.k+':0']={...(state.edits['foe:'+trainer.k+':0']||{}),m:${JSON.stringify(foeMoves)}.map(name=>M.indexOf(name))};` : ''}
+  ${foeEdit ? `state.edits['foe:'+trainer.k+':0']={...(state.edits['foe:'+trainer.k+':0']||{}),...${JSON.stringify(foeEdit)}};` : ''}
   CALC.render();
 })()`;
 const hps = page => page.value(`({mine:Number(document.querySelector('[data-hp=mine]').value),foe:Number(document.querySelector('[data-hp=foe]').value),mineMax:Number(document.querySelector('[data-hp=mine]').closest('.cl').querySelector('.mx').textContent.replace('/',''))})`);
@@ -124,11 +125,13 @@ const checks = [{
   sizes,
   run: async page => {
     await page.route('#/calc');
-    await page.value(duel(['Double-Edge', 'Soft-Boiled', 'Rest', 'Tackle'], ['Double-Edge']));
+    // Swift, not Tackle: since A2 contact moves carry the foe's Rocky Helmet / Rough Skin / Iron Barbs in their HP amount
+    // (Hardlove's Pincurchin lead holds Rocky Helmet: Tackle shows −55), so the no-amount row needs a non-contact move.
+    await page.value(duel(['Double-Edge', 'Soft-Boiled', 'Rest', 'Swift'], ['Double-Edge']));
     const before = await hps(page);
     const [low, high] = (await page.value(rowInfo('Double-Edge'))).hp.split('–').map(Number);
     const chip = await page.value(`${row('Double-Edge')}.querySelector('.hu').textContent`);
-    assert.equal(await page.value(`${row('Tackle')}.querySelector('.hu')`), null, 'no amount without an HP effect');
+    assert.equal(await page.value(`${row('Swift')}.querySelector('.hu')`), null, 'no amount without an HP effect');
     await page.tap(`.dres:not(.na) .mr:has([data-slot="0"]) .hu`);
     let after = await hps(page);
     assert.equal(after.foe, before.foe - Math.min(before.foe, low), 'foe loses the minimum roll');
@@ -156,7 +159,9 @@ const checks = [{
   sizes,
   run: async page => {
     await page.route('#/calc');
-    await page.value(duel(['Double-Edge']));
+    // The foe's item off: since A2 the "you" amount adds contact damage (Hardlove's Pincurchin lead holds Rocky Helmet:
+    // you −65 = recoil 10 + helmet 55); this check is about the recoil sum alone.
+    await page.value(duel(['Double-Edge'], null, {i: ''}));
     await page.tap(`.dres:not(.na) .mr:has([data-slot="0"]) > .mm`);
     const before = await hps(page);
     const type = async (key, value) => page.value(`(()=>{const input=${row('Double-Edge')}.querySelector('[data-hx="${key}"]');input.value='${value}';input.dispatchEvent(new Event('change',{bubbles:true}));})()`);
