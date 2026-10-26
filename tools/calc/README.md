@@ -440,7 +440,7 @@ battler's raw Attack/Defense before stages in Singles or Doubles.
 introduction generation; Plus/Minus accepts either ability. Power Trick is
 gated by its move in `M`. `assemble.py` now supports `side: "field"` entries
 without adding prefixes and preserves `doubles: true` for D3 to hide in Singles.
-The current page renders these offered entries immediately; the engine enforces
+The current page renders new per-side entries immediately; the engine enforces
 Doubles even before D3. Existing Flower Gift declarations are not duplicated;
 Hardlove's old Flower Gift controls are omitted because its `AB` has no Flower Gift.
 Compatibility: unassembled legacy profiles that explicitly map Flower Gift with
@@ -448,6 +448,13 @@ Compatibility: unassembled legacy profiles that explicitly map Flower Gift with
 in Singles. This keeps the committed pre-A3 source/oracle fixtures unchanged.
 Assembly adds `doubles: true` to the retained legacy declarations, so every
 actual guide enforces the new Doubles-only contract; D3 should consume that metadata.
+New global capabilities use `type: "state"`, not `"toggle"`, in the generated
+profile: Water/Mud Sport, Power/Guard Split and the three ally aura keys. They are
+gated and fully supported by the engine, but deliberately not rendered by the
+old page. Adding seven always-visible global boxes made the closed Field panel
+scroll at 260x316; grouping and showing them belongs to D3, not an A3 page edit.
+D3 can render these state declarations as grouped global toggles without any
+engine or availability change. Per-side declarations remain ordinary toggles.
 
 ### Sports and raw-stat splits
 

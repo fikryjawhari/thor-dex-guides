@@ -1578,7 +1578,10 @@ print(json.dumps(out))`;
   assert.ok(offered.gen6.allyFairyAura && !offered.gen6.atkPowerSpot);
   assert.ok(offered.expansion.atkPowerSpot && offered.expansion.atkTabletsOfRuin);
   for (const hack of ['emerald-imperium', 'hardlove-gold', 'photonic-sun', 'eternal-x']) {
-    for (const key of ['waterSport', 'mudSport', 'powerSplit', 'guardSplit']) assert.equal(offered[hack][key].side, 'field');
+    for (const key of ['waterSport', 'mudSport', 'powerSplit', 'guardSplit']) {
+      assert.equal(offered[hack][key].side, 'field');
+      assert.equal(offered[hack][key].type, 'state');
+    }
     for (const key of ['atkPlusMinus', 'defPlusMinus']) assert.equal(offered[hack][key].doubles, true);
     if (hack !== 'hardlove-gold') for (const key of ['atkFlowerGift', 'defFlowerGift']) assert.equal(offered[hack][key].doubles, true);
   }

@@ -94,7 +94,7 @@ def calc_profile(c, data=None):
                 key = entry['k'] if side == 'field' else side + entry['k']
                 if key not in keys:
                     fields.append(dict(k=key, l=(label + ' ' + entry['l']).strip(), side=side,
-                                       type='toggle', group=entry['group'],
+                                       type=entry.get('type', 'toggle'), group=entry['group'],
                                        **({'doubles': True} if entry.get('doubles') else {}),
                                        **({'max': entry['max']} if 'max' in entry else {})))
                     keys.add(key)
