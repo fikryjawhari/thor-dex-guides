@@ -24,6 +24,15 @@ const fixtureChecks=[{
     assert.ok(Object.values(await page.value('CALC.state().tgt')).includes('dig'),'target state persists per card');
     await page.tap('[data-a=eopen][data-s=foe]');
     assert.equal(await page.count('.ed'),0,'paired collapse');
+    if(page.width<480){
+      const width=page.width,height=page.height;
+      await page.tap('[data-a=eopen][data-s=mine]');
+      await page.resize(537,424);
+      assert.equal(await page.count('.ed'),2,'resize populates both wide editors');
+      await page.tap('[data-a=eopen][data-s=foe]');
+      assert.equal(await page.count('.ed'),0,'resize keeps paired collapse');
+      await page.resize(width,height);
+    }
     await page.tap('.dres:not(.na) .mr .mm');
     assert.ok(await page.value('document.querySelector(".dfield").getBoundingClientRect().top>=Math.max(...[...document.querySelectorAll(".dres")].map(element=>element.getBoundingClientRect().bottom))-1'),'Field follows expanded moves');
   },
