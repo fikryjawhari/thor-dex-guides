@@ -24,8 +24,8 @@ const checks = [{
     })()`);
     assert.ok(await page.count('.dres .mr:not(.em)'), 'damage rows rendered');
     await page.tap('.dfield > summary');
-    assert.deepEqual(await page.value(`[...document.querySelectorAll('[data-f]')].map(element=>element.dataset.f)`),
-      entries.filter(entry => entry.type === 'select').concat(entries.filter(entry => entry.type === 'toggle')).map(entry => entry.k));
+    assert.deepEqual(await page.value(`[...new Set([...document.querySelectorAll('[data-f]')].map(element=>element.dataset.f))].sort()`),
+      entries.map(entry => entry.k).sort());
     const weather = entries.find(entry => entry.k === 'weather');
     assert.ok(weather.o.some(([value]) => value === 'Snow'));
     assert.ok(!weather.o.some(([value]) => value === 'Hail'));

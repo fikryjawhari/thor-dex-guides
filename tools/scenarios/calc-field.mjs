@@ -26,11 +26,11 @@ const checks = [
     title: 'the Field box draws the profile list; a selection reaches the engine by key and survives a reload',
     run: async page => {
       await setupCalc(page);
-      const selects = entries.filter(entry => entry.type === 'select').map(entry => entry.k);
-      const toggles = entries.filter(entry => entry.type === 'toggle').map(entry => entry.k);
+      const selects = entries.filter(entry => entry.type === 'select' && entry.k !== 'gameType').map(entry => entry.k);
+      const toggles = entries.filter(entry => entry.type === 'toggle').map(entry => entry.k).sort();
       await page.tap('.dfield > summary');
       assert.deepEqual(await page.value(`[...document.querySelectorAll('.dfr select[data-f]')].map(s=>s.dataset.f)`), selects, "the selects are the profile's");
-      assert.deepEqual(await page.value(`[...document.querySelectorAll('.dtg button[data-f]')].map(b=>b.dataset.f)`), toggles, "the toggles are the profile's");
+      assert.deepEqual(await page.value(`[...document.querySelectorAll('.dtg button[data-f]')].map(b=>b.dataset.f).sort()`), toggles, "the toggles are the profile's");
       assert.equal(await page.count('[data-f="magicRoom"]'), 0, 'the removed toggle is gone');
       const weatherOptions = await page.value(`[...document.querySelector('select[data-f="weather"]').options].map(o=>o.value)`);
       assert(weatherOptions.includes('Hail'), `the added weather is offered: ${weatherOptions}`);

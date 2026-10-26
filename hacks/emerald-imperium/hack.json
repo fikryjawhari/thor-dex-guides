@@ -1555,6 +1555,27 @@
      "type": "toggle",
      "side": "atk",
      "to": "isEmperorPresence"
+    },
+    {
+     "k": "atkFocus",
+     "l": "Attacker Focus Energy",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFocusEnergy"
+    },
+    {
+     "k": "defFocus",
+     "l": "Defender Focus Energy",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFocusEnergy"
+    },
+    {
+     "k": "defEmperorPresence",
+     "l": "Defender Emperor’s Presence",
+     "type": "toggle",
+     "side": "def",
+     "to": "isEmperorPresence"
     }
    ]
   },

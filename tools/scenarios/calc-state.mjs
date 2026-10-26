@@ -26,4 +26,22 @@ await runChecks({name:'calc-state',file,checks:[{
     await page.tap('.dres:not(.na) .mr .mm');
     assert.ok(await page.value('document.querySelector(".dfield").getBoundingClientRect().top>=Math.max(...[...document.querySelectorAll(".dres")].map(element=>element.getBoundingClientRect().bottom))-1'),'Field follows expanded moves');
   },
+},{
+  id:'field-sides',title:'segmented format and stable side-specific engine inputs',
+  run:async page=>{
+    await setupCalc(page);
+    await page.tap('.dfield > summary');
+    await page.tap('[data-f=gameType][data-value=Doubles]');
+    assert.equal(await page.value('CALC.state().field.gameType'),'Doubles');
+    assert.equal(await page.value('document.querySelector("[data-value=Doubles]").getAttribute("aria-pressed")'),'true');
+    assert.equal(await page.count('[data-field-side]'),2);
+    await page.tap('[data-f=atkFocus]');
+    const inputs=await page.value(`(()=>{const original=DMG.calc,calls=[];DMG.calc=(att,def,slot,field)=>{calls.push(field);return original(att,def,slot,field);};CALC.render();DMG.calc=original;return calls;})()`);
+    assert.ok(inputs.some(field=>field.atkFocus===1&&!field.defFocus),'player Focus while attacking');
+    assert.ok(inputs.some(field=>field.defFocus===1&&!field.atkFocus),'player Focus while defending');
+    await page.tap('.cc[data-s=foe] .cn');
+    assert.equal(await page.value('CALC.state().field.atkFocus'),1,'side does not follow attacker selection');
+    await page.reload();
+    assert.equal(await page.value('CALC.state().field.atkFocus'),1,'canonical field persists');
+  },
 }]});

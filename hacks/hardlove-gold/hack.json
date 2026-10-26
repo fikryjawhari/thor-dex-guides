@@ -262,6 +262,20 @@
      "type": "toggle",
      "side": "def",
      "to": "isProtected"
+    },
+    {
+     "k": "atkFocus",
+     "l": "Attacker Focus Energy",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFocusEnergy"
+    },
+    {
+     "k": "defFocus",
+     "l": "Defender Focus Energy",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFocusEnergy"
     }
    ],
    "over": {

@@ -380,10 +380,20 @@ body.calc-route .fbar .nav svg{display:block;width:10px;height:10px}
 .cc .dstate label{display:flex;align-items:center;gap:5px;width:100%;font-size:11px;color:var(--mut)}
 .cc .dstate select{flex:1;min-width:0}
 .cc .ddl{width:100%;min-height:26px;font-size:12px}
+.cc .ed .e2.dstate,.cc .ed .e2:has(.ddl){grid-template-columns:1fr}
+.cc .ed .dentry input{width:14px;height:14px;min-width:14px;margin:0;accent-color:var(--acc)}
 .cc .dentry{display:flex;align-items:center;gap:4px;font-size:11px}
 .cc .l1 .dmonstate{display:flex;flex:none;margin:0;align-items:center}
 .cc .l1 .dmonstate input{width:14px;height:14px;margin:0;accent-color:var(--acc)}
 .cc .cl .dturn{flex:none;margin-left:auto;min-height:20px;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);font:700 11px system-ui;cursor:pointer;touch-action:manipulation}
 .cc .dn{color:#ff7b6b}.cc .up{color:#3fb760}
 .cc .dqp label{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.dformat{display:grid;grid-template-columns:1fr 1fr;margin-bottom:6px}
+.dformat button{min-height:30px;border:1px solid var(--line);background:var(--panel2);color:var(--mut);font:700 12px system-ui;cursor:pointer;touch-action:manipulation}
+.dformat button:first-child{border-radius:7px 0 0 7px}.dformat button:last-child{border-radius:0 7px 7px 0}
+.dformat button[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#111}
+.dfside{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:5px;margin-top:6px}
+.dfside section{min-width:0}.dfside section>b{display:block;text-align:center;font-size:11px;margin-bottom:3px}
+.dfside .dtg{display:grid;grid-template-columns:minmax(0,1fr);gap:3px}
+.dfside .dtg button{width:100%;min-width:0;font-size:11px;overflow-wrap:anywhere}
 @media(min-width:480px){body.calc-route .fit,body.calc-route .fit:has(.ed){height:auto;min-height:calc(100vh - 8px)}body.calc-route .top{flex:none}}

@@ -12,6 +12,9 @@ const stageMul=stage=>stage>=0?(2+stage)/2:2/(2-stage);
 const defaults=()=>({dir:'out',mine:{src:'party',b:0,i:0},foe:{k:'',i:0},field:{},custom:[],imp:null,edits:{},saved:{},recent:[],crit:{},hits:{},mvo:{},z:{},tgt:{}});
 let ST=defaults();try{const stored=JSON.parse(localStorage.getItem(KEY)||'null');if(stored&&typeof stored==='object')ST={...ST,...stored};}catch(error){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(error){BAN={ok:0,h:'Storage full',t:'The current changes could not be remembered.'};}};
+const flipField=field=>Object.fromEntries(Object.entries(field).map(([key,value])=>[key.startsWith('atk')?'def'+key.slice(3):key.startsWith('def')?'atk'+key.slice(3):key,value]));
+if(!ST.fieldSides){if(ST.dir==='in')ST.field=flipField(ST.field);ST.fieldSides=1;}
+const fieldFor=side=>side==='foe'?flipField(ST.field):ST.field;
 window.DMG.init(sourceData,prof);
 const toEngine=mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i||'',st:mon.status||'',iv:mon.iv,ev:EVS?mon.ev:[0,0,0,0,0,0],stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp,abilityOn:mon.abilityOn===true,pty:mon.pty||'',toxn:mon.toxn||1,vol:mon.vol,dl:mon.dl,entry:mon.entry});
 const koTxt=ko=>!ko.n?'5+ hits':(ko.n===1?'OHKO':ko.n+'HKO')+(ko.p<1?' '+Math.min(99,Math.max(1,Math.round(ko.p*100)))+'%':'');
@@ -113,7 +116,7 @@ function calcPage(){if(!host.isConnected)document.body.appendChild(host);if(prof
  let ra='',rb='';
  if(!a||!b)ra=rb=`<div class="dnote">${!a?'Pick one of yours':'Pick a foe'}</div>`;
  else if(a.lv==null||b.lv==null)ra=rb=`<div class="dnote">Set the level cap</div>`;
- else{ra=movesHTML(a,b,'mine',F);rb=movesHTML(b,a,'foe',F);}
+ else{ra=movesHTML(a,b,'mine',fieldFor('mine'));rb=movesHTML(b,a,'foe',fieldFor('foe'));}
  const fs=(prof.field||[]).filter(entry=>F[entry.k]).map(entry=>entry.type==='toggle'?entry.l:(entry.o||[]).find(option=>option[0]===F[entry.k])?.[1]||F[entry.k]);
  const ban=BAN?`<div class="ban ${BAN.ok?'ok':'bad'}"><button class="bx" data-a="bandis" aria-label="Dismiss">×</button><b>${esc(BAN.h)}</b>${esc(BAN.t)}</div>`:'';
  html($('#app'),`<div class="fit">${ban}<div class="top"><div class="dside mg">${mineGrid()}</div><div class="dside">${foeSide()}</div></div>
@@ -143,7 +146,7 @@ const refresh=()=>{const y=scrollY;route2();scrollTo(0,y);};
 function route2(){calcPage();SH.redraw();}
 document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const el=e.target.closest('[data-a],[data-f]');if(!el||!el.closest('#app'))return;
  const a=el.dataset.a;
- if(el.dataset.f&&el.tagName==='BUTTON'){const k=el.dataset.f;ST.field[k]=ST.field[k]?0:1;window.__fo=1;save();refresh();return;}
+ if(el.dataset.f&&el.tagName==='BUTTON'){const k=el.dataset.f;ST.field[k]=el.dataset.value??(ST.field[k]?0:1);window.__fo=1;save();refresh();return;}
  if(a==='row'&&e.target.closest('.dd'))return;
  if(a==='mpick'){ST.mine={src:el.dataset.src,b:+el.dataset.b,i:+el.dataset.i};save();refresh();}
  else if(a==='fpick'){ST.foe.i=+el.dataset.i;save();refresh();}
@@ -226,7 +229,7 @@ function picker({title,items,onPick,none}){let q='';
  pushSheet(s);}
 
 
-function fieldHTML(values){const entries=prof.field||[];return '<div class="dfr">'+entries.filter(entry=>entry.type==='select').map(entry=>`<label>${esc(entry.l)}<select data-f="${esc(entry.k)}">${(entry.o||[]).map(([value,label])=>`<option value="${esc(value)}" ${String(values[entry.k]??'')===String(value)?'selected':''}>${esc(label)}</option>`).join('')}</select></label>`).join('')+'</div><div class="dtg">'+entries.filter(entry=>entry.type==='toggle').map(entry=>`<button data-f="${esc(entry.k)}" aria-pressed="${!!values[entry.k]}">${esc(entry.l)}</button>`).join('')+'</div>';}
+function fieldHTML(values){const entries=prof.field||[],format=entries.find(entry=>entry.k==='gameType');const toggle=entry=>`<button data-f="${esc(entry.k)}" aria-pressed="${!!values[entry.k]}">${esc(entry.l.replace(/^(Attacker|Defender) /,''))}</button>`;return (format?`<div class="dformat" role="group" aria-label="Battle format">${format.o.map(([value,label])=>`<button data-f="gameType" data-value="${esc(value)}" aria-pressed="${(values.gameType||'Singles')===value}">${esc(label)}</button>`).join('')}</div>`:'')+'<div class="dfr">'+entries.filter(entry=>entry.type==='select'&&entry.k!=='gameType').map(entry=>`<label>${esc(entry.l)}<select data-f="${esc(entry.k)}">${(entry.o||[]).map(([value,label])=>`<option value="${esc(value)}" ${String(values[entry.k]??'')===String(value)?'selected':''}>${esc(label)}</option>`).join('')}</select></label>`).join('')+'</div><div class="dtg">'+entries.filter(entry=>entry.type==='toggle'&&entry.side==='field').map(toggle).join('')+'</div><div class="dfside">'+[['atk','Player'],['def','Foe']].map(([side,label])=>`<section data-field-side="${side}"><b>${label}</b><div class="dtg">${entries.filter(entry=>entry.type==='toggle'&&entry.side===side).map(toggle).join('')}</div></section>`).join('')+'</div>';}
 const host=document.createElement('div');host.id='sheets';
 const input=document.createElement('input');input.type='file';input.accept='.sav,.dsv,.bin,main';input.hidden=true;input.id='calc-file';
 function startImport(){if(prof.save)input.click();}
