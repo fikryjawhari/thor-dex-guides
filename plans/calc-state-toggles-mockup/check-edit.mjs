@@ -38,6 +38,7 @@ try{
       if(width===260&&height===316)assert.ok(before.fourthMove<=309,`fourth move ends at ${before.fourthMove}`);
       await value(`setOption('residual',false)`);
       const plain=await value('mockMeasurements()');
+      await value(`document.querySelector('[data-action="apply-turn"][data-side="0"]')?.click()`);
       assert.equal(plain.teamHeight,before.teamHeight,'residuals do not resize team');
       assert.equal(plain.teamList,before.teamList,'residuals do not change team presentation');
       await value(`setOption('residual',true);document.querySelector('[data-action="edit"][data-side="0"]').click()`);

@@ -9,8 +9,8 @@
   `node plans/calc-state-toggles-mockup/check-edit.mjs`: all five viewer sizes, normal/dvkb, pass (ten checks);
   fourth move ends at 309 px at 260 x 316; wide team area is 228 px at both 424 px-high sizes. Edit/residuals leave
   the team area unchanged, both wide editors populate/collapse together, Field stays below expanded moves.
-  Mock values are illustrative, not live engine results. Await the user's design approval, then implement the settled
-  controls and UI fixes. Existing "Settled with the user" choices remain final.
+  Approved with refinements (2026-10-26): build the settled controls and UI fixes below. Mock values are illustrative;
+  production toxic counters use the engine. Existing choices remain final except the explicit Download refinement.
 - No engine edits are authorised by this UI build. Any missing engine behaviour is reported first and deferred
   to the engine follow-up unless the user explicitly changes scope. No push without a fresh yes.
 
@@ -185,7 +185,8 @@ state doubles the power instead, so the Power box shows it.
    are set on the Pokémon, not per row. Between-hit changes are listed but not switchable.
 6. **Intrepid Sword / Dauntless Shield:** on by default; an "off" checkbox in the Pokémon's Edit menu (`entry: false`)
    for when the entry doesn't count (Hardlove: once per battle).
-7. **Download:** a select in the Pokémon's Edit menu: **Auto (→ SpA) / Atk / SpA / Off**, default Auto (`dl` missing).
+7. **Download:** one cycling button in the Pokemon's Edit menu: **Auto (→ stat) -> Atk -> Sp. Atk -> None -> Auto**,
+   default Auto (`dl` missing). This replaces the originally settled select, per user approval on 2026-10-26.
    Auto is what the game does on a fresh entry against the current target, and its label shows which stat that gives
    now; Atk / SpA lock the boost it actually got, so it stays when the target changes; Off when it didn't fire. The
    engine takes `dl: "atk" | "spa" | "off"`.
@@ -193,6 +194,18 @@ state doubles the power instead, so the Power box shows it.
 
 Engine inputs for 5-7 are built (`tools/calc/README.md` → Stat changes before the hit). These are behaviour
 decisions; the build still mocks the Edit-menu controls (target state, Download, Sword / Shield off) before building.
+
+### Layout approval refinements (2026-10-26)
+- The residual amount is a small clickable box on the existing HP line. Tapping it applies one turn immediately,
+  without opening Edit, selecting that side or changing attack direction. Edit contains the parts and toxic counter.
+  Real toxic damage follows the engine at the chosen turn and increments on applying a turn; the mock is illustrative.
+- Download is the cycling button in choice 7. Auto's label follows the current target; explicit choices stay locked.
+- Approved: first-turn/disguise checkbox next to Edit; full name inside Edit; paired wide Edit; compact multi-hit/
+  Draco controls; two player/foe field columns. No extra first-turn label or category row on the closed cards/moves.
+- A full-width Singles / Doubles segmented switch sits above Weather / Terrain, with the active half highlighted.
+  Field side controls stay in their stable player/foe columns when the attack direction changes.
+- Build these existing field controls now; trainer evidence, automatic ability/item weather and manual provenance
+  remain the next sequential decide/build, not an implicit engine change or part of this switch's implementation.
 
 **Not in this spec**
 - Supreme Overlord: absent from all four calc hacks (the engine takes `atk.fnt` if a later hack has it).
