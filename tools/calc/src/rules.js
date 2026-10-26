@@ -17,7 +17,7 @@ function fieldPhase(gen, phase, context, after = false) {
     if (context.move.hasType('Ground')) {
       const grounded = fieldGrounded(context.def, context.field);
       if (after && grounded === false && !context.move.named('Thousand Arrows')) context.value = 0;
-      else if (!after && grounded && type === 'Flying') context.value = 1;
+      else if (!after && grounded && type === 'Flying' && (context.field.isGravity || context.def.guideGrounded)) context.value = 1;
     }
     if (!after && values.defMiracleEye && type === 'Dark' && context.move.hasType('Psychic')) context.value = 1;
     if (after && values.defTarShot && context.move.hasType('Fire') && type === context.def.types[0]) context.value *= 2;

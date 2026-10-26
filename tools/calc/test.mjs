@@ -687,6 +687,14 @@ await test('direct field inputs work without profile entries across all engine g
   }
 });
 
+for (const gen of [4, 5, 6, 7, 8, 9]) {
+  for (const name of ['Charizard', 'Skarmory']) {
+    const profile = {...profiles.expansion, gen};
+    await compare(`Iron Ball dual-type parity Gen ${gen} ${name}`, set('Snorlax'),
+      set(name, {it: 'Iron Ball'}), slot('Earthquake'), {}, {}, profile, fieldGuide);
+  }
+}
+
 await test('volatile Ground immunity and Tar Shot survive inverse chart rules in the right order', () => {
   engine.init(fieldGuide, {...profiles.expansion, over: {rules: [{phase: 'effectiveness',
     when: {ref: 'input.field.inverse'}, value: {op: 'if', args: [

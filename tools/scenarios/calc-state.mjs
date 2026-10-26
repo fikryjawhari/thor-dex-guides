@@ -161,6 +161,15 @@ const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windo
     const dice=[];
     for(let count=0;count<3;count++){dice.push(await page.text(`${row} [data-a=hits]`));await page.tap(`${row} [data-a=hits]`);}
     assert.deepEqual(new Set(dice),new Set(['×1','×4','×5']));
+    for(const suppression of ['magicRoom','Klutz']){
+      if(suppression==='Klutz'&&!guide.AB.some(entry=>entry[0]==='Klutz'))continue;
+      await page.value(`(()=>{const state=CALC.state();state.hits={};state.field.magicRoom=${suppression==='magicRoom'};state.custom.at(-1).a=${suppression==='Klutz'?"AB.findIndex(entry=>entry[0]==='Klutz')":'-1'};CALC.render();})()`);
+      assert.equal(await page.text(`${row} [data-a=hits]`),'×3','suppressed Dice uses the ordinary default');
+      const choices=[];
+      for(let count=0;count<5;count++){choices.push(await page.text(`${row} [data-a=hits]`));await page.tap(`${row} [data-a=hits]`);}
+      assert.deepEqual(new Set(choices),new Set(['×1','×2','×3','×4','×5']),suppression+' restores all hit counts');
+    }
+    await page.value('CALC.state().field.magicRoom=false;CALC.render()');
     if(guide.AB.some(entry=>entry[0]==='Skill Link')){
       await page.value("CALC.state().custom.at(-1).a=AB.findIndex(entry=>entry[0]==='Skill Link');CALC.render()");
       const skill=[];

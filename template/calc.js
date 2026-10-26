@@ -32,8 +32,9 @@ function resolve(m){const p=byId[m.id],l=isNaN(m.l)?null:m.l;const st=l==null?nu
 let BAN=null;const ROWOPEN=new Set();let SMODE='+';
 ST.crit=ST.crit||{};ST.mvo=ST.mvo||{};ST.hits=ST.hits||{};ST.z=ST.z||{};ST.tgt=ST.tgt||{};ST.st=ST.st||{};ST.hitv=ST.hitv||{};
 const MH={};Object.entries(prof.multihit||{}).forEach(([name,hits])=>{const index=M.indexOf(name);if(index>=0)MH[index]=hits;});
-function hitChoices(mi,att){const limits=MH[mi];if(!limits)return [1];if(limits[0]===limits[1])return [limits[1]];if(att.abil==='Skill Link')return [1,limits[1]];if(att.i==='Loaded Dice'&&limits[0]===2&&limits[1]===5)return [1,4,5];return [...new Set([1,...Array.from({length:limits[1]-limits[0]+1},(_,index)=>limits[0]+index)])];}
-function hitsOf(mi,ck,att){const limits=MH[mi];if(!limits)return 1;if(limits[0]===limits[1])return limits[1];const choices=hitChoices(mi,att),selected=ST.hits[ck];return choices.includes(selected)?selected:att.abil==='Skill Link'?limits[1]:att.i==='Loaded Dice'&&choices.includes(4)?4:limits[2];}
+const loadedDice=att=>att.i==='Loaded Dice'&&att.abil!=='Klutz'&&!ST.field.magicRoom;
+function hitChoices(mi,att){const limits=MH[mi];if(!limits)return [1];if(limits[0]===limits[1])return [limits[1]];if(att.abil==='Skill Link')return [1,limits[1]];if(loadedDice(att)&&limits[0]===2&&limits[1]===5)return [1,4,5];return [...new Set([1,...Array.from({length:limits[1]-limits[0]+1},(_,index)=>limits[0]+index)])];}
+function hitsOf(mi,ck,att){const limits=MH[mi];if(!limits)return 1;if(limits[0]===limits[1])return limits[1];const choices=hitChoices(mi,att),selected=ST.hits[ck];return choices.includes(selected)?selected:att.abil==='Skill Link'?limits[1]:loadedDice(att)&&choices.includes(4)?4:limits[2];}
 const TRI=new Set(['Triple Kick','Triple Axel'].map(name=>M.indexOf(name)).filter(index=>index>=0));
 const TNAMES=Object.keys(D.TC);
 const STATE_COUNTERS={'Fury Cutter':4,'Echoed Voice':4,Rollout:4,'Ice Ball':4,'Rage Fist':6,'Last Respects':5};
@@ -53,13 +54,15 @@ const effSpe=r=>r.stats?(window.DMG.speed?window.DMG.speed(toEngine(r),ST.field,
 ST.hazardEntry=ST.hazardEntry||{};
 function rearmHazards(side,part){const marker=ST.hazardEntry[side];if(marker)delete marker[part];}
 function entryEffects(side){const mon=getMon(side);if(!mon||!Number.isFinite(mon.l))return null;return window.DMG.entry(toEngine(resolve(mon)),ST.field,fieldSide(side));}
-function hazardReady(side){const effect=entryEffects(side),marker=ST.hazardEntry[side]||{};return !!effect&&((effect.parts?.length&&!marker.damage)||(effect.status&&!marker.status)||(effect.spe!=null&&!marker.web));}
+const pendingHazardDamage=(effect,marker)=>marker.damage===true?[]:(effect.parts||[]).filter(part=>!marker.damage?.[part.l]);
+function hazardReady(side){const effect=entryEffects(side),marker=ST.hazardEntry[side]||{};return !!effect&&(pendingHazardDamage(effect,marker).length||(effect.status&&!marker.status)||(effect.spe!=null&&!marker.web));}
 function applyHazards(side,enter=false){const effect=entryEffects(side);if(!effect)return;const marker=enter?{key:sideInfo(side).key}:(ST.hazardEntry[side]||{key:sideInfo(side).key});ST.hazardEntry[side]=marker;const mon=resolve(getMon(side));
- if(!marker.damage&&effect.parts?.length)setField(side,'hp',Math.max(0,mon.hp+effect.parts.reduce((total,part)=>total+part.v,0)));
- if(!marker.status&&effect.status){setField(side,'status',effect.status);delete TOX[sideInfo(side).key];}
- if(!marker.web&&effect.spe!=null){const stages=mon.stg.slice();stages[4]=effect.spe;setField(side,'stg',stages);}
- marker.damage=marker.status=marker.web=true;save();}
-function checkEntries(){for(const side of ['mine','foe'])if(getMon(side)&&ST.hazardEntry[side]?.key!==sideInfo(side).key)applyHazards(side,true);}
+ const damage=pendingHazardDamage(effect,marker);
+ if(damage.length){setField(side,'hp',Math.max(0,mon.hp+damage.reduce((total,part)=>total+part.v,0)));marker.damage={...marker.damage,...Object.fromEntries(damage.map(part=>[part.l,true]))};}
+ if(!marker.status&&effect.status){setField(side,'status',effect.status);delete TOX[sideInfo(side).key];marker.status=true;}
+ if(!marker.web&&effect.spe!=null){const stages=mon.stg.slice();stages[4]=effect.spe;setField(side,'stg',stages);marker.web=true;}
+ marker.v=2;save();}
+function checkEntries(){for(const side of ['mine','foe'])if(getMon(side)){const marker=ST.hazardEntry[side];if(marker?.key!==sideInfo(side).key)applyHazards(side,true);else if(marker.v!==2){const effect=entryEffects(side);if(marker.damage===true)marker.damage=Object.fromEntries((effect?.parts||[]).map(part=>[part.l,true]));marker.status=marker.status&&!!getMon(side).status;marker.web=marker.web&&effect?.spe!=null;marker.v=2;save();}}}
 function mineList(){const imp=ST.imp,L=[];if(imp){imp.party.forEach((m,i)=>L.push({g:0,src:'party',b:0,i,m}));imp.boxes.forEach((bx,b)=>bx.forEach((m,i)=>L.push({g:1,src:'box',b,i,m})));}ST.custom.forEach((m,i)=>L.push({g:2,src:'custom',b:0,i,m}));return L;}
 const isSel=x=>ST.mine.src===x.src&&(x.src!=='box'||ST.mine.b===x.b)&&ST.mine.i===x.i;
 function mineGrid(){const L=mineList();

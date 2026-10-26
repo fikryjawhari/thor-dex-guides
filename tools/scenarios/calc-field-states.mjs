@@ -74,6 +74,42 @@ await runChecks({name:'calc-field-states', file, expectTrainers:false, checks:[{
     assert.equal(await hp(page),max-2*loss,'return after a different selection is a fresh entry');
   },
 },{
+  id:'entry immunity edits', title:'blocked hazards stay pending when an item, ability or grounding changes', sizes,
+  run:async page=>{
+    await seed(page);
+    const max=await hp(page);
+    const loss=Math.floor(max/8);
+    const cases=[
+      ...(guide.cfg.calc.gen>=8?[{before:"mon.i='Heavy-Duty Boots'",after:"mon.i=''",field:{atkStealthRock:1,atkToxicSpikes:2,atkStickyWeb:1},damage:true}]:[]),
+      ...(guide.cfg.calc.gen>=8?[{before:"mon.i='Heavy-Duty Boots'",after:"mon.i=''",field:{atkStealthRock:1,atkToxicSpikes:2,atkStickyWeb:1},damage:true,legacy:true}]:[]),
+      {before:"mon.a=AB.findIndex(entry=>entry[0]==='Magic Guard')",after:'mon.a=-1',field:{atkStealthRock:1,atkStickyWeb:1},damage:true},
+      {before:'state.field.atkMagnetRise=1',after:'state.field.atkMagnetRise=0',field:{atkStealthRock:1,atkSpikes:1,atkStickyWeb:1},damage:true},
+      {before:"mon.a=AB.findIndex(entry=>entry[0]==='Immunity')",after:'mon.a=-1',field:{atkStealthRock:1,atkToxicSpikes:2},damage:false},
+    ];
+    for(const fixture of cases){
+      await page.value(`(()=>{const state=CALC.state(),mon=state.custom[0];state.mine={src:'custom',b:0,i:0};state.hazardEntry={};state.field=${JSON.stringify(fixture.field)};mon.hp=${max};mon.a=-1;mon.i='';mon.status='';mon.stg=[0,0,0,0,5];${fixture.before};CALC.render();})()`);
+      if(fixture.legacy){
+        await page.value("(()=>{const state=CALC.state();state.hazardEntry.mine={key:'mine:'+state.custom[0].pid,status:true,web:true};localStorage.setItem(LS.dmg,JSON.stringify(state));})()");
+        await page.reload();await page.goto('#/calc');
+        assert.equal(await page.value('CALC.state().hazardEntry.mine.v'),2,'legacy Full HP marker migrates without a damage flag');
+      }
+      const entered=await hp(page);
+      await openHazards(page);
+      assert.equal(await page.value('document.querySelector("[data-a=hazards][data-s=mine]").disabled'),true,'immunity blocks pending effects');
+      await page.value(`(()=>{const state=CALC.state(),mon=state.custom[0];${fixture.after};CALC.render();})()`);
+      assert.equal(await hp(page),entered,'eligibility edits never apply damage automatically');
+      await openHazards(page);
+      assert.equal(await page.value('document.querySelector("[data-a=hazards][data-s=mine]").disabled'),false,'newly eligible effects can be applied');
+      await page.tap('[data-a=hazards][data-s=mine]');
+      assert.equal(await hp(page),entered-(fixture.damage?loss:0),'only pending damage applies, not previously consumed hazards');
+      if(fixture.field.atkToxicSpikes)assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
+      if(fixture.field.atkStickyWeb)assert.equal(await page.value('CALC.state().custom[0].stg[4]'),-1);
+      await page.value('CALC.render()');
+      await openHazards(page);
+      assert.equal(await page.value('document.querySelector("[data-a=hazards][data-s=mine]").disabled'),true,'applied components remain consumed');
+    }
+  },
+},{
   id:'field groups', title:'profile gating, layer cycling, folded active counts and one-window expanded groups', sizes,
   run:async page=>{
     await seed(page);
