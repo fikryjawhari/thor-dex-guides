@@ -1,5 +1,52 @@
 # Calc: battle-state controls (spec)
 
+## Build status (2026-10-26)
+- Working branch: `worktree-damage-calc-toggles`, tab of `worktree-damage-calc`.
+- Engine pass merged cleanly at `f3203b1`; main checkout's Hardlove `.src/` copied before any extract build.
+- Page not built yet. Next: approve the Edit-menu mockup and layout proposal below, then implement the settled
+  controls and UI fixes. Existing "Settled with the user" choices remain final.
+- No engine edits are authorised by this UI build. Any missing engine behaviour is reported first and deferred
+  to the engine follow-up unless the user explicitly changes scope. No push without a fresh yes.
+
+### Additional Thor feedback: UI work on this branch
+Do this sequentially, not as parallel template jobs. The additions below are requests, not approved mockup designs.
+1. Layout: preserve the opponent's six-row team view when residuals appear; opening Edit must not enlarge the
+   area above the cards or switch the team presentation. At wide sizes both Edit panels open/collapse together,
+   with both populated. Move details must push Field below the complete taller moveset, never overlap it.
+2. Compactness proposal: keep the small view's trainer plus four moves intact. Trim card/header/navigation
+   chrome, not legibility. Mock residual amounts on the existing HP line, with their parts and toxic control in
+   Edit instead of a separate Turn row. Opening details/edits grows content downward, not the team area upward.
+3. Card controls: First turn out / Disguised next to Edit, no additional card row; full species/form name inside
+   Edit; target state, ability-appropriate Download Auto / Atk / SpA / Off and Sword / Shield off controls in Edit.
+4. Move readouts: outside damage is the sum of selected hits (including Parental Bond), details list each hit;
+   offer a one-hit inspection without introducing conflicting stacked hit buttons. Draco's category and
+   Auto/Inverted control uses the top slot above Crit, not an extra text row. Expanded Z-moves show their full name.
+   Loaded Dice / Skill Link narrow the UI's offered hit counts while retaining a one-hit inspection; derive their
+   availability from the guide/profile, with no inferred new engine mechanic.
+5. Trainer-field decide/build next, on this branch: two stable player/foe columns (or an explicitly approved
+   four-state alternative), not mixed scattered side toggles. Automatic weather/terrain follows the active
+   Pokemon unless manually overridden; manual overrides survive Pokemon changes; trainer changes clear the field.
+   Specify precedence, simultaneous sources, manual None, persistence and trainer evidence in that decide step
+   (`plans/trainer-field-conditions.md`), before implementing automation. Unsupported trainer effects are not
+   silently approximated. Speed-colour comparison is sufficient; no extra turn-order control requested now.
+
+### Engine triage (local probes, incoming committed engine)
+- Return / Frustration defaults: both return `null` without explicit power. Setting their maximum default is a
+  deferred engine-contract/default-power follow-up, not an engine edit in this page build.
+- Power-Up Punch already changes hit two: EI Mega Kangaskhan / Parental Bond into neutral-nature Lv 50 Blissey,
+  all defaults otherwise, returns hit ranges 146-174 and 54-64. The latter includes the intervening Attack boost;
+  it is not merely one quarter of hit one. Do not schedule another implementation for this example.
+- Stamina already affects later hits: EI Cloyster's three-hit Icicle Spear into Mudsdale with Stamina gives
+  30-36, 20-26, 14-20, and `pre` reports Defense +1 before hits two and three.
+- Loaded Dice / Skill Link: the engine honours an explicit `slot.hits` of 1-5 in both cases. Restricting what the
+  page offers is UI policy; one-hit inspection is not a claim that Skill Link naturally rolled one hit.
+- Emperor's Presence already has self and doubles-ally profile rules and source-chain checks in
+  `tools/calc/imperium_check.mjs`. Existing fixtures return 31-37 with the ally off, 40-48 with it on, and 52-63
+  when self and ally stack. Expose/verify the right side and singles/doubles UI; no established engine defect.
+- Pursuit's switching-target input is implemented as `def.vol: "switch"`; this build adds its agreed Edit control.
+- This triage verifies these examples, not every possible between-hit effect or field-changing ability/item.
+  Further engine gaps found during implementation must be raised before editing engine code.
+
 Decide session, 2026-10-26, on `worktree-damage-calc-toggles` (tab of `worktree-damage-calc`). Source: the
 "Needs battle state" and "Power box readout" parts of `plans/calc-dynamic-power.md`. No template or engine change was
 made in this step. Mockup: `plans/calc-state-toggles-mockup/mock.html` + `panel.html` (Thor frame, phone preview). The
