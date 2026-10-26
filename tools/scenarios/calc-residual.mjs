@@ -31,7 +31,10 @@ const checks = [{
     assert.equal(Number(await page.value('document.querySelector("[data-hp=foe]").value')),hp-loss);
     assert.equal(await page.text('.cc[data-s=foe] .hpl'),'↺');
     await page.tap('[data-a=eopen][data-s=foe]');
+    assert.equal(await page.count('.cc[data-s=foe] .dqp'),0,'parts collapsed by default');
+    await page.tap('[data-a=resopen][data-s=foe]');
     assert.match(await page.text('.cc[data-s=foe] .dqp'),new RegExp('Sandstorm.*−'+loss,'s'));
+    await page.tap('[data-a=resopen][data-s=foe]');
     await page.tap('[data-a=eopen][data-s=foe]');
     await page.tap('.cc[data-s=foe] .hpl');
     assert.equal(Number(await page.value('document.querySelector("[data-hp=foe]").value')),max);
@@ -75,7 +78,7 @@ const checks = [{
   },
 }, {
   id: 'toxic turn',
-  title: 'Edit sets the toxic counter; the HP-line amount applies and advances it',
+  title: 'the HP line sets the toxic counter; the HP-line amount applies and advances it',
   sizes,
   run: async page => {
     await setupCalc(page, {mine: ['party', 0]});
@@ -85,13 +88,12 @@ const checks = [{
     const max = Number(await page.value(`document.querySelector('.cc[data-s="foe"] .mx').textContent.slice(1)`));
     const tick = turn => '−' + Math.max(1, Math.floor(max * turn / 16));
     assert.equal(await page.text('.cc[data-s=foe] .dturn'), tick(1));
-    await page.tap('[data-a=eopen][data-s=foe]');
-    assert.equal(await page.count('.dqp [data-tox="foe"]'), 1, 'turn box on the toxic part');
-    await page.setBox('.dqp [data-tox="foe"]', 4);
+    assert.equal(await page.count('.cc[data-s=foe] .cl [data-tox="foe"]'), 1, 'turn box on the HP line');
+    await page.setBox('.cc[data-s=foe] .cl [data-tox="foe"]', 4);
     assert.equal(await page.text('.cc[data-s=foe] .dturn'), tick(4), 'turn 4 damage');
     await page.tap('[data-a="eot"][data-s="foe"]');
     assert.equal(await page.text('.cc[data-s=foe] .dturn'), tick(5), 'applying a turn moves the counter on');
-    assert.equal(String(await page.value(`document.querySelector('.dqp [data-tox="foe"]').value`)), '5');
+    assert.equal(String(await page.value(`document.querySelector('.cc[data-s=foe] .cl [data-tox="foe"]').value`)), '5');
   },
 }, {
   id: 'field under an open editor',

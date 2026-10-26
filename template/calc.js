@@ -62,7 +62,7 @@ function foeSide(){const t=trByK[ST.foe.k];if(!t)return `<div class="fbar"><butt
  return `<div class="fbar"><button class="nav" data-a="tprev" aria-label="Previous trainer" ${ti>0?'':'disabled'}><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M6.5 1.5 3 5l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dsrc" data-a="foesheet"><span class="nm">${esc(t.n)}</span></button><button class="nav" data-a="tnext" aria-label="Next trainer" ${ti<D.TR.length-1?'':'disabled'}><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M3.5 1.5 7 5 3.5 8.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${rel?`<span class="dcap ${own?'own':''} ${cap?'':'need'}">Cap ${nb(`data-cap="${t.k}" data-clr="1"`,cap||'',{min:range[0],max:range[1],label:'Level cap'})}</span>`:''}</div>
  <div class="fteam">${t.p.map((x,i)=>{const m=applyEdits(foeBase(t,i),'foe:'+t.k+':'+i);return `<div role="button" tabindex="0" class="ft ${i===ST.foe.i?'on':''}" data-a="fpick" data-i="${i}">${spr(m.id,'s24')}<span class="tx"><span class="l1t"><b>${esc(byId[m.id].n)}</b><i>${isNaN(m.l)?'?':m.l}</i><em>${esc(m.i||'')}</em></span><span class="l2t">${m.m.length?m.m.map(k=>esc(M[k])).join(' · '):'No moves listed'}</span></span></div>`;}).join('')}</div>
  <div class="dstrip fs">${[0,1,2,3,4,5].map(i=>t.p[i]?`<button data-a="fpick" data-i="${i}" class="${i===ST.foe.i?'on':''}" aria-label="${esc(byId[t.p[i].id].n)}">${spr(t.p[i].id,'s28')}<span>${lvl(i)}</span></button>`:`<button class="ph" disabled></button>`).join('')}</div>`;}
-const EDITOPEN={mine:false,foe:false},TOX={};
+const EDITOPEN={mine:false,foe:false},TOX={},RESOPEN={mine:false,foe:false};
 const TYPECHANGE=['Protean','Libero'],changesType=r=>TYPECHANGE.includes(r.abil);
 const signed=v=>(v>0?'+':'−')+Math.abs(v);
 const eotTotal=parts=>parts.reduce((sum,part)=>sum+part.v[0],0);
@@ -77,8 +77,8 @@ function editor(r,side){const custom=side==='mine'&&ST.mine.src==='custom';const
  return `<div class="ed"><div class="ehd"><div class="dfull">${esc(r.name)}</div><div class="e3">${side==='mine'&&!custom?`<button class="dbtn" data-a="esave" data-s="${side}" ${w?'':'disabled'}>Save</button>`:''}${custom?'':`<button class="dbtn" data-a="ereset" data-s="${side}" ${w||sv?'':'disabled'}>${w?'Reset':sv?'Original':'Reset'}</button>`}${custom?`<button class="dbtn" data-a="edel">Delete</button>`:''}</div></div><div class="e2">${prof.natures!==false?sel('na',NATS.map(n=>[n,n]),r.na):''}${prof.abilities!==false?sel('ab',abils.filter(a=>a>=0).map(a=>[a,AB[a]+(r.aGuess&&a===r.a?' ?':'')]),r.a):''}</div>
  <div class="e2">${prof.items!==false?sel('it',[['','No item'],...D.IT.map(x=>[x,x])],r.i):''}${sel('status',prof.status||[['','No status']],r.status||'')}</div>
  ${changesType(r)?`<div class="e2 pty"><span>Type</span>${sel('pty',[['',r.types.join('/')+' (own)'],...TNAMES.map(t=>[t,t])],r.pty||'')}</div>`:''}
- <div class="e2 dstate"><label>Battle state${sel('vol',[['','None'],['dig','Dig'],['fly','Fly / Bounce'],['dive','Dive'],['min','Minimized'],['switch','Switching out']],r.vol||'')}</label></div>
- ${residualParts(r,side)}
+ <div class="e2 dstate${residualOf(r).length?' dres2':''}">${sel('vol',[['','No battle state'],['dig','Dig'],['fly','Fly / Bounce'],['dive','Dive'],['min','Minimized'],['switch','Switching out']],r.vol||'').replace('<select','<select aria-label="Battle state" title="Battle state"')}${residualOf(r).length?`<button class="dqt" data-a="resopen" data-s="${side}" aria-expanded="${!!RESOPEN[side]}">Turn end ${residualOf(r).length} ${RESOPEN[side]?'▴':'▾'}</button>`:''}</div>
+ ${RESOPEN[side]?residualParts(r,side):''}
  <table><tr><th></th>${SN.map(n=>`<th>${n}</th>`).join('')}</tr>
  ${row('IV',i=>nb(`data-e="iv" data-x="${i}" data-s="${side}"`,r.iv[i],{min:0,max:31,label:'IV '+SN[i]}))}
  ${EVS?row('EV',i=>nb(`data-e="ev" data-x="${i}" data-s="${side}"`,r.ev[i],{min:0,max:252,step:4,label:'EV '+SN[i]})):''}
@@ -91,7 +91,7 @@ function chip(r,att,side,fast){if(!r)return `<div class="cc"><button class="cn" 
   +(['Intrepid Sword','Dauntless Shield'].includes(r.abil)?`<label class="dmonstate" title="${esc(r.abil)}"><input aria-label="${esc(r.abil)}" type="checkbox" data-e="entry" data-s="${side}" ${r.entry===false?'':'checked'}></label>`:'')
   +(r.abil==='Download'?`<button class="ddl" data-a="download" data-s="${side}" title="Download: ${esc(downloadText(r,side))}" aria-label="Download: ${esc(downloadText(r,side))}">${downloadShort(r,side)}</button>`:'');
  return `<div class="cc ${att?'att':''}" data-a="sel" data-s="${side}"><div class="l1"><button class="cn" data-a="sel" data-s="${side}"><b>${r.pty&&changesType(r)?`<i class="td" style="background:${tcol(r.pty)}"></i>`:''}${esc(r.name)}${r.edited?' *':r.saved?' •':''}</b></button>${mega?`<button class="mg ${r.pre?'on':''}" data-a="mega" data-s="${side}" aria-label="Mega">M</button>`:''}${controls}<button class="stb ${open||sg?'on':''}" data-a="eopen" data-s="${side}">Edit ${open?'▴':'▾'}</button><span class="sp">Spe <i class="${fast?'f':''}">${spe??'?'}${mod}</i></span></div>
-  <div class="cl"><span>Lv</span>${nb(`data-lv="${side}"`,r.lv??'',{min:range[0],max:range[1],label:'Level'})}<button class="hpl ${mx&&r.hp<mx?'rs':''}" data-a="hpfull" data-s="${side}" title="Full HP" aria-label="${mx&&r.hp<mx?'Full HP':'HP'}">${mx&&r.hp<mx?'↺':'HP'}</button>${nb(`data-hp="${side}"`,r.hp??'',{min:0,max:mx||999,label:'HP now'})}<span class="mx">/${mx??'?'}</span>${r.aura&&r.aura.every((v,i)=>v===r.stg[i])?'<span class="aum" title="Totem aura">Aura</span>':''}${r.vol?`<span class="dvol" title="Battle state">${esc({dig:'Dig',fly:'Fly',dive:'Dive',min:'Min',switch:'Out'}[r.vol]||r.vol)}</span>`:''}${residualButton(r,side)}</div>${open?editor(r,side):''}</div>`;}
+  <div class="cl"><span>Lv</span>${nb(`data-lv="${side}"`,r.lv??'',{min:range[0],max:range[1],label:'Level'})}<button class="hpl ${mx&&r.hp<mx?'rs':''}" data-a="hpfull" data-s="${side}" title="Full HP" aria-label="${mx&&r.hp<mx?'Full HP':'HP'}">${mx&&r.hp<mx?'↺':'HP'}</button>${nb(`data-hp="${side}"`,r.hp??'',{min:0,max:mx||999,label:'HP now'})}<span class="mx">/${mx??'?'}</span>${r.aura&&r.aura.every((v,i)=>v===r.stg[i])?'<span class="aum" title="Totem aura">Aura</span>':''}${r.vol?`<span class="dvol" title="Battle state">${esc({dig:'Dig',fly:'Fly',dive:'Dive',min:'Min',switch:'Out'}[r.vol]||r.vol)}</span>`:''}${r.status==='tox'&&residualOf(r).length?`<span class="dtoxl" title="Toxic turn">T</span>${nb(`data-tox="${side}"`,Math.max(1,r.toxn||1),{min:1,max:15,label:'Toxic turn'})}`:''}${residualButton(r,side)}</div>${open?editor(r,side):''}</div>`;}
 function movesHTML(att,def,side,F){att={...att,side};const hpNow=def.hp,mx=def.stats[0];
  const D0=[0,1,2,3].map(slot=>{const mi=att.m[slot];if(mi==null)return {slot};const ck=sideInfo(side).key+':'+slot,crit=!!ST.crit[ck],n=hitsOf(mi,ck,att),mv=effMv(mi,ck);return {slot,mi,ck,mv,crit,n,r:window.DMG.calc(toEngine(att),toEngine(def),{mv:mi,...ST.mvo[ck],...stateSlot(mi,ck,att,F),hits:n,crit,z:!!(prof.zmove&&ST.z[ck])},F)};});
  const total=(result,mode)=>result.per?result.per.reduce((sum,rolls)=>sum+(mode==='min'?Math.min(...rolls):Math.max(...rolls)),0):result[mode]*result.hits;
@@ -119,7 +119,7 @@ function downloadText(mon,side){if(mon.dl)return {atk:'Atk',spa:'Sp. Atk',off:'N
 const downloadShort=(mon,side)=>{const text=downloadText(mon,side);return text==='None'?'None':text.startsWith('Auto → ')?'A·'+(text.endsWith('Atk')&&!text.endsWith('Sp. Atk')?'Atk':'SpA'):text==='Auto'?'Auto':'M·'+(text==='Atk'?'Atk':'SpA');};
 function residualOf(mon){return mon&&mon.lv!=null?window.DMG.residual(toEngine(mon),ST.field):[];}
 function residualButton(mon,side){const parts=residualOf(mon);if(!parts.length)return '';const amount=eotTotal(parts);return `<button class="dturn ${amount<0?'dn':amount>0?'up':''}" data-a="eot" data-s="${side}" title="Apply one turn" aria-label="Apply one turn to ${esc(mon.name)}">${amount?signed(amount):'±0'}</button>`;}
-function residualParts(mon,side){const parts=residualOf(mon);if(!parts.length)return '';return `<div class="dqp">${parts.map(part=>`<div><span>${esc(part.l)}</span><b class="${part.v[0]<0?'dn':'up'}">${signed(part.v[0])}</b></div>`).join('')}${mon.status==='tox'?`<label>Toxic turn${nb(`data-tox="${side}"`,Math.max(1,mon.toxn||1),{min:1,max:15,label:'Toxic turn'})}</label>`:''}</div>`;}
+function residualParts(mon,side){const parts=residualOf(mon);if(!parts.length)return '';return `<div class="dqp">${parts.map(part=>`<div><span>${esc(part.l)}</span><b class="${part.v[0]<0?'dn':'up'}">${signed(part.v[0])}</b></div>`).join('')}</div>`;}
 function calcPage(){if(!host.isConnected)document.body.appendChild(host);if(prof.save&&!input.isConnected)document.body.appendChild(input);const gridScroll=$('.mg .dstrip')?.scrollTop||0;if(innerWidth>=480&&(EDITOPEN.mine||EDITOPEN.foe))EDITOPEN.mine=EDITOPEN.foe=true;fil.innerHTML='';const A0=getMon('mine'),B0=getMon('foe');const a=A0&&resolve(A0),b=B0&&resolve(B0);if(a)a.toxn=TOX[sideInfo('mine').key];if(b)b.toxn=TOX[sideInfo('foe').key];const out=ST.dir==='out';
  const F=ST.field;const sa=a&&effSpe(a),sb=b&&effSpe(b);
  let ra='',rb='';
@@ -141,6 +141,7 @@ function fitToggles(){const body=$('.dfield[open] .dfb');if(!body)return;const b
  body.style.setProperty('--tgmin',Math.ceil(need+1)+'px');
  // Below the crossover where a side column would hold one box per row, one side at a time (Player | Foe) at full width
  const sides=body.querySelector('.dfside');if(sides)sides.classList.toggle('one',(sides.clientWidth-4)/2<2*Math.ceil(need+1)+3);}
+if(window.ResizeObserver){const probe=document.createElement('span');probe.textContent='MMMM';probe.setAttribute('aria-hidden','true');probe.style.cssText='position:fixed;left:-999px;top:0;visibility:hidden;font-size:11px;white-space:nowrap';document.body.appendChild(probe);new ResizeObserver(()=>{if(location.hash==='#/calc'){fitToggles();fitTeam();}}).observe(probe);}
 const TEAMNEED=222;
 function fitTeam(){if(location.hash!=='#/calc')return;const app=$('#app');if(!app)return;const fit=app.querySelector('.fit'),dm=app.querySelector('.dmatch');if(!fit||!dm||innerWidth<480){app.classList.remove('tl');return;}
  const ban=fit.querySelector('.ban');const cards=[...dm.querySelectorAll('.cc')].map(card=>{const line=card.querySelector('.cl');return line?line.getBoundingClientRect().bottom-card.getBoundingClientRect().top+3:card.offsetHeight;});const moves=[...dm.querySelectorAll('.dres')].map(list=>[...list.querySelectorAll('.mr')].reduce((sum,row)=>{const details=row.querySelector('.dd');return sum+row.offsetHeight-(details&&getComputedStyle(details).display!=='none'?details.offsetHeight+(parseFloat(getComputedStyle(details).marginTop)||0):0);},0)+Math.max(0,list.children.length-1)*3);const closedHeight=Math.max(0,...cards)+Math.max(0,...moves)+4;const avail=Math.max(76,innerHeight-8-closedHeight-4-(ban?ban.offsetHeight+4:0));fit.querySelector('.top').style.height=avail+'px';app.classList.toggle('tl',avail>=TEAMNEED);app.dataset.avail=Math.round(avail);}
@@ -189,6 +190,7 @@ document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const e
  else if(a==='chmv'||a==='addmv'){pickMove(el.dataset.side,+el.dataset.slot);}
  else if(a==='mvreset'){const override=ST.mvo[el.dataset.ck];if(override){delete override.bp;delete override.t;if(!Object.keys(override).length)delete ST.mvo[el.dataset.ck];}save();refresh();}
  else if(a==='tprev'||a==='tnext'){const ti=D.TR.findIndex(x=>x.k===ST.foe.k)+(a==='tnext'?1:-1);if(D.TR[ti]){ST.foe={k:D.TR[ti].k,i:0};recent(D.TR[ti].k);save();refresh();}}
+ else if(a==='resopen'){RESOPEN[el.dataset.s]=!RESOPEN[el.dataset.s];refresh();}
  else if(a==='fside'){FSIDE=el.dataset.v;refresh();}
  else if(a==='bandis'){BAN=null;refresh();}
  else if(a==='foesheet'){SH.foe();}
@@ -196,7 +198,7 @@ document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const e
  else if(a==='findmine'){findMine();}
 
 });
-function findMine(){const L=mineList().map(entry=>({...entry,m:entry.src==='custom'?entry.m:applyEdits(entry.m,'mine:'+entry.m.pid)}));picker({title:'Find yours',items:L.map(x=>({label:byId[x.m.id].n,sub:(x.src==='party'?'Party':x.src==='box'?'Box '+(x.b+1):'Custom')+' · Lv '+x.m.l,id:x.m.id,v:x})),onPick:x=>{ST.mine={src:x.src,b:x.b,i:x.i};save();refreshMainOnly();}});}
+function findMine(){const L=mineList().map(entry=>({...entry,m:entry.src==='custom'?entry.m:applyEdits(entry.m,'mine:'+entry.m.pid)}));picker({title:'Find yours',items:L.map(x=>({label:byId[x.m.id].n,sub:(x.src==='party'?'Party':x.src==='box'?'Box '+(x.b+1):'Custom')+' · Lv '+x.m.l,id:x.m.id,v:x,keys:monKeys(x.m)})),onPick:x=>{ST.mine={src:x.src,b:x.b,i:x.i};save();refreshMainOnly();}});}
 document.addEventListener('change',e=>{if(location.hash!=='#/calc')return;const s=e.target.closest('select[data-f]');if(s){ST.field[s.dataset.f]=s.value;window.__fo=1;save();refresh();}});
 document.addEventListener('toggle',e=>{if(e.target.matches('details.dfield')){window.__fo=e.target.open;fitToggles();}},true);
 const recent=k=>{ST.recent=[k,...ST.recent.filter(x=>x!==k)].slice(0,6);};
@@ -227,9 +229,11 @@ function foeSheet(){return {title:()=>'Foe',
   return `<div role="button" tabindex="0" class="fbtn" data-s="findtr"><span>Find trainer…</span></div>`+(trByK[ST.foe.k]?trRow(trByK[ST.foe.k],true):'')+(rec.length?`<div class="sec2">Recent</div>`+rec.map(t=>trRow(t,t.k===ST.foe.k)).join(''):'')+`<div class="sec2">All trainers</div>`+
    groups.map(g=>`<details class="grp" ><summary>${esc(g.n)} <span class="mut small">${g.t.length}</span></summary><div class="gb">${g.t.map(t=>trRow(t,t.k===ST.foe.k)).join('')}</div></details>`).join('');},
  bind(d){d.querySelectorAll('[data-s="pickfoe"]').forEach(x=>x.onclick=()=>pickFoe(x.dataset.k));
-  const f=$('[data-s="findtr"]',d);if(f)f.onclick=()=>picker({title:'Find trainer',items:D.TR.map(t=>({label:t.n,sub:[t.loc,trCap(t),t.g.replace(/ Split.*/,'')].filter(Boolean).join(' · '),id:t.p[0].id,v:t.k})),onPick:pickFoe});}};}
+  const f=$('[data-s="findtr"]',d);if(f)f.onclick=()=>picker({title:'Find trainer',items:D.TR.map(t=>({label:t.n,sub:[t.loc,trCap(t),t.g.replace(/ Split.*/,'')].filter(Boolean).join(' · '),id:t.p[0]?.id,v:t.k,keys:t.p.flatMap(x=>[byId[x.id]?.n,...monKeys(x)])})),onPick:pickFoe});}};}
 function pickFoe(k){ST.foe={k,i:0};recent(k);save();dismissSheets();refreshMainOnly();}
 
+// Search terms besides the name: a set's moves, held item and (known) ability
+const monKeys=mon=>[...(mon.m||[]).map(move=>M[move]),mon.i,Number.isInteger(mon.a)&&mon.a>=0?AB[mon.a]:''].filter(Boolean);
 function picker({title,items,onPick,none}){let q='';
  const s={title:()=>title,
   body(){return `<div class="fl"></div>`;},
@@ -237,8 +241,8 @@ function picker({title,items,onPick,none}){let q='';
    const box=document.createElement('div');box.className='kbsh';
    box.innerHTML=INV?`<div class="disp2"><span class="q" data-ph="Search"></span><button class="x" aria-label="Clear">×</button></div>`:`<input type="search" placeholder="Search" autocomplete="off">`;
    hd.insertBefore(box,$('.tt',hd));$('.tt',hd).style.display='none';
-   const paint=()=>{const n=norm(q);let L=items;if(n){L=items.filter(it=>norm(it.label).includes(n)).sort((a,b)=>(norm(b.label).startsWith(n)-norm(a.label).startsWith(n))||a.label.length-b.label.length);}
-    const tot=L.length;L=L.slice(0,60);body.innerHTML=(none?`<div role="button" tabindex="0" class="mrow" data-n="1"><span class="tx"><b>${esc(none)}</b></span></div>`:'')+L.map((it,i)=>`<div role="button" tabindex="0" class="mrow" data-i="${i}">${it.id?spr(it.id,'s32'):''}<span class="tx"><b>${esc(it.label)}</b>${it.sub?`<small>${esc(it.sub)}</small>`:''}</span></div>`).join('')+(tot>60?`<div class="dnote">${tot-60} more · keep typing</div>`:'')+(!tot?'<div class="dnote">No match</div>':'');
+   const paint=()=>{const n=norm(q);let L=items;if(n){const rank=it=>{const label=norm(it.label);if(label.startsWith(n))return 0;if(label.includes(n))return 1;it.hit=(it.keys||[]).find(key=>norm(key).includes(n));return it.hit?2:3;};L=items.map(it=>(it.hit=null,[rank(it),it])).filter(([r])=>r<3).sort((a,b)=>a[0]-b[0]||a[1].label.length-b[1].label.length).map(([,it])=>it);}
+    const tot=L.length;L=L.slice(0,60);body.innerHTML=(none?`<div role="button" tabindex="0" class="mrow" data-n="1"><span class="tx"><b>${esc(none)}</b></span></div>`:'')+L.map((it,i)=>`<div role="button" tabindex="0" class="mrow" data-i="${i}">${it.id?spr(it.id,'s32'):''}<span class="tx"><b>${esc(it.label)}</b>${it.sub||it.hit?`<small>${esc([it.sub,n&&it.hit].filter(Boolean).join(' · '))}</small>`:''}</span></div>`).join('')+(tot>60?`<div class="dnote">${tot-60} more · keep typing</div>`:'')+(!tot?'<div class="dnote">No match</div>':'');
     body.querySelectorAll('[data-i]').forEach(x=>x.onclick=()=>{const it=L[+x.dataset.i];dismissSheets();onPick(it.v);});
     const nn=$('[data-n]',body);if(nn)nn.onclick=()=>{dismissSheets();onPick(null);};};
    const upd=()=>{const e=$('.q',box);if(e)e.textContent=q;paint();};

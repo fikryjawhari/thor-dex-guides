@@ -77,8 +77,9 @@ No condition labels or category controls appear in profiles that do not declare 
 Sludge / Sticky Barb, status incl. rising toxic, Grassy Terrain, Dry Skin / Rain Dish / Ice Body / Solar Power / Poison Heal,
 plus the profile's `residual`). The KO text counts the defender's per-turn change; rolls, percentages and HP buttons never do.
 The clickable residual amount sits on its Pokémon's existing HP line. Tap it to apply one turn immediately, without
-opening Edit or selecting the attacker. Parts and toxic's 1-15 turn counter live inside Edit; applying a turn advances
-the transient toxic counter, capped at 15. **Triple Kick / Triple Axel**: the row's ×3 button
+opening Edit or selecting the attacker. Toxic's 1-15 turn box sits on the same HP line (`T`), before the amount;
+applying a turn advances it, capped at 15. Inside Edit the parts are folded behind a Turn end button on the Battle
+state row (opened per card, not stored), so up to five residuals never make the open card taller than one window. **Triple Kick / Triple Axel**: the row's ×3 button
 cycles ×3 (total, default) → H1 → H2 → H3; the outside number is the total or that hit's range, percent and KO stay on the
 total; the choice lives in `ST.hits` (0 = total); no Hits box in the editor. An opened row repeats them (`Turn end: −2 Sandstorm`). Leech Seed is not offered
 (no control says who is seeded). When HP is not full, the HP label becomes an accent ↺ button (tap: full HP).
@@ -109,6 +110,9 @@ choice is not stored). Weather/Terrain have no caption: the empty choice reads "
 **One window**: an open card (Edit), the open Field and an open move each fit one window at the minimum height
 (316 px) at every width: the full name shares its line with Save/Reset, Type/Power/Hits share a row, the move's full
 name shares its line with Change (and Reset), per-hit range and rolls share a line. Check: `calc-state.mjs` one-window.
+Text zoom scales every font; box heights are fixed px. A hidden probe re-measures the toggle widths when the font size
+changes. **Search**: Find trainer and Find yours also match a set's moves, held item and known ability (a trainer:
+any of its Pokémon's); names rank first, and a term match is named on the row.
 Scenario: `tools/scenarios/calc-state.mjs`; trainer Metronome top-slot conflicts: `tools/calc_ui_check.py`.
 **Z-moves** (profile `zmove`, Photonic; 2026-10-26): each damaging row's % line opens with a Z toggle, centred under the
 row's type dot (the dot and the Z share a 20 px column, so the name and the % text start at the same x; the user rejected

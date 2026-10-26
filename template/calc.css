@@ -404,7 +404,13 @@ body.calc-route .fbar .nav svg{display:block;width:10px;height:10px}
 .cc .ed .ehd .e3 .dbtn{flex:none;min-height:0;height:22px;padding:0 8px;font-size:11px}
 .cc .ed select{height:27px}
 .cc .ed input,.cc .ed .nv{height:24px;min-height:24px}
-.cc .ed .sc,.cc .ed .sm,.cc .ed .z{height:25px}
+body.calc-route .cc .ed .sc,body.calc-route .cc .ed .sm,body.calc-route .cc .ed .z{height:25px;min-height:0}
+/* Battle state and the Turn end toggle share a row; the parts open below in two columns; toxic turn is on the HP line */
+body.calc-route .cc .ed .e2.dstate.dres2{grid-template-columns:minmax(0,1fr) auto}
+.cc .ed .dqt{height:27px;padding:0 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--fg);font:600 11px system-ui;white-space:nowrap;cursor:pointer;touch-action:manipulation}
+.cc .ed .dqp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:8px;margin-top:0}
+.cc .cl .dtoxl{flex:none;margin-left:2px;font:700 10px system-ui;color:var(--mut)}
+body.calc-route .cc .cl [data-tox]{width:24px;min-width:0;flex:none}
 body.calc-route .cc .l1 .dmonstate{display:flex;flex:none;margin:0;align-items:center;min-height:0;height:18px}
 body.calc-route .cc .l1 .dmonstate input{width:14px;height:14px;margin:0;accent-color:var(--acc)}
 .cc .cl .dturn{flex:none;width:auto;height:auto;margin-right:0;margin-left:auto;min-height:20px;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);font:700 11px system-ui;cursor:pointer;touch-action:manipulation}

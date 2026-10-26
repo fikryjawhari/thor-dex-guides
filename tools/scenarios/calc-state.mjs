@@ -54,7 +54,13 @@ const fixtureChecks=[{
     await page.reload();
     assert.equal(await page.value('CALC.state().field.atkFocus'),1,'canonical field persists');
   },
-},{
+}];
+const seed=async(page,moves)=>{
+  await page.route('#/calc');
+  await page.value(`(()=>{CALC.use(P.find(entry=>entry.n==='Snorlax'));const state=CALC.state(),mon=state.custom.at(-1),trainer=TRS.find(trainer=>trainer.p.length);mon.l=50;mon.m=${JSON.stringify(moves)}.map(name=>M.indexOf(name));TCAP[trainer.k]=50;CALC.enter(trainer.k,0);state.edits['foe:'+trainer.k+':0']={id:P.find(entry=>entry.n==='Snorlax').id,l:50,a:P.find(entry=>entry.n==='Snorlax').a[0],i:'',m:[M.indexOf('Tackle')],stg:[0,0,0,0,0]};CALC.render();})()`);
+};
+// Every guide: open panels fit one window; search by move / item / ability
+const windowChecks=[{
   id:'one-window',title:'an open card, Field and move each fit one window; Field toggles never break a word',
   sizes:[[260,316],[480,316],[537,316],[832,316],[480,392],[537,424],[832,424]],
   run:async page=>{
@@ -62,6 +68,16 @@ const fixtureChecks=[{
     const room='innerHeight-8';
     await page.tap('[data-a=eopen][data-s=mine]');
     assert.ok(await page.value(`document.querySelector('.cc[data-s=mine]').offsetHeight<=${room}`),'open card: '+await page.value(`document.querySelector('.cc[data-s=mine]').offsetHeight`));
+    assert.equal(new Set(await page.value(`[...document.querySelectorAll('.cc[data-s=mine] .ed .sm,.cc[data-s=mine] .ed .z,.cc[data-s=mine] .ed .sc')].map(button=>button.offsetHeight)`)).size,1,'stage buttons one size');
+    // with residuals (toxic, Leftovers, sand) the parts stay folded behind Turn end and the card still fits
+    await page.value("(()=>{const state=CALC.state(),mon=state.custom.at(-1);mon.i='Leftovers';mon.status='tox';state.field.weather='Sand';CALC.render();})()");
+    assert.equal(await page.count('.cc[data-s=mine] .cl [data-tox=mine]'),1,'toxic turn on the HP line');
+    assert.equal(await page.count('.cc[data-s=mine] .dqp'),0,'parts folded');
+    assert.ok(await page.value(`document.querySelector('.cc[data-s=mine]').offsetHeight<=${room}`),'open card with residuals');
+    await page.tap('[data-a=resopen][data-s=mine]');
+    assert.ok(await page.count('.cc[data-s=mine] .dqp'),'parts open');
+    await page.tap('[data-a=resopen][data-s=mine]');
+    await page.value("(()=>{const state=CALC.state(),mon=state.custom.at(-1);mon.i='';mon.status='';state.field.weather='';CALC.render();})()");
     await page.tap('[data-a=eopen][data-s=mine]');
     for(let index=0;index<await page.count('.dres:not(.na) .mr:not(.em)');index++){
       await page.tap('.dres:not(.na) .mr:not(.em) > .mm',{index});
@@ -80,12 +96,23 @@ const fixtureChecks=[{
       await page.tap('[data-a=fside][data-v=atk]');
     }else assert.equal(await page.value('getComputedStyle(document.querySelector(".dfsw")).display'),'none','both sides shown, no switch');
   },
+},{
+  id:'search-terms',title:'Find trainer and Find yours match moves, items and abilities as well as names',
+  run:async page=>{
+    await seed(page,['Body Slam','Rock Blast','Crunch','Rest']);
+    const trainer=await page.value("(()=>{const list=TRS.filter(t=>t.p.some(x=>x.m&&x.m.length));const x=list[0].p.find(x=>x.m.length);return {name:list[0].n,move:M[x.m[0]]};})()");
+    await page.tap('.fbar .dsrc');
+    await page.tap('[data-s=findtr]');
+    await page.typeSearch(trainer.move);
+    const rows=await page.value('[...document.querySelectorAll(".sheet:last-child .mrow")].map(row=>row.textContent)');
+    assert.ok(rows.some(row=>row.includes(trainer.name)&&row.includes(trainer.move)),`trainer found by ${trainer.move}, the move shown`);
+    await page.value('history.go(-2)');await page.settle();
+    await page.tap('[data-a=findmine]');
+    await page.typeSearch('Rock Blast');
+    assert.ok((await page.value('[...document.querySelectorAll(".sheet:last-child .mrow")].map(row=>row.textContent)')).some(row=>row.includes('Snorlax')&&row.includes('Rock Blast')),'own Pokémon found by move');
+  },
 }];
-const seed=async(page,moves)=>{
-  await page.route('#/calc');
-  await page.value(`(()=>{CALC.use(P.find(entry=>entry.n==='Snorlax'));const state=CALC.state(),mon=state.custom.at(-1),trainer=TRS.find(trainer=>trainer.p.length);mon.l=50;mon.m=${JSON.stringify(moves)}.map(name=>M.indexOf(name));TCAP[trainer.k]=50;CALC.enter(trainer.k,0);state.edits['foe:'+trainer.k+':0']={id:P.find(entry=>entry.n==='Snorlax').id,l:50,a:P.find(entry=>entry.n==='Snorlax').a[0],i:'',m:[M.indexOf('Tackle')],stg:[0,0,0,0,0]};CALC.render();})()`);
-};
-const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),{
+const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windowChecks,{
   id:'move-states',title:'row state cycles, power, Doubles gate, Z suppression and persistence',sizes:[[260,316],[537,424]],
   run:async page=>{
     await seed(page,['Fury Cutter','Assurance','Round','Facade']);
