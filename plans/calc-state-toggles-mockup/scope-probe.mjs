@@ -22,7 +22,7 @@ const calculate=(attacker,defender,name,extra={},field={})=>{
   return engine.calc(attacker,defender,{mv:index,...extra},field);
 };
 for(const name of ['Return','Frustration']){
-  assert.equal(calculate(mon('Kangaskhan'),mon('Blissey'),name),null,name+' still needs explicit power');
+  assert.equal(calculate(mon('Kangaskhan'),mon('Blissey'),name).bp,102,name+' defaults to 102');
   assert.ok(calculate(mon('Kangaskhan'),mon('Blissey'),name,{bp:102}),name+' accepts explicit 102');
 }
 const punch=calculate(mon('Mega Kangaskhan',{ab:ability('Parental Bond')}),mon('Blissey'),'Power-Up Punch');
@@ -49,4 +49,4 @@ const stacked=fixtureResult('emperor-ally-stack');
 assert.deepEqual([allyOff.min,allyOff.max],[31,37]);
 assert.deepEqual([allyOn.min,allyOn.max],[40,48]);
 assert.deepEqual([stacked.min,stacked.max],[52,63]);
-console.log('PASS engine-scope probes: default-power gap; existing PuP, Stamina and Emperor; explicit hit counts');
+console.log('PASS engine-scope probes: Return / Frustration 102 by default; existing PuP, Stamina and Emperor; explicit hit counts');

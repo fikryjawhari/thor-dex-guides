@@ -279,6 +279,7 @@
     }
    ],
    "over": {
+    "afterMove": ["Kee Berry", "Maranga Berry"],
     "critMultiplier": 1.5,
     "state": {
      "Echoed Voice": false,

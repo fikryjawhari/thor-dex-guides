@@ -297,6 +297,9 @@ override entries use **display names**, except species may use their guide ID:
 }
 ```
 
+- `afterMove` lists held items the hack fires after the whole move, not between hits (Hardlove: Kee / Maranga Berry,
+  move step 17 with Red Card / Eject Button): no `pre` event, and later hits keep the starting stage. Elsewhere Kee /
+  Maranga fire once, before hit 2 (stock re-raised them on every later hit: patched in `build.mjs`, 2026-10-26).
 - `critMultiplier` is applied at the actual critical-hit rounding step in every
   supported generation, **not** by scaling final rolls. `build.mjs` checks exact
   single-occurrence upstream source patches and fails if they drift. Default

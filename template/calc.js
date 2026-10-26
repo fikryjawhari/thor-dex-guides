@@ -33,8 +33,10 @@ let BAN=null;const ROWOPEN=new Set();let SMODE='+';
 ST.crit=ST.crit||{};ST.mvo=ST.mvo||{};ST.hits=ST.hits||{};ST.z=ST.z||{};ST.tgt=ST.tgt||{};ST.st=ST.st||{};ST.hitv=ST.hitv||{};
 const MH={};Object.entries(prof.multihit||{}).forEach(([name,hits])=>{const index=M.indexOf(name);if(index>=0)MH[index]=hits;});
 const loadedDice=att=>att.i==='Loaded Dice'&&att.abil!=='Klutz'&&!ST.field.magicRoom;
-function hitChoices(mi,att){const limits=MH[mi];if(!limits)return [1];if(limits[0]===limits[1])return [limits[1]];if(att.abil==='Skill Link')return [1,limits[1]];if(loadedDice(att)&&limits[0]===2&&limits[1]===5)return [1,4,5];return [...new Set([1,...Array.from({length:limits[1]-limits[0]+1},(_,index)=>limits[0]+index)])];}
-function hitsOf(mi,ck,att){const limits=MH[mi];if(!limits)return 1;if(limits[0]===limits[1])return limits[1];const choices=hitChoices(mi,att),selected=ST.hits[ck];return choices.includes(selected)?selected:att.abil==='Skill Link'?limits[1]:loadedDice(att)&&choices.includes(4)?4:limits[2];}
+// The holder's own limits: Ash-Greninja's Water Shuriken always hits 3 times; Loaded Dice makes Population Bomb 4-10.
+function hitLimits(mi,att){const limits=MH[mi];if(!limits)return limits;if(M[mi]==='Water Shuriken'&&/Greninja/.test(att.name)&&/\bAsh\b/.test(att.name))return [3,3,3];if(M[mi]==='Population Bomb'&&loadedDice(att))return [4,10,10];return limits;}
+function hitChoices(mi,att){const limits=hitLimits(mi,att);if(!limits)return [1];if(limits[0]===limits[1])return [limits[1]];if(att.abil==='Skill Link')return [1,limits[1]];if(loadedDice(att)&&limits[0]===2&&limits[1]===5)return [1,4,5];return [...new Set([1,...Array.from({length:limits[1]-limits[0]+1},(_,index)=>limits[0]+index)])];}
+function hitsOf(mi,ck,att){const limits=hitLimits(mi,att);if(!limits)return 1;if(limits[0]===limits[1])return limits[1];const choices=hitChoices(mi,att),selected=ST.hits[ck];return choices.includes(selected)?selected:att.abil==='Skill Link'?limits[1]:loadedDice(att)&&limits[1]===5&&choices.includes(4)?4:limits[2];}
 const TRI=new Set(['Triple Kick','Triple Axel'].map(name=>M.indexOf(name)).filter(index=>index>=0));
 const TNAMES=Object.keys(D.TC);
 const STATE_COUNTERS={'Fury Cutter':4,'Echoed Voice':4,Rollout:4,'Ice Ball':4,'Rage Fist':6,'Last Respects':5};
@@ -113,7 +115,7 @@ function movesHTML(att,def,side,F){att={...att,side};const hpNow=def.hp,mx=def.s
  const percent=value=>Number(Number(value).toFixed(1));
  return D0.map(x=>{const {slot,mi,ck,mv,crit,n,r}=x;
   if(mi==null)return `<div class="mr em"><div class="mm" data-a="addmv" data-slot="${slot}" data-side="${side}">${slot===0&&side==='foe'&&ST.dir==='in'&&!att.m.some(move=>move!=null)?'No moves listed · ':''}+ Move</div></div>`;
-  const open=ROWOPEN.has(ck),mh=MH[mi],ov=ST.mvo[ck];
+  const open=ROWOPEN.has(ck),mh=hitLimits(mi,att),ov=ST.mvo[ck];
   const types=`<label>Type<select data-mo="t" data-mi="${mi}" data-ck="${ck}">${TNAMES.map(t=>`<option ${t===mv.t?'selected':''}>${t}</option>`).join('')}</select></label>`;
   const bp=r||mv.c!=='Status'?`<label>Power${nb(`data-mo="bp" data-mi="${mi}" data-ck="${ck}"`,ov?.bp??r?.bp??(Number(mv.bp)||0),{min:0,max:1000,label:'Power'})}</label>`:'';
   const hits=mh&&mh[0]!==mh[1]&&!r?.z?`<label>Hits<select data-mo="hits" data-mi="${mi}" data-ck="${ck}">${hitChoices(mi,att).map(count=>`<option value="${count}" ${count===n?'selected':''}>${count}</option>`).join('')}</select></label>`:'';

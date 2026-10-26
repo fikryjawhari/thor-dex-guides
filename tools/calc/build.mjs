@@ -93,6 +93,13 @@ const patches = {
   'gen789.ts': [
     ['baseDamage = Math.floor(OF32(baseDamage * 1.5));', 'baseDamage = Math.floor(OF32(baseDamage * ((gen as any).critMultiplier ?? 1.5)));'],
   ],
+  // Stock's `!defenderUsedItem` guard binds to Luminous Moss only, so Kee / Maranga Berry raise the stage again on
+  // every later hit; the game consumes the berry after the first. `afterMoveItems` (profile `over.afterMove`): items
+  // the hack fires after the whole move, never between hits.
+  'util.ts': [
+    ['if ((!defenderUsedItem) &&', 'if (!defenderUsedItem && !(gen as any).afterMoveItems?.includes(defender.item) && ('],
+    ["(defender.hasItem('Kee Berry') && move.category === 'Physical')) {", "(defender.hasItem('Kee Berry') && move.category === 'Physical'))) {"],
+  ],
 };
 
 const result = await build({

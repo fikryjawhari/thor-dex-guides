@@ -128,7 +128,7 @@ function init(guide, configuration) {
     types[toID(name)] = {id: toID(name), name, kind: 'Type', effectiveness};
   }
   generation = {
-    num: profile.gen, critMultiplier: profile.over?.critMultiplier,
+    num: profile.gen, critMultiplier: profile.over?.critMultiplier, afterMoveItems: profile.over?.afterMove || [],
     species: table(species), moves: table({...stock.moves, ...moves}),
     items: table(items), abilities: table({...modern.abilities, ...stock.abilities}),
     natures: table(stock.natures), types: table(types),
@@ -511,6 +511,7 @@ function critChance(entry, moveData, attacker, defender, values) {
 // skipped, the gain is cut to the room left before Simple / Contrary); `slot.pre: false` leaves them out. Between-hit
 // events (after each strike that reaches the target, before the next: `hit` = that next hit) are listed; stock works the
 // stage changes it knows into the later hits' damage (Stamina, Water Compaction, Weak Armor, Kee / Maranga, Luminous Moss).
+// `over.afterMove` lists held items the hack fires after the whole move instead (Hardlove: Kee / Maranga Berry).
 const STAGES = ['atk', 'def', 'spa', 'spd', 'spe'];
 const SEEDS = {'Electric Seed': ['Electric', 'def'], 'Grassy Seed': ['Grassy', 'def'],
   'Misty Seed': ['Misty', 'spd'], 'Psychic Seed': ['Psychic', 'spd']};
@@ -594,7 +595,7 @@ function betweenHitStages(atk, def, hits, hit) {
   const pre = [];
   const change = stageChanger(pre);
   const item = HIT_ITEMS[def.item];
-  let used = !(item && profile.gen >= item[0]);
+  let used = !(item && profile.gen >= item[0]) || !!profile.over?.afterMove?.includes(def.item);
   for (let next = 2; next <= hits; next++) {
     if (profile.gen >= 7 && def.hasAbility('Stamina')) change(def, 'def', 'def', 1, 'Stamina', next);
     if (profile.gen >= 7 && def.hasAbility('Water Compaction') && hit.type === 'Water') {
@@ -617,6 +618,9 @@ function betweenHitStages(atk, def, hits, hit) {
   return pre;
 }
 
+const isAshGreninja = set => /Greninja/.test(guideName(set)) && /\bAsh\b/.test(guideName(set));
+const guideName = set => data.P.find(entry => String(entry.id) === String(set.id))?.n || '';
+
 function calc(atk, def, slot, values = {}) {
   const entry = data.MV[slot.mv];
   const name = data.M[slot.mv];
@@ -636,6 +640,9 @@ function calc(atk, def, slot, values = {}) {
   if (!(Number(power) > 0)) return null;
   const attacker = fieldPokemon(atk, values, 'atk');
   const defender = fieldPokemon(def, values, 'def');
+  // Stock gives Water Shuriken power 20 only to a Pokémon named 'Greninja-Ash'; the guides call it "Ash-Greninja",
+  // "Greninja (Ash)" or "Greninja Ash" (EI / Hardlove / Photonic sources: power 20, always 3 hits).
+  if (moveData.name === 'Water Shuriken' && isAshGreninja(atk)) attacker.name = 'Greninja-Ash';
   const moveType = slot.t || pledge || moveData.type;
   // Protean / Libero: the attacker turns into the move's type (STAB and anything reading its type); a defender keeps
   // the type the page chose for it.
@@ -655,7 +662,7 @@ function calc(atk, def, slot, values = {}) {
   }
   const hitRange = profile.multihit?.[name];
   const stockHits = moveData.multihit;
-  const defaultHits = hitRange?.[2] ?? (typeof stockHits === 'number' ? stockHits : Array.isArray(stockHits) ? stockHits[0] + 1 : 1);
+  const defaultHits = moveData.name === 'Water Shuriken' && isAshGreninja(atk) ? 3 : hitRange?.[2] ??(typeof stockHits === 'number' ? stockHits : Array.isArray(stockHits) ? stockHits[0] + 1 : 1);
   const selected = useZ ? 1 : hitCount(slot.hits ?? defaultHits);
   const move = new Move(generation, moveData.name, {
     overrides, isCrit: crit.forced || (!!slot.crit && crit.p > 0), hits: selected, ability: attacker.ability, item: attacker.item, useZ,

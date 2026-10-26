@@ -572,6 +572,32 @@ await test('hit rules reproduce the native Parental Bond second hit (0.25, half 
   assert.deepEqual(hitsOf(ruled), hitsOf(native));
 });
 
+await test('Kee / Maranga Berry raise the stage once, before hit 2 only (stock re-applied them every hit)', () => {
+  engine.init(data, profiles.expansion);
+  for (const [item, move] of [['Kee Berry', 'Rock Blast'], ['Maranga Berry', 'Water Shuriken']]) {
+    const result = plain(engine.calc(set('Greninja'), set('Blissey', {it: item}), slot(move, {hits: 3}), {}));
+    assert.notDeepEqual(result.per[1], result.per[0], `${item} raises before hit 2`);
+    assert.deepEqual(result.per[2], result.per[1], `${item} is used up: hit 3 = hit 2`);
+    assert.equal(result.pre.length, 1, `${item} reported once`);
+  }
+});
+
+await test('a Gem boosts every hit of a multi-hit move (one activation before the move, as in the games)', () => {
+  engine.init(data, profiles.expansion);
+  const gem = plain(engine.calc(set('Snorlax', {it: 'Normal Gem'}), set('Blissey'), slot('Double Hit'), {}));
+  const none = plain(engine.calc(set('Snorlax'), set('Blissey'), slot('Double Hit'), {}));
+  assert.equal(gem.per, undefined, 'both hits alike');
+  assert.ok(gem.max > none.max, 'both boosted');
+});
+
+await test("Ash-Greninja's Water Shuriken: power 20, three hits by default (guide names, not stock's)", () => {
+  engine.init(data, profiles.expansion);
+  const ash = plain(engine.calc(set('Greninja (Ash)', {ab: ability('Battle Bond')}), set('Blissey'), slot('Water Shuriken'), {}));
+  assert.equal(ash.bp, 20);
+  assert.equal(ash.hits, 3);
+  assert.equal(plain(engine.calc(set('Greninja'), set('Blissey'), slot('Water Shuriken'), {})).bp, undefined, 'plain Greninja keeps 15');
+});
+
 await test('a hit-count rule that returns a non-number fails explicitly', () => {
   engine.init(data, {...structuredClone(profiles.expansion), over: {rules: [{phase: 'hits', value: operation('mul', ref('value'), 'x')}]}});
   assert.throws(() => engine.calc(set('Charizard'), set('Blastoise'), slot('Tackle'), {}), /hit count must be a number/);

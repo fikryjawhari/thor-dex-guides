@@ -44258,17 +44258,9 @@
       },
       "field": {},
       "expect": {
-        "pre": [
-          {
-            "who": "def",
-            "stat": "def",
-            "by": 1,
-            "src": "Kee Berry",
-            "hit": 2
-          }
-        ]
+        "pre": []
       },
-      "src": "U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
     },
     {
       "name": "a-kee-berry-consumed-once-first-hit-rolls",
@@ -44417,17 +44409,9 @@
       },
       "field": {},
       "expect": {
-        "pre": [
-          {
-            "who": "def",
-            "stat": "def",
-            "by": 2,
-            "src": "Kee Berry",
-            "hit": 2
-          }
-        ]
+        "pre": []
       },
-      "src": "U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
     },
     {
       "name": "a-kee-berry-simple-once-first-hit-rolls",
@@ -44576,17 +44560,9 @@
       },
       "field": {},
       "expect": {
-        "pre": [
-          {
-            "who": "def",
-            "stat": "def",
-            "by": -1,
-            "src": "Kee Berry",
-            "hit": 2
-          }
-        ]
+        "pre": []
       },
-      "src": "U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
     },
     {
       "name": "a-kee-berry-contrary-once-first-hit-rolls",
@@ -44735,17 +44711,9 @@
       },
       "field": {},
       "expect": {
-        "pre": [
-          {
-            "who": "def",
-            "stat": "def",
-            "by": 1,
-            "src": "Kee Berry",
-            "hit": 2
-          }
-        ]
+        "pre": []
       },
-      "src": "U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
     },
     {
       "name": "a-kee-berry-given-stage-never-twice-first-hit-rolls",
@@ -44894,17 +44862,9 @@
       },
       "field": {},
       "expect": {
-        "pre": [
-          {
-            "who": "def",
-            "stat": "def",
-            "by": 1,
-            "src": "Kee Berry",
-            "hit": 2
-          }
-        ]
+        "pre": []
       },
-      "src": "U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
     },
     {
       "name": "a-kee-berry-simple-cap-first-hit-rolls",
@@ -45055,7 +45015,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
     },
     {
       "name": "a-kee-berry-at-cap-first-hit-rolls",
@@ -45206,7 +45166,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
     },
     {
       "name": "a-kee-berry-contrary-lower-cap-first-hit-rolls",
@@ -45357,7 +45317,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
     },
     {
       "name": "a-kee-berry-single-no-pre-first-hit-rolls",
@@ -45500,7 +45460,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Kee requires physical, Maranga requires special; the other category cannot consume or boost. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Kee requires physical, Maranga requires special; the other category cannot consume or boost. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
     },
     {
       "name": "a-kee-berry-wrong-category-first-hit-rolls",
@@ -45637,7 +45597,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Magic Room suppresses held berry activation between strikes. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Magic Room suppresses held berry activation between strikes. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
     },
     {
       "name": "a-kee-berry-magic-room-first-hit-rolls",
@@ -45781,7 +45741,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Previously entered stage plus no held berry does not generate another event. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Kee Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Previously entered stage plus no held berry does not generate another event. https://bulbapedia.bulbagarden.net/wiki/Kee_Berry"
     },
     {
       "name": "a-kee-berry-already-consumed-first-hit-rolls",
@@ -45929,17 +45889,9 @@
       },
       "field": {},
       "expect": {
-        "pre": [
-          {
-            "who": "def",
-            "stat": "spd",
-            "by": 1,
-            "src": "Maranga Berry",
-            "hit": 2
-          }
-        ]
+        "pre": []
       },
-      "src": "U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
     },
     {
       "name": "a-maranga-berry-consumed-once-first-hit-rolls",
@@ -46088,17 +46040,9 @@
       },
       "field": {},
       "expect": {
-        "pre": [
-          {
-            "who": "def",
-            "stat": "spd",
-            "by": 2,
-            "src": "Maranga Berry",
-            "hit": 2
-          }
-        ]
+        "pre": []
       },
-      "src": "U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
     },
     {
       "name": "a-maranga-berry-simple-once-first-hit-rolls",
@@ -46247,17 +46191,9 @@
       },
       "field": {},
       "expect": {
-        "pre": [
-          {
-            "who": "def",
-            "stat": "spd",
-            "by": -1,
-            "src": "Maranga Berry",
-            "hit": 2
-          }
-        ]
+        "pre": []
       },
-      "src": "U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
     },
     {
       "name": "a-maranga-berry-contrary-once-first-hit-rolls",
@@ -46406,17 +46342,9 @@
       },
       "field": {},
       "expect": {
-        "pre": [
-          {
-            "who": "def",
-            "stat": "spd",
-            "by": 1,
-            "src": "Maranga Berry",
-            "hit": 2
-          }
-        ]
+        "pre": []
       },
-      "src": "U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
     },
     {
       "name": "a-maranga-berry-given-stage-never-twice-first-hit-rolls",
@@ -46565,17 +46493,9 @@
       },
       "field": {},
       "expect": {
-        "pre": [
-          {
-            "who": "def",
-            "stat": "spd",
-            "by": 1,
-            "src": "Maranga Berry",
-            "hit": 2
-          }
-        ]
+        "pre": []
       },
-      "src": "U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
     },
     {
       "name": "a-maranga-berry-simple-cap-first-hit-rolls",
@@ -46726,7 +46646,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
     },
     {
       "name": "a-maranga-berry-at-cap-first-hit-rolls",
@@ -46877,7 +46797,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
     },
     {
       "name": "a-maranga-berry-contrary-lower-cap-first-hit-rolls",
@@ -47028,7 +46948,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. H itemdata:44669/44734; I util:7260/7264/8204/8207. Mechanics exist despite no named guide acquisition entry. Correct physical/special strike consumes once, before hit2, never before hit1 or again on hit3+. Simple/Contrary then cap; report only actual stages. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
     },
     {
       "name": "a-maranga-berry-single-no-pre-first-hit-rolls",
@@ -47171,7 +47091,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Kee requires physical, Maranga requires special; the other category cannot consume or boost. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Kee requires physical, Maranga requires special; the other category cannot consume or boost. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
     },
     {
       "name": "a-maranga-berry-wrong-category-first-hit-rolls",
@@ -47308,7 +47228,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Magic Room suppresses held berry activation between strikes. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Magic Room suppresses held berry activation between strikes. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
     },
     {
       "name": "a-maranga-berry-magic-room-first-hit-rolls",
@@ -47452,7 +47372,7 @@
       "expect": {
         "pre": []
       },
-      "src": "U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Previously entered stage plus no held berry does not generate another event. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
+      "src": "Hardlove: Kee / Maranga fire after the whole move (src/individual/ServerDoPostMoveEffects.c MOVE_PERFORMANCE_STEP_17_0_DEFENDER_ITEMS_3, Activate_KeeMarangaBerry_RedCard_EjectButton, kumakuma1/hardlove@ee4518c149), never between hits: no pre event (profile over.afterMove). Was: U4a A: Maranga Berry. H kumakuma1/hardlove@f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b; U1 H native ability/item/effect scripts. Previously entered stage plus no held berry does not generate another event. https://bulbapedia.bulbagarden.net/wiki/Maranga_Berry"
     },
     {
       "name": "a-maranga-berry-already-consumed-first-hit-rolls",

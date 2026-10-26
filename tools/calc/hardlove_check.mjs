@@ -191,6 +191,18 @@ check('batch1-negative-and-boundary-cases', () => {
   // Current behaviour: no Defense halving for Explosion / Self-Destruct (source and Gen 9 stock). See Needs Opus.
   assert.notDeepEqual(resultByName('explosion-defense-not-halved').per[0], handRolls(handBase(250, 130, 60), {stab: true}));
 });
+// Kee / Maranga Berry fire after the whole move (ServerDoPostMoveEffects step 17), so no later hit sees the boost;
+// Luminous Moss fires on the hit (CheckDefenderItemEffectOnHit) and still raises hit 2.
+check('kee-maranga-after-the-move', () => {
+  const mon = (name, extra = {}) => ({id: data.P.find(entry => entry.n === name).id, lv: 50, nat: 'Serious', ...extra});
+  const hits = (item, move) => plain(engine.calc(mon('Cloyster'), mon('Blissey', {it: item}), {mv: data.M.indexOf(move), hits: 3}, {}));
+  for (const [item, move] of [['Kee Berry', 'Rock Blast'], ['Maranga Berry', 'Water Shuriken']]) {
+    const result = hits(item, move);
+    assert.equal(result.per, undefined, `${item}: every hit alike`);
+    assert.equal(result.pre, undefined, `${item}: no between-hit event`);
+  }
+  assert.ok(hits('Luminous Moss', 'Water Shuriken').pre, 'Luminous Moss still between hits');
+});
 
 const counts = {pass: results.filter(result => result.status === 'pass').length,
   fail: results.filter(result => result.status === 'fail').length};
