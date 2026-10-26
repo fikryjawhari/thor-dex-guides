@@ -1,0 +1,23 @@
+<fieldset><legend>Live calculator presets</legend><div class="chips" id="calc-presets"></div><p class="hint" id="calc-preset-status">These presets use the built guide and its real damage engine. Tap an HP-line amount to apply a turn. Edit contains residual parts, target state and ability controls. Player/Foe fields are manual; automatic trainer fields are not part of this build.</p></fieldset>
+<script>
+const builtPresets=[
+ ['States',{species:'Snorlax',moves:['Fury Cutter','Assurance','Round','Facade']}],
+ ['Download',{ability:'Download',moves:['Tri Attack','Psychic','Thunderbolt','Ice Beam']}],
+ ['Sword',{ability:'Intrepid Sword',moves:['Iron Head','Close Combat','Crunch','Play Rough']}],
+ ['Shield',{ability:'Dauntless Shield',moves:['Iron Head','Close Combat','Crunch','Body Press']}],
+ ['First turn',{ability:'Bull Rush',moves:['Tackle','Head Charge','Close Combat','Earthquake']}],
+ ['Disguise',{ability:'Illusion',moves:['Dark Pulse','Flamethrower','Night Daze','U-turn']}],
+ ['Toxic',{species:'Snorlax',status:'tox',item:'Leftovers',moves:['Facade','Tackle','Earthquake','Crunch']}],
+ ['Multi-hit',{species:'Cloyster',moves:['Icicle Spear','Rock Blast','Surf','Ice Beam']}],
+ ['Draco',{species:'Snorlax',moves:['Draco Barrage','Psychic','Tackle','Surf']}],
+ ['Parental Bond',{species:'Mega Kangaskhan',ability:'Parental Bond',moves:['Power-Up Punch','Body Slam','Crunch','Earthquake']}],
+];
+function builtPreset(request){
+ const viewer=thorFrame();
+ const message=viewer.eval(`(()=>{const request=${JSON.stringify(request)},ability=request.ability?AB.findIndex(entry=>entry[0]===request.ability):-1;const species=request.species?P.find(entry=>entry.n===request.species):P.find(entry=>[...entry.a,entry.ha].includes(ability)&&ability>=0);if(!species||request.ability&&ability<0)return 'That preset is not available in this guide.';const state=CALC.state();state.custom=[];state.edits={};state.saved={};state.field={};state.st={};state.tgt={};state.hits={};state.hitv={};state.crit={};state.mvo={};state.z={};CALC.use(species);const mon=state.custom.at(-1);mon.l=50;mon.m=request.moves.map(name=>M.indexOf(name)).filter(index=>index>=0);mon.status=request.status||'';mon.i=request.item||'';if(ability>=0)mon.a=ability;const trainer=TRS.find(entry=>entry.n.includes('Flannery')&&entry.p.length===6)||TRS.find(entry=>entry.p.length===6)||TRS[0];TCAP[trainer.k]=50;CALC.enter(trainer.k,0);CALC.render();requestAnimationFrame(()=>scrollTo(0,document.querySelector('.fbar').getBoundingClientRect().top+scrollY-2));return species.n+' · live engine';})()`);
+ document.getElementById('calc-preset-status').textContent=message;
+}
+for(const [label,request] of builtPresets){const button=document.createElement('button');button.textContent=label;button.onclick=()=>builtPreset(request);document.getElementById('calc-presets').appendChild(button);}
+let builtWait=0;
+const builtReady=setInterval(()=>{try{const viewer=thorFrame();if(viewer.CALC){clearInterval(builtReady);if(!viewer.CALC.state().custom.length&&!viewer.CALC.state().imp)builtPreset(builtPresets[0][1]);}}catch(error){}if(++builtWait>=100)clearInterval(builtReady);},100);
+</script>
