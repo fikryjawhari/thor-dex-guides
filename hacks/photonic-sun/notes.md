@@ -167,7 +167,7 @@ has no cheats or checklist steps, and WK.docs holds the game docs.
 
 ### Damage calc
 
-**2026-10-25 / W2:** unchanged Gen 7 weights stand: all 928 lookups checked (50 form fallbacks, zero 1 kg defaults), including 48 Megas, both Primals and distinct Nidoran genders; no weight override or power rule added. The 52-row form verdict table and stock power formulas are in `plans/calc-refine-photonic.md` -> W2. [Bulbapedia weights](https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_weight) and [Minior](https://bulbapedia.bulbagarden.net/wiki/Minior_(Pok%C3%A9mon)) confirm Core is 0.3 kg, already correct. Ten fixtures have no set power (all eight weight/HP/speed moves, Alolan Raichu and stock Mega Steelix); stock checks and 872 native-oracle BP/16-roll comparisons pass. Official comparator's automatic-power adapter is still Needs Opus 6, not a mechanics disagreement.
+**2026-10-25 / W2:** unchanged Gen 7 weights stand: all 928 lookups checked (50 form fallbacks, zero 1 kg defaults), including 48 Megas, both Primals and distinct Nidoran genders; no weight override or power rule added. The 52-row form verdict table and stock power formulas are in `plans/calc-refine-photonic.md` (git history) -> W2. [Bulbapedia weights](https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_weight) and [Minior](https://bulbapedia.bulbagarden.net/wiki/Minior_(Pok%C3%A9mon)) confirm Core is 0.3 kg, already correct. Ten fixtures have no set power (all eight weight/HP/speed moves, Alolan Raichu and stock Mega Steelix); stock checks and 872 native-oracle BP/16-roll comparisons pass. Official comparator's automatic-power adapter is still Needs Opus 6, not a mechanics disagreement.
 
 2026-10-25: field-mechanics pass for 2.38 Rebalanced. `cfg.calc.base = "gen7"`; species stats/types and move
 power/category come from this guide's game data, not the oracle's backup. EVs remain enabled. The oracle is
@@ -190,7 +190,7 @@ can be encountered in Photonic Sun's story. No shared template, shared base prof
 | Flower Gift | Attack and Sp. Def in Sun/Harsh Sunshine, no boost in rain/no weather or to the wrong category; defensive implementation at `src/mechanics/gen789.ts:1604`. |
 | Tailwind | Payback changes power when attacker Tailwind reverses turn order; both sides' Tailwind preserves it. |
 | Inverse | Declarative `effectiveness` rule: invert each defending type's multiplier (0 becomes 2); no ability-immunity bypass. Fixtures cover weakness, resistance, type immunity, dual types, Levitate, Freeze-Dry and Flying Press. |
-| Always-critical moves | Declarative `critical` rule (`value: true`) for Self-Destruct and Explosion (Photonic Move Changes, Rebalanced; data `h`/`e` notes agree). Fixtures `self-destruct-neutral` / `-critical`, `explosion-neutral` / `-critical`: the no-flag case rolls equal the crit-flag case. Oracle does not crit them (neutral 244 vs crit 366 on Self-Destruct, a 1.5 ratio), so the doc decides and these rows are not `match`. Defense halving conflict: see Needs Opus in `plans/calc-refine-photonic.md`. |
+| Always-critical moves | Declarative `critical` rule (`value: true`) for Self-Destruct and Explosion (Photonic Move Changes, Rebalanced; data `h`/`e` notes agree). Fixtures `self-destruct-neutral` / `-critical`, `explosion-neutral` / `-critical`: the no-flag case rolls equal the crit-flag case. Oracle does not crit them (neutral 244 vs crit 366 on Self-Destruct, a 1.5 ratio), so the doc decides and these rows are not `match`. Defense halving conflict: see Needs Opus in `plans/calc-refine-photonic.md` (git history). |
 
 `calc_matchups.json` has 146 cases: **121 match all 16 hzla rolls; 25 known differences; zero unannotated damage mismatches or harness errors**. The orchestrator resolved the W2 automatic-power harness gap (Needs Opus 6); Z2 adds 25 Z-conversion cases, including 15 documented stock-Z oracle differences. Five doc-power assertions still fail independently of the oracle (Needs Opus 4); oracle agreement is not an all-green mechanics gate. The earlier four Self-Destruct/Explosion cases retain their documented differences.
 The six differences deliberately retain stock Gen 7 behaviour:
@@ -244,7 +244,7 @@ Rolls are the engine's 16 rolls. Level as stated, Serious nature, 31 IVs, 0 EVs,
   - Expected on every use: `229 232 235 238 241 243 246 249 252 255 256 259 262 265 268 271`.
   - Other way (ordinary hit): `153 156 157 159 160 162 165 166 168 169 171 174 175 177 178 181`.
 
-Engine pass (2026-10-26, `plans/calc-engine-pass.md`): crit stages are `MV.cr` from the game data's per-move `crit`
+Engine pass (2026-10-26): crit stages are `MV.cr` from the game data's per-move `crit`
 (`tools/ctrguide.py`, 26 moves; Self-Destruct / Explosion 6, so the always-critical rule above now repeats what `cr`
 says: harmless, kept). Battle state (`slot.st`, `def.vol`, ...), crit chance (`crit`) and stat changes before the hit
 (`pre`) follow stock Gen 7 (`tools/calc/README.md`); Spectral Thief steals before the hit, Simple doubling the gain.

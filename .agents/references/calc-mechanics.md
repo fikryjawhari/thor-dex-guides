@@ -2,7 +2,7 @@
 
 The procedure for `cfg.calc` (the damage calc's profile) and `calc_matchups.json` (the fixtures) for one hack.
 The engine and its phases: `tools/calc/README.md`. The EI example, with every source line: `hacks/emerald-imperium/notes.md`
-→ Damage calc. Licences (what may be reused): `plans/damage-calc.md` → Licenses.
+→ Damage calc. Licences (what may be reused): `tools/calc/README.md` → Licences, oracles and checking a hack.
 
 ## Inputs
 - The hack's own source, if it has public source (expansion hacks: `include/config/battle.h` for the switches,
@@ -13,7 +13,7 @@ The engine and its phases: `tools/calc/README.md`. The EI example, with every so
 - The oracle: hzla's Dynamic-Calc-Decomps. Find the hack's entry in `js/romhack_catalog.js` and its backup in
   `backups/title_to_backup_mappings.js` (the `data`, `gen`, `dmgGen`, `types` and `noSwitch` values). Pin the SHA there.
   Read and run it locally only; never copy its code or tables into the repo.
-  Each built hack's hzla link and what it means: `plans/damage-calc.md` → Calc references per hack (Eternal X is on
+  Each built hack's hzla link and what it means: `tools/calc/README.md` → Licences, oracles (Eternal X is on
   the older hzla/Dynamic-Calc). The hg-engine hacks have no hzla calc: use the hack's own rules (Hardlove Gold's are
   there), hzla's ROM importer (https://ddex-chi.vercel.app) as an oracle if it reads the ROM, and the in-game test.
 
@@ -46,7 +46,7 @@ The engine and its phases: `tools/calc/README.md`. The EI example, with every so
    Logs go in `.tmp/calc-<hack>/`.
 7. **Notes.** `notes.md` → "### Damage calc": the profile's base and why, a table of each override with its source
    line and fixtures, the doc/source disagreements (source followed), the known gaps, and what was not checked
-   (in-game test: `plans/damage-calc.md` → How to check, step 4).
+   (in-game test: `tools/calc/README.md` → Licences, oracles and checking a hack).
 8. **Commit.** WIP commits per step, named files only, no trailers. Do not push.
 
 ## Things that have bitten

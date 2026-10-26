@@ -143,12 +143,12 @@ permanent Rain and Electric Terrain. Also retained: permanent Rain/Sun/Sandstorm
 Trick Room, enemy-side permanent Tailwind, random terrain at battle start, one layer each of player Spikes and
 Toxic Spikes after first send-out, and +1 critical chance. The critical bonus's target and random terrain pool
 remain unspecified. Full original wording and scope survive. Shared schema: Emerald Imperium's notes;
-UI handoff: `plans/trainer-field-conditions.md`. No calc defaults, mechanics or visible UI changed. Rebuilt on 0.8.4
+Calc use (area conditions): `plans/calc-auto-effects.md`. No calc defaults, mechanics or visible UI changed. Rebuilt on 0.8.4
 data (merge of main, 2026-10-26): the raw build writes the `field` records.
 
 ### Damage calc (2026-10-25, provisional first pass)
 
-Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (the Nidoran♀ identity collision and Flabébé construction were fixed since: `tools/calc/test.mjs`). Evidence: `plans/calc-refine-hardlove.md` → Unit W → W2.
+Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (the Nidoran♀ identity collision and Flabébé construction were fixed since: `tools/calc/test.mjs`). Evidence: `plans/calc-refine-hardlove.md` (git history) → Unit W → W2.
 
 Enabled on `worktree-damage-calc`, **not merged or independently verified against the ROM**. Base `expansion`
 means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide is 0.8.4 since 2026-10-26 (Build); the
@@ -185,13 +185,13 @@ User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 | Hidden Power | BP 60 is data (`CalcBaseDamage.c:361-362`). Type from IVs (`other_battle_calculators.c:3277`) is not derived: the user types the type. Fixtures: `hidden-power-fire-typed`, `hidden-power-data-type-normal`. Open: see Needs Opus. |
 | Double Shock | Not a punching move: neither data.json nor stock flags it, so Iron Fist never boosts it. "Must be Electric" is a usability rule, not damage. Pain Split: HP averaging, out of scope. |
 
-Engine pass (2026-10-26, `plans/calc-engine-pass.md`): `cfg.calc.over.state` keeps the battle-state inputs off
-where the source ignores them (`plans/calc-state-engine.md` → "U2: Hardlove traces"): Echoed Voice, Rage Fist, Last
+Engine pass (2026-10-26): `cfg.calc.over.state` keeps the battle-state inputs off
+where the source ignores them (each `calc_states.json` case cites its source line): Echoed Voice, Rage Fist, Last
 Respects, Avalanche, Round, Fusion Flare / Bolt and the pledges stay flat; Defense Curl doesn't double Rollout / Ice
 Ball (lost in the replacement damage path); Magnitude isn't doubled against Dig (only Earthquake is); Gust / Twister
 against Fly double their power, not their damage. Revenge's toggle means "the target was already damaged this turn"
 (the source's condition). Crit stages: `MV.cr` from the move effects in `data/Moves.c` (28 moves; Dragon Cheer and
-Ivy Cudgel have none at this pin), the five-entry `critStages` table caps the stage at 4 (`plans/calc-crit.md` → H). Spectral Thief doesn't steal (`over.state`: `false`; its HIT script at this pin has no theft, U1: moves:19309,
+Ivy Cudgel have none at this pin), the five-entry `critStages` table caps the stage at 4. Spectral Thief doesn't steal (`over.state`: `false`; its HIT script at this pin has no theft, U1: moves:19309,
 move0715:7): plain 90 power. **Doc says** it steals boosts. Intrepid Sword / Dauntless Shield are once per battle in
 the source; the calc fires them unless the set's `entry` is `false` (the page says the entry doesn't count). Fixtures:
 `calc_states.json` (736 cases).

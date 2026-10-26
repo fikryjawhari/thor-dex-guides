@@ -228,10 +228,10 @@ are separate from correctness. No trainer `field` evidence is consumed automatic
 | Frozen / otherwise unable attacker | Accepted user decision: calculate hypothetical damage, do not prevent the action. `unable-attacker-slp` and `unable-attacker-frz`; `frz` still means Frostbite. |
 | Spread / weather / screens | Added singles/doubles spread, sun/rain, Reflect/Light Screen/Aurora Veil, non-stacking screens, critical bypass, snow and hail fixtures. Source `GetScreensModifier` (10031+) uses 0.5 singles / 0.667 doubles; spread and ordinary sun/rain/screens do not change between Gen 8 and Gen 9 (direct stock parity checked). Snow is the notable Gen 9 difference: Ice-type Defence ×1.5 (`battle_util.c` 9881); hail has no such defence boost. Weather chip/healing is outside these per-hit rolls. |
 
-Engine pass (2026-10-26, `plans/calc-engine-pass.md`): crit stages are `MV.cr` from the release's
+Engine pass (2026-10-26): crit stages are `MV.cr` from the release's
 `src/data/moves_info.h` (`.src/repos/expansion/`, 32 moves: Snipe Shot 2, Razor Shell 1, Zippy Zap always; **Doc
 says** Aqua Tail +1, the source has none). `cfg.calc.over.critItems` gives EI's Leek: +1 for Farfetch'd (Galarian too),
-+2 for Sirfetch'd (`battle_script_commands.c:1956-1979`; elsewhere +2 for both). `plans/calc-crit.md` → I. Spectral Thief
++2 for Sirfetch'd (`battle_script_commands.c:1956-1979`; elsewhere +2 for both). The crit cases in `calc_states.json` cite the lines. Spectral Thief
 is expansion's (`over.state`: `{theft: "headroom"}`, `battle_script_commands.c:17783/17837`): a stat already at +6
 isn't taken, and the gain is cut to the room left before Simple / Contrary. Intrepid Sword / Dauntless Shield fire on
 every entry here (`battle.h:152-153`); the calc fires them unless the set's `entry` is `false`. Fixtures:
@@ -258,7 +258,7 @@ Checks:
 - `python assemble.py`: all four guides built (`.tmp/calc-emerald-imperium/assemble.log`).
 - `node tools/scenarios/calc-imperium.mjs`: 10 passes (all five viewer sizes, normal/dvkb), real checkbox clicks,
   inversion/collapsed indication, field propagation, reload persistence and ability-state clearing.
-- Not done: an in-game test (a save state and one known move, per `plans/damage-calc.md` → How to check) or a
+- Not done: an in-game test (a save state and one known move, per `tools/calc/README.md` → Licences, oracles and checking a hack) or a
   physical Thor check. Browser regression results are recorded in the session status.
 
 #### W2 weight / automatic-power audit (2026-10-25)

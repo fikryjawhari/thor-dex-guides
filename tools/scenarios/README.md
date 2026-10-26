@@ -15,7 +15,7 @@ the persisted entry and control at 260 × 316 in `dvkb`. The seed is not re-appl
 
 ## Calc checks
 
-`calc-*.mjs` are the damage calc's spec checks (`plans/damage-calc.md` → Checks 1–26). They share `../calc_check_lib.mjs`
+`calc-*.mjs` are the damage calc's spec checks (the UI spec's checks 1–26, 2026-10-24). They share `../calc_check_lib.mjs`
 (the harness: guide copies, page per case, taps, number boxes, the real file input, the matrix); keep helpers there, not
 here, since the gate runs every `*.mjs` in this folder as a scenario.
 

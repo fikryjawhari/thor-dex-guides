@@ -95,7 +95,7 @@ the game docs; stop `k` with `.fN` fragment suffixes.
 
 ### Damage calc
 
-W2 checked 2026-10-25: all 782 stock Gen 6 weights stand (36 form fallbacks, 29 Megas, no 1 kg defaults or regional forms); 38 explicit form/Nidoran verdicts, 67 exact form/Mega checks, 54 weight/ratio boundaries, 470 HP and 338 speed cases confirm stock bands; ten automatic-power fixtures without `bp` all match legacy Dynamic-Calc (119 total: 116 exact, 3 existing always-critical differences, zero errors); no profile overrides or new Needs Opus rows. Evidence and Bulbapedia reference: `plans/calc-refine-eternal.md` → W2; checks: `tools/calc/eternal_check.mjs`.
+W2 checked 2026-10-25: all 782 stock Gen 6 weights stand (36 form fallbacks, 29 Megas, no 1 kg defaults or regional forms); 38 explicit form/Nidoran verdicts, 67 exact form/Mega checks, 54 weight/ratio boundaries, 470 HP and 338 speed cases confirm stock bands; ten automatic-power fixtures without `bp` all match legacy Dynamic-Calc (119 total: 116 exact, 3 existing always-critical differences, zero errors); no profile overrides or new Needs Opus rows. Evidence and Bulbapedia reference: `plans/calc-refine-eternal.md` (git history) → W2; checks: `tools/calc/eternal_check.mjs`.
 
 Field mechanics pass, 2026-10-25. `cfg.calc.base = "gen6"`: standard Generation 6 singles/doubles damage and types,
 with the guide's Rebalanced species stats, types, move power/category/priority and ability assignments. The user's
@@ -173,7 +173,7 @@ always-crit points, watch several uses: every use should show the crit list, nev
   - Expected on every use: `229 232 235 238 241 243 246 249 252 255 256 259 262 265 268 271`.
   - Other way (ordinary hit): `153 156 157 159 160 162 165 166 168 169 171 174 175 177 178 181`.
 
-Engine pass (2026-10-26, `plans/calc-engine-pass.md`): crit stages are `MV.cr` from the game data's per-move `crit`
+Engine pass (2026-10-26): crit stages are `MV.cr` from the game data's per-move `crit`
 (`tools/ctrguide.py`, 26 moves: Drill Peck 1, Cut / Self-Destruct / Explosion / Frost Breath 6; the always-critical
 rule above repeats `cr` 6: harmless, kept). The calc now reports the crit chance (`crit`), so Drill Peck's stage shows.
 Frost Breath: the game data is vanilla X's (60 power, 90 accuracy, always a crit); the changelog's buff is most likely

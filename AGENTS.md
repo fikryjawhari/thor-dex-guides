@@ -42,7 +42,7 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - `sprites/` the shared sprite set (pokeemerald-expansion, 64×64, `png/<key>.png`; README has the key scheme,
   SOURCES.md the pin and credits).
 - `tools/` source fetchers, extract helpers and checks (README), `mockup/` (the Thor frame and the page behaviour
-  checks). `plans/` work not done yet only (now: the damage calc).
+  checks). `plans/` work not done yet only (now: the damage calc's, `plans/calc-open.md`).
 - `dist/` built output (git-ignored); the Pages workflow builds and deploys it.
 
 ## Commands

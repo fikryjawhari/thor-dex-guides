@@ -10584,7 +10584,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. No move/item/ability/pumped bonus."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. No move/item/ability/pumped bonus."
     },
     {
       "name": "crit-stage-0-manual-crit-selected",
@@ -10610,7 +10610,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual damage selector is not a probability guarantee."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual damage selector is not a probability guarantee."
     },
     {
       "name": "crit-opponent-focus-does-not-boost-attacker",
@@ -10638,7 +10638,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Only attacker-side atkFocus counts."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Only attacker-side atkFocus counts."
     },
     {
       "name": "crit-move-karate-chop",
@@ -10664,7 +10664,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1126, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1126, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-razor-wind",
@@ -10690,7 +10690,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1137, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1137, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-drill-peck",
@@ -10716,7 +10716,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1189, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1189, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-razor-leaf",
@@ -10742,7 +10742,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1199, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1199, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-self-destruct",
@@ -10768,7 +10768,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1244, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1244, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-sky-attack",
@@ -10794,7 +10794,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1267, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1267, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-crabhammer",
@@ -10820,7 +10820,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1276, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1276, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-explosion",
@@ -10846,7 +10846,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1277, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1277, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-slash",
@@ -10872,7 +10872,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-aeroblast",
@@ -10898,7 +10898,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1301, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1301, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-cross-chop",
@@ -10924,7 +10924,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1362, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1362, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-blaze-kick",
@@ -10950,7 +10950,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1423, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1423, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-air-cutter",
@@ -10976,7 +10976,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1438, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1438, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-poison-tail",
@@ -11002,7 +11002,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1466, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1466, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-leaf-blade",
@@ -11028,7 +11028,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1472, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1472, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-night-slash",
@@ -11054,7 +11054,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1524, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1524, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-shadow-claw",
@@ -11080,7 +11080,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1545, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1545, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-psycho-cut",
@@ -11106,7 +11106,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1551, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1551, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-cross-poison",
@@ -11132,7 +11132,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1564, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1564, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-stone-edge",
@@ -11158,7 +11158,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1568, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1568, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-attack-order",
@@ -11184,7 +11184,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1578, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1578, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-spacial-rend",
@@ -11210,7 +11210,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1584, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1584, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-storm-throw",
@@ -11236,7 +11236,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1604, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1604, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-frost-breath",
@@ -11262,7 +11262,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1648, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1648, source cr=6. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-drill-run",
@@ -11288,7 +11288,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1653, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1653, source cr=1. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-move-10-000-000-volt-thunderbolt",
@@ -11314,7 +11314,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1843, source cr=2. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1843, source cr=2. Source move stage only; cr>=6 is a guarantee sentinel, excluded from counted stage. slot.crit=false."
     },
     {
       "name": "crit-focus-energy",
@@ -11342,7 +11342,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Focus establishes +2 pumped state."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Focus establishes +2 pumped state."
     },
     {
       "name": "crit-dire-hit-active",
@@ -11370,7 +11370,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Dire Hit already used; same single pumped state as Focus, NOT a held-item bonus."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Dire Hit already used; same single pumped state as Focus, NOT a held-item bonus."
     },
     {
       "name": "crit-lansat-held-unactivated",
@@ -11397,7 +11397,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Full HP, unactivated berry: no pumped state, no permanent held-item boost."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Full HP, unactivated berry: no pumped state, no permanent held-item boost."
     },
     {
       "name": "crit-dire-hit-held-unused",
@@ -11424,7 +11424,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Unused bag item is not an eligible held-crit effect."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Unused bag item is not an eligible held-crit effect."
     },
     {
       "name": "crit-lansat-active-pumped",
@@ -11452,7 +11452,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Lansat already consumed, establishes the same +2 pumped state; no berry remains held."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Lansat already consumed, establishes the same +2 pumped state; no berry remains held."
     },
     {
       "name": "crit-pumped-sources-do-not-stack",
@@ -11480,7 +11480,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Focus/Dire Hit/activated Lansat describe ONE established pumped state, not three bonuses."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Focus/Dire Hit/activated Lansat describe ONE established pumped state, not three bonuses."
     },
     {
       "name": "crit-scope-lens",
@@ -11507,7 +11507,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Eligible held effect adds +1."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Eligible held effect adds +1."
     },
     {
       "name": "crit-scope-lens-with-focus",
@@ -11536,7 +11536,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Item +1 plus pumped +2 reaches guaranteed-crit threshold."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Item +1 plus pumped +2 reaches guaranteed-crit threshold."
     },
     {
       "name": "crit-razor-claw",
@@ -11563,7 +11563,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Eligible held effect adds +1."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Eligible held effect adds +1."
     },
     {
       "name": "crit-razor-claw-with-focus",
@@ -11592,7 +11592,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Item +1 plus pumped +2 reaches guaranteed-crit threshold."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Item +1 plus pumped +2 reaches guaranteed-crit threshold."
     },
     {
       "name": "crit-super-luck",
@@ -11618,7 +11618,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Ability adds one stage."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Ability adds one stage."
     },
     {
       "name": "crit-super-luck-with-focus",
@@ -11646,7 +11646,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Super Luck +1 and pumped +2 guarantee this hit."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Super Luck +1 and pumped +2 guarantee this hit."
     },
     {
       "name": "crit-sniper-not-a-stage-source",
@@ -11672,7 +11672,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Sniper changes critical damage, not the crit probability."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Sniper changes critical damage, not the crit probability."
     },
     {
       "name": "crit-move-plus-scope-lens",
@@ -11699,7 +11699,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Move +1 and held item +1: stage2, p1/2."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Move +1 and held item +1: stage2, p1/2."
     },
     {
       "name": "crit-move-plus-super-luck",
@@ -11725,7 +11725,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Move +1 and ability +1: stage2, p1/2."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Move +1 and ability +1: stage2, p1/2."
     },
     {
       "name": "crit-move-plus-focus",
@@ -11753,7 +11753,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Move +1 and pumped +2: stage3, guaranteed."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Move +1 and pumped +2: stage3, guaranteed."
     },
     {
       "name": "crit-stack-four-stages",
@@ -11782,7 +11782,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. 0+1+1+2=4 counted before cap; H retains index4, I/P/E cap3. Both tables give probability1."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. 0+1+1+2=4 counted before cap; H retains index4, I/P/E cap3. Both tables give probability1."
     },
     {
       "name": "crit-stack-beyond-cap",
@@ -11811,7 +11811,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. 1+1+1+2=5 before cap; top index H4 or I/P/E3. Guaranteed even with slot.crit=false."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. 1+1+1+2=5 before cap; top index H4 or I/P/E3. Guaranteed even with slot.crit=false."
     },
     {
       "name": "crit-lucky-punch-chansey",
@@ -11838,7 +11838,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Chansey-only +2."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Chansey-only +2."
     },
     {
       "name": "crit-lucky-punch-blissey-ineligible",
@@ -11865,7 +11865,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. The restriction is Chansey itself, not its evolution family."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. The restriction is Chansey itself, not its evolution family."
     },
     {
       "name": "crit-lucky-punch-with-move",
@@ -11892,7 +11892,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Punch +2 and move +1 guarantee a crit."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Punch +2 and move +1 guarantee a crit."
     },
     {
       "name": "crit-duck-item-farfetchd",
@@ -11919,7 +11919,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. EI GetHoldEffectCritChanceIncrease gives Farfetchd only +1; all other hacks here give +2."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. EI GetHoldEffectCritChanceIncrease gives Farfetchd only +1; all other hacks here give +2."
     },
     {
       "name": "crit-duck-item-with-move",
@@ -11946,7 +11946,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Move +1 plus eligible duck item. EI reaches stage2, NOT guaranteed; others reach3."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Move +1 plus eligible duck item. EI reaches stage2, NOT guaranteed; others reach3."
     },
     {
       "name": "crit-duck-item-ineligible-holder",
@@ -11973,7 +11973,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Non-duck holder gets no item crit stages."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Non-duck holder gets no item crit stages."
     },
     {
       "name": "crit-stage-two-move-with-scope-lens",
@@ -12000,7 +12000,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1843, source cr=2. USUM signature move +2 and item +1 guarantee; native move data, not a fabricated Z input."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1843, source cr=2. USUM signature move +2 and item +1 guarantee; native move data, not a fabricated Z input."
     },
     {
       "name": "crit-always-crit-plus-counted-bonuses",
@@ -12029,7 +12029,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1244, source cr=6. cr6 supplies forced only; Focus2+Lens1 supplies counted3, not6+2+1."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1244, source cr=6. cr6 supplies forced only; Focus2+Lens1 supplies counted3, not6+2+1."
     },
     {
       "name": "crit-battle-armor-base",
@@ -12055,7 +12055,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor prevents crits at stage0."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor prevents crits at stage0."
     },
     {
       "name": "crit-battle-armor-stage-cap",
@@ -12084,7 +12084,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Armor overrides table guarantee; preserve capped counted stage, p0 and forcedfalse."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Armor overrides table guarantee; preserve capped counted stage, p0 and forcedfalse."
     },
     {
       "name": "crit-battle-armor-always-crit",
@@ -12110,7 +12110,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1244, source cr=6. Armor overrides willCrit/cr6; counted stage remains0."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1244, source cr=6. Armor overrides willCrit/cr6; counted stage remains0."
     },
     {
       "name": "crit-battle-armor-manual-crit-selected",
@@ -12136,7 +12136,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual critical-damage scenario does not change blocked probability."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual critical-damage scenario does not change blocked probability."
     },
     {
       "name": "crit-shell-armor-base",
@@ -12162,7 +12162,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor prevents crits at stage0."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor prevents crits at stage0."
     },
     {
       "name": "crit-shell-armor-stage-cap",
@@ -12191,7 +12191,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Armor overrides table guarantee; preserve capped counted stage, p0 and forcedfalse."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Armor overrides table guarantee; preserve capped counted stage, p0 and forcedfalse."
     },
     {
       "name": "crit-shell-armor-always-crit",
@@ -12217,7 +12217,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1244, source cr=6. Armor overrides willCrit/cr6; counted stage remains0."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1244, source cr=6. Armor overrides willCrit/cr6; counted stage remains0."
     },
     {
       "name": "crit-shell-armor-manual-crit-selected",
@@ -12243,7 +12243,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual critical-damage scenario does not change blocked probability."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Manual critical-damage scenario does not change blocked probability."
     },
     {
       "name": "crit-merciless-not-poisoned",
@@ -12269,7 +12269,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. No poison on defender, no guarantee."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. No poison on defender, no guarantee."
     },
     {
       "name": "crit-merciless-psn",
@@ -12296,7 +12296,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Poisoned target forces a crit; counted stage remains0."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Poisoned target forces a crit; counted stage remains0."
     },
     {
       "name": "crit-merciless-tox",
@@ -12323,7 +12323,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Badly poisoned target also forces a crit."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Badly poisoned target also forces a crit."
     },
     {
       "name": "crit-merciless-burn-not-poison",
@@ -12350,7 +12350,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Burn is not poison."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Burn is not poison."
     },
     {
       "name": "crit-merciless-attacker-poison-does-not-trigger",
@@ -12377,7 +12377,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Only target poison triggers Merciless."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Only target poison triggers Merciless."
     },
     {
       "name": "crit-merciless-keeps-counted-stage",
@@ -12405,7 +12405,7 @@
           "forced": true
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Forced source changes p but not move1+item1 count."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. hacks/photonic-sun/.src/dex-rebalanced.json:1287, source cr=1. Forced source changes p but not move1+item1 count."
     },
     {
       "name": "crit-merciless-blocked-by-battle-armor",
@@ -12432,7 +12432,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor blocks Merciless, forcedfalse and p0."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor blocks Merciless, forcedfalse and p0."
     },
     {
       "name": "crit-merciless-blocked-by-shell-armor",
@@ -12459,7 +12459,7 @@
           "forced": false
         }
       },
-      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); plans/calc-crit.md result contract; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor blocks Merciless, forcedfalse and p0."
+      "src": "U5 C: hacks/photonic-sun/.src/dex-rebalanced.json (USUM Gen 7 native crit rules); tools/calc/README.md Crit; https://bulbapedia.bulbagarden.net/wiki/Critical_hit#Probability_2. Armor blocks Merciless, forcedfalse and p0."
     },
     {
       "name": "a-skull-bash-ordinary",

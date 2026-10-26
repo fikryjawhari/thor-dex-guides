@@ -1,8 +1,8 @@
 # Save reader for a save family
 
 The procedure for importing a hack's save into the damage calc: one reader per save family, plus the hack's ID tables.
-The interface: `plans/damage-calc.md` → Build step 1 (Save readers); the formats and families: → Save reading;
-licences: → Licenses (hzla's readers and PKHeX are read-only references: write the format down as notes, then write
+The interface, formats and families: `plans/calc-open.md` → Save readers and the file picker;
+licences: `tools/calc/README.md` → Licences (hzla's readers and PKHeX are read-only references: write the format down as notes, then write
 our own reader from the notes, never translate their code).
 
 ## Inputs
@@ -30,6 +30,6 @@ our own reader from the notes, never translate their code).
 6. **Notes.** The hack's `notes.md` → Damage calc: the family, the tables' source, what was checked with which save,
    unmapped IDs. Commit after each step (`WIP:` when incomplete), named files only, no trailers.
 
-Families and their first hacks (plans/damage-calc.md → Order): Gen 3 (Emerald Imperium; CFRU saves differ), Gen 4
+Families and their first hacks (plans/calc-open.md → Save readers): Gen 3 (Emerald Imperium; CFRU saves differ), Gen 4
 (Hardlove Gold), Gen 5 (Blaze Black 2 Redux), Gen 6/7 (Photonic Sun, Eternal X). In Dex Viewer the file picker also
 needs the app change (a separate step in `../thor-dex-viewer`).

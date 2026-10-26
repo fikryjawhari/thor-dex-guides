@@ -23,8 +23,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
   - **Standard tooling:** `tools/gate.py` (baseline + every check in one command), `tools/scenarios/`,
     `tools/worktree_setup.py` (claim, `uv sync`, `.src/` junctions to the main checkout), `preview.py --frame`, and
     `.agents/references/` (worker brief, spec skeleton, big-job ledger).
-- Open elsewhere: `worktree-damage-calc` (damage calc framework built 2026-10-25, **not merged**: the user wants the
-  mechanics confirmed first; pushed to `origin`). See Open → Damage calc.
+- Open elsewhere: `worktree-damage-calc` (the damage calc, built 2026-10-25 / 26, **not merged**: the user wants the
+  mechanics confirmed first). See Open → Damage calc.
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
   3DS (done: `ctrguide.py`; next Meissa Moon, Navy Sapphire), pokeemerald-expansion (Emerald Imperium, SoulGold),
   CFRU (Radical Red, Unbound), NDS (Hardlove Gold built; Renegade Platinum, Blaze Black 2 Redux, HeartGold Retiled).
@@ -39,83 +39,23 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
 1. **Test on the Thor.** Nothing since the consistency pass has been on the device (EI and HG were last checked there
    2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
-2. **Damage calc with save import** (start every calc session from `plans/damage-calc-sessions.md`; `plans/damage-calc.md`; branch `worktree-damage-calc`, pushed, not merged).
-   Compact UI and field-state builds (Sol, 2026-10-26) merged from `worktree-damage-calc-toggles` into
-   `worktree-damage-calc` 2026-10-26 after a pre-merge review; the toggles worktree is retired. The review's fixes:
-   stock Iron Ball damage on Flying dual types (12 parity cases), immunity-blocked hazard parts stay pending
-   (v2 entry markers, old saves migrate), Loaded Dice hit limits off under Klutz / Magic Room. Engine 108 groups /
-   53 parity; calc-field-states and calc-state pass on all four guides.
-   The earlier engine pass merged at `f3203b1`.
-   Header placement, compact editors, total-hit damage, Draco and crit/pre controls are wired. New folded States /
-   Turn end / Hazards controls stay inside the minimum window. Phone feedback fixes preserve field-toggle row
-   heights on press and top-pack player-box rows; accepted control sizes and group arrangements stay unchanged.
-   Entry damage applies once on selection; manual HP edits re-arm Apply hazards. Poison / Sticky Web reapply
-   independently without repeating damage. Steelsurge is
-   engine-only; source-gated controls and existing storage keys are preserved. Full engine suite passes (96 groups,
-   41 stock parity cases, all four hack/state suites); existing calc-state checks pass 118 across the four guides.
-   Field-state build/audit evidence: `plans/calc-field-states.md`. Earlier compact-pass gate: 88/117, with eight
-   expected Calc-only differences and 21 baseline EI-only fixture failures on other guides (details in
-   `plans/calc-state-toggles.md`). Original engine follow-ups and trainer-field automation remain separate:
-   `plans/calc-handover.md`. The field / toggle plans are kept until `worktree-damage-calc` merges into main.
-   Open items session 2026-10-26 (Opus): Return / Frustration 102 by default; verification list settled (two
-   engine fixes: Kee / Maranga once, after the move in Hardlove; Ash-Greninja Water Shuriken; Loaded Dice Population
-   Bomb); HP moves (fixed damage, Counter's Taken box, one-tap use with your recoil / drain / heal, exact Dealt / You
-   entry; `plans/calc-hp-moves.md`, its Follow-ups list the settled next fixes: Disguise / Ice Face, Rocky Helmet /
-   Rough Skin, crash damage, Swallow / Spit Up Stockpile count). Next: merge the EI scope decide session, reconcile its
-   files with these notes, then build.
-   Built phone previews:
-   https://windows-pc.tail1846b8.ts.net/preview/calc-field-states.html (EI),
-   https://windows-pc.tail1846b8.ts.net/preview/calc-field-hardlove.html (Hardlove),
-   https://windows-pc.tail1846b8.ts.net/preview/calc-field-photonic.html (Photonic/Z),
-   https://windows-pc.tail1846b8.ts.net/preview/calc-field-eternal.html (Eternal).
-   Approval mockup phone preview:
-   `https://windows-pc.tail1846b8.ts.net/preview/calc-state-edit.html` (ten viewer-size/mode mock checks pass;
-   fourth move at 309 px at minimum size). Tap residual amount to apply a turn directly; cycle Download; full-width
-   Singles/Doubles switch above Weather/Terrain. Scope/engine triage:
-   `plans/calc-state-toggles.md` -> Build status. Additional Thor feedback is recorded there; trainer-field is a
-   later sequential decide/build on this branch. Return/Frustration defaults deferred;
-   Power-Up Punch and Stamina already affect later hits; Loaded Dice/Skill Link selection restrictions are UI;
-   Emperor's Presence already has self/ally rules. Verify these in the page before treating them as engine defects.
-   Refinement done 2026-10-26 (`plans/damage-calc-sessions.md` → Status). Engine pass (`plans/calc-engine-pass.md`,
-   brief + Progress log) done 2026-10-26: battle-state inputs (`slot.st`, `slot.curl`, `slot.met`, `atk.fnt`, `def.vol`),
-   result `bp` / `crit {stage, p, forced}` / `pre`, `MV.cr` in every calc guide's data, 2322 state fixtures
-   (`calc_states.json`, in `npm test`); contract in `tools/calc/README.md`. The toggle UI build now uses these inputs
-   and results, including per-Pokémon Download and the Intrepid Sword / Dauntless Shield off switch (`dl`, `entry`).
-   Then Return / Frustration defaults, mechanics verification, trainer-field automation decide/build, merge to
-   main, then save readers. Extra turn-order controls aren't needed (faster-Speed colour accepted).
-   In-game tests to run on the Thor: each guide's notes.md → Damage calc → In-game tests.
-   Built 2026-10-25 (step 1 of its Order): `@smogon/calc` engine using each guide's own data (`tools/calc/`, 81 tests),
-   six base profiles, the calc page from the UI spec (all 26 spec checks pass: `tools/scenarios/calc-*.mjs`), the import
-   flow with a fake `test` reader, `tools/calc_save_check.mjs`, `#/calc` in domcompare. Emerald Imperium has
-   `cfg.calc`, refined 2026-10-25: 109 fixtures (100 exact hzla matches, nine documented differences), source/stock
-   cross-checks and 10 five-size/mode UI passes. First-turn / disguise checkboxes, allied Emperor field effect and
-   visible Draco Auto/Inverted category controls are built. Correctness fixes include integer Draco selection,
-   special Bull/Quill Rush, Blazing Soul priority, Ice Eater immunity and Defeatist at one-third HP. `noSwitch` and
-   `evs=0` are dispositioned in its notes. Turn-order / trainer-field UI, healing simulation and in-game tests stay
-   separate. Phone preview: `calc-imperium-refined.html`. Hardlove Gold now has a **provisional** Gen 9 profile (2026-10-25):
-   EVs blocked in direct engine calls, Gems x1.5, source contact flags restored; 53 source/stock checks and 10
-   viewer-size/mode checks pass. No independent hack oracle: in-game tests and Protean/type-history states remain
-   open (its notes.md → Damage calc). Copied 0.8.4 importer exports to ignored `.src/calc-import/`; guide stays
-   0.8.3. Photonic Sun now has a Gen 7 field profile (2026-10-25): every requested standard field plus inverse,
-   Flower Gift and Battery; 107 fixtures (101 exact hzla matches, 6 documented Wonder Room / defensive Flower
-   Gift oracle defects retained as stock Gen 7), 10 viewer-size/mode passes. Notes list the remaining individual
-   effect/in-game checks. Phone preview: `calc-photonic.html`. Eternal X now has its standard Gen 6 field profile
-   (2026-10-25): singles/doubles, terrain, all weather including harsh weather, rooms, inverse, Gravity, screens,
-   Helping Hand, Tailwind, Flower Gift and Friend Guard. 97/97 exact older Dynamic-Calc matches, stock Gen 6
-   cross-checks, 10 viewer-size/mode passes, data gate 5/5 and consistency passes; other guides byte-identical.
-   Phone preview: `calc-eternal.html`. Individual-effect refinements and in-game checks remain. Not merged until
-   trusted. Next, each in its own session:
-   - Mechanics refinement per hack (`.agents/references/calc-mechanics.md`; each hack's notes → Damage calc).
-     All four first passes are done; Hardlove remains provisional without an independent oracle/in-game tests.
-   - Trainer area fields prepared 2026-10-25, data-only: trainer `field` evidence preserves original text, section
-     inheritance and conservative effects. Hardlove: all 75 workbook field comments retained, 65 cards; EI: 20 cards
-     including unresolved strategy labels. No existing fields changed, no auto-application or UI. Future decide
-     session: `plans/trainer-field-conditions.md`. Unknown/random effects remain explicit. Broader UI refinements
-     and bug fixes are deferred until after hack/mechanics work and before publication.
-   - Save readers: Gen 3 + EI's ID tables first (`.agents/references/calc-save-reader.md`), then the app's file picker
-     (app repo), Gen 4, Gen 5, Gen 6/7. hzla's readers and PKHeX are read-only references; PokeDaisy (GPLv3) too.
-   - Test the page on the Thor (phone preview: `calc-build.html`).
-   - Token-spend analysis session (prompt given 2026-10-25): agent cost by model / effort / length, rules for briefs.
+2. **Damage calc** (branch `worktree-damage-calc`, `.claude/worktrees/damage-calc`; pushed to `origin` up to
+   `67f0e37`, **not merged**: it waits for the user's mechanics check before `main`). Start every calc session from
+   `plans/calc-open.md` (the open list, in order, plus the checks, the merge steps and the save-reader notes).
+   - **Built** (all four guides with `cfg.calc`: EI, Hardlove, Photonic, Eternal X): `@smogon/calc` engine on each
+     guide's own data with a per-hack profile and fixtures (hzla oracle matches for EI / Photonic / Eternal X;
+     Hardlove provisional, source-checked only), the calc page (compact one-window UI at every viewer size), battle
+     state (counters, toggles, pledges, crit stages, stat changes before the hit, Download / Sword / Shield), stackable
+     field states and entry hazards, turn end, Z-moves and Totem auras (Photonic), HP moves (fixed damage, Taken,
+     one-tap use, Dealt / You), Return / Frustration at 102, the import flow with a test reader. Lasting decisions:
+     `template/README.md` → Damage calculator, `tools/calc/README.md`, each guide's notes.md → Damage calc.
+   - **Open** (`plans/calc-open.md`): build `plans/calc-auto-effects.md` (automatic effects and fight state, spec
+     settled 2026-10-26); the HP-move follow-ups (Disguise / Ice Face, Rocky Helmet family, crash damage, Stockpile);
+     decide `plans/calc-team.md` (drag-and-drop team row); fix the EI-only calc scenarios; then the user's mechanics
+     check (in-game tests in each guide's notes.md), the merge into `main`, save readers and the file picker.
+   - **Phone previews still current:** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-hp-moves-build.html`
+     (EI, newest build), `calc-field-hardlove.html`, `calc-field-photonic.html`, `calc-field-eternal.html` (built
+     before HP moves), `calc-auto-mock.html` (the auto-effects mockup). The older `calc-*` previews are superseded.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
    calc as a reference once the calc exists. Agreed, not done.

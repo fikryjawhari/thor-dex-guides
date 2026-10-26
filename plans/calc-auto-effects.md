@@ -5,8 +5,8 @@ Mockup: `plans/calc-auto-effects-mockup/` (`build.py` → `dist/calc-auto-mock.h
 `calc-auto-mock.html`; `check.mjs` runs its scenarios; `engine-probe.mjs` is the survey below). The mockup's damage
 numbers are a rough formula; only its behaviour is the spec. The user approved the mockup's behaviour as "as close to
 perfect as I can think of"; where the spec differs from the mockup (log overlay, Reset fight, area toggles), the
-spec wins. Replaces the open "Later field/ability/item automation" part of `plans/calc-handover.md` and the UI
-half of `plans/trainer-field-conditions.md`.
+spec wins. Replaces the open "Later field/ability/item automation" part of the calc handover and the UI half of the
+trainer-field plan (both deleted 2026-10-26; git history).
 
 ## What changes
 
@@ -248,8 +248,7 @@ the UI text adds the accuracy note. Update `trainer_fields_check.py`, rebuild th
   (`tools/trainer_fields_check.py`) and settle each with the user before the calc build; record the decisions in
   the hack's `notes.md` and normalise them in `trainer_fields.py`. Also: check the hack's mechanics doc for weather /
   terrain permanence (`setterStays`).
-- When built and merged: delete this plan, `plans/trainer-field-conditions.md` and the automation part of
-  `plans/calc-handover.md`.
+- When built: delete this plan and its mockup folder; take it off `plans/calc-open.md`.
 
 ## Build units
 

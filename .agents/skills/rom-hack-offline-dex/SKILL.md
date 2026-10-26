@@ -100,6 +100,6 @@ The user wants a mockup before any UI change that isn't already in the template:
 
 ## Planned work
 
-Read `plans/damage-calc.md` and `PROGRESS.md` for calc / save-import work. Use the selected `@smogon/calc` (MIT)
+Read `plans/calc-open.md` and `PROGRESS.md` for calc / save-import work. Use the selected `@smogon/calc` (MIT)
 engine; hzla's unlicensed code is read-only format reference, not code to copy. Keep each guide self-contained;
 do not introduce a multi-game runtime or expand agreed scope speculatively.

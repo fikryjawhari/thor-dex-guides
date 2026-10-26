@@ -1,9 +1,0 @@
-<fieldset><legend>Calc state mockup</legend>
- <div class="chips" id="mk1"></div><div class="chips" style="margin-top:6px" id="mk2"></div>
- <p class="hint">Foe state (on the foe card) and reset. Rows: Earthquake (plain), Assurance (Hit toggle), Fury Cutter (use counter), Triple Kick (×3, as now). Tap a row's top button to change it, the row to open its Power box.</p>
-</fieldset>
-<script>
-(function(){const B=(id,list)=>{const el=document.getElementById(id);list.forEach(([l,n,v])=>{const b=document.createElement('button');b.textContent=l;b.onclick=()=>thorFrame().setOption(n,v);el.appendChild(b);});};
- B('mk1',[['Foe: none','foe',''],['Dig','foe','dig'],['Fly','foe','fly'],['Dive','foe','dive']]);
- B('mk2',[['Minimized','foe','min'],['Switching out','foe','switch'],['Reset rows','reset','']]);})();
-</script>

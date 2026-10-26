@@ -1,6 +1,6 @@
 // Calc move rules in the page: Return / Frustration show power 102 by default (a typed power wins); Ash-Greninja's
 // Water Shuriken is a fixed ×3 (power 20); Loaded Dice makes Population Bomb a 1 / 4-10 choice; allied Emperor's Presence
-// boosts only its own side, in Doubles; HP moves (plans/calc-hp-moves.md): fixed damage, Taken, one-use tap in both
+// boosts only its own side, in Doubles; HP moves (template/README.md → HP moves): fixed damage, Taken, one-use tap in both
 // directions, Soft-Boiled / Rest, exact Dealt / You entry. Parts whose species or
 // move the guide lacks are skipped. Every viewer size, normal and dvkb. Without cfg.calc: skip.
 import assert from 'node:assert/strict';
