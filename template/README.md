@@ -58,30 +58,47 @@ These came out of the consistency pass (2026-10-23/24); the extract helpers appl
 ### Damage calculator
 
 Profiles may declare `monControls` (`k`, `l`, `abilities`) for per-Pokémon battle-state checkboxes. EI uses
-`abilityOn` for First turn out (Bull/Quill Rush) and Disguised (Illusion); off is the default. Changing ability or
+`abilityOn` for First turn out (Bull/Quill Rush) and Disguised (Illusion); off is the default. The checkbox sits next
+to Edit, with an accessible label and tooltip, not on an additional card row. Changing ability or
 Mega form clears this state. Controls do not change the attack direction. `categoryInvert` names moves with an
-Invert category checkbox in their move details: the current category and Auto/Inverted/tie state remain visible
-when collapsed. These flags persist inside existing edited/custom Pokémon and per-slot move overrides, never
-under new storage keys. EI also exposes allied Emperor's Presence as an explicit attacking-ally field toggle;
+Invert category checkbox in their move details: a compact P/S · A/I button above Crit also toggles it while collapsed.
+The tooltip spells out category, Auto/Inverted and ties. These flags persist inside existing edited/custom Pokémon
+and per-slot move overrides, never under new storage keys. EI also exposes allied Emperor's Presence per side;
 it only affects doubles. Trainer `field` evidence is still not automatically consumed. Effective priority is an
-engine result, not a claim about which move should happen first; the turn-order UI is separate future work.
-Match blocks with extra individual controls may grow past the nominal viewport-height block so Field stays
-reachable. No condition labels or category controls appear in profiles that do not declare them.
+engine result, not a claim about which move should happen first; the faster Speed colour is the current UI.
+Opening Edit at wide sizes opens both populated editors; closing either closes both. Full form names appear inside
+Edit. The team area's height is based on closed cards and move rows, so edits/residuals never enlarge it or change
+the team from rows to a strip. Editors and expanded moves grow downwards; Field follows the whole moveset.
+No condition labels or category controls appear in profiles that do not declare them.
 
 **Turn end** (residual, 2026-10-25): `DMG.residual(set, field)` gives each side's end-of-turn parts (weather, Leftovers / Black
 Sludge / Sticky Barb, status incl. rising toxic, Grassy Terrain, Dry Skin / Rain Dish / Ice Body / Solar Power / Poison Heal,
 plus the profile's `residual`). The KO text counts the defender's per-turn change; rolls, percentages and HP buttons never do.
-A strip under the cards (`.deot`) has one cell per affected side, always in that side's column (at ≥480 px aligned with its
-card, the name shown; below 480 px no name). Tap the amount: one turn applied to current HP (toxic then rises; the counter
-is transient). The arrow lists the parts; toxic's part has a turn box (1-15) that sets the counter. "Turn" and the
-amount share a baseline (`font` shorthand carries the 24px line-height). **Triple Kick / Triple Axel**: the row's ×3 button
+The clickable residual amount sits on its Pokémon's existing HP line. Tap it to apply one turn immediately, without
+opening Edit or selecting the attacker. Parts and toxic's 1-15 turn counter live inside Edit; applying a turn advances
+the transient toxic counter, capped at 15. **Triple Kick / Triple Axel**: the row's ×3 button
 cycles ×3 (total, default) → H1 → H2 → H3; the outside number is the total or that hit's range, percent and KO stay on the
 total; the choice lives in `ST.hits` (0 = total); no Hits box in the editor. An opened row repeats them (`Turn end: −2 Sandstorm`). Leech Seed is not offered
-(no control says who is seeded). When HP is not full, the HP label becomes an accent ↺ button (tap: full HP); the Lv / HP
-row has no room for a separate button at 260 px. An open editor or parts list lets the ≥480 px block grow past the viewport
-(Field stays below the rows). **Protean / Libero**: the attacker takes each move's type (STAB in every base); the edit menu
+(no control says who is seeded). When HP is not full, the HP label becomes an accent ↺ button (tap: full HP).
+**Protean / Libero**: the attacker takes each move's type (STAB in every base); the edit menu
 of a Pokémon with either ability has a Type row (own types or one of the 18) used when it defends; a dot in that type's colour
 marks the card. Stored as `pty` in the existing edits; ability / Mega change clears it. Scenario: `tools/scenarios/calc-residual.mjs`.
+**Battle state**: per-row toggles, earlier-use counters, partner pledges (Doubles only) and Metronome use the one
+top slot above Crit, without growing the row. Hack `over.state: false` suppresses a move's control; `curl: false`
+suppresses Defense Curl in Rollout/Ice Ball details. A move's own control wins over the item's Metronome counter.
+State is `ST.st[slotKey]`; target Dig/Fly/Dive/Minimized/Switching is `ST.tgt[cardKey]` in Edit. Changing a move clears
+that slot, import clears imported Pokémon's state, and Reset power/type clears only those two overrides.
+Download cycles Auto (with its actual stat), Atk, Sp. Atk, None; Sword/Shield have an ability-conditional off checkbox.
+Details show used/listed/typed power, crit chance/stage and first-/between-hit changes; the move's own changes alone
+can be omitted. Forced crit locks C on; blocked crit disables it. No new localStorage key is used.
+**Hit totals**: collapsed damage sums all selected hits, including Parental Bond. Fixed multi-hit and Parental Bond
+share one total/H1/H2/etc. inspection button; ordinary variable-hit moves cycle through legal counts plus a one-hit
+inspection. Loaded Dice restricts standard 2-5-hit choices to 1/4/5; Skill Link to 1/max. Details retain per-hit rolls.
+**Field**: a full-width Singles/Doubles segment, then shared Weather/Terrain and global toggles, followed by stable
+Player/Foe columns. Stored `atk*` means Player and `def*` means Foe; the page remaps inputs for foe attacks. Old
+attacker-relative state migrates once, using its saved direction. Focus Energy is offered on both sides in every
+profile. Automatic trainer/ability/item field provenance remains a later decide/build, not inferred here.
+Scenario: `tools/scenarios/calc-state.mjs`; trainer Metronome top-slot conflicts: `tools/calc_ui_check.py`.
 **Z-moves** (profile `zmove`, Photonic; 2026-10-26): each damaging row's % line opens with a Z toggle, centred under the
 row's type dot (the dot and the Z share a 20 px column, so the name and the % text start at the same x; the user rejected
 Z before the name: it cut long names at 260 px). On: the row shows the Z-move's name in the accent colour and its damage

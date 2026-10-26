@@ -12,7 +12,10 @@
   card/state/side-mapping checks: 12 passed. Move controls implemented: state toggles/counters, pledges, Metronome,
   Curl/pre inputs, forced/blocked crit metadata, total multi-hit/PB damage and per-hit inspection, compact Draco,
   full Z names, used/listed/typed power. Photonic state/hit checks (6) and EI triple/power checks (20) pass.
-  Expanded coverage, existing-scenario updates and full regression gates remain.
+  Expanded state contract tests cover counters/toggles, hack suppressions, Curl/pre, typed-power reset, target Dig,
+  Download/entry, forced/blocked crit, fixed/PB inspection, Z and persistence. EI: 24 cases pass; other profiles are
+  being rerun after the 2 px minimum-layout trim (Photonic fourth move now at 309 px). Residual (40), Imperium
+  controls (10), layout (36), engine npm suite and Metronome-holder source checks pass. Full four-guide gate remains.
   Approval mockup: `plans/calc-state-toggles-mockup/edit.html`, generated with `build-edit.mjs`
   (sampled Photonic Captain Mallow data and inline shared sprites), framed at `dist/calc-state-edit-frame.html`.
   Phone preview: `https://windows-pc.tail1846b8.ts.net/preview/calc-state-edit.html`.

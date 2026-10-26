@@ -8,6 +8,8 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'tools'))
+from calc_ui_check import check_metronome
 from common import HACK
 
 
@@ -86,3 +88,4 @@ if __name__ == '__main__':
         with open(sys.argv[1], encoding='utf-8') as source:
             baseline = json.load(source)
     check(data, baseline)
+    check_metronome(data, 'hardlove-gold')

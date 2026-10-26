@@ -15,52 +15,34 @@ const changer = name => `P.find(p=>[...p.a,p.ha].some(a=>a!=null&&a>=0&&AB[a][0]
 
 const checks = [{
   id: 'turn end',
-  title: 'each side under its own card, tap applies a turn, arrow lists the parts, KO text counts it',
+  title: 'HP-line amount applies directly; Edit shows parts; KO text counts residuals',
   sizes,
   run: async page => {
     await setupCalc(page, {mine: ['party', 0]});
-    const plainKo = await page.value(`[...document.querySelectorAll('.dres:not(.na) .ko')].map(k=>k.textContent)`);
-    assert.equal(await page.count('.deot'), 0, 'no strip without residual');
-    // Sandstorm only hurts the foe (Garchomp is Ground): one cell, on the foe's side.
-    await page.value(`(()=>{CALC.state().field.weather='Sand';CALC.render();})()`);
-    assert.equal(await page.count('.deot .dq'), 1, 'only the affected side has a cell');
-    const foeCard = await page.value(box('.dmatch .cc[data-s="foe"]'));
-    const foeCell = await page.value(box('.deot .dq'));
-    const strip = await page.value(box('.deot'));
-    assert.ok(foeCell.l > (strip.l + strip.r) / 2 - 4, 'the foe cell sits on the right half');
-    if (page.width >= 480) assert.ok(Math.abs(foeCell.l - foeCard.l) <= 1 && Math.abs(foeCell.r - foeCard.r) <= 1, 'aligned with the foe card');
-    assert.equal(await page.value(`getComputedStyle(document.querySelector('.deot .n')).display`),
-      page.width >= 480 ? 'block' : 'none', 'names only from 480px');
-    const hp = Number(await page.value(`document.querySelector('[data-hp="foe"]').value`));
-    const max = Number(await page.value(`document.querySelector('.cc[data-s="foe"] .mx').textContent.slice(1)`));
-    const loss = Math.max(1, Math.floor(max / 16));
-    assert.equal(await page.text('.deot .dqa .v'), '−' + loss);
-    await page.tap('[data-a="eot"][data-s="foe"]');
-    assert.equal(Number(await page.value(`document.querySelector('[data-hp="foe"]').value`)), hp - loss, 'tap takes one turn off');
-    assert.equal(await page.text('.cc[data-s="foe"] .hpl'), '↺', 'HP not full: reset button');
-    await page.tap('[data-a="eotx"][data-s="foe"]');
-    assert.deepEqual(await page.value(`[...document.querySelectorAll('.dqp div')].map(d=>d.innerText.replace(/\\s+/g,' ').trim())`), [`Sandstorm −${loss}`]);
-    if (page.width >= 480) {
-      const field = await page.value(box('.dfield'));
-      const rows = await page.value(`Math.max(...[...document.querySelectorAll('.dres .mr')].map(r=>r.getBoundingClientRect().bottom))`);
-      assert.ok(field.t >= rows - 1, 'Field stays below the rows with the parts open');
-    }
-    await page.tap('.cc[data-s="foe"] .hpl');
-    assert.equal(Number(await page.value(`document.querySelector('[data-hp="foe"]').value`)), max, 'reset to full');
-    assert.equal(await page.text('.cc[data-s="foe"] .hpl'), 'HP');
-    // Mine holds Black Sludge: both cells, Mine's on the left; foe attacking counts it in the KO text.
-    await page.value(`(()=>{CALC.state().field.weather='';CALC.render();})()`);
-    await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
-    await page.value(`(()=>{const s=document.querySelector('[data-e="it"][data-s="mine"]');s.value='Black Sludge';s.dispatchEvent(new Event('change'));})()`);
-    await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
-    const mineCell = await page.value(box('.deot .dq'));
-    const mineCard = await page.value(box('.dmatch .cc[data-s="mine"]'));
-    assert.ok(mineCell.r < (strip.l + strip.r) / 2 + 4, 'the Mine cell sits on the left half');
-    if (page.width >= 480) assert.ok(Math.abs(mineCell.r - mineCard.r) <= 1, 'ends at the centre line like the card');
-    await page.tap('.dmatch .cc[data-s="foe"] .cl > span');
+    assert.equal(await page.count('.dturn'),0,'no amount without residuals');
+    await page.value("CALC.state().field.weather='Sand';CALC.render()");
+    assert.equal(await page.count('.dturn'),1,'only the affected side has a residual');
+    assert.equal(await page.count('.cc[data-s=foe] .cl .dturn'),1,'foe amount belongs to its HP line');
+    const hp=Number(await page.value('document.querySelector("[data-hp=foe]").value'));
+    const max=Number(await page.value('document.querySelector(".cc[data-s=foe] .mx").textContent.slice(1)'));
+    const loss=Math.max(1,Math.floor(max/16));
+    assert.equal(await page.text('.cc[data-s=foe] .dturn'),'−'+loss);
+    await page.tap('[data-a=eot][data-s=foe]');
+    assert.equal(Number(await page.value('document.querySelector("[data-hp=foe]").value')),hp-loss);
+    assert.equal(await page.text('.cc[data-s=foe] .hpl'),'↺');
+    await page.tap('[data-a=eopen][data-s=foe]');
+    assert.match(await page.text('.cc[data-s=foe] .dqp'),new RegExp('Sandstorm.*−'+loss,'s'));
+    await page.tap('[data-a=eopen][data-s=foe]');
+    await page.tap('.cc[data-s=foe] .hpl');
+    assert.equal(Number(await page.value('document.querySelector("[data-hp=foe]").value')),max);
+    await page.value("CALC.state().field.weather='';CALC.render()");
+    await page.tap('[data-a=eopen][data-s=mine]');
+    await page.value(`(()=>{const select=document.querySelector('[data-e=it][data-s=mine]');select.value='Black Sludge';select.dispatchEvent(new Event('change'));})()`);
+    await page.tap('[data-a=eopen][data-s=mine]');
+    assert.equal(await page.count('.cc[data-s=mine] .cl .dturn'),1,'player residual belongs to player');
+    await page.tap('.cc[data-s=foe] .cn');
     await page.tap('.dres:not(.na) .mr:not(.em):not(.st) > .mm');
-    assert.match(await page.text('.dres:not(.na) .mr.open .eotl'), /^Turn end: −\d+ Black Sludge$/);
-    assert.ok(plainKo.length > 0);
+    assert.match(await page.text('.dres:not(.na) .mr.open .eotl'),/^Turn end: −\d+ Black Sludge$/);
   },
 }, {
   id: 'protean libero type',
@@ -93,7 +75,7 @@ const checks = [{
   },
 }, {
   id: 'toxic turn',
-  title: 'the parts list sets the toxic counter; Turn and its number share a baseline',
+  title: 'Edit sets the toxic counter; the HP-line amount applies and advances it',
   sizes,
   run: async page => {
     await setupCalc(page, {mine: ['party', 0]});
@@ -102,15 +84,13 @@ const checks = [{
     await page.tap('.dmatch .cc[data-s="foe"] [data-a="eopen"]');
     const max = Number(await page.value(`document.querySelector('.cc[data-s="foe"] .mx').textContent.slice(1)`));
     const tick = turn => '−' + Math.max(1, Math.floor(max * turn / 16));
-    assert.equal(await page.text('.deot .dqa .v'), tick(1));
-    const base = await page.value(`(()=>{const b=s=>{const r=document.createRange();r.selectNodeContents(document.querySelector(s));return r.getBoundingClientRect().bottom;};return [b('.dqa .l'),b('.dqa .v')];})()`);
-    assert.ok(Math.abs(base[0] - base[1]) <= 2, `label and number share a baseline (${base})`);
-    await page.tap('[data-a="eotx"][data-s="foe"]');
+    assert.equal(await page.text('.cc[data-s=foe] .dturn'), tick(1));
+    await page.tap('[data-a=eopen][data-s=foe]');
     assert.equal(await page.count('.dqp [data-tox="foe"]'), 1, 'turn box on the toxic part');
     await page.setBox('.dqp [data-tox="foe"]', 4);
-    assert.equal(await page.text('.deot .dqa .v'), tick(4), 'turn 4 damage');
+    assert.equal(await page.text('.cc[data-s=foe] .dturn'), tick(4), 'turn 4 damage');
     await page.tap('[data-a="eot"][data-s="foe"]');
-    assert.equal(await page.text('.deot .dqa .v'), tick(5), 'applying a turn moves the counter on');
+    assert.equal(await page.text('.cc[data-s=foe] .dturn'), tick(5), 'applying a turn moves the counter on');
     assert.equal(String(await page.value(`document.querySelector('.dqp [data-tox="foe"]').value`)), '5');
   },
 }, {

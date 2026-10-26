@@ -214,7 +214,7 @@ const checks = [
   },
   {
     id: '9 multi-hit',
-    title: 'Icicle Spear ×n cycles min to max and back; per-hit damage stays; % and KO scale with the count',
+    title: 'Icicle Spear includes one hit; total damage, % and KO scale with the count',
     run: async page => {
       await setupCalc(page);
       const label = () => page.value(`document.querySelector('.dres:not(.na) .rh').textContent.trim()`);
@@ -224,14 +224,14 @@ const checks = [
         await page.tap('.dres:not(.na) .rh');
         seen.push(+(await label()).slice(1));
       }
-      assert.deepEqual(seen, [4, 5, 2, 3, 4, 5, 2, 3], 'min to max and back (the spec\'s 2,3,4,5 cycle, from 3)');
+      assert.deepEqual(seen, [4, 5, 1, 2, 3, 4, 5, 1], 'one-hit inspection plus normal counts, wrapping from 3');
       const byCount = {};
       for (const n of [2, 3, 4, 5]) {
         while (+(await label()).slice(1) !== n) await page.tap('.dres:not(.na) .rh');
         byCount[n] = (await attackerRows(page))[0];
       }
-      const perHit = Object.values(byCount).map(row => row.hp);
-      assert(perHit.every(hp => hp === perHit[0]), `per-hit damage changes with the count: ${perHit}`);
+      const perHit = Object.entries(byCount).map(([count,row]) => row.hp.split('–').map(value=>Number(value)/Number(count)).join('–'));
+      assert(perHit.every(hp => hp === perHit[0]), `total damage divided by count stays constant: ${perHit}`);
       const percentPerHit = n => +byCount[n].pct.match(/–([\d.]+)%/)[1] / n;
       assert(Math.abs(percentPerHit(2) - percentPerHit(5)) < 0.2, `% per hit should not depend on the count: ${[2, 3, 4, 5].map(percentPerHit).map(x => x.toFixed(2))}`);
       const uses = n => { const ko = byCount[n].ko; return ko.startsWith('OHKO') ? 1 : ko.startsWith('5+') ? 5 : +ko.match(/^(\d)HKO/)[1]; };
