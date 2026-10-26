@@ -280,3 +280,37 @@ Finish with `preview.py --frame` on each guide and the user's Thor test.
 
 - Status is kept across switches like HP (user, 2026-10-26: "everything else is generally volatile"). The toxic
   turn counter is volatile (restarts at 1 on entry).
+
+## Settled at the build start (2026-10-26, Opus main chat with the user)
+
+What changed since the spec was written (the HP-moves build, the docs cleanup, EI's scope check) and how it fits:
+- **One-use tap** (HP moves: the % line's signed amount, one tap = one use) fires the same automatic reactions as
+  HP −: the hit goes through `DMG.hit` (Sash / Sturdy / berries / Weakness Policy / KO boosts...), then the user's
+  change (`DMG.hp`) is worked out from the damage actually dealt (Sash leaving 1 HP → drain / recoil from that).
+  **Dealt / You → Apply**: only the threshold reactions (healing / pinch berries, Berserk / Anger Shell), no Sash /
+  Sturdy (the player typed what the game showed). HP −min / −max stay without the user's change, as now.
+- The spec's "Out of scope: recoil, Life Orb, Rocky Helmet / Rough Skin / Iron Barbs, Shell Bell" is superseded:
+  recoil / Life Orb / Shell Bell are in `DMG.hp` (HP moves), the contact damage joins it (A2).
+- **Disguise / Ice Face**: a new **Broken** box on the card header (ability checkbox pattern; not the EI Disguised
+  box, which is Illusion's). Hit 1 does 0 while intact (Gen 8+ Disguise costs 1/8 max HP), later hits full. The HP −
+  action / one-use tap ticks it when the hit busts it. **Kept for the fight** like foe HP (survives switching;
+  cleared on trainer change / Reset fight); Ice Face comes back on entry while the effective weather is Hail / Snow.
+- **Laser Focus / Lucky Chant / Dragon Cheer**: per-side Field toggles `atkLaserFocus` / `atkLuckyChant` /
+  `atkDragonCheer` (and `def*`), gated by the guide's moves like the other states; Dragon Cheer Doubles only (+1 crit
+  stage, +2 for a Dragon-type target ally). Hardlove's area +1 crit is `atkCritBonus` / `defCritBonus` (A1).
+- **Foul Play** always reads the target's current Attack and stages, including manual stages and changes the calc
+  applies (Weakness Policy, Intimidate); a later hit in the same use (Parental Bond) reads it after a between-hit
+  change (Justified, Weakness Policy).
+- **EI scope gaps: build all** (the user hides unwanted ones in a later UI pass): doubles ally effects as per-side
+  Field toggles, Doubles only, gated by the guide's abilities / moves (Power Spot, Steely Spirit, ally Flower Gift,
+  ally Fairy / Dark Aura and Aura Break, ally Ruin, Plus / Minus partner); Power Trick (per side, stock
+  `isPowerTrick`); Water Sport / Mud Sport (field toggles, Fire / Electric power ×1352/4096 Gen 6+, the generation's
+  own rule before); Power Split / Guard Split (field toggles: the two battlers' Atk+SpA / Def+SpD averaged, new engine
+  code). Electrify / Ion Deluge: the move's Type override already covers it (no build; README says so).
+- **Stockpile** count (1-3, Swallow / Spit Up) is row battle state: scratch, in `ST.st`.
+- **Row heights with an HP chip** (`calc-layout` check 20 on EI): fixed in D2, a chip no taller than the % line.
+- Hardlove Easy mode: not doing (Hardlove notes).
+
+Build units (each ends at a commit the main chat reviews): A1 engine, spec · A2 engine, HP follow-ups + crit inputs +
+Foul Play + cleanups · A3 engine, EI gaps · B data · C page state model · D1 page effects, spec · D2 page, open list
+(HP follow-up controls, crit toggles, chip height, comment) · D3 page, EI gap toggles · E audit.
