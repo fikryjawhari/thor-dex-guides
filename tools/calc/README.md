@@ -456,6 +456,14 @@ scroll at 260x316; grouping and showing them belongs to D3, not an A3 page edit.
 D3 can render these state declarations as grouped global toggles without any
 engine or availability change. Per-side declarations remain ordinary toggles.
 
+Current visible additions (each is Player/Foe): EI gets Power Spot, Steely
+Spirit, Flower Gift, Plus/Minus, all four Ruin abilities and Power Trick;
+Hardlove gets Power Spot, Steely Spirit and Plus/Minus (its Power Trick stays);
+Photonic and Eternal X get Plus/Minus and Power Trick (their Flower Gift stays).
+The deferred global state declarations are all seven for EI / Photonic /
+Eternal X, and six for Hardlove (no Dark Aura in `AB`). Hardlove has no Ruin
+abilities in `AB`; Gen 6/7 do not offer the Gen 8/9 ally abilities.
+
 ### Sports and raw-stat splits
 
 `waterSport` and `mudSport` are global toggles, never atk/def-prefixed: Fire and
@@ -470,8 +478,8 @@ them on switching; the caller manages that lifetime.
 Evidence: EI release `2576d0f3`, `include/config/battle.h:36,59` and
 `src/battle_util.c:9147-9152` (modern reduction),
 `src/battle_script_commands.c:15078-15119` (field timers vs user status).
-Hardlove release `f1b2363`, `src/individual/CalcBaseDamage.c:573-580` also
-chains `UQ412__0_33`; its end-turn sport expiry blocks in
+Hardlove release `f1b2363`, `src/individual/CalcBaseDamage.c:570-577` also
+chains `UQ412__0_33` (`include/q412.h:42` defines it as 1352); its end-turn sport expiry blocks in
 `src/individual/ServerFieldConditionCheck.c:1546-1565` are TODOs, so no expiry
 is inferred/simulated. Eternal X / Photonic use Gen 6 / Gen 7 defaults, absent
 contrary hack evidence. Gen 4 source: pret/pokeplatinum

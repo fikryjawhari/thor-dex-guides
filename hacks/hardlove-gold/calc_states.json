@@ -50089,7 +50089,7 @@
           64
         ]
       },
-      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:573-580: QMul_RoundUp(basePowerModifier, UQ412__0_33), 1352/4096."
+      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:570-577: QMul_RoundUp(basePowerModifier, UQ412__0_33); include/q412.h:42 defines 1352, hence 1352/4096."
     },
     {
       "name": "A3-waterSport-reverse",
@@ -50131,7 +50131,7 @@
           7
         ]
       },
-      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:573-580: QMul_RoundUp(basePowerModifier, UQ412__0_33), 1352/4096."
+      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:570-577: QMul_RoundUp(basePowerModifier, UQ412__0_33); include/q412.h:42 defines 1352, hence 1352/4096."
     },
     {
       "name": "A3-waterSport-unrelated-type",
@@ -50171,7 +50171,7 @@
           117
         ]
       },
-      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:573-580: QMul_RoundUp(basePowerModifier, UQ412__0_33), 1352/4096."
+      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:570-577: QMul_RoundUp(basePowerModifier, UQ412__0_33); include/q412.h:42 defines 1352, hence 1352/4096."
     },
     {
       "name": "A3-mudSport-odd-power",
@@ -50213,7 +50213,7 @@
           64
         ]
       },
-      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:573-580: QMul_RoundUp(basePowerModifier, UQ412__0_33), 1352/4096."
+      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:570-577: QMul_RoundUp(basePowerModifier, UQ412__0_33); include/q412.h:42 defines 1352, hence 1352/4096."
     },
     {
       "name": "A3-mudSport-reverse",
@@ -50255,7 +50255,7 @@
           7
         ]
       },
-      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:573-580: QMul_RoundUp(basePowerModifier, UQ412__0_33), 1352/4096."
+      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:570-577: QMul_RoundUp(basePowerModifier, UQ412__0_33); include/q412.h:42 defines 1352, hence 1352/4096."
     },
     {
       "name": "A3-mudSport-unrelated-type",
@@ -50295,7 +50295,7 @@
           117
         ]
       },
-      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:573-580: QMul_RoundUp(basePowerModifier, UQ412__0_33), 1352/4096."
+      "src": "Hardlove f1b2363 src/individual/CalcBaseDamage.c:570-577: QMul_RoundUp(basePowerModifier, UQ412__0_33); include/q412.h:42 defines 1352, hence 1352/4096."
     },
     {
       "name": "A3-powerSplit-physical",
