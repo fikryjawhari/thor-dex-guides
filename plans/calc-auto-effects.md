@@ -314,3 +314,7 @@ What changed since the spec was written (the HP-moves build, the docs cleanup, E
 Build units (each ends at a commit the main chat reviews): A1 engine, spec · A2 engine, HP follow-ups + crit inputs +
 Foul Play + cleanups · A3 engine, EI gaps · B data · C page state model · D1 page effects, spec · D2 page, open list
 (HP follow-up controls, crit toggles, chip height, comment) · D3 page, EI gap toggles · E audit.
+
+Settled after unit C (user, 2026-10-27): the **Mega toggle is kept for the fight** (like Broken: survives switching,
+cleared on trainer change / Reset fight; toggling is still not an entry); **foe set edits are kept for the fight**
+(no foe Save; trainer data stays the source). Singles / Doubles is not a manual override (survives a new fight).
