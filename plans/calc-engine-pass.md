@@ -162,6 +162,14 @@ with a WIP commit and the exact next step. Do not push. Report: commits, files, 
   Thief; the row's "without" view). This replaces the `abilityOn` gate above (Download is on by default again). 176
   entry-ability sets in the fixtures converted, 36 new cases; state_check 2358 / 2358; old cases same output; npm test green;
   hzla unchanged. Toggle spec on `worktree-damage-calc-toggles` updated with the settled UI choices.
+- Audit (Haiku medium, 2026-10-26; baseline `bb65ad0^1`): data gate EI / PS / EX identical, Hardlove differs only by
+  0.8.4 (counts equal). Template gate: EI / PS / EX dom (normal, kb), consistency, tabs, walk-state, page checks all
+  pass; Hardlove dom: 1063 routes, all moves / species / locations from 0.8.4, no trainer or calc route. **Known
+  harness gap (pre-existing, same on the baseline):** calc-controls / -import / -layout / -persist / -smoke hard-code
+  EI trainers and calc-entry / -field pick party slot 5, so they fail on PS / EX / HG under `gate.py check --template`;
+  the hack-specific calc scenarios pass. Fix when a calc session next touches the scenarios. Pushed `280a3ec`.
+  Phone previews with a full test save: `calc-test-photonic.html`, `calc-test-imperium.html` (built by
+  `.tmp/u4/preview/make.cjs`, not tracked). **Engine pass done; session 2 ends here, claim released.**
 
 ## Next session prompt (the engine pass is done; the next session builds the state toggles)
 ```
