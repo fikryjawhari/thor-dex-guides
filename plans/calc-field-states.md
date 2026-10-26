@@ -54,3 +54,7 @@ viewer sizes. Group each side: the current toggles, then **Turn end** (trapped, 
 nightmare, ingrain, aqua ring, sea of fire) and **Hazards** folded (count of active ones on the fold), the rest
 (Charge, Protect, Foresight, Tar Shot, Glaive Rush, Roost, grounded, Ground immunity, Swamp) where they fit. Fold
 state is not stored. Mockup first at 260 × 316 if the layout isn't obvious. Field summary line lists active ones.
+
+## Out of scope (after this build)
+Merge this tab into `worktree-damage-calc` first, then clear the loose ends there: Return / Frustration default
+power 102, the verify list and the trainer-field automation decide in `plans/calc-handover.md`.
