@@ -16,8 +16,8 @@ const saves=guideSaves(data,'calc-smoke-'+basename(guide,'.html'));
 data.cfg.calc.save='test';
 page=page.replace(dataMatch[0],()=>dataMatch[1]+JSON.stringify(data).replaceAll('</','<\\/')+dataMatch[3]);
 page=page.replace('window.DMG.init(sourceData,prof);',()=>readFileSync(join(root,'template/calc/readers/test.js'),'utf8')+'\nwindow.DMG.init(sourceData,prof);');
-const output=join(root,'.tmp/calc');mkdirSync(output,{recursive:true});
-const built=join(output,'ei-test.html');writeFileSync(built,page);
+const output=join(root,'.tmp/calc',basename(guide,'.html'));mkdirSync(output,{recursive:true});
+const built=join(output,'test.html');writeFileSync(built,page);
 const failures=[];
 const browser=await startBrowser({profilePrefix:'calc-smoke-',flags:['--hide-scrollbars'],onEvent:event=>{if(event.method==='Runtime.exceptionThrown')failures.push(event.params.exceptionDetails.exception?.description||event.params.exceptionDetails.text);}});
 try{

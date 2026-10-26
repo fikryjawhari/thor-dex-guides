@@ -14,15 +14,15 @@ sub-step, run Checks (below), ask before pushing.
 2. **HP-move follow-ups** (below): settled by the user, not built. Engine + page, so not alongside unit A / D of 1:
    in the same build sequence or right after it.
 3. **Decide `plans/calc-team.md`** (drag-and-drop team row): its own decide session, mockup in the Thor frame first.
-4. **Scenario harness gap**: `calc-controls`, `-import`, `-layout`, `-persist`, `-smoke` hard-code EI trainers and
-   `calc-entry` / `calc-field` pick party slot 5, so they fail on Photonic / Eternal / Hardlove under `gate.py check
-   --template` (same on the pre-calc baseline; the gate reads 88/117 because of them plus the intended `#/calc`
-   DOM change). Make them read the guide's own trainers / party.
-5. **The user's mechanics check**, then merge into `main` (below). In-game tests: each guide's notes.md → Damage calc
+4. **The user's mechanics check**, then merge into `main` (below). In-game tests: each guide's notes.md → Damage calc
    → In-game tests. Hardlove stays provisional until then (no independent oracle).
-6. After the merge: **save readers and the file picker** (below), then footer credits (PROGRESS.md → Open).
+5. After the merge: **save readers and the file picker** (below), then footer credits (PROGRESS.md → Open).
 
 Smaller, take with a nearby job:
+- EI mechanics in the game that the profile can't set yet (EI notes.md → Damage calc → Scope check, 2026-10-26):
+  doubles ally effects (Power Spot, Steely Spirit, an ally's Flower Gift, Aura / Aura Break / Ruin on an ally,
+  Plus / Minus), Power Trick, Water / Mud Sport, Electrify / Ion Deluge, Power Split / Guard Split. Each needs the
+  user's yes first; none is a wrong result for a singles calc without them.
 - Crit inputs not built: Laser Focus, Lucky Chant, Dragon Cheer (proposed keys `atkLaserFocus` / `atkLuckyChant` /
   `atkDragonCheer` and `def*`; not approved). Hardlove's area +1 crit comes with auto-effects (`atkCritBonus`).
 - Photonic `hack.json` still has the always-crit rule for Self-Destruct / Explosion, now redundant with `MV.cr` 6:
@@ -63,7 +63,8 @@ the plans that are done then.
 
 `npm test --prefix tools/calc` (engine, stock parity, every `calc_states.json`), `node tools/calc/hzla_compare.mjs
 <hack>` for EI / Photonic / Eternal X (counts unchanged: EI 123 + 9 known, Photonic 118 + 28, Eternal X 116 + 3),
-`python assemble.py`, the calc scenarios for the guide (one browser sweep at a time), the build in the Thor frame on the
+`python assemble.py`, the calc scenarios (`uv run python -I tools/gate.py scenarios --only <calc-...> --jobs 4`;
+the full set once at the end: CLAUDE.md → Commands), the build in the Thor frame on the
 phone preview (`python -I tools/preview.py dist/<hack>.html <name>.html --frame`, live presets:
 `--panel tools/mockup/thor-frame/calc-presets.html`) when the page changed.
 

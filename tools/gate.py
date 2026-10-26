@@ -1,8 +1,13 @@
-"""Reproducible data and serial browser gates; baseline [ref] or check [hack ...].
+"""Reproducible data and browser gates; baseline [ref], check [hack ...] or scenarios [hack ...].
 
 Baselines use git archive: only committed files reach the build, no checkout or
 Git worktree registration changes, and no raw sources are needed.
+Browser checks run one at a time, except the scenario x guide runs with --jobs N
+(N processes at once, each its own browser; the default 1 is serial).
+`scenarios` runs only tools/scenarios/ on the built dist (no rebuild, no baseline):
+--only names some of them (comma-separated stems, e.g. calc-layout,calc-controls).
 """
+import concurrent.futures
 import argparse
 import datetime
 import hashlib
@@ -15,6 +20,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import threading
 import time
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -65,15 +71,31 @@ class Gate:
         stamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S-%f')
         self.logs = ROOT / '.tmp' / 'gate' / stamp
         self.logs.mkdir(parents=True)
+        self.lock = threading.Lock()
 
     def result(self, label, passed, detail=''):
-        self.total += 1
-        self.failed += not passed
-        line = f'{"PASS" if passed else "FAIL"} {label}: {detail}'
-        print(line, flush=True)
-        with (self.logs / 'summary.txt').open('a', encoding='utf-8') as output:
-            output.write(line + '\n')
+        with self.lock:
+            self.total += 1
+            self.failed += not passed
+            line = f'{"PASS" if passed else "FAIL"} {label}: {detail}'
+            print(line, flush=True)
+            with (self.logs / 'summary.txt').open('a', encoding='utf-8') as output:
+                output.write(line + '\n')
         return passed
+
+    def run_browser(self, runs, jobs=1):
+        """Browser runs [(label, command)]: one at a time, or `jobs` at once after one idle check."""
+        if jobs <= 1:
+            for label, command in runs:
+                self.run(label, command, browser=True)
+            return
+        try:
+            browser_idle()
+        except (OSError, subprocess.SubprocessError, RuntimeError) as error:
+            self.result('browser-idle', False, str(error))
+            return
+        with concurrent.futures.ThreadPoolExecutor(jobs) as pool:
+            list(pool.map(lambda run: self.run(*run), runs))
 
     def run(self, label, command, cwd=ROOT, browser=False):
         logfile = self.logs / (re.sub(r'[^a-zA-Z0-9_.-]', '-', label) + '.log')
@@ -168,7 +190,19 @@ def data_check(gate, hack):
         gate.run(hack + '-extract-check', [sys.executable, '-I', str(checker)])
 
 
-def template_check(gate, names):
+def scenario_runs(names, only=None):
+    """Every tools/scenarios/*.mjs (or the `only` stems) on each guide's dist."""
+    scenarios = sorted((ROOT / 'tools' / 'scenarios').glob('*.mjs'))
+    if only:
+        missing = set(only) - {scenario.stem for scenario in scenarios}
+        if missing:
+            raise ValueError('no such scenario: ' + ', '.join(sorted(missing)))
+        scenarios = [scenario for scenario in scenarios if scenario.stem in only]
+    return [(hack + '-scenario-' + scenario.stem, ['node', str(scenario), str(ROOT / 'dist' / (hack + '.html'))])
+            for scenario in scenarios for hack in names]
+
+
+def template_check(gate, names, jobs=1):
     if not gate.run('assemble', [sys.executable, 'assemble.py']):
         return
     for hack in names:
@@ -191,10 +225,7 @@ def template_check(gate, names):
             if check in ('pagecheck', 'walkcheck'):
                 command.append(str(gate.logs / (check + suffix)))
             gate.run(sample + '-' + check + suffix, command + mode, browser=True)
-    for scenario in sorted((ROOT / 'tools' / 'scenarios').glob('*.mjs')):
-        for hack in names:
-            gate.run(hack + '-scenario-' + scenario.stem, ['node', str(scenario),
-                     str(ROOT / 'dist' / (hack + '.html'))], browser=True)
+    gate.run_browser(scenario_runs(names), jobs)
 
 
 def main():
@@ -206,11 +237,22 @@ def main():
     check.add_argument('hacks', nargs='*')
     check.add_argument('--data', action='store_true')
     check.add_argument('--template', action='store_true')
+    check.add_argument('--jobs', type=int, default=1, help='scenario runs at once (default 1: serial)')
+    scenarios = commands.add_parser('scenarios')
+    scenarios.add_argument('hacks', nargs='*')
+    scenarios.add_argument('--only', type=lambda text: [part for part in text.split(',') if part])
+    scenarios.add_argument('--jobs', type=int, default=1, help='runs at once (default 1: serial)')
     args = parser.parse_args()
     gate = Gate()
     try:
         if args.command == 'baseline':
             baseline(gate, args.ref)
+        elif args.command == 'scenarios':
+            names = args.hacks or guides(ROOT)
+            unknown = [hack for hack in names if hack not in guides(ROOT)]
+            if unknown:
+                raise ValueError('no built guide: ' + ', '.join(unknown))
+            gate.run_browser(scenario_runs(names, args.only), args.jobs)
         else:
             manifest = load(BASE / 'manifest.json')
             names = args.hacks or guides(ROOT)
@@ -227,7 +269,7 @@ def main():
                 for hack in names:
                     data_check(gate, hack)
             if args.template or not args.data:
-                template_check(gate, names)
+                template_check(gate, names, args.jobs)
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
         gate.result('gate-setup', False, str(error))
     return gate.finish()

@@ -18,7 +18,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 
 | Script | What it does |
 | --- | --- |
-| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template]` | Captures committed HTML/data/reports at a ref; rebuilds data and runs serial DOM, consistency, tabs, migration, mockup and scenario checks. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
+| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N]` / `scenarios [hack ...] [--only a,b] [--jobs N]` | Captures committed HTML/data/reports at a ref; rebuilds data and runs serial DOM, consistency, tabs, migration, mockup and scenario checks; `--jobs N` runs the scenario × guide runs N at a time (each its own browser; same results as serial). `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
 | `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` to the main checkout (Windows junctions, no copying), then `uv sync`; no hacks means every built guide. Refuses other claims or existing source copies. Release removes only the matching claim. |
 | `scenarios/tracker-reload.mjs <guide.html>` | Seeded tracker state, Clear and reload at 260 × 316 in `dvkb`; assertions on the control and saved state. `scenarios/README.md` describes new spec checks. |
 | `scenarios/calc-layout.mjs <guide.html>` | Calc layout, spec checks 1, 17–20, 22 (+ 18b, 18c): fit at 260 × 316 (and 537 × 424, 832 × 424), long names, scroll stops, box size, wide columns and foe list / strip (480 × 392 to 832 × 316), the 222 px resize, the 61-Pokémon box. Skips without `cfg.calc`. |

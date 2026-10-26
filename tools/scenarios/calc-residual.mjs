@@ -19,9 +19,10 @@ const checks = [{
   sizes,
   run: async page => {
     await setupCalc(page, {mine: ['party', 0]});
-    assert.equal(await page.count('.dturn'),0,'no amount without residuals');
+    // the HP lines' turn-end amounts (.cc), not the move rows' HP chips, which share the class
+    assert.equal(await page.count('.cc .dturn'),0,'no amount without residuals');
     await page.value("CALC.state().field.weather='Sand';CALC.render()");
-    assert.equal(await page.count('.dturn'),1,'only the affected side has a residual');
+    assert.equal(await page.count('.cc .dturn'),1,'only the affected side has a residual');
     assert.equal(await page.count('.cc[data-s=foe] .cl .dturn'),1,'foe amount belongs to its HP line');
     const hp=Number(await page.value('document.querySelector("[data-hp=foe]").value'));
     const max=Number(await page.value('document.querySelector(".cc[data-s=foe] .mx").textContent.slice(1)'));

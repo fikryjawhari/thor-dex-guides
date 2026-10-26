@@ -220,6 +220,8 @@ const checks = [
       const eleven = await page.value(`({doc:document.documentElement.scrollHeight,gridH:document.querySelector('.mg .dstrip').getBoundingClientRect().height})`);
       await page.importSave('good.json');
       await dismissBanner(page);
+      // the import selects party slot 0: back to the same attacker (slot 5), so only the box differs between the two
+      await pickCell(page, 'party', 5);
       await page.value('scrollTo(0,0)');
       await page.settle();
       const m = await page.value(`(()=>{const grid=document.querySelector('.mg .dstrip');const cells=[...document.querySelectorAll('.mg .dstrip button')];const bottom=i=>cells[i]?.getBoundingClientRect().bottom??null;return {doc:document.documentElement.scrollHeight,gridH:grid.getBoundingClientRect().height,overflow:getComputedStyle(grid).overflowY,scrolls:grid.scrollHeight>grid.clientHeight,cells:cells.length,fourthRow:bottom(23)??bottom(cells.length-1),foeBar:document.querySelector('.fbar').getBoundingClientRect().bottom,foeTeam:document.querySelector('.dside:not(.mg) .dstrip').getBoundingClientRect().bottom,h:innerHeight};})()`);

@@ -36,7 +36,14 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - Python env for tools and checks: `uv sync` once per machine (`pyproject.toml` + `uv.lock` are committed), then
   `uv run python -I tools/<script>`. Need a package? `uv add <name>` and commit both files; don't work around it.
 - Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome;
-  options `--routes`, `--jobs`, `--ignore` in its header). Run browser sweeps one at a time.
+  options `--routes`, `--jobs`, `--ignore` in its header). Run browser sweeps one at a time, except scenarios through
+  the gate: `uv run python -I tools/gate.py scenarios [hack ...] [--only calc-layout,calc-controls] --jobs 4` (and
+  `gate.py check ... --jobs 4`) runs them in parallel, the same results as serial (all scenarios × four guides: 6 min
+  instead of 19).
+- When to check: only when no later work in the job will change what the check covers. During a job, run the
+  scenarios the change touches on the guides it touches; the full set once at the end. A failure names its check and
+  leaves a screenshot in `.tmp/calc-checks/`; if the cause still isn't clear, bisect the job's commits (one per
+  sub-step) with that one scenario on that one guide.
 - In Git Bash, prefix commands that take `/`-paths as arguments with `MSYS_NO_PATHCONV=1`.
 
 ## Making a new guide

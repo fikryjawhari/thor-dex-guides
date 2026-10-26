@@ -15,7 +15,7 @@
 // browser, the number pad in dvkb mode.
 import assert from 'node:assert/strict';
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { startBrowser } from './browser.mjs';
 
@@ -54,7 +54,7 @@ export function prepareGuide(file, { tag, edit } = {}) {
   const name = file.split(/[\\/]/).pop();
   const out = join(OUT, `${tag || 'guide'}-${name}`);
   writeFileSync(out, page);
-  GUIDE = { data, trainers, species: speciesId(data), saves: guideSaves(data, `${tag || 'guide'}-${name.replace(/\.html$/, '')}`) };
+  GUIDE = { name: name.replace(/\.html$/, ''), data, trainers, species: speciesId(data), saves: guideSaves(data, `${tag || 'guide'}-${name.replace(/\.html$/, '')}`) };
   return out;
 }
 
@@ -101,7 +101,7 @@ export function guideSaves(data, tag) {
 export const speciesId = data => name => String(data.P.find(entry => entry.n === name)?.id ?? '');
 
 // The trainers the checks need, picked from the guide's own data (walkthrough order, the first that fits; Pokémon with
-// species the guide has and moves listed). null where the guide has none: the check that needs it is skipped.
+// species the guide has and moves listed, singles battles). null where the guide has none: the check that needs it is skipped.
 // - sheetOnly: the first trainer; fixturePatches takes its first Pokémon's moves and ability (the unknown-set rules).
 // - four: four Pokémon (setup's default foe; check 1 fits its rows, check 13 takes its cap as a new set's level).
 // - relative: a cap and at least three Pokémon, some with levels relative to the cap (check 3, the cap box).
@@ -110,7 +110,9 @@ export const speciesId = data => name => String(data.P.find(entry => entry.n ===
 export function trainerRoles(data) {
   const list = data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr));
   const known = new Set(data.P.map(entry => String(entry.id)));
-  const usable = trainer => trainer.p.length > 0 && trainer.p.every(mon => known.has(String(mon.id)) && mon.m?.length);
+  // singles only: a double / triple / multi battle switches the calc's layout (tags differ by guide)
+  const singles = trainer => !(trainer.tags || []).some(tag => /double|triple|multi|2on2/i.test(tag));
+  const usable = trainer => singles(trainer) && trainer.p.length > 0 && trainer.p.every(mon => known.has(String(mon.id)) && mon.m?.length);
   const first = list[0];
   const find = test => list.find(trainer => trainer !== first && usable(trainer) && test(trainer)) ?? null;
   const four = find(trainer => trainer.p.length === 4);
@@ -380,7 +382,10 @@ export const SIZE_STAR = [[260, 316], [537, 424], [832, 424]];
 export const MODES = ['normal', 'dvkb'];
 
 // A check with skip (a reason) is reported as SKIP and passes: the guide lacks what it tests (a trainer role).
-export async function runChecks({ name, file, checks }) {
+export async function runChecks({ name: scenario, file, checks }) {
+  // one report and one set of screenshots per scenario and guide (gate.py runs guides in parallel)
+  const guideName = GUIDE?.name || basename(file, '.html');
+  const name = scenario.endsWith(guideName) ? scenario : `${scenario}-${guideName}`;
   const browser = await openBrowser(name);
   const results = [];
   let failed = 0;
