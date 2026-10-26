@@ -19,6 +19,9 @@ sub-step, run Checks (below), ask before pushing.
 5. After the merge: **save readers and the file picker** (below), then footer credits (PROGRESS.md → Open).
 
 Smaller, take with a nearby job:
+- **Row heights with an HP chip** (left for later by the user, 2026-10-26): a row with a recoil / drain chip is taller
+  (36 px at 260, 42 wide, vs 31 / 33), so in wide windows the two movesets drift apart; `calc-layout` check 20 fails on
+  EI (Snover's Mega Drain +10 vs Cloyster), the calc's only failing scenario. Fix: a chip no taller than the % line.
 - EI mechanics in the game that the profile can't set yet (EI notes.md → Damage calc → Scope check, 2026-10-26):
   doubles ally effects (Power Spot, Steely Spirit, an ally's Flower Gift, Aura / Aura Break / Ruin on an ally,
   Plus / Minus), Power Trick, Water / Mud Sport, Electrify / Ion Deluge, Power Split / Guard Split. Each needs the
@@ -63,10 +66,11 @@ the plans that are done then.
 
 `npm test --prefix tools/calc` (engine, stock parity, every `calc_states.json`), `node tools/calc/hzla_compare.mjs
 <hack>` for EI / Photonic / Eternal X (counts unchanged: EI 123 + 9 known, Photonic 118 + 28, Eternal X 116 + 3),
-`python assemble.py`, the calc scenarios (`uv run python -I tools/gate.py scenarios --only <calc-...> --jobs 4`;
+`python assemble.py`, the calc scenarios (`uv run python -I tools/gate.py scenarios --only <calc-...> --jobs 8`;
 the full set once at the end: CLAUDE.md → Commands), the build in the Thor frame on the
-phone preview (`python -I tools/preview.py dist/<hack>.html <name>.html --frame`, live presets:
-`--panel tools/mockup/thor-frame/calc-presets.html`) when the page changed.
+phone preview when the page changed: with the live presets, `python -I tools/mockup/thor-frame/build.py
+dist/<hack>.html .tmp/<name>.html --panel tools/mockup/thor-frame/calc-presets.html`, then `python -I tools/preview.py
+.tmp/<name>.html <name>.html` (`preview.py --frame` has no panel).
 
 ## Save readers and the file picker
 

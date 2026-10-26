@@ -37,13 +37,14 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
   `uv run python -I tools/<script>`. Need a package? `uv add <name>` and commit both files; don't work around it.
 - Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome;
   options `--routes`, `--jobs`, `--ignore` in its header). Run browser sweeps one at a time, except scenarios through
-  the gate: `uv run python -I tools/gate.py scenarios [hack ...] [--only calc-layout,calc-controls] --jobs 4` (and
-  `gate.py check ... --jobs 4`) runs them in parallel, the same results as serial (all scenarios × four guides: 6 min
-  instead of 19).
+  the gate: `uv run python -I tools/gate.py scenarios [hack ...] [--only calc-layout,calc-controls] --jobs 8` (and
+  `gate.py check ... --jobs 8`) runs them in parallel, the same results as serial (all scenarios × four guides on this
+  16-core PC: serial 19 min, 4 jobs 5.8, 8 jobs 4.0, 12 / 16 jobs 4.3 / 4.4: past 8 each run just slows down).
 - When to check: only when no later work in the job will change what the check covers. During a job, run the
   scenarios the change touches on the guides it touches; the full set once at the end. A failure names its check and
   leaves a screenshot in `.tmp/calc-checks/`; if the cause still isn't clear, bisect the job's commits (one per
-  sub-step) with that one scenario on that one guide.
+  sub-step) with that one scenario on that one guide. The whole procedure: the `verify` skill
+  (`.agents/skills/verify/SKILL.md`; `worktree_setup.py` links `.claude/skills` to `.agents/skills` so Claude Code sees it).
 - In Git Bash, prefix commands that take `/`-paths as arguments with `MSYS_NO_PATHCONV=1`.
 
 ## Making a new guide

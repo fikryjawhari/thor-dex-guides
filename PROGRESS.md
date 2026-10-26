@@ -47,14 +47,17 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
      Hardlove provisional, source-checked only), the calc page (compact one-window UI at every viewer size), battle
      state (counters, toggles, pledges, crit stages, stat changes before the hit, Download / Sword / Shield), stackable
      field states and entry hazards, turn end, Z-moves and Totem auras (Photonic), HP moves (fixed damage, Taken,
-     one-tap use, Dealt / You), Return / Frustration at 102, the import flow with a test reader. Lasting decisions:
+     one-tap use, Dealt / You), Return / Frustration at 102, the import flow with a test reader. EI's last scope check
+     (2026-10-26): Explosion halves Defense (EI's `B_EXPLOSION_DEFENSE` is Gen 4), Ruin abilities confirmed, no inverse
+     battles and no Shadowy Veil in EI; every calc scenario reads each guide's own trainers / party and passes on all
+     four guides, except `calc-layout` check 20 on EI (rows with an HP chip are taller: `plans/calc-open.md`). Lasting decisions:
      `template/README.md` → Damage calculator, `tools/calc/README.md`, each guide's notes.md → Damage calc.
    - **Open** (`plans/calc-open.md`): build `plans/calc-auto-effects.md` (automatic effects and fight state, spec
      settled 2026-10-26); the HP-move follow-ups (Disguise / Ice Face, Rocky Helmet family, crash damage, Stockpile);
-     decide `plans/calc-team.md` (drag-and-drop team row); fix the EI-only calc scenarios; then the user's mechanics
+     decide `plans/calc-team.md` (drag-and-drop team row); then the user's mechanics
      check (in-game tests in each guide's notes.md), the merge into `main`, save readers and the file picker.
-   - **Phone previews still current:** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-hp-moves-build.html`
-     (EI, newest build), `calc-field-hardlove.html`, `calc-field-photonic.html`, `calc-field-eternal.html` (built
+   - **Phone previews still current:** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-ei-scope.html` (EI,
+     newest build, with the preset panel), `calc-hp-moves-build.html` (EI, before the scope check), `calc-field-hardlove.html`, `calc-field-photonic.html`, `calc-field-eternal.html` (built
      before HP moves), `calc-auto-mock.html` (the auto-effects mockup). The older `calc-*` previews are superseded.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
