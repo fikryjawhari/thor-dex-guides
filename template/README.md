@@ -95,6 +95,16 @@ Download cycles Auto (with its actual stat), Atk, Sp. Atk, None, shown as `A·At
 (tooltip spells it out).
 Details show used/listed/typed power, crit chance/stage and first-/between-hit changes; the move's own changes alone
 can be omitted. Forced crit locks C on; blocked crit disables it. No new localStorage key is used.
+**HP moves** (2026-10-26, `plans/calc-hp-moves.md`): fixed / fraction damage (Seismic Toss, Super Fang, Endeavor, Final
+Gambit, Psywave, OHKO moves...) are ordinary rows with one number (no Power box). Counter / Mirror Coat / Bide / Metal
+Burst / Comeuppance: the Power box reads Taken; the row shows — until it is typed. A move that changes its user's HP
+(recoil, drain, Life Orb, Shell Bell, heals, costs, self-KO, Pain Split `↔n`, Wish `↻`, Rest `Zz`) has a signed amount
+in the residual style: at the start of the % line (after Z), or in place of a status row's —. **One tap = one use**:
+the target loses the default damage (the player attacking: minimum roll; the foe attacking: maximum roll; all hits;
+capped at its HP) and the user gets the matching change (Rest also sets Sleep). The opened row of a damage-dependent
+move has **Dealt / You** boxes: Dealt gives your change; You (the recoil / recovery seen) gives the damage range that
+produces it, using its minimum when the player attacks, its maximum when the foe does; Apply applies both. Not stored.
+HP −min / −max stay damage-only. Scenario: `tools/scenarios/calc-moves.mjs`.
 **Hit totals**: collapsed damage sums all selected hits, including Parental Bond. Fixed multi-hit and Parental Bond
 share one total/H1/H2/etc. inspection button; ordinary variable-hit moves cycle through legal counts plus a one-hit
 inspection. Loaded Dice restricts standard 2-5-hit choices to 1/4/5; Skill Link to 1/max. Loaded Dice makes Population Bomb a 1 / 4-10 cycle

@@ -84,7 +84,7 @@ explicitly mapped in `over`. Unrecognised item/ability names have no effect.
 
 ## Public contract
 
-`window.DMG` exposes `init(D, prof)`, `stats(set)`, `calc(atk, def, slot, field)`,
+`window.DMG` exposes `init(D, prof)`, `stats(set)`, `calc(atk, def, slot, field)`, `hp(atk, def, slot, field, dealt)`,
 `residual(set, field = {}, otherSet = null, side = 'atk')`,
 `speed(set, field = {}, side = 'atk')` and `entry(set, field = {}, side = 'atk')`.
 Initialisation replaces all guide state and clears KO caches. It does not change
@@ -116,6 +116,22 @@ state counters, stock power changes (Facade, Hex, Brine, Knock Off, Weather
 Ball, Payback, Acrobatics), the hack's own `movePower` rules, rounded as the
 game does (Gen 5+ half down, Gen 4 floor). Not for a power the page sets, Z-moves
 or moves whose power changes hit by hit (they return `per`).
+
+### HP moves
+
+Fixed / fraction damage (`FIXED`, `OHKO`, `TAKEN` in `adapter.js`) returns an ordinary result with `fixed: true`:
+16 equal rolls (Psywave: its 50-150% spread), the type chart and immunities from a power-100 run of the move. Seismic
+Toss / Night Shade = level, Dragon Rage 40, Sonic Boom 20, Super Fang / Nature's Madness / Ruination = half current HP,
+Guardian of Alola 3/4, Endeavor = target HP - user HP, Final Gambit = user HP, OHKO = target HP (0 against a higher
+level, Sturdy, Ice vs Sheer Cold from Gen 7). Counter / Mirror Coat / Bide (2x), Metal Burst / Comeuppance (1.5x) read
+the damage taken from `slot.bp`, null without it. `hp(atk, def, slot, field, dealt)` is the user's own HP change from
+one use given the damage dealt: `{v, l, set?, st?, later?}` or null (`set` Pain Split's new HPs, `st: 'slp'` Rest,
+`later` Wish). Recoil and drain use the move data's fractions (Gen 5+ round half up, Gen 4 floor, at least 1), Rock
+Head / Magic Guard, Big Root, Liquid Ooze, Dream Eater on a sleeper; plus Struggle, Mind Blown family, Life Orb (not
+with Sheer Force), Shell Bell, self-KO moves, heals (weather for Moonlight family, sand for Shore Up, Strength Sap =
+the target's staged Attack, Swallow at one Stockpile, Purify on a statused target), costs. Not covered: Floral Healing
+/ Heal Pulse, crash damage, Rocky Helmet / Rough Skin. Tests: `test.mjs` (fixed damage, `DMG.hp`), `hardlove_check.mjs`
+(OHKO).
 
 ### Battle state
 

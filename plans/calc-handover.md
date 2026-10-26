@@ -1,6 +1,14 @@
 # Calculator handover (2026-10-26)
 
 ## Start here
+- **Open items session (2026-10-26, Opus) done**: Return / Frustration default 102 (`b987f8d`); the verification list
+  below is settled (`b711953`: Kee / Maranga raise once before hit 2, stock re-raised them every hit; Hardlove fires them
+  after the move, `over.afterMove`; Gems boost every hit, as stock does, checked in Hardlove's source; Ash-Greninja's
+  Water Shuriken power 20 / fixed x3; Loaded Dice Population Bomb 1 / 4-10; Emperor's Presence sides checked in the
+  page). HP moves built from `plans/calc-hp-moves.md` (mockup `plans/calc-hp-moves-mockup/`): fixed damage, Taken box,
+  `DMG.hp`, the one-use amount and Dealt / You entry. Scenario `tools/scenarios/calc-moves.mjs`. Left open: Disguise /
+  Ice Face don't absorb the first hit (stock doesn't model them; the user's call), Floral Healing / Heal Pulse, crash
+  damage, Rocky Helmet. Next on this branch: the Emerald Imperium scope session.
 - **Merged 2026-10-26**: `worktree-damage-calc-toggles` is merged into `worktree-damage-calc` and retired. Work on
   `worktree-damage-calc` (`.claude/worktrees/damage-calc`). Pre-merge review fixes: stock Iron Ball damage on
   Flying dual types, immunity-blocked hazard parts stay pending (entry markers `v:2`, old markers migrate on
@@ -63,14 +71,14 @@
 
 ## Engine requests from the original feedback: carried forward, not edited here
 
-### Confirmed outstanding default-power request
+### Confirmed outstanding default-power request (done 2026-10-26: 102 by default)
 **Return / Frustration:** the user wants maximum power by default (102, not fractional 102.5). The current engine
 returns `null` without an explicit power for the probed EI sets; explicit 102 works. This remains a follow-up to
 the engine/default-power contract. Check each hack's source overrides and existing happiness fixtures before
 changing defaults; do not erase hack-specific behaviour accidentally. UI input policy should follow the settled
 engine contract. No fix was made here.
 
-### Requests to verify, not established missing implementations
+### Requests to verify, not established missing implementations (settled 2026-10-26, Start here)
 - **Between-hit state/stats**, particularly Parental Bond Power-Up Punch's Attack boost and defensive reactions
   such as Stamina: the incoming engine already handles the user's two named examples. EI probe: PuP into Blissey
   gives 146-174 then 54-64; three-hit Icicle Spear into Stamina Mudsdale gives 30-36, 20-26, 14-20, with `pre`

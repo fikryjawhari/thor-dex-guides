@@ -57,6 +57,10 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    expected Calc-only differences and 21 baseline EI-only fixture failures on other guides (details in
    `plans/calc-state-toggles.md`). Original engine follow-ups and trainer-field automation remain separate:
    `plans/calc-handover.md`. The field / toggle plans are kept until `worktree-damage-calc` merges into main.
+   Open items session 2026-10-26 (Opus): Return / Frustration 102 by default; verification list settled (two
+   engine fixes: Kee / Maranga once, after the move in Hardlove; Ash-Greninja Water Shuriken; Loaded Dice Population
+   Bomb); HP moves (fixed damage, Counter's Taken box, one-tap use with your recoil / drain / heal, exact Dealt / You
+   entry; `plans/calc-hp-moves.md`). Next: the Emerald Imperium scope session.
    Built phone previews:
    https://windows-pc.tail1846b8.ts.net/preview/calc-field-states.html (EI),
    https://windows-pc.tail1846b8.ts.net/preview/calc-field-hardlove.html (Hardlove),

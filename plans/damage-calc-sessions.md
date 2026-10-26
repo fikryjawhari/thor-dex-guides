@@ -70,6 +70,10 @@ the calc scenarios for the hack. Put the build on the phone preview (`python -I 
 calc-build.html --frame`) when the page changed.
 
 ## Status
+- Open items (2026-10-26, Opus): Return / Frustration 102; verification list settled (Kee / Maranga once, after the
+  move in Hardlove; Ash-Greninja Water Shuriken; Loaded Dice Population Bomb); HP moves built (`plans/calc-hp-moves.md`,
+  kept until the calc merges: fixed damage, Taken, `DMG.hp`, one-use amount, Dealt / You). `plans/calc-handover.md`
+  → Start here. Next: the Emerald Imperium scope session on this branch.
 - Field states built and phone-preview approved 2026-10-26, merged into this branch from `worktree-damage-calc-toggles` (retired) after a pre-merge review: stacked state / turn-end controls,
   one-shot entry hazards with independent HP/status/Web reapplication, source gating and engine-only Steelsurge.
   Full engine tests pass, including stock parity and all four profiles' state fixtures. Browser audit and phone
