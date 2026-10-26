@@ -1,5 +1,10 @@
 # Calc: battle-state controls (spec)
 
+User review (2026-10-26): built UI accepted except First turn out / Disguised checkbox placement and height.
+Move the checkbox to the **left of Edit** without increasing the Pokemon card's height or changing its size.
+Not fixed in this session: user requested handover only. Next-session entry point: `plans/calc-handover.md`,
+including original engine requests, verified existing support, later field automation and audit evidence.
+
 
 ## Audit record (2026-10-26)
 - Full four-guide gate: **88/117 pass**, not an unqualified green gate. Evidence:
@@ -44,7 +49,8 @@
   each pass, including the final wide-resize editor regression. Photonic fourth move ends at 309 px. Residual (40),
   Imperium controls (10), layout (36), triple/power (20), engine npm suite and Metronome-holder checks pass.
   Built Thor frames: `/preview/calc-state-built.html` (EI), `/preview/calc-state-photonic.html` (Photonic).
-  Full gate completed; see the audit record below. Phone/Thor user approval remains before the later field decide step.
+  Full gate completed; see Audit record. User approved the built UI except the placement/height fix noted above;
+  that fix and the later field decide step remain for the next session.
   Approval mockup: `plans/calc-state-toggles-mockup/edit.html`, generated with `build-edit.mjs`
   (sampled Photonic Captain Mallow data and inline shared sprites), framed at `dist/calc-state-edit-frame.html`.
   Phone preview: `https://windows-pc.tail1846b8.ts.net/preview/calc-state-edit.html`.

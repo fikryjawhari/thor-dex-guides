@@ -47,7 +47,10 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    Engine suite, residual (40), Imperium controls (10), layout (36), triple/power (20), Metronome-holder checks pass.
    Full gate: 88/117 pass; eight expected Calc-only DOM differences (19,840 unaffected route/mode comparisons identical,
    zero page errors) plus 21 EI-only fixture failures on other guides, reproduced against baseline. Details and evidence:
-   plans/calc-state-toggles.md -> Audit record. No engine edits. Built phone previews awaiting user review:
+   plans/calc-state-toggles.md -> Audit record. No engine edits. User approved the built UI on 2026-10-26 except
+   First turn out / Disguised checkbox: move left of Edit without increasing card height/size. Not implemented;
+   next-session handover (UI fix, original engine follow-ups, field automation, checks): plans/calc-handover.md.
+   Built phone previews:
    https://windows-pc.tail1846b8.ts.net/preview/calc-state-built.html (EI),
    https://windows-pc.tail1846b8.ts.net/preview/calc-state-photonic.html (Z controls).
    Approval mockup phone preview:
