@@ -64,8 +64,8 @@ accessible label and tooltip: these checkboxes, the Intrepid Sword / Dauntless S
 and the Download button. Edit itself is the same for every Pokémon. Changing ability or
 Mega form clears this state. Controls do not change the attack direction. `categoryInvert` names moves with an
 Invert category checkbox in their move details: a compact P/S · A/I button above Crit also toggles it while collapsed.
-The tooltip spells out category, Auto/Inverted and ties. These flags persist inside existing edited/custom Pokémon
-and per-slot move overrides, never under new storage keys. EI also exposes allied Emperor's Presence per side;
+The tooltip spells out category, Auto/Inverted and ties. The ability boxes are battle state (scratch, see Fight
+state); the category flag is a per-slot move override and is stored. EI also exposes allied Emperor's Presence per side;
 it only affects doubles. Trainer `field` evidence is still not automatically consumed. Effective priority is an
 engine result, not a claim about which move should happen first; the faster Speed colour is the current UI.
 Opening Edit at wide sizes opens both populated editors; closing either closes both. Full form names appear inside
@@ -85,11 +85,12 @@ total; the choice lives in `ST.hits` (0 = total); no Hits box in the editor. An 
 (no control says who is seeded). When HP is not full, the HP label becomes an accent ↺ button (tap: full HP).
 **Protean / Libero**: the attacker takes each move's type (STAB in every base); the edit menu
 of a Pokémon with either ability has a Type row (own types or one of the 18) used when it defends; a dot in that type's colour
-marks the card. Stored as `pty` in the existing edits; ability / Mega change clears it. Scenario: `tools/scenarios/calc-residual.mjs`.
+marks the card. Scratch `pty`; ability / Mega change clears it. Scenario: `tools/scenarios/calc-residual.mjs`.
 **Battle state**: per-row toggles, earlier-use counters, partner pledges (Doubles only) and Metronome use the one
 top slot above Crit, without growing the row. Hack `over.state: false` suppresses a move's control; `curl: false`
 suppresses Defense Curl in Rollout/Ice Ball details. A move's own control wins over the item's Metronome counter.
-State is `ST.st[slotKey]`; target Dig/Fly/Dive/Minimized/Switching is `ST.tgt[cardKey]` in Edit. Changing a move clears
+State is `ST.st[slotKey]`; target Dig/Fly/Dive/Minimized/Switching is `ST.tgt[cardKey]` in Edit (both scratch, never
+stored). Changing a move clears
 that slot, import clears imported Pokémon's state, and Reset power/type clears only those two overrides.
 Download cycles Auto (with its actual stat), Atk, Sp. Atk, None, shown as `A·Atk` / `A·SpA`, `M·Atk`, `M·SpA`, `None`
 (tooltip spells it out).
@@ -172,7 +173,22 @@ The real adapter must provide that hook for paralysis and other game-specific Sp
 When the adapter returns `per`, the expander shows each hit's rolls; aggregate HP subtraction and best-move ranking
 sum those per-hit ranges, while percentages and KO text use the adapter's already aggregated values.
 
-Mine (party, boxes, custom sets), selection, unsaved/saved edits and per-slot overrides are one object in `cfg.ls.dmg`.
+Mine (party, boxes, custom sets), selection, unsaved/saved edits, kept HP / status, the Field and per-slot overrides
+are one object in `cfg.ls.dmg` (no other key).
+**Fight state** (plans/calc-auto-effects.md, 2026-10-27): a Pokémon's battle condition (stages, ability boxes,
+Download, entry box, Protean type, target state, row state incl. counters, toxic turn) is **scratch**: memory only
+(`SC[cardKey]` + `ST.st` / `ST.tgt`), alive while the card is selected. Selecting another Pokémon and coming back
+brings it fresh; only **HP and status** are kept (`hp` / `status` in `ST.edits`, a custom set's own fields), the
+toxic counter restarts at 1. **Unsaved set edits** (nature, ability, item, level, IVs / EVs, moves, Mega) go when the
+Pokémon is switched away; Save keeps set fields only, never HP / status / scratch; Edit Reset clears unsaved edits and
+scratch. `broken` (Disguise / Ice Face) is kept for the fight on both sides. Player HP is kept across trainers; foe
+HP / status only for the current fight. A **trainer change** (bar arrows, Find trainer, a trainer card's Calc link)
+clears all scratch, the foe's kept state, `broken` and the manual Field overrides (`ST.fman`: Field keys the user set
+this fight; Singles / Doubles is not one); the foe team starts at full HP, slot 1 (or the linked Pokémon).
+**Reset fight** (Field's first row, right of Singles / Doubles): the same, plus every HP 100 % and every status
+cleared, same trainer and Pokémon. Reload keeps HP / status, the foe's of the current fight and the manual Field;
+scratch is gone. Loading older storage drops stored scratch everywhere and keeps only HP / status on cards not
+selected. Entry hazards still apply once per selection and on a new fight. Scenario: `tools/scenarios/calc-auto.mjs`.
 Internal set aliases follow trainer data (`l`, `na`, `a`, `i`, `m`); the engine boundary converts them to its
 `lv`, `nat`, `ab`, `it`, `st`, six-element `stg` contract. Caps stay in the existing `TCAP` store. Sheets and expanders
 are transient; pickers use the shared keyboard/number pad and the viewer's normal select shim.
