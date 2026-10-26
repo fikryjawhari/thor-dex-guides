@@ -231,7 +231,7 @@ body.kbopen .shb{padding-bottom:calc(var(--kbh,0px) + 12px)}
 .rcol .rc{color:var(--mut)}.rcol .rc[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#111}
 .mr .ab1{margin-top:3px}.mr .ab1 .dbtn{width:100%}
 details.dfield>summary{min-height:30px;font-size:12px;padding:0 8px}
-.dfb{padding:0 6px 6px;gap:4px}.dfr select{height:32px}.dtg button{min-height:32px}
+.dfb{padding:0 4px 4px;gap:4px}.dfr select{height:28px;padding:0 4px;font-size:12px}.dtg button{min-height:24px}
 .ed{display:flex;flex-direction:column;gap:3px;margin:2px 0 3px;padding-top:3px;border-top:1px solid var(--line)}
 .ed .e2{display:grid;grid-template-columns:1fr 1fr;gap:3px}
 .ed select{width:100%;min-width:0;height:30px;font-size:12px;padding:0 3px}
@@ -329,9 +329,10 @@ body.calc-route .sheet{z-index:80}
 body.calc-route .kb{z-index:100}
 body.calc-route .dres .mr .rcol{align-self:flex-start}
 body.calc-route .dres .mr .mm{min-width:0}
-body.calc-route .dside.mg .dstrip{max-height:121px}
+body.calc-route .dside.mg .dstrip{max-height:121px;align-content:start}
 body.calc-route .dempty:has([hidden]){grid-template-columns:1fr}
-body.calc-route .dfield .dfb .dtg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+body.calc-route .dfield .dfb .dtg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(var(--tgmin,64px),100%),1fr));grid-auto-rows:max-content;align-content:start;gap:3px}
+body.calc-route .dfield .dfb .dtg button{min-width:0;min-height:24px;padding:1px 3px;font-size:11px;line-height:1.15;overflow-wrap:normal;word-break:normal;hyphens:manual}
 body.calc-route .ed table{table-layout:fixed;width:100%}
 body.calc-route .ed .nv{width:100%;min-width:0}
 body.calc-route .dmonstate{display:flex;align-items:center;gap:5px;min-height:32px;max-width:100%;font-size:12px;cursor:pointer;overflow-wrap:anywhere}
@@ -349,9 +350,23 @@ body.calc-route .dcategory{font-size:11px;font-weight:700;color:var(--acc);paddi
 .deot .dn{color:#ff7b6b}.deot .up{color:#3fb760}
 .dqp{margin-top:2px;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-size:11px}
 .dqp div{display:flex;justify-content:space-between;gap:6px}
+.dqp b{width:auto;height:auto;margin:0}
 .dqp .dqt{flex-wrap:wrap;row-gap:2px}.dqp .dqt span{flex:1}.dqp label{order:3;flex:1 0 100%;display:flex;align-items:center;justify-content:space-between;gap:3px;color:var(--mut);font-size:10px}
 .dqp label input,.dqp label .nv{width:38px;height:24px;min-height:24px;min-width:38px;padding:0 3px;font-size:12px;text-align:center}.dqp span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mr .dd .eotl{color:var(--mut)}
+/* Open move: Type / Power / Hits on one row, the full name shares its line with Change (and Reset), shorter HP buttons,
+   so an open row fits one 316 px window */
+body.calc-route .mr .dd .eg{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:3px;margin-bottom:3px}
+body.calc-route .mr .dd .eg.three{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,.8fr)}
+body.calc-route .mr .dd .eg.one{grid-template-columns:minmax(0,1fr)}
+body.calc-route .mr .dd .eg label{line-height:12px}
+body.calc-route .mr .dd .eg select,body.calc-route .mr .dd .eg input,body.calc-route .mr .dd .eg .nv{height:28px;min-height:28px;font-size:12px}
+body.calc-route .mr .dd .eg select{padding:0 2px}
+.mr .rolls{word-spacing:1px}
+.mr .dd .ab .dbtn{min-height:0;height:28px}
+.mr .mvh{display:flex;align-items:center;gap:3px;margin-top:3px}
+.mr .mvh .mvfull{flex:1;min-width:0;color:var(--fg);font-weight:600;overflow-wrap:anywhere}
+.mr .dd .mvh .dbtn{flex:none;min-height:0;height:26px;padding:0 8px}
 .ed .e2.pty{display:flex;align-items:center;gap:4px}.ed .e2.pty>span{flex:none;color:var(--mut);font:600 11px system-ui}.ed .e2.pty>select{flex:1;min-width:0}
 .cc .cn .td{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:1px}
 .cc .hpl.rs{min-width:20px;color:var(--acc);border:1px solid var(--acc);border-radius:6px;font-weight:700}
@@ -376,3 +391,68 @@ body.calc-route .fbar .nav svg{display:block;width:10px;height:10px}
 /* From 480 px the rows keep their old height (the foe team list needs 222 px under the cards): a smaller Z, no extra line */
 @media (min-width:480px){body .dres.zm .mr .r2{min-height:0;margin:0}body .dres.zm .mr .rz{height:12px;font-size:8.5px;line-height:10px;border-radius:4px}}
 @media (max-width:479.98px){body.calc-route .fbar{min-height:24px}body.calc-route .fbar .nav{height:22px;width:24px;border-radius:7px}body.calc-route .fbar .dsrc{min-height:22px}}
+.cc .dfull{font-size:12px;font-weight:700;overflow-wrap:anywhere}
+.cc .dstate label{display:flex;align-items:center;gap:5px;width:100%;font-size:11px;color:var(--mut)}
+.cc .dstate select{flex:1;min-width:0}
+.cc .ed .e2.dstate{grid-template-columns:1fr}
+/* Ability controls sit on the header line, left of Edit, no taller than Edit (the card keeps its height) */
+.cc .l1 .ddl{flex:none;height:18px;padding:0 4px;border:1px solid var(--acc);border-radius:6px;background:var(--panel2);color:var(--acc);font:700 10px/16px system-ui;white-space:nowrap;cursor:pointer;touch-action:manipulation}
+/* Edit: the full name shares its line with Save / Reset; shorter selects and boxes, so the open card fits one 316 px window */
+.cc .ed .ehd{display:flex;align-items:center;gap:4px;min-height:22px}
+.cc .ed .ehd .dfull{flex:1;min-width:0}
+.cc .ed .ehd .e3{flex:none}
+.cc .ed .ehd .e3 .dbtn{flex:none;min-height:0;height:22px;padding:0 8px;font-size:11px}
+.cc .ed select{height:27px}
+.cc .ed input,.cc .ed .nv{height:24px;min-height:24px}
+body.calc-route .cc .ed .sc,body.calc-route .cc .ed .sm,body.calc-route .cc .ed .z{height:25px;min-height:0}
+/* Battle state and the Turn end toggle share a row; the parts open below in two columns; toxic turn is on the HP line */
+body.calc-route .cc .ed .e2.dstate.dres2{grid-template-columns:minmax(0,1fr) auto}
+.cc .ed .dqt{height:27px;padding:0 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--fg);font:600 11px system-ui;white-space:nowrap;cursor:pointer;touch-action:manipulation}
+.cc .ed .dqp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:8px;margin-top:0}
+.cc .cl .dtoxl{flex:none;margin-left:2px;font:700 10px system-ui;color:var(--mut)}
+body.calc-route .cc .cl [data-tox]{width:24px;min-width:0;flex:none}
+body.calc-route .cc .l1 .dmonstate{display:flex;flex:none;margin:0;align-items:center;min-height:0;height:18px}
+body.calc-route .cc .l1 .dmonstate input{width:14px;height:14px;margin:0;accent-color:var(--acc)}
+.cc .cl .dturn{flex:none;width:auto;height:auto;margin-right:0;margin-left:auto;min-height:20px;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);font:700 11px system-ui;cursor:pointer;touch-action:manipulation}
+.cc .cl:has(.dturn){gap:3px}.cc .cl:has(.dturn) [data-lv]{width:32px}.cc .cl:has(.dturn) [data-hp]{width:38px}
+.cc .dn{color:#ff7b6b}.cc .up{color:#3fb760}
+.cc .dqp label{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.dformat{display:grid;grid-template-columns:1fr 1fr}
+.dformat button{min-height:26px;border:1px solid var(--line);background:var(--panel2);color:var(--mut);font:700 12px system-ui;cursor:pointer;touch-action:manipulation}
+.dformat button:first-child{border-radius:7px 0 0 7px}.dformat button:last-child{border-radius:0 7px 7px 0}
+.dformat button[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#111}
+.dfside{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px}
+.dfside section{min-width:0}.dfside section>b{display:block;text-align:center;font-size:11px;line-height:14px;margin-bottom:2px}
+.dfside .dtg{display:grid;grid-template-columns:minmax(0,1fr);gap:3px}
+.dfside .dtg button{width:100%}
+.dfsw{display:none;grid-column:1/-1;grid-template-columns:1fr 1fr}
+.dfsw button{min-height:24px;border:1px solid var(--line);background:var(--panel2);color:var(--mut);font:700 11px system-ui;cursor:pointer;touch-action:manipulation}
+.dfsw button:first-child{border-radius:7px 0 0 7px}.dfsw button:last-child{border-radius:0 7px 7px 0}
+.dfsw button[aria-pressed=true]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.dfside.one{grid-template-columns:minmax(0,1fr)}
+.dfside.one .dfsw{display:grid}
+.dfside.one section>b,.dfside.one section:not(.on){display:none}
+body.calc-route .dfb{box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;gap:3px}
+body.calc-route .dfb>*{flex-shrink:0}
+details.dfield>summary .mut{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dfgroup{margin-top:1px;border-top:1px solid var(--line)}
+.dfgroup>summary{min-height:24px;display:flex;align-items:center;gap:2px;font-size:10px;font-weight:700;cursor:pointer;list-style:none}
+.dfgroup>summary::-webkit-details-marker{display:none}
+.dfgroup>summary::after{content:'▸';margin-left:auto;color:var(--mut)}
+.dfgroup[open]>summary::after{content:'▾'}
+.dhapply{min-height:28px;width:100%;margin-top:3px;border:1px solid var(--line);border-radius:7px;background:var(--panel2);color:var(--fg);font:inherit;font-size:11px;cursor:pointer;touch-action:manipulation}
+.dhapply:disabled{opacity:.45;cursor:default}
+.dfside section{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;align-content:start;column-gap:3px}
+.dfside section>b,.dfside section>.dtg,.dfgroup{grid-column:1/-1}
+.dfside section:not(:has(.dfgroup[open]))>.dfgroup{grid-column:auto}
+.dfgroup{min-width:0}
+body.calc-route .dfside{gap:3px}
+.mr .rcol .rh[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#111}
+.mr .rcol .rc:disabled{cursor:default;opacity:.7}
+body.calc-route .mr .rcol .dcategory{font-size:10px;padding:0}
+.mr .dmovecheck{display:flex;align-items:center;gap:4px;margin:3px 0;font-size:11px}
+.mr .dd .dmovecheck input{width:14px;height:14px;margin:0;accent-color:var(--acc)}
+.cc .cl .dvol{font-size:9px;color:var(--acc)}
+.cc .cl:has(.dvol){gap:2px}.cc .cl:has(.dvol) [data-lv]{width:28px}.cc .cl:has(.dvol) [data-hp]{width:34px}
+@media(max-width:479.98px){body.calc-route .dmatch{gap:2px}}
+@media(min-width:480px){body.calc-route .fit,body.calc-route .fit:has(.ed){height:auto;min-height:calc(100vh - 8px)}body.calc-route .top{flex:none}}

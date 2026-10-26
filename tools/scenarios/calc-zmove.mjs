@@ -80,7 +80,8 @@ const checks = [{
     const mark = await page.value(`(()=>{const a=document.querySelector('.cc[data-s="foe"] .aum').getBoundingClientRect(),c=document.querySelector('.cc[data-s="foe"]').getBoundingClientRect(),l=document.querySelector('.cc[data-s="foe"] .cl').getBoundingClientRect();return {in:a.right<=c.right+0.5,line:a.top>=l.top-1&&a.bottom<=l.bottom+1};})()`);
     assert.ok(mark.in, 'mark inside the card');
     assert.ok(mark.line, 'mark on the Lv / HP line');
-    await page.tap('.dmatch .cc[data-s="foe"] [data-a="eopen"]');
+    // New Pokémon opens Edit, and from 480 px both editors open together: open the foe's only when it is closed
+    if (!await page.count('.cc[data-s="foe"] .ed')) await page.tap('.dmatch .cc[data-s="foe"] [data-a="eopen"]');
     assert.deepEqual(await stg(), ['0', '+1', '0', '0', '0'], 'Def +1 from the aura');
     await page.tap('.dmatch .cc[data-s="foe"] [data-a="sstep"][data-x="0"]');
     assert.equal(await page.count('.cc[data-s="foe"] .aum'), 0, 'changed stages: no mark');

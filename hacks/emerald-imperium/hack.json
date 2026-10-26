@@ -1550,10 +1550,31 @@
      "to": "isFriendGuard"
     },
     {
-     "k": "atkEmperorPresence",
-     "l": "Emperor's Presence (attacking ally)",
+     "k": "atkFocus",
+     "l": "Attacker Focus Energy",
      "type": "toggle",
      "side": "atk",
+     "to": "isFocusEnergy"
+    },
+    {
+     "k": "atkEmperorPresence",
+     "l": "Attacker Emperor's Presence",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isEmperorPresence"
+    },
+    {
+     "k": "defFocus",
+     "l": "Defender Focus Energy",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFocusEnergy"
+    },
+    {
+     "k": "defEmperorPresence",
+     "l": "Defender Emperor's Presence",
+     "type": "toggle",
+     "side": "def",
      "to": "isEmperorPresence"
     }
    ]

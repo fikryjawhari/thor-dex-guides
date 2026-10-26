@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {guideArg, readGuide, runChecks} from '../calc_check_lib.mjs';
+import {guideArg, readGuide, runChecks, tapField} from '../calc_check_lib.mjs';
 
 const file = guideArg(process.argv, 'dist/hardlove-gold.html');
 const guide = readGuide(file).data;
@@ -24,18 +24,19 @@ const checks = [{
     })()`);
     assert.ok(await page.count('.dres .mr:not(.em)'), 'damage rows rendered');
     await page.tap('.dfield > summary');
-    assert.deepEqual(await page.value(`[...document.querySelectorAll('[data-f]')].map(element=>element.dataset.f)`),
-      entries.filter(entry => entry.type === 'select').concat(entries.filter(entry => entry.type === 'toggle')).map(entry => entry.k));
+    assert.deepEqual(await page.value(`[...new Set([...document.querySelectorAll('[data-f]')].map(element=>element.dataset.f))].sort()`),
+      entries.map(entry => entry.k).sort());
     const weather = entries.find(entry => entry.k === 'weather');
     assert.ok(weather.o.some(([value]) => value === 'Snow'));
     assert.ok(!weather.o.some(([value]) => value === 'Hail'));
-    for (const key of ['atkFlowerGift', 'defFlowerGift', 'atkPowerTrick', 'defPowerTrick', 'atkProtected', 'defProtected']) {
-      await page.tap(`[data-f="${key}"]`);
+    assert.equal(await page.count('[data-f$="Protected"],[data-f$="Protect"]'), 0, 'Protect is reserved for Z-move profiles');
+    for (const key of ['atkFlowerGift', 'defFlowerGift', 'atkPowerTrick', 'defPowerTrick']) {
+      await tapField(page, key);
       assert.equal(await page.value(`CALC.state().field[${JSON.stringify(key)}]`), 1);
     }
     await page.reload();
     await page.route('#/calc');
-    for (const key of ['atkFlowerGift', 'defFlowerGift', 'atkPowerTrick', 'defPowerTrick', 'atkProtected', 'defProtected']) {
+    for (const key of ['atkFlowerGift', 'defFlowerGift', 'atkPowerTrick', 'defPowerTrick']) {
       assert.equal(await page.value(`CALC.state().field[${JSON.stringify(key)}]`), 1, key + ' persisted');
     }
   },

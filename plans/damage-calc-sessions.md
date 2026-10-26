@@ -70,6 +70,11 @@ the calc scenarios for the hack. Put the build on the phone preview (`python -I 
 calc-build.html --frame`) when the page changed.
 
 ## Status
+- Field states built and phone-preview approved 2026-10-26 on `worktree-damage-calc-toggles`: stacked state / turn-end controls,
+  one-shot entry hazards with independent HP/status/Web reapplication, source gating and engine-only Steelsurge.
+  Full engine tests pass, including stock parity and all four profiles' state fixtures. Browser audit and phone
+  preview evidence: `plans/calc-field-states.md`. Merge next into `worktree-damage-calc` only when authorised;
+  Return / Frustration, trainer-field automation and the existing in-game verification list remain separate.
 - Mechanics: Emerald Imperium refined 2026-10-25 (109 fixtures: 100 exact hzla matches, nine documented differences).
   Conditional Bull/Quill Rush and Illusion, allied Emperor's Presence, integer Draco category selection/inversion,
   Blazing Soul priority, Ice Eater immunity and Defeatist's one-third threshold are covered. Individual checkboxes,

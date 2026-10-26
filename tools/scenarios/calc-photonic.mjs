@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {guideArg, readGuide, runChecks} from '../calc_check_lib.mjs';
+import {guideArg, readGuide, runChecks, tapField} from '../calc_check_lib.mjs';
 
 const file = guideArg(process.argv, 'dist/photonic-sun.html');
 const guide = readGuide(file).data;
@@ -24,16 +24,18 @@ const checks = [{
     })()`);
     assert.ok(await page.count('.dres .mr:not(.em)'), 'damage rows rendered');
     await page.tap('.dfield > summary');
-    assert.deepEqual(await page.value(`[...document.querySelectorAll('[data-f]')].map(element=>element.dataset.f)`),
-      entries.filter(entry => entry.type === 'select').concat(entries.filter(entry => entry.type === 'toggle')).map(entry => entry.k));
-    for (const entry of entries.filter(entry => entry.type === 'select')) {
+    assert.deepEqual(await page.value(`[...new Set([...document.querySelectorAll('[data-f]')].map(element=>element.dataset.f))].sort()`),
+      entries.map(entry => entry.k).sort());
+    await page.tap('[data-f=gameType][data-value=Doubles]');
+    assert.equal(await page.value('CALC.state().field.gameType'),'Doubles');
+    for (const entry of entries.filter(entry => entry.type === 'select' && entry.k !== 'gameType')) {
       assert.deepEqual(await page.value(`[...document.querySelector('[data-f="${entry.k}"]').options].map(option=>option.value)`), entry.o.map(([value]) => value));
       const value = {weather: 'Harsh Sunshine', terrain: 'Psychic', gameType: 'Doubles'}[entry.k];
       await page.value(`(()=>{const control=document.querySelector('[data-f="${entry.k}"]');control.value=${JSON.stringify(value)};control.dispatchEvent(new Event('change',{bubbles:true}));})()`);
       assert.equal(await page.value(`CALC.state().field[${JSON.stringify(entry.k)}]`), value);
     }
     for (const entry of entries.filter(entry => entry.type === 'toggle')) {
-      await page.tap(`[data-f="${entry.k}"]`);
+      await tapField(page, entry.k);
       assert.equal(await page.value(`CALC.state().field[${JSON.stringify(entry.k)}]`), 1);
     }
     const before = await page.value('JSON.stringify(CALC.state().field)');

@@ -12,6 +12,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'tools'))
 import itemstd  # noqa: E402
+from calc_ui_check import check_metronome
 import extractlib  # noqa: E402
 import pdfwild, prune, walk  # noqa: E402
 from extractlib import split_name  # noqa: E402
@@ -37,13 +38,14 @@ def main():
     parser.add_argument('current', nargs='?', type=Path,
                         default=Path(__file__).resolve().parents[1] / 'data.json')
     args = parser.parse_args()
+    after = json.loads(args.current.read_text(encoding='utf8'))
+    check_metronome(after, 'emerald-imperium')
     diffs = pdfwild.compare()
     assert not diffs, diffs[:10]
     print('PASS: Locations PDF wild tables match the dex data slot by slot')
     if not args.baseline:
         return
     before = json.loads(args.baseline.read_text(encoding='utf8'))
-    after = json.loads(args.current.read_text(encoding='utf8'))
     old_species = {pokemon['id']: pokemon for pokemon in before['P']}
     species = {pokemon['id']: pokemon for pokemon in after['P']}
     used = {mon['id'] for group in before['TR']['g'] for section in group['sec']

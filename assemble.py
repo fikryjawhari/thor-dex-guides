@@ -65,10 +65,33 @@ def merged(base, over):
     return out
 
 
-def calc_profile(c):
+def calc_profile(c, data=None):
     """A hack's cfg.calc resolved against its base profile."""
     base = json.loads(read('template', 'calc', 'profiles', c['base'] + '.json'))
-    return merged(base, c)
+    profile = merged(base, c)
+    if data is not None:
+        profile['field'] = [entry for entry in profile.get('field', [])
+                            if profile.get('zmove') or entry.get('to') != 'isProtected']
+        moves = set(data['M'])
+        abilities = {entry[0] for entry in data.get('AB', [])} if profile.get('abilities', True) else set()
+        entries = json.loads(read('template', 'calc', 'field-states.json'))
+        fields = profile.setdefault('field', [])
+        keys = {entry['k'] for entry in fields}
+        for entry in entries:
+            if profile['gen'] < entry['gen'] or (entry.get('zmove') and not profile.get('zmove')):
+                continue
+            if (entry.get('moves') or entry.get('abilities')) and not (
+                    moves.intersection(entry.get('moves', [])) or abilities.intersection(entry.get('abilities', []))):
+                continue
+            if entry.get('all') and not set(entry['all']).issubset(moves):
+                continue
+            for side, label in [('atk', 'Player'), ('def', 'Foe')]:
+                key = side + entry['k']
+                if key not in keys:
+                    fields.append(dict(k=key, l=label + ' ' + entry['l'], side=side,
+                                       type='toggle', group=entry['group'],
+                                       **({'max': entry['max']} if 'max' in entry else {})))
+    return profile
 
 
 def calc_parts(prof):
@@ -89,7 +112,7 @@ def build(hid):
     if 'calc' in h['cfg']:
         if not h['cfg'].get('ls', {}).get('dmg'):
             sys.exit(f'{hid}: cfg.calc needs its own storage key cfg.ls.dmg')
-        data['cfg']['calc'] = calc_profile(h['cfg']['calc'])
+        data['cfg']['calc'] = calc_profile(h['cfg']['calc'], data)
         cjs, ccss = calc_parts(data['cfg']['calc'])
         js, css = js + '\n' + cjs, css + '\n' + ccss
     spr, missing, shared = {}, [], 0
