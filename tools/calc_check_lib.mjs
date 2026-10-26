@@ -404,6 +404,13 @@ export async function setupCalc(page, { save = 'good.json', mine = ['party', 5],
   await page.settle();
 }
 
+// Taps a Field toggle. Narrow Fields show one side at a time (Player | Foe switch): the toggle's side is picked first.
+export async function tapField(page, key) {
+  const side = await page.value(`(()=>{const section=document.querySelector('[data-f="${key}"]')?.closest('section[data-field-side]');return section&&section.closest('.dfside.one')&&!section.classList.contains('on')?section.dataset.fieldSide:'';})()`);
+  if (side) await page.tap(`[data-a="fside"][data-v="${side}"]`);
+  await page.tap(`[data-f="${key}"]`);
+}
+
 // Opens the attacker's row in a slot (Change move, power, type, crit live in the row's details). Open rows stay open.
 export async function openSlot(page, slot) {
   const open = await page.value(`!!document.querySelector('.dres:not(.na) [data-a="chmv"][data-slot="${slot}"]')?.closest('.mr').classList.contains('open')`);

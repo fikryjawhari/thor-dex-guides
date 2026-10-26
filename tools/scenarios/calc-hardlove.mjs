@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {guideArg, readGuide, runChecks} from '../calc_check_lib.mjs';
+import {guideArg, readGuide, runChecks, tapField} from '../calc_check_lib.mjs';
 
 const file = guideArg(process.argv, 'dist/hardlove-gold.html');
 const guide = readGuide(file).data;
@@ -30,7 +30,7 @@ const checks = [{
     assert.ok(weather.o.some(([value]) => value === 'Snow'));
     assert.ok(!weather.o.some(([value]) => value === 'Hail'));
     for (const key of ['atkFlowerGift', 'defFlowerGift', 'atkPowerTrick', 'defPowerTrick', 'atkProtected', 'defProtected']) {
-      await page.tap(`[data-f="${key}"]`);
+      await tapField(page, key);
       assert.equal(await page.value(`CALC.state().field[${JSON.stringify(key)}]`), 1);
     }
     await page.reload();

@@ -2,7 +2,7 @@
 // 7 (HP workflow), 8 (crit per move), 9 (multi-hit), 10 (move swap), 11 (Mega), 13 (custom set), 16 (unknown set),
 // 23 (per-slot crit). Each check runs at 260 x 316 in normal and dvkb mode. Without cfg.calc: skip.
 import assert from 'node:assert/strict';
-import { attackerCrit, attackerRows, attackerSide, calcState, changeMove, EI_TRAINERS, fixturePatches, guideArg, openSlot, pickCell, prepareGuide, readGuide, runChecks, setupCalc, spinCap, touchBox } from '../calc_check_lib.mjs';
+import { attackerCrit, attackerRows, attackerSide, calcState, changeMove, EI_TRAINERS, fixturePatches, guideArg, openSlot, pickCell, prepareGuide, readGuide, runChecks, setupCalc, spinCap, touchBox, tapField} from '../calc_check_lib.mjs';
 
 const file = prepareGuide(guideArg(process.argv), { tag: 'calc-controls', edit: fixturePatches });
 if (!file) {
@@ -202,13 +202,13 @@ const checks = [
       await page.tap('.dres:not(.na) .rc', { index: 3 });
       await page.tap('.dfield > summary');
       const noScreen = await attackerRows(page);
-      await page.tap('.dtg button[data-f="defLightScreen"]');
+      await tapField(page, 'defLightScreen');
       const screened = await attackerRows(page);
       assert.equal(screened[0].hp, noScreen[0].hp, 'physical: no change from Light Screen');
       assert.equal(screened[3].hp, noScreen[3].hp, 'the crit row ignores the screen');
       const surf = range(noScreen[2].hp), surfNow = range(screened[2].hp);
       assert(Math.abs(surfNow[1] - surf[1] / 2) <= 1, `Surf (special, no crit) ${screened[2].hp} vs ${noScreen[2].hp}: want about half`);
-      await page.tap('.dtg button[data-f="defLightScreen"]');
+      await tapField(page, 'defLightScreen');
       assert.deepEqual(await attackerRows(page), noScreen, 'screen off: back to the start');
     },
   },

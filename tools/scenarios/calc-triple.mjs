@@ -13,7 +13,7 @@ const guide = readGuide(file).data;
 const sizes = [[260, 316], [480, 392], [537, 424], [832, 424], [832, 316]];
 const row = `[...document.querySelectorAll('.dres:not(.na) .mr')].find(r=>r.querySelector('.mv')?.textContent.trim()==='Triple Kick')`;
 const read = page => page.value(`(()=>{const r=${row};return {hp:r.querySelector('.r1 .hp').textContent,r2:r.querySelector('.r2').textContent,btn:r.querySelector('.rh')?.textContent,box:!!r.querySelector('[data-mo="hits"]')};})()`);
-const perHit = page => page.value(`(()=>{const r=${row};return [...r.querySelectorAll(".rolls")].map(d=>d.innerHTML);})()`).then(list => list.map(html => html.split('<br>')[0].split(': ')[1].split('–').map(Number)));
+const perHit = page => page.value(`(()=>{const r=${row};return [...r.querySelectorAll(".rolls")].map(d=>d.textContent);})()`).then(list => list.map(text => text.match(/Hit \d+: (\d+)–(\d+)/).slice(1).map(Number)));
 
 const checks = [{
   id: 'triple hit button',

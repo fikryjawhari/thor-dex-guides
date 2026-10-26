@@ -54,6 +54,32 @@ const fixtureChecks=[{
     await page.reload();
     assert.equal(await page.value('CALC.state().field.atkFocus'),1,'canonical field persists');
   },
+},{
+  id:'one-window',title:'an open card, Field and move each fit one window; Field toggles never break a word',
+  sizes:[[260,316],[480,316],[537,316],[832,316],[480,392],[537,424],[832,424]],
+  run:async page=>{
+    await seed(page,['Body Slam','Rock Blast','Crunch','Rest']);
+    const room='innerHeight-8';
+    await page.tap('[data-a=eopen][data-s=mine]');
+    assert.ok(await page.value(`document.querySelector('.cc[data-s=mine]').offsetHeight<=${room}`),'open card: '+await page.value(`document.querySelector('.cc[data-s=mine]').offsetHeight`));
+    await page.tap('[data-a=eopen][data-s=mine]');
+    for(let index=0;index<await page.count('.dres:not(.na) .mr:not(.em)');index++){
+      await page.tap('.dres:not(.na) .mr:not(.em) > .mm',{index});
+      assert.ok(await page.value(`document.querySelectorAll('.dres:not(.na) .mr:not(.em)')[${index}].offsetHeight<=${room}`),'open move '+index);
+      await page.tap('.dres:not(.na) .mr:not(.em) .r1',{index});
+    }
+    await page.tap('.dfield > summary');
+    assert.ok(await page.value(`document.querySelector('details.dfield').offsetHeight<=${room}`),'open Field: '+await page.value(`document.querySelector('details.dfield').offsetHeight`));
+    const broken=await page.value(`[...document.querySelectorAll('.dfield .dtg button')].filter(button=>button.offsetParent).filter(button=>{const range=document.createRange(),words=[];const text=button.firstChild;let start=0;for(const word of text.textContent.split(' ')){range.setStart(text,start);range.setEnd(text,start+word.length);if(range.getClientRects().length>1)words.push(word);start+=word.length+1;}return words.length;}).map(button=>button.textContent)`);
+    assert.deepEqual(broken,[],'no word breaks across lines');
+    const one=await page.value('document.querySelector(".dfside").classList.contains("one")');
+    if(one){
+      assert.equal(await page.count('.dfside section:not(.on) button'),await page.value('document.querySelectorAll(".dfside section:not(.on) button").length'));
+      await page.tap('[data-a=fside][data-v=def]');
+      assert.ok(await page.value('document.querySelector("section[data-field-side=def]").offsetParent!==null&&document.querySelector("section[data-field-side=atk]").offsetParent===null'),'Foe side shown');
+      await page.tap('[data-a=fside][data-v=atk]');
+    }else assert.equal(await page.value('getComputedStyle(document.querySelector(".dfsw")).display'),'none','both sides shown, no switch');
+  },
 }];
 const seed=async(page,moves)=>{
   await page.route('#/calc');
@@ -174,19 +200,32 @@ const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),{
   run:async page=>{
     await seed(page,['Tackle']);
     await page.value("CALC.state().custom.at(-1).a=AB.findIndex(entry=>entry[0]==='Download');CALC.render()");
-    await page.tap('[data-a=eopen][data-s=mine]');
-    assert.match(await page.text('[data-a=download]'),/Auto → (Atk|Sp. Atk)/);
-    for(const [value,label] of [['atk','Atk'],['spa','Sp. Atk'],['off','None'],['','Auto']]){
+    // Ability controls sit on the header line left of Edit, and the card is no taller than one without them
+    const headerHeight=()=>page.value('[...document.querySelectorAll(".cc .l1")].map(line=>line.offsetHeight)');
+    const [mineHeader,foeHeader]=await headerHeight();
+    assert.equal(mineHeader,foeHeader,'Download does not make the header taller');
+    assert.ok(await page.value('document.querySelector(".cc[data-s=mine] .l1 [data-a=download]").compareDocumentPosition(document.querySelector(".cc[data-s=mine] .l1 .stb"))&Node.DOCUMENT_POSITION_FOLLOWING'),'Download left of Edit');
+    assert.match(await page.text('[data-a=download]'),/^A·(Atk|SpA)$/);
+    assert.match(await page.value('document.querySelector("[data-a=download]").title'),/Download: Auto → (Atk|Sp. Atk)/);
+    for(const [value,label] of [['atk','M·Atk'],['spa','M·SpA'],['off','None']]){
       await page.tap('[data-a=download]');
       assert.equal(await page.value("CALC.state().custom.at(-1).dl||''"),value);
-      assert.ok((await page.text('[data-a=download]')).includes(label));
+      assert.equal(await page.text('[data-a=download]'),label);
     }
+    await page.tap('[data-a=download]');
+    assert.equal(await page.value("CALC.state().custom.at(-1).dl||''"),'');
+    await page.tap('[data-a=eopen][data-s=mine]');
+    assert.equal(await page.count('.ed [data-a=download]'),0,'Download is not inside Edit');
+    await page.tap('[data-a=eopen][data-s=mine]');
     if(guide.AB.some(entry=>entry[0]==='Intrepid Sword')){
       await page.value("CALC.state().custom.at(-1).a=AB.findIndex(entry=>entry[0]==='Intrepid Sword');CALC.render()");
+      assert.equal(await page.value('document.querySelector(".cc[data-s=mine] .l1 [data-e=entry]").checked'),true,'on by default');
+      assert.deepEqual(await headerHeight(),[mineHeader,foeHeader],'the entry box does not make the header taller');
       await page.tap('[data-e=entry][data-s=mine]');
       assert.equal(await page.value('CALC.state().custom.at(-1).entry'),false);
+      await page.tap('[data-e=entry][data-s=mine]');
+      assert.equal(await page.value('CALC.state().custom.at(-1).entry'),undefined);
     }
-    await page.tap('[data-a=eopen][data-s=mine]');
     await page.value("CALC.state().custom.at(-1).a=P.find(entry=>entry.n==='Snorlax').a[0];CALC.state().custom.at(-1).m=[M.indexOf('Frost Breath')];CALC.render()");
     const crit='.dres:not(.na) .mr:first-child .rc';
     if(guide.M.includes('Frost Breath')&&guide.MV[guide.M.indexOf('Frost Breath')].cr===6){
