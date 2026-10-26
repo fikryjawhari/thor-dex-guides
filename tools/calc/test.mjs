@@ -884,6 +884,57 @@ await test('KO residuals read both cards and the defending field only', () => {
   assert.equal(JSON.stringify({attacker, defender}), original);
 });
 
+await test('automatic entry: Protosynthesis and Quark Drive activate only with their trigger', () => {
+  engine.init(data, profiles.expansion);
+  const tusk = set('Great Tusk', {ab: ability('Protosynthesis')});
+  const target = set('Blastoise');
+  const damage = (user, field = {}) => engine.calc(user, target, slot('Earthquake'), field).max;
+  const base = damage(tusk);
+  assert.ok(damage(tusk, {weather: 'Sun'}) > base);
+  assert.ok(damage({...tusk, it: 'Booster Energy'}) > base);
+  assert.equal(damage(tusk, {weather: 'Rain'}), base);
+  const quark = set('Iron Bundle', {ab: ability('Quark Drive'), ev: [0, 0, 0, 0, 0, 252]});
+  assert.ok(engine.speed(quark, {terrain: 'Electric'}) > engine.speed(quark));
+  assert.ok(engine.speed({...quark, it: 'Booster Energy'}) > engine.speed(quark));
+});
+
+await test('automatic entry: Intimidate reactions, marks, caps, off switch and speed never write input', () => {
+  const guide = {...data, AB: [...data.AB, ['Guard Dog', ''], ['Mirror Armor', '']]};
+  const ability = name => guide.AB.findIndex(entry => entry[0] === name);
+  engine.init(guide, profiles.expansion);
+  const holder = set('Gyarados', {ab: ability('Intimidate')});
+  const target = name => set('Blastoise', {ab: ability(name)});
+  for (const [name, mark] of [['Simple', -2], ['Contrary', 1], ['Defiant', 1], ['Guard Dog', 1],
+    ['Clear Body', 0], ['White Smoke', 0], ['Full Metal Body', 0], ['Hyper Cutter', 0],
+    ['Inner Focus', 0], ['Oblivious', 0], ['Own Tempo', 0], ['Scrappy', 0]]) {
+    assert.equal(engine.intimidate(holder, target(name)).def, mark, name);
+  }
+  assert.deepEqual(plain(engine.intimidate(holder, target('Mirror Armor'))), {atk: -1, def: 0});
+  assert.equal(engine.intimidate(holder, set('Blastoise', {it: 'Clear Amulet'})).def, 0);
+  assert.equal(engine.intimidate({...holder, intim: false}, target('Simple')).def, 0);
+  for (const other of [target('Rattled'), set('Blastoise', {it: 'Adrenaline Orb'})]) {
+    assert.ok(engine.speed(other, {}, 'def', holder) > engine.speed(other));
+  }
+  const inputs = JSON.stringify({holder, target: target('Competitive')});
+  const result = engine.calc(holder, target('Competitive'), slot('Tackle'));
+  assert.ok(result.pre.some(event => event.src === 'Intimidate' && event.by === -1));
+  assert.ok(result.pre.some(event => event.src === 'Competitive' && event.stat === 'spa' && event.by === 2));
+  assert.equal(JSON.stringify({holder, target: target('Competitive')}), inputs);
+});
+
+await test('automatic entry: generation defaults, setterStays and added crit stages', () => {
+  for (const gen of [4, 5, 6, 7, 8, 9]) {
+    engine.init(data, {...profiles.expansion, gen});
+    assert.equal(engine.settings().setterStays, gen <= 5);
+    const result = engine.calc(set('Blastoise'), set('Blastoise'), slot('Tackle'), {atkCritBonus: 1});
+    assert.equal(result.crit.stage, 1);
+    assert.equal(engine.calc(set('Blastoise'), set('Blastoise'), slot('Tackle'), {atkCritBonus: 99}).crit.stage,
+      gen <= 5 ? 4 : 3);
+  }
+  engine.init(data, {...profiles.expansion, setterStays: true});
+  assert.equal(engine.settings().setterStays, true);
+});
+
 await test('initialisation and calculations leave guide/profile inputs unchanged', () => {
   assert.equal(JSON.stringify({data, profiles}), unchanged);
 });

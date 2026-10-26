@@ -153,6 +153,7 @@ function pokemon(set) {
     ability: abilityName || 'Guide no ability', item: itemName,
     status, ivs: statTable(set.iv, 31), evs: statTable(profile.evs === false ? undefined : set.ev, 0),
     boosts: statTable(set.stg, 0), curHP: set.hp,
+    boostedStat: ['Protosynthesis', 'Quark Drive'].includes(abilityName) ? 'auto' : undefined,
   });
   if (set.hp !== undefined) result.originalCurHP = Math.max(0, Math.min(result.maxHP(), set.hp));
   return result;
@@ -203,9 +204,10 @@ function fieldPokemon(set, values, side) {
   return mon;
 }
 
-function speed(set, values = {}, side = 'atk') {
+function speed(set, values = {}, side = 'atk', otherSet = null) {
   const mon = fieldPokemon(set, values, side);
   const field = battleField(values);
+  if (otherSet) intimidate(fieldPokemon(otherSet, values, side === 'atk' ? 'def' : 'atk'), mon, otherSet, [], side, field);
   checkAirLock(mon, field);
   checkForecast(mon, field.weather);
   checkItem(mon, field.isMagicRoom);
@@ -492,7 +494,8 @@ function critChance(entry, moveData, attacker, defender, values) {
   const species = toID(attacker.name);
   const itemStage = typeof item === 'number' ? item
     : Object.entries(item || {}).find(([name]) => species.includes(toID(name)))?.[1] || 0;
-  const counted = (own < 6 ? own : 0) + (values[FOCUS.atk] ? 2 : 0) + itemStage + (attacker.hasAbility('Super Luck') ? 1 : 0);
+  const counted = (own < 6 ? own : 0) + (values[FOCUS.atk] ? 2 : 0) + itemStage + (attacker.hasAbility('Super Luck') ? 1 : 0)
+    + Math.max(0, Math.trunc(Number(values.atkCritBonus)) || 0);
   const stage = Math.min(table.length - 1, counted);
   const blocked = defender.hasAbility('Battle Armor', 'Shell Armor')
     && !attacker.hasAbility('Mold Breaker', 'Teravolt', 'Turboblaze');
@@ -539,11 +542,48 @@ function stageChanger(pre) {
 
 const holdsItem = (mon, field) => !!mon.item && !field.isMagicRoom && !mon.hasAbility('Klutz');
 
+function intimidate(source, target, set, pre, who, field, reflected = false) {
+  if (!source.hasAbility('Intimidate') || set.intim === false) return;
+  if (target.hasAbility('Clear Body', 'White Smoke', 'Full Metal Body', 'Hyper Cutter')
+    || (profile.gen >= 8 && target.hasAbility('Inner Focus', 'Oblivious', 'Own Tempo', 'Scrappy'))
+    || (profile.gen >= 9 && holdsItem(target, field) && target.hasItem('Clear Amulet'))) return;
+  if (profile.gen >= 8 && target.hasAbility('Mirror Armor') && !reflected) {
+    intimidate({...target, hasAbility: name => name === 'Intimidate'}, source, {}, pre,
+      who === 'atk' ? 'def' : 'atk', field, true);
+    return;
+  }
+  const change = stageChanger(pre);
+  const before = target.boosts.atk;
+  change(target, who, 'atk', profile.gen >= 9 && target.hasAbility('Guard Dog') ? 1 : -1, 'Intimidate');
+  if (target.boosts.atk < before) {
+    if (profile.gen >= 5 && target.hasAbility('Defiant')) change(target, who, 'atk', 2, 'Defiant');
+    if (profile.gen >= 6 && target.hasAbility('Competitive')) change(target, who, 'spa', 2, 'Competitive');
+  }
+  if (profile.gen >= 8 && target.hasAbility('Rattled')) change(target, who, 'spe', 1, 'Rattled');
+  if (profile.gen >= 7 && holdsItem(target, field) && target.hasItem('Adrenaline Orb')) change(target, who, 'spe', 1, 'Adrenaline Orb');
+}
+
+function intimidateMarks(atk, def, values = {}) {
+  const mons = [fieldPokemon(atk, values, 'atk'), fieldPokemon(def, values, 'def')];
+  const pre = [];
+  const field = battleField(values);
+  intimidate(mons[0], mons[1], atk, pre, 'def', field);
+  intimidate(mons[1], mons[0], def, pre, 'atk', field);
+  return Object.fromEntries(['atk', 'def'].map(who => [who,
+    pre.filter(event => event.who === who && event.stat === 'atk').reduce((sum, event) => sum + event.by, 0)]));
+}
+
+function settings() {
+  return {setterStays: profile.setterStays ?? profile.gen <= 5};
+}
+
 // First-hit events, applied to the battlers' stages before the calculation.
 function firstHitStages(attacker, defender, atk, def, slot, move, field, own) {
   const pre = [];
   const change = stageChanger(pre);
   const sides = [[attacker, 'atk', atk, defender], [defender, 'def', def, attacker]];
+  intimidate(attacker, defender, atk, pre, 'def', field);
+  intimidate(defender, attacker, def, pre, 'atk', field);
   for (const [mon, who] of sides) {
     const seed = SEEDS[mon.item];
     if (profile.gen >= 7 && seed && holdsItem(mon, field) && field.hasTerrain(seed[0])) {
@@ -859,4 +899,4 @@ function hp(atk, def, slot, values = {}, dealt = 0) {
   return {v: parts.reduce((sum, value) => sum + value, 0), l: name};
 }
 
-window.DMG = {init, stats, calc, residual, speed, entry, hp};
+window.DMG = {init, stats, calc, residual, speed, entry, hp, settings, intimidate: intimidateMarks};
