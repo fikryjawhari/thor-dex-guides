@@ -60,7 +60,9 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    Open items session 2026-10-26 (Opus): Return / Frustration 102 by default; verification list settled (two
    engine fixes: Kee / Maranga once, after the move in Hardlove; Ash-Greninja Water Shuriken; Loaded Dice Population
    Bomb); HP moves (fixed damage, Counter's Taken box, one-tap use with your recoil / drain / heal, exact Dealt / You
-   entry; `plans/calc-hp-moves.md`). Next: the Emerald Imperium scope session.
+   entry; `plans/calc-hp-moves.md`, its Follow-ups list the settled next fixes: Disguise / Ice Face, Rocky Helmet /
+   Rough Skin, crash damage, Swallow / Spit Up Stockpile count). Next: merge the EI scope decide session, reconcile its
+   files with these notes, then build.
    Built phone previews:
    https://windows-pc.tail1846b8.ts.net/preview/calc-field-states.html (EI),
    https://windows-pc.tail1846b8.ts.net/preview/calc-field-hardlove.html (Hardlove),

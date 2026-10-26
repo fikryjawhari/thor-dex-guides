@@ -6,9 +6,10 @@
   after the move, `over.afterMove`; Gems boost every hit, as stock does, checked in Hardlove's source; Ash-Greninja's
   Water Shuriken power 20 / fixed x3; Loaded Dice Population Bomb 1 / 4-10; Emperor's Presence sides checked in the
   page). HP moves built from `plans/calc-hp-moves.md` (mockup `plans/calc-hp-moves-mockup/`): fixed damage, Taken box,
-  `DMG.hp`, the one-use amount and Dealt / You entry. Scenario `tools/scenarios/calc-moves.mjs`. Left open: Disguise /
-  Ice Face don't absorb the first hit (stock doesn't model them; the user's call), Floral Healing / Heal Pulse, crash
-  damage, Rocky Helmet. Next on this branch: the Emerald Imperium scope session.
+  `DMG.hp`, the one-use amount and Dealt / You entry. Scenario `tools/scenarios/calc-moves.mjs`. Follow-ups: `plans/calc-hp-moves.md` → Follow-ups (the
+  user's fixes for Disguise / Ice Face, Rocky Helmet / Rough Skin, crash damage, Swallow / Spit Up; Floral Healing /
+  Heal Pulse recorded, not modelled). Next on this branch: merge the EI scope decide session (the merge session
+  reconciles its files with these notes), then build it.
 - **Merged 2026-10-26**: `worktree-damage-calc-toggles` is merged into `worktree-damage-calc` and retired. Work on
   `worktree-damage-calc` (`.claude/worktrees/damage-calc`). Pre-merge review fixes: stock Iron Ball damage on
   Flying dual types, immunity-blocked hazard parts stay pending (entry markers `v:2`, old markers migrate on

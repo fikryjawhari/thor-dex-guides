@@ -34,3 +34,25 @@ Mockup: `plans/calc-hp-moves-mockup/` (real EI build + `mock.js`, panel A/B). Th
 `tools/calc/test.mjs` (fixed damage, immunities, `DMG.hp` per group, Rock Head / Big Root / Liquid Ooze, weather heals),
 `tools/scenarios/calc-moves.mjs` (fixed rows, chip tap both directions, exact entry both ways, Taken box), all four
 guides, viewer sizes normal / dvkb.
+
+## Follow-ups (2026-10-26, after the build; for the next build session)
+Built and checked: everything above. Settled by the user, not built yet:
+1. **Disguise / Ice Face**: the first hit is absorbed (Disguise: Mimikyu undisguised; Ice Face: physical hits on Eiscue
+   Ice Face). Stock doesn't model them, so multi-hit totals, KO text and the one-use tap count hit 1 at full damage.
+   Build: hit 1 does 0 while the form is intact (Gen 8+ Disguise also costs 1/8 max HP), later hits full; a state for
+   "already broken" (the card's existing ability checkbox pattern, like Disguised for Illusion). Check each hack's
+   source (EI expansion, Hardlove hg-engine, Gen 7 for Photonic; Eternal X has neither: Gen 6).
+2. **Rocky Helmet / Rough Skin / Iron Barbs**: contact damage to the attacker (Helmet 1/6, the abilities 1/8 (1/16 in
+   Gen 4) of the attacker's max HP, per contact hit, Magic Guard none). Add to `DMG.hp` for contact moves, counted per
+   hit (multi-hit, Parental Bond), so the one-use tap includes it.
+3. **Crash damage on a miss** (Jump Kick, High Jump Kick, Axe Kick, Supercell Slam): a separate `−HP` amount like the
+   recoil one, labelled as the miss; tapping it does no damage to the target, only the crash to the user (Gen 5+ half
+   max HP; Gen 4 the move's damage based rule, check Hardlove's source; Magic Guard none).
+4. **Swallow / Spit Up**: a Stockpile count (1-3) in the opened row's details (not its own field elsewhere): Swallow
+   heals 1/4, 1/2, full; Spit Up power 100 × count. Now: Swallow assumes one Stockpile; Spit Up shows — until a power
+   is typed.
+5. **Floral Healing / Heal Pulse**: heal the target, which only matters in Doubles (an ally); no ally is modelled, so
+   recorded only. Same for Life Dew / Jungle Healing's ally share (only the user's own heal is shown).
+Other notes from the build, not decided: Psywave's 16 rolls are an even spread over its 101 (Gen 5+) / 11 (Gen 4)
+outcomes; Counter's Taken uses the Power box (`slot.bp`), so Reset clears it; Pain Split / Rest / Wish never use the
+exact entry.
