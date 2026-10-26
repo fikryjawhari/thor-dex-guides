@@ -1,4 +1,5 @@
 [
+  {"k":"trickRoom","l":"Trick Room","side":"field","group":"battle","gen":4},
   {"k":"waterSport","l":"Water Sport","side":"field","type":"state","group":"battle","gen":4,"moves":["Water Sport"]},
   {"k":"mudSport","l":"Mud Sport","side":"field","type":"state","group":"battle","gen":4,"moves":["Mud Sport"]},
   {"k":"powerSplit","l":"Power Split","side":"field","type":"state","group":"battle","gen":5,"moves":["Power Split"]},
