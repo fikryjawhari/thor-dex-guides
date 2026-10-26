@@ -1,7 +1,8 @@
 """Preserve documented trainer field conditions for a future UI, never infer them from teams.
 
 python -I tools/trainer_fields.py [hack ...] [--write]
-Rebuilds call annotate() before schema ordering. No runtime consumer applies these records yet.
+Rebuilds call annotate() before schema ordering. The damage calc applies these records as area conditions,
+see template/README.md → Damage calculator. Team-variant labels (`label: true`) carry no effect and are not shown.
 """
 import argparse
 import copy
@@ -22,6 +23,9 @@ def evidence(text, scope):
     """Keep the complete note/tag; normalise only explicit statements, not strategy labels."""
     if not CANDIDATE.search(text):
         return None
+    if re.fullmatch(r'(?:Sydney|Sidney|Glacia) (?:Tailwind|TrickRoom|Sun|Snow)\.?', text.strip(), re.I):
+        # Team-variant label (the teams show it), not a condition: no effect, nothing to review.
+        return dict(scope=scope, text=text, effects=[], review=False, label=True)
     effects = []
 
     def add(kind, value, **details):
@@ -30,6 +34,10 @@ def evidence(text, scope):
     weather = re.search(r'\bPermanent(?: OW)? (Rain|Sun|Snow|Sandstorm|Fog)\b', text, re.I)
     if weather:
         add('weather', weather[1].title(), duration='permanent')
+    if re.search(r'\bPermanent Sand\b', text, re.I):
+        add('weather', 'Sandstorm', duration='permanent')
+    if re.fullmatch(r'Trick Room\.?', text.strip(), re.I):
+        add('room', 'Trick Room')
     if re.search(r'\bPermanent OW Thunderstorm:\s*Rain and Electric Terrain\b', text, re.I):
         add('weather', 'Rain', duration='permanent')
         add('terrain', 'Electric', duration='permanent')
@@ -46,7 +54,7 @@ def evidence(text, scope):
         for hazard in ('Spikes', 'Toxic Spikes'):
             add('hazard', hazard, side='player', layers=1, timing='after-first-send-out')
     if re.search(r'\+1 crit chance\b', text, re.I):
-        add('critical-bonus', 1)
+        add('critical-bonus', 1, side='opponent', guess=True)
     incomplete = any(effect['kind'] == 'critical-bonus' or effect['value'] == 'random' for effect in effects)
     return dict(scope=scope, text=text, effects=effects, review=not effects or incomplete)
 
