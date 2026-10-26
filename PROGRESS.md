@@ -63,9 +63,11 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    sessions load is the 2026-10-18 hand-build version. Re-upload the repo copy (zip with forward-slash paths).
 5. **T3 worktree setup hook** (the user, in T3's project settings; sessions can't change them): a project script
    `python -I tools/worktree_setup.py`, icon Configure, run on worktree create. Until then run it by hand (CLAUDE.md → Git).
-6. **Source updates found 2026-10-24** (`check_updates.py`, not accepted): Emerald Imperium's calc backup index
-   changed (its trainer backup didn't; check whether the guide needs it); SoulGold's data files changed (Mega Lopunny
-   innates, Clefable / Mega Clefable and Unown learnsets, ability usage): re-fetch before its guide.
+6. **Source updates found 2026-10-24** (`check_updates.py`): SoulGold's data files changed (Mega Lopunny innates,
+   Clefable / Mega Clefable and Unown learnsets, ability usage): re-fetch before its guide. Emerald Imperium's was
+   accepted 2026-10-26 on `worktree-damage-calc` (hzla's backup index: other hacks' titles and a variant list, EI's
+   entry `imp13` EVs / no EVs; `imp_1-3.js` unchanged; the calc oracle pin ff6c3e3 differs from the new head only in
+   a battle-log UI fix): no re-fetch, no fixture change.
 7. **New-guide scaffold** (`tools/new_hack.py <hack> --like <built hack>`): build it during the first new guide, from
    what that session actually copies.
 

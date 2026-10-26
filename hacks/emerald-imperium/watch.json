@@ -69,12 +69,12 @@
       "state": {
         "sha": "361c7d51bb5c301d9917f22222703db2a36e908a",
         "files": {
-          "src/data/speciesData.json": "c24e64fac48a6e2ea7d6f3eab13e85d61493daea",
-          "src/data/moveData.json": "6b05e53a5c70ed9f8e26ffe2b7171722ef65f5cf",
           "src/data/abilityData.json": "9fde359e9edda59894e8ccebfab2e1951b97114a",
           "src/data/itemData.json": "aee5bda987107b506a66e7186ccd3c9b3c5024cc",
-          "src/data/typeData.json": "e45f0f858efa6d517a4624171780e5e4be73ece1",
+          "src/data/moveData.json": "6b05e53a5c70ed9f8e26ffe2b7171722ef65f5cf",
+          "src/data/speciesData.json": "c24e64fac48a6e2ea7d6f3eab13e85d61493daea",
           "src/data/speciesLabelMap.json": "b36e6ba3317a5f329fcecb3d7571c615ca5bd092",
+          "src/data/typeData.json": "e45f0f858efa6d517a4624171780e5e4be73ece1",
           "src/data/wild_encounters.json": "c84fff60fb55b21ed57ec20d38b1525c44e883c5"
         }
       }
@@ -89,10 +89,10 @@
         "backups/title_to_backup_mappings.js"
       ],
       "state": {
-        "sha": "f3f4140feb2458bb9f9aecbeb06d6ced6b217ee0",
+        "sha": "bae5fc423b755c6b8fd3d564d350da38cc3513df",
         "files": {
           "backups/imp_1-3.js": "68619e23ae3408e306e415efdbe7929508a42cdf",
-          "backups/title_to_backup_mappings.js": "63ed6de244936668748a51e3f96bbbc0a556f3e9"
+          "backups/title_to_backup_mappings.js": "8099b51e0341561d9e1bbd0b3a0662301b928ba6"
         }
       }
     },
