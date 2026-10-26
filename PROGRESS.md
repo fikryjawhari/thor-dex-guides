@@ -40,8 +40,11 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
 2. **Damage calc with save import** (start every calc session from `plans/damage-calc-sessions.md`; `plans/damage-calc.md`; branch `worktree-damage-calc`, pushed, not merged).
-   Compact UI and field-state builds complete on `worktree-damage-calc-toggles` (Sol, 2026-10-26). The user
-   approved the corrected phone previews and requested a commit; merge happens in a separate session.
+   Compact UI and field-state builds (Sol, 2026-10-26) merged from `worktree-damage-calc-toggles` into
+   `worktree-damage-calc` 2026-10-26 after a pre-merge review; the toggles worktree is retired. The review's fixes:
+   stock Iron Ball damage on Flying dual types (12 parity cases), immunity-blocked hazard parts stay pending
+   (v2 entry markers, old saves migrate), Loaded Dice hit limits off under Klutz / Magic Room. Engine 108 groups /
+   53 parity; calc-field-states and calc-state pass on all four guides.
    The earlier engine pass merged at `f3203b1`.
    Header placement, compact editors, total-hit damage, Draco and crit/pre controls are wired. New folded States /
    Turn end / Hazards controls stay inside the minimum window. Phone feedback fixes preserve field-toggle row
@@ -53,7 +56,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    Field-state build/audit evidence: `plans/calc-field-states.md`. Earlier compact-pass gate: 88/117, with eight
    expected Calc-only differences and 21 baseline EI-only fixture failures on other guides (details in
    `plans/calc-state-toggles.md`). Original engine follow-ups and trainer-field automation remain separate:
-   `plans/calc-handover.md`. Merge this tab into `worktree-damage-calc` only when authorised, not directly to main.
+   `plans/calc-handover.md`. The field / toggle plans are kept until `worktree-damage-calc` merges into main.
    Built phone previews:
    https://windows-pc.tail1846b8.ts.net/preview/calc-field-states.html (EI),
    https://windows-pc.tail1846b8.ts.net/preview/calc-field-hardlove.html (Hardlove),
@@ -72,7 +75,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    result `bp` / `crit {stage, p, forced}` / `pre`, `MV.cr` in every calc guide's data, 2322 state fixtures
    (`calc_states.json`, in `npm test`); contract in `tools/calc/README.md`. The toggle UI build now uses these inputs
    and results, including per-Pokémon Download and the Intrepid Sword / Dauntless Shield off switch (`dl`, `entry`).
-   Then trainer-field / turn-order UI decide sessions, merge, then save readers.
+   Then Return / Frustration defaults, mechanics verification, trainer-field automation decide/build, merge to
+   main, then save readers. Extra turn-order controls aren't needed (faster-Speed colour accepted).
    In-game tests to run on the Thor: each guide's notes.md → Damage calc → In-game tests.
    Built 2026-10-25 (step 1 of its Order): `@smogon/calc` engine using each guide's own data (`tools/calc/`, 81 tests),
    six base profiles, the calc page from the UI spec (all 26 spec checks pass: `tools/scenarios/calc-*.mjs`), the import

@@ -70,10 +70,10 @@ the calc scenarios for the hack. Put the build on the phone preview (`python -I 
 calc-build.html --frame`) when the page changed.
 
 ## Status
-- Field states built and phone-preview approved 2026-10-26 on `worktree-damage-calc-toggles`: stacked state / turn-end controls,
+- Field states built and phone-preview approved 2026-10-26, merged into this branch from `worktree-damage-calc-toggles` (retired) after a pre-merge review: stacked state / turn-end controls,
   one-shot entry hazards with independent HP/status/Web reapplication, source gating and engine-only Steelsurge.
   Full engine tests pass, including stock parity and all four profiles' state fixtures. Browser audit and phone
-  preview evidence: `plans/calc-field-states.md`. Merge next into `worktree-damage-calc` only when authorised;
+  preview evidence: `plans/calc-field-states.md`; review fixes: `plans/calc-handover.md` → Start here;
   Return / Frustration, trainer-field automation and the existing in-game verification list remain separate.
 - Mechanics: Emerald Imperium refined 2026-10-25 (109 fixtures: 100 exact hzla matches, nine documented differences).
   Conditional Bull/Quill Rush and Illusion, allied Emperor's Presence, integer Draco category selection/inversion,
@@ -100,7 +100,7 @@ calc-build.html --frame`) when the page changed.
   domcompare clean on the other guides).
 - Engine pass (2026-10-26, done; `plans/calc-engine-pass.md` → Progress): battle state, crit stages (`MV.cr`) and
   stat changes before the hit in the engine, 2322 fixtures in `calc_states.json`; `tools/calc/README.md` has the
-  contract. Next: the state-toggle UI build (`plans/calc-state-toggles.md`, `worktree-damage-calc-toggles`), then the
-  trainer-field / turn-order UI decide sessions, merge, then save readers and the file picker.
+  contract. The state-toggle UI is built and merged here. Next: Return / Frustration defaults, mechanics
+  verification, trainer-field automation decide/build, merge to main, then save readers and the file picker.
 - Readers: none (only the `test` reader). File picker: not started.
 - Merge: not merged; waiting on the mechanics.

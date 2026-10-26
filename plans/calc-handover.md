@@ -1,9 +1,12 @@
 # Calculator handover (2026-10-26)
 
 ## Start here
-- Worktree: `C:\Users\fikry\.t3\worktrees\thor-dex-guides\worktree-damage-calc-toggles`.
-- Branch: `worktree-damage-calc-toggles`, a tab of `worktree-damage-calc`. Keep the T3 thread bound to this tree;
-  do not silently change checkouts. Use Sol in the main chat, keep discussion short, check both claim paths and
+- **Merged 2026-10-26**: `worktree-damage-calc-toggles` is merged into `worktree-damage-calc` and retired. Work on
+  `worktree-damage-calc` (`.claude/worktrees/damage-calc`). Pre-merge review fixes: stock Iron Ball damage on
+  Flying dual types, immunity-blocked hazard parts stay pending (entry markers `v:2`, old markers migrate on
+  render), Loaded Dice limits off under Klutz / Magic Room; regressions in `test.mjs`, `calc-field-states.mjs`,
+  `calc-state.mjs`. Below is the tab's handover as written; "this tab" now means the calc branch.
+- Keep the T3 thread bound to its tree; do not silently change checkouts. Use Sol in the main chat, keep discussion short, check both claim paths and
   claim `.claude/claim`. Only one session edits the template or engine/shared interfaces at a time.
 - The compact UI pass and then `plans/calc-field-states.md` were built on 2026-10-26. The user approved the
   corrected phone previews and authorised committing the field-state build, including engine changes.
