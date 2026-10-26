@@ -114,7 +114,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
   run:async page=>{
     await seed(page);
     await page.tap('.dfield > summary');
-    assert.ok(await page.value('document.querySelector(".dfb").scrollHeight<=document.querySelector(".dfb").clientHeight+1'),'closed groups fit without internal scrolling');
+    assert.ok(await page.value('document.querySelector(".dfield").offsetHeight<=innerHeight-8'),'automatic source lines and closed groups fit one window, with internal scrolling if needed');
     assert.equal(await page.count('[data-f$=Steelsurge]'),0,'steel hazard is engine-only');
     assert.equal(await page.count('[data-f=atkProtect]'),guide.cfg.calc.zmove?1:0);
     if(!guide.cfg.calc.zmove)assert.equal(await page.count('[data-f$=Protected]'),0,'no legacy Protect outside Z profiles');

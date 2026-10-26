@@ -21,7 +21,7 @@ const checks = [{
     await setupCalc(page, {mine: ['party', 0]});
     // the HP lines' turn-end amounts (.cc), not the move rows' HP chips, which share the class
     assert.equal(await page.count('.cc .dturn'),0,'no amount without residuals');
-    await page.value("CALC.state().field.weather='Sand';CALC.render()");
+    await page.value("CALC.state().fman.push('weather');CALC.state().field.weather='Sand';CALC.render()");
     assert.equal(await page.count('.cc .dturn'),1,'only the affected side has a residual');
     assert.equal(await page.count('.cc[data-s=foe] .cl .dturn'),1,'foe amount belongs to its HP line');
     const hp=Number(await page.value('document.querySelector("[data-hp=foe]").value'));

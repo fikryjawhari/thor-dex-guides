@@ -34,7 +34,7 @@ const checks = [
       assert.equal(await page.count('[data-f="magicRoom"]'), 0, 'the removed toggle is gone');
       const weatherOptions = await page.value(`[...document.querySelector('select[data-f="weather"]').options].map(o=>o.value)`);
       assert(weatherOptions.includes('Hail'), `the added weather is offered: ${weatherOptions}`);
-      assert.deepEqual(weatherOptions, entries.find(entry => entry.k === 'weather').o.map(([value]) => value), 'every profile option, in order');
+      assert.deepEqual(weatherOptions, ['@auto', ...entries.find(entry => entry.k === 'weather').o.map(([value]) => value)], 'Auto then every profile option, in order');
 
       const surfBefore = (await attackerRows(page))[2];
       assert.equal(surfBefore.name, 'Surf', 'the Water move is row 3 of Cloyster');

@@ -66,7 +66,7 @@ Mega form clears this state. Controls do not change the attack direction. `categ
 Invert category checkbox in their move details: a compact P/S · A/I button above Crit also toggles it while collapsed.
 The tooltip spells out category, Auto/Inverted and ties. The ability boxes are battle state (scratch, see Fight
 state); the category flag is a per-slot move override and is stored. EI also exposes allied Emperor's Presence per side;
-it only affects doubles. Trainer `field` evidence is still not automatically consumed. Effective priority is an
+it only affects doubles. Effective priority is an
 engine result, not a claim about which move should happen first; the faster Speed colour is the current UI.
 Opening Edit at wide sizes opens both populated editors; closing either closes both. Full form names appear inside
 Edit. The team area's height is based on closed cards and move rows, so edits/residuals never enlarge it or change
@@ -113,7 +113,25 @@ inspection. Loaded Dice restricts standard 2-5-hit choices to 1/4/5; Skill Link 
 **Field**: a full-width Singles/Doubles segment, then shared Weather/Terrain and global toggles, followed by stable
 Player/Foe columns. Stored `atk*` means Player and `def*` means Foe; the page remaps inputs for foe attacks. Old
 attacker-relative state migrates once, using its saved direction. Focus Energy is offered on both sides in every
-profile. Automatic trainer/ability/item field provenance remains a later decide/build, not inferred here.
+profile. Weather / terrain layers are manual (this fight), then the most recent entering ability setter, then
+deduplicated trainer / section `field` evidence, then none. The first select option is `Auto: <value>` (dashed);
+manual selections have an accent border. The source line names area / setter / manual provenance; **Auto** clears
+every manual Field override. Simultaneous leads resolve in Speed order, slower setter winning (reversed under
+Trick Room); primal weather resists ordinary setters. `DMG.settings().setterStays` controls whether a departing
+setter leaves its layer behind. A fainted entrant sets nothing. Area evidence also supplies foe Tailwind, the
+foe's guessed +1 crit, lead-exempt player Spikes / Toxic Spikes and Trick Room. Thunderstorm is Rain + Electric
+Terrain; random terrain and Fog are text only. The Area line exposes the original wording on tap / tooltip;
+variant labels are ignored. Automatic toggles are dashed, pressed and marked A; tapping makes them manual.
+Trick Room is always offered from Gen 4 and reverses the faster-Speed colour, not damage.
+Intimidate has a checked-by-default **Intim.** header box on its holder; the target's HP line shows the engine's
+net `Int −1` / reaction mark without changing Edit stages. Orb status is derived through `DMG.derived` and labelled
+`Burn (Orb)` / `Toxic (Orb)` in Edit; choosing any status, including None, is a kept override. Ice Face restoration
+also comes from the entry API. HP −min / −max apply `DMG.hit` patches (HP, consumed items, stages, toggles, status,
+Broken and field events); the one-use HP chip follows with `DMG.hp` using actual dealt damage / hit count, including
+contact costs. Dealt / You Apply uses exact-damage threshold reactions only. Turn end applies `DMG.turn`, including
+Speed Boost and eligible berries. An eligible berry has its own HP-line chip (`Sitrus +13`, `Salac Spe+1`), applying
+`DMG.berry` once. These actions and entry hazards replace a dismissible fixed bottom log (three lines, then internal
+scrolling; above the keyboard in `dvkb`), never adding layout height or saved state. KO notes come from the engine.
 Field toggles never break a word: the narrowest box is the widest single word of any toggle (measured in the page's
 font at render, so text zoom counts), each toggle grid uses its own measured width and fits as many columns as there is room
 (`auto-fit`), so a narrow grid becomes rows. Where a side column would hold one box per row (the minimum window, 206 px

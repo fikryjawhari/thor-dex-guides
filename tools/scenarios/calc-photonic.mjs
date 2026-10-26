@@ -32,7 +32,7 @@ const checks = [{
     await page.tap('[data-f=gameType][data-value=Doubles]');
     assert.equal(await page.value('CALC.state().field.gameType'),'Doubles');
     for (const entry of entries.filter(entry => entry.type === 'select' && entry.k !== 'gameType')) {
-      assert.deepEqual(await page.value(`[...document.querySelector('[data-f="${entry.k}"]').options].map(option=>option.value)`), entry.o.map(([value]) => value));
+      assert.deepEqual(await page.value(`[...document.querySelector('[data-f="${entry.k}"]').options].map(option=>option.value)`), ['@auto', ...entry.o.map(([value]) => value)]);
       const value = {weather: 'Harsh Sunshine', terrain: 'Psychic', gameType: 'Doubles'}[entry.k];
       await page.value(`(()=>{const control=document.querySelector('[data-f="${entry.k}"]');control.value=${JSON.stringify(value)};control.dispatchEvent(new Event('change',{bubbles:true}));})()`);
       assert.equal(await page.value(`CALC.state().field[${JSON.stringify(entry.k)}]`), value);

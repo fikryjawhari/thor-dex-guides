@@ -28,7 +28,7 @@ const openField = async page => {
 // A manual weather: the first non-empty option
 const setWeather = async page => {
   await openField(page);
-  const value = await page.value(`[...document.querySelector('select[data-f="weather"]').options].map(o=>o.value).find(v=>v)`);
+  const value = await page.value(`[...document.querySelector('select[data-f="weather"]').options].map(o=>o.value).find(v=>v&&v!=='@auto')`);
   await choose(page, 'select[data-f="weather"]', value);
   return value;
 };
@@ -103,7 +103,7 @@ const checks = [
       const state = await page.value('(()=>{const s=CALC.state();return {k:s.foe.k,i:s.foe.i,weather:s.field.weather??null,format:s.field.gameType??null,fman:s.fman,foeEdits:Object.keys(s.edits).filter(k=>k.startsWith("foe:"))};})()');
       assert.notEqual(state.k, trainer, 'another trainer');
       assert.equal(state.i, 0, 'slot 1 selected');
-      assert.equal(state.weather, null, 'manual weather cleared');
+      assert.ok(!state.fman.includes('weather'), 'manual weather cleared; automatic weather may apply');
       assert.equal(state.format, 'Doubles', 'format kept');
       assert.deepEqual(state.fman, [], 'no manual overrides');
       assert.deepEqual(state.foeEdits, [], 'nothing kept for the foe');
@@ -143,7 +143,7 @@ const checks = [
       assert.equal(foe.status, '', 'foe status cleared');
       assert.equal(foe.broken, null, 'broken cleared');
       assert.equal(mine.stg, '0,0,0,0,0', 'scratch cleared');
-      assert.equal(await page.value('CALC.state().field.weather??null'), null, 'manual weather cleared');
+      assert.ok(!(await page.value('CALC.state().fman')).includes('weather'), 'manual weather cleared; automatic weather may apply');
       assert.ok(await page.value(`document.querySelector('.dfield').open`), 'the Field stays open');
       await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 1 });
       assert.equal(await hpOf(page, 'foe'), await maxOf(page, 'foe'), 'the rest of the foe team too');
@@ -249,5 +249,203 @@ const checks = [
     },
   },
 ];
+
+const configure = (page, mine, foe) => page.value(`(()=>{
+  for(const [side,config] of Object.entries(${JSON.stringify({ mine, foe })})){
+    if(!config)continue;
+    const species=P.find(p=>p.n===config.name);if(!species)throw new Error('Missing species '+config.name);
+    const fields={id:species.id,l:50,na:'Hardy',a:species.a[0],i:'',m:[M.indexOf('Tackle')],hp:undefined,status:undefined,stg:[0,0,0,0,0],used:false,toggles:{},intim:true,broken:false,...config};
+    if(config.ability)fields.a=D.AB.findIndex(entry=>entry[0]===config.ability);
+    if(config.moves)fields.m=config.moves.map(name=>M.indexOf(name));
+    for(const [key,value] of Object.entries(fields))if(!['name','ability','moves'].includes(key))CALC.set(side,key,value);
+  }CALC.render();return true;
+})()`);
+const reloadCalc = async page => { await page.reload(); await page.route('#/calc'); };
+const effectTrainer = predicate => guide().data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr)).find(predicate);
+const engineInput = `m=>({id:m.id,lv:m.l,nat:m.na,ab:m.a,it:m.i,st:m.status,iv:m.iv,ev:m.ev,stg:[0,...(m.stg||[0,0,0,0,0])],hp:m.hp,intim:m.intim,used:m.used,broken:m.broken,entry:m.entry,abilityOn:m.abilityOn})`;
+const expectedHit = (page, roll = 'min', side = 'mine') => page.value(`(()=>{const input=${engineInput},side='${side}',other=side==='mine'?'foe':'mine',field=side==='mine'?CALC.state().field:Object.fromEntries(Object.entries(CALC.state().field).map(([key,value])=>[key.startsWith('atk')?'def'+key.slice(3):key.startsWith('def')?'atk'+key.slice(3):key,value]));return DMG.hit(input(CALC.mon(side)),input(CALC.mon(other)),{mv:CALC.mon(side).m[0]},field,'${roll}');})()`);
+const hitFirst = async (page, roll = 'min') => {
+  if(await page.count('#calc-log'))await page.tap('#calc-log button');
+  if (!(await page.count('.dres:not(.na) .mr:first-child.open'))) await page.tap('.dres:not(.na) .mr:first-child .mm');
+  await page.tap(`.dres:not(.na) .mr:first-child [data-a="sub"][data-roll="${roll}"]`);
+};
+
+checks.push(
+  {
+    id: 'weather layers',
+    title: 'both leads slower wins, reversed in Trick Room; manual and Auto; setter lifetime comes from settings',
+    run: async page => {
+      await setupCalc(page);
+      await configure(page, { name: 'Politoed', ability: 'Drizzle' }, { name: 'Torkoal', ability: 'Drought' });
+      await reloadCalc(page);
+      assert.equal(await page.value('CALC.state().field.weather'), 'Sun', 'slower Torkoal wins together');
+      await openField(page);
+      assert.equal(await page.value(`document.querySelector('[data-f="weather"]').value`), '@auto');
+      assert.match(await page.text('.dfsource'), /Sun: foe Torkoal.*Drought/s);
+      await choose(page, '[data-f="weather"]', 'Rain');
+      assert.equal(await page.value('CALC.state().field.weather'), 'Rain');
+      assert.match(await page.text('.dfsource'), /Weather set by you.*auto: Sun/s);
+      await page.tap('[data-a="fieldauto"]');
+      assert.equal(await page.value('CALC.state().field.weather'), 'Sun');
+      await page.tap('[data-f="trickRoom"]');
+      await reloadCalc(page);
+      assert.equal(await page.value('CALC.state().field.weather'), 'Rain', 'faster Politoed wins under Trick Room');
+      await openField(page);
+      await page.tap('[data-a="fieldauto"]');
+      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 1 });
+      const stays = await page.value('DMG.settings().setterStays');
+      assert.equal(await page.value('CALC.state().field.weather'), 'Rain', 'active player setter beats area');
+      await pickCell(page, 'party', 0);
+      if (stays) assert.equal(await page.value('CALC.state().field.weather'), 'Rain', 'Hardlove setter remains after departure');
+      else assert.notEqual(await page.value('CALC.state().field.weather'), 'Rain', 'non-sticky setter leaves');
+      const rain = effectTrainer(trainer => trainer.field?.some(record => record.effects?.some(effect => effect.kind === 'weather' && effect.value === 'Rain')));
+      if(rain){
+        await page.value(`CALC.enter(${JSON.stringify(rain.k)},0)`);
+        await configure(page,{name:'Torkoal',ability:'Drought'},{name:'Bibarel',ability:'Simple'});
+        await reloadCalc(page);
+        assert.equal(await page.value('CALC.state().field.weather'),'Sun','setter beats the real area Rain');
+        await page.value(`CALC.set('mine','hp',0);CALC.render()`);
+        await reloadCalc(page);
+        assert.equal(await page.value('CALC.state().field.weather'),'Rain','fainted entrant contributes no setter');
+      }
+      const primal = guide().data.cfg.calc.field.find(entry => entry.k === 'weather').o.some(([value]) => value === 'Heavy Rain') && guide().data.AB.some(entry => entry[0] === 'Primordial Sea');
+      if(primal){
+        await configure(page,{name:'Kyogre',ability:'Primordial Sea'},{name:'Torkoal',ability:'Drought'});
+        await reloadCalc(page);
+        assert.equal(await page.value('CALC.state().field.weather'),'Heavy Rain','ordinary slower setter cannot replace primal weather');
+      }
+    },
+  },
+  {
+    id: 'area conditions',
+    title: 'real trainer evidence: weather, Tailwind and crit deduplication, lead-exempt hazards, Trick Room and text-only effects',
+    run: async page => {
+      await setupCalc(page);
+      const all = guide().data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr));
+      for (const trainer of all.filter(trainer => trainer.field?.some(record => !record.label)).filter((trainer, index, list) => index === list.findIndex(other => JSON.stringify(other.field?.flatMap(record => record.effects)) === JSON.stringify(trainer.field?.flatMap(record => record.effects))))) {
+        await page.value(`CALC.enter(${JSON.stringify(trainer.k)},0)`);
+        await openField(page);
+        const state = await page.value('CALC.state().field');
+        const effects = trainer.field.filter(record => !record.label).flatMap(record => record.effects);
+        if(effects.some(effect => effect.kind === 'critical-bonus')) { assert.equal(state.defCritBonus, 1, trainer.k+' crit '+JSON.stringify(state)); assert.match(await page.text('.dfarea'), /\+1 crit \(foe, guess\)/); }
+        if(effects.some(effect => effect.kind === 'side-condition')) { assert.equal(state.defTailwind, true); assert.equal(await page.count('[data-f="defTailwind"].dauto sup'), 1); }
+        if(effects.some(effect => effect.value === 'Trick Room')) assert.equal(state.trickRoom, true);
+        if(effects.some(effect => effect.value === 'Fog')) assert.match(await page.text('.dfarea'), /Fog: accuracy ×0.6, no damage effect/);
+        if(effects.some(effect => effect.value === 'random')) assert.notEqual(state.terrain, 'random');
+        if(effects.some(effect => effect.kind === 'hazard')) {
+          assert.equal(state.atkSpikes, 1,trainer.k+' Spikes '+JSON.stringify(state)); assert.equal(state.atkToxicSpikes, 1,trainer.k+' Toxic Spikes '+JSON.stringify(state));
+          assert.ok(await page.value('CALC.state().hazardEntry.mine.status'), 'lead exempt');
+          const lead = await hpOf(page, 'mine');
+          await pickCell(page, 'party', 0);
+          assert.ok((await hpOf(page, 'mine')) < (await maxOf(page, 'mine')), 'next grounded entrant takes Spikes');
+          assert.match(await page.text('#calc-log'), /entry.*Spikes/s);
+          assert.ok(lead > 0);
+          await pickCell(page, 'party', 5);
+        }
+      }
+      const thunder = effectTrainer(trainer => trainer.field?.some(record => /Thunderstorm/.test(record.text)));
+      if(thunder) { await page.value(`CALC.enter(${JSON.stringify(thunder.k)},0)`); assert.equal(await page.value('CALC.state().field.weather'), 'Rain'); assert.equal(await page.value('CALC.state().field.terrain'), 'Electric'); }
+      const sand = effectTrainer(trainer => /Route 111/.test(trainer.loc) && trainer.field?.some(record => /Permanent Sand/.test(record.text)));
+      if(sand) { await page.value(`CALC.enter(${JSON.stringify(sand.k)},0)`); assert.equal(await page.value('CALC.state().field.weather'), 'Sand'); }
+    },
+  },
+  {
+    id: 'intimidate',
+    title: 'Intimidate holder box; engine net marks for Simple and Defiant; untouched stages and no header overflow',
+    run: async page => {
+      await setupCalc(page);
+      for (const [name, ability, delta] of [['Bibarel','Simple',-2],['Bisharp','Defiant',1]]) {
+        await configure(page, { name: 'Growlithe', ability: 'Intimidate' }, { name, ability });
+        assert.match(await page.text('.cc[data-s="foe"] .dintmark'), new RegExp(delta<0?'Int −2':'Int \\+1'));
+        assert.deepEqual(await page.value('CALC.mon("foe").stg'), [0,0,0,0,0]);
+        await page.value(`(()=>{const box=document.querySelector('[data-e="intim"]');box.checked=false;box.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+        assert.equal(await page.count('.dintmark'), 0);
+        const fits = await page.value(`(()=>{const card=document.querySelector('.cc[data-s="mine"] .l1');return card.scrollWidth<=card.clientWidth+1;})()`);
+        assert.ok(fits, 'Intim. header fits at 260');
+      }
+    },
+  },
+  {
+    id: 'hit patches',
+    title: 'HP actions apply engine Sash, Sturdy, berry, Weakness Policy, Balloon and Moxie patches in both directions',
+    run: async page => {
+      await setupCalc(page);
+      const cases = [
+        [{ name:'Gyarados',l:100,moves:['Seismic Toss'] },{ name:'Bibarel',l:1,i:'Focus Sash' },/Focus Sash/],
+        [{ name:'Gyarados',l:100,moves:['Seismic Toss'] },{ name:'Bibarel',l:1,ability:'Sturdy' },/Sturdy/],
+        [{ name:'Gyarados',l:50,moves:['Seismic Toss'] },{ name:'Bibarel',l:50,i:'Sitrus Berry',hp:100 },/Sitrus/],
+        [{ name:'Politoed',moves:['Water Gun'] },{ name:'Torkoal',i:'Weakness Policy' },/Weakness Policy/],
+        [{ name:'Gyarados',moves:['Tackle'] },{ name:'Bibarel',i:'Air Balloon' },/Air Balloon/],
+        [{ name:'Gyarados',l:100,ability:'Moxie',moves:['Seismic Toss'] },{ name:'Bibarel',l:1 },/Moxie/],
+      ];
+      for(const [mine,foe,note] of cases){
+        await configure(page,mine,foe);
+        const result=await expectedHit(page);
+        assert.ok(result, 'engine hit result');
+        await hitFirst(page);
+        assert.equal(await hpOf(page,'foe'),result.def.hp);
+        if(result.def.used)assert.equal(await page.value('CALC.mon("foe").used'),true);
+        if(result.def.stg)assert.deepEqual(await page.value('CALC.mon("foe").stg'),result.def.stg.slice(1));
+        if(result.atk.stg)assert.deepEqual(await page.value('CALC.mon("mine").stg'),result.atk.stg.slice(1));
+        assert.match(await page.text('#calc-log'),note);
+      }
+      await configure(page,{name:'Bibarel',l:1,i:'Focus Sash'},{name:'Gyarados',l:100,moves:['Seismic Toss']});
+      await page.value(`CALC.state().dir='in';CALC.render()`);
+      const reverse=await expectedHit(page,'max','foe');
+      await hitFirst(page,'max');
+      assert.equal(await hpOf(page,'mine'),reverse.def.hp);
+      assert.equal(await page.value('CALC.mon("mine").used'),true,'incoming max hit uses player Sash');
+    },
+  },
+  {
+    id: 'turn berry orb',
+    title: 'Speed Boost turn, Sitrus / Salac chips, derived Orb immunities and kept explicit None override',
+    run: async page => {
+      await setupCalc(page);
+      await configure(page,{ name:'Blaziken',ability:'Speed Boost' },{ name:'Bibarel' });
+      assert.match(await page.text('[data-a="eot"][data-s="mine"]'),/Spe\+1/);
+      await page.tap('[data-a="eot"][data-s="mine"]');
+      assert.equal(await page.value('CALC.mon("mine").stg[4]'),1);
+      for(const item of ['Sitrus Berry','Salac Berry']){
+        await configure(page,{ name:'Bibarel',i:item,hp:20 },null);
+        const before=await page.value(`(()=>{const input=${engineInput};return DMG.berry(input(CALC.mon('mine')),CALC.state().field,input(CALC.mon('foe')),'atk');})()`);
+        assert.ok(before);
+        assert.match(await page.text('[data-a="berry"][data-s="mine"]'),new RegExp(item.split(' ')[0]));
+        await page.tap('[data-a="berry"][data-s="mine"]');
+        assert.equal(await hpOf(page,'mine'),before.atk.hp);
+        assert.equal(await page.count('[data-a="berry"][data-s="mine"]'),0);
+      }
+      await configure(page,{ name:'Machamp',ability:'Guts',i:'Flame Orb' },null);
+      assert.equal(await page.value('CALC.mon("mine").status'),'brn');
+      const guts=await expectedHit(page);
+      await editorOpen(page,'mine',true);
+      assert.match(await page.value(`document.querySelector('.cc[data-s="mine"] select[data-e="status"] option:checked').textContent`),/Burn.*Orb/);
+      await choose(page,'.cc[data-s="mine"] select[data-e="status"]','');
+      assert.equal(await page.value('CALC.mon("mine").status??""'),'');
+      assert.ok(guts.dealt>(await expectedHit(page)).dealt,'derived Burn activates Guts damage');
+      await reloadCalc(page);
+      assert.equal(await page.value('CALC.mon("mine").status??""'),'');
+      await configure(page,{ name:'Charizard',i:'Flame Orb' },null);
+      assert.equal(await page.value('CALC.mon("mine").status??""'),'');
+    },
+  },
+  {
+    id: 'overlay field layout',
+    title: 'fixed dismissible non-persisted overlay, above dvkb number pad; Field internal scrolling fits minimum height',
+    run: async (page,{dvkb}) => {
+      await setupCalc(page);
+      await configure(page,{name:'Gyarados',moves:['Tackle']},{name:'Bibarel'});
+      await hitFirst(page);
+      const geometry=await page.value(`(()=>{const log=document.querySelector('#calc-log');return {position:getComputedStyle(log).position,max:getComputedStyle(log.firstChild).maxHeight,bottom:log.getBoundingClientRect().bottom};})()`);
+      assert.equal(geometry.position,'fixed');
+      if(dvkb){await page.tap('[data-hp="mine"]');assert.ok(await page.value(`document.querySelector('#calc-log').getBoundingClientRect().bottom<=document.querySelector('.kb').getBoundingClientRect().top`),'overlay above keyboard');await page.tap('.kb [data-a="done"]');}
+      await page.tap('#calc-log button');assert.equal(await page.count('#calc-log'),0);
+      await openField(page);
+      const fits=await page.value(`(()=>{const body=document.querySelector('.dfb');body.scrollIntoView({block:'start'});return body.getBoundingClientRect().height<=innerHeight;})()`);
+      assert.ok(fits,'Field body stays within one window');
+      await reloadCalc(page);assert.equal(await page.count('#calc-log'),0);
+    },
+  },
+);
 
 await runChecks({ name: 'calc-auto', file, checks });

@@ -10,7 +10,7 @@ const fixtureChecks=[{
   run:async page=>{
     await setupCalc(page,{mine:['party',0]});
     const teamHeight=await page.value('document.querySelector(".top").offsetHeight');
-    await page.value("CALC.state().field.weather='Sand';CALC.render()");
+    await page.value("CALC.state().fman.push('weather');CALC.state().field.weather='Sand';CALC.render()");
     assert.equal(await page.value('document.querySelector(".top").offsetHeight'),teamHeight,'residuals do not shrink the team');
     const before=await page.value('Number(document.querySelector("[data-hp=foe]").value)');
     await page.tap('[data-a=eot][data-s=foe]');
@@ -70,7 +70,7 @@ const windowChecks=[{
     assert.ok(await page.value(`document.querySelector('.cc[data-s=mine]').offsetHeight<=${room}`),'open card: '+await page.value(`document.querySelector('.cc[data-s=mine]').offsetHeight`));
     assert.equal(new Set(await page.value(`[...document.querySelectorAll('.cc[data-s=mine] .ed .sm,.cc[data-s=mine] .ed .z,.cc[data-s=mine] .ed .sc')].map(button=>button.offsetHeight)`)).size,1,'stage buttons one size');
     // with residuals (toxic, Leftovers, sand) the parts stay folded behind Turn end and the card still fits
-    await page.value("(()=>{const state=CALC.state(),mon=state.custom.at(-1);mon.i='Leftovers';mon.status='tox';state.field.weather='Sand';CALC.render();})()");
+    await page.value("(()=>{const state=CALC.state(),mon=state.custom.at(-1);mon.i='Leftovers';mon.status='tox';state.fman.push('weather');state.field.weather='Sand';CALC.render();})()");
     assert.equal(await page.count('.cc[data-s=mine] .cl [data-tox=mine]'),1,'toxic turn on the HP line');
     assert.equal(await page.count('.cc[data-s=mine] .dqp'),0,'parts folded');
     assert.ok(await page.value(`document.querySelector('.cc[data-s=mine]').offsetHeight<=${room}`),'open card with residuals');
