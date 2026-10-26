@@ -426,7 +426,11 @@ checks.push(
       await page.tap('[data-a="eot"][data-s="mine"]');
       assert.equal(await page.value('CALC.mon("mine").stg[4]'),1);
       for(const item of ['Sitrus Berry','Salac Berry']){
-        await configure(page,{ name:'Bibarel',i:item,hp:20 },null);
+        await configure(page,{ name:'Bibarel',i:item,hp:20,status:'tox' },{name:'Growlithe',ability:'Intimidate'});
+        await page.assertFits('berry, Toxic, turn end and Intimidate together');
+        await editorOpen(page,'mine',true);
+        assert.ok(await page.value(`document.querySelector('.cc[data-s="mine"]').offsetHeight<=innerHeight-8`),'open card with berry, Toxic and Intimidate fits one window');
+        await editorOpen(page,'mine',false);
         const before=await page.value(`(()=>{const input=${engineInput};return DMG.berry(input(CALC.mon('mine')),CALC.state().field,input(CALC.mon('foe')),'atk');})()`);
         assert.ok(before);
         assert.match(await page.text('[data-a="berry"][data-s="mine"]'),new RegExp(item.split(' ')[0]));

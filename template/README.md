@@ -130,7 +130,8 @@ also comes from the entry API. HP −min / −max apply `DMG.hit` patches (HP, c
 Broken and field events); the one-use HP chip follows with `DMG.hp` using actual dealt damage / hit count, including
 contact costs. Dealt / You Apply uses exact-damage threshold reactions only. Turn end applies `DMG.turn`, including
 Speed Boost and eligible berries. An eligible berry has its own HP-line chip (`Sitrus +13`, `Salac Spe+1`), applying
-`DMG.berry` once. These actions and entry hazards replace a dismissible fixed bottom log (three lines, then internal
+`DMG.berry` once. A crowded HP line with a berry wraps rather than clipping its actions or widening the page.
+These actions and entry hazards replace a dismissible fixed bottom log (three lines, then internal
 scrolling; above the keyboard in `dvkb`), never adding layout height or saved state. KO notes come from the engine.
 Field toggles never break a word: the narrowest box is the widest single word of any toggle (measured in the page's
 font at render, so text zoom counts), each toggle grid uses its own measured width and fits as many columns as there is room
