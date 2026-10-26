@@ -3,11 +3,11 @@
 const builtPresets=[
  ['States',{species:'Snorlax',moves:['Fury Cutter','Assurance','Round','Facade']}],
  ['Download',{ability:'Download',moves:['Tri Attack','Psychic','Thunderbolt','Ice Beam']}],
- ['Sword',{ability:'Intrepid Sword',moves:['Iron Head','Close Combat','Crunch','Play Rough']}],
+ ['Sword',{species:'Snorlax',ability:'Intrepid Sword',moves:['Iron Head','Close Combat','Crunch','Play Rough']}],
  ['Shield',{ability:'Dauntless Shield',moves:['Iron Head','Close Combat','Crunch','Body Press']}],
  ['First turn',{ability:'Bull Rush',moves:['Tackle','Head Charge','Close Combat','Earthquake']}],
  ['Disguise',{ability:'Illusion',moves:['Dark Pulse','Flamethrower','Night Daze','U-turn']}],
- ['Toxic',{species:'Snorlax',status:'tox',item:'Leftovers',moves:['Facade','Tackle','Earthquake','Crunch']}],
+ ['Toxic',{species:'Snorlax',status:'tox',moves:['Facade','Tackle','Earthquake','Crunch']}],
  ['Multi-hit',{species:'Cloyster',moves:['Icicle Spear','Rock Blast','Surf','Ice Beam']}],
  ['Draco',{species:'Snorlax',moves:['Draco Barrage','Psychic','Tackle','Surf']}],
  ['Parental Bond',{species:'Mega Kangaskhan',ability:'Parental Bond',moves:['Power-Up Punch','Body Slam','Crunch','Earthquake']}],
@@ -19,5 +19,5 @@ function builtPreset(request){
 }
 for(const [label,request] of builtPresets){const button=document.createElement('button');button.textContent=label;button.onclick=()=>builtPreset(request);document.getElementById('calc-presets').appendChild(button);}
 let builtWait=0;
-const builtReady=setInterval(()=>{try{const viewer=thorFrame();if(viewer.CALC){clearInterval(builtReady);if(!viewer.CALC.state().custom.length&&!viewer.CALC.state().imp)builtPreset(builtPresets[0][1]);}}catch(error){}if(++builtWait>=100)clearInterval(builtReady);},100);
+const builtReady=setInterval(()=>{try{const viewer=thorFrame();if(viewer.CALC){clearInterval(builtReady);if(!viewer.CALC.state().custom.length&&!viewer.CALC.state().imp)builtPreset(builtPresets[0][1]);else{viewer.location.hash='#/calc';document.getElementById('calc-preset-status').textContent='Saved calculator restored; choose a preset to replace its test sets.';}}}catch(error){}if(++builtWait>=100)clearInterval(builtReady);},100);
 </script>

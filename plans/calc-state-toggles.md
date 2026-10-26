@@ -19,7 +19,14 @@
   reset inherited residual negative-number geometry. All four guides rebuilt; state scenarios 24/10/10/10 pass;
   engine npm suite passes. No engine files changed.
 - Explicit changed-route domcompare rerun uses `--ignore="built 2026-10-2[0-9]"`, normal/dvkb, one sweep at a time;
-  logs under `.tmp/resume-audit/dom-*.log`. Full-route evidence is the eight complete gate sweeps above.
+  logs under `.tmp/resume-audit/dom-*.log`: all eight show only the intended Calc difference and zero page errors.
+  Full-route evidence is the eight complete gate sweeps above.
+- Both built tailnet Thor previews checked with the collaborative browser at a 390 px phone viewport, light/dark.
+  EI: direct toxic application changes HP 235 -> 221 and the next amount -14 -> -29; Download cycles Auto(actual stat),
+  Atk, Sp. Atk, None, Auto; Sword-off control and both populated wide editors verified, zero page errors.
+  Photonic: Savage Spin-Out full name in details, Z hides state control, dvkb reload keeps four move rows, zero errors.
+  Frame-only fix: scaled box width/height needed pixel units; all five sizes now match scaled iframe height within
+  one pixel without the black gap. Live presets restore the calc route and use no held item for visibly negative Toxic.
 ## Build status (2026-10-26)
 - Working branch: `worktree-damage-calc-toggles`, tab of `worktree-damage-calc`.
 - Engine pass merged cleanly at `f3203b1`; main checkout's Hardlove `.src/` copied before any extract build.
