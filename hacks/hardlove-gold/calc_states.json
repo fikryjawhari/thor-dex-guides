@@ -1,6 +1,21 @@
 {
   "cases": [
     {
+      "name": "auto-setter-stays-hardlove", "api": "settings",
+      "expect": {"paths": {"setterStays": true}},
+      "src": "A1: Hardlove explicitly keeps setter weather/terrain on switch despite its Gen 9 damage profile."
+    },
+    {
+      "name": "auto-snow-warning-hardlove", "api": "derived", "atk": {"id": "blastoise", "ab": 157},
+      "expect": {"paths": {"weather": "Snow"}},
+      "src": "A1: Hardlove field catalogue supplies Snow, not Hail."
+    },
+    {
+      "name": "auto-figy-hardlove", "api": "berry", "atk": {"id": "blastoise", "it": "Figy Berry", "hp": 1},
+      "expect": {"paths": {"heal": 51, "atk.hp": 52, "atk.used": true}},
+      "src": "A1: Hardlove modern mechanics use Figy one-third recovery (floor 154/3)."
+    },
+    {
       "name": "fury-cutter-prior-0",
       "atk": {
         "id": "manaphy",

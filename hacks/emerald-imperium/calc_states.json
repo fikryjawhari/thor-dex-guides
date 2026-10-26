@@ -1,6 +1,31 @@
 {
   "cases": [
     {
+      "name": "auto-great-tusk-no-trigger", "atk": {"id": "1376", "ab": 270}, "def": {"id": "9"},
+      "slot": {"mv": 66}, "expect": {"paths": {"max": 85}},
+      "src": "A1: Protosynthesis inactive without Sun or Booster Energy; neutral level-50 Earthquake."
+    },
+    {
+      "name": "auto-great-tusk-sun", "atk": {"id": "1376", "ab": 270}, "def": {"id": "9"},
+      "slot": {"mv": 66}, "field": {"weather": "Sun"}, "expect": {"paths": {"max": 109}},
+      "src": "A1: Protosynthesis Sun activates the highest stat, Attack (stock boostedStat auto)."
+    },
+    {
+      "name": "auto-great-tusk-booster", "atk": {"id": "1376", "ab": 270, "it": "Booster Energy"}, "def": {"id": "9"},
+      "slot": {"mv": 66}, "expect": {"paths": {"max": 109}},
+      "src": "A1: Booster Energy gives the same Protosynthesis boost without Sun."
+    },
+    {
+      "name": "auto-quark-electric-speed", "api": "speed", "atk": {"id": "1383", "ab": 271},
+      "field": {"terrain": "Electric"}, "expect": {"paths": {"": 234}},
+      "src": "A1: Iron Bundle Quark Drive highest stat is Speed, 156 times 1.5."
+    },
+    {
+      "name": "auto-figy-gen9", "api": "berry", "atk": {"id": "9", "it": "Figy Berry", "hp": 1},
+      "expect": {"paths": {"heal": 51, "atk.hp": 52, "atk.used": true}},
+      "src": "A1: Gen 9 Figy heals floor(154/3) at quarter HP."
+    },
+    {
       "name": "fury-cutter-prior-0",
       "atk": {
         "id": "490",

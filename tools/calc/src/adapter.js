@@ -746,6 +746,7 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
   const type = exact ? slot.t || move?.type : generation.guideContext?.move.type || slot.t || move?.type;
   const info = {type, cat: result?.cat, eff: result?.eff || 0};
   const strikes = exact ? [[options.damage]] : result.per || Array.from({length: result.hits}, () => result.rolls);
+  const parental = !exact && result.hits === 2 && user.mon.hasAbility('Parental Bond') && generation.guideContext?.move.hits === 1;
   const thresholdAbility = profile.gen >= 7 && target.mon.hasAbility('Berserk')
     || profile.gen >= 9 && target.mon.hasAbility('Anger Shell');
   const delayedBerry = thresholdAbility && strikes.length === 1;
@@ -754,7 +755,7 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
   for (const event of events.filter(event => !event.hit)) {
     const state = event.who === 'atk' ? user : target;
     state.mon.boosts[event.stat] = Math.max(-6, Math.min(6, state.mon.boosts[event.stat] + event.by));
-    if (SEEDS[state.mon.item]) {
+    if (SEEDS[state.mon.item] && event.src === state.mon.item) {
       state.persist(event.stat, event.by);
       state.consume(state.mon.item);
     }
@@ -770,7 +771,7 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
   };
   for (let index = 0; index < strikes.length && current > 0; index++) {
     const followup = index && !exact && !result.fixed ? calcCore(stateSet(atk, user, user.mon.curHP()),
-      stateSet(def, target, current), slot, actionField, {hit: index + 1, parental: result.hits === 2 && user.mon.hasAbility('Parental Bond')}) : null;
+      stateSet(def, target, current), slot, actionField, {hit: index + 1, parental}) : null;
     let damage = (roll === 'min' ? Math.min : Math.max)(...(followup?.rolls || strikes[index]));
     if (!damage) continue;
     const before = current;

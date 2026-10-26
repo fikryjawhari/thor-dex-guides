@@ -1,6 +1,16 @@
 {
   "cases": [
     {
+      "name": "auto-figy-gen6", "api": "berry", "atk": {"id": "blastoise", "it": "Figy Berry", "hp": 1},
+      "expect": {"paths": {"heal": 19, "atk.hp": 20, "atk.used": true}},
+      "src": "A1: Gen 6 Figy-group berries heal one-eighth at half HP (floor 154/8)."
+    },
+    {
+      "name": "auto-sitrus-gen6", "api": "berry", "atk": {"id": "blastoise", "it": "Sitrus Berry", "hp": 1},
+      "expect": {"paths": {"heal": 38, "atk.hp": 39, "atk.used": true}},
+      "src": "A1: Sitrus is one-quarter max HP from Gen 4 onward, not the earlier 30 HP."
+    },
+    {
       "name": "fury-cutter-prior-0",
       "atk": {
         "id": "manaphy",

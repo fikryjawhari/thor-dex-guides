@@ -941,7 +941,8 @@ const autoGuide = {...data, AB: [...data.AB, ...['Guard Dog', 'Mirror Armor', 'R
   'Snow Warning', 'Drought', 'Drizzle', 'Sand Stream', 'Desolate Land', 'Primordial Sea', 'Delta Stream',
   'Orichalcum Pulse', 'Hadron Engine', 'Electric Surge', 'Misty Surge', 'Grassy Surge', 'Psychic Surge',
   'Water Veil', 'Water Bubble', 'Thermal Exchange', 'Purifying Salt', 'Pastel Veil', 'Flower Veil', 'Leaf Guard',
-  'Shields Down', 'Comatose', 'Klutz'].map(name => [name, ''])]};
+  'Shields Down', 'Comatose', 'Klutz', 'Stamina', 'Water Compaction', 'Steam Engine', 'Justified',
+  'Weak Armor', 'Anger Point'].map(name => [name, ''])]};
 const autoSet = (name, ab, extra = {}) => set(name, {...extra, ab: autoGuide.AB.findIndex(entry => entry[0] === ab)});
 
 await test('automatic derivation: all setters, effect aliases and profile Snow availability', () => {
@@ -1054,6 +1055,8 @@ await test('automatic hit: chosen roll each hit, scaling, Parental Bond and betw
   const parent = autoSet('Blastoise', 'Parental Bond');
   const result = engine.calc(parent, target, slot('Tackle'));
   assert.equal(engine.hit(parent, target, slot('Tackle')).dealt, result.per.reduce((total, values) => total + Math.max(...values), 0));
+  const normalMulti = engine.calc(parent, target, slot('Tackle', {hits: 2}));
+  assert.equal(engine.hit(parent, target, slot('Tackle', {hits: 2})).dealt, normalMulti.max * 2);
   const stamina = autoSet('Blissey', 'Stamina', target);
   const many = slot('Tackle', {hits: 3});
   const boosted = engine.calc(user, stamina, many);
@@ -1077,6 +1080,58 @@ await test('automatic hit: item use, thresholds, Berserk before single-hit berri
   assert.deepEqual(plain(shell.def.stg), [0, 1, -1, 1, -1, 1]);
   assert.equal(exact(autoSet('Blastoise', 'Stamina', {it: 'Air Balloon'}), 10).def.used, undefined);
   assert.equal(exact(autoSet('Blastoise', 'Stamina'), 10).def.stg, undefined);
+});
+
+await test('automatic hit: defensive items and abilities, field setters, suppression and aliases', () => {
+  engine.init(autoGuide, profiles.expansion);
+  const user = set('Blastoise');
+  const target = set('Blastoise');
+  const selected = (type = 'Normal', extra = {}) => slot('Tackle', {bp: 1, t: type, ...extra});
+  for (const [ab, type, stat, by] of [['Stamina', 'Normal', 2, 1], ['Water Compaction', 'Water', 2, 2],
+    ['Justified', 'Dark', 1, 1], ['Weak Armor', 'Normal', 5, 2], ['Steam Engine', 'Fire', 5, 6],
+    ['Rattled', 'Ghost', 5, 1], ['Anger Point', 'Normal', 1, 6]]) {
+    assert.equal(engine.hit(user, autoSet('Blastoise', ab), selected(type, {crit: ab === 'Anger Point'})).def.stg[stat], by, ab);
+  }
+  for (const [it, type, stat, by] of [['Weakness Policy', 'Electric', 1, 2], ['Kee Berry', 'Normal', 2, 1],
+    ['Luminous Moss', 'Water', 4, 1], ['Absorb Bulb', 'Water', 3, 1], ['Cell Battery', 'Electric', 1, 1],
+    ['Snowball', 'Ice', 1, 1]]) {
+    const action = engine.hit(user, {...target, it}, selected(type));
+    assert.equal(action.def.used, true, it);
+    assert.equal(action.def.stg[stat], by, it);
+  }
+  assert.equal(engine.hit(user, {...target, it: 'Maranga Berry'}, slot('Water Gun', {bp: 1})).def.stg[4], 1);
+  assert.equal(engine.hit(user, {...target, it: 'Wacan Berry'}, selected('Electric')).def.used, true);
+  assert.equal(engine.hit(autoSet('Blastoise', 'Unnerve'), {...target, it: 'Wacan Berry'}, selected('Electric')).def.used, undefined);
+  assert.equal(engine.hit(user, autoSet('Blastoise', 'Seed Sower'), selected()).field.terrain, 'Grassy');
+  assert.equal(engine.hit(user, autoSet('Blastoise', 'Sand Spit'), selected()).field.weather, 'Sand');
+  assert.equal(engine.hit(user, autoSet('Blastoise', 'Toxic Debris'), selected('Normal', {hits: 3})).field.hazards.atkToxicSpikes, 2);
+  assert.equal(engine.hit(user, autoSet('Blastoise', 'Electromorphosis'), selected()).def.toggles.Charge, true);
+  assert.equal(engine.hit(user, autoSet('Blastoise', 'Wind Power'), slot('Gust', {bp: 1})).def.toggles.Charge, true);
+  assert.equal(engine.hit(user, autoSet('Blastoise', 'Cotton Down'), selected()).atk.stg[5], -1);
+  engine.init(autoGuide, {...profiles.expansion, over: {abilities: {Torrent: {effect: 'Moxie'}}, items: {'Custom Policy': {effect: 'Weakness Policy'}}}});
+  assert.equal(engine.hit(autoSet('Blastoise', 'Torrent'), target, selected('Normal', {bp: 10000})).atk.stg[1], 1);
+  assert.equal(engine.hit(user, {...target, it: 'Custom Policy'}, selected('Electric')).def.stg[1], 2);
+});
+
+await test('automatic hit: reactions respect stage caps, used seeds, weather and item use on later hits', () => {
+  engine.init(autoGuide, profiles.expansion);
+  const user = set('Blastoise');
+  const target = set('Blissey', {ev: [252, 0, 252, 0, 0, 0]});
+  const selected = slot('Tackle', {bp: 10, hits: 2});
+  const seed = engine.hit({...user, it: 'Electric Seed'}, target, selected, {terrain: 'Electric'});
+  assert.equal(seed.atk.used, true);
+  assert.equal(seed.atk.stg[2], 1);
+  const intimidation = autoSet('Blastoise', 'Intimidate');
+  assert.equal(engine.hit(intimidation, {...target, it: 'Electric Seed'}, selected, {terrain: 'Electric'}).def.stg[1], 0);
+  const berserk = autoSet('Blissey', 'Berserk', {...target, it: 'Sitrus Berry'});
+  const max = engine.stats(berserk)[0];
+  const hit = engine.hit(user, {...berserk, hp: Math.floor(max / 2) + 1}, slot('Tackle', {bp: 1, hits: 2}));
+  assert.equal(hit.def.used, true);
+  assert.equal(hit.def.stg, undefined, 'multi-hit berry heals above Berserk threshold before end-of-move check');
+  const orb = set('Blastoise', {it: 'Adrenaline Orb', ab: autoGuide.AB.findIndex(entry => entry[0] === 'Rattled')});
+  assert.equal(engine.speed(orb, {}, 'def', intimidation), engine.speed({...orb, stg: [0, 0, 0, 0, 0, 2]}));
+  assert.equal(engine.intimidate(intimidation, {...user, stg: [0, -6, 0, 0, 0, 0]}).def, 0);
+  assert.equal(engine.intimidate(intimidation, autoSet('Blastoise', 'Defiant', {stg: [0, -6, 0, 0, 0, 0]})).def, 0);
 });
 
 await test('automatic turn: ordered residuals, fainting, Speed Boost, one berry, side and purity', () => {

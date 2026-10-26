@@ -1,5 +1,6 @@
 // Battle-state fixtures: runs every hacks/<hack>/calc_states.json through the built engine and checks each `expect`
 // ({bp}, {ref: slot overrides or {slot, atk, def, field}}, {rolls: [16]}, {pre: [...]}, {crit: {stage, p, forced}}).
+// Optional api selects hit/turn/berry/derived/settings/speed/intimidate; expect.paths checks named result paths.
 // Usage: node state_check.mjs [hack ...]
 import {readdir, readFile} from 'node:fs/promises';
 import {createEngine} from './run.mjs';
@@ -32,12 +33,27 @@ for (const hack of hacks) {
       if (Object.keys(fixture.expect).length !== 1) return 'expect needs exactly one kind';
       let result;
       try {
-        result = engine.calc(fixture.atk, fixture.def, fixture.slot, fixture.field || {});
+        const field = fixture.field || {};
+        if (fixture.api === 'settings') result = engine.settings();
+        else if (fixture.api === 'derived') result = engine.derived(fixture.atk, field);
+        else if (['turn', 'berry'].includes(fixture.api)) result = engine[fixture.api](fixture.atk, field, fixture.def, fixture.side || 'atk');
+        else if (fixture.api === 'speed') result = engine.speed(fixture.atk, field, fixture.side || 'atk', fixture.def);
+        else if (fixture.api === 'intimidate') result = engine.intimidate(fixture.atk, fixture.def, field);
+        else if (fixture.api === 'hit') result = engine.hit(fixture.atk, fixture.def, fixture.slot, field, fixture.roll || 'max', fixture.options || {});
+        else if (fixture.api && fixture.api !== 'calc') return `unknown api ${fixture.api}`;
+        else result = engine.calc(fixture.atk, fixture.def, fixture.slot, field);
       } catch (error) {
         return `error ${error.message}`;
       }
       if (!result) return 'null result';
       const want = fixture.expect[kind];
+      if (kind === 'paths') {
+        for (const [path, expected] of Object.entries(want)) {
+          const actual = (path ? path.split('.').reduce((value, key) => value?.[key], result) : result) ?? null;
+          if (!same(actual, expected)) return `${path} ${JSON.stringify(actual)}, want ${JSON.stringify(expected)}`;
+        }
+        return '';
+      }
       if (PENDING.has(kind) && result[kind] === undefined) return 'pending';
       if (kind === 'bp') {
         const got = result.bp ?? Number(data.MV[fixture.slot.mv].bp);
