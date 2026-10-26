@@ -144,7 +144,7 @@ function pokemon(set) {
   const ability = data.AB?.[set.ab];
   const abilityName = profile.abilities !== false && ability
     ? effectName('abilities', ability[0], !!ability[2]) : '';
-  const itemName = profile.items !== false ? effectName('items', set.it || '') : '';
+  const itemName = profile.items !== false && !set.used ? effectName('items', set.it || '') : '';
   const statusEntry = profile.status?.find(([key]) => key === set.st);
   const status = statusEntry ? profile.over?.status?.[set.st] ?? set.st : '';
   const result = new Pokemon(generation, speciesNames.get(String(set.id)), {
@@ -156,6 +156,7 @@ function pokemon(set) {
     boostedStat: ['Protosynthesis', 'Quark Drive'].includes(abilityName) ? 'auto' : undefined,
   });
   if (set.hp !== undefined) result.originalCurHP = Math.max(0, Math.min(result.maxHP(), set.hp));
+  if (result.hasAbility('Unburden') && set.used) result.abilityOn = true;
   return result;
 }
 
@@ -577,6 +578,232 @@ function settings() {
   return {setterStays: profile.setterStays ?? profile.gen <= 5};
 }
 
+function derived(set, values = {}) {
+  const mon = fieldPokemon(set, values, 'atk');
+  const field = battleField(values);
+  const result = {};
+  const weather = {Drizzle: 'Rain', Drought: 'Sun', 'Sand Stream': 'Sand',
+    'Snow Warning': profile.gen >= 9 ? 'Snow' : 'Hail', 'Desolate Land': 'Harsh Sunshine',
+    'Primordial Sea': 'Heavy Rain', 'Delta Stream': 'Strong Winds', 'Orichalcum Pulse': 'Sun'}[mon.ability];
+  const terrain = {'Electric Surge': 'Electric', 'Hadron Engine': 'Electric', 'Grassy Surge': 'Grassy',
+    'Psychic Surge': 'Psychic', 'Misty Surge': 'Misty'}[mon.ability];
+  if (weather) {
+    result.weather = weather;
+    if (['Harsh Sunshine', 'Heavy Rain', 'Strong Winds'].includes(weather)) result.primal = true;
+  }
+  if (terrain) result.terrain = terrain;
+  checkItem(mon, field.isMagicRoom);
+  if (!set.st && holdsItem(mon, field) && !mon.hasAbility('Comatose', 'Purifying Salt')
+    && !(mon.hasAbility('Shields Down') && mon.curHP() > mon.maxHP() / 2)
+    && !(mon.hasAbility('Leaf Guard') && field.hasWeather('Sun', 'Harsh Sunshine'))
+    && !(mon.hasAbility('Flower Veil') && mon.hasType('Grass'))
+    && !(field.hasTerrain('Misty') && isGrounded(mon, field))) {
+    if (mon.hasItem('Flame Orb') && !mon.hasType('Fire') && !mon.hasAbility('Water Veil', 'Water Bubble', 'Thermal Exchange')) result.status = 'brn';
+    if (mon.hasItem('Toxic Orb') && !mon.hasType('Poison', 'Steel') && !mon.hasAbility('Immunity', 'Pastel Veil')) result.status = 'tox';
+  }
+  return result;
+}
+
+const PINCH_STATS = {'Liechi Berry': 'atk', 'Ganlon Berry': 'def', 'Petaya Berry': 'spa',
+  'Apicot Berry': 'spd', 'Salac Berry': 'spe'};
+const CONFUSION_BERRIES = new Set(['Figy Berry', 'Wiki Berry', 'Mago Berry', 'Aguav Berry', 'Iapapa Berry']);
+const RESIST_BERRIES = {Occa: 'Fire', Passho: 'Water', Wacan: 'Electric', Rindo: 'Grass', Yache: 'Ice',
+  Chople: 'Fighting', Kebia: 'Poison', Shuca: 'Ground', Coba: 'Flying', Payapa: 'Psychic', Tanga: 'Bug',
+  Charti: 'Rock', Kasib: 'Ghost', Haban: 'Dragon', Colbur: 'Dark', Babiri: 'Steel', Chilan: 'Normal', Roseli: 'Fairy'};
+
+function berryEffect(mon, field, other, hp, hit = {}) {
+  if (hp <= 0 || !holdsItem(mon, field) || other?.hasAbility('Unnerve', 'As One (Glastrier)', 'As One (Spectrier)')) return null;
+  const item = mon.item;
+  const config = profile.over?.items?.[item] || {};
+  const ripen = profile.gen >= 8 && mon.hasAbility('Ripen') ? 2 : 1;
+  let threshold = 1 / 2;
+  let heal = 0;
+  let stat;
+  let focus = false;
+  if (item === 'Sitrus Berry') heal = Math.max(1, Math.floor(mon.maxHP() / 4));
+  else if (item === 'Oran Berry') heal = 10;
+  else if (item === 'Berry Juice') heal = 20;
+  else if (CONFUSION_BERRIES.has(item)) {
+    threshold = profile.gen >= 7 ? 1 / 4 : 1 / 2;
+    heal = Math.max(1, Math.floor(mon.maxHP() * (profile.gen === 7 ? 1 / 2 : profile.gen >= 8 ? 1 / 3 : 1 / 8)));
+  } else if (item === 'Enigma Berry') {
+    if (!(hit.eff > 1)) return null;
+    threshold = 1;
+    heal = Math.max(1, Math.floor(mon.maxHP() / 4));
+  } else if (PINCH_STATS[item] || item === 'Lansat Berry') {
+    threshold = 1 / 4;
+    stat = PINCH_STATS[item];
+    focus = item === 'Lansat Berry';
+    if (stat && mon.boosts[stat] >= 6) return null;
+  } else return null;
+  threshold = config.threshold ?? threshold;
+  if (threshold === 1 / 4 && mon.hasAbility('Gluttony')) threshold = 1 / 2;
+  if (hp > Math.floor(mon.maxHP() * threshold)) return null;
+  if (config.heal !== undefined) heal = config.heal <= 1 ? Math.max(1, Math.floor(mon.maxHP() * config.heal)) : Math.trunc(config.heal);
+  const berry = item.endsWith(' Berry');
+  const recovery = heal * (berry ? ripen : 1)
+    + (berry && profile.gen >= 6 && mon.hasAbility('Cheek Pouch') ? Math.max(1, Math.floor(mon.maxHP() / 3)) : 0);
+  return {item, heal: Math.min(mon.maxHP() - hp, recovery), ...(stat ? {stat, by: ripen} : {}), ...(focus ? {focus: true} : {})};
+}
+
+function actionState(set, values, side) {
+  const mon = fieldPokemon(set, values, side);
+  const update = {};
+  const stages = statNames.map((name, index) => set.stg?.[index] ?? 0);
+  const logs = [];
+  const change = (stat, amount, src, absolute = false) => {
+    const events = [];
+    stageChanger(events)(mon, side, stat, absolute ? amount - mon.boosts[stat] : amount, src);
+    for (const event of events) {
+      const index = statNames.indexOf(stat);
+      stages[index] = Math.max(-6, Math.min(6, stages[index] + event.by));
+      update.stg = [...stages];
+      logs.push(`${src}: ${stat} ${event.by > 0 ? '+' : ''}${event.by}`);
+    }
+  };
+  const consume = label => {
+    update.used = true;
+    mon.item = '';
+    logs.push(`${label}: used`);
+  };
+  return {mon, update, logs, change, consume};
+}
+
+function applyBerry(state, field, other, hp, hit) {
+  const effect = berryEffect(state.mon, field, other, hp, hit);
+  if (!effect) return hp;
+  state.consume(effect.item);
+  if (effect.stat) state.change(effect.stat, effect.by, effect.item);
+  if (effect.focus) state.update.toggles = {...state.update.toggles, Focus: true};
+  if (effect.heal) state.logs.push(`${effect.item}: +${effect.heal} HP`);
+  return hp + effect.heal;
+}
+
+function turn(set, values = {}, otherSet = null, side = 'atk') {
+  const state = actionState(set, values, side);
+  const field = battleField(values);
+  const other = otherSet ? fieldPokemon(otherSet, values, side === 'atk' ? 'def' : 'atk') : null;
+  const parts = residual(set, values, otherSet, side);
+  let hp = state.mon.curHP();
+  for (const part of parts) {
+    if (!hp) break;
+    const next = Math.max(0, Math.min(state.mon.maxHP(), hp + part.v[0]));
+    if (next !== hp) state.logs.push(`${part.l}: ${next - hp} HP`);
+    hp = next;
+  }
+  if (hp && state.mon.hasAbility('Speed Boost')) state.change('spe', 1, 'Speed Boost');
+  hp = applyBerry(state, field, other, hp);
+  return {[side]: {...state.update, hp}, log: state.logs, parts};
+}
+
+function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
+  if (!['min', 'max'].includes(roll)) throw new Error('DMG: hit roll must be min or max');
+  const exact = options.damage !== undefined;
+  if (exact && !(Number.isInteger(options.damage) && options.damage >= 0)) throw new Error('DMG: exact damage must be a nonnegative integer');
+  const result = calc(atk, def, slot, values);
+  if (!result && !exact) return null;
+  const user = actionState(atk, values, 'atk');
+  const target = actionState(def, values, 'def');
+  const field = battleField(values);
+  checkAirLock(user.mon, field);
+  checkAirLock(target.mon, field);
+  checkItem(user.mon, field.isMagicRoom);
+  checkItem(target.mon, field.isMagicRoom);
+  const output = {def: target.update, atk: user.update, log: []};
+  let current = target.mon.curHP();
+  let dealt = 0;
+  const move = generation.moves.get(toID(data.M[slot.mv]));
+  const type = slot.t || move?.type;
+  const info = {type, cat: result?.cat, eff: result?.eff || 0};
+  const strikes = exact ? [[options.damage]] : result.per || Array.from({length: result.hits}, () => result.rolls);
+  const events = result?.pre || [];
+  for (const event of events.filter(event => !event.hit && event.src === 'Intimidate')) {
+    const state = event.who === 'atk' ? user : target;
+    state.mon.boosts[event.stat] = Math.max(-6, Math.min(6, state.mon.boosts[event.stat] + event.by));
+  }
+  const fieldChange = (key, value) => {
+    (output.field ||= {})[key] = value;
+    output.log.push(`${key}: ${value}`);
+  };
+  for (let index = 0; index < strikes.length && current > 0; index++) {
+    let damage = (roll === 'min' ? Math.min : Math.max)(...strikes[index]);
+    if (!damage) continue;
+    const before = current;
+    if (!exact && damage >= current && current === target.mon.maxHP()) {
+      const sash = holdsItem(target.mon, field) && target.mon.hasItem('Focus Sash');
+      const sturdy = profile.gen >= 5 && target.mon.hasAbility('Sturdy')
+        && !user.mon.hasAbility('Mold Breaker', 'Teravolt', 'Turboblaze');
+      if (sash || sturdy) {
+        damage = current - 1;
+        if (sash) target.consume('Focus Sash');
+        else target.logs.push('Sturdy: 1 HP');
+      }
+    }
+    current = Math.max(0, current - damage);
+    dealt += before - current;
+    output.log.push(`Hit ${index + 1}: -${before - current} HP`);
+    if (!exact) {
+      const item = target.mon.item;
+      if (holdsItem(target.mon, field) && (item === 'Air Balloon'
+        || (RESIST_BERRIES[item.replace(/ Berry$/, '')] === type && (info.eff > 1 || type === 'Normal')))) target.consume(item);
+    }
+    if (!current) continue;
+    if (before > target.mon.maxHP() / 2 && current <= target.mon.maxHP() / 2) {
+      if (profile.gen >= 7 && target.mon.hasAbility('Berserk')) target.change('spa', 1, 'Berserk');
+      if (profile.gen >= 9 && target.mon.hasAbility('Anger Shell')) {
+        for (const stat of ['def', 'spd']) target.change(stat, -1, 'Anger Shell');
+        for (const stat of ['atk', 'spa', 'spe']) target.change(stat, 1, 'Anger Shell');
+      }
+    }
+    current = applyBerry(target, field, user.mon, current, exact ? {} : info);
+    if (exact) continue;
+    const item = HIT_ITEMS[target.mon.item];
+    if (item && profile.gen >= item[0] && holdsItem(target.mon, field) && item[1](info)
+      && (!profile.over?.afterMove?.includes(target.mon.item) || index === strikes.length - 1)) {
+      const name = target.mon.item;
+      for (const stat of item[2]) target.change(stat, item[3], name);
+      target.consume(name);
+    }
+    if (profile.gen >= 7 && target.mon.hasAbility('Stamina')) target.change('def', 1, 'Stamina');
+    if (profile.gen >= 7 && target.mon.hasAbility('Water Compaction') && type === 'Water') target.change('def', 2, 'Water Compaction');
+    if (profile.gen >= 5 && target.mon.hasAbility('Justified') && type === 'Dark') target.change('atk', 1, 'Justified');
+    if (profile.gen >= 5 && target.mon.hasAbility('Weak Armor') && info.cat === 'Physical') {
+      target.change('def', -1, 'Weak Armor');
+      target.change('spe', profile.gen >= 7 ? 2 : 1, 'Weak Armor');
+    }
+    if (profile.gen >= 8 && target.mon.hasAbility('Steam Engine') && ['Water', 'Fire'].includes(type)) target.change('spe', 6, 'Steam Engine');
+    if (profile.gen >= 5 && target.mon.hasAbility('Rattled') && ['Bug', 'Dark', 'Ghost'].includes(type)) target.change('spe', 1, 'Rattled');
+    if (target.mon.hasAbility('Anger Point') && (slot.crit && result.crit.p || result.crit.forced)) target.change('atk', 6, 'Anger Point', true);
+    if (profile.gen >= 9 && (target.mon.hasAbility('Electromorphosis') || target.mon.hasAbility('Wind Power') && move?.flags?.wind)) {
+      target.update.toggles = {...target.update.toggles, Charge: true};
+      target.logs.push(`${target.mon.ability}: Charge`);
+    }
+    if (profile.gen >= 8 && target.mon.hasAbility('Cotton Down')) user.change('spe', -1, 'Cotton Down');
+    if (profile.gen >= 9 && target.mon.hasAbility('Toxic Debris') && info.cat === 'Physical') {
+      const layers = Math.min(2, (output.field?.hazards?.atkToxicSpikes ?? values.atkToxicSpikes ?? 0) + 1);
+      (output.field ||= {}).hazards = {atkToxicSpikes: layers};
+      target.logs.push('Toxic Debris: Toxic Spikes');
+    }
+    if (profile.gen >= 9 && target.mon.hasAbility('Seed Sower')) fieldChange('terrain', 'Grassy');
+    if (profile.gen >= 8 && target.mon.hasAbility('Sand Spit')) fieldChange('weather', 'Sand');
+  }
+  if (!exact && dealt > 0 && holdsItem(user.mon, field) && user.mon.item.endsWith(' Gem')
+    && user.mon.item === `${type} Gem`) user.consume(user.mon.item);
+  if (!exact && def.hp !== 0 && current === 0 && dealt > 0) {
+    const ability = user.mon.ability;
+    if (profile.gen >= 5 && ability === 'Moxie' || profile.gen >= 8 && ['Chilling Neigh', 'As One (Glastrier)'].includes(ability)) user.change('atk', 1, ability);
+    if (profile.gen >= 8 && ['Grim Neigh', 'As One (Spectrier)'].includes(ability) || profile.gen >= 7 && ability === 'Soul-Heart') user.change('spa', 1, ability);
+    if (profile.gen >= 7 && ability === 'Beast Boost') {
+      const stat = STAGES.reduce((best, stat) => user.mon.rawStats[stat] > user.mon.rawStats[best] ? stat : best, 'atk');
+      user.change(stat, 1, ability);
+    }
+  }
+  target.update.hp = current;
+  output.log.push(...target.logs, ...user.logs);
+  output.dealt = dealt;
+  return output;
+}
+
 // First-hit events, applied to the battlers' stages before the calculation.
 function firstHitStages(attacker, defender, atk, def, slot, move, field, own) {
   const pre = [];
@@ -802,7 +1029,7 @@ const FIXED = {
 const OHKO = new Set(['Fissure', 'Guillotine', 'Horn Drill', 'Sheer Cold']);
 const TAKEN = {Counter: 2, 'Mirror Coat': 2, Bide: 2, 'Metal Burst': 1.5, Comeuppance: 1.5};
 
-function calc(atk, def, slot, values = {}) {
+function calculateMove(atk, def, slot, values = {}) {
   const name = data.M[slot.mv];
   const taken = TAKEN[name];
   if (!FIXED[name] && !OHKO.has(name) && !taken) return calcCore(atk, def, slot, values);
@@ -828,6 +1055,72 @@ function calc(atk, def, slot, values = {}) {
     ko: knockout([rolls], current, eot, max - current),
     notes: base.notes.filter(note => !['STAB', 'Crit'].includes(note) && !/^(Super|Not very) effective$/.test(note))};
   delete result.per; delete result.bp; delete result.pre;
+  return result;
+}
+
+function calc(atk, def, slot, values = {}) {
+  const result = calculateMove(atk, def, slot, values);
+  if (!result) return result;
+  const target = fieldPokemon(def, values, 'def');
+  const user = fieldPokemon(atk, values, 'atk');
+  const field = battleField(values);
+  checkItem(target, field.isMagicRoom);
+  const full = target.curHP() === target.maxHP();
+  const sash = full && holdsItem(target, field) && target.hasItem('Focus Sash');
+  const sturdy = full && profile.gen >= 5 && target.hasAbility('Sturdy')
+    && !user.hasAbility('Mold Breaker', 'Teravolt', 'Turboblaze');
+  const berry = berryEffect(target, field, user, 1, {eff: result.eff});
+  const healing = berry?.heal > 0;
+  const survival = result.hits === 1 && (sash || sturdy);
+  if (!survival && !healing || !target.curHP() || !result.max) return result;
+  if (survival) result.notes.push(sash ? 'Sash' : 'Sturdy');
+  if (healing) result.notes.push(`after ${target.item.replace(/ Berry$/, '')}`);
+  const per = result.per || Array.from({length: result.hits}, () => result.rolls);
+  const frequencies = per.map(rolls => {
+    const counts = new Map();
+    for (const value of rolls) counts.set(value, (counts.get(value) || 0) + 1 / 16);
+    return counts;
+  });
+  let distribution = new Map([[`${target.curHP()},0,0`, 1]]);
+  let probability = 0;
+  const eot = [0, 1, 2, 3].map(turn => (result.eot || []).reduce((sum, part) => sum + part.v[turn], 0));
+  result.ko = {n: 0, p: 0};
+  for (let turn = 0; turn < 4; turn++) {
+    for (const counts of frequencies) {
+      const next = new Map();
+      for (const [key, chance] of distribution) {
+        const [before, consumed, saved] = key.split(',').map(Number);
+        for (const [damage, weight] of counts) {
+          const protects = survival && !saved && before === target.maxHP() && damage >= before;
+          let hp = protects ? 1 : before - damage;
+          let used = consumed;
+          if (hp <= 0) { probability += chance * weight; continue; }
+          if (healing && !used) {
+            const effect = berryEffect(target, field, user, hp, {eff: result.eff});
+            if (effect) { hp += effect.heal; used = 1; }
+          }
+          const state = `${hp},${used},${saved || protects && sash ? 1 : 0}`;
+          next.set(state, (next.get(state) || 0) + chance * weight);
+        }
+      }
+      distribution = next;
+    }
+    const next = new Map();
+    for (const [key, chance] of distribution) {
+      const [before, consumed, saved] = key.split(',').map(Number);
+      let hp = Math.min(target.maxHP(), before + eot[turn]);
+      let used = consumed;
+      if (hp <= 0) { probability += chance; continue; }
+      if (healing && !used) {
+        const effect = berryEffect(target, field, user, hp);
+        if (effect) { hp += effect.heal; used = 1; }
+      }
+      const state = `${hp},${used},${saved}`;
+      next.set(state, (next.get(state) || 0) + chance);
+    }
+    distribution = next;
+    if (probability > 0) { result.ko = {n: turn + 1, p: Math.min(1, probability)}; break; }
+  }
   return result;
 }
 
@@ -899,4 +1192,4 @@ function hp(atk, def, slot, values = {}, dealt = 0) {
   return {v: parts.reduce((sum, value) => sum + value, 0), l: name};
 }
 
-window.DMG = {init, stats, calc, residual, speed, entry, hp, settings, intimidate: intimidateMarks};
+window.DMG = {init, stats, calc, residual, speed, entry, hp, hit, turn, derived, settings, intimidate: intimidateMarks};
