@@ -1,4 +1,8 @@
 [
+  {"k":"waterSport","l":"Water Sport","side":"field","group":"battle","gen":4,"moves":["Water Sport"]},
+  {"k":"mudSport","l":"Mud Sport","side":"field","group":"battle","gen":4,"moves":["Mud Sport"]},
+  {"k":"powerSplit","l":"Power Split","side":"field","group":"battle","gen":5,"moves":["Power Split"]},
+  {"k":"guardSplit","l":"Guard Split","side":"field","group":"battle","gen":5,"moves":["Guard Split"]},
   {"k":"PowerSpot","l":"Ally Power Spot","group":"battle","gen":8,"abilities":["Power Spot"],"doubles":true},
   {"k":"SteelySpirit","l":"Ally Steely Spirit","group":"battle","gen":8,"abilities":["Steely Spirit"],"doubles":true},
   {"k":"FlowerGift","l":"Ally Flower Gift","group":"battle","gen":4,"abilities":["Flower Gift"],"doubles":true},

@@ -227,8 +227,7 @@ Source: the release at `2576d0f3` (shallow fetch into `.tmp/ei-release/`, never 
   non-zero (`battle_util.c` 10710); no trainer or script sets one. The Eternal X `inverse` field is not added.
 - **Shadowy Veil: not in EI.** No ability or move of that name in the release (constants, `abilities.h`, moves), its
   docs, eidex, hzla's `imp` backups or stock; in our data "shadowy" is only Shadow Ball's description. Nothing to add.
-- **Ruin abilities**: native, confirmed by the ruin-* fixtures (stock parity in `imperium_check.mjs`, hzla match). Not
-  modelled: a Ruin on the attacker's or the target's doubles **ally** (stock has `field.is*OfRuin`; no control).
+- **Ruin abilities**: native holders retained; **built A3**: either doubles ally's per-side Ruin flags map once to stock `field.is*OfRuin` (nonstacking; native holder exclusion retained).
 - **Config switches off Gen 9** (the rest of `battle.h`'s damage switches are `GEN_LATEST`): `B_EXPLOSION_DEFENSE`
   `GEN_4` (built, table above); `B_PROTEAN_LIBERO` `GEN_1` (type change on every move: what the calc already does);
   `B_INTREPID_SWORD` / `B_DAUNTLESS_SHIELD` `GEN_1` (on every switch-in, not once per battle: the calc applies the
@@ -238,15 +237,13 @@ Source: the release at `2576d0f3` (shallow fetch into `.tmp/ei-release/`, never 
   the Mega Ring; no trainer sets one), Commander, Battery, Dragon Cheer, the Pledge moves.
 - **Gen 9 inputs already covered**: fainted allies (Last Respects, Supreme Overlord: `atk.fnt`), Rage Fist's count,
   switching (Pursuit, Stakeout), Glaive Rush, Salt Cure, Tar Shot, Charge, hazards, Snow, Neutralizing Gas.
-- **In EI and missing from the profile** (not built; each needs a decision):
-  - Doubles ally effects the engine supports but EI has no control for: Power Spot, Steely Spirit, an ally's Flower
-    Gift (the other three guides have it), Fairy Aura / Dark Aura / Aura Break and Ruin on an ally, Plus / Minus
-    (stock needs `abilityOn`).
-  - Power Trick (stock `isPowerTrick` side flag, no control).
-  - Water Sport / Mud Sport (Gen 6+ field effect, Fire / Electric power ×1352/4096) and Electrify / Ion Deluge (type
-    change to Electric): stock models none of them; each would be a profile rule on a new field toggle.
-  - Laser Focus, Lucky Chant: already on `plans/calc-open.md` (crit inputs).
-  - Power Split / Guard Split: no engine support (stat averaging); rare.
+- **EI scope inputs built** (A3 engine; D3 owns the page pass):
+  - **Built A3:** doubles ally Power Spot, Steely Spirit, Flower Gift (existing key reused), global Fairy/Dark Aura and Aura Break, per-side ally Ruin and Plus/Minus; gated by ability metadata, ignored in Singles.
+  - **Built A3:** per-side Power Trick (`atkPowerTrick` / `defPowerTrick`), gated by its move; stock raw-stat swap.
+  - **Built A3:** global Water Sport / Mud Sport toggles, Fire / Electric BP ×1352/4096 in EI, move-gated; no timer simulation.
+  - **Covered:** Electrify / Ion Deluge use the move's Type override (`slot.t: 'Electric'`), no separate toggle or engine rule.
+  - **Built A2:** Laser Focus and Lucky Chant engine inputs (crit fields); page controls follow in D3.
+  - **Built A3:** global Power Split / Guard Split, move-gated, both battlers' raw offensive / defensive stats averaged down before stages; both attack directions and multi-hit paths.
 - **Overlap with `plans/calc-auto-effects.md`**: Intrepid Sword / Dauntless Shield's every-switch-in rule (above);
   nothing else found that the plan doesn't already list.
 

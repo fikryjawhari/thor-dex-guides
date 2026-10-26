@@ -94,6 +94,10 @@ def calc_profile(c, data=None):
                                        **({'doubles': True} if entry.get('doubles') else {}),
                                        **({'max': entry['max']} if 'max' in entry else {})))
                     keys.add(key)
+                elif entry.get('doubles'):
+                    for index, field in enumerate(fields):
+                        if field['k'] == key:
+                            fields[index] = dict(field, doubles=True)
     return profile
 
 

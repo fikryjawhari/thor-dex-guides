@@ -443,6 +443,49 @@ without adding prefixes and preserves `doubles: true` for D3 to hide in Singles.
 The current page renders these offered entries immediately; the engine enforces
 Doubles even before D3. Existing Flower Gift declarations are not duplicated.
 
+### Sports and raw-stat splits
+
+`waterSport` and `mudSport` are global toggles, never atk/def-prefixed: Fire and
+Electric base power respectively. Gen 4 halves base power (floored); Gen 5+
+adds 1352/4096 to the base-power modifier chain, with the generation's rounding,
+not a multiplier on final damage. The effective move type, including `slot.t`,
+is used. Neither changes fixed damage, other move types, or saved inputs.
+Gen 4-5 toggles assert that a source user is still present; Gen 6+ toggles assert
+the five-turn field effect is active. The API neither counts turns nor clears
+them on switching; the caller manages that lifetime.
+
+Evidence: EI release `2576d0f3`, `include/config/battle.h:36,59` and
+`src/battle_util.c:9147-9152` (modern reduction),
+`src/battle_script_commands.c:15078-15119` (field timers vs user status).
+Hardlove release `f1b2363`, `src/individual/CalcBaseDamage.c:573-580` also
+chains `UQ412__0_33`; its end-turn sport expiry blocks in
+`src/individual/ServerFieldConditionCheck.c:1546-1565` are TODOs, so no expiry
+is inferred/simulated. Eternal X / Photonic use Gen 6 / Gen 7 defaults, absent
+contrary hack evidence. Gen 4 source: pret/pokeplatinum
+`src/battle/battle_lib.c:6811-6817` divides move power by two, not damage.
+Gen 5 default: Pokemon Showdown `data/mods/gen5/moves.ts:579-595,967-983`
+retains the user's volatile status but uses 1352/4096, **not** Gen 4's half.
+
+`powerSplit` / `guardSplit` are global toggles, Gen 5+: replace both battlers'
+raw Atk/SpA or Def/SpD respectively with `floor((user + target) / 2)` before
+stages, abilities, items and damage. Both flags may coexist; they affect either
+attack direction, Foul Play and Body Press, crits and each recalculated hit
+(including Parental Bond). They do not mutate the sets or `DMG.stats`, nor
+change HP or Speed. These flags describe one split between the two displayed
+battlers, not an absent ally or a historical series of splits. With Power Trick,
+the deterministic preview averages the original raw slots then applies the
+stock swap; arbitrary historical ordering requires explicit stat overrides,
+not these checkboxes. Source: EI release `2576d0f3`,
+`src/battle_script_commands.c:15999-16008` (`u16 avg = (*stat1 + *stat2) / 2`);
+Pokemon Showdown `data/moves.ts` Power Split / Guard Split use `storedStats`.
+
+All four global entries use the existing move-availability gate (`M`) and their
+introduction generation in `field-states.json`. Ally abilities use `AB` instead.
+Electrify / Ion Deluge need no engine flag: the move's Type override (`slot.t`)
+covers their change to Electric; it leaves move-specific type rules intact.
+Tests: the five A3 groups in `test.mjs`; 126 A3 battle fixtures across the four
+guides (44 EI, 26 Hardlove, 28 each Eternal X / Photonic), each with rule evidence.
+
 ## Engine overrides (`prof.over`)
 
 `assemble.py` recursively merges the base with each hack's `cfg.calc`. Optional

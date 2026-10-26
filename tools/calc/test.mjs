@@ -49,12 +49,15 @@ function reference(atk, def, selected, options = {}, profile = profiles.expansio
     const entry = guide.P.find(species => species.id === config.id);
     const name = entry.n.replace(/^Mega (.+?)(?: ([XY]))?$/, (_, base, suffix) => `${base}-Mega${suffix ? '-' + suffix : ''}`);
     const original = gen.species.get(toID(name)) || Generations.get(9).species.get(toID(name));
-    return new Pokemon(gen, name, {
+    const result = new Pokemon(gen, name, {
       level: config.lv, nature: config.nat, ability: guide.AB[config.ab]?.[0] || 'Guide no ability',
       item: config.it, status: config.st, abilityOn: !!config.abilityOn, ivs: statObject(config.iv, 31), evs: statObject(config.ev, 0),
       boosts: statObject(config.stg, 0), curHP: config.hp,
       overrides: {...original, name, baseStats: statObject(entry.s, 1), types: entry.t, nfe: !!entry.et.length, abilities: {0: ''}},
     });
+    Object.assign(result.rawStats, config.raw || {});
+    Object.assign(result.stats, config.raw || {});
+    return result;
   };
   const name = guide.M[selected.mv];
   const entry = guide.MV[selected.mv];
@@ -73,7 +76,10 @@ function reference(atk, def, selected, options = {}, profile = profiles.expansio
   });
   move.hits = selected.hits ?? move.hits;
   move.overrides = {...move.overrides, multihit: [move.hits, move.hits]};
-  return {result: calculate(gen, attacker, defender, move, new Field(options)), attacker, defender};
+  const direct = atk.raw || def.raw ? profile.gen === 4 ? require('@smogon/calc/dist/mechanics/gen4').calculateDPP
+    : profile.gen <= 6 ? require('@smogon/calc/dist/mechanics/gen56').calculateBWXY
+      : require('@smogon/calc/dist/mechanics/gen789').calculateSMSSSV : calculate;
+  return {result: direct(gen, attacker, defender, move, new Field(options)), attacker, defender};
 }
 
 function distributions(damage, hits) {
@@ -1442,6 +1448,75 @@ await test('A3 Plus/Minus and Power Trick: all generations, saved stats unchange
       distributions(reference(user, target, selected,
         {[side === 'atk' ? 'attackerSide' : 'defenderSide']: {isPowerTrick: true}}, profile).result.damage, 1)[0]);
     assert.deepEqual(engine.stats(user), before);
+  }
+});
+
+await test('A3 sports: Gen 4 halves BP, Gen 5+ chains 1352, type override and Technician', () => {
+  for (const profile of [profiles.gen4, profiles.gen5, profiles.gen6, profiles.gen7, profiles.expansion]) {
+    engine.init(data, profile);
+    const user = set('Snorlax'), target = set('Blissey');
+    for (const [key, type] of [['waterSport', 'Fire'], ['mudSport', 'Electric']]) {
+      const selected = slot('Tackle', {bp: 101, t: type});
+      const power = profile.gen === 4 ? 50 : 33;
+      for (const [attacker, defender] of [[user, target], [target, user]]) {
+        assert.deepEqual(engine.calc(attacker, defender, selected, {[key]: true}).rolls,
+          engine.calc(attacker, defender, {...selected, bp: power}, {}).rolls);
+      }
+      assert.deepEqual(engine.calc(user, target, slot('Tackle'), {[key]: true}).rolls,
+        engine.calc(user, target, slot('Tackle'), {}).rolls);
+      assert.ok(engine.calc(user, target, selected, {[key]: true}).notes.includes(key === 'waterSport' ? 'Water Sport' : 'Mud Sport'));
+      const tech = {...user, ab: ability('Technician')};
+      assert.deepEqual(engine.calc(tech, target, slot('Tackle', {bp: 100, t: type}), {[key]: true}).rolls,
+        engine.calc(user, target, slot('Tackle', {bp: profile.gen === 4 ? 50 : 33, t: type}), {}).rolls);
+    }
+    assert.deepEqual(engine.calc(user, target, slot('Thunderbolt'), {mudSport: true, waterSport: true}).rolls,
+      engine.calc(user, target, slot('Thunderbolt'), {mudSport: true}).rolls);
+    assert.deepEqual(engine.calc(user, target, slot('Seismic Toss'), {waterSport: true, mudSport: true}).rolls,
+      engine.calc(user, target, slot('Seismic Toss'), {}).rolls);
+  }
+});
+
+await test('A3 splits: floor raw averages before stages, both directions, special stat users and purity', () => {
+  for (const profile of [profiles.gen5, profiles.gen6, profiles.gen7, profiles.expansion]) {
+    engine.init(data, profile);
+    const user = set('Shuckle', {stg: [0, 2, -1, 1, 2, 0]}), target = set('Blissey', {stg: [0, -1, 2, 2, -1, 0]});
+    const saved = JSON.stringify([user, target]), rawUser = engine.stats(user), rawTarget = engine.stats(target);
+    for (const field of [{powerSplit: true}, {guardSplit: true}, {powerSplit: true, guardSplit: true}]) {
+      const raw = {};
+      for (const stat of [...(field.powerSplit ? ['atk', 'spa'] : []), ...(field.guardSplit ? ['def', 'spd'] : [])]) {
+        const index = stats.indexOf(stat);
+        raw[stat] = Math.floor((rawUser[index] + rawTarget[index]) / 2);
+      }
+      for (const [attacker, defender] of [[user, target], [target, user]]) {
+        for (const move of ['Tackle', 'Flamethrower', 'Foul Play', 'Body Press']) {
+          if (move === 'Body Press' && profile.gen < 8) continue;
+          for (const crit of [false, true]) {
+            const selected = slot(move, {crit});
+            assert.deepEqual(plain(engine.calc(attacker, defender, selected, field).rolls),
+              distributions(reference({...attacker, raw}, {...defender, raw}, selected, {}, profile).result.damage, 1)[0],
+              `Gen ${profile.gen} ${move} ${JSON.stringify(field)}`);
+          }
+        }
+      }
+    }
+    assert.equal(JSON.stringify([user, target]), saved);
+    assert.deepEqual(engine.stats(user), rawUser);
+  }
+  engine.init(data, profiles.gen4);
+  assert.deepEqual(engine.calc(set('Shuckle'), set('Blissey'), slot('Tackle'), {powerSplit: true, guardSplit: true}).rolls,
+    engine.calc(set('Shuckle'), set('Blissey'), slot('Tackle'), {}).rolls);
+});
+
+await test('A3 splits persist through multi-hit and Parental Bond recalculations', () => {
+  engine.init(data, profiles.expansion);
+  const user = set('Snorlax', {ab: ability('Parental Bond')}), target = set('Blissey');
+  for (const field of [{powerSplit: true}, {guardSplit: true}, {powerSplit: true, guardSplit: true}]) {
+    const result = engine.calc(user, target, slot('Tackle'), field);
+    const expected = engine.hit(user, target, slot('Tackle'), field, 'max', {userChange: false});
+    assert.equal(result.max + Math.max(...result.per[1]), expected.dealt);
+    const multi = engine.calc({...user, ab: -1}, target, slot('Double Kick'), field);
+    assert.equal(multi.hits, 2);
+    assert.deepEqual(multi.per?.[1] || multi.rolls, multi.rolls);
   }
 });
 

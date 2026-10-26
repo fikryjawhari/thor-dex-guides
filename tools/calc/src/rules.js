@@ -12,6 +12,15 @@ export function fieldGrounded(mon, field) {
 
 function fieldPhase(gen, phase, context, after = false) {
   const values = context.input.field;
+  if (!after && phase === 'powerMods') {
+    const sport = context.move.hasType('Fire') && values.waterSport ? 'Water Sport'
+      : context.move.hasType('Electric') && values.mudSport ? 'Mud Sport' : '';
+    if (sport) {
+      if (gen.num === 4) context.value.push(0.5);
+      else context.value.unshift(1352);
+      context.notes.add(sport);
+    }
+  }
   if (phase === 'effectiveness') {
     const type = context.state.effectivenessType;
     if (context.move.hasType('Ground')) {

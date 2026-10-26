@@ -1010,6 +1010,17 @@ function calcCore(atk, def, slot, values = {}, action = null) {
   if (!(Number(power) > 0)) return null;
   const attacker = fieldPokemon(atk, values, 'atk');
   const defender = fieldPokemon(def, values, 'def');
+  for (const [key, stats] of [['powerSplit', ['atk', 'spa']], ['guardSplit', ['def', 'spd']]]) {
+    if (values[key] && profile.gen >= 5) {
+      for (const stat of stats) {
+        const average = Math.floor((attacker.rawStats[stat] + defender.rawStats[stat]) / 2);
+        for (const mon of [attacker, defender]) {
+          mon.rawStats[stat] = average;
+          mon.stats[stat] = getModifiedStat(average, mon.boosts[stat], generation);
+        }
+      }
+    }
+  }
   // Stock gives Water Shuriken power 20 only to a Pokémon named 'Greninja-Ash'; the guides call it "Ash-Greninja",
   // "Greninja (Ash)" or "Greninja Ash" (EI / Hardlove / Photonic sources: power 20, always 3 hits).
   if (moveData.name === 'Water Shuriken' && isAshGreninja(atk)) attacker.name = 'Greninja-Ash';
@@ -1090,7 +1101,7 @@ function calcCore(atk, def, slot, values = {}, action = null) {
     const stages = before.map(mon => ({...mon.boosts}));
     const events = betweenHitStages(...before, per.length, {type: move.type, cat: move.category, eff});
     pre.push(...events);
-    if (name === 'Foul Play' && !action) {
+    if ((name === 'Foul Play' || values.powerSplit || values.guardSplit) && !action) {
       const sets = [atk, def].map((set, index) => ({...set, entry: false, dl: 'off', intim: false,
         stg: statNames.map(stat => stages[index][stat])}));
       for (let index = 1; index < per.length; index++) {

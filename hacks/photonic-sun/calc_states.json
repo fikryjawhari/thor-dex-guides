@@ -36253,6 +36253,1247 @@
         }
       },
       "src": "2026-10-26 engine inputs (user decision): set `dl` locks the Download boost it got (atk / spa) whatever the current target; `slot.pre: false` leaves out the move's own stat changes (charge turn, Spectral Thief). tools/calc/README.md -> Stat changes before the hit."
+    },
+    {
+      "name": "A3-waterSport-odd-power",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "bp": 101,
+        "t": "Fire"
+      },
+      "field": {
+        "waterSport": true
+      },
+      "expect": {
+        "rolls": [
+          54,
+          55,
+          55,
+          56,
+          56,
+          57,
+          58,
+          58,
+          59,
+          60,
+          60,
+          61,
+          62,
+          62,
+          63,
+          64
+        ]
+      },
+      "src": "Gen 7 default: Pokemon Showdown data/moves.ts Mud Sport/Water Sport condition: duration 5, chainModify([1352,4096]); no contrary hack source."
+    },
+    {
+      "name": "A3-waterSport-reverse",
+      "atk": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "bp": 101,
+        "t": "Fire"
+      },
+      "field": {
+        "waterSport": true
+      },
+      "expect": {
+        "rolls": [
+          5,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          7
+        ]
+      },
+      "src": "Gen 7 default: Pokemon Showdown data/moves.ts Mud Sport/Water Sport condition: duration 5, chainModify([1352,4096]); no contrary hack source."
+    },
+    {
+      "name": "A3-waterSport-unrelated-type",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "waterSport": true
+      },
+      "expect": {
+        "rolls": [
+          99,
+          100,
+          100,
+          102,
+          103,
+          105,
+          105,
+          106,
+          108,
+          109,
+          111,
+          111,
+          112,
+          114,
+          115,
+          117
+        ]
+      },
+      "src": "Gen 7 default: Pokemon Showdown data/moves.ts Mud Sport/Water Sport condition: duration 5, chainModify([1352,4096]); no contrary hack source."
+    },
+    {
+      "name": "A3-mudSport-odd-power",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "bp": 101,
+        "t": "Electric"
+      },
+      "field": {
+        "mudSport": true
+      },
+      "expect": {
+        "rolls": [
+          54,
+          55,
+          55,
+          56,
+          56,
+          57,
+          58,
+          58,
+          59,
+          60,
+          60,
+          61,
+          62,
+          62,
+          63,
+          64
+        ]
+      },
+      "src": "Gen 7 default: Pokemon Showdown data/moves.ts Mud Sport/Water Sport condition: duration 5, chainModify([1352,4096]); no contrary hack source."
+    },
+    {
+      "name": "A3-mudSport-reverse",
+      "atk": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32,
+        "bp": 101,
+        "t": "Electric"
+      },
+      "field": {
+        "mudSport": true
+      },
+      "expect": {
+        "rolls": [
+          5,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          7
+        ]
+      },
+      "src": "Gen 7 default: Pokemon Showdown data/moves.ts Mud Sport/Water Sport condition: duration 5, chainModify([1352,4096]); no contrary hack source."
+    },
+    {
+      "name": "A3-mudSport-unrelated-type",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "mudSport": true
+      },
+      "expect": {
+        "rolls": [
+          99,
+          100,
+          100,
+          102,
+          103,
+          105,
+          105,
+          106,
+          108,
+          109,
+          111,
+          111,
+          112,
+          114,
+          115,
+          117
+        ]
+      },
+      "src": "Gen 7 default: Pokemon Showdown data/moves.ts Mud Sport/Water Sport condition: duration 5, chainModify([1352,4096]); no contrary hack source."
+    },
+    {
+      "name": "A3-powerSplit-physical",
+      "atk": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          2,
+          -1,
+          1,
+          2,
+          0
+        ]
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          -1,
+          2,
+          2,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "powerSplit": true
+      },
+      "expect": {
+        "rolls": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          17,
+          17,
+          17,
+          17,
+          17,
+          18,
+          18,
+          18,
+          18,
+          18,
+          19
+        ]
+      },
+      "src": "EI expansion 2576d0f3 src/battle_script_commands.c:15999-16008: both raw stats = floor(sum/2), before stages; Gen 5+ default also Showdown data/moves.ts powersplit/guardsplit storedStats."
+    },
+    {
+      "name": "A3-powerSplit-special",
+      "atk": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          2,
+          -1,
+          1,
+          2,
+          0
+        ]
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          -1,
+          2,
+          2,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 52
+      },
+      "field": {
+        "powerSplit": true
+      },
+      "expect": {
+        "rolls": [
+          31,
+          31,
+          32,
+          32,
+          32,
+          33,
+          33,
+          34,
+          34,
+          34,
+          35,
+          35,
+          35,
+          36,
+          36,
+          37
+        ]
+      },
+      "src": "EI expansion 2576d0f3 src/battle_script_commands.c:15999-16008: both raw stats = floor(sum/2), before stages; Gen 5+ default also Showdown data/moves.ts powersplit/guardsplit storedStats."
+    },
+    {
+      "name": "A3-powerSplit-foul-play",
+      "atk": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          2,
+          -1,
+          1,
+          2,
+          0
+        ]
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          -1,
+          2,
+          2,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 491
+      },
+      "field": {
+        "powerSplit": true
+      },
+      "expect": {
+        "rolls": [
+          12,
+          12,
+          13,
+          13,
+          13,
+          13,
+          13,
+          13,
+          13,
+          14,
+          14,
+          14,
+          14,
+          14,
+          14,
+          15
+        ]
+      },
+      "src": "EI expansion 2576d0f3 src/battle_script_commands.c:15999-16008: both raw stats = floor(sum/2), before stages; Gen 5+ default also Showdown data/moves.ts powersplit/guardsplit storedStats."
+    },
+    {
+      "name": "A3-powerSplit-reverse",
+      "atk": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "powerSplit": true
+      },
+      "expect": {
+        "rolls": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          3
+        ]
+      },
+      "src": "EI expansion 2576d0f3 src/battle_script_commands.c:15999-16008: both raw stats = floor(sum/2), before stages; Gen 5+ default also Showdown data/moves.ts powersplit/guardsplit storedStats."
+    },
+    {
+      "name": "A3-guardSplit-physical",
+      "atk": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          2,
+          -1,
+          1,
+          2,
+          0
+        ]
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          -1,
+          2,
+          2,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "guardSplit": true
+      },
+      "expect": {
+        "rolls": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          5
+        ]
+      },
+      "src": "EI expansion 2576d0f3 src/battle_script_commands.c:15999-16008: both raw stats = floor(sum/2), before stages; Gen 5+ default also Showdown data/moves.ts powersplit/guardsplit storedStats."
+    },
+    {
+      "name": "A3-guardSplit-special",
+      "atk": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          2,
+          -1,
+          1,
+          2,
+          0
+        ]
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          -1,
+          2,
+          2,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 52
+      },
+      "field": {
+        "guardSplit": true
+      },
+      "expect": {
+        "rolls": [
+          12,
+          12,
+          13,
+          13,
+          13,
+          13,
+          13,
+          13,
+          13,
+          14,
+          14,
+          14,
+          14,
+          14,
+          14,
+          15
+        ]
+      },
+      "src": "EI expansion 2576d0f3 src/battle_script_commands.c:15999-16008: both raw stats = floor(sum/2), before stages; Gen 5+ default also Showdown data/moves.ts powersplit/guardsplit storedStats."
+    },
+    {
+      "name": "A3-guardSplit-foul-play",
+      "atk": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          2,
+          -1,
+          1,
+          2,
+          0
+        ]
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          -1,
+          2,
+          2,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 491
+      },
+      "field": {
+        "guardSplit": true
+      },
+      "expect": {
+        "rolls": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ]
+      },
+      "src": "EI expansion 2576d0f3 src/battle_script_commands.c:15999-16008: both raw stats = floor(sum/2), before stages; Gen 5+ default also Showdown data/moves.ts powersplit/guardsplit storedStats."
+    },
+    {
+      "name": "A3-guardSplit-reverse",
+      "atk": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "guardSplit": true
+      },
+      "expect": {
+        "rolls": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "src": "EI expansion 2576d0f3 src/battle_script_commands.c:15999-16008: both raw stats = floor(sum/2), before stages; Gen 5+ default also Showdown data/moves.ts powersplit/guardsplit storedStats."
+    },
+    {
+      "name": "A3-both-splits",
+      "atk": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "powerSplit": true,
+        "guardSplit": true
+      },
+      "expect": {
+        "rolls": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          5
+        ]
+      },
+      "src": "EI expansion 2576d0f3 src/battle_script_commands.c:15999-16008: both raw stats = floor(sum/2), before stages; Gen 5+ default also Showdown data/moves.ts powersplit/guardsplit storedStats."
+    },
+    {
+      "name": "A3-atk-PowerTrick",
+      "atk": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "atkPowerTrick": true
+      },
+      "expect": {
+        "rolls": [
+          125,
+          127,
+          128,
+          130,
+          131,
+          133,
+          134,
+          136,
+          137,
+          139,
+          140,
+          142,
+          143,
+          145,
+          146,
+          148
+        ]
+      },
+      "src": "EI expansion 2576d0f3 src/battle_script_commands.c:10456-10461 swaps raw Attack/Defense; stock Side.isPowerTrick, stages remain in their slots."
+    },
+    {
+      "name": "A3-def-PowerTrick",
+      "atk": {
+        "id": "shuckle",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "defPowerTrick": true
+      },
+      "expect": {
+        "rolls": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          17,
+          17,
+          17,
+          17,
+          17,
+          18,
+          18,
+          18,
+          18,
+          18,
+          19
+        ]
+      },
+      "src": "EI expansion 2576d0f3 src/battle_script_commands.c:10456-10461 swaps raw Attack/Defense; stock Side.isPowerTrick, stages remain in their slots."
+    },
+    {
+      "name": "A3-ally-FlowerGift",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkFlowerGift": true,
+        "weather": "Sun"
+      },
+      "expect": {
+        "rolls": [
+          147,
+          148,
+          150,
+          153,
+          154,
+          156,
+          157,
+          159,
+          160,
+          163,
+          165,
+          166,
+          168,
+          169,
+          171,
+          174
+        ]
+      },
+      "src": "Smogon calc 0.12.0 src/mechanics/gen789.ts:1232-1235,1436-1453,1610-1620; gen56.ts ally Flower Gift; named Side flag. Doubles only; flag denotes an active ally."
+    },
+    {
+      "name": "A3-ally-FlowerGift-Singles-off",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "gameType": "Singles",
+        "atkFlowerGift": true,
+        "weather": "Sun"
+      },
+      "expect": {
+        "rolls": [
+          99,
+          100,
+          100,
+          102,
+          103,
+          105,
+          105,
+          106,
+          108,
+          109,
+          111,
+          111,
+          112,
+          114,
+          115,
+          117
+        ]
+      },
+      "src": "Smogon calc 0.12.0 src/mechanics/gen789.ts:1232-1235,1436-1453,1610-1620; gen56.ts ally Flower Gift; named Side flag. Doubles only; flag denotes an active ally."
+    },
+    {
+      "name": "A3-ally-FlowerGift-def-side",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 52
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defFlowerGift": true,
+        "weather": "Sun"
+      },
+      "expect": {
+        "rolls": [
+          20,
+          20,
+          20,
+          21,
+          21,
+          21,
+          21,
+          22,
+          22,
+          22,
+          22,
+          23,
+          23,
+          23,
+          23,
+          24
+        ]
+      },
+      "src": "Smogon calc 0.12.0 src/mechanics/gen789.ts:1232-1235,1436-1453,1610-1620; gen56.ts ally Flower Gift; named Side flag. Doubles only; flag denotes an active ally."
+    },
+    {
+      "name": "A3-ally-FairyAura",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 584
+      },
+      "field": {
+        "gameType": "Doubles",
+        "allyFairyAura": true
+      },
+      "expect": {
+        "rolls": [
+          27,
+          27,
+          27,
+          28,
+          28,
+          28,
+          29,
+          29,
+          29,
+          30,
+          30,
+          30,
+          31,
+          31,
+          31,
+          32
+        ]
+      },
+      "src": "Smogon calc 0.12.0 src/mechanics/gen56.ts:766-788 / gen789.ts:1191-1229: ally aura maps to global field; matching type BP x5448/4096 or x3072/4096 with Aura Break."
+    },
+    {
+      "name": "A3-ally-FairyAura-break",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 584
+      },
+      "field": {
+        "gameType": "Doubles",
+        "allyFairyAura": true,
+        "allyAuraBreak": true
+      },
+      "expect": {
+        "rolls": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          17,
+          17,
+          17,
+          17,
+          17,
+          18,
+          18,
+          18,
+          18,
+          18,
+          19
+        ]
+      },
+      "src": "Smogon calc 0.12.0 src/mechanics/gen56.ts:766-788 / gen789.ts:1191-1229: ally aura maps to global field; matching type BP x5448/4096 or x3072/4096 with Aura Break."
+    },
+    {
+      "name": "A3-ally-FairyAura-reverse",
+      "atk": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 584
+      },
+      "field": {
+        "gameType": "Doubles",
+        "allyFairyAura": true
+      },
+      "expect": {
+        "rolls": [
+          35,
+          36,
+          36,
+          36,
+          37,
+          37,
+          38,
+          38,
+          39,
+          39,
+          39,
+          40,
+          40,
+          41,
+          41,
+          42
+        ]
+      },
+      "src": "Smogon calc 0.12.0 src/mechanics/gen56.ts:766-788 / gen789.ts:1191-1229: ally aura maps to global field; matching type BP x5448/4096 or x3072/4096 with Aura Break."
+    },
+    {
+      "name": "A3-ally-DarkAura",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 398
+      },
+      "field": {
+        "gameType": "Doubles",
+        "allyDarkAura": true
+      },
+      "expect": {
+        "rolls": [
+          22,
+          23,
+          23,
+          23,
+          24,
+          24,
+          24,
+          24,
+          25,
+          25,
+          25,
+          25,
+          26,
+          26,
+          26,
+          27
+        ]
+      },
+      "src": "Smogon calc 0.12.0 src/mechanics/gen56.ts:766-788 / gen789.ts:1191-1229: ally aura maps to global field; matching type BP x5448/4096 or x3072/4096 with Aura Break."
+    },
+    {
+      "name": "A3-ally-DarkAura-break",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 398
+      },
+      "field": {
+        "gameType": "Doubles",
+        "allyDarkAura": true,
+        "allyAuraBreak": true
+      },
+      "expect": {
+        "rolls": [
+          13,
+          13,
+          13,
+          14,
+          14,
+          14,
+          14,
+          14,
+          14,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          16
+        ]
+      },
+      "src": "Smogon calc 0.12.0 src/mechanics/gen56.ts:766-788 / gen789.ts:1191-1229: ally aura maps to global field; matching type BP x5448/4096 or x3072/4096 with Aura Break."
+    },
+    {
+      "name": "A3-ally-DarkAura-reverse",
+      "atk": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 398
+      },
+      "field": {
+        "gameType": "Doubles",
+        "allyDarkAura": true
+      },
+      "expect": {
+        "rolls": [
+          30,
+          30,
+          31,
+          31,
+          32,
+          32,
+          32,
+          33,
+          33,
+          33,
+          34,
+          34,
+          34,
+          35,
+          35,
+          36
+        ]
+      },
+      "src": "Smogon calc 0.12.0 src/mechanics/gen56.ts:766-788 / gen789.ts:1191-1229: ally aura maps to global field; matching type BP x5448/4096 or x3072/4096 with Aura Break."
+    },
+    {
+      "name": "A3-ally-Plus",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": 56
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 52
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkPlusMinus": true
+      },
+      "expect": {
+        "rolls": [
+          28,
+          29,
+          29,
+          29,
+          30,
+          30,
+          30,
+          31,
+          31,
+          31,
+          32,
+          32,
+          32,
+          33,
+          33,
+          34
+        ]
+      },
+      "src": "Smogon calc 0.12.0 src/mechanics/gen789.ts:1408 / gen56.ts:869: Special x1.5 requires holder Plus/Minus and abilityOn; ally flag enables abilityOn, never supplies the holder ability."
+    },
+    {
+      "name": "A3-ally-Minus",
+      "atk": {
+        "id": "snorlax",
+        "lv": 50,
+        "ab": 57
+      },
+      "def": {
+        "id": "blissey",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 52
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkPlusMinus": true
+      },
+      "expect": {
+        "rolls": [
+          28,
+          29,
+          29,
+          29,
+          30,
+          30,
+          30,
+          31,
+          31,
+          31,
+          32,
+          32,
+          32,
+          33,
+          33,
+          34
+        ]
+      },
+      "src": "Smogon calc 0.12.0 src/mechanics/gen789.ts:1408 / gen56.ts:869: Special x1.5 requires holder Plus/Minus and abilityOn; ally flag enables abilityOn, never supplies the holder ability."
     }
   ]
 }
