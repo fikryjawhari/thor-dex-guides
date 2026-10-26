@@ -785,7 +785,7 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
     if (!exact && !index && result.bust) {
       target.update.broken = true;
       current = Math.max(0, current - result.bust.loss);
-      target.logs.push(`${result.bust.ability}: broken${result.bust.loss ? ` (-${result.bust.loss} HP)` : ''}`);
+      output.log.push(`${result.bust.ability}: broken${result.bust.loss ? ` (-${result.bust.loss} HP)` : ''}`);
       if (current) current = applyBerry(target, field, user.mon, current);
       continue;
     }
@@ -1009,7 +1009,7 @@ function calcCore(atk, def, slot, values = {}, action = null) {
   const field = battleField(values);
   if (def.vol === 'switch') field.defenderSide.isSwitching = 'out';
   const overrides = {...moveData, basePower: Number(power), type: moveType};
-  if (dataCrit) overrides.willCrit = false;
+  overrides.willCrit = false;
   const crit = critChance(entry, moveData, attacker, defender, values);
   const useZ = !!(profile.zmove && slot.z && moveData.category !== 'Status');
   if (useZ) overrides.zMove = {basePower: zPower(moveData, Number(power), listed)};
@@ -1311,7 +1311,7 @@ function contactEffects(user, target, move, field, category) {
     || profile.over?.contact?.defenderPads && target.hasItem('Protective Pads')) return [];
   const parts = [];
   if (target.hasAbility('Rough Skin') || profile.gen >= 5 && target.hasAbility('Iron Barbs')) {
-    parts.push({l: target.ability, v: -Math.max(1, Math.floor(user.maxHP() / (profile.gen === 4 ? 16 : 8)))});
+    parts.push({l: target.ability, v: -Math.max(1, Math.floor(user.maxHP() / 8))});
   }
   if (profile.gen >= 5 && holdsItem(target, field) && target.hasItem('Rocky Helmet')) {
     parts.push({l: 'Rocky Helmet', v: -Math.max(1, Math.floor(user.maxHP() / 6))});

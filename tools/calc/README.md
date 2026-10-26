@@ -152,8 +152,9 @@ cost; KO includes it once, with the shield gone on later uses. Immunity, Protect
 ability-ignoring moves prevent a bust. A resist berry waits for a real hit; a healing berry can fire after
 the bust cost. `hp` ignores supplied dealt damage for a wholly absorbed move.
 
-Contact costs join `hp.v`: Rocky Helmet floor user max HP / 6, Rough Skin / Iron Barbs floor / 8
-(the generic Gen 4 Rough Skin branch is / 16), once per damaging strike. Magic Guard blocks them;
+Contact costs join `hp.v`: Rocky Helmet floor user max HP / 6, Rough Skin / Iron Barbs floor / 8,
+once per damaging strike. Rough Skin is /8 from Gen 4, not /16 (expansion `include/config/battle.h:34`);
+the /16 rule is pre-Gen-4, outside supported profiles. Magic Guard blocks them;
 Long Reach / Protective Pads (Gen 7+) and Punching Glove on punches (Gen 9+) prevent contact. Item
 suppression applies. `options.hits` is the number of damaging strikes actually applied; for a one-use tap,
 pass `{hits: action.hits}` from `hit` with `action.dealt`. Without it, `hp` uses the move's full hit count

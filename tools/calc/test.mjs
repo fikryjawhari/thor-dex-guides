@@ -1212,6 +1212,17 @@ await test('A2 crit fields: Laser Focus, Lucky Chant, Dragon Cheer and Focus exc
   assert.equal(crit({gameType: 'Doubles', atkDragonCheer: true}).stage, 0);
 });
 
+await test('A2 Lucky Chant also blocks stock always-crit fallback without MV crit data', () => {
+  const fallback = {...data, MV: data.MV.map(entry => entry ? {...entry, cr: 0} : entry)};
+  engine.init(fallback, profiles.expansion);
+  const user = set('Blastoise');
+  const selected = slot('Storm Throw');
+  assert.equal(engine.calc(user, user, selected).crit.forced, true);
+  const result = engine.calc(user, user, selected, {defLuckyChant: true});
+  assert.equal(result.crit.p, 0);
+  assert.equal(result.notes.includes('Crit'), false);
+});
+
 await test('A2 Foul Play reads target stages and changes between Parental Bond hits', () => {
   engine.init(data, profiles.expansion);
   const user = set('Blastoise');
@@ -1258,6 +1269,7 @@ await test('A2 Disguise absorbs once, later hits land, bust HP is not dealt or d
   assert.deepEqual(plain(multi.per[1]), plain(broken.rolls));
   assert.equal(multi.pmax, broken.pmax);
   const action = engine.hit(user, target, {...selected, hits: 2});
+  assert.ok(action.log[0].startsWith('Disguise: broken'));
   assert.equal(action.dealt, Math.min(max - loss, broken.max));
   assert.equal(action.def.hp, Math.max(0, max - loss - broken.max));
   assert.equal(action.hits, 1);
@@ -1314,6 +1326,8 @@ await test('A2 Ice Face blocks physical only, explicit form state and weather re
   assert.equal(engine.derived({...target, broken: true}).restore, undefined);
   assert.equal(engine.derived({...target, broken: true, hp: 0}, {weather: 'Snow'}).restore, undefined);
   assert.equal(engine.derived({...target, broken: true}, {weather: 'Snow'}, {...user, ab: ability('Cloud Nine')}).restore, undefined);
+  engine.init(data, {...profiles.gen7, gen: 9});
+  assert.equal(engine.derived({...target, broken: true}, {weather: 'Hail'}).restore, true);
 });
 
 await test('A2 contact costs per damaging hit including Parental Bond, exact hit report only', () => {
@@ -1345,7 +1359,7 @@ await test('A2 contact costs per damaging hit including Parental Bond, exact hit
   assert.equal(engine.hp(user, target, selected, {magicRoom: true}, 30).v, -Math.floor(max / 8));
   assert.equal(engine.hp(user, {...target, ab: ability('Iron Barbs')}, selected, {}, 30).v, -cost);
   engine.init(data, profiles.gen4);
-  assert.equal(engine.hp(user, target, selected, {}, 30).v, -Math.floor(max / 16));
+  assert.equal(engine.hp(user, target, selected, {}, 30).v, -Math.floor(max / 8));
 });
 
 await test('A2 crash previews are separate misses, generation-aware and Magic Guard safe', () => {
