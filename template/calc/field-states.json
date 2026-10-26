@@ -1,4 +1,7 @@
 [
+  {"k":"LaserFocus","l":"Laser Focus","group":"battle","gen":7,"moves":["Laser Focus"]},
+  {"k":"LuckyChant","l":"Lucky Chant","group":"battle","gen":4,"moves":["Lucky Chant"]},
+  {"k":"DragonCheer","l":"Dragon Cheer","group":"battle","gen":9,"moves":["Dragon Cheer"],"doubles":true},
   {"k":"trickRoom","l":"Trick Room","side":"field","group":"battle","gen":4},
   {"k":"waterSport","l":"Water Sport","side":"field","type":"state","group":"battle","gen":4,"moves":["Water Sport"]},
   {"k":"mudSport","l":"Mud Sport","side":"field","type":"state","group":"battle","gen":4,"moves":["Mud Sport"]},

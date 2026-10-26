@@ -13,11 +13,14 @@
 .dfr select.dmanual{border-color:var(--acc)}
 .dtg button.dauto{position:relative;padding-right:10px}
 .dtg button sup{position:absolute;right:2px;top:1px;font:700 8px system-ui}
+:scope .cc .l1 .dbroken{gap:2px;font-size:9px}
 :scope .cc .l1 .dintim{gap:2px;font-size:9px}
 :scope .cc .cl .dberry{margin-left:0;font-size:9px;padding:0 2px}
-.cc .cl:has(.dberry,.dintmark){flex-wrap:wrap;row-gap:2px}
+.cc .cl:has(.dberry,.dintmark){flex-wrap:nowrap}
 .cc .cl:has(.dberry,.dintmark)>*{flex-shrink:0}
-.cc .cl .dintmark{font-size:9px;padding:1px 2px}
+.cc .cl .dintmark{font-size:8px;padding:1px 0}
+.cc .ed>.dberry{font:700 10px system-ui;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--fg);padding:2px 4px;cursor:pointer}
+@media(max-width:479.98px){.cc .cl:has(.dtoxl,.dintmark){gap:2px;font-size:10px}.cc .cl:has(.dtoxl,.dintmark) [data-lv]{width:26px}.cc .cl:has(.dtoxl,.dintmark) [data-hp]{width:32px}.cc .cl:has(.dtoxl,.dintmark) .dturn{font-size:10px;padding:0 2px}}
 body:not(.calc-route) #calc-log{display:none}
 
 main#app{padding-bottom:70px}
@@ -480,10 +483,11 @@ body.calc-route .mr .rcol .dcategory{font-size:10px;padding:0}
 @media(min-width:480px){body.calc-route .fit,body.calc-route .fit:has(.ed){height:auto;min-height:calc(100vh - 8px)}body.calc-route .top{flex:none}}
 /* HP moves: the one-use amount (residual style) at the start of the % line, or in place of a status row's "—";
    the exact entry (Dealt / You) in the opened row. */
-.mr .dturn.hu{margin:0 4px 0 0;min-height:16px;line-height:14px;font-size:10.5px;min-width:max-content}
+.mr .dturn.hu{margin:0 2px 0 0;height:11px;min-height:0;padding:0 2px;border:0;border-radius:3px;background:var(--panel2);font:700 10px/11px system-ui;min-width:max-content;cursor:pointer;touch-action:manipulation}
 .mr .r2:has(.hu){justify-content:flex-start}.mr .r2:has(.hu) .ko{margin-left:auto}
 .mr.st.hu .mm{opacity:1;cursor:pointer}.mr.st.hu .mv{opacity:.55}
 .mr.st .hp:has(.hu){min-width:max-content;flex:none}.mr.st .hp .dturn.hu{margin:0;min-height:20px}
 .dturn.hu.dn{color:#ff7b6b}
+.dstock{display:flex;align-items:center;gap:6px;font-size:11px}.dstock select{width:44px}
 .hx{display:flex;gap:6px;align-items:end;flex-wrap:wrap}.hx label{display:flex;flex-direction:column;font-size:11px}
 .hx input{width:52px}.hxr{font-size:11px;color:var(--mut)}
