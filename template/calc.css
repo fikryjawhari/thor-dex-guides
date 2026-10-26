@@ -376,3 +376,14 @@ body.calc-route .fbar .nav svg{display:block;width:10px;height:10px}
 /* From 480 px the rows keep their old height (the foe team list needs 222 px under the cards): a smaller Z, no extra line */
 @media (min-width:480px){body .dres.zm .mr .r2{min-height:0;margin:0}body .dres.zm .mr .rz{height:12px;font-size:8.5px;line-height:10px;border-radius:4px}}
 @media (max-width:479.98px){body.calc-route .fbar{min-height:24px}body.calc-route .fbar .nav{height:22px;width:24px;border-radius:7px}body.calc-route .fbar .dsrc{min-height:22px}}
+.cc .dfull{font-size:12px;font-weight:700;overflow-wrap:anywhere}
+.cc .dstate label{display:flex;align-items:center;gap:5px;width:100%;font-size:11px;color:var(--mut)}
+.cc .dstate select{flex:1;min-width:0}
+.cc .ddl{width:100%;min-height:26px;font-size:12px}
+.cc .dentry{display:flex;align-items:center;gap:4px;font-size:11px}
+.cc .l1 .dmonstate{display:flex;flex:none;margin:0;align-items:center}
+.cc .l1 .dmonstate input{width:14px;height:14px;margin:0;accent-color:var(--acc)}
+.cc .cl .dturn{flex:none;margin-left:auto;min-height:20px;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);font:700 11px system-ui;cursor:pointer;touch-action:manipulation}
+.cc .dn{color:#ff7b6b}.cc .up{color:#3fb760}
+.cc .dqp label{display:flex;align-items:center;justify-content:space-between;gap:4px}
+@media(min-width:480px){body.calc-route .fit,body.calc-route .fit:has(.ed){height:auto;min-height:calc(100vh - 8px)}body.calc-route .top{flex:none}}

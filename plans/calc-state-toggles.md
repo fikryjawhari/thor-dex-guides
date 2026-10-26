@@ -3,7 +3,10 @@
 ## Build status (2026-10-26)
 - Working branch: `worktree-damage-calc-toggles`, tab of `worktree-damage-calc`.
 - Engine pass merged cleanly at `f3203b1`; main checkout's Hardlove `.src/` copied before any extract build.
-- Page not built yet. Approval mockup: `plans/calc-state-toggles-mockup/edit.html`, generated with `build-edit.mjs`
+- Card/layout sub-step built: direct HP-line residual application, Edit residual/toxic parts, paired wide editors,
+  target state, cycling Download and entry-off controls, full form name, compact ability checkbox. No engine edits.
+  `calc-state.mjs` card/layout checks pass at all five viewer sizes, normal/dvkb (ten cases); all four guides assemble.
+  Move/field controls and full regression gates remain. Approval mockup: `plans/calc-state-toggles-mockup/edit.html`, generated with `build-edit.mjs`
   (sampled Photonic Captain Mallow data and inline shared sprites), framed at `dist/calc-state-edit-frame.html`.
   Phone preview: `https://windows-pc.tail1846b8.ts.net/preview/calc-state-edit.html`.
   `node plans/calc-state-toggles-mockup/check-edit.mjs`: all five viewer sizes, normal/dvkb, pass (ten checks);
