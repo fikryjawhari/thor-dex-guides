@@ -9,7 +9,10 @@
   Field sub-step built: full-width Singles/Doubles segment, stable Player/Foe columns, Focus Energy in all six base
   profiles and all four hack overrides. Side values now map correctly for both attacking directions, with a one-time
   migration from old attacker-relative saves. Field/profile checks: EI 2, Photonic 10, Eternal 10, Hardlove 10 passed;
-  card/state/side-mapping checks: 12 passed. Move controls and full regression gates remain.
+  card/state/side-mapping checks: 12 passed. Move controls implemented: state toggles/counters, pledges, Metronome,
+  Curl/pre inputs, forced/blocked crit metadata, total multi-hit/PB damage and per-hit inspection, compact Draco,
+  full Z names, used/listed/typed power. Photonic state/hit checks (6) and EI triple/power checks (20) pass.
+  Expanded coverage, existing-scenario updates and full regression gates remain.
   Approval mockup: `plans/calc-state-toggles-mockup/edit.html`, generated with `build-edit.mjs`
   (sampled Photonic Captain Mallow data and inline shared sprites), framed at `dist/calc-state-edit-frame.html`.
   Phone preview: `https://windows-pc.tail1846b8.ts.net/preview/calc-state-edit.html`.

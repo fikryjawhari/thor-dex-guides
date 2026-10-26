@@ -385,7 +385,8 @@ body.calc-route .fbar .nav svg{display:block;width:10px;height:10px}
 .cc .dentry{display:flex;align-items:center;gap:4px;font-size:11px}
 .cc .l1 .dmonstate{display:flex;flex:none;margin:0;align-items:center}
 .cc .l1 .dmonstate input{width:14px;height:14px;margin:0;accent-color:var(--acc)}
-.cc .cl .dturn{flex:none;margin-left:auto;min-height:20px;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);font:700 11px system-ui;cursor:pointer;touch-action:manipulation}
+.cc .cl .dturn{flex:none;width:auto;height:auto;margin-right:0;margin-left:auto;min-height:20px;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);font:700 11px system-ui;cursor:pointer;touch-action:manipulation}
+.cc .cl:has(.dturn){gap:3px}.cc .cl:has(.dturn) [data-lv]{width:32px}.cc .cl:has(.dturn) [data-hp]{width:38px}
 .cc .dn{color:#ff7b6b}.cc .up{color:#3fb760}
 .cc .dqp label{display:flex;align-items:center;justify-content:space-between;gap:4px}
 .dformat{display:grid;grid-template-columns:1fr 1fr;margin-bottom:6px}
@@ -396,4 +397,11 @@ body.calc-route .fbar .nav svg{display:block;width:10px;height:10px}
 .dfside section{min-width:0}.dfside section>b{display:block;text-align:center;font-size:11px;margin-bottom:3px}
 .dfside .dtg{display:grid;grid-template-columns:minmax(0,1fr);gap:3px}
 .dfside .dtg button{width:100%;min-width:0;font-size:11px;overflow-wrap:anywhere}
+.mr .rcol .rh[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#111}
+.mr .rcol .rc:disabled{cursor:default;opacity:.7}
+body.calc-route .mr .rcol .dcategory{font-size:10px;padding:0}
+.mr .dmovecheck{display:flex;align-items:center;gap:4px;margin:3px 0;font-size:11px}
+.mr .dd .dmovecheck input{width:14px;height:14px;margin:0;accent-color:var(--acc)}
+.cc .cl .dvol{font-size:9px;color:var(--acc)}
+@media(max-width:479.98px){.cc .cl .dvol{display:none}}
 @media(min-width:480px){body.calc-route .fit,body.calc-route .fit:has(.ed){height:auto;min-height:calc(100vh - 8px)}body.calc-route .top{flex:none}}

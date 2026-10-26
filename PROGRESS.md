@@ -42,7 +42,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
 2. **Damage calc with save import** (start every calc session from `plans/damage-calc-sessions.md`; `plans/damage-calc.md`; branch `worktree-damage-calc`, pushed, not merged).
    UI build active on `worktree-damage-calc-toggles` (Sol, 2026-10-26): engine pass merged at `f3203b1`, Hardlove
    source inputs copied; card/layout and two-column field implementation built. Card/side-mapping scenarios (12)
-   and four guides' field/profile checks (32) pass. Move controls and full regression checks remain; no engine edits.
+   and four guides' field/profile checks (32) pass. Move-state, total-hit damage, compact Draco and crit/pre wiring
+   implemented; Photonic state/hit (6) and EI triple/power (20) checks pass. Full regression checks remain; no engine edits.
    Approval mockup phone preview:
    `https://windows-pc.tail1846b8.ts.net/preview/calc-state-edit.html` (ten viewer-size/mode mock checks pass;
    fourth move at 309 px at minimum size). Tap residual amount to apply a turn directly; cycle Download; full-width
