@@ -26,6 +26,11 @@
 - Checks: `calc-state.mjs` one-window (7 sizes) and header-height asserts; `tapField` helper in calc_check_lib for
   the narrow switch. Rules recorded in `template/README.md` → Damage calculator.
 - Engine follow-ups below are deliberately left for the merge into `worktree-damage-calc` (the user's call).
+- Then (same day): toxic turn box on the HP line, Edit's residual parts folded behind Turn end, stage buttons one
+  size, search by move / item / ability, text-zoom refit, Find trainer guard for an empty team. The preview panel's
+  All preset (also the fresh-load default) loads every preset as the team.
+- **Next session: build `plans/calc-field-states.md`** (stackable states, pledge fields, hazards; engine + UI). It
+  has one open question to ask first (how Stealth Rock / Spikes damage shows).
 
 ## What is already built and accepted
 - Direct turn application by tapping the residual amount on the HP line; residual parts/toxic counter in Edit.
