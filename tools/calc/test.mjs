@@ -899,7 +899,7 @@ await test('automatic entry: Protosynthesis and Quark Drive activate only with t
 });
 
 await test('automatic entry: Intimidate reactions, marks, caps, off switch and speed never write input', () => {
-  const guide = {...data, AB: [...data.AB, ['Guard Dog', ''], ['Mirror Armor', '']]};
+  const guide = {...data, AB: [...data.AB, ['Guard Dog', ''], ['Mirror Armor', ''], ['Rattled', '']]};
   const ability = name => guide.AB.findIndex(entry => entry[0] === name);
   engine.init(guide, profiles.expansion);
   const holder = set('Gyarados', {ab: ability('Intimidate')});
