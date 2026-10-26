@@ -40,7 +40,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
 2. **Damage calc** (branch `worktree-damage-calc`, `.claude/worktrees/damage-calc`; pushed to `origin` up to
-   `67f0e37`, **not merged**: it waits for the user's mechanics check before `main`). Start every calc session from
+   `457386a`, **not merged**: it waits for the user's mechanics check before `main`). Start every calc session from
    `plans/calc-open.md` (the open list, in order, plus the checks, the merge steps and the save-reader notes).
    - **Built** (all four guides with `cfg.calc`: EI, Hardlove, Photonic, Eternal X): `@smogon/calc` engine on each
      guide's own data with a per-hack profile and fixtures (hzla oracle matches for EI / Photonic / Eternal X;
