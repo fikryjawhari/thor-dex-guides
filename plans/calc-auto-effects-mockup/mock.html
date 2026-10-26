@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calc automatic effects</title>
+<style>
+:root{--bg:#121417;--panel:#1b1e23;--panel2:#23272e;--line:#2e333b;--fg:#e8eaed;--mut:#9aa0a8;--acc:#f0b429;--grn:#6cc46c;--red:#f28b82}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:13px/1.3 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{padding:4px;box-sizing:border-box}
+button,select,input{font:inherit;color:inherit}
+.bar{display:flex;align-items:center;gap:4px;height:24px;margin-bottom:3px;font-size:12px}
+.bar .t{flex:1;min-width:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb{height:22px;min-width:24px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);padding:0 4px;cursor:pointer}
+.strip{display:flex;gap:2px;margin-bottom:3px}
+.strip button{flex:1;min-width:0;height:24px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);font-size:10.5px;padding:0;white-space:nowrap;overflow:hidden;cursor:pointer}
+.strip button[aria-pressed=true]{border-color:var(--acc);color:var(--acc)}
+.strip button.ko{opacity:.45;text-decoration:line-through}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:2px 6px;margin-bottom:3px}
+.card.atk{border-color:#4a5568}
+.l1{display:flex;align-items:center;gap:5px;font-weight:700;min-height:20px}
+.l1 .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.l1 .lv{font-weight:400;color:var(--mut);font-size:11px}
+.ck{display:inline-flex;align-items:center;gap:2px;font:400 10.5px/1 system-ui;color:var(--fg);height:18px;border:1px solid var(--line);border-radius:5px;padding:0 4px;background:var(--panel2);cursor:pointer;white-space:nowrap}
+.ck input{margin:0;width:11px;height:11px}
+.l2,.l3{display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-size:11px;color:var(--mut);min-height:20px}
+.l2 input{width:34px;height:18px;box-sizing:border-box;background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:0 3px;text-align:right}
+.hpbar{flex-basis:100%;height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin:1px 0}
+.hpbar i{display:block;height:100%;background:var(--grn)}
+.chip{height:18px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);padding:0 6px;font-size:10.5px;cursor:pointer;white-space:nowrap}
+.chip.neg{color:var(--red)}
+.chip.pos{color:var(--grn);border-color:#3c6e3c}
+.it.used{text-decoration:line-through;opacity:.6}
+.tag{color:var(--acc)}
+.st{color:#f6ad55}
+.ed{display:none;grid-template-columns:repeat(5,1fr);gap:2px;margin:2px 0}
+.card.edit .ed{display:grid}
+.ed div{display:flex;flex-direction:column;align-items:center;font-size:10px;color:var(--mut)}
+.ed span{display:flex;gap:1px;align-items:center;color:var(--fg)}
+.ed button{width:16px;height:16px;padding:0;border:1px solid var(--line);border-radius:4px;background:var(--panel2);font-size:10px;line-height:1}
+.ed b{min-width:16px;text-align:center}
+.log{font-size:10.5px;color:var(--acc);min-height:0}
+.mr{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:1px 6px;margin-bottom:2px;cursor:pointer}
+.mr .r1{display:flex;justify-content:space-between;gap:6px;font-weight:700;font-size:12.5px}
+.mr .r2{display:flex;justify-content:space-between;gap:6px;font-size:10.5px;color:var(--mut)}
+.mr .td{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.mr .dd{display:none;border-top:1px solid var(--line);margin-top:2px;padding-top:2px;font-size:10.5px;color:var(--mut)}
+.mr.open .dd{display:block}
+.mr .ab{display:flex;gap:4px;margin-top:2px}
+.mr .ab button{flex:1;height:22px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);font-size:11px;cursor:pointer}
+details.fld{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:2px 6px}
+details.fld summary{font-size:12px;font-weight:700;cursor:pointer;min-height:20px;line-height:20px}
+.fr{display:flex;gap:4px;margin:2px 0}
+.fr label{flex:1;min-width:0;display:flex;flex-direction:column;font-size:10px;color:var(--mut)}
+.fr select{width:100%;height:22px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;font-size:11px;padding:0 2px}
+.fr select.auto{border-style:dashed}
+.fr select.man{border-color:var(--acc)}
+.src{font-size:10.5px;color:var(--mut);min-height:14px}
+.src button{height:16px;font-size:10px;border:1px solid var(--acc);color:var(--acc);background:none;border-radius:8px;padding:0 5px;margin-left:3px;cursor:pointer}
+</style></head>
+<body>
+<div class="bar"><button class="sb" data-a="tp" aria-label="Previous trainer">‹</button><span class="t" id="tn"></span><button class="sb" data-a="tn" aria-label="Next trainer">›</button><button class="sb" data-a="dir" id="dir" title="Attack direction"></button></div>
+<div class="strip" id="sm"></div>
+<div id="cm"></div>
+<div id="mv"></div>
+<div id="cf"></div>
+<div class="strip" id="sf"></div>
+<details class="fld" id="fld"><summary id="fsum">Field</summary><div id="fb"></div></details>
+<script>
+const D={"mine":[{"id":"growlithe","n":"Growlithe","t":["Fire"],"s":[55,70,45,70,50,60],"l":18,"i":"Sitrus Berry","a":"Intimidate","m":["Flame Wheel","Bite"]},{"id":"hippopotas","n":"Hippopotas","t":["Ground"],"s":[68,72,78,38,42,32],"l":18,"i":"Weakness Policy","a":"Sand Stream","m":["Bulldoze","Bite"]},{"id":"timburr","n":"Timburr","t":["Fighting"],"s":[75,80,55,25,35,35],"l":18,"i":"Flame Orb","a":"Guts","m":["Karate Chop","Rock Tomb"]},{"id":"dwebble","n":"Dwebble","t":["Bug","Rock"],"s":[50,65,85,35,35,55],"l":18,"i":"","a":"Sturdy","m":["Rock Tomb","Bug Bite"]},{"id":"torchic","n":"Torchic","t":["Fire"],"s":[45,60,40,70,50,45],"l":18,"i":"Focus Sash","a":"Speed Boost","m":["Ember","Quick Attack"]}],"tr":[{"n":"Hiker Anthony","loc":"Route 33","field":[{"kind":"weather","value":"Rain","duration":"permanent"}],"p":[{"id":"luvdisc","n":"Luvdisc","t":["Water"],"s":[43,30,55,40,65,97],"l":16,"i":"Lum Berry","a":"Swift Swim","m":["Water Pulse","Draining Kiss","Toxic","Aqua Ring"]},{"id":"anorith","n":"Anorith","t":["Rock","Bug"],"s":[45,95,50,40,50,75],"l":17,"i":"Lum Berry","a":"Swift Swim","m":["Aqua Jet","Rock Tomb","Bug Bite","Hone Claws"]},{"id":"dratini","n":"Dratini","t":["Dragon"],"s":[41,64,45,50,50,50],"l":18,"i":"Flame Orb","a":"Marvel Scale","m":["Hydro Pump","Aqua Jet","Thunder","Facade"]},{"id":"lombre","n":"Lombre","t":["Water","Grass"],"s":[60,50,50,60,70,50],"l":17,"i":"Sitrus Berry","a":"Rain Dish","m":["Fake Out","Trailblaze","Power-Up Punch","Thunder Punch"]}]},{"n":"Hiker Daniel","loc":"Union Cave","field":[],"p":[{"id":"onix","n":"Onix","t":["Rock","Ground"],"s":[35,45,160,30,45,70],"l":17,"i":"Custap Berry","a":"Sturdy","m":["Bulldoze","Rock Tomb","Stealth Rock","Rock Polish"]},{"id":"trubbish","n":"Trubbish","t":["Poison"],"s":[50,50,62,40,62,65],"l":18,"i":"Loaded Dice","a":"Stench","m":["Rock Blast"]},{"id":"bibarel","n":"Bibarel","t":["Normal","Water"],"s":[79,85,60,55,60,71],"l":17,"i":"Sitrus Berry","a":"Simple","m":["Headbutt","Curse","Aqua Jet"]}]}],"mv":{"Flame Wheel":{"t":"Fire","c":"Physical","bp":60},"Bite":{"t":"Dark","c":"Physical","bp":60},"Bulldoze":{"t":"Ground","c":"Physical","bp":60},"Karate Chop":{"t":"Fighting","c":"Physical","bp":50},"Rock Tomb":{"t":"Rock","c":"Physical","bp":60},"Bug Bite":{"t":"Bug","c":"Physical","bp":60},"Ember":{"t":"Fire","c":"Special","bp":40},"Quick Attack":{"t":"Normal","c":"Physical","bp":40},"Water Pulse":{"t":"Water","c":"Special","bp":60},"Draining Kiss":{"t":"Fairy","c":"Special","bp":50},"Toxic":{"t":"Poison","c":"Status","bp":null},"Aqua Ring":{"t":"Water","c":"Status","bp":null},"Aqua Jet":{"t":"Water","c":"Physical","bp":40},"Hone Claws":{"t":"Dark","c":"Status","bp":null},"Hydro Pump":{"t":"Water","c":"Special","bp":110},"Thunder":{"t":"Electric","c":"Special","bp":110},"Facade":{"t":"Normal","c":"Physical","bp":70},"Fake Out":{"t":"Normal","c":"Physical","bp":40},"Trailblaze":{"t":"Grass","c":"Physical","bp":50},"Power-Up Punch":{"t":"Fighting","c":"Physical","bp":40},"Thunder Punch":{"t":"Electric","c":"Physical","bp":75},"Stealth Rock":{"t":"Rock","c":"Status","bp":null},"Rock Polish":{"t":"Rock","c":"Status","bp":null},"Rock Blast":{"t":"Rock","c":"Physical","bp":25},"Headbutt":{"t":"Normal","c":"Physical","bp":70},"Curse":{"t":"Ghost","c":"Status","bp":null}},"tc":{"Normal":{"Normal":10,"Fire":10,"Water":10,"Electric":10,"Grass":10,"Ice":10,"Fighting":10,"Poison":10,"Ground":10,"Flying":10,"Psychic":10,"Bug":10,"Rock":5,"Ghost":0,"Dragon":10,"Dark":10,"Steel":5,"Fairy":10},"Fire":{"Normal":10,"Fire":5,"Water":5,"Electric":10,"Grass":20,"Ice":20,"Fighting":10,"Poison":10,"Ground":10,"Flying":10,"Psychic":10,"Bug":20,"Rock":5,"Ghost":10,"Dragon":5,"Dark":10,"Steel":20,"Fairy":10},"Water":{"Normal":10,"Fire":20,"Water":5,"Electric":10,"Grass":5,"Ice":10,"Fighting":10,"Poison":10,"Ground":20,"Flying":10,"Psychic":10,"Bug":10,"Rock":20,"Ghost":10,"Dragon":5,"Dark":10,"Steel":10,"Fairy":10},"Electric":{"Normal":10,"Fire":10,"Water":20,"Electric":5,"Grass":5,"Ice":10,"Fighting":10,"Poison":10,"Ground":0,"Flying":20,"Psychic":10,"Bug":10,"Rock":10,"Ghost":10,"Dragon":5,"Dark":10,"Steel":10,"Fairy":10},"Grass":{"Normal":10,"Fire":5,"Water":20,"Electric":10,"Grass":5,"Ice":10,"Fighting":10,"Poison":5,"Ground":20,"Flying":5,"Psychic":10,"Bug":5,"Rock":20,"Ghost":10,"Dragon":5,"Dark":10,"Steel":5,"Fairy":10},"Ice":{"Normal":10,"Fire":5,"Water":5,"Electric":10,"Grass":20,"Ice":5,"Fighting":10,"Poison":10,"Ground":20,"Flying":20,"Psychic":10,"Bug":10,"Rock":10,"Ghost":10,"Dragon":20,"Dark":10,"Steel":5,"Fairy":10},"Fighting":{"Normal":20,"Fire":10,"Water":10,"Electric":10,"Grass":10,"Ice":20,"Fighting":10,"Poison":5,"Ground":10,"Flying":5,"Psychic":5,"Bug":5,"Rock":20,"Ghost":0,"Dragon":10,"Dark":20,"Steel":20,"Fairy":5},"Poison":{"Normal":10,"Fire":10,"Water":10,"Electric":10,"Grass":20,"Ice":10,"Fighting":10,"Poison":5,"Ground":5,"Flying":10,"Psychic":10,"Bug":10,"Rock":5,"Ghost":5,"Dragon":10,"Dark":10,"Steel":0,"Fairy":20},"Ground":{"Normal":10,"Fire":20,"Water":10,"Electric":20,"Grass":5,"Ice":10,"Fighting":10,"Poison":20,"Ground":10,"Flying":0,"Psychic":10,"Bug":5,"Rock":20,"Ghost":10,"Dragon":10,"Dark":10,"Steel":20,"Fairy":10},"Flying":{"Normal":10,"Fire":10,"Water":10,"Electric":5,"Grass":20,"Ice":10,"Fighting":20,"Poison":10,"Ground":10,"Flying":10,"Psychic":10,"Bug":20,"Rock":5,"Ghost":10,"Dragon":10,"Dark":10,"Steel":5,"Fairy":10},"Psychic":{"Normal":10,"Fire":10,"Water":10,"Electric":10,"Grass":10,"Ice":10,"Fighting":20,"Poison":20,"Ground":10,"Flying":10,"Psychic":5,"Bug":10,"Rock":10,"Ghost":10,"Dragon":10,"Dark":0,"Steel":5,"Fairy":10},"Bug":{"Normal":10,"Fire":5,"Water":10,"Electric":10,"Grass":20,"Ice":10,"Fighting":5,"Poison":5,"Ground":10,"Flying":5,"Psychic":20,"Bug":10,"Rock":10,"Ghost":5,"Dragon":10,"Dark":20,"Steel":5,"Fairy":5},"Rock":{"Normal":10,"Fire":20,"Water":10,"Electric":10,"Grass":10,"Ice":20,"Fighting":5,"Poison":10,"Ground":5,"Flying":20,"Psychic":10,"Bug":20,"Rock":10,"Ghost":10,"Dragon":10,"Dark":10,"Steel":5,"Fairy":10},"Ghost":{"Normal":0,"Fire":10,"Water":10,"Electric":10,"Grass":10,"Ice":10,"Fighting":10,"Poison":10,"Ground":10,"Flying":10,"Psychic":20,"Bug":10,"Rock":10,"Ghost":20,"Dragon":10,"Dark":5,"Steel":10,"Fairy":10},"Dragon":{"Normal":10,"Fire":10,"Water":10,"Electric":10,"Grass":10,"Ice":10,"Fighting":10,"Poison":10,"Ground":10,"Flying":10,"Psychic":10,"Bug":10,"Rock":10,"Ghost":10,"Dragon":20,"Dark":10,"Steel":5,"Fairy":0},"Dark":{"Normal":10,"Fire":10,"Water":10,"Electric":10,"Grass":10,"Ice":10,"Fighting":5,"Poison":10,"Ground":10,"Flying":10,"Psychic":20,"Bug":10,"Rock":10,"Ghost":20,"Dragon":10,"Dark":5,"Steel":10,"Fairy":5},"Steel":{"Normal":10,"Fire":5,"Water":5,"Electric":5,"Grass":10,"Ice":20,"Fighting":10,"Poison":10,"Ground":10,"Flying":10,"Psychic":10,"Bug":10,"Rock":20,"Ghost":10,"Dragon":10,"Dark":10,"Steel":5,"Fairy":20},"Fairy":{"Normal":10,"Fire":5,"Water":10,"Electric":10,"Grass":10,"Ice":10,"Fighting":20,"Poison":5,"Ground":10,"Flying":10,"Psychic":10,"Bug":10,"Rock":10,"Ghost":10,"Dragon":20,"Dark":20,"Steel":5,"Fairy":10}}};
+const LS='calcAutoMock';
+const STN=['HP','Atk','Def','SpA','SpD','Spe'];
+const TCOL={Normal:'#a8a77a',Fire:'#ee8130',Water:'#6390f0',Electric:'#f7d02c',Grass:'#7ac74c',Ice:'#96d9d6',Fighting:'#c22e28',Poison:'#a33ea1',Ground:'#e2bf65',Flying:'#a98ff3',Psychic:'#f95587',Bug:'#a6b91a',Rock:'#b6a136',Ghost:'#735797',Dragon:'#6f35fc',Dark:'#705746',Steel:'#b7b7ce',Fairy:'#d685ad'};
+const SETTER={'Sand Stream':'Sand',Drizzle:'Rain',Drought:'Sun','Snow Warning':'Snow'};
+// Kept: player HP (always) and this fight's foe HP, the manual field (this fight). Not kept: anything else.
+let K=JSON.parse(localStorage.getItem(LS)||'null')||{tr:0,hpM:{},hpF:{},man:{weather:'',terrain:''}};
+const save=()=>localStorage.setItem(LS,JSON.stringify(K));
+let S={mi:0,fi:0,dir:'mine',open:-1,enter:{mine:0,foe:0},clock:0,sc:{mine:null,foe:null},log:{mine:'',foe:''}};
+const scratch=()=>({stg:[0,0,0,0,0,0],used:false,intim:true,edit:false});
+const team=side=>side==='mine'?D.mine:D.tr[K.tr].p;
+const act=side=>team(side)[side==='mine'?S.mi:S.fi];
+const other=side=>side==='mine'?'foe':'mine';
+const iv=side=>side==='mine'?31:10;
+function stat(m,i,side){const b=m.s[i],x=Math.floor((2*b+iv(side))*m.l/100);return i?x+5:x+m.l+10;}
+const hpKey=side=>side==='mine'?act('mine').id:K.tr+':'+S.fi;
+const hpOf=(side,m=act(side),idx)=>{const store=side==='mine'?K.hpM:K.hpF,key=side==='mine'?m.id:K.tr+':'+(idx??S.fi);return store[key]??stat(m,0,side);};
+function setHp(side,v){const m=act(side),mx=stat(m,0,side);(side==='mine'?K.hpM:K.hpF)[hpKey(side)]=Math.max(0,Math.min(mx,Math.round(v)));save();}
+const hasItem=(side,name)=>act(side).i===name&&!S.sc[side].used;
+const status=side=>{const m=act(side);if(m.i==='Flame Orb'&&!(m.t.includes('Fire')))return 'brn';if(m.i==='Toxic Orb')return 'tox';return '';};
+function weather(){if(K.man.weather)return {v:K.man.weather==='none'?'':K.man.weather,src:'manual'};const a=autoWeather();return a;}
+function autoWeather(){const set=['mine','foe'].filter(s=>SETTER[act(s).a]).sort((a,b)=>S.enter[b]-S.enter[a]);if(set.length){const s=set[0];return {v:SETTER[act(s).a],src:(s==='mine'?'your ':'foe ')+act(s).n+' · '+act(s).a};}const f=D.tr[K.tr].field.find(e=>e.kind==='weather');return f?{v:f.value,src:'area · '+(f.duration||'')}:{v:'',src:''};}
+// Effective stage: Edit stage plus Intimidate from the opposing holder while its box is ticked (Simple doubles it).
+function stage(side,i){let s=S.sc[side].stg[i];const o=other(side);if(i===1&&act(o).a==='Intimidate'&&S.sc[o].intim)s+=act(side).a==='Simple'?-2:-1;return Math.max(-6,Math.min(6,s));}
+const intimBy=side=>{const o=other(side);return i=>i===1&&act(o).a==='Intimidate'&&S.sc[o].intim;};
+const mult=s=>s>=0?(2+s)/2:2/(2-s);
+function speed(side){const m=act(side);let v=Math.floor(stat(m,5,side)*mult(stage(side,5)));const w=weather().v;if(m.a==='Swift Swim'&&w==='Rain')v*=2;return v;}
+function eff(t,def){return def.t.reduce((p,x)=>p*(D.tc[t][x]??10)/10,1);}
+function calc(side,mvName){const a=act(side),dside=other(side),d=act(dside),mv=D.mv[mvName];if(!mv||mv.c==='Status'||!mv.bp)return null;
+ const phys=mv.c==='Physical',ai=phys?1:3,di=phys?2:4,notes=[];let bp=mv.bp;const st=status(side);
+ if(mvName==='Facade'&&st){bp*=2;notes.push('Facade ×2');}
+ let A=Math.floor(stat(a,ai,side)*mult(stage(side,ai))),Dv=Math.floor(stat(d,di,dside)*mult(stage(dside,di)));
+ if(stage(side,ai)!==S.sc[side].stg[ai])notes.push('Intimidate '+(stage(side,ai)-S.sc[side].stg[ai]));
+ if(phys&&st&&a.a==='Guts'){A=Math.floor(A*1.5);notes.push('Guts');}
+ if(phys&&status(dside)&&d.a==='Marvel Scale'){Dv=Math.floor(Dv*1.5);notes.push('Marvel Scale');}
+ const w=weather().v;if(w==='Sand'&&!phys&&d.t.includes('Rock')){Dv=Math.floor(Dv*1.5);notes.push('Sand SpD');}
+ let base=Math.floor(Math.floor(Math.floor(2*a.l/5+2)*bp*A/Dv)/50)+2;let m=1;
+ if(w==='Rain'&&mv.t==='Water'){m*=1.5;notes.push('Rain');}if(w==='Rain'&&mv.t==='Fire'){m*=.5;notes.push('Rain');}
+ if(w==='Sun'&&mv.t==='Fire'){m*=1.5;notes.push('Sun');}if(w==='Sun'&&mv.t==='Water'){m*=.5;notes.push('Sun');}
+ const stab=a.t.includes(mv.t)?1.5:1,e=eff(mv.t,d);if(stab>1)notes.push('STAB');if(e>1)notes.push('Super effective');if(e<1&&e>0)notes.push('Not very effective');
+ const burn=phys&&st==='brn'&&a.a!=='Guts'?.5:1;if(burn<1)notes.push('Burn');
+ const hits=mvName==='Rock Blast'?3:1;const roll=r=>Math.floor(Math.floor(Math.floor(Math.floor(base*m*r/100)*stab)*e)*burn);
+ const lo=roll(85)*hits,hi=roll(100)*hits,mx=stat(d,0,dside);return {lo,hi,mx,e,notes,hits};}
+// What a hit does to the defender (pressing HP −): Sash / Sturdy, berry, Weakness Policy, in that order.
+function hit(side,dmg,e){const ds=other(side),d=act(ds),mx=stat(d,0,ds),hp=hpOf(ds),sc=S.sc[ds],log=['−'+dmg];let nh=hp-dmg;
+ if(nh<=0&&hp===mx&&d.a==='Sturdy'){nh=1;log.push('Sturdy: 1 HP');}
+ else if(nh<=0&&hp===mx&&hasItem(ds,'Focus Sash')){nh=1;sc.used=true;log.push('Focus Sash: 1 HP, used');}
+ nh=Math.max(0,nh);
+ if(nh>0&&nh<=mx/2&&hasItem(ds,'Sitrus Berry')){const h=Math.floor(mx/4);nh=Math.min(mx,nh+h);sc.used=true;log.push('Sitrus +'+h);}
+ if(nh>0&&e>1&&hasItem(ds,'Weakness Policy')){sc.stg[1]=Math.min(6,sc.stg[1]+2);sc.stg[3]=Math.min(6,sc.stg[3]+2);sc.used=true;log.push('Weakness Policy: Atk +2, SpA +2');}
+ if(nh===0)log.push('fainted');
+ setHp(ds,nh);S.log[ds]=log.join(' · ');S.log[side]='';render();}
+// Turn end: weather, burn, Rain Dish, then a berry the drop reaches, then Speed Boost.
+function residual(side){const m=act(side),mx=stat(m,0,side),w=weather().v,parts=[];
+ if(w==='Sand'&&!m.t.some(t=>['Rock','Ground','Steel'].includes(t)))parts.push(['Sandstorm',-Math.max(1,Math.floor(mx/16))]);
+ if(status(side)==='brn')parts.push(['Burn',-Math.max(1,Math.floor(mx/16))]);
+ if(w==='Rain'&&m.a==='Rain Dish')parts.push(['Rain Dish',Math.max(1,Math.floor(mx/16))]);
+ if(m.a==='Speed Boost')parts.push(['Speed Boost',0]);return parts;}
+function turn(side){const m=act(side),mx=stat(m,0,side),parts=residual(side),log=[];let hp=hpOf(side);
+ for(const [l,v] of parts){if(l==='Speed Boost'){S.sc[side].stg[5]=Math.min(6,S.sc[side].stg[5]+1);log.push('Speed Boost: Spe +1');}else{hp=Math.max(0,Math.min(mx,hp+v));log.push(l+' '+(v>0?'+':'')+v);}}
+ if(hp>0&&hp<=mx/2&&hasItem(side,'Sitrus Berry')){const h=Math.floor(mx/4);hp=Math.min(mx,hp+h);S.sc[side].used=true;log.push('Sitrus +'+h);}
+ setHp(side,hp);S.log[side]='Turn end: '+log.join(' · ');render();}
+function berry(side){const m=act(side),mx=stat(m,0,side),h=Math.floor(mx/4);setHp(side,hpOf(side)+h);S.sc[side].used=true;S.log[side]='Sitrus +'+h+', used';render();}
+// Entry: a Pokémon chosen in a strip comes in fresh (item, stages, Intimidate box back); its HP is kept.
+function enter(side,idx){if(side==='mine')S.mi=idx;else S.fi=idx;S.sc[side]=scratch();S.enter[side]=++S.clock;S.log={mine:'',foe:''};S.open=-1;render();}
+function newFight(tr,fresh=true){K.tr=(tr+D.tr.length)%D.tr.length;if(fresh){K.hpF={};K.man={weather:'',terrain:''};}save();S.mi=S.mi;S.fi=0;S.sc={mine:scratch(),foe:scratch()};
+ const sp=['mine','foe'].sort((a,b)=>speed(b)-speed(a));sp.forEach(s=>S.enter[s]=++S.clock);S.log={mine:'',foe:''};S.open=-1;render();}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function card(side){const m=act(side),mx=stat(m,0,side),hp=hpOf(side),sc=S.sc[side],st=status(side),res=residual(side);
+ const net=res.reduce((t,[,v])=>t+v,0),resLabel=res.length?(net?((net>0?'+':'')+net):'')+(res.some(r=>r[0]==='Speed Boost')?(net?' ':'')+'Spe+1':''):'';
+ const berryOn=hp>0&&hp<=mx/2&&hasItem(side,'Sitrus Berry');
+ const marks=[1,2,3,4,5].map(i=>{const e=stage(side,i),own=sc.stg[i];if(!e&&!own)return '';return `<span class="${e!==own?'tag':''}">${STN[i]} ${e>0?'+':''}${e}${e!==own?' (Int.)':''}</span>`;}).join('');
+ return `<div class="card ${S.dir===side?'atk':''} ${sc.edit?'edit':''}"><div class="l1"><span class="nm">${esc(m.n)} <span class="lv">Lv${m.l}</span></span>${m.a==='Intimidate'?`<label class="ck" title="Intimidate: the opposing Pokémon's Attack −1 in the calc"><input type="checkbox" data-a="intim" data-s="${side}" ${sc.intim?'checked':''}>Intimidate</label>`:''}<button class="ck" data-a="edit" data-s="${side}">Edit</button></div>
+ <div class="l2">HP <input inputmode="numeric" data-a="hp" data-s="${side}" value="${hp}">/${mx}${res.length?`<button class="chip ${net<0?'neg':'pos'}" data-a="turn" data-s="${side}" title="Apply one turn end">${esc(resLabel)}</button>`:''}${berryOn?`<button class="chip pos" data-a="berry" data-s="${side}" title="Eat the Sitrus Berry">Sitrus +${Math.floor(mx/4)}</button>`:''}<span style="margin-left:auto">Spe ${speed(side)}</span><div class="hpbar"><i style="width:${hp/mx*100}%"></i></div></div>
+ <div class="l3">${esc(m.a)}${m.i?` · <span class="it ${sc.used?'used':''}">${esc(m.i)}</span>`:''}${st?` · <span class="st">${st==='brn'?'Burn':'Toxic'} (Orb)</span>`:''} ${marks}</div>
+ <div class="ed">${[1,2,3,4,5].map(i=>`<div>${STN[i]}<span><button data-a="stg" data-s="${side}" data-i="${i}" data-d="-1">−</button><b>${sc.stg[i]}</b><button data-a="stg" data-s="${side}" data-i="${i}" data-d="1">+</button></span></div>`).join('')}</div>
+ ${S.log[side]?`<div class="log">${esc(S.log[side])}</div>`:''}</div>`;}
+function moves(){const side=S.dir;return act(side).m.map((n,k)=>{const r=calc(side,n),mv=D.mv[n];const pc=r?`${(r.lo/r.mx*100).toFixed(1)}-${(r.hi/r.mx*100).toFixed(1)}%`:'status';
+ return `<div class="mr ${S.open===k?'open':''}" data-a="row" data-k="${k}"><div class="r1"><span><i class="td" style="background:${TCOL[mv.t]}"></i>${esc(n)}</span><span>${r?r.lo+'-'+r.hi:''}</span></div><div class="r2"><span>${pc}</span><span>${r&&r.e===0?'immune':''}</span></div>
+ ${r?`<div class="dd">${esc(r.notes.join(', '))||'—'}<div class="ab"><button data-a="sub" data-v="${r.lo}" data-e="${r.e}">HP −${r.lo}</button><button data-a="sub" data-v="${r.hi}" data-e="${r.e}">HP −${r.hi}</button></div></div>`:''}</div>`;}).join('');}
+function strip(side){return team(side).map((m,i)=>`<button data-a="pick" data-s="${side}" data-i="${i}" aria-pressed="${(side==='mine'?S.mi:S.fi)===i}" class="${hpOf(side,m,i)===0?'ko':''}">${esc(m.n.slice(0,7))}</button>`).join('');}
+function field(){const w=weather(),a=autoWeather(),t=D.tr[K.tr];const opts=['Sun','Rain','Sand','Snow'];
+ const wsel=`<select data-a="wx" class="${K.man.weather?'man':'auto'}"><option value="">Auto: ${a.v||'none'}</option><option value="none" ${K.man.weather==='none'?'selected':''}>No weather</option>${opts.map(o=>`<option ${K.man.weather===o?'selected':''}>${o}</option>`).join('')}</select>`;
+ const tsel=`<select data-a="tx" class="${K.man.terrain?'man':'auto'}"><option value="">Auto: none</option>${['none','Electric','Grassy','Psychic','Misty'].map(o=>`<option value="${o}" ${K.man.terrain===o?'selected':''}>${o==='none'?'No terrain':o}</option>`).join('')}</select>`;
+ const srcLine=K.man.weather?`Weather set by you${a.v!==w.v?` (auto: ${a.v||'none'})`:''}<button data-a="auto">Auto</button>`:(w.v?`${w.v}: ${esc(w.src)}`:'');
+ const area=t.field.length?`<div class="src">Area: ${t.field.map(e=>esc((e.duration?e.duration+' ':'')+e.value)).join(', ')}</div>`:'';
+ return `<div class="fr"><label>${wsel}</label><label>${tsel}</label></div><div class="src">${srcLine}</div>${area}`;}
+function render(){const t=D.tr[K.tr];document.getElementById('tn').textContent=t.n+' · '+t.loc;document.getElementById('dir').textContent=S.dir==='mine'?'You→':'←Foe';
+ document.getElementById('sm').innerHTML=strip('mine');document.getElementById('sf').innerHTML=strip('foe');
+ document.getElementById('cm').innerHTML=card('mine');document.getElementById('cf').innerHTML=card('foe');document.getElementById('mv').innerHTML=moves();
+ document.getElementById('fb').innerHTML=field();const w=weather();document.getElementById('fsum').textContent='Field'+(w.v?' · '+w.v+(K.man.weather?'':' (auto)'):'');}
+document.addEventListener('click',ev=>{const el=ev.target.closest('[data-a]');if(!el)return;const a=el.dataset.a,s=el.dataset.s;
+ if(a==='tp')newFight(K.tr-1);else if(a==='tn')newFight(K.tr+1);else if(a==='dir'){S.dir=other(S.dir);S.open=-1;render();}
+ else if(a==='pick')enter(s,+el.dataset.i);else if(a==='row'){if(ev.target.closest('.ab'))return;S.open=S.open===+el.dataset.k?-1:+el.dataset.k;render();}
+ else if(a==='sub'){ev.stopPropagation();hit(S.dir,+el.dataset.v,+el.dataset.e);}else if(a==='turn')turn(s);else if(a==='berry')berry(s);
+ else if(a==='edit'){S.sc[s].edit=!S.sc[s].edit;render();}else if(a==='stg'){const i=+el.dataset.i;S.sc[s].stg[i]=Math.max(-6,Math.min(6,S.sc[s].stg[i]+(+el.dataset.d)));render();}
+ else if(a==='auto'){K.man.weather='';save();render();}});
+document.addEventListener('change',ev=>{const el=ev.target,a=el.dataset.a,s=el.dataset.s;if(a==='intim'){S.sc[s].intim=el.checked;render();}else if(a==='hp'){setHp(s,+el.value||0);S.log[s]='';render();}
+ else if(a==='wx'){K.man.weather=el.value;save();render();}else if(a==='tx'){K.man.terrain=el.value;save();render();}});
+window.mockReset=()=>{localStorage.removeItem(LS);location.reload();};
+S.sc={mine:scratch(),foe:scratch()};newFight(K.tr,false);
+</script>
+</body></html>
