@@ -551,7 +551,7 @@ function stageChanger(pre) {
 const holdsItem = (mon, field) => !!mon.item && !field.isMagicRoom && !mon.hasAbility('Klutz');
 
 function intimidate(source, target, set, pre, who, field, reflected = false) {
-  if (!source.hasAbility('Intimidate') || set.intim === false) return;
+  if (!source.hasAbility('Intimidate') || set.intim === false || source.originalCurHP === 0 || target.originalCurHP === 0) return;
   if (target.hasAbility('Clear Body', 'White Smoke', 'Full Metal Body', 'Hyper Cutter')
     || (profile.gen >= 8 && target.hasAbility('Inner Focus', 'Oblivious', 'Own Tempo', 'Scrappy'))
     || (profile.gen >= 9 && holdsItem(target, field) && target.hasItem('Clear Amulet'))) return;
@@ -589,16 +589,18 @@ function derived(set, values = {}) {
   const mon = fieldPokemon(set, values, 'atk');
   const field = battleField(values);
   const result = {};
+  if (!mon.curHP()) return result;
+  const available = (kind, value) => profile.field?.some(entry => entry.to === kind && entry.o?.some(([key]) => key === value));
   const weather = {Drizzle: 'Rain', Drought: 'Sun', 'Sand Stream': 'Sand',
     'Snow Warning': profile.field?.some(entry => entry.to === 'weather' && entry.o?.some(([key]) => key === 'Snow')) ? 'Snow' : 'Hail', 'Desolate Land': 'Harsh Sunshine',
     'Primordial Sea': 'Heavy Rain', 'Delta Stream': 'Strong Winds', 'Orichalcum Pulse': 'Sun'}[mon.ability];
   const terrain = {'Electric Surge': 'Electric', 'Hadron Engine': 'Electric', 'Grassy Surge': 'Grassy',
     'Psychic Surge': 'Psychic', 'Misty Surge': 'Misty'}[mon.ability];
-  if (weather) {
+  if (weather && available('weather', weather)) {
     result.weather = weather;
     if (['Harsh Sunshine', 'Heavy Rain', 'Strong Winds'].includes(weather)) result.primal = true;
   }
-  if (terrain) result.terrain = terrain;
+  if (terrain && available('terrain', terrain)) result.terrain = terrain;
   checkItem(mon, field.isMagicRoom);
   checkAirLock(mon, field);
   if (mon.curHP() && !set.st && !mon.status && holdsItem(mon, field) && !mon.hasAbility('Comatose', 'Purifying Salt')
@@ -647,10 +649,11 @@ function berryEffect(mon, field, other, hp, hit = {}) {
   threshold = config.threshold ?? threshold;
   if (threshold === 1 / 4 && mon.hasAbility('Gluttony')) threshold = 1 / 2;
   if (hp > Math.floor(mon.maxHP() * threshold)) return null;
-  if (config.heal !== undefined) heal = config.heal <= 1 ? Math.max(1, Math.floor(mon.maxHP() * config.heal)) : Math.trunc(config.heal);
+  if (config.heal !== undefined) heal = config.heal <= 1 ? Math.max(0, Math.floor(mon.maxHP() * config.heal)) : Math.trunc(config.heal);
   const berry = item.endsWith(' Berry');
   const recovery = heal * (berry ? ripen : 1)
     + (berry && profile.gen >= 6 && mon.hasAbility('Cheek Pouch') ? Math.max(1, Math.floor(mon.maxHP() / 3)) : 0);
+  if (!stat && !focus && (!recovery || hp >= mon.maxHP())) return null;
   return {item, heal: Math.min(mon.maxHP() - hp, recovery), ...(stat ? {stat, by: ripen} : {}), ...(focus ? {focus: true} : {})};
 }
 
@@ -751,7 +754,9 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
     || profile.gen >= 9 && target.mon.hasAbility('Anger Shell');
   const delayedBerry = thresholdAbility && strikes.length === 1;
   let crossedHalf = false;
-  const events = result?.pre || [];
+  const events = result?.pre || (!exact && result.fixed
+    ? firstHitStages(fieldPokemon(atk, values, 'atk'), fieldPokemon(def, values, 'def'), atk, def, slot,
+      new Move(generation, data.M[slot.mv]), field, profile.over?.state) : []);
   for (const event of events.filter(event => !event.hit)) {
     const state = event.who === 'atk' ? user : target;
     state.mon.boosts[event.stat] = Math.max(-6, Math.min(6, state.mon.boosts[event.stat] + event.by));
@@ -773,7 +778,10 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
     const followup = index && !exact && !result.fixed ? calcCore(stateSet(atk, user, user.mon.curHP()),
       stateSet(def, target, current), slot, actionField, {hit: index + 1, parental}) : null;
     let damage = (roll === 'min' ? Math.min : Math.max)(...(followup?.rolls || strikes[index]));
-    if (!damage) continue;
+    if (!damage) {
+      if (exact) current = applyBerry(target, field, user.mon, current);
+      continue;
+    }
     const before = current;
     if (!exact && damage >= current && current === target.mon.maxHP()) {
       const sash = holdsItem(target.mon, field) && target.mon.hasItem('Focus Sash');

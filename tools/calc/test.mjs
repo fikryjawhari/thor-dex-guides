@@ -912,6 +912,7 @@ await test('automatic entry: Intimidate reactions, marks, caps, off switch and s
   assert.deepEqual(plain(engine.intimidate(holder, target('Mirror Armor'))), {atk: -1, def: 0});
   assert.equal(engine.intimidate(holder, set('Blastoise', {it: 'Clear Amulet'})).def, 0);
   assert.equal(engine.intimidate({...holder, intim: false}, target('Simple')).def, 0);
+  assert.equal(engine.intimidate({...holder, hp: 0}, target('Simple')).def, 0);
   for (const other of [target('Rattled'), set('Blastoise', {it: 'Adrenaline Orb'})]) {
     assert.ok(engine.speed(other, {}, 'def', holder) > engine.speed(other));
   }
@@ -928,6 +929,7 @@ await test('automatic entry: generation defaults, setterStays and added crit sta
     assert.equal(engine.settings().setterStays, gen <= 5);
     const result = engine.calc(set('Blastoise'), set('Blastoise'), slot('Tackle'), {atkCritBonus: 1});
     assert.equal(result.crit.stage, 1);
+    assert.equal(engine.calc(set('Blastoise'), set('Blastoise'), slot('Tackle'), {defCritBonus: 2}).crit.stage, 0);
     assert.equal(engine.calc(set('Blastoise'), set('Blastoise'), slot('Tackle'), {atkCritBonus: 99}).crit.stage,
       gen <= 5 ? 4 : 3);
   }
@@ -962,6 +964,11 @@ await test('automatic derivation: all setters, effect aliases and profile Snow a
   assert.equal(engine.derived(autoSet('Blastoise', 'Snow Warning')).weather, 'Snow');
   engine.init(autoGuide, {...profiles.gen7, gen: 9});
   assert.equal(engine.derived(autoSet('Blastoise', 'Snow Warning')).weather, 'Hail');
+  engine.init(autoGuide, profiles.gen4);
+  assert.deepEqual(plain(engine.derived(autoSet('Blastoise', 'Primordial Sea'))), {});
+  assert.deepEqual(plain(engine.derived(autoSet('Blastoise', 'Electric Surge'))), {});
+  engine.init(autoGuide, profiles.expansion);
+  assert.deepEqual(plain(engine.derived(autoSet('Blastoise', 'Drought', {hp: 0}))), {});
   engine.init(autoGuide, {...profiles.expansion, over: {abilities: {Torrent: {effect: 'Drought'}},
     items: {'Custom Orb': {effect: 'Flame Orb'}}}});
   assert.deepEqual(plain(engine.derived(autoSet('Blastoise', 'Torrent', {it: 'Custom Orb'}))), {weather: 'Sun', status: 'brn'});
@@ -1006,6 +1013,8 @@ await test('automatic berries: aliases, custom fractions, Ripen, Cheek Pouch, Gl
   engine.init(autoGuide, {...profiles.expansion, over: {items: {'Custom Berry': {effect: 'Sitrus Berry', heal: 0.5, threshold: 0.75}}}});
   const max = engine.stats(set('Blastoise'))[0];
   assert.equal(engine.berry(set('Blastoise', {it: 'Custom Berry', hp: 50})).heal, Math.floor(max / 2));
+  engine.init(autoGuide, {...profiles.expansion, over: {items: {'Sitrus Berry': {heal: 0}}}});
+  assert.equal(engine.berry(set('Blastoise', {it: 'Sitrus Berry', hp: 1})), null);
   engine.init(autoGuide, profiles.expansion);
   assert.equal(engine.berry(autoSet('Blastoise', 'Ripen', {it: 'Sitrus Berry', hp: 1})).heal, Math.floor(max / 4) * 2);
   assert.equal(engine.berry(autoSet('Blastoise', 'Ripen', {it: 'Salac Berry', hp: 1})).atk.stg[5], 2);
@@ -1073,6 +1082,7 @@ await test('automatic hit: item use, thresholds, Berserk before single-hit berri
   const max = engine.stats(user)[0];
   const exact = (target, damage) => engine.hit(user, target, selected, {}, 'max', {damage});
   assert.equal(exact({...user, it: 'Sitrus Berry'}, max - 1).def.hp, 1 + Math.floor(max / 4));
+  assert.equal(exact({...user, it: 'Sitrus Berry', hp: 1}, 0).def.hp, 1 + Math.floor(max / 4));
   const berserk = autoSet('Blastoise', 'Berserk');
   assert.equal(exact(berserk, Math.ceil(max / 2)).def.stg[3], 1);
   assert.equal(exact({...berserk, it: 'Sitrus Berry'}, Math.ceil(max / 2)).def.stg[3], 1);
@@ -1121,6 +1131,7 @@ await test('automatic hit: reactions respect stage caps, used seeds, weather and
   const seed = engine.hit({...user, it: 'Electric Seed'}, target, selected, {terrain: 'Electric'});
   assert.equal(seed.atk.used, true);
   assert.equal(seed.atk.stg[2], 1);
+  assert.equal(engine.hit({...user, it: 'Electric Seed'}, target, slot('Seismic Toss'), {terrain: 'Electric'}).atk.used, true);
   const intimidation = autoSet('Blastoise', 'Intimidate');
   assert.equal(engine.hit(intimidation, {...target, it: 'Electric Seed'}, selected, {terrain: 'Electric'}).def.stg[1], 0);
   const berserk = autoSet('Blissey', 'Berserk', {...target, it: 'Sitrus Berry'});
