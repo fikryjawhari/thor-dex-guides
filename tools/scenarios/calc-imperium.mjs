@@ -10,7 +10,7 @@ if (data.cfg.name !== 'Emerald Imperium' || !data.cfg.calc?.monControls) {
 const ability = name => data.AB.findIndex(entry => entry[0] === name);
 const sizes = [[260,316],[260,350],[480,392],[537,424],[832,424]];
 const controls = '[data-ms="abilityOn"]';
-await runChecks({name: 'calc-imperium', file, expectTrainers: false, checks: [{
+await runChecks({name: 'calc-imperium', file, checks: [{
   id: 'individual-controls', title: 'per-mon state, category inversion and allied field persist without changing direction', sizes,
   run: async page => {
     await page.route('#/calc');

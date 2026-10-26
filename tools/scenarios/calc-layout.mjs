@@ -1,7 +1,7 @@
 // Calc layout: spec checks 1 (fit), 17 (long names), 18 (scroll stops), 19 (box size), 20 (wide window), 22 (big box).
 // Each check runs at the sizes and modes the spec gives (see runChecks in tools/calc_check_lib.mjs). Without cfg.calc: skip.
 import assert from 'node:assert/strict';
-import { dismissBanner, EI_TRAINERS, fixturePatches, guideArg, pickCell, prepareGuide, runChecks, setupCalc, SIZE_SMALL, SIZE_STAR } from '../calc_check_lib.mjs';
+import { dismissBanner, fixturePatches, guide, guideArg, pickCell, prepareGuide, runChecks, setupCalc, SIZE_SMALL, SIZE_STAR } from '../calc_check_lib.mjs';
 
 const WIDE = [[480, 392], [537, 424], [832, 424], [832, 316]];
 
@@ -16,6 +16,10 @@ if (!file) {
   console.log('SKIP calc-layout: no cfg.calc');
   process.exit(0);
 }
+
+const T = guide().trainers;
+// The guide's two longest species names that the dvkb pad can type (letters and spaces; check 17 picks them as new sets).
+const longest = guide().data.P.filter(entry => /^[A-Za-z ]+$/.test(entry.n)).sort((a, b) => b.n.length - a.n.length || a.n.localeCompare(b.n)).slice(0, 2).map(entry => entry.n);
 
 // Check 18 body, shared by the spec's window (316 high, where the stops collapse) and a taller one (400) that separates them.
 async function scrollStops(page) {
@@ -69,7 +73,8 @@ const checks = [
       assert.equal(m.edits, 0, 'Edit is closed');
       assert(Math.abs(m.bar - 2) < 2, `trainer bar at ${m.bar}, want 2`);
       assert.equal(m.rows, 4, 'attacker rows');
-      const limit = page.height === 316 ? 304 : page.height - 8;
+      // Z-move guides have 36 px rows: the fourth row ends inside the window, not 12 px above it (template README → Z-moves).
+      const limit = page.height === 316 ? (guide().data.cfg.calc.zmove ? 316 : 304) : page.height - 8;
       assert(m.bottom <= limit, `fourth move row bottom ${m.bottom} is past ${limit}`);
     },
   },
@@ -77,9 +82,8 @@ const checks = [
     id: '17 long names',
     title: 'names truncate on one line inside their boxes, with a 1.2 line box',
     run: async page => {
-      await setupCalc(page, { trainer: EI_TRAINERS.longName });
-      await pickMineCustom(page, 'Galarian Slowbro');
-      await pickMineCustom(page, 'Mega Charizard X');
+      await setupCalc(page, { trainer: T.longName.k });
+      for (const name of longest) await pickMineCustom(page, name);
       const names = await page.value(`(()=>{const pick=(el,label)=>{const cs=getComputedStyle(el),r=el.getBoundingClientRect(),box=el.closest('.cc,.fbar,.mr,.dsrc,.dmatch,.fit')?.getBoundingClientRect();return {label,text:el.textContent.trim(),truncated:el.scrollWidth>el.clientWidth+0.5,nowrap:cs.whiteSpace==='nowrap',ellipsis:cs.textOverflow==='ellipsis',lineRatio:parseFloat(cs.lineHeight)/parseFloat(cs.fontSize),height:r.height,fontSize:parseFloat(cs.fontSize),padBottom:parseFloat(cs.paddingBottom),inside:box?r.right<=box.right+0.5:true};};
         const out=[];out.push(pick(document.querySelector('.fbar .nm'),'trainer'));
         for(const el of document.querySelectorAll('.dmatch .cc .cn b'))out.push(pick(el,'card'));
@@ -111,7 +115,7 @@ const checks = [
     title: 'a short page (party only) has no two stops within 24 px',
     sizes: SIZE_SMALL,
     run: async page => {
-      await setupCalc(page, { trainer: EI_TRAINERS.candice, save: 'party-only.json' });
+      await setupCalc(page, { trainer: T.four.k, save: 'party-only.json' });
       await page.value('scrollTo(0,0)');
       await page.settle();
       const stops = await page.value('CALC.stops()');
@@ -165,7 +169,7 @@ const checks = [
     title: 'six foe Pokémon: list at 537 and 832 wide by 424 high, strip at 480 by 392 and 832 by 316',
     sizes: WIDE,
     run: async (page, { width, height }) => {
-      await setupCalc(page, { trainer: EI_TRAINERS.flannery });
+      await setupCalc(page, { trainer: T.six.k });
       const m = await page.value(`(()=>{const app=document.getElementById('app');const card=document.querySelector('.dside:not(.mg)').getBoundingClientRect();const visible=r=>r.width>0&&r.height>0;const list=[...document.querySelectorAll('.fteam .ft')].map(e=>e.getBoundingClientRect()).filter(visible);const strip=[...document.querySelectorAll('.dside:not(.mg) .dstrip button:not(.ph)')].map(e=>e.getBoundingClientRect()).filter(visible);const team=document.querySelector('.fteam');return {tl:app.classList.contains('tl'),avail:+app.dataset.avail,card:{top:card.top,bottom:card.bottom},list:list.map(r=>[r.top,r.bottom]),strip:strip.map(r=>[r.top,r.bottom,r.left,r.right]),teamScroll:team?team.scrollHeight-team.clientHeight:null,innerH:innerHeight,innerW:innerWidth};})()`);
       const wantList = (width === 537 || width === 832) && height === 424;
       assert.equal(m.tl, wantList, `team list ${m.tl}, want ${wantList} (available ${m.avail})`);
@@ -185,7 +189,7 @@ const checks = [
     title: 'resizing across the 222 px threshold switches the foe view once, with no loop',
     sizes: [[537, 424]],
     run: async page => {
-      await setupCalc(page, { trainer: EI_TRAINERS.flannery });
+      await setupCalc(page, { trainer: T.six.k });
       const tl = () => page.value(`document.getElementById('app').classList.contains('tl')`);
       const sweep = async heights => {
         const seen = [];
@@ -211,7 +215,7 @@ const checks = [
     title: '61 Pokémon: the grid card is at most 136 px and scrolls; the page grows only by the grid, up to its cap',
     sizes: SIZE_SMALL,
     run: async page => {
-      await setupCalc(page, { trainer: EI_TRAINERS.candice, save: 'eleven.json' });
+      await setupCalc(page, { trainer: T.four.k, save: 'eleven.json' });
       await page.value('scrollTo(0,0)');
       const eleven = await page.value(`({doc:document.documentElement.scrollHeight,gridH:document.querySelector('.mg .dstrip').getBoundingClientRect().height})`);
       await page.importSave('good.json');

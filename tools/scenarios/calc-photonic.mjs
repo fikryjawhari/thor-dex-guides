@@ -48,4 +48,4 @@ const checks = [{
     }
   },
 }];
-await runChecks({name: 'calc-photonic', file, checks, expectTrainers: false});
+await runChecks({name: 'calc-photonic', file, checks});

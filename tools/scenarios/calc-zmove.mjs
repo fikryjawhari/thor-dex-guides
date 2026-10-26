@@ -95,4 +95,4 @@ const checks = [{
   },
 }];
 
-await runChecks({name: 'calc-zmove', file, checks, expectTrainers: false});
+await runChecks({name: 'calc-zmove', file, checks});

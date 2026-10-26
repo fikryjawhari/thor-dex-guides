@@ -290,4 +290,4 @@ const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windo
     assert.equal(await page.text(`${first} .hp`),total);
   },
 }]:[])];
-await runChecks({name:'calc-state',file,expectTrainers:false,checks});
+await runChecks({name:'calc-state',file,checks});

@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 import { basename, join } from 'node:path';
-import { OUT, ROOT, attackerCrit, attackerRows, attackerSide, calcState, fixturePatches, guideArg, openSlot, prepareGuide, runChecks, setupCalc, touchBox } from '../calc_check_lib.mjs';
+import { OUT, ROOT, attackerCrit, attackerRows, attackerSide, calcState, fixturePatches, guide, guideArg, openSlot, prepareGuide, runChecks, setupCalc, touchBox } from '../calc_check_lib.mjs';
 
 const file = prepareGuide(guideArg(process.argv), { tag: 'calc-persist', edit: fixturePatches });
 if (!file) {
@@ -82,8 +82,9 @@ const frameCheck = {
   run: async page => {
     const evalInner = inner(page);
     await evalInner(`location.hash='#/calc'`);
-    await evalInner(`CALC.enter('0.0.3',1)`);
-    assert.equal(await evalInner(`CALC.state().foe.k`), '0.0.3', 'the frame guide has a foe set');
+    const key = guide().trainers.four.k;
+    await evalInner(`CALC.enter(${JSON.stringify(key)},1)`);
+    assert.equal(await evalInner(`CALC.state().foe.k`), key, 'the frame guide has a foe set');
     await page.tap('#clr');
     await page.waitFor(`(()=>{try{return document.getElementById('fr').contentWindow.CALC.state().foe.k===''}catch(e){return false}})()`, 'the frame to reload with the defaults');
     const reset = await evalInner(`(()=>{const s=CALC.state();return {dir:s.dir,foe:s.foe,mine:s.mine,edits:Object.keys(s.edits).length};})()`);

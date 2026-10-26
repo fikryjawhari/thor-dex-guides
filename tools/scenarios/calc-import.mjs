@@ -1,7 +1,7 @@
 // Calc import: spec checks 12 (save and reset), 14 (import errors), 15 (empty states). Each runs at 260 x 316 in normal and
 // dvkb mode. Without cfg.calc: skip. The import is the guide's real file input (the test reader on the fixtures).
 import assert from 'node:assert/strict';
-import { EI_TRAINERS, fixturePatches, guideArg, pickCell, prepareGuide, runChecks, setupCalc } from '../calc_check_lib.mjs';
+import { fixturePatches, guideArg, pickCell, prepareGuide, runChecks, setupCalc } from '../calc_check_lib.mjs';
 
 const file = prepareGuide(guideArg(process.argv), { tag: 'calc-import', edit: fixturePatches });
 if (!file) {

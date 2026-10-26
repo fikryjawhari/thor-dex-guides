@@ -51,4 +51,4 @@ const shown = {
   },
 };
 
-await runChecks({ name: 'calc-hidden-' + basename(guide, '.html'), file: guide, checks: [data.cfg.calc ? shown : hidden], expectTrainers: false });
+await runChecks({ name: 'calc-hidden-' + basename(guide, '.html'), file: guide, checks: [data.cfg.calc ? shown : hidden] });

@@ -41,4 +41,4 @@ const checks = [{
     }
   },
 }];
-await runChecks({name: 'calc-hardlove', file, checks, expectTrainers: false});
+await runChecks({name: 'calc-hardlove', file, checks});

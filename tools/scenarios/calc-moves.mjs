@@ -174,4 +174,4 @@ const checks = [{
   },
 }];
 
-await runChecks({name: 'calc-moves', file, checks, expectTrainers: false});
+await runChecks({name: 'calc-moves', file, checks});

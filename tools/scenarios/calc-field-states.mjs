@@ -20,7 +20,7 @@ const selectStatus = async (page, value) => {
   await page.value(`(()=>{const select=document.querySelector('.cc[data-s=mine] select[data-e=status]');select.value=${JSON.stringify(value)};select.dispatchEvent(new Event('change',{bubbles:true}));})()`);
 };
 
-await runChecks({name:'calc-field-states', file, expectTrainers:false, checks:[{
+await runChecks({name:'calc-field-states', file, checks:[{
   id:'entry lifecycle', title:'entry once, manual HP/status/Web reapply independently, no redraw/reload damage', sizes,
   run:async page=>{
     await seed(page);

@@ -58,4 +58,4 @@ const checks = [
   },
 ];
 
-await runChecks({ name: 'calc-field', file, checks, expectTrainers: false });
+await runChecks({ name: 'calc-field', file, checks });

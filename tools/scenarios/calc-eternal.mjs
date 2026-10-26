@@ -48,4 +48,4 @@ const checks = [{
     }
   },
 }];
-await runChecks({name: 'calc-eternal', file, checks, expectTrainers: false});
+await runChecks({name: 'calc-eternal', file, checks});

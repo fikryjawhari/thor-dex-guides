@@ -2,7 +2,7 @@
 // 7 (HP workflow), 8 (crit per move), 9 (multi-hit), 10 (move swap), 11 (Mega), 13 (custom set), 16 (unknown set),
 // 23 (per-slot crit). Each check runs at 260 x 316 in normal and dvkb mode. Without cfg.calc: skip.
 import assert from 'node:assert/strict';
-import { attackerCrit, attackerRows, attackerSide, calcState, changeMove, EI_TRAINERS, fixturePatches, guideArg, openSlot, pickCell, prepareGuide, readGuide, runChecks, setupCalc, spinCap, touchBox, tapField} from '../calc_check_lib.mjs';
+import { attackerCrit, attackerRows, attackerSide, calcState, changeMove, fixturePatches, guide, guideArg, openSlot, pickCell, prepareGuide, readGuide, runChecks, setupCalc, spinCap, touchBox, tapField} from '../calc_check_lib.mjs';
 
 const file = prepareGuide(guideArg(process.argv), { tag: 'calc-controls', edit: fixturePatches });
 if (!file) {
@@ -11,6 +11,7 @@ if (!file) {
 }
 const DATA = readGuide(file).data;
 const moveIndex = name => DATA.M.indexOf(name);
+const T = guide().trainers;
 
 const checks = [
   {
@@ -40,32 +41,34 @@ const checks = [
   {
     id: '3 cap box',
     title: "cap box steps the trainer's levels; clearing returns the default in grey; the trainer card shows it",
+    skip: !T.relative && 'no trainer with levels relative to a cap in this guide',
     run: async page => {
-      await setupCalc(page, { trainer: EI_TRAINERS.gardenia });
-      const cap = () => page.value(`document.querySelector('[data-cap="1.0.0"]').value`);
+      const key = T.relative.k, start = T.relative.cap;
+      await setupCalc(page, { trainer: key });
+      const cap = () => page.value(`document.querySelector('[data-cap="${key}"]').value`);
       const foeLv = () => page.value(`+document.querySelector('.dmatch .cc[data-s="foe"] [data-lv="foe"]').value`);
       const strip = () => page.value(`[...document.querySelectorAll('.dside:not(.mg) .dstrip button span')].map(s=>+s.textContent)`);
-      assert.equal(await cap(), '34', 'the default cap');
+      assert.equal(await cap(), String(start), 'the default cap');
       assert.equal(await page.count('.dcap.own'), 0, "the default is not the user's own");
       const levels = await strip();
       const foeStart = await foeLv();
       const resultsStart = await attackerRows(page);
       await spinCap(page, +1);
-      assert.equal(await cap(), '35', 'one step up');
+      assert.equal(await cap(), String(start + 1), 'one step up');
       assert.equal(await page.count('.dcap.own'), 1, "the user's value is in the accent colour");
-      const relative = DATA.TR.g.flatMap(group => group.sec.flatMap(section => section.tr)).find(t => t.k === EI_TRAINERS.gardenia).p.map(mon => mon.l == null);
+      const relative = DATA.TR.g.flatMap(group => group.sec.flatMap(section => section.tr)).find(t => t.k === key).p.map(mon => mon.l == null);
       const after = await strip();
       after.forEach((level, index) => assert.equal(level - levels[index], relative[index] ? 1 : 0, `strip level ${index} (relative: ${relative[index]})`));
       assert.equal(await foeLv(), foeStart + 1, "the selected foe's level follows");
       assert.notDeepEqual(await attackerRows(page), resultsStart, 'the results follow');
-      await page.route('#/tr/1.0.0');
-      assert.equal(await page.value(`document.querySelector('.capin').value`), '35', 'the trainer card shows 35');
+      await page.route(`#/tr/${key}`);
+      assert.equal(await page.value(`document.querySelector('.capin').value`), String(start + 1), `the trainer card shows ${start + 1}`);
       await page.route('#/calc');
       await page.settle();
       await spinCap(page, -1);
-      assert.equal(await cap(), '34', 'one step back down');
-      await page.setBox('[data-cap="1.0.0"]', '');
-      assert.equal(await cap(), '34', 'clearing returns the default');
+      assert.equal(await cap(), String(start), 'one step back down');
+      await page.setBox(`[data-cap="${key}"]`, '');
+      assert.equal(await cap(), String(start), 'clearing returns the default');
       assert.equal(await page.count('.dcap.own'), 0, 'grey again');
       assert.equal(await foeLv(), foeStart, "the foe's level goes back");
     },
@@ -81,14 +84,20 @@ const checks = [
       await page.value(`CALC.enter(${JSON.stringify(order[0])},0)`);
       await page.settle();
       assert.equal(await page.value(`document.querySelector('.fbar .nav[aria-label="Previous trainer"]').disabled`), true, '‹ is disabled at the first trainer');
+      // stepping starts at the first trainer with a third Pokémon to pick (a guide's first trainers may have one or two)
+      const sizes = await page.value('TRS.filter(t=>!rivalHidden(t)).map(t=>t.p.length)');
+      const from = sizes.findIndex((size, index) => size >= 3 && index < order.length - 1);
+      assert(from >= 0, 'a trainer with three Pokémon');
+      await page.value(`CALC.enter(${JSON.stringify(order[from])},0)`);
+      await page.settle();
       await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 2 });
       assert.equal((await calcState(page)).foe.i, 2, 'a team member picked');
       await page.tap('.fbar .nav[aria-label="Next trainer"]');
       const next = await calcState(page);
-      assert.equal(next.foe.k, order[1], 'next trainer');
+      assert.equal(next.foe.k, order[from + 1], 'next trainer');
       assert.equal(next.foe.i, 0, '› selects the first Pokémon');
       await page.tap('.fbar .nav[aria-label="Previous trainer"]');
-      assert.equal((await calcState(page)).foe.k, order[0], '‹ goes back');
+      assert.equal((await calcState(page)).foe.k, order[from], '‹ goes back');
       await page.value(`CALC.enter(${JSON.stringify(order.at(-1))},0)`);
       await page.settle();
       assert.equal(await page.value(`document.querySelector('.fbar .nav[aria-label="Next trainer"]').disabled`), true, '› is disabled at the last trainer');
@@ -100,7 +109,7 @@ const checks = [
     id: '5 trainer sheet',
     title: 'trainer sheet: full name under Find, a pick in a split closes it, Recent holds six, newest first',
     run: async page => {
-      await setupCalc(page, { save: null, mine: null, trainer: EI_TRAINERS.candice });
+      await setupCalc(page, { save: null, mine: null, trainer: T.four.k });
       const groupRow = g => `.sheet details.grp:nth-of-type(${g + 1}) .gb .mrow[data-s="pickfoe"]`;
       const pickFromGroup = async g => {
         await page.tap('.fbar .dsrc');
@@ -113,7 +122,7 @@ const checks = [
       await page.tap('.fbar .dsrc');
       assert.equal(await page.count('#sheets .sheet'), 1, 'the sheet opens');
       assert.equal(await page.text('.sheet .fbtn'), 'Find trainer…');
-      assert.equal(await page.text('.sheet .mrow.sel b'), 'Candice', 'the selected trainer in full');
+      assert.equal(await page.text('.sheet .mrow.sel b'), T.four.n, 'the selected trainer in full');
       await page.value(`document.querySelector('.sheet .fbtn').scrollIntoView()`);
       // close without a pick, then the real picks
       await page.tap('.sheet .bk');
@@ -133,7 +142,7 @@ const checks = [
   },
   {
     id: '6 speed and stages',
-    title: 'Spe with stages (+ and − modes), 0 clears; the faster side is accent; paralysis halves the shown value',
+    title: 'Spe with stages (+ and − modes), 0 clears; the faster side is accent; paralysis halves the shown value (Gen 6 and before: a quarter)',
     run: async page => {
       await setupCalc(page);
       await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
@@ -156,7 +165,8 @@ const checks = [
       await page.settle();
       const paralysed = await shown();
       const hook = await page.value('typeof window.DMG.speed');
-      assert.equal(paralysed, String(Math.floor(base / 2)), `paralysis halves the shown value (got ${paralysed}, base ${base}; window.DMG.speed is ${hook})`);
+      const factor = DATA.cfg.calc.gen >= 7 ? 2 : 4; // Gen 7+ halves, before that a quarter
+      assert.equal(paralysed, String(Math.floor(base / factor)), `paralysis divides the shown value by ${factor} (got ${paralysed}, base ${base}; window.DMG.speed is ${hook})`);
     },
   },
   {
@@ -287,8 +297,9 @@ const checks = [
       assert.notEqual(await ability(), base.ability, 'the ability changes');
       // EI's data gives Mega Garchomp the base Speed (102), so Speed can't show the change here: noted, not asserted
       console.log(`     note: Mega Garchomp Spe ${await spe()} (base ${base.spe}) in this data`);
-      await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
-      assert.equal(await name(), 'Garchomp *', 'M again restores the base');
+      // M steps through every Mega the species has (Hardlove: Mega Garchomp, then Mega Garchomp Z), then the base again
+      for (let step = 0; step < 4 && (await name()).startsWith('Mega '); step++) await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
+      assert.equal(await name(), 'Garchomp *', 'M again (once per Mega) restores the base');
       assert.equal(await stats(), base.stats, 'the base stats are back');
       assert.equal(await ability(), base.ability, 'and the base ability');
       await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
@@ -312,7 +323,7 @@ const checks = [
       const s = await calcState(page);
       assert.equal(s.mine.src, 'custom', 'selected');
       assert.equal(s.custom.length, 1);
-      assert.equal(s.custom[0].l, 15, "level is the foe's cap (Candice 15)");
+      assert.equal(s.custom[0].l, T.four.cap || 50, `level is the foe's cap (${T.four.n} ${T.four.cap}), else 50`);
       assert.equal(s.custom[0].na, 'Hardy');
       assert.equal(s.custom[0].i, '');
       assert.deepEqual(s.custom[0].iv, [31, 31, 31, 31, 31, 31]);
@@ -330,7 +341,7 @@ const checks = [
     id: '16 unknown set',
     title: 'a sheet-only trainer: its first Pokémon shows + Move rows when it attacks, and its ability shows ?',
     run: async page => {
-      await setupCalc(page, { trainer: EI_TRAINERS.sheetOnly });
+      await setupCalc(page, { trainer: T.sheetOnly.k });
       await page.tap('.dmatch .cc[data-s="foe"] [data-a="eopen"]');
       const ability = await page.value(`document.querySelector('select[data-e="ab"][data-s="foe"] option:checked').textContent`);
       assert(ability.endsWith(' ?'), `ability shows "${ability}"`);

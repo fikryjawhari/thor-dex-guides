@@ -7,12 +7,14 @@
 //
 // Preparation only: when the profile names no save reader, the `test` reader is injected (template/calc/readers/test.js)
 // and `save: 'test'` set in the copy, so the real file input imports JSON fixtures. `edit(data)` patches a copy's data
-// (fixtures only, e.g. a long trainer name); the built dist is never changed.
+// (fixtures only, e.g. a long trainer name); the built dist is never changed. Every calc guide runs the same checks: the
+// copy's trainers are picked by role from its own data (trainerRoles) and the save fixtures, written in EI's ids, are
+// copied into its ids (guideSaves); a check whose role the guide lacks is skipped (runChecks: `skip`).
 // Taps are real mouse events at the element's centre, after checking that element is what the point hits (a covered
 // control fails the check, as it would under a finger). Number boxes are driven as the page shows them: an input in a
 // browser, the number pad in dvkb mode.
 import assert from 'node:assert/strict';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { startBrowser } from './browser.mjs';
@@ -30,9 +32,15 @@ export function readGuide(file) {
   return { html, match, data: JSON.parse(match[2]) };
 }
 
+// The guide a scenario runs on (prepareGuide sets it): its data, its trainer roles, its species ids and the folder
+// with the save fixtures in its own ids. Setup and import read it, so one scenario runs on every calc guide.
+let GUIDE = null;
+export const guide = () => GUIDE;
+
 export function prepareGuide(file, { tag, edit } = {}) {
   const { html, match, data } = readGuide(file);
   if (!data.cfg.calc) return null;
+  const trainers = trainerRoles(data);
   edit?.(data);
   let page = html;
   let injected = false;
@@ -43,34 +51,91 @@ export function prepareGuide(file, { tag, edit } = {}) {
   page = page.replace(match[0], () => match[1] + JSON.stringify(data).replaceAll('</', '<\\/') + match[3]);
   if (injected) page = page.replace('window.DMG.init(sourceData,prof);', () => readFileSync(TEST_READER, 'utf8') + '\nwindow.DMG.init(sourceData,prof);');
   mkdirSync(OUT, { recursive: true });
-  const out = join(OUT, `${tag || 'guide'}-${file.split(/[\\/]/).pop()}`);
+  const name = file.split(/[\\/]/).pop();
+  const out = join(OUT, `${tag || 'guide'}-${name}`);
   writeFileSync(out, page);
+  GUIDE = { data, trainers, species: speciesId(data), saves: guideSaves(data, `${tag || 'guide'}-${name.replace(/\.html$/, '')}`) };
   return out;
 }
 
-// Fixture patches to the EI data copy the checks run on (never the dist): the sheet-only trainer loses its first
-// Pokémon's moves and ability (the EI data has no Pokémon with missing sets, so the unknown-set rules need one), and two
-// trainers get the spec's long names (the data has none that long). Every scenario applies this to its copy.
+// The fixture saves are written in Emerald Imperium's ids ("ids": "ours"). guideSaves copies them into a guide's own ids
+// by name (an id the guide has under the same name stays, so EI's copies are the fixtures unchanged): species (a missing
+// one becomes the guide's species with that dex number, else its first), moves (a missing one an empty slot), abilities
+// (a missing one the species' first). The file names stay, since the banner shows them. Returns the folder.
+const EI_DATA = join(ROOT, 'hacks', 'emerald-imperium', 'data.json');
+export function guideSaves(data, tag) {
+  const ei = JSON.parse(readFileSync(EI_DATA, 'utf8'));
+  const eiSpecies = new Map(ei.P.map(entry => [String(entry.id), entry]));
+  const byId = new Map(data.P.map(entry => [String(entry.id), entry]));
+  const byName = new Map(data.P.map(entry => [entry.n, String(entry.id)]));
+  const byDex = new Map([...data.P].reverse().map(entry => [entry.dex, String(entry.id)]));
+  const species = id => {
+    const source = eiSpecies.get(String(id));
+    if (!source) return String(id);
+    if (byId.get(String(id))?.n === source.n) return String(id);
+    return byName.get(source.n) ?? byDex.get(source.dex) ?? String(data.P[0].id);
+  };
+  const index = (list, eiList, value, name = entry => entry) => {
+    if (value == null || value < 0 || !eiList[value]) return value;
+    const wanted = name(eiList[value]);
+    if (list[value] != null && name(list[value]) === wanted) return value;
+    const found = list.findIndex(entry => name(entry) === wanted);
+    return found >= 0 ? found : null;
+  };
+  const mon = entry => ({ ...entry, sp: species(entry.sp), mv: (entry.mv || []).map(move => index(data.M, ei.M, move)),
+    ab: index(data.AB, ei.AB, entry.ab, ability => ability[0]) });
+  const folder = join(OUT, 'saves', tag);
+  mkdirSync(folder, { recursive: true });
+  for (const name of readdirSync(FIXTURES).filter(name => name.endsWith('.json'))) {
+    const save = JSON.parse(readFileSync(join(FIXTURES, name), 'utf8'));
+    if (save.ids === 'ours' && Array.isArray(save.party)) {
+      save.party = save.party.map(mon);
+      save.boxes = (save.boxes || []).map(box => box.map(mon));
+    }
+    writeFileSync(join(folder, name), JSON.stringify(save, null, 1));
+  }
+  return folder;
+}
+
+// A species' id in this guide by name (EI's 445 is Garchomp; Photonic's ids are names).
+export const speciesId = data => name => String(data.P.find(entry => entry.n === name)?.id ?? '');
+
+// The trainers the checks need, picked from the guide's own data (walkthrough order, the first that fits; Pokémon with
+// species the guide has and moves listed). null where the guide has none: the check that needs it is skipped.
+// - sheetOnly: the first trainer; fixturePatches takes its first Pokémon's moves and ability (the unknown-set rules).
+// - four: four Pokémon (setup's default foe; check 1 fits its rows, check 13 takes its cap as a new set's level).
+// - relative: a cap and at least three Pokémon, some with levels relative to the cap (check 3, the cap box).
+// - six: six Pokémon with fixed levels (check 20, the foe list).
+// - longName: the first other trainer; fixturePatches gives it a long name (check 17).
+export function trainerRoles(data) {
+  const list = data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr));
+  const known = new Set(data.P.map(entry => String(entry.id)));
+  const usable = trainer => trainer.p.length > 0 && trainer.p.every(mon => known.has(String(mon.id)) && mon.m?.length);
+  const first = list[0];
+  const find = test => list.find(trainer => trainer !== first && usable(trainer) && test(trainer)) ?? null;
+  const four = find(trainer => trainer.p.length === 4);
+  const relative = find(trainer => trainer.cap != null && trainer.p.length >= 3 && trainer.p.some(mon => mon.l == null));
+  const six = find(trainer => trainer.p.length === 6 && trainer.p.every(mon => mon.l != null));
+  const taken = new Set([first, four, relative, six]);
+  const longName = list.find(trainer => !taken.has(trainer)) ?? null;
+  const role = trainer => trainer && { k: trainer.k, n: trainer.n, cap: trainer.cap ?? null, size: trainer.p.length };
+  return { sheetOnly: role(first), four: role(four), relative: role(relative), six: role(six), longName: role(longName) };
+}
+
+// Fixture patches to the data copy the checks run on (never the dist): the sheet-only trainer (trainerRoles) loses its
+// first Pokémon's moves and ability (no guide has a Pokémon with a missing set, so the unknown-set rules need one), and
+// the long-name trainer gets the spec's long name (no guide has one that long). Every scenario applies this to its copy.
 export function fixturePatches(data) {
+  const roles = trainerRoles(data);
   for (const group of data.TR.g) for (const section of group.sec) for (const trainer of section.tr) {
-    if (trainer.k === '0.0.0') {
+    if (trainer.k === roles.sheetOnly?.k) {
       trainer.n = 'Rival Brendan (sheet only)';
       trainer.p[0].m = [];
       delete trainer.p[0].a;
     }
-    if (trainer.k === '3.0.0') trainer.n = 'Team Aqua Grunt Petalburg Woods';
+    if (trainer.k === roles.longName?.k) trainer.n = 'Team Aqua Grunt Petalburg Woods';
   }
 }
-
-// Trainer keys in the EI data that the checks name (checked against the data by runChecks, so a data rebuild that moves
-// one fails loudly instead of testing the wrong trainer).
-export const EI_TRAINERS = {
-  candice: '0.0.3',       // four Pokémon, relative levels, cap 15: check 1 (fit), entry points
-  gardenia: '1.0.0',      // relative levels, cap 34 by default: check 3 (cap box)
-  flannery: '4.0.15',     // six Pokémon, fixed levels: check 20 (foe team list / strip)
-  sheetOnly: '0.0.0',     // the only trainer whose values are marked "from the sheet"; patched in fixtures (check 16/17)
-  longName: '3.0.0',      // patched name in fixtures (check 17)
-};
 
 export class Page {
   static async open(browser, opts) {
@@ -242,7 +307,7 @@ export class Page {
 
   // A fixture by name (tools/scenarios/fixtures/calc/), or any file by absolute path.
   async importSave(name) {
-    await this.importPath(join(FIXTURES, name), name);
+    await this.importPath(join(GUIDE?.saves || FIXTURES, name), name);
   }
 
   // Every import ends in a re-render of #app (a green or red banner, with or without a new grid). A banner from an earlier
@@ -314,17 +379,20 @@ export const SIZE_SMALL = [[260, 316]];
 export const SIZE_STAR = [[260, 316], [537, 424], [832, 424]];
 export const MODES = ['normal', 'dvkb'];
 
-export async function runChecks({ name, file, checks, expectTrainers = true }) {
+// A check with skip (a reason) is reported as SKIP and passes: the guide lacks what it tests (a trainer role).
+export async function runChecks({ name, file, checks }) {
   const browser = await openBrowser(name);
   const results = [];
   let failed = 0;
   try {
-    if (expectTrainers) {
-      const data = readGuide(file).data;
-      const keys = new Set(data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr.map(trainer => trainer.k))));
-      for (const [label, key] of Object.entries(EI_TRAINERS)) if (!keys.has(key)) throw new Error(`trainer ${label} (${key}) is not in this guide's data`);
-    }
+    const roles = GUIDE?.trainers || {};
+    console.log(`trainers: ${Object.entries(roles).map(([role, trainer]) => `${role} ${trainer ? `${trainer.k} ${trainer.n}` : '-'}`).join(' | ')}`);
     for (const check of checks) {
+      if (check.skip) {
+        console.log(`SKIP ${check.id}: ${check.skip}`);
+        results.push({ id: check.id, title: check.title, skipped: check.skip, ok: true });
+        continue;
+      }
       for (const [width, height] of check.sizes || SIZE_SMALL) {
         for (const mode of check.modes || MODES) {
           const label = `${check.id} ${width}x${height} ${mode}`;
@@ -392,8 +460,9 @@ export const pickCell = (page, src, index) => page.tap(`[data-a="mpick"][data-sr
 
 export const dismissBanner = page => page.count('.ban .bx').then(n => (n ? page.tap('.ban .bx') : null));
 
-// The imported party is the attacker's pool. Default: Cloyster (party slot 5) against a trainer, the Mine side attacking.
-export async function setupCalc(page, { save = 'good.json', mine = ['party', 5], trainer = EI_TRAINERS.candice } = {}) {
+// The imported party is the attacker's pool. Default: Cloyster (party slot 5) against the guide's four-Pokémon trainer,
+// the Mine side attacking.
+export async function setupCalc(page, { save = 'good.json', mine = ['party', 5], trainer = GUIDE?.trainers.four?.k } = {}) {
   await page.route('#/calc');
   if (save) {
     await page.importSave(save);
@@ -434,7 +503,7 @@ export async function touchBox(page, selector) {
 }
 
 // One step of the cap box: ArrowUp / ArrowDown on the input in a browser, the pad's + / − in dvkb.
-export async function spinCap(page, direction, key = '1.0.0') {
+export async function spinCap(page, direction, key = GUIDE?.trainers.relative?.k) {
   const selector = `[data-cap="${key}"]`;
   if (page.dvkb) return page.padStep(selector, direction);
   const keyName = direction > 0 ? 'ArrowUp' : 'ArrowDown', code = direction > 0 ? 38 : 40;
