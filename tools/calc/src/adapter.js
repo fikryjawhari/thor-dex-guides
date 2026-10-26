@@ -621,7 +621,7 @@ function betweenHitStages(atk, def, hits, hit) {
 const isAshGreninja = set => /Greninja/.test(guideName(set)) && /\bAsh\b/.test(guideName(set));
 const guideName = set => data.P.find(entry => String(entry.id) === String(set.id))?.n || '';
 
-function calc(atk, def, slot, values = {}) {
+function calcCore(atk, def, slot, values = {}) {
   const entry = data.MV[slot.mv];
   const name = data.M[slot.mv];
   if (!entry) return null;
@@ -747,4 +747,117 @@ function calc(atk, def, slot, values = {}) {
   };
 }
 
-window.DMG = {init, stats, calc, residual, speed, entry};
+// Fixed / fraction damage (plans/calc-hp-moves.md): the move's damage from levels and HP, not from power. The type
+// chart (and immunities) come from an ordinary run of the move at power 100. Counter / Mirror Coat / Bide (2x) and
+// Metal Burst / Comeuppance (1.5x) take the damage taken in `slot.bp`.
+const FIXED = {
+  'Seismic Toss': c => c.lv, 'Night Shade': c => c.lv, 'Dragon Rage': () => 40, 'Sonic Boom': () => 20,
+  'Super Fang': c => Math.max(1, Math.floor(c.def / 2)), "Nature's Madness": c => Math.max(1, Math.floor(c.def / 2)),
+  Ruination: c => Math.max(1, Math.floor(c.def / 2)), 'Guardian of Alola': c => Math.max(1, Math.floor(c.def * 3 / 4)),
+  Endeavor: c => Math.max(0, c.def - c.atk), 'Final Gambit': c => c.atk,
+  Psywave: c => Array.from({length: 16}, (_, i) => profile.gen >= 5
+    ? Math.max(1, Math.floor(c.lv * (Math.round(i * 100 / 15) + 50) / 100))
+    : Math.max(1, Math.floor(c.lv * (Math.round(i * 10 / 15) * 10 + 50) / 100))),
+};
+const OHKO = new Set(['Fissure', 'Guillotine', 'Horn Drill', 'Sheer Cold']);
+const TAKEN = {Counter: 2, 'Mirror Coat': 2, Bide: 2, 'Metal Burst': 1.5, Comeuppance: 1.5};
+
+function calc(atk, def, slot, values = {}) {
+  const name = data.M[slot.mv];
+  const taken = TAKEN[name];
+  if (!FIXED[name] && !OHKO.has(name) && !taken) return calcCore(atk, def, slot, values);
+  if (taken && !(slot.bp > 0)) return null;
+  const base = calcCore(atk, def, {...slot, bp: 100, hits: 1, z: false}, values);
+  if (!base) return null;
+  const attacker = pokemon(atk), defender = pokemon(def);
+  const max = defender.maxHP();
+  const current = Math.max(0, Math.min(max, def.hp ?? max));
+  const own = Math.max(0, Math.min(attacker.maxHP(), atk.hp ?? attacker.maxHP()));
+  let value;
+  if (taken) value = Math.floor(slot.bp * taken);
+  else if (OHKO.has(name)) {
+    const fails = (def.lv ?? 50) > (atk.lv ?? 50)
+      || (defender.hasAbility('Sturdy') && !attacker.hasAbility('Mold Breaker', 'Teravolt', 'Turboblaze'))
+      || (name === 'Sheer Cold' && profile.gen >= 7 && defender.hasType('Ice'));
+    value = fails ? 0 : current;
+  } else value = FIXED[name]({lv: atk.lv ?? 50, def: current, atk: own});
+  const rolls = (Array.isArray(value) ? value : Array(16).fill(value)).map(v => base.eff ? v : 0);
+  const eot = [0, 1, 2, 3].map(turn => (base.eot || []).reduce((sum, part) => sum + part.v[turn], 0));
+  const result = {...base, rolls, hits: 1, min: Math.min(...rolls), max: Math.max(...rolls),
+    pmin: Math.min(...rolls) * 100 / max, pmax: Math.max(...rolls) * 100 / max,
+    ko: knockout([rolls], current, eot, max - current), eff: rolls.some(Boolean) ? base.eff : 0,
+    notes: base.notes.filter(note => !['STAB', 'Crit'].includes(note) && !/^(Super|Not very) effective$/.test(note))};
+  delete result.per; delete result.bp; delete result.pre;
+  if (!result.eff && !result.notes.includes('No effect')) result.notes.push('No effect');
+  return result;
+}
+
+// The user's own HP change from one use of a move (plans/calc-hp-moves.md), given the damage it dealt: {v, l, set?,
+// st?, later?} or null. `v` is the signed change; `set` new HPs for both (Pain Split); `st: 'slp'` (Rest); `later`: lands
+// next turn (Wish). Damage-based amounts: Gen 5+ round half up, Gen 4 floor, at least 1.
+const HEAL_HALF = new Set(['Recover', 'Soft-Boiled', 'Milk Drink', 'Slack Off', 'Heal Order', 'Roost']);
+const HEAL_QUARTER = new Set(['Life Dew', 'Jungle Healing', 'Lunar Blessing']);
+const WEATHER_HEAL = new Set(['Moonlight', 'Morning Sun', 'Synthesis']);
+const SELF_KO = new Set(['Explosion', 'Self-Destruct', 'Misty Explosion', 'Final Gambit', 'Memento', 'Healing Wish', 'Lunar Dance']);
+const COSTS = {'Belly Drum': 2, Substitute: 4, 'Fillet Away': 2, 'Clangorous Soul': 3, 'Shed Tail': 2};
+
+function hp(atk, def, slot, values = {}, dealt = 0) {
+  const name = data.M[slot.mv];
+  if (!name) return null;
+  const moveData = generation.moves.get(toID(name));
+  if (!moveData) return null;
+  const user = fieldPokemon(atk, values, 'atk');
+  const target = fieldPokemon(def, values, 'def');
+  const field = battleField(values);
+  checkAirLock(user, field);
+  checkItem(user, field.isMagicRoom);
+  checkItem(target, field.isMagicRoom);
+  const max = user.maxHP();
+  const now = Math.max(0, Math.min(max, atk.hp ?? max));
+  const part = (amount, num, den) => Math.max(1, profile.gen >= 5 ? Math.round(amount * num / den) : Math.floor(amount * num / den));
+  const guard = user.hasAbility('Magic Guard');
+  const items = !field.isMagicRoom && !user.hasAbility('Klutz');
+  const root = heal => items && user.hasItem('Big Root') ? Math.floor(heal * 5324 / 4096) : heal;
+  dealt = Math.max(0, Math.trunc(dealt || 0));
+  if (SELF_KO.has(name)) return {v: -now, l: 'faints'};
+  if (name === 'Pain Split') {
+    const tmax = target.maxHP(), tnow = Math.max(0, Math.min(tmax, def.hp ?? tmax)), avg = Math.floor((now + tnow) / 2);
+    return {v: Math.min(max, avg) - now, l: 'Pain Split', set: {atk: Math.min(max, avg), def: Math.min(tmax, avg)}};
+  }
+  if (name === 'Rest') return {v: max - now, l: 'Rest', st: 'slp'};
+  if (name === 'Wish') return {v: Math.max(1, Math.floor(max / 2)), l: 'Wish', later: true};
+  if (HEAL_HALF.has(name)) return {v: Math.max(1, Math.floor(max / 2)), l: name};
+  if (HEAL_QUARTER.has(name)) return {v: Math.max(1, Math.floor(max / 4)), l: name};
+  if (name === 'Shore Up') return {v: Math.max(1, Math.floor(max * (field.hasWeather('Sand') ? 2 / 3 : 1 / 2))), l: name};
+  if (WEATHER_HEAL.has(name)) {
+    const share = field.hasWeather('Sun', 'Harsh Sunshine') ? 2 / 3 : field.weather && !field.hasWeather('Strong Winds') ? 1 / 4 : 1 / 2;
+    return {v: Math.max(1, Math.floor(max * share)), l: name};
+  }
+  if (name === 'Swallow') return {v: Math.max(1, Math.floor(max / 4)), l: 'Swallow (1 Stockpile)'};
+  if (name === 'Purify') return target.status ? {v: Math.max(1, Math.floor(max / 2)), l: name} : null;
+  if (name === 'Curse') return user.hasType('Ghost') ? {v: -Math.max(1, Math.floor(max / 2)), l: 'Curse'} : null;
+  if (COSTS[name]) return {v: -Math.max(1, Math.floor(max / COSTS[name])), l: name};
+  if (name === 'Strength Sap') {
+    const heal = root(target.stats.atk);
+    return {v: target.hasAbility('Liquid Ooze') ? (guard ? 0 : -heal) : heal, l: name};
+  }
+  if (moveData.category === 'Status') return null;
+  const parts = [];
+  if (moveData.drain && dealt && (name !== 'Dream Eater' || target.hasStatus('slp') || target.hasAbility('Comatose'))) {
+    const heal = root(part(dealt, ...moveData.drain));
+    parts.push(target.hasAbility('Liquid Ooze') ? (guard ? 0 : -heal) : heal);
+  }
+  if (!guard) {
+    if (moveData.struggleRecoil) parts.push(-Math.max(1, Math.floor(max / 4)));
+    else if (moveData.mindBlownRecoil) parts.push(-Math.ceil(max / 2));
+    else if (moveData.recoil && dealt && !user.hasAbility('Rock Head')) parts.push(-part(dealt, ...moveData.recoil));
+    if (items && user.hasItem('Life Orb') && dealt && !(user.hasAbility('Sheer Force') && moveData.secondaries)) {
+      parts.push(-Math.max(1, Math.floor(max / 10)));
+    }
+  }
+  if (items && user.hasItem('Shell Bell') && dealt) parts.push(Math.max(1, Math.floor(dealt / 8)));
+  if (!parts.length) return null;
+  return {v: parts.reduce((sum, value) => sum + value, 0), l: name};
+}
+
+window.DMG = {init, stats, calc, residual, speed, entry, hp};

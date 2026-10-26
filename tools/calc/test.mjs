@@ -598,6 +598,48 @@ await test("Ash-Greninja's Water Shuriken: power 20, three hits by default (guid
   assert.equal(plain(engine.calc(set('Greninja'), set('Blissey'), slot('Water Shuriken'), {})).bp, undefined, 'plain Greninja keeps 15');
 });
 
+await test('fixed / fraction damage: level, half HP, Endeavor, Final Gambit, immunities, OHKO, Taken', () => {
+  engine.init(data, profiles.expansion);
+  const hit = (atk, def, move, extra = {}) => plain(engine.calc(atk, def, slot(move, extra), {}));
+  const blissey = set('Blissey', {hp: 301});
+  assert.deepEqual([hit(set('Snorlax'), blissey, 'Seismic Toss').min, hit(set('Snorlax'), blissey, 'Seismic Toss').max], [50, 50]);
+  assert.equal(hit(set('Snorlax'), blissey, 'Night Shade').eff, 0, 'Normal is immune to Night Shade');
+  assert.equal(hit(set('Snorlax'), set('Gengar'), 'Seismic Toss').max, 0, 'Ghost is immune to Seismic Toss');
+  assert.equal(hit(set('Snorlax'), blissey, 'Super Fang').max, 150, 'half current HP, rounded down');
+  assert.equal(hit(set('Snorlax', {hp: 40}), blissey, 'Endeavor').max, 261);
+  assert.equal(hit(set('Snorlax', {hp: 40}), blissey, 'Final Gambit').max, 40);
+  const psywave = hit(set('Snorlax'), blissey, 'Psywave');
+  assert.deepEqual([psywave.min, psywave.max], [25, 75]);
+  assert.equal(engine.calc(set('Snorlax'), blissey, slot('Counter'), {}), null, 'Counter needs the damage taken');
+  assert.equal(hit(set('Snorlax'), blissey, 'Counter', {bp: 60}).max, 120);
+  assert.equal(hit(set('Snorlax'), blissey, 'Metal Burst', {bp: 61}).max, 91);
+  assert.equal(hit(set('Snorlax'), set('Blissey', {hp: 100}), 'Seismic Toss').ko.n, 2);
+});
+
+await test('DMG.hp: the user own HP change per group (heals, costs, recoil, drain, items, swaps)', () => {
+  engine.init(data, profiles.expansion);
+  const change = (atk, move, dealt = 0, def = set('Blissey'), field = {}) => plain(engine.hp(atk, def, slot(move), field, dealt));
+  const snorlax = set('Snorlax');
+  const max = engine.stats(snorlax)[0];
+  assert.equal(change(snorlax, 'Recover').v, Math.floor(max / 2));
+  assert.equal(change(snorlax, 'Moonlight', 0, set('Blissey'), {weather: 'Sun'}).v, Math.floor(max * 2 / 3));
+  assert.equal(change(snorlax, 'Moonlight', 0, set('Blissey'), {weather: 'Rain'}).v, Math.floor(max / 4));
+  assert.equal(change(snorlax, 'Belly Drum').v, -Math.floor(max / 2));
+  assert.deepEqual(change(set('Snorlax', {hp: 100}), 'Rest'), {v: max - 100, l: 'Rest', st: 'slp'});
+  assert.equal(change(set('Snorlax', {hp: 100}), 'Explosion').v, -100);
+  assert.equal(change(snorlax, 'Double-Edge', 90).v, -30);
+  assert.equal(change(set('Snorlax', {ab: ability('Rock Head')}), 'Double-Edge', 90), null);
+  assert.equal(change(snorlax, 'Drain Punch', 91).v, 46, 'half, rounded half up');
+  assert.equal(change(set('Snorlax', {it: 'Big Root'}), 'Drain Punch', 91).v, Math.floor(46 * 5324 / 4096));
+  assert.equal(change(snorlax, 'Drain Punch', 91, set('Tentacruel', {ab: ability('Liquid Ooze')})).v, -46);
+  assert.equal(change(set('Snorlax', {it: 'Life Orb'}), 'Body Slam', 50).v, -Math.floor(max / 10));
+  assert.equal(change(snorlax, 'Mind Blown').v, -Math.ceil(max / 2));
+  const split = change(set('Snorlax', {hp: 100}), 'Pain Split', 0, set('Blissey', {hp: 300}));
+  assert.deepEqual(split.set, {atk: 200, def: 200});
+  assert.equal(change(snorlax, 'Body Slam', 50), null, 'no change without an effect');
+  assert.equal(change(snorlax, 'Curse'), null, 'non-Ghost Curse costs nothing');
+});
+
 await test('a hit-count rule that returns a non-number fails explicitly', () => {
   engine.init(data, {...structuredClone(profiles.expansion), over: {rules: [{phase: 'hits', value: operation('mul', ref('value'), 'x')}]}});
   assert.throws(() => engine.calc(set('Charizard'), set('Blastoise'), slot('Tackle'), {}), /hit count must be a number/);

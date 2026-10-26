@@ -204,6 +204,15 @@ check('kee-maranga-after-the-move', () => {
   assert.ok(hits('Luminous Moss', 'Water Shuriken').pre, 'Luminous Moss still between hits');
 });
 
+check('ohko-moves', () => {
+  const mon = (name, extra = {}) => ({id: data.P.find(entry => entry.n === name).id, lv: 50, nat: 'Serious', ...extra});
+  const hit = (def, move) => plain(engine.calc(mon('Snorlax'), def, {mv: data.M.indexOf(move)}, {}));
+  assert.equal(hit(mon('Blissey', {hp: 200}), 'Fissure').max, 200, 'the target HP');
+  assert.equal(hit(mon('Blissey', {lv: 60}), 'Fissure').max, 0, 'fails on a higher level');
+  assert.equal(hit(mon('Golem', {ab: data.AB.findIndex(entry => entry[0] === 'Sturdy')}), 'Horn Drill').max, 0, 'Sturdy');
+  assert.equal(hit(mon('Lapras'), 'Sheer Cold').max, 0, 'Ice is immune to Sheer Cold (Gen 7+)');
+});
+
 const counts = {pass: results.filter(result => result.status === 'pass').length,
   fail: results.filter(result => result.status === 'fail').length};
 await mkdir(new URL('.tmp/calc-hardlove-gold/', root), {recursive: true});
