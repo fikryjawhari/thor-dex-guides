@@ -11,9 +11,9 @@
       "src": "A1: Hardlove field catalogue supplies Snow, not Hail."
     },
     {
-      "name": "auto-figy-hardlove", "api": "berry", "atk": {"id": "blastoise", "it": "Figy Berry", "hp": 1},
-      "expect": {"paths": {"heal": 51, "atk.hp": 52, "atk.used": true}},
-      "src": "A1: Hardlove modern mechanics use Figy one-third recovery (floor 154/3)."
+      "name": "auto-sitrus-hardlove", "api": "berry", "atk": {"id": "blastoise", "it": "Sitrus Berry", "hp": 1},
+      "expect": {"paths": {"heal": 38, "atk.hp": 39, "atk.used": true}},
+      "src": "A1: Hardlove ee4518c149 itemdata.c Sitrus param 25; battle_item.c TryUseHeldItem restores maxHP*25/100 below half."
     },
     {
       "name": "fury-cutter-prior-0",

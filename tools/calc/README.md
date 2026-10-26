@@ -86,7 +86,11 @@ explicitly mapped in `over`. Unrecognised item/ability names have no effect.
 
 `window.DMG` exposes `init(D, prof)`, `stats(set)`, `calc(atk, def, slot, field)`, `hp(atk, def, slot, field, dealt)`,
 `residual(set, field = {}, otherSet = null, side = 'atk')`,
-`speed(set, field = {}, side = 'atk')` and `entry(set, field = {}, side = 'atk')`.
+`speed(set, field = {}, side = 'atk', otherSet = null)`, `entry(set, field = {}, side = 'atk')`,
+`hit(atk, def, slot, field = {}, roll = 'max', options = {})`,
+`turn(set, field = {}, otherSet = null, side = 'atk')`,
+`berry(set, field = {}, otherSet = null, side = 'atk')`, `derived(set, field = {})`,
+`intimidate(atk, def, field = {})` and `settings()`.
 Initialisation replaces all guide state and clears KO caches. It does not change
 the supplied data/profile. `stats` returns unstaged `[HP, Atk, Def, SpA, SpD, Spe]`.
 An absent ability means none, not the species' default. Defaults are level 50,
@@ -103,13 +107,18 @@ upstream weight/speed/fixed-damage rules to overwrite the user's input.
 
 `ko` is the first use count 1-4 with a nonzero KO chance against current HP,
 otherwise `{n:0,p:0}` (5+). It convolves independent equiprobable rolls per hit,
-not correlated per-use totals. No between-turn healing, hazards, poison, recoil,
-accuracy or crit probability is included. Zero current HP returns `{n:0,p:0}`;
+not correlated per-use totals. Listed residuals (`eot`, including recovery/status) count between uses;
+entry hazards, recoil, accuracy and crit probability do not. Zero current HP returns `{n:0,p:0}`;
 the UI supplies the separate fainted label. Percentages can exceed 100.
 Every use repeats the returned set of per-hit distributions. Sequential effects
 within a use (Triple Axel/Kick scaling, defensive changes, Parental Bond) retain
 their own distributions. Changes between uses are not simulated. `eff: 0` means
 immune, and `notes` contains short modifier labels including declarative rule notes.
+Full-HP Focus Sash / Gen 5+ Sturdy count for single-hit moves (Mold Breaker family bypasses Sturdy),
+and at most one healing berry counts across the uses, at its threshold and after a surviving hit/residual.
+Notes identify `Sash`, `Sturdy`, `after Sitrus` (or the other recovery item's name).
+This remains a repeated-distribution estimate, not a battle simulator: later-use damage is not recalculated
+for HP-dependent power, abilities or stages. Multi-hit Sash/Sturdy protection belongs to `hit`, not KO text.
 
 `bp` is present whenever the first hit's power differs from the listed power:
 state counters, stock power changes (Facade, Hex, Brine, Knock Off, Weather
@@ -140,6 +149,8 @@ Optional inputs; a page that passes none gets the same rolls as before.
 
 | Input | Meaning |
 | --- | --- |
+| `set.used` | Held item already consumed: no item effects; activates Unburden. The set's item label stays unchanged. |
+| `set.intim` | Intimidate on the holder, absent/true = active; false = off. Derived changes never write input stages. |
 | `slot.st` | The row's state. Counters take the earlier count (0 = first use), clamped: Fury Cutter (power doubles to 160), Echoed Voice (+listed per turn, 200), Rollout / Ice Ball (×2 per hit, 4), Rage Fist (+50 per hit, 6), Last Respects (+50 per faint, 100). Toggles take `true` (power ×2): Assurance, Revenge, Avalanche, Retaliate, Stomping Tantrum, Temper Flare, Lash Out, Fusion Flare / Bolt, Round, Fickle Beam. Pledges take the partner pledge's name: power 150, the pair's type, always STAB. Never stock `timesUsed`, which repeats the hit over turns. |
 | `slot.curl` | Defense Curl used earlier: Rollout / Ice Ball power ×2. |
 | `slot.met` | Earlier consecutive uses with a held Metronome (stock `timesUsedWithMetronome`). |
@@ -160,7 +171,9 @@ table's chance (Gen 4-5 1/16 1/8 1/4 1/3 1/2, Gen 6 1/16 1/8 1/2 1, Gen 7+ 1/24
 a poisoned target, a stage the table makes certain) makes the hit a crit whatever
 `slot.crit` says, p 1; Battle Armor / Shell Armor (unless the attacker breaks molds)
 make p 0, not forced, and no crit. `slot.crit` still picks crit damage for an
-ordinary hit. Laser Focus, Lucky Chant and Dragon Cheer have no input yet.
+ordinary hit. `atkCritBonus` / `defCritBonus` add nonnegative integer stages before the cap;
+the current attack reads `atkCritBonus` (swap side prefixes when reversing the matchup).
+Laser Focus, Lucky Chant and Dragon Cheer have no input yet.
 
 `over.state` (per hack) changes a move whose source differs: `false` = the state
 input does nothing, `{curl: false}` = Defense Curl doesn't double it, `{vol: false}`
@@ -189,7 +202,66 @@ next hit they come before: Stamina, Water Compaction, Weak Armor (Spe +1 before 
 Weakness Policy, Kee / Maranga Berry, Luminous Moss, Absorb Bulb, Cell Battery,
 Snowball. Stock works the Defense ones into the later hits; a later hit of Foul Play
 does not read the target's new Attack. Post-move events (Berserk, Anger Shell, KOs),
-random secondaries and history (Intimidate, Rage, Charge) stay manual stages.
+random secondaries and history (Rage, Charge) stay manual stages in `calc`; `hit` applies the automatic
+post-hit effects below. Intimidate is a derived first-hit event, not a stored stage.
+
+### Automatic actions and entry effects
+
+All APIs are pure: merge returned patches into scratch state; HP belongs to the page's kept state.
+`stg` patches are complete six-stat arrays in the usual HP/Atk/Def/SpA/SpD/Spe order (HP stage 0),
+starting from the supplied manual stages. They contain action changes, not the derived Intimidate,
+Sword/Shield or Download stages; those are recomputed by the next calculation. Absent patch keys mean unchanged.
+`toggles` is a sparse patch of side-state suffixes (`Focus`, `Charge`); merge it, do not replace other states.
+
+- `hit(atk, def, slot, field, roll, options)` returns
+  `{def: {hp, used?, stg?, toggles?, status?}, atk: {used?, stg?}, field?: {weather?, terrain?, hazards?}, log: string[], dealt}`
+  or null for a non-damaging/unspecified-power move. `status` is reserved; A1 does not emit it.
+  `roll` is `'min'` or `'max'`, selected independently for every strike. `dealt` is actual damage removed,
+  capped at remaining HP on each strike, excluding berry recovery (the input for drain/recoil via `hp`).
+  Normal attacks respect full-HP Sash/Sturdy on each strike, then consumed Balloon/resist berries,
+  healing/pinch berries, reactive items, defensive ability changes and field setters; later strikes
+  recalculate damage from the new HP/stages/items/field. Gems are consumed once for the move;
+  a KO applies Moxie, highest-raw-stat Beast Boost (ties Atk/Def/SpA/SpD/Spe), Neigh/As One or Soul-Heart.
+  Field hazards use full relative keys, e.g. `{hazards: {atkToxicSpikes: 2}}`.
+  Berserk/Anger Shell fire once at move end after crossing half HP; single-hit healing berries wait
+  until that reaction, multi-hit berries can heal before the final threshold check.
+  `options: {damage: nonnegativeInteger}` instead applies an exact damage amount: only threshold
+  berries and Berserk/Anger Shell, no Sash/Sturdy, item popping, contact or KO boosts. A zero amount is legal.
+  Disguise/Ice Face, contact damage and other A2 follow-ups are not implemented here.
+- `turn(set, field, otherSet, side)` returns `{[side]: {hp, used?, stg?, toggles?}, log: string[], parts}`.
+  `parts` is the `residual` array. Apply/clamp its first-turn amounts in order, stop on fainting,
+  then Speed Boost and one eligible berry. This is one turn only; the caller advances Toxic's counter.
+- `berry(set, field, otherSet, side)` returns null if none can fire, otherwise
+  `{[side]: {hp, used: true, stg?, toggles?}, log: string[], item, heal, stat?, by?, focus?}`.
+  This is both the berry-chip preview and its apply patch, without a residual tick. `heal` is actual
+  capped recovery, `stat`/`by` the pinch boost before Simple/Contrary/caps; `focus: true` means Lansat.
+  Sitrus heals 1/4 in all supported generations; Oran 10, Berry Juice 20; Figy/Wiki/Mago/Aguav/Iapapa
+  heal 1/8 at 1/2 HP in Gen 4-6, 1/2 at 1/4 HP in Gen 7, 1/3 at 1/4 HP in Gen 8+.
+  Enigma heals 1/4 only after a super-effective hit. Liechi/Ganlon/Petaya/Apicot/Salac and Lansat
+  trigger at 1/4 HP (Gluttony 1/2); Ripen doubles berries, Cheek Pouch adds 1/3 recovery.
+  Used items, Magic Room, Klutz and opposing Unnerve/As One suppress the relevant item/berry effects.
+  `over.items[originalName].heal` overrides recovery (0-1 fraction of max HP, >1 flat HP),
+  `.threshold` the max-HP fraction. Original labels are retained for override lookup after effect aliases.
+  Hardlove's pinned `ee4518c149` `TryUseHeldItem` instead uses Figy-group 1/8 at 1/2 HP
+  (`itemdata.c` parameter 8). Its five `over.items` entries need `heal: 0.125, threshold: 0.5`;
+  that profile change is pending owner approval (A1's owned `hack.json` line was only `setterStays`).
+- `derived(set, field)` returns `{weather?, terrain?, primal?, status?}` for an entering, non-fainted set.
+  Setters use engine ability aliases and only weather/terrain offered by the profile; Snow Warning picks
+  Snow when offered, otherwise Hail. `primal: true` identifies the three primal weathers. Unused Orbs
+  derive `brn`/`tox` only without an existing status and with type/ability/grounded-Misty immunities checked.
+  The page owns explicit None overrides and weather layering; this API does not apply its returned fields.
+- `intimidate(atk, def, field)` returns `{atk: signedAttackDelta, def: signedAttackDelta}` including
+  Simple/Contrary, Guard Dog, Defiant, caps, immunities and Mirror Armor reflection. Use the net delta
+  for `Int -1` / `Int +1`, omit a zero mark. `calc.pre` separately records every actual change and source
+  (the initial drop has `src: 'Intimidate'`, Defiant/Competitive/Rattled/Adrenaline Orb their own names).
+  `speed` takes `otherSet` to include Rattled/Adrenaline Orb, including reflection, without writing stages.
+  Protosynthesis/Quark Drive choose their highest stat automatically in Sun/Electric Terrain or with Booster Energy.
+- `settings()` returns `{setterStays: boolean}`: explicit profile `setterStays`, otherwise true in Gen 4-5,
+  false in Gen 6+. Hardlove overrides it to true. This is page-layer policy, not weather mutation.
+
+Automatic action tests are in `test.mjs`; hack differences in `calc_states.json`. Those fixtures optionally
+select `api` (`hit`, `turn`, `berry`, `derived`, `settings`, `speed`, `intimidate`, default `calc`), and
+`expect.paths` checks dotted result paths (empty path = the whole result, missing/null = null).
 
 ## Base profiles and fields
 
