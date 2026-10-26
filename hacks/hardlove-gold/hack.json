@@ -280,6 +280,7 @@
     }
    ],
    "over": {
+    "contact": {"defenderPads": true},
     "afterMove": ["Kee Berry", "Maranga Berry"],
     "items": {
      "Figy Berry": {"heal": 0.125, "threshold": 0.5},
@@ -290,6 +291,7 @@
     },
     "critMultiplier": 1.5,
     "state": {
+     "Dragon Cheer": false,
      "Echoed Voice": false,
      "Spectral Thief": false,
      "Rage Fist": false,

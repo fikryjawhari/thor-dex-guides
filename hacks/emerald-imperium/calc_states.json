@@ -1,6 +1,515 @@
 {
   "cases": [
     {
+      "name": "A2-swallow-1",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 243,
+        "st": 1
+      },
+      "expect": {
+        "paths": {
+          "v": 38
+        }
+      },
+      "src": "EI expansion 2576d0f3: Stockpile default: dist/data/moves.js:18617-18620, quarter / half / full 154 HP."
+    },
+    {
+      "name": "A2-swallow-2",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 243,
+        "st": 2
+      },
+      "expect": {
+        "paths": {
+          "v": 77
+        }
+      },
+      "src": "EI expansion 2576d0f3: Stockpile default: dist/data/moves.js:18617-18620, quarter / half / full 154 HP."
+    },
+    {
+      "name": "A2-swallow-3",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 243,
+        "st": 3
+      },
+      "expect": {
+        "paths": {
+          "v": 154
+        }
+      },
+      "src": "EI expansion 2576d0f3: Stockpile default: dist/data/moves.js:18617-18620, quarter / half / full 154 HP."
+    },
+    {
+      "name": "A2-spit-up-default",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9"
+      },
+      "slot": {
+        "mv": 259
+      },
+      "expect": {
+        "bp": 100
+      },
+      "src": "EI expansion 2576d0f3: dist/data/moves.js:17689: 100 per Stockpile, omitted count defaults to 1."
+    },
+    {
+      "name": "A2-spit-up-three",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9"
+      },
+      "slot": {
+        "mv": 259,
+        "st": 3
+      },
+      "expect": {
+        "bp": 300
+      },
+      "src": "EI expansion 2576d0f3: dist/data/moves.js:17689: 100 per Stockpile."
+    },
+    {
+      "name": "A2-spit-up-typed-wins",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9"
+      },
+      "slot": {
+        "mv": 259,
+        "st": 3,
+        "bp": 50
+      },
+      "expect": {
+        "ref": {
+          "st": 1,
+          "bp": 50
+        }
+      },
+      "src": "EI expansion 2576d0f3: Typed power overrides automatic Stockpile power."
+    },
+    {
+      "name": "A2-contact-helmet",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9",
+        "it": "Rocky Helmet"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 0
+      },
+      "dealt": 20,
+      "expect": {
+        "paths": {
+          "v": -25
+        }
+      },
+      "src": "EI expansion 2576d0f3: src/battle_util.c:5641,5650,8090: user max HP /8 and /6 on damaging contact."
+    },
+    {
+      "name": "A2-contact-rough-skin",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9",
+        "ab": 165
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 0
+      },
+      "dealt": 20,
+      "expect": {
+        "paths": {
+          "v": -19
+        }
+      },
+      "src": "EI expansion 2576d0f3: src/battle_util.c:5641,5650,8090: user max HP /8 and /6 on damaging contact."
+    },
+    {
+      "name": "A2-contact-iron-barbs",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9",
+        "ab": 205
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 0
+      },
+      "dealt": 20,
+      "expect": {
+        "paths": {
+          "v": -19
+        }
+      },
+      "src": "EI expansion 2576d0f3: src/battle_util.c:5641,5650,8090: user max HP /8 and /6 on damaging contact."
+    },
+    {
+      "name": "A2-contact-two",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9",
+        "it": "Rocky Helmet",
+        "ab": 165
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 331
+      },
+      "dealt": 40,
+      "expect": {
+        "paths": {
+          "v": -88
+        }
+      },
+      "src": "EI expansion 2576d0f3: src/battle_util.c:5641,5650,8090: user max HP /8 and /6 on damaging contact."
+    },
+    {
+      "name": "A2-crash",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 544
+      },
+      "options": {
+        "miss": true
+      },
+      "expect": {
+        "paths": {
+          "v": -77,
+          "crash": 77,
+          "l": "miss"
+        }
+      },
+      "src": "EI expansion 2576d0f3: include/config/battle.h:69; src/battle_script_commands.c:5992: crash = user max HP /2."
+    },
+    {
+      "name": "A2-crash-magic-guard",
+      "atk": {
+        "id": "9",
+        "ab": 39
+      },
+      "def": {
+        "id": "9"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 544
+      },
+      "options": {
+        "miss": true
+      },
+      "expect": {
+        "paths": {
+          "v": 0,
+          "crash": 0
+        }
+      },
+      "src": "EI expansion 2576d0f3: include/config/battle.h:69; src/battle_script_commands.c:5992: crash = user max HP /2."
+    },
+    {
+      "name": "A2-laser-focus",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9"
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "atkLaserFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 1,
+          "forced": true
+        }
+      },
+      "src": "EI expansion 2576d0f3: Laser Focus: Gen 7+ dist/data/moves.js:10037; Hardlove src/battle/other_battle_calculators.c:1767."
+    },
+    {
+      "name": "A2-lucky-chant-stops-forced",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9"
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {
+        "atkLaserFocus": true,
+        "defLuckyChant": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "EI expansion 2576d0f3: Lucky Chant: dist/data/moves.js:10527, prevents crits against the protected side."
+    },
+    {
+      "name": "A2-dragon-cheer",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9"
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkDragonCheer": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 1,
+          "p": 0.125,
+          "forced": false
+        }
+      },
+      "src": "EI expansion 2576d0f3: src/battle_script_commands.c:12734-12747; stage count at 1998: +1 on non-Dragon, +2 on Dragon, shares Focus state."
+    },
+    {
+      "name": "A2-foul-play-manual-target-attack",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "9",
+        "stg": [
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 365
+      },
+      "expect": {
+        "ref": {
+          "atk": {
+            "stg": [
+              0,
+              6,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "EI expansion 2576d0f3: Foul Play reads target stages, not attacker: @smogon/calc src/mechanics/gen789.ts:1327,1346 (gen56.ts attackSource likewise)."
+    },
+    {
+      "name": "A2-foul-play-between-hit-justified",
+      "atk": {
+        "id": "9",
+        "ab": 116
+      },
+      "def": {
+        "id": "9",
+        "ab": 66
+      },
+      "slot": {
+        "mv": 365
+      },
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Justified",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "EI expansion 2576d0f3: Foul Play uses target Attack after the first Dark hit raises Justified (dist/data/abilities.js Justified)."
+    },
+    {
+      "name": "A2-disguise",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "778",
+        "ab": 235
+      },
+      "slot": {
+        "mv": 77
+      },
+      "expect": {
+        "paths": {
+          "max": 0,
+          "bust.loss": 16,
+          "pmax": 0
+        }
+      },
+      "src": "EI expansion 2576d0f3: src/battle_script_commands.c:2193,2512-2524; include/config/battle.h:154: absorbs once, costs floor max HP /8."
+    },
+    {
+      "name": "A2-disguise-action",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "778",
+        "ab": 235
+      },
+      "api": "hit",
+      "slot": {
+        "mv": 77
+      },
+      "expect": {
+        "paths": {
+          "def.hp": 114,
+          "def.broken": true,
+          "dealt": 0,
+          "hits": 0
+        }
+      },
+      "src": "EI expansion 2576d0f3: src/battle_script_commands.c:2193,2512-2524; include/config/battle.h:154: absorbs once, costs floor max HP /8."
+    },
+    {
+      "name": "A2-disguise-ko-once",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "778",
+        "ab": 235,
+        "hp": 1
+      },
+      "slot": {
+        "mv": 77
+      },
+      "expect": {
+        "paths": {
+          "ko.n": 1,
+          "ko.p": 1
+        }
+      },
+      "src": "EI expansion 2576d0f3: src/battle_script_commands.c:2193,2512-2524; include/config/battle.h:154: absorbs once, costs floor max HP /8."
+    },
+    {
+      "name": "A2-ice-face",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "875",
+        "ab": 250
+      },
+      "api": "hit",
+      "slot": {
+        "mv": 0
+      },
+      "expect": {
+        "paths": {
+          "def.hp": 150,
+          "def.broken": true,
+          "dealt": 0
+        }
+      },
+      "src": "EI expansion 2576d0f3: src/battle_script_commands.c:2203-2210; src/battle_util.c:5012-5021: physical shield, Hail/Snow restore."
+    },
+    {
+      "name": "A2-ice-face-special",
+      "atk": {
+        "id": "9"
+      },
+      "def": {
+        "id": "875",
+        "ab": 250
+      },
+      "slot": {
+        "mv": 166
+      },
+      "expect": {
+        "ref": {
+          "def": {
+            "broken": true
+          }
+        }
+      },
+      "src": "EI expansion 2576d0f3: src/battle_script_commands.c:2203-2210; src/battle_util.c:5012-5021: physical shield, Hail/Snow restore."
+    },
+    {
+      "name": "A2-ice-face-restore",
+      "atk": {
+        "id": "875",
+        "ab": 250,
+        "broken": true
+      },
+      "def": {
+        "id": "9"
+      },
+      "api": "derived",
+      "field": {
+        "weather": "Snow"
+      },
+      "expect": {
+        "paths": {
+          "restore": true
+        }
+      },
+      "src": "EI expansion 2576d0f3: src/battle_script_commands.c:2203-2210; src/battle_util.c:5012-5021: physical shield, Hail/Snow restore."
+    },
+    {
       "name": "auto-great-tusk-no-trigger", "atk": {"id": "1376", "ab": 270}, "def": {"id": "9"},
       "slot": {"mv": 66}, "expect": {"paths": {"max": 85}},
       "src": "A1: Protosynthesis inactive without Sun or Booster Energy; neutral level-50 Earthquake."

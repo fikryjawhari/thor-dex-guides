@@ -1233,6 +1233,141 @@ await test('A2 Foul Play reads target stages and changes between Parental Bond h
   }
 });
 
+await test('A2 Disguise absorbs once, later hits land, bust HP is not dealt or drain', () => {
+  engine.init(data, profiles.expansion);
+  const user = set('Blastoise');
+  const target = set('Mimikyu', {ab: ability('Disguise')});
+  const max = engine.stats(target)[0];
+  const loss = Math.floor(max / 8);
+  const selected = slot('Thunder Punch');
+  const result = engine.calc(user, target, selected);
+  assert.equal(result.max, 0);
+  assert.equal(result.eff, 1);
+  assert.deepEqual(plain(result.bust), {ability: 'Disguise', loss});
+  assert.equal(engine.hit(user, target, selected).def.hp, max - loss);
+  assert.equal(engine.hit(user, target, selected).def.broken, true);
+  assert.equal(engine.hit(user, target, selected).dealt, 0);
+  assert.ok(engine.calc(user, {...target, broken: true}, selected).max > 0);
+  assert.equal(engine.calc(user, target, slot('Tackle')).bust, undefined);
+  assert.equal(engine.calc(user, target, selected, {defProtect: true}).bust, undefined);
+  assert.equal(engine.calc({...user, ab: ability('Mold Breaker')}, target, selected).bust, undefined);
+  assert.equal(engine.hit(user, target, selected, {}, 'max', {damage: 1}).def.broken, undefined);
+  const multi = engine.calc(user, target, {...selected, hits: 2});
+  const broken = engine.calc(user, {...target, broken: true}, selected);
+  assert.deepEqual(plain(multi.per[0]), Array(16).fill(0));
+  assert.deepEqual(plain(multi.per[1]), plain(broken.rolls));
+  assert.equal(multi.pmax, broken.pmax);
+  const action = engine.hit(user, target, {...selected, hits: 2});
+  assert.equal(action.dealt, Math.min(max - loss, broken.max));
+  assert.equal(action.def.hp, Math.max(0, max - loss - broken.max));
+  assert.equal(action.hits, 1);
+  assert.equal(engine.hp(user, target, slot('Draining Kiss'), {}, 100), null);
+  assert.equal(engine.calc(user, target, slot('Night Shade')).max, 0);
+  assert.equal(engine.calc(user, {...target, hp: 1}, selected).ko.n, 1);
+  assert.equal(engine.hit(user, {...target, hp: 1}, selected).dealt, 0);
+  engine.init(data, profiles.gen7);
+  assert.equal(engine.calc(user, target, selected).bust.loss, 0);
+  assert.equal(engine.hit(user, target, selected).def.hp, max);
+  assert.equal(engine.calc(user, {...target, hp: 1}, selected).ko.n, 2);
+  engine.init(data, profiles.gen6);
+  assert.ok(engine.calc(user, target, selected).max > 0);
+});
+
+await test('A2 Disguise Parental Bond, berries after bust, and delayed resist berry', () => {
+  engine.init(data, profiles.expansion);
+  const user = set('Blastoise', {ab: ability('Parental Bond')});
+  const target = set('Mimikyu', {ab: ability('Disguise')});
+  const selected = slot('Thunder Punch');
+  const result = engine.calc(user, target, selected);
+  const broken = engine.calc(user, {...target, broken: true}, selected);
+  assert.equal(result.hits, 2);
+  assert.deepEqual(plain(result.per[1]), plain(broken.per[1]));
+  const max = engine.stats(target)[0];
+  const hp = Math.floor(max / 2) + 1;
+  const action = engine.hit({...user, ab: -1}, {...target, hp, it: 'Sitrus Berry'}, selected);
+  assert.equal(action.def.used, true);
+  assert.equal(action.def.hp, hp - Math.floor(max / 8) + Math.floor(max / 4));
+  assert.equal(action.dealt, 0);
+  const foe = {...target, it: 'Babiri Berry'};
+  const steel = slot('Iron Head', {hits: 2});
+  const protectedHit = engine.calc({...user, ab: -1}, foe, steel);
+  const one = engine.calc({...user, ab: -1}, {...foe, broken: true}, {...steel, hits: 1});
+  assert.deepEqual(plain(protectedHit.per[1]), plain(one.rolls));
+  assert.equal(engine.hit({...user, ab: -1}, foe, steel).def.used, true);
+});
+
+await test('A2 Ice Face blocks physical only, explicit form state and weather re-entry', () => {
+  engine.init(data, profiles.expansion);
+  const user = set('Blastoise');
+  const target = set('Eiscue (Ice)', {ab: ability('Ice Face')});
+  const selected = slot('Tackle');
+  assert.equal(engine.calc(user, target, selected).max, 0);
+  assert.equal(engine.hit(user, target, selected).def.hp, engine.stats(target)[0]);
+  assert.equal(engine.hit(user, target, selected).def.broken, true);
+  assert.ok(engine.calc(user, target, slot('Water Gun')).max > 0);
+  assert.ok(engine.calc(user, {...target, broken: true}, selected).max > 0);
+  const noice = set('Eiscue (Noice)', {ab: ability('Ice Face')});
+  assert.ok(engine.calc(user, noice, selected).max > 0);
+  assert.equal(engine.calc(user, {...noice, broken: false}, selected).max, 0);
+  assert.equal(engine.derived({...target, broken: true}, {weather: 'Snow'}).restore, true);
+  assert.equal(engine.derived(noice, {weather: 'Snow'}).restore, true);
+  assert.equal(engine.derived({...target, broken: true}).restore, undefined);
+  assert.equal(engine.derived({...target, broken: true, hp: 0}, {weather: 'Snow'}).restore, undefined);
+  assert.equal(engine.derived({...target, broken: true}, {weather: 'Snow'}, {...user, ab: ability('Cloud Nine')}).restore, undefined);
+});
+
+await test('A2 contact costs per damaging hit including Parental Bond, exact hit report only', () => {
+  engine.init({...data, AB: [...data.AB, ['Long Reach', '']]}, profiles.expansion);
+  const user = set('Blastoise');
+  const target = set('Blissey', {it: 'Rocky Helmet', ab: ability('Rough Skin')});
+  const max = engine.stats(user)[0];
+  const cost = Math.floor(max / 6) + Math.floor(max / 8);
+  const selected = slot('Tackle');
+  assert.equal(engine.hp(user, target, selected, {}, 10).v, -cost);
+  assert.equal(engine.hp(user, target, {...selected, hits: 3}, {}, 30).v, -cost * 3);
+  assert.equal(engine.hp(user, target, {...selected, hits: 3}, {}, 30, {hits: 1}).v, -cost);
+  assert.equal(engine.hp({...user, ab: ability('Parental Bond')}, target, selected, {}, 30).v, -cost * 2);
+  const action = engine.hit(user, target, {...selected, hits: 3});
+  assert.equal(action.hits, 3);
+  assert.equal(action.contact.v, -cost * 3);
+  assert.equal(action.contact.parts.length, 6);
+  assert.equal(action.atk.hp, undefined);
+  assert.equal(engine.hit(user, target, selected, {}, 'max', {damage: 10}).contact, undefined);
+  assert.equal(engine.hit(user, {...target, hp: 1}, {...selected, hits: 3}).hits, 1);
+  assert.equal(engine.hp(user, target, slot('Water Gun'), {}, 30), null);
+  assert.equal(engine.hp(user, target, selected, {}, 0), null);
+  for (const extra of [{ab: ability('Magic Guard')}, {ab: data.AB.length}, {it: 'Protective Pads'}]) {
+    assert.equal(engine.hp({...user, ...extra}, target, selected, {}, 30), null);
+  }
+  assert.equal(engine.hp({...user, it: 'Punching Glove'}, target, slot('Thunder Punch'), {}, 30), null);
+  assert.equal(engine.hp({...user, it: 'Punching Glove'}, target, selected, {}, 30).v, -cost);
+  assert.equal(engine.hp(user, {...target, used: true}, selected, {}, 30).v, -Math.floor(max / 8));
+  assert.equal(engine.hp(user, target, selected, {magicRoom: true}, 30).v, -Math.floor(max / 8));
+  assert.equal(engine.hp(user, {...target, ab: ability('Iron Barbs')}, selected, {}, 30).v, -cost);
+  engine.init(data, profiles.gen4);
+  assert.equal(engine.hp(user, target, selected, {}, 30).v, -Math.floor(max / 16));
+});
+
+await test('A2 crash previews are separate misses, generation-aware and Magic Guard safe', () => {
+  engine.init(data, profiles.expansion);
+  const user = set('Blastoise');
+  const target = set('Blissey');
+  const max = engine.stats(user)[0];
+  for (const name of ['Jump Kick', 'High Jump Kick', 'Axe Kick', 'Supercell Slam']) {
+    assert.deepEqual(plain(engine.hp(user, target, slot(name), {}, 100, {miss: true})),
+      {v: -Math.floor(max / 2), l: 'miss', crash: Math.floor(max / 2)});
+    assert.equal(engine.hp({...user, ab: ability('Magic Guard')}, target, slot(name), {}, 100, {miss: true}).v, 0);
+  }
+  assert.equal(engine.hp(user, target, slot('Tackle'), {}, 100, {miss: true}), null);
+  engine.init(data, profiles.gen4);
+  assert.equal(engine.hp(user, target, slot('High Jump Kick'), {}, 0, {miss: true, damage: 40}).crash, 20);
+  assert.equal(engine.hp(user, target, slot('High Jump Kick'), {}, 0, {miss: true, damage: 10000}).crash,
+    Math.floor(engine.stats(target)[0] / 2));
+  const ghost = set('Gengar');
+  assert.equal(engine.hp(user, ghost, slot('High Jump Kick'), {}, 0, {miss: true}).crash,
+    Math.floor(engine.stats(ghost)[0] / 2));
+});
+
 await test('initialisation and calculations leave guide/profile inputs unchanged', () => {
   assert.equal(JSON.stringify({data, profiles}), unchanged);
 });

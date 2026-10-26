@@ -1,6 +1,386 @@
 {
   "cases": [
     {
+      "name": "A2-swallow-1",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 255,
+        "st": 1
+      },
+      "expect": {
+        "paths": {
+          "v": 38
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 Stockpile default: dist/data/moves.js:18617-18620, quarter / half / full 154 HP."
+    },
+    {
+      "name": "A2-swallow-2",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 255,
+        "st": 2
+      },
+      "expect": {
+        "paths": {
+          "v": 77
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 Stockpile default: dist/data/moves.js:18617-18620, quarter / half / full 154 HP."
+    },
+    {
+      "name": "A2-swallow-3",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 255,
+        "st": 3
+      },
+      "expect": {
+        "paths": {
+          "v": 154
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 Stockpile default: dist/data/moves.js:18617-18620, quarter / half / full 154 HP."
+    },
+    {
+      "name": "A2-spit-up-default",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise"
+      },
+      "slot": {
+        "mv": 254
+      },
+      "expect": {
+        "bp": 100
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 dist/data/moves.js:17689: 100 per Stockpile, omitted count defaults to 1."
+    },
+    {
+      "name": "A2-spit-up-three",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise"
+      },
+      "slot": {
+        "mv": 254,
+        "st": 3
+      },
+      "expect": {
+        "bp": 300
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 dist/data/moves.js:17689: 100 per Stockpile."
+    },
+    {
+      "name": "A2-spit-up-typed-wins",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise"
+      },
+      "slot": {
+        "mv": 254,
+        "st": 3,
+        "bp": 50
+      },
+      "expect": {
+        "ref": {
+          "st": 1,
+          "bp": 50
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 Typed power overrides automatic Stockpile power."
+    },
+    {
+      "name": "A2-contact-helmet",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise",
+        "it": "Rocky Helmet"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 32
+      },
+      "dealt": 20,
+      "expect": {
+        "paths": {
+          "v": -25
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 dist/data/abilities.js:3890-3894 and dist/data/items.js:5296-5299: user max HP /8 and /6."
+    },
+    {
+      "name": "A2-contact-rough-skin",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise",
+        "ab": 23
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 32
+      },
+      "dealt": 20,
+      "expect": {
+        "paths": {
+          "v": -19
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 dist/data/abilities.js:3890-3894 and dist/data/items.js:5296-5299: user max HP /8 and /6."
+    },
+    {
+      "name": "A2-contact-iron-barbs",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise",
+        "ab": 159
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 32
+      },
+      "dealt": 20,
+      "expect": {
+        "paths": {
+          "v": -19
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 dist/data/abilities.js:3890-3894 and dist/data/items.js:5296-5299: user max HP /8 and /6."
+    },
+    {
+      "name": "A2-contact-two",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise",
+        "it": "Rocky Helmet",
+        "ab": 23
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 23
+      },
+      "dealt": 40,
+      "expect": {
+        "paths": {
+          "v": -88
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 dist/data/abilities.js:3890-3894 and dist/data/items.js:5296-5299: user max HP /8 and /6."
+    },
+    {
+      "name": "A2-crash",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 135
+      },
+      "options": {
+        "miss": true
+      },
+      "expect": {
+        "paths": {
+          "v": -77,
+          "crash": 77,
+          "l": "miss"
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 dist/data/moves.js:8943-8945: crash = user max HP /2."
+    },
+    {
+      "name": "A2-crash-magic-guard",
+      "atk": {
+        "id": "blastoise",
+        "ab": 97
+      },
+      "def": {
+        "id": "blastoise"
+      },
+      "api": "hp",
+      "slot": {
+        "mv": 135
+      },
+      "options": {
+        "miss": true
+      },
+      "expect": {
+        "paths": {
+          "v": 0,
+          "crash": 0
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 dist/data/moves.js:8943-8945: crash = user max HP /2."
+    },
+    {
+      "name": "A2-laser-focus",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise"
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "atkLaserFocus": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 Laser Focus: Gen 7+ dist/data/moves.js:10037; Hardlove src/battle/other_battle_calculators.c:1767."
+    },
+    {
+      "name": "A2-lucky-chant-stops-forced",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise"
+      },
+      "slot": {
+        "mv": 32,
+        "crit": true
+      },
+      "field": {
+        "atkLaserFocus": true,
+        "defLuckyChant": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0,
+          "forced": false
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 Lucky Chant: dist/data/moves.js:10527, prevents crits against the protected side."
+    },
+    {
+      "name": "A2-dragon-cheer",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise"
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkDragonCheer": true
+      },
+      "expect": {
+        "crit": {
+          "stage": 0,
+          "p": 0.0625,
+          "forced": false
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 Dragon Cheer introduced Gen 9, not enabled in this generation."
+    },
+    {
+      "name": "A2-foul-play-manual-target-attack",
+      "atk": {
+        "id": "blastoise"
+      },
+      "def": {
+        "id": "blastoise",
+        "stg": [
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 491
+      },
+      "expect": {
+        "ref": {
+          "atk": {
+            "stg": [
+              0,
+              6,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 Foul Play reads target stages, not attacker: @smogon/calc src/mechanics/gen789.ts:1327,1346 (gen56.ts attackSource likewise)."
+    },
+    {
+      "name": "A2-foul-play-between-hit-justified",
+      "atk": {
+        "id": "blastoise",
+        "ab": 184
+      },
+      "def": {
+        "id": "blastoise",
+        "ab": 153
+      },
+      "slot": {
+        "mv": 491
+      },
+      "expect": {
+        "pre": [
+          {
+            "who": "def",
+            "stat": "atk",
+            "by": 1,
+            "src": "Justified",
+            "hit": 2
+          }
+        ]
+      },
+      "src": "Gen 6 default (closed-source game): pokemon-showdown 0.11.11 Foul Play uses target Attack after the first Dark hit raises Justified (dist/data/abilities.js Justified)."
+    },
+    {
       "name": "auto-figy-gen6", "api": "berry", "atk": {"id": "blastoise", "it": "Figy Berry", "hp": 1},
       "expect": {"paths": {"heal": 19, "atk.hp": 20, "atk.used": true}},
       "src": "A1: Gen 6 Figy-group berries heal one-eighth at half HP (floor 154/8)."

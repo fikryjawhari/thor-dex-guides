@@ -40,6 +40,7 @@ for (const hack of hacks) {
         else if (fixture.api === 'speed') result = engine.speed(fixture.atk, field, fixture.side || 'atk', fixture.def);
         else if (fixture.api === 'intimidate') result = engine.intimidate(fixture.atk, fixture.def, field);
         else if (fixture.api === 'hit') result = engine.hit(fixture.atk, fixture.def, fixture.slot, field, fixture.roll || 'max', fixture.options || {});
+        else if (fixture.api === 'hp') result = engine.hp(fixture.atk, fixture.def, fixture.slot, field, fixture.dealt || 0, fixture.options || {});
         else if (fixture.api && fixture.api !== 'calc') return `unknown api ${fixture.api}`;
         else result = engine.calc(fixture.atk, fixture.def, fixture.slot, field);
       } catch (error) {

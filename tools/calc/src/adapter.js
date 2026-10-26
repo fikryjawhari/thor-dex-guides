@@ -502,7 +502,8 @@ function critChance(entry, moveData, attacker, defender, values) {
   const species = toID(attacker.name);
   const itemStage = typeof item === 'number' ? item
     : Object.entries(item || {}).find(([name]) => species.includes(toID(name)))?.[1] || 0;
-  const cheer = profile.gen >= 9 && values.gameType === 'Doubles' && values.atkDragonCheer ? (attacker.hasType('Dragon') ? 2 : 1) : 0;
+  const cheer = profile.gen >= 9 && profile.over?.state?.['Dragon Cheer'] !== false
+    && values.gameType === 'Doubles' && values.atkDragonCheer ? (attacker.hasType('Dragon') ? 2 : 1) : 0;
   const counted = (own < 6 ? own : 0) + Math.max(values[FOCUS.atk] ? 2 : 0, cheer) + itemStage + (attacker.hasAbility('Super Luck') ? 1 : 0)
     + Math.max(0, Math.trunc(Number(values.atkCritBonus)) || 0);
   const stage = Math.min(table.length - 1, counted);
@@ -586,7 +587,7 @@ function settings() {
   return {setterStays: profile.setterStays ?? profile.gen <= 5};
 }
 
-function derived(set, values = {}) {
+function derived(set, values = {}, otherSet = null) {
   const mon = fieldPokemon(set, values, 'atk');
   const field = battleField(values);
   const result = {};
@@ -604,6 +605,9 @@ function derived(set, values = {}) {
   if (terrain && available('terrain', terrain)) result.terrain = terrain;
   checkItem(mon, field.isMagicRoom);
   checkAirLock(mon, field);
+  if (otherSet) checkAirLock(fieldPokemon(otherSet, values, 'def'), field);
+  if (profile.gen >= 8 && mon.hasAbility('Ice Face') && /Eiscue/i.test(guideName(set))
+    && (set.broken || /Noice/i.test(guideName(set))) && field.hasWeather('Hail', 'Snow')) result.restore = true;
   if (mon.curHP() && !set.st && !mon.status && holdsItem(mon, field) && !mon.hasAbility('Comatose', 'Purifying Salt')
     && !(mon.hasAbility('Shields Down') && mon.curHP() > mon.maxHP() / 2)
     && !(mon.hasAbility('Leaf Guard') && field.hasWeather('Sun', 'Harsh Sunshine'))
@@ -743,7 +747,7 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
   checkAirLock(target.mon, field);
   checkItem(user.mon, field.isMagicRoom);
   checkItem(target.mon, field.isMagicRoom);
-  const output = {def: target.update, atk: user.update, log: []};
+  const output = {def: target.update, atk: user.update, log: [], hits: 0};
   let current = target.mon.curHP();
   let dealt = 0;
   const move = generation.moves.get(toID(data.M[slot.mv]));
@@ -755,6 +759,7 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
     || profile.gen >= 9 && target.mon.hasAbility('Anger Shell');
   const delayedBerry = thresholdAbility && strikes.length === 1;
   let crossedHalf = false;
+  const contact = [];
   const events = result?.pre || (!exact && result.fixed
     ? firstHitStages(fieldPokemon(atk, values, 'atk'), fieldPokemon(def, values, 'def'), atk, def, slot,
       new Move(generation, data.M[slot.mv]), field, profile.over?.state) : []);
@@ -767,6 +772,7 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
     }
   }
   const stateSet = (set, state, hp) => ({...set, hp, used: state.update.used || set.used,
+    broken: state.update.broken ?? set.broken,
     stg: statNames.map(stat => state.mon.boosts[stat]), entry: false, dl: 'off', intim: false});
   const actionField = {...values};
   const fieldChange = (key, value) => {
@@ -776,6 +782,13 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
     output.log.push(`${key}: ${value}`);
   };
   for (let index = 0; index < strikes.length && current > 0; index++) {
+    if (!exact && !index && result.bust) {
+      target.update.broken = true;
+      current = Math.max(0, current - result.bust.loss);
+      target.logs.push(`${result.bust.ability}: broken${result.bust.loss ? ` (-${result.bust.loss} HP)` : ''}`);
+      if (current) current = applyBerry(target, field, user.mon, current);
+      continue;
+    }
     const followup = index && !exact && !result.fixed ? calcCore(stateSet(atk, user, user.mon.curHP()),
       stateSet(def, target, current), slot, actionField, {hit: index + 1, parental}) : null;
     let damage = (roll === 'min' ? Math.min : Math.max)(...(followup?.rolls || strikes[index]));
@@ -796,6 +809,10 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
     }
     current = Math.max(0, current - damage);
     dealt += before - current;
+    if (!exact && before > current) {
+      output.hits++;
+      contact.push(...contactEffects(user.mon, target.mon, move, field, info.cat));
+    }
     output.log.push(`Hit ${index + 1}: -${before - current} HP`);
     if (!exact) {
       const item = target.mon.item;
@@ -866,6 +883,10 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
     }
   }
   target.update.hp = current;
+  if (contact.length) {
+    output.contact = {v: contact.reduce((sum, part) => sum + part.v, 0), parts: contact};
+    output.log.push(...contact.map(part => `${part.l}: ${part.v} HP (user change)`));
+  }
   output.log.push(...target.logs, ...user.logs);
   output.dealt = dealt;
   return output;
@@ -1121,7 +1142,7 @@ const FIXED = {
 const OHKO = new Set(['Fissure', 'Guillotine', 'Horn Drill', 'Sheer Cold']);
 const TAKEN = {Counter: 2, 'Mirror Coat': 2, Bide: 2, 'Metal Burst': 1.5, Comeuppance: 1.5};
 
-function calculateMove(atk, def, slot, values = {}) {
+function unshieldedMove(atk, def, slot, values = {}) {
   const name = data.M[slot.mv];
   const taken = TAKEN[name];
   if (!FIXED[name] && !OHKO.has(name) && !taken) return calcCore(atk, def, slot, values);
@@ -1150,6 +1171,59 @@ function calculateMove(atk, def, slot, values = {}) {
   return result;
 }
 
+function shield(atk, def, slot, values, result) {
+  if (def.broken || !result?.max) return null;
+  const target = fieldPokemon(def, values, 'def');
+  const user = fieldPokemon(atk, values, 'atk');
+  const name = guideName(def);
+  if (!target.curHP() || user.hasAbility('Mold Breaker', 'Teravolt', 'Turboblaze')
+    || ['Sunsteel Strike', 'Moongeist Beam', 'Photon Geyser', 'Light That Burns the Sky',
+      'Searing Sunraze Smash', 'Menacing Moonraze Maelstrom'].includes(data.M[slot.mv])) return null;
+  if (profile.gen >= 7 && target.hasAbility('Disguise') && /Mimikyu/i.test(name)
+    && (def.broken === false || !/Busted/i.test(name))) {
+    return {ability: 'Disguise', loss: profile.gen >= 8 ? Math.max(1, Math.floor(target.maxHP() / 8)) : 0};
+  }
+  if (profile.gen >= 8 && target.hasAbility('Ice Face') && /Eiscue/i.test(name) && result.cat === 'Physical'
+    && (def.broken === false || !/Noice/i.test(name))) return {ability: 'Ice Face', loss: 0};
+  return null;
+}
+
+function calculateMove(atk, def, slot, values = {}) {
+  const result = unshieldedMove(atk, def, slot, values);
+  const bust = shield(atk, def, slot, values, result);
+  if (!bust) return result;
+  const per = Array.from({length: result.hits}, () => Array(16).fill(0));
+  const sets = [atk, {...def, broken: true, hp: Math.max(0, (def.hp ?? stats(def)[0]) - bust.loss)}]
+    .map(set => ({...set, stg: statNames.map((stat, index) => set.stg?.[index] || 0),
+      entry: false, dl: 'off', intim: false}));
+  const pre = (result.pre || []).filter(event => !event.hit);
+  const apply = events => {
+    for (const event of events) {
+      const set = sets[event.who === 'atk' ? 0 : 1];
+      set.stg[statNames.indexOf(event.stat)] += event.by;
+      if (event.src === set.it && (HIT_ITEMS[set.it] || SEEDS[set.it])) set.used = true;
+    }
+  };
+  apply(pre);
+  for (let index = 1; index < per.length; index++) {
+    if (index > 1) {
+      const field = battleField(values);
+      const events = betweenHitStages(...sets.map((set, side) => snapshot(fieldPokemon(set, values, side ? 'def' : 'atk'), field)),
+        2, {type: slot.t || generation.moves.get(toID(data.M[slot.mv])).type, cat: result.cat, eff: result.eff})
+        .map(event => ({...event, hit: index + 1}));
+      apply(events);
+      pre.push(...events);
+    }
+    const next = calcCore(...sets, slot, values, {hit: index + 1,
+      parental: result.hits === 2 && (slot.hits ?? 1) === 1 && pokemon(atk).hasAbility('Parental Bond')});
+    per[index] = next.rolls;
+  }
+  return {...result, bust, rolls: per[0], min: 0, max: 0, per,
+    pmin: per.reduce((sum, rolls) => sum + Math.min(...rolls), 0) * 100 / stats(def)[0],
+    pmax: per.reduce((sum, rolls) => sum + Math.max(...rolls), 0) * 100 / stats(def)[0],
+    pre, notes: [...result.notes, bust.ability]};
+}
+
 function calc(atk, def, slot, values = {}) {
   const result = calculateMove(atk, def, slot, values);
   if (!result) return result;
@@ -1164,27 +1238,30 @@ function calc(atk, def, slot, values = {}) {
   const berry = berryEffect(target, field, user, 1, {eff: result.eff});
   const healing = berry?.heal > 0;
   const survival = result.hits === 1 && (sash || sturdy);
-  if (!survival && !healing || !target.curHP() || !result.max) return result;
+  if (!survival && !healing && !result.bust || !target.curHP() || !result.max && !result.bust) return result;
   if (survival) result.notes.push(sash ? 'Sash' : 'Sturdy');
   if (healing) result.notes.push(`after ${target.item.replace(/ Berry$/, '')}`);
   const per = result.per || Array.from({length: result.hits}, () => result.rolls);
-  const frequencies = per.map(rolls => {
+  const frequencies = hits => hits.map(rolls => {
     const counts = new Map();
     for (const value of rolls) counts.set(value, (counts.get(value) || 0) + 1 / 16);
     return counts;
   });
+  const first = frequencies(per);
+  const laterResult = result.bust ? unshieldedMove(atk, {...def, broken: true}, slot, values) : result;
+  const later = result.bust ? frequencies(laterResult.per || Array.from({length: laterResult.hits}, () => laterResult.rolls)) : first;
   let distribution = new Map([[`${target.curHP()},0,0`, 1]]);
   let probability = 0;
   const eot = [0, 1, 2, 3].map(turn => (result.eot || []).reduce((sum, part) => sum + part.v[turn], 0));
   result.ko = {n: 0, p: 0};
   for (let turn = 0; turn < 4; turn++) {
-    for (const counts of frequencies) {
+    for (const [index, counts] of (turn ? later : first).entries()) {
       const next = new Map();
       for (const [key, chance] of distribution) {
         const [before, consumed, saved] = key.split(',').map(Number);
         for (const [damage, weight] of counts) {
           const protects = survival && !saved && before === target.maxHP() && damage >= before;
-          let hp = protects ? 1 : before - damage;
+          let hp = protects ? 1 : before - damage - (!turn && !index ? result.bust?.loss || 0 : 0);
           let used = consumed;
           if (hp <= 0) { probability += chance * weight; continue; }
           if (healing && !used) {
@@ -1224,8 +1301,25 @@ const HEAL_QUARTER = new Set(['Life Dew', 'Jungle Healing', 'Lunar Blessing']);
 const WEATHER_HEAL = new Set(['Moonlight', 'Morning Sun', 'Synthesis']);
 const SELF_KO = new Set(['Explosion', 'Self-Destruct', 'Misty Explosion', 'Final Gambit', 'Memento', 'Healing Wish', 'Lunar Dance']);
 const COSTS = {'Belly Drum': 2, Substitute: 4, 'Fillet Away': 2, 'Clangorous Soul': 3, 'Shed Tail': 2};
+const CRASH = new Set(['Jump Kick', 'High Jump Kick', 'Axe Kick', 'Supercell Slam']);
 
-function hp(atk, def, slot, values = {}, dealt = 0) {
+function contactEffects(user, target, move, field, category) {
+  if (!move || !(move.flags?.contact || move.name === 'Shell Side Arm' && category === 'Physical')
+    || user.hasAbility('Magic Guard')
+    || profile.gen >= 7 && (user.hasAbility('Long Reach') || user.hasItem('Protective Pads'))
+    || profile.gen >= 9 && user.hasItem('Punching Glove') && move.flags?.punch
+    || profile.over?.contact?.defenderPads && target.hasItem('Protective Pads')) return [];
+  const parts = [];
+  if (target.hasAbility('Rough Skin') || profile.gen >= 5 && target.hasAbility('Iron Barbs')) {
+    parts.push({l: target.ability, v: -Math.max(1, Math.floor(user.maxHP() / (profile.gen === 4 ? 16 : 8)))});
+  }
+  if (profile.gen >= 5 && holdsItem(target, field) && target.hasItem('Rocky Helmet')) {
+    parts.push({l: 'Rocky Helmet', v: -Math.max(1, Math.floor(user.maxHP() / 6))});
+  }
+  return parts;
+}
+
+function hp(atk, def, slot, values = {}, dealt = 0, options = {}) {
   const name = data.M[slot.mv];
   if (!name) return null;
   const moveData = generation.moves.get(toID(name));
@@ -1234,6 +1328,7 @@ function hp(atk, def, slot, values = {}, dealt = 0) {
   const target = fieldPokemon(def, values, 'def');
   const field = battleField(values);
   checkAirLock(user, field);
+  checkAirLock(target, field);
   checkItem(user, field.isMagicRoom);
   checkItem(target, field.isMagicRoom);
   const max = user.maxHP();
@@ -1243,6 +1338,17 @@ function hp(atk, def, slot, values = {}, dealt = 0) {
   const items = !field.isMagicRoom && !user.hasAbility('Klutz');
   const root = heal => items && user.hasItem('Big Root') ? Math.floor(heal * 5324 / 4096) : heal;
   dealt = Math.max(0, Math.trunc(dealt || 0));
+  if (options.miss) {
+    if (!CRASH.has(name)) return null;
+    let crash = Math.max(1, Math.floor(max / 2));
+    if (profile.gen === 4) {
+      const result = unshieldedMove(atk, {...def, broken: true}, slot, {...values, defProtect: false});
+      const damage = options.damage ?? result?.max ?? 0;
+      crash = Math.max(1, Math.floor(Math.min(target.maxHP(), result?.eff ? damage : target.maxHP()) / 2));
+    }
+    if (guard) crash = 0;
+    return {v: crash ? -crash : 0, l: 'miss', crash};
+  }
   if (SELF_KO.has(name)) return {v: -now, l: 'faints'};
   if (name === 'Pain Split') {
     const tmax = target.maxHP(), tnow = Math.max(0, Math.min(tmax, def.hp ?? tmax)), avg = Math.floor((now + tnow) / 2);
@@ -1267,6 +1373,13 @@ function hp(atk, def, slot, values = {}, dealt = 0) {
     return {v: target.hasAbility('Liquid Ooze') ? (guard ? 0 : -heal) : heal, l: name};
   }
   if (moveData.category === 'Status') return null;
+  let landed = 0;
+  if (dealt) {
+    const result = calculateMove(atk, def, slot, values);
+    landed = options.hits === undefined ? Math.max(0, (result?.hits || 1) - (result?.bust ? 1 : 0))
+      : Math.max(0, Math.min(10, Math.trunc(Number(options.hits)) || 0));
+    if (!landed) dealt = 0;
+  }
   const parts = [];
   if (moveData.drain && dealt && (name !== 'Dream Eater' || target.hasStatus('slp') || target.hasAbility('Comatose'))) {
     const heal = root(part(dealt, ...moveData.drain));
@@ -1281,6 +1394,8 @@ function hp(atk, def, slot, values = {}, dealt = 0) {
     }
   }
   if (items && user.hasItem('Shell Bell') && dealt) parts.push(Math.max(1, Math.floor(dealt / 8)));
+  const contact = contactEffects(user, target, moveData, field, slot.cat || moveData.category);
+  for (let index = 0; index < landed; index++) parts.push(...contact.map(part => part.v));
   if (!parts.length) return null;
   return {v: parts.reduce((sum, value) => sum + value, 0), l: name};
 }

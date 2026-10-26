@@ -84,12 +84,12 @@ explicitly mapped in `over`. Unrecognised item/ability names have no effect.
 
 ## Public contract
 
-`window.DMG` exposes `init(D, prof)`, `stats(set)`, `calc(atk, def, slot, field)`, `hp(atk, def, slot, field, dealt)`,
+`window.DMG` exposes `init(D, prof)`, `stats(set)`, `calc(atk, def, slot, field)`, `hp(atk, def, slot, field, dealt, options = {})`,
 `residual(set, field = {}, otherSet = null, side = 'atk')`,
 `speed(set, field = {}, side = 'atk', otherSet = null)`, `entry(set, field = {}, side = 'atk')`,
 `hit(atk, def, slot, field = {}, roll = 'max', options = {})`,
 `turn(set, field = {}, otherSet = null, side = 'atk')`,
-`berry(set, field = {}, otherSet = null, side = 'atk')`, `derived(set, field = {})`,
+`berry(set, field = {}, otherSet = null, side = 'atk')`, `derived(set, field = {}, otherSet = null)`,
 `intimidate(atk, def, field = {})` and `settings()`.
 Initialisation replaces all guide state and clears KO caches. It does not change
 the supplied data/profile. `stats` returns unstaged `[HP, Atk, Def, SpA, SpD, Spe]`.
@@ -139,9 +139,43 @@ one use given the damage dealt: `{v, l, set?, st?, later?}` or null (`set` Pain 
 Head / Magic Guard, Big Root, Liquid Ooze, Dream Eater on a sleeper; plus Struggle, Mind Blown family, Life Orb (not
 with Sheer Force), Shell Bell, self-KO moves, heals (weather for Moonlight family, sand for Shore Up, Strength Sap =
 the target's staged Attack, Swallow at `slot.st` Stockpiles (1-3, default 1: quarter, half, full HP), Purify on a statused target), costs. Not covered: Floral Healing
-/ Heal Pulse, crash damage, Rocky Helmet / Rough Skin. Psywave's 16 rolls are an even spread over its 101 (Gen 5+) /
+/ Heal Pulse (or Life Dew's ally share). Psywave's 16 rolls are an even spread over its 101 (Gen 5+) /
 11 (Gen 4) outcomes. Tests: `test.mjs` (fixed damage, `DMG.hp`), `hardlove_check.mjs`
 (OHKO).
+
+`set.broken: true` means Disguise / Ice Face is already busted (absent = intact on the intact form;
+explicit false also restores a selected busted form). Disguise requires Mimikyu, Gen 7+; Ice Face requires
+Eiscue, Gen 8+, and a physical attack. Hit 1 is zero, later hits land normally, including Parental Bond.
+`calc` returns `bust: {ability: 'Disguise' | 'Ice Face', loss: number}` when absorbed; `loss` is the
+Gen 8+ Disguise cost (floor max HP / 8), otherwise zero. Rolls, per-hit totals and drain/recoil exclude that
+cost; KO includes it once, with the shield gone on later uses. Immunity, Protect and Mold Breaker / the
+ability-ignoring moves prevent a bust. A resist berry waits for a real hit; a healing berry can fire after
+the bust cost. `hp` ignores supplied dealt damage for a wholly absorbed move.
+
+Contact costs join `hp.v`: Rocky Helmet floor user max HP / 6, Rough Skin / Iron Barbs floor / 8
+(the generic Gen 4 Rough Skin branch is / 16), once per damaging strike. Magic Guard blocks them;
+Long Reach / Protective Pads (Gen 7+) and Punching Glove on punches (Gen 9+) prevent contact. Item
+suppression applies. `options.hits` is the number of damaging strikes actually applied; for a one-use tap,
+pass `{hits: action.hits}` from `hit` with `action.dealt`. Without it, `hp` uses the move's full hit count
+(including Parental Bond, excluding an absorbed hit); it cannot infer an early KO from dealt HP alone.
+`hit.contact: {v, parts: [{l, v}]}` reports/logs these costs, but does not apply them to `atk.hp`:
+HP - actions remain defender-only; apply the user's combined `hp.v` once on the one-use action.
+
+`hp(..., dealt, {miss: true})` instead returns `{v, l: 'miss', crash}` for Jump Kick, High Jump Kick,
+Axe Kick and Supercell Slam, null for other moves. `crash` is positive, `v` its negative (both zero for
+Magic Guard); no target damage, drain, contact or Life Orb. Gen 5+ costs floor user max HP / 2.
+The generic Gen 4 rule is half the would-be damage capped at half target max HP (against an immune
+target, half its max HP). `{miss: true, damage: n}` supplies that would-be damage; otherwise use the
+maximum roll. Hardlove uses the modern rule, not this generic Gen 4 branch.
+
+Source checks: EI release expansion `include/config/battle.h:34,69,154`, `src/battle_script_commands.c:2193,2512,5992`
+and `src/battle_util.c:5012,5641,8090,8487`; Hardlove `ee4518c149` `src/battle/battle_calc_damage.c:260`,
+`src/individual/MoveHitDefenderAbilityCheck.c:52`, `src/individual/SwitchInAbilityCheck.c:984`,
+`data/battle_scripts/subscripts/subscript_0332_HANDLE_DISGUISE_ICE_FACE.s:34` and
+`subscript_0061_CRASH_ON_MISS.s:7`. Hardlove's `over.contact.defenderPads` also blocks contact when the
+**defender** holds effective Pads (`src/battle/other_battle_calculators.c:2873`). Photonic uses Gen 7
+Disguise without HP loss; Eternal X is Gen 6 and has neither shield. Fixtures cite generation-default
+Showdown 0.11.11 source for those closed-source games, not a claim of extracted game code.
 
 ### Battle state
 
@@ -180,6 +214,10 @@ The corresponding `defLaserFocus`, `atkLuckyChant`, `defDragonCheer` describe th
 swap prefixes when reversing the matchup. Page availability is gated by Laser Focus, Lucky Chant and
 Dragon Cheer in the guide's moves; no field catalogue changes here. `slot.st` also supplies Spit Up's
 Stockpile count (1-3, default 1): power 100 times count, with a typed `slot.bp` winning.
+Hardlove sets `over.state['Dragon Cheer']: false`: at `ee4518c149`, `data/Moves.c:24743` gives it
+`MOVE_EFFECT_HIT`; `move_script_0916_DRAGON_CHEER.s:7` only jumps to that effect, and
+`src/battle/other_battle_calculators.c:1754` has no Dragon Cheer stage. EI's +1 / +2 and shared Focus
+state are in expansion `src/battle_script_commands.c:12734` (stage count at 1998).
 
 `over.state` (per hack) changes a move whose source differs: `false` = the state
 input does nothing, `{curl: false}` = Defense Curl doesn't double it, `{vol: false}`
@@ -221,11 +259,11 @@ Sword/Shield or Download stages; those are recomputed by the next calculation. A
 `toggles` is a sparse patch of side-state suffixes (`Focus`, `Charge`); merge it, do not replace other states.
 
 - `hit(atk, def, slot, field, roll, options)` returns
-  `{def: {hp, used?, stg?, toggles?, status?}, atk: {used?, stg?}, field?: {weather?, terrain?, hazards?}, log: string[], dealt}`
+  `{def: {hp, broken?, used?, stg?, toggles?, status?}, atk: {used?, stg?}, field?: {weather?, terrain?, hazards?}, log: string[], dealt, hits, contact?: {v, parts: [{l, v}]}}`
   or null for a non-damaging/unspecified-power move. `status` is reserved; A1 does not emit it.
   `roll` is `'min'` or `'max'`, selected independently for every strike. `dealt` is actual damage removed,
   capped at remaining HP on each strike, excluding berry recovery (the input for drain/recoil via `hp`).
-  Normal attacks respect full-HP Sash/Sturdy on each strike, then consumed Balloon/resist berries,
+  Normal attacks bust an intact Disguise/Ice Face first (`def.broken: true`), then respect full-HP Sash/Sturdy on each real strike, consumed Balloon/resist berries,
   healing/pinch berries, reactive items, defensive ability changes and field setters; later strikes
   recalculate damage from the new HP/stages/items/field. Gems are consumed once for the move;
   a KO applies Moxie, highest-raw-stat Beast Boost (ties Atk/Def/SpA/SpD/Spe), Neigh/As One or Soul-Heart.
@@ -234,7 +272,8 @@ Sword/Shield or Download stages; those are recomputed by the next calculation. A
   until that reaction, multi-hit berries can heal before the final threshold check.
   `options: {damage: nonnegativeInteger}` instead applies an exact damage amount: only threshold
   berries and Berserk/Anger Shell, no Sash/Sturdy, item popping, contact or KO boosts. A zero amount is legal.
-  Disguise/Ice Face, contact damage and other A2 follow-ups are not implemented here.
+  `hits` counts damaging strikes (not an absorbed hit, zero in exact mode), stopping on the defender's KO.
+  `contact` is informational user change, not an applied attacker HP patch (see HP moves).
 - `turn(set, field, otherSet, side)` returns `{[side]: {hp, used?, stg?, toggles?}, log: string[], parts}`.
   `parts` is the `residual` array. Apply/clamp its first-turn amounts in order, stop on fainting,
   then Speed Boost and one eligible berry. This is one turn only; the caller advances Toxic's counter.
@@ -251,10 +290,12 @@ Sword/Shield or Download stages; those are recomputed by the next calculation. A
   `.threshold` the max-HP fraction. Original labels are retained for override lookup after effect aliases.
   Hardlove's pinned `ee4518c149` `TryUseHeldItem` instead uses Figy-group 1/8 at 1/2 HP
   (`itemdata.c` parameter 8): its `over.items` sets `heal: 0.125, threshold: 0.5` for the five.
-- `derived(set, field)` returns `{weather?, terrain?, primal?, status?}` for an entering, non-fainted set.
+- `derived(set, field, otherSet = null)` returns `{weather?, terrain?, primal?, status?, restore?}` for an entering, non-fainted set.
   Setters use engine ability aliases and only weather/terrain offered by the profile; Snow Warning picks
   Snow when offered, otherwise Hail. `primal: true` identifies the three primal weathers. Unused Orbs
   derive `brn`/`tox` only without an existing status and with type/ability/grounded-Misty immunities checked.
+  Ice Face on a broken/noice Eiscue returns `restore: true` in effective Hail/Snow; apply `broken: false`
+  on entry. `otherSet` lets opposing Cloud Nine/Air Lock suppress that weather (or pass effective weather).
   The page owns explicit None overrides and weather layering; this API does not apply its returned fields.
 - `intimidate(atk, def, field)` returns `{atk: signedAttackDelta, def: signedAttackDelta}` including
   Simple/Contrary, Guard Dog, Defiant, caps, immunities and Mirror Armor reflection. Use the net delta
