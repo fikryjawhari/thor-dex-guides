@@ -130,7 +130,8 @@ one use given the damage dealt: `{v, l, set?, st?, later?}` or null (`set` Pain 
 Head / Magic Guard, Big Root, Liquid Ooze, Dream Eater on a sleeper; plus Struggle, Mind Blown family, Life Orb (not
 with Sheer Force), Shell Bell, self-KO moves, heals (weather for Moonlight family, sand for Shore Up, Strength Sap =
 the target's staged Attack, Swallow at one Stockpile, Purify on a statused target), costs. Not covered: Floral Healing
-/ Heal Pulse, crash damage, Rocky Helmet / Rough Skin. Tests: `test.mjs` (fixed damage, `DMG.hp`), `hardlove_check.mjs`
+/ Heal Pulse, crash damage, Rocky Helmet / Rough Skin. Psywave's 16 rolls are an even spread over its 101 (Gen 5+) /
+11 (Gen 4) outcomes. Tests: `test.mjs` (fixed damage, `DMG.hp`), `hardlove_check.mjs`
 (OHKO).
 
 ### Battle state
@@ -533,6 +534,29 @@ covers the reviewed modifier concepts, but not every possible future hook or
 full battle simulation. A translation needing an unavailable intermediate value,
 early-exit change or new insertion point must extend the engine with tests,
 rather than claim parity through an approximate final-roll multiplier.
+
+## Licences, oracles and checking a hack
+
+| Project | Licence | Use |
+| --- | --- | --- |
+| `@smogon/calc` | MIT | The engine, inlined in every calc guide; keep its notice. |
+| hzla/Dynamic-Calc-Decomps, hzla/Dynamic-Calc | none at the top (its `calc/` keeps Smogon's MIT) | A local oracle and a format reference only (decided 2026-10-20, we don't ask): read it, write the layouts / settings down as notes, write our own code. Never copy or translate its code or tables. Credit it in the footer as a reference. |
+| PokeDaisy, PKHeX | GPLv3 | Read only (copying would make the guides GPL). PKHeX is the best save-format reference and a check for our readers. |
+
+Save formats, offsets and encryption are facts, not code: reimplementing them is fine.
+
+The oracle per built hack (hzla's link names the data set, `dmgGen` the damage mechanics, `gen` the game, `types`
+the type chart): Emerald Imperium `Dynamic-Calc-Decomps/?data=imp13&dmgGen=8&gen=8&types=6&noSwitch=1&evs=0` (the
+source uses Gen 9; `evs=0` is the catalog's No EVs variant, `noSwitch` AI switch prediction: neither is a damage
+rule); Photonic Sun `?data=pspm&dmgGen=7&gen=7&types=6`; Eternal X the older `Dynamic-Calc/?data=8d1ab90a3b3c494d8485
+&dmgGen=6&gen=6`; Hardlove Gold none (hg-engine: its `doc/Mechanics.txt` and source, hack notes → Damage calc; hzla's
+ROM importer https://ddex-chi.vercel.app is a possible oracle for Gen 3 / 4 games without a calc).
+
+Checking a hack's mechanics, in order: its source where there is some (damage function and config switches), its
+docs and changelog, the oracle's settings and profile, and last the **in-game test**: a save state before a trainer
+battle, one known move, note the damage, reload and repeat a few times; every result must fall inside the calc's 16
+rolls (one physical, one special, one crit, one weather- or ability-boosted move). Each guide's notes.md → Damage
+calc → In-game tests lists its cases. Procedure: `.agents/references/calc-mechanics.md`.
 
 ## Node runner and comparison harness
 

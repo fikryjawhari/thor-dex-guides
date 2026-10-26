@@ -95,9 +95,9 @@ Download cycles Auto (with its actual stat), Atk, Sp. Atk, None, shown as `A·At
 (tooltip spells it out).
 Details show used/listed/typed power, crit chance/stage and first-/between-hit changes; the move's own changes alone
 can be omitted. Forced crit locks C on; blocked crit disables it. No new localStorage key is used.
-**HP moves** (2026-10-26, `plans/calc-hp-moves.md`): fixed / fraction damage (Seismic Toss, Super Fang, Endeavor, Final
+**HP moves** (2026-10-26): fixed / fraction damage (Seismic Toss, Super Fang, Endeavor, Final
 Gambit, Psywave, OHKO moves...) are ordinary rows with one number (no Power box). Counter / Mirror Coat / Bide / Metal
-Burst / Comeuppance: the Power box reads Taken; the row shows — until it is typed. A move that changes its user's HP
+Burst / Comeuppance: the Power box reads Taken; the row shows — until it is typed (Reset power clears it). A move that changes its user's HP
 (recoil, drain, Life Orb, Shell Bell, heals, costs, self-KO, Pain Split `↔n`, Wish `↻`, Rest `Zz`) has a signed amount
 in the residual style: at the start of the % line (after Z), or in place of a status row's —. **One tap = one use**:
 the target loses the default damage (the player attacking: minimum roll; the foe attacking: maximum roll; all hits;
@@ -166,8 +166,7 @@ brings it back). Scenario: `tools/scenarios/calc-zmove.mjs`.
 field entries, multi-hit ranges and variable-power moves. The page calls `DMG.init`, `DMG.stats` and `DMG.calc`;
 damage rolls and KO probabilities come from the adapter, not page-side mechanics. Weight / HP / speed moves (Low Kick, Flail, Gyro
 Ball, ...) get their power from the engine (`r.bp`, shown in the row's Power box, which still overrides); Return /
-Frustration show 102 (maximum happiness, 2026-10-26); the other variable-power moves show — until a power is set. The committed unit-B engine is a
-temporary, explicitly marked stub and must be replaced by unit A before release.
+Frustration show 102 (maximum happiness, 2026-10-26); the other variable-power moves show — until a power is set.
 Effective Speed uses the optional `DMG.speed(set, field)` hook; without it, the fallback applies stages only.
 The real adapter must provide that hook for paralysis and other game-specific Speed modifiers.
 When the adapter returns `per`, the expander shows each hit's rolls; aggregate HP subtraction and best-move ranking
@@ -188,6 +187,19 @@ Below 480px, one moveset is shown; from 480px, equal columns show both and keep 
 The Mine grid scrolls internally; the foe list replaces its strip only at 222px of measured availability. Both strips
 share 28px cells with the level safely inside the selection border. Without `cfg.calc`, only removal of the Calc tab
 changes the other pages' DOM, and `#/calc` redirects to the Pokémon list.
+
+**Design rules** (UI spec 2026-10-24): one screen at 260 × 316 (trainer bar, foe strip, both cards, the attacker's
+four moves); don't add a row to that block without removing one. Nothing to open for common edits (level, HP, nature,
+ability, item, status, IVs / EVs, stages, Mega, moves, power / type / hits, crit); sheets only for long lists. Space goes
+to the matchup: no headings, explanatory text or dividers; names truncate in the main block, full in sheets and
+expanders. Never overflow the width, normal or `dvkb`, every expander open. The template owns the mechanics-free UI;
+everything that differs between games (generation, field list, status / stage / level ranges, changed effects,
+multi-hit / variable-power moves, forms, save family) comes from the profile. **Touch targets** are smaller than
+viewer-ui.md's 40-44 px by the user's decision (number boxes ~22 px, Edit / M 18 px, `×n` / `C` 28 × 14.5 px, rows 31
+px, cells and tools strip 28 px); if the Thor shows they are too small, grow the cards' second line and the tools strip
+first. **Safari lessons:** rows with block children in a `<button>` size too small (use `div role=button`); give sheet
+children `flex:none`; size stacked buttons with explicit heights, scoped (`.mr .rcol button`), not `flex:1`; ellipsis
+text needs line-height ≥ 1.2 and 1 px bottom padding or descenders clip.
 
 Built with the user over many mockup rounds; keep to it and don't retry what's listed as rejected.
 
