@@ -1565,9 +1565,10 @@ print(json.dumps(out))`;
   assert.ok(offered.expansion.atkPowerSpot && offered.expansion.atkTabletsOfRuin);
   for (const hack of ['emerald-imperium', 'hardlove-gold', 'photonic-sun', 'eternal-x']) {
     for (const key of ['waterSport', 'mudSport', 'powerSplit', 'guardSplit']) assert.equal(offered[hack][key].side, 'field');
-    for (const key of ['atkFlowerGift', 'defFlowerGift', 'atkPlusMinus', 'defPlusMinus']) assert.equal(offered[hack][key].doubles, true);
+    for (const key of ['atkPlusMinus', 'defPlusMinus']) assert.equal(offered[hack][key].doubles, true);
+    if (hack !== 'hardlove-gold') for (const key of ['atkFlowerGift', 'defFlowerGift']) assert.equal(offered[hack][key].doubles, true);
   }
-  assert.ok(!offered['hardlove-gold'].allyDarkAura && !offered['hardlove-gold'].atkTabletsOfRuin);
+  assert.ok(!offered['hardlove-gold'].allyDarkAura && !offered['hardlove-gold'].atkTabletsOfRuin && !offered['hardlove-gold'].atkFlowerGift);
 });
 
 await test('initialisation and calculations leave guide/profile inputs unchanged', () => {

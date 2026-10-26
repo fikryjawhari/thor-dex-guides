@@ -441,7 +441,8 @@ introduction generation; Plus/Minus accepts either ability. Power Trick is
 gated by its move in `M`. `assemble.py` now supports `side: "field"` entries
 without adding prefixes and preserves `doubles: true` for D3 to hide in Singles.
 The current page renders these offered entries immediately; the engine enforces
-Doubles even before D3. Existing Flower Gift declarations are not duplicated.
+Doubles even before D3. Existing Flower Gift declarations are not duplicated;
+Hardlove's old Flower Gift controls are omitted because its `AB` has no Flower Gift.
 
 ### Sports and raw-stat splits
 
@@ -463,6 +464,10 @@ chains `UQ412__0_33`; its end-turn sport expiry blocks in
 is inferred/simulated. Eternal X / Photonic use Gen 6 / Gen 7 defaults, absent
 contrary hack evidence. Gen 4 source: pret/pokeplatinum
 `src/battle/battle_lib.c:6811-6817` divides move power by two, not damage.
+The Gen 4-only `src/gen4-sport.js` path retains its sequential floors: Charge,
+Helping Hand, Technician and held-power effects precede Sport; Blaze/Heatproof/
+Dry Skin and Rivalry follow it. Thus odd-power Blaze is not incorrectly
+halved after its boost. With neither Sport active the stock path is unchanged.
 Gen 5 default: Pokemon Showdown `data/mods/gen5/moves.ts:579-595,967-983`
 retains the user's volatile status but uses 1352/4096, **not** Gen 4's half.
 
@@ -483,7 +488,7 @@ All four global entries use the existing move-availability gate (`M`) and their
 introduction generation in `field-states.json`. Ally abilities use `AB` instead.
 Electrify / Ion Deluge need no engine flag: the move's Type override (`slot.t`)
 covers their change to Electric; it leaves move-specific type rules intact.
-Tests: the five A3 groups in `test.mjs`; 126 A3 battle fixtures across the four
+Tests: the seven A3 groups in `test.mjs`; 126 A3 battle fixtures across the four
 guides (44 EI, 26 Hardlove, 28 each Eternal X / Photonic), each with rule evidence.
 
 ## Engine overrides (`prof.over`)

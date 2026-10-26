@@ -82,6 +82,10 @@ def calc_profile(c, data=None):
                 continue
             if (entry.get('moves') or entry.get('abilities')) and not (
                     moves.intersection(entry.get('moves', [])) or abilities.intersection(entry.get('abilities', []))):
+                if entry.get('doubles'):
+                    unavailable = {entry['k']} if entry.get('side') == 'field' else {side + entry['k'] for side in ['atk', 'def']}
+                    fields[:] = [field for field in fields if field['k'] not in unavailable]
+                    keys.difference_update(unavailable)
                 continue
             if entry.get('all') and not set(entry['all']).issubset(moves):
                 continue
