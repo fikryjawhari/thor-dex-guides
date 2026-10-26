@@ -10,8 +10,13 @@ const nb=numBox,KEY=LS.dmg;
 const range=prof.lv||[1,100],stageRange=prof.stages||[-6,6];
 const stageMul=stage=>stage>=0?(2+stage)/2:2/(2-stage);
 const defaults=()=>({dir:'out',mine:{src:'party',b:0,i:0},foe:{k:'',i:0},field:{},custom:[],imp:null,edits:{},saved:{},recent:[],crit:{},hits:{},mvo:{},z:{},tgt:{},st:{},hitv:{}});
+// Fight state (plans/calc-auto-effects.md, unit C). KEPT: HP / status (player across trainers, foe for this fight);
+// FIGHT: kept for this fight on both sides; SCRATCH: battle condition, memory only (SC by card key) while selected.
+// Any other edit field is a set field: unsaved ones go when the Pokémon is switched away, Save keeps them.
+const KEPT=['hp','status'],FIGHT=['broken'],SCRATCH=new Set(['stg','abilityOn','dl','entry','pty',...(prof.monControls||[]).map(control=>control.k)]),SC={};
+const isSetField=f=>!KEPT.includes(f)&&!FIGHT.includes(f)&&!SCRATCH.has(f);
 let ST=defaults();try{const stored=JSON.parse(localStorage.getItem(KEY)||'null');if(stored&&typeof stored==='object')ST={...ST,...stored};}catch(error){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST));}catch(error){BAN={ok:0,h:'Storage full',t:'The current changes could not be remembered.'};}};
+const save=()=>{try{const {st,tgt,...kept}=ST;localStorage.setItem(KEY,JSON.stringify(kept));}catch(error){BAN={ok:0,h:'Storage full',t:'The current changes could not be remembered.'};}};
 const flipField=field=>Object.fromEntries(Object.entries(field).map(([key,value])=>[key.startsWith('atk')?'def'+key.slice(3):key.startsWith('def')?'atk'+key.slice(3):key,value]));
 if(!ST.fieldSides){if(ST.dir==='in')ST.field=flipField(ST.field);ST.fieldSides=1;}
 const fieldFor=side=>side==='foe'?flipField(ST.field):ST.field;
@@ -22,7 +27,7 @@ const koTxt=ko=>!ko.n?'5+ hits':(ko.n===1?'OHKO':ko.n+'HKO')+(ko.p<1?' '+Math.mi
 const trByK=TRK;
 const isRel=t=>t.p.some(x=>x.l==null);
 function curMine(){const imp=ST.imp,m=ST.mine;if(m.src==='party'&&imp&&imp.party)return imp.party[m.i]||null;if(m.src==='box'&&imp&&imp.boxes&&imp.boxes[m.b])return imp.boxes[m.b][m.i]||null;if(m.src==='custom')return ST.custom[m.i]||null;return null;}
-function applyEdits(base,key){ST.saved=ST.saved||{};const sv=key&&ST.saved[key],e=key&&ST.edits[key];const w=!!e&&Object.keys(e).length>0;if(!sv&&!w)return {...base};return {...base,...sv,...e,edited:w,saved:!!sv};}
+function applyEdits(base,key){ST.saved=ST.saved||{};const sv=key&&ST.saved[key],e=key&&ST.edits[key];const w=!!e&&Object.keys(e).some(isSetField);if(!sv&&!w)return {...base};return {...base,...sv,...e,edited:w,saved:!!sv};}
 function foeBase(t,i){const x=t.p[i];if(!x)return null;const p=byId[x.id];const cap=capOf(t),level=monLv(x,cap),knownAbility=Number.isInteger(x.a)&&x.a>=0;
  return {id:x.id,l:Number.isFinite(level)?Math.max(range[0],Math.min(range[1],level)):NaN,na:x.na||'Hardy',a:knownAbility?x.a:p.a[0],aGuess:!knownAbility,i:x.i||'',m:(x.m||[]).slice(),iv:x.iv||[31,31,31,31,31,31],ev:x.ev||[0,0,0,0,0,0],...(x.au?{stg:x.au.slice(),aura:x.au}:{}),foe:true};}
 function resolve(m){const p=byId[m.id],l=isNaN(m.l)?null:m.l;const st=l==null?null:window.DMG.stats(toEngine(m));
@@ -30,7 +35,7 @@ function resolve(m){const p=byId[m.id],l=isNaN(m.l)?null:m.l;const st=l==null?nu
 
 
 let BAN=null;const ROWOPEN=new Set();let SMODE='+';
-ST.crit=ST.crit||{};ST.mvo=ST.mvo||{};ST.hits=ST.hits||{};ST.z=ST.z||{};ST.tgt=ST.tgt||{};ST.st=ST.st||{};ST.hitv=ST.hitv||{};
+ST.crit=ST.crit||{};ST.mvo=ST.mvo||{};ST.hits=ST.hits||{};ST.z=ST.z||{};ST.tgt={};ST.st={};ST.hitv=ST.hitv||{};
 const MH={};Object.entries(prof.multihit||{}).forEach(([name,hits])=>{const index=M.indexOf(name);if(index>=0)MH[index]=hits;});
 // HP moves: the row's one-use tap (USE, per render), exact entry (HX, not stored), moves whose Power box is the damage taken.
 const USE={},HX={},TAKEN=new Set(['Counter','Mirror Coat','Bide','Metal Burst','Comeuppance']);
@@ -52,11 +57,35 @@ function stateButton(mi,ck,att,field){const control=moveState(mi,att,field),valu
 function hitDetails(result,mi,ck,att,def){const own=['Skull Bash','Meteor Beam','Electro Shot','Spectral Thief'].includes(M[mi])&&prof.over?.state?.[M[mi]]!==false,override=ST.mvo[ck]||{},chance=result.crit,statNames={atk:'Atk',def:'Def',spa:'Sp. Atk',spd:'Sp. Def',spe:'Spe'};return (chance?`<div class="dcrit">Crit ${chance.p>0&&chance.p<1?'1/'+Math.round(1/chance.p):chance.p} · stage ${chance.stage}${chance.forced?' · guaranteed ('+esc(MV[mi].cr===6?M[mi]:att.abil==='Merciless'&&['psn','tox'].includes(def.status)?'Merciless':'crit stage '+chance.stage)+')':chance.p===0?' · blocked':''}</div>`:'')+(result.pre||[]).map(change=>`<div class="dpre">${change.hit?'Before hit '+change.hit:'Before the hit'}: ${change.who==='def'?'target':'user'} ${statNames[change.stat]||change.stat} ${signed(change.by)} (${esc(change.src)})</div>`).join('')+(own?`<label class="dmovecheck"><input type="checkbox" data-mo="pre" data-mi="${mi}" data-ck="${ck}" ${override.pre===false?'checked':''}>Without move's own stat changes</label>`:'')+(['Rollout','Ice Ball'].includes(M[mi])&&prof.over?.state?.[M[mi]]?.curl!==false?`<label class="dmovecheck"><input type="checkbox" data-mo="curl" data-mi="${mi}" data-ck="${ck}" ${override.curl?'checked':''}>Defense Curl used</label>`:'');}
 const effMv=(mi,ck)=>({...MV[mi],...((prof.varpow||[]).includes(M[mi])?{bp:null}:{}),...Object.fromEntries(Object.entries(ST.mvo[ck]||{}).filter(([,v])=>v!=null))});
 function sideInfo(side){const isM=side==='mine';const t=trByK[ST.foe.k];const base=isM?curMine():(t?foeBase(t,ST.foe.i):null);const custom=isM&&ST.mine.src==='custom';const key=isM?'mine:'+(base||{}).pid:'foe:'+ST.foe.k+':'+ST.foe.i;return {isM,key,base,custom};}
-function getMon(side){const i=sideInfo(side);if(!i.base)return null;return {...(i.custom?i.base:applyEdits(i.base,i.key)),vol:ST.tgt[i.key]||''};}
-function setField(side,f,v,manual=false){const i=sideInfo(side);if(i.custom){if(v===undefined)delete i.base[f];else i.base[f]=v;}else{const e=(ST.edits[i.key]=ST.edits[i.key]||{});if(v===undefined)delete e[f];else e[f]=v;}if(f==='hp'&&manual)rearmHazards(side,'damage');if(f==='status')rearmHazards(side,'status');if(f==='stg')rearmHazards(side,'web');save();}
+function getMon(side){const i=sideInfo(side);if(!i.base)return null;return {...(i.custom?i.base:applyEdits(i.base,i.key)),...SC[i.key],vol:ST.tgt[i.key]||''};}
+function setField(side,f,v,manual=false){const i=sideInfo(side);if(SCRATCH.has(f)){const s=(SC[i.key]=SC[i.key]||{});if(v===undefined)delete s[f];else s[f]=v;}else if(i.custom){if(v===undefined)delete i.base[f];else i.base[f]=v;}else{const e=(ST.edits[i.key]=ST.edits[i.key]||{});if(v===undefined)delete e[f];else e[f]=v;}if(f==='hp'&&manual)rearmHazards(side,'damage');if(f==='status')rearmHazards(side,'status');if(f==='stg')rearmHazards(side,'web');save();}
 const fieldSide=side=>side==='foe'?'def':'atk';
 const effSpe=r=>r.stats?(window.DMG.speed?window.DMG.speed(toEngine(r),ST.field,fieldSide(r.side)):Math.floor(Math.floor(r.stats[5]*stageMul(r.stg[4]))*(r.status==='par'?(CF.calc.gen>=7?.5:.25):1))):null;
 ST.hazardEntry=ST.hazardEntry||{};
+// Lifecycle: leaving a card drops its scratch and unsaved set edits (HP / status / broken stay); a new fight (trainer
+// change, Reset fight) clears all scratch, the foe's HP / status, broken on both sides and the manual Field overrides
+// (ST.fman: Field keys the user set this fight). entered(sides, together) is the hook for what fires on entry (D1).
+const setPart=e=>Object.fromEntries(Object.entries(e||{}).filter(([f])=>isSetField(f)));
+function dropSetEdits(key){const e=ST.edits[key];if(!e)return;for(const f of Object.keys(e))if(isSetField(f))delete e[f];if(!Object.keys(e).length)delete ST.edits[key];}
+function leaveCard(key){delete SC[key];delete ST.tgt[key];delete TOX[key];for(const ck of Object.keys(ST.st))if(ck.startsWith(key+':'))delete ST.st[ck];dropSetEdits(key);}
+const markManual=k=>{if(k!=='gameType'&&!ST.fman.includes(k))ST.fman.push(k);};
+function entered(sides,together){}
+function newFight(reset){for(const k of Object.keys(SC))delete SC[k];for(const k of Object.keys(TOX))delete TOX[k];ST.tgt={};ST.st={};ST.hazardEntry={};
+ const foeFields=[...KEPT,...FIGHT],mineFields=reset?foeFields:FIGHT,clear=(o,fields)=>{if(o)fields.forEach(f=>delete o[f]);};
+ for(const [k,e] of Object.entries(ST.edits)){clear(e,k.startsWith('foe:')?foeFields:mineFields);if(!Object.keys(e).length)delete ST.edits[k];}
+ (ST.custom||[]).forEach(mon=>clear(mon,mineFields));
+ for(const k of ST.fman)delete ST.field[k];ST.fman=[];entered(['mine','foe'],true);}
+const cardKeys=()=>({mine:sideInfo('mine').key,foe:sideInfo('foe').key,tr:ST.foe.k});
+// Migration on load (older builds stored battle condition): scratch fields go everywhere, saved HP / status move to the
+// edits, cards not selected keep only HP / status, foe entries of other trainers go. Runs on every load (idempotent).
+(()=>{const cur=new Set(Object.values(cardKeys())),fight='foe:'+ST.foe.k+':',strip=o=>{if(o)for(const f of SCRATCH)delete o[f];};
+ for(const [k,s] of Object.entries(ST.saved||{})){const e=ST.edits[k]=ST.edits[k]||{};for(const f of KEPT)if(f in s){if(!(f in e))e[f]=s[f];delete s[f];}strip(s);if(!Object.keys(s).length)delete ST.saved[k];}
+ for(const [k,e] of Object.entries(ST.edits)){strip(e);if(k.startsWith('foe:')&&!k.startsWith(fight))delete ST.edits[k];else if(!cur.has(k))dropSetEdits(k);if(ST.edits[k]&&!Object.keys(ST.edits[k]).length)delete ST.edits[k];}
+ (ST.custom||[]).forEach(strip);
+ if(!Array.isArray(ST.fman))ST.fman=Object.keys(ST.field).filter(k=>k!=='gameType');try{if(localStorage.getItem(KEY))save();}catch(error){}})();
+let LAST=cardKeys();
+function syncFight(){const now=cardKeys(),left=[];if(now.mine!==LAST.mine){leaveCard(LAST.mine);left.push('mine');}if(now.foe!==LAST.foe){leaveCard(LAST.foe);left.push('foe');}
+ const fresh=now.tr!==LAST.tr;LAST=now;if(fresh)newFight(false);else if(left.length)entered(left,false);if(fresh||left.length)save();}
 function rearmHazards(side,part){const marker=ST.hazardEntry[side];if(marker)delete marker[part];}
 function entryEffects(side){const mon=getMon(side);if(!mon||!Number.isFinite(mon.l))return null;return window.DMG.entry(toEngine(resolve(mon)),ST.field,fieldSide(side));}
 const pendingHazardDamage=(effect,marker)=>marker.damage===true?[]:(effect.parts||[]).filter(part=>!marker.damage?.[part.l]);
@@ -92,7 +121,7 @@ function megaToggle(side){const m=getMon(side);const set=(id,a,i)=>{setField(sid
 function editor(r,side){const custom=side==='mine'&&ST.mine.src==='custom';const p=r.p,abils=[...new Set([...p.a,...(p.ha!=null?[p.ha]:[])])];
  const sel=(k,opts,cur)=>`<select data-e="${k}" data-s="${side}">${opts.map(([v,l])=>`<option value="${esc(v)}" ${String(v)===String(cur)?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
  const row=(lab,fn)=>`<tr><td class="l">${lab}</td>${SN.map((n,i)=>`<td>${fn(i)}</td>`).join('')}</tr>`;
- const si=sideInfo(side),w=ST.edits[si.key]&&Object.keys(ST.edits[si.key]).length,sv=ST.saved&&ST.saved[si.key];
+ const si=sideInfo(side),w=ST.edits[si.key]&&Object.keys(ST.edits[si.key]).some(isSetField),sv=ST.saved&&ST.saved[si.key];
  return `<div class="ed"><div class="ehd"><div class="dfull">${esc(r.name)}</div><div class="e3">${side==='mine'&&!custom?`<button class="dbtn" data-a="esave" data-s="${side}" ${w?'':'disabled'}>Save</button>`:''}${custom?'':`<button class="dbtn" data-a="ereset" data-s="${side}" ${w||sv?'':'disabled'}>${w?'Reset':sv?'Original':'Reset'}</button>`}${custom?`<button class="dbtn" data-a="edel">Delete</button>`:''}</div></div><div class="e2">${prof.natures!==false?sel('na',NATS.map(n=>[n,n]),r.na):''}${prof.abilities!==false?sel('ab',abils.filter(a=>a>=0).map(a=>[a,AB[a]+(r.aGuess&&a===r.a?' ?':'')]),r.a):''}</div>
  <div class="e2">${prof.items!==false?sel('it',[['','No item'],...D.IT.map(x=>[x,x])],r.i):''}${sel('status',prof.status||[['','No status']],r.status||'')}</div>
  ${changesType(r)?`<div class="e2 pty"><span>Type</span>${sel('pty',[['',r.types.join('/')+' (own)'],...TNAMES.map(t=>[t,t])],r.pty||'')}</div>`:''}
@@ -147,7 +176,7 @@ const downloadShort=(mon,side)=>{const text=downloadText(mon,side);return text==
 function residualOf(mon){if(!mon||mon.lv==null)return [];const other=getMon(mon.side==='foe'?'mine':'foe');return window.DMG.residual(toEngine(mon),ST.field,other&&Number.isFinite(other.l)?toEngine(resolve(other)):null,fieldSide(mon.side));}
 function residualButton(mon,side){const parts=residualOf(mon);if(!parts.length)return '';const amount=eotTotal(parts);return `<button class="dturn ${amount<0?'dn':amount>0?'up':''}" data-a="eot" data-s="${side}" title="Apply one turn" aria-label="Apply one turn to ${esc(mon.name)}">${amount?signed(amount):'±0'}</button>`;}
 function residualParts(mon,side){const parts=residualOf(mon);if(!parts.length)return '';return `<div class="dqp">${parts.map(part=>`<div><span>${esc(part.l)}</span><b class="${part.v[0]<0?'dn':'up'}">${signed(part.v[0])}</b></div>`).join('')}</div>`;}
-function calcPage(){if(!host.isConnected)document.body.appendChild(host);if(prof.save&&!input.isConnected)document.body.appendChild(input);checkEntries();const gridScroll=$('.mg .dstrip')?.scrollTop||0,fieldScroll=$('.dfb')?.scrollTop||0;if(innerWidth>=480&&(EDITOPEN.mine||EDITOPEN.foe))EDITOPEN.mine=EDITOPEN.foe=true;fil.innerHTML='';const A0=getMon('mine'),B0=getMon('foe');const a=A0&&{...resolve(A0),side:'mine'},b=B0&&{...resolve(B0),side:'foe'};if(a)a.toxn=TOX[sideInfo('mine').key];if(b)b.toxn=TOX[sideInfo('foe').key];const out=ST.dir==='out';
+function calcPage(){if(!host.isConnected)document.body.appendChild(host);if(prof.save&&!input.isConnected)document.body.appendChild(input);syncFight();checkEntries();const gridScroll=$('.mg .dstrip')?.scrollTop||0,fieldScroll=$('.dfb')?.scrollTop||0;if(innerWidth>=480&&(EDITOPEN.mine||EDITOPEN.foe))EDITOPEN.mine=EDITOPEN.foe=true;fil.innerHTML='';const A0=getMon('mine'),B0=getMon('foe');const a=A0&&{...resolve(A0),side:'mine'},b=B0&&{...resolve(B0),side:'foe'};if(a)a.toxn=TOX[sideInfo('mine').key];if(b)b.toxn=TOX[sideInfo('foe').key];const out=ST.dir==='out';
  const F=ST.field;const sa=a&&effSpe(a),sb=b&&effSpe(b);
  let ra='',rb='';
  if(!a||!b)ra=rb=`<div class="dnote">${!a?'Pick one of yours':'Pick a foe'}</div>`;
@@ -189,7 +218,7 @@ const refresh=()=>{const y=scrollY;route2();scrollTo(0,y);};
 function route2(){calcPage();SH.redraw();}
 document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const el=e.target.closest('[data-a],[data-f]');if(!el||!el.closest('#app'))return;
  const a=el.dataset.a;
- if(el.dataset.f&&el.tagName==='BUTTON'){const k=el.dataset.f,entry=prof.field.find(entry=>entry.k===k);ST.field[k]=el.dataset.value??(entry?.max?((Number(ST.field[k])||0)+1)%(entry.max+1):(ST.field[k]?0:1));if(entry?.group==='hazards')rearmHazards(entry.side==='def'?'foe':'mine',k.endsWith('ToxicSpikes')?'status':k.endsWith('StickyWeb')?'web':'damage');window.__fo=1;save();refresh();return;}
+ if(el.dataset.f&&el.tagName==='BUTTON'){const k=el.dataset.f,entry=prof.field.find(entry=>entry.k===k);markManual(k);ST.field[k]=el.dataset.value??(entry?.max?((Number(ST.field[k])||0)+1)%(entry.max+1):(ST.field[k]?0:1));if(entry?.group==='hazards')rearmHazards(entry.side==='def'?'foe':'mine',k.endsWith('ToxicSpikes')?'status':k.endsWith('StickyWeb')?'web':'damage');window.__fo=1;save();refresh();return;}
  if(a==='row'&&e.target.closest('.dd'))return;
  if(a==='mpick'){ST.mine={src:el.dataset.src,b:+el.dataset.b,i:+el.dataset.i};save();refresh();}
  else if(a==='fpick'){ST.foe.i=+el.dataset.i;save();refresh();}
@@ -206,12 +235,13 @@ document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const e
  else if(a==='sub'){const side=el.dataset.side==='mine'?'foe':'mine',r=resolve(getMon(side));setField(side,'hp',Math.max(0,r.hp-(+el.dataset.v)));refresh();}
  else if(a==='eot'){const side=el.dataset.s,r={...resolve(getMon(side)),side},key=sideInfo(side).key;r.toxn=TOX[key];const parts=residualOf(r);setField(side,'hp',Math.max(0,Math.min(r.stats?.[0]||0,r.hp+eotTotal(parts))));if(parts.some(part=>part.v[1]!==part.v[0]))TOX[key]=Math.min(15,(TOX[key]||1)+1);refresh();}
  else if(a==='hazards'){applyHazards(el.dataset.s);refresh();}
+ else if(a==='fightreset'){newFight(true);window.__fo=1;save();refresh();}
  else if(a==='download'){const side=el.dataset.s,choices=['','atk','spa','off'],value=getMon(side).dl||'';setField(side,'dl',choices[(choices.indexOf(value)+1)%choices.length]||undefined);refresh();}
  else if(a==='hpfull'){const mon=resolve(getMon(el.dataset.s));setField(el.dataset.s,'hp',mon.stats?.[0]||0,true);refresh();}
  else if(a==='eopen'){const open=!EDITOPEN[el.dataset.s];if(innerWidth>=480){EDITOPEN.mine=open;EDITOPEN.foe=open;}else EDITOPEN[el.dataset.s]=open;refresh();}
  else if(a==='mega'){megaToggle(el.dataset.s);refresh();}
- else if(a==='esave'){const k=sideInfo(el.dataset.s).key;ST.saved=ST.saved||{};ST.saved[k]={...ST.saved[k],...ST.edits[k]};delete ST.edits[k];save();refresh();}
- else if(a==='ereset'){const k=sideInfo(el.dataset.s).key;if(ST.edits[k]&&Object.keys(ST.edits[k]).length)delete ST.edits[k];else if(ST.saved&&ST.saved[k])delete ST.saved[k];save();refresh();}
+ else if(a==='esave'){const k=sideInfo(el.dataset.s).key;ST.saved=ST.saved||{};if(ST.edits[k]&&Object.keys(ST.edits[k]).some(isSetField)){ST.saved[k]={...ST.saved[k],...setPart(ST.edits[k])};dropSetEdits(k);}save();refresh();}
+ else if(a==='ereset'){const k=sideInfo(el.dataset.s).key;if(ST.edits[k]&&Object.keys(ST.edits[k]).some(isSetField))dropSetEdits(k);else if(ST.saved&&ST.saved[k])delete ST.saved[k];save();refresh();}
  else if(a==='edel'){ST.custom.splice(ST.mine.i,1);ST.mine={src:'party',b:0,i:0};EDITOPEN.mine=false;save();refresh();}
  else if(a==='smode'){SMODE=SMODE==='+'?'-':'+';refresh();}
  else if(a==='sstep'){const side=el.dataset.s,x=+el.dataset.x,arr=resolve(getMon(side)).stg.slice();arr[x]=Math.max(stageRange[0],Math.min(stageRange[1],arr[x]+(SMODE==='+'?1:-1)));setField(side,'stg',arr);refresh();}
@@ -228,7 +258,7 @@ document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const e
 
 });
 function findMine(){const L=mineList().map(entry=>({...entry,m:entry.src==='custom'?entry.m:applyEdits(entry.m,'mine:'+entry.m.pid)}));picker({title:'Find yours',items:L.map(x=>({label:byId[x.m.id].n,sub:(x.src==='party'?'Party':x.src==='box'?'Box '+(x.b+1):'Custom')+' · Lv '+x.m.l,id:x.m.id,v:x,keys:monKeys(x.m)})),onPick:x=>{ST.mine={src:x.src,b:x.b,i:x.i};save();refreshMainOnly();}});}
-document.addEventListener('change',e=>{if(location.hash!=='#/calc')return;const s=e.target.closest('select[data-f]');if(s){ST.field[s.dataset.f]=s.value;window.__fo=1;save();refresh();}});
+document.addEventListener('change',e=>{if(location.hash!=='#/calc')return;const s=e.target.closest('select[data-f]');if(s){markManual(s.dataset.f);ST.field[s.dataset.f]=s.value;window.__fo=1;save();refresh();}});
 document.addEventListener('toggle',e=>{if(e.target.matches('details.dfield')){window.__fo=e.target.open;fitToggles();}if(e.target.matches('details[data-fgroup]')&&e.target.isConnected){const was=FIELDOPEN[e.target.dataset.fgroup];FIELDOPEN[e.target.dataset.fgroup]=e.target.open;fitToggles();if(e.target.open&&!was)e.target.scrollIntoView({block:'nearest'});}},true);
 const recent=k=>{ST.recent=[k,...ST.recent.filter(x=>x!==k)].slice(0,6);};
 
@@ -285,7 +315,7 @@ let FSIDE='atk';
 const FIELDOPEN={};
 function fieldHTML(values){const entries=prof.field||[],format=entries.find(entry=>entry.k==='gameType');const toggle=entry=>`<button data-f="${esc(entry.k)}" aria-pressed="${!!values[entry.k]}">${esc(entry.l.replace(/^(Attacker|Defender|Player|Foe) /,''))}${entry.max?' '+(values[entry.k]||0):''}</button>`;
  const group=(side,key,label)=>{const fields=entries.filter(entry=>entry.side===side&&entry.group===key);if(!fields.length)return '';const on=fields.filter(entry=>values[entry.k]).length,id=side+':'+key,monSide=side==='atk'?'mine':'foe';return `<details class="dfgroup" data-fgroup="${id}" ${FIELDOPEN[id]?'open':''}><summary>${label}${on?' · '+on:''}</summary><div class="dtg">${fields.map(toggle).join('')}</div>${key==='hazards'?`<button class="dhapply" data-a="hazards" data-s="${monSide}" ${hazardReady(monSide)?'':'disabled'}>Apply hazards</button>`:''}</details>`;};
- return (format?`<div class="dformat" role="group" aria-label="Battle format">${format.o.map(([value,label])=>`<button data-f="gameType" data-value="${esc(value)}" aria-pressed="${(values.gameType||'Singles')===value}">${esc(label)}</button>`).join('')}</div>`:'')+'<div class="dfr">'+entries.filter(entry=>entry.type==='select'&&entry.k!=='gameType').map(entry=>`<select data-f="${esc(entry.k)}" aria-label="${esc(entry.l)}" title="${esc(entry.l)}">${(entry.o||[]).map(([value,label])=>`<option value="${esc(value)}" ${String(values[entry.k]??'')===String(value)?'selected':''}>${esc(value===''?'No '+entry.l.toLowerCase():label)}</option>`).join('')}</select>`).join('')+'</div><div class="dtg">'+entries.filter(entry=>entry.type==='toggle'&&entry.side==='field').map(toggle).join('')+'</div><div class="dfside"><div class="dfsw" role="group" aria-label="Side">'+[['atk','Player'],['def','Foe']].map(([side,label])=>{const on=entries.filter(entry=>entry.type==='toggle'&&entry.side===side&&values[entry.k]).length;return `<button data-a="fside" data-v="${side}" aria-pressed="${FSIDE===side}">${label}${on?' · '+on:''}</button>`;}).join('')+'</div>'+[['atk','Player'],['def','Foe']].map(([side,label])=>`<section data-field-side="${side}" class="${FSIDE===side?'on':''}"><b>${label}</b><div class="dtg">${entries.filter(entry=>entry.type==='toggle'&&entry.side===side&&!entry.group).map(toggle).join('')}</div>${group(side,'battle','States')}${group(side,'turn','Turn end')}${group(side,'hazards','Hazards')}</section>`).join('')+'</div>';}
+ return '<div class="dfr0">'+(format?`<div class="dformat" role="group" aria-label="Battle format">${format.o.map(([value,label])=>`<button data-f="gameType" data-value="${esc(value)}" aria-pressed="${(values.gameType||'Singles')===value}">${esc(label)}</button>`).join('')}</div>`:'')+'<button class="dfreset" data-a="fightreset">Reset fight</button></div><div class="dfr">'+entries.filter(entry=>entry.type==='select'&&entry.k!=='gameType').map(entry=>`<select data-f="${esc(entry.k)}" aria-label="${esc(entry.l)}" title="${esc(entry.l)}">${(entry.o||[]).map(([value,label])=>`<option value="${esc(value)}" ${String(values[entry.k]??'')===String(value)?'selected':''}>${esc(value===''?'No '+entry.l.toLowerCase():label)}</option>`).join('')}</select>`).join('')+'</div><div class="dtg">'+entries.filter(entry=>entry.type==='toggle'&&entry.side==='field').map(toggle).join('')+'</div><div class="dfside"><div class="dfsw" role="group" aria-label="Side">'+[['atk','Player'],['def','Foe']].map(([side,label])=>{const on=entries.filter(entry=>entry.type==='toggle'&&entry.side===side&&values[entry.k]).length;return `<button data-a="fside" data-v="${side}" aria-pressed="${FSIDE===side}">${label}${on?' · '+on:''}</button>`;}).join('')+'</div>'+[['atk','Player'],['def','Foe']].map(([side,label])=>`<section data-field-side="${side}" class="${FSIDE===side?'on':''}"><b>${label}</b><div class="dtg">${entries.filter(entry=>entry.type==='toggle'&&entry.side===side&&!entry.group).map(toggle).join('')}</div>${group(side,'battle','States')}${group(side,'turn','Turn end')}${group(side,'hazards','Hazards')}</section>`).join('')+'</div>';}
 const host=document.createElement('div');host.id='sheets';
 const input=document.createElement('input');input.type='file';input.accept='.sav,.dsv,.bin,main';input.hidden=true;input.id='calc-file';
 function startImport(){if(prof.save)input.click();}
