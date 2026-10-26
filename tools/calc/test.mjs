@@ -1476,6 +1476,19 @@ await test('A3 sports: Gen 4 halves BP, Gen 5+ chains 1352, type override and Te
   }
 });
 
+await test('A3 Gen 4 sport rounding is before Blaze and Dry Skin, after Technician and held power', () => {
+  engine.init(data, profiles.gen4);
+  const user = set('Snorlax', {hp: 1, ab: ability('Blaze')}), target = set('Blissey');
+  const selected = slot('Tackle', {bp: 47, t: 'Fire'});
+  assert.deepEqual(engine.calc(user, target, selected, {waterSport: true}).rolls,
+    engine.calc({...user, ab: -1}, target, {...selected, bp: 34}, {}).rolls);
+  assert.deepEqual(engine.calc({...user, ab: -1}, {...target, ab: ability('Dry Skin')}, selected, {waterSport: true}).rolls,
+    engine.calc({...user, ab: -1}, target, {...selected, bp: 28}, {}).rolls);
+  assert.deepEqual(engine.calc({...user, ab: ability('Technician'), it: 'Charcoal'}, target,
+    {...selected, bp: 49}, {waterSport: true}).rolls,
+  engine.calc({...user, ab: -1}, target, {...selected, bp: 43}, {}).rolls);
+});
+
 await test('A3 splits: floor raw averages before stages, both directions, special stat users and purity', () => {
   for (const profile of [profiles.gen5, profiles.gen6, profiles.gen7, profiles.expansion]) {
     engine.init(data, profile);
@@ -1518,6 +1531,43 @@ await test('A3 splits persist through multi-hit and Parental Bond recalculations
     assert.equal(multi.hits, 2);
     assert.deepEqual(multi.per?.[1] || multi.rolls, multi.rolls);
   }
+});
+
+await test('A3 assembly gates new fields by moves, abilities and generation, without duplicates', () => {
+  const source = `import assemble,json
+entries=json.load(open('template/calc/field-states.json',encoding='utf-8'))
+names={'PowerSpot','SteelySpirit','FlowerGift','PlusMinus','allyFairyAura','allyDarkAura','allyAuraBreak','TabletsOfRuin','SwordOfRuin','VesselOfRuin','BeadsOfRuin','PowerTrick','waterSport','mudSport','powerSplit','guardSplit'}
+def selected(profile):
+ return {entry['k']:entry for entry in profile['field'] if entry['k'] in names or entry['k'][3:] in names}
+out={}
+for base in ['gen4','gen5','gen6','gen7','expansion']:
+ data={'M':list({move for entry in entries for move in entry.get('moves',[])}),'AB':[[name] for entry in entries for name in entry.get('abilities',[])]}
+ out[base]=selected(assemble.calc_profile({'base':base},data))
+out['empty']=selected(assemble.calc_profile({'base':'expansion'},{'M':[],'AB':[]}))
+out['noabilities']=selected(assemble.calc_profile({'base':'expansion','abilities':False},data))
+for hack in ['emerald-imperium','hardlove-gold','photonic-sun','eternal-x']:
+ config=json.load(open('hacks/'+hack+'/hack.json',encoding='utf-8'))['cfg']['calc']
+ guide=json.load(open('hacks/'+hack+'/data.json',encoding='utf-8'))
+ profile=assemble.calc_profile(config,guide)
+ assert len(profile['field'])==len({field['k'] for field in profile['field']})
+ out[hack]=selected(profile)
+print(json.dumps(out))`;
+  const result = spawnSync('python', ['-X', 'utf8', '-c', source], {cwd: fileURLToPath(root), encoding: 'utf8'});
+  assert.equal(result.status, 0, result.stderr);
+  const offered = JSON.parse(result.stdout);
+  assert.deepEqual(offered.empty, {});
+  assert.deepEqual(Object.keys(offered.noabilities).sort(),
+    ['waterSport', 'mudSport', 'powerSplit', 'guardSplit', 'atkPowerTrick', 'defPowerTrick'].sort());
+  assert.ok(offered.gen4.waterSport && offered.gen4.mudSport && offered.gen4.atkPowerTrick);
+  assert.ok(!offered.gen4.powerSplit && !offered.gen4.allyFairyAura && !offered.gen4.atkPowerSpot);
+  assert.ok(offered.gen5.powerSplit && offered.gen5.guardSplit && !offered.gen5.allyFairyAura);
+  assert.ok(offered.gen6.allyFairyAura && !offered.gen6.atkPowerSpot);
+  assert.ok(offered.expansion.atkPowerSpot && offered.expansion.atkTabletsOfRuin);
+  for (const hack of ['emerald-imperium', 'hardlove-gold', 'photonic-sun', 'eternal-x']) {
+    for (const key of ['waterSport', 'mudSport', 'powerSplit', 'guardSplit']) assert.equal(offered[hack][key].side, 'field');
+    for (const key of ['atkFlowerGift', 'defFlowerGift', 'atkPlusMinus', 'defPlusMinus']) assert.equal(offered[hack][key].doubles, true);
+  }
+  assert.ok(!offered['hardlove-gold'].allyDarkAura && !offered['hardlove-gold'].atkTabletsOfRuin);
 });
 
 await test('initialisation and calculations leave guide/profile inputs unchanged', () => {

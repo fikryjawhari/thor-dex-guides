@@ -1,3 +1,5 @@
+import {sportPowerDPP} from './gen4-sport.js';
+
 const phases = new Set(['hits', 'beforeStats', 'afterMoveType', 'effectiveness', 'critical', 'turnOrder',
   'movePower', 'powerMods', 'attackMods', 'defenseMods', 'attack', 'defense',
   'hitBaseDamage', 'beforeWeather', 'baseDamage', 'finalMods', 'beforeRolls', 'roll']);
@@ -16,8 +18,7 @@ function fieldPhase(gen, phase, context, after = false) {
     const sport = context.move.hasType('Fire') && values.waterSport ? 'Water Sport'
       : context.move.hasType('Electric') && values.mudSport ? 'Mud Sport' : '';
     if (sport) {
-      if (gen.num === 4) context.value.push(0.5);
-      else context.value.unshift(1352);
+      if (gen.num >= 5) context.value.unshift(1352);
       context.notes.add(sport);
     }
   }
@@ -160,6 +161,13 @@ export function applyPhase(gen, phase, local, value) {
 }
 
 export function legacyMods(gen, phase, local, value) {
+  if (phase === 'powerMods') {
+    const base = gen.guideContext;
+    const values = base.input.field;
+    if (local.move.hasType('Fire') && values.waterSport || local.move.hasType('Electric') && values.mudSport) {
+      value = sportPowerDPP({...base, ...local, state: base.state, atk: local.attacker, def: local.defender});
+    }
+  }
   const modifiers = applyPhase(gen, phase, local, []);
   return modifiers.reduce((amount, multiplier) => Math.floor(amount * multiplier), value);
 }
