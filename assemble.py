@@ -85,12 +85,15 @@ def calc_profile(c, data=None):
                 continue
             if entry.get('all') and not set(entry['all']).issubset(moves):
                 continue
-            for side, label in [('atk', 'Player'), ('def', 'Foe')]:
-                key = side + entry['k']
+            sides = [('field', '')] if entry.get('side') == 'field' else [('atk', 'Player'), ('def', 'Foe')]
+            for side, label in sides:
+                key = entry['k'] if side == 'field' else side + entry['k']
                 if key not in keys:
-                    fields.append(dict(k=key, l=label + ' ' + entry['l'], side=side,
+                    fields.append(dict(k=key, l=(label + ' ' + entry['l']).strip(), side=side,
                                        type='toggle', group=entry['group'],
+                                       **({'doubles': True} if entry.get('doubles') else {}),
                                        **({'max': entry['max']} if 'max' in entry else {})))
+                    keys.add(key)
     return profile
 
 

@@ -51,7 +51,7 @@ function reference(atk, def, selected, options = {}, profile = profiles.expansio
     const original = gen.species.get(toID(name)) || Generations.get(9).species.get(toID(name));
     return new Pokemon(gen, name, {
       level: config.lv, nature: config.nat, ability: guide.AB[config.ab]?.[0] || 'Guide no ability',
-      item: config.it, status: config.st, ivs: statObject(config.iv, 31), evs: statObject(config.ev, 0),
+      item: config.it, status: config.st, abilityOn: !!config.abilityOn, ivs: statObject(config.iv, 31), evs: statObject(config.ev, 0),
       boosts: statObject(config.stg, 0), curHP: config.hp,
       overrides: {...original, name, baseStats: statObject(entry.s, 1), types: entry.t, nfe: !!entry.et.length, abilities: {0: ''}},
     });
@@ -1380,6 +1380,69 @@ await test('A2 crash previews are separate misses, generation-aware and Magic Gu
   const ghost = set('Gengar');
   assert.equal(engine.hp(user, ghost, slot('High Jump Kick'), {}, 0, {miss: true}).crash,
     Math.floor(engine.stats(ghost)[0] / 2));
+});
+
+await test('A3 ally effects: stock parity, side ownership, Singles exclusion and no Ruin stacking', () => {
+  engine.init(data, profiles.expansion);
+  const user = set('Snorlax'), target = set('Blissey');
+  for (const [key, move, weather, scope] of [
+    ['PowerSpot', 'Tackle', '', 'side'], ['SteelySpirit', 'Iron Head', '', 'side'],
+    ['FlowerGift', 'Tackle', 'Sun', 'side'], ['FairyAura', 'Moonblast', '', 'aura'],
+    ['DarkAura', 'Dark Pulse', '', 'aura'], ['TabletsOfRuin', 'Tackle', '', 'ruin'],
+    ['SwordOfRuin', 'Tackle', '', 'ruin'], ['VesselOfRuin', 'Flamethrower', '', 'ruin'],
+    ['BeadsOfRuin', 'Flamethrower', '', 'ruin'],
+  ]) {
+    const selected = slot(move), toggle = (scope === 'aura' ? 'ally' : 'atk') + key;
+    const field = {gameType: 'Doubles', weather, [toggle]: true};
+    const options = {gameType: 'Doubles', weather, ...(scope === 'side'
+      ? {attackerSide: {['is' + key]: true}} : {['is' + key]: true})};
+    assert.deepEqual(plain(engine.calc(user, target, selected, field).rolls),
+      distributions(reference(user, target, selected, options).result.damage, 1)[0], key);
+    assert.deepEqual(engine.calc(user, target, selected, {...field, gameType: 'Singles'}).rolls,
+      engine.calc(user, target, selected, {weather}).rolls, key + ' Singles');
+    if (scope === 'side' && key !== 'FlowerGift') assert.deepEqual(
+      engine.calc(user, target, selected, {gameType: 'Doubles', ['def' + key]: true}).rolls,
+      engine.calc(user, target, selected, {gameType: 'Doubles'}).rolls);
+    if (scope !== 'side') assert.deepEqual(plain(engine.calc(target, user, selected, field).rolls),
+      distributions(reference(target, user, selected, options).result.damage, 1)[0], key + ' reverse');
+    if (scope === 'ruin') {
+      assert.deepEqual(engine.calc(user, target, selected, {...field, ['def' + key]: true}).rolls,
+        engine.calc(user, target, selected, field).rolls);
+      assert.deepEqual(engine.calc(user, target, selected, {gameType: 'Doubles', ['def' + key]: true}).rolls,
+        engine.calc(user, target, selected, field).rolls);
+    }
+  }
+  assert.deepEqual(plain(engine.calc(user, target, slot('Moonblast'),
+    {gameType: 'Doubles', allyFairyAura: true, allyAuraBreak: true}).rolls),
+  distributions(reference(user, target, slot('Moonblast'),
+    {gameType: 'Doubles', isFairyAura: true, isAuraBreak: true}).result.damage, 1)[0]);
+  assert.deepEqual(plain(engine.calc(user, target, slot('Flamethrower'),
+    {gameType: 'Doubles', weather: 'Sun', defFlowerGift: true}).rolls),
+  distributions(reference(user, target, slot('Flamethrower'),
+    {gameType: 'Doubles', weather: 'Sun', defenderSide: {isFlowerGift: true}}).result.damage, 1)[0]);
+  const holder = {...user, ab: ability('Tablets of Ruin')};
+  assert.deepEqual(engine.calc(holder, target, slot('Tackle'), {gameType: 'Doubles', atkTabletsOfRuin: true}).rolls,
+    engine.calc(holder, target, slot('Tackle'), {gameType: 'Doubles'}).rolls);
+});
+
+await test('A3 Plus/Minus and Power Trick: all generations, saved stats unchanged', () => {
+  for (const profile of [profiles.gen4, profiles.gen5, profiles.gen6, profiles.gen7, profiles.expansion]) {
+    engine.init(data, profile);
+    const target = set('Blissey');
+    for (const name of ['Plus', 'Minus']) {
+      const user = set('Snorlax', {ab: ability(name)}), selected = slot('Flamethrower');
+      assert.deepEqual(plain(engine.calc(user, target, selected, {gameType: 'Doubles', atkPlusMinus: true}).rolls),
+        distributions(reference({...user, abilityOn: true}, target, selected, {gameType: 'Doubles'}, profile).result.damage, 1)[0]);
+      assert.deepEqual(engine.calc(user, target, selected, {atkPlusMinus: true}).rolls,
+        engine.calc(user, target, selected, {}).rolls);
+    }
+    const user = set('Shuckle'), selected = slot('Tackle'), before = engine.stats(user);
+    for (const side of ['atk', 'def']) assert.deepEqual(
+      plain(engine.calc(user, target, selected, {[side + 'PowerTrick']: true}).rolls),
+      distributions(reference(user, target, selected,
+        {[side === 'atk' ? 'attackerSide' : 'defenderSide']: {isPowerTrick: true}}, profile).result.damage, 1)[0]);
+    assert.deepEqual(engine.stats(user), before);
+  }
 });
 
 await test('initialisation and calculations leave guide/profile inputs unchanged', () => {

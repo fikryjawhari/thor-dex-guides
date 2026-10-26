@@ -416,6 +416,33 @@ after switching/fainting, or simulate self stat-reactions such as Defiant.
 Callers apply returned parts with normal HP bounds and clear manual toggles.
 The focused field groups in `test.mjs` are included in `npm test`.
 
+### Ally abilities and Power Trick
+
+`atkPowerSpot`, `atkSteelySpirit`, `atkFlowerGift`, `atkPlusMinus` (and their
+`def` equivalents) describe that battler's doubles ally. They only act when
+`gameType: "Doubles"`. Flower Gift reuses the existing three guides' key and
+stock Sun/Harsh Sunshine Attack/Special Defense rules. Plus/Minus enables
+`abilityOn` only on a Plus/Minus holder (Gen 4 callers assert the ally has the
+opposite ability; Gen 5+ either ability suffices).
+
+`allyFairyAura`, `allyDarkAura`, `allyAuraBreak` are global ally-source flags:
+either team's ally affects both battlers' moves. `atkTabletsOfRuin`,
+`atkSwordOfRuin`, `atkVesselOfRuin`, `atkBeadsOfRuin` and `def` equivalents
+also affect both teams; either source sets the stock global Ruin flag once.
+Native holders still work without flags and remain immune to their own Ruin.
+All these ally flags are ignored in Singles. They assert an active unsuppressed
+ally ability; the calculator has no ally Pokemon or ally item to inspect.
+
+`atkPowerTrick` / `defPowerTrick` set stock `isPowerTrick`, swapping that
+battler's raw Attack/Defense before stages in Singles or Doubles.
+
+`field-states.json` gates each ally entry by its named ability in `AB` and its
+introduction generation; Plus/Minus accepts either ability. Power Trick is
+gated by its move in `M`. `assemble.py` now supports `side: "field"` entries
+without adding prefixes and preserves `doubles: true` for D3 to hide in Singles.
+The current page renders these offered entries immediately; the engine enforces
+Doubles even before D3. Existing Flower Gift declarations are not duplicated.
+
 ## Engine overrides (`prof.over`)
 
 `assemble.py` recursively merges the base with each hack's `cfg.calc`. Optional

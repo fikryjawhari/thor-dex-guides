@@ -179,8 +179,20 @@ function battleField(values) {
   for (const side of ['atk', 'def']) {
     const target = side === 'atk' ? result.attackerSide : result.defenderSide;
     for (const [key, property] of Object.entries({Charge: 'isCharge', Protect: 'isProtected',
-      Foresight: 'isForesight', Swamp: 'isSwamp'})) {
+      Foresight: 'isForesight', Swamp: 'isSwamp', PowerTrick: 'isPowerTrick'})) {
       if (values[side + key] !== undefined) target[property] = !!values[side + key];
+    }
+    for (const [key, property] of Object.entries({PowerSpot: 'isPowerSpot', SteelySpirit: 'isSteelySpirit',
+      FlowerGift: 'isFlowerGift'})) {
+      target[property] = result.gameType === 'Doubles' && !!values[side + key];
+    }
+  }
+  for (const key of ['FairyAura', 'DarkAura', 'AuraBreak']) {
+    if (values['ally' + key] !== undefined) result['is' + key] = result.gameType === 'Doubles' && !!values['ally' + key];
+  }
+  for (const key of ['TabletsOfRuin', 'SwordOfRuin', 'VesselOfRuin', 'BeadsOfRuin']) {
+    if (values['atk' + key] !== undefined || values['def' + key] !== undefined) {
+      result['is' + key] = result.gameType === 'Doubles' && !!(values['atk' + key] || values['def' + key]);
     }
   }
   for (const entry of profile.field || []) {
@@ -196,6 +208,7 @@ const changesType = (mon, set) => typeChangers.includes(data.AB?.[set.ab]?.[0]) 
 
 function fieldPokemon(set, values, side) {
   const mon = pokemon(set);
+  if (mon.hasAbility('Plus', 'Minus')) mon.abilityOn = values.gameType === 'Doubles' && !!values[side + 'PlusMinus'];
   if (set.pty && changesType(mon, set)) mon.types = [set.pty];
   if (values[side + 'Roost'] && mon.hasType('Flying')) {
     mon.types = mon.types.filter(type => type !== 'Flying');
