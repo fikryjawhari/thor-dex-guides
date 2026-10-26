@@ -430,7 +430,7 @@ either team's ally affects both battlers' moves. `atkTabletsOfRuin`,
 `atkSwordOfRuin`, `atkVesselOfRuin`, `atkBeadsOfRuin` and `def` equivalents
 also affect both teams; either source sets the stock global Ruin flag once.
 Native holders still work without flags and remain immune to their own Ruin.
-All these ally flags are ignored in Singles. They assert an active unsuppressed
+All newly assembled ally controls are ignored in Singles. They assert an active unsuppressed
 ally ability; the calculator has no ally Pokemon or ally item to inspect.
 
 `atkPowerTrick` / `defPowerTrick` set stock `isPowerTrick`, swapping that
@@ -443,6 +443,11 @@ without adding prefixes and preserves `doubles: true` for D3 to hide in Singles.
 The current page renders these offered entries immediately; the engine enforces
 Doubles even before D3. Existing Flower Gift declarations are not duplicated;
 Hardlove's old Flower Gift controls are omitted because its `AB` has no Flower Gift.
+Compatibility: unassembled legacy profiles that explicitly map Flower Gift with
+`to: "isFlowerGift"` and omit `doubles` retain their prior stock behavior, even
+in Singles. This keeps the committed pre-A3 source/oracle fixtures unchanged.
+Assembly adds `doubles: true` to the retained legacy declarations, so every
+actual guide enforces the new Doubles-only contract; D3 should consume that metadata.
 
 ### Sports and raw-stat splits
 
@@ -488,7 +493,7 @@ All four global entries use the existing move-availability gate (`M`) and their
 introduction generation in `field-states.json`. Ally abilities use `AB` instead.
 Electrify / Ion Deluge need no engine flag: the move's Type override (`slot.t`)
 covers their change to Electric; it leaves move-specific type rules intact.
-Tests: the seven A3 groups in `test.mjs`; 126 A3 battle fixtures across the four
+Tests: the eight A3 groups in `test.mjs`; 126 A3 battle fixtures across the four
 guides (44 EI, 26 Hardlove, 28 each Eternal X / Photonic), each with rule evidence.
 
 ## Engine overrides (`prof.over`)

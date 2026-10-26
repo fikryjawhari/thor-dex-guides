@@ -1451,6 +1451,20 @@ await test('A3 Plus/Minus and Power Trick: all generations, saved stats unchange
   }
 });
 
+await test('A3 inherited Flower Gift preserves raw-profile parity; assembled metadata enforces Doubles', () => {
+  const user = set('Snorlax'), target = set('Blissey'), selected = slot('Tackle');
+  const field = {weather: 'Sun', atkFlowerGift: true};
+  const entry = {k: 'atkFlowerGift', type: 'toggle', side: 'atk', to: 'isFlowerGift'};
+  engine.init(data, {...profiles.expansion, field: [...profiles.expansion.field, entry]});
+  assert.deepEqual(plain(engine.calc(user, target, selected, field).rolls),
+    distributions(reference(user, target, selected, {weather: 'Sun', attackerSide: {isFlowerGift: true}}).result.damage, 1)[0]);
+  engine.init(data, {...profiles.expansion, field: [...profiles.expansion.field, {...entry, doubles: true}]});
+  assert.deepEqual(engine.calc(user, target, selected, field).rolls,
+    engine.calc(user, target, selected, {weather: 'Sun'}).rolls);
+  assert.deepEqual(plain(engine.calc(user, target, selected, {...field, gameType: 'Doubles'}).rolls),
+    distributions(reference(user, target, selected, {gameType: 'Doubles', weather: 'Sun', attackerSide: {isFlowerGift: true}}).result.damage, 1)[0]);
+});
+
 await test('A3 sports: Gen 4 halves BP, Gen 5+ chains 1352, type override and Technician', () => {
   for (const profile of [profiles.gen4, profiles.gen5, profiles.gen6, profiles.gen7, profiles.expansion]) {
     engine.init(data, profile);

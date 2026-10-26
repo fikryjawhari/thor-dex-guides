@@ -184,7 +184,9 @@ function battleField(values) {
     }
     for (const [key, property] of Object.entries({PowerSpot: 'isPowerSpot', SteelySpirit: 'isSteelySpirit',
       FlowerGift: 'isFlowerGift'})) {
-      target[property] = result.gameType === 'Doubles' && !!values[side + key];
+      const legacy = key === 'FlowerGift' && profile.field?.some(entry => entry.k === side + key
+        && entry.to === property && !entry.doubles);
+      target[property] = (result.gameType === 'Doubles' || legacy) && !!values[side + key];
     }
   }
   for (const key of ['FairyAura', 'DarkAura', 'AuraBreak']) {

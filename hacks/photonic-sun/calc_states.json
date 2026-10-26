@@ -37082,7 +37082,7 @@
       "src": "Smogon calc 0.12.0 src/mechanics/gen789.ts:1232-1235,1436-1453,1610-1620; gen56.ts ally Flower Gift; named Side flag. Doubles only; flag denotes an active ally."
     },
     {
-      "name": "A3-ally-FlowerGift-Singles-off",
+      "name": "A3-legacy-FlowerGift-Singles-preserved",
       "atk": {
         "id": "snorlax",
         "lv": 50,
@@ -37103,25 +37103,25 @@
       },
       "expect": {
         "rolls": [
-          99,
-          100,
-          100,
-          102,
-          103,
-          105,
-          105,
-          106,
-          108,
-          109,
-          111,
-          111,
-          112,
-          114,
-          115,
-          117
+          147,
+          148,
+          150,
+          153,
+          154,
+          156,
+          157,
+          159,
+          160,
+          163,
+          165,
+          166,
+          168,
+          169,
+          171,
+          174
         ]
       },
-      "src": "Smogon calc 0.12.0 src/mechanics/gen789.ts:1232-1235,1436-1453,1610-1620; gen56.ts ally Flower Gift; named Side flag. Doubles only; flag denotes an active ally."
+      "src": "Legacy raw cfg.calc explicitly maps isFlowerGift without doubles metadata: pre-A3 stock behavior retained. assemble.py adds doubles:true for actual guides; test.mjs checks assembled Singles exclusion."
     },
     {
       "name": "A3-ally-FlowerGift-def-side",
