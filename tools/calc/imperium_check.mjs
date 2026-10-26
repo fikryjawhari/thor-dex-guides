@@ -34,13 +34,13 @@ function sourceCategory(matchup) {
   return {automatic: physical > special ? 'Physical' : 'Special', tie: physical === special};
 }
 
-function handDamage(matchup, modifier) {
+function handDamage(matchup, modifier, defenseStat) {
   const move = data.MV[matchup.slot.mv];
   const attacker = engine.stats(matchup.atk);
   const defender = engine.stats(matchup.def);
   const physical = move.c === 'Physical';
   const attack = round(attacker[physical ? 1 : 3] * modifier / 4096);
-  const defense = defender[physical ? 2 : 4];
+  const defense = defenseStat ?? defender[physical ? 2 : 4];
   const base = Math.floor(Math.floor((Math.floor(2 * matchup.atk.lv / 5) + 2) * (matchup.slot.bp ?? move.bp) * attack / defense) / 50) + 2;
   const stab = data.P.find(entry => entry.id === matchup.atk.id).t.includes(move.t);
   return Array.from({length: 16}, (_, index) => {
@@ -103,11 +103,12 @@ for (const matchup of fixtures.matchups.filter(entry => entry.name.startsWith('g
 
 const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 const statTable = (values, fallback) => Object.fromEntries(statNames.map((name, index) => [name, values?.[index] ?? fallback]));
-function stock(matchup, generation = 9, powerModifier = 4096) {
+function stock(matchup, generation = 9, powerModifier = 4096, abilities = false) {
   const gen = Generations.get(generation);
   const mon = set => {
     const entry = data.P.find(species => species.id === set.id);
-    return new Pokemon(gen, entry.n, {level: set.lv, ability: 'Guide no ability', nature: set.nat || 'Serious',
+    const ability = abilities && set.ab >= 0 ? data.AB[set.ab][0] : 'Guide no ability';
+    return new Pokemon(gen, entry.n, {level: set.lv, ability, nature: set.nat || 'Serious',
       ivs: statTable(set.iv, 31), evs: statTable(set.ev, 0), boosts: statTable(set.stg, 0),
       overrides: {baseStats: statTable(entry.s, 1), types: entry.t}});
   };
@@ -135,6 +136,38 @@ for (const matchup of fixtures.matchups.filter(entry => entry.name.startsWith('e
   const modifier = count === 2 ? Math.floor((5325 * 5325 + 2048) / 4096) : count === 1 ? 5325 : 4096;
   assert.deepEqual(result(matchup.name).rolls, plain(stock(matchup, 9, modifier)), matchup.name + ' source power chain');
 }
+// Ruin abilities: stock reads the holder's ability (EI: any battler on the field, battle_util.c 9681-9685, 9843-9847);
+// the holder and a battler with the same Ruin are unaffected, Psyshock counts as Defense.
+const ruinCases = fixtures.matchups.filter(entry => entry.name.startsWith('ruin-'));
+const noAbility = matchup => engine.calc({...matchup.atk, ab: -1}, {...matchup.def, ab: -1}, matchup.slot, matchup.field);
+const ruinUnaffected = ['ruin-tablets-special', 'ruin-tablets-holder', 'ruin-vessel-physical', 'ruin-vessel-holder',
+  'ruin-sword-holder', 'ruin-beads-psyshock', 'ruin-beads-holder', 'ruin-same-tablets'];
+for (const matchup of ruinCases) {
+  assert.deepEqual(result(matchup.name).rolls, plain(stock(matchup, 9, 4096, true)), matchup.name + ' stock Ruin');
+  const plainRolls = plain(noAbility(matchup).rolls);
+  if (ruinUnaffected.includes(matchup.name)) assert.deepEqual(result(matchup.name).rolls, plainRolls, matchup.name);
+  else if (!matchup.name.startsWith('ruin-two-')) {
+    const lowersAttack = /tablets|vessel/.test(matchup.name);
+    const max = result(matchup.name).max;
+    assert.ok(lowersAttack ? max < plainRolls.at(-1) : max > plainRolls.at(-1), matchup.name + ' direction');
+  }
+}
+for (const [two, attack, defense] of [['ruin-two-physical', 'ruin-tablets', 'ruin-sword'], ['ruin-two-special', 'ruin-vessel', 'ruin-beads']]) {
+  assert.ok(result(attack).max < result(two).max && result(two).max < result(defense).max, two + ' stacks both');
+}
+// B_EXPLOSION_DEFENSE GEN_4: Self-Destruct / Explosion / Misty Explosion halve the raw defending stat (floor) before stages,
+// after Wonder Room's swap (battle_util.c 9749-9775).
+const explosionCases = fixtures.matchups.filter(entry => /explosion|self-destruct/.test(entry.name));
+for (const matchup of explosionCases.filter(entry => !entry.slot.crit)) {
+  const physical = data.MV[matchup.slot.mv].c === 'Physical';
+  const raw = engine.stats(matchup.def)[physical !== !!matchup.field.wonderRoom ? 2 : 4];
+  const defense = staged(Math.floor(raw / 2), matchup.def.stg?.[physical ? 2 : 4]);
+  assert.deepEqual(result(matchup.name).rolls, handDamage(matchup, 4096, defense), matchup.name + ' source defense');
+}
+const critExplosion = fixture('explosion-crit-plus-one');
+assert.deepEqual(result(critExplosion.name).rolls,
+  plain(engine.calc(critExplosion.atk, {...critExplosion.def, stg: undefined}, critExplosion.slot, {}).rolls),
+  'crit ignores the Defense boost after halving');
 const orderCase = {...fixture('physical-neutral'), slot: {mv: data.M.indexOf('Payback')}};
 const order = value => engine.calc(orderCase.atk, orderCase.def, {...orderCase.slot, order: value}, {});
 assert.ok(order('last').max > order('first').max, 'explicit order feeds order-dependent base power');

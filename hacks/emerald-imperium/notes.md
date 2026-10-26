@@ -165,7 +165,8 @@ note below). `ls.dmg` (`eidmg`) is unchanged.
 Sources: the mechanics are read from the release's `src/battle_util.c` and `include/config/battle.h` (a shallow
 fetch into `.tmp/source/`, never shipped). The oracle is hzla's Dynamic-Calc-Decomps, pinned at `ff6c3e3…`, run
 locally from `.tmp/hzla/` (`hzla_compare.mjs`); its code and tables are not copied. Where hzla and the source
-differ, the source wins. The 2026-10-25 refinement has nine explained roll differences, listed in the fixtures.
+differ, the source wins. The 2026-10-25 refinement has nine explained roll differences, the 2026-10-26 scope check
+three more (Explosion), listed in the fixtures: `hzla_compare` reads 142 match + 12 known.
 
 | Mechanic | Profile entry | Source (release) | Fixtures |
 | --- | --- | --- | --- |
@@ -188,6 +189,8 @@ differ, the source wins. The 2026-10-25 refinement has nine explained roll diffe
 | Ice Eater absorbs Ice attacks | `effectiveness`, including Mold Breaker, Ability Shield and Neutralizing Gas boundaries | 4112–4115, 10700 | ice-eater-* |
 | Defeatist halves the attacking stat only at or below one-third HP | `beforeStats` suppresses the stock half-HP trigger, `attackMods` applies EI's threshold | 9539–9542 | defeatist-*: half HP, third+1, third physical/special |
 | Frostbite halves special damage | `beforeRolls` sets `isBurned` for special moves when the attacker's status is `frz` | 9975, applied 10308 | frostbite-special, frostbite-physical |
+| Self-Destruct, Explosion, Misty Explosion halve the target's defending stat (`B_EXPLOSION_DEFENSE` is `GEN_4`): the raw stat, floored, before stages, after Wonder Room's swap; Misty Explosion halves Sp. Def | `beforeStats` halves `def.rawStats.def` (physical without Wonder Room) or `.spd` (otherwise) | 9774–9775 | explosion-*, self-destruct-*, misty-explosion-*: plain, +1 stage, Wonder Room, crit |
+| Ruin abilities (Tablets / Sword / Vessel / Beads): ×0.75 in the attacking / defending stat chain while any living battler has one, except a battler with the same Ruin; Psyshock counts as Defense | native (stock reads the holder's ability) | 9681–9685, 9843–9847, `IsAbilityOnField` 6542 | ruin-*: each Ruin, its holder, the other category, Psyshock, two Ruins, both Tablets |
 
 Status: EI's `B_USE_FROSTBITE` makes frostbite replace freeze in most cases (`include/config/battle.h`), and a few
 moves still freeze. A frozen attacker cannot act, and a frozen defender has no damage effect here, so only frostbite
@@ -208,6 +211,40 @@ Disagreements between the changes doc or the Known Bugs file and the source (sou
   hzla restricts it to physical damage; our two special-on fixtures intentionally differ.
 - Illusion modifies the attacking stat in the release, not move power (as hzla does). Hand-calculated tests at
   powers 7, 17, 25 and 41 protect the rounding point even when ordinary fixtures happen to match.
+- Explosion's halving: hzla halves the staged Defense with round-half-down, after weather; the source floors the raw
+  stat before stages. They agree without a stage; with +1 on an odd halved stat they differ (Lickitung 95 → 47 → 70,
+  hzla 142 → 71). Under Wonder Room hzla swaps the defences twice (as in Photonic Sun's notes) and halves Defense.
+
+#### Scope check (2026-10-26)
+
+Source: the release at `2576d0f3` (shallow fetch into `.tmp/ei-release/`, never shipped), `include/config/battle.h`,
+`item.h`, `pokemon.h`, `src/battle_util.c`, the map scripts and `trainer_parties.h`.
+- **Inverse battles: none.** `B_FLAG_INVERSE_BATTLE` is `0`, and the effectiveness code only inverts when it is
+  non-zero (`battle_util.c` 10710); no trainer or script sets one. The Eternal X `inverse` field is not added.
+- **Shadowy Veil: not in EI.** No ability or move of that name in the release (constants, `abilities.h`, moves), its
+  docs, eidex, hzla's `imp` backups or stock; in our data "shadowy" is only Shadow Ball's description. Nothing to add.
+- **Ruin abilities**: native, confirmed by the ruin-* fixtures (stock parity in `imperium_check.mjs`, hzla match). Not
+  modelled: a Ruin on the attacker's or the target's doubles **ally** (stock has `field.is*OfRuin`; no control).
+- **Config switches off Gen 9** (the rest of `battle.h`'s damage switches are `GEN_LATEST`): `B_EXPLOSION_DEFENSE`
+  `GEN_4` (built, table above); `B_PROTEAN_LIBERO` `GEN_1` (type change on every move: what the calc already does);
+  `B_INTREPID_SWORD` / `B_DAUNTLESS_SHIELD` `GEN_1` (on every switch-in, not once per battle: the calc applies the
+  boost whenever the holder is in, which matches; the auto-effects build keeps it per entry). The non-latest `item.h`
+  and `pokemon.h` switches are overworld / graphics only.
+- **Not in EI**: Terastallization, Z-Moves, Dynamax (no Tera Orb, Z-Power Ring or Dynamax Band is given anywhere, only
+  the Mega Ring; no trainer sets one), Commander, Battery, Dragon Cheer, the Pledge moves.
+- **Gen 9 inputs already covered**: fainted allies (Last Respects, Supreme Overlord: `atk.fnt`), Rage Fist's count,
+  switching (Pursuit, Stakeout), Glaive Rush, Salt Cure, Tar Shot, Charge, hazards, Snow, Neutralizing Gas.
+- **In EI and missing from the profile** (not built; each needs a decision):
+  - Doubles ally effects the engine supports but EI has no control for: Power Spot, Steely Spirit, an ally's Flower
+    Gift (the other three guides have it), Fairy Aura / Dark Aura / Aura Break and Ruin on an ally, Plus / Minus
+    (stock needs `abilityOn`).
+  - Power Trick (stock `isPowerTrick` side flag, no control).
+  - Water Sport / Mud Sport (Gen 6+ field effect, Fire / Electric power ×1352/4096) and Electrify / Ion Deluge (type
+    change to Electric): stock models none of them; each would be a profile rule on a new field toggle.
+  - Laser Focus, Lucky Chant: already on `plans/calc-open.md` (crit inputs).
+  - Power Split / Guard Split: no engine support (stat averaging); rare.
+- **Overlap with `plans/calc-auto-effects.md`**: Intrepid Sword / Dauntless Shield's every-switch-in rule (above);
+  nothing else found that the plan doesn't already list.
 
 #### Refinement dispositions (2026-10-25)
 
@@ -480,6 +517,11 @@ unless stated. Multi-hit rolls are per hit.
   - Attacker: Celebi (Atk 120, SpA 120). Defender: Snorlax (Def 85, SpD 130, HP 235). Move: Draco Barrage (Dragon, Special, power 100).
   - Expected (calc, Physical): `54 55 55 56 56 57 58 58 59 60 60 61 62 62 63 64`.
   - Other way (the game uses Special): `35 36 36 36 37 37 38 38 39 39 39 40 40 41 41 42`.
+- **Self-Destruct halves Defense.** Settles: `B_EXPLOSION_DEFENSE` `GEN_4` (the target's Defense is halved), not the
+  Gen 5+ rule. Explosion would OHKO here, so the test uses Self-Destruct.
+  - Attacker: Snorlax (Atk 130). Defender: Blastoise (HP 154, Def 120). Move: Self-Destruct (Normal, power 100).
+  - Expected: `123 124 126 127 129 130 132 133 135 136 138 139 141 142 144 145`.
+  - Other way (no halving): `61 63 63 64 64 66 66 67 67 69 69 70 70 72 72 73`.
 
 ## Checks
 

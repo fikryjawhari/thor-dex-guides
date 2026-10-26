@@ -1318,6 +1318,128 @@
        2048
       ],
       "note": "Defeatist"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Self-Destruct",
+           "Explosion",
+           "Misty Explosion"
+          ]
+         ]
+        },
+        {
+         "op": "ne",
+         "args": [
+          {
+           "op": "eq",
+           "args": [
+            {
+             "ref": "move.category"
+            },
+            "Physical"
+           ]
+          },
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "field.isWonderRoom"
+            },
+            false
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "set": {
+       "def.rawStats.def": {
+        "op": "floor",
+        "args": [
+         {
+          "op": "div",
+          "args": [
+           {
+            "ref": "def.rawStats.def"
+           },
+           2
+          ]
+         }
+        ]
+       }
+      },
+      "note": "Explosion halves Defense"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Self-Destruct",
+           "Explosion",
+           "Misty Explosion"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "eq",
+           "args": [
+            {
+             "ref": "move.category"
+            },
+            "Physical"
+           ]
+          },
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "field.isWonderRoom"
+            },
+            false
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "set": {
+       "def.rawStats.spd": {
+        "op": "floor",
+        "args": [
+         {
+          "op": "div",
+          "args": [
+           {
+            "ref": "def.rawStats.spd"
+           },
+           2
+          ]
+         }
+        ]
+       }
+      },
+      "note": "Explosion halves Sp. Def"
      }
     ]
    },

@@ -2544,6 +2544,419 @@
         "mv": 274
       },
       "field": {}
+    },
+    {
+      "name": "ruin-tablets",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 274
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-tablets-special",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 274
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-tablets-holder",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 274
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-vessel",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 276
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-vessel-physical",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 276
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-vessel-holder",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 276
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-sword",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 275
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-sword-psyshock",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 275
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 304
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-sword-holder",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 275
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-beads",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 277
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-beads-psyshock",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 277
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 304
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-beads-holder",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 277
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-two-physical",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 275
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 274
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-two-special",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 277
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 276
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-same-tablets",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 274
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 274
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "explosion-halves-defense",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 475
+      },
+      "field": {}
+    },
+    {
+      "name": "self-destruct-halves-defense",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 474
+      },
+      "field": {}
+    },
+    {
+      "name": "misty-explosion-halves-spdef",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 358
+      },
+      "field": {}
+    },
+    {
+      "name": "explosion-defense-plus-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "108",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 475
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9774-9775",
+        "reason": "B_EXPLOSION_DEFENSE is GEN_4: the source halves the raw Defense (floor) before stages (95 -> 47 -> +1 70); the oracle halves the staged stat with round-half-down (142 -> 71)."
+      }
+    },
+    {
+      "name": "misty-explosion-spdef-plus-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "108",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 358
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9774-9775",
+        "reason": "B_EXPLOSION_DEFENSE is GEN_4: the source halves the raw Sp. Def (floor) before stages (95 -> 47 -> +1 70); the oracle halves the staged stat with round-half-down (142 -> 71)."
+      }
+    },
+    {
+      "name": "explosion-wonder-room",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 475
+      },
+      "field": {
+        "wonderRoom": true
+      },
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9749-9775",
+        "reason": "Wonder Room swaps Defense and Sp. Def once (battle_util.c:9749-9752), so the source halves Blastoise's Sp. Def (125 -> 62); the oracle swaps them twice and halves Defense (120 -> 60), as recorded for Photonic Sun."
+      }
+    },
+    {
+      "name": "explosion-crit-plus-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "108",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 475,
+        "crit": true
+      },
+      "field": {}
     }
   ]
 }
