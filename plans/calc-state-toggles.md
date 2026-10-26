@@ -1,5 +1,25 @@
 # Calc: battle-state controls (spec)
 
+
+## Audit record (2026-10-26)
+- Full four-guide gate: **88/117 pass**, not an unqualified green gate. Evidence:
+  `.tmp/gate/20261026-133753-240043/summary.txt`. Baseline SHA:
+  `e39529e6fed29674fa3a9d0c277dabd48fabeaf1` (incoming engine already merged; no UI implementation yet).
+- All four extract builds/checks pass; data identical except built date; counts/reports unchanged.
+- Eight complete DOM sweeps (normal/dvkb): only `#/calc` differs intentionally, zero old/new page errors.
+  19,840 unaffected route/mode comparisons are identical. The eight generic identity checks therefore report FAIL.
+- The other 21 failures are seven EI-specific scenarios run against the three other guides: controls, entry,
+  field, import, layout, persist and smoke. Each reproduces against the untouched baseline build. Controls/import/
+  layout/persist require EI trainer IDs; entry/field expect an EI save party slot; smoke expects EI good.json import.
+  Baseline reproduction logs: `.tmp/resume-audit/baseline-*.log`. These tests have not been weakened or production
+  code changed to accommodate mismatched fixtures. Actual-profile scenarios and the new state scenarios pass.
+- Consistency (including light theme/viewer sizes), tabs, walkthrough state and tracker reload pass for all four.
+  EI page/walk/jump/zoom checks pass in normal/dvkb. Photonic Z scenarios: 20 pass.
+- Final refinement: pair editors on narrow-to-wide resize and automatic Edit opening; label uniform rolls Per hit;
+  reset inherited residual negative-number geometry. All four guides rebuilt; state scenarios 24/10/10/10 pass;
+  engine npm suite passes. No engine files changed.
+- Explicit changed-route domcompare rerun uses `--ignore="built 2026-10-2[0-9]"`, normal/dvkb, one sweep at a time;
+  logs under `.tmp/resume-audit/dom-*.log`. Full-route evidence is the eight complete gate sweeps above.
 ## Build status (2026-10-26)
 - Working branch: `worktree-damage-calc-toggles`, tab of `worktree-damage-calc`.
 - Engine pass merged cleanly at `f3203b1`; main checkout's Hardlove `.src/` copied before any extract build.
@@ -13,9 +33,11 @@
   Curl/pre inputs, forced/blocked crit metadata, total multi-hit/PB damage and per-hit inspection, compact Draco,
   full Z names, used/listed/typed power. Photonic state/hit checks (6) and EI triple/power checks (20) pass.
   Expanded state contract tests cover counters/toggles, hack suppressions, Curl/pre, typed-power reset, target Dig,
-  Download/entry, forced/blocked crit, fixed/PB inspection, Z and persistence. EI: 24 cases pass; other profiles are
-  being rerun after the 2 px minimum-layout trim (Photonic fourth move now at 309 px). Residual (40), Imperium
-  controls (10), layout (36), engine npm suite and Metronome-holder source checks pass. Full four-guide gate remains.
+  Download/entry, forced/blocked crit, fixed/PB inspection, Z and persistence. EI: 24 cases pass; other profiles: 10
+  each pass, including the final wide-resize editor regression. Photonic fourth move ends at 309 px. Residual (40),
+  Imperium controls (10), layout (36), triple/power (20), engine npm suite and Metronome-holder checks pass.
+  Built Thor frames: `/preview/calc-state-built.html` (EI), `/preview/calc-state-photonic.html` (Photonic).
+  Full gate completed; see the audit record below. Phone/Thor user approval remains before the later field decide step.
   Approval mockup: `plans/calc-state-toggles-mockup/edit.html`, generated with `build-edit.mjs`
   (sampled Photonic Captain Mallow data and inline shared sprites), framed at `dist/calc-state-edit-frame.html`.
   Phone preview: `https://windows-pc.tail1846b8.ts.net/preview/calc-state-edit.html`.

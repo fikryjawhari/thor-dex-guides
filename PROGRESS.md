@@ -43,8 +43,13 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    UI build active on `worktree-damage-calc-toggles` (Sol, 2026-10-26): engine pass merged at `f3203b1`, Hardlove
    source inputs copied; card/layout and two-column field implementation built. Card/side-mapping scenarios (12)
    and four guides' field/profile checks (32) pass. Move-state, total-hit damage, compact Draco and crit/pre wiring
-   implemented; expanded state contracts, engine suite, residual (40), Imperium controls (10), layout (36), triple/power
-   (20) and Metronome-holder checks pass. Four-guide gate/DOM audit and built phone preview remain; no engine edits.
+   implemented; state scenarios pass 24/10/10/10 across the four guides, including wide-resize paired editors.
+   Engine suite, residual (40), Imperium controls (10), layout (36), triple/power (20), Metronome-holder checks pass.
+   Full gate: 88/117 pass; eight expected Calc-only DOM differences (19,840 unaffected route/mode comparisons identical,
+   zero page errors) plus 21 EI-only fixture failures on other guides, reproduced against baseline. Details and evidence:
+   plans/calc-state-toggles.md -> Audit record. No engine edits. Built phone previews awaiting user review:
+   https://windows-pc.tail1846b8.ts.net/preview/calc-state-built.html (EI),
+   https://windows-pc.tail1846b8.ts.net/preview/calc-state-photonic.html (Z controls).
    Approval mockup phone preview:
    `https://windows-pc.tail1846b8.ts.net/preview/calc-state-edit.html` (ten viewer-size/mode mock checks pass;
    fourth move at 309 px at minimum size). Tap residual amount to apply a turn directly; cycle Download; full-width
