@@ -110,6 +110,69 @@ within a use (Triple Axel/Kick scaling, defensive changes, Parental Bond) retain
 their own distributions. Changes between uses are not simulated. `eff: 0` means
 immune, and `notes` contains short modifier labels including declarative rule notes.
 
+`bp` is present whenever the first hit's power differs from the listed power:
+state counters, stock power changes (Facade, Hex, Brine, Knock Off, Weather
+Ball, Payback, Acrobatics), the hack's own `movePower` rules, rounded as the
+game does (Gen 5+ half down, Gen 4 floor). Not for a power the page sets, Z-moves
+or moves whose power changes hit by hit (they return `per`).
+
+### Battle state
+
+Optional inputs; a page that passes none gets the same rolls as before.
+
+| Input | Meaning |
+| --- | --- |
+| `slot.st` | The row's state. Counters take the earlier count (0 = first use), clamped: Fury Cutter (power doubles to 160), Echoed Voice (+listed per turn, 200), Rollout / Ice Ball (×2 per hit, 4), Rage Fist (+50 per hit, 6), Last Respects (+50 per faint, 100). Toggles take `true` (power ×2): Assurance, Revenge, Avalanche, Retaliate, Stomping Tantrum, Temper Flare, Lash Out, Fusion Flare / Bolt, Round, Fickle Beam. Pledges take the partner pledge's name: power 150, the pair's type, always STAB. Never stock `timesUsed`, which repeats the hit over turns. |
+| `slot.curl` | Defense Curl used earlier: Rollout / Ice Ball power ×2. |
+| `slot.met` | Earlier consecutive uses with a held Metronome (stock `timesUsedWithMetronome`). |
+| `atk.fnt` | Fainted allies, 0-5 (Supreme Overlord, stock `alliesFainted`). |
+| `def.vol` | `dig` (Earthquake, Magnitude), `dive` (Surf, Whirlpool), `fly` (Gust, Twister), `min` (Stomp, Steamroller, Body Slam, Dragon Rush, Flying Press, Heat Crash, Heavy Slam from Gen 7, Malicious Moonsault, Supercell Slam; Phantom / Shadow Force in Gen 6 only): damage ×2 (a built-in `finalMods` rule ahead of the hack's, note `Dig` / `Dive` / `Fly` / `Minimize`); before Gen 5 (Gen 6 for `min`) the power doubles instead. `switch`: Pursuit's switching target (stock `isSwitching: 'out'`). |
+
+### Crit
+
+Every result has `crit: {stage, p, forced}`. `stage` counts the move's `MV.cr`
+(data.json; 6 = always a crit, a guarantee rather than six stages; without any `cr`
+in the data, stock's high-crit and always-crit moves), the pumped state (field
+`atkFocus`: Focus Energy, Dire Hit or an eaten Lansat Berry, +2; `defFocus` is the
+other side's), one held item (Scope Lens / Razor Claw +1, Leek / Stick +2 for
+Farfetch'd / Sirfetch'd, Lucky Punch +2 for Chansey; `over.critItems` changes one,
+by species name) and Super Luck +1, capped at the table's last index. `p` is the
+table's chance (Gen 4-5 1/16 1/8 1/4 1/3 1/2, Gen 6 1/16 1/8 1/2 1, Gen 7+ 1/24
+1/8 1/2 1, or the profile's `critStages`). `forced` (always-crit move, Merciless on
+a poisoned target, a stage the table makes certain) makes the hit a crit whatever
+`slot.crit` says, p 1; Battle Armor / Shell Armor (unless the attacker breaks molds)
+make p 0, not forced, and no crit. `slot.crit` still picks crit damage for an
+ordinary hit. Laser Focus, Lucky Chant and Dragon Cheer have no input yet.
+
+`over.state` (per hack) changes a move whose source differs: `false` = the state
+input does nothing, `{curl: false}` = Defense Curl doesn't double it, `{vol: false}`
+/ `{vol: "power"}` = the target's state doesn't double it / doubles its power
+instead of its damage, `"Spectral Thief": false` = no theft (Hardlove), `{theft:
+"headroom"}` = expansion's theft (Imperium: a stat at +6 is skipped, the gain is cut
+to the room left before Simple / Contrary). Fixtures: `hacks/<hack>/calc_states.json`,
+checked by `state_check.mjs` (in `npm test`); each case cites its rule.
+
+### Stat changes before the hit
+
+A result has `pre: [{who, stat, by, src, hit?}]` when the hit changes a stage before
+it lands (absent = none; actual changes only, after Simple / Contrary and the ±6 cap;
+the input stages are the starting point, never a trigger of their own). First-hit
+events change the stages the hit uses: a held terrain seed in its terrain (consumed;
+not under Magic Room or Klutz); on entry Dauntless Shield and Intrepid Sword (on unless
+the set's `entry` is `false`) and Download (the set's `dl`: missing = from the target's
+staged Defense vs Special Defense, tie = SpA; `"atk"` / `"spa"` = the boost it got,
+kept whatever the target; `"off"` = none); stock's own copies never fire. The move's
+own: the charge turn of Skull Bash (Def) / Meteor Beam / Electro Shot (SpA) and
+Spectral Thief (the target's losses, then the attacker's gains; none against an immune
+target); `slot.pre: false` leaves them out (the row's "without" view). Between-hit
+events carry `hit`, the
+next hit they come before: Stamina, Water Compaction, Weak Armor (Spe +1 before Gen
+7), Justified, Steam Engine, Cotton Down (the attacker's Speed), and once per item
+Weakness Policy, Kee / Maranga Berry, Luminous Moss, Absorb Bulb, Cell Battery,
+Snowball. Stock works the Defense ones into the later hits; a later hit of Foul Play
+does not read the target's new Attack. Post-move events (Berserk, Anger Shell, KOs),
+random secondaries and history (Intimidate, Rage, Charge) stay manual stages.
+
 ## Base profiles and fields
 
 The six committed JSON bases contain generation defaults, not verified hack
@@ -182,8 +245,8 @@ override entries use **display names**, except species may use their guide ID:
   Express that move's behaviour with a rule on `names.*` instead.
 - `status` maps declared profile status keys to upstream status keys. Only
   statuses present in `profile.status` are accepted.
-- `critStages` is reserved metadata for a future crit-probability control; the
-  current contract selects crit explicitly per slot and does not sample rates.
+- `critStages` (or `over.critStages`) is the crit chance per counted stage when the
+  hack's table differs from its generation's (Hardlove's five entries); see Crit.
   Stat-formula changes outside the exposed phases and new generation mechanics
   require engine work.
 - `residual` adds a hack's own end-of-turn effects to `DMG.residual` / the KO text:

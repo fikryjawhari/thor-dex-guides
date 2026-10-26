@@ -228,6 +228,15 @@ are separate from correctness. No trainer `field` evidence is consumed automatic
 | Frozen / otherwise unable attacker | Accepted user decision: calculate hypothetical damage, do not prevent the action. `unable-attacker-slp` and `unable-attacker-frz`; `frz` still means Frostbite. |
 | Spread / weather / screens | Added singles/doubles spread, sun/rain, Reflect/Light Screen/Aurora Veil, non-stacking screens, critical bypass, snow and hail fixtures. Source `GetScreensModifier` (10031+) uses 0.5 singles / 0.667 doubles; spread and ordinary sun/rain/screens do not change between Gen 8 and Gen 9 (direct stock parity checked). Snow is the notable Gen 9 difference: Ice-type Defence ×1.5 (`battle_util.c` 9881); hail has no such defence boost. Weather chip/healing is outside these per-hit rolls. |
 
+Engine pass (2026-10-26, `plans/calc-engine-pass.md`): crit stages are `MV.cr` from the release's
+`src/data/moves_info.h` (`.src/repos/expansion/`, 32 moves: Snipe Shot 2, Razor Shell 1, Zippy Zap always; **Doc
+says** Aqua Tail +1, the source has none). `cfg.calc.over.critItems` gives EI's Leek: +1 for Farfetch'd (Galarian too),
++2 for Sirfetch'd (`battle_script_commands.c:1956-1979`; elsewhere +2 for both). `plans/calc-crit.md` → I. Spectral Thief
+is expansion's (`over.state`: `{theft: "headroom"}`, `battle_script_commands.c:17783/17837`): a stat already at +6
+isn't taken, and the gain is cut to the room left before Simple / Contrary. Intrepid Sword / Dauntless Shield fire on
+every entry here (`battle.h:152-153`); the calc fires them unless the set's `entry` is `false`. Fixtures:
+`calc_states.json` (725 cases).
+
 Independent validation: `tools/calc/imperium_check.mjs` checks source-derived integer category estimates,
 hand-calculated ability modifier placement/rounding, native Gen 9 field rolls and Gen 8/9 parity for unchanged
 fields, effective priority, explicit order, EVs and immutable inputs. Included in `npm test`.
@@ -526,9 +535,9 @@ The JSON in #data, the same for every guide. Key order and what is dropped: tool
 extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides that have that data, the others omit it.
   Top level, in order: M MV AB P LOC AR [ARO] IT WK TR TC built   (no build markers, no source strings)
   M   [moveName]
-  MV  [{t type, c category, bp power or "Varies", ac accuracy or null, pp, pr priority, d description, f flags[],
-        h change notes[], [dc 1 = the changes doc lists it, e the doc's paragraph], [cf doc-vs-data conflicts[]],
-        [x 1 = hack original]}]
+  MV  [{t type, c category, bp power or "Varies", ac accuracy or null, pp, pr priority, [cr crit stage when not 0,
+        6 = always a crit (the damage calc)], d description, f flags[], h change notes[], [dc 1 = the changes doc
+        lists it, e the doc's paragraph], [cf doc-vs-data conflicts[]], [x 1 = hack original]}]
   AB  [[name, description, [1 if hack original, [changed]]]]   (trailing falsy values are not written)
   P   [{id speciesId string, n display name, dex, t[types], a[abilityIdx], ha hidden abilityIdx or -1,
         s[HP,Atk,Def,SpA,SpD,Spe], ef/et [[how, id]] evolves from/into, of[ids] other forms, lv[[level, moveIdx]]

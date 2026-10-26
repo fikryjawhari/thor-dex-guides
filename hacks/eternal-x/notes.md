@@ -112,7 +112,7 @@ No shared template, engine or base-profile change was needed.
 | Ally Flower Gift toggles | Standard x1.5 Attack / Sp. Def in Sun and Harsh Sunshine; oracle `calc/mechanics/gen56.js:871-876,944-949`. Rain/no-weather and wrong-category negative cases included. |
 | Always-critical moves | Declarative `critical` rule (`value: true`) for Cut, Self-Destruct and Explosion (Move Changes, Rebalanced; data `h`/`e` notes agree). The oracle (gen 6) crits them only with the crit flag: its no-flag rolls are 1/1.5 of its crit rolls. Fixtures `cut-neutral`, `self-destruct-neutral`, `explosion-neutral` are known differences (source: the doc; the oracle lacks the rule), their `-critical` pairs and the Cut type fixtures (`cut-rock-defender`, `cut-ghost-defender`, both with the crit flag) match. Check: neutral rolls equal crit rolls. |
 | Cut / Strength types | Types come from the guide data (Grass / Rock, `MV` 14 / 69), no rule needed: Cut vs Rock 2x; Strength vs Fire 2x; Rock-type user gets STAB (`strength-rock-user-stab`). Matches the oracle. |
-| Drill Peck | No work: the calc shows damage with and without a crit, not the crit chance, so the higher crit ratio changes nothing the calc displays. |
+| Drill Peck | Crit stage 1 from the game data (`MV.cr`); the calc counts it in the crit chance it reports (engine pass below). |
 | Triple Kick | Power 20 (data) x the hit number: 20 / 40 / 60, as the expansion source does it (shared engine fix, `tools/calc/test.mjs`). The oracle keeps a flat 20, so no oracle fixture. Check in game. |
 | Remaining field controls | Native Gen 6 mechanics; oracle `calc/mechanics/gen56.js`, `calc/mechanics/util.js` and independent stock `@smogon/calc` 0.12.0 Gen 6 comparisons. |
 
@@ -172,6 +172,13 @@ always-crit points, watch several uses: every use should show the crit list, nev
 - **Explosion always crits.** Same setup with Explosion (power 250, faints the user).
   - Expected on every use: `229 232 235 238 241 243 246 249 252 255 256 259 262 265 268 271`.
   - Other way (ordinary hit): `153 156 157 159 160 162 165 166 168 169 171 174 175 177 178 181`.
+
+Engine pass (2026-10-26, `plans/calc-engine-pass.md`): crit stages are `MV.cr` from the game data's per-move `crit`
+(`tools/ctrguide.py`, 26 moves: Drill Peck 1, Cut / Self-Destruct / Explosion / Frost Breath 6; the always-critical
+rule above repeats `cr` 6: harmless, kept). The calc now reports the crit chance (`crit`), so Drill Peck's stage shows.
+Frost Breath: the game data is vanilla X's (60 power, 90 accuracy, always a crit); the changelog's buff is most likely
+the Gen 6 change 40 → 60 that vanilla X already had. No data change. Weak Armor raises Speed by 1 (Gen 6). Battle
+state, crit and `pre`: `tools/calc/README.md`. Fixtures: `calc_states.json` (320 cases).
 
 ## Checks
 

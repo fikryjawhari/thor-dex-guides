@@ -64,6 +64,8 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
             h.append('New description')
         e = {'t': m['type'], 'c': m['cat'], 'bp': m['bp'] or None, 'ac': m['acc'] if m['acc'] and m['acc'] <= 100 else None,
              'pp': m['pp'], 'pr': m['pr'], 'd': fix(m['desc']), 'f': m['flags'], 'h': h}
+        if m['crit']:
+            e['cr'] = m['crit']    # crit stage (the damage calc); 6 = always a crit
         if norm(m['name']) in doc:
             e['e'] = doc.pop(norm(m['name']))
             e['dc'] = 1

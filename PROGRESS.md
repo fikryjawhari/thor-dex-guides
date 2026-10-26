@@ -7,7 +7,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
 ## Current status (2026-10-24)
 
 - **Live on GitHub Pages** (https://fikryjawhari.github.io/thor-dex-guides/), built by the Action from `main`:
-  Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.3 (NDS), Photonic Sun 2.38 Rebalanced (3DS), Eternal X 2.67
+  Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.4 (NDS), Photonic Sun 2.38 Rebalanced (3DS), Eternal X 2.67
   Rebalanced (3DS). All four share one template, one extract layout (`tools/extractlib.py`), one data schema
   (`tools/schema.py`), one Items standard (`tools/itemstd.py`) and one notes / SOURCES layout.
 - Done and merged: the split UI, search (full-window, results with actions, search stays set), trainer cards, the
@@ -40,8 +40,13 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
 2. **Damage calc with save import** (start every calc session from `plans/damage-calc-sessions.md`; `plans/damage-calc.md`; branch `worktree-damage-calc`, pushed, not merged).
-   Refinement done 2026-10-26 (`plans/damage-calc-sessions.md` → Status). Next: `plans/calc-dynamic-power.md` (engine,
-   with the refinement's leftovers), then trainer-field / turn-order UI decide sessions, merge, then save readers.
+   Refinement done 2026-10-26 (`plans/damage-calc-sessions.md` → Status). Engine pass (`plans/calc-engine-pass.md`,
+   brief + Progress log) done 2026-10-26: battle-state inputs (`slot.st`, `slot.curl`, `slot.met`, `atk.fnt`, `def.vol`),
+   result `bp` / `crit {stage, p, forced}` / `pre`, `MV.cr` in every calc guide's data, 2322 state fixtures
+   (`calc_states.json`, in `npm test`); contract in `tools/calc/README.md`. The page doesn't use the new inputs or
+   results yet: that is the toggle UI build (`plans/calc-state-toggles.md` on `worktree-damage-calc-toggles`), which
+   also adds the per-Pokémon Download choice and the Intrepid Sword / Dauntless Shield off switch (`dl`, `entry`).
+   Then trainer-field / turn-order UI decide sessions, merge, then save readers.
    In-game tests to run on the Thor: each guide's notes.md → Damage calc → In-game tests.
    Built 2026-10-25 (step 1 of its Order): `@smogon/calc` engine using each guide's own data (`tools/calc/`, 81 tests),
    six base profiles, the calc page from the UI spec (all 26 spec checks pass: `tools/scenarios/calc-*.mjs`), the import

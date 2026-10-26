@@ -14,7 +14,7 @@ ORDER = {
     'top': ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'built'],
     'P': ['id', 'n', 'dex', 't', 'a', 'ha', 's', 'ef', 'et', 'of', 'lv', 'tm', 'tu', 'eg', 'w', 'g', 'hi',
           'stone', 'sloc', 'nu', 'fc', 'cf'],
-    'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'd', 'f', 'h', 'dc', 'e', 'cf', 'x'],
+    'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'cr', 'd', 'f', 'h', 'dc', 'e', 'cf', 'x'],
     'AR': ['n', 'l', 'st', 'sub', 'in', 'es', 'map', 'ns', 'note'],
     'IT': ['n', 'k', 'note', 'r'],
     'WK': ['splits', 'np', 'docs', 'ko', 'cheats', 'cnote'],

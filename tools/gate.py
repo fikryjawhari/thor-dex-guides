@@ -22,7 +22,7 @@ BASE = ROOT / '.tmp' / 'baseline'
 REBUILDS = {
     'eternal-x': ['hacks/eternal-x/extract/build.py'],
     'photonic-sun': ['hacks/photonic-sun/extract/build.py'],
-    'hardlove-gold': ['hacks/hardlove-gold/extract/build.py', '--published'],
+    'hardlove-gold': ['hacks/hardlove-gold/extract/build.py'],
     'emerald-imperium': ['tools/itemstd.py', 'emerald-imperium'],
 }
 BROWSER_CHECK = r'(domcompare|consistency-check|walk-state-check|pagecheck|walkcheck|jumpcheck|zoomcheck|scenarios[/\\][^ ]+)\.mjs'

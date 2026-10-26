@@ -1,6 +1,6 @@
 # Hardlove Gold build notes
 
-Hardlove Gold 0.8.3, an hg-engine hack of Pokémon HeartGold. Built from the hack's own source code (the authority) and
+Hardlove Gold 0.8.4, an hg-engine hack of Pokémon HeartGold. Built from the hack's own source code (the authority) and
 its sheets. 986 species and forms (596 obtainable, 74 Megas, 316 trainer-only), 782 moves, 284 abilities, 62 tracker
 areas (the Starter area is index 61), 329 trainers in 18 boxes, 94 walkthrough stops.
 
@@ -8,16 +8,13 @@ areas (the Starter area is index 61), 329 trainers in 18 boxes, 94 walkthrough s
 
 ```bash
 uv run python -I hacks/hardlove-gold/extract/build.py                     # raw sources in .src/ -> data.json + extract/report.txt
-uv run python -I hacks/hardlove-gold/extract/build.py --published [data.json]   # source-free: finish a published data.json
 uv run python -I hacks/hardlove-gold/extract/check.py [baseline.json]
 python assemble.py hardlove-gold
 ```
 
-`--published` loads the committed data.json and re-applies only the finishing steps (Starter area, the shared
-finalisers in `tools/extractlib.py`: Items standard, split names). Idempotent. The published data.json is made this
-way, because the 0.8.2 raw sources cannot reproduce the 0.8.3 corrections to WK and TR (History); the plain raw run is the
-check that the extract scripts still agree with the old pipeline (it differs on seven trainer records and keeps the two
-duplicate trainer keys `9.0.2` / `9.0.5`). A complete raw rebuild needs the matching 0.8.3 source and sheets.
+The raw build is the only build, and two runs give the same bytes. It stops when `.src/repos/hardlove/COMMIT` is not
+the release `watch.json` pins ("Released game source" ref): re-fetch with SOURCES.md first. The old `--published` path
+(re-finishing the committed data.json without sources) is gone since 0.8.4: it let a stale `.src` look like data drift.
 
 Modules: `dex.py` (M MV AB P TC; `dexsite.py` the docs site's pages, `hgsource.py` / `hgengine.py` the hg-engine C
 files), `locs.py` (LOC, P.w, the Starter area; `enccheck.py` checks the wild tables against the game), `trainers.py`
@@ -28,8 +25,8 @@ modules are called several times and share the working state `X` (`common.py`). 
 
 Sources (numbered as in SOURCES.md's table):
 
-0. **The hack's source**: github.com/kumakuma1/hardlove, branch `beta_hardlove`, pinned at 0.8.2 `8ac661afda` /
-   0.8.3 `f1b2363001` (`repos/hardlove/COMMIT`). This is what the ROM is built from, so it wins wherever it has the data:
+0. **The hack's source**: github.com/kumakuma1/hardlove, branch `beta_hardlove`, pinned at 0.8.4 `ee4518c149`
+   (`repos/hardlove/COMMIT`, checked by build.py against `watch.json`). This is what the ROM is built from, so it wins wherever it has the data:
    `data/Species.c` + `HiddenAbilityTable.c` (types, base stats, abilities and hidden abilities of every species and
    form), `data/learnsets/learnsets.json` (level-up, TM, tutor and egg moves; forms without an entry use their base
    form), `data/Evolutions.c` (methods rewritten to words), `data/Moves.c` + `include/config.h` (type, category, power,
@@ -74,8 +71,9 @@ Sources (numbered as in SOURCES.md's table):
    game's Trainers.c replaced it); only a fallback for missing types.
 7. **pokemon-showdown** 0.11.11: move and ability descriptions, dex numbers, the Z-A Mega list (their data comes from
    source 0), and the Gen 9 baseline the move notes compare against.
-8. **Mechanics.txt** (level caps, starter choice table, removed EVs and other rules), **Hardlove Gold AI document_WIP.txt**
-   and **Post-KO Switch-in AI.xlsx**: shown as "Game docs" in the Walkthrough tab. Move Performance.txt (generic move
+8. **Mechanics.txt** (level caps, starter choice table, removed EVs and other rules), **Hardlove Gold AI document_WIP.md**
+   (Markdown since 0.8.4; `walk.md_text` turns it into the doc view's plain text: no title, Contents or diagram, table
+   rows as "cell: value") and **Post-KO Switch-in AI.xlsx**: shown as "Game docs" in the Walkthrough tab. Move Performance.txt (generic move
    order notes from a wiki) is not used.
 
 Data rules:
@@ -90,19 +88,24 @@ Data rules:
   carry over. The Starter area (AR 61, LOC 95) is appended last; only the three Turtwig / Litten / Froakie `Starter
   choice` encounters sit there. `ARO` (Locations order) puts it first on the Locations page, above New Bark Town. Wild tables are checked against the game slot by slot (85 locations, 11 with differences;
   the game wins and replaces Route 46, Violet City, Route 5, Mt. Mortar 1F (Entrance) and 2F, Lake of Rage, Whirl Islands
-  1F and B2F, Mt. Silver (Snowy Area); Ice Path 1F and Mt. Silver (Moltres Room) match no game table: statics / gifts).
+  1F and B2F, Mt. Silver (Snowy Area); Ice Path 1F and Mt. Silver (Moltres Room) match no game table: statics / gifts;
+  Ice Path 1F is the table the game gets after 0.8.4, `ce2cbaa`). Safari areas are checked against `SafariEncounters.c`
+  (the day list of each method; Goldeen-only water tables are placeholders): the game replaces Marshland Surf / Fishing
+  (swapped in the sheet, like Mt. Mortar) and Mountain Land (the sheet already has the post-0.8.4 Tauros for Furret). The
+  game's Rocky Beach and Desert areas are not in the sheet.
 - **Walkthrough**: no written walkthrough exists. Stops come from the trainer sheet's sections in order, split by level
   cap header; each area is anchored to its first stop when that keeps the order monotonic, else becomes an "on the way"
   stop. Items are filed by the earliest area name in their location text (`ALIASW` in walk.py). The New Bark Town stop
   includes Starter before its original area.
 - **Level caps**: TR.caps from Mechanics.txt; a trainer's cap is its split header's cap. Boxes are the sheet's mini-splits;
   both tabs end `Victory Road Split [Cap 81]`, `Elite Four Split [Cap 81]`, then Mini Bosses.
-- **Trainers**: the game set wins; where the sheet differs the card says "Sheet says ..." (70 sets differ, 6 game Pokémon
+- **Trainers**: the game set wins; where the sheet differs the card says "Sheet says ..." (61 sets differ, 6 game Pokémon
   are missing from the sheet: Nuzlocker Ethan's random team). Sheet typos are fixed ("Msytic Water", "Scope Lense",
-  "Letfovers", Mega stone names; Sailor Garrett's rows shifted). The 0.8.3 Trainers.c changes are in the data (History).
-  The sheet lists Will [Double] (702) and Koga [Double] (703) twice; the game has one of each, so the duplicates `9.0.2`
-  (Mr. Mime row; confirmed in game: Slowbro) and `9.0.5` (same team as `9.0.4`, but Thundurus "Covert Cloak") are removed
-  (the raw 0.8.2 run keeps them).
+  "Letfovers", Mega stone names; Sailor Garrett's rows shifted; "Lunch" is Lunge, not the fuzzy match's Crunch: `CANON`
+  in dex.py). Pure Power on a Huge Power set is the same effect, not a difference (`SAMEAB` in trainers.py).
+  The sheet lists Will [Double] (702) and Koga [Double] (703) twice; the game has one of each, so the second entry with
+  the same game trainer and name is dropped (`9.0.2`: Mr. Mime row, confirmed in game: Slowbro; `9.0.5`: same team as
+  `9.0.4`). Their keys stay unused, so later keys don't move.
 - **Moves**: 188 changes in the sheet, 183 on moves in the data; 45 changed in the game but not in the sheet; the sheet
   disagrees with the game on Dragon Tail ac, Screech pp, Reflect ac, Double Slap ac, Pain Split bp, Snarl pp; Collision
   Course is not in the game data. TM / HM numbers come from the game (the items sheet's HM05 Rock Smash is HM06 in the
@@ -140,20 +143,21 @@ permanent Rain and Electric Terrain. Also retained: permanent Rain/Sun/Sandstorm
 Trick Room, enemy-side permanent Tailwind, random terrain at battle start, one layer each of player Spikes and
 Toxic Spikes after first send-out, and +1 critical chance. The critical bonus's target and random terrain pool
 remain unspecified. Full original wording and scope survive. Shared schema: Emerald Imperium's notes;
-UI handoff: `plans/trainer-field-conditions.md`. No calc defaults, mechanics or visible UI changed. The guide stays
-0.8.3; this does not replace corrected published trainers with the older extraction or newer 0.8.4 importer.
+UI handoff: `plans/trainer-field-conditions.md`. No calc defaults, mechanics or visible UI changed. Rebuilt on 0.8.4
+data (merge of main, 2026-10-26): the raw build writes the `field` records.
 
 ### Damage calc (2026-10-25, provisional first pass)
 
-Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (Nidoran♀ identity collision and Flabébé construction remain shared-engine gaps). Evidence: `plans/calc-refine-hardlove.md` → Unit W → W2.
+Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (the Nidoran♀ identity collision and Flabébé construction were fixed since: `tools/calc/test.mjs`). Evidence: `plans/calc-refine-hardlove.md` → Unit W → W2.
 
 Enabled on `worktree-damage-calc`, **not merged or independently verified against the ROM**. Base `expansion`
-means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide remains **0.8.3**: the 0.8.4 downloads did
-not replace its species, moves, trainer sets or version. No Gen 4 save reader yet.
+means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide is 0.8.4 since 2026-10-26 (Build); the
+calc's source traces below were made at the 0.8.3 pin. No Gen 4 save reader yet.
 
 #### Sources and profile
 
-Authority: `kumakuma1/hardlove` at `f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b`, this guide's existing pin.
+Authority: `kumakuma1/hardlove` at `f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b` (0.8.3) for the traces in this section;
+the guide's data now comes from `ee4518c149` (0.8.4): recheck a traced battle file against it when its rule matters.
 Battle files are cached in ignored `.tmp/calc-hardlove-gold/source/`; re-fetch those raw GitHub paths at that commit.
 User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 
@@ -179,6 +183,17 @@ User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 | Hidden Power | BP 60 is data (`CalcBaseDamage.c:361-362`). Type from IVs (`other_battle_calculators.c:3277`) is not derived: the user types the type. Fixtures: `hidden-power-fire-typed`, `hidden-power-data-type-normal`. Open: see Needs Opus. |
 | Double Shock | Not a punching move: neither data.json nor stock flags it, so Iron Fist never boosts it. "Must be Electric" is a usability rule, not damage. Pain Split: HP averaging, out of scope. |
 
+Engine pass (2026-10-26, `plans/calc-engine-pass.md`): `cfg.calc.over.state` keeps the battle-state inputs off
+where the source ignores them (`plans/calc-state-engine.md` → "U2: Hardlove traces"): Echoed Voice, Rage Fist, Last
+Respects, Avalanche, Round, Fusion Flare / Bolt and the pledges stay flat; Defense Curl doesn't double Rollout / Ice
+Ball (lost in the replacement damage path); Magnitude isn't doubled against Dig (only Earthquake is); Gust / Twister
+against Fly double their power, not their damage. Revenge's toggle means "the target was already damaged this turn"
+(the source's condition). Crit stages: `MV.cr` from the move effects in `data/Moves.c` (28 moves; Dragon Cheer and
+Ivy Cudgel have none at this pin), the five-entry `critStages` table caps the stage at 4 (`plans/calc-crit.md` → H). Spectral Thief doesn't steal (`over.state`: `false`; its HIT script at this pin has no theft, U1: moves:19309,
+move0715:7): plain 90 power. **Doc says** it steals boosts. Intrepid Sword / Dauntless Shield are once per battle in
+the source; the calc fires them unless the set's `entry` is `false` (the page says the entry doesn't count). Fixtures:
+`calc_states.json` (736 cases).
+
 Gem replacement intentionally takes the **last** native 5325: in pinned `@smogon/calc 0.12.0`
 `calculateBPModsSMSSSV`, the Gem item branch follows ability modifiers and no later branch adds 5325. First-match
 replacement would be ambiguous with Sheer Force. Recheck this on engine updates; source/stock parity does not
@@ -189,7 +204,7 @@ certify every modifier-order/rounding combination in hg-engine.
 Old extraction initialised every `MV.f` to `[]`, losing standard contact/punch/sound flags and breaking Unseen Fist
 and other flag-sensitive effects. `hgengine.move_flags()` starts with pinned Showdown Gen 9 flags, then takes
 **contact** from the hack's `data/Moves.c`. Fresh builds use it in `dex.movetable`; the committed data was patched
-with the same helper. Source-free `--published` rebuilds preserve it. Only flags changed: 774 entries, 255 contact
+with the same helper; the raw build writes them. Only flags changed: 774 entries, 255 contact
 moves; IDs/order, stats, moves' numbers, trainer teams and storage keys unchanged. Source removes standard contact
 from Sunsteel Strike, Collision Course, Electro Drift, Thunderous Kick and Behemoth Blade (fixtures cover all five).
 Unit F (2026-10-25) audited punch/bite/pulse/sound/slicing against the pinned 0.8.3 tables: restored Growl's punch
@@ -281,6 +296,15 @@ earlier data.json, that species order, move / ability tables, area names, traine
 (CLAUDE.md). Known from the build report: sprites missing or borrowed: bounsweet, mega_golisopod (base sprite).
 
 ## History
+
+- **2026-10-26, 0.8.4 and one build.** Pinned 0.8.4 = `ee4518c149` ("add soak tm"; the patch went up 2026-10-24 20:55
+  UTC; the next commit, "version", is after it). Game changes in the data: TM47 Soak (was Steel Wing; Ilex Forest; learned by 155
+  species and forms), Trainers.c (the 0.8.3 sets now come from the source, no patch). The AI doc is now Markdown and
+  rewritten for 0.8.4; the Post-KO sheet gained a row. A raw rebuild used to differ from the published data (0.8.2
+  `.src`, older trainer sheet), which looked like drift; now the raw build reproduces it: the duplicate Will / Koga rule,
+  the Lunge and Pure Power sheet rules, and a Safari check against the game (Marshland Surf / Fishing swapped back,
+  Mountain Furret). `--published` removed; build.py checks the pin. The Locations sheet (2026-10-25) already has some
+  post-0.8.4 changes (Tauros forms); the game check keeps 0.8.4's.
 
 - **2026-10-24, Charcoal reads `Also:`.** The Azalea Cutters' Charcoal (after Bugsy and getting Cut) was a `Found:` line, so
   it looked like it lay on the ground; it is a reward. `itemstd.RULES['hardlove-gold']['also']` relabels it (Items and the

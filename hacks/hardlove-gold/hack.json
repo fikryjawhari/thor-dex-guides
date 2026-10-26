@@ -3,7 +3,7 @@
  "title": "Hardlove Gold Dex",
  "game": "Hardlove Gold",
  "platform": "NDS",
- "version": "0.8.3",
+ "version": "0.8.4",
  "cfg": {
   "name": "Hardlove Gold",
   "orig": "",
@@ -266,6 +266,24 @@
    ],
    "over": {
     "critMultiplier": 1.5,
+    "state": {
+     "Echoed Voice": false,
+     "Spectral Thief": false,
+     "Rage Fist": false,
+     "Last Respects": false,
+     "Avalanche": false,
+     "Round": false,
+     "Fusion Flare": false,
+     "Fusion Bolt": false,
+     "Fire Pledge": false,
+     "Water Pledge": false,
+     "Grass Pledge": false,
+     "Rollout": {"curl": false},
+     "Ice Ball": {"curl": false},
+     "Magnitude": {"vol": false},
+     "Gust": {"vol": "power"},
+     "Twister": {"vol": "power"}
+    },
     "rules": [
      {
       "phase": "powerMods",
@@ -1577,7 +1595,7 @@
    "chdoc": "",
    "mvh": "Hardlove changes",
    "nodc": "",
-   "mvsrc": "Type, category, power, accuracy, PP and priority from the game's own data (0.8.3 source); the description is standard Gen 9 (Showdown)",
+   "mvsrc": "Type, category, power, accuracy, PP and priority from the game's own data; the description is standard Gen 9 (Showdown)",
    "mvsrcx": "",
    "absrc": "Description from Showdown (Gen 9).",
    "ns": "Roamers appear on many routes, so they have no encounter slot here.",

@@ -1,16 +1,15 @@
 # Hardlove Gold docs
 
-Fetched 2026-10-18 (0.8.2, 2026-10-15; trainer sets patched for 0.8.3 on 2026-10-19) from the hack's own source code,
+Fetched 2026-10-26 (0.8.4, 2026-10-24; first fetched 2026-10-18 for 0.8.2) from the hack's own source code,
 [kumakuma1/hardlove](https://github.com/kumakuma1/hardlove) (the author's hg-engine build, branch `beta_hardlove`), the
 hack's [docs site](https://kumakuma1.github.io/hardlove-docs/index.html) (repo
 [kumakuma1/hardlove-docs](https://github.com/kumakuma1/hardlove-docs) at `bb5862f`, 2026-10-02, older than 0.8.0) and its
 [Google Drive](https://drive.google.com/drive/folders/1IltXECEUg7YKeUxO9K6g4bmg33NI4Wax). The source is the authority;
 the docs fill what it lacks. Where each input is used: `notes.md` → Sources and rules.
 
-Pins: 0.8.2 = `8ac661afda` (2026-10-15 11:05, "can choose starter nature"); 0.8.3 = `f1b2363001` (2026-10-18 08:06 UTC,
-"use copy of pp for calcing mega stats"). Between the two only `data/Trainers.c` changed among the files below (5 E4/Red
-sets, commit `4c171c8d91`), so those sets were patched into the guide on 2026-10-19 instead of a full rebuild
-(`build.py --published`, `notes.md` → History).
+Pin: 0.8.4 = `ee4518c149` (2026-10-24 20:37 UTC, "add soak tm"; the patch file went up at 20:55 UTC, the next commit
+"version" on 2026-10-25 is after the release). Earlier: 0.8.3 = `f1b2363001`, 0.8.2 = `8ac661afda`. `build.py` refuses
+to run when `repos/hardlove/COMMIT` is not the `watch.json` ref, so update both together.
 
 ## Files
 
@@ -26,7 +25,7 @@ sets, commit `4c171c8d91`), so those sets were patched into the guide on 2026-10
 | `repos/hardlove.js` | [kumakuma1/hardlovecalc](https://github.com/kumakuma1/hardlovecalc) backup at `76ad13b` (Jan 2026): only a fallback for missing types now |
 | `repos/showdown/` | pokemon-showdown 0.11.11 `moves.js`, `text/moves.js`, `pokedex.js`, `text/abilities.js`: descriptions, dex numbers, the Gen 9 baseline for move notes |
 | `Mechanics.txt` | Same as `repos/hardlove/doc/Mechanics.txt`. Shown in the guide's Walkthrough tab |
-| `Hardlove Gold AI document_WIP.txt`, `Post-KO Switch-in AI.xlsx` | Trainer AI. Shown in the guide's Walkthrough tab |
+| `Hardlove Gold AI document_WIP.md`, `Post-KO Switch-in AI.xlsx` | Trainer AI. Shown in the guide's Walkthrough tab |
 | `Move Performance.txt` | Generic move-order notes copied from a wiki; not used |
 
 ## Calc references (2026-10-25)
@@ -51,7 +50,7 @@ Source updates: `watch.json` (`uv run python -I tools/check_updates.py hardlove-
 
 ```bash
 D=hacks/hardlove-gold/.src
-SHA=f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b   # 0.8.3; update to the commit of the release you want
+SHA=ee4518c149c34914cdadefcba9c6f4f40c78ebf5   # 0.8.4; update to the commit of the release you want
 R=https://raw.githubusercontent.com/kumakuma1/hardlove/$SHA
 python -I tools/drive_ls.py 1IltXECEUg7YKeUxO9K6g4bmg33NI4Wax $D
 python -I tools/mirror.py https://kumakuma1.github.io/hardlove-docs/index.html $D/site
