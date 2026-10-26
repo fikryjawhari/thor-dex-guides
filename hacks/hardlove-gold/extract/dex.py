@@ -383,7 +383,7 @@ def abilities(D):
 
 
 # Crit stage per move effect (the damage calc's MV.cr): each of these scripts adds one to the crit boosts before CalcCrit
-# (the burn / poison variants map to HIGH_CRITICAL); the always-crit ones are 6. plans/calc-crit.md → H.
+# (the burn / poison variants map to HIGH_CRITICAL); the always-crit ones are 6. tools/calc/README.md → Crit.
 CRIT_EFFECTS = {'MOVE_EFFECT_' + e: 1 for e in ('HIGH_CRITICAL', 'HIGH_CRITICAL_BURN_HIT', 'HIGH_CRITICAL_POISON_HIT',
                 'CHARGE_TURN_HIGH_CRIT', 'CHARGE_TURN_HIGH_CRIT_FLINCH', 'HIGH_CRITICAL_RAISE_SPEED_HIT')}
 CRIT_EFFECTS |= {'MOVE_EFFECT_ALWAYS_CRITICAL': 6, 'MOVE_EFFECT_HIT_THREE_TIMES_ALWAYS_CRITICAL': 6}

@@ -148,6 +148,10 @@ data (merge of main, 2026-10-26): the raw build writes the `field` records.
 
 ### Damage calc (2026-10-25, provisional first pass)
 
+Area conditions (trainer `field`, 2026-10-26): area +1 crit is applied as the foe side's +1 crit stage, a guess and
+labelled `+1 crit (foe, guess)`. Permanent Fog is shown as text only: accuracy ×0.6, no damage effect (Gen 4 rule,
+unverified in hg-engine). Easy mode (enemy levels − (1 + floor(lv / 25))): not doing (user, 2026-10-26).
+
 Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (the Nidoran♀ identity collision and Flabébé construction were fixed since: `tools/calc/test.mjs`). Evidence: `plans/calc-refine-hardlove.md` (git history) → Unit W → W2.
 
 Enabled on `worktree-damage-calc`, **not merged or independently verified against the ROM**. Base `expansion`

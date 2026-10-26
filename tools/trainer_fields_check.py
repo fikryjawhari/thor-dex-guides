@@ -49,10 +49,18 @@ def main():
     assert len(hazards['effects']) == 2
     assert all(effect['side'] == 'player' and effect['layers'] == 1 for effect in hazards['effects'])
     critical = trainer_fields.evidence('+1 crit chance.', 'trainer-note')['effects'][0]
-    assert critical == dict(kind='critical-bonus', value=1)
-    for text in ['Sydney Tailwind', 'Sydney TrickRoom', 'Glacia Sun', 'Trick Room', 'Unknown weather effect']:
+    assert critical == dict(kind='critical-bonus', value=1, side='opponent', guess=True)
+    assert trainer_fields.evidence('+1 crit chance.', 'trainer-note')['review'] is False
+    sand = trainer_fields.evidence('Permanent Sand', 'trainer-tag')
+    assert sand['effects'] == [dict(kind='weather', value='Sandstorm', duration='permanent')]
+    assert sand['review'] is False
+    room = trainer_fields.evidence('Trick Room', 'trainer-tag')
+    assert room['effects'] == [dict(kind='room', value='Trick Room')] and room['review'] is False
+    for text in ['Sydney Tailwind', 'Sydney TrickRoom', 'Sidney Tailwind', 'Glacia Sun', 'Glacia Snow']:
         record = trainer_fields.evidence(text, 'trainer-tag')
-        assert record['review'] and record['effects'] == []
+        assert record['effects'] == [] and record['review'] is False and record['label'] is True, text
+    record = trainer_fields.evidence('Unknown weather effect', 'trainer-tag')
+    assert record['review'] and record['effects'] == []
     for text in ['Rain Dance', 'Drizzle', 'Snow Warning', 'Guards Scizorite.', 'Team 1']:
         assert trainer_fields.evidence(text, 'trainer-note') is None
     sample = dict(TR=dict(g=[dict(note=['Permanent OW Rain'], sec=[dict(note=[], tr=[
@@ -71,6 +79,14 @@ def main():
         assert data == expected, f'{path}: schema changed data'
         trainer_fields.annotate(expected)
         assert data == expected, f'{path}: annotation not idempotent'
+        for group in data['TR']['g']:
+            for section in group['sec']:
+                for trainer in section['tr']:
+                    for record in trainer.get('field', []):
+                        decided = record.get('label') or record['text'] in ('Permanent Sand', 'Trick Room') \
+                            or record['text'].startswith(('Sydney ', 'Sidney ', 'Glacia '))
+                        if decided:
+                            assert record['review'] is False, (path, trainer['n'], record['text'])
     print('PASS trainer field parsing, inheritance, ambiguity, schema and rebuild idempotence')
     if '--sources' in sys.argv:
         source_check(root)
