@@ -27,10 +27,13 @@ const checks = [
     run: async page => {
       await setupCalc(page);
       const selects = entries.filter(entry => entry.type === 'select' && entry.k !== 'gameType').map(entry => entry.k);
-      const toggles = entries.filter(entry => entry.type === 'toggle').map(entry => entry.k).sort();
+      const toggles = entries.filter(entry => entry.type !== 'select');
       await page.tap('.dfield > summary');
+      await page.tap('[data-f=gameType][data-value=Singles]');
       assert.deepEqual(await page.value(`[...document.querySelectorAll('.dfr select[data-f]')].map(s=>s.dataset.f)`), selects, "the selects are the profile's");
-      assert.deepEqual(await page.value(`[...document.querySelectorAll('.dtg button[data-f]')].map(b=>b.dataset.f).sort()`), toggles, "the toggles are the profile's");
+      assert.deepEqual(await page.value(`[...document.querySelectorAll('.dtg button[data-f]')].map(b=>b.dataset.f).sort()`), toggles.filter(entry=>!entry.doubles).map(entry=>entry.k).sort(), "Singles draws every non-ally profile toggle/state");
+      await page.tap('[data-f=gameType][data-value=Doubles]');
+      assert.deepEqual(await page.value(`[...document.querySelectorAll('.dtg button[data-f]')].map(b=>b.dataset.f).sort()`), toggles.map(entry=>entry.k).sort(), "Doubles draws every profile toggle/state");
       assert.equal(await page.count('[data-f="magicRoom"]'), 0, 'the removed toggle is gone');
       const weatherOptions = await page.value(`[...document.querySelector('select[data-f="weather"]').options].map(o=>o.value)`);
       assert(weatherOptions.includes('Hail'), `the added weather is offered: ${weatherOptions}`);
