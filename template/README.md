@@ -106,6 +106,14 @@ capped at its HP) and the user gets the matching change (Rest also sets Sleep). 
 move has **Dealt / You** boxes: Dealt gives your change; You (the recoil / recovery seen) gives the damage range that
 produces it, using its minimum when the player attacks, its maximum when the foe does; Apply applies both. Not stored.
 HP −min / −max stay damage-only. Scenario: `tools/scenarios/calc-moves.mjs`.
+Contact costs (Rocky Helmet / Rough Skin / Iron Barbs) are included once in the one-use amount, using the
+engine's actually applied hit count, including early KOs. Crash moves (Jump Kick, High Jump Kick, Axe Kick,
+Supercell Slam) have a separate **miss −HP** chip: `DMG.hp` with `miss: true`, and the default would-be roll
+for Gen 4's damage-based rule. Its tap changes only the user's HP and logs the miss; no target hit or contact cost.
+**Stockpile** is a 1–3 select in Swallow / Spit Up's opened details (`ST.st`, scratch, default 1): Swallow heals
+quarter / half / full HP, Spit Up uses power 100 / 200 / 300; typed Power still wins. It does not occupy the
+row's top-right control or share Metronome's counter. Recoil / drain / crash chips are no taller than the % line:
+closed rows keep equal heights with or without a chip, including the two movesets in wide windows.
 **Hit totals**: collapsed damage sums all selected hits, including Parental Bond. Fixed multi-hit and Parental Bond
 share one total/H1/H2/etc. inspection button; ordinary variable-hit moves cycle through legal counts plus a one-hit
 inspection. Loaded Dice restricts standard 2-5-hit choices to 1/4/5; Skill Link to 1/max. Loaded Dice makes Population Bomb a 1 / 4-10 cycle
@@ -142,6 +150,8 @@ choice is not stored). Weather/Terrain have no caption: the empty choice reads "
 those supported by the guide's moves / causing abilities and generation (Protect additionally needs `zmove`). The engine accepts
 these keys independently of UI availability. Dig / Fly / Dive / Minimized / Switching out remain the exclusive
 Edit selection. Other states fold under States, Turn end and Hazards, with active counts; fold state is session-only.
+Laser Focus / Lucky Chant / Dragon Cheer are per-side States toggles (`atk*` Player, `def*` Foe), gated by their
+moves, generation and profile-disabled effects. Dragon Cheer is offered only in Doubles, never in Hardlove.
 The closed group headings share one row so the minimum-size Field fits without scrolling. Expanded groups stay
 inside that one-window Field, scrolling its body when needed; opening a group brings its controls into view.
 Field content does not flex-shrink; toggle rows keep their natural wrapped-label height when pressed or redrawn.
@@ -194,7 +204,7 @@ sum those per-hit ranges, while percentages and KO text use the adapter's alread
 
 Mine (party, boxes, custom sets), selection, unsaved/saved edits, kept HP / status, the Field and per-slot overrides
 are one object in `cfg.ls.dmg` (no other key).
-**Fight state** (plans/calc-auto-effects.md, 2026-10-27): a Pokémon's battle condition (stages, ability boxes,
+**Fight state** (2026-10-27): a Pokémon's battle condition (stages, ability boxes,
 Download, entry box, Protean type, target state, row state incl. counters, toxic turn) is **scratch**: memory only
 (`SC[cardKey]` + `ST.st` / `ST.tgt`), alive while the card is selected. Selecting another Pokémon and coming back
 brings it fresh; only **HP and status** are kept (`hp` / `status` in `ST.edits`, a custom set's own fields), the
@@ -210,6 +220,10 @@ this fight; Singles / Doubles is not one); the foe team starts at full HP, slot 
 cleared, same trainer and Pokémon. Reload keeps HP / status, the foe's of the current fight and the manual Field;
 scratch is gone. Loading older storage drops stored scratch everywhere, turns a stored Mega (`pre`) into `mega` and
 keeps only HP / status / fight state on player cards not selected. Entry hazards still apply once per selection and on a new fight. Scenario: `tools/scenarios/calc-auto.mjs`.
+**Broken** is a labelled header checkbox only for a Mimikyu / Eiscue form with Disguise / Ice Face as its current
+and available ability, with abilities enabled and the supported generation. It reads/writes `broken` fight state;
+HP − / one-use actions tick it via `DMG.hit`. Busted / Noice forms start checked unless explicitly restored.
+Switching preserves it; trainer change / Reset fight clears it; Ice Face can restore on entry in Hail / Snow.
 Internal set aliases follow trainer data (`l`, `na`, `a`, `i`, `m`); the engine boundary converts them to its
 `lv`, `nat`, `ab`, `it`, `st`, six-element `stg` contract. Caps stay in the existing `TCAP` store. Sheets and expanders
 are transient; pickers use the shared keyboard/number pad and the viewer's normal select shim.
@@ -226,7 +240,10 @@ share 28px cells with the level safely inside the selection border. Without `cfg
 changes the other pages' DOM, and `#/calc` redirects to the Pokémon list.
 
 **Design rules** (UI spec 2026-10-24): one screen at 260 × 316 (trainer bar, foe strip, both cards, the attacker's
-four moves); don't add a row to that block without removing one. Nothing to open for common edits (level, HP, nature,
+four moves); don't add a row to that block without removing one. Below 640 px (including narrow wide-layout columns),
+a berry chip moves into Edit when Toxic, an Intimidate mark or a battle-state label crowds the HP line; compact
+number boxes, marks and a Speed-change arrow keep that line unwrapped (full effect names remain in the tooltip). Consuming a berry does not change the closed card height or hide
+the fourth move. Otherwise the berry stays beside the turn-end amount. Nothing to open for common edits (level, HP, nature,
 ability, item, status, IVs / EVs, stages, Mega, moves, power / type / hits, crit); sheets only for long lists. Space goes
 to the matchup: no headings, explanatory text or dividers; names truncate in the main block, full in sheets and
 expanders. Never overflow the width, normal or `dvkb`, every expander open. The template owns the mechanics-free UI;

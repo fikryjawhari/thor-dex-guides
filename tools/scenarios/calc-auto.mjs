@@ -4,7 +4,7 @@
 // cleared, same trainer and Pokémon), reload / migration of older storage, and (C2) Mega and foe set edits kept for
 // the fight. Default foe: the guide's four-Pokémon trainer (calc_check_lib trainerRoles); 260 x 316, normal and dvkb. Usage: node tools/scenarios/calc-auto.mjs [dist/<hack>.html]
 import assert from 'node:assert/strict';
-import { fixturePatches, guide, guideArg, pickCell, prepareGuide, runChecks, setupCalc } from '../calc_check_lib.mjs';
+import { fixturePatches, guide, guideArg, pickCell, prepareGuide, runChecks, setupCalc, tapField } from '../calc_check_lib.mjs';
 
 const file = prepareGuide(guideArg(process.argv), { tag: 'calc-auto', edit: fixturePatches });
 if (!file) {
@@ -419,6 +419,7 @@ checks.push(
   {
     id: 'turn berry orb',
     title: 'Speed Boost turn, Sitrus / Salac chips, derived Orb immunities and kept explicit None override',
+    sizes: [[260,316],[316,316],[260,350],[480,392],[537,424],[832,424]],
     run: async page => {
       await setupCalc(page);
       await configure(page,{ name:'Blaziken',ability:'Speed Boost' },{ name:'Bibarel' });
@@ -426,17 +427,23 @@ checks.push(
       await page.tap('[data-a="eot"][data-s="mine"]');
       assert.equal(await page.value('CALC.mon("mine").stg[4]'),1);
       for(const item of ['Sitrus Berry','Salac Berry']){
-        await configure(page,{ name:'Bibarel',i:item,hp:20,status:'tox' },{name:'Growlithe',ability:'Intimidate'});
+        await configure(page,{ name:'Bibarel',hp:20,moves:['Tackle','Swift','Surf','Flamethrower'] },{name:'Growlithe',ability:'Intimidate'});
+        const closedHeight=await page.value(`document.querySelector('.dmatch .cc[data-s="mine"]').offsetHeight`);
+        await page.value(`CALC.set('mine','i','${item}');CALC.set('mine','status','tox');CALC.render()`);
         await page.assertFits('berry, Toxic, turn end and Intimidate together');
+        assert.equal(await page.value(`document.querySelector('.dmatch .cc[data-s="mine"]').offsetHeight`),closedHeight,'crowded HP controls never grow the closed card');
+        await page.value(`scrollTo(0,document.querySelector('.fbar').getBoundingClientRect().top+scrollY-2)`);
+        assert.ok(await page.value(`document.querySelector('.dres:not(.na) .mr:last-child').getBoundingClientRect().bottom<=innerHeight`),'fourth attacker move still visible');
         await editorOpen(page,'mine',true);
         assert.ok(await page.value(`document.querySelector('.cc[data-s="mine"]').offsetHeight<=innerHeight-8`),'open card with berry, Toxic and Intimidate fits one window');
-        await editorOpen(page,'mine',false);
         const before=await page.value(`(()=>{const input=${engineInput};return DMG.berry(input(CALC.mon('mine')),CALC.state().field,input(CALC.mon('foe')),'atk');})()`);
         assert.ok(before);
         assert.match(await page.text('[data-a="berry"][data-s="mine"]'),new RegExp(item.split(' ')[0]));
         await page.tap('[data-a="berry"][data-s="mine"]');
         assert.equal(await hpOf(page,'mine'),before.atk.hp);
         assert.equal(await page.count('[data-a="berry"][data-s="mine"]'),0);
+        await editorOpen(page,'mine',false);
+        assert.equal(await page.value(`document.querySelector('.dmatch .cc[data-s="mine"]').offsetHeight`),closedHeight,'consumed berry does not change the closed height');
         await page.assertFits('Toxic, turn end and Intimidate after consuming a berry');
       }
       await configure(page,{ name:'Machamp',ability:'Guts',i:'Flame Orb' },null);
@@ -471,5 +478,66 @@ checks.push(
     },
   },
 );
+
+checks.push({
+  id: 'broken box', title: 'Disguise and Ice Face header boxes follow real holders, HP actions, switches and Reset fight',
+  sizes: [[260,316],[260,350],[480,392],[537,424],[832,424]],
+  run: async page => {
+    await setupCalc(page);
+    const profile=guide().data.cfg.calc;
+    for (const [pattern,ability,minGen] of [['Mimikyu','Disguise',7],['Eiscue','Ice Face',8]]) {
+      const species=guide().data.P.find(mon=>mon.n.includes(pattern)&&!/Busted|Noice/.test(mon.n)&&mon.a.some(index=>guide().data.AB[index]?.[0]===ability));
+      if (!species || profile.gen<minGen || profile.abilities===false) continue;
+      const selected=await page.value(`(()=>{CALC.use(P.find(mon=>mon.id===${JSON.stringify(species.id)}));const state=CALC.state(),mon=state.custom.at(-1);Object.assign(mon,{l:50,a:D.AB.findIndex(entry=>entry[0]==='${ability}'),i:'',m:[M.indexOf('Bite')],hp:undefined});state.dir='in';CALC.render();return state.mine.i;})()`);
+      await configure(page,null,{name:'Bibarel',moves:['Bite']});
+      assert.equal(await page.count('[data-ms="broken"][data-s="mine"]'),1);
+      assert.equal(await page.value(`document.querySelector('[data-ms="broken"][data-s="mine"]').checked`),false);
+      await page.tap('[data-ms="broken"][data-s="mine"]');
+      assert.equal(await page.value(`CALC.mon('mine').broken`),true,'manual Broken writes fight state');
+      await page.tap('[data-ms="broken"][data-s="mine"]');
+      await hitFirst(page);
+      assert.equal(await page.value(`document.querySelector('[data-ms="broken"][data-s="mine"]').checked`),true,'HP minus bust ticks Broken');
+      await page.tap('#calc-log button');
+      await pickCell(page,'party',0);
+      await pickCell(page,'custom',selected);
+      assert.equal(await page.value(`document.querySelector('[data-ms="broken"][data-s="mine"]').checked`),true,'Broken survives switching');
+      await openField(page);
+      await page.tap('[data-a="fightreset"]');
+      assert.equal(await page.value(`document.querySelector('[data-ms="broken"][data-s="mine"]').checked`),false,'Reset fight restores intact');
+      await page.value(`CALC.set('mine','a',D.AB.findIndex(entry=>entry[0]==='Intimidate'));CALC.render()`);
+      assert.equal(await page.count('[data-ms="broken"][data-s="mine"]'),0,'no box without the shield ability');
+      await page.value(`CALC.set('mine','a',D.AB.findIndex(entry=>entry[0]==='${ability}'));CALC.set('mine','id',P.find(mon=>mon.n==='Bibarel').id);CALC.render()`);
+      assert.equal(await page.count('[data-ms="broken"][data-s="mine"]'),0,'no box for a form lacking the ability');
+    }
+  },
+}, {
+  id: 'crit field controls', title: 'per-side crit states gated by moves, generation and profile; Dragon Cheer only in Doubles; Field scroll stays inside one window',
+  sizes: [[260,316],[260,350],[480,392],[537,424],[832,424]],
+  run: async page => {
+    await setupCalc(page);
+    const data=guide().data,profile=data.cfg.calc;
+    await openField(page);
+    await page.tap('[data-f="gameType"][data-value="Singles"]');
+    for (const [key,name,generation] of [['LaserFocus','Laser Focus',7],['LuckyChant','Lucky Chant',4],['DragonCheer','Dragon Cheer',9]]) {
+      const offered=profile.gen>=generation&&data.M.includes(name)&&profile.over?.state?.[name]!==false;
+      for (const prefix of ['atk','def']) {
+        const field=prefix+key;
+        assert.equal(profile.field.some(entry=>entry.k===field),offered,field+' build-time gating');
+        assert.equal(await page.count(`[data-f="${field}"]`),offered&&key!=='DragonCheer'?1:0,field+' Singles availability');
+      }
+    }
+    await page.tap('[data-f="gameType"][data-value="Doubles"]');
+    for (const entry of profile.field.filter(entry=>/^(atk|def)(LaserFocus|LuckyChant|DragonCheer)$/.test(entry.k))) {
+      assert.equal(await page.count(`[data-f="${entry.k}"]`),1);
+      await tapField(page,entry.k);
+      assert.equal(await page.value(`!!CALC.state().field.${entry.k}`),true,'toggle writes '+entry.k);
+      const fits=await page.value(`(()=>{const field=document.querySelector('.dfield'),body=field.querySelector('.dfb');field.scrollIntoView({block:'start'});return field.getBoundingClientRect().height<=innerHeight&&body.scrollHeight>=body.clientHeight;})()`);
+      assert.ok(fits,'expanded crit group stays in the one-window Field');
+    }
+    await page.tap('[data-f="gameType"][data-value="Singles"]');
+    assert.equal(await page.count('[data-f$="DragonCheer"]'),0,'Dragon Cheer disappears in Singles');
+    if (data.cfg.name==='Hardlove Gold') assert.equal(profile.field.some(entry=>entry.k.endsWith('DragonCheer')),false,'Hardlove has no functional Dragon Cheer');
+  },
+});
 
 await runChecks({ name: 'calc-auto', file, checks });

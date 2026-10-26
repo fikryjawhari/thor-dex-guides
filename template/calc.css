@@ -20,7 +20,7 @@
 .cc .cl:has(.dberry,.dintmark)>*{flex-shrink:0}
 .cc .cl .dintmark{font-size:8px;padding:1px 0}
 .cc .ed>.dberry{font:700 10px system-ui;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--fg);padding:2px 4px;cursor:pointer}
-@media(max-width:479.98px){.cc .cl:has(.dtoxl,.dintmark){gap:2px;font-size:10px}.cc .cl:has(.dtoxl,.dintmark) [data-lv]{width:26px}.cc .cl:has(.dtoxl,.dintmark) [data-hp]{width:32px}.cc .cl:has(.dtoxl,.dintmark) .dturn{font-size:10px;padding:0 2px}}
+@media(max-width:639.98px){:scope .cc .cl:has(.dtoxl,.dintmark){gap:1px;font-size:10px}:scope .cc .cl:has(.dtoxl,.dintmark) [data-lv]{width:24px}:scope .cc .cl:has(.dtoxl,.dintmark) [data-hp]{width:28px}:scope .cc .cl:has(.dtoxl,.dintmark) .mx{font-size:9px}:scope .cc .cl:has(.dtoxl,.dintmark) .dturn{font-size:10px;padding:0 2px}}
 body:not(.calc-route) #calc-log{display:none}
 
 main#app{padding-bottom:70px}

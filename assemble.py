@@ -79,8 +79,7 @@ def calc_profile(c, data=None):
         keys = {entry['k'] for entry in fields}
         for entry in entries:
             if (profile['gen'] < entry['gen'] or (entry.get('zmove') and not profile.get('zmove'))
-                    or any(profile.get('over', {}).get('state', {}).get(move) is False
-                           for move in entry.get('moves', []))):
+                    or profile.get('over', {}).get('state', {}).get(entry['l']) is False):
                 continue
             if (entry.get('moves') or entry.get('abilities')) and not (
                     moves.intersection(entry.get('moves', [])) or abilities.intersection(entry.get('abilities', []))):

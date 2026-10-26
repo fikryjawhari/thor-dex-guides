@@ -179,4 +179,87 @@ const checks = [{
   },
 }];
 
+const input = `mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i,st:mon.status,iv:mon.iv,ev:mon.ev,stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp,used:mon.used,broken:mon.broken,abilityOn:mon.abilityOn})`;
+checks.push({
+  id: 'crash miss', title: 'every crash move: separate miss chip, user-only HP loss and action log in both directions', sizes,
+  run: async page => {
+    await page.route('#/calc');
+    for (const name of ['Jump Kick','High Jump Kick','Axe Kick','Supercell Slam'].filter(has)) {
+      await page.value(duel([name], [name]));
+      await page.value(`CALC.set('foe','i','Rocky Helmet');CALC.set('mine','i','Life Orb');CALC.render()`);
+      for (const side of ['mine','foe']) {
+        await page.value(`CALC.state().dir='${side==='mine'?'out':'in'}';CALC.render()`);
+        await page.assertFits(name+' hit and miss chips');
+        const before=await hps(page), expected=await page.value(`(()=>{const convert=${input},att=convert(CALC.mon('${side}')),def=convert(CALC.mon('${side==='mine'?'foe':'mine'}')),field=CALC.state().field,slot={mv:M.indexOf('${name}')},result=DMG.calc(att,def,slot,field),damage=result.per?result.per.reduce((sum,roll)=>sum+Math.${side==='mine'?'min':'max'}(...roll),0):result.${side==='mine'?'min':'max'}*result.hits;return DMG.hp(att,def,slot,field,0,{miss:true,damage});})()`);
+        const text=await page.value(`${row(name)}.querySelector('[data-a="crash"]').textContent`);
+        assert.equal(text,'miss −'+expected.crash);
+        await page.tap('.dres:not(.na) [data-a="crash"]');
+        const after=await hps(page);
+        assert.equal(after[side],Math.max(0,before[side]+expected.v),'only crash, not Life Orb or contact');
+        assert.equal(after[side==='mine'?'foe':'mine'],before[side==='mine'?'foe':'mine'],'miss does not hit the target');
+        assert.match(await page.text('#calc-log'),/miss/);
+        await page.tap('#calc-log button');
+      }
+    }
+    if (data.AB.some(entry=>entry[0]==='Magic Guard')) {
+      await page.value(duel(['High Jump Kick']));
+      await page.value(`CALC.set('mine','a',D.AB.findIndex(entry=>entry[0]==='Magic Guard'));CALC.render()`);
+      const before=await hps(page);
+      assert.match(await page.text('.dres:not(.na) [data-a="crash"]'),/miss −0/);
+      await page.tap('.dres:not(.na) [data-a="crash"]');
+      assert.deepEqual(await hps(page),before,'Magic Guard prevents crash');
+    }
+  },
+}, {
+  id: 'stockpile', title: 'Swallow and Spit Up details choose 1–3 Stockpiles; typed power wins; counts are scratch', sizes,
+  run: async page => {
+    if (!has('Swallow') || !has('Spit Up')) return;
+    await page.route('#/calc');
+    await page.value(duel(['Swallow','Spit Up']));
+    for (const name of ['Swallow','Spit Up']) {
+      await page.value(`${row(name)}.querySelector('.mm').click()`);
+      for (const count of [1,2,3]) {
+        await page.value(`(()=>{const select=${row(name)}.querySelector('[data-mo="stock"]');select.value='${count}';select.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+        if (name==='Spit Up') {
+          assert.equal(await page.value(`+${row(name)}.querySelector('[data-mo="bp"]').value`),count*100);
+        } else {
+          await page.value(`CALC.set('mine','hp',1);CALC.render()`);
+          const before=await hps(page);
+          await page.value(`${row(name)}.querySelector('[data-a="use"]').click()`);
+          assert.equal((await hps(page)).mine,Math.min(before.mineMax,1+Math.floor(before.mineMax*[.25,.5,1][count-1])));
+          assert.equal((await hps(page)).foe,before.foe,'Swallow never hits the foe');
+          await page.tap('#calc-log button');
+        }
+      }
+    }
+    await page.value(`(()=>{const box=${row('Spit Up')}.querySelector('[data-mo="bp"]');box.value='77';box.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+    await page.value(`(()=>{const select=${row('Spit Up')}.querySelector('[data-mo="stock"]');select.value='1';select.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+    assert.equal(await page.value(`+${row('Spit Up')}.querySelector('[data-mo="bp"]').value`),77);
+    assert.equal(await page.value(`CALC.state().st[CALC.key('mine')+':0']`),3,'each row owns its count');
+    await page.value(`CALC.use(P.find(mon=>mon.n==='Snorlax'));CALC.render()`);
+    assert.deepEqual(await page.value('CALC.state().st'),{},'switching clears Stockpile scratch');
+  },
+}, {
+  id: 'contact one use', title: 'one-use chip includes contact costs once, using actual hit count after an early KO', sizes,
+  run: async page => {
+    await page.route('#/calc');
+    await page.value(duel(['Double-Edge']));
+    await page.value(`CALC.set('foe','id',P.find(mon=>mon.n==='Garchomp').id);CALC.set('foe','a',D.AB.findIndex(entry=>entry[0]==='Rough Skin'));CALC.set('foe','i','Rocky Helmet');CALC.set('foe','hp',1);CALC.render()`);
+    const before=await hps(page), expected=await page.value(`(()=>{const convert=${input},att=convert(CALC.mon('mine')),def=convert(CALC.mon('foe')),slot={mv:M.indexOf('Double-Edge')},field=CALC.state().field,hit=DMG.hit(att,def,slot,field,'min');return {hit,hp:DMG.hp(att,def,slot,field,hit.dealt,{hits:hit.hits})};})()`);
+    assert.ok(expected.hit.contact.v<0,'fixture has contact cost');
+    await page.tap('.dres:not(.na) [data-a="use"]');
+    const after=await hps(page);
+    assert.equal(after.foe,0);
+    assert.equal(after.mine,Math.max(0,before.mine+expected.hp.v),'combined recoil and contact applied once');
+    assert.match(await page.text('#calc-log'),/Rocky Helmet/);
+    await page.tap('#calc-log button');
+    await page.value(duel(['Double Hit']));
+    await page.value(`CALC.set('foe','id',P.find(mon=>mon.n==='Garchomp').id);CALC.set('foe','a',D.AB.findIndex(entry=>entry[0]==='Rough Skin'));CALC.set('foe','i','Rocky Helmet');CALC.set('foe','hp',1);CALC.render()`);
+    const start=await hps(page),multi=await page.value(`(()=>{const convert=${input},att=convert(CALC.mon('mine')),def=convert(CALC.mon('foe')),slot={mv:M.indexOf('Double Hit')},field=CALC.state().field,hit=DMG.hit(att,def,slot,field,'min');return {hit,hp:DMG.hp(att,def,slot,field,hit.dealt,{hits:hit.hits})};})()`);
+    assert.equal(multi.hit.hits,1,'second strike is not applied after KO');
+    await page.tap('.dres:not(.na) [data-a="use"]');
+    assert.equal((await hps(page)).mine,start.mine+multi.hp.v,'contact only once for the actual damaging strike');
+  },
+});
+
 await runChecks({name: 'calc-moves', file, checks});
