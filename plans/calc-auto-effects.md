@@ -67,7 +67,7 @@ Beast Boost 48.
 
 | Event | Player side | Foe side | Field |
 | --- | --- | --- | --- |
-| Select a Pokémon (strip, grid, Find) | the one leaving loses its scratch and unsaved set edits, keeps HP; the new one starts fresh (Intimidate box on), with its kept HP | same, HP kept for this fight | it **enters**: its setter weather / terrain applies; Orb status shows; entry hazards as now |
+| Select a Pokémon (strip, grid, Find) | the one leaving loses its scratch and unsaved set edits, keeps HP and status; the new one starts fresh (Intimidate box on), with its kept HP and status | same, HP and status kept for this fight | it **enters**: its setter weather / terrain applies; Orb status shows; entry hazards as now |
 | Change trainer (bar arrows, Find trainer, a trainer card's Calc link) | scratch cleared, HP kept | team from the data, full HP, slot 1 selected | manual overrides cleared, area conditions applied, both leads enter together (slower setter wins; reversed under Trick Room) |
 | **Reset fight** | **all HP 100%, status cleared**, scratch cleared | same | as a trainer change, same trainer, same selected Pokémon |
 | Reload | HP kept (both sides); scratch gone (= fresh) | foe HP of the current fight kept | manual overrides of the current fight kept; derived values recomputed |
@@ -133,7 +133,7 @@ by `field-states.json` move availability (area evidence turns it on in guides wh
 | --- | --- | --- |
 | Intimidate | while the holder is selected and its box is ticked | **Checkbox on the holder's card header**, like First turn out, **on by default**, back on at every entry. The opposing Pokémon's Atk is its Edit stage −1 in every calc (+1 → 0; untick → +1 again); its stages are never written. Reactions by the engine: Simple −2, Contrary +1, Clear Body / White Smoke / Full Metal Body / Hyper Cutter / Clear Amulet none, Gen 8+ Inner Focus / Oblivious / Own Tempo / Scrappy none, Guard Dog +1, Defiant Atk +2 and Competitive SpA +2 on top, Rattled Spe +1 (Gen 8+), Mirror Armor reflects onto the holder, Adrenaline Orb Spe +1. Mark at the end of the target's Lv / HP line like Totem "Aura": `Int −1` (net, e.g. `Int +1` for Defiant). |
 | Weather / terrain setters | on entry | Field (above) |
-| Flame / Toxic Orb | on entry, when the holder has no status and can get it (not Fire for Flame Orb; not Poison / Steel, Comatose, Water Veil / Water Bubble, Misty Terrain grounded) | status shows `Burn (Orb)` / `Toxic (Orb)`; choosing a status (incl. None) in Edit overrides for this Pokémon's stay; turn-end damage / Poison Heal follow |
+| Flame / Toxic Orb | on entry, when the holder has no status and can get it (not Fire for Flame Orb; not Poison / Steel, Comatose, Water Veil / Water Bubble, Misty Terrain grounded) | status shows `Burn (Orb)` / `Toxic (Orb)`; choosing a status (incl. None) in Edit overrides it and is kept like any status; turn-end damage / Poison Heal follow |
 | Protosynthesis / Quark Drive (+ Booster Energy) | sun / Electric Terrain (incl. derived ones), else Booster Energy | engine (bug fix) |
 | Speed Boost | each turn end applied | Spe +1 to the scratch stages; part of the turn-end amount (`−3 Spe+1`) |
 | Unburden | after its item is used (berry, Sash, Balloon, Gem, Weakness Policy, seed) | Speed ×2 from then on (scratch) |
