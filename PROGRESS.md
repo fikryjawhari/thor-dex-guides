@@ -41,7 +41,9 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
 2. **Damage calc with save import** (start every calc session from `plans/damage-calc-sessions.md`; `plans/damage-calc.md`; branch `worktree-damage-calc`, pushed, not merged).
    UI build active on `worktree-damage-calc-toggles` (Sol, 2026-10-26): engine pass merged at `f3203b1`, Hardlove
-   source inputs copied; controls/layout approval mockup next, no template edits yet. Scope/engine triage:
+   source inputs copied; controls/layout approval mockup published, no template edits yet. Phone preview:
+   `https://windows-pc.tail1846b8.ts.net/preview/calc-state-edit.html` (ten viewer-size/mode mock checks pass;
+   fourth move at 309 px at minimum size). Await approval before building. Scope/engine triage:
    `plans/calc-state-toggles.md` -> Build status. Additional Thor feedback is recorded there; trainer-field is a
    later sequential decide/build on this branch. No engine edits planned: Return/Frustration defaults deferred;
    Power-Up Punch and Stamina already affect later hits; Loaded Dice/Skill Link selection restrictions are UI;

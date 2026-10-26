@@ -3,7 +3,13 @@
 ## Build status (2026-10-26)
 - Working branch: `worktree-damage-calc-toggles`, tab of `worktree-damage-calc`.
 - Engine pass merged cleanly at `f3203b1`; main checkout's Hardlove `.src/` copied before any extract build.
-- Page not built yet. Next: approve the Edit-menu mockup and layout proposal below, then implement the settled
+- Page not built yet. Approval mockup: `plans/calc-state-toggles-mockup/edit.html`, generated with `build-edit.mjs`
+  (sampled Photonic Captain Mallow data and inline shared sprites), framed at `dist/calc-state-edit-frame.html`.
+  Phone preview: `https://windows-pc.tail1846b8.ts.net/preview/calc-state-edit.html`.
+  `node plans/calc-state-toggles-mockup/check-edit.mjs`: all five viewer sizes, normal/dvkb, pass (ten checks);
+  fourth move ends at 309 px at 260 x 316; wide team area is 228 px at both 424 px-high sizes. Edit/residuals leave
+  the team area unchanged, both wide editors populate/collapse together, Field stays below expanded moves.
+  Mock values are illustrative, not live engine results. Await the user's design approval, then implement the settled
   controls and UI fixes. Existing "Settled with the user" choices remain final.
 - No engine edits are authorised by this UI build. Any missing engine behaviour is reported first and deferred
   to the engine follow-up unless the user explicitly changes scope. No push without a fresh yes.
@@ -31,6 +37,7 @@ Do this sequentially, not as parallel template jobs. The additions below are req
    silently approximated. Speed-colour comparison is sufficient; no extra turn-order control requested now.
 
 ### Engine triage (local probes, incoming committed engine)
+Reproduce: `node plans/calc-state-toggles-mockup/scope-probe.mjs` (no npm install or engine rebuild).
 - Return / Frustration defaults: both return `null` without explicit power. Setting their maximum default is a
   deferred engine-contract/default-power follow-up, not an engine edit in this page build.
 - Power-Up Punch already changes hit two: EI Mega Kangaskhan / Parental Bond into neutral-nature Lv 50 Blissey,
