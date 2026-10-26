@@ -55,8 +55,8 @@ def evidence(text, scope):
             add('hazard', hazard, side='player', layers=1, timing='after-first-send-out')
     if re.search(r'\+1 crit chance\b', text, re.I):
         add('critical-bonus', 1, side='opponent', guess=True)
-    incomplete = any(effect['kind'] == 'critical-bonus' or effect['value'] == 'random' for effect in effects)
-    return dict(scope=scope, text=text, effects=effects, review=not effects or incomplete)
+    # Settled with the user (plans/calc-auto-effects.md): the crit bonus is a labelled guess, random terrain is text only.
+    return dict(scope=scope, text=text, effects=effects, review=not effects)
 
 
 def records(group, section, trainer):

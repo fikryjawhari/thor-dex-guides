@@ -50,6 +50,7 @@ def main():
     assert all(effect['side'] == 'player' and effect['layers'] == 1 for effect in hazards['effects'])
     critical = trainer_fields.evidence('+1 crit chance.', 'trainer-note')['effects'][0]
     assert critical == dict(kind='critical-bonus', value=1, side='opponent', guess=True)
+    assert trainer_fields.evidence('+1 crit chance.', 'trainer-note')['review'] is False
     sand = trainer_fields.evidence('Permanent Sand', 'trainer-tag')
     assert sand['effects'] == [dict(kind='weather', value='Sandstorm', duration='permanent')]
     assert sand['review'] is False
