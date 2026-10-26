@@ -783,12 +783,11 @@ function calc(atk, def, slot, values = {}) {
   } else value = FIXED[name]({lv: atk.lv ?? 50, def: current, atk: own});
   const rolls = (Array.isArray(value) ? value : Array(16).fill(value)).map(v => base.eff ? v : 0);
   const eot = [0, 1, 2, 3].map(turn => (base.eot || []).reduce((sum, part) => sum + part.v[turn], 0));
-  const result = {...base, rolls, hits: 1, min: Math.min(...rolls), max: Math.max(...rolls),
+  const result = {...base, fixed: true, rolls, hits: 1, min: Math.min(...rolls), max: Math.max(...rolls),
     pmin: Math.min(...rolls) * 100 / max, pmax: Math.max(...rolls) * 100 / max,
-    ko: knockout([rolls], current, eot, max - current), eff: rolls.some(Boolean) ? base.eff : 0,
+    ko: knockout([rolls], current, eot, max - current),
     notes: base.notes.filter(note => !['STAB', 'Crit'].includes(note) && !/^(Super|Not very) effective$/.test(note))};
   delete result.per; delete result.bp; delete result.pre;
-  if (!result.eff && !result.notes.includes('No effect')) result.notes.push('No effect');
   return result;
 }
 

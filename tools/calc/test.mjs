@@ -604,6 +604,7 @@ await test('fixed / fraction damage: level, half HP, Endeavor, Final Gambit, imm
   const blissey = set('Blissey', {hp: 301});
   assert.deepEqual([hit(set('Snorlax'), blissey, 'Seismic Toss').min, hit(set('Snorlax'), blissey, 'Seismic Toss').max], [50, 50]);
   assert.equal(hit(set('Snorlax'), blissey, 'Night Shade').eff, 0, 'Normal is immune to Night Shade');
+  assert.equal(hit(set('Snorlax'), set('Blissey', {hp: 10}), 'Endeavor').eff, 1, 'Endeavor at 0 is not an immunity');
   assert.equal(hit(set('Snorlax'), set('Gengar'), 'Seismic Toss').max, 0, 'Ghost is immune to Seismic Toss');
   assert.equal(hit(set('Snorlax'), blissey, 'Super Fang').max, 150, 'half current HP, rounded down');
   assert.equal(hit(set('Snorlax', {hp: 40}), blissey, 'Endeavor').max, 261);

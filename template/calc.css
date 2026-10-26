@@ -456,3 +456,12 @@ body.calc-route .mr .rcol .dcategory{font-size:10px;padding:0}
 .cc .cl:has(.dvol){gap:2px}.cc .cl:has(.dvol) [data-lv]{width:28px}.cc .cl:has(.dvol) [data-hp]{width:34px}
 @media(max-width:479.98px){body.calc-route .dmatch{gap:2px}}
 @media(min-width:480px){body.calc-route .fit,body.calc-route .fit:has(.ed){height:auto;min-height:calc(100vh - 8px)}body.calc-route .top{flex:none}}
+/* HP moves: the one-use amount (residual style) at the start of the % line, or in place of a status row's "—";
+   the exact entry (Dealt / You) in the opened row. */
+.mr .dturn.hu{margin:0 4px 0 0;min-height:16px;line-height:14px;font-size:10.5px;min-width:max-content}
+.mr .r2:has(.hu){justify-content:flex-start}.mr .r2:has(.hu) .ko{margin-left:auto}
+.mr.st.hu .mm{opacity:1;cursor:pointer}.mr.st.hu .mv{opacity:.55}
+.mr.st .hp:has(.hu){min-width:max-content;flex:none}.mr.st .hp .dturn.hu{margin:0;min-height:20px}
+.dturn.hu.dn{color:#ff7b6b}
+.hx{display:flex;gap:6px;align-items:end;flex-wrap:wrap}.hx label{display:flex;flex-direction:column;font-size:11px}
+.hx input{width:52px}.hxr{font-size:11px;color:var(--mut)}
