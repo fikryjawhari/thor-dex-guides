@@ -151,6 +151,9 @@ data (merge of main, 2026-10-26): the raw build writes the `field` records.
 Area conditions (trainer `field`, 2026-10-26): area +1 crit is applied as the foe side's +1 crit stage, a guess and
 labelled `+1 crit (foe, guess)`. Permanent Fog is shown as text only: accuracy ×0.6, no damage effect (Gen 4 rule,
 unverified in hg-engine). Easy mode (enemy levels − (1 + floor(lv / 25))): not doing (user, 2026-10-26).
+`setterStays: true` (`doc/Mechanics.txt:31-32`: weather / terrain from abilities and moves are permanent), so a
+setter's weather stays after it leaves. Figy-group berries heal 1/8 at half HP (`over.items`; `TryUseHeldItem`, `itemdata.c` parameter 8). Dragon
+Cheer is off (`over`: no crit stage at this pin). Weather moves set Snow (no Hail).
 
 Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (the Nidoran♀ identity collision and Flabébé construction were fixed since: `tools/calc/test.mjs`). Evidence: `plans/calc-refine-hardlove.md` (git history) → Unit W → W2.
 
@@ -178,7 +181,7 @@ User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 | Battle Bond | Manually select +1 Atk and +1 Spe after KO, no SpA: `data/battle_scripts/subscripts/subscript_0515_BATTLE_BOND_BOOST.s:11-16`. No automatic post-KO simulation. |
 | Snow | Gen 9 Snow (no Hail): Ice physical Defense x1.5, not SpD, `src/individual/CalcBaseDamage.c:1400-1408`. |
 | Fields | Existing Gen 9 fields retained; add per-side Flower Gift, Power Trick, Protect using existing renderer/native engine. Importer's limited field list is not an availability specification. |
-| Permanent fields | Select current weather/terrain manually; no countdown or Defog simulation to incorrectly expire/clear them. |
+| Permanent fields | Setter and area weather / terrain stay (`setterStays`); no countdown or Defog simulation. |
 | Moody / sleep / OHKO | Accuracy/evasion randomness, sleep duration and OHKO chance/level checks are outside damage simulation. Current sleep status and manual stat stages remain usable. |
 | Return / Frustration | Power from happiness (`CalcBaseDamage.c:211-215`, integer `*10/25`); the user types the power (`expansion` varpow), so the calc takes the typed value. Fixtures: `frustration-happiness-127`, `frustration-happiness-0`, `return-happiness-127`. |
 | Rage Fist | Flat data power 100 (sheet's +50 per hit taken not modelled): no hit-taken counter is in the source (only the punch list, `other_battle_calculators.c:441`), so the sheet/notes stand as the orchestrator directed. Fixtures: `rage-fist-flat-100`, `rage-fist-normal-target-immune`. |

@@ -167,6 +167,9 @@ has no cheats or checklist steps, and WK.docs holds the game docs.
 
 ### Damage calc
 
+Retest (2026-10-27): Protect is offered from the guide's Protect-family moves, no longer through `zmove`; Z-moves
+through it stay ¼. Hail-setting moves set Hail (no Snow in Gen 7).
+
 **2026-10-25 / W2:** unchanged Gen 7 weights stand: all 928 lookups checked (50 form fallbacks, zero 1 kg defaults), including 48 Megas, both Primals and distinct Nidoran genders; no weight override or power rule added. The 52-row form verdict table and stock power formulas are in `plans/calc-refine-photonic.md` (git history) -> W2. [Bulbapedia weights](https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_weight) and [Minior](https://bulbapedia.bulbagarden.net/wiki/Minior_(Pok%C3%A9mon)) confirm Core is 0.3 kg, already correct. Ten fixtures have no set power (all eight weight/HP/speed moves, Alolan Raichu and stock Mega Steelix); stock checks and 872 native-oracle BP/16-roll comparisons pass. Official comparator's automatic-power adapter is still Needs Opus 6, not a mechanics disagreement.
 
 2026-10-25: field-mechanics pass for 2.38 Rebalanced. `cfg.calc.base = "gen7"`; species stats/types and move

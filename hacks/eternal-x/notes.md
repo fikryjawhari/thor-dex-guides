@@ -95,6 +95,8 @@ the game docs; stop `k` with `.fN` fragment suffixes.
 
 ### Damage calc
 
+Retest (2026-10-27): Protect is now offered (the guide has Protect-family moves). Hail-setting moves set Hail.
+
 W2 checked 2026-10-25: all 782 stock Gen 6 weights stand (36 form fallbacks, 29 Megas, no 1 kg defaults or regional forms); 38 explicit form/Nidoran verdicts, 67 exact form/Mega checks, 54 weight/ratio boundaries, 470 HP and 338 speed cases confirm stock bands; ten automatic-power fixtures without `bp` all match legacy Dynamic-Calc (119 total: 116 exact, 3 existing always-critical differences, zero errors); no profile overrides or new Needs Opus rows. Evidence and Bulbapedia reference: `plans/calc-refine-eternal.md` (git history) → W2; checks: `tools/calc/eternal_check.mjs`.
 
 Field mechanics pass, 2026-10-25. `cfg.calc.base = "gen6"`: standard Generation 6 singles/doubles damage and types,
