@@ -32,4 +32,4 @@ our own reader from the notes, never translate their code).
 
 Families and their first hacks (plans/calc-open.md → Save readers): Gen 3 (Emerald Imperium; CFRU saves differ), Gen 4
 (Hardlove Gold), Gen 5 (Blaze Black 2 Redux), Gen 6/7 (Photonic Sun, Eternal X). In Dex Viewer the file picker also
-needs the app change (a separate step in `../thor-dex-viewer`).
+needs the app change (a separate step in `../thor-offline-viewer`).

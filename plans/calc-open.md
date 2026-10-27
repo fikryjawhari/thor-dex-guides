@@ -101,7 +101,7 @@ The hard part is per hack: **the ID tables**. Our data has no game IDs, so each 
 them its own way). References (read only): hzla/Dynamic-Calc-Decomps `js/savereaders/` (Gen 3 incl. EI constants, Gen
 4/5, Gen 6 / 7; sample saves in `cypress/fixtures/saves/`), PKHeX (check a reader by opening the same save there).
 
-**File picker** (app repo `../thor-dex-viewer`, after the Gen 3 reader works with a dropped file): Android WebView
+**File picker** (app repo `../thor-offline-viewer`, after the Gen 3 reader works with a dropped file): Android WebView
 ignores `<input type=file>` unless the app handles `onShowFileChooser` (Android's document picker, remembering the last
 folder; check first whether the viewer already does). Later: "reload from the same file" in one tap (persistent URI
 permission). Outside the viewer the file input already works in any browser.

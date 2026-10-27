@@ -1,7 +1,7 @@
 # Thor Dex Guides
 
 Offline, single-file dex guides for ROM hacks, built for Dex Viewer on the AYN Thor (the app lives in the sibling repo
-`../thor-dex-viewer`, private) and also usable in any phone browser. This repo is **public** and served by GitHub
+`../thor-offline-viewer`, private) and also usable in any phone browser. This repo is **public** and served by GitHub
 Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of every session.
 
 ## Hard rules
@@ -59,6 +59,8 @@ adapt); agents build the units (Workflow → Which model).
    for its quirks. What the template shows when the data has it: `template/README.md` → What the data switches on.
    For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences); 3DS hacks take
    the game data over the docs ("Doc says ...").
+   Calc: settle each trainer `field` record marked `review` (`tools/trainer_fields_check.py`) with me (notes.md,
+   normalised in `tools/trainer_fields.py`); check the mechanics doc for permanent weather / terrain (`setterStays`).
    Hacks come in families (PROGRESS.md → Hack families): reuse the family's shared code (3DS: `tools/ctrguide.py`),
    write a family's first guide so its siblings can reuse it, and lift the shared part out when the second one comes.
 3. `hacks/<hack>/hack.json`: copy an existing one; new localStorage prefix in `cfg.ls`, the hack's wording in

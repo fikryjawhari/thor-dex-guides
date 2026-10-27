@@ -1,6 +1,6 @@
 # Progress
 
-Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on 2026-10-19; that repo's
+Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private) on 2026-10-19; that repo's
 `docs/PROGRESS.md` keeps the app's history. History here is in git, each hack's `notes.md` → History, and
 `template/README.md` (design decisions). This file is the current state and what's left.
 
