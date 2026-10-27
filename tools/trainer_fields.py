@@ -55,7 +55,7 @@ def evidence(text, scope):
             add('hazard', hazard, side='player', layers=1, timing='after-first-send-out')
     if re.search(r'\+1 crit chance\b', text, re.I):
         add('critical-bonus', 1, side='opponent', guess=True)
-    # Settled with the user (plans/calc-auto-effects.md): the crit bonus is a labelled guess, random terrain is text only.
+    # Settled with the user (Hardlove notes.md → Damage calc): the crit bonus is a labelled guess, random terrain is text only.
     return dict(scope=scope, text=text, effects=effects, review=not effects)
 
 

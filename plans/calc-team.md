@@ -1,6 +1,6 @@
 # Calc: a team row you build by dragging (idea, not decided)
 
-2026-10-26, raised in the auto-effects decide session (`plans/calc-auto-effects.md`). Needs its own decide session
+2026-10-26, raised in the auto-effects decide session (`plans/calc-auto-effects.md`, git history). Needs its own decide session
 (mockup in the Thor frame, then a spec); not part of the auto-effects build.
 
 ## What the user wants

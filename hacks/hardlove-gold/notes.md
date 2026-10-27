@@ -143,7 +143,7 @@ permanent Rain and Electric Terrain. Also retained: permanent Rain/Sun/Sandstorm
 Trick Room, enemy-side permanent Tailwind, random terrain at battle start, one layer each of player Spikes and
 Toxic Spikes after first send-out, and +1 critical chance. The critical bonus's target and random terrain pool
 remain unspecified. Full original wording and scope survive. Shared schema: Emerald Imperium's notes;
-Calc use (area conditions): `plans/calc-auto-effects.md`. No calc defaults, mechanics or visible UI changed. Rebuilt on 0.8.4
+Calc use (area conditions): `template/README.md` → Damage calculator, and Damage calc below. Rebuilt on 0.8.4
 data (merge of main, 2026-10-26): the raw build writes the `field` records.
 
 ### Damage calc (2026-10-25, provisional first pass)
