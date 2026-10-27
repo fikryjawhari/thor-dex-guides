@@ -528,6 +528,15 @@ checks.push({
         assert.equal(await page.count(`[data-f="${field}"]`),offered&&key!=='DragonCheer'?1:0,field+' Singles availability');
       }
     }
+    if(data.cfg.name==='Emerald Imperium'){
+      for(const key of ['atkLaserFocus','atkLuckyChant'])assert.ok(profile.field.some(entry=>entry.k===key),'EI explicitly offers '+key);
+      assert.ok(!profile.field.some(entry=>entry.k.endsWith('DragonCheer')),'Dragon Cheer is not in EI');
+    }
+    for(const entry of profile.field.filter(entry=>/^(atk|def)(LaserFocus|LuckyChant)$/.test(entry.k))){
+      await tapField(page,entry.k);
+      assert.equal(await page.value(`document.querySelector('[data-f="${entry.k}"]').getAttribute('aria-pressed')`),'true',entry.k+' visible and tappable in Singles States');
+      await tapField(page,entry.k);
+    }
     await page.tap('[data-f="gameType"][data-value="Doubles"]');
     for (const entry of profile.field.filter(entry=>/^(atk|def)(LaserFocus|LuckyChant|DragonCheer)$/.test(entry.k))) {
       assert.equal(await page.count(`[data-f="${entry.k}"]`),1);
