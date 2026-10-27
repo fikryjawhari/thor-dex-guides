@@ -175,11 +175,17 @@ exactly two-line rows, so all six fit: name, level, item, then the ability (shri
 those supported by the guide's moves / causing abilities and generation (Protect needs a Protect-family move, not `zmove`). The engine accepts
 these keys independently of UI availability. Dig / Fly / Dive / Minimized / Switching out remain the exclusive
 Edit selection. Other states fold under States, Turn end and Hazards, with active counts; fold state is session-only.
-Laser Focus / Lucky Chant / Dragon Cheer are per-side States toggles (`atk*` Player, `def*` Foe), gated by their
-moves, generation and profile-disabled effects. Dragon Cheer is offered only in Doubles, never in Hardlove.
-Global Water/Mud Sport, Power/Guard Split and ally aura states fold under **Global** beside the existing global
-toggles; ally controls (including per-side Ruin sources) appear only in Doubles, and these global manual choices share the normal Auto / Reset fight / trainer-change lifecycle.
-Gravity, Wonder Room and Magic Room sit in Global with the field-wide states; their keys and storage are unchanged.
+**Grouped by what an entry affects** (2026-10-27): **Global** = every Pokémon on the field (rooms, Gravity, Sports,
+Splits, Inverse; in Doubles the auras and Ruins, one toggle each named by the ability: another Pokémon on the field has
+it, so it applies to both calc Pokémon; a calc Pokémon holding it keeps the automatic behaviour, is not lowered by its
+own Ruin, and the same Ruin doesn't stack). The **side grid** (ungrouped) = the whole side: screens, Tailwind,
+Safeguard, Lucky Chant, pledge Sea of Fire / Swamp, Emperor's Presence and the Doubles ally effects (no "Ally" in
+labels). **States** = this Pokémon only (Focus Energy, Laser Focus, Charge, Power Trick, Protect, Roost, ...).
+**Turn end** = its residuals; **Hazards** as before. `field-states.json` sets the group, also for a hack's own copy of
+an entry (`assemble.py:calc_profile`). Ruin keys are `tabletsOfRuin` etc.; saved per-side `atk*/def*OfRuin` migrate on
+load (either side on = on) and the engine still reads them. Each state is gated by its moves / abilities, generation
+and profile-disabled effects (Dragon Cheer never in Hardlove); Doubles-only entries appear only in Doubles; global
+manual choices share the normal Auto / Reset fight / trainer-change lifecycle.
 Expanded groups stay inside the one-window Field, scrolling its body when needed; opening a group brings its controls
 into view.
 Field content does not flex-shrink; toggle rows keep their natural wrapped-label height when pressed or redrawn.

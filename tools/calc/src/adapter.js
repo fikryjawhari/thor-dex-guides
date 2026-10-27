@@ -192,9 +192,11 @@ function battleField(values) {
   for (const key of ['FairyAura', 'DarkAura', 'AuraBreak']) {
     if (values['ally' + key] !== undefined) result['is' + key] = result.gameType === 'Doubles' && !!values['ally' + key];
   }
+  // Ruin: one field-wide key (another Pokemon on the field has it); the older per-side keys still read.
   for (const key of ['TabletsOfRuin', 'SwordOfRuin', 'VesselOfRuin', 'BeadsOfRuin']) {
-    if (values['atk' + key] !== undefined || values['def' + key] !== undefined) {
-      result['is' + key] = result.gameType === 'Doubles' && !!(values['atk' + key] || values['def' + key]);
+    const keys = [key[0].toLowerCase() + key.slice(1), 'atk' + key, 'def' + key];
+    if (keys.some(name => values[name] !== undefined)) {
+      result['is' + key] = result.gameType === 'Doubles' && keys.some(name => !!values[name]);
     }
   }
   for (const entry of profile.field || []) {

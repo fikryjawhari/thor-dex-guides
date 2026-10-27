@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {changeMove, fixturePatches, guideArg, prepareGuide, readGuide, runChecks, setupCalc} from '../calc_check_lib.mjs';
+import {changeMove, fixturePatches, guideArg, prepareGuide, readGuide, runChecks, setupCalc, tapField} from '../calc_check_lib.mjs';
 
 const file=prepareGuide(guideArg(process.argv),{tag:'calc-state',edit:fixturePatches});
 if(!file){console.log('SKIP calc-state: no cfg.calc');process.exit(0);}
@@ -45,7 +45,7 @@ const fixtureChecks=[{
     assert.equal(await page.value('CALC.state().field.gameType'),'Doubles');
     assert.equal(await page.value('document.querySelector("[data-value=Doubles]").getAttribute("aria-pressed")'),'true');
     assert.equal(await page.count('[data-field-side]'),2);
-    await page.tap('[data-f=atkFocus]');
+    await tapField(page,'atkFocus');
     const inputs=await page.value(`(()=>{const original=DMG.calc,calls=[];DMG.calc=(att,def,slot,field)=>{calls.push(field);return original(att,def,slot,field);};CALC.render();DMG.calc=original;return calls;})()`);
     assert.ok(inputs.some(field=>field.atkFocus===1&&!field.defFocus),'player Focus while attacking');
     assert.ok(inputs.some(field=>field.defFocus===1&&!field.atkFocus),'player Focus while defending');

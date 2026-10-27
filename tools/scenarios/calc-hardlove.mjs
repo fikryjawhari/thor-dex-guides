@@ -29,7 +29,8 @@ const checks = [{
     const weather = entries.find(entry => entry.k === 'weather');
     assert.ok(weather.o.some(([value]) => value === 'Snow'));
     assert.ok(!weather.o.some(([value]) => value === 'Hail'));
-    assert.equal(await page.count('[data-f$="Protected"],[data-f$="Protect"]'), 0, 'Protect is reserved for Z-move profiles');
+    // Protect is gated by Protect-family moves since R2 (template/README.md), never the old Protected control.
+    assert.equal(await page.count('[data-f$="Protected"]'), 0, 'no legacy Protected control');
     // A3 gates the ally Flower Gift by the guide's abilities and Hardlove's ability list has no Flower Gift
     // (tools/calc/README.md: Ally abilities and Power Trick), so the ally check uses Power Spot (Doubles only) instead.
     await page.tap('[data-f=gameType][data-value=Doubles]');

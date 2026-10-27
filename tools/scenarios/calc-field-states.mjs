@@ -57,7 +57,11 @@ await runChecks({name:'calc-field-states', file, checks:[{
     assert.equal(await page.count('[data-f=allyDarkAura]'),guide.cfg.name==='Hardlove Gold'?0:1);
     const closed=await page.value('(()=>{const body=document.querySelector(".dfb");return {height:body.closest("details").offsetHeight,scroll:body.scrollHeight,room:body.clientHeight};})()');
     assert.ok(closed.height<=316-8,'closed groups fit the minimum-height window');
-    assert.ok(closed.scroll<=closed.room+1,'closed groups do not require Field-body scrolling');
+    // In Doubles the ally effects join the side grid (grouped by what they affect), so only Singles must fit unscrolled.
+    await page.tap('[data-f=gameType][data-value=Singles]');
+    const single=await page.value('(()=>{const body=document.querySelector(".dfb");return {scroll:body.scrollHeight,room:body.clientHeight};})()');
+    assert.ok(single.scroll<=single.room+1,'closed groups do not require Field-body scrolling in Singles: '+JSON.stringify(single));
+    await page.tap('[data-f=gameType][data-value=Doubles]');
     const moves={waterSport:'Flamethrower',mudSport:'Thunderbolt',powerSplit:'Tackle',guardSplit:'Tackle',allyFairyAura:'Moonblast',allyDarkAura:'Dark Pulse',allyAuraBreak:'Moonblast'};
     for(const entry of globalEntries){
       const move=moves[entry.k];
@@ -83,7 +87,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
     }
     await page.tap('[data-f=gameType][data-value=Singles]');
     for(const entry of globalEntries)assert.equal(await page.count(`[data-f="${entry.k}"]`),entry.doubles?0:1,entry.k+' Singles availability');
-    assert.doesNotMatch(await page.text('.dfield > summary'),/Ally Fairy Aura/,'inactive Doubles-only state omitted from summary');
+    assert.doesNotMatch(await page.text('.dfield > summary'),/Fairy Aura/,'inactive Doubles-only state omitted from summary');
   },
 },{
   id:'global lifecycle', title:'global manual state persists and Auto, Reset fight and trainer changes clear every key', sizes,

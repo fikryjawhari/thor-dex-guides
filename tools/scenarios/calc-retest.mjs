@@ -318,4 +318,33 @@ checks.push({
     }
   },
 });
+checks.push({
+  id:'R3 regroup',title:'entries grouped by what they affect; no Ally labels; Ruin is one global toggle and old per-side saves migrate',sizes:[[260,316]],
+  run:async page=>{
+    const field=await page.value('CF.calc.field'),key=name=>field.find(entry=>entry.k===name);
+    await setupCalc(page);
+    await page.tap('.dfield > summary');
+    await page.tap('[data-f=gameType][data-value=Doubles]');
+    const where=await page.value(`[...document.querySelectorAll('.dfb button[data-f]')].map(button=>({k:button.dataset.f,text:button.textContent,group:button.closest('[data-fgroup]')?.dataset.fgroup||(button.closest('[data-field-side]')?'side':'')}))`);
+    assert.deepEqual(where.filter(item=>/\bAlly\b|\(ally\)/.test(item.text)),[],'no Ally labels');
+    const groupOf=k=>where.find(item=>item.k===k)?.group;
+    for(const k of ['trickRoom','gravity','wonderRoom','magicRoom','waterSport','mudSport','powerSplit','guardSplit','allyFairyAura','allyDarkAura','allyAuraBreak','tabletsOfRuin','swordOfRuin','vesselOfRuin','beadsOfRuin'])if(key(k))assert.equal(groupOf(k),'field:battle',k+' in Global');
+    for(const name of ['Reflect','LightScreen','AuroraVeil','Tailwind','Safeguard','LuckyChant','SeaOfFire','Swamp','HelpingHand','FriendGuard','PowerSpot','SteelySpirit','FlowerGift','PlusMinus','DragonCheer','Battery','EmperorPresence'])if(key('atk'+name))assert.equal(groupOf('atk'+name),'side','atk'+name+' in the side grid');
+    for(const name of ['Focus','LaserFocus','Charge','PowerTrick','Protect','Roost','MagnetRise','Telekinesis','Foresight','MiracleEye','TarShot','GlaiveRush','Grounded'])if(key('atk'+name))assert.equal(groupOf('atk'+name),'atk:battle','atk'+name+' in States');
+    for(const name of ['Trapped','Seeded','SaltCure','Cursed','Nightmare','Ingrain','AquaRing'])if(key('atk'+name))assert.equal(groupOf('atk'+name),'atk:turn','atk'+name+' in Turn end');
+    assert.equal(field.filter(entry=>/^(atk|def)(TabletsOf|SwordOf|VesselOf|BeadsOf)Ruin$/.test(entry.k)).length,0,'no per-side Ruin keys');
+    if(!key('tabletsOfRuin'))return;
+    assert.equal(where.find(item=>item.k==='tabletsOfRuin').text.replace(/A$/,''),'Tablets of Ruin');
+    await page.tap('[data-f=gameType][data-value=Singles]');
+    assert.equal(await page.count('[data-f=tabletsOfRuin]'),0,'Ruin is Doubles-only');
+    // A save from before: per-side Ruin keys, on for one side, become the one global toggle.
+    await page.value(`(()=>{const key=Object.keys(localStorage).find(name=>{try{return 'fman' in JSON.parse(localStorage.getItem(name));}catch(e){return false;}});const state=JSON.parse(localStorage.getItem(key));state.field={...state.field,gameType:'Doubles',defTabletsOfRuin:1,atkTabletsOfRuin:0,atkSwordOfRuin:0};state.fman=[...(state.fman||[]),'defTabletsOfRuin'];localStorage.setItem(key,JSON.stringify(state));})()`);
+    await page.reload();await page.route('#/calc');
+    const state=await page.value('(()=>{const state=CALC.state();return {field:state.field,fman:state.fman};})()');
+    assert.equal(state.field.tabletsOfRuin,1,'either side on → global on');
+    assert(!('swordOfRuin' in state.field)||!state.field.swordOfRuin,'off stays off');
+    assert(!Object.keys(state.field).some(k=>/^(atk|def)\w+OfRuin$/.test(k)),'old keys removed');
+    assert(state.fman.includes('tabletsOfRuin')&&!state.fman.some(k=>/^(atk|def)\w+OfRuin$/.test(k)),'manual mark migrated');
+  },
+});
 await runChecks({name:'calc-retest',file,checks});

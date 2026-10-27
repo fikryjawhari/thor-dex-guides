@@ -94,7 +94,8 @@ def calc_profile(c, data=None):
                 key = entry['k'] if side == 'field' else side + entry['k']
                 if key not in keys:
                     fields.append(dict(k=key, l=(label + ' ' + entry['l']).strip(), side=side,
-                                       type=entry.get('type', 'toggle'), group=entry['group'],
+                                       type=entry.get('type', 'toggle'),
+                                       **({'group': entry['group']} if entry.get('group') else {}),
                                        **({'doubles': True} if entry.get('doubles') else {}),
                                        **({'max': entry['max']} if 'max' in entry else {})))
                     keys.add(key)
@@ -102,6 +103,16 @@ def calc_profile(c, data=None):
                     for index, field in enumerate(fields):
                         if field['k'] == key:
                             fields[index] = dict(field, doubles=True)
+        # Field groups by what an entry affects (template/README.md): field-states.json decides for a hack's own copy
+        # of one of its entries (Hardlove's Power Trick), and Focus Energy is one Pokemon's state.
+        groups = {entry['k']: entry.get('group') for entry in entries if entry.get('side') != 'field'}
+        for entry in fields:
+            name = entry['k'][3:] if entry.get('side') in ('atk', 'def') else None
+            group = groups.get(name) if name in groups else 'battle' if entry.get('to') == 'isFocusEnergy' else entry.get('group')
+            if group:
+                entry['group'] = group
+            else:
+                entry.pop('group', None)
     return profile
 
 

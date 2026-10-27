@@ -1398,7 +1398,7 @@ await test('A3 ally effects: stock parity, side ownership, Singles exclusion and
     ['SwordOfRuin', 'Tackle', '', 'ruin'], ['VesselOfRuin', 'Flamethrower', '', 'ruin'],
     ['BeadsOfRuin', 'Flamethrower', '', 'ruin'],
   ]) {
-    const selected = slot(move), toggle = (scope === 'aura' ? 'ally' : 'atk') + key;
+    const selected = slot(move), toggle = scope === 'aura' ? 'ally' + key : scope === 'ruin' ? key[0].toLowerCase() + key.slice(1) : 'atk' + key;
     const field = {gameType: 'Doubles', weather, [toggle]: true};
     const options = {gameType: 'Doubles', weather, ...(scope === 'side'
       ? {attackerSide: {['is' + key]: true}} : {['is' + key]: true})};
@@ -1412,6 +1412,9 @@ await test('A3 ally effects: stock parity, side ownership, Singles exclusion and
     if (scope !== 'side') assert.deepEqual(plain(engine.calc(target, user, selected, field).rolls),
       distributions(reference(target, user, selected, options).result.damage, 1)[0], key + ' reverse');
     if (scope === 'ruin') {
+      // The older per-side keys (saved before Ruin became one field-wide toggle) still read the same.
+      for (const old of ['atk' + key, 'def' + key]) assert.deepEqual(engine.calc(user, target, selected, {gameType: 'Doubles', [old]: true}).rolls,
+        engine.calc(user, target, selected, field).rolls, old + ' legacy');
       assert.deepEqual(engine.calc(user, target, selected, {...field, ['def' + key]: true}).rolls,
         engine.calc(user, target, selected, field).rolls);
       assert.deepEqual(engine.calc(user, target, selected, {gameType: 'Doubles', ['def' + key]: true}).rolls,
@@ -1427,8 +1430,11 @@ await test('A3 ally effects: stock parity, side ownership, Singles exclusion and
   distributions(reference(user, target, slot('Flamethrower'),
     {gameType: 'Doubles', weather: 'Sun', defenderSide: {isFlowerGift: true}}).result.damage, 1)[0]);
   const holder = {...user, ab: ability('Tablets of Ruin')};
-  assert.deepEqual(engine.calc(holder, target, slot('Tackle'), {gameType: 'Doubles', atkTabletsOfRuin: true}).rolls,
-    engine.calc(holder, target, slot('Tackle'), {gameType: 'Doubles'}).rolls);
+  assert.deepEqual(engine.calc(holder, target, slot('Tackle'), {gameType: 'Doubles', tabletsOfRuin: true}).rolls,
+    engine.calc(holder, target, slot('Tackle'), {gameType: 'Doubles'}).rolls, 'a holder is not lowered by its own Ruin');
+  const ruinTarget = {...target, ab: ability('Tablets of Ruin')};
+  assert.deepEqual(engine.calc(user, ruinTarget, slot('Tackle'), {gameType: 'Doubles', tabletsOfRuin: true}).rolls,
+    engine.calc(user, ruinTarget, slot('Tackle'), {gameType: 'Doubles'}).rolls, 'same-name Ruin does not stack');
 });
 
 await test('A3 Plus/Minus and Power Trick: all generations, saved stats unchanged', () => {
@@ -1550,7 +1556,7 @@ await test('A3 splits persist through multi-hit and Parental Bond recalculations
 await test('A3 assembly gates new fields by moves, abilities and generation, without duplicates', () => {
   const source = `import assemble,json
 entries=json.load(open('template/calc/field-states.json',encoding='utf-8'))
-names={'PowerSpot','SteelySpirit','FlowerGift','PlusMinus','allyFairyAura','allyDarkAura','allyAuraBreak','TabletsOfRuin','SwordOfRuin','VesselOfRuin','BeadsOfRuin','PowerTrick','waterSport','mudSport','powerSplit','guardSplit'}
+names={'PowerSpot','SteelySpirit','FlowerGift','PlusMinus','allyFairyAura','allyDarkAura','allyAuraBreak','tabletsOfRuin','swordOfRuin','vesselOfRuin','beadsOfRuin','PowerTrick','waterSport','mudSport','powerSplit','guardSplit'}
 def selected(profile):
  return {entry['k']:entry for entry in profile['field'] if entry['k'] in names or entry['k'][3:] in names}
 out={}
@@ -1576,7 +1582,7 @@ print(json.dumps(out))`;
   assert.ok(!offered.gen4.powerSplit && !offered.gen4.allyFairyAura && !offered.gen4.atkPowerSpot);
   assert.ok(offered.gen5.powerSplit && offered.gen5.guardSplit && !offered.gen5.allyFairyAura);
   assert.ok(offered.gen6.allyFairyAura && !offered.gen6.atkPowerSpot);
-  assert.ok(offered.expansion.atkPowerSpot && offered.expansion.atkTabletsOfRuin);
+  assert.ok(offered.expansion.atkPowerSpot && offered.expansion.tabletsOfRuin && offered.expansion.tabletsOfRuin.side === 'field' && !offered.expansion.atkTabletsOfRuin);
   for (const hack of ['emerald-imperium', 'hardlove-gold', 'photonic-sun', 'eternal-x']) {
     for (const key of ['waterSport', 'mudSport', 'powerSplit', 'guardSplit']) {
       assert.equal(offered[hack][key].side, 'field');
@@ -1585,7 +1591,7 @@ print(json.dumps(out))`;
     for (const key of ['atkPlusMinus', 'defPlusMinus']) assert.equal(offered[hack][key].doubles, true);
     if (hack !== 'hardlove-gold') for (const key of ['atkFlowerGift', 'defFlowerGift']) assert.equal(offered[hack][key].doubles, true);
   }
-  assert.ok(!offered['hardlove-gold'].allyDarkAura && !offered['hardlove-gold'].atkTabletsOfRuin && !offered['hardlove-gold'].atkFlowerGift);
+  assert.ok(!offered['hardlove-gold'].allyDarkAura && !offered['hardlove-gold'].tabletsOfRuin && !offered['hardlove-gold'].atkFlowerGift);
 });
 
 await test('R2 Protect blocks ordinary/fixed/exact hits without any reactions; bypasses and Z survive', async () => {
