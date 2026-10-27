@@ -61,10 +61,11 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
      76 calc scenario jobs pass; domcompare vs `9b1fb22`: only `#/calc` differs on all four, normal and kb, 0 errors;
      gaps: no calc text-zoom check, Foul Play engine-only). Agent handovers in `.tmp/D1-D3/report.md` (not committed).
      Decisions made on the way are in the spec's last two sections.
-   - **Now:** unit F1 (Sol) fixes the user's first Thor-preview test: preset cards built through the real data paths
-     (items didn't show in Edit), Sitrus shown twice, used items visible as used and kept for the fight, HP −min / −max
-     inside the move also apply the user's recoil / contact change, Intimidate a plain box (no text), Orb status not
-     applied on entry, Gravity / Wonder Room / Magic Room into Global, Laser Focus / Lucky Chant missing on EI. Then the
+   - **Now:** unit F1 (done, `95eed33`, handover `.tmp/F1/report.md`) fixed the user's first Thor-preview test:
+     presets build real cards, Sitrus shown once, used items show as **No item (used)** and stay used for the fight,
+     HP −min / −max inside the move apply the user's recoil / contact change, plain Intimidate box, Orb on entry,
+     Gravity / Wonder Room / Magic Room in Global; Laser Focus / Lucky Chant on EI were already offered (under States)
+     — recheck on the refreshed preview. 76/76 calc jobs pass; only `#/calc` differs. Then the
      user tests again (previews below), then the **docs step**: fold the spec's decisions into `template/README.md` /
      `tools/calc/README.md` / notes (HP follow-ups as built; "not modelled": Gen 7 Rollout glitch, Floral Healing /
      Life Dew's ally share), CLAUDE.md → Making a new guide step 2 (settle `review` field records; `setterStays`), delete
