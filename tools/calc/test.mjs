@@ -1588,6 +1588,24 @@ print(json.dumps(out))`;
   assert.ok(!offered['hardlove-gold'].allyDarkAura && !offered['hardlove-gold'].atkTabletsOfRuin && !offered['hardlove-gold'].atkFlowerGift);
 });
 
+await test('R2 Protect blocks ordinary/fixed/exact hits without any reactions; bypasses and Z survive', async () => {
+  for (const hack of ['emerald-imperium','hardlove-gold','photonic-sun','eternal-x']) {
+    const guide=await load(`hacks/${hack}/data.json`), config=(await load(`hacks/${hack}/hack.json`)).cfg.calc;
+    const calc=await createEngine(guide,config), species=guide.P.find(mon=>mon.n==='Snorlax');
+    const user={id:species.id,lv:50,nat:'Serious',ab:-1,it:'Life Orb',hp:100},target={...user,it:'Focus Sash'};
+    const selected={mv:guide.M.indexOf('Tackle')};
+    const result=calc.calc(user,target,selected,{defProtect:true});
+    assert.equal(result.max,0,hack);assert.equal(result.protected,true,hack);
+    for(const damage of [undefined,30]){const hit=calc.hit(user,target,selected,{defProtect:true},'max',damage==null?{}:{damage});assert.equal(hit.dealt,0);assert.deepEqual(plain(hit.atk),{});assert.deepEqual(plain(hit.def),{});}
+    const fixed=guide.M.indexOf('Seismic Toss');if(fixed>=0)assert.equal(calc.calc(user,target,{mv:fixed},{defProtect:true}).max,0,hack+' fixed');
+    const feint=guide.M.indexOf('Feint');if(feint>=0)assert(calc.calc(user,target,{mv:feint},{defProtect:true}).max>0,hack+' Feint');
+    const unseen=guide.AB.findIndex(entry=>entry[0]==='Unseen Fist');if(unseen>=0)assert(calc.calc({...user,ab:unseen},target,selected,{defProtect:true}).max>0,hack+' Unseen Fist');
+    if(config.zmove){const z={...selected,z:true},zUser={...user,it:'Normalium Z'},zTarget={...target,it:'',hp:calc.stats(target)[0]},normal=calc.calc(zUser,zTarget,z),protectedZ=calc.calc(zUser,zTarget,z,{defProtect:true});assert(protectedZ.max>0);assert.equal(protectedZ.protected,undefined);assert(protectedZ.rolls.every((value,index)=>Math.abs(value-normal.rolls[index]/4)<=1),'stock quarter-strength rounding');}
+    assert.equal(calc.entry(target,{defToxicSpikes:2,defSafeguard:true},'def').status,undefined,hack+' Safeguard');
+    assert.equal(calc.entry(target,{defToxicSpikes:2},'def').status,'tox',hack+' poison without Safeguard');
+  }
+});
+
 await test('initialisation and calculations leave guide/profile inputs unchanged', () => {
   assert.equal(JSON.stringify({data, profiles}), unchanged);
 });

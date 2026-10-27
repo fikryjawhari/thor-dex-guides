@@ -262,7 +262,7 @@ function entry(set, values = {}, side = 'atk') {
     || (mon.hasAbility('Leaf Guard') && field.hasWeather('Sun', 'Harsh Sunshine'))
     || (mon.hasAbility('Flower Veil') && mon.hasType('Grass'))
     || (mon.hasAbility('Shields Down') && mon.name === 'Minior-Meteor');
-  if (profile.gen >= 4 && toxic && !mon.status && !poisonImmune && !field.hasTerrain('Misty')) {
+  if (profile.gen >= 4 && toxic && !values[side + 'Safeguard'] && !mon.status && !poisonImmune && !field.hasTerrain('Misty')) {
     result.status = toxic === 2 ? 'tox' : 'psn';
   }
   if (profile.gen >= 6 && values[side + 'StickyWeb']
@@ -753,7 +753,9 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
   if (!['min', 'max'].includes(roll)) throw new Error('DMG: hit roll must be min or max');
   const exact = options.damage !== undefined;
   if (exact && !(Number.isInteger(options.damage) && options.damage >= 0)) throw new Error('DMG: exact damage must be a nonnegative integer');
-  const result = exact ? null : calculateMove(atk, def, slot, values);
+  const calculated = calculateMove(atk, def, slot, values);
+  if (calculated?.protected) return {atk: {}, def: {}, dealt: 0, hits: 0, log: ['Protected']};
+  const result = exact ? null : calculated;
   if (!result && !exact) return null;
   const user = actionState(atk, values, 'atk');
   const target = actionState(def, values, 'def');
@@ -1137,6 +1139,7 @@ function calcCore(atk, def, slot, values = {}, action = null) {
   }
   return {
     cat: move.category, rolls: [...rolls], hits: per.length, min, max, crit,
+    ...(description.isProtected && !max ? {protected: true} : {}),
     ...(preset ? {bp: preset} : (auto || HP_POWER.has(moveData.name)) && slot.bp === undefined && description.moveBP
       ? {bp: description.moveBP} : !listed && !useZ && slot.bp === undefined && !perHit && shownPower !== moveData.basePower
         ? {bp: shownPower} : {}),
@@ -1175,6 +1178,7 @@ function unshieldedMove(atk, def, slot, values = {}) {
   if (taken && !(slot.bp > 0)) return null;
   const base = calcCore(atk, def, {...slot, bp: 100, hits: 1, z: false}, values);
   if (!base) return null;
+  if (base.protected) return base;
   const attacker = pokemon(atk), defender = pokemon(def);
   const max = defender.maxHP();
   const current = Math.max(0, Math.min(max, def.hp ?? max));

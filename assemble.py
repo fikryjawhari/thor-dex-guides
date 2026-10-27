@@ -70,8 +70,6 @@ def calc_profile(c, data=None):
     base = json.loads(read('template', 'calc', 'profiles', c['base'] + '.json'))
     profile = merged(base, c)
     if data is not None:
-        profile['field'] = [entry for entry in profile.get('field', [])
-                            if profile.get('zmove') or entry.get('to') != 'isProtected']
         moves = set(data['M'])
         abilities = {entry[0] for entry in data.get('AB', [])} if profile.get('abilities', True) else set()
         entries = json.loads(read('template', 'calc', 'field-states.json'))

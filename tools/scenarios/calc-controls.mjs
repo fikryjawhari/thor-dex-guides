@@ -177,10 +177,10 @@ const checks = [
       const hpOf = () => page.value(`+document.querySelector('[data-hp="foe"]').value`);
       const maxOf = () => page.value(`+document.querySelector('.dmatch .cc[data-s="foe"] .mx').textContent.replace('/','')`);
       await page.tap('.dres:not(.na) .mr:not(.em) .mm', { index: 0 });
-      const minTotal = await page.value(`+document.querySelector('.dres:not(.na) .mr.open .ab [data-a="sub"]').dataset.v`);
+      const minTotal = await page.value(`+document.querySelector('.dres:not(.na) .mr.open .r1 [data-a="sub"]').dataset.v`);
       const before = await hpOf();
       const koBefore = await attackerRows(page);
-      await page.tap('.dres:not(.na) .mr.open .ab [data-a="sub"]', { index: 0 });
+      await page.tap('.dres:not(.na) .mr.open .r1 [data-a="sub"]', { index: 0 });
       const after = await hpOf();
       assert.equal(after, Math.max(0, before - minTotal), `defender HP ${before} − ${minTotal}`);
       const koAfter = await attackerRows(page);

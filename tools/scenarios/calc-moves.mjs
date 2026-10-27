@@ -131,11 +131,13 @@ const checks = [{
     const before = await hps(page);
     const [low, high] = (await page.value(rowInfo('Double-Edge'))).hp.split('–').map(Number);
     const chip = await page.value(`${row('Double-Edge')}.querySelector('.hu').textContent`);
+    assert.match(chip,/^\d+–\d+$/,'unsigned range');
+    assert.equal(await page.value(`${row('Double-Edge')}.querySelector('.hu').tagName`),'SPAN','follow-up is not tappable');
     assert.equal(await page.value(`${row('Swift')}.querySelector('.hu')`), null, 'no amount without an HP effect');
-    await page.tap(`.dres:not(.na) .mr:has([data-slot="0"]) .hu`);
+    await page.tap(`.dres:not(.na) .mr:has([data-slot="0"]) [data-a="sub"][data-roll="min"]`);
     let after = await hps(page);
     assert.equal(after.foe, before.foe - Math.min(before.foe, low), 'foe loses the minimum roll');
-    assert.equal(after.mine, before.mine + Number(chip.replace('−', '-')), 'you lose the recoil shown');
+    assert.equal(after.mine, before.mine + -Number(chip.split('–')[0]), 'you lose the recoil shown');
     await page.tap(`.dres:not(.na) .mr:has([data-slot="1"]) .hu`);
     const healed = await hps(page);
     assert.ok(healed.mine > after.mine, 'Soft-Boiled heals');
@@ -147,7 +149,7 @@ const checks = [{
     await page.value(`(()=>{CALC.state().dir='in';CALC.render();})()`);
     const foeRow = (await page.value(rowInfo('Double-Edge'))).hp.split('–').map(Number);
     const start = await hps(page);
-    await page.tap(`.dres:not(.na) .mr:has([data-slot="0"]) .hu`);
+    await page.tap(`.dres:not(.na) .mr:has([data-slot="0"]) [data-a="sub"][data-roll="max"]`);
     const end = await hps(page);
     assert.equal(end.mine, start.mine - Math.min(start.mine, foeRow[1]), 'the player loses the maximum roll');
     assert.ok(end.foe < start.foe, 'the foe takes its recoil');

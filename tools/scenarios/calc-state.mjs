@@ -282,7 +282,7 @@ const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windo
     assert.equal(ranges.length,2);
     const total=[0,1].map(index=>ranges.reduce((sum,range)=>sum+range[index],0)).join('–');
     assert.equal(await page.text(`${first} .hp`),total);
-    assert.equal(await page.count(`${first} .rcol .rh`),1,'no stacked controls');
+    assert.equal(await page.count(`${first} .dmovecontrols .rh`),1,'no stacked controls');
     await page.tap(`${first} [data-a=hitv]`);
     assert.equal(await page.text(`${first} .hp`),ranges[0].join('–'));
     await page.tap(`${first} [data-a=hitv]`);
