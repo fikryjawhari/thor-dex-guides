@@ -35,10 +35,12 @@ await runChecks({name:'calc-field-states', file, checks:[{
     for(const key of ['gravity','wonderRoom','magicRoom']){
       if(!guide.cfg.calc.field.some(entry=>entry.k===key))continue;
       assert.equal(await page.value(`document.querySelector('[data-f="${key}"]').closest('[data-fgroup]').dataset.fgroup`),'field:battle');
+      await openGlobals(page);
       await tapField(page,key);
       assert.equal(await page.value(`!!CALC.state().field.${key}`),true);
       await page.reload();await page.goto('#/calc');
       assert.equal(await page.value(`!!CALC.state().field.${key}`),true);
+      await openGlobals(page);
       await tapField(page,key);
       assert.equal(await page.value(`!!CALC.state().field.${key}`),false);
     }
