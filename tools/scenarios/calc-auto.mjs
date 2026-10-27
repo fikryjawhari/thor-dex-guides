@@ -542,6 +542,33 @@ checks.push({
 });
 
 checks.push({
+  id: 'used item fight', title: 'all consumed items stay visibly used across switches/reload, replacement and new fight clear them',
+  run: async page => {
+    await setupCalc(page);
+    for(const item of ['Focus Sash','Weakness Policy','Sitrus Berry','Air Balloon','Normal Gem']){
+      await configure(page,{name:'Snorlax',i:item},null);
+      await page.value(`CALC.set('mine','used',true);CALC.render()`);
+      await editorOpen(page,'mine',true);
+      assert.equal(await page.value(`document.querySelector('.cc[data-s="mine"] select[data-e="it"] option:checked').textContent`),item+' (used)');
+      const index=await page.value('CALC.state().mine.i');
+      await page.value(`CALC.state().custom.push({...CALC.state().custom[${index}],pid:'other'});CALC.state().mine.i=CALC.state().custom.length-1;CALC.render();CALC.state().mine.i=${index};CALC.render()`);
+      await reloadCalc(page);
+      assert.equal(await page.value('CALC.mon("mine").used'),true,item+' kept after switch and reload');
+      await editorOpen(page,'mine',true);
+      await choose(page,'.cc[data-s="mine"] select[data-e="it"]',item);
+      assert.ok(!await page.value('CALC.mon("mine").used'),'item replacement clears used');
+      await page.value(`CALC.set('mine','used',true);CALC.render()`);
+      await page.tap('[data-a="tnext"]');
+      assert.ok(!await page.value('CALC.mon("mine").used'),'trainer change clears used');
+      await page.value(`CALC.set('mine','used',true);CALC.render()`);
+      await openField(page);
+      await page.tap('[data-a="fightreset"]');
+      assert.ok(!await page.value('CALC.mon("mine").used'),'Reset fight clears used');
+    }
+  },
+});
+
+checks.push({
   id: 'berry amount once', title: 'ready berry is chip-only; residual crossing includes and consumes the berry',
   run: async page => {
     await setupCalc(page);
@@ -553,7 +580,7 @@ checks.push({
     await page.tap('[data-a="eot"][data-s="mine"]');
     assert.ok(await hpOf(page,'mine')<before,'residual only');
     assert.ok(!await page.value('CALC.mon("mine").used'),'ready berry is not silently consumed');
-    await page.value(`CALC.set('mine','hp',Math.floor(DMG.stats(${engineSet('mine')})[0]/2)+1);CALC.render()`);
+    await page.value(`CALC.set('mine','hp',Math.floor(DMG.stats((${engineInput})(CALC.mon('mine')))[0]/2)+1);CALC.render()`);
     assert.equal(await page.count('[data-a="berry"][data-s="mine"]'),0,'not ready before residual');
     await page.tap('[data-a="eot"][data-s="mine"]');
     assert.equal(await page.value('CALC.mon("mine").used'),true,'residual crossing consumes berry');
