@@ -273,6 +273,12 @@ Sword/Shield or Download stages; those are recomputed by the next calculation. A
   until that reaction, multi-hit berries can heal before the final threshold check.
   `options: {damage: nonnegativeInteger}` instead applies an exact damage amount: only threshold
   berries and Berserk/Anger Shell, no Sash/Sturdy, item popping, contact or KO boosts. A zero amount is legal.
+  `options: {damage, reactions: true}` is the custom Damage action: the typed amount replaces the roll,
+  but normal on-hit reactions (Sash/Sturdy, shield, item/stat/field changes, contact and KO boosts) remain.
+  `options: {strike: n}` applies only the displayed nth strike, retaining normal reactions; omitted/zero means all.
+  Protect returns an empty-patch zero-hit action for either damage mode; `calc` marks it `protected: true`.
+  Move-data bypasses and Unseen Fist/Piercing Drill contact bypass fully; Z stays quarter strength, even without a crystal.
+  Safeguard blocks the protected side's automatic Toxic Spikes status, not self-induced Orb/Rest status.
   `hits` counts damaging strikes (not an absorbed hit, zero in exact mode), stopping on the defender's KO.
   `contact` is informational user change, not an applied attacker HP patch (see HP moves).
 - `turn(set, field, otherSet, side)` returns `{[side]: {hp, used?, stg?, toggles?}, log: string[], parts}`.

@@ -259,7 +259,7 @@ function route2(){calcPage();SH.redraw();}
 document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const el=e.target.closest('[data-a],[data-f]');if(!el||!el.closest('#app'))return;
  const a=el.dataset.a;
  if(el.dataset.f&&el.tagName==='BUTTON'){const k=el.dataset.f,entry=prof.field.find(entry=>entry.k===k);markManual(k);ST.field[k]=el.dataset.value??(entry?.max?((Number(ST.field[k])||0)+1)%(entry.max+1):(ST.field[k]?0:1));if(entry?.group==='hazards')rearmHazards(entry.side==='def'?'foe':'mine',k.endsWith('ToxicSpikes')?'status':k.endsWith('StickyWeb')?'web':'damage');window.__fo=1;save();refresh();return;}
- if(a==='row'&&e.target.closest('.dd'))return;
+ if(a==='row'&&e.target.closest('.dd,input,select,.nv,.num'))return;
  if(a==='mpick'){ST.mine={src:el.dataset.src,b:+el.dataset.b,i:+el.dataset.i};save();refresh();}
  else if(a==='fpick'){ST.foe.i=+el.dataset.i;save();refresh();}
  else if(a==='sel'){if(e.target.closest('input,select,.nv,.num,.ed,.stb,.mg,.hpl,.dmonstate,.ddl'))return;ST.dir=el.dataset.s==='mine'?'out':'in';save();refresh();}

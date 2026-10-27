@@ -1615,7 +1615,7 @@ await test('R2 selected strike keeps Sash/shield/contact; custom exact amount ke
   assert.equal(custom.def.hp,1);assert.equal(custom.def.used,true);
   const stamina=engine.hit(user,{...target,it:'',ab:ability('Stamina')},slot('Tackle'),{},'max',{damage:10,reactions:true});
   assert.equal(stamina.def.hp,max-10);assert.equal(stamina.def.stg[2],1);
-  const shielded=set('Mimikyu',{ab:ability('Disguise'),broken:false}),broken=engine.hit(user,shielded,slot('Double Hit'),{},'max',{strike:1});
+  const shielded=set('Mimikyu',{ab:ability('Disguise'),broken:false}),broken=engine.hit(user,shielded,slot('Rock Blast'),{},'max',{strike:1});
   assert.equal(broken.def.broken,true);assert.equal(broken.dealt,0);
 });
 

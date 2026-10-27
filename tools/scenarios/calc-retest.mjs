@@ -122,6 +122,7 @@ checks.push({
     assert(Math.max(...rows.map(row=>row.height))-Math.min(...rows.map(row=>row.height))<1,'equal closed row heights including status, stock and multi-hit');
     assert(rows.every(row=>row.controls&&row.openActions===0),'all controls on bar, no old HP actions');
     assert.equal(rows[0].endpoints,2);assert.match(rows[0].range,/^\d+–\d+$/);assert.equal(rows[0].rangeButton,false);
+    assert.equal(await page.value(`(()=>{const select=document.querySelector('.dres:not(.na) [data-mo=stock]'),event=new MouseEvent('click',{bubbles:true,cancelable:true});select.dispatchEvent(event);return event.defaultPrevented||select.closest('.mr').classList.contains('open');})()`),false,'bar Stockpile stays native and does not open the row');
     if(mode==='normal'&&((width===260&&height===316)||(width===537&&height===424))){
       mkdirSync('.tmp/R2',{recursive:true});
       await page.value(width<480?`scrollTo(0,document.querySelector('.fbar').getBoundingClientRect().top+scrollY-2)`:'scrollTo(0,0)');await page.settle();
@@ -194,11 +195,11 @@ checks.push({
       if(!guide().data.M.includes(name))continue;
       await page.value(`CALC.state().dir='${side==='mine'?'out':'in'}';CALC.set('${side}','m',[M.indexOf('${name}')]);CALC.render();document.querySelector('${r2Row} [data-a=movetoggle]').click()`);
       assert.equal(await page.value(`CALC.mon('${side}').vol`),vol,name+' user state');
-      await page.tap(`[data-a=eopen][data-s=${side}]`);await page.select(`.cc[data-s=${side}] select[data-e=vol]`,'');assert.equal(await page.value(`document.querySelector('${r2Row} [data-a=movetoggle]').getAttribute('aria-pressed')`),'false');await page.tap(`[data-a=eopen][data-s=${side}]`);
+      await page.tap(`[data-a=eopen][data-s=${side}]`);await page.value(`(()=>{const select=document.querySelector('.cc[data-s=${side}] select[data-e=vol]');select.value='';select.dispatchEvent(new Event('change',{bubbles:true}));})()`);assert.equal(await page.value(`document.querySelector('${r2Row} [data-a=movetoggle]').getAttribute('aria-pressed')`),'false');await page.tap(`[data-a=eopen][data-s=${side}]`);
     }
     for(const [name,key,value] of [['Hail','weather',guide().data.cfg.calc.field.find(entry=>entry.k==='weather').o.some(entry=>entry[0]==='Snow')?'Snow':'Hail'],['Rain Dance','weather','Rain'],['Electric Terrain','terrain','Electric']]){
       if(!guide().data.M.includes(name))continue;
-      await page.value(`CALC.set('foe','m',[M.indexOf('${name}')]);CALC.render();document.querySelector('${r2Row} [data-a=movetoggle]').click()`);assert.equal(await page.value(`CALC.state().field.${key}`),value,name+' own profile weather/terrain');await page.select(`.dfight select[data-f=${key}]`,'');assert.equal(await page.value(`document.querySelector('${r2Row} [data-a=movetoggle]').getAttribute('aria-pressed')`),'false');
+      await page.value(`CALC.set('foe','m',[M.indexOf('${name}')]);CALC.render();document.querySelector('${r2Row} [data-a=movetoggle]').click()`);assert.equal(await page.value(`CALC.state().field.${key}`),value,name+' own profile weather/terrain');await page.value(`(()=>{const select=document.querySelector('.dfight select[data-f=${key}]');select.value='';select.dispatchEvent(new Event('change',{bubbles:true}));})()`);assert.equal(await page.value(`document.querySelector('${r2Row} [data-a=movetoggle]').getAttribute('aria-pressed')`),'false');
     }
   },
 },{

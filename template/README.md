@@ -109,25 +109,31 @@ Download cycles Auto (with its actual stat), Atk, Sp. Atk, None, shown as `A·At
 (tooltip spells it out).
 Details show used/listed/typed power, crit chance/stage and first-/between-hit changes; the move's own changes alone
 can be omitted. Forced crit locks C on; blocked crit disables it. No new localStorage key is used.
-**HP moves** (2026-10-26): fixed / fraction damage (Seismic Toss, Super Fang, Endeavor, Final
-Gambit, Psywave, OHKO moves...) are ordinary rows with one number (no Power box). Counter / Mirror Coat / Bide / Metal
-Burst / Comeuppance: the Power box reads Taken; the row shows — until it is typed (Reset power clears it). A move that changes its user's HP
-(recoil, drain, Life Orb, Shell Bell, heals, costs, self-KO, Pain Split `↔n`, Wish `↻`, Rest `Zz`) has a signed amount
-in the residual style: at the start of the % line (after Z), or in place of a status row's —. **One tap = one use**:
-the target loses the default damage (the player attacking: minimum roll; the foe attacking: maximum roll; all hits;
-capped at its HP) and the user gets the matching change (Rest also sets Sleep). The opened row of a damage-dependent
-move has **Dealt / You** boxes: Dealt gives your change; You (the recoil / recovery seen) gives the damage range that
-produces it, using its minimum when the player attacks, its maximum when the foe does; Apply applies both. Not stored.
-HP −min / −max apply the hit through `DMG.hit` and the user's recoil, drain, Life Orb and contact costs through
-`DMG.hp`, using the actually dealt damage and damaging hit count, exactly like the outer one-use amount. Scenario: `tools/scenarios/calc-moves.mjs`.
-Contact costs (Rocky Helmet / Rough Skin / Iron Barbs) are included once in the one-use amount, using the
-engine's actually applied hit count, including early KOs. Crash moves (Jump Kick, High Jump Kick, Axe Kick,
-Supercell Slam) have a separate **miss −HP** chip: `DMG.hp` with `miss: true`, and the default would-be roll
-for Gen 4's damage-based rule. Its tap changes only the user's HP and logs the miss; no target hit or contact cost.
-**Stockpile** is a 1–3 select in Swallow / Spit Up's opened details (`ST.st`, scratch, default 1): Swallow heals
-quarter / half / full HP, Spit Up uses power 100 / 200 / 300; typed Power still wins. It does not occupy the
-row's top-right control or share Metronome's counter. Recoil / drain / crash chips are no taller than the % line:
-closed rows keep equal heights with or without a chip, including the two movesets in wide windows.
+**HP moves / move bars** (2026-10-27): damaging rows expose boxed minimum and maximum endpoints on the closed
+row. Either applies that displayed damage to the opposite card through `DMG.hit`, then the user's recoil, drain,
+Life Orb and contact costs through `DMG.hp`, using actual dealt damage and damaging hits. Crit, selected hit count,
+Z and per-hit inspection affect the endpoints; Sash/Sturdy, berries, Broken and automatic reactions still apply.
+The row's second bar contains every crit, hit-cycle, category, move-state and Stockpile control; all closed rows,
+including status and multi-hit rows, have equal heights. Nothing sits outside the move card.
+Recoil/drain/contact follow-ups are noninteractive unsigned red/green ranges. Status heals/costs, Rest, Wish and
+Pain Split retain their one-use action in place of the status row's dash. Crash moves keep their separate miss
+button, changing only the user's HP. Open damaging rows have a Damage amount + Apply (number pad in dvkb); rolls
+fill that amount. Exact damage retains on-hit reactions without rerolling. The inverse You box is retained for
+inferring damage from observed recoil/recovery; its separate Apply recovery amount keeps threshold-only semantics.
+None of these amount entries is stored. Fixed damage has equal min/max endpoints and no Power box; Counter / Mirror
+Coat / Bide / Metal Burst / Comeuppance still use Taken and show a dash until specified. Stockpile's native 1–3
+select is on the bar for Swallow / Spit Up (`ST.st`, scratch, default 1); typed Spit Up power still wins.
+**Move → Field / Edit**: profile-offered screens, rooms, weather, terrain and side states have a switch on the move
+row (status: instead of the dash; damaging: beside crit). They share the exact Field keys and manual lifecycle.
+Own states use the move user's side, hazards/debuffs the opponent's; Dig/Fly/Bounce/Dive/Minimize share the exclusive
+Edit battle state. Layered hazards cycle through their legal counts; Helping Hand and Dragon Cheer obey Doubles
+availability. Weather/terrain switches select that guide's value and toggle it back to none: Hail sets Snow in EI
+and Hardlove, Hail in Photonic/Eternal X. The native Field/Edit control and row switch stay synchronized both ways.
+Safeguard is per side where the move exists and blocks automatic opposing status (currently Toxic Spikes entry),
+not self-induced Orb/Rest status. Protect is offered wherever a Protect-family move exists, independent of Z support.
+Protected incoming attacks show zero / Protected; endpoints and custom Apply do nothing. Feint / move-data bypasses
+and Unseen Fist contact bypass fully; Photonic Z damage is quarter strength, including with no held Z-crystal.
+Scenarios: `calc-retest`, `calc-moves`, `calc-controls`, `calc-state`, `calc-field-states`, `calc-triple`, `calc-zmove`.
 **Hit totals**: collapsed damage sums all selected hits, including Parental Bond. Fixed multi-hit and Parental Bond
 share one total/H1/H2/etc. inspection button; ordinary variable-hit moves cycle through legal counts plus a one-hit
 inspection. Loaded Dice restricts standard 2-5-hit choices to 1/4/5; Skill Link to 1/max. Loaded Dice makes Population Bomb a 1 / 4-10 cycle
@@ -148,8 +154,8 @@ Trick Room is always offered from Gen 4 and reverses the faster-Speed colour, no
 Intimidate has a checked-by-default **Intim.** header box on its holder; the target's HP line shows the engine's
 net `Int −1` / reaction mark without changing Edit stages. Orb status is derived through `DMG.derived` and labelled
 `Burn (Orb)` / `Toxic (Orb)` in Edit; choosing any status, including None, is a kept override. Ice Face restoration
-also comes from the entry API. HP −min / −max apply `DMG.hit` patches (HP, consumed items, stages, toggles, status,
-Broken and field events); the one-use HP chip follows with `DMG.hp` using actual dealt damage / hit count, including
+also comes from the entry API. The boxed damage endpoints apply `DMG.hit` patches (HP, consumed items, stages, toggles, status,
+Broken and field events); the user change follows with `DMG.hp` using actual dealt damage / hit count, including
 contact costs. Dealt / You Apply uses exact-damage threshold reactions only. Turn end applies `DMG.turn`, including
 Speed Boost and eligible berries. An eligible berry has its own HP-line chip (`Sitrus +13`, `Salac Spe+1`), applying
 `DMG.berry` once. A crowded HP line with a berry or Intimidate wraps rather than clipping actions or widening the page.
@@ -161,7 +167,7 @@ font at render, so text zoom counts), each toggle grid uses its own measured wid
 of Field), a Player | Foe switch shows one side at full width (the count of its active toggles on each button; the
 choice is not stored). Weather/Terrain have no caption: the empty choice reads "No weather" / "No terrain".
 **Stackable states** (2026-10-26): `template/calc/field-states.json` defines side controls; `assemble.py` adds only
-those supported by the guide's moves / causing abilities and generation (Protect additionally needs `zmove`). The engine accepts
+those supported by the guide's moves / causing abilities and generation (Protect needs a Protect-family move, not `zmove`). The engine accepts
 these keys independently of UI availability. Dig / Fly / Dive / Minimized / Switching out remain the exclusive
 Edit selection. Other states fold under States, Turn end and Hazards, with active counts; fold state is session-only.
 Laser Focus / Lucky Chant / Dragon Cheer are per-side States toggles (`atk*` Player, `def*` Foe), gated by their
