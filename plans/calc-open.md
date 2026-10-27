@@ -19,6 +19,7 @@ sub-step, run Checks (below), ask before pushing.
 5. After the merge: **save readers and the file picker** (below), then footer credits (PROGRESS.md → Open).
 
 Smaller, take with a nearby job:
+- Apply −HP from the closed move row (user, 2026-10-27): for the UI pass
 - **Row heights with an HP chip** (left for later by the user, 2026-10-26): a row with a recoil / drain chip is taller
   (36 px at 260, 42 wide, vs 31 / 33), so in wide windows the two movesets drift apart; `calc-layout` check 20 fails on
   EI (Snover's Mega Drain +10 vs Cloyster), the calc's only failing scenario. Fix: a chip no taller than the % line.

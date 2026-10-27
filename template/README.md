@@ -105,7 +105,8 @@ the target loses the default damage (the player attacking: minimum roll; the foe
 capped at its HP) and the user gets the matching change (Rest also sets Sleep). The opened row of a damage-dependent
 move has **Dealt / You** boxes: Dealt gives your change; You (the recoil / recovery seen) gives the damage range that
 produces it, using its minimum when the player attacks, its maximum when the foe does; Apply applies both. Not stored.
-HP −min / −max stay damage-only. Scenario: `tools/scenarios/calc-moves.mjs`.
+HP −min / −max apply the hit through `DMG.hit` and the user's recoil, drain, Life Orb and contact costs through
+`DMG.hp`, using the actually dealt damage and damaging hit count, exactly like the outer one-use amount. Scenario: `tools/scenarios/calc-moves.mjs`.
 Contact costs (Rocky Helmet / Rough Skin / Iron Barbs) are included once in the one-use amount, using the
 engine's actually applied hit count, including early KOs. Crash moves (Jump Kick, High Jump Kick, Axe Kick,
 Supercell Slam) have a separate **miss −HP** chip: `DMG.hp` with `miss: true`, and the default would-be roll
