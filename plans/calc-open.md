@@ -10,7 +10,7 @@ worktree, one template / engine session at a time, commit per sub-step, run Chec
 
 1. **Build `plans/calc-team.md`** (decided 2026-10-27; spec and build units there, mockup `plans/calc-team-mockup/`):
    both teams, both cards, all four moves and the fight bar in the first frame at every size; facing columns with
-   nameless cards at narrow; a drag-and-drop team row.
+   nameless cards at narrow; a drag-and-drop team row; Auto Doubles from trainer tags / partners (build unit 4).
 2. **Save readers and the file picker** (below), on their own branch `worktree-damage-calc-saves` made from this one.
    Done before the merge: "a calc is useless if I have to import Pokémon by hand" (the user).
 3. **The user's mechanics check**: each guide's notes.md → Damage calc → In-game tests. They stay open and merge
