@@ -445,17 +445,13 @@ body.calc-route .cc .l1 .dmonstate input{width:14px;height:14px;margin:0;accent-
 .dformat button{min-height:26px;border:1px solid var(--line);background:var(--panel2);color:var(--mut);font:700 12px system-ui;cursor:pointer;touch-action:manipulation}
 .dformat button:first-child{border-radius:7px 0 0 7px}.dformat button:last-child{border-radius:0 7px 7px 0}
 .dformat button[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#111}
-.dfside{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px}
-.dfside section{min-width:0}.dfside section>b{display:block;text-align:center;font-size:11px;line-height:14px;margin-bottom:2px}
-.dfside .dtg{display:grid;grid-template-columns:minmax(0,1fr);gap:3px}
-.dfside .dtg button{width:100%}
-.dfsw{display:none;grid-column:1/-1;grid-template-columns:1fr 1fr}
+.dfside{display:flex;flex-direction:column;gap:4px;min-width:0}
+.dfsw{display:grid;grid-template-columns:1fr 1fr}
 .dfsw button{min-height:24px;border:1px solid var(--line);background:var(--panel2);color:var(--mut);font:700 11px system-ui;cursor:pointer;touch-action:manipulation}
 .dfsw button:first-child{border-radius:7px 0 0 7px}.dfsw button:last-child{border-radius:0 7px 7px 0}
 .dfsw button[aria-pressed=true]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
-.dfside.one{grid-template-columns:minmax(0,1fr)}
-.dfside.one .dfsw{display:grid}
-.dfside.one section>b,.dfside.one section:not(.on){display:none}
+.dfside section{min-width:0;display:flex;flex-direction:column}.dfside section:not(.on){display:none}
+.dfside section>.dtg:empty{display:none}
 body.calc-route .dfb{box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;gap:3px}
 body.calc-route .dfb>*{flex-shrink:0}
 details.dfield>summary .mut{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -469,10 +465,8 @@ details.dfield>summary .mut{min-width:0;overflow:hidden;text-overflow:ellipsis;w
 .dffield>summary{min-height:24px;white-space:nowrap}
 .dhapply{min-height:28px;width:100%;margin-top:3px;border:1px solid var(--line);border-radius:7px;background:var(--panel2);color:var(--fg);font:inherit;font-size:11px;cursor:pointer;touch-action:manipulation}
 .dhapply:disabled{opacity:.45;cursor:default}
-.dfside section{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:max-content;align-content:start;column-gap:3px}
-.dfside section>b,.dfside section>.dtg,.dfgroup{grid-column:1/-1}
-.dfside section:not(:has(.dfgroup[open]))>.dfgroup{grid-column:auto}
 .dfgroup{min-width:0}
+.dfgroup>.endbar.dfend{min-height:28px;margin-top:3px;font-size:11px}
 body.calc-route .dfside{gap:3px}
 .mr .rcol .rh[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#111}
 .mr .rcol .rc:disabled{cursor:default;opacity:.7}
@@ -501,7 +495,7 @@ body.calc-route .dfight .dformat button{min-height:26px;padding:0 4px;font-size:
 body.calc-route .dfight .dfreset{min-height:26px;padding:0;font-size:17px}
 body.calc-route .dfight select.dauto{border-style:dashed}
 body.calc-route .dfight select.dmanual{border-color:var(--acc)}
-@media(min-width:480px){body.calc-route .top>.dside{align-self:stretch;height:100%;box-sizing:border-box}body.calc-route #app.tl .fteam{flex:1 1 auto;overflow-y:auto}body.calc-route .ft{min-height:40px}body.calc-route .fit{gap:4px}}
+@media(min-width:480px){body.calc-route .top>.dside{align-self:stretch;height:100%;box-sizing:border-box}body.calc-route #app.tl .fteam{flex:1 1 auto;overflow-y:auto}body.calc-route .ft{min-height:30px}body.calc-route .fit{gap:4px}}
 
 body.calc-route .cc .cl{min-height:20px;gap:1px;font-size:10px;flex-wrap:nowrap}
 body.calc-route .cc .cl>*{flex-shrink:0}
@@ -528,7 +522,9 @@ body.calc-route .sheet .shb{min-height:0}
 @media(prefers-color-scheme:light){body.calc-route .dturn.dn,body.calc-route .dqp .dn{color:#b63528}body.calc-route .dturn.up,body.calc-route .dqp .up{color:#187b47}}
 body.calc-route.kbopen .sheet{bottom:var(--kbh,0px)}
 body.calc-route.kbopen .sheet .shb{padding-bottom:4px}
-@media(min-width:480px){body.calc-route .ft .l2t{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}body.calc-route .ft .l1t{flex-wrap:wrap;gap:1px 4px}body.calc-route .ft .l1t em{max-width:100%;white-space:normal;overflow:visible;overflow-wrap:anywhere}}
+/* Preview rows: exactly two lines. Line 1 name, level, item, then the ability, which shrinks (to an ellipsis) first. */
+body.calc-route .ft .l1t{flex-wrap:nowrap;gap:4px}body.calc-route .ft .l1t{overflow:hidden}body.calc-route .ft .l1t b{flex:0 1 auto}body.calc-route .ft .l1t i{flex:none}
+body.calc-route .ft .l1t em{flex:0 10 auto;margin-left:0}body.calc-route .ft .l1t em:empty{display:none}body.calc-route .ft .l1t em.ab{flex:0 1000 auto;margin-left:auto}
 
 body.calc-route .dres .mr>.mm{width:100%;min-width:0;padding:1px 5px;box-sizing:border-box}
 body.calc-route .dres .mr .r1{height:17px;line-height:17px;align-items:center;gap:3px}

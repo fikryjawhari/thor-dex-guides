@@ -22,7 +22,7 @@ const checks=[{
     else{
       assert(Math.abs(Math.max(...geometry.moves.map(rect=>rect.bottom))-height)<=1,'fourth rows end at viewport bottom');
       assert(geometry.fight.top>=height,'fight below moves');
-      if(height===424){assert(geometry.expanded,'full preview at 424');assert.equal(geometry.team,'auto','preview scrolls internally');assert.equal(geometry.preview.length,6,'all six full preview rows');assert(geometry.preview.every(row=>row.parts===2&&row.text.length>20),'ability and full move text in every row');}
+      if(height===424){assert(geometry.expanded,'full preview at 424');assert.equal(geometry.team,'auto','preview scrolls internally');assert.equal(geometry.preview.length,6,'all six full preview rows');assert(geometry.preview.every(row=>row.parts===1&&row.text.length>20),'item / ability line and move line in every row');}
     }
     assert(geometry.field.top>=geometry.fight.bottom,'Field follows fight bar');
     if(mode==='normal'&&(width!==260||height===316)){
@@ -218,4 +218,104 @@ checks.push({
   },
 });
 
+// R3: Field groups stacked in one column with per-group collapse bars; two-line trainer preview rows; short fight selects.
+const r3Shot=async(page,name)=>{mkdirSync('.tmp/R3',{recursive:true});const shot=await page.send('Page.captureScreenshot',{format:'png'});writeFileSync(`.tmp/R3/${guide().name}-${name}.png`,Buffer.from(shot.data,'base64'));};
+const r3Field=async(page,doubles=false)=>{
+  await setupCalc(page);
+  if(!await page.value('document.querySelector(".dfield").open'))await page.tap('.dfield > summary');
+  if(doubles)await page.tap('[data-f=gameType][data-value=Doubles]');
+};
+const r3Groups=`[...document.querySelectorAll('.dfb details[data-fgroup]')].filter(d=>d.offsetParent)`;
+checks.push({
+  id:'R3 groups',title:"Global first, then Player | Foe, then the side's groups stacked in one column at every size",sizes,
+  run:async(page,{width,height,mode})=>{
+    await r3Field(page,true);
+    const layout=await page.value(`(()=>{const body=document.querySelector('.dfb'),kids=[...body.children].filter(el=>el.offsetParent);const global=body.querySelector(':scope>details[data-fgroup="field:battle"]');return {globalIndex:kids.indexOf(global),switchIndex:kids.indexOf(body.querySelector(':scope>.dfside')),loose:body.querySelectorAll(':scope>.dtg button').length,outside:[...body.querySelectorAll('button[data-f]')].filter(el=>!el.closest('[data-field-side]')&&!el.closest('[data-fgroup="field:battle"]')).map(el=>el.dataset.f),switchShown:getComputedStyle(document.querySelector('.dfsw')).display!=='none',bars:document.querySelectorAll('.dfield .endbar').length,groupBars:document.querySelectorAll('.dfield details[data-fgroup]>.endbar').length,groups:document.querySelectorAll('.dfield details[data-fgroup]').length,trick:document.querySelector('[data-f=trickRoom]')?.closest('[data-fgroup]')?.dataset.fgroup??'none'};})()`);
+    assert.equal(layout.globalIndex,0,'Global is the first Field block');
+    assert(layout.switchIndex>layout.globalIndex,'side switch after Global');
+    assert.equal(layout.loose,0,'no global toggles outside Global');
+    assert.deepEqual(layout.outside,[],'every global toggle sits in Global');
+    assert(['field:battle','none'].includes(layout.trick),'Trick Room inside Global');
+    assert(layout.switchShown,'Player | Foe switch at every width');
+    assert.equal(layout.bars,layout.groupBars,'collapse bars only inside groups (no whole-Field bar)');
+    assert.equal(layout.groupBars,layout.groups,'one collapse bar per group');
+    for(const side of ['atk','def']){
+      await page.tap(`[data-a=fside][data-v=${side}]`);
+      for(const id of await page.value(`${r3Groups}.map(d=>d.dataset.fgroup)`))if(!await page.value(`document.querySelector('[data-fgroup="${id}"]').open`))await page.tap(`[data-fgroup="${id}"] > summary`);
+      const rects=await page.value(`${r3Groups}.map(d=>{const r=d.getBoundingClientRect();return {id:d.dataset.fgroup,top:r.top,bottom:r.bottom,left:r.left,width:r.width,open:d.open};})`);
+      const labels=await page.value(`${r3Groups}.map(d=>d.querySelector(':scope>summary').textContent.replace(/ · .*/,''))`);
+      assert(rects.length>=2&&rects.every(r=>r.open),side+' groups open: '+JSON.stringify(rects));
+      assert.equal(labels[0],'Global');
+      const own=labels.slice(1),order=['States','Turn end','Hazards'];
+      assert.deepEqual(own,order.filter(label=>own.includes(label)),side+' group order');
+      for(let i=1;i<rects.length;i++){
+        assert(Math.abs(rects[i].left-rects[0].left)<=1.5&&Math.abs(rects[i].width-rects[0].width)<=1.5,`one column: ${JSON.stringify(rects[i])} vs ${JSON.stringify(rects[0])}`);
+        assert(rects[i].top>=rects[i-1].bottom-1,`stacked: ${rects[i].id} below ${rects[i-1].id}`);
+      }
+      const grids=await page.value(`${r3Groups}.map(d=>getComputedStyle(d.querySelector(':scope>.dtg')).display)`);
+      assert(grids.every(display=>display==='grid'),'open groups use the normal toggle grid');
+      if(side==='atk'&&mode==='normal'&&((width===260&&height===316)||(width===537&&height===424))){
+        await page.value(`(()=>{const d=document.querySelector('.dfield');d.scrollIntoView({block:'start'});})()`);await page.settle();
+        await r3Shot(page,`field-${width}x${height}`);
+      }
+    }
+    // Open / closed state survives a redraw (session state, as before).
+    await page.value('CALC.render()');await page.settle();
+    assert(await page.value(`${r3Groups}.every(d=>d.open)`),'open groups stay open after a redraw');
+  },
+},{
+  id:'R3 bars',title:"a group's collapse bar shows only when the open group is taller than the window, and closes that group",sizes:[[260,316],[537,424]],
+  run:async page=>{
+    await r3Field(page);
+    await page.tap('[data-fgroup="atk:hazards"] > summary');
+    await page.settle();
+    assert(await page.value(`document.querySelector('[data-fgroup="atk:hazards"]>.endbar').hidden`),'short group: no bar');
+    // Make the open group taller than the window (as a long group at big text zoom would be): its bar appears.
+    await page.value(`(()=>{const d=document.querySelector('[data-fgroup="atk:hazards"]'),pad=document.createElement('div');pad.style.height=innerHeight+'px';d.querySelector(':scope>.dtg').after(pad);dispatchEvent(new Event('resize'));})()`);
+    await page.settle();
+    assert.equal(await page.value(`document.querySelector('[data-fgroup="atk:hazards"]>.endbar').hidden`),false,'tall group shows its bar');
+    assert.equal(await page.text('[data-fgroup="atk:hazards"]>.endbar'),'Collapse Hazards');
+    await page.value(`document.querySelector('[data-fgroup="atk:hazards"]>.endbar').scrollIntoView({block:'nearest'})`);
+    await page.settle();
+    await page.tap('[data-fgroup="atk:hazards"]>.endbar');
+    const after=await page.value(`(()=>{const d=document.querySelector('[data-fgroup="atk:hazards"]'),r=d.querySelector(':scope>summary').getBoundingClientRect();return {open:d.open,top:r.top,bottom:r.bottom,room:innerHeight,field:document.querySelector('.dfield').open};})()`);
+    assert.equal(after.open,false,'bar closes its group');
+    assert.equal(after.field,true,'Field stays open');
+    assert(after.top>=0&&after.bottom<=after.room,'group heading in view: '+JSON.stringify(after));
+    await page.value('CALC.render()');await page.settle();
+    assert.equal(await page.value(`document.querySelector('[data-fgroup="atk:hazards"]').open`),false,'closed state kept');
+  },
+},{
+  id:'R3 preview',title:'six two-line trainer preview rows visible without scrolling; a row picks its foe',sizes:[[537,424],[832,424]],
+  run:async(page,{width,height,mode})=>{
+    await setupCalc(page,{trainer:guide().trainers.six.k});
+    await page.value('scrollTo(0,0)');await page.settle();
+    const rows=await page.value(`(()=>{const team=document.querySelector('.fteam'),t=team.getBoundingClientRect();const lines=el=>{const range=document.createRange();range.selectNodeContents(el);return new Set([...range.getClientRects()].filter(x=>x.width>0).map(x=>Math.round(x.bottom))).size;};return {team:{top:t.top,bottom:t.bottom,scroll:team.scrollHeight,client:team.clientHeight},rows:[...team.querySelectorAll('.ft')].map(row=>{const r=row.getBoundingClientRect(),l1=row.querySelector('.l1t');return {top:r.top,bottom:r.bottom,l1:lines(l1),l1h:l1.getBoundingClientRect().height,l2:row.querySelectorAll('.l2t').length,l2w:lines(row.querySelector('.l2t')),text:row.innerText};})};})()`);
+    assert.equal(rows.rows.length,6,'six rows');
+    assert(rows.team.scroll<=rows.team.client+1,'no scrolling needed: '+JSON.stringify(rows.team));
+    for(const row of rows.rows){
+      assert(row.top>=rows.team.top-1&&row.bottom<=rows.team.bottom+1&&row.bottom<=height+1,'row visible: '+JSON.stringify(row));
+      assert(row.l1<=2&&row.l1h<=20&&row.l2===1&&row.l2w===1,'exactly two lines: '+JSON.stringify(row));
+    }
+    if(mode==='normal')await r3Shot(page,`preview-${width}x${height}`);
+    await page.tap('.fteam .ft',{index:2});
+    assert.equal(await page.value('CALC.state().foe.i'),2,'tapping a row picks that foe');
+  },
+},{
+  id:'R3 fight text',title:'closed weather / terrain selects read in full at 260',sizes:[[260,316],[260,394]],
+  run:async page=>{
+    await setupCalc(page);
+    const fits=async label=>{
+      const out=await page.value(`(()=>{const canvas=document.createElement('canvas').getContext('2d');return [...document.querySelectorAll('.dfight select')].map(select=>{const style=getComputedStyle(select);canvas.font=style.font;const text=select.options[select.selectedIndex].text;return {text,need:canvas.measureText(text).width,room:select.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight)-18};});})()`);
+      for(const item of out)assert(item.need<=item.room,`${label}: "${item.text}" ${item.need.toFixed(1)} > ${item.room.toFixed(1)}`);
+    };
+    await fits('auto');
+    for(const [key,value] of [['weather',''],['terrain',''],['weather','Rain'],['terrain','Grassy'],['weather','Sand']]){
+      if(!await page.value(`[...document.querySelector('.dfight select[data-f=${key}]').options].some(o=>o.value===${JSON.stringify(value)})`))continue;
+      await page.value(`(()=>{const select=document.querySelector('.dfight select[data-f=${key}]');select.value=${JSON.stringify(value)};select.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+      await page.settle();
+      await fits(`${key}=${value||'none'}`);
+    }
+  },
+});
 await runChecks({name:'calc-retest',file,checks});

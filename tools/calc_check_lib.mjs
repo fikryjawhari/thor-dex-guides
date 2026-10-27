@@ -478,9 +478,9 @@ export async function setupCalc(page, { save = 'good.json', mine = ['party', 5],
   await page.settle();
 }
 
-// Taps a Field toggle. Narrow Fields show one side at a time (Player | Foe switch): the toggle's side is picked first.
+// Taps a Field toggle. Field shows one side at a time (Player | Foe switch): the toggle's side is picked first.
 export async function tapField(page, key) {
-  const side = await page.value(`(()=>{const section=document.querySelector('[data-f="${key}"]')?.closest('section[data-field-side]');return section&&section.closest('.dfside.one')&&!section.classList.contains('on')?section.dataset.fieldSide:'';})()`);
+  const side = await page.value(`(()=>{const section=document.querySelector('[data-f="${key}"]')?.closest('section[data-field-side]');return section&&!section.classList.contains('on')?section.dataset.fieldSide:'';})()`);
   if (side) await page.tap(`[data-a="fside"][data-v="${side}"]`);
   const group = await page.value(`(()=>{const details=document.querySelector('[data-f="${key}"]')?.closest('details[data-fgroup]');return details&&!details.open?details.dataset.fgroup:'';})()`);
   if (group) await page.tap(`details[data-fgroup="${group}"] > summary`);

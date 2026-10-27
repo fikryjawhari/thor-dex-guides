@@ -11,7 +11,7 @@ const seed = async page => {
 };
 const openHazards = async (page, side='atk') => {
   if (!await page.value("document.querySelector('.dfield').open")) await page.tap('.dfield > summary');
-  if (await page.value(`document.querySelector('.dfside').classList.contains('one')&&!document.querySelector('[data-field-side="${side}"]').classList.contains('on')`)) await page.tap(`[data-a=fside][data-v=${side}]`);
+  if (await page.value(`!document.querySelector('[data-field-side="${side}"]').classList.contains('on')`)) await page.tap(`[data-a=fside][data-v=${side}]`);
   if (!await page.value(`document.querySelector('[data-fgroup="${side}:hazards"]').open`)) await page.tap(`[data-fgroup="${side}:hazards"] > summary`);
 };
 const hp = (page, side='mine') => page.value(`Number(document.querySelector('[data-hp=${side}]').value)`);

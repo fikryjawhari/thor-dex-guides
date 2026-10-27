@@ -88,13 +88,11 @@ const windowChecks=[{
     assert.ok(await page.value(`document.querySelector('details.dfield').offsetHeight<=${room}`),'open Field: '+await page.value(`document.querySelector('details.dfield').offsetHeight`));
     const broken=await page.value(`[...document.querySelectorAll('.dfield .dtg button')].filter(button=>button.offsetParent).filter(button=>{const range=document.createRange(),words=[];const text=button.firstChild;let start=0;for(const word of text.textContent.split(' ')){range.setStart(text,start);range.setEnd(text,start+word.length);if(range.getClientRects().length>1)words.push(word);start+=word.length+1;}return words.length;}).map(button=>button.textContent)`);
     assert.deepEqual(broken,[],'no word breaks across lines');
-    const one=await page.value('document.querySelector(".dfside").classList.contains("one")');
-    if(one){
-      assert.equal(await page.count('.dfside section:not(.on) button'),await page.value('document.querySelectorAll(".dfside section:not(.on) button").length'));
-      await page.tap('[data-a=fside][data-v=def]');
-      assert.ok(await page.value('document.querySelector("section[data-field-side=def]").offsetParent!==null&&document.querySelector("section[data-field-side=atk]").offsetParent===null'),'Foe side shown');
-      await page.tap('[data-a=fside][data-v=atk]');
-    }else assert.equal(await page.value('getComputedStyle(document.querySelector(".dfsw")).display'),'none','both sides shown, no switch');
+    // One side at a time at every width (Player | Foe switch), its groups stacked in one column.
+    assert.equal(await page.count('.dfside section:not(.on) button'),await page.value('document.querySelectorAll(".dfside section:not(.on) button").length'));
+    await page.tap('[data-a=fside][data-v=def]');
+    assert.ok(await page.value('document.querySelector("section[data-field-side=def]").offsetParent!==null&&document.querySelector("section[data-field-side=atk]").offsetParent===null'),'Foe side shown');
+    await page.tap('[data-a=fside][data-v=atk]');
   },
 },{
   id:'search-terms',title:'Find trainer and Find yours match moves, items and abilities as well as names',
