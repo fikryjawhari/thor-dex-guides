@@ -2,7 +2,7 @@
 // weather (Hail) and loses a toggle (Magic Room); a selection reaches the engine by key (Rain boosts Surf: about ×1.5 on
 // the Water move), and survives a reload. 260 x 316 in normal and dvkb mode. Without cfg.calc: skip.
 import assert from 'node:assert/strict';
-import { attackerRows, fixturePatches, guideArg, prepareGuide, readGuide, runChecks, setupCalc } from '../calc_check_lib.mjs';
+import { attackerRows, fixturePatches, guideArg, prepareGuide, readGuide, runChecks, setupCalc, tapField } from '../calc_check_lib.mjs';
 
 const file = prepareGuide(guideArg(process.argv), {
   tag: 'calc-field',
@@ -49,7 +49,7 @@ const checks = [
       const [lo, hi] = range(surfBefore.hp), [rlo, rhi] = range(surfRain.hp);
       assert(rlo / lo > 1.4 && rlo / lo < 1.6 && rhi / hi > 1.4 && rhi / hi < 1.6, `Rain should boost Surf about ×1.5: ${surfRain.hp} vs ${surfBefore.hp}`);
 
-      await page.tap('.dtg button[data-f="gravity"]');
+      await tapField(page,'gravity');
       assert.equal(await page.value('CALC.state().field.gravity'), 1, 'a toggle is stored under its key');
       assert.equal(await page.text('.dtg button[data-f="gravity"]'), 'Gravity');
 
