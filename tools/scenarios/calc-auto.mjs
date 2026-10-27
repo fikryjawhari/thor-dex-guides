@@ -289,7 +289,7 @@ checks.push(
       assert.match(await page.text('.dfsource'), /Weather set by you.*auto: Sun/s);
       await page.tap('[data-a="fieldauto"]');
       assert.equal(await page.value('CALC.state().field.weather'), 'Sun');
-      await page.tap('[data-f="trickRoom"]');
+      await tapField(page, 'trickRoom');
       await reloadCalc(page);
       assert.equal(await page.value('CALC.state().field.weather'), 'Rain', 'faster Politoed wins under Trick Room');
       await openField(page);
