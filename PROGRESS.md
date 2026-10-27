@@ -39,7 +39,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 1. **Test on the Thor.** Nothing since the consistency pass has been on the device (EI and HG were last checked there
    2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
-2. **Damage calc** (branch `worktree-damage-calc`, `.claude/worktrees/damage-calc`; pushed to `origin` up to `457386a`, **not merged**).
+2. **Damage calc** (branch `worktree-damage-calc`, `.claude/worktrees/damage-calc`; pushed to `origin` 2026-10-27 with the docs pass, **not merged**).
    Start every calc session from `plans/calc-open.md` (what's left in order, the checks, the merge steps and the
    save-reader notes). Lasting decisions: `template/README.md` → Damage calculator, `tools/calc/README.md`, each
    guide's notes.md → Damage calc.
