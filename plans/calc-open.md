@@ -1,58 +1,26 @@
 # Damage calc: open work
 
-Everything not built yet, in one place (2026-10-26, after the docs reconcile). Branch `worktree-damage-calc`
-(`.claude/worktrees/damage-calc`), not merged into `main`. What is built: `template/README.md` → Damage calculator
-(page), `tools/calc/README.md` (engine contract, licences, oracles), each calc guide's notes.md → Damage calc (profile,
-fixtures, In-game tests). Every calc session: claim the worktree, one template / engine session at a time, commit per
-sub-step, run Checks (below), ask before pushing.
+What's left before the damage calc merges, in order (2026-10-27, after the auto-effects and retest builds). Branch
+`worktree-damage-calc` (`.claude/worktrees/damage-calc`), not merged into `main`. What is built:
+`template/README.md` → Damage calculator (page), `tools/calc/README.md` (engine contract, Not modelled, licences,
+oracles), each calc guide's notes.md → Damage calc (profile, fixtures, In-game tests). Every calc session: claim the
+worktree, one template / engine session at a time, commit per sub-step, run Checks (below), ask before pushing.
 
 ## The list, in order
 
-1. **Build `plans/calc-auto-effects.md`** (spec settled 2026-10-26; mockup `plans/calc-auto-effects-mockup/`): fight
-   state as scratch, automatic weather / terrain / Intimidate / Orb / berries / Sash, area conditions from trainer
-   `field` evidence, HP − actions with the log overlay, Reset fight, Trick Room. Units A-E in the spec.
-2. **HP-move follow-ups** (below): settled by the user, not built. Engine + page, so not alongside unit A / D of 1:
-   in the same build sequence or right after it.
-3. **Decide `plans/calc-team.md`** (drag-and-drop team row): its own decide session, mockup in the Thor frame first.
-4. **The user's mechanics check**, then merge into `main` (below). In-game tests: each guide's notes.md → Damage calc
-   → In-game tests. Hardlove stays provisional until then (no independent oracle).
-5. After the merge: **save readers and the file picker** (below), then footer credits (PROGRESS.md → Open).
+1. **Decide `plans/calc-team.md`**: its own decide session on this branch, mockup in the Thor frame first. Also
+   settle there: both teams (a second row with the user's own team), how the top area is split between the box and
+   the trainer, getting the fight bar into the first frame, and the trainer preview's two-line rows (built now) vs
+   full rows (the user is unsure which they prefer).
+2. **Save readers and the file picker** (below), on their own branch `worktree-damage-calc-saves` made from this one.
+   Done before the merge: "a calc is useless if I have to import Pokémon by hand" (the user).
+3. **The user's mechanics check**: each guide's notes.md → Damage calc → In-game tests. They stay open and merge
+   into `main` with the branch; Hardlove stays provisional until then (no independent oracle). Rule: the source
+   wins over the docs.
+4. **The merge into `main`** (below), then footer credits (PROGRESS.md → Open).
 
-Smaller, take with a nearby job:
-- Apply −HP from the closed move row (user, 2026-10-27): for the UI pass
-- **Row heights with an HP chip** (left for later by the user, 2026-10-26): a row with a recoil / drain chip is taller
-  (36 px at 260, 42 wide, vs 31 / 33), so in wide windows the two movesets drift apart; `calc-layout` check 20 fails on
-  EI (Snover's Mega Drain +10 vs Cloyster), the calc's only failing scenario. Fix: a chip no taller than the % line.
-- EI mechanics in the game that the profile can't set yet (EI notes.md → Damage calc → Scope check, 2026-10-26):
-  doubles ally effects (Power Spot, Steely Spirit, an ally's Flower Gift, Aura / Aura Break / Ruin on an ally,
-  Plus / Minus), Power Trick, Water / Mud Sport, Electrify / Ion Deluge, Power Split / Guard Split. Each needs the
-  user's yes first; none is a wrong result for a singles calc without them.
-- Crit inputs not built: Laser Focus, Lucky Chant, Dragon Cheer (proposed keys `atkLaserFocus` / `atkLuckyChant` /
-  `atkDragonCheer` and `def*`; not approved). Hardlove's area +1 crit comes with auto-effects (`atkCritBonus`).
-- Photonic `hack.json` still has the always-crit rule for Self-Destruct / Explosion, now redundant with `MV.cr` 6:
-  harmless, drop it at the next Photonic calc change.
-- Code comments that cite deleted plans (`template/calc.js` HP moves, `tools/calc/src/adapter.js` fixed damage and
-  `DMG.hp`, `hacks/hardlove-gold/extract/dex.py` crit stages): point them at the READMEs at the next touch.
-- Hardlove Easy mode (enemy trainer levels − (1 + floor(lv / 25))): a possible calc option, not asked for.
-- Known engine limits, not planned: a later hit of Foul Play doesn't read the target's new Attack; the Gen 7 Rollout
-  storage glitch; Floral Healing / Heal Pulse and Life Dew's ally share (no ally modelled).
-
-## HP-move follow-ups (settled by the user 2026-10-26)
-
-1. **Disguise / Ice Face**: the first hit is absorbed (Disguise: Mimikyu undisguised; Ice Face: physical hits on
-   Eiscue Ice Face). Stock doesn't model them, so multi-hit totals, KO text and the one-use tap count hit 1 at full
-   damage. Build: hit 1 does 0 while the form is intact (Gen 8+ Disguise also costs 1/8 max HP), later hits full; an
-   "already broken" state on the card (the ability checkbox pattern, like Disguised for Illusion). Check each hack's
-   source (EI expansion, Hardlove hg-engine, Gen 7 for Photonic; Eternal X, Gen 6, has neither). Auto-effects' HP −
-   action turns the box off when it busts.
-2. **Rocky Helmet / Rough Skin / Iron Barbs**: contact damage to the attacker (Helmet 1/6, the abilities 1/8, 1/16 in
-   Gen 4, of the attacker's max HP, per contact hit; Magic Guard none). Add to `DMG.hp` for contact moves, per hit
-   (multi-hit, Parental Bond), so the one-use tap includes it.
-3. **Crash damage on a miss** (Jump Kick, High Jump Kick, Axe Kick, Supercell Slam): a separate `−HP` amount like the
-   recoil one, labelled as the miss; tapping it does no damage to the target, only the crash to the user (Gen 5+ half
-   max HP; Gen 4 the damage-based rule: check Hardlove's source; Magic Guard none).
-4. **Swallow / Spit Up**: a Stockpile count (1-3) in the opened row's details: Swallow heals 1/4, 1/2, full; Spit Up
-   power 100 × count. Now Swallow assumes one Stockpile and Spit Up shows — until a power is typed.
+Small, take with a nearby job:
+- Hardlove Easy mode (enemy trainer levels − (1 + floor(lv / 25))): not doing (user, 2026-10-26).
 
 ## Merging into main
 
@@ -66,7 +34,7 @@ the plans that are done then.
 ## Checks (every session that changes calc data or code)
 
 `npm test --prefix tools/calc` (engine, stock parity, every `calc_states.json`), `node tools/calc/hzla_compare.mjs
-<hack>` for EI / Photonic / Eternal X (counts unchanged: EI 123 + 9 known, Photonic 118 + 28, Eternal X 116 + 3),
+<hack>` for EI / Photonic / Eternal X (counts unchanged: EI 142 + 12 known, Photonic 118 + 28, Eternal X 116 + 3),
 `python assemble.py`, the calc scenarios (`uv run python -I tools/gate.py scenarios --only <calc-...> --jobs 8`;
 the full set once at the end: CLAUDE.md → Commands), the build in the Thor frame on the
 phone preview when the page changed: with the live presets, `python -I tools/mockup/thor-frame/build.py
@@ -101,7 +69,8 @@ The hard part is per hack: **the ID tables**. Our data has no game IDs, so each 
 them its own way). References (read only): hzla/Dynamic-Calc-Decomps `js/savereaders/` (Gen 3 incl. EI constants, Gen
 4/5, Gen 6 / 7; sample saves in `cypress/fixtures/saves/`), PKHeX (check a reader by opening the same save there).
 
-**File picker** (app repo `../thor-offline-viewer`, after the Gen 3 reader works with a dropped file): Android WebView
+**File picker** (app repo `../thor-offline-viewer`, after the Gen 3 reader works with a dropped file; first guess:
+`../thor-offline-viewer/docs/_plans/save-file-picker.md`): Android WebView
 ignores `<input type=file>` unless the app handles `onShowFileChooser` (Android's document picker, remembering the last
 folder; check first whether the viewer already does). Later: "reload from the same file" in one tap (persistent URI
 permission). Outside the viewer the file input already works in any browser.
