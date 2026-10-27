@@ -36,12 +36,6 @@ body.mkdrag{cursor:grabbing}
 
 /* B narrow: teams 3 x 2 beside each other, half-width cards. */
 #app.mk.mk-B.mk-narrow .mkrow,#app.mk.mk-B.mk-narrow .mkfoe .dstrip{grid-template-columns:repeat(3,minmax(0,1fr))}
-#app.mk.mk-B.mk-narrow .cc .cl>span:first-child,#app.mk.mk-B.mk-narrow .cc .cl [data-lv]{display:none}
-#app.mk.mk-B.mk-narrow .cc .stb{font-size:0;width:18px;padding:0}
-#app.mk.mk-B.mk-narrow .cc .stb::after{content:'▾';font-size:11px}
-#app.mk.mk-B.mk-narrow .cc .l1 .sp{font-size:0}
-#app.mk.mk-B.mk-narrow .cc .l1 .sp i{font-size:12px}
-#app.mk.mk-B.mk-narrow .cc .l1 .sp i::before{content:'Spe ';font-size:9px;font-weight:400;color:var(--mut)}
 
 /* A: one-line cards (name, Edit, Speed | HP); level lives in Edit. */
 #app.mk.mk-A .cc{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:4px}
@@ -78,21 +72,52 @@ body.mkdrag{cursor:grabbing}
 #app.mk.mk-A.mk-narrow .top>.dside:not(.mg){gap:2px}
 /* B narrow: the trainer bar without its panel; cards two short lines. */
 #app.mk.mk-B.mk-narrow .top>.dside:not(.mg){background:none;border:0;padding:0}
-#app.mk.mk-B.mk-narrow .cc{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;column-gap:2px;align-items:center}
-#app.mk.mk-B.mk-narrow .cc>.l1{display:contents}
-#app.mk.mk-B.mk-narrow .cc .l1 .sp{grid-area:2/3/3/5;justify-self:end}
-#app.mk.mk-B.mk-narrow .cc>.cl{grid-area:2/1/3/3;min-height:20px;gap:2px}
-#app.mk.mk-B.mk-narrow .cc>.dhpbar,#app.mk.mk-B.mk-narrow .cc>.ed{grid-column:1/-1}
-#app.mk.mk-B.mk-narrow .cc .cl .mx{display:none}
 #app.mk.mk-A.mk-narrow .cc .l1 .cn{min-height:18px}
 #app.mk.mk-A.mk-narrow .cc .cl input,#app.mk.mk-A.mk-narrow .cc .cl .nv{height:18px;min-height:18px}
 #app.mk.mk-A.mk-narrow .cc .stb,#app.mk.mk-A.mk-narrow .cc .mg{height:18px}
 #app.mk.mk-A.mk-narrow .cc{padding-top:0;padding-bottom:0}
-/* B narrow, rearranged: name + Speed on line 1; HP, Mega, Edit on line 2. */
-#app.mk.mk-B.mk-narrow .cc .cn{grid-area:1/1/2/4}
-#app.mk.mk-B.mk-narrow .cc .l1 .sp{grid-area:1/4/2/5}
-#app.mk.mk-B.mk-narrow .cc>.cl{grid-area:2/1/3/2}
-#app.mk.mk-B.mk-narrow .cc .l1 .mg{grid-area:2/2/3/3}
-#app.mk.mk-B.mk-narrow .cc .l1 .stb{grid-area:2/3/3/5;justify-self:end}
-#app.mk.mk-B.mk-narrow .cc .l1 .sp i::before{content:none}
 #app.mk.mk-A.mk-narrow .top>.dside:not(.mg){padding:1px 2px}
+
+/* B narrow, no names (the team row shows who is in): every card part is one flex-wrap line set.
+   Line 1: ↺ HP /max ... Speed; HP bar; line 2+: Mega, ability boxes, Edit, Toxic turn, residual, berry, Int. */
+#app.mk.mk-B.mk-narrow .cc{display:flex;flex-flow:row wrap;align-items:center;gap:1px 2px;padding:1px 3px 2px}
+#app.mk.mk-B.mk-narrow .cc>.l1,#app.mk.mk-B.mk-narrow .cc>.cl,#app.mk.mk-B.mk-narrow .cc .dend{display:contents}
+#app.mk.mk-B.mk-narrow .cc .cn{display:none}
+#app.mk.mk-B.mk-narrow .cc.mkname .cn{display:block;order:0;flex-basis:100%;min-height:16px}
+#app.mk.mk-B.mk-narrow .cc .cl>span:first-child,#app.mk.mk-B.mk-narrow .cc [data-lv]{display:none}
+#app.mk.mk-B.mk-narrow .cc .hpl,#app.mk.mk-B.mk-narrow .cc [data-hp],#app.mk.mk-B.mk-narrow .cc .mx{order:1}
+#app.mk.mk-B.mk-narrow .cc [data-hp]{width:32px;height:20px;min-height:20px;font-size:12px}
+#app.mk.mk-B.mk-narrow .cc .mx{font-size:10px}
+#app.mk.mk-B.mk-narrow .cc .l1 .sp{order:2;margin-left:auto;font-size:9px}
+#app.mk.mk-B.mk-narrow .cc .l1 .sp i{font-size:12px}
+#app.mk.mk-B.mk-narrow .cc>.dhpbar{order:3;flex-basis:100%;margin:0}
+#app.mk.mk-B.mk-narrow .cc .mg,#app.mk.mk-B.mk-narrow .cc .dmonstate,#app.mk.mk-B.mk-narrow .cc .ddl,#app.mk.mk-B.mk-narrow .cc .stb,#app.mk.mk-B.mk-narrow .cc .dtoxl,#app.mk.mk-B.mk-narrow .cc [data-tox],#app.mk.mk-B.mk-narrow .cc .dend>button,#app.mk.mk-B.mk-narrow .cc .aum,#app.mk.mk-B.mk-narrow .cc .dvol{order:4;height:18px;min-height:18px}
+#app.mk.mk-B.mk-narrow .cc .stb{order:5;margin-left:auto}
+#app.mk.mk-B.mk-narrow .cc [data-tox]{width:22px;font-size:11px}
+#app.mk.mk-B.mk-narrow .cc>.ed{order:9;flex-basis:100%}
+#app.mk.mk-B.mk-narrow .cc:has(.ed) .stb{margin-left:0}
+
+/* Narrow, all layouts: a little off the trainer bar, fight bar and move rows (team cells unchanged). */
+#app.mk.mk-narrow .fbar{min-height:22px}
+#app.mk.mk-narrow .fbar .nav,#app.mk.mk-narrow .fbar .dsrc{height:22px;min-height:22px}
+#app.mk.mk-narrow .dfight select,#app.mk.mk-narrow .dfight .dformat button,#app.mk.mk-narrow .dfight .dfreset{height:22px;min-height:22px}
+#app.mk.mk-B.mk-narrow .mr .mv{line-height:1.15;padding-bottom:0}
+#app.mk.mk-B.mk-narrow .mr .r1{line-height:1.15}
+#app.mk.mk-B.mk-narrow .mr .r2{line-height:1.05}
+#app.mk.mk-B.mk-narrow .mr .rcol button{height:28px}
+#app.mk.mk-B.mk-narrow .mr .rcol.two button{height:14px}
+#app.mk.mk-B.mk-narrow .dres{gap:2px}
+/* Speed joins line 2 at the right, after Edit (✎); line 1 is HP only. */
+#app.mk.mk-B.mk-narrow .cc .l1 .sp{order:6;margin-left:2px}
+#app.mk.mk-B.mk-narrow .cc .stb{order:5;margin-left:auto;font-size:0;width:20px;padding:0}
+#app.mk.mk-B.mk-narrow .cc .stb::after{content:'✎';font-size:11px}
+#app.mk.mk-B.mk-narrow .cc>.dhpbar{order:2}
+#app.mk.mk-B.mk-narrow .cc .hpl,#app.mk.mk-B.mk-narrow .cc [data-hp],#app.mk.mk-B.mk-narrow .cc .mx{order:1}
+#app.mk.mk-B.mk-narrow .mr .r1{height:16px;align-items:center}
+#app.mk.mk-B.mk-narrow .mr .r1 .dendpoint{height:15px;line-height:15px}
+#app.mk.mk-B.mk-narrow .mr .r2{height:13px;align-items:center}
+#app.mk.mk-B.mk-narrow .mr .r2 button,#app.mk.mk-B.mk-narrow .mr .r2 .dturn{height:13px;line-height:13px;min-height:0}
+#app.mk.mk-B.mk-narrow .mr:not(.open) .mm{min-height:0}
+/* Level: shown on the team cell; editable when the card is open (full width). */
+#app.mk.mk-B.mk-narrow .cc:has(.ed) .cl>span:first-child,#app.mk.mk-B.mk-narrow .cc:has(.ed) [data-lv]{display:inline-flex;order:1;align-items:center}
+#app.mk.mk-B.mk-narrow .cc:has(.ed) [data-lv]{width:30px;height:20px;min-height:20px;font-size:12px;margin-right:4px}

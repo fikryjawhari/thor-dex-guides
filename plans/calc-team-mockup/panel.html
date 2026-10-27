@@ -1,8 +1,9 @@
 <fieldset><legend>Calc teams</legend>
-<div class="chips" id="mk-lay"><b>Layout</b> <button data-k="lay" data-v="A">A Stacked, one-line cards</button><button data-k="lay" data-v="B">B Facing columns</button><button data-k="lay" data-v="C">C One-line moves</button></div>
+<div class="chips" id="mk-lay"><b>Layout</b> <button data-k="lay" data-v="B">Facing columns, no names</button><button data-k="lay" data-v="A">A (old)</button><button data-k="lay" data-v="C">C (old)</button></div>
 <div class="chips" id="mk-fb"><b>Fight bar</b> <button data-k="fb" data-v="bottom">Under the moves</button><button data-k="fb" data-v="top">Above the teams</button></div>
 <div class="chips" id="mk-pv"><b>Trainer preview (≥480)</b> <button data-k="pv" data-v="two">Two-line rows</button><button data-k="pv" data-v="full">Full rows</button><button data-k="pv" data-v="off">Off</button></div>
 <div class="chips"><b>Team</b> <button id="mk-party">Fill from party</button><button id="mk-clear">Empty</button><button id="mk-first">Scroll to first frame</button></div>
+<div class="chips"><b>My card</b> <button id="mk-busy">Busy: Toxic + Sitrus at 40 HP</button><button id="mk-calm">Plain</button></div>
 <p class="hint" id="mk-fit"></p>
 </fieldset>
 <script>
@@ -11,6 +12,8 @@
  document.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{mk()?.set({[b.dataset.k]:b.dataset.v});setTimeout(paint,60);});
  document.getElementById('mk-party').onclick=()=>{mk()?.fillParty();};
  document.getElementById('mk-clear').onclick=()=>{mk()?.clearTeam();};
+ document.getElementById('mk-busy').onclick=()=>{mk()?.stress();};
+ document.getElementById('mk-calm').onclick=()=>{mk()?.calm();};
  document.getElementById('mk-first').onclick=()=>{mk()?.first();};
  setInterval(paint,700);
  let tries=0;const go=setInterval(()=>{try{const w=thorFrame();if(w.CALC&&w.MK){clearInterval(go);if(w.location.hash!=='#/calc')w.location.hash='#/calc';}}catch(e){}if(++tries>100)clearInterval(go);},100);}

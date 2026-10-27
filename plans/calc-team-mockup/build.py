@@ -15,8 +15,8 @@ out = root / '.tmp' / 'calc-team'
 out.mkdir(parents=True, exist_ok=True)
 page = (root / 'dist' / 'emerald-imperium.html').read_text(encoding='utf8')
 state = json.loads((here / 'seed.json').read_text(encoding='utf8'))
-seed = ("<script>try{if(localStorage.getItem('mkseed')!=='3'){localStorage.setItem('eidmg',"
-        + json.dumps(json.dumps(state)) + ");localStorage.removeItem('mkteam');localStorage.setItem('mkseed','3');}"
+seed = ("<script>try{if(localStorage.getItem('mkseed')!=='4'){localStorage.setItem('eidmg',"
+        + json.dumps(json.dumps(state)) + ");localStorage.removeItem('mkteam');localStorage.removeItem('mkopt');localStorage.setItem('mkseed','4');}"
         "if(!location.hash)location.hash='#/calc';}catch(e){}</script>")
 css = '<style id="mk-css">' + (here / 'patch.css').read_text(encoding='utf8') + '</style>'
 js = '<script id="mk-js">' + (here / 'patch.js').read_text(encoding='utf8') + '</script>'

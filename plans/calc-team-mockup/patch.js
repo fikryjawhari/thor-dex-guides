@@ -3,7 +3,7 @@
 (()=>{
 const app=document.getElementById('app');
 const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??d;}catch(e){return d;}};
-let OPT={lay:'A',pv:'two',fb:'bottom',...load('mkopt',{})};
+let OPT={lay:'B',pv:'two',fb:'bottom',...load('mkopt',{})};
 let TEAM=load('mkteam',null)||[{src:'party',b:0,i:0},{src:'party',b:0,i:1},{src:'party',b:0,i:2},{src:'party',b:0,i:3}];
 const keep=()=>{localStorage.setItem('mkteam',JSON.stringify(TEAM));localStorage.setItem('mkopt',JSON.stringify(OPT));};
 const same=(a,b)=>a&&b&&a.src===b.src&&(a.src!=='box'||+a.b===+b.b)&&+a.i===+b.i;
@@ -23,7 +23,7 @@ function areas(){
  const w=wide(),top=OPT.fb==='top',L=OPT.lay;
  if(w){const rows=['ban ban','box tside',...(top?['fight fight']:[]),'team foe','cm cf','mv mf',...(top?[]:['fight fight'])];
   return {cols:'minmax(0,1fr) minmax(0,1fr)',rows,sizes:rows.map(r=>r==='box tside'?'minmax(0,1fr)':'auto')};}
- if(L==='B'){const rows=['ban ban','box box','tside tside',...(top?['fight fight']:[]),'team foe','cm cf','mv mv',...(top?[]:['fight fight'])];return {cols:'minmax(0,1fr) minmax(0,1fr)',rows};}
+ if(L==='B'){const open=!!app.querySelector('.dmatch>.cc .ed');const rows=['ban ban','box box','tside tside',...(top?['fight fight']:[]),'team foe',...(open?['cm cm','cf cf']:['cm cf']),'mv mv',...(top?[]:['fight fight'])];return {cols:'minmax(0,1fr) minmax(0,1fr)',rows};}
  const rows=['ban','box','team','tside',...(top?['fight']:[]),'cm','cf','mv',...(top?[]:['fight'])];return {cols:'minmax(0,1fr)',rows};}
 
 function apply(){
@@ -53,6 +53,7 @@ function apply(){
  sides[1]?.querySelector(':scope>.mkrow')?.remove();if(OPT.lay==='A'&&!wide()&&sides[1])sides[1].insertAdjacentHTML('afterbegin',teamRow());
  // Box cells already in the team get a dot.
  fit2.querySelectorAll('.mg .dstrip button[data-a="mpick"]').forEach(b=>b.classList.toggle('mkin',TEAM.some(r=>same(r,refOf(b)))));
+ const cards=fit2.querySelectorAll('.dmatch>.cc');if(cards[0])cards[0].classList.toggle('mkname',!TEAM.some(r=>same(r,CALC.state().mine)));
  measure();}
 
 // Readout for the panel: does the first frame hold my team, foe team, both cards, four moves and the fight bar?
@@ -92,6 +93,6 @@ document.addEventListener('click',e=>{if(Date.now()-SUPPRESS<400&&e.target.close
 new MutationObserver(()=>apply()).observe(app,{childList:true});
 addEventListener('resize',()=>{const f=app.querySelector('.fit');if(f)apply();});
 addEventListener('hashchange',()=>{if(location.hash==='#/calc')goFirst();});
-window.MK={get opt(){return {...OPT};},set(o){OPT={...OPT,...o};keep();apply();goFirst();},team:()=>TEAM.slice(),clearTeam(){TEAM=[];keep();apply();},fillParty(){TEAM=[0,1,2,3,4,5].map(i=>({src:'party',b:0,i}));keep();apply();},first:goFirst,measure:()=>{measure();return window.MK.fit;}};
+window.MK={get opt(){return {...OPT};},set(o){OPT={...OPT,...o};keep();apply();goFirst();},team:()=>TEAM.slice(),clearTeam(){TEAM=[];keep();apply();},fillParty(){TEAM=[0,1,2,3,4,5].map(i=>({src:'party',b:0,i}));keep();apply();},first:goFirst,stress(){CALC.set('mine','status','tox');CALC.set('mine','i','Sitrus Berry');const m=CALC.mon('mine');CALC.render();CALC.set('mine','hp',40);CALC.render();},calm(){CALC.set('mine','status','');CALC.set('mine','i','');CALC.set('mine','hp',null);CALC.render();},measure:()=>{measure();return window.MK.fit;}};
 apply();goFirst();
 })();
