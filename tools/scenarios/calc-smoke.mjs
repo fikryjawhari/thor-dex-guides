@@ -40,7 +40,7 @@ try{
   await evaluate(`(()=>{const trainer=TRS.find(entry=>entry.p.length>=4&&entry.p.every(mon=>byId[mon.id]));CALC.state().mine={src:'party',b:0,i:5};CALC.enter(trainer.k,0);CALC.render();document.querySelector('[data-a="bandis"]').click();scrollTo(0,document.querySelector('.fbar').getBoundingClientRect().top+scrollY-2);})()`);
   const dimensions=await evaluate(`(()=>{const rows=[...document.querySelectorAll('.dres:not(.na) .mr')];return {width:document.documentElement.scrollWidth,bottom:rows.at(-1)?.getBoundingClientRect().bottom,trainer:document.querySelector('.fbar').getBoundingClientRect().top,mine:document.querySelector('.mg .dstrip button').getBoundingClientRect().height,foe:document.querySelector('.dside:not(.mg) .dstrip button').getBoundingClientRect().height};})()`);
   assert.equal(dimensions.width,width,'horizontal overflow');if(width===260)assert.equal(dimensions.mine,dimensions.foe,'cell size mismatch');
-  if(width===260){assert(Math.abs(dimensions.trainer-2)<2,JSON.stringify(dimensions));assert(dimensions.bottom<=(data.cfg.calc.zmove?316:304),`Fit: ${JSON.stringify(dimensions)}`);}
+  if(width===260){assert(Math.abs(dimensions.trainer-2)<2,JSON.stringify(dimensions));assert(dimensions.bottom<=316,`Fit (all four moves inside 260 × 316, plans/calc-retest.md item 2): ${JSON.stringify(dimensions)}`);}
   const screenshot=await send('Page.captureScreenshot',{format:'png'});writeFileSync(join(output,`${width}x${height}${keyboard?'-dvkb':''}.png`),Buffer.from(screenshot.result.data,'base64'));
   const selection=await evaluate(`JSON.stringify(CALC.state().mine)`);
   await importFixture('wrong.json',`document.querySelector('.ban.bad')?.textContent.includes('Wrong game')`);

@@ -56,7 +56,8 @@ const checks = [
       await page.tap('.dmatch .cc[data-s="mine"] .cl > span');
       assert.equal(await attackerSide(page), 'mine');
       assert.deepEqual(await attackerCrit(page), ['false', 'false', 'false', 'true'], 'crit on Ice Beam (slot 3) is restored');
-      assert((await attackerRows(page))[0].name === 'Icicle Spear' && (await attackerRows(page))[0].pct.startsWith('×4'), 'the hit count (×4) is restored');
+      // the hit count lives on the row's cycle button (calc-retest R2), not in the % line
+      assert((await attackerRows(page))[0].name === 'Icicle Spear' && await page.value(`document.querySelector('.dres:not(.na) .mr:not(.em) [data-a=hits]')?.textContent.trim()`) === '×4', 'the hit count (×4) is restored');
       assert.equal(await page.value(`document.querySelector('[data-mo="bp"][data-ck$=":2"]').value`), '100', 'the power override on Surf is restored');
       assert.equal((await calcState(page)).dir, 'out');
       assert.equal(beforeWeather, 'Rain');
