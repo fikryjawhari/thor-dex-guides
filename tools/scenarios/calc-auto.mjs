@@ -4,6 +4,7 @@
 // cleared, same trainer and Pokémon), reload / migration of older storage, and (C2) Mega and foe set edits kept for
 // the fight. Default foe: the guide's four-Pokémon trainer (calc_check_lib trainerRoles); 260 x 316, normal and dvkb. Usage: node tools/scenarios/calc-auto.mjs [dist/<hack>.html]
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { fixturePatches, guide, guideArg, pickCell, prepareGuide, runChecks, setupCalc, tapField } from '../calc_check_lib.mjs';
 
 const file = prepareGuide(guideArg(process.argv), { tag: 'calc-auto', edit: fixturePatches });
@@ -537,6 +538,16 @@ checks.push({
     await page.tap('[data-f="gameType"][data-value="Singles"]');
     assert.equal(await page.count('[data-f$="DragonCheer"]'),0,'Dragon Cheer disappears in Singles');
     if (data.cfg.name==='Hardlove Gold') assert.equal(profile.field.some(entry=>entry.k.endsWith('DragonCheer')),false,'Hardlove has no functional Dragon Cheer');
+  },
+});
+
+checks.push({
+  id: 'phone presets', title: 'every phone preset uses real custom sets, matching Edit or reporting not available',
+  run: async page => {
+    await setupCalc(page);
+    const panel=readFileSync(new URL('../mockup/thor-frame/calc-presets.html',import.meta.url),'utf8').split('<script>')[1].split('let builtWait')[0];
+    const results=await page.value(`(()=>{const thorFrame=()=>window;const host=document.createElement('div');host.innerHTML='<div id="calc-presets"></div><p id="calc-preset-status"></p>';document.body.append(host);${panel};return builtPresets.map(([label,request])=>{builtPreset(request);const message=document.querySelector('#calc-preset-status').textContent;if(message.includes('not available'))return {label,missing:true};if(!document.querySelector('.cc[data-s="mine"] .ed'))document.querySelector('[data-a="eopen"][data-s="mine"]').click();const item=document.querySelector('.cc[data-s="mine"] select[data-e="it"]'),ability=document.querySelector('.cc[data-s="mine"] select[data-e="ab"]'),mon=CALC.mon('mine');return {label,item:item?.value,expected:request.item||'',ability:ability?.value,actual:String(mon.a),moves:mon.m.length};});})()`);
+    for(const result of results){if(result.missing)continue;assert.equal(result.item,result.expected,result.label+' held item in Edit');assert.equal(result.ability,result.actual,result.label+' ability in Edit');assert.equal(result.moves,4,result.label+' four available moves');}
   },
 });
 
