@@ -751,8 +751,9 @@ function berry(set, values = {}, otherSet = null, side = 'atk') {
 
 function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
   if (!['min', 'max'].includes(roll)) throw new Error('DMG: hit roll must be min or max');
-  const exact = options.damage !== undefined;
-  if (exact && !(Number.isInteger(options.damage) && options.damage >= 0)) throw new Error('DMG: exact damage must be a nonnegative integer');
+  const supplied = options.damage !== undefined;
+  const exact = supplied && !options.reactions;
+  if (supplied && !(Number.isInteger(options.damage) && options.damage >= 0)) throw new Error('DMG: exact damage must be a nonnegative integer');
   const calculated = calculateMove(atk, def, slot, values);
   if (calculated?.protected) return {atk: {}, def: {}, dealt: 0, hits: 0, log: ['Protected']};
   const result = exact ? null : calculated;
@@ -770,7 +771,9 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
   const move = generation.moves.get(toID(data.M[slot.mv]));
   const type = exact ? slot.t || move?.type : generation.guideContext?.move.type || slot.t || move?.type;
   const info = {type, cat: result?.cat, eff: result?.eff || 0};
-  const strikes = exact ? [[options.damage]] : result.per || Array.from({length: result.hits}, () => result.rolls);
+  const strike = Math.max(0, Math.trunc(options.strike || 0));
+  const allStrikes = supplied ? [[options.damage]] : result.per || Array.from({length: result.hits}, () => result.rolls);
+  const strikes = strike ? [allStrikes[Math.min(strike, allStrikes.length) - 1]] : allStrikes;
   const parental = !exact && result.hits === 2 && user.mon.hasAbility('Parental Bond') && generation.guideContext?.move.hits === 1;
   const thresholdAbility = profile.gen >= 7 && target.mon.hasAbility('Berserk')
     || profile.gen >= 9 && target.mon.hasAbility('Anger Shell');
@@ -799,7 +802,7 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
     output.log.push(`${key}: ${value}`);
   };
   for (let index = 0; index < strikes.length && current > 0; index++) {
-    if (!exact && !index && result.bust) {
+    if (!exact && !index && result.bust && strike <= 1) {
       target.update.broken = true;
       current = Math.max(0, current - result.bust.loss);
       output.log.push(`${result.bust.ability}: broken${result.bust.loss ? ` (-${result.bust.loss} HP)` : ''}`);
@@ -1014,6 +1017,7 @@ function calcCore(atk, def, slot, values = {}, action = null) {
   if (!(Number(power) > 0)) return null;
   const attacker = fieldPokemon(atk, values, 'atk');
   const defender = fieldPokemon(def, values, 'def');
+  if (values.defProtect && (moveData.breaksProtect || attacker.hasAbility('Unseen Fist', 'Piercing Drill') && moveData.flags?.contact)) values = {...values, defProtect: false};
   for (const [key, stats] of [['powerSplit', ['atk', 'spa']], ['guardSplit', ['def', 'spd']]]) {
     if (values[key] && profile.gen >= 5) {
       for (const stat of stats) {
@@ -1089,6 +1093,9 @@ function calcCore(atk, def, slot, values = {}, action = null) {
   }
   if (!per.every(rolls => rolls.length === 16 && rolls.every(value => Number.isInteger(value) && value >= 0))) {
     throw new Error(`DMG: invalid damage rolls for ${name}`);
+  }
+  if (useZ && values.defProtect && !attacker.item?.includes(' Z')) {
+    for (const hit of per) for (let index = 0; index < hit.length; index++) hit[index] = hit[index] ? Math.max(1, Math.floor(hit[index] / 4)) : 0;
   }
   const rolls = per[0];
   const perHit = per.some(hit => hit.some((value, index) => value !== rolls[index]));

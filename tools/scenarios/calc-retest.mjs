@@ -108,4 +108,113 @@ checks.push({
     assert.equal(await page.count('.sheet .mrow[data-i="0"]'),1,'all stock items, not just guide availability');
   },
 });
+const r2Mon=`mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i,st:mon.status,iv:mon.iv,ev:mon.ev,stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp,used:mon.used,broken:mon.broken,vol:mon.vol})`;
+const r2Row='.dres:not(.na) .mr:first-child';
+const r2Duel=async(page,moves=['Double-Edge','Drain Punch','Bullet Seed','Reflect'])=>{
+  await setupCalc(page);
+  await page.value(`CALC.use(P.find(mon=>mon.n==='Blissey'));CALC.set('mine','l',50);CALC.set('mine','a',-1);CALC.set('mine','i','');CALC.set('mine','m',${JSON.stringify(moves)}.map(name=>M.indexOf(name)));CALC.set('foe','id',P.find(mon=>mon.n==='Snorlax').id);CALC.set('foe','l',50);CALC.set('foe','a',-1);CALC.set('foe','i','');CALC.set('foe','m',${JSON.stringify(moves)}.map(name=>M.indexOf(name)));CALC.render();CALC.set('mine','hp',200);CALC.set('foe','hp',200);CALC.render()`);
+};
+checks.push({
+  id:'R2 rows',title:'equal closed rows with all controls inside, unsigned noninteractive ranges; frame retained',sizes,
+  run:async(page,{width,height,mode})=>{
+    await r2Duel(page,['Double-Edge','Bullet Seed','Spit Up','Reflect']);
+    const rows=await page.value(`(()=>{const rows=[...document.querySelectorAll('.dres:not(.na) .mr')];return rows.map(row=>{const box=row.getBoundingClientRect();return {height:box.height,controls:[...row.querySelectorAll('.rh,.rc,.dstock')].every(control=>row.querySelector('.mm .r1,.mm .r2')&&control.closest('.r1,.r2')),endpoints:row.querySelectorAll('.r1 [data-a=sub]').length,openActions:row.querySelectorAll('.dd [data-a=sub]').length,range:row.querySelector('span.hu')?.textContent,rangeButton:!!row.querySelector('button.hu[data-a=use]')};});})()`);
+    assert(Math.max(...rows.map(row=>row.height))-Math.min(...rows.map(row=>row.height))<1,'equal closed row heights including status, stock and multi-hit');
+    assert(rows.every(row=>row.controls&&row.openActions===0),'all controls on bar, no old HP actions');
+    assert.equal(rows[0].endpoints,2);assert.match(rows[0].range,/^\d+–\d+$/);assert.equal(rows[0].rangeButton,false);
+    if(mode==='normal'&&((width===260&&height===316)||(width===537&&height===424))){
+      mkdirSync('.tmp/R2',{recursive:true});
+      await page.value(width<480?`scrollTo(0,document.querySelector('.fbar').getBoundingClientRect().top+scrollY-2)`:'scrollTo(0,0)');await page.settle();
+      writeFileSync(`.tmp/R2/${guide().name}-${width}x${height}-closed.png`,Buffer.from((await page.send('Page.captureScreenshot',{format:'png'})).data,'base64'));
+      await page.tap(`${r2Row} .mm`);
+      writeFileSync(`.tmp/R2/${guide().name}-${width}x${height}-open.png`,Buffer.from((await page.send('Page.captureScreenshot',{format:'png'})).data,'base64'));
+    }
+  },
+},{
+  id:'R2 exact',title:'roll fills custom amount, number pad works, both sides apply exact HP plus Life Orb/contact/recoil',
+  run:async(page,{mode})=>{
+    await r2Duel(page,['Double-Edge']);
+    for(const side of ['mine','foe']){
+      const other=side==='mine'?'foe':'mine';
+      await page.value(`CALC.state().dir='${side==='mine'?'out':'in'}';CALC.set('${side}','hp',200);CALC.set('${other}','hp',200);CALC.set('${side}','i','Life Orb');CALC.set('${other}','i','Rocky Helmet');CALC.render()`);
+      await page.tap(`${r2Row} .mm`);
+      const roll=Number(await page.text(`${r2Row} .rolls button`));await page.tap(`${r2Row} .rolls button`);
+      assert.equal(await page.value(`+document.querySelector('${r2Row} [data-hx=d]').value`),roll,'roll fills Damage amount');
+      await page.setBox(`${r2Row} [data-hx=d]`,30);
+      const expected=await page.value(`(()=>{const convert=${r2Mon},att=convert(CALC.mon('${side}')),def=convert(CALC.mon('${other}')),slot={mv:M.indexOf('Double-Edge')},hit=DMG.hit(att,def,slot,{},'max',{damage:30,reactions:true}),hp=DMG.hp(att,def,slot,{},hit.dealt,{hits:hit.hits});return {target:hit.def.hp,user:att.hp+hp.v};})()`);
+      await page.tap(`${r2Row} [data-a=damage]`);
+      assert.equal(await page.value(`CALC.mon('${other}').hp`),expected.target);
+      assert.equal(await page.value(`CALC.mon('${side}').hp`),expected.user);
+      assert.equal(await page.count('#calc-log'),1,'log overlay');await page.tap('#calc-log button');
+      await page.tap(`${r2Row} .mm`);
+    }
+  },
+},{
+  id:'R2 endpoints',title:'closed min/max are real hit actions, current crit/hit totals, Sash and ready berries react',
+  run:async page=>{
+    await r2Duel(page,['Double-Edge','Bullet Seed','Tackle','Reflect']);
+    for(const side of ['mine','foe'])for(const roll of ['min','max']){
+      const other=side==='mine'?'foe':'mine';
+      await page.value(`CALC.state().dir='${side==='mine'?'out':'in'}';CALC.set('${side}','hp',200);CALC.set('${other}','hp',200);CALC.set('${side}','i','Life Orb');CALC.set('${other}','i','Rocky Helmet');CALC.render()`);
+      const expected=await page.value(`(()=>{const convert=${r2Mon},att=convert(CALC.mon('${side}')),def=convert(CALC.mon('${other}')),slot={mv:M.indexOf('Double-Edge')},hit=DMG.hit(att,def,slot,{},'${roll}'),hp=DMG.hp(att,def,slot,{},hit.dealt,{hits:hit.hits});return {target:hit.def.hp,user:Math.max(0,att.hp+hp.v)};})()`);
+      assert.equal(await page.count(`${r2Row}.open`),0);await page.tap(`${r2Row} [data-a=sub][data-roll=${roll}]`);
+      assert.equal(await page.value(`CALC.mon('${other}').hp`),expected.target);assert.equal(await page.value(`CALC.mon('${side}').hp`),expected.user);await page.tap('#calc-log button');
+    }
+    await page.value(`CALC.state().dir='out';CALC.set('mine','i','');CALC.set('foe','i','');CALC.render()`);
+    const multi='.dres:not(.na) .mr:nth-child(2)';
+    for(let count=0;count<6;count++){
+      await page.value(`CALC.set('mine','hp',200);CALC.set('foe','hp',200);CALC.render()`);
+      const numbers=await page.value(`(()=>{const row=document.querySelector('${multi}');return {n:Number(row.querySelector('[data-a=hits]').textContent.replace('×','')),min:+row.querySelector('[data-roll=min]').textContent};})()`);
+      const before=await page.value(`CALC.mon('foe').hp`);await page.tap(`${multi} [data-roll=min]`);assert.equal(await page.value(`CALC.mon('foe').hp`),Math.max(0,before-numbers.min));await page.tap('#calc-log button');await page.tap(`${multi} [data-a=hits]`);
+    }
+    for(const item of ['Focus Sash','Sitrus Berry']){
+      await page.value(`CALC.set('mine','id',P.find(mon=>mon.n==='Snorlax').id);CALC.set('mine','m',[M.indexOf('Double-Edge')]);CALC.set('foe','id',P.find(mon=>mon.n==='Blissey').id);CALC.set('foe','i','${item}');CALC.set('foe','used',false);CALC.set('foe','hp',undefined);CALC.render();${item==='Sitrus Berry'?"CALC.set('foe','hp',80);CALC.render();":''}`);
+      const expected=await page.value(`(()=>{const convert=${r2Mon},hit=DMG.hit(convert(CALC.mon('mine')),convert(CALC.mon('foe')),{mv:M.indexOf('Double-Edge')},{},'max');return hit.def;})()`);
+      await page.tap(`${r2Row} [data-roll=max]`);assert.equal(await page.value(`CALC.mon('foe').hp`),expected.hp);assert.equal(await page.value(`CALC.mon('foe').used||false`),expected.used||false);await page.tap('#calc-log button');
+    }
+  },
+});
+const ownMoves={Reflect:['Reflect'],LightScreen:['Light Screen'],AuroraVeil:['Aurora Veil'],Tailwind:['Tailwind'],Safeguard:['Safeguard'],Protect:['Protect','Detect',"King's Shield",'Spiky Shield','Baneful Bunker','Obstruct','Silk Trap','Burning Bulwark'],Focus:['Focus Energy'],LaserFocus:['Laser Focus'],LuckyChant:['Lucky Chant'],DragonCheer:['Dragon Cheer'],PowerTrick:['Power Trick'],Charge:['Charge'],Roost:['Roost'],MagnetRise:['Magnet Rise'],Ingrain:['Ingrain'],AquaRing:['Aqua Ring'],GlaiveRush:['Glaive Rush'],HelpingHand:['Helping Hand']};
+const opponentMoves={StealthRock:['Stealth Rock','Stone Axe'],Spikes:['Spikes','Ceaseless Edge'],ToxicSpikes:['Toxic Spikes'],StickyWeb:['Sticky Web'],Seeded:['Leech Seed'],SaltCure:['Salt Cure'],Nightmare:['Nightmare'],Cursed:['Curse'],Trapped:['Bind','Wrap','Fire Spin','Whirlpool','Sand Tomb','Clamp','Magma Storm','Infestation','Snap Trap','Thunder Cage'],Foresight:['Foresight','Odor Sleuth'],MiracleEye:['Miracle Eye'],TarShot:['Tar Shot'],Grounded:['Smack Down','Thousand Arrows'],Telekinesis:['Telekinesis']};
+const globalMoves={trickRoom:['Trick Room'],gravity:['Gravity'],wonderRoom:['Wonder Room'],magicRoom:['Magic Room'],waterSport:['Water Sport'],mudSport:['Mud Sport'],powerSplit:['Power Split'],guardSplit:['Guard Split']};
+checks.push({
+  id:'R2 move sync',title:'all offered move-to-Field mappings sync both directions, correct absolute side and hazard layers',
+  run:async(page,{mode})=>{
+    await r2Duel(page,['Reflect']);
+    const mappings=[];
+    for(const side of ['mine','foe'])for(const [map,prefix] of [[ownMoves,side==='mine'?'atk':'def'],[opponentMoves,side==='mine'?'def':'atk'],[globalMoves,'']])for(const [key,names] of Object.entries(map))for(const name of names){
+      const control=guide().data.cfg.calc.field.find(entry=>entry.k===prefix+key);if(!control||!guide().data.M.includes(name))continue;
+      const result=await page.value(`(()=>{const side='${side}',key='${prefix+key}',state=CALC.state();state.dir=side==='mine'?'out':'in';state.field.gameType='Doubles';state.fman.push(key);state.field[key]=0;CALC.set(side,'id',P.find(mon=>mon.n==='Gengar').id);CALC.set(side,'m',[M.indexOf(${JSON.stringify(name)})]);CALC.render();const button=document.querySelector('${r2Row} [data-a=movetoggle]');if(!button)return {missing:true};button.click();const value=state.field[key],pressed=document.querySelector('${r2Row} [data-a=movetoggle]').getAttribute('aria-pressed');document.querySelector('button[data-f="'+key+'"]').click();const second=state.field[key],off=document.querySelector('${r2Row} [data-a=movetoggle]').getAttribute('aria-pressed');return {value,pressed,second,off};})()`);
+      assert(!result.missing,name+' offers '+prefix+key);assert(result.value,name+' sets '+prefix+key);assert.equal(result.pressed,'true',name);assert.equal(result.second,control.max?2:0,name+' Field updates same value');assert.equal(result.off,control.max?'true':'false',name+' reflected back');
+      mappings.push({side,move:name,key:prefix+key});
+    }
+    mkdirSync('.tmp/R2',{recursive:true});writeFileSync(`.tmp/R2/${guide().name}-move-map.json`,JSON.stringify(mappings,null,2));
+    assert(mappings.length>50,'broad profile-specific map coverage');
+    for(const side of ['mine','foe'])for(const [name,vol] of [['Dig','dig'],['Fly','fly'],['Bounce','fly'],['Dive','dive'],['Minimize','min']]){
+      if(!guide().data.M.includes(name))continue;
+      await page.value(`CALC.state().dir='${side==='mine'?'out':'in'}';CALC.set('${side}','m',[M.indexOf('${name}')]);CALC.render();document.querySelector('${r2Row} [data-a=movetoggle]').click()`);
+      assert.equal(await page.value(`CALC.mon('${side}').vol`),vol,name+' user state');
+      await page.tap(`[data-a=eopen][data-s=${side}]`);await page.select(`.cc[data-s=${side}] select[data-e=vol]`,'');assert.equal(await page.value(`document.querySelector('${r2Row} [data-a=movetoggle]').getAttribute('aria-pressed')`),'false');await page.tap(`[data-a=eopen][data-s=${side}]`);
+    }
+    for(const [name,key,value] of [['Hail','weather',guide().data.cfg.calc.field.find(entry=>entry.k==='weather').o.some(entry=>entry[0]==='Snow')?'Snow':'Hail'],['Rain Dance','weather','Rain'],['Electric Terrain','terrain','Electric']]){
+      if(!guide().data.M.includes(name))continue;
+      await page.value(`CALC.set('foe','m',[M.indexOf('${name}')]);CALC.render();document.querySelector('${r2Row} [data-a=movetoggle]').click()`);assert.equal(await page.value(`CALC.state().field.${key}`),value,name+' own profile weather/terrain');await page.select(`.dfight select[data-f=${key}]`,'');assert.equal(await page.value(`document.querySelector('${r2Row} [data-a=movetoggle]').getAttribute('aria-pressed')`),'false');
+    }
+  },
+},{
+  id:'R2 Protect',title:'both sides Protect show zero/Protected; min/max and exact are no-ops; Feint and Z bypass',
+  run:async page=>{
+    await r2Duel(page,['Tackle','Feint','Protect','Safeguard']);
+    for(const side of ['mine','foe']){
+      const other=side==='mine'?'foe':'mine',prefix=other==='mine'?'atk':'def';
+      await page.value(`CALC.state().dir='${side==='mine'?'out':'in'}';CALC.state().field.${prefix}Protect=true;CALC.state().fman.push('${prefix}Protect');CALC.set('${side}','i','Life Orb');CALC.render()`);
+      assert.match(await page.text(`${r2Row} .hp`),/Protected/);const before=await page.value(`['mine','foe'].map(side=>CALC.mon(side).hp)`);
+      await page.value(`(()=>{document.querySelector('${r2Row} .mm').click();const input=document.querySelector('${r2Row} [data-hx=d]');input.value=50;input.dispatchEvent(new Event('change'));document.querySelector('${r2Row} [data-a=damage]').click();})()`);
+      assert.deepEqual(await page.value(`['mine','foe'].map(side=>CALC.mon(side).hp)`),before,'Protected exact no-op');
+      if(guide().data.M.includes('Feint'))assert(await page.value(`+document.querySelector('.dres:not(.na) .mr:nth-child(2) [data-roll=max]').textContent`)>0,'Feint bypass');
+      await page.value(`document.querySelector('${r2Row} .mm').click();CALC.state().field.${prefix}Protect=false;CALC.render()`);
+    }
+  },
+});
+
 await runChecks({name:'calc-retest',file,checks});

@@ -112,12 +112,12 @@ const checks = [{
   run: async page => {
     await page.route('#/calc');
     await page.value(duel(['Seismic Toss', 'Counter']));
-    assert.equal((await page.value(rowInfo('Seismic Toss'))).hp, '50', 'level 50');
+    assert.equal((await page.value(rowInfo('Seismic Toss'))).hp, '50–50', 'both endpoints equal level 50');
     assert.equal((await page.value(rowInfo('Counter'))).hp, '—', 'Counter needs the damage taken');
     await page.tap(`.dres:not(.na) .mr:has([data-slot="1"]) > .mm`);
     assert.ok((await page.value(`${row('Counter')}.querySelector('.eg label:nth-child(2)').textContent`)).startsWith('Taken'));
     await page.value(`(()=>{const input=${row('Counter')}.querySelector('[data-mo="bp"]');input.value='60';input.dispatchEvent(new Event('change',{bubbles:true}));})()`);
-    assert.equal((await page.value(rowInfo('Counter'))).hp, '120');
+    assert.equal((await page.value(rowInfo('Counter'))).hp, '120–120');
   },
 }, {
   id: 'use-tap',
@@ -249,7 +249,7 @@ checks.push({
     await page.value(`CALC.set('foe','id',P.find(mon=>mon.n==='Garchomp').id);CALC.set('foe','a',D.AB.findIndex(entry=>entry[0]==='Rough Skin'));CALC.set('foe','i','Rocky Helmet');CALC.set('foe','hp',1);CALC.render()`);
     const before=await hps(page), expected=await page.value(`(()=>{const convert=${input},att=convert(CALC.mon('mine')),def=convert(CALC.mon('foe')),slot={mv:M.indexOf('Double-Edge')},field=CALC.state().field,hit=DMG.hit(att,def,slot,field,'min');return {hit,hp:DMG.hp(att,def,slot,field,hit.dealt,{hits:hit.hits})};})()`);
     assert.ok(expected.hit.contact.v<0,'fixture has contact cost');
-    await page.tap('.dres:not(.na) [data-a="use"]');
+    await page.tap('.dres:not(.na) [data-a="sub"][data-roll="min"]');
     const after=await hps(page);
     assert.equal(after.foe,0);
     assert.equal(after.mine,Math.max(0,before.mine+expected.hp.v),'combined recoil and contact applied once');
@@ -259,7 +259,7 @@ checks.push({
     await page.value(`CALC.set('foe','id',P.find(mon=>mon.n==='Garchomp').id);CALC.set('foe','a',D.AB.findIndex(entry=>entry[0]==='Rough Skin'));CALC.set('foe','i','Rocky Helmet');CALC.set('foe','hp',1);CALC.render()`);
     const start=await hps(page),multi=await page.value(`(()=>{const convert=${input},att=convert(CALC.mon('mine')),def=convert(CALC.mon('foe')),slot={mv:M.indexOf('Double Hit')},field=CALC.state().field,hit=DMG.hit(att,def,slot,field,'min');return {hit,hp:DMG.hp(att,def,slot,field,hit.dealt,{hits:hit.hits})};})()`);
     assert.equal(multi.hit.hits,1,'second strike is not applied after KO');
-    await page.tap('.dres:not(.na) [data-a="use"]');
+    await page.tap('.dres:not(.na) [data-a="sub"][data-roll="min"]');
     assert.equal((await hps(page)).mine,start.mine+multi.hp.v,'contact only once for the actual damaging strike');
   },
 });

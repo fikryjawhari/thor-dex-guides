@@ -1599,11 +1599,24 @@ await test('R2 Protect blocks ordinary/fixed/exact hits without any reactions; b
     for(const damage of [undefined,30]){const hit=calc.hit(user,target,selected,{defProtect:true},'max',damage==null?{}:{damage});assert.equal(hit.dealt,0);assert.deepEqual(plain(hit.atk),{});assert.deepEqual(plain(hit.def),{});}
     const fixed=guide.M.indexOf('Seismic Toss');if(fixed>=0)assert.equal(calc.calc(user,target,{mv:fixed},{defProtect:true}).max,0,hack+' fixed');
     const feint=guide.M.indexOf('Feint');if(feint>=0)assert(calc.calc(user,target,{mv:feint},{defProtect:true}).max>0,hack+' Feint');
-    const unseen=guide.AB.findIndex(entry=>entry[0]==='Unseen Fist');if(unseen>=0)assert(calc.calc({...user,ab:unseen},target,selected,{defProtect:true}).max>0,hack+' Unseen Fist');
+    const unseen=guide.AB.findIndex(entry=>entry[0]==='Unseen Fist');if(unseen>=0)assert.deepEqual(plain(calc.calc({...user,ab:unseen},target,selected,{defProtect:true}).rolls),plain(calc.calc({...user,ab:unseen},target,selected).rolls),hack+' Unseen Fist full bypass');
     if(config.zmove){const z={...selected,z:true},zUser={...user,it:'Normalium Z'},zTarget={...target,it:'',hp:calc.stats(target)[0]},normal=calc.calc(zUser,zTarget,z),protectedZ=calc.calc(zUser,zTarget,z,{defProtect:true});assert(protectedZ.max>0);assert.equal(protectedZ.protected,undefined);assert(protectedZ.rolls.every((value,index)=>Math.abs(value-normal.rolls[index]/4)<=1),'stock quarter-strength rounding');}
     assert.equal(calc.entry(target,{defToxicSpikes:2,defSafeguard:true},'def').status,undefined,hack+' Safeguard');
     assert.equal(calc.entry(target,{defToxicSpikes:2},'def').status,'tox',hack+' poison without Safeguard');
   }
+});
+
+await test('R2 selected strike keeps Sash/shield/contact; custom exact amount keeps on-hit reactions', () => {
+  engine.init(data,profiles.expansion);
+  const user=set('Snorlax'),target=set('Blastoise',{it:'Focus Sash'}),selected=slot('Double Kick',{bp:1000});
+  const one=engine.hit(user,target,selected,{},'max',{strike:1});
+  assert.equal(one.def.hp,1);assert.equal(one.def.used,true);assert.equal(one.hits,1);
+  const max=engine.stats(target)[0],custom=engine.hit(user,target,slot('Tackle'),{},'max',{damage:max+100,reactions:true});
+  assert.equal(custom.def.hp,1);assert.equal(custom.def.used,true);
+  const stamina=engine.hit(user,{...target,it:'',ab:ability('Stamina')},slot('Tackle'),{},'max',{damage:10,reactions:true});
+  assert.equal(stamina.def.hp,max-10);assert.equal(stamina.def.stg[2],1);
+  const shielded=set('Mimikyu',{ab:ability('Disguise'),broken:false}),broken=engine.hit(user,shielded,slot('Double Hit'),{},'max',{strike:1});
+  assert.equal(broken.def.broken,true);assert.equal(broken.dealt,0);
 });
 
 await test('initialisation and calculations leave guide/profile inputs unchanged', () => {
