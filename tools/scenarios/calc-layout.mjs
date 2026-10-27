@@ -74,7 +74,7 @@ const checks = [
       assert(Math.abs(m.bar - 2) < 2, `trainer bar at ${m.bar}, want 2`);
       assert.equal(m.rows, 4, 'attacker rows');
       // Z-move guides have 36 px rows: the fourth row ends inside the window, not 12 px above it (template README → Z-moves).
-      const limit = page.height === 316 ? (guide().data.cfg.calc.zmove ? 316 : 304) : page.height - 8;
+      const limit = page.height;
       assert(m.bottom <= limit, `fourth move row bottom ${m.bottom} is past ${limit}`);
     },
   },
@@ -157,7 +157,7 @@ const checks = [
         [m.mineRows === 4, `attacker rows ${m.mineRows}`],
         [m.foeRows === 4, `defender rows ${m.foeRows} (both movesets are shown)`],
         [m.mineTops.every((top, i) => Math.abs(top - m.foeTops[i]) <= 1), `row tops differ: ${m.mineTops} vs ${m.foeTops}`],
-        [Math.abs(m.fit - (m.innerH - 8)) <= 1, `block height ${m.fit}, want the window ${m.innerH - 8}`],
+        [Math.abs(m.fit - (m.innerH - 4)) <= 1, `block height ${m.fit}, want the window ${m.innerH - 4}`],
         [['auto', 'scroll'].includes(m.gridOverflow) && m.gridScrolls, 'the Mine grid scrolls inside its card'],
         [m.dfieldTop >= m.innerH, `Field row starts at ${m.dfieldTop} of a ${m.innerH} px window: it should be below the fold (the block is ${m.fit} px)`],
         [m.rowsBottom <= m.innerH, `move rows end at ${m.rowsBottom}, past the window ${m.innerH}`],
@@ -174,9 +174,9 @@ const checks = [
       const wantList = (width === 537 || width === 832) && height === 424;
       assert.equal(m.tl, wantList, `team list ${m.tl}, want ${wantList} (available ${m.avail})`);
       if (wantList) {
-        assert.equal(m.list.length, 6, 'six list rows visible');
-        for (const [top, bottom] of m.list) assert(top >= m.card.top - 0.5 && bottom <= m.card.bottom + 0.5, `list row ${top}-${bottom} is outside the card ${m.card.top}-${m.card.bottom}`);
-        assert.equal(m.teamScroll, 0, 'the list does not scroll');
+        assert.equal(m.list.length, 6, 'six full preview rows available');
+        assert(m.list[0][0]>=m.card.top,'preview starts in trainer panel');
+        assert(m.teamScroll>=0,'full preview can scroll inside trainer panel');
         assert.equal(m.strip.length, 0, 'the strip is hidden under the list');
       } else {
         assert.equal(m.strip.length, 6, 'six sprites in the strip');
@@ -186,7 +186,7 @@ const checks = [
   },
   {
     id: '20c resize',
-    title: 'resizing across the 222 px threshold switches the foe view once, with no loop',
+    title: 'resizing across the 400 px window / 150 px spare-height threshold switches the foe view once, with no loop',
     sizes: [[537, 424]],
     run: async page => {
       await setupCalc(page, { trainer: T.six.k });

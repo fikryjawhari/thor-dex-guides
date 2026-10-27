@@ -1426,4 +1426,4 @@ function hp(atk, def, slot, values = {}, dealt = 0, options = {}) {
   return {v: parts.reduce((sum, value) => sum + value, 0), l: name};
 }
 
-window.DMG = {init, stats, calc, residual, speed, entry, hp, hit, turn, berry, derived, settings, intimidate: intimidateMarks};
+window.DMG = {items: () => [...generation.items].map(item => item.name), init, stats, calc, residual, speed, entry, hp, hit, turn, berry, derived, settings, intimidate: intimidateMarks};

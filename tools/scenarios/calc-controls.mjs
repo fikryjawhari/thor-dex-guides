@@ -288,7 +288,7 @@ const checks = [
       // the stat row and the ability sit in the Edit dropdown, so open it first
       await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
       const stats = () => page.value(`[...document.querySelectorAll('.cc[data-s="mine"] .ed tr')].find(tr=>tr.querySelector('td.l')?.textContent.trim()==='Stat').textContent.replace(/\\s+/g,' ').trim()`);
-      const ability = () => page.value(`document.querySelector('select[data-e="ab"][data-s="mine"]').selectedOptions[0].textContent.trim()`);
+      const ability = () => page.value(`(()=>{const entry=document.querySelector('[data-e="ab"][data-s="mine"]');return entry.tagName==='SELECT'?entry.selectedOptions[0].textContent.trim():entry.value})()`);
       const base = { spe: await spe(), stats: await stats(), ability: await ability() };
       assert.equal(await name(), 'Garchomp');
       await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');

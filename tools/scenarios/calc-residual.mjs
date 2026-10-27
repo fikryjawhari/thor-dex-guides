@@ -27,14 +27,14 @@ const checks = [{
     const hp=Number(await page.value('document.querySelector("[data-hp=foe]").value'));
     const max=Number(await page.value('document.querySelector(".cc[data-s=foe] .mx").textContent.slice(1)'));
     const loss=Math.max(1,Math.floor(max/16));
-    assert.equal(await page.text('.cc[data-s=foe] .dturn'),'−'+loss);
+    assert.equal(await page.text('.cc[data-s=foe] .dturn'),String(loss));
     await page.tap('[data-a=eot][data-s=foe]');
     assert.equal(Number(await page.value('document.querySelector("[data-hp=foe]").value')),hp-loss);
     assert.equal(await page.text('.cc[data-s=foe] .hpl'),'↺');
     await page.tap('[data-a=eopen][data-s=foe]');
     assert.equal(await page.count('.cc[data-s=foe] .dqp'),0,'parts collapsed by default');
     await page.tap('[data-a=resopen][data-s=foe]');
-    assert.match(await page.text('.cc[data-s=foe] .dqp'),new RegExp('Sandstorm.*−'+loss,'s'));
+    assert.match(await page.text('.cc[data-s=foe] .dqp'),new RegExp('Sandstorm.*'+loss,'s'));
     await page.tap('[data-a=resopen][data-s=foe]');
     await page.tap('[data-a=eopen][data-s=foe]');
     await page.tap('.cc[data-s=foe] .hpl');
@@ -70,7 +70,7 @@ const checks = [{
       await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
       await page.value(`(()=>{const s=document.querySelector('.ed [data-e="pty"]');s.value='Fire';s.dispatchEvent(new Event('change'));})()`);
       assert.equal(await page.count('.dmatch .cc[data-s="mine"] .cn .td'), 1, `${name}: chosen again`);
-      const other = await page.value(`[...document.querySelectorAll('.ed [data-e="ab"] option')].map(o=>o.value).find(v=>AB[v][0]!==${JSON.stringify(name)})`);
+      const other = await page.value(`[...document.querySelectorAll('.ed [data-e="ab"] option')].map(o=>o.value).find(v=>AB[v]&&AB[v][0]!==${JSON.stringify(name)})`);
       if (other != null) {
         await page.value(`(()=>{const s=document.querySelector('.ed [data-e="ab"]');s.value=${JSON.stringify(String(other))};s.dispatchEvent(new Event('change'));})()`);
         assert.equal(await page.count('.ed [data-e="pty"]'), 0, `${name}: no type choice for another ability`);
@@ -90,7 +90,7 @@ const checks = [{
     await page.value(`(()=>{const s=document.querySelector('[data-e="status"][data-s="foe"]');s.value='tox';s.dispatchEvent(new Event('change'));})()`);
     await page.tap('.dmatch .cc[data-s="foe"] [data-a="eopen"]');
     const max = Number(await page.value(`document.querySelector('.cc[data-s="foe"] .mx').textContent.slice(1)`));
-    const tick = turn => '−' + Math.max(1, Math.floor(max * turn / 16));
+    const tick = turn => '' + Math.max(1, Math.floor(max * turn / 16));
     assert.equal(await page.text('.cc[data-s=foe] .dturn'), tick(1));
     assert.equal(await page.count('.cc[data-s=foe] .cl [data-tox="foe"]'), 1, 'turn box on the HP line');
     await page.setBox('.cc[data-s=foe] .cl [data-tox="foe"]', 4);

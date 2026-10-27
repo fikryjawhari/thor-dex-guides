@@ -30,7 +30,7 @@ const checks = [
       const toggles = entries.filter(entry => entry.type !== 'select');
       await page.tap('.dfield > summary');
       await page.tap('[data-f=gameType][data-value=Singles]');
-      assert.deepEqual(await page.value(`[...document.querySelectorAll('.dfr select[data-f]')].map(s=>s.dataset.f)`), selects, "the selects are the profile's");
+      assert.deepEqual(await page.value(`[...document.querySelectorAll('.dfight select[data-f],.dfr select[data-f]')].map(s=>s.dataset.f)`), selects, "the selects are the profile's");
       assert.deepEqual(await page.value(`[...document.querySelectorAll('.dtg button[data-f]')].map(b=>b.dataset.f).sort()`), toggles.filter(entry=>!entry.doubles).map(entry=>entry.k).sort(), "Singles draws every non-ally profile toggle/state");
       await page.tap('[data-f=gameType][data-value=Doubles]');
       assert.deepEqual(await page.value(`[...document.querySelectorAll('.dtg button[data-f]')].map(b=>b.dataset.f).sort()`), toggles.map(entry=>entry.k).sort(), "Doubles draws every profile toggle/state");

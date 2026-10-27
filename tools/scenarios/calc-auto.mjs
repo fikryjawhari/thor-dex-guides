@@ -22,7 +22,7 @@ const editorOpen = async (page, side, open) => {
   if (!!(await page.count(`.cc[data-s="${side}"] .ed`)) !== open) await page.tap(`.dmatch .cc[data-s="${side}"] [data-a="eopen"]`);
 };
 const choose = (page, selector, value) => page.value(`(()=>{const s=document.querySelector(${JSON.stringify(selector)});s.value=${JSON.stringify(value)};s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
-const otherNature = (page, side) => page.value(`[...document.querySelector('.cc[data-s="${side}"] select[data-e="na"]').options].map(o=>o.value).find(v=>v!==CALC.mon('${side}').na)`);
+const otherNature = (page, side) => page.value(`NATS.find(value=>value!==CALC.mon('${side}').na)`);
 const openField = async page => {
   if (!(await page.value(`document.querySelector('.dfield').open`))) await page.tap('.dfield > summary');
 };
@@ -46,7 +46,7 @@ const checks = [
       await choose(page, '.cc[data-s="mine"] select[data-e="status"]', 'par');
       await page.tap('.cc[data-s="mine"] .ed .sc[data-x="0"]');
       const nature = (await mon(page, 'mine')).na, edited = await otherNature(page, 'mine');
-      await choose(page, '.cc[data-s="mine"] select[data-e="na"]', edited);
+      await choose(page, '.cc[data-s="mine"] [data-e="na"]', edited);
       await choose(page, '.cc[data-s="mine"] select[data-e="vol"]', 'dig');
       // battle state with no control on every guide's card: through the page's own setter
       await page.value(`(()=>{CALC.set('mine','abilityOn',true);CALC.set('mine','dl','atk');CALC.set('mine','broken',true);CALC.state().st[CALC.key('mine')+':0']=1;CALC.render();})()`);
@@ -61,7 +61,7 @@ const checks = [
       assert.ok(!(await nameOf(page, 'mine')).endsWith('*'), 'no unsaved mark');
       // Save keeps set edits, never battle condition
       await editorOpen(page, 'mine', true);
-      await choose(page, '.cc[data-s="mine"] select[data-e="na"]', edited);
+      await choose(page, '.cc[data-s="mine"] [data-e="na"]', edited);
       await page.tap('.cc[data-s="mine"] .ed .sc[data-x="0"]');
       await page.tap('[data-a="esave"][data-s="mine"]');
       const saved = await page.value(`CALC.state().saved[CALC.key('mine')]`);
@@ -228,10 +228,10 @@ const checks = [
       await setupCalc(page);
       await editorOpen(page, 'foe', true);
       assert.equal(await page.count('[data-a="esave"][data-s="foe"]'), 0, 'no foe Save');
-      const field = (await page.value(`document.querySelectorAll('.cc[data-s="foe"] select[data-e="ab"] option').length`)) > 1 ? 'a' : 'na';
-      const sel = `.cc[data-s="foe"] select[data-e="${field === 'a' ? 'ab' : 'na'}"]`;
+      const field = 'na';
+      const sel = `.cc[data-s="foe"] [data-e="${field === 'a' ? 'ab' : 'na'}"]`;
       const was = await page.value(`document.querySelector('${sel}').value`);
-      const edited = await page.value(`[...document.querySelector('${sel}').options].map(o=>o.value).find(v=>v!==${JSON.stringify(was)})`);
+      const edited = await page.value(`NATS.find(value=>value!==${JSON.stringify(was)})`);
       await choose(page, sel, edited);
       const now = await page.value(`String(CALC.mon('foe').${field})`);
       console.log(`     note: foe ${field} ${was} -> ${now}`);
@@ -409,7 +409,7 @@ checks.push(
         if(result.def.used)assert.equal(await page.value('CALC.mon("foe").used'),true);
         for(const [side,patch] of [['mine',result.atk],['foe',result.def]])if(patch.used){
           await editorOpen(page,side,true);
-          assert.match(await page.value(`document.querySelector('.cc[data-s="${side}"] select[data-e="it"] option:checked').textContent`),/\(used\)$/,'consumed item visible after actual hit');
+          assert.match(await page.value(`document.querySelector('.cc[data-s="${side}"] [data-e="it"]').value`),/\(used\)$/,'consumed item visible after actual hit');
           await editorOpen(page,side,false);
         }
         if(result.def.stg)assert.deepEqual(await page.value('CALC.mon("foe").stg'),result.def.stg.slice(1));
@@ -431,7 +431,7 @@ checks.push(
     run: async page => {
       await setupCalc(page);
       await configure(page,{ name:'Blaziken',ability:'Speed Boost' },{ name:'Bibarel' });
-      assert.match(await page.text('[data-a="eot"][data-s="mine"]'),/Spe\+1/);
+      assert.match(await page.text('[data-a="eot"][data-s="mine"]'),/↑1/);
       await page.tap('[data-a="eot"][data-s="mine"]');
       assert.equal(await page.value('CALC.mon("mine").stg[4]'),1);
       for(const item of ['Sitrus Berry','Salac Berry']){
@@ -446,7 +446,7 @@ checks.push(
         assert.ok(await page.value(`document.querySelector('.cc[data-s="mine"]').offsetHeight<=innerHeight-8`),'open card with berry, Toxic and Intimidate fits one window');
         const before=await page.value(`(()=>{const input=${engineInput};return DMG.berry(input(CALC.mon('mine')),CALC.state().field,input(CALC.mon('foe')),'atk');})()`);
         assert.ok(before);
-        assert.match(await page.text('[data-a="berry"][data-s="mine"]'),new RegExp(item.split(' ')[0]));
+        assert.match(await page.text('[data-a="berry"][data-s="mine"]'),/^\+\d*$/);
         await page.tap('[data-a="berry"][data-s="mine"]');
         assert.equal(await hpOf(page,'mine'),before.atk.hp);
         assert.equal(await page.count('[data-a="berry"][data-s="mine"]'),0);
@@ -566,15 +566,15 @@ checks.push({
       await configure(page,{name:'Snorlax',i:item},null);
       await page.value(`CALC.set('mine','used',true);CALC.render()`);
       await editorOpen(page,'mine',true);
-      assert.equal(await page.value(`document.querySelector('.cc[data-s="mine"] select[data-e="it"] option:checked').textContent`),'No item (used)');
-      assert.equal(await page.value(`document.querySelector('.cc[data-s="mine"] select[data-e="it"]').title`),item+' (used)');
-      assert.equal(await page.value(`document.querySelector('.cc[data-s="mine"] select[data-e="it"]').value`),'@used');
+      assert.equal(await page.value(`document.querySelector('.cc[data-s="mine"] [data-e="it"]').value`),'No item (used)');
+      assert.equal(await page.value(`document.querySelector('.cc[data-s="mine"] [data-e="it"]').title`),item+' (used)');
+      assert.equal(await page.value(`document.querySelector('.cc[data-s="mine"] [data-e="it"]').value`),'No item (used)');
       const index=await page.value('CALC.state().mine.i');
       await page.value(`CALC.state().custom.push({...CALC.state().custom[${index}],pid:'other'});CALC.state().mine.i=CALC.state().custom.length-1;CALC.render();CALC.state().mine.i=${index};CALC.render()`);
       await reloadCalc(page);
       assert.equal(await page.value('CALC.mon("mine").used'),true,item+' kept after switch and reload');
       await editorOpen(page,'mine',true);
-      await choose(page,'.cc[data-s="mine"] select[data-e="it"]',item);
+      await choose(page,'.cc[data-s="mine"] [data-e="it"]',item);
       assert.ok(!await page.value('CALC.mon("mine").used'),'item replacement clears used');
       await page.value(`CALC.set('mine','used',true);CALC.render()`);
       await page.tap('[data-a="tnext"]');
@@ -611,7 +611,7 @@ checks.push({
   run: async page => {
     await setupCalc(page);
     const panel=readFileSync(new URL('../mockup/thor-frame/calc-presets.html',import.meta.url),'utf8').split('<script>')[1].split('let builtWait')[0];
-    const results=await page.value(`(()=>{const thorFrame=()=>window;const host=document.createElement('div');host.innerHTML='<div id="calc-presets"></div><p id="calc-preset-status"></p>';document.body.append(host);${panel};return builtPresets.map(([label,request])=>{const before=JSON.stringify(CALC.state().custom);builtPreset(request);const message=document.querySelector('#calc-preset-status').textContent;if(message.startsWith('That preset'))return {label,missing:true,preserved:before===JSON.stringify(CALC.state().custom)};if(!document.querySelector('.cc[data-s="mine"] .ed'))document.querySelector('[data-a="eopen"][data-s="mine"]').click();const item=document.querySelector('.cc[data-s="mine"] select[data-e="it"]'),ability=document.querySelector('.cc[data-s="mine"] select[data-e="ab"]'),mon=CALC.mon('mine');return {label,item:item?.value,expected:request.item||'',ability:ability?.value,actual:String(mon.a),moves:mon.m.length,status:mon.status,statusLabel:document.querySelector('.cc[data-s="mine"] select[data-e="status"] option:checked').textContent};});})()`);
+    const results=await page.value(`(()=>{const thorFrame=()=>window;const host=document.createElement('div');host.innerHTML='<div id="calc-presets"></div><p id="calc-preset-status"></p>';document.body.append(host);${panel};return builtPresets.map(([label,request])=>{const before=JSON.stringify(CALC.state().custom);builtPreset(request);const message=document.querySelector('#calc-preset-status').textContent;if(message.startsWith('That preset'))return {label,missing:true,preserved:before===JSON.stringify(CALC.state().custom)};if(!document.querySelector('.cc[data-s="mine"] .ed'))document.querySelector('[data-a="eopen"][data-s="mine"]').click();const item=document.querySelector('.cc[data-s="mine"] [data-e="it"]'),ability=document.querySelector('.cc[data-s="mine"] select[data-e="ab"]'),mon=CALC.mon('mine');return {label,item:item?.value,expected:request.item||'',ability:ability?.value??document.querySelector('.cc[data-s="mine"] input[data-e="ab"]')?.value,actual:ability?String(mon.a):AB[mon.a][0],moves:mon.m.length,status:mon.status,statusLabel:document.querySelector('.cc[data-s="mine"] select[data-e="status"] option:checked').textContent};});})()`);
     for(const result of results){if(result.missing){assert.equal(result.preserved,true,result.label+' unavailable preserves the current team');continue;}assert.equal(result.item,result.expected,result.label+' held item in Edit');assert.equal(result.ability,result.actual,result.label+' ability in Edit');assert.equal(result.moves,4,result.label+' four available moves');if(result.label==='Orb'){assert.equal(result.status,'brn');assert.equal(result.statusLabel,'Burn (Orb)');}}
   },
 });
