@@ -48,11 +48,16 @@ dist/<hack>.html .tmp/<name>.html --panel tools/mockup/thor-frame/calc-presets.h
 
 ## Save readers and the file picker
 
-Order: Gen 3 + Emerald Imperium's ID tables (tested against the user's save), the viewer's file picker (app repo),
-Gen 4 (Hardlove Gold), Gen 6/7 (Photonic Sun, then Eternal X); Gen 5 waits for the Blaze Black 2 Redux guide. From then
+Order: Gen 3 + Emerald Imperium's ID tables (**done 2026-10-28**: `readers/expansion.js`, tested against hzla's EI 1.3
+save, not the user's: they had none), the viewer's file picker (app repo), Gen 6/7 (Photonic Sun, then Eternal X:
+blank USUM / X saves made with PKHeX as the oracle, the format is vanilla's), Gen 4 (Hardlove Gold: waits for the
+user's save, no hg-engine save is public); Gen 5 waits for the Blaze Black 2 Redux guide. Public test saves
+(2026-10-27): hzla/Dynamic-Calc-Decomps `cypress/fixtures/saves/` (EI 1.3 + an mGBA state + a paste of it, Renegade
+Platinum, Heart & Soul); none for hg-engine or the 3DS. From then
 on every new guide's extract writes its ID tables (add it to CLAUDE.md → Making a new guide and the skill then).
-Procedure: `.agents/references/calc-save-reader.md`. Each needs the user's save in `hacks/<hack>/.src/saves/` plus its
-`.expected.json`: ask for it first. Licences: `tools/calc/README.md` → Licences.
+Procedure: `.agents/references/calc-save-reader.md`. Each needs a save in `hacks/<hack>/.src/saves/` plus its
+`.expected.json` (the user's, or a public / PKHeX-made one when they have none; `tools/calc_paste_expected.py` turns an
+hzla paste into one). Licences: `tools/calc/README.md` → Licences.
 
 **Interface** (built with the `test` reader, `template/calc/readers/test.js`): `READERS[family] = (bytes, D) => {game,
 party [mon], boxes [[mon]]}`, or throw `{code: 'wrong' | 'state' | 'unreadable' | 'empty', game?}` (the four banners:
