@@ -22,7 +22,8 @@ for name in names:
     sample.append({'n': name, 'sprite': 'data:image/png;base64,' + base64.b64encode(sprite.read_bytes()).decode() if sprite.exists() else '', 'abilities': list(dict.fromkeys(data['AB'][index][0] for index in species.get('a', []) + ([species['ha']] if 'ha' in species else [])))})
 items = json.loads(subprocess.check_output(['node', '-e', 'console.log(JSON.stringify(require("./tools/calc/node_modules/@smogon/calc/dist/data/items.js").ITEMS[9]))'], cwd=root, text=True))
 items = sorted(set(items) | {row[0] for group in data['IT'] for row in group.get('r', [])})
-payload = {'species': sample, 'abilities': sorted({entry[0] for entry in data['AB']}), 'items': ['No item'] + items, 'field': profile['field'], 'status': profile['status']}
+base_abilities = json.loads(subprocess.check_output(['node', '-e', 'console.log(JSON.stringify(require("./tools/calc/node_modules/@smogon/calc/dist/data/abilities.js").ABILITIES[9]))'], cwd=root, text=True))
+payload = {'species': sample, 'abilities': sorted(set(base_abilities) | {entry[0] for entry in data['AB']}), 'items': ['No item'] + items, 'field': profile['field'], 'status': profile['status']}
 source = (here / 'mock.src.html').read_text(encoding='utf8').replace('/*DATA*/{}', assembly.script_json(payload))
 (here / 'mock.html').write_text(source, encoding='utf8')
 output = root / 'dist/calc-retest-mock.html'

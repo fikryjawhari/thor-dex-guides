@@ -6,7 +6,7 @@ import {startBrowser} from '../../tools/browser.mjs';
 
 await mkdir('.tmp/M1', {recursive:true});
 const errors=[],results=[];
-const browser=await startBrowser({profilePrefix:'calc-retest-',onEvent:message=>{if(message.method==='Runtime.exceptionThrown')errors.push(message.params.exceptionDetails);}});
+const browser=await startBrowser({profilePrefix:'calc-retest-',flags:['--hide-scrollbars'],onEvent:message=>{if(message.method==='Runtime.exceptionThrown')errors.push(message.params.exceptionDetails);}});
 try {
  const target=await browser.send('Target.createTarget',{url:'about:blank'});
  const session=(await browser.send('Target.attachToTarget',{targetId:target.result.targetId,flatten:true})).result.sessionId;
@@ -31,7 +31,7 @@ try {
   assert.deepEqual(await evaluate('mons.map(mon=>mon.hp)'),[145,162],'foe damage and target berry');
   await evaluate('resetFight();demo("edit")');await geometry(label+'-edit');await shot(label+'-edit');
   await click('[data-part="14"][data-side="0"]');assert.equal(await evaluate('mons[0].hp'),172);
-  await change('[data-ability="0"]','Other…');await geometry(label+'-ability');
+  if(keyboard){await click('[data-ability="0"]');await click('[data-choice="Other…"]');}else await change('[data-ability="0"]','Other…');await geometry(label+'-ability');await shot(label+'-ability-picker');
   await evaluate(`document.querySelector('#query').value='lev';paintPicker()`);
   await click('[data-choice="Levitate"]');assert.equal(await evaluate('mons[0].ability'),'Levitate');
   await click('[data-other-clear="0"]');assert.equal(await evaluate('!!mons[0].other'),false);
@@ -52,7 +52,21 @@ try {
   await click('[data-toggle-move="11"][data-side="0"]');assert.equal(await evaluate('mons[0].vol'),'dig');
   await evaluate('demo("field")');await geometry(label+'-field');await shot(label+'-field');
   await click('[data-reset-fight]');assert.equal(await evaluate('field.gameType'),'Singles');assert.equal(await evaluate('field.defSpikes||0'),0);
+  assert.equal(await evaluate('document.querySelector("[data-residual]").textContent'),'14');
+  await evaluate(`mons[1].hp=235;mons[1].item='Focus Sash';mons[0].item='Life Orb';render();applyDamage(0,300,0)`);
+  assert.equal(await evaluate('mons[1].hp'),1);assert.equal(await evaluate('mons[1].item'),'No item');assert.ok((await evaluate('document.querySelector("#log").textContent')).includes('Life Orb'));
+  await evaluate(`resetFight();mons[1].hp=235;mons[1].ability='Sturdy';render();applyDamage(0,300,0)`);assert.equal(await evaluate('mons[1].hp'),1);
  }
  await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'light'}]});await evaluate('resetFight();demo("cards")');await geometry('light');await shot('480-light');
- assert.deepEqual(errors,[]);await writeFile('.tmp/M1/checks.json',JSON.stringify({results,errors},null,2));console.log(`PASS: ${results.length} layouts; six scenario passes; no exceptions`);
+ await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'dark'}]});
+ await send('Emulation.setDeviceMetricsOverride',{width:800,height:720,deviceScaleFactor:1,mobile:false});
+ await send('Page.navigate',{url:pathToFileURL(resolve('dist/calc-retest-mock.html')).href});await pause();
+ const frames=[];
+ for(const [width,height] of [[260,316],[260,394],[480,392]])for(const keyboard of [false,true]){
+  await evaluate(`localStorage.setItem('dvkb','${keyboard?'1':'0'}');W=${width};H=${height};FIT=false;scale();load()`);await pause();
+  const frame=await evaluate(`({width:thorFrame().innerWidth,height:thorFrame().innerHeight,scroll:thorFrame().document.documentElement.scrollWidth,keyboard:thorFrame().document.body.classList.contains('dvkb'),errors:thorFrame().__errs})`);
+  assert.equal(frame.width,width);assert.equal(frame.height,height);assert.equal(frame.scroll,width);assert.equal(frame.keyboard,keyboard);assert.deepEqual(frame.errors,[]);frames.push(frame);
+ }
+ await shot('thor-frame-480-dvkb');
+ assert.deepEqual(errors,[]);await writeFile('.tmp/M1/checks.json',JSON.stringify({results,frames,errors},null,2));console.log(`PASS: ${results.length} layouts; six scenario passes; six framed viewports; no exceptions`);
 }finally{await browser.close();}
