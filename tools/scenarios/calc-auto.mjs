@@ -555,6 +555,7 @@ checks.push({
   id: 'used item fight', title: 'all consumed items stay visibly used across switches/reload, replacement and new fight clear them',
   run: async page => {
     await setupCalc(page);
+    await page.value(`CALC.use(P.find(mon=>mon.n==='Snorlax'));CALC.render()`);
     for(const item of ['Focus Sash','Weakness Policy','Sitrus Berry','Air Balloon','Normal Gem']){
       await configure(page,{name:'Snorlax',i:item},null);
       await page.value(`CALC.set('mine','used',true);CALC.render()`);
