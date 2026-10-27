@@ -1,5 +1,5 @@
-"""Check a built data.json: the Locations PDF's wild tables against the dex data and, given a pre-Part-B data.json, the
-Part B invariants and preservation.
+"""Check a built data.json: the save importer's GID tables, the Locations PDF's wild tables against the dex data and,
+given a pre-Part-B data.json, the Part B invariants and preservation.
 
 Usage: uv run python -I hacks/emerald-imperium/extract/check.py [baseline.json [current.json]]
 """
@@ -32,6 +32,18 @@ def finalise(data):
     return [i for i in before if i not in kept]
 
 
+def check_gid(data):
+    """Every P id, move and ability has a game id; every mapped species a growth rate (template/calc/readers/README.md)."""
+    gid = data['GID']
+    species = {v for v in gid['sp'] if v}
+    assert species == {pokemon['id'] for pokemon in data['P']}, 'P ids without a game species id'
+    assert all(gid['gr'][i] in range(6) for i, v in enumerate(gid['sp']) if v), 'a species without a growth rate'
+    assert set(i for i in gid['mv'] if i is not None) == set(range(len(data['M']))), 'moves without a game id'
+    assert set(i for i in gid['ab'] if i is not None) == set(range(len(data['AB']))), 'abilities without a game id'
+    assert 'Never-Melt Ice' in gid['it'] and 'Never-MeltIce' not in gid['it'], 'squeezed item names'
+    print(f'PASS: GID maps all {len(species)} species, {len(data["M"])} moves, {len(data["AB"])} abilities')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('baseline', nargs='?', type=Path)
@@ -40,6 +52,7 @@ def main():
     args = parser.parse_args()
     after = json.loads(args.current.read_text(encoding='utf8'))
     check_metronome(after, 'emerald-imperium')
+    check_gid(after)
     diffs = pdfwild.compare()
     assert not diffs, diffs[:10]
     print('PASS: Locations PDF wild tables match the dex data slot by slot')
