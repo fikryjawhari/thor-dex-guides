@@ -56,8 +56,11 @@ Everything in `plans/calc-auto-effects.md` (built) still holds unless changed he
    same reactions as 7. Tapping one of the listed rolls fills the box.
 9. **Follow-up chips become ranges**, not buttons: recoil / drain / Rocky Helmet etc. show `25–30` for min–max of the
    row, red for the attacker's loss, green for a gain, no sign; not tappable (7 applies them).
-10. **Multi-hit control**: the existing small cycle button (as the calc has now, cycling the counts **including 1×**),
-    not a select, and no taller than the row: every closed move row has the same height.
+10. **Everything beside the move card moves into it.** The crit button, the multi-hit cycle button and the move-state
+    controls now outside the row (the "toggle moves": Assurance, Fury Cutter / Rollout / Echoed Voice counters,
+    Stockpile, Stored Power stages... whatever `calc.js` renders next to the row) go inside the card, on its bar, as the
+    mockup put crit + hits + the move toggle. Multi-hit: the existing small cycle button (counts **including 1×**), not
+    a select. Every closed move row has the same height, controls included, and the frame rule (2) still holds.
 11. **Move → Field toggles.** A move that sets a Field entry or battle state gets a toggle on its row (status moves: in
     place of `—`; damaging ones like Stone Axe / Dig: beside crit), lit when on, flipping the same state the Field /
     Edit controls flip. Side: the move user's side for screens / Tailwind / Safeguard / Protect / own states, the
@@ -76,9 +79,12 @@ Everything in `plans/calc-auto-effects.md` (built) still holds unless changed he
     (`.endbar`, `Collapse <group>`, as Walkthrough / Items use: `template/dex.js` "Collapse bars", shown only when the
     open block is taller than the window). No big "Collapse Field" bar.
 14. **New entries:** Safeguard per side (a tracked state; where the calc applies a status automatically it blocks it
-    for that side, otherwise no effect) for every calc guide whose moves include it; **Protect enabled for EI** (its
-    entry exists, gated off for EI: ungate it; behaviour as the entry defines, say what it does in the report);
-    **Hail sets Snow in EI** (EI's weather is Snow; the Hail move, if EI has it, maps to Snow).
+    for that side, otherwise no effect) for every calc guide whose moves include it; **Protect** (the entry exists but only
+    Photonic shows it, through `zmove`): offer it on every calc guide whose moves include a Protect-family move (the
+    user asked for EI; same rule everywhere). On: the protected side's incoming hits show 0 / "Protected" and taps
+    apply nothing, except moves that bypass Protect (Feint, Unseen Fist contact, the guide's own list if it has one)
+    and Photonic's Z-moves (¼, as now). **Weather moves use the guide's own weather**: Hail sets Snow where the guide
+    has Snow, not Hail (EI), Hail elsewhere. No per-guide passes beyond this: the map reads each guide's profile.
 
 ## Checks
 
