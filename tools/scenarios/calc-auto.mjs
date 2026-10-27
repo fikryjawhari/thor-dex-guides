@@ -396,6 +396,7 @@ checks.push(
         [{ name:'Gyarados',l:50,moves:['Seismic Toss'] },{ name:'Bibarel',l:50,i:'Sitrus Berry',hp:100 },/Sitrus/],
         [{ name:'Politoed',moves:['Water Gun'] },{ name:'Torkoal',i:'Weakness Policy' },/Weakness Policy/],
         [{ name:'Gyarados',moves:['Tackle'] },{ name:'Bibarel',i:'Air Balloon' },/Air Balloon/],
+        [{ name:'Gyarados',i:'Normal Gem',moves:['Tackle'] },{ name:'Bibarel' },/Gem/],
         [{ name:'Gyarados',l:100,ability:'Moxie',moves:['Seismic Toss'] },{ name:'Bibarel',l:1 },/Moxie/],
       ];
       for(const [mine,foe,note] of cases){
@@ -406,6 +407,11 @@ checks.push(
         assert.equal(await hpOf(page,'foe'),result.def.hp);
         if(result.def.hp===0)assert.equal(await page.value(`document.querySelector('.dres:not(.na) [data-a="sub"]').disabled`),true,'HP actions disabled on a fainted target');
         if(result.def.used)assert.equal(await page.value('CALC.mon("foe").used'),true);
+        for(const [side,patch] of [['mine',result.atk],['foe',result.def]])if(patch.used){
+          await editorOpen(page,side,true);
+          assert.match(await page.value(`document.querySelector('.cc[data-s="${side}"] select[data-e="it"] option:checked').textContent`),/\(used\)$/,'consumed item visible after actual hit');
+          await editorOpen(page,side,false);
+        }
         if(result.def.stg)assert.deepEqual(await page.value('CALC.mon("foe").stg'),result.def.stg.slice(1));
         if(result.atk.stg)assert.deepEqual(await page.value('CALC.mon("mine").stg'),result.atk.stg.slice(1));
         assert.match(await page.text('#calc-log'),note);

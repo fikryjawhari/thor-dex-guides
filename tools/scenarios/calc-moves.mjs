@@ -267,15 +267,16 @@ checks.push({
   sizes: [[260,316]],
   run: async page => {
     await page.route('#/calc');
-    for(const move of ['Double-Edge','Drain Punch','Double Hit'])for(const roll of ['min','max']){
-      await page.value(duel([move]));
-      await page.value(`CALC.set('mine','i','Life Orb');CALC.set('mine','hp',100);CALC.set('foe','id',P.find(mon=>mon.n==='Garchomp').id);CALC.set('foe','a',D.AB.findIndex(entry=>entry[0]==='Rough Skin'));CALC.set('foe','i','Rocky Helmet');CALC.set('foe','hp',1);CALC.render()`);
-      const before=await hps(page),expected=await page.value(`(()=>{const convert=${input},att=convert(CALC.mon('mine')),def=convert(CALC.mon('foe')),slot={mv:M.indexOf('${move}')},field=CALC.state().field,hit=DMG.hit(att,def,slot,field,'${roll}');return {hit,hp:DMG.hp(att,def,slot,field,hit.dealt,{hits:hit.hits})};})()`);
+    for(const side of ['mine','foe'])for(const move of ['Double-Edge','Drain Punch','Double Hit'])for(const roll of ['min','max']){
+      await page.value(duel([move],[move]));
+      const other=side==='mine'?'foe':'mine';
+      await page.value(`CALC.state().dir='${side==='mine'?'out':'in'}';CALC.set('${side}','i','Life Orb');CALC.set('${side}','hp',100);CALC.set('${other}','id',P.find(mon=>mon.n==='Garchomp').id);CALC.set('${other}','a',D.AB.findIndex(entry=>entry[0]==='Rough Skin'));CALC.set('${other}','i','Rocky Helmet');CALC.set('${other}','hp',1);CALC.render()`);
+      const before=await hps(page),expected=await page.value(`(()=>{const convert=${input},att=convert(CALC.mon('${side}')),def=convert(CALC.mon('${other}')),slot={mv:M.indexOf('${move}')},field=Object.fromEntries(Object.entries(CALC.state().field).map(([key,value])=>['${side}'==='foe'?(key.startsWith('atk')?'def'+key.slice(3):key.startsWith('def')?'atk'+key.slice(3):key):key,value])),hit=DMG.hit(att,def,slot,field,'${roll}');return {hit,hp:DMG.hp(att,def,slot,field,hit.dealt,{hits:hit.hits})};})()`);
       await page.tap('.dres:not(.na) .mr:first-child .mm');
       await page.tap(`.dres:not(.na) [data-a="sub"][data-roll="${roll}"]`);
       const after=await hps(page);
-      assert.equal(after.foe,expected.hit.def.hp,move+' '+roll+' actual target HP');
-      assert.equal(after.mine,Math.max(0,before.mine+expected.hp.v),move+' '+roll+' actual user HP');
+      assert.equal(after[other],expected.hit.def.hp,side+' '+move+' '+roll+' actual target HP');
+      assert.equal(after[side],Math.max(0,before[side]+expected.hp.v),side+' '+move+' '+roll+' actual user HP');
       await page.tap('#calc-log button');
     }
   },
