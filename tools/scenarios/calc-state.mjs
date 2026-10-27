@@ -121,7 +121,7 @@ const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windo
     assert.ok(heights.every(height=>height===heights[3]),'state controls add no row height');
     if(page.width===260){
       const fit=await page.value(`(()=>{const bar=document.querySelector('.fbar').getBoundingClientRect().top+scrollY;return document.querySelector('${row}:nth-child(4)').getBoundingClientRect().bottom+scrollY-(bar-2);})()`);
-      assert.ok(fit<=309,'trainer plus four state rows fit at minimum size: '+fit);
+      assert.ok(fit<=316,'trainer plus four state rows fit at minimum size: '+fit);
     }
     assert.equal(await page.count(`${row}:nth-child(3) [data-a=state]`),0,'combo hidden in Singles');
     if(guide.cfg.calc.over?.state?.['Fury Cutter']!==false){

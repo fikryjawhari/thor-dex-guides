@@ -242,8 +242,8 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await page.tap('[data-a=fpick][data-i="1"]',{index:await page.value('[...document.querySelectorAll(\'[data-a=fpick][data-i="1"]\')].findIndex(element=>element.offsetWidth>0)')});
     assert.equal(await hp(page,'foe'),max-Math.floor(max/8));
     const amounts=await page.value('[...document.querySelectorAll(".dturn")].map(button=>button.textContent)');
-    assert.ok(amounts.includes('−'+Math.floor(max/4)),'Player curse');
-    assert.ok(amounts.includes('+'+Math.floor(max/16)),'Foe Ingrain');
+    assert.ok(amounts.includes(String(Math.floor(max/4))),'Player curse');
+    assert.ok(amounts.includes(String(Math.floor(max/16))),'Foe Ingrain');
     await page.tap('.cc[data-s=foe] .cn');
     assert.equal(await hp(page,'foe'),max-Math.floor(max/8),'direction change is not entry');
     assert.deepEqual(await page.value('[...document.querySelectorAll(".dturn")].map(button=>button.textContent)'),amounts);

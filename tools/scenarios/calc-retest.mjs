@@ -13,7 +13,7 @@ const checks=[{
     await setupCalc(page,{trainer:guide().trainers.six.k});
     await page.value(width<480?`scrollTo(0,document.querySelector('.fbar').getBoundingClientRect().top+scrollY-2)`:'scrollTo(0,0)');
     await page.settle();
-    const geometry=await page.value(`(()=>{const rect=el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right};};return {bar:rect(document.querySelector('.fbar')),cards:[...document.querySelectorAll('.dmatch>.cc')].map(rect),moves:[...document.querySelectorAll('${width<480?'.dres:not(.na) .mr':'.dres .mr'}')].map(rect),cols:getComputedStyle(document.querySelector('.mg .dstrip')).gridTemplateColumns.split(' ').length,teamCols:getComputedStyle(document.querySelector('.dstrip.fs')).gridTemplateColumns.split(' ').length,expanded:document.querySelector('#app').classList.contains('tl'),preview:document.querySelector('.fteam').innerText,team:getComputedStyle(document.querySelector('.fteam')).overflowY,fight:rect(document.querySelector('.dfight')),field:rect(document.querySelector('.dfield'))};})()`);
+    const geometry=await page.value(`(()=>{const rect=el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right};};return {bar:rect(document.querySelector('.fbar')),cards:[...document.querySelectorAll('.dmatch>.cc')].map(rect),moves:[...document.querySelectorAll('${width<480?'.dres:not(.na) .mr':'.dres .mr'}')].map(rect),cols:getComputedStyle(document.querySelector('.mg .dstrip')).gridTemplateColumns.split(' ').length,teamCols:getComputedStyle(document.querySelector('.dstrip.fs')).gridTemplateColumns.split(' ').length,expanded:document.querySelector('#app').classList.contains('tl'),preview:[...document.querySelectorAll('.fteam .ft')].map(row=>({text:row.innerText,parts:row.querySelectorAll('.l2t').length})),team:getComputedStyle(document.querySelector('.fteam')).overflowY,fight:rect(document.querySelector('.dfight')),field:rect(document.querySelector('.dfield'))};})()`);
     assert.equal(geometry.cols,6,'box six across');
     assert.equal(geometry.teamCols,6,'trainer strip six across');
     assert.equal(geometry.moves.length,width<480?4:8);
@@ -22,10 +22,10 @@ const checks=[{
     else{
       assert(Math.abs(Math.max(...geometry.moves.map(rect=>rect.bottom))-height)<=1,'fourth rows end at viewport bottom');
       assert(geometry.fight.top>=height,'fight below moves');
-      if(height===424){assert(geometry.expanded,'full preview at 424');assert.equal(geometry.team,'auto','preview scrolls internally');assert(geometry.preview.includes('Unknown ability')||geometry.preview.length>50);}
+      if(height===424){assert(geometry.expanded,'full preview at 424');assert.equal(geometry.team,'auto','preview scrolls internally');assert.equal(geometry.preview.length,6,'all six full preview rows');assert(geometry.preview.every(row=>row.parts===2&&row.text.length>20),'ability and full move text in every row');}
     }
     assert(geometry.field.top>=geometry.fight.bottom,'Field follows fight bar');
-    if(mode==='normal'&&width!==260||mode==='normal'&&height===316){
+    if(mode==='normal'&&(width!==260||height===316)){
       mkdirSync('.tmp/R1',{recursive:true});
       const shot=await page.send('Page.captureScreenshot',{format:'png'});
       writeFileSync(`.tmp/R1/${guide().name}-${width}x${height}.png`,Buffer.from(shot.data,'base64'));
@@ -78,6 +78,8 @@ checks.push({
         assert(geometry.query.bottom<=geometry.results.top&&geometry.results.bottom<=geometry.keyboard.top+1,'query/results/keyboard visible together');
         assert(geometry.results.bottom-geometry.results.top>=40,'room for results');
       }
+      const shot=await page.send('Page.captureScreenshot',{format:'png'});
+      writeFileSync(`.tmp/R1/${guide().name}-${kind}-${mode}.png`,Buffer.from(shot.data,'base64'));
       await page.typeSearch(query);
       await page.tap('.sheet .mrow[data-i="0"]');
       assert.equal(await page.value(`CALC.mon('mine').${kind==='it'?'i':'na'}`),query);
@@ -92,10 +94,17 @@ checks.push({
     assert.equal(await page.count('.cc[data-s=mine] input[data-e=ab]'),1,'off-species ability reopens as text');
     await page.tap('[data-a=abclear][data-s=mine]');
     assert.equal(await page.count('.cc[data-s=mine] select[data-e=ab]'),1);
+    await page.value(`document.querySelector('.dres:not(.na) .mr .mm').click()`);
+    const selects=await page.value(`[...document.querySelectorAll('select')].map(select=>{const event=new MouseEvent('click',{bubbles:true,cancelable:true});select.dispatchEvent(event);return {kind:select.dataset.e||select.dataset.mo||select.dataset.f,prevented:event.defaultPrevented,sheets:document.querySelectorAll('.sheet').length};})`);
+    assert(selects.some(select=>select.kind==='t'),'move Type remains a native select');
+    assert(selects.some(select=>select.kind==='vol'),'Battle state remains a native select');
+    assert(selects.every(select=>!select.prevented&&!select.sheets),'no native select intercepted');
     const native=await page.value(`(()=>{const select=document.querySelector('.cc[data-s=mine] select[data-e=status]');const event=new MouseEvent('click',{bubbles:true,cancelable:true});select.dispatchEvent(event);return event.defaultPrevented||!!document.querySelector('.sheet');})()`);
     assert.equal(native,false,'native select not intercepted');
     await page.tap('.cc[data-s=mine] [data-pick=it]');
-    await page.typeSearch('Master Ball');
+    const unavailable=await page.value(`DMG.items().find(item=>!D.IT.some(section=>section.r.some(row=>row[0]===item)))`);
+    assert(unavailable,'stock item missing from guide availability');
+    await page.typeSearch(unavailable);
     assert.equal(await page.count('.sheet .mrow[data-i="0"]'),1,'all stock items, not just guide availability');
   },
 });

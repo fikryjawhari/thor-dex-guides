@@ -501,7 +501,6 @@ body.calc-route .dfight .dformat button{min-height:26px;padding:0 4px;font-size:
 body.calc-route .dfight .dfreset{min-height:26px;padding:0;font-size:17px}
 body.calc-route .dfight select.dauto{border-style:dashed}
 body.calc-route .dfight select.dmanual{border-color:var(--acc)}
-body.calc-route .dfield .dfr0{display:none}
 @media(min-width:480px){body.calc-route .top>.dside{align-self:stretch;height:100%;box-sizing:border-box}body.calc-route #app.tl .fteam{flex:1 1 auto;overflow-y:auto}body.calc-route .ft{min-height:40px}body.calc-route .fit{gap:4px}}
 
 body.calc-route .cc .cl{min-height:20px;gap:1px;font-size:10px;flex-wrap:nowrap}

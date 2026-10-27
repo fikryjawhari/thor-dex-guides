@@ -73,6 +73,19 @@ Edit. The team area's height is based on closed cards and move rows, so edits/re
 the team from rows to a strip. Editors and expanded moves grow downwards; Field follows the whole moveset.
 No condition labels or category controls appear in profiles that do not declare them.
 
+**Retest layout and editors (R1, 2026-10-27):** Both sprite grids keep six columns. Wide layouts pin the closed
+cards and both four-move lists to the first viewport bottom; spare height goes to the internally scrolling box and
+trainer panels. Full trainer rows (level, item, ability, all moves) appear from a 400 px window height when at least
+150 px remains above the cards; the six rows may scroll. Resize and text-size changes recalculate that space.
+Singles/Doubles, weather, terrain and the ↺ Reset fight button live in the full-width fight bar below the moves,
+outside Field; the existing automatic/manual layers and doubles gating are unchanged.
+The HP line is 20 px high, with Toxic beside the unsigned red/green residual and nameless white +berry action;
+a thin bar shows current HP. Each Turn end part in Edit is an independent button (no automatic berry or other parts).
+Item (all engine items plus guide/custom items), Nature and Other ability use text entries opening the full-window
+picker, including the in-guide keyboard. Species abilities remain a native select with Other…; × returns to it,
+retaining a valid species ability or restoring the first species ability. Off-species saved abilities reopen as text.
+No native select (status, battle state, move type, hit count, weather, terrain, etc.) is intercepted.
+
 **Turn end** (residual, 2026-10-25): `DMG.residual(set, field)` gives each side's end-of-turn parts (weather, Leftovers / Black
 Sludge / Sticky Barb, status incl. rising toxic, Grassy Terrain, Dry Skin / Rain Dish / Ice Body / Solar Power / Poison Heal,
 plus the profile's `residual`). The KO text counts the defender's per-turn change; rolls, percentages and HP buttons never do.
@@ -82,7 +95,7 @@ applying a turn advances it, capped at 15. Inside Edit the parts are folded behi
 state row (opened per card, not stored), so up to five residuals never make the open card taller than one window. **Triple Kick / Triple Axel**: the row's ×3 button
 cycles ×3 (total, default) → H1 → H2 → H3; the outside number is the total or that hit's range, percent and KO stay on the
 total; the choice lives in `ST.hits` (0 = total); no Hits box in the editor. An opened row repeats them (`Turn end: −2 Sandstorm`). Leech Seed is not offered
-(no control says who is seeded). When HP is not full, the HP label becomes an accent ↺ button (tap: full HP).
+(no control says who is seeded). The ↺ button restores full HP (accented when HP is not full).
 **Protean / Libero**: the attacker takes each move's type (STAB in every base); the edit menu
 of a Pokémon with either ability has a Type row (own types or one of the 18) used when it defends; a dot in that type's colour
 marks the card. Scratch `pty`; ability / Mega change clears it. Scenario: `tools/scenarios/calc-residual.mjs`.

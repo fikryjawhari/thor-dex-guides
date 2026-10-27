@@ -137,7 +137,7 @@ const MEGA={};P.forEach(species=>{const forms=(species.of||[]).filter(id=>byId[i
 function megaToggle(side){const m=getMon(side),base=m.pre||m,L=MEGA[base.id]||[],ix=m.pre?L.indexOf(m.id):-1,n=(!m.pre||ix>=0)&&ix+1<L.length?byId[L[ix+1]]:null;
  setField(side,'abilityOn',false);setField(side,'pty',undefined);setField(side,'mega',undefined);if(n)setField(side,'mega',{id:n.id,a:n.a[0],i:n.stone||base.i});}
 function editor(r,side){const custom=side==='mine'&&ST.mine.src==='custom';const p=r.p,abils=[...new Set([...p.a,...(p.ha!=null?[p.ha]:[])])];
- const sel=(k,opts,cur)=>`<select data-e="${k}" data-s="${side}"${k==='it'&&r.used?` title="${esc(r.i+' (used)')}"`:''}>${opts.map(([v,l])=>`<option value="${esc(v)}" ${String(v)===String(cur)?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
+ const sel=(k,opts,cur)=>`<select data-e="${k}" data-s="${side}"${k==='ab'?' aria-label="Ability"':''}${k==='it'&&r.used?` title="${esc(r.i+' (used)')}"`:''}>${opts.map(([v,l])=>`<option value="${esc(v)}" ${String(v)===String(cur)?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
  const entry=(kind,value,label)=>`<input class="dentry" type="text" readonly data-e="${kind}" data-pick="${kind}" data-s="${side}" value="${esc(value)}" aria-label="${label}" title="${esc(kind==='it'&&r.used?r.i+' (used)':value||label)}">`;
  const ability=ABOTHER[sideInfo(side).key]||!abils.includes(r.a)?`<div class="dability">${entry('ab',AB[r.a]||'','Ability')}<button data-a="abclear" data-s="${side}" aria-label="Use species ability">×</button></div>`:sel('ab',[...abils.filter(ability=>ability>=0).map(ability=>[ability,AB[ability]+(r.aGuess&&ability===r.a?' ?':'')]),['@other','Other…']],r.a);
  const row=(lab,fn)=>`<tr><td class="l">${lab}</td>${SN.map((n,i)=>`<td>${fn(i)}</td>`).join('')}</tr>`;
@@ -267,7 +267,7 @@ document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const e
  else if(a==='sub'){applyHit(el.dataset.side,el.dataset.ck,el.dataset.roll);refresh();}
  else if(a==='eot'){const side=el.dataset.s,r={...resolve(getMon(side)),side},key=sideInfo(side).key,result=turnOf(r,side);applySidePatch(result,side);if(result.parts.some(part=>part.v[1]!==part.v[0]))TOX[key]=Math.min(15,(TOX[key]||1)+1);actionLog([r.name+' turn end',...result.log]);refresh();}
  else if(a==='respart'){const side=el.dataset.s,mon={...resolve(getMon(side)),side},part=residualOf(mon)[+el.dataset.part];if(part){setField(side,'hp',Math.max(0,Math.min(mon.stats[0],mon.hp+part.v[0])));if(part.v[1]!==part.v[0])TOX[sideInfo(side).key]=Math.min(15,(TOX[sideInfo(side).key]||1)+1);actionLog([mon.name,part.l+' '+signed(part.v[0])]);refresh();}}
- else if(a==='abclear'){const side=el.dataset.s;delete ABOTHER[sideInfo(side).key];setField(side,'a',byId[getMon(side).id].a[0]);setField(side,'aGuess',false);setField(side,'abilityOn',false);setField(side,'pty',undefined);refresh();}
+ else if(a==='abclear'){const side=el.dataset.s;delete ABOTHER[sideInfo(side).key];const mon=getMon(side),species=byId[mon.id];setField(side,'a',[...species.a,species.ha].includes(mon.a)?mon.a:species.a[0]);setField(side,'aGuess',false);setField(side,'abilityOn',false);setField(side,'pty',undefined);refresh();}
  else if(a==='berry'){const side=el.dataset.s,r=resolve(getMon(side)),result=berryOf(r,side);applySidePatch(result,side);actionLog([r.name,...(result?.log||[])]);refresh();}
  else if(a==='hazards'){applyHazards(el.dataset.s);refresh();}
  else if(a==='fightreset'){newFight(true);window.__fo=1;save();refresh();}
