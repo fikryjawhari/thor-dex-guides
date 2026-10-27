@@ -3,13 +3,15 @@
     sp  game species id -> our P id     (our ids are the expansion's SPECIES_ numbers: checked by name here)
     mv  game move id    -> M index      (by name)
     ab  game ability id -> AB index     (by name)
-    it  game item id    -> item name    (the game's own names)
+    it  game item id    -> item name    (the game's, spelt as Showdown / the trainer sets do where the game squeezes a
+                                         name into its 12-14 letters: Never-MeltIce -> Never-Melt Ice; the calc engine
+                                         knows items by those names)
     gr  game species id -> growth rate  (0-5, GROWTH_ order; boxed Pokémon store only experience)
 
 Lists indexed by game id, null where nothing maps. Runs after finalise (prune changes M / AB indexes).
 Source: the release's pokeemerald-expansion (iriv24 at 2576d0f, SOURCES.md), read by tools/expansion_ids.py.
 """
-import glob, os
+import glob, os, re
 import expansion_ids as X
 from common import SRC, report
 
@@ -81,11 +83,31 @@ def build(D):
                 report(f'  GID: {what} {n} has no game id')
         return out
 
+    # item spelling: Showdown's names (repos/showdown/items.js) and the trainer sets' items, matched loosely; only a
+    # longer name replaces the game's (a squeezed one), so Poké Ball keeps its accent
+    showdown = open(os.path.join(SRC, 'repos', 'showdown', 'items.js'), encoding='utf8').read()
+    full = set(re.findall(r'^\s+name: "([^"]+)"', showdown, re.M))
+    full |= {m['i'] for group in D['TR']['g'] for section in group['sec'] for t in section.get('tr', [])
+             for m in t.get('p', []) if m.get('i')}
+    spelt = {X.key(n): n for n in sorted(full)}
+    respelt = []
+
+    def item(c):
+        name = item_names.get(c)
+        if c == 'ITEM_NONE' or not name or name.startswith('?'):
+            return None
+        longer = spelt.get(X.key(name), name)
+        if len(longer) <= len(name):
+            return name
+        respelt.append(f'{name} -> {longer}')
+        return longer
+
     D['GID'] = {
         'sp': sp_table,
         'mv': by_name(mv, move_names, D['M'], 'move'),
         'ab': by_name(ab, ability_names, [a[0] for a in D['AB']], 'ability',
                       ability_texts, [a[1] if len(a) > 1 else '' for a in D['AB']]),
-        'it': table(it, lambda c: item_names.get(c) if c != 'ITEM_NONE' and item_names.get(c, '?')[:1] != '?' else None),
+        'it': table(it, item),
         'gr': gr_table,
     }
+    report(f'GID items: {len(set(respelt))} spelt in full: ' + ', '.join(sorted(set(respelt))))

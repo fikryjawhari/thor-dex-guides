@@ -21,7 +21,7 @@ Fetched 2026-10-18 (v1.3 / 1.3.1) from the official docs folder linked from [eme
 | `repos/expansion/moves_info.h` | [iriv24/pokeemerald-expansion](https://github.com/iriv24/pokeemerald-expansion) at `2576d0f` (the release's source, notes.md → Damage calc): each move's crit stage (`MV.cr`; eidex has none) |
 | `repos/expansion/include/…`, `src/…` | The same commit: constants (species, moves, abilities, items), names (`src/data/abilities.h`, `items.h`), growth rates (`src/data/pokemon/species_info*.h`) for the save importer's `GID` (`extract/gid.py`); `pokemon.h`, `global.h`, `save.h`, `save.c`, `pokemon.c`, `pokemon_storage_system.h` are the save format (`template/calc/readers/README.md`) |
 | `saves/` | Save-reader test files (2026-10-27) from [hzla/Dynamic-Calc-Decomps](https://github.com/hzla/Dynamic-Calc-Decomps) `cypress/fixtures/` at `ecb3a77`: an EI 1.3 save, an mGBA save state of it, `em_imp.sav` and the paste hzla's importer makes of the save (prefixed `hzla-`); `ei-1.3.expected.json` is written from the paste (`tools/README.md` → Save check) |
-| `repos/showdown/moves.js`, `abilities.js` | pokemon-showdown 0.11.11 `dist/data`: move priority, and flags for EI changes and originals |
+| `repos/showdown/moves.js`, `abilities.js`, `items.js` | pokemon-showdown 0.11.11 `dist/data`: move priority, and flags for EI changes and originals; `items.js` the full item names the game squeezes (`GID.it`) |
 
 ## Re-fetch
 
@@ -46,7 +46,7 @@ mkdir -p $D/saves
 for f in "saves/Emerald Imperium 1.3.sav" "saves/Emerald Imperium 1.3.ss1" saves/em_imp.sav "texts/Emerald Imperium 1.3_save_paste.txt"; do
   curl -sL "https://raw.githubusercontent.com/hzla/Dynamic-Calc-Decomps/ecb3a7762cf47f776eeac8ce3f53c2f4efad7336/cypress/fixtures/${f// /%20}" -o "$D/saves/hzla-$(basename "$f")"
 done
-for f in moves.js abilities.js; do curl -sL https://cdn.jsdelivr.net/npm/pokemon-showdown@0.11.11/dist/data/$f -o $D/repos/showdown/$f; done
+for f in moves.js abilities.js items.js; do curl -sL https://cdn.jsdelivr.net/npm/pokemon-showdown@0.11.11/dist/data/$f -o $D/repos/showdown/$f; done
 ```
 
 For a new EI version, check for newer data first: the Drive folder's file names carry the version, and

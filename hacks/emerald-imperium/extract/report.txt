@@ -49,3 +49,4 @@ trainers put in walkthrough order: Wattson Split [Cap 34], Mt. Chimney Magma bos
 GID species: 1208 of 1208 P ids are game species ids
 GID move: 789 of 789 ours matched by name
 GID ability: 284 of 284 ours matched by name
+GID items: 20 spelt in full: AbilityShield -> Ability Shield, AdrenalineOrb -> Adrenaline Orb, BoosterEnergy -> Booster Energy, CharizarditeX -> Charizardite X, CharizarditeY -> Charizardite Y, DeepSeaScale -> Deep Sea Scale, DeepSeaTooth -> Deep Sea Tooth, EmpoleoniteD -> Empoleonite D, EmpoleoniteO -> Empoleonite O, GalaricaCuff -> Galarica Cuff, KickingShoes -> Kicking Shoes, LustrousGlobe -> Lustrous Globe, Never-MeltIce -> Never-Melt Ice, PrettyFeather -> Pretty Feather, PsychicMemory -> Psychic Memory, PunchingGlove -> Punching Glove, RustedShield -> Rusted Shield, RustedSword -> Rusted Sword, SafetyGoggles -> Safety Goggles, Upgrade -> Up-Grade
