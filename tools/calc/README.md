@@ -138,8 +138,8 @@ one use given the damage dealt: `{v, l, set?, st?, later?}` or null (`set` Pain 
 `later` Wish). Recoil and drain use the move data's fractions (Gen 5+ round half up, Gen 4 floor, at least 1), Rock
 Head / Magic Guard, Big Root, Liquid Ooze, Dream Eater on a sleeper; plus Struggle, Mind Blown family, Life Orb (not
 with Sheer Force), Shell Bell, self-KO moves, heals (weather for Moonlight family, sand for Shore Up, Strength Sap =
-the target's staged Attack, Swallow at `slot.st` Stockpiles (1-3, default 1: quarter, half, full HP), Purify on a statused target), costs. Not covered: Floral Healing
-/ Heal Pulse (or Life Dew's ally share). Psywave's 16 rolls are an even spread over its 101 (Gen 5+) /
+the target's staged Attack, Swallow at `slot.st` Stockpiles (1-3, default 1: quarter, half, full HP), Purify on a statused target), costs (gaps: Not modelled below).
+Psywave's 16 rolls are an even spread over its 101 (Gen 5+) /
 11 (Gen 4) outcomes. Tests: `test.mjs` (fixed damage, `DMG.hp`), `hardlove_check.mjs`
 (OHKO).
 
@@ -160,7 +160,8 @@ suppression applies. `options.hits` is the number of damaging strikes actually a
 pass `{hits: action.hits}` from `hit` with `action.dealt`. Without it, `hp` uses the move's full hit count
 (including Parental Bond, excluding an absorbed hit); it cannot infer an early KO from dealt HP alone.
 `hit.contact: {v, parts: [{l, v}]}` reports/logs these costs, but does not apply them to `atk.hp`:
-HP - actions remain defender-only; apply the user's combined `hp.v` once on the one-use action.
+`hit` patches only the defender; the page applies the user's combined `hp.v` once per tap (damage endpoints,
+custom Damage amount, one-use action).
 
 `hp(..., dealt, {miss: true})` instead returns `{v, l: 'miss', crash}` for Jump Kick, High Jump Kick,
 Axe Kick and Supercell Slam, null for other moves. `crash` is positive, `v` its negative (both zero for
@@ -316,6 +317,12 @@ Sword/Shield or Download stages; those are recomputed by the next calculation. A
 Automatic action tests are in `test.mjs`; hack differences in `calc_states.json`. Those fixtures optionally
 select `api` (`hit`, `turn`, `berry`, `derived`, `settings`, `speed`, `intimidate`, default `calc`), and
 `expect.paths` checks dotted result paths (empty path = the whole result, missing/null = null).
+
+### Not modelled
+
+- The Gen 7 Rollout storage glitch (power carried over between uses).
+- Floral Healing / Heal Pulse, and Life Dew's ally share: no ally is modelled.
+- Electrify / Ion Deluge: no flag; use the move's Type override (Sports and raw-stat splits).
 
 ## Base profiles and fields
 

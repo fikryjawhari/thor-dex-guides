@@ -75,8 +75,9 @@ No condition labels or category controls appear in profiles that do not declare 
 
 **Retest layout and editors (R1, 2026-10-27):** Both sprite grids keep six columns. Wide layouts pin the closed
 cards and both four-move lists to the first viewport bottom; spare height goes to the internally scrolling box and
-trainer panels. Full trainer rows (level, item, ability, all moves) appear from a 400 px window height when at least
-150 px remains above the cards; the six rows may scroll. Resize and text-size changes recalculate that space.
+trainer panels. The full trainer preview (one two-line row per Pokémon: name, level, item, ability; its moves; tap =
+pick that foe) appears from a 400 px window height when at least 150 px remains above the cards (so at 537 / 832 ×
+424); the six rows scroll inside the panel if they don't fit. Resize and text-size changes recalculate that space.
 Singles/Doubles, weather, terrain and the ↺ Reset fight button live in the full-width fight bar below the moves,
 outside Field; the existing automatic/manual layers and doubles gating are unchanged.
 The HP line is 20 px high, with Toxic beside the unsigned red/green residual and nameless white +berry action;
@@ -94,8 +95,8 @@ opening Edit or selecting the attacker. Toxic's 1-15 turn box sits on the same H
 applying a turn advances it, capped at 15. Inside Edit the parts are folded behind a Turn end button on the Battle
 state row (opened per card, not stored), so up to five residuals never make the open card taller than one window. **Triple Kick / Triple Axel**: the row's ×3 button
 cycles ×3 (total, default) → H1 → H2 → H3; the outside number is the total or that hit's range, percent and KO stay on the
-total; the choice lives in `ST.hits` (0 = total); no Hits box in the editor. An opened row repeats them (`Turn end: −2 Sandstorm`). Leech Seed is not offered
-(no control says who is seeded). The ↺ button restores full HP (accented when HP is not full).
+total; the choice lives in `ST.hits` (0 = total); no Hits box in the editor. An opened row repeats them (`Turn end: −2 Sandstorm`). Leech Seed is the side's
+Seeded state (Turn end group). The ↺ button restores full HP (accented when HP is not full).
 **Protean / Libero**: the attacker takes each move's type (STAB in every base); the edit menu
 of a Pokémon with either ability has a Type row (own types or one of the 18) used when it defends; a dot in that type's colour
 marks the card. Scratch `pty`; ability / Mega change clears it. Scenario: `tools/scenarios/calc-residual.mjs`.
@@ -138,20 +139,19 @@ Scenarios: `calc-retest`, `calc-moves`, `calc-controls`, `calc-state`, `calc-fie
 share one total/H1/H2/etc. inspection button; ordinary variable-hit moves cycle through legal counts plus a one-hit
 inspection. Loaded Dice restricts standard 2-5-hit choices to 1/4/5; Skill Link to 1/max. Loaded Dice makes Population Bomb a 1 / 4-10 cycle
 (default 10, its fixed ×10 without the dice); Ash-Greninja's Water Shuriken is a fixed ×3 (the engine gives it power 20). Details retain per-hit rolls.
-**Field**: a full-width Singles/Doubles segment, then shared Weather/Terrain and global toggles, followed by stable
-Player/Foe columns. Stored `atk*` means Player and `def*` means Foe; the page remaps inputs for foe attacks. Old
+**Field**: Singles/Doubles, Weather and Terrain are in the fight bar; Field below it (layout: Field layout). Stored `atk*` means Player and `def*` means Foe; the page remaps inputs for foe attacks. Old
 attacker-relative state migrates once, using its saved direction. Focus Energy is offered on both sides in every
 profile. Weather / terrain layers are manual (this fight), then the most recent entering ability setter, then
 deduplicated trainer / section `field` evidence, then none. The first select option is `Auto: <value>` (dashed);
 manual selections have an accent border. The source line names area / setter / manual provenance; **Auto** clears
 every manual Field override. Simultaneous leads resolve in Speed order, slower setter winning (reversed under
-Trick Room); primal weather resists ordinary setters. `DMG.settings().setterStays` controls whether a departing
+Trick Room; at the same Speed the foe's wins); primal weather resists ordinary setters. `DMG.settings().setterStays` controls whether a departing
 setter leaves its layer behind. A fainted entrant sets nothing. Area evidence also supplies foe Tailwind, the
 foe's guessed +1 crit, lead-exempt player Spikes / Toxic Spikes and Trick Room. Thunderstorm is Rain + Electric
 Terrain; random terrain and Fog are text only. The Area line exposes the original wording on tap / tooltip;
 variant labels are ignored. Automatic toggles are dashed, pressed and marked A; tapping makes them manual.
 Trick Room is always offered from Gen 4 and reverses the faster-Speed colour, not damage.
-Intimidate has a checked-by-default **Intim.** header box on its holder; the target's HP line shows the engine's
+Intimidate is a plain checked-by-default header box on its holder (no text; name in tooltip / aria-label); the target's HP line shows the engine's
 net `Int −1` / reaction mark without changing Edit stages. Orb status is derived through `DMG.derived` and labelled
 `Burn (Orb)` / `Toxic (Orb)` in Edit; choosing any status, including None, is a kept override. Ice Face restoration
 also comes from the entry API. The boxed damage endpoints apply `DMG.hit` patches (HP, consumed items, stages, toggles, status,
@@ -169,8 +169,8 @@ count on each button; not stored), then that side's ungrouped toggles and its St
 stacked. Each group ends in the standard `.endbar` (`Collapse <group>`, shown only when the open group is taller than
 the window; it closes the group and keeps its heading in view). No whole-Field bar (rejected in the R3 mockup).
 Fight-bar selects keep their closed text short for 260 px: the auto choice reads the auto value or "Auto" (dashed
-border; the full "Auto: …" in its title), the empty choice "None", one-word values instead of long labels ("Sand"). The full trainer preview (from 480 px at 424 high) has
-exactly two-line rows, so all six fit: name, level, item, then the ability (shrinks to an ellipsis first); the moves.
+border; the full "Auto: …" in its title), the empty choice "None", one-word values instead of long labels ("Sand").
+In the preview rows the ability shrinks to an ellipsis first. Two-line rows vs full rows is still open (calc-team).
 **Stackable states** (2026-10-26): `template/calc/field-states.json` defines side controls; `assemble.py` adds only
 those supported by the guide's moves / causing abilities and generation (Protect needs a Protect-family move, not `zmove`). The engine accepts
 these keys independently of UI availability. Dig / Fly / Dive / Minimized / Switching out remain the exclusive
@@ -260,13 +260,13 @@ Save keeps set fields only, never HP / status / scratch; Edit Reset clears unsav
 HP / status only for the current fight. A **trainer change** (bar arrows, Find trainer, a trainer card's Calc link)
 clears all scratch, the foe's kept state and set edits, `broken` / Mega / used items and the manual Field overrides (`ST.fman`: Field keys the user set
 this fight; Singles / Doubles is not one); the foe team starts at full HP, slot 1 (or the linked Pokémon).
-**Reset fight** (Field's first row, right of Singles / Doubles): the same, plus every HP 100 % and every status
+**Reset fight** (↺ in the fight bar): the same, plus every HP 100 % and every status
 cleared, same trainer and Pokémon. Reload keeps HP / status, the foe's of the current fight and the manual Field;
 scratch is gone. Loading older storage drops stored scratch everywhere, turns a stored Mega (`pre`) into `mega` and
 keeps only HP / status / fight state on player cards not selected. Entry hazards still apply once per selection and on a new fight. Scenario: `tools/scenarios/calc-auto.mjs`.
 **Broken** is a labelled header checkbox only for a Mimikyu / Eiscue form with Disguise / Ice Face as its current
 and available ability, with abilities enabled and the supported generation. It reads/writes `broken` fight state;
-HP − / one-use actions tick it via `DMG.hit`. Busted / Noice forms start checked unless explicitly restored.
+Damage taps / one-use actions tick it via `DMG.hit`. Busted / Noice forms start checked unless explicitly restored.
 Switching preserves it; trainer change / Reset fight clears it; Ice Face can restore on entry in Hail / Snow.
 Internal set aliases follow trainer data (`l`, `na`, `a`, `i`, `m`); the engine boundary converts them to its
 `lv`, `nat`, `ab`, `it`, `st`, six-element `stg` contract. Caps stay in the existing `TCAP` store. Sheets and expanders
