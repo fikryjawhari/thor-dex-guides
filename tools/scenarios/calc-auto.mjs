@@ -566,7 +566,9 @@ checks.push({
       await configure(page,{name:'Snorlax',i:item},null);
       await page.value(`CALC.set('mine','used',true);CALC.render()`);
       await editorOpen(page,'mine',true);
-      assert.equal(await page.value(`document.querySelector('.cc[data-s="mine"] select[data-e="it"] option:checked').textContent`),item+' (used)');
+      assert.equal(await page.value(`document.querySelector('.cc[data-s="mine"] select[data-e="it"] option:checked').textContent`),'No item (used)');
+      assert.equal(await page.value(`document.querySelector('.cc[data-s="mine"] select[data-e="it"]').title`),item+' (used)');
+      assert.equal(await page.value(`document.querySelector('.cc[data-s="mine"] select[data-e="it"]').value`),'@used');
       const index=await page.value('CALC.state().mine.i');
       await page.value(`CALC.state().custom.push({...CALC.state().custom[${index}],pid:'other'});CALC.state().mine.i=CALC.state().custom.length-1;CALC.render();CALC.state().mine.i=${index};CALC.render()`);
       await reloadCalc(page);

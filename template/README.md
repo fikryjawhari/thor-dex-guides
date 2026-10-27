@@ -223,7 +223,9 @@ the set; ability / item edits while Mega go with it): kept across switches and r
 Orb status is derived on entry unless the user explicitly picked a status (including None). New custom presets
 leave status unset, just like a new Pokémon in Edit; an empty status override would suppress the Orb.
 **Used items** (`used`) are fight state: kept across switches and reload, cleared on trainer change / Reset fight.
-Edit shows `<item> (used)` with its effect off; picking any item (including the same one) replaces it and clears used.
+Edit shows `No item (used)` with its effect off (the original item is in the tooltip). This fits at 260 px.
+Its selected `@used` option is separate from the real item, so picking even that same item fires a normal set edit
+and replaces it, clearing used.
 Save keeps set fields only, never HP / status / scratch; Edit Reset clears unsaved edits and scratch. `broken` (Disguise / Ice Face) is kept for the fight on both sides. Player HP is kept across trainers; foe
 HP / status only for the current fight. A **trainer change** (bar arrows, Find trainer, a trainer card's Calc link)
 clears all scratch, the foe's kept state and set edits, `broken` / Mega / used items and the manual Field overrides (`ST.fman`: Field keys the user set
