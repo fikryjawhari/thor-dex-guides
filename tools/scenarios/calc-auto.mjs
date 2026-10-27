@@ -542,6 +542,25 @@ checks.push({
 });
 
 checks.push({
+  id: 'berry amount once', title: 'ready berry is chip-only; residual crossing includes and consumes the berry',
+  run: async page => {
+    await setupCalc(page);
+    await configure(page,{name:'Snorlax',i:'Sitrus Berry',hp:100},null);
+    assert.equal(await page.count('[data-a="eot"][data-s="mine"]'),0,'no duplicate green turn amount');
+    assert.equal(await page.count('[data-a="berry"][data-s="mine"]'),1);
+    await page.value(`CALC.set('mine','status','tox');CALC.render()`);
+    const before=await hpOf(page,'mine');
+    await page.tap('[data-a="eot"][data-s="mine"]');
+    assert.ok(await hpOf(page,'mine')<before,'residual only');
+    assert.ok(!await page.value('CALC.mon("mine").used'),'ready berry is not silently consumed');
+    await page.value(`CALC.set('mine','hp',Math.floor(DMG.stats(${engineSet('mine')})[0]/2)+1);CALC.render()`);
+    assert.equal(await page.count('[data-a="berry"][data-s="mine"]'),0,'not ready before residual');
+    await page.tap('[data-a="eot"][data-s="mine"]');
+    assert.equal(await page.value('CALC.mon("mine").used'),true,'residual crossing consumes berry');
+  },
+});
+
+checks.push({
   id: 'phone presets', title: 'every phone preset uses real custom sets, matching Edit or reporting not available',
   run: async page => {
     await setupCalc(page);

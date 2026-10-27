@@ -206,6 +206,10 @@ sum those per-hit ranges, while percentages and KO text use the adapter's alread
 
 Mine (party, boxes, custom sets), selection, unsaved/saved edits, kept HP / status, the Field and per-slot overrides
 are one object in `cfg.ls.dmg` (no other key).
+**Turn-end amount** excludes a berry already eligible before the turn: only its berry chip shows that recovery.
+The turn action leaves that berry available. If residual damage first crosses the threshold, the turn amount and
+action include its recovery and consumption. Speed Boost still follows the residual parts.
+
 **Fight state** (2026-10-27): a Pokémon's battle condition (stages, ability boxes,
 Download, entry box, Protean type, target state, row state incl. counters, toxic turn) is **scratch**: memory only
 (`SC[cardKey]` + `ST.st` / `ST.tgt`), alive while the card is selected. Selecting another Pokémon and coming back
