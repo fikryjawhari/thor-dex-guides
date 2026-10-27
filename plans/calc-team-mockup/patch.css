@@ -128,3 +128,38 @@ body.mkdrag{cursor:grabbing}
 /* Berry at the left of line 3; T sits centred right against its turn box. */
 #app.mk.mk-B.mk-narrow .cc .dend>.dberry{margin-right:auto}
 #app.mk.mk-B.mk-narrow .cc .dend>.dtoxl{display:inline-flex;align-items:center;line-height:1;margin:0 -1px 0 0;padding:0;font-size:10px;vertical-align:middle;position:static;top:auto}
+
+/* Line 3 parts share one inner box so their digits line up (the Toxic turn box sat higher). */
+#app.mk .cc .dend>.dturn,#app.mk .cc .dend>[data-tox]{box-sizing:border-box;height:18px;min-height:18px;padding:0 3px;line-height:16px;font-size:11px;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center}
+#app.mk .cc .dend>[data-tox]{width:18px;padding:0;text-align:center}
+#app.mk .cc .dend>.dtoxl{display:inline-flex;align-items:center;height:18px;line-height:1}
+
+/* Wide: my team row inside the box panel, a line between it and the grid; no foe strip (the preview is the team). */
+#app.mk.mk-wide .mkbox{flex:none;padding:3px 0 0;border-top:1px solid var(--line);margin-top:2px}
+#app.mk.mk-wide .mkbox.mkabove{padding:0 0 3px;border-top:0;border-bottom:1px solid var(--line);margin:0 0 2px}
+#app.mk.mk-wide .mkbox .mkrow .mks{min-height:28px;height:28px;padding:0;position:relative;justify-content:center}
+#app.mk.mk-wide .mkbox .mkrow .mks .spr{width:24px;height:24px}
+#app.mk.mk-wide .mkbox .mkrow .mks span{position:absolute;right:1px;bottom:0;font-size:8px;line-height:1;padding:0 1px;border-radius:3px;background:color-mix(in srgb,var(--panel2) 80%,transparent)}
+#app.mk.mk-wide .mkfoe,#app.mk.mk-wide .mkteam{display:none!important}
+/* Wide: all six two-line preview rows without scrolling; cards, moves and fight bar a little tighter. */
+#app.mk.mk-wide.mk-pv-two .fteam{gap:1px;overflow:hidden}
+#app.mk.mk-wide.mk-pv-two .ft{min-height:0;padding:0 4px;gap:4px}
+#app.mk.mk-wide.mk-pv-two .ft .spr{width:22px;height:22px}
+#app.mk.mk-wide.mk-pv-two .ft .l1t{font-size:11.5px;line-height:1.15}
+#app.mk.mk-wide.mk-pv-two .ft .l2t{font-size:9.5px;line-height:1.15}
+#app.mk.mk-wide .fbar{min-height:24px}
+#app.mk.mk-wide .fbar .nav,#app.mk.mk-wide .fbar .dsrc{height:24px;min-height:24px}
+#app.mk.mk-wide .dfight select,#app.mk.mk-wide .dfight .dformat button,#app.mk.mk-wide .dfight .dfreset{height:22px;min-height:22px}
+#app.mk.mk-wide .mr .r1{height:16px;align-items:center;line-height:1.15}
+#app.mk.mk-wide .mr .r1 .dendpoint{height:15px;line-height:15px}
+#app.mk.mk-wide .mr .r2{height:13px;align-items:center}
+#app.mk.mk-wide .mr .r2 button,#app.mk.mk-wide .mr .r2 .dturn{height:13px;line-height:13px;min-height:0}
+#app.mk.mk-wide .mr .mv{line-height:1.15;padding-bottom:0}
+#app.mk.mk-wide .dmatch .mr .mm,#app.mk.mk-wide .dmatch .mr.st .mm,#app.mk.mk-wide .dmatch .mr.em .mm{min-height:0}
+#app.mk.mk-wide .cc .cl{min-height:20px}
+#app.mk.mk-wide .cc .cl input,#app.mk.mk-wide .cc .cl .nv{height:20px;min-height:20px}
+#app.mk.mk-wide .cc .l1 .cn{min-height:18px}
+#app.mk.mk-wide.mk-pv-two .ft .l1t{line-height:1.1}
+#app.mk.mk-wide.mk-pv-two .ft .l2t{line-height:1.1}
+#app.mk.mk-wide.mk-pv-two .ft .spr{width:20px;height:20px}
+#app.mk.mk-wide .dfight{align-self:end}

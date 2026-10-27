@@ -3,7 +3,7 @@
 (()=>{
 const app=document.getElementById('app');
 const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??d;}catch(e){return d;}};
-let OPT={lay:'B',pv:'two',fb:'bottom',...load('mkopt',{})};
+let OPT={lay:'B',pv:'two',fb:'bottom',tp:'below',fbw:'box',...load('mkopt',{})};
 let TEAM=load('mkteam',null)||[{src:'party',b:0,i:0},{src:'party',b:0,i:1},{src:'party',b:0,i:2},{src:'party',b:0,i:3}];
 const keep=()=>{localStorage.setItem('mkteam',JSON.stringify(TEAM));localStorage.setItem('mkopt',JSON.stringify(OPT));};
 const same=(a,b)=>a&&b&&a.src===b.src&&(a.src!=='box'||+a.b===+b.b)&&+a.i===+b.i;
@@ -21,7 +21,7 @@ function teamRow(){
 // Grid areas per layout: narrow (< 480, page scrolls) and wide (two columns, one window).
 function areas(){
  const w=wide(),top=OPT.fb==='top',L=OPT.lay;
- if(w){const rows=['ban ban','box tside',...(top?['fight fight']:[]),'team foe','cm cf','mv mf',...(top?[]:['fight fight'])];
+ if(w){const side=OPT.fbw==='box';const rows=side?['ban ban','box tside','fight tside','cm cf','mv mf']:['ban ban','box tside',...(top?['fight fight']:[]),'cm cf','mv mf',...(top?[]:['fight fight'])];
   return {cols:'minmax(0,1fr) minmax(0,1fr)',rows,sizes:rows.map(r=>r==='box tside'?'minmax(0,1fr)':'auto')};}
  if(L==='B'){const open=!!app.querySelector('.dmatch>.cc .ed');const rows=['ban ban','box box','tside tside',...(top?['fight fight']:[]),'team foe',...(open?['cm cm','cf cf']:['cm cf']),'mv mv',...(top?[]:['fight fight'])];return {cols:'minmax(0,1fr) minmax(0,1fr)',rows};}
  const rows=['ban','box','team','tside',...(top?['fight']:[]),'cm','cf','mv',...(top?[]:['fight'])];return {cols:'minmax(0,1fr)',rows};}
@@ -44,13 +44,15 @@ function apply(){
  const fit2=fit,sides=fit2.querySelectorAll('.top>.dside'),foe=fit2.querySelector('.mkfoe'),strip=fit2.querySelector('.dstrip.fs:not(.mkrow):not(.mg .dstrip)')||sides[1]?.querySelector('.dstrip');
  // A / C narrow keep the foe strip inside the trainer panel (one box); B and wide give it its own cell.
  const own=wide()||OPT.lay==='B';if(strip){if(own&&strip.parentElement!==foe)foe.appendChild(strip);if(!own&&strip.parentElement===foe)sides[1].appendChild(strip);}
- foe.style.display=own?'':'none';
+ foe.style.display=own&&!wide()?'':'none';fit2.querySelector('.mkteam').style.display=wide()?'none':'';
  if(!wide()){const res=fit2.querySelectorAll('.dmatch>.dres');res.forEach(r=>r.style.gridArea='mv');}else{const res=fit2.querySelectorAll('.dmatch>.dres');if(res[1])res[1].style.gridArea='mf';}
  const g=areas();fit2.style.gridTemplateColumns=g.cols;fit2.style.gridTemplateAreas=g.rows.filter(r=>r.split(' ')[0]!=='ban'||fit2.querySelector(':scope>.ban')).map(r=>`"${r}"`).join(' ');
  fit2.style.gridTemplateRows=g.sizes?g.rows.filter(r=>r.split(' ')[0]!=='ban'||fit2.querySelector(':scope>.ban')).map(r=>r==='box tside'?'minmax(0,1fr)':'auto').join(' '):'';
  fit2.querySelector('.mkteam').innerHTML=teamRow();
  // A narrow: a copy of the row lives at the top of the trainer panel.
- sides[1]?.querySelector(':scope>.mkrow')?.remove();if(OPT.lay==='A'&&!wide()&&sides[1])sides[1].insertAdjacentHTML('afterbegin',teamRow());
+ sides[1]?.querySelector(':scope>.mkrow')?.remove();sides[0]?.querySelector(':scope>.mkbox')?.remove();
+ // Wide: my team row is part of the box panel, split off by a line (below or above the grid).
+ if(wide()&&sides[0]){const w=document.createElement('div');w.className='mkbox mk'+OPT.tp;w.innerHTML=teamRow();if(OPT.tp==='above')sides[0].querySelector('.tools')?.after(w);else sides[0].appendChild(w);}if(OPT.lay==='A'&&!wide()&&sides[1])sides[1].insertAdjacentHTML('afterbegin',teamRow());
  // Box cells already in the team get a dot.
  fit2.querySelectorAll('.mg .dstrip button[data-a="mpick"]').forEach(b=>b.classList.toggle('mkin',TEAM.some(r=>same(r,refOf(b)))));
  const cards=fit2.querySelectorAll('.dmatch>.cc');if(cards[0])cards[0].classList.toggle('mkname',!TEAM.some(r=>same(r,CALC.state().mine)));

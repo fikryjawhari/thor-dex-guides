@@ -48,14 +48,22 @@ extra info only adds line 3:
 - Tapping the card still selects the attacker (`data-a="sel"` on `.cc`).
 
 ### Wide (≥ 480): two columns, one window
-Grid areas: `box tside` (the only `1fr` row; box grid and trainer preview scroll inside), `team foe`, `cm cf`,
-`mv mf`, `fight fight`. My team row (6 across, 28 px cells as the foe strip now) sits under the box, the foe strip
-(always shown now, also when the preview is) under the trainer panel, aligned. Cards keep **today's two-line cards
-with names** (the columns are ~216 px; open question below). Fight bar full width at the bottom: the cards, moves and
-fight bar are pinned to the bottom; spare height goes to the box / preview.
-- **Trainer preview** (`.fteam`): **two-line rows** (as built), shown whenever the trainer panel has room for the bar
-  plus at least one row; the strip under it always shows all six, so the preview no longer needs 150 px
-  (`TEAMNEED` / the 400 px height rule go). At 392 about 3 rows show, at 424 about 4; they scroll.
+Grid areas: `box tside` (the only `1fr` row), `fight tside`, `cm cf`, `mv mf`: the cards and both move lists are
+pinned to the bottom, the left column is the box panel then the fight bar, the right column is the trainer panel.
+- **My team row is part of the box panel**, under the grid (default; above it is the other choice), split off by a
+  1 px line (`border-top: var(--line)`), not a panel of its own. Cells 28 px high, sprite 24 px, level badge on the
+  corner. The box grid scrolls in what is left (≈ 3 rows at 392).
+- **Fight bar** under the box panel in the left column (it's ~214 px wide, the same bar as at 260). Not full width at
+  the bottom: that costs the 25 px the preview needs at 480 × 392.
+- **No foe strip at wide**: the trainer preview is the foe's team (tap a row = pick that foe, as now).
+- **Trainer preview: two-line rows, all six always visible, no scrolling**: rows 25 px (sprite 20, line 1 11.5 px,
+  line 2 9.5 px, line-height 1.1, padding 0 4px, gap 1 px), trainer bar 24 px. `TEAMNEED` / the 400 px rule go.
+  Measured: all six visible at 480 × 392, 537 × 424 and 832 × 424.
+- **Cards** keep today's two-line cards with names (~48 px); inputs 20 px, name line 18 px.
+- **Move rows** the same 33 px as narrow (lines 16 + 13 px).
+- **Line 3 parts aligned** (all sizes): the Toxic turn box, the residual and the berry chip share one inner box
+  (border-box, 18 px high, line-height 16 px, 11 px text, centred), so their digits sit on one line (the turn box sat
+  higher).
 
 ## My team row
 - **Storage:** `team: [{src, pid}]` (max 6, dense, in order) in the existing `cfg.ls.dmg` object; no new key. Resolve
@@ -90,23 +98,23 @@ fight bar are pinned to the bottom; spare height goes to the box / preview.
 
 ## Open (defaults used; the user may overrule after the Thor)
 - Wide cards: keep the names (default) or use the nameless card there too.
-- Fight bar under the moves (default) or above the teams (the mockup panel has both).
-- Trainer preview at wide: two-line rows (default) / full rows / off.
+- Narrow fight bar under the moves (default) or above the teams.
+- Wide team row under the box grid (default) or above it.
 - Drop on a filled slot: replace (default) or insert and push along. Hold time 250 ms.
 - Later, not in this build: an HP bar / fainted grey on team cells.
 
 ## Build units (in order; one template session at a time)
 1. **Layout + nameless card** (template: `calc.js` `calcPage` markup / `calc.css`; Sol or Opus): build the grid areas
-   in the page's own markup (not the mockup's after-render moves): narrow facing columns, wide pinned rows, foe strip
-   out of the trainer panel, fight bar inside the one-window block, condensed trainer bar / move rows / fight bar
+   in the page's own markup (not the mockup's after-render moves): narrow facing columns (foe strip out of the trainer
+   panel), wide: team row in the box panel, fight bar under the box, no foe strip, six 25 px preview rows, condensed trainer bar / move rows / fight bar
    (narrow), nameless card at narrow incl. the name fallback and full-width Edit, preview rows without `TEAMNEED`;
    `stops()` / `openMatch` scroll targets. Commit.
 2. **Team row + drag and drop** (template; Sol): `ST.team` with pid refs, render, tap = send in, the pointer-event
    drag (from the mockup's `patch.js`), box dots, first-import fill, drop of unresolved entries. Commit.
 3. **Checks** (Haiku medium): update `calc-retest` R1 (foe strip 3 columns at narrow, preview row count, fight bar now
    inside the first frame at every size), `calc-state` one-window; add `tools/scenarios/calc-team.mjs`: first-frame
-   rule at the five sizes × normal / dvkb (my row, foe row, both cards, four moves (wide: eight), fight bar inside
-   the viewport, plain and busy card), drag via `Input.dispatchTouchEvent` (box → empty, box → filled, swap, drag out,
+   rule at the five sizes × normal / dvkb (my row, the foe's team (narrow: strip; wide: all six preview rows unclipped),
+   both cards, four moves (wide: eight), fight bar inside the viewport, plain and busy card), drag via `Input.dispatchTouchEvent` (box → empty, box → filled, swap, drag out,
    swipe doesn't drag, tap sends in), persistence across reload, re-import keeps the team by pid, deleted custom
    leaves it. Then plans/calc-open.md → Checks (full calc scenario set, `assemble.py`, every calc guide), domcompare
    against the branch's previous build on `#/calc`.
