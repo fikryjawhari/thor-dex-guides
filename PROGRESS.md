@@ -39,43 +39,30 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 1. **Test on the Thor.** Nothing since the consistency pass has been on the device (EI and HG were last checked there
    2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
-2. **Damage calc** (branch `worktree-damage-calc`, `.claude/worktrees/damage-calc`; pushed to `origin` up to
-   `457386a`, **not merged**: it waits for the user's mechanics check before `main`). Start every calc session from
-   `plans/calc-open.md` (the open list, in order, plus the checks, the merge steps and the save-reader notes).
-   - **Built** (all four guides with `cfg.calc`: EI, Hardlove, Photonic, Eternal X): `@smogon/calc` engine on each
-     guide's own data with a per-hack profile and fixtures (hzla oracle matches for EI / Photonic / Eternal X;
-     Hardlove provisional, source-checked only), the calc page (compact one-window UI at every viewer size), battle
-     state (counters, toggles, pledges, crit stages, stat changes before the hit, Download / Sword / Shield), stackable
-     field states and entry hazards, turn end, Z-moves and Totem auras (Photonic), HP moves (fixed damage, Taken,
-     one-tap use, Dealt / You), Return / Frustration at 102, the import flow with a test reader. EI's last scope check
-     (2026-10-26): Explosion halves Defense (EI's `B_EXPLOSION_DEFENSE` is Gen 4), Ruin abilities confirmed, no inverse
-     battles and no Shadowy Veil in EI; every calc scenario reads each guide's own trainers / party and passes on all
-     four guides, except `calc-layout` check 20 on EI (rows with an HP chip are taller: `plans/calc-open.md`). Lasting decisions:
-     `template/README.md` → Damage calculator, `tools/calc/README.md`, each guide's notes.md → Damage calc.
-   - **Session 2026-10-27 (auto-effects build, handover):** `plans/calc-auto-effects.md` built in units A1-A3 (engine:
-     `DMG.hit / turn / berry / derived / intimidate / settings`, Disguise / Ice Face, contact and crash damage,
-     Stockpile, crit inputs, Foul Play, EI scope gaps), B (trainer `field` decisions, all four guides 0 review), C / C2
-     (page state model: scratch vs kept HP / status, FIGHT-class `broken` / `mega`, foe edits kept for the fight, Reset
-     fight, migration), D1-D3 (Field layers + Auto, area conditions, Trick Room, Intimidate box, Orb, HP actions, berry
-     chip, log overlay, Broken box, crash / Stockpile controls, crit toggles, row-height fix, Global group), E audit (all
-     76 calc scenario jobs pass; domcompare vs `9b1fb22`: only `#/calc` differs on all four, normal and kb, 0 errors;
-     gaps: no calc text-zoom check, Foul Play engine-only). Agent handovers in `.tmp/D1-D3/report.md` (not committed).
-     Decisions made on the way are in the spec's last two sections.
-   - **Now:** unit F1 (done, `95eed33`, handover `.tmp/F1/report.md`) fixed the user's first Thor-preview test:
-     presets build real cards, Sitrus shown once, used items show as **No item (used)** and stay used for the fight,
-     HP −min / −max inside the move apply the user's recoil / contact change, plain Intimidate box, Orb on entry,
-     Gravity / Wonder Room / Magic Room in Global; Laser Focus / Lucky Chant on EI were already offered (under States)
-     — recheck on the refreshed preview. 76/76 calc jobs pass; only `#/calc` differs. Then the
-     user tests again (previews below), then the **docs step**: fold the spec's decisions into `template/README.md` /
-     `tools/calc/README.md` / notes (HP follow-ups as built; "not modelled": Gen 7 Rollout glitch, Floral Healing /
-     Life Dew's ally share), CLAUDE.md → Making a new guide step 2 (settle `review` field records; `setterStays`), delete
-     the spec and `plans/calc-auto-effects-mockup/`, cut `plans/calc-open.md` to calc-team, the mechanics check + merge,
-     save readers / file picker (+ the "apply −HP from the closed row" UI item), update this section.
-   - **Open after that:** decide `plans/calc-team.md`; the user's UI pass (hide unwanted EI-gap toggles, −HP from the
-     closed row); the user's mechanics check, then the merge into `main`; save readers and the file picker.
-   - **Phone previews (current):** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-auto-ei.html`,
-     `calc-auto-hardlove.html`, `calc-auto-photonic.html`, `calc-auto-eternal.html` (each in the Thor frame with the
-     preset panel). Older `calc-*` previews are superseded.
+2. **Damage calc** (branch `worktree-damage-calc`, `.claude/worktrees/damage-calc`; pushed to `origin` up to `457386a`, **not merged**).
+   Start every calc session from `plans/calc-open.md` (what's left in order, the checks, the merge steps and the
+   save-reader notes). Lasting decisions: `template/README.md` → Damage calculator, `tools/calc/README.md`, each
+   guide's notes.md → Damage calc.
+   - **Built** on all four guides with `cfg.calc` (EI, Hardlove, Photonic, Eternal X): the engine on each guide's own
+     data with per-hack profiles and fixtures, the one-window calc page, battle state, HP moves, Z-moves / Totem
+     auras, import with a test reader; then auto-effects and the retest (commits after `9b1fb22` up to `023fb96`):
+     - A1-A3 engine: `DMG.hit / turn / berry / derived / intimidate / settings`, Disguise / Ice Face, contact and
+       crash damage, Stockpile, crit inputs, Foul Play, EI's scope gaps.
+     - B data: trainer `field` decisions (all four guides 0 `review`).
+     - C / C2 page state: fight state vs kept HP / status, Broken / Mega / foe edits kept for the fight, Reset fight.
+     - D1-D3 page effects: weather / terrain layers + Auto, area conditions, Trick Room, Intimidate, Orb, berry chip,
+       log overlay, HP follow-up controls, crit toggles, EI gap toggles.
+     - F1 fixes after the first Thor-preview test (presets, used items, Intimidate box, rooms in Global).
+     - R1 layout and cards (six across, pinned two columns, trainer preview, fight bar, HP row, pickers); R2 moves
+       (tappable damage, custom amount, follow-up ranges, move → Field toggles, Safeguard / Protect, the guide's
+       weather); R3 Field groups (Global / side / States / Turn end / Hazards, per-group collapse bars).
+   - **Checks:** all pass at `023fb96`: 80/80 calc scenario jobs, engine tests, hzla compares EI 142 + 12 known,
+     Photonic 118 + 28, Eternal X 116 + 3, all 0 mismatch.
+   - **Phone previews:** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-auto-ei.html`,
+     `calc-auto-hardlove.html`, `calc-auto-photonic.html`, `calc-auto-eternal.html` (Thor frame, preset panel).
+   - **Next on this branch:** decide `plans/calc-team.md` (decide session). **Save readers + file picker:** branch
+     `worktree-damage-calc-saves` (made next by the main chat). **Mechanics check:** stays open, merges into `main`
+     at the end.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
    calc as a reference once the calc exists. Agreed, not done.
