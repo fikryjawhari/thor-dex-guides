@@ -8,10 +8,9 @@ worktree, one template / engine session at a time, commit per sub-step, run Chec
 
 ## The list, in order
 
-1. **Decide `plans/calc-team.md`**: its own decide session on this branch, mockup in the Thor frame first. Also
-   settle there: both teams (a second row with the user's own team), how the top area is split between the box and
-   the trainer, getting the fight bar into the first frame, and the trainer preview's two-line rows (built now) vs
-   full rows (the user is unsure which they prefer).
+1. **Build `plans/calc-team.md`** (decided 2026-10-27; spec and build units there, mockup `plans/calc-team-mockup/`):
+   both teams, both cards, all four moves and the fight bar in the first frame at every size; facing columns with
+   nameless cards at narrow; a drag-and-drop team row.
 2. **Save readers and the file picker** (below), on their own branch `worktree-damage-calc-saves` made from this one.
    Done before the merge: "a calc is useless if I have to import Pokémon by hand" (the user).
 3. **The user's mechanics check**: each guide's notes.md → Damage calc → In-game tests. They stay open and merge

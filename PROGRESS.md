@@ -60,7 +60,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
      Photonic 118 + 28, Eternal X 116 + 3, all 0 mismatch.
    - **Phone previews:** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-auto-ei.html`,
      `calc-auto-hardlove.html`, `calc-auto-photonic.html`, `calc-auto-eternal.html` (Thor frame, preset panel).
-   - **Next on this branch:** decide `plans/calc-team.md` (decide session). **Save readers + file picker:** branch
+   - **Next on this branch:** build `plans/calc-team.md` (decided 2026-10-27; build units listed there). **Save readers + file picker:** branch
      `worktree-damage-calc-saves` (`.claude/worktrees/damage-calc-saves`, from `23c82f6`; its own session). **Mechanics check:** stays open, merges into `main`
      at the end.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
