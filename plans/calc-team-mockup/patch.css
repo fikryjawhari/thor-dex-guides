@@ -1,0 +1,98 @@
+/* calc-team decide mockup: layout over the real calc page (see patch.js). */
+#app.mk .fit{display:grid;gap:3px;align-content:start}
+#app.mk .top,#app.mk .dmatch{display:contents}
+#app.mk .dfight{margin:0}
+#app.mk .dmatch>.cc,#app.mk .dmatch>.dres{min-width:0}
+#app.mk .dmatch>.dres{align-self:start}
+#app.mk.mk-narrow .dmatch>.dres.na{display:none}
+
+/* Team row and foe strip cells. */
+.mkteam,.mkfoe{padding:3px!important}
+.mkrow .mks{position:relative}
+.mkrow .mks.mkempty{border-style:dashed;background:transparent}
+.mkrow .mks.over,.mkrow .mks.mkempty.over{border-color:var(--acc);border-style:solid;box-shadow:inset 0 0 0 2px var(--acc)}
+.mg .dstrip button.mkin::after{content:'';position:absolute;top:2px;right:2px;width:5px;height:5px;border-radius:50%;background:var(--acc)}
+.mg .dstrip button{position:relative}
+.mg .dstrip button,.mkteam .mks{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.mklift{opacity:.35}
+.mkghost{position:fixed;left:0;top:0;z-index:9999;pointer-events:none;margin:0;display:flex;flex-direction:column;align-items:center;background:var(--panel2);border:1px solid var(--acc);border-radius:6px;box-shadow:0 4px 14px #0008;color:var(--fg);font:600 10px system-ui}
+.mkghost .spr{width:22px;height:22px}
+.mkghost.mkrm{border-color:#ff6b6b;opacity:.8}
+.mkghost.mkrm::after{content:'×';position:absolute;top:-8px;right:-8px;width:16px;height:16px;border-radius:50%;background:#ff6b6b;color:#111;font:800 12px/16px system-ui;text-align:center}
+body.mkdrag{cursor:grabbing}
+
+/* Wide: one window; box and trainer panel take what the pinned rows leave and scroll inside. */
+#app.mk.mk-wide .fit{height:calc(100vh - 8px)}
+#app.mk.mk-wide .top>.dside{min-height:0;overflow:hidden}
+#app.mk.mk-wide .top>.dside:not(.mg){align-self:stretch;display:flex;flex-direction:column}
+#app.mk.mk-wide .top>.dside:not(.mg)>.dstrip{display:none}
+#app.mk.mk-wide .fteam{display:flex!important;flex-direction:column;gap:2px;flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+#app.mk.mk-wide.mk-pv-off .fteam{display:none!important}
+#app.mk.mk-wide.mk-pv-full .ft{align-items:flex-start;padding:3px 4px}
+#app.mk.mk-wide.mk-pv-full .ft .l1t{flex-wrap:wrap;row-gap:0}
+#app.mk.mk-wide.mk-pv-full .ft .l1t .ab{flex-basis:100%;margin-left:0;text-align:left}
+#app.mk.mk-wide.mk-pv-full .ft .l2t{white-space:normal}
+#app.mk .mkfoe .dstrip{display:grid}
+
+/* B narrow: teams 3 x 2 beside each other, half-width cards. */
+#app.mk.mk-B.mk-narrow .mkrow,#app.mk.mk-B.mk-narrow .mkfoe .dstrip{grid-template-columns:repeat(3,minmax(0,1fr))}
+#app.mk.mk-B.mk-narrow .cc .cl>span:first-child,#app.mk.mk-B.mk-narrow .cc .cl [data-lv]{display:none}
+#app.mk.mk-B.mk-narrow .cc .stb{font-size:0;width:18px;padding:0}
+#app.mk.mk-B.mk-narrow .cc .stb::after{content:'▾';font-size:11px}
+#app.mk.mk-B.mk-narrow .cc .l1 .sp{font-size:0}
+#app.mk.mk-B.mk-narrow .cc .l1 .sp i{font-size:12px}
+#app.mk.mk-B.mk-narrow .cc .l1 .sp i::before{content:'Spe ';font-size:9px;font-weight:400;color:var(--mut)}
+
+/* A: one-line cards (name, Edit, Speed | HP); level lives in Edit. */
+#app.mk.mk-A .cc{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:4px}
+#app.mk.mk-A .cc>.l1{min-width:0}
+#app.mk.mk-A .cc>.dhpbar,#app.mk.mk-A .cc>.ed,#app.mk.mk-A .cc>:not(.l1):not(.cl){grid-column:1/-1}
+#app.mk.mk-A .cc .cl{min-height:0;gap:2px}
+#app.mk.mk-A .cc .cl>span:first-child,#app.mk.mk-A .cc .cl [data-lv]{display:none}
+#app.mk.mk-A .cc .stb{font-size:0;width:18px;padding:0}
+#app.mk.mk-A .cc .stb::after{content:'▾';font-size:11px}
+#app.mk.mk-A .cc .l1 .sp{font-size:0}
+#app.mk.mk-A .cc .l1 .sp i{font-size:12px}
+#app.mk.mk-A .cc .l1 .sp i::before{content:'Spe ';font-size:9px;font-weight:400;color:var(--mut)}
+
+/* C: one-line moves (name, damage, KO); the second bar's controls and % come back when the row is open. */
+#app.mk.mk-C .mr:not(.open) .mm{display:flex;align-items:center;gap:4px;min-height:0!important}
+#app.mk.mk-C .mr:not(.open) .r1{flex:1;min-width:0}
+#app.mk.mk-C .mr:not(.open) .r2{flex:none}
+#app.mk.mk-C .mr:not(.open) .r2>:not(.ko){display:none}
+#app.mk.mk-C .mr:not(.open) .rcol{display:none}
+
+/* Narrow: compact team cells (sprite with the level on its corner), tighter gaps. */
+#app.mk.mk-narrow .fit{gap:2px}
+#app.mk.mk-narrow .mkteam,#app.mk.mk-narrow .mkfoe{padding:2px!important}
+#app.mk.mk-narrow .mkrow .mks,#app.mk.mk-narrow .top>.dside:not(.mg) .dstrip button,#app.mk.mk-narrow .mkfoe .dstrip button{min-height:24px;height:24px;padding:0;position:relative;justify-content:center}
+#app.mk.mk-narrow .mkrow .mks .spr,#app.mk.mk-narrow .top>.dside:not(.mg) .dstrip button .spr,#app.mk.mk-narrow .mkfoe .dstrip button .spr{width:22px;height:22px}
+#app.mk.mk-narrow .mkrow .mks span,#app.mk.mk-narrow .top>.dside:not(.mg) .dstrip button span,#app.mk.mk-narrow .mkfoe .dstrip button span{position:absolute;right:1px;bottom:0;font-size:8px;line-height:1;padding:0 1px;border-radius:3px;background:color-mix(in srgb,var(--panel2) 80%,transparent)}
+#app.mk.mk-narrow .dfight{min-height:0}
+#app.mk.mk-A.mk-narrow .cc{min-height:0}
+#app.mk.mk-A .cc .cl .mx{display:none}
+#app.mk.mk-narrow .dfight select,#app.mk.mk-narrow .dfight .dformat button,#app.mk.mk-narrow .dfight .dfreset{height:24px;min-height:24px}
+#app.mk.mk-narrow .mkrow,#app.mk.mk-narrow .mkfoe .dstrip{gap:2px}
+/* A narrow: my team row sits in the trainer panel, above the trainer bar (one box: mine, trainer, theirs). */
+#app.mk.mk-A.mk-narrow .mkteam{display:none}
+#app.mk.mk-A.mk-narrow .top>.dside:not(.mg){gap:2px}
+/* B narrow: the trainer bar without its panel; cards two short lines. */
+#app.mk.mk-B.mk-narrow .top>.dside:not(.mg){background:none;border:0;padding:0}
+#app.mk.mk-B.mk-narrow .cc{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;column-gap:2px;align-items:center}
+#app.mk.mk-B.mk-narrow .cc>.l1{display:contents}
+#app.mk.mk-B.mk-narrow .cc .l1 .sp{grid-area:2/3/3/5;justify-self:end}
+#app.mk.mk-B.mk-narrow .cc>.cl{grid-area:2/1/3/3;min-height:20px;gap:2px}
+#app.mk.mk-B.mk-narrow .cc>.dhpbar,#app.mk.mk-B.mk-narrow .cc>.ed{grid-column:1/-1}
+#app.mk.mk-B.mk-narrow .cc .cl .mx{display:none}
+#app.mk.mk-A.mk-narrow .cc .l1 .cn{min-height:18px}
+#app.mk.mk-A.mk-narrow .cc .cl input,#app.mk.mk-A.mk-narrow .cc .cl .nv{height:18px;min-height:18px}
+#app.mk.mk-A.mk-narrow .cc .stb,#app.mk.mk-A.mk-narrow .cc .mg{height:18px}
+#app.mk.mk-A.mk-narrow .cc{padding-top:0;padding-bottom:0}
+/* B narrow, rearranged: name + Speed on line 1; HP, Mega, Edit on line 2. */
+#app.mk.mk-B.mk-narrow .cc .cn{grid-area:1/1/2/4}
+#app.mk.mk-B.mk-narrow .cc .l1 .sp{grid-area:1/4/2/5}
+#app.mk.mk-B.mk-narrow .cc>.cl{grid-area:2/1/3/2}
+#app.mk.mk-B.mk-narrow .cc .l1 .mg{grid-area:2/2/3/3}
+#app.mk.mk-B.mk-narrow .cc .l1 .stb{grid-area:2/3/3/5;justify-self:end}
+#app.mk.mk-B.mk-narrow .cc .l1 .sp i::before{content:none}
+#app.mk.mk-A.mk-narrow .top>.dside:not(.mg){padding:1px 2px}
