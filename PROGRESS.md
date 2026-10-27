@@ -52,13 +52,29 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
      battles and no Shadowy Veil in EI; every calc scenario reads each guide's own trainers / party and passes on all
      four guides, except `calc-layout` check 20 on EI (rows with an HP chip are taller: `plans/calc-open.md`). Lasting decisions:
      `template/README.md` → Damage calculator, `tools/calc/README.md`, each guide's notes.md → Damage calc.
-   - **Open** (`plans/calc-open.md`): build `plans/calc-auto-effects.md` (automatic effects and fight state, spec
-     settled 2026-10-26); the HP-move follow-ups (Disguise / Ice Face, Rocky Helmet family, crash damage, Stockpile);
-     decide `plans/calc-team.md` (drag-and-drop team row); then the user's mechanics
-     check (in-game tests in each guide's notes.md), the merge into `main`, save readers and the file picker.
-   - **Phone previews still current:** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-ei-scope.html` (EI,
-     newest build, with the preset panel), `calc-hp-moves-build.html` (EI, before the scope check), `calc-field-hardlove.html`, `calc-field-photonic.html`, `calc-field-eternal.html` (built
-     before HP moves), `calc-auto-mock.html` (the auto-effects mockup). The older `calc-*` previews are superseded.
+   - **Session 2026-10-27 (auto-effects build, handover):** `plans/calc-auto-effects.md` built in units A1-A3 (engine:
+     `DMG.hit / turn / berry / derived / intimidate / settings`, Disguise / Ice Face, contact and crash damage,
+     Stockpile, crit inputs, Foul Play, EI scope gaps), B (trainer `field` decisions, all four guides 0 review), C / C2
+     (page state model: scratch vs kept HP / status, FIGHT-class `broken` / `mega`, foe edits kept for the fight, Reset
+     fight, migration), D1-D3 (Field layers + Auto, area conditions, Trick Room, Intimidate box, Orb, HP actions, berry
+     chip, log overlay, Broken box, crash / Stockpile controls, crit toggles, row-height fix, Global group), E audit (all
+     76 calc scenario jobs pass; domcompare vs `9b1fb22`: only `#/calc` differs on all four, normal and kb, 0 errors;
+     gaps: no calc text-zoom check, Foul Play engine-only). Agent handovers in `.tmp/D1-D3/report.md` (not committed).
+     Decisions made on the way are in the spec's last two sections.
+   - **Now:** unit F1 (Sol) fixes the user's first Thor-preview test: preset cards built through the real data paths
+     (items didn't show in Edit), Sitrus shown twice, used items visible as used and kept for the fight, HP −min / −max
+     inside the move also apply the user's recoil / contact change, Intimidate a plain box (no text), Orb status not
+     applied on entry, Gravity / Wonder Room / Magic Room into Global, Laser Focus / Lucky Chant missing on EI. Then the
+     user tests again (previews below), then the **docs step**: fold the spec's decisions into `template/README.md` /
+     `tools/calc/README.md` / notes (HP follow-ups as built; "not modelled": Gen 7 Rollout glitch, Floral Healing /
+     Life Dew's ally share), CLAUDE.md → Making a new guide step 2 (settle `review` field records; `setterStays`), delete
+     the spec and `plans/calc-auto-effects-mockup/`, cut `plans/calc-open.md` to calc-team, the mechanics check + merge,
+     save readers / file picker (+ the "apply −HP from the closed row" UI item), update this section.
+   - **Open after that:** decide `plans/calc-team.md`; the user's UI pass (hide unwanted EI-gap toggles, −HP from the
+     closed row); the user's mechanics check, then the merge into `main`; save readers and the file picker.
+   - **Phone previews (current):** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-auto-ei.html`,
+     `calc-auto-hardlove.html`, `calc-auto-photonic.html`, `calc-auto-eternal.html` (each in the Thor frame with the
+     preset panel). Older `calc-*` previews are superseded.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
    calc as a reference once the calc exists. Agreed, not done.
