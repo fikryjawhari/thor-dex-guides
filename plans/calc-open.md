@@ -6,6 +6,11 @@ What's left before the damage calc merges, in order (2026-10-27, after the auto-
 oracles), each calc guide's notes.md → Damage calc (profile, fixtures, In-game tests). Every calc session: claim the
 worktree, one template / engine session at a time, commit per sub-step, run Checks (below), ask before pushing.
 
+**On `worktree-damage-calc-saves`** (`.claude/worktrees/damage-calc-saves`, made 2026-10-27 from the calc branch at
+`23c82f6`): this branch's job is item 2 only, the save readers and the file picker (with the app repo,
+`../thor-offline-viewer`). calc-team stays on `worktree-damage-calc`. When done, merge this branch into
+`worktree-damage-calc` (or into `main` after it, whichever merges first), rebuild, run Checks.
+
 ## The list, in order
 
 1. **Decide `plans/calc-team.md`**: its own decide session on this branch, mockup in the Thor frame first. Also
