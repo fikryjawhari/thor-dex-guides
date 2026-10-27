@@ -29,6 +29,21 @@ const openGlobals = async page => {
 };
 
 await runChecks({name:'calc-field-states', file, checks:[{
+  id:'global rooms',title:'rooms move into Global with unchanged keys and persistence',sizes:[[260,316]],
+  run:async page=>{
+    await seed(page);
+    for(const key of ['gravity','wonderRoom','magicRoom']){
+      if(!guide.cfg.calc.field.some(entry=>entry.k===key))continue;
+      assert.equal(await page.value(`document.querySelector('[data-f="${key}"]').closest('[data-fgroup]').dataset.fgroup`),'field:battle');
+      await tapField(page,key);
+      assert.equal(await page.value(`!!CALC.state().field.${key}`),true);
+      await page.reload();await page.goto('#/calc');
+      assert.equal(await page.value(`!!CALC.state().field.${key}`),true);
+      await tapField(page,key);
+      assert.equal(await page.value(`!!CALC.state().field.${key}`),false);
+    }
+  },
+},{
   id:'global damage', title:'all global toggles match engine damage, profile and Doubles gates, measured labels and one-window Field', sizes,
   run:async page=>{
     await seed(page);
