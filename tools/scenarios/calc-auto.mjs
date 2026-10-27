@@ -375,6 +375,7 @@ checks.push(
       await setupCalc(page);
       for (const [name, ability, delta] of [['Bibarel','Simple',-2],['Bisharp','Defiant',1]]) {
         await configure(page, { name: 'Growlithe', ability: 'Intimidate' }, { name, ability });
+        assert.deepEqual(await page.value(`(()=>{const box=document.querySelector('[data-e="intim"]');return {text:box.parentElement.textContent.trim(),title:box.parentElement.title,aria:box.getAttribute('aria-label')};})()`),{text:'',title:'Intimidate',aria:'Intimidate'},'plain accessible checkbox');
         assert.match(await page.text('.cc[data-s="foe"] .dintmark'), new RegExp(delta<0?'Int −2':'Int \\+1'));
         assert.deepEqual(await page.value('CALC.mon("foe").stg'), [0,0,0,0,0]);
         await page.value(`(()=>{const box=document.querySelector('[data-e="intim"]');box.checked=false;box.dispatchEvent(new Event('change',{bubbles:true}));})()`);
