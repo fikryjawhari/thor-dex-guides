@@ -28,7 +28,7 @@ if (!Array.isArray(expected.party) || !Array.isArray(expected.boxes)) {
   process.exit(2);
 }
 
-const file = prepareGuide(guide, { tag: 'save-check' });
+const file = prepareGuide(guide, { tag: 'save-check', realReader: true });
 if (!file) {
   console.error(`${guide}: no cfg.calc, so there is no import to check`);
   process.exit(2);
