@@ -1601,6 +1601,7 @@ await test('R2 Protect blocks ordinary/fixed/exact hits without any reactions; b
     const feint=guide.M.indexOf('Feint');if(feint>=0)assert(calc.calc(user,target,{mv:feint},{defProtect:true}).max>0,hack+' Feint');
     const unseen=guide.AB.findIndex(entry=>entry[0]==='Unseen Fist');if(unseen>=0)assert.deepEqual(plain(calc.calc({...user,ab:unseen},target,selected,{defProtect:true}).rolls),plain(calc.calc({...user,ab:unseen},target,selected).rolls),hack+' Unseen Fist full bypass');
     if(config.zmove){const z={...selected,z:true},zUser={...user,it:'Normalium Z'},zTarget={...target,it:'',hp:calc.stats(target)[0]},normal=calc.calc(zUser,zTarget,z),protectedZ=calc.calc(zUser,zTarget,z,{defProtect:true});assert(protectedZ.max>0);assert.equal(protectedZ.protected,undefined);assert(protectedZ.rolls.every((value,index)=>Math.abs(value-normal.rolls[index]/4)<=1),'stock quarter-strength rounding');}
+    if(config.zmove){const z={...selected,z:true},zTarget={...target,it:'',hp:calc.stats(target)[0]},normal=calc.calc(user,zTarget,z),protectedZ=calc.calc(user,zTarget,z,{defProtect:true});assert.deepEqual(plain(protectedZ.rolls),plain(normal.rolls).map(value=>Math.max(1,Math.floor(value/4))),'Z without crystal still quarters');}
     assert.equal(calc.entry(target,{defToxicSpikes:2,defSafeguard:true},'def').status,undefined,hack+' Safeguard');
     assert.equal(calc.entry(target,{defToxicSpikes:2},'def').status,'tox',hack+' poison without Safeguard');
   }
