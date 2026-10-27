@@ -163,9 +163,14 @@ These actions and entry hazards replace a dismissible fixed bottom log (three li
 scrolling; above the keyboard in `dvkb`), never adding layout height or saved state. KO notes come from the engine.
 Field toggles never break a word: the narrowest box is the widest single word of any toggle (measured in the page's
 font at render, so text zoom counts), each toggle grid uses its own measured width and fits as many columns as there is room
-(`auto-fit`), so a narrow grid becomes rows. Where a side column would hold one box per row (the minimum window, 206 px
-of Field), a Player | Foe switch shows one side at full width (the count of its active toggles on each button; the
-choice is not stored). Weather/Terrain have no caption: the empty choice reads "No weather" / "No terrain".
+(`auto-fit`), so a narrow grid becomes rows. **Field layout** (R3, 2026-10-27), one column at every width: Global
+(collapsible, every field-wide toggle incl. Trick Room), then a Player | Foe switch (one side at a time; its active
+count on each button; not stored), then that side's ungrouped toggles and its States, Turn end and Hazards groups,
+stacked. Each group ends in the standard `.endbar` (`Collapse <group>`, shown only when the open group is taller than
+the window; it closes the group and keeps its heading in view). No whole-Field bar (rejected in the R3 mockup).
+Fight-bar selects keep their closed text short for 260 px: the auto choice reads the auto value or "Auto" (dashed
+border; the full "Auto: …" in its title), the empty choice "None", one-word values instead of long labels ("Sand"). The full trainer preview (from 480 px at 424 high) has
+exactly two-line rows, so all six fit: name, level, item, then the ability (shrinks to an ellipsis first); the moves.
 **Stackable states** (2026-10-26): `template/calc/field-states.json` defines side controls; `assemble.py` adds only
 those supported by the guide's moves / causing abilities and generation (Protect needs a Protect-family move, not `zmove`). The engine accepts
 these keys independently of UI availability. Dig / Fly / Dive / Minimized / Switching out remain the exclusive
@@ -175,8 +180,8 @@ moves, generation and profile-disabled effects. Dragon Cheer is offered only in 
 Global Water/Mud Sport, Power/Guard Split and ally aura states fold under **Global** beside the existing global
 toggles; ally controls (including per-side Ruin sources) appear only in Doubles, and these global manual choices share the normal Auto / Reset fight / trainer-change lifecycle.
 Gravity, Wonder Room and Magic Room sit in Global with the field-wide states; their keys and storage are unchanged.
-The closed group headings share one row so the minimum-size Field fits without scrolling. Expanded groups stay
-inside that one-window Field, scrolling its body when needed; opening a group brings its controls into view.
+Expanded groups stay inside the one-window Field, scrolling its body when needed; opening a group brings its controls
+into view.
 Field content does not flex-shrink; toggle rows keep their natural wrapped-label height when pressed or redrawn.
 The player's Pokemon box packs compact rows against its top edge, leaving any spare height below the last row.
 Turn-end parts now include trapping (the opposing holder's Binding Band), Leech Seed transfer (Big Root / Liquid
