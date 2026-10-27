@@ -3,7 +3,7 @@
 (()=>{
 const app=document.getElementById('app');
 const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??d;}catch(e){return d;}};
-let OPT={lay:'B',pv:'two',fb:'bottom',tp:'below',fbw:'box',...load('mkopt',{})};
+let OPT={lay:'B',pv:'two',fb:'top',tp:'below',fbw:'box',...load('mkopt',{})};
 let TEAM=load('mkteam',null)||[{src:'party',b:0,i:0},{src:'party',b:0,i:1},{src:'party',b:0,i:2},{src:'party',b:0,i:3}];
 const keep=()=>{localStorage.setItem('mkteam',JSON.stringify(TEAM));localStorage.setItem('mkopt',JSON.stringify(OPT));};
 const same=(a,b)=>a&&b&&a.src===b.src&&(a.src!=='box'||+a.b===+b.b)&&+a.i===+b.i;
@@ -92,6 +92,14 @@ document.addEventListener('touchmove',e=>{if(D?.on)e.preventDefault();},{passive
 document.addEventListener('contextmenu',e=>{if(e.target.closest('.mg .dstrip button,.mkrow .mks'))e.preventDefault();},true);
 document.addEventListener('click',e=>{if(Date.now()-SUPPRESS<400&&e.target.closest('.mg .dstrip,.mkrow')){e.stopPropagation();e.preventDefault();}},true);
 
+// Rail jump arrows (dex.js jump() reads CALC.stops()): narrow = top (box), first frame (trainer bar, the fight bar and
+// teams under it), the bottom of the last move when an open row / editor pushes it past the window, Field; wide = top
+// (the one-window calc), Field. Stops closer than 24 px merge.
+function stops(){const y=el=>el?el.getBoundingClientRect().top+scrollY:null,max=Math.max(0,document.documentElement.scrollHeight-innerHeight);
+ const bar=app.querySelector('.fbar'),field=document.querySelector('details.dfield'),last=app.querySelector(wide()?'.dres .mr:last-child':'.dres:not(.na) .mr:last-child');
+ const v=[0];if(!wide()&&bar){const top=y(bar)-2;v.push(top);if(last){const end=last.getBoundingClientRect().bottom+scrollY-innerHeight+3;if(end>top+24)v.push(end);}}
+ if(field)v.push(y(field)-2);const out=[];for(const value of v.map(x=>Math.round(Math.max(0,Math.min(max,x)))).sort((a,b)=>a-b))if(!out.length||value-out[out.length-1]>=24)out.push(value);return out;}
+const hook=setInterval(()=>{if(window.CALC){window.CALC.stops=stops;clearInterval(hook);}},50);
 new MutationObserver(()=>apply()).observe(app,{childList:true});
 addEventListener('resize',()=>{const f=app.querySelector('.fit');if(f)apply();});
 addEventListener('hashchange',()=>{if(location.hash==='#/calc')goFirst();});

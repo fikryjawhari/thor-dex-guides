@@ -1,6 +1,6 @@
 # Calc: both teams in the first frame (spec)
 
-Decided 2026-10-27 in the calc-team decide session, from the mockup `plans/calc-team-mockup/` (the real EI build
+Decided 2026-10-27 / 28 in the calc-team decide session (final choices 2026-10-28), from the mockup `plans/calc-team-mockup/` (the real EI build
 patched: `build.py` writes `.tmp/calc-team/calc-team.html`, Thor frame + panel; phone preview `calc-team.html`). The
 mockup's `patch.css` / `patch.js` are the reference for every size below; the user approved it on the phone preview
 and will report anything that is bad on the Thor. Branch `worktree-damage-calc`. Delete this plan and the mockup when
@@ -9,7 +9,7 @@ built (lasting decisions go to `template/README.md` → Damage calculator).
 ## The goal
 At every viewer size the first frame shows, at once: **my team, the foe's team, both cards, all four moves (wide: both
 lists) and the fight bar**. At 260 × 316 the first frame is the page scrolled to the trainer bar (as now: `openMatch`
-/ `stops()` scroll to `.fbar`).
+scrolls to `.fbar`); the rail's jump arrows stop there (Jump arrows, below).
 
 ## Layout
 
@@ -18,16 +18,16 @@ Top to bottom (the page scrolls; the box stays above, as now):
 1. **Box** (`.dside.mg`, unchanged: tools + six-across grid, internal scroll, max-height 136).
 2. **Trainer bar** (`.fbar`: ‹ name ›, Cap box when relative) full width, **no panel border** (the `.dside`
    around it is background-less, padding 0), 22 px high (nav / name button 22 px).
-3. **Teams, side by side**: left = my team (3 × 2 grid), right = the foe's team (3 × 2, the existing foe strip moved
+3. **Fight bar** full width (S / D, weather, terrain, ↺), 22 px high, **above the teams** (final).
+4. **Teams, side by side**: left = my team (3 × 2 grid), right = the foe's team (3 × 2, the existing foe strip moved
    out of the trainer panel). Each in its own `.dside` panel, padding 2 px, gap 2 px. Cells: 24 px high, sprite
    22 px, level as a small badge on the cell's bottom-right corner (8 px, translucent panel2 background). Pokémon are
    not made smaller than this (user).
-4. **Cards side by side** (mine left, foe right), the nameless card below.
-5. **Moves** (the attacker's four, full width), each closed row 33 px: line 1 16 px (endpoint buttons 15 px), line 2
+5. **Cards side by side** (mine left, foe right), the nameless card below.
+6. **Moves** (the attacker's four, full width), each closed row 33 px: line 1 16 px (endpoint buttons 15 px), line 2
    13 px (its buttons / turn chip 13 px), `.mm` padding 1 px, row gap 2 px. Open rows unchanged.
-6. **Fight bar** full width under the moves (S / D, weather, terrain, ↺), 22 px high.
 7. Field (unchanged).
-`.fit` gap 2 px. Budget at 260 × 316 (measured in the mockup, trainer bar top to fight bar bottom): plain cards 294 px,
+`.fit` gap 2 px. Budget at 260 × 316 (measured in the mockup, trainer bar top to the fourth move's bottom): plain cards 294 px,
 the busiest card (Mega, Toxic turn, residual, Sitrus chip: three card lines) 313 px.
 
 **The nameless card** (narrow only; the highlighted team cell says who is in). A fixed shape, the parts never move;
@@ -50,7 +50,7 @@ extra info only adds line 3:
 ### Wide (≥ 480): two columns, one window
 Grid areas: `box tside` (the only `1fr` row), `fight tside`, `cm cf`, `mv mf`: the cards and both move lists are
 pinned to the bottom, the left column is the box panel then the fight bar, the right column is the trainer panel.
-- **My team row is part of the box panel**, under the grid (default; above it is the other choice), split off by a
+- **My team row is part of the box panel**, under the grid (final), split off by a
   1 px line (`border-top: var(--line)`), not a panel of its own. Cells 28 px high, sprite 24 px, level badge on the
   corner. The box grid scrolls in what is left (≈ 3 rows at 392).
 - **Fight bar** under the box panel in the left column (it's ~214 px wide, the same bar as at 260). Not full width at
@@ -96,19 +96,44 @@ pinned to the bottom, the left column is the box panel then the fight bar, the r
 - Text zoom (A+): the card may wrap more; never clip or widen the page.
 - Doubles / Trick Room / Speed colour: unchanged (the number keeps its colour).
 
-## Open (defaults used; the user may overrule after the Thor)
-- Wide cards: keep the names (default) or use the nameless card there too.
-- Narrow fight bar under the moves (default) or above the teams.
-- Wide team row under the box grid (default) or above it.
-- Drop on a filled slot: replace (default) or insert and push along. Hold time 250 ms.
-- Later, not in this build: an HP bar / fainted grey on team cells.
+## Jump arrows (the rail's ⤒ / ⤓, `CALC.stops()`)
+They lock to the new frame. Narrow: **top** (0, the box), **first frame** (trainer bar top − 2 px: trainer bar, fight
+bar, teams, cards, moves), **the fourth move's bottom** only when an open row / editor pushes it below the window
+(bottom − innerHeight + 3, kept only if it is ≥ 24 px past the first frame), **Field** (`details.dfield` top − 2).
+Wide: **top** (the one-window calc) and **Field**. Every stop is clamped to the page's scroll range; stops closer than
+24 px merge. Measured in the mockup: 260 × 316 → 0, 137 (+ Field when it's open: 386); wide → 0, Field. `openMatch`
+still lands on the first frame.
+
+## Decided (2026-10-28)
+Facing columns, nameless cards at narrow; fight bar above the teams below 480 and under the box from 480; my team row
+in the box panel under the grid from 480; trainer preview two-line rows; wide cards keep their names; drop on a filled
+slot replaces it; hold 250 ms. The user will report anything bad on the Thor. Later, not in this build: an HP bar /
+fainted grey on team cells.
+
+## Auto Doubles (the last manual fight setting)
+Tag / multi / double battles switch the fight bar to **Doubles** automatically, like weather and terrain already do.
+- **Data** (each guide's `data.json`, already there; no new extraction): a trainer is a doubles fight when one of its
+  `tags` matches `^(True )?Double` (EI "Double Battle" / "True Double Battle", Hardlove "Double", "Double with …",
+  "Double Battle with …", "Double, Optional"), `^2on2 Double` (Hardlove), `^Multi Battle` (Photonic) or
+  `^Triple Battle` (Eternal X: the calc has no triples; Doubles is the nearest, spread moves ×0.75 as in triples), **or**
+  it has partners (`pt`: multi battles with Hau / Calem / Serena). Not doubles: Hardlove "Back2Back …" (one after
+  another, singles) and Eternal X "Rotation Battle" (one active Pokémon at a time). Counts (2026-10-28): EI 14,
+  Hardlove 92, Photonic 60, Eternal X 62 (50 tagged + 12 partner-only). Where to put it: `tools/trainer_fields.py`
+  writes it as field evidence (`gameType: 'Doubles'`, source = the tag / "partner") so it rides the existing Auto
+  layer; the per-hack patterns are one shared list there (a new hack adds its wording).
+- **Page:** S / D follows the existing automatic / manual lifecycle: the trainer's evidence makes D automatic
+  (dashed, pressed, A mark, the tooltip names the tag); tapping S or D makes it manual for this fight; Auto, ↺ Reset
+  fight and a trainer change clear the manual choice. A doubles fight also turns on the Doubles-only Field entries as
+  now. The Area line names the source like weather ("Double Battle").
+- **Checks:** per guide, the count above; a doubles trainer opens in D (auto), a singles one in S; manual S survives a
+  move / HP change and is cleared by Reset fight and by the next trainer; Back2Back / Rotation stay S.
 
 ## Build units (in order; one template session at a time)
 1. **Layout + nameless card** (template: `calc.js` `calcPage` markup / `calc.css`; Sol or Opus): build the grid areas
    in the page's own markup (not the mockup's after-render moves): narrow facing columns (foe strip out of the trainer
    panel), wide: team row in the box panel, fight bar under the box, no foe strip, six 25 px preview rows, condensed trainer bar / move rows / fight bar
    (narrow), nameless card at narrow incl. the name fallback and full-width Edit, preview rows without `TEAMNEED`;
-   `stops()` / `openMatch` scroll targets. Commit.
+   `stops()` (Jump arrows) / `openMatch` scroll targets. Commit.
 2. **Team row + drag and drop** (template; Sol): `ST.team` with pid refs, render, tap = send in, the pointer-event
    drag (from the mockup's `patch.js`), box dots, first-import fill, drop of unresolved entries. Commit.
 3. **Checks** (Haiku medium): update `calc-retest` R1 (foe strip 3 columns at narrow, preview row count, fight bar now
@@ -116,8 +141,11 @@ pinned to the bottom, the left column is the box panel then the fight bar, the r
    rule at the five sizes × normal / dvkb (my row, the foe's team (narrow: strip; wide: all six preview rows unclipped),
    both cards, four moves (wide: eight), fight bar inside the viewport, plain and busy card), drag via `Input.dispatchTouchEvent` (box → empty, box → filled, swap, drag out,
    swipe doesn't drag, tap sends in), persistence across reload, re-import keeps the team by pid, deleted custom
-   leaves it. Then plans/calc-open.md → Checks (full calc scenario set, `assemble.py`, every calc guide), domcompare
+   leaves it, jump-arrow stops at 260 × 316 / 260 × 394 / wide with Field closed and open. Then plans/calc-open.md → Checks (full calc scenario set, `assemble.py`, every calc guide), domcompare
    against the branch's previous build on `#/calc`.
-4. **Docs + preview** (Opus main chat): `template/README.md` → Damage calculator (replace "Retest layout" sizes, the
-   preview rule, add the team row), every calc guide in the Thor frame on the phone preview, delete this plan and
+4. **Auto Doubles** (Sol or Opus: data rule across four guides + template): `trainer_fields.py` evidence and the four
+   rebuilds (`build.py` of each calc guide), the S / D auto layer in `calc.js`, the checks above in
+   `tools/scenarios/calc-field.mjs` (or its own `calc-doubles.mjs`), hzla compares unchanged. Commit.
+5. **Docs + preview** (Opus main chat): `template/README.md` → Damage calculator (replace "Retest layout" sizes, the
+   preview rule, the team row, Auto Doubles), every calc guide in the Thor frame on the phone preview, delete this plan and
    `plans/calc-team-mockup/`, PROGRESS / calc-open item 1 done.
