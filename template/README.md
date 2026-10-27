@@ -219,6 +219,8 @@ toxic counter restarts at 1. The player's **unsaved set edits** (nature, ability
 when the Pokémon is switched away; the **foe's set edits are kept for the fight** (no foe Save: trainer data stays the
 source) and go on a trainer change / Reset fight. **Mega** is fight state like `broken` (`mega`, the form laid over
 the set; ability / item edits while Mega go with it): kept across switches and reload, not a set edit, not an entry.
+Orb status is derived on entry unless the user explicitly picked a status (including None). New custom presets
+leave status unset, just like a new Pokémon in Edit; an empty status override would suppress the Orb.
 **Used items** (`used`) are fight state: kept across switches and reload, cleared on trainer change / Reset fight.
 Edit shows `<item> (used)` with its effect off; picking any item (including the same one) replaces it and clears used.
 Save keeps set fields only, never HP / status / scratch; Edit Reset clears unsaved edits and scratch. `broken` (Disguise / Ice Face) is kept for the fight on both sides. Player HP is kept across trainers; foe
