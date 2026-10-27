@@ -24,6 +24,9 @@ items = json.loads(subprocess.check_output(['node', '-e', 'console.log(JSON.stri
 items = sorted(set(items) | {row[0] for group in data['IT'] for row in group.get('r', [])})
 base_abilities = json.loads(subprocess.check_output(['node', '-e', 'console.log(JSON.stringify(require("./tools/calc/node_modules/@smogon/calc/dist/data/abilities.js").ABILITIES[9]))'], cwd=root, text=True))
 field = list(profile['field'])
+for entry in field:
+    if entry['k'] in [side + key for side in ['atk', 'def'] for key in ['HelpingHand', 'FriendGuard', 'EmperorPresence']]:
+        entry['doubles'] = True
 for side, label in [('atk', 'Player'), ('def', 'Foe')]:
     for key in ['Safeguard', 'Protect']:
         if not any(entry['k'] == side + key for entry in field):
