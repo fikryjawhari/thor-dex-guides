@@ -12,7 +12,7 @@ if (!file) {
 const guide = readGuide(file).data;
 const sizes = [[260, 316], [480, 392], [537, 424], [832, 424], [832, 316]];
 const row = `[...document.querySelectorAll('.dres:not(.na) .mr')].find(r=>r.querySelector('.mv')?.textContent.trim()==='Triple Kick')`;
-const read = page => page.value(`(()=>{const r=${row};return {hp:r.querySelector('.r1 .hp').textContent,r2:r.querySelector('.r2').textContent,btn:r.querySelector('.rh')?.textContent,box:!!r.querySelector('[data-mo="hits"]')};})()`);
+const read = page => page.value(`(()=>{const r=${row};return {hp:r.querySelector('.r1 .hp').textContent,r2:(()=>{const bar=r.querySelector('.r2').cloneNode(true);bar.querySelector('.dmovecontrols')?.remove();return bar.textContent;})(),btn:r.querySelector('.rh')?.textContent,box:!!r.querySelector('[data-mo="hits"]')};})()`);
 const perHit = page => page.value(`(()=>{const r=${row};return [...r.querySelectorAll(".rolls")].map(d=>d.textContent);})()`).then(list => list.map(text => text.match(/Hit \d+: (\d+)–(\d+)/).slice(1).map(Number)));
 
 const checks = [{
