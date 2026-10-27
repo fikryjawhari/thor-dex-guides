@@ -2,8 +2,8 @@
 // imported party and boxes with an expected file written in names.
 // Usage: node tools/calc_save_check.mjs <guide.html> <save file> <expected.json>
 //   exit 0: every Pokémon matches; 1: a mismatch (the diff is printed); 2: the import or the setup failed.
-// A guide whose profile names no save reader gets the `test` reader (template/calc/readers/test.js), so a JSON
-// fixture in the test format (tools/scenarios/fixtures/calc/*.json) can be checked. A guide with a reader uses it as built.
+// A .json save is a fixture in the test format (tools/scenarios/fixtures/calc/*.json) and goes through the `test`
+// reader (template/calc/readers/test.js); any other file through the guide's reader as built (cfg.calc.save).
 //
 // expected.json: { "party": [mon, ...], "boxes": [[mon, ...], ...] }, with mon =
 //   { "species": "Garchomp", "level": 34, "nature": "Hardy", "ability": "Rough Skin", "item": "",
@@ -28,15 +28,19 @@ if (!Array.isArray(expected.party) || !Array.isArray(expected.boxes)) {
   process.exit(2);
 }
 
-const file = prepareGuide(guide, { tag: 'save-check', realReader: true });
+const fixture = /\.json$/i.test(save);
+const file = prepareGuide(guide, { tag: 'save-check', realReader: !fixture });
 if (!file) {
   console.error(`${guide}: no cfg.calc, so there is no import to check`);
   process.exit(2);
 }
 const { data } = readGuide(guide);
-const reader = data.cfg.calc.save || 'test';
-if (!data.cfg.calc.save) console.log('reader: test (the guide names none; the JSON fixture format applies)');
-else console.log(`reader: ${reader}`);
+const reader = fixture ? 'test' : data.cfg.calc.save;
+if (!reader) {
+  console.error(`${guide}: the guide names no save reader (cfg.calc.save), so only .json fixtures can be checked`);
+  process.exit(2);
+}
+console.log(`reader: ${reader}${fixture ? ' (a .json fixture)' : ''}`);
 
 const byId = Object.fromEntries(data.P.map(p => [String(p.id), p]));
 const abilityName = index => data.AB[index]?.[0] ?? `ability ${index}`;

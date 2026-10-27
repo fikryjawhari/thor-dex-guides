@@ -491,6 +491,30 @@ No source weights were missing/undocumented; no new oracle differences or engine
 No template, engine source, extract scripts, other hacks, storage keys or orchestrator claim were changed.
 No viewer/Thor or in-game testing was performed for this data/fixture-only unit.
 
+#### Save import
+
+Reader `expansion` (`cfg.calc.save`; format notes `template/calc/readers/README.md` → expansion: EI's one 28-sector save
+slot, the expansion Pokémon struct). `extract/gid.py` writes `GID` after the prune from the release's expansion headers
+(`tools/expansion_ids.py`): species (our P ids are the game's species numbers, all 1,208 checked by name), moves (789 of
+789 by name), abilities (284 of 284; the two "As One" by description), items (the game's names, 20 squeezed ones spelt as
+Showdown and the trainer sets do: Never-MeltIce -> Never-Melt Ice, so their calc effects apply), growth rates (every
+species; EI's Primal Dialga / Palkia from `species_info.h`). The 67 pruned species have no GID entry: an imported one is
+skipped and counted in the banner ("· 1 not in this guide").
+
+Checked 2026-10-27 (`.src/saves/`, SOURCES.md):
+- hzla's `Emerald Imperium 1.3.sav` against `ei-1.3.expected.json` (written by `tools/calc_paste_expected.py` from
+  hzla's paste of the same save, `--layout box13:3,party:6,box0:24`): all 33 match (species incl. Alolan Marowak,
+  Galarian Rapidash, Aegislash; level, nature, ability slot incl. hidden, item incl. Mega Stones, moves, IVs incl. two
+  30s in Speed / Sp. Atk, which checks the stat reorder). The paste has no EVs and all its levels are 56, which the
+  party's stored levels confirm.
+- A copy with a mint (Impish -> Adamant), EVs (4 HP / 252 Atk / 252 Spe) and one Pokémon made a pruned species
+  (Mewtwo): nature, EVs and the skip all as expected (made by hand; the save has no mints or EVs of its own).
+- Banners: hzla's mGBA save state -> Save state; a Renegade Platinum save -> Wrong game; one flipped byte in the party
+  sector -> Unreadable; a blank flash and a save with party count 0 -> No Pokémon yet. hzla's second save `em_imp.sav`
+  imports 6 + 25 (levels 1-56, Pikachu (Pop Star)); no expected file for it.
+- Not checked yet: a save from the user's own game (EI 1.3.1), RetroArch's `.srm`, a Pokémon with its form in a
+  macro-built family (Vivillon) and the ability randomiser (not modelled).
+
 #### In-game tests
 
 Rolls are the engine's 16 rolls (`tools/calc`). Level 50, Serious nature, 31 IVs, 0 EVs, no item, no field, no crit
@@ -577,7 +601,7 @@ The other guides' notes link here.
 ```text
 The JSON in #data, the same for every guide. Key order and what is dropped: tools/schema.py, applied by the
 extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides that have that data, the others omit it.
-  Top level, in order: M MV AB P LOC AR [ARO] IT WK TR TC built   (no build markers, no source strings)
+  Top level, in order: M MV AB P LOC AR [ARO] IT WK TR TC [GID] built   (no build markers, no source strings)
   M   [moveName]
   MV  [{t type, c category, bp power or "Varies", ac accuracy or null, pp, pr priority, [cr crit stage when not 0,
         6 = always a crit (the damage calc)], d description, f flags[], h change notes[], [dc 1 = the changes doc
@@ -626,7 +650,11 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
   Level caps: a trainer's default cap is the cap of the next boundary fight in the Navigation list (Roxanne 15, Rustboro
        rival 20 ... Champion 85); Hot House tiers 2-7 badges = 30/44/56/64/71/80. This reproduces every "level cap used
        for the speed calculation" note in the sheet.
-  TC {attackType: {defendType: multiplier x10}}   built (date)
+  TC {attackType: {defendType: multiplier x10}}
+  GID [optional] the save importer's game id tables, lists indexed by game id (null = nothing maps): sp -> P id,
+      mv -> M idx, ab -> AB idx, it -> item name, [gr -> growth rate 0-5 (GROWTH_ order), for readers whose boxed
+      Pokémon store only experience]. Written after the prune (M / AB indexes); template/calc/readers/README.md
+  built (date)
 
 STAT FORMULA (Gen 3+)
   HP    = floor((2B + IV + floor(EV/4)) x L / 100) + L + 10

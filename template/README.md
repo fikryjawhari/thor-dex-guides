@@ -273,8 +273,10 @@ Internal set aliases follow trainer data (`l`, `na`, `a`, `i`, `m`); the engine 
 are transient; pickers use the shared keyboard/number pad and the viewer's normal select shim.
 
 Import exists only with `profile.save`: a file input calls `READERS[profile.save](bytes, D)` and maps game IDs through
-`D.GID` (bypassed with `ids: "ours"`). Success atomically replaces the import and clears imported edits/slot overrides;
-errors retain the old import. `calc/readers/test.js` and `tools/scenarios/fixtures/calc/` supply synthetic JSON saves.
+`D.GID` (bypassed with `ids: "ours"`). A Pokémon whose species maps to nothing in the guide (EI's pruned species) is
+skipped and counted in the banner ("· 1 not in this guide"); Wrong game only when no party Pokémon maps. Success
+atomically replaces the import and clears imported edits/slot overrides; errors retain the old import. Readers and
+their formats: `calc/readers/README.md`. `calc/readers/test.js` and `tools/scenarios/fixtures/calc/` supply synthetic JSON saves.
 `node tools/scenarios/calc-smoke.mjs dist/emerald-imperium.html` patches only a temporary built page to select that reader.
 
 `dex.js` owns guarded rail, trainer-card and stat-calculator entry hooks and delegates the calc's three scroll stops.
