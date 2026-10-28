@@ -68,8 +68,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
      (the generator stays git-ignored in `.tmp/pkhex-oracle/`, PKHeX is GPLv3; recipe in `readers/README.md`; .NET 10
      SDK user-local in `%LOCALAPPDATA%\Microsoft\dotnet`). File picker: guide side follows the app's
      `docs/SAVE_BRIDGE.md` (`calc-bridge.mjs`); waits on the app's Thor test. Next there, in order (handover 2026-10-28):
-     1. Rerun `uv run python -I tools/gate.py scenarios --only calc-import,calc-bridge --jobs 8` (the Unreadable
-        wording changed in `1770685` while another session held the browser; the check only looks for "checksum").
+     1. Done 2026-10-28: `gate.py scenarios --only calc-import,calc-bridge,calc-smoke --jobs 8` 12/12 on all four
+        guides, after the Unreadable wording change (`1770685`) and the Gen 4 reader.
      2. App repo session (`../thor-offline-viewer`, PC with the Thor on adb): its `docs/_plans/save-file-picker.md` →
         Left to do (install, find each emulator's save folder, the bridge tests over CDP). If the contract changes,
         update `template/calc.js` (import block) and `tools/scenarios/calc-bridge.mjs` here.
