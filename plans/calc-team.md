@@ -44,9 +44,11 @@ extra info only adds line 3:
 - **Name:** hidden; shown as line 0 when the selected Pokémon is not in the team row (picked from the box / Find) —
   for the foe the strip always holds it, so the foe card never shows the name.
   **When line 0 shows** (the user, 2026-10-28, from the Thor preview: the card took four lines and hid the fourth
-  move): the Speed number moves up to line 0's right end, next to the name, and the name truncates (ellipsis) to
-  fit; line 2 then has no Speed. Without line 0 the card is as above (Speed on line 2). The first-frame budget at
-  260 × 316 must hold with the name shown.
+  move): M, the ability boxes (Intimidate toggle, Disguise / Ice Face, Broken, Sword / Shield, Download, the
+  monControls) and the Speed number move up to line 0, between the name and its right end, Speed furthest right; the
+  name truncates (ellipsis) as far as needed, even very short. Line 2 keeps only what's left (Aura, the battle-state
+  tag) and goes when empty. Without line 0 the card is as above. Line 0 is not shown while Edit is open (the editor
+  names it). The first-frame budget at 260 × 316 must hold with the name shown (built: the plain card is 2 lines, 44 px).
 - **Edit open at narrow:** the open card spans both columns (grid rows `cm cm` / `cf cf`): the other card moves under
   it, full width too. The editor itself is unchanged (it already shows the name).
 - Tapping the card still selects the attacker (`data-a="sel"` on `.cc`).

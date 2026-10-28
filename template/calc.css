@@ -665,11 +665,13 @@ body.calc-route .thp i{display:block;height:100%;background:#71d99a}
 body.calc-route .thp i.y,body.calc-route .dhpbar i.y{background:#e8c547}
 body.calc-route .thp i.r,body.calc-route .dhpbar i.r{background:#ff6b6b}
 body.calc-route .ko>.spr{filter:grayscale(1)}
-/* The narrow nameless card's name line (the selected Pokémon isn't in the team row): Speed moves up to its right end,
-   the name truncates; line 2 then has no Speed. */
+/* The narrow nameless card's name line (the selected Pokémon isn't in the team row; not while Edit is open: the editor
+   names it): M, the ability boxes and Speed move up to it, the name truncates as far as needed; line 2 keeps only Aura /
+   the battle-state tag. */
 @media(max-width:479.98px){
  body.calc-route .cc.offteam .cn{flex:1 1 0;min-width:0;overflow:hidden;text-align:left}
  body.calc-route .cc.offteam .cn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
  body.calc-route .cc.offteam .l1 .sp{order:0;margin-left:4px}
+ body.calc-route .cc.offteam .mg,body.calc-route .cc.offteam .dmonstate,body.calc-route .cc.offteam .ddl{order:0;flex:none}
  body.calc-route .cc.offteam::after{content:'';order:0;flex:0 0 100%;height:0}
 }
