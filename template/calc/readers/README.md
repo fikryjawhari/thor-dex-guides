@@ -11,6 +11,7 @@ The notes below are the formats as read from each reference (facts, not code: `t
 ## PKHeX oracle recipe (Gen 6/7)
 
 2026-10-28: a disposable .NET 10 console project in `.tmp/pkhex-oracle/` references NuGet `PKHeX.Core` **26.10.18**.
+On this machine invoke `%LOCALAPPDATA%\Microsoft\dotnet\dotnet.exe` (SDK 10.0.403); it is not on PATH.
 Neither the program nor its linked binaries belong in this repository (GPLv3). Use `SAV7USUM`, `SAV7SM`, `SAV6XY`
 and `SAV6AO` blank constructors, set Version to US / SN / X / OR, and insert PK7 / PK6 objects through PartyData
 and SetBoxSlotAtIndex. Blank constructors leave footer identifiers unset: initialise the footer BEEF marker and
@@ -20,14 +21,13 @@ constructor and require ChecksumsValid and PartyCount = 6.
 The USUM / SM party is Alolan Raichu, hidden-ability Alolan Ninetales, Sensu Oricorio, Charizard with Charizardite X,
 hidden-ability Garchomp and Heat Rotom; XY / ORAS substitute Pikachu, hidden-ability Ninetales and Clefairy for the
 first three. Party indices 0..5 use levels 10 + 2*index, natures index%25, PID 0x24680000 + index and encryption
-constant 0x10000001 | ((index%32)<<13). Thirty-two boxed specimens cycle Bulbasaur, Clefairy, Drifloon, Nincada,
-Magikarp and Pikachu: all shuffle selectors (including 24..31 aliases), all six growth rates, levels 10..72 and
+constant 0x10000001 | ((index%32)<<13). Thirty-two boxed specimens cycle Bulbasaur, Caterpie, Illumise, Finneon,
+Magikarp and Pikachu: all shuffle selectors (including 24..31 aliases), all six hacked growth rates and
 natures 0..24. Slots span boxes 1/2 and the last box's last slot; the other slots remain blank. Moves are Thunderbolt,
 Flamethrower, Protect and Toxic. In calc order HP/Atk/Def/SpA/SpD/Spe, IVs are [31,index%32,17,23,9,3],
 EVs [4,100,12,152,8,200]. Use PKHeX's CurrentLevel, RefreshAbility, ResetPartyStats and RefreshChecksum.
 
-For boxed specimens use Bulbasaur, Caterpie, Illumise, Finneon, Magikarp and Pikachu instead: they cover all six
-**hacked** growth rates (Clefairy, Drifloon and Nincada have changed rates). Preserve PKHeX's EXP, then calculate
+The input levels are 10..72. Preserve PKHeX's EXP, then calculate
 the expected boxed level with PKHeX Experience.GetLevel(EXP, hacked growth rate from dex-rebalanced.json).
 Party expectations use Stat_Level. Thus the expected files describe this guide's terms, not vanilla levels.
 Export `<name>.expected.json` from those input objects, not the reader or imported page. Resolve numeric move,
@@ -109,6 +109,24 @@ The family recognises all four layouts, but a Gen 7 guide accepts only USUM and 
 ORAS are wrong-game controls, not imports into Photonic Sun / Eternal X. PNG, gzip, RASTATE and Citra CST emulator
 state headers give `state`. A damaged known-size save or recognisable truncated main gives `unreadable`;
 unrecognised sizes/containers give `wrong`. Valid files with no non-egg party give `empty`.
+
+**Verification (2026-10-28).** `node tools/calc_save_check.mjs dist/photonic-sun.html
+hacks/photonic-sun/.src/saves/pkhex-usum.sav hacks/photonic-sun/.src/saves/pkhex-usum.expected.json` matches all
+38 specimens, every compared field. `.tmp/calc-save-photonic-sun/checks.mjs` also compares all four layouts against
+their expected files directly, including all 32 shuffle selectors and six hacked growth rates, and asserts no
+mutation of input bytes. Against the actual Photonic page, XY / ORAS / SM show Wrong game, truncated (one byte and
+half file), corrupted party and damaged footer show Unreadable, Citra's state header shows Save state.
+Additional files made with PKHeX, with outer CRCs resealed: bad Pokémon checksum and count 7 are unreadable;
+zero party or egg-only party are empty; mismatched game byte is wrong. PK7 hyper-trained Attack and Speed
+return effective 31 IVs in calc order. These local variants and logs live in `.tmp/calc-save-photonic-sun/`.
+The oracle generator remains local, including its footer initialisation and variant recipes; no GPL-linked code
+or binaries are distributed with the guide.
+
+`npm test --prefix tools/calc` passes. `uv run python -I tools/gate.py scenarios --only
+calc-import,calc-bridge,calc-smoke --jobs 8` passes 12/12 runs across all four guides (normal/dvkb and viewer sizes).
+Hzla remains 118 matches + 28 known differences, zero mismatches/errors. The pre-change data baseline at `62c2e6d`
+correctly flags the new GID and two new report lines: all old data, counts and old report lines are unchanged.
+Do not recapture that baseline to conceal the intentional additions; the parent must accept this delta.
 
 ## expansion: pokeemerald-expansion
 

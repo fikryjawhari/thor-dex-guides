@@ -62,7 +62,8 @@ window.READERS.gen67=(bytes,data)=>{
  const layout=LAYOUTS.find(candidate=>candidate.size===bytes.length);
  if(!layout){
   for(const candidate of LAYOUTS){if(bytes.length>=candidate.size||bytes.length<candidate.party+6*PARTY+1||!candidate.versions.includes(bytes[candidate.status+4]))continue;
-   try{if(pokemon(bytes,candidate.party,true,candidate,data))fail();}catch(error){if(error.code==='unreadable')throw error;}}
+   let recognised=false;try{recognised=!!pokemon(bytes,candidate.party,true,candidate,data);}catch{}
+   if(recognised)fail();}
   throw {code:'wrong'};
  }
  validate(bytes,layout);
