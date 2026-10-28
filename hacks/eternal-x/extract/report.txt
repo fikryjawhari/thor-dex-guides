@@ -60,3 +60,5 @@ items: Shops 145, TMs 100, Evolution Items 26, Held Items 136, Stats and Abiliti
 items: dropped duplicate Exp. Share from Held Items (kept in Key Items)
 availability: obtainable 763 trainer/partner species 594 kept 782 removed 4
   removed species IDs: mega-mewtwo-y, wormadam-sandy, wormadam-trash, floette-eternal
+GID: 880 species/form keys for 782 species, 617 moves, 188 abilities, 697 item names
+GID species/forms outside this guide: 4 150:2, 413:1, 413:2, 670:5

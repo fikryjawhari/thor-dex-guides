@@ -20,6 +20,7 @@
   ],
   "calc": {
    "base": "gen6",
+   "save": "gen67",
    "field": [
     {
      "k": "gameType",
