@@ -38,11 +38,11 @@
         "version": "0.8.5"
       },
       "state": {
-        "sha": "ee4518c149c34914cdadefcba9c6f4f40c78ebf5",
+        "sha": "64838bf7dbe032cd87fd986f9c8699c1436c67c5",
         "files": {
           "asm/include/items.inc": "8299aa49b61f2b5aa1e234c9cd95c6918e99318b",
           "asm/include/species.inc": "0776df5d89d605ea6059905c0ae2e840b01bc79d",
-          "data/Encounters.c": "cd24e5b231c717c386e516f0df12cc5c284189bb",
+          "data/Encounters.c": "244a2267a5c76e80374ad994a8a2b36af86739ed",
           "data/Evolutions.c": "c0a975ae23f5a83041b2f8c202cc27d2772211a1",
           "data/FormToSpeciesMapping.c": "5950b7b4e2cca52fc09c1c63ebd6373da5ae5618",
           "data/Headbutt.c": "73478cbb855e98850cd1a27b7c7af2e4d2d6d5dd",
@@ -51,11 +51,11 @@
           "data/MachineMoves.c": "7a15cb0a77757d79aa0578f1ac9921441ad53597",
           "data/Moves.c": "d9a1d26d7ff58826993046d9eeac4d34493c315c",
           "data/PokeFormDataTbl.c": "6182520e3febb9eba6a4a05c9ba75b446a575ce6",
-          "data/SafariEncounters.c": "e94c8bb3ecf21ed5a886867649d8f2e05abfb4e7",
-          "data/Species.c": "b7e08833bf83345b98345958838dddc643c55854",
-          "data/Trainers.c": "17d8c0c763c3317decce49ab83c6be20f9633e59",
-          "data/itemdata/itemdata.c": "4f67d48e6f3d349f6f25061e7666f0cd0a2e11b8",
-          "data/learnsets/learnsets.json": "a6d4bc579b06945614e086a94c465fdfa17adfda",
+          "data/SafariEncounters.c": "dbcede440ddcb1be18671144fc9315e9427c0bb8",
+          "data/Species.c": "e965dc63dfd08ed84f9a1075c88515c9a40ceecb",
+          "data/Trainers.c": "aca644a642546a02c8df1e14248367a93d672aea",
+          "data/itemdata/itemdata.c": "ee644d63541e267a993bba0350eb5dfa4c45527d",
+          "data/learnsets/learnsets.json": "e4979a16491a3288ba49402151116e1cae7df511",
           "data/text/keys.csv": "92e03e07ea62ef9814c6f9f14f753f48f921774c",
           "doc/GymHealing.txt": "5ab2972da01d3de350490c353843a8ab24e08288",
           "doc/Items.txt": "469caae8d2a85557a789b729cf9df3e49bab4d0f",
@@ -72,7 +72,7 @@
       "url": "https://drive.google.com/embeddedfolderview?id=1tBVoMcm-kZdUOWL1yhkxwykvDH5o85C6&hl=en",
       "pattern": "flip-entry-title\">HardloveGold_Demo_([0-9.]+)\\.xdelta",
       "select": "latest",
-      "state": "0.8.4"
+      "state": "0.8.5"
     },
     {
       "name": "Documentation dates (trainer order, splits, locations and AI)",
@@ -109,7 +109,7 @@
         },
         "1QtkxHFLeb1VVde2LEJiibGFRNoeFFcangj_OuX13OUI": {
           "name": "Trainer Battles",
-          "modified": "2026-10-18"
+          "modified": "2026-10-27"
         }
       },
       "baseline_note": "Seeded current Drive dates 2026-10-24; original modified dates were not saved with the 2026-10-18 downloads."
