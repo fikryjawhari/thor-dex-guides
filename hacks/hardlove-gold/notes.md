@@ -116,27 +116,6 @@ Data rules:
   Evolution methods the text can't describe (SPIN_* variants) show as unknown.
 - **Items**: rules in `itemstd.RULES['hardlove-gold']`, the `Other` box mapped in `HG_OTHER` (History → Items standard).
 
-### 0.8.5 data audit (against main `f050aaa`, 2026-10-29)
-
-Every changed data field traces to `ee4518c149..64838bf7db` or the refreshed Trainer Battles sheet. No extractor
-changes were needed. Counts and published identities stay at 986 species, 329 trainer cards, 62 tracker areas,
-382 items and 94 walkthrough stops; `LOC`, `AR`, `ARO`, `IT`, `WK`, `AB`, `TC` and storage keys are unchanged.
-
-- One species learnset changes: Tauros gets Body Slam at 40 instead of Strength, Raging Bull at 48 instead of
-  Thrash, and an extra Close Combat at 55. One move is added (782 -> 783), Raging Bull, Normal / Physical / 90 / 100.
-  Existing move records are unchanged by name. `GID.mv` adds game move 876 and remaps the 15 later guide indexes.
-- Eighteen species' encounter lists change: eight Ice Path species lose ten stale-sheet warnings now that the game
-  matches the already-updated sheet; Safari Mountain adds one Tauros encounter and removes one Furret encounter.
-  Nine other lists only reorder identical encounters because Mountain no longer needs replacement from the game
-  (`locs.verify`). Ice Path's 36 day/time slots and Safari's three Mountain slots changed in source; the guide uses
-  day tables, so the sheet already contained most of the new encounters. Locations.xlsx has no cell/comment changes.
-- Five trainer cards change: Mike's Gouging Fire changes Levitate to Protosynthesis, dropping its obsolete sheet
-  conflict. Four sheet cells add conflicts on unchanged game sets: Ivan's Azumarill (Knock Off), Randall's Bronzong
-  (Reflect), Carol's Hariyama (Flame Orb), Rocket Grunt #34's Dragonite (Multiscale). Conflicting sets: 61 -> 64.
-- Source-only changes: the three Paldean Tauros forms have new learnsets and lose Anger Point, but are absent from
-  this guide's obtainable / trainer species. Kee / Maranga steal/fling effect fields are not item-location data;
-  their calc limitations are recorded below. The remaining data difference is the build date.
-
 ## Local storage (prefix hg)
 
 `hgdex4` list filters, `hgcalc:<id>` + `hgcalc:lastlv` stat calc, `hgtrack` tracker {s starter, e {areaIdx: {p: id} or
@@ -184,7 +163,7 @@ Enabled by the damage calc merged at main `f050aaa`, **not independently verifie
 means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide is 0.8.5 since 2026-10-29 (Build); the
 calc's source traces below were made at the 0.8.3 pin. Save import: below (Save import).
 
-#### 0.8.5 mechanics review (2026-10-29)
+#### Engine changes in 0.8.5 the calc does not model
 
 Reviewed `ee4518c149..64838bf7db` against the existing profile and `tools/calc/README.md` (Not modelled).
 This update changes notes and game data only, not `cfg.calc` or the shared engine. The older source traces below
@@ -367,31 +346,6 @@ is what the game shows if the point goes the other way.
 
 ## Checks
 
-0.8.5 calc validation (2026-10-29): `npm test --prefix tools/calc` fails one Hardlove source/stock fixture:
-`source-reckless-chloroblast` still uses numeric move 772, now Obstruct (Chloroblast moved to 773), so the damage
-result is null. A second fixture silently changes identity: `source-noncontact-behemoth-blade` uses 780, now
-Ceaseless Edge (Behemoth Blade moved to 781). These are not trainer-set expectation changes: left untouched and
-reported, rather than weakening the checks or changing engine code. Hardlove source/stock: 106 pass / 1 fail.
-Diagnostic only: resolving those two slots by their original move names gives results identical to main for both.
-The later npm suites were run separately after its short-circuit: Photonic and Eternal X pass; state fixtures
-pass for all four guides (Hardlove 800, EI 809, Eternal X 373, Photonic 599; zero failures).
-
-Full release checks (2026-10-29): baseline `main f050aaa` passes 2/2; the gate finishes 38/43. Four failures are
-expected comparisons against 0.8.4: changed data / report and both DOM sweeps (2,483 routes each, zero page errors;
-the footer build date changes every route). An unchanged Bulbasaur control route matches after ignoring only
-`built 2026-10-28` / `built 2026-10-29`. Counts, extraction, all five viewer sizes / light theme, tabs, walkthrough
-state, page / walk / zoom checks and 200 search jumps per mode pass. Scenario commands: 23 pass (six not applicable
-and skipped), one fails: `calc-bridge` B1 / B2 in normal and dvkb, 8 pass / 4 fail. Its fixture is fixed at
-2026-10-28 14:32 but its regex expects same-day `saved 14:32`; on 2026-10-29 the correct banner includes `28 Oct`.
-The same four failures reproduce on the baseline HTML; the screenshot confirms the dated banner. No shared test or
-template change was made to hide this pre-existing date-sensitive assertion. Other calc scenarios pass.
-
-The user's real 0.7.0 save still matches all 11 Pokemon (six party, five boxed), reader `gen4`; no expected data was
-changed. Source-update state was accepted with `tools/check_updates.py --accept hardlove-gold` (positional hack and
-`--accept` are mutually exclusive). Evidence is in ignored `.tmp/gate-hl.log`, `.tmp/hl-calc.log`,
-`.tmp/hl-states.log`, `.tmp/hl-save.log` and `.tmp/hl-bridge-baseline.log`. Outstanding before a green validation:
-repair the two numeric matchup slots and the shared bridge scenario's date assumption in separately authorised work.
-
 `check.py` [baseline.json]: reference integrity (species, trainer teams, area rows), the Starter area, Trainers / Walkthrough
 box names and trainer references, unique stop keys, no checklist steps, the Items box set and row sub-headings; given an
 earlier data.json, that species order, move / ability tables, area names, trainer keys and stop keys are kept. Then
@@ -400,7 +354,7 @@ earlier data.json, that species order, move / ability tables, area names, traine
 
 ## History
 
-- **2026-10-29, 0.8.5.** Rebuilt from `64838bf7db` and the 2026-10-28 Drive fetch; Tauros learnset / Raging Bull, Ice Path warning cleanup, Safari Mountain Tauros, Gouging Fire Protosynthesis and four sheet conflicts; mechanics limits reviewed without engine changes.
+- **2026-10-29, 0.8.5.** Pinned `64838bf7db` (beta_hardlove head, 2026-10-26; the patch is dated 2026-10-27). Game changes in the data: Tauros learnset (Body Slam 40, Raging Bull 48, Close Combat 55) and the new move Raging Bull (783 moves; it is inserted at guide index 767, so later move indices moved by one: the calc's source fixtures were remapped by name); Ice Path now matches the game (ten stale-sheet warnings gone), Safari Mountain Tauros instead of Furret; Mike's Gouging Fire Protosynthesis; four new sheet conflicts (61 -> 64). Counts, area, item, trainer and stop keys unchanged. The engine changes (Emergency Exit, Eject Pack, hazards + berries, Pastel Veil, Rage Powder, Pluck) are noted under Damage calc; no profile change.
 
 - **2026-10-26, 0.8.4 and one build.** Pinned 0.8.4 = `ee4518c149` ("add soak tm"; the patch went up 2026-10-24 20:55
   UTC; the next commit, "version", is after it). Game changes in the data: TM47 Soak (was Steel Wing; Ilex Forest; learned by 155

@@ -19,7 +19,7 @@ if (!file) {
 }
 
 const fixture = name => [...readFileSync(join(guide()?.saves || FIXTURES, name))];
-const T0 = new Date(2026, 9, 28, 14, 32).getTime();
+const D0 = new Date(), T0 = new Date(D0.getFullYear(), D0.getMonth(), D0.getDate(), 14, 32).getTime(); // today: the banner shows only the time for a same-day save
 const save = (name, modified = T0) => ({ name, modified, size: fixture(name).length, bytes: fixture(name) });
 
 const FAKE = `(()=>{const fb=window.__fb={linked:null,next:null,err:null,picks:0,calls:[]};
