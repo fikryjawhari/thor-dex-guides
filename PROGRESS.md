@@ -101,8 +101,9 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
      5. Footer credits (item 3 below), hzla's calc among them.
      6. Push the branch and the two checkpoint tags, and delete `worktree-damage-calc-saves` on `origin` (merged, local
         branch gone) (the user: at the end, once calc and saves are closed out).
-     7. The merge into `main`: the user decides it in the session right before it (`plans/calc-open.md` → Merging into
-        main).
+     7. The merge into `main`: **decided 2026-10-28, merge now** (`plans/calc-open.md` → Merging into main). Items 1-4
+        stay open after it (the user: the Thor / viewer test right after the merge, saves reported as they play,
+        mechanics long-term). Handover: review fixes done and pushed (`ed20795`); next session does the merge.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
    calc as a reference once the calc exists. Agreed, not done.

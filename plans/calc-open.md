@@ -22,7 +22,10 @@ Small, take with a nearby job:
 
 ## Merging into main
 
-When the user trusts the mechanics (their call). Opus main chat: merge `main` into the branch, rebuild, audit (Haiku
+**Go (the user, 2026-10-28):** merge now. The app's Thor test, real saves and the mechanics check come after the merge
+and stay open on `main` (PROGRESS.md → Damage calc): the user loads the guides in the offline viewer with the Thor
+plugged in, reports save-reader problems as they play, and does the mechanics check long-term.
+Originally: when the user trusts the mechanics (their call). Opus main chat: merge `main` into the branch, rebuild, audit (Haiku
 medium: `python assemble.py`, `uv run python -I tools/gate.py check <hack>` for every guide, `node tools/domcompare.mjs`
 against main's build with `--routes '#/calc'` and `--kb`, `tools/scenarios/calc-*.mjs`, `node
 tools/calc_save_check.mjs`), every calc guide in the Thor frame on the phone preview, the user approves, merge into
