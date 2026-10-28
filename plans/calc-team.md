@@ -43,12 +43,21 @@ extra info only adds line 3:
 - **Lv:** shown on the team cell; the Lv box is on the card only while Edit is open (it joins line 1 first).
 - **Name:** hidden; shown as line 0 when the selected Pokémon is not in the team row (picked from the box / Find) —
   for the foe the strip always holds it, so the foe card never shows the name.
-  **When line 0 shows** (the user, 2026-10-28, from the Thor preview: the card took four lines and hid the fourth
-  move): M, the ability boxes (Intimidate toggle, Disguise / Ice Face, Broken, Sword / Shield, Download, the
-  monControls) and the Speed number move up to line 0, between the name and its right end, Speed furthest right; the
-  name truncates (ellipsis) as far as needed, even very short. Line 2 keeps only what's left (Aura, the battle-state
-  tag) and goes when empty. Without line 0 the card is as above. Line 0 is not shown while Edit is open (the editor
-  names it). The first-frame budget at 260 × 316 must hold with the name shown (built: the plain card is 2 lines, 44 px).
+  **At most three lines, always** (the user, 2026-10-28; the HP bar under line 1 isn't a line). Built (unit 2):
+  - Name not shown: line 2 = M, ability boxes, Aura, state tag, Speed (right); line 3 = berry (left), T + Toxic box,
+    residual (right).
+  - Name shown (line 0): M, the ability boxes and Speed move up to line 0 (Speed at its right end); the name truncates
+    (ellipsis) as far as needed, even to one letter. There is no line 2: line 0, line 1 (HP), line 3.
+  - Aura and the state tag sit on the top line (line 0 or line 2) while it has room; when it doesn't, they move to line
+    3, centred between the berry chip and T / residual (state first, then Aura, then both). If that is still more than
+    three lines the card goes tight (1 px gaps, slimmer chips, Aura shown as "A", tooltip unchanged). `fitCards()`
+    measures each narrow card after render, on resize and when its size changes (text zoom fires no resize) and keeps
+    the first arrangement that fits.
+  - Line 0 is not shown while Edit is open (the editor names the Pokémon).
+  - Measured at 260 × 316 and 260 × 394, normal and dvkb: the busiest case (name + M + two ability boxes + Aura + state
+    + berry + Toxic + residual) is 3 lines (62 px), fourth move bottom 314 at 316. A plain card with the name is 2 lines
+    (44 px). At text zoom 1.3 the busiest name-line card takes a fourth line (nothing clips, page 260 wide); Aura
+    never shows on my card in practice (it's the foe's totem aura).
 - **Edit open at narrow:** the open card spans both columns (grid rows `cm cm` / `cf cf`): the other card moves under
   it, full width too. The editor itself is unchanged (it already shows the name).
 - Tapping the card still selects the attacker (`data-a="sel"` on `.cc`).

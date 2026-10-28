@@ -622,29 +622,47 @@ body.calc-route .cc .l1 .ddl{line-height:1.6}
  body.calc-route .fbar{min-height:22px}
  body.calc-route .fbar .nav,body.calc-route .fbar .dsrc{height:auto;min-height:22px}
  body.calc-route .cc{display:flex;flex-direction:row;flex-wrap:wrap;align-content:start;align-items:center;gap:0 2px;padding:1px 3px;min-height:0}
- body.calc-route .cc .l1,body.calc-route .cc .cl{display:contents}
+ body.calc-route .cc .l1,body.calc-route .cc .cl,body.calc-route .cc .cl .dend{display:contents}
+ /* At most three lines (the HP bar isn't one), by order: 0-1 the name line (.offteam only: name, M, ability boxes, Speed
+    at the right end), 2-3 HP + ✎, 4 the HP bar, 5-6 line 2 (M, ability boxes, Speed; not with the name line), 7 a
+    break, 8-11 line 3 (berry, Aura / state when moved down, T + Toxic box, residual). Aura and the battle-state tag
+    sit on the top line unless fitCards() moves them down (.adn / .sdn) or tightens the card (.tight). */
  body.calc-route .cc .cn{display:none}
- body.calc-route .cc.offteam .cn{display:block;order:0;flex:0 0 100%;min-width:0;min-height:18px}
+ body.calc-route .cc.offteam .cn{display:block;order:0;flex:1 1 0;min-width:0;min-height:18px;overflow:hidden;text-align:left}
+ body.calc-route .cc.offteam .cn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ body.calc-route .cc.offteam::after{content:'';order:1;flex:0 0 100%;height:0}
+ body.calc-route .cc::before{content:'';order:7;flex:0 0 100%;height:0}
  body.calc-route .cc .cl>span:first-child,body.calc-route .cc [data-lv],body.calc-route .cc .dintmark{display:none}
- body.calc-route .cc .hpl,body.calc-route .cc [data-hp],body.calc-route .cc .mx{order:1}
+ body.calc-route .cc .hpl,body.calc-route .cc [data-hp],body.calc-route .cc .mx{order:2}
+ body.calc-route .cc .stb{order:3;margin-left:auto;font-size:0;width:auto;min-width:20px;height:auto;min-height:18px;padding:0}
+ body.calc-route .cc>.dhpbar{order:4;flex-basis:100%;margin:0}
+ body.calc-route .cc .mg,body.calc-route .cc .dmonstate,body.calc-route .cc .ddl,body.calc-route .cc .aum,body.calc-route .cc .dvol{order:5;flex:none;height:auto;min-height:18px;margin-left:0;box-sizing:border-box}
+ body.calc-route .cc .l1 .sp{order:6;margin-left:auto;font-size:0;min-height:18px;display:flex;align-items:center}
+ body.calc-route .cc.offteam .mg,body.calc-route .cc.offteam .dmonstate,body.calc-route .cc.offteam .ddl,body.calc-route .cc.offteam .aum,body.calc-route .cc.offteam .dvol{order:0}
+ body.calc-route .cc.offteam .l1 .sp{order:1;margin-left:2px}
+ body.calc-route .cc .dend>.dberry{order:8;margin-right:auto}
+ body.calc-route .cc.adn .cl>.aum:not(.dintmark){order:9;margin-left:auto}
+ body.calc-route .cc.adn:not(.sdn) .cl>.aum:not(.dintmark){margin-right:auto}
+ body.calc-route .cc.sdn .cl>.dvol{order:9;margin-right:auto}
+ body.calc-route .cc.sdn:not(.adn) .cl>.dvol{margin-left:auto}
+ body.calc-route .cc.adn .dend>.dberry,body.calc-route .cc.sdn .dend>.dberry{margin-right:0}
+ body.calc-route .cc .dend>.dtoxl,body.calc-route .cc .dend>[data-tox]{order:10}
+ body.calc-route .cc .dend>button:not(.dberry){order:11}
+ body.calc-route .cc:not(.adn):not(.sdn):not(:has(.dberry)) .dend>:first-child{margin-left:auto}
+ body.calc-route .cc.tight{gap:0 1px;padding:1px 2px}
+ body.calc-route .cc.tight .aum:not(.dintmark){font-size:0;padding:1px 3px}
+ body.calc-route .cc.tight .aum:not(.dintmark)::after{content:'A';font-size:9.5px}
+ body.calc-route .cc.tight .dturn{padding:0 2px}
+ body.calc-route .cc.tight .dvol{font-size:8.5px}
+ body.calc-route .cc>.ed{order:12;flex-basis:100%;min-width:0}
  body.calc-route .cc .cl [data-hp]{width:max(26px,2.16em);height:auto;min-height:20px;padding:0 1px;font-size:12px;line-height:1.15}
  body.calc-route .cc .cl .hpl{width:max(15px,1em);min-width:max(15px,1em)}
  body.calc-route .cc .mx{font-size:10px}
- body.calc-route .cc .stb{order:2;margin-left:auto;font-size:0;width:auto;min-width:20px;height:auto;min-height:18px;padding:0}
  body.calc-route .cc .stb::after{content:'✎';font-size:11px}
- body.calc-route .cc>.dhpbar{order:3;flex-basis:100%;margin:0}
- body.calc-route .cc .mg,body.calc-route .cc .dmonstate,body.calc-route .cc .ddl,body.calc-route .cc .aum,body.calc-route .cc .dvol{order:4;height:auto;min-height:18px;margin-left:0;box-sizing:border-box}
- body.calc-route .cc .l1 .sp{order:5;margin-left:auto;font-size:0;min-height:18px;display:flex;align-items:center}
  body.calc-route .cc .l1 .sp i{font-size:12px}
- body.calc-route .cc .cl .dend{order:6;flex-basis:100%;display:flex;justify-content:flex-end;align-items:center;gap:2px;flex-wrap:wrap}
- body.calc-route .cc .dend:empty{display:none}
- body.calc-route .cc .dend>.dberry{order:0;margin-right:auto}
- body.calc-route .cc .dend>.dtoxl,body.calc-route .cc .dend>[data-tox]{order:1}
- body.calc-route .cc .dend>button:not(.dberry){order:2}
  body.calc-route .cc .dend>[data-tox]{width:max(17px,1.55em);height:auto;min-height:18px;font-size:11px;padding:0}
  body.calc-route .cc .dend>.dtoxl{margin:0 -1px 0 0;padding:0;font-size:10px;position:static}
- body.calc-route .cc>.ed{order:9;flex-basis:100%;min-width:0}
- body.calc-route .cc:has(.ed) .cl>span:first-child,body.calc-route .cc:has(.ed) [data-lv]{display:inline-flex;order:1;align-items:center}
+ body.calc-route .cc:has(.ed) .cl>span:first-child,body.calc-route .cc:has(.ed) [data-lv]{display:inline-flex;order:2;align-items:center}
  body.calc-route .cc:has(.ed) [data-lv]{width:30px;height:20px;min-height:20px;font-size:12px;margin-right:4px}
 }
 /* My team row (calc-team): in-team dot on box cells, drag and drop, HP bar and fainted grey on every team cell. */
@@ -665,13 +683,3 @@ body.calc-route .thp i{display:block;height:100%;background:#71d99a}
 body.calc-route .thp i.y,body.calc-route .dhpbar i.y{background:#e8c547}
 body.calc-route .thp i.r,body.calc-route .dhpbar i.r{background:#ff6b6b}
 body.calc-route .ko>.spr{filter:grayscale(1)}
-/* The narrow nameless card's name line (the selected Pokémon isn't in the team row; not while Edit is open: the editor
-   names it): M, the ability boxes and Speed move up to it, the name truncates as far as needed; line 2 keeps only Aura /
-   the battle-state tag. */
-@media(max-width:479.98px){
- body.calc-route .cc.offteam .cn{flex:1 1 0;min-width:0;overflow:hidden;text-align:left}
- body.calc-route .cc.offteam .cn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
- body.calc-route .cc.offteam .l1 .sp{order:0;margin-left:4px}
- body.calc-route .cc.offteam .mg,body.calc-route .cc.offteam .dmonstate,body.calc-route .cc.offteam .ddl{order:0;flex:none}
- body.calc-route .cc.offteam::after{content:'';order:0;flex:0 0 100%;height:0}
-}
