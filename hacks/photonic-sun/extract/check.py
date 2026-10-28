@@ -23,7 +23,19 @@ def stops(data):
             for stop_index, stop in enumerate(split['st'])}
 
 
+def check_gid(data):
+    gid = data['GID']
+    assert set(gid['sp'].values()) == {pokemon['id'] for pokemon in data['P']}, 'P ids without a game species/form'
+    assert all(':' in key and gid['gr'][key] in range(6) for key in gid['sp']), 'forms without a growth rate'
+    assert {index for index in gid['mv'] if index is not None} == set(range(len(data['M']))), 'moves without a game id'
+    assert {index for index in gid['ab'] if index is not None} == set(range(len(data['AB']))), 'abilities without a game id'
+    assert gid['sp']['26:1'] == 'raichu-alola' and gid['sp']['479:1'] == 'heat-rotom', 'form keys lost'
+    assert gid['it'][660] == 'Charizardite X', 'held item ids lost'
+    print(f'PASS: GID maps all {len(data["P"])} species, {len(data["M"])} moves, {len(data["AB"])} abilities')
+
+
 def check_current(new):
+    check_gid(new)
     new_pokemon = {pokemon['id']: pokemon for pokemon in new['P']}
     assert len(new_pokemon) == len(new['P'])
     for pokemon in new['P']:

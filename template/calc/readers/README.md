@@ -26,6 +26,10 @@ natures 0..24. Slots span boxes 1/2 and the last box's last slot; the other slot
 Flamethrower, Protect and Toxic. In calc order HP/Atk/Def/SpA/SpD/Spe, IVs are [31,index%32,17,23,9,3],
 EVs [4,100,12,152,8,200]. Use PKHeX's CurrentLevel, RefreshAbility, ResetPartyStats and RefreshChecksum.
 
+For boxed specimens use Bulbasaur, Caterpie, Illumise, Finneon, Magikarp and Pikachu instead: they cover all six
+**hacked** growth rates (Clefairy, Drifloon and Nincada have changed rates). Preserve PKHeX's EXP, then calculate
+the expected boxed level with PKHeX Experience.GetLevel(EXP, hacked growth rate from dex-rebalanced.json).
+Party expectations use Stat_Level. Thus the expected files describe this guide's terms, not vanilla levels.
 Export `<name>.expected.json` from those input objects, not the reader or imported page. Resolve numeric move,
 ability and item names from Photonic Sun's `.src/dex-rebalanced.json`; spell the selected form names as the guide
 does. Include every field checked by calc_save_check and every empty box. USUM files are
