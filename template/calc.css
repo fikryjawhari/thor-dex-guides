@@ -562,6 +562,9 @@ body.calc-route .dfight .dfreset{height:max(22px,1.29em)}
 body.calc-route .cc .dend>.dturn,body.calc-route .cc .dend>[data-tox]{box-sizing:border-box;height:auto;min-height:18px;padding:0 3px;line-height:1.4545;font-size:11px;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center}
 body.calc-route .cc .dend>[data-tox]{width:18px;padding:0;text-align:center}
 body.calc-route .cc .dend>.dtoxl{display:inline-flex;align-items:center;min-height:18px;line-height:1}
+body.calc-route .cc .l1 .mg,body.calc-route .cc .l1 .dmonstate,body.calc-route .cc .l1 .ddl{height:auto;min-height:18px}
+body.calc-route .cc .l1 .mg{width:max(20px,1.8em)}
+body.calc-route .cc .l1 .ddl{line-height:1.6}
 @media(min-width:480px){
  body.calc-route .fit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"ban ban" "box tside" "fight tside" "cm cf" "mv mf";grid-template-rows:auto minmax(156px,1fr) auto auto auto;gap:3px;height:auto;min-height:calc(100vh - 8px)}
  body.calc-route .fit:not(:has(.ban)){grid-template-areas:"box tside" "fight tside" "cm cf" "mv mf";grid-template-rows:minmax(156px,1fr) auto auto auto}
@@ -582,7 +585,7 @@ body.calc-route .cc .dend>.dtoxl{display:inline-flex;align-items:center;min-heig
  body.calc-route .ft .l1t{font-size:11.5px;line-height:1.1}
  body.calc-route .ft .l2t{font-size:9.5px;line-height:1.1}
  body.calc-route .fbar{min-height:24px}
- body.calc-route .fbar .nav,body.calc-route .fbar .dsrc{height:24px;min-height:24px}
+ body.calc-route .fbar .nav,body.calc-route .fbar .dsrc{height:auto;min-height:24px}
  body.calc-route .dfight{grid-area:fight;align-self:end;min-height:0}
  body.calc-route .dmatch>.cc:first-child{grid-area:cm}
  body.calc-route .dmatch>.cc:nth-child(2){grid-area:cf}
@@ -615,7 +618,7 @@ body.calc-route .cc .dend>.dtoxl{display:inline-flex;align-items:center;min-heig
  body.calc-route .dmatch>.dres{grid-area:mv;gap:2px}
  body.calc-route .dmatch>.dres.na{display:none}
  body.calc-route .fbar{min-height:22px}
- body.calc-route .fbar .nav,body.calc-route .fbar .dsrc{height:22px;min-height:22px}
+ body.calc-route .fbar .nav,body.calc-route .fbar .dsrc{height:auto;min-height:22px}
  body.calc-route .cc{display:flex;flex-direction:row;flex-wrap:wrap;align-content:start;align-items:center;gap:0 2px;padding:1px 3px;min-height:0}
  body.calc-route .cc .l1,body.calc-route .cc .cl{display:contents}
  body.calc-route .cc .cn{display:none}
@@ -629,7 +632,7 @@ body.calc-route .cc .dend>.dtoxl{display:inline-flex;align-items:center;min-heig
  body.calc-route .cc .stb{order:2;margin-left:auto;font-size:0;width:auto;min-width:20px;height:auto;min-height:18px;padding:0}
  body.calc-route .cc .stb::after{content:'✎';font-size:11px}
  body.calc-route .cc>.dhpbar{order:3;flex-basis:100%;margin:0}
- body.calc-route .cc .mg,body.calc-route .cc .dmonstate,body.calc-route .cc .ddl,body.calc-route .cc .aum,body.calc-route .cc .dvol{order:4;height:18px;min-height:18px}
+ body.calc-route .cc .mg,body.calc-route .cc .dmonstate,body.calc-route .cc .ddl,body.calc-route .cc .aum,body.calc-route .cc .dvol{order:4;height:auto;min-height:18px;margin-left:0;box-sizing:border-box}
  body.calc-route .cc .l1 .sp{order:5;margin-left:auto;font-size:0;min-height:18px;display:flex;align-items:center}
  body.calc-route .cc .l1 .sp i{font-size:12px}
  body.calc-route .cc .cl .dend{order:6;flex-basis:100%;display:flex;justify-content:flex-end;align-items:center;gap:2px;flex-wrap:wrap}

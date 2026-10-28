@@ -20,7 +20,7 @@ const checks = [
     run: async page => {
       await setupCalc(page, { mine: ['party', 0] });
       assert.equal((await calcState(page)).dir, 'out', 'Mine attacks to start');
-      await page.tap('.dmatch .cc[data-s="foe"] .cl > span');
+      await page.tap('.dmatch .cc[data-s="foe"] .sp');
       assert.equal(await attackerSide(page), 'foe', 'the foe card is the attacker after a tap on its label');
       assert.equal((await calcState(page)).dir, 'in');
       assert(await page.count('.dres:not(.na) .mr:not(.em)') > 0, "the foe's moves are listed");
