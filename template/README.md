@@ -46,7 +46,7 @@ an unknown key.
   an update that inserts one (Hardlove 0.8.5 inserted Raging Bull at move 767) keeps them: the calc's sets (custom,
   imported, edits, saved, a Mega's form; a set's species as `sn` beside its `id`) and the Pokémon list's filters.
   `nameOf` / `idxOf` (dex.js) map them; a repeated name (Hardlove's duplicate ability slots, Photonic Sun's Z-moves,
-  EI's As One) carries its occurrence (`Swarm#2`). In memory they stay this build's indices. On load a gone move
+  EI's two As One, Glastrier's and Spectrier's) carries its occurrence (`Swarm#2`). In memory they stay this build's indices. On load a gone move
   empties its slot, a gone ability falls back to the species' first, a gone species drops the set (an edit: the species
   edit), a gone filter drops; numbers (state saved before names, `a: -1` = no ability) load as indices.
   Scenario: `calc-persist.mjs` → 26c.

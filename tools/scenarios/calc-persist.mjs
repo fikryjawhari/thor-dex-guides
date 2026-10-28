@@ -106,7 +106,7 @@ const frameCheck = {
 // Stored sets and the Pokémon list's filters name species, abilities and moves (template/README.md → Damage
 // calculator), so a guide update that inserts one keeps them. The update is simulated from the storage side: names
 // written by hand resolve to this build's indices, gone ones fall back, older index storage loads as before. A
-// repeated name (Hardlove's ability slots, Photonic Sun's Z-moves, EI's As One) is stored with its occurrence.
+// repeated name (Hardlove's ability slots, Photonic Sun's Z-moves, EI's Glastrier / Spectrier As One) is stored with its occurrence.
 const namesCheck = {
   id: '26c names',
   title: 'stored sets name species, ability and moves; on load names map back, gone ones fall back, index storage still loads',
