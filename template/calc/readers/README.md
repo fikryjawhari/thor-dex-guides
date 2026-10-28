@@ -39,6 +39,73 @@ evidence that Photonic Sun's mechanics match vanilla. All four reopen with valid
 | `test.js` | synthetic JSON | the calc checks' fixtures | `tools/scenarios/calc-import.mjs` |
 | `expansion.js` | pokeemerald-expansion (GBA) | Emerald Imperium | hzla's EI 1.3 save (33 Pokémon) and the edge files: EI notes.md → Damage calc → Save import |
 
+## gen67: decrypted 3DS main saves
+
+Format references read on 2026-10-28: PKHeX commit `8e3eb3d47bb496746c3eaa9d160329d295a5e2e5`,
+`PKHeX.Core/PKM/{PK6,PK7}.cs`, `PKM/Util/PokeCrypto.cs`, `Saves/{SAV6,SAV7,SAV6XY,SAV6AO,SAV7SM,SAV7USUM,SAV_BEEF}.cs`,
+`Saves/Access/SaveBlockAccessor{6XY,6AO,7SM,7USUM}.cs`, `Saves/Blocks/BlockInfo3DS.cs`, `Saves/Util/{SaveUtil,Checksums}.cs`,
+`Saves/Substructures/Gen{6,7}/MyStatus{6,7}.cs`, `Saves/Encryption/MemeCrypto/MemeCrypto.cs` and `Game/Enums/GameVersion.cs`.
+These are read-only format references, not implementation sources.
+Background: [Project Pokémon: XY save structure](https://projectpokemon.org/home/docs/gen-6/xy-save-structure-r82/)
+describes the cartridge container, **not** the decrypted `main` accepted here. Bulbapedia's
+[Generation VI Pokémon structure](https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_structure_(Generation_VI))
+is an additional reference link; its anti-bot page prevented verification in this session, so the offsets below
+were verified against PKHeX and its generated saves instead.
+
+**File.** Decrypted main files contain one active save, not the cartridge's encrypted dual-save container.
+All multibyte integers below are little endian. There is no newest-slot choice in main.
+
+| Layout | Bytes | Party | Box storage | Boxes | Status | Block count | Game byte at Status+4 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| XY | 0x65600 | 0x14200 | 0x22600 | 31 | 0x14000 | 55 | 24 / 25 |
+| ORAS | 0x76000 | 0x14200 | 0x33000 | 31 | 0x14000 | 58 | 26 / 27 |
+| SM | 0x6BE00 | 0x1400 | 0x4E00 | 32 | 0x1200 | 37 | 30 / 31 |
+| USUM | 0x6CC00 | 0x1600 | 0x5200 | 32 | 0x1400 | 39 | 32 / 33 |
+
+Party: six 260-byte records followed by one byte count (0..6), in a 0x61C-byte block. Boxes: 30 records of
+232 bytes each, consecutively, with no per-box padding. XY / ORAS party block id is 18, boxes 53 / 56, status 17;
+SM / USUM party id is 4, boxes 14, status 3. These numbers come from the save block definitions, not the ROM.
+
+**Footer/checksums.** The last 0x200 bytes start with two u64 secure timestamps, then u32 `0x42454546` at +0x10
+(bytes 46 45 45 42, conventionally called BEEF). At +0x14 are block entries: u32 length, u16 id, u16 checksum.
+Blocks start at zero, with each subsequent offset rounded up to 0x200 after the previous block's length. The
+metadata describes lengths, not data offsets. Gen 6 uses CRC-16/CCITT polynomial 0x1021, initial 0xFFFF, no final
+XOR, MSB first. Gen 7 uses reflected CRC-16 polynomial 0xA001, initial 0xFFFF, final XOR 0xFFFF. In Gen 7 block 36,
+the 0x80-byte RSA signature at block+0x100 is treated as zero when verifying the CRC: signing happens after CRCs
+are written. The reader verifies these CRCs (including that zeroed region), not the RSA signature or secure values.
+
+**PK6/PK7 (232 stored, 260 party).** Unencrypted header: u32 encryption constant at 0, u16 sanity at 4 (zero),
+u16 checksum at 6. The 224-byte payload is four 56-byte blocks, A/B/C/D. Decrypt consecutive u16 words by
+advancing `seed = (seed * 0x41C64E6D + 0x6073) mod 2^32`, then XORing the word with seed's high 16 bits;
+seed starts at the encryption constant, **not** the checksum. Party bytes 232..259 use the same cipher with the
+seed restarted at the encryption constant. Shuffle selector is `(constant >>> 13) & 31`; 24..31 repeat 0..7.
+Canonical A/B/C/D take their encrypted-block positions from these selectors, in order:
+`0123 0132 0213 0312 0231 0321 1023 1032 2013 3012 2031 3021 1203 1302 2103 3102 2301 3201 1230 1320 2130 3120 2310 3210`.
+Checksum is the sum of the 112 decrypted payload u16 words modulo 65536; shuffle does not change the sum.
+
+| Canonical record offset (header included) | Field |
+| --- | --- |
+| 0x08 / 0x0A | u16 national species / u16 held item |
+| 0x10 / 0x14 / 0x15 | u32 experience / u8 ability id / low three bits ability number (1,2,4; 4 = hidden slot) |
+| 0x18 / 0x1C / 0x1D | u32 personality / u8 nature 0..24 / form in bits 3..7 (gender bits 1..2) |
+| 0x1E..0x23 | six u8 EVs, HP/Atk/Def/Speed/SpAtk/SpDef |
+| 0x5A..0x61 | four u16 move ids |
+| 0x74 | u32 six 5-bit IVs in that same game order, bit 30 egg, bit 31 nickname |
+| 0xDE (PK7 only) | hyper-training flags in HP/Atk/Def/SpAtk/SpDef/Speed order; effective IV is 31 when set |
+| 0xEC (party only, separately decrypted) | u8 current level |
+
+Box level is derived from experience and the hack's game-data growth rate (`GID.gr`, keyed like species).
+The game-data growth order is Medium Fast, Erratic, Fluctuating, Medium Slow, Fast, Slow, as in expansion's notes.
+Return `sp` as `species:form` (including form zero), and `ab` as the explicit ability id, not an inferred vanilla
+ability. The hidden slot is documented but does not override that id. Eggs and genuinely blank records are omitted;
+a nonblank record with bad sanity/checksum is unreadable, not silently dropped. Hyper training affects returned
+IVs in Gen 7 only. Gen 6 byte 0xDE is not a hyper-training flag.
+
+The family recognises all four layouts, but a Gen 7 guide accepts only USUM and a Gen 6 guide only XY; thus SM and
+ORAS are wrong-game controls, not imports into Photonic Sun / Eternal X. PNG, gzip, RASTATE and Citra CST emulator
+state headers give `state`. A damaged known-size save or recognisable truncated main gives `unreadable`;
+unrecognised sizes/containers give `wrong`. Valid files with no non-egg party give `empty`.
+
 ## expansion: pokeemerald-expansion
 
 Reference: the hack's own expansion source (Emerald Imperium: iriv24/pokeemerald-expansion `2576d0f`, `include/save.h`,
