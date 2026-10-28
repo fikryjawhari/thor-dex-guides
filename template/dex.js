@@ -207,7 +207,12 @@ function detail(id){const p=byId[id];if(!p){app.innerHTML='<p>Not found.</p>';re
  <div class="card"><h3>Moves</h3><div class="sub">${Object.entries(mv).map(([k,v])=>`<button data-k="${k}" class="${k===moveTab?'on':''}">${v[0]} (${v[1]})</button>`).join('')}</div><div id="mvb" style="overflow-x:auto">${mv[moveTab][2]()}</div></div>`;
  app.querySelectorAll('.sub button').forEach(b=>b.onclick=()=>{moveTab=b.dataset.k;app.querySelectorAll('.sub button').forEach(x=>x.classList.toggle('on',x===b));app.querySelector('#mvb').innerHTML=mv[moveTab][2]();});
  bindCalc(p);window.scrollTo(0,0);}
-function calcState(p){let s=null;try{s=JSON.parse(localStorage.getItem(LS.calc+':'+p.id)||'null')}catch(e){}if(!s){let l=50;try{l=+(localStorage.getItem(LS.calc+':lastlv')||50)}catch(e){}s={l,n:'Hardy',iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0]};}return s;}
+// Stat calculator state, one key per species by name (LS.calc + ':' + nameOf(P, i)); one stored by species id (before
+// names: in Emerald Imperium the id is the game's species number) moves to its name once, at load.
+const calcKey=p=>LS.calc+':'+nameOf(P,p.i);
+try{const pre=LS.calc+':',ks=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith(pre))ks.push(k);}
+ for(const k of ks){const v=k.slice(pre.length),p=byId[v];if(!p||nameKeys(P).index.has(v))continue;const nk=calcKey(p);if(localStorage.getItem(nk)==null)localStorage.setItem(nk,localStorage.getItem(k));localStorage.removeItem(k);}}catch(e){}
+function calcState(p){let s=null;try{s=JSON.parse(localStorage.getItem(calcKey(p))||'null')}catch(e){}if(!s){let l=50;try{l=+(localStorage.getItem(LS.calc+':lastlv')||50)}catch(e){}s={l,n:'Hardy',iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0]};}return s;}
 function calcCard(p){const s=calcState(p);return `<div class="card calc"><h3>Stat calculator</h3>
  <div class="bar" style="margin:0 0 8px"><span class="mut small">Level ${numBox('id="c-l"',s.l,{min:1,max:100,steppers:true,label:'Level'})}</span><select id="c-n">${NATS.map(n=>`<option value="${n}" ${n===s.n?'selected':''}>${natLabel(n)}</option>`).join('')}</select></div>
  <div style="overflow-x:auto"><table><tr><th></th>${SN.map(n=>`<th>${n}</th>`).join('')}</tr>
@@ -220,7 +225,7 @@ function bindCalc(p){const g=id=>app.querySelector(id);if(!g('#c-l'))return;
  const upd=()=>{const s={l:Math.max(1,Math.min(100,parseInt(g('#c-l').value)||1)),n:g('#c-n').value,iv:[...app.querySelectorAll('[data-iv]')].map(e=>Math.max(0,Math.min(31,parseInt(e.value)||0))),ev:EVS?[...app.querySelectorAll('[data-ev]')].map(e=>Math.max(0,Math.min(252,parseInt(e.value)||0))):[0,0,0,0,0,0]};
   SN.forEach((n,i)=>{g('#c-r'+i).textContent=stat(p.s[i],i,s.iv[i],s.ev[i],s.l,s.n);});
   const lv=[];for(let L=Math.max(1,s.l-2);L<=Math.min(100,s.l+6);L++)lv.push(`<span class="${L===s.l?'cur':''}">Lv ${L}: <b>${stat(p.s[5],5,s.iv[5],s.ev[5],L,s.n)}</b></span>`);g('#c-lv').innerHTML=lv.join('');
-  try{localStorage.setItem(LS.calc+':'+p.id,JSON.stringify(s));localStorage.setItem(LS.calc+':lastlv',s.l);}catch(e){}};
+  try{localStorage.setItem(calcKey(p),JSON.stringify(s));localStorage.setItem(LS.calc+':lastlv',s.l);}catch(e){}};
  app.querySelectorAll('.calc input,.calc select,.calc .nv').forEach(e=>e.addEventListener('input',upd));upd();}
 // ===== MOVE PAGE
 function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const r=(learn[i]||[]);const tms=(D.IT||[]).filter(s=>s.k==='tm').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>[s.n==='Move Tutors'?'Tutor':x[0].split(' ')[0],x[1]]));
@@ -256,8 +261,15 @@ const FAM={};(()=>{const par={};const f=x=>{while(par[x]!==x){par[x]=par[par[x]]
  P.forEach(p=>[...p.ef,...p.et].forEach(([x,id])=>{if(id&&par[id]!==undefined){const a=f(p.id),b=f(id);if(a!==b)par[a]=b;}}));
  P.forEach(p=>{if((p.g===1||p.fc)&&p.dex){const b=P.find(x=>x.dex===p.dex&&x.g!==1&&!x.fc);if(b){const a=f(p.id),c=f(b.id);if(a!==c)par[a]=c;}}});
  P.forEach(p=>FAM[p.id]=f(p.id));})();
-const TK={s:'',pl:'',e:{},t:{}};try{Object.assign(TK,JSON.parse(localStorage.getItem(LS.track)||'{}'));}catch(e){}
-const tkSave=()=>{try{localStorage.setItem(LS.track,JSON.stringify(TK))}catch(e){}};
+// Tracked and traded species are stored by name (spOut), and read back by name or, saved before names, by id (spIn;
+// a species no longer in the guide drops). The backup code is the stored form.
+const spOut=id=>byId[id]?nameOf(P,byId[id].i):id;
+const spIn=v=>{const i=typeof v==='string'?nameKeys(P).index.get(v):undefined;return i!=null?P[i].id:byId[v]?v:undefined;};
+const tkIn=o=>{const e={},t={};for(const [a,x] of Object.entries(o.e||{})){if(x&&x.p!=null){const p=spIn(x.p);if(p!=null)e[a]={...x,p};}else if(x)e[a]=x;}
+ for(const [k,v] of Object.entries(o.t||{})){const p=spIn(v);if(p!=null)t[k]=p;}return {e,t};};
+const tkOut=()=>JSON.stringify({...TK,e:Object.fromEntries(Object.entries(TK.e).map(([a,x])=>[a,x&&x.p!=null?{...x,p:spOut(x.p)}:x])),t:Object.fromEntries(Object.entries(TK.t||{}).map(([k,v])=>[k,spOut(v)]))});
+const TK={s:'',pl:'',e:{},t:{}};try{Object.assign(TK,JSON.parse(localStorage.getItem(LS.track)||'{}'));}catch(e){}Object.assign(TK,tkIn(TK));
+const tkSave=()=>{try{localStorage.setItem(LS.track,tkOut())}catch(e){}};
 const caughtFams=(skip)=>{const s=new Set();for(const v of Object.values(TK.t||{})){if(v)s.add(FAM[v]||v);}for(const [a,e] of Object.entries(TK.e)){if(e&&e.p&&+a!==skip)s.add(FAM[e.p]||e.p);}return s;};
 const areaSpecies=a=>{const seen=new Set(),out=[];(AR[a]?.l||[]).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]==='Trade')return;if(!seen.has(p.id)){seen.add(p.id);out.push(p);}}));return out;};
 // Areas split into tracker slots (AR[i].sub, e.g. one per egg; each slot has .in = the area): ARS(a) = the slots, or
@@ -297,8 +309,8 @@ function bindTrackers(){app.querySelectorAll('.trk').forEach(el=>{if(el.dataset.
   if(v==='')delete TK.e[a];else if(v==='__fail')TK.e[a]={f:1};else TK.e[a]={p:v};tkSave();rerender();};
  const x=el.querySelector('.tk-x');if(x)x.onclick=()=>{delete TK.e[a];tkSave();rerender();};});
  app.querySelectorAll('.tk-reset').forEach(b=>{if(b.dataset.b)return;b.dataset.b=1;b.onclick=()=>{if(confirm(PICK?'Clear every tracked encounter, trade and the starter choice?':'Clear every tracked encounter?')){TK.e={};TK.t={};TK.s='';TK.pl='';tkSave();rerender();}};});
- app.querySelectorAll('.tk-export').forEach(b=>b.onclick=()=>{prompt('Copy this backup code:',JSON.stringify(TK));});
- app.querySelectorAll('.tk-import').forEach(b=>b.onclick=()=>{const t=prompt('Paste a backup code:');if(!t)return;try{const o=JSON.parse(t);TK.s=o.s||'';TK.e=o.e||{};TK.t=o.t||{};tkSave();rerender();}catch(e){alert('That code could not be read.');}});
+ app.querySelectorAll('.tk-export').forEach(b=>b.onclick=()=>{prompt('Copy this backup code:',tkOut());});
+ app.querySelectorAll('.tk-import').forEach(b=>b.onclick=()=>{const t=prompt('Paste a backup code:');if(!t)return;try{const o=JSON.parse(t);TK.s=o.s||'';Object.assign(TK,tkIn(o));tkSave();rerender();}catch(e){alert('That code could not be read.');}});
  app.querySelectorAll('.tk-trade').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.t=TK.t||{};if(s.value)TK.t[s.dataset.k]=s.value;else delete TK.t[s.dataset.k];tkSave();rerender();};});
  app.querySelectorAll('.tk-starter,.st-pick').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.s=s.value;const sa=STARTER_AREA,sp=P.find(x=>x.name===s.value);if(sa>=0){if(sp)TK.e[sa]={p:sp.id};else delete TK.e[sa];}tkSave();rerender();};});
  app.querySelectorAll('.tk-player').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.pl=s.value;tkSave();rerender();};});}
@@ -339,10 +351,23 @@ function encSummary(a){const e=TK.e[a];if(!e)return '';if(e.f)return '<span clas
 // B1F...) → places (an area's own places, same names merged; one place = the area's own name) → methods. One area: its
 // tracker sits above its places; a box of several areas: each place is one area and carries its tracker. An area with
 // several places of its own never joins a box. State in LS.loc {o:{<first area>:1 open}, x:{<area>.<place>:0 closed},
-// s:{<area>.<place>.<method>:0 closed}}: boxes start closed, places and methods open. Layout: template/README.md.
+// s:{<area>.<place>.<method>:0 closed}, layout (relayout)}: boxes start closed, places and methods open. Layout: template/README.md.
+// Open state saved by position (a box's index, "box.place", either with a ".rest") keeps the names it was saved under
+// (S.layout, as the walkthrough's WO.layout): when an update adds, drops or moves boxes or places, relayout moves each
+// key to the position that now has its name (a repeated name counts its occurrence) and drops one whose name is gone.
+// lay: [[box name, [place names]]] in this build's order; kinds: {state map: 1 keyed by box, 2 by box.place}. Returns
+// true when the stored state needs saving (moved, or saved before layouts); the layout goes with the next save anyway.
+function relayout(S,lay,kinds){if(JSON.stringify(S.layout)===JSON.stringify(lay))return false;const had=Array.isArray(S.layout)||Object.keys(kinds).some(k=>Object.keys(S[k]||{}).length);
+ const occ=list=>{const seen={};return list.map(n=>{const k=seen[n]=(seen[n]||0)+1;return k>1?n+'#'+k:n;});};
+ if(Array.isArray(S.layout)){const old=S.layout,ob=occ(old.map(x=>x[0])),nb=new Map(occ(lay.map(x=>x[0])).map((n,i)=>[n,i]));
+  const box=i=>nb.get(ob[i]),place=(i,j)=>{const b=box(i),n=b!=null&&occ(old[i][1]||[])[j];const nj=n!=null&&n!==false?occ(lay[b][1]).indexOf(n):-1;return nj<0?undefined:b+'.'+nj;};
+  for(const [kind,depth] of Object.entries(kinds)){const out={};for(const [k,v] of Object.entries(S[kind]||{})){const m=depth===1?k.match(/^(\d+)(.*)$/s):k.match(/^(\d+)\.(\d+)(.*)$/s);
+   if(!m){out[k]=v;continue;}const to=depth===1?box(+m[1]):place(+m[1],+m[2]);if(to!=null)out[to+(depth===1?m[2]:m[3])]=v;}S[kind]=out;}}
+ S.layout=lay;return had;}
 const LO=(()=>{try{return Object.assign({o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.loc)||'{}'))}catch(e){return {o:{},x:{},s:{}}}})();
 const loSave=()=>{try{localStorage.setItem(LS.loc,JSON.stringify(LO))}catch(e){}};
 const places=a=>{const m=new Map();AR[a].l.forEach(li=>{const n=LOC[li];if(!m.has(n))m.set(n,[]);m.get(n).push(li);});return [...m].map(([n,ls],j)=>({n,ls,j}));};
+relayout(LO,AR.map((A,a)=>[String(a),places(a).map(p=>p.n)]),{x:2,s:2})&&loSave();
 const LGRP=(()=>{const out=[],two=n=>n.split(' ').length>2?n.split(' ').slice(0,2).join(' '):null;
  ARO.forEach(i=>{const A=AR[i];if(A.in!=null)return;const k=two(A.n),one=places(i).length===1,p=out[out.length-1];
   if(k&&one&&p&&p.one&&p.k===k)p.a.push(i);else out.push({k,one,a:[i]});});
@@ -423,8 +448,9 @@ function listItems(){fil.innerHTML='';const s=st.q;const IT=D.IT||[];
  app.querySelectorAll('details.split[open]').forEach(d=>TOG.items(d));bars();}
 // Inside a box: its name again as a sticky heading, then the rows, under yellow sub-headings where the data gives them
 // (r[4]: EI shops, Hardlove's held item kinds; two or more get an Expand / Collapse all bar). State in LS.items {o:{<box>:1 open}, x:{<box>:0 closed heading},
-// s:{<box>.<sub>:0 closed}}: boxes start closed, the rest open. Filled when first opened.
+// s:{<box>.<sub>:0 closed}, layout (relayout)}: boxes start closed, the rest open. Filled when first opened.
 const IO=(()=>{try{return Object.assign({o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.items)||'{}'))}catch(e){return {o:{},x:{},s:{}}}})();
+if(relayout(IO,(D.IT||[]).map(sec=>[sec.n,[]]),{o:1,x:1,s:1}))try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
 function itemBox(si){const sec=D.IT[si],tbl=rs=>`<table class="itbl ix">${rs.map(r=>itemRow(sec,r)).join('')}</table>`,subs=[];
  sec.r.forEach(r=>{const g=r[4]||'';if(!subs.length||subs[subs.length-1][0]!==g)subs.push([g,[]]);subs[subs.length-1][1].push(r);});
  // No stop header: the box's sub-headings (every row has one) pin straight under the search bar.
@@ -510,6 +536,25 @@ const segBar=(cls,a='Expand all',c='Collapse all')=>`<div class="seg ${cls}"><bu
 // (stop.note), game docs (WK.docs, WK.ko), items with no place (WK.np).
 const WO=(()=>{try{return Object.assign({c:{},o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.walk)||'{}'))}catch(e){return {c:{},o:{},x:{},s:{}}}})();
 const woSave=()=>{try{localStorage.setItem(LS.walk,JSON.stringify(WO))}catch(e){}};
+// Search recents (LS.recent) are stored by identity (recOut): a species, move, ability or place by name, a walkthrough
+// stop by its key (w), an item by its box and row names; recIn reads them back as this build's positions (an index or
+// id saved before names passes through, a gone one drops). A stop saved by position (before keys) takes the key it had
+// in the layout it was saved under, before migrateWalkState replaces that layout (no layout: the stop whose key root,
+// its legacy position, is that position).
+const STOPK=new Map();D.WK.splits.forEach((sp,si)=>sp.st.forEach((x,ti)=>{if(x.k!=null&&!STOPK.has(String(x.k)))STOPK.set(String(x.k),[si,ti]);}));
+const recOut=o=>o.k==='p'?{k:'p',v:spOut(o.v)}:o.k==='f'?{k:'f',v:fname(o.v)}:o.k==='w'?{k:'w',w:String(D.WK.splits[o.si].st[o.ti].k??o.si+'.'+o.ti)}:
+ o.k==='i'?{k:'i',si:nameOf(D.IT,o.si),ri:nameOf(D.IT[o.si].r,o.ri)}:o;
+const recIn=o=>{if(!o||typeof o!=='object')return null;
+ if(o.k==='p'){const v=spIn(o.v);return v==null?null:{k:'p',v};}
+ if(o.k==='f'){const f=o.v;if(!f||typeof f!=='object')return null;if(!FLIST[f.k])return o;const v=idxOf(FLIST[f.k],f.v);return v==null||FLIST[f.k][v]==null?null:{k:'f',v:{...f,v}};}
+ if(o.k==='w'){const at=o.w!=null?STOPK.get(String(o.w)):D.WK.splits[o.si]?.st[o.ti]?[o.si,o.ti]:null;return at?{k:'w',si:at[0],ti:at[1]}:null;}
+ if(o.k==='i'){const si=idxOf(D.IT||[],o.si),sec=(D.IT||[])[si],ri=sec?idxOf(sec.r,o.ri):null;return sec&&sec.r[ri]?{k:'i',si,ri}:null;}
+ return o;};
+const recRead=()=>{let r=[];try{r=JSON.parse(localStorage.getItem(LS.recent)||'[]')}catch(e){}return Array.isArray(r)?r.map(recIn).filter(Boolean):[];};
+const recSave=r=>{try{localStorage.setItem(LS.recent,JSON.stringify(r.map(recOut)))}catch(e){}};
+try{const r=JSON.parse(localStorage.getItem(LS.recent)||'[]'),lay=Array.isArray(WO.layout)?WO.layout:null;
+ if(Array.isArray(r)&&r.some(o=>o&&o.k==='w'&&o.w==null))localStorage.setItem(LS.recent,JSON.stringify(r.map(o=>{if(!(o&&o.k==='w'&&o.w==null))return o;
+  const k=lay?lay[o.si]?.[o.ti]:STOPK.has(o.si+'.'+o.ti)?o.si+'.'+o.ti:null;return k==null?null:{k:'w',w:String(k)};}).filter(Boolean)));}catch(e){}
 function migrateWalkState(){
  const layout=D.WK.splits.map((split,splitIndex)=>split.st.map(stop=>String(stop.k)));
  if(JSON.stringify(WO.layout)===JSON.stringify(layout))return;
@@ -719,10 +764,10 @@ function listTrainers(){fil.innerHTML='';const s=st.q;
  bindHead();bindTrackers();app.querySelectorAll('details.split[data-gi][open]').forEach(d=>TOG.trainers(d));bars();}
 // The page is boxes (D.TR.g: one per level cap, "Roxanne Split [Cap 15]"; Hot House, Mini Bosses) → places (the
 // box's locations) → trainers (name, tags and team preview; open, the full card). State in LS.tr {o:{<box>:1 open},
-// p:{<box>.<place>:0 closed}, t:{<trainer>:0 closed}}: boxes start closed, places and trainers open. (Numeric keys and
-// x are from before the boxes were mini-splits, and no longer read.)
+// p:{<box>.<place>:0 closed}, t:{<trainer key>:0 closed}, layout (relayout)}: boxes start closed, places and trainers
+// open. (Numeric keys and x are from before the boxes were mini-splits, and no longer read.)
 TOPEN.o=TOPEN.o||{};TOPEN.p=TOPEN.p||{};TOPEN.t=TOPEN.t||{};
-const trSave=()=>{try{localStorage.setItem(LS.tr,JSON.stringify(TOPEN))}catch(e){}};
+const trSave=()=>{try{localStorage.setItem(LS.tr,JSON.stringify(TOPEN))}catch(e){}};if(relayout(TOPEN,TRD.g.map(g=>[g.n,g.sec.map(x=>x.h)]),{o:1,p:2}))trSave();
 function trGroup(gi){const g=TRD.g[gi];
  const secs=g.sec.map((s,si)=>{const ts=s.tr.filter(t=>!rivalHidden(t));
   const head=((s.note||[]).length?`<div class="trnote">${s.note.map(esc).join('<br>')}</div>`:'')+(s.rw?`<div class="trnote"><b>Reward, pick one:</b> ${s.rw.map(z=>{const p=P.find(q=>q.name===z||q.name.startsWith(z+' ('));return p?plink(p.id):esc(z);}).join(', ')}</div>`:'');
@@ -856,8 +901,7 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
  go(h,then){if(location.hash===h){render(false);if(then)then();}else{this.after=then||null;location.hash=h;}},
  cur(){const v=(location.hash||'#/').slice(2).split('/')[0];return {locs:'l',l:'l',trainers:'t',tr:'t',items:'i',walk:'w'}[v]||'p';},
  pick(i,x){const it=this.items[i];if(!it)return;const o=it.o,a=it.acts[x]||it.acts[0];
-  let r=[];try{r=JSON.parse(localStorage.getItem(LS.recent)||'[]')}catch(e){}
-  r=[o,...r.filter(y=>JSON.stringify(y)!==JSON.stringify(o))].slice(0,6);try{localStorage.setItem(LS.recent,JSON.stringify(r))}catch(e){}
+  const r=[o,...recRead().filter(y=>JSON.stringify(y)!==JSON.stringify(o))].slice(0,6);recSave(r);
   this.close();a[1]();},
  // Actions. find: search a list page for text; clear: no search, so the page shows in full for a jump.
  find(h,t){q.value=t;st.q=t.toLowerCase();this.go(h);},
@@ -925,7 +969,7 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
  draw(top){if(!this.el)return;const s=this.q.trim().toLowerCase();
   const tx=this.el.querySelector('.sq .tx');if(tx)tx.textContent=this.q;this.el.classList.toggle('empty',!this.q);this.items=[];let h='';
   const cur=this.cur(),T={p:'Pokémon',f:'Filters',l:'Locations',t:'Trainers',i:'Items',w:'Walkthrough'};
-  if(!norm(s)){let r=[];try{r=JSON.parse(localStorage.getItem(LS.recent)||'[]')}catch(e){}
+  if(!norm(s)){const r=recRead();
    const rr=r.map(o=>this.row(o,'')).join('');
    h=rr?`<div class="ssh">Recent</div>`+rr:`<div class="shint">Search Pokémon, types, abilities, moves, places, trainers, items and the walkthrough. Pick a result to open it or jump to it, or search this page for what you typed.</div>`;}
   else{const S=this.sections(s);
@@ -991,7 +1035,16 @@ function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).sp
 try{history.scrollRestoration='manual'}catch(e){}
 const SNAP={};let curKey=null;
 const entryKey=()=>{let k=history.state&&history.state.dk;if(!k){k=Date.now()+'.'+Math.random().toString(36).slice(2,6);try{history.replaceState({dk:k},'')}catch(e){}}return k;};
-const posSave=()=>{try{localStorage.setItem(LS.pos,JSON.stringify({h:location.hash,a:keepAnchor()}))}catch(e){}};
+// A Pokémon, move, ability or place page is named beside its route (n), and so is the anchor's link (an): when an
+// update moves one, the route and anchor follow the name (a gone page: the Pokémon list; a gone anchor: none).
+const RLIST={m:M,a:AB,l:LOC},hrefOf=a=>(/href="([^"]*)"/.exec(a&&a.sel||'')||[])[1];
+const routeName=h=>{const m=/^#\/([pmal])\/([^/]*)$/.exec(h||'');if(!m)return;const v=decodeURIComponent(m[2]);return m[1]==='p'?(byId[v]?spOut(v):undefined):nameOf(RLIST[m[1]],+v);};
+const routeOf=(h,n)=>{const m=/^#\/([pmal])\//.exec(h);if(m[1]==='p'){const id=spIn(n);return id==null?null:'#/p/'+id;}const i=idxOf(RLIST[m[1]],n);return i==null?null:'#/'+m[1]+'/'+i;};
+try{const c=JSON.parse(localStorage.getItem(LS.pos)||'null');let moved=false;
+ if(c&&c.n!=null&&routeName(c.h)!==c.n){const h=routeOf(c.h,c.n);if(h)c.h=h;else{c.h='#/';delete c.a;}moved=true;}
+ const ah=c&&c.an!=null&&hrefOf(c.a);if(ah&&routeName(ah)!==c.an){const h=routeOf(ah,c.an);if(h)c.a.sel=c.a.sel.replace('href="'+ah+'"','href="'+h+'"');else delete c.a;moved=true;}
+ if(moved)localStorage.setItem(LS.pos,JSON.stringify(c));}catch(e){}
+const posSave=()=>{try{const a=keepAnchor(),h=location.hash;localStorage.setItem(LS.pos,JSON.stringify({h,a,n:routeName(h),an:routeName(hrefOf(a))}))}catch(e){}};
 let posT=0;window.addEventListener('scroll',()=>{clearTimeout(posT);posT=setTimeout(posSave,300);},{passive:true});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)posSave();});
 window.dexViewer={restoreScroll(y){let c=null;try{c=JSON.parse(localStorage.getItem(LS.pos)||'null')}catch(e){}

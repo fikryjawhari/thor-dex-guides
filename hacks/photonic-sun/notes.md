@@ -148,10 +148,11 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
 
 ## Local storage (prefix ps)
 
-`psdex` list filters, `pscalc:<id>` + `pscalc:lastlv` stat calc, `pstrack` tracker {s starter, e, t}, `pswalk` walkthrough
+`psdex` list filters, `pscalc:<species name>` (was `<id>`) + `pscalc:lastlv` stat calc, `pstrack` tracker {s starter, e, t}, `pswalk` walkthrough
 open state, `pscap` levels per trainer, `pstr` open trainer boxes, `psrecent` search picks, `pspos` last route, `psmgm`
 Minimal Grinding Mode, `pscapset` level cap set, `psloc` / `psitems` open boxes. Keep them once published.
-`TK.e[area].p` is a slug ID; dex state stores filters with move / ability / location indices, not list positions.
+Species, moves, abilities and places in saved state are names, trainers stable keys (template/README.md → What the data
+switches on); ids and indices saved before still load.
 
 ## Hack-only data
 

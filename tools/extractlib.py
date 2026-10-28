@@ -10,7 +10,8 @@ Layout of every hack's extract/ (run from the repo root: uv run python -I hacks/
     items.py     IT                        walk.py   WK                   prune.py     species kept in P
     check.py     checks on a built data.json (optional baseline to compare)
     + helper modules that only one hack needs (format readers, source parsers), named for what they read.
-build.py ends with finalise(): Items standard (tools/itemstd.py), the hack's prune, shared split names.
+build.py ends with finalise(): Items standard (tools/itemstd.py), the hack's prune, stable trainer keys
+(tools/trainer_keys.py; extract/trainer_keys.json is committed), shared split names.
 
 Damage calc: a hack's battle mechanics are hack.json -> cfg.calc (.agents/references/calc-mechanics.md), not data.json.
 When its save family has a reader, the extract also writes data.json -> GID {sp, mv, ab, it}: game id -> our species
@@ -30,6 +31,7 @@ import datajson  # noqa: E402
 import itemstd  # noqa: E402
 import schema  # noqa: E402
 import trainer_fields  # noqa: E402
+import trainer_keys  # noqa: E402
 from splits import split_name  # noqa: E402,F401  (re-exported for the hacks' modules)
 
 sys.stdout.reconfigure(encoding='utf-8')
@@ -171,11 +173,13 @@ def trainers_follow_walk(D):
 
 
 def finalise(D, hack, prune=None):
-    """The end of every build: Items standard (tools/itemstd.py), the hack's species prune, Trainers page in walkthrough
-    order, shared split names, the data schema (tools/schema.py: dead fields dropped, stop keys, key order). Idempotent."""
+    """The end of every build: Items standard (tools/itemstd.py), the hack's species prune, stable trainer keys
+    (tools/trainer_keys.py: extract/trainer_keys.json), Trainers page in walkthrough order, shared split names, the data
+    schema (tools/schema.py: dead fields dropped, stop keys, key order). Idempotent."""
     itemstd.standardise(D, itemstd.RULES.get(hack, {}), report)
     if prune:
         prune(D)
+    trainer_keys.stabilise(D, os.path.join(ROOT, 'hacks', hack, 'extract', 'trainer_keys.json'), report)
     trainers_follow_walk(D)
     split_names(D)
     trainer_fields.annotate(D)
