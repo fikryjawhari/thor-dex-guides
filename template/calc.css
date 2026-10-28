@@ -172,6 +172,7 @@ body.kbopen .shb{padding-bottom:calc(var(--kbh,0px) + 12px)}
 .mr .rc[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#111}
 .mr.st .mm{opacity:.55;cursor:default}
 .mr.st .rc{display:none}
+.ban .bpick{display:block;margin-top:6px;min-height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:inherit;font:inherit}
 .ban{position:relative;padding-right:30px}.ban .bx{position:absolute;right:2px;top:2px;width:30px;height:30px;border:0;background:none;color:var(--mut);font-size:18px}
 .dmatch{display:flex;flex-direction:column;gap:3px}
 .cc{padding:3px 6px}

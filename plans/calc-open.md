@@ -79,10 +79,10 @@ The hard part is per hack: **the ID tables**. Our data has no game IDs, so each 
 them its own way). References (read only): hzla/Dynamic-Calc-Decomps `js/savereaders/` (Gen 3 incl. EI constants, Gen
 4/5, Gen 6 / 7; sample saves in `cypress/fixtures/saves/`), PKHeX (check a reader by opening the same save there).
 
-**File picker** (app repo `../thor-offline-viewer`, after the Gen 3 reader works with a dropped file; first guess:
-`../thor-offline-viewer/docs/_plans/save-file-picker.md`): Android WebView
-ignores `<input type=file>` unless the app handles `onShowFileChooser` (Android's document picker, remembering the last
-folder; check first whether the viewer already does). Later: "reload from the same file" in one tap (persistent URI
-permission). Outside the viewer the file input already works in any browser.
+**File picker**: built in the app (`../thor-offline-viewer`, 2026-10-27; contract `docs/SAVE_BRIDGE.md`,
+`window.dexViewerApp`), **not yet run on the Thor**. Guide side built 2026-10-28 (`template/README.md` → Import;
+`tools/scenarios/calc-bridge.mjs` against a fake bridge, every calc guide). Left: the app's on-device tests
+(its `docs/_plans/save-file-picker.md`), then one real import per emulator on the Thor (RetroArch `.srm`, DraStic
+`.dsv`, Azahar `main`); if the contract changes there, update `calc.js` and the scenario.
 
 Not doing: reading the game's memory while it runs (only an emulator can), writing to saves.
