@@ -185,6 +185,7 @@ def data_check(gate, hack):
         original_data.pop('built', None)
         if original_data == current:
             (directory / 'data.json').write_bytes(original)
+    gate.run(hack + '-trainer-keys', [sys.executable, '-I', 'tools/trainer_keys_test.py', hack])
     checker = directory / 'extract' / 'check.py'
     if checker.exists():
         gate.run(hack + '-extract-check', [sys.executable, '-I', str(checker)])
