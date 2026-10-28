@@ -155,7 +155,7 @@ Tag / multi / double battles switch the fight bar to **Doubles** automatically, 
   move / HP change and is cleared by Reset fight and by the next trainer; Back2Back / Rotation stay S.
 
 ## Build units (in order; one template session at a time)
-Status 2026-10-28: unit 1 done (`a0f978a`), unit 2 done (`3007d4b`..this commit; `CALC.team()`, `CALC.fit()` for checks), unit 4a done (`eba379c`, `ac9a9e4`), the saves branch merged (`506c25c`).
+Status 2026-10-28: unit 1 done (`a0f978a`), unit 2 done (`3007d4b`..this commit; `CALC.team()`, `CALC.fit()` for checks), unit 4a done (`eba379c`, `ac9a9e4`), unit 4b done (`19fb59c`..this commit; `tools/scenarios/calc-doubles.mjs`; tapping the trainer's own format is Auto, not a manual choice), the saves branch merged (`506c25c`).
 Checks during a unit: only what it changed, fast path `uv run python -I tools/gate.py scenarios <hacks> --only
 calc-a,calc-b --jobs 4` (built dist, no rebuild; `python assemble.py` first after a template change). The full `gate.py
 check --template --jobs 4` runs once, in unit 3. Engine / oracle checks: `plans/calc-open.md` → Checks (a fresh worktree
@@ -181,7 +181,7 @@ needs `npm ci --prefix tools/calc` and `.tmp/hzla*` copied from the calc worktre
    `assemble.py`, every calc guide), domcompare against `calc-pre-team` on `#/calc`.
 4. **Auto Doubles.** **4a data: done** (`eba379c`, `ac9a9e4`): `tools/trainer_fields.py` `DOUBLES_TAGS` / partners
    write `{scope: 'trainer-tag' | 'trainer-partner', text, effects: [{kind: 'gameType', value: 'Doubles', source}],
-   review: false}` in `trainer.field`; counts asserted in `tools/trainer_fields_check.py`. **4b page** (template; Opus
+   review: false}` in `trainer.field`; counts asserted in `tools/trainer_fields_check.py`. **4b page: done** (template; Opus
    medium, after unit 2): the S / D auto layer in `calc.js`: read the record from `areaRecords()` (`areaField()`
    ignores `kind: 'gameType'`, so add it separately); the Area line names `effect.source` / the record `text` ("Double
    Battle", "partner"), not the value "Doubles"; the checks above in `tools/scenarios/calc-field.mjs` (or its own

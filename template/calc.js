@@ -285,6 +285,8 @@ document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const e
  const a=el.dataset.a;
  // A Field group's collapse bar: close it, keep its heading in view (in the Field body and the window), flash it.
  if(a==='fgfold'){const d=el.closest('details'),sm=d.querySelector(':scope>summary');d.open=false;sm.scrollIntoView({block:'nearest'});flash(sm);return;}
+ // S / D: the trainer's own format (automatic) is no manual choice, so tapping it goes back to Auto.
+ if(el.dataset.f==='gameType'&&el.tagName==='BUTTON'&&el.dataset.value===(AUTOFIELD.gameType||'Singles')){ST.fman=ST.fman.filter(key=>key!=='gameType');if(AUTOFIELD.gameType)ST.field.gameType=AUTOFIELD.gameType;else delete ST.field.gameType;window.__fo=1;save();refresh();return;}
  if(el.dataset.f&&el.tagName==='BUTTON'){const k=el.dataset.f,entry=prof.field.find(entry=>entry.k===k);markManual(k);ST.field[k]=el.dataset.value??(entry?.max?((Number(ST.field[k])||0)+1)%(entry.max+1):(ST.field[k]?0:1));if(entry?.group==='hazards')rearmHazards(entry.side==='def'?'foe':'mine',k.endsWith('ToxicSpikes')?'status':k.endsWith('StickyWeb')?'web':'damage');window.__fo=1;save();refresh();return;}
  if(a==='row'&&e.target.closest('.dd,input,select,.nv,.num'))return;
  if(a==='mpick'){ST.mine={src:el.dataset.src,b:+el.dataset.b,i:+el.dataset.i};save();refresh();}

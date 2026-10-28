@@ -1,7 +1,7 @@
 // Auto Doubles (plans/calc-team.md → Auto Doubles, unit 4b): a trainer's doubles evidence (tools/trainer_fields.py:
 // a `gameType: Doubles` effect on a trainer-tag / trainer-partner field record) makes S / D automatic. Per guide: the
 // count of trainers with the evidence; a doubles trainer opens in D (dashed, A mark, tooltip and Area line name the tag),
-// a singles one in S; a manual S survives a move / HP change and is cleared by Reset fight, Field's Auto and the next
+// a singles one in S; tapping the trainer's own format is Auto; a manual S survives a move / HP change and is cleared by Reset fight, Field's Auto and the next
 // trainer; Hardlove "Back2Back" (no Double tag) and Eternal X "Rotation Battle" stay S; the partner record names
 // "partner". 260 x 316, normal and dvkb. Usage: node tools/scenarios/calc-doubles.mjs [dist/<hack>.html]
 import assert from 'node:assert/strict';
@@ -104,10 +104,18 @@ const checks = [
       await expectAuto(page, second, 'next trainer (doubles)');
       await page.reload();
       await expectAuto(page, second, 'after a reload');
+      await page.tap('.dfight [data-f="gameType"][data-value="Singles"]');
       await page.tap('.dfight [data-f="gameType"][data-value="Doubles"]');
-      assert.deepEqual(await format(page), { format: 'Doubles', manual: true }, 'tapping D is manual too');
+      await expectAuto(page, second, "tapping the trainer's own format goes back to Auto");
       await enter(page, all().find(trainer => trainer.k === guide().trainers.four.k));
       await expectSingles(page, 'next trainer (singles)');
+      await page.tap('.dfight [data-f="gameType"][data-value="Singles"]');
+      await expectSingles(page, "tapping S on a singles trainer stays Auto");
+      assert.equal(await page.count('.dfsource [data-a="fieldauto"]'), 0, 'no Auto button for it');
+      await page.tap('.dfight [data-f="gameType"][data-value="Doubles"]');
+      assert.deepEqual(await format(page), { format: 'Doubles', manual: true }, 'tapping D on a singles trainer is manual');
+      await enter(page, all().find(trainer => trainer.k === guide().trainers.six?.k || trainer.k === guide().trainers.relative?.k));
+      await expectSingles(page, 'next trainer (singles) clears a manual D');
     },
   },
   {
