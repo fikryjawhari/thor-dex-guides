@@ -15,7 +15,7 @@ to run when `repos/hardlove/COMMIT` is not the `watch.json` ref, so update both 
 
 | File | Contents |
 | --- | --- |
-| `repos/hardlove/` | The hack's source at the pinned commit (`COMMIT` holds the sha): `data/Species.c`, `HiddenAbilityTable.c`, `learnsets/learnsets.json`, `Evolutions.c`, `Moves.c` (+ `include/config.h` for the Champions move flags), `Trainers.c`, `Encounters.c`, `SafariEncounters.c`, `Headbutt.c`, `MachineMoves.c`, `HiddenItems.c`, `itemdata/itemdata.c`, form tables, `doc/` (Mechanics, level caps). Stats, types, abilities (with hidden), all move lists, evolutions, move data, trainer sets and TM numbers come from here; wild tables are checked against it |
+| `repos/hardlove/` | The hack's source at the pinned commit (`COMMIT` holds the sha): `data/Species.c`, `HiddenAbilityTable.c`, `learnsets/learnsets.json`, `Evolutions.c`, `Moves.c` (+ `include/config.h` for the Champions move flags), `Trainers.c`, `Encounters.c`, `SafariEncounters.c`, `Headbutt.c`, `MachineMoves.c`, `HiddenItems.c`, `itemdata/itemdata.c`, form tables, the species / move / ability / item constants (the save importer's id tables), `doc/` (Mechanics, level caps). Stats, types, abilities (with hidden), all move lists, evolutions, move data, trainer sets and TM numbers come from here; wild tables are checked against it |
 | `site/pokedex/` | One page per Pokémon. Now only the species list and order, names, other forms and sprites. Its data predates 0.8.0/0.8.1 and has no hidden abilities. Female-only species have 0-byte sprites |
 | `repos/sprites/` | Sprites for those female-only species, from `repos/hardlove`'s `data/graphics/sprites/<id>/female/front.png` |
 | `Pokemon Locations.xlsx` | Sheet `13PoaWuu8lcyTSa6iI1gz6RyQVNqaY6WvrrI18k32mys`: availability, pools, gifts, trades, Game Corner, wild tables (checked slot by slot against `Encounters.c`; the game wins where they differ) |
@@ -57,6 +57,7 @@ python -I tools/mirror.py https://kumakuma1.github.io/hardlove-docs/index.html $
 for f in data/Species.c data/HiddenAbilityTable.c data/learnsets/learnsets.json data/Evolutions.c data/MachineMoves.c data/Moves.c \
          data/Trainers.c data/Encounters.c data/SafariEncounters.c data/Headbutt.c data/HiddenItems.c data/itemdata/itemdata.c \
          data/FormToSpeciesMapping.c data/PokeFormDataTbl.c data/text/keys.csv include/config.h include/constants/species.h \
+         include/constants/moves.h include/constants/ability.h \
          asm/include/species.inc asm/include/items.inc doc/Mechanics.txt doc/LevelCaps.txt doc/Items.txt doc/GymHealing.txt; do
   mkdir -p $D/repos/hardlove/$(dirname $f); curl -sf $R/$f -o $D/repos/hardlove/$f || echo "missing $f"; done
 echo $SHA > $D/repos/hardlove/COMMIT

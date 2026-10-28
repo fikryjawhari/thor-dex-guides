@@ -5,7 +5,7 @@
                                      (Unown B, Shellos East) maps to the base)
     mv  game move id    -> M index  (by name)
     ab  game ability id -> AB index (by name)
-    it  game item id    -> item name (spelt as the trainer sets spell them)
+    it  game item id    -> item name (the constant's, spelt as the trainer sets spell it)
     gr  'species:form'  -> growth rate (0-5, GROWTH_ order; boxed Pokémon store only experience)
 
 Lists indexed by game id, null where nothing maps. Runs after finalise (prune changes M / AB indexes).
@@ -91,10 +91,16 @@ def build(D):
         size = len(REPORT); n = X.cname(n); del REPORT[size:]
         return n
 
+    # items: the constant's name, spelt as the trainer sets spell it where only punctuation differs (Kings Rock -> King's
+    # Rock: the calc engine knows items by those names)
+    spelt = {key(m['i']): m['i'] for group in D['TR']['g'] for section in group['sec'] for t in section['tr']
+             for m in t['p'] if m.get('i')}
+    item = lambda c: None if c == 'ITEM_NONE' else spelt.get(key(hgsource.Src.title(c, 'ITEM_')), hgsource.Src.title(c, 'ITEM_'))
+
     D['GID'] = {
         'sp': species,
         'mv': by_name(mv, move_name, D['M'], 'move'),
         'ab': by_name(ab, X.abn, [a[0] for a in D['AB']], 'ability'),
-        'it': indexed(it, lambda c: None if c == 'ITEM_NONE' else hgsource.Src.title(c, 'ITEM_')),
+        'it': indexed(it, item),
         'gr': growth,
     }
