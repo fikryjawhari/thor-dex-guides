@@ -253,10 +253,11 @@ function calcPage(){if(!host.isConnected)document.body.appendChild(host);if(prof
   ${fieldHTML(F)}</div></details>`);
  bindCap();bindMain();bindEd();fitToggles();if($('.mg .dstrip'))$('.mg .dstrip').scrollTop=gridScroll;if($('.dfb'))$('.dfb').scrollTop=fieldScroll;fitCards();if(CARDRO){CARDRO.disconnect();document.querySelectorAll('.dmatch>.cc').forEach(card=>CARDRO.observe(card));}jumpState();}
 
-// The narrow card is at most three lines (the HP bar isn't one): a card that measures more goes .tight (gaps /
-// paddings trimmed, Aura as A), so text zoom and crowded cards still fit.
+// The narrow card is at most three lines (the HP bar isn't one): a card that measures more moves Aura up (.aup: the
+// ability / Speed line, or the HP line on a named card), then goes .tight (gaps / paddings trimmed, Aura as A).
 function cardLines(card){const boxes=[],walk=el=>{for(const child of el.children){const style=getComputedStyle(child);if(style.display==='contents')walk(child);else if(style.display!=='none'&&!child.matches('.dhpbar,.ed')){const r=child.getBoundingClientRect();if(r.height)boxes.push(r);}}};walk(card);boxes.sort((a,b)=>a.top-b.top);let lines=0,bottom=-1e9;for(const r of boxes){if(r.top>=bottom-2){lines++;bottom=r.bottom;}else bottom=Math.max(bottom,r.bottom);}return lines;}
-function fitCards(){for(const card of document.querySelectorAll('.dmatch>.cc')){card.classList.remove('tight');if(innerWidth>=480||card.querySelector('.ed'))continue;if(cardLines(card)>3)card.classList.add('tight');}}
+function fitCards(){for(const card of document.querySelectorAll('.dmatch>.cc')){card.classList.remove('aup','tight');if(innerWidth>=480||card.querySelector('.ed'))continue;
+ for(const step of card.querySelector('.cl>.aum')?['aup','tight']:['tight']){if(cardLines(card)<=3)break;card.classList.add(step);}}}
 // Text zoom (A- / A+) fires no resize: the cards' own size changes re-fit them, a frame later (no observer loop).
 let fitFrame=0;const CARDRO=window.ResizeObserver?new ResizeObserver(()=>{cancelAnimationFrame(fitFrame);fitFrame=requestAnimationFrame(()=>{if(location.hash==='#/calc')fitCards();});}):null;
 addEventListener('resize',()=>{if(location.hash==='#/calc')fitCards();});

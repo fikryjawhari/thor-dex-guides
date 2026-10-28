@@ -84,7 +84,8 @@ battle-state tag (Dig, Fly, ...), Aura and the berry chip at the left, T + Toxic
 user, 2026-10-28: state / Aura never on the name line). The name shows (line 0) only when the selected Pokémon is not
 in the team row: then M, the ability boxes and Speed move up beside it, the name truncating as far as needed. **At most
 three lines, always** (the user): `fitCards()` measures each narrow card (render, resize, size change: text zoom fires
-no resize) and goes tight (1 px gaps, Aura as "A") if it takes more. No name line while Edit is open; an open card
+no resize); one that takes more moves Aura up (the ability / Speed line, or after `/max` on a named card: Aura is the
+rarest tag and about stages), then goes tight (1 px gaps, Aura as "A"). No name line while Edit is open; an open card
 spans both columns. Lv sits on the team cell (the Lv box only in Edit). No Intimidate mark on any card (the user,
 2026-10-28): the holder's box is the only sign. **Wide (≥ 480):** left column = box panel with my team row under the grid (1 px line), then the fight bar; right
 column = the trainer panel, whose preview (two-line rows, 25 px, all six always visible, no scrolling; tap = pick that
