@@ -6,17 +6,13 @@ What's left before the damage calc merges, in order (2026-10-27, after the auto-
 oracles), each calc guide's notes.md → Damage calc (profile, fixtures, In-game tests). Every calc session: claim the
 worktree, one template / engine session at a time, commit per sub-step, run Checks (below), ask before pushing.
 
-**On `worktree-damage-calc-saves`** (`.claude/worktrees/damage-calc-saves`, made 2026-10-27 from the calc branch at
-`23c82f6`): this branch's job is item 2 only, the save readers and the file picker (with the app repo,
-`../thor-offline-viewer`). calc-team stays on `worktree-damage-calc`. When done, merge this branch into
-`worktree-damage-calc` (or into `main` after it, whichever merges first), rebuild, run Checks.
-
 ## The list, in order
 
-1. **Build `plans/calc-team.md`** (decided 2026-10-27; spec and build units there, mockup `plans/calc-team-mockup/`):
+1. **Build `plans/calc-team.md`** (units 1 and 4a done 2026-10-28; units 2, 4b, 3, 5 left, in that order; decided 2026-10-27; spec and build units there, mockup `plans/calc-team-mockup/`):
    both teams, both cards, all four moves and the fight bar in the first frame at every size; facing columns with
    nameless cards at narrow; a drag-and-drop team row; Auto Doubles from trainer tags / partners (build unit 4).
-2. **Save readers and the file picker** (below), on their own branch `worktree-damage-calc-saves` made from this one.
+2. **Save readers and the file picker** (below): built on `worktree-damage-calc-saves`, merged here 2026-10-28
+   (`506c25c`). Left: the app repo's Thor test and real saves (PROGRESS.md → Damage calc → Open after the build).
    Done before the merge: "a calc is useless if I have to import Pokémon by hand" (the user).
 3. **The user's mechanics check**: each guide's notes.md → Damage calc → In-game tests. They stay open and merge
    into `main` with the branch; Hardlove stays provisional until then (no independent oracle). Rule: the source

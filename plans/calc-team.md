@@ -86,6 +86,12 @@ pinned to the bottom, the left column is the box panel then the fight bar, the r
     selection suppressed on the cells; the click right after a drop is swallowed (400 ms); near the top / bottom
     40 px the page auto-scrolls (narrow).
   - Mega: the M toggle on the card, never a second team entry.
+- **HP bar and fainted** (added 2026-10-28): every team cell (my team row; the foe strip at narrow; the foe's trainer
+  preview rows at wide) shows a thin HP bar along its bottom (2 px, the card's HP bar colours: green / yellow / red by
+  percent) from that Pokémon's current fight HP. At 0 HP the sprite turns grey (`filter: grayscale(1)`, nothing
+  else: no icon, no dimming of the cell). Both follow HP changes live; ↺ Reset fight and a trainer change restore full
+  HP, so the bars refill and the colour comes back. Fits inside the existing cells (24 px narrow, 28 px wide, 25 px
+  preview rows): the first-frame budget at 260 × 316 must hold.
 - **dvkb:** nothing to type in the row; check that the layout holds with the keyboard mode on.
 
 ## Edge cases
@@ -107,8 +113,8 @@ still lands on the first frame.
 ## Decided (2026-10-28)
 Facing columns, nameless cards at narrow; fight bar above the teams below 480 and under the box from 480; my team row
 in the box panel under the grid from 480; trainer preview two-line rows; wide cards keep their names; drop on a filled
-slot replaces it; hold 250 ms. The user will report anything bad on the Thor. Later, not in this build: an HP bar /
-fainted grey on team cells.
+slot replaces it; hold 250 ms. The user will report anything bad on the Thor. Added 2026-10-28 (unit 2): an HP bar and
+the fainted grey on team cells (My team → HP bar and fainted).
 
 ## Auto Doubles (the last manual fight setting)
 Tag / multi / double battles switch the fight bar to **Doubles** automatically, like weather and terrain already do.
@@ -129,23 +135,39 @@ Tag / multi / double battles switch the fight bar to **Doubles** automatically, 
   move / HP change and is cleared by Reset fight and by the next trainer; Back2Back / Rotation stay S.
 
 ## Build units (in order; one template session at a time)
-1. **Layout + nameless card** (template: `calc.js` `calcPage` markup / `calc.css`; Sol or Opus): build the grid areas
-   in the page's own markup (not the mockup's after-render moves): narrow facing columns (foe strip out of the trainer
-   panel), wide: team row in the box panel, fight bar under the box, no foe strip, six 25 px preview rows, condensed trainer bar / move rows / fight bar
-   (narrow), nameless card at narrow incl. the name fallback and full-width Edit, preview rows without `TEAMNEED`;
-   `stops()` (Jump arrows) / `openMatch` scroll targets. Commit.
-2. **Team row + drag and drop** (template; Sol): `ST.team` with pid refs, render, tap = send in, the pointer-event
-   drag (from the mockup's `patch.js`), box dots, first-import fill, drop of unresolved entries. Commit.
-3. **Checks** (Haiku medium): update `calc-retest` R1 (foe strip 3 columns at narrow, preview row count, fight bar now
-   inside the first frame at every size), `calc-state` one-window; add `tools/scenarios/calc-team.mjs`: first-frame
-   rule at the five sizes × normal / dvkb (my row, the foe's team (narrow: strip; wide: all six preview rows unclipped),
-   both cards, four moves (wide: eight), fight bar inside the viewport, plain and busy card), drag via `Input.dispatchTouchEvent` (box → empty, box → filled, swap, drag out,
-   swipe doesn't drag, tap sends in), persistence across reload, re-import keeps the team by pid, deleted custom
-   leaves it, jump-arrow stops at 260 × 316 / 260 × 394 / wide with Field closed and open. Then plans/calc-open.md → Checks (full calc scenario set, `assemble.py`, every calc guide), domcompare
-   against the branch's previous build on `#/calc`.
-4. **Auto Doubles** (Sol or Opus: data rule across four guides + template): `trainer_fields.py` evidence and the four
-   rebuilds (`build.py` of each calc guide), the S / D auto layer in `calc.js`, the checks above in
-   `tools/scenarios/calc-field.mjs` (or its own `calc-doubles.mjs`), hzla compares unchanged. Commit.
+Status 2026-10-28: unit 1 done (`a0f978a`), unit 4a done (`eba379c`, `ac9a9e4`), the saves branch merged (`506c25c`).
+Checks during a unit: only what it changed, fast path `uv run python -I tools/gate.py scenarios <hacks> --only
+calc-a,calc-b --jobs 4` (built dist, no rebuild; `python assemble.py` first after a template change). The full `gate.py
+check --template --jobs 4` runs once, in unit 3. Engine / oracle checks: `plans/calc-open.md` → Checks (a fresh worktree
+needs `npm ci --prefix tools/calc` and `.tmp/hzla*` copied from the calc worktree).
+1. **Done.** Layout + nameless card (`a0f978a`).
+2. **Team row + drag and drop + HP bar / fainted** (template; Opus medium): `ST.team` with pid refs, render, tap = send
+   in, the pointer-event drag (from the mockup's `patch.js`), box dots, first-import fill (through the real readers /
+   the app bridge now merged: `importBytes`), drop of unresolved entries; the team cells' HP bar and fainted grey
+   (My team → HP bar and fainted) on both teams at every size. Replace unit 1's stand-in `teamMembers()` (party or
+   customs) and keep the `.offteam` name fallback working off `ST.team`. Commit.
+3. **Checks** (Haiku medium; after units 2 and 4b): update the checks that test the old layout (unit 1's list: retest
+   R1 HP / frame, layout 18c / 19 / 20 / 20b / 20c, smoke cell size, zmove z toggle / totem aura, auto crowded HP,
+   controls 2, persist 26 dvkb, import 12 dvkb, bridge B2 dvkb: the last four tap the Lv box, which is only on the
+   narrow card while Edit is open; confirm with the user the fight bar's ↺ at 22 px vs the old 26 px tap rule),
+   `calc-state` one-window; add `tools/scenarios/calc-team.mjs`: first-frame rule at the five sizes × normal / dvkb
+   (my row, the foe's team (narrow: strip; wide: all six preview rows unclipped), both cards, four moves (wide:
+   eight), fight bar inside the viewport, plain and busy card), open move rows / an open editor never overlap Field
+   (both sides, 480 × 392 and 560 × 424), drag via `Input.dispatchTouchEvent` (box → empty, box → filled, swap, drag
+   out, swipe doesn't drag, tap sends in), persistence across reload, re-import keeps the team by pid, deleted custom
+   leaves it, HP bar / grey at 0 HP and back after Reset fight and a trainer change, jump-arrow stops at 260 × 316 /
+   260 × 394 / wide with Field closed and open; the Auto Doubles checks (unit 4). Add `#/calc` to
+   `tools/domcompare.mjs`'s routes. Then `plans/calc-open.md` → Checks (full calc scenario set with `--jobs 4`,
+   `assemble.py`, every calc guide), domcompare against `calc-pre-team` on `#/calc`.
+4. **Auto Doubles.** **4a data: done** (`eba379c`, `ac9a9e4`): `tools/trainer_fields.py` `DOUBLES_TAGS` / partners
+   write `{scope: 'trainer-tag' | 'trainer-partner', text, effects: [{kind: 'gameType', value: 'Doubles', source}],
+   review: false}` in `trainer.field`; counts asserted in `tools/trainer_fields_check.py`. **4b page** (template; Opus
+   medium, after unit 2): the S / D auto layer in `calc.js`: read the record from `areaRecords()` (`areaField()`
+   ignores `kind: 'gameType'`, so add it separately); the Area line names `effect.source` / the record `text` ("Double
+   Battle", "partner"), not the value "Doubles"; the checks above in `tools/scenarios/calc-field.mjs` (or its own
+   `calc-doubles.mjs`); hzla compares unchanged. Commit.
 5. **Docs + preview** (Opus main chat): `template/README.md` → Damage calculator (replace "Retest layout" sizes, the
-   preview rule, the team row, Auto Doubles), every calc guide in the Thor frame on the phone preview, delete this plan and
-   `plans/calc-team-mockup/`, PROGRESS / calc-open item 1 done.
+   preview rule, the team row, HP bar / fainted, Auto Doubles), the save ID tables rule in CLAUDE.md → Making a new
+   guide and the skill (`plans/calc-open.md` → Save readers: "every new guide's extract writes its ID tables"), every
+   calc guide in the Thor frame on the phone preview, delete this plan and `plans/calc-team-mockup/`, PROGRESS /
+   calc-open items 1-2 done.
