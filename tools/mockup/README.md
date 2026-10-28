@@ -10,6 +10,8 @@ Run browser sweeps one at a time so CPU contention does not change layout timing
   in a Thor-sized screen (the viewer sizes, fit to screen, `dvkb`, tabs, reload / clear saved state, error and width
   readout; pinned on a phone). Put the output on the phone preview (`tools/preview.py`). Mockups write only the inner
   page (a small standalone HTML with data sampled from `data.json`) and an optional `--panel` of options, never a frame.
+  `thor-frame/calc-presets.html` is the panel for a built calc guide: live-engine test sets (States, Download, Sword,
+  Toxic...; All loads every preset as the team).
 - `walkcheck.mjs <guide.html> <shot-prefix> [kb]`: the walkthrough at 260 × 316 (`kb` = `dvkb` set): taps hold the
   header, bars, jumps, Next step, starter, state after a reload, other routes; prints each check and page errors and
   saves a screenshot.

@@ -26,8 +26,8 @@ def write(path, D, lines=LINES):
 # hack.json: the same keys in the same order in every hack (the values are the hack's own).
 HACK_ORDER = {
     'top': ['id', 'title', 'game', 'platform', 'version', 'cfg'],
-    'cfg': ['name', 'orig', 'evs', 'starter', 'orbs', 'g3trainer', 'capLast', 'walkAreaNote', 'trw', 'ls', 'txt'],
-    'ls': ['dex', 'calc', 'track', 'walk', 'cap', 'tr', 'recent', 'pos', 'mgm', 'loc', 'items', 'capset'],
+    'cfg': ['name', 'orig', 'evs', 'starter', 'orbs', 'g3trainer', 'capLast', 'walkAreaNote', 'trw', 'calc', 'ls', 'txt'],
+    'ls': ['dex', 'calc', 'track', 'walk', 'cap', 'tr', 'recent', 'pos', 'mgm', 'loc', 'items', 'capset', 'dmg'],
     'txt': ['obt', 'nw', 'g3', 'conf', 'tc', 'chdoc', 'mvh', 'nodc', 'mvsrc', 'mvsrcx', 'absrc', 'ns', 'walk', 'capl',
             'capnone', 'noev', 'plm', 'plf'],
 }

@@ -8,6 +8,8 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'tools'))
+from calc_ui_check import check_metronome
 from common import HACK
 
 
@@ -21,6 +23,11 @@ def stops(data):
 
 
 def check(data, baseline=None):
+    flags = {name: data['MV'][index]['f'] for index, name in enumerate(data['M'])}
+    assert 'contact' in flags['Drain Punch'] and 'punch' in flags['Drain Punch']
+    assert 'sound' in flags['Boomburst']
+    for name in ['Dark Pulse', 'Sunsteel Strike', 'Collision Course', 'Electro Drift', 'Thunderous Kick', 'Behemoth Blade']:
+        assert 'contact' not in flags[name], name
     species = {entry['id']: entry for entry in data['P']}
     assert len(species) == len(data['P'])
     assert not any('vc' in entry for entry in data['P'])
@@ -73,6 +80,22 @@ def check(data, baseline=None):
           f"{len(stop_keys)} stops, {len(data['AR'])} areas")
 
 
+def check_gid(data):
+    """The save importer's tables (template/calc/readers/README.md → gen4): every non-Mega species has a species:form key
+    with a growth rate, every move and ability name a game id, items spelt as the trainer sets spell them."""
+    gid = data['GID']
+    mapped = set(gid['sp'].values())
+    assert {p['id'] for p in data['P'] if p['g'] != 1} <= mapped, 'species without a game species:form'
+    assert all(key in gid['gr'] and gid['gr'][key] in range(6) for key in gid['sp']), 'a species without a growth rate'
+    assert set(i for i in gid['mv'] if i is not None) == set(range(len(data['M']))), 'moves without a game id'
+    names = {name for name, *_ in data['AB']}
+    assert {data['AB'][i][0] for i in gid['ab'] if i is not None} == names, 'abilities without a game id'
+    assert gid['sp']['702:0'] == 'chesnaught'   # hg-engine numbers Gen 5 on 50 past the National Dex and gid['sp']['26:1'] == 'raichu_alolan'
+    assert "King's Rock" in gid['it'] and 'Leftovers' in gid['it']
+    print(f'PASS: GID maps {len(mapped)} species ({len(gid["sp"])} species:form keys), {len(data["M"])} moves, '
+          f'{len(names)} ability names')
+
+
 if __name__ == '__main__':
     with open(os.path.join(HACK, 'data.json'), encoding='utf-8') as source:
         data = json.load(source)
@@ -81,3 +104,5 @@ if __name__ == '__main__':
         with open(sys.argv[1], encoding='utf-8') as source:
             baseline = json.load(source)
     check(data, baseline)
+    check_gid(data)
+    check_metronome(data, 'hardlove-gold')

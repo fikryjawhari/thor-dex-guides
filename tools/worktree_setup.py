@@ -1,4 +1,4 @@
-"""Claim a worktree, link source inputs from the main checkout, and uv sync."""
+"""Claim a worktree, link source inputs from the main checkout and .claude/skills to .agents/skills, and uv sync."""
 import argparse
 import datetime
 import json
@@ -71,6 +71,14 @@ def main():
         else:
             target.symlink_to(source, target_is_directory=True)
         print(f'Linked {target} -> {source}')
+    # Claude Code reads project skills from .claude/skills (git-ignored); the versioned ones are in .agents/skills
+    skills, versioned = ROOT / '.claude' / 'skills', ROOT / '.agents' / 'skills'
+    if not os.path.lexists(skills):
+        if os.name == 'nt':
+            subprocess.run(['cmd', '/d', '/c', 'mklink', '/J', str(skills), str(versioned)], check=True)
+        else:
+            skills.symlink_to(Path('..') / '.agents' / 'skills', target_is_directory=True)
+        print(f'Linked {skills} -> {versioned}')
     subprocess.run(['uv', 'sync'], cwd=ROOT, check=True)
     print(f'Ready: {session}; {branch}; {ROOT}')
     print('Source junctions are shared inputs: read only; generated caches may be written by existing extracts.')

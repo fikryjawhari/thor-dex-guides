@@ -9,6 +9,11 @@ Sprites: each guide's #spr maps its own species ids to data URIs. Every species 
 the shared set's sprites/png/<key>.png (sprites/README.md). A hack's sprites.json is only a supplement, keyed by
 species id or sprite key, for forms the shared set lacks; an entry there wins. Only the sprites a guide uses are
 inlined, each cropped to its visible area. Species with no sprite from either are reported, never silently dropped.
+
+Damage calc: only a hack whose cfg has `calc` gets it. Its profile is the base template/calc/profiles/<base>.json with
+the hack's own keys laid over it (dicts merge key by key, anything else replaces), written to the page as cfg.calc. The
+page then also inlines template/calc/engine.js, the save reader template/calc/readers/<save>.js when the profile names
+one, template/calc.js after dex.js and template/calc.css after dex.css. Guides without `calc` are built as before.
 """
 import base64, html, json, os, sys
 
@@ -52,11 +57,86 @@ def cropped(uri):
         return uri
 
 
+def merged(base, over):
+    """`over` laid over `base`: dicts merge key by key, anything else replaces."""
+    out = dict(base)
+    for k, v in over.items():
+        out[k] = merged(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
+    return out
+
+
+def calc_profile(c, data=None):
+    """A hack's cfg.calc resolved against its base profile."""
+    base = json.loads(read('template', 'calc', 'profiles', c['base'] + '.json'))
+    profile = merged(base, c)
+    if data is not None:
+        profile['field'] = [entry for entry in profile.get('field', []) if entry.get('to') != 'isProtected']
+        moves = set(data['M'])
+        abilities = {entry[0] for entry in data.get('AB', [])} if profile.get('abilities', True) else set()
+        entries = json.loads(read('template', 'calc', 'field-states.json'))
+        fields = profile.setdefault('field', [])
+        keys = {entry['k'] for entry in fields}
+        for entry in entries:
+            if (profile['gen'] < entry['gen'] or (entry.get('zmove') and not profile.get('zmove'))
+                    or profile.get('over', {}).get('state', {}).get(entry['l']) is False):
+                continue
+            if (entry.get('moves') or entry.get('abilities')) and not (
+                    moves.intersection(entry.get('moves', [])) or abilities.intersection(entry.get('abilities', []))):
+                if entry.get('doubles'):
+                    unavailable = {entry['k']} if entry.get('side') == 'field' else {side + entry['k'] for side in ['atk', 'def']}
+                    fields[:] = [field for field in fields if field['k'] not in unavailable]
+                    keys.difference_update(unavailable)
+                continue
+            if entry.get('all') and not set(entry['all']).issubset(moves):
+                continue
+            sides = [('field', '')] if entry.get('side') == 'field' else [('atk', 'Player'), ('def', 'Foe')]
+            for side, label in sides:
+                key = entry['k'] if side == 'field' else side + entry['k']
+                if key not in keys:
+                    fields.append(dict(k=key, l=(label + ' ' + entry['l']).strip(), side=side,
+                                       type=entry.get('type', 'toggle'),
+                                       **({'group': entry['group']} if entry.get('group') else {}),
+                                       **({'doubles': True} if entry.get('doubles') else {}),
+                                       **({'max': entry['max']} if 'max' in entry else {})))
+                    keys.add(key)
+                elif entry.get('doubles'):
+                    for index, field in enumerate(fields):
+                        if field['k'] == key:
+                            fields[index] = dict(field, doubles=True)
+        # Field groups by what an entry affects (template/README.md): field-states.json decides for a hack's own copy
+        # of one of its entries (Hardlove's Power Trick), and Focus Energy is one Pokemon's state.
+        groups = {entry['k']: entry.get('group') for entry in entries if entry.get('side') != 'field'}
+        for entry in fields:
+            name = entry['k'][3:] if entry.get('side') in ('atk', 'def') else None
+            group = groups.get(name) if name in groups else 'battle' if entry.get('to') == 'isFocusEnergy' else entry.get('group')
+            if group:
+                entry['group'] = group
+            else:
+                entry.pop('group', None)
+    return profile
+
+
+def calc_parts(prof):
+    """(js, css) the calc adds to a guide: engine, save reader, page."""
+    js = [read('template', 'calc', 'engine.js')]
+    if prof.get('save'):
+        js.append(read('template', 'calc', 'readers', prof['save'] + '.js'))
+    js.append(read('template', 'calc.js'))
+    return '\n'.join(js), read('template', 'calc.css')
+
+
 def build(hid):
     h = json.loads(read('hacks', hid, 'hack.json'))
     keys, data = keys_for(hid)
     own = json.loads(read('hacks', hid, 'sprites.json')) if os.path.exists(os.path.join(ROOT, 'hacks', hid, 'sprites.json')) else {}
-    data['cfg'] = h['cfg']
+    data['cfg'] = dict(h['cfg'])
+    js, css = read('template', 'dex.js'), read('template', 'dex.css')
+    if 'calc' in h['cfg']:
+        if not h['cfg'].get('ls', {}).get('dmg'):
+            sys.exit(f'{hid}: cfg.calc needs its own storage key cfg.ls.dmg')
+        data['cfg']['calc'] = calc_profile(h['cfg']['calc'], data)
+        cjs, ccss = calc_parts(data['cfg']['calc'])
+        js, css = js + '\n' + cjs, css + '\n' + ccss
     spr, missing, shared = {}, [], 0
     for p in data['P']:
         k = keys[p['id']]
@@ -77,7 +157,7 @@ def build(hid):
     for k, v in vals.items():
         out = out.replace('{{' + k + '}}', html.escape(v))
     # Big parts last, so a "{{" inside them is never treated as a placeholder.
-    out = out.replace('{{css}}', read('template', 'dex.css')).replace('{{js}}', read('template', 'dex.js'))
+    out = out.replace('{{css}}', css).replace('{{js}}', js)
     out = out.replace('{{data}}', script_json(data)).replace('{{spr}}', script_json(spr))
     os.makedirs(os.path.join(ROOT, 'dist'), exist_ok=True)
     open(os.path.join(ROOT, 'dist', hid + '.html'), 'w', encoding='utf-8', newline='\n').write(out)

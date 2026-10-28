@@ -134,6 +134,192 @@ bar (filters rival teams, trades, starter-only items), trade slots in the tracke
 "Level cap" box for cap-relative teams, availability filter "Trainer only" instead of "Changed from vanilla". No
 Minimal Grinding Mode, Hot House, changes doc or conflict cards.
 
+### Trainer field preparation (2026-10-25)
+
+All 75 field-condition comments in the active Trainer Battles tabs are retained in existing notes and new shared
+trainer `field` evidence metadata (65 cards, 110 records including section inheritance). Run
+`tools/trainer_fields_check.py --sources` to check this against the local workbook. Thunderstorm records both
+permanent Rain and Electric Terrain. Also retained: permanent Rain/Sun/Sandstorm/Snow/Fog, Lt. Surge's permanent
+Trick Room, enemy-side permanent Tailwind, random terrain at battle start, one layer each of player Spikes and
+Toxic Spikes after first send-out, and +1 critical chance. The critical bonus's target and random terrain pool
+remain unspecified. Full original wording and scope survive. Shared schema: Emerald Imperium's notes;
+Calc use (area conditions): `template/README.md` → Damage calculator, and Damage calc below. Rebuilt on 0.8.4
+data (merge of main, 2026-10-26): the raw build writes the `field` records.
+
+### Damage calc (2026-10-25, provisional first pass)
+
+Area conditions (trainer `field`, 2026-10-26): area +1 crit is applied as the foe side's +1 crit stage, a guess and
+labelled `+1 crit (foe, guess)`. Permanent Fog is shown as text only: accuracy ×0.6, no damage effect (Gen 4 rule,
+unverified in hg-engine). Easy mode (enemy levels − (1 + floor(lv / 25))): not doing (user, 2026-10-26).
+Doubles (2026-10-28): one `gameType: 'Doubles'` record per trainer with a Double / 2on2 Double tag or partners (92 trainers);
+three Back2Back trainers also carry a Double tag (Executive Ariana, Rocket Grunt #25, Kimono Girl Miki) and count as Doubles.
+`setterStays: true` (`doc/Mechanics.txt:31-32`: weather / terrain from abilities and moves are permanent), so a
+setter's weather stays after it leaves. Figy-group berries heal 1/8 at half HP (`over.items`; `TryUseHeldItem`, `itemdata.c` parameter 8). Dragon
+Cheer is off (`over`: no crit stage at this pin). Weather moves set Snow (no Hail).
+
+Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (the Nidoran♀ identity collision and Flabébé construction were fixed since: `tools/calc/test.mjs`). Evidence: `plans/calc-refine-hardlove.md` (git history) → Unit W → W2.
+
+Enabled on `worktree-damage-calc`, **not merged or independently verified against the ROM**. Base `expansion`
+means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide is 0.8.4 since 2026-10-26 (Build); the
+calc's source traces below were made at the 0.8.3 pin. Save import: below (Save import).
+
+#### Save import
+
+Reader `gen4` (`cfg.calc.save`; format notes `template/calc/readers/README.md` → gen4: hg-engine's enlarged HGSS
+blocks, 30 boxes, the 9-bit ability, mints and the hidden-ability flag). `extract/gid.py` writes `GID` after finalise
+from the pinned source's headers (`include/constants/{species,moves,ability}.h`, `asm/include/items.inc`,
+`data/Species.c` growth rates, `data/PokeFormDataTbl.c` forms): species as `species:form` (hg-engine numbers Gen 5 on 50
+past the National Dex: Chesnaught is 702), 1,101 keys for all 986 P ids; 115 forms the guide lacks but whose stats,
+types and abilities are their base's (Unown B, Shellos East, ...) map to the base; a form with its own data that the
+guide lacks (Alolan Rattata) has no key, so an imported one is skipped and counted in the banner. Moves 782 of 782 and
+abilities by name (the ten repeated names at the end of AB, which no species uses, take the first); items are the
+constant's name in the trainer sets' spelling (Kings Rock -> King's Rock). `check.py` → `check_gid`.
+
+Checked 2026-10-28 with the user's own save, made in **0.7.0** (`.src/saves/Hardlove Gold NDS (0.7.0).sav`, 512 KB
+raw): both partitions' four blocks pass their CRCs, partition 2 is newer (save count 25). Against
+`(0.7.0).expected.json`, written by a separate Python decoder (`.tmp/calc-save-hardlove/proto.py`, not committed;
+from the same notes, so it checks the JS, not the notes), `tools/calc_save_check.mjs` matches all 11 (6 party:
+Eldegoss, Rhyhorn, Arbok, Dottler, Furret, Frogadier with hidden-flag Protean; 5 boxed, levels from experience). Edge
+files (`.tmp/calc-save-hardlove/edges.mjs`): DeSmuME `.dsv` footer reads; newer general block corrupted falls back to
+the older; both copies corrupted is unreadable; blank is empty; PNG / melonDS / mGBA states are states; GBA, USUM and
+footer-less files are wrong. Not yet checked: a 0.8.x save, Pokémon with a mint or Alolan / Galarian forms, eggs in
+the party; the user reports what looks wrong in play.
+
+#### Sources and profile
+
+Authority: `kumakuma1/hardlove` at `f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b` (0.8.3) for the traces in this section;
+the guide's data now comes from `ee4518c149` (0.8.4): recheck a traced battle file against it when its rule matters.
+Battle files are cached in ignored `.tmp/calc-hardlove-gold/source/`; re-fetch those raw GitHub paths at that commit.
+User-supplied notes agree with `doc/Mechanics.txt:5-34`.
+
+| Mechanic | Implementation / source |
+| --- | --- |
+| No EVs | Existing `cfg.evs` hides editing; `cfg.calc.evs: false` also ignores supplied EVs in engine stats/damage. Other profiles keep EVs. |
+| Crits | `critStages`: 1/16, 1/8, 1/2, 1, 1 (`src/battle/other_battle_calculators.c:1720`). Explicit x1.5 damage (`src/battle/battle_calc_damage.c:424`). No crit sampling: KO odds are conditional on a hit and selected crit. |
+| Gems | Matching live item/type: replace native last 5325 power modifier with 6144 (x1.5), `src/individual/CalcBaseDamage.c:915-918`. Item identity retained for Flying Gem + Acrobatics. Magic Room, Klutz and wrong-type Gems do not boost. |
+| Gem exclusions | No boost for Struggle, Pledges or OHKO moves: `src/individual/BattleController_BeforeMove.c:5166-5188`. Consumption precedes damage: `data/battle_scripts/subscripts/subscript_0452_HANDLE_GEM_ACTIVATION_MESSAGE.s`. |
+| Unseen Fist | Native contact-only Protect bypass at full damage. Docs' "completely" does not mean non-contact moves: `CanHitThroughProtect`, `src/individual/BattleController_BeforeMove.c:2556-2567`, checks contact. Punching Glove prevents contact. |
+| Protean / Libero | Native fresh-activation STAB. Source once-per-switch Protean vs repeated Libero: `src/individual/BattleController_BeforeMove.c:620-645`. Decision (user, 2026-10-25): every-move STAB, accepted although the source is once per switch-in for Protean; the edit menu sets the defending type (no type history). |
+| Kee / Maranga Berry | Fire after the whole move (`src/individual/ServerDoPostMoveEffects.c` step 17 with Red Card / Eject Button), never between hits: `over.afterMove`, no `pre` event; Luminous Moss, Absorb Bulb, Cell Battery, Snowball, Weakness Policy fire on the hit (`CheckDefenderItemEffectOnHit.c`). Gems boost every hit (`gemBoostingMove` set before the move, cleared at move end). Check: `kee-maranga-after-the-move`. |
+| Multi-hit counts | `battle_script_commands.c` (2-5 roll): Skill Link 5; Greninja form 1 Water Shuriken 3 hits, power 20 (`CalcBaseDamage.c` `MOVE_WATER_SHURIKEN`); Loaded Dice 4-5, Population Bomb 4-10 with one accuracy check. |
+| Battle Bond | Manually select +1 Atk and +1 Spe after KO, no SpA: `data/battle_scripts/subscripts/subscript_0515_BATTLE_BOND_BOOST.s:11-16`. No automatic post-KO simulation. |
+| Snow | Gen 9 Snow (no Hail): Ice physical Defense x1.5, not SpD, `src/individual/CalcBaseDamage.c:1400-1408`. |
+| Fields | Existing Gen 9 fields retained; add per-side Flower Gift, Power Trick, Protect using existing renderer/native engine. Importer's limited field list is not an availability specification. |
+| Permanent fields | Setter and area weather / terrain stay (`setterStays`); no countdown or Defog simulation. |
+| Moody / sleep / OHKO | Accuracy/evasion randomness, sleep duration and OHKO chance/level checks are outside damage simulation. Current sleep status and manual stat stages remain usable. |
+| Return / Frustration | Power from happiness (`CalcBaseDamage.c:211-215`, integer `*10/25`); the user types the power (`expansion` varpow), so the calc takes the typed value. Fixtures: `frustration-happiness-127`, `frustration-happiness-0`, `return-happiness-127`. |
+| Rage Fist | Flat data power 100 (sheet's +50 per hit taken not modelled): no hit-taken counter is in the source (only the punch list, `other_battle_calculators.c:441`), so the sheet/notes stand as the orchestrator directed. Fixtures: `rage-fist-flat-100`, `rage-fist-normal-target-immune`. |
+| Thunder Wave | Status-only (accuracy bypass for Electric users, no damage rule): out of scope for the damage calc. No fixtures. |
+| Pain Split | Status-only (HP averaging): out of scope for the damage calc. No fixtures. |
+| Misty Explosion | Power 200 is data; Misty Terrain x1.5 is stock Gen 9 (`CalcBaseDamage.c:492-494`, applied to base power). Fixtures: `misty-explosion-misty-terrain`, `misty-explosion-no-terrain`. Defense halving: see Needs Opus in the calc plan. |
+| Explosion / Self-Destruct | Power 250 / 200 are data. No Defense halving in source (`CalcBaseDamage.c` has no Explosion case; the sheet's "Halves target's defense" is not implemented) and none in Gen 9 stock (Gen 1-4 only). Current calc: not halved. Fixtures: `explosion-defense-not-halved`, `self-destruct-defense-not-halved`. Decision: the code wins, no halving; check in game (In-game tests). |
+| Hidden Power | BP 60 is data (`CalcBaseDamage.c:361-362`). Type from IVs (`other_battle_calculators.c:3277`) is not derived: the user types the type. Fixtures: `hidden-power-fire-typed`, `hidden-power-data-type-normal`. Open: see Needs Opus. |
+| Double Shock | Not a punching move: neither data.json nor stock flags it, so Iron Fist never boosts it. "Must be Electric" is a usability rule, not damage. Pain Split: HP averaging, out of scope. |
+
+Engine pass (2026-10-26): `cfg.calc.over.state` keeps the battle-state inputs off
+where the source ignores them (each `calc_states.json` case cites its source line): Echoed Voice, Rage Fist, Last
+Respects, Avalanche, Round, Fusion Flare / Bolt and the pledges stay flat; Defense Curl doesn't double Rollout / Ice
+Ball (lost in the replacement damage path); Magnitude isn't doubled against Dig (only Earthquake is); Gust / Twister
+against Fly double their power, not their damage. Revenge's toggle means "the target was already damaged this turn"
+(the source's condition). Crit stages: `MV.cr` from the move effects in `data/Moves.c` (28 moves; Dragon Cheer and
+Ivy Cudgel have none at this pin), the five-entry `critStages` table caps the stage at 4. Spectral Thief doesn't steal (`over.state`: `false`; its HIT script at this pin has no theft, U1: moves:19309,
+move0715:7): plain 90 power. **Doc says** it steals boosts. Intrepid Sword / Dauntless Shield are once per battle in
+the source; the calc fires them unless the set's `entry` is `false` (the page says the entry doesn't count). Fixtures:
+`calc_states.json` (736 cases).
+
+Gem replacement intentionally takes the **last** native 5325: in pinned `@smogon/calc 0.12.0`
+`calculateBPModsSMSSSV`, the Gem item branch follows ability modifiers and no later branch adds 5325. First-match
+replacement would be ambiguous with Sheer Force. Recheck this on engine updates; source/stock parity does not
+certify every modifier-order/rounding combination in hg-engine.
+
+#### Move flags fixed
+
+Old extraction initialised every `MV.f` to `[]`, losing standard contact/punch/sound flags and breaking Unseen Fist
+and other flag-sensitive effects. `hgengine.move_flags()` starts with pinned Showdown Gen 9 flags, then takes
+**contact** from the hack's `data/Moves.c`. Fresh builds use it in `dex.movetable`; the committed data was patched
+with the same helper; the raw build writes them. Only flags changed: 774 entries, 255 contact
+moves; IDs/order, stats, moves' numbers, trainer teams and storage keys unchanged. Source removes standard contact
+from Sunsteel Strike, Collision Course, Electro Drift, Thunderous Kick and Behemoth Blade (fixtures cover all five).
+Unit F (2026-10-25) audited punch/bite/pulse/sound/slicing against the pinned 0.8.3 tables: restored Growl's punch
+flag and slicing on Crush Claw, Dire Claw, Dragon Claw, Metal Claw and Shadow Claw; three source-formula fixtures.
+Reckless and Sheer Force follow the source's effect-code lists (`CalcBaseDamage.c:691-709`) through `over.rules`
+`powerMods`: Reckless x1.2 on Chloroblast (stock has no recoil flag on it); Sheer Force x1.3 added on Floaty Fall,
+Splishy Splash and Thousand Waves, and removed on the 21 moves stock boosts but the source does not (Rapid Spin,
+Secret Power, Snore, Sky Attack, Alluring Voice, Bounce, Upper Hand, Barb Barrage, Relic Song, Diamond Storm, Double
+Iron Bash, Aura Wheel, Axe Kick, Salt Cure, Mortal Spin, Order Up, Matcha Gotcha, Eerie Spell, Esper Wing, Infernal
+Parade, Dire Claw). Fixtures `source-sheer-force-*`, `source-reckless-chloroblast`.
+
+#### Importer downloads
+
+Originals copied to ignored `.src/calc-import/`, references only, not shipped:
+- `hardlovegoldnds084_npoint_data.json`: title 0.8.4, 1,039 species, 905 moves, 690 species with sets (1,910 sets).
+  Useful for a future version-update cross-check; no damage engine or expected rolls.
+- `hardlovegoldnds084.js`: `var overrides`, species/learnsets, encounters, moves, items and abilities.
+- `hardlovegoldnds084_searchindex.js`: generated search/aliases, not mechanics.
+
+Malformed move: key `10`, type `000`, category `000 bolt`, priority 195. Item overrides contain only two records.
+These are not complete validated replacements for pinned source/guide tables or verified calc settings. No
+unlicensed importer code/tables were copied into tracked runtime files.
+
+#### Validation and open in-game tests
+
+`npm test --prefix tools/calc`: 81 existing engine tests plus 66 Hardlove checks (59 matchups, seven focused checks).
+`hardlove_check.mjs` compares all 16 rolls/hit with stock Gen 9 and guide numbers, explicit reference Gem powers,
+and a hand-derived example: level 50, Atk 130, Def 120, Tackle 40 -> base 21; Gem power 60 -> 30; crit base 31.
+Report `.tmp/calc-hardlove-gold/check.json` explicitly says `independentHackOracle: false`. Fixtures intentionally
+have no runnable hzla settings: do not pass them to `hzla_compare.mjs` or call these independent oracle matches.
+`node tools/scenarios/calc-hardlove.mjs`: controls/damage/persistence pass at five viewer sizes, normal + dvkb (10/10).
+Build all guides after the shared engine change: `python assemble.py`.
+
+Session regression checks: all four guides built; Photonic Sun and Eternal X are byte-identical to HEAD builds;
+Emerald Imperium's calc DOM is identical in normal/dvkb, without page errors. Hardlove's extract checker and
+Trainers/Walkthrough check pass (986 species, 329 trainer cards, 18 splits, 94 stops); consistency checks pass in
+both modes, five viewer sizes and light theme. Data comparison against HEAD confirms only `MV.f` changed.
+Phone preview: `hardlove-calc.html` (Thor frame). No independent ROM-oracle comparison or full gate claimed.
+
+**Stop before declaring the mechanics trusted. User's in-game checks:**
+1. Known level/nature/IV and zero-EV sets: record starting/ending HP for a neutral move, matching Gem, guaranteed
+   crit, Flying Gem + Acrobatics and a multi-hit Gem attack. Multiple observed hits can challenge the range; one
+   hit cannot prove all 16 rolls.
+2. Against Protect with Unseen Fist: contact full damage; same punch with Punching Glove blocked; Dark Pulse blocked.
+   Test the five source-specific non-contact moves when available.
+3. Two different off-type moves without switching: record type/damage for Protean, repeat with Libero. The calc gives
+   STAB on every move (user decision); if the game drops it on the second move, that is the accepted difference.
+4. Battle Bond: compare all stats before/after KO, after a second KO, and after switching. Atk/Spe only, no SpA.
+   Use manual stages in the calc; repeated-trigger behaviour is not certified.
+5. Ice defender with Snow: physical vs special damage. Also check permanent weather/terrain beyond normal duration,
+   Defog not clearing terrain, Gen 4 sleep turns and No Guard/Lock On OHKO chance in gameplay, not damage parity.
+
+Other framework limits: no switch/type history, automatic partner inference, item-consumption persistence between
+uses, ability activation counters or post-KO changes. Speed label handles stages/paralysis, not every field/ability
+modifier (damage engine turn-order logic is separate). Unknown weights, hack-specific move effects and other flag
+classes still need refinement. Do not merge based on stock-engine parity alone.
+
+#### In-game tests
+
+Rolls are the engine's 16 rolls. Level 50, Serious nature, 31 IVs, 0 EVs, no item, no field unless stated. "Other way"
+is what the game shows if the point goes the other way.
+
+- **Explosion is not halved.** Settles: the target's Defense is not halved for Explosion (the sheet says halved; the source has no halving).
+  - Attacker: Snorlax (Atk 130), no ability effect. Defender: Blastoise (HP 154, Def 120). Move: Explosion (power 250, STAB).
+  - Expected: `153 156 157 159 160 162 165 166 168 169 171 174 175 177 178 181`.
+  - Other way (halved): `306 309 312 316 319 324 327 330 334 337 342 345 348 352 355 360`. Halved Def equals doubled Atk here (Def 120 is even).
+- **Self-Destruct is not halved.** Same setup with Self-Destruct (power 200).
+  - Expected: `123 124 126 127 129 130 132 133 135 136 138 139 141 142 144 145`.
+  - Other way (halved): `244 247 250 252 255 258 261 264 267 270 273 276 279 282 285 288`.
+- **Rage Fist has flat power 100.** Settles: no +50 per hit taken (the sheet's rule is not modelled).
+  - Attacker: Snorlax with Rage Fist, no hits taken. Defender: Blastoise.
+  - Expected: `41 42 42 43 43 44 44 45 45 46 46 47 47 48 48 49`.
+  - Other way (one hit taken, power 150): `62 62 63 64 64 65 66 67 67 68 69 70 70 71 72 73`.
+- **Protean on a second off-type move.** Settles: the calc gives STAB to every off-type move (an accepted decision); the source gives it once per switch-in.
+  - Attacker: Greninja (Protean). Defender: Snorlax. Move 1: Ice Beam. Move 2, same switch-in: Flamethrower (Fire).
+  - Expected in the calc (STAB on both moves): `49 49 49 51 51 52 52 52 54 54 55 55 55 57 57 58`.
+  - Other way (no STAB on move 2, the source rule): `33 33 33 34 34 35 35 35 36 36 37 37 37 38 38 39` (Greninja without Protean, Flamethrower).
+- **Snow raises Ice Defense against physical moves only.** Settles: Snow does not change special damage.
+  - Defender: Abomasnow (Ice/Grass, Lv 50). Physical attacker: Snorlax, Tackle. Special attacker: Alakazam, Psychic (power 90).
+  - Physical in Snow: `22 22 22 22 24 24 24 24 24 24 25 25 25 25 25 27`. Other way (no Snow): `33 33 33 33 34 34 34 34 36 36 36 36 37 37 37 39`.
+  - Special in Snow: `76 76 78 78 79 81 81 82 82 84 85 85 87 87 88 90`, the same with no Snow.
+
 ## Checks
 
 `check.py` [baseline.json]: reference integrity (species, trainer teams, area rows), the Starter area, Trainers / Walkthrough

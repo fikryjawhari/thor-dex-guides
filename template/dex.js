@@ -120,7 +120,7 @@ document.addEventListener('click',e=>{if(!INV)return;
  const s=e.target.closest('.num .st');if(s){const b=s.parentElement.querySelector('.nv');const st=+b.dataset.step||1;setNum(b,clampNum(b,(parseInt(b.value)||+b.dataset.min)+(+s.dataset.d)*st));return;}
  const b=e.target.closest('button.nv');if(!b||(KB.o&&KB.o.target===b))return;
  b.classList.add('open');KB.open({mode:'num',target:b,value:b.value,label:`${b.dataset.label} (${b.dataset.min}–${b.dataset.max})`,
-  done:v=>{const n=parseInt(v);if(!isNaN(n))setNum(b,clampNum(b,n));},onClose:()=>b.classList.remove('open')});});
+  done:v=>{if(CF.calc&&b.dataset.clr&&v===''){setNum(b,'');return;}const n=parseInt(v);if(!isNaN(n))setNum(b,clampNum(b,n));},onClose:()=>b.classList.remove('open')});});
 // Encounter "Other…": the letters keyboard with matching Pokemon in a strip above the keys.
 function otherKb(a){const A=AR[a];const res=x=>{const n=norm(x);return n.length<2?[]:P.filter(p=>p.g===0&&(p.nk??=norm(p.n)).includes(n)).slice(0,12);};
  KB.open({mode:'abc',value:'',label:A?A.n:'Name',strip:x=>{const r=res(x);return r.length?r.map(p=>`<button type="button" class="kpick" data-id="${esc(p.id)}">${spr(p.id,'s32')}<span>${esc(p.name)}</span></button>`).join('')
@@ -137,7 +137,8 @@ document.getElementById('t-s').addEventListener('click',e=>{e.preventDefault();S
 // The search stays set across pages (detail pages hide it) until its × clears it, or a tap on the tab you're already on.
 document.getElementById('rail').addEventListener('click',e=>{const a=e.target.closest('a[href^="#/"]');
  if(a&&a.getAttribute('href')===(location.hash||'#/')&&q.value){e.preventDefault();q.value='';q.dispatchEvent(new Event('input'));window.scrollTo(0,0);}});
-function setTab(t){['p','l','t','i','w','c'].forEach(x=>document.getElementById('t-'+x).classList.toggle('on',x===t));}
+if(!CF.calc)document.getElementById('t-c').remove();
+function setTab(t){['p','l','t','i','w','c'].forEach(x=>document.getElementById('t-'+x)?.classList.toggle('on',x===t));}
 // ===== POKEMON TAB: chip filters (type / ability / move / location)
 const FL={type:'Type',ab:'Ability',mv:'Move',loc:'Found at'};
 const fval=f=>f.k==='mv'?M[f.v]:f.k==='loc'?LOC[f.v]:f.k==='ab'?AB[f.v][0]:f.v;
@@ -204,6 +205,7 @@ function calcCard(p){const s=calcState(p);return `<div class="card calc"><h3>Sta
  <tr><th>Stat</th>${SN.map((n,i)=>`<td class="res" id="c-r${i}"></td>`).join('')}</tr></table></div>
  ${EVS?'':`<div class="mut small" style="margin-top:6px">${TX.noev}</div>`}<div class="mut small" style="margin-top:8px">Speed by level (rare candy planning)</div><div class="lvrow" id="c-lv"></div></div>`;}
 function bindCalc(p){const g=id=>app.querySelector(id);if(!g('#c-l'))return;
+ if(CF.calc){const button=document.createElement('button');button.className='calc-use';button.textContent='Use in calc ▸';button.onclick=()=>window.CALC?.use(p);g('.calc').appendChild(button);}
  const upd=()=>{const s={l:Math.max(1,Math.min(100,parseInt(g('#c-l').value)||1)),n:g('#c-n').value,iv:[...app.querySelectorAll('[data-iv]')].map(e=>Math.max(0,Math.min(31,parseInt(e.value)||0))),ev:EVS?[...app.querySelectorAll('[data-ev]')].map(e=>Math.max(0,Math.min(252,parseInt(e.value)||0))):[0,0,0,0,0,0]};
   SN.forEach((n,i)=>{g('#c-r'+i).textContent=stat(p.s[i],i,s.iv[i],s.ev[i],s.l,s.n);});
   const lv=[];for(let L=Math.max(1,s.l-2);L<=Math.min(100,s.l+6);L++)lv.push(`<span class="${L===s.l?'cur':''}">Lv ${L}: <b>${stat(p.s[5],5,s.iv[5],s.ev[5],L,s.n)}</b></span>`);g('#c-lv').innerHTML=lv.join('');
@@ -478,11 +480,11 @@ function segAll(b,list){const open=b.dataset.a==='1',y=b.getBoundingClientRect()
 // top with the gap above it; down = the next split to that same spot, so up and down undo each other.
 const RJ=document.querySelector('.rjump');
 const jts=()=>[...app.querySelectorAll('details.split.jt')];
-function jump(dir){const t=T(),sp=jts(),hs=sp.map(d=>d.getBoundingClientRect().top);let i;
+function jump(dir){if(CF.calc&&location.hash==='#/calc'&&window.CALC){const stops=window.CALC.stops();const target=dir>0?stops.find(stop=>stop>scrollY+3):stops.slice().reverse().find(stop=>stop<scrollY-3);scrollTo(0,target??(dir>0?stops[stops.length-1]:0));jumpState();return;}const t=T(),sp=jts(),hs=sp.map(d=>d.getBoundingClientRect().top);let i;
  if(dir<0){i=-1;hs.forEach((y,j)=>{if(y<t-2)i=j;});if(i<0){scrollTo(0,0);jumpState();return;}}
  else{i=hs.findIndex(y=>y>t+2);if(i<0){scrollTo(0,html.scrollHeight);jumpState();return;}}
  scrollBy(0,hs[i]-t);flash(sp[i].querySelector(':scope>summary'));jumpState();}
-function jumpState(){if(!RJ||RJ.hidden)return;const t=T(),atEnd=scrollY+innerHeight>=html.scrollHeight-1;
+function jumpState(){if(!RJ||RJ.hidden)return;if(CF.calc&&location.hash==='#/calc'&&window.CALC){const stops=window.CALC.stops();RJ.querySelector('[data-j="-1"]').disabled=!stops.some(stop=>stop<scrollY-3);RJ.querySelector('[data-j="1"]').disabled=!stops.some(stop=>stop>scrollY+3);return;}const t=T(),atEnd=scrollY+innerHeight>=html.scrollHeight-1;
  RJ.querySelector('[data-j="-1"]').disabled=scrollY<=0;RJ.querySelector('[data-j="1"]').disabled=atEnd||!jts().some(d=>d.getBoundingClientRect().top>t+2);}
 if(RJ){RJ.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>jump(+b.dataset.j));
  let raf=0;addEventListener('scroll',()=>{if(!raf&&!RJ.hidden)raf=requestAnimationFrame(()=>{raf=0;jumpState();});},{passive:true});}
@@ -642,21 +644,23 @@ const evTxt=ev=>ev.map((v,i)=>v?v+' '+SN[i]:'').filter(Boolean).join(' / ');
 const monLv=(x,cap)=>x.l!=null?x.l:x.r!=null&&cap?cap+x.r:NaN;
 // One Pokemon (template/README.md): sprite, name and level; types, tags and speed; ability · item · nature; moves
 // two across; EVs. No IVs (speeds still use them).
-function monCard(x,cap,sel){const p=byId[x.id];const lv=monLv(x,cap);
+// A Totem's aura (mon.au: stages Atk, Def, SpA, SpD, Spe): "Aura Def +1", "Aura +2 all".
+const auTxt=au=>{const n=['Atk','Def','SpA','SpD','Spe'],s=v=>(v>0?'+':'−')+Math.abs(v);return 'Aura '+(au.every(v=>v===au[0])?s(au[0])+' all':au.map((v,i)=>v?n[i]+' '+s(v):'').filter(Boolean).join(' '));};
+function monCard(x,cap,sel,trainerKey,index){const p=byId[x.id];const lv=monLv(x,cap);
  const main=p&&lv?stat(p.s[5],5,x.iv[5],EVS&&!MGM?x.ev[5]:0,lv,x.na):null;
  const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b></span>${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
  const lvs=x.l!=null||x.r==null?`Lv ${x.l??'?'}`:`Lv ${lv||'?'} <span class="mut small">cap${x.r?(x.r>0?'+':'−')+Math.abs(x.r):''}</span>`;
- const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'');
+ const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'')+(x.au?`<span class="tag aura">${auTxt(x.au)}</span>`:'');
  const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');const ev=EVS&&!MGM&&x.ev?evTxt(x.ev):'';
  return `<div class="mon${sel?' sel':''}"><div class="mh">${spr(x.id,'s32')}<div class="mt"><div class="l1"><span class="mn">${p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:'?'}</span><b>${lvs}</b></div><div class="l2">${p?p.t.map(ty).join(''):''}${tags} ${spd}</div></div></div>
  <div class="small ab">${ab}${x.i?' · '+esc(x.i):''}${x.na?` · <span title="${esc(natLabel(x.na))}">${esc(x.na)}</span>`:''}</div>
  <div class="mv">${x.m.map(i=>`<a href="#/m/${i}"><span class="dot" style="background:${tcol(M[i]==='Hidden Power'&&x.hp?x.hp:(MV[i]||{}).t)}"></span>${M[i]==='Hidden Power'&&x.hp?'HP '+esc(x.hp):esc(M[i])}</a>`).join('')}</div>
  ${ev?`<div class="mut small ex">EVs ${ev}</div>`:''}${(x.x||[]).length?`<div class="mut small ex">Sheet: ${x.x.map(esc).join('; ')}</div>`:''}
- ${(x.cf||[]).length?`<div class="cfx">Sheet says ${x.cf.map(esc).join('; ')}</div>`:''}</div>`;}
+ ${(x.cf||[]).length?`<div class="cfx">Sheet says ${x.cf.map(esc).join('; ')}</div>`:''}${CF.calc&&trainerKey?`<button class="calc-versus" data-trainer="${esc(trainerKey)}" data-index="${index}">Calc vs ${esc(p?.name||'?')} ▸</button>`:''}</div>`;}
 // A team. Under 500 px wide (dex.css) a team of two or more is a strip of sprite buttons with levels over one Pokemon,
 // the first to start (a tap shows another; not saved); wider, every Pokemon, three across at most.
-function teamHTML(ps,cap){if(ps.length<2)return `<div class="team">${ps.map(x=>monCard(x,cap)).join('')}</div>`;
- return `<div class="tpick">${ps.map((x,i)=>{const l=monLv(x,cap);return `<button type="button" data-i="${i}"${i?'':' class="on"'}>${spr(x.id,'s28')}<small>${isNaN(l)?'?':l}</small></button>`;}).join('')}</div><div class="team tB">${ps.map((x,i)=>monCard(x,cap,!i)).join('')}</div>`;}
+function teamHTML(ps,cap,trainerKey){if(ps.length<2)return `<div class="team">${ps.map((x,index)=>monCard(x,cap,false,trainerKey,index)).join('')}</div>`;
+ return `<div class="tpick">${ps.map((x,i)=>{const l=monLv(x,cap);return `<button type="button" data-i="${i}"${i?'':' class="on"'}>${spr(x.id,'s28')}<small>${isNaN(l)?'?':l}</small></button>`;}).join('')}</div><div class="team tB">${ps.map((x,i)=>monCard(x,cap,!i,trainerKey,i)).join('')}</div>`;}
 document.addEventListener('click',e=>{const b=e.target.closest('.tpick button');if(!b)return;const bar=b.parentElement,t=bar.nextElementSibling;
  [...bar.children].forEach(x=>x.classList.toggle('on',x===b));[...t.children].forEach((m,i)=>m.classList.toggle('sel',i===+b.dataset.i));});
 // A partner fighting at your side (t.pt [{n, st, p}], one team per starter where it depends on it): a closed drop-down
@@ -675,7 +679,7 @@ function trainerBlock(t,mini,row,inRow,multi){const rel=t.p.some(x=>x.l==null);c
  ${(t.note||[]).length?`<div class="trnote">${t.note.map(esc).join('<br>')}</div>`:''}
  ${t.rw?`<div class="trnote"><b>Rewards:</b> ${t.rw.map(esc).join(', ')}</div>`:''}
  ${rel?`<details class="capd" data-k="${t.k}" ${CAPO.has(t.k)?'open':''}><summary>Level cap <b>${t.cap||'–'}</b>${own?` <span class="mut small">· yours</span> <b>${TCAP[t.k]}</b>`:!t.cap&&cap?` <span class="mut small">· using</span> <b>${cap}</b>`:''}</summary><div class="trk"><span class="mut small">Your level</span>${INV?numBox(`data-k="${t.k}"`,cap||'',{min:1,max:100,steppers:true,label:TX.capl}).replace('class="nv"','class="nv capin"'):`<input class="capin" type="number" inputmode="numeric" min="1" max="100" style="width:72px" data-k="${t.k}" value="${cap||''}">`}<span class="mut small">${own&&t.cap?`<a href="#" class="capreset" data-k="${t.k}">reset to cap ${t.cap}</a>`:t.cap?'':TX.capnone}</span></div></details>`:''}
- ${inRow?'':partnerBlock(t)}${teamHTML(t.p,cap)}
+ ${inRow?'':partnerBlock(t)}${teamHTML(t.p,cap,t.k)}
  ${row||t.pp?`<div class="trf mut small">${row?`<button class="trfold">${UPI}<span>Collapse</span></button>`:''}${t.pp?`<span class="trpp"><a href="${esc(t.pp)}" target="_blank" rel="noopener">Pokepaste</a></span>`:''}</div>`:''}</div>`;}
 // The level box under a trainer starts closed; it stays open across re-renders (setting the level re-renders) but not
 // across reloads.
@@ -945,14 +949,17 @@ function land(el){if(!el)return;const st0=el.tagName==='SUMMARY'?el.parentElemen
  ['pointerdown','wheel','keydown'].forEach(k=>addEventListener(k,end,{once:true,passive:true}));
  const f=()=>{if(stop||performance.now()-t0>700){html.style.overflowAnchor='';cv.forEach(p=>p.style.contentVisibility='');jumpState();return;}to();requestAnimationFrame(f);};requestAnimationFrame(f);}
 
-// ===== CALC (empty for now; the stat calculator is on each Pokemon page)
-function calcPage(){fil.innerHTML='';app.innerHTML=`<div class="card"><h3>Calc</h3><p style="margin:0">Coming soon. Each Pokémon page has a stat calculator in the meantime.</p></div>`;}
+document.addEventListener('click',event=>{const button=CF.calc&&event.target.closest('.calc-versus');if(button)window.CALC?.enter(button.dataset.trainer,+button.dataset.index);});
+// ===== CALC
+function calcPage(){if(window.CALC)window.CALC.render();}
 // ===== ROUTER
 function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).split('/');const v=parts[0]||'';
+ if(v==='calc'&&!CF.calc){history.replaceState(history.state,'','#/');render(fromInput);return;}
+ if(CF.calc){document.body.classList.toggle('calc-route',v==='calc');if(v!=='calc')window.CALC?.leave();}
  if(st.view===''&&v!==''&&!fromInput)st.listScroll=Object.assign(keepAnchor(),{z:cvSizes()});
  // The search stays set from page to page, except into a place (#/l/, a link from a Pokemon page): that's a jump to it.
  if(v==='l'&&!fromInput){q.value='';st.q='';}
- document.body.dataset.v=v;if(RJ)RJ.hidden=!(COLV[v]&&!st.q);
+ document.body.dataset.v=v;if(RJ)RJ.hidden=!(COLV[v]&&!st.q||CF.calc&&v==='calc');
  if(v==='p'){setTab('p');detail(decodeURIComponent(parts[1]));}
  else if(v==='m'){setTab('p');moveDetail(+parts[1]);}
  else if(v==='a'){setTab('p');abilityDetail(+parts[1]);}

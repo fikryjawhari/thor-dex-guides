@@ -18,6 +18,1616 @@
    "trainers",
    "trainers"
   ],
+  "calc": {
+   "setterStays": true,
+   "base": "expansion",
+   "save": "gen4",
+   "evs": false,
+   "critStages": [
+    0.0625,
+    0.125,
+    0.5,
+    1,
+    1
+   ],
+   "field": [
+    {
+     "k": "gameType",
+     "l": "Battle",
+     "type": "select",
+     "o": [
+      [
+       "Singles",
+       "Singles"
+      ],
+      [
+       "Doubles",
+       "Doubles"
+      ]
+     ],
+     "side": "field",
+     "to": "gameType"
+    },
+    {
+     "k": "weather",
+     "l": "Weather",
+     "type": "select",
+     "o": [
+      [
+       "",
+       "None"
+      ],
+      [
+       "Sun",
+       "Sun"
+      ],
+      [
+       "Rain",
+       "Rain"
+      ],
+      [
+       "Sand",
+       "Sandstorm"
+      ],
+      [
+       "Snow",
+       "Snow"
+      ],
+      [
+       "Harsh Sunshine",
+       "Harsh sunshine"
+      ],
+      [
+       "Heavy Rain",
+       "Heavy rain"
+      ],
+      [
+       "Strong Winds",
+       "Strong winds"
+      ]
+     ],
+     "side": "field",
+     "to": "weather"
+    },
+    {
+     "k": "terrain",
+     "l": "Terrain",
+     "type": "select",
+     "o": [
+      [
+       "",
+       "None"
+      ],
+      [
+       "Electric",
+       "Electric"
+      ],
+      [
+       "Grassy",
+       "Grassy"
+      ],
+      [
+       "Misty",
+       "Misty"
+      ],
+      [
+       "Psychic",
+       "Psychic"
+      ]
+     ],
+     "side": "field",
+     "to": "terrain"
+    },
+    {
+     "k": "gravity",
+     "l": "Gravity",
+     "type": "toggle",
+     "side": "field",
+     "to": "isGravity"
+    },
+    {
+     "k": "wonderRoom",
+     "l": "Wonder Room",
+     "type": "toggle",
+     "side": "field",
+     "to": "isWonderRoom"
+    },
+    {
+     "k": "magicRoom",
+     "l": "Magic Room",
+     "type": "toggle",
+     "side": "field",
+     "to": "isMagicRoom"
+    },
+    {
+     "k": "atkReflect",
+     "l": "Attacker Reflect",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isReflect"
+    },
+    {
+     "k": "atkLightScreen",
+     "l": "Attacker Light Screen",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isLightScreen"
+    },
+    {
+     "k": "atkAuroraVeil",
+     "l": "Attacker Aurora Veil",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isAuroraVeil"
+    },
+    {
+     "k": "atkTailwind",
+     "l": "Attacker Tailwind",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isTailwind"
+    },
+    {
+     "k": "atkHelpingHand",
+     "l": "Attacker Helping Hand",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isHelpingHand"
+    },
+    {
+     "k": "atkFriendGuard",
+     "l": "Attacker Friend Guard",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFriendGuard"
+    },
+    {
+     "k": "defReflect",
+     "l": "Defender Reflect",
+     "type": "toggle",
+     "side": "def",
+     "to": "isReflect"
+    },
+    {
+     "k": "defLightScreen",
+     "l": "Defender Light Screen",
+     "type": "toggle",
+     "side": "def",
+     "to": "isLightScreen"
+    },
+    {
+     "k": "defAuroraVeil",
+     "l": "Defender Aurora Veil",
+     "type": "toggle",
+     "side": "def",
+     "to": "isAuroraVeil"
+    },
+    {
+     "k": "defTailwind",
+     "l": "Defender Tailwind",
+     "type": "toggle",
+     "side": "def",
+     "to": "isTailwind"
+    },
+    {
+     "k": "defHelpingHand",
+     "l": "Defender Helping Hand",
+     "type": "toggle",
+     "side": "def",
+     "to": "isHelpingHand"
+    },
+    {
+     "k": "defFriendGuard",
+     "l": "Defender Friend Guard",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFriendGuard"
+    },
+    {
+     "k": "atkFlowerGift",
+     "l": "Attacker Flower Gift",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFlowerGift"
+    },
+    {
+     "k": "atkPowerTrick",
+     "l": "Attacker Power Trick",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isPowerTrick"
+    },
+    {
+     "k": "atkProtected",
+     "l": "Attacker Protect",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isProtected"
+    },
+    {
+     "k": "defFlowerGift",
+     "l": "Defender Flower Gift",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFlowerGift"
+    },
+    {
+     "k": "defPowerTrick",
+     "l": "Defender Power Trick",
+     "type": "toggle",
+     "side": "def",
+     "to": "isPowerTrick"
+    },
+    {
+     "k": "defProtected",
+     "l": "Defender Protect",
+     "type": "toggle",
+     "side": "def",
+     "to": "isProtected"
+    },
+    {
+     "k": "atkFocus",
+     "l": "Attacker Focus Energy",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFocusEnergy"
+    },
+    {
+     "k": "defFocus",
+     "l": "Defender Focus Energy",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFocusEnergy"
+    }
+   ],
+   "over": {
+    "contact": {
+     "defenderPads": true
+    },
+    "afterMove": [
+     "Kee Berry",
+     "Maranga Berry"
+    ],
+    "items": {
+     "Figy Berry": {
+      "heal": 0.125,
+      "threshold": 0.5
+     },
+     "Wiki Berry": {
+      "heal": 0.125,
+      "threshold": 0.5
+     },
+     "Mago Berry": {
+      "heal": 0.125,
+      "threshold": 0.5
+     },
+     "Aguav Berry": {
+      "heal": 0.125,
+      "threshold": 0.5
+     },
+     "Iapapa Berry": {
+      "heal": 0.125,
+      "threshold": 0.5
+     }
+    },
+    "critMultiplier": 1.5,
+    "state": {
+     "Dragon Cheer": false,
+     "Echoed Voice": false,
+     "Spectral Thief": false,
+     "Rage Fist": false,
+     "Last Respects": false,
+     "Avalanche": false,
+     "Round": false,
+     "Fusion Flare": false,
+     "Fusion Bolt": false,
+     "Fire Pledge": false,
+     "Water Pledge": false,
+     "Grass Pledge": false,
+     "Rollout": {
+      "curl": false
+     },
+     "Ice Ball": {
+      "curl": false
+     },
+     "Magnitude": {
+      "vol": false
+     },
+     "Gust": {
+      "vol": "power"
+     },
+     "Twister": {
+      "vol": "power"
+     }
+    },
+    "rules": [
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          {
+           "op": "lookup",
+           "args": [
+            {
+             "literal": {
+              "Normal": "Normal Gem",
+              "Fire": "Fire Gem",
+              "Water": "Water Gem",
+              "Electric": "Electric Gem",
+              "Grass": "Grass Gem",
+              "Ice": "Ice Gem",
+              "Fighting": "Fighting Gem",
+              "Poison": "Poison Gem",
+              "Ground": "Ground Gem",
+              "Flying": "Flying Gem",
+              "Psychic": "Psychic Gem",
+              "Bug": "Bug Gem",
+              "Rock": "Rock Gem",
+              "Ghost": "Ghost Gem",
+              "Dragon": "Dragon Gem",
+              "Dark": "Dark Gem",
+              "Steel": "Steel Gem",
+              "Fairy": "Fairy Gem"
+             }
+            },
+            {
+             "ref": "move.type"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "op": "in",
+           "args": [
+            {
+             "ref": "names.move"
+            },
+            [
+             "Struggle",
+             "Water Pledge",
+             "Fire Pledge",
+             "Grass Pledge",
+             "Fissure",
+             "Guillotine",
+             "Horn Drill",
+             "Sheer Cold"
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "replace": [
+       {
+        "from": 5325,
+        "to": 6144
+       }
+      ],
+      "note": "Gem ×1.5"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          {
+           "op": "lookup",
+           "args": [
+            {
+             "literal": {
+              "Normal": "Normal Gem",
+              "Fire": "Fire Gem",
+              "Water": "Water Gem",
+              "Electric": "Electric Gem",
+              "Grass": "Grass Gem",
+              "Ice": "Ice Gem",
+              "Fighting": "Fighting Gem",
+              "Poison": "Poison Gem",
+              "Ground": "Ground Gem",
+              "Flying": "Flying Gem",
+              "Psychic": "Psychic Gem",
+              "Bug": "Bug Gem",
+              "Rock": "Rock Gem",
+              "Ghost": "Ghost Gem",
+              "Dragon": "Dragon Gem",
+              "Dark": "Dark Gem",
+              "Steel": "Steel Gem",
+              "Fairy": "Fairy Gem"
+             }
+            },
+            {
+             "ref": "move.type"
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Struggle",
+           "Water Pledge",
+           "Fire Pledge",
+           "Grass Pledge",
+           "Fissure",
+           "Guillotine",
+           "Horn Drill",
+           "Sheer Cold"
+          ]
+         ]
+        }
+       ]
+      },
+      "replace": [
+       {
+        "from": 5325,
+        "to": 4096
+       }
+      ],
+      "note": "Gem does not activate on this move"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Sheer Force"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Floaty Fall",
+           "Splishy Splash",
+           "Thousand Waves"
+          ]
+         ]
+        }
+       ]
+      },
+      "append": [
+       5325
+      ],
+      "note": "Sheer Force"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Sheer Force"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Rapid Spin",
+           "Secret Power",
+           "Snore",
+           "Sky Attack",
+           "Alluring Voice",
+           "Bounce",
+           "Upper Hand",
+           "Barb Barrage",
+           "Relic Song",
+           "Diamond Storm",
+           "Double Iron Bash",
+           "Aura Wheel",
+           "Axe Kick",
+           "Salt Cure",
+           "Mortal Spin",
+           "Order Up",
+           "Matcha Gotcha",
+           "Eerie Spell",
+           "Esper Wing",
+           "Infernal Parade",
+           "Dire Claw"
+          ]
+         ]
+        }
+       ]
+      },
+      "remove": [
+       5325
+      ],
+      "note": "Sheer Force does not boost this move here"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Reckless"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          "Chloroblast"
+         ]
+        }
+       ]
+      },
+      "append": [
+       4915
+      ],
+      "note": "Reckless"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Low Kick",
+           "Grass Knot"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "set": {
+       "state.hardloveDefWeight": {
+        "op": "floor",
+        "args": [
+         {
+          "op": "div",
+          "args": [
+           {
+            "op": "mul",
+            "args": [
+             {
+              "ref": "def.weightkg"
+             },
+             10,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.ability"
+                 },
+                 "Heavy Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           },
+           {
+            "op": "mul",
+            "args": [
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.ability"
+                 },
+                 "Light Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             },
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.item"
+                 },
+                 "Float Stone"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "state.hardlovePower": {
+        "op": "if",
+        "args": [
+         {
+          "op": "lte",
+          "args": [
+           {
+            "ref": "state.hardloveDefWeight"
+           },
+           100
+          ]
+         },
+         20,
+         {
+          "op": "if",
+          "args": [
+           {
+            "op": "lte",
+            "args": [
+             {
+              "ref": "state.hardloveDefWeight"
+             },
+             250
+            ]
+           },
+           40,
+           {
+            "op": "if",
+            "args": [
+             {
+              "op": "lte",
+              "args": [
+               {
+                "ref": "state.hardloveDefWeight"
+               },
+               500
+              ]
+             },
+             60,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "lte",
+                "args": [
+                 {
+                  "ref": "state.hardloveDefWeight"
+                 },
+                 1000
+                ]
+               },
+               80,
+               {
+                "op": "if",
+                "args": [
+                 {
+                  "op": "lte",
+                  "args": [
+                   {
+                    "ref": "state.hardloveDefWeight"
+                   },
+                   2000
+                  ]
+                 },
+                 100,
+                 120
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "desc.moveBP": {
+        "ref": "state.hardlovePower"
+       }
+      },
+      "value": {
+       "ref": "state.hardlovePower"
+      },
+      "note": "Hardlove inclusive weight bands (CalcBaseDamage.c:131-145; weights in hectograms)"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Heavy Slam",
+           "Heat Crash"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "set": {
+       "state.hardloveDefWeight": {
+        "op": "floor",
+        "args": [
+         {
+          "op": "div",
+          "args": [
+           {
+            "op": "mul",
+            "args": [
+             {
+              "ref": "def.weightkg"
+             },
+             10,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.ability"
+                 },
+                 "Heavy Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           },
+           {
+            "op": "mul",
+            "args": [
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.ability"
+                 },
+                 "Light Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             },
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "def.item"
+                 },
+                 "Float Stone"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "state.hardloveAtkWeight": {
+        "op": "floor",
+        "args": [
+         {
+          "op": "div",
+          "args": [
+           {
+            "op": "mul",
+            "args": [
+             {
+              "ref": "atk.weightkg"
+             },
+             10,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "atk.ability"
+                 },
+                 "Heavy Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           },
+           {
+            "op": "mul",
+            "args": [
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "atk.ability"
+                 },
+                 "Light Metal"
+                ]
+               },
+               2,
+               1
+              ]
+             },
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "eq",
+                "args": [
+                 {
+                  "ref": "atk.item"
+                 },
+                 "Float Stone"
+                ]
+               },
+               2,
+               1
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "state.hardlovePower": {
+        "op": "if",
+        "args": [
+         {
+          "op": "eq",
+          "args": [
+           {
+            "ref": "state.hardloveDefWeight"
+           },
+           0
+          ]
+         },
+         120,
+         {
+          "op": "if",
+          "args": [
+           {
+            "op": "lte",
+            "args": [
+             {
+              "op": "floor",
+              "args": [
+               {
+                "op": "div",
+                "args": [
+                 {
+                  "ref": "state.hardloveAtkWeight"
+                 },
+                 {
+                  "ref": "state.hardloveDefWeight"
+                 }
+                ]
+               }
+              ]
+             },
+             1
+            ]
+           },
+           40,
+           {
+            "op": "if",
+            "args": [
+             {
+              "op": "lte",
+              "args": [
+               {
+                "op": "floor",
+                "args": [
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "ref": "state.hardloveAtkWeight"
+                   },
+                   {
+                    "ref": "state.hardloveDefWeight"
+                   }
+                  ]
+                 }
+                ]
+               },
+               2
+              ]
+             },
+             60,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "lte",
+                "args": [
+                 {
+                  "op": "floor",
+                  "args": [
+                   {
+                    "op": "div",
+                    "args": [
+                     {
+                      "ref": "state.hardloveAtkWeight"
+                     },
+                     {
+                      "ref": "state.hardloveDefWeight"
+                     }
+                    ]
+                   }
+                  ]
+                 },
+                 3
+                ]
+               },
+               80,
+               {
+                "op": "if",
+                "args": [
+                 {
+                  "op": "lte",
+                  "args": [
+                   {
+                    "op": "floor",
+                    "args": [
+                     {
+                      "op": "div",
+                      "args": [
+                       {
+                        "ref": "state.hardloveAtkWeight"
+                       },
+                       {
+                        "ref": "state.hardloveDefWeight"
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   4
+                  ]
+                 },
+                 100,
+                 120
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "desc.moveBP": {
+        "ref": "state.hardlovePower"
+       }
+      },
+      "value": {
+       "ref": "state.hardlovePower"
+      },
+      "note": "Hardlove effective integer weights and ratio bands (CalcBaseDamage.c:146-172; GetPokemonWeight)"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Flail",
+           "Reversal"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "set": {
+       "state.hardlovePower": {
+        "op": "if",
+        "args": [
+         {
+          "op": "lte",
+          "args": [
+           {
+            "op": "floor",
+            "args": [
+             {
+              "op": "div",
+              "args": [
+               {
+                "op": "mul",
+                "args": [
+                 48,
+                 {
+                  "ref": "atk.originalCurHP"
+                 }
+                ]
+               },
+               {
+                "ref": "atk.rawStats.hp"
+               }
+              ]
+             }
+            ]
+           },
+           1
+          ]
+         },
+         200,
+         {
+          "op": "if",
+          "args": [
+           {
+            "op": "lte",
+            "args": [
+             {
+              "op": "floor",
+              "args": [
+               {
+                "op": "div",
+                "args": [
+                 {
+                  "op": "mul",
+                  "args": [
+                   48,
+                   {
+                    "ref": "atk.originalCurHP"
+                   }
+                  ]
+                 },
+                 {
+                  "ref": "atk.rawStats.hp"
+                 }
+                ]
+               }
+              ]
+             },
+             4
+            ]
+           },
+           150,
+           {
+            "op": "if",
+            "args": [
+             {
+              "op": "lte",
+              "args": [
+               {
+                "op": "floor",
+                "args": [
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "op": "mul",
+                    "args": [
+                     48,
+                     {
+                      "ref": "atk.originalCurHP"
+                     }
+                    ]
+                   },
+                   {
+                    "ref": "atk.rawStats.hp"
+                   }
+                  ]
+                 }
+                ]
+               },
+               9
+              ]
+             },
+             100,
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "lte",
+                "args": [
+                 {
+                  "op": "floor",
+                  "args": [
+                   {
+                    "op": "div",
+                    "args": [
+                     {
+                      "op": "mul",
+                      "args": [
+                       48,
+                       {
+                        "ref": "atk.originalCurHP"
+                       }
+                      ]
+                     },
+                     {
+                      "ref": "atk.rawStats.hp"
+                     }
+                    ]
+                   }
+                  ]
+                 },
+                 16
+                ]
+               },
+               80,
+               {
+                "op": "if",
+                "args": [
+                 {
+                  "op": "lte",
+                  "args": [
+                   {
+                    "op": "floor",
+                    "args": [
+                     {
+                      "op": "div",
+                      "args": [
+                       {
+                        "op": "mul",
+                        "args": [
+                         48,
+                         {
+                          "ref": "atk.originalCurHP"
+                         }
+                        ]
+                       },
+                       {
+                        "ref": "atk.rawStats.hp"
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   31
+                  ]
+                 },
+                 40,
+                 20
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "desc.moveBP": {
+        "ref": "state.hardlovePower"
+       }
+      },
+      "value": {
+       "ref": "state.hardlovePower"
+      },
+      "note": "Hardlove Flail/Reversal p >= 32 gives 20 BP (CalcBaseDamage.c:177-204)"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Gyro Ball"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "set": {
+       "state.hardlovePower": {
+        "op": "if",
+        "args": [
+         {
+          "op": "eq",
+          "args": [
+           {
+            "ref": "atk.stats.spe"
+           },
+           0
+          ]
+         },
+         1,
+         {
+          "op": "max",
+          "args": [
+           1,
+           {
+            "op": "min",
+            "args": [
+             150,
+             {
+              "op": "floor",
+              "args": [
+               {
+                "op": "div",
+                "args": [
+                 {
+                  "op": "mul",
+                  "args": [
+                   25,
+                   {
+                    "ref": "def.stats.spe"
+                   }
+                  ]
+                 },
+                 {
+                  "ref": "atk.stats.spe"
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "desc.moveBP": {
+        "ref": "state.hardlovePower"
+       }
+      },
+      "value": {
+       "ref": "state.hardlovePower"
+      },
+      "note": "Hardlove Gyro Ball has no stock +1 (CalcBaseDamage.c:98-105; minimum at :958)"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          "Hard Press"
+         ]
+        }
+       ]
+      },
+      "set": {
+       "desc.moveBP": 1
+      },
+      "value": 1,
+      "note": "Hardlove Hard Press has zero data power and no special formula; final minimum is 1 (Moves.c:24709; CalcBaseDamage.c:958)"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "op": "coalesce",
+           "args": [
+            {
+             "ref": "input.slot.bp"
+            },
+            0
+           ]
+          },
+          0
+         ]
+        },
+        {
+         "op": "or",
+         "args": [
+          {
+           "op": "eq",
+           "args": [
+            {
+             "ref": "names.move"
+            },
+            "Hard Press"
+           ]
+          },
+          {
+           "op": "and",
+           "args": [
+            {
+             "op": "eq",
+             "args": [
+              {
+               "ref": "names.move"
+              },
+              "Gyro Ball"
+             ]
+            },
+            {
+             "op": "gt",
+             "args": [
+              {
+               "ref": "atk.stats.spe"
+              },
+              0
+             ]
+            },
+            {
+             "op": "lt",
+             "args": [
+              {
+               "op": "mul",
+               "args": [
+                25,
+                {
+                 "ref": "def.stats.spe"
+                }
+               ]
+              },
+              {
+               "ref": "atk.stats.spe"
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "op": "and",
+           "args": [
+            {
+             "op": "in",
+             "args": [
+              {
+               "ref": "names.move"
+              },
+              [
+               "Crush Grip",
+               "Wring Out"
+              ]
+             ]
+            },
+            {
+             "op": "eq",
+             "args": [
+              {
+               "op": "floor",
+               "args": [
+                {
+                 "op": "div",
+                 "args": [
+                  {
+                   "op": "floor",
+                   "args": [
+                    {
+                     "op": "div",
+                     "args": [
+                      {
+                       "op": "add",
+                       "args": [
+                        {
+                         "op": "mul",
+                         "args": [
+                          12000,
+                          {
+                           "op": "floor",
+                           "args": [
+                            {
+                             "op": "div",
+                             "args": [
+                              {
+                               "op": "mul",
+                               "args": [
+                                4096,
+                                {
+                                 "ref": "def.originalCurHP"
+                                }
+                               ]
+                              },
+                              {
+                               "ref": "def.rawStats.hp"
+                              }
+                             ]
+                            }
+                           ]
+                          }
+                         ]
+                        },
+                        2047
+                       ]
+                      },
+                      4096
+                     ]
+                    }
+                   ]
+                  },
+                  100
+                 ]
+                }
+               ]
+              },
+              0
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "value": [],
+      "note": "Hardlove clamps zero power to 1 after power modifiers, not before (CalcBaseDamage.c:957-958)"
+     }
+    ],
+    "species": {
+     "mega_garchomp_z": {
+      "weightkg": 99
+     },
+     "mega_lucario_z": {
+      "weightkg": 49.4
+     },
+     "maushold": {
+      "weightkg": 2.8
+     }
+    }
+   }
+  },
   "ls": {
    "dex": "hgdex4",
    "calc": "hgcalc",
@@ -29,7 +1639,8 @@
    "pos": "hgpos",
    "mgm": "hgmgm",
    "loc": "hgloc",
-   "items": "hgitems"
+   "items": "hgitems",
+   "dmg": "hgdmg"
   },
   "txt": {
    "obt": "Obtainable only",

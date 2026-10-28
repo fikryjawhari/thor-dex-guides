@@ -2,6 +2,24 @@
 initialisers like [SPECIES_X] = { .field = value, ... } become nested dicts/lists of strings and ints."""
 import re, json, os
 
+def move_flags(move, standard):
+    """Gen 9 flags with contact and hg-engine's additional punch/slicing members restored.
+
+    Hardlove 0.8.3: src/battle/other_battle_calculators.c:422-505. Growl deliberately replaces Double Shock
+    in PunchingMoveTable; SlicingMoveTable adds the five claw moves missing from the standard flags.
+    """
+    flags = set(standard.get('flags', []))
+    if 'FLAG_CONTACT' in str(move['battle']['flags']).split():
+        flags.add('contact')
+    else:
+        flags.discard('contact')
+    name = move['names']['name']
+    if name == 'Growl':
+        flags.add('punch')
+    if name in ('Crush Claw', 'Dire Claw', 'Dragon Claw', 'Metal Claw', 'Shadow Claw'):
+        flags.add('slicing')
+    return sorted(flags)
+
 def strip_comments(t):
     t = re.sub(r'/\*.*?\*/', '', t, flags=re.S)
     t = re.sub(r'//[^\n]*', '', t)

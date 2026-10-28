@@ -10,6 +10,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import H  # noqa: E402
 from extractlib import finalise, write_data  # noqa: E402
+from ctrguide import build_save_ids  # noqa: E402
 import dex, locs, trainers, items, walk, prune  # noqa: E402
 
 
@@ -23,6 +24,7 @@ def main():
     walk.build(D)
     items.order(D)
     finalise(D, H.name, prune.build)
+    build_save_ids(D, H.load('dex-rebalanced.json'))
     write_data(D, H)
 
 

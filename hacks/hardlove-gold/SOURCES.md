@@ -15,7 +15,7 @@ to run when `repos/hardlove/COMMIT` is not the `watch.json` ref, so update both 
 
 | File | Contents |
 | --- | --- |
-| `repos/hardlove/` | The hack's source at the pinned commit (`COMMIT` holds the sha): `data/Species.c`, `HiddenAbilityTable.c`, `learnsets/learnsets.json`, `Evolutions.c`, `Moves.c` (+ `include/config.h` for the Champions move flags), `Trainers.c`, `Encounters.c`, `SafariEncounters.c`, `Headbutt.c`, `MachineMoves.c`, `HiddenItems.c`, `itemdata/itemdata.c`, form tables, `doc/` (Mechanics, level caps). Stats, types, abilities (with hidden), all move lists, evolutions, move data, trainer sets and TM numbers come from here; wild tables are checked against it |
+| `repos/hardlove/` | The hack's source at the pinned commit (`COMMIT` holds the sha): `data/Species.c`, `HiddenAbilityTable.c`, `learnsets/learnsets.json`, `Evolutions.c`, `Moves.c` (+ `include/config.h` for the Champions move flags), `Trainers.c`, `Encounters.c`, `SafariEncounters.c`, `Headbutt.c`, `MachineMoves.c`, `HiddenItems.c`, `itemdata/itemdata.c`, form tables, the species / move / ability / item constants (the save importer's id tables), `doc/` (Mechanics, level caps). Stats, types, abilities (with hidden), all move lists, evolutions, move data, trainer sets and TM numbers come from here; wild tables are checked against it |
 | `site/pokedex/` | One page per Pokémon. Now only the species list and order, names, other forms and sprites. Its data predates 0.8.0/0.8.1 and has no hidden abilities. Female-only species have 0-byte sprites |
 | `repos/sprites/` | Sprites for those female-only species, from `repos/hardlove`'s `data/graphics/sprites/<id>/female/front.png` |
 | `Pokemon Locations.xlsx` | Sheet `13PoaWuu8lcyTSa6iI1gz6RyQVNqaY6WvrrI18k32mys`: availability, pools, gifts, trades, Game Corner, wild tables (checked slot by slot against `Encounters.c`; the game wins where they differ) |
@@ -27,6 +27,22 @@ to run when `repos/hardlove/COMMIT` is not the `watch.json` ref, so update both 
 | `Mechanics.txt` | Same as `repos/hardlove/doc/Mechanics.txt`. Shown in the guide's Walkthrough tab |
 | `Hardlove Gold AI document_WIP.md`, `Post-KO Switch-in AI.xlsx` | Trainer AI. Shown in the guide's Walkthrough tab |
 | `Move Performance.txt` | Generic move-order notes copied from a wiki; not used |
+
+## Calc references (2026-10-25)
+
+User-exported `hardlovegoldnds084_npoint_data.json`, `hardlovegoldnds084.js` and
+`hardlovegoldnds084_searchindex.js` are copied from Downloads into ignored `.src/calc-import/`.
+They describe 0.8.4, not this guide's pinned 0.8.3, and contain data/search metadata rather than a damage engine.
+Keep as local references only; re-export from hzla's Dynamic Dex importer to obtain them again.
+SHA-256 respectively: `8e32f6dd6cf575fe9ecf56ca9f87b813e5240600ac76fbd51694bef2719ab449`,
+`58fd68c1fa8182026f161e333c5e1a28ad2eae3f76d74cb54edbe6f31e9353a8`,
+`a833693d67009d54dd4328118af48c4b6163f288c81bc18079a63f2af43dc2cb`.
+
+Calc source evidence uses the existing `f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b` release pin:
+`src/individual/{CalcBaseDamage,BattleController_BeforeMove}.c`,
+`src/battle/{battle_calc_damage,other_battle_calculators,ability}.c`, `include/config.h`, `doc/Mechanics.txt`,
+and `data/battle_scripts/subscripts/subscript_{0452_HANDLE_GEM_ACTIVATION_MESSAGE,0515_BATTLE_BOND_BOOST}.s`.
+Read only; never copied into runtime. Paths/line evidence and test limits: notes.md → Damage calc.
 
 ## Re-fetch
 
@@ -41,6 +57,7 @@ python -I tools/mirror.py https://kumakuma1.github.io/hardlove-docs/index.html $
 for f in data/Species.c data/HiddenAbilityTable.c data/learnsets/learnsets.json data/Evolutions.c data/MachineMoves.c data/Moves.c \
          data/Trainers.c data/Encounters.c data/SafariEncounters.c data/Headbutt.c data/HiddenItems.c data/itemdata/itemdata.c \
          data/FormToSpeciesMapping.c data/PokeFormDataTbl.c data/text/keys.csv include/config.h include/constants/species.h \
+         include/constants/moves.h include/constants/ability.h \
          asm/include/species.inc asm/include/items.inc doc/Mechanics.txt doc/LevelCaps.txt doc/Items.txt doc/GymHealing.txt; do
   mkdir -p $D/repos/hardlove/$(dirname $f); curl -sf $R/$f -o $D/repos/hardlove/$f || echo "missing $f"; done
 echo $SHA > $D/repos/hardlove/COMMIT

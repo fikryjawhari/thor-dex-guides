@@ -1,0 +1,41 @@
+<fieldset><legend>Live calculator presets</legend><div class="chips" id="calc-presets"></div><p class="hint" id="calc-preset-status">Live engine. A preset replaces your test sets with one Pokémon; All loads every preset as your team.</p></fieldset>
+<script>
+const builtPresets=[
+ ['States',{species:'Snorlax',moves:['Fury Cutter','Assurance','Round','Facade']}],
+ ['Download',{ability:'Download',moves:['Tri Attack','Psychic','Thunderbolt','Ice Beam']}],
+ ['Sword',{ability:'Intrepid Sword',moves:['Iron Head','Close Combat','Crunch','Play Rough']}],
+ ['Shield',{ability:'Dauntless Shield',moves:['Iron Head','Close Combat','Crunch','Body Press']}],
+ ['First turn',{ability:'Bull Rush',moves:['Tackle','Head Charge','Close Combat','Earthquake']}],
+ ['Illusion',{ability:'Illusion',moves:['Dark Pulse','Flamethrower','Night Daze','U-turn']}],
+ ['Toxic',{species:'Snorlax',status:'tox',moves:['Facade','Tackle','Earthquake','Crunch']}],
+ ['Move toggles',{species:'Snorlax',moves:['Trick Room','Reflect','Stealth Rock','Double Hit']}],
+ ['Multi-hit',{species:'Cloyster',moves:['Icicle Spear','Rock Blast','Surf','Ice Beam']}],
+ ['Draco',{species:'Snorlax',moves:['Draco Barrage','Psychic','Tackle','Surf']}],
+ ['Parental Bond',{species:'Mega Kangaskhan',ability:'Parental Bond',moves:['Power-Up Punch','Body Slam','Crunch','Earthquake']}],
+ ['Residuals',{species:'Grotle',ability:'Self Sufficient',item:'Leftovers',status:'tox',moves:['Razor Leaf','Bite','Earthquake','Leech Seed']}],
+ ['Intimidate',{ability:'Intimidate',moves:['Waterfall','Earthquake','Crunch','Ice Fang']}],
+ ['Sash',{species:'Alakazam',item:'Focus Sash',moves:['Psychic','Shadow Ball','Focus Blast','Counter']}],
+ ['Sturdy',{ability:'Sturdy',moves:['Rock Slide','Earthquake','Iron Head','Explosion']}],
+ ['Sitrus',{species:'Snorlax',item:'Sitrus Berry',moves:['Body Slam','Earthquake','Crunch','Rest']}],
+ ['Weakness Policy',{species:'Snorlax',item:'Weakness Policy',moves:['Body Slam','Earthquake','Crunch','Curse']}],
+ ['Orb',{species:'Heracross',ability:'Guts',item:'Flame Orb',moves:['Facade','Close Combat','Megahorn','Knock Off']}],
+ ['Setter',{ability:'Drought',moves:['Flamethrower','Solar Beam','Earth Power','Weather Ball']}],
+ ['Speed Boost',{ability:'Speed Boost',moves:['Protect','U-turn','Close Combat','Swords Dance']}],
+ ['Moxie',{ability:'Moxie',moves:['Crunch','Earthquake','Waterfall','Dragon Dance']}],
+ ['Mimikyu',{species:'Mimikyu',ability:'Disguise',moves:['Play Rough','Shadow Claw','Shadow Sneak','Swords Dance']}],
+ ['Crash',{species:'Hitmonlee',ability:'Reckless',moves:['High Jump Kick','Jump Kick','Close Combat','Rock Slide']}],
+ ['Helmet',{species:'Ferrothorn',ability:'Iron Barbs',item:'Rocky Helmet',moves:['Power Whip','Gyro Ball','Leech Seed','Spikes']}],
+ ['Stockpile',{species:'Swalot',moves:['Stockpile','Swallow','Spit Up','Sludge Bomb']}],
+ ['Foul Play',{species:'Umbreon',moves:['Foul Play','Moonlight','Toxic','Protect']}],
+];
+function builtPreset(request,all){
+ const viewer=thorFrame();
+ const message=viewer.eval(`(()=>{const list=${JSON.stringify(all||[request])};const supported=request=>{const ability=request.ability?AB.findIndex(entry=>entry[0]===request.ability):-1;const species=request.species?P.find(entry=>entry.n===request.species):P.find(entry=>[...entry.a,entry.ha].includes(ability)&&ability>=0);return species&&(!request.ability||ability>=0&&[...species.a,species.ha].includes(ability))&&request.moves.every(name=>M.includes(name));};if(!list.some(supported))return 'That preset is not available in this guide.';const state=CALC.state();state.custom=[];state.edits={};state.saved={};state.field={};state.fman=[];state.st={};state.tgt={};state.hits={};state.hitv={};state.crit={};state.mvo={};state.z={};const made=[],missing=[];for(const request of list){const ability=request.ability?AB.findIndex(entry=>entry[0]===request.ability):-1;const species=request.species?P.find(entry=>entry.n===request.species):P.find(entry=>[...entry.a,entry.ha].includes(ability)&&ability>=0);if(!species||request.ability&&(ability<0||![...species.a,species.ha].includes(ability))||request.moves.some(name=>!M.includes(name))){missing.push(request.species||request.ability);continue;}CALC.use(species);const mon=state.custom.at(-1);mon.pid+='-'+made.length;CALC.set('mine','l',50);CALC.set('mine','m',request.moves.map(name=>M.indexOf(name)));CALC.set('mine','i',request.item||'');if(request.status)CALC.set('mine','status',request.status);if(ability>=0)CALC.set('mine','a',ability);made.push(species.n);}if(!made.length)return 'That preset is not available in this guide.';state.mine={src:'custom',b:0,i:0};const trainer=TRS.find(entry=>entry.n.includes('Flannery')&&entry.p.length===6)||TRS.find(entry=>entry.p.length===6)||TRS[0];TCAP[trainer.k]=50;CALC.enter(trainer.k,0);CALC.render();requestAnimationFrame(()=>scrollTo(0,document.querySelector('.fbar').getBoundingClientRect().top+scrollY-2));return (made.length>1?made.length+' Pokémon loaded':made[0])+' · live engine'+(missing.length?' · not available: '+missing.join(', '):'');})()`);
+ document.getElementById('calc-preset-status').textContent=message;
+}
+const allPresets=()=>builtPresets.map(([,request])=>request);
+{const button=document.createElement('button');button.textContent='All';button.onclick=()=>builtPreset(null,allPresets());document.getElementById('calc-presets').appendChild(button);}
+for(const [label,request] of builtPresets){const button=document.createElement('button');button.textContent=label;button.onclick=()=>builtPreset(request);document.getElementById('calc-presets').appendChild(button);}
+let builtWait=0;
+const builtReady=setInterval(()=>{try{const viewer=thorFrame();if(viewer.CALC){clearInterval(builtReady);if(!viewer.CALC.state().custom.length&&!viewer.CALC.state().imp)builtPreset(null,allPresets());else{viewer.location.hash='#/calc';document.getElementById('calc-preset-status').textContent='Saved calculator restored; choose a preset to replace its test sets.';}}}catch(error){}if(++builtWait>=100)clearInterval(builtReady);},100);
+</script>

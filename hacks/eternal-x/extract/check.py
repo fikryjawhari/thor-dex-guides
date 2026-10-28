@@ -41,7 +41,21 @@ def check_prune():
     print('Availability fixture: evolution/breeding, usable Mega, form change, trainers, partners and pruning PASS.')
 
 
+def check_gid(data):
+    gid = data['GID']
+    assert set(gid['sp'].values()) == {pokemon['id'] for pokemon in data['P']}, 'P ids without a game species/form'
+    assert all(':' in key and gid['gr'][key] in range(6) for key in gid['sp']), 'forms without a growth rate'
+    assert {index for index in gid['mv'] if index is not None} == set(range(len(data['M']))), 'moves without a game id'
+    assert {index for index in gid['ab'] if index is not None} == set(range(len(data['AB']))), 'abilities without a game id'
+    assert gid['sp']['479:1'] == 'heat-rotom' and gid['sp']['678:1'] == 'meowstic-female', 'form keys lost'
+    assert gid['sp']['681:1'] == 'aegislash-blade' and gid['sp']['710:3'] == 'pumpkaboo-super', 'battle/size forms lost'
+    assert gid['sp']['666:19'] == 'vivillon-icy-snow' and gid['sp']['669:4'] == 'flabebe-red', 'cosmetic aliases lost'
+    assert gid['it'][660] == 'Charizardite X' and gid['it'][678] == 'Charizardite Y', 'held item ids lost'
+    print(f'PASS: GID maps all {len(data["P"])} species, {len(data["M"])} moves, {len(data["AB"])} abilities')
+
+
 def check(data, baseline=None):
+    check_gid(data)
     species = {entry['id']: entry for entry in data['P']}
     assert len(species) == len(data['P'])
     assert not any('vc' in entry for entry in data['P'])

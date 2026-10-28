@@ -1,0 +1,2962 @@
+{
+  "oracle": {
+    "title": "Emerald Imperium 1.3",
+    "gen": 8,
+    "damageGen": 8,
+    "types": 6,
+    "critGen": 6,
+    "backup": "imp_1-3",
+    "names": {
+      "abilities": {
+        "Emperor's Presence": "Emperor's Prescence",
+        "ORAORAORAORA!": "ORAORAORAORA"
+      },
+      "species": {},
+      "moves": {},
+      "items": {}
+    }
+  },
+  "matchups": [
+    {
+      "name": "physical-neutral",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "special-neutral",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "super-effective-stab",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "3",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "type-immunity",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "94",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "levitate-immunity",
+      "atk": {
+        "id": "445",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "94",
+        "lv": 50,
+        "ab": 97
+      },
+      "slot": {
+        "mv": 66
+      },
+      "field": {}
+    },
+    {
+      "name": "critical",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80,
+        "crit": true
+      },
+      "field": {}
+    },
+    {
+      "name": "burn",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "st": "brn"
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "reflect",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {
+        "defReflect": true
+      }
+    },
+    {
+      "name": "light-screen",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {
+        "defLightScreen": true
+      }
+    },
+    {
+      "name": "sun",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {
+        "weather": "Sun"
+      }
+    },
+    {
+      "name": "rain",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "weather": "Rain"
+      }
+    },
+    {
+      "name": "electric-terrain",
+      "atk": {
+        "id": "26",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 227
+      },
+      "field": {
+        "terrain": "Electric"
+      }
+    },
+    {
+      "name": "stat-stages",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "multi-hit",
+      "atk": {
+        "id": "91",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 294,
+        "hits": 5
+      },
+      "field": {}
+    },
+    {
+      "name": "hit-dependent-triple-axel",
+      "atk": {
+        "id": "237",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 325,
+        "hits": 3
+      },
+      "field": {}
+    },
+    {
+      "name": "item-choice-band",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1,
+        "it": "Choice Band"
+      },
+      "def": {
+        "id": "3",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 95
+      },
+      "field": {}
+    },
+    {
+      "name": "item-life-orb",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1,
+        "it": "Life Orb"
+      },
+      "def": {
+        "id": "3",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "item-expert-belt",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1,
+        "it": "Expert Belt"
+      },
+      "def": {
+        "id": "3",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "item-charcoal",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1,
+        "it": "Charcoal"
+      },
+      "def": {
+        "id": "3",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "huge-power",
+      "atk": {
+        "id": "184",
+        "lv": 50,
+        "ab": 140
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 150
+      },
+      "field": {}
+    },
+    {
+      "name": "technician",
+      "atk": {
+        "id": "212",
+        "lv": 50,
+        "ab": 24
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 412
+      },
+      "field": {}
+    },
+    {
+      "name": "adaptability",
+      "atk": {
+        "id": "474",
+        "lv": 50,
+        "ab": 18
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 251
+      },
+      "field": {}
+    },
+    {
+      "name": "mega-aerilate",
+      "atk": {
+        "id": "942",
+        "lv": 50,
+        "ab": 124,
+        "it": "Salamencite"
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 10
+      },
+      "field": {}
+    },
+    {
+      "name": "thick-fat",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": 2
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "iron-fist-changed",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 110
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 459
+      },
+      "field": {}
+    },
+    {
+      "name": "emperor-presence",
+      "atk": {
+        "id": "395",
+        "lv": 50,
+        "ab": 183
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {}
+    },
+    {
+      "name": "custom-aqua-fang",
+      "atk": {
+        "id": "160",
+        "lv": 50,
+        "ab": 27
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 571
+      },
+      "field": {}
+    },
+    {
+      "name": "custom-dark-hole",
+      "atk": {
+        "id": "94",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 508
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-barrage-fairy",
+      "atk": {
+        "id": "887",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "36",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130
+      },
+      "field": {}
+    },
+    {
+      "name": "frostbite-special",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": -1,
+        "st": "frz"
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "ora-punch-second-hit",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 73
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 459
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-barrage-special",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130
+      },
+      "field": {}
+    },
+    {
+      "name": "emperor-presence-steel",
+      "atk": {
+        "id": "395",
+        "lv": 50,
+        "ab": 183
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 167
+      },
+      "field": {}
+    },
+    {
+      "name": "iron-fist-non-punch",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 110
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "ora-non-punch",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 73
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "frostbite-physical",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "st": "frz"
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "feline-prowess-special",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 56
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "liquid-voice-sound",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 125
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 186
+      },
+      "field": {}
+    },
+    {
+      "name": "sage-power-special",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 196
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "striker-kick",
+      "atk": {
+        "id": "107",
+        "lv": 50,
+        "ab": 109
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 487
+      },
+      "field": {}
+    },
+    {
+      "name": "fatal-precision-super-effective",
+      "atk": {
+        "id": "65",
+        "lv": 50,
+        "ab": 168
+      },
+      "def": {
+        "id": "107",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "bone-zone-immune",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 107
+      },
+      "def": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 539
+      },
+      "field": {}
+    },
+    {
+      "name": "mountaineer-rock",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 242
+      },
+      "slot": {
+        "mv": 93
+      },
+      "field": {}
+    },
+    {
+      "name": "primal-armor-super-effective",
+      "atk": {
+        "id": "25",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 192
+      },
+      "slot": {
+        "mv": 227
+      },
+      "field": {}
+    },
+    {
+      "name": "boss-roxanne",
+      "atk": {
+        "id": "111",
+        "lv": 14,
+        "ab": 29,
+        "it": "Rindo Berry",
+        "nat": "Adamant",
+        "iv": [
+          31,
+          31,
+          31,
+          31,
+          31,
+          31
+        ],
+        "ev": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "9",
+        "lv": 15,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 86
+      },
+      "field": {},
+      "trainer": {
+        "key": "0.0.4",
+        "slot": 0,
+        "source": "data.json TR"
+      }
+    },
+    {
+      "name": "boss-wattson",
+      "atk": {
+        "id": "702",
+        "lv": 34,
+        "ab": 218,
+        "it": "Terrain Extender",
+        "nat": "Timid",
+        "iv": [
+          31,
+          31,
+          31,
+          31,
+          31,
+          30
+        ],
+        "ev": [
+          6,
+          0,
+          0,
+          252,
+          0,
+          252
+        ]
+      },
+      "def": {
+        "id": "9",
+        "lv": 34,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 600
+      },
+      "field": {},
+      "trainer": {
+        "key": "3.0.14",
+        "slot": 0,
+        "source": "data.json TR"
+      }
+    },
+    {
+      "name": "boss-norman",
+      "atk": {
+        "id": "1003",
+        "lv": 59,
+        "ab": 204,
+        "it": "Focus Sash",
+        "nat": "Timid",
+        "iv": [
+          31,
+          31,
+          31,
+          31,
+          31,
+          31
+        ],
+        "ev": [
+          6,
+          0,
+          0,
+          252,
+          0,
+          252
+        ]
+      },
+      "def": {
+        "id": "9",
+        "lv": 59,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 672
+      },
+      "field": {},
+      "trainer": {
+        "key": "5.0.17",
+        "slot": 0,
+        "source": "data.json TR"
+      }
+    },
+    {
+      "name": "bull-rush-physical-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 148,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "bull-rush-special-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 148,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "bull-rush-physical-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 148,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "bull-rush-special-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 148,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9522-9526",
+        "reason": "Release source boosts the selected attacking stat on the first turn without a physical-category guard; oracle incorrectly limits this to physical moves."
+      }
+    },
+    {
+      "name": "quill-rush-physical-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 223,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "quill-rush-special-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 223,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "quill-rush-physical-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 223,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "quill-rush-special-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 223,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9522-9526",
+        "reason": "Release source boosts the selected attacking stat on the first turn without a physical-category guard; oracle incorrectly limits this to physical moves."
+      }
+    },
+    {
+      "name": "illusion-physical-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "illusion-special-off",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": false
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "illusion-physical-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "illusion-special-on",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {}
+    },
+    {
+      "name": "ability-toggle-unrelated",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "ability-toggle-defender-only",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": true
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "emperor-ally-off",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "gameType": "Doubles"
+      }
+    },
+    {
+      "name": "emperor-ally-water",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkEmperorPresence": true
+      },
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9299-9302",
+        "reason": "Release source applies a separate allied Emperor modifier in doubles, stacking with the attacker. The pinned oracle has no allied Emperor field input."
+      }
+    },
+    {
+      "name": "emperor-ally-steel",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 167
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkEmperorPresence": true
+      },
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9299-9302",
+        "reason": "Release source applies a separate allied Emperor modifier in doubles, stacking with the attacker. The pinned oracle has no allied Emperor field input."
+      }
+    },
+    {
+      "name": "emperor-ally-other-type",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkEmperorPresence": true
+      }
+    },
+    {
+      "name": "emperor-ally-singles-ignored",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "atkEmperorPresence": true
+      }
+    },
+    {
+      "name": "emperor-ally-stack",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": 183
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "gameType": "Doubles",
+        "atkEmperorPresence": true
+      },
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9299-9302",
+        "reason": "Release source applies a separate allied Emperor modifier in doubles, stacking with the attacker. The pinned oracle has no allied Emperor field input."
+      }
+    },
+    {
+      "name": "draco-lower-atk-physical-auto",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "242",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": false
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-lower-atk-physical-inverted",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "242",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": true
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:11968-12017",
+        "reason": "Explicit user-selected inversion models the other category, including non-ties. The oracle cannot force an alternate Draco Barrage category. Equal damage can mask the choice."
+      }
+    },
+    {
+      "name": "draco-higher-atk-special-auto",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "713",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": false
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-higher-atk-special-inverted",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "713",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": true
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:11968-12017",
+        "reason": "Explicit user-selected inversion models the other category, including non-ties. The oracle cannot force an alternate Draco Barrage category. Equal damage can mask the choice."
+      }
+    },
+    {
+      "name": "draco-tie-auto",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": false
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-tie-inverted",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": true
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:11968-12017",
+        "reason": "Explicit user-selected inversion models the other category, including non-ties. The oracle cannot force an alternate Draco Barrage category. Equal damage can mask the choice."
+      }
+    },
+    {
+      "name": "draco-integer-near-tie-auto",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "ev": [
+          0,
+          4,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": false
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:12004-12017",
+        "reason": "Release source truncates the two damage estimates to integers, then randomises ties. Our deterministic Special default plus inversion exposes both outcomes; equal rolls may mask the oracle ratio-only choice."
+      }
+    },
+    {
+      "name": "draco-integer-near-tie-inverted",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "ev": [
+          0,
+          4,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 130,
+        "invert": true
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:11968-12017",
+        "reason": "Explicit user-selected inversion models the other category, including non-ties. The oracle cannot force an alternate Draco Barrage category. Equal damage can mask the choice."
+      }
+    },
+    {
+      "name": "draco-staged-auto",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          -1,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 130,
+        "invert": false
+      },
+      "field": {}
+    },
+    {
+      "name": "draco-staged-inverted",
+      "atk": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          -1,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "251",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          -1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 130,
+        "invert": true
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:11968-12017",
+        "reason": "Explicit user-selected inversion models the other category, including non-ties. The oracle cannot force an alternate Draco Barrage category. Equal damage can mask the choice."
+      }
+    },
+    {
+      "name": "blazing-soul-full",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": 82
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "blazing-soul-hurt",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": 82,
+        "hp": 1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {}
+    },
+    {
+      "name": "blazing-soul-not-fire",
+      "atk": {
+        "id": "6",
+        "lv": 50,
+        "ab": 82
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "blazing-soul-psychic-terrain",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 82
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {
+        "terrain": "Psychic"
+      },
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_main.c:5030-5032",
+        "reason": "At full HP Blazing Soul raises Fire priority, so grounded defenders are protected by Psychic Terrain. The oracle omits the priority boost."
+      }
+    },
+    {
+      "name": "unable-attacker-slp",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "st": "slp"
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "unable-attacker-frz",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "st": "frz"
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "evs-enabled",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "ev": [
+          0,
+          252,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {}
+    },
+    {
+      "name": "spread-singles",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {}
+    },
+    {
+      "name": "spread-doubles",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "gameType": "Doubles"
+      }
+    },
+    {
+      "name": "doubles-sun",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 80
+      },
+      "field": {
+        "gameType": "Doubles",
+        "weather": "Sun"
+      }
+    },
+    {
+      "name": "doubles-rain",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 149
+      },
+      "field": {
+        "gameType": "Doubles",
+        "weather": "Rain"
+      }
+    },
+    {
+      "name": "doubles-reflect",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defReflect": true
+      }
+    },
+    {
+      "name": "doubles-light-screen",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defLightScreen": true
+      }
+    },
+    {
+      "name": "doubles-veil",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defAuroraVeil": true
+      }
+    },
+    {
+      "name": "doubles-screens-not-stacked",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defLightScreen": true,
+        "defAuroraVeil": true
+      }
+    },
+    {
+      "name": "doubles-screen-crit",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0,
+        "crit": true
+      },
+      "field": {
+        "gameType": "Doubles",
+        "defReflect": true
+      }
+    },
+    {
+      "name": "snow-ice-defense",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "weather": "Snow"
+      }
+    },
+    {
+      "name": "hail-no-ice-defense",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "471",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      },
+      "field": {
+        "weather": "Hail"
+      }
+    },
+    {
+      "name": "ice-eater-immune",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 182
+      },
+      "slot": {
+        "mv": 143
+      }
+    },
+    {
+      "name": "ice-eater-other-type",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 182
+      },
+      "slot": {
+        "mv": 190
+      }
+    },
+    {
+      "name": "ice-eater-mold-breaker",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 122
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 182
+      },
+      "slot": {
+        "mv": 143
+      }
+    },
+    {
+      "name": "ice-eater-ability-shield",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 122
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 182,
+        "it": "Ability Shield"
+      },
+      "slot": {
+        "mv": 143
+      }
+    },
+    {
+      "name": "ice-eater-neutralizing-gas",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 111
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 182
+      },
+      "slot": {
+        "mv": 143
+      }
+    },
+    {
+      "name": "gas-suppresses-bullrush",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 148,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 111
+      },
+      "slot": {
+        "mv": 190
+      }
+    },
+    {
+      "name": "gas-suppresses-quillrush",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 223,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 111
+      },
+      "slot": {
+        "mv": 190
+      }
+    },
+    {
+      "name": "gas-suppresses-illusion",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 204,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 111
+      },
+      "slot": {
+        "mv": 190
+      }
+    },
+    {
+      "name": "gas-suppresses-blazingsoul",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 82,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 111
+      },
+      "slot": {
+        "mv": 80
+      }
+    },
+    {
+      "name": "gas-suppresses-emperorspresence",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 183,
+        "abilityOn": true
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 111
+      },
+      "slot": {
+        "mv": 149
+      }
+    },
+    {
+      "name": "defeatist-half-no-penalty",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 202,
+        "hp": 117
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      }
+    },
+    {
+      "name": "defeatist-third-plus-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 202,
+        "hp": 79
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      }
+    },
+    {
+      "name": "defeatist-third-physical",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 202,
+        "hp": 78
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 0
+      }
+    },
+    {
+      "name": "defeatist-third-special",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 202,
+        "hp": 78
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 190
+      }
+    },
+    {
+      "name": "w2-low-kick",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 425
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-grass-knot",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "774",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-regional-raticate",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "957",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-mega-infernape",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1493",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-mega-empoleon-d",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1492",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-mega-luxray",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1489",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-mega-roserade",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1531",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-mega-orbeetle",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1512",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-minior-core",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "1199",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-nidoran-f",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "29",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-nidoran-m",
+      "atk": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "32",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 25
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-heavy-slam",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 461
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-heat-crash-mega",
+      "atk": {
+        "id": "1492",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "12",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 124
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-flail-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 155
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-flail-full",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 155
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-reversal-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 235
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-reversal-full",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 235
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-eruption-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 588
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-eruption-full",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 588
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-water-spout-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1,
+        "hp": 1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 162
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-water-spout-full",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 162
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-gyro-ball",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "101",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 146
+      },
+      "field": {}
+    },
+    {
+      "name": "w2-electro-ball",
+      "atk": {
+        "id": "101",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 274
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-tablets",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 274
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-tablets-special",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 274
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-tablets-holder",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 274
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-vessel",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 276
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-vessel-physical",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 276
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-vessel-holder",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 276
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-sword",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 275
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-sword-psyshock",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 275
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 304
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-sword-holder",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 275
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-beads",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 277
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-beads-psyshock",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 277
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 304
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-beads-holder",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 277
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-two-physical",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 275
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 274
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-two-special",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 277
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 276
+      },
+      "slot": {
+        "mv": 222
+      },
+      "field": {}
+    },
+    {
+      "name": "ruin-same-tablets",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": 274
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": 274
+      },
+      "slot": {
+        "mv": 32
+      },
+      "field": {}
+    },
+    {
+      "name": "explosion-halves-defense",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 475
+      },
+      "field": {}
+    },
+    {
+      "name": "self-destruct-halves-defense",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 474
+      },
+      "field": {}
+    },
+    {
+      "name": "misty-explosion-halves-spdef",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 358
+      },
+      "field": {}
+    },
+    {
+      "name": "explosion-defense-plus-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "108",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 475
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9774-9775",
+        "reason": "B_EXPLOSION_DEFENSE is GEN_4: the source halves the raw Defense (floor) before stages (95 -> 47 -> +1 70); the oracle halves the staged stat with round-half-down (142 -> 71)."
+      }
+    },
+    {
+      "name": "misty-explosion-spdef-plus-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "108",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 358
+      },
+      "field": {},
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9774-9775",
+        "reason": "B_EXPLOSION_DEFENSE is GEN_4: the source halves the raw Sp. Def (floor) before stages (95 -> 47 -> +1 70); the oracle halves the staged stat with round-half-down (142 -> 71)."
+      }
+    },
+    {
+      "name": "explosion-wonder-room",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "9",
+        "lv": 50,
+        "ab": -1
+      },
+      "slot": {
+        "mv": 475
+      },
+      "field": {
+        "wonderRoom": true
+      },
+      "difference": {
+        "source": "iriv24/pokeemerald-expansion@2576d0f3/src/battle_util.c:9749-9775",
+        "reason": "Wonder Room swaps Defense and Sp. Def once (battle_util.c:9749-9752), so the source halves Blastoise's Sp. Def (125 -> 62); the oracle swaps them twice and halves Defense (120 -> 60), as recorded for Photonic Sun."
+      }
+    },
+    {
+      "name": "explosion-crit-plus-one",
+      "atk": {
+        "id": "143",
+        "lv": 50,
+        "ab": -1
+      },
+      "def": {
+        "id": "108",
+        "lv": 50,
+        "ab": -1,
+        "stg": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "slot": {
+        "mv": 475,
+        "crit": true
+      },
+      "field": {}
+    }
+  ]
+}

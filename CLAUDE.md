@@ -1,7 +1,7 @@
 # Thor Dex Guides
 
 Offline, single-file dex guides for ROM hacks, built for Dex Viewer on the AYN Thor (the app lives in the sibling repo
-`../thor-dex-viewer`, private) and also usable in any phone browser. This repo is **public** and served by GitHub
+`../thor-offline-viewer`, private) and also usable in any phone browser. This repo is **public** and served by GitHub
 Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of every session.
 
 ## Hard rules
@@ -20,14 +20,15 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
   you were working on (`tools/domcompare.mjs` shows exactly what changed).
 
 ## Layout
-- `template/` shell.html, dex.css, dex.js: the one template (Emerald Imperium is the reference build). Its README:
+- `template/` shell.html, dex.css, dex.js, and the damage calc (calc.js / calc.css, `calc/` engine, base profiles, save
+  readers; inlined only for hacks with `cfg.calc`): the one template (Emerald Imperium is the reference build). Its README:
   what `hack.json` sets, what the data switches on, the shared rules and the page design (with what was rejected).
 - `hacks/<hack>/` hack.json (title, version, `cfg` = wording, storage keys, feature switches), data.json (`#data`),
   sprites.json (only forms the shared set lacks), notes.md (build notes and schema), extract/ (the scripts that made data.json), SOURCES.md.
 - `sprites/` the shared sprite set (pokeemerald-expansion, 64×64, `png/<key>.png`; README has the key scheme,
   SOURCES.md the pin and credits).
 - `tools/` source fetchers, extract helpers and checks (README), `mockup/` (the Thor frame and the page behaviour
-  checks). `plans/` work not done yet only (now: the damage calc).
+  checks). `plans/` work not done yet only (now: the damage calc's, `plans/calc-open.md`).
 - `dist/` built output (git-ignored); the Pages workflow builds and deploys it.
 
 ## Commands
@@ -35,7 +36,15 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - Python env for tools and checks: `uv sync` once per machine (`pyproject.toml` + `uv.lock` are committed), then
   `uv run python -I tools/<script>`. Need a package? `uv add <name>` and commit both files; don't work around it.
 - Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome;
-  options `--routes`, `--jobs`, `--ignore` in its header). Run browser sweeps one at a time.
+  options `--routes`, `--jobs`, `--ignore` in its header). Run browser sweeps one at a time, except scenarios through
+  the gate: `uv run python -I tools/gate.py scenarios [hack ...] [--only calc-layout,calc-controls] --jobs 8` (and
+  `gate.py check ... --jobs 8`) runs them in parallel, the same results as serial (all scenarios × four guides on this
+  16-core PC: serial 19 min, 4 jobs 5.8, 8 jobs 4.0, 12 / 16 jobs 4.3 / 4.4: past 8 each run just slows down).
+- When to check: only when no later work in the job will change what the check covers. During a job, run the
+  scenarios the change touches on the guides it touches; the full set once at the end. A failure names its check and
+  leaves a screenshot in `.tmp/calc-checks/`; if the cause still isn't clear, bisect the job's commits (one per
+  sub-step) with that one scenario on that one guide. The whole procedure: the `verify` skill
+  (`.agents/skills/verify/SKILL.md`; `worktree_setup.py` links `.claude/skills` to `.agents/skills` so Claude Code sees it).
 - In Git Bash, prefix commands that take `/`-paths as arguments with `MSYS_NO_PATHCONV=1`.
 
 ## Making a new guide
@@ -50,6 +59,12 @@ adapt); agents build the units (Workflow → Which model).
    for its quirks. What the template shows when the data has it: `template/README.md` → What the data switches on.
    For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences); 3DS hacks take
    the game data over the docs ("Doc says ...").
+   Calc: settle each trainer `field` record marked `review` (`tools/trainer_fields_check.py`) with me (notes.md,
+   normalised in `tools/trainer_fields.py`); check the mechanics doc for permanent weather / terrain (`setterStays`).
+   Save import: the extract writes the hack's save ID tables (`GID`: species / forms, moves, items, abilities as the
+   game numbers them, from the game source or game files) and the guide gets a reader for its generation
+   (`template/calc/readers/README.md`); check it on a save with `.agents/references/calc-save-reader.md`. A doubles
+   tag the shared list doesn't know yet goes in `tools/trainer_fields.py` → `DOUBLES_TAGS`.
    Hacks come in families (PROGRESS.md → Hack families): reuse the family's shared code (3DS: `tools/ctrguide.py`),
    write a family's first guide so its siblings can reuse it, and lift the shared part out when the second one comes.
 3. `hacks/<hack>/hack.json`: copy an existing one; new localStorage prefix in `cfg.ls`, the hack's wording in
@@ -60,7 +75,9 @@ adapt); agents build the units (Workflow → Which model).
    `python -I tools/sprite_keys.py <hack>` lists the forms it matched (check once) and the species it couldn't place:
    those are the hack's own additions and go in its `sprites.json`, the only art a hack keeps. `assemble.py` lists
    species with no sprite; they show as a type-coloured circle with the name's first letter.
-5. `uv run python -I tools/gate.py check <hack>` (baseline setup: `tools/README.md` → Standard gates).
+5. Damage calc: `hack.json` → `cfg.calc` from the hack's mechanics ([calc mechanics](.agents/references/calc-mechanics.md));
+   once the hack's save family has a reader, its ID tables and `save` ([save reader](.agents/references/calc-save-reader.md)).
+6. `uv run python -I tools/gate.py check <hack>` (baseline setup: `tools/README.md` → Standard gates).
    Then `python -I tools/preview.py dist/<hack>.html --frame` for Thor-frame review on the phone preview.
 
 ## Git
@@ -126,7 +143,7 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
   which branch the work is on and what merges next.
 
 ## Workflow
-- References: [worker brief](.agents/references/worker-brief.md), [spec skeleton](.agents/references/spec-skeleton.md), [big jobs](.agents/references/big-job.md).
+- References: [worker brief](.agents/references/worker-brief.md), [spec skeleton](.agents/references/spec-skeleton.md), [big jobs](.agents/references/big-job.md), [calc mechanics](.agents/references/calc-mechanics.md), [save reader](.agents/references/calc-save-reader.md).
 - I test on the Thor. Testing a guide there without the library: PROGRESS.md → Testing on the Thor.
 - UI changes: mockup first as a plain interactive HTML page at the viewer's real size, then build it.
 - **Showing pages to me** (mockups, unmerged builds): `python -I tools/preview.py <page.html> [name.html]` puts it on

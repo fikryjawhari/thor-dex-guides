@@ -1,6 +1,6 @@
 # Progress
 
-Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on 2026-10-19; that repo's
+Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private) on 2026-10-19; that repo's
 `docs/PROGRESS.md` keeps the app's history. History here is in git, each hack's `notes.md` → History, and
 `template/README.md` (design decisions). This file is the current state and what's left.
 
@@ -23,7 +23,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
   - **Standard tooling:** `tools/gate.py` (baseline + every check in one command), `tools/scenarios/`,
     `tools/worktree_setup.py` (claim, `uv sync`, `.src/` junctions to the main checkout), `preview.py --frame`, and
     `.agents/references/` (worker brief, spec skeleton, big-job ledger).
-- Open elsewhere: `worktree-damage-calc` (the calc decide session).
+- Open elsewhere: `worktree-damage-calc` (the damage calc, built 2026-10-25 / 26, **not merged**: the user wants the
+  mechanics confirmed first). See Open → Damage calc.
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
   3DS (done: `ctrguide.py`; next Meissa Moon, Navy Sapphire), pokeemerald-expansion (Emerald Imperium, SoulGold),
   CFRU (Radical Red, Unbound), NDS (Hardlove Gold built; Renegade Platinum, Blaze Black 2 Redux, HeartGold Retiled).
@@ -38,11 +39,71 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
 1. **Test on the Thor.** Nothing since the consistency pass has been on the device (EI and HG were last checked there
    2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
    text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
-2. **Damage calc with save import** (`plans/damage-calc.md`): `@smogon/calc` (MIT) as the engine, our own save readers
-   (Gen 3, 4/5, 6/7) written from format notes, never from hzla's unlicensed code; each hack's extract writes its game
-   ID tables. Also needs the app's file picker (app repo). PokeDaisy (GPLv3) is read-only reference. Decide session
-   running (`worktree-damage-calc`). The Gen 3 reader must cover pokeemerald-expansion and CFRU saves. `domcompare`
-   skips `#/calc` today: add it to its routes when the calc page is built.
+2. **Damage calc** (branch `worktree-damage-calc`, `.claude/worktrees/damage-calc`; pushed to `origin` 2026-10-27 with the docs pass, **not merged**).
+   Start every calc session from `plans/calc-open.md` (what's left in order, the checks, the merge steps and the
+   save-reader notes). Lasting decisions: `template/README.md` → Damage calculator, `tools/calc/README.md`, each
+   guide's notes.md → Damage calc.
+   - **Built** on all four guides with `cfg.calc` (EI, Hardlove, Photonic, Eternal X): the engine on each guide's own
+     data with per-hack profiles and fixtures, the one-window calc page, battle state, HP moves, Z-moves / Totem
+     auras, import with a test reader; then auto-effects and the retest (commits after `9b1fb22` up to `023fb96`):
+     - A1-A3 engine: `DMG.hit / turn / berry / derived / intimidate / settings`, Disguise / Ice Face, contact and
+       crash damage, Stockpile, crit inputs, Foul Play, EI's scope gaps.
+     - B data: trainer `field` decisions (all four guides 0 `review`).
+     - C / C2 page state: fight state vs kept HP / status, Broken / Mega / foe edits kept for the fight, Reset fight.
+     - D1-D3 page effects: weather / terrain layers + Auto, area conditions, Trick Room, Intimidate, Orb, berry chip,
+       log overlay, HP follow-up controls, crit toggles, EI gap toggles.
+     - F1 fixes after the first Thor-preview test (presets, used items, Intimidate box, rooms in Global).
+     - R1 layout and cards (six across, pinned two columns, trainer preview, fight bar, HP row, pickers); R2 moves
+       (tappable damage, custom amount, follow-up ranges, move → Field toggles, Safeguard / Protect, the guide's
+       weather); R3 Field groups (Global / side / States / Turn end / Hazards, per-group collapse bars).
+   - **Checks:** all pass at `023fb96`: 80/80 calc scenario jobs, engine tests, hzla compares EI 142 + 12 known,
+     Photonic 118 + 28, Eternal X 116 + 3, all 0 mismatch.
+   - **Phone previews:** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-team-ei.html`,
+     `calc-team-hardlove.html`, `calc-team-photonic.html`, `calc-team-eternal.html` (Thor frame, preset panel; the
+     calc-team build at `HEAD`).
+   - **Checkpoints** (local tags, pushed with the branch at the end): `live-2026-10-24` = `168dfd3` (the live site, no
+     calc), `calc-pre-team` = `fe937cc` (the calc before the calc-team build).
+   - **calc-team build: done 2026-10-28** (plan and mockup deleted; decisions in `template/README.md` → Both teams in
+     the first frame). Both teams, both cards, four moves and the fight bar in the first frame at every size; nameless
+     narrow card (at most three lines, `fitCards()`); team row by pid with drag and drop (no automatic fill from an
+     import); HP bar / fainted grey on team cells; Auto Doubles from trainer tags / partners; the action log at the top,
+     gone after 3 s. Checks at the end: full `gate.py check --template --jobs 4` 117/125, the 8 failures all DOM
+     compares against `calc-pre-team`; with the footer's build date ignored only `#/calc` differs (all four guides,
+     intended). Every calc scenario passes incl. the new `calc-team` / `calc-doubles`; engine tests and hzla compares
+     unchanged (EI 142 + 12, Photonic 118 + 28, Eternal X 116 + 3, 0 mismatch).
+     The user's review (2026-10-28), kept: card HP bar colours, the wide preview's HP bar under the sprite with the level
+     badge over its end, tapping the trainer's own S / D = Auto. Changed the same day: my team's HP / status refill on
+     a trainer change too; battle state / Aura moved to the card's line 3 (left, before the berry); no Intimidate mark;
+     no A on the Auto D (dashed outline only); battle type before the trainer's name in the calc (`[D]`, `[M]`, `[T]`,
+     `[R]`, `[BR]`, `[B2B]`, `[B3B]`, `[P]` partner trainers); foe / partner Pokémon drag onto my team as custom copies; a
+     crowded card moves Aura, then the state, up a line before going tight (template/README.md → Both teams in the first frame).
+   - **Save readers + the guide side of the app's save picker:** built on `worktree-damage-calc-saves`, merged into this
+     branch 2026-10-28 (worktree and branch deleted after the merge). Gen 3 for Emerald Imperium
+     (`readers/expansion.js` + EI `GID`, checked against hzla's EI 1.3 save, 33 of 33; EI notes.md → Damage calc → Save
+     import). Gen 4 for Hardlove Gold (`readers/gen4.js`, hg-engine HGSS; GID from `extract/gid.py`), checked on the
+     user's own **0.7.0** save, 11 of 11 (Hardlove notes.md → Damage calc → Save import). Gen 6/7 (`readers/gen67.js`,
+     GID from `tools/ctrguide.py` → `build_save_ids`): Photonic Sun 38/38 and Eternal X 85/85 against PKHeX-made USUM /
+     XY saves (the generator stays git-ignored in `.tmp/pkhex-oracle/`, PKHeX is GPLv3; recipe in `readers/README.md`;
+     .NET 10 SDK user-local in `%LOCALAPPDATA%\Microsoft\dotnet`). Gen 5 waits for the Blaze Black 2 Redux guide.
+     The app bridge (guide side): Import / ↻ refresh / Change file / Pick through `window.dexViewerApp` per the app's
+     `docs/SAVE_BRIDGE.md` (unchanged since app commit `add3b06`, 2026-10-27), bridge error banners, the newer-save dot;
+     checked on a fake bridge (`tools/scenarios/calc-bridge.mjs`).
+   - **Open after the build (tests and credits, not built in the calc-team sessions):**
+     1. App repo session (`../thor-offline-viewer`, PC with the Thor on adb): its `docs/_plans/save-file-picker.md` →
+        Left to do (install, find each emulator's save folder, the bridge tests over CDP). If the contract changes,
+        update `template/calc.js` (import block) and `tools/scenarios/calc-bridge.mjs` here.
+     2. On the Thor, one real import per guide through the viewer: EI (RetroArch `.srm`), Photonic Sun / Eternal X
+        (Azahar `main`); compare with PKHeX on the PC. Put the saves in `hacks/<hack>/.src/saves/` with an
+        expected.json (procedure: `.agents/references/calc-save-reader.md`).
+     3. Hardlove: the user plays on and reports what imports wrong (a 0.8.x save, mints, regional forms untested).
+     4. **Mechanics check** (each guide's notes.md → Damage calc → In-game tests): stays open, merges into `main` with
+        the branch.
+     5. Footer credits (item 3 below), hzla's calc among them.
+     6. Push the branch and the two checkpoint tags, and delete `worktree-damage-calc-saves` on `origin` (merged, local
+        branch gone) (the user: at the end, once calc and saves are closed out).
+     7. The merge into `main`: **decided 2026-10-28, merge now** (`plans/calc-open.md` → Merging into main). Items 1-4
+        stay open after it (the user: the Thor / viewer test right after the merge, saves reported as they play,
+        mechanics long-term). Handover: review fixes done and pushed (`ed20795`); next session does the merge.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
    calc as a reference once the calc exists. Agreed, not done.
@@ -50,9 +111,11 @@ Guides for Dex Viewer, split out of the app repo (`thor-dex-viewer`, private) on
    sessions load is the 2026-10-18 hand-build version. Re-upload the repo copy (zip with forward-slash paths).
 5. **T3 worktree setup hook** (the user, in T3's project settings; sessions can't change them): a project script
    `python -I tools/worktree_setup.py`, icon Configure, run on worktree create. Until then run it by hand (CLAUDE.md → Git).
-6. **Source updates found 2026-10-24** (`check_updates.py`, not accepted): Emerald Imperium's calc backup index
-   changed (its trainer backup didn't; check whether the guide needs it); SoulGold's data files changed (Mega Lopunny
-   innates, Clefable / Mega Clefable and Unown learnsets, ability usage): re-fetch before its guide.
+6. **Source updates found 2026-10-24** (`check_updates.py`): SoulGold's data files changed (Mega Lopunny innates,
+   Clefable / Mega Clefable and Unown learnsets, ability usage): re-fetch before its guide. Emerald Imperium's was
+   accepted 2026-10-26 on `worktree-damage-calc` (hzla's backup index: other hacks' titles and a variant list, EI's
+   entry `imp13` EVs / no EVs; `imp_1-3.js` unchanged; the calc oracle pin ff6c3e3 differs from the new head only in
+   a battle-log UI fix): no re-fetch, no fixture change.
 7. **New-guide scaffold** (`tools/new_hack.py <hack> --like <built hack>`): build it during the first new guide, from
    what that session actually copies.
 

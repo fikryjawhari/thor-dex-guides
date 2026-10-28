@@ -11,10 +11,10 @@ there (and to the notes) when a hack gets a new field.
 
 # Canonical key order per object kind. Optional fields (omitted when empty) are marked in the notes, not here.
 ORDER = {
-    'top': ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'built'],
+    'top': ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'GID', 'built'],
     'P': ['id', 'n', 'dex', 't', 'a', 'ha', 's', 'ef', 'et', 'of', 'lv', 'tm', 'tu', 'eg', 'w', 'g', 'hi',
           'stone', 'sloc', 'nu', 'fc', 'cf'],
-    'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'd', 'f', 'h', 'dc', 'e', 'cf', 'x'],
+    'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'cr', 'd', 'f', 'h', 'dc', 'e', 'cf', 'x'],
     'AR': ['n', 'l', 'st', 'sub', 'in', 'es', 'map', 'ns', 'note'],
     'IT': ['n', 'k', 'note', 'r'],
     'WK': ['splits', 'np', 'docs', 'ko', 'cheats', 'cnote'],
@@ -23,9 +23,9 @@ ORDER = {
     'TR': ['g', 'caps'],
     'group': ['n', 'cap', 'tab', 'note', 'sec'],
     'section': ['h', 'cap', 'note', 'opt', 'rw', 'tr'],
-    'trainer': ['k', 'n', 'loc', 'tags', 'st', 'cap', 'note', 'rw', 'pp', 'c', 'bt', 'pl', 'pt', 'p'],
+    'trainer': ['k', 'n', 'loc', 'tags', 'st', 'cap', 'note', 'field', 'rw', 'pp', 'c', 'bt', 'pl', 'pt', 'p'],
     'partner': ['n', 'st', 'pl', 'p'],
-    'mon': ['id', 'l', 'r', 'i', 'a0', 'a', 'ao', 'na', 'iv', 'ev', 'm', 'hp', 'ld', 'pre', 'x', 'cf', 'src'],
+    'mon': ['id', 'l', 'r', 'i', 'a0', 'a', 'ao', 'na', 'iv', 'ev', 'm', 'hp', 'ld', 'au', 'pre', 'x', 'cf', 'src'],
 }
 
 

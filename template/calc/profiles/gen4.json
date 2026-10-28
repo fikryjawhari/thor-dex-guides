@@ -1,0 +1,291 @@
+{
+  "gen": 4,
+  "lv": [
+    1,
+    100
+  ],
+  "stages": [
+    -6,
+    6
+  ],
+  "status": [
+    [
+      "",
+      "Healthy"
+    ],
+    [
+      "brn",
+      "Burn"
+    ],
+    [
+      "par",
+      "Paralysis"
+    ],
+    [
+      "psn",
+      "Poison"
+    ],
+    [
+      "tox",
+      "Bad poison"
+    ],
+    [
+      "slp",
+      "Sleep"
+    ],
+    [
+      "frz",
+      "Freeze"
+    ]
+  ],
+  "natures": true,
+  "abilities": true,
+  "items": true,
+  "field": [
+    {
+      "k": "gameType",
+      "l": "Battle",
+      "type": "select",
+      "o": [
+        [
+          "Singles",
+          "Singles"
+        ],
+        [
+          "Doubles",
+          "Doubles"
+        ]
+      ],
+      "side": "field",
+      "to": "gameType"
+    },
+    {
+      "k": "weather",
+      "l": "Weather",
+      "type": "select",
+      "o": [
+        [
+          "",
+          "None"
+        ],
+        [
+          "Sun",
+          "Sun"
+        ],
+        [
+          "Rain",
+          "Rain"
+        ],
+        [
+          "Sand",
+          "Sandstorm"
+        ],
+        [
+          "Hail",
+          "Hail"
+        ]
+      ],
+      "side": "field",
+      "to": "weather"
+    },
+    {
+      "k": "gravity",
+      "l": "Gravity",
+      "type": "toggle",
+      "side": "field",
+      "to": "isGravity"
+    },
+    {
+      "k": "atkReflect",
+      "l": "Attacker Reflect",
+      "type": "toggle",
+      "side": "atk",
+      "to": "isReflect"
+    },
+    {
+      "k": "atkLightScreen",
+      "l": "Attacker Light Screen",
+      "type": "toggle",
+      "side": "atk",
+      "to": "isLightScreen"
+    },
+    {
+      "k": "atkTailwind",
+      "l": "Attacker Tailwind",
+      "type": "toggle",
+      "side": "atk",
+      "to": "isTailwind"
+    },
+    {
+      "k": "atkHelpingHand",
+      "l": "Attacker Helping Hand",
+      "type": "toggle",
+      "side": "atk",
+      "to": "isHelpingHand"
+    },
+    {
+      "k": "defReflect",
+      "l": "Defender Reflect",
+      "type": "toggle",
+      "side": "def",
+      "to": "isReflect"
+    },
+    {
+      "k": "defLightScreen",
+      "l": "Defender Light Screen",
+      "type": "toggle",
+      "side": "def",
+      "to": "isLightScreen"
+    },
+    {
+      "k": "defTailwind",
+      "l": "Defender Tailwind",
+      "type": "toggle",
+      "side": "def",
+      "to": "isTailwind"
+    },
+    {
+      "k": "defHelpingHand",
+      "l": "Defender Helping Hand",
+      "type": "toggle",
+      "side": "def",
+      "to": "isHelpingHand"
+    },
+    {
+      "k": "atkFocus",
+      "l": "Attacker Focus Energy",
+      "type": "toggle",
+      "side": "atk",
+      "to": "isFocusEnergy"
+    },
+    {
+      "k": "defFocus",
+      "l": "Defender Focus Energy",
+      "type": "toggle",
+      "side": "def",
+      "to": "isFocusEnergy"
+    }
+  ],
+  "multihit": {
+    "Barrage": [
+      2,
+      5,
+      3
+    ],
+    "Bonemerang": [
+      2,
+      2,
+      2
+    ],
+    "Comet Punch": [
+      2,
+      5,
+      3
+    ],
+    "Double Kick": [
+      2,
+      2,
+      2
+    ],
+    "Double Slap": [
+      2,
+      5,
+      3
+    ],
+    "Fury Attack": [
+      2,
+      5,
+      3
+    ],
+    "Fury Swipes": [
+      2,
+      5,
+      3
+    ],
+    "Pin Missile": [
+      2,
+      5,
+      3
+    ],
+    "Spike Cannon": [
+      2,
+      5,
+      3
+    ],
+    "Twineedle": [
+      2,
+      2,
+      2
+    ],
+    "Triple Kick": [
+      3,
+      3,
+      3
+    ],
+    "Bone Rush": [
+      2,
+      5,
+      3
+    ],
+    "Arm Thrust": [
+      2,
+      5,
+      3
+    ],
+    "Bullet Seed": [
+      2,
+      5,
+      3
+    ],
+    "Icicle Spear": [
+      2,
+      5,
+      3
+    ],
+    "Rock Blast": [
+      2,
+      5,
+      3
+    ],
+    "Double Hit": [
+      2,
+      2,
+      2
+    ]
+  },
+  "varpow": [
+    "Bide",
+    "Counter",
+    "Dragon Rage",
+    "Fissure",
+    "Guillotine",
+    "Horn Drill",
+    "Night Shade",
+    "Psywave",
+    "Seismic Toss",
+    "Sonic Boom",
+    "Super Fang",
+    "Low Kick",
+    "Flail",
+    "Mirror Coat",
+    "Present",
+    "Reversal",
+    "Hidden Power",
+    "Magnitude",
+    "Frustration",
+    "Return",
+    "Spit Up",
+    "Endeavor",
+    "Sheer Cold",
+    "Crush Grip",
+    "Fling",
+    "Metal Burst",
+    "Natural Gift",
+    "Wring Out",
+    "Gyro Ball",
+    "Grass Knot",
+    "Punishment",
+    "Trump Card"
+  ],
+  "over": {}
+}
