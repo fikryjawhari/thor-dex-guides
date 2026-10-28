@@ -1,14 +1,15 @@
 # Hardlove Gold docs
 
-Fetched 2026-10-26 (0.8.4, 2026-10-24; first fetched 2026-10-18 for 0.8.2) from the hack's own source code,
+Fetched 2026-10-28 (0.8.5, 2026-10-27; source and Drive docs refreshed; docs site and Showdown retained;
+first fetched 2026-10-18 for 0.8.2) from the hack's own source code,
 [kumakuma1/hardlove](https://github.com/kumakuma1/hardlove) (the author's hg-engine build, branch `beta_hardlove`), the
 hack's [docs site](https://kumakuma1.github.io/hardlove-docs/index.html) (repo
 [kumakuma1/hardlove-docs](https://github.com/kumakuma1/hardlove-docs) at `bb5862f`, 2026-10-02, older than 0.8.0) and its
 [Google Drive](https://drive.google.com/drive/folders/1IltXECEUg7YKeUxO9K6g4bmg33NI4Wax). The source is the authority;
 the docs fill what it lacks. Where each input is used: `notes.md` → Sources and rules.
 
-Pin: 0.8.4 = `ee4518c149` (2026-10-24 20:37 UTC, "add soak tm"; the patch file went up at 20:55 UTC, the next commit
-"version" on 2026-10-25 is after the release). Earlier: 0.8.3 = `f1b2363001`, 0.8.2 = `8ac661afda`. `build.py` refuses
+Pin: 0.8.5 = `64838bf7db` (2026-10-26, "merge"; reviewed `beta_hardlove` head for the 2026-10-27 release,
+fetched 2026-10-28). Earlier: 0.8.4 = `ee4518c149`, 0.8.3 = `f1b2363001`, 0.8.2 = `8ac661afda`. `build.py` refuses
 to run when `repos/hardlove/COMMIT` is not the `watch.json` ref, so update both together.
 
 ## Files
@@ -50,7 +51,7 @@ Source updates: `watch.json` (`uv run python -I tools/check_updates.py hardlove-
 
 ```bash
 D=hacks/hardlove-gold/.src
-SHA=ee4518c149c34914cdadefcba9c6f4f40c78ebf5   # 0.8.4; update to the commit of the release you want
+SHA=64838bf7dbe032cd87fd986f9c8699c1436c67c5   # 0.8.5; update to the commit of the release you want
 R=https://raw.githubusercontent.com/kumakuma1/hardlove/$SHA
 python -I tools/drive_ls.py 1IltXECEUg7YKeUxO9K6g4bmg33NI4Wax $D
 python -I tools/mirror.py https://kumakuma1.github.io/hardlove-docs/index.html $D/site

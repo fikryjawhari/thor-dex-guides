@@ -6,7 +6,7 @@ in the location tables AND on the unavailable list (kept): chimecho, forretress,
 obtainable 596 locations 95
 trainer species fuzzy-matched: Amoongus > amoonguss; Blaizken > blaziken; Deoxys-D > deoxys_defense; Enamorus-T > enamorus_therian; Landorus-T > landorus_therian; Torkol > torkoal; Wigglituff > wigglytuff
 Z-A Megas from Showdown: mega_absol_z, mega_barbaracle, mega_baxcalibur, mega_chandelure, mega_chesnaught, mega_chimecho, mega_clefable, mega_crabominable, mega_darkrai, mega_delphox, mega_dragalge, mega_dragonite, mega_drampa, mega_eelektross, mega_emboar, mega_excadrill, mega_falinks, mega_feraligatr, mega_floette, mega_froslass, mega_garchomp_z, mega_glimmora, mega_golisopod, mega_golurk, mega_greninja, mega_hawlucha, mega_heatran, mega_lucario_z, mega_magearna, mega_malamar, mega_meganium, mega_pyroar, mega_raichu_y, mega_scolipede, mega_scovillain, mega_scrafty, mega_skarmory, mega_staraptor, mega_starmie, mega_victreebel, mega_zeraora, mega_zygarde
-hack source: kumakuma1/hardlove at ee4518c149c34914cdadefcba9c6f4f40c78ebf5
+hack source: kumakuma1/hardlove at 64838bf7dbe032cd87fd986f9c8699c1436c67c5
 evolution method not described: SPIN_CLOCKWISE_LESS_THAN_5_SECONDS_DAY 0
 evolution method not described: SPIN_COUNTERCLOCKWISE_LESS_THAN_5_SECONDS_DAY 0
 evolution method not described: SPIN_CLOCKWISE_LESS_THAN_5_SECONDS_NIGHT 0
@@ -24,22 +24,20 @@ wild table Mt. Mortar 2F (ENCDATA_D38R0103_MT_MORTAR_ROOM_ABOVE_WATERFALL): Surf
 wild table Lake of Rage (ENCDATA_T29_LAKE_OF_RAGE): Land: sheet manectric 15%, parasect 10%; game manectric 25%
 wild table Whirl Islands 1F (ENCDATA_D40R0101_WHIRL_ISLANDS_1F): Fishing: sheet clawitzer 30%; game clauncher 30%
 wild table Whirl Islands B2F (ENCDATA_D40R0104_WHIRL_ISLANDS_B2F): Land: sheet golurk 15%; game mudsdale 15%
-wild table Ice Path 1F (None): no game table with these Pokemon (static, gift or scripted encounter, or not in the game)
 wild table Mt. Silver (Snowy Area) (ENCDATA_D41R0102_MT_SILVER_TOP_SNOWY_AREA): Surf in the game, not in the sheet: goldeen 100% | Fishing in the game, not in the sheet: goldeen 100%
 wild table Mt. Silver (Moltres Room) (None): no game table with these Pokemon (static, gift or scripted encounter, or not in the game)
 safari area not in the sheet: Safari Zone: Rocky Beach
 wild table Safari Zone: Marshland Surf: sheet ['araquanid', 'barraskewda', 'dragonite', 'huntail', 'lanturn', 'overqwil', 'relicanth', 'seismitoad', 'sharpedo']; game ['archeops', 'avalugg_hisuian', 'dewgong', 'dhelmise', 'flygon', 'omastar', 'salamence', 'samurott', 'slowbro']
 wild table Safari Zone: Marshland Fishing: sheet ['archeops', 'avalugg_hisuian', 'dewgong', 'dhelmise', 'flygon', 'omastar', 'salamence', 'samurott', 'slowbro']; game ['araquanid', 'barraskewda', 'dragonite', 'huntail', 'lanturn', 'overqwil', 'relicanth', 'seismitoad', 'sharpedo']
-wild table Safari Zone: Mountain Land: sheet ['tauros']; game ['furret']
 safari area not in the sheet: Safari Zone: Desert
-wild tables checked against the game: 85 locations, 11 with differences; replaced from the game: Route 46, Violet City, Route 5, Mt. Mortar 1F (Entrance), Mt. Mortar 2F, Lake of Rage, Whirl Islands 1F, Whirl Islands B2F, Mt. Silver (Snowy Area), Safari Zone: Marshland (Surf), Safari Zone: Marshland (Fishing), Safari Zone: Mountain (Land)
+wild tables checked against the game: 85 locations, 10 with differences; replaced from the game: Route 46, Violet City, Route 5, Mt. Mortar 1F (Entrance), Mt. Mortar 2F, Lake of Rage, Whirl Islands 1F, Whirl Islands B2F, Mt. Silver (Snowy Area), Safari Zone: Marshland (Surf), Safari Zone: Marshland (Fishing)
 trainer-only species from the game sets: groudon
 trainer-only species from the game sets: darkrai
 trainer-only species from the game sets: floette_eternal_flower
 trainer-only species from the game sets: mewtwo
 types filled: clefairy (calc), clefable (calc), wigglytuff (calc), mr_mime (calc), cleffa (calc), togepi (calc), togetic (calc), marill (calc), azumarill (calc), snubbull (calc), granbull (calc), ralts (calc), kirlia (calc), gardevoir (calc), mega_gardevoir (previous build), azurill (calc), mawile (calc), mega_mawile (previous build), mega_altaria (previous build), togekiss (calc), mega_audino (previous build), whimsicott (calc), flabebe (previous build), floette (calc), florges (calc), slurpuff (calc), sylveon (calc), dedenne (calc), carbink (calc), klefki (calc), xerneas (calc), diancie (calc), primarina (calc), cutiefly (calc), ribombee (calc), morelull (calc), shiinotic (calc), comfey (calc), mimikyu (calc), tapu_koko (calc), tapu_lele (calc), tapu_bulu (calc), magearna (calc), hatterene (calc), impidimp (calc), morgrem (calc), grimmsnarl (calc), alcremie (calc), enamorus (calc), dachsbun (calc), tinkaton (calc), flutter_mane (previous build), iron_valiant (previous build), enamorus_therian (calc)
 not in the hack source, site data kept: wormadam_trashy
-changed from the dex site by the hack source: {'hidden abilities (not on the site)': 647, 'level-up moves': 311, 'tm moves': 301, 'tu moves': 70, 'abilities': 28, 'evolutions': 2, 'eg moves': 59, 'stats': 5}
+changed from the dex site by the hack source: {'hidden abilities (not on the site)': 647, 'level-up moves': 312, 'tm moves': 301, 'tu moves': 70, 'abilities': 28, 'evolutions': 2, 'eg moves': 59, 'stats': 5}
   stats (5): mega_feraligatr [85, 160, 125, 89, 93, 78] > [85, 160, 100, 89, 93, 78]; mega_skarmory [65, 140, 110, 40, 100, 110] > [85, 140, 110, 40, 100, 110]; mega_garchomp_z [108, 130, 85, 141, 85, 151] > [108, 130, 95, 141, 85, 151]; zacian_crowned [92, 170, 115, 80, 115, 148] > [92, 150, 115, 80, 115, 148]; zamazenta_crowned [92, 130, 145, 80, 145, 128] > [92, 120, 140, 80, 140, 128]
   abilities (28): mega_charizard_x Pressure > Tough Claws; mega_aerodactyl Pressure > Tough Claws; sentret Keen Eye > Keen Eye/Run Away; furret Keen Eye > Keen Eye/Run Away; mega_steelix Pressure > Sand Force; taillow Guts/Keen Eye > Guts; swellow Guts/Keen Eye > Guts; mega_sableye Pressure/Frisk > Magic Bounce; mega_medicham Huge Power > Pure Power; mega_sharpedo Speed Boost > Strong Jaw; mega_camerupt Magma Armor/Solid Rock > Sheer Force; mega_banette Frisk > Prankster; mega_absol Pressure > Magic Bounce; mega_absol_z Magic Bounce > Sharpness; mega_metagross Pressure > Tough Claws; mega_garchomp Pressure > Sand Force; mega_garchomp_z Sand Force > Levitate; mega_lucario_z Adaptability > Aura Guard; greninja Torrent > Battle Bond; gourgeist Frisk > Frisk/Insomnia; mudsdale Inner Focus/Stamina > Inner Focus/Own Tempo; mega_golisopod Emergency Exit > Tough Claws; drampa Berserk/Sap Sipper > Berserk; sneasler Inner Focus > Inner Focus/Poison Touch; sprigatito Protean > Libero; floragato Protean > Libero; meowscarada Protean > Libero; sneasel_hisuian Inner Focus > Inner Focus/Poison Touch
   evolutions (2): growlithe > arcanine, arcanine_hisuian; koffing > weezing, weezing_galarian
@@ -63,11 +61,12 @@ in the game but not the sheet: Nuzlocker Ethan (Random Team, see Mini Bosses) ab
 trainer listed twice in the sheet, dropped: 9.0.2 Elite Four Will 702
 trainer listed twice in the sheet, dropped: 9.0.5 Elite Four Koga 703
 ability fuzzy: Swam > Swarm
-trainer sets: {'game set': 1454, 'sets where the sheet differs': 61, 'game Pokemon missing from the sheet': 6}
+trainer sets: {'game set': 1454, 'sets where the sheet differs': 64, 'game Pokemon missing from the sheet': 6}
   Leader Falkner Farfetch'd-G: sheet says ability Inner Focus
   Fisherman Ralph Poliwhirl: sheet says item Oran Berry
   Hiker Russel Geodude-A: sheet says moves Spark, Rock Tomb, Bulldoze, Thunder Wave
   Hiker Russel Sandshrew-A: sheet says species Sandshrew-A
+  Camper Ivan Azumarill: sheet says moves Aqua Jet, Knock Off, Play Rough, Belly Drum
   Pokéfan♂ William Amoonguss: sheet says moves Spore, Pollen Puff, Giga Drain, Venoshock
   Psychic♂ Mark Braixen: sheet says ability Blaze
   School Kid Alan Palossand: sheet says nature Quiet
@@ -75,6 +74,7 @@ trainer sets: {'game set': 1454, 'sets where the sheet differs': 61, 'game Pokem
   Firebreather Ned Magmortar: sheet says nature Timid
   Rival Silver Grimmsnarl: sheet says item Sitrus Berry
   Medium Martha Drifloon: sheet says species Drifloon
+  Swimmer♂ Randall Bronzong: sheet says moves Future Sight, Flash Cannon, Weather Ball, Reflect
   Swimmer♂ Randall Masquerain: sheet says level 42
   Black Belt Nob Samurott-H: sheet says ability Sharpness
   Camper Grant Swanna: sheet says item Sitrus Berry
@@ -82,6 +82,7 @@ trainer sets: {'game set': 1454, 'sets where the sheet differs': 61, 'game Pokem
   Rocket Grunt♀ #4 Scolipede: sheet says level 48
   Rocket Grunt♂ #6 Machamp: sheet says moves Close Combat, Ice Punch, Fire Punch, Bullet Punch
   Executive Ariana Altaria: sheet says level 49
+  Ace Trainer♀ Carol Hariyama: sheet says item Flame Orb
   Twins Meg & Peg Incineroar: sheet says item Assault Vest
   Sailor Stanly Bronzong: sheet says item Colbur Berry
   Leader Lt. Surge Pincurchin: sheet says moves Zing Zap, Scald, Charge, Spikes
@@ -96,6 +97,7 @@ trainer sets: {'game set': 1454, 'sets where the sheet differs': 61, 'game Pokem
   Rocket Grunt♂ #23 Dewgong: sheet says nature Hasty
   Boarder Patton Tentacruel: sheet says level 61
   Boarder Deandre Avalugg: sheet says moves Icicle Spear, Body Press, Gyro Ball, Earthquake
+  Rocket Grunt♀ #34 Dragonite: sheet says ability Multiscale
   Executive Petrel Torkoal: sheet says level 66
   Executive Petrel Lycanroc-Dusk: sheet says nature Jolly
   Rival Silver Sinistcha: sheet says item Sitrus Berry
@@ -115,7 +117,6 @@ trainer sets: {'game set': 1454, 'sets where the sheet differs': 61, 'game Pokem
   Ace Trainer♂ Paulo Ampharos-M: sheet says ability Static / Mold Breaker
   Ace Trainer♀ Fran Darmanitan: sheet says nature Jolly
   Ace Trainer♂ Mike Indeedee-F: sheet says moves Expanding Force, Dazzling Gleam, Hyper Voice, Memento
-  Ace Trainer♂ Mike Gouging Fire: sheet says ability Protosynthesis
   Ace Trainer♂ Brian Ogerpon: sheet says nature Jolly
   Ace Trainer♂ Gaven Magnezone: sheet says nature Modest; ability Analytic
   Ace Trainer♀ Morgan Volcanion: sheet says item Saftey Googles
@@ -131,12 +132,12 @@ moves vs the game data: {'changed in game, not in the sheet': 45, 'sheet disagre
 move changes in the sheet: 188 on moves in the data: 183 ; not learned or used by anyone: barrage, freezeshock, iceburn, magmastorm, thundercage
 move names fuzzy-matched: Accelrock > Accelerock; Acient Power > Ancient Power; Baze Kick > Blaze Kick; ColisionCourse > Collision Course; Eartquake > Earthquake; Exploson > Explosion; Fisheous Rend > Fishious Rend; Fishous Rend > Fishious Rend; Flare Bitz > Flare Blitz; Icy Beam > Ice Beam; Leed Seed > Leech Seed; Precicipe Blades > Precipice Blades; Rock Romb > Rock Tomb; Sleep Power > Sleep Powder; Sludge Bumb > Sludge Bomb; Spirit Beak > Spirit Break; Stealth Rocks > Stealth Rock; Subsitute > Substitute; Sustitute > Substitute; Vaccuum Wave > Vacuum Wave; Vice Grip > Vise Grip; Whish > Wish
 TM/HM fixes from the game: TM14 = Blizzard; TM19 = Giga Drain; TM25 = Thunder; TM38 = Fire Blast; TM41 = Torment; TM52 = Focus Blast; TM53 = Energy Ball; TM55 = Brine; TM56 = Fling; TM63 = Embargo; TM65 = Shadow Claw; TM68 = Giga Impact; TM69 = Rock Polish; TM71 = Stone Edge; TM73 = Thunder Wave; TM78 = Captivate; TM80 = Rock Slide; TM81 = X-Scissor; TM82 = Sleep Talk; TM83 = Natural Gift; TM84 = Scald; TM85 = Dream Eater; TM86 = Grass Knot; TM90 = Protect; TM92 = Trick Room; HM05 Rock Smash is HM06 in the game; HM06 Whirlpool is HM05 in the game
-P 986 obtainable 596 megas 74 trainer only 316 moves 782 abilities 284 trainers 329 areas 61 stops 94 unplaced items 0
+P 986 obtainable 596 megas 74 trainer only 316 moves 783 abilities 284 trainers 329 areas 61 stops 94 unplaced items 0
 items: dropped duplicate Metal Coat from Held Items (kept in Evolution Items)
 items: dropped duplicate Razor Claw from Held Items (kept in Evolution Items)
 items: dropped duplicate Razor Fang from Held Items (kept in Evolution Items)
 items: dropped duplicate King's Rock from Held Items (kept in Evolution Items)
 trainers put in walkthrough order: Morty Split [Cap 39]
 GID species: 1101 species:form keys for 986 of 986 P ids; 115 forms with their base's battle data map to the base
-GID move: 782 of 782 our names matched
+GID move: 783 of 783 our names matched
 GID ability: 274 of 274 our names matched
