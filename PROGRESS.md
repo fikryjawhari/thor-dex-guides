@@ -93,7 +93,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
      4. **Mechanics check** (each guide's notes.md → Damage calc → In-game tests): stays open, merges into `main` with
         the branch.
      5. Footer credits (item 3 below), hzla's calc among them.
-     6. Push the branch and the two checkpoint tags (the user: at the end, once calc and saves are closed out).
+     6. Push the branch and the two checkpoint tags, and delete `worktree-damage-calc-saves` on `origin` (merged, local
+        branch gone) (the user: at the end, once calc and saves are closed out).
      7. The merge into `main`: the user decides it in the session right before it (`plans/calc-open.md` → Merging into
         main).
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
