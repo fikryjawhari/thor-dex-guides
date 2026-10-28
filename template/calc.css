@@ -544,3 +544,35 @@ body.calc-route .dres .damount label{display:flex;align-items:center;gap:4px;fon
 body.calc-route .dres .damount input{width:58px}
 body.calc-route .dres .rolls button{font:inherit;color:var(--fg);border:1px solid var(--line);border-radius:3px;background:var(--panel2);padding:1px 2px;margin:1px 0;cursor:pointer}
 body.calc-route .dres.zm .mr .r2{gap:6px}
+body.calc-route .dteamrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
+body.calc-route .dteamrow .dteamslot{border-style:dashed;opacity:1}
+body.calc-route .dteamrow button,body.calc-route .dfoe .dstrip button{position:relative;justify-content:center;height:24px;min-height:24px;padding:0}
+body.calc-route .dteamrow .spr,body.calc-route .dfoe .dstrip .spr{width:22px;height:22px;min-height:0}
+body.calc-route .dteamrow button span,body.calc-route .dfoe .dstrip button span{position:absolute;right:1px;bottom:0;font-size:8px;line-height:1;padding:0 1px;border-radius:3px;background:color-mix(in srgb,var(--panel2) 80%,transparent)}
+body.calc-route .dres .mr .r1{height:16px;line-height:1.15}
+body.calc-route .dres .mr .r1 .dendpoint{height:15px;line-height:15px;box-sizing:border-box}
+body.calc-route .dres .mr .r2{height:13px;line-height:13px}
+body.calc-route .dres .mr .r2 button,body.calc-route .dres .mr .r2 .dturn{height:13px;min-height:0;line-height:13px}
+body.calc-route .dres .mr .mv{line-height:1.15;padding-bottom:0}
+body.calc-route .dres .mr .mm,body.calc-route .dres .mr.st .mm,body.calc-route .dres .mr.em .mm{min-height:0;padding:1px 5px}
+body.calc-route .dfight select,body.calc-route .dfight .dformat button,body.calc-route .dfight .dfreset{height:22px;min-height:22px}
+@media(max-width:479.98px){
+ body.calc-route .fit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"ban ban" "box box" "tside tside" "fight fight" "team foe" "cm cf" "mv mv";gap:2px}
+ body.calc-route .fit:not(:has(.ban)){grid-template-areas:"box box" "tside tside" "fight fight" "team foe" "cm cf" "mv mv"}
+ body.calc-route .fit:has(.cc .ed){grid-template-areas:"ban ban" "box box" "tside tside" "fight fight" "team foe" "cm cm" "cf cf" "mv mv"}
+ body.calc-route .fit:not(:has(.ban)):has(.cc .ed){grid-template-areas:"box box" "tside tside" "fight fight" "team foe" "cm cm" "cf cf" "mv mv"}
+ body.calc-route .top,body.calc-route .dbox,body.calc-route .dmatch{display:contents}
+ body.calc-route .fit>.ban{grid-area:ban}
+ body.calc-route .dbox>.mg{grid-area:box}
+ body.calc-route .dtrainer{grid-area:tside;background:none;border:0;padding:0;min-height:0}
+ body.calc-route .dteam{grid-area:team;padding:2px}
+ body.calc-route .dfoe{grid-area:foe;padding:2px}
+ body.calc-route .dfoe .dstrip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
+ body.calc-route .dfight{grid-area:fight;min-height:0}
+ body.calc-route .dmatch>.cc:first-child{grid-area:cm}
+ body.calc-route .dmatch>.cc:nth-child(2){grid-area:cf}
+ body.calc-route .dmatch>.dres{grid-area:mv;gap:2px}
+ body.calc-route .dmatch>.dres.na{display:none}
+ body.calc-route .fbar{min-height:22px}
+ body.calc-route .fbar .nav,body.calc-route .fbar .dsrc{height:22px;min-height:22px}
+}

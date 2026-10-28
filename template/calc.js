@@ -129,12 +129,14 @@ function mineGrid(){const L=mineList();
  let h='',g=-1;L.forEach(x=>{g=x.g;const m=x.src==='custom'?x.m:applyEdits(x.m,'mine:'+x.m.pid);
   h+=`<button data-a="mpick" data-src="${x.src}" data-b="${x.b}" data-i="${x.i}" class="${isSel(x)?'on':''} ${x.src==='custom'?'cu':''}" aria-label="${esc(byId[m.id].n)}">${spr(m.id,'s28')}<span>${m.l}</span></button>`;});
  return `<div class="tools"><button data-a="import" ${prof.save?'':'hidden'}>↻ Import</button><button data-a="newmon">+ New</button><button data-a="findmine">⌕ Find</button></div><div class="dstrip fs">${h}</div>`;}
+function teamRow(){return `<div class="dstrip fs dteamrow" aria-label="My team">${Array.from({length:6},()=>'<button class="dteamslot" disabled aria-label="Empty team slot"></button>').join('')}</div>`;}
+function foeTeam(){const t=trByK[ST.foe.k];if(!t)return `<button class="dbtn" data-a="foesheet">Pick a trainer</button>`;
+ return `<div class="dstrip fs">${Array.from({length:6},(_,i)=>{if(!t.p[i])return '<button class="ph" disabled></button>';const m=applyEdits(foeBase(t,i),'foe:'+t.k+':'+i);return `<button data-a="fpick" data-i="${i}" class="${i===ST.foe.i?'on':''}" aria-label="${esc(byId[m.id].n)}">${spr(m.id,'s28')}<span>${isNaN(m.l)?'?':m.l}</span></button>`;}).join('')}</div>`;}
 function foeSide(){const t=trByK[ST.foe.k];if(!t)return `<div class="fbar"><button class="dsrc" data-a="foesheet"><span class="nm mut">Pick a trainer</span></button></div>`;
  const rel=isRel(t),cap=capOf(t),own=+TCAP[t.k]>0,ti=D.TR.indexOf(t);
- const lvl=i=>{const m=applyEdits(foeBase(t,i),'foe:'+t.k+':'+i);return isNaN(m.l)?'?':m.l;};
  return `<div class="fbar"><button class="nav" data-a="tprev" aria-label="Previous trainer" ${ti>0?'':'disabled'}><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M6.5 1.5 3 5l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dsrc" data-a="foesheet"><span class="nm">${esc(t.n)}</span></button><button class="nav" data-a="tnext" aria-label="Next trainer" ${ti<D.TR.length-1?'':'disabled'}><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M3.5 1.5 7 5 3.5 8.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>${rel?`<span class="dcap ${own?'own':''} ${cap?'':'need'}">Cap ${nb(`data-cap="${t.k}" data-clr="1"`,cap||'',{min:range[0],max:range[1],label:'Level cap'})}</span>`:''}</div>
  <div class="fteam">${t.p.map((x,i)=>{const m=applyEdits(foeBase(t,i),'foe:'+t.k+':'+i);return `<div role="button" tabindex="0" class="ft ${i===ST.foe.i?'on':''}" data-a="fpick" data-i="${i}">${spr(m.id,'s24')}<span class="tx"><span class="l1t"><b>${esc(byId[m.id].n)}</b><i>${isNaN(m.l)?'?':m.l}</i><em>${esc(m.i||'')}</em><em class="ab">${esc(AB[m.a]||'No ability')}</em></span><span class="l2t">${m.m.length?m.m.map(k=>esc(M[k])).join(' · '):'No moves listed'}</span></span></div>`;}).join('')}</div>
- <div class="dstrip fs">${[0,1,2,3,4,5].map(i=>t.p[i]?`<button data-a="fpick" data-i="${i}" class="${i===ST.foe.i?'on':''}" aria-label="${esc(byId[t.p[i].id].n)}">${spr(t.p[i].id,'s28')}<span>${lvl(i)}</span></button>`:`<button class="ph" disabled></button>`).join('')}</div>`;}
+ `;}
 const EDITOPEN={mine:false,foe:false},TOX={},RESOPEN={mine:false,foe:false},ABOTHER={};
 const TYPECHANGE=['Protean','Libero'],changesType=r=>TYPECHANGE.includes(r.abil);
 const signed=v=>(v>0?'+':'−')+Math.abs(v);
@@ -224,9 +226,9 @@ function calcPage(){if(!host.isConnected)document.body.appendChild(host);if(prof
  else{ra=movesHTML(a,b,'mine',fieldFor('mine'));rb=movesHTML(b,a,'foe',fieldFor('foe'));}
  const fs=(prof.field||[]).filter(entry=>F[entry.k]&&(!entry.doubles||F.gameType==='Doubles')).map(entry=>entry.type!=='select'?entry.l.replace(/^Attacker /,'Player ').replace(/^Defender /,'Foe ')+(entry.max?' '+F[entry.k]:''):(entry.o||[]).find(option=>option[0]===F[entry.k])?.[1]||F[entry.k]);
  const ban=BAN?`<div class="ban ${BAN.ok?'ok':'bad'}"><button class="bx" data-a="bandis" aria-label="Dismiss">×</button><b>${esc(BAN.h)}</b>${esc(BAN.t)}</div>`:'';
- html($('#app'),`<div class="fit">${ban}<div class="top"><div class="dside mg">${mineGrid()}</div><div class="dside">${foeSide()}</div></div>
+ html($('#app'),`<div class="fit">${ban}<div class="top"><div class="dbox"><div class="dside mg">${mineGrid()}</div><div class="dside dteam">${teamRow()}</div></div><div class="dside dtrainer">${foeSide()}</div></div><div class="dside dfoe">${foeTeam()}</div><div class="dfight">${fieldHTML(F,true)}</div>
   <div class="dmatch">${chip(a,out,'mine',F.trickRoom?sa<sb:sa>sb)}${chip(b,!out,'foe',F.trickRoom?sb<sa:sb>sa)}<div class="dres${prof.zmove?' zm':''} ${out?'':'na'}">${ra}</div><div class="dres${prof.zmove?' zm':''} ${out?'na':''}">${rb}</div></div></div>
- <div class="dfight">${fieldHTML(F,true)}</div><details class="dfield" ${window.__fo?'open':''}><summary>Field <span class="mut">${esc(fs.join(' · ')||'none')}</span></summary><div class="dfb">
+ <details class="dfield" ${window.__fo?'open':''}><summary>Field <span class="mut">${esc(fs.join(' · ')||'none')}</span></summary><div class="dfb">
   ${fieldHTML(F)}</div></details>`);
  bindCap();bindMain();bindEd();fitToggles();fitTeam();if($('.mg .dstrip'))$('.mg .dstrip').scrollTop=gridScroll;if($('.dfb'))$('.dfb').scrollTop=fieldScroll;jumpState();}
 
