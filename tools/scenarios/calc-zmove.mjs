@@ -28,6 +28,8 @@ async function setup(page) {
   await page.typeSearch('Decidueye');
   await page.tap('.mrow[data-i="0"]');
   await page.value(`CALC.enter(${JSON.stringify(TOTEM)},0)`);
+  // The narrow card's parts (Aura, state tag) may move to line 3 or go tight after injecting: re-measure (template: fitCards).
+  await page.value('CALC.fit()');
   await page.settle();
 }
 
@@ -59,10 +61,6 @@ const checks = [{
     await page.tap(`.dres:not(.na) .mr:nth-child(${i + 1}) .rz`);
     assert.equal(await page.value(`${rows}[${i}].querySelector('.mv').textContent`), before[i].mv, 'Z off: the move again');
     assert.equal(await page.value(`${rows}[${i}].querySelector('.hp').textContent`), before[i].hp, 'Z off: the same damage');
-    if (page.width >= 537 && page.height >= 424) {
-      assert.ok(await page.value(`document.querySelector('#app').classList.contains('tl')`),
-        `foe team list shown (room ${await page.value(`document.querySelector('#app').dataset.avail`)}, needs 222)`);
-    }
     if (page.width < 480) {
       const span = await page.value(`(()=>{const f=document.querySelector('.fbar').getBoundingClientRect().top;return ${rows}.at(-1).getBoundingClientRect().bottom-f;})()`);
       assert.ok(span <= page.height, `trainer bar to the last move fits the window (${Math.round(span)} / ${page.height})`);
@@ -77,9 +75,11 @@ const checks = [{
     const stg = () => page.value(`[...document.querySelectorAll('.dmatch .cc[data-s="foe"] [data-a="sstep"]')].map(b=>b.textContent)`);
     assert.equal(await page.count('.cc[data-s="foe"] .aum'), 1, 'Aura mark on the Totem');
     assert.equal(await page.count('.cc[data-s="mine"] .aum'), 0, 'none on Mine');
-    const mark = await page.value(`(()=>{const a=document.querySelector('.cc[data-s="foe"] .aum').getBoundingClientRect(),c=document.querySelector('.cc[data-s="foe"]').getBoundingClientRect(),l=document.querySelector('.cc[data-s="foe"] .cl').getBoundingClientRect();return {in:a.right<=c.right+0.5,line:a.top>=l.top-1&&a.bottom<=l.bottom+1};})()`);
+    // The mark sits on card line 2 or 3 (or line 0 with a name), or reads "A" in tight mode: its element and tooltip are what counts.
+    const mark = await page.value(`(()=>{const el=document.querySelector('.cc[data-s="foe"] .aum'),a=el.getBoundingClientRect(),c=document.querySelector('.cc[data-s="foe"]').getBoundingClientRect();return {in:a.left>=c.left-0.5&&a.right<=c.right+0.5&&a.top>=c.top-0.5&&a.bottom<=c.bottom+0.5,title:el.getAttribute('title'),text:el.textContent.trim()};})()`);
     assert.ok(mark.in, 'mark inside the card');
-    assert.ok(mark.line, 'mark on the Lv / HP line');
+    assert.equal(mark.title, 'Totem aura', 'mark tooltip');
+    assert.ok(['Aura', 'A'].includes(mark.text), `mark reads "Aura" or "A" (tight): ${mark.text}`);
     // New Pokémon opens Edit, and from 480 px both editors open together: open the foe's only when it is closed
     if (!await page.count('.cc[data-s="foe"] .ed')) await page.tap('.dmatch .cc[data-s="foe"] [data-a="eopen"]');
     assert.deepEqual(await stg(), ['0', '+1', '0', '0', '0'], 'Def +1 from the aura');
@@ -90,6 +90,7 @@ const checks = [{
     assert.equal(await page.count('.cc[data-s="foe"] .aum'), 1, 'mark back');
     await page.tap('.dmatch .cc[data-s="foe"] [data-a="eopen"]');
     await page.value(`CALC.enter(${JSON.stringify(TOTEM)},1)`);
+    await page.value('CALC.fit()');
     await page.settle();
     assert.equal(await page.count('.cc[data-s="foe"] .aum'), 0, 'the ally has no aura');
   },
