@@ -36,6 +36,9 @@ explicit task authorisation and provider-specific instructions still win.
   the gate runs both halves. Add task-specific checks under `tools/scenarios/`; do not weaken existing checks.
 - One browser sweep at a time, across worktrees too. Check running Node check commands before each standalone run;
   the gate checks before every browser command and fails on contention. Logs belong in `.tmp/<unit>/` and `.tmp/gate/`.
+- Saved state (localStorage) never stores a position in the data (an index into `M` / `MV` / `AB` / `P` / `LOC` / `TR` / `WK` / `IT`): store names or stable keys, map them back on load, handle a gone
+  one, keep older formats loading (`template/README.md` → the Rule bullet). Template work that adds saved state adds
+  it to `tools/scenarios/guide-update.mjs`'s snapshot.
 - Intended DOM/data changes need explicit acceptance, not a new baseline or `--ignore` used to hide failures.
 
 ## Commits and handover

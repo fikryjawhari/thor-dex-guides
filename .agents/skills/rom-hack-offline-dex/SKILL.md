@@ -25,7 +25,10 @@ Do not hand-build an old standalone guide or implement guide UI in the sibling A
 - `hacks/<hack>/extract/` generates `hacks/<hack>/data.json` in the shared layout (`tools/extractlib.py` docstring;
   `check.py` checks the result). Follow `hacks/emerald-imperium/notes.md`'s schema; `extractlib.finalise()` applies
   the shared rules (Items standard, cap split names, Trainers in walkthrough order, key order).
-- Wording, feature switches and storage keys belong in `hacks/<hack>/hack.json` (`cfg`). Preserve published keys.
+- Wording, feature switches and storage keys belong in `hacks/<hack>/hack.json` (`cfg`). Preserve published keys,
+  walkthrough stop keys and the trainer key table (`extract/trainer_keys.json`, written by the first build).
+- Saved state never stores a position in the data (an index into `M` / `MV` / `AB` / `P` / `LOC` / `TR` / `WK` / `IT`): names or stable keys, mapped back on load, a gone one handled, older formats
+  still loading (`template/README.md`). `tools/scenarios/guide-update.mjs` checks every kind on every guide.
   Adapt Emerald Imperium-only features through existing configuration and schema.
 - Shared sprites live in `sprites/`; hack-specific additions go in `hacks/<hack>/sprites.json`.
 - Build `dist/<hack>.html` with `python assemble.py <hack>`. Template changes require `python assemble.py` and
