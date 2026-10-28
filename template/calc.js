@@ -16,12 +16,24 @@ const defaults=()=>({dir:'out',mine:{src:'party',b:0,i:0},foe:{k:'',i:0},field:{
 // Any other edit field is a set field: unsaved ones go when the Pokémon is switched away, Save keeps them.
 const KEPT=['hp','status'],FIGHT=['broken','mega','used'],MEGA_F=['id','a','i','aGuess'],SCRATCH=new Set(['stg','abilityOn','dl','entry','pty','intim','toggles',...(prof.monControls||[]).map(control=>control.k)]),SC={};
 const isSetField=f=>!KEPT.includes(f)&&!FIGHT.includes(f)&&!SCRATCH.has(f);
+// Stored sets (custom, imported, edits, saved, a Mega's form) name their species (sn, beside the id), ability and moves
+// (nameOf / idxOf in dex.js), so a guide update that inserts one keeps them; in memory they are this build's indices.
+// On load a move that no longer exists empties its slot, an ability falls back (a whole set: the species' first), a
+// species drops the set (an edit: the species edit). An ability that is no index (-1 = none) stays as it is.
+function monOut(o){if(!o||typeof o!=='object')return o;const r={...o};if(byId[r.id])r.sn=nameOf(P,byId[r.id].i);if(AB[r.a]!=null)r.a=nameOf(AB,r.a);if(Array.isArray(r.m))r.m=r.m.map(x=>nameOf(M,x)??null);for(const f of ['mega','pre'])if(r[f])r[f]=monOut(r[f]);return r;}
+function monIn(o,whole){if(!o||typeof o!=='object')return true;if(o.sn!=null){const i=idxOf(P,o.sn);if(i!=null)o.id=P[i].id;delete o.sn;}if(!byId[o.id]&&(whole||'id' in o)){if(whole)return false;delete o.id;}
+ if(typeof o.a==='string'){const i=idxOf(AB,o.a);if(i==null)delete o.a;else o.a=i;}if(whole&&!('a' in o))o.a=byId[o.id].a[0];
+ if(Array.isArray(o.m))o.m=o.m.map(x=>MV[idxOf(M,x)]?idxOf(M,x):null);for(const f of ['mega','pre'])if(o[f]&&!monIn(o[f],true))delete o[f];return true;}
+const storeOut=s=>{const each=list=>(list||[]).map(monOut),byKey=map=>Object.fromEntries(Object.entries(map||{}).map(([k,v])=>[k,monOut(v)]));return {...s,custom:each(s.custom),edits:byKey(s.edits),saved:byKey(s.saved),...(s.imp?{imp:{...s.imp,party:each(s.imp.party),boxes:(s.imp.boxes||[]).map(each)}}:{})};};
 let ST=defaults();try{const stored=JSON.parse(localStorage.getItem(KEY)||'null');if(stored&&typeof stored==='object')ST={...ST,...stored};}catch(error){}
+(()=>{const mine=curMine(),keep=list=>(list||[]).filter(mon=>monIn(mon,true));ST.custom=keep(ST.custom);if(ST.imp){ST.imp.party=keep(ST.imp.party);ST.imp.boxes=(ST.imp.boxes||[]).map(keep);}
+ for(const map of [ST.edits,ST.saved])for(const e of Object.values(map||{}))monIn(e,false);
+ if(mine&&curMine()!==mine){const list=ST.mine.src==='custom'?ST.custom:ST.mine.src==='box'?ST.imp?.boxes?.[ST.mine.b]:ST.imp?.party,i=list?list.indexOf(mine):-1;ST.mine=i>=0?{...ST.mine,i}:{src:'party',b:0,i:0};}})();
 // Custom sets made before pids existed get one (the team refers to customs by pid).
 (ST.custom||[]).forEach((mon,index)=>{if(mon&&!mon.pid)mon.pid='c'+Date.now()+'-'+index;});
 // Ruin was one toggle per side (2026-10-26), now one field-wide toggle: on for either side is on.
 for(const name of ['TabletsOfRuin','SwordOfRuin','VesselOfRuin','BeadsOfRuin']){const key=name[0].toLowerCase()+name.slice(1),old=['atk'+name,'def'+name];if(ST.field&&old.some(k=>k in ST.field)){if(old.some(k=>ST.field[k]))ST.field[key]=1;old.forEach(k=>delete ST.field[k]);}if(Array.isArray(ST.fman)&&old.some(k=>ST.fman.includes(k)))ST.fman=[...new Set(ST.fman.map(k=>old.includes(k)?key:k))];}
-const save=()=>{try{const {st,tgt,...kept}=ST;localStorage.setItem(KEY,JSON.stringify(kept));}catch(error){BAN={ok:0,h:'Storage full',t:'The current changes could not be remembered.'};}};
+const save=()=>{try{const {st,tgt,...kept}=ST;localStorage.setItem(KEY,JSON.stringify(storeOut(kept)));}catch(error){BAN={ok:0,h:'Storage full',t:'The current changes could not be remembered.'};}};
 const flipField=field=>Object.fromEntries(Object.entries(field).map(([key,value])=>[key.startsWith('atk')?'def'+key.slice(3):key.startsWith('def')?'atk'+key.slice(3):key,value]));
 if(!ST.fieldSides){if(ST.dir==='in')ST.field=flipField(ST.field);ST.fieldSides=1;}
 const battleField=()=>ST.field;

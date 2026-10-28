@@ -5,6 +5,14 @@ const SPR=JSON.parse(document.getElementById('spr').textContent);
 // Per-hack settings from hacks/<hack>/hack.json (assemble.py puts them in D.cfg): names, storage keys, wording.
 const CF=D.cfg,LS=CF.ls,TX=CF.txt;
 const M=D.M,MV=D.MV,AB=D.AB,P=D.P,LOC=D.LOC,byId={};P.forEach((p,i)=>{p.tu=p.tu||[];p.i=i;p.name=p.n;p.key=(p.n+' '+p.dex).toLowerCase();byId[p.id]=p;});
+// Saved state names moves, abilities, species and places, not their positions in the data: a guide update that inserts
+// one shifts every later position. A repeated name (Hardlove's duplicate ability slots, Photonic Sun's Z-moves) carries
+// its occurrence ("Swarm#2"). nameOf(list, index) gives the name to store, idxOf(list, name) this build's index (undefined
+// = gone); a number (state saved before names) passes through as an index.
+const NAMES=new Map();
+function nameKeys(list){let keys=NAMES.get(list);if(!keys){const seen={};keys={names:[],index:new Map()};list.forEach((x,i)=>{const n=typeof x==='string'?x:Array.isArray(x)?x[0]:x.n,k=seen[n]=(seen[n]||0)+1,key=k>1?n+'#'+k:n;keys.names.push(key);keys.index.set(key,i);});NAMES.set(list,keys);}return keys;}
+const nameOf=(list,i)=>Number.isInteger(i)?nameKeys(list).names[i]:i;
+const idxOf=(list,v)=>typeof v==='string'?nameKeys(list).index.get(v):v;
 const TC={normal:'#9fa19f',fire:'#e62829',water:'#2980ef',electric:'#d8b000',grass:'#3fa129',ice:'#3dcef3',fighting:'#ff8000',poison:'#9141cb',ground:'#915121',flying:'#81b9ef',psychic:'#ef4179',bug:'#91a119',rock:'#afa981',ghost:'#704170',dragon:'#5060e1',dark:'#624d4e',steel:'#60a1b8',fairy:'#ef70ef'};
 const tcol=t=>TC[(t||'').toLowerCase()]||'#777';
 const SN=['HP','Atk','Def','SpA','SpD','Spe'];
@@ -42,9 +50,12 @@ const abUsers={};P.forEach(p=>p.as.forEach(a=>{(abUsers[a]=abUsers[a]||[]).push(
 const types=[...new Set(P.flatMap(p=>p.t))].sort();
 const usedMoves=M.map((m,i)=>i).filter(i=>learn[i]);
 const st={q:'',f:[],sort:'dex',av:'all',listScroll:null,view:''};
+// Move, ability and place filters are stored by name (nameOf); one that no longer exists drops out.
+const FLIST={mv:M,ab:AB,loc:LOC},fname=f=>FLIST[f.k]?{...f,v:nameOf(FLIST[f.k],f.v)}:f;
 try{const s=JSON.parse(localStorage.getItem(LS.dex)||'{}');['f','sort','av'].forEach(k=>{if(s[k]!=null)st[k]=s[k];});}catch(e){}
+if(!Array.isArray(st.f))st.f=[];st.f=st.f.map(f=>FLIST[f?.k]?{...f,v:idxOf(FLIST[f.k],f.v)}:f).filter(f=>f&&f.v!=null&&(!FLIST[f.k]||FLIST[f.k][f.v]!=null));
 if(st.sort==='bst')st.sort='dex';if(st.av==='chg')st.av='all';
-const save=()=>{try{localStorage.setItem(LS.dex,JSON.stringify({f:st.f,sort:st.sort,av:st.av}))}catch(e){}};
+const save=()=>{try{localStorage.setItem(LS.dex,JSON.stringify({f:st.f.map(fname),sort:st.sort,av:st.av}))}catch(e){}};
 // ===== IN-PAGE KEYBOARD (Dex Viewer only). The viewer's window never takes the Android keyboard, so there the search
 // box and number boxes are buttons, and these keyboards type into them. Elsewhere (a phone browser) the page keeps its
 // real inputs. The viewer is recognised by its host; localStorage "dvkb" = "1" forces the keyboard for testing.
