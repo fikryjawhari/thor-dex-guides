@@ -26,12 +26,13 @@ const checks = [
       assert(await page.count('.dres:not(.na) .mr:not(.em)') > 0, "the foe's moves are listed");
       await page.tap('.dmatch .cc[data-s="mine"] .sp');
       assert.equal(await attackerSide(page), 'mine', "Mine's name makes Mine attack again");
+      // The narrow card's Lv box is on the card only while Edit is open: Edit opens, Lv and HP are touched, then Edit closes.
+      await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
+      assert.equal(await attackerSide(page), 'mine', 'Edit leaves the attacker alone');
       await touchBox(page, '[data-lv="mine"]');
       assert.equal(await attackerSide(page), 'mine', 'Lv leaves the attacker alone');
       await touchBox(page, '[data-hp="mine"]');
       assert.equal(await attackerSide(page), 'mine', 'HP leaves the attacker alone');
-      await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
-      assert.equal(await attackerSide(page), 'mine', 'Edit leaves the attacker alone');
       await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
       await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
       assert.equal(await attackerSide(page), 'mine', 'M leaves the attacker alone (Garchomp has a Mega)');
