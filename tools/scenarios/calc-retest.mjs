@@ -20,9 +20,11 @@ const checks=[{
     for(const rect of [...geometry.cards,...geometry.moves])assert(rect.top>=0&&rect.bottom<=height+1,`frame ${JSON.stringify(rect)}`);
     if(width<480)assert(geometry.bar.top>=0,'trainer bar in frame');
     else{
-      assert(Math.abs(Math.max(...geometry.moves.map(rect=>rect.bottom))-height)<=1,'fourth rows end at viewport bottom');
-      assert(geometry.fight.top>=height,'fight below moves');
-      if(height===424){assert(geometry.expanded,'full preview at 424');assert.equal(geometry.team,'auto','preview scrolls internally');assert.equal(geometry.preview.length,6,'all six full preview rows');assert(geometry.preview.every(row=>row.parts===1&&row.text.length>20),'item / ability line and move line in every row');}
+      const lists=await page.value(`[...document.querySelectorAll('.dres')].map(list=>Math.max(...[...list.querySelectorAll('.mr')].map(row=>row.getBoundingClientRect().bottom)))`);
+      assert.equal(lists.length,2,'both move lists');
+      for(const bottom of lists)assert(bottom<=height+1&&height-bottom<=4,'both move lists end at the viewport bottom (4 px margin)');
+      assert(geometry.fight.bottom<=Math.min(...geometry.moves.map(rect=>rect.top)),'fight bar above the moves (wide left column)');
+      if(height===424){assert.equal(geometry.team,'visible','preview does not scroll: all six rows visible (two-line rows)');assert(await page.value(`[...document.querySelectorAll('.fteam .ft')].every(row=>row.getBoundingClientRect().bottom<=innerHeight)`),'all six preview rows inside the window');assert.equal(geometry.preview.length,6,'all six full preview rows');assert(geometry.preview.every(row=>row.parts===1&&row.text.length>20),'item / ability line and move line in every row');}
     }
     assert(geometry.field.top>=geometry.fight.bottom,'Field follows fight bar');
     if(mode==='normal'&&(width!==260||height===316)){
@@ -49,12 +51,13 @@ checks.push({
   run:async page=>{
     await setupCalc(page);
     await page.value(`CALC.use(P.find(mon=>mon.n==='Snorlax'));CALC.set('mine','l',50);CALC.set('mine','i','Sitrus Berry');CALC.set('mine','status','tox');CALC.render();CALC.set('mine','hp',40);CALC.render()`);
-    const row=await page.value(`(()=>{const card=document.querySelector('.cc[data-s=mine]'),line=card.querySelector('.cl'),rect=line.getBoundingClientRect();return {height:rect.height,children:[...line.querySelectorAll('[data-lv],[data-hp],[data-tox],.dturn')].map(el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right};}),left:rect.left,right:rect.right,berry:line.querySelector('.dberry').textContent,residual:line.querySelector('[data-a=eot]').textContent};})()`);
-    assert(row.height<=22,'HP row shorter than mockup');
-    assert(row.children.length>=5,'level, HP, toxic, residual, berry');
-    for(const rect of row.children){assert(rect.left>=row.left-1&&rect.right<=row.right+1,'HP controls inside row');assert(rect.bottom-rect.top<=22);}
-    assert(Math.max(...row.children.map(rect=>rect.top))-Math.min(...row.children.map(rect=>rect.top))<=3,'one HP line');
-    assert.match(row.berry,/^\+\d*$/,'nameless positive berry');
+    const row=await page.value(`(()=>{const card=document.querySelector('.cc[data-s=mine]');const R=el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right};};const shown=els=>[...els].filter(el=>el.getBoundingClientRect().width>0).map(R);return {card:R(card),hp:shown(card.querySelectorAll('.hpl,[data-hp],.mx')),line:shown(card.querySelectorAll('.dberry,.dtoxl,[data-tox],[data-a=eot]')),berry:card.querySelector('.dberry').textContent,residual:card.querySelector('[data-a=eot]').textContent};})()`);
+    assert(row.card.bottom-row.card.top<=63,'busiest narrow card stays at three lines (62 px)');
+    assert(row.hp.every(rect=>rect.left>=row.card.left-1&&rect.right<=row.card.right+1),'HP controls inside the card');
+    assert(Math.max(...row.hp.map(rect=>(rect.top+rect.bottom)/2))-Math.min(...row.hp.map(rect=>(rect.top+rect.bottom)/2))<=3,'HP controls on one line (line 1, centres)');
+    assert(row.line.length>=3,'berry, toxic and residual on line 3');
+    for(const rect of row.line){assert(rect.left>=row.card.left-1&&rect.right<=row.card.right+1,'line 3 controls inside the card');assert(rect.bottom-rect.top<=22);}
+    assert(Math.max(...row.line.map(rect=>(rect.top+rect.bottom)/2))-Math.min(...row.line.map(rect=>(rect.top+rect.bottom)/2))<=3,'toxic, residual and berry share one line (line 3, centres)');
     assert.match(row.residual,/^\d/,'unsigned residual');
     await page.tap('[data-a=eopen][data-s=mine]');
     await page.tap('[data-a=resopen][data-s=mine]');
