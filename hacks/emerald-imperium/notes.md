@@ -149,9 +149,9 @@ Data rules:
 
 ## Local storage (prefix ei)
 
-`eidex1` list filters / sort / availability, `eicalc:<id>` + `eicalc:lastlv` stat calc, `eitrack` tracker {e:{areaIdx:{p:id}
-or {f:1}}}, `eiwalk` walkthrough {c:{split.stop.step:1}, o:{open splits, gi: Guide info}, x:{closed stops, doc*: open
-docs}, s:{split.stop.c/e/i/t: section open 1 / closed 0}}, `eicap` {trainerKey: your highest level}, `eitr` open trainer
+`eidex1` list filters / sort / availability, `eicalc:<species name>` (was `<id>`, moved on load) + `eicalc:lastlv` stat calc, `eitrack`
+tracker {e:{areaIdx:{p:species name (was id)} or {f:1}}}, `eiwalk` walkthrough {c:{split.stop.step:1}, o:{open splits, gi: Guide info}, x:{closed stops, doc*: open
+docs}, s:{split.stop.c/e/i/t: section open 1 / closed 0}}, `eicap` {trainer key (stable): your highest level}, `eitr` open trainer
 groups, `eimgm` "1" = Minimal Grinding Mode (speeds without EVs), `eirecent`, `eipos`, `eiloc`, `eiitems`. Keep them once
 published. Rival teams are filtered by the type of the starter recorded in tracker area 0 (Starter); the walkthrough's
 Starter picker sets that same tracker value.
@@ -420,11 +420,18 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
        then) and it never changes; when stops are regrouped or reordered the old key stays (a stop split in two gets
        "<key>.f1"), and dex.js migrateWalkState moves the saved ticks / collapse state to the new positions by key.
        Positions in state are "split.stop"; there is no separate legacy table (the root of a key is its legacy position).
+       Trainer key k: the trainer's identity for saved state (level caps, the calc, recents, open state). The extracts
+       number trainers "g.s.t" while they build; finalise (tools/trainer_keys.py) then gives each its key from the
+       committed extract/trainer_keys.json, matched on identity (name, place, starter / player variant, game trainer
+       id when the source has one, team species): a key never changes, a new trainer gets "t<N>". The table was
+       seeded 2026-10-29 with the keys as they were, so no saved state moved. The build report lists loose matches,
+       new keys and entries nothing matched (a trainer renamed with a new team loses its state unless its entry is
+       edited to the new name).
   TR  {g:[{n box (= the walkthrough split name), cap, tab sheet tab, [note[]], sec:[{h place, [cap [level, who, where,
        battles left]], [note[]], [opt 1 = optional place], [rw reward choices], tr:[trainer]}]}], caps:[[label, cap]]
        (the page's Level caps table)}
        (boxes are level cap runs named from caps, places runs of one location; Hot House stays one box)
-       trainer {k "g.s.t" key, n name, loc place, tags[] (Optional, Double Battle, Back to Back #1, Permanent Rain, Trick
+       trainer {k key (Trainer key below), n name, loc place, tags[] (Optional, Double Battle, Back to Back #1, Permanent Rain, Trick
        Room...), [st "Water"/"Grass"/"Fire" or the starter's name = shown if that is YOUR starter], [cap default level
        cap], note[], [field evidence records], [rw rewards], [pp pokepast url], [c calc trainer names], [bt battle id shared by trainers fought at
        once], [pl "m"/"f" = shown for that player character], [pt partners [{n, st, pl, p}]], p:[mon]}

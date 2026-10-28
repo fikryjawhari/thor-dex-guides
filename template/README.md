@@ -50,6 +50,21 @@ an unknown key.
   empties its slot, a gone ability falls back to the species' first, a gone species drops the set (an edit: the species
   edit), a gone filter drops; numbers (state saved before names, `a: -1` = no ability) load as indices.
   Scenario: `calc-persist.mjs` → 26c.
+- The rest of the saved state is stored by identity too, so a guide update keeps it (scenario `stable-keys.mjs` → 27a-d):
+  - Trainer keys `k` are stable (the extract's key table, `tools/trainer_keys.py`): level caps, the Trainers page's open
+    trainers, the calc's foe, recent trainers, foe edits (`foe:<k>:<slot>`), copied foes (`f:<k>:<slot>`) and search
+    recents need nothing in the template.
+  - Species: the Dex stat calc (`cfg.ls.calc` + `:` + name, `calcKey`) and the tracker's caught / traded species
+    (`spOut` / `spIn`; the backup code too) by name. A stat calc key by species id moves to the name once on load;
+    tracker ids load as before.
+  - Search recents: a species, move, ability or place filter by name, a walkthrough stop by its key (`w`), an item by
+    its box and row names (`recOut` / `recIn`); a stop saved by position takes its key from the layout it was saved
+    under, other positions and ids load as they are, a gone one drops.
+  - Open boxes saved by position (Trainers `o` / `p`, Items `o` / `x` / `s`, Locations `x` / `s`) keep the box and
+    place names they were saved under (`layout`); `relayout` moves them to the positions those names have now.
+  - The reopen route (`cfg.ls.pos`) names its Pokémon, move, ability or place page (`n`) and its anchor's link (`an`);
+    when that moved, the route follows the name (gone: the Pokémon list).
+  Tracker areas (`AR` indexes, append-only) and walkthrough state (stop keys, `migrateWalkState`) were stable already.
 
 ## Shared rules every guide follows
 

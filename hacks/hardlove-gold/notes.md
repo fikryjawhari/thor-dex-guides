@@ -118,8 +118,8 @@ Data rules:
 
 ## Local storage (prefix hg)
 
-`hgdex4` list filters, `hgcalc:<id>` + `hgcalc:lastlv` stat calc, `hgtrack` tracker {s starter, e {areaIdx: {p: id} or
-{f: 1}}, t {"area|For X": id}}, `hgwalk2` walkthrough open state (EI's shape), `hgcap2` level cap per trainer (+ _last),
+`hgdex4` list filters, `hgcalc:<species name>` (was `<id>`) + `hgcalc:lastlv` stat calc, `hgtrack` tracker {s starter,
+e {areaIdx: {p: species name} or {f: 1}}, t {"area|For X": species name}} (ids before 2026-10-29 still load), `hgwalk2` walkthrough open state (EI's shape), `hgcap2` level cap per trainer (+ _last),
 `hgtr` open trainer groups, `hgrecent` search picks, `hgpos` last route and anchor, `hgmgm`, `hgloc`, `hgitems`. `dvkb` =
 "1" forces viewer mode (shared test switch). Keep them once published. The template seeds the Starter slot from a saved
 `hgtrack.s`, independent of area 0's New Bark Town encounter.

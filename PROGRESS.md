@@ -31,6 +31,10 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
   3DS (done: `ctrguide.py`; next Meissa Moon, Navy Sapphire), pokeemerald-expansion (Emerald Imperium, SoulGold),
   CFRU (Radical Red, Unbound), NDS (Hardlove Gold built; Renegade Platinum, Blaze Black 2 Redux, HeartGold Retiled).
+- **Saved state survives guide updates** (2026-10-29): every kind is stored by name or a stable key, not a position
+  (`template/README.md` → What the data switches on; scenario `stable-keys.mjs`). Trainer keys come from each hack's
+  committed `extract/trainer_keys.json` (`tools/trainer_keys.py`); on a hack update read the build report's
+  trainer-keys lines.
 - **Shipping a guide update:** push `main`, wait for the Pages Action, then on the Thor long-press the guide → Update
   from link. Same library id, so saved state (tracker, ticks, calc) is kept.
 - The other eight hacks in `hacks/` have sources compiled (`SOURCES.md`; complete `.src/` on the PC, checked
@@ -68,11 +72,6 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
    learnsets, ability usage): re-fetch before its guide.
 7. **New-guide scaffold** (`tools/new_hack.py <hack> --like <built hack>`): build it during the first new guide, from
    what that session actually copies.
-8. **Other saved state keyed by position** (found 2026-10-29 with the calc's names fix, not done): trainer keys
-   `g.s.t` are positions in `TR`, so a hack update that inserts a trainer shifts the user's level caps per trainer
-   (`cfg.ls.cap`), the calc's current foe and recent trainers; search recents keep walkthrough / item positions; the
-   Dex stat calc is keyed by species id, which in EI is the game's species number. A fix would be stable trainer keys
-   like the walkthrough's stop keys (set once, migrated on load).
 
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 

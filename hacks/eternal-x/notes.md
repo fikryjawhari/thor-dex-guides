@@ -83,7 +83,7 @@ PDFs). Fetch the sources with `SOURCES.md` (game data regenerated 2026-10-22). M
 
 ## Local storage (prefix ex)
 
-`exdex`, `excalc`, `extrack` (tracker {s starter, pl player, e, t}), `exwalk`, `excap`, `extr`, `exrecent`, `expos`,
+`exdex`, `excalc` (`:<species name>`), `extrack` (tracker {s starter, pl player, e, t}; species by name), `exwalk`, `excap`, `extr`, `exrecent`, `expos`,
 `exmgm`, `exloc`, `exitems`, `excapset`. Keep them once published.
 
 ## Hack-only data

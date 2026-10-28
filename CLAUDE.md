@@ -10,7 +10,8 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - Never commit raw docs from hack authors (xlsx, pdf, zips, ROM or romfs dumps). They live in `hacks/<hack>/.src/`
   (git-ignored) and are re-fetched with that hack's `SOURCES.md`.
 - Keep each hack's localStorage keys (`hack.json` → `cfg.ls`) once a guide is published: changing one throws away
-  people's saved trackers, checklists and positions.
+  people's saved trackers, checklists and positions. Likewise its walkthrough stop keys and trainer keys
+  (`extract/trainer_keys.json`: entries are only ever added; read the build report's trainer-keys lines on an update).
 - The guide must work at the viewer sizes (PROGRESS.md → Viewer sizes), especially 260 × 316, in normal and `dvkb` mode.
   The full viewer contract is `.agents/skills/rom-hack-offline-dex/references/viewer-ui.md` (the repo's copy of the
   `rom-hack-offline-dex` skill).
@@ -56,7 +57,7 @@ adapt); agents build the units (Workflow → Which model).
    turn them into `hacks/<hack>/data.json`, in the schema in `hacks/emerald-imperium/notes.md` (Data schema).
    `build.py` ends with `extractlib.finalise()`, which applies the shared rules (`template/README.md` → Shared rules:
    Items standard, cap split names, Trainers in walkthrough order, schema); a hack only adds an `itemstd.RULES` entry
-   for its quirks. What the template shows when the data has it: `template/README.md` → What the data switches on.
+   for its quirks; its first run writes `extract/trainer_keys.json` (commit it). What the template shows when the data has it: `template/README.md` → What the data switches on.
    For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences); 3DS hacks take
    the game data over the docs ("Doc says ...").
    Calc: settle each trainer `field` record marked `review` (`tools/trainer_fields_check.py`) with me (notes.md,
