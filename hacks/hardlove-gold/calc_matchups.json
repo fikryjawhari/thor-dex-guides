@@ -29,7 +29,7 @@
     {
       "name": "source-reckless-chloroblast",
       "atk": {"id": "snorlax", "lv": 50, "ab": 83},
-      "slot": {"mv": 772},
+      "slot": {"mv": 773},
       "field": {},
       "def": {"id": "blastoise", "lv": 50, "ab": -1},
       "reference": {"item": "", "power": 180, "plainMove": true}
@@ -968,7 +968,7 @@
         "ab": 173
       },
       "slot": {
-        "mv": 780
+        "mv": 781
       },
       "field": {
         "defProtected": true

@@ -1,7 +1,7 @@
 # Hardlove Gold build notes
 
-Hardlove Gold 0.8.4, an hg-engine hack of Pokémon HeartGold. Built from the hack's own source code (the authority) and
-its sheets. 986 species and forms (596 obtainable, 74 Megas, 316 trainer-only), 782 moves, 284 abilities, 62 tracker
+Hardlove Gold 0.8.5, an hg-engine hack of Pokémon HeartGold. Built from the hack's own source code (the authority) and
+its sheets. 986 species and forms (596 obtainable, 74 Megas, 316 trainer-only), 783 moves, 284 abilities, 62 tracker
 areas (the Starter area is index 61), 329 trainers in 18 boxes, 94 walkthrough stops.
 
 ## Build
@@ -25,7 +25,7 @@ modules are called several times and share the working state `X` (`common.py`). 
 
 Sources (numbered as in SOURCES.md's table):
 
-0. **The hack's source**: github.com/kumakuma1/hardlove, branch `beta_hardlove`, pinned at 0.8.4 `ee4518c149`
+0. **The hack's source**: github.com/kumakuma1/hardlove, branch `beta_hardlove`, pinned at 0.8.5 `64838bf7db`
    (`repos/hardlove/COMMIT`, checked by build.py against `watch.json`). This is what the ROM is built from, so it wins wherever it has the data:
    `data/Species.c` + `HiddenAbilityTable.c` (types, base stats, abilities and hidden abilities of every species and
    form), `data/learnsets/learnsets.json` (level-up, TM, tutor and egg moves; forms without an entry use their base
@@ -86,12 +86,12 @@ Data rules:
 - **Locations**: order = Encounter Tables column order, Safari areas after the gate, Blackthorn City after Ice Path.
   Areas merge sub-locations (`areaOf` in walk.py); the area list is unchanged from the first build, so tracker slots
   carry over. The Starter area (AR 61, LOC 95) is appended last; only the three Turtwig / Litten / Froakie `Starter
-  choice` encounters sit there. `ARO` (Locations order) puts it first on the Locations page, above New Bark Town. Wild tables are checked against the game slot by slot (85 locations, 11 with differences;
+  choice` encounters sit there. `ARO` (Locations order) puts it first on the Locations page, above New Bark Town. Wild tables are checked against the game slot by slot (85 locations, 10 with differences;
   the game wins and replaces Route 46, Violet City, Route 5, Mt. Mortar 1F (Entrance) and 2F, Lake of Rage, Whirl Islands
-  1F and B2F, Mt. Silver (Snowy Area); Ice Path 1F and Mt. Silver (Moltres Room) match no game table: statics / gifts;
-  Ice Path 1F is the table the game gets after 0.8.4, `ce2cbaa`). Safari areas are checked against `SafariEncounters.c`
+  1F and B2F, Mt. Silver (Snowy Area); Mt. Silver (Moltres Room) matches no game table: statics / gifts;
+  Ice Path 1F now matches the 0.8.5 game table (`ce2cbaa`), clearing its stale-sheet warnings). Safari areas are checked against `SafariEncounters.c`
   (the day list of each method; Goldeen-only water tables are placeholders): the game replaces Marshland Surf / Fishing
-  (swapped in the sheet, like Mt. Mortar) and Mountain Land (the sheet already has the post-0.8.4 Tauros for Furret). The
+  (swapped in the sheet, like Mt. Mortar). Mountain Land now matches the sheet's Tauros instead of Furret. The
   game's Rocky Beach and Desert areas are not in the sheet.
 - **Walkthrough**: no written walkthrough exists. Stops come from the trainer sheet's sections in order, split by level
   cap header; each area is anchored to its first stop when that keeps the order monotonic, else becomes an "on the way"
@@ -99,7 +99,7 @@ Data rules:
   includes Starter before its original area.
 - **Level caps**: TR.caps from Mechanics.txt; a trainer's cap is its split header's cap. Boxes are the sheet's mini-splits;
   both tabs end `Victory Road Split [Cap 81]`, `Elite Four Split [Cap 81]`, then Mini Bosses.
-- **Trainers**: the game set wins; where the sheet differs the card says "Sheet says ..." (61 sets differ, 6 game Pokémon
+- **Trainers**: the game set wins; where the sheet differs the card says "Sheet says ..." (64 sets differ, 6 game Pokémon
   are missing from the sheet: Nuzlocker Ethan's random team). Sheet typos are fixed ("Msytic Water", "Scope Lense",
   "Letfovers", Mega stone names; Sailor Garrett's rows shifted; "Lunch" is Lunge, not the fuzzy match's Crunch: `CANON`
   in dex.py). Pure Power on a Huge Power set is the same effect, not a difference (`SAMEAB` in trainers.py).
@@ -159,9 +159,33 @@ Cheer is off (`over`: no crit stage at this pin). Weather moves set Snow (no Hai
 
 Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (the Nidoran♀ identity collision and Flabébé construction were fixed since: `tools/calc/test.mjs`). Evidence: `plans/calc-refine-hardlove.md` (git history) → Unit W → W2.
 
-Enabled on `worktree-damage-calc`, **not merged or independently verified against the ROM**. Base `expansion`
-means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide is 0.8.4 since 2026-10-26 (Build); the
+Enabled by the damage calc merged at main `f050aaa`, **not independently verified against the ROM**. Base `expansion`
+means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide is 0.8.5 since 2026-10-29 (Build); the
 calc's source traces below were made at the 0.8.3 pin. Save import: below (Save import).
+
+#### Engine changes in 0.8.5 the calc does not model
+
+Reviewed `ee4518c149..64838bf7db` against the existing profile and `tools/calc/README.md` (Not modelled).
+This update changes notes and game data only, not `cfg.calc` or the shared engine. The older source traces below
+remain historical evidence, not a claim that all 0.8.5 battle behaviour has been verified in game.
+
+- Emergency Exit and the expanded Eject Pack triggers change switching and replacement timing. The calc has no
+  automatic switch-out / replacement queue; apply the new battle state manually. Source: `SwitchInAbilityCheck.c`,
+  `other_battle_calculators.c`, `ServerDoPostMoveEffects.c` and the hazard / Eject Pack battle tests.
+- Hazards and berries now run through the source's switch-in sequence, including berry activation after hazard
+  damage and Emergency Exit replacements. The calc exposes entry hazards and berry application separately; it
+  does not simulate that queue. Figy-group healing remains 1/8 at half HP: `battle_item.c` extracts
+  `GetHeldItemUseSubscript` from `TryUseHeldItem` without changing that formula; the five profile overrides stay.
+- Pastel Veil now cures poison on switch-in and handles ally protection / messages. The calc already prevents its
+  holder's Toxic Spikes / Toxic Orb poison, but does not cure an existing status on entry or model a Veil ally.
+  Set that status manually (`SwitchInAbilityCheck.c`, `BattleController_BeforeMove.c`).
+- Helping Hand changes are trainer AI scoring (`src/trainerai/{main,pick_command,setupStateVariables}.c`), not a new
+  damage multiplier. The existing manual Helping Hand control remains; the calc does not predict AI decisions.
+- Rage Powder now respects Grass, Overcoat and Safety Goggles (`CanIgnoreRedirection` in
+  `other_battle_calculators.c`). Target redirection is not modelled; select the intended defender manually.
+- Pluck / Bug Bite share the rewritten berry-use logic with Fling (`battle_item.c`); Kee / Maranga gain steal / fling
+  effects in `itemdata.c`. The calc models damage / held-berry actions, not stolen or flung berry side effects or PP
+  restoration. Existing Kee / Maranga after-the-whole-move timing is unchanged by this data update.
 
 #### Save import
 
@@ -171,7 +195,7 @@ from the pinned source's headers (`include/constants/{species,moves,ability}.h`,
 `data/Species.c` growth rates, `data/PokeFormDataTbl.c` forms): species as `species:form` (hg-engine numbers Gen 5 on 50
 past the National Dex: Chesnaught is 702), 1,101 keys for all 986 P ids; 115 forms the guide lacks but whose stats,
 types and abilities are their base's (Unown B, Shellos East, ...) map to the base; a form with its own data that the
-guide lacks (Alolan Rattata) has no key, so an imported one is skipped and counted in the banner. Moves 782 of 782 and
+guide lacks (Alolan Rattata) has no key, so an imported one is skipped and counted in the banner. Moves 783 of 783 and
 abilities by name (the ten repeated names at the end of AB, which no species uses, take the first); items are the
 constant's name in the trainer sets' spelling (Kings Rock -> King's Rock). `check.py` → `check_gid`.
 
@@ -188,7 +212,7 @@ the party; the user reports what looks wrong in play.
 #### Sources and profile
 
 Authority: `kumakuma1/hardlove` at `f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b` (0.8.3) for the traces in this section;
-the guide's data now comes from `ee4518c149` (0.8.4): recheck a traced battle file against it when its rule matters.
+the guide's data now comes from `64838bf7db` (0.8.5): recheck a traced battle file against it when its rule matters.
 Battle files are cached in ignored `.tmp/calc-hardlove-gold/source/`; re-fetch those raw GitHub paths at that commit.
 User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 
@@ -329,6 +353,8 @@ earlier data.json, that species order, move / ability tables, area names, traine
 (CLAUDE.md). Known from the build report: sprites missing or borrowed: bounsweet, mega_golisopod (base sprite).
 
 ## History
+
+- **2026-10-29, 0.8.5.** Pinned `64838bf7db` (beta_hardlove head, 2026-10-26; the patch is dated 2026-10-27). Game changes in the data: Tauros learnset (Body Slam 40, Raging Bull 48, Close Combat 55) and the new move Raging Bull (783 moves; it is inserted at guide index 767, so later move indices moved by one: the calc's source fixtures were remapped by name); Ice Path now matches the game (ten stale-sheet warnings gone), Safari Mountain Tauros instead of Furret; Mike's Gouging Fire Protosynthesis; four new sheet conflicts (61 -> 64). Counts, area, item, trainer and stop keys unchanged. The engine changes (Emergency Exit, Eject Pack, hazards + berries, Pastel Veil, Rage Powder, Pluck) are noted under Damage calc; no profile change.
 
 - **2026-10-26, 0.8.4 and one build.** Pinned 0.8.4 = `ee4518c149` ("add soak tm"; the patch went up 2026-10-24 20:55
   UTC; the next commit, "version", is after it). Game changes in the data: TM47 Soak (was Steel Wing; Ilex Forest; learned by 155
