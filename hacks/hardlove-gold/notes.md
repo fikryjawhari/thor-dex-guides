@@ -159,7 +159,29 @@ Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights
 
 Enabled on `worktree-damage-calc`, **not merged or independently verified against the ROM**. Base `expansion`
 means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide is 0.8.4 since 2026-10-26 (Build); the
-calc's source traces below were made at the 0.8.3 pin. No Gen 4 save reader yet.
+calc's source traces below were made at the 0.8.3 pin. Save import: below (Save import).
+
+#### Save import
+
+Reader `gen4` (`cfg.calc.save`; format notes `template/calc/readers/README.md` → gen4: hg-engine's enlarged HGSS
+blocks, 30 boxes, the 9-bit ability, mints and the hidden-ability flag). `extract/gid.py` writes `GID` after finalise
+from the pinned source's headers (`include/constants/{species,moves,ability}.h`, `asm/include/items.inc`,
+`data/Species.c` growth rates, `data/PokeFormDataTbl.c` forms): species as `species:form` (hg-engine numbers Gen 5 on 50
+past the National Dex: Chesnaught is 702), 1,101 keys for all 986 P ids; 115 forms the guide lacks but whose stats,
+types and abilities are their base's (Unown B, Shellos East, ...) map to the base; a form with its own data that the
+guide lacks (Alolan Rattata) has no key, so an imported one is skipped and counted in the banner. Moves 782 of 782 and
+abilities by name (the ten repeated names at the end of AB, which no species uses, take the first); items are the
+constant's name in the trainer sets' spelling (Kings Rock -> King's Rock). `check.py` → `check_gid`.
+
+Checked 2026-10-28 with the user's own save, made in **0.7.0** (`.src/saves/Hardlove Gold NDS (0.7.0).sav`, 512 KB
+raw): both partitions' four blocks pass their CRCs, partition 2 is newer (save count 25). Against
+`(0.7.0).expected.json`, written by a separate Python decoder (`.tmp/calc-save-hardlove/proto.py`, not committed;
+from the same notes, so it checks the JS, not the notes), `tools/calc_save_check.mjs` matches all 11 (6 party:
+Eldegoss, Rhyhorn, Arbok, Dottler, Furret, Frogadier with hidden-flag Protean; 5 boxed, levels from experience). Edge
+files (`.tmp/calc-save-hardlove/edges.mjs`): DeSmuME `.dsv` footer reads; newer general block corrupted falls back to
+the older; both copies corrupted is unreadable; blank is empty; PNG / melonDS / mGBA states are states; GBA, USUM and
+footer-less files are wrong. Not yet checked: a 0.8.x save, Pokémon with a mint or Alolan / Galarian forms, eggs in
+the party; the user reports what looks wrong in play.
 
 #### Sources and profile
 

@@ -57,7 +57,61 @@ generation log: `.tmp/calc-save-eternal-x/oracle.log`. Fixtures and the GPL-link
 | --- | --- | --- | --- |
 | `test.js` | synthetic JSON | the calc checks' fixtures | `tools/scenarios/calc-import.mjs` |
 | `expansion.js` | pokeemerald-expansion (GBA) | Emerald Imperium | hzla's EI 1.3 save (33 Pokémon) and the edge files: EI notes.md → Damage calc → Save import |
+| `gen4.js` | HeartGold hg-engine (NDS) | Hardlove Gold | the user's 0.7.0 save (11 Pokémon) and the edge files: Hardlove notes.md → Damage calc → Save import |
 | `gen67.js` | decrypted XY / ORAS / SM / USUM main | Photonic Sun (USUM); Eternal X (XY) | PKHeX.Core 26.10.18: Photonic's 38 Pokémon in each layout; Eternal X's own 85-Pokémon XY oracle; USUM/XY through the real file picker; wrong-game, checksum, truncation, egg/empty, state and PK6/PK7 hyper-training controls |
+
+## gen4: HeartGold hg-engine (NDS)
+
+References read 2026-10-28: the hack's own hg-engine source at Hardlove's pin (kumakuma1/hardlove `ee4518c149`:
+`include/pokemon.h` (the BoxPokemon blocks and the `DUMMY_P2_*` bit masks), `src/pokemon.c` (ability get / set, the
+mint nature, hidden ability on generation), `include/save.h` (the block footer), `include/pokemon_storage_system.h`
+(PC_BOX), `include/constants/species.h`), and the save itself. The vanilla parts (two partitions, the footer, PK4
+encryption and block order) are the generally documented Gen 4 format (Bulbapedia / Project Pokémon's Gen 4 save and
+Pokémon structure pages; not reread this session); every offset below was confirmed on the user's save (all CRCs and
+Pokémon checksums hold; levels match the party's stored ones).
+
+**File.** 512 KB (0x80000); a DeSmuME `.dsv` adds its own text footer after it (`|-DESMUME SAVE-|`), accepted. Two
+partitions at 0 and 0x40000, each with a **general** block (party, bag, flags) and a **storage** block (PC). hg-engine
+enlarges both: general 0xFFA0 bytes at 0, storage 0x1E4FC at 0x10000 (vanilla HGSS: 0xF628, and 0x12310 at 0xF700).
+Each block ends in a 16-byte footer: u32 save count, u32 block size, u32 magic 0x20060623, u16 block id (0 general,
+1 storage), u16 CRC-16/CCITT (polynomial 0x1021, initial 0xFFFF, MSB first, no final XOR) of the block before the
+footer. The reader takes each block from the partition whose copy has a valid CRC and the higher save count, separately
+(HGSS may write the general block alone). No footer of this size anywhere: `wrong`, or `empty` for an all-0xFF / all-0
+file; footers but no valid general or storage copy: `unreadable`.
+
+**Party and boxes.** General block: u32 party count at 0x94 (more than 6: `unreadable`), six 236-byte party records
+at 0x98. Storage block: 30 boxes of 0x1000 bytes (30 × 136-byte records, then 16 bytes of padding), from offset 0;
+`NUM_PC_BOXES` is 30 here (the block size fits 30 boxes, and all 900 records decode). Empty slots are encrypted blank
+records (species 0), skipped like eggs.
+
+**PK4 record (136 stored, 236 party).** u32 personality at 0, u16 flags at 4, u16 checksum at 6. Bytes 8..135 are four
+32-byte blocks A/B/C/D, encrypted with the same LCRNG as gen67 (`seed * 0x41C64E6D + 0x6073`, XOR the high 16 bits)
+but seeded with the **checksum**; the party bytes 136..235 are seeded with the **personality**. Block order: selector
+`((personality >>> 13) & 31) % 24` in the same 24-entry table as gen67. Checksum: the 16-bit sum of the 64 decrypted
+words; a mismatch is a Bad Egg (skipped).
+
+| Canonical record offset | Field |
+| --- | --- |
+| 0x08 / 0x0A | u16 species (hg-engine's number: Gen 5 on are 50 past the National Dex) / u16 held item |
+| 0x10 | u32: experience in bits 0..20, **bit 31 the ability's 9th bit** (`abilityMSB`) |
+| 0x15 | u8 ability, low 8 bits: the ability is stored, not derived (`ResetBoxMonAbility` writes the slot's or the hidden one) |
+| 0x18..0x1D | six u8 EVs, HP / Atk / Def / Speed / SpAtk / SpDef |
+| 0x28..0x2F | four u16 moves |
+| 0x38 | u32 six 5-bit IVs in the same order, bit 30 egg, bit 31 nicknamed |
+| 0x40 | u8: bit 0 fateful, bits 1-2 gender, **bits 3-7 form** |
+| 0x41 | bits 6-7 `DUMMY_P2_1`: bit 6 the hidden-ability flag, bit 7 a crit-evolution counter |
+| 0x42 | u16 `DUMMY_P2_2`: bit 0 ability slot swapped (Ability Capsule), **bits 1-5 mint nature + 1** (0 = none), bits 6-11 per-stat IV overrides (defined, unused at this pin) |
+| 0x8C (party only) | u8 level |
+
+**Derived values.** Nature: the mint's when set, else personality % 25 (`GetBoxMonNatureCountMints`). Ability: the
+stored 9-bit id as `ab` (it already reflects the hidden flag and a capsule). Level: the party's stored level; boxed ones
+from experience with `GID.gr` (keyed `species:form`, falling back to form 0), growth order as in expansion's notes
+(Medium Fast, Erratic, Fluctuating, Medium Slow, Fast, Slow; `.expRate` in `Species.c`). `sp` is `species:form`; the
+hack's `GID.sp` maps the forms (`PokeFormDataTbl.c`: form n of a base is its n-th entry). A Mega is reverted before
+saving, so a save never holds one.
+
+Other Gen 4 hacks (Renegade Platinum, HeartGold Retiled) need their own layout row: Platinum's blocks, vanilla HGSS's
+sizes, the box count. Add it to `LAYOUT` (make it a list) once a save of that game is in hand to confirm the sizes.
 
 ## gen67: decrypted 3DS main saves
 

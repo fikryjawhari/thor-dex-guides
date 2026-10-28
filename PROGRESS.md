@@ -76,7 +76,10 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
      3. On the Thor, one real import per guide through the viewer: EI (RetroArch `.srm`), Photonic Sun / Eternal X
         (Azahar `main`); compare with PKHeX on the PC. Put the saves in `hacks/<hack>/.src/saves/` with an
         expected.json (procedure: `.agents/references/calc-save-reader.md`).
-     4. Hardlove Gold (Gen 4 reader) once the user sends a save; then merge this branch into `worktree-damage-calc`. **Mechanics check:** stays open, merges into `main`
+     4. Hardlove Gold: Gen 4 reader done 2026-10-28 (`readers/gen4.js`, hg-engine HGSS; GID from `extract/gid.py`),
+        checked on the user's own **0.7.0** save (11 of 11; Hardlove notes.md → Damage calc → Save import). The user
+        plays on and reports what imports wrong (a 0.8.x save, mints, regional forms untested). Then merge this branch
+        into `worktree-damage-calc`. **Mechanics check:** stays open, merges into `main`
      at the end.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
