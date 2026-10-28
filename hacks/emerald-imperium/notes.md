@@ -321,7 +321,7 @@ species; EI's Primal Dialga / Palkia from `species_info.h`). The 67 pruned speci
 skipped and counted in the banner ("· 1 not in this guide").
 
 Checked 2026-10-27 (`.src/saves/`, SOURCES.md):
-- hzla's `Emerald Imperium 1.3.sav` against `ei-1.3.expected.json` (written by `tools/calc_paste_expected.py` from
+- `hzla-Emerald Imperium 1.3.sav` (hzla's original save) against `ei-1.3.expected.json` (written by `tools/calc_paste_expected.py` from
   hzla's paste of the same save, `--layout box13:3,party:6,box0:24`): all 33 match (species incl. Alolan Marowak,
   Galarian Rapidash, Aegislash; level, nature, ability slot incl. hidden, item incl. Mega Stones, moves, IVs incl. two
   30s in Speed / Sp. Atk, which checks the stat reorder). The paste has no EVs and all its levels are 56, which the
@@ -329,7 +329,7 @@ Checked 2026-10-27 (`.src/saves/`, SOURCES.md):
 - A copy with a mint (Impish -> Adamant), EVs (4 HP / 252 Atk / 252 Spe) and one Pokémon made a pruned species
   (Mewtwo): nature, EVs and the skip all as expected (made by hand; the save has no mints or EVs of its own).
 - Banners: hzla's mGBA save state -> Save state; a Renegade Platinum save -> Wrong game; one flipped byte in the party
-  sector -> Unreadable; a blank flash and a save with party count 0 -> No Pokémon yet. hzla's second save `em_imp.sav`
+  sector -> Unreadable; a blank flash and a save with party count 0 -> No Pokémon yet. the second save `hzla-em_imp.sav`
   imports 6 + 25 (levels 1-56, Pikachu (Pop Star)); no expected file for it.
 - Not checked yet: a save from the user's own game (EI 1.3.1), RetroArch's `.srm`, a Pokémon with its form in a
   macro-built family (Vivillon) and the ability randomiser (not modelled).
