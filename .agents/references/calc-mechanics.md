@@ -11,16 +11,15 @@ The engine and its phases: `tools/calc/README.md`. The EI example, with every so
   `git show FETCH_HEAD:<path>` per file. Never `git grep` a blobless clone (it fetches every blob).
 - The hack's docs, changes sheet and known-bugs list in `hacks/<hack>/.src/` (re-fetched with its `SOURCES.md`).
 - The oracle: hzla's Dynamic-Calc-Decomps. Find the hack's entry in `js/romhack_catalog.js` and its backup in
-  `backups/title_to_backup_mappings.js` (the `data`, `gen`, `dmgGen`, `types` and `noSwitch` values). Pin the SHA there.
-  Read and run it locally only; never copy its code or tables into the repo.
-  Each built hack's hzla link and what it means: `tools/calc/README.md` → Licences, oracles (Eternal X is on
-  the older hzla/Dynamic-Calc). The hg-engine hacks have no hzla calc: use the hack's own rules (Hardlove Gold's are
-  there), hzla's ROM importer (https://ddex-chi.vercel.app) as an oracle if it reads the ROM, and the in-game test.
+  `backups/title_to_backup_mappings.js` (the `data`, `gen`, `dmgGen`, `types` and `noSwitch` values).
+  Pin and run it with the comparison harness: `tools/calc/README.md` → Local hzla oracle.
+  Eternal X uses the older Dynamic-Calc. Hardlove Gold has source/stock fixtures, not an independent hack oracle;
+  use its source and in-game tests. Reference-use rules and possible alternative oracles belong in the engine README.
 
 ## Procedure
-1. **Settings.** Note the oracle's `gen`, `dmgGen`, `types`, `critGen`, backup and title in `calc_matchups.json` →
-   `oracle`. Check the hack's own config (`battle.h` or equivalent): if its switches are `GEN_LATEST`, the base is
-   the latest generation (`expansion`, Gen 9) whatever the oracle says. A difference that no fixture exercises is
+1. **Settings.** Record `gen`, `damageGen` (the link's `dmgGen`), `types`, `critGen`, backup and title in
+   `calc_matchups.json` → `oracle`. Check the hack's own config (`battle.h` or equivalent): if its switches are `GEN_LATEST`, the base is
+   determined by the pinned source (`expansion` currently uses Gen 9), not the oracle's setting. A difference that no fixture exercises is
    recorded, not forced.
 2. **Profile.** `hack.json` → `cfg.calc = {base, ...}`, plus the calc's own storage key `cfg.ls.dmg` (`<prefix>dmg`;
    `assemble.py` stops without it). Keep only what the hack changes:
@@ -28,8 +27,8 @@ The engine and its phases: `tools/calc/README.md`. The EI example, with every so
    - `over.abilities` / `over.items` `{effect: ""}` to disable a native effect the hack changes, and `effect: "<name>"`
      only when the same effect exists under another name. Never alias a move to a name another guide move uses.
    - `over.moves` for basepower/type/flags data; use a rule for behaviour that depends on another name.
-   - `over.rules` for each changed mechanic, each with `note` and a comment or notes line giving its source line.
-   Run `python -I tools/datajson.py hacks/<hack>/hack.json` (it re-reads the file: save your edit to disk first).
+   - `over.rules` for each changed mechanic, each with `note` and a source citation in the hack's notes.
+   Run `python -I tools/datajson.py hacks/<hack>/hack.json`.
 3. **Fixtures.** `calc_matchups.json` → `matchups`: one per changed mechanic, plus negative cases (the ability on a
    move it does not affect), a neutral baseline and the edge cases the rule's `when` tests. Use guide IDs and
    display names. Run `node tools/calc/hzla_compare.mjs <hack> --fetch --output .tmp/calc-<hack>/compare.json`.
@@ -38,12 +37,12 @@ The engine and its phases: `tools/calc/README.md`. The EI example, with every so
    `difference: {source, reason}` to the matchup (it reports `known-difference`); if it supports the oracle, change
    the profile. Record the verdict in the hack's notes.
 5. **Engine.** Only if a mechanic cannot be expressed with the phases. Add the phase in `tools/calc/src/rules.js`
-   and `instrument.mjs`, hand-check the numbers in `tools/calc/test.mjs`, document it in `tools/calc/README.md`
+   and `tools/calc/instrument.mjs`, hand-check the numbers in `tools/calc/test.mjs`, document it in `tools/calc/README.md`
    (phase table and the hzla mapping), then `node tools/calc/build.mjs` and commit `template/calc/engine.js`.
    Never hard-code a hack's names in the engine.
-6. **Checks.** `node tools/calc/test.mjs` (all pass), the comparison (every case `match` or an explained
+6. **Checks.** `npm test --prefix tools/calc`, the comparison (every case `match` or an explained
    `known-difference`), `python -I tools/datajson.py hacks/<hack>/hack.json`, `python assemble.py <hack>`.
-   Logs go in `.tmp/calc-<hack>/`.
+   Comparison reports go in `.tmp/calc-<hack>/`. Page/data verification: `.agents/skills/verify/SKILL.md`.
 7. **Notes.** `notes.md` → "### Damage calc": the profile's base and why, a table of each override with its source
    line and fixtures, the doc/source disagreements (source followed), the known gaps, and what was not checked
    (in-game test: `tools/calc/README.md` → Licences, oracles and checking a hack).
@@ -56,7 +55,6 @@ The engine and its phases: `tools/calc/README.md`. The EI example, with every so
   Check a rounding claim with a number, not from memory.
 - An alias to `Shell Side Arm` (Smogon's category rule) shares one engine record with a hack's own move of that name;
   EI has one, so Draco Barrage uses a `beforeStats` rule instead.
-- The docs can disagree with the source. Read the source's function for each entry before writing a rule.
-- Species names reach the engine only through `speciesName()` (`tools/calc/src/adapter.js`: accents stripped,
+- Species names reach the engine only through `speciesName()` (`tools/calc/src/names.js`: accents stripped,
   ♀ / ♂ → -F / -M, Mega / Primal reordered). Never match raw guide names against stock or source names (a raw
-  "Nidoran♀" merged into Nidoran-M in every guide); run them through `speciesName()` first.
+  "Nidoran♀" loses its distinction from Nidoran-M); run them through `speciesName()` first.
