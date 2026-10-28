@@ -32,7 +32,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   3DS (done: `ctrguide.py`; next Meissa Moon, Navy Sapphire), pokeemerald-expansion (Emerald Imperium, SoulGold),
   CFRU (Radical Red, Unbound), NDS (Hardlove Gold built; Renegade Platinum, Blaze Black 2 Redux, HeartGold Retiled).
 - **Saved state survives guide updates** (2026-10-29): every kind is stored by name or a stable key, not a position
-  (`template/README.md` → What the data switches on; scenario `stable-keys.mjs`). Trainer keys come from each hack's
+  (`template/README.md` → What the data switches on; scenarios `stable-keys.mjs` and `guide-update.mjs`, the
+  general one: every index shifted, every kind of saved state compared by name). It is a hard rule now (CLAUDE.md). Trainer keys come from each hack's
   committed `extract/trainer_keys.json` (`tools/trainer_keys.py`); on a hack update read the build report's
   trainer-keys lines.
 - **Shipping a guide update:** push `main`, wait for the Pages Action, then on the Thor long-press the guide → Update
