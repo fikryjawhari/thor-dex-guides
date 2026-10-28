@@ -116,6 +116,27 @@ Data rules:
   Evolution methods the text can't describe (SPIN_* variants) show as unknown.
 - **Items**: rules in `itemstd.RULES['hardlove-gold']`, the `Other` box mapped in `HG_OTHER` (History → Items standard).
 
+### 0.8.5 data audit (against main `f050aaa`, 2026-10-29)
+
+Every changed data field traces to `ee4518c149..64838bf7db` or the refreshed Trainer Battles sheet. No extractor
+changes were needed. Counts and published identities stay at 986 species, 329 trainer cards, 62 tracker areas,
+382 items and 94 walkthrough stops; `LOC`, `AR`, `ARO`, `IT`, `WK`, `AB`, `TC` and storage keys are unchanged.
+
+- One species learnset changes: Tauros gets Body Slam at 40 instead of Strength, Raging Bull at 48 instead of
+  Thrash, and an extra Close Combat at 55. One move is added (782 -> 783), Raging Bull, Normal / Physical / 90 / 100.
+  Existing move records are unchanged by name. `GID.mv` adds game move 876 and remaps the 15 later guide indexes.
+- Eighteen species' encounter lists change: eight Ice Path species lose ten stale-sheet warnings now that the game
+  matches the already-updated sheet; Safari Mountain adds one Tauros encounter and removes one Furret encounter.
+  Nine other lists only reorder identical encounters because Mountain no longer needs replacement from the game
+  (`locs.verify`). Ice Path's 36 day/time slots and Safari's three Mountain slots changed in source; the guide uses
+  day tables, so the sheet already contained most of the new encounters. Locations.xlsx has no cell/comment changes.
+- Five trainer cards change: Mike's Gouging Fire changes Levitate to Protosynthesis, dropping its obsolete sheet
+  conflict. Four sheet cells add conflicts on unchanged game sets: Ivan's Azumarill (Knock Off), Randall's Bronzong
+  (Reflect), Carol's Hariyama (Flame Orb), Rocket Grunt #34's Dragonite (Multiscale). Conflicting sets: 61 -> 64.
+- Source-only changes: the three Paldean Tauros forms have new learnsets and lose Anger Point, but are absent from
+  this guide's obtainable / trainer species. Kee / Maranga steal/fling effect fields are not item-location data;
+  their calc limitations are recorded below. The remaining data difference is the build date.
+
 ## Local storage (prefix hg)
 
 `hgdex4` list filters, `hgcalc:<id>` + `hgcalc:lastlv` stat calc, `hgtrack` tracker {s starter, e {areaIdx: {p: id} or
@@ -159,7 +180,7 @@ Cheer is off (`over`: no crit stage at this pin). Weather moves set Snow (no Hai
 
 Unit W/W2 (2026-10-25): automatic weight/HP/speed/boost fixtures, source weights for Mega Garchomp Z/Lucario Z/Maushold, inclusive weight bands, Flail p32, Gyro Ball without +1, source Hard Press 1 BP and late zero-power clamp; 986 lookup weights audited, 984 live probes pass (the Nidoran♀ identity collision and Flabébé construction were fixed since: `tools/calc/test.mjs`). Evidence: `plans/calc-refine-hardlove.md` (git history) → Unit W → W2.
 
-Enabled on `worktree-damage-calc`, **not merged or independently verified against the ROM**. Base `expansion`
+Enabled by the damage calc merged at main `f050aaa`, **not independently verified against the ROM**. Base `expansion`
 means Gen 9 damage/types, not Gen 4 just because this is NDS. The guide is 0.8.5 since 2026-10-29 (Build); the
 calc's source traces below were made at the 0.8.3 pin. Save import: below (Save import).
 
@@ -345,6 +366,15 @@ is what the game shows if the point goes the other way.
   - Special in Snow: `76 76 78 78 79 81 81 82 82 84 85 85 87 87 88 90`, the same with no Snow.
 
 ## Checks
+
+0.8.5 calc validation (2026-10-29): `npm test --prefix tools/calc` fails one Hardlove source/stock fixture:
+`source-reckless-chloroblast` still uses numeric move 772, now Obstruct (Chloroblast moved to 773), so the damage
+result is null. A second fixture silently changes identity: `source-noncontact-behemoth-blade` uses 780, now
+Ceaseless Edge (Behemoth Blade moved to 781). These are not trainer-set expectation changes: left untouched and
+reported, rather than weakening the checks or changing engine code. Hardlove source/stock: 106 pass / 1 fail.
+Diagnostic only: resolving those two slots by their original move names gives results identical to main for both.
+The later npm suites were run separately after its short-circuit: Photonic and Eternal X pass; state fixtures
+pass for all four guides (Hardlove 800, EI 809, Eternal X 373, Photonic 599; zero failures).
 
 `check.py` [baseline.json]: reference integrity (species, trainer teams, area rows), the Starter area, Trainers / Walkthrough
 box names and trainer references, unique stop keys, no checklist steps, the Items box set and row sub-headings; given an

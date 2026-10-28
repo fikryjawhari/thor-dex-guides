@@ -33,7 +33,7 @@ to run when `repos/hardlove/COMMIT` is not the `watch.json` ref, so update both 
 
 User-exported `hardlovegoldnds084_npoint_data.json`, `hardlovegoldnds084.js` and
 `hardlovegoldnds084_searchindex.js` are copied from Downloads into ignored `.src/calc-import/`.
-They describe 0.8.4, not this guide's pinned 0.8.3, and contain data/search metadata rather than a damage engine.
+They describe 0.8.4, not this guide's pinned 0.8.5, and contain data/search metadata rather than a damage engine.
 Keep as local references only; re-export from hzla's Dynamic Dex importer to obtain them again.
 SHA-256 respectively: `8e32f6dd6cf575fe9ecf56ca9f87b813e5240600ac76fbd51694bef2719ab449`,
 `58fd68c1fa8182026f161e333c5e1a28ad2eae3f76d74cb54edbe6f31e9353a8`,

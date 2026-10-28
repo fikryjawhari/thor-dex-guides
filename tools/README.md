@@ -209,7 +209,7 @@ plus raw-file requests for diffs. A run caps itself at fifty; that is not an hou
 runs too. Recursive trees avoid one request per watched path and the compare API's 300-file truncation; a truncated
 tree fails loudly. No token is required. No release tags are assumed.
 
-Hardlove watches its reviewed 0.8.3 release commit, not `beta_hardlove` head. Its Drive patch filenames guard that
+Hardlove watches its reviewed 0.8.5 release commit, not moving `beta_hardlove` head. Its Drive patch filenames guard that
 pin. A new version blocks accepting the source until the release commit is matched by UTC date and changelog;
 then update `ref` and `release.version`. Retiled's upstream engine is likewise release-matched, never upstream
 main; its own guides/tables may be checked on head. Code wins over docs; docs' Drive dates independently signal
