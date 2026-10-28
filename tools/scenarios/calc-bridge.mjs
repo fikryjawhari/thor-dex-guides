@@ -7,6 +7,10 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { dismissBanner, FIXTURES, fixturePatches, guide, guideArg, prepareGuide, runChecks } from '../calc_check_lib.mjs';
+// Edit opens and closes per side (the narrow card's Lv box is there only while it is open); idempotent.
+const editorOpen = async (page, side, open) => {
+  if (!!(await page.count(`.cc[data-s="${side}"] .ed`)) !== open) await page.tap(`.dmatch .cc[data-s="${side}"] [data-a="eopen"]`);
+};
 
 const file = prepareGuide(guideArg(process.argv), { tag: 'calc-bridge', edit: fixturePatches });
 if (!file) {
@@ -71,7 +75,9 @@ const checks = [
       await tapWait(page, IMPORT);
       await dismissBanner(page);
       await page.tap('[data-a="mpick"][data-src="party"][data-i="0"]');
+      await editorOpen(page, 'mine', true);
       await page.setBox('[data-lv="mine"]', 30);
+      await editorOpen(page, 'mine', false);
       const edits = await page.value('Object.keys(CALC.state().edits).length');
       assert(edits > 0, 'an edit to keep');
       await tapWait(page, '.tools [data-a="import"]');

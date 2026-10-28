@@ -6,6 +6,10 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { OUT, ROOT, attackerCrit, attackerRows, attackerSide, calcState, fixturePatches, guide, guideArg, openSlot, prepareGuide, runChecks, setupCalc, touchBox } from '../calc_check_lib.mjs';
+// Edit opens and closes per side (the narrow card's Lv box is there only while it is open); idempotent.
+const editorOpen = async (page, side, open) => {
+  if (!!(await page.count(`.cc[data-s="${side}"] .ed`)) !== open) await page.tap(`.dmatch .cc[data-s="${side}"] [data-a="eopen"]`);
+};
 
 const file = prepareGuide(guideArg(process.argv), { tag: 'calc-persist', edit: fixturePatches });
 if (!file) {
@@ -34,10 +38,13 @@ const checks = [
       await page.tap('.dfield > summary');
       await page.value(`(()=>{const s=document.querySelector('select[data-f="weather"]');s.value='Rain';s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
       await page.tap('.dmatch .cc[data-s="foe"] .cl .mx');
+      await editorOpen(page, 'mine', true);
       await page.setBox('[data-lv="mine"]', 30);
-      await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
       await page.tap('[data-a="esave"][data-s="mine"]');
+      await editorOpen(page, 'mine', false);
+      await editorOpen(page, 'foe', true);
       await page.setBox('[data-lv="foe"]', 9);
+      await editorOpen(page, 'foe', false);
       const beforeFoe = await foeName(page), beforeWeather = await weatherValue(page);
       const beforeState = await calcState(page);
       assert.equal(beforeState.dir, 'in');

@@ -25,10 +25,12 @@ const checks = [
     title: 'unsaved (*) survives a reload; Save makes it (•); Original goes back to the save file; a re-import clears both',
     run: async page => {
       await setupCalc(page);
+      await editMine(page);
       await page.setBox('[data-lv="mine"]', 30);
       assert.equal(await mineName(page), 'Cloyster *', 'unsaved change marked');
       await page.reload();
       assert.equal(await mineName(page), 'Cloyster *', 'the unsaved change is kept across a reload');
+      await editMine(page);
       assert.equal(await mineLevel(page), 30, 'at 30');
       await editMine(page);
       await page.tap('[data-a="esave"][data-s="mine"]');
@@ -38,8 +40,10 @@ const checks = [
       assert.equal(await mineLevel(page), 33, "Original: back to the save file's level");
       assert.equal(await mineName(page), 'Cloyster', 'no mark');
       // edits on two Pokémon, then a re-import: both cleared, and the banner says how many
+      await editMine(page);
       await page.setBox('[data-lv="mine"]', 30);
       await pickCell(page, 'party', 0);
+      await editMine(page);
       await page.setBox('[data-lv="mine"]', 36);
       await editMine(page);
       await page.tap('[data-a="esave"][data-s="mine"]');
