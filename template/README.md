@@ -63,7 +63,7 @@ the card's header line, left of Edit, no taller than Edit (the card keeps the he
 accessible label and tooltip: these checkboxes, the Intrepid Sword / Dauntless Shield box (checked = on, the default)
 and the Download button. Edit itself is the same for every Pokémon. Changing ability or
 Mega form clears this state. Controls do not change the attack direction. `categoryInvert` names moves with an
-Invert category checkbox in their move details: a compact P/S · A/I button above Crit also toggles it while collapsed.
+Invert category checkbox in their move details: a compact P/S · A/I button in the second move bar also toggles it while collapsed.
 The tooltip spells out category, Auto/Inverted and ties. The ability boxes are battle state (scratch, see Fight
 state); the category flag is a per-slot move override and is stored. EI also exposes allied Emperor's Presence per side;
 it only affects doubles. Effective priority is an
@@ -198,7 +198,7 @@ These actions and entry hazards replace a fixed log at the top of the window (th
 scrolling; gone 3 s after the last action, held while a long one is touched or scrolled, × closes it at once), never adding layout height or saved state. KO notes come from the engine.
 Field toggles never break a word: the narrowest box is the widest single word of any toggle (measured in the page's
 font at render, so text zoom counts), each toggle grid uses its own measured width and fits as many columns as there is room
-(`auto-fit`), so a narrow grid becomes rows. **Field layout**,  one column at every width: Global
+(`auto-fit`), so a narrow grid becomes rows. **Field layout**, one column at every width: Global
 (collapsible, every field-wide toggle incl. Trick Room), then a Player | Foe switch (one side at a time; its active
 count on each button; not stored), then that side's ungrouped toggles and its States, Turn end and Hazards groups,
 stacked. Each group ends in the standard `.endbar` (`Collapse <group>`, shown only when the open group is taller than
@@ -225,7 +225,7 @@ Expanded groups stay inside the one-window Field, scrolling its body when needed
 into view.
 Field content does not flex-shrink; toggle rows keep their natural wrapped-label height when pressed or redrawn.
 The player's Pokemon box packs compact rows against its top edge, leaving any spare height below the last row.
-Turn-end parts now include trapping (the opposing holder's Binding Band), Leech Seed transfer (Big Root / Liquid
+Turn-end parts include trapping (the opposing holder's Binding Band), Leech Seed transfer (Big Root / Liquid
 Ooze / Magic Guard), Salt Cure, Ghost Curse, sleeping Nightmare, Ingrain, Aqua Ring, pledge fire and automatic Bad
 Dreams. Speed uses the engine's final field-aware value, including Swamp. All side utilities use fixed Player/Foe
 prefixes; attack calculation still remaps them for the chosen direction.
@@ -324,12 +324,11 @@ other pages' DOM, and `#/calc` redirects to the Pokémon list.
 Engine contracts, mechanics and profile authoring: `tools/calc/README.md`. Save formats and reader coverage:
 `calc/readers/README.md`. Browser checks: `tools/scenarios/README.md` → Calc checks.
 
-**Design rules**: one screen at 260 × 316 (trainer bar, foe strip, both cards, the attacker's
-four moves); don't add a row to that block without removing one. Below 640 px (including narrow wide-layout columns),
-a berry chip moves into Edit when Toxic, an Intimidate mark or a battle-state label crowds the HP line; compact
-number boxes, marks and a Speed-change arrow keep that line unwrapped (full effect names remain in the tooltip). Consuming a berry does not change the closed card height or hide
-the fourth move. Otherwise the berry stays beside the turn-end amount. Nothing to open for common edits (level, HP, nature,
-ability, item, status, IVs / EVs, stages, Mega, moves, power / type / hits, crit); sheets only for long lists. Space goes
+**Design rules**: one screen at 260 × 316 shows both teams, both cards, the attacker's four moves and the
+fight bar; don't add a row without removing one. Closed cards expose HP, Mega, ability controls and turn-end/
+berry actions; Edit holds level, nature, ability, item, status, IVs/EVs and stages. Move expanders hold details
+and overrides; sheets are for long lists. The berry stays beside the turn-end amount (narrow placement follows
+the three-line rules above); consuming it must not change card height or hide the fourth move. Space goes
 to the matchup: no headings, explanatory text or dividers; names truncate in the main block, full in sheets and
 expanders. Never overflow the width, normal or `dvkb`, every expander open. The template owns the mechanics-free UI;
 everything that differs between games (generation, field list, status / stage / level ranges, changed effects,
