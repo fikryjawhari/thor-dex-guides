@@ -25,7 +25,14 @@ Small, take with a nearby job:
 **Go (the user, 2026-10-28):** merge now. The app's Thor test, real saves and the mechanics check come after the merge
 and stay open on `main` (PROGRESS.md → Damage calc): the user loads the guides in the offline viewer with the Thor
 plugged in, reports save-reader problems as they play, and does the mechanics check long-term.
-Originally: when the user trusts the mechanics (their call). Opus main chat: merge `main` into the branch, rebuild, audit (Haiku
+Originally: when the user trusts the mechanics (their call).
+**Docs cleanup after the merge** (the user, 2026-10-28; docs only, after `main` is pushed, so it adds no merge noise):
+the branch grew its docs over many sessions (2.8k doc lines: `tools/calc/README.md` 880, EI notes.md +430,
+`template/README.md` +290, the other guides' notes.md, `calc/readers/README.md`, PROGRESS.md). Make each say what is
+true now: drop build logs, unit-by-unit history and superseded decisions (git keeps them), merge repeats, fix stale
+references (deleted plans, old behaviour such as the A mark, `Int −1`, player HP kept across trainers), keep the
+rules and the reasons. PROGRESS.md → Damage calc becomes a short status plus the open items; this plan's open items
+move there and the plan is deleted. Check every link / path named still exists. Ask before pushing. Opus main chat: merge `main` into the branch, rebuild, audit (Haiku
 medium: `python assemble.py`, `uv run python -I tools/gate.py check <hack>` for every guide, `node tools/domcompare.mjs`
 against main's build with `--routes '#/calc'` and `--kb`, `tools/scenarios/calc-*.mjs`, `node
 tools/calc_save_check.mjs`), every calc guide in the Thor frame on the phone preview, the user approves, merge into
