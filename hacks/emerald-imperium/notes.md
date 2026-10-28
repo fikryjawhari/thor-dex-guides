@@ -450,13 +450,15 @@ STAT FORMULA (Gen 3+)
   Other = floor((floor((2B + IV + floor(EV/4)) x L / 100) + 5) x nature)
 ```
 
-Trainer `field` is optional, data-only preparation for a later field UI. Shared finalisation regenerates it from
+Trainer `field` is optional evidence for the calc's automatic Field defaults and Area line. Shared finalisation regenerates it from
 group/section/trainer notes and trainer tags (`tools/trainer_fields.py`); it never inspects team moves, abilities
 or held items. Each record is `{scope, text, effects, review}`: scope identifies the original note/tag level,
 text is the complete existing wording, effects holds conservative normalisations, and review marks unresolved
-labels or incomplete targeting/outcomes. Effects use `{kind, value, [duration], [side], [timing], [layers]}`;
-absent properties are unknown, not defaults. Kinds: weather, terrain, room, side-condition, hazard, critical-bonus.
+labels or incomplete targeting/outcomes. Effects use `{kind, value, [duration], [side], [timing], [layers], [source]}`;
+absent properties are unknown, not defaults. Kinds: weather, terrain, room, side-condition, hazard, critical-bonus and gameType.
 Side is player or opponent; weather/terrain/rooms are global. Duration `permanent` records the doc wording, not
 a claim that an effect cannot be replaced. Timing is battle-start or after-first-send-out when documented.
-Repeated section/trainer evidence describes one effect, not stacked applications. No template or calc consumer
-applies these records yet; `review: false` does not mean the engine supports the effect or its special rules.
+Repeated section/trainer evidence describes one effect, not stacked applications. The calc consumes supported
+effects (weather/terrain, Trick Room, foe Tailwind/crit, hazards and automatic Doubles); variant labels are ignored.
+Fog and random terrain remain text only. `review: false` does not imply support for every special rule.
+UI precedence and lifecycle: `template/README.md` → Damage calculator; normalization: `tools/trainer_fields.py`.
