@@ -3,7 +3,7 @@
 if(!CF.calc)return;
 const prof=CF.calc,AB=sourceData.AB.map(entry=>entry[0]);
 const D={...sourceData,IT:[...new Set(sourceData.IT.flatMap(section=>section.r.map(row=>row[0])))]};
-Object.defineProperty(D,'TR',{get:()=>TRS.filter(trainer=>!rivalHidden(trainer))});
+Object.defineProperty(D,'TR',{get:()=>TRS.filter(trainer=>!rivalHidden(trainer)).flatMap(trainer=>[trainer,...(trainer.pt?ptOf(trainer).map(partner=>PARTNERS.get(partner)):[])])});
 const $=(selector,root)=>(root||document).querySelector(selector);
 const html=(element,content)=>{element.innerHTML=content;return element;};
 const nb=numBox,KEY=LS.dmg;
@@ -28,15 +28,18 @@ const battleField=()=>ST.field;
 const fieldFor=side=>side==='foe'?flipField(battleField()):battleField();
 // Battle type before the trainer's name in the calc (bar, trainer sheet, Find trainer; the walkthrough shows the tag):
 // [D] double (incl. True / 2on2), [M] multi (tag or partner), [T] triple, [R] rotation, [BR] battle royal, [B2B] / [B3B];
-// a double back-to-back shows both ([D B2B]).
+// a double back-to-back shows both ([D B2B]); [P] a partner at your side in a multi (PARTNERS).
 const BATTLETYPES=[[/^Multi/i,'M'],[/^Triple/i,'T'],[/^Rotation/i,'R'],[/^Battle Royal/i,'BR'],[/^(True |2on2 )?Double/i,'D'],[/^Back ?(to|2) ?Back ?(to|2) ?Back/i,'B3B'],[/^Back ?(to|2) ?Back/i,'B2B']];
-const battleType=t=>{const codes=[],tags=[];for(const [re,code] of BATTLETYPES){const tag=(t.tags||[]).find(text=>re.test(text));if(tag&&!codes.includes(code)&&!(code==='B2B'&&codes.includes('B3B'))){codes.push(code);tags.push(tag);}}if(!codes.length&&t.pt?.length){codes.push('M');tags.push('Multi Battle');}return codes.length?{code:codes.join(' '),tags}:null;};
+const battleType=t=>{if(t.partnerOf)return {code:'P',tags:['Partner']};const codes=[],tags=[];for(const [re,code] of BATTLETYPES){const tag=(t.tags||[]).find(text=>re.test(text));if(tag&&!codes.includes(code)&&!(code==='B2B'&&codes.includes('B3B'))){codes.push(code);tags.push(tag);}}if(!codes.length&&t.pt?.length){codes.push('M');tags.push('Multi Battle');}return codes.length?{code:codes.join(' '),tags}:null;};
 const trName=t=>{const type=battleType(t);return (type?`[${type.code}] `:'')+t.n;};
 window.DMG.init(sourceData,prof);
 const toEngine=mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i||'',st:mon.status||'',iv:mon.iv,ev:EVS?mon.ev:[0,0,0,0,0,0],stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp,abilityOn:mon.abilityOn===true,pty:mon.pty||'',toxn:mon.toxn||1,vol:mon.vol,dl:mon.dl,entry:mon.entry,intim:mon.intim,used:mon.used,broken:mon.broken});
 const koTxt=ko=>!ko.n?'5+ hits':(ko.n===1?'OHKO':ko.n+'HKO')+(ko.p<1?' '+Math.min(99,Math.max(1,Math.round(ko.p*100)))+'%':'');
 
-const trByK=TRK;
+const trByK={...TRK};
+// Partners (t.pt: at your side in a multi) are calc trainers of their own right after their battle ([P], key
+// <trainer>~p<n>; only your starter's team once chosen, as ptOf), so their Pokémon can be dragged to your team.
+const PARTNERS=new Map();for(const t of TRS)(t.pt||[]).forEach((partner,n)=>{const entry={...t,k:t.k+'~p'+n,n:ptName(partner.n)+(partner.st?` (${partner.st})`:''),p:partner.p,tags:[],partnerOf:t.k};delete entry.pt;PARTNERS.set(partner,entry);trByK[entry.k]=entry;});
 const isRel=t=>t.p.some(x=>x.l==null);
 function curMine(){const imp=ST.imp,m=ST.mine;if(m.src==='party'&&imp&&imp.party)return imp.party[m.i]||null;if(m.src==='box'&&imp&&imp.boxes&&imp.boxes[m.b])return imp.boxes[m.b][m.i]||null;if(m.src==='custom')return ST.custom[m.i]||null;return null;}
 function applyEdits(base,key){ST.saved=ST.saved||{};const sv=key&&ST.saved[key],e=key&&ST.edits[key];const w=!!e&&Object.keys(e).some(isSetField);if(!sv&&!e)return {...base};return {...base,...sv,...e,edited:w,saved:!!sv};}
@@ -254,10 +257,11 @@ function calcPage(){if(!host.isConnected)document.body.appendChild(host);if(prof
  bindCap();bindMain();bindEd();fitToggles();if($('.mg .dstrip'))$('.mg .dstrip').scrollTop=gridScroll;if($('.dfb'))$('.dfb').scrollTop=fieldScroll;fitCards();if(CARDRO){CARDRO.disconnect();document.querySelectorAll('.dmatch>.cc').forEach(card=>CARDRO.observe(card));}jumpState();}
 
 // The narrow card is at most three lines (the HP bar isn't one): a card that measures more moves Aura up (.aup: the
-// ability / Speed line, or the HP line on a named card), then goes .tight (gaps / paddings trimmed, Aura as A).
+// ability / Speed line, or the HP line on a named card), then the battle state (.sup), then goes .tight (gaps /
+// paddings trimmed, Aura as A).
 function cardLines(card){const boxes=[],walk=el=>{for(const child of el.children){const style=getComputedStyle(child);if(style.display==='contents')walk(child);else if(style.display!=='none'&&!child.matches('.dhpbar,.ed')){const r=child.getBoundingClientRect();if(r.height)boxes.push(r);}}};walk(card);boxes.sort((a,b)=>a.top-b.top);let lines=0,bottom=-1e9;for(const r of boxes){if(r.top>=bottom-2){lines++;bottom=r.bottom;}else bottom=Math.max(bottom,r.bottom);}return lines;}
-function fitCards(){for(const card of document.querySelectorAll('.dmatch>.cc')){card.classList.remove('aup','tight');if(innerWidth>=480||card.querySelector('.ed'))continue;
- for(const step of card.querySelector('.cl>.aum')?['aup','tight']:['tight']){if(cardLines(card)<=3)break;card.classList.add(step);}}}
+function fitCards(){for(const card of document.querySelectorAll('.dmatch>.cc')){card.classList.remove('aup','sup','tight');if(innerWidth>=480||card.querySelector('.ed'))continue;
+ for(const step of [card.querySelector('.cl>.aum')&&'aup',card.querySelector('.cl>.dvol')&&'sup','tight'].filter(Boolean)){if(cardLines(card)<=3)break;card.classList.add(step);}}}
 // Text zoom (A- / A+) fires no resize: the cards' own size changes re-fit them, a frame later (no observer loop).
 let fitFrame=0;const CARDRO=window.ResizeObserver?new ResizeObserver(()=>{cancelAnimationFrame(fitFrame);fitFrame=requestAnimationFrame(()=>{if(location.hash==='#/calc')fitCards();});}):null;
 addEventListener('resize',()=>{if(location.hash==='#/calc')fitCards();});
@@ -342,25 +346,27 @@ document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const e
 // 8 px (moving first is a scroll); mouse: move 5 px. Box → empty slot appends, → filled slot replaces, already in the team
 // moves to that slot (swap); team → slot swaps (empty slot: to the end), team → outside the row removes. While dragging
 // touchmove is prevented and the page auto-scrolls near the top / bottom 40 px (narrow); the click after a drop is swallowed.
-let DRAG=null,DROPPED=0;const DRAGCELL='.mg .dstrip button[data-a="mpick"],.dteamrow button[data-a="mpick"]';
+let DRAG=null,DROPPED=0;const DRAGCELL='.mg .dstrip button[data-a="mpick"],.dteamrow button[data-a="mpick"],.dside:not(.mg) .dstrip button[data-a="fpick"],.fteam .ft[data-a="fpick"]';
 const dragRef=el=>({src:el.dataset.src,pid:el.dataset.pid});
+// A foe (or partner) Pokémon dropped on my team becomes a custom set (once per trainer slot: pid f:<trainer>:<slot>).
+function foeCopy(k,i){const pid='f:'+k+':'+i;if(!ST.custom.some(mon=>mon.pid===pid)){const base=foeBase(trByK[k],i);if(!base)return null;ST.custom.push({id:base.id,pid,l:Number.isFinite(base.l)?base.l:getMon('mine')?.l||50,na:base.na,a:base.a,i:base.i,m:base.m,iv:base.iv.slice(),ev:base.ev.slice()});}return {src:'custom',pid};}
 function dragTarget(x,y){const g=DRAG.ghost;g.style.display='none';const el=document.elementFromPoint(x,y);g.style.display='';return el?.closest('.dteamrow button')||null;}
 function dragStart(){const d=DRAG,g=d.el.cloneNode(true),r=d.el.getBoundingClientRect();d.on=true;g.classList.add('dghost');g.removeAttribute('data-a');g.style.width=r.width+'px';g.style.height=r.height+'px';document.body.appendChild(g);d.ghost=g;d.el.classList.add('dlift');document.body.classList.add('ddrag');dragMove(d.x,d.y);}
 function dragMove(x,y){const d=DRAG;d.x=x;d.y=y;d.ghost.style.transform=`translate(${x-d.ghost.offsetWidth/2}px,${y-d.ghost.offsetHeight*.9}px) scale(1.2)`;const t=dragTarget(x,y);document.querySelectorAll('.dteamrow .dover').forEach(el=>el!==t&&el.classList.remove('dover'));if(t)t.classList.add('dover');d.ghost.classList.toggle('drm',d.from==='team'&&!t);
  cancelAnimationFrame(d.raf);if(innerWidth<480&&(y<40||y>innerHeight-40)){const step=y<40?-6:6,loop=()=>{if(DRAG!==d||!d.on)return;scrollBy(0,step);d.raf=requestAnimationFrame(loop);};d.raf=requestAnimationFrame(loop);}}
-function dragDrop(){const d=DRAG,t=dragTarget(d.x,d.y),T=ST.team,ref=dragRef(d.el);
+function dragDrop(){const d=DRAG,t=dragTarget(d.x,d.y),T=ST.team,ref=d.from==='foe'?t&&foeCopy(d.k,d.i):dragRef(d.el);
  if(d.from==='team'){const n=+d.el.dataset.t;if(!t)T.splice(n,1);else{const m=+t.dataset.t;if(m>=T.length)T.push(T.splice(n,1)[0]);else [T[n],T[m]]=[T[m],T[n]];}}
- else if(t){const m=+t.dataset.t,at=T.findIndex(r=>sameRef(r,ref));if(at>=0){if(m>=T.length)T.push(T.splice(at,1)[0]);else [T[at],T[m]]=[T[m],T[at]];}else if(m<T.length)T[m]=ref;else T.push(ref);}
+ else if(t&&ref){const m=+t.dataset.t,at=T.findIndex(r=>sameRef(r,ref));if(at>=0){if(m>=T.length)T.push(T.splice(at,1)[0]);else [T[at],T[m]]=[T[m],T[at]];}else if(m<T.length)T[m]=ref;else T.push(ref);}
  ST.team=T.slice(0,6);dragEnd();save();refresh();}
 function dragEnd(){const d=DRAG;if(!d)return;DRAG=null;clearTimeout(d.timer);cancelAnimationFrame(d.raf);if(d.on){DROPPED=Date.now();d.ghost.remove();d.el.classList.remove('dlift');document.body.classList.remove('ddrag');document.querySelectorAll('.dteamrow .dover').forEach(el=>el.classList.remove('dover'));}}
-document.addEventListener('pointerdown',e=>{if(location.hash!=='#/calc'||e.button>0||DRAG)return;const el=e.target.closest(DRAGCELL);if(!el||!el.dataset.pid||!el.closest('#app'))return;
- DRAG={el,from:el.closest('.dteamrow')?'team':'box',x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,mouse:e.pointerType==='mouse',id:e.pointerId,on:false};if(!DRAG.mouse){const d=DRAG;d.timer=setTimeout(()=>{if(DRAG===d&&!d.on)dragStart();},250);}},true);
+document.addEventListener('pointerdown',e=>{if(location.hash!=='#/calc'||e.button>0||DRAG)return;const el=e.target.closest(DRAGCELL),foe=el?.dataset.a==='fpick';if(!el||!foe&&!el.dataset.pid||!el.closest('#app'))return;
+ DRAG={el,from:foe?'foe':el.closest('.dteamrow')?'team':'box',k:ST.foe.k,i:+el.dataset.i,x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,mouse:e.pointerType==='mouse',id:e.pointerId,on:false};if(!DRAG.mouse){const d=DRAG;d.timer=setTimeout(()=>{if(DRAG===d&&!d.on)dragStart();},250);}},true);
 document.addEventListener('pointermove',e=>{const d=DRAG;if(!d||e.pointerId!==d.id)return;if(d.on){dragMove(e.clientX,e.clientY);return;}const dist=Math.hypot(e.clientX-d.x0,e.clientY-d.y0);if(d.mouse&&dist>5){d.x=e.clientX;d.y=e.clientY;dragStart();}else if(!d.mouse&&dist>8)dragEnd();},true);
 document.addEventListener('pointerup',e=>{if(!DRAG||e.pointerId!==DRAG.id)return;if(DRAG.on)dragDrop();else dragEnd();},true);
 document.addEventListener('pointercancel',e=>{if(DRAG&&e.pointerId===DRAG.id)dragEnd();},true);
 document.addEventListener('touchmove',e=>{if(DRAG?.on)e.preventDefault();},{passive:false,capture:true});
 document.addEventListener('contextmenu',e=>{if(location.hash==='#/calc'&&e.target.closest?.(DRAGCELL))e.preventDefault();},true);
-document.addEventListener('click',e=>{if(Date.now()-DROPPED<400&&e.target.closest?.('.mg .dstrip,.dteamrow')){e.stopPropagation();e.preventDefault();}},true);
+document.addEventListener('click',e=>{if(Date.now()-DROPPED<400&&e.target.closest?.('.mg .dstrip,.dteamrow,.dside:not(.mg) .dstrip,.fteam')){e.stopPropagation();e.preventDefault();}},true);
 function findMine(){const L=mineList().map(entry=>({...entry,m:entry.src==='custom'?entry.m:applyEdits(entry.m,'mine:'+entry.m.pid)}));picker({title:'Find yours',items:L.map(x=>({label:byId[x.m.id].n,sub:(x.src==='party'?'Party':x.src==='box'?'Box '+(x.b+1):'Custom')+' · Lv '+x.m.l,id:x.m.id,v:x,keys:monKeys(x.m)})),onPick:x=>{ST.mine={src:x.src,b:x.b,i:x.i};save();refreshMainOnly();}});}
 document.addEventListener('change',e=>{if(location.hash!=='#/calc')return;const s=e.target.closest('select[data-f]');if(s){if(s.value==='@auto'){ST.fman=ST.fman.filter(key=>key!==s.dataset.f);delete ST.field[s.dataset.f];}else{markManual(s.dataset.f);ST.field[s.dataset.f]=s.value;}window.__fo=1;save();refresh();}});
 document.addEventListener('toggle',e=>{if(e.target.matches('details.dfield')){window.__fo=e.target.open;fitToggles();}if(e.target.matches('details[data-fgroup]')&&e.target.isConnected){const was=FIELDOPEN[e.target.dataset.fgroup];FIELDOPEN[e.target.dataset.fgroup]=e.target.open;fitToggles();if(e.target.open&&!was)e.target.scrollIntoView({block:'nearest'});}},true);

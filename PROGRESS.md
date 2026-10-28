@@ -75,7 +75,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
      badge over its end, tapping the trainer's own S / D = Auto. Changed the same day: my team's HP / status refill on
      a trainer change too; battle state / Aura moved to the card's line 3 (left, before the berry); no Intimidate mark;
      no A on the Auto D (dashed outline only); battle type before the trainer's name in the calc (`[D]`, `[M]`, `[T]`,
-     `[R]`, `[BR]`, `[B2B]`, `[B3B]`; template/README.md → Both teams in the first frame).
+     `[R]`, `[BR]`, `[B2B]`, `[B3B]`, `[P]` partner trainers); foe / partner Pokémon drag onto my team as custom copies; a
+     crowded card moves Aura, then the state, up a line before going tight (template/README.md → Both teams in the first frame).
    - **Save readers + the guide side of the app's save picker:** built on `worktree-damage-calc-saves`, merged into this
      branch 2026-10-28 (worktree and branch deleted after the merge). Gen 3 for Emerald Imperium
      (`readers/expansion.js` + EI `GID`, checked against hzla's EI 1.3 save, 33 of 33; EI notes.md → Damage calc → Save

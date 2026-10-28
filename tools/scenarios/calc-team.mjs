@@ -273,6 +273,29 @@ async function dragCheck(page) {
   assert.deepEqual(sent.got, sent.want, 'a tap on a team cell sends that Pokémon in');
 }
 
+// A foe Pokémon dropped on my team becomes one custom copy (pid f:<trainer>:<slot>); a partner ([P]) follows its multi.
+async function foeDragCheck(page) {
+  const partnered = allTrainers().find(trainer => trainer.pt?.length);
+  await setupCalc(page, partnered ? { trainer: partnered.k } : {});
+  await touchOn(page);
+  if (partnered) {
+    await page.tap('[data-a="tnext"]');
+    assert.match(await page.text('.dsrc .nm'), /^\[P\] /, 'the partner follows its battle, marked [P]');
+    assert.ok((await page.value('CALC.state().foe.k')).startsWith(partnered.k + '~p'), 'partner key <trainer>~p<n>');
+  }
+  const k = await page.value('CALC.state().foe.k'), wide = await page.value('innerWidth>=480');
+  const FOE = i => wide ? `.fteam .ft[data-a=fpick][data-i="${i}"]` : `.dside:not(.mg) .dstrip button[data-a=fpick][data-i="${i}"]`;
+  const id = await page.value('CALC.mon("foe").id');
+  await drag(page, FOE(0), SLOT(0));
+  assert.deepEqual(await teamOf(page), [`custom:f:${k}:0`], 'foe → empty slot appends a custom copy');
+  await drag(page, FOE(0), SLOT(1));
+  assert.deepEqual(await teamOf(page), [`custom:f:${k}:0`], 'the same foe Pokémon again: still one entry');
+  assert.equal(await page.value(`CALC.state().custom.filter(m=>m.pid===${JSON.stringify('f:' + k + ':0')}).length`), 1, 'one custom copy');
+  assert.equal(await page.value('CALC.state().foe.i'), 0, 'dragging does not pick a foe');
+  await page.tap(SLOT(0));
+  assert.equal(await page.value('CALC.mon("mine").id'), id, 'the copy is sent in on my side');
+}
+
 // An empty team stays empty through an import (a fresh page: nothing dragged in yet).
 async function emptyTeamCheck(page) {
   assert.deepEqual(await teamOf(page), [], 'an import into an empty team never fills it');
@@ -404,6 +427,12 @@ const checks = [
     run: dragCheck,
   },
   {
+    id: 'foe drag',
+    title: 'a foe Pokémon dropped on my team is one custom copy, sent in by a tap; a partner trainer ([P]) follows its multi',
+    sizes: [[260, 316], [832, 424]],
+    run: foeDragCheck,
+  },
+  {
     id: 'team persistence',
     title: 'the team survives a reload; a re-import keeps it by pid and never fills an empty team; deleting a custom set removes it from the team',
     sizes: [[260, 316]],
@@ -417,7 +446,7 @@ const checks = [
   },
   {
     id: 'auto doubles wide',
-    title: 'a doubles trainer opens in D (Auto, A mark); the D button fits inside the fight bar',
+    title: 'a doubles trainer opens in D (Auto, dashed); the D button fits inside the fight bar',
     sizes: [[480, 392], [832, 424]],
     skip: doublesTrainer() ? undefined : 'no trainer with doubles evidence',
     run: doublesCheck,

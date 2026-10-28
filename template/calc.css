@@ -625,7 +625,7 @@ body.calc-route .cc .l1 .ddl{line-height:1.6}
  /* At most three lines (the HP bar isn't one), by order: 0-1 the name line (.offteam only: name, M, ability boxes, Speed
     at the right end), 2-3 HP + ✎, 4 the HP bar, 5-6 line 2 (M, ability boxes, Speed; not with the name line), 7 a
     break, 8-12 line 3 (battle state, Aura, berry at the left; T + Toxic box, residual at the right). A card that would
-    take more than three lines gets .aup from fitCards() (Aura up to line 2, or the HP line when named), then .tight. */
+    take more than three lines gets .aup from fitCards() (Aura up to line 2, or the HP line when named), then .sup (the state too), then .tight. */
  body.calc-route .cc .cn{display:none}
  body.calc-route .cc.offteam .cn{display:block;order:0;flex:1 1 0;min-width:0;min-height:18px;overflow:hidden;text-align:left}
  body.calc-route .cc.offteam .cn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -643,6 +643,8 @@ body.calc-route .cc .l1 .ddl{line-height:1.6}
  body.calc-route .cc .cl>.aum{order:9}
  body.calc-route .cc.aup .cl>.aum{order:5}
  body.calc-route .cc.offteam.aup .cl>.aum{order:2}
+ body.calc-route .cc.sup .cl>.dvol{order:5}
+ body.calc-route .cc.offteam.sup .cl>.dvol{order:2}
  body.calc-route .cc .dend>.dberry{order:10}
  body.calc-route .cc .dend>.dtoxl,body.calc-route .cc .dend>[data-tox]{order:11}
  body.calc-route .cc .dend>button:not(.dberry){order:12}

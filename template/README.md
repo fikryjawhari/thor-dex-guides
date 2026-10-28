@@ -85,7 +85,7 @@ user, 2026-10-28: state / Aura never on the name line). The name shows (line 0) 
 in the team row: then M, the ability boxes and Speed move up beside it, the name truncating as far as needed. **At most
 three lines, always** (the user): `fitCards()` measures each narrow card (render, resize, size change: text zoom fires
 no resize); one that takes more moves Aura up (the ability / Speed line, or after `/max` on a named card: Aura is the
-rarest tag and about stages), then goes tight (1 px gaps, Aura as "A"). No name line while Edit is open; an open card
+rarest tag and about stages), then the battle state the same way, then goes tight (1 px gaps, Aura as "A"). No name line while Edit is open; an open card
 spans both columns. Lv sits on the team cell (the Lv box only in Edit). No Intimidate mark on any card (the user,
 2026-10-28): the holder's box is the only sign. **Wide (≥ 480):** left column = box panel with my team row under the grid (1 px line), then the fight bar; right
 column = the trainer panel, whose preview (two-line rows, 25 px, all six always visible, no scrolling; tap = pick that
@@ -98,7 +98,10 @@ by drag and drop only. Tap a team cell = send it in (as a box tap). Pointer-even
 touch): touch / pen hold 250 ms without moving 8 px (moving first scrolls), mouse 5 px; box → empty slot appends, →
 filled slot replaces, already in the team → swap; team → slot swaps (empty slot: to the end), → outside the row
 removes (red × on the floating copy); the click right after a drop is swallowed (400 ms); narrow auto-scrolls at the
-edges. Box cells in the team carry a 5 px accent dot. Mega is the card's M, never a second entry.
+edges. Box cells in the team carry a 5 px accent dot. Mega is the card's M, never a second entry. **Foe Pokémon to my
+team** (the user, 2026-10-28: a partner's team in a multi): a foe strip cell (narrow) or foe row (wide) dragged onto
+the team row becomes a custom set copied from the trainer's (pid `f:<trainer>:<slot>`, once: a second drop moves it),
+listed with the other custom sets; dropped anywhere else nothing happens, and a tap still picks the foe.
 **HP bar and fainted** on every team cell (my row, the foe strip, the wide preview rows): a 2 px bar in the card HP
 bar's colours (green, yellow ≤ 50 %, red ≤ 20 %), and a grey sprite at 0 HP; ↺ Reset fight and a trainer change
 refill both sides (the user, 2026-10-28: my team's HP no longer carries over to the next trainer).
@@ -108,7 +111,10 @@ not Rotation) opens in D automatically (dashed outline, no A mark: the user; too
 the fight (tapping the trainer's own format is Auto); Auto, ↺ and the next trainer clear it.
 **Battle type in the trainer's name** (calc only: the bar, the trainer sheet, Find trainer; the walkthrough shows the tag
 itself): `[D]` double (True / 2on2 too), `[M]` multi (tag or `pt` partners), `[T]` triple, `[R]` rotation, `[BR]` battle
-royal, `[B2B]` / `[B3B]` back to back; a double back-to-back shows both (`[D B2B]`). From the trainer's tags in the
+royal, `[B2B]` / `[B3B]` back to back; a double back-to-back shows both (`[D B2B]`). `[P]`: a partner at your side in a
+multi (`t.pt`) is a calc trainer of its own right after its battle (key `<trainer>~p<n>`, name short as in the
+walkthrough plus its starter team, e.g. `[P] Hau (Rowlet)`; only your starter's team once chosen), so its Pokémon can be
+dragged to your team. From the trainer's tags in the
 template (`BATTLETYPES`), no data change; a new hack's wording gets a pattern there. Search ignores the brackets, so
 "d" lists the doubles first, and the tag's wording ("double battle", "back to back") is a search key.
 Scenarios: `calc-team`, `calc-doubles`, `calc-layout`, `calc-retest`.
