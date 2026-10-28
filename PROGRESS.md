@@ -58,19 +58,23 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
        weather); R3 Field groups (Global / side / States / Turn end / Hazards, per-group collapse bars).
    - **Checks:** all pass at `023fb96`: 80/80 calc scenario jobs, engine tests, hzla compares EI 142 + 12 known,
      Photonic 118 + 28, Eternal X 116 + 3, all 0 mismatch.
-   - **Phone previews:** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-auto-ei.html`,
-     `calc-auto-hardlove.html`, `calc-auto-photonic.html`, `calc-auto-eternal.html` (Thor frame, preset panel).
+   - **Phone previews:** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-team-ei.html`,
+     `calc-team-hardlove.html`, `calc-team-photonic.html`, `calc-team-eternal.html` (Thor frame, preset panel; the
+     calc-team build at `HEAD`).
    - **Checkpoints** (local tags, pushed with the branch at the end): `live-2026-10-24` = `168dfd3` (the live site, no
      calc), `calc-pre-team` = `fe937cc` (the calc before the calc-team build).
-   - **calc-team build** (`plans/calc-team.md`, build units there; session of 2026-10-28):
-     - Unit 1 layout + nameless card: done (`a0f978a`). Field now stays below open move rows / the editor at every size
-       (the user's report on the mockup). The scenarios that still fail test the old layout: unit 3 updates them.
-     - Unit 4a Auto Doubles data: done (`eba379c`, `ac9a9e4`): `tools/trainer_fields.py` `DOUBLES_TAGS` / partners write a
-       `gameType: Doubles` field record; counts EI 14, Hardlove 92, Photonic 60, Eternal X 62. The three Hardlove
-       Back2Back trainers that also carry a Double tag (Ariana, Grunt #25, Miki) count as doubles, as the spec's 92 does.
-     - Left, in order (each its own agent, one template session at a time): **unit 2** team row + drag and drop +
-       fainted grey sprite + HP bar on the team cells; **unit 4b** S / D auto layer in `calc.js`; **unit 3** checks;
-       **unit 5** docs + previews. Details and check commands: `plans/calc-team.md` → Build units.
+   - **calc-team build: done 2026-10-28** (plan and mockup deleted; decisions in `template/README.md` → Both teams in
+     the first frame). Both teams, both cards, four moves and the fight bar in the first frame at every size; nameless
+     narrow card (at most three lines, `fitCards()`); team row by pid with drag and drop (no automatic fill from an
+     import); HP bar / fainted grey on team cells; Auto Doubles from trainer tags / partners; the action log at the top,
+     gone after 3 s. Checks at the end: full `gate.py check --template --jobs 4` 117/125, the 8 failures all DOM
+     compares against `calc-pre-team`; with the footer's build date ignored only `#/calc` differs (all four guides,
+     intended). Every calc scenario passes incl. the new `calc-team` / `calc-doubles`; engine tests and hzla compares
+     unchanged (EI 142 + 12, Photonic 118 + 28, Eternal X 116 + 3, 0 mismatch).
+     For the user to review on the Thor: the three-line card (very short names, Aura as "A" in tight mode); my team's HP
+     is kept across trainers (bars refill on ↺ only, the foe's on both); the card's HP bar now turns yellow / red too;
+     the wide preview's HP bar is under the sprite only; the level badge covers the bar's right end; tapping the
+     trainer's own S / D counts as Auto; the A mark on the 22 px D is tight.
    - **Save readers + the guide side of the app's save picker:** built on `worktree-damage-calc-saves`, merged into this
      branch 2026-10-28 (worktree and branch deleted after the merge). Gen 3 for Emerald Imperium
      (`readers/expansion.js` + EI `GID`, checked against hzla's EI 1.3 save, 33 of 33; EI notes.md → Damage calc → Save

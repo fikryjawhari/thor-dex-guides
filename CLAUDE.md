@@ -61,6 +61,10 @@ adapt); agents build the units (Workflow → Which model).
    the game data over the docs ("Doc says ...").
    Calc: settle each trainer `field` record marked `review` (`tools/trainer_fields_check.py`) with me (notes.md,
    normalised in `tools/trainer_fields.py`); check the mechanics doc for permanent weather / terrain (`setterStays`).
+   Save import: the extract writes the hack's save ID tables (`GID`: species / forms, moves, items, abilities as the
+   game numbers them, from the game source or game files) and the guide gets a reader for its generation
+   (`template/calc/readers/README.md`); check it on a save with `.agents/references/calc-save-reader.md`. A doubles
+   tag the shared list doesn't know yet goes in `tools/trainer_fields.py` → `DOUBLES_TAGS`.
    Hacks come in families (PROGRESS.md → Hack families): reuse the family's shared code (3DS: `tools/ctrguide.py`),
    write a family's first guide so its siblings can reuse it, and lift the shared part out when the second one comes.
 3. `hacks/<hack>/hack.json`: copy an existing one; new localStorage prefix in `cfg.ls`, the hack's wording in

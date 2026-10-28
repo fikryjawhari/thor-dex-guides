@@ -73,13 +73,38 @@ Edit. The team area's height is based on closed cards and move rows, so edits/re
 the team from rows to a strip. Editors and expanded moves grow downwards; Field follows the whole moveset.
 No condition labels or category controls appear in profiles that do not declare them.
 
-**Retest layout and editors (R1, 2026-10-27):** Both sprite grids keep six columns. Wide layouts pin the closed
-cards and both four-move lists to the first viewport bottom; spare height goes to the internally scrolling box and
-trainer panels. The full trainer preview (one two-line row per Pokémon: name, level, item, ability; its moves; tap =
-pick that foe) appears from a 400 px window height when at least 150 px remains above the cards (so at 537 / 832 ×
-424); the six rows scroll inside the panel if they don't fit. Resize and text-size changes recalculate that space.
-Singles/Doubles, weather, terrain and the ↺ Reset fight button live in the full-width fight bar below the moves,
-outside Field; the existing automatic/manual layers and doubles gating are unchanged.
+**Both teams in the first frame (calc-team, 2026-10-28):** at every viewer size the first frame shows my team, the
+foe's team, both cards, the attacker's four moves (wide: both lists) and the fight bar at once. Both sprite grids keep
+six columns. **Narrow (< 480):** box (unchanged), then the trainer bar (22 px, no panel border), the fight bar (S / D,
+weather, terrain, ↺; 22 px, its buttons too: accepted below the 26 px tap size), my team (3 × 2) facing the foe strip
+(3 × 2), the two cards side by side, the moves (closed rows 33 px). The first frame is the page scrolled to the trainer
+bar (`openMatch`). **Nameless card** (narrow): the highlighted team cell says who is in. Line 1 ↺, HP box, `/max`, ✎;
+the HP bar under it; line 2 M, ability boxes, Aura / battle-state tag, Speed (no label) at the right; line 3 only for
+berry chip (left), T + Toxic box and residual (right). The name shows (line 0) only when the selected Pokémon is not in
+the team row: then M, the ability boxes and Speed move up beside it, the name truncating as far as needed. **At most
+three lines, always** (the user): `fitCards()` measures each narrow card (render, resize, size change: text zoom fires
+no resize) and moves Aura / the state tag to line 3, then goes tight (1 px gaps, Aura as "A") if needed. No name line
+while Edit is open; an open card spans both columns. Lv sits on the team cell (the Lv box only in Edit); `Int −1` is not
+shown. **Wide (≥ 480):** left column = box panel with my team row under the grid (1 px line), then the fight bar; right
+column = the trainer panel, whose preview (two-line rows, 25 px, all six always visible, no scrolling; tap = pick that
+foe) is the foe's team (no strip); the cards (named, ~48 px) and both move lists pinned to the bottom of the window.
+Jump arrows (`CALC.stops()`): top, the first frame (trainer bar − 2, narrow), the fourth move's bottom when an open row
+or editor pushes it ≥ 24 px past that, and Field (always, clamped); stops within 24 px merge.
+**My team row**: `team: [{src, pid}]` (≤ 6, dense) in `cfg.ls.dmg`, resolved by pid (imported: party then boxes;
+custom: `ST.custom`); entries that no longer resolve drop out. Imports never fill or change it (the user): it is built
+by drag and drop only. Tap a team cell = send it in (as a box tap). Pointer-event drag (HTML5 drag doesn't fire on
+touch): touch / pen hold 250 ms without moving 8 px (moving first scrolls), mouse 5 px; box → empty slot appends, →
+filled slot replaces, already in the team → swap; team → slot swaps (empty slot: to the end), → outside the row
+removes (red × on the floating copy); the click right after a drop is swallowed (400 ms); narrow auto-scrolls at the
+edges. Box cells in the team carry a 5 px accent dot. Mega is the card's M, never a second entry.
+**HP bar and fainted** on every team cell (my row, the foe strip, the wide preview rows): a 2 px bar in the card HP
+bar's colours (green, yellow ≤ 50 %, red ≤ 20 %), and a grey sprite at 0 HP; ↺ Reset fight refills both sides, a
+trainer change the foe's (the player's HP is kept across trainers).
+**Auto Doubles**: a trainer whose data carries a `gameType: Doubles` field record (`tools/trainer_fields.py`
+`DOUBLES_TAGS` / partners: double, multi, 2on2, triple (the calc has no triples) tags or `pt` partners; not Back2Back,
+not Rotation) opens in D automatically (dashed, A mark, tooltip and Area line name the tag); tapping S / D is manual for
+the fight (tapping the trainer's own format is Auto); Auto, ↺ and the next trainer clear it.
+Scenarios: `calc-team`, `calc-doubles`, `calc-layout`, `calc-retest`.
 The HP line is 20 px high, with Toxic beside the unsigned red/green residual and nameless white +berry action;
 a thin bar shows current HP. Each Turn end part in Edit is an independent button (no automatic berry or other parts).
 Item (all engine items plus guide/custom items), Nature and Other ability use text entries opening the full-window
@@ -171,7 +196,7 @@ stacked. Each group ends in the standard `.endbar` (`Collapse <group>`, shown on
 the window; it closes the group and keeps its heading in view). No whole-Field bar (rejected in the R3 mockup).
 Fight-bar selects keep their closed text short for 260 px: the auto choice reads the auto value or "Auto" (dashed
 border; the full "Auto: …" in its title), the empty choice "None", one-word values instead of long labels ("Sand").
-In the preview rows the ability shrinks to an ellipsis first. Two-line rows vs full rows is still open (calc-team).
+In the preview rows the ability shrinks to an ellipsis first.
 **Stackable states** (2026-10-26): `template/calc/field-states.json` defines side controls; `assemble.py` adds only
 those supported by the guide's moves / causing abilities and generation (Protect needs a Protect-family move, not `zmove`). The engine accepts
 these keys independently of UI availability. Dig / Fly / Dive / Minimized / Switching out remain the exclusive
@@ -260,7 +285,7 @@ and replaces it, clearing used.
 Save keeps set fields only, never HP / status / scratch; Edit Reset clears unsaved edits and scratch. `broken` (Disguise / Ice Face) is kept for the fight on both sides. Player HP is kept across trainers; foe
 HP / status only for the current fight. A **trainer change** (bar arrows, Find trainer, a trainer card's Calc link)
 clears all scratch, the foe's kept state and set edits, `broken` / Mega / used items and the manual Field overrides (`ST.fman`: Field keys the user set
-this fight; Singles / Doubles is not one); the foe team starts at full HP, slot 1 (or the linked Pokémon).
+this fight, Singles / Doubles included); the foe team starts at full HP, slot 1 (or the linked Pokémon).
 **Reset fight** (↺ in the fight bar): the same, plus every HP 100 % and every status
 cleared, same trainer and Pokémon. Reload keeps HP / status, the foe's of the current fight and the manual Field;
 scratch is gone. Loading older storage drops stored scratch everywhere, turns a stored Mega (`pre`) into `mega` and

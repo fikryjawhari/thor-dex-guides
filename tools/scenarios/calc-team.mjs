@@ -1,4 +1,4 @@
-// Calc team (plans/calc-team.md → Layout, Jump arrows, Build units → 3, unit 3b part 1): the first frame at the five viewer
+// Calc team (template/README.md → Both teams in the first frame): the first frame at the five viewer
 // sizes (plain and busiest card), open move rows / the editor never reach the Field, and CALC.stops() follows the rule.
 // Each check runs at the sizes and modes the spec gives (runChecks in tools/calc_check_lib.mjs). Without cfg.calc: skip.
 // Usage: node tools/scenarios/calc-team.mjs [dist/<hack>.html]
@@ -31,7 +31,7 @@ function measure(selectors) {
   return out;
 }
 
-// Runs in the page: the spec's rule (plans/calc-team.md → Jump arrows), computed from the DOM (not CALC.stops()).
+// Runs in the page: the spec's rule (template/README.md → Both teams in the first frame: jump arrows), computed from the DOM (not CALC.stops()).
 // Top, the trainer bar top − 2 (narrow), the fourth move's bottom (narrow; only when ≥ 24 px past the first frame), Field top − 2;
 // clamped to the scroll range; stops closer than 24 px merge.
 function ruleStops() {

@@ -1,4 +1,4 @@
-// Auto Doubles (plans/calc-team.md → Auto Doubles, unit 4b): a trainer's doubles evidence (tools/trainer_fields.py:
+// Auto Doubles (template/README.md → Auto Doubles): a trainer's doubles evidence (tools/trainer_fields.py:
 // a `gameType: Doubles` effect on a trainer-tag / trainer-partner field record) makes S / D automatic. Per guide: the
 // count of trainers with the evidence; a doubles trainer opens in D (dashed, A mark, tooltip and Area line name the tag),
 // a singles one in S; tapping the trainer's own format is Auto; a manual S survives a move / HP change and is cleared by Reset fight, Field's Auto and the next
