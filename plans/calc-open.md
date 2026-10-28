@@ -50,7 +50,11 @@ dist/<hack>.html .tmp/<name>.html --panel tools/mockup/thor-frame/calc-presets.h
 
 Order: Gen 3 + Emerald Imperium's ID tables (**done 2026-10-28**: `readers/expansion.js`, tested against hzla's EI 1.3
 save, not the user's: they had none), the viewer's file picker (app repo), Gen 6/7 (Photonic Sun, then Eternal X:
-blank USUM / X saves made with PKHeX as the oracle, the format is vanilla's), Gen 4 (Hardlove Gold: waits for the
+**Photonic Sun done 2026-10-28**, `gen67.js` + shared `ctrguide.build_save_ids`; PKHeX USUM oracle matches all
+38 Pokémon through the file picker. SM / XY / ORAS are verified layouts but wrong-game controls in Photonic Sun.
+Eternal X is next: call the shared helper after finalise/prune using its own dex-rebalanced.json, set save=gen67,
+and regenerate XY expectations in its guide terms. Blank USUM / SM / XY / ORAS oracle saves and the local recipe
+are in readers/README.md; no GPL-linked code is committed), Gen 4 (Hardlove Gold: waits for the
 user's save, no hg-engine save is public); Gen 5 waits for the Blaze Black 2 Redux guide. Public test saves
 (2026-10-27): hzla/Dynamic-Calc-Decomps `cypress/fixtures/saves/` (EI 1.3 + an mGBA state + a paste of it, Renegade
 Platinum, Heart & Soul); none for hg-engine or the 3DS. From then
@@ -72,7 +76,7 @@ picks the family; without it Import is hidden. Done-check: `tools/calc_save_chec
 | CFRU | Radical Red, Unbound | Gen 3 layout with CFRU's changes (expanded IDs, extra blocks). |
 | Gen 4 (Pt / HGSS) | Hardlove Gold, HeartGold Retiled, Renegade Platinum | Two slots, newest by a save counter; blocks shuffled by PV and encrypted with the LCRNG (0x41C64E6D / 0x6073) seeded by the checksum; party stats stored separately (encrypted with the PV). |
 | Gen 5 (BW2) | Blaze Black 2 Redux | Gen 4's Pokémon encryption; other block offsets and checksum table. |
-| Gen 6/7 (XY / ORAS / SM / USUM) | Photonic Sun, Eternal X, Meissa Moon, Navy Sapphire | 232-byte PK6 / PK7, same shuffle and LCRNG. Azahar keeps the save unencrypted, known by size (XY 0x65600, ORAS 0x76000, SM 0x6BE00, USUM 0x6CC00) and a `BEEF` footer; party at 0x14200 (XY / ORAS), 0x1400 (SM), 0x1600 (USUM). |
+| Gen 6/7 (XY / ORAS / SM / USUM) | Photonic Sun done; Eternal X next; Meissa Moon, Navy Sapphire later | `readers/gen67.js`: 232-byte stored / 260-byte party PK6/PK7, encryption-constant shuffle and LCRNG, footer/block CRCs and per-Pokémon checksums. Main sizes XY 0x65600, ORAS 0x76000, SM 0x6BE00, USUM 0x6CC00; party at 0x14200 (XY/ORAS), 0x1400 (SM), 0x1600 (USUM). A Gen 7 guide accepts USUM, a Gen 6 guide XY. Format/coverage: readers/README.md. |
 
 The hard part is per hack: **the ID tables**. Our data has no game IDs, so each extract writes `GID` from its own sources
 (expansion constants, CFRU tables, the NDS NARCs, the 3DS game files). Forms are the tricky part (each family stores

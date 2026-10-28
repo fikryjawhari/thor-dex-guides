@@ -221,9 +221,57 @@ The Photonic-specific scenario above covers this session's field controls withou
 
 Z-moves (2026-10-25): profile `zmove: true` (engine `580f021`) and `zpow`, the 16 Z powers the Move Changes doc gives (`50b3e2d`; they win over the band and stock's own Z powers); 25 no-power fixtures (`b73d0ab`, `3ffed9b`; checks `e0d94c1`), all pass, including Catastropika 210. In the calc each damaging row has a Z toggle on its % line (template README → Damage calculator, "Z-moves"). Totem auras: TR mons carry `au` (`extract/totems.py`); the calc takes it as the Totem's stat stages with an "Aura" mark. Scenario: `tools/scenarios/calc-zmove.mjs` (20/20, every size, normal / dvkb).
 
-Not checked: in-game damage on the Thor, a full audit of every changed move/ability/item, switch-in/history-dependent states or save import. The fixture oracle
+Not checked: in-game damage on the Thor, a full audit of every changed move/ability/item or switch-in/history-dependent states. The fixture oracle
 shares guide stats/types/power/category, so agreement does not independently validate the extracted data. Future
 mechanics refinements should add fixtures here rather than change other guides' base profiles.
+
+#### Save import
+
+2026-10-28: `cfg.calc.save = "gen67"`, `template/calc/readers/gen67.js`, decrypted USUM `main` (also accepts a
+`.sav` name). Same vanilla save format, not vanilla growth rates or ability assumptions. The reader validates the
+footer, all block CRCs and each nonblank Pokémon checksum; reads stored species/form, ability id, item and moves;
+uses the stored party level and hacked growth for boxed levels; skips eggs and applies PK7 hyper-training flags.
+It does not verify the Gen 7 RSA signature. SM / XY / ORAS return Wrong game for this guide.
+
+`tools/ctrguide.py::build_save_ids` is shared with the next 3DS guide. `extract/build.py` calls it **after**
+finalise/prune. `GID.sp` has 1107 `species:form` keys covering every one of the 928 P ids; `GID.mv` / `GID.ab`
+cover all 728 move indices / 233 ability indices; `GID.it` uses all 896 game item names. `GID.gr` holds the growth
+rates for all source forms, even excluded ones. These come from the existing `.src/dex-rebalanced.json` produced
+by `tools/ctr_dex.py` from the hack's romfs and code patch, not from PKHeX/hzla tables. Use source move **ids and
+table order**, not a name-only dictionary: the physical/special Z-move pairs deliberately have identical names.
+`extract/check.py` now asserts full species/move/ability coverage and selected form/item ids.
+
+Unmapped species/form keys, intentionally outside the retained guide: **25:1..25:7, 718:1, 718:2** (cap Pikachu
+and the pruned Zygarde 10% entries). No retained species, move or ability is unmapped. The importer skips and counts
+Pokémon with unmapped species using the existing banner. Cosmetic/totem aliases follow the existing `_spec` map.
+
+Oracle: local PKHeX.Core **26.10.18**, SDK **10.0.403**. Recipe: `template/calc/readers/README.md` → PKHeX oracle
+recipe. No linked program or binaries are committed. `hacks/photonic-sun/.src/saves/pkhex-usum.sav` and its
+`.expected.json` contain six party and 32 boxed Pokémon; all fields match through `tools/calc_save_check.mjs`.
+The boxes cover all shuffle selectors and all six hacked growth rates; expected boxed levels use PKHeX
+Experience.GetLevel with those hacked rates, independently of our reader. XY / ORAS / SM fixture pairs live in
+`.tmp/pkhex-oracle/out/` and also match all fields directly; their expected names/boxed levels are in Photonic
+terms, so the Eternal X agent must regenerate expectations from its own game data.
+
+Checks/logs in `.tmp/calc-save-photonic-sun/`:
+- `import-usum.log`: real file input, 38/38 Pokémon, every compared field.
+- `edges.log`, `unit.log`: all four layouts; wrong-game banners for XY/ORAS/SM; truncated (one byte/half), corrupted
+  and footer copies unreadable; recognisable state headers; PKHeX-resealed bad Pokémon checksum/count, empty and
+  egg-only parties, wrong game byte; hyper-trained IVs; zero page errors.
+- `npm-test.log`: `npm test --prefix tools/calc` passes unchanged engine and state suites.
+- `scenarios.log`: `uv run python -I tools/gate.py scenarios --only calc-import,calc-bridge,calc-smoke --jobs 8`,
+  all 12 guide/scenario runs pass (normal/dvkb and viewer sizes).
+- `hzla.log`, `hzla-compare.json`: `node tools/calc/hzla_compare.mjs photonic-sun`, 118 matches + 28 known
+  differences, no mismatch/error. Initial missing local oracle was fetched at the tool's pinned commit.
+- `gate-data.log`: `uv run python -I tools/gate.py check photonic-sun --data` against pre-change `62c2e6d` flags
+  exactly the authorised GID addition and two GID report lines; rebuild, coverage and unchanged counts pass.
+  All old data excluding built is identical. Baseline not recaptured: parent acceptance of this delta is needed.
+- `domcompare.log`: full 2478-route sweep, zero page errors/unsettled routes; raw comparison differs because the
+  footer built date advances 2026-10-26 → 2026-10-28 (Import is also newly enabled on Calc). Not claimed as a clean
+  DOM pass; no ignore or baseline replacement used. The other three assembled guides are byte-identical to baseline.
+
+Still not checked: a real player's save and in-game import on the Thor. The existing shared Unreadable banner
+says both slots fail, although decrypted 3DS main has one active save; changing that UI is outside this task.
 
 #### In-game tests
 

@@ -38,10 +38,13 @@ does. Include every field checked by calc_save_check and every empty box. USUM f
 evidence that Photonic Sun's mechanics match vanilla. All four reopen with valid checksums; generation log:
 `.tmp/calc-save-photonic-sun/oracle.log`.
 
+## Reader coverage
+
 | File | Family | Hacks | Checked with |
 | --- | --- | --- | --- |
 | `test.js` | synthetic JSON | the calc checks' fixtures | `tools/scenarios/calc-import.mjs` |
 | `expansion.js` | pokeemerald-expansion (GBA) | Emerald Imperium | hzla's EI 1.3 save (33 Pokémon) and the edge files: EI notes.md → Damage calc → Save import |
+| `gen67.js` | decrypted XY / ORAS / SM / USUM main | Photonic Sun (USUM); Eternal X wiring next | PKHeX.Core 26.10.18: 38 Pokémon in each layout; USUM through the real file picker; wrong-game, checksum, truncation, egg/empty, state and hyper-training controls |
 
 ## gen67: decrypted 3DS main saves
 
