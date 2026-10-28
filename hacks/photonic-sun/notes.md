@@ -121,7 +121,9 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   (preformatted, scrolls sideways), the Mega Evolution guide and the changelog. Both tabs end Elite Four Split [Cap 100],
   Post-game: Episode RR, Post-game; the two Poni Grove trainers and the Guardians / Ultra Space / Battle Tree / Title
   Defense content are in the last box; neither post-game box has a cap. 11 of the 148 fragments only separate trainers
-  across cap boundaries (each visit's encounters, items and notes are kept once).
+  across cap boundaries (each visit's encounters, items and notes are kept once). Every fragment keeps a persistent
+  `k`: the original `split.stop` on its first fragment, `.fN` on the others. Preserve those identities when regrouping;
+  the shared walkthrough migration restores saved state by key, not the new position.
 - **Conflicts and findings** (full list: report.txt). The Move Changes doc says Triple Kick 10 → 20 power; the game data
   still has 10. Toxic Thread's new effect isn't a number the move data shows. Wild tables that differ from the PDF (the
   game is shown): fishing rates on Routes 7 and 9, Akala Outskirts, Seafolk Village (Dhelmise 50%, doc 5%), Poni Breaker
@@ -185,7 +187,7 @@ Ten fixtures omit set power (all eight weight/HP/speed moves, Alolan Raichu and 
 Oracle: hzla Dynamic-Calc-Decomps, `data=pspm`, `gen=7`, `dmgGen=7`, `types=6`, `critGen=7`, title
 `Photonic Sun/Prismatic Moon`, backup `pspm`, pin `ff6c3e339e276e6b4e8e44db58750b6534bc26aa`.
 No hzla code or tables ship. Source paths in the table are relative to `@smogon/calc` 0.12.0;
-oracle paths below refer to that pinned checkout, fetched with `tools/calc/hzla_compare.mjs --fetch photonic-sun`.
+oracle paths below refer to that pinned checkout, fetched with `node tools/calc/hzla_compare.mjs photonic-sun --fetch`.
 
 | Setting / rule | Evidence and checks |
 | --- | --- |
