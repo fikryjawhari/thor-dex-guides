@@ -47,7 +47,7 @@ const checks = [
       await setupCalc(page, { trainer: key });
       const cap = () => page.value(`document.querySelector('[data-cap="${key}"]').value`);
       const foeLv = () => page.value(`+document.querySelector('.dmatch .cc[data-s="foe"] [data-lv="foe"]').value`);
-      const strip = () => page.value(`[...document.querySelectorAll('.dside:not(.mg) .dstrip button span')].map(s=>+s.textContent)`);
+      const strip = () => page.value(`[...document.querySelectorAll('.dfoe .dstrip button span')].map(s=>+s.textContent)`);
       assert.equal(await cap(), String(start), 'the default cap');
       assert.equal(await page.count('.dcap.own'), 0, "the default is not the user's own");
       const levels = await strip();
@@ -345,7 +345,7 @@ const checks = [
       await page.tap('.dmatch .cc[data-s="foe"] [data-a="eopen"]');
       const ability = await page.value(`document.querySelector('select[data-e="ab"][data-s="foe"] option:checked').textContent`);
       assert(ability.endsWith(' ?'), `ability shows "${ability}"`);
-      await page.tap('.dmatch .cc[data-s="foe"] .cl > span');
+      await page.tap('.dmatch .cc[data-s="foe"] .cl .mx');
       const slots = await page.value(`[...document.querySelectorAll('.dres:not(.na) .mr.em .mm')].map(m=>m.textContent.replace(/\\s+/g,' ').trim())`);
       assert.equal(slots.length, 4, `four slots show + Move when it attacks (${JSON.stringify(slots)})`);
       assert(slots[0].includes('No moves listed'), `first slot says "${slots[0]}"`);

@@ -33,7 +33,7 @@ const checks = [
       await page.setBox('[data-mo="bp"][data-ck$=":2"]', 100);
       await page.tap('.dfield > summary');
       await page.value(`(()=>{const s=document.querySelector('select[data-f="weather"]');s.value='Rain';s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
-      await page.tap('.dmatch .cc[data-s="foe"] .cl > span');
+      await page.tap('.dmatch .cc[data-s="foe"] .cl .mx');
       await page.setBox('[data-lv="mine"]', 30);
       await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
       await page.tap('[data-a="esave"][data-s="mine"]');
@@ -53,7 +53,7 @@ const checks = [
       assert.equal(await boxValue(page, '[data-lv="mine"]'), '30', 'and its level');
       assert.equal(await foeName(page), beforeFoe, 'the unsaved foe edit (*) is kept');
       assert.equal(await boxValue(page, '[data-lv="foe"]'), '9', 'and its level');
-      await page.tap('.dmatch .cc[data-s="mine"] .cl > span');
+      await page.tap('.dmatch .cc[data-s="mine"] .cl .mx');
       assert.equal(await attackerSide(page), 'mine');
       assert.deepEqual(await attackerCrit(page), ['false', 'false', 'false', 'true'], 'crit on Ice Beam (slot 3) is restored');
       // the hit count lives on the row's cycle button (calc-retest R2), not in the % line

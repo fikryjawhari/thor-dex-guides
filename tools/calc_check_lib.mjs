@@ -515,5 +515,5 @@ export async function spinCap(page, direction, key = GUIDE?.trainers.relative?.k
   await page.tap(selector);
   await page.send('Input.dispatchKeyEvent', { type: 'keyDown', key: keyName, code: keyName, windowsVirtualKeyCode: code });
   await page.send('Input.dispatchKeyEvent', { type: 'keyUp', key: keyName, code: keyName, windowsVirtualKeyCode: code });
-  await page.tap('.dmatch .cc[data-s="mine"] .cl > span'); // focus leaves the input: the change event
+  await page.tap('.dmatch .cc[data-s="mine"] .cl .mx'); // focus leaves the input: the change event
 }

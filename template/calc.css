@@ -553,8 +553,10 @@ body.calc-route .dres .mr .r1{height:auto;min-height:16px;line-height:1.15}
 body.calc-route .dres .mr .r1 .dendpoint{height:auto;min-height:15px;line-height:1.15;box-sizing:border-box}
 body.calc-route .dres .mr .r2{height:auto;min-height:13px;line-height:1.15}
 body.calc-route .dres .mr .r2 button,body.calc-route .dres .mr .r2 .dturn{height:auto;min-height:13px;line-height:1.15}
+body.calc-route .dres .mr .r2 .dstock{height:auto;min-height:13px}
+body.calc-route .dres .mr .r2 .dstock select{height:13px;line-height:1}
 body.calc-route .dres .mr span.hu{height:auto;min-height:0;line-height:1.15}
-body.calc-route .dres .mr .mv{line-height:1.15;padding-bottom:0}
+body.calc-route .dres .mr .mv{line-height:1.2;padding-bottom:0}
 body.calc-route .dres .mr .mm,body.calc-route .dres .mr.st .mm,body.calc-route .dres .mr.em .mm{min-height:0;padding:1px 5px}
 body.calc-route .dres .mr.em .mm{min-height:33px;display:flex;align-items:center}
 body.calc-route .dfight select,body.calc-route .dfight .dformat button,body.calc-route .dfight .dfreset{height:max(22px,1.4em);min-height:22px;line-height:1.15}
@@ -622,8 +624,7 @@ body.calc-route .cc .l1 .ddl{line-height:1.6}
  body.calc-route .cc{display:flex;flex-direction:row;flex-wrap:wrap;align-content:start;align-items:center;gap:0 2px;padding:1px 3px;min-height:0}
  body.calc-route .cc .l1,body.calc-route .cc .cl{display:contents}
  body.calc-route .cc .cn{display:none}
- body.calc-route .cc.offteam .cn{display:block;order:0;flex:0 0 100%;min-height:18px;white-space:normal;overflow-wrap:anywhere}
- body.calc-route .cc.offteam .cn b{white-space:normal;overflow-wrap:anywhere}
+ body.calc-route .cc.offteam .cn{display:block;order:0;flex:0 0 100%;min-width:0;min-height:18px}
  body.calc-route .cc .cl>span:first-child,body.calc-route .cc [data-lv],body.calc-route .cc .dintmark{display:none}
  body.calc-route .cc .hpl,body.calc-route .cc [data-hp],body.calc-route .cc .mx{order:1}
  body.calc-route .cc .cl [data-hp]{width:max(26px,2.16em);height:auto;min-height:20px;padding:0 1px;font-size:12px;line-height:1.15}
