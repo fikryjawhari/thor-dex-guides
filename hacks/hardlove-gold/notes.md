@@ -376,6 +376,22 @@ Diagnostic only: resolving those two slots by their original move names gives re
 The later npm suites were run separately after its short-circuit: Photonic and Eternal X pass; state fixtures
 pass for all four guides (Hardlove 800, EI 809, Eternal X 373, Photonic 599; zero failures).
 
+Full release checks (2026-10-29): baseline `main f050aaa` passes 2/2; the gate finishes 38/43. Four failures are
+expected comparisons against 0.8.4: changed data / report and both DOM sweeps (2,483 routes each, zero page errors;
+the footer build date changes every route). An unchanged Bulbasaur control route matches after ignoring only
+`built 2026-10-28` / `built 2026-10-29`. Counts, extraction, all five viewer sizes / light theme, tabs, walkthrough
+state, page / walk / zoom checks and 200 search jumps per mode pass. Scenario commands: 23 pass (six not applicable
+and skipped), one fails: `calc-bridge` B1 / B2 in normal and dvkb, 8 pass / 4 fail. Its fixture is fixed at
+2026-10-28 14:32 but its regex expects same-day `saved 14:32`; on 2026-10-29 the correct banner includes `28 Oct`.
+The same four failures reproduce on the baseline HTML; the screenshot confirms the dated banner. No shared test or
+template change was made to hide this pre-existing date-sensitive assertion. Other calc scenarios pass.
+
+The user's real 0.7.0 save still matches all 11 Pokemon (six party, five boxed), reader `gen4`; no expected data was
+changed. Source-update state was accepted with `tools/check_updates.py --accept hardlove-gold` (positional hack and
+`--accept` are mutually exclusive). Evidence is in ignored `.tmp/gate-hl.log`, `.tmp/hl-calc.log`,
+`.tmp/hl-states.log`, `.tmp/hl-save.log` and `.tmp/hl-bridge-baseline.log`. Outstanding before a green validation:
+repair the two numeric matchup slots and the shared bridge scenario's date assumption in separately authorised work.
+
 `check.py` [baseline.json]: reference integrity (species, trainer teams, area rows), the Starter area, Trainers / Walkthrough
 box names and trainer references, unique stop keys, no checklist steps, the Items box set and row sub-headings; given an
 earlier data.json, that species order, move / ability tables, area names, trainer keys and stop keys are kept. Then
