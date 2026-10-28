@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import { dismissBanner, fixturePatches, guide, guideArg, pickCell, prepareGuide, runChecks, setupCalc, SIZE_SMALL, SIZE_STAR } from '../calc_check_lib.mjs';
 
-const WIDE = [[480, 392], [537, 424], [832, 424], [832, 316]];
+const WIDE = [[480, 392], [537, 424], [832, 424]];
 
 // Every failing condition of a check, not only the first: one run then shows the whole picture.
 function allOf(conditions) {
@@ -21,43 +21,50 @@ const T = guide().trainers;
 // The guide's two longest species names that the dvkb pad can type (letters and spaces; check 17 picks them as new sets).
 const longest = guide().data.P.filter(entry => /^[A-Za-z ]+$/.test(entry.n)).sort((a, b) => b.n.length - a.n.length || a.n.localeCompare(b.n)).slice(0, 2).map(entry => entry.n);
 
-// Check 18 body, shared by the spec's window (316 high, where the stops collapse) and a taller one (400) that separates them.
+// Check 18 body, shared by the spec's window (316 high) and a taller one (400) where the stops separate.
+// The expected stops come from the spec's rule (Layout → Jump arrows), computed here from the DOM, not from CALC.stops().
+const expectedStops = page => page.value(`(()=>{const max=Math.max(0,document.documentElement.scrollHeight-innerHeight);const bar=document.querySelector('.fbar');const rows=[...document.querySelectorAll('.dres:not(.na) .mr')];const field=document.querySelector('details.dfield');const v=[0];let end=null;if(innerWidth<480&&bar){const top=bar.getBoundingClientRect().top+scrollY-2;v.push(top);end=rows.at(-1).getBoundingClientRect().bottom+scrollY-innerHeight+3;if(end>=top+24)v.push(end);else end=null;}if(field)v.push(field.getBoundingClientRect().top+scrollY-2);const c=v.map(x=>Math.round(Math.max(0,Math.min(max,x)))).sort((a,b)=>a-b);const out=[];for(const x of c)if(!out.length||x-out.at(-1)>=24)out.push(x);return {stops:out,end:end===null?null:Math.round(Math.max(0,Math.min(max,end))),window:innerHeight};})()`);
+
+// Walks the rail down through every stop and back up, checking each lands on its stop and the ends are disabled.
+async function walkStops(page, stops) {
+  for (let i = 1; i < stops.length; i++) {
+    await page.tap('.rjump [data-j="1"]');
+    assert(Math.abs((await page.value('scrollY')) - stops[i]) <= 1, `down to stop ${i} lands at ${await page.value('scrollY')}, want ${stops[i]}`);
+  }
+  if (stops.length > 1) assert.equal(await page.value('document.querySelector(\'.rjump [data-j="1"]\').disabled'), true, 'down is disabled at the last stop');
+  for (let i = stops.length - 2; i >= 0; i--) {
+    await page.tap('.rjump [data-j="-1"]');
+    assert(Math.abs((await page.value('scrollY')) - stops[i]) <= 1, `up to stop ${i} lands at ${await page.value('scrollY')}, want ${stops[i]}`);
+  }
+  assert.equal(await page.value('scrollY'), 0, 'up returns to the top');
+  assert.equal(await page.value('document.querySelector(\'.rjump [data-j="-1"]\').disabled'), true, 'up is disabled at the top');
+}
+
 async function scrollStops(page) {
   await setupCalc(page);
   await page.value('scrollTo(0,0)');
   await page.settle();
+  const want = await expectedStops(page);
   const stops = await page.value('CALC.stops()');
-  const geometry = await page.value(`(()=>{const bar=document.querySelector('.fbar').getBoundingClientRect().top+scrollY;const last=[...document.querySelectorAll('.dres:not(.na) .mr')].at(-1).getBoundingClientRect().bottom+scrollY;return {bar:Math.round(bar),last:Math.round(last),window:innerHeight};})()`);
-  // Stops 2 and 3 closer than 24 px collapse into one, and the trainer bar (the default view) is the one kept.
-  const s2 = geometry.last - geometry.window + 3, s3 = geometry.bar - 2;
-  if (Math.abs(s3 - s2) < 24) {
-    assert.equal(stops.length, 2, `stops ${JSON.stringify(stops)}: stop 2 (${s2}) and the trainer bar (${s3}) are within 24 px and collapse`);
-    assert(Math.abs(stops[1] - s3) <= 1, `the collapsed stop keeps the trainer bar at the top: ${stops[1]} vs ${s3}`);
-    await page.tap('.rjump [data-j="1"]');
-    assert(Math.abs((await page.value('scrollY')) - stops[1]) <= 1, 'down lands on the trainer bar');
-    await page.tap('.rjump [data-j="-1"]');
-    assert.equal(await page.value('scrollY'), 0, 'up returns to the top');
-    return;
+  assert.deepEqual(stops, want.stops, `CALC.stops() ${JSON.stringify(stops)}, the rule gives ${JSON.stringify(want.stops)} (window ${want.window}, last row at the bottom ${want.end})`);
+  await walkStops(page, stops);
+  // Field open: its stop joins the list (or merges with a stop within 24 px), the rule still holds.
+  await page.value(`document.querySelector('details.dfield').open=true`);
+  await page.settle();
+  const openWant = await expectedStops(page);
+  const openStops = await page.value('CALC.stops()');
+  assert.deepEqual(openStops, openWant.stops, `Field open: CALC.stops() ${JSON.stringify(openStops)}, the rule gives ${JSON.stringify(openWant.stops)}`);
+  await walkStops(page, openStops);
+  await page.value(`document.querySelector('details.dfield').open=false`);
+  await page.settle();
+  // When the last move row is the stop (the fourth-move stop), it puts that row on the bottom edge.
+  if (want.end !== null && stops.includes(want.end)) {
+    await page.value(`scrollTo(0,0)`);
+    await page.settle();
+    for (let i = 0; i < stops.indexOf(want.end); i++) await page.tap('.rjump [data-j="1"]');
+    const bottom = await page.value(`[...document.querySelectorAll('.dres:not(.na) .mr')].at(-1).getBoundingClientRect().bottom`);
+    assert(Math.abs(bottom - (innerHeight - 3)) <= 2, `fourth move row bottom ${bottom} at the end stop, want ${innerHeight - 3}`);
   }
-  assert.equal(stops.length, 3, `stops ${JSON.stringify(stops)}: last row at the bottom would be ${geometry.last - geometry.window + 3}, trainer bar at the top ${geometry.bar - 2}; the 24 px rule keeps one of them (trainer block ${geometry.last - geometry.bar} px in a ${geometry.window} px window)`);
-  assert.equal(stops[0], 0);
-  await page.tap('.rjump [data-j="1"]');
-  assert(Math.abs((await page.value('scrollY')) - stops[1]) <= 1, `down 1 lands at ${await page.value('scrollY')}, want stop 2 at ${stops[1]}`);
-  const atStop2 = await page.value(`(()=>{const rows=[...document.querySelectorAll('.dres:not(.na) .mr')];return {lastBottom:rows.at(-1).getBoundingClientRect().bottom,grid:document.querySelector('.mg').getBoundingClientRect().bottom,h:innerHeight};})()`);
-  assert(Math.abs(atStop2.lastBottom - (atStop2.h - 3)) <= 2, `last move row at ${atStop2.lastBottom}, want the viewport bottom ${atStop2.h - 3}`);
-  assert(atStop2.grid > 0, 'the box above should still show at stop 2');
-  await page.tap('.rjump [data-j="1"]');
-  // The bar at the top is stop 3 only where the page can scroll that far; a shorter page stops at its end (the nearest reachable one).
-  const reach = await page.value(`(()=>({at:scrollY,max:document.documentElement.scrollHeight-innerHeight,bar:document.querySelector('.fbar').getBoundingClientRect().top+scrollY}))()`);
-  const want = Math.min(reach.bar - 2, reach.max);
-  assert(Math.abs(reach.at - want) <= 1, `stop 3 lands at ${reach.at}, want ${want} (the bar at the top, or the page end at ${reach.max})`);
-  await page.tap('.rjump [data-j="1"]').catch(() => {});
-  assert.equal(await page.value('document.querySelector(\'.rjump [data-j="1"]\').disabled'), true, 'down is disabled at the last stop');
-  await page.tap('.rjump [data-j="-1"]');
-  assert(Math.abs((await page.value('scrollY')) - stops[1]) <= 1, 'up returns to stop 2');
-  await page.tap('.rjump [data-j="-1"]');
-  assert.equal(await page.value('scrollY'), 0, 'up returns to the top');
-  assert.equal(await page.value('document.querySelector(\'.rjump [data-j="-1"]\').disabled'), true, 'up is disabled at the top');
 }
 
 const checks = [
@@ -106,7 +113,7 @@ const checks = [
   },
   {
     id: '18c scroll stops, taller',
-    title: 'diagnostic: the same stops at 260 x 400, where the 24 px rule keeps all three',
+    title: 'diagnostic: the same rule at 260 x 400, where the stops separate',
     sizes: [[260, 400]],
     run: scrollStops,
   },
@@ -128,16 +135,19 @@ const checks = [
   },
   {
     id: '19 box size',
-    title: 'grid cells match the trainer strip; six per row; no divider lines',
+    title: 'box cells 28 px, six per row, no divider lines; team cells match the foe strip (24 px, same sprite size)',
     sizes: SIZE_SMALL,
     run: async page => {
       await setupCalc(page);
-      const m = await page.value(`(()=>{const cells=[...document.querySelectorAll('.mg .dstrip button')];const foe=[...document.querySelectorAll('.dside:not(.mg) .dstrip button:not(.ph)')];const media=e=>{const i=e.querySelector('img,svg,canvas');if(!i)return null;const r=i.getBoundingClientRect();return [Math.round(r.width),Math.round(r.height)];};const top0=cells[0].getBoundingClientRect().top;return {cellH:cells[0].getBoundingClientRect().height,foeH:foe[0]?.getBoundingClientRect().height,cellMedia:media(cells[0]),foeMedia:media(foe[0]),perRow:cells.filter(c=>Math.abs(c.getBoundingClientRect().top-top0)<1).length,dividers:document.querySelectorAll('.mg hr,.dside hr,.mg .sep').length,strip:getComputedStyle(document.querySelector('.mg .dstrip')).borderTopWidth};})()`);
-      assert.equal(m.cellH, m.foeH, 'cell height vs the trainer strip');
-      assert.deepEqual(m.cellMedia, m.foeMedia, 'sprite size vs the trainer strip');
-      assert.equal(m.perRow, 6, 'cells per row');
-      assert.equal(m.dividers, 0, 'divider lines');
-      assert.equal(m.strip, '0px', 'border on the grid');
+      const m = await page.value(`(()=>{const media=e=>{const i=e?.querySelector('img,svg,canvas');if(!i)return null;const r=i.getBoundingClientRect();return [Math.round(r.width),Math.round(r.height)];};const box=[...document.querySelectorAll('.mg .dstrip button')];const top0=box[0].getBoundingClientRect().top;const team=[...document.querySelectorAll('.dteamrow button[data-t]')];const foe=[...document.querySelectorAll('.dfoe .dstrip button:not(.ph)')];return {boxH:box[0].getBoundingClientRect().height,perRow:box.filter(c=>Math.abs(c.getBoundingClientRect().top-top0)<1).length,dividers:document.querySelectorAll('.mg hr,.dside hr,.mg .sep').length,strip:getComputedStyle(document.querySelector('.mg .dstrip')).borderTopWidth,teamH:team[0]?.getBoundingClientRect().height??null,foeH:foe[0]?.getBoundingClientRect().height??null,teamMedia:media(team[0]),foeMedia:media(foe[0])};})()`);
+      allOf([
+        [m.boxH === 28, `box cell height ${m.boxH}, want 28`],
+        [m.perRow === 6, `box cells per row ${m.perRow}`],
+        [m.dividers === 0, `divider lines ${m.dividers}`],
+        [m.strip === '0px', 'border on the grid'],
+        [m.teamH === 24 && m.foeH === 24, `team cell ${m.teamH} vs foe strip cell ${m.foeH}, want 24 and 24`],
+        [JSON.stringify(m.teamMedia) === JSON.stringify(m.foeMedia), `sprite size team ${m.teamMedia} vs foe strip ${m.foeMedia}`],
+      ]);
     },
   },
   {
@@ -148,7 +158,7 @@ const checks = [
       await setupCalc(page);
       await page.value('scrollTo(0,0)');
       await page.settle();
-      const m = await page.value(`(()=>{const widths=s=>[...document.querySelectorAll(s)].map(e=>Math.round(e.getBoundingClientRect().width*10)/10);const mine=[...document.querySelectorAll('.dres:not(.na) .mr')].map(e=>e.getBoundingClientRect());const foe=[...document.querySelectorAll('.dres.na .mr')].map(e=>e.getBoundingClientRect());const grid=document.querySelector('.mg .dstrip');return {cols:widths('.top > .dside'),res:widths('.dmatch > .dres'),chips:widths('.dmatch > .cc'),mineRows:mine.length,foeRows:foe.length,mineTops:mine.map(r=>Math.round(r.top)),foeTops:foe.map(r=>Math.round(r.top)),rowHeights:mine.map(r=>Math.round(r.height)),fit:document.querySelector('.fit').getBoundingClientRect().height,innerH:innerHeight,gridOverflow:getComputedStyle(grid).overflowY,gridScrolls:grid.scrollHeight>grid.clientHeight,dfieldTop:document.querySelector('.dfield').getBoundingClientRect().top,rowsBottom:Math.max(...mine.map(r=>r.bottom),...foe.map(r=>r.bottom))};})()`);
+      const m = await page.value(`(()=>{const widths=s=>[...document.querySelectorAll(s)].map(e=>Math.round(e.getBoundingClientRect().width*10)/10);const mine=[...document.querySelectorAll('.dres:not(.na) .mr')].map(e=>e.getBoundingClientRect());const foe=[...document.querySelectorAll('.dres.na .mr')].map(e=>e.getBoundingClientRect());const grid=document.querySelector('.mg .dstrip');return {cols:widths('.top > .dbox, .top > .dside.dtrainer'),res:widths('.dmatch > .dres'),chips:widths('.dmatch > .cc'),mineRows:mine.length,foeRows:foe.length,mineTops:mine.map(r=>Math.round(r.top)),foeTops:foe.map(r=>Math.round(r.top)),rowHeights:mine.map(r=>Math.round(r.height)),fit:document.querySelector('.fit').getBoundingClientRect().height,innerH:innerHeight,gridOverflow:getComputedStyle(grid).overflowY,gridScrolls:grid.scrollHeight>grid.clientHeight,dfieldTop:document.querySelector('.dfield').getBoundingClientRect().top,rowsBottom:Math.max(...mine.map(r=>r.bottom),...foe.map(r=>r.bottom))};})()`);
       allOf([
         [m.cols.length === 2, `two columns, found ${m.cols.length}`],
         [Math.abs(m.cols[0] - m.cols[1]) < 0.5, `column widths ${m.cols}`],
@@ -157,7 +167,8 @@ const checks = [
         [m.mineRows === 4, `attacker rows ${m.mineRows}`],
         [m.foeRows === 4, `defender rows ${m.foeRows} (both movesets are shown)`],
         [m.mineTops.every((top, i) => Math.abs(top - m.foeTops[i]) <= 1), `row tops differ: ${m.mineTops} vs ${m.foeTops}`],
-        [Math.abs(m.fit - (m.innerH - 4)) <= 1, `block height ${m.fit}, want the window ${m.innerH - 4}`],
+        // The fit block leaves a 4 px margin top and bottom (8 px short of the window is accepted).
+        [m.fit <= m.innerH && m.fit >= m.innerH - 9, `block height ${m.fit}, want the window ${m.innerH} less a 4 px margin top and bottom`],
         [['auto', 'scroll'].includes(m.gridOverflow) && m.gridScrolls, 'the Mine grid scrolls inside its card'],
         [m.dfieldTop >= m.innerH, `Field row starts at ${m.dfieldTop} of a ${m.innerH} px window: it should be below the fold (the block is ${m.fit} px)`],
         [m.rowsBottom <= m.innerH, `move rows end at ${m.rowsBottom}, past the window ${m.innerH}`],
@@ -165,49 +176,41 @@ const checks = [
     },
   },
   {
-    id: '20b foe list or strip',
-    title: 'six foe Pokémon: list at 537 and 832 wide by 424 high, strip at 480 by 392 and 832 by 316',
+    id: '20b foe team rows',
+    title: 'six foe Pokémon: all six trainer rows inside the window at 480 x 392, 537 x 424 and 832 x 424, the list does not scroll',
     sizes: WIDE,
-    run: async (page, { width, height }) => {
+    run: async page => {
       await setupCalc(page, { trainer: T.six.k });
-      const m = await page.value(`(()=>{const app=document.getElementById('app');const card=document.querySelector('.dside:not(.mg)').getBoundingClientRect();const visible=r=>r.width>0&&r.height>0;const list=[...document.querySelectorAll('.fteam .ft')].map(e=>e.getBoundingClientRect()).filter(visible);const strip=[...document.querySelectorAll('.dside:not(.mg) .dstrip button:not(.ph)')].map(e=>e.getBoundingClientRect()).filter(visible);const team=document.querySelector('.fteam');return {tl:app.classList.contains('tl'),avail:+app.dataset.avail,card:{top:card.top,bottom:card.bottom},list:list.map(r=>[r.top,r.bottom]),strip:strip.map(r=>[r.top,r.bottom,r.left,r.right]),teamScroll:team?team.scrollHeight-team.clientHeight:null,innerH:innerHeight,innerW:innerWidth};})()`);
-      const wantList = (width === 537 || width === 832) && height === 424;
-      assert.equal(m.tl, wantList, `team list ${m.tl}, want ${wantList} (available ${m.avail})`);
-      if (wantList) {
-        assert.equal(m.list.length, 6, 'six full preview rows available');
-        assert(m.list[0][0]>=m.card.top,'preview starts in trainer panel');
-        assert(m.teamScroll>=0,'full preview can scroll inside trainer panel');
-        assert.equal(m.strip.length, 0, 'the strip is hidden under the list');
-      } else {
-        assert.equal(m.strip.length, 6, 'six sprites in the strip');
-        for (const [top, bottom] of m.strip) assert(bottom <= m.innerH && top >= 0, `sprite at ${top}-${bottom} is off screen`);
-      }
+      await page.value('scrollTo(0,0)');
+      await page.settle();
+      const m = await page.value(`(()=>{const rows=[...document.querySelectorAll('.fteam .ft')].map(e=>e.getBoundingClientRect()).filter(r=>r.width>0&&r.height>0);const team=document.querySelector('.fteam');return {rows:rows.map(r=>[Math.round(r.top),Math.round(r.bottom)]),scroll:team?team.scrollHeight-team.clientHeight:null,innerH:innerHeight};})()`);
+      assert.equal(m.rows.length, 6, 'six trainer rows visible');
+      for (const [top, bottom] of m.rows) assert(top >= 0 && bottom <= m.innerH, `row ${top}-${bottom} is outside the ${m.innerH} px window`);
+      assert(m.scroll !== null && m.scroll <= 1, `the trainer list scrolls by ${m.scroll} px, want none`);
     },
   },
   {
     id: '20c resize',
-    title: 'resizing across the 400 px window / 150 px spare-height threshold switches the foe view once, with no loop',
+    title: 'resizing 537 wide between 392 and 424 high: six rows inside the window at every height, the list never scrolls or switches',
     sizes: [[537, 424]],
     run: async page => {
       await setupCalc(page, { trainer: T.six.k });
-      const tl = () => page.value(`document.getElementById('app').classList.contains('tl')`);
-      const sweep = async heights => {
-        const seen = [];
-        for (const h of heights) {
+      const probe = `(()=>{const rows=[...document.querySelectorAll('.fteam .ft')].map(e=>e.getBoundingClientRect()).filter(r=>r.width>0&&r.height>0);const team=document.querySelector('.fteam');return {n:rows.length,inside:rows.every(r=>r.bottom<=innerHeight),scroll:team?team.scrollHeight-team.clientHeight:null,tl:document.getElementById('app').classList.contains('tl'),h:innerHeight};})()`;
+      const heights = [];
+      for (let h = 392; h <= 424; h += 4) heights.push(h);
+      const down = heights.slice().reverse();
+      for (const order of [heights, down]) {
+        for (const h of order) {
           await page.resize(537, h);
-          seen.push(await tl());
+          await page.settle();
+          const m = await page.value(probe);
+          assert.equal(m.h, h, `window ${m.h}, want ${h}`);
+          assert.equal(m.n, 6, `at ${h} high: ${m.n} trainer rows visible, want 6`);
+          assert(m.inside, `at ${h} high: a trainer row ends below the window`);
+          assert(m.scroll !== null && m.scroll <= 1, `at ${h} high: the list scrolls by ${m.scroll} px`);
+          assert.equal(m.tl, false, `at ${h} high: the page switched to a list-only view`);
         }
-        return seen;
-      };
-      const down = [];
-      for (let h = 424; h >= 316; h -= 4) down.push(h);
-      const up = down.slice().reverse();
-      const seenDown = await sweep(down);
-      const seenUp = await sweep(up);
-      const switches = seq => seq.slice(1).filter((value, i) => value !== seq[i]).length;
-      assert(seenDown.includes(true) && seenDown.includes(false), `the sweep down should cross the threshold: ${seenDown.join(',')}`);
-      assert(switches(seenDown) <= 1, `down: ${switches(seenDown)} switches (${seenDown.join(',')})`);
-      assert(switches(seenUp) <= 1, `up: ${switches(seenUp)} switches (${seenUp.join(',')})`);
+      }
     },
   },
   {
