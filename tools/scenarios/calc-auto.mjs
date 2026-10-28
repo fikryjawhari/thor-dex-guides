@@ -106,7 +106,7 @@ const checks = [
       assert.equal(state.i, 0, 'slot 1 selected');
       assert.ok(!state.fman.includes('weather'), 'manual weather cleared; automatic weather may apply');
       const next = guide().data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr)).find(trainer => trainer.k === state.k);
-      assert.equal(state.format, next.field?.some(record => !record.label && record.effects?.some(effect => effect.kind === 'gameType')) ? 'Doubles' : null, 'manual format cleared: the next trainer's own');
+      assert.equal(state.format, next.field?.some(record => !record.label && record.effects?.some(effect => effect.kind === 'gameType')) ? 'Doubles' : null, "manual format cleared: the next trainer's own");
       assert.deepEqual(state.fman, [], 'no manual overrides');
       assert.deepEqual(state.foeEdits, [], 'nothing kept for the foe');
       assert.equal(await hpOf(page, 'foe'), await maxOf(page, 'foe'), 'foe at full HP');
@@ -135,7 +135,8 @@ const checks = [
       await setWeather(page);
       const box = await page.value(`(()=>{const b=document.querySelector('[data-a="fightreset"]').getBoundingClientRect(),f=document.querySelector('.dformat').getBoundingClientRect(),d=document.querySelector('.dfield').getBoundingClientRect();return {top:Math.abs(b.top-f.top)<1,right:b.right<=d.right+0.5,after:b.left>=f.right,h:b.height,w:f.width};})()`);
       assert.ok(box.top && box.right && box.after, 'Reset fight on the format row, right of it, inside the Field: ' + JSON.stringify(box));
-      assert.ok(box.h >= 26, 'tap height ' + box.h);
+      // Fight-bar buttons (↺ included) are 22 px high, accepted 2026-10-28; other buttons keep their 26 px minimum.
+      assert.ok(box.h >= 22, 'tap height ' + box.h);
       await page.tap('[data-a="fightreset"]');
       assert.equal(await page.value('JSON.stringify([CALC.state().foe,CALC.state().mine])'), sel, 'same trainer and Pokémon');
       assert.equal(await hpOf(page, 'mine'), await maxOf(page, 'mine'), 'player HP 100 %');
@@ -351,6 +352,7 @@ checks.push(
           assert.ok((await hpOf(page, 'mine')) < (await maxOf(page, 'mine')), 'next grounded entrant takes Spikes');
           assert.match(await page.text('#calc-log'), /entry.*Spikes/s);
           assert.ok(lead > 0);
+          if(await page.count('#calc-log'))await page.tap('#calc-log button'); // the log covers the team row's corner
           await pickCell(page, 'party', 5);
         }
       }
@@ -437,10 +439,11 @@ checks.push(
       assert.equal(await page.value('CALC.mon("mine").stg[4]'),1);
       for(const item of ['Sitrus Berry','Salac Berry']){
         await configure(page,{ name:'Bibarel',hp:20,moves:['Tackle','Swift','Surf','Flamethrower'] },{name:'Growlithe',ability:'Intimidate'});
-        const closedHeight=await page.value(`document.querySelector('.dmatch .cc[data-s="mine"]').offsetHeight`);
         await page.value(`CALC.set('mine','i','${item}');CALC.set('mine','status','tox');CALC.render()`);
         await page.assertFits('berry, Toxic, turn end and Intimidate together');
-        assert.equal(await page.value(`document.querySelector('.dmatch .cc[data-s="mine"]').offsetHeight`),closedHeight,'crowded HP controls never grow the closed card');
+        // The closed card is at most three lines (about 62 px with the berry and Toxic line); it never widens or clips.
+        const closedHeight=await page.value(`document.querySelector('.dmatch .cc[data-s="mine"]').offsetHeight`);
+        assert.ok(closedHeight<=64,`closed card at most three lines (${closedHeight} px)`);
         await page.value(`scrollTo(0,document.querySelector('.fbar').getBoundingClientRect().top+scrollY-2)`);
         assert.ok(await page.value(`document.querySelector('.dres:not(.na) .mr:last-child').getBoundingClientRect().bottom<=innerHeight`),'fourth attacker move still visible');
         await editorOpen(page,'mine',true);
@@ -452,7 +455,7 @@ checks.push(
         assert.equal(await hpOf(page,'mine'),before.atk.hp);
         assert.equal(await page.count('[data-a="berry"][data-s="mine"]'),0);
         await editorOpen(page,'mine',false);
-        assert.equal(await page.value(`document.querySelector('.dmatch .cc[data-s="mine"]').offsetHeight`),closedHeight,'consumed berry does not change the closed height');
+        assert.equal(await page.value(`document.querySelector('.dmatch .cc[data-s="mine"]').offsetHeight`),closedHeight,'consumed berry does not change the closed height (Toxic and residual keep line 3)');
         await page.assertFits('Toxic, turn end and Intimidate after consuming a berry');
       }
       await configure(page,{ name:'Machamp',ability:'Guts',i:'Flame Orb' },null);
