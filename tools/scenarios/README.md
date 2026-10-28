@@ -1,35 +1,56 @@
 # Spec scenarios
 
-Each `*.mjs` is an executable scenario: `node tools/scenarios/<name>.mjs dist/<hack>.html`.
-`gate.py check --template` runs every entry on each selected guide, serially. Keep helpers outside this folder
-or use another extension. Existing mockup checks stay in `tools/mockup/`; the gate calls them directly.
+Each `*.mjs` is executable: `node tools/scenarios/<name>.mjs dist/<hack>.html`.
+`gate.py check --template --jobs 8` runs every entry on each selected guide. For built guides without a rebuild
+or baseline: `uv run python -I tools/gate.py scenarios [hack ...] --only calc-layout,calc-controls --jobs 8`.
+Omit `--only` for all scenarios; `--jobs` defaults to 1. Other browser sweeps remain serial.
+Keep helpers outside this folder or use another extension: the gate discovers every `*.mjs` here.
+Existing mockup checks stay in `tools/mockup/`; the gate calls them directly.
 
-Use `startBrowser` from `../browser.mjs`, an isolated browser context, and `try/finally` with `close()`.
-Seed localStorage before navigation (only once, not on every reload). Set the viewer size and `dvkb`, open a
-route, wait for the rendered control, act through the DOM, then assert both visible and saved state. Capture
-page exceptions; use bounded waits and fail with a descriptive assertion/nonzero exit. No fixed personal paths.
-Include 260 × 316, keyboard mode, empty data and older saved state where the spec needs them.
+Use `startBrowser` from `tools/browser.mjs`, an isolated browser context, and `try/finally` with `close()`.
+Seed localStorage once before navigation, not on every reload. Set the viewer size and `dvkb`, open a route,
+wait for the control, act through the DOM, then assert visible and saved state. Capture page exceptions;
+use bounded waits and descriptive assertions/nonzero exits. No fixed personal paths. Include 260 × 316,
+keyboard mode, empty data and older saved state where relevant.
 
-`tracker-reload.mjs` seeds an existing failed tracker entry, clicks its Clear button, then reloads and checks
-the persisted entry and control at 260 × 316 in `dvkb`. The seed is not re-applied after reload.
+`tracker-reload.mjs` seeds a failed tracker entry, clicks Clear, then reloads and checks persistence at
+260 × 316 in `dvkb`. The seed is not re-applied after reload.
 
 ## Calc checks
 
-`calc-*.mjs` are the damage calc's spec checks (the UI spec's checks 1–26, 2026-10-24). They share `../calc_check_lib.mjs`
-(the harness: guide copies, page per case, taps, number boxes, the real file input, the matrix); keep helpers there, not
-here, since the gate runs every `*.mjs` in this folder as a scenario.
+Most use `tools/calc_check_lib.mjs`: copied guides, role-based trainers, isolated pages, hit-tested taps,
+number boxes/dvkb pad, the real file input and result matrices. Fixture patches rename trainers and strip a
+sheet-only set; synthetic save fixtures in `tools/scenarios/fixtures/calc/` are mapped into each guide's IDs.
+Import scenarios inject `template/calc/readers/test.js`; real reader checks use `tools/calc_save_check.mjs`
+(`tools/README.md` → Calc checks and the save check). Built `dist/` files are never changed.
 
-| File | Checks | Notes |
-| --- | --- | --- |
-| `calc-layout.mjs` | 1, 17, 18, 18b, 18c, 19, 20, 20b, 20c, 22 | 18c is a diagnostic at 260 × 400, where the stops separate. |
-| `calc-controls.mjs` | 2–10, 11, 13, 16, 23 | |
-| `calc-import.mjs` | 12, 14, 15 | Fixtures in `fixtures/calc/`. |
-| `calc-bridge.mjs` | Dex Viewer save bridge | A fake `window.dexViewerApp`: first import, ↻ refresh, the newer-save dot, bridge errors, Change file / Pick. |
-| `calc-persist.mjs` | 26, 26b | 26b drives the Thor frame (`thor-frame/build.py`) through its `contentWindow`. |
-| `calc-entry.mjs` | 21 | |
-| `calc-field.mjs` | 25 | Copies the profile with a weather added and a toggle removed. |
-| `calc-hidden.mjs` | 24 | Runs as built: without `cfg.calc` the feature must be absent; with it, present. |
+| File | Coverage |
+| --- | --- |
+| `calc-layout.mjs` | Fit, long names, scroll stops, box size, wide columns and foe list/strip; includes the 222 px resize and 61-Pokémon box. |
+| `calc-controls.mjs` | Attack taps, caps, trainer navigation, speed/stages, HP, crit, hits, moves, Mega, custom/unknown sets. |
+| `calc-import.mjs` | Save/reset/re-import, four error banners and empty states. |
+| `calc-bridge.mjs` | Fake `window.dexViewerApp`: import, refresh, newer-save dot, errors and Change file/Pick. |
+| `calc-persist.mjs` | Reloaded state and Clear saved state through the frame built by `tools/mockup/thor-frame/build.py`. |
+| `calc-entry.mjs` | Trainer-card and Pokémon-page entry points. |
+| `calc-field.mjs` | Profile-driven controls, engine inputs and persistence after profile edits. |
+| `calc-hidden.mjs` | As-built visibility and entry points with and without `cfg.calc`. |
+| `calc-auto.mjs` | Scratch/set/fight lifetimes, entry effects, trainer changes, Reset fight and migration. |
+| `calc-doubles.mjs` | Automatic trainer format, manual overrides, reset and non-doubles tags. |
+| `calc-field-states.mjs` | Global groups, sports/splits/auras, hazards and re-entry. |
+| `calc-moves.mjs` | Default power, hit restrictions, ally effects and HP-move actions. |
+| `calc-residual.mjs` | Turn-end effects, type choices, HP reset and open-editor layout. |
+| `calc-retest.mjs` | Frame, fight bar, HP, pickers, damage actions, move/Field sync, Protect and Field groups. |
+| `calc-smoke.mjs` | Import, first-frame fit, cell sizes and failed-import state preservation. |
+| `calc-state.mjs` | Card/Field layout, search, row states, hit choices, reset, pre-hit changes and crits. |
+| `calc-team.mjs` | Team/card first-frame fit, busiest cards, open editors/moves and scroll stops. |
+| `calc-triple.mjs` | Total/individual strikes and automatic variable power with manual overrides. |
+| `calc-zmove.mjs` | Z toggles and Totem auras where available. |
+| `calc-imperium.mjs`, `calc-hardlove.mjs`, `calc-photonic.mjs`, `calc-eternal.mjs` | Each hack's actual profile controls and persistence. |
 
-Every calc check skips on a guide without `cfg.calc` (prints `SKIP`, exits 0), except `calc-hidden`. Each runs at 260 × 316
-in normal and `dvkb`; checks 1 and 20 also at the wide sizes. Failures keep their assertion: a failing check is a finding
-to report, not a reason to loosen the assertion or to edit the page. Outputs: `.tmp/calc-checks/<scenario>.json`, `…-FAIL.png`.
+Calc checks skip guides without `cfg.calc`, except `calc-hidden`. Missing data or trainer roles may skip individual
+cases. The shared harness defaults to 260 × 316 in normal and `dvkb`; each scenario declares extra sizes/modes.
+Layout includes 260 × 400, 537 × 424, 832 × 424, 480 × 392 and 832 × 316 diagnostics.
+Harness runs print PASS/FAIL and a matrix, write `.tmp/calc-checks/<scenario>-<guide>.json`, and save
+`<scenario>-<guide>-<check>-<size>-<mode>-FAIL.png` on failure. Page errors and horizontal overflow fail a case
+unless it explicitly opts out of the fit assertion. `calc-smoke.mjs` uses its own smoke harness.
+A failing assertion is a finding, not a reason to weaken the check. Verification procedure: `.agents/skills/verify/SKILL.md`.
