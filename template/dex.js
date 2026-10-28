@@ -536,6 +536,25 @@ const segBar=(cls,a='Expand all',c='Collapse all')=>`<div class="seg ${cls}"><bu
 // (stop.note), game docs (WK.docs, WK.ko), items with no place (WK.np).
 const WO=(()=>{try{return Object.assign({c:{},o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.walk)||'{}'))}catch(e){return {c:{},o:{},x:{},s:{}}}})();
 const woSave=()=>{try{localStorage.setItem(LS.walk,JSON.stringify(WO))}catch(e){}};
+// Search recents (LS.recent) are stored by identity (recOut): a species, move, ability or place by name, a walkthrough
+// stop by its key (w), an item by its box and row names; recIn reads them back as this build's positions (an index or
+// id saved before names passes through, a gone one drops). A stop saved by position (before keys) takes the key it had
+// in the layout it was saved under, before migrateWalkState replaces that layout (no layout: the stop whose key root,
+// its legacy position, is that position).
+const STOPK=new Map();D.WK.splits.forEach((sp,si)=>sp.st.forEach((x,ti)=>{if(x.k!=null&&!STOPK.has(String(x.k)))STOPK.set(String(x.k),[si,ti]);}));
+const recOut=o=>o.k==='p'?{k:'p',v:spOut(o.v)}:o.k==='f'?{k:'f',v:fname(o.v)}:o.k==='w'?{k:'w',w:String(D.WK.splits[o.si].st[o.ti].k??o.si+'.'+o.ti)}:
+ o.k==='i'?{k:'i',si:nameOf(D.IT,o.si),ri:nameOf(D.IT[o.si].r,o.ri)}:o;
+const recIn=o=>{if(!o||typeof o!=='object')return null;
+ if(o.k==='p'){const v=spIn(o.v);return v==null?null:{k:'p',v};}
+ if(o.k==='f'){const f=o.v;if(!f||typeof f!=='object')return null;if(!FLIST[f.k])return o;const v=idxOf(FLIST[f.k],f.v);return v==null||FLIST[f.k][v]==null?null:{k:'f',v:{...f,v}};}
+ if(o.k==='w'){const at=o.w!=null?STOPK.get(String(o.w)):D.WK.splits[o.si]?.st[o.ti]?[o.si,o.ti]:null;return at?{k:'w',si:at[0],ti:at[1]}:null;}
+ if(o.k==='i'){const si=idxOf(D.IT||[],o.si),sec=(D.IT||[])[si],ri=sec?idxOf(sec.r,o.ri):null;return sec&&sec.r[ri]?{k:'i',si,ri}:null;}
+ return o;};
+const recRead=()=>{let r=[];try{r=JSON.parse(localStorage.getItem(LS.recent)||'[]')}catch(e){}return Array.isArray(r)?r.map(recIn).filter(Boolean):[];};
+const recSave=r=>{try{localStorage.setItem(LS.recent,JSON.stringify(r.map(recOut)))}catch(e){}};
+try{const r=JSON.parse(localStorage.getItem(LS.recent)||'[]'),lay=Array.isArray(WO.layout)?WO.layout:null;
+ if(Array.isArray(r)&&r.some(o=>o&&o.k==='w'&&o.w==null))localStorage.setItem(LS.recent,JSON.stringify(r.map(o=>{if(!(o&&o.k==='w'&&o.w==null))return o;
+  const k=lay?lay[o.si]?.[o.ti]:STOPK.has(o.si+'.'+o.ti)?o.si+'.'+o.ti:null;return k==null?null:{k:'w',w:String(k)};}).filter(Boolean)));}catch(e){}
 function migrateWalkState(){
  const layout=D.WK.splits.map((split,splitIndex)=>split.st.map(stop=>String(stop.k)));
  if(JSON.stringify(WO.layout)===JSON.stringify(layout))return;
@@ -575,25 +594,6 @@ function migrateWalkState(){
  }
  WO.layout=layout;woSave();
 }
-// Search recents (LS.recent) are stored by identity (recOut): a species, move, ability or place by name, a walkthrough
-// stop by its key (w), an item by its box and row names; recIn reads them back as this build's positions (an index or
-// id saved before names passes through, a gone one drops). A stop saved by position (before keys) takes the key it had
-// in the layout it was saved under, before migrateWalkState replaces that layout (no layout: the stop whose key root,
-// its legacy position, is that position).
-const STOPK=new Map();D.WK.splits.forEach((sp,si)=>sp.st.forEach((x,ti)=>{if(x.k!=null&&!STOPK.has(String(x.k)))STOPK.set(String(x.k),[si,ti]);}));
-const recOut=o=>o.k==='p'?{k:'p',v:spOut(o.v)}:o.k==='f'?{k:'f',v:fname(o.v)}:o.k==='w'?{k:'w',w:String(D.WK.splits[o.si].st[o.ti].k??o.si+'.'+o.ti)}:
- o.k==='i'?{k:'i',si:nameOf(D.IT,o.si),ri:nameOf(D.IT[o.si].r,o.ri)}:o;
-const recIn=o=>{if(!o||typeof o!=='object')return null;
- if(o.k==='p'){const v=spIn(o.v);return v==null?null:{k:'p',v};}
- if(o.k==='f'){const f=o.v;if(!f||typeof f!=='object')return null;if(!FLIST[f.k])return o;const v=idxOf(FLIST[f.k],f.v);return v==null||FLIST[f.k][v]==null?null:{k:'f',v:{...f,v}};}
- if(o.k==='w'){const at=o.w!=null?STOPK.get(String(o.w)):D.WK.splits[o.si]?.st[o.ti]?[o.si,o.ti]:null;return at?{k:'w',si:at[0],ti:at[1]}:null;}
- if(o.k==='i'){const si=idxOf(D.IT||[],o.si),sec=(D.IT||[])[si],ri=sec?idxOf(sec.r,o.ri):null;return sec&&sec.r[ri]?{k:'i',si,ri}:null;}
- return o;};
-const recRead=()=>{let r=[];try{r=JSON.parse(localStorage.getItem(LS.recent)||'[]')}catch(e){}return Array.isArray(r)?r.map(recIn).filter(Boolean):[];};
-const recSave=r=>{try{localStorage.setItem(LS.recent,JSON.stringify(r.map(recOut)))}catch(e){}};
-try{const r=JSON.parse(localStorage.getItem(LS.recent)||'[]'),lay=Array.isArray(WO.layout)?WO.layout:null;
- if(Array.isArray(r)&&r.some(o=>o&&o.k==='w'&&o.w==null))localStorage.setItem(LS.recent,JSON.stringify(r.map(o=>{if(!(o&&o.k==='w'&&o.w==null))return o;
-  const k=lay?lay[o.si]?.[o.ti]:STOPK.has(o.si+'.'+o.ti)?o.si+'.'+o.ti:null;return k==null?null:{k:'w',w:String(k)};}).filter(Boolean)));}catch(e){}
 migrateWalkState();
 const CHK=D.WK.splits.some(sp=>sp.st.some(s=>(s.s||[]).length));
 const tkCounts=()=>[Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length,Object.values(TK.e).filter(e=>e&&e.f).length];

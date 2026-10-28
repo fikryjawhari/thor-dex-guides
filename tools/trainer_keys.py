@@ -85,6 +85,7 @@ def match(table, ts):
 def stabilise(D, path, report):
     """Give every trainer its key from the table at path (adding new ones), rename the walkthrough's references."""
     ts = trainers(D)
+    assert len({t['k'] for t in ts}) == len(ts), 'trainer keys: the extract gave two trainers one key'
     table = read(path)
     if table is None:
         write(path, [dict(k=t['k'], **identity(t)) for t in ts])
