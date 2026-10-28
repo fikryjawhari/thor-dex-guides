@@ -156,6 +156,7 @@ WK.cheats (+ `cnote`), trainer `c` (calc trainer names), `pp` (pokepaste), mon `
 Area conditions (trainer `field`, 2026-10-26): EI "Permanent Sand" (Route 111, desert route) is applied as Sandstorm;
 the "Trick Room" tags (Grace & Declan, Sidney) as Trick Room. Sidney's "Tailwind / TrickRoom" and Glacia's
 "Snow / Sun" are team-variant labels, not conditions.
+Doubles (2026-10-28): each "Double Battle" / "True Double Battle" trainer gets one `gameType: 'Doubles'` record (source = the tag, `tools/trainer_fields.py`; 14 trainers).
 
 W2 complete (2026-10-25): 1,208 species audited, five source weight overrides, 23 automatic-power fixtures;
 two Needs Opus rows (Hoopa source/scope conflict and Eruption/Water Spout power-display metadata).

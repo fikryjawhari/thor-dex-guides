@@ -151,6 +151,8 @@ data (merge of main, 2026-10-26): the raw build writes the `field` records.
 Area conditions (trainer `field`, 2026-10-26): area +1 crit is applied as the foe side's +1 crit stage, a guess and
 labelled `+1 crit (foe, guess)`. Permanent Fog is shown as text only: accuracy ×0.6, no damage effect (Gen 4 rule,
 unverified in hg-engine). Easy mode (enemy levels − (1 + floor(lv / 25))): not doing (user, 2026-10-26).
+Doubles (2026-10-28): one `gameType: 'Doubles'` record per trainer with a Double / 2on2 Double tag or partners (92 trainers);
+three Back2Back trainers also carry a Double tag (Executive Ariana, Rocket Grunt #25, Kimono Girl Miki) and count as Doubles.
 `setterStays: true` (`doc/Mechanics.txt:31-32`: weather / terrain from abilities and moves are permanent), so a
 setter's weather stays after it leaves. Figy-group berries heal 1/8 at half HP (`over.items`; `TryUseHeldItem`, `itemdata.c` parameter 8). Dragon
 Cheer is off (`over`: no crit stage at this pin). Weather moves set Snow (no Hail).
