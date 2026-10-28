@@ -89,7 +89,8 @@ The search box is always a button (`searchDisp`). Tapping it covers the whole gu
 - `posSave()` writes `{h: location.hash, a: keepAnchor()}` to `<prefix>pos` on scroll (debounced 300 ms) and on `visibilitychange`.
 - **`window.dexViewer.restoreScroll(y)`**: the app calls this after reloading the guide (screen swap, reboot) instead of `scrollTo`. Restore from `<prefix>pos` when its hash matches, else `scrollTo(0,y)`.
 - **Reopen on the last route:** the app always loads the bare file, so when there's no hash, `history.replaceState` to the saved hash before the first render.
-- Persist filters, sort, open sections, tracker and calc inputs in localStorage under the hack's prefix.
+- Persist filters, sort, open sections, tracker and calc inputs in localStorage under the hack's prefix, by name or
+  stable key, never by a position in the data (guide updates shift positions; `template/README.md` → the Rule bullet).
 
 ## Testing
 

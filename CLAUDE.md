@@ -15,6 +15,10 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - The guide must work at the viewer sizes (PROGRESS.md → Viewer sizes), especially 260 × 316, in normal and `dvkb` mode.
   The full viewer contract is `.agents/skills/rom-hack-offline-dex/references/viewer-ui.md` (the repo's copy of the
   `rom-hack-offline-dex` skill).
+- Saved state never stores a position in the data (an index into `M` / `MV` / `AB` / `P` / `LOC` / `TR` / `WK` / `IT`): hack updates insert entries and shift every later index. It stores names
+  (`nameOf` / `idxOf`) or stable keys (stop keys, trainer keys, `AR` indexes, which are append-only), maps them back on
+  load, says what happens when one is gone (falls back or drops), and keeps loading what older builds stored.
+  `tools/scenarios/guide-update.mjs` checks every kind on every guide: a new kind of saved state goes in its snapshot.
 - No explanatory or provenance text at the top of pages (where the data came from, how search works, rules of the
   tracker): the user doesn't want it, in any guide. Credits go in the footer.
 - Template changes are shared by every guide: after one, run `assemble.py` and check every guide, not just the one
@@ -57,7 +61,9 @@ adapt); agents build the units (Workflow → Which model).
    turn them into `hacks/<hack>/data.json`, in the schema in `hacks/emerald-imperium/notes.md` (Data schema).
    `build.py` ends with `extractlib.finalise()`, which applies the shared rules (`template/README.md` → Shared rules:
    Items standard, cap split names, Trainers in walkthrough order, schema); a hack only adds an `itemstd.RULES` entry
-   for its quirks; its first run writes `extract/trainer_keys.json` (commit it). What the template shows when the data has it: `template/README.md` → What the data switches on.
+   for its quirks. Trainer keys: with no `extract/trainer_keys.json` yet, `finalise()` (`tools/trainer_keys.py`) writes
+   it from the extract's own keys (the "g.s.t" positions of that first build), so the first build seeds it; commit it
+   with the first data.json. Later builds match trainers to it and only add entries. What the template shows when the data has it: `template/README.md` → What the data switches on.
    For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences); 3DS hacks take
    the game data over the docs ("Doc says ...").
    Calc: settle each trainer `field` record marked `review` (`tools/trainer_fields_check.py`) with me (notes.md,

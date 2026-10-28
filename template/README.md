@@ -39,6 +39,10 @@ an unknown key.
   variants (the player picker shows when any trainer has `pl`), EVs (MGM).
 - Walkthrough: checklist steps `stop.s` (Next step and Reset checklist show only then), stop notes, cheat codes
   `WK.cheats`, game docs `WK.docs` / `WK.ko`, unplaced items `WK.np`, stop keys `stop.k`.
+- **Rule:** saved state never stores a position in the data (an index into `M` / `MV` / `AB` / `P` / `LOC` / `TR` / `WK` / `IT`). It stores
+  names or stable keys, maps them back on load, says what happens when one is gone, and keeps loading older formats
+  (below). `tools/scenarios/guide-update.mjs` checks it on every guide with a copy whose every index is shifted; a new
+  kind of saved state goes in that scenario's snapshot.
 - Saved walkthrough state is keyed by stop key: when a hack regroups its stops, `migrateWalkState` moves saved ticks,
   open state and scroll anchors to the new positions (`tools/walk-state-check.mjs` tests it). Give every new stop a
   key that never changes; cutting a stop in two keeps the key on the first part and adds `.fN` to the others.
