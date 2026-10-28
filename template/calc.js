@@ -19,10 +19,10 @@ const isSetField=f=>!KEPT.includes(f)&&!FIGHT.includes(f)&&!SCRATCH.has(f);
 // Stored sets (custom, imported, edits, saved, a Mega's form) name their species (sn, beside the id), ability and moves
 // (nameOf / idxOf in dex.js), so a guide update that inserts one keeps them; in memory they are this build's indices.
 // On load a move that no longer exists empties its slot, an ability falls back (a whole set: the species' first), a
-// species drops the set (an edit: the species edit).
-function monOut(o){if(!o||typeof o!=='object')return o;const r={...o};if(byId[r.id])r.sn=nameOf(P,byId[r.id].i);if('a' in r){const n=nameOf(AB,r.a);if(n==null)delete r.a;else r.a=n;}if(Array.isArray(r.m))r.m=r.m.map(x=>nameOf(M,x)??null);for(const f of ['mega','pre'])if(r[f])r[f]=monOut(r[f]);return r;}
+// species drops the set (an edit: the species edit). An ability that is no index (-1 = none) stays as it is.
+function monOut(o){if(!o||typeof o!=='object')return o;const r={...o};if(byId[r.id])r.sn=nameOf(P,byId[r.id].i);if(AB[r.a]!=null)r.a=nameOf(AB,r.a);if(Array.isArray(r.m))r.m=r.m.map(x=>nameOf(M,x)??null);for(const f of ['mega','pre'])if(r[f])r[f]=monOut(r[f]);return r;}
 function monIn(o,whole){if(!o||typeof o!=='object')return true;if(o.sn!=null){const i=idxOf(P,o.sn);if(i!=null)o.id=P[i].id;delete o.sn;}if(!byId[o.id]&&(whole||'id' in o)){if(whole)return false;delete o.id;}
- if('a' in o&&AB[idxOf(AB,o.a)]==null)delete o.a;else if('a' in o)o.a=idxOf(AB,o.a);if(whole&&!('a' in o))o.a=byId[o.id].a[0];
+ if(typeof o.a==='string'){const i=idxOf(AB,o.a);if(i==null)delete o.a;else o.a=i;}if(whole&&!('a' in o))o.a=byId[o.id].a[0];
  if(Array.isArray(o.m))o.m=o.m.map(x=>MV[idxOf(M,x)]?idxOf(M,x):null);for(const f of ['mega','pre'])if(o[f]&&!monIn(o[f],true))delete o[f];return true;}
 const storeOut=s=>{const each=list=>(list||[]).map(monOut),byKey=map=>Object.fromEntries(Object.entries(map||{}).map(([k,v])=>[k,monOut(v)]));return {...s,custom:each(s.custom),edits:byKey(s.edits),saved:byKey(s.saved),...(s.imp?{imp:{...s.imp,party:each(s.imp.party),boxes:(s.imp.boxes||[]).map(each)}}:{})};};
 let ST=defaults();try{const stored=JSON.parse(localStorage.getItem(KEY)||'null');if(stored&&typeof stored==='object')ST={...ST,...stored};}catch(error){}

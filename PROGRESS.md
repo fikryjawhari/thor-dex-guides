@@ -55,9 +55,6 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
    4. **Mechanics check** (long-term, the user): each guide's notes.md → Damage calc → In-game tests. Hardlove has no
       independent oracle, so its calc stays provisional until then. The source wins over the docs.
    5. **Footer credits** (item 3), hzla's calc among them.
-   6. **Saved custom sets use the guide's indices** (moves by `M` index, species by id). An update that inserts a
-      move or species shifts the later ones (Hardlove 0.8.5 inserted Raging Bull at 767; harmless then, the calc
-      had no users yet). Before the next such update: store names, or migrate saved sets by name on load.
    Gen 5 save reading waits for the Blaze Black 2 Redux guide; the other families: `template/calc/readers/README.md`.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
@@ -71,6 +68,11 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
    learnsets, ability usage): re-fetch before its guide.
 7. **New-guide scaffold** (`tools/new_hack.py <hack> --like <built hack>`): build it during the first new guide, from
    what that session actually copies.
+8. **Other saved state keyed by position** (found 2026-10-29 with the calc's names fix, not done): trainer keys
+   `g.s.t` are positions in `TR`, so a hack update that inserts a trainer shifts the user's level caps per trainer
+   (`cfg.ls.cap`), the calc's current foe and recent trainers; search recents keep walkthrough / item positions; the
+   Dex stat calc is keyed by species id, which in EI is the game's species number. A fix would be stable trainer keys
+   like the walkthrough's stop keys (set once, migrated on load).
 
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 

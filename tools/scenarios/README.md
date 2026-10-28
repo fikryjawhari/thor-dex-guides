@@ -30,7 +30,7 @@ Import scenarios inject `template/calc/readers/test.js`; real reader checks use 
 | `calc-controls.mjs` | Attack taps, caps, trainer navigation, speed/stages, HP, crit, hits, moves, Mega, custom/unknown sets. |
 | `calc-import.mjs` | Save/reset/re-import, four error banners and empty states. |
 | `calc-bridge.mjs` | Fake `window.dexViewerApp`: import, refresh, newer-save dot, errors and Change file/Pick. |
-| `calc-persist.mjs` | Reloaded state and Clear saved state through the frame built by `tools/mockup/thor-frame/build.py`. |
+| `calc-persist.mjs` | Reloaded state, saved sets and list filters by name across a simulated guide update (26c), and Clear saved state through the frame built by `tools/mockup/thor-frame/build.py`. |
 | `calc-entry.mjs` | Trainer-card and Pokémon-page entry points. |
 | `calc-field.mjs` | Profile-driven controls, engine inputs and persistence after profile edits. |
 | `calc-hidden.mjs` | As-built visibility and entry points with and without `cfg.calc`. |
