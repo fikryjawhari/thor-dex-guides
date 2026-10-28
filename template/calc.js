@@ -238,7 +238,7 @@ function fitToggles(){const body=$('.dfield[open] .dfb');if(!body)return;body.st
  body.style.setProperty('--tgmin',Math.ceil(need+1)+'px');barsSoon();}
 if(window.ResizeObserver){const probe=document.createElement('span');probe.textContent='MMMM';probe.setAttribute('aria-hidden','true');probe.style.cssText='position:fixed;left:-999px;top:0;visibility:hidden;font-size:11px;white-space:nowrap';document.body.appendChild(probe);new ResizeObserver(()=>{if(location.hash==='#/calc')fitToggles();}).observe(probe);}
 
-window.addEventListener('resize',()=>{if(location.hash==='#/calc')fitToggles();});
+window.addEventListener('resize',()=>{if(location.hash==='#/calc'&&innerWidth>=480&&EDITOPEN.mine!==EDITOPEN.foe)calcPage();else fitToggles();});
 function bindMain(){document.querySelectorAll('[data-ms]').forEach(i=>{i.onchange=()=>{setField(i.dataset.s,i.dataset.ms,i.checked);refresh();};});document.querySelectorAll('[data-lv],[data-hp]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const side=i.dataset.lv||i.dataset.hp,f=i.dataset.lv?'l':'hp';const v=parseInt(i.value);if(isNaN(v))return;
   setField(side,f,f==='l'?Math.max(range[0],Math.min(range[1],v)):Math.max(0,Math.min(resolve(getMon(side)).stats?.[0]||0,v)),f==='hp');if(f==='l'){const mon=resolve(getMon(side));if(mon.hp!=null)setField(side,'hp',mon.hp);}refresh();};});
  document.querySelectorAll('[data-hx]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const v=parseInt(i.value);if(isNaN(v))delete HX[i.dataset.ck];else HX[i.dataset.ck]={[i.dataset.hx]:Math.max(0,v)};refresh();};});

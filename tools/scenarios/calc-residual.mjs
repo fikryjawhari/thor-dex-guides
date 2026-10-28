@@ -44,7 +44,7 @@ const checks = [{
     await page.value(`(()=>{const select=document.querySelector('[data-e=it][data-s=mine]');select.value='Black Sludge';select.dispatchEvent(new Event('change'));})()`);
     await page.tap('[data-a=eopen][data-s=mine]');
     assert.equal(await page.count('.cc[data-s=mine] .cl .dturn'),1,'player residual belongs to player');
-    await page.tap('.cc[data-s=foe] .cn');
+    await page.tap('.cc[data-s=foe] .sp');
     await page.tap('.dres:not(.na) .mr:not(.em):not(.st) > .mm');
     assert.match(await page.text('.dres:not(.na) .mr.open .eotl'),/^Turn end: −\d+ Black Sludge$/);
   },

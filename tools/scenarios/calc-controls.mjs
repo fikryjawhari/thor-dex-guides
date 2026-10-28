@@ -24,7 +24,7 @@ const checks = [
       assert.equal(await attackerSide(page), 'foe', 'the foe card is the attacker after a tap on its label');
       assert.equal((await calcState(page)).dir, 'in');
       assert(await page.count('.dres:not(.na) .mr:not(.em)') > 0, "the foe's moves are listed");
-      await page.tap('.dmatch .cc[data-s="mine"] .cn');
+      await page.tap('.dmatch .cc[data-s="mine"] .sp');
       assert.equal(await attackerSide(page), 'mine', "Mine's name makes Mine attack again");
       await touchBox(page, '[data-lv="mine"]');
       assert.equal(await attackerSide(page), 'mine', 'Lv leaves the attacker alone');
