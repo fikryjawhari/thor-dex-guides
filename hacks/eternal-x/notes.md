@@ -147,12 +147,68 @@ actual field controls/options, damage rendering and reload persistence at five v
 `consistency-check.mjs eternal-x` passes both modes, all five sizes and light theme. Phone preview:
 `calc-eternal.html` (Thor frame); manually checked the fields at 260x316, with no horizontal overflow.
 
-Not checked: in-game damage on the Thor, exhaustive individual move/ability/item effects,
-switch-in/history automation or save import. Oracle agreement isolates mechanics:
+Not checked: in-game damage on the Thor, exhaustive individual move/ability/item effects or
+switch-in/history automation. Save import coverage is recorded below. Oracle agreement isolates mechanics:
 sharing guide stats/types/power does not independently validate extracted data. The hack's Pokemon Changes doc
 describes changed stats/types/ability assignments/movepools, including later-generation additions; those do not
 upgrade the requested battle mechanics to Gen 7. Future refinements add fixtures here rather than change other
 guides' base profiles.
+
+#### Save import
+
+2026-10-28: `cfg.calc.save = "gen67"` enables the existing decrypted XY `main` reader (also accepts a `.sav`
+name). No reader, template UI or shared helper changes. The reader validates the footer, every block CRC and
+each nonblank Pokémon checksum; imports stored species/form, ability id, held item, moves, nature and IVs/EVs;
+uses the stored party level and Eternal X growth rates for boxed levels; skips eggs. PK6 byte 0xDE is not a
+hyper-training flag. USUM / ORAS / SM are Wrong game for this guide.
+
+`extract/build.py` calls `tools/ctrguide.py::build_save_ids` **after** finalise/prune, as Photonic Sun does.
+The source is Eternal X's existing `.src/dex-rebalanced.json` (hack romfs + code patch), not PKHeX/hzla tables.
+`GID.sp` has 880 species/form keys covering all 782 retained P ids, `GID.mv` / `GID.ab` cover all 617 move / 188
+ability indices, and `GID.it` maps all 697 source item names (718 slots including gaps). `GID.gr` retains all 884
+source form growth rates, including excluded forms. Preserve source move ids and table order: the shared helper
+must not collapse duplicate physical/special Z-move names in Photonic Sun. `extract/check.py` asserts full
+species/move/ability coverage, growth rates, meaningful and cosmetic form aliases and both Charizard stones.
+
+Unmapped species/forms are the four already pruned from the guide: `150:2` Mega Mewtwo Y, `413:1` / `413:2`
+Wormadam Sandy / Trash and `670:5` Eternal Flower Floette. No retained species, move or ability is unmapped.
+Identical Vivillon patterns and Flabébé colours map to their retained Icy Snow / Red guide rows, not new species.
+
+Independent synthetic oracle: PKHeX.Core 26.10.18 / .NET 10, local `.tmp/pkhex-oracle/` program; never commit
+the GPL-linked program or binaries. `hacks/eternal-x/.src/saves/pkhex-xy.{sav,expected.json}` contains 6 party +
+79 boxed Pokémon across 31 boxes; PKHeX reopens it with valid checksums and party count. Expectations come
+from input objects and Eternal X's own names/ability assignments/growth rates, not the reader output. Thirty-nine
+source form growth rates differ from Photonic Sun; Eternal X has five rates (no Fluctuating). The fixture covers
+all 32 shuffle selectors/aliases and all five rates, 25 natures, asymmetric IVs/EVs, empty move/item slots,
+hidden abilities, Charizard X/Y/Alakazam/Mewtwo stones and stored Megas, every Rotom form, both Meowstic/Aegislash
+forms, all Pumpkaboo/Gourgeist sizes, 20 Vivillon patterns and five Flabébé colours, including the final box slot.
+Recipe: `template/calc/readers/README.md` → PKHeX oracle recipe.
+
+Checks/logs: `.tmp/calc-save-eternal-x/`:
+- `import-xy.log`: `node tools/calc_save_check.mjs dist/eternal-x.html
+  hacks/eternal-x/.src/saves/pkhex-xy.sav hacks/eternal-x/.src/saves/pkhex-xy.expected.json`, real file input,
+  85/85 Pokémon and every compared field pass.
+- `oracle.log`, `unit.log`: all 85 Pokémon match every expected field directly, input unchanged; wrong-game,
+  truncated/half, CRC/footer, PKHeX-resealed Pokémon checksum/count/game, empty/egg party and state controls pass;
+  PK6 0xDE does not hyper-train IVs.
+- `edges.log`: all those rejection banners pass through the real picker at 260x316, rejected imports preserve
+  the previous save and zero page errors. `import-photonic-regression.log`: Photonic Sun's existing USUM file
+  picker check still passes 38/38 Pokémon, every field; shared helper/reader unchanged.
+- `npm-test.log`: `npm test --prefix tools/calc` passes all engine/state suites.
+- `scenarios.log`: `uv run python -I tools/gate.py scenarios --only calc-import,calc-bridge,calc-smoke --jobs 8`,
+  12/12 guide/scenario runs pass in 27.0s; per-run logs in `.tmp/gate/20261028-124141-176382/`.
+  Browser runs waited for two clear process checks; an earlier attempt refused concurrent pagecheck work
+  (`scenarios-contention.log`). The successful run did not bypass the gate's idle check.
+- `hzla.log`, `hzla-compare.json`: `node tools/calc/hzla_compare.mjs eternal-x --output
+  .tmp/calc-save-eternal-x/hzla-compare.json`, 116 matches + 3 known differences, no mismatch/error. Initially
+  missing local oracle fetched at the comparator's pin with `--fetch`.
+- `gate-data.log`, `baseline-delta.log`: `uv run python -I tools/gate.py check eternal-x --data` against
+  `c0dce4a` flags only the authorised GID addition and two GID report lines; existing data excluding `built`
+  is identical, rebuild/counts/extract checks pass. Baseline was not replaced; parent acceptance of this delta
+  is needed. Build commands, `tools/datajson.py hacks/eternal-x/hack.json` and `assemble.py eternal-x` pass.
+
+Still untested: a real player's XY save and import on the Thor. The existing shared Unreadable banner refers to
+two save slots although decrypted 3DS main has one active save; UI wording is outside this task.
 
 #### In-game tests
 

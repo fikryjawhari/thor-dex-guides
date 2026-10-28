@@ -6,6 +6,11 @@ What's left before the damage calc merges, in order (2026-10-27, after the auto-
 oracles), each calc guide's notes.md → Damage calc (profile, fixtures, In-game tests). Every calc session: claim the
 worktree, one template / engine session at a time, commit per sub-step, run Checks (below), ask before pushing.
 
+**On `worktree-damage-calc-saves`** (`.claude/worktrees/damage-calc-saves`, made 2026-10-27 from the calc branch at
+`23c82f6`): this branch's job is item 2 only, the save readers and the file picker (with the app repo,
+`../thor-offline-viewer`). calc-team stays on `worktree-damage-calc`. When done, merge this branch into
+`worktree-damage-calc` (or into `main` after it, whichever merges first), rebuild, run Checks.
+
 ## The list, in order
 
 1. **Build `plans/calc-team.md`** (decided 2026-10-27; spec and build units there, mockup `plans/calc-team-mockup/`):
@@ -42,11 +47,22 @@ dist/<hack>.html .tmp/<name>.html --panel tools/mockup/thor-frame/calc-presets.h
 
 ## Save readers and the file picker
 
-Order: Gen 3 + Emerald Imperium's ID tables (tested against the user's save), the viewer's file picker (app repo),
-Gen 4 (Hardlove Gold), Gen 6/7 (Photonic Sun, then Eternal X); Gen 5 waits for the Blaze Black 2 Redux guide. From then
+Order: Gen 3 + Emerald Imperium's ID tables (**done 2026-10-28**: `readers/expansion.js`, tested against hzla's EI 1.3
+save, not the user's: they had none), the viewer's file picker (app repo), Gen 6/7 (Photonic Sun, then Eternal X:
+**Photonic Sun and Eternal X done 2026-10-28**, `gen67.js` + shared `ctrguide.build_save_ids` after finalise/prune;
+PKHeX USUM oracle matches all 38 Pokémon for Photonic Sun; Eternal X's own XY oracle matches all 85 Pokémon
+through the file picker, with Eternal X growth rates/names and form/cosmetic aliases. SM / ORAS are verified
+layouts but wrong-game controls for both guides; XY is wrong for Photonic, USUM wrong for Eternal X.
+No retained species/move/ability is unmapped. Eternal X excludes four already-pruned forms; its notes record them.
+Blank USUM / SM / XY / ORAS oracle saves and the local recipe
+are in readers/README.md; no GPL-linked code is committed), Gen 4 (Hardlove Gold: waits for the
+user's save, no hg-engine save is public); Gen 5 waits for the Blaze Black 2 Redux guide. Public test saves
+(2026-10-27): hzla/Dynamic-Calc-Decomps `cypress/fixtures/saves/` (EI 1.3 + an mGBA state + a paste of it, Renegade
+Platinum, Heart & Soul); none for hg-engine or the 3DS. From then
 on every new guide's extract writes its ID tables (add it to CLAUDE.md → Making a new guide and the skill then).
-Procedure: `.agents/references/calc-save-reader.md`. Each needs the user's save in `hacks/<hack>/.src/saves/` plus its
-`.expected.json`: ask for it first. Licences: `tools/calc/README.md` → Licences.
+Procedure: `.agents/references/calc-save-reader.md`. Each needs a save in `hacks/<hack>/.src/saves/` plus its
+`.expected.json` (the user's, or a public / PKHeX-made one when they have none; `tools/calc_paste_expected.py` turns an
+hzla paste into one). Licences: `tools/calc/README.md` → Licences.
 
 **Interface** (built with the `test` reader, `template/calc/readers/test.js`): `READERS[family] = (bytes, D) => {game,
 party [mon], boxes [[mon]]}`, or throw `{code: 'wrong' | 'state' | 'unreadable' | 'empty', game?}` (the four banners:
@@ -61,17 +77,17 @@ picks the family; without it Import is hidden. Done-check: `tools/calc_save_chec
 | CFRU | Radical Red, Unbound | Gen 3 layout with CFRU's changes (expanded IDs, extra blocks). |
 | Gen 4 (Pt / HGSS) | Hardlove Gold, HeartGold Retiled, Renegade Platinum | Two slots, newest by a save counter; blocks shuffled by PV and encrypted with the LCRNG (0x41C64E6D / 0x6073) seeded by the checksum; party stats stored separately (encrypted with the PV). |
 | Gen 5 (BW2) | Blaze Black 2 Redux | Gen 4's Pokémon encryption; other block offsets and checksum table. |
-| Gen 6/7 (XY / ORAS / SM / USUM) | Photonic Sun, Eternal X, Meissa Moon, Navy Sapphire | 232-byte PK6 / PK7, same shuffle and LCRNG. Azahar keeps the save unencrypted, known by size (XY 0x65600, ORAS 0x76000, SM 0x6BE00, USUM 0x6CC00) and a `BEEF` footer; party at 0x14200 (XY / ORAS), 0x1400 (SM), 0x1600 (USUM). |
+| Gen 6/7 (XY / ORAS / SM / USUM) | Photonic Sun and Eternal X done; Meissa Moon, Navy Sapphire later | `readers/gen67.js`: 232-byte stored / 260-byte party PK6/PK7, encryption-constant shuffle and LCRNG, footer/block CRCs and per-Pokémon checksums. Main sizes XY 0x65600, ORAS 0x76000, SM 0x6BE00, USUM 0x6CC00; party at 0x14200 (XY/ORAS), 0x1400 (SM), 0x1600 (USUM). A Gen 7 guide accepts USUM, a Gen 6 guide XY. PKHeX oracle: 38 USUM / 85 XY Pokémon through each guide's picker. Format/coverage: readers/README.md. |
 
 The hard part is per hack: **the ID tables**. Our data has no game IDs, so each extract writes `GID` from its own sources
 (expansion constants, CFRU tables, the NDS NARCs, the 3DS game files). Forms are the tricky part (each family stores
 them its own way). References (read only): hzla/Dynamic-Calc-Decomps `js/savereaders/` (Gen 3 incl. EI constants, Gen
 4/5, Gen 6 / 7; sample saves in `cypress/fixtures/saves/`), PKHeX (check a reader by opening the same save there).
 
-**File picker** (app repo `../thor-offline-viewer`, after the Gen 3 reader works with a dropped file; first guess:
-`../thor-offline-viewer/docs/_plans/save-file-picker.md`): Android WebView
-ignores `<input type=file>` unless the app handles `onShowFileChooser` (Android's document picker, remembering the last
-folder; check first whether the viewer already does). Later: "reload from the same file" in one tap (persistent URI
-permission). Outside the viewer the file input already works in any browser.
+**File picker**: built in the app (`../thor-offline-viewer`, 2026-10-27; contract `docs/SAVE_BRIDGE.md`,
+`window.dexViewerApp`), **not yet run on the Thor**. Guide side built 2026-10-28 (`template/README.md` → Import;
+`tools/scenarios/calc-bridge.mjs` against a fake bridge, every calc guide). Left: the app's on-device tests
+(its `docs/_plans/save-file-picker.md`), then one real import per emulator on the Thor (RetroArch `.srm`, DraStic
+`.dsv`, Azahar `main`); if the contract changes there, update `calc.js` and the scenario.
 
 Not doing: reading the game's memory while it runs (only an emulator can), writing to saves.

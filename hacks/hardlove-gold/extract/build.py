@@ -4,8 +4,8 @@ Usage (repo root): uv run python -I hacks/hardlove-gold/extract/build.py
 Modules: dex.py (M, MV, AB, P, TC), locs.py (LOC, P.w), trainers.py (TR), items.py (IT), walk.py (AR, WK). The steps keep the
 order the data needs (the dex site's names, the locations sheet, the game's source, the trainer sheet...), so each module
 is called several times; they share the working state X (common.py). Then the split UI's reshaping (trainers / items
-split()), the Starter area (locs.starter) and the shared finalisers (tools/extractlib.py finalise: Items standard, split
-names). The report goes to hacks/hardlove-gold/extract/report.txt.
+split()), the Starter area (locs.starter), the shared finalisers (tools/extractlib.py finalise: Items standard, split
+names) and the save importer's id tables (gid.py). The report goes to hacks/hardlove-gold/extract/report.txt.
 
 The raw build is the only build: data.json is always made from .src. It stops when .src is not the release that watch.json
 pins (repos/hardlove/COMMIT against the "Released game source" ref), so stale sources can't quietly rebuild older data.
@@ -15,7 +15,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import H, report  # noqa: E402
 from extractlib import finalise, write_data  # noqa: E402
-import dex, locs, trainers, items, walk  # noqa: E402
+import dex, gid, locs, trainers, items, walk  # noqa: E402
 import json  # noqa: E402
 
 
@@ -46,6 +46,7 @@ def main():
     items.split(D)        # Held Items + Berries, Valuables
     locs.starter(D)       # the Starter area
     finalise(D, H.name)
+    gid.build(D)          # GID: the save importer's game id tables (after finalise: M / AB indexes)
     write_data(D, H)
 
 

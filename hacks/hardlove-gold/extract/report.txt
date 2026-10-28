@@ -137,3 +137,6 @@ items: dropped duplicate Razor Claw from Held Items (kept in Evolution Items)
 items: dropped duplicate Razor Fang from Held Items (kept in Evolution Items)
 items: dropped duplicate King's Rock from Held Items (kept in Evolution Items)
 trainers put in walkthrough order: Morty Split [Cap 39]
+GID species: 1101 species:form keys for 986 of 986 P ids; 115 forms with their base's battle data map to the base
+GID move: 782 of 782 our names matched
+GID ability: 274 of 274 our names matched

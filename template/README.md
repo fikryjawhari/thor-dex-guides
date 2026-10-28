@@ -273,8 +273,18 @@ Internal set aliases follow trainer data (`l`, `na`, `a`, `i`, `m`); the engine 
 are transient; pickers use the shared keyboard/number pad and the viewer's normal select shim.
 
 Import exists only with `profile.save`: a file input calls `READERS[profile.save](bytes, D)` and maps game IDs through
-`D.GID` (bypassed with `ids: "ours"`). Success atomically replaces the import and clears imported edits/slot overrides;
-errors retain the old import. `calc/readers/test.js` and `tools/scenarios/fixtures/calc/` supply synthetic JSON saves.
+`D.GID` (bypassed with `ids: "ours"`). A Pokémon whose species maps to nothing in the guide (EI's pruned species) is
+skipped and counted in the banner ("· 1 not in this guide"); Wrong game only when no party Pokémon maps. Success
+atomically replaces the import and clears imported edits/slot overrides; errors retain the old import. In Dex Viewer
+the bytes come from the app's save bridge instead (`window.dexViewerApp`, contract: `../thor-offline-viewer/docs/
+SAVE_BRIDGE.md`; the file input does nothing there). Nothing imported yet: Import calls `save()`, and `pickSave()` only
+when no file is linked. With an import, ↻ Import is refresh: `save()` only, never the picker (it would take focus from
+the game); the same file and `modified` as the import gives "No new save" and keeps the edits. Banners get a button
+in the viewer: Change file (green) or Pick (red), both `pickSave()`; cancelling keeps everything. Bridge errors: `gone`
+"Save file not found", `too-big` "Not a save file", `failed` "Unreadable", `busy` ignored; `save()` null with an
+import, "No save file linked". `ST.imp.mod` keeps the save's `modified`; `saveInfo()` on entering the calc puts a dot on
+↻ Import when the linked save is newer. Readers and
+their formats: `calc/readers/README.md`. `calc/readers/test.js` and `tools/scenarios/fixtures/calc/` supply synthetic JSON saves.
 `node tools/scenarios/calc-smoke.mjs dist/emerald-imperium.html` patches only a temporary built page to select that reader.
 
 `dex.js` owns guarded rail, trainer-card and stat-calculator entry hooks and delegates the calc's three scroll stops.

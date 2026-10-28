@@ -20,6 +20,7 @@
   ],
   "calc": {
    "base": "gen7",
+   "save": "gen67",
    "zmove": true,
    "zpow": {
     "Wing Attack": 160,

@@ -37,14 +37,16 @@ export function readGuide(file) {
 let GUIDE = null;
 export const guide = () => GUIDE;
 
-export function prepareGuide(file, { tag, edit } = {}) {
+// The scenarios' fixtures are test-reader files, so the page gets the test reader even when its guide has a real one;
+// realReader keeps the guide's own (calc_save_check).
+export function prepareGuide(file, { tag, edit, realReader } = {}) {
   const { html, match, data } = readGuide(file);
   if (!data.cfg.calc) return null;
   const trainers = trainerRoles(data);
   edit?.(data);
   let page = html;
   let injected = false;
-  if (!data.cfg.calc.save) {
+  if (!data.cfg.calc.save || !realReader && data.cfg.calc.save !== 'test') {
     data.cfg.calc.save = 'test';
     injected = true;
   }

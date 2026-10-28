@@ -11,7 +11,7 @@ there (and to the notes) when a hack gets a new field.
 
 # Canonical key order per object kind. Optional fields (omitted when empty) are marked in the notes, not here.
 ORDER = {
-    'top': ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'built'],
+    'top': ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'GID', 'built'],
     'P': ['id', 'n', 'dex', 't', 'a', 'ha', 's', 'ef', 'et', 'of', 'lv', 'tm', 'tu', 'eg', 'w', 'g', 'hi',
           'stone', 'sloc', 'nu', 'fc', 'cf'],
     'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'cr', 'd', 'f', 'h', 'dc', 'e', 'cf', 'x'],

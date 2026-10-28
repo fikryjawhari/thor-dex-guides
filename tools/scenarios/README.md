@@ -24,6 +24,7 @@ here, since the gate runs every `*.mjs` in this folder as a scenario.
 | `calc-layout.mjs` | 1, 17, 18, 18b, 18c, 19, 20, 20b, 20c, 22 | 18c is a diagnostic at 260 × 400, where the stops separate. |
 | `calc-controls.mjs` | 2–10, 11, 13, 16, 23 | |
 | `calc-import.mjs` | 12, 14, 15 | Fixtures in `fixtures/calc/`. |
+| `calc-bridge.mjs` | Dex Viewer save bridge | A fake `window.dexViewerApp`: first import, ↻ refresh, the newer-save dot, bridge errors, Change file / Pick. |
 | `calc-persist.mjs` | 26, 26b | 26b drives the Thor frame (`thor-frame/build.py`) through its `contentWindow`. |
 | `calc-entry.mjs` | 21 | |
 | `calc-field.mjs` | 25 | Copies the profile with a weather added and a toggle removed. |

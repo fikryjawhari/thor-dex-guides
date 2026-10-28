@@ -165,6 +165,35 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
            'moves changed', sum(bool(e.get('h')) for e in MV))
 
 
+def build_save_ids(data, source):
+    """Map a decrypted 3DS save's ids through this guide's own game-data extract, after species pruning."""
+    kept = {pokemon['id'] for pokemon in data['P']}
+    species = {f'{number}:{form}': target for (number, form), target in data['_spec'].items() if target in kept}
+    rates = ['Medium Fast', 'Erratic', 'Fluctuating', 'Medium Slow', 'Fast', 'Slow']
+    growth = {f'{row["id"]}:{row["form"]}': rates.index(row['growth']) for row in source['species']}
+    assert data['M'] == [row['name'] for row in source['moves']], 'save move ids need the original table order'
+    move_index = {row['id']: index for index, row in enumerate(source['moves'])}
+
+    def indexed(rows, convert):
+        result = [None] * (max(row['id'] for row in rows) + 1)
+        for row in rows:
+            result[row['id']] = convert(row)
+        return result
+
+    data['GID'] = {
+        'sp': species,
+        'mv': indexed(source['moves'], lambda row: move_index[row['id']]),
+        'ab': indexed(source['abilities'], lambda row: data['_ABI'].get(row['name'])),
+        'it': indexed(source['items'], lambda row: fix(row['name'])),
+        'gr': growth,
+    }
+    report('GID:', len(species), 'species/form keys for', len(set(species.values())), 'species,',
+           len(data['M']), 'moves,', len(data['AB']), 'abilities,', len(source['items']), 'item names')
+    unmapped = [f'{row["id"]}:{row["form"]}' for row in source['species']
+                if f'{row["id"]}:{row["form"]}' not in species]
+    report('GID species/forms outside this guide:', len(unmapped), ', '.join(unmapped))
+
+
 def parse_move_doc(text):
     """Move Changes.pdf: 'Move: change text' paragraphs and the TM changes, keyed by normalised move name."""
     body = text.split('more useful:', 1)[1].split('* This change')[0]

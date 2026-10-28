@@ -60,9 +60,42 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
      Photonic 118 + 28, Eternal X 116 + 3, all 0 mismatch.
    - **Phone previews:** `https://windows-pc.tail1846b8.ts.net/preview/` + `calc-auto-ei.html`,
      `calc-auto-hardlove.html`, `calc-auto-photonic.html`, `calc-auto-eternal.html` (Thor frame, preset panel).
-   - **Next on this branch:** build `plans/calc-team.md` (decided 2026-10-27; build units listed there). **Save readers + file picker:** branch
-     `worktree-damage-calc-saves` (`.claude/worktrees/damage-calc-saves`, from `23c82f6`; its own session). **Mechanics check:** stays open, merges into `main`
-     at the end.
+   - **Checkpoints** (local tags, pushed with the branch at the end): `live-2026-10-24` = `168dfd3` (the live site, no
+     calc), `calc-pre-team` = `fe937cc` (the calc before the calc-team build).
+   - **calc-team build** (`plans/calc-team.md`, build units there; session of 2026-10-28):
+     - Unit 1 layout + nameless card: done (`a0f978a`). Field now stays below open move rows / the editor at every size
+       (the user's report on the mockup). The scenarios that still fail test the old layout: unit 3 updates them.
+     - Unit 4a Auto Doubles data: done (`eba379c`, `ac9a9e4`): `tools/trainer_fields.py` `DOUBLES_TAGS` / partners write a
+       `gameType: Doubles` field record; counts EI 14, Hardlove 92, Photonic 60, Eternal X 62. The three Hardlove
+       Back2Back trainers that also carry a Double tag (Ariana, Grunt #25, Miki) count as doubles, as the spec's 92 does.
+     - Left, in order (each its own agent, one template session at a time): **unit 2** team row + drag and drop +
+       fainted grey sprite + HP bar on the team cells; **unit 4b** S / D auto layer in `calc.js`; **unit 3** checks;
+       **unit 5** docs + previews. Details and check commands: `plans/calc-team.md` → Build units.
+   - **Save readers + the guide side of the app's save picker:** built on `worktree-damage-calc-saves`, merged into this
+     branch 2026-10-28 (worktree and branch deleted after the merge). Gen 3 for Emerald Imperium
+     (`readers/expansion.js` + EI `GID`, checked against hzla's EI 1.3 save, 33 of 33; EI notes.md → Damage calc → Save
+     import). Gen 4 for Hardlove Gold (`readers/gen4.js`, hg-engine HGSS; GID from `extract/gid.py`), checked on the
+     user's own **0.7.0** save, 11 of 11 (Hardlove notes.md → Damage calc → Save import). Gen 6/7 (`readers/gen67.js`,
+     GID from `tools/ctrguide.py` → `build_save_ids`): Photonic Sun 38/38 and Eternal X 85/85 against PKHeX-made USUM /
+     XY saves (the generator stays git-ignored in `.tmp/pkhex-oracle/`, PKHeX is GPLv3; recipe in `readers/README.md`;
+     .NET 10 SDK user-local in `%LOCALAPPDATA%\Microsoft\dotnet`). Gen 5 waits for the Blaze Black 2 Redux guide.
+     The app bridge (guide side): Import / ↻ refresh / Change file / Pick through `window.dexViewerApp` per the app's
+     `docs/SAVE_BRIDGE.md` (unchanged since app commit `add3b06`, 2026-10-27), bridge error banners, the newer-save dot;
+     checked on a fake bridge (`tools/scenarios/calc-bridge.mjs`).
+   - **Open after the build (tests and credits, not built in the calc-team sessions):**
+     1. App repo session (`../thor-offline-viewer`, PC with the Thor on adb): its `docs/_plans/save-file-picker.md` →
+        Left to do (install, find each emulator's save folder, the bridge tests over CDP). If the contract changes,
+        update `template/calc.js` (import block) and `tools/scenarios/calc-bridge.mjs` here.
+     2. On the Thor, one real import per guide through the viewer: EI (RetroArch `.srm`), Photonic Sun / Eternal X
+        (Azahar `main`); compare with PKHeX on the PC. Put the saves in `hacks/<hack>/.src/saves/` with an
+        expected.json (procedure: `.agents/references/calc-save-reader.md`).
+     3. Hardlove: the user plays on and reports what imports wrong (a 0.8.x save, mints, regional forms untested).
+     4. **Mechanics check** (each guide's notes.md → Damage calc → In-game tests): stays open, merges into `main` with
+        the branch.
+     5. Footer credits (item 3 below), hzla's calc among them.
+     6. Push the branch and the two checkpoint tags (the user: at the end, once calc and saves are closed out).
+     7. The merge into `main`: the user decides it in the session right before it (`plans/calc-open.md` → Merging into
+        main).
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
    calc as a reference once the calc exists. Agreed, not done.

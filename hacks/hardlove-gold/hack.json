@@ -21,6 +21,7 @@
   "calc": {
    "setterStays": true,
    "base": "expansion",
+   "save": "gen4",
    "evs": false,
    "critStages": [
     0.0625,
@@ -280,14 +281,34 @@
     }
    ],
    "over": {
-    "contact": {"defenderPads": true},
-    "afterMove": ["Kee Berry", "Maranga Berry"],
+    "contact": {
+     "defenderPads": true
+    },
+    "afterMove": [
+     "Kee Berry",
+     "Maranga Berry"
+    ],
     "items": {
-     "Figy Berry": {"heal": 0.125, "threshold": 0.5},
-     "Wiki Berry": {"heal": 0.125, "threshold": 0.5},
-     "Mago Berry": {"heal": 0.125, "threshold": 0.5},
-     "Aguav Berry": {"heal": 0.125, "threshold": 0.5},
-     "Iapapa Berry": {"heal": 0.125, "threshold": 0.5}
+     "Figy Berry": {
+      "heal": 0.125,
+      "threshold": 0.5
+     },
+     "Wiki Berry": {
+      "heal": 0.125,
+      "threshold": 0.5
+     },
+     "Mago Berry": {
+      "heal": 0.125,
+      "threshold": 0.5
+     },
+     "Aguav Berry": {
+      "heal": 0.125,
+      "threshold": 0.5
+     },
+     "Iapapa Berry": {
+      "heal": 0.125,
+      "threshold": 0.5
+     }
     },
     "critMultiplier": 1.5,
     "state": {
@@ -303,11 +324,21 @@
      "Fire Pledge": false,
      "Water Pledge": false,
      "Grass Pledge": false,
-     "Rollout": {"curl": false},
-     "Ice Ball": {"curl": false},
-     "Magnitude": {"vol": false},
-     "Gust": {"vol": "power"},
-     "Twister": {"vol": "power"}
+     "Rollout": {
+      "curl": false
+     },
+     "Ice Ball": {
+      "curl": false
+     },
+     "Magnitude": {
+      "vol": false
+     },
+     "Gust": {
+      "vol": "power"
+     },
+     "Twister": {
+      "vol": "power"
+     }
     },
     "rules": [
      {
