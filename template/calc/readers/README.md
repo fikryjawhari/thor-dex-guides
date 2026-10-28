@@ -20,6 +20,23 @@ absent from the guide, counting them in the banner. `test.js` is the synthetic r
 Throw `{code: 'wrong' | 'state' | 'unreadable' | 'empty', game?}` for Wrong game, Save state, Unreadable or
 No Pokémon yet. The family notes below describe format detection and validation; they record facts, not copied code.
 
+## Families not built yet
+
+| Family | Hacks | Format |
+| --- | --- | --- |
+| Gen 3 (pokeemerald / pokefirered) | SoulGold (expansion, like EI) | 14 sections in two slots (newest by save index); each Pokémon's 4 blocks ordered by personality value and XOR-encrypted with it. Expansion hacks change the struct per hack. |
+| CFRU | Radical Red, Unbound | Gen 3 layout with CFRU's changes (expanded IDs, extra blocks). |
+| Gen 4 (Pt / HGSS) | HeartGold Retiled, Renegade Platinum | As `gen4.js`; vanilla-engine hacks differ in the species / form numbers. |
+| Gen 5 (BW2) | Blaze Black 2 Redux | Gen 4's Pokémon encryption; other block offsets and checksum table. |
+| Gen 6/7 | Meissa Moon, Navy Sapphire | `gen67.js` as is, with the guide's own `GID`. |
+
+The hard part of each new guide is the ID tables, not the reader: the data has no game IDs, so the extract writes
+`GID` from the hack's own sources (expansion constants, CFRU tables, the NDS NARCs, the 3DS game files); forms are the
+tricky part. Every new guide's extract writes them. References (read only): hzla/Dynamic-Calc-Decomps
+`js/savereaders/` (sample saves in `cypress/fixtures/saves/`), PKHeX (open the same save there to check a reader).
+
+Not doing: reading the game's memory while it runs (only an emulator can), writing to saves.
+
 ## Reader coverage
 
 | File | Family | Hacks | Checked with |
