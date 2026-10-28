@@ -66,7 +66,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
     for(const entry of globalEntries){
       const move=moves[entry.k];
       assert.ok(guide.M.includes(move),move+' fixture is available');
-      await page.value(`(()=>{const state=CALC.state();state.dir='out';state.mine={src:'custom',b:0,i:0};state.fman=[];state.field={gameType:'Doubles',${entry.k==='allyAuraBreak'?'allyFairyAura:1,':''}};state.custom[0].m=[M.indexOf(${JSON.stringify(move)})];state.edits['foe:'+state.foe.k+':0'].id=P.find(mon=>mon.n==='Chansey').id;CALC.render();})()`);
+      await page.value(`(()=>{const state=CALC.state();state.dir='out';state.mine={src:'custom',b:0,i:0};state.fman=['gameType'];state.field={gameType:'Doubles',${entry.k==='allyAuraBreak'?'allyFairyAura:1,':''}};state.custom[0].m=[M.indexOf(${JSON.stringify(move)})];state.edits['foe:'+state.foe.k+':0'].id=P.find(mon=>mon.n==='Chansey').id;CALC.render();})()`);
       const expected=await page.value(`(()=>{const convert=${engineInput},state=CALC.state(),att=convert(CALC.mon('mine')),def=convert(CALC.mon('foe')),slot={mv:state.custom[0].m[0]};return [0,1].map(value=>{const result=DMG.calc(att,def,slot,{...state.field,[${JSON.stringify(entry.k)}]:value});return [result.min*result.hits,result.max*result.hits];});})()`);
       assert.notDeepEqual(expected[0],expected[1],entry.k+' fixture changes engine damage');
       const damage='.dres:not(.na) .mr:first-child .r1 .hp';

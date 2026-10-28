@@ -210,7 +210,7 @@ const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windo
     assert.equal(await page.text(`${first} [data-a=state]`),'Hit','one top control, not Metronome');
     await changeMove(page,0,'Tackle');
     assert.equal(await page.value('Object.keys(CALC.state().st).length'),0,'changing the move clears its state');
-    await page.value("CALC.state().custom.at(-1).m=[M.indexOf('Fire Pledge')];CALC.state().field.gameType='Doubles';CALC.render()");
+    await page.value("CALC.state().custom.at(-1).m=[M.indexOf('Fire Pledge')];CALC.state().field.gameType='Doubles';CALC.state().fman.push('gameType');CALC.render()");
     if(guide.M.includes('Fire Pledge')&&guide.cfg.calc.over?.state?.['Fire Pledge']!==false){
       await page.tap(`${first} [data-a=state]`);
       assert.ok(await page.value("Object.values(CALC.state().st).includes('Water Pledge')"),'pledge sends partner name');

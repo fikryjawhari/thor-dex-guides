@@ -683,3 +683,4 @@ body.calc-route .thp i{display:block;height:100%;background:#71d99a}
 body.calc-route .thp i.y,body.calc-route .dhpbar i.y{background:#e8c547}
 body.calc-route .thp i.r,body.calc-route .dhpbar i.r{background:#ff6b6b}
 body.calc-route .ko>.spr{filter:grayscale(1)}
+.dformat button{position:relative}.dformat button.dauto{outline:1px dashed currentColor;outline-offset:-3px}.dformat button sup{position:absolute;right:2px;top:0;font:700 7px system-ui}

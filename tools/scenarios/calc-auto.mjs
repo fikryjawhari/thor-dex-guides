@@ -99,13 +99,14 @@ const checks = [
       await page.setBox('[data-hp="foe"]', 2);
       await setWeather(page);
       await page.tap('[data-f="gameType"][data-value="Doubles"]');
-      assert.deepEqual(await page.value('CALC.state().fman'), ['weather'], 'the weather is a manual override; the format is not');
+      assert.deepEqual(await page.value('CALC.state().fman'), ['weather', 'gameType'], 'the weather and the format are manual overrides');
       await page.tap('[data-a="tnext"]');
       const state = await page.value('(()=>{const s=CALC.state();return {k:s.foe.k,i:s.foe.i,weather:s.field.weather??null,format:s.field.gameType??null,fman:s.fman,foeEdits:Object.keys(s.edits).filter(k=>k.startsWith("foe:"))};})()');
       assert.notEqual(state.k, trainer, 'another trainer');
       assert.equal(state.i, 0, 'slot 1 selected');
       assert.ok(!state.fman.includes('weather'), 'manual weather cleared; automatic weather may apply');
-      assert.equal(state.format, 'Doubles', 'format kept');
+      const next = guide().data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr)).find(trainer => trainer.k === state.k);
+      assert.equal(state.format, next.field?.some(record => !record.label && record.effects?.some(effect => effect.kind === 'gameType')) ? 'Doubles' : null, 'manual format cleared: the next trainer's own');
       assert.deepEqual(state.fman, [], 'no manual overrides');
       assert.deepEqual(state.foeEdits, [], 'nothing kept for the foe');
       assert.equal(await hpOf(page, 'foe'), await maxOf(page, 'foe'), 'foe at full HP');

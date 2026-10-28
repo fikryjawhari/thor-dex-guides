@@ -97,7 +97,7 @@ const checks = [{
     await page.route('#/calc');
     await page.value(mine('Snorlax', ['Surf', 'Tackle']));
     const max = async () => Number((await page.value(rowInfo('Surf'))).hp.split('–').pop());
-    const set = async field => { await page.value(`(()=>{Object.assign(CALC.state().field,${JSON.stringify(field)});CALC.render();})()`); return max(); };
+    const set = async field => { await page.value(`(()=>{const s=CALC.state();Object.assign(s.field,${JSON.stringify(field)});if(!s.fman.includes('gameType'))s.fman.push('gameType');CALC.render();})()`); return max(); };
     const singles = await set({gameType: 'Singles', atkEmperorPresence: 0, defEmperorPresence: 0});
     assert.equal(await set({atkEmperorPresence: 1}), singles, 'Singles: no effect');
     const doubles = await set({gameType: 'Doubles', atkEmperorPresence: 0});
