@@ -32,9 +32,51 @@ def source_check(root):
     print(f'PASS Hardlove source coverage: {count} field comments retained as evidence')
 
 
+DOUBLES_EXPECTED = {'emerald-imperium': 14, 'hardlove-gold': 92, 'photonic-sun': 60, 'eternal-x': 62}
+DOUBLES_PARTNER_ONLY = {'eternal-x': 12}
+
+
+def doubles_check(root):
+    """Doubles evidence per guide (2026-10-28 counts): tags and partners only; Back2Back / Rotation without a Double tag stay singles."""
+    assert trainer_fields.doubles({'tags': ['Double Battle']}) == dict(
+        scope='trainer-tag', text='Double Battle', effects=[dict(kind='gameType', value='Doubles', source='Double Battle')],
+        review=False)
+    assert trainer_fields.doubles({'tags': ['True Double Battle']})['text'] == 'True Double Battle'
+    assert trainer_fields.doubles({'tags': ['Double, Optional']})['text'] == 'Double, Optional'
+    assert trainer_fields.doubles({'tags': ['2on2 Double Battle']})['text'] == '2on2 Double Battle'
+    assert trainer_fields.doubles({'tags': ['Multi Battle']})['text'] == 'Multi Battle'
+    assert trainer_fields.doubles({'tags': ['Triple Battle']})['text'] == 'Triple Battle'
+    partner = trainer_fields.doubles({'tags': ['Optional'], 'pt': [dict(n='Hau')]})
+    assert partner['text'] == 'partner' and partner['scope'] == 'trainer-partner' and partner['review'] is False
+    assert trainer_fields.doubles({'tags': ['Back2Back with Executive Proton']}) is None
+    assert trainer_fields.doubles({'tags': ['Rotation Battle']}) is None
+    assert trainer_fields.doubles({'tags': ['Single Battle']}) is None
+    for hack, expected in DOUBLES_EXPECTED.items():
+        data = json.loads((root / 'hacks' / hack / 'data.json').read_text(encoding='utf-8'))
+        trainers = [trainer for group in data['TR']['g'] for section in group['sec'] for trainer in section['tr']]
+        doubles_records = lambda trainer: [record for record in trainer.get('field', [])
+                                           if any(effect['kind'] == 'gameType' for effect in record['effects'])]
+        battles = [trainer for trainer in trainers if doubles_records(trainer)]
+        partners = [trainer for trainer in battles if all(record['scope'] == 'trainer-partner'
+                                                          for record in doubles_records(trainer))]
+        assert len(battles) == expected, (hack, len(battles), expected)
+        assert len(partners) == DOUBLES_PARTNER_ONLY.get(hack, 0), (hack, len(partners))
+        for trainer in trainers:
+            tags = trainer.get('tags', [])
+            tagged = any(pattern.search(tag) for tag in tags for pattern in trainer_fields.DOUBLES_TAGS)
+            # Back2Back / Rotation are singles unless a Double tag or partner says otherwise (Hardlove keeps 3 such trainers).
+            if any(tag.startswith(('Back2Back', 'Rotation')) for tag in tags):
+                assert (trainer in battles) == (tagged or bool(trainer.get('pt'))), (hack, trainer['n'])
+            if any(tag.startswith('Rotation') for tag in tags):
+                assert trainer not in battles, (hack, trainer['n'])
+        print(f'  {hack}: {len(battles)} doubles trainers ({len(partners)} partner-only)')
+    print('PASS doubles evidence: tags, partners, Back2Back / Rotation exclusions and per-guide counts')
+
+
 def main():
     root = Path(__file__).resolve().parent.parent
-    thunder = trainer_fields.evidence('Permanent OW Thunderstorm: Rain and Electric Terrain', 'trainer-note')
+    doubles_check(root)
+    thunder =trainer_fields.evidence('Permanent OW Thunderstorm: Rain and Electric Terrain', 'trainer-note')
     assert [(effect['kind'], effect['value']) for effect in thunder['effects']] == [
         ('weather', 'Rain'), ('terrain', 'Electric')]
     assert all(effect['duration'] == 'permanent' for effect in thunder['effects'])

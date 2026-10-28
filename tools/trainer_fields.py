@@ -3,6 +3,9 @@
 python -I tools/trainer_fields.py [hack ...] [--write]
 Rebuilds call annotate() before schema ordering. The damage calc applies these records as area conditions,
 see template/README.md → Damage calculator. Team-variant labels (`label: true`) carry no effect and are not shown.
+Doubles fights (one `gameType: 'Doubles'` record per trainer, source = the first matching tag or "partner") come from
+DOUBLES_TAGS (tag wording, one entry per pattern; a new hack adds its own) and the trainer's partners (`pt`), never from
+the teams. Back2Back and Rotation battles are singles, so no pattern matches them.
 """
 import argparse
 import copy
@@ -17,6 +20,10 @@ ROOT = Path(__file__).resolve().parent.parent
 CANDIDATE = re.compile(
     r'\bpermanent\b|\bOW\b|\bweather\b|\bterrain\b|\bthunderstorm\b|'
     r'\btailwind\b|\btrick\s*room\b|\bcrit chance\b|\bGlacia (?:Sun|Snow)\b', re.I)
+# Doubles tag wording per hack: EI "Double Battle", "True Double Battle"; Hardlove "Double, Optional", "2on2 Double";
+# Photonic "Multi Battle"; Eternal X "Triple Battle" (the calc has no triples: Doubles is the nearest). Not doubles:
+# Hardlove "Back2Back …", Eternal X "Rotation Battle".
+DOUBLES_TAGS = [re.compile(pattern) for pattern in (r'^(True )?Double', r'^2on2 Double', r'^Multi Battle', r'^Triple Battle')]
 
 
 def evidence(text, scope):
@@ -59,6 +66,16 @@ def evidence(text, scope):
     return dict(scope=scope, text=text, effects=effects, review=not effects)
 
 
+def doubles(trainer):
+    """One Doubles record when a tag matches DOUBLES_TAGS or the trainer has partners; the tag is the source."""
+    tag = next((text for text in trainer.get('tags', []) if any(p.search(text) for p in DOUBLES_TAGS)), None)
+    if tag is None and not trainer.get('pt'):
+        return None
+    source = tag or 'partner'
+    effect = dict(kind='gameType', value='Doubles', source=source)
+    return dict(scope='trainer-tag' if tag else 'trainer-partner', text=source, effects=[effect], review=False)
+
+
 def records(group, section, trainer):
     """Resolve section/group evidence onto each card while retaining its original scope."""
     result = []
@@ -70,6 +87,9 @@ def records(group, section, trainer):
             record = evidence(text, scope)
             if record and record not in result:
                 result.append(record)
+    battle = doubles(trainer)
+    if battle:
+        result.append(battle)
     return result
 
 
