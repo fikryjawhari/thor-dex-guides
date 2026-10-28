@@ -355,13 +355,13 @@ async function hpCheck(page) {
   check(await cell(F0), { ko: false, cls: '', w: 100 }, 'a trainer change refills the foe');
 }
 
-// A doubles trainer opens in D (Auto, A mark) and the D button sits inside the fight bar, not clipped, inside the window.
+// A doubles trainer opens in D (Auto: dashed, no A mark) and the D button sits inside the fight bar, not clipped, inside the window.
 async function doublesCheck(page) {
   await setupCalc(page, { trainer: doublesTrainer().k });
   const d = await page.value(`(()=>{const D=[...document.querySelectorAll('.dfight [data-f="gameType"]')].find(b=>b.dataset.value==='Doubles');if(!D)return null;const F=D.closest('.dfight'),r=D.getBoundingClientRect(),f=F.getBoundingClientRect();return{pressed:D.getAttribute('aria-pressed'),auto:D.classList.contains('dauto'),mark:!!D.querySelector('sup'),inside:r.width>0&&r.left>=f.left-0.5&&r.right<=f.right+0.5&&r.top>=f.top-0.5&&r.bottom<=f.bottom+0.5,clipped:D.scrollWidth>D.clientWidth+1,right:f.right,vw:innerWidth};})()`);
   assert.ok(d, 'the D button is drawn in the fight bar');
   assert.equal(d.pressed, 'true', 'a doubles trainer opens in D');
-  assert.ok(d.auto && d.mark, 'D is the Auto one, with its A mark');
+  assert.ok(d.auto && !d.mark, 'D is the Auto one (dashed), with no A mark');
   assert.ok(d.inside && !d.clipped, 'the D button fits inside the fight bar, not clipped');
   assert.ok(d.right <= d.vw + 0.5, `the fight bar (right ${Math.round(d.right)}) is within the window ${d.vw}`);
 }

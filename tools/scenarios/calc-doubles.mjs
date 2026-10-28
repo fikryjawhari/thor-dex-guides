@@ -1,6 +1,6 @@
 // Auto Doubles (template/README.md → Auto Doubles): a trainer's doubles evidence (tools/trainer_fields.py:
 // a `gameType: Doubles` effect on a trainer-tag / trainer-partner field record) makes S / D automatic. Per guide: the
-// count of trainers with the evidence; a doubles trainer opens in D (dashed, A mark, tooltip and Area line name the tag),
+// count of trainers with the evidence; a doubles trainer opens in D (dashed, no A mark, tooltip and Area line name the tag),
 // a singles one in S; tapping the trainer's own format is Auto; a manual S survives a move / HP change and is cleared by Reset fight, Field's Auto and the next
 // trainer; Hardlove "Back2Back" (no Double tag) and Eternal X "Rotation Battle" stay S; the partner record names
 // "partner". 260 x 316, normal and dvkb. Usage: node tools/scenarios/calc-doubles.mjs [dist/<hack>.html]
@@ -31,7 +31,7 @@ async function expectAuto(page, trainer, label) {
   assert.deepEqual(await format(page), { format: 'Doubles', manual: false }, label + ': opens in D (auto)');
   const [single, double] = await buttons(page);
   assert.equal(double.pressed, 'true', label + ': D pressed');
-  assert.ok(double.auto && double.a, label + ': D dashed with the A mark');
+  assert.ok(double.auto && !double.a, label + ': D dashed, no A mark');
   assert.equal(double.title, 'Auto: ' + sourceOf(trainer), label + ': the tooltip names the tag');
   assert.ok(!single.auto && single.pressed === 'false', label + ': S plain');
 }

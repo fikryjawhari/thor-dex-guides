@@ -79,13 +79,14 @@ six columns. **Narrow (< 480):** box (unchanged), then the trainer bar (22 px, n
 weather, terrain, ↺; 22 px, its buttons too: accepted below the 26 px tap size), my team (3 × 2) facing the foe strip
 (3 × 2), the two cards side by side, the moves (closed rows 33 px). The first frame is the page scrolled to the trainer
 bar (`openMatch`). **Nameless card** (narrow): the highlighted team cell says who is in. Line 1 ↺, HP box, `/max`, ✎;
-the HP bar under it; line 2 M, ability boxes, Aura / battle-state tag, Speed (no label) at the right; line 3 only for
-berry chip (left), T + Toxic box and residual (right). The name shows (line 0) only when the selected Pokémon is not in
-the team row: then M, the ability boxes and Speed move up beside it, the name truncating as far as needed. **At most
+the HP bar under it; line 2 M, ability boxes, Speed (no label) at the right; line 3 (only when it has something) the
+battle-state tag (Dig, Fly, ...), Aura and the berry chip at the left, T + Toxic box and residual at the right (the
+user, 2026-10-28: state / Aura never on the name line). The name shows (line 0) only when the selected Pokémon is not
+in the team row: then M, the ability boxes and Speed move up beside it, the name truncating as far as needed. **At most
 three lines, always** (the user): `fitCards()` measures each narrow card (render, resize, size change: text zoom fires
-no resize) and moves Aura / the state tag to line 3, then goes tight (1 px gaps, Aura as "A") if needed. No name line
-while Edit is open; an open card spans both columns. Lv sits on the team cell (the Lv box only in Edit); `Int −1` is not
-shown. **Wide (≥ 480):** left column = box panel with my team row under the grid (1 px line), then the fight bar; right
+no resize) and goes tight (1 px gaps, Aura as "A") if it takes more. No name line while Edit is open; an open card
+spans both columns. Lv sits on the team cell (the Lv box only in Edit). No Intimidate mark on any card (the user,
+2026-10-28): the holder's box is the only sign. **Wide (≥ 480):** left column = box panel with my team row under the grid (1 px line), then the fight bar; right
 column = the trainer panel, whose preview (two-line rows, 25 px, all six always visible, no scrolling; tap = pick that
 foe) is the foe's team (no strip); the cards (named, ~48 px) and both move lists pinned to the bottom of the window.
 Jump arrows (`CALC.stops()`): top, the first frame (trainer bar − 2, narrow), the fourth move's bottom when an open row
@@ -98,12 +99,17 @@ filled slot replaces, already in the team → swap; team → slot swaps (empty s
 removes (red × on the floating copy); the click right after a drop is swallowed (400 ms); narrow auto-scrolls at the
 edges. Box cells in the team carry a 5 px accent dot. Mega is the card's M, never a second entry.
 **HP bar and fainted** on every team cell (my row, the foe strip, the wide preview rows): a 2 px bar in the card HP
-bar's colours (green, yellow ≤ 50 %, red ≤ 20 %), and a grey sprite at 0 HP; ↺ Reset fight refills both sides, a
-trainer change the foe's (the player's HP is kept across trainers).
+bar's colours (green, yellow ≤ 50 %, red ≤ 20 %), and a grey sprite at 0 HP; ↺ Reset fight and a trainer change
+refill both sides (the user, 2026-10-28: my team's HP no longer carries over to the next trainer).
 **Auto Doubles**: a trainer whose data carries a `gameType: Doubles` field record (`tools/trainer_fields.py`
 `DOUBLES_TAGS` / partners: double, multi, 2on2, triple (the calc has no triples) tags or `pt` partners; not Back2Back,
-not Rotation) opens in D automatically (dashed, A mark, tooltip and Area line name the tag); tapping S / D is manual for
+not Rotation) opens in D automatically (dashed outline, no A mark: the user; tooltip and Area line name the tag); tapping S / D is manual for
 the fight (tapping the trainer's own format is Auto); Auto, ↺ and the next trainer clear it.
+**Battle type in the trainer's name** (calc only: the bar, the trainer sheet, Find trainer; the walkthrough shows the tag
+itself): `[D]` double (True / 2on2 too), `[M]` multi (tag or `pt` partners), `[T]` triple, `[R]` rotation, `[BR]` battle
+royal, `[B2B]` / `[B3B]` back to back; a double back-to-back shows both (`[D B2B]`). From the trainer's tags in the
+template (`BATTLETYPES`), no data change; a new hack's wording gets a pattern there. Search ignores the brackets, so
+"d" lists the doubles first, and the tag's wording ("double battle", "back to back") is a search key.
 Scenarios: `calc-team`, `calc-doubles`, `calc-layout`, `calc-retest`.
 The HP line is 20 px high, with Toxic beside the unsigned red/green residual and nameless white +berry action;
 a thin bar shows current HP. Each Turn end part in Edit is an independent button (no automatic berry or other parts).
@@ -176,8 +182,8 @@ foe's guessed +1 crit, lead-exempt player Spikes / Toxic Spikes and Trick Room. 
 Terrain; random terrain and Fog are text only. The Area line exposes the original wording on tap / tooltip;
 variant labels are ignored. Automatic toggles are dashed, pressed and marked A; tapping makes them manual.
 Trick Room is always offered from Gen 4 and reverses the faster-Speed colour, not damage.
-Intimidate is a plain checked-by-default header box on its holder (no text; name in tooltip / aria-label); the target's HP line shows the engine's
-net `Int −1` / reaction mark without changing Edit stages. Orb status is derived through `DMG.derived` and labelled
+Intimidate is a plain checked-by-default header box on its holder (no text; name in tooltip / aria-label); it applies the
+engine's net drop / reaction without changing Edit stages, with no mark on the target's card. Orb status is derived through `DMG.derived` and labelled
 `Burn (Orb)` / `Toxic (Orb)` in Edit; choosing any status, including None, is a kept override. Ice Face restoration
 also comes from the entry API. The boxed damage endpoints apply `DMG.hit` patches (HP, consumed items, stages, toggles, status,
 Broken and field events); the user change follows with `DMG.hp` using actual dealt damage / hit count, including
@@ -282,12 +288,12 @@ leave status unset, just like a new Pokémon in Edit; an empty status override w
 Edit shows `No item (used)` with its effect off (the original item is in the tooltip). This fits at 260 px.
 Its selected `@used` option is separate from the real item, so picking even that same item fires a normal set edit
 and replaces it, clearing used.
-Save keeps set fields only, never HP / status / scratch; Edit Reset clears unsaved edits and scratch. `broken` (Disguise / Ice Face) is kept for the fight on both sides. Player HP is kept across trainers; foe
-HP / status only for the current fight. A **trainer change** (bar arrows, Find trainer, a trainer card's Calc link)
-clears all scratch, the foe's kept state and set edits, `broken` / Mega / used items and the manual Field overrides (`ST.fman`: Field keys the user set
+Save keeps set fields only, never HP / status / scratch; Edit Reset clears unsaved edits and scratch. `broken` (Disguise / Ice Face) is kept for the fight on both sides. HP / status
+(both sides) only for the current fight. A **trainer change** (bar arrows, Find trainer, a trainer card's Calc link)
+clears all scratch, both sides' HP / status, the foe's set edits, `broken` / Mega / used items and the manual Field overrides (`ST.fman`: Field keys the user set
 this fight, Singles / Doubles included); the foe team starts at full HP, slot 1 (or the linked Pokémon).
-**Reset fight** (↺ in the fight bar): the same, plus every HP 100 % and every status
-cleared, same trainer and Pokémon. Reload keeps HP / status, the foe's of the current fight and the manual Field;
+**Reset fight** (↺ in the fight bar): the same (every HP 100 %, every status cleared), same trainer and
+Pokémon. Reload keeps HP / status, the foe's of the current fight and the manual Field;
 scratch is gone. Loading older storage drops stored scratch everywhere, turns a stored Mega (`pre`) into `mega` and
 keeps only HP / status / fight state on player cards not selected. Entry hazards still apply once per selection and on a new fight. Scenario: `tools/scenarios/calc-auto.mjs`.
 **Broken** is a labelled header checkbox only for a Mimikyu / Eiscue form with Disguise / Ice Face as its current

@@ -1,6 +1,6 @@
 // Calc fight state (plans/calc-auto-effects.md, unit C rows of Checks): the scratch lifecycle (battle condition lives
 // only while a Pokémon is selected; HP / status / broken are kept; unsaved set edits go on a switch, saved ones stay),
-// a trainer change (foe fresh, player HP kept, manual Field overrides cleared), Reset fight (all HP 100 %, statuses
+// a trainer change (both sides fresh at full HP, manual Field overrides cleared), Reset fight (all HP 100 %, statuses
 // cleared, same trainer and Pokémon), reload / migration of older storage, and (C2) Mega and foe set edits kept for
 // the fight. Default foe: the guide's four-Pokémon trainer (calc_check_lib trainerRoles); 260 x 316, normal and dvkb. Usage: node tools/scenarios/calc-auto.mjs [dist/<hack>.html]
 import assert from 'node:assert/strict';
@@ -88,7 +88,7 @@ const checks = [
   },
   {
     id: 'trainer change',
-    title: 'next trainer: foe team fresh at full HP, slot 1; player HP kept, scratch and broken gone; manual Field overrides cleared, format kept',
+    title: 'next trainer: foe team fresh at full HP, slot 1; player HP / status refilled, scratch and broken gone; manual Field overrides cleared, format kept',
     run: async page => {
       await setupCalc(page);
       const max = await maxOf(page, 'mine'), trainer = await page.value('CALC.state().foe.k');
@@ -111,7 +111,7 @@ const checks = [
       assert.deepEqual(state.foeEdits, [], 'nothing kept for the foe');
       assert.equal(await hpOf(page, 'foe'), await maxOf(page, 'foe'), 'foe at full HP');
       const mine = await mon(page, 'mine');
-      assert.equal(mine.hp, max - 10, 'player HP kept');
+      assert.equal(await hpOf(page, 'mine'), max, 'player HP refilled');
       assert.equal(mine.stg, '0,0,0,0,0', 'player scratch cleared');
       assert.equal(mine.broken, null, 'broken ends with the fight');
       await page.tap('[data-a="tprev"]');
@@ -373,13 +373,13 @@ checks.push(
   },
   {
     id: 'intimidate',
-    title: 'Intimidate holder box; engine net marks for Simple and Defiant; untouched stages and no header overflow',
+    title: 'Intimidate holder box, no card mark; untouched stages and no header overflow',
     run: async page => {
       await setupCalc(page);
-      for (const [name, ability, delta] of [['Bibarel','Simple',-2],['Bisharp','Defiant',1]]) {
+      for (const [name, ability] of [['Bibarel','Simple'],['Bisharp','Defiant']]) {
         await configure(page, { name: 'Growlithe', ability: 'Intimidate' }, { name, ability });
         assert.deepEqual(await page.value(`(()=>{const box=document.querySelector('[data-e="intim"]');return {text:box.parentElement.textContent.trim(),title:box.parentElement.title,aria:box.getAttribute('aria-label')};})()`),{text:'',title:'Intimidate',aria:'Intimidate'},'plain accessible checkbox');
-        assert.match(await page.text('.cc[data-s="foe"] .dintmark'), new RegExp(delta<0?'Int −2':'Int \\+1'));
+        assert.equal(await page.count('.dintmark'), 0, 'no Intimidate mark on the card (the engine tests check the net stage)');
         assert.deepEqual(await page.value('CALC.mon("foe").stg'), [0,0,0,0,0]);
         await page.value(`(()=>{const box=document.querySelector('[data-e="intim"]');box.checked=false;box.dispatchEvent(new Event('change',{bubbles:true}));})()`);
         assert.equal(await page.count('.dintmark'), 0);

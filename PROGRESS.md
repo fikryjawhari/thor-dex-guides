@@ -71,10 +71,11 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
      compares against `calc-pre-team`; with the footer's build date ignored only `#/calc` differs (all four guides,
      intended). Every calc scenario passes incl. the new `calc-team` / `calc-doubles`; engine tests and hzla compares
      unchanged (EI 142 + 12, Photonic 118 + 28, Eternal X 116 + 3, 0 mismatch).
-     For the user to review on the Thor: the three-line card (very short names, Aura as "A" in tight mode); my team's HP
-     is kept across trainers (bars refill on ↺ only, the foe's on both); the card's HP bar now turns yellow / red too;
-     the wide preview's HP bar is under the sprite only; the level badge covers the bar's right end; tapping the
-     trainer's own S / D counts as Auto; the A mark on the 22 px D is tight.
+     The user's review (2026-10-28), kept: card HP bar colours, the wide preview's HP bar under the sprite with the level
+     badge over its end, tapping the trainer's own S / D = Auto. Changed the same day: my team's HP / status refill on
+     a trainer change too; battle state / Aura moved to the card's line 3 (left, before the berry); no Intimidate mark;
+     no A on the Auto D (dashed outline only); battle type before the trainer's name in the calc (`[D]`, `[M]`, `[T]`,
+     `[R]`, `[BR]`, `[B2B]`, `[B3B]`; template/README.md → Both teams in the first frame).
    - **Save readers + the guide side of the app's save picker:** built on `worktree-damage-calc-saves`, merged into this
      branch 2026-10-28 (worktree and branch deleted after the merge). Gen 3 for Emerald Imperium
      (`readers/expansion.js` + EI `GID`, checked against hzla's EI 1.3 save, 33 of 33; EI notes.md → Damage calc → Save

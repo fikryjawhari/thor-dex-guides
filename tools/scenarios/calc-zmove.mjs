@@ -28,7 +28,7 @@ async function setup(page) {
   await page.typeSearch('Decidueye');
   await page.tap('.mrow[data-i="0"]');
   await page.value(`CALC.enter(${JSON.stringify(TOTEM)},0)`);
-  // The narrow card's parts (Aura, state tag) may move to line 3 or go tight after injecting: re-measure (template: fitCards).
+  // The narrow card may go tight after injecting: re-measure (template: fitCards).
   await page.value('CALC.fit()');
   await page.settle();
 }
@@ -75,7 +75,7 @@ const checks = [{
     const stg = () => page.value(`[...document.querySelectorAll('.dmatch .cc[data-s="foe"] [data-a="sstep"]')].map(b=>b.textContent)`);
     assert.equal(await page.count('.cc[data-s="foe"] .aum'), 1, 'Aura mark on the Totem');
     assert.equal(await page.count('.cc[data-s="mine"] .aum'), 0, 'none on Mine');
-    // The mark sits on card line 2 or 3 (or line 0 with a name), or reads "A" in tight mode: its element and tooltip are what counts.
+    // The mark sits on card line 3, or reads "A" in tight mode: its element and tooltip are what counts.
     const mark = await page.value(`(()=>{const el=document.querySelector('.cc[data-s="foe"] .aum'),a=el.getBoundingClientRect(),c=document.querySelector('.cc[data-s="foe"]').getBoundingClientRect();return {in:a.left>=c.left-0.5&&a.right<=c.right+0.5&&a.top>=c.top-0.5&&a.bottom<=c.bottom+0.5,title:el.getAttribute('title'),text:el.textContent.trim()};})()`);
     assert.ok(mark.in, 'mark inside the card');
     assert.equal(mark.title, 'Totem aura', 'mark tooltip');
