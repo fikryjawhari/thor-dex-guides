@@ -556,6 +556,9 @@ body.calc-route .dres .mr .r2 button,body.calc-route .dres .mr .r2 .dturn{height
 body.calc-route .dres .mr .mv{line-height:1.15;padding-bottom:0}
 body.calc-route .dres .mr .mm,body.calc-route .dres .mr.st .mm,body.calc-route .dres .mr.em .mm{min-height:0;padding:1px 5px}
 body.calc-route .dfight select,body.calc-route .dfight .dformat button,body.calc-route .dfight .dfreset{height:22px;min-height:22px}
+body.calc-route .cc .dend>.dturn,body.calc-route .cc .dend>[data-tox]{box-sizing:border-box;height:18px;min-height:18px;padding:0 3px;line-height:16px;font-size:11px;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center}
+body.calc-route .cc .dend>[data-tox]{width:18px;padding:0;text-align:center}
+body.calc-route .cc .dend>.dtoxl{display:inline-flex;align-items:center;height:18px;line-height:1}
 @media(max-width:479.98px){
  body.calc-route .fit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"ban ban" "box box" "tside tside" "fight fight" "team foe" "cm cf" "mv mv";gap:2px}
  body.calc-route .fit:not(:has(.ban)){grid-template-areas:"box box" "tside tside" "fight fight" "team foe" "cm cf" "mv mv"}
@@ -575,4 +578,29 @@ body.calc-route .dfight select,body.calc-route .dfight .dformat button,body.calc
  body.calc-route .dmatch>.dres.na{display:none}
  body.calc-route .fbar{min-height:22px}
  body.calc-route .fbar .nav,body.calc-route .fbar .dsrc{height:22px;min-height:22px}
+ body.calc-route .cc{display:flex;flex-direction:row;flex-wrap:wrap;align-content:start;align-items:center;gap:0 2px;padding:1px 3px;min-height:0}
+ body.calc-route .cc .l1,body.calc-route .cc .cl{display:contents}
+ body.calc-route .cc .cn{display:none}
+ body.calc-route .cc.offteam .cn{display:block;order:0;flex:0 0 100%;min-height:18px;white-space:normal;overflow-wrap:anywhere}
+ body.calc-route .cc.offteam .cn b{white-space:normal;overflow-wrap:anywhere}
+ body.calc-route .cc .cl>span:first-child,body.calc-route .cc [data-lv],body.calc-route .cc .dintmark{display:none}
+ body.calc-route .cc .hpl,body.calc-route .cc [data-hp],body.calc-route .cc .mx{order:1}
+ body.calc-route .cc .cl [data-hp]{width:26px;height:20px;min-height:20px;padding:0 1px;font-size:12px}
+ body.calc-route .cc .mx{font-size:10px}
+ body.calc-route .cc .stb{order:2;margin-left:auto;font-size:0;width:20px;min-width:20px;height:18px;padding:0}
+ body.calc-route .cc .stb::after{content:'✎';font-size:11px}
+ body.calc-route .cc>.dhpbar{order:3;flex-basis:100%;margin:0}
+ body.calc-route .cc .mg,body.calc-route .cc .dmonstate,body.calc-route .cc .ddl,body.calc-route .cc .aum,body.calc-route .cc .dvol{order:4;height:18px;min-height:18px}
+ body.calc-route .cc .l1 .sp{order:5;margin-left:auto;font-size:0;min-height:18px;display:flex;align-items:center}
+ body.calc-route .cc .l1 .sp i{font-size:12px}
+ body.calc-route .cc .cl .dend{order:6;flex-basis:100%;display:flex;justify-content:flex-end;align-items:center;gap:2px;flex-wrap:wrap}
+ body.calc-route .cc .dend:empty{display:none}
+ body.calc-route .cc .dend>.dberry{order:0;margin-right:auto}
+ body.calc-route .cc .dend>.dtoxl,body.calc-route .cc .dend>[data-tox]{order:1}
+ body.calc-route .cc .dend>button:not(.dberry){order:2}
+ body.calc-route .cc .dend>[data-tox]{width:17px;height:16px;min-height:16px;font-size:10px;padding:0}
+ body.calc-route .cc .dend>.dtoxl{margin:0 -1px 0 0;padding:0;font-size:10px;position:static}
+ body.calc-route .cc>.ed{order:9;flex-basis:100%;min-width:0}
+ body.calc-route .cc:has(.ed) .cl>span:first-child,body.calc-route .cc:has(.ed) [data-lv]{display:inline-flex;order:1;align-items:center}
+ body.calc-route .cc:has(.ed) [data-lv]{width:30px;height:20px;min-height:20px;font-size:12px;margin-right:4px}
 }
