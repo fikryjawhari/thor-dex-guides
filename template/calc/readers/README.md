@@ -38,6 +38,19 @@ does. Include every field checked by calc_save_check and every empty box. USUM f
 evidence that Photonic Sun's mechanics match vanilla. All four reopen with valid checksums; generation log:
 `.tmp/calc-save-photonic-sun/oracle.log`.
 
+Eternal X XY fixture (2026-10-28): `hacks/eternal-x/.src/saves/pkhex-xy.{sav,expected.json}`,
+generated with the same local project and PKHeX pin, but **Eternal X's own** `dex-rebalanced.json` for growth,
+stored ability assignments and move/ability/item names. Its source has five growth rates (no Fluctuating);
+expected boxed levels use PKHeX Experience.GetLevel with those rates, preserving vanilla-generated EXP.
+Six party members include Charizard with each stone, Alakazam/Mewtwo with stones, hidden abilities, female
+Meowstic and Heat Rotom. Seventy-nine boxed specimens cover all 32 shuffle selectors, natures 0..24, four stored
+Megas with matching stones, all six Rotom forms, both Meowstic/Aegislash forms, all four Pumpkaboo/Gourgeist
+sizes, all 20 Vivillon patterns and all five Flabébé colours. Identical cosmetic forms use the guide's retained
+Icy Snow / Red names. IVs/EVs follow the recipe above, levels cycle 10..90, items include empty/Leftovers/Life
+Orb/Focus Sash/Choice Scarf, and every third specimen has an empty fourth move. Box slots span boxes 1..5 and
+box 31 slot 30, with all empty boxes included in expectations. Reopened XY checksums and party count pass;
+generation log: `.tmp/calc-save-eternal-x/oracle.log`. Fixtures and the GPL-linked generator remain uncommitted.
+
 ## Reader coverage
 
 | File | Family | Hacks | Checked with |
