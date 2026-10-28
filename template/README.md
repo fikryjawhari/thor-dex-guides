@@ -45,7 +45,7 @@ an unknown key.
 
 ## Shared rules every guide follows
 
-These came out of the consistency pass (2026-10-23/24); the extract helpers apply most of them.
+The extract helpers apply most of these rules.
 - Species that are neither obtainable nor used by a trainer are left out (Megas / forms too).
 - Trainers boxes are cap splits named `<Boss> Split [Cap N]`, then `Elite Four Split [Cap N]`, then `Post-game`
   (`tools/splits.py`). One cap list, mini caps included. The walkthrough's splits are the same boxes, and the
@@ -63,7 +63,7 @@ the card's header line, left of Edit, no taller than Edit (the card keeps the he
 accessible label and tooltip: these checkboxes, the Intrepid Sword / Dauntless Shield box (checked = on, the default)
 and the Download button. Edit itself is the same for every Pokémon. Changing ability or
 Mega form clears this state. Controls do not change the attack direction. `categoryInvert` names moves with an
-Invert category checkbox in their move details: a compact P/S · A/I button above Crit also toggles it while collapsed.
+Invert category checkbox in their move details: a compact P/S · A/I button in the second move bar also toggles it while collapsed.
 The tooltip spells out category, Auto/Inverted and ties. The ability boxes are battle state (scratch, see Fight
 state); the category flag is a per-slot move override and is stored. EI also exposes allied Emperor's Presence per side;
 it only affects doubles. Effective priority is an
@@ -73,21 +73,20 @@ Edit. The team area's height is based on closed cards and move rows, so edits/re
 the team from rows to a strip. Editors and expanded moves grow downwards; Field follows the whole moveset.
 No condition labels or category controls appear in profiles that do not declare them.
 
-**Both teams in the first frame (calc-team, 2026-10-28):** at every viewer size the first frame shows my team, the
+**Both teams in the first frame:** at every viewer size the first frame shows my team, the
 foe's team, both cards, the attacker's four moves (wide: both lists) and the fight bar at once. Both sprite grids keep
 six columns. **Narrow (< 480):** box (unchanged), then the trainer bar (22 px, no panel border), the fight bar (S / D,
 weather, terrain, ↺; 22 px, its buttons too: accepted below the 26 px tap size), my team (3 × 2) facing the foe strip
 (3 × 2), the two cards side by side, the moves (closed rows 33 px). The first frame is the page scrolled to the trainer
 bar (`openMatch`). **Nameless card** (narrow): the highlighted team cell says who is in. Line 1 ↺, HP box, `/max`, ✎;
 the HP bar under it; line 2 M, ability boxes, Speed (no label) at the right; line 3 (only when it has something) the
-battle-state tag (Dig, Fly, ...), Aura and the berry chip at the left, T + Toxic box and residual at the right (the
-user, 2026-10-28: state / Aura never on the name line). The name shows (line 0) only when the selected Pokémon is not
+battle-state tag (Dig, Fly, ...), Aura and the berry chip at the left, T + Toxic box and residual at the right.
+State / Aura never sit on the name line. The name shows (line 0) only when the selected Pokémon is not
 in the team row: then M, the ability boxes and Speed move up beside it, the name truncating as far as needed. **At most
-three lines, always** (the user): `fitCards()` measures each narrow card (render, resize, size change: text zoom fires
+three lines, always**: `fitCards()` measures each narrow card (render, resize, size change: text zoom fires
 no resize); one that takes more moves Aura up (the ability / Speed line, or after `/max` on a named card: Aura is the
 rarest tag and about stages), then the battle state the same way, then goes tight (1 px gaps, Aura as "A"). No name line while Edit is open; an open card
-spans both columns. Lv sits on the team cell (the Lv box only in Edit). No Intimidate mark on any card (the user,
-2026-10-28): the holder's box is the only sign. **Wide (≥ 480):** left column = box panel with my team row under the grid (1 px line), then the fight bar; right
+spans both columns. Lv sits on the team cell (the Lv box only in Edit). No Intimidate mark on any card: the holder's box is the only sign. **Wide (≥ 480):** left column = box panel with my team row under the grid (1 px line), then the fight bar; right
 column = the trainer panel, whose preview (two-line rows, 25 px, all six always visible, no scrolling; tap = pick that
 foe) is the foe's team (no strip); the cards (named, ~48 px) and both move lists pinned to the bottom of the window.
 Jump arrows (`CALC.stops()`): top, the first frame (trainer bar − 2, narrow), the fourth move's bottom when an open row
@@ -99,15 +98,15 @@ touch): touch / pen hold 250 ms without moving 8 px (moving first scrolls), mous
 filled slot replaces, already in the team → swap; team → slot swaps (empty slot: to the end), → outside the row
 removes (red × on the floating copy); the click right after a drop is swallowed (400 ms); narrow auto-scrolls at the
 edges. Box cells in the team carry a 5 px accent dot. Mega is the card's M, never a second entry. **Foe Pokémon to my
-team** (the user, 2026-10-28: a partner's team in a multi): a foe strip cell (narrow) or foe row (wide) dragged onto
+team** (for a partner's team in a multi): a foe strip cell (narrow) or foe row (wide) dragged onto
 the team row becomes a custom set copied from the trainer's (pid `f:<trainer>:<slot>`, once: a second drop moves it),
 listed with the other custom sets; dropped anywhere else nothing happens, and a tap still picks the foe.
 **HP bar and fainted** on every team cell (my row, the foe strip, the wide preview rows): a 2 px bar in the card HP
 bar's colours (green, yellow ≤ 50 %, red ≤ 20 %), and a grey sprite at 0 HP; ↺ Reset fight and a trainer change
-refill both sides (the user, 2026-10-28: my team's HP no longer carries over to the next trainer).
+refill HP and clear status on both sides (see Fight state).
 **Auto Doubles**: a trainer whose data carries a `gameType: Doubles` field record (`tools/trainer_fields.py`
 `DOUBLES_TAGS` / partners: double, multi, 2on2, triple (the calc has no triples) tags or `pt` partners; not Back2Back,
-not Rotation) opens in D automatically (dashed outline, no A mark: the user; tooltip and Area line name the tag); tapping S / D is manual for
+not Rotation) opens in D automatically (dashed outline only, no A mark; tooltip and Area line name the tag); tapping S / D is manual for
 the fight (tapping the trainer's own format is Auto); Auto, ↺ and the next trainer clear it.
 **Battle type in the trainer's name** (calc only: the bar, the trainer sheet, Find trainer; the walkthrough shows the tag
 itself): `[D]` double (True / 2on2 too), `[M]` multi (tag or `pt` partners), `[T]` triple, `[R]` rotation, `[BR]` battle
@@ -125,21 +124,18 @@ picker, including the in-guide keyboard. Species abilities remain a native selec
 retaining a valid species ability or restoring the first species ability. Off-species saved abilities reopen as text.
 No native select (status, battle state, move type, hit count, weather, terrain, etc.) is intercepted.
 
-**Turn end** (residual, 2026-10-25): `DMG.residual(set, field)` gives each side's end-of-turn parts (weather, Leftovers / Black
-Sludge / Sticky Barb, status incl. rising toxic, Grassy Terrain, Dry Skin / Rain Dish / Ice Body / Solar Power / Poison Heal,
-plus the profile's `residual`). The KO text counts the defender's per-turn change; rolls, percentages and HP buttons never do.
-The clickable residual amount sits on its Pokémon's existing HP line. Tap it to apply one turn immediately, without
-opening Edit or selecting the attacker. Toxic's 1-15 turn box sits on the same HP line (`T`), before the amount;
-applying a turn advances it, capped at 15. Inside Edit the parts are folded behind a Turn end button on the Battle
-state row (opened per card, not stored), so up to five residuals never make the open card taller than one window. **Triple Kick / Triple Axel**: the row's ×3 button
-cycles ×3 (total, default) → H1 → H2 → H3; the outside number is the total or that hit's range, percent and KO stay on the
-total; the choice lives in `ST.hits` (0 = total); no Hits box in the editor. An opened row repeats them (`Turn end: −2 Sandstorm`). Leech Seed is the side's
-Seeded state (Turn end group). The ↺ button restores full HP (accented when HP is not full).
+**Turn end**: `DMG.residual(set, field)` supplies each side's parts; engine rules live in
+`tools/calc/README.md` → Public contract. KO text counts the defender's per-turn change; rolls, percentages
+and damage endpoints do not. Tap the residual amount on the HP line to apply one turn without opening Edit
+or selecting the attacker. Toxic's 1–15 turn box (`T`) sits before it and advances on application, capped at 15.
+Inside Edit the parts fold behind Turn end on the Battle state row (per card, not stored), so they never make
+the open card taller than one window. An opened move repeats the parts (`Turn end: −2 Sandstorm`).
+Leech Seed is the side's Seeded state. The ↺ button restores full HP (accented when HP is not full).
 **Protean / Libero**: the attacker takes each move's type (STAB in every base); the edit menu
 of a Pokémon with either ability has a Type row (own types or one of the 18) used when it defends; a dot in that type's colour
 marks the card. Scratch `pty`; ability / Mega change clears it. Scenario: `tools/scenarios/calc-residual.mjs`.
-**Battle state**: per-row toggles, earlier-use counters, partner pledges (Doubles only) and Metronome use the one
-top slot above Crit, without growing the row. Hack `over.state: false` suppresses a move's control; `curl: false`
+**Battle state**: per-row toggles, earlier-use counters, partner pledges (Doubles only) and Metronome share the
+second move bar with Crit, without growing the row. Hack `over.state: false` suppresses a move's control; `curl: false`
 suppresses Defense Curl in Rollout/Ice Ball details. A move's own control wins over the item's Metronome counter.
 State is `ST.st[slotKey]`; target Dig/Fly/Dive/Minimized/Switching is `ST.tgt[cardKey]` in Edit (both scratch, never
 stored). Changing a move clears
@@ -148,7 +144,7 @@ Download cycles Auto (with its actual stat), Atk, Sp. Atk, None, shown as `A·At
 (tooltip spells it out).
 Details show used/listed/typed power, crit chance/stage and first-/between-hit changes; the move's own changes alone
 can be omitted. Forced crit locks C on; blocked crit disables it. No new localStorage key is used.
-**HP moves / move bars** (2026-10-27): damaging rows expose boxed minimum and maximum endpoints on the closed
+**HP moves / move bars**: damaging rows expose boxed minimum and maximum endpoints on the closed
 row. Either applies that displayed damage to the opposite card through `DMG.hit`, then the user's recoil, drain,
 Life Orb and contact costs through `DMG.hp`, using actual dealt damage and damaging hits. Crit, selected hit count,
 Z and per-hit inspection affect the endpoints; Sash/Sturdy, berries, Broken and automatic reactions still apply.
@@ -187,7 +183,8 @@ Trick Room; at the same Speed the foe's wins); primal weather resists ordinary s
 setter leaves its layer behind. A fainted entrant sets nothing. Area evidence also supplies foe Tailwind, the
 foe's guessed +1 crit, lead-exempt player Spikes / Toxic Spikes and Trick Room. Thunderstorm is Rain + Electric
 Terrain; random terrain and Fog are text only. The Area line exposes the original wording on tap / tooltip;
-variant labels are ignored. Automatic toggles are dashed, pressed and marked A; tapping makes them manual.
+variant labels are ignored. Automatic Field toggles are dashed, pressed and marked A; tapping makes them manual.
+The fight bar's automatic D is the exception: dashed outline only.
 Trick Room is always offered from Gen 4 and reverses the faster-Speed colour, not damage.
 Intimidate is a plain checked-by-default header box on its holder (no text; name in tooltip / aria-label); it applies the
 engine's net drop / reaction without changing Edit stages, with no mark on the target's card. Orb status is derived through `DMG.derived` and labelled
@@ -196,25 +193,24 @@ also comes from the entry API. The boxed damage endpoints apply `DMG.hit` patche
 Broken and field events); the user change follows with `DMG.hp` using actual dealt damage / hit count, including
 contact costs. Dealt / You Apply uses exact-damage threshold reactions only. Turn end applies `DMG.turn`, including
 Speed Boost and eligible berries. An eligible berry has its own HP-line chip (`Sitrus +13`, `Salac Spe+1`), applying
-`DMG.berry` once. A crowded HP line with a berry or Intimidate wraps rather than clipping actions or widening the page.
+`DMG.berry` once. A crowded card fits its berry action without clipping or widening the page; Intimidate has no target mark.
 These actions and entry hazards replace a fixed log at the top of the window (three lines, then internal
-scrolling; gone 3 s after the last action, held while a long one is touched or scrolled, × closes it at once; 2026-10-28,
-the user: the bottom one stayed until dismissed), never adding layout height or saved state. KO notes come from the engine.
+scrolling; gone 3 s after the last action, held while a long one is touched or scrolled, × closes it at once), never adding layout height or saved state. KO notes come from the engine.
 Field toggles never break a word: the narrowest box is the widest single word of any toggle (measured in the page's
 font at render, so text zoom counts), each toggle grid uses its own measured width and fits as many columns as there is room
-(`auto-fit`), so a narrow grid becomes rows. **Field layout** (R3, 2026-10-27), one column at every width: Global
+(`auto-fit`), so a narrow grid becomes rows. **Field layout**, one column at every width: Global
 (collapsible, every field-wide toggle incl. Trick Room), then a Player | Foe switch (one side at a time; its active
 count on each button; not stored), then that side's ungrouped toggles and its States, Turn end and Hazards groups,
 stacked. Each group ends in the standard `.endbar` (`Collapse <group>`, shown only when the open group is taller than
-the window; it closes the group and keeps its heading in view). No whole-Field bar (rejected in the R3 mockup).
+the window; it closes the group and keeps its heading in view). No whole-Field bar: each group owns its collapse control.
 Fight-bar selects keep their closed text short for 260 px: the auto choice reads the auto value or "Auto" (dashed
 border; the full "Auto: …" in its title), the empty choice "None", one-word values instead of long labels ("Sand").
 In the preview rows the ability shrinks to an ellipsis first.
-**Stackable states** (2026-10-26): `template/calc/field-states.json` defines side controls; `assemble.py` adds only
+**Stackable states**: `template/calc/field-states.json` defines side controls; `assemble.py` adds only
 those supported by the guide's moves / causing abilities and generation (Protect needs a Protect-family move, not `zmove`). The engine accepts
 these keys independently of UI availability. Dig / Fly / Dive / Minimized / Switching out remain the exclusive
 Edit selection. Other states fold under States, Turn end and Hazards, with active counts; fold state is session-only.
-**Grouped by what an entry affects** (2026-10-27): **Global** = every Pokémon on the field (rooms, Gravity, Sports,
+**Grouped by what an entry affects**: **Global** = every Pokémon on the field (rooms, Gravity, Sports,
 Splits, Inverse; in Doubles the auras and Ruins, one toggle each named by the ability: another Pokémon on the field has
 it, so it applies to both calc Pokémon; a calc Pokémon holding it keeps the automatic behaviour, is not lowered by its
 own Ruin, and the same Ruin doesn't stack). The **side grid** (ungrouped) = the whole side: screens, Tailwind,
@@ -229,7 +225,7 @@ Expanded groups stay inside the one-window Field, scrolling its body when needed
 into view.
 Field content does not flex-shrink; toggle rows keep their natural wrapped-label height when pressed or redrawn.
 The player's Pokemon box packs compact rows against its top edge, leaving any spare height below the last row.
-Turn-end parts now include trapping (the opposing holder's Binding Band), Leech Seed transfer (Big Root / Liquid
+Turn-end parts include trapping (the opposing holder's Binding Band), Leech Seed transfer (Big Root / Liquid
 Ooze / Magic Guard), Salt Cure, Ghost Curse, sleeping Nightmare, Ingrain, Aqua Ring, pledge fire and automatic Bad
 Dreams. Speed uses the engine's final field-aware value, including Swamp. All side utilities use fixed Player/Foe
 prefixes; attack calculation still remaps them for the chosen direction.
@@ -251,25 +247,21 @@ Text zoom scales every font; box heights are fixed px. A hidden probe re-measure
 changes. **Search**: Find trainer and Find yours also match a set's moves, held item and known ability (a trainer:
 any of its Pokémon's); names rank first, and a term match is named on the row.
 Scenario: `tools/scenarios/calc-state.mjs`; trainer Metronome top-slot conflicts: `tools/calc_ui_check.py`.
-**Z-moves** (profile `zmove`, Photonic; 2026-10-26): each damaging row's % line opens with a Z toggle, centred under the
-row's type dot (the dot and the Z share a 20 px column, so the name and the % text start at the same x; the user rejected
-Z before the name: it cut long names at 260 px). On: the row shows the Z-move's name in the accent colour and its damage
-(slot `z`, one hit: no ×n / Hits), the opened row says "Z-move of <move>". Stored per slot in `ST.z` (the calc's one key),
-cleared with the slot's move. Rows are 36 px instead of 31 so the toggle fits (the % line sits 2 px up inside the row);
-the trainer bar's arrows are drawn chevrons centred in their buttons (the ‹ › glyphs sat low), and below 480 px the buttons
-are 24 × 22 and the bar 24 px tall (was 30 × 26, 28): trainer bar to the fourth move is 309 px of 316. From 480 px the Z is smaller
-(12 px) and the rows stay 32 px: the 36 px rows left 211 px under the cards at 537 / 832 × 424, below the foe team list's
-222 (now 227). Status rows have no Z. Guides without `zmove` render exactly as before (no `zm` class, no `pc` span class).
+**Z-moves** (profile `zmove`, Photonic): each damaging row's % line has a Z toggle, centred under the
+row's type dot (a shared 20 px column keeps the name and % text aligned). Z before the name was rejected because
+it cut long names at 260 px. On: the row shows the Z-move's name in the accent colour and its damage
+(slot `z`, one hit: no ×n / Hits); the opened row says "Z-move of <move>". Stored per slot in `ST.z`,
+cleared with the slot's move. Status rows have no Z. Profiles without `zmove` have no Z control.
 **Totem auras** (data `au`, five stages): the Trainers card tags the Totem ("Aura Def +1", "Aura +2 all"); in the calc
-its stages start at the aura and an "Aura" mark sits at the end of the Lv / HP line while they are unchanged (Reset
-brings it back). Scenario: `tools/scenarios/calc-zmove.mjs`.
+its stages start at the aura, with an "Aura" mark while unchanged (Reset brings it back).
+Narrow placement follows the three-line card rules above. Scenario: `tools/scenarios/calc-zmove.mjs`.
 
 `#/calc` is implemented by `calc.js` and `calc.css`; `assemble.py` includes these and `calc/engine.js` only with
 `cfg.calc`. The resolved profile supplies the level and stage bounds, status choices, nature/ability/item switches,
 field entries, multi-hit ranges and variable-power moves. The page calls `DMG.init`, `DMG.stats` and `DMG.calc`;
 damage rolls and KO probabilities come from the adapter, not page-side mechanics. Weight / HP / speed moves (Low Kick, Flail, Gyro
 Ball, ...) get their power from the engine (`r.bp`, shown in the row's Power box, which still overrides); Return /
-Frustration show 102 (maximum happiness, 2026-10-26); the other variable-power moves show — until a power is set.
+Frustration show 102 (maximum happiness); the other variable-power moves show — until a power is set.
 Effective Speed uses the optional `DMG.speed(set, field)` hook; without it, the fallback applies stages only.
 The real adapter must provide that hook for paralysis and other game-specific Speed modifiers.
 When the adapter returns `per`, the expander shows each hit's rolls; aggregate HP subtraction and best-move ranking
@@ -281,7 +273,7 @@ are one object in `cfg.ls.dmg` (no other key).
 The turn action leaves that berry available. If residual damage first crosses the threshold, the turn amount and
 action include its recovery and consumption. Speed Boost still follows the residual parts.
 
-**Fight state** (2026-10-27): a Pokémon's battle condition (stages, ability boxes,
+**Fight state**: a Pokémon's battle condition (stages, ability boxes,
 Download, entry box, Protean type, target state, row state incl. counters, toxic turn) is **scratch**: memory only
 (`SC[cardKey]` + `ST.st` / `ST.tgt`), alive while the card is selected. Selecting another Pokémon and coming back
 brings it fresh; only **HP and status** are kept (`hp` / `status` in `ST.edits`, a custom set's own fields), the
@@ -315,8 +307,7 @@ Import exists only with `profile.save`: a file input calls `READERS[profile.save
 `D.GID` (bypassed with `ids: "ours"`). A Pokémon whose species maps to nothing in the guide (EI's pruned species) is
 skipped and counted in the banner ("· 1 not in this guide"); Wrong game only when no party Pokémon maps. Success
 atomically replaces the import and clears imported edits/slot overrides; errors retain the old import. In Dex Viewer
-the bytes come from the app's save bridge instead (`window.dexViewerApp`, contract: `../thor-offline-viewer/docs/
-SAVE_BRIDGE.md`; the file input does nothing there). Nothing imported yet: Import calls `save()`, and `pickSave()` only
+the bytes come from the app's save bridge instead (`window.dexViewerApp`, contract: `../thor-offline-viewer/docs/SAVE_BRIDGE.md`; the file input does nothing there). Nothing imported yet: Import calls `save()`, and `pickSave()` only
 when no file is linked. With an import, ↻ Import is refresh: `save()` only, never the picker (it would take focus from
 the game); the same file and `modified` as the import gives "No new save" and keeps the edits. Banners get a button
 in the viewer: Change file (green) or Pick (red), both `pickSave()`; cancelling keeps everything. Bridge errors: `gone`
@@ -326,29 +317,29 @@ import, "No save file linked". `ST.imp.mod` keeps the save's `modified`; `saveIn
 their formats: `calc/readers/README.md`. `calc/readers/test.js` and `tools/scenarios/fixtures/calc/` supply synthetic JSON saves.
 `node tools/scenarios/calc-smoke.mjs dist/emerald-imperium.html` patches only a temporary built page to select that reader.
 
-`dex.js` owns guarded rail, trainer-card and stat-calculator entry hooks and delegates the calc's three scroll stops.
-Below 480px, one moveset is shown; from 480px, equal columns show both and keep Field below the viewport-height block.
-The Mine grid scrolls internally; the foe list replaces its strip only at 222px of measured availability. Both strips
-share 28px cells with the level safely inside the selection border. Without `cfg.calc`, only removal of the Calc tab
-changes the other pages' DOM, and `#/calc` redirects to the Pokémon list.
+`dex.js` owns guarded rail, trainer-card and stat-calculator entry hooks and delegates scroll stops to
+`CALC.stops()` (see Both teams in the first frame). Without `cfg.calc`, only removal of the Calc tab changes the
+other pages' DOM, and `#/calc` redirects to the Pokémon list.
 
-**Design rules** (UI spec 2026-10-24): one screen at 260 × 316 (trainer bar, foe strip, both cards, the attacker's
-four moves); don't add a row to that block without removing one. Below 640 px (including narrow wide-layout columns),
-a berry chip moves into Edit when Toxic, an Intimidate mark or a battle-state label crowds the HP line; compact
-number boxes, marks and a Speed-change arrow keep that line unwrapped (full effect names remain in the tooltip). Consuming a berry does not change the closed card height or hide
-the fourth move. Otherwise the berry stays beside the turn-end amount. Nothing to open for common edits (level, HP, nature,
-ability, item, status, IVs / EVs, stages, Mega, moves, power / type / hits, crit); sheets only for long lists. Space goes
+Engine contracts, mechanics and profile authoring: `tools/calc/README.md`. Save formats and reader coverage:
+`calc/readers/README.md`. Browser checks: `tools/scenarios/README.md` → Calc checks.
+
+**Design rules**: one screen at 260 × 316 shows both teams, both cards, the attacker's four moves and the
+fight bar; don't add a row without removing one. Closed cards expose HP, Mega, ability controls and turn-end/
+berry actions; Edit holds level, nature, ability, item, status, IVs/EVs and stages. Move expanders hold details
+and overrides; sheets are for long lists. The berry stays beside the turn-end amount (narrow placement follows
+the three-line rules above); consuming it must not change card height or hide the fourth move. Space goes
 to the matchup: no headings, explanatory text or dividers; names truncate in the main block, full in sheets and
 expanders. Never overflow the width, normal or `dvkb`, every expander open. The template owns the mechanics-free UI;
 everything that differs between games (generation, field list, status / stage / level ranges, changed effects,
 multi-hit / variable-power moves, forms, save family) comes from the profile. **Touch targets** are smaller than
-viewer-ui.md's 40-44 px by the user's decision (number boxes ~22 px, Edit / M 18 px, `×n` / `C` 28 × 14.5 px, rows 31
-px, cells and tools strip 28 px); if the Thor shows they are too small, grow the cards' second line and the tools strip
+viewer-ui.md's 40-44 px by the user's decision (number boxes ~22 px, Edit / M 18 px, `×n` / `C` 28 × 14.5 px, closed rows about 33 px,
+cells and tools strip 28 px); if the Thor shows they are too small, grow the cards' second line and the tools strip
 first. **Safari lessons:** rows with block children in a `<button>` size too small (use `div role=button`); give sheet
 children `flex:none`; size stacked buttons with explicit heights, scoped (`.mr .rcol button`), not `flex:1`; ellipsis
 text needs line-height ≥ 1.2 and 1 px bottom padding or descenders clip.
 
-Built with the user over many mockup rounds; keep to it and don't retry what's listed as rejected.
+Keep these decisions; don't retry what's listed as rejected.
 
 **Collapsible pages** (walkthrough, Locations, Trainers, Items; `COLLAPSIBLE PAGES` in dex.js, "Collapsible pages" in
 dex.css):

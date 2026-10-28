@@ -1,55 +1,41 @@
 # Save readers
 
-One reader per save family: `READERS['<family>'] = (bytes, D) => ({game, party, boxes})` in game ids, or `throw {code:
-'wrong' | 'state' | 'unreadable' | 'empty', game}`. The interface, the families and the order they are built in:
-`plans/calc-open.md` → Save readers; the procedure: `.agents/references/calc-save-reader.md`. A guide picks its reader
-with `cfg.calc.save`; `assemble.py` inlines `readers/<save>.js`. The page maps the game ids through `D.GID` (written by
-the hack's extract) and skips a Pokémon whose species the guide lacks, counting it in the banner.
+One reader per save family, selected by `cfg.calc.save`. `assemble.py` inlines
+`template/calc/readers/<save>.js`; without a reader the page hides Import.
+Procedure for adding a family: `.agents/references/calc-save-reader.md`.
+Licences and reference-use rules: `tools/calc/README.md` → Licences, oracles and checking a hack.
 
-The notes below are the formats as read from each reference (facts, not code: `tools/calc/README.md` → Licences).
+## Interface
 
-## PKHeX oracle recipe (Gen 6/7)
+`READERS[family] = (bytes, D) => ({game, party, boxes})` is synchronous, without dependencies or game tables.
+`bytes` is a `Uint8Array`; `D` is the guide's data. Return party `[mon]` and boxes `[[mon]]`, retaining empty boxes.
+A mon is `{pid, sp, lv, nat, ab?, abs?, it, mv, iv, ev}` in game IDs: nature 0-24, four moves,
+six IVs/EVs in calc order HP/Atk/Def/SpA/SpD/Spe. `ab` is an ability ID; `abs` is a species ability slot
+(0/1/2, with 2 hidden). Format-specific species/form keys are described below.
 
-2026-10-28: a disposable .NET 10 console project in `.tmp/pkhex-oracle/` references NuGet `PKHeX.Core` **26.10.18**.
-On this machine invoke `%LOCALAPPDATA%\Microsoft\dotnet\dotnet.exe` (SDK 10.0.403); it is not on PATH.
-Neither the program nor its linked binaries belong in this repository (GPLv3). Use `SAV7USUM`, `SAV7SM`, `SAV6XY`
-and `SAV6AO` blank constructors, set Version to US / SN / X / OR, and insert PK7 / PK6 objects through PartyData
-and SetBoxSlotAtIndex. Blank constructors leave footer identifiers unset: initialise the footer BEEF marker and
-each block's length/id from AllBlocks before Write; let PKHeX write the checksums. Reopen with the matching save
-constructor and require ChecksumsValid and PartyCount = 6.
+The extract writes `D.GID`: `sp` maps to guide species IDs, `mv` to `M` indices, `ab` to `AB` indices,
+`it` to item names; `gr` supplies growth rates for boxed levels. The page maps these IDs and skips species
+absent from the guide, counting them in the banner. `test.js` is the synthetic reader used by page checks.
 
-The USUM / SM party is Alolan Raichu, hidden-ability Alolan Ninetales, Sensu Oricorio, Charizard with Charizardite X,
-hidden-ability Garchomp and Heat Rotom; XY / ORAS substitute Pikachu, hidden-ability Ninetales and Clefairy for the
-first three. Party indices 0..5 use levels 10 + 2*index, natures index%25, PID 0x24680000 + index and encryption
-constant 0x10000001 | ((index%32)<<13). Thirty-two boxed specimens cycle Bulbasaur, Caterpie, Illumise, Finneon,
-Magikarp and Pikachu: all shuffle selectors (including 24..31 aliases), all six hacked growth rates and
-natures 0..24. Slots span boxes 1/2 and the last box's last slot; the other slots remain blank. Moves are Thunderbolt,
-Flamethrower, Protect and Toxic. In calc order HP/Atk/Def/SpA/SpD/Spe, IVs are [31,index%32,17,23,9,3],
-EVs [4,100,12,152,8,200]. Use PKHeX's CurrentLevel, RefreshAbility, ResetPartyStats and RefreshChecksum.
+Throw `{code: 'wrong' | 'state' | 'unreadable' | 'empty', game?}` for Wrong game, Save state, Unreadable or
+No Pokémon yet. The family notes below describe format detection and validation; they record facts, not copied code.
 
-The input levels are 10..72. Preserve PKHeX's EXP, then calculate
-the expected boxed level with PKHeX Experience.GetLevel(EXP, hacked growth rate from dex-rebalanced.json).
-Party expectations use Stat_Level. Thus the expected files describe this guide's terms, not vanilla levels.
-Export `<name>.expected.json` from those input objects, not the reader or imported page. Resolve numeric move,
-ability and item names from Photonic Sun's `.src/dex-rebalanced.json`; spell the selected form names as the guide
-does. Include every field checked by calc_save_check and every empty box. USUM files are
-`hacks/photonic-sun/.src/saves/pkhex-usum.{sav,expected.json}`; SM/XY/ORAS are
-`.tmp/pkhex-oracle/out/pkhex-<game>.{sav,expected.json}`. These are synthetic format fixtures, not legal teams or
-evidence that Photonic Sun's mechanics match vanilla. All four reopen with valid checksums; generation log:
-`.tmp/calc-save-photonic-sun/oracle.log`.
+## Families not built yet
 
-Eternal X XY fixture (2026-10-28): `hacks/eternal-x/.src/saves/pkhex-xy.{sav,expected.json}`,
-generated with the same local project and PKHeX pin, but **Eternal X's own** `dex-rebalanced.json` for growth,
-stored ability assignments and move/ability/item names. Its source has five growth rates (no Fluctuating);
-expected boxed levels use PKHeX Experience.GetLevel with those rates, preserving vanilla-generated EXP.
-Six party members include Charizard with each stone, Alakazam/Mewtwo with stones, hidden abilities, female
-Meowstic and Heat Rotom. Seventy-nine boxed specimens cover all 32 shuffle selectors, natures 0..24, four stored
-Megas with matching stones, all six Rotom forms, both Meowstic/Aegislash forms, all four Pumpkaboo/Gourgeist
-sizes, all 20 Vivillon patterns and all five Flabébé colours. Identical cosmetic forms use the guide's retained
-Icy Snow / Red names. IVs/EVs follow the recipe above, levels cycle 10..90, items include empty/Leftovers/Life
-Orb/Focus Sash/Choice Scarf, and every third specimen has an empty fourth move. Box slots span boxes 1..5 and
-box 31 slot 30, with all empty boxes included in expectations. Reopened XY checksums and party count pass;
-generation log: `.tmp/calc-save-eternal-x/oracle.log`. Fixtures and the GPL-linked generator remain uncommitted.
+| Family | Hacks | Format |
+| --- | --- | --- |
+| Gen 3 (pokeemerald / pokefirered) | SoulGold (expansion, like EI) | 14 sections in two slots (newest by save index); each Pokémon's 4 blocks ordered by personality value and XOR-encrypted with it. Expansion hacks change the struct per hack. |
+| CFRU | Radical Red, Unbound | Gen 3 layout with CFRU's changes (expanded IDs, extra blocks). |
+| Gen 4 (Pt / HGSS) | HeartGold Retiled, Renegade Platinum | As `gen4.js`; vanilla-engine hacks differ in the species / form numbers. |
+| Gen 5 (BW2) | Blaze Black 2 Redux | Gen 4's Pokémon encryption; other block offsets and checksum table. |
+| Gen 6/7 | Meissa Moon, Navy Sapphire | `gen67.js` as is, with the guide's own `GID`. |
+
+The hard part of each new guide is the ID tables, not the reader: the data has no game IDs, so the extract writes
+`GID` from the hack's own sources (expansion constants, CFRU tables, the NDS NARCs, the 3DS game files); forms are the
+tricky part. Every new guide's extract writes them. References (read only): hzla/Dynamic-Calc-Decomps
+`js/savereaders/` (sample saves in `cypress/fixtures/saves/`), PKHeX (open the same save there to check a reader).
+
+Not doing: reading the game's memory while it runs (only an emulator can), writing to saves.
 
 ## Reader coverage
 
@@ -62,13 +48,13 @@ generation log: `.tmp/calc-save-eternal-x/oracle.log`. Fixtures and the GPL-link
 
 ## gen4: HeartGold hg-engine (NDS)
 
-References read 2026-10-28: the hack's own hg-engine source at Hardlove's pin (kumakuma1/hardlove `ee4518c149`:
+References: the hack's own hg-engine source at Hardlove's pin (kumakuma1/hardlove `ee4518c149`:
 `include/pokemon.h` (the BoxPokemon blocks and the `DUMMY_P2_*` bit masks), `src/pokemon.c` (ability get / set, the
 mint nature, hidden ability on generation), `include/save.h` (the block footer), `include/pokemon_storage_system.h`
 (PC_BOX), `include/constants/species.h`), and the save itself. The vanilla parts (two partitions, the footer, PK4
 encryption and block order) are the generally documented Gen 4 format (Bulbapedia / Project Pokémon's Gen 4 save and
-Pokémon structure pages; not reread this session); every offset below was confirmed on the user's save (all CRCs and
-Pokémon checksums hold; levels match the party's stored ones).
+Pokémon structure pages). Offsets were confirmed on the user's 0.7.0 save: all CRCs and Pokémon checksums hold,
+and levels match the party's stored ones. The 0.8.x layout, mints and regional forms still need real-save checks.
 
 **File.** 512 KB (0x80000); a DeSmuME `.dsv` adds its own text footer after it (`|-DESMUME SAVE-|`), accepted. Two
 partitions at 0 and 0x40000, each with a **general** block (party, bag, flags) and a **storage** block (PC). hg-engine
@@ -115,7 +101,7 @@ sizes, the box count. Add it to `LAYOUT` (make it a list) once a save of that ga
 
 ## gen67: decrypted 3DS main saves
 
-Format references read on 2026-10-28: PKHeX commit `8e3eb3d47bb496746c3eaa9d160329d295a5e2e5`,
+Format references:  PKHeX commit `8e3eb3d47bb496746c3eaa9d160329d295a5e2e5`,
 `PKHeX.Core/PKM/{PK6,PK7}.cs`, `PKM/Util/PokeCrypto.cs`, `Saves/{SAV6,SAV7,SAV6XY,SAV6AO,SAV7SM,SAV7USUM,SAV_BEEF}.cs`,
 `Saves/Access/SaveBlockAccessor{6XY,6AO,7SM,7USUM}.cs`, `Saves/Blocks/BlockInfo3DS.cs`, `Saves/Util/{SaveUtil,Checksums}.cs`,
 `Saves/Substructures/Gen{6,7}/MyStatus{6,7}.cs`, `Saves/Encryption/MemeCrypto/MemeCrypto.cs` and `Game/Enums/GameVersion.cs`.
@@ -123,8 +109,7 @@ These are read-only format references, not implementation sources.
 Background: [Project Pokémon: XY save structure](https://projectpokemon.org/home/docs/gen-6/xy-save-structure-r82/)
 describes the cartridge container, **not** the decrypted `main` accepted here. Bulbapedia's
 [Generation VI Pokémon structure](https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_structure_(Generation_VI))
-is an additional reference link; its anti-bot page prevented verification in this session, so the offsets below
-were verified against PKHeX and its generated saves instead.
+is background only; the offsets below were verified against PKHeX and its generated saves.
 
 **File.** Decrypted main files contain one active save, not the cartridge's encrypted dual-save container.
 All multibyte integers below are little endian. There is no newest-slot choice in main.
@@ -180,23 +165,12 @@ ORAS are wrong-game controls, not imports into Photonic Sun / Eternal X. PNG, gz
 state headers give `state`. A damaged known-size save or recognisable truncated main gives `unreadable`;
 unrecognised sizes/containers give `wrong`. Valid files with no non-egg party give `empty`.
 
-**Verification (2026-10-28).** `node tools/calc_save_check.mjs dist/photonic-sun.html
-hacks/photonic-sun/.src/saves/pkhex-usum.sav hacks/photonic-sun/.src/saves/pkhex-usum.expected.json` matches all
-38 specimens, every compared field. `.tmp/calc-save-photonic-sun/checks.mjs` also compares all four layouts against
-their expected files directly, including all 32 shuffle selectors and six hacked growth rates, and asserts no
-mutation of input bytes. Against the actual Photonic page, XY / ORAS / SM show Wrong game, truncated (one byte and
-half file), corrupted party and damaged footer show Unreadable, Citra's state header shows Save state.
-Additional files made with PKHeX, with outer CRCs resealed: bad Pokémon checksum and count 7 are unreadable;
-zero party or egg-only party are empty; mismatched game byte is wrong. PK7 hyper-trained Attack and Speed
-return effective 31 IVs in calc order. These local variants and logs live in `.tmp/calc-save-photonic-sun/`.
-The oracle generator remains local, including its footer initialisation and variant recipes; no GPL-linked code
-or binaries are distributed with the guide.
-
-`npm test --prefix tools/calc` passes. `uv run python -I tools/gate.py scenarios --only
-calc-import,calc-bridge,calc-smoke --jobs 8` passes 12/12 runs across all four guides (normal/dvkb and viewer sizes).
-Hzla remains 118 matches + 28 known differences, zero mismatches/errors. The pre-change data baseline at `62c2e6d`
-correctly flags the new GID and two new report lines: all old data, counts and old report lines are unchanged.
-Do not recapture that baseline to conceal the intentional additions; the parent must accept this delta.
+**Verification.** The PKHeX fixtures in the recipe below cover all 32 shuffle selectors, hacked growth rates,
+forms and compared import fields. Outer-CRC-resealed variants check bad Pokémon checksums and party count 7
+(`unreadable`), zero/egg-only party (`empty`), a mismatched game byte (`wrong`) and PK7 hyper-trained Attack/Speed
+(effective 31 IVs). Input bytes remain unchanged. The real file picker also checks wrong layouts, truncation,
+corrupt party/footer and emulator state headers. Run `tools/calc_save_check.mjs` as documented in `tools/README.md`
+→ Calc checks and the save check; these format checks do not verify hack battle mechanics.
 
 ## expansion: pokeemerald-expansion
 
@@ -252,3 +226,45 @@ reorders IVs and EVs.
   highest level whose experience is ≤ its own in the species' growth table (`D.GID.gr`: GROWTH_ order medium fast,
   erratic, fluctuating, medium slow, fast, slow; formulas in `src/data/pokemon/experience_tables.h`, level 1 = 1 exp).
   For the sample save's party the experience level equals the stored level for all six.
+
+## PKHeX oracle recipe (Gen 6/7)
+
+Use a disposable .NET 10 console project in `.tmp/pkhex-oracle/` referencing NuGet `PKHeX.Core` **26.10.18**.
+If dotnet is not on PATH, this machine has `%LOCALAPPDATA%\Microsoft\dotnet\dotnet.exe` (SDK 10.0.403).
+Neither the program nor its linked binaries belong in this repository (GPLv3). Use `SAV7USUM`, `SAV7SM`, `SAV6XY`
+and `SAV6AO` blank constructors, set Version to US / SN / X / OR, and insert PK7 / PK6 objects through PartyData
+and SetBoxSlotAtIndex. Blank constructors leave footer identifiers unset: initialise the footer BEEF marker and
+each block's length/id from AllBlocks before Write; let PKHeX write the checksums. Reopen with the matching save
+constructor and require ChecksumsValid and PartyCount = 6.
+
+The USUM / SM party is Alolan Raichu, hidden-ability Alolan Ninetales, Sensu Oricorio, Charizard with Charizardite X,
+hidden-ability Garchomp and Heat Rotom; XY / ORAS substitute Pikachu, hidden-ability Ninetales and Clefairy for the
+first three. Party indices 0..5 use levels 10 + 2*index, natures index%25, PID 0x24680000 + index and encryption
+constant 0x10000001 | ((index%32)<<13). Thirty-two boxed specimens cycle Bulbasaur, Caterpie, Illumise, Finneon,
+Magikarp and Pikachu: all shuffle selectors (including 24..31 aliases), all six hacked growth rates and
+natures 0..24. Slots span boxes 1/2 and the last box's last slot; the other slots remain blank. Moves are Thunderbolt,
+Flamethrower, Protect and Toxic. In calc order HP/Atk/Def/SpA/SpD/Spe, IVs are [31,index%32,17,23,9,3],
+EVs [4,100,12,152,8,200]. Use PKHeX's CurrentLevel, RefreshAbility, ResetPartyStats and RefreshChecksum.
+
+The input levels are 10..72. Preserve PKHeX's EXP, then calculate
+the expected boxed level with PKHeX Experience.GetLevel(EXP, hacked growth rate from dex-rebalanced.json).
+Party expectations use Stat_Level. Thus the expected files describe this guide's terms, not vanilla levels.
+Export `<name>.expected.json` from those input objects, not the reader or imported page. Resolve numeric move,
+ability and item names from Photonic Sun's `.src/dex-rebalanced.json`; spell the selected form names as the guide
+does. Include every field checked by calc_save_check and every empty box. USUM files are
+`hacks/photonic-sun/.src/saves/pkhex-usum.{sav,expected.json}`; SM/XY/ORAS are
+`.tmp/pkhex-oracle/out/pkhex-<game>.{sav,expected.json}`. These are synthetic format fixtures, not legal teams or
+evidence that Photonic Sun's mechanics match vanilla. Require all four to reopen with valid checksums.
+
+Eternal X XY fixture: `hacks/eternal-x/.src/saves/pkhex-xy.{sav,expected.json}`,
+generated with the same local project and PKHeX pin, but **Eternal X's own** `dex-rebalanced.json` for growth,
+stored ability assignments and move/ability/item names. Its source has five growth rates (no Fluctuating);
+expected boxed levels use PKHeX Experience.GetLevel with those rates, preserving vanilla-generated EXP.
+Six party members include Charizard with each stone, Alakazam/Mewtwo with stones, hidden abilities, female
+Meowstic and Heat Rotom. Seventy-nine boxed specimens cover all 32 shuffle selectors, natures 0..24, four stored
+Megas with matching stones, all six Rotom forms, both Meowstic/Aegislash forms, all four Pumpkaboo/Gourgeist
+sizes, all 20 Vivillon patterns and all five Flabébé colours. Identical cosmetic forms use the guide's retained
+Icy Snow / Red names. IVs/EVs follow the recipe above, levels cycle 10..90, items include empty/Leftovers/Life
+Orb/Focus Sash/Choice Scarf, and every third specimen has an empty fourth move. Box slots span boxes 1..5 and
+box 31 slot 30, with all empty boxes included in expectations. Require valid XY checksums and party count.
+Fixtures and the GPL-linked generator remain uncommitted.

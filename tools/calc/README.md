@@ -5,7 +5,7 @@ From the repository root:
 ```sh
 npm ci --prefix tools/calc
 node tools/calc/build.mjs
-node tools/calc/test.mjs
+npm test --prefix tools/calc
 ```
 
 Only rebuilding/testing needs npm. Commit `template/calc/engine.js` after every
@@ -13,46 +13,58 @@ adapter/dependency change. `assemble.py` inlines this committed, minified IIFE
 without Node or a network. The banner preserves Smogon's MIT notice. Dependencies
 are exact versions, with npm's integrity hashes in `package-lock.json`.
 
-## Emerald Imperium validation
+## Hack validation
+
+`npm test --prefix tools/calc` runs the engine suite, each hack's source/stock checks and
+`state_check.mjs` against every `hacks/<hack>/calc_states.json`. The independent hzla comparison is separate:
+
+```sh
+node tools/calc/hzla_compare.mjs emerald-imperium --fetch
+node tools/calc/hzla_compare.mjs photonic-sun --fetch
+node tools/calc/hzla_compare.mjs eternal-x --fetch
+```
+
+Omit `--fetch` once the pinned local oracle exists (Local hzla oracle below). Known differences belong in
+the fixtures and each hack's notes, not a dated count here. Page checks: `tools/scenarios/README.md`.
+
+### Emerald Imperium
 
 Emerald Imperium's `imperium_check.mjs` is also included in `npm test`. It checks source-derived category
 estimates and conditional attack modifiers independently of hzla, plus field parity and priority/order contracts.
 Per-mon `abilityOn` is opt-in for the profile's `monControls`; `categoryInvert` names moves whose `slot.invert`
 swaps automatic category. Such results expose `categoryChoice: {automatic, inverted, tie}` and all results expose
 effective `priority`. EI's `slot.order: "first" | "last"` feeds order-dependent power without guessing a foe's move.
-These are battle inputs, not save/import facts; absent states stay off. See EI notes for source rules and differences.
+These are battle inputs, not save/import facts; absent states stay off. See `hacks/emerald-imperium/notes.md`
+→ Damage calc for source rules and differences.
 
-## Hardlove Gold validation
+### Hardlove Gold
 
 Hardlove Gold has a provisional source/stock suite in `hardlove_check.mjs`, included
 in `npm test`. Its fixtures use `oracle.kind: "source-and-stock-reference"`, not
 runnable hzla settings; do not pass them to `hzla_compare.mjs`. Reports explicitly
 say `independentHackOracle: false`. Hack notes list in-game checks and unsupported
-type-history states (Protean / Libero: every-move STAB, a chosen defending type). `node tools/scenarios/calc-hardlove.mjs` checks its
+type-history states (Protean / Libero: every-move STAB, a chosen defending type). `node tools/scenarios/calc-hardlove.mjs dist/hardlove-gold.html` checks its
 actual controls and persistence at every viewer size/mode.
 
 An explicit profile `evs: false` ignores supplied EVs in both `stats` and `calc`;
 omitting it preserves EV-aware behaviour. This is independent of the guide's
 `cfg.evs` UI switch so direct engine calls cannot accidentally add EVs.
 
-## Photonic Sun validation
+### Photonic Sun
 
-`node photonic_check.mjs` (also in `npm test`) validates the Photonic Gen 7 field profile:
-107 fixtures, direct stock Gen 7 parity for non-inverse cases, explicit inverse effectiveness and positive/negative
-field assertions. `node tools/calc/hzla_compare.mjs photonic-sun` from the repository root compares against the
-pinned `pspm` oracle: 101 exact matches and 6 documented differences (Wonder Room and defensive Flower Gift).
-These differences retain stock Gen 7, not oracle bugs; see the hack's notes. No shared engine change is needed.
+`photonic_check.mjs` validates the Gen 7 profile: direct stock parity for non-inverse cases,
+explicit inverse effectiveness and positive/negative field assertions. The hzla comparison uses the pinned
+`pspm` oracle. Source-supported differences retain stock Gen 7; see the fixtures and hack's notes.
 `node tools/scenarios/calc-photonic.mjs dist/photonic-sun.html` checks actual controls/options and persistence at
 five viewer sizes in normal/dvkb modes. Its profile adds inverse, Flower Gift and Battery to the Gen 7 fields
 without altering another guide's field list. Inverse is expressed as a per-defending-type effectiveness rule;
 ability immunities still apply. This is a field pass, not a complete audit of Photonic's individual effects.
 
-## Eternal X validation
+### Eternal X
 
-`node eternal_check.mjs` (also in `npm test`) validates the Eternal X Gen 6 field profile: 97 fixtures,
-direct stock Gen 6 parity for every non-inverse case, hand-checked Wonder Room/defensive Flower Gift rolls,
-inverse effectiveness and positive/negative field assertions. `node tools/calc/hzla_compare.mjs eternal-x --fetch`
-from the repository root compares all 97 cases exactly against the older Dynamic-Calc, not Decomps.
+`eternal_check.mjs` validates the Gen 6 profile: direct stock parity for non-inverse cases,
+hand-checked Wonder Room/defensive Flower Gift rolls, inverse effectiveness and positive/negative field assertions.
+The hzla comparison uses the older Dynamic-Calc, not Decomps.
 `node tools/scenarios/calc-eternal.mjs dist/eternal-x.html` checks fields/options and persistence at five viewer
 sizes in normal/dvkb modes. The profile adds inverse and both Flower Gift sides to Gen 6's existing controls;
 it does not enable Psychic terrain, Aurora Veil or Battery, or change any other guide. See Eternal X's notes
@@ -84,7 +96,7 @@ explicitly mapped in `over`. Unrecognised item/ability names have no effect.
 
 ## Public contract
 
-`window.DMG` exposes `init(D, prof)`, `stats(set)`, `calc(atk, def, slot, field)`, `hp(atk, def, slot, field, dealt, options = {})`,
+`window.DMG` exposes `items()`, `init(D, prof)`, `stats(set)`, `calc(atk, def, slot, field)`, `hp(atk, def, slot, field, dealt, options = {})`,
 `residual(set, field = {}, otherSet = null, side = 'atk')`,
 `speed(set, field = {}, side = 'atk', otherSet = null)`, `entry(set, field = {}, side = 'atk')`,
 `hit(atk, def, slot, field = {}, roll = 'max', options = {})`,
@@ -181,7 +193,7 @@ Showdown 0.11.11 source for those closed-source games, not a claim of extracted 
 
 ### Battle state
 
-Optional inputs; a page that passes none gets the same rolls as before.
+Optional inputs; absent values leave the corresponding state inactive.
 
 | Input | Meaning |
 | --- | --- |
@@ -254,7 +266,8 @@ post-hit effects below. Intimidate is a derived first-hit event, not a stored st
 
 ### Automatic actions and entry effects
 
-All APIs are pure: merge returned patches into scratch state; HP belongs to the page's kept state.
+Action APIs do not mutate inputs. The page applies returned patches and owns their lifetime;
+see `template/README.md` → Damage calculator. HP and status clear on trainer change or Reset fight.
 `stg` patches are complete six-stat arrays in the usual HP/Atk/Def/SpA/SpD/Spe order (HP stage 0),
 starting from the supplied manual stages. They contain action changes, not the derived Intimidate,
 Sword/Shield or Download stages; those are recomputed by the next calculation. Absent patch keys mean unchanged.
@@ -262,7 +275,7 @@ Sword/Shield or Download stages; those are recomputed by the next calculation. A
 
 - `hit(atk, def, slot, field, roll, options)` returns
   `{def: {hp, broken?, used?, stg?, toggles?, status?}, atk: {used?, stg?}, field?: {weather?, terrain?, hazards?}, log: string[], dealt, hits, contact?: {v, parts: [{l, v}]}}`
-  or null for a non-damaging/unspecified-power move. `status` is reserved; A1 does not emit it.
+  or null for a non-damaging/unspecified-power move. `status` is reserved, not currently emitted.
   `roll` is `'min'` or `'max'`, selected independently for every strike. `dealt` is actual damage removed,
   capped at remaining HP on each strike, excluding berry recovery (the input for drain/recoil via `hp`).
   Normal attacks bust an intact Disguise/Ice Face first (`def.broken: true`), then respect full-HP Sash/Sturdy on each real strike, consumed Balloon/resist berries,
@@ -307,7 +320,8 @@ Sword/Shield or Download stages; those are recomputed by the next calculation. A
   The page owns explicit None overrides and weather layering; this API does not apply its returned fields.
 - `intimidate(atk, def, field)` returns `{atk: signedAttackDelta, def: signedAttackDelta}` including
   Simple/Contrary, Guard Dog, Defiant, caps, immunities and Mirror Armor reflection. Use the net delta
-  for `Int -1` / `Int +1`, omit a zero mark. `calc.pre` separately records every actual change and source
+  when a caller needs the net Attack change. The page uses an Intimidate checkbox, not a delta mark.
+  `calc.pre` separately records every actual change and source
   (the initial drop has `src: 'Intimidate'`, Defiant/Competitive/Rattled/Adrenaline Orb their own names).
   `speed` takes `otherSet` to include Rattled/Adrenaline Orb, including reflection, without writing stages.
   Protosynthesis/Quark Drive choose their highest stat automatically in Sun/Electric Terrain or with Booster Energy.
@@ -404,8 +418,7 @@ guide data or profiles.
 - Speed: `Swamp` joins the stock speed-modifier chain at 1/4, so rounding,
   Tailwind, stages, weather abilities, held items and paralysis remain stock.
   `speed` returns the final numeric speed for display, not the unstaged stat.
-  Its single-set signature cannot inspect an opposing weather-suppressing
-  ability; callers should pass the effective weather when needed.
+  Pass `otherSet` to include the opposing weather-suppressing ability.
 - Entry: `StealthRock` (boolean), `Spikes` (0-3), `ToxicSpikes` (0-2),
   `StickyWeb` (boolean), `Steelsurge` (boolean, engine only). `entry` returns
   `{parts: [{l, v: number}], status?: 'psn' | 'tox', spe?: -1 | 1}`. Damage
@@ -443,7 +456,7 @@ either team's ally affects both battlers' moves. `atkTabletsOfRuin`,
 `atkSwordOfRuin`, `atkVesselOfRuin`, `atkBeadsOfRuin` and `def` equivalents
 also affect both teams; either source sets the stock global Ruin flag once.
 Native holders still work without flags and remain immune to their own Ruin.
-All newly assembled ally controls are ignored in Singles. They assert an active unsuppressed
+All assembled ally controls are ignored in Singles. They assert an active unsuppressed
 ally ability; the calculator has no ally Pokemon or ally item to inspect.
 
 `atkPowerTrick` / `defPowerTrick` set stock `isPowerTrick`, swapping that
@@ -451,30 +464,19 @@ battler's raw Attack/Defense before stages in Singles or Doubles.
 
 `field-states.json` gates each ally entry by its named ability in `AB` and its
 introduction generation; Plus/Minus accepts either ability. Power Trick is
-gated by its move in `M`. `assemble.py` now supports `side: "field"` entries
+gated by its move in `M`. `assemble.py` supports `side: "field"` entries
 without adding prefixes and preserves `doubles: true` to hide ally controls in Singles.
 The page and engine both enforce Doubles. Existing Flower Gift declarations are not duplicated;
 Hardlove's old Flower Gift controls are omitted because its `AB` has no Flower Gift.
 Compatibility: unassembled legacy profiles that explicitly map Flower Gift with
 `to: "isFlowerGift"` and omit `doubles` retain their prior stock behavior, even
-in Singles. This keeps the committed pre-A3 source/oracle fixtures unchanged.
+in Singles. This preserves the source/oracle fixtures' legacy inputs.
 Assembly adds `doubles: true` to the retained legacy declarations, so every
 actual guide enforces the Doubles-only contract in both the engine and the page.
-New global capabilities use `type: "state"`, not `"toggle"`, in the generated
+Global controls use `type: "state"`, not `"toggle"`, in the generated
 profile: Water/Mud Sport, Power/Guard Split and the three ally aura keys. They are
-rendered under the closed **Global** heading in the existing global-toggle grid.
-Its expanded body uses the same measured, word-preserving toggle columns and internal
-Field scrolling; the closed minimum-size Field needs no extra row. Manual global
-choices use `ST.field` / `ST.fman` and clear on Auto, Reset fight or trainer change.
-Per-side declarations remain ordinary toggles; no engine or availability change was needed.
-
-Current visible additions (each is Player/Foe): EI gets Power Spot, Steely
-Spirit, Flower Gift, Plus/Minus, all four Ruin abilities and Power Trick;
-Hardlove gets Power Spot, Steely Spirit and Plus/Minus (its Power Trick stays);
-Photonic and Eternal X get Plus/Minus and Power Trick (their Flower Gift stays).
-The deferred global state declarations are all seven for EI / Photonic /
-Eternal X, and six for Hardlove (no Dark Aura in `AB`). Hardlove has no Ruin
-abilities in `AB`; Gen 6/7 do not offer the Gen 8/9 ally abilities.
+rendered under **Global**. Per-side declarations remain ordinary toggles.
+Layout, lifetime and reset behaviour belong in `template/README.md` → Damage calculator.
 
 ### Sports and raw-stat splits
 
@@ -520,8 +522,7 @@ All four global entries use the existing move-availability gate (`M`) and their
 introduction generation in `field-states.json`. Ally abilities use `AB` instead.
 Electrify / Ion Deluge need no engine flag: the move's Type override (`slot.t`)
 covers their change to Electric; it leaves move-specific type rules intact.
-Tests: the eight A3 groups in `test.mjs`; 126 A3 battle fixtures across the four
-guides (44 EI, 26 Hardlove, 28 each Eternal X / Photonic), each with rule evidence.
+Tests: `test.mjs` and each guide's `calc_states.json`, with rule evidence.
 
 ## Engine overrides (`prof.over`)
 
@@ -543,7 +544,7 @@ override entries use **display names**, except species may use their guide ID:
 
 - `afterMove` lists held items the hack fires after the whole move, not between hits (Hardlove: Kee / Maranga Berry,
   move step 17 with Red Card / Eject Button): no `pre` event, and later hits keep the starting stage. Elsewhere Kee /
-  Maranga fire once, before hit 2 (stock re-raised them on every later hit: patched in `build.mjs`, 2026-10-26).
+  Maranga fire once, before hit 2 (`build.mjs` prevents stock from re-raising them on every later hit).
 - `critMultiplier` is applied at the actual critical-hit rounding step in every
   supported generation, **not** by scaling final rolls. `build.mjs` checks exact
   single-occurrence upstream source patches and fails if they drift. Default
@@ -721,7 +722,7 @@ Reference reviewed: hzla/Dynamic-Calc-Decomps, branch `decomp`,
 under `calc/mechanics/romhacks/`, plus generation/type settings. That repository
 has no licence for its changes. This engine contains **no copied or translated
 hzla implementation or profile tables**. The table describes independent
-configuration concepts, not drop-in source compatibility. Per-hack sessions
+configuration concepts, not drop-in source compatibility. Each hack
 must derive their own data and compare all 16 rolls against a locally run
 reference before marking a hack verified.
 
@@ -731,7 +732,7 @@ reference before marking a hack verified.
 | Species/move data generation (`gen`) | Guide `D.P`, `D.M/MV/AB`; metadata overlays `over.species/moves/abilities/items`. Our `gen` selects mechanics, not guide species data. |
 | Damage-mechanics generation (`dmgGen`) | Top-level profile `gen` (4-9), independent of guide data. |
 | Type-generation setting (`types`) | `over.typeGen`; normally guide `D.TC`, then `over.typeChart` per-pair changes. |
-| Critical multiplier / critical-rate stages | `over.critMultiplier` / `over.critStages` (rates metadata only); explicit slot crit. |
+| Critical multiplier / critical-rate stages | `over.critMultiplier` / `over.critStages`; result `crit` gives probability/guarantees, `slot.crit` selects ordinary crit damage (Crit above). |
 | Shared context, temporary state, description annotations | Rules read live `atk/def/move/field`, scratch `state`, and `desc`; `note` labels the result. |
 | Pre-stat/switch-in adjustments | `beforeStats` rules and declared field flags for external switch-in state. |
 | Move-type conversion / custom weather types | `afterMoveType` rules; `move.type`, `field.weather`, original-name tests. |
@@ -767,7 +768,7 @@ rather than claim parity through an approximate final-roll multiplier.
 | Project | Licence | Use |
 | --- | --- | --- |
 | `@smogon/calc` | MIT | The engine, inlined in every calc guide; keep its notice. |
-| hzla/Dynamic-Calc-Decomps, hzla/Dynamic-Calc | none at the top (its `calc/` keeps Smogon's MIT) | A local oracle and a format reference only (decided 2026-10-20, we don't ask): read it, write the layouts / settings down as notes, write our own code. Never copy or translate its code or tables. Credit it in the footer as a reference. |
+| hzla/Dynamic-Calc-Decomps, hzla/Dynamic-Calc | none at the top (its `calc/` keeps Smogon's MIT) | A local oracle and a format reference only: read it, write the layouts / settings down as notes, write our own code. Never copy or translate its code or tables. Credit it in the footer as a reference. |
 | PokeDaisy, PKHeX | GPLv3 | Read only (copying would make the guides GPL). PKHeX is the best save-format reference and a check for our readers. |
 
 Save formats, offsets and encryption are facts, not code: reimplementing them is fine.
@@ -840,8 +841,8 @@ node tools/calc/run.mjs hacks/emerald-imperium/data.json profile.json - < matchu
 `profile.json` can be a full profile or `{"base":"expansion","over":{...}}`;
 the runner merges a base recursively like assembly (arrays replace). Matchup
 input is one `{atk,def,slot,field?}` or an array of those. Output is a result/null
-or an equally ordered array. Species, move, ability and item selectors retain
-the plan's guide IDs/indices. Errors go to stderr with a nonzero exit status.
+or an equally ordered array. Species, move, ability and item selectors use
+guide IDs/indices. Errors go to stderr with a nonzero exit status.
 
 For a local diff tool:
 
@@ -859,25 +860,3 @@ separate direct Smogon oracle and synthetic hand-checked overrides, not hzla
 code. It covers Gen 4/5 and modern mechanics, per-hit effects, exact KO
 convolution, runner single/batch input, and input immutability. Reference parity
 against a specific hack's local hzla calculator remains a per-hack audit.
-
-## Validation snapshot (2026-10-25)
-
-- Clean `npm ci --prefix tools/calc --ignore-scripts`: 6 packages audited,
-  zero reported vulnerabilities.
-- `node tools/calc/build.mjs` twice: identical SHA-256
-  `009b0e716cf416c67e5a888e73948aefafc9ccf45780aceb38bb08e405e031c3`.
-- `node tools/calc/test.mjs`: **81 passed, 0 failed**, including 41 direct
-  Smogon parity matchups. Synthetic overrides exercise every exposed phase; the
-  hit-phase tests use hand-checked rolls (base 17, Gen 4 base 15 before its +2)
-  and the Parental Bond equivalence.
-- Bundle: **375,315 bytes**, **88,389 bytes gzip** (the hit phases add 493 bytes).
-  Fallback metadata dominates (249,186 attributed bytes); modern mechanics are next.
-- Emerald Imperium against the pinned hzla oracle: **47/47** matches, no known
-  differences (`hacks/emerald-imperium/notes.md` → Damage calc).
-- `python assemble.py`: all four guides built; assembly needs no npm packages.
-  Browser/Thor sweeps are deliberately deferred to integration, not claimed here.
-
-These are framework checks, not a declaration that Emerald Imperium or any
-other hack's mechanics profile is verified. Logs are local in
-`.tmp/calc-engine/`; the baseline against `f44f780` was built separately under
-`.tmp/baseline/` by the repository gate.

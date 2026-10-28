@@ -1,7 +1,7 @@
 # Emerald Imperium build notes
 
 Emerald Imperium 1.3 / 1.3.1, a GBA hack of Pokémon Emerald. Data from the hack's dex site, the official docs and the
-game's own trainer sets. 1,208 species and forms, 159 tracker areas, 20 trainer boxes (138 boss trainers), 9 walkthrough
+game's own trainer sets. 1,208 species and forms, 159 tracker areas, 20 trainer boxes (138 boss trainers), 20 walkthrough
 splits (106 stops, 141 steps).
 
 ## Build
@@ -132,7 +132,20 @@ Data rules:
   Extrasensroy, Fishous Rend, Stealth Rocks, Scorching Sand; abilities Emperor's Prescence, Gulp Missle, Tablet of Ruin.
   Items keep readable names (the game's item data truncates to 12 letters). Keldeo-Resolute uses Keldeo (folded cosmetic
   form). Behemoth Bash added to M.
-- **Items**: rules in `itemstd.RULES['emerald-imperium']` (History → Items standard).
+- **Items**: `tools/itemstd.py`, `itemstd.RULES['emerald-imperium']`. TMs + HMs share one box (182, game order).
+  Shops have one row per item, each shop and price on its own line; berry lists split into individual berries.
+  Battle rewards are `Also:` rows under the item's class, not a separate reward box; duplicate Leftovers merge.
+  Mega Stones and Useful NPCs keep place text; NPCs sort A to Z. Name fixes use the rule's `rename` map.
+- **Kept species**: obtainable species or actual trainer use; Megas / Primals need an obtainable base dex number
+  or trainer use. Trainer-only Primal Dialga / Palkia stay; unused Mega Mewtwo X/Y and Mega Latias/Latios do not.
+  IDs, order and move/ability/location indices are preserved; links to removed species are cleared, including
+  Mega Stone links, but item facts stay. All 159 tracker area indices and egg subslots remain stable.
+- **Walkthrough**: `walk.name_splits` follows the Trainers page's 20 boxes (19 cap splits plus Hot House).
+  Hot House has six badge fragments (`2.1`, `2.1.f1`...`f5`); Route 110 / Victory Road's second-cap fragments
+  (`2.3.f1` / `8.1.f1`) contain trainers only. Gardenia is at Mauville before Wally, cap 34; Rustboro's instruction
+  to fight her any time stays. The desert note belongs to Trick House. Persistent stop keys let
+  `dex.js` `migrateWalkState` move saved ticks/open state without losing them. `tools/tabs_check.py` checks
+  walkthrough/trainer order and nondecreasing caps.
 
 ## Local storage (prefix ei)
 
@@ -153,13 +166,10 @@ WK.cheats (+ `cnote`), trainer `c` (calc trainer names), `pp` (pokepaste), mon `
 
 ### Damage calc
 
-Area conditions (trainer `field`, 2026-10-26): EI "Permanent Sand" (Route 111, desert route) is applied as Sandstorm;
+Area conditions (trainer `field`): EI "Permanent Sand" (Route 111, desert route) is applied as Sandstorm;
 the "Trick Room" tags (Grace & Declan, Sidney) as Trick Room. Sidney's "Tailwind / TrickRoom" and Glacia's
 "Snow / Sun" are team-variant labels, not conditions.
-Doubles (2026-10-28): each "Double Battle" / "True Double Battle" trainer gets one `gameType: 'Doubles'` record (source = the tag, `tools/trainer_fields.py`; 14 trainers).
-
-W2 complete (2026-10-25): 1,208 species audited, five source weight overrides, 23 automatic-power fixtures;
-two Needs Opus rows (Hoopa source/scope conflict and Eruption/Water Spout power-display metadata).
+Doubles: each "Double Battle" / "True Double Battle" trainer gets one `gameType: 'Doubles'` record (source = the tag, `tools/trainer_fields.py`; 14 trainers).
 
 Profile: `cfg.calc` in `hack.json` over `template/calc/profiles/expansion.json` (Gen 9 mechanics). Settings
 checked: EI's own `include/config/battle.h` sets every damage switch used here to `GEN_LATEST`, which is `GEN_9`
@@ -167,11 +177,11 @@ in this release (`iriv24/pokeemerald-expansion` at `2576d0f3…`). hzla's pinned
 hack; the source-backed Gen 9 base stays, with explicit field fixtures added in the refinement. `Frostbite` is on `frz` (see the status
 note below). `ls.dmg` (`eidmg`) is unchanged.
 
-Sources: the mechanics are read from the release's `src/battle_util.c` and `include/config/battle.h` (a shallow
-fetch into `.tmp/source/`, never shipped). The oracle is hzla's Dynamic-Calc-Decomps, pinned at `ff6c3e3…`, run
-locally from `.tmp/hzla/` (`hzla_compare.mjs`); its code and tables are not copied. Where hzla and the source
-differ, the source wins. The 2026-10-25 refinement has nine explained roll differences, the 2026-10-26 scope check
-three more (Explosion), listed in the fixtures: `hzla_compare` reads 142 match + 12 known.
+Sources: the mechanics are read from the pinned release's `src/battle_util.c` and `include/config/battle.h`
+(fetch recipe: `SOURCES.md`, never shipped). Source paths and lines below are relative to that release. The oracle is hzla's Dynamic-Calc-Decomps, pinned at `ff6c3e3…`, run
+locally with `tools/calc/hzla_compare.mjs`; its code and tables are not copied. Where hzla and the source
+differ, the source wins. Known differences are recorded in `calc_matchups.json`. Engine contracts and
+validation commands: `tools/calc/README.md` → Hack validation; page behaviour: `template/README.md` → Damage calculator.
 
 | Mechanic | Profile entry | Source (release) | Fixtures |
 | --- | --- | --- | --- |
@@ -203,8 +213,8 @@ changes a result. The `frz` key is labelled Frostbite; no Freeze option is shown
 
 Not changed from native: Toxic Boost, Flare Boost, Water Compaction, Adaptability, Technician and the other vanilla
 abilities use the Smogon/expansion behaviour. Checked against source: Toxic Boost (physical, 1.5×), Flare Boost
-(special, 1.5×). The first pass incorrectly described Defeatist as native-correct: stock triggers at half HP;
-the refinement explicitly fixes EI's one-third threshold. The rest are not audited line by line.
+(special, 1.5×). Defeatist needs the override above because stock triggers at half HP.
+The rest are not audited line by line.
 
 Disagreements between the changes doc or the Known Bugs file and the source (source followed):
 - Flare Boost: the doc says Attack; the source boosts Sp. Atk while burned (9161).
@@ -220,282 +230,90 @@ Disagreements between the changes doc or the Known Bugs file and the source (sou
   stat before stages. They agree without a stage; with +1 on an odd halved stat they differ (Lickitung 95 → 47 → 70,
   hzla 142 → 71). Under Wonder Room hzla swaps the defences twice (as in Photonic Sun's notes) and halves Defense.
 
-#### Scope check (2026-10-26)
+#### Scope and profile choices
 
-Source: the release at `2576d0f3` (shallow fetch into `.tmp/ei-release/`, never shipped), `include/config/battle.h`,
-`item.h`, `pokemon.h`, `src/battle_util.c`, the map scripts and `trainer_parties.h`.
-- **Inverse battles: none.** `B_FLAG_INVERSE_BATTLE` is `0`, and the effectiveness code only inverts when it is
-  non-zero (`battle_util.c` 10710); no trainer or script sets one. The Eternal X `inverse` field is not added.
-- **Shadowy Veil: not in EI.** No ability or move of that name in the release (constants, `abilities.h`, moves), its
-  docs, eidex, hzla's `imp` backups or stock; in our data "shadowy" is only Shadow Ball's description. Nothing to add.
-- **Ruin abilities**: native holders retained; another Pokémon's Ruin is one Global Doubles toggle per Ruin (R3; the
-  stock `field.is*OfRuin`, not stacking, never lowering its holder).
-- **Config switches off Gen 9** (the rest of `battle.h`'s damage switches are `GEN_LATEST`): `B_EXPLOSION_DEFENSE`
-  `GEN_4` (built, table above); `B_PROTEAN_LIBERO` `GEN_1` (type change on every move: what the calc already does);
-  `B_INTREPID_SWORD` / `B_DAUNTLESS_SHIELD` `GEN_1` (on every switch-in, not once per battle: the calc applies the
-  boost whenever the holder is in, which matches; the auto-effects build keeps it per entry). The non-latest `item.h`
-  and `pokemon.h` switches are overworld / graphics only.
-- **Not in EI**: Terastallization, Z-Moves, Dynamax (no Tera Orb, Z-Power Ring or Dynamax Band is given anywhere, only
-  the Mega Ring; no trainer sets one), Commander, Battery, Dragon Cheer, the Pledge moves.
-- **Gen 9 inputs already covered**: fainted allies (Last Respects, Supreme Overlord: `atk.fnt`), Rage Fist's count,
-  switching (Pursuit, Stakeout), Glaive Rush, Salt Cure, Tar Shot, Charge, hazards, Snow, Neutralizing Gas.
-- **EI scope inputs built** (A3 engine, D3 page toggles, grouped by what they affect in R3; the user names any to hide):
-  - **Built A3:** doubles ally Power Spot, Steely Spirit, Flower Gift (existing key reused), global Fairy/Dark Aura and Aura Break, global Ruin, per-side Plus/Minus; gated by ability metadata, ignored in Singles.
-  - **Built A3:** per-side Power Trick (`atkPowerTrick` / `defPowerTrick`), gated by its move; stock raw-stat swap.
-  - **Built A3:** global Water Sport / Mud Sport toggles, Fire / Electric BP ×1352/4096 in EI, move-gated; no timer simulation.
-  - **Covered:** Electrify / Ion Deluge use the move's Type override (`slot.t: 'Electric'`), no separate toggle or engine rule.
-  - **Built A2:** Laser Focus and Lucky Chant (crit fields), page toggles in D3.
-  - **Built A3:** global Power Split / Guard Split, move-gated, both battlers' raw offensive / defensive stats averaged down before stages; both attack directions and multi-hit paths.
-- **Protect** is offered (EI has Protect-family moves; R2, 2026-10-27). Hail-setting moves set **Snow** (EI has
-  Snow, no Hail).
+Release `2576d0f3`: `include/config/battle.h`, `item.h`, `pokemon.h`, `src/battle_util.c`, map scripts
+and `trainer_parties.h` determine availability, not the oracle's field list.
+- **Inverse battles: none.** `B_FLAG_INVERSE_BATTLE` is `0`; effectiveness only inverts when non-zero
+  (`battle_util.c` 10710), and no trainer or script sets it.
+- **Shadowy Veil: absent.** No ability or move in the release, docs, eidex or oracle backup.
+- **Non-latest damage switches:** `B_EXPLOSION_DEFENSE` `GEN_4` (table above); `B_PROTEAN_LIBERO` `GEN_1`
+  (type change on every move); `B_INTREPID_SWORD` / `B_DAUNTLESS_SHIELD` `GEN_1` (every entry).
+  Non-latest `item.h` / `pokemon.h` switches are overworld / graphics only.
+- **Not available:** Terastallization, Z-Moves, Dynamax (only the Mega Ring is given; no trainer sets them),
+  Commander, Battery, Dragon Cheer or Pledge moves.
+- **Profile inputs:** fainted allies, Rage Fist count, switching, Glaive Rush, Salt Cure, Tar Shot, Charge,
+  hazards, Snow and Neutralizing Gas; move/ability-gated ally Power Spot, Steely Spirit, Flower Gift,
+  Fairy/Dark Aura, Aura Break, Ruin and Plus/Minus; Power Trick, Sports, Power/Guard Split, Laser Focus,
+  Lucky Chant and Protect. Shared grouping, generation gates and effects: `tools/calc/README.md` → Base profiles and fields.
+- **Electrify / Ion Deluge:** use the move's Type override (`slot.t: 'Electric'`), not a separate toggle.
+- **Hail-setting moves set Snow**, not Hail.
 
-#### Refinement dispositions (2026-10-25)
+#### Conditional mechanics and validation
 
-Every original open point is closed mechanically or explicitly scoped below. UI and trainer-field preparation
-are separate from correctness. No trainer `field` evidence is consumed automatically.
+- `abilityOn` is opt-in for Bull/Quill Rush and Illusion, never inferred from switch history.
+  Own and allied Emperor's Presence stack; the allied effect is Doubles-only.
+- Draco Barrage compares integer-truncated, staged Atk/Def and SpA/SpD estimates using Shell Side Arm's
+  fixed power 100 and level term, not attacking stats alone or final damage with items, abilities, weather
+  or screens. The source randomises integer ties; Auto defaults to Special and `slot.invert` selects the other
+  category, in ties or non-ties. The chosen category controls contact.
+- Ice Eater provides Ice immunity with Mold Breaker, Ability Shield and Neutralizing Gas boundaries;
+  healing is not part of its single-attack damage result. Parasitic Waste's on-hit healing is not modelled.
+- Self Sufficient heals 1/16 at turn end (`battle_util.c` 5137–5142), and Frostbite costs 1/16 (2447–2452).
+  `cfg.calc.residual` feeds turn-end actions and KO estimates, never damage rolls.
+- Blazing Soul reports effective priority, including Psychic Terrain blocking. `slot.order` feeds
+  order-dependent power without choosing a foe's move. The Speed highlight is not a turn-order promise.
+- Calculate hypothetical damage even when the attacker is asleep or frozen. `frz` means Frostbite here.
+- `MV.cr` comes from release `src/data/moves_info.h`: Snipe Shot 2, Razor Shell 1, Zippy Zap always.
+  **Doc says** Aqua Tail +1; the source has none. `over.critItems` gives Leek +1 for Farfetch'd (Galarian too),
+  +2 for Sirfetch'd (`battle_script_commands.c` 1956–1979; stock gives +2 for both).
+- Spectral Thief uses `over.state: {theft: "headroom"}` (`battle_script_commands.c` 17783/17837):
+  a stat at +6 is not taken; gain is limited to remaining room before Simple / Contrary.
+  Intrepid Sword / Dauntless Shield fire on every entry (`battle.h` 152–153) unless `entry` is false.
+- Oracle `noSwitch` concerns AI switch prediction, not damage. Its `evs=0` is a catalog No EVs variant,
+  not a universal ban: keep EV support and MGM's zero-EV selection.
 
-| Point | Disposition |
-| --- | --- |
-| Oracle `noSwitch=1` | Switch-in prediction / AI ranking and associated preview controls, not a damage-generation setting. Read `js/calc_ui/switch_preview/g3.js`, `g4.js`, `g5.js`, and `menu_settings.js` in the pinned oracle; no damage-core use. No engine override or damage fixture is appropriate. |
-| Oracle `evs=0` | The catalog explicitly offers No EVs and w/ EVs variants (`js/romhack_catalog.js` 182–191). It is not a universal EI ban. Preserve guide EV support and existing MGM zero-EV selection; `evs-enabled` and the shared UI scenarios guard this. |
-| Individual ability state | `monControls` declares per-Pokémon First turn out (Bull/Quill Rush) or Disguised (Illusion). Missing/false `abilityOn` means off; no switch history is guessed. Controls must remain on their own Pokémon, not global. Other abilities are not silently redefined. |
-| Defeatist threshold discovered during refinement | Correctness fix, no extra checkbox: current HP automatically determines the one-third trigger. Four boundary fixtures and hand-calculated rolls; matches the hack oracle. |
-| Ally Emperor's Presence | Explicit `atkEmperorPresence` field effect, attacking ally only, Doubles only. Own ability remains automatic; own plus ally stacks. No ally slot or trainer-field inference is needed. Water, Steel, off, other type, singles and stacking fixtures. |
-| Draco Barrage | Compares floor-staged Atk/Def versus SpA/SpD damage estimates using the source's fixed Shell Side Arm power (100) and level term. It does not compare attacking stats alone or simulate final damage, items, ability multipliers, weather or screens. Source randomises integer ties; use deterministic Special as the automatic tie default and an explicit invert toggle for either result. Inversion is also allowed in non-ties. Result exposes automatic category, tie and inversion; chosen category controls contact. |
-| Ice Eater | Correctness fix: explicitly implement Ice immunity, which the stock engine did not provide. Five fixtures cover Ice/non-Ice, Mold Breaker, Ability Shield and Neutralizing Gas. Healing is outside this single-attack damage result; recovery / multi-turn simulation deferred. |
-| Self Sufficient / Parasitic Waste | Self Sufficient heals 1/16 at end of turn (`battle_util.c:5137-5142`): `cfg.calc.residual`, counted in the KO text and the Turn end strip, never in the rolls. Frostbite 1/16 per turn (`battle_util.c:2447-2452`) likewise. Parasitic Waste heals on the hit, not at end of turn: not modelled. |
-| Blazing Soul / priority | Correct effective priority is implemented now, including Psychic Terrain blocking. `slot.order` accepts first/last and feeds existing order-dependent power hooks. The UI still needs a separate decide step for move-vs-move order, ties, Trick Room and single-column direction. A Speed highlight is not a turn-order promise. |
-| Frozen / otherwise unable attacker | Accepted user decision: calculate hypothetical damage, do not prevent the action. `unable-attacker-slp` and `unable-attacker-frz`; `frz` still means Frostbite. |
-| Spread / weather / screens | Added singles/doubles spread, sun/rain, Reflect/Light Screen/Aurora Veil, non-stacking screens, critical bypass, snow and hail fixtures. Source `GetScreensModifier` (10031+) uses 0.5 singles / 0.667 doubles; spread and ordinary sun/rain/screens do not change between Gen 8 and Gen 9 (direct stock parity checked). Snow is the notable Gen 9 difference: Ice-type Defence ×1.5 (`battle_util.c` 9881); hail has no such defence boost. Weather chip/healing is outside these per-hit rolls. |
+`tools/calc/imperium_check.mjs` independently checks category estimates, modifier placement/rounding,
+Gen 9 field rolls and unchanged Gen 8/9 parity, priority/order, EVs and immutable inputs. It runs in
+`npm test --prefix tools/calc`; `calc_states.json` holds state/crit fixtures. KO estimates repeat an attack
+under fixed inputs, not a turn simulation: they do not expire First turn out, break disguise, apply healing
+or decide later move order. In-game confirmation remains open (below), including Quill Rush special damage,
+integer-tied Draco Barrage distribution, allied Emperor stacking and Blazing Soul into Psychic Terrain.
 
-Engine pass (2026-10-26): crit stages are `MV.cr` from the release's
-`src/data/moves_info.h` (`.src/repos/expansion/`, 32 moves: Snipe Shot 2, Razor Shell 1, Zippy Zap always; **Doc
-says** Aqua Tail +1, the source has none). `cfg.calc.over.critItems` gives EI's Leek: +1 for Farfetch'd (Galarian too),
-+2 for Sirfetch'd (`battle_script_commands.c:1956-1979`; elsewhere +2 for both). The crit cases in `calc_states.json` cite the lines. Spectral Thief
-is expansion's (`over.state`: `{theft: "headroom"}`, `battle_script_commands.c:17783/17837`): a stat already at +6
-isn't taken, and the gain is cut to the room left before Simple / Contrary. Intrepid Sword / Dauntless Shield fire on
-every entry here (`battle.h:152-153`); the calc fires them unless the set's `entry` is `false`. Fixtures:
-`calc_states.json` (725 cases).
+#### Weights and automatic power
 
-Independent validation: `tools/calc/imperium_check.mjs` checks source-derived integer category estimates,
-hand-calculated ability modifier placement/rounding, native Gen 9 field rolls and Gen 8/9 parity for unchanged
-fields, effective priority, explicit order, EVs and immutable inputs. Included in `npm test`.
-KO estimates repeat the displayed attack under fixed inputs, not a turn-state simulation: they do not expire
-First turn out, break disguise, apply healing or decide subsequent move order.
+All 1,208 guide species have source-backed weights: 1,080 stock-name lookups, 128 `weightNames()` fallbacks,
+no 1 kg defaults. Weights are source hectograms / 10, not hzla data. Source: `iriv24/pokeemerald-expansion`
+`2576d0f3f4c861c760f0c55198e37e6d7b91683e`, `src/data/pokemon/species_info.h` and its
+`gen_1_families.h` through `gen_9_families.h` under `src/data/pokemon/species_info/`.
+The parent header supplies the hack Megas; do not substitute a base species or Gigantamax form.
+Fetch the release with `SOURCES.md`; source paths below are relative to that release.
 
-Still requires in-game confirmation: Bull/Quill Rush on a special attack, integer-tied Draco Barrage category
-distribution, allied Emperor stacking and Blazing Soul into Psychic Terrain. Source-backed fixtures are not an
-in-game test. First-turn/disguise checkboxes, an allied Emperor field effect and per-move category inversion are
-wired and persisted in the existing storage object. Category and Auto/Inverted state remain visible when the
-move is collapsed. Changing an ability or Mega form clears its conditional state. Broader turn-order and
-trainer-field UI are deferred. At wide sizes the match block grows when these controls need more room, keeping
-Field reachable rather than allowing an overflowing match block to cover it.
+`cfg.calc.over.species` overrides the stock/fallback weights:
 
-Checks:
-- `node tools/calc/hzla_compare.mjs emerald-imperium`: 132 cases, 123 exact matches, nine source/UI-choice differences,
-  zero unexplained mismatches. Report `.tmp/calc-emerald-imperium/compare.json`.
-- `node tools/calc/test.mjs`: 81 passed, 0 failed (`.tmp/calc-emerald-imperium/engine-test.log`).
-- `python assemble.py`: all four guides built (`.tmp/calc-emerald-imperium/assemble.log`).
-- `node tools/scenarios/calc-imperium.mjs`: 10 passes (all five viewer sizes, normal/dvkb), real checkbox clicks,
-  inversion/collapsed indication, field propagation, reload persistence and ability-state clearing.
-- Not done: an in-game test (a save state and one known move, per `tools/calc/README.md` → Licences, oracles and checking a hack) or a
-  physical Thor check. Browser regression results are recorded in the session status.
+| ID | Form | kg | Release source |
+| --- | --- | ---: | --- |
+| 1493 | Mega Infernape | 70 | `species_info.h:564` |
+| 1492 | Mega Empoleon D | 160 | `species_info.h:499` |
+| 1489 | Mega Luxray | 46 | `species_info.h:306` |
+| 1531 | Mega Roserade | 20 | `species_info.h:692` |
+| 774 | Minior (Meteor Red) | 40 | `gen_7_families.h:4259` |
+| 1168 | Hoopa Unbound | 49 | `gen_6_families.h:6143` |
 
-#### W2 weight / automatic-power audit (2026-10-25)
+Hoopa's `.weight = 490` is 49 kg, an inherited expansion typo rather than the official 490 kg.
+The release source wins over the old scope assumption that no existing species weights change.
 
-All 1,208 guide species were compared with EI source weights: 1,080 stock-name lookups,
-128 `weightNames()` fallbacks and no 1 kg defaults. All 128 fallback rows (including the
-regional forms omitted from the brief), both Nidoran and the additional Hoopa discrepancy appear below.
-Weights are hectograms divided by ten. No hzla weight data was used.
-
-Source **EI**: `iriv24/pokeemerald-expansion` commit
-`2576d0f3f4c861c760f0c55198e37e6d7b91683e`, `src/data/pokemon/species_info.h` and
-`src/data/pokemon/species_info/gen_1_families.h` through `gen_9_families.h`.
-The parent `species_info.h` supplies the additional hack Megas: do not substitute a base species
-or a Gigantamax form. Source paths/lines below are relative to these locations; macro line numbers
-identify the actual `.weight` initializer. The shared sprite-source expansion pin
-`73b3fbeb574327cd9420c89e56bef5aa3c08fead` was also fetched for cross-reference; EI values win.
-The local read-only `repos/eidex.zip` (`361c7d51bb5c301d9917f22222703db2a36e908a`)
-has species IDs/labels but no weight fields. Its labels map guide IDs to source symbols.
-All requested forms have an EI source weight: none needs an online weight or undocumented fallback.
-
-| ID | Form | Engine before (kg) | EI source (kg) | Source EI | Verdict |
-| --- | --- | ---: | ---: | --- | --- |
-| 1497 | Mega Butterfree | 32 | 32 | `gen_1_families.h:1264` | Keep; exact source weight |
-| 956 | Alolan Rattata | 3.8 | 3.8 | `gen_1_families.h:2003` | Keep; exact source weight |
-| 957 | Alolan Raticate | 25.5 | 25.5 | `gen_1_families.h:2070` | Keep; exact source weight |
-| 1009 | Pikachu (Cosplay) | 6 | 6 | `gen_1_families.h:2672` | Keep; exact source weight |
-| 1010 | Pikachu (Rock Star) | 6 | 6 | `gen_1_families.h:2723` | Keep; exact source weight |
-| 1011 | Pikachu (Belle) | 6 | 6 | `gen_1_families.h:2775` | Keep; exact source weight |
-| 1012 | Pikachu (Pop Star) | 6 | 6 | `gen_1_families.h:2827` | Keep; exact source weight |
-| 1013 | Pikachu (PhD) | 6 | 6 | `gen_1_families.h:2878` | Keep; exact source weight |
-| 1014 | Pikachu (Libre) | 6 | 6 | `gen_1_families.h:2929` | Keep; exact source weight |
-| 1533 | Pikachu (Surfing) | 6 | 6 | `gen_1_families.h:2981` | Keep; exact source weight |
-| 1534 | Pikachu (Flying) | 6 | 6 | `gen_1_families.h:3033` | Keep; exact source weight |
-| 958 | Alolan Raichu | 21 | 21 | `gen_1_families.h:3755` | Keep; exact source weight |
-| 959 | Alolan Sandshrew | 40 | 40 | `gen_1_families.h:3952` | Keep; exact source weight |
-| 960 | Alolan Sandslash | 55 | 55 | `gen_1_families.h:4018` | Keep; exact source weight |
-| 29 | Nidoran♀ | 7 | 7 | `gen_1_families.h:4084` | Keep; exact source weight |
-| 32 | Nidoran♂ | 9 | 9 | `gen_1_families.h:4279` | Keep; exact source weight |
-| 961 | Alolan Vulpix | 9.9 | 9.9 | `gen_1_families.h:4817` | Keep; exact source weight |
-| 962 | Alolan Ninetales | 19.9 | 19.9 | `gen_1_families.h:4884` | Keep; exact source weight |
-| 963 | Alolan Diglett | 1 | 1 | `gen_1_families.h:6082` | Keep; exact source weight |
-| 964 | Alolan Dugtrio | 66.6 | 66.6 | `gen_1_families.h:6149` | Keep; exact source weight |
-| 965 | Alolan Meowth | 4.2 | 4.2 | `gen_1_families.h:6348` | Keep; exact source weight |
-| 974 | Galarian Meowth | 7.5 | 7.5 | `gen_1_families.h:6479` | Keep; exact source weight |
-| 966 | Alolan Persian | 33 | 33 | `gen_1_families.h:6414` | Keep; exact source weight |
-| 993 | Hisuian Growlithe | 22.7 | 22.7 | `gen_1_families.h:7114` | Keep; exact source weight |
-| 994 | Hisuian Arcanine | 168 | 168 | `gen_1_families.h:7179` | Keep; exact source weight |
-| 1500 | Mega Machamp | 130 | 130 | `gen_1_families.h:8035` | Keep; exact source weight |
-| 967 | Alolan Geodude | 20.3 | 20.3 | `gen_1_families.h:8637` | Keep; exact source weight |
-| 968 | Alolan Graveler | 110 | 110 | `gen_1_families.h:8704` | Keep; exact source weight |
-| 969 | Alolan Golem | 316 | 316 | `gen_1_families.h:8770` | Keep; exact source weight |
-| 975 | Galarian Ponyta | 24 | 24 | `gen_1_families.h:8964` | Keep; exact source weight |
-| 976 | Galarian Rapidash | 80 | 80 | `gen_1_families.h:9029` | Keep; exact source weight |
-| 977 | Galarian Slowpoke | 36 | 36 | `gen_1_families.h:9352` | Keep; exact source weight |
-| 978 | Galarian Slowbro | 70.5 | 70.5 | `gen_1_families.h:9419` | Keep; exact source weight |
-| 979 | Galarian Farfetch'd | 42 | 42 | `gen_1_families.h:9828` | Keep; exact source weight |
-| 970 | Alolan Grimer | 42 | 42 | `gen_1_families.h:10374` | Keep; exact source weight |
-| 971 | Alolan Muk | 52 | 52 | `gen_1_families.h:10442` | Keep; exact source weight |
-| 1502 | Mega Kingler | 60 | 60 | `gen_1_families.h:11432` | Keep; exact source weight |
-| 995 | Hisuian Voltorb | 13 | 13 | `gen_1_families.h:11629` | Keep; exact source weight |
-| 996 | Hisuian Electrode | 71 | 71 | `gen_1_families.h:11694` | Keep; exact source weight |
-| 972 | Alolan Exeggutor | 415.6 | 415.6 | `gen_1_families.h:11896` | Keep; exact source weight |
-| 973 | Alolan Marowak | 34 | 34 | `gen_1_families.h:12094` | Keep; exact source weight |
-| 980 | Galarian Weezing | 16 | 16 | `gen_1_families.h:12738` | Keep; exact source weight |
-| 981 | Galarian Mr. Mime | 56.8 | 56.8 | `gen_1_families.h:14113` | Keep; exact source weight |
-| 1402 | Paldean Tauros (Combat) | 115 | 115 | `gen_1_families.h:15246` | Keep; exact source weight |
-| 1403 | Paldean Tauros (Blaze) | 85 | 85 | `gen_1_families.h:15311` | Keep; exact source weight |
-| 1404 | Paldean Tauros (Aqua) | 110 | 110 | `gen_1_families.h:15376` | Keep; exact source weight |
-| 1503 | Mega Lapras | 220 | 220 | `gen_1_families.h:15725` | Keep; exact source weight |
-| 1505 | Mega Snorlax | 460 | 460 | `gen_1_families.h:17289` | Keep; exact source weight |
-| 982 | Galarian Articuno | 50.9 | 50.9 | `gen_1_families.h:17422` | Keep; exact source weight |
-| 983 | Galarian Zapdos | 58.2 | 58.2 | `gen_1_families.h:17563` | Keep; exact source weight |
-| 984 | Galarian Moltres | 66 | 66 | `gen_1_families.h:17703` | Keep; exact source weight |
-| 997 | Hisuian Typhlosion | 69.8 | 69.8 | `gen_2_families.h:438` | Keep; exact source weight |
-| 1405 | Paldean Wooper | 11 | 11 | `gen_2_families.h:3072` | Keep; exact source weight |
-| 985 | Galarian Slowking | 79.5 | 79.5 | `gen_1_families.h:9484` | Keep; exact source weight |
-| 998 | Hisuian Qwilfish | 3.9 | 3.9 | `gen_2_families.h:4529` | Keep; exact source weight |
-| 999 | Hisuian Sneasel | 27 | 27 | `gen_2_families.h:5022` | Keep; exact source weight |
-| 986 | Galarian Corsola | 0.5 | 0.5 | `gen_2_families.h:5849` | Keep; exact source weight |
-| 987 | Galarian Zigzagoon | 17.5 | 17.5 | `gen_3_families.h:1102` | Keep; exact source weight |
-| 988 | Galarian Linoone | 32.5 | 32.5 | `gen_3_families.h:1167` | Keep; exact source weight |
-| 1527 | Mega Slaking | 130.5 | 130.5 | `species_info.h:626` | Keep; exact source weight |
-| 351 | Castform (Normal) | 0.8 | 0.8 | `gen_3_families.h:7986` | Keep; exact source weight |
-| 1490 | Mega Torterra | 310 | 310 | `species_info.h:375` | Keep; exact source weight |
-| 1493 | Mega Infernape | 55 | 70 | `species_info.h:564` | `over.species` override applied |
-| 1491 | Mega Empoleon O | 84.5 | 84.5 | `species_info.h:437` | Keep; exact source weight |
-| 1492 | Mega Empoleon D | 84.5 | 160 | `species_info.h:499` | `over.species` override applied |
-| 1489 | Mega Luxray | 42 | 46 | `species_info.h:306` | `over.species` override applied |
-| 1531 | Mega Roserade | 14.5 | 20 | `species_info.h:692` | `over.species` override applied |
-| 413 | Wormadam (Plant) | 6.5 | 6.5 | `gen_4_families.h:1846` | Keep; exact source weight |
-| 1532 | Mega Dusknoir | 106.6 | 106.6 | `species_info.h:762` | Keep; exact source weight |
-| 1529 | Primal Dialga | 683 | 683 | `species_info.h:874` | Keep; exact source weight |
-| 1530 | Primal Palkia | 336 | 336 | `species_info.h:931` | Keep; exact source weight |
-| 492 | Shaymin (Land) | 2.1 | 2.1 | `gen_4_families.h:6580` | Keep; exact source weight |
-| 1000 | Hisuian Samurott | 58.2 | 58.2 | `gen_5_families.h:663` | Keep; exact source weight |
-| 1001 | Hisuian Lilligant | 19.2 | 19.2 | `gen_5_families.h:3778` | Keep; exact source weight |
-| 550 | Basculin (Red Striped) | 18 | 18 | `gen_5_families.h:3845` | Keep; exact source weight |
-| 989 | Galarian Darumaka | 40 | 40 | `gen_5_families.h:4556` | Keep; exact source weight |
-| 555 | Darmanitan (Standard) | 92.9 | 92.9 | `gen_5_families.h:4437` | Keep; exact source weight |
-| 990 | Galarian Darmanitan (Standard) | 120 | 120 | `gen_5_families.h:4621` | Keep; exact source weight |
-| 1093 | Galarian Darmanitan (Zen) | 120 | 120 | `gen_5_families.h:4685` | Keep; exact source weight |
-| 991 | Galarian Yamask | 1.5 | 1.5 | `gen_5_families.h:5261` | Keep; exact source weight |
-| 1506 | Mega Garbodor | 107.3 | 107.3 | `gen_5_families.h:5778` | Keep; exact source weight |
-| 1002 | Hisuian Zorua | 12.5 | 12.5 | `gen_5_families.h:5965` | Keep; exact source weight |
-| 1003 | Hisuian Zoroark | 73 | 73 | `gen_5_families.h:6030` | Keep; exact source weight |
-| 992 | Galarian Stunfisk | 20.5 | 20.5 | `gen_5_families.h:9511` | Keep; exact source weight |
-| 1004 | Hisuian Braviary | 43.4 | 43.4 | `gen_5_families.h:10279` | Keep; exact source weight |
-| 641 | Tornadus (Incarnate) | 63 | 63 | `gen_5_families.h:11112` | Keep; exact source weight |
-| 642 | Thundurus (Incarnate) | 61 | 61 | `gen_5_families.h:11246` | Keep; exact source weight |
-| 645 | Landorus (Incarnate) | 68 | 68 | `gen_5_families.h:11513` | Keep; exact source weight |
-| 648 | Meloetta (Aria) | 6.5 | 6.5 | `gen_5_families.h:12000` | Keep; exact source weight |
-| 670 | Floette (Red) | 0.9 | 0.9 | `gen_6_families.h:1688` | Keep; exact source weight |
-| 678 | Meowstic (Male) | 8.5 | 8.5 | `gen_6_families.h:2336` | Keep; exact source weight |
-| 1155 | Meowstic (Female) | 8.5 | 8.5 | `gen_6_families.h:2398` | Keep; exact source weight |
-| 1005 | Hisuian Sliggoo | 68.5 | 68.5 | `gen_6_families.h:4250` | Keep; exact source weight |
-| 1006 | Hisuian Goodra | 334.1 | 334.1 | `gen_6_families.h:4315` | Keep; exact source weight |
-| 710 | Pumpkaboo (Average) | 5 | 5 | `gen_6_families.h:4575` | Keep; exact source weight |
-| 711 | Gourgeist (Average) | 12.5 | 12.5 | `gen_6_families.h:4839` | Keep; exact source weight |
-| 1007 | Hisuian Avalugg | 262.4 | 262.4 | `gen_6_families.h:5228` | Keep; exact source weight |
-| 720 | Hoopa (Confined) | 9 | 9 | `gen_6_families.h:6076` | Keep; exact source weight |
-| 1168 | Hoopa (Unbound) | 490 | 49 | `gen_6_families.h:6143` | Set 49 kg (orchestrator: the game's own value wins) |
-| 1008 | Hisuian Decidueye | 37 | 37 | `gen_7_families.h:221` | Keep; exact source weight |
-| 741 | Oricorio (Baile) | 3.4 | 3.4 | `gen_7_families.h:1421` | Keep; exact source weight |
-| 1172 | Rockruff (Own Tempo) | 9.2 | 9.2 | `gen_7_families.h:1939` | Keep; exact source weight |
-| 745 | Lycanroc (Midday) | 25 | 25 | `gen_7_families.h:2000` | Keep; exact source weight |
-| 746 | Wishiwashi (Solo) | 0.3 | 0.3 | `gen_7_families.h:2191` | Keep; exact source weight |
-| 773 | Silvally (Normal) | 100.5 | 100.5 | `gen_7_families.h:4161` | Keep; exact source weight |
-| 774 | Minior (Meteor Red) | 0.3 | 40 | `gen_7_families.h:4259` | `over.species` override applied |
-| 1199 | Minior (Core Red) | 0.3 | 0.3 | `gen_7_families.h:4297` | Keep; exact source weight |
-| 1512 | Mega Orbeetle | 40.8 | 40.8 | `gen_8_families.h:1344` | Keep; exact source weight |
-| 1513 | Mega Drednaw | 115.5 | 115.5 | `gen_8_families.h:1907` | Keep; exact source weight |
-| 1514 | Mega Coalossal | 310.5 | 310.5 | `gen_8_families.h:2281` | Keep; exact source weight |
-| 1515 | Mega Flapple | 1 | 1 | `gen_8_families.h:2471` | Keep; exact source weight |
-| 1516 | Mega Appletun | 13 | 13 | `gen_8_families.h:2592` | Keep; exact source weight |
-| 1517 | Mega Sandaconda | 65.5 | 65.5 | `gen_8_families.h:2902` | Keep; exact source weight |
-| 849 | Toxtricity (Amped) | 40 | 40 | `gen_8_families.h:3331` | Keep; exact source weight |
-| 1518 | Mega Toxtricity | 40 | 40 | `gen_8_families.h:3395` | Keep; exact source weight |
-| 1519 | Mega Centiskorch | 120 | 120 | `gen_8_families.h:3640` | Keep; exact source weight |
-| 1521 | Mega Grimmsnarl | 61 | 61 | `gen_8_families.h:4520` | Keep; exact source weight |
-| 875 | Eiscue (Ice) | 89 | 89 | `gen_8_families.h:5139` | Keep; exact source weight |
-| 876 | Indeedee (Male) | 28 | 28 | `gen_8_families.h:5262` | Keep; exact source weight |
-| 1225 | Indeedee (Female) | 28 | 28 | `gen_8_families.h:5325` | Keep; exact source weight |
-| 1523 | Mega Copperajah | 650 | 650 | `gen_8_families.h:5643` | Keep; exact source weight |
-| 892 | Urshifu (Single Strike) | 105 | 105 | `gen_8_families.h:6794` | Keep; exact source weight |
-| 902 | Basculegion (Male) | 110 | 110 | `gen_5_families.h:4048` | Keep; exact source weight |
-| 1234 | Basculegion (Female) | 110 | 110 | `gen_5_families.h:4111` | Keep; exact source weight |
-| 905 | Enamorus (Incarnate) | 48 | 48 | `gen_8_families.h:7636` | Keep; exact source weight |
-| 1299 | Oinkologne (Male) | 120 | 120 | `gen_9_families.h:659` | Keep; exact source weight |
-| 1300 | Oinkologne (Female) | 120 | 120 | `gen_9_families.h:721` | Keep; exact source weight |
-| 1316 | Squawkabilly (Green) | 2.4 | 2.4 | `gen_9_families.h:1731` | Keep; exact source weight |
-| 1352 | Palafin (Zero) | 60.2 | 60.2 | `gen_9_families.h:4011` | Keep; exact source weight |
-| 1391 | Gimmighoul (Chest) | 5 | 5 | `gen_9_families.h:6132` | Keep; exact source weight |
-| 1416 | Ogerpon (Teal) | 39.8 | 39.8 | `gen_9_families.h:7414` | Keep; exact source weight |
-
-**Power bands (EI `src/battle_util.c`).** Lines 8693–8717 define Flail/Reversal and weight tables;
-8832–8843 use `floor(48 * currentHP / maxHP)` with inclusive thresholds 1/4/9/16/32/48
-and powers 200/150/100/80/40/20. Low Kick/Grass Knot (8917–8929) use strict weight comparisons:
-<10/<25/<50/<100/<200/≥200 kg gives 20/40/60/80/100/120. Heavy Slam/Heat Crash (8930–8935)
-use the integer attacker/defender ratio: <2/2/3/4/≥5 gives 40/60/80/100/120.
-Eruption/Water Spout (8832–8834) floor move power times currentHP/maxHP; the final minimum is 1.
-Electro Ball (8944–8948) uses integer speed ratio <1/1/2/3/≥4 → 40/60/80/120/150;
-Gyro Ball (8950–8953) uses `min(150, floor(25 * defenderSpeed / attackerSpeed) + 1)`.
-These are the native Gen 9 engine rules: no shared engine phase or profile power rule is needed.
-
-**Decided (orchestrator, session 3): `over.species[1168].weightkg = 49`**, the weight the game uses (an expansion typo it inherits; Bulbapedia's 490 kg is the official one). Was: **Needs Opus — W2 Hoopa Unbound (`1168`).** EI `gen_6_families.h:6143` says `.weight = 490`
-(49 kg); the shared expansion header at the sprite pin has the same `.weight = 490`
-(`gen_6_families.h:7417`), while stock is 490 kg. This inherited source discrepancy conflicts
-with the binding scope note that EI changes no existing-species weights. Retain stock 490 kg;
-the orchestrator must decide whether the release-source typo should override that scope note.
-This is not an undocumented form and is not silently treated as a confirmed 49 kg change.
-
-**Done (orchestrator, session 3):** the result now reports Eruption / Water Spout / Dragon Energy's power (`HP_POWER` in `tools/calc/src/adapter.js`), so the Power box shows it. Was: **Needs Opus — W2 HP-power display metadata.** Eruption/Water Spout damage scales correctly without
-`slot.bp` and matches both the oracle and forced-power source-formula rolls at every Snorlax HP value.
-However, `tools/calc/src/adapter.js:300–311` excludes these fixed-nominal-power moves from `AUTO_POWER`;
-results omit the computed `bp` even at full HP. At 1/235 HP the roll is correctly 1 damage and at full HP
-Eruption versus Blastoise gives 19–23, but neither result has `bp`. Shared adapter/UI changes are not
-W2 worker-owned. The fixtures test damage rather than claiming that missing metadata is power 1 or 150.
-
-**W2 final checks.** `npm test --prefix tools/calc`, `node tools/calc/imperium_check.mjs`,
-`node tools/calc/hzla_compare.mjs emerald-imperium` and
-`python -I tools/datajson.py hacks/emerald-imperium/hack.json` pass before every W2 commit.
-The comparison now has 132 fixtures: 123 exact matches (all 23 W2 cases included), nine pre-existing
-documented differences, zero unexplained mismatches/errors. W2 adds 1,208 species weight-band checks,
-30 strict weight-boundary checks, 24 integer-ratio boundary checks, 940 exhaustive HP checks and
-338 speed-stage checks. Fixed-power reference calculations disable native variable-power recalculation,
-so the source HP and speed formulas are checked independently of that recalculation.
-The 23 persisted W2 fixtures never set `slot.bp`: 11 weight/form cases, two weight-ratio cases,
-eight HP cases and two speed cases. Logs and the full source audit remain in
-`.tmp/calc-refine/w2-ei.log` and `.tmp/calc-refine/w2-ei-audit.json` (not shipped).
-No source weights were missing/undocumented; no new oracle differences or engine rules were added.
-No template, engine source, extract scripts, other hacks, storage keys or orchestrator claim were changed.
-No viewer/Thor or in-game testing was performed for this data/fixture-only unit.
+Automatic-power bands are native Gen 9: `src/battle_util.c` 8693–8717, 8832–8843, 8917–8953
+(Flail/Reversal, Low Kick/Grass Knot, Heavy Slam/Heat Crash, HP power, Electro Ball/Gyro Ball).
+No profile power rule is needed. The adapter reports computed power, including Eruption / Water Spout /
+Dragon Energy, for the Power box. `tools/calc/imperium_check.mjs` independently checks weight boundaries,
+integer ratios, exhaustive HP and speed-stage cases against fixed-power reference calculations.
+The 23 automatic-power fixtures in `calc_matchups.json` omit `slot.bp` so they exercise the native rules.
 
 #### Save import
 
-Reader `expansion` (`cfg.calc.save`; format notes `template/calc/readers/README.md` → expansion: EI's one 28-sector save
-slot, the expansion Pokémon struct). `extract/gid.py` writes `GID` after the prune from the release's expansion headers
+Reader `expansion` (`cfg.calc.save`; format notes `template/calc/readers/README.md` → expansion: pokeemerald-expansion
+(the 28-sector slot and expansion Pokémon struct)). `extract/gid.py` writes `GID` after the prune from the release's expansion headers
 (`tools/expansion_ids.py`): species (our P ids are the game's species numbers, all 1,208 checked by name), moves (789 of
 789 by name), abilities (284 of 284; the two "As One" by description), items (the game's names, 20 squeezed ones spelt as
 Showdown and the trainer sets do: Never-MeltIce -> Never-Melt Ice, so their calc effects apply), growth rates (every
@@ -503,7 +321,7 @@ species; EI's Primal Dialga / Palkia from `species_info.h`). The 67 pruned speci
 skipped and counted in the banner ("· 1 not in this guide").
 
 Checked 2026-10-27 (`.src/saves/`, SOURCES.md):
-- hzla's `Emerald Imperium 1.3.sav` against `ei-1.3.expected.json` (written by `tools/calc_paste_expected.py` from
+- `hzla-Emerald Imperium 1.3.sav` (hzla's original save) against `ei-1.3.expected.json` (written by `tools/calc_paste_expected.py` from
   hzla's paste of the same save, `--layout box13:3,party:6,box0:24`): all 33 match (species incl. Alolan Marowak,
   Galarian Rapidash, Aegislash; level, nature, ability slot incl. hidden, item incl. Mega Stones, moves, IVs incl. two
   30s in Speed / Sp. Atk, which checks the stat reorder). The paste has no EVs and all its levels are 56, which the
@@ -511,7 +329,7 @@ Checked 2026-10-27 (`.src/saves/`, SOURCES.md):
 - A copy with a mint (Impish -> Adamant), EVs (4 HP / 252 Atk / 252 Spe) and one Pokémon made a pruned species
   (Mewtwo): nature, EVs and the skip all as expected (made by hand; the save has no mints or EVs of its own).
 - Banners: hzla's mGBA save state -> Save state; a Renegade Platinum save -> Wrong game; one flipped byte in the party
-  sector -> Unreadable; a blank flash and a save with party count 0 -> No Pokémon yet. hzla's second save `em_imp.sav`
+  sector -> Unreadable; a blank flash and a save with party count 0 -> No Pokémon yet. the second save `hzla-em_imp.sav`
   imports 6 + 25 (levels 1-56, Pikachu (Pop Star)); no expected file for it.
 - Not checked yet: a save from the user's own game (EI 1.3.1), RetroArch's `.srm`, a Pokémon with its form in a
   macro-built family (Vivillon) and the ability randomiser (not modelled).
@@ -553,47 +371,17 @@ unless stated. Multi-hit rolls are per hit.
 ## Checks
 
 `check.py` [baseline.json [current.json]]: the Locations PDF's wild tables against the dex data slot by slot; given a
-pre-Part-B data.json, the keep rule for species (every trainer-used species stays), reference integrity, unchanged tables
+pre-pruning data.json, the keep rule for species (every trainer-used species stays), reference integrity, unchanged tables
 and trainers, tracker area indices, walkthrough stop / tick keys, and that finalising again leaves the data
 byte-identical. Then `python assemble.py emerald-imperium` (no missing-sprite warning), `tools/domcompare.mjs`
 against the previous build, and the viewer-size checks (CLAUDE.md).
 
 ## History
 
-- **2026-10-24, walkthrough = Trainers boxes.** The nine gym splits became the Trainers page's 20 boxes, same names and
-  order (`walk.name_splits`): 19 cap splits plus the optional Hot House after Brawly, its stop cut into the six badge
-  sections (`2.1`, `2.1.f1`...`f5`, named like them). Each stop goes with its trainers' box; Route 110 and Victory Road
-  span two caps and are cut in two (second part `2.3.f1` / `8.1.f1`, trainers only). Gardenia moved from Rustboro to the
-  Mauville stop, before Wally, where the Trainers page has her (cap 34; the Rustboro step "fight Gardenia at any time"
-  stays). Stops keep their keys, so saved ticks and open state carry over (dex.js `migrateWalkState`); the Norman split's
-  desert note moved to the Trick House split. The Trainers page now lists each box in walkthrough order (shared
-  finaliser `trainers_follow_walk`): Wattson, Mt. Chimney, Flannery, Trick House and Tate and Liza boxes reordered.
-  `tools/tabs_check.py` checks both pages agree and caps never go down. Template, same day: Starter above Next step on
-  the walkthrough, and the Trainers place buttons show their box's cap (`n/N | cap`).
-- **2026-10-23, Items standard.** `tools/itemstd.py` (shared, idempotent; run by `finalise()`) puts Items in the shared
-  box set (rules: `itemstd.RULES['emerald-imperium']`). TMs + HMs are one box (182, game order); Shops is one row per item
-  (shops one per line, price after the shop; the six berry lists split into single berries; the stray Pomeg Berry row
-  dropped; kind from the item name, `EI_KIND`); the 40 Battle item rewards moved into Held Items (class by item),
-  Evolution Items (Leaf, Shiny, Ice Stone) and Stats and Abilities (PP Max), as `Also: reward, defeat <trainer> <place>`
-  (Leftovers x3 merged); capitalisation fixed (`rename`). Mega Stones and Useful NPCs (A to Z) keep their place text.
-- **2026-10-23, Part B (consistency pass).** Species 1,275 -> 1,208: dropped 63 unavailable, unused ordinary / form
-  entries and four unused Megas whose base species is unavailable (Mega Mewtwo X / Y, Mega Latias / Latios). Megas /
-  Primals need an obtainable base dex number or actual trainer use; trainer-only Primal Dialga / Palkia stay. Original
-  species IDs, order, all move / ability / location indices and encounter records kept; links to removed species
-  filtered, Mega Stone item facts kept with the removed-species links cleared. AR[0] is `Starter` (`st:1`), same
-  location list and index; all 159 tracker area indices, egg subslots and saved tracker species survive.
-  Walkthrough keeps its nine splits and every stop and step, now named `<Boss> Split [Cap N]` through `tools/splits.py`
-  (Roxanne 15, Brawly 25, Wattson 34, Flannery 47, Norman 59, Winona 68, Tate & Liza 76, Juan 82, Elite Four 85);
-  Trainers keeps 20 boxes, only Champion's becomes `Elite Four Split [Cap 85]`. `hack.json` and the localStorage keys are
-  unchanged. Saved links to removed species can no longer open a detail page, but no saved ID is reassigned. Checked: all
-  481 trainer-used species, 159 areas, 106 stops, 141 steps preserved; finalising twice is byte-identical; consistency
-  check (all viewer sizes, normal / dvkb, light theme), `walkcheck` / `pagecheck` at 260x316 and `domcompare` over 2,716
-  routes per mode: no page errors (every route differs, since the footer's species count changed). No Thor-device test.
-- **2026-10-20, split UI.** Hatch-town slots, Gardenia's move to the Wattson split, folded gift houses, level cap boxes
-  and shop sub-headings (Sources and rules) were added to the published data.
-- **2026-10-19.** The builder and these notes moved out of the guide's top comment into `extract/` and this file.
-- **2026-10-02, first build (claude.ai, five batches).** Pokémon, moves, abilities; changes doc, Locations PDF and
-  tracker; Items and Walkthrough with cheat codes; Trainers (138 boss trainers, 677 Pokémon) from the boss sheet + hzla calc.
+- **2026-10-24:** Walkthrough regrouped into the Trainers page's 20 boxes, retaining persistent stop keys.
+- **2026-10-23:** Shared item standard; 1,275 → 1,208 species under the obtainable/trainer-used rule, saved IDs preserved.
+- **2026-10-20:** Hatch-town slots, Gardenia in the Wattson split, town gift houses and shop sub-headings added.
+- **2026-10-02:** First guide from dex/changes/location docs, boss sheet and hzla trainer sets.
 
 ## Data schema (shared by all four guides)
 
@@ -662,13 +450,15 @@ STAT FORMULA (Gen 3+)
   Other = floor((floor((2B + IV + floor(EV/4)) x L / 100) + 5) x nature)
 ```
 
-Trainer `field` is optional, data-only preparation for a later field UI. Shared finalisation regenerates it from
+Trainer `field` is optional evidence for the calc's automatic Field defaults and Area line. Shared finalisation regenerates it from
 group/section/trainer notes and trainer tags (`tools/trainer_fields.py`); it never inspects team moves, abilities
 or held items. Each record is `{scope, text, effects, review}`: scope identifies the original note/tag level,
 text is the complete existing wording, effects holds conservative normalisations, and review marks unresolved
-labels or incomplete targeting/outcomes. Effects use `{kind, value, [duration], [side], [timing], [layers]}`;
-absent properties are unknown, not defaults. Kinds: weather, terrain, room, side-condition, hazard, critical-bonus.
+labels or incomplete targeting/outcomes. Effects use `{kind, value, [duration], [side], [timing], [layers], [source]}`;
+absent properties are unknown, not defaults. Kinds: weather, terrain, room, side-condition, hazard, critical-bonus and gameType.
 Side is player or opponent; weather/terrain/rooms are global. Duration `permanent` records the doc wording, not
 a claim that an effect cannot be replaced. Timing is battle-start or after-first-send-out when documented.
-Repeated section/trainer evidence describes one effect, not stacked applications. No template or calc consumer
-applies these records yet; `review: false` does not mean the engine supports the effect or its special rules.
+Repeated section/trainer evidence describes one effect, not stacked applications. The calc consumes supported
+effects (weather/terrain, Trick Room, foe Tailwind/crit, hazards and automatic Doubles); variant labels are ignored.
+Fog and random terrain remain text only. `review: false` does not imply support for every special rule.
+UI precedence and lifecycle: `template/README.md` → Damage calculator; normalization: `tools/trainer_fields.py`.

@@ -95,17 +95,19 @@ the game docs; stop `k` with `.fN` fragment suffixes.
 
 ### Damage calc
 
-Retest (2026-10-27): Protect is now offered (the guide has Protect-family moves). Hail-setting moves set Hail.
+`cfg.calc.base = "gen6"`: standard Gen 6 singles/doubles damage and types, with Rebalanced species
+stats/types, move power/category/priority and ability assignments from game data. Later-generation species
+or movepools do not upgrade the battle mechanics to Gen 7. EVs stay off; `ls.dmg` (`exdmg`) is unchanged.
+Page decisions: `template/README.md` → Damage calculator; engine contracts and checks: `tools/calc/README.md`.
 
-W2 checked 2026-10-25: all 782 stock Gen 6 weights stand (36 form fallbacks, 29 Megas, no 1 kg defaults or regional forms); 38 explicit form/Nidoran verdicts, 67 exact form/Mega checks, 54 weight/ratio boundaries, 470 HP and 338 speed cases confirm stock bands; ten automatic-power fixtures without `bp` all match legacy Dynamic-Calc (119 total: 116 exact, 3 existing always-critical differences, zero errors); no profile overrides or new Needs Opus rows. Evidence and Bulbapedia reference: `plans/calc-refine-eternal.md` (git history) → W2; checks: `tools/calc/eternal_check.mjs`.
+The profile offers all eight weather choices (none and harsh weather included), Electric/Grassy/Misty terrain,
+Gravity, Magic Room, Wonder Room, inverse and both sides' Reflect, Light Screen, Helping Hand, Tailwind,
+Flower Gift and Friend Guard. No Psychic terrain, Aurora Veil or Battery. Stored sides are Player/Foe;
+the page remaps them for attack direction. Protect is move-gated; Hail-setting moves set Hail.
 
-Field mechanics pass, 2026-10-25. `cfg.calc.base = "gen6"`: standard Generation 6 singles/doubles damage and types,
-with the guide's Rebalanced species stats, types, move power/category/priority and ability assignments. The user's
-requested field list is explicit: all eight weather choices (including none and the three harsh weather states),
-Electric/Grassy/Misty terrain, Gravity, Magic Room, Wonder Room, inverse, and both sides' Reflect, Light Screen,
-Helping Hand, Tailwind, Flower Gift and Friend Guard. No Psychic terrain, Aurora Veil or Battery. Field sides are
-relative to the current attacker/defender, as in the shared calc UI; the existing `excalc` storage key is unchanged.
-No shared template, engine or base-profile change was needed.
+All 782 stock Gen 6 weights stand (36 form fallbacks, 29 Megas, no 1 kg defaults or regional forms).
+`tools/calc/eternal_check.mjs` checks forms/Nidoran, weight and ratio boundaries, exhaustive HP and speed cases;
+ten automatic-power fixtures omit `bp`. No weight override or profile power rule is needed.
 
 | Configuration | Source / check |
 | --- | --- |
@@ -114,50 +116,33 @@ No shared template, engine or base-profile change was needed.
 | Ally Flower Gift toggles | Standard x1.5 Attack / Sp. Def in Sun and Harsh Sunshine; oracle `calc/mechanics/gen56.js:871-876,944-949`. Rain/no-weather and wrong-category negative cases included. |
 | Always-critical moves | Declarative `critical` rule (`value: true`) for Cut, Self-Destruct and Explosion (Move Changes, Rebalanced; data `h`/`e` notes agree). The oracle (gen 6) crits them only with the crit flag: its no-flag rolls are 1/1.5 of its crit rolls. Fixtures `cut-neutral`, `self-destruct-neutral`, `explosion-neutral` are known differences (source: the doc; the oracle lacks the rule), their `-critical` pairs and the Cut type fixtures (`cut-rock-defender`, `cut-ghost-defender`, both with the crit flag) match. Check: neutral rolls equal crit rolls. |
 | Cut / Strength types | Types come from the guide data (Grass / Rock, `MV` 14 / 69), no rule needed: Cut vs Rock 2x; Strength vs Fire 2x; Rock-type user gets STAB (`strength-rock-user-stab`). Matches the oracle. |
-| Drill Peck | Crit stage 1 from the game data (`MV.cr`); the calc counts it in the crit chance it reports (engine pass below). |
+| Drill Peck | Crit stage 1 from the game data (`MV.cr`); the calc counts it in the crit chance it reports (crit data below). |
 | Triple Kick | Power 20 (data) x the hit number: 20 / 40 / 60, as the expansion source does it (shared engine fix, `tools/calc/test.mjs`). The oracle keeps a flat 20, so no oracle fixture. Check in game. |
 | Remaining field controls | Native Gen 6 mechanics; oracle `calc/mechanics/gen56.js`, `calc/mechanics/util.js` and independent stock `@smogon/calc` 0.12.0 Gen 6 comparisons. |
 
 Oracle: `hzla/Dynamic-Calc`, pinned at `42b4cdc0f11de43ecabf3a5d2c1aba67e46e2f74` in ignored
 `.tmp/hzla-eternal-x/`, backup `exwy`. Its title says Insanity Rebalanced; the hack's Rebalanced and Insanity
 Rebalanced dex are identical (SOURCES.md), and the comparison supplies our guide's Rebalanced sets, not its trainers.
-`hzla_compare.mjs` loads this older calculator's original `calc/` scripts in `index.html` order with its shared-export
-browser shim. This is necessary because its CommonJS gen78 dependency references a nonexistent custom stats module;
-no oracle source was edited, copied into tracked files or bundled. Legacy-only UI defaults: `invert=false` (inverse
-uses `field.isInverseBattle`), `switchIn=0`, `challengeMode=false`; `npoint_data` / `backup_moves` use `backup_data`.
+Run the pinned oracle with `tools/calc/hzla_compare.mjs`; loader details and commands belong in
+`tools/calc/README.md` → Local hzla oracle. `calc_matchups.json` records the always-critical differences and
+field cases. `tools/calc/eternal_check.mjs` compares non-inverse cases to uninstrumented stock Gen 6,
+hand-checks Wonder Room/defensive Flower Gift and asserts inverse/field relationships; included in `npm test`.
+Page checks: `tools/scenarios/calc-eternal.mjs` (controls and persistence across viewer sizes/modes).
 
-`calc_matchups.json`: **109 cases: 106 match all 16 oracle rolls; 3 known differences (always-critical neutral fixtures, see the Always-critical row); no unexplained mismatches**.
-Includes singles/doubles spread and single-target attacks; screens and critical bypass; Helping Hand/Friend Guard;
-all weather choices, harsh-weather immunities, Strong Winds, sand's Rock Sp. Def boost and Air Lock; each terrain
-with grounded/airborne cases; Magic Room suppressing Choice Band/Eviolite; Wonder Room physical/special/Psyshock;
-inverse single/dual weakness, resistance and immunity; both Flower Gift sides; Tailwind via Payback's turn-order
-power; Gravity removing Flying/Levitate immunity and grounding terrain recipients; combined doubles support.
+`MV.cr` comes from game-data `crit` via `tools/ctrguide.py`: Drill Peck 1; Cut / Self-Destruct /
+Explosion / Frost Breath 6. The always-critical rules repeat `cr` 6 harmlessly. Frost Breath uses vanilla X's
+60 power, 90 accuracy and always-crit data; the changelog's buff is likely the Gen 6 40 → 60 change already
+in vanilla X, not another buff. Weak Armor raises Speed by 1 (Gen 6). State/crit/pre-hit fixtures:
+`calc_states.json`; shared contracts: `tools/calc/README.md` → Battle state and Crit.
 
-`tools/calc/eternal_check.mjs` independently compares every non-inverse fixture to uninstrumented stock Gen 6,
-asserts inverse effectiveness and positive/negative field relationships, and hand-checks the Wonder Room/defensive
-Flower Gift rolls. Those fixtures share the Photonic check's relevant stats: base damage 20 before STAB for Wonder
-Room Tackle, 136 for Psychic, 25 for Psyshock, and 20 for defensive Flower Gift Psychic. Included in
-`npm test --prefix tools/calc`: 81 shared + 53 Hardlove + 111 Photonic + 109 Eternal fixtures/checks pass.
-Existing oracle comparisons remain 47/47 Emerald Imperium and 101 matches / 6 documented differences Photonic Sun.
-
-Validation: all four guides assemble; the other three built HTML files are byte-identical to before this pass.
-`gate.py baseline HEAD` captured pre-pass commit `32c9b80`; `gate.py check eternal-x --data` passes 5/5 (rebuilt data
-identical except timestamp, report byte-identical, counts and extract assertions pass). `calc-eternal.mjs` verifies
-actual field controls/options, damage rendering and reload persistence at five viewer sizes, normal/dvkb: 10/10.
-`consistency-check.mjs eternal-x` passes both modes, all five sizes and light theme. Phone preview:
-`calc-eternal.html` (Thor frame); manually checked the fields at 260x316, with no horizontal overflow.
-
-Not checked: in-game damage on the Thor, exhaustive individual move/ability/item effects or
-switch-in/history automation. Save import coverage is recorded below. Oracle agreement isolates mechanics:
-sharing guide stats/types/power does not independently validate extracted data. The hack's Pokemon Changes doc
-describes changed stats/types/ability assignments/movepools, including later-generation additions; those do not
-upgrade the requested battle mechanics to Gen 7. Future refinements add fixtures here rather than change other
-guides' base profiles.
+Not checked: in-game damage on the Thor or an exhaustive audit of individual move/ability/item effects.
+Oracle agreement with guide-supplied stats/types/power does not independently validate extraction.
+Refinements belong in this hack's profile/fixtures, not another guide's base profile.
 
 #### Save import
 
-2026-10-28: `cfg.calc.save = "gen67"` enables the existing decrypted XY `main` reader (also accepts a `.sav`
-name). No reader, template UI or shared helper changes. The reader validates the footer, every block CRC and
+`cfg.calc.save = "gen67"` selects `template/calc/readers/gen67.js` for decrypted XY `main` (a `.sav`
+name is also accepted). The reader validates the footer, every block CRC and
 each nonblank Pokémon checksum; imports stored species/form, ability id, held item, moves, nature and IVs/EVs;
 uses the stored party level and Eternal X growth rates for boxed levels; skips eggs. PK6 byte 0xDE is not a
 hyper-training flag. USUM / ORAS / SM are Wrong game for this guide.
@@ -174,8 +159,8 @@ Unmapped species/forms are the four already pruned from the guide: `150:2` Mega 
 Wormadam Sandy / Trash and `670:5` Eternal Flower Floette. No retained species, move or ability is unmapped.
 Identical Vivillon patterns and Flabébé colours map to their retained Icy Snow / Red guide rows, not new species.
 
-Independent synthetic oracle: PKHeX.Core 26.10.18 / .NET 10, local `.tmp/pkhex-oracle/` program; never commit
-the GPL-linked program or binaries. `hacks/eternal-x/.src/saves/pkhex-xy.{sav,expected.json}` contains 6 party +
+Independent synthetic oracle: PKHeX.Core 26.10.18 / .NET 10; never commit the GPL-linked program or binaries.
+Local fixtures (recreate with the recipe below): `.src/saves/pkhex-xy.sav` and `pkhex-xy.expected.json`, 6 party +
 79 boxed Pokémon across 31 boxes; PKHeX reopens it with valid checksums and party count. Expectations come
 from input objects and Eternal X's own names/ability assignments/growth rates, not the reader output. Thirty-nine
 source form growth rates differ from Photonic Sun; Eternal X has five rates (no Fluctuating). The fixture covers
@@ -184,31 +169,14 @@ hidden abilities, Charizard X/Y/Alakazam/Mewtwo stones and stored Megas, every R
 forms, all Pumpkaboo/Gourgeist sizes, 20 Vivillon patterns and five Flabébé colours, including the final box slot.
 Recipe: `template/calc/readers/README.md` → PKHeX oracle recipe.
 
-Checks/logs: `.tmp/calc-save-eternal-x/`:
-- `import-xy.log`: `node tools/calc_save_check.mjs dist/eternal-x.html
-  hacks/eternal-x/.src/saves/pkhex-xy.sav hacks/eternal-x/.src/saves/pkhex-xy.expected.json`, real file input,
-  85/85 Pokémon and every compared field pass.
-- `oracle.log`, `unit.log`: all 85 Pokémon match every expected field directly, input unchanged; wrong-game,
-  truncated/half, CRC/footer, PKHeX-resealed Pokémon checksum/count/game, empty/egg party and state controls pass;
-  PK6 0xDE does not hyper-train IVs.
-- `edges.log`: all those rejection banners pass through the real picker at 260x316, rejected imports preserve
-  the previous save and zero page errors. `import-photonic-regression.log`: Photonic Sun's existing USUM file
-  picker check still passes 38/38 Pokémon, every field; shared helper/reader unchanged.
-- `npm-test.log`: `npm test --prefix tools/calc` passes all engine/state suites.
-- `scenarios.log`: `uv run python -I tools/gate.py scenarios --only calc-import,calc-bridge,calc-smoke --jobs 8`,
-  12/12 guide/scenario runs pass in 27.0s; per-run logs in `.tmp/gate/20261028-124141-176382/`.
-  Browser runs waited for two clear process checks; an earlier attempt refused concurrent pagecheck work
-  (`scenarios-contention.log`). The successful run did not bypass the gate's idle check.
-- `hzla.log`, `hzla-compare.json`: `node tools/calc/hzla_compare.mjs eternal-x --output
-  .tmp/calc-save-eternal-x/hzla-compare.json`, 116 matches + 3 known differences, no mismatch/error. Initially
-  missing local oracle fetched at the comparator's pin with `--fetch`.
-- `gate-data.log`, `baseline-delta.log`: `uv run python -I tools/gate.py check eternal-x --data` against
-  `c0dce4a` flags only the authorised GID addition and two GID report lines; existing data excluding `built`
-  is identical, rebuild/counts/extract checks pass. Baseline was not replaced; parent acceptance of this delta
-  is needed. Build commands, `tools/datajson.py hacks/eternal-x/hack.json` and `assemble.py eternal-x` pass.
+Checked 2026-10-28 against that oracle: `tools/calc_save_check.mjs` imports all 85 Pokémon through the
+real file input with every compared field matching. Wrong-game, truncated/half, CRC/footer, resealed bad
+Pokémon checksum/count/game, empty/egg party and save-state controls reject without replacing the old import.
+PK6 0xDE does not hyper-train IVs. Reader formats and the oracle recipe are owned by
+`template/calc/readers/README.md` → gen67: decrypted 3DS main saves and PKHeX oracle recipe (Gen 6/7).
 
-Still untested: a real player's XY save and import on the Thor. The existing shared Unreadable banner refers to
-two save slots although decrypted 3DS main has one active save; UI wording is outside this task.
+Still untested: a real player's XY save and import on the Thor. The shared Unreadable banner refers to
+two save slots although decrypted 3DS main has one active save; retain this wording caveat until fixed.
 
 #### In-game tests
 
@@ -231,43 +199,19 @@ always-crit points, watch several uses: every use should show the crit list, nev
   - Expected on every use: `229 232 235 238 241 243 246 249 252 255 256 259 262 265 268 271`.
   - Other way (ordinary hit): `153 156 157 159 160 162 165 166 168 169 171 174 175 177 178 181`.
 
-Engine pass (2026-10-26): crit stages are `MV.cr` from the game data's per-move `crit`
-(`tools/ctrguide.py`, 26 moves: Drill Peck 1, Cut / Self-Destruct / Explosion / Frost Breath 6; the always-critical
-rule above repeats `cr` 6: harmless, kept). The calc now reports the crit chance (`crit`), so Drill Peck's stage shows.
-Frost Breath: the game data is vanilla X's (60 power, 90 accuracy, always a crit); the changelog's buff is most likely
-the Gen 6 change 40 → 60 that vanilla X already had. No data change. Weak Armor raises Speed by 1 (Gen 6). Battle
-state, crit and `pre`: `tools/calc/README.md`. Fixtures: `calc_states.json` (320 cases).
-
 ## Checks
 
 `check.py` [baseline.json]: an availability fixture (evolution / breeding, usable Mega, form change, trainers, partners,
 pruning); references (evolution, forms, trainer and partner teams, area rows); the cap list and matching Trainers /
 Walkthrough box names; unique stop keys (74) with all 69 legacy roots; key-item decisions; every trainer key in a stop.
-Given a pre-Part-B data.json: species IDs and order, identical AR / ARO / LOC and trainer cards, area attachments,
+Given a pre-pruning data.json: species IDs and order, identical AR / ARO / LOC and trainer cards, area attachments,
 trainer references and checklist arrays per legacy stop. Then `python assemble.py eternal-x` (782 shared sprites, no
 missing ones), `tools/domcompare.mjs` against the previous build, and the viewer-size checks (CLAUDE.md).
 
 ## History
 
-- **2026-10-24, gifts read `Also:`.** Poké Radar, King's Rock (Lysandre) and the three Kanto Mega Stones from Sycamore
-  were `Found:` lines; `itemstd.RULES['eternal-x']['also']` relabels them (Items and the walkthrough).
-
-- **2026-10-23, Items standard.** `tools/itemstd.py` (shared, idempotent; run by `finalise()`) puts Items in the shared
-  box set (rules: `itemstd.RULES['eternal-x']`; `python -I tools/itemstd.py eternal-x` on a published data.json). The 29
-  stones under Held Items moved to Mega Stones (linked to the Mega page by `P.stone`); Genesect Drives -> Memories and
-  Drives; the five HMs moved from Key Items to TMs and HMs (HMs sub-heading, linked to the move); Exp. Share stays in Key
-  Items only. Fossils, Mega Stones and Evolution Items A to Z.
-- **2026-10-23, Part B (consistency pass).** Removed IDs `mega-mewtwo-y`, `wormadam-sandy`, `wormadam-trash`,
-  `floette-eternal` (786 -> 782). Key Items 33 -> 28 (rules above; Poké Radar row added, previously omitted by the
-  whitelist). Cap list, split names and the cap regroup as above (Sycamore Lumiose 18 and Couriway 70 removed). All 680
-  trainer cards (keys, partners), AR, ARO and LOC unchanged as parsed objects. Saved state: `LS.dex` stores `{f,sort,av}`,
-  not species-array indices; `TK.e[area].p` and `TK.t` hold string species IDs; calc inputs use `LS.calc + ':' + p.id`;
-  config key names untouched. A removed species ID previously selected stays in stored state (it is not rewritten).
-  Checks: repeat builds byte-identical, `pagecheck` / `walkcheck` in both modes at 260x316, consistency check (five
-  viewer sizes, light theme), `domcompare` over 2,316 routes per mode with no page errors. No Thor-device test.
-- **2026-10-23, stable fragment keys.** Stops regrouped by cap shared one original key across fragments, which would have
-  coupled their saved state. Extraction now emits 74 unique keys keeping all 69 legacy roots (the Shalour stops at
-  `3.4`, `4.0`, `5.0` use `2.4`, `2.4.f1`, `2.4.f2`), and the shared template's `migrateWalkState` moves saved ticks,
-  open state and anchors to the new positions by key. (Part B first found that the template used positional coordinates
-  for stop state; the template fix is in `template/dex.js`.)
-- **2026-10-22, first build** (Rebalanced version, from the game files and Bulbapedia; game data regenerated that day).
+- **2026-10-24:** Poké Radar, Lysandre's King's Rock and Sycamore's Kanto Mega Stone gifts relabelled `Also:`.
+- **2026-10-23:** Shared item standard: Mega Stones / Drives / HMs refiled, Exp. Share kept only in Key Items.
+- **2026-10-23:** 786 → 782 species; Key Items 33 → 28; cap regroup preserved trainer/area IDs and storage keys.
+- **2026-10-23:** 74 unique stop-fragment keys preserve all 69 legacy roots and migrate saved state by key.
+- **2026-10-22:** First Rebalanced guide from game files and Bulbapedia.

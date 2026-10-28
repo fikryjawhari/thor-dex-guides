@@ -21,15 +21,8 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N]` / `scenarios [hack ...] [--only a,b] [--jobs N]` | Captures committed HTML/data/reports at a ref; rebuilds data and runs serial DOM, consistency, tabs, migration, mockup and scenario checks; `--jobs N` runs the scenario × guide runs N at a time (each its own browser; same results as serial). `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
 | `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` to the main checkout (Windows junctions, no copying), then `uv sync`; no hacks means every built guide. Refuses other claims or existing source copies. Release removes only the matching claim. |
 | `scenarios/tracker-reload.mjs <guide.html>` | Seeded tracker state, Clear and reload at 260 × 316 in `dvkb`; assertions on the control and saved state. `scenarios/README.md` describes new spec checks. |
-| `scenarios/calc-layout.mjs <guide.html>` | Calc layout, spec checks 1, 17–20, 22 (+ 18b, 18c): fit at 260 × 316 (and 537 × 424, 832 × 424), long names, scroll stops, box size, wide columns and foe list / strip (480 × 392 to 832 × 316), the 222 px resize, the 61-Pokémon box. Skips without `cfg.calc`. |
-| `scenarios/calc-controls.mjs <guide.html>` | Calc controls, checks 2–11, 13, 16, 23: tap to attack, cap box, trainer stepping and sheet, Spe and stages, HP, crit, multi-hit, move swap, Mega, custom set, unknown set, per-slot crit. |
-| `scenarios/calc-import.mjs <guide.html>` | Calc import, checks 12, 14, 15: save / reset and re-import, the four error banners, empty states. Uses the test reader and the fixtures in `scenarios/fixtures/calc/` (written in EI's ids, copied into each guide's own ids). |
-| `scenarios/calc-bridge.mjs <guide.html>` | Calc import through Dex Viewer's save bridge (`../thor-offline-viewer/docs/SAVE_BRIDGE.md`) with a fake `window.dexViewerApp`: Import / ↻ refresh / Change file, the error banners, the newer-save dot; no buttons without the bridge. |
-| `scenarios/calc-persist.mjs <guide.html>` | Calc persistence, check 26 (every kind of state back after a reload) and Clear saved state in the Thor frame built by `thor-frame/build.py`. |
-| `scenarios/calc-entry.mjs <guide.html>` | Calc entry points, check 21: Calc vs ▸ on a trainer card and Use in calc ▸ on a Pokémon page. |
-| `scenarios/calc-field.mjs <guide.html>` | Calc field from data, check 25: a copy of the profile field list is drawn exactly; a selection reaches the engine and survives a reload. |
-| `scenarios/calc-hidden.mjs [guide.html]` | Calc hidden without data, check 24: a guide without `cfg.calc` has five tabs and no entry buttons; with `cfg.calc` the Calc tab and both buttons show. Runs as built, no copy. |
-| `calc_check_lib.mjs` | Shared harness for the calc checks (outside `scenarios/` because the gate runs every `*.mjs` there): prepares a copy of a built guide (test reader, fixture data edits, the trainers each check needs picked by role from the guide's own data, the save fixtures in its ids; a check whose role the guide lacks is skipped), one isolated page per case with real taps (hit-tested), number boxes as the input or the dvkb pad, the real `#calc-file` input, page-error capture, and the PASS / FAIL matrix with screenshots in `.tmp/calc-checks/`. |
+| `scenarios/calc-*.mjs <guide.html>` | Calc page checks: layout, controls, state, import/bridge, mechanics and per-hack fields. Coverage, sizes and failure output: `scenarios/README.md` → Calc checks. |
+| `calc_check_lib.mjs` | Shared calc scenario harness: guide copies with fixture patches, role-based trainers and save IDs, isolated pages, hit-tested taps, number boxes/dvkb pad, real file input, error capture and result matrices. |
 | `expansion_ids.py` | pokeemerald-expansion headers -> game ids (`#define`s), names (`[CONST] = { .name = … }`) and growth rates (species_info blocks and family macros), for a hack's `GID` (EI `extract/gid.py`; SoulGold's later). |
 | `calc_paste_expected.py <paste> <hack> <out.json> --layout …` | A save's `expected.json` from a Showdown-style paste of it (hzla's calc importer makes one): names in the guide's own spelling; `--layout` places the paste's Pokémon in party / boxes. |
 | `calc_save_check.mjs <guide.html> <save file> <expected.json>` | The done-check for a save reader: imports the save through the guide's real file input and compares its party and boxes with `expected.json` (names: species, level, nature, ability, item, moves in order, IVs, EVs). Exit 0 on a match; 1 with a printed diff on a mismatch; 2 when the import or setup fails. Format and proof: below. |
@@ -121,22 +114,17 @@ One-time setup per PC (serve keeps running across reboots):
 
 ## Calc checks and the save check
 
-The calc checks (`tools/scenarios/calc-*.mjs`, from the calc's UI spec checks 1–26) are run by `gate.py check --template` on every
-guide with `cfg.calc` (the others skip, except `calc-hidden`, which checks that they hide the feature). Run one by hand:
+The calc scenarios, shared harness, viewer sizes and failure output are documented in
+`tools/scenarios/README.md` → Calc checks. Run selected scenarios on built guides without rebuilding or a baseline:
 
-```
+```sh
+uv run python -I tools/gate.py scenarios --only calc-layout,calc-controls --jobs 8
 node tools/scenarios/calc-controls.mjs dist/emerald-imperium.html
 ```
 
-Each prints one PASS / FAIL line per check × size × mode and a matrix, writes `.tmp/calc-checks/<scenario>.json`, saves a
-`…-FAIL.png` screenshot for each failure, and exits 1 on any failure. Every case opens its own page (fresh storage),
-and page exceptions and console errors fail the case. Each case also asserts `documentElement.scrollWidth` equals the
-viewport. Sizes: 260 × 316 in normal and `dvkb` for every check; checks 1 and 20 also at 537 × 424 and 832 × 424 (20:
-480 × 392 and 832 × 316). The checks run on a copy of the built guide (`.tmp/calc-checks/`): the test reader is
-injected and used even when the profile names a real save reader (the fixtures are test-reader files; real readers have
-the save check), and `calc_check_lib.mjs`'s `fixturePatches` renames two trainers and
-strips one sheet-only Pokémon's set, because the EI data has no trainer with those names or gaps. The built `dist/` is
-never changed.
+`gate.py check --template --jobs 8` includes all scenarios for the selected guides; non-calc guides skip calc cases
+except `calc-hidden`, which checks feature visibility. The gate runs browser sweeps one at a time, but scenario × guide
+jobs can run in parallel. Standard gates above describes the baseline and full checks.
 
 **Save check** (`tools/calc_save_check.mjs`): the done-check for a save reader.
 
@@ -152,9 +140,8 @@ never changed.
   `party[0].level: expected 35, got 34`. Exit 2: the setup or the import failed (the banner text is printed).
 - An hzla paste of the save (Showdown format) becomes `expected.json` with `tools/calc_paste_expected.py`; check the
   paste's levels and EVs before trusting them (EI's had no EVs).
-- Gen 6/7 synthetic oracle saves (2026-10-28): PKHeX.Core 26.10.18, local .NET 10 project only; six party and 32
-  boxed specimens in USUM / SM / XY / ORAS, reopened with valid checksums. Recipe and local paths:
-  `template/calc/readers/README.md` → PKHeX oracle recipe. No linked program, binaries or saves are committed.
+- Gen 6/7 synthetic saves and independent PKHeX expectations: `template/calc/readers/README.md` → PKHeX oracle
+  recipe (Gen 6/7). Keep the linked generator, binaries and saves local.
 - Proof on the test reader (`tools/scenarios/fixtures/calc/`): `good.json` with `good.expected.json` exits 0;
   `good.json` with `good.wrong.expected.json` (two deliberate differences) exits 1 and prints both.
 

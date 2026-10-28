@@ -91,7 +91,7 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   keying scaffold only: trainer keys are assigned by it, then sections and trainer runs are regrouped by cap without
   renumbering. Episode RR keeps its rooms; all other post-game sections share the final Post-game box.
 - **Level caps** (CAPS in trainers.py): one list including all mini caps, except Dexio (Heahea) and Battle Royal. Equal
-  and immediately adjacent caps stay. Ultra Necrozma is 95 (was 100, the user 2026-10-24), so caps never go down. Totem levels come from
+  and immediately adjacent caps stay. Ultra Necrozma is 95 (not its encounter level 100), so caps never go down. Totem levels come from
   Totem Battles.pdf. Each place shows its next cap and the battles left before it: one per battle (t.bt), one starter's
   rival fight, no optional places, Kantonian Gym, Battle Buffet or Prismatic Moon teams. Route trainers you can walk
   around all count: no source marks them (Bulbapedia's walkthrough and location pages don't, Serebii doesn't), so there's
@@ -121,7 +121,9 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   (preformatted, scrolls sideways), the Mega Evolution guide and the changelog. Both tabs end Elite Four Split [Cap 100],
   Post-game: Episode RR, Post-game; the two Poni Grove trainers and the Guardians / Ultra Space / Battle Tree / Title
   Defense content are in the last box; neither post-game box has a cap. 11 of the 148 fragments only separate trainers
-  across cap boundaries (each visit's encounters, items and notes are kept once).
+  across cap boundaries (each visit's encounters, items and notes are kept once). Every fragment keeps a persistent
+  `k`: the original `split.stop` on its first fragment, `.fN` on the others. Preserve those identities when regrouping;
+  the shared walkthrough migration restores saved state by key, not the new position.
 - **Conflicts and findings** (full list: report.txt). The Move Changes doc says Triple Kick 10 → 20 power; the game data
   still has 10. Toxic Thread's new effect isn't a number the move data shows. Wild tables that differ from the PDF (the
   game is shown): fishing rates on Routes 7 and 9, Akala Outskirts, Seafolk Village (Dhelmise 50%, doc 5%), Poni Breaker
@@ -129,7 +131,7 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   Canyon (plus Boldore), Poni Meadow, Route 16, Ancient Poni Path, Thrifty Megamart; levels at Verdant Cavern, Route 3
   shadows, Route 8 surfing and most bubbling spots; Poni Wilds berry piles are half Crabrawler; Poni Grove's Stakataka /
   Blacephalon slots are 0%.
-- **Totem encounters (2026-10-25):** `extract/totems.py` hand-transcribes all 13 `Totem Battles.pdf` tables
+- **Totem encounters:** `extract/totems.py` hand-transcribes all 13 `Totem Battles.pdf` tables
   (33 mons), including Nihilego, Ultra Necrozma and both Verdant Cavern rematches. The two-column text dump shifts
   item/aura, nature/EV and move labels; tables were checked by column rather than blindly parsed by row label.
   All 653 `trainers-rebalanced.json` records were checked (38 teams contain listed Totem species); none is a Totem
@@ -139,7 +141,7 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   Each story fight joins its existing CAPS box/place; Raticate uses the Gumshoos box with `Prismatic Moon`, while
   Gumshoos is tagged `Photonic Sun`. Stable `totem-*` keys leave all existing trainer identities intact. Rematches
   join Post-game at Verdant Cavern, reached from Part 34's Hau'oli City stop after Ilima; no new stop keys needed.
-  Orchestrator verdicts: Hydro Pump identifies **Wash Rotom** (`wash-rotom`); its trainer note says "Doc says Rotom".
+  Hydro Pump identifies **Wash Rotom** (`wash-rotom`); its trainer note says "Doc says Rotom".
   The doc has no IVs: each encounter has one note "IVs not in the doc: 31 assumed", and all mons use `[31]*6`.
   Ultra Necrozma retains its doc level **100**, separately from the chosen progression cap **95**.
   No other doc-vs-game set differences were found because the game trainer archive does not contain these fights.
@@ -167,22 +169,25 @@ has no cheats or checklist steps, and WK.docs holds the game docs.
 
 ### Damage calc
 
-Retest (2026-10-27): Protect is offered from the guide's Protect-family moves, no longer through `zmove`; Z-moves
-through it stay ¼. Hail-setting moves set Hail (no Snow in Gen 7).
+`cfg.calc.base = "gen7"`; Rebalanced species stats/types and move power/category come from game data,
+not the oracle backup. EVs stay enabled; `ls.dmg` (`psdmg`) is unchanged. Gen 6/7 share the type chart,
+so no type-chart override is needed. Page decisions: `template/README.md` → Damage calculator;
+engine contracts and checks: `tools/calc/README.md`.
 
-**2026-10-25 / W2:** unchanged Gen 7 weights stand: all 928 lookups checked (50 form fallbacks, zero 1 kg defaults), including 48 Megas, both Primals and distinct Nidoran genders; no weight override or power rule added. The 52-row form verdict table and stock power formulas are in `plans/calc-refine-photonic.md` (git history) -> W2. [Bulbapedia weights](https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_weight) and [Minior](https://bulbapedia.bulbagarden.net/wiki/Minior_(Pok%C3%A9mon)) confirm Core is 0.3 kg, already correct. Ten fixtures have no set power (all eight weight/HP/speed moves, Alolan Raichu and stock Mega Steelix); stock checks and 872 native-oracle BP/16-roll comparisons pass. Official comparator's automatic-power adapter is still Needs Opus 6, not a mechanics disagreement.
+The profile keeps Singles/Doubles, all four terrains, ordinary/harsh weather, Gravity, Magic Room,
+Wonder Room, Reflect/Light Screen, Aurora Veil, Helping Hand, Tailwind and Friend Guard. It adds both sides'
+Flower Gift and Battery plus an optional inverse scenario. These inputs do not claim every condition occurs
+in the story. Protect is move-gated, with Z damage through it at ¼; Hail-setting moves set Hail, not Snow.
 
-2026-10-25: field-mechanics pass for 2.38 Rebalanced. `cfg.calc.base = "gen7"`; species stats/types and move
-power/category come from this guide's game data, not the oracle's backup. EVs remain enabled. The oracle is
-hzla Dynamic-Calc-Decomps, `data=pspm`, `gen=7`, `dmgGen=7`, `types=6`, `critGen=7`, title
-`Photonic Sun/Prismatic Moon`, backup `pspm`, pinned commit `ff6c3e339e276e6b4e8e44db58750b6534bc26aa`.
-Gen 6 and Gen 7 use the same type chart; no type-chart override is needed. No hzla code or tables are shipped.
+All 928 stock Gen 7 weights stand (50 form fallbacks, no 1 kg defaults), including 48 Megas, both Primals,
+Nidoran genders and Minior Core at 0.3 kg. No weight override or profile power rule is needed.
+Ten fixtures omit set power (all eight weight/HP/speed moves, Alolan Raichu and Mega Steelix);
+`tools/calc/photonic_check.mjs` checks forms, weight/ratio boundaries and native HP/speed power.
 
-The profile keeps the standard Gen 7 fields, including Singles/Doubles, all four terrains, Sun/Rain/Sand/Hail,
-Harsh Sunshine/Heavy Rain/Strong Winds, Gravity, Magic Room, Wonder Room, both sides' Reflect/Light Screen,
-Aurora Veil, Helping Hand, Tailwind and Friend Guard. It adds both sides' Flower Gift and Battery plus an
-optional inverse-battle scenario toggle. These are calculator scenario inputs, not claims that every condition
-can be encountered in Photonic Sun's story. No shared template, shared base profile or storage key changed.
+Oracle: hzla Dynamic-Calc-Decomps, `data=pspm`, `gen=7`, `dmgGen=7`, `types=6`, `critGen=7`, title
+`Photonic Sun/Prismatic Moon`, backup `pspm`, pin `ff6c3e339e276e6b4e8e44db58750b6534bc26aa`.
+No hzla code or tables ship. Source paths in the table are relative to `@smogon/calc` 0.12.0;
+oracle paths below refer to that pinned checkout, fetched with `node tools/calc/hzla_compare.mjs photonic-sun --fetch`.
 
 | Setting / rule | Evidence and checks |
 | --- | --- |
@@ -193,9 +198,9 @@ can be encountered in Photonic Sun's story. No shared template, shared base prof
 | Flower Gift | Attack and Sp. Def in Sun/Harsh Sunshine, no boost in rain/no weather or to the wrong category; defensive implementation at `src/mechanics/gen789.ts:1604`. |
 | Tailwind | Payback changes power when attacker Tailwind reverses turn order; both sides' Tailwind preserves it. |
 | Inverse | Declarative `effectiveness` rule: invert each defending type's multiplier (0 becomes 2); no ability-immunity bypass. Fixtures cover weakness, resistance, type immunity, dual types, Levitate, Freeze-Dry and Flying Press. |
-| Always-critical moves | Declarative `critical` rule (`value: true`) for Self-Destruct and Explosion (Photonic Move Changes, Rebalanced; data `h`/`e` notes agree). Fixtures `self-destruct-neutral` / `-critical`, `explosion-neutral` / `-critical`: the no-flag case rolls equal the crit-flag case. Oracle does not crit them (neutral 244 vs crit 366 on Self-Destruct, a 1.5 ratio), so the doc decides and these rows are not `match`. Defense halving conflict: see Needs Opus in `plans/calc-refine-photonic.md` (git history). |
+| Always-critical moves | `critical: {value: true}` for Self-Destruct / Explosion (Rebalanced Move Changes and `MV.cr` agree); unflagged and crit-flagged fixture rolls are equal. The oracle omits the automatic crit and halves Defense. Keep Gen 7 Defense unchanged: neither game data nor docs restore Gen 1–4 halving. `calc_matchups.json` records the four differences. |
 
-`calc_matchups.json` has 146 cases: **121 match all 16 hzla rolls; 25 known differences; zero unannotated damage mismatches or harness errors**. The orchestrator resolved the W2 automatic-power harness gap (Needs Opus 6); Z2 adds 25 Z-conversion cases, including 15 documented stock-Z oracle differences. Five doc-power assertions still fail independently of the oracle (Needs Opus 4); oracle agreement is not an all-green mechanics gate. The earlier four Self-Destruct/Explosion cases retain their documented differences.
+`calc_matchups.json` records known differences rather than forcing oracle parity.
 The six differences deliberately retain stock Gen 7 behaviour:
 - Wonder Room (Tackle, Psychic, Psyshock): the pinned oracle's active `calc/mechanics/gen789.js:54-57` swaps raw
   defenses twice (`checkRawStatChanges`, then `checkWonderRoom`), and line 1076 selects the opposite attacking
@@ -204,74 +209,63 @@ The six differences deliberately retain stock Gen 7 behaviour:
   `calculateDfModsSMSSSV` omits it, although its separate `calc/mechanics/vanilla/gen789.js:1231` includes it.
   Ours applies the normal x1.5 Sp. Def modifier. Do not remove the modifier just to match the broken oracle path.
 
-Checks: `node tools/calc/photonic_check.mjs` runs all 111 fixtures, compares every non-inverse case's 16 rolls
-directly with uninstrumented stock Gen 7 using guide stat/move overrides, and asserts inverse effectiveness plus
-positive/negative field relationships. Hand-checked base damage for the divergent singles cases: Wonder Room
-Tackle = 20 before STAB (130 Attack / 125 swapped Defense), Psychic = 136 (85 Sp. Atk / 25 swapped Sp. Def),
-Psyshock = 25 (85 Sp. Atk / 125 swapped Defense); defensive Flower Gift Psychic = 20 (85 Sp. Atk / 187 boosted
-Sp. Def, half-down rounding from 125 x1.5). All five 16-roll arrays are asserted independently of the stock API.
-Included in `npm test --prefix tools/calc` (81 shared + 53 Hardlove + 111
-Photonic checks pass). `node tools/calc/hzla_compare.mjs photonic-sun` writes its report under
-`.tmp/calc-photonic-sun/compare.json`. `python assemble.py` builds all four guides.
-`node tools/scenarios/calc-photonic.mjs dist/photonic-sun.html`: all controls/options, rendered damage, stored field
-values and reload persistence pass at 260x316, 480x392, 537x424, 832x424 and 832x316, normal and dvkb (10 passes).
-Phone preview: `calc-photonic.html` (Thor frame). The older shared `calc-controls.mjs` cannot run against this
-guide: its harness requires Emerald Imperium's Flannery trainer key `4.0.15`; it aborts before its assertions.
-The Photonic-specific scenario above covers this session's field controls without changing that unrelated suite.
+`tools/calc/photonic_check.mjs` compares non-inverse field cases directly with uninstrumented stock Gen 7,
+asserts inverse/field relationships and hand-checks the divergent Wonder Room/Flower Gift rolls.
+It runs in `npm test --prefix tools/calc`; the independent oracle command is
+`node tools/calc/hzla_compare.mjs photonic-sun`. Page controls/persistence: `tools/scenarios/calc-photonic.mjs`;
+shared browser coverage and usage: `tools/scenarios/README.md` → Calc checks.
 
-Z-moves (2026-10-25): profile `zmove: true` (engine `580f021`) and `zpow`, the 16 Z powers the Move Changes doc gives (`50b3e2d`; they win over the band and stock's own Z powers); 25 no-power fixtures (`b73d0ab`, `3ffed9b`; checks `e0d94c1`), all pass, including Catastropika 210. In the calc each damaging row has a Z toggle on its % line (template README → Damage calculator, "Z-moves"). Totem auras: TR mons carry `au` (`extract/totems.py`); the calc takes it as the Totem's stat stages with an "Aura" mark. Scenario: `tools/scenarios/calc-zmove.mjs` (20/20, every size, normal / dvkb).
+Z-moves use `zmove: true` and the 16 Move Changes powers in `zpow`, which override stock/band power.
+The 25 no-set-power fixtures cover documented powers, native exceptions and single-hit conversion, including
+Catastropika 210. Each damaging row's Z toggle follows `template/README.md` → Damage calculator.
+Totem `au` comes from `extract/totems.py`; it initializes stages and the Aura mark, checked by
+`tools/scenarios/calc-zmove.mjs`.
 
-Not checked: in-game damage on the Thor, a full audit of every changed move/ability/item or switch-in/history-dependent states. The fixture oracle
-shares guide stats/types/power/category, so agreement does not independently validate the extracted data. Future
-mechanics refinements should add fixtures here rather than change other guides' base profiles.
+`MV.cr` comes from game-data `crit` via `tools/ctrguide.py` (26 moves; Self-Destruct / Explosion 6).
+The always-critical rules harmlessly repeat `cr`. Battle state, crit chance and pre-hit changes use stock Gen 7;
+Spectral Thief steals before the hit, with Simple doubling the gain. **Doc says** Triple Kick 20 and Power Gem 90;
+the patched game data has 10 / 80 (Power Gem's PP 15 change is present), which the guide/calc use.
+State/crit fixtures: `calc_states.json`; shared contracts: `tools/calc/README.md` → Battle state and Crit.
+
+Not checked: in-game damage on the Thor or a full audit of changed move/ability/item and history-dependent effects.
+Oracle agreement with guide-supplied stats/types/power/category does not independently validate extraction.
+Refinements belong in this hack's profile/fixtures, not other guides' base profiles.
 
 #### Save import
 
-2026-10-28: `cfg.calc.save = "gen67"`, `template/calc/readers/gen67.js`, decrypted USUM `main` (also accepts a
+`cfg.calc.save = "gen67"`, `template/calc/readers/gen67.js`, decrypted USUM `main` (also accepts a
 `.sav` name). Same vanilla save format, not vanilla growth rates or ability assumptions. The reader validates the
 footer, all block CRCs and each nonblank Pokémon checksum; reads stored species/form, ability id, item and moves;
 uses the stored party level and hacked growth for boxed levels; skips eggs and applies PK7 hyper-training flags.
 It does not verify the Gen 7 RSA signature. SM / XY / ORAS return Wrong game for this guide.
 
-`tools/ctrguide.py::build_save_ids` is shared with the next 3DS guide. `extract/build.py` calls it **after**
+`tools/ctrguide.py::build_save_ids` is shared with Eternal X. `extract/build.py` calls it **after**
 finalise/prune. `GID.sp` has 1107 `species:form` keys covering every one of the 928 P ids; `GID.mv` / `GID.ab`
 cover all 728 move indices / 233 ability indices; `GID.it` uses all 896 game item names. `GID.gr` holds the growth
 rates for all source forms, even excluded ones. These come from the existing `.src/dex-rebalanced.json` produced
 by `tools/ctr_dex.py` from the hack's romfs and code patch, not from PKHeX/hzla tables. Use source move **ids and
 table order**, not a name-only dictionary: the physical/special Z-move pairs deliberately have identical names.
-`extract/check.py` now asserts full species/move/ability coverage and selected form/item ids.
+`extract/check.py` asserts full species/move/ability coverage and selected form/item ids.
 
 Unmapped species/form keys, intentionally outside the retained guide: **25:1..25:7, 718:1, 718:2** (cap Pikachu
 and the pruned Zygarde 10% entries). No retained species, move or ability is unmapped. The importer skips and counts
 Pokémon with unmapped species using the existing banner. Cosmetic/totem aliases follow the existing `_spec` map.
 
 Oracle: local PKHeX.Core **26.10.18**, SDK **10.0.403**. Recipe: `template/calc/readers/README.md` → PKHeX oracle
-recipe. No linked program or binaries are committed. `hacks/photonic-sun/.src/saves/pkhex-usum.sav` and its
-`.expected.json` contain six party and 32 boxed Pokémon; all fields match through `tools/calc_save_check.mjs`.
+recipe (Gen 6/7). No linked program or binaries are committed. Local fixtures (recreate with that recipe):
+`.src/saves/pkhex-usum.sav` and `pkhex-usum.expected.json`, six party and 32 boxed Pokémon.
 The boxes cover all shuffle selectors and all six hacked growth rates; expected boxed levels use PKHeX
-Experience.GetLevel with those hacked rates, independently of our reader. XY / ORAS / SM fixture pairs live in
-`.tmp/pkhex-oracle/out/` and also match all fields directly; their expected names/boxed levels are in Photonic
-terms, so the Eternal X agent must regenerate expectations from its own game data.
+Experience.GetLevel with those hacked rates, independently of our reader. XY / ORAS / SM synthetic layouts
+also match directly, but their expectations use Photonic names/boxed levels: Eternal X needs its own game data.
 
-Checks/logs in `.tmp/calc-save-photonic-sun/`:
-- `import-usum.log`: real file input, 38/38 Pokémon, every compared field.
-- `edges.log`, `unit.log`: all four layouts; wrong-game banners for XY/ORAS/SM; truncated (one byte/half), corrupted
-  and footer copies unreadable; recognisable state headers; PKHeX-resealed bad Pokémon checksum/count, empty and
-  egg-only parties, wrong game byte; hyper-trained IVs; zero page errors.
-- `npm-test.log`: `npm test --prefix tools/calc` passes unchanged engine and state suites.
-- `scenarios.log`: `uv run python -I tools/gate.py scenarios --only calc-import,calc-bridge,calc-smoke --jobs 8`,
-  all 12 guide/scenario runs pass (normal/dvkb and viewer sizes).
-- `hzla.log`, `hzla-compare.json`: `node tools/calc/hzla_compare.mjs photonic-sun`, 118 matches + 28 known
-  differences, no mismatch/error. Initial missing local oracle was fetched at the tool's pinned commit.
-- `gate-data.log`: `uv run python -I tools/gate.py check photonic-sun --data` against pre-change `62c2e6d` flags
-  exactly the authorised GID addition and two GID report lines; rebuild, coverage and unchanged counts pass.
-  All old data excluding built is identical. Baseline not recaptured: parent acceptance of this delta is needed.
-- `domcompare.log`: full 2478-route sweep, zero page errors/unsettled routes; raw comparison differs because the
-  footer built date advances 2026-10-26 → 2026-10-28 (Import is also newly enabled on Calc). Not claimed as a clean
-  DOM pass; no ignore or baseline replacement used. The other three assembled guides are byte-identical to baseline.
+Checked 2026-10-28 against that oracle: `tools/calc_save_check.mjs` imports all 38 USUM Pokémon through the real
+file input with every compared field matching. All four layouts, hyper-trained IVs, wrong-game/state banners,
+truncated/corrupted/footer copies, resealed bad Pokémon checksum/count/game and empty/egg-only party controls
+are covered. Rejected imports preserve the previous save. Format details belong in
+`template/calc/readers/README.md` → gen67: decrypted 3DS main saves.
 
-Still not checked: a real player's save and in-game import on the Thor. The existing shared Unreadable banner
-says both slots fail, although decrypted 3DS main has one active save; changing that UI is outside this task.
+Still untested: a real player's save and import on the Thor. The shared Unreadable banner refers to two slots
+although decrypted 3DS main has one active save; retain this wording caveat until fixed.
 
 #### In-game tests
 
@@ -295,18 +289,11 @@ Rolls are the engine's 16 rolls. Level as stated, Serious nature, 31 IVs, 0 EVs,
   - Expected on every use: `229 232 235 238 241 243 246 249 252 255 256 259 262 265 268 271`.
   - Other way (ordinary hit): `153 156 157 159 160 162 165 166 168 169 171 174 175 177 178 181`.
 
-Engine pass (2026-10-26): crit stages are `MV.cr` from the game data's per-move `crit`
-(`tools/ctrguide.py`, 26 moves; Self-Destruct / Explosion 6, so the always-critical rule above now repeats what `cr`
-says: harmless, kept). Battle state (`slot.st`, `def.vol`, ...), crit chance (`crit`) and stat changes before the hit
-(`pre`) follow stock Gen 7 (`tools/calc/README.md`); Spectral Thief steals before the hit, Simple doubling the gain.
-**Doc says** Triple Kick 20 and Power Gem 90; the game data (the patched dump: Power Gem's PP 15 change is in it) has
-10 / 80, which the guide and calc use. Fixtures: `calc_states.json` (541 cases).
-
 ## Checks
 
 `check.py` [baseline.json]: references (species, evolution and form links, trainer and partner teams), 29 caps, the 31
 matching Trainers / Walkthrough box names ending Elite Four Split [Cap 100], Post-game: Episode RR, Post-game, a `cap` on
-every section of a capped box, unique stop keys, every trainer key in a stop. Given a pre-Part-B data.json: exact trainer
+every section of a capped box, unique stop keys, every trainer key in a stop. Given a pre-pruning data.json: exact trainer
 keys and teams, all 73 area indices and indexed tables, the species kept, the legacy stops covering the 148 fragments
 (trainer occurrences, areas, items), the Poni Grove trainers in Post-game, Key Items minus Surge Badge. Then
 `python assemble.py photonic-sun`, `tools/walk-state-check.mjs` (saved walkthrough state), `tools/consistency-check.mjs`,
@@ -314,24 +301,9 @@ keys and teams, all 73 area indices and indexed tables, the species kept, the le
 
 ## History
 
-- **2026-10-25, Totem data (calc step 7).** Added 13 encounter cards with doc auras, 20 SOS allies, version tags,
-  cap-aligned trainer/walkthrough placement and set/aura assertions in `extract/check.py`; schema `au` documented.
-- **2026-10-24, Ultra Necrozma cap 95** (was 100; `CAPS` in trainers.py). `.src/dex-rebalanced.json` regenerated with
-  `ctr_dex.py` (SOURCES.md) first: the raw build now reproduces the published data.json exactly.
-- **2026-10-23, Items standard.** `tools/itemstd.py` (shared, idempotent; run by `finalise()`) puts Items in the shared
-  box set (rules: `itemstd.RULES['photonic-sun']`; `python -I tools/itemstd.py photonic-sun` on a published data.json).
-  TMs -> TMs and HMs (no HMs: TMs sub-heading only); Z-Crystals text is `Found:` lines; Silvally Memories, Genesect
-  Drives -> Memories and Drives; Shops Thunder Stone and Cherish Ball moved out of `Other`.
-- **2026-10-23, Part B (consistency pass).** Species 931 -> 928 (Availability above). TR: 9 chapter boxes -> 31 cap /
-  post-game boxes, 101 -> 111 sections; 31 old cap entries minus two removals = 29 caps (the 8 auto-dropped mini caps
-  are back). WK: 35 parts -> the same 31 boxes through `tools/splits.py`; all 137 old visits kept, and all 502 original
-  trainer occurrences. Key Items 30 -> 29 (Surge Badge). All 497 trainer records, keys, teams, EVs and per-trainer saved
-  caps, all 73 AR indices, LOC / ARO and move / ability indices are unchanged. The walkthrough stop keys: 119 of 148
-  stop coordinates changed, so each stop carries `k` (its original `split.stop` on the first fragment, `.fN` on the
-  others) and the template's `migrateWalkState` moves saved ticks, open state and sections to the new positions by key
-  (zero real checklist steps exist, so no real tick could be lost; verified with synthetic ticks at stop `1.0` -> `0.7`,
-  normal and dvkb, legacy saves and layout-stamped saves). Checks: repeat builds byte-identical; `pagecheck` /
-  `walkcheck` at 260x316; `domcompare` over 2,467 routes per mode with no page errors. No Thor-device test.
-- **2026-10-21 / 10-20.** Route 1's Hau'oli Outskirts table became its own area (SPLIT); the Locations page's sections
-  (design A: one section per game table, day / night in one row); SOS allies; the PDF's grass maps.
-- **2026-10-19, first build** in this repo (fetched 2026-10-18).
+- **2026-10-25:** Added 13 Totem encounters, doc auras, 20 SOS allies and version tags under stable trainer/stop keys.
+- **2026-10-24:** Ultra Necrozma progression cap 100 → 95; encounter level remains 100.
+- **2026-10-23:** Shared item standard: TMs and HMs (no HMs here), Z-Crystals `Found:`, Memories/Drives and shop kinds.
+- **2026-10-23:** 931 → 928 species; 31 cap/post-game boxes, 29 caps, 148 walkthrough fragments; saved IDs preserved.
+- **2026-10-21 / 10-20:** Hau'oli Outskirts split from Route 1; game-table sections, day/night rows and SOS allies added.
+- **2026-10-19:** First guide in this repo from the 2.38 sources.

@@ -14,7 +14,7 @@ refuses to start while another browser check runs, so start one sweep, then the 
 | Change | Run |
 | --- | --- |
 | A hack's extract / `data.json` | its `extract/build.py`, `extract/check.py`, `python assemble.py <hack>`, `uv run python -I tools/gate.py check <hack> --data` |
-| Calc engine (`tools/calc/src`, `template/calc/profiles`), a profile in `hack.json` → `cfg.calc`, `calc_matchups.json` | `npm test --prefix tools/calc`; `node tools/calc/hzla_compare.mjs <hack>` for EI / Photonic / Eternal X (counts: `plans/calc-open.md` → Checks); `python assemble.py` |
+| Calc engine (`tools/calc/src`, `template/calc/profiles`), a profile in `hack.json` → `cfg.calc`, `calc_matchups.json` | `npm test --prefix tools/calc`; `node tools/calc/hzla_compare.mjs <hack>` for EI / Photonic / Eternal X (expected: EI 142 + 12 known, Photonic 118 + 28, Eternal X 116 + 3, 0 mismatch); `python assemble.py` |
 | `template/` (shell, dex.css / dex.js, calc.js / calc.css) | `python assemble.py`; the scenarios for the area (below) on every guide; `node tools/domcompare.mjs <old> <new> [--kb] --routes '<#/route>'` against the job's start build |
 | A scenario or `tools/calc_check_lib.mjs` | that scenario on every guide |
 | Docs only (`*.md`) | nothing |
@@ -49,5 +49,3 @@ UI changes also end in the Thor frame on the phone preview (`python -I tools/pre
    on that one guide (about 30 s a step).
 4. Fix the cause. Change a check only when the check is wrong (it tests one guide's data, a stale selector); a real
    page problem the job may not fix goes to the user with a recommendation.
-
-Known open failure: `calc-layout` check 20 on EI (rows with an HP chip are taller; `plans/calc-open.md`).
