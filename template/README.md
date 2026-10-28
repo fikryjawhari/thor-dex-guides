@@ -159,8 +159,9 @@ Broken and field events); the user change follows with `DMG.hp` using actual dea
 contact costs. Dealt / You Apply uses exact-damage threshold reactions only. Turn end applies `DMG.turn`, including
 Speed Boost and eligible berries. An eligible berry has its own HP-line chip (`Sitrus +13`, `Salac Spe+1`), applying
 `DMG.berry` once. A crowded HP line with a berry or Intimidate wraps rather than clipping actions or widening the page.
-These actions and entry hazards replace a dismissible fixed bottom log (three lines, then internal
-scrolling; above the keyboard in `dvkb`), never adding layout height or saved state. KO notes come from the engine.
+These actions and entry hazards replace a fixed log at the top of the window (three lines, then internal
+scrolling; gone 3 s after the last action, held while a long one is touched or scrolled, × closes it at once; 2026-10-28,
+the user: the bottom one stayed until dismissed), never adding layout height or saved state. KO notes come from the engine.
 Field toggles never break a word: the narrowest box is the widest single word of any toggle (measured in the page's
 font at render, so text zoom counts), each toggle grid uses its own measured width and fits as many columns as there is room
 (`auto-fit`), so a narrow grid becomes rows. **Field layout** (R3, 2026-10-27), one column at every width: Global

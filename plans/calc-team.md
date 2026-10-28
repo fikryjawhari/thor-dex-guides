@@ -69,7 +69,8 @@ pinned to the bottom, the left column is the box panel then the fight bar, the r
 - **Storage:** `team: [{src, pid}]` (max 6, dense, in order) in the existing `cfg.ls.dmg` object; no new key. Resolve
   by `pid` (imported: party then boxes; custom: `ST.custom`), so re-imports, box moves and deleted customs can't point
   at the wrong Pokémon. An entry that doesn't resolve is dropped on render (a deleted custom set leaves the team).
-- **First import:** an empty team is filled once from the imported party; a built team is never overwritten.
+- **No automatic fill** (the user, 2026-10-28, replacing "first import fills an empty team"): imports never touch the
+  team; it is built only by drag and drop.
 - **Cells:** sprite + level badge; the selected one `.on` (accent); empty slots dashed. Box cells already in the team
   get a 5 px accent dot (top right).
 - **Tap a team cell** = send it in (same as tapping it in the box: `ST.mine`, a switch: scratch state applies, HP
@@ -116,6 +117,10 @@ in the box panel under the grid from 480; trainer preview two-line rows; wide ca
 slot replaces it; hold 250 ms. The user will report anything bad on the Thor. Added 2026-10-28 (unit 2): an HP bar and
 the fainted grey on team cells (My team → HP bar and fainted).
 
+## Action log (2026-10-28, built)
+The action log overlay (every action: hits, misses, turn end, berry, entry, Area info) sits at the top and goes 3 s
+after the last action; a new action restarts the 3 s, touching / scrolling a long one holds it, × still closes it.
+
 ## Auto Doubles (the last manual fight setting)
 Tag / multi / double battles switch the fight bar to **Doubles** automatically, like weather and terrain already do.
 - **Data** (each guide's `data.json`, already there; no new extraction): a trainer is a doubles fight when one of its
@@ -142,19 +147,19 @@ check --template --jobs 4` runs once, in unit 3. Engine / oracle checks: `plans/
 needs `npm ci --prefix tools/calc` and `.tmp/hzla*` copied from the calc worktree).
 1. **Done.** Layout + nameless card (`a0f978a`).
 2. **Team row + drag and drop + HP bar / fainted** (template; Opus medium): `ST.team` with pid refs, render, tap = send
-   in, the pointer-event drag (from the mockup's `patch.js`), box dots, first-import fill (through the real readers /
-   the app bridge now merged: `importBytes`), drop of unresolved entries; the team cells' HP bar and fainted grey
+   in, the pointer-event drag (from the mockup's `patch.js`), box dots (no automatic fill from an import: My team row), drop of unresolved entries; the team cells' HP bar and fainted grey
    (My team → HP bar and fainted) on both teams at every size. Replace unit 1's stand-in `teamMembers()` (party or
    customs) and keep the `.offteam` name fallback working off `ST.team`. Commit.
 3. **Checks** (Haiku medium; after units 2 and 4b): update the checks that test the old layout (unit 1's list: retest
    R1 HP / frame, layout 18c / 19 / 20 / 20b / 20c, smoke cell size, zmove z toggle / totem aura, auto crowded HP,
    controls 2, persist 26 dvkb, import 12 dvkb, bridge B2 dvkb: the last four tap the Lv box, which is only on the
-   narrow card while Edit is open; confirm with the user the fight bar's ↺ at 22 px vs the old 26 px tap rule),
+   narrow card while Edit is open; the fight bar's buttons (↺ included) are 22 px: the user accepted that 2026-10-28,
+   so the tap rule takes 22 px for the fight bar),
    `calc-state` one-window; add `tools/scenarios/calc-team.mjs`: first-frame rule at the five sizes × normal / dvkb
    (my row, the foe's team (narrow: strip; wide: all six preview rows unclipped), both cards, four moves (wide:
    eight), fight bar inside the viewport, plain and busy card), open move rows / an open editor never overlap Field
    (both sides, 480 × 392 and 560 × 424), drag via `Input.dispatchTouchEvent` (box → empty, box → filled, swap, drag
-   out, swipe doesn't drag, tap sends in), persistence across reload, re-import keeps the team by pid, deleted custom
+   out, swipe doesn't drag, tap sends in), persistence across reload, re-import keeps the team by pid and never fills an empty one, deleted custom
    leaves it, HP bar / grey at 0 HP and back after Reset fight and a trainer change, jump-arrow stops at 260 × 316 /
    260 × 394 / wide with Field closed and open; the Auto Doubles checks (unit 4). Add `#/calc` to
    `tools/domcompare.mjs`'s routes. Then `plans/calc-open.md` → Checks (full calc scenario set with `--jobs 4`,

@@ -470,15 +470,16 @@ checks.push(
   },
   {
     id: 'overlay field layout',
-    title: 'fixed dismissible non-persisted overlay, above dvkb number pad; Field internal scrolling fits minimum height',
+    title: 'fixed overlay at the top, × or 3 s closes it, not persisted, clear of the dvkb number pad; Field internal scrolling fits minimum height',
     run: async (page,{dvkb}) => {
       await setupCalc(page);
       await configure(page,{name:'Gyarados',moves:['Tackle']},{name:'Bibarel'});
       await hitFirst(page);
-      const geometry=await page.value(`(()=>{const log=document.querySelector('#calc-log');return {position:getComputedStyle(log).position,max:getComputedStyle(log.firstChild).maxHeight,bottom:log.getBoundingClientRect().bottom};})()`);
-      assert.equal(geometry.position,'fixed');
-      if(dvkb){await page.tap('[data-hp="mine"]');assert.ok(await page.value(`document.querySelector('#calc-log').getBoundingClientRect().bottom<=document.querySelector('.kb').getBoundingClientRect().top`),'overlay above keyboard');await page.tap('.kb [data-a="done"]');}
+      const geometry=await page.value(`(()=>{const log=document.querySelector('#calc-log');return {position:getComputedStyle(log).position,max:getComputedStyle(log.firstChild).maxHeight,top:log.getBoundingClientRect().top};})()`);
+      assert.equal(geometry.position,'fixed');assert.ok(geometry.top<=8,'overlay at the top');
+      if(dvkb){await page.tap('[data-hp="mine"]');assert.ok(await page.value(`document.querySelector('#calc-log').getBoundingClientRect().bottom<=document.querySelector('.kb').getBoundingClientRect().top`),'overlay clear of the keyboard');await page.tap('.kb [data-a="done"]');}
       await page.tap('#calc-log button');assert.equal(await page.count('#calc-log'),0);
+      await hitFirst(page);assert.equal(await page.count('#calc-log'),1);await page.value(`new Promise(r=>setTimeout(r,3300))`);assert.equal(await page.count('#calc-log'),0,'gone after 3 s');
       await openField(page);
       const fits=await page.value(`(()=>{const body=document.querySelector('.dfb');body.scrollIntoView({block:'start'});return body.getBoundingClientRect().height<=innerHeight;})()`);
       assert.ok(fits,'Field body stays within one window');
