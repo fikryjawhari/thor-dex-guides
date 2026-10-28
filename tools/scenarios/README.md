@@ -31,6 +31,7 @@ Import scenarios inject `template/calc/readers/test.js`; real reader checks use 
 | `calc-import.mjs` | Save/reset/re-import, four error banners and empty states. |
 | `calc-bridge.mjs` | Fake `window.dexViewerApp`: import, refresh, newer-save dot, errors and Change file/Pick. |
 | `calc-persist.mjs` | Reloaded state, saved sets and list filters by name across a simulated guide update (26c), and Clear saved state through the frame built by `tools/mockup/thor-frame/build.py`. |
+| `guide-update.mjs` | The general update check (28a-b): a copy with one new entry at the front of M, AB, P, the Trainers boxes and the walkthrough (every index shifted, as Hardlove 0.8.5 did); every kind of saved state, compared by name, must point at the same things, and a Pokémon page and a trainer card must read the same. Runs on every guide: add new kinds of saved state to its snapshot. |
 | `stable-keys.mjs` | Saved state across a simulated guide update (27a-d): trainers (cap, open state, calc foe / recents / edits / copied foe), search recents, species (stat calc, tracker), open Items / Locations boxes and the reopen route; old storage formats. Runs on every guide. |
 | `calc-entry.mjs` | Trainer-card and Pokémon-page entry points. |
 | `calc-field.mjs` | Profile-driven controls, engine inputs and persistence after profile edits. |
