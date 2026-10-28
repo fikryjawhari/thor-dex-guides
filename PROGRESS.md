@@ -63,9 +63,12 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
    - **Next on this branch:** decide `plans/calc-team.md` (decide session). **Save readers + file picker:** branch
      `worktree-damage-calc-saves` (`.claude/worktrees/damage-calc-saves`, from `23c82f6`; its own session). 2026-10-28:
      Gen 3 done for Emerald Imperium (`readers/expansion.js` + EI `GID`, checked against hzla's EI 1.3 save, 33 of 33;
-     EI notes.md → Damage calc → Save import). Next there: Gen 6/7 against PKHeX-made blank saves (.NET 10 SDK installed
-     user-local 2026-10-28: `%LOCALAPPDATA%\Microsoft\dotnet`), Hardlove when the user has a save (they will send one). File picker:
-     guide side follows the app's `docs/SAVE_BRIDGE.md` (2026-10-28, `calc-bridge.mjs`); waits on the app's Thor test. **Mechanics check:** stays open, merges into `main`
+     EI notes.md → Damage calc → Save import). Gen 6/7 done 2026-10-28 (`readers/gen67.js`, GID from
+     `tools/ctrguide.py` → `build_save_ids`): Photonic Sun 38/38 and Eternal X 85/85 against PKHeX-made USUM / XY saves
+     (the generator stays git-ignored in `.tmp/pkhex-oracle/`, PKHeX is GPLv3; recipe in `readers/README.md`; .NET 10
+     SDK user-local in `%LOCALAPPDATA%\Microsoft\dotnet`). File picker: guide side follows the app's
+     `docs/SAVE_BRIDGE.md` (`calc-bridge.mjs`); waits on the app's Thor test. Next there: Hardlove (Gen 4) when the
+     user sends a save; real saves from the Thor for each reader. **Mechanics check:** stays open, merges into `main`
      at the end.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
