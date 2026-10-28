@@ -8,6 +8,32 @@ the hack's extract) and skips a Pokémon whose species the guide lacks, counting
 
 The notes below are the formats as read from each reference (facts, not code: `tools/calc/README.md` → Licences).
 
+## PKHeX oracle recipe (Gen 6/7)
+
+2026-10-28: a disposable .NET 10 console project in `.tmp/pkhex-oracle/` references NuGet `PKHeX.Core` **26.10.18**.
+Neither the program nor its linked binaries belong in this repository (GPLv3). Use `SAV7USUM`, `SAV7SM`, `SAV6XY`
+and `SAV6AO` blank constructors, set Version to US / SN / X / OR, and insert PK7 / PK6 objects through PartyData
+and SetBoxSlotAtIndex. Blank constructors leave footer identifiers unset: initialise the footer BEEF marker and
+each block's length/id from AllBlocks before Write; let PKHeX write the checksums. Reopen with the matching save
+constructor and require ChecksumsValid and PartyCount = 6.
+
+The USUM / SM party is Alolan Raichu, hidden-ability Alolan Ninetales, Sensu Oricorio, Charizard with Charizardite X,
+hidden-ability Garchomp and Heat Rotom; XY / ORAS substitute Pikachu, hidden-ability Ninetales and Clefairy for the
+first three. Party indices 0..5 use levels 10 + 2*index, natures index%25, PID 0x24680000 + index and encryption
+constant 0x10000001 | ((index%32)<<13). Thirty-two boxed specimens cycle Bulbasaur, Clefairy, Drifloon, Nincada,
+Magikarp and Pikachu: all shuffle selectors (including 24..31 aliases), all six growth rates, levels 10..72 and
+natures 0..24. Slots span boxes 1/2 and the last box's last slot; the other slots remain blank. Moves are Thunderbolt,
+Flamethrower, Protect and Toxic. In calc order HP/Atk/Def/SpA/SpD/Spe, IVs are [31,index%32,17,23,9,3],
+EVs [4,100,12,152,8,200]. Use PKHeX's CurrentLevel, RefreshAbility, ResetPartyStats and RefreshChecksum.
+
+Export `<name>.expected.json` from those input objects, not the reader or imported page. Resolve numeric move,
+ability and item names from Photonic Sun's `.src/dex-rebalanced.json`; spell the selected form names as the guide
+does. Include every field checked by calc_save_check and every empty box. USUM files are
+`hacks/photonic-sun/.src/saves/pkhex-usum.{sav,expected.json}`; SM/XY/ORAS are
+`.tmp/pkhex-oracle/out/pkhex-<game>.{sav,expected.json}`. These are synthetic format fixtures, not legal teams or
+evidence that Photonic Sun's mechanics match vanilla. All four reopen with valid checksums; generation log:
+`.tmp/calc-save-photonic-sun/oracle.log`.
+
 | File | Family | Hacks | Checked with |
 | --- | --- | --- | --- |
 | `test.js` | synthetic JSON | the calc checks' fixtures | `tools/scenarios/calc-import.mjs` |

@@ -152,6 +152,9 @@ never changed.
   `party[0].level: expected 35, got 34`. Exit 2: the setup or the import failed (the banner text is printed).
 - An hzla paste of the save (Showdown format) becomes `expected.json` with `tools/calc_paste_expected.py`; check the
   paste's levels and EVs before trusting them (EI's had no EVs).
+- Gen 6/7 synthetic oracle saves (2026-10-28): PKHeX.Core 26.10.18, local .NET 10 project only; six party and 32
+  boxed specimens in USUM / SM / XY / ORAS, reopened with valid checksums. Recipe and local paths:
+  `template/calc/readers/README.md` → PKHeX oracle recipe. No linked program, binaries or saves are committed.
 - Proof on the test reader (`tools/scenarios/fixtures/calc/`): `good.json` with `good.expected.json` exits 0;
   `good.json` with `good.wrong.expected.json` (two deliberate differences) exits 1 and prints both.
 
