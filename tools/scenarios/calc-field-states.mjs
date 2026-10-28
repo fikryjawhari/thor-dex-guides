@@ -119,6 +119,8 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await page.value("Object.assign(CALC.state().field,{atkStealthRock:1,atkSpikes:2,atkToxicSpikes:2,atkStickyWeb:1});CALC.render()");
     assert.equal(await hp(page),max,'setting layers never subtracts HP');
     await page.tap('[data-a=mpick][data-src=custom][data-i="0"]');
+    // The action log (fixed at the top, gone after 3 s) can cover the next tap: close it first.
+    if(await page.count('#calc-log'))await page.tap('#calc-log button');
     const loss=Math.floor(max/8)+Math.floor(max/6);
     assert.equal(await hp(page),max-loss,'Rocks and two Spikes layers apply once');
     assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
@@ -147,6 +149,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await openHazards(page);
     await page.tap('[data-a=hazards][data-s=mine]');
     assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
+    if(await page.count('#calc-log'))await page.tap('#calc-log button');
     assert.equal(await hp(page),max-loss,'re-poisoning never reapplies damage');
     await page.tap('[data-a=sstep][data-s=mine][data-x="4"]');
     await page.value('CALC.set("mine","stg",[0,0,0,0,5]);CALC.render()');
