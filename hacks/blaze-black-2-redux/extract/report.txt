@@ -2079,7 +2079,7 @@ items areas: 86 places (records and shops); 70 join a LOC area; no LOC area (no 
   item alias: Razz Berry III -> Razz Berry (1: Bulbapedia shop Join Avenue)
   move format: SolarBeam -> Solar Beam (2: Item Changes:307, TM table)
   move format: U-Turn -> U-turn (4: Item Changes:451, TM table, Bulbapedia shop Battle Subway)
-not built yet: walk (TODO: implement blaze-black-2-redux walk extraction)
+walkthrough: 22 splits, 117 stops (31 on the way), 466 trainers, 104 areas, 1100 item lines + 1048 shop lines placed, 0 unplaced
 doc name fixes: 18 (species 6, move 11, ability 1)
   species fuzzy: Snubull -> Snubbull (1: Type Changes:39)
   species fuzzy: Grabull -> Granbull (1: Type Changes:40)
