@@ -123,6 +123,42 @@ class Tutor:
                 self.moves.append((move, (c[1] + (' (%s)' % days if days else '')).strip()))
 
 
+class Location:
+    """A location's encounter rows, retaining floor, method, time and raw rate (never wild levels)."""
+
+    def __init__(self, page):
+        self.title, self.link = text(page['title']), page['link']
+        self.encounters = []
+        for table in re.findall(r'<table\b.*?</table>', page['html'], re.S):
+            rows = re.findall(r'<tr\b[^>]*>(.*?)</tr>', table, re.S)
+            if not rows or 'Method' not in text(rows[0]) or 'Rate' not in text(rows[0]):
+                continue
+            floor = ''
+            for row in rows[1:]:
+                cells = re.findall(r'<t[dh][^>]*>(.*?)</t[dh]>', row, re.S)
+                if len(cells) == 1:
+                    floor = text(cells[0])
+                elif len(cells) == 5:
+                    name = text(re.split(r'<br\s*/?>', cells[1])[0])
+                    self.encounters.append((floor, name, *(text(cell) for cell in cells[2:])))
+                else:
+                    raise ValueError('%s: unexpected encounter row %s' % (self.title, list(map(text, cells))))
+
+
+class RaidDen:
+    """One den, its access text and species / star levels exactly as listed, excluding reward-item tables."""
+
+    def __init__(self, page):
+        self.title, self.link = text(page['title']), page['link']
+        intro = page['html'].split('<h2')[0]
+        self.access = text(re.findall(r'<p\b[^>]*>(.*?)</p>', intro, re.S)[0])
+        self.encounters = []
+        for table in re.findall(r'<table\b.*?</table>', page['html'], re.S):
+            rows = _rows(table)
+            if rows and rows[0] == ['Pokémon', 'Star Level']:
+                self.encounters.extend(tuple(row) for row in rows[1:])
+
+
 class Wiki:
     def __init__(self, path):
         self.all = json.load(open(path, encoding='utf-8'))
@@ -148,3 +184,21 @@ class Wiki:
         parts = re.split(r'<h[34][^>]*>(.*?)</h[34]>', raw)
         return [Tutor(text(parts[i]), parts[i + 1]) for i in range(1, len(parts) - 1, 2)
                 if _field(parts[i + 1], 'Location')]
+
+    def locations(self):
+        return [Location(page) for page in self.all if re.search(r'/locations/[^/]+/$', page['link'])]
+
+    def raid_dens(self):
+        return [RaidDen(page) for page in self.all if re.search(r'/raid-dens/[^/]+/$', page['link'])]
+
+    def swarms(self):
+        """(species, area, [(day of month, time)]) from the per-species timetable headings and tables."""
+        parts = re.split(r'<h[23][^>]*>(.*?)</h[23]>', self.page('Swarms')['html'])
+        out = []
+        for index in range(1, len(parts) - 1, 2):
+            heading = re.split(r'\s+[–-]\s+', text(parts[index]))
+            tables = re.findall(r'<table\b.*?</table>', parts[index + 1], re.S)
+            rows = next((rows for table in tables if (rows := _rows(table)) and rows[0] == ['Date', 'Time']), [])
+            if len(heading) == 2 and rows and rows[0] == ['Date', 'Time']:
+                out.append((*heading, [tuple(row) for row in rows[1:]]))
+        return out
