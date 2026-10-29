@@ -45,7 +45,13 @@ in tools/calc/package.json; review tools/calc/test.mjs field-profile fixtures. N
 Review tools/itemstd.py RULES only for source-backed quirks; shared defaults need no entry.
 Fill sources/watch.json, version/mode, GID/save reader and sprite additions by hand.
 
+Scaffold verification (2026-10-29, baseline 23a42e1): tools/new_hack_test.py 13/13; four live guides' data gate
+24/24 and template gate (--jobs 4) 137/137. All eight normal / dvkb DOM comparisons: 19,850 routes, zero
+differences or page errors; four HTML files byte-identical. Calc npm test passes, including this disabled stub.
+Renegade Platinum dry-run lists 17 writes without creating its config. Logs: .tmp/bb2r-scaffold/.
+
 ## History
 
 2026-10-29: scaffold from Hardlove Gold with tools/new_hack.py; prefix bb2r, calc disabled, no data.json.
 Four live guides' data gates pass and their built HTML is byte-identical to 23a42e1. Data / calc units fill TODOs.
+Full template / calc checks passed; scaffold unit complete. No live guide, template or source-audit plan changed.
