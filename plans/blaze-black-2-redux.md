@@ -58,3 +58,17 @@ inventory: `plans/blaze-black-2-redux-sources.md` (the audit). Mode mockup: `pla
    review with the user, GID tables, Gen 5 reader + PKHeX comparison.
 10. Player's-eye review (Thor frame, phone preview), then the sceptic audit (Haiku medium).
 Units 5-7 can run in parallel after 4 (different extract files; data.json is rebuilt on merge).
+
+## Findings for later units
+- **hzla (unit 3, `aa0e05f`; SOURCES.md):** one BB2R backup, Challenge = `challengeMode=true` on the same sets.
+  2,970 sets, 889 trainer ids, every set with 6 IVs, nature, ability, item, level and `diff` (+N). Set `level` = stat
+  level; ordinary damage uses `level + diff` (`calc/mechanics/gen56.js` `calculateBWXY` 862-896 at the pin); `noCh`
+  turns it off; Night Shade / Seismic Toss use the unboosted level there. The conservative name+location join matched
+  only 216/415 doc teams (20 ambiguous, 179 unmatched): the trainers unit needs a better join (hzla's trainer order,
+  `da8a533`), and the doc swaps Bryce / Micki. Of matched Pokémon: level 673/711, moves 670, ability 669, item 711.
+- Oddities settled by hzla: Banette Grab → Snatch (hzla ability Frisk); Winona's Noctowl Tinted Lens @ Colbur Berry;
+  Shauntal rematch Jellicent Cursed Body @ Leftovers; postgame Colress Klinklang @ Air Balloon, Earthquake (not
+  Superpower), 88 +4; Shadow Claw Ghost / Physical / 90 / 100 / 15 PP.
+- **EVless:** player EVs 0; trainers already 0; wild held items removed except Latios, Latias, Giratina. No separate
+  EVless doc. BP vendors / Castelia artist are Challenge-wide (back after the postgame Route 3 Suicune sighting).
+- No BW2 save fixture in hzla's repos: PKHeX-generated `.sav` only.
