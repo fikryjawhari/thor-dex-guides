@@ -21,6 +21,11 @@ function invocation(source, phase, value, state = '') {
 
 export function instrument(source, filename) {
   if (filename === 'util.ts') {
+    source = once(source, 'export function getFinalSpeed(gen: Generation, pokemon: Pokemon, field: Field, side: Side) {',
+      `export function getFinalSpeed(gen: Generation, pokemon: Pokemon, field: Field, side: Side) {
+  if ((field as any).guideWeightSpeed) return Math.floor(pokemon.species.weightkg);
+  const typed = (side as any).guideTailwindTypes;
+  if (typed?.some((type: any) => pokemon.hasType(type))) side = Object.assign(Object.create(Object.getPrototypeOf(side)), side, {isTailwind: true});`);
     source = once(source, 'export function isGrounded(pokemon: Pokemon, field: Field) {',
       `export function isGrounded(pokemon: Pokemon, field: Field) {
   const guideGrounded = fieldGrounded(pokemon, field);

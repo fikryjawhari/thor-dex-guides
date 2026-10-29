@@ -61,7 +61,7 @@ export function unboundCases(data) {
   add('Drill Beak negative', atk('Drill Beak'), {}, 'Tackle');
   add('Shadowy Veil Ghost', {}, {id:species('Gengar')}, 'Psychic', {shadowyVeil:true});
   add('Shadowy Veil negative', {}, {}, 'Psychic', {shadowyVeil:true});
-  const docDifference = name => `${name}: guide ability description; hzla ff6c3e3 has no corresponding custom-name effect`;
+  const docDifference = name => `${name}: ${name === 'Subterfuge' ? 'guide ability description' : 'user decision 2026-10-30'}; hzla ff6c3e3 has no corresponding custom-name effect`;
   for (const name of ['Brain Bond','Face Shield','Subterfuge']) {
     add(name, name === 'Face Shield' ? {} : atk(name), name === 'Face Shield' ? def(name) : {}, name === 'Subterfuge' ? 'Flamethrower' : 'Tackle', {}, {}, docDifference(name));
   }

@@ -29,7 +29,7 @@ UNBOUND_FIELD_DECISIONS = dict(fog='apply', flying_tailwind='apply', magnet_rise
                               weight_room='apply', heavy_rain='apply', vicious_sand='apply',
                               camomons='apply', inverse='apply', shadowy_veil='apply',
                               negative_energy='apply', pixies='apply', rainbow='apply',
-                              sky='text', dynamax='text')
+                              sky='text', dynamax='text', rain='apply', butterfree='text')
 UNBOUND_FIELD_PROPOSALS = {
     'fog': dict(prefix="There's a constant FOG weather effect", effects=[dict(kind='weather', value='Fog')]),
     'flying_tailwind': dict(prefix='Permanent Tailwind for Flying-types on the field', effects=[
@@ -47,12 +47,15 @@ UNBOUND_FIELD_PROPOSALS = {
     'rainbow': dict(prefix='Rainbow Battle:', effects=[dict(kind='field-rule', value='Rainbow Battle', side='both')]),
     'sky': dict(prefix='Sky Battle', effects=[]),
     'dynamax': dict(prefix='Dynamax Battle', effects=[]),
+    'rain': dict(prefix='Rain', exact=True, effects=[dict(kind='weather', value='Rain')]),
+    'butterfree': dict(prefix='Benjamin Butterfree metagame', effects=[]),
 }
 
 
 def unbound_proposal(text):
     return next((key for key, proposal in UNBOUND_FIELD_PROPOSALS.items()
-                 if text.startswith(proposal['prefix'])), None)
+                 if (text == proposal['prefix'] if proposal.get('exact')
+                     else text.startswith(proposal['prefix']))), None)
 
 
 def evidence(text, scope):

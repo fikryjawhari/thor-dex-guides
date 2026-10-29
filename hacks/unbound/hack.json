@@ -84,6 +84,10 @@
       [
        "Vicious Sandstorm",
        "Vicious Sandstorm"
+      ],
+      [
+       "Fog",
+       "Fog"
       ]
      ],
      "side": "field",
@@ -243,7 +247,13 @@
      "type": "toggle",
      "side": "field",
      "to": "isShadowyVeil"
-    }
+    },
+    {"k": "weightSpeed", "l": "Weight as Speed", "type": "toggle", "side": "field", "to": "guideWeightSpeed"},
+    {"k": "camomons", "l": "Camomons", "type": "toggle", "side": "field", "to": "guideCamomons"},
+    {"k": "inverse", "l": "Inverse battle", "type": "toggle", "side": "field", "to": "isInverseBattle"},
+    {"k": "negativeEnergy", "l": "Negative Energy", "type": "toggle", "side": "field", "to": "guideNegativeEnergy"},
+    {"k": "pixies", "l": "Pixies", "type": "toggle", "side": "field", "to": "guidePixies"},
+    {"k": "rainbow", "l": "Rainbow Battle", "type": "toggle", "side": "field", "to": "guideRainbow"}
    ],
    "over": {
     "weather": {
@@ -354,6 +364,12 @@
      }
     },
     "rules": [
+     {
+      "phase": "effectiveness",
+      "when": {"ref": "input.field.inverse"},
+      "value": {"op": "if", "args": [{"op": "eq", "args": [{"ref": "value"}, 0]}, 2, {"op": "div", "args": [1, {"ref": "value"}]}]},
+      "note": "Inverse battle: invert each defending type; type immunities become weaknesses. Ability immunities remain."
+     },
      {
       "phase": "afterMoveType",
       "when": {
@@ -534,6 +550,8 @@
         {
          "ref": "input.field.shadowyVeil"
         },
+        {"op": "eq", "args": [{"ref": "def.originalCurHP"}, {"ref": "def.rawStats.hp"}]},
+        {"op": "eq", "args": [{"ref": "state.hitCount"}, 0]},
         {
          "op": "includes",
          "args": [

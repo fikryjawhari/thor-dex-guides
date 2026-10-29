@@ -84,7 +84,7 @@ def main():
               for key in trainer_fields.UNBOUND_FIELD_PROPOSALS}
     assert counts == dict(fog=2, flying_tailwind=2, magnet_rise=2, weight_room=2, heavy_rain=2, vicious_sand=1,
                           camomons=2, inverse=2, shadowy_veil=2, negative_energy=3, pixies=1, rainbow=1,
-                          sky=1, dynamax=1), counts
+                          sky=1, dynamax=1, rain=1, butterfree=2), counts
     for record in pending:
         assert record == trainer_fields.evidence(record['text'], record['scope'])
     decisions = trainer_fields.UNBOUND_FIELD_DECISIONS.copy()

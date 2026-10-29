@@ -3,6 +3,7 @@ import {existsSync, readFileSync} from 'node:fs';
 import {createEngine, resolveProfile} from './run.mjs';
 import {unboundCases} from './unbound_cases.mjs';
 import {assumedTrainerSet} from './unbound_assumed.mjs';
+import {checkUnboundGimmicks} from './unbound_gimmicks.mjs';
 
 const directory = new URL('../../hacks/unbound/', import.meta.url);
 const configuration = JSON.parse(readFileSync(new URL('hack.json', directory), 'utf8'));
@@ -79,3 +80,4 @@ assert.deepEqual(assumedTrainerSet(data,{...bulbasaur,m:[slot.mv]},50).m,[slot.m
 assert.notDeepEqual(assumedTrainerSet(data,bulbasaur,14).m,assumed.m, 'resolved level controls the move set');
 assert.throws(()=>assumedTrainerSet(data,bulbasaur,NaN));
 console.log(`PASS Unbound: ${cases.length-differences} exact hzla fixtures, ${differences} explicit disagreements; custom actions and Vicious residual`);
+checkUnboundGimmicks(data,engine);
