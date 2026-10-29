@@ -13,6 +13,18 @@ from common import H, RD, SPECIES, doc, drayano, report
 
 
 SEASON = re.compile(r' - (Spring|Summer|Autumn|Winter|Spring, Summer, Autumn|Spring/Summer/Autumn)$')
+FLOOR_AREAS = {
+    'Relic Castle - Lower Floors': ('Room Left of Pots', 'Room Right of Pots', 'Furthest Room Right',
+                                   'Furthest Room Left', 'Room with Pots', 'Volcarona Room'),
+    'Celestial Tower': ('2F', '3F', '4F', 'Roof'),
+    'Victory Road - Connecting Caves I': ('Main', 'Dark'),
+    'Victory Road - Connecting Caves II': ('Dragons', 'Top'),
+    'Dragonspiral Tower - Indoors': ('First Room', 'Second Room', 'Roof'),
+    'Dreamyard - All Areas': ('Surface', 'Basement'),
+}
+FLOOR_ALIASES = {name: tuple(name + ' - ' + floor for floor in floors) for name, floors in FLOOR_AREAS.items()}
+FLOOR_ALIASES['Twist Mountain - All Seasons'] = ('Twist Mountain - All Seasons', 'Twist Mountain - Ice Room')
+FLOOR_ALIASES['Underground Ruins - All Areas'] = ('Underground Ruins - All Areas', 'Underground Ruins - Regi Rooms')
 MIRROR_ALIASES = {
     'Driftveil Drawbridge, Charizard Bridge': 'Driftveil Drawbridge',
     'Giants Chasm - Route 13': 'Giant Chasm - Route 13',
@@ -28,8 +40,11 @@ AREA_ALIASES = {
     "Aspertia City - Trainer School and Cheren's Gym": ('Aspertia City',),
     "Virbank City and Roxie's Gym": ('Virbank City',),
     'Virbank Complex': ('Virbank Complex - Outside', 'Virbank Complex - Inside'),
+    'Outer Complex': ('Virbank Complex - Outside',),
+    'Inner Complex': ('Virbank Complex - Inside',),
     'Castelia City - Battle Company': ('Castelia City',),
-    "Castelia City - Various + Burgh's Gym": ('Castelia City',),
+    'Castelia City': ('Castelia City', 'Castelia Gardens'),
+    "Castelia City - Various + Burgh's Gym": ('Castelia City', 'Castelia Gardens'),
     'Relic Passage - Castelia Side': ('Relic Passage - Castelia',),
     'Relic Passage': ('Relic Passage - Castelia', 'Relic Passage - Driftveil Side', 'Relic Passage - Center (Main) Room'),
     'Route 4 - Pre-Burgh/Castelia Side': ('Route 4',),
@@ -37,6 +52,8 @@ AREA_ALIASES = {
     'Relic Castle': ('Relic Castle - Upper Floors', 'Relic Castle - Lower Floors'),
     'Driftveil Drawbridge': ('Driftveil Drawbridge, Charizard Bridge',),
     'Charizard Bridge': ('Driftveil Drawbridge, Charizard Bridge',),
+    "Amusement Park and Elesa's Gym": ('Nimbasa City',),
+    'Driftveil Market': ('Driftveil City',),
     "Clay's Gym": ('Driftveil City',),
     'Clay Tunnel': ('Clay Tunnel - All Areas',),
     'Reversal Mountain': ('Reversal Mountain - Outside', 'Reversal Mountain - Inside'),
@@ -65,8 +82,12 @@ AREA_ALIASES = {
     'Nature Preserve': ('The Nature Preserve',),
     'Marvelous Bridge': ('Marvellous Bridge',),
     'Season Research Lab': ('Route 6',),
+    'Guidance Chamber': ('Mistralton Cave',),
     "Team Plasma's Safehouse": ('Driftveil City',),
 }
+AREA_ALIASES = {heading: tuple(child for name in names for child in FLOOR_ALIASES.get(name, (name,)))
+                for heading, names in AREA_ALIASES.items()}
+AREA_ALIASES.update(FLOOR_ALIASES)
 GROTTO_AREAS = {'Giant Chasm': 'Giants Chasm - Plasma Airship Area',
                'Pinwheel Forest - Deep in the Woods': 'Pinwheel Forest - Inside',
                "Pinwheel Forest - Challenger's Rock": 'Pinwheel Forest - Outside'}
@@ -77,26 +98,26 @@ GIFT_POOLS = (
     ('Bulbasaur', 'Charmander', 'Squirtle'), ('Meditite',), ('Eevee',), ('Chikorita', 'Cyndaquil', 'Totodile'),
     ('Bonsly', 'Mime Jr.', 'Glameow', 'Stunky'),
     ('Omanyte', 'Kabuto', 'Lileep', 'Anorith', 'Cranidos', 'Shieldon', 'Tirtouga', 'Archen', 'Aerodactyl'),
-    ('Treecko', 'Torchic', 'Mudkip'), ('Turtwig', 'Chimchar', 'Piplup'), ('Zorua',), ('Corsola',),
+    ('Treeko', 'Torchic', 'Mudkip'), ('Turtwig', 'Chimchar', 'Piplup'), ('Zorua',), ('Corsola',),
     ('Stantler',), ('Volcarona',), ('Lapras',), ('Rotom',),
 )
 GIFT_AREAS = ('Starter', 'Floccesy Town', 'Floccesy Ranch', 'Virbank City', 'Virbank City', 'Castelia City',
               'Castelia City', 'Castelia City', 'Relic Castle - Upper Floors', 'Anville Town', 'Driftveil City',
-              'Driftveil City', 'Route 6', 'Route 5', 'Relic Castle - Lower Floors', 'Village Bridge', 'Route 9')
+              'Driftveil City', 'Route 6', 'Route 5', 'Relic Castle - Lower Floors - Volcarona Room', 'Village Bridge', 'Route 9')
 LEGEND_AREAS = {
     'Articuno': 'Giants Chasm - Route 13', 'Zapdos': 'Chargestone Cave', 'Moltres': 'Reversal Mountain - Outside',
     'Mewtwo': 'Wellspring Cave - Both Floors', 'Mew': 'Faraway Island', 'Raikou': 'Chargestone Cave',
     'Entei': 'Route 23', 'Suicune': 'Route 13', 'Lugia': 'Route 17', 'Ho-Oh': 'Aspertia City', 'Celebi': 'Entralink',
-    'Regirock': 'Underground Ruins - All Areas', 'Regice': 'Underground Ruins - All Areas',
-    'Registeel': 'Underground Ruins - All Areas', 'Latias': 'Route 15', 'Latios': 'Route 18',
-    'Kyogre': 'Undella Bay', 'Groudon': 'Desert Resort', 'Rayquaza': 'Celestial Tower', 'Jirachi': 'Dreamyard - All Areas',
-    'Deoxys': 'Giants Chasm - Plasma Airship Area', 'Uxie': 'Nacrene City', 'Mesprit': 'Celestial Tower', 'Azelf': 'Route 23',
+    'Regirock': 'Underground Ruins - Regi Rooms', 'Regice': 'Underground Ruins - Regi Rooms',
+    'Registeel': 'Underground Ruins - Regi Rooms', 'Latias': 'Route 15', 'Latios': 'Route 18',
+    'Kyogre': 'Abyssal Ruins', 'Groudon': 'Desert Resort', 'Rayquaza': 'Celestial Tower - Roof', 'Jirachi': 'Dreamyard - All Areas - Surface',
+    'Deoxys': 'Giants Chasm - Plasma Airship Area', 'Uxie': 'Nacrene City', 'Mesprit': 'Celestial Tower - Roof', 'Azelf': 'Route 23',
     'Dialga': 'Mistralton Cave', 'Palkia': 'Route 18', 'Giratina': 'Unity Tower', 'Arceus': 'The Nature Preserve',
     'Heatran': 'Reversal Mountain - Inside', 'Regigigas': 'Twist Mountain - All Seasons', 'Cresselia': 'Marvellous Bridge',
     'Darkrai': 'Strange House', 'Manaphy': 'Route 3', 'Shaymin': 'Pinwheel Forest - Inside', 'Victini': 'Liberty Garden',
     'Cobalion': 'Route 13', 'Virizion': 'Route 11', 'Terrakion': 'Route 22', 'Tornadus': 'Route 8, Moor of Icirrus - All Seasons',
-    'Thundurus': 'Dragonspiral Tower', 'Landorus': 'Abundant Shrine', 'Reshiram': 'Dragonspiral Tower - Indoors',
-    'Zekrom': 'Dragonspiral Tower - Indoors', 'Kyurem': 'Giants Chasm - Kyurems Cave', 'Keldeo': 'Pledge Grove',
+    'Thundurus': 'Dragonspiral Tower', 'Landorus': 'Abundant Shrine', 'Reshiram': 'Dragonspiral Tower - Indoors - Roof',
+    'Zekrom': 'Dragonspiral Tower - Indoors - Roof', 'Kyurem': 'Giants Chasm - Kyurems Cave', 'Keldeo': 'Pledge Grove',
     'Meloetta': 'Accumula Town', 'Genesect': 'P2 Laboratory',
 }
 VANILLA_TRADES = (
@@ -117,6 +138,25 @@ def area_name(name):
 def area_names(heading):
     """Walkthrough join: exact source heading -> canonical names, with explicit multi-area mappings."""
     return AREA_ALIASES.get(heading, (area_name(heading),))
+
+
+def wild_area_name(source, method):
+    """EI-style named floor/room slots; never infer individual floors from an undivided All Areas/Both Floors table."""
+    name = area_name(source)
+    if source == 'Castelia City' and method.startswith('Grass'):
+        return 'Castelia Gardens'
+    if name in FLOOR_AREAS:
+        floor = next((floor for floor in FLOOR_AREAS[name] if floor in method), None)
+        if name == 'Dreamyard - All Areas' and floor is None:
+            floor = 'Surface'
+        if floor is None:
+            raise ValueError('unmapped encounter floor: ' + source + ' / ' + method)
+        return name + ' - ' + floor
+    if name == 'Twist Mountain - All Seasons' and 'Ice Room' in method:
+        return 'Twist Mountain - Ice Room'
+    if name == 'Underground Ruins - All Areas' and 'Regi Rooms' in method:
+        return 'Underground Ruins - Regi Rooms'
+    return name
 
 
 def species_id(name):
@@ -222,11 +262,13 @@ def build(data):
 
     add_area('Starter')['st'] = 1
     for source in wild['areas']:
-        area = add_area(area_name(source['name']))
+        if source['name'] == 'Castelia City':
+            add_area('Castelia City')
         season = SEASON.search(source['name'])
         for group in source['groups']:
             if not group['rows']:
                 continue
+            area = add_area(wild_area_name(source['name'], group['method']))
             label = season[1] if season else group['method']
             section = next((entry for entry in area['es'] if entry['n'] == label), None)
             if section is None:
@@ -268,15 +310,25 @@ def build(data):
             note += ' Gift doc says Relic Passage; Wild Area Changes places it in Relic Castle - Lower Floors.'
         for name in pool:
             extra = ''
+            rate = '1 of ' + str(len(pool)) if len(pool) > 1 else ''
+            species_method = method
             if index == 1:
+                species_method, rate = 'Gift', ''
                 extra = ' Starter: ' + {'Pansage': 'Tepig', 'Panpour': 'Snivy', 'Pansear': 'Oshawott'}[name] + '.'
-            add(name, area, method, '1 of ' + str(len(pool)) if len(pool) > 1 else '', block['levels'], note + extra)
+            elif index == 8:
+                if name == 'Aerodactyl':
+                    species_method, rate = 'Gift (Fossil revival)', ''
+                    extra = ' Revive Old Amber found elsewhere; not in Roark\'s eight-fossil random pool.'
+                else:
+                    species_method, rate = 'Choice (Roark fossil)', '1 of 8'
+                    extra = ' Roark offers one of these eight fossils at random; all can also be found elsewhere and revived.'
+            add(name, area, species_method, rate, block['levels'], note + extra)
     event_levels = {species_id(event['species']): event['levels'] for event in wild['events']}
     for name, record in legends.items():
-        note = 'Speak to the Key Gift Guy in Aspertia City first. One-time encounter; save before interacting. ' + record['note']
+        note = 'Speak to the Key Gift Guy in Aspertia City first. Save before interacting; new scripted legendary encounters are one-time. ' + record['note']
         if name == 'Victini':
             note += ' Provisional: quest prose places Victini in Liberty Garden lighthouse; the summary says Castelia Gardens.'
-        add(name, record['area'], 'Egg' if name == 'Manaphy' else 'Static', '', '1' if name == 'Manaphy' else event_levels.get(species_id(name), ''), note)
+        add(name, record['area'], 'Egg' if name == 'Manaphy' else 'Static', '', event_levels.get(species_id(name), ''), note)
     for event in wild['events']:
         species = species_id(event['species'])
         if species in {species_id(name) for name in legends} or species in {'corsola', 'volcarona'}:
@@ -316,13 +368,21 @@ def build(data):
         else:
             pokemon['g'] = 3
     data['LOC'], data['AR'] = locations, areas
-    data['ARO'] = list(range(len(areas)))
+    order = list(range(len(areas)))
+    for name, after in (('Floccesy Town', 'Route 19'), ('Liberty Garden', 'Castelia Gardens'),
+                        ('Nimbasa City', 'Relic Castle - Upper Floors'), ('Anville Town', 'Nimbasa City'),
+                        ('Driftveil City', 'Driftveil Drawbridge, Charizard Bridge')):
+        order.remove(byarea[name])
+        order.insert(order.index(byarea[after]) + 1, byarea[name])
+    data['ARO'] = order
     comparison = mirror_comparison(wild)
     report('Locations: source areas %d; tracker areas %d; sections %d; wild rate rows %d; grotto sections %d / entries %d' %
            (len(wild['areas']), len(areas), sum(len(area['es']) for area in areas),
             sum(len(group['rows']) for area in wild['areas'] for group in area['groups']), len(wild['grottos']),
             sum(len(grotto['rows']) for grotto in wild['grottos'])))
     report('Locations: gifts 13 (ranch egg 17 species); gift-doc statics 4; legendaries %d; trades 3 doc + 3 vanilla + 24 phone' % len(legends))
+    for index, area in enumerate(areas):
+        report('  Tracker area %d: %s' % (index, area['n']))
     report('Locations mirror: %s' % comparison)
     for area in wild['areas']:
         for group in area['groups']:

@@ -40,8 +40,112 @@ evolutions: 325 edges; doc-changed 92; from Pokemon Changes prose 3: snorunt -> 
 type chart vs the docs' statements: agrees
 move descriptions: none (the mirror has none for this hack; MV.d is empty)
 doc fix: Shadow Claw: "PP 70 -> 90" read as Power 70 -> 90 (Move Changes:485)
-Locations: source areas 81; tracker areas 87; sections 352; wild rate rows 2057; grotto sections 20 / entries 206
+Locations: source areas 81; tracker areas 104; sections 352; wild rate rows 2057; grotto sections 20 / entries 206
 Locations: gifts 13 (ranch egg 17 species); gift-doc statics 4; legendaries 47; trades 3 doc + 3 vanilla + 24 phone
+  Tracker area 0: Starter
+  Tracker area 1: Aspertia City
+  Tracker area 2: Route 19
+  Tracker area 3: Route 20
+  Tracker area 4: Floccesy Ranch
+  Tracker area 5: Virbank City
+  Tracker area 6: Virbank Complex - Outside
+  Tracker area 7: Virbank Complex - Inside
+  Tracker area 8: Castelia City
+  Tracker area 9: Castelia Gardens
+  Tracker area 10: Castelia Sewers
+  Tracker area 11: Relic Passage - Castelia
+  Tracker area 12: Route 4
+  Tracker area 13: Desert Resort
+  Tracker area 14: Relic Castle - Upper Floors
+  Tracker area 15: Route 5
+  Tracker area 16: Route 16
+  Tracker area 17: Lostlorn Forest
+  Tracker area 18: Driftveil Drawbridge, Charizard Bridge
+  Tracker area 19: Route 6
+  Tracker area 20: Clay Tunnel - All Areas
+  Tracker area 21: Relic Passage - Driftveil Side
+  Tracker area 22: Relic Passage - Center (Main) Room
+  Tracker area 23: Relic Castle - Lower Floors - Room Left of Pots
+  Tracker area 24: Relic Castle - Lower Floors - Room Right of Pots
+  Tracker area 25: Relic Castle - Lower Floors - Furthest Room Right
+  Tracker area 26: Relic Castle - Lower Floors - Furthest Room Left
+  Tracker area 27: Relic Castle - Lower Floors - Room with Pots
+  Tracker area 28: Relic Castle - Lower Floors - Volcarona Room
+  Tracker area 29: Mistralton Cave
+  Tracker area 30: Chargestone Cave
+  Tracker area 31: Route 7
+  Tracker area 32: Celestial Tower - 2F
+  Tracker area 33: Celestial Tower - 3F
+  Tracker area 34: Celestial Tower - 4F
+  Tracker area 35: Celestial Tower - Roof
+  Tracker area 36: Reversal Mountain - Outside
+  Tracker area 37: Reversal Mountain - Inside
+  Tracker area 38: Strange House
+  Tracker area 39: Undella Town
+  Tracker area 40: Undella Bay
+  Tracker area 41: Route 14
+  Tracker area 42: Abundant Shrine
+  Tracker area 43: Seaside Cave - Upper Floor
+  Tracker area 44: Seaside Cave - Lower Floor
+  Tracker area 45: Route 13
+  Tracker area 46: Route 12
+  Tracker area 47: Village Bridge
+  Tracker area 48: Route 11
+  Tracker area 49: Route 9
+  Tracker area 50: Route 21
+  Tracker area 51: Humilau City
+  Tracker area 52: Route 22
+  Tracker area 53: Giants Chasm - Route 13
+  Tracker area 54: Giants Chasm - Entrance Cave
+  Tracker area 55: Giants Chasm - Plasma Airship Area
+  Tracker area 56: Giants Chasm - Kyurems Cave
+  Tracker area 57: Route 23
+  Tracker area 58: Victory Road - Ruined Area
+  Tracker area 59: Victory Road - Lower Mountainside
+  Tracker area 60: Victory Road - Forest
+  Tracker area 61: Victory Road - Connecting Caves I - Main
+  Tracker area 62: Victory Road - Connecting Caves I - Dark
+  Tracker area 63: Victory Road - Upper Mountainside
+  Tracker area 64: Victory Road - Connecting Caves II - Dragons
+  Tracker area 65: Victory Road - Connecting Caves II - Top
+  Tracker area 66: Victory Road - N's Castle, Entrance
+  Tracker area 67: Route 8, Moor of Icirrus - All Seasons
+  Tracker area 68: Icirrus City - All Seasons
+  Tracker area 69: Dragonspiral Tower
+  Tracker area 70: Dragonspiral Tower - Indoors - First Room
+  Tracker area 71: Dragonspiral Tower - Indoors - Second Room
+  Tracker area 72: Twist Mountain - All Seasons
+  Tracker area 73: Twist Mountain - Ice Room
+  Tracker area 74: Underground Ruins - All Areas
+  Tracker area 75: Underground Ruins - Regi Rooms
+  Tracker area 76: Marvellous Bridge
+  Tracker area 77: Route 15
+  Tracker area 78: Pinwheel Forest - Inside
+  Tracker area 79: Pinwheel Forest - Outside
+  Tracker area 80: Route 3
+  Tracker area 81: Wellspring Cave - Both Floors
+  Tracker area 82: Striation City
+  Tracker area 83: Dreamyard - All Areas - Surface
+  Tracker area 84: Dreamyard - All Areas - Basement
+  Tracker area 85: Route 2
+  Tracker area 86: Route 1
+  Tracker area 87: Route 17
+  Tracker area 88: Route 18
+  Tracker area 89: P2 Laboratory
+  Tracker area 90: The Nature Preserve
+  Tracker area 91: Floccesy Town
+  Tracker area 92: Anville Town
+  Tracker area 93: Driftveil City
+  Tracker area 94: Faraway Island
+  Tracker area 95: Entralink
+  Tracker area 96: Abyssal Ruins
+  Tracker area 97: Nacrene City
+  Tracker area 98: Unity Tower
+  Tracker area 99: Liberty Garden
+  Tracker area 100: Dragonspiral Tower - Indoors - Roof
+  Tracker area 101: Pledge Grove
+  Tracker area 102: Accumula Town
+  Tracker area 103: Nimbasa City
 Locations mirror: {'areas': 81, 'match': 1296, 'doc_only': 761, 'mirror_only': 0, 'disagreements': []}
 Doc rate total: Route 20 - Spring / Surf, Normal = 105% (line 115), kept as printed
 Doc rate total: Route 20 - Spring / Surf, Dark Spot = 95% (line 115), kept as printed
@@ -93,12 +197,13 @@ Doc rate total: The Nature Preserve / Fish, Dark Spot = 90% (line 2505), kept as
 not built yet: trainers (TODO: implement blaze-black-2-redux trainers extraction)
 not built yet: items (TODO: implement blaze-black-2-redux items extraction)
 not built yet: walk (TODO: implement blaze-black-2-redux walk extraction)
-doc name fixes: 17 (species 5, move 11, ability 1)
+doc name fixes: 18 (species 6, move 11, ability 1)
   species fuzzy: Snubull -> Snubbull (1: Type Changes:39)
   species fuzzy: Grabull -> Granbull (1: Type Changes:40)
   species fuzzy: Poliswine -> Piloswine (1: Evolution Changes:60)
   species fuzzy: Cherrim -S -> Cherrim (2: Locations, Locations)
   species fuzzy: Whiripede -> Whirlipede (2: Locations, Locations)
+  species typo: Treeko -> Treecko (1: Locations)
   move alias: Vice Grip -> Vise Grip (1: Move Changes:31)
   move typo: Submisson -> Submission (1: Move Changes:41)
   move typo: Twinneedle -> Twineedle (1: Pokemon Changes:546)

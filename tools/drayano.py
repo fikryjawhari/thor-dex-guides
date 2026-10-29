@@ -569,6 +569,8 @@ def _encounter_blocks(doc):
     for line, text in enumerate(doc.lines):
         if text == 'Special Encounters':
             kind = 'Static'
+            current = None
+            continue
         if line + 1 < len(doc.lines) and doc.lines[line + 1] == '---' and text.strip():
             current = {'name': text.strip().rstrip('.'), 'line': line, 'kind': kind, 'location': '', 'levels': '', 'text': ''}
             out.append(current)
