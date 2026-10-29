@@ -10,6 +10,7 @@ import os
 
 import cfru
 from common import FORMS, H, RD, move, pid, report, sid
+from items import GAME_ITEMS
 
 PROFILE = 'unbound_2_1'
 
@@ -32,6 +33,7 @@ def build(D):
         report('GID: not built (no .src/repos/Unbound-Cloud; SOURCES.md fetches it)')
         return
     gid, notes = cfru.save_ids(cloud, PROFILE, species_id, lambda n: move(n), D['P'], D['M'])
+    gid['it'] = [GAME_ITEMS.get(n, n) if n else n for n in gid['it']]     # the Items page's names (items.py)
     D['GID'] = gid
     used = {x for x in gid['sp'] if x}
     report('GID (Unbound-Cloud %s): sp %d ids (%d P entries reached, %d not: %s), mv %d ids, it %d ids, gr %d'

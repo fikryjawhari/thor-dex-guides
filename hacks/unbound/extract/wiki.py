@@ -222,3 +222,24 @@ def item_prerequisites(raw):
         if re.search(r'prerequisites|requirements', heading, re.I):
             requirements.extend(text(part) for part in re.findall(r'<li[^>]*>(.*?)</li>', block, re.S))
     return list(dict.fromkeys(requirements))
+
+
+def item_crystal_parts(wiki):
+    """The Z-Crystals table split at its line breaks: [(name, [places (the bold lines)], post-game, how)]."""
+    out = []
+    for row in re.findall(r'<tr[^>]*>(.*?)</tr>', wiki.page('Z-Crystals')['html'], re.S):
+        cells = re.findall(r'<td[^>]*>(.*?)</td>', row, re.S)
+        if len(cells) < 2 or not text(cells[0]).endswith(' Z'):
+            continue
+        lines = [ln for ln in (text(x) for x in re.split(r'<br\s*/?>', cells[1])) if ln]
+        places = [text(x) for x in re.findall(r'<strong>(.*?)</strong>', cells[1], re.S)]
+        post = any(re.fullmatch(r'\(post-game\)', ln, re.I) for ln in lines)
+        how = ' '.join(ln for ln in lines if ln not in places and not re.fullmatch(r'\(post-game\)', ln, re.I))
+        out.append((text(cells[0]), places, post, how))
+    return out
+
+
+def useful_npcs(wiki):
+    """The Useful NPCs pages (misc-info/useful-npcs/<npc>/): [(name without "(NPC)", fields {Location, ...})]."""
+    return [(re.sub(r'\s*\(NPCs?\)$', '', text(p['title'])), item_fields(p['html']))
+            for p in wiki.all if re.search(r'/useful-npcs/[^/]+/?$', p['link'])]
