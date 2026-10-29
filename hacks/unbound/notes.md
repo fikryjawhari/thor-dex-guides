@@ -219,11 +219,11 @@ and selects the `cfru` save reader. No Dynamax. Storage keys are unchanged.
 Reference: hzla `ff6c3e339e276e6b4e8e44db58750b6534bc26aa`, Unbound profile plus `gen789.js`;
 the source files are reference-only, not copied into the engine. `tools/calc/unbound_oracle.mjs` runs the pinned
 local calculator with its Expert adapter and independent move flags. `unbound_expected.json` records all 16 rolls
-per hit for 79 cases; `unbound_check.mjs` is already registered in `npm test`.
+per hit for 85 cases; `unbound_check.mjs` is already registered in `npm test`.
 
-76 cases match exactly, including Vicious Sandstorm's Ground/Rock special defence, Weather Ball, Solar Beam/Blade,
+82 cases match exactly, including Vicious Sandstorm's Ground/Rock special defence, Weather Ball, Solar Beam/Blade,
 Sand Force, Grass Dash / Slippery Tail priority (also at 1 HP, Psychic Terrain and Dazzling), Bellow / Sound Waves,
-Crabby Tactics, Honey Armor, Multieye / Multiscale / Shadow Shield (hazards, boots, damaged HP), Icy Skin / Dusty Scales,
+Crabby Tactics, Honey Armor, Multieye / Multiscale / Shadow Shield (hazards, boots, damaged HP, Flying and multihit), Icy Skin / Dusty Scales,
 Portal Power, Evaporate, Drill Beak, Shadowy Veil, Gen 8 crit/burn/EV/Z baselines and all three custom moves.
 The stock-equivalent aliases are behaviour mappings, not copies of hzla's profile.
 
@@ -244,6 +244,77 @@ in-game check is still needed before changing game data.
 In-game tests left: every custom ability alias, Brain Bond's second-hit ratio, Honey Armor vs Face Shield's timing,
 Focus Belt / Nine Lives survival and bypass, Vicious Sandstorm chip/permanence, the three custom moves, and Z/Mega
 battles. The oracle is evidence of calculator behaviour, not an independent run of Unbound's battle engine.
+
+The Brain Bond 1/4 child and Face Shield +1 entry stage are standard-clone assumptions, not numeric claims made by
+the short game descriptions. Ask the user before treating those as settled in-game mechanics. Cotton Down aliases
+only simulate the two displayed battlers, not an absent ally's Speed. InfernalRage's description also claims doubled
+power on a statused target; neither this calc nor the pinned oracle implements that custom-name effect yet.
+
+The hazard fixtures exercise real `isSR` / `spikes` inputs on both engines. `battleField` and the oracle adapter now
+map the existing public `defStealthRock` / `defSpikes` keys into those properties: without that mapping both engines
+would appear to agree while neither tested the hazard branch. The fixtures additionally assert that hazards change
+the shield's damage, and Boots restore the full-HP result. Rock/Ground SpD fixtures use Flamethrower, not a Psychic
+attack against Dark-type Tyranitar (which would prove nothing).
+
+| Fixture (level 50 Mew unless the case names another species) | Our damage | hzla damage |
+| --- | --- | --- |
+| Gen 8 neutral / critical / burn | 16-19 / 23-28 / 8-9 | same |
+| Gen 8 EVs / Z Tackle | 20-24 / 39-46 | same |
+| Vicious Weather Ball / Solar Beam / Solar Blade | 39-46 / 23-28 / 24-29 | same |
+| Vicious Sand Force Earthquake | 50-59 | 50-59 |
+| Vicious SpD Garchomp / Tyranitar / Rhyperior / Mew | 13-16 / 11-14 / 18-22 / 34-41 | same |
+| Grass Dash Energy Ball / Slippery Tail Iron Tail | 34-41 / 39-46, priority 1 | same |
+| Bellow / Sound Waves Hyper Voice attack / defence | 45-53 / 17-20 | same |
+| Multieye / Multiscale / Shadow Shield full / rocks / spikes / Boots | 12-15 / 25-30 / 25-30 / 12-15 | same |
+| Crabby Tactics Tackle / Honey Armor defending Tackle | 23-28 / 8-10 | same |
+| Icy Skin / Dusty Scales defending Psychic | 12-15 | 12-15 |
+| Portal Power defending Psychic / Evaporate defending Surf | 19-22 / 0 | same |
+| Drill Beak Drill Peck / Shadowy Veil Gengar defending Psychic | 46-55 / 66-78 | same |
+| Brain Bond Tackle | 16-19 + 4-5 | 16-19, one hit |
+| Face Shield defending Tackle | 11-13 | 16-19 |
+| Subterfuge Flamethrower | 51-61 | 34-41 |
+| Endless Edge / InfernalRage / Metal Bash | 46-56 / 1-2 / 23-28 | same |
+| Vicious end-turn chip on 175 HP Mew | -21 HP (sheet's 1/8) | 0 HP; ordinary Sand is -10 HP |
+
+The residual discrepancy is separate from the three damage-roll disagreements. The harness runs hzla's own
+`getEndOfTurn` in its VM (test-only export, no oracle source changes): Vicious has no chip branch there. The positive
+ordinary-Sand control proves the harness measures weather chip. This calc follows Moleman's sheet comment for 1/8.
+All 85 named inputs, negative cases, exact per-hit distributions and priority values are in
+`tools/calc/unbound_cases.mjs` / `unbound_expected.json`; the table is only a readable index, not a weaker min/max check.
+
+#### Pending field decisions and D2 integration
+
+The 11 source field records remain `review: true` with no active effects; the normal Doubles records stay active.
+`tools/trainer_fields.py` keeps the six proposals and a decision registry. The source audit found **no cell comment**
+for Alice, Galavan, Big Mo or Tessy: only the Fight Gimmicks cell value. The comments for Mirskle and Moleman are
+retained verbatim in the data. The full proposal table and exact acceptance edits are in `plans/unbound.md`.
+Audited Doubles: 36 cards, 34 tag-backed and 2 partner-only; the checker and browser EXPECTED now assert those counts.
+
+D2 is implemented only on the data side, as the task's no-template limit requires:
+`tools/calc/unbound_assumed.mjs` computes four most recent distinct level-up moves at the resolved level, Hardy,
+31 IVs and 0 EVs, preserving species/held item and source objects. It never replaces supplied moves. `cfg.calc.assumedSets`
+is `level-up`; the caller must restrict this to ordinary `Moves unknown` cards. All 292 ordinary cards remain unknown
+on the trainer page (unit 6 reconciled the original 310 target: 309 catalogue rows = 292 ordinary + 17 boss rows).
+No guessed data or data positions are written to localStorage by this helper.
+
+**Template handoff:** `calc.js` `foeBase` must call that helper after `monLv`, before constructing the calc-only set,
+carry `mGuess` / `naGuess` / `ivGuess` / `evGuess`, and show a short visible `Assumed` marker and tooltip for those
+fields. Clear a guess when that field is explicitly edited; Reset restores it. Recompute the defaults when the
+cap changes without replacing manual edits. `aGuess` already marks an unknown ability, but no moves/IV/EV/nature
+guess marker exists. Do not fill `TR.p.m`, change trainer cards or save data indices. The D2 page scenario stays
+strictly failing until this integration exists; it is not skipped or asserted against the current empty moves.
+
+Other template gaps: `importBytes` rejects a boxes-only save before mapping boxes (unit 8a's NG+ case); inspect both
+party and boxes before emitting `empty`, allow selecting a box when party is empty. Typed Tailwind / Magnet Rise,
+weight-based turn order and permanent trainer weather need the field-review answers and template support. The
+current field auto merge allows weather setters to override an area weather regardless of `duration`.
+Tessy's source also says Camomons Battle; the tag remains visible, but move-derived typing is not implemented here.
+
+Browser status on this branch: layout/import/field/smoke pass; new Mega/Z-holder/field-review checks pass at every
+viewer size, normal and dvkb. D2 fails pending the forbidden template hook. Existing generic scenarios also expose
+fixture assumptions: `trainerRoles` treats partner-backed Vega (5.3.0) as singles, controls assumes the fixture's
+Cloyster outspeeds its opponent, and `calc-zmove` hardcodes Photonic's absent `totem-gumshoos` plus Totem-only tests.
+Those are not fixed or weakened in this unit. EI and BB2R smoke/field regressions pass after the shared engine change.
 
 #### Save import
 

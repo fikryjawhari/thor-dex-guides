@@ -146,6 +146,71 @@ User's answers (2026-10-29):
 Units 4-6 can run in parallel after 3 (different extract files; data.json is rebuilt on merge).
 
 ## Findings for later units
+
+- **Unit 8b (calc, `worktree-unbound-calc`, 2026-10-30): for the user.** Enabled the Gen 8 `cfru` profile,
+  EVs, Megas, Z-moves and CFRU save reader; no Dynamax or storage-key changes. 85 pinned hzla fixtures:
+  **82 exact matches, 3 explicit disagreements** (Brain Bond second hit, Face Shield entry defence, Subterfuge STAB).
+  Honey Armor follows hzla's doubled physical defence, not its short description's entry boost. Focus Belt / Nine
+  Lives are assumed Sturdy as requested. Numeric ledger and remaining in-game checks: notes.md → Damage calc.
+  A fourth, **residual-only** disagreement is measured explicitly: 175 HP Mew loses 21 HP in Vicious Sandstorm here
+  (Moleman's sheet says 1/8), hzla's `getEndOfTurn` gives 0; ordinary Sand gives -10 in the same oracle harness.
+  Oracle command: `node tools/calc/unbound_oracle.mjs <clean ff6c3e3 checkout> .tmp/unbound-calc/oracle.json`;
+  run here using `C:/Users/fikry/Documents/Personal/Dev/thor-dex-guides/.tmp/hzla`. Both engines now receive real
+  hazard inputs in the full-HP shield fixtures (the old adapter silently omitted them).
+
+  **Field proposals for the user (all 11 records still `review: true`; nothing accepted here):**
+
+  | Trainer / stable key | Sheet evidence | Proposed calc field / card behaviour | Decision key |
+  | --- | --- | --- | --- |
+  | Mirskle `0.4.0` | `Gym Leaders!B2` comment: constant Fog, accuracy loss, weather replacement/return and Defog | Fog text/accuracy label; no damage modifier. No accuracy simulation. | `fog` |
+  | Mirskle rematch `10.7.0` | `Battleground!B2`, same Fog comment | Same; do not infer the comment's Battle Frontier exception for Battleground. | `fog` |
+  | Alice `2.6.1` | `Gym Leaders!B42` value; **no comment** | Tailwind only for selected Flying types on **both** sides, recomputed on selection/type changes; never unconditional foe Tailwind. Needs template support. Keep source text until then. | `flying_tailwind` |
+  | Alice rematch `10.7.2` | `Battleground!B42` value; **no comment** | Same conditional Tailwind. | `flying_tailwind` |
+  | Galavan `5.6.0` | `Gym Leaders!B102` value; **no comment** | Magnet Rise for selected Electric/Steel types, both sides; honour Gravity/grounding. Needs template support; card retains source text. | `magnet_rise` |
+  | Galavan rematch `10.7.4` | `Battleground!B82` value; **no comment** | Same conditional Magnet Rise. | `magnet_rise` |
+  | Big Mo `6.13.1` | `Gym Leaders!B122` value `Trick Room for Weight`; **no comment** | Text only: not ordinary speed-reversing Trick Room. Need the weight/order rule confirmed before engine/UI support. | `weight_room` |
+  | Big Mo rematch `10.7.5` | `Battleground!B102` value; **no comment** | Same text-only recommendation. | `weight_room` |
+  | Tessy `7.7.0` | `Gym Leaders!B142` value `Camomons Battle, Permanent Heavy Rain`; **no comment** | Weather = Heavy Rain, not Rain (Water boosted, Fire null); retain permanent-weather/Camomons source text. Permanent lock and move-derived typing are separate template gaps. | `heavy_rain` |
+  | Tessy rematch `10.7.6` | `Battleground!B122` value; **no comment** | Same Heavy Rain proposal. | `heavy_rain` |
+  | Moleman `9.2.0` | `Pokemon League!B2` comment: 1/8 chip, unremovable, Ground/Rock SpD | Weather = Vicious Sandstorm; engine applies sand effects, Ground/Rock SpD and 1/8 chip. Keep permanence text; template must stop weather setters replacing it. | `vicious_sand` |
+
+  Exact answer edits: in `tools/trainer_fields.py`, `UNBOUND_FIELD_DECISIONS[key]` stays `None` pending an answer.
+  Set `fog`, `heavy_rain` or `vicious_sand` to `'apply'` to emit the proposed field effects, or any key to `'text'`
+  to close review with the original source text only. Rebuild Unbound data with its existing extract after an edit.
+  For Alice/Galavan/Big Mo, `'apply'` deliberately raises until the stated template support exists; do **not** bypass
+  that guard or turn them into whole-side Tailwind / generic Trick Room. A user's text-only answer is just `'text'`.
+  Recommendations: apply Fog/Heavy Rain/Vicious defaults with the limitations above, implement conditional Alice/
+  Galavan fields in the parent's template pass, and keep Big Mo text-only until the actual weight rule is confirmed.
+
+  **D2 handoff (template explicitly out of scope):** data-only `tools/calc/unbound_assumed.mjs`,
+  `assumedTrainerSet(data, sourceMon, resolvedLevel)`, is tested: last four distinct level-up moves, Hardy, 31 IVs,
+  0 EVs; original objects and sourced moves unchanged. Profile sets `assumedSets: 'level-up'`. Main chat must call it
+  in `template/calc.js` `foeBase` after resolving level, only for ordinary `Moves unknown` trainers; carry
+  `mGuess/naGuess/ivGuess/evGuess`, add visible `Assumed` markers (only `aGuess` exists now), clear a marker on edit,
+  restore/recompute defaults on Reset/cap changes without replacing manual edits. Keep trainer cards unknown and
+  persisted moves/abilities name-based. 292 ordinary cards are present (unit 6's reconciled count, not 310).
+  Also fix `importBytes`: read/map boxes before rejecting an empty party, accept a box-only save and offer its box.
+
+  **Checks:** `cd tools/calc && npm test` passes, including 85 Unbound fixtures and 8a's 37-save CFRU oracle check
+  (12,024 Pokémon; 10 saves refused as expected). `uv run python -I tools/trainer_fields_check.py unbound` passes:
+  11 pending fields, 36 Doubles (34 tags + 2 partner-only). `python assemble.py unbound` passes.
+  `uv run python -I tools/gate.py scenarios unbound --only calc-unbound,calc-import,calc-layout,calc-controls,calc-doubles,calc-field,calc-zmove,calc-smoke --jobs 4`
+  is **4/8 PASS**, not merge-ready as an all-green unit: layout/import/field/smoke pass; new Unbound scenario is
+  30 PASS / 10 FAIL (only the deliberately strict D2 integration assertion, every size/mode). Other failures are
+  existing scenario assumptions: `calc_check_lib.mjs` `trainerRoles.singles` ignores partner-backed doubles and picks
+  Vega `5.3.0` as singles (doubles: 1 pass / 3 fail), controls assumes the fixture's Cloyster is faster (24/2),
+  `calc-zmove` hardcodes Photonic's absent `totem-gumshoos` and Totem aura tests (0/20). Fix those fixtures in the parent
+  without weakening the behaviour assertions. No unrelated scenario helpers changed here.
+  EI/BB2R: `python assemble.py emerald-imperium blaze-black-2-redux`, then
+  `uv run python -I tools/gate.py scenarios emerald-imperium blaze-black-2-redux --only calc-smoke,calc-field --jobs 4`
+  passes **4/4**. No full gate, stable-keys or guide-update run. Logs: `.tmp/unbound-calc/`, final Unbound browser
+  `.tmp/gate/20261030-081518-526642/`, EI/BB2R `.tmp/gate/20261030-081153-161180/`.
+
+  **Additional questions:** accept Brain Bond's standard 1/4 child and Face Shield's +1 entry as labelled assumptions,
+  or follow hzla's no-effect handling until in-game tests? Recommendation: retain the documented behaviour mappings
+  provisionally, but do not describe the numeric ratios as source-confirmed. InfernalRage keeps the guide's odd
+  1 BP / Fire data and hzla's damage behaviour; its status-doubling description is not implemented in either calc.
+  Tessy's Camomons typing is also not modelled; retain its source tag until the parent settles the UI/mechanics.
 (Units add theirs here.)
 - Main chat after 8a (2026-10-29): fixtures moved to `hacks/unbound/.src/saves/expected/` (git-ignored; the save-reader
   procedure keeps expected.json beside the saves); `python-dotenv` added with uv; battle-only forms map to their base

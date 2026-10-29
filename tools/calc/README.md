@@ -349,9 +349,11 @@ select `api` (`hit`, `turn`, `berry`, `derived`, `settings`, `speed`, `intimidat
 Unbound's `over.weather` maps a custom weather label to a stock weather via `effect` while retaining the input
 label for profile rules. Optional `residual` replaces sand's chip divisor, with the same type/ability/item immunities
 and Cloud Nine suppression. Unbound maps Vicious Sandstorm to Sand with divisor 8; other guides are unchanged.
-`node tools/calc/unbound_oracle.mjs <pinned-local-hzla-root> [.tmp/output.json]` reproduces its 79 oracle cases;
-the harness validates the pinned source blobs and selects Expert through hzla's adapter. Checked-in expected
+`node tools/calc/unbound_oracle.mjs <pinned-local-hzla-root> [.tmp/output.json]` reproduces its 85 oracle cases;
+the harness validates the clean checkout pin/source blobs and selects Expert through hzla's adapter. Checked-in expected
 rolls are in `unbound_expected.json`, inputs in `unbound_cases.mjs`, and assertions in `unbound_check.mjs`.
+The harness also measures hzla's own end-turn function, exposing it only inside the local VM: Vicious chip is a
+recorded sheet/oracle disagreement, with ordinary Sand as a positive control. No oracle source is modified.
 
 The six committed JSON bases contain generation defaults, not verified hack
 mechanics. `expansion` uses Gen 9; `cfru` uses Gen 8 as a modern family starting
