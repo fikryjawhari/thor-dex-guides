@@ -27,7 +27,6 @@ No Pokémon yet. The family notes below describe format detection and validation
 | Gen 3 (pokeemerald / pokefirered) | SoulGold (expansion, like EI) | 14 sections in two slots (newest by save index); each Pokémon's 4 blocks ordered by personality value and XOR-encrypted with it. Expansion hacks change the struct per hack. |
 | CFRU | Radical Red, Unbound | Gen 3 layout with CFRU's changes (expanded IDs, extra blocks). |
 | Gen 4 (Pt / HGSS) | HeartGold Retiled, Renegade Platinum | As `gen4.js`; vanilla-engine hacks differ in the species / form numbers. |
-| Gen 5 (BW2) | Blaze Black 2 Redux | Gen 4's Pokémon encryption; other block offsets and checksum table. |
 | Gen 6/7 | Meissa Moon, Navy Sapphire | `gen67.js` as is, with the guide's own `GID`. |
 
 The hard part of each new guide is the ID tables, not the reader: the data has no game IDs, so the extract writes
@@ -44,7 +43,76 @@ Not doing: reading the game's memory while it runs (only an emulator can), writi
 | `test.js` | synthetic JSON | the calc checks' fixtures | `tools/scenarios/calc-import.mjs` |
 | `expansion.js` | pokeemerald-expansion (GBA) | Emerald Imperium | hzla's EI 1.3 save (33 Pokémon) and the edge files: EI notes.md → Damage calc → Save import |
 | `gen4.js` | HeartGold hg-engine (NDS) | Hardlove Gold | the user's 0.7.0 save (11 Pokémon) and the edge files: Hardlove notes.md → Damage calc → Save import |
+| `gen5.js` | B2W2 raw NDS | Blaze Black 2 Redux | PKHeX.Core 26.10.18 generated saves; recipe and limits below |
 | `gen67.js` | decrypted XY / ORAS / SM / USUM main | Photonic Sun (USUM); Eternal X (XY) | PKHeX.Core 26.10.18: Photonic's 38 Pokémon in each layout; Eternal X's own 85-Pokémon XY oracle; USUM/XY through the real file picker; wrong-game, checksum, truncation, egg/empty, state and PK6/PK7 hyper-training controls |
+
+## gen5: Black 2 / White 2 (NDS)
+
+Format references (read, not translated): PKHeX tag 26.10.18, commit
+`bfe89c74a3f5265805e364b79bc04ad38ebbc5ea`, `PKHeX.Core/Saves/SAV5.cs`, `SAV5B2W2.cs`,
+`Saves/Access/SaveBlockAccessor5B2W2.cs`, `SaveBlockAccessor5BW.cs`, `Saves/Blocks/BlockInfoNDS.cs`,
+`Saves/Util/SaveUtil.cs`, `PKM/PK5.cs`, `PKM/Util/PokeCrypto.cs`, `PKM/Strings/StringConverter5.cs`
+and `StringConverter4Util.cs`. Cross-reference Project Pokemon technical documentation, Generation 5,
+**B2W2 Save Structure** (r72) and **BW Save Structure** (r73), accessed 2026-10-29.
+These are independent format notes; the implementation contains no PKHeX code.
+
+**Container.** Raw 512 KiB (0x80000), exported by melonDS / DraStic. Also accept a bounded
+DeSmuME footer containing `|-DESMUME SAVE-|` after the raw data, as gen4 does. No arbitrary trailers.
+Primary B2W2 save starts at 0, backup at 0x26000. Read the primary, as PKHeX does, without silently
+recovering older backup data. A damaged primary is unreadable even if backup is good. DLC and unrelated
+world blocks are neither imported nor validated. Native emulator states are not battery saves.
+
+**Block CRCs.** CRC16-CCITT: polynomial 0x1021, initial 0xFFFF, MSB first, no final XOR.
+Checksum table at 0x25F00: 0x94 bytes, CRC at 0x25FA2 (footer excluded). Each data block has a
+u16 update counter after its payload, then a u16 payload CRC; the table holds a second copy of that CRC.
+Require table CRC and both copies of every imported block CRC to agree. Validate box names (block 0:
+start 0, length 0x3E0, CRC 0x3E2, mirror 0x25F00), all 24 boxes (block b+1: start
+`0x400+b*0x1000`, length 0xFF0, CRC start+0xFF2, mirror `0x25F02+b*2`), party (block 26:
+start 0x18E00, length 0x534, CRC 0x19336, mirror 0x25F34), and trainer (block 27:
+start 0x19400, length 0xB0, CRC 0x194B2, mirror 0x25F36). Party count is u8 at +4 (0..6);
+six 220-byte records start at +8. Each box holds 30 consecutive 136-byte records. Trainer game byte
+at +0x1F is 0 Black / 1 White; the layout identifies the pair, not this byte.
+
+**Detection.** BW1 uses a different table: 0x23F00, length 0x8C, CRC 0x23F9A, backup at 0x24000,
+despite sharing party/box offsets. Its valid table gives `wrong` (BW1). Gen 4 size/magic footers
+give `wrong` (Gen 4). PNG, gzip, RASTATE, MELN and DeSmuME state signatures give `state`.
+Truncation is `unreadable`, unknown containers/sizes are `wrong`. At the right size all-zero/all-FF
+files are `empty`; so is a valid new save with neither usable party nor boxed Pokemon. Box-only saves
+work. Broken B2W2 table/party/box/PK5 checksums give `unreadable`, never silently skipped or combined
+with backup. No marker distinguishes BB2R from vanilla B2W2: the caller must select the hack.
+
+**PK5 (136 stored / 220 party).** u32 PID at 0, u16 sanity at 4 (zero), u16 checksum at 6.
+Payload bytes 8..135: four 32-byte blocks. Checksum is the sum of the 64 decrypted u16 words modulo
+65536. Encryption advances `seed = seed*0x41C64E6D + 0x6073 mod 2^32` per word, XORing its high
+16 bits; seed starts at the checksum. Party bytes 136..219 restart the stream at PID. Shuffle selector
+is `((PID >>> 13) & 31) % 24`; canonical A/B/C/D positions use the gen67 permutation order below.
+
+| Canonical offset | Field |
+| --- | --- |
+| 0x08 / 0x0A / 0x10 | u16 National Dex species / u16 held item / u32 experience |
+| 0x15 | explicit u8 ability ID, not inferred from vanilla species abilities |
+| 0x18..0x1D | u8 EVs: HP/Atk/Def/Speed/SpAtk/SpDef |
+| 0x28..0x2F | four u16 moves (zero = empty) |
+| 0x30..0x33 / 0x34..0x37 | four u8 current PP / PP-Up counts |
+| 0x38 | six 5-bit IVs in game order, bit 30 egg, bit 31 nicknamed |
+| 0x40 / 0x41 / 0x42 | form in bits 3..7 / explicit nature 0..24 / hidden-ability flag bit 0 |
+| 0x48..0x5D | nickname: 11 little-endian 16-bit characters, max 10 visible; zero/FFFF terminates |
+| 0x8C | party level, after decrypting the separate extension |
+
+Gen 5 text is Unicode BMP, not Gen 4 character indices. Normalise 0x246D/0x246E to male/female
+signs; preserve accents and other Unicode. Return `pid, sp, lv, nat, ab, it, mv, iv, ev`, with
+`sp = species:form` and IVs/EVs reordered to calc HP/Atk/Def/SpA/SpD/Spe. Additive `nickname`, `pp`,
+`ppUps` fields cover text/PP in the oracle; the calc may ignore them. Validate before omitting eggs
+and species-zero slots, and retain all 24 boxes. Box levels use EXP and `D.GID.gr[species:form]`,
+falling back to base growth. Missing/invalid growth gives null (like gen4), not an assumed vanilla level.
+Never mutate the input.
+
+**GID.** BB2R's `extract/gen5-ids.json` is a factual ID/name/form/growth export from NuGet
+PKHeX.Core **26.10.18**, English strings and B2W2 personal data, not executable code. Gen 5 limits:
+649 species, 559 moves, 164 abilities, 638 items. Map names after finalisation; all 26 doc move
+replacements retain their original slot. Cosmetic forms map to the base, battle forms to distinct P.
+Item names map when IT exists; unmapped names are reported. Unknown forms never silently map to base.
+Personal data supplies growth/form counts, with Unown's 28 cosmetic letters explicitly enumerated.
 
 ## gen4: HeartGold hg-engine (NDS)
 
