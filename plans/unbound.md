@@ -141,14 +141,19 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
 
 ## Findings for later units
 (Units add theirs here.)
-- Unit 5 (items, source-reader checkpoint; awaiting count clarification): wiki TM/HM membership 129 includes
-  the index; actual machines are TM001-TM120 + HM01-HM08 = 128, independently confirmed by the public
-  2.1.1.1 workbook. Recommend acceptance count 128, not an invented extra machine. Missions membership 84
-  is 83 individual pages + the index; #001 A Hero's Journey is in the index (main-story completion, post-game
-  access). Include it from there, not as an item reward. Other reproduced input counts: 67 locations / 687
-  item-list rows, 34 Z-crystals, 29 tutors, 48 stone pages / 49 stones including both orbs, 140 shop-stock rows,
-  352 individual RomHackDex item pages. Only additive wiki readers are built; unit 7 item/reward placement
-  and unit 8 final IT/GID names are not ready. Full unit 5 implementation and checks remain.
+- Unit 5 (items, `worktree-unbound-it3`): IT built (`extract/items.py`, notes.md → Items; check.py `check_items`).
+  Counts: 128 machines (TM001-TM120, HM01-HM08), 49 stones / orbs, 34 Z-Crystals (Doc's Incinium Z is "Currently
+  Unavailable"), 29 tutors / 192 rows, 140 shop-stock rows (+ 91 Battle Frontier BP-exchange rows, Up-Grade from its page, 7 from the Fallshore evolution
+  merchant), 83 missions + #001 (70 item rewards), 67 Locations pages / 687 rows all placed, 34 Useful NPCs.
+  **Unit 7:** `items.PLACED` = [(Locations page title, item, IT box, line)] for every Locations row (703 after
+  splitting multi-item rows): attach a stop's items by the stop's wiki location page; mission rewards read
+  `Also: Mission #NNN Title · start place` (the mission's stop). The game-order boxes (Key Items, TMs and HMs, Move
+  Tutors, Stats and Abilities, Z-Crystals) stay in extract order until the walkthrough exists: add
+  `'unbound': {'reorder': set(GAME_ORDER_BOXES)}` to `itemstd.RULES` with WK. **Unit 8:** IT names = the game's
+  (Unbound-Cloud) with the official spelling where they differ; GID it is renamed to match (`items.GAME_ITEMS`: HP Up,
+  Guard Spec., Dream Mist, Heavy-Duty Boots), and check.py holds every game item in IT to IT's spelling. Mega Stones
+  as P.stone (Houndoominite, not the wiki's Houndoomite; Red Orb / Blue Orb), Z-Crystals as the game names them
+  (Aloraichium Z, Ultranecrozium Z ...). The IT schema has no description field: the RomHackDex item pages are not used.
 - Main chat (2026-10-29): Focus Belt / Nine Lives are probably Sturdy clones (the wiki lists Sturdy for their
   holders); unit 8: the calc treats them as Sturdy, marked assumed in notes.md → Damage calc. Pikachu Surfing / Flying
   use EI's art (`sprites.json`, the user's call).
