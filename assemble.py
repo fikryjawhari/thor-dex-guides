@@ -131,7 +131,7 @@ def build(hid):
     own = json.loads(read('hacks', hid, 'sprites.json')) if os.path.exists(os.path.join(ROOT, 'hacks', hid, 'sprites.json')) else {}
     data['cfg'] = dict(h['cfg'])
     js, css = read('template', 'dex.js'), read('template', 'dex.css')
-    if 'calc' in h['cfg']:
+    if h['cfg'].get('calc'):         # new_hack.py scaffolds calc: false (disabled)
         if not h['cfg'].get('ls', {}).get('dmg'):
             sys.exit(f'{hid}: cfg.calc needs its own storage key cfg.ls.dmg')
         data['cfg']['calc'] = calc_profile(h['cfg']['calc'], data)

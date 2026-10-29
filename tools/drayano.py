@@ -82,7 +82,7 @@ def key(s):
 ALIASES = {
     'move': {'Faint Attack': 'Feint Attack', 'Acid Armour': 'Acid Armor', 'Judgement': 'Judgment',
              'Minimise': 'Minimize', 'Razorwind': 'Razor Wind', 'Hi Jump Kick': 'High Jump Kick',
-             'SmokeScreen': 'Smokescreen', 'Vicegrip': 'Vice Grip', 'Vise Grip': 'Vice Grip'},
+             'SmokeScreen': 'Smokescreen', 'Vice Grip': 'Vise Grip', 'Vicegrip': 'Vise Grip'},
     'ability': {'Synchronise': 'Synchronize', 'Normalise': 'Normalize', 'Compoundeyes': 'Compound Eyes',
                 'Lightningrod': 'Lightning Rod'},
     'item': {'NeverMeltIce': 'Never-Melt Ice', 'Sitrus Berries': 'Sitrus Berry'},
@@ -300,7 +300,7 @@ def pokemon_changes(doc):
             t = doc.lines[i]
             if re.fullmatch(r'=+', t):
                 continue
-            if re.fullmatch(r'[A-Za-z][^:]*:', t):
+            if re.fullmatch(r'[A-Za-z][^:]*:', t) or t in KINDS:     # Beldum's "Catch Rate" has no colon
                 if head:
                     fields.append(Field(head, hl, rows))
                 head, hl, rows = t, i, []
@@ -329,17 +329,21 @@ def _change(t, line, section):
     m = re.search(r'\s*\[(!|L:A)\]$', body)
     if m:
         mark, body = m.group(1), body[:m.start()].strip()
+    text = body                                  # keeps a footnote's stars ("Power 60 -> 50**")
     body = re.sub(r'\*+$', '', body).strip()
     m = re.fullmatch(r'(%s):?\s+(.+?)\s*(?:->|>>|>)\s*(.+)' % '|'.join(map(re.escape, FIELDS)), body)
     if m:
-        return Change(m.group(1), m.group(2).strip(), m.group(3).strip(), mark, body, line)
+        return Change(m.group(1), m.group(2).strip(), m.group(3).strip(), mark, text, line)
     m = re.fullmatch(r'(%s):?\s+(\S+)' % '|'.join(map(re.escape, FIELDS)), body)
     if m:
-        return Change(m.group(1), None, m.group(2), mark, body, line)
+        return Change(m.group(1), None, m.group(2), mark, text, line)
+    m = re.fullmatch(r'([+-]\d+) Priority.*', body)          # Esper Wing: "+1 Priority like Quick Attack"
+    if m:
+        return Change('Priority', None, m.group(1), mark, text, line)
     m = re.fullmatch(r'([A-Z][a-z]+)\s*->\s*([A-Z][a-z]+)', body)
     if m and section == 'Type Changes':
-        return Change('Type', m.group(1), m.group(2), mark, body, line)
-    return Change(None, None, None, mark, body, line)
+        return Change('Type', m.group(1), m.group(2), mark, text, line)
+    return Change(None, None, None, mark, text, line)
 
 
 def move_changes(doc):
@@ -428,15 +432,15 @@ def evo_method(s):
     guides' wording ('level 21', 'using Link Cable', 'level up knowing Heal Bell'); add = the doc keeps the old method
     too ("in addition to its normal evolution method", RP's "Now able to")."""
     s = s.strip().rstrip('.')
-    m = re.match(r'Now (?:only )?(?:evolves|able to evolve) into (.+?) (at Level|via|by|if|after|when|with) (.*)$', s)
+    m = re.match(r'(?i)(?:Now )?(?:only )?(?:evolves|able to evolve) into (.+?) (at Level|at any time|via|by|if|after|when|with|using) (.*)$', s)
     if not m:
         return None
     into, rest = m.group(1).strip(), (m.group(2) + ' ' + m.group(3)).strip()
-    add = 'in addition to' in rest or s.startswith('Now able to')
+    add = 'in addition to' in rest or 'able to' in s
     rest = re.sub(r'\s*in addition to its normal evolution method', '', rest)
     sex = re.search(r'if (?:\w+ is )?(female|male)', rest, re.I)
-    lvl = re.search(r'at Level (\d+)', rest)
-    item = re.search(r'(?:via the use of|by using|^with) (?:an? |the )?(.+)$', rest)
+    lvl = re.search(r'(?i)at Level (\d+)', rest)
+    item = re.search(r'(?:via the use of|using|^with) (?:an? |the )?(.+)$', rest)
     if lvl:
         how = 'level %s' % lvl.group(1)
         place = re.search(r'after last battling in (.+?) at Level', rest)
@@ -446,7 +450,7 @@ def evo_method(s):
         if extra:
             how += ' (%s)' % ', '.join(extra)
     elif item:
-        how = 'using ' + item.group(1).strip()
+        how = 'using ' + item.group(1).strip() + (' (%s)' % sex.group(1).lower() if sex else '')
     elif re.search(r'knowing the move (.+)$', rest):
         how = 'level up knowing ' + re.search(r'knowing the move (.+)$', rest).group(1)
     elif re.search(r'when an? (.+?) is in the party', rest):
