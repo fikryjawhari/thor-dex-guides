@@ -26,6 +26,7 @@ form kyurem_black: canonical Gen VIII stats, abilities; doc fields (Black Kyurem
 form kyurem_white: canonical Gen VIII stats, abilities; doc fields (White Kyurem) lv
 form meloetta_pirouette: canonical Gen VIII types, stats; doc fields (Pirouette Forme) none
 Move Changes block that names no move: Further Modifications ['All Sound Moves now hit through a defenders Substitute, like in Gen VI+.']
+crit stages: 22 moves high-crit, 2 always-crit (Gen V list + Move Changes)
 dex: P 671 (649 species + 22 forms), M 577, AB 166
 Pokemon Changes: 649 species blocks; stats from the doc for 191 entries, 189 differing from the mirror (which shows the doc's Old line for 186)
 level-up lists from the doc: 79 differ from the mirror as printed (doc spellings)

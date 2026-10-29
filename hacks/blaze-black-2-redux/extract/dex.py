@@ -103,6 +103,12 @@ def mirror_how(h):
     return None
 
 
+GEN5_HIGH_CRIT = ['Aeroblast', 'Air Cutter', 'Attack Order', 'Blaze Kick', 'Crabhammer', 'Cross Chop', 'Cross Poison',
+                  'Drill Run', 'Karate Chop', 'Leaf Blade', 'Night Slash', 'Poison Tail', 'Psycho Cut', 'Razor Leaf',
+                  'Razor Wind', 'Shadow Claw', 'Sky Attack', 'Slash', 'Spacial Rend', 'Stone Edge']
+GEN5_ALWAYS_CRIT = ['Frost Breath', 'Storm Throw']
+
+
 def build(D):
     S = RD.species()
     docs = {name: doc(name) for name in ('Pokemon Changes', 'Move Changes', 'Type Changes', 'Evolution Changes')}
@@ -356,6 +362,17 @@ def build(D):
             o['cf'] = cf
             cf_count += len(cf)
         MV.append(o)
+
+    # ---- crit stages (MV.cr, for the calc): Gen V's high-crit and always-crit moves (Bulbapedia, Critical hit:
+    # Generation V), then Move Changes: Cut, Dragon Claw, Octazooka, X-Scissor gain high crit; Crabhammer loses it.
+    # Replacement moves keep stage 0: the docs give none of them a crit change.
+    crit = dict.fromkeys(GEN5_HIGH_CRIT, 1) | dict.fromkeys(GEN5_ALWAYS_CRIT, 6)
+    crit.update({'Cut': 1, 'Dragon Claw': 1, 'Octazooka': 1, 'X-Scissor': 1, 'Crabhammer': 0})
+    for name, stage in crit.items():
+        if stage and name in M:
+            MV[M.index(name)]['cr'] = stage
+    report('crit stages: %d moves high-crit, %d always-crit (Gen V list + Move Changes)'
+           % (sum(1 for o in MV if o.get('cr') == 1), sum(1 for o in MV if o.get('cr') == 6)))
 
     # ---- type chart: the mirror's, checked against what the docs say ----
     TC = RD.type_chart()

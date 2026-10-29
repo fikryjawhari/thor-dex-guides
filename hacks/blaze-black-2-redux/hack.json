@@ -25,21 +25,6 @@
    "setterStays": true,
    "over": {
     "moves": {
-     "Cut": {
-      "critRatio": 2
-     },
-     "Dragon Claw": {
-      "critRatio": 2
-     },
-     "Octazooka": {
-      "critRatio": 2
-     },
-     "X-Scissor": {
-      "critRatio": 2
-     },
-     "Crabhammer": {
-      "critRatio": 1
-     },
      "Wild Charge": {
       "recoil": null
      },
