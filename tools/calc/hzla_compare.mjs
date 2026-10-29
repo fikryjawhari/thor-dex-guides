@@ -49,7 +49,7 @@ async function oracleRepository(repo, fetch, legacy, expected = legacy ? legacyP
   return head;
 }
 
-function loadOracle(repo, options) {
+export function loadOracle(repo, options) {
   const settings = {
     damageGen: options.damageGen, critGen: options.critGen, type_chart: options.types,
     typeChart: options.types, noSwitch: true, switchIn: 0, challengeMode: false,
@@ -107,7 +107,7 @@ function loadOracle(repo, options) {
   return {calc, context};
 }
 
-function oracleGeneration(calc, data, options, profile) {
+export function oracleGeneration(calc, data, options, profile) {
   const stock = calc.Generations.get(options.gen);
   const modern = calc.Generations.get(8);
   const translations = options.names || {};
@@ -171,7 +171,7 @@ function normaliseDamage(damage, hits) {
   return per;
 }
 
-function oracleMatchup(oracle, gen, data, profile, options, matchup) {
+export function oracleMatchup(oracle, gen, data, profile, options, matchup) {
   const {calc, context} = oracle;
   const names = options.names || {};
   if (options.settings?.challengeMode) challengeTrainer(context, data, matchup, names);
@@ -210,7 +210,7 @@ function oracleMatchup(oracle, gen, data, profile, options, matchup) {
   const per = normaliseDamage(result.damage, hits);
   let ko;
   try { ko = plain(result.kochance(false)); } catch (error) { ko = {unavailable: error.message}; }
-  return {per, ko, description: plain(result.rawDesc),
+  return {per, ko, priority: result.move.priority, description: plain(result.rawDesc),
     input: {attacker: attacker.name, defender: defender.name, move: name, hits}};
 }
 

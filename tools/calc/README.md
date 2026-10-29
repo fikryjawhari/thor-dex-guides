@@ -346,6 +346,13 @@ select `api` (`hit`, `turn`, `berry`, `derived`, `settings`, `speed`, `intimidat
 
 ## Base profiles and fields
 
+Unbound's `over.weather` maps a custom weather label to a stock weather via `effect` while retaining the input
+label for profile rules. Optional `residual` replaces sand's chip divisor, with the same type/ability/item immunities
+and Cloud Nine suppression. Unbound maps Vicious Sandstorm to Sand with divisor 8; other guides are unchanged.
+`node tools/calc/unbound_oracle.mjs <pinned-local-hzla-root> [.tmp/output.json]` reproduces its 79 oracle cases;
+the harness validates the pinned source blobs and selects Expert through hzla's adapter. Checked-in expected
+rolls are in `unbound_expected.json`, inputs in `unbound_cases.mjs`, and assertions in `unbound_check.mjs`.
+
 The six committed JSON bases contain generation defaults, not verified hack
 mechanics. `expansion` uses Gen 9; `cfru` uses Gen 8 as a modern family starting
 point; `gen4` through `gen7` use their numbered mechanics. A later per-hack audit

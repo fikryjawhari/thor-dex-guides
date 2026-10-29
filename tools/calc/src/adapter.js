@@ -184,6 +184,7 @@ function battleField(values) {
     const target = entry.side === 'atk' ? options.attackerSide : entry.side === 'def' ? options.defenderSide : options;
     target[entry.to] = entry.type === 'toggle' ? !!value : value;
   }
+  options.weather = profile.over?.weather?.[options.weather]?.effect ?? options.weather;
   const result = new Field(options);
   for (const side of ['atk', 'def']) {
     const target = side === 'atk' ? result.attackerSide : result.defenderSide;
@@ -312,7 +313,7 @@ function residual(set, values = {}, otherSet = null, side = 'atk') {
     else if (mon.hasAbility('Rain Dish')) add('Rain Dish', 1, 16);
   } else if (field.hasWeather('Sand')) {
     if (!mon.hasType('Rock', 'Ground', 'Steel') && !mon.hasAbility('Overcoat', 'Sand Force', 'Sand Rush', 'Sand Veil')
-      && !(items && mon.hasItem('Safety Goggles'))) add('Sandstorm', -1, 16);
+      && !(items && mon.hasItem('Safety Goggles'))) add(profile.over?.weather?.[values.weather] ? values.weather : 'Sandstorm', -1, profile.over?.weather?.[values.weather]?.residual ?? 16);
   } else if (field.hasWeather('Hail', 'Snow')) {
     if (mon.hasAbility('Ice Body')) add('Ice Body', 1, 16);
     else if (field.hasWeather('Hail') && !mon.hasType('Ice') && !mon.hasAbility('Overcoat', 'Snow Cloak')

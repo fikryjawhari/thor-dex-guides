@@ -212,10 +212,43 @@ constants give the same id -> constant tables (checked every build). The reader 
 
 ### Damage calc
 
+#### Mechanics (unit 8b)
+
+`cfg.calc` uses the Gen 8 `cfru` base, keeps EVs, enables Z-moves and the existing Mega-form controls,
+and selects the `cfru` save reader. No Dynamax. Storage keys are unchanged.
+Reference: hzla `ff6c3e339e276e6b4e8e44db58750b6534bc26aa`, Unbound profile plus `gen789.js`;
+the source files are reference-only, not copied into the engine. `tools/calc/unbound_oracle.mjs` runs the pinned
+local calculator with its Expert adapter and independent move flags. `unbound_expected.json` records all 16 rolls
+per hit for 79 cases; `unbound_check.mjs` is already registered in `npm test`.
+
+76 cases match exactly, including Vicious Sandstorm's Ground/Rock special defence, Weather Ball, Solar Beam/Blade,
+Sand Force, Grass Dash / Slippery Tail priority (also at 1 HP, Psychic Terrain and Dazzling), Bellow / Sound Waves,
+Crabby Tactics, Honey Armor, Multieye / Multiscale / Shadow Shield (hazards, boots, damaged HP), Icy Skin / Dusty Scales,
+Portal Power, Evaporate, Drill Beak, Shadowy Veil, Gen 8 crit/burn/EV/Z baselines and all three custom moves.
+The stock-equivalent aliases are behaviour mappings, not copies of hzla's profile.
+
+Three disagreements are explicit regression expectations, not waived comparisons: Brain Bond's description gives a
+weaker second hit (implemented as Gen 8 Parental Bond); Face Shield gives an entry defence boost (Dauntless Shield);
+Subterfuge changes type for its move (Protean). hzla recognises none of those names and returns unmodified damage.
+Honey Armor's description says entry defence, but hzla doubles physical defence (Fur Coat): the calc follows hzla.
+Vicious Sandstorm is selectable, with normal sand mechanics and 1/8 HP residual; its permanence is a trainer-field
+decision, not globally applied. Shadowy Veil halves damage against Ghost types, matching the profile.
+
+Focus Belt and Nine Lives are **assumed Sturdy**, as agreed with the user. Knockout boosts use Moxie (Pride),
+Chilling Neigh (Fiery / Shocking Neigh) and Grim Neigh (Royal Roar); Cotton Cloud / Tangling Wool use Cotton Down.
+Those action effects are tested separately: hzla's damage-only oracle does not simulate a knockout or a later turn.
+Endless Edge / InfernalRage / Metal Bash keep their guide power/type/category, rather than aliasing differently named
+official moves. InfernalRage's supplied 1 BP and Fire typing are surprising but match this reference input; an
+in-game check is still needed before changing game data.
+
+In-game tests left: every custom ability alias, Brain Bond's second-hit ratio, Honey Armor vs Face Shield's timing,
+Focus Belt / Nine Lives survival and bypass, Vicious Sandstorm chip/permanence, the three custom moves, and Z/Mega
+battles. The oracle is evidence of calculator behaviour, not an independent run of Unbound's battle engine.
+
 #### Save import
 
 Reader `cfru` (profile `unbound21`, signature 0x01121999 = Unbound 2.1.0-2.1.1.1); format: `template/calc/readers/README.md`
-→ cfru. `cfg.calc` is still `false`: unit 8b sets `cfg.calc.save = "cfru"` with the calc profile. IDs: `GID` above
+→ cfru. Unit 8b enables `cfg.calc.save = "cfru"` with the calc profile. IDs: `GID` above
 (no `ab`: the reader returns the ability slot, resolved as the game does against the guide's species).
 
 Checked 2026-10-29 against both oracles, Unbound-Cloud (Skeli789's) and hzla's reader, on the 37 local saves with the
