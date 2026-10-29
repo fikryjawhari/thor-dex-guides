@@ -89,10 +89,21 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 - Real save import on the Thor (melonDS / DraStic `.sav`), like the other guides (Open → Damage calc → Real saves).
 - `worktree-bb2r-calc` and its T3 worktree (`~/.t3/worktrees/thor-dex-guides/t3-6ab62dd5`) are merged: delete them.
 
+**EV-less 3DS (branch `worktree-ctr-evless`, 2026-10-29):** `tools/ctr_evless.py` + `tools/usum_statics.py`;
+Photonic Sun's trainers from the EV-less copy, MGM switch hidden (`cfg.mgm`, the same template line as the Unbound
+branch), Totem battles from the game (real IVs; "Doc says" notes on 6 differences). The user installs
+`hacks/<hack>/.src/evless/luma/titles/<title id>/` on the Thor and checks in game: no EVs gained after battles
+(the summary screen's EVs stay 0), a trainer's Pokémon stats, and a Totem fight still hard.
+
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
 ## Decisions
 
+- **3DS hacks are played EV-less** (2026-10-29, the user): `tools/ctr_evless.py` makes a copy of the mod (the
+  original is kept, for normal EVs) where no species grants EVs and no trainer Pokémon has EVs; static fights (USUM
+  Totems and their allies) keep theirs. A 3DS guide follows the copy: trainer data dumped from it, `cfg.mgm` false.
+  Done: Photonic Sun (guide + copy), Eternal X (copy only: Gen 6 trainers have no EVs, so the guide is unchanged).
+  New 3DS guides: make the copy (each SOURCES.md → EV-less copy) and dump trainers from it.
 - Public repo, served by GitHub Pages (built by the Action from `dist/`, nothing built is committed). The app repo
   stays private.
 - Guides stay single self-contained HTML files that work offline with or without the app. Shared sprites are not

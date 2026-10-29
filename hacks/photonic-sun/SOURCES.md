@@ -58,6 +58,30 @@ python -I tools/usum_trainers.py "$A/0004000E001B5000" hacks/photonic-sun/.src/t
 python -I tools/bulba_pages.py hacks/photonic-sun/.src/bulbapedia "cat:Ultra Sun and Ultra Moon locations" "pre:Walkthrough:Pokémon Ultra Sun and Ultra Moon"
 ```
 
+## EV-less copy (the user's install, 2026-10-29)
+
+The user plays an EV-less copy of the mod (`tools/ctr_evless.py`): no species grants EVs, no trainer Pokémon has
+EVs, the Totem battles (static encounters) keep theirs. The original mod folder is never written; the copy goes to
+`.src/evless/` and the guide's trainer data is dumped from it. Needs the whole title folder (the `romfs/a/` extract
+above leaves out `romfs/Shop.cro`), so it is extracted again into `romfs-dl/mod/`.
+
+```bash
+S=hacks/photonic-sun/.src; A="$APPDATA/Azahar/dump/romfs"; F=("$A/0004000E001B5000" "$A/00040000001B5000")
+python -I -c "import zipfile,sys; z=zipfile.ZipFile(sys.argv[1]); [z.extract(n,sys.argv[2]) for n in z.namelist() if '/luma/' in n and not n.endswith('/')]" $S/romfs-dl/Rebalanced.zip $S/romfs-dl/mod
+rm -rf $S/evless   # the tool refuses an existing output folder
+python -I tools/ctr_evless.py usum $S/romfs-dl/mod/Rebalanced/luma/titles/00040000001B5000 $S/evless/luma/titles/00040000001B5000 "${F[@]}"
+python -I tools/usum_trainers.py $S/evless/luma/titles/00040000001B5000/romfs $S/trainers-evless.json "${F[@]}"
+python -I tools/usum_statics.py $S/romfs-dl/mod/Rebalanced/luma/titles/00040000001B5000/romfs $S/statics-rebalanced.json "${F[@]}"
+```
+
+Install: `.src/evless/luma/titles/00040000001B5000/` replaces the mod's title folder in the emulator's mods (keep
+the original somewhere to switch back).
+
+| Output | Contents |
+| --- | --- |
+| `trainers-evless.json` | `trainers-rebalanced.json` with every EV 0 (checked: nothing else differs). **The guide's trainer data** |
+| `statics-rebalanced.json` | The 252 static encounters (`tools/usum_statics.py`): the 13 Totem battles with IVs, EVs, aura and SOS allies (the doc has no IVs), Nihilego, the Necrozma fights, Ultra Beasts |
+
 | Output | Contents |
 | --- | --- |
 | `trainers-rebalanced.json` | **All 653 trainers** with natures, EVs and per-stat IVs (the PDFs leave out natures and EVs): name and class from the hack's text, battle type, bag, and per Pokémon species, form, level, nature, ability, gender, item, IVs, EVs, moves. Includes Hau's first two battles, which the PDF skips |

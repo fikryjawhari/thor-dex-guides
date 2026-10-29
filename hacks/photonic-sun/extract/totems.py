@@ -1,9 +1,18 @@
-"""Hand-checked Totem Battles.pdf tables; text extraction shifts labels between rows.
+"""Totem battles from the game's static encounters (statics-rebalanced.json, tools/usum_statics.py), checked against
+the hand-checked Totem Battles.pdf tables below (text extraction shifts labels between rows).
 
-Rows: species key, level, ability, item, nature, HP/Atk/Def/SpA/SpD/Spe EVs, moves.
-These wild/SOS encounters have no matching entries in trainers-rebalanced.json.
+Doc rows: species key, level, ability, item, nature, HP/Atk/Def/SpA/SpD/Spe EVs, moves. The game wins: level, item,
+nature, ability, IVs (the doc has none), EVs, moves and aura come from the static record; each difference from the
+doc gets a "Doc says ..." note. These wild/SOS encounters have no matching entries in the trainer data, and they
+keep their EVs in the EV-less mod copy (tools/ctr_evless.py leaves static encounters alone).
 """
-from common import report, slug
+from common import load, report, slug
+
+# Static record (statics-rebalanced.json index) of each battle's Totem; its allies come from the record.
+RECORD = {'Gumshoos': 4, 'Raticate': 9, 'Araquanid': 137, 'Marowak': 249, 'Lurantis': 24, 'Nihilego': 1,
+          'Togedemaru': 146, 'Mimikyu': 39, 'Kommo-o': 45, 'Ultra Necrozma': 160, 'Ribombee': 162,
+          'Gumshoos (Rematch)': 229, 'Raticate (Rematch)': 231}
+STATS = ['HP', 'Atk', 'Def', 'SpA', 'SpD', 'Spe']
 
 
 BATTLES = [
@@ -89,7 +98,47 @@ BATTLES = [
 ]
 
 
+def game_rows(statics, name, rows):
+    """Pair each doc row with its game record (Totem first, then its allies, matched on the move set)."""
+    totem = statics[RECORD[name]]
+    allies = [statics[index] for index in totem['allies']]
+    assert len(allies) == len(rows) - 1, name
+    pairs = [(rows[0], totem)]
+    for row in rows[1:]:
+        match = [ally for ally in allies if set(ally['moves']) == set(row[6].split('/'))]
+        assert len(match) == 1, (name, row[0])
+        pairs.append((row, match[0]))
+    return pairs
+
+
+def evs_text(evs):
+    return ' / '.join(f'{value} {stat}' for value, stat in zip(evs, STATS) if value) or 'none'
+
+
+def doc_says(row, game, aura, first):
+    """'Doc says ...' notes for one Pokemon where the game differs from the doc."""
+    species, level, ability, item, nature, evs, moves = row
+    who, out = game['species'], []
+    if level != game['level']:
+        out.append(f'level {level}')
+    if (item or None) != game['item']:
+        out.append(f'item {item or "none"}')
+    if nature != game['nature']:
+        out.append(nature)
+    if ability != game['ability']:
+        out.append(ability)
+    if list(evs) != list(game['evs'].values()):
+        out.append('EVs ' + evs_text(evs))
+    if set(moves.split('/')) != set(game['moves']):
+        out.append(moves.replace('/', ' / '))
+    if first and aura != game['aura']:
+        out.append(f'aura {aura}')
+    return [f'Doc says {who} ' + ', '.join(out) + '.'] if out else []
+
+
 def add(data, groups, targets, stops, caps):
+    statics = load('statics-rebalanced.json')
+    differences = 0
     for name, aura, rows in BATTLES:
         rematch = name.endswith('(Rematch)')
         moon = name.startswith('Raticate')
@@ -116,17 +165,21 @@ def add(data, groups, targets, stops, caps):
                 group['sec'].insert(position, section)
             else:
                 group['sec'].append(section)
-        team = []
-        for species, level, ability, item, nature, evs, moves in rows:
+        team, says = [], []
+        for index, (row, game) in enumerate(game_rows(statics, name, rows)):
+            species = row[0]
             assert species in data['_byid'], (name, species)
-            team.append({'id': species, 'l': level, 'a': data['_ABI'][ability], 'i': item,
-                         'na': nature, 'iv': [31] * 6, 'ev': list(evs),
-                         'm': [data['M'].index(move) for move in moves.split('/')], 'src': 's'})
-        if aura is not None:
-            team[0]['au'] = list(aura)
-        note = ['IVs not in the doc: 31 assumed']
+            ivs = list(game['ivs'].values())
+            assert all(0 <= iv <= 31 for iv in ivs), (name, species, ivs)
+            team.append({'id': species, 'l': game['level'], 'a': data['_ABI'][game['ability']], 'i': game['item'] or '',
+                         'na': game['nature'], 'iv': ivs, 'ev': list(game['evs'].values()),
+                         'm': [data['M'].index(move) for move in game['moves']], 'src': 's'})
+            says += doc_says(row, game, aura, index == 0)
+        team[0]['au'] = list(statics[RECORD[name]]['aura'])
+        differences += len(says)
+        note = says
         if len(team) > 1:
-            note.append('The first PokÃ©mon is the Totem; the others are its SOS allies, not a sequential team.')
+            note.append('The first Pokémon is the Totem; the others are its SOS allies, not a sequential team.')
         if name == 'Togedemaru':
             note.append('Doc says Rotom; Hydro Pump identifies Wash Rotom.')
         if name == 'Ultra Necrozma':
@@ -150,4 +203,4 @@ def add(data, groups, targets, stops, caps):
         stop = next(stop for stop in stops if stop[:2] == [part, anchor])
         stop[2].append(key)
     report('totem battles:', len(BATTLES), 'mons:', sum(len(rows) for _, _, rows in BATTLES),
-           '(doc sets; 31 IV assumed; allies in foe roster)')
+           '(game sets with IVs; allies in foe roster); doc differences:', differences)

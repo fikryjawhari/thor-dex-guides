@@ -8,6 +8,7 @@
   "name": "Photonic Sun",
   "orig": "",
   "evs": true,
+  "mgm": false,
   "starter": "pick",
   "orbs": false,
   "g3trainer": false,

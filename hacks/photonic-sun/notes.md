@@ -23,8 +23,14 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
 
 - **Game data is the authority** (PROGRESS.md → Source data check): `dex-rebalanced.json` (tools/ctr_dex.py on the hack's
   romfs and code.ips over the user's Ultra Sun v1.2 dumps) for species, moves, abilities, TMs and wild tables;
-  `trainers-rebalanced.json` (tools/usum_trainers.py) for every trainer set, natures, IVs and EVs included. The docs are
-  the check and give what the game data can't (wild methods, specials, shops).
+  `trainers-evless.json` (tools/usum_trainers.py on the EV-less mod copy) for every trainer set, natures and IVs
+  included; `statics-rebalanced.json` (tools/usum_statics.py) for the Totem battles. The docs are the check and give
+  what the game data can't (wild methods, specials, shops).
+- **EV-less (2026-10-29, the user's choice):** the guide follows the user's EV-less copy of the mod
+  (`tools/ctr_evless.py`, SOURCES.md → EV-less copy): no species grants EVs and no trainer Pokémon has EVs, which
+  makes the game play like Minimal Grinding Mode. Only the 13 Totem cards (Totems and SOS allies: static encounters,
+  untouched) keep EVs. So `cfg.mgm` is false (no MGM switch; `psmgm` stays reserved) and `cfg.evs` stays on for the
+  player's EVs (vitamins, wings) and the Totem sets. `check.py` fails on any trainer EV outside the Totem cards.
 - **Vanilla comparison**: `dex-vanilla.json` and `trainers-vanilla.json`, the same two tools on the vanilla dumps alone.
   MV.h (move change notes) compares the two dex files; the Move Changes doc's paragraph is MV.e (shown as "Move Changes
   doc"). P.vc is not emitted.
@@ -131,7 +137,9 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   Canyon (plus Boldore), Poni Meadow, Route 16, Ancient Poni Path, Thrifty Megamart; levels at Verdant Cavern, Route 3
   shadows, Route 8 surfing and most bubbling spots; Poni Wilds berry piles are half Crabrawler; Poni Grove's Stakataka /
   Blacephalon slots are 0%.
-- **Totem encounters:** `extract/totems.py` hand-transcribes all 13 `Totem Battles.pdf` tables
+- **Totem encounters:** `extract/totems.py` takes all 13 battles from the game's static encounters (a/1/5/9 entry 1,
+  `statics-rebalanced.json`; record per battle in `RECORD`, allies from the record) and checks them against its
+  hand-transcription of the `Totem Battles.pdf` tables
   (33 mons), including Nihilego, Ultra Necrozma and both Verdant Cavern rematches. The two-column text dump shifts
   item/aura, nature/EV and move labels; tables were checked by column rather than blindly parsed by row label.
   All 653 `trainers-rebalanced.json` records were checked (38 teams contain listed Totem species); none is a Totem
@@ -142,15 +150,18 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   Gumshoos is tagged `Photonic Sun`. Stable `totem-*` keys leave all existing trainer identities intact. Rematches
   join Post-game at Verdant Cavern, reached from Part 34's Hau'oli City stop after Ilima; no new stop keys needed.
   Hydro Pump identifies **Wash Rotom** (`wash-rotom`); its trainer note says "Doc says Rotom".
-  The doc has no IVs: each encounter has one note "IVs not in the doc: 31 assumed", and all mons use `[31]*6`.
-  Ultra Necrozma retains its doc level **100**, separately from the chosen progression cap **95**.
-  No other doc-vs-game set differences were found because the game trainer archive does not contain these fights.
+  The doc has no IVs; the game's are used (2026-10-29; until then 31 was assumed). Not all 31: Totem Gumshoos Atk 0,
+  Totem Raticate Atk / SpA / Spe 0, their Yungoos / Rattata allies all 0, and several special attackers Atk 0.
+  The game wins on every field; differences get "Doc says" notes: EVs of Togedemaru (+6 Spe), Mimikyu (+84 Spe),
+  Kommo-o (152 Spe, doc SpD), Ultra Necrozma (10 SpD, doc 8), Ribombee (106 SpD, doc 104), and Naganadel's level
+  (90, doc 91). Species, items, natures, abilities, auras and move sets otherwise match; move order is the game's.
+  Ultra Necrozma retains its level **100**, separately from the chosen progression cap **95**.
 
 ## Local storage (prefix ps)
 
 `psdex` list filters, `pscalc:<species name>` (was `<id>`) + `pscalc:lastlv` stat calc, `pstrack` tracker {s starter, e, t}, `pswalk` walkthrough
 open state, `pscap` levels per trainer, `pstr` open trainer boxes, `psrecent` search picks, `pspos` last route, `psmgm`
-Minimal Grinding Mode, `pscapset` level cap set, `psloc` / `psitems` open boxes. Keep them once published.
+Minimal Grinding Mode (unused since the EV-less change: no switch), `pscapset` level cap set, `psloc` / `psitems` open boxes. Keep them once published.
 Species, moves, abilities and places in saved state are names, trainers stable keys (template/README.md → What the data
 switches on); ids and indices saved before still load.
 
