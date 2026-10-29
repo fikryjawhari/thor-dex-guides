@@ -175,7 +175,29 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
   line only. `txt` wording is all TODO (units 4-7 fill theirs).
 - Unit 7a (mission-collapse decide, `worktree-unbound-missions`): interactive sample and frame options in
   `tools/mockup/unbound-missions/`; draft build spec `plans/unbound-missions.md`. Phone preview:
-  https://windows-pc.tail1846b8.ts.net/preview/unbound-missions.html . Open choices: quiet divider vs bordered
-  card (recommend quiet), and stay open vs auto-close on the final mission tick (recommend stay open).
+  https://windows-pc.tail1846b8.ts.net/preview/unbound-missions.html . User chose bordered card and auto-close (spec accepted).
   Three real missions/three stops; no template/extract changes. 7b waits for phone approval; preserve ordinary
   tick identities when inserting groups, add stable mission **and child-step** keys plus guide-update snapshots.
+- Unit 3 (dex, `worktree-unbound-dex`): look names up through `extract/common.py`, never by hand:
+  `sid(name)` takes any source's spelling ("Raichu-Alola", "Alolan Raichu", "Charizard-Mega-X", "Lycanroc (Midnight
+  Form)", "Urshifu-Rapid-Strike", "Indeedee-F", "Shadow-Warrior"; a cosmetic form -> its species, "-Gmax" -> the base)
+  and returns the P id; `move(name)` / `ability(name)` give the M / AB name for CFRU short names ("Dazzle Gleam"), the
+  run-together ones and the wiki's typos (`WIKI_MOVE_FIX`, `WIKI_ABILITY_FIX`); they are filled by `dex.build`, so
+  call them after it. `WIKI` (`extract/wiki.py`) reads the wiki export: `pokemon()` has each page's `location` text
+  (unit 4) and `held` items; `mega_stones()`, `tutors()` (29 tutors: location, requirement, moves with cost / days:
+  units 5 / 7); extend it for Locations / Items / Missions pages rather than parsing the JSON again.
+  Naming: regional "Alolan X" / "Galarian X" / "Hisuian X", Megas "Mega X [X|Y]", "Primal X", forms "X (Label)",
+  peer defaults "Pumpkaboo (Small)", "Urshifu (Single Strike)", "Basculin (Red Striped)", "Lycanroc (Midday)"; Shadow
+  Warrior is Unbound's own (dex 0). Cosmetic forms are one entry (Unown, Vivillon, Minior's cores -> "Minior (Core)",
+  Burmy's cloaks...): a location listing "Burmy (Sandy)" is Burmy. Gigantamax forms are not species: a raid den's
+  Gigantamax Pokémon is its base species with a note. P has every form; nothing is pruned yet: whoever adds the
+  locations / trainers adds the prune to `build.py` (EI's `prune.py`, the shared rule).
+  Surprises: the mirror misnames 15 species' abilities (Unbound's own shown as vanilla ones; fixed from the game
+  table) and its ability descriptions for short names belong to other abilities; the wiki's National Dex numbers and
+  learnsets are unreliable (its locations / evolution text are fine). The game's tables are now pinned
+  (`.src/repos/Unbound-Cloud`, hzla's `unbound_2_1_constants.js`): `check.py` compares every species with them, and
+  `gid.py` builds GID (sp / mv / it / gr; no ab: CFRU stores the slot). GID item names are Unbound-Cloud's: unit 5 makes
+  them match IT's names. Unit 6: `trainer_keys.json` is not written until a build has trainers (the first one seeds
+  it); hzla writes species Showdown-style, `sid` reads them. Unit 8: Z-move and Max-move entries are not in M (the
+  mirror's "P" / "S" copies were left out); As One is "As One (Glastrier)" / "(Spectrier)"; three moves the calc
+  doesn't know (Endless Edge, InfernalRage, Steelyhit) are MV.x.
