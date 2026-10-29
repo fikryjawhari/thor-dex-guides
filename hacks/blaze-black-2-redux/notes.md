@@ -308,7 +308,7 @@ are a placeholder, not a claim.
 
 Field reviews: ten records across Caroll, Elmer, Porta, Sterling and Lance, two each: "Weather Trainers and Lance"
 and the gauntlet/healing note. Neither infers permanent weather from abilities. The four explicit Permanent Rain /
-Sandstorm boss conditions are separately retained. User settles reviews later. `calc-doubles` EXPECTED is **72**
+Sandstorm boss conditions are separately retained. Settled 2026-10-29: both are text only, no field effect (the weather comes from the teams' abilities; `tools/trainer_fields.py`), no record left to review. `calc-doubles` EXPECTED is **72**
 from data; cfg.calc stays false, so the scenario still skips until the calc unit enables it, not bypassing its gate.
 
 ## Checks
@@ -378,7 +378,7 @@ Competitive), else its first, marked `?` like a guessed trainer ability (`templa
 `s<sl>` marker fits the level row at every viewer size, normal and dvkb; foe stats at `sl`, its Seismic Toss deals
 `sl`, the player's its own level); the shared calc scenarios run on BB2R (`gate.py scenarios blaze-black-2-redux`).
 
-Open / in-game tests: Triple Axel (doc: 30, then +10 per hit, "Triple Kick mechanics"; both calcs give 30 x3);
+Open / in-game tests: Triple Axel (doc: 30, then +10 per hit, "Triple Kick mechanics"; both calcs give 30 x3; the user's call: 30 / 40 / 50, to build);
 Night Shade / Seismic Toss from a level-bug Pokemon (hzla: stat level; the game may use the shown level); Kyurem
 (no hzla set); which slot ID the hack gives Competitive / Neutralizing Gas (a save with Milotic or Weezing settles it).
 

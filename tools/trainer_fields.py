@@ -33,6 +33,10 @@ def evidence(text, scope):
     if re.fullmatch(r'(?:Sydney|Sidney|Glacia) (?:Tailwind|TrickRoom|Sun|Snow)\.?', text.strip(), re.I):
         # Team-variant label (the teams show it), not a condition: no effect, nothing to review.
         return dict(scope=scope, text=text, effects=[], review=False, label=True)
+    if re.fullmatch(r'Weather Trainers and Lance', text.strip()) or text.startswith('Weather gauntlet:'):
+        # BB2R (settled 2026-10-29): the weather comes from each team's abilities (Snow Warning, Drought, ...), not the
+        # field; the gauntlet / healing note is text only.
+        return dict(scope=scope, text=text, effects=[], review=False)
     effects = []
 
     def add(kind, value, **details):
