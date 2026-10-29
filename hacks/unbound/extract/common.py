@@ -47,7 +47,7 @@ def base_name(slug):
     f = FORMS[slug]
     page = RD.species()[cfru.VIRTUAL_BASE.get(f.base, f.base)] if f.base in FORMS or f.base in cfru.VIRTUAL_BASE \
         else RD.species()[slug]
-    return OWN.get(page.slug) or NAME_FIX.get(page.name, page.name)
+    return OWN.get(page.slug) or NAME_FIX.get(page.name) or cfru.species_name(page)
 
 
 def pid(slug):
@@ -94,6 +94,16 @@ def _build_sid():
         for n in _aliases(slug):
             _SID.setdefault(key(n), target[slug])
     _SID.setdefault('shadowwarrior', pid('shadow-warrior'))
+
+
+def FORMS_KIND(species_id):
+    """The cfru form kind of a P id ('base', 'regional', 'mega', 'form')."""
+    if not _KIND:
+        _KIND.update({pid(s): f.kind for s, f in FORMS.items()})
+    return _KIND.get(species_id, 'base')
+
+
+_KIND = {}
 
 
 def sid(name):

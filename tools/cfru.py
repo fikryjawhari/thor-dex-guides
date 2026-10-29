@@ -2,6 +2,7 @@
 
     import cfru
     cfru.official(name)           a move or ability as the guides spell it ("Dazzle Gleam" -> "Dazzling Gleam")
+    cfru.species_name(page)       a mirror page's species name in full ("Fletchindr" -> "Fletchinder", Nidoran♀)
     cfru.clean(text)              game text from a RomHackDex mirror ("Pok\\emon", "Pok�mon", line breaks)
     cfru.forms(rd)                {slug: Form} every pokedex page of a RomHackDex mirror (tools/romhackdex.py) placed:
                                   its base species, form kind and the name the guide gives it
@@ -69,6 +70,12 @@ CFRU_NAMES = {
     'Vessel Of Ruin': 'Vessel of Ruin', 'Zero To Hero': 'Zero to Hero',
 }
 
+# Species: the game stores 10 characters, so the mirror's h1 shortens the longer names.
+CFRU_SPECIES = {'Baraskewda': 'Barraskewda', 'Blacphalon': 'Blacephalon', 'Centskorch': 'Centiskorch',
+                'Corvknight': 'Corviknight', 'Corvsquire': 'Corvisquire', 'Crabminble': 'Crabominable',
+                'Fletchindr': 'Fletchinder', 'Stonjorner': 'Stonjourner'}
+SLUG_NAMES = {'nidoran-f': 'Nidoran♀', 'nidoran-m': 'Nidoran♂'}     # pages whose h1 drops the sex symbol
+
 # Official spellings the run-together names are matched against (letters only): every move and ability of Gens I-VIII
 # whose name has a space, hyphen or apostrophe, i.e. the ones a CFRU constant spells differently.
 KNOWN = [
@@ -97,6 +104,11 @@ def official(name):
     if name in CFRU_NAMES:
         return CFRU_NAMES[name]
     return _KNOWN.get(key(name), name)
+
+
+def species_name(page):
+    """The official name of a mirror page's species (the h1 is CFRU's 10-character name)."""
+    return SLUG_NAMES.get(page.slug) or CFRU_SPECIES.get(page.name, page.name)
 
 
 ZMAX = re.compile(r'^(.*) ([PS])$')       # "Breakneck Blitz P": the physical / special copy of a Z or Max move

@@ -46,6 +46,16 @@ ABILITY_FIX = {
     'calyrex_ice_rider': (['As One (Glastrier)'], None), 'calyrex_shadow_rider': (['As One (Spectrier)'], None),
 }
 
+# Official ability text where neither source has it (the mirror's entries for these names carry another ability's
+# text, and no wiki page lists them): the games' own descriptions (Sword / Shield).
+CANON_DESC = {'Neutralizing Gas': "While the Pokémon is in battle, the effects of all other Pokémon's Abilities "
+                                  'will be nullified or will not be triggered.',
+              'Power of Alchemy': 'The Pokémon copies the Ability of a defeated ally.',
+              'As One (Glastrier)': "This Ability combines the effects of both Calyrex's Unnerve Ability and "
+                                    "Glastrier's Chilling Neigh Ability.",
+              'As One (Spectrier)': "This Ability combines the effects of both Calyrex's Unnerve Ability and "
+                                    "Spectrier's Grim Neigh Ability."}
+
 
 def wiki_how(how):
     """The wiki's "Acquire At" text in the guides' wording."""
@@ -165,13 +175,13 @@ def build(D):
         if w and f.kind in ('base', 'regional'):
             cf = []
             if w.types and w.types != p['t']:
-                cf.append('Wiki says %s; RomHackDex says %s' % (' / '.join(w.types), ' / '.join(p['t'])))
+                cf.append('Wiki says %s; the dex has %s' % (' / '.join(w.types), ' / '.join(p['t'])))
                 cf_count['types'] += 1
             wab = [cfru.official(ab) for ab in (x[0] for x in w.abilities)]
             wab = [WIKI_ABILITY_FIX.get(a, a) for a in wab]
             mine = abil + ([hidden] if hidden and hidden not in abil else [])
-            if wab and set(wab) != set(mine):
-                cf.append('Wiki says abilities %s; RomHackDex says %s' % (' / '.join(wab), ' / '.join(mine)))
+            if wab and {key(a) for a in wab} != {key(a) for a in mine}:
+                cf.append('Wiki says abilities %s; the dex has %s' % (' / '.join(wab), ' / '.join(mine)))
                 cf_count['abilities'] += 1
             if cf:
                 wiki_cf.append('%s: %s' % (p['id'], '; '.join(cf)))
@@ -272,8 +282,8 @@ def build(D):
         own = a not in calc
         md = mirror_desc.get(a)
         if own or not md:      # Unbound's own (the mirror pairs its short names with another ability's text), or none
-            d = wiki_desc.get(a, '')
-            if d:
+            d = wiki_desc.get(a) or wiki_desc.get(re.sub(r' \(.*\)$', '', a)) or CANON_DESC.get(a, '')
+            if a in wiki_desc:
                 from_wiki.append(a)
         else:
             d = cfru.clean(md)

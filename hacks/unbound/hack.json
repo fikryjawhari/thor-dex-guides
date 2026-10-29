@@ -6,7 +6,7 @@
  "version": "2.1.1.1",
  "cfg": {
   "name": "Pokémon Unbound",
-  "orig": "",
+  "orig": "Unbound",
   "evs": true,
   "mgm": false,
   "starter": "type",
@@ -52,5 +52,15 @@
    "capnone": "",
    "noev": ""
   }
+ },
+ "sk": {
+  "exeggcute_a": "0102",
+  "cubone_a": "0104",
+  "koffing_g": "0109",
+  "mime_jr_g": "0439",
+  "basculin_h": "0550-white-striped",
+  "eiscue_noice": "0875-noice",
+  "calyrex_ice_rider": "0898-ice",
+  "calyrex_shadow_rider": "0898-shadow"
  }
 }
