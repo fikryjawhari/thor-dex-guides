@@ -22,7 +22,7 @@ import common  # noqa: E402
 from common import FORMS, H, RD, WIKI, cfru, key, pid  # noqa: E402
 
 EXPECTED = {'wiki types': 0, 'wiki abilities': 16, 'dropped': 38, 'merged': 116, 'no stone': ['rayquaza_mega'],
-            'no description': ['Focus Belt', 'Nine Lives'], 'not in game table': ['shadow_warrior']}
+            'no description': [], 'not in game table': ['shadow_warrior']}
 FAIL = []
 
 
