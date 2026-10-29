@@ -78,3 +78,7 @@ Units 5-7 can run in parallel after 4 (different extract files; data.json is reb
   to the species' ability slot, flagged); Castform weather / typed Arceus forms map to their base P.
 - **Move Changes "Further Modifications":** all sound moves hit through Substitute (Gen 6+ rule) → calc profile.
 - **Dex open items for the user:** Pikachu, Stoutland, Unfezant: RomHackDex stats match neither doc line.
+- **Items (merged `36dd5b4`):** gaps from Bulbapedia (433 placements, "(vanilla)"; RomHackDex has nothing beyond the
+  doc). GID items 440/441 (Old Sea Map unmapped, key item). For the user at the end: TM57 (TM table Lentimas vs
+  placement list Chargestone, list wins); Giga Impact TM66 vs TM68 ("Doc says"); Castelia Cafe artist = Bulbapedia's
+  Harlequin (unconfirmed). Walkthrough: `items.area_join()`, `items.shop_places(D)`, `NO_WILD` towns.
