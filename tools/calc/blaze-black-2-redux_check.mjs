@@ -32,6 +32,22 @@ check('profile settings', () => {
   assert.ok(data.MV.every(entry => entry.f === undefined), 'MV.f omitted: stock Gen 5 flags');
 });
 
+// Triple Axel (Move Changes: power 30, successive hits +10, "Triple Kick mechanics"): hits of 30 / 40 / 50, a typed
+// power shifts all three, and the hit actions take the same powers (profile over.moves step; hzla gives 30 x 3).
+check('Triple Axel 30 / 40 / 50', () => {
+  const one = bp => plain(engine.calc(set('weavile'), set('garchomp'), {mv: mv('Tackle'), bp, t: 'Ice', hits: 1}, {})).rolls;
+  const three = plain(engine.calc(set('weavile'), set('garchomp'), {mv: mv('Triple Axel'), hits: 3}, {}));
+  assert.deepEqual(three.per, [one(30), one(40), one(50)]);
+  const typed = plain(engine.calc(set('weavile'), set('garchomp'), {mv: mv('Triple Axel'), bp: 60, hits: 3}, {}));
+  assert.deepEqual(typed.per, [one(60), one(70), one(80)]);
+  const onSnorlax = bp => Math.max(...plain(engine.calc(set('weavile'), set('snorlax'), {mv: mv('Tackle'), bp, t: 'Ice', hits: 1}, {})).rolls);
+  const hp = engine.stats(set('snorlax'))[0];
+  const action = plain(engine.hit(set('weavile'), {...set('snorlax'), hp}, {mv: mv('Triple Axel'), hits: 3}, {}, 'max'));
+  assert.equal(action.def.hp, hp - onSnorlax(30) - onSnorlax(40) - onSnorlax(50), 'hit actions: 30 / 40 / 50');
+  const stockThree = plain(stock.calc(set('weavile'), set('garchomp'), {mv: mv('Triple Axel'), hits: 3}, {}));
+  assert.deepEqual(stockThree.per ?? Array(3).fill(stockThree.rolls), [one(30), one(30), one(30)], 'base gen5 without the step: 30 x 3');
+});
+
 check('EVless: supplied EVs are ignored', () => {
   const low = engine.stats(set('snorlax')), high = engine.stats(set('snorlax', {ev: [252, 252, 252, 252, 252, 252]}));
   assert.deepEqual(plain(low), plain(high));

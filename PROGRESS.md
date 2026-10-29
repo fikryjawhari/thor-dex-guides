@@ -92,11 +92,14 @@ Plan and decisions: `plans/blaze-black-2-redux.md` (Decisions, Findings); source
   and `sl`); stat level clamped to 1 (template); import fallback for an unknown ability ID (Competitive / Neutralizing
   Gas, marked `?`); move-flag removal reviewed (the lists were empty: the engine's stock flags are right). Template
   gate on the four live guides: 137 / 137 pass (`gate.py check <four> --template --jobs 8`, 36 min). Merged into the guide branch (fast-forward).
-- **User answers pending / to ask:** the in-game level checks (`-levels.md` → in-game checks: Floccesy School Kid,
-  Castelia Sewers tag Hugh, Lenora & Hawes; Striaton trio postgame); the 10 trainer-field review records (weather
-  trainers Caroll, Elmer, Porta, Sterling, Lance); Triple Axel (doc 30 then +10 per hit vs both calcs 30 × 3); Kyurem
-  (Lv 74, no hzla set); Royal Unova stop placed after Burgh from memory; Pikachu / Stoutland / Unfezant RomHackDex
-  stats match neither doc line; items TM57 / Giga Impact / Castelia Cafe artist (plan Findings).
+- **Settled 2026-10-29:** weather-trainer field records (text only), Triple Axel 30 / 40 / 50 (built: profile `step`),
+  Kyurem Lv 74 no level bug, Pikachu / Stoutland / Unfezant (hzla = doc New line = ours), rival / school teams
+  follow the picked starter (`t.st` = starter name; picking one hid them all).
+- **In-game checks while the user plays** (the battle screen's level settles each; `-levels.md`): Floccesy School
+  Kid (12: as now; 11: drop one increment from the 57 D1 Pokémon), Castelia Sewers Hugh (26: as now; 24: no
+  increment for the 54 partner Pokémon), Lenora & Hawes (31: as now; 33: shown 33, stats 31); Striaton trio
+  postgame. TM57 in Chargestone Cave (the old Escape Rope)? Giga Impact's TM number at Shopping Mall Nine (66 / 68)?
+  When Royal Unova first opens (stop placed after Burgh). Castelia Cafe artist unconfirmed.
 - Then: player's-eye review (Thor frame, `tools/preview.py --frame`), the sceptic audit (Haiku medium: full gate,
   domcompare on the four live guides, viewer sizes, saved state), notes / PROGRESS / family notes, ask before push and
   before merging into main. `pagecheck.mjs` is Emerald-specific (crashes on BB2R): the audit needs a BB2R-aware run.

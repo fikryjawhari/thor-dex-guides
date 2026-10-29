@@ -25,6 +25,9 @@
    "setterStays": true,
    "over": {
     "moves": {
+     "Triple Axel": {
+       "step": 10
+     },
      "Wild Charge": {
       "recoil": null
      },

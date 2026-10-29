@@ -352,6 +352,7 @@ permanent ability weather). Type chart: data `TC` (Fairy, Gen VI Steel). Overrid
 |---|---|---|---|
 | Cut, Dragon Claw, Octazooka, X-Scissor high crit; Crabhammer not | Move Changes | `MV.cr` (extract/dex.py, with Gen V's high-crit list, Bulbapedia) | `crit ratio changes` (check) |
 | Wild Charge: no recoil | Move Changes | `over.moves` `recoil: null` | `wild-charge`, check |
+| Triple Axel hits 30 / 40 / 50 (power 30, later hits +10, "Triple Kick mechanics") | Move Changes; the user's call 2026-10-29 | `over.moves` `step: 10` (engine: each later hit adds the step; hit actions too) | `triple-axel` (known difference: hzla 30 x 3), check |
 | Needle Arm, Rock Smash boosted by Iron Fist | Move Changes; Changelog 291 | `over.moves` punch flag | `iron-fist-*` (known differences: hzla doesn't flag them), negatives |
 | Sound moves hit through Substitute | Move Changes, Further Modifications | nothing: the calc has no Substitute state | sound flags (Soundproof) |
 | Power / type / category / accuracy | Move Changes | data (`MV`) | `frost-breath`, `shadow-claw-90`, `esper-wing`, `wave-crash`, `hex-*` |
@@ -366,8 +367,8 @@ after it (tooltip "Stats at Lv 13 (Challenge level bug)"); edits keep the differ
 
 **Oracle** (`node tools/calc/hzla_compare.mjs blaze-black-2-redux`): hzla Decomps at the reviewed pin `403c2669`
 (`oracle.sha`), `challengeMode` on, a shim giving its Challenge branch the trainer side of each case. 50 cases
-(early / mid / late bosses, level-bug Pokemon incl. Cheren's Munchlax, changed moves, doubles, weather): **47 match,
-3 known differences** (Iron Fist x2: doc over hzla's data; one hzla UI artefact: a player Pokemon of the trainer's
+(early / mid / late bosses, level-bug Pokemon incl. Cheren's Munchlax, changed moves, doubles, weather): **46 match,
+4 known differences** (Iron Fist x2 and Triple Axel: doc over hzla's data; one hzla UI artefact: a player Pokemon of the trainer's
 species at its stat level also gets the +N).
 
 **Imported abilities:** Competitive and Neutralizing Gas have no Gen V ability ID, so an imported Pokemon's ability
@@ -378,7 +379,7 @@ Competitive), else its first, marked `?` like a guessed trainer ability (`templa
 `s<sl>` marker fits the level row at every viewer size, normal and dvkb; foe stats at `sl`, its Seismic Toss deals
 `sl`, the player's its own level); the shared calc scenarios run on BB2R (`gate.py scenarios blaze-black-2-redux`).
 
-Open / in-game tests: Triple Axel (doc: 30, then +10 per hit, "Triple Kick mechanics"; both calcs give 30 x3; the user's call: 30 / 40 / 50, to build);
+Open / in-game tests: Triple Axel's 30 / 40 / 50 (compare a hit in game);
 Night Shade / Seismic Toss from a level-bug Pokemon (hzla: stat level; the game may use the shown level); Kyurem
 (no hzla set); which slot ID the hack gives Competitive / Neutralizing Gas (a save with Milotic or Weezing settles it).
 

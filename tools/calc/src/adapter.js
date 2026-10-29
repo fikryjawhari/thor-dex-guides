@@ -1069,10 +1069,14 @@ function calcCore(atk, def, slot, values = {}, action = null) {
     ...(slot.met > 0 ? {timesUsedWithMetronome: Math.trunc(slot.met)} : {}),
   });
   move.hits = selected;
+  // A profile power step (over.moves[name].step): each later hit adds that much power (BB2R Triple Axel 30 / 40 / 50,
+  // Triple Kick's Gen V code with a higher first hit) instead of stock's power x hit number.
+  const step = profile.over?.moves?.[name]?.step;
   if (action) {
     move.hits = 1;
     if (attacker.hasAbility('Parental Bond')) attacker.ability = action.parental ? 'Parental Bond (Child)' : 'Guide no ability';
-    if (['Triple Kick', 'Triple Axel'].includes(moveData.name)) move.bp *= action.hit;
+    if (step) move.bp += step * (action.hit - 1);
+    else if (['Triple Kick', 'Triple Axel'].includes(moveData.name)) move.bp *= action.hit;
   }
   const context = {
     atk: attacker, def: defender, move, field, desc: {}, notes: new Set(),
@@ -1097,8 +1101,19 @@ function calcCore(atk, def, slot, values = {}, action = null) {
   const calculate = profile.gen === 4 ? calculateDPP : profile.gen <= 6 ? calculateBWXY : calculateSMSSSV;
   const result = calculate(generation, attacker, defender, move, field);
   const normalise = damage => typeof damage === 'number' ? Array(16).fill(damage) : [...damage];
-  const per = Array.isArray(result.damage) && (Array.isArray(result.damage[0]) || result.damage.length === 2)
+  let per = Array.isArray(result.damage) && (Array.isArray(result.damage[0]) || result.damage.length === 2)
     ? result.damage.map(normalise) : Array.from({length: hits}, () => normalise(result.damage));
+  if (step && !action && hits > 1) {
+    const first = move.bp;
+    move.hits = 1;
+    per = Array.from({length: hits}, (_, index) => {
+      move.bp = first + step * index;
+      context.state.hit = index + 1;
+      const damage = calculate(generation, attacker, defender, move, field).damage;
+      return normalise(Array.isArray(damage[0]) ? damage[0] : damage);
+    });
+    move.bp = first; move.hits = hits; context.state.hit = 1;
+  }
   if (values.defGlaiveRush && !context.state.fieldGlaiveApplied) {
     for (const hit of per) for (let index = 0; index < hit.length; index++) hit[index] *= 2;
   }

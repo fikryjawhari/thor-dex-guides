@@ -724,6 +724,10 @@
     "k": "14.1.0",
     "slot": 0,
     "name": "Socialite Marian"
+   },
+   "difference": {
+    "source": "Move Changes.txt (Triple Axel: \"Power 20 -> 30\", \"Successive Hits Power 20 -> 10\", \"uses Triple Kick mechanics\")",
+    "reason": "BB2R's hits are 30 / 40 / 50 (profile over.moves step 10; the user's call 2026-10-29); hzla gives Triple Axel no per-hit rule, so 30 x 3. The profile follows the doc."
    }
   },
   {
