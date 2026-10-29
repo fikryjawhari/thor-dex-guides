@@ -213,17 +213,21 @@ def build(data):
                 item_raw = 'Air Balloon'
                 move_raw = ['Earthquake' if move == 'Superpower' else move for move in move_raw]
                 repairs.append((row['line'], 'Klinklang: Doc says no item / Superpower; Air Balloon / Earthquake.'))
-            if 'Grab' in move_raw:
+            level_raw = row['level']
+            if row['line'] == 325:
+                level_raw = 9
+                repairs.append((row['line'], 'Pansage: Doc says lv.19; lv.9, as in the other starter branches (hzla 9 +1).'))
+            if any(move.strip('"') == 'Grab' for move in move_raw):
                 repairs.append((row['line'], 'Banette: Doc says Grab; Snatch.'))
             ability = abilities(ability_raw, where)
             item = items(item_raw, where) if item_raw else ''
             resolved = [moves(move, where) for move in move_raw]
             assert identity and ability and all(resolved) and (item is not None), (where, row)
-            level = row['level'] if normal or record['mode'] == 'challenge' else min(100, row['level'] + record['increment'])
+            level = level_raw if normal or record['mode'] == 'challenge' else min(100, level_raw + record['increment'])
             mon = dict(id=identity, l=level, i=item, a=ability_index[ability], iv=[0] * 6,
                        m=[move_index[move] for move in resolved], _moves=resolved, _row=row)
-            if not normal and record['mode'] == 'shared' and row['level'] != level:
-                mon['sl'] = row['level']
+            if not normal and record['mode'] == 'shared' and level_raw != level:
+                mon['sl'] = level_raw
             team.append(mon)
         matched, number = hzla.join(record, branch, team)
         for slot, (mon, other) in enumerate(zip(team, matched)):
@@ -247,7 +251,7 @@ def build(data):
                     if differs:
                         hzla.disagreements[field] += 1
                         value = ', '.join(theirs) if isinstance(theirs, list) else str(theirs) or 'no item'
-                        mon.setdefault('hn', []).append('stat-level model differs' if field == 'stat level' else '%s %s' % (field, value))
+                        mon.setdefault('hn', []).append('%s %s' % (field, value))
                         report('  hzla disagreement: doc line %d, %s, %s, %s: doc %s; hzla says %s (trainer %d)' %
                                (mon['_row']['line'], record['header'], mon['id'], field, ours, theirs, number))
             else:
