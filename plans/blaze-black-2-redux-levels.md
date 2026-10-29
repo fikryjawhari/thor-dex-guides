@@ -19,7 +19,7 @@ Split: 244 rows have the same stat level but a different increment; in 84 the st
 
 | class | rows | offsets | likely right |
 |---|---|---|---|
-| A1 our parser: sub-section "no level shift" scope | 24 | −2 | **hzla (our bug)** |
+| A1 our parser: sub-section "no level shift" scope | 24 | −2 | **hzla (our bug)**; fixed (5f596e7) |
 | A2 doc's scoped "no level shift" that hzla's location +2 ignores | 15 | −2 | doc |
 | A3 ally (partner) Pokémon in tag battles: we add the increment, hzla 0 | 54 | +2/+3/+4 | in-game check |
 | A4 postgame: the doc states no increment; we carry +4, hzla +5 / +3 / +2 | 140 | −1 (110), +1 (18), +2 (12) | +4 vs +5: in-game; hzla's +3/+2: doc |
