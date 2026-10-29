@@ -7,6 +7,7 @@ categories, html}). Stdlib only.
     W.pokemon()           {title: Mon} the 967 Pokédex pages
     W.mega_stones()       [Stone] the 48 Mega Stone pages (the Red Orb / Blue Orb page is one)
     W.tutors()            [Tutor] every tutor on the Move Tutors page
+    W.trainer_locations() [TrainerRow] the Trainer Locations (List) page's 309 named rows, in page order
     text(html)            an HTML cell as plain text
 """
 import html as _html
@@ -148,3 +149,40 @@ class Wiki:
         parts = re.split(r'<h[34][^>]*>(.*?)</h[34]>', raw)
         return [Tutor(text(parts[i]), parts[i + 1]) for i in range(1, len(parts) - 1, 2)
                 if _field(parts[i + 1], 'Location')]
+
+    def trainer_locations(self):
+        """The Trainer Locations (List) page: one TrainerRow per named row, in page order. A Pokemon / place cell
+        with rowspan covers the next row(s) too: those rows have no cells of their own (15 on the page), so they
+        get the place and `shared` = the first row's name, and no team (the cell lists the first row's team)."""
+        raw = self.page('Trainer Locations (List)')['html']
+        out = []
+        for head, body in re.findall(r'<h2[^>]*>(.*?)</h2>(.*?)(?=<h2|$)', raw, re.S):
+            spans = []      # [rows left, first row] for an open rowspan
+            for tr in re.findall(r'<tr[^>]*>(.*?)</tr>', body, re.S):
+                cells = re.findall(r'<td([^>]*)>(.*?)</td>', tr, re.S)
+                if not cells:
+                    continue
+                row = TrainerRow(text(head), cells)
+                if len(cells) == 1 and spans and spans[-1][0] > 0:
+                    spans[-1][0] -= 1
+                    row.shared = spans[-1][1].name
+                    row.place = spans[-1][1].place
+                for attrs, _ in cells[1:2]:
+                    n = re.search(r'rowspan="(\d+)"', attrs)
+                    if n:
+                        spans.append([int(n.group(1)) - 1, row])
+                out.append(row)
+        return out
+
+
+class TrainerRow:
+    """A Trainer Locations row: area (the page's h2), name, mons [(species, level)] as the wiki writes them, place
+    (the Location and Requirements cell), cells (how many cells the row has), shared (see trainer_locations)."""
+
+    def __init__(self, area, cells):
+        self.area, self.cells, self.shared = area, len(cells), None
+        self.name = text(cells[0][1])
+        team = cells[1][1] if len(cells) > 1 else ''
+        self.mons = [(text(n), int(lv)) for n, lv in
+                     re.findall(r'<strong>(.*?)</strong>.*?\(Lv\.\s*(\d+)\)', team, re.S)]
+        self.place = text(cells[2][1]) if len(cells) > 2 else ''
