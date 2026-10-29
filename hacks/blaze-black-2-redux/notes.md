@@ -362,7 +362,7 @@ meant "no flags" and switched off Iron Fist / Soundproof.
 **Level bug** (Challenge; hzla's model): a trainer Pokemon with `sl` has stats at `sl`; the damage formula uses the
 shown level `l`; Night Shade / Seismic Toss / Psywave use `sl` (hzla `handleFixedDamageMoves`); the player's Pokemon
 are unaffected. Engine: `tools/calc/README.md` → Level bug. Page: the foe card shows Lv `l` and a small grey `s<sl>`
-after it (tooltip "Stats at Lv 13 (Challenge level bug)"); edits keep the difference; nothing new is saved.
+after it (tooltip "Stats at Lv 13 (Challenge level bug)"); edits keep the difference, the stat level never below 1; nothing new is saved.
 
 **Oracle** (`node tools/calc/hzla_compare.mjs blaze-black-2-redux`): hzla Decomps at the reviewed pin `403c2669`
 (`oracle.sha`), `challengeMode` on, a shim giving its Challenge branch the trainer side of each case. 50 cases
