@@ -482,10 +482,76 @@ def wild(doc, dialect):
     raise NotImplementedError('drayano.wild: the locations unit writes it')
 
 
+def item_destination(text):
+    """A BB2R endpoint, with mode, quantity and Hidden separate from the displayed item name."""
+    text = text.strip()
+    stars = re.search(r'^\*+|\*+$', text)
+    mode = 'Challenge' if stars and len(stars[0]) == 2 else 'Easy/Normal' if stars else None
+    text = text.strip('*').strip()
+    hidden = bool(re.search(r'\(Hidden\)', text, re.I))
+    text = re.sub(r'\s*\(Hidden\)', '', text, flags=re.I)
+    quantity = re.search(r'\s+x(\d+)$', text, re.I)
+    text = re.sub(r'\s+x\d+$', '', text, flags=re.I)
+    text = re.sub(r'\(s\)$', '', text).strip().rstrip('.')
+    return {'item': text, 'quantity': int(quantity[1]) if quantity else 1, 'hidden': hidden, 'mode': mode}
+
+
 def items(doc, dialect):
-    """Item Changes: BB2R 'Old -> New' placement lines with hidden markers, quantities and difficulty stars, TM rows;
-    RP grouped categories -> [(area, old, new, note, line)]."""
-    raise NotImplementedError('drayano.items: the items unit writes it')
+    """BB2R Item Changes -> placements (including deletions), tms, marts, pickup, replacements, prices, uses, notes.
+    Keep source lines and raw endpoints. Stars qualify availability; choices remain one source statement.
+    RP's grouped layout is deliberately not inferred from the BB2R grammar."""
+    if dialect.lower() != 'bb2r':
+        raise NotImplementedError('drayano.items: unsupported dialect ' + dialect)
+    result = {name: [] for name in ('placements', 'tms', 'marts', 'pickup', 'replacements', 'prices', 'uses')}
+    result['notes'] = {}
+    section, area, mart = '', None, None
+    for line, raw in enumerate(doc.lines):
+        text = raw.strip()
+        if line and line + 1 < len(doc.lines) and re.fullmatch(r'=+', doc.lines[line - 1]) and re.fullmatch(r'=+', doc.lines[line + 1]) and text:
+            section, area = text, None
+            continue
+        heading = re.fullmatch(r'~+\s*(.*?)\s*~+', text)
+        if heading:
+            area = heading[1]
+            if section == 'Modified Marts':
+                mart = {'area': area, 'line': line, 'rows': []}
+                result['marts'].append(mart)
+            continue
+        if not text or re.fullmatch(r'=+', text):
+            continue
+        if section == 'Item Locations' and area:
+            if re.fullmatch(r'\*+(?:Challenge mode only\.|Easy and Normal mode only\.)', text):
+                continue
+            old, separator, new = text.partition('->')
+            endpoint = new.strip() if separator else text
+            record = item_destination(endpoint)
+            record.update(area=area, old=old.strip() if separator else None, raw=endpoint, line=line)
+            result['placements'].append(record)
+        elif section == 'Modified TMs + Locations':
+            match = re.fullmatch(r'TM(\d{2})\s{2,}(.+?)\s{2,}(.+)', text)
+            if match:
+                old, separator, new = match[2].partition('->')
+                result['tms'].append({'number': int(match[1]), 'old': old.strip(),
+                                      'move': new.strip() if separator else old.strip(),
+                                      'area': match[3].rstrip(' *'), 'changed': match[3].endswith('*'), 'line': line})
+        elif section == 'Modified Marts' and area:
+            mart['rows'].append(text)
+        elif section == 'Pickup Table Changes':
+            match = re.fullmatch(r'- All instances of (?:a |an )?(.+?) have been replaced with (?:a |an )?(.+)\.', text)
+            if match:
+                result['pickup'].append({'old': match[1], 'item': match[2], 'line': line})
+        elif section == 'Modified Items':
+            match = re.fullmatch(r'- (.+?)\s+\(\$(\d+) -> \$(\d+)\)', text)
+            if match:
+                result['prices'].append({'item': match[1], 'old': int(match[2]), 'price': int(match[3]), 'line': line})
+            elif text.startswith('- ') and ' -> ' in text:
+                old, new = text[2:].split(' -> ')
+                result['replacements'].append({'old': old, 'item': new, 'line': line})
+            elif text.startswith('- '):
+                result['uses'].append({'item': text[2:], 'line': line})
+        elif section in ('EVless Mode Information', 'Castelia Berry Guy, Battle Subway and PWT Prizes'):
+            result['notes'].setdefault(section, []).append(text)
+    return result
 
 
 def gifts(doc, dialect):
