@@ -17,7 +17,8 @@ CAPS = [('Cheren', 14), ('Roxie', 21), ('Brycen', 23), ('Burgh', 29), ('Lenora a
         ('Ghetsis', 72), ('Lance', 76), ('Elite Four et al', 78), ('Iris', 79)]
 ANCHORS = [433, 520, 548, 831, 1053, 1061, 1287, 1229, 1302, 1516, 1897, 1974, 2017, 2113,
            2382, 2626, 2835, 3081, 3368, 3484, 3502]
-STARTERS = {'Tepig': 'Fire', 'Oshawott': 'Water', 'Snivy': 'Grass'}
+# t.st is the player's starter by name (cfg.starter 'pick', the tracker's picker; template README → starter)
+STARTERS = {'Tepig': 'Tepig', 'Oshawott': 'Oshawott', 'Snivy': 'Snivy'}
 STATS = ('hp', 'at', 'df', 'sa', 'sd', 'sp')
 OPTIONAL_CAPS = {'ROXANNE': 13, 'BRAWLY': 20, 'WATTSON': 29, 'FLANNERY': 37, 'NORMAN': 44,
                  'JUAN': 54, 'WINONA': 63, 'TATE AND LIZA': 67}

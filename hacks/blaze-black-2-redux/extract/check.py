@@ -274,7 +274,7 @@ check(sum('split-cap exception:' in line for line in report_text.splitlines()) =
       'four split-cap exceptions: TM Protectors Melody / Nikola, Black / White Kyurem')
 check(sum('trainer recorded fix:' in line for line in report_text.splitlines()) == 5,
       'five recorded trainer fixes: Hugh Pansage lv, Banette Snatch, Noctowl, Jellicent, Klinklang')
-hugh = next(trainer for trainer in trainers if trainer['n'] == 'Hugh' and trainer.get('st') == 'Grass')
+hugh = next(trainer for trainer in trainers if trainer['n'] == 'Hugh' and trainer.get('st') == 'Snivy')
 check(max(mon['l'] for mon in hugh['p']) <= 14, 'Floccesy Hugh (Snivy branch) Pansage lv.19 typo repaired')
 check(all(trainer['tags'].count('Challenge only') <= 1 for trainer in trainers), 'Challenge only tagged once')
 wild = drayano.wild(doc('Wild Area Changes'), 'bb2r')
