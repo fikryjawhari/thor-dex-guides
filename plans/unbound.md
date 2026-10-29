@@ -164,6 +164,27 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
   Guard Spec., Dream Mist, Heavy-Duty Boots), and check.py holds every game item in IT to IT's spelling. Mega Stones
   as P.stone (Houndoominite, not the wiki's Houndoomite; Red Orb / Blue Orb), Z-Crystals as the game names them
   (Aloraichium Z, Ultranecrozium Z ...). The IT schema has no description field: the RomHackDex item pages are not used.
+- Unit 6 (trainers + caps, 2026-10-29, `worktree-unbound-tr4`): done; results in notes.md → Trainers / Caps,
+  checks in `check.py` → `trainer_checks`. 393 cards: 101 boss (439 sheet slots, per-starter rivals and partners),
+  292 ordinary (the wiki's 309 rows less 17 that are boss cards), 11 boxes (10 cap splits incl. Maxima 40, Post-game).
+  **Unit 7:** trainer order is `BOSSES` / `SECTIONS` in `extract/trainers.py` (wiki walkthrough parts 1-40); not done:
+  moving an ordinary trainer to the part that names it (Skier Charlie: parts 29-30) and Route 3's three Surf fishermen
+  (Lv 41-42, placed by cap in the Galavan split). Split points: Ivory 1 / Zeph 1 open the Alice split; Maxima's own
+  split at Tarmigan Mansion; Barbs and Big Mo share "Antisis City" (a second section after the Sewers); Reena, Sterling
+  & Portia before the League. Stop keys should carry the trainer keys (`trainer_keys.json`). `trainers_follow_walk`
+  will reorder boxes once WK has stops. **Unit 4:** `cfg.starter` is `pick`; the picker lists P entries with a
+  `Starter choice` encounter: add Gible / Beldum / Larvitar ones (named as P names them), or the rival cards can't
+  be filtered. **Unit 8:** IV source = hzla Expert (all 31s) on 379 slots; no IVs on 60 (58 sheet only + Route 9
+  Shadow Warrior pair), no EVs on the 4 partner Vaporeon (no speed shown, settled). Mega holders on the cards
+  (`a0` → `a`; random pre-Mega in `ao`); 10 Z-Crystal holders, all postgame (Ryuzoji / Kenlawa Mimikium Z, Title
+  Defense Zeph Decidium Z, Battleground Vega / Alice / Mel / Galavan / Big Mo / Tessy / Benjamin); `au` carries the Boss Wild boosts (Omniboost =
+  all +1); "Raid Shields" is text only. Field review list: Fog, Tailwind for Flying-types, Magnet Rise, Trick Room for
+  Weight, Permanent Heavy Rain, Vicious Sandstorm (11 records); Negative Energy, Shadowy Veil, Pixies, Rainbow Battle,
+  Inverse / Camomons / Sky / Dynamax battles are tags with no field record yet. Ordinary trainers have no moves / IVs /
+  nature (D2's assumed sets are the calc's job). **Dex (main chat):** the game's own Metal Bash (MOVE_STEELYHIT, 40 BP)
+  is merged into Behemoth Blade by `tools/cfru.py`'s alias; the rival's Beldum shows Behemoth Blade with an `x`.
+  **Scenarios:** `guide-update` can't run on Unbound yet: it crashes on `GID.ab` (Unbound has none: a one-line guard
+  in `tools/scenarios/guide-update.mjs`) and then needs WK splits (unit 7). `stable-keys` passes.
 - Main chat (2026-10-29): Focus Belt / Nine Lives are probably Sturdy clones (the wiki lists Sturdy for their
   holders); unit 8: the calc treats them as Sturdy, marked assumed in notes.md → Damage calc. Pikachu Surfing / Flying
   use EI's art (`sprites.json`, the user's call).

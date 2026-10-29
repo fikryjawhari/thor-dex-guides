@@ -1,14 +1,14 @@
 # Pokémon Unbound build notes
 
-Scaffolded from `emerald-imperium`. Built so far: the dex (unit 3 of `plans/unbound.md`); locations, items, trainers
+Scaffolded from `emerald-imperium`. Built so far: the dex (unit 3 of `plans/unbound.md`) and trainers (unit 6); locations, items
 and the walkthrough are stubs that `build.py` skips (empty tables). Feature switches and cfg.txt wording still need
 review by those units.
 
 ## Build
 
 `uv run python -I hacks/unbound/extract/build.py` (then `python assemble.py unbound`). Order: `dex.py`, the stub
-modules (skipped while they raise NotImplementedError), `finalise()`, then `gid.py` (GID indexes M as it ends up). With
-no trainers yet no `trainer_keys.json` is written: unit 6's first build seeds it.
+modules (skipped while they raise NotImplementedError), `finalise()`, then `gid.py` (GID indexes M as it ends up).
+`extract/trainer_keys.json` was seeded by the first build with trainers (unit 6); later builds only add entries.
 
 Modules: `common.py` (paths, the readers, the name lookups every module uses), `wiki.py` (the unboundwiki.com export:
 Pokédex pages, Mega Stones, the Move Tutors page), `dex.py`, `gid.py`, `check.py`. The CFRU family part is
@@ -233,6 +233,101 @@ Galarian Darmanitan Zen, Meloetta Pirouette, Shaymin Sky); `GID.sp` maps them to
 oracles show the base species (Unbound-Cloud keeps Shaymin Sky). Experience: Unbound's growth tables differ from
 pokefirered's formulas at a few levels (README → cfru → Derived values); `GID.gr` is right, the reader carries the
 table.
+### Trainers (unit 6, 2026-10-29)
+
+`extract/trainers.py` (TR), readers `bosssheet.py` (the Expert workbook) and `wiki.py` → `trainer_locations()`;
+`check.py` → `trainer_checks` reproduces every count below from the raw sources.
+
+**Boss teams: the Expert workbook** (`trainers-expert.xlsx`, D1). 439 numeric-level slots in 84 blocks (102 column
+groups): Gym Leaders 45, Pokemon League 30, Rival 51, Team Shadow Bosses 39, Team Light Of Ruin Bosses 42, Boss Wild
+Battles 18, Mega Trainers 63, Other Bosses 55, Title Defense 48, Battleground 48; 415 foe slots on 101 boss cards and
+24 partner slots. One card per block (`BOSSES`, in walkthrough order); a pair block (Vivian & Mathis, Marlon & Grunt,
+Ivory & Grunt, Rory & Chad, Swizer & Bullo, Sterling & Portia, Ryuzoji & Kenlawa) is split into one card each by its
+"[X's lead]" marks, with a shared `bt`. Rival: one card per player starter (`t.st` Gible / Beldum / Larvitar, Rival!B1 /
+I1 / P1 "PLAYER CHOSE ..."), Title Defense's three rivals likewise. Partners `pt` (Jax, Marlon, the rival); the rival's
+"Starter (mega)" (Team Shadow K126, Light of Ruin K66, Lv 64) is one partner team per starter: Gible → Mega Tyranitar,
+Beldum → Mega Garchomp, Larvitar → Mega Metagross, moves from the cell comments (K130 / K70, which differ: Garchomp
+Stomping Tantrum vs Earthquake), ability from the "Sand Stream // Tough Claws // Sand Force" cell, item the stone,
+nature and EVs from Rival 5's Mega ("check corresponding spread"); `x` says so.
+Normalised (each in `x` or the report): "Hidden Power <Type>" → Hidden Power + `hp`; "Heatt Wave" (Mega Trainers!E205,
+hzla too) → Heat Wave; "A / B" → `ao` (`a` = hzla's pick, else the first); "A → B" → `a0` / `a` (a random pre-Mega
+"Swarm / Sniper → Adaptability" keeps the whole text in `ao`); "[1st lead]" / "[2nd lead]" → `ld`; "(pre-burned)" →
+`pre` Burned; "(respawnable)" → `x`; Rival 2 Swinub "default moveset" → no moves, `x`. Boss Wild "Boosts" → `au`
+(Claydol Def +3 SpD +1, the beasts Spe +1, Ho-Oh / Lugia, Zekrom / Reshiram, Omniboost +1 = all +1); "Raid Shields"
+and "none?" → `x`. Route 9's "MOVES BLOCKED BY AURAS" sidebar → a trainer note. Block notes: the header's place text,
+"Minimum levels (the sheet)." on Minimum Level blocks, "unsure" for Almuth, Trainer Items, "NOT UPDATED TO 2.1.0"
+(Rory & Chad), and the Fight Gimmicks cell's comment (Fog, Negative Energy, Vicious Sandstorm, Shadowy Veil, Pixies,
+Rainbow Battle). Gimmicks are tags (Double Battle, Tag Battle with X, Inverse Battle, Camomons Battle, Sky Battle,
+Dynamax Battle, ...). All 130 cell comments are used (the build reports any that isn't).
+**Metal Bash** (Rival 1 / 2 Beldum, Rival!P5 / Q24): the game's own move (MOVE_STEELYHIT, 40 BP Steel in hzla); the
+dex merges the mirror's "Metal Bash" into Behemoth Blade (`tools/cfru.py` alias), so the card shows Behemoth Blade
+with `x` "the sheet says Metal Bash". Needs a dex fix (a Metal Bash M entry); then drop the `x`.
+
+**hzla** (`backups/unbound.js`, `formatted_sets["expert"]`, 383 sets): joined on (species id, label) with the sheet's
+export label (minus " - Expert" / "[Expert]"; `LABEL_FIX` for Almuth, Rival 3, the Boss Wild blocks). 381 slots
+joined (380 sets: the Route 9 Shadow Warrior pair shares one), 58 sheet only, 3 malformed hzla species keys (`[2nd` =
+Light of Ruin Vega's Honchkrow, `Supply and Demand`, `Rogue Electivire`). Sheet only: no hzla team 50 (rivals 1-2 9,
+the 24 partner slots, Alexa 5, Annie 6, Battleground Galavan 6); the malformed keys' teams 8 (Honchkrow 1, Electrode
+×3, Rogue Electivire 4). Joined slots take hzla's IVs (all 31) and its differences as `hn` ("hzla says ..."): 16
+slots differ, 15 shown: Champion Jax Salamence / Naganadel nature, Rival 3 Beldum Swinub EVs (hzla none), Rival 4
+Beldum Gabite and Rival 5 Gible / Beldum / Larvitar moves, Marlon 2 four levels (hzla 1 lower), Aklove 3 Meloetta /
+Manaphy ability, and two misattached hzla sets (Ravonna's Kangaskhan 4, Battleground Mel's Avalugg: every field).
+The 16th, Champion Jax Magnezone, is hzla's EV key `def`, read as Defense: no difference shown.
+
+**Unknown stats** (no speed on the card): no IVs on the 58 sheet-only slots and the Route 9 Shadow Warrior pair
+(hzla's set has no `ivs`): 60; no EVs on the four partner Vaporeon (Team Shadow Bosses!J126, Team Light Of Ruin
+Bosses!J46 / J66, Boss Wild Battles!F193: "252?" cells, raw in `x`). "?" items / natures are left out with the cell in
+`x`: J126 / J66 Wacan Berry? Hardy?, F193 Leftovers? Hardy?, E193 Toucannon Sharp Beak?, G193 Mamoswine Occa Berry?.
+
+**Levels.** A block's level row names its cap ("Level at Cap", "Level at Tessy Cap", ...). Where a mon's level cell
+has a later-cap comment ("Benjamin Cap: 61 Elite Four Cap: 75"), the card shows it as `x` ("Lv 61 at Benjamin cap ·
+75 at E4 cap"), and when every given level is cap + one offset and the sheet's level is the named cap + that offset,
+the level is relative (`r`, `t.cap` = the split's cap; the card's "Your level" box moves it): 76 mons (Lily, Vivian &
+Mathis, Yale, Ernesto, Timothy, Aloysius, Osean, Travon, Almuth, Alexa, James, Candice, Gruff, Rory & Chad, the two
+Scientists, Swizer & Bullo). Kept absolute (9, a trainer note says so): **Reena** (sheet and hzla Lv 59-61 "at E4 Cap",
+its notes 75-77 at the E4 cap: they disagree) and **Barbs** (minimum levels 57-59, above the Big Mo cap she's met at).
+Every trainer in a capped box has `t.cap` = its box's cap.
+
+**Ordinary trainers: the wiki's 309 rows** = 292 ordinary cards + 17 rows that are boss cards (the Mega Trainers,
+Ace Trainer Alexa, Expert Ryuzoji / Kenlawa). Species and levels as the wiki gives them (typos: Aurora → Aurorus,
+Scrappy → Scraggy, Wash Rotom → Rotom Wash; Youngster Ben's Nidoran ♂ from the workbook, Picnicker Nancy's Nidoran
+unknown, shown ♀ with `x`), no moves (tag "Moves unknown"), no IVs / EVs; the wiki's place text is the first note.
+The 15 name-only rows: 3 are boss cards (Vivian, Portia, Kenlawa), 12 get their team from the workbook (a pair block's
+"[X's lead]" split, or their own block: Bird Keeper Reed, Ace Trainer Roland); none is "team unknown".
+Ordinary-trainer workbook (`research-2026-10-29/ordinary-trainers.xlsx`): 287 of the 292 matched (area sheet + name;
+"Picknicker" = Picnicker), 50 held items placed, the note "Scales with your level, evolving as it does: minimum Lv
+N (workbook)." and Trainer Items; `x` where its species or minimum level differs from the wiki's. Pair blocks get a
+shared `bt` ("Fought together with ...") and Double Battle when the block says so. Wiki and workbook team sizes
+differ for Cyclist Gerald (1 / 2), Super Nerd Avery (3 / 4) and the Crystal Peak Science Society Scientist (3 / 2):
+the wiki's team stands. **Workbook-only blocks: 143** (not added): Dehara City 15, Thundercap Mountain 12, Tarmigan
+Mansion 12, Seaport City 11, Route 9 11, Fallshore City 11, Antisis City 11, Dresco Town 8, Blizzard City 7, Vivill
+Warehouse 6, Crystal Peak 5, Route 10 / Redwood Village / Polder Town / KBT Expressway / Crater Town 4 each, Shadow
+Base 3, one each in Valley Cave, Ruins of Void, Route 5, Route 17, Route 14, Frozen Heights, Frozen Forest, Frost
+Mountain, Cinder Volcano, Bellin Town, Antisis Sewers (the build report lists every block).
+
+**Placement.** Boxes are the cap splits (Caps below) then Post-game (Aklove 3, Krystal, Ravonna, Ryuzoji & Kenlawa,
+Annie, the Candice rematch, Title Defense, Battleground; Battle Frontier left out). Each split's places in walkthrough
+order (`SECTIONS`, the wiki walkthrough parts 1-40); bosses as `BOSSES` lists them, ordinary trainers before the
+bosses of their place, at the area's earliest visit whose cap covers the team's highest wiki level. Route 3's three
+fishermen (Lv 41-42, Surf) have no such visit: placed by cap in the Galavan split (report). Not done: moving a
+trainer to the walkthrough part that names it (unit 7; `trainers_follow_walk` orders boxes once WK has stops).
+
+**Field records** (`tools/trainer_fields.py`): 36 doubles (tags Double Battle / Tag Battle, partners), Arabella's
+Permanent Misty Terrain, 11 records to review: Fog (Mirskle ×2), Permanent Tailwind for Flying-types (Alice ×2),
+Permanent Magnet Rise (Galavan ×2), Trick Room for Weight (Big Mo ×2), Permanent Heavy Rain (Tessy ×2), Vicious
+Sandstorm (Moleman). Not evidence yet (no CANDIDATE word): Negative Energy, Shadowy Veil, Pixies, Rainbow Battle,
+Inverse / Camomons / Sky / Dynamax Battle, Marlon 2's "Rain": unit 8.
+
+**Trainer keys**: `extract/trainer_keys.json`, seeded by the first build with trainers (393 trainers, keys "g.s.t" as
+they were); rematches are distinct by place / team. Saved state uses them only.
+
+### Caps
+
+`trainer-index.xlsx` → LEVEL CAPS, column D (Difficult / Expert / Insane), re-read and asserted on every build:
+Mirskle 20 (D2), Vega 26 (D3), Alice 32 (D4), Mel 36 (D5), Successor Maxima 40 (D6, not a badge: its own split),
+Galavan 45 (D7), Big Mo 52 (D8), Tessy 57 (D9), Benjamin 61 (D10), Elite Four 75 (D11). `TR.caps` lists them; boxes
+`<Boss> Split [Cap N]` (Maxima Split [Cap 40]), `Elite Four Split [Cap 75]`, `Post-game` (no cap: no postgame cap row
+exists). The first box's note says once that boss levels are at the cap unless a trainer says "minimum levels".
 
 ## Local storage
 
@@ -265,12 +360,13 @@ Prefix `unbound`. Keep these keys once published.
 
 `uv run python -I hacks/unbound/extract/check.py`: dex counts (every mirror page placed, M and AB reproduced),
 integrity, the wiki differences (EXPECTED), every species against the game's table (types, stats, abilities), GID
-coverage. Locations: every rated wiki row in P.w (method, rate, time, floor), the sections reproduce the wiki's rates, every species resolves, one slot per area, the counts (`LOC_EXPECTED`). Units 5-7 add theirs. Calc stubs remain: calc is disabled.
-
-coverage. Items (`check_items`, ITEMS_EXPECTED): the wiki counts (67 Locations pages / 687 rows, 128 machines, 49
-stones, 34 Z-Crystals, 29 tutors, 140 shop rows, 83 missions, 34 NPCs), every Locations row's place a page title and
-its item placed there, the GID item names, the workbook's TM / Mega Stone / Z-Crystal sheets. Units 4, 6, 7 add theirs.
-Calc stubs remain: calc is disabled.
+coverage. Locations: every rated wiki row in P.w (method, rate, time, floor), the sections reproduce the wiki's
+rates, every species resolves, one slot per area, the counts (`LOC_EXPECTED`). Items (`check_items`,
+ITEMS_EXPECTED): the wiki counts (67 Locations pages / 687 rows, 128 machines, 49 stones, 34 Z-Crystals, 29
+tutors, 140 shop rows, 83 missions, 34 NPCs), every Locations row's place a page title and its item placed
+there, the GID item names, the workbook's TM / Mega Stone / Z-Crystal sheets. Trainers (`trainer_checks`: the
+sheet's slots per worksheet on the cards, the hzla join and its explained differences, the wiki's 309 rows,
+LEVEL CAPS, unknown-stat slots, relative levels). Unit 7 adds its own. Calc stubs remain: calc is disabled.
 Before enabling it, replace the null in tools/scenarios/calc-doubles.mjs EXPECTED with an audited count and add
 tools/trainer_fields_check.py DOUBLES_EXPECTED (DOUBLES_PARTNER_ONLY if needed). The engine stub is registered
 in tools/calc/package.json; review tools/calc/test.mjs field-profile fixtures. Never copy another hack's counts.
