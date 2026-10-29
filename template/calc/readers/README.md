@@ -71,7 +71,7 @@ start 0, length 0x3E0, CRC 0x3E2, mirror 0x25F00), all 24 boxes (block b+1: star
 start 0x18E00, length 0x534, CRC 0x19336, mirror 0x25F34), and trainer (block 27:
 start 0x19400, length 0xB0, CRC 0x194B2, mirror 0x25F36). Party count is u8 at +4 (0..6);
 six 220-byte records start at +8. Each box holds 30 consecutive 136-byte records. Trainer game byte
-at +0x1F is 0 Black / 1 White; the layout identifies the pair, not this byte.
+at +0x1F is 23 Black 2 / 22 White 2 (BW1: 21 Black / 20 White); check it as well as the layout.
 
 **Detection.** BW1 uses a different table: 0x23F00, length 0x8C, CRC 0x23F9A, backup at 0x24000,
 despite sharing party/box offsets. Its valid table gives `wrong` (BW1). Gen 4 size/magic footers
