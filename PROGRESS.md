@@ -95,13 +95,24 @@ branch), Totem battles from the game (real IVs; "Doc says" notes on 6 difference
 `hacks/<hack>/.src/evless/luma/titles/<title id>/` on the Thor and checks in game: no EVs gained after battles
 (the summary screen's EVs stay 0), a trainer's Pokémon stats, and a Totem fight still hard.
 
-**Unbound 2.1.1.1 (Expert): in progress** on `worktree-unbound` (`.claude/worktrees/unbound`). Plan, decisions and
-unit findings: `plans/unbound.md`. Merged on the branch: 1 sources, 2 scaffold, 3 dex + `tools/cfru.py` + GID, 4 locations,
-5 items, 7a mission spec (accepted: bordered card, auto-close). Running (Opus, Sol hit its limit): 6 trainers + caps
-(round 4, `worktree-unbound-tr4`), 8a CFRU save reader (`worktree-unbound-reader`). Next: merge 6, add the
-unobtainable-species prune to `build.py` (unit 4's 30 not-found list), then 7 walkthrough, 7b mission template build,
-8b calc profile + field review, 9 review + audit. Template changes so far on the branch: `cfg.mgm` (also on main),
-no speed for unknown IVs / EVs (`monCard`).
+**Unbound 2.1.1.1 (Expert): in progress** on `worktree-unbound` (`.claude/worktrees/unbound`; pushed to origin at
+`35b862e`). Plan, every decision and unit findings: `plans/unbound.md`; mission spec `plans/unbound-missions.md`.
+- Merged on the branch (2026-10-30, `052cb0d`): sources, scaffold, dex + `tools/cfru.py` + GID, locations, items,
+  trainers + caps (393 cards, keys seeded), walkthrough with 84 keyed missions, CFRU save reader (`cfru.js`, 37 saves
+  vs Unbound-Cloud / hzla, 0 unexplained), calc profile (8b: 82 exact hzla fixtures), prune (21 species). Template
+  changes so far: `cfg.mgm`, no speed for unknown IVs / EVs (`monCard`).
+- Running: **7b** mission template build (Opus, `worktree-unbound-missions-build`, from the spec; ends with the phone
+  preview link); **8c** calc gimmicks engine side (Sol, `worktree-unbound-gimmicks`: every gimmick per the user,
+  Brain Bond = Parental Bond, Face Shield = Gen 8 Dauntless Shield; writes the calc UI spec into Findings).
+- Next, in order: merge 7b (domcompare: no change on the other guides), merge 8c, then **the calc UI pass**
+  (template `calc.js`: new field kinds, D2 assumed-set markers, import shows boxes when the party is empty; one
+  template session), then unit 9: the guide in the Thor frame on the phone preview for the user, then the Haiku
+  medium sceptic audit (`gate.py check unbound` + scenarios on all six guides).
+- Waiting on the user: the official Unbound calc (https://unboundcalc.byethost3.com/?i=1) blocks automated fetching;
+  if the user saves it (browser "Save page as… complete") into `hacks/unbound/.src/unboundcalc/`, it becomes the
+  second calc oracle. A real `.srm` import on the Thor after the calc UI pass.
+- Old unit worktrees under `~/.t3/worktrees/thor-dex-guides/` (sources, dex, missions, locs*, it*, trainers, tr*,
+  walk, calc) are merged or superseded: delete them and their branches once the guide is merged into main.
 
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
