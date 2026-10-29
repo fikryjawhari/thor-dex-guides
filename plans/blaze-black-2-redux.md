@@ -72,3 +72,9 @@ Units 5-7 can run in parallel after 4 (different extract files; data.json is reb
 - **EVless:** player EVs 0; trainers already 0; wild held items removed except Latios, Latias, Giratina. No separate
   EVless doc. BP vendors / Castelia artist are Challenge-wide (back after the postgame Route 3 Suicune sighting).
 - No BW2 save fixture in hzla's repos: PKHeX-generated `.sav` only.
+- **Reader (unit 9a, merged `b1cf0f7`):** template/calc/readers/gen5.js, PKHeX oracle 805 Pokémon / 9,660 fields / 0
+  mismatches, 17 controls. Calc unit: wire `cfg.calc.save = "gen5"` + the import path; GID items fill once IT exists
+  (rebuild); Competitive / Neutralizing Gas have no known Gen 5 ability id in BB2R (an imported one should fall back
+  to the species' ability slot, flagged); Castform weather / typed Arceus forms map to their base P.
+- **Move Changes "Further Modifications":** all sound moves hit through Substitute (Gen 6+ rule) → calc profile.
+- **Dex open items for the user:** Pikachu, Stoutland, Unfezant: RomHackDex stats match neither doc line.
