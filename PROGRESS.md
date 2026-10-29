@@ -89,7 +89,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 - Real save import on the Thor (melonDS / DraStic `.sav`), like the other guides (Open → Damage calc → Real saves).
 - `worktree-bb2r-calc` and its T3 worktree (`~/.t3/worktrees/thor-dex-guides/t3-6ab62dd5`) are merged: delete them.
 
-**EV-less 3DS (branch `worktree-ctr-evless`, 2026-10-29):** `tools/ctr_evless.py` + `tools/usum_statics.py`;
+**EV-less 3DS (merged into `main` 2026-10-29, not pushed):** `tools/ctr_evless.py` + `tools/usum_statics.py`;
 Photonic Sun's trainers from the EV-less copy, MGM switch hidden (`cfg.mgm`, the same template line as the Unbound
 branch), Totem battles from the game (real IVs; "Doc says" notes on 6 differences). The user installs
 `hacks/<hack>/.src/evless/luma/titles/<title id>/` on the Thor and checks in game: no EVs gained after battles
