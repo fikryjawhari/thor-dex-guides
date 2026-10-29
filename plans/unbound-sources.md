@@ -62,7 +62,7 @@ Category membership is not mutually exclusive: one page belongs to Items and Meg
 | walkthrough | 41 |
 | z-crystals | 1 |
 
-Wild-table heading test: **60 location pages** have a Wild Pokémon heading; this counts pages, not floors, encounter methods or table rows. Raid URL family: 33 pages (includes parent listing); walkthrough: 41 pages (parent + Parts 1-40); gyms: 9 pages (parent + 8 gyms). Do not call these 41 walkthrough parts or 33 individual dens without subtracting the index.
+Wild-table check: **60 location pages** have a Wild Pokémon heading and a table in its section; **54 contain numeric-rate rows**. Other tables can document gifts, trades and statics, so a Wild Pokémon heading is not proof of random encounters. This counts pages, not floors, methods or slots; the earlier 39-table estimate is not reproduced. Raid URL family: 33 pages (parent + 32 individual dens); walkthrough: 41 pages (parent + Parts 1-40); gyms: 9 pages (parent + 8 gyms). Do not call these 41 walkthrough parts or 33 individual dens without subtracting the index.
 
 [Trainer Locations List](https://unboundwiki.com/extras/all-trainers/): **309 named rows**, **294 with roster/location cells**, **15 name-only rows**. Count all named rows for the catalogue, but do not invent a party for the name-only entries. Rows include Mega Trainers and rematches, so this is not a clean set of ordinary-only trainers. Pokémon level tokens: 717 (`Lv.` occurrences in roster HTML). The wiki has obvious naming/type slips (Scrappy for Scraggy, Aurora for Aurorus, Inkay labelled Poison/Psychic); do not propagate types from trainer prose.
 
@@ -894,9 +894,10 @@ Workbook re-fetch: use the exact Google sheet IDs above with `/export?format=xls
 ## 6. Open questions / downstream acceptance
 
 
-- User decision: may the ordinary-trainer unit incorporate known held items and the larger evolution-line catalogue (418 blocks), or stay strictly within D2's 310 wiki catalogue? No change is applied by this audit.
+- User decision: may the ordinary-trainer unit incorporate known held items and the larger evolution-line catalogue (418 blocks), or stay strictly within D2's wiki catalogue? The settled target says 310, but the mirror has 309 named rows (294 complete, 15 name-only); reconcile this count before implementing. No change is applied by this audit.
 - Retain Maxima cap 40 as the intermediate four-badge boundary; do not invent a badge. User review needed only if the later UI insists on badge-only splits.
 - Wiki stat cross-check cannot be completed because wiki stats are absent; use the explicit Cloud sample and keep the source limitation visible. The 41 ability-list differences need per-species treatment under the settled RHD authority, not a silent wholesale wiki merge.
 - Unit 3 must resolve every RHD form identity by slug/Cloud define and handle evolution-learned moves; scratch zero substitution is not an acceptable production fix. Wiki umbrella pages do not enumerate every form.
 - Unit 8 still needs independent save oracle assertions, expected-box/party comparisons and Thor .srm import. 2.1.x fixture signature does not establish exact point release or current difficulty without decoding the difficulty var.
 - No browser checks, gates, builds, pushes or merges were run/requested. Update watcher exit 1 is known upstream drift, not failure: only hzla gen789.js and vanilla/gen789.js changed; pins remain unchanged.
+- Local validation: `uv run python -I .tmp/unbound-sources/validate.py` checks all 15 copied hzla byte hashes and canonical LF Git blobs, all 37 save hashes against the pinned Cloud originals, documented join counts, unchanged Decisions/Units sections and the five-file ownership limit. Windows CRLF checkout bytes differ from raw LF blob bytes: normalise text only for blob verification, never rewrite shared inputs. `git diff --check` is also run; no gate/browser sweep is applicable.

@@ -1,16 +1,22 @@
 # Unbound docs
 
-Fetched 2026-10-18. Dex, locations and items from RomHackDex; boss teams from three community sheets the user supplied;
-missions, walkthrough and extras from [unboundwiki.com](https://unboundwiki.com/).
+Fetched 2026-10-18/19 (original mirrors and boss sheets); references, cap/regular-trainer/location workbooks
+and save fixtures added 2026-10-29. Target: **Unbound 2.1.1.1, Expert**. Original shared inputs were not modified.
+Full source inventory, conflicts, gap searches and downstream map: `plans/unbound-sources.md`.
 
 | Path | Contents |
 | --- | --- |
-| `romhackdex/pokedex/` | 1,269 Pokémon pages: stats, abilities, evolutions, level-up and TM moves, wild locations |
+| `romhackdex/pokedex/` | 1,268 actual Pokémon/form HTML files: stats, abilities, evolutions, learnsets, wild locations; h1 names are not unique form keys |
 | `romhackdex/locations/`, `romhackdex/items/` | 94 locations, 352 items |
-| `romhackdex/moves/index.html`, `abilities/index.html` | Move and ability (with descriptions) tables |
+| `romhackdex/moves/index.html`, `abilities/index.html` | Move table and 258 named abilities with descriptions |
 | `romhackdex/moves.json` | **Use this for moves**: all 993 with type, category, power, accuracy, PP, priority and description (`tools/rhd_moves.py`) |
 | `trainers-difficult.xlsx`, `trainers-expert.xlsx`, `trainers-insane.xlsx` | Gym leaders, league, rival, Shadow and Light of Ruin bosses, boss wild battles, mega trainers, Title Defense, Battleground, with EV spreads |
-| `unboundwiki/unboundwiki.json` | 1,545 wiki entries (title, link, category, HTML): 967 Pokédex, 84 missions, 40-part walkthrough, 104 locations, 129 TMs and HMs, 90 items, 49 Mega Stones, plus pages for raid dens, tutors, Z-crystals, mechanics |
+| `unboundwiki/unboundwiki.json` | 1,545 records; 968 individual Pokémon pages (967 categorised + Snorunt), 84 mission-category pages, walkthrough parent + 40 parts, 104 Locations-category pages versus 67 individual location URLs, 129 TMs/HMs, 90 Items-category memberships, 49 Mega Stones-category memberships; category counts are not disjoint |
+| `research-2026-10-29/trainer-index.xlsx` | Public 2.1.1.1 document hub; LEVEL CAPS!D2:D11 gives Expert caps 20/26/32/36/40/45/52/57/61/75 (includes non-badge Maxima) |
+| `research-2026-10-29/ordinary-trainers.xlsx` | 49 location sheets; 418 trainer blocks, 1,003 evolution-name cells, 73 nonempty held-item cells; no moves/abilities |
+| `research-2026-10-29/location-guide.xlsx` | Public 2.1.1.1 location guide: encounter methods, gifts/statics, legends, trades, swarms, wild held items, TMs, Mega Stones, Z-crystals; no wild-level field |
+| `research-2026-10-29/dpe/`, `cfru/` | Supplemental author source files; immutable commit URLs and per-file SHA-256 in the audit; not verified release-matched |
+| `repos/hzla/`, `repos/Unbound-Cloud/`, `saves/Unbound-Cloud/` | Pinned reference files / full shallow Cloud clone / 37 copied 2.1-signature save candidates; manifests and licence limits below |
 
 ## Re-fetch
 
@@ -35,9 +41,27 @@ mkdir -p $D/unboundwiki
 python -I tools/wp_dump.py https://unboundwiki.com $D/unboundwiki/unboundwiki.json pages wiki
 ```
 
-About 200 MB. The wiki's Pokédex overlaps RomHackDex; use whichever reads cleaner at build time. Unbound is the only
-backlog hack with a quest system (the wiki's Missions category). Two RomHackDex pages 404 on the site itself
-(Minior Red Meteor, Pumpkaboo Average).
+Authority (settled in `plans/unbound.md`): RomHackDex for dex data; the Expert workbook for boss teams,
+hzla for IVs and discrepancies; wiki for locations/items/walkthrough/missions/catalogue trainers. Do not silently
+replace these with a newly discovered source. The two missing RHD form pages have Cloud/DPE alternatives:
+Minior meteor `SPECIES_MINIOR_SHIELD` / ID 991; Pumpkaboo average `SPECIES_PUMPKABOO_M` / ID 855.
+The bare Pumpkaboo entry is small, not average. Exact stats and learnset pointers are in the audit.
+
+New workbook re-fetch (always into a new folder, never over existing shared inputs):
+
+```powershell
+curl.exe -fL 'https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/export?format=xlsx' -o <new-folder>/trainer-index.xlsx
+curl.exe -fL 'https://docs.google.com/spreadsheets/d/1s7f-S_d9WNK6vUKUJcTr7xX_dsbJ8eSebvYFSNPo9FU/export?format=xlsx' -o <new-folder>/ordinary-trainers.xlsx
+curl.exe -fL 'https://docs.google.com/spreadsheets/d/1PyGm-yrit5Ow6cns2tBA9VEMwLVMzn3YhDRipABjLUM/export?format=xlsx' -o <new-folder>/location-guide.xlsx
+```
+
+SHA-256: trainer-index `413e522356a78cc27131e98ac92ab5802132173c5f41c724d0bad2069ac60dca`;
+ordinary-trainers `21b1d4858b6ba261d523dfbf846e9322baf9edf373d68b6b7ba6f9f8ddd74fca`;
+location-guide `cc268f58ac91288a6841d4e9897177aadc04d723ca0f976f00b464f4fbb8c218`.
+Google can regenerate workbook containers: compare cells too, not only byte hashes. The linked General Guide
+returned HTTP 401 and was not fetched. Public author source commits: DPE Unbound
+`fe058e0e3ac23cf968cf950de43332135bc1549d`; generic CFRU master
+`b637a27898b14e25dd24d0f69a3e302f0069deb8`. See audit section 5 for files, hashes and immutable URLs.
 
 
 ## Pinned hzla reference (2026-10-29)
@@ -88,6 +112,11 @@ not a root-level `save_constants/`. `backups/unbound.js` requires the globals fr
 `js/unbound_adapter.js` plus `pokedex`; `tools/calcbackup.js` alone fails. For teams-only research,
 load the adapter and evaluate the backup in an isolated VM with `pokedex: {}`; this deliberately
 does NOT produce a complete dex. Use `unboundModes.expert`, not the default Insane `formatted_sets`.
+
+Windows scratch files have CRLF checkout endings. The table pins canonical Git blobs (LF); this repo's
+`git hash-object <file>` applies its text normalisation. A raw byte-SHA1 is not the same check.
+Local byte SHA-256 values are retained in `.tmp/unbound-sources/hzla-manifest.json`; validation checked
+both the unchanged copied bytes and all 15 canonical blob IDs without rewriting shared inputs.
 
 ## Pinned Unbound-Cloud reference (2026-10-29)
 
@@ -150,14 +179,23 @@ The older snapshot can be recovered with the recorded commit even after `main` a
 
 ## Files
 
-TODO: document files.
+The inventory table above covers input groups. `plans/unbound-sources.md` enumerates worksheet dimensions,
+trainer/Pokémon counts, category versus URL counts, every compared field discrepancy, form-name collisions,
+and all 37 oracle candidate paths with immutable URLs, hashes and hzla reader results.
 
 
 ## Game files
 
-TODO: document game files.
+No ROM or private game dump fetched. Cloud test saves are local, git-ignored research fixtures; no save licence
+was found. 32 of 37 2.1-signature candidates parse in hzla; 5 reject as randomised/invalid. The signature proves
+2.1.x compatibility only, not exact 2.1.1.1 provenance. Actual RetroArch .srm import on the Thor remains untested.
 
 
 ## Source checks
 
-TODO: document source checks.
+2026-10-29: reproduced file/table counts; compared all 439 Expert numeric-level sheet slots against 383 hzla sets
+(381 matched slots, 380 distinct sets, 16 differing slots, 58 unmatched sheet slots, 3 malformed hzla species keys).
+Compared 968 wiki Pokémon pages by explicit form slugs (0 type disagreements, 41 displayed ability-list differences;
+wiki stats absent). All Cloud 2.1 species/move/item/BaseStats entries match hzla; AbilityNames has 7 extra tokens.
+Caps and supplemental sources are pinned above. Checks and caveats: audit sections 1-6. No browser/gate/build checks
+are relevant to this research-only unit. No source baseline was accepted and no shared input was overwritten.
