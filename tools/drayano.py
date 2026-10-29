@@ -545,9 +545,65 @@ def trainers(doc, dialect):
 
 
 def wild(doc, dialect):
-    """Wild Area Changes (BB2R: positional two-column tables, seasons, shaking spots, grottos) / WildPokemon (RP: comma
-    lists, Morning/Day/Night, Radar, honey, three rods) -> [(area, method, species, levels, rate, line)]."""
-    raise NotImplementedError('drayano.wild: the locations unit writes it')
+    """BB2R -> {areas, grottos, events}. Areas have printed names and method groups; rows keep species, levels,
+    rate, note and source line. Grottos keep rarity instead of percentages; --% events are not wild slots.
+    RP's comma lists / time-of-day format awaits its locations unit."""
+    if dialect != 'bb2r':
+        raise NotImplementedError('wild dialect: ' + dialect)
+    areas, grottos, events = [], [], []
+    area, grotto, rarity = None, None, None
+    groups = {}
+    in_grottos = False
+    slot = re.compile(r'^(.+?)\s+(?:Lv\.\s*)?(\d+(?:-\d+)?)\s*(.*?)\s*(\d+|--)%$')
+    for line, text in enumerate(doc.lines):
+        if text.strip() == 'Hidden Grotto Guide':
+            in_grottos = True
+            continue
+        heading = re.fullmatch(r'~+\s*(.*?)\s*~+', text.strip())
+        if heading:
+            groups = {}
+            if in_grottos:
+                grotto = {'name': heading[1], 'line': line, 'rows': []}
+                grottos.append(grotto)
+                rarity = None
+            else:
+                area = {'name': heading[1], 'line': line, 'groups': []}
+                areas.append(area)
+            continue
+        if in_grottos:
+            if not grotto:
+                continue
+            category = re.fullmatch(r'(Guaranteed|Common|Uncommon|Rare) Encounters:', text.strip())
+            if category:
+                rarity = category[1]
+            elif rarity == 'Guaranteed' and 'Lv. 30 Stantler' in text:
+                grotto['rows'].append({'species': 'Stantler', 'levels': '30', 'rarity': rarity, 'line': line})
+            elif rarity in ('Common', 'Uncommon', 'Rare') and re.fullmatch(r'\s*- .+', text):
+                grotto['rows'].append({'species': text.strip()[2:].strip(), 'levels': '', 'rarity': rarity, 'line': line})
+            continue
+        if not area:
+            continue
+        cells = [(match.start(), match.group().strip()) for match in re.finditer(r'\S.*?(?=\s{3,}|$)', text)]
+        for column, cell in cells:
+            side = int(column >= 39)
+            match = slot.fullmatch(cell)
+            if match:
+                species, levels, note, rate = match.groups()
+                row = {'species': species.rstrip('*').strip(), 'levels': levels, 'note': note.strip(), 'line': line}
+                if rate == '--':
+                    events.append(dict(row, area=area['name'], method=groups.get(side, {}).get('method', 'Static')))
+                else:
+                    if side not in groups:
+                        raise ValueError('%s:%d: slot without method: %s' % (doc.path, line, cell))
+                    groups[side]['rows'].append(dict(row, rate=int(rate)))
+                continue
+            if re.match(r'^(Grass|Surf|Fish|Cave|Sand|Sewer|Bridge|Floor|Rooms|Swamps|Roof|Special Event|Hidden Grotto)[,: ]', cell):
+                headings = re.findall(r'[^:]+:', cell) or [cell]
+                for offset, title in enumerate(headings):
+                    group = {'method': title.strip().rstrip(':'), 'line': line, 'rows': []}
+                    groups[side + offset] = group
+                    area['groups'].append(group)
+    return {'areas': areas, 'grottos': grottos, 'events': events}
 
 
 def items(doc, dialect):
@@ -558,9 +614,38 @@ def items(doc, dialect):
 
 def gifts(doc, dialect):
     """Gift Pokemon (BB2R) / SpecialEvents (RP): blocks of 'Location:' / 'Level:' fields, choices, the ranch egg pool."""
-    raise NotImplementedError('drayano.gifts: the locations unit writes it')
+    if dialect != 'bb2r':
+        raise NotImplementedError('gifts dialect: ' + dialect)
+    return _encounter_blocks(doc)
 
 
 def trades(doc, dialect):
     """Trade Changes: named trades with Location and trait bullets (BB2R prose; RP slash IVs and natures)."""
-    raise NotImplementedError('drayano.trades: the locations unit writes it')
+    if dialect != 'bb2r':
+        raise NotImplementedError('trades dialect: ' + dialect)
+    blocks = _encounter_blocks(doc)
+    for block in blocks:
+        match = re.search(r'looking for (?:an? )?(.+?) in exchange for (.+?),', block['text'])
+        if not match:
+            raise ValueError('trade pair missing: ' + block['name'])
+        block['requested'], block['species'] = match.groups()
+    return blocks
+
+
+def _encounter_blocks(doc):
+    out, current, kind = [], None, 'Gift'
+    for line, text in enumerate(doc.lines):
+        if text == 'Special Encounters':
+            kind = 'Static'
+            current = None
+            continue
+        if line + 1 < len(doc.lines) and doc.lines[line + 1] == '---' and text.strip():
+            current = {'name': text.strip().rstrip('.'), 'line': line, 'kind': kind, 'location': '', 'levels': '', 'text': ''}
+            out.append(current)
+        elif current and text.startswith('Location:'):
+            current['location'] = text.split(':', 1)[1].strip().rstrip('.')
+        elif current and text.startswith('Level:'):
+            current['levels'] = text.split(':', 1)[1].strip()
+        elif current and text.strip() and not re.fullmatch(r'=+', text):
+            current['text'] += (' ' if current['text'] else '') + text.strip()
+    return out

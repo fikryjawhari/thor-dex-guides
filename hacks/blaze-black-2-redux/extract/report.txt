@@ -40,14 +40,164 @@ evolutions: 325 edges; doc-changed 92; from Pokemon Changes prose 3: snorunt -> 
 type chart vs the docs' statements: agrees
 move descriptions: none (the mirror has none for this hack; MV.d is empty)
 doc fix: Shadow Claw: "PP 70 -> 90" read as Power 70 -> 90 (Move Changes:485)
-not built yet: locs (TODO: implement blaze-black-2-redux locs extraction)
+Locations: source areas 81; tracker areas 104; sections 352; wild rate rows 2057; grotto sections 20 / entries 206
+Locations: gifts 13 (ranch egg 17 species); gift-doc statics 4; legendaries 47; trades 3 doc + 3 vanilla + 24 phone
+  Tracker area 0: Starter
+  Tracker area 1: Aspertia City
+  Tracker area 2: Route 19
+  Tracker area 3: Route 20
+  Tracker area 4: Floccesy Ranch
+  Tracker area 5: Virbank City
+  Tracker area 6: Virbank Complex - Outside
+  Tracker area 7: Virbank Complex - Inside
+  Tracker area 8: Castelia City
+  Tracker area 9: Castelia Gardens
+  Tracker area 10: Castelia Sewers
+  Tracker area 11: Relic Passage - Castelia
+  Tracker area 12: Route 4
+  Tracker area 13: Desert Resort
+  Tracker area 14: Relic Castle - Upper Floors
+  Tracker area 15: Route 5
+  Tracker area 16: Route 16
+  Tracker area 17: Lostlorn Forest
+  Tracker area 18: Driftveil Drawbridge, Charizard Bridge
+  Tracker area 19: Route 6
+  Tracker area 20: Clay Tunnel - All Areas
+  Tracker area 21: Relic Passage - Driftveil Side
+  Tracker area 22: Relic Passage - Center (Main) Room
+  Tracker area 23: Relic Castle - Lower Floors - Room Left of Pots
+  Tracker area 24: Relic Castle - Lower Floors - Room Right of Pots
+  Tracker area 25: Relic Castle - Lower Floors - Furthest Room Right
+  Tracker area 26: Relic Castle - Lower Floors - Furthest Room Left
+  Tracker area 27: Relic Castle - Lower Floors - Room with Pots
+  Tracker area 28: Relic Castle - Lower Floors - Volcarona Room
+  Tracker area 29: Mistralton Cave
+  Tracker area 30: Chargestone Cave
+  Tracker area 31: Route 7
+  Tracker area 32: Celestial Tower - 2F
+  Tracker area 33: Celestial Tower - 3F
+  Tracker area 34: Celestial Tower - 4F
+  Tracker area 35: Celestial Tower - Roof
+  Tracker area 36: Reversal Mountain - Outside
+  Tracker area 37: Reversal Mountain - Inside
+  Tracker area 38: Strange House
+  Tracker area 39: Undella Town
+  Tracker area 40: Undella Bay
+  Tracker area 41: Route 14
+  Tracker area 42: Abundant Shrine
+  Tracker area 43: Seaside Cave - Upper Floor
+  Tracker area 44: Seaside Cave - Lower Floor
+  Tracker area 45: Route 13
+  Tracker area 46: Route 12
+  Tracker area 47: Village Bridge
+  Tracker area 48: Route 11
+  Tracker area 49: Route 9
+  Tracker area 50: Route 21
+  Tracker area 51: Humilau City
+  Tracker area 52: Route 22
+  Tracker area 53: Giants Chasm - Route 13
+  Tracker area 54: Giants Chasm - Entrance Cave
+  Tracker area 55: Giants Chasm - Plasma Airship Area
+  Tracker area 56: Giants Chasm - Kyurems Cave
+  Tracker area 57: Route 23
+  Tracker area 58: Victory Road - Ruined Area
+  Tracker area 59: Victory Road - Lower Mountainside
+  Tracker area 60: Victory Road - Forest
+  Tracker area 61: Victory Road - Connecting Caves I - Main
+  Tracker area 62: Victory Road - Connecting Caves I - Dark
+  Tracker area 63: Victory Road - Upper Mountainside
+  Tracker area 64: Victory Road - Connecting Caves II - Dragons
+  Tracker area 65: Victory Road - Connecting Caves II - Top
+  Tracker area 66: Victory Road - N's Castle, Entrance
+  Tracker area 67: Route 8, Moor of Icirrus - All Seasons
+  Tracker area 68: Icirrus City - All Seasons
+  Tracker area 69: Dragonspiral Tower
+  Tracker area 70: Dragonspiral Tower - Indoors - First Room
+  Tracker area 71: Dragonspiral Tower - Indoors - Second Room
+  Tracker area 72: Twist Mountain - All Seasons
+  Tracker area 73: Twist Mountain - Ice Room
+  Tracker area 74: Underground Ruins - All Areas
+  Tracker area 75: Underground Ruins - Regi Rooms
+  Tracker area 76: Marvellous Bridge
+  Tracker area 77: Route 15
+  Tracker area 78: Pinwheel Forest - Inside
+  Tracker area 79: Pinwheel Forest - Outside
+  Tracker area 80: Route 3
+  Tracker area 81: Wellspring Cave - Both Floors
+  Tracker area 82: Striation City
+  Tracker area 83: Dreamyard - All Areas - Surface
+  Tracker area 84: Dreamyard - All Areas - Basement
+  Tracker area 85: Route 2
+  Tracker area 86: Route 1
+  Tracker area 87: Route 17
+  Tracker area 88: Route 18
+  Tracker area 89: P2 Laboratory
+  Tracker area 90: The Nature Preserve
+  Tracker area 91: Floccesy Town
+  Tracker area 92: Anville Town
+  Tracker area 93: Driftveil City
+  Tracker area 94: Faraway Island
+  Tracker area 95: Entralink
+  Tracker area 96: Abyssal Ruins
+  Tracker area 97: Nacrene City
+  Tracker area 98: Unity Tower
+  Tracker area 99: Liberty Garden
+  Tracker area 100: Dragonspiral Tower - Indoors - Roof
+  Tracker area 101: Pledge Grove
+  Tracker area 102: Accumula Town
+  Tracker area 103: Nimbasa City
+Locations mirror: {'areas': 81, 'match': 1296, 'doc_only': 761, 'mirror_only': 0, 'disagreements': []}
+Doc rate total: Route 20 - Spring / Surf, Normal = 105% (line 115), kept as printed
+Doc rate total: Route 20 - Spring / Surf, Dark Spot = 95% (line 115), kept as printed
+Doc rate total: Route 20 - Summer / Surf, Normal = 105% (line 154), kept as printed
+Doc rate total: Route 20 - Summer / Surf, Dark Spot = 95% (line 154), kept as printed
+Doc rate total: Route 20 - Autumn / Surf, Normal = 105% (line 193), kept as printed
+Doc rate total: Route 20 - Autumn / Surf, Dark Spot = 95% (line 193), kept as printed
+Doc rate total: Route 20 - Winter / Grass, Shaking Spots = 130% (line 225), kept as printed
+Doc rate total: Route 20 - Winter / Surf, Normal = 105% (line 233), kept as printed
+Doc rate total: Route 20 - Winter / Surf, Dark Spot = 95% (line 233), kept as printed
+Doc rate total: Virbank City / Surf, Normal = 130% (line 288), kept as printed
+Doc rate total: Virbank City / Surf, Dark Spot = 130% (line 288), kept as printed
+Doc rate total: Relic Passage - Center (Main) Room / Surf, Normal = 110% (line 751), kept as printed
+Doc rate total: Relic Passage - Center (Main) Room / Surf, Dark Spot = 90% (line 751), kept as printed
+Doc rate total: Route 14 / Surf, Normal = 110% (line 1118), kept as printed
+Doc rate total: Route 14 / Surf, Dark Spot = 90% (line 1118), kept as printed
+Doc rate total: Abundant Shrine / Fish, Normal = 110% (line 1164), kept as printed
+Doc rate total: Abundant Shrine / Fish, Dark Spot = 90% (line 1164), kept as printed
+Doc rate total: Seaside Cave - Upper Floor / Fish, Normal = 105% (line 1195), kept as printed
+Doc rate total: Seaside Cave - Upper Floor / Fish, Dark Spot = 95% (line 1195), kept as printed
+Doc rate total: Route 13 / Fish, Normal = 105% (line 1255), kept as printed
+Doc rate total: Route 13 / Fish, Dark Spot = 95% (line 1255), kept as printed
+Doc rate total: Village Bridge / Grass, Doubles = 110% (line 1298), kept as printed
+Doc rate total: Village Bridge / Surf, Normal = 105% (line 1318), kept as printed
+Doc rate total: Village Bridge / Surf, Dark Spot = 95% (line 1318), kept as printed
+Doc rate total: Humilau City / Fish, Normal, Humilau City = 110% (line 1421), kept as printed
+Doc rate total: Humilau City / Fish, Dark Spot, Humilau City = 90% (line 1421), kept as printed
+Doc rate total: Route 22 / Fish, Normal = 110% (line 1462), kept as printed
+Doc rate total: Route 22 / Fish, Dark Spot = 90% (line 1462), kept as printed
+Doc rate total: Giants Chasm - Entrance Cave / Surf, Normal = 110% (line 1513), kept as printed
+Doc rate total: Giants Chasm - Entrance Cave / Fish, Dark Spot = 95% (line 1519), kept as printed
+Doc rate total: Giants Chasm - Kyurems Cave / Surf, Normal = 110% (line 1568), kept as printed
+Doc rate total: Giants Chasm - Kyurems Cave / Fish, Dark Spot = 95% (line 1574), kept as printed
+Doc rate total: Victory Road - Ruined Area / Surf, Normal = 110% (line 1633), kept as printed
+Doc rate total: Victory Road - Ruined Area / Surf, Dark Spot = 90% (line 1633), kept as printed
+Doc rate total: Victory Road - Ruined Area / Fish, Dark Spot = 95% (line 1639), kept as printed
+Doc rate total: Victory Road - Lower Mountainside / Grass, Doubles = 95% (line 1650), kept as printed
+Doc rate total: Route 8, Moor of Icirrus - All Seasons / Surf, Normal = 95% (line 1843), kept as printed
+Doc rate total: Icirrus City - All Seasons / Surf, Dark Spot = 105% (line 1876), kept as printed
+Doc rate total: Dragonspiral Tower - Spring/Summer/Autumn / Surf, Dark Spot = 96% (line 1916), kept as printed
+Doc rate total: Dragonspiral Tower - Winter / Grass, Shaking Spots = 96% (line 1948), kept as printed
+Doc rate total: Route 1 / Surf, Dark Spot = 96% (line 2365), kept as printed
+Doc rate total: Route 17 / Fish, Normal = 110% (line 2388), kept as printed
+Doc rate total: Route 17 / Fish, Dark Spot = 90% (line 2388), kept as printed
+Doc rate total: Route 18 / Fish, Normal = 105% (line 2425), kept as printed
+Doc rate total: P2 Laboratory / Fish, Normal = 105% (line 2466), kept as printed
+Doc rate total: The Nature Preserve / Fish, Normal = 110% (line 2505), kept as printed
+Doc rate total: The Nature Preserve / Fish, Dark Spot = 90% (line 2505), kept as printed
   hzla disagreement: doc line 253, Hiker Jerome, wooper, level: doc 14; hzla says 13 (trainer 206)
   hzla disagreement: doc line 253, Hiker Jerome, wooper, stat level: doc 13; hzla says 12 (trainer 206)
   hzla disagreement: doc line 302, Ranger♀ Naoko - {Sitrus Berry}, stoutland, level: doc 41; hzla says 40 (trainer 387)
   hzla disagreement: doc line 302, Ranger♀ Naoko - {Sitrus Berry}, stoutland, stat level: doc 40; hzla says 39 (trainer 387)
-  hzla disagreement: doc line 325, HUGH, pansage, level: doc 20; hzla says 10 (trainer 166)
-  hzla disagreement: doc line 325, HUGH, pansage, stat level: doc 19; hzla says 9 (trainer 166)
-  split-cap exception: doc line 311, Hugh, levels [9, 11, 20] > split cap 14 (Cheren Split [Cap 14]); doc levels retained
   hzla disagreement: doc line 359, School Kid Seymour, pansage, level: doc 12; hzla says 11 (trainer 747)
   hzla disagreement: doc line 359, School Kid Seymour, pansage, stat level: doc 11; hzla says 10 (trainer 747)
   hzla disagreement: doc line 360, School Kid Seymour, snivy, level: doc 12; hzla says 11 (trainer 747)
@@ -734,7 +884,7 @@ not built yet: locs (TODO: implement blaze-black-2-redux locs extraction)
   hzla disagreement: doc line 3986, LEADER MARLON - Nacrene City, ludicolo, level: doc 87; hzla says 88 (trainer 821)
   hzla disagreement: doc line 3987, LEADER MARLON - Nacrene City, jellicent, level: doc 89; hzla says 90 (trainer 821)
 trainers: 468 records, 1867 doc Pokemon, 466 cards, 31 Normal teams, 3 Challenge-only battles
-hzla coverage: 1909/1915 Pokemon with IVs+nature; disagreements {'level': 329, 'stat level': 85, 'ability': 140, 'moves': 92, 'item': 25, 'species': 11}
+hzla coverage: 1909/1915 Pokemon with IVs+nature; disagreements {'level': 328, 'stat level': 84, 'ability': 140, 'moves': 92, 'item': 25, 'species': 11}
   hzla unmatched: doc line 3075, Black Kyurem - Blaze Black 2 Redux, side , starter None
   hzla unmatched: doc line 3078, White Kyurem - Volt White 2 Redux, side , starter None
   hzla join: doc line 232, side , starter None -> trainer 164 (score 267)
@@ -752,7 +902,7 @@ hzla coverage: 1909/1915 Pokemon with IVs+nature; disagreements {'level': 329, '
   hzla join: doc line 300, side , starter None -> trainer 387 (score 249)
   hzla join: doc line 311, side , starter Oshawott -> trainer 168 (score 348)
   hzla join: doc line 311, side , starter Tepig -> trainer 167 (score 348)
-  hzla join: doc line 311, side , starter Snivy -> trainer 166 (score 343)
+  hzla join: doc line 311, side , starter Snivy -> trainer 166 (score 348)
   hzla join: doc line 327, side , starter None -> trainer 181 (score 385)
   hzla join: doc line 332, side , starter None -> trainer 182 (score 385)
   hzla join: doc line 337, side , starter None -> trainer 180 (score 385)
@@ -1252,6 +1402,8 @@ hzla coverage: 1909/1915 Pokemon with IVs+nature; disagreements {'level': 329, '
   hzla join: doc line 3960, side , starter None -> trainer 819 (score 684)
   hzla join: doc line 3970, side , starter None -> trainer 820 (score 671)
   hzla join: doc line 3981, side , starter None -> trainer 821 (score 688)
+  trainer recorded fix: doc line 325, Pansage: Doc says lv.19; lv.9, as in the other starter branches (hzla 9 +1).
+  trainer recorded fix: doc line 1856, Banette: Doc says Grab; Snatch.
   trainer recorded fix: doc line 2488, Noctowl: Doc says Wacan Berry as ability; Tinted Lens @ Colbur Berry.
   trainer recorded fix: doc line 3572, Jellicent: Doc says Water Absorb @ Water Absorb; Cursed Body @ Leftovers.
   trainer recorded fix: doc line 3705, Klinklang: Doc says no item / Superpower; Air Balloon / Earthquake.
@@ -1293,10 +1445,13 @@ hzla coverage: 1909/1915 Pokemon with IVs+nature; disagreements {'level': 329, '
   ability typo: Study -> Sturdy (1: Trainer Changes:1328)
 not built yet: items (TODO: implement blaze-black-2-redux items extraction)
 not built yet: walk (TODO: implement blaze-black-2-redux walk extraction)
-doc name fixes: 15 (species 3, move 11, ability 1)
+doc name fixes: 18 (species 6, move 11, ability 1)
   species fuzzy: Snubull -> Snubbull (1: Type Changes:39)
   species fuzzy: Grabull -> Granbull (1: Type Changes:40)
   species fuzzy: Poliswine -> Piloswine (1: Evolution Changes:60)
+  species fuzzy: Cherrim -S -> Cherrim (2: Locations, Locations)
+  species fuzzy: Whiripede -> Whirlipede (2: Locations, Locations)
+  species typo: Treeko -> Treecko (1: Locations)
   move alias: Vice Grip -> Vise Grip (1: Move Changes:31)
   move typo: Submisson -> Submission (1: Move Changes:41)
   move typo: Twinneedle -> Twineedle (1: Pokemon Changes:546)
@@ -1310,3 +1465,10 @@ doc name fixes: 15 (species 3, move 11, ability 1)
   move alias: Minimise -> Minimize (1: Move Changes:375)
   move UNRESOLVED: Further Modifications (1: Move Changes:630)
   ability alias: Synchronise -> Synchronize (11: Pokemon Changes:2197, Pokemon Changes:2212, Pokemon Changes:2246)
+GID species: 712 species:form keys; 671/675 P ids; 649/649 base species
+GID unmapped species: 351:1 Castform, 351:2 Castform, 351:3 Castform, 493:1 Arceus, 493:2 Arceus, 493:3 Arceus, 493:4 Arceus, 493:5 Arceus, 493:6 Arceus, 493:7 Arceus, 493:8 Arceus, 493:9 Arceus, 493:10 Arceus, 493:11 Arceus, 493:12 Arceus, 493:13 Arceus, 493:14 Arceus, 493:15 Arceus, 493:16 Arceus
+GID move: 559/577 guide names; unmapped: Shadow Blast, Shadow Blitz, Shadow Bolt, Shadow Break, Shadow Chill, Shadow Down, Shadow End, Shadow Fire, Shadow Half, Shadow Hold, Shadow Mist, Shadow Panic, Shadow Rave, Shadow Rush, Shadow Shed, Shadow Sky, Shadow Storm, Shadow Wave
+GID ability: 164/166 guide names; unmapped: Competitive, Neutralizing Gas
+GID item: 0/0 guide names; unmapped: none
+GID items: IT empty; all 638 game item names deferred until the items unit merges
+GID move replacements: 26/26 original slots mapped
