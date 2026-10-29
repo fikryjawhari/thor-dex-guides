@@ -25,6 +25,11 @@ import wiki as W
 from wiki import key, text
 
 PLACED = []
+# Item-page place names -> the Locations page that covers them (the item pages name sub-areas and shorthands).
+PLACE_ALIAS = {'Thundercap Mt.': 'Thundercap Mountain', 'Dehara Dept. Store': 'Dehara City',
+               'Seaport City East Warehouse': 'Seaport Warehouses', "Professor Log's Lab": 'Frozen Heights',
+               'Pokemon Day Care': 'Route 5', 'Magnolia Cafe': 'Magnolia Town', 'Your house': 'Frozen Heights',
+               'Cube Corp': 'Cube Corp.', 'Tehl Town': 'Tehl Town / Underground Pass'}
 
 # ---- names ----------------------------------------------------------------------------------------------------------
 # Wiki / workbook spellings -> the item's name (the game's, as Unbound-Cloud writes it, or the official one).
@@ -324,6 +329,8 @@ def build(D):
             add(box, name, line, sub=sub)
     # key and evolution item pages: the places the Locations pages and missions don't give
     shops = []                                   # (item, shop, price, unlock)
+    stock = {canon(s[2])[0] for s in WIKI.item_shops()}
+    extra = []                                   # item-page places no Locations page lists
     for d in details:
         name = canon(d['name'])[0]
         box, sub = box_of(name)
@@ -335,25 +342,32 @@ def build(D):
             mm = re.search(r'Mission #0*(\d+)', pl)
             if mm and int(mm.group(1)) in missions.get(name, ()):
                 continue
-            if any(key(where).startswith(k) or k.startswith(key(where)) for k in listed.get(name, ())):
-                continue
             buy = re.search(r'Purchase from (?:the )?(.+?) for ([\d,]+) Poke ?Dollars', how)
             bp = re.search(r'Exchange (?:for )?(\d+) Battle Points', how)
+            here = key(PLACE_ALIAS.get(re.sub(r'\s*\(.*\)$', '', where), where))
+            if not (buy or bp or 'Raid Den' in where or 'Raid Den' in how or how.startswith('Dropped by')
+                    or where == 'Mystery Gift'
+                    or re.search(r'Pokemon Encounters|Wild Held Item', where) or re.match(r'Held', how)) \
+                    and any(here.startswith(k) or k.startswith(here) for k in listed.get(name, ())):
+                continue                         # the Locations page has it
             if buy:
-                shops.append((name, '%s · %s' % (where, buy.group(1)), '₽' + buy.group(2), ''))
+                if name not in stock:            # the shop list has the Dept. Store's stones
+                    shops.append((name, '%s · %s' % (where, buy.group(1)), '₽' + buy.group(2), ''))
             elif bp:
                 shops.append((name, 'Battle Frontier · Exchange Service Counter', bp.group(1) + ' BP', 'post-game'))
             elif re.search(r'Pokemon Encounters|Wild Held Item', where) or re.match(r'Held', how):
                 add(box, name, 'Wild: ' + re.sub(r'^(?:Held(?: item)? by (?:the following )?wild Pokemon:?|Held by wild'
                                                  r'|Held by|5% chance being a held item on any of the following wild '
                                                  r'Pokemon:?)\s*', '', how), sub=sub)
-            elif 'Raid Den' in where or 'Raid Den' in how:
-                add(box, name, 'Also: %s · raid drop' % re.sub(r'\s*Raid Den$', ' Raid Den', where), sub=sub)
+            elif 'Raid Den' in where or 'Raid Den' in how or how.startswith('Dropped by'):
+                where = PLACE_ALIAS.get(where, where)
+                add(box, name, 'Also: %s · raid drop' % (where if 'Raid Den' in where else where + ' Raid Den'), sub=sub)
             elif where == 'Mystery Gift':
                 add(box, name, 'Also: Mystery Gift · post-game · ' + how, sub=sub)
             else:
                 label = 'Also' if re.search(r'gift|given|reward|from the|show|talk|exchange|sold', how, re.I) else 'Found'
                 add(box, name, '%s: %s · %s' % (label, where, how), sub=sub)
+                extra.append('%s (%s)' % (name, where))
     # Z-Crystals
     for zn, places, post, how in W.item_crystal_parts(WIKI):
         name = canon(zn)[0]
@@ -404,6 +418,7 @@ def build(D):
            '%d mission item rewards, %d Locations rows placed' % (
                len(MACHINES), len(STONE_NAMES), sum(1 for r in rows if r[0] == 'Z-Crystals'), len(WIKI.tutors()),
                sum(1 for r in rows if r[0] == 'Move Tutors'), len(shops), rewards, len(PLACED)))
+    report('items: item pages give %d places the Locations pages lack: %s' % (len(extra), '; '.join(extra)))
     for line in log:
         report('items:', line)
 

@@ -21,8 +21,9 @@ tutors: wiki Move Tutors page 29 tutors / 152 moves; tutor moves in species list
   taught by a wiki tutor but in no species list (6): Draco Meteor, Dragon Ascent, Relic Song, Secret Sword, Steel Beam, Volt Tackle
 locs: not built yet (TODO: implement unbound locs extraction)
 trainers: not built yet (TODO: implement unbound trainers extraction)
-items: old-box rows {'TMs and HMs': 128, 'Mega Stones': 49, 'Evolution Items': 133, 'Valuables': 419, 'Stats and Abilities': 68, 'Key Items': 33, 'Held Items': 101, 'Z-Crystals': 34, 'Shops': 168, 'Move Tutors': 192, 'Useful NPCs': 34}
-items: 128 machines, 49 Mega Stones / orbs, 34 Z-Crystals, 29 tutors (192 moves), 168 shop rows, 70 mission item rewards, 703 Locations rows placed
+items: old-box rows {'TMs and HMs': 128, 'Mega Stones': 49, 'Evolution Items': 140, 'Valuables': 419, 'Stats and Abilities': 68, 'Key Items': 32, 'Held Items': 101, 'Z-Crystals': 34, 'Shops': 163, 'Move Tutors': 192, 'Useful NPCs': 34}
+items: 128 machines, 49 Mega Stones / orbs, 34 Z-Crystals, 29 tutors (192 moves), 163 shop rows, 70 mission item rewards, 703 Locations rows placed
+items: item pages give 20 places the Locations pages lack: S.S. Ticket (Seaport City); Prison Bottle (Crystal Peak); Mega Keystone (Tarmigan Mansion); Lunar Wing (Fullmoon Island); Trainer Catalogue (Fallshore City); Reveal Glass (Magnolia Fields); Shiny Charm (Fallshore City); Grubby Hanky (Magnolia Cafe); Dusk Stone (Cube Corp.); Shiny Stone (Route 7); Shiny Stone (Vivill Warehouse); Gracidea (Flower Paradise); Ice Stone (Cube Corp.); Ice Stone (Cube Corp. (Stone Maker)); Dubious Disc (Seaport City East Warehouse); Old Rod (Route 7); Fire Stone (Route 9); Devon Scope (Route 16); Braille Converter (Icicle Cave 4F); ADM (Seaport City)
 walk: not built yet (TODO: implement unbound walk extraction)
 trainer keys: new table hacks\unbound\extract\trainer_keys.json (0 trainers, keys as they are)
 trainer keys: no trainers yet, no key table written
