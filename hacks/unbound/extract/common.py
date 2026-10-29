@@ -97,7 +97,7 @@ def _build_sid():
     location_aliases = {
         'Magikarp (Shiny)': 'Magikarp', 'Spiky-Eared Pichu': 'Pichu (Spiky-eared)',
         'Gigantamax Garbodor': 'Garbodor', 'Gigantamax Butterfree': 'Butterfree',
-        'Balloon Pikachu': 'Pikachu', 'Flying Pikachu': 'Pikachu',
+        'Balloon Pikachu': 'Pikachu (Flying)', 'Flying Pikachu': 'Pikachu (Flying)', 'Surfing Pikachu': 'Pikachu (Surfing)',
         'Original Color Magearna': 'Magearna (Original Color)', 'Eternal Flower Floette': 'Floette (Eternal Flower)',
         'Eternal Floette': 'Floette (Eternal Flower)', 'Turtonaut': 'Turtonator', 'Gurrdurr': 'Gurdurr',
         'Flabebe (Red)': 'Flabébé', 'Frillish (M)': 'Frillish', 'Deerling (Spring)': 'Deerling',

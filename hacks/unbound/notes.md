@@ -130,7 +130,7 @@ says"); the RomHackDex location pages only a membership report. No source has wi
   Camerupt / Excadrill / Heatmor / Magmar (the wiki has them in Cinder Volcano Depths), Minior Blue Core / Grim Woods
   Pumpkaboo Average (form choices), Route 7 Raticate (the wiki: Alolan), and a few single rows. Not added.
 - **Names:** "Balloon Pikachu" (the wiki), "Flying Pikachu" / "Surfing Pikachu" are Pikachu (Flying) / (Surfing) here (`locs.NAME_FIX`;
-  `common.location_aliases` maps "Flying Pikachu" to Pikachu, unit 3's), "Indeedee♀️" is Indeedee (Female).
+  `common.location_aliases` agrees), "Indeedee♀️" is Indeedee (Female).
 - **Availability (P.g):** EI's rule (any row, plus evolution families both ways; a form change follows its base): 30
   not found: Pikachu's five cosplay forms and Cosplay, Alolan Cubone, Unfezant / Frillish female, Pumpkaboo / Gourgeist
   Large and Average, Zygarde 10%, Wishiwashi School, Minior (Core), Toxtricity Low Key, Zacian / Zamazenta (both forms),
