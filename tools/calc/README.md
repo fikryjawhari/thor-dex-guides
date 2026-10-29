@@ -70,6 +70,45 @@ sizes in normal/dvkb modes. The profile adds inverse and both Flower Gift sides 
 it does not enable Psychic terrain, Aurora Veil or Battery, or change any other guide. See Eternal X's notes
 for the pin, checks and remaining individual-effect/in-game work.
 
+### Unbound field rules (unit 8c)
+
+`unbound_check.mjs` runs the original 85 hzla fixtures plus `unbound_gimmicks.mjs`'s independent hand computations.
+An optional user-saved official calculator is loaded **offline only** from `hacks/unbound/.src/unboundcalc/` by
+`unbound_saved_oracle.mjs`; `unbound_official_manifest.json` pins its engine/data and Camomons-control hashes.
+No source code from either oracle is bundled or redistributed. Missing saved files report comparison pending.
+See Unbound notes.md -> Damage calc for exact inputs, arithmetic, disagreements and unresolved sheet labels.
+
+New generic field inputs, absent/off for every other guide:
+- `atkTailwindTypes` / `defTailwindTypes`: type-name arrays. Apply one ordinary Tailwind to matching current
+  types, inside `getFinalSpeed`, including speed-dependent power; never stack with an already active Tailwind.
+- `atkMagnetRiseTypes` / `defMagnetRiseTypes`: type-name arrays. Give matching current types the existing airborne
+  state for Ground immunity and entry hazards. Gravity, explicit grounding/Ingrain and active Iron Ball win.
+- `weightSpeed`: final Speed is floor(species weightkg), including Mega/form weights, inside `getFinalSpeed`.
+  It bypasses all ordinary Speed modifiers, does not rewrite `stats`, and does not enable Trick Room.
+  This follows the literal user answer; the saved official calc instead applies modifiers after weight.
+- `camomons`: `set.moves` must contain the first one/two known runtime guide move indices, in slot order.
+  Types are the distinct `MV[index].t` values before ordinary type-changing turn/ability states. Unknown first
+  move throws explicitly; one known move is monotype. UI persistence must still store move names, not indices.
+- `weatherLock`: underlying weather **name**, overriding conflicting `weather` inputs. `derived` returns no
+  weather setter under a lock. Weather suppression remains ordinary, not removal. Custom weather aliases,
+  profile rules and residual divisors read the locked name, not a stale manual weather input.
+- `negativeEnergy`, `pixies`, `rainbow`: respectively a typing/ability-exempt 1/12 residual; Fairy +1 lower
+  staged defence on entry (Def on tie, normal stage modification); Dragon secondary-effect multipliers.
+
+`fieldEffects(set, field={}, side='atk')` returns effective `types`, `accuracyMultiplier`, `secondaryMultiplier`,
+`flinchMultiplier`, `poisonTouchMultiplier`, `blockedMoves` and a Pixies `entryBoost` stat hint. Fog gives0.6
+unless Keen Eye/Infiltrator/active Umbrella; its roll accuracy is not simulated. Rainbow doubles ordinary
+Dragon secondaries, stacks with Serene Grace except flinches, and doubles Poison Touch. `secondaryChance(set,
+basePercent, field={}, kind='secondary', side='atk')` uses those modifiers and caps at100; kind can also be
+`flinch` or `poisonTouch`. Base probabilities must be supplied; the calc move catalogue carries a secondary
+flag, not a complete chance table. These APIs do not execute random status/flinch branches.
+
+Unbound's profile supplies inverse effectiveness and full-HP/first-hit-only Shadowy Veil damage. The generic
+`shadowyVeil` field also skips full-HP Ghost entry hazards and exposes non-Ghost Safeguard/Substitute restrictions;
+`hp` refuses prohibited Substitute. UI must honour the block list for field/status actions. Brain Bond and
+Face Shield already used stock aliases; user confirmation changes their evidence status, not the numeric
+engine implementation. Other guides' profiles, fixture inputs and expected distributions remain unchanged.
+
 ## Data ownership and size
 
 The adapter supplies its own Generation interface to Smogon's Gen 4, Gen 5/6 and

@@ -75,6 +75,7 @@ export function checkUnboundGimmicks(data, engine) {
   assert.deepEqual(plain(engine.residual(mon('Pikachu'),sand)), [{l:'Vicious Sandstorm',v:[-13,-13,-13,-13]}]);
   assert.equal(engine.derived(mon('Mew',{ab:ability('Drought')}),sand).weather,undefined);
   assert.deepEqual(damage(neutral,mon('Garchomp'),'Surf',sand).rolls, damage(neutral,mon('Garchomp'),'Surf',{weather:'Vicious Sandstorm'}).rolls);
+  assert.deepEqual(damage(mon('Mew',{ab:ability('Cloud Nine')}),mon('Garchomp'),'Surf',sand).rolls,damage(neutral,mon('Garchomp'),'Surf').rolls,'Cloud Nine suppresses Ground sand defence, without removing lock');
   const trainers = data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr));
   const mel = trainers.find(trainer => trainer.k === '3.4.0');
   const normalFoe = mon(data.P.find(species => species.id === mel.p[0].id).n);
@@ -150,6 +151,8 @@ export function checkUnboundGimmicks(data, engine) {
       const field = new calc.Field({isBigMoField:true});
       assert.equal(calc.getFinalSpeed(generation,theirMon(name),field,field.attackerSide),expected,'saved official weight '+name);
     }
+    const weightField = new calc.Field({isBigMoField:true});
+    assert.equal(calc.getFinalSpeed(generation,theirMon('Abomasnow',{item:'Choice Scarf'}),weightField,weightField.attackerSide),202,'official weight then modifiers; user literal final Speed is 135');
     const theirCamoAttack = theirMon('Mew',{overrides:{types:['Fire','Ice']}});
     const theirCamoDefense = theirMon('Mew',{overrides:{types:['Grass','Normal']}});
     assert.deepEqual(theirDamage(theirCamoAttack,theirCamoDefense,'Flamethrower'),rolls(43,1.5,2),'official native Flamethrower is 95 BP: explicit data disagreement');

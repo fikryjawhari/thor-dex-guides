@@ -475,6 +475,7 @@
           "Vicious Sandstorm"
          ]
         },
+        {"op": "eq", "args": [{"ref": "field.weather"}, "Sand"]},
         {
          "op": "not",
          "args": [
