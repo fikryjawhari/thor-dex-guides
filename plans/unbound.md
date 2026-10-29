@@ -114,6 +114,13 @@ User's answers (2026-10-29):
   "Your level" box sets another cap, saved per trainer key in `LS.cap`, and the calc follows it). Where a mon's
   levels at the given caps aren't cap + one offset, keep absolute levels and note it.
 - **Battle Frontier: left out** (no fixed teams; user 2026-10-29). Postgame box: Battleground and Title Defense.
+- **Calc gimmicks (user 2026-10-30): all of them in the calc**, with the official Unbound calc
+  (https://unboundcalc.byethost3.com/?i=1, "the official Unbound calc with all the extra effects") as the oracle
+  next to hzla: Mirskle's Fog, Alice's Tailwind for Flying types, Galavan's Magnet Rise for Electric / Steel types,
+  Big Mo's "Trick Room for Weight" (each Pokémon's Speed = its weight in kg, rounded down: Abomasnow 135, Mega
+  Abomasnow 185), Tessy's permanent Heavy Rain and Camomons Battle, Moleman's Vicious Sandstorm, Elias's Shadowy Veil,
+  Mel's Inverse Battle. Both sides where the sheet doesn't say otherwise.
+- **Brain Bond = Parental Bond; Face Shield = Gen 8 (pre-nerf) Dauntless Shield** (user 2026-10-30; overrides hzla).
 - **Missions (7a, 2026-10-29):** bordered mission card, auto-close on the final tick (`plans/unbound-missions.md`).
 - **Mode:** hack.json has no mode field; "Expert" goes in the trainer wording (`txt`), not a new key.
 
