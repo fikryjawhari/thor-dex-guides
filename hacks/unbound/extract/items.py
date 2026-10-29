@@ -330,6 +330,14 @@ def build(D):
     # key and evolution item pages: the places the Locations pages and missions don't give
     shops = []                                   # (item, shop, price, unlock)
     stock = {canon(s[2])[0] for s in WIKI.item_shops()}
+    vendors = W.frontier_vendors(WIKI)
+    for vendor, _, vrows in vendors:            # the Battle Frontier's BP exchange
+        if vendor.startswith('Exchange Service Vendor'):
+            for cells in vrows:
+                n = canon(cells[0])[0]
+                shops.append((n, 'Battle Frontier · ' + vendor.replace(' Vendor – ', ' (') + ')',
+                              cells[1].replace(' BP', ' BP'), 'post-game'))
+    bp_stock = {x[0] for x in shops}
     extra = []                                   # item-page places no Locations page lists
     for d in details:
         name = canon(d['name'])[0]
@@ -354,7 +362,8 @@ def build(D):
                 if name not in stock:            # the shop list has the Dept. Store's stones
                     shops.append((name, '%s · %s' % (where, buy.group(1)), '₽' + buy.group(2), ''))
             elif bp:
-                shops.append((name, 'Battle Frontier · Exchange Service Counter', bp.group(1) + ' BP', 'post-game'))
+                if name not in bp_stock:
+                        shops.append((name, 'Battle Frontier · Exchange Service Counter', bp.group(1) + ' BP', 'post-game'))
             elif re.search(r'Pokemon Encounters|Wild Held Item', where) or re.match(r'Held', how):
                 add(box, name, 'Wild: ' + re.sub(r'^(?:Held(?: item)? by (?:the following )?wild Pokemon:?|Held by wild'
                                                  r'|Held by|5% chance being a held item on any of the following wild '
@@ -387,7 +396,9 @@ def build(D):
         if name == 'Moomoo Milk' and '6,600' in price:
             price += ' a dozen'
         add('Shops', name, ' · '.join(x for x in (shop, price, unlock) if x), sub=shop_kind(name))
-    # move tutors
+    # move tutors (the Battle Frontier page says who its Draco Meteor trainer teaches)
+    learners = {move(m.group(1)): m.group(2) for _, f, _ in vendors
+                for m in [re.match(r'Teaches (.+?) to (any .+)$', f)] if m}
     for t in WIKI.tutors():
         where = sentence(t.location)
         req = sentence(t.requirement)
@@ -396,7 +407,8 @@ def build(D):
             if name is None:
                 log.append('tutor move not in M: %s (%s)' % (mv, t.name))
             cost = re.sub(r'(Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day', lambda x: x.group(1)[:3], cost)
-            add('Move Tutors', name or mv, ' · '.join(x for x in (t.name, where, cost, req) if x), Mi.get(name))
+            who = 'teaches ' + learners[name] if name in learners else ''
+            add('Move Tutors', name or mv, ' · '.join(x for x in (t.name, where, cost, req, who) if x), Mi.get(name))
     # useful NPCs
     for npc, f in W.useful_npcs(WIKI):
         where, _, how = [x.strip() for x in f.get('Location', '').partition(' – ')]

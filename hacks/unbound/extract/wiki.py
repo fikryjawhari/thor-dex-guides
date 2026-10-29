@@ -243,3 +243,18 @@ def useful_npcs(wiki):
     """The Useful NPCs pages (misc-info/useful-npcs/<npc>/): [(name without "(NPC)", fields {Location, ...})]."""
     return [(re.sub(r'\s*\(NPCs?\)$', '', text(p['title'])), item_fields(p['html']))
             for p in wiki.all if re.search(r'/useful-npcs/[^/]+/?$', p['link'])]
+
+
+def frontier_vendors(wiki):
+    """The Battle Frontier page's Vendors: [(vendor, function, [[cell, ...] rows after its Function / Cost lines])]."""
+    raw = dict(item_sections(wiki.page('Battle Frontier')['html'])).get('Vendors', '')
+    out = []
+    for cells in _rows(raw):
+        cells = [c for c in cells if c]
+        if len(cells) == 1:
+            out.append([cells[0], '', []])
+        elif out and len(cells) == 2 and cells[0] == 'Function':
+            out[-1][1] = cells[1]
+        elif out and cells and cells[0] not in ('Cost', 'Move', 'Item', 'TM'):
+            out[-1][2].append(cells)
+    return [tuple(v) for v in out]
