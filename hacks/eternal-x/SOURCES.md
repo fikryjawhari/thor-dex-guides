@@ -71,6 +71,22 @@ overlay files are stale full copies of the trainer data: besides Viola they lack
 135). So the nerfed game really plays as Rebalanced with only Viola swapped; the dex should show the nerf
 as an alternative Viola team, nothing else.
 
+## EV-less copy (the user's install, 2026-10-29)
+
+The user plays an EV-less copy of the Rebalanced mod (`tools/ctr_evless.py`): no species grants EVs (Gen 6 trainer
+data has no EVs). The original is never written. The guide doesn't change: it shows no EV yields and has no trainer
+EVs. Needs the whole title folder (with `romfs/DllField.cro`), extracted into `romfs-dl/mod/`.
+
+```bash
+E=hacks/eternal-x/.src; V="$APPDATA/Azahar/dump/romfs/0004000000055D00"
+python -I -c "import zipfile,sys; z=zipfile.ZipFile(sys.argv[1]); [z.extract(n,sys.argv[2]) for n in z.namelist() if 'Rebalanced version/luma/' in n and not n.endswith('/')]" "$E/romfs-dl/Eternal X 2.67.zip" $E/romfs-dl/mod
+rm -rf $E/evless   # the tool refuses an existing output folder
+python -I tools/ctr_evless.py xy "$E/romfs-dl/mod/Eternal X 2.67/Game Files/Rebalanced version/luma/titles/0004000000055D00" $E/evless/luma/titles/0004000000055D00 "$V"
+```
+
+Install: `.src/evless/luma/titles/0004000000055D00/` replaces the mod's title folder. The Viola nerf overlay
+(`a/0/3/8` + `a/0/4/0`, trainer files only) still stacks on top of it.
+
 ## Bulbapedia (trainer places, story order)
 
 Fetched 2026-10-22: 182 wikitext pages, the "Kalos locations" category (trainer and item lists per place) and the 17

@@ -59,6 +59,8 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `xy_trainers.py [--oras] <romfs> <out.json> [vanilla-romfs]` | Dumps every trainer from an XY (Eternal X) or ORAS (Navy Sapphire) romfs, names from its own text. |
 | `ex_rivals.py <trainers.json> <out.md>` | Eternal X's rival fights by battle and starter, from `xy_trainers.py` output. |
 | `usum_trainers.py [--sm] <romfs> <out.json> [fallback-romfs ...]` | Dumps every trainer from a USUM (Photonic Sun) or SM (Meissa Moon) romfs, with natures and EVs. |
+| `usum_statics.py <romfs> <out.json> [fallback-romfs ...]` | Dumps a USUM romfs's static encounters (a/1/5/9): Totem battles with IVs, EVs, aura and SOS allies, and other scripted fights. |
+| `ctr_evless.py <xy\|oras\|sm\|usum> <mod-title-folder> <out-folder> [fallback-romfs ...]` | Makes an EV-less copy of a 3DS hack's mod folder (the original is never written): no species grants EVs, no Gen 7 trainer Pokémon has EVs (Gen 6 trainers have none); static encounters (Totems, scripted fights) keep theirs. Checks that only EV bytes changed. Any 3DS hack: the user's standard for Photonic Sun, Eternal X and later ones. |
 | `bulba_pages.py <out-dir> cat:<Category> \| pre:<Title prefix> ...` | Bulbapedia pages as wikitext through its API (category members or a title prefix; `Walkthrough:` prefixes work). Photonic Sun's trainer places and story order. |
 | `serebii_usum_items.py <items.shtml> <tm.shtml> <out.csv>` | Vanilla Ultra Sun item locations from Serebii's pages. |
 | `rhd_moves.py <moves/index.html> <hack-slug> <out.json>` | Every RomHackDex move with priority and description (the index lacks both); reads each move page, saves only those fields. |
