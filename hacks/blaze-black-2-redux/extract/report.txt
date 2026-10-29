@@ -362,9 +362,451 @@ items cross-check classification: mirror-only / real conflict: non-item heading/
   items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Tri Attack         Route 6 * @ Humilau City
   items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Wave Crash       Humilau City Gym * @ Humilau City
   items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Weather Ball           Lacunosa Town * @ Humilau City
-items: 375 placement names, 1197 placements (757 Item Changes, 4 trade/gift docs, 0 RomHackDex, 436 Bulbapedia), 95 TMs, 6 HMs, 6 modified marts, 1048 shop offers
+items: 373 placement names, 1110 placements (673 Item Changes, 4 trade/gift docs, 0 RomHackDex, 433 Bulbapedia), 95 TMs, 6 HMs, 6 modified marts, 1048 shop offers
 items: 652 nonempty doc statements in 69 areas; 3 deletions; 8 mode-qualified statements; 4 Pickup substitutions
 items: complete vanilla Pickup table, 10 level bands with probabilities; four doc substitutions applied
+  item sources: Poké Ball: Item Changes 84; Item Changes 111; Item Changes 112; Item Changes 963; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: Bicycle: Item Changes 85
+  item sources: TM54 False Swipe: Item Changes 86
+  item sources: TM53 Energy Ball: Item Changes 87
+  item sources: Choice Scarf: Item Changes 88; Item Changes 442; Item Changes 782; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM83 Work Up: Item Changes 89
+  item sources: Potion: Item Changes 94; Item Changes 104; Item Changes 105; Item Changes 978; Bulbapedia: Castelia Sewers; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: Oran Berry: Item Changes 95; Gift Pokemon 25; shop Bulbapedia: Join Avenue; shop Item Changes:1030
+  item sources: Water Stone: Item Changes 96; Item Changes 174; Item Changes 175; Item Changes 410; Bulbapedia: Chargestone Cave; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Join Avenue; shop Item Changes:1056; shop Item Changes:1061
+  item sources: TM31 Brick Break: Item Changes 97; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Expert Belt: Item Changes 98; Item Changes 334
+  item sources: Muscle Band: Item Changes 103; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Silk Scarf: Item Changes 110
+  item sources: Super Rod: Item Changes 113
+  item sources: Great Ball: Item Changes 114; Item Changes 144; Item Changes 162; Item Changes 924; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova); shop Bulbapedia: Join Avenue
+  item sources: Miracle Seed: Item Changes 115
+  item sources: Dire Hit: Item Changes 116; Bulbapedia: Join Avenue; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: Heart Scale: Item Changes 117; Item Changes 205; Item Changes 265; Item Changes 274; Item Changes 335; Item Changes 372; Item Changes 513; Item Changes 521; Item Changes 558; Item Changes 564; Item Changes 642; Item Changes 689; Item Changes 718; Item Changes 795; Item Changes 1016; Bulbapedia: Mistralton City; Bulbapedia: Join Avenue; shop Bulbapedia: Join Avenue; shop Item Changes:1040
+  item sources: Sitrus Berry: Item Changes 118; Item Changes 241; Item Changes 552; Item Changes 596; Item Changes 724; Item Changes 833; Item Changes 971; shop Bulbapedia: Join Avenue; shop Item Changes:1073
+  item sources: Max Revive: Item Changes 119; Item Changes 706; Item Changes 752; Item Changes 753; Item Changes 821; Item Changes 835; Item Changes 871; Item Changes 872; Item Changes 955; Item Changes 956; Bulbapedia: Anville Town; Bulbapedia: Join Avenue; shop Bulbapedia: Join Avenue
+  item sources: Rare Candy: Item Changes 120; Item Changes 170; Item Changes 504; Item Changes 545; Item Changes 577; Item Changes 589; Item Changes 669; Item Changes 692; Item Changes 720; Item Changes 758; Item Changes 759; Item Changes 781; Item Changes 793; Item Changes 830; Item Changes 899; Item Changes 913; Item Changes 914; Item Changes 936; Item Changes 1012; Bulbapedia: Anville Town; Bulbapedia: Battle Subway; Bulbapedia: Nature Preserve; Bulbapedia: Royal Unova; Bulbapedia: Join Avenue; Bulbapedia: Black Tower; Bulbapedia: Nimbasa City; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Leppa Berry: Item Changes 121; Bulbapedia: Lacunosa Town; shop Bulbapedia: Join Avenue
+  item sources: Big Mushroom: Item Changes 122; Item Changes 374; Item Changes 542; Item Changes 590; Item Changes 792; Item Changes 931; shop Bulbapedia: Join Avenue
+  item sources: Sticky Barb: Item Changes 123
+  item sources: Soothe Bell: Item Changes 128; Item Changes 285
+  item sources: TM41 Infestation: Item Changes 129
+  item sources: Quick Claw: Item Changes 130
+  item sources: Exp. Share: Item Changes 131; Bulbapedia: Floccesy Town; Bulbapedia: Icirrus City
+  item sources: Binding Band: Item Changes 132; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM21 Frustration: Item Changes 133
+  item sources: Iron Ball: Item Changes 138; Item Changes 340; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Berry Juice: Item Changes 139; Item Changes 184; Item Changes 990; Bulbapedia: Royal Unova; Bulbapedia: Join Avenue
+  item sources: Focus Band: Item Changes 145; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Smoke Ball: Item Changes 146; Bulbapedia: Reversal Mountain
+  item sources: Lagging Tail: Item Changes 147; Item Changes 529
+  item sources: Ultra Ball: Item Changes 148; Item Changes 212; Item Changes 336; Item Changes 387; Item Changes 424; Item Changes 559; Item Changes 578; Item Changes 704; Item Changes 726; Item Changes 746; Item Changes 804; Item Changes 814; Item Changes 831; Item Changes 832; Item Changes 846; Item Changes 873; Item Changes 896; Item Changes 908; Item Changes 909; Item Changes 938; Item Changes 958; Item Changes 979; Bulbapedia: Aspertia City; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova); shop Bulbapedia: Join Avenue
+  item sources: TM36 Sludge Bomb: Item Changes 149
+  item sources: TM09 Venoshock: Item Changes 150
+  item sources: TM94 Rock Smash: Item Changes 155
+  item sources: Wise Glasses: Item Changes 156; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Pearl: Item Changes 157; Item Changes 514; Item Changes 553; Item Changes 645; Item Changes 1009; Bulbapedia: Join Avenue
+  item sources: Mental Herb: Item Changes 158; Item Changes 462; shop Item Changes:1061
+  item sources: TM59 Incinerate: Item Changes 159; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM45 Power-Up Punch: Item Changes 160
+  item sources: Scope Lens: Item Changes 161; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM47 Low Sweep: Item Changes 163
+  item sources: Tiny Mushroom: Item Changes 164; Item Changes 302; Item Changes 365; Item Changes 455; Item Changes 538; Item Changes 789; shop Bulbapedia: Join Avenue
+  item sources: Lucky Egg: Item Changes 169; Item Changes 461; Trade Changes 56
+  item sources: Lucky Punch: Item Changes 171
+  item sources: Destiny Knot: Item Changes 172
+  item sources: Dream Ball: Item Changes 173
+  item sources: Leaf Stone: Item Changes 174; Item Changes 175; Item Changes 308; Item Changes 310; Item Changes 453; Item Changes 840; Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Join Avenue; shop Item Changes:1056; shop Item Changes:1061
+  item sources: Fire Stone: Item Changes 174; Item Changes 175; Item Changes 269; Item Changes 472; Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave; shop Bulbapedia: Battle Subway; shop Bulbapedia: Black City; shop Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Join Avenue; shop Item Changes:1056; shop Item Changes:1061
+  item sources: Thunder Stone: Item Changes 175; Item Changes 286; Item Changes 394; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave; shop Bulbapedia: Battle Subway; shop Bulbapedia: Black City; shop Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Join Avenue; shop Item Changes:1056; shop Item Changes:1061
+  item sources: Sun Stone: Item Changes 175; Item Changes 267; Item Changes 276; Item Changes 713; Item Changes 843; Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave; shop Bulbapedia: Join Avenue; shop Item Changes:1056; shop Item Changes:1061
+  item sources: Moon Stone: Item Changes 175; Item Changes 364; Item Changes 698; Item Changes 708; Item Changes 939; Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave; shop Bulbapedia: Join Avenue; shop Item Changes:1056; shop Item Changes:1061
+  item sources: Ice Stone: Item Changes 175; Item Changes 282; Item Changes 886; shop Item Changes:1056; shop Item Changes:1061
+  item sources: Quick Ball: Item Changes 176; Item Changes 626; Item Changes 905; shop Bulbapedia: Accumula Town; shop Bulbapedia: Icirrus City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Pokémon League (Unova)
+  item sources: Timer Ball: Item Changes 177; Item Changes 581; Item Changes 923; shop Bulbapedia: Icirrus City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Pokémon League (Unova)
+  item sources: Float Stone: Item Changes 178; Item Changes 894; shop Bulbapedia: Join Avenue
+  item sources: Light Ball: Item Changes 179
+  item sources: Thick Club: Item Changes 180
+  item sources: TM44 Rest: Item Changes 181
+  item sources: Up-Grade: Item Changes 182; Item Changes 839; Item Changes 925; shop Bulbapedia: Black City; shop Item Changes:1061
+  item sources: TM70 Flash: Item Changes 183
+  item sources: TM10 Hidden Power: Item Changes 185; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Eviolite: Item Changes 186; shop Item Changes:1061
+  item sources: Charcoal: Item Changes 187
+  item sources: Amulet Coin: Item Changes 188
+  item sources: TM86 Grass Knot: Item Changes 189
+  item sources: Leftovers: Item Changes 190
+  item sources: Black Glasses: Item Changes 191
+  item sources: TM81 X-Scissor: Item Changes 192
+  item sources: TM88 Pluck: Item Changes 193; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Tanga Berry: Item Changes 194; shop Bulbapedia: Join Avenue
+  item sources: Toxic Orb: Item Changes 199; Item Changes 788; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Twisted Spoon: Item Changes 200
+  item sources: Rare Bone: Item Changes 201; Item Changes 345; Item Changes 889; Item Changes 890; shop Bulbapedia: Join Avenue
+  item sources: TM84 Poison Jab: Item Changes 202
+  item sources: Black Sludge: Item Changes 203; Bulbapedia: Marine Tube
+  item sources: HM04 Strength: Item Changes 204
+  item sources: Flame Orb: Item Changes 206; Item Changes 860; Bulbapedia: Reversal Mountain; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: HP Up: Item Changes 207; Item Changes 607; Item Changes 631; Item Changes 728; Item Changes 802; Item Changes 853; Item Changes 942; Bulbapedia: Anville Town; Bulbapedia: Mistralton City; Bulbapedia: Black Tower; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: Hard Stone: Item Changes 208; Item Changes 220; Item Changes 228; Item Changes 259; Item Changes 314; Item Changes 396; Item Changes 407; Item Changes 429; Item Changes 439; Item Changes 467; Item Changes 494; Item Changes 630; Item Changes 705; Item Changes 761; Item Changes 842; Item Changes 850; Item Changes 945; Item Changes 965; Item Changes 966; Item Changes 967; shop Bulbapedia: Join Avenue
+  item sources: Metal Powder: Item Changes 209; Trade Changes 42
+  item sources: Max Repel: Item Changes 210; Item Changes 221; Item Changes 225; Item Changes 382; Item Changes 438; Item Changes 479; Item Changes 557; Item Changes 576; Item Changes 691; Item Changes 703; Item Changes 747; Item Changes 780; Item Changes 834; Item Changes 865; Item Changes 973; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova); shop Bulbapedia: Join Avenue
+  item sources: Nugget: Item Changes 211; Item Changes 385; Item Changes 488; Item Changes 531; Item Changes 532; Item Changes 628; Item Changes 851; Item Changes 912; Bulbapedia: Join Avenue; shop Bulbapedia: Join Avenue
+  item sources: TM08 Bulk Up: Item Changes 213; Item Changes 1093; shop Bulbapedia: Striaton City
+  item sources: Escape Rope: Item Changes 218; Item Changes 426; Item Changes 750; Item Changes 866; Bulbapedia: Reversal Mountain; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: TM23 Smack Down: Item Changes 219; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM85 Play Rough: Item Changes 222; Item Changes 937
+  item sources: Green Shard: Item Changes 223; Item Changes 249; Item Changes 423; Item Changes 491; Item Changes 668; Item Changes 732; Item Changes 794; Item Changes 841; Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Join Avenue; shop Item Changes:1040
+  item sources: Blue Shard: Item Changes 224; Item Changes 258; Item Changes 403; Item Changes 490; Item Changes 550; Item Changes 687; Item Changes 999; Item Changes 1000; Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Join Avenue; shop Item Changes:1040
+  item sources: Red Shard: Item Changes 226; Item Changes 242; Item Changes 261; Item Changes 284; Item Changes 673; Item Changes 754; Item Changes 812; Item Changes 895; Bulbapedia: Pokémon World Tournament; Bulbapedia: Reversal Mountain; shop Bulbapedia: Join Avenue; shop Item Changes:1040
+  item sources: Yellow Shard: Item Changes 227; Item Changes 247; Item Changes 381; Item Changes 697; Item Changes 731; Item Changes 897; Item Changes 929; Bulbapedia: Pokémon World Tournament; Bulbapedia: Reversal Mountain; shop Bulbapedia: Join Avenue; shop Item Changes:1040
+  item sources: TM14 Blizzard: Item Changes 229; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town
+  item sources: TM38 Fire Blast: Item Changes 230; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town
+  item sources: TM25 Thunder: Item Changes 231; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town
+  item sources: TM52 Focus Blast: Item Changes 232
+  item sources: Poké Toy: Item Changes 237; shop Bulbapedia: Shopping Mall Nine
+  item sources: Life Orb: Item Changes 238; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Prism Scale: Item Changes 239; Item Changes 982; Item Changes 1020; Bulbapedia: Undella Town; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: Wide Lens: Item Changes 240; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Hyper Potion: Item Changes 243; Item Changes 323; Item Changes 384; Item Changes 482; Item Changes 540; Item Changes 951; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova); shop Bulbapedia: Join Avenue
+  item sources: TM28 Dig: Item Changes 244
+  item sources: Stardust: Item Changes 245; Item Changes 246; Item Changes 266; Item Changes 852
+  item sources: Grip Claw: Item Changes 248; Item Changes 312
+  item sources: Soft Sand: Item Changes 254
+  item sources: Rawst Berry: Item Changes 255; Item Changes 763; Bulbapedia: Castelia City; Bulbapedia: Reversal Mountain; shop Bulbapedia: Join Avenue; shop Item Changes:1030
+  item sources: Star Piece: Item Changes 256; Item Changes 483; Item Changes 560; Item Changes 701; Item Changes 710; Item Changes 722; Item Changes 723; Item Changes 1013
+  item sources: Deep Sea Tooth: Item Changes 257; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: TM03 Psyshock: Item Changes 260
+  item sources: Deep Sea Scale: Item Changes 262; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: Super Repel: Item Changes 263; Item Changes 322; Item Changes 421; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: TM78 Bulldoze: Item Changes 264
+  item sources: Max Ether: Item Changes 268; Item Changes 551; Item Changes 592; Bulbapedia: Join Avenue
+  item sources: TM39 Rock Tomb: Item Changes 275
+  item sources: TM01 Hone Claws: Item Changes 277
+  item sources: Macho Brace: Item Changes 283
+  item sources: Revive: Item Changes 287; Item Changes 456; Item Changes 485; Item Changes 654; Bulbapedia: Anville Town; Bulbapedia: Castelia Sewers; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova); shop Bulbapedia: Join Avenue
+  item sources: Shell Bell: Item Changes 288; Item Changes 338
+  item sources: TM72 Volt Switch: Item Changes 289
+  item sources: TM49 Echoed Voice: Item Changes 290
+  item sources: Choice Band: Item Changes 291; Item Changes 770; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Cheri Berry: Item Changes 292; Item Changes 313; Item Changes 324; Item Changes 762; Bulbapedia: Castelia City; shop Bulbapedia: Join Avenue
+  item sources: Dawn Stone: Item Changes 300; Item Changes 790; Item Changes 943; Item Changes 953; Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave; shop Bulbapedia: Black City; shop Bulbapedia: Join Avenue; shop Item Changes:1056; shop Item Changes:1061
+  item sources: TM66 Power Gem: Item Changes 301
+  item sources: TM22 Solar Beam: Item Changes 307
+  item sources: Pecha Berry: Item Changes 309; Item Changes 369; Bulbapedia: Castelia City; Bulbapedia: Lacunosa Town; shop Bulbapedia: Join Avenue; shop Item Changes:1035
+  item sources: TM95 Snarl: Item Changes 311
+  item sources: Metronome: Item Changes 319; Item Changes 970; Trade Changes 29
+  item sources: TM43 Flame Charge: Item Changes 320
+  item sources: HM02 Fly: Item Changes 321
+  item sources: Armor Fossil: Item Changes 329; Item Changes 884; shop Bulbapedia: Join Avenue
+  item sources: Skull Fossil: Item Changes 329; Item Changes 883; shop Bulbapedia: Join Avenue
+  item sources: Link Cable: Item Changes 337; Item Changes 348; Item Changes 420; Item Changes 464; Item Changes 543; Item Changes 867; Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); shop Item Changes:1061
+  item sources: Haban Berry: Item Changes 339; shop Bulbapedia: Join Avenue
+  item sources: Everstone: Item Changes 341; Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: Luxury Ball: Item Changes 342; Item Changes 858; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Pokémon League (Unova); shop Item Changes:1030
+  item sources: TM63 Brutal Swing: Item Changes 343
+  item sources: Air Balloon: Item Changes 344; Item Changes 443; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM26 Earthquake: Item Changes 346
+  item sources: Choice Specs: Item Changes 347; Item Changes 822; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Ether: Item Changes 355; shop Bulbapedia: Join Avenue
+  item sources: Rocky Helmet: Item Changes 356
+  item sources: Zinc: Item Changes 357; Item Changes 556; Item Changes 657; Item Changes 906; Item Changes 988; Item Changes 1011; Bulbapedia: Anville Town; Bulbapedia: Black Tower; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: TM79 Frost Breath: Item Changes 358; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Elixir: Item Changes 363; Item Changes 454; Item Changes 481; Item Changes 627; Item Changes 813; Bulbapedia: Anville Town
+  item sources: Silver Powder: Item Changes 366
+  item sources: Protein: Item Changes 367; Item Changes 530; Item Changes 643; Item Changes 816; Item Changes 859; Item Changes 983; Bulbapedia: Anville Town; Bulbapedia: Pinwheel Forest; Bulbapedia: Black Tower; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: Shiny Stone: Item Changes 368; Item Changes 511; Item Changes 539; Item Changes 815; Item Changes 888; Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave; shop Bulbapedia: Join Avenue; shop Item Changes:1056; shop Item Changes:1061
+  item sources: HM03 Surf: Item Changes 370
+  item sources: TM20 Tri Attack: Item Changes 371; Item Changes 801; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: King's Rock: Item Changes 373; Item Changes 452; Item Changes 989; Bulbapedia: Icirrus City; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: Magnet: Item Changes 379
+  item sources: Full Heal: Item Changes 380; Item Changes 405; Item Changes 427; Item Changes 604; Item Changes 730; Item Changes 791; Item Changes 847; Item Changes 950; Bulbapedia: Castelia Sewers; Bulbapedia: Reversal Mountain; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova); shop Bulbapedia: Join Avenue
+  item sources: TM77 Psych Up: Item Changes 383; Item Changes 887; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Big Nugget: Item Changes 386; Item Changes 414; Item Changes 900; Item Changes 907; Bulbapedia: Nature Preserve; Bulbapedia: Join Avenue; shop Bulbapedia: Join Avenue
+  item sources: Chesto Berry: Item Changes 388; Bulbapedia: Castelia City; shop Bulbapedia: Join Avenue; shop Item Changes:1035
+  item sources: Light Clay: Item Changes 389; Bulbapedia: Unova Route 4
+  item sources: Carbos: Item Changes 390; Item Changes 588; Item Changes 666; Item Changes 712; Item Changes 811; Item Changes 869; Item Changes 957; Bulbapedia: Anville Town; Bulbapedia: Black Tower; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: TM91 Flash Cannon: Item Changes 391
+  item sources: Cell Battery: Item Changes 392; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM57 Charge Beam: Item Changes 393
+  item sources: Metal Coat: Item Changes 395; Item Changes 411; shop Bulbapedia: Black City; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: Lum Berry: Item Changes 401; Item Changes 787; Item Changes 836; Item Changes 972; Item Changes 981; Bulbapedia: Village Bridge; shop Bulbapedia: Join Avenue
+  item sources: TM64 Explosion: Item Changes 402; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Claw Fossil: Item Changes 404; Item Changes 882; shop Bulbapedia: Join Avenue
+  item sources: Root Fossil: Item Changes 406; Item Changes 881; shop Bulbapedia: Join Avenue
+  item sources: Helix Fossil: Item Changes 408; Item Changes 878; shop Bulbapedia: Join Avenue
+  item sources: Dome Fossil: Item Changes 409; Item Changes 879; shop Bulbapedia: Join Avenue
+  item sources: Reaper Cloth: Item Changes 412; Item Changes 755; Item Changes 941; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: Iron: Item Changes 413; Item Changes 440; Item Changes 721; Item Changes 743; Item Changes 944; Item Changes 1017; Bulbapedia: Anville Town; Bulbapedia: Pinwheel Forest; Bulbapedia: Black Tower; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: TM82 Dragon Tail: Item Changes 419
+  item sources: Dragon Fang: Item Changes 422; Item Changes 764
+  item sources: Dragon Scale: Item Changes 425; Item Changes 760; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: TM80 Rock Slide: Item Changes 428
+  item sources: Sharp Beak: Item Changes 434
+  item sources: Eject Button: Item Changes 435; Item Changes 659; Item Changes 898; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM40 Aerial Ace: Item Changes 436
+  item sources: Master Ball: Item Changes 437; Item Changes 510; Item Changes 661; Bulbapedia: Join Avenue
+  item sources: TM62 Acrobatics: Item Changes 441
+  item sources: TM89 U-turn: Item Changes 451; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM61 Will-O-Wisp: Item Changes 463
+  item sources: Odd Incense: Item Changes 465; shop Item Changes:1061
+  item sources: TM65 Shadow Claw: Item Changes 466
+  item sources: TM24 Thunderbolt: Item Changes 473
+  item sources: Cleanse Tag: Item Changes 474; Bulbapedia: Icirrus City
+  item sources: TM69 Rock Polish: Item Changes 480
+  item sources: PP Up: Item Changes 484; Item Changes 580; Item Changes 593; Item Changes 667; Item Changes 679; Item Changes 711; Item Changes 734; Item Changes 926; Item Changes 940; Bulbapedia: Anville Town; Bulbapedia: Battle Subway; Bulbapedia: Icirrus City; Bulbapedia: Join Avenue; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: Calcium: Item Changes 486; Item Changes 537; Item Changes 690; Item Changes 729; Item Changes 910; Item Changes 952; Bulbapedia: Anville Town; Bulbapedia: Black Tower; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: TM27 Return: Item Changes 487
+  item sources: Persim Berry: Item Changes 489; Item Changes 493; Item Changes 685; Item Changes 930; shop Bulbapedia: Join Avenue; shop Item Changes:1073
+  item sources: TM35 Flamethrower: Item Changes 492
+  item sources: Shed Shell: Item Changes 499
+  item sources: Spell Tag: Item Changes 500
+  item sources: TM30 Shadow Ball: Item Changes 501
+  item sources: Dusk Stone: Item Changes 502; Item Changes 744; Item Changes 868; Item Changes 893; Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; shop Bulbapedia: Black City; shop Bulbapedia: Join Avenue; shop Item Changes:1056; shop Item Changes:1061
+  item sources: Lunar Wing: Item Changes 503
+  item sources: HM05 Waterfall: Item Changes 509
+  item sources: TM55 Scald: Item Changes 512
+  item sources: Big Pearl: Item Changes 515; Item Changes 527; Item Changes 554; Item Changes 678; Item Changes 779; Item Changes 921; shop Bulbapedia: Join Avenue
+  item sources: Draco Plate: Item Changes 520
+  item sources: Splash Plate: Item Changes 522
+  item sources: Max Potion: Item Changes 528; Item Changes 605; Item Changes 672; Item Changes 699; Item Changes 803; Bulbapedia: Nature Preserve; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: TM60 Quash: Item Changes 541; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: PP Max: Item Changes 544; Item Changes 820; Item Changes 844; Item Changes 849; Item Changes 954; Item Changes 1018; Item Changes 1019; Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: Bright Powder: Item Changes 555; Bulbapedia: Anville Town; Bulbapedia: Unova Route 4; shop Bulbapedia: Battle Subway
+  item sources: TM29 Psychic: Item Changes 561
+  item sources: TM76 Bug Buzz: Item Changes 562
+  item sources: TM32 Dazzling Gleam: Item Changes 563; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM48 Mystical Fire: Item Changes 565; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM04 Calm Mind: Item Changes 570; shop Bulbapedia: Striaton City
+  item sources: TM56 Weather Ball: Item Changes 571
+  item sources: Poison Barb: Item Changes 579; Item Changes 671
+  item sources: Stick: Item Changes 582
+  item sources: TM93 Wild Charge: Item Changes 583
+  item sources: TM19 Giga Drain: Item Changes 591; Item Changes 1014
+  item sources: Magmarizer: Item Changes 594; Bulbapedia: Plasma Frigate; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: Electirizer: Item Changes 595; Bulbapedia: Plasma Frigate; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: Black Belt: Item Changes 597; Item Changes 733; Bulbapedia: Icirrus City
+  item sources: Aspear Berry: Item Changes 602; Bulbapedia: Castelia City; shop Bulbapedia: Join Avenue; shop Item Changes:1030
+  item sources: Big Root: Item Changes 603
+  item sources: TM75 Swords Dance: Item Changes 606; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Razor Fang: Item Changes 608; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Item Changes:1061
+  item sources: Cover Fossil: Item Changes 613; shop Bulbapedia: Join Avenue
+  item sources: Plume Fossil: Item Changes 613; shop Bulbapedia: Join Avenue
+  item sources: Absorb Bulb: Item Changes 614; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Ring Target: Item Changes 615
+  item sources: Dubious Disc: Item Changes 616; shop Bulbapedia: Black City; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: TM02 Dragon Claw: Item Changes 617
+  item sources: Old Amber: Item Changes 618; Item Changes 880; shop Bulbapedia: Join Avenue
+  item sources: TM87 Rock Climb: Item Changes 625; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM34 Sludge Wave: Item Changes 629; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM42 Facade: Item Changes 636
+  item sources: Mystic Water: Item Changes 641; Bulbapedia: Castelia City
+  item sources: Sea Incense: Item Changes 644; shop Item Changes:1061
+  item sources: Damp Rock: Item Changes 646; Bulbapedia: Unova Route 8
+  item sources: Full Restore: Item Changes 647; Item Changes 686; Item Changes 748; Item Changes 749; Item Changes 891; Item Changes 892; Item Changes 911; Item Changes 927; Item Changes 980; Bulbapedia: Anville Town; Bulbapedia: Castelia Sewers; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: TM51 Wave Crash: Item Changes 648; Item Changes 829; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM17 Protect: Item Changes 649; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: TM67 Retaliate: Item Changes 655
+  item sources: TM92 Trick Room: Item Changes 656
+  item sources: Red Card: Item Changes 658; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Zoom Lens: Item Changes 660; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Heat Rock: Item Changes 670; Item Changes 775
+  item sources: TM06 Toxic: Item Changes 684
+  item sources: Dive Ball: Item Changes 688; Item Changes 915; Item Changes 1001; Bulbapedia: Village Bridge; shop Bulbapedia: Undella Town
+  item sources: TM13 Ice Beam: Item Changes 700
+  item sources: Never-Melt Ice: Item Changes 702; Item Changes 809
+  item sources: Razor Claw: Item Changes 707; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Item Changes:1061
+  item sources: TM90 Substitute: Item Changes 709
+  item sources: TM50 Overheat: Item Changes 719
+  item sources: TM05 Roar: Item Changes 725
+  item sources: Repeat Ball: Item Changes 727; shop Bulbapedia: Accumula Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Pokémon League (Unova)
+  item sources: TM12 Taunt: Item Changes 735
+  item sources: Old Sea Map: Item Changes 740
+  item sources: TM58 Hurricane: Item Changes 741
+  item sources: Protector: Item Changes 742; Item Changes 870; shop Bulbapedia: Black City; shop Bulbapedia: Join Avenue; shop Item Changes:1061
+  item sources: TM46 Aura Sphere: Item Changes 745
+  item sources: TM71 Stone Edge: Item Changes 751
+  item sources: Max Elixir: Item Changes 756; Item Changes 757; Item Changes 800; Item Changes 848; Item Changes 928; Bulbapedia: Icirrus City; Bulbapedia: Join Avenue
+  item sources: HM06 Dive: Item Changes 765
+  item sources: Smooth Rock: Item Changes 776
+  item sources: Icy Rock: Item Changes 777
+  item sources: Nest Ball: Item Changes 778; Item Changes 845; shop Bulbapedia: Accumula Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Pokémon League (Unova)
+  item sources: Old Gateau: Item Changes 810; Bulbapedia: Nimbasa City; Bulbapedia: Royal Unova; shop Bulbapedia: Join Avenue
+  item sources: Comet Shard: Item Changes 823; Item Changes 824
+  item sources: Net Ball: Item Changes 837; Bulbapedia: Mistralton City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Pokémon League (Unova); shop Item Changes:1030
+  item sources: Balm Mushroom: Item Changes 838; Item Changes 964
+  item sources: Dusk Ball: Item Changes 885; Item Changes 922; shop Bulbapedia: Icirrus City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Pokémon League (Unova)
+  item sources: Gracidea: Item Changes 920
+  item sources: Poké Doll: Item Changes 968
+  item sources: Fluffy Tail: Item Changes 969
+  item sources: Permit: Item Changes 991
+  item sources: Oval Charm: Item Changes 992
+  item sources: Shiny Charm: Item Changes 993
+  item sources: Sacred Ash: Item Changes 994; shop Bulbapedia: Join Avenue
+  item sources: Pearl String: Item Changes 1002; Item Changes 1010; Bulbapedia: Join Avenue
+  item sources: Shoal Salt: Item Changes 1003
+  item sources: Shoal Shell: Item Changes 1004
+  item sources: Magma Stone: Item Changes 1015
+  item sources: TM07 Hail: Item Changes 1092; shop Bulbapedia: Mistralton City
+  item sources: TM11 Sunny Day: Item Changes 1096; shop Bulbapedia: Mistralton City
+  item sources: TM15 Hyper Beam: Item Changes 1100; shop Bulbapedia: Shopping Mall Nine; shop Item Changes:1061
+  item sources: TM16 Light Screen: Item Changes 1101; shop Bulbapedia: Nimbasa City
+  item sources: TM18 Rain Dance: Item Changes 1103; shop Bulbapedia: Mistralton City
+  item sources: TM33 Reflect: Item Changes 1118; shop Bulbapedia: Nimbasa City
+  item sources: TM37 Sandstorm: Item Changes 1122; shop Bulbapedia: Mistralton City
+  item sources: TM68 Giga Impact: Item Changes 1153; shop Bulbapedia: Shopping Mall Nine; shop Item Changes:1061
+  item sources: TM73 Thunder Wave: Item Changes 1158; shop Bulbapedia: Nimbasa City
+  item sources: TM74 Gyro Ball: Item Changes 1159; shop Bulbapedia: Nimbasa City
+  item sources: Reveal Glass: Bulbapedia: Abundant Shrine
+  item sources: Dread Plate: Bulbapedia: Abyssal Ruins
+  item sources: Earth Plate: Bulbapedia: Abyssal Ruins
+  item sources: Fist Plate: Bulbapedia: Abyssal Ruins
+  item sources: Flame Plate: Bulbapedia: Abyssal Ruins
+  item sources: Icicle Plate: Bulbapedia: Abyssal Ruins
+  item sources: Insect Plate: Bulbapedia: Abyssal Ruins
+  item sources: Iron Plate: Bulbapedia: Abyssal Ruins
+  item sources: Meadow Plate: Bulbapedia: Abyssal Ruins
+  item sources: Mind Plate: Bulbapedia: Abyssal Ruins
+  item sources: Sky Plate: Bulbapedia: Abyssal Ruins
+  item sources: Spooky Plate: Bulbapedia: Abyssal Ruins
+  item sources: Stone Plate: Bulbapedia: Abyssal Ruins
+  item sources: Toxic Plate: Bulbapedia: Abyssal Ruins
+  item sources: Zap Plate: Bulbapedia: Abyssal Ruins
+  item sources: Relic Gold: Bulbapedia: Abyssal Ruins
+  item sources: Relic Silver: Bulbapedia: Abyssal Ruins
+  item sources: Relic Copper: Bulbapedia: Abyssal Ruins
+  item sources: Relic Statue: Bulbapedia: Abyssal Ruins
+  item sources: Relic Vase: Bulbapedia: Abyssal Ruins
+  item sources: Relic Band: Bulbapedia: Abyssal Ruins
+  item sources: Relic Crown: Bulbapedia: Abyssal Ruins
+  item sources: Lansat Berry: Bulbapedia: Battle Subway
+  item sources: Starf Berry: Bulbapedia: Battle Subway
+  item sources: Dowsing Machine: Bulbapedia: Castelia City
+  item sources: Super Potion: Bulbapedia: Castelia Sewers; Bulbapedia: Virbank Complex; Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: Antidote: Bulbapedia: Castelia Sewers; Bulbapedia: Icirrus City; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: Fire Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Reversal Mountain; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Water Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Grass Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Ice Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Fighting Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Poison Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Ground Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Flying Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Psychic Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Bug Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Rock Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave; shop Bulbapedia: Join Avenue
+  item sources: Ghost Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Dragon Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Dark Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Steel Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Normal Gem: Bulbapedia: Chargestone Cave; Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Wellspring Cave
+  item sources: Electric Gem: Bulbapedia: Clay Tunnel; Bulbapedia: Giant Chasm; Bulbapedia: Mistralton Cave; Bulbapedia: Seaside Cave; Bulbapedia: Twist Mountain; Bulbapedia: Victory Road (Black 2 and White 2); Bulbapedia: Wellspring Cave
+  item sources: Soul Dew: Bulbapedia: Dreamyard
+  item sources: Heal Powder: Bulbapedia: Driftveil Drawbridge; shop Bulbapedia: Driftveil City
+  item sources: Health Wing: Bulbapedia: Driftveil Drawbridge; Bulbapedia: Marvelous Bridge; Bulbapedia: Unova Route 4; Bulbapedia: Black Tower
+  item sources: Muscle Wing: Bulbapedia: Driftveil Drawbridge; Bulbapedia: Marvelous Bridge; Bulbapedia: Black Tower
+  item sources: Resist Wing: Bulbapedia: Driftveil Drawbridge; Bulbapedia: Marvelous Bridge; Bulbapedia: Black Tower
+  item sources: Genius Wing: Bulbapedia: Driftveil Drawbridge; Bulbapedia: Marvelous Bridge; Bulbapedia: Black Tower
+  item sources: Clever Wing: Bulbapedia: Driftveil Drawbridge; Bulbapedia: Marvelous Bridge; Bulbapedia: Black Tower
+  item sources: Swift Wing: Bulbapedia: Driftveil Drawbridge; Bulbapedia: Marvelous Bridge; Bulbapedia: Unova Route 4; Bulbapedia: Black Tower
+  item sources: Pretty Wing: Bulbapedia: Driftveil Drawbridge; Bulbapedia: Marvelous Bridge
+  item sources: DNA Splicers: Bulbapedia: Giant Chasm
+  item sources: Paralyze Heal: Bulbapedia: Icirrus City; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: Fresh Water: Bulbapedia: Marvelous Bridge; Bulbapedia: Join Avenue; shop Bulbapedia: Castelia City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: Dark Stone: Bulbapedia: N's Castle
+  item sources: Light Stone: Bulbapedia: N's Castle
+  item sources: Vs. Recorder: Bulbapedia: Nimbasa City
+  item sources: Dropped Item: Bulbapedia: Nimbasa City
+  item sources: Rage Candy Bar: Bulbapedia: Nimbasa City; Bulbapedia: Royal Unova; shop Bulbapedia: Join Avenue
+  item sources: Lava Cookie: Bulbapedia: Nimbasa City; Bulbapedia: Royal Unova; shop Bulbapedia: Join Avenue
+  item sources: Plasma Card: Bulbapedia: Plasma Frigate
+  item sources: Power Belt: Bulbapedia: Plasma Frigate; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Energy Root: Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Driftveil City
+  item sources: Energy Powder: Bulbapedia: Shopping Mall Nine; Bulbapedia: Tubeline Bridge; shop Bulbapedia: Driftveil City
+  item sources: Power Lens: Bulbapedia: Unova Route 13; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Power Band: Bulbapedia: Unova Route 13; shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Colress Machine: Bulbapedia: Unova Route 22
+  item sources: Pomeg Berry: Bulbapedia: Unova Route 5; Bulbapedia: Black Tower; shop Bulbapedia: Join Avenue; shop Item Changes:1035
+  item sources: Kelpsy Berry: Bulbapedia: Unova Route 5; Bulbapedia: Black Tower; shop Bulbapedia: Join Avenue; shop Item Changes:1035
+  item sources: Qualot Berry: Bulbapedia: Unova Route 5; Bulbapedia: Black Tower; shop Bulbapedia: Join Avenue; shop Item Changes:1035
+  item sources: Hondew Berry: Bulbapedia: Unova Route 5; Bulbapedia: Black Tower; shop Bulbapedia: Join Avenue; shop Item Changes:1035
+  item sources: Grepa Berry: Bulbapedia: Unova Route 5; Bulbapedia: Black Tower; shop Bulbapedia: Join Avenue; shop Item Changes:1035
+  item sources: HM01 Cut: Bulbapedia: Virbank City
+  item sources: Repel: Bulbapedia: Join Avenue; shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: Soda Pop: Bulbapedia: Join Avenue; shop Bulbapedia: Castelia City; shop Bulbapedia: Shopping Mall Nine
+  item sources: Lemonade: Bulbapedia: Join Avenue; shop Bulbapedia: Castelia City; shop Bulbapedia: Shopping Mall Nine
+  item sources: Moomoo Milk: Bulbapedia: Join Avenue; shop Bulbapedia: Driftveil City; shop Bulbapedia: Join Avenue
+  item sources: Guard Spec.: Bulbapedia: Join Avenue; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: Tamato Berry: Bulbapedia: Black Tower; shop Bulbapedia: Join Avenue; shop Item Changes:1035
+  item sources: Greet Mail: shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Opelucid City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town
+  item sources: Favored Mail: shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Opelucid City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town
+  item sources: RSVP Mail: shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Opelucid City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town
+  item sources: Thanks Mail: shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Opelucid City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town
+  item sources: Inquiry Mail: shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Opelucid City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town
+  item sources: Like Mail: shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Opelucid City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town
+  item sources: Reply Mail: shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Opelucid City; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town
+  item sources: Power Bracer: shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Power Anklet: shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: Power Weight: shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: White Herb: shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Item Changes:1061
+  item sources: Power Herb: shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament; shop Item Changes:1061
+  item sources: Focus Sash: shop Bulbapedia: Battle Subway; shop Bulbapedia: Pokémon World Tournament
+  item sources: BridgeMail M: shop Bulbapedia: Black City
+  item sources: Casteliacone: shop Bulbapedia: Castelia City
+  item sources: Revival Herb: shop Bulbapedia: Driftveil City
+  item sources: BridgeMail T: shop Bulbapedia: Icirrus City
+  item sources: BridgeMail V: shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Opelucid City
+  item sources: Awakening: shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: Burn Heal: shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: Ice Heal: shop Bulbapedia: Lentimas Town; shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Accumula Town; shop Bulbapedia: Aspertia City; shop Bulbapedia: Black City; shop Bulbapedia: Castelia City; shop Bulbapedia: Driftveil City; shop Bulbapedia: Floccesy Town; shop Bulbapedia: Humilau City; shop Bulbapedia: Icirrus City; shop Bulbapedia: Lacunosa Town; shop Bulbapedia: Mistralton City; shop Bulbapedia: Nimbasa City; shop Bulbapedia: Opelucid City; shop Bulbapedia: Striaton City; shop Bulbapedia: Undella Town; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Virbank City; shop Bulbapedia: Pokémon League (Unova)
+  item sources: Heal Ball: shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Striaton City; shop Bulbapedia: Victory Road (Black 2 and White 2); shop Bulbapedia: Pokémon League (Unova)
+  item sources: X Speed: shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: X Attack: shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: X Defense: shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: X Accuracy: shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: X Sp. Atk: shop Bulbapedia: Shopping Mall Nine
+  item sources: X Sp. Def: shop Bulbapedia: Shopping Mall Nine; shop Bulbapedia: Join Avenue
+  item sources: Honey: shop Bulbapedia: Join Avenue; shop Item Changes:1040
+  item sources: Liechi Berry: shop Bulbapedia: Join Avenue
+  item sources: Apicot Berry: shop Bulbapedia: Join Avenue
+  item sources: Salac Berry: shop Bulbapedia: Join Avenue
+  item sources: Rindo Berry: shop Bulbapedia: Join Avenue
+  item sources: Ganlon Berry: shop Bulbapedia: Join Avenue
+  item sources: Wacan Berry: shop Bulbapedia: Join Avenue
+  item sources: Petaya Berry: shop Bulbapedia: Join Avenue
+  item sources: Occa Berry: shop Bulbapedia: Join Avenue
+  item sources: Passho Berry: shop Bulbapedia: Join Avenue
+  item sources: Shuca Berry: shop Bulbapedia: Join Avenue
+  item sources: Kebia Berry: shop Bulbapedia: Join Avenue
+  item sources: Yache Berry: shop Bulbapedia: Join Avenue
+  item sources: Chople Berry: shop Bulbapedia: Join Avenue
+  item sources: Charti Berry: shop Bulbapedia: Join Avenue
+  item sources: Coba Berry: shop Bulbapedia: Join Avenue
+  item sources: Payapa Berry: shop Bulbapedia: Join Avenue
+  item sources: Babiri Berry: shop Bulbapedia: Join Avenue
+  item sources: Colbur Berry: shop Bulbapedia: Join Avenue
+  item sources: Kasib Berry: shop Bulbapedia: Join Avenue
+  item sources: Chilan Berry: shop Bulbapedia: Join Avenue
+  item sources: Bluk Berry: shop Bulbapedia: Join Avenue
+  item sources: Razz Berry: shop Bulbapedia: Join Avenue
+  item sources: Gooey Mulch: shop Bulbapedia: Join Avenue
+  item sources: Damp Mulch: shop Bulbapedia: Join Avenue
+  item sources: Growth Mulch: shop Bulbapedia: Join Avenue
+  item sources: Stable Mulch: shop Bulbapedia: Join Avenue
+  item sources: Odd Keystone: shop Bulbapedia: Join Avenue
+  item sources: Figy Berry: shop Item Changes:1040
+  item sources: Wiki Berry: shop Item Changes:1040
+  item sources: Mago Berry: shop Item Changes:1040
+  item sources: Aguav Berry: shop Item Changes:1040
+  item sources: Iapapa Berry: shop Item Changes:1040
+  item sources: Full Incense: shop Item Changes:1061
+  item sources: Lax Incense: shop Item Changes:1061
+  item sources: Luck Incense: shop Item Changes:1061
+  item sources: Pure Incense: shop Item Changes:1061
+  item sources: Rock Incense: shop Item Changes:1061
+  item sources: Rose Incense: shop Item Changes:1061
+  item sources: Wave Incense: shop Item Changes:1061
+items areas: 86 places (records and shops); 70 join a LOC area; no LOC area (no wild encounters): Black City, Black Tower, Join Avenue, Lacunosa Town, Lentimas Town, Marine Tube, Mistralton City, Nuvema Town, Opelucid City, PWT, Plasma Frigate, Pokémon League, Royal Unova, Tubeline Bridge
   item format: Pokéball -> Poké Ball (4: Item Changes:84, Item Changes:111, Item Changes:112)
   item alias: Bike -> Bicycle (1: Item Changes:85)
   item format: Exp Share -> Exp. Share (2: Item Changes:131, RomHackDex)
@@ -381,9 +823,14 @@ items: complete vanilla Pickup table, 10 level bands with probabilities; four do
   item format: NeverMeltIce -> Never-Melt Ice (2: Item Changes:702, Item Changes:809)
   item format: BalmMushroom -> Balm Mushroom (2: Item Changes:838, Item Changes:964)
   item format: Never Melt Ice -> Never-Melt Ice (2: RomHackDex, RomHackDex)
+  item alias: Moomoo Milk III -> Moomoo Milk (3: Bulbapedia Castelia City, Bulbapedia Join Avenue, Bulbapedia: Join Avenue:0)
+  item alias: Amulet Coin III -> Amulet Coin (1: Bulbapedia Castelia City)
+  item alias: Dowsing MCHN -> Dowsing Machine (2: Bulbapedia Castelia City, Bulbapedia: Castelia City:0)
+  item alias: Super Rod III -> Super Rod (1: Bulbapedia Nuvema Town)
   item format: Upgrade -> Up-Grade (1: Bulbapedia shop Black City)
-  move format: SolarBeam -> Solar Beam (2: Item Changes:307, Item Changes:1107)
-  move format: U-Turn -> U-turn (4: Item Changes:451, Item Changes:1174, Bulbapedia shop Battle Subway)
+  item alias: Razz Berry III -> Razz Berry (1: Bulbapedia shop Join Avenue)
+  move format: SolarBeam -> Solar Beam (2: Item Changes:307, TM table)
+  move format: U-Turn -> U-turn (4: Item Changes:451, TM table, Bulbapedia shop Battle Subway)
 not built yet: walk (TODO: implement blaze-black-2-redux walk extraction)
 doc name fixes: 18 (species 6, move 11, ability 1)
   species fuzzy: Snubull -> Snubbull (1: Type Changes:39)
@@ -409,6 +856,6 @@ GID species: 712 species:form keys; 671/671 P ids; 649/649 base species
 GID unmapped species: 351:1 Castform, 351:2 Castform, 351:3 Castform, 493:1 Arceus, 493:2 Arceus, 493:3 Arceus, 493:4 Arceus, 493:5 Arceus, 493:6 Arceus, 493:7 Arceus, 493:8 Arceus, 493:9 Arceus, 493:10 Arceus, 493:11 Arceus, 493:12 Arceus, 493:13 Arceus, 493:14 Arceus, 493:15 Arceus, 493:16 Arceus
 GID move: 559/577 guide names; unmapped: Shadow Blast, Shadow Blitz, Shadow Bolt, Shadow Break, Shadow Chill, Shadow Down, Shadow End, Shadow Fire, Shadow Half, Shadow Hold, Shadow Mist, Shadow Panic, Shadow Rave, Shadow Rush, Shadow Shed, Shadow Sky, Shadow Storm, Shadow Wave
 GID ability: 164/166 guide names; unmapped: Competitive, Neutralizing Gas
-GID item: 324/444 guide names; unmapped: Bicycle, Old Sea Map, Dropped Item, Ice Stone, Link Cable, Razz Berry III, TM04 Calm Mind, TM07 Hail, TM08 Bulk Up, TM10 Hidden Power, TM11 Sunny Day, TM14 Blizzard, TM15 Hyper Beam, TM16 Light Screen, TM17 Protect, TM18 Rain Dance, TM20 Tri Attack, TM23 Smack Down, TM25 Thunder, TM31 Brick Break, TM32 Dazzling Gleam, TM33 Reflect, TM34 Sludge Wave, TM37 Sandstorm, TM38 Fire Blast, TM48 Mystical Fire, TM51 Wave Crash, TM59 Incinerate, TM60 Quash, TM64 Explosion, TM68 Giga Impact, TM73 Thunder Wave, TM74 Gyro Ball, TM75 Swords Dance, TM77 Psych Up, TM79 Frost Breath, TM87 Rock Climb, TM88 Pluck, TM89 U-turn, TM54 False Swipe, TM53 Energy Ball, TM83 Work Up, TM41 Infestation, TM21 Frustration, TM36 Sludge Bomb, TM09 Venoshock, TM94 Rock Smash, TM45 Power-Up Punch, TM47 Low Sweep, TM44 Rest, TM70 Flash, TM86 Grass Knot, TM81 X-Scissor, TM84 Poison Jab, TM85 Play Rough, TM52 Focus Blast, TM28 Dig, TM03 Psyshock, TM78 Bulldoze, TM39 Rock Tomb, TM01 Hone Claws, TM72 Volt Switch, TM49 Echoed Voice, TM66 Power Gem, TM22 Solar Beam, TM95 Snarl, TM43 Flame Charge, TM63 Brutal Swing, TM26 Earthquake, TM91 Flash Cannon, TM57 Charge Beam, TM82 Dragon Tail, TM80 Rock Slide, TM40 Aerial Ace, TM62 Acrobatics, TM61 Will-O-Wisp, TM65 Shadow Claw, TM24 Thunderbolt, TM69 Rock Polish, TM27 Return, TM35 Flamethrower, TM30 Shadow Ball, TM55 Scald, TM29 Psychic, TM76 Bug Buzz, TM56 Weather Ball, TM93 Wild Charge, TM19 Giga Drain, TM02 Dragon Claw, TM42 Facade, TM67 Retaliate, TM92 Trick Room, TM06 Toxic, TM13 Ice Beam, TM90 Substitute, TM50 Overheat, TM05 Roar, TM12 Taunt, TM58 Hurricane, TM46 Aura Sphere, TM71 Stone Edge, HM04 Strength, HM02 Fly, HM03 Surf, HM05 Waterfall, HM06 Dive, HM01 Cut, Amulet Coin III, Dowsing MCHN, Moomoo Milk III, Super Rod III, Stick, Lunar Wing, Health Wing, Muscle Wing, Resist Wing, Genius Wing, Clever Wing, Swift Wing, Pretty Wing
+GID item: 440/441 guide names; unmapped: Old Sea Map
 GID move replacements: 26/26 original slots mapped
 trainer keys: no trainers yet, no table written

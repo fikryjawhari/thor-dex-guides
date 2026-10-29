@@ -17,8 +17,12 @@ ITEM_AREA_ALIASES = {
     'Castellia City Gym': 'Castelia City Gym', 'Giants Chasm': 'Giant Chasm',
     'Team Plasma Frigate': 'Plasma Frigate', 'Driftveil City Marketplace': 'Driftveil City',
     'Driftveil Market': 'Driftveil City', 'Route 9 Shopping Mall': 'Route 9', 'Shopping Mall Nine': 'Route 9',
-    'Battle Subway': 'Nimbasa City', 'Pokémon World Tournament': 'PWT',
+    'Battle Subway': 'Nimbasa City', 'Pokémon World Tournament': 'PWT', 'Pokémon League (Unova)': 'Pokémon League',
 }
+# Item places with no LOC area (no wild encounters there): the walkthrough places these by its own stops.
+NO_WILD = {'Black City', 'Black Tower', 'Join Avenue', 'Lacunosa Town', 'Lentimas Town', 'Marine Tube',
+           'Mistralton City', 'Nuvema Town', 'Opelucid City', 'PWT', 'Plasma Frigate', 'Pokémon League',
+           'Royal Unova', 'Tubeline Bridge'}
 POSTGAME_VENDOR = 'Challenge: absent until the postgame Route 3 Suicune sighting'
 EVLESS = 'EVless: wild held items removed except Latios, Latias and Giratina; vitamins and Power items do not restore player EVs'
 STONES = ['Fire Stone', 'Water Stone', 'Thunder Stone', 'Leaf Stone', 'Moon Stone', 'Sun Stone', 'Shiny Stone',
@@ -38,7 +42,10 @@ ALIASES = {'Bike': 'Bicycle', 'Pokéball': 'Poké Ball', 'Thunderstone': 'Thunde
            'X-Special': 'X Sp. Atk', 'X Special': 'X Sp. Atk', 'X-Sp Def': 'X Sp. Def',
            'Guard Spec': 'Guard Spec.', 'Armour Fossil': 'Armor Fossil', 'Dubious Disk': 'Dubious Disc',
            'Persim Berries': 'Persim Berry', 'Perism berries': 'Persim Berry', 'Perism Berry': 'Persim Berry',
-           'Tanga Berries': 'Tanga Berry', 'Either': 'Ether', 'Upgrade': 'Up-Grade'}
+           'Tanga Berries': 'Tanga Berry', 'Either': 'Ether', 'Upgrade': 'Up-Grade',
+           # Bulbapedia snapshot artifacts (a games-template suffix and the in-game abbreviation)
+           'Amulet Coin III': 'Amulet Coin', 'Moomoo Milk III': 'Moomoo Milk', 'Super Rod III': 'Super Rod',
+           'Razz Berry III': 'Razz Berry', 'Dowsing MCHN': 'Dowsing Machine'}
 DROP_KEYS = {'Town Map IV', 'Town Map', 'Running Shoes', 'Xtransceiver B2W2', 'Xtransceiver', 'Pal Pad',
              'Fashion Case', 'Prop Case', 'Medal Box', 'Gram 1', 'Gram 2', 'Gram 3'}
 KEY_ITEMS = {'Bicycle', 'Super Rod', 'Dowsing Machine', 'Shiny Charm', 'Oval Charm', 'Permit', 'Old Sea Map',
@@ -1284,6 +1291,34 @@ VANILLA['placements'] += [
     ['Green Shard', 'Reversal Mountain', 'Phenomenon', 'Reversal Mountain'],
 ]
 ITEM_LOCATIONS = []
+SOURCES = []    # (item, shop line, source): the build report keeps where each shop line came from
+
+
+def found_line(row):
+    """One IT line for a location record; sources stay in the record and the report, never in page text."""
+    note = row['note']
+    if row['source'].startswith('Bulbapedia'):
+        note += (' ' if note else '') + '(vanilla)'
+    return 'Found: %s%s' % (row['area'], ' — ' + note if note else '')
+
+
+def area_join(area, loc_names):
+    """Walkthrough join: an item place (record area or shop line place) -> (place, LOC area names).
+    place is the item place with item aliases and Gym / Pokémon Center suffixes removed; LOC names are () only for
+    NO_WILD places."""
+    import locs
+    place = ITEM_AREA_ALIASES.get(area, area)
+    place = re.sub(r' (?:Gym|Pokémon Center)$', '', place)
+    place = ITEM_AREA_ALIASES.get(place, place)
+    names = tuple(name for name in locs.area_names(place) if name in loc_names)
+    names = names or tuple(sorted(name for name in loc_names if name.startswith((place + ' - ', place + ', '))))
+    return place, names
+
+
+def shop_places(data):
+    """The place of every Shops line (the text before the first ' — ')."""
+    return sorted({line.split(' — ')[0] for box in data['IT'] if box['n'] == 'Shops' for row in box['r']
+                   for line in row[1].splitlines()})
 
 
 def area_key(area):
@@ -1460,13 +1495,14 @@ def collect(data):
             if row['quantity'] > 1:
                 note += ('; ' if note else '') + '×%d' % row['quantity']
             if row['mode']:
-                note += ('; ' if note else '') + ('Easy/Normal only — unavailable in Challenge' if row['mode'] == 'Easy/Normal' else 'Challenge only')
+                note += ('; ' if note else '') + ('Easy/Normal only, not in Challenge' if row['mode'] == 'Easy/Normal' else 'Challenge only')
             if row['item'].startswith('Choice between'):
                 note += ('; ' if note else '') + row['item'] + ' (choose one)'
             add(raw, row['area'], note, 'Item Changes', row['line'], row['hidden'], row['quantity'], row['mode'])
     for row in parsed['tms']:
-        add('TM%02d %s' % (row['number'], row['move']), row['area'],
-            'TM table; changed location' if row['changed'] else 'TM table', 'Item Changes', row['line'])
+        raw = 'TM%02d %s' % (row['number'], row['move'])
+        if (drayano.key(resolve(raw, names, moves, tms, 'TM table')), area_key(row['area'])) not in covered:
+            add(raw, row['area'], '', 'Item Changes', row['line'])
     trade_area = None
     for line, text in enumerate(doc('Trade Changes').lines):
         location = re.match(r'Location: (.+?)\.', text)
@@ -1494,11 +1530,12 @@ def collect(data):
     for raw, area, note, title in VANILLA['placements']:
         if not raw or raw in DROP_KEYS or raw.startswith('TM') or raw.split(' ', 1)[0] in doc_hms:
             continue
+        note = re.sub(r'\s*\*\s*', '; ', re.sub(r'^\s*\*\s*|\)\*', lambda m: ')' if ')' in m[0] else '', note))
         if raw.startswith('Dropped Item-'):
             raw = 'Dropped Item'
         replacement = {'Oval Stone': 'Link Cable', 'Red Scarf': 'Ice Stone'}
         if raw in replacement:
-            note += '; replaces vanilla ' + raw + ' [Item Changes item replacement]'
+            note += '; replaces vanilla ' + raw
             raw = replacement[raw]
         canonical = resolve(raw, names, moves, tms, 'Bulbapedia ' + title)
         if (drayano.key(canonical), area_key(area)) in primary_covered:
@@ -1534,10 +1571,9 @@ def build(data):
         grouped.setdefault(row['item'], []).append(row)
     for name, places in grouped.items():
         box = category(name)
-        parts = ['Found: %s%s [%s%s]' % (row['area'], ' — ' + row['note'] if row['note'] else '', row['source'],
-                                       ':%d' % row['line'] if row['line'] else '') for row in places]
+        parts = [found_line(row) for row in places]
         if name in {names(row['item']) for row in parsed['uses']}:
-            parts.append('Also: has a Use option for evolution [Item Changes]')
+            parts.append('Also: has a Use option, like an evolution stone')
         boxes.setdefault(box, []).append([name, '\n'.join(dict.fromkeys(parts)), places[0]['link'], 0, subsection(name)])
     shops = build_shops(parsed, names, moves, tms)
     boxes['Shops'] = [[name, text, None, 0, shop_kind(name)] for name, text in shops]
@@ -1545,7 +1581,7 @@ def build(data):
         name = names(row['item'], 'Pickup:%d' % row['line'])
         box = category(name)
         target = next((entry for entry in boxes.setdefault(box, []) if entry[0] == name), None)
-        note = 'Also: Pickup — replaces every %s slot; original level/probability bands unchanged [Item Changes:%d]' % (row['old'], row['line'])
+        note = 'Also: Pickup, in place of every %s slot' % row['old']
         if target:
             target[1] += '\n' + note
         else:
@@ -1555,7 +1591,6 @@ def build(data):
         box = category(name)
         target = next((entry for entry in boxes.setdefault(box, []) if entry[0] == name), None)
         note = 'Also: Pickup (10% after a win); on a successful pickup: ' + '; '.join('Lv %s: %d%%' % band for band in bands)
-        note += ' [Bulbapedia: Pickup (Ability); Item Changes substitutions applied]'
         if target:
             target[1] += '\n' + note
         else:
@@ -1569,12 +1604,26 @@ def build(data):
             len(tms), sum(name.startswith('HM') for name in grouped), len(shops)))
     report('items: 652 nonempty doc statements in 69 areas; 3 deletions; 8 mode-qualified statements; 4 Pickup substitutions')
     report('items: complete vanilla Pickup table, 10 level bands with probabilities; four doc substitutions applied')
+    sources = collections.OrderedDict()
+    for row in records:
+        sources.setdefault(row['item'], []).append(row['source'] + (' %d' % row['line'] if row['line'] else ''))
+    for name, _, source in SOURCES:
+        sources.setdefault(name, []).append('shop ' + source)
+    for name, found in sources.items():
+        report('  item sources: %s: %s' % (name, '; '.join(dict.fromkeys(found))))
+    loc_names = set(data['LOC'])
+    places = sorted({row['area'] for row in records} | set(shop_places(data)))
+    joins = {area: area_join(area, loc_names) for area in places}
+    report('items areas: %d places (records and shops); %d join a LOC area; no LOC area (no wild encounters): %s' %
+           (len(places), sum(bool(names) for _, names in joins.values()),
+            ', '.join(sorted({place for place, names in joins.values() if not names}))))
     for line in names.lines(formats=True) + moves.lines(formats=True):
         report(line)
 
 
 def build_shops(parsed, names, moves, tms):
     offers = []
+    SOURCES.clear()
     for raw, area, vendor, price, note, title in VANILLA['shops']:
         if area in ('Virbank City', 'Castelia City', 'Driftveil City', 'Humilau City') and 'Lower cashier' in vendor:
             continue
@@ -1590,14 +1639,16 @@ def build_shops(parsed, names, moves, tms):
         name = resolve(raw, names, moves, tms, 'Bulbapedia shop ' + title)
         override = next((row['price'] for row in parsed['prices'] if names(row['item']) == name), None)
         if override is not None:
-            price = '$%d [Item Changes price]' % override
+            price = '$%d' % override
         if area in ('Battle Subway', 'Pokémon World Tournament'):
             note = '; '.join(value for value in (note, POSTGAME_VENDOR) if value)
         if area == 'Black City' and 'Store ' in vendor:
             store = int(vendor.rsplit('Store ', 1)[1])
             weekday = name in ('Thunder Stone', 'Fire Stone', 'Dusk Stone', 'Dawn Stone')
             note = 'Black Tower Area %d cleared; %s' % ([2, 5, 8, 10][store - 1], 'weekdays' if weekday else 'weekends')
-        text = '%s — %s; %s%s [Bulbapedia: %s]' % (area, vendor, price, '; ' + note if note else '', title)
+        price = re.sub(r'^(\d+) dollars$', r'$\1', price)
+        text = '%s — %s; %s%s' % (area, vendor, price, '; ' + note if note else '')
+        SOURCES.append((name, text, 'Bulbapedia: ' + title))
         offers.append((name, text))
     stock = {
         'Virbank City': ['Luxury Ball', 'Net Ball', 'Aspear Berry', 'Oran Berry', 'Rawst Berry'],
@@ -1616,8 +1667,8 @@ def build_shops(parsed, names, moves, tms):
             if name in prices:
                 text += '; $%d' % prices[name]
             if name == 'TM68 Giga Impact' and area == 'Route 9 Shopping Mall':
-                text += '; doc mart prose prints TM66, but its 95-TM table identifies Giga Impact as TM68'
-            text += ' [Item Changes:%d]' % mart['line']
+                text += '; Doc says TM66 (its TM table: TM68)'
+            SOURCES.append((name, text, 'Item Changes:%d' % mart['line']))
             offers.append((name, text))
     return list(dict.fromkeys(offers))
 

@@ -162,6 +162,34 @@ not a replacement for omitted methods. No template change or browser sweep in th
   new Locations output. Its trainer-keys check fails because the baseline scaffold deliberately has no
   `extract/trainer_keys.json` until the trainers unit builds real trainers; this unit does not invent that table.
 
+### Items
+`extract/items.py` (IT; `item_locations()` and `area_join()` for the walkthrough), checked in `extract/check.py`.
+- **Sources, in order:** Item Changes (652 placement statements in 69 areas, the 95-TM table, 6 modified marts,
+  8 price changes, 13 Use-option items, 4 Pickup substitutions), Trade Changes / Gift Pokemon (held items), then
+  Bulbapedia for vanilla gaps (placements, HMs, every unmodified shop, the Pickup table; a snapshot in `VANILLA` /
+  `PICKUP`, no network at build time). RomHackDex's 558 item pages are a scrape of Item Changes' own placement list
+  (one item + one place per page; the mart headings scraped as items, no stock, no vanilla placements), so they add
+  nothing: the loop stays as a cross-check (`items cross-check` in the report) and fills any gap it ever has first.
+- **Page text carries no sources.** Rows are `Found:` / `Also:` lines and shop lines (`Place — vendor; price; note`).
+  A Bulbapedia placement ends "(vanilla)" (Hardlove's marker); shop lines are not marked (every mart is vanilla bar
+  the 6 modified ones). Where each line came from (doc line, Bulbapedia page) is in the report (`item sources:`).
+- **Doc conflicts:** TM57: the TM table still says Lentimas Town, the placement list moves it to Chargestone Cave
+  (Escape Rope -> TM57) and puts TM24 in its Lentimas slot; the placement list wins. The Route 9 mall prose says
+  "TM66 Giga Impact"; the TM table has Giga Impact as TM68 ("Doc says TM66" on the shop line).
+- **Modes:** the doc's 5 Easy/Normal-only placements say "Easy/Normal only, not in Challenge"; its 3 Challenge-only
+  ones "Challenge only". BP vendors (Battle Subway, PWT) and the Castelia berry Harlequin (taken to be the doc's
+  "Castelia Cafe artist"; unconfirmed, Bulbapedia refused the fetch) carry "Challenge: absent until the postgame
+  Route 3 Suicune sighting".
+- **Names:** Bulbapedia's "Amulet Coin III" style suffixes and "Dowsing MCHN" fold into the item (`ALIASES`). GID
+  (`gid.py` `GAME_ITEMS`): PKHeX's Bike / Leek / Feathers / Dropped Item (M, F) are the guide's Bicycle / Stick / Wings
+  / Dropped Item; BB2R's reused slots Red Scarf = Ice Stone and Oval Stone = Link Cable (Item Changes, Modified
+  Items); TMs / HMs map by number. 440 / 441 IT names map; Old Sea Map (BB2R's "God/Grey Stone" slot, no PKHeX
+  name) stays unmapped: a key item, never held.
+- **Walkthrough join:** `area_join(area, LOC names)` gives each item place (record area or shop place) its LOC areas;
+  places with none are `NO_WILD` (towns and buildings with no wild encounters: Black City, Black Tower, Join Avenue,
+  Lacunosa, Lentimas, Marine Tube, Mistralton, Nuvema, Opelucid, PWT, Plasma Frigate, Pokémon League, Royal Unova,
+  Tubeline Bridge); the check asserts every place is one or the other.
+
 ## Local storage
 
 Prefix `bb2r`. Keep these keys once published.
@@ -218,9 +246,8 @@ reproduction and limitations: `template/calc/readers/README.md` → gen5.
 ID/name/form/growth export from PKHeX.Core 26.10.18; format-source commit
 `bfe89c74a3f5265805e364b79bc04ad38ebbc5ea`. No PKHeX code or linked binaries are shipped.
 Coverage: 712 species:form keys, all 649 base species and all 671 P entries; 559/559 real B2W2 move
-slots, including the 26 replacements at the old slot; 164/164 B2W2 ability slots. IT is currently empty:
-all 638 item IDs are deferred, automatically mapped by name when the items unit merges. The check proves
-future IT matching (Leftovers, NeverMeltIce alias and an unmapped-name control).
+slots, including the 26 replacements at the old slot; 164/164 B2W2 ability slots. Items map by IT name
+(Items above: 440 / 441, Old Sea Map unmapped); the check also keeps the alias and unmapped-name controls.
 
 Unmapped, deliberately not assigned invented IDs:
 - Castform weather forms 351:1..3 and typed Arceus 493:1..16: no matching P entries. They are skipped

@@ -163,16 +163,32 @@ for source in item_doc['placements']:
               'items: hidden/quantity at doc line %d' % source['line'])
         check(record['mode'] == source['mode'] and record['available'] == (source['mode'] != 'Easy/Normal'),
               'items: Challenge availability at doc line %d' % source['line'])
-        check(any('Item Changes:%d]' % source['line'] in text for text in text_by_item.get(record['item'], [])),
-              'items: final IT lost doc line %d' % source['line'])
+        check(any(line.startswith('Found: ' + record['area']) for text in text_by_item.get(record['item'], [])
+                  for line in text.splitlines()), 'items: final IT lost doc line %d' % source['line'])
+        if record['mode'] == 'Easy/Normal':
+            check(any(line.startswith('Found: ' + record['area']) and 'Easy/Normal only, not in Challenge' in line
+                      for text in text_by_item[record['item']] for line in text.splitlines()),
+                  'items: Easy/Normal-only placement flagged at doc line %d' % source['line'])
 tm_rows = [row for box in D['IT'] if box['n'] == 'TMs and HMs' for row in box['r'] if row[0].startswith('TM')]
 hm_rows = [row for box in D['IT'] if box['n'] == 'TMs and HMs' for row in box['r'] if row[0].startswith('HM')]
 check(len(tm_rows) == 95 and len(hm_rows) == 6, 'items: final IT has 95 TMs and 6 HMs')
 for source in item_doc['tms']:
-    found = doc_by_line.get(source['line'], [])
     move_name = drayano.Names('move', M)(source['move'])
-    check(len(found) == 1 and found[0]['link'] is not None and M[found[0]['link']] == move_name,
+    row = [row for row in tm_rows if row[0].startswith('TM%02d ' % source['number'])]
+    check(len(row) == 1 and row[0][2] is not None and M[row[0][2]] == move_name,
           'items: TM%02d resolved against M' % source['number'])
+    check(any(record['item'] == row[0][0] and items.area_key(record['area']) == items.area_key(source['area'])
+              for record in records) or source['number'] == 57, 'items: TM%02d at its TM-table place' % source['number'])
+    # TM57: the TM table still says Lentimas Town; the placement list moves it to Chargestone Cave (line 393) and puts
+    # TM24 in its Lentimas slot (line 473). The placement list wins (notes.md -> Items).
+check(not any(re.search(r'\[(?:Item Changes|Bulbapedia|RomHackDex)|Item Changes:\d', row[1]) for row in item_rows),
+      'items: no source / line tags in IT text')
+loc_names = set(D['LOC'])
+for area in sorted({record['area'] for record in records} | set(items.shop_places(D))):
+    place, joined = items.area_join(area, loc_names)
+    check(bool(joined) != (place in items.NO_WILD), 'items: area %r joins a LOC area or is listed in NO_WILD' % area)
+check(not any(re.search(r'Item Changes|Bulbapedia', record['note']) for record in records),
+      'items: no source tags in location notes (the walkthrough shows them)')
 check(not any(re.search(r'mode only\.|Modified|sells:|TM #|\{\{|\s{2,}', row[0]) for row in item_rows),
       'items: no footnotes, headings or fused location text parsed as item names')
 check(not any(row[0] in ('Oval Stone', 'Red Scarf') for row in item_rows), 'items: replaced item IDs not restored from vanilla')
@@ -187,7 +203,7 @@ for row in shops:
     for line in row[1].splitlines():
         if line.startswith(('Battle Subway', 'Pokémon World Tournament')):
             check(items.POSTGAME_VENDOR in line, 'items: BP vendor is postgame-only in Challenge')
-check(any(row[0] == 'TM68 Giga Impact' and 'doc mart prose prints TM66' in row[1] for row in shops),
+check(any(row[0] == 'TM68 Giga Impact' and 'Doc says TM66' in row[1] for row in shops),
       'items: Giga Impact mart typo resolved against TM table')
 check(not itemstd.checks(D), 'items: Items standard: %s' % itemstd.checks(D))
 check(all(row[4] in itemstd.STATS_SUBS for box in D['IT'] if box['n'] == 'Stats and Abilities' for row in box['r']),
@@ -325,6 +341,11 @@ print('GID unmapped species: Castform weather 351:1..3, typed Arceus 493:1..16 (
 print('GID items:', 'deferred: IT empty' if not D['IT'] else 'mapped by IT name; see report')
 check(gid['sp']['646:1'] == 'kyurem_white' and gid['sp']['646:2'] == 'kyurem_black', 'Kyurem form order: White then Black')
 check(gid['sp']['550:1'] == 'basculin_blue_striped' and gid['sp']['422:1'] == 'shellos_east_sea', 'Basculin Blue / Shellos East form keys')
+gid_items = {name for name in gid['it'] if name}
+holdable = {row[0] for box in D['IT'] if box['n'] not in ('Key Items', 'Shops', 'TMs and HMs') for row in box['r']}
+check(holdable <= gid_items, 'every holdable IT item maps in GID: missing %s' % sorted(holdable - gid_items))
+unmapped = {row[0] for box in D['IT'] for row in box['r']} - gid_items - {'Old Sea Map'}
+check(not unmapped, 'GID items: only Old Sea Map (no PKHeX name for its reused slot) unmapped; also %s' % sorted(unmapped))
 with_items = deepcopy(D)
 with_items['IT'] = [{'n': 'test', 'r': [['Leftovers', '', None], ['NeverMeltIce', '', None], ['Not A Game Item', '', None]]}]
 build_gid(with_items)
