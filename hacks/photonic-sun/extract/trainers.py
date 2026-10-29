@@ -1,7 +1,8 @@
 """Trainers (TR): trainer boxes, and the walkthrough's stops (D['_stops'], finished by walk.py).
 
-Sets are the hack's own trainer data (trainers-rebalanced.json, tools/usum_trainers.py): species, form, level,
-nature, ability, item, IVs, EVs and moves. The game data has no places, so they come from Bulbapedia: its Ultra
+Sets are the hack's own trainer data from the EV-less mod copy (trainers-evless.json: tools/usum_trainers.py on
+the output of tools/ctr_evless.py, so no trainer Pokémon has EVs): species, form, level, nature, ability, item, IVs,
+EVs (all 0) and moves. The game data has no places, so they come from Bulbapedia: its Ultra
 Sun / Ultra Moon walkthrough lists every trainer in story order under place headings, with the vanilla team
 (Trainerentry templates for regular trainers, Party templates for bosses). Each entry is matched to a vanilla trainer
 (trainers-vanilla.json, the same tool on vanilla Ultra Sun) by class + name, then species and levels; the hack edits
@@ -269,7 +270,7 @@ def trainer_splits(groups, caps, battles):
 
 
 def build(D):
-    V, Hk = load('trainers-vanilla.json'), load('trainers-rebalanced.json')
+    V, Hk = load('trainers-vanilla.json'), load('trainers-evless.json')
     dexj = load('dex-rebalanced.json')
     spec, MI, ABI, byid = D['_spec'], D['_MI'], D['_ABI'], D['_byid']
     sid = {s['name']: s['id'] for s in dexj['species'] if not s['form']}

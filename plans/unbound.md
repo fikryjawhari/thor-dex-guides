@@ -141,6 +141,9 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
 
 ## Findings for later units
 (Units add theirs here.)
+- Main chat (2026-10-29): Focus Belt / Nine Lives are probably Sturdy clones (the wiki lists Sturdy for their
+  holders); unit 8: the calc treats them as Sturdy, marked assumed in notes.md → Damage calc. Pikachu Surfing / Flying
+  use EI's art (`sprites.json`, the user's call).
 - Unit 1 (sources): detailed audit `plans/unbound-sources.md`; pin/re-fetch/licence manifest
   `hacks/unbound/SOURCES.md`. No D1-D7 changes, no extracts/template edits. Research is on
   `worktree-unbound-sources`, to merge into `worktree-unbound` before later units.

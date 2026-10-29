@@ -15,7 +15,7 @@ lag rules, scroll restore) are the viewer contract: `.agents/skills/rom-hack-off
 | `name` | The hack's name in wording. |
 | `orig` | Tag for hack-original moves / abilities (`''` = none). |
 | `evs` | `false` = no EV inputs or EV speeds. MGM shows only when this is on **and** some trainer Pokémon has EVs. |
-| `mgm` | `false` = no MGM switch even with EVs on (the hack has no way to turn EVs off: Unbound). Speeds always count EVs. Absent = on. |
+| `mgm` | `false` = no MGM switch even with EVs on (Unbound, which has no way to turn EVs off; Photonic Sun's EV-less copy). A trainer Pokémon with no `iv`, or no `ev` where EVs count, shows no speed (unknown, not assumed). Speeds always count EVs. Absent = on. |
 | `starter` | `pick` = named starter picker (tracker bar, Trainers header, walkthrough) stored in `TK.s`; `type` = the same picker for guides whose rivals follow a type (`t.st` = Grass / Fire / Water). |
 | `orbs` | Primal / Rayquaza Mega pages point at Useful NPCs. |
 | `g3trainer` | Unobtainable species are tagged Trainer only. |
