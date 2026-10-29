@@ -148,6 +148,8 @@ def main():
         print('GID: not in data.json (no Unbound-Cloud checkout)')
 
     check_locations(D, ids)
+    check_items(D)
+
     print('dex: P %d (%d mirror pages: %d merged, %d dropped), M %d, AB %d, wiki differences %s'
           % (len(P), len(FORMS), merged, sum(dropped.values()), len(M), len(AB), dict(count)))
     if FAIL:
@@ -211,6 +213,137 @@ def check_locations(D, ids):
     for k, v in LOC_EXPECTED.items():
         check(got[k] == v, 'locations: %s %s, expected %s' % (k, got[k], v))
     print('locations: %s' % dict(got))
+
+
+ITEMS_EXPECTED = {'location pages': 67, 'location rows': 687, 'machines': 128, 'stones': 49, 'z': 34, 'tutors': 29,
+                  'shop rows': 140, 'missions': 83, 'npcs': 34,
+                  # Locations rows whose item no IT row places there (notes.md → Items says why)
+                  'not placed': [],
+                  # location-guide.xlsx differences (notes.md → Items)
+                  'workbook': ['Z-Crystal: workbook only Incinium Z']}     # the workbook: "Currently Unavailable"
+
+
+def check_items(D):
+    """Items (unit 5): counts reproduced from the wiki export, every Locations row placed, GID names resolve."""
+    if not D.get('IT'):
+        print('items: no IT yet')
+        return
+    import items
+    from wiki import text, item_crystal_parts, useful_npcs
+    E = ITEMS_EXPECTED
+    box = {b['n']: b['r'] for b in D['IT']}
+    by_name = collections.defaultdict(list)
+    for b in D['IT']:
+        for r in b['r']:
+            by_name[r[0]].append((b['n'], r))
+    # machines: TM001-TM120 and HM01-HM08, each linked to its move
+    tm = box.get('TMs and HMs', [])
+    nums = {(m.group(1), int(m.group(2))) for m in (re.match(r'(TM|HM)(\d+) ', r[0]) for r in tm) if m}
+    for r in tm:                                    # canon() names a TM by its number ("TM34 (Shockwave)")
+        m = re.match(r'(TM|HM)(\d+) ', r[0])
+        items.MACHINES[(m.group(1), int(m.group(2)))] = r[0]
+    check(len(tm) == E['machines'] and nums == {('TM', i) for i in range(1, 121)} | {('HM', i) for i in range(1, 9)},
+          'machines: %d rows, numbers %s' % (len(tm), sorted(nums)[:5]))
+    check(all(isinstance(r[2], int) for r in tm), 'machines without a move link: %s'
+          % [r[0] for r in tm if not isinstance(r[2], int)])
+    # Mega Stones = the dex's stones
+    stones = {p['stone']: p['id'] for p in D['P'] if p.get('stone')}
+    ms = box.get('Mega Stones', [])
+    check(len(ms) == E['stones'] == len(stones) and all(stones.get(r[0]) == r[2] for r in ms),
+          'Mega Stones: %d rows, %d P stones' % (len(ms), len(stones)))
+    z = box.get('Z-Crystals', [])
+    check(len(z) == E['z'] == len(item_crystal_parts(WIKI)), 'Z-Crystals: %d rows' % len(z))
+    tut = WIKI.tutors()
+    check(len(tut) == E['tutors'] and len(box.get('Move Tutors', [])) == sum(len(t.moves) for t in tut),
+          'tutors: %d, rows %d' % (len(tut), len(box.get('Move Tutors', []))))
+    check(all(isinstance(r[2], int) for r in box.get('Move Tutors', [])), 'tutor rows without a move link')
+    shops = WIKI.item_shops()
+    sold = {r[0] for r in box.get('Shops', [])}
+    check(len(shops) == E['shop rows'] and all(items.canon(s[2])[0] in sold for s in shops),
+          'shops: %d stock rows; not in Shops: %s' % (len(shops), [s[2] for s in shops if items.canon(s[2])[0] not in sold]))
+    mis = WIKI.item_missions()
+    first = WIKI.page('All Missions')
+    check(len(mis) == E['missions'] and first is not None and "A Hero's Journey" in text(first['html']),
+          'missions: %d pages (+ #001 in All Missions)' % len(mis))
+    npcs = box.get('Useful NPCs', [])
+    check(len(npcs) == E['npcs'] == len(useful_npcs(WIKI)), 'Useful NPCs: %d' % len(npcs))
+    # Locations pages: every row's place is a page title, every row's item placed there (or by its own page)
+    pages = WIKI.item_areas()
+    titles = {text(p['title']) for p in pages}
+    rows = WIKI.item_locations()
+    unmapped = sorted({pl for pl, _, _ in rows} - titles)
+    check(len(pages) == E['location pages'] and len(rows) == E['location rows'] and not unmapped,
+          'Locations: %d pages, %d rows, places that are no page title: %s' % (len(pages), len(rows), unmapped))
+    zn = {r[0] for r in z}
+    missing, other = [], []
+    for place, raw, _ in rows:
+        for one in items.split_names(raw):
+            name = items.canon(one)[0]
+            m = re.match(r'(TM|HM)\s*0*(\d+)', name)
+            if m:
+                if (m.group(1), int(m.group(2))) not in nums:
+                    other.append('%s: %s (no such machine)' % (place, raw))
+            elif name in stones or (re.search(r'ite( [XY])?$', name) and name not in by_name):
+                if name not in stones:
+                    other.append('%s: %s (not a dex stone)' % (place, raw))
+            elif name.endswith(' Z'):
+                if name not in zn:
+                    other.append('%s: %s (not on the Z-Crystals page)' % (place, raw))
+            elif name in items.KEY_DROP:
+                pass
+            elif not any(place in r[1] for _, r in by_name.get(name, ())):
+                missing.append('%s: %s' % (place, raw))
+    check(missing == E['not placed'], 'Locations rows no IT row places: %s' % missing)
+    check(not other, 'Locations TMs / stones / Z-Crystals not matching their own pages: %s' % other)
+    # GID: a game item name that is an IT item is spelled as IT spells it
+    bad, hit = [], 0
+    for n in (x for x in (D.get('GID') or {}).get('it', []) if x):
+        c = items.canon(n)[0]
+        if c in by_name:
+            hit += 1
+            if c != n:
+                bad.append('%s -> %s' % (n, c))
+    check(not bad, 'GID item names that differ from their IT name: %s' % bad)
+    wb = workbook_items(tm, stones, zn)
+    check(wb == E['workbook'], 'location-guide.xlsx differences: %s' % wb)
+    print('items: %d boxes, %d rows; machines %d, stones %d, Z %d, tutors %d (%d rows), shop stock %d, missions %d, '
+          'NPCs %d, Locations %d pages / %d rows (%d places, all page titles), GID items in IT %d'
+          % (len(D['IT']), sum(len(b['r']) for b in D['IT']), len(tm), len(ms), len(z), len(tut),
+             len(box.get('Move Tutors', [])), len(shops), len(mis), len(npcs), len(pages), len(rows),
+             len({p for p, _, _ in rows}), hit))
+
+
+def workbook_items(tm, stones, zn):
+    """location-guide.xlsx sheets TM & HM, Megastone, Z-Crystal against IT (names by key; [] = they agree)."""
+    path = os.path.join(H.src, 'research-2026-10-29', 'location-guide.xlsx')
+    if not os.path.isfile(path):
+        return []
+    import openpyxl
+    import items
+    wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+    out, kind, seen = [], 'TM', set()
+    mine = {(m.group(1), int(m.group(2))): m.group(3) for m in (re.match(r'(TM|HM)(\d+) (.+)', r[0]) for r in tm)}
+    for r in wb['TM & HM'].iter_rows(values_only=True):
+        c = [x for x in r if x is not None]
+        if c and str(c[0]).strip() == 'No.' and seen:
+            kind = 'HM'
+        if len(c) < 2 or not str(c[0]).strip().isdigit():
+            continue
+        k = (kind, int(c[0]))
+        seen.add(k)
+        theirs = str(c[1]).strip()
+        if k in mine and key(cfru.official(theirs)) != key(mine[k]) and key(theirs) != key(mine[k]):
+            out.append('%s%s: workbook %s' % (k[0], k[1], theirs))
+    out += ['%s%s: not in the workbook' % k for k in sorted(set(mine) - seen)]
+    for sheet, have in (('Megastone', set(stones)), ('Z-Crystal', zn)):
+        names = set()
+        for r in wb[sheet].iter_rows(values_only=True):
+            c = [x for x in r if x is not None]
+            if len(c) >= 2 and str(c[0]).strip().isdigit():
+                names.add(items.canon(str(c[1]).strip())[0])
+        out += ['%s: workbook only %s' % (sheet, n) for n in sorted(names - have)]
+        out += ['%s: not in the workbook %s' % (sheet, n) for n in sorted(have - names)]
+    return out
 
 
 if __name__ == '__main__':

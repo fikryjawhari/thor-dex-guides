@@ -136,6 +136,55 @@ says"); the RomHackDex location pages only a membership report. No source has wi
   Large and Average, Zygarde 10%, Wishiwashi School, Minior (Core), Toxtricity Low Key, Zacian / Zamazenta (both forms),
   Eternatus, Kubfu, both Urshifu, Glastrier, Spectrier and the three Calyrex.
 
+### Items
+
+`items.py` from the unboundwiki.com export (`wiki.py` readers); the 2.1.1.1 `location-guide.xlsx` (TM & HM,
+Megastone, Z-Crystal sheets) cross-checks it in `check.py`. IT after the Items standard (1,241 rows): Valuables 419,
+Key Items 32, Shops 204 items, TMs and HMs 128, Move Tutors 192, Held Items 97, Evolution Items 35, Stats and
+Abilities 17, Mega Stones 49, Z-Crystals 34, Useful NPCs 34. No `itemstd.RULES` entry: the extract writes the
+`Found:` / `Also:` / `Wild:` lines itself.
+- **Locations pages** (67 pages, 66 with an item table, 687 rows; KBT Expressway has none): every row is placed. A row
+  reads `Found: <page title> · requires Rock Climb · hidden · <the wiki's place text>`; `(Gift)` rows are `Also:`.
+  The wiki's flags become words: `requires X` (HMs, ADM, the Crystal Peak crystals, Mission #070), `hidden`,
+  `repeatable daily`, sub-places ("Fallshore Beach"), and the item name's own brackets ("gate opens 12pm", "x5").
+  Valuables keep one row per place (sub-heading = the item); other boxes merge an item's places into one row.
+  TMs / HMs, Mega Stones and Z-Crystals on these pages only cross-check their own pages (check.py: every number,
+  stone and crystal matches). `items.PLACED` keeps every row's page title for the walkthrough (unit 7).
+  Two rows list several items: Tehl Town's Underground Pass (15 hidden items, "one spot per item") and Shadow Base's
+  "Metagrossite or Tyranitarite or Garchompite" (the two stones the starter didn't give; Mega Stones has them).
+- **TMs and HMs**: the 128 machine pages (TM001-TM120, HM01-HM08; the TMs & HMs category's 129th member is its
+  index page). Text = the page's Location; `needs ...` from its prerequisites (HMs, bicycle) and the HMs' badge.
+- **Mega Stones / orbs**: the dex's P.stone / P.sloc (49, Red / Blue Orb included; Rayquaza has none). Wiki says
+  "Houndoomite"; the game (Unbound-Cloud) says Houndoominite, which IT and P.stone use.
+- **Z-Crystals**: the Z-Crystals page (34). Doc says Incinium Z exists but is "Currently Unavailable"; the wiki leaves
+  it out and so does IT.
+- **Key and evolution items**: their item pages give the places the Locations pages lack (20, listed in report.txt:
+  S.S. Ticket, Mega Keystone, Shiny Charm, Old Rod, ...), raid drops (`Also: Route 12 Raid Den · raid drop`), wild held
+  items (`Wild:`), Mystery Gift, the Fallshore evolution-item merchant and BP prices. Town Map and Costume Box are left
+  out (Items standard: no value).
+- **Shops**: All Shop Inventories (140 stock rows: marts by badge, the second clerks, Dehara Dept. Store floors, the
+  Fallshore / Seaport bazaars), the Battle Frontier page's three Exchange Service vendors (BP, post-game) and the
+  Fallshore evolution-item merchant (item pages). Wiki says Up-Grade costs 32 BP at the exchange; the Battle
+  Frontier's vendor list doesn't have it (kept, from the Up-Grade page). Sea / other incenses: "post-game only".
+- **Mission rewards**: 83 mission pages + `All Missions` (#001 A Hero's Journey: post-game access, no item). 70 item
+  rewards; each reads `Also: Mission #021 Extreme Hyperosmia · Route 5, Pokémon Day-Care` (× quantity). Rewards that
+  are TMs, Mega Stones or Z-Crystals are in those boxes' own text. Left out: Pokémon / eggs, services (Lucky Egg,
+  Amulet Coin, DexNav upgrades, nature change), BP, the HeartGold / SoulSilver costume, #027 (no reward).
+- **Move tutors**: the Move Tutors page, 29 tutors, 192 rows (one per move and tutor: `tutor · place · cost (days) ·
+  requirement`). Six moves are in no species' tutor list (Draco Meteor, Dragon Ascent, Relic Song, Secret Sword,
+  Steel Beam, Volt Tackle): the Battle Frontier page says the Draco Meteor trainer "teaches any Dragon-type with max
+  friendship" (on that row); for the other five ("Ancient Moves") no source names the learners, so they are listed
+  with their tutor only. Their move pages show the tutor and no learners.
+- **Useful NPCs**: the 34 Useful NPC pages (`<NPC>: purpose · cost · where`).
+- **Names** (`items.canon`): the game's names (Unbound-Cloud `src/data/ItemNames.json`), the official one where it
+  differs. Wiki spellings fixed: CFRU short names (Nevermeltice, Parlyz Heal, Terrain Ext., Protect Pads, Whip Dream,
+  Heavy Boots, Utility Parasol, Adrenal Orb, Charizite X, Aerodactite, Alorichium Z, Ultranecronium Z; TMs "Dazzle
+  Gleam", "Power-Up Hit", "Drain Kiss" take the machine pages' move names), plurals / "(x5)" quantities, typos in the
+  shop list (Pomeg betty, Pinab Berry). Kept as the wiki names them (no game item): Zygarde Cell, Sea Salt, Sea Shell,
+  "Random healing item", Money (₽10,000), Silvally Memory (random), the key items Unbound-Cloud doesn't list.
+- **GID items**: `gid.py` renames Unbound-Cloud's names to IT's (`items.GAME_ITEMS`: Hp Up, Guard Spec, Dream Mist
+  (Unbound), Heavy Duty Boots); check.py: every game item that is in IT is spelled as IT spells it (350 of them).
+
 ### CFRU family (`tools/cfru.py`)
 
 Shared with Radical Red (its mirror was checked for the same quirks, 2026-10-29). CFRU-general:
@@ -191,6 +240,11 @@ Prefix `unbound`. Keep these keys once published.
 `uv run python -I hacks/unbound/extract/check.py`: dex counts (every mirror page placed, M and AB reproduced),
 integrity, the wiki differences (EXPECTED), every species against the game's table (types, stats, abilities), GID
 coverage. Locations: every rated wiki row in P.w (method, rate, time, floor), the sections reproduce the wiki's rates, every species resolves, one slot per area, the counts (`LOC_EXPECTED`). Units 5-7 add theirs. Calc stubs remain: calc is disabled.
+
+coverage. Items (`check_items`, ITEMS_EXPECTED): the wiki counts (67 Locations pages / 687 rows, 128 machines, 49
+stones, 34 Z-Crystals, 29 tutors, 140 shop rows, 83 missions, 34 NPCs), every Locations row's place a page title and
+its item placed there, the GID item names, the workbook's TM / Mega Stone / Z-Crystal sheets. Units 4, 6, 7 add theirs.
+Calc stubs remain: calc is disabled.
 Before enabling it, replace the null in tools/scenarios/calc-doubles.mjs EXPECTED with an audited count and add
 tools/trainer_fields_check.py DOUBLES_EXPECTED (DOUBLES_PARTNER_ONLY if needed). The engine stub is registered
 in tools/calc/package.json; review tools/calc/test.mjs field-profile fixtures. Never copy another hack's counts.

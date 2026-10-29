@@ -179,7 +179,9 @@ Route 18 [Route 18] | RHD only: - | guide only: bayleef, binacle, bouffalant, co
 Victory Road [Victory Road - 1F, Victory Road - (1F - B1F - 2F), Victory Road - 2F, Victory Road - 3F, Victory Road - 4F + Kyurem's Cave, Victory Road - B1F, Victory Road - Kyurem's Cave, Victory Road - Maze Area, Victory Road - Snowy Area] | RHD only: drakloak, minior_blue | guide only: azumarill, basculin, bruxish, chansey, dewgong, durant, finneon, floatzel, hakamo_o, jigglypuff, lapras, lumineon, lurantis, magikarp, marill, minior, psyduck, roselia, seel
 Cube Corp. [Cube Corp.] | RHD only: gyarados, wailmer, wailord | guide only: ditto, jellicent, magikarp, pelipper, tentacool
 trainers: not built yet (TODO: implement unbound trainers extraction)
-items: not built yet (TODO: implement unbound items extraction)
+items: old-box rows {'TMs and HMs': 128, 'Mega Stones': 49, 'Evolution Items': 140, 'Valuables': 419, 'Stats and Abilities': 68, 'Key Items': 32, 'Held Items': 101, 'Z-Crystals': 34, 'Shops': 239, 'Move Tutors': 192, 'Useful NPCs': 34}
+items: 128 machines, 49 Mega Stones / orbs, 34 Z-Crystals, 29 tutors (192 moves), 239 shop rows, 70 mission item rewards, 703 Locations rows placed
+items: item pages give 20 places the Locations pages lack: S.S. Ticket (Seaport City); Prison Bottle (Crystal Peak); Mega Keystone (Tarmigan Mansion); Lunar Wing (Fullmoon Island); Trainer Catalogue (Fallshore City); Reveal Glass (Magnolia Fields); Shiny Charm (Fallshore City); Grubby Hanky (Magnolia Cafe); Dusk Stone (Cube Corp.); Shiny Stone (Route 7); Shiny Stone (Vivill Warehouse); Gracidea (Flower Paradise); Ice Stone (Cube Corp.); Ice Stone (Cube Corp. (Stone Maker)); Dubious Disc (Seaport City East Warehouse); Old Rod (Route 7); Fire Stone (Route 9); Devon Scope (Route 16); Braille Converter (Icicle Cave 4F); ADM (Seaport City)
 walk: not built yet (TODO: implement unbound walk extraction)
 trainer keys: new table hacks\unbound\extract\trainer_keys.json (0 trainers, keys as they are)
 trainer keys: no trainers yet, no key table written

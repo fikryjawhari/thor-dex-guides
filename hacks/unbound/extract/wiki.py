@@ -204,6 +204,59 @@ class Wiki:
                 out.append((*heading, [tuple(row) for row in rows[1:]]))
         return out
 
+    def item_areas(self):
+        return [p for p in self.all if re.search(r'/locations/[^/]+/?$', p['link'])]
+
+    def item_locations(self):
+        found = []
+        for page in self.item_areas():
+            for heading, block in item_sections(page['html']):
+                if re.search(r'item.*location|hidden items', heading, re.I):
+                    for cells in _rows(block):
+                        if len(cells) >= 2 and cells[0] not in ('Item', 'Items', '#') and cells[1]:
+                            found.append((text(page['title']), cells[0], cells[1]))
+        return found
+
+    def item_machines(self):
+        return [dict(page=p, name=text(p['title']), fields=item_fields(p['html']),
+                     requirements=item_prerequisites(p['html']))
+                for p in self.all if re.match(r'^(TM|HM)\d+ ', text(p['title']))]
+
+    def item_crystals(self):
+        return [(cells[0], cells[1]) for cells in _rows(self.page('Z-Crystals')['html'])
+                if len(cells) >= 2 and cells[0].endswith(' Z')]
+
+    def item_details(self):
+        found = []
+        for page in self.pages('Items'):
+            if not re.search(r'/items/(?:key-items|evolution-items)/[^/]+/?$', page['link']):
+                continue
+            places = []
+            for cells in _rows(page['html']):
+                if len(cells) >= 2 and cells[0].isdigit():
+                    places.append(cells[1])
+            fields = item_fields(page['html'])
+            if fields.get('Location'):
+                places.append(fields['Location'])
+            found.append(dict(page=page, name=text(page['title']), fields=fields, places=places,
+                              requirements=item_prerequisites(page['html'])))
+        return found
+
+    def item_shops(self):
+        found = []
+        for heading, block in item_sections(self.page('All Shop Inventories')['html']):
+            stall = ''
+            for cells in _rows(block):
+                if len(cells) == 1:
+                    stall = cells[0]
+                elif len(cells) >= 2 and re.fullmatch(r'[\d,]+', cells[1]):
+                    found.append((heading, stall, cells[0], cells[1], cells[2] if len(cells) > 2 else ''))
+        return found
+
+    def item_missions(self):
+        return [dict(page=p, name=text(p['title']), fields=item_fields(p['html']))
+                for p in self.pages('Missions') if re.match(r'^Mission #\d+:', text(p['title']))]
+
 
 def mystery_gifts(wiki):
     """(password, reward, held item) rows of the Mystery Gift Codes page."""
@@ -217,3 +270,60 @@ def legendaries(wiki):
     page = next(p for p in wiki.all if p['link'].endswith('/extras/legendary-pokemon/'))
     rows = [row for table in re.findall(r'<table\b.*?</table>', page['html'], re.S) for row in _rows(table)]
     return [(row[0], row[1]) for row in rows if len(row) >= 2 and row[0] != 'Pokémon']
+
+
+def item_sections(raw):
+    parts = re.split(r'<h[234][^>]*>(.*?)</h[234]>', raw, flags=re.S)
+    return [(text(parts[index]), parts[index + 1]) for index in range(1, len(parts) - 1, 2)]
+
+
+def item_fields(raw):
+    fields = {}
+    for cells in _rows(raw):
+        if len(cells) == 2:
+            fields.setdefault(cells[0].rstrip(':'), cells[1])
+    return fields
+
+
+def item_prerequisites(raw):
+    requirements = []
+    for heading, block in item_sections(raw):
+        if re.search(r'prerequisites|requirements', heading, re.I):
+            requirements.extend(text(part) for part in re.findall(r'<li[^>]*>(.*?)</li>', block, re.S))
+    return list(dict.fromkeys(requirements))
+
+
+def item_crystal_parts(wiki):
+    """The Z-Crystals table split at its line breaks: [(name, [places (the bold lines)], post-game, how)]."""
+    out = []
+    for row in re.findall(r'<tr[^>]*>(.*?)</tr>', wiki.page('Z-Crystals')['html'], re.S):
+        cells = re.findall(r'<td[^>]*>(.*?)</td>', row, re.S)
+        if len(cells) < 2 or not text(cells[0]).endswith(' Z'):
+            continue
+        lines = [ln for ln in (text(x) for x in re.split(r'<br\s*/?>', cells[1])) if ln]
+        places = [text(x) for x in re.findall(r'<strong>(.*?)</strong>', cells[1], re.S)]
+        post = any(re.fullmatch(r'\(post-game\)', ln, re.I) for ln in lines)
+        how = ' '.join(ln for ln in lines if ln not in places and not re.fullmatch(r'\(post-game\)', ln, re.I))
+        out.append((text(cells[0]), places, post, how))
+    return out
+
+
+def useful_npcs(wiki):
+    """The Useful NPCs pages (misc-info/useful-npcs/<npc>/): [(name without "(NPC)", fields {Location, ...})]."""
+    return [(re.sub(r'\s*\(NPCs?\)$', '', text(p['title'])), item_fields(p['html']))
+            for p in wiki.all if re.search(r'/useful-npcs/[^/]+/?$', p['link'])]
+
+
+def frontier_vendors(wiki):
+    """The Battle Frontier page's Vendors: [(vendor, function, [[cell, ...] rows after its Function / Cost lines])]."""
+    raw = dict(item_sections(wiki.page('Battle Frontier')['html'])).get('Vendors', '')
+    out = []
+    for cells in _rows(raw):
+        cells = [c for c in cells if c]
+        if len(cells) == 1:
+            out.append([cells[0], '', []])
+        elif out and len(cells) == 2 and cells[0] == 'Function':
+            out[-1][1] = cells[1]
+        elif out and cells and cells[0] not in ('Cost', 'Move', 'Item', 'TM'):
+            out[-1][2].append(cells)
+    return [tuple(v) for v in out]
