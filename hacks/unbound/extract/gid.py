@@ -15,6 +15,11 @@ from items import GAME_ITEMS
 PROFILE = 'unbound_2_1'
 
 
+# Forms that exist only in battle (they revert after it): a save holding one shows the base species, as Unbound-Cloud
+# and hzla do (unit 8a). Shaymin Sky stays (it lasts outside battle until night / frozen).
+BATTLE_ONLY = {'zen', 'g-zen', 'pirouette', 'blade', 'school', 'ultra', 'noice', 'complete', 'crowned', 'ash'}
+
+
 def species_id(define, name):
     """A CFRU species constant -> our P id: its mirror page (a cosmetic form -> its species, a Gigantamax form -> the
     base), else the display name."""
@@ -23,6 +28,8 @@ def species_id(define, name):
         f = FORMS[slug]
         if f.kind == 'drop':
             return f.base.replace('-', '_') if f.base != slug else None
+        if f.kind == 'form' and f.suffix in BATTLE_ONLY:        # a battle-only form in a save is its base
+            return pid(f.base + ('-g' if f.suffix.startswith('g-') else ''))
         return pid(cfru.merge_into(f, FORMS, RD.species()) or slug)
     return sid(name) or sid(define[len('SPECIES_'):].replace('_', ' '))
 

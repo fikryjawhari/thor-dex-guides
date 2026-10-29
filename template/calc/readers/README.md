@@ -25,7 +25,7 @@ No Pokémon yet. The family notes below describe format detection and validation
 | Family | Hacks | Format |
 | --- | --- | --- |
 | Gen 3 (pokeemerald / pokefirered) | SoulGold (expansion, like EI) | 14 sections in two slots (newest by save index); each Pokémon's 4 blocks ordered by personality value and XOR-encrypted with it. Expansion hacks change the struct per hack. |
-| CFRU | Radical Red, Unbound | Gen 3 layout with CFRU's changes (expanded IDs, extra blocks). |
+| CFRU | Radical Red | `cfru.js` with its own profile (signature, boxes, randomiser flags, experience table; cfru below) and GID. |
 | Gen 4 (Pt / HGSS) | HeartGold Retiled, Renegade Platinum | As `gen4.js`; vanilla-engine hacks differ in the species / form numbers. |
 | Gen 6/7 | Meissa Moon, Navy Sapphire | `gen67.js` as is, with the guide's own `GID`. |
 
@@ -44,6 +44,7 @@ Not doing: reading the game's memory while it runs (only an emulator can), writi
 | `expansion.js` | pokeemerald-expansion (GBA) | Emerald Imperium | hzla's EI 1.3 save (33 Pokémon) and the edge files: EI notes.md → Damage calc → Save import |
 | `gen4.js` | HeartGold hg-engine (NDS) | Hardlove Gold | the user's 0.7.0 save (11 Pokémon) and the edge files: Hardlove notes.md → Damage calc → Save import |
 | `gen5.js` | B2W2 raw NDS | Blaze Black 2 Redux | PKHeX.Core 26.10.18 generated saves; recipe and limits below |
+| `cfru.js` | CFRU (GBA) | Unbound 2.1 (profile `unbound21`) | Unbound-Cloud (Skeli789's reader) and hzla's `savereader_unbound.js` on 37 local 2.1-signature saves, every party and box slot, 0 unexplained differences: `tools/calc/cfru_check.mjs`, cfru below |
 | `gen67.js` | decrypted XY / ORAS / SM / USUM main | Photonic Sun (USUM); Eternal X (XY) | PKHeX.Core 26.10.18: Photonic's 38 Pokémon in each layout; Eternal X's own 85-Pokémon XY oracle; USUM/XY through the real file picker; wrong-game, checksum, truncation, egg/empty, state and PK6/PK7 hyper-training controls |
 
 ## gen5: Black 2 / White 2 (NDS)
@@ -372,6 +373,76 @@ reorders IVs and EVs.
   highest level whose experience is ≤ its own in the species' growth table (`D.GID.gr`: GROWTH_ order medium fast,
   erratic, fluctuating, medium slow, fast, slow; formulas in `src/data/pokemon/experience_tables.h`, level 1 = 1 exp).
   For the sample save's party the experience level equals the stored level for all six.
+
+## cfru: Complete FireRed Upgrade (GBA)
+
+References (read only, unlicensed; facts written down, no code taken): Skeli789/Unbound-Cloud `3d20f32`
+`server/src/{SaveBlocks,SaveBlockProcessing,PokemonProcessing,Defines}.py`, hzla `js/savereaders/savereader_unbound.js`
+and its generated `unbound_2_1_constants.js`, CFRU master `b637a27` `src/exp.c`. Checked on the saves: below.
+
+**File.** 128 KB of flash (0x20000); flashcarts and mGBA add a 16-byte footer (up to 64 extra bytes accepted). States as
+in expansion. Two slots of 14 sectors (file sectors 0-13, 14-27) of 0x1000 bytes: data, then the footer at 0xFF4:
+`u16 id`, `u16 checksum`, `u32 signature`, `u32 counter`. CFRU uses 0xFF0 data bytes per sector (vanilla 0xF80), but
+the checksum (the 32-bit sum of little-endian words, then `(sum >> 16) + sum`, low 16 bits) covers only the vanilla
+chunk for ids 0 (0xF24), 4 (0xD98) and 13 (0x450), 0xFF0 for the others: CFRU keeps its own data in the rest. A slot
+is valid when it has ids 0-13 once each, one signature and counter in all 14, every checksum right, and the
+profile's signature (the game treats another build's slot as missing). Two valid slots: the higher counter (0 beats
+0xFFFFFFFF; a tie takes slot A). File sectors 30 and 31 belong to neither slot: CFRU writes box data there with no
+footer (all zero or erased), so they are read as they are.
+
+**Signatures.** Unbound 2.0.x 0x01121998, 2.1.0-2.1.1.1 0x01121999, later 0x01122000; CFRU's base build 0x29012004;
+vanilla FireRed / Emerald 0x08012025. A valid slot of a listed other build gives `wrong` with its name; a damaged slot
+with the profile's signature `unreadable`; erased flash `empty`.
+
+**Randomised saves.** CFRU flags from 0x900 sit in sector 0 from 0xF24 (0xCC bytes), then sector 4 from 0xD98; flag f
+is bit `f % 8` of byte `(f - 0x900) >> 3`. Unbound's species and learnset randomisers are 0x9FD and 0x9FE; set, the
+species ids don't mean their species: `wrong` ("A randomised ... save"). So is the Egglocke tool's save (trainer
+name "Egglock" and id 0x3CEAB505 at sector 0 offsets 0 / 0xA), as Unbound-Cloud does.
+
+**Party.** Sector 1 (SaveBlock1): `u8 count` at 0x34 (more than 6: `unreadable`), six 100-byte party Pokémon at 0x38.
+CFRU stores them without encryption, the substructures in fixed order: 0 `u32 personality`, 0x13 flags (bit 0 Bad
+Egg, 1 has species, 2 egg), 0x20 `u16 species`, 0x22 `u16 item`, 0x24 `u32 experience`, 0x2C four `u16 moves`, 0x38
+six EVs (HP Atk Def Spe SpA SpD), 0x48 `u32` IVs (six 5-bit, bit 30 egg, bit 31 hidden ability), 0x54 `u8 level`.
+
+**Boxes.** 58-byte box Pokémon, also unencrypted: 0 personality, 4 otId, 8 nickname[10], 18 language, 19 sanity
+(bit 0 Bad Egg, 2 egg), 20 otName[7], 27 markings, 28 `u16 species`, 30 `u16 item`, 32 `u32 experience`, 36 PP bonuses,
+37 friendship, 38 ball, 39 four 10-bit moves packed little-endian in 5 bytes, 44-49 EVs (HP Atk Def Spe SpA SpD), 50
+Pokérus, 51 met location, 52 `u16` met info, 54 `u32` IVs as in the party. 25 boxes × 30, one stream in box order:
+boxes 1-19 sectors 5-13 joined (from offset 4 of sector 5: `u32 currentBox`), 20-22 sector 30 from 0xB0C and
+sector 31 to 0xF80, 23-24 sector 2 from 0xF18 and sector 3 to 0xCC0, box 25 sector 0 at 0xB0 (1,740 bytes). Skipped:
+species 0, Bad Eggs, eggs. A box with 0xFF bytes (erased sectors 30 / 31) reads as Bad Eggs, so as empty.
+
+**Derived values.**
+- Nature: personality % 25 (no mint field in the format).
+- Ability: `abs` as the game picks it: hidden if the bit is set and the species has a hidden ability, else slot 1 if
+  personality bit 0 is set and the species has a second ability, else slot 0. The species is the guide's (`D.P` via
+  `GID.sp`); unmapped ids keep the raw slot. Where the game's table repeats one ability in both slots and the guide
+  lists it once (Vaporeon, Weavile ...), this gives slot 0, the same ability.
+- Level: the party's stored level; boxed from experience with `GID.gr` and the profile's table. Unbound's own table
+  (the hack's, as Unbound-Cloud has it) is pokefirered's integer formulas except Medium Slow one lower at levels 5, 15
+  ... 95, Fluctuating one lower at 5, 37, 45, 85, and Erratic 69-98 without the inner floor (`(1911 - 10n) n³ / 1500`).
+  The saves bear it out: 9 boxed Pokémon have exactly Unbound's value at such a level (2,034 at Medium Slow 15), none
+  pokefirered's.
+- Species: the stored id. Unbound-Cloud and hzla rename in-battle-only forms to their base (Darmanitan Zen,
+  Meloetta Pirouette, ...; hzla also Shaymin Sky, which Unbound-Cloud keeps); the reader doesn't: `GID.sp` decides.
+
+**Checked** (`node tools/calc/cfru_oracles.mjs && node tools/calc/cfru_compare.mjs`; regression: `node
+tools/calc/cfru_check.mjs`, in `npm test`, skips without `hacks/unbound/.src/saves/`): 37 saves with the 2.1 signature
+from Unbound-Cloud's tests (git-ignored, unlicensed), party (hzla only: Unbound-Cloud reads no party) and every box
+slot (Unbound-Cloud by position, hzla in order) for species, level, nature, ability, item, four moves, IVs, EVs and
+personality (Unbound-Cloud). 0 unexplained differences; the explained ones, all one oracle's own rule: Unbound-Cloud
+keeps the raw ability slot (1,900), gives nature / slot 0 to an id with no base stats (2), reads randomised saves and
+flags them (3); hzla skips ids outside its table (2) and picks slot 1 where both slots hold one ability (56); both
+rename in-battle forms (28). The fixtures (`hacks/unbound/.src/saves/expected/`, git-ignored like the saves they describe; `calc_save_check.mjs` format) are
+written from the oracles, not from the reader: 12,177 Pokémon, 10 refused saves. Not checked: a 2.1.1.1 save played on
+RetroArch (the signature covers 2.1.0-2.1.1.1, so the format is the same).
+
+**Radical Red** needs its own profile: its sector signature (from an RR save's footer at 0xFF8), box count and
+whether its box map is the 25-box one above (Unbound-Cloud's CFRU map, used for every CFRU hack it reads), its
+randomiser flags (CFRU's defaults are 0x940 / 0x941), its experience table (check a save's freshly caught Pokémon
+against pokefirered's formulas, as above), and `cfg.calc.cfru` in both guides once there are two profiles. Its `GID`
+comes from RR's own tables (its species / move / item ids are not Unbound's). hzla's RR reader and PKHeX, if it reads
+RR, are the oracles; `cfru_compare.mjs` takes `--hack` but reads Unbound-Cloud's dumps: RR needs its own oracle dump.
 
 ## PKHeX oracle recipe (Gen 6/7)
 

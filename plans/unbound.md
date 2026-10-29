@@ -147,6 +147,10 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
 
 ## Findings for later units
 (Units add theirs here.)
+- Main chat after 8a (2026-10-29): fixtures moved to `hacks/unbound/.src/saves/expected/` (git-ignored; the save-reader
+  procedure keeps expected.json beside the saves); `python-dotenv` added with uv; battle-only forms map to their base
+  in `gid.py`. **8b:** the page says "No Pokémon yet" when the party is empty but boxes aren't (`insane_ng+`): fix in
+  `calc.js`.
 - Unit 5 (items, `worktree-unbound-it3`): IT built (`extract/items.py`, notes.md → Items; check.py `check_items`).
   Counts: 128 machines (TM001-TM120, HM01-HM08), 49 stones / orbs, 34 Z-Crystals (Doc's Incinium Z is "Currently
   Unavailable"), 29 tutors / 192 rows, 140 shop-stock rows (+ 91 Battle Frontier BP-exchange rows, Up-Grade from its page, 7 from the Fallshore evolution
@@ -192,6 +196,18 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
   32 / rejects 5. Oracle manifest, expected-JSON paths, Expert var assertion and licence limits are
   in audit section 4. Current Cloud rejects its old 2.1 signature at upload: use the 2.1 profile/format,
   not that policy rejection. Independent expected-data assertions and actual Thor .srm import remain.
+- Unit 8a (save reader, `worktree-unbound-reader`): `template/calc/readers/cfru.js` (profile `unbound21`) agrees
+  with Unbound-Cloud and hzla on all 37 local 2.1 saves, every party and box slot, 0 unexplained (notes.md → Damage
+  calc → Save import; README → cfru). **For 8b:** set `cfg.calc.save = "cfru"`; then `calc_save_check.mjs
+  dist/unbound.html <save> tools/calc/fixtures/cfru/unbound/<save>.expected.json` works as is (e.g. `flashcart.sav`,
+  6 party + 45 boxed; a fixture with `"same"` points at an identical one). Decide with the user: in-battle-only forms
+  in a save (Darmanitan Zen, Meloetta Pirouette; Aegislash Blade, Wishiwashi School, Necrozma Ultra, Eiscue Noice,
+  Zygarde Complete, Zacian / Zamazenta Crowned, Ash-Greninja the same way) map in `GID.sp` to their form pages; both
+  oracles show the base. Recommendation: map them to the base in `gid.py` (as Cherrim Sunshine, Cramorant and
+  Mimikyu Busted already are), keep Shaymin Sky (Unbound-Cloud, the author's tool, keeps it). The page throws "No
+  Pokémon yet" when the party is empty even if boxes hold Pokémon (calc.js `importBytes`; one test save, NG+ start).
+  **For Radical Red:** README → cfru → Radical Red (signature, box map, randomiser flags, experience table, own GID,
+  `cfg.calc.cfru` in both guides).
 - Unit 2 (scaffold, `worktree-unbound`): `new_hack.py --like emerald-imperium` done; `cfg.mgm: false` added to the
   template (`dex.js` HAS_MGM, `datajson.HACK_ORDER`, template/README.md cfg table); other guides differ by that one
   line only. `txt` wording is all TODO (units 4-7 fill theirs).

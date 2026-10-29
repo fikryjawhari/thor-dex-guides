@@ -208,6 +208,32 @@ save; Shadow Warrior has no id), 766 moves, 522 items (Unbound-Cloud's display n
 the Items page). No `ab`: a CFRU box Pokémon stores its ability slot, so the reader returns `abs`. hzla's generated
 constants give the same id -> constant tables (checked every build). The reader itself is unit 8.
 
+### Damage calc
+
+#### Save import
+
+Reader `cfru` (profile `unbound21`, signature 0x01121999 = Unbound 2.1.0-2.1.1.1); format: `template/calc/readers/README.md`
+→ cfru. `cfg.calc` is still `false`: unit 8b sets `cfg.calc.save = "cfru"` with the calc profile. IDs: `GID` above
+(no `ab`: the reader returns the ability slot, resolved as the game does against the guide's species).
+
+Checked 2026-10-29 against both oracles, Unbound-Cloud (Skeli789's) and hzla's reader, on the 37 local saves with the
+2.1 signature (`.src/saves/Unbound-Cloud/`, from Unbound-Cloud's tests, not committed): every party and box slot, 0
+unexplained differences (`node tools/calc/cfru_oracles.mjs && node tools/calc/cfru_compare.mjs`; the regression check
+`node tools/calc/cfru_check.mjs` asserts the oracle-written fixtures in `hacks/unbound/.src/saves/expected/` (git-ignored: they describe UNLICENSED saves; regenerate with `cfru_compare.mjs --write-fixtures`). Battle-only forms
+(Darmanitan Zen, Meloetta Pirouette, Aegislash Blade, Eiscue Noice, Necrozma Ultra, Zygarde Complete, Zacian / Zamazenta
+Crowned, Ash-Greninja) read as their base species (`gid.BATTLE_ONLY`, as both oracles show them); Shaymin Sky stays, 12,177
+Pokémon; it is in `npm test` and skips without the saves). 27 saves read, 10 refused as the oracles do: 3 randomised
+(`wrong`), 2 with no valid slot (`unreadable`), 5 with no Pokémon (`empty`). The saves are real 2.1.x game saves
+(the game wrote them: counters up to 3,189, a flashcart save, Expert / Insane / Sandbox variants, NG+), some edited
+through Unbound-Cloud; which 2.1 point release is unknown, and the format is the same for all of them. **Open:** the
+user's own RetroArch `.srm` imported on the Thor (with 8b, once `cfg.calc` is on).
+
+Findings for GID (`extract/gid.py`, not changed here): a save can hold in-battle-only forms (the test saves have
+Galarian Darmanitan Zen, Meloetta Pirouette, Shaymin Sky); `GID.sp` maps them to their own pages, where both
+oracles show the base species (Unbound-Cloud keeps Shaymin Sky). Experience: Unbound's growth tables differ from
+pokefirered's formulas at a few levels (README → cfru → Derived values); `GID.gr` is right, the reader carries the
+table.
+
 ## Local storage
 
 Prefix `unbound`. Keep these keys once published.

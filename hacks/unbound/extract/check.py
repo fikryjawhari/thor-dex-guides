@@ -25,7 +25,10 @@ import common  # noqa: E402
 from common import FORMS, H, RD, WIKI, cfru, key, pid  # noqa: E402
 
 EXPECTED = {'wiki types': 0, 'wiki abilities': 16, 'dropped': 38, 'merged': 116, 'no stone': ['rayquaza_mega'],
-            'no description': [], 'not in game table': ['shadow_warrior']}
+            'no description': [], 'not in game table': ['shadow_warrior'],
+            'no save id': ['aegislash_blade', 'darmanitan_g_zen', 'darmanitan_zen', 'eiscue_noice', 'greninja_ash',
+                           'meloetta_pirouette', 'necrozma_ultra', 'shadow_warrior', 'zacian_crowned',
+                           'zamazenta_crowned', 'zygarde_complete']}    # battle-only forms read as their base (gid.py)
 LOC_EXPECTED = {'areas': 69, 'slots': 63, 'pages': 67, 'rated pages': 54, 'rated rows': 1161, 'dens': 32,
                 'raid rows': 462, 'doc wild rows added': 52, 'doc special added': 21, 'legend page added': 40,
                 'mystery gifts': 34, 'rhd areas': 52, 'rhd only': 40, 'guide only': 297}
@@ -137,7 +140,7 @@ def main():
     if G:
         reached = {x for x in G['sp'] if x}
         unreached = sorted(i for i, p in ids.items() if p['g'] != 1 and i not in reached)
-        check(unreached == EXPECTED['not in game table'], 'P entries no save id reaches: %s' % unreached)
+        check(unreached == EXPECTED['no save id'], 'P entries no save id reaches: %s' % unreached)
         check(all(x is None or 0 <= x < nm for x in G['mv']) and sum(1 for x in G['mv'] if x is not None) == len(G['mv']) - 1,
               'GID mv: a move id unmapped or out of range')
         check(all((x is None) == (y is None) for x, y in zip(G['sp'], G['gr'])) and all(x in range(6) for x in G['gr'] if x is not None),
