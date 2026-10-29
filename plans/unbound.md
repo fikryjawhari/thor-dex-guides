@@ -210,3 +210,15 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
   it); hzla writes species Showdown-style, `sid` reads them. Unit 8: Z-move and Max-move entries are not in M (the
   mirror's "P" / "S" copies were left out); As One is "As One (Glastrier)" / "(Spectrier)"; three moves the calc
   doesn't know (Endless Edge, InfernalRage, Steelyhit) are MV.x.
+- Unit 4 (locations, `worktree-unbound-loc3`): AR = Starter + the 67 wiki location pages in walkthrough order + Mystery
+  Gift (no slot); one slot per area, AR index append-only. Unit 7: use the area names as LOC has them (exact wiki page
+  titles: "Tehl Town / Underground Pass", "Cube Corp.", "S.S. Marine", "Thundercap Mountain"); sub-places with no page
+  sit in an area: Rift Cave and Distortion World (portal in Rift Cave) -> Dehara City, Tomb of Borrius -> Great Desert,
+  Safari Zone -> Polder Town, Cave of Being -> Route 10, Dream Lab / Fullmoon / Newmoon Island -> Tarmigan Town,
+  Magnolia Café -> Magnolia Town, Battleground -> Seaport City, Mission HQ -> Fallshore City, Autl Woods -> Route 9.
+  Order (walkthrough Parts): ... Frozen Forest, Fallshore City, Route 11, Epidimy Town, Route 10, Tehl Town, Route 9,
+  Thundercap Mountain, Cliff Cave, Tarmigan Town ... Crystal Peak (35) before Magnolia Fields (36); Seaport Warehouses
+  and S.S. Marine are Part 32; Redwood Forest, Battle Frontier, Cube Corp. have no Part heading (placed after Redwood
+  Village / at the end). Unit 5: Mystery Gift codes are on the wiki's Mystery Gift Codes page (34 rows, held items).
+  Main chat: P.g is set (EI's rule, 30 not found, notes.md -> Locations) for the prune; `common.location_aliases` maps
+  "Flying Pikachu" to plain Pikachu (locs.py overrides to the Flying form). stable-keys can't run until TR / WK exist.

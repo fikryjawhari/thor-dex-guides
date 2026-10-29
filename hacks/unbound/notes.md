@@ -84,6 +84,58 @@ wins" rule.
   species list. Left as the mirror has them.
 - **Type chart:** the mirror's; the wiki states no changes; it matches the Gen VI+ chart.
 
+### Locations
+
+`locs.py` (LOC, AR, P.w, P.g). Sources: the wiki's 67 location pages (Wild Pokémon tables: floor, method, time, rate;
+54 pages have 1,161 rated rows), its 32 raid den pages, the Legendary Pokémon, Mystery Gift Codes and Swarms pages; the
+public 2.1.1.1 location guide workbook (`.src/research-2026-10-29/location-guide.xlsx`) is the cross-check ("Doc
+says"); the RomHackDex location pages only a membership report. No source has wild levels: the guide shows none.
+
+- **Areas:** 69 = Starter (the picker; Beldum / Gible / Larvitar at Shadow Base) + the 67 wiki pages in walkthrough
+  order (the Parts' headings, Part 1-40; post-game Battle Frontier and Cube Corp. last) + Mystery Gift. One tracker slot
+  per area (EI's floor rule): floors, sub-places (Rift Cave in Dehara City, Tomb of Borrius in Great Desert, Safari Zone
+  in Polder Town, Cave of Being in Route 10, Distortion World via the Rift Cave portal) and raid dens are sections.
+  No slot (AR.ns): Tarmigan Mansion, Antisis Port, Ferrothorn Turf, S.S. Marine, Battle Frontier (no encounters in any
+  source) and Mystery Gift (codes, any Pokémon Center after the Elite Four). New areas go at the end of AR (saved
+  trackers are keyed by AR index).
+- **Rated rows** -> AR.es: a floor is a section with a group per method (· qualifier), a page without floors gets a
+  section per method (· qualifier). Day / Night rows share one row, r [day, night]; "Requires Gen 8 Activation" ->
+  "· Gen 8", Safari Zone modes -> "· Easy" etc.; Special Encounter = DexNav. One row is listed twice in one table and
+  summed. 22 tables don't total 100% as the wiki gives them (Route 3 Good Rod 120%, Epidimy Town Old Rod 200%, Route 14
+  / 15 / 16 Super Rod 80%...; report: WIKI RATE TOTALS): shown as given.
+- **Other wiki rows** (gifts, statics, trades, fossils, Game Corner, missions, swarms: 247) are P.w rows with the
+  wiki's time cell as the note. Swarms: the wiki's rate-less Swarm rows get the Swarms page's hour for each day of the
+  month; area note "Swarm: 50% ... one swarm at a time" (the Swarms page).
+- **Raid dens:** a section per den, a group per star level as listed; a Gigantamax species is its base with
+  "Gigantamax"; the den's access text (its lead "The X Raid Den is found" trimmed) is the area note. 462 rows.
+- **Legendary page:** 40 rows the location pages lack, worded as the page has them (Entei / Raikou roam from the Tomb
+  of Borrius portal: Great Desert; Tornadus / Thundurus: Magnolia Fields; Latios / Latias: Fallshore City; Phione:
+  Ruins of Void with Manaphy). Wiki says two places for Deoxys (location page Route 5, Legendary page Route 13 with
+  Jirachi), Magearna (Frozen Heights reward / Tomb of Borrius mission), Entei and Raikou (Ruins of Void / roaming):
+  both shown.
+- **Mystery Gift:** the 34 codes (reward, code, held item); "Mega" rewards are the base species holding the stone.
+- **Doc says** (the workbook lists it, the wiki doesn't; shown in the area with "Doc says"): 52 wild rows (88 cells:
+  Rift Cave's ghosts, Tomb of Borrius's Unown / Sigilyph, Victory Road B1F's fire types, Epidimy Town and Antisis City
+  surfing and fishing, Thundercap Mountain outside Rock Smash, DexNav rows for Indeedee F, Eiscue, Galarian Weezing,
+  Drizzile, Dracovish, Arctovish...) and 21 gifts / statics (the other two Borrius starters post-game at the Rival's
+  House and Shadow Base, daily Lombre / Voltorb / Electrode in the gyms, Trubbish at Antisis City, the Shark Bait
+  Sharpedo, Carbink, Snorlax / Zoroark in Redwood Forest, the Magnolia Café eggs). Matched: 1,101 wild
+  cells, 54 gift / static / trade / Game Corner cells, 78 of the legend sheet's species. The workbook's swarms and wild
+  held items agree with the wiki (0 differences). Full list: report.txt -> LOCATION SOURCE DIFFERENCES.
+- **Gen 8:** areas with Gen 8 rows note "register any Galar Pokémon first (a trade, or a Mystery Gift after the Elite
+  Four)" (the wiki's Activate Gen 8 Encounters page).
+- **RomHackDex** (report only): its 94 location pages fold into 52 of our areas with differences; 297 species we
+  list that it lacks (mostly fishing / surfing and Gen 8 rows) and 40 it lists that no other source has here: 16 more
+  Safari Zone species (Blitzle, Kangaskhan, Tauros...; the wiki and the workbook agree without them), Cinder Volcano's
+  Camerupt / Excadrill / Heatmor / Magmar (the wiki has them in Cinder Volcano Depths), Minior Blue Core / Grim Woods
+  Pumpkaboo Average (form choices), Route 7 Raticate (the wiki: Alolan), and a few single rows. Not added.
+- **Names:** "Balloon Pikachu" (the wiki), "Flying Pikachu" / "Surfing Pikachu" are Pikachu (Flying) / (Surfing) here (`locs.NAME_FIX`;
+  `common.location_aliases` maps "Flying Pikachu" to Pikachu, unit 3's), "Indeedee♀️" is Indeedee (Female).
+- **Availability (P.g):** EI's rule (any row, plus evolution families both ways; a form change follows its base): 30
+  not found: Pikachu's five cosplay forms and Cosplay, Alolan Cubone, Unfezant / Frillish female, Pumpkaboo / Gourgeist
+  Large and Average, Zygarde 10%, Wishiwashi School, Minior (Core), Toxtricity Low Key, Zacian / Zamazenta (both forms),
+  Eternatus, Kubfu, both Urshifu, Glastrier, Spectrier and the three Calyrex.
+
 ### CFRU family (`tools/cfru.py`)
 
 Shared with Radical Red (its mirror was checked for the same quirks, 2026-10-29). CFRU-general:
@@ -138,7 +190,7 @@ Prefix `unbound`. Keep these keys once published.
 
 `uv run python -I hacks/unbound/extract/check.py`: dex counts (every mirror page placed, M and AB reproduced),
 integrity, the wiki differences (EXPECTED), every species against the game's table (types, stats, abilities), GID
-coverage. Units 4-7 add theirs. Calc stubs remain: calc is disabled.
+coverage. Locations: every rated wiki row in P.w (method, rate, time, floor), the sections reproduce the wiki's rates, every species resolves, one slot per area, the counts (`LOC_EXPECTED`). Units 5-7 add theirs. Calc stubs remain: calc is disabled.
 Before enabling it, replace the null in tools/scenarios/calc-doubles.mjs EXPECTED with an audited count and add
 tools/trainer_fields_check.py DOUBLES_EXPECTED (DOUBLES_PARTNER_ONLY if needed). The engine stub is registered
 in tools/calc/package.json; review tools/calc/test.mjs field-profile fixtures. Never copy another hack's counts.

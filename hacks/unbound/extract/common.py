@@ -94,6 +94,18 @@ def _build_sid():
         for n in _aliases(slug):
             _SID.setdefault(key(n), target[slug])
     _SID.setdefault('shadowwarrior', pid('shadow-warrior'))
+    location_aliases = {
+        'Magikarp (Shiny)': 'Magikarp', 'Spiky-Eared Pichu': 'Pichu (Spiky-eared)',
+        'Gigantamax Garbodor': 'Garbodor', 'Gigantamax Butterfree': 'Butterfree',
+        'Balloon Pikachu': 'Pikachu', 'Flying Pikachu': 'Pikachu',
+        'Original Color Magearna': 'Magearna (Original Color)', 'Eternal Flower Floette': 'Floette (Eternal Flower)',
+        'Eternal Floette': 'Floette (Eternal Flower)', 'Turtonaut': 'Turtonator', 'Gurrdurr': 'Gurdurr',
+        'Flabebe (Red)': 'Flabébé', 'Frillish (M)': 'Frillish', 'Deerling (Spring)': 'Deerling',
+        'Sawsbuck (Spring)': 'Sawsbuck', 'Gravler (Alolan)': 'Alolan Graveler',
+        'Nidoran (female)': 'Nidoran♀', 'Nidoran (male)': 'Nidoran♂',
+    }
+    for alias, canonical in location_aliases.items():
+        _SID.setdefault(key(alias), _SID[key(canonical)])
 
 
 def FORMS_KIND(species_id):
