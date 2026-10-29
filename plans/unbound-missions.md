@@ -1,6 +1,6 @@
 # Unbound missions — unit 7a draft
 
-Status: **draft for phone review, not accepted for 7b** (2026-10-29). Base: `72edc56`,
+Status: **accepted for 7b** (user, 2026-10-29: **B · Bordered card** and **B · Auto-close**). Base: `72edc56`,
 `worktree-unbound`; design branch: `worktree-unbound-missions`. No template or extract changes.
 
 ## What changes
@@ -41,6 +41,8 @@ sections. Do not promote sample paraphrases into the final extract without sourc
   this trial; **7b must retain the current raw-query Done action** and existing search/history contract.
 
 ## Questions for the user
+
+**Answered 2026-10-29: 1 = B (bordered card), 2 = B (auto-close).** 7b builds B / B; the A rows below are history.
 
 1. **Mission title:** panel “A · Quiet divider” or “B · Bordered card”? Recommend **A**, the default:
    avoids a fourth boxed/indented appearance at 260px; title wraps, progress and chevron stay visible. B adds

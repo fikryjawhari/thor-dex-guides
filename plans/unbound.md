@@ -75,6 +75,7 @@ User's answers (2026-10-29):
 - **D7 Version:** 2.1.1.1.
 - **EVs (2026-10-29):** Unbound has no way to turn EVs off, so they stay: `cfg.evs` true, `cfg.mgm` false (new switch:
   no MGM toggle, one speed per Pokémon with its EVs). Trainer cards and the calc use the sheets' EVs as given.
+- **Missions (7a, 2026-10-29):** bordered mission card, auto-close on the final tick (`plans/unbound-missions.md`).
 - **Mode:** hack.json has no mode field; "Expert" goes in the trainer wording (`txt`), not a new key.
 
 ## Units (in order; each an agent in its own worktree from `worktree-unbound`, ending at a commit)
