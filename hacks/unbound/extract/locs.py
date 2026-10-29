@@ -64,7 +64,7 @@ METHOD = {'Special Encounter': 'DexNav', 'Special Encounter (Surf)': 'DexNav (Su
 NOT_RHD = re.compile(r'dexnav|raid|^(?:gift|static|egg|trade|game corner|mission reward|random egg)', re.I)
 NUMERIC = re.compile(r'\d+(?:\.\d+)?%$')
 NOTE_GEN8 = 'Gen 8 rows: register any Galar Pokémon first (a trade, or a Mystery Gift after the Elite Four).'
-NOTE_SWARM = 'Swarm: 50% in the grass or cave for the hour it is on (one swarm at a time; hours by day of month).'
+NOTE_SWARM = 'Swarm: 50% in the grass or cave for its hour (one swarm at a time).'
 NOTE_GIFT = 'Codes at any Pokémon Center, after the Elite Four.'
 
 
@@ -358,7 +358,7 @@ def build(data):
     # Swarm timetables (Swarms page) on the area's Swarm rows
     for name, place, schedule in WIKI.swarms():
         area, species_id = area_name(place), sid(name)
-        times = 'Swarm hours: ' + ', '.join('%s %s' % (re.sub(r'\D', '', day), hour.replace(':00', '').lower())
+        times = 'Swarm: ' + ', '.join('%s %s' % (day, hour.replace(':00', '').lower())
                                             for day, hour in schedule)
         rows = [x for box in by_area[area].get('es', []) for g in box['g'] for x in g['rows']
                 if x['p'] == species_id and ('Swarm' in box['n'] or 'Swarm' in g['m'])]
@@ -381,7 +381,12 @@ def build(data):
     # Raid dens: one section per den, a group per star level
     for den in WIKI.raid_dens():
         area = area_name(den.title.removeprefix('Underwater ').removesuffix(' Raid Den'))
-        note(area, '%s: %s' % (den.title, den.access))
+        access = den.access
+        lead = re.match(r"(?:The )?[\w. ]+?(?:'s)? Raid Den (?:is |can (?:only )?be )(?:found |located |accessed |hidden )?",
+                        access)
+        if lead:
+            access = access[lead.end()].upper() + access[lead.end() + 1:]
+        note(area, '%s: %s' % ('Underwater raid den' if den.title.startswith('Underwater') else 'Raid den', access))
         for name, stars in den.encounters:
             gmax = 'Gigantamax' if re.search(r'Gigantamax|Gmax', name, re.I) else ''
             for species_id in species_ids(re.sub(r'^(?:Gigantamax|Gmax) ', '', name)):
@@ -515,6 +520,10 @@ def build(data):
         len(data['AR']), sum(1 for a in data['AR'] if not a.get('ns')), dict(sorted(counts.items()))))
     report('doc separator labels (floors / headings, not species): %d kinds' % len(labels))
     report('NOT FOUND (%d): %s' % (sum(p['g'] == 3 for p in data['P']), ', '.join(p['n'] for p in data['P'] if p['g'] == 3)))
+    odd = ['%s / %s / %s: %s%%' % (area['n'], box['n'], g['m'] or '-', total)
+           for area in data['AR'] for box in area.get('es', []) for g in box['g'] if 'Raid Den' not in box['n']
+           for total in {round(sum(x['r'][j] for x in g['rows']), 2) for j in (0, 1)} if total and total != 100]
+    report('WIKI RATE TOTALS NOT 100%% (%d, as the wiki gives them):\n%s' % (len(odd), '\n'.join(odd)))
     report('LOCATION SOURCE DIFFERENCES (%d):\n%s' % (len(differences), '\n'.join(differences)))
     report('DOC WILD HELD ITEMS NOT IN P.hi (%d):\n%s' % (len(held), '\n'.join(held)))
     rhd = membership_differences(data)
