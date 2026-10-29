@@ -19,6 +19,11 @@ def read_archive(roots, path):
 def read_garc(path):
     """Return the list of entry payloads (bytes), first sub-entry of each, LZ11 left as is."""
     data = open(path, "rb").read()
+    return [data[start:end] for start, end in spans(data, path)]
+
+
+def spans(data, path="GARC"):
+    """(start, end) file offsets of each entry's first sub-entry ((0, 0) for an empty entry), for in-place patches."""
     if data[:4] != b"CRAG":
         raise ValueError(f"{path}: not a GARC")
     header_size, = struct.unpack_from("<I", data, 4)
@@ -41,8 +46,8 @@ def read_garc(path):
             if vector >> bit & 1:
                 start, end, length = struct.unpack_from("<III", data, q)
                 q += 12
-                subs.append(data[data_offset + start:data_offset + end])
-        out.append(subs[0] if subs else b"")
+                subs.append((data_offset + start, data_offset + end))
+        out.append(subs[0] if subs else (0, 0))
     return out
 
 
