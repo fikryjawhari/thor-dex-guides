@@ -67,7 +67,10 @@ export function checkUnboundGimmicks(data, engine) {
   assert.deepEqual(camoHit.rolls, rolls(41,1.5,2), 'Camomons: base 41, Fire STAB and Grass weakness');
   assert.equal(camoHit.eff,2);
   assert.deepEqual(damage(attacker,defender,'Psychic',camomons).rolls, rolls(41), 'original Psychic STAB removed');
-  assert.deepEqual(plain(engine.fieldEffects({...attacker,moves:[move('Tackle'),move('Tackle')]},camomons).types), ['Normal']);
+  const doubled = {...defender,moves:[move('Tackle'),move('Tackle')]};
+  assert.deepEqual(plain(engine.fieldEffects(doubled,camomons).types), ['Normal','Normal'], 'two same-type moves: the type twice, as the official calc');
+  const fighter = mon('Mew', {moves:[move('Aura Sphere')]});
+  assert.equal(damage(fighter,doubled,'Aura Sphere',camomons).eff, 4, 'Normal/Normal takes Fighting 4x');
   assert.deepEqual(plain(engine.fieldEffects({...attacker,moves:[move('Tackle')]},camomons).types), ['Normal']);
   assert.throws(() => engine.fieldEffects(neutral,camomons), /known first move/);
   assert.equal(engine.speed({...attacker,moves:[move('Fly'),move('Tackle')]}, {...camomons,...typedWind}),240);
@@ -165,6 +168,7 @@ export function checkUnboundGimmicks(data, engine) {
     const theirCamoDefense = theirMon('Mew',{overrides:{types:['Grass','Normal']}});
     assert.deepEqual(theirDamage(theirCamoAttack,theirCamoDefense,'Flamethrower'),rolls(43,1.5,2),'official native Flamethrower is 95 BP: explicit data disagreement');
     assert.deepEqual(theirDamage(theirCamoAttack,theirCamoDefense,'Flamethrower',{}, {basePower:90}),camoHit.rolls,'same 90 BP input agrees; Camomons controls copy the first two move types');
+    assert.deepEqual(theirDamage(theirMon('Mew',{overrides:{types:['Fighting']}}),theirMon('Mew',{overrides:{types:['Normal','Normal']}}),'Aura Sphere'),damage(fighter,doubled,'Aura Sphere',camomons).rolls,'saved official Normal/Normal (two Normal moves) matches 4x');
     assert.deepEqual(theirDamage(theirMon('Mew'),theirMon('Mew'),'Shadow Ball',{isInverseBattle:true}),damage(neutral,neutral,'Shadow Ball',{inverse:true}).rolls);
     assert.equal(theirDamage(theirMon('Mew'),theirMon('Gengar',{curHP:134}),'Psychic',{isShadowyVeil:true})[0],66,'official says always-on Ghost half damage, unlike sheet full-HP rule');
     console.log(`PASS saved official Unbound oracle: Face Shield, Parental Bond, Heavy Rain, weight Speed (then Scarf / stages / Heavy Metal), Camomons, inverse; explicit Brain Bond/Flamethrower/Shadowy Veil differences (${official.files.length} hashed sources)`);

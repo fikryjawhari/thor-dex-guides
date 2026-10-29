@@ -236,7 +236,9 @@ function fieldPokemon(set, values, side) {
   const mon = pokemon(set);
   if (values.camomons) {
     if (!data.MV[set.moves?.[0]]) throw new Error('DMG: Camomons requires a known first move');
-    mon.types = [...new Set(set.moves.slice(0, 2).map(index => data.MV[index]?.t).filter(Boolean))];
+    // The first two moves' types, a duplicate kept (the official Unbound calc copies both into the type selectors:
+    // two Normal moves make a Normal/Normal mon, 4x weak to Fighting; user 2026-10-30).
+    mon.types = set.moves.slice(0, 2).map(index => data.MV[index]?.t).filter(Boolean);
     mon.guideCamomons = true;
   }
   if (mon.hasAbility('Plus', 'Minus')) mon.abilityOn = values.gameType === 'Doubles' && !!values[side + 'PlusMinus'];
