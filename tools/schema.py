@@ -9,6 +9,7 @@ What the template reads is in hacks/emerald-imperium/notes.md (Data schema). A k
 there (and to the notes) when a hack gets a new field.
 Trainer normal {easy, p} is an optional secondary Normal team; easy is its Easy level decrement. Mon l is displayed,
 sl is an optional different stat level, hn is a list of hzla disagreement notes. Missing data changes no rendering.
+Walkthrough s accepts legacy [text, note] pairs or mission {m, n, u, r, note?, s}; mission children are {k, t, n?}.
 """
 
 # Canonical key order per object kind. Optional fields (omitted when empty) are marked in the notes, not here.

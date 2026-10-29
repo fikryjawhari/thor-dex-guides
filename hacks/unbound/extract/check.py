@@ -158,6 +158,7 @@ def main():
 
     check_locations(D, ids)
     check_items(D)
+    check_walkthrough(D)
 
     print('dex: P %d (%d mirror pages: %d merged, %d dropped), M %d, AB %d, wiki differences %s'
           % (len(P), len(FORMS), merged, sum(dropped.values()), len(M), len(AB), dict(count)))
@@ -537,6 +538,109 @@ def trainer_checks(D):
           'differ / %d sheet only; %d relative-level mons' % (len(cards), len(boss), len(ordinary), len(TR['g']),
                                                              sum(per.values()), joined, len(sets), len(differ),
                                                              sum(only.values()), len(rel)))
+
+
+def check_walkthrough(data):
+    import copy
+    import items
+    import schema
+    import tabs_check
+    import walk
+    from wiki import text
+
+    splits = data['WK']['splits']
+    stops = [stop for split in splits for stop in split['st']]
+    source_parts = {number for number, page in WIKI.walkthrough_parts()}
+    represented = {int(match[1]) for stop in stops
+                   if (match := re.match(r'part-(\d+)/', stop['k']))}
+    check(source_parts == represented == set(range(1, 41)),
+          'walkthrough parts: source %s, represented %s' % (sorted(source_parts), sorted(represented)))
+    check([split['n'] for split in splits] == [group['n'] for group in data['TR']['g']],
+          'walkthrough splits differ from Trainers cap boxes')
+    check(len(splits) == 11, 'walkthrough requires ten cap splits and Post-game')
+    check(len({stop['k'] for stop in stops}) == len(stops), 'duplicate walkthrough stop key')
+    check(all(stop['k'].startswith(('part-', 'postgame/')) for stop in stops),
+          'walkthrough stop keys must identify a source part / semantic visit')
+    check(all(index in range(len(data['AR'])) for stop in stops for index in stop['a']),
+          'walkthrough has an unknown area')
+    cards = [trainer for group in data['TR']['g'] for section in group['sec'] for trainer in section['tr']]
+    placed = collections.Counter(trainer for stop in stops for trainer in stop['tr'])
+    check(placed == collections.Counter(trainer['k'] for trainer in cards),
+          'every trainer must appear in exactly one walkthrough stop')
+    groups = {trainer['k']: group['n'] for group in data['TR']['g'] for section in group['sec'] for trainer in section['tr']}
+    check(all(groups.get(trainer) == split['n'] for split in splits for stop in split['st'] for trainer in stop['tr']),
+          'walkthrough trainers must stay in their own cap split')
+    by_key = {stop['k']: stop for stop in stops}
+    card_by_key = {trainer['k']: trainer for trainer in cards}
+    check({card_by_key[trainer]['n'] for trainer in by_key['part-20/surf-route-3']['tr']} ==
+          {'Fisherman Edgar', 'Fisherman Jason', 'Fisherman Cole'}, 'Route 3 Surf fishermen must follow Galavan')
+    check(any(card_by_key[trainer]['n'] == 'Skier Charlie' for trainer in by_key['part-30/antisis-thundercap']['tr']),
+          'Skier Charlie must be at the part-30 Thundercap revisit')
+    expected_visits = {
+        'Sinnoh Leader Candice': 'part-9/blizzard-city',
+        'Ace Trainer Alexa': 'part-10/alexa',
+        'Mega Trainer Yale': 'part-14/mega-yale',
+        'Hiker Franklin': 'part-26/surf-route-2',
+        'Mega Trainer Vivian': 'part-26/surf-route-2',
+        'Mega Trainer Mathis': 'part-26/surf-route-2',
+    }
+    for name, stop_key in expected_visits.items():
+        check(any(card_by_key[trainer]['n'] == name for trainer in by_key[stop_key]['tr']),
+              name + ' must be at ' + stop_key)
+    part_text = {number: key(text(page['html']))
+                 for number, page in WIKI.walkthrough_parts()}
+    placed_stops = {trainer: stop['k'] for stop in stops for trainer in stop['tr']}
+    for split, group in zip(splits, data['TR']['g']):
+        scope = {int(match[1]) for stop in split['st'] if (match := re.match(r'part-(\d+)/', stop['k']))}
+        for section in group['sec']:
+            for trainer in section['tr']:
+                if 'Moves unknown' not in trainer['tags']:
+                    continue
+                named = {number for number in scope if key(trainer['n']) in part_text[number]}
+                current = re.match(r'part-(\d+)/', placed_stops[trainer['k']])
+                check(not named or current and int(current[1]) in named,
+                      'ordinary trainer outside the wiki part naming it: ' + trainer['n'])
+    check(tabs_check.check('unbound'), 'tabs_check: walkthrough / Trainers order or caps disagree')
+    expected_items = collections.Counter((place, items.canon(one)[0]) for place, raw, description in WIKI.item_locations()
+                                         for one in items.split_names(raw))
+    actual_items = collections.Counter()
+    for stop in stops:
+        areas = [data['AR'][index]['n'] for index in stop['a']]
+        for row in stop['it']:
+            place = next((area for area in areas if (area, row[1]) in expected_items), None)
+            actual_items[(place, row[1])] += 1
+    check(actual_items == expected_items,
+          'walkthrough Locations item rows: missing %s, extra %s' % (dict(expected_items - actual_items),
+                                                                  dict(actual_items - expected_items)))
+    missions = [step for stop in stops for step in stop['s'] if isinstance(step, dict)]
+    source_missions = {mission['page']['link'].rstrip('/').rsplit('/', 1)[-1]
+                       for mission in WIKI.walkthrough_missions()} | {'mission-001'}
+    mission_keys = collections.Counter(mission.get('m') for mission in missions)
+    check(len(missions) == 84 and mission_keys == collections.Counter(source_missions),
+          'walkthrough missions must cover all 83 pages and #001 exactly once')
+    check(len(WIKI.mission_index()) == 84, 'wiki mission index count changed')
+    for stop in stops:
+        for mission in (step for step in stop['s'] if isinstance(step, dict)):
+            check(walk.MISSION_STOPS.get(int(mission['m'].split('-')[-1])) == stop['k'],
+                  'mission at wrong unlock stop: ' + mission['m'])
+            children = mission.get('s', [])
+            child_keys = [child.get('k') for child in children]
+            check(bool(children) and all(child_keys) and len(set(child_keys)) == len(children),
+                  'empty mission or missing/duplicate child keys: ' + mission['m'])
+            check(all(re.fullmatch(r'[a-z][a-z0-9-]*', child_key) for child_key in child_keys),
+                  'mission children need semantic keys: ' + mission['m'])
+    for source in WIKI.walkthrough_missions():
+        slug = source['page']['link'].rstrip('/').rsplit('/', 1)[-1]
+        mission = next(mission for mission in missions if mission['m'] == slug)
+        check(mission['u'] == source['fields']['Unlock Requirements'], 'mission unlock note differs: ' + slug)
+    try:
+        schema.standardise(copy.deepcopy(data))
+    except (AssertionError, KeyError, TypeError) as error:
+        check(False, 'walkthrough schema: ' + str(error))
+    ordinary = sum(isinstance(step, list) for stop in stops for step in stop['s'])
+    print('walkthrough: %d parts, %d splits, %d stops, %d ordinary steps, %d missions / %d children, '
+          '%d items, %d trainers' % (len(source_parts), len(splits), len(stops), ordinary, len(missions),
+                                   sum(len(mission['s']) for mission in missions), sum(actual_items.values()), sum(placed.values())))
 
 
 if __name__ == '__main__':

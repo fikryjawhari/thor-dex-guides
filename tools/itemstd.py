@@ -72,6 +72,7 @@ HG_OTHER = {
         'Old man next to the Bidoof resets the Embedded Tower.'),
 }
 RULES = {
+    'unbound': {'reorder': set(GAME_ORDER_BOXES)},
     'emerald-imperium': {
         'reorder': set(GAME_ORDER_BOXES), 'tm_width': 3, 'shop_kind_re': EI_KIND,
         'drop': {('Shops', 'Pomeg Berry')},     # the author's stray first row (it only holds the vanilla-stock remark)
