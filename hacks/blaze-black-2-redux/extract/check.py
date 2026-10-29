@@ -5,6 +5,7 @@ Dex: the doc's own counts, every doc-changed species' stats / types / abilities 
 evolution is an edge, every move name in the docs resolves, indexes in range, the move conflicts the audit counted.
 """
 from pathlib import Path
+from copy import deepcopy
 import json
 import sys
 from collections import Counter
@@ -21,6 +22,7 @@ if not data.is_file():
 from common import RD, doc, drayano  # noqa: E402
 from dex import BASE_LABEL, FORMS, FORM_NAMES, VERSION  # noqa: E402
 import locs
+from gid import build as build_gid, replacements, tables
 
 D = json.load(open(data, encoding='utf-8'))
 M, MV, AB, P = D['M'], D['MV'], D['AB'], D['P']
@@ -222,6 +224,36 @@ check((comparison['areas'], comparison['match'], comparison['doc_only'], compari
       'RomHackDex audit reproduced: 81 areas / 1,296 match / 761 omissions / zero disagreements')
 print('Locations: 81 source headers; 104 initial AR slots; 352 sections; 2,057 wild rows; 20 grottos / 206 entries; '
       '47 legendary species; 30 trades; all source percentage groups reproduced')
+ids, gid = tables(), D['GID']
+check(all(f'{dex}:0' in gid['sp'] for dex in range(1, 650)), 'GID covers every base species 1-649')
+check(set(gid['sp'].values()) == {p['id'] for p in P}, 'GID covers every guide form')
+check(set(gid['sp']) == set(gid['gr']), 'GID growth and species keys agree')
+unsupported = {f'351:{form}' for form in range(1, 4)} | {f'493:{form}' for form in range(1, 17)}
+check(set(gid['sp']) == {f'{dex}:{form}' for dex, form, _ in ids['forms']} - unsupported,
+      'GID covers personal forms except unrepresented Castform weather / typed Arceus forms')
+replace = replacements(ids)
+check(len(replace) == 26, '26 replacement slots')
+check(all(gid['mv'][slot] is not None and M[gid['mv'][slot]] == name for slot, name in replace.items()), 'every replacement retains its game slot')
+mapped = {index for index in gid['mv'] if index is not None}
+used = {index for p in P for field in ('tm', 'tu', 'eg') for index in p[field]}
+used.update(index for p in P for _, index in p['lv'])
+check(used <= mapped, 'every move used by a BB2R species has a game slot')
+missing = [name for index, name in enumerate(M) if index not in mapped]
+check(len(mapped) == 559 and len(missing) == 18 and all(name.startswith('Shadow ') for name in missing),
+      'all 559 BB2R moves resolve; only 18 unused XD mirror catalogue entries lack Gen 5 IDs')
+check(len(gid['mv']) == 560 and all(index is not None for index in gid['mv'][1:]), 'all B2W2 move slots map')
+check(len(gid['ab']) == 165 and all(index is not None for index in gid['ab'][1:]), 'all B2W2 ability slots map')
+print('GID unmapped moves:', ', '.join(missing) or 'none')
+print('GID unmapped abilities:', ', '.join(a[0] for index, a in enumerate(AB) if index not in {value for value in gid['ab'] if value is not None}) or 'none')
+print('GID unmapped species: Castform weather 351:1..3, typed Arceus 493:1..16 (no P entries)')
+print('GID items:', 'deferred: IT empty' if not D['IT'] else 'mapped by IT name; see report')
+check(gid['sp']['646:1'] == 'kyurem_white' and gid['sp']['646:2'] == 'kyurem_black', 'Kyurem form order: White then Black')
+check(gid['sp']['550:1'] == 'basculin_blue_striped' and gid['sp']['422:1'] == 'shellos_east_sea', 'Basculin Blue / Shellos East form keys')
+with_items = deepcopy(D)
+with_items['IT'] = [{'n': 'test', 'r': [['Leftovers', '', None], ['NeverMeltIce', '', None], ['Not A Game Item', '', None]]}]
+build_gid(with_items)
+check(with_items['GID']['it'][234] == 'Leftovers' and with_items['GID']['it'][246] == 'NeverMeltIce', 'item mapping after items merge, including aliases')
+check('Not A Game Item' not in with_items['GID']['it'], 'unknown items are not assigned invented IDs')
 
 if fails:
     print('FAIL blaze-black-2-redux extract-check: %d' % len(fails))

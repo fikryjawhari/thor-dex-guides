@@ -205,6 +205,45 @@ Scaffold verification (2026-10-29, baseline 23a42e1): tools/new_hack_test.py 13/
 differences or page errors; four HTML files byte-identical. Calc npm test passes, including this disabled stub.
 Renegade Platinum dry-run lists 17 writes without creating its config. Logs: .tmp/bb2r-scaffold/.
 
+### Save import
+
+Unit 9a supplies the `gen5` reader for raw B2W2 `.sav` (melonDS / DraStic export), with an optional
+bounded DeSmuME footer. It returns party and all 24 boxes in game IDs, explicit nature/ability, held item,
+moves, calc-order IVs/EVs and levels; additive nickname/current PP/PP-Up fields are covered by the oracle.
+Eggs are omitted; box-only saves work. Checks cover table, imported blocks, both CRC copies and each PK5.
+The primary is read as PKHeX does: no silent fallback to an older backup. Format references, offsets,
+reproduction and limitations: `template/calc/readers/README.md` → gen5.
+
+`extract/gid.py` runs after shared finalisation. Its committed `gen5-ids.json` is the factual English
+ID/name/form/growth export from PKHeX.Core 26.10.18; format-source commit
+`bfe89c74a3f5265805e364b79bc04ad38ebbc5ea`. No PKHeX code or linked binaries are shipped.
+Coverage: 712 species:form keys, all 649 base species and all 671 P entries; 559/559 real B2W2 move
+slots, including the 26 replacements at the old slot; 164/164 B2W2 ability slots. IT is currently empty:
+all 638 item IDs are deferred, automatically mapped by name when the items unit merges. The check proves
+future IT matching (Leftovers, NeverMeltIce alias and an unmapped-name control).
+
+Unmapped, deliberately not assigned invented IDs:
+- Castform weather forms 351:1..3 and typed Arceus 493:1..16: no matching P entries. They are skipped
+  rather than imported with the base's wrong type; the calc/data units can add supported form entries later.
+- 18 unused mirror-only XD moves: Shadow Blast, Shadow Blitz, Shadow Bolt, Shadow Break, Shadow Chill,
+  Shadow Down, Shadow End, Shadow Fire, Shadow Half, Shadow Hold, Shadow Mist, Shadow Panic, Shadow Rave,
+  Shadow Rush, Shadow Shed, Shadow Sky, Shadow Storm, Shadow Wave. None occurs in P's learnsets.
+- Competitive and Neutralizing Gas: post-Gen-5 names in AB (and P) with no documented replacement slots.
+  The reader retains the actual stored ability ID; a vanilla-name table cannot prove these hack additions.
+
+Verification 2026-10-29: all reader-module state controls and 42 standalone assertions pass;
+PKHeX-generated Black 2 / White 2 / box-only saves compare **805 Pokemon × 12 fields = 9,660 fields,
+zero mismatches**, covering all 731 source species/form combinations, all natures, all shuffle selectors
+and every B2W2 move slot. All 17 controls reject correctly (BW1, Gen 4, CRCs, bad PK5 sanity/checksums,
+bad count/game, truncation, state, empty/egg-only and valid backup with damaged primary).
+The uncommitted generator is `.tmp/pkhex-oracle/`; fixtures and expected files are `.src/saves/pkhex-b2w2*`;
+logs are `.tmp/bb2r-reader/`. Build + extract check pass; no browser checks were run for this unit.
+No real BB2R save exists yet: the user chose this oracle; a real save remains a follow-up, not a claimed pass.
+
+The later calc unit must wire `cfg.calc.save = "gen5"` and the calc import path, then rebuild after the
+items/data units merge. This unit does not change calc.js, dex.js, shell.html or hack.json, enable imports,
+or claim those unresolved catalogue names have proven hack game IDs.
+
 ## History
 
 2026-10-29: dex unit: `tools/drayano.py`, `tools/romhackdex.py`, `extract/dex.py`; P 671, M 577, AB 166. The
