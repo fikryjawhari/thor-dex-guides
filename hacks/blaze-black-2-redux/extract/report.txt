@@ -42,7 +42,195 @@ move descriptions: none (the mirror has none for this hack; MV.d is empty)
 doc fix: Shadow Claw: "PP 70 -> 90" read as Power 70 -> 90 (Move Changes:485)
 not built yet: locs (TODO: implement blaze-black-2-redux locs extraction)
 not built yet: trainers (TODO: implement blaze-black-2-redux trainers extraction)
-not built yet: items (TODO: implement blaze-black-2-redux items extraction)
+items cross-check: doc 644, mirror 557, agree 520, doc-only 124, mirror-only 37
+items cross-check classification: doc-only / coverage: mirror omits doc machine/placement 119
+items cross-check classification: doc-only / naming/choice expansion 5
+items cross-check classification: mirror-only / naming/choice expansion 6
+items cross-check classification: mirror-only / real conflict: fused TM row mislocated at Humilau 16
+items cross-check classification: mirror-only / real conflict: non-item heading/footnote 15
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM62 Acrobatics @ Mistralton City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Acrobatics @ Mistralton City Gym
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Aerial Ace @ Mistralton City
+  items cross-check doc-only [naming/choice expansion]: New: Armour Fossil and Skull Fossil. @ Driftveil Drawbridge
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Aura Sphere @ Victory Road
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Blizzard @ Relic Passage
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Brick Break @ Route 19
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM63 Brutal Swing @ Driftveil City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Brutal Swing @ Driftveil City Marketplace
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Bug Buzz @ Route 13
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Bulk Up @ Castelia City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM08 Bulk Up @ Castelia Sewers
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Bulldoze @ Desert Resort
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Calm Mind @ Lacunosa Town
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM57 Charge Beam @ Chargestone Cave
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Charge Beam @ Lentimas Town
+  items cross-check doc-only [naming/choice expansion]: Choice between a Water Stone, Thunder Stone, Fire Stone, Sun Stone, Moon Stone, Leaf Stone or Ice Stone @ Castelia City
+  items cross-check doc-only [naming/choice expansion]: New: Cover Fossil and Plume Fossil @ Opelucid City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Dazzling Gleam @ Route 13
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Dig @ Route 4
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM02 Dragon Claw @ Opelucid City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Dragon Claw @ Opelucid City Gym
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Dragon Tail @ Mistralton Cave
+  items cross-check doc-only [naming/choice expansion]: Dubious Disk @ Opelucid City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM26 Earthquake @ Driftveil City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Earthquake @ Driftveil City Gym
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Echoed Voice @ Nimbasa City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Energy Ball @ Aspertia City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Explosion @ Clay Tunnel
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Facade @ Marine Tube
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: False Swipe @ Aspertia City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Fire Blast @ Relic Passage
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Flame Charge @ Route 5
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Flamethrower @ Reversal Mountain
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Flash @ Castelia City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Flash Cannon @ Chargestone Cave
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Focus Blast @ Relic Passage
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Frost Breath @ PWT
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Frustration @ Floccesy Ranch
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM19 Giga Drain @ Route 18
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Giga Drain @ Village Bridge
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Giga Impact @ Shopping Mall Nine
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM86 Grass Knot @ Castelia City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Grass Knot @ Castelia Gardens
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Gyro Ball @ Nimbasa City Pokémon Center
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Hail @ Mistralton City Pokémon Center
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Hidden Power @ Castelia City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: HM02 Fly @ Route 5
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: HM03 Surf @ Route 6
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: HM04 Strength @ Castelia Sewers
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: New: HM05 Waterfall @ Undella Town
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: HM06 Dive @ Victory Road
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Hone Claws @ Relic Castle
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Hurricane @ Victory Road
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Hyper Beam @ Shopping Mall Nine
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Ice Beam @ Giant Chasm
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Incinerate @ Virbank Complex
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Infestation @ Floccesy Ranch
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Light Screen @ Nimbasa City Pokémon Center
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Low Sweep @ Virbank Complex
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Mystical Fire @ Route 13
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Overheat @ Route 23
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM85 Play Rough @ Dreamyard
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Play Rough @ Relic Passage
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Pluck @ Castelia City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Poison Jab @ Castelia Sewers
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Power Gem @ Route 16
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Power-Up Punch @ Virbank Complex
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Protect @ Humilau City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Psychic @ Route 13
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Psych Up @ Chargestone Cave
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM77 Psych Up @ Twist Mountain
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Psyshock @ Desert Resort
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Quash @ Abundant Shrine
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Rain Dance @ Mistralton City Pokémon Center
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Reflect @ Nimbasa City Pokémon Center
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Rest @ Castelia City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM67 Retaliate @ Plasma Frigate
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Retaliate @ Team Plasma Frigate
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Return @ Reversal Mountain
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Roar @ Route 23
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Rock Climb @ Route 9
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Rock Polish @ Reversal Mountain
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Rock Slide @ Mistralton Cave
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Rock Smash @ Virbank Complex
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Rock Tomb @ Relic Castle
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Sandstorm @ Mistralton City Pokémon Center
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Scald @ Undella Town
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Shadow Ball @ Strange House
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Shadow Claw @ Celestial Tower
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Sludge Bomb @ Virbank City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Sludge Wave @ Route 9
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Smack Down @ Relic Passage
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Snarl @ Lostlorn Forest
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: SolarBeam @ Lostlorn Forest
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Stone Edge @ Victory Road
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM90 Substitute @ Giant Chasm
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Substitute @ Giants Chasm
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Sunny Day @ Mistralton City Pokémon Center
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Swords Dance @ Route 11
+  items cross-check doc-only [naming/choice expansion]: Tanga Berries x2 @ Castelia City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Taunt @ Route 23
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Thunder @ Relic Passage
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Thunderbolt @ Lentimas Town
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Thunder Wave @ Nimbasa City Pokémon Center
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Toxic @ Seaside Cave
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM20, Tri Attack @ Route 15
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Tri Attack @ Route 6
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Trick Room @ Plasma Frigate
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: U-Turn @ Route 7
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM09 Venoshock @ Virbank City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Venoshock @ Virbank City Gym
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM72 Volt Switch @ Nimbasa City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Volt Switch @ Nimbasa City Gym
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM51 Wave Crash @ Humilau City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Wave Crash @ Humilau City Gym
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM51 Wave Crash @ Pinwheel Forest
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Weather Ball @ Lacunosa Town
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Wild Charge @ Route 12
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Will-O-Wisp @ Celestial Tower
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM83 Work Up @ Aspertia City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: Work Up @ Aspertia City Gym
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: TM81 X-Scissor @ Castelia City
+  items cross-check doc-only [coverage: mirror omits doc machine/placement]: X-Scissor @ Castellia City Gym
+  items cross-check mirror-only [naming/choice expansion]: Armor Fossil @ Driftveil Drawbridge
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Aura Sphere            Victory Road * @ Humilau City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Brutal Swing         Driftveil City Marketplace @ Humilau City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Bug Buzz        Route 13 * @ Humilau City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: **Challenge mode only. @ Driftveil City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: **Challenge mode only. @ Mistralton City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: **Challenge mode only. @ Nimbasa City
+  items cross-check mirror-only [naming/choice expansion]: Cover Fossil @ Opelucid City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Dazzling Gleam   Route 13 * @ Humilau City
+  items cross-check mirror-only [naming/choice expansion]: Dubious Disc @ Opelucid City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: *Easy and Normal mode only. @ Driftveil City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: *Easy and Normal mode only. @ Mistralton City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: *Easy and Normal mode only. @ Nimbasa City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: *Easy and Normal mode only. @ Opelucid City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Giga Drain       Village Bridge * @ Humilau City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Hurricane           Victory Road * @ Humilau City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Infestation          Floccesy Ranch * @ Humilau City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: Modified Marts @ Route 18
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: Modified TMs + Locations @ Humilau City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Mystical Fire          Route 13 * @ Humilau City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: Now sells: @ Route 9 Shopping Mall
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: Plasma Grunt now sells: @ Driftveil Market
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Play Rough       Relic Passage * @ Humilau City
+  items cross-check mirror-only [naming/choice expansion]: Plume Fossil @ Opelucid City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Power Gem            Route 16 @ Humilau City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Power-Up Punch       Virbank Complex * @ Humilau City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Rock Climb           Route 9 * @ Humilau City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: Secondary Mart now sells: @ Castelia City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: Secondary Mart now sells: @ Driftveil City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: Secondary Mart now sells: @ Humilau City
+  items cross-check mirror-only [real conflict: non-item heading/footnote]: Secondary Mart now sells: @ Virbank City
+  items cross-check mirror-only [naming/choice expansion]: Skull Fossil @ Driftveil Drawbridge
+  items cross-check mirror-only [naming/choice expansion]: Tanga Berry @ Castelia City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: TM #    Move                            Location in Redux @ Humilau City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Tri Attack         Route 6 * @ Humilau City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Wave Crash       Humilau City Gym * @ Humilau City
+  items cross-check mirror-only [real conflict: fused TM row mislocated at Humilau]: Weather Ball           Lacunosa Town * @ Humilau City
+items: 375 placement names, 1197 placements (757 Item Changes, 4 trade/gift docs, 0 RomHackDex, 436 Bulbapedia), 95 TMs, 6 HMs, 6 modified marts, 1048 shop offers
+items: 652 nonempty doc statements in 69 areas; 3 deletions; 8 mode-qualified statements; 4 Pickup substitutions
+items: complete vanilla Pickup table, 10 level bands with probabilities; four doc substitutions applied
+  item format: Pokéball -> Poké Ball (4: Item Changes:84, Item Changes:111, Item Changes:112)
+  item alias: Bike -> Bicycle (1: Item Changes:85)
+  item format: Exp Share -> Exp. Share (2: Item Changes:131, RomHackDex)
+  item alias: Tanga Berries -> Tanga Berry (1: Item Changes:194)
+  item format: Poke Toy -> Poké Toy (2: Item Changes:237, RomHackDex)
+  item format: DeepSeaTooth -> Deep Sea Tooth (1: Item Changes:257)
+  item format: DeepSeaScale -> Deep Sea Scale (1: Item Changes:262)
+  item format: Thunderstone -> Thunder Stone (2: Item Changes:286, Item Changes:394)
+  item format: TinyMushroom -> Tiny Mushroom (4: Item Changes:302, Item Changes:365, Item Changes:455)
+  item alias: Armour Fossil -> Armor Fossil (1: Item Changes:329)
+  item format: SilverPowder -> Silver Powder (1: Item Changes:366)
+  item format: BrightPowder -> Bright Powder (3: Item Changes:555, Bulbapedia Unova Route 4, Bulbapedia: Unova Route 4:0)
+  item alias: Dubious Disk -> Dubious Disc (1: Item Changes:616)
+  item format: NeverMeltIce -> Never-Melt Ice (2: Item Changes:702, Item Changes:809)
+  item format: BalmMushroom -> Balm Mushroom (2: Item Changes:838, Item Changes:964)
+  item format: Never Melt Ice -> Never-Melt Ice (2: RomHackDex, RomHackDex)
+  item format: Upgrade -> Up-Grade (1: Bulbapedia shop Black City)
+  move format: SolarBeam -> Solar Beam (2: Item Changes:307, Item Changes:1107)
+  move format: U-Turn -> U-turn (4: Item Changes:451, Item Changes:1174, Bulbapedia shop Battle Subway)
 not built yet: walk (TODO: implement blaze-black-2-redux walk extraction)
 doc name fixes: 15 (species 3, move 11, ability 1)
   species fuzzy: Snubull -> Snubbull (1: Type Changes:39)
