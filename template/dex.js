@@ -703,7 +703,8 @@ const monLv=(x,cap)=>x.l!=null?x.l:x.r!=null&&cap?cap+x.r:NaN;
 // A Totem's aura (mon.au: stages Atk, Def, SpA, SpD, Spe): "Aura Def +1", "Aura +2 all".
 const auTxt=au=>{const n=['Atk','Def','SpA','SpD','Spe'],s=v=>(v>0?'+':'−')+Math.abs(v);return 'Aura '+(au.every(v=>v===au[0])?s(au[0])+' all':au.map((v,i)=>v?n[i]+' '+s(v):'').filter(Boolean).join(' '));};
 function monCard(x,cap,sel,trainerKey,index){const p=byId[x.id];const lv=monLv(x,cap);
- const main=p&&lv?stat(p.s[5],5,x.iv[5],EVS&&!MGM?x.ev[5]:0,x.sl??lv,x.na):null;
+ // No speed when the source gives no IVs, or no EVs where they count (unknown, not assumed).
+ const spe=EVS&&!MGM?x.ev?.[5]:0;const main=p&&lv&&x.iv&&spe!=null?stat(p.s[5],5,x.iv[5],spe,x.sl??lv,x.na):null;
  const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b></span>${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
  const lvs=x.l!=null||x.r==null?`Lv ${x.l??'?'}`:`Lv ${lv||'?'} <span class="mut small">cap${x.r?(x.r>0?'+':'−')+Math.abs(x.r):''}</span>`;
  const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'')+(x.au?`<span class="tag aura">${auTxt(x.au)}</span>`:'');

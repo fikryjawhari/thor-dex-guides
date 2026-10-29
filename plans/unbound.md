@@ -151,6 +151,9 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
   `cfg.starter` should become `pick` (sheet headers name Gible/Beldum/Larvitar); not changed yet. Unit 7 should retain
   the extra Maxima split. Unit 8 must distinguish joined hzla sets from sourced IV coverage and preserve unknown EVs.
   No extraction, keys, workbook joins, field review, builds, scenarios or screenshots yet; not a completed unit.
+- Main chat (2026-10-29): Focus Belt / Nine Lives are probably Sturdy clones (the wiki lists Sturdy for their
+  holders); unit 8: the calc treats them as Sturdy, marked assumed in notes.md → Damage calc. Pikachu Surfing / Flying
+  use EI's art (`sprites.json`, the user's call).
 - Unit 1 (sources): detailed audit `plans/unbound-sources.md`; pin/re-fetch/licence manifest
   `hacks/unbound/SOURCES.md`. No D1-D7 changes, no extracts/template edits. Research is on
   `worktree-unbound-sources`, to merge into `worktree-unbound` before later units.

@@ -9,9 +9,9 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import HACK, split_name
+from common import HACK, load, split_name
 from trainers import CAPS
-from totems import BATTLES
+from totems import BATTLES, game_rows
 
 
 def trainers(data):
@@ -84,6 +84,12 @@ def check_totems(data, cards):
     assert {trainer['n'] for trainer in totems} == expected.keys()
     source = {('Totem ' + name if name not in ('Nihilego', 'Ultra Necrozma') else name): rows
               for name, _, rows in BATTLES}
+    doc_name = {('Totem ' + name if name not in ('Nihilego', 'Ultra Necrozma') else name): name for name, _, _ in BATTLES}
+    statics = load('statics-rebalanced.json')
+    evless = load('trainers-evless.json')
+    assert not any(any(mon['evs'].values()) for trainer in evless for mon in trainer['team'])
+    assert not any(any(mon.get('ev') or []) for trainer in cards.values() if 'Totem' not in trainer['tags']
+                   for mon in trainer['p'] + [m for partner in trainer.get('pt', []) for m in partner['p']])
     placements = {trainer['k']: index for index, group in enumerate(data['TR']['g'])
                   for section in group['sec'] for trainer in section['tr']}
     occurrences = Counter(key for stop in stops(data).values() for key in stop['tr'])
@@ -96,13 +102,13 @@ def check_totems(data, cards):
         assert all('au' not in mon for mon in team[1:]), name
         assert occurrences[trainer['k']] == 1, name
         assert len(team) == len(source[name]), name
-        for mon, row in zip(team, source[name]):
-            species, level, ability, item, nature, evs, moves = row
-            assert (mon['id'], mon['l'], mon['i'], mon['na'], mon['ev']) == (species, level, item, nature, evs)
-            assert mon['iv'] == [31] * 6
-            assert data['AB'][mon['a']][0] == ability
-            assert [data['M'][index] for index in mon['m']] == moves.split('/')
-        assert trainer['note'].count('IVs not in the doc: 31 assumed') == 1
+        for mon, (row, game) in zip(team, game_rows(statics, doc_name[name], source[name])):
+            assert mon['id'] == row[0], name
+            assert (mon['l'], mon['i'] or None, mon['na'], mon['iv'], mon['ev']) == (
+                game['level'], game['item'], game['nature'], list(game['ivs'].values()), list(game['evs'].values()))
+            assert data['AB'][mon['a']][0] == game['ability']
+            assert [data['M'][index] for index in mon['m']] == game['moves']
+        assert not any('31 assumed' in line for line in trainer['note']), name
         if 'Raticate' in name:
             assert 'Prismatic Moon' in trainer['tags'] and not trainer.get('st')
         if 'Gumshoos' in name:
@@ -117,7 +123,7 @@ def check_totems(data, cards):
             assert trainer['loc'] == CAPS[target][1]
             assert trainer['cap'] == data['TR']['g'][target]['cap']
     assert next(trainer for trainer in totems if trainer['n'] == 'Ultra Necrozma')['p'][0]['l'] == 100
-    print('PASS: all 13 Totem battles, exact auras/sets, foe allies, version tags, cap boxes and walkthrough links')
+    print('PASS: all 13 Totem battles, game sets (IVs, EVs), exact auras, no trainer EVs outside Totems, foe allies, version tags, cap boxes and walkthrough links')
 
 
 def check(baseline_path):
