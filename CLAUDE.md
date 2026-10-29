@@ -151,6 +151,8 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
 
 ## Workflow
 - References: [worker brief](.agents/references/worker-brief.md), [spec skeleton](.agents/references/spec-skeleton.md), [big jobs](.agents/references/big-job.md), [calc mechanics](.agents/references/calc-mechanics.md), [save reader](.agents/references/calc-save-reader.md).
+- Prompts and briefs (session prompts I ask for, agent briefs): [prompt writing](.agents/references/prompt-writing.md).
+  Big jobs goal first (altitude, depth, range, speed, an outside judge); small ones task first with the end goal named.
 - I test on the Thor. Testing a guide there without the library: PROGRESS.md → Testing on the Thor.
 - UI changes: mockup first as a plain interactive HTML page at the viewer's real size, then build it.
 - **Showing pages to me** (mockups, unmerged builds): `python -I tools/preview.py <page.html> [name.html]` puts it on
