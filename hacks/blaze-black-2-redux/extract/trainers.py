@@ -376,7 +376,7 @@ def build(data):
                 group_index = len(CAPS)
             group = groups[group_index]
             cap = group['cap']
-            optional_cap = next((value for boss, value in OPTIONAL_CAPS.items() if record['optional'] and boss in record['header']), None)
+            optional_cap = None  # user 2026-10-29: caps come only from the 21 cap battles; optional bosses take their split's
             if optional_cap:
                 trainer['cap'] = optional_cap
             elif cap:

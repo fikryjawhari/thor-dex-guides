@@ -217,9 +217,7 @@ stops, every trainer card in one stop, every AR area and every Found / shop line
   the gym rematches there).
 - **Stop keys:** the first build's positions ("split.stop", `tools/schema.py`), published with the guide; a later
   regroup keeps a stop's key (`template/README.md` → saved walkthrough state). The check pins this build's keys.
-- **tabs_check:** the Trainers page has five "cap goes down" lines (optional Hoenn leaders' own caps inside a split,
-  by the user's cap rule) and the walkthrough one more (Winona alone at Opelucid, 63 in the 64 split): the check has
-  no notion of an in-split optional cap. Everything else agrees.
+- **tabs_check:** clean (0 problems). Optional bosses take their split's cap (below), so no cap goes down.
 
 ## Local storage
 
@@ -294,8 +292,8 @@ Partner teams copied onto both opponents produce 120 final partner slots, not 12
 Caps, exactly the user's order (only these end splits): Cheren 14; Roxie 21; Brycen 23; Burgh 29; Lenora and Hawes
 33; Subway Masters 36; Elesa 38; Charles 39; Rood 41; Clay 45; Colress 53; Skyla 55; Bianca 56; Hugh 58; Benga 62;
 Drayden 64; Marlon 68; Ghetsis 72; Lance 76; Elite Four et al 78; Iris 79 ("New to Redux" rows named from the doc's
-spoiler cap guide). Optional Hoenn bosses stay in these splits with spoiler-guide caps: Roxanne 13, Brawly 20,
-Wattson 29, Flannery 37, Norman 44, Juan 54, Winona 63, Tate and Liza 67. Charles follows Elesa despite the earlier
+spoiler cap guide). Optional Hoenn bosses stay in these splits under the split's cap: the user's rule is that caps
+come only from the 21 cap battles (the spoiler guide's Roxanne 13, Brawly 20, ... are not used; `OPTIONAL_CAPS`). Charles follows Elesa despite the earlier
 Route 5 doc section. Gated revisits use a later listed cap without adding splits. Source order within each split
 remains for the walkthrough, which reviews Surf/Waterfall revisit placement and TM Protectors' access.
 
@@ -329,7 +327,7 @@ nature or an explicit "unknown"; five recorded fixes; every card key in `trainer
 `hn`, `sl`): four live guides DOM identical normal + kb at baseline 8242fed; BB2R Trainers at 260 x 316 normal +
 dvkb: 31 Normal lines, nothing past 260 px, no page errors (`tools/mockup/pagecheck.mjs` only knows EI's place names).
 Walkthrough (2026-10-29): `extract/check.py` walk asserts; `gate.py scenarios --only guide-update,stable-keys` pass
-(2 + 4); `tabs_check.py` 6 lines, all in-split optional caps (### Walkthrough).
+(2 + 4); `tabs_check.py` clean.
 
 TODO: replace extract/check.py and calc stubs with source-backed assertions. Calc remains disabled.
 Before enabling it, replace the null in tools/scenarios/calc-doubles.mjs EXPECTED with an audited count and add

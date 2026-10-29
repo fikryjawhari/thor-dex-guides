@@ -2100,6 +2100,7 @@ doc name fixes: 18 (species 6, move 11, ability 1)
   move alias: Minimise -> Minimize (1: Move Changes:375)
   move UNRESOLVED: Further Modifications (1: Move Changes:630)
   ability alias: Synchronise -> Synchronize (11: Pokemon Changes:2197, Pokemon Changes:2212, Pokemon Changes:2246)
+trainer keys: new table hacks\blaze-black-2-redux\extract\trainer_keys.json (466 trainers, keys as they are)
 GID species: 712 species:form keys; 671/675 P ids; 649/649 base species
 GID unmapped species: 351:1 Castform, 351:2 Castform, 351:3 Castform, 493:1 Arceus, 493:2 Arceus, 493:3 Arceus, 493:4 Arceus, 493:5 Arceus, 493:6 Arceus, 493:7 Arceus, 493:8 Arceus, 493:9 Arceus, 493:10 Arceus, 493:11 Arceus, 493:12 Arceus, 493:13 Arceus, 493:14 Arceus, 493:15 Arceus, 493:16 Arceus
 GID move: 559/577 guide names; unmapped: Shadow Blast, Shadow Blitz, Shadow Bolt, Shadow Break, Shadow Chill, Shadow Down, Shadow End, Shadow Fire, Shadow Half, Shadow Hold, Shadow Mist, Shadow Panic, Shadow Rave, Shadow Rush, Shadow Shed, Shadow Sky, Shadow Storm, Shadow Wave
