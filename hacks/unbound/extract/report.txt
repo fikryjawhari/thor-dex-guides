@@ -20,10 +20,317 @@ type chart vs the Gen VI+ chart: agrees
 tutors: wiki Move Tutors page 29 tutors / 152 moves; tutor moves in species lists 157; listed but no wiki tutor teaches them (11): Cut, Dazzling Gleam, Dive, Draining Kiss, Fly, Power-Up Punch, Rock Climb, Rock Smash, Strength, Surf, Waterfall
   taught by a wiki tutor but in no species list (6): Draco Meteor, Dragon Ascent, Relic Song, Secret Sword, Steel Beam, Volt Tackle
 locs: not built yet (TODO: implement unbound locs extraction)
-trainers: not built yet (TODO: implement unbound trainers extraction)
+  ordinary: Cyclist Gerald (Thundercap Mt.): wiki 1 Pokémon, workbook 2
+  ordinary: Bird Keeper Roger (Great Desert): wiki 4 Pokémon, workbook 2
+  ordinary: Super Nerd Avery (Victory Road): wiki 3 Pokémon, workbook 4
+  ordinary: Ace Trainer Austina (Victory Road): wiki 4 Pokémon, workbook 2
+  ordinary: Science Society Scientist (Crystal Peak): wiki 3 Pokémon, workbook 2
+  ordinary: Fisherman Edgar (Route 3, Lv 41): no visit to the area covers it; placed in Galavan Split [Cap 45]
+  trainers: place Route 3 added to Galavan Split [Cap 45]
+  ordinary: Fisherman Jason (Route 3, Lv 42): no visit to the area covers it; placed in Galavan Split [Cap 45]
+  ordinary: Fisherman Cole (Route 3, Lv 41): no visit to the area covers it; placed in Galavan Split [Cap 45]
+trainers: 439 sheet slots in 84 boss blocks; hzla 383 sets: 381 slots joined (380 sets), 15 differ, 58 sheet only, 3 malformed hzla keys
+trainers: wiki 309 rows = 292 ordinary + 17 boss cards; 2 name-only rows with no team; workbook 287 matched, 48 held items, 143 workbook-only blocks
+trainers: 76 mons at relative levels; 9 with a later-cap line kept absolute; 130 comments used of 130
+  hzla differs: Rival!J43: EVs none
+  hzla differs: Team Shadow Bosses!B86: level 40
+  hzla differs: Team Shadow Bosses!D86: level 40
+  hzla differs: Team Shadow Bosses!E86: level 39
+  hzla differs: Team Shadow Bosses!F86: level 41
+  hzla differs: Rival!M62: moves Dragon Claw, Stomping Tantrum, Crunch, Fire Blast
+  hzla differs: Rival!B81: moves Ice Fang, Bulldoze, Ice Shard, Stealth Rock
+  hzla differs: Rival!N81: moves Dragon Rush, Stomping Tantrum, Crunch, Sandstorm
+  hzla differs: Rival!P81: moves Ice Fang, Bulldoze, Ice Shard, Stealth Rock
+  hzla differs: Pokemon League!B85: nature Adamant
+  hzla differs: Pokemon League!F85: nature Jolly
+  hzla differs: Team Light Of Ruin Bosses!B86: ability Serene Grace
+  hzla differs: Team Light Of Ruin Bosses!D86: ability none
+  hzla differs: Mega Trainers!E225: level 72; ability Limber; moves Dark Pulse, Burning Jealousy, Thunder Wave, Nasty Plot; nature Modest; EVs 6 / 252 / 252 / 252 / 252 / 252
+  hzla differs: Battleground!G65: level 83; ability Iron Fist; moves Double Iron Bash, Thunder Punch, Ice Punch, High Horsepower; nature Adamant; EVs 6 / 252 / 4 / 252 / 252 / 252
+  sheet only: Rival!B5
+  sheet only: Rival!I5
+  sheet only: Rival!P5
+  sheet only: Rival!B24
+  sheet only: Rival!C24
+  sheet only: Rival!I24
+  sheet only: Rival!J24
+  sheet only: Rival!P24
+  sheet only: Rival!Q24
+  sheet only: Team Shadow Bosses!I6
+  sheet only: Team Shadow Bosses!J6
+  sheet only: Team Shadow Bosses!K6
+  sheet only: Other Bosses!B5
+  sheet only: Other Bosses!C5
+  sheet only: Other Bosses!D5
+  sheet only: Other Bosses!E5
+  sheet only: Other Bosses!F5
+  sheet only: Team Shadow Bosses!I66
+  sheet only: Team Shadow Bosses!J66
+  sheet only: Team Shadow Bosses!K66
+  sheet only: Team Light Of Ruin Bosses!I6
+  sheet only: Team Light Of Ruin Bosses!J6
+  sheet only: Team Light Of Ruin Bosses!K6
+  sheet only: Team Light Of Ruin Bosses!C6
+  sheet only: Other Bosses!B125
+  sheet only: Other Bosses!C125
+  sheet only: Other Bosses!D125
+  sheet only: Other Bosses!B145
+  sheet only: Other Bosses!C145
+  sheet only: Other Bosses!D145
+  sheet only: Other Bosses!E145
+  sheet only: Boss Wild Battles!E193
+  sheet only: Boss Wild Battles!F193
+  sheet only: Boss Wild Battles!G193
+  sheet only: Team Light Of Ruin Bosses!I46
+  sheet only: Team Light Of Ruin Bosses!J46
+  sheet only: Team Light Of Ruin Bosses!K46
+  sheet only: Team Light Of Ruin Bosses!I66
+  sheet only: Team Light Of Ruin Bosses!J66
+  sheet only: Team Light Of Ruin Bosses!K66
+  sheet only: Team Shadow Bosses!I126
+  sheet only: Team Shadow Bosses!J126
+  sheet only: Team Shadow Bosses!K126
+  sheet only: Team Light Of Ruin Bosses!I86
+  sheet only: Team Light Of Ruin Bosses!J86
+  sheet only: Team Light Of Ruin Bosses!K86
+  sheet only: Other Bosses!B25
+  sheet only: Other Bosses!C25
+  sheet only: Other Bosses!D25
+  sheet only: Other Bosses!E25
+  sheet only: Other Bosses!F25
+  sheet only: Other Bosses!G25
+  sheet only: Battleground!B85
+  sheet only: Battleground!C85
+  sheet only: Battleground!D85
+  sheet only: Battleground!E85
+  sheet only: Battleground!F85
+  sheet only: Battleground!G85
+  hzla malformed key: '[2nd' / 'Lvl 47 Light of Ruin Vega'
+  hzla malformed key: 'Supply and Demand' / 'Lvl 53 Science Society Scientist |Supply and Demand|'
+  hzla malformed key: 'Rogue Electivire' / 'Lvl 59 Science Society Scientist |Rogue Electivire|'
+  unknown IVs: Rival!B5
+  unknown IVs: Rival!I5
+  unknown IVs: Rival!P5
+  unknown IVs: Rival!B24
+  unknown IVs: Rival!C24
+  unknown IVs: Rival!I24
+  unknown IVs: Rival!J24
+  unknown IVs: Rival!P24
+  unknown IVs: Rival!Q24
+  unknown IVs: Team Shadow Bosses!I6
+  unknown IVs: Team Shadow Bosses!J6
+  unknown IVs: Team Shadow Bosses!K6
+  unknown IVs: Other Bosses!B5
+  unknown IVs: Other Bosses!C5
+  unknown IVs: Other Bosses!D5
+  unknown IVs: Other Bosses!E5
+  unknown IVs: Other Bosses!F5
+  unknown IVs: Team Shadow Bosses!I66
+  unknown IVs: Team Shadow Bosses!J66
+  unknown IVs: Team Shadow Bosses!K66
+  unknown IVs: Boss Wild Battles!B3
+  unknown IVs: Boss Wild Battles!C3
+  unknown IVs: Team Light Of Ruin Bosses!I6
+  unknown IVs: Team Light Of Ruin Bosses!J6
+  unknown IVs: Team Light Of Ruin Bosses!K6
+  unknown IVs: Team Light Of Ruin Bosses!C6
+  unknown IVs: Other Bosses!B125
+  unknown IVs: Other Bosses!C125
+  unknown IVs: Other Bosses!D125
+  unknown IVs: Other Bosses!B145
+  unknown IVs: Other Bosses!C145
+  unknown IVs: Other Bosses!D145
+  unknown IVs: Other Bosses!E145
+  unknown IVs: Boss Wild Battles!E193
+  unknown IVs: Boss Wild Battles!F193
+  unknown EVs: Boss Wild Battles!F193
+  unknown IVs: Boss Wild Battles!G193
+  unknown IVs: Team Light Of Ruin Bosses!I46
+  unknown IVs: Team Light Of Ruin Bosses!J46
+  unknown EVs: Team Light Of Ruin Bosses!J46
+  unknown IVs: Team Light Of Ruin Bosses!K46
+  unknown IVs: Team Light Of Ruin Bosses!I66
+  unknown IVs: Team Light Of Ruin Bosses!J66
+  unknown EVs: Team Light Of Ruin Bosses!J66
+  unknown IVs: Team Light Of Ruin Bosses!K66
+  unknown IVs: Team Shadow Bosses!I126
+  unknown IVs: Team Shadow Bosses!J126
+  unknown EVs: Team Shadow Bosses!J126
+  unknown IVs: Team Shadow Bosses!K126
+  unknown IVs: Team Light Of Ruin Bosses!I86
+  unknown IVs: Team Light Of Ruin Bosses!J86
+  unknown IVs: Team Light Of Ruin Bosses!K86
+  unknown IVs: Other Bosses!B25
+  unknown IVs: Other Bosses!C25
+  unknown IVs: Other Bosses!D25
+  unknown IVs: Other Bosses!E25
+  unknown IVs: Other Bosses!F25
+  unknown IVs: Other Bosses!G25
+  unknown IVs: Battleground!B85
+  unknown IVs: Battleground!C85
+  unknown IVs: Battleground!D85
+  unknown IVs: Battleground!E85
+  unknown IVs: Battleground!F85
+  unknown IVs: Battleground!G85
+  later-cap levels not cap + one offset (absolute): Other Bosses!B205 Lv 57, cap 52, offsets [0]
+  later-cap levels not cap + one offset (absolute): Other Bosses!C205 Lv 59, cap 52, offsets [2]
+  later-cap levels not cap + one offset (absolute): Other Bosses!D205 Lv 58, cap 52, offsets [1]
+  later-cap levels not cap + one offset (absolute): Other Bosses!E205 Lv 59, cap 52, offsets [2]
+  later-cap levels not cap + one offset (absolute): Mega Trainers!B165 Lv 59, cap 75, offsets [0]
+  later-cap levels not cap + one offset (absolute): Mega Trainers!C165 Lv 61, cap 75, offsets [2]
+  later-cap levels not cap + one offset (absolute): Mega Trainers!D165 Lv 60, cap 75, offsets [1]
+  later-cap levels not cap + one offset (absolute): Mega Trainers!E165 Lv 60, cap 75, offsets [1]
+  later-cap levels not cap + one offset (absolute): Mega Trainers!F165 Lv 61, cap 75, offsets [2]
+  sheet fix: Rival!P5: Metal Bash shows as the dex Behemoth Blade
+  sheet fix: Rival!B24: "default moveset", no moves listed
+  sheet fix: Rival!I24: "default moveset", no moves listed
+  sheet fix: Rival!P24: "default moveset", no moves listed
+  sheet fix: Rival!Q24: Metal Bash shows as the dex Behemoth Blade
+  sheet fix: Pokemon League!D85: hzla's EV key 'def' read as Defense
+  workbook only: Antisis City!B1 Black Emboar Goon
+  workbook only: Antisis City!B8 Black Ferrothorn Goon
+  workbook only: Antisis City!B15 Officer McGuinty
+  workbook only: Antisis City!B22 Officer Peralta
+  workbook only: Antisis City!B29 Officer Holt
+  workbook only: Antisis City!B36 Black Ferrothorn Goon ("Odd Odd Docks")
+  workbook only: Antisis City!B43 Black Ferrothorn Goon ("Odd Odd Docks")
+  workbook only: Antisis City!B50 Black Ferrothon Rory ("A Minor Scrap")
+  workbook only: Antisis City!B57 Roughneck Riff
+  workbook only: Antisis City!B64 Black Belt Hakawakawak
+  workbook only: Antisis City!B71 Roughneck Griff
+  workbook only: Antisis Sewers!B8 Science Society Scientist
+  workbook only: Bellin Town!B1 Pokefan Terrance
+  workbook only: Blizzard City!B1 Worker Alan
+  workbook only: Blizzard City!B8 Bird Keeper Wilton
+  workbook only: Blizzard City!B15 Bird Keeper Edwin
+  workbook only: Blizzard City!B22 Bird Keeper Sebastian
+  workbook only: Blizzard City!B29 Bird Keeper Chester
+  workbook only: Blizzard City!B36 Bird Keeper Perry
+  workbook only: Blizzard City!B43 Bird Keeper Robert
+  workbook only: Cinder Volcano!B78 Team Light of Ruin Grunt
+  workbook only: Crater Town!B1 Youngster Dixon
+  workbook only: Crater Town!B8 Scientist Dilweed
+  workbook only: Crater Town!B15 Medium Lyssa
+  workbook only: Crater Town!B22 Medium Clemonce
+  workbook only: Crystal Peak!B22 Light of Ruin Grunt & Grunt
+  workbook only: Crystal Peak!B29 Light of Ruin Grunt & Grunt
+  workbook only: Crystal Peak!B36 Light of Ruin Grunt & Grunt
+  workbook only: Crystal Peak!B43 Light of Ruin Grunt & Grunt
+  workbook only: Crystal Peak!B78 Science Society Scientist
+  workbook only: Dehara City!B1 Twins Mayo & May [Double Battle]
+  workbook only: Dehara City!B36 Battle Girl Ginger [Double Battle]
+  workbook only: Dehara City!B43 Gambler Artred [Double Battle]
+  workbook only: Dehara City!B50 Poke Maniac Garth [Double Battle]
+  workbook only: Dehara City!B57 Psychic Wyatt [Double Battle]
+  workbook only: Dehara City!B64 Bird Keeper Featred [Double Battle]
+  workbook only: Dehara City!B71 Super Nerd Ezra
+  workbook only: Dehara City!B78 Worker Humphrey
+  workbook only: Dehara City!B85 Guitarist Luca
+  workbook only: Dehara City!B92 Scientist Giselle
+  workbook only: Dehara City!B99 Scientist Jose
+  workbook only: Dehara City!B106 Scientist Jerry
+  workbook only: Dehara City!B113 Super Nerd Zack
+  workbook only: Dehara City!B120 Collector Ashton
+  workbook only: Dehara City!B127 Worker Bernie
+  workbook only: Dresco Town!B1 Youngster Doobie
+  workbook only: Dresco Town!B8 Camper Liam
+  workbook only: Dresco Town!B15 Kindler Daniel
+  workbook only: Dresco Town!B22 Tuber Renee
+  workbook only: Dresco Town!B29 Collector Kobe [Double Battle]
+  workbook only: Dresco Town!B36 Picnicker Sarah
+  workbook only: Dresco Town!B43 Ace Trainer Bram [Double Battle]
+  workbook only: Dresco Town!B50 Psychic Angelica
+  workbook only: Fallshore City!B1 Beauty Bridget
+  workbook only: Fallshore City!B8 Roughneck Koji
+  workbook only: Fallshore City!B15 Scientist Connor
+  workbook only: Fallshore City!B22 Ace Trainer Mary
+  workbook only: Fallshore City!B29 Beauty Lauren
+  workbook only: Fallshore City!B36 Beauty Lori
+  workbook only: Fallshore City!B43 Picnicker Caitlin
+  workbook only: Fallshore City!B50 Beauty Alessia
+  workbook only: Fallshore City!B57 Beauty Tamia
+  workbook only: Fallshore City!B64 Youngster Yasu
+  workbook only: Fallshore City!B71 Painter Monet
+  workbook only: Frost Mountain!B8 Painter Morris
+  workbook only: Frozen Forest!B1 Burglar Jett
+  workbook only: Frozen Heights!B1 Team Shadow Grunt
+  workbook only: KBT Expressway!B1 Black Emboar Goon
+  workbook only: KBT Expressway!B8 Black Emboar Goon
+  workbook only: KBT Expressway!B15 Black Emboar Goon
+  workbook only: KBT Expressway!B22 Black Emboar Goon
+  workbook only: Polder Town!B1 Fisherman Nicholas
+  workbook only: Polder Town!B8 Tuber Savannah
+  workbook only: Polder Town!B15 Ace Trainer Darwin
+  workbook only: Polder Town!B22 Ace Trainer Anita
+  workbook only: Redwood Village!B1 Ace Trainer Daisy
+  workbook only: Redwood Village!B8 Ninja Boy Fuller
+  workbook only: Redwood Village!B15 Expert Tizzy
+  workbook only: Redwood Village!B22 Bug Catcher Curtis
+  workbook only: Route 5!B36 Pokemon Breeder Annie
+  workbook only: Route 9!B1 Team Shadow Grunt
+  workbook only: Route 9!B8 Team Shadow Grunt
+  workbook only: Route 9!B15 Team Shadow Grunt
+  workbook only: Route 9!B22 Team Shadow Grunt
+  workbook only: Route 9!B29 Team Shadow Grunt
+  workbook only: Route 9!B36 Team Shadow Grunt
+  workbook only: Route 9!B43 Team Shadow Grunt
+  workbook only: Route 9!B50 Team Shadow Grunt
+  workbook only: Route 9!B57 Team Shadow Grunt
+  workbook only: Route 9!B64 Team Shadow Grunt
+  workbook only: Route 9!B71 Team Shadow Grunt
+  workbook only: Route 10!B29 Terror Granbull Goon
+  workbook only: Route 10!B36 Terror Granbull Goon
+  workbook only: Route 10!B43 Terror Granbull Goon
+  workbook only: Route 10!B50 Terror Granbull Goon
+  workbook only: Route 14!B92 Roughneck Raul
+  workbook only: Route 17!B43 Bug Cathcer Conner
+  workbook only: Ruins of Void!B1 Shadow Grunt
+  workbook only: Seaport City!B1 Ruin Maniac Abraham [Camomons Double Battle]
+  workbook only: Seaport City!B8 Ninja Boy Suryu [Camomons Battle]
+  workbook only: Seaport City!B15 Rancher Rangalik [Camomons Double Battle]
+  workbook only: Seaport City!B22 Pokefan Fatisimo [Camomons Battle]
+  workbook only: Seaport City!B29 Aroma Lady Paulinda [Camomons Double Battle]
+  workbook only: Seaport City!B36 Tuber Reetah [Camomons Battle]
+  workbook only: Seaport City!B43 Burglar Swizer & Black Ferrothorn Bullo [Double Battle]
+  workbook only: Seaport City!B50 Black Ferrothorn Goon & Burglar Milan [Double Battle]
+  workbook only: Seaport City!B57 Black Ferrothorn Goon & Burglar Colin [Double Battle]
+  workbook only: Seaport City!B64 Black Ferrothorn Goon & Burglar Toby [Double Battle]
+  workbook only: Seaport City!B71 Black Ferrothorn Goon & Burglar Fernando [Double Battle]
+  workbook only: Shadow Base!B1 Shadow Grunt
+  workbook only: Shadow Base!B8 Shadow Grunt
+  workbook only: Shadow Base!B15 Shadow Scientist
+  workbook only: Tarmigan Mansion!B1 Expert Andy
+  workbook only: Tarmigan Mansion!B8 Super Nerd Arnie
+  workbook only: Tarmigan Mansion!B15 Black Belt Atsushi
+  workbook only: Tarmigan Mansion!B22 Expert Tammy
+  workbook only: Tarmigan Mansion!B29 Ace Trainer Caroline
+  workbook only: Tarmigan Mansion!B36 Ace Trainer Samuel
+  workbook only: Tarmigan Mansion!B43 Expert Clancy
+  workbook only: Tarmigan Mansion!B50 Scientist Ted
+  workbook only: Tarmigan Mansion!B57 Collector Winston & Kindler Jeff
+  workbook only: Tarmigan Mansion!B64 Dragon Tamer Burle
+  workbook only: Tarmigan Mansion!B71 Expert Ken
+  workbook only: Tarmigan Mansion!B78 Expert Sheri
+  workbook only: Thundercap Mountain!B22 Shadow Grunt
+  workbook only: Thundercap Mountain!B43 Shadow Grunt
+  workbook only: Thundercap Mountain!B50 Shadow Grunt
+  workbook only: Thundercap Mountain!B71 Shadow Grunt
+  workbook only: Thundercap Mountain!B78 Shadow Grunt
+  workbook only: Thundercap Mountain!B85 Shadow Grunt
+  workbook only: Thundercap Mountain!B92 Shadow Grunt
+  workbook only: Thundercap Mountain!B99 Shadow Grunt
+  workbook only: Thundercap Mountain!B106 Shadow Grunt
+  workbook only: Thundercap Mountain!B113 Shadow Grunt
+  workbook only: Thundercap Mountain!B211 Roughneck Corey
+  workbook only: Thundercap Mountain!B218 Black Belt Kentaro
+  workbook only: Valley Cave!B1 Gamer Hugo
+  workbook only: Vivill Warehouse!B1 Light of Ruin Grunt
+  workbook only: Vivill Warehouse!B8 Light of Ruin Grunt
+  workbook only: Vivill Warehouse!B15 Light of Ruin Grunt
+  workbook only: Vivill Warehouse!B22 Light of Ruin Grunt
+  workbook only: Vivill Warehouse!B29 Light of Ruin Grunt
+  workbook only: Vivill Warehouse!B36 Light of Ruin Grunt
 items: not built yet (TODO: implement unbound items extraction)
 walk: not built yet (TODO: implement unbound walk extraction)
-trainer keys: new table hacks\unbound\extract\trainer_keys.json (0 trainers, keys as they are)
-trainer keys: no trainers yet, no key table written
 GID (Unbound-Cloud unbound_2_1): sp 1180 ids (1063 P entries reached, 51 not: abomasnow_mega, absol_mega, aerodactyl_mega, aggron_mega, alakazam_mega, altaria_mega, ampharos_mega, audino_mega, banette_mega, beedrill_mega, blastoise_mega, blaziken_mega, camerupt_mega, charizard_mega_x, charizard_mega_y, diancie_mega, gallade_mega, garchomp_mega, gardevoir_mega, gengar_mega, glalie_mega, groudon_primal, gyarados_mega, heracross_mega, houndoom_mega, kangaskhan_mega, kyogre_primal, latias_mega, latios_mega, lopunny_mega, lucario_mega, manectric_mega, mawile_mega, medicham_mega, metagross_mega, mewtwo_mega_x, mewtwo_mega_y, pidgeot_mega, pinsir_mega, rayquaza_mega, sableye_mega, salamence_mega, sceptile_mega, scizor_mega, shadow_warrior, sharpedo_mega, slowbro_mega, steelix_mega, swampert_mega, tyranitar_mega, venusaur_mega), mv 766 ids, it 522 ids, gr 1180
   GID cross-check vs hzla unbound_2_1_constants.js: same ids for every species, move and item

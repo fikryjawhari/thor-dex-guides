@@ -143,11 +143,193 @@ def main():
 
     print('dex: P %d (%d mirror pages: %d merged, %d dropped), M %d, AB %d, wiki differences %s'
           % (len(P), len(FORMS), merged, sum(dropped.values()), len(M), len(AB), dict(count)))
+    if D['TR']['g']:
+        trainer_checks(D)
     if FAIL:
         print('FAIL unbound extract-check:\n  ' + '\n  '.join(FAIL))
         return 1
     print('OK unbound extract-check')
     return 0
+
+
+# ---- Trainers (unit 6): reproduced from the Expert workbook, hzla, the wiki list and LEVEL CAPS ----
+SHEET_SLOTS = {'Gym Leaders': 45, 'Pokemon League': 30, 'Rival': 51, 'Team Shadow Bosses': 39,
+               'Team Light Of Ruin Bosses': 42, 'Boss Wild Battles': 18, 'Mega Trainers': 63, 'Other Bosses': 55,
+               'Title Defense': 48, 'Battleground': 48}
+PARTNER_SLOTS = 24
+# hzla's Expert sets against the sheet (plans/unbound-sources.md → the join audit): joined slots, distinct sets,
+# sheet-only slots, malformed hzla species keys, and every slot that differs (raw: hzla's EV key 'def' counts).
+HZLA = {'joined': 381, 'sets': 380, 'sheet only': 58, 'malformed': 3}
+HZLA_DIFFER = {
+    'Pokemon League!B85': 'nature', 'Pokemon League!F85': 'nature',
+    'Pokemon League!D85': "EVs: hzla's key 'def' (read as Defense: the card shows no difference)",
+    'Rival!J43': 'EVs (hzla none)', 'Rival!M62': 'moves', 'Rival!B81': 'moves', 'Rival!N81': 'moves',
+    'Rival!P81': 'moves', 'Team Shadow Bosses!B86': 'level', 'Team Shadow Bosses!D86': 'level',
+    'Team Shadow Bosses!E86': 'level', 'Team Shadow Bosses!F86': 'level', 'Team Light Of Ruin Bosses!B86': 'ability',
+    'Team Light Of Ruin Bosses!D86': 'ability (hzla none)',
+    'Mega Trainers!E225': 'a misattached hzla set (level, ability, moves, nature, EVs)',
+    'Battleground!G65': 'a misattached hzla set (level, ability, moves, nature, EVs)'}
+# Sheet-only slots, by why: hzla has no team (rivals 1-2, partners, Alexa, Annie, Battleground Galavan) or a malformed
+# species key ('[2nd' = Light of Ruin Vega's Honchkrow, 'Supply and Demand', 'Rogue Electivire').
+SHEET_ONLY = {'no hzla team': 9 + PARTNER_SLOTS + 5 + 6 + 6, 'malformed hzla key': 1 + 3 + 4}
+# Unknown stats (no speed on the card): no IVs = the sheet-only slots + the Route 9 Shadow Warrior pair (hzla's set
+# has no ivs); no EVs = the four partner Vaporeon with "?" EVs.
+NO_EV = ['Boss Wild Battles!F193', 'Team Light Of Ruin Bosses!J46', 'Team Light Of Ruin Bosses!J66',
+         'Team Shadow Bosses!J126']
+WIKI_ROWS = {'rows': 309, 'ordinary': 292, 'boss cards': 17, 'name only': 15, 'name only, team unknown': 2}
+RELATIVE = 76           # mons whose later-cap levels are all cap + one offset
+ABSOLUTE_LADDER = 9     # Reena (the sheet's "Level at E4 Cap" levels don't fit its notes) and Barbs (minimum levels)
+
+
+def trainer_checks(D):
+    import bosssheet
+    import trainers as T
+    TR = D['TR']
+    cards = [(g, s, t) for g in TR['g'] for s in g['sec'] for t in s['tr']]
+    boss = [(g, s, t) for g, s, t in cards if 'Moves unknown' not in t['tags']]
+    ordinary = [(g, s, t) for g, s, t in cards if 'Moves unknown' in t['tags']]
+
+    # sheet: per-sheet counts; every foe slot on a card (species, level), every partner slot in a partner team
+    blocks = bosssheet.blocks()
+    per = collections.Counter()
+    foe, part = collections.Counter(), collections.Counter()
+    strip = lambda s: re.sub(r'\s*\[[^\]]*\]|\s*\((pre-burned|respawnable)\)', '', s).strip()
+    for b in blocks:
+        for g in b.groups:
+            for m in g.mons:
+                per[b.sheet] += 1
+                if m.species == 'Starter (mega)':
+                    part[('starter', m.level)] += 1
+                else:
+                    (foe if g.role == 'foe' else part)[(common.sid(strip(m.species)), m.level)] += 1
+    check(dict(per) == SHEET_SLOTS, 'sheet slots per worksheet: %s' % dict(per))
+    check(sum(part.values()) == PARTNER_SLOTS, 'partner slots: %d' % sum(part.values()))
+    lv = lambda t, m: m['l'] if 'l' in m else t['cap'] + m['r']
+    have = collections.Counter((m['id'], lv(t, m)) for _, _, t in boss for m in t['p'])
+    check(have == foe, 'boss cards vs the sheet foe slots: missing %s, extra %s' % (dict(foe - have), dict(have - foe)))
+    seen, have_pt = set(), collections.Counter()
+    for _, _, t in boss:
+        for i, p in enumerate(t.get('pt', [])):
+            if p.get('st') not in (None, 'Gible') or (t.get('bt') or t['k'], p['n'], i) in seen:
+                continue
+            seen.add((t.get('bt') or t['k'], p['n'], i))
+            for m in p['p']:
+                have_pt[('starter', m['l']) if m.get('x', [''])[-1].startswith('Nature and EVs from Rival 5')
+                        else (m['id'], m['l'])] += 1
+    check(have_pt == part, 'partner teams vs the sheet: missing %s, extra %s' % (dict(part - have_pt),
+                                                                                 dict(have_pt - part)))
+
+    # hzla join, reproduced
+    hz, bad, total = T._hzla()
+    joined, sets, only, differ = 0, set(), collections.Counter(), {}
+    malformed_teams = {key('Light of Ruin Vega'), key('Science Society Scientist |Supply and Demand|'),
+                       key('Science Society Scientist |Rogue Electivire|')}
+    for b in blocks:
+        for g in b.groups:
+            for m in g.mons:
+                label = T.LABEL_FIX.get((b.sheet, b.row))
+                if b.sheet == 'Rival' and b.row == 40:
+                    label = 'Rival 3 |Player Chose %s|' % g.starter
+                label = key(label if label is not None else re.sub(r'\s*(- Expert|\[Expert\])$', '', m.label))
+                pid = common.sid(strip(m.species)) if m.species != 'Starter (mega)' else None
+                hit = [c for c in hz.get(label, []) if c[0] == pid]
+                if not hit:
+                    only['malformed hzla key' if label in malformed_teams and g.role == 'foe' else 'no hzla team'] += 1
+                    continue
+                joined += 1
+                sets.add((hit[0][1], hit[0][2]))
+                s = hit[0][3]
+                diffs = []
+                if s['level'] != m.level:
+                    diffs.append('level')
+                if key(s.get('ability', '')) not in {key(x) for x in re.split(r' / | → ', m.ability)}:
+                    diffs.append('ability')
+                if key(s.get('item') or '') != key(m.item.rstrip('?')):
+                    diffs.append('item')
+                fix = lambda x: T.MOVE_FIX.get(x, x)
+                if sorted(key(fix(x)) for x in s['moves'] if x) != sorted(key(fix(x)) for x in m.moves
+                                                                          if x != 'default moveset'):
+                    diffs.append('moves')
+                if key(s.get('nature', '')) != key(m.nature.rstrip('?')):
+                    diffs.append('nature')
+                ev = [T._num(x.rstrip('?')) for x in m.evs]
+                if None not in ev and [s.get('evs', {}).get(k, 0) for k in T.EV_KEYS] != ev:
+                    diffs.append('EVs')
+                if diffs:
+                    differ[m.cell] = diffs
+    check(joined == HZLA['joined'] and len(sets) == HZLA['sets'] and sum(only.values()) == HZLA['sheet only']
+          and len(bad) == HZLA['malformed'] and total == 383,
+          'hzla join: %d joined, %d sets, %s sheet only, %d malformed of %d' % (joined, len(sets), dict(only),
+                                                                               len(bad), total))
+    check(dict(only) == SHEET_ONLY, 'sheet-only reasons: %s' % dict(only))
+    check(set(differ) == set(HZLA_DIFFER), 'hzla differences unexplained: %s; gone: %s' % (
+        sorted(set(differ) - set(HZLA_DIFFER)), sorted(set(HZLA_DIFFER) - set(differ))))
+    hn = sum(1 for _, _, t in boss for m in t['p'] if m.get('hn'))
+    check(hn == len(HZLA_DIFFER) - 1, 'cards with "hzla says": %d (expected %d: all but the def-key one)' %
+          (hn, len(HZLA_DIFFER) - 1))
+
+    # unknown stats: every boss / partner mon without IVs or EVs is a listed slot
+    def slots():
+        for _, _, t in boss:
+            for m in t['p']:
+                yield m
+        seen = set()
+        for _, _, t in boss:
+            for i, p in enumerate(t.get('pt', [])):
+                if p.get('st') not in (None, 'Gible') or (t.get('bt') or t['k'], i) in seen:
+                    continue
+                seen.add((t.get('bt') or t['k'], i))
+                yield from p['p']
+    mons = list(slots())
+    no_iv = sum(1 for m in mons if 'iv' not in m)
+    no_ev = sum(1 for m in mons if 'ev' not in m)
+    check(no_iv == HZLA['sheet only'] + 2, 'mons without IVs: %d (sheet only %d + the Route 9 pair)' %
+          (no_iv, HZLA['sheet only']))
+    check(no_ev == len(NO_EV), 'mons without EVs: %d, expected %s' % (no_ev, NO_EV))
+    check(all(m.get('src') == 's' for m in mons if 'iv' not in m and m['id'] != 'shadow_warrior'),
+          'a mon without IVs is not marked sheet only')
+    check(sum(1 for m in mons if m.get('src') == 's') == HZLA['sheet only'], 'sheet-only marks')
+    check(not any(set(m['iv']) != {31} for m in mons if 'iv' in m), 'an hzla IV that is not 31')
+
+    # wiki list: every row is a card (ordinary, or the boss card for a Mega Trainer / Alexa / Ryuzoji & Kenlawa)
+    rows = WIKI.trainer_locations()
+    names = collections.Counter(key(t['n']) for _, _, t in cards)
+    ordn = collections.Counter((key(t['n']), t['loc']) for _, _, t in ordinary)
+    shared = [r for r in rows if r.shared]
+    unknown = [t for _, _, t in ordinary if not t['p']]
+    check(len(rows) == WIKI_ROWS['rows'] and len(ordinary) == WIKI_ROWS['ordinary'] and
+          len(rows) - len(ordinary) == WIKI_ROWS['boss cards'] and len(shared) == WIKI_ROWS['name only'] and
+          len(unknown) == WIKI_ROWS['name only, team unknown'],
+          'wiki rows: %d = %d ordinary + %d boss cards, %d name only, %d team unknown' % (
+              len(rows), len(ordinary), len(rows) - len(ordinary), len(shared), len(unknown)))
+    missing = [r.name for r in rows if not ordn[(key(r.name), r.area)] and not names[key(r.name)]]
+    check(not missing, 'wiki rows with no card: %s' % missing)
+    check(all(m['m'] == [] and 'iv' not in m for _, _, t in ordinary for m in t['p']),
+          'an ordinary trainer with moves or IVs')
+
+    # caps: re-read LEVEL CAPS!D2:D11; boxes in order, every trainer in a capped box has its cap
+    T._caps_check()
+    caps = [c for _, c in T.CAPS]
+    check([c for _, c in TR['caps']] == caps, 'TR.caps: %s' % TR['caps'])
+    check([g['cap'] for g in TR['g']] == caps + [None], 'box caps: %s' % [g['cap'] for g in TR['g']])
+    check(all(t.get('cap') == g['cap'] for g, _, t in cards), 'a trainer whose cap is not its box\'s')
+
+    # relative levels: each mon's later-cap line = cap + r at every cap it names
+    rel = [(t, m) for _, _, t in boss for m in t['p'] if 'r' in m]
+    bad_rel = []
+    for t, m in rel:
+        line = next(x for x in m['x'] if x.startswith('Lv '))
+        for lv_, cap in re.findall(r'(\d+) at ([A-Za-z0-9 ]+?) cap', line):
+            if int(lv_) != T.CAP_OF[cap] + m['r']:
+                bad_rel.append((t['k'], m['id'], line))
+    ladder = sum(1 for _, _, t in boss for m in t['p'] if any(x.startswith('Lv ') for x in m.get('x', [])))
+    check(len(rel) == RELATIVE and not bad_rel and ladder == RELATIVE + ABSOLUTE_LADDER,
+          'relative levels: %d (expected %d), ladder lines %d, inconsistent %s' % (len(rel), RELATIVE, ladder,
+                                                                                  bad_rel))
+    print('trainers: %d cards (%d boss, %d ordinary) in %d boxes; sheet %d slots; hzla %d joined / %d sets / %d '
+          'differ / %d sheet only; %d relative-level mons' % (len(cards), len(boss), len(ordinary), len(TR['g']),
+                                                             sum(per.values()), joined, len(sets), len(differ),
+                                                             sum(only.values()), len(rel)))
 
 
 if __name__ == '__main__':
