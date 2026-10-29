@@ -227,8 +227,8 @@ Crabby Tactics, Honey Armor, Multieye / Multiscale / Shadow Shield (hazards, boo
 Portal Power, Evaporate, Drill Beak, Shadowy Veil, Gen 8 crit/burn/EV/Z baselines and all three custom moves.
 The stock-equivalent aliases are behaviour mappings, not copies of hzla's profile.
 
-Three disagreements are explicit regression expectations, not waived comparisons: Brain Bond's description gives a
-weaker second hit (implemented as Gen 8 Parental Bond); Face Shield gives an entry defence boost (Dauntless Shield);
+Three disagreements are explicit regression expectations, not waived comparisons: the user confirmed Brain Bond
+as Gen 7+ Parental Bond (quarter-power child) and Face Shield as Gen 8 Dauntless Shield (+1 Defence every entry);
 Subterfuge changes type for its move (Protean). hzla recognises none of those names and returns unmodified damage.
 Honey Armor's description says entry defence, but hzla doubles physical defence (Fur Coat): the calc follows hzla.
 Vicious Sandstorm is selectable, with normal sand mechanics and 1/8 HP residual; its permanence is a trainer-field
@@ -245,8 +245,8 @@ In-game tests left: every custom ability alias, Brain Bond's second-hit ratio, H
 Focus Belt / Nine Lives survival and bypass, Vicious Sandstorm chip/permanence, the three custom moves, and Z/Mega
 battles. The oracle is evidence of calculator behaviour, not an independent run of Unbound's battle engine.
 
-The Brain Bond 1/4 child and Face Shield +1 entry stage are standard-clone assumptions, not numeric claims made by
-the short game descriptions. Ask the user before treating those as settled in-game mechanics. Cotton Down aliases
+The Brain Bond 1/4 child and Face Shield +1 entry stage are settled user decisions (2026-10-30), overriding hzla's
+no-effect custom names. They are not numeric claims made by the short game descriptions. Cotton Down aliases
 only simulate the two displayed battlers, not an absent ally's Speed. InfernalRage's description also claims doubled
 power on a statused target; neither this calc nor the pinned oracle implements that custom-name effect yet.
 
@@ -282,13 +282,79 @@ ordinary-Sand control proves the harness measures weather chip. This calc follow
 All 85 named inputs, negative cases, exact per-hit distributions and priority values are in
 `tools/calc/unbound_cases.mjs` / `unbound_expected.json`; the table is only a readable index, not a weaker min/max check.
 
-#### Pending field decisions and D2 integration
+#### Unit 8c gimmicks and independent ledger
 
-The 11 source field records remain `review: true` with no active effects; the normal Doubles records stay active.
-`tools/trainer_fields.py` keeps the six proposals and a decision registry. The source audit found **no cell comment**
-for Alice, Galavan, Big Mo or Tessy: only the Fight Gimmicks cell value. The comments for Mirskle and Moleman are
-retained verbatim in the data. The full proposal table and exact acceptance edits are in `plans/unbound.md`.
-Audited Doubles: 36 cards, 34 tag-backed and 2 partner-only; the checker and browser EXPECTED now assert those counts.
+User decisions dated 2026-10-30 supersede the old 8b proposals. `tools/trainer_fields.py` applies Fog, typed
+Tailwind/Magnet Rise on both sides, weight Speed, Camomons, locked Heavy Rain/Vicious Sandstorm, Shadowy Veil,
+Inverse, Negative Energy, Pixies, Rainbow, and ordinary Rain. Rebuilt data has **27 gimmick evidence records,
+zero review flags**; Doubles remains 36 cards, 34 tag-backed and 2 partner-only. Unknown Sky/Dynamax/Butterfree
+rules are explicitly text-only, not guessed mechanics. Other guides' data and fixtures were not rewritten.
+
+Authority: Expert workbook's Fight Gimmicks cells/comments and the user's answers. Alice `Gym Leaders!B42` /
+`Battleground!B42`, Galavan `B102` / `B82`, Big Mo `B122` / `B102`, and Tessy `B142` / `B122` have **no comments**.
+Tessy's cell says only `Camomons Battle, Permanent Heavy Rain`; the first-two-move typing definition is the user's
+Smogon-format answer, corroborated by the saved official controls (`UpdateCamomons`, lines 510-531), which copy
+each side's first two displayed move types into that side's type selectors. Equal types collapse to one.
+Mirskle comments (`Gym Leaders!B2`, `Battleground!B2`) say Fog reduces accuracy 40%, exempts Keen Eye/Infiltrator/
+Utility Umbrella, returns after temporary weather, and is permanently removed by Defog. The 20% Battle Frontier
+exception is not applied to Battleground. Moleman `Pokemon League!B2` says sand chip 1/8, unremovable, with Ground
+Sp.Def boosted alongside Rock. Elias `Pokemon League!B22` explicitly limits Ghost half damage/hazard immunity
+to full HP and blocks non-Ghost Safeguard/Substitute. Vega `Gym Leaders!B22`, `Team Light Of Ruin Bosses!B3`,
+`Battleground!B22` describe 8.33% chip except Dark/Ghost/Psychic and Unaware/Oblivious/Magic Guard. Arabella
+`Pokemon League!B42` says Fairy entry +1 lower defence (Def on tie). Penny `Pokemon League!B62` says Dragon
+secondary chances double, including Poison Touch; stack with Serene Grace except flinches. Marlon
+`Team Shadow Bosses!B83` simply says Rain (no comment, no permanence claim).
+
+`tools/calc/unbound_gimmicks.mjs` is part of `npm test` via `unbound_check.mjs`. Its roll reference is independent:
+level-50 base damage `B=floor(floor(22*power*Atk/Def)/50)+2`; rolls 85..100 apply floor(random), half-down STAB,
+effectiveness, then half-down final modifiers. It asserts **all 16 rolls**, not just the readable ranges below.
+Mew: 175 HP and 120 in other stats, Hardy/31 IV/0 EV. No oracle output is copied into our hand expectations.
+
+| Fixture group | Hand computation and checked result | Authority / second oracle |
+| --- | --- | --- |
+| Brain Bond | Tackle B=19; first 16-19. Child half-down(19/4)=5 before random, 4-5. Multi-hit distributions remain separate. | User; **hzla says** one hit 16-19. Official native Brain Bond also one hit; its standard Parental Bond exactly matches our alias. |
+| Face Shield | Defence 120 -> 180 on entry; B=13, 11-13. `entry:false` restores 16-19; fresh entry gives +1 again without mutating the input. | User; **hzla says** no boost, 16-19. Saved official Face Shield agrees with +1. |
+| Weight Speed | floor(135.5)=135 Abomasnow; floor(185)=185 Mega Abomasnow; floor(6)=6 Pikachu; floor(6.9)=6 Bulbasaur. Mew 4 vs Pikachu 6 gives Gyro Ball floor(25*6/4)+1=38 BP. | User; saved official matches all four unmodified speeds. Literal final replacement ignores stages/items/paralysis/Tailwind; modifier-order disagreement below. |
+| Typed Tailwind | Charizard Speed 120 -> 240, Mew stays 120, both sides. Gyro Ball vs doubled Charizard =51 BP; Camomons Flying changes eligibility. | Alice cell value + user; shared stock Tailwind applied only to matching current types. |
+| Typed Magnet Rise | Ground move vs Electric Pikachu / Steel Metagross =0; nonmatching Mew takes damage. Gravity/Iron Ball/Grounded override immunity; matching player's Spikes/Toxic Spikes/Web do not apply. | Galavan cell value + user. Hand immunity assertions; not a claimed official typed-field match. |
+| Camomons | Mew Flamethrower/Ice Beam -> Fire/Ice; opponent Vine Whip/Tackle -> Grass/Normal. 90 BP B=41, Fire STAB x1.5, Grass weakness x2 =>102-122. Original Psychic STAB disappears (34-41 into Grass/Normal). | User format; no sheet comment. Saved official selector behaviour agrees; equal 90 BP inputs agree exactly. |
+| Heavy Rain / lock | 90 BP Surf B=41 -> half-down(41*1.5)=61 before random =>51-61; Fire =0. Conflicting Sun/manual/Drought setter cannot replace the active lock. | Tessy + user; official Fire =0. Ordinary Marlon Rain gives same Surf boost, but has no lock. |
+| Vicious Sandstorm / lock | 110 HP Pikachu loses floor(110/8)=13; Mew 175 loses21. Lock keeps custom divisor and Ground Sp.Def modifier even with conflicting Sun input. | Moleman comment; original exact hzla damage fixtures retained. **hzla says** zero Vicious end-turn chip. |
+| Mel Inverse | Actual Mel lead (Normal) takes no ordinary Shadow Ball, x2 inverse Shadow Ball and x0.5 inverse Fighting. Levitate Ground immunity survives inverse. | User; existing per-type inverse rule, same mechanism as Photonic/Eternal; saved official equal-input inverse rolls agree. |
+| Shadowy Veil | Psychic into Gengar: Sp.Def95, B=52, Mew STAB x1.5, Poison weakness x2 =>132-156; full-HP veil halves to66-78. At134/135 HP no veil. First of two hits halves, second does not. Full HP ignores all hazards; damaged HP takes them. | Elias comment; old full-HP hzla fixture still matches. Saved official **says**66-78 even when damaged, contrary to sheet. Non-Ghost Substitute HP action is refused; API lists both blocked moves. |
+| Fog | Accuracy multiplier0.6, exempt abilities/active Umbrella1.0; Klutz suppresses Umbrella. Damage-neutral Tackle stays16-19. | Mirskle comment. Chance metadata only, no invented damage/accuracy simulation. |
+| Negative Energy | floor(110/12)=9 HP per turn on Pikachu; immune typings/abilities0, separate from weather and stacking with sand. | Vega comments; repeating 8.33% interpreted as standard 1/12 residual, rounded down with minimum1. |
+| Pixies | Clefable Defence93 < Sp.Def110: +1 Def ->139; Mew Tackle B=17 =>14-17. Mawile Defence105 > Sp.Def75: +1 Sp.Def. Camomons Fairy Mew ties120 -> Def. | Arabella comment; both sides, `entry:false`, Simple +2 and Contrary -1 tested through normal stage engine. |
+| Rainbow | Dragon ordinary secondary10% ->20%; Dragon+Serene Grace30% ->100% (capped), flinch30% ->60% (not120%), Poison Touch30% ->60%. Non-Dragon unchanged except its own Serene Grace. | Penny comment. `fieldEffects` exposes multipliers, `secondaryChance` calculates percentages; it does not simulate random outcomes. |
+
+The optional saved official page **exists and was used**, not fetched around host protection. `unbound_saved_oracle.mjs`
+executes only local engine/data scripts in a VM with no filesystem/network require. `unbound_official_manifest.json`
+pins 32 SHA-256s (31 executed scripts plus the read-only Camomons UI source); raw page/JS remain ignored `.src/`.
+The tests keep native source disagreements visible: official Flamethrower is95 BP (B43, Camomons108-128), not
+the guide's90 BP (B41,102-122); equal-input90 BP comparison separately passes. Official native Brain Bond is a
+no-op, Face Shield is recognised, and Shadowy Veil is always-on for Ghosts. The player's confirmed Brain Bond /
+Face Shield answers and sheet's full-HP Shadowy Veil rule win here. These are calculator comparisons, not in-game proof.
+
+**Open questions, finish in the main chat:** Sky Battle (`Mega Trainers!B241`, Almuth7.5.9), Dynamax Battle
+(`Other Bosses!B141`, Scientist7.6.2), Benjamin Butterfree metagame (`Gym Leaders!B162`, `Battleground!B142`,
+Benjamin8.3.0/10.7.7) all have **no comments defining a rule**. Keep visible labels, ask for rules before enabling
+new behaviour. Dynamax trainer tag also conflicts with the earlier raids-only/no-calc-Dynamax decision.
+**Weight modifier ordering:** literal user final Speed=floor(kg) is implemented, so Scarf Abomasnow remains135;
+official first substitutes weight then applies Speed modifiers, giving202. Both expectations are tested explicitly.
+Recommend retaining the literal answer until the user chooses otherwise; do not call this parity.
+
+#### D2 and template integration (main-chat pass, not built here)
+
+Exact function/state/control/persistence spec: `plans/unbound.md` -> Findings -> **Unit 8c: engine/data and exact UI
+handoff (for the main chat)**. It names `areaField`, `updateField`, `fieldHTML`, `toEngine`, `resolve`, `effSpe`,
+`entered`, `newFight`, `fieldFor`, `clearAreaFog`, all engine keys and stable `ST.areaByTrainer[t.k]` effect keys.
+Keep the existing `unbounddmg` storage key. Current `calc.js` still ignores the new field kinds: **engine/data
+completion is not end-to-end UI completion**. No UI/browser/gate checks were run in unit8c.
+
+Unit8c checks: full `npm test` passes (other guides' expected rolls unchanged), `trainer_fields_check.py unbound`
+passes27 source gimmick records/zero review, Unbound extract build/check pass, and `python assemble.py` builds
+all six guides. Existing missing-sprite notices are unchanged (BB2R's four custom species and Unbound Shadow
+Warrior). Logs: `.tmp/unbound-gimmicks/`. No full gate, browser sweep, push or merge.
 
 D2 is implemented only on the data side, as the task's no-template limit requires:
 `tools/calc/unbound_assumed.mjs` computes four most recent distinct level-up moves at the resolved level, Hardy,
@@ -305,12 +371,10 @@ guess marker exists. Do not fill `TR.p.m`, change trainer cards or save data ind
 strictly failing until this integration exists; it is not skipped or asserted against the current empty moves.
 
 Other template gaps: `importBytes` rejects a boxes-only save before mapping boxes (unit 8a's NG+ case); inspect both
-party and boxes before emitting `empty`, allow selecting a box when party is empty. Typed Tailwind / Magnet Rise,
-weight-based turn order and permanent trainer weather need the field-review answers and template support. The
-current field auto merge allows weather setters to override an area weather regardless of `duration`.
-Tessy's source also says Camomons Battle; the tag remains visible, but move-derived typing is not implemented here.
+party and boxes before emitting `empty`, allow selecting a box when party is empty or entirely unmapped. The new
+engine APIs and accepted field records still need the UI hooks and lock/layer handling specified in the plan.
 
-Browser status on this branch: layout/import/field/smoke pass; new Mega/Z-holder/field-review checks pass at every
+Historical unit8b browser status (not rerun by8c): layout/import/field/smoke pass; Mega/Z-holder/field-review checks pass at every
 viewer size, normal and dvkb. D2 fails pending the forbidden template hook. Existing generic scenarios also expose
 fixture assumptions: `trainerRoles` treats partner-backed Vega (5.3.0) as singles, controls assumes the fixture's
 Cloyster outspeeds its opponent, and `calc-zmove` hardcodes Photonic's absent `totem-gumshoos` plus Totem-only tests.

@@ -167,6 +167,12 @@ const nativeClone = Pokemon.prototype.clone;
 Pokemon.prototype.clone = function clone() {
   const copy = nativeClone.call(this);
   if (this.guideLevel !== undefined) copy.guideLevel = this.guideLevel;
+  if (this.guideCamomons) {
+    copy.guideCamomons = true;
+    copy.types = [...this.types];
+  }
+  copy.guideGrounded = this.guideGrounded;
+  copy.guideAirborne = this.guideAirborne;
   return copy;
 };
 
@@ -184,10 +190,14 @@ function battleField(values) {
     const target = entry.side === 'atk' ? options.attackerSide : entry.side === 'def' ? options.defenderSide : options;
     target[entry.to] = entry.type === 'toggle' ? !!value : value;
   }
+  if (values.weatherLock) options.weather = values.weatherLock;
   options.weather = profile.over?.weather?.[options.weather]?.effect ?? options.weather;
   const result = new Field(options);
+  result.guideWeightSpeed = !!values.weightSpeed;
+  result.guidePixies = !!values.pixies;
   for (const side of ['atk', 'def']) {
     const target = side === 'atk' ? result.attackerSide : result.defenderSide;
+    target.guideTailwindTypes = values[side + 'TailwindTypes'];
     target.isSR = !!values[side + 'StealthRock'];
     target.spikes = Math.max(0, Math.min(3, Math.trunc(Number(values[side + 'Spikes'])) || 0));
     for (const [key, property] of Object.entries({Charge: 'isCharge', Protect: 'isProtected',
@@ -224,6 +234,11 @@ const changesType = (mon, set) => typeChangers.includes(data.AB?.[set.ab]?.[0]) 
 
 function fieldPokemon(set, values, side) {
   const mon = pokemon(set);
+  if (values.camomons) {
+    if (!data.MV[set.moves?.[0]]) throw new Error('DMG: Camomons requires a known first move');
+    mon.types = [...new Set(set.moves.slice(0, 2).map(index => data.MV[index]?.t).filter(Boolean))];
+    mon.guideCamomons = true;
+  }
   if (mon.hasAbility('Plus', 'Minus')) mon.abilityOn = values.gameType === 'Doubles' && !!values[side + 'PlusMinus'];
   if (set.pty && changesType(mon, set)) mon.types = [set.pty];
   if (values[side + 'Roost'] && mon.hasType('Flying')) {
@@ -231,8 +246,32 @@ function fieldPokemon(set, values, side) {
     if (!mon.types.length) mon.types = [profile.gen === 4 ? 'Normal' : '???'];
   }
   mon.guideGrounded = !!(values[side + 'Grounded'] || values[side + 'Ingrain']);
-  mon.guideAirborne = !!(values[side + 'MagnetRise'] || values[side + 'Telekinesis']);
+  mon.guideAirborne = !!(values[side + 'MagnetRise'] || values[side + 'Telekinesis']
+    || values[side + 'MagnetRiseTypes']?.some(type => mon.hasType(type)));
   return mon;
+}
+
+function fieldEffects(set, values = {}, side = 'atk') {
+  const mon = fieldPokemon(set, values, side);
+  const field = battleField(values);
+  checkItem(mon, field.isMagicRoom);
+  const fog = field.hasWeather('Fog') && !mon.hasAbility('Infiltrator', 'Keen Eye') && !mon.hasItem('Utility Umbrella');
+  const rainbow = values.rainbow && mon.hasType('Dragon');
+  const serene = mon.hasAbility('Serene Grace');
+  const lower = getModifiedStat(mon.rawStats.def, mon.boosts.def, generation)
+    <= getModifiedStat(mon.rawStats.spd, mon.boosts.spd, generation) ? 'def' : 'spd';
+  return {types: [...mon.types], accuracyMultiplier: fog ? 0.6 : 1,
+    secondaryMultiplier: (rainbow ? 2 : 1) * (serene ? 2 : 1),
+    flinchMultiplier: rainbow || serene ? 2 : 1, poisonTouchMultiplier: rainbow ? 2 : 1,
+    blockedMoves: values.shadowyVeil && !mon.hasType('Ghost') ? ['Safeguard', 'Substitute'] : [],
+    entryBoost: values.pixies && mon.hasType('Fairy') && set.entry !== false ? lower : null};
+}
+
+function secondaryChance(set, chance, values = {}, kind = 'secondary', side = 'atk') {
+  if (!Number.isFinite(chance) || chance < 0 || chance > 100) throw new Error('DMG: secondary chance must be 0-100');
+  const property = {secondary:'secondaryMultiplier',flinch:'flinchMultiplier',poisonTouch:'poisonTouchMultiplier'}[kind];
+  if (!property) throw new Error('DMG: unknown secondary effect kind');
+  return Math.min(100, chance * fieldEffects(set, values, side)[property]);
 }
 
 function speed(set, values = {}, side = 'atk', otherSet = null) {
@@ -258,6 +297,7 @@ function entry(set, values = {}, side = 'atk') {
   const result = {parts: []};
   if (profile.gen >= 8 && mon.hasItem('Heavy-Duty Boots')) return result;
   const max = mon.maxHP();
+  if (values.shadowyVeil && mon.hasType('Ghost') && mon.curHP() === max) return result;
   const damage = (label, divisor, effectiveness = 1) => {
     if (!mon.hasAbility('Magic Guard') && effectiveness > 0) {
       result.parts.push({l: label, v: -Math.max(1, Math.floor(max * effectiveness / divisor))});
@@ -308,14 +348,17 @@ function residual(set, values = {}, otherSet = null, side = 'atk') {
     const value = Math.max(1, Math.floor(max / divisor));
     parts.push({l: label, v: Array(4).fill(sign * value)});
   };
+  if (values.negativeEnergy && !mon.hasType('Dark', 'Ghost', 'Psychic')
+    && !mon.hasAbility('Unaware', 'Oblivious')) add('Negative Energy', -1, 12);
   if (field.hasWeather('Sun', 'Harsh Sunshine')) {
     if (mon.hasAbility('Dry Skin', 'Solar Power')) add(mon.ability, -1, 8);
   } else if (field.hasWeather('Rain', 'Heavy Rain')) {
     if (mon.hasAbility('Dry Skin')) add('Dry Skin', 1, 8);
     else if (mon.hasAbility('Rain Dish')) add('Rain Dish', 1, 16);
   } else if (field.hasWeather('Sand')) {
+    const weather = values.weatherLock || values.weather;
     if (!mon.hasType('Rock', 'Ground', 'Steel') && !mon.hasAbility('Overcoat', 'Sand Force', 'Sand Rush', 'Sand Veil')
-      && !(items && mon.hasItem('Safety Goggles'))) add(profile.over?.weather?.[values.weather] ? values.weather : 'Sandstorm', -1, profile.over?.weather?.[values.weather]?.residual ?? 16);
+      && !(items && mon.hasItem('Safety Goggles'))) add(profile.over?.weather?.[weather] ? weather : 'Sandstorm', -1, profile.over?.weather?.[weather]?.residual ?? 16);
   } else if (field.hasWeather('Hail', 'Snow')) {
     if (mon.hasAbility('Ice Body')) add('Ice Body', 1, 16);
     else if (field.hasWeather('Hail') && !mon.hasType('Ice') && !mon.hasAbility('Overcoat', 'Snow Cloak')
@@ -627,7 +670,7 @@ function derived(set, values = {}, otherSet = null) {
     'Primordial Sea': 'Heavy Rain', 'Delta Stream': 'Strong Winds', 'Orichalcum Pulse': 'Sun'}[mon.ability];
   const terrain = {'Electric Surge': 'Electric', 'Hadron Engine': 'Electric', 'Grassy Surge': 'Grassy',
     'Psychic Surge': 'Psychic', 'Misty Surge': 'Misty'}[mon.ability];
-  if (weather && available('weather', weather)) {
+  if (weather && !values.weatherLock && available('weather', weather)) {
     result.weather = weather;
     if (['Harsh Sunshine', 'Heavy Rain', 'Strong Winds'].includes(weather)) result.primal = true;
   }
@@ -950,6 +993,13 @@ function firstHitStages(attacker, defender, atk, def, slot, move, field, own) {
     }
     if (entry || mon.hasAbility('Download')) mon.ability = 'Guide no ability';
   }
+  if (field.guidePixies) for (const [mon, who, set] of sides) {
+    if (set.entry !== false && mon.hasType('Fairy')) {
+      const defense = getModifiedStat(mon.rawStats.def, mon.boosts.def, generation);
+      const special = getModifiedStat(mon.rawStats.spd, mon.boosts.spd, generation);
+      change(mon, who, defense <= special ? 'def' : 'spd', 1, 'Pixies');
+    }
+  }
   const charge = CHARGE[move.name];
   if ((charge || move.name === 'Spectral Thief') && slot.pre === false) move.name = `Guide ${move.name}`;
   else if (charge) {
@@ -1083,7 +1133,7 @@ function calcCore(atk, def, slot, values = {}, action = null) {
   }
   const context = {
     atk: attacker, def: defender, move, field, desc: {}, notes: new Set(),
-    input: {atk, def, slot, field: values},
+    input: {atk, def, slot, field: values.weatherLock ? {...values, weather: values.weatherLock} : values},
     mechanics: profile.gen,
     meta: {atkItem: generation.items.get(toID(attacker.item || '')),
       defItem: generation.items.get(toID(defender.item || '')), move: moveData},
@@ -1392,6 +1442,7 @@ function hp(atk, def, slot, values = {}, dealt = 0, options = {}) {
   if (!moveData) return null;
   const user = fieldPokemon(atk, values, 'atk');
   const target = fieldPokemon(def, values, 'def');
+  if (values.shadowyVeil && !user.hasType('Ghost') && ['Safeguard', 'Substitute'].includes(name)) return null;
   const field = battleField(values);
   checkAirLock(user, field);
   checkAirLock(target, field);
@@ -1466,4 +1517,4 @@ function hp(atk, def, slot, values = {}, dealt = 0, options = {}) {
   return {v: parts.reduce((sum, value) => sum + value, 0), l: name};
 }
 
-window.DMG = {items: () => [...generation.items].map(item => item.name), init, stats, calc, residual, speed, entry, hp, hit, turn, berry, derived, settings, intimidate: intimidateMarks};
+window.DMG = {items: () => [...generation.items].map(item => item.name), init, stats, calc, residual, speed, entry, hp, hit, turn, berry, derived, settings, fieldEffects, secondaryChance, intimidate: intimidateMarks};

@@ -158,6 +158,123 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
 
 ## Findings for later units
 
+### Unit 8c: engine/data and exact UI handoff (for the main chat)
+
+- **Implementation, 2026-10-30, `worktree-unbound-gimmicks`, base `480d4cf`:** supersedes 8b's pending
+  field/Brain Bond/Face Shield questions below. All accepted field decisions are active in trainer metadata:
+  **27 Unbound gimmick evidence records, zero `review`**, plus the unchanged 36 Doubles cards. Rain (Marlon)
+  and the undefined Benjamin Butterfree tag were also found. No `template/calc.js` changes were made.
+  Engine code is in `tools/calc/src/adapter.js`, the speed hook in `instrument.mjs`, rebuilt bundle in
+  `template/calc/engine.js`. `unbound_gimmicks.mjs` adds independent numeric/assertion groups alongside the
+  unchanged 85 hzla input cases (82 exact, 3 explicit disagreements); see notes.md's Unit 8c ledger.
+- **Official oracle is available:** the user-saved `.src/unboundcalc/PokemonUnboundDamageCalculator.htm`
+  and local assets run offline through `unbound_saved_oracle.mjs`; 32 source hashes are pinned in
+  `unbound_official_manifest.json` (31 executed engine/data scripts, one read-only UI source). No browser,
+  network access, host-protection bypass or redistributed calculator source. Exact Face Shield, standard
+  Parental Bond, Heavy Rain, four unmodified weight Speeds, Camomons with equal inputs and inverse checks pass.
+  Explicit source disagreements: official native Brain Bond has no effect; official Flamethrower is 95 BP
+  (guide 90); official Shadowy Veil halves damage even below full HP (sheet says full HP only). Follow the user,
+  guide move data and sheet respectively, not a weakened oracle check.
+
+#### Field mapping and controls
+
+Extend `areaField`, `updateField`, `fieldHTML`, `toEngine`, `resolve`, `effSpe`, `entered`, `newFight` and
+`fieldFor` in `template/calc.js`; do not put a second damage implementation in the page. The engine is ready,
+but **current calc.js ignores the new field kinds**, so this is not yet a working end-to-end gimmick UI.
+
+| Trainer/rule | Data effect | Engine input; exact UI label and behaviour |
+| --- | --- | --- |
+| Mirskle + rematch | `weather: Fog` | `ST.field.weather='Fog'`; label `Fog`. Display `Accuracy x0.6` with Keen Eye/Infiltrator/active Utility Umbrella exceptions via `DMG.fieldEffects`. Never multiply damage by accuracy. Weather can temporarily replace Fog; `Defog` permanently clears the underlying Fog for this fight. |
+| Alice + rematch | `typed-side-condition: Tailwind`, `types:['Flying']`, `side:'both'` | Populate `atkTailwindTypes` and `defTailwindTypes` with `['Flying']`. Global rule toggle `Flying-only Tailwind (both)`. Per-side readout `Active`/`Not Flying`, recomputed from effective types; not unconditional `defTailwind=true`. Ordinary per-side Tailwind remains independent and never stacks twice. |
+| Galavan + rematch | `typed-side-condition: Magnet Rise`, `types:['Electric','Steel']`, `side:'both'` | `atkMagnetRiseTypes` / `defMagnetRiseTypes` arrays. Global toggle `Electric/Steel Magnet Rise (both)`, per-side active readout. Preserve ordinary side Magnet Rise, Gravity, Grounded/Ingrain and Iron Ball controls; those grounding effects take precedence. Recompute on form/type/move changes. |
+| Big Mo + rematch | `speed-rule: Weight` | `weightSpeed:true`; global toggle `Weight as Speed`. Show `Weight Speed: 135` (Mega Abomasnow 185) on each side and use `DMG.speed` for ordering and move power. This is a **final** floor(kg) replacement, not the normal Speed stat and not an automatic Trick Room reversal. Ordinary Trick Room remains a separate manual scenario control. |
+| Tessy + rematch | `typing: Camomons` | `camomons:true`; global toggle `Camomons`. `toEngine` must pass `moves:mon.m.slice(0,2)` on **both** battlers. Engine inputs use runtime move indices, never saved indices. `resolve`/type chips and conditional fields use `DMG.fieldEffects(...).types`, not `p.t`. Duplicate move types collapse; one known move gives one type. If slot 1 is unknown/empty, show `Choose first move for Camomons` and disable calculations rather than passing a guessed native type (engine throws). Changing either first move, form, set or assumed level refreshes types, STAB, effectiveness, hazards and Speed. Do not derive types from the attack currently being previewed, Weather Ball's weather conversion or Protean's selected attack. Existing explicit type-changing ability/turn-state controls still apply afterwards. |
+| Tessy + rematch | `weather: Heavy Rain`, `duration:'permanent'`, `locked:true` | `weather='Heavy Rain'`, `weatherLock='Heavy Rain'`. Label `Permanent Heavy Rain`. While rule enabled, weather dropdown is read-only, weather setters/actions cannot replace/remove it, and leaving a setter does not clear it. A separate explicitly labelled scenario-override toggle may disable the **area rule**, removing both default weather and lock. Fire damage is zero; Water boost is automatic. |
+| Moleman | `weather: Vicious Sandstorm`, permanent + locked | `weather='Vicious Sandstorm'`, `weatherLock='Vicious Sandstorm'`. Same lock/override UI, label `Permanent Vicious Sandstorm`. Show 1/8 end-turn chip from the engine, Ground/Rock Sp.Def boosts and other sand mechanics. Air Lock/Cloud Nine suppress weather effects without removing the underlying lock. |
+| Elias | `field-rule: Shadowy Veil` | `shadowyVeil:true`; global toggle `Shadowy Veil (both)`. Full-HP Ghosts get half damage on first hit only and no entry hazards, including Toxic Spikes/Web; damaged Ghosts do not. Show current shield eligibility. `DMG.fieldEffects(...).blockedMoves` disables Safeguard/Substitute Use for non-Ghosts with reason `Shadowy Veil`; Ghosts retain them. HP actions also refuse non-Ghost Substitute. |
+| Mel + rematch | `battle-rule: Inverse` | `inverse:true`; global toggle `Inverse battle (both)`. Use existing inverse engine rule; never invert displayed final damage or ability immunities in the page. |
+| Vega, LoR Vega, Vega rematch | `field-rule: Negative Energy` | `negativeEnergy:true`; global toggle `Negative Energy (both)`. Use engine residual list/Turn end, 1/12 max HP, not weather. Dark/Ghost/Psychic and Unaware/Oblivious/Magic Guard are exempt. |
+| Arabella | existing permanent Misty Terrain + `field-rule: Pixies` | `terrain='Misty'`, `pixies:true`; global toggle `Pixies (both)`. Label entry effect `+1 lower defence (Def on tie)`. Use existing entry/Use pipeline and engine `pre` events, not repeated UI stage increments. `fieldEffects.entryBoost` is a readout, not a second event to apply. Respect per-mon `entry:false`, Simple/Contrary and stat-stage caps. |
+| Penny | `field-rule: Rainbow Battle` | `rainbow:true`; global toggle `Rainbow Battle (both)`. For Dragons show `Secondary x2`, `x4 with Serene Grace; flinch x2`, `Poison Touch 30% -> 60%`. Engine `secondaryChance(set,basePercent,field,kind,side)` caps at 100; `kind` is `secondary`, `flinch` or `poisonTouch`. Non-Dragons retain ordinary Serene Grace. Do not claim status/flinch outcomes are deterministically simulated or change damage rolls. |
+| Marlon Zapdos fight | `weather: Rain` | `weather='Rain'`, ordinary replaceable Rain, **no lock**. |
+| Sky Battle / Dynamax Battle / Benjamin Butterfree metagame | text-only records, no invented rule | Keep source label and `Rule not specified in sheet` in area details. No fake functional toggle or silent Dynamax switch. Questions below must be settled before implementation. |
+
+`areaRecords` retains the source text and deduplicates repeated tag/comment effects. `updateField` resolves
+area/default + action + ability + manual layers, but the enabled `weatherLock` wins over all weather layers.
+`DMG.derived` deliberately emits no weather setter under a lock. `fieldFor('foe')`/`flipField` must swap the new
+`atk*Types` / `def*Types` arrays too; global rules/locks are not swapped. Never store active conditional results
+as species constants: recalculate after edits, Mega, Camomons, Roost and selected set changes. Preview is pure.
+
+#### Stable saved state and entry/reset behaviour
+
+- Keep the published `CF.ls.dmg` / `KEY = LS.dmg = 'unbounddmg'`. No new localStorage namespace.
+  Add `ST.areaByTrainer` to `defaults()` and existing `save`/`storeOut`; key it by the existing **stable trainer
+  `t.k`**, not `TRS`/section/group/card positions. Each value is `{disabled:{[effectKey]:true},fogCleared:false}`.
+  `effectKey = kind + ':' + value + ':' + (side || 'field')`, e.g. `typed-side-condition:Tailwind:both`.
+  Store names/type strings/booleans, not positions in `P`, `M`, `MV`, `AB` or `TR`. Absent map/entry means source
+  defaults, so old saved state loads unchanged; ignore disappeared trainer/effect keys safely.
+- `areaField()` consults `ST.areaByTrainer[t.k].disabled` before emitting an effect. Each source-rule toggle
+  edits that stable map, then calls `updateField`/`refresh`/`save`. The ordinary profile controls remain
+  `ST.field.{inverse,weightSpeed,camomons,shadowyVeil,negativeEnergy,pixies,rainbow,weather,terrain}` with manual
+  membership in existing `ST.fman`; typed arrays and `weatherLock` are **derived runtime values**, rebuilt from
+  named effects on load, not persisted as cached active results. Locked weather cannot be bypassed by an old
+  manual `ST.field.weather` value or stale SETTERS/ACTIONFIELD.
+- Add `clearAreaFog()` to mark `ST.areaByTrainer[t.k].fogCleared=true` for Defog Use, clearing the Fog layer but
+  not ordinary independent weather. Replacing weather alone does not set this flag. Fog returns when temporary
+  weather ends/is cleared, unless Defog cleared it. In `newFight`/Reset clear the selected trainer's `fogCleared`
+  and fight-only state, restore source rule defaults and existing HP/entry reset behaviour; preserve deliberate
+  saved set edits according to the existing Save/Reset contract. Never reuse a different trainer's Fog flag.
+- `entered` must not turn `weightSpeed` into `trickRoom`; entry ordering reads `effSpe`/`DMG.speed`. Pixies and
+  Face Shield act on **each real entry**, not on render/reload, and do not accumulate during repeated previews.
+  Pass each battler's existing `entry` state and apply engine `pre` events through the existing stage/Use flow.
+  The UI needs scenarios for both sides, switches/re-entry, damaged/full HP, caps/Mega/first-two-move edits,
+  grounding, lock versus manual/ability weather, Fog replacement/Defog/Reset, persistence with reordered data,
+  plus 260x316 normal/dvkb and the other viewer sizes. None were run by this engine-only unit.
+
+#### D2 assumed sets and boxes-only import (still required)
+
+- `foeBase(t,i)`: resolve `monLv` first. Only when `prof.assumedSets==='level-up'`, the trainer is an ordinary
+  `Moves unknown` card, source moves are absent and level is finite, call the existing
+  `assumedTrainerSet(sourceData,sourceMon,resolvedLevel)` from `tools/calc/unbound_assumed.mjs` (inline/adapt at
+  build time; no runtime module fetch). It returns calc-only `m`, `na`, `iv`, `ev`, and
+  `mGuess/naGuess/ivGuess/evGuess`. Then apply manual/saved set edits, **not** the other way round. Leave `TR`
+  untouched, including all 292 ordinary trainer cards. Last four distinct level-up moves, Hardy, 31 IV, 0 EV.
+- `monOut`/`monIn`, `storeOut`, `applyEdits`, field editors and Reset must preserve name-based move/ability
+  saving and show/clear individual `Assumed` markers (moves/nature/IVs/EVs; existing `aGuess` still applies).
+  Cap changes recompute untouched defaults, retain manual field overrides, and update Camomons types. A manual
+  edit clears only its marker; Reset restores appropriate defaults. Do not add positional keys for markers:
+  derive them from the source/default and saved named-field overrides under the existing stable set identity.
+  **Existing debt to fix in that pass:** `sideInfo` uses `foe:<t.k>:<ST.foe.i>` for edits. Do not build new saved
+  gimmick state on that position; migrate any newly persisted assumed-set overrides to a roster identity based
+  on stable trainer key + species ID (and a source-stable identity for duplicate species) before persisting them.
+- `importBytes(bytes,name,modified)`: call the reader, inspect/map **party and all boxes before either empty
+  rejection**. `empty` means no raw monsters anywhere; `wrong` means raw monsters existed but none map to this
+  guide. A mapped box survivor succeeds even with empty/unmapped party. Set `ST.imp={party,boxes,...}` and choose
+  first mapped party member or the first mapped box member (`ST.mine.src='box'`, correct box/slot runtime
+  selection); retain existing pid/team/re-import mapping. Reject an actually empty save without destroying the
+  previous import. Persist species/moves/abilities by existing named `monOut`, never raw GID/data positions.
+
+#### Remaining source questions
+
+- **Checks:** `cd tools/calc && npm test`, `uv run python -I tools/trainer_fields_check.py unbound`,
+  `uv run python -I hacks/unbound/extract/build.py > .tmp/unbound-gimmicks/build.log 2>&1`,
+  `uv run python -I hacks/unbound/extract/check.py`, and `python assemble.py` all pass. Other guides' checked
+  distributions and fixture files remain unchanged. Existing missing-sprite notices remain (BB2R's four custom
+  species and Unbound Shadow Warrior); no new build failure. Logs are `.tmp/unbound-gimmicks/`.
+  No `gate.py check`, browser sweeps, push or merge. UI implementation/scenarios are deliberately deferred.
+
+- **Sky Battle** (`Mega Trainers!B241`, Almuth `7.5.9`): no comment. Recommend label-only until eligibility and
+  any damage/grounding rules are specified; do not assume the vanilla restricted roster is the full rule.
+- **Dynamax Battle** (`Other Bosses!B141`, Scientist `7.6.2`): no comment. Earlier decision says no calc Dynamax
+  (raids only), but this is a trainer tag. Recommend ask which side/form/HP multiplier/Max moves apply; retain
+  the tag and keep the profile's existing Dynamax-off state in this unit.
+- **Benjamin Butterfree metagame** (`Gym Leaders!B162`, `Battleground!B142`, keys `8.3.0` / `10.7.7`): no
+  comment. Recommend ask for the actual rule, not a guessed Butterfree/ability transformation.
+- **Weight modifiers:** implemented the literal user answer, **final** Speed = floor(kg). Saved official calc
+  instead substitutes weight before ordinary modifiers: Abomasnow + Choice Scarf = **202**, our literal rule
+  = **135**. Both are explicit passing expectations, not parity. Confirm whether to keep the literal final
+  replacement (recommendation pending clarification) or follow the official modifier ordering.
+
 - **Unit 8b (calc, `worktree-unbound-calc`, 2026-10-30): for the user.** Enabled the Gen 8 `cfru` profile,
   EVs, Megas, Z-moves and CFRU save reader; no Dynamax or storage-key changes. 85 pinned hzla fixtures:
   **82 exact matches, 3 explicit disagreements** (Brain Bond second hit, Face Shield entry defence, Subterfuge STAB).

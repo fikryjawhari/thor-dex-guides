@@ -25,24 +25,37 @@ CANDIDATE = re.compile(
 # Hardlove "Back2Back …", Eternal X "Rotation Battle".
 DOUBLES_TAGS = [re.compile(pattern) for pattern in (r'^(True )?Double', r'^2on2 Double', r'^Multi Battle', r'^Triple Battle', r'^Tag Battle')]
 
-UNBOUND_FIELD_DECISIONS = dict(fog=None, flying_tailwind=None, magnet_rise=None,
-                              weight_room=None, heavy_rain=None, vicious_sand=None)
+UNBOUND_FIELD_DECISIONS = dict(fog='apply', flying_tailwind='apply', magnet_rise='apply',
+                              weight_room='apply', heavy_rain='apply', vicious_sand='apply',
+                              camomons='apply', inverse='apply', shadowy_veil='apply',
+                              negative_energy='apply', pixies='apply', rainbow='apply',
+                              sky='text', dynamax='text', rain='apply', butterfree='text')
 UNBOUND_FIELD_PROPOSALS = {
     'fog': dict(prefix="There's a constant FOG weather effect", effects=[dict(kind='weather', value='Fog')]),
-    'flying_tailwind': dict(prefix='Permanent Tailwind for Flying-types on the field', effects=[],
-                           template='Tailwind for each currently selected Flying-type, both sides'),
-    'magnet_rise': dict(prefix='Permanent Magnet Rise for Electric- and Steel-types on the field', effects=[],
-                        template='Magnet Rise for each currently selected Electric- or Steel-type, both sides'),
-    'weight_room': dict(prefix='Trick Room for Weight', effects=[],
-                        template='Weight-based turn order, not ordinary Trick Room; text only until implemented'),
-    'heavy_rain': dict(prefix='Permanent Heavy Rain', effects=[dict(kind='weather', value='Heavy Rain', duration='permanent')]),
-    'vicious_sand': dict(prefix='Vicious Sandstorm:', effects=[dict(kind='weather', value='Vicious Sandstorm', duration='permanent')]),
+    'flying_tailwind': dict(prefix='Permanent Tailwind for Flying-types on the field', effects=[
+        dict(kind='typed-side-condition', value='Tailwind', types=['Flying'], side='both', duration='permanent')]),
+    'magnet_rise': dict(prefix='Permanent Magnet Rise for Electric- and Steel-types on the field', effects=[
+        dict(kind='typed-side-condition', value='Magnet Rise', types=['Electric', 'Steel'], side='both', duration='permanent')]),
+    'weight_room': dict(prefix='Trick Room for Weight', effects=[dict(kind='speed-rule', value='Weight', side='both')]),
+    'heavy_rain': dict(prefix='Permanent Heavy Rain', effects=[dict(kind='weather', value='Heavy Rain', duration='permanent', locked=True)]),
+    'vicious_sand': dict(prefix='Vicious Sandstorm:', effects=[dict(kind='weather', value='Vicious Sandstorm', duration='permanent', locked=True)]),
+    'camomons': dict(prefix='Camomons Battle', effects=[dict(kind='typing', value='Camomons', side='both')]),
+    'inverse': dict(prefix='Inverse Battle', effects=[dict(kind='battle-rule', value='Inverse', side='both')]),
+    'shadowy_veil': dict(prefix='Shadowy Veil', effects=[dict(kind='field-rule', value='Shadowy Veil', side='both')]),
+    'negative_energy': dict(prefix='A negative energy fills the battlefield', effects=[dict(kind='field-rule', value='Negative Energy', side='both')]),
+    'pixies': dict(prefix='Pixies:', effects=[dict(kind='field-rule', value='Pixies', side='both')]),
+    'rainbow': dict(prefix='Rainbow Battle:', effects=[dict(kind='field-rule', value='Rainbow Battle', side='both')]),
+    'sky': dict(prefix='Sky Battle', effects=[]),
+    'dynamax': dict(prefix='Dynamax Battle', effects=[]),
+    'rain': dict(prefix='Rain', exact=True, effects=[dict(kind='weather', value='Rain')]),
+    'butterfree': dict(prefix='Benjamin Butterfree metagame', effects=[]),
 }
 
 
 def unbound_proposal(text):
     return next((key for key, proposal in UNBOUND_FIELD_PROPOSALS.items()
-                 if text.startswith(proposal['prefix'])), None)
+                 if (text == proposal['prefix'] if proposal.get('exact')
+                     else text.startswith(proposal['prefix']))), None)
 
 
 def evidence(text, scope):
@@ -53,8 +66,6 @@ def evidence(text, scope):
         if decision not in (None, 'apply', 'text'):
             raise ValueError(f'Invalid Unbound field decision: {proposal}={decision!r}')
         suggested = UNBOUND_FIELD_PROPOSALS[proposal]
-        if decision == 'apply' and suggested.get('template'):
-            raise ValueError(f'{proposal}: template support required before applying')
         return dict(scope=scope, text=text, effects=copy.deepcopy(suggested['effects']) if decision == 'apply' else [],
                     review=decision is None)
     if not CANDIDATE.search(text):
