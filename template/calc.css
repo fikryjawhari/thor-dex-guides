@@ -404,6 +404,7 @@ body .dres.zm .mr .rcol{display:flex;flex-direction:column;align-self:stretch;he
 body .dres.zm .mr .rcol button{height:auto;flex:1 1 0;min-height:0}
 .mr .dd .zl{color:var(--acc);font-weight:600}
 /* Totem aura: the foe's stages are its aura while unchanged */
+.cc .dsl{flex:none;align-self:center;margin:0 1px 0 -1px;font:600 9px system-ui;color:#9aa4b2;white-space:nowrap}
 .cc .aum{flex:none;margin-left:auto;align-self:center;font:700 9.5px system-ui;color:#f3e3a6;background:#4a3d12;border-radius:5px;padding:1px 4px;white-space:nowrap}
 /* Trainer bar arrows: a drawn chevron, centred in its button (the text glyphs sat low); below 480 px the buttons and the
    bar are smaller, which gives the move rows their room */

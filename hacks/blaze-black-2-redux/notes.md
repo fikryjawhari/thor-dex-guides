@@ -311,6 +311,40 @@ Scaffold verification (2026-10-29, baseline 23a42e1): tools/new_hack_test.py 13/
 differences or page errors; four HTML files byte-identical. Calc npm test passes, including this disabled stub.
 Renegade Platinum dry-run lists 17 writes without creating its config. Logs: .tmp/bb2r-scaffold/.
 
+### Damage calc
+
+Profile (`hack.json` → `cfg.calc`): base **gen5** (Gen V engine: crits x2, Gen V crit table, Gen V damage order),
+`save: "gen5"`, `evs: false` (EVless: no player EVs; trainers have none), `setterStays: true` (no doc changes Gen V's
+permanent ability weather). Type chart: data `TC` (Fairy, Gen VI Steel). Overrides, each from the docs:
+
+| Change | Source | How | Fixtures |
+|---|---|---|---|
+| Cut, Dragon Claw, Octazooka, X-Scissor high crit; Crabhammer not | Move Changes | `MV.cr` (extract/dex.py, with Gen V's high-crit list, Bulbapedia) | `crit ratio changes` (check) |
+| Wild Charge: no recoil | Move Changes | `over.moves` `recoil: null` | `wild-charge`, check |
+| Needle Arm, Rock Smash boosted by Iron Fist | Move Changes; Changelog 291 | `over.moves` punch flag | `iron-fist-*` (known differences: hzla doesn't flag them), negatives |
+| Sound moves hit through Substitute | Move Changes, Further Modifications | nothing: the calc has no Substitute state | sound flags (Soundproof) |
+| Power / type / category / accuracy | Move Changes | data (`MV`) | `frost-breath`, `shadow-claw-90`, `esper-wing`, `wave-crash`, `hex-*` |
+
+`MV.f` is omitted, so the engine keeps stock Gen V flags (modern ones for the replacement moves); an empty list
+meant "no flags" and switched off Iron Fist / Soundproof.
+
+**Level bug** (Challenge; hzla's model): a trainer Pokemon with `sl` has stats at `sl`; the damage formula uses the
+shown level `l`; Night Shade / Seismic Toss / Psywave use `sl` (hzla `handleFixedDamageMoves`); the player's Pokemon
+are unaffected. Engine: `tools/calc/README.md` → Level bug. Page: the foe card shows Lv `l` and a small grey `s<sl>`
+after it (tooltip "Stats at Lv 13 (Challenge level bug)"); edits keep the difference; nothing new is saved.
+
+**Oracle** (`node tools/calc/hzla_compare.mjs blaze-black-2-redux`): hzla Decomps at the reviewed pin `403c2669`
+(`oracle.sha`), `challengeMode` on, a shim giving its Challenge branch the trainer side of each case. 50 cases
+(early / mid / late bosses, level-bug Pokemon incl. Cheren's Munchlax, changed moves, doubles, weather): **47 match,
+3 known differences** (Iron Fist x2: doc over hzla's data; one hzla UI artefact: a player Pokemon of the trainer's
+species at its stat level also gets the +N).
+
+Open / in-game tests: Triple Axel (doc: 30, then +10 per hit, "Triple Kick mechanics"; both calcs give 30 x3);
+Night Shade / Seismic Toss from a level-bug Pokemon (hzla: stat level; the game may use the shown level); Kyurem
+(no hzla set); Competitive / Neutralizing Gas (no Gen V ability id; an imported one maps by ID); the page-level
+scenarios (calc-blaze-black-2-redux, calc-layout at 260 x 316 with the `s13` marker, calc-import, calc-doubles 72)
+and `tools/trainer_fields_check.py` for BB2R are not done yet.
+
 ### Save import
 
 Unit 9a supplies the `gen5` reader for raw B2W2 `.sav` (melonDS / DraStic export), with an optional
