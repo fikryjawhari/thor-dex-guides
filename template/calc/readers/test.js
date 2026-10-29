@@ -48,15 +48,19 @@ const root=path.resolve(__dirname,'../../..'),saveDir=path.join(root,'hacks/blaz
 if(fs.existsSync(path.join(saveDir,'pkhex-b2w2-black2.sav'))){
  const ids=JSON.parse(fs.readFileSync(path.join(root,'hacks/blaze-black-2-redux/extract/gen5-ids.json'),'utf8'));
  const oracleData={GID:{gr:Object.fromEntries(ids.forms.map(([species,form,growth])=>[species+':'+form,growth]))}};
- let count=0,fields=0;
+ const built=JSON.parse(fs.readFileSync(path.join(root,'hacks/blaze-black-2-redux/data.json'),'utf8'));
+ let count=0,fields=0;const forms=new Set(),natures=new Set(),selectors=new Set(),moves=new Set();
  for(const name of ['black2','white2','box-only']){const stem=path.join(saveDir,'pkhex-b2w2-'+name),input=fs.readFileSync(stem+'.sav'),snapshot=Buffer.from(input),expected=JSON.parse(fs.readFileSync(stem+'.expected.json','utf8')),actual=READERS.gen5(input,oracleData);
   equal(actual,expected,name+' complete PKHeX result');equal(input,snapshot,name+' immutable');
-  for(const pokemon of actual.party.concat(actual.boxes.flat())){count++;fields+=Object.keys(pokemon).length;}
+  equal(READERS.gen5(input,built),expected,name+' with built guide growth table');
+  equal(READERS.gen5(Buffer.concat([input,Buffer.from('|-DESMUME SAVE-|')]),oracleData),expected,name+' PKHeX with footer');
+  for(const pokemon of actual.party.concat(actual.boxes.flat())){count++;fields+=Object.keys(pokemon).length;forms.add(pokemon.sp);natures.add(pokemon.nat);selectors.add(pokemon.pid>>>13&31);for(const move of pokemon.mv)if(move)moves.add(move);}
  }
- const controls={bw1:['wrong','BW1'],gen4:['wrong','Gen 4'],'party-crc':['unreadable'],'box-crc':['unreadable'],'table-crc':['unreadable'],mirror:['unreadable'],'pk5-checksum':['unreadable'],count:['unreadable'],game:['wrong'],truncated:['unreadable'],state:['state']};
- for(const [name,[code,game]] of Object.entries(controls))rejects(fs.readFileSync(path.join(saveDir,'pkhex-b2w2-control-'+name+'.sav')),code,game);
- for(const name of ['empty','egg-only'])rejects(fs.readFileSync(path.join(saveDir,'pkhex-b2w2-'+name+'.sav')),'empty');
- console.log('PASS gen5 PKHeX oracle: '+count+' Pokemon, '+fields+' fields, 0 mismatches; '+(Object.keys(controls).length+2)+' controls rejected');
+ const controls={bw1:['wrong','BW1'],gen4:['wrong','Gen 4'],'party-crc':['unreadable'],'box-crc':['unreadable'],'table-crc':['unreadable'],mirror:['unreadable'],'pk5-checksum':['unreadable'],count:['unreadable'],game:['wrong'],truncated:['unreadable'],state:['state'],sanity:['unreadable'],'boxed-pk5-checksum':['unreadable'],'egg-checksum':['unreadable'],'primary-backup':['unreadable']};
+ for(const [name,[code,game]] of Object.entries(controls)){const stem=path.join(saveDir,'pkhex-b2w2-control-'+name);equal(JSON.parse(fs.readFileSync(stem+'.expected.json','utf8')).error,code,name+' expected error');rejects(fs.readFileSync(stem+'.sav'),code,game);}
+ for(const name of ['empty','egg-only']){const stem=path.join(saveDir,'pkhex-b2w2-'+name);equal(JSON.parse(fs.readFileSync(stem+'.expected.json','utf8')).error,'empty',name+' expected error');rejects(fs.readFileSync(stem+'.sav'),'empty');}
+ equal(forms.size,ids.forms.length,'every species/form in oracle');equal(natures.size,25,'all natures');equal(selectors.size,32,'all shuffle selectors');equal(moves.size,559,'every Gen 5 move slot');
+ console.log('PASS gen5 PKHeX oracle: '+count+' Pokemon, '+fields+' fields, 0 mismatches; '+(Object.keys(controls).length+2)+' controls rejected; '+forms.size+' forms, 25 natures, 32 selectors, 559 move slots');
 }else{
  if(process.env.GEN5_ORACLE_REQUIRED==='1')throw new Error('Generate PKHeX B2W2 oracle fixtures first (README recipe)');
  console.log('SKIP gen5 PKHeX oracle: local fixtures absent (set GEN5_ORACLE_REQUIRED=1 to require them)');

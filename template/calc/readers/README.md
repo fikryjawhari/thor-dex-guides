@@ -114,6 +114,84 @@ replacements retain their original slot. Cosmetic forms map to the base, battle 
 Item names map when IT exists; unmapped names are reported. Unknown forms never silently map to base.
 Personal data supplies growth/form counts, with Unown's 28 cosmetic letters explicitly enumerated.
 
+The current guide has 671 P entries; GID covers all of them with 712 keys, including all 649 base
+species. Weather Castform (351:1..3) and typed Arceus (493:1..16) have no distinct P entries and
+stay unmapped rather than silently importing the wrong type. There are 559 actual B2W2 move slots
+after replacement; M additionally contains 18 unused XD Shadow moves from the mirror, with no Gen 5
+slots. AB additionally contains Competitive and Neutralizing Gas, with no vanilla Gen 5 numbers;
+no replacement ability IDs are evidenced by the audited docs, so do not invent any. The data/calc
+units must resolve those catalogue issues separately. IT is currently empty; the extract check also
+exercises a temporary IT with Leftovers, a spelling alias and an unknown item without writing it.
+
+**PKHeX oracle recipe (Gen 5).** The disposable generator is `.tmp/pkhex-oracle/Program.cs`;
+the project, NuGet binaries, saves and expected files are uncommitted. Use .NET SDK **10.0.403**,
+`net10.0`, and NuGet `PKHeX.Core` **26.10.18**, as in the Gen 6/7 recipe. On this machine the SDK
+host is `%LOCALAPPDATA%/Microsoft/dotnet/dotnet.exe`; the Program Files host has no SDK. The exact
+package SHA-512 (base64) is
+`qAwvQTwexYgKMi6Pac5wVZymNLZFofrgeSMn1sT66wjO0Q+sGFj9l6atuWOQ4YiOtXyCAkr6HnS8VGAK4ARvRg==`.
+
+Create a console project with `dotnet new console --framework net10.0 --output .tmp/pkhex-oracle`,
+then `dotnet add .tmp/pkhex-oracle package PKHeX.Core --version 26.10.18`. Recreate the local generator
+from the following deterministic recipe (not from this JS reader), or rerun the existing Program.cs:
+
+1. `GameInfo.GetStrings("en")`: export Species[0..649], Move[0..559], Ability[0..164], and
+   `GetItemStrings(EntityContext.Gen5, GameVersion.B2)[0..638]`. `PersonalTable.B2W2[species].FormCount`
+   supplies forms (at least 1; explicitly 28 for Unown); each form's growth comes from
+   `PersonalTable.B2W2.GetFormEntry(species, form).EXPGrowth`. Write to `.tmp/pkhex-oracle/gen5-ids.json`.
+   The committed table keeps source/referenceCommit metadata, those four name arrays, and compact
+   `forms` rows `[species, form, growth]`; it has 731 rows. Only factual names/IDs, not linked code,
+   are exported. `gid.py` uses this file without .NET at build time.
+2. Make `SAV5B2W2` instances with Version B2/W2, Language 2, OT `Oracle`, ID32 0x24681357.
+   Unlike Gen 6/7, blank SAV5 constructors need no footer identifiers initialised; `Write()` writes
+   the CRCs. Use PK5 objects, `PartyData`, `SetBoxSlotAtIndex`, `Write().ToArray()`, then reopen
+   with `new SAV5B2W2(bytes)` and require `ChecksumsValid`. Export expected fields from the reopened
+   PK5 properties, not the reader. Expected boxed level uses `Experience.GetLevel(EXP, growth)`;
+   party level uses `Stat_Level`. Include all 24 box arrays, omitting empty/egg specimens.
+3. Specimen index i: PID `0xA1000001 | ((i%32)<<13) | ((i/32)<<18)`, Nature i%25 (deliberately
+   independent of PID), Language 2, ID32 above, Version matching save. `RefreshAbility(i%3)`;
+   `CurrentLevel = 1+i%100`, `ResetPartyStats`, `RefreshChecksum`. Game-stat properties in calc
+   order: IVs `[i%32,(3*i)%32,31,0,17,23]`, EVs `[4,i%256,12,128,8,200]`. Moves
+   `[1+i%559,1+(7*i)%559,182,i%3==0?0:85]`, PP `[7,9,10,i%3==0?0:11]`, PP Ups
+   `[i%4,(i+1)%4,2,i%3==0?0:3]`. Cycle item IDs `[0,234,270,275,287,116,117,118,119]`.
+   Set IsNicknamed and cycle nicknames `Flambé, Éclair, Nidoran♂, Nidoran♀, Noël, Pokémon, Éléonôrà,
+   Ｒｏｔｏｍ`. These intentionally varied specimens test structure, not legal teams or EV limits.
+4. `pkhex-b2w2-black2.sav`: party indices 0..5 are species `[479,550,555,386,422,646]`, forms
+   `[1,1,1,3,1,2]`. Box every nonzero form from the table (dex/form order), then the first 60
+   base species, using indices 6 onward and consecutive slots. Put index 999 Togepi egg in box 23
+   slot 18; index 1000 Genesect form 4 in box 24 slot 30. There are 6 party + 143 usable boxed.
+5. `pkhex-b2w2-white2.sav`: six base species 1..6 in party at indices 100..105, then species
+   1..649 in consecutive box slots at indices 0..648. There are 6 party + 649 boxed.
+   `pkhex-b2w2-box-only.sav`: index 24 Pikachu in the last box's last slot, no party. Also export
+   `pkhex-b2w2-empty.sav` and `pkhex-b2w2-egg-only.sav` (the Togepi egg in party and last box slot).
+   Each successful save gets `<stem>.expected.json` with numeric game IDs and exactly the 12 returned
+   mon fields. Empty/egg-only expectations instead contain `{"error":"empty"}`.
+6. Generate `pkhex-b2w2-control-*.sav` with matching `.expected.json` error-code sidecars:
+   `bw1` from SAV5BW Version B, `gen4` from SAV4HGSS Version HG (512 KiB input; initialise general
+   footer at 0xF628-16, storage at 0xF700+0x12310-16 with size/magic/id before Write; blank HGSS
+   construction alone has too small a backing buffer for extension CRCs). Require both controls'
+   ChecksumsValid. Flip B2's byte 0x18E09 (`party-crc`), 0x400 (`box-crc`), or 0x25F40
+   (`table-crc`); `mirror` flips 0x25F02 and recomputes only the table CRC. For `pk5-checksum`,
+   flip 0x18E10; `boxed-pk5-checksum`, flip 0x408; `egg-checksum`, flip the egg's payload byte 8.
+   For `sanity`, set 0x18E0C to 1; `count`, set 0x18E04 to 7; `game`, set 0x1941F to 21.
+   Reseal these last six containers with `new SAV5B2W2(bytes).Write()` without refreshing any PK5.
+   `primary-backup` copies B2 bytes 0..0x25FFF to 0x26000, then flips primary 0x18E10 without
+   resealing. `truncated` is B2 cut at 0x20000; `state` starts `MELN synthetic state`.
+
+Output lives in `hacks/blaze-black-2-redux/.src/saves/`. Run `dotnet run --project .tmp/pkhex-oracle`,
+then `node template/calc/readers/test.js`; set `GEN5_ORACLE_REQUIRED=1` to fail instead of skip when
+local fixtures are absent. The Node entry point retains test.js's browser-only synthetic-reader behaviour
+and adds standalone tests only when run directly. Other reader modules load with their state controls.
+All logs go to `.tmp/bb2r-reader/`. No browser checks or calc wiring are part of this unit.
+
+**Verified 2026-10-29.** 42 standalone assertions; PKHeX comparison: **805 Pokemon, 9,660 field
+comparisons, zero mismatches**, 731 species/form combinations, all 25 natures, 32 shuffle selectors,
+559 move slots (including all replaced slots), all six growth rates, full/sparse/empty boxes, accented
+and full-width text, skipped eggs, unchanged input bytes and nonzero Uint8Array/Buffer offsets.
+The three successful fixtures also pass with the accepted footer. All **17** PKHeX-backed controls
+reject with the expected code; BW1 and Gen 4 include the correct wrong-game description.
+These generated standard-format saves are the agreed oracle, not evidence from a real BB2R save.
+A real melonDS/DraStic save remains a follow-up check, especially for any undocumented hack ID changes.
+
 ## gen4: HeartGold hg-engine (NDS)
 
 References: the hack's own hg-engine source at Hardlove's pin (kumakuma1/hardlove `ee4518c149`:

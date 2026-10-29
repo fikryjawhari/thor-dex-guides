@@ -38,6 +38,7 @@ def main():
     keys = Path(H.extract) / 'trainer_keys.json'
     seeded = keys.exists()
     extractlib.finalise(data, H.name)
+    __import__('gid').build(data)
     if not seeded and not any(s['tr'] for g in data['TR']['g'] for s in g['sec']):
         keys.unlink(missing_ok=True)     # the trainers unit's first build seeds it from real trainers
         extractlib.REPORT[:] = [r for r in extractlib.REPORT if not r.startswith('trainer keys: new table')]
