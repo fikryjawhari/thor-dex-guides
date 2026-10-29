@@ -57,10 +57,39 @@ CANON_DESC = {'Neutralizing Gas': "While the Pokémon is in battle, the effects 
                                     "Spectrier's Grim Neigh Ability."}
 
 
+# The wiki's text where the normaliser below can't word it.
+EVO_TEXT = {('gligar', 'gliscor'): 'level up at night holding a Razor Fang',
+            ('sneasel', 'weavile'): 'level up at night holding a Razor Claw',
+            ('sneasel_h', 'sneasler'): 'level up by day holding a Razor Claw',
+            ('happiny', 'chansey'): 'level up by day holding an Oval Stone',
+            ('munchlax', 'snorlax'): 'level up with high friendship', ('yungoos', 'gumshoos'): 'level 20 (day)',
+            ('shellos', 'gastrodon'): 'level 30', ('combee', 'vespiquen'): 'level 21 (female)',
+            ('charjabug', 'vikavolt'): 'using Thunder Stone, or level up in Thundercap Mountain',
+            ('magneton', 'magnezone'): 'using Thunder Stone, or level up in Thundercap Mountain',
+            ('nosepass', 'probopass'): 'using Thunder Stone, or level up in Thundercap Mountain',
+            ('bonsly', 'sudowoodo'): 'level up knowing Mimic', ('salandit', 'salazzle'): 'level 33 (female)'}
+ITEM_ONLY = re.compile(r"(?:King's Rock|Protector|Electirizer|Magmarizer|Sachet|Peat Block|Razor Claw|Razor Fang)\b.*")
+
+
 def wiki_how(how):
     """The wiki's "Acquire At" text in the guides' wording."""
-    h = re.sub(r'^(?:Evolve|Evolves)\s+(?:at|with|by)\s+', '', how.strip(), flags=re.I)
-    h = re.sub(r'^Level up \w[\w.\']* (with|knowing|while|holding|in|at|during)', r'level up \1', h)
+    h = re.sub(r'\s+([,)])', r'\1', how.strip())
+    h = re.sub(r'^(?:Evolve|Evolves)\s+(?:at|with|by)\s+', '', h, flags=re.I)
+    h = re.sub(r'(?i)\blevel[- ]up\b', 'level up', h)
+    h = re.sub(r'(?i)\bhigh (friendship|happiness)\b', 'high friendship', h).replace('withi ', 'with ')
+    h = re.sub(r"^level up (?:[A-Z][\w.']*(?: Jr\.)? )?while (?:it|[A-Z]\w+) knows (?:the move )?", 'level up knowing ', h)
+    h = re.sub(r'^level up while knowing (?:the move )?|^level up knowing the move ', 'level up knowing ', h)
+    h = re.sub(r'(?i)^level with ', 'level up with ', h)
+    h = re.sub(r"^level up [A-Z][\w.']* (with|knowing) ", r'level up \1 ', h)
+    m = re.match(r'level up knowing (.+)$', h)
+    if m and move(m.group(1)):
+        h = 'level up knowing ' + move(m.group(1))
+    h = re.sub(r'^Level \((\d+)\)', r'Level \1', h)
+    h = re.sub(r'(?i)\((night|nighttime)\)', '(night)', h)
+    h = re.sub(r'(?i)\((day|daytime)\)', '(day)', h)
+    h = re.sub(r'(?i)\bat night(?:time)?\b', 'at night', h).replace(' Weather', ' weather')
+    if ITEM_ONLY.fullmatch(h):
+        h = 'using ' + h
     h = re.sub(r'^Use (.+?) \(on [^)]*\)$', r'Use \1', h)
     return cfru.evo_text(h)
 
@@ -235,7 +264,7 @@ def build(D):
             if not a or not b or a not in byid or b not in byid:
                 wiki_unplaced.append('%s -> %s (%s, page %s)' % (parent, child, how, t))
                 continue
-            edges.setdefault((a, b), wiki_how(how))
+            edges.setdefault((a, b), EVO_TEXT.get((a, b)) or wiki_how(how))
     rhd = {}
     for a, b, how in RD.evolutions():
         fa, fb = FORMS.get(a), FORMS.get(b)
