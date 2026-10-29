@@ -13,7 +13,7 @@ if (!file) {
   process.exit(0);
 }
 
-const EXPECTED = { 'emerald-imperium': 14, 'hardlove-gold': 92, 'photonic-sun': 60, 'eternal-x': 62 };
+const EXPECTED = { 'blaze-black-2-redux': null, 'emerald-imperium': 14, 'hardlove-gold': 92, 'photonic-sun': 60, 'eternal-x': 62 };
 const all = () => guide().data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr));
 const doublesRecord = trainer => (trainer.field || []).find(record => !record.label && (record.effects || []).some(effect => effect.kind === 'gameType' && effect.value === 'Doubles'));
 const sourceOf = trainer => { const record = doublesRecord(trainer); return record.effects.find(effect => effect.kind === 'gameType').source || record.text; };
@@ -51,6 +51,7 @@ const checks = [
     fit: false,
     run: async () => {
       const count = all().filter(doublesRecord).length;
+      assert.equal(typeof EXPECTED[guide().name], 'number', `TODO: audit ${guide().name} doubles EXPECTED count`);
       assert.equal(count, EXPECTED[guide().name], `${guide().name}: ${count} trainers with doubles evidence`);
       for (const [role, trainer] of Object.entries(guide().trainers)) if (trainer) assert.ok(!doublesRecord(all().find(other => other.k === trainer.k)), `${role} trainer ${trainer.k} is singles`);
       if (guide().name === 'hardlove-gold') {
