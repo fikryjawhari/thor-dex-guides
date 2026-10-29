@@ -35,6 +35,8 @@ const MK = MIXED && MIXED.si + '.' + MIXED.ti;
 
 const q = s => JSON.stringify(s);
 const card = m => `details.wmis[data-m=${q(m)}]`;
+// A header tap holds its header in place for 450 ms (flip): wait it out, as a finger would, before the next tap.
+const tapHeader = async (page, sel) => { await page.tap(sel + '>summary'); await page.value('new Promise(r=>setTimeout(r,500))'); };
 const walk = async page => { await page.route('#/walk'); await page.settle(); };
 // Saved state, set through the guide's own code: ticks = leaf ids ('o:si.ti.j' or 'm:slug:key'), open = slugs.
 const LEAVES = `D.WK.splits.flatMap((sp,si)=>sp.st.flatMap((s,ti)=>stopLeaves(s,si,ti))).map(l=>({l,id:l.m?'m:'+l.m.m+':'+l.c.k:'o:'+l.si+'.'+l.ti+'.'+l.j}))`;
@@ -93,7 +95,7 @@ const checks = [
       assert.equal(total, MIXED.st.s.filter(Array.isArray).length + MIXED.st.s.filter(isM).reduce((n, x) => n + x.s.length, 0), 'every leaf once, no container');
       const hs = await page.value(`document.querySelector(${q(c1)}+'>summary').getBoundingClientRect().height`);
       assert.ok(hs >= 44, `header is at least 44 px (${hs})`);
-      await page.tap(c1 + '>summary');
+      await tapHeader(page, c1);
       assert.equal(await page.value(`document.querySelector(${q(c1)}).open`), true, 'header tap opens');
       assert.equal((await saved(page)).missions?.[M1.m]?.o, true, 'open saved');
       assert.ok(await page.value(`document.querySelector(${q(c1)}+' .misb').textContent.includes(${q(M1.r)})`), 'reward shown when open');
@@ -123,14 +125,14 @@ const checks = [
       assert.ok(at.top >= at.pin - 2 && at.top < at.h - 20, `closed header is on screen under the pinned headers (${JSON.stringify(at)})`);
       assert.equal(await page.value(`document.querySelector(${q(c1)}+'>summary .tag').classList.contains('got')`), true, 'complete badge');
       assert.equal(await page.value(`document.querySelector('details.stopd[data-k="${MK}"]').open&&document.querySelector('details.sec[data-s="${MK}.c"]').open`), true, 'stop and checklist stay open');
-      await page.tap(c1 + '>summary');
+      await tapHeader(page, c1);
       assert.equal(await page.value(`document.querySelector(${q(c1)}).open`), true, 'a complete mission reopens and stays open');
       await page.tap(row(1));
       assert.equal(await tagOf(page, c1), `${M1.s.length - 1}/${M1.s.length}`, 'untick after complete');
       assert.equal(await page.value(`document.querySelector(${q(c1)}).open`), true, 'untick keeps it open');
       // The other mission: closed explicitly, then reload.
-      await page.tap(card(M2.m) + '>summary');
-      await page.tap(card(M2.m) + '>summary');
+      await tapHeader(page, card(M2.m));
+      await tapHeader(page, card(M2.m));
       assert.equal((await saved(page)).missions[M2.m].o, false, 'explicit close saved');
       await page.reload();
       await walk(page);
