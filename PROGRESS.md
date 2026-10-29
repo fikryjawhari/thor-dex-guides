@@ -85,13 +85,13 @@ Plan and decisions: `plans/blaze-black-2-redux.md` (Decisions, Findings); source
   bosses under their split's cap (user rule). BB2R build / check / tabs_check clean.
 - Level fix A1 merged (6 trainers / 24 Pokémon; Ranger Lewis kept at +4 by an explicit exception, open in
   `-levels.md` D1).
-- **Next: calc continuation** on `worktree-bb2r-calc` (head c5571b5, WIP; based on 40fa618: `git merge` the guide
-  branch first, data.json → rebuild). Done there: engine level bug (stats at `sl`, formula at `l`), profile,
-  `cfg.calc` (gen5 save, EVless), 50 hzla-oracle fixtures (47 match, 3 explained), BB2R engine check, save import
-  wiring, "s13" level hint. Left (its commit body): the BB2R scenario file (stub), then calc-layout / calc-import /
-  calc-doubles / calc-smoke at 260 × 316 + dvkb; trainer_fields_check.py for BB2R; the Competitive / Neutralizing Gas
-  ability fallback (species slot, flagged); `gate.py check --template --jobs 8` (four live guides unchanged). It also
-  removed BB2R's empty move-flag lists in the dex extract (restores Iron Fist / Soundproof): review that.
+- **Calc continuation done** on `worktree-bb2r-calc` (2026-10-29; guide branch merged in, data.json unchanged): BB2R
+  scenario (`calc-blaze-black-2-redux.mjs`: Gen V field, EVless, the `s<sl>` marker at every size + dvkb, stats and
+  Seismic Toss at `sl`); every shared scenario passes on BB2R, the first Gen V calc (the scenarios now gate Mega,
+  terrain, Sticky Web, auras, Weakness Policy on the profile, Gen V crit x2, and their engine-input copies take EVless
+  and `sl`); stat level clamped to 1 (template); import fallback for an unknown ability ID (Competitive / Neutralizing
+  Gas, marked `?`); move-flag removal reviewed (the lists were empty: the engine's stock flags are right). Template
+  gate on the four live guides: 137 / 137 pass (`gate.py check <four> --template --jobs 8`, 36 min). Next: merge `worktree-bb2r-calc` into the guide branch.
 - **User answers pending / to ask:** the in-game level checks (`-levels.md` → in-game checks: Floccesy School Kid,
   Castelia Sewers tag Hugh, Lenora & Hawes; Striaton trio postgame); the 10 trainer-field review records (weather
   trainers Caroll, Elmer, Porta, Sterling, Lance); Triple Axel (doc 30 then +10 per hit vs both calcs 30 × 3); Kyurem
