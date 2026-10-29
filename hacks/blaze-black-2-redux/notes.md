@@ -370,11 +370,17 @@ after it (tooltip "Stats at Lv 13 (Challenge level bug)"); edits keep the differ
 3 known differences** (Iron Fist x2: doc over hzla's data; one hzla UI artefact: a player Pokemon of the trainer's
 species at its stat level also gets the +N).
 
+**Imported abilities:** Competitive and Neutralizing Gas have no Gen V ability ID, so an imported Pokemon's ability
+ID the tables don't know becomes the species' one ability with no ID (Koffing / Weezing: Neutralizing Gas, Milotic:
+Competitive), else its first, marked `?` like a guessed trainer ability (`template/calc.js` `abilityGuess`).
+
+**Page checks:** `tools/scenarios/calc-blaze-black-2-redux.mjs` (Gen V field: Hail, no terrain; no EV row; the
+`s<sl>` marker fits the level row at every viewer size, normal and dvkb; foe stats at `sl`, its Seismic Toss deals
+`sl`, the player's its own level); the shared calc scenarios run on BB2R (`gate.py scenarios blaze-black-2-redux`).
+
 Open / in-game tests: Triple Axel (doc: 30, then +10 per hit, "Triple Kick mechanics"; both calcs give 30 x3);
 Night Shade / Seismic Toss from a level-bug Pokemon (hzla: stat level; the game may use the shown level); Kyurem
-(no hzla set); Competitive / Neutralizing Gas (no Gen V ability id; an imported one maps by ID); the page-level
-scenarios (calc-blaze-black-2-redux, calc-layout at 260 x 316 with the `s13` marker, calc-import, calc-doubles 72)
-and `tools/trainer_fields_check.py` for BB2R are not done yet.
+(no hzla set); which slot ID the hack gives Competitive / Neutralizing Gas (a save with Milotic or Weezing settles it).
 
 ### Save import
 
