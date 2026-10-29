@@ -105,6 +105,83 @@ save; Shadow Warrior has no id), 766 moves, 522 items (Unbound-Cloud's display n
 the Items page). No `ab`: a CFRU box Pokémon stores its ability slot, so the reader returns `abs`. hzla's generated
 constants give the same id -> constant tables (checked every build). The reader itself is unit 8.
 
+### Trainers (unit 6 source checkpoint, 2026-10-29; NOT IMPLEMENTED)
+
+Source inspection reproduced the Expert workbook's numeric-level inventory. These are structural teams,
+including partner groups and starter branches, not the final number of trainer cards or stable keys.
+
+| Expert worksheet | Structural teams | Pokemon slots |
+| --- | ---: | ---: |
+| Gym Leaders | 9 | 45 |
+| Pokemon League | 5 | 30 |
+| Rival | 15 | 51 |
+| Team Shadow Bosses | 10 | 39 |
+| Team Light Of Ruin Bosses | 9 | 42 |
+| Boss Wild Battles | 12 | 18 |
+| Mega Trainers | 13 | 63 |
+| Other Bosses | 12 | 55 |
+| Title Defense | 8 | 48 |
+| Battleground | 8 | 48 |
+| Total | 101 | 439 |
+
+The pinned hzla Expert object contains 383 sets. Unit 1's join audit remains the comparison authority pending
+implementation: 381 joined sheet slots (380 distinct sets), 365 agreeing, 16 differing, 58 sheet-only, and
+three malformed hzla keys (`[2nd`, `Supply and Demand`, `Rogue Electivire`). Unit 6 has not yet reproduced that
+join or added the card-level discrepancies; `plans/unbound-sources.md` lists every difference and missing slot.
+An additional IV coverage detail was directly verified: hzla's `Shadow-Warrior` / `Lvl 37 Route9 ` set has no
+`ivs` member. Both matching sheet slots therefore lack sourced IVs even though the species/team join succeeds.
+Do not confuse a matched set with complete IV coverage.
+
+The wiki Trainer Locations list was independently counted through the existing Wiki reader: 309 named rows,
+294 with roster/location cells (292 four-cell rows and two three-cell rows), plus 15 name-only rows.
+Workbook joins, held-item coverage and workbook-only trainers are not implemented or counted yet.
+Rival!B1/I1/P1 explicitly say PLAYER CHOSE GIBLE/BELDUM/LARVITAR, so the eventual `cfg.starter` should be
+`pick`, with `t.st` Gible/Beldum/Larvitar, not Grass/Fire/Water. Configuration remains unchanged at this checkpoint.
+
+**Blocking player-facing decision:** preserve unknown statistics without inventing displayed speeds. The source
+contains question-mark EVs in four partner Vaporeon slots:
+
+| Expert slot | Question-mark EV cells (HP/Atk/Def/SpA/SpD/Spe) |
+| --- | --- |
+| Team Shadow Bosses!J126 | J135:J140: 252? / 0? / 0? / 0? / 252? / 0? |
+| Team Light Of Ruin Bosses!J46 | J55:J60: 252? / 0? / 0? / 252? / 0? / 0? |
+| Team Light Of Ruin Bosses!J66 | J75:J80: 252? / 0? / 0? / 252? / 0? / 0? |
+| Boss Wild Battles!F193 | F202:F207: 252? / 0? / 0? / 252? / 0? / 0? |
+
+`template/dex.js` monCard directly dereferences `x.iv[5]` and, with Unbound's EVs enabled, `x.ev[5]` for
+every Pokemon with a known species and level. Omitting these arrays throws; null/empty entries coerce to
+invented numeric values or NaN, while source strings such as `0?` produce NaN. No existing unknown-stat
+display convention was found. Ordinary trainers need the same handling before unit 8 adds explicitly
+assumed calc sets. A note alone does not prevent a misleading Speed number.
+
+Question for the main chat/user: may the template owner bring forward unknown-IV/EV rendering support before
+unit 6 resumes? Recommendation: retain question-mark source evidence verbatim, support unknown stats explicitly,
+and suppress Speed when its inputs are unknown; do not silently assume 0/31 IVs, strip EV question marks, or
+advance unit 8's assumed calc sets. This changes shared rendering/schema and is outside this worker's ownership.
+The task's stop-on-unsettled-display rule was applied. No trainer extraction, field review, key seeding,
+data rebuild, scenarios or screenshots have been performed; this checkpoint is not merge-ready as a finished unit.
+
+### Caps (unit 6 source checkpoint)
+
+All ten values independently re-read from `research-2026-10-29/trainer-index.xlsx`, worksheet LEVEL CAPS,
+column D (Difficult Expert Insane). Not yet wired into Trainers or the walkthrough.
+
+| Boundary | Cap | Cell |
+| --- | ---: | --- |
+| Mirskle | 20 | LEVEL CAPS!D2 |
+| Vega | 26 | LEVEL CAPS!D3 |
+| Alice | 32 | LEVEL CAPS!D4 |
+| Mel | 36 | LEVEL CAPS!D5 |
+| Successor Maxima (non-badge boundary) | 40 | LEVEL CAPS!D6 |
+| Galavan | 45 | LEVEL CAPS!D7 |
+| Big Mo | 52 | LEVEL CAPS!D8 |
+| Tessy | 57 | LEVEL CAPS!D9 |
+| Benjamin | 61 | LEVEL CAPS!D10 |
+| Elite Four / first League | 75 | LEVEL CAPS!D11 |
+
+Maxima must retain her own cap split between Mel and Galavan; do not collapse the two four-badge stages.
+The shared cap split naming rule applies when implemented. No postgame 100-cap source row was found.
+
 ## Local storage
 
 Prefix `unbound`. Keep these keys once published.

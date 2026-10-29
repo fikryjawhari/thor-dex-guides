@@ -141,6 +141,16 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
 
 ## Findings for later units
 (Units add theirs here.)
+- Unit 6 WIP/source checkpoint (2026-10-29): independently reproduced 101 structural Expert teams / 439 slots,
+  wiki 309 = 294 with teams + 15 name-only, hzla 383 Expert sets, and every LEVEL CAPS!D2:D11 value.
+  **Stopped before implementation for a player-facing decision:** four partner Vaporeon slots carry question-mark
+  EVs (exact cells in notes.md -> Trainers); the matched hzla Route9 Shadow Warrior set also has no IVs.
+  The shared trainer renderer requires numeric IV/EV arrays and otherwise crashes or prints invented/NaN speeds.
+  Recommend the main chat/template owner add unknown-stat handling and hide uncomputable Speed before resuming,
+  rather than silently defaulting stats or bringing forward unit 8's assumed sets. No template edits authorised here.
+  `cfg.starter` should become `pick` (sheet headers name Gible/Beldum/Larvitar); not changed yet. Unit 7 should retain
+  the extra Maxima split. Unit 8 must distinguish joined hzla sets from sourced IV coverage and preserve unknown EVs.
+  No extraction, keys, workbook joins, field review, builds, scenarios or screenshots yet; not a completed unit.
 - Unit 1 (sources): detailed audit `plans/unbound-sources.md`; pin/re-fetch/licence manifest
   `hacks/unbound/SOURCES.md`. No D1-D7 changes, no extracts/template edits. Research is on
   `worktree-unbound-sources`, to merge into `worktree-unbound` before later units.
