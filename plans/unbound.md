@@ -54,23 +54,25 @@ Settled by the readiness check (change only with the user):
 - **CFRU family code:** `tools/cfru.py` (naming / forms, Unbound-Cloud ID tables → `GID`, shared RomHackDex
   handling), reused by Radical Red.
 
-To ask the user before unit 3:
-- **D1 Difficulty.** Which mode's teams are the default on every card: Difficult, Expert or Insane (the user's
-  playthrough)? The other two: (a) left out, (b) collapsed lines like BB2R's `t.normal` (needs `t.normal`
-  generalised to named alternates: a template change), (c) a mode picker (new saved state). Recommended: (a) now,
-  (b) later if wanted.
-- **D2 Ordinary trainers** (310, species and levels only). Recommended: in Trainers and the walkthrough with
-  species / levels / location, marked "moves unknown"; the calc fills their moves from the level-up list at that
-  level (marked assumed). Alternative: bosses only.
-- **D3 Caps.** Caps are the in-game level cap per badge (once unit 1 has the values), splitting the Trainers page
-  and the walkthrough like the other guides. Confirm.
-- **D4 Missions** (84). Recommended: walkthrough stops at the point each unlocks (checklist steps `stop.s`), with
-  rewards in Items; no new tab.
-- **D5 Extras:** raid dens (33) as location sections with their species; DexNav / swarms / Gen 8 activation
-  (postgame Mystery Gift) as notes on the areas. Battle Frontier, Battleground and Title Defense in the postgame box.
-- **D6 Save:** which emulator / save file on the Thor, and can the user copy one Unbound 2.1.x save to the PC
-  (`hacks/unbound/.src/saves/`)? Without it the reader is checked against Unbound-Cloud and hzla only.
-- **D7 Version:** 2.1.1.1 (the last release; hzla says 2.1.1). Confirm the user's version.
+User's answers (2026-10-29):
+- **D1 Difficulty: Expert.** Expert teams on every card; Difficult and Insane are left out (hzla's other modes stay
+  in `.src/` for later). Mode `Expert` in hack.json.
+- **D2 Ordinary trainers:** all 310 in Trainers and the walkthrough with species, levels and location, marked
+  "moves unknown". The calc gives them the last four level-up moves at that level, a neutral nature (Hardy) and 31
+  IVs, marked assumed.
+- **D3 Caps:** the in-game level cap per badge (unit 1 finds the values, each with a source); these split the Trainers
+  page and the walkthrough.
+- **D4 Missions:** walkthrough steps at the point each unlocks, **each mission its own collapsible level** inside the
+  stop (title line closed; its steps inside), so stops stay short. Steps today are flat (`stop.s` = [step, note]):
+  this is a **template change** with new saved state (a mission's open state and ticks, keyed by a stable mission
+  key, never a position; `guide-update.mjs` snapshot). Mockup first (unit 7a), then build.
+- **D5 Extras:** raid dens as location sections; DexNav / swarms / Gen 8 activation as area notes; Battle Frontier,
+  Battleground and Title Defense in the postgame box.
+- **D6 Save:** the user plays on RetroArch (`.srm`, a 128 KB Gen 3 flash save) and has **no save to provide**. The
+  reader is checked against Unbound-Cloud and hzla on whatever saves unit 1 finds (Unbound-Cloud's tests, hzla's
+  fixtures, public sample saves); with none, the reader ships marked provisional and a real import on the Thor is a
+  follow-up check (PROGRESS.md), as BB2R's was.
+- **D7 Version:** 2.1.1.1.
 
 ## Units (in order; each an agent in its own worktree from `worktree-unbound`, ending at a commit)
 1. **Source audit + gaps** (Sol): pin hzla and Unbound-Cloud (SOURCES.md, watch.json); inventory with counts like
@@ -89,9 +91,14 @@ To ask the user before unit 3:
    rewards; RomHackDex items for descriptions.
 6. **Trainers + caps** (Sol): boss sheets in the D1 mode, hzla IVs and cross-check, ordinary trainers (D2), rival
    `t.st`, Mega Trainers, doubles / gimmicks, postgame boxes; caps (D3); trainer keys seeded.
-7. **Walkthrough** (Sol): the 41-part wiki walkthrough split at the caps, missions (D4), `tools/tabs_check.py`.
+7. **Walkthrough** (Sol): the 41-part wiki walkthrough split at the caps, `tools/tabs_check.py`.
+   7a. **Mission collapse decide** (Sol, a mockup at 260 × 316 in the Thor frame, user reviews on the phone): how a
+   mission sits in a stop, closed / open, ticks, Next step, search hits inside a closed mission; spec in
+   `plans/unbound-missions.md`. 7b. **Build** it in the template (main chat / Opus; one template session at a
+   time), missions in data with stable keys, scenario + `guide-update.mjs` snapshot, all guides re-checked
+   (`domcompare`: no change on the other four).
 8. **Calc + save** (Opus for the reader if Sol stalls): Unbound profile with fixtures against hzla's calc, field
-   review with the user, `cfru.js` reader checked against Unbound-Cloud / hzla on the user's save (D6).
+   review with the user, the D2 assumed sets, `cfru.js` reader checked against Unbound-Cloud / hzla (D6).
 9. Player's-eye review (Thor frame, phone preview), then the sceptic audit (Haiku medium).
 Units 4-6 can run in parallel after 3 (different extract files; data.json is rebuilt on merge).
 
