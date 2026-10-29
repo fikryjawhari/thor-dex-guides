@@ -7,6 +7,8 @@ every hack's data.json, so the four files look like one template with only the d
 
 What the template reads is in hacks/emerald-imperium/notes.md (Data schema). A key that is not in ORDER raises: add it
 there (and to the notes) when a hack gets a new field.
+Trainer normal {easy, p} is an optional secondary Normal team; easy is its Easy level decrement. Mon l is displayed,
+sl is an optional different stat level, hn is a list of hzla disagreement notes. Missing data changes no rendering.
 """
 
 # Canonical key order per object kind. Optional fields (omitted when empty) are marked in the notes, not here.
@@ -23,9 +25,10 @@ ORDER = {
     'TR': ['g', 'caps'],
     'group': ['n', 'cap', 'tab', 'note', 'sec'],
     'section': ['h', 'cap', 'note', 'opt', 'rw', 'tr'],
-    'trainer': ['k', 'n', 'loc', 'tags', 'st', 'cap', 'note', 'field', 'rw', 'pp', 'c', 'bt', 'pl', 'pt', 'p'],
+    'trainer': ['k', 'n', 'loc', 'tags', 'st', 'cap', 'note', 'field', 'rw', 'pp', 'c', 'bt', 'pl', 'pt', 'p', 'normal'],
+    'normal': ['easy', 'p'],
     'partner': ['n', 'st', 'pl', 'p'],
-    'mon': ['id', 'l', 'r', 'i', 'a0', 'a', 'ao', 'na', 'iv', 'ev', 'm', 'hp', 'ld', 'au', 'pre', 'x', 'cf', 'src'],
+    'mon': ['id', 'l', 'sl', 'r', 'i', 'a0', 'a', 'ao', 'na', 'iv', 'ev', 'm', 'hp', 'ld', 'au', 'pre', 'x', 'cf', 'hn', 'src'],
 }
 
 
@@ -99,13 +102,15 @@ def standardise(D):
             for t in section['tr']:
                 t.pop('id', None)
                 drop_empty(t, 'st', 'cap', 'c')
-                for team in [t] + t.get('pt', []):
+                for team in [t] + t.get('pt', []) + ([t['normal']] if 'normal' in t else []):
                     for mon in team['p']:
                         mon.pop('s', None)
                         drop_empty(mon, 'x')
                         order(mon, 'mon')
                 for partner in t.get('pt', []):
                     order(partner, 'partner')
+                if 'normal' in t:
+                    order(t['normal'], 'normal')
                 order(t, 'trainer')
             order(section, 'section')
         order(group, 'group')

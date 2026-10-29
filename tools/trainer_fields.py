@@ -23,7 +23,7 @@ CANDIDATE = re.compile(
 # Doubles tag wording per hack: EI "Double Battle", "True Double Battle"; Hardlove "Double, Optional", "2on2 Double";
 # Photonic "Multi Battle"; Eternal X "Triple Battle" (the calc has no triples: Doubles is the nearest). Not doubles:
 # Hardlove "Back2Back …", Eternal X "Rotation Battle".
-DOUBLES_TAGS = [re.compile(pattern) for pattern in (r'^(True )?Double', r'^2on2 Double', r'^Multi Battle', r'^Triple Battle')]
+DOUBLES_TAGS = [re.compile(pattern) for pattern in (r'^(True )?Double', r'^2on2 Double', r'^Multi Battle', r'^Triple Battle', r'^Tag Battle')]
 
 
 def evidence(text, scope):

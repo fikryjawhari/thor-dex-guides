@@ -29,9 +29,9 @@ def check(ok, what):
 
 
 # ---- shape ----
-base = [p for p in P if p['id'] not in {f[0] for f in FORMS}]
+base = [p for p in P if p['dex'] <= 649 and p['id'] not in {f[0] for f in FORMS}]
 check(len(base) == 649 and sorted(p['dex'] for p in base) == list(range(1, 650)), 'one base entry per dex 1-649')
-check(len(P) == 649 + len(FORMS), 'P = 649 species + %d forms' % len(FORMS))
+check(len(P) == 649 + len(FORMS) + 4, 'P = 649 species + %d forms + 4 trainer-only creations' % len(FORMS))
 check(len(MV) == len(M) and len(set(M)) == len(M), 'MV matches M, M unique')
 for p in P:
     idx = [i for _, i in p['lv']] + p['tm'] + p.get('tu', []) + p['eg']
@@ -123,6 +123,55 @@ check(mv['Cut']['t'] == 'Grass' and mv['Covet']['t'] == 'Fairy' and mv['Rock Cli
 check(mv['Whirlwind']['ac'] is None and mv['Absorb']['bp'] == 35, 'accuracy never-miss, Absorb 35')
 check(not ({o for o, n, _ in mc.replacements} - {'Submisson'}) & set(M), 'replaced moves are gone from M')
 
+records = drayano.trainers(doc('Trainer Changes'), 'bb2r')
+check(len(records) == 468, '468 trainer battle records parsed')
+check(sum(len(record['rows']) for record in records) == 1867, '1867 doc Pokemon resolved')
+check(all(record['rows'] for record in records), 'no empty trainer records')
+check(sum(record['mode'] == 'normal' for record in records) == 31, '31 Normal source records')
+expected_caps = [['Cheren', 14], ['Roxie', 21], ['Brycen', 23], ['Burgh', 29], ['Lenora and Hawes', 33],
+                 ['Subway Masters', 36], ['Elesa', 38], ['Charles', 39], ['Rood', 41], ['Clay', 45], ['Colress', 53],
+                 ['Skyla', 55], ['Bianca', 56], ['Hugh', 58], ['Benga', 62], ['Drayden', 64], ['Marlon', 68],
+                 ['Ghetsis', 72], ['Lance', 76], ['Elite Four et al', 78], ['Iris', 79]]
+check(D['TR']['caps'] == expected_caps, 'caps = the user plan, exactly')
+check([group['cap'] for group in D['TR']['g']] == [row[1] for row in expected_caps] + [None], 'only cap boundaries plus Post-game')
+trainers = [trainer for group in D['TR']['g'] for section in group['sec'] for trainer in section['tr']]
+check(len(trainers) == 466, '466 cards after starter, version and joint-team expansion')
+check(sum('normal' in trainer for trainer in trainers) == 31, '31 collapsed Normal teams')
+check(sum('Challenge only' in trainer['tags'] for trainer in trainers) == 3, '3 Challenge-only cards')
+check(sum('st' in trainer for trainer in trainers if 'School Kid' in trainer['n']) == 6, 'school trainers follow your starter')
+report_text = (HERE / 'report.txt').read_text(encoding='utf-8')
+for group in D['TR']['g']:
+    for section in group['sec']:
+        for trainer in section['tr']:
+            check(0 < len(trainer['p']) <= 6, trainer['n'] + ': legal opponent party size')
+            if group['cap'] and max(mon['l'] for mon in trainer['p']) > group['cap']:
+                check(any('split-cap exception:' in line and trainer['n'] + ', levels' in line and
+                          '> split cap %d ' % group['cap'] in line for line in report_text.splitlines()),
+                      trainer['n'] + ': over-cap card listed as an exception')
+            for team in [trainer] + trainer.get('pt', []) + ([trainer['normal']] if 'normal' in trainer else []):
+                for mon in team['p']:
+                    check(mon['id'] in byid, trainer['n'] + ': Pokemon resolved')
+                    check(1 <= mon['l'] <= 100 and ('sl' not in mon or 1 <= mon['sl'] < mon['l']), trainer['n'] + ': displayed/stat level pair')
+                    check(len(mon['iv']) == 6 and all(0 <= value <= 31 for value in mon['iv']), trainer['n'] + ': six IVs')
+                    check('na' in mon or any('IVs/nature unknown' in note for note in mon.get('hn', [])), trainer['n'] + ': IV/nature uncertainty explicit')
+                    check(mon['m'] and all(0 <= index < len(M) for index in mon['m']), trainer['n'] + ': all moves resolved')
+                    check(0 <= mon['a'] < len(AB), trainer['n'] + ': ability resolved')
+            if 'normal' in trainer:
+                check(trainer['normal']['easy'] in (1, 2, 3, 4), trainer['n'] + ': Easy decrement')
+                check(all('sl' not in mon for mon in trainer['normal']['p']), trainer['n'] + ': Normal uses stated levels')
+cheren = next(trainer for trainer in trainers if trainer['n'] == 'Leader Cheren')
+munchlax = next(mon for mon in cheren['p'] if mon['id'] == 'munchlax')
+check(munchlax['l'] == 14 and munchlax['sl'] == 13, 'Challenge Cheren Munchlax displayed 14 / stat 13')
+red = next(trainer for trainer in trainers if trainer['n'] == 'Red')
+check(all(mon['l'] == 100 for mon in red['p']) and any('+7' in note for note in red['note']), 'Red stays at 100, +7 retained as text')
+colress = next(trainer for trainer in trainers if trainer['n'] == 'Colress' and 'Postgame' in trainer['tags'])
+klinklang = next(mon for mon in colress['p'] if mon['id'] == 'klinklang')
+check(klinklang['i'] == 'Air Balloon' and 'Earthquake' in [M[index] for index in klinklang['m']] and
+      klinklang['l'] == 92 and klinklang['sl'] == 88, 'settled Klinklang Air Balloon / Earthquake, 88+4')
+check(not any('Grab' == M[index] for trainer in trainers for mon in trainer['p'] for index in mon['m']), 'Grab repaired to Snatch')
+keys = json.loads((HERE / 'trainer_keys.json').read_text(encoding='utf-8'))
+check(len({trainer['k'] for trainer in trainers}) == len(trainers), 'unique stable trainer keys')
+
 if fails:
     print('FAIL blaze-black-2-redux extract-check: %d' % len(fails))
     for f in fails[:40]:
@@ -130,3 +179,4 @@ if fails:
     sys.exit(1)
 print('PASS blaze-black-2-redux extract-check: P %d, M %d, AB %d; 649 species / 189 stat / 51 type / 94 evolution / '
       '154 move-conflict counts reproduced' % (len(P), len(M), len(AB)))
+print('PASS BB2R trainers: 468 records / 1867 doc Pokemon; 466 cards; 31 Normal teams / 3 Challenge-only; exact 21 caps; level pairs and over-cap reports checked')

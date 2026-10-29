@@ -473,18 +473,22 @@ def _bb2r_trainers(doc):
     location = context = version = ''
     increment = 0
     easy_increment = 1
+    started = False
     headings = {line: title for title, line, start, end in doc.blocks()}
     roster = re.compile(r'^(.+?)\s*\[([^]]+)\][,.]?\s*(?:lv\.\s*)?(\d+)\s*(?:@([^:]*))?:\s*(.+)$', re.I)
     for line, text in enumerate(doc.lines):
         text = text.strip()
-        if line < 230:
+        if '~~~~' in text and 'Trainer Changes' in text:
+            started = True
+            continue
+        if not started:
             continue
         if line in headings:
             if current:
                 records.append(current)
                 current = None
             location, context, version = headings[line], '', ''
-            increment = 0
+            increment = easy_increment
             continue
         shift = re.search(r'Levels?\s*(?:-\d+ on Easy mode,\s*)?\+(\d+)', text, re.I)
         if shift:
@@ -510,14 +514,16 @@ def _bb2r_trainers(doc):
             match = roster.match(text)
             if match:
                 species, ability, level, item, moves = match.groups()
+                misplaced = re.match(r'^@([^:]+):\s*(.+)$', moves)
+                if misplaced and not item:
+                    item, moves = misplaced.groups()
                 current['rows'].append(dict(species=species, ability=ability.rstrip('*'), level=int(level),
                                             item=(item or '').strip(), moves=[move.strip() for move in moves.split(',')],
                                             line=line))
-            if text and not re.fullmatch(r'[=~\-]+', text):
+            if text and (text == '---' or not re.fullmatch(r'[=~\-]+', text)):
                 current['body'].append((line, text))
-        if not current or not current['rows']:
-            if re.match(r'^If you picked ', text):
-                context = text
+        if re.match(r'^If you picked ', text):
+            context = text
         if text in ('Blaze Black 2 Redux only', 'Volt White 2 Redux only'):
             version = text
         if line > 1 and re.fullmatch(r'~+', doc.lines[line - 1].strip()) and text and not text.startswith('~'):
