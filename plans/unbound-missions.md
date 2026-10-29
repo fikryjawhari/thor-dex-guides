@@ -2,6 +2,9 @@
 
 Status: **accepted for 7b** (user, 2026-10-29: **B · Bordered card** and **B · Auto-close**). Base: `72edc56`,
 `worktree-unbound`; design branch: `worktree-unbound-missions`. No template or extract changes.
+**7b built** (2026-10-30, `worktree-unbound-missions-build` from `052cb0d`): template, `walk-missions.mjs`, the
+guide-update snapshot and template/README.md. Next: the user's phone / Thor review, then merge into `worktree-unbound`
+and delete this plan (its decisions are in template/README.md).
 
 ## What changes
 

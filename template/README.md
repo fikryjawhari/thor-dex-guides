@@ -43,6 +43,19 @@ an unknown key.
   level (the trainer speed uses it). `mon.hn` lists disagreements as "hzla says ...", independently of sheet `cf`.
 - Walkthrough: checklist steps `stop.s` (Next step and Reset checklist show only then), stop notes, cheat codes
   `WK.cheats`, game docs `WK.docs` / `WK.ko`, unplaced items `WK.np`, stop keys `stop.k`.
+- Walkthrough missions (Unbound): a `stop.s` entry that is an object, not a `[text, note]` pair,
+  `{m: slug, n: name, u: unlock, r: reward, note?, s: [{k, t, n?}]}`, is a mission card at that place in the stop's
+  checklist (`misHTML`). `m` is unique in the guide and never changes once published (the wiki slug, not a title or an
+  order); each step `k` never changes within its mission (an action or target name, not a position or a hash).
+  `tools/schema.py` rejects missing / repeated keys and empty step lists; at runtime a malformed mission or a repeated
+  slug is left out, nothing is invented. One leaf list (`stopLeaves`: ordinary steps, then each mission's steps at its
+  place) drives every count, Next step, search and reset. Saved in `LS.walk` → `missions: {slug: {o: open, c: {stepKey:
+  1}}}` (absent until a mission is used; an old save without it loads unchanged). Ordinary steps keep their keys
+  (`split.stop.j`, j counting only the pairs), so missions placed among them shift nothing. A record whose mission or
+  step is gone stays in the save, unused, and comes back with its key; a new step starts unticked, a moved or renamed
+  mission keeps its state. Reset clears every mission's ticks (orphans too) and keeps open states. Search recents
+  `{k:'ms', m, c?}` and scroll anchors (`details.wmis[data-m]`) go by slug; a gone step falls back to its mission, a
+  gone mission's recent drops. Checks: `tools/scenarios/walk-missions.mjs`, the snapshot in `guide-update.mjs`.
 - **Rule:** saved state never stores a position in the data (an index into `M` / `MV` / `AB` / `P` / `LOC` / `TR` / `WK` / `IT`). It stores
   names or stable keys, maps them back on load, says what happens when one is gone, and keeps loading older formats
   (below). `tools/scenarios/guide-update.mjs` checks it on every guide with a copy whose every index is shifted; a new
@@ -393,6 +406,18 @@ dex.css):
 note, then Checklist / Encounters / Items / Trainers sections. Stops with trainers show `n/N | cap` (the split's cap
 when the stop has none). Empty stops are grey signs (`.wsign`), not boxes. Guide info holds tracker export / import /
 reset, the game docs and the intro text.
+
+**Walkthrough missions** (decided 2026-10-29, Unbound unit 7a): a mission is a **bordered card** (panel background,
+1 px border, no extra gutter) inside the Checklist at its unlock place, closed by default. The header is the name
+(wraps, never cut), `done/total` and a chevron, 44 px tall, and doesn't pin (the stop and Checklist headers already
+take the top of a 316 px window). Open: unlock, reward and note (each omitted when empty), then its steps (44 px rows).
+No mission-wide checkbox. **The tick that completes a mission closes it** (`foldUp`: its header lands under the pinned
+headers and takes focus); only that mission, never its stop or Checklist, never on load; reopened it stays open until
+the next completing tick. Next step goes depth-first in data order (ordinary steps, every step of a mission, the next
+ordinary step), opening only the target's chain and landing with `land()`. Search: a hit on a mission's name, unlock,
+reward or note is one row for the mission (lands on its header); otherwise each matching step is a row (lands on it);
+the search-this-page filter shows a matching mission open. Rejected: a quiet divider title (A), staying open on the
+final tick (A), a sticky mission header, a mission tab or global list.
 
 **Trainers:** a Show switch per box (Places / Trainers / Teams, read from the page, not stored) pinned under the box
 header; each place header has a `n/N | cap` button that fills first (part → all open, all → all closed) and never

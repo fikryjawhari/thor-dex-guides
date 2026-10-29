@@ -362,6 +362,13 @@ as species constants: recalculate after edits, Mega, Camomons, Roost and selecte
   Route 3's Surf fishermen stay in Galavan's Cap 45 box but appear **after Galavan**, Part 20. Charlie goes in Part 30
   (unchanged source/card location says Icicle Cave). Other revisit fixes and source-reader details: notes.md →
   Walkthrough. No unplaced entries or outstanding decisions.
+- **Unit 7b (mission cards in the template, 2026-10-30, `worktree-unbound-missions-build`):** built B / B from
+  `plans/unbound-missions.md`: `stopEnt` / `stopLeaves` (dex.js) are the one leaf list; `misHTML` the card;
+  `LS.walk` → `missions` by slug and step key (record and orphan rules: template/README.md → What the data switches
+  on). No data change was needed. Next step now lands through `land()` (same end position, `GAP` under the pinned
+  headers): its one-shot scroll stopped short on Unbound's long stops (content-visibility estimates) for ordinary
+  steps too. Mission-free guides: same DOM (domcompare). Checks: `tools/scenarios/walk-missions.mjs` (m1-m5), the
+  missions snapshot in `guide-update.mjs`. Ordinary rows keep their 33 px height (other guides); mission rows are 44 px.
 
 (Units add theirs here.)
 - Main chat after 8a (2026-10-29): fixtures moved to `hacks/unbound/.src/saves/expected/` (git-ignored; the save-reader

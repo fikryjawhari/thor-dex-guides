@@ -315,9 +315,9 @@ function bindTrackers(){app.querySelectorAll('.trk').forEach(el=>{if(el.dataset.
  app.querySelectorAll('.tk-starter,.st-pick').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.s=s.value;const sa=STARTER_AREA,sp=P.find(x=>x.name===s.value);if(sa>=0){if(sp)TK.e[sa]={p:sp.id};else delete TK.e[sa];}tkSave();rerender();};});
  app.querySelectorAll('.tk-player').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.pl=s.value;tkSave();rerender();};});}
 // Scroll anchor: the element nearest the top of the window, saved as a selector plus its offset, so a re-render can put it back.
-const ANCH='.list>a.row,details.split[data-a],details.split[data-wo],details.split[data-gi],details.split[data-si],details.stopd[data-k],.trk[data-a],details.trd';
+const ANCH='.list>a.row,details.split[data-a],details.split[data-wo],details.split[data-gi],details.split[data-si],details.stopd[data-k],details.wmis[data-m],.trk[data-a],details.trd';
 const anchorSel=e=>e.matches('a.row')?`a.row[href="${e.getAttribute('href')}"]`:e.matches('details.trd')?`details.trd[data-k="${e.dataset.k}"]`:
- e.matches('.trk')?`.trk[data-a="${e.dataset.a}"]`:e.matches('details.stopd')?`details.stopd[data-k="${e.dataset.k}"]`:
+ e.matches('.trk')?`.trk[data-a="${e.dataset.a}"]`:e.matches('details.stopd')?`details.stopd[data-k="${e.dataset.k}"]`:e.matches('details.wmis')?`details.wmis[data-m="${CSS.escape(e.dataset.m)}"]`:
  `details.split[${['a','wo','gi','si'].map(k=>'data-'+k).find(k=>e.hasAttribute(k))}="${e.getAttribute(['a','wo','gi','si'].map(k=>'data-'+k).find(k=>e.hasAttribute(k)))}"]`;
 // Found by hit-testing down the window: reading the geometry of anything inside a skipped block forces it to lay out.
 function keepAnchor(){const r=app.getBoundingClientRect(),x=r.left+r.width/2;
@@ -536,6 +536,27 @@ const segBar=(cls,a='Expand all',c='Collapse all')=>`<div class="seg ${cls}"><bu
 // (stop.note), game docs (WK.docs, WK.ko), items with no place (WK.np).
 const WO=(()=>{try{return Object.assign({c:{},o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.walk)||'{}'))}catch(e){return {c:{},o:{},x:{},s:{}}}})();
 const woSave=()=>{try{localStorage.setItem(LS.walk,JSON.stringify(WO))}catch(e){}};
+// Missions: a stop.s entry that is an object, not a [text, note] pair ({m slug, n, u unlock, r reward, note?, s:[{k, t, n?}]}),
+// is a card in the stop's checklist with its own steps. Saved in WO.missions {slug:{o:open, c:{stepKey:1}}}, by slug
+// and step key, never by position: a record whose mission or step is gone stays in the save, unused, and comes back
+// with its key. Ordinary steps keep their key (split.stop.j, j counting only the pairs), so missions among them shift
+// nothing. A malformed mission (no slug, no steps, a step with no key or a repeated one) or a repeated slug is left out.
+const MIS=new Map(),MISAT=new Map();
+const misOk=x=>{if(!x||Array.isArray(x)||typeof x!=='object'||typeof x.m!=='string'||!x.m||!Array.isArray(x.s)||!x.s.length)return false;
+ const ks=new Set();return x.s.every(c=>c&&typeof c.k==='string'&&c.k&&typeof c.t==='string'&&!ks.has(c.k)&&ks.add(c.k));};
+// A stop's checklist in data order: {j, x} for an ordinary step, {m} for a mission.
+const stopEnt=s=>s._e??=(()=>{let j=0;const out=[];(s.s||[]).forEach(x=>{if(Array.isArray(x))out.push({j:j++,x});else if(misOk(x)&&!MIS.has(x.m)){MIS.set(x.m,x);out.push({m:x});}});return out;})();
+D.WK.splits.forEach((sp,si)=>sp.st.forEach((s,ti)=>stopEnt(s).forEach(e=>{if(e.m)MISAT.set(e.m.m,[si,ti]);})));
+const misMap=()=>WO.missions&&typeof WO.missions==='object'&&!Array.isArray(WO.missions)?WO.missions:null;
+const misRec=m=>{const r=misMap()?.[m];return r&&typeof r==='object'&&!Array.isArray(r)?r:null;};
+const misDone=(m,k)=>{const c=misRec(m)?.c;return !!(c&&typeof c==='object'&&c[k]===1);};
+function misSet(m,f){if(!misMap())WO.missions={};let r=misRec(m);if(!r)r=WO.missions[m]={o:false,c:{}};
+ if(!r.c||typeof r.c!=='object'||Array.isArray(r.c))r.c={};f(r);woSave();}
+// Every checkbox of a stop's checklist, in order (the one list behind the counts, Next step and reset): ordinary steps
+// {j, x} and, at their place, each mission's steps {m, c}.
+const stopLeaves=(s,si,ti)=>stopEnt(s).flatMap(e=>e.m?e.m.s.map(c=>({si,ti,s,m:e.m,c})):[{si,ti,s,j:e.j,x:e.x}]);
+const leafDone=l=>l.m?misDone(l.m.m,l.c.k):!!WO.c[l.si+'.'+l.ti+'.'+l.j];
+const misTx=x=>x.tx??=[x.n,x.u,x.r,x.note,...x.s.flatMap(c=>[c.t,c.n])].filter(Boolean).join(' ').toLowerCase();
 // Search recents (LS.recent) are stored by identity (recOut): a species, move, ability or place by name, a walkthrough
 // stop by its key (w), an item by its box and row names; recIn reads them back as this build's positions (an index or
 // id saved before names passes through, a gone one drops). A stop saved by position (before keys) takes the key it had
@@ -548,6 +569,7 @@ const recIn=o=>{if(!o||typeof o!=='object')return null;
  if(o.k==='p'){const v=spIn(o.v);return v==null?null:{k:'p',v};}
  if(o.k==='f'){const f=o.v;if(!f||typeof f!=='object')return null;if(!FLIST[f.k])return o;const v=idxOf(FLIST[f.k],f.v);return v==null||FLIST[f.k][v]==null?null:{k:'f',v:{...f,v}};}
  if(o.k==='w'){const at=o.w!=null?STOPK.get(String(o.w)):D.WK.splits[o.si]?.st[o.ti]?[o.si,o.ti]:null;return at?{k:'w',si:at[0],ti:at[1]}:null;}
+ if(o.k==='ms'){const x=typeof o.m==='string'&&MIS.get(o.m);if(!x)return null;return o.c!=null&&x.s.some(c=>c.k===o.c)?{k:'ms',m:o.m,c:o.c}:{k:'ms',m:o.m};}
  if(o.k==='i'){const si=idxOf(D.IT||[],o.si),sec=(D.IT||[])[si],ri=sec?idxOf(sec.r,o.ri):null;return sec&&sec.r[ri]?{k:'i',si,ri}:null;}
  return o;};
 const recRead=()=>{let r=[];try{r=JSON.parse(localStorage.getItem(LS.recent)||'[]')}catch(e){}return Array.isArray(r)?r.map(recIn).filter(Boolean):[];};
@@ -595,7 +617,7 @@ function migrateWalkState(){
  WO.layout=layout;woSave();
 }
 migrateWalkState();
-const CHK=D.WK.splits.some(sp=>sp.st.some(s=>(s.s||[]).length));
+const CHK=D.WK.splits.some((sp,si)=>sp.st.some((s,ti)=>stopLeaves(s,si,ti).length));
 const tkCounts=()=>[Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length,Object.values(TK.e).filter(e=>e&&e.f).length];
 // Guide info: tracker and checklist tools, then the game docs (cheat codes and unplaced items count as docs), then the
 // intro. Built when opened.
@@ -610,19 +632,26 @@ function guideInfoHTML(){const W=D.WK,[n,f]=tkCounts();
   `<div class="bar pbar">${trackerButtons()}${CHK?'<button class="btn danger wk-reset">Reset checklist</button>':''}</div>`+
   (docs?`<div class="psec">Game docs</div>`+docs:'')+`<div class="mut small" style="margin:12px 0 4px">${TX.walk}</div>`;}
 // Next step: the first unticked checklist step, in walkthrough order.
-function nextStep(){const W=D.WK;for(let si=0;si<W.splits.length;si++){const sp=W.splits[si];for(let ti=0;ti<sp.st.length;ti++){const s=sp.st[ti];for(let j=0;j<(s.s||[]).length;j++)if(!WO.c[si+'.'+ti+'.'+j])return {si,ti,j,s};}}return null;}
-const nextInner=()=>{const n=nextStep();return n?`<b>Next step</b><span>${esc(n.s.n)} · ${esc(n.s.s[n.j][0])}</span>`:'<b>Checklist done</b>';};
+function nextStep(){const W=D.WK;for(let si=0;si<W.splits.length;si++){const sp=W.splits[si];for(let ti=0;ti<sp.st.length;ti++){const l=stopLeaves(sp.st[ti],si,ti).find(l=>!leafDone(l));if(l)return l;}}return null;}
+const nextInner=()=>{const n=nextStep();return n?`<b>Next step</b><span>${esc(n.s.n)} · ${n.m?esc(n.m.n||n.m.m)+' · '+esc(n.c.t):esc(n.x[0])}</span>`:'<b>Checklist done</b>';};
 // Starter picker: named choices stored in TK.s, shared with the tracker bar and Trainers.
 function starterRow(){let sel='';
  if(PICK)sel=starterSel('tk-starter','Not chosen (show all)');
  return (sel?`<div class="card strow"><span class="mut small">Starter</span>${sel}</div>`:'')+(PLAYER?`<div class="card strow"><span class="mut small">Player</span>${playerSel('tk-player','Not chosen (show all)')}</div>`:'');}
 // Sections inside a stop, opened and closed from their yellow header; the header shows a summary.
 const SECN={c:'Checklist',e:'Encounters',i:'Items',t:'Trainers'};
-function walkSec(k,t,tags,body){const sk=k+'.'+t,v=WO.s[sk],open=v===undefined?t!=='c':!!v;
+function walkSec(k,t,tags,body,force){const sk=k+'.'+t,v=WO.s[sk],open=force||(v===undefined?t!=='c':!!v);
  return sectionHTML(sk,SECN[t],tags,body,open);}
+// A mission card: name and progress on the header; open, its unlock, reward and note, then its steps. It starts closed;
+// on a filtered page (st.q) one that matches opens. data-w is the open state it was drawn with (bindWalk saves changes).
+function misHTML(x){const nd=x.s.filter(c=>misDone(x.m,c.k)).length,open=misRec(x.m)?.o===true||!!st.q&&misTx(x).includes(st.q),m=esc(x.m);
+ const meta=(b,t)=>t?`<div class="mmeta">${b?`<b>${b}</b> `:''}${esc(t)}</div>`:'';
+ return `<details class="wmis" data-m="${m}" data-w="${open?1:0}" ${open?'open':''}><summary><span class="mn">${esc(x.n||x.m)}</span><span class="tag${nd===x.s.length?' got':''}">${nd}/${x.s.length}</span></summary><div class="misb">`+
+  meta('Unlock:',x.u)+meta('Reward:',x.r)+meta('',x.note)+x.s.map(c=>{const done=misDone(x.m,c.k);return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-mk="${m}" data-ck="${esc(c.k)}" ${done?'checked':''}><span>${esc(c.t)}${c.n?`<div class="mut small">${esc(c.n)}</div>`:''}</span></label>`;}).join('')+
+  `</div><button class="endbar sb" hidden>${UPI}<span>Collapse ${esc(x.n||x.m)}</span></button></details>`;}
 function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;
- const ss=s.s||[],nd=ss.filter((x,j)=>WO.c[k+'.'+j]).length;
- const steps=ss.map((x,j)=>{const sk=k+'.'+j;const done=!!WO.c[sk];return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-sk="${sk}" ${done?'checked':''}><span>${esc(x[0])}${x[1]?`<div class="mut small">${esc(x[1])}</div>`:''}</span></label>`;}).join('');
+ const lv=stopLeaves(s,si,ti),nd=lv.filter(leafDone).length,mq=!!st.q&&stopEnt(s).some(e=>e.m&&misTx(e.m).includes(st.q));
+ const steps=stopEnt(s).map(({j,x,m})=>{if(m)return misHTML(m);const sk=k+'.'+j;const done=!!WO.c[sk];return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-sk="${sk}" ${done?'checked':''}><span>${esc(x[0])}${x[1]?`<div class="mut small">${esc(x[1])}</div>`:''}</span></label>`;}).join('');
  const ts=(s.tr||[]).map(k=>TRK[k]).filter(t=>t&&!rivalHidden(t));
  // Encounters: one box per area with its own tracker; several areas get a short tag (the area name minus the stop's).
  const areas=[];s.a.flatMap(ARS).forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=A.es?secLines(ai,cf).concat(A.l.flatMap(li=>adjRows(li,cf,notSec).map(r=>[li,r]))):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;areas.push([ai,A,enc]);});
@@ -631,17 +660,17 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;
   return `<div class="area">${A.ns&&tag?`<span class="atag">${esc(tag)}</span>`:''}${trackerHTML(ai,tag)}${CF.walkAreaNote&&A.note?`<div class="trnote">${esc(A.note)}</div>`:''}`+enc.map(([li,[m,rows]])=>`<div class="encl"><span class="mut">${A.l.length>1||LOC[li]!==A.n?esc(LOC[li])+' · ':''}${esc(m)}:</span> ${rows.map(x=>`<span class="${x.d?'dupe':''}"><a href="#/p/${x.p.id}">${esc(x.p.name)}</a> ${esc(x.show)}</span>`).join(', ')}</div>`).join('')+'</div>';}).join('');
  const its=s.it.filter(i=>starterOk(i[2]));
  // A stop with nothing in it is just a direction ("back to Iki Town"): a grey sign, not a box that opens nothing.
- if(!ss.length&&!areas.length&&!its.length&&!ts.length&&!s.note)return `<div class="wsign" data-k="${k}">${esc(s.n)}</div>`;
+ if(!lv.length&&!areas.length&&!its.length&&!ts.length&&!s.note)return `<div class="wsign" data-k="${k}">${esc(s.n)}</div>`;
  const split=D.WK.splits[si],cap=+(split.n.match(/\[(?:Level )?Cap (\d+)\]/)?.[1]||0);
  let h=`<details class="stopd" ${closed?'':'open'} data-k="${k}"><summary class="stoph"><span class="pn">${esc(s.n)}${s.x?' <span class="mut small">(on the way)</span>':''}</span>${s.a.map(encAll).join('')}${ts.length?walkPt(ts,cap):''}</summary><div class="stop">`+
   (s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+
-  (ss.length?walkSec(k,'c',`<span class="tag${nd===ss.length?' got':''}">${nd}/${ss.length}</span>`,`<div class="chkb">${steps}</div>`):'')+
+  (lv.length?walkSec(k,'c',`<span class="tag${nd===lv.length?' got':''}">${nd}/${lv.length}</span>`,`<div class="chkb">${steps}</div>`,mq):'')+
   (areas.length?walkSec(k,'e',areas.map(([ai])=>encSummary(ai)).join(''),enc):'')+
   (its.length?walkSec(k,'i',`<span class="tag">${its.length}</span>${its.some(i=>/miss permanently/i.test(i[2]))?'<span class="tag miss">MISSABLE</span>':''}`,`<table class="itbl wt ix">${its.map(i=>`<tr><td>${i[3]!=null&&(i[0]==='TMs and HMs'||i[0]==='Move Tutors')?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Mega Stones'&&i[3]?`<a href="#/p/${i[3]}">${esc(i[1])}</a>`:esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2]).replace(/\n/g,'<br>')}${/miss permanently/i.test(i[2])?'<span class="warn">MISSABLE</span>':''}</td></tr>`).join('')}</table>`):'')+
   (ts.length?walkSec(k,'t',`<span class="tag">${ts.length}</span>`,walkTrainers(ts)):'');
  return h+`<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.n)}</span></button></div></details>`;}
 // What a walkthrough search matches: the stop's name, notes, steps, items, areas (and their Pokemon) and trainers.
-const stopText=s=>s.tx??=(s.n+' '+(s.note?s.note+' ':'')+(s.s||[]).map(x=>x.join(' ')).join(' ')+' '+s.it.map(i=>i[1]+' '+i[2]).join(' ')+' '+s.a.flatMap(ARS).map(ai=>AR[ai].n+' '+areaSpecies(ai).map(p=>p.name).join(' ')).join(' ')+' '+(s.tr||[]).map(k=>TRK[k]?TRK[k].key:'').join(' ')).toLowerCase();
+const stopText=s=>s.tx??=(s.n+' '+(s.note?s.note+' ':'')+stopEnt(s).map(e=>e.m?misTx(e.m):e.x.join(' ')).join(' ')+' '+s.it.map(i=>i[1]+' '+i[2]).join(' ')+' '+s.a.flatMap(ARS).map(ai=>AR[ai].n+' '+areaSpecies(ai).map(p=>p.name).join(' ')).join(' ')+' '+(s.tr||[]).map(k=>TRK[k]?TRK[k].key:'').join(' ')).toLowerCase();
 function listWalk(){fil.innerHTML='';const W=D.WK;const cf=caughtFams(-1);const shown=new Set();const q=st.q;
  if(q){const hits=[];W.splits.forEach((sp,si)=>sp.st.forEach((s,ti)=>{if(stopText(s).includes(q))hits.push([si,ti]);}));
   app.innerHTML=hits.map(([si,ti])=>`<div class="sech">${esc(W.splits[si].n)}</div>`+walkStop(W.splits[si].st[ti],si,ti,cf,shown)).join('');bindWalk();return;}
@@ -649,18 +678,21 @@ function listWalk(){fil.innerHTML='';const W=D.WK;const cf=caughtFams(-1);const 
  // Top: Guide info, Starter, Next step, then Expand / Collapse all for the splits.
  app.innerHTML=`<div class="wtool"><details class="split" data-wo="gi" ${WO.o.gi?'open':''}><summary>Guide info <span class="mut small">${n} caught · ${f} failed</span></summary><div class="body pbody" data-gi="1"></div></details>`+
   starterRow()+(CHK?`<button class="resume wk-next">${nextInner()}</button>`:'')+segBar('wk-all all')+`</div>`+
-  W.splits.map((sp,si)=>{const all=sp.st.flatMap((s,ti)=>(s.s||[]).map((x,j)=>si+'.'+ti+'.'+j));const done=all.filter(k=>WO.c[k]).length;
+  W.splits.map((sp,si)=>{const all=sp.st.flatMap((s,ti)=>stopLeaves(s,si,ti));const done=all.filter(leafDone).length;
    return `<details class="split jt" data-wo="${si}" ${WO.o[si]?'open':''}><summary>${esc(sp.n)} ${CHK?`<span class="tag ${done===all.length&&all.length?'got':''}">${done}/${all.length}</span>`:`<span class="mut small">${sp.st.length} stop${sp.st.length===1?'':'s'}</span>`}</summary>${sp.note?`<div class="trnote" style="margin:8px 2px">${esc(sp.note)}</div>`:''}<div class="body" data-si="${si}"></div></details>`;}).join('');
  app.querySelectorAll('details.split[data-wo]').forEach(d=>{const fill=()=>{const b=d.querySelector('.body');if(b&&d.open&&!b.innerHTML){if(b.dataset.gi){b.innerHTML=guideInfoHTML();bindWalk();return;}const si=+b.dataset.si;
    b.innerHTML=segBar('wk-sp')+W.splits[si].st.map((s,ti)=>walkStop(s,si,ti,cf,shown)).join('')+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(W.splits[si].n)}</span></button>`;bindWalk();}};
   d.addEventListener('toggle',()=>{if(d.open)WO.o[d.dataset.wo]=1;else delete WO.o[d.dataset.wo];woSave();fill();barsSoon();});fill();});
  bindWalk();bars();}
-function bindWalk(){bindTrackers();bindTrd();bindHead();app.querySelectorAll('.wstep input').forEach(c=>{if(c.dataset.b)return;c.dataset.b=1;c.onchange=()=>{if(c.checked)WO.c[c.dataset.sk]=1;else delete WO.c[c.dataset.sk];woSave();c.closest('.wstep').classList.toggle('done',c.checked);
+function bindWalk(){bindTrackers();bindTrd();bindHead();app.querySelectorAll('.wstep input').forEach(c=>{if(c.dataset.b)return;c.dataset.b=1;c.onchange=()=>{const mk=c.dataset.mk;if(mk)misSet(mk,r=>{if(c.checked)r.c[c.dataset.ck]=1;else delete r.c[c.dataset.ck];});else{if(c.checked)WO.c[c.dataset.sk]=1;else delete WO.c[c.dataset.sk];woSave();}c.closest('.wstep').classList.toggle('done',c.checked);
   const tag=d=>{if(!d)return;const all=[...d.querySelectorAll('.wstep input')],n=all.filter(x=>x.checked).length,t=d.querySelector(':scope>summary .tag');if(t){t.textContent=n+'/'+all.length;t.classList.toggle('got',n===all.length);}};
-  tag(c.closest('details.sec'));tag(c.closest('details.split'));const nx=app.querySelector('.wk-next');if(nx)nx.innerHTML=nextInner();};});
+  const mi=mk&&c.closest('details.wmis');tag(mi);tag(c.closest('details.sec'));tag(c.closest('details.split'));const nx=app.querySelector('.wk-next');if(nx)nx.innerHTML=nextInner();
+  // The tick that completes a mission closes it, its header landing under the pinned ones.
+  if(mi&&c.checked&&[...mi.querySelectorAll('.wstep input')].every(x=>x.checked)){foldUp(mi);mi.querySelector(':scope>summary').focus({preventScroll:true});}};});
  colBind(app);app.querySelectorAll('details.stopd').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{const k=d.dataset.k;if(/^doc/.test(k)){if(d.open)WO.x[k]=1;else delete WO.x[k];}else if(d.open)delete WO.x[k];else WO.x[k]=0;woSave();barsSoon();});});
  app.querySelectorAll('details.sec').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{WO.s[d.dataset.s]=d.open?1:0;woSave();barsSoon();});});
- const r=app.querySelector('.wk-reset');if(r&&!r.dataset.b){r.dataset.b=1;r.onclick=()=>{if(confirm('Clear every walkthrough checkbox?')){WO.c={};woSave();rerender();}};}
+ app.querySelectorAll('details.wmis').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{if(+d.dataset.w===+d.open)return;d.dataset.w=d.open?1:0;misSet(d.dataset.m,r=>{r.o=d.open;});barsSoon();});});
+ const r=app.querySelector('.wk-reset');if(r&&!r.dataset.b){r.dataset.b=1;r.onclick=()=>{if(confirm('Clear every walkthrough checkbox?')){WO.c={};const mm=misMap();if(mm)Object.values(mm).forEach(r=>{if(r&&typeof r==='object')r.c={};});woSave();rerender();}};}
  barsSoon();}
 // Taps on the collapsible pages: header taps (flip), the expand / collapse bars (.all = the page's boxes, else the blocks
 // of the box it sits in; the Trainers page has its own controls: trShow, trTeams, trAll),
@@ -673,9 +705,8 @@ app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
  const b=e.target.closest('.seg button');
  if(b){const s=b.closest('.seg');if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.it-sp')?b.closest('.body').querySelectorAll('details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
  const end=e.target.closest('.endbar,.trfold');if(end){foldUp(end.closest('details'));return;}
- if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;delete WO.x[k];WO.s[k+'.c']=1;woSave();render(true);
-  const inp=app.querySelector(`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;const l=inp.closest('.wstep'),stop=l.closest('details.stopd'),sec=l.closest('details.sec');
-  noAnchor();scrollBy(0,l.getBoundingClientRect().top-(T()+stop.querySelector(':scope>summary').offsetHeight+sec.querySelector(':scope>summary').offsetHeight));flash(l);hold(l);jumpState();return;}
+ if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;delete WO.x[k];WO.s[k+'.c']=1;if(n.m)misSet(n.m.m,r=>{r.o=true;});woSave();render(true);
+  const inp=app.querySelector(n.m?`.wstep input[data-mk="${CSS.escape(n.m.m)}"][data-ck="${CSS.escape(n.c.k)}"]`:`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;land(inp.closest('.wstep'),GAP);return;}
  const sm=e.target.closest('summary');
  if(sm&&sm.parentElement.tagName==='DETAILS'&&app.contains(sm)&&!e.target.closest('a,select,input,button')){e.preventDefault();flip(sm.parentElement,!sm.parentElement.open);}});
 // ===== TRAINERS TAB (D.TR, see notes). Speeds use each Pokemon's real IVs and nature, and its EVs unless the Minimal
@@ -908,6 +939,9 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
  find(h,t){q.value=t;st.q=t.toLowerCase();this.go(h);},
  clear(){q.value='';st.q='';},
  jumpStop(si,ti){this.clear();WO.o[si]=1;delete WO.x[si+'.'+ti];woSave();this.go('#/walk',()=>land(app.querySelector(`details.stopd[data-k="${si}.${ti}"]>summary,.wsign[data-k="${si}.${ti}"]`)));},
+ // A mission (a hit on its name) or one of its steps: open its split, stop, checklist and card; a gone step lands on the card.
+ jumpMis(m,c){const at=MISAT.get(m);if(!at)return;const k=at.join('.');this.clear();WO.o[at[0]]=1;delete WO.x[k];WO.s[k+'.c']=1;misSet(m,r=>{r.o=true;});
+  this.go('#/walk',()=>{const d=app.querySelector(`details.wmis[data-m="${CSS.escape(m)}"]`),i=d&&c!=null&&d.querySelector(`input[data-ck="${CSS.escape(c)}"]`);land(i?i.closest('.wstep'):d&&d.querySelector(':scope>summary'));});},
  // A trainer fought alongside others shares their row, which goes by the first one's key: open them all, find it by data-ks.
  jumpWalkTr(k){const w=walkOf(k);if(!w)return;const sk=w[0]+'.'+w[1];this.clear();WO.o[w[0]]=1;delete WO.x[sk];WO.s[sk+'.t']=1;trMates(k).forEach(x=>TRDO.add(x));woSave();
   this.go('#/walk',()=>land(trRowOf(app.querySelector(`details.stopd[data-k="${sk}"]`),k)));},
@@ -929,6 +963,7 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
    if(vs.length===1)add('Walk','w',()=>this.jumpStop(...vs[0]));else if(vs.length)add('Walk','w',()=>this.find('#/walk',AR[o.v].n));}
   else if(o.k==='w'){const s=(D.WK.splits[o.si]||{st:[]}).st[o.ti];if(!s)return null;add('Walk','w',()=>this.jumpStop(o.si,o.ti));
    const a=s.a.find(a=>AR[a]);if(a!=null)add('Places','l',()=>this.place(a));}
+  else if(o.k==='ms'){if(!MIS.has(o.m))return null;add('Walk','w',()=>this.jumpMis(o.m,o.c));}
   else if(o.k==='t'){if(!TRK[o.v])return null;add('Trainers','t',()=>this.jumpTr(o.v));if(walkOf(o.v))add('Walk','w',()=>this.jumpWalkTr(o.v));add('Full page','tp',()=>this.go('#/tr/'+o.v));}
   else if(o.k==='i'){const sec=(D.IT||[])[o.si],r=sec&&sec.r[o.ri];if(!r)return null;const lc=r[0].toLowerCase();
    add('Items','i',()=>this.jumpItem(o.si,o.ri));
@@ -942,6 +977,7 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
   else if(o.k==='f'){ic=this.ico('f');lb=o.v.k==='type'?ty(o.v.v):esc(fval(o.v));sb=esc(FL[o.v.k]+' filter');}
   else if(o.k==='l'){ic=this.ico('l');lb=esc(AR[o.v].n);sb=esc(sub||'');}
   else if(o.k==='w'){const sp=D.WK.splits[o.si];ic=this.ico('w');lb=esc(sp.st[o.ti].n);sb=esc(sp.n);}
+  else if(o.k==='ms'){const x=MIS.get(o.m),c=o.c!=null&&x.s.find(c=>c.k===o.c),at=MISAT.get(o.m);ic=this.ico('w');lb=esc(c?c.t:x.n||x.m);sb=esc(D.WK.splits[at[0]].st[at[1]].n+(c?' · '+(x.n||x.m):''));}
   else if(o.k==='t'){const t=TRK[o.v];ic=this.ico('t');lb=esc(t.n);sb=esc(t.loc);}
   else{const sec=D.IT[o.si],r=sec.r[o.ri];ic=this.ico('i');lb=esc(r[0]);sb=esc(sec.n+' · '+r[1]);}
   this.items.push({o,acts});const i=this.items.length-1;
@@ -964,6 +1000,8 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
   walkStops().forEach(([s,si,ti])=>{if(norm(s.n).includes(n))addW(si,ti);});
   if(cur==='w'){pl.forEach(([a])=>visits(a).forEach(v=>addW(...v)));out.l=pl.filter(([a])=>!visits(a).length).map(([a,o])=>[{k:'l',v:a},o]);out.w=ws;}
   else{const cov=new Set(pl.flatMap(([a])=>visits(a).map(v=>v.join('.'))));out.l=pl.map(([a,o])=>[{k:'l',v:a},o]);out.w=ws.filter(([o])=>!cov.has(o.si+'.'+o.ti));}
+  // Missions, after the stops: one row for a hit on the name, unlock, reward or note; else a row for each step that matches.
+  if(n.length>=2)MIS.forEach(x=>{const nk=t=>!!t&&norm(t).includes(n);if([x.n,x.u,x.r,x.note].some(nk))out.w.push([{k:'ms',m:x.m}]);else x.s.forEach(c=>{if(nk(c.t)||nk(c.n))out.w.push([{k:'ms',m:x.m,c:c.k}]);});});
   out.t=TRS.filter(t=>!rivalHidden(t)&&norm(t.n).includes(n)).map(t=>[{k:'t',v:t.k}]);
   out.i=(D.IT||[]).flatMap((sec,si)=>sec.r.map((r,ri)=>[r,ri]).filter(([r])=>norm(r[0]).includes(n)).map(([r,ri])=>[{k:'i',si,ri}]));
   return out;},
@@ -995,11 +1033,12 @@ const locFound=()=>LFOUND??=new Set(Object.values(locs).flatMap(l=>l.map(([p])=>
 // bottom of a page that content-visibility hasn't laid out yet. Any press, wheel or key ends it. Boxes around el that
 // are still closed (a Prismatic Moon drop-down) are opened, and the ones content-visibility skips are laid out for real
 // until it ends: a skipped box counts at its 400 px estimate, so a target deep inside a long one sat past the page's end.
+// gap: room above el (Next step leaves GAP, as the jump buttons do).
 let landEnd=null;
-function land(el){if(!el)return;const st0=el.tagName==='SUMMARY'?el.parentElement.parentElement:el;
+function land(el,gap=0){if(!el)return;const st0=el.tagName==='SUMMARY'?el.parentElement.parentElement:el;
  for(let p=st0.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))if(!p.open){p.open=true;if(p._f)p._f();}
  const cv=[];for(let p=el.parentElement;p&&p!==app;p=p.parentElement)if(getComputedStyle(p).contentVisibility==='auto'){p.style.contentVisibility='visible';cv.push(p);}
- const pin=()=>{let y=hdrH()+trPinH(st0);for(let p=st0.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))if(p.open&&p.matches('details.stopd,details.sec'))y+=p.querySelector(':scope>summary').offsetHeight;return y;};
+ const pin=()=>{let y=hdrH()+gap+trPinH(st0);for(let p=st0.closest('details');p&&app.contains(p);p=p.parentElement.closest('details'))if(p.open&&p.matches('details.stopd,details.sec'))y+=p.querySelector(':scope>summary').offsetHeight;return y;};
  const to=()=>{const dy=el.getBoundingClientRect().top-pin();if(Math.abs(dy)>.5)scrollBy(0,dy);};
  noAnchor();to();flash(el);const t0=performance.now();let stop=false;const end=()=>{stop=true;};if(landEnd)landEnd();landEnd=end;
  ['pointerdown','wheel','keydown'].forEach(k=>addEventListener(k,end,{once:true,passive:true}));
