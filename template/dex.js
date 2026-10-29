@@ -998,10 +998,10 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
    if(norm(A.n).includes(n)||other.some(x=>norm(x).includes(n)))pl.push([a,other.join(', ')]);});
   const seen=new Set(),ws=[],addW=(si,ti)=>{const k=si+'.'+ti;if(!seen.has(k)){seen.add(k);ws.push([{k:'w',si,ti}]);}};
   walkStops().forEach(([s,si,ti])=>{if(norm(s.n).includes(n))addW(si,ti);});
-  // Missions: one row for a hit on the name, unlock, reward or note; else a row for each step that matches.
-  if(n.length>=2)MIS.forEach(x=>{const nk=t=>!!t&&norm(t).includes(n);if([x.n,x.u,x.r,x.note].some(nk))ws.push([{k:'ms',m:x.m}]);else x.s.forEach(c=>{if(nk(c.t)||nk(c.n))ws.push([{k:'ms',m:x.m,c:c.k}]);});});
   if(cur==='w'){pl.forEach(([a])=>visits(a).forEach(v=>addW(...v)));out.l=pl.filter(([a])=>!visits(a).length).map(([a,o])=>[{k:'l',v:a},o]);out.w=ws;}
-  else{const cov=new Set(pl.flatMap(([a])=>visits(a).map(v=>v.join('.'))));out.l=pl.map(([a,o])=>[{k:'l',v:a},o]);out.w=ws.filter(([o])=>o.k!=='w'||!cov.has(o.si+'.'+o.ti));}
+  else{const cov=new Set(pl.flatMap(([a])=>visits(a).map(v=>v.join('.'))));out.l=pl.map(([a,o])=>[{k:'l',v:a},o]);out.w=ws.filter(([o])=>!cov.has(o.si+'.'+o.ti));}
+  // Missions, after the stops: one row for a hit on the name, unlock, reward or note; else a row for each step that matches.
+  if(n.length>=2)MIS.forEach(x=>{const nk=t=>!!t&&norm(t).includes(n);if([x.n,x.u,x.r,x.note].some(nk))out.w.push([{k:'ms',m:x.m}]);else x.s.forEach(c=>{if(nk(c.t)||nk(c.n))out.w.push([{k:'ms',m:x.m,c:c.k}]);});});
   out.t=TRS.filter(t=>!rivalHidden(t)&&norm(t.n).includes(n)).map(t=>[{k:'t',v:t.k}]);
   out.i=(D.IT||[]).flatMap((sec,si)=>sec.r.map((r,ri)=>[r,ri]).filter(([r])=>norm(r[0]).includes(n)).map(([r,ri])=>[{k:'i',si,ri}]));
   return out;},
