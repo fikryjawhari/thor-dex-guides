@@ -198,7 +198,8 @@ class Wiki:
         for index in range(1, len(parts) - 1, 2):
             heading = re.split(r'\s+[–-]\s+', text(parts[index]))
             tables = re.findall(r'<table\b.*?</table>', parts[index + 1], re.S)
-            rows = next((rows for table in tables if (rows := _rows(table)) and rows[0] == ['Date', 'Time']), [])
+            rows = next((rows for table in tables if (rows := [row for row in _rows(table) if any(row)])
+                         and rows[0] == ['Date', 'Time']), [])
             if len(heading) == 2 and rows and rows[0] == ['Date', 'Time']:
                 out.append((*heading, [tuple(row) for row in rows[1:]]))
         return out
