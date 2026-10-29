@@ -203,3 +203,17 @@ class Wiki:
             if len(heading) == 2 and rows and rows[0] == ['Date', 'Time']:
                 out.append((*heading, [tuple(row) for row in rows[1:]]))
         return out
+
+
+def mystery_gifts(wiki):
+    """(password, reward, held item) rows of the Mystery Gift Codes page."""
+    page = next(p for p in wiki.all if p['link'].endswith('/extras/mystery-gift-codes/'))
+    rows = [row for table in re.findall(r'<table\b.*?</table>', page['html'], re.S) for row in _rows(table)]
+    return [tuple(row) for row in rows if len(row) == 3 and row[0] != 'Password']
+
+
+def legendaries(wiki):
+    """(species, place and condition) rows of the Legendary Pokémon page."""
+    page = next(p for p in wiki.all if p['link'].endswith('/extras/legendary-pokemon/'))
+    rows = [row for table in re.findall(r'<table\b.*?</table>', page['html'], re.S) for row in _rows(table)]
+    return [(row[0], row[1]) for row in rows if len(row) >= 2 and row[0] != 'Pokémon']

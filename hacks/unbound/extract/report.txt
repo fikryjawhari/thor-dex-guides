@@ -19,7 +19,142 @@ Mega Stones: 49 placed from the wiki; Megas with no stone page (1): rayquaza_meg
 type chart vs the Gen VI+ chart: agrees
 tutors: wiki Move Tutors page 29 tutors / 152 moves; tutor moves in species lists 157; listed but no wiki tutor teaches them (11): Cut, Dazzling Gleam, Dive, Draining Kiss, Fly, Power-Up Punch, Rock Climb, Rock Smash, Strength, Surf, Waterfall
   taught by a wiki tutor but in no species list (6): Draco Meteor, Dragon Ascent, Relic Song, Secret Sword, Steel Beam, Volt Tackle
-locs: not built yet (TODO: implement unbound locs extraction)
+locations: 69 areas, 63 with a tracker slot; {'dens': 32, 'doc legend matched': 78, 'doc special added': 22, 'doc special matched': 54, 'doc wild cells added': 88, 'doc wild matched': 1101, 'doc wild rows added': 52, 'legend page added': 40, 'legend page matched': 41, 'legend page other place': 4, 'mystery gifts': 34, 'raid rows': 462, 'swarms': 24, 'wiki other': 247, 'wiki slots summed': 1, 'wiki starter rows': 3, 'wiki wild': 1162}
+doc separator labels (floors / headings, not species): 76 kinds
+LOCATION SOURCE DIFFERENCES (78):
+Route 13 | Deoxys | Legendary page: Route 13 (post-game) Found in the area only accessible with Jirachi in your team; location pages: Route 5
+Great Desert | Entei | Legendary page: Roaming Acquirable after interacting with the portal in the Tomb of Borrius; location pages: Ruins of Void
+Great Desert | Magearna | Legendary page: Tomb of Borrius Part of the “Tomb Raider” side mission; location pages: Frozen Heights
+Great Desert | Raikou | Legendary page: Roaming Acquirable after interacting with the portal in the Tomb of Borrius; location pages: Ruins of Void
+Route 7 | Indeedee (Female) | Doc says DexNav | M19
+Icy Hole | Eiscue | Doc says DexNav | AG10
+Dehara City | Golbat | Doc says Grass/cave (Rift Cave: 1F, B1F - B2F) | BI3 BI12
+Dehara City | Haunter | Doc says Grass/cave (Rift Cave: 1F, B1F - B2F) | BI4 BI13
+Dehara City | Duskull | Doc says Grass/cave (Rift Cave: 1F) | BI5
+Dehara City | Golett | Doc says Grass/cave (Rift Cave: 1F) | BI6
+Dehara City | Bronzor | Doc says Grass/cave (Rift Cave: 1F) | BI7
+Dehara City | Chimecho | Doc says Grass/cave (Rift Cave: 1F, B1F - B2F) | BI8 BI17
+Dehara City | Bronzong | Doc says Grass/cave (Rift Cave: 1F, B1F - B2F) | BI9 BI16
+Dehara City | Dusclops | Doc says Grass/cave (Rift Cave: 1F, B1F - B2F) | BI10 BI14
+Dehara City | Golurk | Doc says Grass/cave (Rift Cave: B1F - B2F) | BI15
+Dehara City | Sinistea | Doc says DexNav (Rift Cave: B1F - B2F) | BI19
+Antisis Sewers | Galarian Weezing | Doc says DexNav | BM11
+Great Desert | Unown | Doc says Grass/cave (Tomb of Borrius: 1F, B4F, B3F, B2F, B1F, 1F (Main Room)) | BO4 BO5 BO6 BO7 BO10 BO11 BO12 BO13 BO14 BO17 BO18 BO19 BO20 BO21 BO24 BO25 BO26 BO27 BO28 BO31 BO32 BO33 BO34 BO35 BO38 BO39 BO40
+Great Desert | Sigilyph | Doc says Grass/cave (Tomb of Borrius: 1F, B4F, B3F, B2F, B1F) | BO8 BO15 BO22 BO29 BO36
+Victory Road | Magcargo | Doc says Grass/cave (B1F) | CC12
+Victory Road | Salazzle | Doc says Grass/cave (B1F) | CC13
+Victory Road | Camerupt | Doc says Grass/cave (B1F) | CC14
+Victory Road | Excadrill | Doc says Grass/cave (B1F) | CC16
+Victory Road | Magmar | Doc says Grass/cave (B1F) | CC18
+Route 17 | Carvanha | Doc says Super Rod (Underwater) | AE27
+Route 17 | Sharpedo | Doc says Super Rod (Underwater) | AE28
+Route 18 | Kingdra | Doc says Super Rod | AG24
+Epidimy Town | Finneon | Doc says Surf | AO4
+Epidimy Town | Psyduck | Doc says Surf | AO5
+Epidimy Town | Lumineon | Doc says Surf | AO6
+Epidimy Town | Golduck | Doc says Surf | AO7
+Epidimy Town | Geodude | Doc says Rock Smash | AO23
+Epidimy Town | Graveler | Doc says Rock Smash | AO24
+Antisis City | Tentacool | Doc says Surf | AY4
+Antisis City | Pelipper | Doc says Surf | AY5
+Antisis City | Tentacruel | Doc says Surf | AY6
+Antisis City | Mantyke | Doc says Surf | AY7
+Antisis City | Magikarp | Doc says Old Rod | AY14
+Antisis City | Remoraid | Doc says Good Rod | AY16
+Antisis City | Horsea | Doc says Good Rod | AY17
+Antisis City | Octillery | Doc says Super Rod | AY19
+Antisis City | Seadra | Doc says Super Rod | AY20
+Antisis City | Gyarados | Doc says Super Rod | AY21
+Polder Town | Palpitoad | Doc says Surf | BC4
+Icy Hole | Cloyster | Doc says Super Rod | BE21
+Thundercap Mountain | Binacle | Doc says Rock Smash (Outside) | BW27
+Thundercap Mountain | Corsola | Doc says Rock Smash (Outside) | BW29
+Thundercap Mountain | Krabby | Doc says Rock Smash (Outside) | BW30
+Thundercap Mountain | Kingler | Doc says Rock Smash (Outside) | BW31
+Great Desert | Graveler | Doc says Rock Smash (Tomb of Borrius) | CE21
+Great Desert | Shuckle | Doc says Rock Smash (Tomb of Borrius) | CE22
+Redwood Forest | Drizzile | Doc says DexNav | CQ7
+Cube Corp. | Jellicent | Doc says Surf | CS4 CS5
+Cube Corp. | Dracovish | Doc says DexNav | CS9
+Cube Corp. | Arctovish | Doc says DexNav | CS10
+Victory Road | Magcargo | Doc says Surf (B1F) | CU12
+Frozen Heights | Beldum | Doc says Gift: Rival's House; post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A4
+Frozen Heights | Gible | Doc says Gift: Rival's House; post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A4
+Frozen Heights | Larvitar | Doc says Gift: Rival's House; post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A4
+Shadow Base | Beldum | Doc says Static: post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A5
+Shadow Base | Gible | Doc says Static: post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A5
+Shadow Base | Larvitar | Doc says Static: post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A5
+KBT Expressway | Carbink | Doc says Static: Behind any collapsed doors; ADM; Carbink | Gift & Static Encounters!A12
+Fallshore City | Lombre | Doc says Static: Gym; Lombre (Daily); wiki: Auburn Waterway, Route 10 | Gift & Static Encounters!A17
+Dehara City | Pikachu (Flying) | Doc says Mission Reward: Complete the A Life of No Regrets mission; Flying Pikachu | Gift & Static Encounters!A23
+Dehara City | Voltorb | Doc says Static: Gym; Voltorb/Electrode (Daily) | Gift & Static Encounters!A25
+Dehara City | Electrode | Doc says Static: Gym; Voltorb/Electrode (Daily); wiki: Blizzard City | Gift & Static Encounters!A25
+Antisis City | Garbodor | Doc says Static: Trubbish/Garbodor; wiki: Fallshore City | Gift & Static Encounters!A33
+Route 17 | Sharpedo | Doc says Static: Underwater; Do the Shark Bait mission; Sharpedo; wiki: Fallshore City, Route 12, Route 14 | Gift & Static Encounters!A36
+Magnolia Town | Vivillon | Doc says Mission Reward: Complete the Butterfly Effect mission; Shiny Vivillon; wiki: Dresco Town, Fallshore City, Seaport City | Gift & Static Encounters!A45
+Redwood Forest | Snorlax | Doc says Static: post-game; Beat the League; Snorlax | Gift & Static Encounters!A47
+Redwood Forest | Zoroark | Doc says Static: post-game; Daily (After chasing the illusions); Zoroark | Gift & Static Encounters!A48
+Magnolia Town | Bulbasaur | Doc says Random Egg: Free egg one a day; Kanto Starters | Gift & Static Encounters!A49
+Magnolia Town | Charmander | Doc says Random Egg: Free egg one a day; Kanto Starters | Gift & Static Encounters!A49
+Magnolia Town | Squirtle | Doc says Random Egg: Free egg one a day; Kanto Starters | Gift & Static Encounters!A49
+Magnolia Town | Chespin | Doc says Egg: Free egg once a day; Kalos Starters | Gift & Static Encounters!A50
+Magnolia Town | Fennekin | Doc says Egg: Free egg once a day; Kalos Starters | Gift & Static Encounters!A50
+Magnolia Town | Froakie | Doc says Egg: Post-game; Froakie | Gift & Static Encounters!A51
+DOC WILD HELD ITEMS NOT IN P.hi (0):
+
+RHD MEMBERSHIP DIFFERENCES (52 areas; 40 species RHD only, 297 guide only):
+Route 1 [Route 1] | RHD only: minior_blue | guide only: minior
+Icicle Cave [Icicle Cave, Icicle Cave 1F + B1F, Icicle Cave 4F - 1F, Icicle Cave 4F (Secret Entrance), Icicle Cave4F (Outside)] | RHD only: sandshrew | guide only: magikarp, sandshrew_a, shuckle
+Route 2 [Route 2] | RHD only: krabby, roggenrola | guide only: basculin, magikarp, pelipper, pikipek, starmie
+Dresco Town [Dresco Town] | RHD only: - | guide only: basculin, magikarp, pelipper, starmie
+Route 3 [Route 3] | RHD only: - | guide only: kingler, magikarp, pelipper, wingull
+Flower Paradise [Flower Paradise, Flower Paradise (Blue Flowers), Flower Paradise (Blue-Yellow Flowers), Flower Paradise (Pink Flowers), Flower Paradise (Pink-Purple Flowers), Flower Paradise (Red Flowers)] | RHD only: - | guide only: oricorio_p, oricorio_s, oricorio_y
+Grim Woods [Grim Woods] | RHD only: pumpkaboo_m | guide only: caterpie, magikarp, pumpkaboo, surskit
+Route 4 [Route 4] | RHD only: - | guide only: basculin, corphish, magikarp, pelipper, starly, starmie
+Cinder Volcano [Cinder Volcano, Cinder Volcano - Shadow Basement] | RHD only: camerupt, excadrill, heatmor, magmar | guide only: shuckle
+Route 5 [Route 5] | RHD only: - | guide only: basculin, corphish, ditto, lickitung, magikarp, pelipper, starmie
+Valley Cave [Valley Cave, Valley Cave - B1F] | RHD only: - | guide only: geodude, lumineon, magikarp
+Route 6 [Route 6] | RHD only: - | guide only: bunnelby, goldeen, magikarp, pelipper
+Route 7 [Route 7] | RHD only: raticate | guide only: goldeen, magikarp, pelipper, raticate_a, rattata_a, yungoos
+Frost Mountain [Frost Mountain] | RHD only: - | guide only: magikarp, roggenrola, sealeo, spheal
+Route 8 [Route 8] | RHD only: minior_blue | guide only: minior, snover
+Frozen Forest [Frozen Forest] | RHD only: - | guide only: snover
+Fallshore City [Fallshore City] | RHD only: - | guide only: magikarp, pelipper, remoraid, sharpedo
+Route 11 [Route 11] | RHD only: - | guide only: barboach, basculin, basculin_blue, magikarp, pelipper, swablu
+Epidimy Town [Epidimy Town] | RHD only: - | guide only: barboach, basculin, golduck, graveler, magikarp, pelipper, tentacool, tentacruel
+Route 10 [Route 10] | RHD only: - | guide only: bruxish, ditto, lotad, magikarp, surskit
+Tehl Town / Underground Pass [Tehl Town] | RHD only: - | guide only: bruxish, golduck, magikarp, marill
+Route 9 [Route 9 + Autl Woods] | RHD only: - | guide only: audino, bruxish, magikarp, spearow, surskit
+Thundercap Mountain [Thundercap Mt., Thundercap Mt. - 2F + 4F, Thundercap Mt. - 2F (Small Floor), Thundercap Mt. - 3F, Thundercap Mt. - Inside, Thundercap Mt. - Outside] | RHD only: - | guide only: binacle, corsola, geodude_a, magikarp, stunfisk
+Cliff Cave [Cliff Cave] | RHD only: - | guide only: geodude_a, golbat, graveler_a
+Tarmigan Town [Tarmigan Town] | RHD only: - | guide only: magikarp, poliwag, psyduck, slowpoke
+Route 12 [Route 12] | RHD only: - | guide only: carvanha, fletchling, magikarp, pelipper
+Dehara City [Dehara City, Rift Cave, Rift Cave - B1F - B2F] | RHD only: - | guide only: magikarp, pelipper, poliwhirl
+Ruins of Void [Ruins of Void, Ruins of Void - B1F - B2F] | RHD only: luvdisc | guide only: geodude, golduck, gyarados, horsea, kingdra, magikarp, pelipper, seadra
+Route 13 [Route 13] | RHD only: - | guide only: binacle, clauncher, corsola, geodude, magikarp, pelipper
+Route 14 [Route 14, Route 14 - East, Route 14 - Small Island, Route 14 - West] | RHD only: - | guide only: binacle, chinchou, clamperl, corsola, lanturn, magikarp, mareanie, pelipper, seadra, toxapex
+Auburn Waterway [Auburn Waterway] | RHD only: - | guide only: bruxish, ditto, lotad, magikarp, surskit
+Lost Tunnel [Lost Tunnel] | RHD only: - | guide only: diglett, dugtrio, geodude
+Great Desert [Great Desert, Tomb of Borrius] | RHD only: geodude | guide only: graveler, sandslash, shuckle, unown
+Gurun Town [Gurun Town] | RHD only: - | guide only: corsola, magikarp, pelipper, remoraid, seadra
+Vivill Woods [Vivill Woods] | RHD only: - | guide only: caterpie, foongus, magikarp, morelull, surskit, swadloon
+Vivill Town [Vivill Town] | RHD only: - | guide only: basculin, cloyster, corsola, horsea, magikarp, pelipper, remoraid, seadra
+Vivill Warehouse [Vivill Warehouse] | RHD only: - | guide only: basculin, dhelmise, horsea, magikarp
+Route 15 [Route 15] | RHD only: - | guide only: basculin, cloyster, horsea, magikarp, pelipper, seadra
+Route 16 [Route 16] | RHD only: - | guide only: binacle, chinchou, clamperl, corsola, geodude, kingler, krabby, lanturn, magikarp, pelipper, seadra, tangela
+Antisis City [Antisis City] | RHD only: - | guide only: magikarp, pelipper, remoraid, seadra
+Antisis Sewers [Antisis Sewers] | RHD only: - | guide only: raticate, whirlipede
+Icy Hole [Ice Hole, Icy Hole] | RHD only: - | guide only: golbat, magikarp, seel
+Route 17 [Route 17] | RHD only: pidgeot | guide only: binacle, chinchou, clamperl, corsola, kingler, krabby, lanturn, lapras, magikarp, remoraid, seadra, skiploom
+Seaport City [Seaport City] | RHD only: - | guide only: corsola, lapras, magikarp, pelipper, remoraid, seadra
+Polder Town [Polder Town, Safari Zone, Safari Zone - Hard, Safari Zone - Insane, Safari Zone - Medium] | RHD only: blitzle, bounsweet, diglett_a, exeggcute, helioptile, kangaskhan, meowth_a, minun, mudkip, natu, plusle, rhyhorn, skitty, spinda, steenee, tauros, torchic, treecko, wobbuffet, xatu, zebstrika | guide only: gastrodon, magikarp, palpitoad, politoed, poliwhirl, quagsire, sliggoo, stunfisk
+Cootes Bog [Cootes Bog] | RHD only: - | guide only: carnivine, croagunk, croconaw, gastrodon, magikarp, politoed, poliwhirl, toxicroak
+Crystal Peak [Crystal Peak, Crystal Peak - 1F, Crystal Peak - Outside] | RHD only: - | guide only: dragonair, finneon, gastrodon, loudred, lumineon, magikarp, psyduck, qwilfish, skarmory, zweilous
+Magnolia Fields [Magnolia Fields] | RHD only: - | guide only: frillish, furfrou, gogoat, jellicent, magikarp, miltank, mudsdale, noctowl, pelipper, quilava, qwilfish, tauros, tranquill
+Redwood Forest [Redwood Forest, Redwood Forest - Headbutt Trees] | RHD only: - | guide only: komala, ledian, magikarp, oranguru, passimian, psyduck, ursaring, vigoroth
+Route 18 [Route 18] | RHD only: - | guide only: bayleef, binacle, bouffalant, corsola, farfetchd, kingdra, magikarp, pelipper, persian, remoraid, seadra, skuntank, sudowoodo
+Victory Road [Victory Road - 1F, Victory Road - (1F - B1F - 2F), Victory Road - 2F, Victory Road - 3F, Victory Road - 4F + Kyurem's Cave, Victory Road - B1F, Victory Road - Kyurem's Cave, Victory Road - Maze Area, Victory Road - Snowy Area] | RHD only: drakloak, minior_blue | guide only: azumarill, basculin, bruxish, chansey, dewgong, durant, finneon, floatzel, hakamo_o, jigglypuff, lapras, lumineon, lurantis, magikarp, marill, minior, psyduck, roselia, seel
+Cube Corp. [Cube Corp.] | RHD only: gyarados, wailmer, wailord | guide only: ditto, jellicent, magikarp, pelipper, tentacool
 trainers: not built yet (TODO: implement unbound trainers extraction)
 items: not built yet (TODO: implement unbound items extraction)
 walk: not built yet (TODO: implement unbound walk extraction)
