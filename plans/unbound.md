@@ -108,6 +108,12 @@ User's answers (2026-10-29):
   with the player (evolution line + minimum level). Workbook-only trainers are reported (notes.md), not added. The
   15 name-only rows are listed with name and place and "team unknown" (or the workbook's team where it has one).
   The "310" in the session prompt is the wiki's 309 named rows.
+- **Bosses at several caps (2026-10-29, after unit 6 round 3):** where the Expert sheet's comments give a boss's
+  levels at later caps too, the card shows one short line ("Lv 61 at Benjamin cap · 75 at E4 cap") **and** the
+  levels are relative to the cap like EI's (`r` = level − cap, default `t.cap` = the fight's split cap; the card's
+  "Your level" box sets another cap, saved per trainer key in `LS.cap`, and the calc follows it). Where a mon's
+  levels at the given caps aren't cap + one offset, keep absolute levels and note it.
+- **Battle Frontier: left out** (no fixed teams; user 2026-10-29). Postgame box: Battleground and Title Defense.
 - **Missions (7a, 2026-10-29):** bordered mission card, auto-close on the final tick (`plans/unbound-missions.md`).
 - **Mode:** hack.json has no mode field; "Expert" goes in the trainer wording (`txt`), not a new key.
 
