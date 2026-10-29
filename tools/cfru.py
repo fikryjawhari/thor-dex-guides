@@ -377,3 +377,60 @@ def define_slug(define, forms_):
         if cand in forms_:
             return cand
     return None
+
+
+# ---- save ID tables (data.json GID) from Skeli's Unbound-Cloud repo ---------------------------------------------------
+GROWTH = ['GROWTH_MEDIUM_FAST', 'GROWTH_ERRATIC', 'GROWTH_FLUCTUATING', 'GROWTH_MEDIUM_SLOW', 'GROWTH_FAST', 'GROWTH_SLOW']
+
+
+def save_ids(cloud, profile, species_id, move_name, P, M):
+    """GID {sp, mv, it, gr} for a CFRU hack from an Unbound-Cloud checkout (cloud: its root; profile: the folder under
+    server/src/data/, 'unbound_2_1' for Unbound 2.1). Lists indexed by game id, None where nothing maps:
+    sp -> P id (species_id(define, display name)), mv -> M index (move_name(display name)), it -> item display name,
+    gr -> growth rate (GROWTH order). No ab: a CFRU box Pokémon stores its ability slot, not an ability id (the reader
+    returns abs). Returns (GID, notes) with notes {kind: [unmapped "id DEFINE name"]}."""
+    import json
+    import os
+    srv = os.path.join(cloud, 'server', 'src', 'data')
+    cli = os.path.join(cloud, 'src', 'data')
+    load = lambda *p: json.load(open(os.path.join(*p), encoding='utf-8'))
+    species, moves, items = (load(srv, profile, f + '.json') for f in ('Species', 'Moves', 'Items'))
+    stats = load(srv, profile, 'BaseStats.json')
+    sn, alt, mn, itn = (load(cli, f + '.json') for f in ('SpeciesNames', 'SpeciesNamesAlts', 'MoveNames', 'ItemNames'))
+    ids, mi = {p['id'] for p in P}, {n: i for i, n in enumerate(M)}
+    notes = {'sp': [], 'mv': [], 'it': []}
+
+    def table(src):
+        return [None] * (max(int(k) for k in src) + 1)
+    sp, gr = table(species), table(species)
+    for k, define in species.items():
+        if define in ('SPECIES_NONE', 'SPECIES_EGG'):
+            continue
+        name = alt.get(define) or sn.get(define, define)
+        target = species_id(define, name)
+        if target in ids:
+            sp[int(k)] = target
+        else:
+            notes['sp'].append('%s %s %s' % (k, define, name))
+        g = (stats.get(define) or {}).get('growthRate')
+        gr[int(k)] = GROWTH.index(g) if g in GROWTH else (0 if target in ids else None)
+    mv = table(moves)
+    for k, define in moves.items():
+        if define == 'MOVE_NONE':
+            continue
+        n = move_name(mn.get(define, define))
+        if n in mi:
+            mv[int(k)] = mi[n]
+        else:
+            notes['mv'].append('%s %s %s' % (k, define, mn.get(define)))
+    it = table(items)
+    for k, define in items.items():
+        if define == 'ITEM_NONE':
+            continue
+        raw = itn.get(define)
+        name = raw.get('name') if isinstance(raw, dict) else raw
+        if name:
+            it[int(k)] = name
+        else:
+            notes['it'].append('%s %s' % (k, define))
+    return {'sp': sp, 'mv': mv, 'it': it, 'gr': gr}, notes

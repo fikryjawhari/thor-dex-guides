@@ -126,6 +126,21 @@ def main():
     else:
         print('game table: not checked (no .src/repos/**/unbound_2_1_constants.js yet; unit 1 pins it)')
 
+    # ---- GID: every species a save can hold reached, every move mapped ----
+    G = D.get('GID')
+    if G:
+        reached = {x for x in G['sp'] if x}
+        unreached = sorted(i for i, p in ids.items() if p['g'] != 1 and i not in reached)
+        check(unreached == EXPECTED['not in game table'], 'P entries no save id reaches: %s' % unreached)
+        check(all(x is None or 0 <= x < nm for x in G['mv']) and sum(1 for x in G['mv'] if x is not None) == len(G['mv']) - 1,
+              'GID mv: a move id unmapped or out of range')
+        check(all((x is None) == (y is None) for x, y in zip(G['sp'], G['gr'])) and all(x in range(6) for x in G['gr'] if x is not None),
+              'GID gr: a species id without a growth rate')
+        print('GID: sp %d ids -> %d species, mv %d, it %d' % (sum(1 for x in G['sp'] if x), len(reached),
+                                                           sum(1 for x in G['mv'] if x is not None), sum(1 for x in G['it'] if x)))
+    else:
+        print('GID: not in data.json (no Unbound-Cloud checkout)')
+
     print('dex: P %d (%d mirror pages: %d merged, %d dropped), M %d, AB %d, wiki differences %s'
           % (len(P), len(FORMS), merged, sum(dropped.values()), len(M), len(AB), dict(count)))
     if FAIL:
