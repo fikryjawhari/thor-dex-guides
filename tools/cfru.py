@@ -413,6 +413,7 @@ def save_ids(cloud, profile, species_id, move_name, P, M):
         else:
             notes['sp'].append('%s %s %s' % (k, define, name))
         g = (stats.get(define) or {}).get('growthRate')
+        # every species the game has keeps its growth rate (boxed levels), even one the guide doesn't show (pruned)
         gr[int(k)] = GROWTH.index(g) if g in GROWTH else (0 if target in ids else None)
     mv = table(moves)
     for k, define in moves.items():

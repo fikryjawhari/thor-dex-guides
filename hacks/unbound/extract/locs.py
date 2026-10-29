@@ -276,6 +276,12 @@ def species_note(name):
     return '; '.join(word for word in ('Gigantamax', 'Shiny') if word in name)
 
 
+# Forms you get with their base species (a female, a size, Toxel's nature, Minior's core outside battle, Wishiwashi's
+# School in battle): no location lists them, so they follow the base (the prune would remove them otherwise).
+VARIANTS = {'frillish_f', 'unfezant_f', 'pumpkaboo_l', 'pumpkaboo_m', 'gourgeist_l', 'gourgeist_m', 'toxtricity_low_key',
+            'minior_blue', 'wishiwashi_s'}
+
+
 def build(data):
     pages = {page.title: page for page in WIKI.locations()}
     if set(pages) != set(ORDER):
@@ -495,7 +501,8 @@ def build(data):
         held += ['%s: %s' % (by_id[species_id]['n'], value) for value in values
                  if not any(key(value) in key(existing) for existing in by_id[species_id].get('hi', []))]
 
-    # Availability (EI's rule): anything with a row, plus evolution families both ways; a form change follows its base
+    # Availability (EI's rule): anything with a row, plus evolution families both ways; a form change follows its base,
+    # and so do the variants no location names (gender, size, nature, Minior's core, Wishiwashi's school: VARIANTS)
     family = {p['id']: [t for _, t in p.get('et', []) + p.get('ef', [])] for p in data['P']}
     found = {p['id'] for p in data['P'] if p['w']}
     queue = list(found)
@@ -507,8 +514,8 @@ def build(data):
     for p in data['P']:
         if p['g'] == 1:
             continue
-        base = next((x for x in data['P'] if x['dex'] == p['dex'] and not x.get('fc') and x['g'] != 1), None) \
-            if p.get('fc') else None
+        base = next((x for x in data['P'] if x['dex'] == p['dex'] and not x.get('fc') and x['g'] != 1
+                     and x['id'] not in VARIANTS), None) if p.get('fc') or p['id'] in VARIANTS else None
         p['g'] = 0 if p['id'] in found or (base and base['id'] in found) else 3
 
     for area in data['AR']:

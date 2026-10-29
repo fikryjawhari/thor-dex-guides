@@ -27,8 +27,14 @@ from common import FORMS, H, RD, WIKI, cfru, key, pid  # noqa: E402
 EXPECTED = {'wiki types': 0, 'wiki abilities': 16, 'dropped': 38, 'merged': 116, 'no stone': ['rayquaza_mega'],
             'no description': [], 'not in game table': ['shadow_warrior'],
             'no save id': ['aegislash_blade', 'darmanitan_g_zen', 'darmanitan_zen', 'eiscue_noice', 'greninja_ash',
-                           'meloetta_pirouette', 'necrozma_ultra', 'shadow_warrior', 'zacian_crowned',
-                           'zamazenta_crowned', 'zygarde_complete']}    # battle-only forms read as their base (gid.py)
+                           'meloetta_pirouette', 'necrozma_ultra', 'shadow_warrior', 'zygarde_complete'],
+            # prune.py (EI's rule): the species no source places (notes.md -> Locations, Availability)
+            'pruned': ['calyrex', 'calyrex_ice_rider', 'calyrex_shadow_rider', 'cubone_a', 'eternatus', 'glastrier', 'kubfu',
+                       'pikachu_belle', 'pikachu_cosplay', 'pikachu_libre', 'pikachu_phd', 'pikachu_pop_star',
+                       'pikachu_rock_star', 'spectrier', 'urshifu', 'urshifu_rapid', 'zacian', 'zacian_crowned',
+                       'zamazenta', 'zamazenta_crowned', 'zygarde_10'],
+            'pruned abilities': ['As One (Glastrier)', 'As One (Spectrier)', 'Chilling Neigh', 'Dauntless Shield',
+                                 'Grim Neigh']}    # battle-only forms read as their base (gid.py)
 LOC_EXPECTED = {'areas': 69, 'slots': 63, 'pages': 67, 'rated pages': 54, 'rated rows': 1161, 'dens': 32,
                 'raid rows': 462, 'doc wild rows added': 52, 'doc special added': 21, 'legend page added': 40,
                 'mystery gifts': 34, 'rhd areas': 52, 'rhd only': 40, 'guide only': 297}
@@ -59,11 +65,11 @@ def main():
         into = cfru.merge_into(f, FORMS, S)
         if into:
             merged += 1
-            check(pid(into) in ids, 'merged page %s: target %s not in P' % (slug, pid(into)))
+            check(pid(into) in ids or pid(into) in EXPECTED['pruned'], 'merged page %s: target %s not in P' % (slug, pid(into)))
         else:
             placed += 1
-            check(pid(slug) in ids, 'mirror page %s not in P' % slug)
-    check(placed == len(P), 'P %d entries, mirror pages placed %d' % (len(P), placed))
+            check(pid(slug) in ids or pid(slug) in EXPECTED['pruned'], 'mirror page %s not in P' % slug)
+    check(placed == len(P) + len(EXPECTED['pruned']), 'P %d entries, mirror pages placed %d' % (len(P), placed))
     check(sum(dropped.values()) == EXPECTED['dropped'], 'dropped %s' % dict(dropped))
     check(merged == EXPECTED['merged'], 'merged %d' % merged)
 
@@ -72,7 +78,7 @@ def main():
     names = {cfru.official(m['n']) for m in raw if not cfru.move_kind(m['n'])}
     check(set(M) == names and len(M) == len(names), 'M %d, moves.json gives %d official names' % (len(M), len(names)))
     used = {AB[i][0] for p in P for i in p['a'] + ([p['ha']] if p['ha'] >= 0 else [])}
-    check(used == {a[0] for a in AB}, 'AB has abilities no species has: %s' % ({a[0] for a in AB} - used))
+    check({a[0] for a in AB} - used == set(EXPECTED['pruned abilities']), 'AB has abilities no species has: %s' % ({a[0] for a in AB} - used))
     nodesc = sorted(a[0] for a in AB if not a[1])
     check(nodesc == EXPECTED['no description'], 'abilities without a description: %s' % nodesc)
 
@@ -143,7 +149,7 @@ def main():
         check(unreached == EXPECTED['no save id'], 'P entries no save id reaches: %s' % unreached)
         check(all(x is None or 0 <= x < nm for x in G['mv']) and sum(1 for x in G['mv'] if x is not None) == len(G['mv']) - 1,
               'GID mv: a move id unmapped or out of range')
-        check(all((x is None) == (y is None) for x, y in zip(G['sp'], G['gr'])) and all(x in range(6) for x in G['gr'] if x is not None),
+        check(all(y is not None for x, y in zip(G['sp'], G['gr']) if x is not None) and all(x in range(6) for x in G['gr'] if x is not None),
               'GID gr: a species id without a growth rate')
         print('GID: sp %d ids -> %d species, mv %d, it %d' % (sum(1 for x in G['sp'] if x), len(reached),
                                                            sum(1 for x in G['mv'] if x is not None), sum(1 for x in G['it'] if x)))

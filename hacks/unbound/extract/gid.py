@@ -41,6 +41,7 @@ def build(D):
         return
     gid, notes = cfru.save_ids(cloud, PROFILE, species_id, lambda n: move(n), D['P'], D['M'])
     gid['it'] = [GAME_ITEMS.get(n, n) if n else n for n in gid['it']]     # the Items page's names (items.py)
+    # Species the prune removed (prune.py) are not in P: save_ids maps them to nothing, so an import skips them.
     D['GID'] = gid
     used = {x for x in gid['sp'] if x}
     report('GID (Unbound-Cloud %s): sp %d ids (%d P entries reached, %d not: %s), mv %d ids, it %d ids, gr %d'

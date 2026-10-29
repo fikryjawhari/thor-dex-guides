@@ -131,10 +131,12 @@ says"); the RomHackDex location pages only a membership report. No source has wi
   Pumpkaboo Average (form choices), Route 7 Raticate (the wiki: Alolan), and a few single rows. Not added.
 - **Names:** "Balloon Pikachu" (the wiki), "Flying Pikachu" / "Surfing Pikachu" are Pikachu (Flying) / (Surfing) here (`locs.NAME_FIX`;
   `common.location_aliases` agrees), "Indeedee♀️" is Indeedee (Female).
-- **Availability (P.g):** EI's rule (any row, plus evolution families both ways; a form change follows its base): 30
-  not found: Pikachu's five cosplay forms and Cosplay, Alolan Cubone, Unfezant / Frillish female, Pumpkaboo / Gourgeist
-  Large and Average, Zygarde 10%, Wishiwashi School, Minior (Core), Toxtricity Low Key, Zacian / Zamazenta (both forms),
-  Eternatus, Kubfu, both Urshifu, Glastrier, Spectrier and the three Calyrex.
+- **Availability (P.g):** EI's rule (any row, plus evolution families both ways; a form change follows its base) and
+  `locs.VARIANTS` (female Frillish / Unfezant, Pumpkaboo / Gourgeist sizes, Toxtricity Low Key, Minior's core,
+  Wishiwashi School follow their base: no location names them). 21 not found, and **pruned** (`prune.py`, EI's rule;
+  the user's call 2026-10-29): Pikachu's five cosplay forms and Cosplay, Alolan Cubone, Zygarde 10%, Zacian / Zamazenta
+  (both forms), Eternatus, Kubfu, both Urshifu, Glastrier, Spectrier and the three Calyrex. A save holding one imports
+  without it (GID maps it to nothing).
 
 ### Items
 

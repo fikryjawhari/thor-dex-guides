@@ -128,6 +128,12 @@ function compare(save, where, m, other, who, rawSpecies) {
     explain(save, "the game lists one ability in both slots, the guide once: same ability, slot 0 in cfru.js", `${where} ${who} ${cloudSpecies[m.sp]} ${stats.ability1}`);
     other = {...other, abs: m.abs};
   }
+  // a species the guide doesn't have (pruned): the import skips the Pokémon, and the reader can't apply the guide's
+  // ability-slot fallback to it
+  if (m.abs !== other.abs && G.sp[m.sp] == null) {
+    explain(save, "species not in the guide (pruned): the import skips it; no ability-slot fallback without the guide's entry", `${where} ${who} ${cloudSpecies[m.sp]} slot ${other.abs} -> ${m.abs}`);
+    other = {...other, abs: m.abs};
+  }
   for (const f of ['lv', 'nat', 'abs', 'it', 'mv', 'iv', 'ev'])
     if (!same(m[f], other[f])) miss(save, `${where} ${f} ${JSON.stringify(m[f])} vs ${who} ${JSON.stringify(other[f])}`);
 }
