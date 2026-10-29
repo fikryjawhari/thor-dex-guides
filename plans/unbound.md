@@ -159,7 +159,8 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
   `Starter choice` encounter: add Gible / Beldum / Larvitar ones (named as P names them), or the rival cards can't
   be filtered. **Unit 8:** IV source = hzla Expert (all 31s) on 379 slots; no IVs on 60 (58 sheet only + Route 9
   Shadow Warrior pair), no EVs on the 4 partner Vaporeon (no speed shown, settled). Mega holders on the cards
-  (`a0` → `a`; random pre-Mega in `ao`), no Z-Crystals in the sheet; `au` carries the Boss Wild boosts (Omniboost =
+  (`a0` → `a`; random pre-Mega in `ao`); 10 Z-Crystal holders, all postgame (Ryuzoji / Kenlawa Mimikium Z, Title
+  Defense Zeph Decidium Z, Battleground Vega / Alice / Mel / Galavan / Big Mo / Tessy / Benjamin); `au` carries the Boss Wild boosts (Omniboost =
   all +1); "Raid Shields" is text only. Field review list: Fog, Tailwind for Flying-types, Magnet Rise, Trick Room for
   Weight, Permanent Heavy Rain, Vicious Sandstorm (11 records); Negative Energy, Shadowy Veil, Pixies, Rainbow Battle,
   Inverse / Camomons / Sky / Dynamax battles are tags with no field record yet. Ordinary trainers have no moves / IVs /
