@@ -489,6 +489,22 @@ def build(data):
         held += ['%s: %s' % (by_id[species_id]['n'], value) for value in values
                  if not any(key(value) in key(existing) for existing in by_id[species_id].get('hi', []))]
 
+    # Availability (EI's rule): anything with a row, plus evolution families both ways; a form change follows its base
+    family = {p['id']: [t for _, t in p.get('et', []) + p.get('ef', [])] for p in data['P']}
+    found = {p['id'] for p in data['P'] if p['w']}
+    queue = list(found)
+    while queue:
+        for target in family[queue.pop()]:
+            if target not in found:
+                found.add(target)
+                queue.append(target)
+    for p in data['P']:
+        if p['g'] == 1:
+            continue
+        base = next((x for x in data['P'] if x['dex'] == p['dex'] and not x.get('fc') and x['g'] != 1), None) \
+            if p.get('fc') else None
+        p['g'] = 0 if p['id'] in found or (base and base['id'] in found) else 3
+
     for area in data['AR']:
         if not any(row[0] == area['l'][0] for species in data['P'] for row in species['w']) \
                 or area['n'] == GIFT_AREA:
@@ -498,6 +514,7 @@ def build(data):
     report('locations: %d areas, %d with a tracker slot; %s' % (
         len(data['AR']), sum(1 for a in data['AR'] if not a.get('ns')), dict(sorted(counts.items()))))
     report('doc separator labels (floors / headings, not species): %d kinds' % len(labels))
+    report('NOT FOUND (%d): %s' % (sum(p['g'] == 3 for p in data['P']), ', '.join(p['n'] for p in data['P'] if p['g'] == 3)))
     report('LOCATION SOURCE DIFFERENCES (%d):\n%s' % (len(differences), '\n'.join(differences)))
     report('DOC WILD HELD ITEMS NOT IN P.hi (%d):\n%s' % (len(held), '\n'.join(held)))
     rhd = membership_differences(data)

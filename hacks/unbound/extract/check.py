@@ -6,6 +6,9 @@ Usage: uv run python -I hacks/unbound/extract/check.py
 - Integrity: unique ids and names, valid move / ability indexes, evolutions both ways, every Mega's stone.
 - Wiki vs the dex: the number of species whose types / abilities the wiki gives differently (EXPECTED; notes.md lists
   them), so a source update that changes them is noticed.
+- Locations: every numeric-rate row of the wiki's location pages is a P.w row (area, method, rate, time) and the AR.es
+  sections reproduce the rates; every species resolves through sid; 67 location pages, 54 with rated rows, 32 raid
+  dens, one tracker slot per area; the doc / RomHackDex difference counts (LOC_EXPECTED; notes.md -> Locations).
 - Game tables: when hzla's unbound_2_1_constants.js (generated from Skeli's Unbound-Cloud) is under .src/repos/, every
   species' types, stats and abilities against it.
 """
@@ -23,6 +26,9 @@ from common import FORMS, H, RD, WIKI, cfru, key, pid  # noqa: E402
 
 EXPECTED = {'wiki types': 0, 'wiki abilities': 16, 'dropped': 38, 'merged': 116, 'no stone': ['rayquaza_mega'],
             'no description': [], 'not in game table': ['shadow_warrior']}
+LOC_EXPECTED = {'areas': 69, 'slots': 63, 'pages': 67, 'rated pages': 54, 'rated rows': 1161, 'dens': 32,
+                'raid rows': 462, 'doc wild rows added': 52, 'doc special added': 22, 'legend page added': 40,
+                'mystery gifts': 34, 'rhd areas': 52, 'rhd only': 40, 'guide only': 297}
 FAIL = []
 
 
@@ -141,6 +147,7 @@ def main():
     else:
         print('GID: not in data.json (no Unbound-Cloud checkout)')
 
+    check_locations(D, ids)
     print('dex: P %d (%d mirror pages: %d merged, %d dropped), M %d, AB %d, wiki differences %s'
           % (len(P), len(FORMS), merged, sum(dropped.values()), len(M), len(AB), dict(count)))
     if FAIL:
@@ -148,6 +155,62 @@ def main():
         return 1
     print('OK unbound extract-check')
     return 0
+
+
+def check_locations(D, ids):
+    import locs
+    LOC, AR = D['LOC'], D['AR']
+    got = collections.Counter()
+    check(len(AR) == len(LOC) and all(a['l'] == [i] and a['n'] == LOC[i] for i, a in enumerate(AR)),
+          'locations: an area is not one tracker slot (AR[i].l == [i])')
+    check(len(set(LOC)) == len(LOC), 'locations: duplicate area names')
+    got['areas'], got['slots'] = len(AR), sum(1 for a in AR if not a.get('ns'))
+    rows = collections.defaultdict(list)
+    for p in D['P']:
+        for w in p.get('w', []):
+            check(0 <= w[0] < len(LOC), 'locations: %s row outside LOC' % p['id'])
+            rows[(w[0], p['id'])].append(w)
+    pages = WIKI.locations()
+    got['pages'] = len(pages)
+    total, section_total = 0.0, 0.0
+    for page in pages:
+        area, rated = LOC.index(page.title), 0
+        for floor, name, method, when, rate in page.encounters:
+            if not re.fullmatch(r'\d+(?:\.\d+)?%', rate) or method == 'Starter':
+                continue
+            rated += 1
+            low = when.lower()
+            dn = 'day' if low in ('day',) else 'night' if low in ('night',) else ''
+            for sid_ in locs.species_ids(name):
+                check(sid_ in ids, 'locations: %s does not resolve' % name)
+                hit = [w for w in rows[(area, sid_)] if len(w) > 5 and w[5] == 1 and w[2] == rate
+                       and (locs.METHOD.get(method, method)) == w[1] and (not floor or floor in w[4])
+                       and (not dn or dn in w[4])]
+                check(hit, 'locations: %s / %s / %s %s %s %s not in P.w' % (page.title, floor, name, method, when, rate))
+            total += float(rate[:-1]) * (1 if dn else 2) * len(locs.species_ids(name))
+        got['rated rows'] += rated
+        got['rated pages'] += rated > 0
+    for a in AR:
+        for box in a.get('es', []):
+            for g in box['g']:
+                for x in g['rows']:
+                    check(x['p'] in ids, 'locations: section row %s unknown' % x['p'])
+                    section_total += x['r'][0] + x['r'][1]
+    check(abs(total - section_total) < 0.01, 'locations: section rates %.2f, wiki rates %.2f' % (section_total, total))
+    got['dens'] = len(WIKI.raid_dens())
+    got['raid rows'] = sum(1 for ws in rows.values() for w in ws if w[1] == 'Raid den')
+    wild = {'Grass/cave', 'Surf', 'DexNav', 'Old Rod', 'Good Rod', 'Super Rod', 'Rock Smash', 'Swarm', 'Headbutt'}
+    legend = {(LOC.index(area), method, how) for area, method, name, how in locs.legend_rows()}
+    for kind, test in (('doc wild rows added', lambda w: w[4].startswith('Doc says') and w[1] in wild),
+                       ('doc special added', lambda w: w[4].startswith('Doc says: ') and w[1] not in wild),
+                       ('legend page added', lambda w: (w[0], w[1], w[4]) in legend),
+                       ('mystery gifts', lambda w: w[1] == 'Mystery Gift' and w[4].startswith('Code '))):
+        got[kind] = sum(1 for ws in rows.values() for w in ws if test(w))
+    rhd = locs.membership_differences(D)
+    got['rhd areas'], got['rhd only'], got['guide only'] = len(rhd), sum(len(x[2]) for x in rhd), sum(len(x[3]) for x in rhd)
+    for k, v in LOC_EXPECTED.items():
+        check(got[k] == v, 'locations: %s %s, expected %s' % (k, got[k], v))
+    print('locations: %s' % dict(got))
 
 
 if __name__ == '__main__':

@@ -35,8 +35,8 @@
    "dmg": "unbounddmg"
   },
   "txt": {
-   "obt": "TODO: obt",
-   "nw": "TODO: nw",
+   "obt": "Obtainable only",
+   "nw": "Not found only",
    "g3": "TODO: g3",
    "conf": "TODO: conf",
    "tc": "TODO: tc",
@@ -46,7 +46,7 @@
    "mvsrc": "TODO: mvsrc",
    "mvsrcx": "TODO: mvsrcx",
    "absrc": "",
-   "ns": "TODO: ns",
+   "ns": "Not an encounter area, so it has no encounter slot here.",
    "walk": "TODO: walk",
    "capl": "TODO: capl",
    "capnone": "",

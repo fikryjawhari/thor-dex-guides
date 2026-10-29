@@ -21,6 +21,7 @@ tutors: wiki Move Tutors page 29 tutors / 152 moves; tutor moves in species list
   taught by a wiki tutor but in no species list (6): Draco Meteor, Dragon Ascent, Relic Song, Secret Sword, Steel Beam, Volt Tackle
 locations: 69 areas, 63 with a tracker slot; {'dens': 32, 'doc legend matched': 78, 'doc special added': 22, 'doc special matched': 54, 'doc wild cells added': 88, 'doc wild matched': 1101, 'doc wild rows added': 52, 'legend page added': 40, 'legend page matched': 41, 'legend page other place': 4, 'mystery gifts': 34, 'raid rows': 462, 'swarms': 24, 'wiki other': 247, 'wiki slots summed': 1, 'wiki starter rows': 3, 'wiki wild': 1162}
 doc separator labels (floors / headings, not species): 76 kinds
+NOT FOUND (30): Pikachu (Belle), Pikachu (Cosplay), Pikachu (Libre), Pikachu (PhD), Pikachu (Pop Star), Pikachu (Rock Star), Alolan Cubone, Unfezant (Female), Frillish (Female), Pumpkaboo (Large), Pumpkaboo (Average), Gourgeist (Large), Gourgeist (Average), Zygarde (10%), Wishiwashi (School), Minior (Core), Toxtricity (Low Key), Zacian, Zacian (Crowned), Zamazenta, Zamazenta (Crowned), Eternatus, Kubfu, Urshifu (Single Strike), Urshifu (Rapid Strike), Glastrier, Spectrier, Calyrex, Calyrex (Ice Rider), Calyrex (Shadow Rider)
 LOCATION SOURCE DIFFERENCES (78):
 Route 13 | Deoxys | Legendary page: Route 13 (post-game) Found in the area only accessible with Jirachi in your team; location pages: Route 5
 Great Desert | Entei | Legendary page: Roaming Acquirable after interacting with the portal in the Tomb of Borrius; location pages: Ruins of Void
