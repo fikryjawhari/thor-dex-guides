@@ -21,7 +21,7 @@ export function unboundCases(data) {
   add('Vicious Sand Force', atk('Sand Force'), {}, 'Earthquake', sand);
   add('Vicious Sand Force negative', atk('Sand Force'), {}, 'Tackle', sand);
   for (const name of ['Garchomp','Tyranitar','Rhyperior','Mew']) {
-    add('Vicious SpD '+name, {}, {id:species(name)}, 'Psychic', sand);
+    add('Vicious SpD '+name, {}, {id:species(name)}, 'Flamethrower', sand);
     add('Vicious physical '+name, {}, {id:species(name)}, 'Tackle', sand);
   }
   for (const [name, hit] of [['Grass Dash','Energy Ball'],['Slippery Tail','Iron Tail']]) {
@@ -42,6 +42,8 @@ export function unboundCases(data) {
     add(name+' rocks', {}, def(name), 'Psychic', {defStealthRock:true});
     add(name+' spikes', {}, def(name), 'Psychic', {defSpikes:1});
     add(name+' boots', {}, {...def(name),it:'Heavy-Duty Boots'}, 'Psychic', {defStealthRock:true,defSpikes:1});
+    add(name+' Flying spikes', {}, {...def(name),id:species('Crobat')}, 'Flamethrower', {defSpikes:1});
+    add(name+' multihit', {}, def(name), 'Double Hit', {}, {hits:2});
   }
   for (const name of ['Icy Skin','Dusty Scales']) {
     add(name+' special', {}, def(name), 'Psychic');

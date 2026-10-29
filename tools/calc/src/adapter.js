@@ -188,6 +188,8 @@ function battleField(values) {
   const result = new Field(options);
   for (const side of ['atk', 'def']) {
     const target = side === 'atk' ? result.attackerSide : result.defenderSide;
+    target.isSR = !!values[side + 'StealthRock'];
+    target.spikes = Math.max(0, Math.min(3, Math.trunc(Number(values[side + 'Spikes'])) || 0));
     for (const [key, property] of Object.entries({Charge: 'isCharge', Protect: 'isProtected',
       Foresight: 'isForesight', Swamp: 'isSwamp', PowerTrick: 'isPowerTrick'})) {
       if (values[side + key] !== undefined) target[property] = !!values[side + key];

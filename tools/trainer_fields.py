@@ -25,9 +25,38 @@ CANDIDATE = re.compile(
 # Hardlove "Back2Back …", Eternal X "Rotation Battle".
 DOUBLES_TAGS = [re.compile(pattern) for pattern in (r'^(True )?Double', r'^2on2 Double', r'^Multi Battle', r'^Triple Battle', r'^Tag Battle')]
 
+UNBOUND_FIELD_DECISIONS = dict(fog=None, flying_tailwind=None, magnet_rise=None,
+                              weight_room=None, heavy_rain=None, vicious_sand=None)
+UNBOUND_FIELD_PROPOSALS = {
+    'fog': dict(prefix="There's a constant FOG weather effect", effects=[dict(kind='weather', value='Fog')]),
+    'flying_tailwind': dict(prefix='Permanent Tailwind for Flying-types on the field', effects=[],
+                           template='Tailwind for each currently selected Flying-type, both sides'),
+    'magnet_rise': dict(prefix='Permanent Magnet Rise for Electric- and Steel-types on the field', effects=[],
+                        template='Magnet Rise for each currently selected Electric- or Steel-type, both sides'),
+    'weight_room': dict(prefix='Trick Room for Weight', effects=[],
+                        template='Weight-based turn order, not ordinary Trick Room; text only until implemented'),
+    'heavy_rain': dict(prefix='Permanent Heavy Rain', effects=[dict(kind='weather', value='Heavy Rain', duration='permanent')]),
+    'vicious_sand': dict(prefix='Vicious Sandstorm:', effects=[dict(kind='weather', value='Vicious Sandstorm', duration='permanent')]),
+}
+
+
+def unbound_proposal(text):
+    return next((key for key, proposal in UNBOUND_FIELD_PROPOSALS.items()
+                 if text.startswith(proposal['prefix'])), None)
+
 
 def evidence(text, scope):
     """Keep the complete note/tag; normalise only explicit statements, not strategy labels."""
+    proposal = unbound_proposal(text)
+    if proposal:
+        decision = UNBOUND_FIELD_DECISIONS[proposal]
+        if decision not in (None, 'apply', 'text'):
+            raise ValueError(f'Invalid Unbound field decision: {proposal}={decision!r}')
+        suggested = UNBOUND_FIELD_PROPOSALS[proposal]
+        if decision == 'apply' and suggested.get('template'):
+            raise ValueError(f'{proposal}: template support required before applying')
+        return dict(scope=scope, text=text, effects=copy.deepcopy(suggested['effects']) if decision == 'apply' else [],
+                    review=decision is None)
     if not CANDIDATE.search(text):
         return None
     if re.fullmatch(r'(?:Sydney|Sidney|Glacia) (?:Tailwind|TrickRoom|Sun|Snow)\.?', text.strip(), re.I):

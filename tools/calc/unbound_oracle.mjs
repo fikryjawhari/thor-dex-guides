@@ -8,6 +8,12 @@ import {resolveProfile} from './run.mjs';
 import {unboundCases} from './unbound_cases.mjs';
 
 const repo = resolve(process.argv[2] || '.tmp/hzla');
+const head = spawnSync('git', ['-C',repo,'rev-parse','HEAD'], {encoding:'utf8'});
+assert.equal(head.status,0,head.stderr);
+assert.equal(head.stdout.trim(),'ff6c3e339e276e6b4e8e44db58750b6534bc26aa','complete oracle checkout pin');
+const status = spawnSync('git', ['-C',repo,'status','--porcelain','--untracked-files=no'], {encoding:'utf8'});
+assert.equal(status.status,0,status.stderr);
+assert.equal(status.stdout.trim(),'','oracle has no tracked edits');
 for (const [path, expected] of Object.entries({
   'calc/mechanics/romhacks/profiles/unbound.js':'42eb9896924205f8042d57030c863bd26515abb0',
   'calc/mechanics/gen789.js':'034de2610d94bb603fcfea9224f7d36da6901776',
@@ -30,7 +36,17 @@ assert.ok(Object.keys(normalized.formatted_sets).length, 'Expert sets selected')
 oracle.context.backup_moves = normalized.moves;
 const generation = oracleGeneration(oracle.calc, data, options, profile);
 const results = unboundCases(data).map(test => ({name:test.name, ...oracleMatchup(oracle,generation,data,profile,options,test)}));
-const output = {sha:'ff6c3e339e276e6b4e8e44db58750b6534bc26aa', options, results};
+const descriptionModule = {exports:{}};
+const descriptionSource = readFileSync(resolve(repo,'calc/desc.js'),'utf8');
+const exposeEndOfTurn = runInContext(`(function(require,module,exports){${descriptionSource}\nexports.guideEndOfTurn=getEndOfTurn;})`,oracle.context);
+exposeEndOfTurn(request=>oracle.load(resolve(repo,'calc',request)),descriptionModule,descriptionModule.exports);
+const neutral = new oracle.calc.Pokemon(generation,'Mew',{level:50,ability:'Guide no ability'});
+const tackle = new oracle.calc.Move(generation,'Tackle');
+const residual = {};
+for (const weather of ['Sand','Vicious Sandstorm']) {
+  residual[weather] = descriptionModule.exports.guideEndOfTurn(generation,neutral,neutral,tackle,new oracle.calc.Field({weather}));
+}
+const output = {sha:'ff6c3e339e276e6b4e8e44db58750b6534bc26aa', options, residual, results};
 const destination = resolve(process.argv[3] || '.tmp/unbound-calc/oracle.json');
 writeFileSync(destination, JSON.stringify(output,null,2)+'\n');
 console.log(`Unbound oracle: ${results.length} cases -> ${destination}`);

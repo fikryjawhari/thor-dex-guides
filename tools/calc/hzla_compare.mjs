@@ -104,7 +104,7 @@ export function loadOracle(repo, options) {
   } else calc = load(resolve(repo, 'calc/index.js'));
   context.typeChart = calc.TYPE_CHART[options.types];
   if (!context.typeChart) throw new Error(`Missing oracle type chart ${options.types}`);
-  return {calc, context};
+  return {calc, context, load};
 }
 
 export function oracleGeneration(calc, data, options, profile) {
@@ -152,6 +152,10 @@ function oracleSet(calc, gen, data, set, translations) {
 
 function oracleField(calc, profile, values) {
   const options = {attackerSide: {}, defenderSide: {}};
+  for (const [side, target] of [['atk', options.attackerSide], ['def', options.defenderSide]]) {
+    target.isSR = !!values[side + 'StealthRock'];
+    target.spikes = Math.max(0, Math.min(3, Math.trunc(Number(values[side + 'Spikes'])) || 0));
+  }
   for (const entry of profile.field || []) {
     if (values[entry.k] === undefined) continue;
     if (entry.type === 'select' && !entry.o.some(([value]) => value === values[entry.k])) continue;

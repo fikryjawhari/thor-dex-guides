@@ -25,6 +25,7 @@
    "evs": true,
    "mega": true,
    "zmove": true,
+   "assumedSets": "level-up",
    "field": [
     {
      "k": "gameType",
