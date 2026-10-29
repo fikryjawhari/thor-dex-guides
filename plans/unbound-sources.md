@@ -676,3 +676,227 @@ Every file below has licence status **UNLICENSED / no separate save grant found*
 | [var_test/vanilla_difficulty.sav](https://github.com/Skeli789/Unbound-Cloud/blob/3d20f323b3f4690504f638fc8a6d491067f69194/server/pytests/data/saves/var_test/vanilla_difficulty.sav) | 131072 | accepted: 3 party, 598 boxed | d4e522e9ff89b28ccd1e91a2d912d605dd9ae0b1485bc1ebf9223c4788f62120 |
 
 Repository releases API returned an empty list; all 20 issue/PR records were searched for saves/attachments (no additional downloadable save beyond checked-in fixtures). hzla has no binary Unbound fixture of its own, but calc/test/unbound-savereader.test.js explicitly loads the Cloud fixture directory. Web searches included `Pokemon Unbound 2.1 save github`, `Pokemon Unbound 2.1 save file download`, and the official Cloud repo/tests; unverifiable Drive/player posts were not promoted over the author's fixtures. No Discord-private files were accessible or claimed searched.
+
+
+## 5. Gap searches and decisions left to the user
+
+### Ordinary trainers: partial gap closed, no complete sets found
+
+Searched the public 2.1.1.1 trainer-document index, its linked regular-trainer workbook, wiki catalogue, hzla Expert data, Unbound-Cloud tables/tests, DPE Unbound tree and generic CFRU tree; web queries included `Pokemon Unbound ordinary trainers documentation spreadsheet moves abilities` and `Pokemon Unbound Regular Trainers spreadsheet`. The [public trainer index](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit) **Intro!A9** links the [Regular Trainers workbook](https://docs.google.com/spreadsheets/d/1s7f-S_d9WNK6vUKUJcTr7xX_dsbJ8eSebvYFSNPo9FU/edit), now fetched as `.src/research-2026-10-29/ordinary-trainers.xlsx` (SHA-256 below). No authenticated/private Discord content was accessible; the public doc hub is the reproducible community-document route, not a claim to have searched private channels.
+
+Result: **49 worksheets, 418 populated trainer Name blocks, 1,003 evolution-line species cells and 73 nonempty Held Item cells; zero Moves rows and zero Ability rows**. The layout is A=Name, then Trainer Items, Evolution Lines, Evo Names, Minimum Level, Held Item. These are evolution-line/minimum-level records, not fixed complete parties. Examples: Bellin Town!B6 is Focus Sash for Pokefan Terrance's Alolan Sandslash; the wiki alone lacks held items. This is a materially richer ordinary-trainer source than the wiki, but not full sets and not automatically an Expert-specific replacement.
+
+**D2 is not changed:** retain moves-unknown/assumed-last-four handling. Ask the user before extending the 310-catalogue scope to these 418 blocks or adopting the 73 known item cells. No ordinary-trainer moves/abilities or release-matched full trainer dump was found. Cloud stores the player's saved Pokémon, not NPC trainer parties. DPE contains dex tables; generic CFRU tables/vanilla definitions are not an Unbound 2.1.1.1 trainer dump.
+
+| Regular-trainer worksheet | Trainer blocks | Evo-name slots |
+| --- | --- | --- |
+| Auburn Waterway | 5 | 9 |
+| Antisis City | 11 | 18 |
+| Antisis Sewers | 6 | 13 |
+| Bellin Town | 1 | 1 |
+| Blizzard City | 7 | 15 |
+| Cinder Volcano | 12 | 22 |
+| Cootes Bog | 8 | 22 |
+| Crater Town | 4 | 4 |
+| Crystal Peak | 12 | 32 |
+| Dehara City | 19 | 45 |
+| Dresco Town | 8 | 26 |
+| Fallshore City | 11 | 31 |
+| Frost Mountain | 6 | 10 |
+| Frozen Forest | 1 | 2 |
+| Frozen Heights | 1 | 1 |
+| Great Desert | 15 | 36 |
+| Grim Woods | 6 | 12 |
+| Icicle Cave | 8 | 22 |
+| KBT Expressway | 4 | 12 |
+| Magnolia Fields | 6 | 13 |
+| Polder Town | 4 | 11 |
+| Redwood Forest | 5 | 11 |
+| Redwood Village | 4 | 6 |
+| Route 2 | 7 | 19 |
+| Route 3 | 8 | 16 |
+| Route 4 | 4 | 9 |
+| Route 5 | 9 | 21 |
+| Route 6 | 9 | 15 |
+| Route 7 | 9 | 12 |
+| Route 8 | 9 | 21 |
+| Route 9 | 18 | 39 |
+| Route 10 | 8 | 12 |
+| Route 11 | 9 | 27 |
+| Route 12 | 8 | 20 |
+| Route 13 | 15 | 41 |
+| Route 14 | 15 | 39 |
+| Route 15 | 2 | 4 |
+| Route 16 | 11 | 24 |
+| Route 17 | 9 | 24 |
+| Route 18 | 12 | 29 |
+| Ruins of Void | 1 | 2 |
+| Seaport City | 11 | 45 |
+| Shadow Base | 3 | 7 |
+| Tarmigan Mansion | 12 | 29 |
+| Thundercap Mountain | 31 | 90 |
+| Valley Cave | 4 | 9 |
+| Victory Road | 19 | 51 |
+| Vivill Warehouse | 6 | 13 |
+| Vivill Woods | 5 | 11 |
+
+Every held-item source cell (later trainer unit can join by block + species + location, not species alone):
+
+| Sheet cell | Held item |
+| --- | --- |
+| Bellin Town!B6 | Focus Sash |
+| Cinder Volcano!B34 | Black Belt |
+| Cinder Volcano!C34 | Black Belt |
+| Cinder Volcano!B55 | Rawst Berry |
+| Cinder Volcano!C55 | Rawst Berry |
+| Dehara City!C41 | Flame Orb |
+| Dehara City!D41 | Toxic Orb |
+| Fallshore City!B76 | Focus Sash |
+| Frost Mountain!B13 | Icy Rock |
+| Frost Mountain!B20 | Black Belt |
+| Icicle Cave!C41 | Slowbronite |
+| Route 6!B27 | Figy Berry |
+| Route 6!C27 | Figy Berry |
+| Route 6!B41 | Heat Rock |
+| Route 7!B27 | Black Belt |
+| Route 7!C27 | Black Belt |
+| Route 8!B41 | Black Belt |
+| Route 8!C41 | Black Belt |
+| Route 8!D41 | Black Belt |
+| Route 8!B62 | Black Belt |
+| Route 8!C62 | Black Belt |
+| Route 10!B20 | Quick Claw |
+| Route 14!B83 | Coba Berry |
+| Route 14!C83 | Chople Berry |
+| Route 18!B20 | Black Belt |
+| Route 18!C20 | Black Belt |
+| Route 18!D20 | Black Belt |
+| Route 18!C76 | Leek |
+| Seaport City!B27 | Light Ball |
+| Tarmigan Mansion!B6 | Kasib Berry |
+| Tarmigan Mansion!C6 | Chople Berry |
+| Tarmigan Mansion!B20 | Black Belt |
+| Tarmigan Mansion!C20 | Black Belt |
+| Tarmigan Mansion!B27 | Kasib Berry |
+| Tarmigan Mansion!C27 | Haban Berry |
+| Tarmigan Mansion!D27 | Colbur Berry |
+| Tarmigan Mansion!B48 | Rindo Berry |
+| Tarmigan Mansion!C48 | Passho Berry |
+| Tarmigan Mansion!B76 | Babiri Berry |
+| Tarmigan Mansion!C76 | Kebia Berry |
+| Tarmigan Mansion!B83 | Payapa Berry |
+| Tarmigan Mansion!C83 | Chople Berry |
+| Tarmigan Mansion!D83 | Passho Berry |
+| Thundercap Mountain!B209 | Babiri Berry |
+| Thundercap Mountain!C209 | Chople Berry |
+| Thundercap Mountain!D209 | Passho Berry |
+| Thundercap Mountain!E209 | Tanga Berry |
+| Thundercap Mountain!B223 | Black Belt |
+| Thundercap Mountain!C223 | Black Belt |
+| Valley Cave!B13 | Black Belt |
+| Valley Cave!C13 | Black Belt |
+| Valley Cave!D13 | Black Belt |
+| Victory Road!B6 | Black Belt |
+| Victory Road!C6 | Black Belt |
+| Victory Road!B20 | Focus Sash |
+| Victory Road!B27 | Black Belt |
+| Victory Road!C27 | Black Belt |
+| Victory Road!D27 | Black Belt |
+| Victory Road!E27 | Black Belt |
+| Victory Road!C69 | Focus Sash |
+| Victory Road!B83 | Flying Gem |
+| Victory Road!C83 | Throat Spray |
+| Victory Road!B90 | Expert Belt |
+| Victory Road!C90 | Quick Claw |
+| Victory Road!B97 | Occa Berry |
+| Victory Road!C97 | Occa Berry |
+| Victory Road!B118 | Rocky Helmet |
+| Victory Road!C118 | Leftovers |
+| Victory Road!D118 | Life Orb |
+| Victory Road!B125 | Leftovers |
+| Victory Road!C125 | Life Orb |
+| Victory Road!D125 | Sitrus Berry |
+| Vivill Warehouse!D20 | Sitrus Berry |
+
+### Wild levels: no release-matched numeric encounter ranges
+
+Searched all mirrored RHD location pages, the wiki Wild Pokémon tables, the [2.1.1.1 location guide](https://docs.google.com/spreadsheets/d/1PyGm-yrit5Ow6cns2tBA9VEMwLVMzn3YhDRipABjLUM/edit) (all 10 worksheets), public trainer-index scaling explanation, and [generic CFRU wild_encounter.c](https://github.com/Skeli789/Complete-Fire-Red-Upgrade/blob/b637a27898b14e25dd24d0f69a3e302f0069deb8/src/wild_encounter.c#L88). RHD explicitly says encounter rates and levels are unavailable; wiki tables give method/time/rate and omit level columns. The location guide Grass & Cave Encounters and Surfing, Fishing, Rock Smash sheets likewise provide no numeric wild-level column. Index Intro!A23 documents **boss** scaling; it must not be misquoted as a wild-scaling formula.
+
+The author's generic CFRU code has an optional `FLAG_SCALE_WILD_POKEMON_LEVELS` path using the lowest party level and optional cap clamp (lines 96-106), and a normal per-slot min/max path (109 onward). It establishes configurable scaling capability, **not that Unbound 2.1.1.1 always enables that flag or the exact distribution for each method**. The shared engine master is not the game release. The linked General Guide export returned HTTP 401 (not silently skipped). Result: no reliable fixed/scaling range source for the target release; leave wild levels out as specified. Gifts/statics with explicit source levels can still retain them separately.
+
+### D3: optional Expert caps, including the non-badge Maxima boundary
+
+All ten values are directly from the [version 2.1.1.1 trainer index](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit), worksheet **LEVEL CAPS**, column **D = Difficult Expert Insane**. Column C is Vanilla and must not be used. The badge count below means badges already owned **before** the named fight; caps advance after beating the boundary. **Maxima is not a ninth badge:** she supplies the intermediate cap 40 after Mel, before Galavan's cap 45, with four badges in both stages. Do not force a single value for every badge count or use the maximum boss Pokémon level as a cap.
+
+| Badges before fight | Next boundary | Cap | Exact source cell |
+| --- | --- | --- | --- |
+| 0 | Mirskle | 20 | [LEVEL CAPS!D2](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit) |
+| 1 | Véga | 26 | [LEVEL CAPS!D3](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit) |
+| 2 | Alice | 32 | [LEVEL CAPS!D4](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit) |
+| 3 | Mel | 36 | [LEVEL CAPS!D5](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit) |
+| 4, before Maxima | Successor Maxima (no badge) | 40 | [LEVEL CAPS!D6](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit) |
+| 4, after Maxima | Galavan | 45 | [LEVEL CAPS!D7](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit) |
+| 5 | Big Mo | 52 | [LEVEL CAPS!D8](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit) |
+| 6 | Tessy | 57 | [LEVEL CAPS!D9](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit) |
+| 7 | Benjamin | 61 | [LEVEL CAPS!D10](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit) |
+| 8 | Elite Four / first League | 75 | [LEVEL CAPS!D11](https://docs.google.com/spreadsheets/d/1Ha06sD9mKw5yXXT2icVZjVQapcArU5C5gLEvA-hkq9o/edit) |
+
+The sheet supplies no post-League 100-cap row: 100 is the general maximum level, not an additional sourced badge cap here. Title Defense / Battleground minimum levels stay postgame records. D3's intended in-game cap splitting can use the extra Maxima boundary without changing the settled decision; confirm with the user if a literal badge-only UI would otherwise suppress it. Wiki gym pages show mode-dependent opponent levels, not this cap table; generic CFRU exp.c says `GetCurrentLevelCap` must be implemented by the hack, so it is not an alternate cap authority.
+
+### The two RHD 404s: alternative data and identity warning
+
+Alternative source is the pinned Cloud **unbound_2_1** [Species.json](https://github.com/Skeli789/Unbound-Cloud/blob/3d20f323b3f4690504f638fc8a6d491067f69194/server/src/data/unbound_2_1/Species.json) + [BaseStats.json](https://github.com/Skeli789/Unbound-Cloud/blob/3d20f323b3f4690504f638fc8a6d491067f69194/server/src/data/unbound_2_1/BaseStats.json), cross-checked against author DPE [Base_Stats.c](https://github.com/Skeli789/Dynamic-Pokemon-Expansion/blob/fe058e0e3ac23cf968cf950de43332135bc1549d/src/Base_Stats.c). These are target-profile data, unlike a vanilla stats fallback. RHD already has `minior-shield/`; the missing colour-labelled meteor page is not a new battle-stat form. Pumpkaboo's average size is **_M**, not the bare default (small) entry.
+
+| Missing page | Canonical define / save ID | HP/Atk/Def/SpA/SpD/Spe | Type / abilities | Alternative citation |
+| --- | --- | --- | --- | --- |
+| Minior Red Meteor | SPECIES_MINIOR_SHIELD / 991 | 60 / 60 / 100 / 60 / 100 / 60 | Rock/Flying; Shields Down | [DPE Base_Stats.c:31964](https://github.com/Skeli789/Dynamic-Pokemon-Expansion/blob/fe058e0e3ac23cf968cf950de43332135bc1549d/src/Base_Stats.c#L31964); [wiki Minior](https://unboundwiki.com/pokemon/minior/) |
+| Pumpkaboo Average | SPECIES_PUMPKABOO_M / 855 | 49 / 66 / 70 / 44 / 55 / 51 | Ghost/Grass; Pickup, Frisk; hidden Heatproof | [DPE Base_Stats.c:27542](https://github.com/Skeli789/Dynamic-Pokemon-Expansion/blob/fe058e0e3ac23cf968cf950de43332135bc1549d/src/Base_Stats.c#L27542); [wiki Pumpkaboo](https://unboundwiki.com/pokemon/pumpkaboo/) |
+
+Pumpkaboo base `SPECIES_PUMPKABOO` / ID 818 is **44/66/70/44/55/56**, i.e. small, not average; do not reuse it to fill the missing average page. Minior core red is SPECIES_MINIOR_RED / ID 1065, **60/100/60/100/60/120**, not the meteor shell. Wiki provides the learnsets/evolution text but no size-specific stats. DPE Learnsets.c / Egg_Moves.c are also fetched. Do not claim this unversioned author branch overrides the settled source priority.
+
+Exact learnset aliases: `dpe/src/Learnsets.c:21780` maps `SPECIES_PUMPKABOO_M` to `sPumpkabooLevelUpLearnset` (defined at 15520), the same list as the other sizes; `dpe/src/Egg_Moves.c:3998` contains the explicit `egg_moves(PUMPKABOO_M, ...)` block. `Learnsets.c:21916` maps `SPECIES_MINIOR_SHIELD` to `sMiniorShieldLevelUpLearnset` (16931), also reused by the core colours at 21990 onward. These are immutable at the DPE commit cited above. TM compatibility is a separate table: inspect the pinned tree before any future fallback; this audit did not fabricate a TM list for a missing page.
+
+### Supplementary stat sample (not a wiki stat comparison)
+
+The following RHD stats agree exactly with the pinned Cloud [unbound_2_1/BaseStats.json](https://github.com/Skeli789/Unbound-Cloud/blob/3d20f323b3f4690504f638fc8a6d491067f69194/server/src/data/unbound_2_1/BaseStats.json):
+
+| RHD slug | HP/Atk/Def/SpA/SpD/Spe (both sources) |
+| --- | --- |
+| bulbasaur | 45 / 49 / 49 / 65 / 65 / 45 |
+| pikachu | 35 / 55 / 40 / 50 / 50 / 90 |
+| flygon | 80 / 100 / 80 / 80 / 80 / 100 |
+| stonjourner | 100 / 125 / 135 / 20 / 20 / 70 |
+| minior-shield | 60 / 60 / 100 / 60 / 100 / 60 |
+| pumpkaboo (small) | 44 / 66 / 70 / 44 / 55 / 56 |
+
+### Save gap (D6)
+
+Closed for local binary oracles: 37 fetched candidates, 32 accepted by hzla, 5 randomized/invalid rejections. The [author Cloud tests](https://github.com/Skeli789/Unbound-Cloud/blob/3d20f323b3f4690504f638fc8a6d491067f69194/server/pytests/test_Integrated.py) and [Expert difficulty assertion](https://github.com/Skeli789/Unbound-Cloud/blob/3d20f323b3f4690504f638fc8a6d491067f69194/server/pytests/test_SaveBlockProcessing.py#L238) are stronger evidence than anonymous save posts. **Still open:** point-release provenance (the shared signature cannot prove 2.1.1.1), independent field-by-field comparison with expected Cloud JSON, a freshly played real save, and actual RetroArch .srm import on the Thor. No user save is requested: D6 says none is available. Keep fixture licence restrictions and generated/corrupt status in the test manifest.
+
+### New fetch pins and retrieval status
+
+| New local file under .src/research-2026-10-29/ | SHA-256 / retrieval result |
+| --- | --- |
+| cfru/src/exp.c | aa1d1b96aa0e3f4677b60244cf23bacc22958891fa21b2f8c0769aac4f16c6e2 |
+| cfru/src/wild_encounter.c | 2435592ce801088d51d78db45b3f36adb0097a5ec9ed89c3279511334fbf3651 |
+| dpe/include/abilities.h | 6277f77cd8a637708bad50ce3508dd01990ecaf092cfc4649b7b42d4e34bdef8 |
+| dpe/include/base_stats.h | 579e15678703bf7ccabf9ed4a1884d3dfe76adfc0db0d77eaa0a296b3c4cde1a |
+| dpe/include/species.h | 46a140dd639a0ff93396c0767abbcba9db4b2c76e5e69f829bd580889584376b |
+| dpe/src/Base_Stats.c | b1f9811e59fb26f876c8ddc222b3f52c83d48e3625d76037d3ed61107ac456cd |
+| dpe/src/Egg_Moves.c | 63b69cfbae89cd9d4f61e797bc59d7e61a2b4f6866bf93c2b16d0a5e97d7c3fe |
+| dpe/src/Learnsets.c | 674e86a4b5e1ac8c22beb04ff0982c080c0f3cd564fb9034f83f83f7804870b2 |
+| location-guide.xlsx | cc268f58ac91288a6841d4e9897177aadc04d723ca0f976f00b464f4fbb8c218 |
+| ordinary-trainers.xlsx | 21b1d4858b6ba261d523dfbf846e9322baf9edf373d68b6b7ba6f9f8ddd74fca |
+| trainer-index.xlsx | 413e522356a78cc27131e98ac92ab5802132173c5f41c724d0bad2069ac60dca |
+
+Workbook re-fetch: use the exact Google sheet IDs above with `/export?format=xlsx` into a NEW staging directory. The byte hashes identify the downloaded versions; Google can regenerate the XLSX container, so a different byte hash alone does not prove changed cells. General Guide ID 1LFSBZuPDtJrwAz7t6ZkJ-il4j8M3qCdaKLNe6EZdPmQ returned HTTP 401. A first incorrect regular-sheet search URL returned 404; the successful ID is verified from Intro!A9. The CFRU Unbound branch API returned 422 (no such branch), so only master at b637a27898b14e25dd24d0f69a3e302f0069deb8 is examined. DPE Unbound is pinned at fe058e0e3ac23cf968cf950de43332135bc1549d; both tree JSON responses are retained, not assumed release-matched.
+
+## 6. Open questions / downstream acceptance
+
+
+- User decision: may the ordinary-trainer unit incorporate known held items and the larger evolution-line catalogue (418 blocks), or stay strictly within D2's 310 wiki catalogue? No change is applied by this audit.
+- Retain Maxima cap 40 as the intermediate four-badge boundary; do not invent a badge. User review needed only if the later UI insists on badge-only splits.
+- Wiki stat cross-check cannot be completed because wiki stats are absent; use the explicit Cloud sample and keep the source limitation visible. The 41 ability-list differences need per-species treatment under the settled RHD authority, not a silent wholesale wiki merge.
+- Unit 3 must resolve every RHD form identity by slug/Cloud define and handle evolution-learned moves; scratch zero substitution is not an acceptable production fix. Wiki umbrella pages do not enumerate every form.
+- Unit 8 still needs independent save oracle assertions, expected-box/party comparisons and Thor .srm import. 2.1.x fixture signature does not establish exact point release or current difficulty without decoding the difficulty var.
+- No browser checks, gates, builds, pushes or merges were run/requested. Update watcher exit 1 is known upstream drift, not failure: only hzla gen789.js and vanilla/gen789.js changed; pins remain unchanged.
