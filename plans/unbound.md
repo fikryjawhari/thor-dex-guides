@@ -120,6 +120,10 @@ User's answers (2026-10-29):
   Big Mo's "Trick Room for Weight" (each Pokémon's Speed = its weight in kg, rounded down: Abomasnow 135, Mega
   Abomasnow 185), Tessy's permanent Heavy Rain and Camomons Battle, Moleman's Vicious Sandstorm, Elias's Shadowy Veil,
   Mel's Inverse Battle. Both sides where the sheet doesn't say otherwise.
+- **Camomons (user 2026-10-30):** types become the first two moves' types; a single-type Pokémon gains a second type
+  when move 2 differs. Two moves of the same type: the official calc (saved by the user in
+  `hacks/unbound/.src/unboundcalc/`, `shared_controls_YA0k.js` UpdateCamomons) sets type 1 = type 2 = that type and
+  doesn't remove the duplicate, so it counts twice (4x weak / 4x resist). Follow the official calc; in-game check open.
 - **Brain Bond = Parental Bond; Face Shield = Gen 8 (pre-nerf) Dauntless Shield** (user 2026-10-30; overrides hzla).
 - **Missions (7a, 2026-10-29):** bordered mission card, auto-close on the final tick (`plans/unbound-missions.md`).
 - **Mode:** hack.json has no mode field; "Expert" goes in the trainer wording (`txt`), not a new key.

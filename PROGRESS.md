@@ -108,9 +108,9 @@ branch), Totem battles from the game (real IVs; "Doc says" notes on 6 difference
   (template `calc.js`: new field kinds, D2 assumed-set markers, import shows boxes when the party is empty; one
   template session), then unit 9: the guide in the Thor frame on the phone preview for the user, then the Haiku
   medium sceptic audit (`gate.py check unbound` + scenarios on all six guides).
-- Waiting on the user: the official Unbound calc (https://unboundcalc.byethost3.com/?i=1) blocks automated fetching;
-  if the user saves it (browser "Save page as… complete") into `hacks/unbound/.src/unboundcalc/`, it becomes the
-  second calc oracle. A real `.srm` import on the Thor after the calc UI pass.
+- The official Unbound calc is saved in `hacks/unbound/.src/unboundcalc/` (the user, 2026-10-30): the second calc
+  oracle. When 8c merges, check its gimmicks against it (Camomons: duplicate type counts twice there). A real `.srm`
+  import on the Thor after the calc UI pass.
 - Old unit worktrees under `~/.t3/worktrees/thor-dex-guides/` (sources, dex, missions, locs*, it*, trainers, tr*,
   walk, calc) are merged or superseded: delete them and their branches once the guide is merged into main.
 
