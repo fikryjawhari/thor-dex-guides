@@ -54,7 +54,9 @@ wins" rule.
   Descriptions: the mirror's text, except for Unbound's own and the names the mirror lacks, which take the wiki's game
   text (the mirror's index pairs its short names with another ability's text); Neutralizing Gas, Power of Alchemy and
   As One take the official Sword / Shield text (no source has theirs). Focus Belt and Nine Lives (Unbound originals)
-  have no description anywhere. 23 abilities are Unbound originals (`AB[2]`, tag `cfg.orig` "Unbound"): the ones the
+  have no description anywhere; the wiki lists Sturdy for every species that has them (its pattern: the vanilla
+  equivalent, as Huge Power for Pure Power), so the guide says "Probably works like Sturdy ...; not confirmed" (user
+  2026-10-29; an in-game check settles it). 23 abilities are Unbound originals (`AB[2]`, tag `cfg.orig` "Unbound"): the ones the
   calc's data doesn't know.
 - **Wiki says** (not shown in the guide: the game's tables agree with the dex on every one; `check.py` counts 16):
   Meowth / Persian Sturdy (game: Nine Lives), Machoke / Machamp Sturdy (game: Focus Belt), Meditite / Medicham Huge
@@ -147,8 +149,9 @@ Prefix `unbound`. Keep these keys once published.
 
 - Sprites: every species uses the shared set; `hack.json` -> `sk` points 8 forms at the shared art they share
   (Unbound's Alolan Exeggcute / Cubone and Galarian Koffing / Mime Jr. look like their base species; Hisuian Basculin
-  is White-Striped; Eiscue Noice Face; Calyrex's riders). No art (type circle): Pikachu Surfing and Flying (the shared
-  set lacks them; Emerald Imperium has its own), Shadow Warrior. `sprites.json` is empty.
+  is White-Striped; Eiscue Noice Face; Calyrex's riders). Pikachu Surfing and Flying: `sprites.json` has Emerald
+  Imperium's art for them (the shared set lacks them; the user chose to reuse EI's, 2026-10-29, an exception to "a
+  guide never copies another guide's art"). No art (type circle): Shadow Warrior.
 
 ## Checks
 

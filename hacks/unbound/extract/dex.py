@@ -54,7 +54,11 @@ CANON_DESC = {'Neutralizing Gas': "While the Pokémon is in battle, the effects 
               'As One (Glastrier)': "This Ability combines the effects of both Calyrex's Unnerve Ability and "
                                     "Glastrier's Chilling Neigh Ability.",
               'As One (Spectrier)': "This Ability combines the effects of both Calyrex's Unnerve Ability and "
-                                    "Spectrier's Grim Neigh Ability."}
+                                    "Spectrier's Grim Neigh Ability.",
+              # Unbound originals no source describes; the wiki lists Sturdy for every species that has them (as it
+              # lists the vanilla equivalent for Pure Power, Solid Rock ...), so the text says what that suggests.
+              'Focus Belt': 'Probably works like Sturdy (the wiki lists Sturdy for these Pokémon); not confirmed.',
+              'Nine Lives': 'Probably works like Sturdy (the wiki lists Sturdy for these Pokémon); not confirmed.'}
 
 
 # The wiki's text where the normaliser below can't word it.

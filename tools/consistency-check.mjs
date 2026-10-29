@@ -30,7 +30,7 @@ try {
     const data = JSON.parse(readFileSync(`hacks/${hack}/data.json`, 'utf8'));
     const starter = data.P.find(pokemon => pokemon.n === 'Treecko');
     const evOn = mons => (mons || []).some(mon => mon.ev?.some(value => value > 0));
-    const mgm = config.evs !== false && (data.TR?.g || []).some(group => group.sec.some(section => section.tr.some(trainer =>
+    const mgm = config.evs !== false && config.mgm !== false && (data.TR?.g || []).some(group => group.sec.some(section => section.tr.some(trainer =>
       evOn(trainer.p) || (trainer.pt || []).some(partner => evOn(partner.p)))));
     const seed = { [config.ls.dex]: JSON.stringify({ av: 'chg' }), [config.ls.walk]: JSON.stringify({c:{'0.0.0':1}}), dvkb: keyboard ? '1' : '0' };
     if (config.starter === 'type' && starter) seed[config.ls.track] = JSON.stringify({ e: { 0: { p: starter.id }, 1: { f: 1 } }, t: {} });
