@@ -35,8 +35,14 @@ export function checkUnboundGimmicks(data, engine) {
 
   for (const [name, expected] of [['Abomasnow',135],['Mega Abomasnow',185],['Pikachu',6],['Bulbasaur',6]]) {
     assert.equal(engine.speed(mon(name), {weightSpeed:true}), expected, name+' weight Speed');
-    assert.equal(engine.speed(mon(name, {it:'Choice Scarf',st:'par',stg:[0,0,0,0,0,6]}), {weightSpeed:true,atkTailwind:true}), expected, name+' final replacement, not a base-stat modifier');
   }
+  // Official Unbound calc order (user 2026-10-30): weight replaces the Speed stat, then stages, Scarf, paralysis, Tailwind.
+  assert.equal(engine.speed(mon('Abomasnow', {it:'Choice Scarf'}), {weightSpeed:true}), 202, 'Scarf Abomasnow: floor(135.5 x 1.5) after weight');
+  assert.equal(engine.speed(mon('Mega Abomasnow', {it:'Choice Scarf'}), {weightSpeed:true}), 277, 'Scarf Mega Abomasnow: 185 x 1.5');
+  assert.equal(engine.speed(mon('Abomasnow', {stg:[0,0,0,0,0,1]}), {weightSpeed:true}), 203, '+1 applies to the unrounded 135.5 kg, as the official calc');
+  assert.equal(engine.speed(mon('Abomasnow'), {weightSpeed:true,atkTailwind:true}), 270, 'Tailwind doubles weight Speed');
+  assert.equal(engine.speed(mon('Abomasnow', {st:'par'}), {weightSpeed:true}), 67, 'paralysis halves weight Speed (gen 8 rule)');
+  assert.equal(engine.speed(mon('Abomasnow', {ab:ability('Heavy Metal')}), {weightSpeed:true}), 271, 'Heavy Metal doubles the weight, as the official calc');
   assert.equal(damage(mon(), mon('Pikachu'), 'Gyro Ball', {weightSpeed:true}).bp, 38, 'internal weight speeds 4 vs 6: floor(25*6/4)+1');
   const typedWind = {atkTailwindTypes:['Flying'],defTailwindTypes:['Flying']};
   for (const side of ['atk','def']) {
@@ -152,14 +158,16 @@ export function checkUnboundGimmicks(data, engine) {
       assert.equal(calc.getFinalSpeed(generation,theirMon(name),field,field.attackerSide),expected,'saved official weight '+name);
     }
     const weightField = new calc.Field({isBigMoField:true});
-    assert.equal(calc.getFinalSpeed(generation,theirMon('Abomasnow',{item:'Choice Scarf'}),weightField,weightField.attackerSide),202,'official weight then modifiers; user literal final Speed is 135');
+    assert.equal(calc.getFinalSpeed(generation,theirMon('Abomasnow',{item:'Choice Scarf'}),weightField,weightField.attackerSide),engine.speed(mon('Abomasnow', {it:'Choice Scarf'}), {weightSpeed:true}),'saved official weight then Scarf (202) matches');
+    assert.equal(calc.getFinalSpeed(generation,theirMon('Abomasnow',{boosts:{spe:1}}),weightField,weightField.attackerSide),engine.speed(mon('Abomasnow', {stg:[0,0,0,0,0,1]}), {weightSpeed:true}),'saved official weight +1 matches');
+    assert.equal(calc.getFinalSpeed(generation,theirMon('Abomasnow',{ability:'Heavy Metal'}),weightField,weightField.attackerSide),engine.speed(mon('Abomasnow', {ab:ability('Heavy Metal')}), {weightSpeed:true}),'saved official Heavy Metal weight matches');
     const theirCamoAttack = theirMon('Mew',{overrides:{types:['Fire','Ice']}});
     const theirCamoDefense = theirMon('Mew',{overrides:{types:['Grass','Normal']}});
     assert.deepEqual(theirDamage(theirCamoAttack,theirCamoDefense,'Flamethrower'),rolls(43,1.5,2),'official native Flamethrower is 95 BP: explicit data disagreement');
     assert.deepEqual(theirDamage(theirCamoAttack,theirCamoDefense,'Flamethrower',{}, {basePower:90}),camoHit.rolls,'same 90 BP input agrees; Camomons controls copy the first two move types');
     assert.deepEqual(theirDamage(theirMon('Mew'),theirMon('Mew'),'Shadow Ball',{isInverseBattle:true}),damage(neutral,neutral,'Shadow Ball',{inverse:true}).rolls);
     assert.equal(theirDamage(theirMon('Mew'),theirMon('Gengar',{curHP:134}),'Psychic',{isShadowyVeil:true})[0],66,'official says always-on Ghost half damage, unlike sheet full-HP rule');
-    console.log(`PASS saved official Unbound oracle: Face Shield, Parental Bond, Heavy Rain, weight Speed, Camomons, inverse; explicit Brain Bond/Flamethrower/Shadowy Veil differences (${official.files.length} hashed sources)`);
+    console.log(`PASS saved official Unbound oracle: Face Shield, Parental Bond, Heavy Rain, weight Speed (then Scarf / stages / Heavy Metal), Camomons, inverse; explicit Brain Bond/Flamethrower/Shadowy Veil differences (${official.files.length} hashed sources)`);
   } else console.log('PENDING official Unbound comparison: no saved page; host protection not bypassed');
   console.log('PASS Unbound hand fixtures: weight Speed, typed Tailwind/Magnet Rise, Camomons, locked weather, Mel inverse, Shadowy Veil, Fog, Negative Energy, Pixies, Rainbow');
 }
