@@ -21,16 +21,14 @@ tutors: wiki Move Tutors page 29 tutors / 152 moves; tutor moves in species list
   taught by a wiki tutor but in no species list (6): Draco Meteor, Dragon Ascent, Relic Song, Secret Sword, Steel Beam, Volt Tackle
 locs: not built yet (TODO: implement unbound locs extraction)
   ordinary: Cyclist Gerald (Thundercap Mt.): wiki 1 Pokémon, workbook 2
-  ordinary: Bird Keeper Roger (Great Desert): wiki 4 Pokémon, workbook 2
   ordinary: Super Nerd Avery (Victory Road): wiki 3 Pokémon, workbook 4
-  ordinary: Ace Trainer Austina (Victory Road): wiki 4 Pokémon, workbook 2
   ordinary: Science Society Scientist (Crystal Peak): wiki 3 Pokémon, workbook 2
   ordinary: Fisherman Edgar (Route 3, Lv 41): no visit to the area covers it; placed in Galavan Split [Cap 45]
   trainers: place Route 3 added to Galavan Split [Cap 45]
   ordinary: Fisherman Jason (Route 3, Lv 42): no visit to the area covers it; placed in Galavan Split [Cap 45]
   ordinary: Fisherman Cole (Route 3, Lv 41): no visit to the area covers it; placed in Galavan Split [Cap 45]
 trainers: 439 sheet slots in 84 boss blocks; hzla 383 sets: 381 slots joined (380 sets), 15 differ, 58 sheet only, 3 malformed hzla keys
-trainers: wiki 309 rows = 292 ordinary + 17 boss cards; 2 name-only rows with no team; workbook 287 matched, 48 held items, 143 workbook-only blocks
+trainers: wiki 309 rows = 292 ordinary + 17 boss cards; 0 name-only rows with no team; workbook 287 matched, 50 held items, 143 workbook-only blocks
 trainers: 76 mons at relative levels; 9 with a later-cap line kept absolute; 130 comments used of 130
   hzla differs: Rival!J43: EVs none
   hzla differs: Team Shadow Bosses!B86: level 40
@@ -332,5 +330,10 @@ trainers: 76 mons at relative levels; 9 with a later-cap line kept absolute; 130
   workbook only: Vivill Warehouse!B36 Light of Ruin Grunt
 items: not built yet (TODO: implement unbound items extraction)
 walk: not built yet (TODO: implement unbound walk extraction)
+trainer keys: 4 matched loosely
+  6.5.12: Bird Keeper Roger (Great Desert) matched on n, loc, st, pl
+  6.5.13: Bird Keeper Reed (Great Desert) matched on n, loc, st, pl
+  9.1.14: Ace Trainer Austina (Victory Road) matched on n, loc, st, pl
+  9.1.15: Ace Trainer Roland (Victory Road) matched on n, loc, st, pl
 GID (Unbound-Cloud unbound_2_1): sp 1180 ids (1063 P entries reached, 51 not: abomasnow_mega, absol_mega, aerodactyl_mega, aggron_mega, alakazam_mega, altaria_mega, ampharos_mega, audino_mega, banette_mega, beedrill_mega, blastoise_mega, blaziken_mega, camerupt_mega, charizard_mega_x, charizard_mega_y, diancie_mega, gallade_mega, garchomp_mega, gardevoir_mega, gengar_mega, glalie_mega, groudon_primal, gyarados_mega, heracross_mega, houndoom_mega, kangaskhan_mega, kyogre_primal, latias_mega, latios_mega, lopunny_mega, lucario_mega, manectric_mega, mawile_mega, medicham_mega, metagross_mega, mewtwo_mega_x, mewtwo_mega_y, pidgeot_mega, pinsir_mega, rayquaza_mega, sableye_mega, salamence_mega, sceptile_mega, scizor_mega, shadow_warrior, sharpedo_mega, slowbro_mega, steelix_mega, swampert_mega, tyranitar_mega, venusaur_mega), mv 766 ids, it 522 ids, gr 1180
   GID cross-check vs hzla unbound_2_1_constants.js: same ids for every species, move and item

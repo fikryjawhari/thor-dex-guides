@@ -688,8 +688,29 @@ def build(D):
                     else:
                         wteam.append((p, m['min'], m, 'Level: the workbook minimum (the wiki has no %s)' % m['sp']))
                     assert p, m
+            elif b:
+                # the name-only row's own workbook block: its species, levels from the combined wiki team
+                pool = [(wiki_sid(n, bmons), lv) for n, lv in wmons]
+                wteam = []
+                for m in bmons:
+                    p = _wb_sid(m['sp'])
+                    hit = next((w for w in pool if w[0][0] == p), None)
+                    if hit:
+                        pool.remove(hit)
+                    wteam.append((p, hit[1] if hit else m['min'], m, hit[0][1] if hit else
+                                  'Level: the workbook minimum (the wiki has no %s)' % m['sp']))
             else:
                 wteam = None
+        elif b and not pair and len(bmons) < len(wmons) and any(r.shared == row.name for r in ordinary):
+            # the wiki's combined team for this row and the name-only one after it: keep the workbook's part
+            combined[row.name] = wmons
+            pool, wteam = list(bmons), []
+            for n, lv in wmons:
+                pid, warn = wiki_sid(n, bmons)
+                hit = next((m for m in pool if _wb_sid(m['sp']) == pid), None)
+                if hit:
+                    pool.remove(hit)
+                    wteam.append((pid, lv, hit, warn))
         else:
             wteam = [wiki_sid(n, bmons) + (lv,) for n, lv in wmons]
             wteam = [(pid, lv, None, warn) for pid, warn, lv in wteam]

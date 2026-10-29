@@ -176,7 +176,7 @@ SHEET_ONLY = {'no hzla team': 9 + PARTNER_SLOTS + 5 + 6 + 6, 'malformed hzla key
 # has no ivs); no EVs = the four partner Vaporeon with "?" EVs.
 NO_EV = ['Boss Wild Battles!F193', 'Team Light Of Ruin Bosses!J46', 'Team Light Of Ruin Bosses!J66',
          'Team Shadow Bosses!J126']
-WIKI_ROWS = {'rows': 309, 'ordinary': 292, 'boss cards': 17, 'name only': 15, 'name only, team unknown': 2}
+WIKI_ROWS = {'rows': 309, 'ordinary': 292, 'boss cards': 17, 'name only': 15, 'name only, team unknown': 0}
 RELATIVE = 76           # mons whose later-cap levels are all cap + one offset
 ABSOLUTE_LADDER = 9     # Reena (the sheet's "Level at E4 Cap" levels don't fit its notes) and Barbs (minimum levels)
 
