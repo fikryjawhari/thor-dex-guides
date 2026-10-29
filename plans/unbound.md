@@ -147,24 +147,26 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
 
 ## Findings for later units
 (Units add theirs here.)
-- Unit 6 round 2 (2026-10-29, `worktree-unbound-tr3`, WIP): readers `extract/bosssheet.py` (439 Expert slots, 102
-  column groups, level-row labels that name each fight's cap) and `wiki.py` `trainer_locations()` (309 rows; the 15
-  name-only rows share the row above's place and combined team through a rowspan). New sources: 130 cell comments
-  (gimmick rules, per-slot evolution / move-by-level notes, other-cap level ladders, the rival partner's Mega movesets),
-  and the ordinary workbook's pair blocks split the wiki's combined teams. Design and placement plan: notes.md → Trainers.
-  Unit 7: the split points there (Maxima 40 is its own split; Ivory 1 / Zeph 1 open the Alice split; Lily and the
-  other "Tessy Cap" Mega Trainers come after Big Mo). Unit 8: field gimmicks with the sheet's own rule text,
-  Boss Wild "Boosts" rows (Omniboost, Raid Shields), 60 slots without IVs (58 sheet-only + Route 9 pair).
-- Unit 6 WIP/source checkpoint (2026-10-29): independently reproduced 101 structural Expert teams / 439 slots,
-  wiki 309 = 294 with teams + 15 name-only, hzla 383 Expert sets, and every LEVEL CAPS!D2:D11 value.
-  **Stopped before implementation for a player-facing decision:** four partner Vaporeon slots carry question-mark
-  EVs (exact cells in notes.md -> Trainers); the matched hzla Route9 Shadow Warrior set also has no IVs.
-  The shared trainer renderer requires numeric IV/EV arrays and otherwise crashes or prints invented/NaN speeds.
-  Recommend the main chat/template owner add unknown-stat handling and hide uncomputable Speed before resuming,
-  rather than silently defaulting stats or bringing forward unit 8's assumed sets. No template edits authorised here.
-  `cfg.starter` should become `pick` (sheet headers name Gible/Beldum/Larvitar); not changed yet. Unit 7 should retain
-  the extra Maxima split. Unit 8 must distinguish joined hzla sets from sourced IV coverage and preserve unknown EVs.
-  No extraction, keys, workbook joins, field review, builds, scenarios or screenshots yet; not a completed unit.
+- Unit 6 (trainers + caps, 2026-10-29, `worktree-unbound-tr4`): done; results in notes.md → Trainers / Caps,
+  checks in `check.py` → `trainer_checks`. 393 cards: 101 boss (439 sheet slots, per-starter rivals and partners),
+  292 ordinary (the wiki's 309 rows less 17 that are boss cards), 11 boxes (10 cap splits incl. Maxima 40, Post-game).
+  **Unit 7:** trainer order is `BOSSES` / `SECTIONS` in `extract/trainers.py` (wiki walkthrough parts 1-40); not done:
+  moving an ordinary trainer to the part that names it (Skier Charlie: parts 29-30) and Route 3's three Surf fishermen
+  (Lv 41-42, placed by cap in the Galavan split). Split points: Ivory 1 / Zeph 1 open the Alice split; Maxima's own
+  split at Tarmigan Mansion; Barbs and Big Mo share "Antisis City" (a second section after the Sewers); Reena, Sterling
+  & Portia before the League. Stop keys should carry the trainer keys (`trainer_keys.json`). `trainers_follow_walk`
+  will reorder boxes once WK has stops. **Unit 4:** `cfg.starter` is `pick`; the picker lists P entries with a
+  `Starter choice` encounter: add Gible / Beldum / Larvitar ones (named as P names them), or the rival cards can't
+  be filtered. **Unit 8:** IV source = hzla Expert (all 31s) on 379 slots; no IVs on 60 (58 sheet only + Route 9
+  Shadow Warrior pair), no EVs on the 4 partner Vaporeon (no speed shown, settled). Mega holders on the cards
+  (`a0` → `a`; random pre-Mega in `ao`), no Z-Crystals in the sheet; `au` carries the Boss Wild boosts (Omniboost =
+  all +1); "Raid Shields" is text only. Field review list: Fog, Tailwind for Flying-types, Magnet Rise, Trick Room for
+  Weight, Permanent Heavy Rain, Vicious Sandstorm (11 records); Negative Energy, Shadowy Veil, Pixies, Rainbow Battle,
+  Inverse / Camomons / Sky / Dynamax battles are tags with no field record yet. Ordinary trainers have no moves / IVs /
+  nature (D2's assumed sets are the calc's job). **Dex (main chat):** the game's own Metal Bash (MOVE_STEELYHIT, 40 BP)
+  is merged into Behemoth Blade by `tools/cfru.py`'s alias; the rival's Beldum shows Behemoth Blade with an `x`.
+  **Scenarios:** `guide-update` can't run on Unbound yet: it crashes on `GID.ab` (Unbound has none: a one-line guard
+  in `tools/scenarios/guide-update.mjs`) and then needs WK splits (unit 7). `stable-keys` passes.
 - Main chat (2026-10-29): Focus Belt / Nine Lives are probably Sturdy clones (the wiki lists Sturdy for their
   holders); unit 8: the calc treats them as Sturdy, marked assumed in notes.md → Damage calc. Pikachu Surfing / Flying
   use EI's art (`sprites.json`, the user's call).
