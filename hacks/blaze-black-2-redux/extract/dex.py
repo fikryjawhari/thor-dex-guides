@@ -318,7 +318,7 @@ def build(D):
     for name in M:
         m = mirror_moves[drayano.key(name)]
         o = {'t': m['t'], 'c': m['c'], 'bp': m['bp'], 'ac': m['ac'], 'pp': m['pp'], 'pr': m['pr'] or 0,
-             'd': m.get('d') or '', 'f': [], 'h': []}
+             'd': m.get('d') or '', 'h': []}
         mirror = dict(o)
         old = [k for k, v in replaced.items() if v[0] == name]
         if old:

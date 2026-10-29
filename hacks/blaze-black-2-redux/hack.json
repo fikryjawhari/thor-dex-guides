@@ -18,7 +18,44 @@
    "trainers",
    "trainers"
   ],
-  "calc": false,
+  "calc": {
+   "base": "gen5",
+   "save": "gen5",
+   "evs": false,
+   "setterStays": true,
+   "over": {
+    "moves": {
+     "Cut": {
+      "critRatio": 2
+     },
+     "Dragon Claw": {
+      "critRatio": 2
+     },
+     "Octazooka": {
+      "critRatio": 2
+     },
+     "X-Scissor": {
+      "critRatio": 2
+     },
+     "Crabhammer": {
+      "critRatio": 1
+     },
+     "Wild Charge": {
+      "recoil": null
+     },
+     "Needle Arm": {
+      "flags": {
+       "punch": 1
+      }
+     },
+     "Rock Smash": {
+      "flags": {
+       "punch": 1
+      }
+     }
+    }
+   }
+  },
   "ls": {
    "dex": "bb2rdex",
    "calc": "bb2rcalc",
