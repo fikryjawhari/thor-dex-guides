@@ -148,3 +148,77 @@ class Wiki:
         parts = re.split(r'<h[34][^>]*>(.*?)</h[34]>', raw)
         return [Tutor(text(parts[i]), parts[i + 1]) for i in range(1, len(parts) - 1, 2)
                 if _field(parts[i + 1], 'Location')]
+
+    def item_areas(self):
+        return [p for p in self.all if re.search(r'/locations/[^/]+/?$', p['link'])]
+
+    def item_locations(self):
+        found = []
+        for page in self.item_areas():
+            for heading, block in item_sections(page['html']):
+                if re.search(r'item.*location|hidden items', heading, re.I):
+                    for cells in _rows(block):
+                        if len(cells) >= 2 and cells[0] not in ('Item', 'Items', '#') and cells[1]:
+                            found.append((text(page['title']), cells[0], cells[1]))
+        return found
+
+    def item_machines(self):
+        return [dict(page=p, name=text(p['title']), fields=item_fields(p['html']),
+                     requirements=item_prerequisites(p['html']))
+                for p in self.all if re.match(r'^(TM|HM)\d+ ', text(p['title']))]
+
+    def item_crystals(self):
+        return [(cells[0], cells[1]) for cells in _rows(self.page('Z-Crystals')['html'])
+                if len(cells) >= 2 and cells[0].endswith(' Z')]
+
+    def item_details(self):
+        found = []
+        for page in self.pages('Items'):
+            if not re.search(r'/items/(?:key-items|evolution-items)/[^/]+/?$', page['link']):
+                continue
+            places = []
+            for cells in _rows(page['html']):
+                if len(cells) >= 2 and cells[0].isdigit():
+                    places.append(cells[1])
+            fields = item_fields(page['html'])
+            if fields.get('Location'):
+                places.append(fields['Location'])
+            found.append(dict(page=page, name=text(page['title']), fields=fields, places=places,
+                              requirements=item_prerequisites(page['html'])))
+        return found
+
+    def item_shops(self):
+        found = []
+        for heading, block in item_sections(self.page('All Shop Inventories')['html']):
+            stall = ''
+            for cells in _rows(block):
+                if len(cells) == 1:
+                    stall = cells[0]
+                elif len(cells) >= 2 and re.fullmatch(r'[\d,]+', cells[1]):
+                    found.append((heading, stall, cells[0], cells[1], cells[2] if len(cells) > 2 else ''))
+        return found
+
+    def item_missions(self):
+        return [dict(page=p, name=text(p['title']), fields=item_fields(p['html']))
+                for p in self.pages('Missions') if re.match(r'^Mission #\d+:', text(p['title']))]
+
+
+def item_sections(raw):
+    parts = re.split(r'<h[234][^>]*>(.*?)</h[234]>', raw, flags=re.S)
+    return [(text(parts[index]), parts[index + 1]) for index in range(1, len(parts) - 1, 2)]
+
+
+def item_fields(raw):
+    fields = {}
+    for cells in _rows(raw):
+        if len(cells) == 2:
+            fields.setdefault(cells[0].rstrip(':'), cells[1])
+    return fields
+
+
+def item_prerequisites(raw):
+    requirements = []
+    for heading, block in item_sections(raw):
+        if re.search(r'prerequisites|requirements', heading, re.I):
+            requirements.extend(text(part) for part in re.findall(r'<li[^>]*>(.*?)</li>', block, re.S))
+    return list(dict.fromkeys(requirements))
