@@ -104,10 +104,14 @@ branch), Totem battles from the game (real IVs; "Doc says" notes on 6 difference
 - 8c merged 2026-10-30 (`e0571af`): every gimmick in the engine, 27 field records, none left for review; the
   calc UI spec is in `plans/unbound.md` → Findings → 8c. Engine change left for the UI pass: weight Speed in the
   official order (Decisions).
-- Running: **7b** mission template build (Opus, `worktree-unbound-missions-build`, from the spec; ends with the phone
-  preview link); **8c** calc gimmicks engine side (Sol, `worktree-unbound-gimmicks`: every gimmick per the user,
-  Brain Bond = Parental Bond, Face Shield = Gen 8 Dauntless Shield; writes the calc UI spec into Findings).
-- Next, in order: merge 7b (domcompare: no change on the other guides), merge 8c, then **the calc UI pass**
+- 7b merged 2026-10-30 (`cd389e0`): missions as bordered cards with auto-close (`template/dex.js` / `dex.css`,
+  `tools/scenarios/walk-missions.mjs`, guide-update snapshot covers missions); domcompare: the other five guides
+  unchanged. Changed for every guide: Next step lands through the search-jump routine (same 8 px gap; EI checked).
+  Not done: Next doesn't move focus to the target checkbox; scroll anchors restore to the card, not the row. Mission
+  rows are 44 px, ordinary rows ~33 px (left as is unless the user minds). Phone preview of the merged build:
+  https://windows-pc.tail1846b8.ts.net/preview/unbound.html . Delete `plans/unbound-missions.md` once the user
+  approves (its decisions are in template/README.md).
+- Next, in order: **the calc UI pass**
   (template `calc.js`: new field kinds, D2 assumed-set markers, import shows boxes when the party is empty; one
   template session), then unit 9: the guide in the Thor frame on the phone preview for the user, then the Haiku
   medium sceptic audit (`gate.py check unbound` + scenarios on all six guides).
