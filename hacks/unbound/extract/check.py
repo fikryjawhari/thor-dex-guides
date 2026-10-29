@@ -27,7 +27,7 @@ from common import FORMS, H, RD, WIKI, cfru, key, pid  # noqa: E402
 EXPECTED = {'wiki types': 0, 'wiki abilities': 16, 'dropped': 38, 'merged': 116, 'no stone': ['rayquaza_mega'],
             'no description': [], 'not in game table': ['shadow_warrior']}
 LOC_EXPECTED = {'areas': 69, 'slots': 63, 'pages': 67, 'rated pages': 54, 'rated rows': 1161, 'dens': 32,
-                'raid rows': 462, 'doc wild rows added': 52, 'doc special added': 22, 'legend page added': 40,
+                'raid rows': 462, 'doc wild rows added': 52, 'doc special added': 21, 'legend page added': 40,
                 'mystery gifts': 34, 'rhd areas': 52, 'rhd only': 40, 'guide only': 297}
 FAIL = []
 

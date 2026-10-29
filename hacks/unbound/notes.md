@@ -117,9 +117,9 @@ says"); the RomHackDex location pages only a membership report. No source has wi
 - **Doc says** (the workbook lists it, the wiki doesn't; shown in the area with "Doc says"): 52 wild rows (88 cells:
   Rift Cave's ghosts, Tomb of Borrius's Unown / Sigilyph, Victory Road B1F's fire types, Epidimy Town and Antisis City
   surfing and fishing, Thundercap Mountain outside Rock Smash, DexNav rows for Indeedee F, Eiscue, Galarian Weezing,
-  Drizzile, Dracovish, Arctovish...) and 22 gifts / statics (the other two Borrius starters post-game at the Rival's
+  Drizzile, Dracovish, Arctovish...) and 21 gifts / statics (the other two Borrius starters post-game at the Rival's
   House and Shadow Base, daily Lombre / Voltorb / Electrode in the gyms, Trubbish at Antisis City, the Shark Bait
-  Sharpedo, Flying Pikachu, Carbink, Snorlax / Zoroark in Redwood Forest, the Magnolia Café eggs). Matched: 1,101 wild
+  Sharpedo, Carbink, Snorlax / Zoroark in Redwood Forest, the Magnolia Café eggs). Matched: 1,101 wild
   cells, 54 gift / static / trade / Game Corner cells, 78 of the legend sheet's species. The workbook's swarms and wild
   held items agree with the wiki (0 differences). Full list: report.txt -> LOCATION SOURCE DIFFERENCES.
 - **Gen 8:** areas with Gen 8 rows note "register any Galar Pokémon first (a trade, or a Mystery Gift after the Elite
@@ -129,7 +129,7 @@ says"); the RomHackDex location pages only a membership report. No source has wi
   Safari Zone species (Blitzle, Kangaskhan, Tauros...; the wiki and the workbook agree without them), Cinder Volcano's
   Camerupt / Excadrill / Heatmor / Magmar (the wiki has them in Cinder Volcano Depths), Minior Blue Core / Grim Woods
   Pumpkaboo Average (form choices), Route 7 Raticate (the wiki: Alolan), and a few single rows. Not added.
-- **Names:** "Flying Pikachu" / "Surfing Pikachu" are Pikachu (Flying) / (Surfing) here (`locs.NAME_FIX`;
+- **Names:** "Balloon Pikachu" (the wiki), "Flying Pikachu" / "Surfing Pikachu" are Pikachu (Flying) / (Surfing) here (`locs.NAME_FIX`;
   `common.location_aliases` maps "Flying Pikachu" to Pikachu, unit 3's), "Indeedee♀️" is Indeedee (Female).
 - **Availability (P.g):** EI's rule (any row, plus evolution families both ways; a form change follows its base): 30
   not found: Pikachu's five cosplay forms and Cosplay, Alolan Cubone, Unfezant / Frillish female, Pumpkaboo / Gourgeist

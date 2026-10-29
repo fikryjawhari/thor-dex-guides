@@ -52,7 +52,8 @@ LEGEND_PLACE = {'Entei': 'Great Desert', 'Raikou': 'Great Desert', 'Thundurus': 
 
 NAME_FIX = {'Klank': 'Klang', 'Whirlpide': 'Whirlipede', 'Amoongus': 'Amoonguss', 'Spheal Egg': 'Spheal',
             'Flabebe': 'Flabébé', 'Nidoran♂️': 'Nidoran♂', 'Nidoran♀️': 'Nidoran♀', 'Indeedee♀️': 'Indeedee (F)',
-            'Surfing Pikachu': 'Pikachu (Surfing)', 'Flying Pikachu': 'Pikachu (Flying)'}     # own forms, not cosmetic
+            'Surfing Pikachu': 'Pikachu (Surfing)', 'Flying Pikachu': 'Pikachu (Flying)',
+            'Balloon Pikachu': 'Pikachu (Flying)'}     # own forms, not cosmetic
 GROUPS = {'One of the Borrius Starters': ['Beldum', 'Gible', 'Larvitar'],
           'Unova Starters': ['Snivy', 'Tepig', 'Oshawott'], 'Sinnoh Starters': ['Turtwig', 'Chimchar', 'Piplup'],
           'Alola Starters': ['Rowlet', 'Litten', 'Popplio'], 'Kanto Starters': ['Bulbasaur', 'Charmander', 'Squirtle'],

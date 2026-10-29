@@ -19,7 +19,7 @@ Mega Stones: 49 placed from the wiki; Megas with no stone page (1): rayquaza_meg
 type chart vs the Gen VI+ chart: agrees
 tutors: wiki Move Tutors page 29 tutors / 152 moves; tutor moves in species lists 157; listed but no wiki tutor teaches them (11): Cut, Dazzling Gleam, Dive, Draining Kiss, Fly, Power-Up Punch, Rock Climb, Rock Smash, Strength, Surf, Waterfall
   taught by a wiki tutor but in no species list (6): Draco Meteor, Dragon Ascent, Relic Song, Secret Sword, Steel Beam, Volt Tackle
-locations: 69 areas, 63 with a tracker slot; {'dens': 32, 'doc legend matched': 78, 'doc special added': 22, 'doc special matched': 54, 'doc wild cells added': 88, 'doc wild matched': 1101, 'doc wild rows added': 52, 'legend page added': 40, 'legend page matched': 41, 'legend page other place': 4, 'mystery gifts': 34, 'raid rows': 462, 'swarms': 24, 'wiki other': 247, 'wiki slots summed': 1, 'wiki starter rows': 3, 'wiki wild': 1162}
+locations: 69 areas, 63 with a tracker slot; {'dens': 32, 'doc legend matched': 78, 'doc special added': 21, 'doc special matched': 55, 'doc wild cells added': 88, 'doc wild matched': 1101, 'doc wild rows added': 52, 'legend page added': 40, 'legend page matched': 41, 'legend page other place': 4, 'mystery gifts': 34, 'raid rows': 462, 'swarms': 24, 'wiki other': 247, 'wiki slots summed': 1, 'wiki starter rows': 3, 'wiki wild': 1162}
 doc separator labels (floors / headings, not species): 76 kinds
 NOT FOUND (30): Pikachu (Belle), Pikachu (Cosplay), Pikachu (Libre), Pikachu (PhD), Pikachu (Pop Star), Pikachu (Rock Star), Alolan Cubone, Unfezant (Female), Frillish (Female), Pumpkaboo (Large), Pumpkaboo (Average), Gourgeist (Large), Gourgeist (Average), Zygarde (10%), Wishiwashi (School), Minior (Core), Toxtricity (Low Key), Zacian, Zacian (Crowned), Zamazenta, Zamazenta (Crowned), Eternatus, Kubfu, Urshifu (Single Strike), Urshifu (Rapid Strike), Glastrier, Spectrier, Calyrex, Calyrex (Ice Rider), Calyrex (Shadow Rider)
 WIKI RATE TOTALS NOT 100% (22, as the wiki gives them):
@@ -45,7 +45,7 @@ Route 16 / Super Rod / -: 80%
 Magnolia Fields / Long Grass / -: 90%
 Magnolia Fields / Long Grass / -: 110%
 Route 18 / Long Grass / -: 75%
-LOCATION SOURCE DIFFERENCES (78):
+LOCATION SOURCE DIFFERENCES (77):
 Route 13 | Deoxys | Legendary page: Route 13 (post-game) Found in the area only accessible with Jirachi in your team; location pages: Route 5
 Great Desert | Entei | Legendary page: Roaming Acquirable after interacting with the portal in the Tomb of Borrius; location pages: Ruins of Void
 Great Desert | Magearna | Legendary page: Tomb of Borrius Part of the “Tomb Raider” side mission; location pages: Frozen Heights
@@ -110,7 +110,6 @@ Shadow Base | Gible | Doc says Static: post-game; Beat the League; One of the Bo
 Shadow Base | Larvitar | Doc says Static: post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A5
 KBT Expressway | Carbink | Doc says Static: Behind any collapsed doors; ADM; Carbink | Gift & Static Encounters!A12
 Fallshore City | Lombre | Doc says Static: Gym; Lombre (Daily); wiki: Auburn Waterway, Route 10 | Gift & Static Encounters!A17
-Dehara City | Pikachu (Flying) | Doc says Mission Reward: Complete the A Life of No Regrets mission; Flying Pikachu | Gift & Static Encounters!A23
 Dehara City | Voltorb | Doc says Static: Gym; Voltorb/Electrode (Daily) | Gift & Static Encounters!A25
 Dehara City | Electrode | Doc says Static: Gym; Voltorb/Electrode (Daily); wiki: Blizzard City | Gift & Static Encounters!A25
 Antisis City | Garbodor | Doc says Static: Trubbish/Garbodor; wiki: Fallshore City | Gift & Static Encounters!A33
