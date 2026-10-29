@@ -96,7 +96,12 @@ branch), Totem battles from the game (real IVs; "Doc says" notes on 6 difference
 (the summary screen's EVs stay 0), a trainer's Pokémon stats, and a Totem fight still hard.
 
 **Unbound 2.1.1.1 (Expert): in progress** on `worktree-unbound` (`.claude/worktrees/unbound`). Plan, decisions and
-unit findings: `plans/unbound.md`. Units 1, 2, 3, 7a done; 4-6 running.
+unit findings: `plans/unbound.md`. Merged on the branch: 1 sources, 2 scaffold, 3 dex + `tools/cfru.py` + GID, 4 locations,
+5 items, 7a mission spec (accepted: bordered card, auto-close). Running (Opus, Sol hit its limit): 6 trainers + caps
+(round 4, `worktree-unbound-tr4`), 8a CFRU save reader (`worktree-unbound-reader`). Next: merge 6, add the
+unobtainable-species prune to `build.py` (unit 4's 30 not-found list), then 7 walkthrough, 7b mission template build,
+8b calc profile + field review, 9 review + audit. Template changes so far on the branch: `cfg.mgm` (also on main),
+no speed for unknown IVs / EVs (`monCard`).
 
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
