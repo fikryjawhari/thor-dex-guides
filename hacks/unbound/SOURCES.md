@@ -16,6 +16,13 @@ missions, walkthrough and extras from [unboundwiki.com](https://unboundwiki.com/
 
 Source updates: `watch.json` (`uv run python -I tools/check_updates.py unbound`).
 
+2026-10-29 audit run: exit **1** (changes detected, no errors), 4 GitHub API requests.
+All seven pre-existing sources and Unbound-Cloud were unchanged. hzla's live `decomp` branch
+differs from the pinned snapshot in `calc/mechanics/gen789.js` and `calc/mechanics/vanilla/gen789.js`.
+The pinned input is deliberately retained; no `--accept` was run. Full log:
+`.tmp/unbound-sources/check-updates.log`. The two repository watches compare live branches
+against the file-blob baselines, not a fixed ref against itself.
+
 ```bash
 D=hacks/unbound/.src
 python -I tools/mirror.py https://romhackdex.net/unbound/ $D/romhackdex 4000 team-builder compare /moves/ /abilities/
