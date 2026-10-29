@@ -101,6 +101,9 @@ branch), Totem battles from the game (real IVs; "Doc says" notes on 6 difference
   trainers + caps (393 cards, keys seeded), walkthrough with 84 keyed missions, CFRU save reader (`cfru.js`, 37 saves
   vs Unbound-Cloud / hzla, 0 unexplained), calc profile (8b: 82 exact hzla fixtures), prune (21 species). Template
   changes so far: `cfg.mgm`, no speed for unknown IVs / EVs (`monCard`).
+- 8c merged 2026-10-30 (`e0571af`): every gimmick in the engine, 27 field records, none left for review; the
+  calc UI spec is in `plans/unbound.md` → Findings → 8c. Engine change left for the UI pass: weight Speed in the
+  official order (Decisions).
 - Running: **7b** mission template build (Opus, `worktree-unbound-missions-build`, from the spec; ends with the phone
   preview link); **8c** calc gimmicks engine side (Sol, `worktree-unbound-gimmicks`: every gimmick per the user,
   Brain Bond = Parental Bond, Face Shield = Gen 8 Dauntless Shield; writes the calc UI spec into Findings).

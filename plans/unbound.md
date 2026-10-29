@@ -124,6 +124,10 @@ User's answers (2026-10-29):
   when move 2 differs. Two moves of the same type: the official calc (saved by the user in
   `hacks/unbound/.src/unboundcalc/`, `shared_controls_YA0k.js` UpdateCamomons) sets type 1 = type 2 = that type and
   doesn't remove the duplicate, so it counts twice (4x weak / 4x resist). Follow the official calc; in-game check open.
+- **Weight Speed order (user 2026-10-30): like the official calc.** Weight (kg, rounded down) replaces the Speed stat,
+  then Choice Scarf, stages, paralysis, Tailwind etc. apply as usual (Scarf Abomasnow 202). 8c built "weight is final"
+  (135): the calc UI pass changes the engine and its fixtures to the official order.
+- **Sky Battle, Dynamax Battle, Benjamin Butterfree format: labels only** on the card (user 2026-10-30); no calc rule.
 - **Brain Bond = Parental Bond; Face Shield = Gen 8 (pre-nerf) Dauntless Shield** (user 2026-10-30; overrides hzla).
 - **Missions (7a, 2026-10-29):** bordered mission card, auto-close on the final tick (`plans/unbound-missions.md`).
 - **Mode:** hack.json has no mode field; "Expert" goes in the trainer wording (`txt`), not a new key.
