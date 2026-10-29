@@ -471,9 +471,9 @@ def _bb2r_trainers(doc):
     records = []
     current = None
     location = context = version = ''
-    increment = 0
+    increment = section_increment = 0
     easy_increment = 1
-    started = False
+    sub_seen = started = False
     headings = {line: title for title, line, start, end in doc.blocks()}
     roster = re.compile(r'^(.+?)\s*\[([^]]+)\][,.]?\s*(?:lv\.\s*)?(\d+)\s*(?:@([^:]*))?:\s*(.+)$', re.I)
     for line, text in enumerate(doc.lines):
@@ -488,16 +488,31 @@ def _bb2r_trainers(doc):
                 records.append(current)
                 current = None
             location, context, version = headings[line], '', ''
-            increment = easy_increment
+            increment = section_increment = easy_increment
+            sub_seen = False
             continue
+        # A '~~~' sub-heading ('~~~~ Name ~~~~', or a title between two '~~~' rules) resets the increment to the
+        # section's value (set before the section's first sub-heading); shift lines inside a sub-section stay there.
+        if re.fullmatch(r'~{3,}\s*[^~\s].*?~{3,}', text) or (text and not text.startswith('~') and line > 0 and line + 1 < len(doc.lines)
+                and re.fullmatch(r'~{3,}', doc.lines[line - 1].strip()) and re.fullmatch(r'~{3,}', doc.lines[line + 1].strip())):
+            # Explicit exception: Reversal Mountain B1F has no shift line of its own and keeps the MAIN AREA's +4 (the
+            # old carry-over); the section default would be +3 (Ranger Lewis, a D1 row: settle in game).
+            if not (location == 'Reversal Mountain' and text.strip('~ ') == 'B1F'):
+                increment = section_increment
+            sub_seen = True
         shift = re.search(r'Levels?\s*(?:-\d+ on Easy mode,\s*)?\+(\d+)', text, re.I)
         if shift:
             increment = int(shift[1])
             if increment < 7:
                 easy_increment = increment
+            if not sub_seen:
+                section_increment = increment
             continue
-        if 'No level shift based on difficulty' in text:
+        # Unscoped only: "No level shift based on difficulty in Burgh's room" covers Burgh's own teams, which the increment never reaches.
+        if re.search(r'No level shift based on difficulty[,.]', text):
             increment = 0
+            if not sub_seen:
+                section_increment = 0
             continue
         header = re.match(r'^[\u25cf\u25cb][*\u2655\u265b\s]*(.+?):?\s*$', text)
         guardian = text.startswith('Victini Guardian -')

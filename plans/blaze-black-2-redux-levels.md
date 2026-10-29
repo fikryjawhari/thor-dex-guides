@@ -71,6 +71,7 @@ Chasm Grunt #724. Every other row agrees, so the doc lists the stored level. The
 Challenge level was typed in. Changelog has nothing on these levels (v1.0.2 "Raised Hugh's levels slightly outside
 Chargestone" comes before both hzla backups). The ROM is likely right, but this is the one class that changes the
 displayed level of many early fights, so check it in the game.
+Reversal Mountain B1F (Ranger Lewis): no shift line of its own; kept at the MAIN AREA's +4 by an explicit exception; the section default would be +3; settle in game.
 
 **E1 (8).** Doc: early Braven/Clifford version branch lv.20 (3 Pokémon, line 575), later Braven and Clifford lv.25
 (4 each). hzla: 212 = Braven 4 × lv.20, 213 = Clifford Meowth/Sandile 25 + Dwebble/Darumaka 20. That fits no doc
