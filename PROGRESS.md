@@ -10,8 +10,11 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.5 (NDS), Photonic Sun 2.38 Rebalanced (3DS), Eternal X 2.67
   Rebalanced (3DS). All four share one template, one extract layout (`tools/extractlib.py`), one data schema
   (`tools/schema.py`), one Items standard (`tools/itemstd.py`) and one notes / SOURCES layout.
-- **Blaze Black 2 Redux 1.4.1** (NDS, Complete / Challenge Mode): scaffold only on `worktree-bb2r-scaffold`;
-  no data.json, calc disabled. Source audit and data builders fill the TODOs; not published.
+- **Blaze Black 2 Redux 1.4.1** (NDS, Complete EVless / Challenge Mode) merged into `main` 2026-10-29 (live once
+  `main` is pushed): dex, locations, items, trainers with caps and Normal teams, walkthrough, the first Gen V calc
+  (level bug `sl`, Triple Axel 30 / 40 / 50) and Gen 5 save import. Audit passed (Haiku, BB2R only: extract checks,
+  calc checks, hzla 46 match / 4 known, page checks at 260 x 316 normal + dvkb, 27 / 27 scenarios); the four live
+  guides passed the template gate (137 / 137) and every scenario (135 / 135 over five guides). Open: BB2R below.
 - Done and merged: the split UI, search (full-window, results with actions, search stays set), trainer cards, the
   consistency pass (2026-10-24) and the walkthrough / Trainers agreement (2026-10-24: walkthrough splits = Trainers
   boxes, same order, caps never go down, `tools/tabs_check.py`). Audits passed headless; the user approved the phone
@@ -75,34 +78,16 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
    learnsets, ability usage): re-fetch before its guide.
 7. **New-guide scaffold done** (2026-10-29): `tools/new_hack.py <hack> --like <built hack>`; BB2R skeleton created, no data yet.
 
-**In progress: Blaze Black 2 Redux** (branch `worktree-blaze-black-2-redux`, worktree
-`.claude/worktrees/blaze-black-2-redux`; the session prompt's goal: Complete EVless, Challenge, calc + save import).
-Plan and decisions: `plans/blaze-black-2-redux.md` (Decisions, Findings); source audit `-sources.md`; level analysis
-`-levels.md`; mode mockup `-modes.html` (option A built). Handover 2026-10-29:
-- Merged on the guide branch: audit, scaffold (`tools/new_hack.py`), hzla source, shared `tools/drayano.py` +
-  `tools/romhackdex.py` + dex, locations, items, trainers + caps (Normal-team line in the template), Gen 5 reader
-  (`template/calc/readers/gen5.js`, PKHeX oracle 805 / 0 mismatches), walkthrough (22 splits, 117 stops), optional
-  bosses under their split's cap (user rule). BB2R build / check / tabs_check clean.
-- Level fix A1 merged (6 trainers / 24 Pokémon; Ranger Lewis kept at +4 by an explicit exception, open in
-  `-levels.md` D1).
-- **Calc continuation done** on `worktree-bb2r-calc` (2026-10-29; guide branch merged in, data.json unchanged): BB2R
-  scenario (`calc-blaze-black-2-redux.mjs`: Gen V field, EVless, the `s<sl>` marker at every size + dvkb, stats and
-  Seismic Toss at `sl`); every shared scenario passes on BB2R, the first Gen V calc (the scenarios now gate Mega,
-  terrain, Sticky Web, auras, Weakness Policy on the profile, Gen V crit x2, and their engine-input copies take EVless
-  and `sl`); stat level clamped to 1 (template); import fallback for an unknown ability ID (Competitive / Neutralizing
-  Gas, marked `?`); move-flag removal reviewed (the lists were empty: the engine's stock flags are right). Template
-  gate on the four live guides: 137 / 137 pass (`gate.py check <four> --template --jobs 8`, 36 min). Merged into the guide branch (fast-forward).
-- **Settled 2026-10-29:** weather-trainer field records (text only), Triple Axel 30 / 40 / 50 (built: profile `step`),
-  Kyurem Lv 74 no level bug, Pikachu / Stoutland / Unfezant (hzla = doc New line = ours), rival / school teams
-  follow the picked starter (`t.st` = starter name; picking one hid them all).
+**Blaze Black 2 Redux: open.** Decisions and findings: `plans/blaze-black-2-redux.md`; level analysis
+`plans/blaze-black-2-redux-levels.md` (delete both once the checks below are settled; notes.md keeps the decisions).
 - **In-game checks while the user plays** (the battle screen's level settles each; `-levels.md`): Floccesy School
   Kid (12: as now; 11: drop one increment from the 57 D1 Pokémon), Castelia Sewers Hugh (26: as now; 24: no
   increment for the 54 partner Pokémon), Lenora & Hawes (31: as now; 33: shown 33, stats 31); Striaton trio
   postgame. TM57 in Chargestone Cave (the old Escape Rope)? Giga Impact's TM number at Shopping Mall Nine (66 / 68)?
-  When Royal Unova first opens (stop placed after Burgh). Castelia Cafe artist unconfirmed.
-- Then: player's-eye review (Thor frame, `tools/preview.py --frame`), the sceptic audit (Haiku medium: full gate,
-  domcompare on the four live guides, viewer sizes, saved state), notes / PROGRESS / family notes, ask before push and
-  before merging into main. `pagecheck.mjs` is Emerald-specific (crashes on BB2R): the audit needs a BB2R-aware run.
+  When Royal Unova first opens (stop placed after Burgh). Castelia Cafe artist unconfirmed. Triple Axel's 30 / 40 / 50
+  against a hit in game.
+- Real save import on the Thor (melonDS / DraStic `.sav`), like the other guides (Open → Damage calc → Real saves).
+- `worktree-bb2r-calc` and its T3 worktree (`~/.t3/worktrees/thor-dex-guides/t3-6ab62dd5`) are merged: delete them.
 
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
