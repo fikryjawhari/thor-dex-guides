@@ -68,7 +68,7 @@ wins" rule.
   merged (the entry species use is kept; the build report lists them and the fields where they differ); 102 Max /
   G-Max and 36 Z-move copies are left out (no species learns them; the calc's Z-moves are unit 8's). Three names the
   calc doesn't know stay as Unbound originals (`MV.x`): Endless Edge (Hisuian Samurott), InfernalRage (Hisuian
-  Typhlosion), Steelyhit (no learner); the mirror's data for the first two isn't Ceaseless Edge's / Infernal Parade's.
+  Typhlosion), Metal Bash (the game's MOVE_STEELYHIT; notes → Trainers); the mirror's data for the first two isn't Ceaseless Edge's / Infernal Parade's.
   Crit stages: the Gen VIII lists (`cfru.HIGH_CRIT`, `ALWAYS_CRIT`). Descriptions: the mirror's, cleaned (`cfru.clean`).
 - **Evolutions:** the wiki's Evolution Line tables (they name each child's parent; the mirror draws a family as one
   flattened chain), worded by `dex.wiki_how` / `cfru.evo_text`; the mirror's "Lv. N" wins on a level (no conflicts
@@ -259,9 +259,10 @@ and "none?" → `x`. Route 9's "MOVES BLOCKED BY AURAS" sidebar → a trainer no
 (Rory & Chad), and the Fight Gimmicks cell's comment (Fog, Negative Energy, Vicious Sandstorm, Shadowy Veil, Pixies,
 Rainbow Battle). Gimmicks are tags (Double Battle, Tag Battle with X, Inverse Battle, Camomons Battle, Sky Battle,
 Dynamax Battle, ...). All 130 cell comments are used (the build reports any that isn't).
-**Metal Bash** (Rival 1 / 2 Beldum, Rival!P5 / Q24): the game's own move (MOVE_STEELYHIT, 40 BP Steel in hzla); the
-dex merges the mirror's "Metal Bash" into Behemoth Blade (`tools/cfru.py` alias), so the card shows Behemoth Blade
-with `x` "the sheet says Metal Bash". Needs a dex fix (a Metal Bash M entry); then drop the `x`.
+**Metal Bash** (Rival 1 / 2 Beldum, Rival!P5 / Q24): the game's MOVE_STEELYHIT, named "Metal Bash" in the game's
+own table (Unbound-Cloud `src/data/MoveNames.json`); the dex has it as Metal Bash (`cfru.CFRU_NAMES` 'Steelyhit').
+RomHackDex has two entries for it: "Metal Bash" (60 BP, 5 PP, lowers the user's Defense and Sp. Def; 4 species learn it)
+and "Steelyhit" (40 BP, 35 PP, no learners); the dex keeps the first (RomHackDex is the move source). hzla says 40 BP.
 
 **hzla** (`backups/unbound.js`, `formatted_sets["expert"]`, 383 sets): joined on (species id, label) with the sheet's
 export label (minus " - Expert" / "[Expert]"; `LABEL_FIX` for Almuth, Rival 3, the Boss Wild blocks). 381 slots
@@ -284,8 +285,9 @@ has a later-cap comment ("Benjamin Cap: 61 Elite Four Cap: 75"), the card shows 
 75 at E4 cap"), and when every given level is cap + one offset and the sheet's level is the named cap + that offset,
 the level is relative (`r`, `t.cap` = the split's cap; the card's "Your level" box moves it): 76 mons (Lily, Vivian &
 Mathis, Yale, Ernesto, Timothy, Aloysius, Osean, Travon, Almuth, Alexa, James, Candice, Gruff, Rory & Chad, the two
-Scientists, Swizer & Bullo). Kept absolute (9, a trainer note says so): **Reena** (sheet and hzla Lv 59-61 "at E4 Cap",
-its notes 75-77 at the E4 cap: they disagree) and **Barbs** (minimum levels 57-59, above the Big Mo cap she's met at).
+Scientists, Swizer & Bullo). **Reena** (5 more, 81 in all): sheet and hzla say Lv 59-61 "at E4 Cap", its notes 75-77 at the E4 cap (every
+other Mega Trainer's pattern): relative to the notes, each mon with "Sheet says Lv N" (main chat 2026-10-29). Kept
+absolute (4, a trainer note says so): **Barbs** (minimum levels 57-59, above the Big Mo cap she's met at).
 Every trainer in a capped box has `t.cap` = its box's cap.
 
 **Ordinary trainers: the wiki's 309 rows** = 292 ordinary cards + 17 rows that are boss cards (the Mega Trainers,

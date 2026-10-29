@@ -46,7 +46,7 @@ CFRU_NAMES = {
     'Teary Look': 'Tearful Look', 'Flower Guard': 'Flower Shield', 'Psychic Fang': 'Psychic Fangs',
     'Scorch Sands': 'Scorching Sands', 'PsyshieldRam': 'Psyshield Bash', 'Break Swipe': 'Breaking Swipe',
     'Expand Force': 'Expanding Force', 'Clang Scales': 'Clanging Scales', 'Draco Hammer': 'Dragon Hammer',
-    'Metal Bash': 'Behemoth Blade', 'Giant Bash': 'Behemoth Bash', 'Cliff Blades': 'Precipice Blades',
+    'Steelyhit': 'Metal Bash', 'Giant Bash': 'Behemoth Bash', 'Cliff Blades': 'Precipice Blades',
     'Aroma Mist': 'Aromatic Mist', 'Astral Storm': 'Astral Barrage', 'Geist Beam': 'Moongeist Beam',
     'Jungle Heal': 'Jungle Healing', 'Mystic Power': 'Mystical Power', 'Crafty Guard': 'Crafty Shield',
     'Water Star': 'Water Shuriken', 'BleakiceWind': 'Bleakwind Storm', 'WildboltWind': 'Wildbolt Storm',

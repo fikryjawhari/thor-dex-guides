@@ -282,10 +282,6 @@ def build(D):
                 fixes.append('%s: "default moveset", no moves listed' % cell)
                 continue
             m = MOVE_FIX.get(m, m)
-            if m == 'Metal Bash' and 'moves: the sheet says Metal Bash' not in x:
-                # the game's own Metal Bash (MOVE_STEELYHIT); the dex has no entry for it yet (notes.md → Trainers)
-                x.append('moves: the sheet says Metal Bash')
-                fixes.append('%s: Metal Bash shows as the dex Behemoth Blade' % cell)
             h = re.fullmatch(r'Hidden Power (\w+)', m)
             if h:
                 hp, m = h[1], 'Hidden Power'
@@ -476,6 +472,15 @@ def build(D):
                 mon['r'] = slot.level - base
                 del mon['l']
                 relative.append(slot.cell)
+            elif len(offsets) == 1 and named and named[1] in CAP_OF:
+                # The block names its cap but its level isn't that cap + the notes' offset (Reena: Lv 59-61 "at E4
+                # Cap", notes 75-77 there). The notes follow every other Mega Trainer's pattern: they win.
+                (r,) = offsets
+                mon['x'].insert(1, 'Sheet says Lv %d' % slot.level)
+                mon['r'] = r
+                del mon['l']
+                relative.append(slot.cell)
+                fixes.append('%s: Lv %d at %s Cap, the notes say %d: relative to the notes' % (cell, slot.level, named[1], base + r))
             else:
                 absolute_ladder.append((slot.cell, slot.level, base, sorted(offsets)))
                 note = 'Levels as the sheet lists them: its notes give other levels at this cap (see each Pokémon).'

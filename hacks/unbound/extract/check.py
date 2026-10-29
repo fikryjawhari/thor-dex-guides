@@ -376,8 +376,8 @@ SHEET_ONLY = {'no hzla team': 9 + PARTNER_SLOTS + 5 + 6 + 6, 'malformed hzla key
 NO_EV = ['Boss Wild Battles!F193', 'Team Light Of Ruin Bosses!J46', 'Team Light Of Ruin Bosses!J66',
          'Team Shadow Bosses!J126']
 WIKI_ROWS = {'rows': 309, 'ordinary': 292, 'boss cards': 17, 'name only': 15, 'name only, team unknown': 0}
-RELATIVE = 76           # mons whose later-cap levels are all cap + one offset
-ABSOLUTE_LADDER = 9     # Reena (the sheet's "Level at E4 Cap" levels don't fit its notes) and Barbs (minimum levels)
+RELATIVE = 81           # mons whose later-cap levels are all cap + one offset (76 + Reena's 5, relative to her notes)
+ABSOLUTE_LADDER = 4     # Barbs (minimum levels); Reena is relative to her notes now
 
 
 def trainer_checks(D):
@@ -403,7 +403,9 @@ def trainer_checks(D):
                     (foe if g.role == 'foe' else part)[(common.sid(strip(m.species)), m.level)] += 1
     check(dict(per) == SHEET_SLOTS, 'sheet slots per worksheet: %s' % dict(per))
     check(sum(part.values()) == PARTNER_SLOTS, 'partner slots: %d' % sum(part.values()))
-    lv = lambda t, m: m['l'] if 'l' in m else t['cap'] + m['r']
+    def lv(t, m):
+        said = next((int(x[len('Sheet says Lv '):]) for x in m.get('x', []) if x.startswith('Sheet says Lv ')), None)
+        return said if said is not None else m['l'] if 'l' in m else t['cap'] + m['r']    # Reena: the sheet's own cell
     have = collections.Counter((m['id'], lv(t, m)) for _, _, t in boss for m in t['p'])
     check(have == foe, 'boss cards vs the sheet foe slots: missing %s, extra %s' % (dict(foe - have), dict(have - foe)))
     seen, have_pt = set(), collections.Counter()

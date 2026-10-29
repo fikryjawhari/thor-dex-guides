@@ -43,8 +43,8 @@ function shifted() {
   for (const sp of D.WK.splits) for (const st of sp.st) for (const it of st.it || []) if (typeof it[3] === 'number') it[3] = mv(it[3]);
   for (const it of D.WK.np || []) if (typeof it[3] === 'number') it[3] = mv(it[3]);
   if (D.GID) {
-    D.GID.mv = D.GID.mv.map(mv);
-    D.GID.ab = D.GID.ab.map(ab);
+    if (D.GID.mv) D.GID.mv = D.GID.mv.map(mv);
+    if (D.GID.ab) D.GID.ab = D.GID.ab.map(ab);   // CFRU saves store the ability slot: no ab table
   }
   D.P.unshift({ id: 'brand-new-species', n: 'Brand New Species', dex: 0, t: ['Normal'], a: [1], ha: -1, s: [50, 50, 50, 50, 50, 50],
     ef: [], et: [], of: [], lv: [[1, 1]], tm: [], eg: [], w: [], g: 3 });
