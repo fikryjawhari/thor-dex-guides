@@ -141,6 +141,14 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
 
 ## Findings for later units
 (Units add theirs here.)
+- Unit 6 round 2 (2026-10-29, `worktree-unbound-tr3`, WIP): readers `extract/bosssheet.py` (439 Expert slots, 102
+  column groups, level-row labels that name each fight's cap) and `wiki.py` `trainer_locations()` (309 rows; the 15
+  name-only rows share the row above's place and combined team through a rowspan). New sources: 130 cell comments
+  (gimmick rules, per-slot evolution / move-by-level notes, other-cap level ladders, the rival partner's Mega movesets),
+  and the ordinary workbook's pair blocks split the wiki's combined teams. Design and placement plan: notes.md → Trainers.
+  Unit 7: the split points there (Maxima 40 is its own split; Ivory 1 / Zeph 1 open the Alice split; Lily and the
+  other "Tessy Cap" Mega Trainers come after Big Mo). Unit 8: field gimmicks with the sheet's own rule text,
+  Boss Wild "Boosts" rows (Omniboost, Raid Shields), 60 slots without IVs (58 sheet-only + Route 9 pair).
 - Unit 6 WIP/source checkpoint (2026-10-29): independently reproduced 101 structural Expert teams / 439 slots,
   wiki 309 = 294 with teams + 15 name-only, hzla 383 Expert sets, and every LEVEL CAPS!D2:D11 value.
   **Stopped before implementation for a player-facing decision:** four partner Vaporeon slots carry question-mark

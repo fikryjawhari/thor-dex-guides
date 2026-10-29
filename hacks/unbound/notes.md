@@ -107,7 +107,7 @@ save; Shadow Warrior has no id), 766 moves, 522 items (Unbound-Cloud's display n
 the Items page). No `ab`: a CFRU box Pokémon stores its ability slot, so the reader returns `abs`. hzla's generated
 constants give the same id -> constant tables (checked every build). The reader itself is unit 8.
 
-### Trainers (unit 6 source checkpoint, 2026-10-29; NOT IMPLEMENTED)
+### Trainers (unit 6, 2026-10-29: readers done, trainers.py not written yet)
 
 Source inspection reproduced the Expert workbook's numeric-level inventory. These are structural teams,
 including partner groups and starter branches, not the final number of trainer cards or stable keys.
@@ -140,28 +140,84 @@ Workbook joins, held-item coverage and workbook-only trainers are not implemente
 Rival!B1/I1/P1 explicitly say PLAYER CHOSE GIBLE/BELDUM/LARVITAR, so the eventual `cfg.starter` should be
 `pick`, with `t.st` Gible/Beldum/Larvitar, not Grass/Fire/Water. Configuration remains unchanged at this checkpoint.
 
-**Blocking player-facing decision:** preserve unknown statistics without inventing displayed speeds. The source
-contains question-mark EVs in four partner Vaporeon slots:
+**Unknown stats (settled 2026-10-29, template `16b9650`):** a trainer Pokémon with no `iv`, or no `ev` (EVs count in
+Unbound), shows no speed. Omit `iv` where hzla has no set (sheet-only slots, Route 9 Shadow Warrior); omit `ev` for
+the four partner Vaporeon below and keep the raw cells as `x` ("Sheet: EVs 252? / 0? / ...").
 
-| Expert slot | Question-mark EV cells (HP/Atk/Def/SpA/SpD/Spe) |
+| Expert slot | Question-mark cells |
 | --- | --- |
-| Team Shadow Bosses!J126 | J135:J140: 252? / 0? / 0? / 0? / 252? / 0? |
-| Team Light Of Ruin Bosses!J46 | J55:J60: 252? / 0? / 0? / 252? / 0? / 0? |
-| Team Light Of Ruin Bosses!J66 | J75:J80: 252? / 0? / 0? / 252? / 0? / 0? |
-| Boss Wild Battles!F193 | F202:F207: 252? / 0? / 0? / 252? / 0? / 0? |
+| Team Shadow Bosses!J126 | J135:J140 EVs 252? / 0? / 0? / 0? / 252? / 0?; item Wacan Berry?, nature Hardy? |
+| Team Light Of Ruin Bosses!J46 | J55:J60 EVs 252? / 0? / 0? / 252? / 0? / 0? |
+| Team Light Of Ruin Bosses!J66 | J75:J80 EVs 252? / 0? / 0? / 252? / 0? / 0?; item Wacan Berry?, nature Hardy? |
+| Boss Wild Battles!F193 | F202:F207 EVs 252? / 0? / 0? / 252? / 0? / 0?; item Leftovers?, nature Hardy? |
 
-`template/dex.js` monCard directly dereferences `x.iv[5]` and, with Unbound's EVs enabled, `x.ev[5]` for
-every Pokemon with a known species and level. Omitting these arrays throws; null/empty entries coerce to
-invented numeric values or NaN, while source strings such as `0?` produce NaN. No existing unknown-stat
-display convention was found. Ordinary trainers need the same handling before unit 8 adds explicitly
-assumed calc sets. A note alone does not prevent a misleading Speed number.
+Also unsure in the sheet (value kept, `x` says so): Boss Wild Battles!E193 Toucannon item Sharp Beak?, G193 Mamoswine
+item Occa Berry?; Boss Wild Battles!B153 boosts "none?".
 
-Question for the main chat/user: may the template owner bring forward unknown-IV/EV rendering support before
-unit 6 resumes? Recommendation: retain question-mark source evidence verbatim, support unknown stats explicitly,
-and suppress Speed when its inputs are unknown; do not silently assume 0/31 IVs, strip EV question marks, or
-advance unit 8's assumed calc sets. This changes shared rendering/schema and is outside this worker's ownership.
-The task's stop-on-unsettled-display rule was applied. No trainer extraction, field review, key seeding,
-data rebuild, scenarios or screenshots have been performed; this checkpoint is not merge-ready as a finished unit.
+#### Readers (round 2: `extract/bosssheet.py`, `wiki.py` → `trainer_locations()`)
+
+- `bosssheet.blocks()` reproduces the 439 numeric-level slots per sheet as in the table above (Gym 45, League 30,
+  Rival 51, Shadow 39, Light 42, Boss Wild 18, Mega 63, Other 55, Title Defense 48, Battleground 48). It returns 102
+  column groups: unit 1's 101 counted Boss Wild Battles' Crystal Peak block (row 191: foe B:D, rival partner E:G) as one
+  group. Route 9's sidebar "MOVES BLOCKED BY AURAS:" (F2:F13) is `Block.side`, not Pokémon.
+- `Block.levelrow` is the level row's own label, and it places the fight: "Level at Cap" (gyms, League, Rival, Light
+  of Ruin 1-4, Boss Wild), "Level at Big Mo / Tessy / Maxima / E4 / Mel / Vega / Alice Cap" (Mega Trainers, Other
+  Bosses), "Level at Cap (UNSURE)" (Almuth), "Minimum Level" (every Team Shadow block, Aklove 3, Krystal, Ravonna,
+  Annie, Barbs, Ryuzoji & Kenlawa, the Candice rematch, Title Defense, Battleground). The txt line says levels are at
+  the cap; a "Minimum Level" or "(UNSURE)" block needs a trainer note saying so.
+- `trainer_locations()`: 309 rows = 293 with species + Mega Trainer Reena (empty team cell, Route 18) + 15 rows with no
+  cells of their own. Those 15 sit under a rowspan: they share the row above's place and team cell (`shared`), i.e.
+  the wiki lists the pair's combined team under the first name (Skier Anna and Ruby, Picnicker Kelsey under Camper
+  Chad, ...). Two 3-cell rows (Ace Trainer Lia: no picture cell; Bug Catcher Greg: no place). The page says "310".
+
+#### Sources found this round (use them)
+
+- **Cell comments** (130, openpyxl `cell.comment`): gimmick explanations on the Fight Gimmicks cells (Fog, Negative
+  Energy, Vicious Sandstorm, Shadowy Veil, Pixies, Rainbow Battle) → trainer notes (field evidence); per-slot notes
+  (Rival "Trumbeak on levels lower than 28", Other Bosses "Night Slash on lvl 50 or higher", "Regenerator if Walrein")
+  and other-cap level ladders ("Benjamin Cap: 61 / Elite Four Cap: 75") → `mon.x`; Team Shadow K130 / Light K70: the
+  rival partner's "Starter (mega)" moveset per Mega (Tyranitar / Garchomp / Metagross).
+- "Starter (mega)" (Shadow K126, Light K66, level 64): one partner `pt` per starter (`st`): player Gible → Mega
+  Tyranitar, Beldum → Mega Garchomp, Larvitar → Mega Metagross (ability cell "Sand Stream // Tough Claws // Sand
+  Force"), moves from the comment, nature / EVs from Rival 5's Mega ("Check corresponding spread in Rival sheet").
+- Sheet values to normalise (record each): "Hidden Power <Type>" → Hidden Power + `hp`; "Heatt Wave" (Mega Trainers
+  E205) → Heat Wave; Rival 2 Swinub "default moveset" → no moves, `x`; "A / B" ability → `ao`; "A → B" → `a0` / `a`;
+  species suffixes "[1st lead]" / "[X's lead]" → `ld`, "(pre-burned)" → `pre` Burned, "(respawnable)" → note;
+  "Sucessor Maxima" label typo.
+- hzla Expert (the `formatted_sets["expert"]` line of backups/unbound.js is JSON): 383 sets, labels "Lvl N <label>";
+  all 382 IV sets are 31s. Join on (sid(species), key(label)) with the sheet label minus " - Expert" / "[Expert]".
+  Label overrides: Rival row 40 → "Rival 3 |Player Chose X|", Almuth → "Mega Trainer Almuth", Boss Wild blocks →
+  Route9 / Ruins of Void / Cinder Volcano / Vivill Hideout (= Vivill Warehouse) / Distortion World / Crystal Peak.
+  Ravonna "Kangaskhan1-4" and Ryuzoji / Kenlawa "Mimikyu1-3" are calc labels: strip ": ..." for the trainer.
+- Ordinary-trainer workbook: 418 Name blocks, 1,000 Evo Names cells, 73 Held Item cells (column-aligned with the evo
+  names). Pair blocks ("Skier Anna & Ruby [Double Battle]", "Camper Phillip & Picnicker Tina") mark each trainer's
+  first Pokémon "[Anna's lead]": that splits the wiki's combined team. Trainer Items row (X Speed, Full Restore) → note.
+  Spellings differ ("Picknicker", "Ferrothon", sheet "Anthisis City"): match on key + area, report loose matches.
+- Wiki Trainer Locations includes the Mega Trainers and Expert Ryuzoji / Kenlawa: those rows are the sheet's boss
+  cards (one card, counted present), not ordinary duplicates. Wiki levels are lower than Expert (Lily 49-52 vs the
+  sheet's 57-60 at the Tessy cap).
+
+#### Placement plan (walkthrough parts 1-40 on the wiki)
+
+Mirskle 20: Frozen Heights (part 1, Rival 1), Icicle Cave (2, Rival 2), Route 2, Dresco Town, Route 3, Dresco Gym (4).
+Vega 26: Grim Woods, Route 4, Cinder Volcano (5, Marlon 1 tag), Route 5, Crater Town, KBT Expressway (7, James), Crater
+Gym. Alice 32: Ivory 1 + Zeph 1 (7, after Vega), Valley Cave, Route 6, Route 7, Frost Mountain (9, Rival 3), Route 8,
+Blizzard City (Candice, "Level at Alice Cap"), Frozen Forest, Blizzard Gym. Mel 36: Route 11 (11), Cinder Volcano 2F
+(Alexa, "Mel Cap"), Route 10 (12, Gruff), Route 9 (13, Ivory 2 tag, Shadow Warriors), Fallshore Gym. Maxima 40:
+Thundercap Mt. (15, Marlon 2), Cinder Volcano 3F (Yale, "Maxima Cap"), Tarmigan Mansion (16). Galavan 45: Route 12 (17,
+Rival 4), Dehara, Ruins of Void (18: Claydol, beasts, birds), Cinder Volcano (Light of Ruin Vega tag, Primal Groudon),
+Shadow Base (19, Zeph 2), Dehara Gym. Big Mo 52: Routes 13-14 (21, Osean), Route 2 (Vivian & Mathis, "Big Mo Cap"),
+Auburn Waterway (22), Thundercap (23), Great Desert (24), Vivill Woods / Warehouse / Distortion World (25: Aklove 1,
+Shadow Warrior, Giratina), Routes 15-16 (26), Antisis City (27: Rory & Chad, Supply and Demand), Antisis Sewers /
+Ferrothorn Turf (28, Barbs: minimum levels 57-59, above the cap), Antisis Gym (29). Tessy 57: Icicle Cave (29, Lily),
+Route 10 (Ernesto), Route 11 (Timothy), Thundercap (30, Aloysius), Great Desert (Travon), Route 17 (31, Almuth),
+Seaport City (31-32: Swizer & Bullo, Rogue Electivire), Polder Gym (33). Benjamin 61: Cootes Bog (34, Rival 5), Crystal
+Peak (35: Zekrom / Reshiram with the rival partner, Ivory 3, Aklove 2, Marlon 3, Rayquaza / Hoopa), Magnolia Fields,
+Redwood Gym (36). Elite Four 75: Route 18 (37, Reena), Victory Road (38, Sterling & Portia), League (39). Post-game:
+Ruins of Void (40, Aklove 3 tag with Jax), Crystal Peak (Krystal), Redwood Forest (Ravonna), Frost Mountain 2F
+(Ryuzoji & Kenlawa), Day Care (Annie), Blizzard City (Candice rematch); then Title Defense and Battleground sections
+(Battle Frontier: no fixed teams found yet). Ordinary trainers: the area's earliest visit whose cap is at least the
+wiki's highest level, moved to the walkthrough part that names the trainer when one does (Skier Charlie: parts 29-30).
 
 ### Caps (unit 6 source checkpoint)
 
