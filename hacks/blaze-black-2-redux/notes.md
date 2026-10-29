@@ -284,6 +284,7 @@ Partner teams copied onto both opponents produce 120 final partner slots, not 12
   Normal Winona Noctowl Tinted Lens @ Colbur Berry; Challenge Shauntal rematch Jellicent Cursed Body @ Leftovers;
   postgame Colress Klinklang Air Balloon / Earthquake, displayed 92, stat 88; Floccesy Hugh's Snivy-branch Pansage
   lv.19 -> lv.9 (the other branches and hzla have 9; 19 would be 20 at the cap-14 split). Name repairs: report.
+- Level increment (`_bb2r_trainers`): a `~~~` sub-heading resets to the section's value (set before its first sub-heading); unscoped "No level shift" only. Reversal Mountain B1F (Ranger Lewis): no shift line of its own; kept at the MAIN AREA's +4 by an explicit exception; the section default would be +3; settle in game.
 - hzla disagreements (doc wins, card shows `hn` "hzla says ..."): **328 displayed levels / 84 stat levels / 140
   abilities / 92 moves / 25 items / 11 species**. Most level ones are hzla's older sets (doc stat level 1-5 off) or
   a different increment (postgame: the doc's "old documentation" carries +4, hzla often +5). The per-Pokemon ledger is
