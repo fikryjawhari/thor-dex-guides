@@ -39,9 +39,9 @@ def check(ok, what):
 
 
 # ---- shape ----
-base = [p for p in P if p['id'] not in {f[0] for f in FORMS}]
+base = [p for p in P if p['dex'] <= 649 and p['id'] not in {f[0] for f in FORMS}]
 check(len(base) == 649 and sorted(p['dex'] for p in base) == list(range(1, 650)), 'one base entry per dex 1-649')
-check(len(P) == 649 + len(FORMS), 'P = 649 species + %d forms' % len(FORMS))
+check(len(P) == 649 + len(FORMS) + 4, 'P = 649 species + %d forms + 4 trainer-only creations' % len(FORMS))
 check(len(MV) == len(M) and len(set(M)) == len(M), 'MV matches M, M unique')
 for p in P:
     idx = [i for _, i in p['lv']] + p['tm'] + p.get('tu', []) + p['eg']
@@ -221,6 +221,62 @@ check(all(sum(percent for bands in pickup.values() for level, percent in bands i
 again = copy.deepcopy(D)
 itemstd.standardise(again)
 check(again['IT'] == D['IT'], 'items: Items standard is idempotent')
+records = drayano.trainers(doc('Trainer Changes'), 'bb2r')
+check(len(records) == 468, '468 trainer battle records parsed')
+check(sum(len(record['rows']) for record in records) == 1867, '1867 doc Pokemon resolved')
+check(all(record['rows'] for record in records), 'no empty trainer records')
+check(sum(record['mode'] == 'normal' for record in records) == 31, '31 Normal source records')
+expected_caps = [['Cheren', 14], ['Roxie', 21], ['Brycen', 23], ['Burgh', 29], ['Lenora and Hawes', 33],
+                 ['Subway Masters', 36], ['Elesa', 38], ['Charles', 39], ['Rood', 41], ['Clay', 45], ['Colress', 53],
+                 ['Skyla', 55], ['Bianca', 56], ['Hugh', 58], ['Benga', 62], ['Drayden', 64], ['Marlon', 68],
+                 ['Ghetsis', 72], ['Lance', 76], ['Elite Four et al', 78], ['Iris', 79]]
+check(D['TR']['caps'] == expected_caps, 'caps = the user plan, exactly')
+check([group['cap'] for group in D['TR']['g']] == [row[1] for row in expected_caps] + [None], 'only cap boundaries plus Post-game')
+trainers = [trainer for group in D['TR']['g'] for section in group['sec'] for trainer in section['tr']]
+check(len(trainers) == 466, '466 cards after starter, version and joint-team expansion')
+check(sum('normal' in trainer for trainer in trainers) == 31, '31 collapsed Normal teams')
+check(sum('Challenge only' in trainer['tags'] for trainer in trainers) == 3, '3 Challenge-only cards')
+check(sum('st' in trainer for trainer in trainers if 'School Kid' in trainer['n']) == 6, 'school trainers follow your starter')
+report_text = (HERE / 'report.txt').read_text(encoding='utf-8')
+for group in D['TR']['g']:
+    for section in group['sec']:
+        for trainer in section['tr']:
+            check(0 < len(trainer['p']) <= 6, trainer['n'] + ': legal opponent party size')
+            if group['cap'] and max(mon['l'] for mon in trainer['p']) > group['cap']:
+                check(any('split-cap exception:' in line and trainer['n'] + ', levels' in line and
+                          '> split cap %d ' % group['cap'] in line for line in report_text.splitlines()),
+                      trainer['n'] + ': over-cap card listed as an exception')
+            for team in [trainer] + trainer.get('pt', []) + ([trainer['normal']] if 'normal' in trainer else []):
+                for mon in team['p']:
+                    check(mon['id'] in byid, trainer['n'] + ': Pokemon resolved')
+                    check(1 <= mon['l'] <= 100 and ('sl' not in mon or 1 <= mon['sl'] < mon['l']), trainer['n'] + ': displayed/stat level pair')
+                    check(len(mon['iv']) == 6 and all(0 <= value <= 31 for value in mon['iv']), trainer['n'] + ': six IVs')
+                    check('na' in mon or any('IVs/nature unknown' in note for note in mon.get('hn', [])), trainer['n'] + ': IV/nature uncertainty explicit')
+                    check(mon['m'] and all(0 <= index < len(M) for index in mon['m']), trainer['n'] + ': all moves resolved')
+                    check(0 <= mon['a'] < len(AB), trainer['n'] + ': ability resolved')
+            if 'normal' in trainer:
+                check(trainer['normal']['easy'] in (1, 2, 3, 4), trainer['n'] + ': Easy decrement')
+                check(all('sl' not in mon for mon in trainer['normal']['p']), trainer['n'] + ': Normal uses stated levels')
+cheren = next(trainer for trainer in trainers if trainer['n'] == 'Leader Cheren')
+munchlax = next(mon for mon in cheren['p'] if mon['id'] == 'munchlax')
+check(munchlax['l'] == 14 and munchlax['sl'] == 13, 'Challenge Cheren Munchlax displayed 14 / stat 13')
+red = next(trainer for trainer in trainers if trainer['n'] == 'Red')
+check(all(mon['l'] == 100 for mon in red['p']) and any('+7' in note for note in red['note']), 'Red stays at 100, +7 retained as text')
+colress = next(trainer for trainer in trainers if trainer['n'] == 'Colress' and 'Postgame' in trainer['tags'])
+klinklang = next(mon for mon in colress['p'] if mon['id'] == 'klinklang')
+check(klinklang['i'] == 'Air Balloon' and 'Earthquake' in [M[index] for index in klinklang['m']] and
+      klinklang['l'] == 92 and klinklang['sl'] == 88, 'settled Klinklang Air Balloon / Earthquake, 88+4')
+check(not any('Grab' == M[index] for trainer in trainers for mon in trainer['p'] for index in mon['m']), 'Grab repaired to Snatch')
+keys = json.loads((HERE / 'trainer_keys.json').read_text(encoding='utf-8'))
+check(len({trainer['k'] for trainer in trainers}) == len(trainers), 'unique stable trainer keys')
+check({trainer['k'] for trainer in trainers} <= {entry['k'] for entry in keys}, 'every card key is in trainer_keys.json')
+check(sum('split-cap exception:' in line for line in report_text.splitlines()) == 4,
+      'four split-cap exceptions: TM Protectors Melody / Nikola, Black / White Kyurem')
+check(sum('trainer recorded fix:' in line for line in report_text.splitlines()) == 5,
+      'five recorded trainer fixes: Hugh Pansage lv, Banette Snatch, Noctowl, Jellicent, Klinklang')
+hugh = next(trainer for trainer in trainers if trainer['n'] == 'Hugh' and trainer.get('st') == 'Grass')
+check(max(mon['l'] for mon in hugh['p']) <= 14, 'Floccesy Hugh (Snivy branch) Pansage lv.19 typo repaired')
+check(all(trainer['tags'].count('Challenge only') <= 1 for trainer in trainers), 'Challenge only tagged once')
 wild = drayano.wild(doc('Wild Area Changes'), 'bb2r')
 groups = [(area, group) for area in wild['areas'] for group in area['groups'] if group['rows']]
 rows = [row for area, group in groups for row in group['rows']]
@@ -318,7 +374,8 @@ print('Locations: 81 source headers; 104 initial AR slots; 352 sections; 2,057 w
       '47 legendary species; 30 trades; all source percentage groups reproduced')
 ids, gid = tables(), D['GID']
 check(all(f'{dex}:0' in gid['sp'] for dex in range(1, 650)), 'GID covers every base species 1-649')
-check(set(gid['sp'].values()) == {p['id'] for p in P}, 'GID covers every guide form')
+check(set(gid['sp'].values()) == {p['id'] for p in P} - {'F00', 'MT', 'MT2', 'UFO'},
+      'GID covers every guide form except the four trainer-only Pokestar creations')
 check(set(gid['sp']) == set(gid['gr']), 'GID growth and species keys agree')
 unsupported = {f'351:{form}' for form in range(1, 4)} | {f'493:{form}' for form in range(1, 17)}
 check(set(gid['sp']) == {f'{dex}:{form}' for dex, form, _ in ids['forms']} - unsupported,
@@ -327,7 +384,7 @@ replace = replacements(ids)
 check(len(replace) == 26, '26 replacement slots')
 check(all(gid['mv'][slot] is not None and M[gid['mv'][slot]] == name for slot, name in replace.items()), 'every replacement retains its game slot')
 mapped = {index for index in gid['mv'] if index is not None}
-used = {index for p in P for field in ('tm', 'tu', 'eg') for index in p[field]}
+used = {index for p in P for field in ('tm', 'tu', 'eg') for index in p.get(field, [])}
 used.update(index for p in P for _, index in p['lv'])
 check(used <= mapped, 'every move used by a BB2R species has a game slot')
 missing = [name for index, name in enumerate(M) if index not in mapped]
@@ -360,3 +417,4 @@ if fails:
 print('PASS blaze-black-2-redux extract-check: P %d, M %d, AB %d; 649 species / 189 stat / 51 type / 94 evolution / '
       '154 move-conflict counts reproduced' % (len(P), len(M), len(AB)))
 print('PASS items: 652 doc destinations / 69 areas; 95 TMs linked to M, 6 HMs; 6 marts; mode, source, deletion and standard checks')
+print('PASS BB2R trainers: 468 records / 1867 doc Pokemon; 466 cards; 31 Normal teams / 3 Challenge-only; exact 21 caps; level pairs and over-cap reports checked')

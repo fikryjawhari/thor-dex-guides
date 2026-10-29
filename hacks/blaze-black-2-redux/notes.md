@@ -207,9 +207,79 @@ Prefix `bb2r`. Keep these keys once published.
 - `items`: `bb2ritems`
 - `dmg`: `bb2rdmg`
 
+Trainer keys are committed in `extract/trainer_keys.json` (466 initial identities). Normal-team open state is
+not saved; no localStorage key was added or changed.
+
 ## Hack-only data
 
 TODO: document hack-only data.
+
+Trainers use optional shared `normal`, `sl` and `hn` schema fields (Trainers below). Four trainer-only Pokestar
+species come from the pinned hzla table; everything stays in the one offline HTML.
+
+### Trainers
+
+Unit 7 (2026-10-29), Complete / EVless / Challenge. All **468 battle records / 1,867 source Pokemon rows** parse,
+including 31 Normal alternatives. Selecting 437 Challenge records, then expanding starters, versions and joint
+sides, gives **466 cards / 1,711 opponent Pokemon**. Plus **150 Normal / 54 independently joined partner Pokemon**
+gives **1,915 roster slots, 1,909 with hzla IVs+nature (99.69%)**. Challenge opponents: **1,705/1,711** covered.
+Partner teams copied onto both opponents produce 120 final partner slots, not 120 independent joins.
+
+- Docs win for species, Complete abilities, moves, items and levels; all names go through `drayano.Names` and
+  unresolved doc names fail the build. Structural repairs include missing comma/dot after abilities, lv. whitespace,
+  Phanpy's missing lv. prefix and Meditite's item after an extra colon. RP remains a separate trainer dialect.
+- hzla uses the pinned `403c2669` sets and `da8a533` trainer navigation (SOURCES.md). Join whole parties by species
+  content, moves/items/levels and order proximity, then Pokemon by species/moves. Related forms can share individual
+  IV/nature evidence while retaining their doc identity; different species never borrow one another's natures/IVs.
+  Repeated documented encounters can reuse a matching party. Every join and trainer ID is recorded in the report.
+- Bryce/Micki: doc Psychic Micki's five-Pokemon party joins hzla **555 (Bryce)**; doc Psychic Bryce's Reuniclus
+  joins **553 (Micki)**. Do not join these by name alone.
+- `l` is displayed level; optional `sl` is a different stat level. Shared parties add the section increment to the
+  doc level, continuing the regional increment (default +4 after Skyla) unless a section says no shift. Explicit
+  Challenge parties use their stated levels; when hzla's `level + diff` agrees, its base level supplies `sl`.
+  Normal retains doc levels; `normal.easy` is the regional Easy decrement. Red stays 100, +7 retained as text.
+  The trainer speed uses `sl`; visible levels remain `l`. Generic stat-model disagreements do not replace the doc.
+- All **31** paired bosses carry `normal: {easy, p}`: native collapsed Normal team below Challenge, not a mode
+  toggle or saved preference. Grunt #884, Victini Guardian and Lance are tagged **Challenge only**. Guardian's
+  before-Burgh / postgame access restriction is on the card.
+- Formats: Double Battle / Triple Battle / Tag Battle supply Doubles calc evidence (no true triples in the calc).
+  Rotation Battle stays singles. Joint parties, including unmarked Shanta/Webster and Grunts #807/#809, split into
+  <=6-Pokemon side cards sharing `bt`; partners stay separate `pt` teams. Reversal Mountain tag fights use Bianca's
+  Normal party regardless of mode. School children and Hugh branches carry the player's starter type. Both N
+  introductory game versions, four seasonal teams, both Braven/Clifford versions, optional fights, postgame,
+  rematches, E4 round two and Route 4 game-only teams are retained and flagged.
+- Four trainer-only Pokestar creations F-00/MT/MT2/UFO are added to P using hzla's pinned species table (types,
+  100-all stats, Pound placeholder learnset, documented abilities). Docs give actual party moves. No borrowed
+  ordinary-species sprite: these four deliberately use the template's coloured initial fallback.
+- Recorded fixes (each card keeps its "Doc says ..." note; report: `trainer recorded fix`): Banette Grab -> Snatch;
+  Normal Winona Noctowl Tinted Lens @ Colbur Berry; Challenge Shauntal rematch Jellicent Cursed Body @ Leftovers;
+  postgame Colress Klinklang Air Balloon / Earthquake, displayed 92, stat 88; Floccesy Hugh's Snivy-branch Pansage
+  lv.19 -> lv.9 (the other branches and hzla have 9; 19 would be 20 at the cap-14 split). Name repairs: report.
+- hzla disagreements (doc wins, card shows `hn` "hzla says ..."): **328 displayed levels / 84 stat levels / 140
+  abilities / 92 moves / 25 items / 11 species**. Most level ones are hzla's older sets (doc stat level 1-5 off) or
+  a different increment (postgame: the doc's "old documentation" carries +4, hzla often +5). The per-Pokemon ledger is
+  the report's `hzla disagreement` lines; joins are its `hzla join` lines.
+
+Caps, exactly the user's order (only these end splits): Cheren 14; Roxie 21; Brycen 23; Burgh 29; Lenora and Hawes
+33; Subway Masters 36; Elesa 38; Charles 39; Rood 41; Clay 45; Colress 53; Skyla 55; Bianca 56; Hugh 58; Benga 62;
+Drayden 64; Marlon 68; Ghetsis 72; Lance 76; Elite Four et al 78; Iris 79 ("New to Redux" rows named from the doc's
+spoiler cap guide). Optional Hoenn bosses stay in these splits with spoiler-guide caps: Roxanne 13, Brawly 20,
+Wattson 29, Flannery 37, Norman 44, Juan 54, Winona 63, Tate and Liza 67. Charles follows Elesa despite the earlier
+Route 5 doc section. Gated revisits use a later listed cap without adding splits. Source order within each split
+remains for the walkthrough, which reviews Surf/Waterfall revisit placement and TM Protectors' access.
+
+Four split-cap exceptions, doc levels kept (report: `split-cap exception`): Relic Passage TM Protectors Melody (six)
+and Nikola (three), displayed 72 in the Colress 53 split (optional, late); Black / White Kyurem, doc 70 + 4 = 74 in
+the Ghetsis 72 split, with no hzla set (the calc unit settles these scripted encounters).
+
+Six unmatched IV/nature slots: the two Kyurem; N Spring Pelipper and Beartic (hzla Politoed / Dragonite); N winter
+Vanilluxe (hzla Clefable); rematch Cheren Dodrio (hzla Zangoose). Docs kept, uncertainty on the card; the zero IVs
+are a placeholder, not a claim.
+
+Field reviews: ten records across Caroll, Elmer, Porta, Sterling and Lance, two each: "Weather Trainers and Lance"
+and the gauntlet/healing note. Neither infers permanent weather from abilities. The four explicit Permanent Rain /
+Sandstorm boss conditions are separately retained. User settles reviews later. `calc-doubles` EXPECTED is **72**
+from data; cfg.calc stays false, so the scenario still skips until the calc unit enables it, not bypassing its gate.
 
 ## Checks
 
@@ -220,6 +290,14 @@ blocks, 189 with stats, 51 Type Changes rows, 94 evolution methods for 86 specie
 doc-changed species' stats / types / abilities equal the doc (Complete); 189 stat conflicts with the mirror; every doc
 evolution is an edge both ways and no method is left vague; every move name in Pokemon / Move Changes resolves; 154
 move fields where the mirror disagrees; Shadow Claw, Esper Wing, the type-changed moves; no replaced move in M.
+
+`extract/check.py` (trainers, 2026-10-29): 468 records / 1,867 doc Pokemon resolved; 466 cards; caps = the plan's
+21, only they end splits; 31 Normal teams (stated levels, Easy 1-4) + 3 Challenge-only; displayed level <= split cap
+or one of the four reported exceptions; level pairs (Cheren Munchlax 14 / 13, Red 100, Klinklang 92 / 88); IVs and
+nature or an explicit "unknown"; five recorded fixes; every card key in `trainer_keys.json`. Template (`normal`,
+`hn`, `sl`): four live guides DOM identical normal + kb at baseline 8242fed; BB2R Trainers at 260 x 316 normal +
+dvkb: 31 Normal lines, nothing past 260 px, no page errors (`tools/mockup/pagecheck.mjs` only knows EI's place names).
+`guide-update` / `stable-keys` need `WK.splits`: they run once the walkthrough unit lands.
 
 TODO: replace extract/check.py and calc stubs with source-backed assertions. Calc remains disabled.
 Before enabling it, replace the null in tools/scenarios/calc-doubles.mjs EXPECTED with an audited count and add

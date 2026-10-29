@@ -467,13 +467,81 @@ def evo_method(s):
 # ---- hooks for the next units (not written yet) ---------------------------------------------------------------------
 
 
+def _bb2r_trainers(doc):
+    records = []
+    current = None
+    location = context = version = ''
+    increment = 0
+    easy_increment = 1
+    started = False
+    headings = {line: title for title, line, start, end in doc.blocks()}
+    roster = re.compile(r'^(.+?)\s*\[([^]]+)\][,.]?\s*(?:lv\.\s*)?(\d+)\s*(?:@([^:]*))?:\s*(.+)$', re.I)
+    for line, text in enumerate(doc.lines):
+        text = text.strip()
+        if '~~~~' in text and 'Trainer Changes' in text:
+            started = True
+            continue
+        if not started:
+            continue
+        if line in headings:
+            if current:
+                records.append(current)
+                current = None
+            location, context, version = headings[line], '', ''
+            increment = easy_increment
+            continue
+        shift = re.search(r'Levels?\s*(?:-\d+ on Easy mode,\s*)?\+(\d+)', text, re.I)
+        if shift:
+            increment = int(shift[1])
+            if increment < 7:
+                easy_increment = increment
+            continue
+        if 'No level shift based on difficulty' in text:
+            increment = 0
+            continue
+        header = re.match(r'^[\u25cf\u25cb][*\u2655\u265b\s]*(.+?):?\s*$', text)
+        guardian = text.startswith('Victini Guardian -')
+        first = text.startswith('FIRST BATTLE:')
+        if header or guardian or first and not (current and current['header'] == 'N - First battle'):
+            if current:
+                records.append(current)
+            title = header[1].rstrip(': ') if header else 'Victini Guardian' if guardian else 'N - First battle'
+            current = dict(header=title, line=line, location=location, context=context, version=version,
+                           increment=increment, easy_increment=easy_increment, optional=text.startswith('\u25cb'),
+                           mode='normal' if re.search(r'\[(?:Easy and )?Normal mode\]', text, re.I) else
+                           'challenge' if re.search(r'\[Challenge mode\]', text, re.I) or guardian else 'shared', rows=[], body=[])
+        if current:
+            match = roster.match(text)
+            if match:
+                species, ability, level, item, moves = match.groups()
+                misplaced = re.match(r'^@([^:]+):\s*(.+)$', moves)
+                if misplaced and not item:
+                    item, moves = misplaced.groups()
+                current['rows'].append(dict(species=species, ability=ability.rstrip('*'), level=int(level),
+                                            item=(item or '').strip(), moves=[move.strip() for move in moves.split(',')],
+                                            line=line))
+            if text and (text == '---' or not re.fullmatch(r'[=~\-]+', text)):
+                current['body'].append((line, text))
+        if re.match(r'^If you picked ', text):
+            context = text
+        if text in ('Blaze Black 2 Redux only', 'Volt White 2 Redux only'):
+            version = text
+        if line > 1 and re.fullmatch(r'~+', doc.lines[line - 1].strip()) and text and not text.startswith('~'):
+            context = text
+    if current:
+        records.append(current)
+    return records
+
+
 def trainers(doc, dialect):
     """Trainer Changes (BB2R) / TrainerPokemon (RP) -> location sections of battle records with their teams.
     BB2R: '● Youngster Terrell:' headers, 'Species [Ability], lv.N @Item: Move, Move' rows, Normal/Challenge blocks,
     partners (left / right / tag), '*' = Complete-only ability. RP: inline 'Name  Species Lv. n, ...' rows and boss rows
     'Species (Lv. n) @ item / nature / ability / moves', Vs. Seeker rematches. Both resolve species / moves / abilities
     / items through Names (the structural repairs in the BB2R audit section 2 stay recorded)."""
-    raise NotImplementedError('drayano.trainers: the trainers unit writes it')
+    if dialect.lower() == 'bb2r':
+        return _bb2r_trainers(doc)
+    raise NotImplementedError('drayano.trainers: unsupported dialect %s (RP needs its own reader)' % dialect)
 
 
 def wild(doc, dialect):

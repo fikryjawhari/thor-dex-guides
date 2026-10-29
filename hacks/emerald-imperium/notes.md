@@ -434,12 +434,14 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
        trainer {k key (Trainer key below), n name, loc place, tags[] (Optional, Double Battle, Back to Back #1, Permanent Rain, Trick
        Room...), [st "Water"/"Grass"/"Fire" or the starter's name = shown if that is YOUR starter], [cap default level
        cap], note[], [field evidence records], [rw rewards], [pp pokepast url], [c calc trainer names], [bt battle id shared by trainers fought at
-       once], [pl "m"/"f" = shown for that player character], [pt partners [{n, st, pl, p}]], p:[mon]}
-       mon {id speciesId (Mega/Primal form when it holds the stone), l absolute level OR r relative to the cap, i item,
+       once], [pl "m"/"f" = shown for that player character], [pt partners [{n, st, pl, p}]], p:[mon],
+       [normal {easy level decrement for Easy, p:[mon] Normal team; collapsed, no saved state}]}
+       mon {id speciesId (Mega/Primal form when it holds the stone), l absolute displayed level OR r relative to the cap,
+       [sl stat level, only when different from l; Gen V Challenge level bug, never substituted for the displayed level], i item,
        [a0 ability before Mega Evolution], a ability idx (Mega ability for Megas), [ao "A / B" when the slot is random],
        [na nature], iv[6], [ev[6]] (HP,Atk,Def,SpA,SpD,Spe), m[moveIdx], [hp Hidden Power type (from IVs)], [ld lead
        slot], [au[5] Totem aura stages Atk,Def,SpA,SpD,Spe], [pre[status]], [x[sheet extra speed lines]], [cf[sheet values that differ from the calc]],
-       [src "s" = sheet only]}
+       [hn[hzla disagreements shown as "hzla says ..."]], [src "s" = sheet only]}
   WK stop .tr [trainer keys]: placed by location name within the walkthrough split (gym leaders take the last matching
        stop, others a forward pointer; Route 111 desert fights in Split 5 sit with Mirage Tower; Elite Four with Victory
        Road; fallbacks: Gardenia (post 3rd badge) -> Verdanturf Town, Crasher Wake -> Mauville City).

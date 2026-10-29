@@ -36,7 +36,10 @@ an unknown key.
   (`AR.map`), tracker sub-slots (`AR.sub`), optional page order `ARO` (areas added later sit at the end of `AR` so saved
   trackers keep their slots).
 - Trainers: caps `TR.caps` (hidden when empty), partners `t.pt`, shared battles `t.bt`, starter `t.st` and player `t.pl`
-  variants (the player picker shows when any trainer has `pl`), EVs (MGM).
+  variants (the player picker shows when any trainer has `pl`), EVs (MGM). `t.normal` adds a collapsed Normal team
+  below the default team, with its Normal levels and Easy decrement (`easy`); it has no saved open state or calc
+  launch buttons. Absent data renders nothing. `mon.l` is always the displayed level; optional `mon.sl` is the stat
+  level (the trainer speed uses it). `mon.hn` lists disagreements as "hzla says ...", independently of sheet `cf`.
 - Walkthrough: checklist steps `stop.s` (Next step and Reset checklist show only then), stop notes, cheat codes
   `WK.cheats`, game docs `WK.docs` / `WK.ko`, unplaced items `WK.np`, stop keys `stop.k`.
 - **Rule:** saved state never stores a position in the data (an index into `M` / `MV` / `AB` / `P` / `LOC` / `TR` / `WK` / `IT`). It stores
