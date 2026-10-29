@@ -9,6 +9,7 @@ mkdirSync(out, { recursive: true });
 const errors = [];
 const browser = await startBrowser({ profilePrefix: 'unbound-missions-', onEvent: event => {
   if (event.method === 'Runtime.exceptionThrown') errors.push(event.params.exceptionDetails.text);
+  if (event.method === 'Runtime.consoleAPICalled' && event.params.type === 'error') errors.push(JSON.stringify(event.params.args));
 } });
 const target = await browser.send('Target.createTarget', { url: 'about:blank' });
 const attached = await browser.send('Target.attachToTarget', { targetId: target.result.targetId, flatten: true });
@@ -97,6 +98,15 @@ try {
       assert.equal(await value('mockup.state.query'), 'underwater', 'query retained');
       assert.equal(await value('mockup.progress("mission-007")[0]'), 2, 'ticks survive reload');
       assert.equal(await value('document.querySelector(".mission").open'), true, 'mission open survives reload');
+      await value("mockup.setQuery('power bracer');mockup.openSearch()");
+      assert.equal(await value('document.querySelectorAll(".hit").length'), 1, 'metadata hit deduplicated');
+      await value('document.querySelector(".hit").click()');
+      await settle();
+      assert.equal(await value('document.activeElement.parentElement.dataset.m'), 'mission-003', 'metadata lands mission summary');
+      await value("mockup.setQuery('no such mission');mockup.openSearch()");
+      assert.equal(await value('document.getElementById("results").textContent'), 'No results');
+      await value('document.getElementById("search-clear").click();document.getElementById("search-back").click()');
+      assert.equal(await value('mockup.state.query'), '', 'clear search');
       await value("demo('done')");
       assert.equal(await value('document.querySelector(".wk-next").disabled'), true, 'all done disabled');
       await value("demo('last');document.querySelector('.wk-next').click()");
@@ -104,18 +114,21 @@ try {
       await value('document.activeElement.click()');
       assert.equal(await value('document.querySelector(".wk-next").textContent'), 'Checklist done');
       await value("demo('partial');setOption('style','line')");
+      await settle();
+      await value("reveal(document.querySelector('.mission>summary'))");
       if (width === 260 && height === 316) await shot(`260x316-${mode}-closed`);
       reports.push(`${width}x${height} ${mode}: PASS (both styles, targets, Next, completion, search, reload, all done)`);
     }
   }
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'light' }] });
   await send('Emulation.setDeviceMetricsOverride', { width: 260, height: 316, deviceScaleFactor: 2.3, mobile: true });
-  await value("demo('partial');document.body.style.fontSize='19.5px';document.querySelectorAll('details').forEach(details=>details.open=true)");
+  await value("{demo('partial');document.querySelectorAll('details').forEach(details=>details.open=true);const sizes=[...document.querySelectorAll('#app *')].map(element=>[element,parseFloat(getComputedStyle(element).fontSize)]);sizes.forEach(([element,size])=>element.style.fontSize=size*1.3+'px')}");
   await settle();
-  assert.equal(await value('document.documentElement.scrollWidth'), 260, 'light + 130% base text overflow');
+  assert.equal(await value('document.documentElement.scrollWidth'), 260, 'light + 130% text overflow');
+  await value("reveal(document.querySelector('.mission>summary'))");
   await shot('260x316-light-zoom');
   assert.deepEqual(errors, [], 'console exceptions');
-  reports.push('Light theme + 130% base font: PASS; runtime exceptions: 0');
+  reports.push('Light theme + 130% text: PASS; runtime exceptions/console errors: 0');
   writeFileSync(resolve(out, 'checks.txt'), reports.join('\n') + '\n');
   console.log(reports.join('\n'));
 } finally {
