@@ -190,6 +190,37 @@ not a replacement for omitted methods. No template change or browser sweep in th
   Lacunosa, Lentimas, Marine Tube, Mistralton, Nuvema, Opelucid, PWT, Plasma Frigate, Pokémon League, Royal Unova,
   Tubeline Bridge); the check asserts every place is one or the other.
 
+### Walkthrough
+`extract/walk.py` (WK), checked in `extract/check.py`. 22 splits = the Trainers boxes (21 caps, then Post-game), 117
+stops, every trainer card in one stop, every AR area and every Found / shop line placed (WK.np empty).
+- **Stops:** each box's places in Trainer Changes order (a run of one place is one stop: an optional Hoenn leader joins
+  the gym stop after it). Places the doc has no trainers for are on-the-way stops in game order (`ON_THE_WAY`):
+  Aspertia City (the Starter area), Route 19 and Floccesy Town before Route 20; Royal Unova after Burgh (opens with
+  the third badge; game order from memory, unconfirmed); Join Avenue on Route 4; Anville Town from Nimbasa; Driftveil
+  Drawbridge after Route 5; the PWT after Clay; Lentimas Town after Skyla; Marine Tube before Humilau.
+- **Areas:** at the first stop whose place names them (`locs.area_names`); `AREA_STOP` fixes four (Starter; Relic
+  Passage centre room with the Driftveil side; Route 8 / Moor of Icirrus with Icirrus postgame; Marvellous Bridge).
+  Seasons and Surf / fishing sections show at the first visit (one tracker slot per area).
+- **Items:** each line at the first stop of its place (`items.area_join`, else a stop of that name; `ITEM_PLACE`,
+  `STOP_PLACE` for the rest) that is reachable: Surf notes from Route 6 (HM03, Clay split), Waterfall notes from the
+  Benga split, postgame notes from Post-game, "N Badges" shop lines from the box after the Nth gym leader, and a gym
+  TM at the stop of the leader whose reward it is (`rw`).
+- **Surf / Waterfall revisits:** the doc's "after Surf" trainers already sit in the Colress split (Castelia Sewers,
+  Castelia). The Route 20 Rangers (Autumn) and Lostlorn's Veteran Murphy need Surf and Waterfall (HM05, Undella Town,
+  end of the Hugh split): `trainers.py` now floors them at the Benga split (they were Rood / Colress by level); their
+  stops lead that split and show the area again (`REVISIT`).
+- **TM Protectors** (Melody, Nikola, Lv 72, optional, any time): at Relic Passage (Driftveil side) in the Colress
+  split, where they stand (user, 2026-10-29). **Black / White Kyurem** (Lv 74): Giant Chasm stop of the Ghetsis split,
+  just before Ghetsis, above the cap as the doc gives it (user, 2026-10-29).
+- **Postgame:** the doc's postgame sections in its order, with the postgame-only places of the Wild Areas doc between
+  them (Dragonspiral Tower ... Route 3; Dreamyard ... P2 Laboratory; Entralink ... Pledge Grove; Nacrene City before
+  the gym rematches there).
+- **Stop keys:** the first build's positions ("split.stop", `tools/schema.py`), published with the guide; a later
+  regroup keeps a stop's key (`template/README.md` → saved walkthrough state). The check pins this build's keys.
+- **tabs_check:** the Trainers page has five "cap goes down" lines (optional Hoenn leaders' own caps inside a split,
+  by the user's cap rule) and the walkthrough one more (Winona alone at Opelucid, 63 in the 64 split): the check has
+  no notion of an in-split optional cap. Everything else agrees.
+
 ## Local storage
 
 Prefix `bb2r`. Keep these keys once published.
@@ -297,7 +328,8 @@ or one of the four reported exceptions; level pairs (Cheren Munchlax 14 / 13, Re
 nature or an explicit "unknown"; five recorded fixes; every card key in `trainer_keys.json`. Template (`normal`,
 `hn`, `sl`): four live guides DOM identical normal + kb at baseline 8242fed; BB2R Trainers at 260 x 316 normal +
 dvkb: 31 Normal lines, nothing past 260 px, no page errors (`tools/mockup/pagecheck.mjs` only knows EI's place names).
-`guide-update` / `stable-keys` need `WK.splits`: they run once the walkthrough unit lands.
+Walkthrough (2026-10-29): `extract/check.py` walk asserts; `gate.py scenarios --only guide-update,stable-keys` pass
+(2 + 4); `tabs_check.py` 6 lines, all in-split optional caps (### Walkthrough).
 
 TODO: replace extract/check.py and calc stubs with source-backed assertions. Calc remains disabled.
 Before enabling it, replace the null in tools/scenarios/calc-doubles.mjs EXPECTED with an audited count and add

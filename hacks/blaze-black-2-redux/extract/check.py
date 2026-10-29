@@ -409,6 +409,39 @@ build_gid(with_items)
 check(with_items['GID']['it'][234] == 'Leftovers' and with_items['GID']['it'][246] == 'NeverMeltIce', 'item mapping after items merge, including aliases')
 check('Not A Game Item' not in with_items['GID']['it'], 'unknown items are not assigned invented IDs')
 
+# walkthrough (walk.py): the splits are the Trainers boxes, every card / area / item line in it
+WK = D['WK']
+stops = [(sp['n'], st) for sp in WK['splits'] for st in sp['st']]
+caps = [int(m[1]) for sp in WK['splits'] if (m := re.search(r'\[Cap (\d+)\]$', sp['n']))]
+check([sp['n'] for sp in WK['splits']] == [g['n'] for g in D['TR']['g']], 'walkthrough: splits = Trainers boxes, same order')
+check(caps == [c for _, c in D['TR']['caps']] and len(caps) == 21 and WK['splits'][-1]['n'] == 'Post-game',
+      'walkthrough: 21 cap splits (Cheren 14 ... Iris 79), then Post-game')
+check(caps == sorted(caps), 'walkthrough: split caps never go down')
+placed = [k for _, st in stops for k in st['tr']]
+cards = [t['k'] for g in D['TR']['g'] for s in g['sec'] for t in s['tr']]
+check(sorted(placed) == sorted(cards) and len(set(placed)) == len(placed), 'walkthrough: every trainer card in exactly one stop')
+check(not {a for a in range(len(D['AR']))} - {a for _, st in stops for a in st['a']}, 'walkthrough: every AR area in a stop')
+lines = sorted((box['n'], row[0], line) for box in D['IT'] for row in box['r'] for line in row[1].splitlines()
+               if box['n'] == 'Shops' or line.startswith('Found: '))
+walked = sorted((r[0], r[1], r[2]) for _, st in stops for r in st['it']) + [(r[0], r[1], r[2]) for r in WK['np']]
+check(sorted(walked) == lines, 'walkthrough: every Found / shop line in exactly one stop or WK.np')
+check(not WK['np'], 'walkthrough: no unplaced item lines (%d)' % len(WK['np']))
+keys = [st['k'] for _, st in stops]
+check(keys == ['%d.%d' % (si, ti) for si, sp in enumerate(WK['splits']) for ti in range(len(sp['st']))],
+      'walkthrough: first-build stop keys "split.stop" (they never change afterwards)')
+check(all(st['tr'] or st['a'] or st['it'] for _, st in stops), 'walkthrough: no empty stop')
+TR_BY_KEY = {t['k']: t for g in D['TR']['g'] for s in g['sec'] for t in s['tr']}
+where = {TR_BY_KEY[k]['n']: (sp, st['n']) for sp, st in stops for k in st['tr']}
+check(where.get('Trainer Melody') == where.get('Trainer Nikola') == ('Colress Split [Cap 53]', 'Relic Passage - Driftveil Side'),
+      'walkthrough: TM Protectors at Relic Passage (Driftveil side), Colress split')
+ghetsis = next(st['tr'] for sp, st in stops if sp.startswith('Ghetsis') and st['n'].startswith('Giant Chasm'))
+names = [TR_BY_KEY[k]['n'] for k in ghetsis]
+check(names.index('Black Kyurem - Blaze Black 2 Redux') < names.index('Ghetsis'), 'walkthrough: Kyurem just before Ghetsis')
+check(where.get('Ranger♂ Leaf')[0].startswith('Benga') and where.get('Veteran Murphy')[0].startswith('Benga'),
+      'walkthrough: Surf + Waterfall trainers (Route 20 Rangers, Lostlorn Murphy) in the Benga split')
+gym_tm = {st['n'] for sp, st in stops for r in st['it'] if r[1] == 'TM83 Work Up'}
+check(gym_tm == {"Aspertia City - Trainer School and Cheren's Gym"}, 'walkthrough: gym TMs at the gym stop')
+
 if fails:
     print('FAIL blaze-black-2-redux extract-check: %d' % len(fails))
     for f in fails[:40]:
@@ -418,3 +451,5 @@ print('PASS blaze-black-2-redux extract-check: P %d, M %d, AB %d; 649 species / 
       '154 move-conflict counts reproduced' % (len(P), len(M), len(AB)))
 print('PASS items: 652 doc destinations / 69 areas; 95 TMs linked to M, 6 HMs; 6 marts; mode, source, deletion and standard checks')
 print('PASS BB2R trainers: 468 records / 1867 doc Pokemon; 466 cards; 31 Normal teams / 3 Challenge-only; exact 21 caps; level pairs and over-cap reports checked')
+print('PASS BB2R walkthrough: %d splits = Trainers boxes, %d stops, %d cards / %d areas / %d item lines placed once, %d unplaced'
+      % (len(WK['splits']), len(stops), len(placed), len(D['AR']), len(lines), len(WK['np'])))
