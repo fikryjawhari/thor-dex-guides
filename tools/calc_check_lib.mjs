@@ -117,7 +117,9 @@ export function trainerRoles(data) {
   const usable = trainer => singles(trainer) && trainer.p.length > 0 && trainer.p.every(mon => known.has(String(mon.id)) && mon.m?.length);
   const first = list[0];
   const find = test => list.find(trainer => trainer !== first && usable(trainer) && test(trainer)) ?? null;
-  const four = find(trainer => trainer.p.length === 4);
+  // four: its first Pokémon (the default foe) can take a crit (checks 8 and 23; BB2R's Roxanne leads with Battle Armor)
+  const noCrit = new Set(['Battle Armor', 'Shell Armor'].map(name => data.AB.findIndex(entry => entry[0] === name)));
+  const four = find(trainer => trainer.p.length === 4 && !noCrit.has(trainer.p[0].a));
   const relative = find(trainer => trainer.cap != null && trainer.p.length >= 3 && trainer.p.some(mon => mon.l == null));
   const six = find(trainer => trainer.p.length === 6 && trainer.p.every(mon => mon.l != null));
   const taken = new Set([first, four, relative, six]);

@@ -111,7 +111,7 @@ checks.push({
     assert.equal(await page.count('.sheet .mrow[data-i="0"]'),1,'all stock items, not just guide availability');
   },
 });
-const r2Mon=`mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i,st:mon.status,iv:mon.iv,ev:mon.ev,stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp,used:mon.used,broken:mon.broken,vol:mon.vol})`;
+const r2Mon=`mon=>({id:mon.id,lv:mon.l,...(mon.sd?{sl:Math.max(1,mon.l-mon.sd)}:{}),nat:mon.na,ab:mon.a,it:mon.i,st:mon.status,iv:mon.iv,ev:${guide().data.cfg.calc.evs===false}?[0,0,0,0,0,0]:mon.ev,stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp,used:mon.used,broken:mon.broken,vol:mon.vol})`;
 const r2Row='.dres:not(.na) .mr:first-child';
 const r2Duel=async(page,moves=['Double-Edge','Drain Punch','Bullet Seed','Reflect'])=>{
   await setupCalc(page);
@@ -314,7 +314,7 @@ checks.push({
     };
     await fits('auto');
     for(const [key,value] of [['weather',''],['terrain',''],['weather','Rain'],['terrain','Grassy'],['weather','Sand']]){
-      if(!await page.value(`[...document.querySelector('.dfight select[data-f=${key}]').options].some(o=>o.value===${JSON.stringify(value)})`))continue;
+      if(!await page.value(`[...(document.querySelector('.dfight select[data-f=${key}]')?.options||[])].some(o=>o.value===${JSON.stringify(value)})`))continue; // Gen V: no terrain
       await page.value(`(()=>{const select=document.querySelector('.dfight select[data-f=${key}]');select.value=${JSON.stringify(value)};select.dispatchEvent(new Event('change',{bubbles:true}));})()`);
       await page.settle();
       await fits(`${key}=${value||'none'}`);

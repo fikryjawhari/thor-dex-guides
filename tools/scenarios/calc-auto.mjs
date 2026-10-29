@@ -265,7 +265,7 @@ const configure = (page, mine, foe) => page.value(`(()=>{
 })()`);
 const reloadCalc = async page => { await page.reload(); await page.route('#/calc'); };
 const effectTrainer = predicate => guide().data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr)).find(predicate);
-const engineInput = `m=>({id:m.id,lv:m.l,nat:m.na,ab:m.a,it:m.i,st:m.status,iv:m.iv,ev:m.ev,stg:[0,...(m.stg||[0,0,0,0,0])],hp:m.hp,intim:m.intim,used:m.used,broken:m.broken,entry:m.entry,abilityOn:m.abilityOn})`;
+const engineInput = `m=>({id:m.id,lv:m.l,...(m.sd?{sl:Math.max(1,m.l-m.sd)}:{}),nat:m.na,ab:m.a,it:m.i,st:m.status,iv:m.iv,ev:${guide().data.cfg.calc.evs===false}?[0,0,0,0,0,0]:m.ev,stg:[0,...(m.stg||[0,0,0,0,0])],hp:m.hp,intim:m.intim,used:m.used,broken:m.broken,entry:m.entry,abilityOn:m.abilityOn})`;
 const expectedHit = (page, roll = 'min', side = 'mine') => page.value(`(()=>{const input=${engineInput},side='${side}',other=side==='mine'?'foe':'mine',field=side==='mine'?CALC.state().field:Object.fromEntries(Object.entries(CALC.state().field).map(([key,value])=>[key.startsWith('atk')?'def'+key.slice(3):key.startsWith('def')?'atk'+key.slice(3):key,value]));return DMG.hit(input(CALC.mon(side)),input(CALC.mon(other)),{mv:CALC.mon(side).m[0]},field,'${roll}');})()`);
 const hitFirst = async (page, roll = 'min') => {
   if(await page.count('#calc-log'))await page.tap('#calc-log button');
@@ -403,6 +403,8 @@ checks.push(
         [{ name:'Gyarados',l:100,ability:'Moxie',moves:['Seismic Toss'] },{ name:'Bibarel',l:1 },/Moxie/],
       ];
       for(const [mine,foe,note] of cases){
+        // Weakness Policy is Gen VI (the engine applies it from Gen VI: tools/calc/src/adapter.js)
+        if(foe.i==='Weakness Policy'&&guide().data.cfg.calc.gen<6)continue;
         await configure(page,mine,foe);
         const result=await expectedHit(page);
         assert.ok(result, 'engine hit result');

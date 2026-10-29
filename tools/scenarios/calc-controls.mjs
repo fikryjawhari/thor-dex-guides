@@ -12,6 +12,8 @@ if (!file) {
 const DATA = readGuide(file).data;
 const moveIndex = name => DATA.M.indexOf(name);
 const T = guide().trainers;
+// Megas: species marked g 1 (calc.js MEGA); a Gen V guide (BB2R) has none, so the M steps and check 11 skip.
+const hasMega = DATA.P.some(entry => entry.g === 1);
 
 const checks = [
   {
@@ -34,9 +36,11 @@ const checks = [
       await touchBox(page, '[data-hp="mine"]');
       assert.equal(await attackerSide(page), 'mine', 'HP leaves the attacker alone');
       await page.tap('.dmatch .cc[data-s="mine"] [data-a="eopen"]');
-      await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
-      assert.equal(await attackerSide(page), 'mine', 'M leaves the attacker alone (Garchomp has a Mega)');
-      await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
+      if (hasMega) {
+        await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
+        assert.equal(await attackerSide(page), 'mine', 'M leaves the attacker alone (Garchomp has a Mega)');
+        await page.tap('.dmatch .cc[data-s="mine"] .mg[data-a="mega"]');
+      }
     },
   },
   {
@@ -197,7 +201,7 @@ const checks = [
   },
   {
     id: '8 crit per move',
-    title: 'C toggles one row (≈×1.5); a screen on the defender halves the non-crit rows, not the crit row',
+    title: 'C toggles one row (≈×1.5, Gen V ×2); a screen on the defender halves the non-crit rows, not the crit row',
     run: async page => {
       await setupCalc(page);
       const before = await attackerRows(page);
@@ -207,7 +211,8 @@ const checks = [
       crit.forEach((row, i) => { if (i !== 3) assert.equal(row.hp, before[i].hp, `${row.name} changed`); });
       const range = s => s.split('–').map(Number);
       const [lo, hi] = range(before[3].hp), [clo, chi] = range(crit[3].hp);
-      assert(clo / lo > 1.4 && clo / lo < 1.6 && chi / hi > 1.4 && chi / hi < 1.6, `crit ${crit[3].hp} vs ${before[3].hp}: want about ×1.5`);
+      const factor = DATA.cfg.calc.gen >= 6 ? 1.5 : 2; // crits are x2 before Gen VI
+      assert([clo / lo, chi / hi].every(ratio => Math.abs(ratio - factor) < 0.1), `crit ${crit[3].hp} vs ${before[3].hp}: want about ×${factor}`);
       await page.tap('.dres:not(.na) .rc', { index: 3 });
       assert.deepEqual(await attackerRows(page), before, 'toggled off: back to the start');
       await page.tap('.dres:not(.na) .rc', { index: 3 });
@@ -267,21 +272,24 @@ const checks = [
       await page.tap('[data-a="mvreset"]');
       assert.equal((await attackerRows(page))[0].hp, eq.hp, 'Reset power / type clears the edits');
       assert.equal(await page.count('[data-a="mvreset"]'), 0, 'and the button goes');
+      // the fixture set can arrive with an empty slot (a move the guide lacks: BB2R has no Sand Tomb), so count from it
+      const moves = await page.count('.dres:not(.na) .mr:not(.em)');
       await openSlot(page, 3);
       await page.tap('.dres:not(.na) [data-a="chmv"][data-slot="3"]');
       await page.tap('.mrow[data-n="1"]');
-      assert.equal(await page.count('.dres:not(.na) .mr:not(.em)'), 3, 'three moves now');
+      assert.equal(await page.count('.dres:not(.na) .mr:not(.em)'), moves - 1, 'one move fewer now');
       await page.tap('[data-a="addmv"][data-slot="3"]');
       await page.typeSearch('Ice Beam');
       await page.tap('.mrow[data-i="0"]');
       const names = (await attackerRows(page)).map(r => r.name);
-      assert.equal(names.length, 4, `four moves after + Move (${names})`);
-      assert.equal(names[3], 'Ice Beam', '+ Move fills the fourth slot');
+      assert.equal(names.length, moves, `the moves are back after + Move (${names})`);
+      assert.equal(await page.value(`M[CALC.mon('mine').m[3]]`), 'Ice Beam', '+ Move fills the fourth slot');
     },
   },
   {
     id: '11 Mega',
     title: 'M on Garchomp: name, stats and ability change; M again restores; Mega is fight state (no set edit), kept over a reload, Reset fight ends it',
+    skip: !hasMega && 'no Mega in this guide',
     run: async page => {
       await setupCalc(page, { mine: ['party', 0] });
       const name = () => page.value(`document.querySelector('.dmatch .cc[data-s="mine"] .cn b').textContent.trim()`);

@@ -113,7 +113,9 @@ const windowChecks=[{
 const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windowChecks,{
   id:'move-states',title:'row state cycles, power, Doubles gate, Z suppression and persistence',sizes:[[260,316],[537,424]],
   run:async page=>{
-    await seed(page,['Fury Cutter','Assurance','Round','Facade']);
+    // a Doubles-only combo move: Round, or a Fusion move where the guide replaced it (BB2R: Round is Disarming Voice)
+    const combo=['Round','Fusion Bolt','Fusion Flare'].find(name=>guide.M.includes(name));
+    await seed(page,['Fury Cutter','Assurance',combo,'Facade']);
     const row='.dres:not(.na) .mr';
     const heights=await page.value(`[...document.querySelectorAll('${row}')].map(element=>element.offsetHeight)`);
     assert.ok(heights.every(height=>height===heights[3]),'state controls add no row height');
@@ -132,7 +134,7 @@ const checks=[...(guide.cfg.name==='Emerald Imperium'?fixtureChecks:[]),...windo
     assert.equal(await page.value(`document.querySelector('${row}:nth-child(2) [data-a=state]').getAttribute('aria-pressed')`),'true');
     await page.tap('.dfield > summary');
     await page.tap('[data-f=gameType][data-value=Doubles]');
-    assert.equal(await page.count(`${row}:nth-child(3) [data-a=state]`),guide.cfg.calc.over?.state?.Round===false?0:1);
+    assert.equal(await page.count(`${row}:nth-child(3) [data-a=state]`),guide.cfg.calc.over?.state?.[combo]===false?0:1);
     if(guide.cfg.calc.zmove){
       await page.tap(`${row}:nth-child(2) [data-a=zmv]`);
       assert.equal(await page.count(`${row}:nth-child(2) [data-a=state]`),0,'Z hides top slot');

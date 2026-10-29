@@ -7,7 +7,7 @@ const guide = readGuide(file).data;
 const sizes = [[260,316],[480,316],[537,316],[832,316],[480,392],[537,424],[832,424]];
 const seed = async page => {
   await page.goto('#/calc');
-  await page.value(`(()=>{const state=CALC.state(),species=P.find(mon=>mon.n==='Snorlax'),trainer=TRS.find(trainer=>trainer.p.length>=2),base={l:50,na:'Hardy',a:-1,i:'',status:'',iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0],stg:[0,0,0,0,5],m:[M.indexOf('Tackle'),M.indexOf('Earthquake')]};state.field={};state.custom=[];for(let index=0;index<2;index++){CALC.use(species);Object.assign(state.custom.at(-1),structuredClone(base));}TCAP[trainer.k]=50;CALC.enter(trainer.k,0);for(let index=0;index<2;index++)state.edits['foe:'+trainer.k+':'+index]={...structuredClone(base),id:species.id};CALC.render();})()`);
+  await page.value(`(()=>{const state=CALC.state(),species=P.find(mon=>mon.n==='Snorlax'),trainer=TRS.find(trainer=>trainer.p.length>=2),base={l:50,na:'Hardy',a:-1,i:'',status:'',iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0],stg:[0,0,0,0,5],m:[M.indexOf('Tackle'),M.indexOf('Earthquake')]};state.field={};state.custom=[];for(let index=0;index<2;index++){CALC.use(species);Object.assign(state.custom.at(-1),structuredClone(base));}TCAP[trainer.k]=50;CALC.enter(trainer.k,0);for(let index=0;index<2;index++)state.edits['foe:'+trainer.k+':'+index]={...structuredClone(base),id:species.id,sd:0};CALC.render();})()`);
 };
 const openHazards = async (page, side='atk') => {
   if (!await page.value("document.querySelector('.dfield').open")) await page.tap('.dfield > summary');
@@ -21,8 +21,11 @@ const selectStatus = async (page, value) => {
 };
 
 const globalKeys = ['allyFairyAura','allyDarkAura','allyAuraBreak','waterSport','mudSport','powerSplit','guardSplit'];
-const engineInput = `mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i,st:mon.status,iv:mon.iv,ev:mon.ev,stg:[0,...mon.stg],hp:mon.hp})`;
+const engineInput = `mon=>({id:mon.id,lv:mon.l,...(mon.sd?{sl:Math.max(1,mon.l-mon.sd)}:{}),nat:mon.na,ab:mon.a,it:mon.i,st:mon.status,iv:mon.iv,ev:${guide.cfg.calc.evs===false}?[0,0,0,0,0,0]:mon.ev,stg:[0,...mon.stg],hp:mon.hp})`;
 const globalEntries = guide.cfg.calc.field.filter(entry=>globalKeys.includes(entry.k));
+// Gen VI field effects: the auras and Sticky Web (a Gen V profile, BB2R, has neither)
+const gen6 = guide.cfg.calc.gen >= 6;
+const web = guide.cfg.calc.field.some(entry=>entry.k==='atkStickyWeb');
 const openGlobals = async page => {
   if (!await page.value('document.querySelector(".dfield").open')) await page.tap('.dfield > summary');
   if (!await page.value('document.querySelector(".dffield").open')) await page.tap('[data-fgroup="field:battle"] > summary');
@@ -51,10 +54,10 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await seed(page);
     await page.tap('.dfield > summary');
     await page.tap('[data-f=gameType][data-value=Singles]');
-    assert.deepEqual(globalEntries.map(entry=>entry.k).sort(),globalKeys.filter(key=>key!=='allyDarkAura'||guide.cfg.name!=='Hardlove Gold').sort(),'A3 profile gates remain unchanged');
+    assert.deepEqual(globalEntries.map(entry=>entry.k).sort(),globalKeys.filter(key=>(key!=='allyDarkAura'||guide.cfg.name!=='Hardlove Gold')&&(gen6||!key.startsWith('ally'))).sort(),'A3 profile gates remain unchanged');
     for(const entry of guide.cfg.calc.field.filter(entry=>entry.doubles))assert.equal(await page.count(`[data-f="${entry.k}"]`),0,entry.k+' hidden in Singles');
     await page.tap('[data-f=gameType][data-value=Doubles]');
-    assert.equal(await page.count('[data-f=allyDarkAura]'),guide.cfg.name==='Hardlove Gold'?0:1);
+    assert.equal(await page.count('[data-f=allyDarkAura]'),guide.cfg.name==='Hardlove Gold'||!gen6?0:1);
     const closed=await page.value('(()=>{const body=document.querySelector(".dfb");return {height:body.closest("details").offsetHeight,scroll:body.scrollHeight,room:body.clientHeight};})()');
     assert.ok(closed.height<=316-8,'closed groups fit the minimum-height window');
     // In Doubles the ally effects join the side grid (grouped by what they affect), so only Singles must fit unscrolled.
@@ -124,7 +127,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
     const loss=Math.floor(max/8)+Math.floor(max/6);
     assert.equal(await hp(page),max-loss,'Rocks and two Spikes layers apply once');
     assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
-    assert.equal(await page.value('CALC.mon("mine").stg[4]'),-1,'Web replaces +5 with -1');
+    assert.equal(await page.value('CALC.mon("mine").stg[4]'),web?-1:5,'Web replaces +5 with -1');
     await page.value('CALC.render();CALC.render()');
     assert.equal(await hp(page),max-loss,'redraw does not apply entry');
     await openHazards(page);
@@ -155,7 +158,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await page.value('CALC.set("mine","stg",[0,0,0,0,5]);CALC.render()');
     await openHazards(page);
     await page.tap('[data-a=hazards][data-s=mine]');
-    assert.equal(await page.value('CALC.mon("mine").stg[4]'),-1);
+    assert.equal(await page.value('CALC.mon("mine").stg[4]'),web?-1:5);
     assert.equal(await hp(page),max-loss,'Web replay never reapplies damage');
     await page.route('#/');
     await page.route('#/calc');
@@ -197,7 +200,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
       await page.tap('[data-a=hazards][data-s=mine]');
       assert.equal(await hp(page),entered-(fixture.damage?loss:0),'only pending damage applies, not previously consumed hazards');
       if(fixture.field.atkToxicSpikes)assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
-      if(fixture.field.atkStickyWeb)assert.equal(await page.value('CALC.mon("mine").stg[4]'),-1);
+      if(fixture.field.atkStickyWeb&&web)assert.equal(await page.value('CALC.mon("mine").stg[4]'),-1);
       await page.value('CALC.render()');
       await openHazards(page);
       assert.equal(await page.value('document.querySelector("[data-a=hazards][data-s=mine]").disabled'),true,'applied components remain consumed');
@@ -254,7 +257,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await page.tap('.cc[data-s=foe] .sp');
     assert.equal(await hp(page,'foe'),max-Math.floor(max/8),'direction change is not entry');
     assert.deepEqual(await page.value('[...document.querySelectorAll(".dturn")].map(button=>button.textContent)'),amounts);
-    assert.equal(await page.value('Number(document.querySelector(".cc[data-s=foe] .sp i").textContent.replace(/[^0-9]/g,""))'),await page.value('DMG.speed({id:CALC.state().edits["foe:"+CALC.state().foe.k+":1"].id,lv:50,ab:-1,stg:[0,0,0,0,0,-1]},CALC.state().field,"def")'));
+    assert.equal(await page.value('Number(document.querySelector(".cc[data-s=foe] .sp i").textContent.replace(/[^0-9]/g,""))'),await page.value(`DMG.speed({id:CALC.state().edits["foe:"+CALC.state().foe.k+":1"].id,lv:50,ab:-1,stg:[0,0,0,0,0,${web?-1:5}]},CALC.state().field,"def")`));
   },
 },{
   id:'top-filled team',title:'added Pokemon fill compact rows from the top of the player box',sizes,

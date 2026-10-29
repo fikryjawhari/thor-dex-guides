@@ -21,7 +21,7 @@ const checks = [
       await setupCalc(page, { trainer: null });
       const before = await calcState(page);
       await page.route(`#/tr/${four.k}`);
-      assert.equal(await page.count('.tpick button'), four.size, 'the team strip (under 500 px): one button per Pokémon');
+      assert.equal(await page.value("document.querySelector('.tpick').querySelectorAll('button').length"), four.size, 'the team strip (under 500 px): one button per Pokémon (a Normal-mode team has its own strip)');
       await page.tap('.tpick button', { index: 2 });
       assert.equal(await page.count('.mon.sel .calc-versus'), 1, 'one Calc vs button shows: the selected Pokémon');
       await page.tap('.mon.sel .calc-versus');

@@ -89,7 +89,8 @@ function firstFrameCheck(mode) {
     // The six-Pokemon trainer (the foe preview shows six rows at wide); a guide without one uses the four-Pokemon trainer.
     const trainer = guide().trainers.six?.k ?? guide().trainers.four?.k;
     await setupCalc(page, { trainer });
-    if (mode === 'busy') assert.ok(await busyCard(page), 'a Mega species on the page (for the busiest card)');
+    // a guide without Megas (BB2R, Gen V) gets the busiest card without the Mega toggle: a long name
+    if (mode === 'busy') assert.ok(await busyCard(page) || !guide().data.P.some(entry => entry.g === 1) && await busyCard(page, { names: longNames(), need: '.cc[data-s=mine]' }), 'a Mega species on the page (for the busiest card)');
     if (mode === 'ability') assert.ok(await busyCard(page, { names: ABILITY_CANDIDATES, need: '.cc[data-s=mine] [data-e=intim]' }), 'an Intimidate species on the page (for the ability card)');
     await landOnFrame(page);
     const narrow = width < 480;

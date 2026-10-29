@@ -181,7 +181,7 @@ const checks = [{
   },
 }];
 
-const input = `mon=>({id:mon.id,lv:mon.l,nat:mon.na,ab:mon.a,it:mon.i,st:mon.status,iv:mon.iv,ev:mon.ev,stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp,used:mon.used,broken:mon.broken,abilityOn:mon.abilityOn})`;
+const input = `mon=>({id:mon.id,lv:mon.l,...(mon.sd?{sl:Math.max(1,mon.l-mon.sd)}:{}),nat:mon.na,ab:mon.a,it:mon.i,st:mon.status,iv:mon.iv,ev:${data.cfg.calc.evs===false}?[0,0,0,0,0,0]:mon.ev,stg:[0,...(mon.stg||[0,0,0,0,0])],hp:mon.hp,used:mon.used,broken:mon.broken,abilityOn:mon.abilityOn})`;
 checks.push({
   id: 'crash miss', title: 'every crash move: separate miss chip, user-only HP loss and action log in both directions', sizes,
   run: async page => {
