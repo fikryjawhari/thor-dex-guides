@@ -62,8 +62,36 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `bulba_pages.py <out-dir> cat:<Category> \| pre:<Title prefix> ...` | Bulbapedia pages as wikitext through its API (category members or a title prefix; `Walkthrough:` prefixes work). Photonic Sun's trainer places and story order. |
 | `serebii_usum_items.py <items.shtml> <tm.shtml> <out.csv>` | Vanilla Ultra Sun item locations from Serebii's pages. |
 | `rhd_moves.py <moves/index.html> <hack-slug> <out.json>` | Every RomHackDex move with priority and description (the index lacks both); reads each move page, saves only those fields. |
+| `drayano.py` | Drayano-family doc readers (Pokemon / Move / Type / Evolution Changes, both dialects) and the `Names` fixer every doc name goes through (records each fix). Below: Drayano family. |
+| `romhackdex.py` | Reader for a local RomHackDex mirror: species pages, evolutions, moves.json, abilities, type chart. Below: Drayano family. |
 | `drayano_check.py <Pokemon Changes.txt> <romhackdex/pokedex>` | Compares Drayano's change doc with a RomHackDex mirror (new base stats, full level-up lists) for every species the doc changes. |
 | `preview.py <page.html> [name.html] [--frame] [--title T] [--rm name ...]` | Puts a page on the phone preview (below) and prints its link; `--frame` wraps it with `mockup/thor-frame/build.py` first. Existing usage unchanged. |
+
+## Drayano family (BB2R, Renegade Platinum)
+
+Drayano's hacks ship the same set of boxed .txt docs and no source code; romhackdex.net mirrors each one. Shared:
+- `drayano.py`: `read()` a doc (lines keep their numbers), `pokemon_changes()` (species blocks; `Species.pick(kind,
+  version, form)` picks the Complete / Classic and form field, then `stats()` / `types()` / `abilities()` /
+  `level_up()` / `tm_compat()` / `evolution()`), `move_changes()` (replacements, change blocks with their markers and
+  footnotes), `type_changes()`, `evolution_changes()` + `evo_method()` (the guides' wording: "level 21", "using Link
+  Cable"). Both dialects: BB2R's bracketed version / form headings, three ability slots and "- Power 20 -> 35 [!]";
+  RP's plain "Ability:" (two slots), "Base Stats (Trash Cloak) (Complete):" and "Power: 65 >> 75".
+- `Names(kind, canonical)`: the one place a doc name is fixed: spacing / case, the family's `ALIASES` (regional and
+  legacy spellings) and `TYPOS` (seen in the docs), then a unique closest name within edit distance 2. It records
+  every fix and every name it couldn't place (`lines()` for the build report); never guesses past that. Add a new
+  doc's misspellings to `TYPOS` when a fuzzy match is wrong or ambiguous.
+- `romhackdex.py`: `Mirror(path)` → `species()` / `find(name)`, `evolutions()` (branches flattened by the site put
+  back on their parent), `moves()`, `abilities()`, `type_chart()`.
+- Hooks the next units fill in `drayano.py`: `trainers()`, `wild()`, `items()`, `gifts()`, `trades()` (each docstring
+  says what the two dialects look like). A hack's extract keeps its own choices: version, forms, docs over mirror,
+  difficulty, caps.
+
+How RP plugs in: its `extract/common.py` makes the same three `Names` on its own mirror, `dex.py` reads
+`PokemonChanges.txt` with `version='Complete'` (two ability slots, no hidden), applies `MoveChanges.txt` (11
+replacements) and `TypeChanges.txt` (29 rows). Its mirror differs from BB2R's: 504 pages (it has form pages), move
+descriptions present, Farfetch'd's page incomplete; its stats and level-up lists already carry the doc's changes
+(`drayano_check.py`: 2 stat, 0 level-up differences). Its EvolutionChanges sections are "- Name: Now able to evolve
+..." bullets, read by the same functions. Check its stat / move counts in its own check.py; never copy BB2R's.
 
 ## New-guide scaffold
 
