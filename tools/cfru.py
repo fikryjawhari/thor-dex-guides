@@ -8,6 +8,7 @@
     cfru.merge_into(form, F, S)   the page a cosmetic form is listed under (None: its own entry)
     cfru.evo_text(how)            a wiki / mirror evolution method in the guides' wording ("Level 16" -> "level 16")
     cfru.HIGH_CRIT, ALWAYS_CRIT   Gen VIII crit stages (CFRU battles are Gen VIII), for MV.cr
+    cfru.calc_names()             the official names the damage calc knows (a name outside it: a hack original)
 
 CFRU-general (true of any CFRU hack's RomHackDex mirror; Radical Red's was checked 2026-10-29):
 - Names: the game stores moves and abilities in 12 characters, so the mirror shows "Dazzle Gleam", "Elec Terrain",
@@ -56,13 +57,14 @@ CFRU_NAMES = {
     'Core Enforce': 'Core Enforcer', 'Prism Laser': 'Prismatic Laser', 'Spect Thief': 'Spectral Thief',
     'Double Iron': 'Double Iron Bash', 'False Yield': 'Hold Back', 'DMax Cannon': 'Dynamax Cannon',
     'Freeze Glare': 'Freezing Glare', 'Spring Wind': 'Springtide Storm', 'Vicegrip': 'Vise Grip',
-    'Fa�ade': 'Facade', 'Will-o-Wisp': 'Will-O-Wisp', 'U-Turn': 'U-turn', 'Selfdestruct': 'Self-Destruct',
+    'Fa�ade': 'Facade', 'Façade': 'Facade', 'Corrode Gas': 'Corrosive Gas', 'Jealous Burn': 'Burning Jealousy',
+    'Misty Explode': 'Misty Explosion', 'Rising Volt': 'Rising Voltage', 'Will-o-Wisp': 'Will-O-Wisp', 'U-Turn': 'U-turn', 'Selfdestruct': 'Self-Destruct',
     'Kings Shield': "King's Shield", 'Lets Snuggle Forever': "Let's Snuggle Forever",
     '10000000 Volt Thunderbolt': '10,000,000 Volt Thunderbolt', 'Soul Stealing 7 Star Strike': 'Soul-Stealing 7-Star Strike',
     'Guardian Of Alola': 'Guardian of Alola', 'Light That Burns The Sky': 'Light That Burns the Sky',
     # abilities
     'Alchemic Power': 'Power of Alchemy', 'Neutralize Gas': 'Neutralizing Gas', 'Propellor Tail': 'Propeller Tail',
-    'Valiant Shield': 'Dauntless Shield', 'Wandering Soul': 'Wandering Spirit', 'Water Compact': 'Water Compaction',
+    'Valiant Shield': 'Dauntless Shield', 'Odd Medicine': 'Curious Medicine', 'Wandering Soul': 'Wandering Spirit', 'Water Compact': 'Water Compaction',
     'WaterCompaction': 'Water Compaction', 'Electromrphosis': 'Electromorphosis', 'Sword Of Ruin': 'Sword of Ruin',
     'Vessel Of Ruin': 'Vessel of Ruin', 'Zero To Hero': 'Zero to Hero',
 }
@@ -153,7 +155,9 @@ SPECIES_LABEL = {
     ('wishiwashi', 's'): 'School', ('magearna', 'p'): 'Original Color',
     **{('minior', c): 'Core' for c in ('red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet')},
 }
-# The default form's label, for species whose default form is one of several of the same standing.
+# The default form's label (other sources' names for it: hzla's "Minior-Meteor"); NAME_BASE: the species whose name
+# shows it, the ones whose forms are peers of the default rather than changes of it.
+NAME_BASE = {'pumpkaboo', 'gourgeist', 'oricorio', 'lycanroc', 'toxtricity', 'urshifu', 'basculin', 'wormadam'}
 BASE_LABEL = {
     'pumpkaboo': 'Small', 'gourgeist': 'Small', 'oricorio': 'Baile', 'lycanroc': 'Midday', 'toxtricity': 'Amped',
     'urshifu': 'Single Strike', 'basculin': 'Red Striped', 'wormadam': 'Plant', 'meowstic': 'Male',
@@ -190,7 +194,9 @@ class Form:
         else:
             self.kind = 'form'
         self.label = None
-        if rest and base in LETTERS:
+        if self.kind == 'base' and base in NAME_BASE:
+            self.label = BASE_LABEL[base]
+        elif rest and base in LETTERS:
             self.label = {'exclamation': '!', 'question': '?'}.get(rest, rest.upper())
         elif rest and self.kind != 'mega':
             self.label = SPECIES_LABEL.get((base, rest)) or LABEL.get(rest) or ' '.join(
@@ -297,3 +303,65 @@ HIGH_CRIT = ['Aeroblast', 'Air Cutter', 'Attack Order', 'Blaze Kick', 'Crabhamme
              'Razor Shell', 'Razor Wind', 'Shadow Claw', 'Sky Attack', 'Slash', 'Snipe Shot', 'Spacial Rend',
              'Stone Edge', 'Esper Wing', 'Stone Axe', '10,000,000 Volt Thunderbolt']
 ALWAYS_CRIT = ['Frost Breath', 'Storm Throw', 'Wicked Blow', 'Surging Strikes']
+
+
+_CALC = None
+
+
+def calc_names():
+    """Every official name the damage calc's data knows (template/calc/engine.js: moves, abilities, species, items).
+    A move or ability name outside it is a hack original (MV.x / AB[2]) or a name the calc can't look up."""
+    global _CALC
+    if _CALC is None:
+        import os
+        eng = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'template', 'calc', 'engine.js'),
+                   encoding='utf-8').read()
+        _CALC = set(re.findall(r'name:"([^"]+)"', eng))
+        _CALC |= {re.sub(r' \(.*\)$', '', n) for n in _CALC}       # "As One (Glastrier)"
+    return _CALC
+
+
+# RomHackDex's evolution labels on CFRU hacks (the game's method names), as text the player can act on; an item name
+# alone means using it, "Trade <item>" trading holding it. evo_text() words "Lv. N".
+RHD_EVO = {
+    'Friendship': 'high friendship', 'Friendship (Day)': 'high friendship by day',
+    'Friendship (Night)': 'high friendship at night', 'friendship-day': 'high friendship by day',
+    'friendship-night': 'high friendship at night', 'level-day': 'level up by day', 'level-night': 'level up at night',
+    'level-female': 'level up (female)', 'level-male': 'level up (male)', 'Trade': 'trade',
+    'move': 'level up knowing a certain move', 'move-male': 'level up knowing a certain move (male)',
+    'move-female': 'level up knowing a certain move (female)', 'map': 'level up in a special place',
+    'level-hold-item': 'level up holding an item', 'hold-item-day': 'level up holding an item by day',
+    'hold-item-night': 'level up holding an item at night', 'item-hold-item': 'using an item',
+    'item-night': 'using an item at night', 'item-location': 'using an item in a special place',
+    'rainy-foggy-overworld': 'level up in rain or fog', 'critical-hit': 'land critical hits in one battle',
+    'level-atk-gt-def': 'level up with Attack > Defense', 'level-atk-eq-def': 'level up with Attack = Defense',
+    'level-atk-lt-def': 'level up with Attack < Defense', 'level-silcoon': 'level up (random)',
+    'level-cascoon': 'level up (random)', 'level-ninjask': 'level up', 'level-shedinja': 'level up with a free party slot',
+    'other-party-mon': 'level up with a certain Pokémon in the party', 'type-in-party': 'level up with a Dark type in the party',
+    'nature-high': 'level up (Amped nature)', 'nature-low': 'level up (Low Key nature)',
+    'move-type Fairy': 'level up knowing a Fairy-type move',
+}
+NO_EVO = {'gigantamax', 'gigantamax true', 'None'}       # the mirror's chain drawn through a form change, not evolution
+
+
+def rhd_evo(how):
+    """A mirror label as method text, or None for a label that is no evolution (a form change drawn in the chain)."""
+    h = (how or '').strip()
+    if h in NO_EVO or not h:
+        return None
+    if h in RHD_EVO:
+        return RHD_EVO[h]
+    m = re.fullmatch(r'Trade (.+)', h)
+    if m:
+        return 'trade holding ' + m.group(1)
+    return evo_text(h) if h.startswith('Lv') else 'using ' + h
+
+
+def define_slug(define, forms_):
+    """The mirror slug for a CFRU species constant (SPECIES_RAICHU_A -> raichu-a, SPECIES_DARMANITANZEN ->
+    darmanitanzen), or None when the mirror has no page by that name (match those by display name)."""
+    slug = define[len('SPECIES_'):].lower().replace('_', '-')
+    for cand in (slug, slug.replace('-', ''), {'female': 'f'}.get(slug, slug)):
+        if cand in forms_:
+            return cand
+    return None
