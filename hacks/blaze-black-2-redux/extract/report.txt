@@ -1,0 +1,64 @@
+doc Pokemon Changes v1.4.1
+doc Move Changes v1.4.1
+doc Type Changes v1.4.1
+doc Evolution Changes v1.4.1
+Pokemon Changes prints 546 for Kyurem (dex 646): placed by name
+form deoxys_attack: canonical Gen VIII stats; doc fields (Attack Forme) a, lv
+form deoxys_defense: canonical Gen VIII stats; doc fields (Defense Forme) a, lv
+form deoxys_speed: canonical Gen VIII stats; doc fields (Speed Forme) a, lv
+form wormadam_sandy: canonical Gen VIII types, stats; doc fields (Sandy Cloak) s, a, lv
+form wormadam_trash: canonical Gen VIII types, stats; doc fields (Trash Cloak) s, a, lv
+form rotom_heat: canonical Gen VIII types, stats; doc fields (Heat Form) none
+form rotom_wash: canonical Gen VIII types, stats; doc fields (Wash Form) none
+form rotom_frost: canonical Gen VIII types, stats; doc fields (Frost Form) none
+form rotom_fan: canonical Gen VIII types, stats; doc fields (Fan Form) a
+form rotom_mow: canonical Gen VIII types, stats; doc fields (Mow Form) none
+form giratina_origin: canonical Gen VIII types, stats, abilities; doc fields (Origin Forme) none
+form shaymin_sky: canonical Gen VIII types, stats, abilities; doc fields (Sky Forme) lv
+form basculin_blue_striped: canonical Gen VIII abilities; doc fields (Blue-Striped Form) none
+form darmanitan_zen: canonical Gen VIII types, stats, abilities; doc fields (Zen Mode) none
+form shellos_east_sea: canonical Gen VIII nothing; doc fields (East Sea) none
+form gastrodon_east_sea: canonical Gen VIII nothing; doc fields (East Sea) none
+form tornadus_therian: canonical Gen VIII types, stats, abilities; doc fields (Therian Forme) none
+form thundurus_therian: canonical Gen VIII types, stats, abilities; doc fields (Therian Forme) none
+form landorus_therian: canonical Gen VIII types, stats, abilities; doc fields (Therian Forme) none
+form kyurem_black: canonical Gen VIII stats, abilities; doc fields (Black Kyurem) lv
+form kyurem_white: canonical Gen VIII stats, abilities; doc fields (White Kyurem) lv
+form meloetta_pirouette: canonical Gen VIII types, stats; doc fields (Pirouette Forme) none
+Move Changes block that names no move: Further Modifications ['All Sound Moves now hit through a defenders Substitute, like in Gen VI+.']
+dex: P 671 (649 species + 22 forms), M 577, AB 166
+Pokemon Changes: 649 species blocks; stats from the doc for 191 entries, 189 differing from the mirror (which shows the doc's Old line for 186)
+level-up lists from the doc: 79 differ from the mirror as printed (doc spellings)
+  stats where the mirror matches neither of the doc's lines (3): pikachu doc old [35, 55, 30, 60, 40, 90], mirror [35, 55, 40, 50, 50, 90]; stoutland doc old [85, 100, 90, 45, 90, 80], mirror [85, 110, 90, 45, 90, 80]; unfezant doc old [80, 105, 80, 65, 55, 93], mirror [80, 115, 80, 65, 55, 93]
+level-up lists from the doc that differ from the mirror after name fixes (4): poliwag, deoxys, wormadam, shaymin
+TM compatibility the doc adds that the mirror lacks: 652 (e.g. bulbasaur TM56 Weather Ball; ivysaur TM56 Weather Ball; venusaur TM34 Sludge Wave; venusaur TM56 Weather Ball)
+Type Changes vs Pokemon Changes (0): 
+Move Changes: 26 replacements, 169 move blocks applied (Type Changes 5, Redux Move Modifications 161, Legends: Arceus Moves 5), 154 fields where the mirror disagrees (MV cf)
+replaced moves the sources still use, mapped to their replacement: {'Razor Wind': 11, 'Slam': 13, 'Punishment': 9, 'Smelling Salts': 12, 'Thrash': 13, 'Bubble': 2, 'Rolling Kick': 2, 'Mega Punch': 2, 'Horn Drill': 3, 'Sand Tomb': 9, 'Sweet Kiss': 6, 'Submission': 2, 'Metal Sound': 1, 'Comet Punch': 1, 'Constrict': 1}
+evolutions: 325 edges; doc-changed 92; from Pokemon Changes prose 3: snorunt -> froslass using Dawn Stone (female); burmy -> wormadam_sandy level 25 (female, last battle in Caves/Desert); burmy -> wormadam_trash level 25 (female, last battle in the Sewers/Indoors)
+  methods the mirror leaves vague, Gen V method filled (48): growlithe -> arcanine (Evolution item); azurill -> marill (Friendship); gloom -> vileplume (Evolution item); gloom -> bellossom (Evolution item); weepinbell -> victreebel (Evolution item); chansey -> blissey (Friendship); roselia -> roserade (Evolution item); buneary -> lopunny (Friendship); lampent -> chandelure (Evolution item); minccino -> cinccino (Evolution item); cleffa -> clefairy (Friendship); clefairy -> clefable (Evolution item); shellder -> cloyster (Evolution item); cottonee -> whimsicott (Evolution item); golbat -> crobat (Friendship); eelektrik -> eelektross (Evolution item); eevee -> vaporeon (Evolution item); eevee -> jolteon (Evolution item); eevee -> flareon (Evolution item); exeggcute -> exeggutor (Evolution item); kirlia -> gallade (Evolution item); murkrow -> honchkrow (Evolution item); igglybuff -> jigglypuff (Friendship); jigglypuff -> wigglytuff (Evolution item); swadloon -> leavanny (Friendship); petilil -> lilligant (Evolution item); lombre -> ludicolo (Evolution item); magneton -> magnezone (location); mantyke -> mantine (Lv. Special); misdreavus -> mismagius (Evolution item); munchlax -> snorlax (Friendship); munna -> musharna (Evolution item); nidorino -> nidoking (Evolution item); nidorina -> nidoqueen (Evolution item); nincada -> shedinja (shed); vulpix -> ninetales (Evolution item); nosepass -> probopass (location); nuzleaf -> shiftry (Evolution item); panpour -> simipour (Evolution item); pansage -> simisage (Evolution item); pansear -> simisear (Evolution item); pichu -> pikachu (Friendship); pikachu -> raichu (Evolution item); poliwhirl -> poliwrath (Evolution item); staryu -> starmie (Evolution item); sunkern -> sunflora (Evolution item); togepi -> togetic (Friendship); togetic -> togekiss (Evolution item)
+type chart vs the docs' statements: agrees
+move descriptions: none (the mirror has none for this hack; MV.d is empty)
+doc fix: Shadow Claw: "PP 70 -> 90" read as Power 70 -> 90 (Move Changes:485)
+not built yet: locs (TODO: implement blaze-black-2-redux locs extraction)
+not built yet: trainers (TODO: implement blaze-black-2-redux trainers extraction)
+not built yet: items (TODO: implement blaze-black-2-redux items extraction)
+not built yet: walk (TODO: implement blaze-black-2-redux walk extraction)
+doc name fixes: 15 (species 3, move 11, ability 1)
+  species fuzzy: Snubull -> Snubbull (1: Type Changes:39)
+  species fuzzy: Grabull -> Granbull (1: Type Changes:40)
+  species fuzzy: Poliswine -> Piloswine (1: Evolution Changes:60)
+  move alias: Vice Grip -> Vise Grip (1: Move Changes:31)
+  move typo: Submisson -> Submission (1: Move Changes:41)
+  move typo: Twinneedle -> Twineedle (1: Pokemon Changes:546)
+  move alias: Faint Attack -> Feint Attack (50: Pokemon Changes:1337, Pokemon Changes:1480, Pokemon Changes:1515)
+  move typo: Sliver Wind -> Silver Wind (1: Pokemon Changes:1759)
+  move typo: Autonomize -> Autotomize (15: Pokemon Changes:2552, Pokemon Changes:2583, Pokemon Changes:7010)
+  move alias: Acid Armour -> Acid Armor (2: Pokemon Changes:4599, Move Changes:94)
+  move typo: Will-O-Wiisp -> Will-O-Wisp (1: Pokemon Changes:8259)
+  move typo: Ominous Mind -> Ominous Wind (2: Pokemon Changes:9375, Pokemon Changes:9415)
+  move alias: Judgement -> Judgment (1: Move Changes:335)
+  move alias: Minimise -> Minimize (1: Move Changes:375)
+  move UNRESOLVED: Further Modifications (1: Move Changes:630)
+  ability alias: Synchronise -> Synchronize (11: Pokemon Changes:2197, Pokemon Changes:2212, Pokemon Changes:2246)
+trainer keys: no trainers yet, no table written
