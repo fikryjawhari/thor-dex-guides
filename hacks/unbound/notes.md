@@ -437,6 +437,62 @@ Galavan 45 (D7), Big Mo 52 (D8), Tessy 57 (D9), Benjamin 61 (D10), Elite Four 75
 `<Boss> Split [Cap N]` (Maxima Split [Cap 40]), `Elite Four Split [Cap 75]`, `Post-game` (no cap: no postgame cap row
 exists). The first box's note says once that boss levels are at the cap unless a trainer says "minimum levels".
 
+### Walkthrough (unit 7, 2026-10-30)
+
+`extract/walk.py` follows the wiki's **40 numbered parts**, in order, with a concise action outline and explicit
+optional backtracking stops. The walkthrough index is a 41st page, not Part 41. There are **11 splits** matching
+the Trainers boxes exactly: the ten caps (including non-badge Maxima 40), then Post-game. **122 stops, 182 ordinary
+steps, 84 missions with 475 child steps** (657 checkbox leaves once 7b renders them). All 69 Locations / tracker
+area names have a stop; `a` resolves those names to the existing AR slots without changing AR.
+
+- **Items:** all **703** `items.PLACED` rows (the 687 Locations rows after splitting multi-item cells) are attached to
+  the first visit to their source Locations page; all access, hidden-item and post-game conditions remain in their
+  text. Nothing is unplaced. Costume Box deliberately remains a walkthrough row even though the Items standard
+  omits it from IT; the finaliser's one `walkthrough rows left as they were` report is this known row, not lost data.
+  Unbound now opts into `itemstd.RULES` game-order sorting for `GAME_ORDER_BOXES`; this supersedes the pre-walkthrough
+  ordering described in Items. The IT row multiset is unchanged.
+- **Trainers:** every one of the **393** cards (**101 boss, 292 ordinary**) occurs at exactly one stop. Trainer card
+  contents, keys and cap assignments are unchanged; finalise only reorders their sections to follow WK. The three
+  Route 3 Surf fishermen (Edgar, Jason, Cole, minimum Lv 41-42) are the optional tail of the **Galavan split, after
+  defeating Galavan**, when Surf first becomes usable (Part 20). They stay in their existing Cap 45 box, before any
+  Cap 52 cards, so the displayed caps never decrease. No trainer-data change is needed.
+- **Named revisit placements:** Candice belongs to Part 9, before Alice's Part 10 gym; Alexa to Part 10's optional
+  Rock Smash backtrack; Yale to Part 14's post-Mel Strength backtrack. Route 4's Crissy, Dale and Barney go on its
+  western Part 5 stop, not the eastern Part 4 stop. Franklin and Mega Trainers Vivian / Mathis go on Route 2's
+  Fighting Challenge Island in **Part 26**, reached west from Route 15, not the first possible Surf visit. Skier
+  Charlie is at the **Part 30 Thundercap Mountain revisit** where the walkthrough names him, while his unchanged
+  trainer card / Trainer Locations source still says Icicle Cave. Seaport's kidnappers and Scientist are in the
+  respective Part 32 warehouses; the Cootes Bog rival is at Part 35's Crystal Peak approach.
+- **Missions:** the 83 mission pages plus #001 from All Missions produce 84 objects in `stop.s`, in the accepted 7b
+  union shape. #001's reward is access to post-game. `u` keeps the full source unlock note, `r` keeps non-item
+  rewards and uses unit 5's canonical item names, and `note` records completion / timing conditions where useful.
+  Conditional chains are shown at their relevant stop with their conditions, not assumed completed; the local
+  hatching, fishing and pie chains are ordered prerequisite-first. #030 unlocks on reaching Seaport but sends the
+  player back to its giver in Epidimy; #053 has a Tehl revisit after reaching Polder, before Tessy's gym. #038 needs
+  Champion + ADM and #047 needs Champion + #005, so both are post-game rather than their locations' first visits.
+- **Source HTML repair, reader-only:** five pages have Unlock Requirements outside a `tr` (#007, #038, #047, #057,
+  #060), and #027 has its Reward outside a `tr`. `Wiki.walkthrough_missions()` reads these cells directly, recovering
+  all requirements and #027's Adamant Orb / Dialga opportunity without changing unit 5's item reader or IT output.
+- **Keys and ordinary steps:** stop keys identify source part / semantic visit (`part-4/dresco-gym`); post-game
+  side stops use `postgame/<visit>`. Mission `m` is its literal wiki slug; all child keys identify actions or targets.
+  Raid, sign and daily-event source numbers only look up explicitly authored semantic keys, never become saved
+  indexes. Pattern and species targets use their names. No hashes or data positions are used. Missions are appended
+  after each stop's ordinary pairs; those pairs retain their order. No storage key or saved state is changed here.
+- **7b cases:** longest is **#013 Basic Literacy, 47 children** (accept + 45 individually located signs + reward),
+  followed by #008's 34, #050's 27, #065's 25 and #015's 21. Eight stops have a mission-only Checklist:
+  `postgame/mission-hq` (9 missions), `postgame/dehara-city` (2), and `postgame/magnolia-town`, `postgame/tehl-town`,
+  `postgame/tarmigan-town`, `postgame/gurun-town`, `postgame/crater-town`, `postgame/tomb-of-borrius` (one each).
+  These must be real expandable stops, not grey signs. Long-running collection missions intentionally stay at their
+  unlock stop; their child location / access notes cover later visits.
+- **Checks:** build, extract-check, `tools/tabs_check.py unbound` (393 placed, 0 missing, 0 problems), and assembly
+  pass. Extract-check reproduces source part / mission coverage and Locations item counts, verifies every trainer
+  exactly once and in its own split, checks named ordinary trainers against the relevant wiki parts, and validates
+  mission keys / children through the shared schema. Schema probes reject missing / duplicate mission and child
+  keys and empty children; all five other guides standardise unchanged. An EI rebuild changed only its volatile
+  `built` date (2026-10-28 to 2026-10-30); that generated date change was restored, leaving no other guide changed.
+  No gate/browser scenarios: missions deliberately await template unit 7b. Assembly's existing missing Shadow
+  Warrior sprite warning is unchanged.
+
 ## Local storage
 
 Prefix `unbound`. Keep these keys once published.

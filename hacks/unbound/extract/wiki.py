@@ -258,6 +258,25 @@ class Wiki:
         return [dict(page=p, name=text(p['title']), fields=item_fields(p['html']))
                 for p in self.pages('Missions') if re.match(r'^Mission #\d+:', text(p['title']))]
 
+    def walkthrough_parts(self):
+        parts = [(int(match[1]), page) for page in self.all
+                 if (match := re.search(r'/walkthrough/part-(\d+)/?$', page['link']))]
+        return sorted(parts, key=lambda part: part[0])
+
+    def mission_index(self):
+        return [row for row in _rows(self.page('All Missions')['html'])
+                if row and re.match(r'#\d{3}:', row[0])]
+
+    def walkthrough_missions(self):
+        missions = self.item_missions()
+        for mission in missions:
+            raw = mission['page']['html']
+            for label in ('Start Location', 'Unlock Requirements', 'Objectives', 'Reward'):
+                field = _field(raw, label)
+                if field is not None:
+                    mission['fields'][label] = text(field)
+        return missions
+
     def trainer_locations(self):
         """The Trainer Locations (List) page: one TrainerRow per named row, in page order. A Pokemon / place cell
         with rowspan covers the next row(s) too: those rows have no cells of their own (15 on the page), so they

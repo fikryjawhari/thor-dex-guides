@@ -218,6 +218,26 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
   provisionally, but do not describe the numeric ratios as source-confirmed. InfernalRage keeps the guide's odd
   1 BP / Fire data and hzla's damage behaviour; its status-doubling description is not implemented in either calc.
   Tessy's Camomons typing is also not modelled; retain its source tag until the parent settles the UI/mechanics.
+- **Unit 7 (walkthrough data, 2026-10-30, `worktree-unbound-walk`):** `extract/walk.py` is built: **40 actual wiki
+  parts** (the index makes 41 pages, not 41 parts), **11 cap splits, 122 stops, 182 ordinary steps, 84 missions /
+  475 child steps**, **703 Locations item rows**, **393 trainers** (101 boss / 292 ordinary), all placed; all 69 AR
+  names covered. Build, extract-check, tabs_check (0 missing / 0 problems), assembly pass. No template changes or
+  browser/gate scenarios; **7b is still needed before the guide can render missions**. Schema now accepts/rejects
+  the accepted union; IT game-order sorting is enabled. IT rows and trainer card contents / keys / caps are unchanged,
+  only display order follows WK. EI rebuilt unchanged apart from its date, restored; no other hack diff.
+  **7b:** longest mission **#013 Basic Literacy has 47 children**; #008 has 34, #050 27, #065 25, #015 21. Eight
+  mission-only Checklist stops: `postgame/mission-hq` (9 missions), `postgame/dehara-city` (2), and (one each)
+  `postgame/magnolia-town`, `postgame/tehl-town`, `postgame/tarmigan-town`, `postgame/gurun-town`,
+  `postgame/crater-town`, `postgame/tomb-of-borrius`. Treat them as real stops, not empty grey signs. Conditional
+  hatching/fishing/pie chains keep full `u` and prerequisite order; long-running collection missions stay at unlock.
+  Stop keys use source part / semantic visit; mission keys are literal slugs; child keys are semantic, including
+  explicit target maps for numbered source tables. Missions append after ordinary pairs: 7b must count only pairs
+  for legacy ordinary-step ordinals, never flatten mission children into them. #038 and #047 are post-game; malformed
+  source HTML otherwise hides their requirements (also #007/#057/#060); #027's similarly hidden reward is recovered.
+  Route 3's Surf fishermen stay in Galavan's Cap 45 box but appear **after Galavan**, Part 20. Charlie goes in Part 30
+  (unchanged source/card location says Icicle Cave). Other revisit fixes and source-reader details: notes.md →
+  Walkthrough. No unplaced entries or outstanding decisions.
+
 (Units add theirs here.)
 - Main chat after 8a (2026-10-29): fixtures moved to `hacks/unbound/.src/saves/expected/` (git-ignored; the save-reader
   procedure keeps expected.json beside the saves); `python-dotenv` added with uv; battle-only forms map to their base

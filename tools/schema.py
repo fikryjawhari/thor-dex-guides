@@ -9,6 +9,7 @@ What the template reads is in hacks/emerald-imperium/notes.md (Data schema). A k
 there (and to the notes) when a hack gets a new field.
 Trainer normal {easy, p} is an optional secondary Normal team; easy is its Easy level decrement. Mon l is displayed,
 sl is an optional different stat level, hn is a list of hzla disagreement notes. Missing data changes no rendering.
+Walkthrough s accepts legacy [text, note] pairs or mission {m, n, u, r, note?, s}; mission children are {k, t, n?}.
 """
 
 # Canonical key order per object kind. Optional fields (omitted when empty) are marked in the notes, not here.
@@ -22,6 +23,8 @@ ORDER = {
     'WK': ['splits', 'np', 'docs', 'ko', 'cheats', 'cnote'],
     'split': ['n', 'note', 'st'],
     'stop': ['k', 'n', 'a', 's', 'note', 'it', 'tr', 'x'],
+    'mission': ['m', 'n', 'u', 'r', 'note', 's'],
+    'mission_step': ['k', 't', 'n'],
     'TR': ['g', 'caps'],
     'group': ['n', 'cap', 'tab', 'note', 'sec'],
     'section': ['h', 'cap', 'note', 'opt', 'rw', 'tr'],
@@ -76,6 +79,7 @@ def standardise(D):
     wk = D['WK']
     for key in ('src', 'gc', 'legacyStops'):
         wk.pop(key, None)
+    missions = set()
     for si, split in enumerate(wk['splits']):
         split.pop('cap', None)       # the cap is in the name: "Name Split [Cap N]"
         drop_empty(split, 'note')
@@ -85,6 +89,29 @@ def standardise(D):
             # The stop's key: the identity saved ticks / collapse state follow when the layout changes (dex.js
             # migrateWalkState). A guide's stops get their first key from their position; it never changes after.
             stop.setdefault('k', f'{si}.{ti}')
+            for step in stop.get('s', []):
+                if not isinstance(step, dict):
+                    assert isinstance(step, list) and len(step) == 2 and all(isinstance(part, str) for part in step), \
+                        'walkthrough ordinary steps must be [text, note] pairs'
+                    continue
+                assert all(isinstance(step.get(field), str) and step[field].strip() for field in ('m', 'n')), \
+                    'walkthrough missions require nonempty m and n'
+                assert all(isinstance(step.get(field), str) for field in ('u', 'r')), \
+                    'walkthrough missions require u and r strings'
+                assert step['m'] not in missions, 'walkthrough mission keys must be globally unique'
+                missions.add(step['m'])
+                assert isinstance(step.get('s'), list) and step['s'], 'walkthrough missions require nonempty s'
+                children = set()
+                for child in step['s']:
+                    assert isinstance(child, dict) and all(isinstance(child.get(field), str) and child[field].strip()
+                                                          for field in ('k', 't')), \
+                        'walkthrough mission children require nonempty k and t'
+                    assert child['k'] not in children, 'walkthrough mission child keys must be unique within a mission'
+                    children.add(child['k'])
+                    assert 'n' not in child or isinstance(child['n'], str), 'mission child n must be a string'
+                    order(child, 'mission_step')
+                assert 'note' not in step or isinstance(step['note'], str), 'mission note must be a string'
+                order(step, 'mission')
             order(stop, 'stop')
         order(split, 'split')
     keys = [stop['k'] for split in wk['splits'] for stop in split['st']]
