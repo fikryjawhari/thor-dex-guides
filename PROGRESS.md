@@ -83,10 +83,8 @@ Plan and decisions: `plans/blaze-black-2-redux.md` (Decisions, Findings); source
   `tools/romhackdex.py` + dex, locations, items, trainers + caps (Normal-team line in the template), Gen 5 reader
   (`template/calc/readers/gen5.js`, PKHeX oracle 805 / 0 mismatches), walkthrough (22 splits, 117 stops), optional
   bosses under their split's cap (user rule). BB2R build / check / tabs_check clean.
-- **In flight when this was written:** branch `bb2r-a1` (Haiku): parser fix for level class A1 (6 trainers / 24
-  Pokémon). The new rule also moved Ranger Lewis (Reversal Mountain B1F, +4 → +3); told to keep B1F at +4 by an
-  explicit exception (open, in `-levels.md` D1) and commit. Merge it only if its report shows exactly 6 / 24 with keys
-  unchanged.
+- Level fix A1 merged (6 trainers / 24 Pokémon; Ranger Lewis kept at +4 by an explicit exception, open in
+  `-levels.md` D1).
 - **Next: calc continuation** on `worktree-bb2r-calc` (head c5571b5, WIP; based on 40fa618: `git merge` the guide
   branch first, data.json → rebuild). Done there: engine level bug (stats at `sl`, formula at `l`), profile,
   `cfg.calc` (gen5 save, EVless), 50 hzla-oracle fixtures (47 match, 3 explained), BB2R engine check, save import
