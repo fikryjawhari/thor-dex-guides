@@ -108,6 +108,12 @@ the supplied data/profile. `stats` returns unstaged `[HP, Atk, Def, SpA, SpD, Sp
 An absent ability means none, not the species' default. Defaults are level 50,
 31 IVs, zero EVs/stages, neutral nature and full HP. `hp: 0` is retained.
 
+**Level bug** (BB2R Challenge, hzla's model): an optional `sl` is the level the stats are computed at, while `lv` is
+the level the Pokemon shows. Only the damage formula's level term (`getBaseDamage`, Gen 4's own formula) reads
+`lv`; Night Shade / Seismic Toss / Psywave use `sl` as hzla's `handleFixedDamageMoves` does, and the OHKO level
+check uses `lv`. A set without `sl` (or with `sl == lv`) is unchanged. `instrument.mjs` rewrites the level term;
+`clone()` keeps the shown level (Parental Bond's child).
+
 Damage `rolls`, `min`, `max` describe **hit 1**. Optional `per` contains one
 16-roll array per hit, and is present only when the hits differ. When absent,
 repeat `rolls` exactly `hits` times. `pmin`/`pmax` cover all selected hits

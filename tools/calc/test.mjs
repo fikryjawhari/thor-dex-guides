@@ -1626,6 +1626,39 @@ await test('R2 selected strike keeps Sash/shield/contact; custom exact amount ke
   assert.equal(broken.def.broken,true);assert.equal(broken.dealt,0);
 });
 
+await test('a stat level (sl) sets stats only; the shown level drives the formula, fixed damage keeps sl', () => {
+  for (const base of [profiles.gen5, profiles.expansion, profiles.gen4]) {
+    engine.init(data, base);
+    const shown = set('Machop', {lv: 50, sl: 46}), plainLow = set('Machop', {lv: 46}), plainHigh = set('Machop', {lv: 50});
+    const target = set('Snorlax', {lv: 50});
+    assert.deepEqual(plain(engine.stats(shown)), plain(engine.stats(plainLow)));
+    assert.notDeepEqual(plain(engine.stats(shown)), plain(engine.stats(plainHigh)));
+    const tackle = slot('Tackle');
+    const bp = data.MV[tackle.mv].bp, atk = engine.stats(shown)[1], def = engine.stats(target)[2];
+    const result = engine.calc(shown, target, tackle);
+    const low = engine.calc(plainLow, target, tackle).rolls;
+    // Hand formula, neutral and non-STAB, no other modifier: level 50 with level-46 Attack.
+    const level = 50, damage = base.gen === 4
+      ? Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * bp * atk / 50) / def) + 2
+      : Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * bp * atk / def) / 50) + 2;
+    const hand = Array.from({length: 16}, (_, i) => Math.floor(damage * (85 + i) / 100));
+    assert.deepEqual(plain(result.rolls), hand, `gen ${base.gen}`);
+    assert.ok(Math.max(...hand) > Math.max(...low), `gen ${base.gen} level term`);
+    assert.deepEqual(plain(engine.calc(shown, target, slot('Seismic Toss')).rolls), Array(16).fill(46));
+    // As the defender, only its stats change.
+    assert.deepEqual(plain(engine.calc(target, shown, tackle).rolls), plain(engine.calc(target, plainLow, tackle).rolls));
+    // Parental Bond's child clone keeps the shown level (expansion only).
+    if (base.gen > 5) {
+      const bond = {...shown, ab: ability('Parental Bond')}, bondLow = {...plainHigh, ab: ability('Parental Bond')};
+      const both = engine.calc(bond, target, tackle), high = engine.calc(bondLow, target, tackle);
+      assert.ok(both.per, 'two hits');
+      assert.ok(Math.max(...both.per[1]) <= Math.max(...high.per[1]));
+      assert.ok(Math.max(...both.per[1]) >= Math.max(...engine.calc({...bond, lv: 46, sl: undefined}, target, tackle).per[1]));
+    }
+  }
+  engine.init(data, profiles.expansion);
+});
+
 await test('initialisation and calculations leave guide/profile inputs unchanged', () => {
   assert.equal(JSON.stringify({data, profiles}), unchanged);
 });

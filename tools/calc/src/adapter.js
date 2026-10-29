@@ -148,7 +148,7 @@ function pokemon(set) {
   const statusEntry = profile.status?.find(([key]) => key === set.st);
   const status = statusEntry ? profile.over?.status?.[set.st] ?? set.st : '';
   const result = new Pokemon(generation, speciesNames.get(String(set.id)), {
-    level: set.lv ?? 50,
+    level: set.sl ?? set.lv ?? 50,
     nature: profile.natures === false ? 'Serious' : set.nat || 'Serious',
     ability: abilityName || 'Guide no ability', item: itemName,
     status, ivs: statTable(set.iv, 31), evs: statTable(profile.evs === false ? undefined : set.ev, 0),
@@ -158,8 +158,17 @@ function pokemon(set) {
   if (set.hp !== undefined) result.originalCurHP = Math.max(0, Math.min(result.maxHP(), set.hp));
   if (result.hasAbility('Unburden') && set.used) result.abilityOn = true;
   result.guideItem = set.it || '';
+  // Stats at `sl`, the damage formula at the shown level (BB2R Challenge trainers; tools/calc/README.md, Level bug).
+  if (set.sl !== undefined && set.sl !== (set.lv ?? 50)) result.guideLevel = set.lv ?? 50;
   return result;
 }
+
+const nativeClone = Pokemon.prototype.clone;
+Pokemon.prototype.clone = function clone() {
+  const copy = nativeClone.call(this);
+  if (this.guideLevel !== undefined) copy.guideLevel = this.guideLevel;
+  return copy;
+};
 
 function stats(set) {
   const mon = pokemon(set);
@@ -1199,7 +1208,7 @@ function unshieldedMove(atk, def, slot, values = {}) {
       || (defender.hasAbility('Sturdy') && !attacker.hasAbility('Mold Breaker', 'Teravolt', 'Turboblaze'))
       || (name === 'Sheer Cold' && profile.gen >= 7 && defender.hasType('Ice'));
     value = fails ? 0 : current;
-  } else value = FIXED[name]({lv: atk.lv ?? 50, def: current, atk: own});
+  } else value = FIXED[name]({lv: atk.sl ?? atk.lv ?? 50, def: current, atk: own});
   const rolls = (Array.isArray(value) ? value : Array(16).fill(value)).map(v => base.eff ? v : 0);
   const eot = [0, 1, 2, 3].map(turn => (base.eot || []).reduce((sum, part) => sum + part.v[turn], 0));
   const result = {...base, fixed: true, rolls, hits: 1, min: Math.min(...rolls), max: Math.max(...rolls),

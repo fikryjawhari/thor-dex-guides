@@ -135,5 +135,10 @@ export function getMoveEffectiveness(gen: any, move: any, type: any, revealed?: 
     }
     return once(body, '  return baseDamage;', `  return ${invocation(body, 'baseDamage', 'baseDamage', 'isCritical')};`);
   });
+  // A trainer Pokemon whose stats use another level than it shows (BB2R Challenge: data `sl`) carries the shown level
+  // as `guideLevel`; only the damage formula's level term reads it (fixed-damage moves keep `level`).
+  const level = '((attacker as any).guideLevel ?? attacker.level)';
+  if (modern) source = source.replaceAll('getBaseDamage(attacker.level,', `getBaseDamage(${level},`);
+  else source = source.replaceAll('(2 * attacker.level) / 5 + 2', `(2 * ${level}) / 5 + 2`);
   return `import {applyPhase, legacyMods, guideRoll} from 'guide-calc-rules';\n${source}`;
 }
