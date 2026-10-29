@@ -89,6 +89,9 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 - Real save import on the Thor (melonDS / DraStic `.sav`), like the other guides (Open → Damage calc → Real saves).
 - `worktree-bb2r-calc` and its T3 worktree (`~/.t3/worktrees/thor-dex-guides/t3-6ab62dd5`) are merged: delete them.
 
+**Unbound 2.1.1.1 (Expert): in progress** on `worktree-unbound` (`.claude/worktrees/unbound`). Plan, decisions and
+unit findings: `plans/unbound.md`. Scaffold done; units 1 (sources) and 7a (mission mockup) next.
+
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
 ## Decisions

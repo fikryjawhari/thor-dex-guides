@@ -73,6 +73,9 @@ User's answers (2026-10-29):
   fixtures, public sample saves); with none, the reader ships marked provisional and a real import on the Thor is a
   follow-up check (PROGRESS.md), as BB2R's was.
 - **D7 Version:** 2.1.1.1.
+- **EVs (2026-10-29):** Unbound has no way to turn EVs off, so they stay: `cfg.evs` true, `cfg.mgm` false (new switch:
+  no MGM toggle, one speed per Pokémon with its EVs). Trainer cards and the calc use the sheets' EVs as given.
+- **Mode:** hack.json has no mode field; "Expert" goes in the trainer wording (`txt`), not a new key.
 
 ## Units (in order; each an agent in its own worktree from `worktree-unbound`, ending at a commit)
 1. **Source audit + gaps** (Sol): pin hzla and Unbound-Cloud (SOURCES.md, watch.json); inventory with counts like
@@ -104,3 +107,6 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
 
 ## Findings for later units
 (Units add theirs here.)
+- Unit 2 (scaffold, `worktree-unbound`): `new_hack.py --like emerald-imperium` done; `cfg.mgm: false` added to the
+  template (`dex.js` HAS_MGM, `datajson.HACK_ORDER`, template/README.md cfg table); other guides differ by that one
+  line only. `txt` wording is all TODO (units 4-7 fill theirs).

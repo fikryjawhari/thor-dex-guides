@@ -31,3 +31,18 @@ python -I tools/wp_dump.py https://unboundwiki.com $D/unboundwiki/unboundwiki.js
 About 200 MB. The wiki's Pokédex overlaps RomHackDex; use whichever reads cleaner at build time. Unbound is the only
 backlog hack with a quest system (the wiki's Missions category). Two RomHackDex pages 404 on the site itself
 (Minior Red Meteor, Pumpkaboo Average).
+
+
+## Files
+
+TODO: document files.
+
+
+## Game files
+
+TODO: document game files.
+
+
+## Source checks
+
+TODO: document source checks.

@@ -1,0 +1,56 @@
+{
+ "id": "unbound",
+ "title": "Pokémon Unbound Dex",
+ "game": "Pokémon Unbound",
+ "platform": "GBA",
+ "version": "2.1.1.1",
+ "cfg": {
+  "name": "Pokémon Unbound",
+  "orig": "",
+  "evs": true,
+  "mgm": false,
+  "starter": "type",
+  "orbs": true,
+  "g3trainer": false,
+  "capLast": false,
+  "walkAreaNote": false,
+  "trw": [
+   "boss",
+   "bosses",
+   "boss trainers"
+  ],
+  "calc": false,
+  "ls": {
+   "dex": "unbounddex",
+   "calc": "unboundcalc",
+   "track": "unboundtrack",
+   "walk": "unboundwalk",
+   "cap": "unboundcap",
+   "tr": "unboundtr",
+   "recent": "unboundrecent",
+   "pos": "unboundpos",
+   "mgm": "unboundmgm",
+   "loc": "unboundloc",
+   "items": "unbounditems",
+   "dmg": "unbounddmg"
+  },
+  "txt": {
+   "obt": "TODO: obt",
+   "nw": "TODO: nw",
+   "g3": "TODO: g3",
+   "conf": "TODO: conf",
+   "tc": "TODO: tc",
+   "chdoc": "TODO: chdoc",
+   "mvh": "TODO: mvh",
+   "nodc": "TODO: nodc",
+   "mvsrc": "TODO: mvsrc",
+   "mvsrcx": "TODO: mvsrcx",
+   "absrc": "",
+   "ns": "TODO: ns",
+   "walk": "TODO: walk",
+   "capl": "TODO: capl",
+   "capnone": "",
+   "noev": ""
+  }
+ }
+}

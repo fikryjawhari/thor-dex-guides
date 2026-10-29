@@ -689,7 +689,7 @@ TRD.g.forEach((g,gi)=>g.sec.forEach((s,si)=>s.tr.forEach(t=>{t.g=g.n;t.h=s.h;t.t
  t.key=(t.n+' '+t.loc+' '+t.tags.join(' ')+' '+g.n+' '+s.h+' '+t.p.map(x=>(byId[x.id]?byId[x.id].name:'')+' '+(x.i||'')).join(' ')+' '+(t.st?t.st+' starter':'')).toLowerCase();TRS.push(t);TRK[t.k]=t;})));
 const TRUSE={};TRS.forEach(t=>t.p.forEach(x=>{(TRUSE[x.id]=TRUSE[x.id]||[]).includes(t)||TRUSE[x.id].push(t);}));
 let TCAP={};try{TCAP=JSON.parse(localStorage.getItem(LS.cap)||'{}')}catch(e){}
-const HAS_MGM=EVS&&!!D.TR?.g.some(g=>g.sec.some(s=>s.tr.some(t=>(t.p||[]).some(p=>p.ev?.some(v=>v>0))||(t.pt||[]).some(partner=>(partner.p||[]).some(p=>p.ev?.some(v=>v>0))))));
+const HAS_MGM=EVS&&CF.mgm!==false&&!!D.TR?.g.some(g=>g.sec.some(s=>s.tr.some(t=>(t.p||[]).some(p=>p.ev?.some(v=>v>0))||(t.pt||[]).some(partner=>(partner.p||[]).some(p=>p.ev?.some(v=>v>0))))));
 let MGM=false;try{MGM=HAS_MGM&&localStorage.getItem(LS.mgm)==='1'}catch(e){}
 const capOf=t=>+TCAP[t.k]||t.cap||(CF.capLast&&+TCAP._last)||0;
 const starterType=()=>{if(PICK&&CF.starter!=='type')return TK.s;const e=TK.e&&TK.e[STARTER_AREA>=0?STARTER_AREA:0];const p=e&&e.p&&!e.f&&byId[e.p];return p?(p.t.find(x=>['Grass','Fire','Water'].includes(x))||''):'';};
