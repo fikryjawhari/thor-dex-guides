@@ -42,3 +42,18 @@ compares the 642 species the doc changes. Level-up lists agree (the 74 differenc
 RomHackDex** (Venusaur 82/83/100 for the doc's 87/85/103, Golurk 89/124/80 for 115/125/85). So take stats from
 `Pokemon Changes.txt` for every species it lists (it gives full new stats) and RomHackDex for the rest (unchanged,
 so vanilla is right). Trainers (with Challenge Mode teams), wild tables and items come from the docs.
+
+
+## Files
+
+TODO: document files.
+
+
+## Game files
+
+TODO: document game files.
+
+
+## Source checks
+
+TODO: document source checks.

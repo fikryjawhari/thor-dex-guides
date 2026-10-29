@@ -18,6 +18,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 
 | Script | What it does |
 | --- | --- |
+| `new_hack.py <hack> --like <built hack> [--title name] [--version N] [--ls-prefix prefix] [--dry-run] [--force]` | Stdlib scaffold: config, notes / source headings, empty sprites, extract modules / check, gate rebuild and calc scenario / engine-check stubs. No data or other hack's mechanics / fixtures; calc off. Details below. |
 | `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N]` / `scenarios [hack ...] [--only a,b] [--jobs N]` | Captures committed HTML/data/reports at a ref; rebuilds data and runs serial DOM, consistency, tabs, migration, mockup and scenario checks; `--jobs N` runs the scenario × guide runs N at a time (each its own browser; same results as serial). `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
 | `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` to the main checkout (Windows junctions, no copying), then `uv sync`; no hacks means every built guide. Refuses other claims or existing source copies. Release removes only the matching claim. |
 | `scenarios/tracker-reload.mjs <guide.html>` | Seeded tracker state, Clear and reload at 260 × 316 in `dvkb`; assertions on the control and saved state. `scenarios/README.md` describes new spec checks. |
@@ -63,6 +64,35 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `rhd_moves.py <moves/index.html> <hack-slug> <out.json>` | Every RomHackDex move with priority and description (the index lacks both); reads each move page, saves only those fields. |
 | `drayano_check.py <Pokemon Changes.txt> <romhackdex/pokedex>` | Compares Drayano's change doc with a RomHackDex mirror (new base stats, full level-up lists) for every species the doc changes. |
 | `preview.py <page.html> [name.html] [--frame] [--title T] [--rm name ...]` | Puts a page on the phone preview (below) and prints its link; `--frame` wraps it with `mockup/thor-frame/build.py` first. Existing usage unchanged. |
+
+## New-guide scaffold
+
+`python -I tools/new_hack.py blaze-black-2-redux --like hardlove-gold --title "Blaze Black 2 Redux" --version 1.4.1 --ls-prefix bb2r`
+uses a built sibling's config shape / feature switches, not its data, calc profile, descriptions or saved-state keys.
+Review the inherited switches; nonempty cfg.txt values become TODOs. The default prefix is the ID without hyphens;
+collisions with any configured guide are rejected. `--title` is the game name (the page title adds ` Dex`), version
+defaults to `TODO`. No raw sources, data.json, report, trainer-key ledger or calc fixtures are fabricated.
+
+Creates hack.json, notes.md (the six standard headings), sprites.json, extract/{common,build,dex,locs,trainers,items,walk,check}.py,
+tools/scenarios/calc-<hack>.mjs and tools/calc/<hack>_check.mjs. Adds REBUILDS in gate.py, a null EXPECTED count in
+calc-doubles.mjs and the engine stub to calc/package.json's test command. Appends missing SOURCES.md headings
+(Files, Re-fetch, Game files, Source checks), preserving every existing line. No watch.json is copied or replaced.
+
+`--dry-run` preflights and lists writes without creating directories or changing registrations. Existing generated
+files cause a refusal before any write unless `--force`; force still cannot change existing localStorage keys or
+overwrite source text. Repeating with force writes only changed content and never duplicates registrations.
+Assembly and default gates discover only data-bearing guides (assembly prints SKIP for scaffolds); explicit gate
+requests report no built guide. Extract/check and calc stubs skip absent data; the build reports TODO, and checks
+fail closed once their data/profile needs real assertions. Calc scenarios skip other guides.
+
+Fill audited sources/watch, extract TODOs, feature switches / wording, version/mode and notes. The first real build
+seeds trainer_keys.json and report.txt through extractlib.finalise()/write_data(); commit them with data.json. Fill
+engine/profile stubs before enabling calc; replace the null doubles count and add audited DOUBLES_EXPECTED /
+DOUBLES_PARTNER_ONLY in trainer_fields_check.py (these enumerate data-bearing guides and cannot take empty stubs).
+Review calc/test.mjs's field-profile fixtures, save readers / GID, and itemstd.py RULES for actual hack quirks only.
+Template/readers docs, hzla_compare's supported reference calculators, Hardlove source checks and the EI fixture
+defaults are not universal guide registries: don't add invented expectations there. Safety tests:
+`python -I tools/new_hack_test.py` (stdlib and Node).
 
 ## Standard gates
 

@@ -10,6 +10,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.5 (NDS), Photonic Sun 2.38 Rebalanced (3DS), Eternal X 2.67
   Rebalanced (3DS). All four share one template, one extract layout (`tools/extractlib.py`), one data schema
   (`tools/schema.py`), one Items standard (`tools/itemstd.py`) and one notes / SOURCES layout.
+- **Blaze Black 2 Redux 1.4.1** (NDS, Complete / Challenge Mode): scaffold only on `worktree-bb2r-scaffold`;
+  no data.json, calc disabled. Source audit and data builders fill the TODOs; not published.
 - Done and merged: the split UI, search (full-window, results with actions, search stays set), trainer cards, the
   consistency pass (2026-10-24) and the walkthrough / Trainers agreement (2026-10-24: walkthrough splits = Trainers
   boxes, same order, caps never go down, `tools/tabs_check.py`). Audits passed headless; the user approved the phone
@@ -71,8 +73,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 6. **Source updates** (`check_updates.py`, 2026-10-28): all built guides current (Hardlove 0.8.5 done 2026-10-29).
    SoulGold's data files changed since 2026-10-24 (Mega Lopunny innates, Clefable / Mega Clefable and Unown
    learnsets, ability usage): re-fetch before its guide.
-7. **New-guide scaffold** (`tools/new_hack.py <hack> --like <built hack>`): build it during the first new guide, from
-   what that session actually copies.
+7. **New-guide scaffold done** (2026-10-29): `tools/new_hack.py <hack> --like <built hack>`; BB2R skeleton created, no data yet.
 
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 

@@ -42,7 +42,7 @@ class ScaffoldTests(unittest.TestCase):
     def write(self, name, text):
         path = self.root / name
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(text, encoding='utf-8')
+        path.write_text(text, encoding='utf-8', newline='\n')
         return path
 
     def materialise(self):
@@ -122,6 +122,15 @@ class ScaffoldTests(unittest.TestCase):
         self.args.like = 'unbuilt'
         with self.assertRaisesRegex(ValueError, 'built guide'):
             new_hack.scaffold(self.args)
+
+    def test_source_line_endings_preserved_byte_for_byte(self):
+        path = self.write('hacks/new-guide/SOURCES.md', '')
+        original = b'# Existing audit\r\n\r\nKeep these lines.\r\n'
+        path.write_bytes(original)
+        self.materialise()
+        self.assertTrue(path.read_bytes().startswith(original))
+        self.args.force = True
+        self.assertNotIn(path, new_hack.scaffold(self.args))
 
     def test_dry_run_writes_nothing(self):
         before = {path.relative_to(self.root): path.read_bytes() for path in self.root.rglob('*') if path.is_file()}

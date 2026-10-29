@@ -1,0 +1,55 @@
+{
+ "id": "blaze-black-2-redux",
+ "title": "Blaze Black 2 Redux Dex",
+ "game": "Blaze Black 2 Redux",
+ "platform": "NDS",
+ "version": "1.4.1",
+ "cfg": {
+  "name": "Blaze Black 2 Redux",
+  "orig": "",
+  "evs": false,
+  "starter": "pick",
+  "orbs": false,
+  "g3trainer": true,
+  "capLast": true,
+  "walkAreaNote": true,
+  "trw": [
+   "trainer",
+   "trainers",
+   "trainers"
+  ],
+  "calc": false,
+  "ls": {
+   "dex": "bb2rdex",
+   "calc": "bb2rcalc",
+   "track": "bb2rtrack",
+   "walk": "bb2rwalk",
+   "cap": "bb2rcap",
+   "tr": "bb2rtr",
+   "recent": "bb2rrecent",
+   "pos": "bb2rpos",
+   "mgm": "bb2rmgm",
+   "loc": "bb2rloc",
+   "items": "bb2ritems",
+   "dmg": "bb2rdmg"
+  },
+  "txt": {
+   "obt": "TODO: obt",
+   "nw": "TODO: nw",
+   "g3": "TODO: g3",
+   "conf": "",
+   "tc": "TODO: tc",
+   "chdoc": "",
+   "mvh": "TODO: mvh",
+   "nodc": "",
+   "mvsrc": "TODO: mvsrc",
+   "mvsrcx": "",
+   "absrc": "TODO: absrc",
+   "ns": "TODO: ns",
+   "walk": "TODO: walk",
+   "capl": "TODO: capl",
+   "capnone": "TODO: capnone",
+   "noev": "TODO: noev"
+  }
+ }
+}

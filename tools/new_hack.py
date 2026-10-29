@@ -16,7 +16,11 @@ def json_text(value):
 
 
 def source_notes(path, title):
-    text = path.read_text(encoding='utf-8') if path.exists() else f'# {title} sources\n'
+    if path.exists():
+        with path.open(encoding='utf-8', newline='') as source:
+            text = source.read()
+    else:
+        text = f'# {title} sources\n'
     headings = set(re.findall(r'^## (.+?)\s*$', text, re.MULTILINE))
     for heading in SOURCE_HEADINGS:
         if heading not in headings:
@@ -99,7 +103,7 @@ def scaffold(args):
         if existing['cfg']['ls'] != storage:
             raise ValueError('--force cannot change an existing guide\'s localStorage keys')
     return {path: text for path, text in files.items()
-            if not path.exists() or path.read_text(encoding='utf-8') != text}
+            if not path.exists() or path.read_bytes() != text.encode('utf-8')}
 
 
 CALC_TODO = '''TODO: replace extract/check.py and calc stubs with source-backed assertions. Calc remains disabled.

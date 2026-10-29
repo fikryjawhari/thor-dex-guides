@@ -74,17 +74,22 @@ adapt); agents build the units (Workflow → Which model).
    tag the shared list doesn't know yet goes in `tools/trainer_fields.py` → `DOUBLES_TAGS`.
    Hacks come in families (PROGRESS.md → Hack families): reuse the family's shared code (3DS: `tools/ctrguide.py`),
    write a family's first guide so its siblings can reuse it, and lift the shared part out when the second one comes.
-3. `hacks/<hack>/hack.json`: copy an existing one; new localStorage prefix in `cfg.ls`, the hack's wording in
-   `cfg.txt`, feature switches. `notes.md`: the same headings as the existing ones (Build, Sources and rules, Local storage, Hack-only data, Checks,
-   History); `SOURCES.md` likewise (Files, Re-fetch, Game files, Source checks). Add `extract/check.py`. Add the
-   guide to PROGRESS.md → Current status.
+3. `python -I tools/new_hack.py <hack> --like <built hack> [--title "Game name"] [--version N] [--ls-prefix prefix]`:
+   scaffold `hack.json`, notes / SOURCES headings, empty sprites, extract modules and check, gate rebuild and calc
+   scenario / engine-check stubs. Existing files need `--force`; SOURCES text is append-only. `--dry-run` lists writes.
+   No data.json yet: assembly and default gates skip it. Add the guide to PROGRESS.md → Current status.
 4. Sprites: every guide uses the shared set (`sprites/README.md`); keys are worked out from dex number and name.
    `python -I tools/sprite_keys.py <hack>` lists the forms it matched (check once) and the species it couldn't place:
    those are the hack's own additions and go in its `sprites.json`, the only art a hack keeps. `assemble.py` lists
    species with no sprite; they show as a type-coloured circle with the name's first letter.
 5. Damage calc: `hack.json` → `cfg.calc` from the hack's mechanics ([calc mechanics](.agents/references/calc-mechanics.md));
    once the hack's save family has a reader, its ID tables and `save` ([save reader](.agents/references/calc-save-reader.md)).
-6. `uv run python -I tools/gate.py check <hack>` (baseline setup: `tools/README.md` → Standard gates).
+6. Finish the scaffold TODOs: audited sources / watch, extract modules and checks, cfg wording / feature switches,
+   version / mode and notes. The first build writes data.json, report.txt and trainer_keys.json; commit all three.
+   Calc stubs skip while disabled and fail when enabled: fill source-backed scenarios / engine fixtures, replace
+   calc-doubles EXPECTED's null, add trainer_fields_check counts and review calc/test.mjs profile fixtures. The
+   scaffold registers the engine check in calc/package.json; itemstd RULES needs an entry only for hack quirks.
+   `uv run python -I tools/gate.py check <hack>` (baseline setup: `tools/README.md` → Standard gates).
    Then `python -I tools/preview.py dist/<hack>.html --frame` for Thor-frame review on the phone preview.
 
 ## Git
