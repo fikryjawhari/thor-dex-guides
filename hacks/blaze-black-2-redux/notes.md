@@ -263,6 +263,14 @@ doc-changed species' stats / types / abilities equal the doc (Complete); 189 sta
 evolution is an edge both ways and no method is left vague; every move name in Pokemon / Move Changes resolves; 154
 move fields where the mirror disagrees; Shadow Claw, Esper Wing, the type-changed moves; no replaced move in M.
 
+`extract/check.py` (trainers, 2026-10-29): 468 records / 1,867 doc Pokemon resolved; 466 cards; caps = the plan's
+21, only they end splits; 31 Normal teams (stated levels, Easy 1-4) + 3 Challenge-only; displayed level <= split cap
+or one of the four reported exceptions; level pairs (Cheren Munchlax 14 / 13, Red 100, Klinklang 92 / 88); IVs and
+nature or an explicit "unknown"; five recorded fixes; every card key in `trainer_keys.json`. Template (`normal`,
+`hn`, `sl`): four live guides DOM identical normal + kb at baseline 8242fed; BB2R Trainers at 260 x 316 normal +
+dvkb: 31 Normal lines, nothing past 260 px, no page errors (`tools/mockup/pagecheck.mjs` only knows EI's place names).
+`guide-update` / `stable-keys` need `WK.splits`: they run once the walkthrough unit lands.
+
 TODO: replace extract/check.py and calc stubs with source-backed assertions. Calc remains disabled.
 Before enabling it, replace the null in tools/scenarios/calc-doubles.mjs EXPECTED with an audited count and add
 tools/trainer_fields_check.py DOUBLES_EXPECTED (DOUBLES_PARTNER_ONLY if needed). The engine stub is registered
