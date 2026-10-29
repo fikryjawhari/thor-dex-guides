@@ -1,0 +1,2042 @@
+{
+ "oracle": {
+  "title": "Blaze Black 2/Volt White 2 Redux",
+  "gen": 5,
+  "damageGen": 5,
+  "types": 6,
+  "critGen": 5,
+  "backup": "bb2redux1-4",
+  "sha": "403c2669f03f19db43b9f0f7f342c062f9519475",
+  "settings": {
+   "challengeMode": true
+  }
+ },
+ "matchups": [
+  {
+   "name": "neutral-physical",
+   "atk": {
+    "id": "snorlax",
+    "lv": 50,
+    "ab": -1
+   },
+   "def": {
+    "id": "blastoise",
+    "lv": 50,
+    "ab": -1
+   },
+   "slot": {
+    "mv": 511
+   },
+   "field": {}
+  },
+  {
+   "name": "neutral-special",
+   "atk": {
+    "id": "snorlax",
+    "lv": 50,
+    "ab": -1
+   },
+   "def": {
+    "id": "blastoise",
+    "lv": 50,
+    "ab": -1
+   },
+   "slot": {
+    "mv": 244
+   },
+   "field": {}
+  },
+  {
+   "name": "crit-gen5-double",
+   "atk": {
+    "id": "snorlax",
+    "lv": 50,
+    "ab": -1
+   },
+   "def": {
+    "id": "blastoise",
+    "lv": 50,
+    "ab": -1
+   },
+   "slot": {
+    "mv": 511,
+    "crit": true
+   },
+   "field": {}
+  },
+  {
+   "name": "cut-grass-crit",
+   "atk": {
+    "id": "fearow",
+    "lv": 59,
+    "ab": 57,
+    "it": "",
+    "nat": "Impish",
+    "iv": [
+     6,
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "sl": 55
+   },
+   "def": {
+    "id": "seismitoad",
+    "lv": 59,
+    "ab": 159,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 92,
+    "crit": true
+   },
+   "field": {},
+   "trainer": {
+    "k": "15.1.1",
+    "slot": 3,
+    "name": "Ranger♂ Crofton"
+   }
+  },
+  {
+   "name": "frost-breath-always-crit",
+   "atk": {
+    "id": "jynx",
+    "lv": 35,
+    "ab": 150,
+    "it": "",
+    "nat": "Bashful",
+    "iv": [
+     6,
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "sl": 33
+   },
+   "def": {
+    "id": "garchomp",
+    "lv": 36,
+    "ab": 111,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 182
+   },
+   "field": {},
+   "trainer": {
+    "k": "6.2.1",
+    "slot": 0,
+    "name": "Ranger♂ Forrest"
+   }
+  },
+  {
+   "name": "fairy-moonblast-dragon",
+   "atk": {
+    "id": "illumise",
+    "lv": 33,
+    "ab": 96,
+    "it": "",
+    "nat": "Bashful",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 31
+   },
+   "def": {
+    "id": "dragonair",
+    "lv": 33,
+    "ab": 116,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 309
+   },
+   "field": {},
+   "trainer": {
+    "k": "6.1.4",
+    "slot": 0,
+    "name": "Backers Stu and Art"
+   }
+  },
+  {
+   "name": "fairy-immune-dragon-claw",
+   "atk": {
+    "id": "flygon",
+    "lv": 50,
+    "ab": 64,
+    "it": "Life Orb",
+    "nat": "Modest",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 47
+   },
+   "def": {
+    "id": "togekiss",
+    "lv": 50,
+    "ab": 138,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 115
+   },
+   "field": {},
+   "trainer": {
+    "k": "10.3.0",
+    "slot": 2,
+    "name": "Hugh"
+   }
+  },
+  {
+   "name": "steel-ghost-neutral",
+   "atk": {
+    "id": "sableye",
+    "lv": 40,
+    "ab": 96,
+    "it": "",
+    "nat": "Modest",
+    "iv": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "sl": 37
+   },
+   "def": {
+    "id": "excadrill",
+    "lv": 40,
+    "ab": 109,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 426
+   },
+   "field": {},
+   "trainer": {
+    "k": "9.3.0",
+    "slot": 2,
+    "name": "Hiker Teppei"
+   }
+  },
+  {
+   "name": "steel-dark-neutral",
+   "atk": {
+    "id": "snorlax",
+    "lv": 89,
+    "ab": 146,
+    "it": "Leftovers",
+    "nat": "Adamant",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 85
+   },
+   "def": {
+    "id": "metagross",
+    "lv": 89,
+    "ab": 12,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 88
+   },
+   "field": {},
+   "trainer": {
+    "k": "21.13.0",
+    "slot": 3,
+    "name": "Leader Cheren - Nacrene City"
+   }
+  },
+  {
+   "name": "fairy-resists-fighting",
+   "atk": {
+    "id": "samurott",
+    "lv": 46,
+    "ab": 118,
+    "it": "",
+    "nat": "Timid",
+    "iv": [
+     12,
+     12,
+     12,
+     12,
+     12,
+     12
+    ],
+    "sl": 43
+   },
+   "def": {
+    "id": "togekiss",
+    "lv": 46,
+    "ab": 138,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 397
+   },
+   "field": {},
+   "trainer": {
+    "k": "10.5.11",
+    "slot": 1,
+    "name": "Ace Trainer Vicki"
+   }
+  },
+  {
+   "name": "iron-fist-needle-arm",
+   "atk": {
+    "id": "cacturne",
+    "lv": 44,
+    "ab": 59,
+    "it": "",
+    "nat": "Calm",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 41
+   },
+   "def": {
+    "id": "samurott",
+    "lv": 44,
+    "ab": 118,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 321
+   },
+   "field": {},
+   "difference": {
+    "source": "Move Changes.txt (Needle Arm, Rock Smash: \"None -> Boosted by the ability Iron Fist [!]\"); Changelog.txt line 291",
+    "reason": "BB2R makes Needle Arm and Rock Smash punching moves; hzla's backup does not flag them, so its Iron Fist does not boost them. The profile follows the doc."
+   }
+  },
+  {
+   "name": "iron-fist-rock-smash",
+   "atk": {
+    "id": "samurott",
+    "lv": 46,
+    "ab": 59,
+    "it": "",
+    "nat": "Timid",
+    "iv": [
+     12,
+     12,
+     12,
+     12,
+     12,
+     12
+    ],
+    "sl": 43
+   },
+   "def": {
+    "id": "snorlax",
+    "lv": 46,
+    "ab": 52,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 397
+   },
+   "field": {},
+   "difference": {
+    "source": "Move Changes.txt (Needle Arm, Rock Smash: \"None -> Boosted by the ability Iron Fist [!]\"); Changelog.txt line 291",
+    "reason": "BB2R makes Needle Arm and Rock Smash punching moves; hzla's backup does not flag them, so its Iron Fist does not boost them. The profile follows the doc."
+   }
+  },
+  {
+   "name": "needle-arm-no-iron-fist",
+   "atk": {
+    "id": "cacturne",
+    "lv": 44,
+    "ab": 159,
+    "it": "",
+    "nat": "Calm",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 41
+   },
+   "def": {
+    "id": "samurott",
+    "lv": 44,
+    "ab": 118,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 321
+   },
+   "field": {},
+   "trainer": {
+    "k": "10.5.12",
+    "slot": 3,
+    "name": "Ace Trainer Shaye"
+   }
+  },
+  {
+   "name": "iron-fist-non-punch",
+   "atk": {
+    "id": "cacturne",
+    "lv": 44,
+    "ab": 59,
+    "it": "",
+    "nat": "Calm",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 41
+   },
+   "def": {
+    "id": "samurott",
+    "lv": 44,
+    "ab": 118,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 416
+   },
+   "field": {}
+  },
+  {
+   "name": "iron-fist-real-punch",
+   "atk": {
+    "id": "cacturne",
+    "lv": 44,
+    "ab": 59,
+    "it": "",
+    "nat": "Calm",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 41
+   },
+   "def": {
+    "id": "samurott",
+    "lv": 44,
+    "ab": 118,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 121
+   },
+   "field": {}
+  },
+  {
+   "name": "soundproof-hyper-voice",
+   "atk": {
+    "id": "unfezant",
+    "lv": 47,
+    "ab": 153,
+    "it": "",
+    "nat": "Impish",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 44
+   },
+   "def": {
+    "id": "exploud",
+    "lv": 47,
+    "ab": 128,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 241
+   },
+   "field": {},
+   "trainer": {
+    "k": "10.8.2",
+    "slot": 1,
+    "name": "Lass Flo"
+   }
+  },
+  {
+   "name": "soundproof-non-sound",
+   "atk": {
+    "id": "unfezant",
+    "lv": 47,
+    "ab": 153,
+    "it": "",
+    "nat": "Impish",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 44
+   },
+   "def": {
+    "id": "exploud",
+    "lv": 47,
+    "ab": 128,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 12
+   },
+   "field": {},
+   "trainer": {
+    "k": "10.8.2",
+    "slot": 1,
+    "name": "Lass Flo"
+   }
+  },
+  {
+   "name": "boomburst",
+   "atk": {
+    "id": "electrode",
+    "lv": 36,
+    "ab": 1,
+    "it": "",
+    "nat": "Brave",
+    "iv": [
+     24,
+     24,
+     24,
+     24,
+     24,
+     24
+    ],
+    "sl": 34
+   },
+   "def": {
+    "id": "samurott",
+    "lv": 36,
+    "ab": 118,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 48
+   },
+   "field": {},
+   "trainer": {
+    "k": "6.4.4",
+    "slot": 1,
+    "name": "Beauty Ampère"
+   }
+  },
+  {
+   "name": "triple-axel",
+   "atk": {
+    "id": "lopunny",
+    "lv": 54,
+    "ab": 113,
+    "it": "",
+    "nat": "Adamant",
+    "iv": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "sl": 50
+   },
+   "def": {
+    "id": "garchomp",
+    "lv": 54,
+    "ab": 111,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 537,
+    "hits": 3
+   },
+   "field": {},
+   "trainer": {
+    "k": "14.1.0",
+    "slot": 0,
+    "name": "Socialite Marian"
+   }
+  },
+  {
+   "name": "wave-crash",
+   "atk": {
+    "id": "empoleon",
+    "lv": 65,
+    "ab": 22,
+    "it": "",
+    "nat": "Bold",
+    "iv": [
+     24,
+     24,
+     24,
+     24,
+     24,
+     24
+    ],
+    "sl": 61
+   },
+   "def": {
+    "id": "charizard",
+    "lv": 65,
+    "ab": 22,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 557
+   },
+   "field": {},
+   "trainer": {
+    "k": "16.6.0",
+    "slot": 1,
+    "name": "Ace Trainer Doyle"
+   }
+  },
+  {
+   "name": "esper-wing",
+   "atk": {
+    "id": "rufflet",
+    "lv": 27,
+    "ab": 117,
+    "it": "",
+    "nat": "Mild",
+    "iv": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "sl": 25
+   },
+   "def": {
+    "id": "throh",
+    "lv": 27,
+    "ab": 39,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 142
+   },
+   "field": {},
+   "trainer": {
+    "k": "4.0.13",
+    "slot": 1,
+    "name": "Backpacker Rachel"
+   }
+  },
+  {
+   "name": "hex-status",
+   "atk": {
+    "id": "vulpix",
+    "lv": 16,
+    "ab": 25,
+    "it": "",
+    "nat": "Adamant",
+    "iv": [
+     3,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "sl": 15
+   },
+   "def": {
+    "id": "sewaddle",
+    "lv": 16,
+    "ab": 139,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "st": "par"
+   },
+   "slot": {
+    "mv": 228
+   },
+   "field": {},
+   "trainer": {
+    "k": "1.1.5",
+    "slot": 1,
+    "name": "Lass Daya"
+   }
+  },
+  {
+   "name": "hex-healthy",
+   "atk": {
+    "id": "vulpix",
+    "lv": 16,
+    "ab": 25,
+    "it": "",
+    "nat": "Adamant",
+    "iv": [
+     3,
+     3,
+     3,
+     3,
+     3,
+     3
+    ],
+    "sl": 15
+   },
+   "def": {
+    "id": "sewaddle",
+    "lv": 16,
+    "ab": 139,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 228
+   },
+   "field": {},
+   "trainer": {
+    "k": "1.1.5",
+    "slot": 1,
+    "name": "Lass Daya"
+   }
+  },
+  {
+   "name": "wild-charge",
+   "atk": {
+    "id": "blitzle",
+    "lv": 26,
+    "ab": 66,
+    "it": "Electric Gem",
+    "nat": "Timid",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 24
+   },
+   "def": {
+    "id": "panpour",
+    "lv": 26,
+    "ab": 38,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 562
+   },
+   "field": {},
+   "trainer": {
+    "k": "3.5.1",
+    "slot": 0,
+    "name": "Gamefreak Morimoto"
+   }
+  },
+  {
+   "name": "shadow-claw-90",
+   "atk": {
+    "id": "sableye",
+    "lv": 40,
+    "ab": 96,
+    "it": "",
+    "nat": "Modest",
+    "iv": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "sl": 37
+   },
+   "def": {
+    "id": "lucario",
+    "lv": 40,
+    "ab": 60,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 426
+   },
+   "field": {},
+   "trainer": {
+    "k": "9.3.0",
+    "slot": 2,
+    "name": "Hiker Teppei"
+   }
+  },
+  {
+   "name": "octazooka",
+   "atk": {
+    "id": "octillery",
+    "lv": 26,
+    "ab": 123,
+    "it": "",
+    "nat": "Bashful",
+    "iv": [
+     6,
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "sl": 24
+   },
+   "def": {
+    "id": "pignite",
+    "lv": 26,
+    "ab": 117,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 327
+   },
+   "field": {},
+   "trainer": {
+    "k": "3.4.0",
+    "slot": 1,
+    "name": "Scientist♀ Lumina"
+   }
+  },
+  {
+   "name": "x-scissor",
+   "atk": {
+    "id": "skorupi",
+    "lv": 25,
+    "ab": 123,
+    "it": "",
+    "nat": "Docile",
+    "iv": [
+     12,
+     12,
+     12,
+     12,
+     12,
+     12
+    ],
+    "sl": 23
+   },
+   "def": {
+    "id": "servine",
+    "lv": 25,
+    "ab": 17,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 573
+   },
+   "field": {},
+   "trainer": {
+    "k": "3.2.6",
+    "slot": 0,
+    "name": "Plasma Grunts #342, #356 (Right side Grunt:)"
+   }
+  },
+  {
+   "name": "crabhammer",
+   "atk": {
+    "id": "delibird",
+    "lv": 29,
+    "ab": 143,
+    "it": "",
+    "nat": "Gentle",
+    "iv": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "sl": 27
+   },
+   "def": {
+    "id": "pignite",
+    "lv": 29,
+    "ab": 117,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 85
+   },
+   "field": {},
+   "trainer": {
+    "k": "4.1.6",
+    "slot": 2,
+    "name": "Backpacker Clara"
+   }
+  },
+  {
+   "name": "level-bug-munchlax-tackle",
+   "atk": {
+    "id": "munchlax",
+    "lv": 14,
+    "ab": 146,
+    "it": "Oran Berry",
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 13
+   },
+   "def": {
+    "id": "tepig",
+    "lv": 14,
+    "ab": 117,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 511
+   },
+   "field": {},
+   "trainer": {
+    "k": "0.4.2",
+    "slot": 5,
+    "name": "Leader Cheren"
+   }
+  },
+  {
+   "name": "level-bug-munchlax-rock-tomb",
+   "atk": {
+    "id": "munchlax",
+    "lv": 14,
+    "ab": 146,
+    "it": "Oran Berry",
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 13
+   },
+   "def": {
+    "id": "tepig",
+    "lv": 14,
+    "ab": 117,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 399
+   },
+   "field": {},
+   "trainer": {
+    "k": "0.4.2",
+    "slot": 5,
+    "name": "Leader Cheren"
+   }
+  },
+  {
+   "name": "level-bug-player-ember",
+   "atk": {
+    "id": "tepig",
+    "lv": 14,
+    "ab": 117,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "def": {
+    "id": "munchlax",
+    "lv": 14,
+    "ab": 146,
+    "it": "Oran Berry",
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 13
+   },
+   "slot": {
+    "mv": 135
+   },
+   "field": {},
+   "trainer": {
+    "k": "0.4.2",
+    "slot": 5,
+    "name": "Leader Cheren"
+   }
+  },
+  {
+   "name": "level-bug-equal-level-player",
+   "atk": {
+    "id": "munchlax",
+    "lv": 13,
+    "ab": 146,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "def": {
+    "id": "munchlax",
+    "lv": 14,
+    "ab": 146,
+    "it": "Oran Berry",
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 13
+   },
+   "slot": {
+    "mv": 511
+   },
+   "field": {},
+   "trainer": {
+    "k": "0.4.2",
+    "slot": 5,
+    "name": "Leader Cheren"
+   }
+  },
+  {
+   "name": "level-bug-lillipup-muscle-band",
+   "atk": {
+    "id": "lillipup",
+    "lv": 13,
+    "ab": 157,
+    "it": "Muscle Band",
+    "nat": "Jolly",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 12
+   },
+   "def": {
+    "id": "oshawott",
+    "lv": 14,
+    "ab": 118,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 524
+   },
+   "field": {},
+   "trainer": {
+    "k": "0.4.2",
+    "slot": 1,
+    "name": "Leader Cheren"
+   }
+  },
+  {
+   "name": "level-bug-aipom-water-gem",
+   "atk": {
+    "id": "aipom",
+    "lv": 13,
+    "ab": 121,
+    "it": "Water Gem",
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 12
+   },
+   "def": {
+    "id": "tepig",
+    "lv": 14,
+    "ab": 117,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 553
+   },
+   "field": {},
+   "trainer": {
+    "k": "0.4.2",
+    "slot": 3,
+    "name": "Leader Cheren"
+   }
+  },
+  {
+   "name": "level-bug-deerling-double-kick",
+   "atk": {
+    "id": "deerling",
+    "lv": 13,
+    "ab": 112,
+    "it": "Occa Berry",
+    "nat": "Adamant",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 12
+   },
+   "def": {
+    "id": "lillipup",
+    "lv": 14,
+    "ab": 157,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 109,
+    "hits": 2
+   },
+   "field": {},
+   "trainer": {
+    "k": "0.4.2",
+    "slot": 4,
+    "name": "Leader Cheren"
+   }
+  },
+  {
+   "name": "level-bug-big-diff-lopunny",
+   "atk": {
+    "id": "lopunny",
+    "lv": 54,
+    "ab": 113,
+    "it": "",
+    "nat": "Adamant",
+    "iv": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "sl": 50
+   },
+   "def": {
+    "id": "garchomp",
+    "lv": 54,
+    "ab": 111,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 388,
+    "bp": 102
+   },
+   "field": {},
+   "trainer": {
+    "k": "14.1.0",
+    "slot": 0,
+    "name": "Socialite Marian"
+   }
+  },
+  {
+   "name": "level-bug-equal-level-player-big",
+   "atk": {
+    "id": "lopunny",
+    "lv": 50,
+    "ab": 113,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "def": {
+    "id": "lopunny",
+    "lv": 54,
+    "ab": 113,
+    "it": "",
+    "nat": "Adamant",
+    "iv": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "sl": 50
+   },
+   "slot": {
+    "mv": 388,
+    "bp": 102
+   },
+   "field": {},
+   "trainer": {
+    "k": "14.1.0",
+    "slot": 0,
+    "name": "Socialite Marian"
+   },
+   "difference": {
+    "source": "hzla calc/mechanics/gen56.js calculateBWXY 862-896 at be7cc6c (pin 403c2669): isTrainerAttacker = right set selector text includes attacker.name and attacker.level",
+    "reason": "The game's level bug is in the trainer's party data, so only the trainer's Pokemon is affected. hzla recognises the trainer attacker by species and level text, so the player's same-species Pokemon at the trainer's stat level is boosted too (a UI artefact, not a mechanic)."
+   }
+  },
+  {
+   "name": "level-bug-night-shade",
+   "atk": {
+    "id": "spinarak",
+    "lv": 16,
+    "ab": 123,
+    "it": "",
+    "nat": "Naive",
+    "iv": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "sl": 15
+   },
+   "def": {
+    "id": "tepig",
+    "lv": 16,
+    "ab": 117,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 323
+   },
+   "field": {},
+   "trainer": {
+    "k": "1.1.4",
+    "slot": 3,
+    "name": "Youngster Waylon"
+   }
+  },
+  {
+   "name": "level-bug-seismic-toss",
+   "atk": {
+    "id": "chansey",
+    "lv": 29,
+    "ab": 114,
+    "it": "",
+    "nat": "Gentle",
+    "iv": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "sl": 27
+   },
+   "def": {
+    "id": "pignite",
+    "lv": 29,
+    "ab": 117,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 418
+   },
+   "field": {},
+   "trainer": {
+    "k": "4.1.0",
+    "slot": 2,
+    "name": "Nurse Mariah"
+   }
+  },
+  {
+   "name": "level-bug-postgame-cheren",
+   "atk": {
+    "id": "exploud",
+    "lv": 89,
+    "ab": 113,
+    "it": "Life Orb",
+    "nat": "Lax",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 85
+   },
+   "def": {
+    "id": "conkeldurr",
+    "lv": 89,
+    "ab": 39,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 48
+   },
+   "field": {},
+   "trainer": {
+    "k": "21.13.0",
+    "slot": 4,
+    "name": "Leader Cheren - Nacrene City"
+   }
+  },
+  {
+   "name": "doubles-grunt-ember",
+   "atk": {
+    "id": "growlithe",
+    "lv": 11,
+    "ab": 57,
+    "it": "",
+    "nat": "Timid",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ],
+    "sl": 10
+   },
+   "def": {
+    "id": "snivy",
+    "lv": 11,
+    "ab": 17,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 135
+   },
+   "field": {
+    "gameType": "Doubles"
+   },
+   "trainer": {
+    "k": "0.1.6",
+    "slot": 0,
+    "name": "Plasma Grunt #884"
+   }
+  },
+  {
+   "name": "doubles-drayden-rock-slide",
+   "atk": {
+    "id": "charizard",
+    "lv": 63,
+    "ab": 22,
+    "it": "Sitrus Berry",
+    "nat": "Naughty",
+    "iv": [
+     30,
+     30,
+     30,
+     30,
+     30,
+     30
+    ]
+   },
+   "def": {
+    "id": "volcarona",
+    "lv": 64,
+    "ab": 30,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 396
+   },
+   "field": {
+    "gameType": "Doubles"
+   },
+   "trainer": {
+    "k": "15.4.5",
+    "slot": 0,
+    "name": "Leader Drayden"
+   }
+  },
+  {
+   "name": "doubles-drayden-single-target",
+   "atk": {
+    "id": "charizard",
+    "lv": 63,
+    "ab": 22,
+    "it": "Sitrus Berry",
+    "nat": "Naughty",
+    "iv": [
+     30,
+     30,
+     30,
+     30,
+     30,
+     30
+    ]
+   },
+   "def": {
+    "id": "volcarona",
+    "lv": 64,
+    "ab": 30,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 426
+   },
+   "field": {
+    "gameType": "Doubles"
+   },
+   "trainer": {
+    "k": "15.4.5",
+    "slot": 0,
+    "name": "Leader Drayden"
+   }
+  },
+  {
+   "name": "sand-rock-spdef",
+   "atk": {
+    "id": "nidoking",
+    "lv": 44,
+    "ab": 117,
+    "it": "Life Orb",
+    "nat": "Timid",
+    "iv": [
+     30,
+     30,
+     30,
+     30,
+     30,
+     30
+    ]
+   },
+   "def": {
+    "id": "gigalith",
+    "lv": 45,
+    "ab": 136,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 129
+   },
+   "field": {
+    "weather": "Sand"
+   },
+   "trainer": {
+    "k": "9.4.7",
+    "slot": 4,
+    "name": "Leader Clay"
+   }
+  },
+  {
+   "name": "sheer-force-life-orb",
+   "atk": {
+    "id": "nidoking",
+    "lv": 44,
+    "ab": 117,
+    "it": "Life Orb",
+    "nat": "Timid",
+    "iv": [
+     30,
+     30,
+     30,
+     30,
+     30,
+     30
+    ]
+   },
+   "def": {
+    "id": "swampert",
+    "lv": 45,
+    "ab": 160,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 244
+   },
+   "field": {},
+   "trainer": {
+    "k": "9.4.7",
+    "slot": 4,
+    "name": "Leader Clay"
+   }
+  },
+  {
+   "name": "rain-water",
+   "atk": {
+    "id": "seismitoad",
+    "lv": 44,
+    "ab": 159,
+    "it": "Rindo Berry",
+    "nat": "Serious",
+    "iv": [
+     30,
+     30,
+     30,
+     30,
+     30,
+     30
+    ]
+   },
+   "def": {
+    "id": "excadrill",
+    "lv": 45,
+    "ab": 109,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 238
+   },
+   "field": {
+    "weather": "Rain"
+   },
+   "trainer": {
+    "k": "9.4.7",
+    "slot": 0,
+    "name": "Leader Clay"
+   }
+  },
+  {
+   "name": "iris-latios-esper-wing",
+   "atk": {
+    "id": "latios",
+    "lv": 79,
+    "ab": 64,
+    "it": "Life Orb",
+    "nat": "Hardy",
+    "iv": [
+     30,
+     30,
+     30,
+     30,
+     30,
+     30
+    ]
+   },
+   "def": {
+    "id": "haxorus",
+    "lv": 78,
+    "ab": 104,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 142
+   },
+   "field": {},
+   "trainer": {
+    "k": "20.0.0",
+    "slot": 5,
+    "name": "Champion Iris"
+   }
+  },
+  {
+   "name": "iris-togekiss-moonblast",
+   "atk": {
+    "id": "togekiss",
+    "lv": 78,
+    "ab": 114,
+    "it": "Sitrus Berry",
+    "nat": "Naive",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "def": {
+    "id": "haxorus",
+    "lv": 78,
+    "ab": 104,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 309
+   },
+   "field": {},
+   "trainer": {
+    "k": "20.0.0",
+    "slot": 4,
+    "name": "Champion Iris"
+   }
+  },
+  {
+   "name": "iris-dragonite-dual-wingbeat",
+   "atk": {
+    "id": "dragonite",
+    "lv": 78,
+    "ab": 79,
+    "it": "Leftovers",
+    "nat": "Naive",
+    "iv": [
+     30,
+     30,
+     30,
+     30,
+     30,
+     30
+    ]
+   },
+   "def": {
+    "id": "conkeldurr",
+    "lv": 78,
+    "ab": 39,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "slot": {
+    "mv": 127,
+    "hits": 2
+   },
+   "field": {},
+   "trainer": {
+    "k": "20.0.0",
+    "slot": 1,
+    "name": "Champion Iris"
+   }
+  },
+  {
+   "name": "player-vs-iris-multiscale",
+   "atk": {
+    "id": "mamoswine",
+    "lv": 78,
+    "ab": 146,
+    "nat": "Serious",
+    "iv": [
+     31,
+     31,
+     31,
+     31,
+     31,
+     31
+    ]
+   },
+   "def": {
+    "id": "dragonite",
+    "lv": 78,
+    "ab": 79,
+    "it": "Leftovers",
+    "nat": "Naive",
+    "iv": [
+     30,
+     30,
+     30,
+     30,
+     30,
+     30
+    ]
+   },
+   "slot": {
+    "mv": 248
+   },
+   "field": {},
+   "trainer": {
+    "k": "20.0.0",
+    "slot": 1,
+    "name": "Champion Iris"
+   }
+  }
+ ]
+}

@@ -9,6 +9,9 @@ import {speciesName, weightNames} from './src/names.js';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const pin = 'ff6c3e339e276e6b4e8e44db58750b6534bc26aa';
+// Reviewed Decomps pins a fixture may select with `oracle.sha` (each in its own clone). 403c2669: BB2R's backup and
+// the Challenge level branch (calc/mechanics/gen56.js calculateBWXY, hacks/blaze-black-2-redux/SOURCES.md).
+const pins = {[pin]: '.tmp/hzla', '403c2669f03f19db43b9f0f7f342c062f9519475': '.tmp/hzla-403c2669'};
 const upstream = 'https://github.com/hzla/Dynamic-Calc-Decomps.git';
 const legacyPin = '42b4cdc0f11de43ecabf3a5d2c1aba67e46e2f74';
 const legacyUpstream = 'https://github.com/hzla/Dynamic-Calc.git';
@@ -32,8 +35,7 @@ function git(repo, args) {
   return result.stdout.trim();
 }
 
-async function oracleRepository(repo, fetch, legacy) {
-  const expected = legacy ? legacyPin : pin;
+async function oracleRepository(repo, fetch, legacy, expected = legacy ? legacyPin : pin) {
   if (!existsSync(repo)) {
     if (!fetch) throw new Error(`Missing local oracle: ${repo}; rerun with --fetch`);
     await mkdir(dirname(repo), {recursive: true});
@@ -124,12 +126,23 @@ function oracleGeneration(calc, data, options, profile) {
     moves: {get: id => stock.moves.get(id) || modern.moves.get(id)}};
 }
 
+// hzla's Challenge branch reads the right-hand (trainer) set: `get_current_in()` and the set selector's text (species
+// and stat level, `js/shared_controls.js`). The shim gives it the trainer side of the case: the side with `sl`.
+function challengeTrainer(context, data, matchup, translations) {
+  const set = matchup.atk.sl !== undefined ? matchup.atk : matchup.def.sl !== undefined ? matchup.def : null;
+  if (!set) { context.get_current_in = () => null; return; }
+  const name = oracleName(data.P.find(species => String(species.id) === String(set.id)).n, 'species', translations);
+  const current = {level: set.sl, diff: (set.lv ?? 50) - set.sl};
+  context.get_current_in = () => current;
+  context.$ = selector => selector === '.set-selector' ? [{}, {}, {}, {value: `${name} (Lv ${set.sl})`}] : [];
+}
+
 function oracleSet(calc, gen, data, set, translations) {
   const entry = data.P.find(species => String(species.id) === String(set.id));
   if (!entry) throw new Error(`Unknown guide species ${set.id}`);
   if (set.ab !== undefined && set.ab !== -1 && !data.AB[set.ab]) throw new Error(`Unknown ability ${set.ab}`);
   return new calc.Pokemon(gen, oracleName(entry.n, 'species', translations), {
-    level: set.lv ?? 50, nature: set.nat || 'Serious',
+    level: set.sl ?? set.lv ?? 50, nature: set.nat || 'Serious',
     ability: set.ab >= 0 ? oracleName(data.AB[set.ab][0], 'abilities', translations) : 'Guide no ability',
     item: oracleName(set.it || '', 'items', translations), status: set.st || '', curHP: set.hp,
     ivs: statObject(set.iv, 31), evs: statObject(set.ev, 0), boosts: statObject(set.stg, 0),
@@ -161,6 +174,7 @@ function normaliseDamage(damage, hits) {
 function oracleMatchup(oracle, gen, data, profile, options, matchup) {
   const {calc, context} = oracle;
   const names = options.names || {};
+  if (options.settings?.challengeMode) challengeTrainer(context, data, matchup, names);
   const attacker = oracleSet(calc, gen, data, matchup.atk, names);
   const defender = oracleSet(calc, gen, data, matchup.def, names);
   const entry = data.MV[matchup.slot.mv];
@@ -189,6 +203,9 @@ function oracleMatchup(oracle, gen, data, profile, options, matchup) {
       ...(fixed ? {name: 'Guide fixed power', id: 'guidefixedpower'} : {}),
     }});
   move.hits = hits;
+  // Later Decomps pins read moves[0] for Tera (never a guide item): give both sides the case's move.
+  if (!attacker.moves?.length) attacker.moves = [move];
+  if (!defender.moves?.length) defender.moves = [move];
   const result = calc.calculate(gen, attacker, defender, move, oracleField(calc, profile, matchup.field || {}));
   const per = normaliseDamage(result.damage, hits);
   let ko;
@@ -212,8 +229,9 @@ export async function compare(hack, {repo, fetch = false, output, caseName} = {}
     || ![4, 5, 6, 7, 8, 9].includes(options.damageGen) || ![4, 5, 6, 7, 8, 9].includes(options.types)) {
     throw new Error('Fixtures require oracle title, gen, damageGen and types (4-9)');
   }
-  repo = resolve(repo || resolve(root, legacy ? '.tmp/hzla-eternal-x' : '.tmp/hzla'));
-  const sha = await oracleRepository(repo, fetch, legacy);
+  if (options.sha && (legacy || !pins[options.sha])) throw new Error(`Unreviewed oracle pin ${options.sha}`);
+  repo = resolve(repo || resolve(root, legacy ? '.tmp/hzla-eternal-x' : pins[options.sha || pin]));
+  const sha = await oracleRepository(repo, fetch, legacy, options.sha);
   const profile = await resolveProfile(config.cfg.calc);
   const cases = fixtures.matchups.filter(matchup => !caseName || matchup.name === caseName);
   if (!cases.length || new Set(cases.map(matchup => matchup.name)).size !== cases.length) {
