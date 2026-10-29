@@ -110,3 +110,9 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
 - Unit 2 (scaffold, `worktree-unbound`): `new_hack.py --like emerald-imperium` done; `cfg.mgm: false` added to the
   template (`dex.js` HAS_MGM, `datajson.HACK_ORDER`, template/README.md cfg table); other guides differ by that one
   line only. `txt` wording is all TODO (units 4-7 fill theirs).
+- Unit 7a (mission-collapse decide, `worktree-unbound-missions`): interactive sample and frame options in
+  `tools/mockup/unbound-missions/`; draft build spec `plans/unbound-missions.md`. Phone preview:
+  https://windows-pc.tail1846b8.ts.net/preview/unbound-missions.html . Open choices: quiet divider vs bordered
+  card (recommend quiet), and stay open vs auto-close on the final mission tick (recommend stay open).
+  Three real missions/three stops; no template/extract changes. 7b waits for phone approval; preserve ordinary
+  tick identities when inserting groups, add stable mission **and child-step** keys plus guide-update snapshots.
