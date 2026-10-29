@@ -103,6 +103,11 @@ User's answers (2026-10-29):
 - **D7 Version:** 2.1.1.1.
 - **EVs (2026-10-29):** Unbound has no way to turn EVs off, so they stay: `cfg.evs` true, `cfg.mgm` false (new switch:
   no MGM toggle, one speed per Pokémon with its EVs). Trainer cards and the calc use the sheets' EVs as given.
+- **Ordinary trainers (2026-10-29, after unit 1):** the wiki's Trainer Locations list (309 named rows) is the list;
+  where `research-2026-10-29/ordinary-trainers.xlsx` matches a trainer, add its held items and say its team scales
+  with the player (evolution line + minimum level). Workbook-only trainers are reported (notes.md), not added. The
+  15 name-only rows are listed with name and place and "team unknown" (or the workbook's team where it has one).
+  The "310" in the session prompt is the wiki's 309 named rows.
 - **Missions (7a, 2026-10-29):** bordered mission card, auto-close on the final tick (`plans/unbound-missions.md`).
 - **Mode:** hack.json has no mode field; "Expert" goes in the trainer wording (`txt`), not a new key.
 
