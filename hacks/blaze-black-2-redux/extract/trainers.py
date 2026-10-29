@@ -367,7 +367,8 @@ def build(data):
             if record['line'] == 1229:
                 group_index = 7
             if re.search(r'after|After', record['context']):
-                minimum = {'Cheren': 1, 'Roxie': 2, 'Elesa': 7, 'Clay': 10, 'Drayden': 16}
+                # Waterfall: HM05 in Undella Town (Hugh split), so these come back in the Benga split
+                minimum = {'Cheren': 1, 'Roxie': 2, 'Elesa': 7, 'Clay': 10, 'Drayden': 16, 'Waterfall': 14}
                 floor = max([group_index] + [index for boss, index in minimum.items() if boss in record['context']])
                 highest = max(mon['l'] for mon in team)
                 group_index = next((index for index in range(floor, len(CAPS)) if CAPS[index][1] >= highest), len(CAPS))
@@ -375,7 +376,7 @@ def build(data):
                 group_index = len(CAPS)
             group = groups[group_index]
             cap = group['cap']
-            optional_cap = next((value for boss, value in OPTIONAL_CAPS.items() if record['optional'] and boss in record['header']), None)
+            optional_cap = None  # user 2026-10-29: caps come only from the 21 cap battles; optional bosses take their split's
             if optional_cap:
                 trainer['cap'] = optional_cap
             elif cap:

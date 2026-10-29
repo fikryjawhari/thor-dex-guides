@@ -75,6 +75,32 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
    learnsets, ability usage): re-fetch before its guide.
 7. **New-guide scaffold done** (2026-10-29): `tools/new_hack.py <hack> --like <built hack>`; BB2R skeleton created, no data yet.
 
+**In progress: Blaze Black 2 Redux** (branch `worktree-blaze-black-2-redux`, worktree
+`.claude/worktrees/blaze-black-2-redux`; the session prompt's goal: Complete EVless, Challenge, calc + save import).
+Plan and decisions: `plans/blaze-black-2-redux.md` (Decisions, Findings); source audit `-sources.md`; level analysis
+`-levels.md`; mode mockup `-modes.html` (option A built). Handover 2026-10-29:
+- Merged on the guide branch: audit, scaffold (`tools/new_hack.py`), hzla source, shared `tools/drayano.py` +
+  `tools/romhackdex.py` + dex, locations, items, trainers + caps (Normal-team line in the template), Gen 5 reader
+  (`template/calc/readers/gen5.js`, PKHeX oracle 805 / 0 mismatches), walkthrough (22 splits, 117 stops), optional
+  bosses under their split's cap (user rule). BB2R build / check / tabs_check clean.
+- Level fix A1 merged (6 trainers / 24 Pokémon; Ranger Lewis kept at +4 by an explicit exception, open in
+  `-levels.md` D1).
+- **Next: calc continuation** on `worktree-bb2r-calc` (head c5571b5, WIP; based on 40fa618: `git merge` the guide
+  branch first, data.json → rebuild). Done there: engine level bug (stats at `sl`, formula at `l`), profile,
+  `cfg.calc` (gen5 save, EVless), 50 hzla-oracle fixtures (47 match, 3 explained), BB2R engine check, save import
+  wiring, "s13" level hint. Left (its commit body): the BB2R scenario file (stub), then calc-layout / calc-import /
+  calc-doubles / calc-smoke at 260 × 316 + dvkb; trainer_fields_check.py for BB2R; the Competitive / Neutralizing Gas
+  ability fallback (species slot, flagged); `gate.py check --template --jobs 8` (four live guides unchanged). It also
+  removed BB2R's empty move-flag lists in the dex extract (restores Iron Fist / Soundproof): review that.
+- **User answers pending / to ask:** the in-game level checks (`-levels.md` → in-game checks: Floccesy School Kid,
+  Castelia Sewers tag Hugh, Lenora & Hawes; Striaton trio postgame); the 10 trainer-field review records (weather
+  trainers Caroll, Elmer, Porta, Sterling, Lance); Triple Axel (doc 30 then +10 per hit vs both calcs 30 × 3); Kyurem
+  (Lv 74, no hzla set); Royal Unova stop placed after Burgh from memory; Pikachu / Stoutland / Unfezant RomHackDex
+  stats match neither doc line; items TM57 / Giga Impact / Castelia Cafe artist (plan Findings).
+- Then: player's-eye review (Thor frame, `tools/preview.py --frame`), the sceptic audit (Haiku medium: full gate,
+  domcompare on the four live guides, viewer sizes, saved state), notes / PROGRESS / family notes, ask before push and
+  before merging into main. `pagecheck.mjs` is Emerald-specific (crashes on BB2R): the audit needs a BB2R-aware run.
+
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
 ## Decisions
