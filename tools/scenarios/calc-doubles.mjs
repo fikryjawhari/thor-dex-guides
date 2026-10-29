@@ -51,6 +51,7 @@ const checks = [
     fit: false,
     run: async () => {
       const count = all().filter(doublesRecord).length;
+      assert.equal(typeof EXPECTED[guide().name], 'number', `TODO: audit ${guide().name} doubles EXPECTED count`);
       assert.equal(count, EXPECTED[guide().name], `${guide().name}: ${count} trainers with doubles evidence`);
       for (const [role, trainer] of Object.entries(guide().trainers)) if (trainer) assert.ok(!doublesRecord(all().find(other => other.k === trainer.k)), `${role} trainer ${trainer.k} is singles`);
       if (guide().name === 'hardlove-gold') {

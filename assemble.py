@@ -195,7 +195,14 @@ link into Dex Viewer's "Add from link". Data and sprites belong to each hack's a
 def main():
     ids = sys.argv[1:] or sorted(d for d in os.listdir(os.path.join(ROOT, 'hacks'))
                                  if os.path.exists(os.path.join(ROOT, 'hacks', d, 'hack.json')))
-    guides = [build(h) for h in ids]
+    guides = []
+    for hid in ids:
+        if not os.path.exists(os.path.join(ROOT, 'hacks', hid, 'data.json')):
+            if not os.path.exists(os.path.join(ROOT, 'hacks', hid, 'hack.json')):
+                raise ValueError('no guide: ' + hid)
+            print(f'SKIP {hid}: no data.json (scaffold only)')
+            continue
+        guides.append(build(hid))
     if not sys.argv[1:]:
         open(os.path.join(ROOT, 'dist', 'guides.json'), 'w', encoding='utf-8', newline='\n').write(
             json.dumps({'guides': guides}, ensure_ascii=False, indent=1) + '\n')
