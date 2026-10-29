@@ -82,6 +82,27 @@ wins" rule.
   species list. Left as the mirror has them.
 - **Type chart:** the mirror's; the wiki states no changes; it matches the Gen VI+ chart.
 
+### Items
+
+Unit 5 source-reader checkpoint (2026-10-29; extraction not implemented yet): additive readers in `wiki.py`
+cover the 67 individual location pages, 687 item-list rows (requirements retained in their location text),
+128 individual TM/HM pages, 34 Z-crystal rows, 72 key/evolution-item pages, 140 shop-stock rows, and 83
+individual mission pages. The 29 tutors and 48 individual Mega Stone pages already have readers; the combined
+Red Orb/Blue Orb page represents two items (49 stones/orbs total). RomHackDex has 352 individual item pages.
+
+Acceptance question before building: the requested 129 TMs/HMs is category membership, not machine count.
+The wiki has TM001 through TM120 plus HM01 through HM08, with no gaps: 128 machines. Its 129th category
+member is the `TMs & HMs` index. The public 2.1.1.1 `location-guide.xlsx`, sheet `TM & HM`, agrees: 120 TMs
+and eight HMs; its second `No.` header must not be counted. Recommendation: approve 128 as the machine
+acceptance count, never create an extra item for the index page. There is no Wiki/Doc machine-count conflict.
+
+Likewise, the 84 Missions-category records are 83 individual pages plus `All Missions`. Mission #001,
+`A Hero's Journey`, has its requirements and post-game-access reward in the index, not an individual page.
+Recommendation: account for all 84 missions using the index for #001, keeping non-item rewards out of IT.
+Resume by implementing `items.py`, completing reward-field handling (some infoboxes use colspan/multiple
+cells), normalising names/GID after finalise, adding checks, workbook comparisons and the requested browser
+checks. No IT data, GID mappings or item-standard rules have changed at this checkpoint.
+
 ### CFRU family (`tools/cfru.py`)
 
 Shared with Radical Red (its mirror was checked for the same quirks, 2026-10-29). CFRU-general:

@@ -141,6 +141,14 @@ Units 4-6 can run in parallel after 3 (different extract files; data.json is reb
 
 ## Findings for later units
 (Units add theirs here.)
+- Unit 5 (items, source-reader checkpoint; awaiting count clarification): wiki TM/HM membership 129 includes
+  the index; actual machines are TM001-TM120 + HM01-HM08 = 128, independently confirmed by the public
+  2.1.1.1 workbook. Recommend acceptance count 128, not an invented extra machine. Missions membership 84
+  is 83 individual pages + the index; #001 A Hero's Journey is in the index (main-story completion, post-game
+  access). Include it from there, not as an item reward. Other reproduced input counts: 67 locations / 687
+  item-list rows, 34 Z-crystals, 29 tutors, 48 stone pages / 49 stones including both orbs, 140 shop-stock rows,
+  352 individual RomHackDex item pages. Only additive wiki readers are built; unit 7 item/reward placement
+  and unit 8 final IT/GID names are not ready. Full unit 5 implementation and checks remain.
 - Unit 1 (sources): detailed audit `plans/unbound-sources.md`; pin/re-fetch/licence manifest
   `hacks/unbound/SOURCES.md`. No D1-D7 changes, no extracts/template edits. Research is on
   `worktree-unbound-sources`, to merge into `worktree-unbound` before later units.
