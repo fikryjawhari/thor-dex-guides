@@ -64,7 +64,8 @@ The base routing is `calc/mechanics/gen789.js` (gen 7/8/9), with the vanilla fal
 `calc/mechanics/vanilla/gen789.js`, shared mechanics in `calc/mechanics/util.js`, and
 the Unbound profile registered by `calc/mechanics/romhacks/index.js` / `helpers.js`.
 There is no separate `cfru.js` profile in this snapshot. This is a reference subset, not a runnable calc clone.
-The three Unbound tests are synthetic JS fixtures; no `.sav` / `.srm` Unbound fixture exists here.
+The Unbound tests include synthetic fixtures and references to external Unbound-Cloud saves;
+no binary `.sav` / `.srm` Unbound fixture is stored in the hzla tree.
 
 Re-fetch into a NEW staging directory; never overwrite the shared source inputs:
 
@@ -80,6 +81,65 @@ not a root-level `save_constants/`. `backups/unbound.js` requires the globals fr
 `js/unbound_adapter.js` plus `pokedex`; `tools/calcbackup.js` alone fails. For teams-only research,
 load the adapter and evaluate the backup in an isolated VM with `pokedex: {}`; this deliberately
 does NOT produce a complete dex. Use `unboundModes.expert`, not the default Insane `formatted_sets`.
+
+## Pinned Unbound-Cloud reference (2026-10-29)
+
+Repository: https://github.com/Skeli789/Unbound-Cloud
+Snapshot: `3d20f323b3f4690504f638fc8a6d491067f69194` (shallow clone of `main`). Local: `.src/repos/Unbound-Cloud/`.
+Both package manifests explicitly say **UNLICENSED**; no repository LICENSE was found.
+Read as format/data reference only; do not copy implementation into the guide. Public availability is not a licence.
+
+| Path | Git blob SHA |
+| --- | --- |
+| `server/src/data/unbound_2_1/Species.json` | `a7daa09f6a7e4a074280473496a31be8ed5e8289` |
+| `server/src/data/unbound_2_1/BaseStats.json` | `7517e816b0ff292d2ec7275f9509b6a3fa3d6c97` |
+| `server/src/data/unbound_2_1/Moves.json` | `35ab2b2da384c81f7f91525215525b4d242869a5` |
+| `server/src/data/unbound_2_1/Items.json` | `850f2731a07fa9c99116f719ecfd4ad5cd39ad5f` |
+| `server/src/data/unbound_2_1/BallTypes.json` | `49110c2cab584665a777ea445acc52e9aeaee216` |
+| `src/data/AbilityNames.json` | `ceae4d0f9f101c34b4651cb5c5853bb688981b07` |
+| `src/data/SpeciesNames.json` | `ce75f7ea66ad7c0947ca05adeb364c95bd402b38` |
+| `src/data/SpeciesNamesAlts.json` | `b936002b22abbca61fd15acf82245a26e4ed613c` |
+| `src/data/MoveNames.json` | `c3edeef85e6969695fb91688c9ddf90285d9af23` |
+| `src/data/ItemNames.json` | `aa0f3d5739165565b9d6186edd6239543a553483` |
+| `src/data/ExperienceCurves.json` | `b0da680a6957e82657e9eb640bfe4feb29d6122e` |
+| `server/src/Defines.py` | `9c6c74e83141d5f50f94ad7cde0ba84542b8ae71` |
+| `server/src/SaveBlocks.py` | `0e14d6d5e70cde9fe9881080c09deeaf606d6601` |
+| `server/src/SaveBlockProcessing.py` | `57cb975fed387a93afc5da9d176801f7827dbbcb` |
+| `server/src/PokemonProcessing.py` | `46971e69111438f7223fda6a366cf5b8ac37ea58` |
+| `server/src/PokemonUtil.py` | `6620f9699fb40088f056602225143f8ce57ecfb9` |
+| `server/src/Util.py` | `dfe430c992d732629784a30f945d9bf40835ad2f` |
+| `server/src/data/Natures.json` | `ee86ea098c74a58c9a0381adca2f9d89b4bbf500` |
+| `server/src/data/Languages.json` | `55aafb8652ed26e1373ab0759ad9209c80c7878a` |
+| `server/src/data/charmap.tbl` | `68092f108589c4215b07493b2f44bd7b2d9efb9d` |
+| `package.json` | `5d5c043237add0bb2921ba4d873e91948ba0048e` |
+| `server/pytests/test_Integrated.py` | `e5a1ced0f33c89986ca775dfc1ac59ba8ca34f77` |
+| `server/pytests/test_SaveBlockProcessing.py` | `351bb475082f63a5a13b7ac619a44768dc8c3d1b` |
+| `server/pytests/test_Saveblocks.py` | `0becdd0128a0962517628954761d236be1e160ea` |
+
+`unbound_2_1/` is mandatory: `unbound/` is a newer profile, NOT interchangeable.
+`Species.json`: 1,181 ID entries including sentinel/form IDs; `Moves.json`: 767; `Items.json`: 523.
+All three mappings and the 1,264 `BaseStats.json` records match hzla exactly (zero differing entries).
+`AbilityNames.json` maps **symbolic defines to display strings, not integer IDs**: 343 entries vs hzla's 336,
+seven additional names. Numeric save ability interpretation comes from the per-species slot in BaseStats,
+not dictionary insertion order. Species/form display names are `SpeciesNames.json` + `SpeciesNamesAlts.json`.
+
+Save oracle: 53 binary `.sav` fixtures in `server/pytests/data/saves/`; 37 contain the Unbound 2.1 signature
+`0x01121999` in at least one slot. Those 37 were copied preserving subpaths into `.src/saves/Unbound-Cloud/`.
+They include intentional corrupt/randomised controls; signature presence alone does not establish validity.
+File URLs, hashes and reader results are in `plans/unbound-sources.md`. No licence is granted for these fixtures;
+keep local only. The 2.1 signature identifies 2.1.0 through 2.1.1.1, not an exact point release.
+Current Cloud `Defines.py` calls 2.1 an old version: don't use its current upload rejection as a format failure.
+hzla's Unbound test file already references these Cloud fixtures as well as synthetic fixtures.
+
+```powershell
+git clone --depth 1 https://github.com/Skeli789/Unbound-Cloud.git <new-staging>
+git -C <new-staging> fetch --depth 1 origin 3d20f323b3f4690504f638fc8a6d491067f69194
+git -C <new-staging> checkout --detach FETCH_HEAD
+git -C <new-staging> rev-parse HEAD
+```
+
+Inspect `server/pytests/data/saves/` and copy candidates into a NEW oracle folder; never overwrite existing inputs.
+The older snapshot can be recovered with the recorded commit even after `main` advances.
 
 ## Files
 
