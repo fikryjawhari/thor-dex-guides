@@ -294,7 +294,8 @@ Authority: Expert workbook's Fight Gimmicks cells/comments and the user's answer
 `Battleground!B42`, Galavan `B102` / `B82`, Big Mo `B122` / `B102`, and Tessy `B142` / `B122` have **no comments**.
 Tessy's cell says only `Camomons Battle, Permanent Heavy Rain`; the first-two-move typing definition is the user's
 Smogon-format answer, corroborated by the saved official controls (`UpdateCamomons`, lines 510-531), which copy
-each side's first two displayed move types into that side's type selectors. Equal types collapse to one.
+each side's first two displayed move types into that side's type selectors. Equal types are kept twice (user
+2026-10-30, the official calc: two Normal moves = Normal/Normal, 4x weak to Fighting; engine + oracle fixture).
 Mirskle comments (`Gym Leaders!B2`, `Battleground!B2`) say Fog reduces accuracy 40%, exempts Keen Eye/Infiltrator/
 Utility Umbrella, returns after temporary weather, and is permanently removed by Defog. The 20% Battle Frontier
 exception is not applied to Battleground. Moleman `Pokemon League!B2` says sand chip 1/8, unremovable, with Ground
@@ -339,46 +340,26 @@ Face Shield answers and sheet's full-HP Shadowy Veil rule win here. These are ca
 (`Other Bosses!B141`, Scientist7.6.2), Benjamin Butterfree metagame (`Gym Leaders!B162`, `Battleground!B142`,
 Benjamin8.3.0/10.7.7) all have **no comments defining a rule**. Keep visible labels, ask for rules before enabling
 new behaviour. Dynamax trainer tag also conflicts with the earlier raids-only/no-calc-Dynamax decision.
-**Weight modifier ordering:** literal user final Speed=floor(kg) is implemented, so Scarf Abomasnow remains135;
-official first substitutes weight then applies Speed modifiers, giving202. Both expectations are tested explicitly.
-Recommend retaining the literal answer until the user chooses otherwise; do not call this parity.
+**Weight modifier ordering (user 2026-10-30, calc UI pass):** the official order. Weight in kg (x2 Heavy Metal,
+x0.5 Light Metal / Float Stone, as the official calc) replaces the Speed stat; stages, Choice Scarf, paralysis and
+Tailwind apply as usual: Abomasnow 135, Scarf 202, +1 203 (stage on 135.5), Mega 185. The saved official oracle
+now matches (Scarf, +1, Heavy Metal). Paralysis follows the gen 8 engine (x0.5); the official calc uses x0.25 for
+every generation but 7, a difference outside weight Speed.
 
-#### D2 and template integration (main-chat pass, not built here)
+#### Calc UI (calc UI pass, 2026-10-30, `worktree-unbound-calcui`)
 
-Exact function/state/control/persistence spec: `plans/unbound.md` -> Findings -> **Unit 8c: engine/data and exact UI
-handoff (for the main chat)**. It names `areaField`, `updateField`, `fieldHTML`, `toEngine`, `resolve`, `effSpe`,
-`entered`, `newFight`, `fieldFor`, `clearAreaFog`, all engine keys and stable `ST.areaByTrainer[t.k]` effect keys.
-Keep the existing `unbounddmg` storage key. Current `calc.js` still ignores the new field kinds: **engine/data
-completion is not end-to-end UI completion**. No UI/browser/gate checks were run in unit8c.
-
-Unit8c checks: full `npm test` passes (other guides' expected rolls unchanged), `trainer_fields_check.py unbound`
-passes27 source gimmick records/zero review, Unbound extract build/check pass, and `python assemble.py` builds
-all six guides. Existing missing-sprite notices are unchanged (BB2R's four custom species and Unbound Shadow
-Warrior). Logs: `.tmp/unbound-gimmicks/`. No full gate, browser sweep, push or merge.
-
-D2 is implemented only on the data side, as the task's no-template limit requires:
-`tools/calc/unbound_assumed.mjs` computes four most recent distinct level-up moves at the resolved level, Hardy,
-31 IVs and 0 EVs, preserving species/held item and source objects. It never replaces supplied moves. `cfg.calc.assumedSets`
-is `level-up`; the caller must restrict this to ordinary `Moves unknown` cards. All 292 ordinary cards remain unknown
-on the trainer page (unit 6 reconciled the original 310 target: 309 catalogue rows = 292 ordinary + 17 boss rows).
-No guessed data or data positions are written to localStorage by this helper.
-
-**Template handoff:** `calc.js` `foeBase` must call that helper after `monLv`, before constructing the calc-only set,
-carry `mGuess` / `naGuess` / `ivGuess` / `evGuess`, and show a short visible `Assumed` marker and tooltip for those
-fields. Clear a guess when that field is explicitly edited; Reset restores it. Recompute the defaults when the
-cap changes without replacing manual edits. `aGuess` already marks an unknown ability, but no moves/IV/EV/nature
-guess marker exists. Do not fill `TR.p.m`, change trainer cards or save data indices. The D2 page scenario stays
-strictly failing until this integration exists; it is not skipped or asserted against the current empty moves.
-
-Other template gaps: `importBytes` rejects a boxes-only save before mapping boxes (unit 8a's NG+ case); inspect both
-party and boxes before emitting `empty`, allow selecting a box when party is empty or entirely unmapped. The new
-engine APIs and accepted field records still need the UI hooks and lock/layer handling specified in the plan.
-
-Historical unit8b browser status (not rerun by8c): layout/import/field/smoke pass; Mega/Z-holder/field-review checks pass at every
-viewer size, normal and dvkb. D2 fails pending the forbidden template hook. Existing generic scenarios also expose
-fixture assumptions: `trainerRoles` treats partner-backed Vega (5.3.0) as singles, controls assumes the fixture's
-Cloyster outspeeds its opponent, and `calc-zmove` hardcodes Photonic's absent `totem-gumshoos` plus Totem-only tests.
-Those are not fixed or weakened in this unit. EI and BB2R smoke/field regressions pass after the shared engine change.
+Every gimmick now works through the page (`template/README.md` → Calc UI: area rules): the trainer's records turn on
+weight Speed, Camomons, Inverse, Shadowy Veil, Negative Energy, Pixies (+ Misty) and Rainbow; Alice / Galavan get
+typed Tailwind / Magnet Rise on both sides; Tessy / Moleman lock Heavy Rain / Vicious Sandstorm; Mirskle's Fog is
+the bottom weather layer with Defog; Marlon's Rain is ordinary. Area switches and Defog are saved per trainer key in
+`ST.areaByTrainer` under the published `unbounddmg` key. Sky Battle, Dynamax Battle and Benjamin's Butterfree
+format stay labels only. Followed over the official calc (fixtures say so in `unbound_gimmicks.mjs`): Brain Bond =
+Parental Bond (official: no effect), Flamethrower 90 BP (official 95), Shadowy Veil full-HP Ghosts only (official:
+any HP). D2 assumed sets come from `foeBase` (same rule as `tools/calc/unbound_assumed.mjs`; calc-unbound compares
+them), marked `?` per field; boxes-only saves import. Checks: `tools/scenarios/calc-unbound.mjs` (field rules on
+both sides, locks vs setters / manual / old saves, Fog replace / Defog / Reset, Camomons edits and Mega, grounding,
+weight Speed with Scarf, persistence across reload, D2 marks and cap, boxes-only / empty / wrong import);
+guide-update covers `areaByTrainer` across an index-shifting update.
 
 #### Save import
 

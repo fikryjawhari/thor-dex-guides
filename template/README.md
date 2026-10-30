@@ -226,10 +226,30 @@ every manual Field override. Simultaneous leads resolve in Speed order, slower s
 Trick Room; at the same Speed the foe's wins); primal weather resists ordinary setters. `DMG.settings().setterStays` controls whether a departing
 setter leaves its layer behind. A fainted entrant sets nothing. Area evidence also supplies foe Tailwind, the
 foe's guessed +1 crit, lead-exempt player Spikes / Toxic Spikes and Trick Room. Thunderstorm is Rain + Electric
-Terrain; random terrain and Fog are text only. The Area line exposes the original wording on tap / tooltip;
+Terrain; random terrain and Fog are text only (Fog is a weather where the profile offers it: below). The Area line exposes the original wording on tap / tooltip;
 variant labels are ignored. Automatic Field toggles are dashed, pressed and marked A; tapping makes them manual.
 The fight bar's automatic D is the exception: dashed outline only.
 Trick Room is always offered from Gen 4 and reverses the faster-Speed colour, not damage.
+
+**Calc UI: area rules** (Unbound, 2026-10-30; `plans/unbound.md` → Unit 8c). Named trainer / section effects drive
+the engine, never a second damage path in the page: `speed-rule Weight`, `typing Camomons`, `battle-rule Inverse`,
+`field-rule` Shadowy Veil / Negative Energy / Pixies / Rainbow Battle turn on the profile's Global toggles (auto, A
+mark, tap = manual). `typed-side-condition` (Tailwind / Magnet Rise for listed types, both sides) and a locked
+weather (`locked:true`) become runtime values (`AREARULES`: `atk/def…Types`, `weatherLock`) that `battleField()`
+adds to the stored field; they are rebuilt by `updateField`, never saved. A lock beats every weather layer (select
+disabled, setters, actions, an old manual save). With a Fog option in the profile, area Fog is the bottom weather
+layer: a manual / setter weather covers it, **Defog** (Clear Fog on the move row) clears it for the fight. The
+Global group lists an area switch per typed rule / lock / Fog (on = applies); the switches and Defog are saved in
+`ST.areaByTrainer[t.k] = {disabled:{'kind:value:side':true}, fogCleared}` (trainer key + effect name; created only
+when used, cleared by `newFight` / Reset fight). Field readouts (`.dfrule`) give each side's state: Tailwind / Magnet
+Rise active / not that type / grounded, Camomons types, Weight Speed, Fog accuracy, Shadowy Veil eligibility, Pixies
+boost, Rainbow chances. Camomons takes each side's first two moves (`toEngine` passes `moves`; a duplicate type counts
+twice, as the official calc); with a first move unknown the results wait ("Choose first move for Camomons").
+**Assumed sets** (`cfg.calc.assumedSets: 'level-up'`): a `Moves unknown` trainer's mon without source moves gets the
+last four distinct level-up moves at its level, Hardy, 31 IVs, 0 EVs in the calc only (`foeBase`), each marked `?`
+until that field is edited; foe edits remember their species (`ST.foeSp`) and drop when another species is in the
+slot after an update. **Import** maps party and boxes before refusing: a boxes-only save imports and starts on the
+first box Pokémon; empty = no Pokémon anywhere, wrong = none in this guide; a refused file keeps the previous import.
 Intimidate is a plain checked-by-default header box on its holder (no text; name in tooltip / aria-label); it applies the
 engine's net drop / reaction without changing Edit stages, with no mark on the target's card. Orb status is derived through `DMG.derived` and labelled
 `Burn (Orb)` / `Toxic (Orb)` in Edit; choosing any status, including None, is a kept override. Ice Face restoration

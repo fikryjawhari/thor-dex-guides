@@ -2,7 +2,8 @@
 // on the guide as built must point at the same things in a copy with one new entry at the front of M (and MV), AB, P,
 // the Trainers boxes and the first walkthrough split, every reference to them shifted. Rule: saved state never stores
 // a position in the data (template/README.md → What the data switches on). Runs on every guide.
-//   28a same state: calc sets (species, ability, moves), the calc's foe, recent trainers and foe edits, list filters,
+//   28a same state: calc sets (species, ability, moves), the calc's foe, recent trainers and foe edits, area rule
+//       switches / Defog (guides with area rules), list filters,
 //       level caps, Trainers open state, search recents, the stat calc, walkthrough ticks and the tracker, compared
 //       by name before and after the update.
 //   28b same pages: a Pokémon page and a trainer card read the same in both copies (the shifted copy is consistent).
@@ -16,6 +17,7 @@ const { html, match, data } = readGuide(file);
 const name = file.split(/[\\/]/).pop().replace(/\.html$/, '');
 const trainers = data.TR.g.flatMap((g, gi) => g.sec.flatMap((s, si) => s.tr.map((t, ti) => ({ t, gi, si, ti }))));
 const used = new Set(trainers.flatMap(({ t }) => [...t.p, ...(t.pt || []).flatMap(x => x.p)].map(m => m.id)));
+const AREARULES = trainers.some(({ t }) => (t.field || []).some(r => (r.effects || []).some(e => e.kind === 'typed-side-condition' || e.locked)));
 const X = trainers.find(({ t }) => t.p.length >= 2 && !t.st && !t.pl && !t.pt) || trainers[0];
 const S = data.P.find(p => p.g === 0 && p.a.length > 1 && p.lv.length >= 4 && !used.has(p.id)) || data.P.find(p => p.g === 0);
 const STOP = data.WK.splits.flatMap((sp, si) => sp.st.map((st, ti) => ({ st, si, ti }))).find(({ st }) => (st.s || []).some(Array.isArray)) || null;
@@ -102,6 +104,7 @@ const SNAPSHOT = `(()=>{const C=CF.calc?CALC.state():null,tn=k=>TRK[k]?.n??'gone
     missionsOpen:ms&&ms.filter(([m])=>MIS.has(m)).map(([m,r])=>[m,mn(m),r.o===true]).sort(),
     missionTicks:ms&&ms.filter(([m])=>MIS.has(m)).flatMap(([m,r])=>Object.keys(r.c||{}).filter(k=>r.c[k]===1).map(k=>[m,k,MIS.get(m).s.find(c=>c.k===k)?.t??'gone:'+k])).sort(),
     tracker:Object.entries(TK.e).map(([a,e])=>[AR[a]?.n,e.p?byId[e.p]?.n:'failed']),
+    areaRules:C&&C.areaByTrainer?Object.entries(C.areaByTrainer).map(([k,v])=>[tn(k),Object.keys(v.disabled||{}).sort(),v.fogCleared===true]):null,
   };})()`;
 
 const checks = [
@@ -129,6 +132,8 @@ const checks = [
         await page.value(`(()=>{const p=byId[${sid}];CALC.enter(${k},1);CALC.use(p);
           CALC.set('mine','m',[M.length-1,usedMoves[0],usedMoves[1],usedMoves[2]]);CALC.set('mine','a',p.a[p.a.length-1]);})()`);
         await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.edits['foe:'+${k}+':1']={l:77};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
+        // Area rule switches and Defog (Unbound), keyed by trainer key and effect name.
+        if (AREARULES) await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.areaByTrainer={[${k}]:{disabled:{'typed-side-condition:Tailwind:both':true,'weather:Heavy Rain:field':true},fogCleared:true}};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
       }
       await page.reload();
       const was = await page.value(SNAPSHOT);

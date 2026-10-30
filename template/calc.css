@@ -6,7 +6,7 @@
 .dfsource{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--mut)}
 .dfsource span{flex:1;min-width:0;overflow-wrap:anywhere}
 .dfsource button{flex:none;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--acc);font:700 11px system-ui;padding:3px 6px;cursor:pointer}
-.dfarea{max-width:100%;min-width:0;font-size:11px;line-height:1.3;color:var(--mut);white-space:nowrap;overflow-x:auto}
+.dfarea,.dfrule{max-width:100%;min-width:0;font-size:11px;line-height:1.3;color:var(--mut);white-space:nowrap;overflow-x:auto}
 .dfarea button{padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
 .dfr select.dauto,.dtg button.dauto{border-style:dashed}
 .dfr select.dmanual{border-color:var(--acc)}
@@ -685,3 +685,6 @@ body.calc-route .thp i.y,body.calc-route .dhpbar i.y{background:#e8c547}
 body.calc-route .thp i.r,body.calc-route .dhpbar i.r{background:#ff6b6b}
 body.calc-route .ko>.spr{filter:grayscale(1)}
 .dformat button{position:relative}.dformat button.dauto{outline:1px dashed currentColor;outline-offset:-3px}.dformat button sup{position:absolute;right:2px;top:0;font:700 7px system-ui}
+/* D2 assumed values (moves unknown): a ? after the move name, IV / EV label; nature in italics */
+.mr.guess .mv::after,.dguess:not(input)::after{content:' ?';color:var(--mut)}
+.dentry.dguess{font-style:italic}

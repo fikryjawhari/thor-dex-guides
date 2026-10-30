@@ -23,9 +23,13 @@ export function instrument(source, filename) {
   if (filename === 'util.ts') {
     source = once(source, 'export function getFinalSpeed(gen: Generation, pokemon: Pokemon, field: Field, side: Side) {',
       `export function getFinalSpeed(gen: Generation, pokemon: Pokemon, field: Field, side: Side) {
-  if ((field as any).guideWeightSpeed) return Math.floor(pokemon.species.weightkg);
   const typed = (side as any).guideTailwindTypes;
   if (typed?.some((type: any) => pokemon.hasType(type))) side = Object.assign(Object.create(Object.getPrototypeOf(side)), side, {isTailwind: true});`);
+    // Weight as Speed (Unbound's Big Mo): kg (x Heavy/Light Metal, Float Stone; the stage step floors it) replaces the Speed stat, then
+    // stages, Scarf, paralysis and Tailwind apply as usual (the official Unbound calc's order: Scarf Abomasnow 202).
+    source = once(source, '  let speed = getModifiedStat(pokemon.rawStats.spe, pokemon.boosts.spe, gen);',
+      `  const guideWeight = pokemon.hasAbility('Heavy Metal') ? 2 : pokemon.hasAbility('Light Metal') || pokemon.hasItem('Float Stone') ? 0.5 : 1;
+  let speed = getModifiedStat((field as any).guideWeightSpeed ? pokemon.species.weightkg * guideWeight : pokemon.rawStats.spe, pokemon.boosts.spe, gen);`);
     source = once(source, 'export function isGrounded(pokemon: Pokemon, field: Field) {',
       `export function isGrounded(pokemon: Pokemon, field: Field) {
   const guideGrounded = fieldGrounded(pokemon, field);
