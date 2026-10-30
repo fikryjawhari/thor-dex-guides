@@ -4,122 +4,55 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 `docs/PROGRESS.md` keeps the app's history. History here is in git, each hack's `notes.md` → History, and
 `template/README.md` (design decisions). This file is the current state and what's left.
 
-## Current status (2026-10-29)
+## Current status (2026-10-30)
 
-- **Live on GitHub Pages** (https://fikryjawhari.github.io/thor-dex-guides/), built by the Action from `main`:
-  Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.5 (NDS), Photonic Sun 2.38 Rebalanced (3DS), Eternal X 2.67
-  Rebalanced (3DS). All four share one template, one extract layout (`tools/extractlib.py`), one data schema
-  (`tools/schema.py`), one Items standard (`tools/itemstd.py`) and one notes / SOURCES layout.
-- **Blaze Black 2 Redux 1.4.1** (NDS, Complete EVless / Challenge Mode) merged into `main` 2026-10-29 (live once
-  `main` is pushed): dex, locations, items, trainers with caps and Normal teams, walkthrough, the first Gen V calc
-  (level bug `sl`, Triple Axel 30 / 40 / 50) and Gen 5 save import. Audit passed (Haiku, BB2R only: extract checks,
-  calc checks, hzla 46 match / 4 known, page checks at 260 x 316 normal + dvkb, 27 / 27 scenarios); the four live
-  guides passed the template gate (137 / 137) and every scenario (135 / 135 over five guides). Open: BB2R below.
-- Done and merged: the split UI, search (full-window, results with actions, search stays set), trainer cards, the
-  consistency pass (2026-10-24) and the walkthrough / Trainers agreement (2026-10-24: walkthrough splits = Trainers
-  boxes, same order, caps never go down, `tools/tabs_check.py`). Audits passed headless; the user approved the phone
-  previews.
-- Done and merged 2026-10-24 (data byte-identical and pages DOM-identical where nothing was meant to change):
-  - **Code cleanup:** dead template code out, shared 3DS extract code in `tools/ctrguide.py` (dex conversion,
-    trainer matching, walkthrough stops) and `tools/wikitext.py`, shared `tools/browser.mjs` for every browser check;
-    domcompare's EI `--kb` flake and the walk-state check (stale fixtures, checked the wrong migration) fixed.
-  - **Text zoom vs collapse bars:** a ResizeObserver on `#app` rechecks the bars (`tools/mockup/zoomcheck.mjs`).
-  - **Update checker:** `tools/check_updates.py` + `hacks/<hack>/watch.json` for all twelve hacks.
-  - **Standard tooling:** `tools/gate.py` (baseline + every check in one command), `tools/scenarios/`,
-    `tools/worktree_setup.py` (claim, `uv sync`, `.src/` junctions to the main checkout), `preview.py --frame`, and
-    `.agents/references/` (worker brief, spec skeleton, big-job ledger).
-- **Damage calc** merged 2026-10-29 on all four guides (`cfg.calc`): the engine on each guide's own data with
-  per-hack profiles, the one-window calc page with both teams, battle state and field effects, save import (Gen 3
-  expansion, Gen 4 hg-engine, Gen 6/7) through a file input or the viewer's save bridge. Decisions:
-  `template/README.md` → Damage calculator; engine: `tools/calc/README.md`; readers: `template/calc/readers/README.md`;
-  per hack: notes.md → Damage calc. Open: Open → Damage calc.
+- **Six guides on `main`**, one template, one extract layout (`tools/extractlib.py`), one data schema
+  (`tools/schema.py`), one Items standard (`tools/itemstd.py`), one notes / SOURCES layout, and the damage calc with
+  save import on every one: Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.5 (NDS), Photonic Sun 2.38 Rebalanced
+  (3DS, EV-less), Eternal X 2.67 Rebalanced (3DS), Blaze Black 2 Redux 1.4.1 (NDS, Complete EVless / Challenge),
+  Unbound 2.1.1.1 (GBA, Expert). Live on GitHub Pages (https://fikryjawhari.github.io/thor-dex-guides/), built by the
+  Action from `main`.
+- **`main` is ahead of `origin/main`, not pushed** (the user decides): BB2R fixes (cfg.txt placeholders, `assemble.py`
+  stops on TODO / TBD / FIXME in a hack.json; Aspertia City has no tracker slot; curated Valuables) and the calc's
+  move effects (every guaranteed move effect: status-move buttons, secondaries on Use, one resolver with a
+  generation-aware blocker table, per-hack `calc_effects.json`; `template/README.md` and `tools/calc/README.md` → Move
+  effects). Accuracy / evasion stages and volatiles (confusion and the like) are logged only, not stored.
+- Where things are decided: `template/README.md` (template, UI, calc page), `tools/calc/README.md` (engine),
+  `template/calc/readers/README.md` (save readers), each hack's `notes.md` (data, Damage calc, In-game tests / checks).
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
-  3DS (done: `ctrguide.py`; next Meissa Moon, Navy Sapphire), pokeemerald-expansion (Emerald Imperium, SoulGold),
-  CFRU (Radical Red, Unbound), NDS (Hardlove Gold built; Renegade Platinum, Blaze Black 2 Redux, HeartGold Retiled).
-- **Saved state survives guide updates** (2026-10-29): every kind is stored by name or a stable key, not a position
-  (`template/README.md` → What the data switches on; scenarios `stable-keys.mjs` and `guide-update.mjs`, the
-  general one: every index shifted, every kind of saved state compared by name). It is a hard rule now (CLAUDE.md). Trainer keys come from each hack's
-  committed `extract/trainer_keys.json` (`tools/trainer_keys.py`); on a hack update read the build report's
-  trainer-keys lines.
+  3DS (`tools/ctrguide.py`; next Meissa Moon, Navy Sapphire), pokeemerald-expansion (Emerald Imperium; SoulGold),
+  CFRU (Unbound, `tools/cfru.py`; Radical Red), NDS (Hardlove Gold; Blaze Black 2 Redux with the Drayano family's
+  `tools/drayano.py` / `tools/romhackdex.py`; Renegade Platinum reuses them; HeartGold Retiled).
 - **Shipping a guide update:** push `main`, wait for the Pages Action, then on the Thor long-press the guide → Update
   from link. Same library id, so saved state (tracker, ticks, calc) is kept.
-- The other eight hacks in `hacks/` have sources compiled (`SOURCES.md`; complete `.src/` on the PC, checked
-  2026-10-19) but no guide: Meissa Moon, Navy Sapphire (3DS), Renegade Platinum, Blaze Black 2 Redux, HeartGold
-  Retiled (NDS), SoulGold, Radical Red, Unbound (GBA). See "Source data" below.
+- **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
-## Open, in order
+## Open
 
-1. **Test on the Thor.** Nothing since the consistency pass has been on the device (EI and HG were last checked there
-   2026-10-19; Photonic Sun and Eternal X may not be in the library yet: add them from their Pages URLs). Include the
-   text zoom fix: open Items, press A−/A+ without toggling, the collapse bars should follow.
-2. **Damage calc: after the merge.** Built and merged; these stay open:
-   1. **Thor / viewer test** (next): load the four guides in the offline viewer with the Thor on adb. The app repo
-      (`../thor-offline-viewer`) has its side: `docs/_plans/save-file-picker.md` → Left to do (install, each
-      emulator's save folder, the bridge tests over CDP). If the bridge contract (`docs/SAVE_BRIDGE.md`) changes,
-      update `template/calc.js` (import block) and `tools/scenarios/calc-bridge.mjs`.
-   2. **Real saves:** one import per guide on the Thor (EI RetroArch `.srm`, Hardlove DraStic `.dsv`, Photonic Sun /
-      Eternal X Azahar `main`), compared with PKHeX on the PC; keep each in `hacks/<hack>/.src/saves/` with an
-      expected.json (`.agents/references/calc-save-reader.md`).
-   3. **Hardlove import reports:** the user plays on and reports what imports wrong (a 0.8.x save, mints and regional
-      forms are untested).
-   4. **Mechanics check** (long-term, the user): each guide's notes.md → Damage calc → In-game tests. Hardlove has no
-      independent oracle, so its calc stays provisional until then. The source wins over the docs.
-   5. **Footer credits** (item 3), hzla's calc among them.
-   6. **Move effects** (built 2026-10-30 on `worktree-calc-move-effects`, not merged; spec `plans/calc-move-effects.md`,
-      decisions `template/README.md` → Move effects, engine `tools/calc/README.md` → Move effects): status moves have
-      an effect button (`Atk+2`, `Def−1`, `Par`, `Fails`) for the side that owns the row; damaging moves' guaranteed
-      effects come with the damage taps; one resolver (`tools/calc/src/effects.js`) with a generation-aware blocker
-      table; the table from Showdown (`tools/calc/move-effects.json`), per-hack differences in
-      `hacks/<hack>/calc_effects.json`. Open: in-game checks (the user), and the deliberate gaps: accuracy / evasion,
-      confusion and other volatiles, ability / type changes and item swaps are logged, not stored; switching.
-      Checked 2026-10-30 (main 5cab574 merged in): npm test, gate check 243/255 (the 12 fails are the DOM sweeps' `#/calc`,
-      whose only difference is the new Mist toggles), calc-effects on all six guides. Ready to merge.
-   Gen 5 save reading waits for the Blaze Black 2 Redux guide; the other families: `template/calc/readers/README.md`.
+1. **Thor / in-game tests** (the user, per guide). Nothing since the consistency pass has been on the device; BB2R
+   and Unbound may not be in the library yet (add them from their Pages URLs). On the Thor: the text zoom fix (Items,
+   A−/A+, the collapse bars follow) and the calc in the offline viewer with the save bridge (the app repo
+   `../thor-offline-viewer`: `docs/_plans/save-file-picker.md` → Left to do; if `docs/SAVE_BRIDGE.md` changes, update
+   `template/calc.js` (import block) and `tools/scenarios/calc-bridge.mjs`). In game: each guide's notes.md → In-game
+   tests (BB2R: In-game checks: trainer levels vs hzla, TM57, Giga Impact's TM, Triple Axel, Psyshield Bash; Unbound:
+   Focus Belt / Nine Lives as Sturdy, Camomons with two moves of one type, Shelter Def +1 Spe +1; Photonic Sun: no EVs
+   gained on the EV-less copy, a Totem still hard, Toxic Thread −2 each; Hardlove: Thief / Covet steal nothing, Growth
+   SpA only, Rapid Spin no Speed, so its calc stays provisional until then). Calc page: is the `+2 −1` label style
+   (Shell Smash) clear on the device?
+2. **Real save tests.** Hardlove: the user plays on and reports what imports wrong (a 0.8.x save, mints, regional
+   forms). One real import per guide on the Thor (EI RetroArch `.srm`, Hardlove DraStic `.dsv`, Photonic Sun / Eternal
+   X Azahar `main`, BB2R melonDS / DraStic `.sav`, Unbound RetroArch `.srm`), compared with PKHeX on the PC; keep each
+   in `hacks/<hack>/.src/saves/` with an expected.json (`.agents/references/calc-save-reader.md`).
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
-   Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
-   calc (Dynamic-Calc-Decomps, the oracle and save-reader reference). Agreed, not done.
-4. **Skill:** the repo copy (`.agents/skills/rom-hack-offline-dex/`) is current; the claude.ai account skill Claude
-   sessions load is the 2026-10-18 hand-build version. Re-upload the repo copy (zip with forward-slash paths).
+   Bulbapedia / Serebii where used, the sprite set's credits (`sprites/SOURCES.md`), hzla's calc
+   (Dynamic-Calc-Decomps, the oracle and save-reader reference). Agreed, not done.
+4. **Skill re-upload:** the repo copy (`.agents/skills/rom-hack-offline-dex/`) is current; the claude.ai account skill
+   is the 2026-10-18 hand-build version. Re-upload the repo copy (zip with forward-slash paths).
 5. **T3 worktree setup hook** (the user, in T3's project settings; sessions can't change them): a project script
    `python -I tools/worktree_setup.py`, icon Configure, run on worktree create. Until then run it by hand (CLAUDE.md → Git).
-6. **Source updates** (`check_updates.py`, 2026-10-28): all built guides current (Hardlove 0.8.5 done 2026-10-29).
-   SoulGold's data files changed since 2026-10-24 (Mega Lopunny innates, Clefable / Mega Clefable and Unown
-   learnsets, ability usage): re-fetch before its guide.
-7. **New-guide scaffold done** (2026-10-29): `tools/new_hack.py <hack> --like <built hack>`; BB2R skeleton created, no data yet.
-
-**Blaze Black 2 Redux: open.** Decisions and findings: `plans/blaze-black-2-redux.md`; level analysis
-`plans/blaze-black-2-redux-levels.md` (delete both once the checks below are settled; notes.md keeps the decisions).
-- **In-game checks while the user plays** (the battle screen's level settles each; `-levels.md`): Floccesy School
-  Kid (12: as now; 11: drop one increment from the 57 D1 Pokémon), Castelia Sewers Hugh (26: as now; 24: no
-  increment for the 54 partner Pokémon), Lenora & Hawes (31: as now; 33: shown 33, stats 31); Striaton trio
-  postgame. TM57 in Chargestone Cave (the old Escape Rope)? Giga Impact's TM number at Shopping Mall Nine (66 / 68)?
-  When Royal Unova first opens (stop placed after Burgh). Castelia Cafe artist unconfirmed. Triple Axel's 30 / 40 / 50
-  against a hit in game.
-- Real save import on the Thor (melonDS / DraStic `.sav`), like the other guides (Open → Damage calc → Real saves).
-- **Fixes on `worktree-bb2r-fixes` (2026-10-30, not merged):** cfg.txt wording for the 12 scaffold placeholders
-  (`assemble.py` now stops on TODO / TBD / FIXME in a hack.json); Aspertia City has no tracker slot (`AR.ns`, the
-  template drops a saved entry for a no-slot area); Items → Valuables curated (notes.md → Items). Needs the user's
-  look on the phone, then merge.
-- `worktree-bb2r-calc` and its T3 worktree (`~/.t3/worktrees/thor-dex-guides/t3-6ab62dd5`) are merged: delete them.
-
-**EV-less 3DS (merged into `main` 2026-10-29, not pushed):** `tools/ctr_evless.py` + `tools/usum_statics.py`;
-Photonic Sun's trainers from the EV-less copy, MGM switch hidden (`cfg.mgm`, the same template line as the Unbound
-branch), Totem battles from the game (real IVs; "Doc says" notes on 6 differences). The user installs
-`hacks/<hack>/.src/evless/luma/titles/<title id>/` on the Thor and checks in game: no EVs gained after battles
-(the summary screen's EVs stay 0), a trainer's Pokémon stats, and a Totem fight still hard.
-
-**Unbound 2.1.1.1 (Expert): merged into `main` 2026-10-30.** Decisions: `hacks/unbound/notes.md` and
-`template/README.md` (the plans are deleted; git history keeps them). 393 trainers (101 bosses, 292 ordinary with
-guessed sets marked `?` on cards and in the calc), 84 keyed missions, CFRU save reader, calc with every Unbound gimmick
-(official Unbound calc + hzla as oracles). Sceptic audit 2026-10-30: gate check, all scenarios on all six guides and
-260 × 316 normal / dvkb pass after its fixes. Open follow-ups:
-- A real `.srm` import on the Thor (the user has no save yet; the reader is checked on 37 test saves).
-- In-game checks (notes.md): Focus Belt / Nine Lives as Sturdy; Camomons with two moves of the same type.
-- Ideas for later sessions (the user): sticky mission names in the walkthrough; Move Tutors headed by tutor in every
-  guide (Unbound has it via `itemstd` `keep_sub`).
-- Old unit worktrees under `~/.t3/worktrees/thor-dex-guides/` and their `worktree-unbound-*` branches: deleted on merge.
-
-**Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
+6. **Source updates** (`uv run python -I tools/check_updates.py`): SoulGold's data files changed since 2026-10-24
+   (Mega Lopunny innates, Clefable / Mega Clefable and Unown learnsets, ability usage): re-fetch before its guide.
+   hzla's live `decomp` branch differs from Unbound's pin in `gen789.js` (pin kept).
 
 ## Decisions
 
@@ -183,23 +116,21 @@ From the app repo's Build environment (adb is at `$LOCALAPPDATA/Android/Sdk/plat
 
 ## Source data (checked 2026-10-19)
 
-Every hack's `.src/` on the PC opens cleanly and matches the counts in its `SOURCES.md`. The dex source per hack (the
-extract step turns it into `data.json`):
+Every hack's `.src/` on the PC opens cleanly and matches the counts in its `SOURCES.md`. The six hacks with no guide
+yet, and the dex source each extract will turn into `data.json`:
 
 | Hack | Dex source (stats, abilities, learnsets, evolutions) | Moves | Wild | Trainers |
 | --- | --- | --- | --- | --- |
 | Meissa Moon | `.src/dex.json` (game data) | same | same | `trainers.json` (natures, EVs) |
 | Navy Sapphire | `.src/dex.json` (game data) | same | same, by method with rates | `trainers.json` |
 | Renegade Platinum | `romhackdex/pokedex/` | `romhackdex/moves.json` | `WildPokemon.txt` (+ RomHackDex) | `TrainerPokemon.txt` |
-| Blaze Black 2 Redux | `romhackdex/pokedex/` **but stats from `Pokemon Changes.txt`** (RomHackDex shows vanilla stats for 188 changed species) | `romhackdex/moves.json` | `Wild Area Changes.txt` | `Trainer Changes.txt` |
 | HeartGold Retiled | `hg-engine/species-pinned.json` | `hg-engine/pinned/Moves.c` | `source/Encounters.c` + guide | `source/Trainers.c` + guide |
 | SoulGold | `data/species.json` + `data/species-details/` | `data/moves.json` | `data/encounters.json` | `data/trainers.json` |
 | Radical Red | `romhackdex/pokedex/` | `romhackdex/moves.json` | RomHackDex | the two sheets |
-| Unbound | `romhackdex/pokedex/` | `romhackdex/moves.json` | RomHackDex | the three sheets |
 
 Questions for those builds:
 - **HG Retiled:** never hg-engine `main`. Retiled's repo only carries the tables it changes; species / moves come from
   the last upstream commit before its release (`dcbe17a`).
-- **BB2R** has Complete and Classic versions (the doc has both ability sets): pick Complete like RomHackDex, or ask.
 - Gen 7 wild tables have no method field (label them from the docs, as Photonic Sun does). Static and gift
   encounters of the 3DS games come from the game's `DllField.cro` (Eternal X's `locs.py`) or the docs.
+- Renegade Platinum: the Drayano family code (`tools/drayano.py`, `tools/romhackdex.py`) was written for it to reuse.
