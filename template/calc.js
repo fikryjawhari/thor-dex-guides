@@ -181,7 +181,7 @@ const cardKeys=()=>({mine:sideInfo('mine').key,foe:sideInfo('foe').key,tr:ST.foe
  if(!Array.isArray(ST.fman))ST.fman=Object.keys(ST.field).filter(k=>k!=='gameType');try{if(localStorage.getItem(KEY))save();}catch(error){}})();
 let LAST=cardKeys();
 function syncFight(){const now=cardKeys(),left=[],before=LAST;if(now.mine!==LAST.mine){leaveCard(LAST.mine);left.push('mine');}if(now.foe!==LAST.foe){leaveCard(LAST.foe);left.push('foe');}
- const fresh=now.tr!==LAST.tr;LAST=now;if(fresh)newFight();else if(left.length){for(const side of left)if(before[side])offerHazards(side);entered(left,false);}if(fresh||left.length)save();}
+ const fresh=now.tr!==LAST.tr;LAST=now;if(fresh)newFight();else if(left.length){for(const side of left)if(before[side]&&!before[side].endsWith(':undefined'))offerHazards(side);entered(left,false);}if(fresh||left.length)save();}
 function offerHazards(side){const key=sideInfo(side).key;if(key&&getMon(side))ST.hzOffer[side]=key;else delete ST.hzOffer[side];}
 function hzDone(side){if(ST.hzOffer&&side in ST.hzOffer)delete ST.hzOffer[side];}
 // The hazard chip's effect (DMG.hazards: damage, status, Web, blockers, the berry it triggers), null when nothing would change.
