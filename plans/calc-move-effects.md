@@ -132,7 +132,7 @@ status, HP, items and field must match what the game shows after that move resol
 | attract | Oblivious (ign); same gender / genderless; Aroma Veil (6+) | | log only |
 | taunt | Oblivious (6+), Aroma Veil (6+) | | log only |
 | flinch | Inner Focus | | chance only: never reaches the layer |
-| foe-caused stage drops | Clear Body, White Smoke, Full Metal Body (7+) (ign); Hyper Cutter (Atk, ign); Big Pecks (Def, 5+, ign); Keen Eye (acc, ign); Mist (foe side, not Infiltrator 6+); Clear Amulet (9); Flower Veil on Grass (6+) | | not self-inflicted drops |
+| foe-caused stage drops | Clear Body, White Smoke, Full Metal Body (7+) (ign); Hyper Cutter (Atk, ign); Big Pecks (Def, 5+, ign); Keen Eye (acc, ign); Mind's Eye, Illuminate (acc, 9, ign; EI turns Illuminate off); Mist (foe side, not Infiltrator 6+); Clear Amulet (9); Flower Veil on Grass (6+) | | not self-inflicted drops |
 | foe-caused secondaries on the target | Shield Dust (ign); Covert Cloak (9) | | `sb` unaffected |
 | all `sec` and `sec[].sb` | the user's Sheer Force (5+) | | also Life Orb recoil (existing) |
 | powder moves | Grass (6+), Overcoat (6+, ign), Safety Goggles (6+) | | |

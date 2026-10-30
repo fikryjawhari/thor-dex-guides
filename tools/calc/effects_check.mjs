@@ -233,6 +233,29 @@ await check('Diamond Storm: the self Def boost is a 50 % roll in every generatio
   const sel = (await engine('expansion')).effects('Diamond Storm');
   assert.equal(plain(sel)?.sb, undefined, 'no guaranteed sb in the record');
 });
+await check("Accuracy drops: Keen Eye every gen, Mind's Eye / Illuminate Gen 9 only; Illuminate off by rule (EI)", async () => {
+  // Emerald Imperium's data has no Keen Eye: Hardlove Gold's has Keen Eye and Illuminate.
+  const hl = await load('hacks/hardlove-gold/data.json');
+  const hlMon = (name, ab) => ({...mon(name), id: hl.P.find(entry => entry.n === name).id, ab: hl.AB.findIndex(entry => entry[0] === ab)});
+  const fails = async (base, ab, extra = {}, source = mew) => {
+    const own = await createEngine(hl, {...await load(`template/calc/profiles/${base}.json`), ...extra});
+    const user = {...source, id: hl.P.find(entry => entry.n === 'Blissey').id, ab: source.ab === -1 ? -1 : hl.AB.findIndex(entry => entry[0] === 'Mold Breaker')};
+    return plain(own.effect(user, hlMon('Snorlax', ab), {mv: hl.M.indexOf('Smokescreen')}, {})).fails ?? null;
+  };
+  assert.equal(await fails('expansion', 'Keen Eye'), 'Keen Eye');
+  assert.equal(await fails('gen5', 'Keen Eye'), 'Keen Eye');
+  assert.equal(await fails('expansion', 'Illuminate'), 'Illuminate');
+  for (const base of ['gen7', 'cfru', 'gen5']) assert.equal(await fails(base, 'Illuminate'), null, base);
+  assert.equal(await fails('expansion', 'Illuminate', {over: {effects: {rules: {blockers: {illuminate: false}}}}}), null, 'rule off');
+  assert.equal(await fails('expansion', 'Keen Eye', {}, mon('Blissey', {ab: 'Mold Breaker'})), null, 'Mold Breaker');
+  assert.equal((await use('expansion', mew, mon('Snorlax', {ab: "Mind's Eye"}), 'Smokescreen')).fails, "Mind's Eye");
+});
+await check('An accuracy drop still counts as lowered: Defiant, Competitive, White Herb', async () => {
+  assert.deepEqual((await use('expansion', mew, mon('Snorlax', {ab: 'Defiant'}), 'Smokescreen')).def.stg, stg(2, 0, 0, 0, 0));
+  assert.deepEqual((await use('expansion', mew, mon('Snorlax', {ab: 'Competitive'}), 'Smokescreen')).def.stg, stg(0, 0, 2, 0, 0));
+  assert.equal((await use('expansion', mew, mon('Snorlax', {it: 'White Herb'}), 'Smokescreen')).def.used, true);
+  assert.equal((await use('expansion', mew, mon('Snorlax', {ab: "Mind's Eye", it: 'White Herb'}), 'Smokescreen')).def?.used, undefined, 'blocked: herb kept');
+});
 await check('Knock Off removes the item (Sticky Hold keeps it); Clear Smog resets the target', async () => {
   const big = mon('Snorlax', {lv: 100, it: 'Leftovers'});
   assert.equal((await strike('expansion', mew, big, 'Knock Off')).def.used, true);

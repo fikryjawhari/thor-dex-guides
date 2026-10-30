@@ -387,7 +387,8 @@ moves with no record). Per move `[[first generation, record], ...]`; `build.mjs`
 user's own stages, `sec` secondaries `{c, b, st, v, sb, k}`, `k` hand kinds (Showdown functions: haze, clear, copy,
 swap, invert, maxatk, curse, cure, shift, knock, steal, eat, burnitem, trick, drowsy, stockpile, growth, venom, ko3,
 memento, sap, ability, type, random; `fn` = an unmapped function, skipped), `ti` the status move checks type immunity,
-`fl` powder / sound / bullet / reflectable / bypasssub / contact. One correction: Rapid Spin's Speed +1 from Gen 8
+`fl` powder / sound / bullet / reflectable / bypasssub / contact. A `self` / `selfBoost` with a `chance` (Diamond
+Storm's 50 % Def +2 from Gen 7) becomes a `sec` self part, never a sure `sb`. One correction: Rapid Spin's Speed +1 from Gen 8
 (Showdown's gen 4-7 data keeps it). **Per hack**: `hacks/<hack>/calc_effects.json` `{source, notes, moves, rules,
 unsourced, fixtures}`; `assemble.py` puts `moves` / `rules` in the profile as `over.effects` (a record replaces, null
 removes; `rules.blockers[id]` false or `[from, to]` changes a blocker row). `effects_audit.mjs <hack> [--changed]`
@@ -401,10 +402,11 @@ shield): the user's `sb`, the secondaries whose chance × Serene Grace / Rainbow
 with Sheer Force; Shield Dust / Covert Cloak stop the target's part), then the after-hit kinds (Knock Off, Clear
 Smog, Fell Stinger: not secondaries), then reactions. Stages follow Showdown's `boost()`: Simple / Contrary (Gen 5+;
 Gen 4 Simple stays at calc time), caps, foe-caused-drop blockers (Clear Body family, Hyper Cutter, Big Pecks, Keen
-Eye, Mist, Clear Amulet, Flower Veil), Mirror Armor (Gen 8+), then Defiant / Competitive. Status: already statused,
+Eye; Mind's Eye and Illuminate Gen 9, Mist, Clear Amulet, Flower Veil), Mirror Armor (Gen 8+), then Defiant / Competitive. Status: already statused,
 the type / ability / field blockers, then Synchronize (Gen 4: Toxic as poison). Reactions: status berries and Lum,
 Persim (confusion), Mental Herb, White Herb (any lowered stage), Eject Pack (Gen 8+, logged). Accuracy / evasion and
-volatiles the calc has no state for are logged, not stored; a volatile that has a Field / Edit switch (Leech Seed,
+volatiles the calc has no state for are logged, not stored (an accuracy / evasion drop still counts as lowered
+for Defiant, Competitive, White Herb and Eject Pack); a volatile that has a Field / Edit switch (Leech Seed,
 Focus Energy, Charge, ...) is the switch's.
 
 API: `effect(atk, def, slot, field)` (status moves) returns the `hit`-shaped patches plus `label` / `text` / `cls`,

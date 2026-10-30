@@ -16,9 +16,10 @@
     "Alluring Voice (not overridden): confusion at chance 100 only if the target raised a stat this turn (src/data/moves_info.h:20605, onlyIfTargetRaisedStats). Not modelled: no record change",
     "Power Split, Guard Split, Speed Swap: average or swap raw stats, not stage changes; not modelled (src/data/moves_info.h, EFFECT_POWER_SPLIT / GUARD_SPLIT / SPEED_SWAP)",
     "Blockers: every row matches EI's GEN_LATEST switches (include/config/battle.h), so no rules were set. Frostbite: EI's frz is Frostbite (B_USE_FROSTBITE TRUE); Sun does not stop it (CanGetFrostbite, src/battle_util.c:6718), and the table has no Sun rule for frz, which is right",
-    "Blockers, not expressible in rules: EI's accuracy protection is Keen Eye and Mind's Eye only (src/battle_script_commands.c:5620, 11959); Illuminate blocks nothing in battle (it is only in the damage calc and the wild encounter code). The table's keen-eye row also lists Illuminate for gen 9, so a gen 9 Illuminate target shows Acc drops as Fails. Needs a template change (split the row); not fixed here",
+    "Blockers: EI's accuracy protection is Keen Eye and Mind's Eye only (src/battle_script_commands.c:5620, 11959); Illuminate blocks nothing in battle (it is only in the damage calc and the wild encounter code), so rules.blockers.illuminate is false (the shared table gives Illuminate the Gen 9 block)",
     "Blockers, doubles only: Pastel Veil, Sweet Veil and Flower Veil protect allies too (IsAbilityOnSide, src/battle_util.c:6662 and 6684). The table checks the target only; singles unaffected"
   ],
+  "rules": {"blockers": {"illuminate": false}},
   "moves": {
     "Sand Attack": {"b": {"atk": -1}, "fl": ["reflectable"], "tg": "o", "n": "EI src/data/moves_info.h:796 EFFECT_ATTACK_DOWN"},
     "Charge Beam": {"sec": [{"c": 100, "sb": {"spa": 1}}], "n": "EI src/data/moves_info.h:11276 SP_ATK_PLUS_1 self chance 100"},
@@ -69,6 +70,12 @@
     {"title": "Freezy Frost removes both sides' stat changes (Haze, chance 100)", "move": "Freezy Frost", "kind": "hit",
       "user": {"n": "Bulbasaur", "lv": 50}, "target": {"n": "Snorlax", "lv": 50, "stg": [2, 0, 0, 0, 0]}, "field": {},
       "expect": {"def.stg": [0, 0, 0, 0, 0, 0]}},
+    {"title": "Illuminate does not stop an accuracy drop (EI: only Keen Eye and Mind's Eye do)", "move": "Smokescreen", "kind": "effect",
+      "user": {"n": "Bulbasaur", "lv": 50}, "target": {"n": "Snorlax", "lv": 50, "ab": "Illuminate"}, "field": {},
+      "expect": {"fails": null}},
+    {"title": "Mind's Eye stops an accuracy drop", "move": "Smokescreen", "kind": "effect",
+      "user": {"n": "Bulbasaur", "lv": 50}, "target": {"n": "Snorlax", "lv": 50, "ab": "Mind's Eye"}, "field": {},
+      "expect": {"fails": "Mind's Eye"}},
     {"title": "Life Dew cures the user's status (Jungle Healing's effect)", "move": "Life Dew", "kind": "effect",
       "user": {"n": "Bulbasaur", "lv": 50, "st": "par"}, "target": {"n": "Snorlax", "lv": 50}, "field": {},
       "expect": {"atk.status": ""}}

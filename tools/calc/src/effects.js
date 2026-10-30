@@ -59,8 +59,13 @@ export const BLOCKERS = [
   {id: 'full-metal-body', on: ['drop'], ability: 'Full Metal Body', gen: [7, 9], foe: true},
   {id: 'hyper-cutter', on: ['drop:atk'], ability: 'Hyper Cutter', gen: [4, 9], ign: true, foe: true},
   {id: 'big-pecks', on: ['drop:def'], ability: 'Big Pecks', gen: [5, 9], ign: true, foe: true},
-  {id: 'keen-eye', on: ['drop:acc'], ability: ['Keen Eye', "Mind's Eye", 'Illuminate'], gen: [4, 9], ign: true, foe: true,
-    test: c => c.target.hasAbility('Keen Eye') || c.gen >= 9},
+  // Accuracy drops: Keen Eye in every generation; Mind's Eye (new) and Illuminate (given onTryBoost) from Gen 9
+  // (Showdown abilities.ts; mods/gen8 abilities illuminate has no onTryBoost). A hack whose Illuminate does nothing
+  // in battle sets rules.blockers.illuminate false (Emerald Imperium). Accuracy isn't stored: the row decides the
+  // button's Fails / log and whether the drop counts for Defiant, Competitive, White Herb and Eject Pack.
+  {id: 'keen-eye', on: ['drop:acc'], ability: 'Keen Eye', gen: [4, 9], ign: true, foe: true},
+  {id: 'minds-eye', on: ['drop:acc'], ability: "Mind's Eye", gen: [9, 9], ign: true, foe: true},
+  {id: 'illuminate', on: ['drop:acc'], ability: 'Illuminate', gen: [9, 9], ign: true, foe: true},
   {id: 'mist', on: ['drop'], side: 'Mist', gen: [4, 9], foe: true, test: c => !(c.gen >= 6 && c.source.hasAbility('Infiltrator'))},
   {id: 'clear-amulet', on: ['drop'], item: 'Clear Amulet', gen: [9, 9], foe: true},
   {id: 'shield-dust', on: ['sec'], ability: 'Shield Dust', gen: [4, 9], ign: true},
@@ -149,6 +154,9 @@ export function createEffects(env) {
           out.parts.push({who, stat, by, untracked: true});
           note(`${STAT_LABEL[stat]} ${signed(by)} (not tracked)`);
           any = true;
+          // An accuracy / evasion drop is still a lowered stat (Showdown Defiant onAfterEachBoost, White Herb,
+          // Eject Pack: any negative boost). The stage isn't stored, so a drop at −6 can't be told apart.
+          if (by < 0) { lowered = true; state.untrackedDrop = true; }
           continue;
         }
         const before = mon.boosts[stat];
@@ -454,7 +462,7 @@ export function createEffects(env) {
           note('Mental Herb: cured');
           continue;
         }
-        if (item === 'White Herb' && STATS.some(stat => mon.boosts[stat] < 0)) {
+        if (item === 'White Herb' && (STATS.some(stat => mon.boosts[stat] < 0) || state.untrackedDrop)) {
           for (const stat of STATS) if (mon.boosts[stat] < 0) state.set(stat, 0);
           state.consume(item);
           out.parts.push({who, restored: true, item});
