@@ -437,9 +437,9 @@ dex.css):
    (search this page) shows its places and sections open (the walkthrough's Checklist stays closed unless a mission
    matches).
 2. Tapping a header never scrolls (`flip()`, `hold()`); browser scroll anchoring is off while it settles.
-3. Expand all / Collapse all bars (`segBar`): one at the page top for the boxes, and on Locations one in a box with 2+
-   places. They only open or close their own level and never move the bar. The walkthrough's and Items' in-box bars
-   were removed (2026-10-31).
+3. Expand all / Collapse all bars (`segBar`): only one, at the page top for the boxes; it only opens or closes that
+   level and never moves. The in-box bars (walkthrough, Items, Locations) were removed 2026-10-31: everything starts
+   collapsed, so the user opens sections one by one.
 4. Collapse bars at the bottom of a block only when it is taller than the window (`bars()`); a pinned block collapses
    in place and flashes (inset accent ring). Rechecked on toggles, resizes, content-visibility renders and any change
    of the page size (a ResizeObserver on `#app`: the viewer's text zoom fires no resize but changes the height).
