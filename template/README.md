@@ -245,7 +245,7 @@ variant labels are ignored. Automatic Field toggles are dashed, pressed and mark
 The fight bar's automatic D is the exception: dashed outline only.
 Trick Room is always offered from Gen 4 and reverses the faster-Speed colour, not damage.
 
-**Calc UI: area rules** (Unbound, 2026-10-30; `plans/unbound.md` → Unit 8c). Named trainer / section effects drive
+**Calc UI: area rules** (Unbound, 2026-10-30; `hacks/unbound/notes.md` → Unit 8c gimmicks). Named trainer / section effects drive
 the engine, never a second damage path in the page: `speed-rule Weight`, `typing Camomons`, `battle-rule Inverse`,
 `field-rule` Shadowy Veil / Negative Energy / Pixies / Rainbow Battle turn on the profile's Global toggles (auto, A
 mark, tap = manual). `typed-side-condition` (Tailwind / Magnet Rise for listed types, both sides) and a locked

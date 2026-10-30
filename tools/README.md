@@ -214,7 +214,7 @@ run `uv run python -I tools/check_updates.py [hack]`; its pins and coverage are 
 
 | Hack | Version | Sources compiled | Guide built | Where to look for updates |
 | --- | --- | --- | --- | --- |
-| Blaze Black 2 Redux | v1.4.1 | 2026-10-18 (docs), 2026-10-19 (RomHackDex) | – | Drayano's Drive (Documentation folder), RomHackDex |
+| Blaze Black 2 Redux | v1.4.1 | 2026-10-18 (docs), 2026-10-19 (RomHackDex), 2026-10-29 hzla pins | 2026-10-29 | Drayano's Drive (Documentation folder), RomHackDex, hzla Dynamic-Calc-Decomps |
 | Emerald Imperium | v1.3 / 1.3.1 | 2026-10-18 (guide built from the same sources) | 2026-10-02 | emeraldimperium.info Drive folder; eidex and Dynamic-Calc-Decomps repos |
 | Eternal X | v2.67 | 2026-10-18 (docs + romfs), dex extract 2026-10-19, regenerated + Bulbapedia 2026-10-22 | 2026-10-22 | Buffel Saft's Drive, PokeCommunity thread |
 | Hardlove Gold | 0.8.5 (source `kumakuma1/hardlove` `64838bf7db`; docs site `bb5862f` is older) | 2026-10-28 (source + Drive docs; site / Showdown retained) | 2026-10-28 | `kumakuma1/hardlove` branch `beta_hardlove` commits, the changelog, Drive sheets |
@@ -225,7 +225,7 @@ run `uv run python -I tools/check_updates.py [hack]`; its pins and coverage are 
 | Radical Red | v4.1 | 2026-10-18, move details 2026-10-19 | – | RomHackDex; the two trainer sheets |
 | Renegade Platinum | v1.3.0 | 2026-10-18 (docs), 2026-10-19 (RomHackDex) | – | Drayano's Drive (Documentation folder), RomHackDex |
 | SoulGold | no version number | 2026-10-18, species details 2026-10-19 | – | eemeliri.github.io/soulgold data files |
-| Unbound | 2.1.1.1 Expert (docs target) | 2026-10-18/19 mirrors; 2026-10-29 reference pins, caps/regular/location docs, 37 save candidates | 2026-10-29 source audit (not guide build) | RomHackDex, unboundwiki.com, three boss sheets; hzla ff6c3e3, Unbound-Cloud 3d20f32; trainer-index LEVEL CAPS (Maxima 40); `plans/unbound-sources.md` |
+| Unbound | 2.1.1.1 Expert (docs target) | 2026-10-18/19 mirrors; 2026-10-29 reference pins, caps/regular/location docs, 37 save candidates | 2026-10-30 | RomHackDex, unboundwiki.com, three boss sheets; hzla ff6c3e3, Unbound-Cloud 3d20f32; trainer-index LEVEL CAPS (Maxima 40); `hacks/unbound/SOURCES.md` |
 
 ## Source update checks
 

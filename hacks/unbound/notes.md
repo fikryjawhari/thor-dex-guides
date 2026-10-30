@@ -1,8 +1,7 @@
 # Pokémon Unbound build notes
 
-Scaffolded from `emerald-imperium`. Built so far: the dex (unit 3 of `plans/unbound.md`) and trainers (unit 6); locations, items
-and the walkthrough are stubs that `build.py` skips (empty tables). Feature switches and cfg.txt wording still need
-review by those units.
+Scaffolded from `emerald-imperium`; built unit by unit and merged 2026-10-30 (the plan is in git history,
+`plans/unbound.md`).
 
 ## Build
 

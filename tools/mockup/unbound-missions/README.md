@@ -1,7 +1,8 @@
 # Unbound mission collapse — decide mockup
 
 Draft for unit 7a / D4, from `72edc56`; not the template implementation or an approved design.
-Build spec and open questions: `plans/unbound-missions.md`. No template, extract or guide data edits.
+Built and merged: decisions in `template/README.md` (walkthrough missions); the spec is in git history
+(`plans/unbound-missions.md`). No template, extract or guide data edits.
 
 ## Phone review
 
