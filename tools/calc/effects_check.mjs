@@ -221,6 +221,18 @@ await check('Chance effects never apply; Serene Grace makes a 50 % one certain',
   assert.equal((await strike('expansion', mon('Blissey', {ab: 'Serene Grace'}), big, 'Thunderbolt')).def.status, undefined);
   assert.equal((await strike('expansion', mon('Blissey', {ab: 'Serene Grace'}), big, 'Poison Fang')).def.status, 'tox');
 });
+await check('Diamond Storm: the self Def boost is a 50 % roll in every generation (Showdown self.chance / secondary.self)', async () => {
+  const big = mon('Snorlax', {lv: 100});
+  // Gen 7+ data has self: {chance: 50, boosts: {def: 2}}; Gen 4-6 secondary {chance: 50, self: {def: 1}}.
+  for (const base of ['expansion', 'gen7', 'cfru', 'gen6']) {
+    assert.equal((await strike(base, mew, big, 'Diamond Storm')).atk.stg, undefined, base);
+  }
+  // Serene Grace doubles the self chance to 100 (Showdown serenegrace move.self.chance *= 2); Sheer Force drops it.
+  assert.deepEqual((await strike('expansion', mon('Blissey', {ab: 'Serene Grace'}), big, 'Diamond Storm')).atk.stg, stg(0, 2, 0, 0, 0));
+  assert.deepEqual((await strike('gen6', mon('Blissey', {ab: 'Serene Grace'}), big, 'Diamond Storm')).atk.stg, stg(0, 1, 0, 0, 0));
+  const sel = (await engine('expansion')).effects('Diamond Storm');
+  assert.equal(plain(sel)?.sb, undefined, 'no guaranteed sb in the record');
+});
 await check('Knock Off removes the item (Sticky Hold keeps it); Clear Smog resets the target', async () => {
   const big = mon('Snorlax', {lv: 100, it: 'Leftovers'});
   assert.equal((await strike('expansion', mew, big, 'Knock Off')).def.used, true);

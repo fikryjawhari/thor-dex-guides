@@ -234,9 +234,16 @@ function declarative(entry) {
     if (entry.volatileStatus) r.v = entry.volatileStatus;
     if (entry.ignoreImmunity === false) r.ti = 1;
   }
-  const sb = boostsOf(entry.self?.boosts) ?? boostsOf(entry.selfBoost?.boosts);
-  if (sb) r.sb = sb;
   const secs = [];
+  // `self` / `selfBoost` with a `chance` (Diamond Storm's self: {chance: 50}) is a roll, not a sure effect:
+  // it goes in `sec` as a self part with that chance, so Serene Grace doubles it and Sheer Force drops it
+  // (Showdown abilities.ts serenegrace `move.self.chance *= 2`, sheerforce `delete move.self`).
+  for (const s of [entry.self, entry.selfBoost]) {
+    const b = boostsOf(s?.boosts);
+    if (!b) continue;
+    if (s.chance != null && s.chance < 100) secs.push({ c: s.chance, sb: b });
+    else if (!r.sb) r.sb = b;
+  }
   const list = [entry.secondary, ...(Array.isArray(entry.secondaries) ? entry.secondaries : [entry.secondaries])].filter(Boolean);
   for (const s of list) {
     const it = { c: s.chance ?? 100 };

@@ -85,7 +85,7 @@
     "Defense Curl": [[4,{"b":{"def":1},"tg":"s","v":"defensecurl"}]],
     "Destiny Bond": [[4,{"fl":["bypasssub"],"tg":"s","v":"destinybond"}]],
     "Detect": [[4,{"tg":"s","v":"protect"}]],
-    "Diamond Storm": [[4,{"sec":[{"c":50,"sb":{"def":1}}]}],[7,{"sb":{"def":2}}]],
+    "Diamond Storm": [[4,{"sec":[{"c":50,"sb":{"def":1}}]}],[7,{"sec":[{"c":50,"sb":{"def":2}}]}]],
     "Dire Claw": [[4,{"fl":["contact"],"sec":[{"c":50,"k":"fn"}]}]],
     "Disable": [[4,{"fl":["bypasssub"],"tg":"o","v":"disable"}],[5,{"fl":["reflectable","bypasssub"],"tg":"o","v":"disable"}]],
     "Discharge": [[4,{"sec":[{"c":30,"st":"par"}]}]],

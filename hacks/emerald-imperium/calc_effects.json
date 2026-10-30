@@ -9,7 +9,7 @@
     "Ice Hammer: no Speed -1 on the user (src/data/moves_info.h:15609, no additionalEffects)",
     "Scale Shot: no Defense -1 / Speed +1 (EFFECT_MULTI_HIT with no additionalEffects) (src/data/moves_info.h:18041)",
     "Bitter Malice: no guaranteed Attack -1; the only effect is a 30% freeze / frostbite (src/data/moves_info.h:19044)",
-    "Diamond Storm: Defense +2 on the user is a 50% self effect (src/data/moves_info.h:14692, additionalEffects DEF_PLUS_2 self chance 50). The table's record had it as an unconditional self boost: a table bug in tools/calc/move_effects.mjs (every guide), overridden here to none",
+    "Diamond Storm (not overridden): Defense +2 on the user is a 50% self effect (src/data/moves_info.h:14692, additionalEffects DEF_PLUS_2 self chance 50); the shared table has it as a 50% self part, never applied",
     "Freezy Frost: Haze after the hit, chance 100: both sides' stat changes removed (src/data/moves_info.h:17023 MOVE_EFFECT_HAZE)",
     "Life Dew: EFFECT_JUNGLE_HEALING, the same effect as Jungle Healing: cures the user's status (src/data/moves_info.h:17846, ALL_BATTLERS; singles: the user). The table had no effect",
     "Magnetic Flux (not overridden): Def +1 and SpD +1 only when the user has the Plus or Minus ability (data/battle_scripts_1.s BattleScript_EffectMagneticFlux, src/data/moves_info.h:14965). The record has no conditions; left none",
@@ -28,7 +28,6 @@
     "Ice Hammer": null,
     "Scale Shot": null,
     "Bitter Malice": null,
-    "Diamond Storm": null,
     "Freezy Frost": {"sec": [{"c": 100, "k": "haze"}], "n": "EI src/data/moves_info.h:17023 MOVE_EFFECT_HAZE chance 100"},
     "Life Dew": {"k": "cure", "tg": "s", "n": "EI src/data/moves_info.h:17846 EFFECT_JUNGLE_HEALING (as Jungle Healing)"}
   },

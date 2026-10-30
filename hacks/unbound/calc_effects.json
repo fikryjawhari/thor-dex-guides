@@ -4,7 +4,7 @@
     "Shelter: Def +1 and Spe +1, not Def +2 (Gen 8). CFRU MOVE_SHELTER uses EFFECT_DEF_SPD_UP and its description says 'raise its Defense and its Speed' (CFRU strings/attack_descriptions.string @DESC_SHELTER); Unbound's text says 'raising its defensive stats' (CFRU battle_moves.c)",
     "Aromatic Mist: ally-only move, no effect in the calc (the Gen 8 record put the Sp. Def boost on the foe because the pinned table maps Showdown's adjacentAlly to the opposing side). Unbound text: 'raises the Sp. Def stat of an ally Pokémon'; the calc has no ally target",
     "Coaching: ally-only, no effect in the calc (same cause as Aromatic Mist). Unbound text: 'coaches its ally Pokémon, boosting their Attack and Defense stats'",
-    "Diamond Storm: user's Def +2 is a 50 % chance, not guaranteed (Gen 8 record applied it every use). Unbound text: 'may also sharply raise the user's Defense stat'; CFRU MOVE DEFENSE_UP_2_HIT secondaryEffectChance 50 (battle_moves.c)",
+    "Diamond Storm (not overridden): user's Def +2 is a 50 % chance. Unbound text: 'may also sharply raise the user's Defense stat'; CFRU MOVE DEFENSE_UP_2_HIT secondaryEffectChance 50 (battle_moves.c); the shared table agrees",
     "Triple Arrows: foe's Def -1 is guaranteed (CFRU chance 100; Gen 8 record 50 %). CFRU description: 'arrows that raise the crit ratio and lower the foe's Defense' (no 'may'); Unbound text: 'also lowers the target's defensive stats'. Flinch 30 % kept",
     "Bitter Malice: 20 % frostbite (CFRU FREEZE_HIT chance 20; description 'may inflict the foe with frostbite'). The pinned record's guaranteed Atk -1 is not this move's effect; a chance-only record applies nothing in the calc",
     "Chance-only differences, no override (never applied by the calc): Barb Barrage poison 30 (CFRU) vs 50; Leaf Tornado accuracy 30 vs 50; Sandsear Storm burn 30 vs 20; Wildbolt Storm paralysis 30 vs 20; Bleakwind Storm frostbite 20 (CFRU) vs Spe -1 30",
@@ -15,7 +15,6 @@
     "Shelter": {"b": {"def": 1, "spe": 1}, "tg": "s"},
     "Aromatic Mist": null,
     "Coaching": null,
-    "Diamond Storm": {"sec": [{"c": 50, "sb": {"def": 2}}]},
     "Triple Arrows": {"sec": [{"c": 100, "b": {"def": -1}}, {"c": 30, "v": "flinch"}]},
     "Bitter Malice": {"sec": [{"c": 20, "st": "frz"}]}
   },
