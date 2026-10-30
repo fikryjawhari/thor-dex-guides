@@ -167,7 +167,7 @@ body:is([data-v=p],[data-v=m],[data-v=a],[data-v=tr]) header{display:none}
 .trmini{flex-wrap:wrap;justify-content:flex-end;max-width:100%}
 .hero>div{min-width:0}.calc select{max-width:100%;min-width:0}
 @media (max-width:420px){.card{padding:8px}
- .hero .s112{width:72px;height:72px}.hero{gap:10px}.hero h2{font-size:18px;overflow-wrap:anywhere}
+ .hero .s112{width:72px;height:72px}.hero{gap:10px}.hero h2{font-size:18px}
  /* encounter rows restack: sprite and name on the left, rate over level on the right */
  table.enc,table.enc tbody{display:block}
  table.enc tr{display:grid;grid-template-columns:34px minmax(0,1fr) auto;column-gap:6px;padding:4px 0;border-bottom:1px solid var(--line)}
@@ -439,3 +439,112 @@ details.stopd>summary.stoph{padding-top:2px;padding-bottom:2px}
 .pt.part{background:none;border-color:var(--acc);color:var(--acc)}
 .pt.on{background:var(--acc);border-color:var(--acc);color:#1b1608}
 .calc-use,.calc-versus{display:block;min-height:40px;margin-top:6px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--acc);font:600 12px system-ui;cursor:pointer}
+/* ===== Pokémon page (template/README.md → Pokémon page) */
+#pbar svg.i,.pnav svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* Name bar: fixed beside the rail, slides in once the top card is off screen. ‹ [sprite name types] ↑ › */
+:root{--pbh:40px}
+#pbar{position:fixed;top:0;left:44px;right:0;z-index:4;background:var(--bg);box-shadow:0 1px 0 var(--line);transition:transform .12s ease-out}
+#pbar.off{transform:translateY(-110%);box-shadow:none}
+#pbar[hidden]{display:none}
+#pbar .in{max-width:960px;margin:0 auto;height:var(--pbh);display:flex;align-items:stretch;container-type:inline-size}
+#pbar button{background:none;border:0;padding:0;color:var(--fg);cursor:pointer;-webkit-tap-highlight-color:transparent;font:inherit}
+#pbar .ar{flex:none;width:26px;display:flex;align-items:center;justify-content:center;color:var(--acc)}
+#pbar .ar:disabled{color:var(--line);cursor:default}
+#pbar .up{flex:none;width:32px;display:flex;align-items:center;justify-content:center;color:var(--acc);border-left:1px solid var(--line)}
+#pbar .who{flex:1;min-width:0;display:flex;align-items:center;gap:4px;text-align:left;border-left:1px solid var(--line);padding-left:3px}
+#pbar .sp{position:relative;flex:none;display:flex}#pbar .spr{width:34px;height:34px}
+#pbar .nm{flex:1;min-width:0;font-weight:700;font-size:15px;line-height:1.15;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+#pbar .nm .fc{color:var(--mut);font-size:11px}
+#pbar .tys{flex:none;display:flex;gap:3px;align-items:center;padding-right:4px}
+#pbar .tys .ty{margin:0;font-size:11px;padding:1px 6px}
+/* narrow: the types as letters down the sprite's right edge, the name a fixed 13 px */
+#pbar .bdg{display:none;position:absolute;right:0;top:50%;transform:translateY(-50%);flex-direction:column;gap:2px}
+#pbar .bdg .tyc{width:13px;height:13px;font-size:8.5px;box-shadow:0 0 0 1.5px var(--bg)}
+@container (max-width:300px){#pbar .nm{font-size:13px}#pbar .tys{display:none}#pbar .bdg{display:flex}#pbar .sp{width:38px}#pbar .sp .spr{width:30px;height:30px}}
+/* Previous / next at the top of the page */
+body[data-v=p] #app{container:app/inline-size}
+.pnav{display:flex;gap:var(--g)}
+.pnav a{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:4px;min-height:44px;color:var(--fg);-webkit-tap-highlight-color:transparent}
+.pnav a.nx{flex-direction:row-reverse;text-align:right}
+.pnav a .ch{flex:none;color:var(--acc);display:flex}
+.pnav a .ch svg{width:18px;height:18px}
+.pnav a .t{min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.pnav a .t b{font-size:13px;color:var(--link);line-height:1.15;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.pnav a .t .r{font-size:11px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pnav a .r .rel{color:var(--acc)}
+.pnav .gap{flex:1 1 0}
+/* narrow: 12 px names (the widest word, ~6.7 em, fits half of 260) */
+@container app (max-width:360px){.pnav a .t b{font-size:12px}.pnav a .ch svg{width:16px;height:16px}}
+/* Top card: tap it (2+ forms) for the forms menu */
+.card.hero{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"s n" "s m";column-gap:14px;row-gap:4px;align-items:center}
+.hero>.spr{grid-area:s}.hero>h2{grid-area:n;align-self:end;margin:0}.hero>.hm{grid-area:m;align-self:start;min-width:0}
+@container app (max-width:340px){.card.hero{grid-template-areas:"n n" "s m";column-gap:10px;padding:8px 10px}.hero>h2{font-size:20px}.hero>.hm{align-self:center}.hero .s112{width:88px;height:88px}}
+.hero.hasf{cursor:pointer;-webkit-tap-highlight-color:transparent}.hero .car{color:var(--acc);font-weight:600}
+.fmask{position:fixed;inset:0;z-index:7}
+.fmenu{position:fixed;z-index:8;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.45);padding:4px;max-height:70vh;overflow:auto}
+.fmenu button{display:flex;align-items:center;gap:6px;width:100%;min-height:44px;background:none;border:0;border-radius:8px;color:var(--fg);font:600 14px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-align:left;padding:2px 6px;cursor:pointer}
+.fmenu button.on{background:var(--railon);color:var(--acc)}
+.fmenu .spr{width:32px;height:32px}
+.fmenu .n{flex:1;min-width:0}
+.fmenu .tyc{width:16px;height:16px;font-size:10px;margin-left:2px}
+/* Type and category as letters */
+.tyc{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35);flex:none;vertical-align:middle}
+.tyc.bt{color:#000;text-shadow:none}
+.catc{display:inline-block;font-size:11px;font-weight:800;padding:1px 4px;border-radius:5px;background:var(--panel2);line-height:1.3}
+.catc.Physical{color:#f0605a}.catc.Special{color:#7fb2ff}.catc.Status{color:var(--mut)}
+/* Sections: a card whose title row opens and closes it */
+details.psec{padding:0}
+details.psec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;min-height:40px;padding:6px 26px 6px 12px;position:relative;-webkit-tap-highlight-color:transparent}
+details.psec>summary::-webkit-details-marker{display:none}
+details.psec>summary::after{content:'▸';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:13px}
+details.psec[open]>summary::after{content:'▾'}
+details.psec>summary h3{margin:0;flex:none}
+details.psec>.pb{padding:0 12px 12px}
+details.psec>.endbar{margin:-6px 8px 4px auto}
+.hero+.seg{margin-top:var(--g)}
+/* Moves: full words while they fit, letters when the table is narrow */
+.mvw{container-type:inline-size;overflow-x:auto}
+.mvw .tyc,.mvw .catc,.mvw .pc0{display:none}
+@container (max-width:380px){
+ .mvw .ty,.mvw .cat,.mvw .pc,.mvw .hw{display:none}
+ .mvw .tyc,.mvw .catc{display:inline-flex}
+ .mvw .pc0{display:inline}
+ .mvw td,.mvw th{padding:4px 2px}
+ .mvw td:first-child,.mvw th:first-child{padding-left:0}
+ .mvw td:last-child,.mvw th:last-child{padding-right:0}
+ .mvw td.tc,.mvw th.tc{padding-left:1px;padding-right:1px}
+ .mvw table{font-size:12.5px}
+ .mvw .tyc{width:16px;height:16px;font-size:10px}
+ .mvw .catc{padding:1px 3px;font-size:10.5px}
+ .mvw td.lv{font-size:11px}
+}
+.mvw td.n,.mvw th.n{text-align:right}
+/* a one-word move name longer than the room breaks rather than pushing the row sideways */
+.mvw td:nth-last-child(5){overflow-wrap:anywhere}
+.mvw td.lv{color:var(--mut)}
+.mvw th.tc,.mvw td.tc{text-align:center}
+.psec .warn{cursor:help}.psec .warn.q{color:#ef5350;font-size:12px}
+/* Evolution: the whole family, base stage first, forms under their Pokémon */
+.fam{display:flex;flex-direction:column}
+.fam .fr{display:flex;align-items:center;gap:6px;min-height:40px;padding:2px 4px 2px calc(4px + var(--d,0)*16px);border-radius:8px;color:var(--fg)}
+.fam .fr .spr{width:32px;height:32px}
+.fam .fr .t{min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.fam .fr .t b{font-size:14px;color:var(--link);font-weight:600}
+.fam .fr .t .h{font-size:12px;color:var(--mut)}
+.fam .fr.cur{background:var(--railon)}
+.fam .fr.cur .t b{color:var(--acc);font-weight:700}
+.fam .fr .tag{margin-left:0}
+/* Stat calculator, stats down the side */
+.cvh{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
+.cvh select{flex:1;min-width:110px}
+table.cv{width:auto;max-width:100%}
+.calc table.cv th,.calc table.cv td{text-align:right;padding:3px 4px}
+.calc table.cv th:first-child{text-align:left;color:var(--fg);font-size:13px;white-space:nowrap}
+.calc table.cv input{width:44px;padding:4px 4px;font-size:14px;text-align:center}
+.calc table.cv .nv{min-width:38px;min-height:36px}
+table.cv td.res{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums;min-width:34px}
+table.cv td.b{color:var(--mut);font-variant-numeric:tabular-nums}
+table.cv th.up{color:#f0605a}table.cv th.up::after{content:'↑'}
+table.cv th.dn{color:#7fb2ff}table.cv th.dn::after{content:'↓'}
+table.cv tr.tot td,table.cv tr.tot th{border-bottom:0;color:var(--mut);font-size:12px}
+@media (max-width:340px){details.psec>summary{padding-left:8px}details.psec>.pb{padding:0 6px 8px}details.psec[data-s=mv]>.pb{padding:0 4px 6px}.calc table.cv th,.calc table.cv td{padding:3px 2px}}
