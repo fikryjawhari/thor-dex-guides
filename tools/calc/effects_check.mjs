@@ -339,6 +339,20 @@ await check('Hazards: Sticky Web (Gen 6+): Clear Body (a foe Mold Breaker does n
   assert.equal(herb.label, 'White Herb');
   assert.equal(await hz('expansion', mon('Snorlax'), {...web, defMist: true}), null, 'Mist');
 });
+await check('Hazards: Sticky Web lowers from a fresh stage 0 (−1, Simple −2, Contrary +1), other stages stay; a blocked Web leaves Speed', async () => {
+  const web = {defStickyWeb: true};
+  for (const spe of [3, -3, -1]) {
+    const out = await hz('expansion', mon('Snorlax', {stg: stg(1, 0, 0, 0, spe)}), web);
+    assert.deepEqual(out.def.stg, stg(1, 0, 0, 0, -1), 'from ' + spe);
+    assert.equal(out.label, 'Spe−1');
+  }
+  assert.deepEqual((await hz('expansion', mon('Snorlax', {ab: 'Simple', stg: stg(0, 0, 0, 0, 2)}), web)).def.stg, stg(0, 0, 0, 0, -2));
+  assert.deepEqual((await hz('expansion', mon('Snorlax', {ab: 'Contrary', stg: stg(0, 0, 0, 0, 4)}), web)).def.stg, stg(0, 0, 0, 0, 1));
+  assert.equal(await hz('expansion', mon('Snorlax', {ab: 'Clear Body', stg: stg(0, 0, 0, 0, 3)}), web), null, 'blocked: no change');
+  const blocked = await hz('expansion', mon('Snorlax', {ab: 'Clear Body', stg: stg(0, 0, 0, 0, 3)}), {...web, defStealthRock: true});
+  assert.equal(blocked.def.stg, undefined, 'blocked Web with Rocks: Speed untouched');
+  assert.deepEqual((await hz('expansion', mon('Snorlax', {it: 'White Herb', stg: stg(0, 0, 0, 0, 3)}), web)).def.stg, stg(0, 0, 0, 0, 0));
+});
 await check('Hazards: the berry comes at once (Sitrus nets the label; Salac; Lum / Pecha cure; Unnerve stops it)', async () => {
   const lax = mon('Snorlax');
   const max = await maxHP('expansion', lax);

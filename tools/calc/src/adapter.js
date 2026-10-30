@@ -429,9 +429,19 @@ function hazards(set, values = {}, otherSet = null, side = 'atk') {
     boosts: {atk: 0, def: 0, spa: 0, spd: 0, spe: 0}, types: [], item: ''}, update: {}, logs: [], volatiles: new Set(),
     set() {}, change() {}, consume() {}, persist() {}, setStatus() {}, lose() {}, st: ''};
   let resolved = {parts: [], log: []};
+  // Sticky Web lowers Speed from a fresh entry's stage 0, whatever stage the card holds (the user, 2026-10-31: an HP /
+  // stage edit before the tap must not make it drop below what a fresh entry gives). A blocked Web leaves the stage.
+  const speed = mon.boosts.spe;
+  let webbed = false;
   if (hp && (record.st || record.b)) {
+    if (record.b) target.set('spe', 0);
     resolved = effects.resolve({name: record.st ? 'Toxic Spikes' : 'Sticky Web', record, user: user || stub, target,
       field, values: local, phase: 'entry'});
+    webbed = !!record.b && resolved.parts.some(part => part.who === 'def' && part.stat === 'spe' && part.by);
+    if (record.b && !webbed) {
+      target.set('spe', speed);
+      if (target.update.stg?.every((value, index) => value === (set.stg?.[index] ?? 0))) delete target.update.stg;
+    }
   }
   let berry = null;
   if (hp && hp < start) {
@@ -446,7 +456,7 @@ function hazards(set, values = {}, otherSet = null, side = 'atk') {
   if (target.update.status) pieces.push(STATUS_LABEL[target.update.status]);
   const after = target.update.stg || [];
   statNames.forEach((stat, index) => {
-    const by = index && after.length ? after[index] - (set.stg?.[index] ?? 0) : 0;
+    const by = index && after.length ? after[index] - (webbed && stat === 'spe' ? 0 : set.stg?.[index] ?? 0) : 0;
     if (by) pieces.push(STAT_LABEL[stat] + (by > 0 ? '+' : '−') + Math.abs(by));
   });
   if (!pieces.length && target.update.used) pieces.push((set.it || 'Item').replace(/ Berry$/, ''));
