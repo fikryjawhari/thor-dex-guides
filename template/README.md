@@ -473,6 +473,11 @@ result has action buttons (Dex, Trainers, Places, Walk, Filter...) that jump or 
 The search stays set across pages until its × or a tap on the current rail tab. Jumps use `land()`, which lays out
 content-visibility-skipped ancestors first.
 
+**Rail tabs** (2026-10-31): each tab keeps its own page and place for the session (`TABS` in dex.js: route, anchor,
+block sizes, saved when one of its routes is left), so scrolling one tab never moves another and an open Pokémon page
+stays open. A tap on the tab you're on clears the search and goes to the top; on a Pokémon / move / ability page it
+first goes to the list at its place (like ‹ All Pokémon), then the top. Back / forward keep their own per-entry restore.
+
 **Rejected** (don't bring back): animated collapses (slide, smooth scroll then close, synced fold); pinned trainer
 rows or team previews; a ☰ rail; BST anywhere; IVs on cards; the "Changes from vanilla" card and Changed filter;
 evo/breed tags; the trials / mini caps switch; per-hack item boxes; separate Expand / Collapse bars per island and place
