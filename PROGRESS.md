@@ -72,6 +72,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
       table; the table from Showdown (`tools/calc/move-effects.json`), per-hack differences in
       `hacks/<hack>/calc_effects.json`. Open: in-game checks (the user), and the deliberate gaps: accuracy / evasion,
       confusion and other volatiles, ability / type changes and item swaps are logged, not stored; switching.
+      Checked 2026-10-30 (main 5cab574 merged in): npm test, gate check 243/255 (the 12 fails are the DOM sweeps' `#/calc`,
+      whose only difference is the new Mist toggles), calc-effects on all six guides. Ready to merge.
    Gen 5 save reading waits for the Blaze Black 2 Redux guide; the other families: `template/calc/readers/README.md`.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
