@@ -297,6 +297,51 @@ async function foeDragCheck(page) {
   assert.equal(await page.value('CALC.mon("mine").id'), id, 'the copy is sent in on my side');
 }
 
+// ↺ on a card resets that Pokémon's battle state (HP, status, stages; template/README.md → Reset fight) and keeps its set
+// edits; the other side is untouched.
+async function monResetCheck(page) {
+  await setupCalc(page);
+  await page.value(`(()=>{CALC.set('mine','na','Adamant');CALC.set('mine','hp',1);CALC.set('mine','status','brn');CALC.set('mine','stg',[2,0,0,0,0]);CALC.set('foe','hp',1);CALC.render();})()`);
+  await page.settle();
+  const reset = '.cc[data-s=mine] [data-a=hpfull]';
+  assert.equal(await page.value(`document.querySelector('${reset}').classList.contains('rs')`), true, '↺ is lit while the Pokémon has battle state');
+  await page.tap(reset);
+  const mon = await page.value(`(()=>{const m=CALC.mon('mine');return{hp:m.hp??null,status:m.status||'',stg:(m.stg||[]).filter(Boolean).length,na:m.na,max:+(document.querySelector('.cc[data-s=mine] .mx').textContent.match(/[0-9]+/)[0]),box:+document.querySelector('[data-hp=mine]').value};})()`);
+  assert.equal(mon.box, mon.max, 'HP back to full');
+  assert.equal(mon.status, '', 'status cleared');
+  assert.equal(mon.stg, 0, 'stat stages cleared');
+  assert.equal(mon.na, 'Adamant', 'set edits stay');
+  assert.equal(await page.value(`CALC.mon('foe').hp`), 1, "the foe's battle state stays");
+  assert.equal(await page.value(`document.querySelector('${reset}').classList.contains('rs')`), false, '↺ unlit after the reset');
+}
+
+// A tap on the Pokémon already in opens its dex page (box cell, team cell, foe); the first tap only picks; a drag never opens it.
+async function dexLinkCheck(page) {
+  await setupCalc(page);
+  await touchOn(page);
+  const wide = await page.value('innerWidth>=480');
+  const FOE = i => wide ? `.fteam .ft[data-a=fpick][data-i="${i}"]` : `.dside:not(.mg) .dstrip button[data-a=fpick][data-i="${i}"]`;
+  const hash = () => page.value('location.hash');
+  const back = async () => { await page.route('#/calc'); await page.settle(); };
+  let id = await page.value(`CALC.mon('mine').id`);
+  await page.tap(BOX(5));
+  assert.equal(await hash(), `#/p/${id}`, 'a tap on the selected box Pokémon opens its dex page');
+  await back();
+  await page.tap(BOX(0));
+  assert.equal(await hash(), '#/calc', 'a tap on another Pokémon only picks it');
+  assert.equal(await page.value('CALC.state().mine.i'), 0, 'picked');
+  await drag(page, BOX(0), SLOT(0));
+  assert.equal(await hash(), '#/calc', 'dragging the selected Pokémon into the team does not open its page');
+  assert.deepEqual(await teamOf(page), ['party:0'], 'and it joined the team');
+  id = await page.value(`CALC.mon('mine').id`);
+  await page.tap(SLOT(0));
+  assert.equal(await hash(), `#/p/${id}`, 'a tap on the selected Pokémon in the team row opens its page');
+  await back();
+  id = await page.value(`CALC.mon('foe').id`);
+  await page.tap(FOE(0));
+  assert.equal(await hash(), `#/p/${id}`, 'a tap on the selected foe opens its page');
+}
+
 // An empty team stays empty through an import (a fresh page: nothing dragged in yet).
 async function emptyTeamCheck(page) {
   assert.deepEqual(await teamOf(page), [], 'an import into an empty team never fills it');
@@ -323,7 +368,8 @@ async function persistCheck(page) {
   const withCustom = await teamOf(page);
   assert.equal(withCustom.length, 3, 'a custom set dragged into the team');
   assert.ok(withCustom[2].startsWith('custom:'), 'the third member is the custom set');
-  await page.tap(custom);
+  // CALC.use sent the custom set in already: a second tap would open its dex page.
+  if (await page.value("CALC.state().mine.src") !== 'custom') await page.tap(custom);
   await page.tap('[data-a=eopen][data-s=mine]');
   await page.tap('[data-a=edel]');
   assert.deepEqual(await teamOf(page), before, 'deleting a custom set removes it from the team');
@@ -444,6 +490,18 @@ const checks = [
     title: 'HP bar colours by percent and the grey fainted sprite on the team row, the foe strip (narrow) and the foe rows (wide); Reset fight and a foe trainer change refill',
     sizes: [[260, 316], [480, 392]],
     run: hpCheck,
+  },
+  {
+    id: 'mon reset',
+    title: "↺ on a card clears that Pokémon's HP, status and stages, keeps its set edits, leaves the foe alone",
+    sizes: [[260, 316], [832, 424]],
+    run: monResetCheck,
+  },
+  {
+    id: 'dex link',
+    title: 'a tap on the Pokémon already in (box, team row, foe) opens its dex page; the first tap only picks; a drag never opens it',
+    sizes: [[260, 316], [480, 392], [832, 424]],
+    run: dexLinkCheck,
   },
   {
     id: 'auto doubles wide',

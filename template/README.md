@@ -372,7 +372,13 @@ Save keeps set fields only, never HP / status / scratch; Edit Reset clears unsav
 clears all scratch, both sides' HP / status, the foe's set edits, `broken` / Mega / used items and the manual Field overrides (`ST.fman`: Field keys the user set
 this fight, Singles / Doubles included); the foe team starts at full HP, slot 1 (or the linked Pokémon).
 **Reset fight** (↺ in the fight bar): the same (every HP 100 %, every status cleared), same trainer and
-Pokémon. Reload keeps HP / status, the foe's of the current fight and the manual Field;
+Pokémon. **↺ on a card** (before the HP box) does the same for that one Pokémon: a battle-state reset to a fresh
+send-out (full HP, no status / Toxic count, stages, toggles, battle-state tag, used item, `broken`, Mega), not a set reset
+(its set edits and Save stay; Edit's Reset / Original is the set reset); entry hazards re-arm, no entry effect fires,
+the other Pokémon and the Field are untouched. Lit (`.rs`) while the Pokémon has any of it. Scenario: `calc-team.mjs` mon reset.
+**Dex link:** a tap on the Pokémon already in (box cell, team cell, foe strip / foe row) opens its dex page (`#/p/<id>`,
+the base form); the first tap only picks it, and a drag never counts (`DROPPED` swallows the click after a drop).
+Scenario: `calc-team.mjs` dex link. Reload keeps HP / status, the foe's of the current fight and the manual Field;
 scratch is gone. Loading older storage drops stored scratch everywhere, turns a stored Mega (`pre`) into `mega` and
 keeps only HP / status / fight state on player cards not selected. Entry hazards still apply once per selection and on a new fight. Scenario: `tools/scenarios/calc-auto.mjs`.
 **Broken** is a labelled header checkbox only for a Mimikyu / Eiscue form with Disguise / Ice Face as its current
