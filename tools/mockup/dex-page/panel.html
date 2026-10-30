@@ -1,0 +1,18 @@
+<fieldset><legend>Name bar</legend><div class="chips">
+<button onclick="thorFrame().setOption('bar','scroll')">A · Appears once the top card scrolls off (recommended)</button>
+<button onclick="thorFrame().setOption('bar','always')">B · Always pinned</button>
+</div></fieldset>
+<fieldset><legend>Move columns</legend><div class="chips">
+<button onclick="thorFrame().setOption('cols','narrow')">A · Letters only when narrow (recommended)</button>
+<button onclick="thorFrame().setOption('cols','always')">B · Letters at every size</button>
+<button onclick="thorFrame().setOption('cols','full')">Today (full words, "changed" tag)</button>
+</div></fieldset>
+<fieldset><legend>Open / closed sections</legend><div class="chips">
+<button onclick="thorFrame().setOption('mem','keep')">A · Remembered across Pokémon and reloads (recommended)</button>
+<button onclick="thorFrame().setOption('mem','reset')">B · Back to the defaults on every Pokémon</button>
+<button onclick="thorFrame().resetSections()">Reset to defaults now</button>
+</div></fieldset>
+<fieldset><legend>Closed-section hints</legend><div class="chips">
+<button onclick="thorFrame().setOption('hints','on')">A · Show (BST, weaknesses, places, next evolution)</button>
+<button onclick="thorFrame().setOption('hints','off')">B · Title only</button>
+</div><p style="font-size:12px">Try Bulbasaur (Vine Whip has the "!"), Charizard (long move list), Mega Charizard X, Crabominable (long name). Defaults: Abilities, Base stats, Evolution, Moves open; Stat calculator, Type defences, Where to find, Used by trainers closed.</p></fieldset>
