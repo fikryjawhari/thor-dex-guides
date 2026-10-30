@@ -7,16 +7,19 @@ import base64, json, re, sys
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(root / 'tools'))
+import pngpal  # noqa: E402  (the guide's own crop: every inlined sprite fills its box)
 here = Path(__file__).parent
 out = Path(sys.argv[1]) if len(sys.argv) > 1 else root / '.tmp/dex-page/index.html'
 d = json.loads((root / 'hacks/emerald-imperium/data.json').read_text(encoding='utf8'))
 hack = json.loads((root / 'hacks/emerald-imperium/hack.json').read_text(encoding='utf8'))
 
-# id -> sprite file in the shared set
-SAMPLE = {'1': '0001', '2': '0002', '6': '0006', '907': '0006-mega-x', '740': '0740', '130': '0130', '115': '0115',
-          '887': '0887'}
+# id -> sprite file in the shared set: whole families, so the arrows and the Evolution box have neighbours
+SAMPLE = {'1': '0001', '2': '0002', '3': '0003', '906': '0003-mega', '4': '0004', '5': '0005', '6': '0006',
+          '907': '0006-mega-x', '908': '0006-mega-y', '129': '0129', '130': '0130', '917': '0130-mega',
+          '744': '0744', '1172': '0744', '745': '0745', '1173': '0745-midnight', '1174': '0745-dusk'}
 P = {p['id']: p for p in d['P']}
-ps = [P[i] for i in SAMPLE]
+ps = [p for p in d['P'] if p['id'] in SAMPLE]  # the dex's own order
 mv, ab, loc = set(), set(), set()
 for p in ps:
     mv.update(m for _, m in p['lv']); mv.update(p['tm']); mv.update(p.get('tu', [])); mv.update(p['eg'])
@@ -38,7 +41,7 @@ def walk(x, ctx):
         for v in x: walk(v, ctx)
 walk(d['TR'], '')
 
-spr = {i: 'data:image/png;base64,' + base64.b64encode((root / f'sprites/png/{f}.png').read_bytes()).decode()
+spr = {i: 'data:image/png;base64,' + base64.b64encode(pngpal.crop((root / f'sprites/png/{f}.png').read_bytes())).decode()
        for i, f in SAMPLE.items()}
 data = {
     'P': ps, 'stubs': stubs, 'used': used, 'TC': d['TC'], 'orig': hack['cfg'].get('orig', ''),

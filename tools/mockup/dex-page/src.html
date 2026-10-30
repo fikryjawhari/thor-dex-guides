@@ -8,21 +8,53 @@
 /*DEXCSS*/
 /* ===== mockup: the Pokemon page */
 body[data-v=p] header,body[data-v=list] header{display:none}
-/* Pinned name bar: fixed over the page beside the rail; --pbh is its height */
-:root{--pbh:38px}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* Name bar: fixed beside the rail, slides in once the top card is off screen. ‹ [sprite name types] ↑ › */
+:root{--pbh:40px}
 #pbar{position:fixed;top:0;left:44px;right:0;z-index:4;background:var(--bg);box-shadow:0 1px 0 var(--line);transition:transform .12s ease-out}
 #pbar.off{transform:translateY(-110%);box-shadow:none}
 #pbar[hidden]{display:none}
-#pbar .in{max-width:960px;margin:0 auto;height:var(--pbh);display:flex;align-items:center;gap:6px;padding:0 0 0 var(--g);container-type:inline-size}
-#pbar .spr{width:30px;height:30px}
-#pbar .nm{flex:1;min-width:0;font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#pbar .tys{flex:none;display:flex;gap:3px;align-items:center}
+#pbar .in{max-width:960px;margin:0 auto;height:var(--pbh);display:flex;align-items:stretch;container-type:inline-size}
+#pbar button{background:none;border:0;padding:0;color:var(--fg);cursor:pointer;-webkit-tap-highlight-color:transparent;font:inherit}
+#pbar .ar{flex:none;width:28px;display:flex;align-items:center;justify-content:center;color:var(--acc)}
+#pbar .ar:disabled{color:var(--line)}
+#pbar .up{flex:none;width:34px;display:flex;align-items:center;justify-content:center;color:var(--acc);border-left:1px solid var(--line)}
+#pbar .who{flex:1;min-width:0;display:flex;align-items:center;gap:4px;text-align:left;border-left:1px solid var(--line);padding-left:3px}
+#pbar .spr{width:32px;height:32px}
+#pbar .nm{flex:1;min-width:0;font-weight:700;font-size:14px;line-height:1.15;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+#pbar .nm .fc{color:var(--mut);font-size:11px}
+#pbar .tys{flex:none;display:flex;gap:3px;align-items:center;padding-right:4px}
 #pbar .tys .ty{margin:0;font-size:11px;padding:1px 6px}
-#pbar .up{flex:none;width:40px;height:var(--pbh);display:flex;align-items:center;justify-content:center;background:none;border:0;border-left:1px solid var(--line);color:var(--acc);padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
-#pbar .up svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 #pbar .tyc{display:none}
-@container (max-width:250px){#pbar .tys .ty{display:none}#pbar .tys .tyc{display:inline-flex}}
-body.bar-always main{padding-top:calc(var(--pbh) + var(--g))}
+@container (max-width:300px){#pbar .tys{flex-direction:column;gap:2px}#pbar .tys .ty{display:none}#pbar .tys .tyc{display:inline-flex;width:16px;height:16px;font-size:10px}}
+/* Previous / next at the top of the page */
+.pnav{display:flex;gap:var(--g);container-type:inline-size}
+.pnav a{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:4px;min-height:44px;color:var(--fg);-webkit-tap-highlight-color:transparent}
+.pnav a.nx{flex-direction:row-reverse;text-align:right}
+.pnav a .ch{flex:none;color:var(--acc);display:flex}
+.pnav a .ch svg{width:18px;height:18px}
+.pnav a .t{min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.pnav a .t b{font-size:13px;line-height:1.15;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.pnav a .t .r{font-size:11px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pnav a .r .rel{color:var(--acc)}
+.pnav a .spr{width:30px;height:30px}
+.pnav .gap{flex:1 1 0}
+@container (max-width:300px){.pnav a .spr{display:none}.pnav a .t b{font-size:12px}.pnav a .ch svg{width:16px;height:16px}}
+body.nav-card .pnav a{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px 4px}
+body.nav-link .pnav a .spr{display:none}
+body.nav-link .pnav a .t b{color:var(--link)}
+/* Top card: tap the sprite or the name for the form menu */
+.hero .fb{background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hero.hasf{cursor:pointer;-webkit-tap-highlight-color:transparent}.hero .car{color:var(--acc);font-weight:600}
+.hero .fbs{flex:none}
+.hero .alt{margin-top:2px}
+.fmask{position:fixed;inset:0;z-index:7}
+.fmenu{position:fixed;z-index:8;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.45);padding:4px;max-height:70vh;overflow:auto}
+.fmenu button{display:flex;align-items:center;gap:6px;width:100%;min-height:44px;background:none;border:0;border-radius:8px;color:var(--fg);font:600 14px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-align:left;padding:2px 6px;cursor:pointer}
+.fmenu button.on{background:var(--railon);color:var(--acc)}
+.fmenu .spr{width:32px;height:32px}
+.fmenu .n{flex:1;min-width:0}
+.fmenu .tyc{width:16px;height:16px;font-size:10px;margin-left:2px}
 /* Type and category as letters */
 .tyc{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35);flex:none;vertical-align:middle}
 .tyc.bt{color:#000;text-shadow:none}
@@ -35,9 +67,6 @@ details.psec>summary::-webkit-details-marker{display:none}
 details.psec>summary::after{content:'▸';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:13px}
 details.psec[open]>summary::after{content:'▾'}
 details.psec>summary h3{margin:0;flex:none}
-details.psec>summary .hint{flex:1;min-width:0;text-align:right;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-details.psec>summary .hint .tyc{width:16px;height:16px;font-size:10px;margin-left:2px;vertical-align:-3px}
-details.psec[open]>summary .hint,body.hints-off details.psec>summary .hint{display:none}
 details.psec>.pb{padding:0 12px 12px}
 details.psec>.endbar{margin:-6px 8px 4px auto}
 .hero+.seg{margin-top:var(--g)}
@@ -45,51 +74,63 @@ details.psec>.endbar{margin:-6px 8px 4px auto}
 .mvw{container-type:inline-size;overflow-x:auto}
 .mvw .tyc,.mvw .catc,.mvw .pc0{display:none}
 @container (max-width:380px){
- body.cols-narrow .mvw .ty,body.cols-narrow .mvw .cat,body.cols-narrow .mvw .pc,body.cols-narrow .mvw .hw{display:none}
- body.cols-narrow .mvw .tyc,body.cols-narrow .mvw .catc{display:inline-flex}
- body.cols-narrow .mvw td,body.cols-narrow .mvw th{padding:4px 2px}
- body.cols-narrow .mvw td:first-child,body.cols-narrow .mvw th:first-child{padding-left:0}
- body.cols-narrow .mvw td:last-child,body.cols-narrow .mvw th:last-child{padding-right:0}
- body.cols-narrow .mvw table{font-size:12.5px}
- body.cols-narrow .mvw .pc0{display:inline}
- body.cols-narrow .mvw td.tc,body.cols-narrow .mvw th.tc{padding-left:1px;padding-right:1px}
- body.cols-narrow .mvw .tyc{width:16px;height:16px;font-size:10px}
- body.cols-narrow .mvw .catc{padding:1px 3px;font-size:10.5px}
- body.cols-narrow .mvw td.lv{font-size:11px}
+ .mvw .ty,.mvw .cat,.mvw .pc,.mvw .hw{display:none}
+ .mvw .tyc,.mvw .catc{display:inline-flex}
+ .mvw .pc0{display:inline}
+ .mvw td,.mvw th{padding:4px 2px}
+ .mvw td:first-child,.mvw th:first-child{padding-left:0}
+ .mvw td:last-child,.mvw th:last-child{padding-right:0}
+ .mvw td.tc,.mvw th.tc{padding-left:1px;padding-right:1px}
+ .mvw table{font-size:12.5px}
+ .mvw .tyc{width:16px;height:16px;font-size:10px}
+ .mvw .catc{padding:1px 3px;font-size:10.5px}
+ .mvw td.lv{font-size:11px}
 }
-body.cols-always .mvw .ty,body.cols-always .mvw .cat,body.cols-always .mvw .pc,body.cols-always .mvw .hw{display:none}
- body.cols-always .mvw .tyc,body.cols-always .mvw .catc{display:inline-flex}
- body.cols-always .mvw td,body.cols-always .mvw th{padding:4px 2px}
- body.cols-always .mvw td:first-child,body.cols-always .mvw th:first-child{padding-left:0}
- body.cols-always .mvw td:last-child,body.cols-always .mvw th:last-child{padding-right:0}
- body.cols-always .mvw table{font-size:12.5px}
- body.cols-always .mvw .pc0{display:inline}
- body.cols-always .mvw td.tc,body.cols-always .mvw th.tc{padding-left:1px;padding-right:1px}
- body.cols-always .mvw .tyc{width:16px;height:16px;font-size:10px}
- body.cols-always .mvw .catc{padding:1px 3px;font-size:10.5px}
- body.cols-always .mvw td.lv{font-size:11px}
 .mvw td.n,.mvw th.n{text-align:right}
 /* a single-word name longer than the room breaks rather than pushing the row sideways */
 .mvw td:nth-last-child(5){overflow-wrap:anywhere}
 .mvw td.lv{color:var(--mut)}
 .mvw th.tc,.mvw td.tc{text-align:center}
-@media (max-width:340px){details.psec>summary{padding-left:8px}details.psec>.pb{padding:0 6px 8px}details.psec[data-s=mv]>.pb{padding:0 4px 6px}.hero{padding:10px;gap:10px}.hero .s112{width:88px;height:88px}}
+.warn{cursor:help}
+/* Evolution: the whole family, base stage first, forms under their Pokemon */
+.fam{display:flex;flex-direction:column}
+.fam .fr{display:flex;align-items:center;gap:6px;min-height:40px;padding:2px 4px 2px calc(4px + var(--d,0)*16px);border-radius:8px;color:var(--fg)}
+.fam .fr .spr{width:32px;height:32px}
+.fam .fr .t{min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.fam .fr .t b{font-size:14px;color:var(--link);font-weight:600}
+.fam .fr .t .h{font-size:12px;color:var(--mut)}
+.fam .fr.cur{background:var(--railon)}
+.fam .fr.cur .t b{color:var(--acc);font-weight:700}
+.fam .fr .tag{margin-left:0}
+/* Stat calculator, stats down the side */
+.cvh{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
+.cvh select{flex:1;min-width:110px}
+table.cv{width:auto;max-width:100%}
+table.cv th,table.cv td{text-align:right;padding:3px 4px}
+table.cv th:first-child{text-align:left;color:var(--fg);font-size:13px;white-space:nowrap}
+table.cv input{width:44px;padding:4px 4px;font-size:14px;text-align:center}
+table.cv td.res{font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums;min-width:34px}
+table.cv td.b{color:var(--mut);font-variant-numeric:tabular-nums}
+table.cv th.up{color:#f0605a}table.cv th.up::after{content:'↑'}
+table.cv th.dn{color:#7fb2ff}table.cv th.dn::after{content:'↓'}
+table.cv tr.tot td,table.cv tr.tot th{border-bottom:0;color:var(--mut);font-size:12px}
+@media (max-width:340px){details.psec>summary{padding-left:8px}details.psec>.pb{padding:0 6px 8px}details.psec[data-s=mv]>.pb{padding:0 4px 6px}.hero{padding:10px;gap:10px}.hero .s112{width:88px;height:88px}table.cv th,table.cv td{padding:3px 2px}}
 #toast{position:fixed;left:54px;right:10px;bottom:10px;z-index:9;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
 #toast.on{opacity:1}
 </style></head><body>
 <!--RAIL-->
 <header><div class="bar"><input type="search" id="q" placeholder="Search"></div><div class="bar" id="filters"></div></header>
-<div id="pbar" hidden><div class="in"><span class="sp"></span><span class="nm"></span><span class="tys"></span><button class="up" aria-label="Top of page" title="Top of page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h14 M12 9v11 M7 14l5-5 5 5"/></svg></button></div></div>
+<div id="pbar" hidden><div class="in"><button class="ar" data-d="-1" aria-label="Previous Pokémon"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="who" aria-label="Forms"><span class="sp"></span><span class="nm"></span><span class="tys"></span></button><button class="up" aria-label="Top of page" title="Top of page"><svg class="i" viewBox="0 0 24 24"><path d="M5 4.5h14 M12 9v11 M7 14l5-5 5 5"/></svg></button><button class="ar" data-d="1" aria-label="Next Pokémon"><svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></div>
 <main id="app"></main>
 <div id="toast"></div>
 <script>
 const D=/*DATA*/null,SPRD=/*SPR*/null;
-const KEY='dex-page-mock-v1';
+const KEY='dex-page-mock-v2';
 const DEF={ab:1,bs:1,sc:0,td:0,wh:0,ev:1,tr:0,mv:1};
-let S={bar:'scroll',cols:'narrow',mem:'keep',hints:'on',open:null};
+let S={nav:'card',calc:'vert',open:null};
 try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
-let cur={...DEF};
+let cur={...DEF},PEND=null,curId=null;
 const app=document.getElementById('app'),bar=document.getElementById('pbar');
 const SN=['HP','Atk','Def','SpA','SpD','Spe'];
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -102,85 +143,132 @@ const tyc=t=>`<span class="tyc${btc(t)}" style="background:${tcol(t)}" title="${
 const cat=c=>c?`<span class="cat ${c}">${c==='Physical'?'Phys':c==='Special'?'Spec':'Status'}</span>`:'';
 const catc=c=>c?`<span class="catc ${c}" title="${c}">${c==='Physical'?'P':c==='Special'?'Sp':'St'}</span>`:'';
 const byId={};D.P.forEach(p=>byId[p.id]=p);
+const ORDER=D.P.map(p=>p.id);
 const nm=id=>byId[id]?byId[id].n:D.stubs[id]||'?';
-const plink=id=>byId[id]?`<a href="#/p/${id}">${esc(nm(id))}</a>`:`<a href="#/x">${esc(nm(id))}</a>`;
 const spr=(id,c)=>`<div class="spr ${c}" style="background-image:url(${SPRD[id]})"></div>`;
+const formsOf=p=>D.P.filter(x=>x.dex===p.dex);
+const how=h=>h.replace(/^level /i,'Lv ');
+// What t is to c, for the arrows: the evolution between them, or a form of the same Pokemon
+function rel(c,t){let e=c.et.find(x=>x[1]===t.id)||c.ef.find(x=>x[1]===t.id);if(e)return how(e[0]);
+ if(t.dex===c.dex)return t.g===1?'Mega':c.g===1?'Base form':'Form';return '';}
+const warn=t=>`<span class="warn" title="${t}">!</span>`;
 const NAT={Lonely:[1,2],Brave:[1,5],Adamant:[1,3],Naughty:[1,4],Bold:[2,1],Relaxed:[2,5],Impish:[2,3],Lax:[2,4],Timid:[5,1],Hasty:[5,2],Jolly:[5,3],Naive:[5,4],Modest:[3,1],Mild:[3,2],Quiet:[3,5],Rash:[3,4],Calm:[4,1],Gentle:[4,2],Sassy:[4,5],Careful:[4,3]};
 function stat(b,i,iv,ev,lv,nat){if(i===0)return Math.floor((2*b+iv+Math.floor(ev/4))*lv/100)+lv+10;let v=Math.floor((2*b+iv+Math.floor(ev/4))*lv/100)+5;const n=NAT[nat];if(n){if(n[0]===i)v=Math.floor(v*1.1);else if(n[1]===i)v=Math.floor(v*0.9);}return v;}
 const types=Object.keys(D.TC).sort();
-function weak(p){const g={};types.forEach(a=>{let m=1;p.t.forEach(d=>{m*=((D.TC[a]||{})[d]??10)/10;});if(m!==1)(g[m]=g[m]||[]).push(a);});return g;}
-function defBlock(p){const g=weak(p);const row=(m,l)=>g[m]?`<div style="margin:3px 0"><span class="mut" style="display:inline-block;width:44px">${l}</span>${g[m].map(ty).join('')}</div>`:'';
+function defBlock(p){const g={};types.forEach(a=>{let m=1;p.t.forEach(d=>{m*=((D.TC[a]||{})[d]??10)/10;});if(m!==1)(g[m]=g[m]||[]).push(a);});
+ const row=(m,l)=>g[m]?`<div style="margin:3px 0"><span class="mut" style="display:inline-block;width:44px">${l}</span>${g[m].map(ty).join('')}</div>`:'';
  return row(4,'4×')+row(2,'2×')+row(0.5,'½×')+row(0.25,'¼×')+row(0,'0×')+`<div class="mut small" style="margin-top:4px">Abilities (Levitate and so on) not included.</div>`;}
 function whereTable(p){if(p.g===1)return `<div class="mut">Mega form. Mega Stone: ${esc(p.stone||'?')}${p.sloc?': '+esc(p.sloc):''}</div>`;
  if(!p.w.length)return `<div class="mut">No direct wild encounter. Obtained by evolving or breeding (see Evolution).</div>`;
  return `<table class="wh"><tr><th>Location</th><th>Method</th><th>Rate</th><th>Lv</th></tr>${p.w.map(w=>`<tr><td><a href="#/l/${w[0]}">${esc(D.LOC[w[0]])}</a>${w[4]?`<div class="mut small">${esc(w[4])}</div>`:''}</td><td>${esc(w[1])}</td><td class="n">${esc(w[2])}</td><td class="n">${esc(w[3])}</td></tr>`).join('')}</table>`;}
-function evoBlock(p){const li=arr=>arr.map(([how,id])=>`<li>${plink(id)} <span class="mut">${esc(how)}</span></li>`).join('');
- let h='';if(p.ef.length)h+=`<div class="mut small">Evolves from</div><ul class="evo">${li(p.ef)}</ul>`;
- if(p.et.length)h+=`<div class="mut small"${p.ef.length?' style="margin-top:6px"':''}>Evolves into</div><ul class="evo">${li(p.et)}</ul>`;
- if(p.of.length)h+=`<div style="margin-top:6px" class="mut">Other forms: ${p.of.map(plink).join(', ')}</div>`;
- return h||'<div class="mut">Does not evolve.</div>';}
-const abLine=i=>`<a href="#/a/${i}">${esc(D.AB[i][0])}</a>${D.AB[i][3]?' <span class="tag">changed</span>':''}<div class="mut small">${esc(D.AB[i][3]||D.AB[i][1])}</div>`;
-// A move row. Today: full type / category, the "changed" tag. New: no "changed" tag; letters when narrow (CSS).
-function mrow(i,lv){const v=D.MV[i]||{},today=S.cols==='full';
- return `<tr>${lv!==undefined?`<td class="n lv">${lv||'Evo'}</td>`:''}<td><a href="#/m/${i}">${esc(D.M[i])}</a>${v.x?` <span class="tag">${D.orig}</span>`:today&&(v.dc||v.h)?' <span class="tag">changed</span>':''}${v.cf?'<span class="warn">!</span>':''}</td><td class="tc">${v.t?ty(v.t)+tyc(v.t):''}</td><td class="tc">${cat(v.c)+catc(v.c)}</td><td class="n">${v.bp==='Varies'?'<span class="hw">Varies</span><span class="pc0">Var</span>':v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'<span class="pc">%</span>':'-'}</td></tr>`;}
+// The family from its base stage: each Pokemon, its forms (same dex number, not evolved into), then what it evolves into
+function famBlock(p){const base=formsOf(p).find(x=>x.g!==1&&!x.fc)||p;let r=base;const up=new Set();
+ while(r.ef.length&&byId[r.ef[0][1]]&&!up.has(r.id)){up.add(r.id);r=byId[r.ef[0][1]];}
+ const rows=[],done=new Set();
+ const walk=(x,d,h)=>{if(!x||done.has(x.id))return;done.add(x.id);rows.push([x,d,h]);
+  formsOf(x).filter(f=>!done.has(f.id)&&!f.ef.length).forEach(f=>{done.add(f.id);rows.push([f,d,null,f.g===1?'Mega':'Form']);});
+  x.et.forEach(([h2,id])=>walk(byId[id],d+1,how(h2)));};
+ walk(r,0,null);
+ const row=([x,d,h,tg])=>{const inner=`${spr(x.id,'')}<span class="t"><b>${esc(x.n)}</b>${h||tg?`<span class="h">${h?'↳ '+esc(h):''}${tg?`<span class="tag">${tg}</span>`:''}</span>`:''}</span>`;
+  return x.id===p.id?`<div class="fr cur" style="--d:${d}">${inner}</div>`:`<a class="fr" style="--d:${d}" href="#/p/${x.id}" data-keep>${inner}</a>`;};
+ return `<div class="fam">${rows.map(row).join('')}</div>${rows.length<2?'<div class="mut small" style="margin-top:4px">Does not evolve.</div>':''}`;}
+const abLine=i=>`<a href="#/a/${i}">${esc(D.AB[i][0])}</a>${D.AB[i][2]?warn('New in this hack'):D.AB[i][3]?warn('Changed in this hack'):''}<div class="mut small">${esc(D.AB[i][3]||D.AB[i][1])}</div>`;
+// A move row: "!" for new, changed or disputed; letters when the table is narrow (CSS)
+function mrow(i,lv){const v=D.MV[i]||{},w=v.x?'New in this hack':v.cf?'Sources disagree':v.dc||v.h?'Changed in this hack':'';
+ return `<tr>${lv!==undefined?`<td class="n lv">${lv||'Evo'}</td>`:''}<td><a href="#/m/${i}">${esc(D.M[i])}</a>${w?warn(w):''}</td><td class="tc">${v.t?ty(v.t)+tyc(v.t):''}</td><td class="tc">${cat(v.c)+catc(v.c)}</td><td class="n">${v.bp==='Varies'?'<span class="hw">Varies</span><span class="pc0">Var</span>':v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'<span class="pc">%</span>':'-'}</td></tr>`;}
 const mhead=lv=>`<tr>${lv?'<th class="n">Lv</th>':''}<th>Move</th><th class="tc"><span class="hw">Type</span></th><th class="tc"><span class="hw">Cat</span></th><th class="n">Pow</th><th class="n">Acc</th></tr>`;
 let moveTab='lv';
-function secHTML(k,label,hint,body){return `<details class="card psec" data-s="${k}" ${cur[k]?'open':''}><summary><h3>${label}</h3><span class="hint">${hint}</span></summary><div class="pb">${body}</div><button class="endbar sb" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14l5-5 5 5"/></svg><span>${label}</span></button></details>`;}
-function calcBody(p){return `<div class="bar" style="margin:0 0 8px"><span class="mut small">Level <input type="number" id="c-l" min="1" max="100" value="50"></span><select id="c-n">${['Hardy',...Object.keys(NAT)].map(n=>`<option>${n}</option>`).join('')}</select></div>
+function secHTML(k,label,body,cls=''){return `<details class="card psec${cls}" data-s="${k}" ${cur[k]?'open':''}><summary><h3>${label}</h3></summary><div class="pb">${body}</div><button class="endbar sb" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14l5-5 5 5"/></svg><span>${label}</span></button></details>`;}
+// Stat calculator: one saved state per Pokemon in the guide; here only for this visit
+const CS={};
+function calcState(p){return CS[p.id]??={l:50,n:'Hardy',iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0]};}
+const natSel=s=>`<select id="c-n">${['Hardy',...Object.keys(NAT)].map(n=>`<option ${n===s.n?'selected':''}>${n}${NAT[n]?` (+${SN[NAT[n][0]]} −${SN[NAT[n][1]]})`:''}</option>`).join('')}</select>`;
+function calcBody(p){const s=calcState(p);
+ if(S.calc==='vert')return `<div class="cvh"><span class="mut small">Level</span><input type="number" id="c-l" min="1" max="100" value="${s.l}" style="width:56px">${natSel(s)}</div>
+ <table class="cv"><tr><th></th><th>Base</th><th>IV</th><th>EV</th><th>Stat</th></tr>
+ ${SN.map((n,i)=>`<tr><th data-i="${i}">${n}</th><td class="b">${p.s[i]}</td><td><input type="number" data-iv="${i}" min="0" max="31" value="${s.iv[i]}"></td><td><input type="number" data-ev="${i}" min="0" max="252" step="4" value="${s.ev[i]}"></td><td class="res" id="c-r${i}"></td></tr>`).join('')}
+ <tr class="tot"><th>Total</th><td class="b">${p.s.reduce((a,b)=>a+b,0)}</td><td></td><td id="c-et"></td><td></td></tr></table>
+ <div class="mut small" style="margin-top:8px">Speed by level (rare candy planning)</div><div class="lvrow" id="c-lv"></div>`;
+ return `<div class="bar" style="margin:0 0 8px"><span class="mut small">Level <input type="number" id="c-l" min="1" max="100" value="${s.l}"></span>${natSel(s)}</div>
  <div style="overflow-x:auto"><table><tr><th></th>${SN.map(n=>`<th>${n}</th>`).join('')}</tr>
- <tr><th>IV</th>${SN.map((n,i)=>`<td><input type="number" data-iv="${i}" min="0" max="31" value="31"></td>`).join('')}</tr>
- <tr><th>EV</th>${SN.map((n,i)=>`<td><input type="number" data-ev="${i}" min="0" max="252" step="4" value="0"></td>`).join('')}</tr>
+ <tr><th>IV</th>${SN.map((n,i)=>`<td><input type="number" data-iv="${i}" min="0" max="31" value="${s.iv[i]}"></td>`).join('')}</tr>
+ <tr><th>EV</th>${SN.map((n,i)=>`<td><input type="number" data-ev="${i}" min="0" max="252" step="4" value="${s.ev[i]}"></td>`).join('')}</tr>
  <tr><th>Stat</th>${SN.map((n,i)=>`<td class="res" id="c-r${i}"></td>`).join('')}</tr></table></div>
  <div class="mut small" style="margin-top:8px">Speed by level (rare candy planning)</div><div class="lvrow" id="c-lv"></div>`;}
-function bindCalc(p){const g=s=>app.querySelector(s);const upd=()=>{const l=Math.max(1,Math.min(100,+g('#c-l').value||1)),n=g('#c-n').value,iv=[...app.querySelectorAll('[data-iv]')].map(e=>+e.value||0),ev=[...app.querySelectorAll('[data-ev]')].map(e=>+e.value||0);
- SN.forEach((x,i)=>g('#c-r'+i).textContent=stat(p.s[i],i,iv[i],ev[i],l,n));const r=[];for(let L=Math.max(1,l-2);L<=Math.min(100,l+6);L++)r.push(`<span class="${L===l?'cur':''}">Lv ${L}: <b>${stat(p.s[5],5,iv[5],ev[5],L,n)}</b></span>`);g('#c-lv').innerHTML=r.join('');};
+function bindCalc(p){const g=s=>app.querySelector(s);const upd=()=>{const s=calcState(p);s.l=Math.max(1,Math.min(100,+g('#c-l').value||1));s.n=g('#c-n').value.split(' ')[0];s.iv=[...app.querySelectorAll('[data-iv]')].map(e=>+e.value||0);s.ev=[...app.querySelectorAll('[data-ev]')].map(e=>+e.value||0);
+ SN.forEach((x,i)=>g('#c-r'+i).textContent=stat(p.s[i],i,s.iv[i],s.ev[i],s.l,s.n));const nt=NAT[s.n];
+ app.querySelectorAll('table.cv th[data-i]').forEach(th=>{th.classList.toggle('up',!!nt&&nt[0]===+th.dataset.i);th.classList.toggle('dn',!!nt&&nt[1]===+th.dataset.i);});
+ if(g('#c-et'))g('#c-et').textContent=s.ev.reduce((a,b)=>a+b,0)+' / 510';
+ const r=[];for(let L=Math.max(1,s.l-2);L<=Math.min(100,s.l+6);L++)r.push(`<span class="${L===s.l?'cur':''}">Lv ${L}: <b>${stat(p.s[5],5,s.iv[5],s.ev[5],L,s.n)}</b></span>`);g('#c-lv').innerHTML=r.join('');};
  app.querySelectorAll('.calc input,.calc select').forEach(e=>e.addEventListener('input',upd));upd();}
+// Previous / next in dex order (the list's order: forms sit after their Pokemon)
+function navLink(p,t,d){if(!t)return '<span class="gap"></span>';const r=rel(p,t);
+ return `<a class="${d<0?'pv':'nx'}" href="#/p/${t.id}" data-keep data-rep><span class="ch"><svg class="i" viewBox="0 0 24 24"><path d="${d<0?'M15 5l-7 7 7 7':'M9 5l7 7-7 7'}"/></svg></span>${spr(t.id,'')}<span class="t"><b>${esc(t.n)}</b><span class="r">#${t.dex}${r?` · <span class="rel">${esc(r)}</span>`:''}</span></span></a>`;}
+const nb=(p,d)=>byId[ORDER[ORDER.indexOf(p.id)+d]];
 
-function detail(id){const p=byId[id];if(!p){app.innerHTML='<p>Not found.</p>';return;}
- cur=S.mem==='keep'?{...DEF,...(S.open||{})}:{...DEF};
+function detail(id){const p=byId[id];if(!p){app.innerHTML='<p>Not found.</p>';return;}curId=id;
+ cur={...DEF,...(S.open||{})};
  const byName=a=>[...a].sort((x,y)=>D.M[x].localeCompare(D.M[y]));
  const tbl=(a,lv)=>a.length?`<table>${mhead(lv)}${a.map(x=>lv?mrow(x[1],x[0]):mrow(x)).join('')}</table>`:'<div class="mut">None</div>';
  const mv={lv:['Level-up',p.lv.length,()=>tbl(p.lv,true)],tm:['TM/HM',p.tm.length,()=>tbl(byName(p.tm))],eg:['Egg',p.eg.length,()=>tbl(byName(p.eg))]};
- const g=weak(p),wk=[...(g[4]||[]),...(g[2]||[])],u=D.used[id]||[],nmv=new Set([...p.lv.map(x=>x[1]),...p.tm,...p.eg]).size;
+ const u=D.used[id]||[],fs=formsOf(p).length>1;
  const ab=p.a.map(i=>`<div style="margin:4px 0">${abLine(i)}</div>`).join('')+(p.ha>=0?`<div style="margin:6px 0 0"><span class="mut small">Hidden</span> ${abLine(p.ha)}</div>`:'');
  const bs=p.s.map((v,i)=>`<div class="stat"><span class="mut">${SN[i]}</span><span class="v">${v}</span><span class="b"><i style="width:${Math.min(100,v/160*100)}%;background:${v<60?'#e05252':v<90?'#e0a030':v<120?'#5cb85c':'#3aa0d8'}"></i></span></div>`).join('');
- app.innerHTML=`<a class="back" href="#/">‹ All Pokémon</a>
- <div class="card hero">${spr(p.id,'s112')}<div><h2>${esc(p.n)}${p.g===1?'&#8203;<span class="tag">Mega</span>':''}</h2>${p.dex?`<div class="mut small">#${p.dex}</div>`:''}<div style="margin-top:4px">${p.t.map(ty).join('')}</div></div></div>
+ 
+ app.innerHTML=`<div class="pnav">${navLink(p,nb(p,-1),-1)}${navLink(p,nb(p,1),1)}</div>
+ <div class="card hero${fs?' hasf':''}"${fs?' role="button" aria-label="Forms"':''}>${spr(p.id,'s112')}<div><h2>${esc(p.n)}${p.g===1?'&#8203;<span class="tag">Mega</span>':''}</h2>${p.dex?`<div class="mut small">#${p.dex}${fs?` · <span class="car">${formsOf(p).length} forms ▾</span>`:''}</div>`:''}<div style="margin-top:4px">${p.t.map(ty).join('')}</div></div></div>
  <div class="seg pall"><button data-a="1">Expand all</button><button data-a="0">Collapse all</button></div>
- ${secHTML('ab','Abilities',[...p.a,...(p.ha>=0?[p.ha]:[])].map(i=>esc(D.AB[i][0])).join(' · '),ab)}
- ${secHTML('bs','Base stats','BST '+p.s.reduce((a,b)=>a+b,0),bs)}
- <div class="calcw">${secHTML('sc','Stat calculator','',calcBody(p))}</div>
- ${secHTML('td','Type defences',wk.length?'Weak '+wk.map(tyc).join(''):'',defBlock(p))}
- ${secHTML('wh','Where to find',p.g===1?'Mega':p.w.length?p.w.length+' place'+(p.w.length>1?'s':''):'Not wild',whereTable(p))}
- ${secHTML('ev','Evolution',p.et.length?'→ '+p.et.map(x=>esc(nm(x[1]))).join(', '):p.ef.length?'from '+esc(nm(p.ef[0][1])):'Does not evolve',evoBlock(p))}
- ${u.length?secHTML('tr',`Used by trainers (${u.length})`,'',u.map(([n,c])=>`<div><a href="#/tr">${esc(n)}</a> <span class="mut small">${esc(c)}</span></div>`).join('')):''}
- ${secHTML('mv','Moves',nmv+' moves',`<div class="sub">${Object.entries(mv).map(([k,v])=>`<button data-k="${k}" class="${k===moveTab?'on':''}">${v[0]} (${v[1]})</button>`).join('')}</div><div id="mvb" class="mvw">${mv[moveTab][2]()}</div>`)}`;
- app.querySelector('.calcw>details').classList.add('calc');app.querySelector('.calcw').replaceWith(app.querySelector('.calcw>details'));
+ ${secHTML('ab','Abilities',ab)}
+ ${secHTML('bs','Base stats',bs)}
+ ${secHTML('sc','Stat calculator',calcBody(p),' calc')}
+ ${secHTML('td','Type defences',defBlock(p))}
+ ${secHTML('wh','Where to find',whereTable(p))}
+ ${secHTML('ev','Evolution',famBlock(p))}
+ ${u.length?secHTML('tr',`Used by trainers (${u.length})`,u.map(([n,c])=>`<div><a href="#/tr">${esc(n)}</a> <span class="mut small">${esc(c)}</span></div>`).join('')):''}
+ ${secHTML('mv','Moves',`<div class="sub">${Object.entries(mv).map(([k,v])=>`<button data-k="${k}" class="${k===moveTab?'on':''}">${v[0]} (${v[1]})</button>`).join('')}</div><div id="mvb" class="mvw">${mv[moveTab][2]()}</div>`)}`;
  app.querySelectorAll('.sub button').forEach(b=>b.onclick=()=>{moveTab=b.dataset.k;app.querySelectorAll('.sub button').forEach(x=>x.classList.toggle('on',x===b));app.querySelector('#mvb').innerHTML=mv[moveTab][2]();ends();});
- app.querySelectorAll('details.psec').forEach(d=>d.addEventListener('toggle',()=>{cur[d.dataset.s]=d.open?1:0;if(S.mem==='keep'){S.open={...cur};save();}ends();}));
- app.querySelectorAll('details.psec>summary').forEach(sm=>sm.addEventListener('click',()=>{const d=sm.parentElement;if(d.open)keepTitle(sm);}));
+ app.querySelectorAll('details.psec').forEach(d=>d.addEventListener('toggle',()=>{cur[d.dataset.s]=d.open?1:0;S.open={...cur};save();ends();}));
+ app.querySelectorAll('details.psec>summary').forEach(sm=>sm.addEventListener('click',()=>{if(sm.parentElement.open)keepTitle(sm);}));
  app.querySelectorAll('details.psec>.endbar').forEach(b=>b.onclick=()=>{const d=b.parentElement;d.open=false;keepTitle(d.querySelector('summary'));});
  app.querySelectorAll('.pall button').forEach(b=>b.onclick=()=>{const o=b.dataset.a==='1';app.querySelectorAll('details.psec').forEach(d=>d.open=o);});
+ if(fs){const h=app.querySelector('.hero');h.onclick=()=>formMenu(p,h.querySelector('h2'));}
  bindCalc(p);
- bar.querySelector('.sp').innerHTML=spr(p.id,'');bar.querySelector('.nm').textContent=p.n;bar.querySelector('.tys').innerHTML=p.t.map(t=>ty(t)+tyc(t)).join('');
- bar.hidden=false;window.scrollTo(0,0);barState();requestAnimationFrame(ends);}
-// Closing a section scrolled past: its title stays on screen, under the bar.
-function keepTitle(sm){requestAnimationFrame(()=>{const top=sm.getBoundingClientRect().top,lim=barH();if(top<lim)scrollBy(0,top-lim-4);});}
-const barH=()=>bar.hidden||bar.classList.contains('off')&&S.bar!=='always'?0:bar.offsetHeight;
-function barState(){if(bar.hidden)return;const h=app.querySelector('.hero');const show=S.bar==='always'||h&&h.getBoundingClientRect().bottom<bar.offsetHeight-4;bar.classList.toggle('off',!show);}
+ bar.querySelector('.sp').innerHTML=spr(p.id,'');bar.querySelector('.nm').innerHTML=esc(p.n)+(fs?' <span class="fc">▾</span>':'');bar.querySelector('.tys').innerHTML=p.t.map(t=>ty(t)+tyc(t)).join('');
+ bar.querySelector('[data-d="-1"]').disabled=!nb(p,-1);bar.querySelector('[data-d="1"]').disabled=!nb(p,1);
+ bar.hidden=false;fitName();const a=PEND;PEND=null;window.scrollTo(0,0);if(a)toAnchor(a);barState();requestAnimationFrame(ends);}
+// Switching Pokemon keeps the place: the section under the bar and how far into it (top card still showing: scrollY)
+function anchor(){const lim=bar.offsetHeight,h=app.querySelector('.hero');if(!h||h.getBoundingClientRect().bottom>lim)return {y:scrollY};
+ let a=null;for(const d of app.querySelectorAll('details.psec'))if(d.getBoundingClientRect().top<=lim+1)a=d;return a?{k:a.dataset.s,off:lim-a.getBoundingClientRect().top}:{y:scrollY};}
+function toAnchor(a){if(a.y!=null){scrollTo(0,a.y);return;}const ks=Object.keys(DEF);let d=app.querySelector(`details.psec[data-s="${a.k}"]`),off=a.off;
+ for(let i=ks.indexOf(a.k)+1;!d&&i<ks.length;i++){d=app.querySelector(`details.psec[data-s="${ks[i]}"]`);off=0;}
+ if(!d)return;off=Math.min(off,Math.max(0,d.offsetHeight-40));scrollTo(0,d.getBoundingClientRect().top+scrollY-bar.offsetHeight+off);}
+function go(id){PEND=anchor();location.replace('#/p/'+id);}
+function formMenu(p,el){const fs=formsOf(p);if(fs.length<2)return;const r=el.getBoundingClientRect();
+ const m=document.createElement('div');m.className='fmask';const w=Math.min(260,innerWidth-52);
+ m.innerHTML=`<div class="fmenu" style="top:${Math.min(r.bottom+4,innerHeight-60)}px;left:${Math.max(48,Math.min(r.left,innerWidth-w-4))}px;width:${w}px">${fs.map(f=>`<button data-id="${f.id}" class="${f.id===p.id?'on':''}">${spr(f.id,'')}<span class="n">${esc(f.n)}</span>${f.t.map(tyc).join('')}</button>`).join('')}</div>`;
+ m.onclick=e=>{const b=e.target.closest('button');m.remove();if(b&&b.dataset.id!==p.id)go(b.dataset.id);};document.body.appendChild(m);}
+function keepTitle(sm){requestAnimationFrame(()=>{const top=sm.getBoundingClientRect().top,lim=bar.classList.contains('off')?0:bar.offsetHeight;if(top<lim)scrollBy(0,top-lim-4);});}
+// The bar's name: 14 px, smaller (to 10.5) until its longest word fits and it takes two lines at most
+function fitName(){const n=bar.querySelector('.nm');let f=14;n.style.fontSize=f+'px';const w=n.textContent.split(/\s+/).reduce((a,b)=>b.length>a.length?b:a,'');
+ const probe=document.createElement('span');probe.style.cssText='position:absolute;visibility:hidden;white-space:nowrap;font-weight:700';probe.textContent=w;n.appendChild(probe);
+ while(f>10.5&&(probe.offsetWidth>n.clientWidth||n.scrollHeight>n.clientHeight+1)){f-=.5;n.style.fontSize=f+'px';}probe.remove();}
+function barState(){if(bar.hidden)return;const h=app.querySelector('.hero');bar.classList.toggle('off',!(h&&h.getBoundingClientRect().bottom<bar.offsetHeight-4));}
 // A collapse bar at the end of an open section taller than the window
 function ends(){app.querySelectorAll('details.psec').forEach(d=>{const b=d.querySelector(':scope>.endbar');b.hidden=!(d.open&&d.offsetHeight>innerHeight-bar.offsetHeight);});}
-function list(){bar.hidden=true;app.innerHTML=`<div class="list">${D.P.map(p=>`<a class="row" href="#/p/${p.id}">${spr(p.id,'s40')}<span class="num">${p.dex}</span><span class="rt"><span class="nm">${esc(p.n)}</span><span>${p.t.map(ty).join('')}</span></span><span class="bst">${p.s.reduce((a,b)=>a+b,0)}</span></a>`).join('')}</div><div class="mut small" style="margin-top:8px">Mockup: a few Emerald Imperium Pokémon. Other links and rail buttons are not in it.</div>`;}
-function render(){const h=location.hash||'#/',m=h.match(/^#\/p\/(.+)$/);document.body.dataset.v=m?'p':'list';document.getElementById('t-p').classList.add('on');if(m)detail(m[1]);else{list();scrollTo(0,0);}}
-function apply(){document.body.classList.remove('bar-always','cols-narrow','cols-always','cols-full','hints-off');document.body.classList.add('cols-'+S.cols);if(S.bar==='always')document.body.classList.add('bar-always');if(S.hints==='off')document.body.classList.add('hints-off');}
+function list(){bar.hidden=true;app.innerHTML=`<div class="list">${D.P.map(p=>`<a class="row" href="#/p/${p.id}">${spr(p.id,'s40')}<span class="num">${p.dex}</span><span class="rt"><span class="nm">${esc(p.n)}</span><span>${p.t.map(ty).join('')}</span></span><span class="bst">${p.s.reduce((a,b)=>a+b,0)}</span></a>`).join('')}</div><div class="mut small" style="margin-top:8px">Mockup: a few Emerald Imperium families. Other links and rail buttons are not in it.</div>`;}
+function render(){const h=location.hash||'#/',m=h.match(/^#\/p\/(.+)$/);document.body.dataset.v=m?'p':'list';document.getElementById('t-p').classList.add('on');if(m)detail(m[1]);else{PEND=null;list();scrollTo(0,0);}}
+function apply(){document.body.classList.remove('nav-card','nav-link');document.body.classList.add('nav-'+S.nav);}
 let tt;function toast(s){const t=document.getElementById('toast');t.textContent=s;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),1400);}
 document.addEventListener('click',e=>{const a=e.target.closest('a[href]');if(!a)return;const h=a.getAttribute('href');
- if(a.closest('#rail')){if(h==='#/'){return;}e.preventDefault();toast('Not in this mockup: only the Pokémon pages are.');return;}
- if(/^#\/(m|a|l|tr|x)/.test(h)){e.preventDefault();toast('Not in this mockup: '+a.textContent+' links to its own page.');}});
+ if(a.closest('#rail')){if(h==='#/')return;e.preventDefault();toast('Not in this mockup: only the Pokémon pages are.');return;}
+ if(/^#\/(m|a|l|tr|x)/.test(h)){e.preventDefault();toast('Not in this mockup: '+a.textContent+' links to its own page.');return;}
+ if(a.hasAttribute('data-keep')){e.preventDefault();const id=h.slice(4);if(a.hasAttribute('data-rep'))go(id);else{PEND=anchor();location.hash=h;}}});
 bar.querySelector('.up').onclick=()=>window.scrollTo(0,0);
-addEventListener('scroll',barState,{passive:true});addEventListener('resize',()=>{barState();ends();});
+bar.querySelectorAll('.ar').forEach(b=>b.onclick=()=>{const t=nb(byId[curId],+b.dataset.d);if(t)go(t.id);});
+bar.querySelector('.who').onclick=()=>formMenu(byId[curId],bar.querySelector('.who'));
+addEventListener('scroll',barState,{passive:true});addEventListener('resize',()=>{if(!bar.hidden)fitName();barState();ends();});
 addEventListener('hashchange',render);
-window.setOption=(k,v)=>{S[k]=v;if(k==='mem'&&v==='reset')S.open=null;save();apply();const y=scrollY;if(document.body.dataset.v==='p'){const m=location.hash.match(/^#\/p\/(.+)$/);detail(m[1]);scrollTo(0,y);barState();}};
-window.resetSections=()=>{S.open=null;save();render();};
+window.setOption=(k,v)=>{S[k]=v;save();apply();if(document.body.dataset.v==='p'){PEND=anchor();detail(curId);}};
+window.resetSections=()=>{S.open=null;save();if(curId&&document.body.dataset.v==='p'){PEND=anchor();detail(curId);}};
 apply();render();
 </script></body></html>
