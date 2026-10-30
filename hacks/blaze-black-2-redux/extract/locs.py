@@ -13,6 +13,9 @@ from common import H, RD, SPECIES, doc, drayano, report
 
 
 SEASON = re.compile(r' - (Spring|Summer|Autumn|Winter|Spring, Summer, Autumn|Spring/Summer/Autumn)$')
+# Areas with no encounter slot (AR ns: their encounters still show, the tracker has no entry for them). Aspertia City is
+# where you get the starter, so the starter is its encounter (the user, 2026-10-30); the Starter slot records it.
+NO_SLOT = {'Aspertia City'}
 FLOOR_AREAS = {
     'Relic Castle - Lower Floors': ('Room Left of Pots', 'Room Right of Pots', 'Furthest Room Right',
                                    'Furthest Room Left', 'Room with Pots', 'Volcarona Room'),
@@ -367,6 +370,9 @@ def build(data):
             pokemon['g'] = 0
         else:
             pokemon['g'] = 3
+    for area in areas:
+        if area['n'] in NO_SLOT:
+            area['ns'] = 1
     data['LOC'], data['AR'] = locations, areas
     order = list(range(len(areas)))
     for name, after in (('Floccesy Town', 'Route 19'), ('Liberty Garden', 'Castelia Gardens'),
