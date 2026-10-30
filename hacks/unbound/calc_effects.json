@@ -1,0 +1,93 @@
+{
+  "source": "CFRU (Skeli789/Complete-Fire-Red-Upgrade @ b637a278: src/Tables/battle_moves.c, strings/attack_descriptions.string, assembly/battle_scripts/general_attack_battle_scripts.s, src/battle_util.c) as Unbound's base; Unbound 2.1.1.1 in-game move descriptions (hacks/unbound/data.json MV.d) as the player-facing text. Where the two disagree the entry says so and the Gen 8 record is kept.",
+  "notes": [
+    "Shelter: Def +1 and Spe +1, not Def +2 (Gen 8). CFRU MOVE_SHELTER uses EFFECT_DEF_SPD_UP and its description says 'raise its Defense and its Speed' (CFRU strings/attack_descriptions.string @DESC_SHELTER); Unbound's text says 'raising its defensive stats' (CFRU battle_moves.c)",
+    "Aromatic Mist: ally-only move, no effect in the calc (the Gen 8 record put the Sp. Def boost on the foe because the pinned table maps Showdown's adjacentAlly to the opposing side). Unbound text: 'raises the Sp. Def stat of an ally Pokémon'; the calc has no ally target",
+    "Coaching: ally-only, no effect in the calc (same cause as Aromatic Mist). Unbound text: 'coaches its ally Pokémon, boosting their Attack and Defense stats'",
+    "Diamond Storm: user's Def +2 is a 50 % chance, not guaranteed (Gen 8 record applied it every use). Unbound text: 'may also sharply raise the user's Defense stat'; CFRU MOVE DEFENSE_UP_2_HIT secondaryEffectChance 50 (battle_moves.c)",
+    "Triple Arrows: foe's Def -1 is guaranteed (CFRU chance 100; Gen 8 record 50 %). CFRU description: 'arrows that raise the crit ratio and lower the foe's Defense' (no 'may'); Unbound text: 'also lowers the target's defensive stats'. Flinch 30 % kept",
+    "Bitter Malice: 20 % frostbite (CFRU FREEZE_HIT chance 20; description 'may inflict the foe with frostbite'). The pinned record's guaranteed Atk -1 is not this move's effect; a chance-only record applies nothing in the calc",
+    "Chance-only differences, no override (never applied by the calc): Barb Barrage poison 30 (CFRU) vs 50; Leaf Tornado accuracy 30 vs 50; Sandsear Storm burn 30 vs 20; Wildbolt Storm paralysis 30 vs 20; Bleakwind Storm frostbite 20 (CFRU) vs Spe -1 30",
+    "Blockers checked against CFRU src/battle_util.c (CanBeParalyzed: Electric immune, all gens; IsAffectedByPowderByDetails: Grass, Overcoat, Safety Goggles; CanBeGeneralStatused: Misty Terrain grounded; CanBePutToSleep: Electric Terrain grounded, Sweet Veil doubles; CanBeYawned): matches BLOCKERS in tools/calc/src/effects.js, so no rules change",
+    "Amounts kept at Gen 8 where CFRU's code differs from Unbound's text (see unsourced): Cotton Guard, Tail Glow, Shift Gear, Victory Dance, Toxic Thread, Rapid Spin, Rock Smash, Burning Jealousy"
+  ],
+  "moves": {
+    "Shelter": {"b": {"def": 1, "spe": 1}, "tg": "s"},
+    "Aromatic Mist": null,
+    "Coaching": null,
+    "Diamond Storm": {"sec": [{"c": 50, "sb": {"def": 2}}]},
+    "Triple Arrows": {"sec": [{"c": 100, "b": {"def": -1}}, {"c": 30, "v": "flinch"}]},
+    "Bitter Malice": {"sec": [{"c": 20, "st": "frz"}]}
+  },
+  "unsourced": [
+    "Cotton Guard: CFRU DEFENSE_UP_2 (+2) vs Gen 8 +3 and Unbound text 'drastically raises'; kept +3, unresolved",
+    "Tail Glow: CFRU SPECIAL_ATTACK_UP_2 (+2) vs Gen 8 +3 and text 'drastically raising'; kept +3, unresolved",
+    "Shift Gear: CFRU DRAGON_DANCE (Atk +1, Spe +1) vs Gen 8 Spe +2 and text 'sharply raising its Speed'; kept Gen 8",
+    "Victory Dance: CFRU code BULK_UP (Atk +1, Def +1); CFRU description says Atk, Def and Speed; Unbound text says offensive and defensive only; kept Gen 8 (Atk, Def, Spe +1). Its +50 % damage is not modelled",
+    "Toxic Thread: CFRU POISON only (no Spe -1); Unbound text and Gen 8 say Spe -1 too; kept Gen 8",
+    "Rapid Spin: Gen 8 record Spe +1 on hit; Unbound text is silent and CFRU RAPID_SPIN was not checked; kept Gen 8",
+    "Rock Smash: CFRU chance 100 vs Gen 8 50 and Unbound text 'may also lower'; kept 50 %",
+    "Burning Jealousy: CFRU burns foes whose stats rose this turn (conditional, not modelled); kept no effect",
+    "Extreme Evoboost: Z-move only; CFRU EXTREME_EVOBOOST raises all five stats by +2 (general_attack_battle_scripts.s ExtremeEvoboost_Atk); Z-move status effects are out of scope in plan calc-move-effects.md",
+    "Stoked Sparksurfer: Z-move only; CFRU guarantees paralysis (chance 100); Z-move effect, out of scope",
+    "Endless Edge, InfernalRage, Metal Bash, Vise Grip: no CFRU battle_moves.c row under that name; kept the Gen 8 record and did not check",
+    "Gear Up, Magnetic Flux, Rototiller, Flower Shield: ally-only or Grass-type field effects; no Gen 8 record, so the calc does nothing (unchanged); not modelled",
+    "Coil: CFRU omits the accuracy +1 that the Gen 8 record and Unbound text include; accuracy is not modelled, so no calc change"
+  ],
+  "fixtures": [
+    {
+      "title": "Shelter raises Def and Spe by 1 (CFRU DEF_SPD_UP)",
+      "move": "Shelter",
+      "kind": "effect",
+      "user": {"n": "Bulbasaur", "lv": 50},
+      "target": {"n": "Bulbasaur", "lv": 50},
+      "field": {},
+      "expect": {"atk.stg": [0, 0, 1, 0, 0, 1], "def.status": null}
+    },
+    {
+      "title": "Aromatic Mist does nothing in singles (ally-only; no foe Sp. Def boost)",
+      "move": "Aromatic Mist",
+      "kind": "effect",
+      "user": {"n": "Bulbasaur", "lv": 50},
+      "target": {"n": "Bulbasaur", "lv": 50},
+      "field": {},
+      "expect": {"atk.stg": null, "def.stg": null}
+    },
+    {
+      "title": "Coaching does nothing in singles (ally-only; no foe Atk / Def boost)",
+      "move": "Coaching",
+      "kind": "effect",
+      "user": {"n": "Bulbasaur", "lv": 50},
+      "target": {"n": "Bulbasaur", "lv": 50},
+      "field": {},
+      "expect": {"atk.stg": null, "def.stg": null}
+    },
+    {
+      "title": "Diamond Storm's user Def +2 is a 50 % chance, so it is not applied",
+      "move": "Diamond Storm",
+      "kind": "hit",
+      "user": {"n": "Bulbasaur", "lv": 50},
+      "target": {"n": "Bulbasaur", "lv": 50},
+      "field": {},
+      "expect": {"atk.stg": null}
+    },
+    {
+      "title": "Triple Arrows lowers the foe's Def by 1 on every hit (CFRU chance 100)",
+      "move": "Triple Arrows",
+      "kind": "hit",
+      "user": {"n": "Bulbasaur", "lv": 50},
+      "target": {"n": "Bulbasaur", "lv": 50},
+      "field": {},
+      "expect": {"def.stg": [0, 0, -1, 0, 0, 0]}
+    },
+    {
+      "title": "Bitter Malice frostbite is a 20 % chance, so the foe is not frozen",
+      "move": "Bitter Malice",
+      "kind": "hit",
+      "user": {"n": "Bulbasaur", "lv": 50},
+      "target": {"n": "Bulbasaur", "lv": 50},
+      "field": {},
+      "expect": {"def.status": null, "def.stg": null}
+    }
+  ]
+}
