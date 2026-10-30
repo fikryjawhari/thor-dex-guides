@@ -506,6 +506,8 @@ body.calc-route .cc .cl [data-tox]{width:18px}
 body.calc-route .cc .cl .mx{font-size:10px}
 body.calc-route .cc .cl .hpl{padding:0;width:15px;min-width:15px;font-size:12px}
 body.calc-route .cc .cl .dend{margin-left:auto;display:flex;align-items:center;gap:1px}
+/* Wide: the berry / hazard chip leads the turn-end group, so the residual stays put when the chip changes (narrow: order 10 below). */
+body.calc-route .cc .dend>.dberry{order:-1}
 body.calc-route .cc .cl .dtoxl{margin:0}
 body.calc-route .cc .cl .dturn{margin:0;min-width:0;min-height:18px;height:18px;padding:0 2px;font:700 10px/18px system-ui}
 body.calc-route .dturn.dn,body.calc-route .dqp .dn{color:#ff7b6b}
