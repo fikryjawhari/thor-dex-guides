@@ -139,7 +139,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await closeLog();
     assert.equal(await hp(page),max-loss,'one tap: Rocks and two Spikes layers');
     assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
-    assert.equal(await page.value('CALC.mon("mine").stg[4]'),web?speed-1:speed,'Web lowers Speed by one stage');
+    assert.equal(await page.value('(CALC.mon("mine").stg||[])[4]||0'),web?speed-1:speed,'Web lowers Speed by one stage');
     assert.equal(await page.count(chip),0,'gone once tapped');
     await page.value('CALC.render()');
     assert.equal(await hp(page),max-loss,'applied once');
