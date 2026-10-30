@@ -1,0 +1,37 @@
+{
+ "source": "Photonic Sun 2.38 Rebalanced: Move Changes.pdf (hacks/photonic-sun/.src; the same change lines are in data.json MV.e: \"now boosts Speed\", \"Now harshly lowers the target's Speed, Defense, and Special Defense stats, as well as poisoning them\"). Generation 7 profile.",
+ "notes": [
+  "Rapid Spin: the user's Speed +1 on every hit (doc: \"Power 20 => 50, now boosts Speed\"; no chance given, so guaranteed)",
+  "Toxic Thread: lowers the target's Speed, Defense and Special Defense by two stages each and poisons it (doc: \"Now harshly lowers the target's Speed, Defense, and Special Defense stats, as well as poisoning them\"); \"harshly\" is the game's -2 wording, so -2 each, not the vanilla Speed -1 only",
+  "Checked, no override: Curse (table already Atk +1 Def +1 Spe -1 for non-Ghost); Steel Wing, Twineedle, Water Pulse, Rock Climb, Chatter, Mud Bomb, Octazooka, Freeze-Dry, Force Palm, Cross Poison (the changed effects are chances, not 100 %, or accuracy / PP only); Dark Void (accuracy only); Mystical Fire (table already Sp. Atk -1 100 %); Fell Stinger not in Photonic's list; Drill Peck and Self-Destruct / Explosion (crit only, not an effect the table holds); Parabolic Charge / Horn Leech / Draining Kiss (drain changes only)",
+  "Not modelled, not a change: Rototiller, Flower Shield, Magnetic Flux and Gear Up (stat rises on Grass types / allies with Plus or Minus, a target set the calc has no kind for); Defog (lowers evasion, which is not stored; screen removal is field); Power Split / Guard Split / Speed Swap (stat average / swap, no stage change); Extreme Evoboost (Z-move status, out of scope); Spirit Shackle keeps its trap kind"
+ ],
+ "moves": {
+  "Rapid Spin": {"fl": ["contact"], "sec": [{"c": 100, "sb": {"spe": 1}}], "n": "Photonic Move Changes.pdf: Rapid Spin now boosts Speed"},
+  "Toxic Thread": {"b": {"spe": -2, "def": -2, "spd": -2}, "fl": ["reflectable"], "st": "psn", "tg": "o", "n": "Photonic Move Changes.pdf: Toxic Thread harshly lowers Speed, Defense and Special Defense, and poisons"}
+ },
+ "unsourced": [
+  "Rototiller, Flower Shield, Magnetic Flux, Gear Up: stat rises by target type / ally ability, no kind in the table (the shared table gap, not a Photonic change)",
+  "Defog: lowers the target's evasion only (not stored); the screen removal is field state"
+ ],
+ "fixtures": [
+  {
+   "title": "Rapid Spin: the user's Speed +1 after the hit (doc: now boosts Speed)",
+   "move": "Rapid Spin",
+   "kind": "hit",
+   "user": {"n": "Gyarados", "lv": 50},
+   "target": {"n": "Snorlax", "lv": 50},
+   "field": {},
+   "expect": {"atk.stg": [0, 0, 0, 0, 0, 1]}
+  },
+  {
+   "title": "Toxic Thread: foe Speed, Defense and Special Defense -2 and poisoned",
+   "move": "Toxic Thread",
+   "kind": "effect",
+   "user": {"n": "Ariados", "lv": 50},
+   "target": {"n": "Snorlax", "lv": 50},
+   "field": {},
+   "expect": {"def.stg": [0, 0, -2, 0, -2, -2], "def.status": "psn"}
+  }
+ ]
+}

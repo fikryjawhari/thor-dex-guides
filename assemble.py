@@ -152,6 +152,13 @@ def build(hid):
         if not h['cfg'].get('ls', {}).get('dmg'):
             sys.exit(f'{hid}: cfg.calc needs its own storage key cfg.ls.dmg')
         data['cfg']['calc'] = calc_profile(h['cfg']['calc'], data)
+        # The hack's own move-effect differences (tools/calc/README.md → Move effects): the engine reads
+        # over.effects {moves, rules}; fixtures and notes stay in the file (effects_check.mjs).
+        effects_path = os.path.join(ROOT, 'hacks', hid, 'calc_effects.json')
+        if os.path.exists(effects_path):
+            own_fx = json.loads(read('hacks', hid, 'calc_effects.json'))
+            over = data['cfg']['calc'].setdefault('over', {})
+            over['effects'] = {k: own_fx[k] for k in ('moves', 'rules') if own_fx.get(k)}
         cjs, ccss = calc_parts(data['cfg']['calc'])
         js, css = js + '\n' + cjs, css + '\n' + ccss
     spr, missing, shared = {}, [], 0

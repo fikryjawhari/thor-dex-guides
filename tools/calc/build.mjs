@@ -53,6 +53,12 @@ for (let generation = 4; generation <= 9; generation++) {
 // Gen 7 Z powers that are not the plain band for the move's power (profile `zmove`; adapter `zPower`).
 const zBand = power => power <= 55 ? 100 : power <= 65 ? 120 : power <= 75 ? 140 : power <= 85 ? 160 : power <= 95 ? 175
   : power <= 100 ? 180 : power <= 110 ? 185 : power <= 125 ? 190 : power <= 130 ? 195 : 200;
+// Move effects (tools/calc/move_effects.mjs from Showdown, pinned): [[first generation, record], ...] by move id.
+records.fx = {};
+const effectSource = JSON.parse(await readFile(new URL('./move-effects.json', import.meta.url), 'utf8'));
+for (const [name, entries] of Object.entries(effectSource.moves)) {
+  records.fx[name.toLowerCase().replace(/[^a-z0-9]/g, '')] = entries;
+}
 records.zpow = {};
 for (const move of Generations.get(7).moves) {
   if (move.zMove?.basePower && move.zMove.basePower !== zBand(move.basePower)) records.zpow[move.id] = move.zMove.basePower;

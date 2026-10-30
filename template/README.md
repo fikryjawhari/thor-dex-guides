@@ -218,6 +218,19 @@ Scenarios: `calc-retest`, `calc-moves`, `calc-controls`, `calc-state`, `calc-fie
 share one total/H1/H2/etc. inspection button; ordinary variable-hit moves cycle through legal counts plus a one-hit
 inspection. Loaded Dice restricts standard 2-5-hit choices to 1/4/5; Skill Link to 1/max. Loaded Dice makes Population Bomb a 1 / 4-10 cycle
 (default 10, its fixed ×10 without the dice); Ash-Greninja's Water Shuriken is a fixed ×3 (the engine gives it power 20). Details retain per-hit rolls.
+**Move effects** (every guide; engine: `tools/calc/README.md` → Move effects): a status move's "—" is a button
+showing what it does now, for the side that owns the row (a foe's Swords Dance raises the foe): `Atk+2`,
+`SpA SpD+1`, `+1 ×3`, `+2 −1` (Shell Smash), `Def−1`, `Par` / `Brn` / `Psn` / `Tox` / `Slp` / `Frz`, `Conf`,
+green for raises, red for drops and status; `Fails` (muted, reason in the title, a tap logs it and changes nothing)
+when the game's move would fail (immune type, Limber, Mist, +6, already statused, ...). An HP part joins the same
+button (`Atk+6 −50` Belly Drum). The button is the size of a damage endpoint, so closed status rows keep a damaging
+row's height (also the HP chips, which were 4 px taller). Moves with a Field / Edit switch keep it; switching it on
+also applies the move's other parts (Charge's SpD +1). Damaging moves get no new control: their guaranteed effects
+(Close Combat's drops, Nuzzle's paralysis, Knock Off, a 50 % effect under Serene Grace) apply with the damage
+endpoints, the custom Damage Apply and the damaging Use; the opened row says `After: …`. Chance effects never apply.
+Not stored or not tracked (logged): accuracy / evasion, confusion and other volatiles, ability / type changes and item
+swaps (set them in Edit), switching. Mist is a side state (`atkMist` / `defMist`, beside Safeguard). No new saved
+state otherwise: stages, status, `used` and HP are the existing per-Pokémon battle state. Scenario: `calc-effects`.
 **Field**: Singles/Doubles, Weather and Terrain are in the fight bar; Field below it (layout: Field layout). Stored `atk*` means Player and `def*` means Foe; the page remaps inputs for foe attacks. Old
 attacker-relative state migrates once, using its saved direction. Focus Energy is offered on both sides in every
 profile. Weather / terrain layers are manual (this fight), then the most recent entering ability setter, then

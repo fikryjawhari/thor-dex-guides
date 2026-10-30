@@ -1,0 +1,44 @@
+{
+ "source": "Blaze Black 2 Redux 1.4.1: Move Changes.txt (hacks/blaze-black-2-redux/.src, the Redux doc; the same lines are in data.json MV.h); Psyshield Bash checked against Move Changes.txt and the repo's move table (hzla/bb2redux1-4.json lists it as the Smelling Salts replacement). Generation 5 profile.",
+ "notes": [
+  "Rock Smash: secondary Defense -1 is 100 % (doc: \"50% Def -1 -> 100% Def -1\"), was 50 % (Move Changes.txt, Rock Smash)",
+  "String Shot: Speed -2 instead of -1 (doc: \"Speed -1 -> Speed -2\", Move Changes.txt, String Shot)",
+  "Psyshield Bash (replaces Smelling Salts): raises the user's Defense and Special Defense by one stage, guaranteed (doc: \"Rasies the user's Defense and Special Defense by one stage.\", Move Changes.txt, Psyshield Bash)",
+  "Checked, no override: Headlong Rush (table already drops Def and SpD -1, doc \"like Close Combat\"); Howl (table is user-only Attack +1, doc \"Raises only Users Attack\"); Acid Armor / Barrier / Swords Dance / Charm / Swagger / Thunder Wave / Growth (sun 2) match the doc or only change PP / power / accuracy; Lunge, Fire Lash, Breaking Swipe, Mystical Fire, Moonblast, Power-Up Punch, Nuzzle, Play Rough, Accelerock, Infestation, Smart Strike (replacements) keep their table effects; Crabhammer, Power Gem, Strength, Raging Fury, Scald, Poison Fang, Leaf Tornado, Octazooka: the new or changed effects are chances (never applied) or accuracy / PP only; Raging Fury's self-confusion is a volatile on the user (not modelled)"
+ ],
+ "moves": {
+  "Rock Smash": {"fl": ["contact"], "sec": [{"b": {"def": -1}, "c": 100}], "n": "BB2R Move Changes.txt: Rock Smash 50% Def -1 -> 100% Def -1"},
+  "String Shot": {"b": {"spe": -2}, "fl": ["reflectable"], "tg": "o", "n": "BB2R Move Changes.txt: String Shot Speed -1 -> Speed -2"},
+  "Psyshield Bash": {"fl": ["contact"], "sec": [{"c": 100, "sb": {"def": 1, "spd": 1}}], "n": "BB2R Move Changes.txt: Psyshield Bash raises user's Defense and Special Defense by one stage"}
+ },
+ "unsourced": [],
+ "fixtures": [
+  {
+   "title": "Rock Smash: Defense -1 on the target every hit (doc 100 %)",
+   "move": "Rock Smash",
+   "kind": "hit",
+   "user": {"n": "Machamp", "lv": 50},
+   "target": {"n": "Snorlax", "lv": 50},
+   "field": {},
+   "expect": {"def.stg": [0, 0, -1, 0, 0, 0]}
+  },
+  {
+   "title": "String Shot: Speed -2 on the foe",
+   "move": "String Shot",
+   "kind": "effect",
+   "user": {"n": "Ariados", "lv": 50},
+   "target": {"n": "Snorlax", "lv": 50},
+   "field": {},
+   "expect": {"def.stg": [0, 0, 0, 0, 0, -2]}
+  },
+  {
+   "title": "Psyshield Bash: user's Defense and Special Defense +1",
+   "move": "Psyshield Bash",
+   "kind": "hit",
+   "user": {"n": "Machamp", "lv": 50},
+   "target": {"n": "Snorlax", "lv": 50},
+   "field": {},
+   "expect": {"atk.stg": [0, 0, 1, 0, 1, 0]}
+  }
+ ]
+}

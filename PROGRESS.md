@@ -65,10 +65,15 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
    4. **Mechanics check** (long-term, the user): each guide's notes.md → Damage calc → In-game tests. Hardlove has no
       independent oracle, so its calc stays provisional until then. The source wins over the docs.
    5. **Footer credits** (item 3), hzla's calc among them.
-   6. **Status moves on the move cards** (the user, 2026-10-30; a later session, every guide): every status move's
-      effect usable from its move row, so a battle's changes apply from the move view. Today stat-stage moves (Leer,
-      Withdraw, Swords Dance ...) show "—" with no Use; only damage, self-HP and field-setting moves act. Applies to
-      boss sets and Unbound's guessed sets alike.
+   6. **Move effects** (built 2026-10-30 on `worktree-calc-move-effects`, not merged; spec `plans/calc-move-effects.md`,
+      decisions `template/README.md` → Move effects, engine `tools/calc/README.md` → Move effects): status moves have
+      an effect button (`Atk+2`, `Def−1`, `Par`, `Fails`) for the side that owns the row; damaging moves' guaranteed
+      effects come with the damage taps; one resolver (`tools/calc/src/effects.js`) with a generation-aware blocker
+      table; the table from Showdown (`tools/calc/move-effects.json`), per-hack differences in
+      `hacks/<hack>/calc_effects.json`. Open: in-game checks (the user), and the deliberate gaps: accuracy / evasion,
+      confusion and other volatiles, ability / type changes and item swaps are logged, not stored; switching.
+      Checked 2026-10-30 (main 5cab574 merged in): npm test, gate check 243/255 (the 12 fails are the DOM sweeps' `#/calc`,
+      whose only difference is the new Mist toggles), calc-effects on all six guides. Ready to merge.
    Gen 5 save reading waits for the Blaze Black 2 Redux guide; the other families: `template/calc/readers/README.md`.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's

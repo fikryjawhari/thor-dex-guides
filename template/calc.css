@@ -484,6 +484,8 @@ body.calc-route .mr .rcol .dcategory{font-size:10px;padding:0}
 .mr.st.hu .mm{opacity:1;cursor:pointer}.mr.st.hu .mv{opacity:.55}
 .mr.st .hp:has(.hu){min-width:max-content;flex:none}.mr.st .hp .dturn.hu{margin:0;min-height:20px}
 .dturn.hu.dn{color:#ff7b6b}
+/* Move effects: a status move's button that would fail now (the reason in its title; a tap logs it). */
+body.calc-route .dturn.dfx.na{color:var(--mut);font-weight:400}
 .dstock{display:flex;align-items:center;gap:6px;font-size:11px}.dstock select{width:44px}
 .hx{display:flex;gap:6px;align-items:end;flex-wrap:wrap}.hx label{display:flex;flex-direction:column;font-size:11px}
 .hx input{width:52px}.hxr{font-size:11px;color:var(--mut)}
@@ -632,7 +634,7 @@ body.calc-route .cc .l1 .ddl{line-height:1.6}
  body.calc-route .cc.offteam .cn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
  body.calc-route .cc.offteam::after{content:'';order:1;flex:0 0 100%;height:0}
  body.calc-route .cc::before{content:'';order:7;flex:0 0 100%;height:0}
- body.calc-route .cc .cl>span:first-child,body.calc-route .cc [data-lv]{display:none}
+ body.calc-route .cc .cl>span:first-child,body.calc-route .cc [data-lv],body.calc-route .cc .dsl{display:none}
  body.calc-route .cc .hpl,body.calc-route .cc [data-hp],body.calc-route .cc .mx{order:2}
  body.calc-route .cc .stb{order:3;margin-left:auto;font-size:0;width:auto;min-width:20px;height:auto;min-height:18px;padding:0}
  body.calc-route .cc>.dhpbar{order:4;flex-basis:100%;margin:0}
@@ -663,7 +665,7 @@ body.calc-route .cc .l1 .ddl{line-height:1.6}
  body.calc-route .cc .l1 .sp i{font-size:12px}
  body.calc-route .cc .dend>[data-tox]{width:max(17px,1.55em);height:auto;min-height:18px;font-size:11px;padding:0}
  body.calc-route .cc .dend>.dtoxl{margin:0 -1px 0 auto;padding:0;font-size:10px;position:static}
- body.calc-route .cc:has(.ed) .cl>span:first-child,body.calc-route .cc:has(.ed) [data-lv]{display:inline-flex;order:2;align-items:center}
+ body.calc-route .cc:has(.ed) .cl>span:first-child,body.calc-route .cc:has(.ed) [data-lv],body.calc-route .cc:has(.ed) .dsl{display:inline-flex;order:2;align-items:center}
  body.calc-route .cc:has(.ed) [data-lv]{width:30px;height:20px;min-height:20px;font-size:12px;margin-right:4px}
 }
 /* My team row (calc-team): in-team dot on box cells, drag and drop, HP bar and fainted grey on every team cell. */
@@ -688,3 +690,5 @@ body.calc-route .ko>.spr{filter:grayscale(1)}
 /* D2 assumed values (moves unknown): a ? after the move name, IV / EV label; nature in italics */
 .mr.guess .mv::after,.dguess:not(input)::after{content:' ?';color:var(--mut)}
 .dentry.dguess{font-style:italic}
+/* Status-move buttons (effects, HP chips) are as tall as the damage endpoints, so closed status rows keep the height of a damaging row. */
+body.calc-route .dres .mr.st .hp .dturn.hu{height:auto;min-height:15px;line-height:1.15;box-sizing:border-box;border:1px solid var(--line);border-radius:4px;padding:0 3px}
