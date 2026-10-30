@@ -15,9 +15,9 @@
   "capLast": false,
   "walkAreaNote": false,
   "trw": [
-   "boss",
-   "bosses",
-   "boss trainers"
+   "trainer",
+   "trainers",
+   "trainers"
   ],
   "calc": {
    "base": "cfru",
