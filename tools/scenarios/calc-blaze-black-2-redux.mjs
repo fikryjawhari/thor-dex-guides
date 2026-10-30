@@ -49,18 +49,26 @@ const checks = [{
     assert.notDeepEqual(foe.stats, foe.atL, 'not at the shown level');
     assert.equal(foe.toss, bug.sl, 'foe Seismic Toss deals the stat level');
     assert.equal(foe.mineToss, 50, 'player Seismic Toss deals its own level');
-    const marker = await page.value(`(()=>{const el=document.querySelector('.dsl');if(!el)return null;
+    // The marker: in the card from 480 px; under 480 the compact card hides it (with the level box) and the editor
+    // shows it.
+    const markerAt = `(()=>{const el=document.querySelector('.dsl');if(!el)return null;
       const box=el.getBoundingClientRect(),card=el.closest('.cc').getBoundingClientRect(),row=el.closest('.cl');
-      return {text:el.textContent,n:document.querySelectorAll('.dsl').length,inside:box.left>=card.left-0.5&&box.right<=card.right+0.5,rowFits:row.scrollWidth<=row.clientWidth+1};})()`);
-    assert.ok(marker, 'level-bug marker shown');
+      return {text:el.textContent,n:document.querySelectorAll('.dsl').length,shown:box.width>0,inside:box.left>=card.left-0.5&&box.right<=card.right+0.5,rowFits:row.scrollWidth<=row.clientWidth+1};})()`;
+    const compact = await page.value('innerWidth<480');
+    let marker = await page.value(markerAt);
+    assert.ok(marker, 'level-bug marker rendered');
     assert.equal(marker.n, 1, 'only the foe has the marker');
     assert.equal(marker.text, 's' + bug.sl);
-    assert.ok(marker.inside, 'marker inside its card');
-    assert.ok(marker.rowFits, 'level row does not overflow');
+    assert.equal(marker.shown, !compact, compact ? 'hidden on the compact card' : 'shown on the card');
 
     // EVless: the foe editor has no EV row.
     await page.value(`(()=>{const b=document.querySelector('.dsl').closest('.cc').querySelector('.stb');if(b.getAttribute('aria-expanded')!=='true')b.click();})()`);
+    await page.settle();
     assert.equal(await page.count('[data-e="ev"]'), 0, 'no EV row');
+    marker = await page.value(markerAt);
+    assert.ok(marker.shown, 'marker shown with the editor open');
+    assert.ok(marker.inside, 'marker inside its card');
+    assert.ok(marker.rowFits, 'level row does not overflow');
 
     // Gen V field: Hail (no Snow), no terrain; Doubles adds its controls.
     const weather = entries.find(entry => entry.k === 'weather');
@@ -72,6 +80,32 @@ const checks = [{
     assert.deepEqual(await page.value(fieldKeys), entries.filter(entry => !entry.doubles).map(entry => entry.k).sort());
     await page.tap('[data-f=gameType][data-value=Doubles]');
     assert.deepEqual(await page.value(fieldKeys), entries.map(entry => entry.k).sort());
+  },
+}, {
+  id: 'level-bug card lines',
+  title: "a level-bug foe's card (Hugh's Lv 50 Samurott, stats at 47) stays within three lines",
+  sizes: [[260, 316], [480, 392]],
+  run: async page => {
+    await page.route('#/calc');
+    const entered = await page.value(`(()=>{
+      CALC.use(byId.snorlax);
+      const mon=CALC.state().custom[0];mon.l=50;mon.m=[M.indexOf('Tackle')];
+      const ok=x=>x.id==='samurott'&&Number.isFinite(x.sl)&&x.sl<x.l;
+      const trainer=TRS.find(t=>t.n==='Hugh'&&t.p.some(ok));
+      const slot=trainer.p.findIndex(ok);
+      CALC.enter(trainer.k,slot);CALC.render();
+      return {k:trainer.k,l:trainer.p[slot].l,sl:trainer.p[slot].sl};
+    })()`);
+    assert.ok(entered.sl < entered.l, 'a level-bug foe');
+    await page.settle();
+    // Lines of the closed foe card: its visible leaf boxes (the HP bar is not a line), grouped by overlap.
+    const lines = await page.value(`(()=>{const card=[...document.querySelectorAll('.dmatch>.cc')].find(c=>c.querySelector('.dsl'));
+      const boxes=[],walk=el=>{for(const child of el.children){if(child.matches('.dhpbar,.ed'))continue;const style=getComputedStyle(child);if(style.display==='none')continue;
+        const kids=[...child.children].some(k=>getComputedStyle(k).display!=='none');const r=child.getBoundingClientRect();
+        if(style.display==='contents'||kids&&!child.matches('button,label'))walk(child);else if(r.height&&r.width)boxes.push(r);}};
+      walk(card);boxes.sort((a,b)=>a.top-b.top);let lines=0,bottom=-1e9;
+      for(const r of boxes){if(r.top>=bottom-2){lines++;bottom=r.bottom;}else bottom=Math.max(bottom,r.bottom);}return lines;})()`);
+    assert.ok(lines <= 3, `foe card takes ${lines} lines (Hugh ${entered.k}, Lv ${entered.l} stats ${entered.sl})`);
   },
 }];
 await runChecks({name: 'calc-blaze-black-2-redux', file, checks});
