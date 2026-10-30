@@ -113,7 +113,9 @@ export function trainerRoles(data) {
   const list = data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr));
   const known = new Set(data.P.map(entry => String(entry.id)));
   // singles only: a double / triple / multi battle switches the calc's layout (tags differ by guide)
-  const singles = trainer => !(trainer.tags || []).some(tag => /double|triple|multi|2on2/i.test(tag));
+  // (or the doubles evidence of the field records: Unbound's tag battles, calc-doubles)
+  const singles = trainer => !(trainer.tags || []).some(tag => /double|triple|multi|2on2/i.test(tag))
+    && !(trainer.field || []).some(record => !record.label && (record.effects || []).some(effect => effect.kind === 'gameType' && effect.value === 'Doubles'));
   const usable = trainer => singles(trainer) && trainer.p.length > 0 && trainer.p.every(mon => known.has(String(mon.id)) && mon.m?.length);
   const first = list[0];
   const find = test => list.find(trainer => trainer !== first && usable(trainer) && test(trainer)) ?? null;

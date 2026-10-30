@@ -1,6 +1,6 @@
 // Calc Z-moves (profile zmove: a Z toggle on each damaging row's % line) and Totem auras (a trainer mon's `au` becomes
-// its stat stages, with an "Aura" mark while they are unchanged). Every viewer size, normal and dvkb. Photonic only
-// (the one guide with zmove and Totems); others skip.
+// its stat stages, with an "Aura" mark while they are unchanged). Every viewer size, normal and dvkb. Guides with zmove:
+// Photonic (Z against its Totem, and the Totem checks) and Unbound (Z against its first boss with moves, no Totems).
 import assert from 'node:assert/strict';
 import {guideArg, prepareGuide, readGuide, runChecks} from '../calc_check_lib.mjs';
 
@@ -15,10 +15,13 @@ if (!guide.cfg.calc?.zmove) {
   process.exit(0);
 }
 const sizes = [[260, 316], [480, 392], [537, 424], [832, 424], [832, 316]];
-const TOTEM = 'totem-gumshoos';
+const TRAINERS = guide.TR.g.flatMap(group => group.sec.flatMap(section => section.tr));
+const TOTEM = TRAINERS.some(trainer => trainer.k === 'totem-gumshoos' && trainer.p[0]?.au) ? 'totem-gumshoos' : null;
+// The Z foe: the Totem, or the first singles trainer whose lead has listed moves.
+const FOE = TOTEM || TRAINERS.find(trainer => trainer.p[0]?.m?.length && !(trainer.tags || []).some(tag => /double|multi|tag/i.test(tag)))?.k;
 const rows = `[...document.querySelectorAll('.dres:not(.na) .mr:not(.em)')]`;
 
-// A fresh calc: Decidueye (New Pokémon) attacking Totem Gumshoos (Def +1 aura).
+// A fresh calc: Decidueye (New Pokémon) attacking Totem Gumshoos (Def +1 aura) or the guide's Z foe.
 async function setup(page) {
   await page.route('#/calc');
   await page.value(`(()=>{localStorage.removeItem(LS.dmg);})()`);
@@ -27,7 +30,7 @@ async function setup(page) {
   await page.tap('[data-a="newmon"]');
   await page.typeSearch('Decidueye');
   await page.tap('.mrow[data-i="0"]');
-  await page.value(`CALC.enter(${JSON.stringify(TOTEM)},0)`);
+  await page.value(`CALC.enter(${JSON.stringify(FOE)},0)`);
   // The narrow card may go tight after injecting: re-measure (template: fitCards).
   await page.value('CALC.fit()');
   await page.settle();
@@ -96,4 +99,4 @@ const checks = [{
   },
 }];
 
-await runChecks({name: 'calc-zmove', file, checks});
+await runChecks({name: 'calc-zmove', file, checks: TOTEM ? checks : checks.filter(check => check.id !== 'totem aura')});

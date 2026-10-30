@@ -164,8 +164,12 @@ const checks = [
       assert.equal(await shown(), `${Math.floor(base * 1.5)}↑`, '− once: stage +1, ×1.5');
       await page.tap('.cc[data-s="mine"] .ed .z[data-a="sreset"]');
       assert.equal(await shown(), String(base), '0 clears the stages');
-      assert.equal(await page.count('.dmatch .cc[data-s="mine"] .sp i.f'), 1, 'the faster side is accent-coloured');
-      assert.equal(await page.count('.dmatch .cc[data-s="foe"] .sp i.f'), 0, 'and the slower side is not');
+      // The faster side is whichever shows more Spe (the guide's save and foe decide which; Unbound's foe is faster).
+      const foeShown = Number((await page.value(`document.querySelector('.dmatch .cc[data-s="foe"] .sp i').textContent`)).replace(/[^0-9]/g, ''));
+      assert.notEqual(foeShown, base, 'the two sides differ in Spe');
+      const [fast, slow] = base > foeShown ? ['mine', 'foe'] : ['foe', 'mine'];
+      assert.equal(await page.count(`.dmatch .cc[data-s="${fast}"] .sp i.f`), 1, `the faster side (${fast}) is accent-coloured`);
+      assert.equal(await page.count(`.dmatch .cc[data-s="${slow}"] .sp i.f`), 0, 'and the slower side is not');
       await page.value(`(()=>{const s=document.querySelector('.cc[data-s="mine"] select[data-e="status"]');s.value='par';s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
       await page.settle();
       const paralysed = await shown();
