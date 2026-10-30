@@ -742,8 +742,9 @@ const guessT=t=>CF.calc?.assumedSets==='level-up'&&(t.tags||[]).includes('Moves 
 function monCard(x,cap,sel,trainerKey,index,guess){const p=byId[x.id];const lv=monLv(x,cap);
  const gm=guess&&!(x.m||[]).length&&Number.isFinite(lv)?guessMoves(x.id,lv):null;
  // No speed when the source gives no IVs, or no EVs where they count (unknown), except with assumed sets (Unbound D2):
- // then the calc's guess (31 IVs, 0 EVs, neutral nature) gives it, marked " ?" like the guessed moves.
- const sg=CF.calc?.assumedSets==='level-up'&&(!x.iv||EVS&&!MGM&&x.ev?.[5]==null);
+ // then the calc's guess (31 IVs, 0 EVs, neutral nature) gives it, marked " ?" like the guessed moves (also when only
+// the nature is unknown: the calc marks the same Pokemon's Spe).
+ const sg=CF.calc?.assumedSets==='level-up'&&(!x.iv||EVS&&!MGM&&x.ev?.[5]==null||!x.na);
  const iv5=x.iv?x.iv[5]:sg?31:null,spe=EVS&&!MGM?x.ev?.[5]??(sg?0:null):0;const main=p&&lv&&iv5!=null&&spe!=null?stat(p.s[5],5,iv5,spe,x.sl??lv,x.na):null;
  const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b>${sg?'<span class="mut"> ?</span>':''}</span>${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
  const lvs=x.l!=null||x.r==null?`Lv ${x.l??'?'}`:`Lv ${lv||'?'} <span class="mut small">cap${x.r?(x.r>0?'+':'−')+Math.abs(x.r):''}</span>`;
