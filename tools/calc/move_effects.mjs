@@ -277,6 +277,8 @@ function recordFor(tables, gen, id) {
   if (!eff) return {};
   const { entry, srcOf } = eff;
   if (isSkipped(entry)) return {};
+  // Ally-only moves (Coaching, Aromatic Mist, Helping Hand ...): the calc has no ally, and in singles they fail.
+  if (entry.target === 'adjacentAlly') return {};
   const r = declarative(entry);
   const tgOf = (e) => (SELF_TARGETS.has(e.target) ? 's' : 'o');
   let tgOverride = null;
