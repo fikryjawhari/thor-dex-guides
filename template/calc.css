@@ -532,6 +532,9 @@ body.calc-route .ft .l1t em{flex:0 10 auto;margin-left:0}body.calc-route .ft .l1
 
 body.calc-route .dres .mr>.mm{width:100%;min-width:0;padding:1px 5px;box-sizing:border-box}
 body.calc-route .dres .mr .r1{height:17px;line-height:17px;align-items:center;gap:3px}
+/* Safari counts the move name's full text in the line's minimum width (Chrome counts min-width:0): without these the
+   name never truncates there and the right-hand button (Par, Enc, Subst -62...) is pushed past the row and the page. */
+body.calc-route .dres .mr .mm,body.calc-route .dres .mr .r1,body.calc-route .dres .mr .r2{min-width:0}
 body.calc-route .dres .mr .r2{height:15px;min-height:0;margin:0;line-height:15px;align-items:center;gap:3px;font-size:9px}
 body.calc-route .dres .mr .hp{display:flex;align-items:center;gap:1px;flex:none;font-size:11px}
 body.calc-route .dres .dendpoint{border:1px solid var(--line);border-radius:4px;padding:0 2px;background:var(--panel2);color:var(--fg);font:700 10px/14px system-ui;cursor:pointer;touch-action:manipulation}
