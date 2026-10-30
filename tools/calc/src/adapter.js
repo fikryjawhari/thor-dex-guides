@@ -8,6 +8,7 @@ import {calculateSMSSSV} from '@smogon/calc/src/mechanics/gen789';
 import {getModifiedStat, getFinalSpeed, isGrounded, checkItem, checkForecast, checkAirLock} from '@smogon/calc/src/mechanics/util';
 import {applyPhase, prepareRules} from './rules.js';
 import {speciesName, weightNames} from './names.js';
+import {createEffects, describe, SWITCH_VOLATILES} from './effects.js';
 
 const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 const toID = value => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -21,6 +22,7 @@ let speciesNames;
 let koCache;
 let stockMoves;
 let dataCrit;
+let effectTable;
 
 function mergeRecord(base, override) {
   const result = {...base};
@@ -136,7 +138,34 @@ function init(guide, configuration) {
   };
   // A target in the state a move punishes (`def.vol`, Gen 5+): double damage, ahead of the hack's own final rules.
   (generation.guideRules.finalMods ||= []).unshift({phase: 'finalMods', when: {ref: 'state.volDouble'}, append: [8192]});
+  effectTable = resolveEffects();
 }
+
+// Move effects (tools/calc/README.md → Move effects): the generated table's record for this generation (the last
+// entry whose first generation is at most profile.gen), then the hack's own `over.effects.moves` (null = none).
+function resolveEffects() {
+  const table = {};
+  for (const [id, entries] of Object.entries(catalog.fx || {})) {
+    let record = null;
+    for (const [from, entry] of entries) if (from <= profile.gen) record = entry;
+    if (record) table[id] = record;
+  }
+  for (const [name, record] of Object.entries(profile.over?.effects?.moves || {})) {
+    if (record === null) delete table[toID(name)];
+    else table[toID(name)] = record;
+  }
+  return table;
+}
+
+function effectRecord(name) {
+  if (!name) return null;
+  const own = profile.over?.effects?.moves || {};
+  if (Object.prototype.hasOwnProperty.call(own, name)) return own[name];
+  const index = data.M.indexOf(name);
+  const alias = effectName('moves', name, !!data.MV[index]?.x);
+  return effectTable[toID(name)] || (alias ? effectTable[toID(alias)] : null) || null;
+}
+
 
 function pokemon(set) {
   const entry = speciesByID.get(String(set.id));
@@ -766,7 +795,26 @@ function actionState(set, values, side) {
     stages[index] = Math.max(-6, Math.min(6, stages[index] + by));
     update.stg = [...stages];
   };
-  return {mon, update, logs, change, consume, persist};
+  // Move effects: an absolute stage (the input stages move by the same delta), a status, an item lost to a move.
+  const setStage = (stat, value) => {
+    const index = statNames.indexOf(stat);
+    stages[index] = Math.max(-6, Math.min(6, stages[index] + value - mon.boosts[stat]));
+    mon.boosts[stat] = value;
+    update.stg = [...stages];
+  };
+  const setStatus = value => {
+    update.status = value;
+    state.st = value;
+    mon.status = value;
+  };
+  const lose = () => {
+    update.used = true;
+    mon.item = '';
+    mon.disabledItem = undefined;
+    if (mon.hasAbility('Unburden')) mon.abilityOn = true;
+  };
+  const state = {mon, update, logs, change, consume, persist, set: setStage, setStatus, lose, st: set.st || '', volatiles: new Set()};
+  return state;
 }
 
 function applyBerry(state, field, other, hp, hit) {
@@ -960,6 +1008,17 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
       const stat = STAGES.reduce((best, stat) => user.mon.rawStats[stat] > user.mon.rawStats[best] ? stat : best, 'atk');
       user.change(stat, 1, ability);
     }
+  }
+  // The move's own effects after the damage (secondaries, self drops, item removal): the same resolver as the
+  // status-move buttons. Not for an exact amount without reactions (the You / Dealt Apply).
+  const record = exact ? null : effectRecord(data.M[slot.mv]);
+  if (record && (record.sb || record.sec || record.k)) {
+    target.mon.originalCurHP = current;
+    effectChance = fieldEffects(atk, values, 'atk').secondaryMultiplier;
+    const out = effects.resolve({name: data.M[slot.mv], record, user, target, field, values: actionField, phase: 'after',
+      hit: {landed: dealt > 0 || !!result?.bust, ko: def.hp !== 0 && current === 0 && dealt > 0}, moveType: type});
+    output.log.push(...out.log);
+    if (out.parts.length) output.effects = out.parts;
   }
   target.update.hp = current;
   if (contact.length) {
@@ -1519,4 +1578,50 @@ function hp(atk, def, slot, values = {}, dealt = 0, options = {}) {
   return {v: parts.reduce((sum, value) => sum + value, 0), l: name};
 }
 
-window.DMG = {items: () => [...generation.items].map(item => item.name), init, stats, calc, residual, speed, entry, hp, hit, turn, berry, derived, settings, fieldEffects, secondaryChance, intimidate: intimidateMarks};
+// Move effects (tools/calc/README.md → Move effects; tools/calc/src/effects.js is the resolver).
+let effectChance = 1;
+const effects = createEffects({
+  gen: () => profile.gen,
+  rules: () => profile.over?.effects?.rules,
+  chance: listed => Math.min(100, listed * effectChance),
+  typeEffect: (type, mon) => mon.types.reduce((product, defending) =>
+    product * (generation.types.get(toID(type))?.effectiveness?.[defending] ?? 1), 1),
+  grounded: (mon, field) => isGrounded(mon, field),
+  holds: (mon, field) => holdsItem(mon, field),
+  heldName: mon => mon.item || mon.disabledItem || '',
+  unnerved: mon => mon.hasAbility('Unnerve', 'As One (Glastrier)', 'As One (Spectrier)'),
+});
+
+// What a move does beyond damage and HP, for the move's own parts: the resolved record (null = nothing).
+function moveEffects(name) {
+  return effectRecord(name);
+}
+
+// A status move's effect on use: patches like `hit` (`atk` = the user, `def` = its target) plus the button's
+// label / text / cls and `fails` (the reason nothing changes). Null: the move has no effect beyond its HP part or its
+// Field / Edit switch, or it is a damaging move (its effects come with `hit`).
+function effect(atk, def, slot, values = {}, options = {}) {
+  const name = data.M[slot.mv];
+  const record = effectRecord(name);
+  if (!record) return null;
+  const moveData = generation.moves.get(toID(name));
+  if (!moveData || moveData.category !== 'Status') return null;
+  const own = {...record};
+  if (own.v && SWITCH_VOLATILES.has(own.v)) delete own.v;
+  if (!(own.b || own.st || own.v || own.k || own.sb)) return null;
+  const user = actionState(atk, values, 'atk');
+  const target = actionState(def, values, 'def');
+  if (own.k === 'curse' && user.mon.hasType('Ghost')) return null;
+  const field = battleField(values);
+  for (const mon of [user.mon, target.mon]) {
+    checkAirLock(mon, field);
+    checkItem(mon, field.isMagicRoom);
+  }
+  effectChance = fieldEffects(atk, values, 'atk').secondaryMultiplier;
+  const out = effects.resolve({name, record: own, user, target, field, values, phase: 'status',
+    moveType: slot.t || moveData.type, toggles: !!options.toggles});
+  return {atk: user.update, def: target.update, log: out.log, parts: out.parts,
+    ...(out.fails ? {fails: out.fails} : {}), ...(out.bounced ? {bounced: true} : {}), ...describe(out)};
+}
+
+window.DMG = {items: () => [...generation.items].map(item => item.name), init, stats, calc, residual, speed, entry, hp, hit, turn, berry, derived, settings, fieldEffects, secondaryChance, intimidate: intimidateMarks, effect, effects: moveEffects};

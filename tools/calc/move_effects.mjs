@@ -132,6 +132,11 @@ function findSource(override) {
   candidates.push(path.resolve(root, '..', '..', '..', '.tmp', 'showdown'));
   candidates.push(path.join(root, '.tmp', 'showdown'));
   const hit = candidates.find((c) => existsSync(path.join(c, BASE_FILE)));
+  if (!hit && process.argv.includes('--check')) {
+    // A clone without the fetched source can still run npm test; the table is checked where the source is.
+    console.log('SKIP move_effects --check: no Showdown source in .tmp/showdown (tools/calc/README.md → Move effects)');
+    process.exit(0);
+  }
   if (!hit) die(`no Showdown data found (looked in: ${candidates.join(', ')}); pass --src`);
   return hit;
 }
