@@ -26,9 +26,9 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stro
 #pbar .tys{flex:none;display:flex;gap:3px;align-items:center;padding-right:4px}
 #pbar .tys .ty{margin:0;font-size:11px;padding:1px 6px}
 /* narrow: types as small badges on the sprite's foot, the name a fixed 13 px */
-#pbar .bdg{display:none;position:absolute;right:-5px;bottom:0;gap:1px}
-#pbar .bdg .tyc{width:14px;height:14px;font-size:9px;box-shadow:0 0 0 1.5px var(--bg)}
-@container (max-width:300px){#pbar .nm{font-size:13px}#pbar .tys{display:none}#pbar .bdg{display:flex}}
+#pbar .bdg{display:none;position:absolute;right:0;top:50%;transform:translateY(-50%);flex-direction:column;gap:2px}
+#pbar .bdg .tyc{width:13px;height:13px;font-size:8.5px;box-shadow:0 0 0 1.5px var(--bg)}
+@container (max-width:300px){#pbar .nm{font-size:13px}#pbar .tys{display:none}#pbar .bdg{display:flex}#pbar .sp{width:38px}#pbar .sp .spr{width:30px;height:30px}}
 /* Previous / next at the top of the page */
 .pnav{display:flex;gap:var(--g)}
 .pnav a{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:4px;min-height:44px;color:var(--fg);-webkit-tap-highlight-color:transparent}
@@ -39,12 +39,9 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stro
 .pnav a .t b{font-size:13px;color:var(--link);line-height:1.15;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .pnav a .t .r{font-size:11px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pnav a .r .rel{color:var(--acc)}
-.pnav a .spr{width:30px;height:30px}
 .pnav .gap{flex:1 1 0}
-.pnav a .h{display:contents}
-/* narrow: chevron and sprite on one line, name and relation under it */
-@container app (max-width:360px){.pnav a,.pnav a.nx{flex-direction:column;align-items:flex-start;gap:0}.pnav a.nx{align-items:flex-end}
- .pnav a .h{display:flex;align-items:center;gap:2px}.pnav a.nx .h{flex-direction:row-reverse}.pnav a .t b{font-size:12.5px}.pnav a .ch svg{width:16px;height:16px}}
+/* narrow: 12 px names (the widest word, ~6.7 em, fits half of 260) */
+@container app (max-width:360px){.pnav a .t b{font-size:12px}.pnav a .ch svg{width:16px;height:16px}}
 /* Top card: tap the sprite or the name for the form menu */
 #app{container:app/inline-size}
 .card.hero{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"s n" "s m";column-gap:14px;row-gap:4px;align-items:center}
@@ -210,7 +207,7 @@ function bindCalc(p){const g=s=>app.querySelector(s);const upd=()=>{const s=calc
  app.querySelectorAll('.calc input,.calc select').forEach(e=>e.addEventListener('input',upd));upd();}
 // Previous / next in dex order (the list's order: forms sit after their Pokemon)
 function navLink(p,t,d){if(!t)return '<span class="gap"></span>';const r=rel(p,t);
- return `<a class="${d<0?'pv':'nx'}" href="#/p/${t.id}" data-keep data-rep><span class="h"><span class="ch"><svg class="i" viewBox="0 0 24 24"><path d="${d<0?'M15 5l-7 7 7 7':'M9 5l7 7-7 7'}"/></svg></span>${spr(t.id,'')}</span><span class="t"><b>${esc(t.n)}</b><span class="r">#${t.dex}${r?` · <span class="rel">${esc(r)}</span>`:''}</span></span></a>`;}
+ return `<a class="${d<0?'pv':'nx'}" href="#/p/${t.id}" data-keep data-rep><span class="ch"><svg class="i" viewBox="0 0 24 24"><path d="${d<0?'M15 5l-7 7 7 7':'M9 5l7 7-7 7'}"/></svg></span><span class="t"><b>${esc(t.n)}</b><span class="r">#${t.dex}${r?` · <span class="rel">${esc(r)}</span>`:''}</span></span></a>`;}
 // Previous / next step through the list as it's filtered; from a page outside the filter, the nearest listed one
 const inList=x=>!S.f.length||S.f.every(t=>x.t.includes(t));
 const nb=(p,d)=>{for(let i=ORDER.indexOf(p.id)+d;i>=0&&i<ORDER.length;i+=d){const x=byId[ORDER[i]];if(inList(x))return x;}return null;};
