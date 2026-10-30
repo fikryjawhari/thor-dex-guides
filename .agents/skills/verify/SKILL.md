@@ -14,7 +14,7 @@ refuses to start while another browser check runs, so start one sweep, then the 
 | Change | Run |
 | --- | --- |
 | A hack's extract / `data.json` | its `extract/build.py`, `extract/check.py`, `python assemble.py <hack>`, `uv run python -I tools/gate.py check <hack> --data` |
-| Calc engine (`tools/calc/src`, `template/calc/profiles`), a profile in `hack.json` → `cfg.calc`, `calc_matchups.json` | `npm test --prefix tools/calc`; `node tools/calc/hzla_compare.mjs <hack>` for EI / Photonic / Eternal X (expected: EI 142 + 12 known, Photonic 118 + 28, Eternal X 116 + 3, 0 mismatch); `python assemble.py` |
+| Calc engine (`tools/calc/src`, `template/calc/profiles`), a profile in `hack.json` → `cfg.calc`, `calc_matchups.json` | `npm test --prefix tools/calc`; `node tools/calc/hzla_compare.mjs <hack>` for EI / Photonic / Eternal X / BB2R (expected: EI 142 + 12 known, Photonic 118 + 28, Eternal X 116 + 3, BB2R 46 + 4, 0 mismatch); `python assemble.py` |
 | `template/` (shell, dex.css / dex.js, calc.js / calc.css) | `python assemble.py`; the scenarios for the area (below) on every guide; `node tools/domcompare.mjs <old> <new> [--kb] --routes '<#/route>'` against the job's start build |
 | A scenario or `tools/calc_check_lib.mjs` | that scenario on every guide |
 | Docs only (`*.md`) | nothing |
