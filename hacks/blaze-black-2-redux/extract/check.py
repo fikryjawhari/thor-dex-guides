@@ -149,7 +149,11 @@ doc_by_line = {}
 for record in records:
     if record['source'] == 'Item Changes':
         doc_by_line.setdefault(record['line'], []).append(record)
-    check(record['item'] in text_by_item, 'items: location item missing from IT: ' + record['item'])
+    if record['box'] == items.NOT_LISTED:             # medicine, balls and the like: not in Items or the walkthrough
+        check(not any(row[0] == record['item'] for box in D['IT'] if box['n'] != 'Shops' for row in box['r']),
+              'items: not-listed item in IT outside Shops: ' + record['item'])
+    else:
+        check(record['item'] in text_by_item, 'items: location item missing from IT: ' + record['item'])
     if record['link'] is not None:
         check(0 <= record['link'] < len(M) and M[record['link']] == record['item'].split(' ', 1)[1],
               'items: machine move link ' + record['item'])
@@ -159,6 +163,8 @@ for source in item_doc['placements']:
     found = doc_by_line.get(source['line'], [])
     check(len(found) == len(items.choices(source)), 'items: every doc destination/choice present at line %d' % source['line'])
     for record in found:
+        if record['box'] == items.NOT_LISTED:
+            continue
         check(record['hidden'] == source['hidden'] and record['quantity'] == source['quantity'],
               'items: hidden/quantity at doc line %d' % source['line'])
         check(record['mode'] == source['mode'] and record['available'] == (source['mode'] != 'Easy/Normal'),
@@ -169,6 +175,11 @@ for source in item_doc['placements']:
             check(any(line.startswith('Found: ' + record['area']) and 'Easy/Normal only, not in Challenge' in line
                       for text in text_by_item[record['item']] for line in text.splitlines()),
                   'items: Easy/Normal-only placement flagged at doc line %d' % source['line'])
+valuables = {row[0]: row[4] for box in D['IT'] if box['n'] == 'Valuables' for row in box['r']}
+check(valuables and all(items.VALUABLES.get(name) == sub for name, sub in valuables.items()),
+      'items: Valuables holds only items.VALUABLES, under their sub-headings')
+check(not {'Iron Ball', 'Light Ball', 'Smoke Ball'} - {row[0] for box in D['IT'] if box['n'] == 'Held Items' for row in box['r']},
+      'items: Iron / Light / Smoke Ball are Held Items')
 tm_rows = [row for box in D['IT'] if box['n'] == 'TMs and HMs' for row in box['r'] if row[0].startswith('TM')]
 hm_rows = [row for box in D['IT'] if box['n'] == 'TMs and HMs' for row in box['r'] if row[0].startswith('HM')]
 check(len(tm_rows) == 95 and len(hm_rows) == 6, 'items: final IT has 95 TMs and 6 HMs')
