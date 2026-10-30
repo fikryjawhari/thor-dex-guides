@@ -16,35 +16,40 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stro
 #pbar[hidden]{display:none}
 #pbar .in{max-width:960px;margin:0 auto;height:var(--pbh);display:flex;align-items:stretch;container-type:inline-size}
 #pbar button{background:none;border:0;padding:0;color:var(--fg);cursor:pointer;-webkit-tap-highlight-color:transparent;font:inherit}
-#pbar .ar{flex:none;width:28px;display:flex;align-items:center;justify-content:center;color:var(--acc)}
+#pbar .ar{flex:none;width:26px;display:flex;align-items:center;justify-content:center;color:var(--acc)}
 #pbar .ar:disabled{color:var(--line)}
-#pbar .up{flex:none;width:34px;display:flex;align-items:center;justify-content:center;color:var(--acc);border-left:1px solid var(--line)}
+#pbar .up{flex:none;width:32px;display:flex;align-items:center;justify-content:center;color:var(--acc);border-left:1px solid var(--line)}
 #pbar .who{flex:1;min-width:0;display:flex;align-items:center;gap:4px;text-align:left;border-left:1px solid var(--line);padding-left:3px}
-#pbar .spr{width:32px;height:32px}
-#pbar .nm{flex:1;min-width:0;font-weight:700;font-size:14px;line-height:1.15;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+#pbar .sp{position:relative;flex:none;display:flex}#pbar .spr{width:34px;height:34px}
+#pbar .nm{flex:1;min-width:0;font-weight:700;font-size:15px;line-height:1.15;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 #pbar .nm .fc{color:var(--mut);font-size:11px}
 #pbar .tys{flex:none;display:flex;gap:3px;align-items:center;padding-right:4px}
 #pbar .tys .ty{margin:0;font-size:11px;padding:1px 6px}
-#pbar .tyc{display:none}
-@container (max-width:300px){#pbar .tys{flex-direction:column;gap:2px}#pbar .tys .ty{display:none}#pbar .tys .tyc{display:inline-flex;width:16px;height:16px;font-size:10px}}
+/* narrow: types as small badges on the sprite's foot, the name a fixed 13 px */
+#pbar .bdg{display:none;position:absolute;right:-5px;bottom:0;gap:1px}
+#pbar .bdg .tyc{width:14px;height:14px;font-size:9px;box-shadow:0 0 0 1.5px var(--bg)}
+@container (max-width:300px){#pbar .nm{font-size:13px}#pbar .tys{display:none}#pbar .bdg{display:flex}}
 /* Previous / next at the top of the page */
-.pnav{display:flex;gap:var(--g);container-type:inline-size}
+.pnav{display:flex;gap:var(--g)}
 .pnav a{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:4px;min-height:44px;color:var(--fg);-webkit-tap-highlight-color:transparent}
 .pnav a.nx{flex-direction:row-reverse;text-align:right}
 .pnav a .ch{flex:none;color:var(--acc);display:flex}
 .pnav a .ch svg{width:18px;height:18px}
 .pnav a .t{min-width:0;display:flex;flex-direction:column;line-height:1.2}
-.pnav a .t b{font-size:13px;line-height:1.15;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.pnav a .t b{font-size:13px;color:var(--link);line-height:1.15;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .pnav a .t .r{font-size:11px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pnav a .r .rel{color:var(--acc)}
 .pnav a .spr{width:30px;height:30px}
 .pnav .gap{flex:1 1 0}
-@container (max-width:300px){.pnav a .spr{display:none}.pnav a .t b{font-size:12px}.pnav a .ch svg{width:16px;height:16px}}
-body.nav-card .pnav a{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px 4px}
-body.nav-link .pnav a .spr{display:none}
-body.nav-link .pnav a .t b{color:var(--link)}
+.pnav a .h{display:contents}
+/* narrow: chevron and sprite on one line, name and relation under it */
+@container app (max-width:360px){.pnav a,.pnav a.nx{flex-direction:column;align-items:flex-start;gap:0}.pnav a.nx{align-items:flex-end}
+ .pnav a .h{display:flex;align-items:center;gap:2px}.pnav a.nx .h{flex-direction:row-reverse}.pnav a .t b{font-size:12.5px}.pnav a .ch svg{width:16px;height:16px}}
 /* Top card: tap the sprite or the name for the form menu */
-.hero .fb{background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#app{container:app/inline-size}
+.card.hero{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"s n" "s m";column-gap:14px;row-gap:4px;align-items:center}
+.hero>.spr{grid-area:s}.hero>h2{grid-area:n;align-self:end;margin:0}.hero>.hm{grid-area:m;align-self:start}
+@container app (max-width:340px){.card.hero{grid-template-areas:"n n" "s m";column-gap:10px;padding:8px 10px}.hero>h2{font-size:20px}.hero>.hm{align-self:center}.hero .s112{width:88px;height:88px}}
 .hero.hasf{cursor:pointer;-webkit-tap-highlight-color:transparent}.hero .car{color:var(--acc);font-weight:600}
 .hero .fbs{flex:none}
 .hero .alt{margin-top:2px}
@@ -91,7 +96,7 @@ details.psec>.endbar{margin:-6px 8px 4px auto}
 .mvw td:nth-last-child(5){overflow-wrap:anywhere}
 .mvw td.lv{color:var(--mut)}
 .mvw th.tc,.mvw td.tc{text-align:center}
-.warn{cursor:help}
+.warn{cursor:help}.warn.q{color:#ef5350;font-size:12px}
 /* Evolution: the whole family, base stage first, forms under their Pokemon */
 .fam{display:flex;flex-direction:column}
 .fam .fr{display:flex;align-items:center;gap:6px;min-height:40px;padding:2px 4px 2px calc(4px + var(--d,0)*16px);border-radius:8px;color:var(--fg)}
@@ -114,7 +119,8 @@ table.cv td.b{color:var(--mut);font-variant-numeric:tabular-nums}
 table.cv th.up{color:#f0605a}table.cv th.up::after{content:'↑'}
 table.cv th.dn{color:#7fb2ff}table.cv th.dn::after{content:'↓'}
 table.cv tr.tot td,table.cv tr.tot th{border-bottom:0;color:var(--mut);font-size:12px}
-@media (max-width:340px){details.psec>summary{padding-left:8px}details.psec>.pb{padding:0 6px 8px}details.psec[data-s=mv]>.pb{padding:0 4px 6px}.hero{padding:10px;gap:10px}.hero .s112{width:88px;height:88px}table.cv th,table.cv td{padding:3px 2px}}
+@media (max-width:340px){details.psec>summary{padding-left:8px}details.psec>.pb{padding:0 6px 8px}details.psec[data-s=mv]>.pb{padding:0 4px 6px}table.cv th,table.cv td{padding:3px 2px}}
+.flt .chip{padding:2px;cursor:pointer;opacity:.45}.flt .chip.on{opacity:1;outline:2px solid var(--acc)}.flt .chip .ty{margin:0}
 #toast{position:fixed;left:54px;right:10px;bottom:10px;z-index:9;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
 #toast.on{opacity:1}
 </style></head><body>
@@ -127,7 +133,7 @@ table.cv tr.tot td,table.cv tr.tot th{border-bottom:0;color:var(--mut);font-size
 const D=/*DATA*/null,SPRD=/*SPR*/null;
 const KEY='dex-page-mock-v2';
 const DEF={ab:1,bs:1,sc:0,td:0,wh:0,ev:1,tr:0,mv:1};
-let S={nav:'card',calc:'vert',open:null};
+let S={calc:'vert',open:null,f:[]};
 try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 let cur={...DEF},PEND=null,curId=null;
@@ -151,16 +157,16 @@ const how=h=>h.replace(/^level /i,'Lv ');
 // What t is to c, for the arrows: the evolution between them, or a form of the same Pokemon
 function rel(c,t){let e=c.et.find(x=>x[1]===t.id)||c.ef.find(x=>x[1]===t.id);if(e)return how(e[0]);
  if(t.dex===c.dex)return t.g===1?'Mega':c.g===1?'Base form':'Form';return '';}
-const warn=t=>`<span class="warn" title="${t}">!</span>`;
+const warn=t=>t==='Sources disagree'?`<span class="warn q" title="${t}">?</span>`:`<span class="warn" title="${t}">!</span>`;
 const NAT={Lonely:[1,2],Brave:[1,5],Adamant:[1,3],Naughty:[1,4],Bold:[2,1],Relaxed:[2,5],Impish:[2,3],Lax:[2,4],Timid:[5,1],Hasty:[5,2],Jolly:[5,3],Naive:[5,4],Modest:[3,1],Mild:[3,2],Quiet:[3,5],Rash:[3,4],Calm:[4,1],Gentle:[4,2],Sassy:[4,5],Careful:[4,3]};
 function stat(b,i,iv,ev,lv,nat){if(i===0)return Math.floor((2*b+iv+Math.floor(ev/4))*lv/100)+lv+10;let v=Math.floor((2*b+iv+Math.floor(ev/4))*lv/100)+5;const n=NAT[nat];if(n){if(n[0]===i)v=Math.floor(v*1.1);else if(n[1]===i)v=Math.floor(v*0.9);}return v;}
 const types=Object.keys(D.TC).sort();
 function defBlock(p){const g={};types.forEach(a=>{let m=1;p.t.forEach(d=>{m*=((D.TC[a]||{})[d]??10)/10;});if(m!==1)(g[m]=g[m]||[]).push(a);});
- const row=(m,l)=>g[m]?`<div style="margin:3px 0"><span class="mut" style="display:inline-block;width:44px">${l}</span>${g[m].map(ty).join('')}</div>`:'';
+ const row=(m,l)=>g[m]?`<div style="margin:3px 0"${K('td:'+m,m)}><span class="mut" style="display:inline-block;width:44px">${l}</span>${g[m].map(ty).join('')}</div>`:'';
  return row(4,'4×')+row(2,'2×')+row(0.5,'½×')+row(0.25,'¼×')+row(0,'0×')+`<div class="mut small" style="margin-top:4px">Abilities (Levitate and so on) not included.</div>`;}
 function whereTable(p){if(p.g===1)return `<div class="mut">Mega form. Mega Stone: ${esc(p.stone||'?')}${p.sloc?': '+esc(p.sloc):''}</div>`;
  if(!p.w.length)return `<div class="mut">No direct wild encounter. Obtained by evolving or breeding (see Evolution).</div>`;
- return `<table class="wh"><tr><th>Location</th><th>Method</th><th>Rate</th><th>Lv</th></tr>${p.w.map(w=>`<tr><td><a href="#/l/${w[0]}">${esc(D.LOC[w[0]])}</a>${w[4]?`<div class="mut small">${esc(w[4])}</div>`:''}</td><td>${esc(w[1])}</td><td class="n">${esc(w[2])}</td><td class="n">${esc(w[3])}</td></tr>`).join('')}</table>`;}
+ return `<table class="wh"><tr><th>Location</th><th>Method</th><th>Rate</th><th>Lv</th></tr>${p.w.map((w,j)=>`<tr${K('wh:'+w[0]+'#'+j,j)}><td><a href="#/l/${w[0]}">${esc(D.LOC[w[0]])}</a>${w[4]?`<div class="mut small">${esc(w[4])}</div>`:''}</td><td>${esc(w[1])}</td><td class="n">${esc(w[2])}</td><td class="n">${esc(w[3])}</td></tr>`).join('')}</table>`;}
 // The family from its base stage: each Pokemon, its forms (same dex number, not evolved into), then what it evolves into
 function famBlock(p){const base=formsOf(p).find(x=>x.g!==1&&!x.fc)||p;let r=base;const up=new Set();
  while(r.ef.length&&byId[r.ef[0][1]]&&!up.has(r.id)){up.add(r.id);r=byId[r.ef[0][1]];}
@@ -169,16 +175,17 @@ function famBlock(p){const base=formsOf(p).find(x=>x.g!==1&&!x.fc)||p;let r=base
   formsOf(x).filter(f=>!done.has(f.id)&&!f.ef.length).forEach(f=>{done.add(f.id);rows.push([f,d,null,f.g===1?'Mega':'Form']);});
   x.et.forEach(([h2,id])=>walk(byId[id],d+1,how(h2)));};
  walk(r,0,null);
- const row=([x,d,h,tg])=>{const inner=`${spr(x.id,'')}<span class="t"><b>${esc(x.n)}</b>${h||tg?`<span class="h">${h?'↳ '+esc(h):''}${tg?`<span class="tag">${tg}</span>`:''}</span>`:''}</span>`;
-  return x.id===p.id?`<div class="fr cur" style="--d:${d}">${inner}</div>`:`<a class="fr" style="--d:${d}" href="#/p/${x.id}" data-keep>${inner}</a>`;};
- return `<div class="fam">${rows.map(row).join('')}</div>${rows.length<2?'<div class="mut small" style="margin-top:4px">Does not evolve.</div>':''}`;}
+ const row=([x,d,h,tg],o)=>{const inner=`${spr(x.id,'')}<span class="t"><b>${esc(x.n)}</b>${h||tg?`<span class="h">${h?'↳ '+esc(h):''}${tg?`<span class="tag">${tg}</span>`:''}</span>`:''}</span>`;
+  return x.id===p.id?`<div class="fr cur" style="--d:${d}"${K('ev:'+x.id,o)}>${inner}</div>`:`<a class="fr" style="--d:${d}" href="#/p/${x.id}" data-keep${K('ev:'+x.id,o)}>${inner}</a>`;};
+ return `<div class="fam">${rows.map((r,o)=>row(r,o)).join('')}</div>${rows.length<2?'<div class="mut small" style="margin-top:4px">Does not evolve.</div>':''}`;}
+const K=(k,o)=>` data-k="${esc(k)}" data-o="${esc(o)}"`;
 const abLine=i=>`<a href="#/a/${i}">${esc(D.AB[i][0])}</a>${D.AB[i][2]?warn('New in this hack'):D.AB[i][3]?warn('Changed in this hack'):''}<div class="mut small">${esc(D.AB[i][3]||D.AB[i][1])}</div>`;
 // A move row: "!" for new, changed or disputed; letters when the table is narrow (CSS)
-function mrow(i,lv){const v=D.MV[i]||{},w=v.x?'New in this hack':v.cf?'Sources disagree':v.dc||v.h?'Changed in this hack':'';
- return `<tr>${lv!==undefined?`<td class="n lv">${lv||'Evo'}</td>`:''}<td><a href="#/m/${i}">${esc(D.M[i])}</a>${w?warn(w):''}</td><td class="tc">${v.t?ty(v.t)+tyc(v.t):''}</td><td class="tc">${cat(v.c)+catc(v.c)}</td><td class="n">${v.bp==='Varies'?'<span class="hw">Varies</span><span class="pc0">Var</span>':v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'<span class="pc">%</span>':'-'}</td></tr>`;}
+function mrow(i,lv,o,occ){const v=D.MV[i]||{},w=v.x?'New in this hack':v.cf?'Sources disagree':v.dc||v.h?'Changed in this hack':'';
+ return `<tr${K('mv:'+i+(occ>1?'#'+occ:''),o)}>${lv!==undefined?`<td class="n lv">${lv||'Evo'}</td>`:''}<td><a href="#/m/${i}">${esc(D.M[i])}</a>${w?warn(w):''}</td><td class="tc">${v.t?ty(v.t)+tyc(v.t):''}</td><td class="tc">${cat(v.c)+catc(v.c)}</td><td class="n">${v.bp==='Varies'?'<span class="hw">Varies</span><span class="pc0">Var</span>':v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'<span class="pc">%</span>':'-'}</td></tr>`;}
 const mhead=lv=>`<tr>${lv?'<th class="n">Lv</th>':''}<th>Move</th><th class="tc"><span class="hw">Type</span></th><th class="tc"><span class="hw">Cat</span></th><th class="n">Pow</th><th class="n">Acc</th></tr>`;
 let moveTab='lv';
-function secHTML(k,label,body,cls=''){return `<details class="card psec${cls}" data-s="${k}" ${cur[k]?'open':''}><summary><h3>${label}</h3></summary><div class="pb">${body}</div><button class="endbar sb" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14l5-5 5 5"/></svg><span>${label}</span></button></details>`;}
+function secHTML(k,label,body,cls=''){return `<details class="card psec${cls}" data-s="${k}" ${cur[k]?'open':''}><summary${K('sec:'+k,Object.keys(DEF).indexOf(k))}><h3>${label}</h3></summary><div class="pb">${body}</div><button class="endbar sb" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14l5-5 5 5"/></svg><span>${label}</span></button></details>`;}
 // Stat calculator: one saved state per Pokemon in the guide; here only for this visit
 const CS={};
 function calcState(p){return CS[p.id]??={l:50,n:'Hardy',iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0]};}
@@ -186,7 +193,7 @@ const natSel=s=>`<select id="c-n">${['Hardy',...Object.keys(NAT)].map(n=>`<optio
 function calcBody(p){const s=calcState(p);
  if(S.calc==='vert')return `<div class="cvh"><span class="mut small">Level</span><input type="number" id="c-l" min="1" max="100" value="${s.l}" style="width:56px">${natSel(s)}</div>
  <table class="cv"><tr><th></th><th>Base</th><th>IV</th><th>EV</th><th>Stat</th></tr>
- ${SN.map((n,i)=>`<tr><th data-i="${i}">${n}</th><td class="b">${p.s[i]}</td><td><input type="number" data-iv="${i}" min="0" max="31" value="${s.iv[i]}"></td><td><input type="number" data-ev="${i}" min="0" max="252" step="4" value="${s.ev[i]}"></td><td class="res" id="c-r${i}"></td></tr>`).join('')}
+ ${SN.map((n,i)=>`<tr${K('sc:'+i,i)}><th data-i="${i}">${n}</th><td class="b">${p.s[i]}</td><td><input type="number" data-iv="${i}" min="0" max="31" value="${s.iv[i]}"></td><td><input type="number" data-ev="${i}" min="0" max="252" step="4" value="${s.ev[i]}"></td><td class="res" id="c-r${i}"></td></tr>`).join('')}
  <tr class="tot"><th>Total</th><td class="b">${p.s.reduce((a,b)=>a+b,0)}</td><td></td><td id="c-et"></td><td></td></tr></table>
  <div class="mut small" style="margin-top:8px">Speed by level (rare candy planning)</div><div class="lvrow" id="c-lv"></div>`;
  return `<div class="bar" style="margin:0 0 8px"><span class="mut small">Level <input type="number" id="c-l" min="1" max="100" value="${s.l}"></span>${natSel(s)}</div>
@@ -203,20 +210,22 @@ function bindCalc(p){const g=s=>app.querySelector(s);const upd=()=>{const s=calc
  app.querySelectorAll('.calc input,.calc select').forEach(e=>e.addEventListener('input',upd));upd();}
 // Previous / next in dex order (the list's order: forms sit after their Pokemon)
 function navLink(p,t,d){if(!t)return '<span class="gap"></span>';const r=rel(p,t);
- return `<a class="${d<0?'pv':'nx'}" href="#/p/${t.id}" data-keep data-rep><span class="ch"><svg class="i" viewBox="0 0 24 24"><path d="${d<0?'M15 5l-7 7 7 7':'M9 5l7 7-7 7'}"/></svg></span>${spr(t.id,'')}<span class="t"><b>${esc(t.n)}</b><span class="r">#${t.dex}${r?` · <span class="rel">${esc(r)}</span>`:''}</span></span></a>`;}
-const nb=(p,d)=>byId[ORDER[ORDER.indexOf(p.id)+d]];
+ return `<a class="${d<0?'pv':'nx'}" href="#/p/${t.id}" data-keep data-rep><span class="h"><span class="ch"><svg class="i" viewBox="0 0 24 24"><path d="${d<0?'M15 5l-7 7 7 7':'M9 5l7 7-7 7'}"/></svg></span>${spr(t.id,'')}</span><span class="t"><b>${esc(t.n)}</b><span class="r">#${t.dex}${r?` · <span class="rel">${esc(r)}</span>`:''}</span></span></a>`;}
+// Previous / next step through the list as it's filtered; from a page outside the filter, the nearest listed one
+const inList=x=>!S.f.length||S.f.every(t=>x.t.includes(t));
+const nb=(p,d)=>{for(let i=ORDER.indexOf(p.id)+d;i>=0&&i<ORDER.length;i+=d){const x=byId[ORDER[i]];if(inList(x))return x;}return null;};
 
 function detail(id){const p=byId[id];if(!p){app.innerHTML='<p>Not found.</p>';return;}curId=id;
  cur={...DEF,...(S.open||{})};
  const byName=a=>[...a].sort((x,y)=>D.M[x].localeCompare(D.M[y]));
- const tbl=(a,lv)=>a.length?`<table>${mhead(lv)}${a.map(x=>lv?mrow(x[1],x[0]):mrow(x)).join('')}</table>`:'<div class="mut">None</div>';
+ const tbl=(a,lv)=>{const seen={};return a.length?`<table>${mhead(lv)}${a.map(x=>lv?mrow(x[1],x[0],x[0]||0.5,seen[x[1]]=(seen[x[1]]||0)+1):mrow(x,undefined,D.M[x],1)).join('')}</table>`:'<div class="mut">None</div>';};
  const mv={lv:['Level-up',p.lv.length,()=>tbl(p.lv,true)],tm:['TM/HM',p.tm.length,()=>tbl(byName(p.tm))],eg:['Egg',p.eg.length,()=>tbl(byName(p.eg))]};
  const u=D.used[id]||[],fs=formsOf(p).length>1;
- const ab=p.a.map(i=>`<div style="margin:4px 0">${abLine(i)}</div>`).join('')+(p.ha>=0?`<div style="margin:6px 0 0"><span class="mut small">Hidden</span> ${abLine(p.ha)}</div>`:'');
- const bs=p.s.map((v,i)=>`<div class="stat"><span class="mut">${SN[i]}</span><span class="v">${v}</span><span class="b"><i style="width:${Math.min(100,v/160*100)}%;background:${v<60?'#e05252':v<90?'#e0a030':v<120?'#5cb85c':'#3aa0d8'}"></i></span></div>`).join('');
+ const ab=p.a.map((i,j)=>`<div style="margin:4px 0"${K('ab:'+j,j)}>${abLine(i)}</div>`).join('')+(p.ha>=0?`<div style="margin:6px 0 0"${K('ab:h',9)}><span class="mut small">Hidden</span> ${abLine(p.ha)}</div>`:'');
+ const bs=p.s.map((v,i)=>`<div class="stat"${K('bs:'+i,i)}><span class="mut">${SN[i]}</span><span class="v">${v}</span><span class="b"><i style="width:${Math.min(100,v/160*100)}%;background:${v<60?'#e05252':v<90?'#e0a030':v<120?'#5cb85c':'#3aa0d8'}"></i></span></div>`).join('');
  
  app.innerHTML=`<div class="pnav">${navLink(p,nb(p,-1),-1)}${navLink(p,nb(p,1),1)}</div>
- <div class="card hero${fs?' hasf':''}"${fs?' role="button" aria-label="Forms"':''}>${spr(p.id,'s112')}<div><h2>${esc(p.n)}${p.g===1?'&#8203;<span class="tag">Mega</span>':''}</h2>${p.dex?`<div class="mut small">#${p.dex}${fs?` · <span class="car">${formsOf(p).length} forms ▾</span>`:''}</div>`:''}<div style="margin-top:4px">${p.t.map(ty).join('')}</div></div></div>
+ <div class="card hero${fs?' hasf':''}"${fs?' role="button" aria-label="Forms"':''}>${spr(p.id,'s112')}<h2>${esc(p.n)}${p.g===1?'&#8203;<span class="tag">Mega</span>':''}</h2><div class="hm">${p.dex?`<div class="mut small">#${p.dex}${fs?` · <span class="car">${formsOf(p).length} forms ▾</span>`:''}</div>`:''}<div style="margin-top:4px">${p.t.map(ty).join('')}</div></div></div>
  <div class="seg pall"><button data-a="1">Expand all</button><button data-a="0">Collapse all</button></div>
  ${secHTML('ab','Abilities',ab)}
  ${secHTML('bs','Base stats',bs)}
@@ -224,40 +233,51 @@ function detail(id){const p=byId[id];if(!p){app.innerHTML='<p>Not found.</p>';re
  ${secHTML('td','Type defences',defBlock(p))}
  ${secHTML('wh','Where to find',whereTable(p))}
  ${secHTML('ev','Evolution',famBlock(p))}
- ${u.length?secHTML('tr',`Used by trainers (${u.length})`,u.map(([n,c])=>`<div><a href="#/tr">${esc(n)}</a> <span class="mut small">${esc(c)}</span></div>`).join('')):''}
- ${secHTML('mv','Moves',`<div class="sub">${Object.entries(mv).map(([k,v])=>`<button data-k="${k}" class="${k===moveTab?'on':''}">${v[0]} (${v[1]})</button>`).join('')}</div><div id="mvb" class="mvw">${mv[moveTab][2]()}</div>`)}`;
- app.querySelectorAll('.sub button').forEach(b=>b.onclick=()=>{moveTab=b.dataset.k;app.querySelectorAll('.sub button').forEach(x=>x.classList.toggle('on',x===b));app.querySelector('#mvb').innerHTML=mv[moveTab][2]();ends();});
+ ${u.length?secHTML('tr',`Used by trainers (${u.length})`,u.map(([n,c],j)=>`<div${K('tr:'+n,j)}><a href="#/tr">${esc(n)}</a> <span class="mut small">${esc(c)}</span></div>`).join('')):''}
+ ${secHTML('mv','Moves',`<div class="sub">${Object.entries(mv).map(([k,v])=>`<button data-tab="${k}" class="${k===moveTab?'on':''}">${v[0]} (${v[1]})</button>`).join('')}</div><div id="mvb" class="mvw">${mv[moveTab][2]()}</div>`)}`;
+ app.querySelectorAll('.sub button').forEach(b=>b.onclick=()=>{moveTab=b.dataset.tab;app.querySelectorAll('.sub button').forEach(x=>x.classList.toggle('on',x===b));app.querySelector('#mvb').innerHTML=mv[moveTab][2]();ends();});
  app.querySelectorAll('details.psec').forEach(d=>d.addEventListener('toggle',()=>{cur[d.dataset.s]=d.open?1:0;S.open={...cur};save();ends();}));
  app.querySelectorAll('details.psec>summary').forEach(sm=>sm.addEventListener('click',()=>{if(sm.parentElement.open)keepTitle(sm);}));
  app.querySelectorAll('details.psec>.endbar').forEach(b=>b.onclick=()=>{const d=b.parentElement;d.open=false;keepTitle(d.querySelector('summary'));});
- app.querySelectorAll('.pall button').forEach(b=>b.onclick=()=>{const o=b.dataset.a==='1';app.querySelectorAll('details.psec').forEach(d=>d.open=o);});
+ app.querySelectorAll('.pall button').forEach(b=>b.onclick=()=>{const o=b.dataset.a==='1';if(!o&&allShut()){resetOpen();return;}app.querySelectorAll('details.psec').forEach(d=>d.open=o);});
  if(fs){const h=app.querySelector('.hero');h.onclick=()=>formMenu(p,h.querySelector('h2'));}
  bindCalc(p);
- bar.querySelector('.sp').innerHTML=spr(p.id,'');bar.querySelector('.nm').innerHTML=esc(p.n)+(fs?' <span class="fc">▾</span>':'');bar.querySelector('.tys').innerHTML=p.t.map(t=>ty(t)+tyc(t)).join('');
+ bar.querySelector('.sp').innerHTML=spr(p.id,'')+`<span class="bdg">${p.t.map(tyc).join('')}</span>`;bar.querySelector('.nm').innerHTML=esc(p.n)+(fs?' <span class="fc">▾</span>':'');bar.querySelector('.tys').innerHTML=p.t.map(ty).join('');
  bar.querySelector('[data-d="-1"]').disabled=!nb(p,-1);bar.querySelector('[data-d="1"]').disabled=!nb(p,1);
- bar.hidden=false;fitName();const a=PEND;PEND=null;window.scrollTo(0,0);if(a)toAnchor(a);barState();requestAnimationFrame(ends);}
-// Switching Pokemon keeps the place: the section under the bar and how far into it (top card still showing: scrollY)
-function anchor(){const lim=bar.offsetHeight,h=app.querySelector('.hero');if(!h||h.getBoundingClientRect().bottom>lim)return {y:scrollY};
- let a=null;for(const d of app.querySelectorAll('details.psec'))if(d.getBoundingClientRect().top<=lim+1)a=d;return a?{k:a.dataset.s,off:lim-a.getBoundingClientRect().top}:{y:scrollY};}
-function toAnchor(a){if(a.y!=null){scrollTo(0,a.y);return;}const ks=Object.keys(DEF);let d=app.querySelector(`details.psec[data-s="${a.k}"]`),off=a.off;
- for(let i=ks.indexOf(a.k)+1;!d&&i<ks.length;i++){d=app.querySelector(`details.psec[data-s="${ks[i]}"]`);off=0;}
- if(!d)return;off=Math.min(off,Math.max(0,d.offsetHeight-40));scrollTo(0,d.getBoundingClientRect().top+scrollY-bar.offsetHeight+off);}
+ bar.hidden=false;const a=PEND;PEND=null;window.scrollTo(0,0);if(a)toAnchor(a);barState();requestAnimationFrame(ends);}
+// Switching Pokemon keeps the place: the first row under the bar that means the same thing on both pages (the same
+// move, stat, ability slot, family member, section title) lands at the same height. Missing: the nearest row of its
+// kind in that section (nearest level, next name alphabetically), else its section's title, else the next section.
+const vis=e=>e.getClientRects().length>0;
+function anchor(){if(scrollY<2)return {y:0};const line=bar.classList.contains('off')?0:bar.offsetHeight;
+ const es=[...app.querySelectorAll('[data-k]')].filter(vis);const a=es.find(e=>e.getBoundingClientRect().top>=line-1);if(!a)return {y:scrollY};
+ const d=a.closest('details.psec');return {k:a.dataset.k,o:a.dataset.o,s:d?d.dataset.s:null,top:a.getBoundingClientRect().top};}
+function findAnchor(a){const e=[...app.querySelectorAll('[data-k]')].find(x=>x.dataset.k===a.k&&vis(x));if(e)return e;
+ const kind=a.k.split(':')[0],sec=a.s&&app.querySelector(`details.psec[data-s="${a.s}"]`);
+ if(sec&&sec.open){const c=[...sec.querySelectorAll('[data-k]')].filter(x=>vis(x)&&x.dataset.k.split(':')[0]===kind);
+  if(c.length){const n=Number(a.o);if(a.o!==''&&!isNaN(n))return c.reduce((b,x)=>Math.abs(Number(x.dataset.o)-n)<Math.abs(Number(b.dataset.o)-n)?x:b);
+   return c.find(x=>x.dataset.o.localeCompare(a.o)>=0)||c[c.length-1];}}
+ if(sec)return sec.querySelector('summary');
+ const ks=Object.keys(DEF);for(let i=ks.indexOf(a.s)+1;a.s&&i<ks.length;i++){const d=app.querySelector(`details.psec[data-s="${ks[i]}"]`);if(d)return d.querySelector('summary');}
+ return null;}
+function toAnchor(a){if(a.k==null){scrollTo(0,a.y);return;}const e=findAnchor(a);if(e)scrollTo(0,e.getBoundingClientRect().top+scrollY-a.top);}
 function go(id){PEND=anchor();location.replace('#/p/'+id);}
 function formMenu(p,el){const fs=formsOf(p);if(fs.length<2)return;const r=el.getBoundingClientRect();
  const m=document.createElement('div');m.className='fmask';const w=Math.min(260,innerWidth-52);
  m.innerHTML=`<div class="fmenu" style="top:${Math.min(r.bottom+4,innerHeight-60)}px;left:${Math.max(48,Math.min(r.left,innerWidth-w-4))}px;width:${w}px">${fs.map(f=>`<button data-id="${f.id}" class="${f.id===p.id?'on':''}">${spr(f.id,'')}<span class="n">${esc(f.n)}</span>${f.t.map(tyc).join('')}</button>`).join('')}</div>`;
  m.onclick=e=>{const b=e.target.closest('button');m.remove();if(b&&b.dataset.id!==p.id)go(b.dataset.id);};document.body.appendChild(m);}
 function keepTitle(sm){requestAnimationFrame(()=>{const top=sm.getBoundingClientRect().top,lim=bar.classList.contains('off')?0:bar.offsetHeight;if(top<lim)scrollBy(0,top-lim-4);});}
-// The bar's name: 14 px, smaller (to 10.5) until its longest word fits and it takes two lines at most
-function fitName(){const n=bar.querySelector('.nm');let f=14;n.style.fontSize=f+'px';const w=n.textContent.split(/\s+/).reduce((a,b)=>b.length>a.length?b:a,'');
- const probe=document.createElement('span');probe.style.cssText='position:absolute;visibility:hidden;white-space:nowrap;font-weight:700';probe.textContent=w;n.appendChild(probe);
- while(f>10.5&&(probe.offsetWidth>n.clientWidth||n.scrollHeight>n.clientHeight+1)){f-=.5;n.style.fontSize=f+'px';}probe.remove();}
 function barState(){if(bar.hidden)return;const h=app.querySelector('.hero');bar.classList.toggle('off',!(h&&h.getBoundingClientRect().bottom<bar.offsetHeight-4));}
 // A collapse bar at the end of an open section taller than the window
-function ends(){app.querySelectorAll('details.psec').forEach(d=>{const b=d.querySelector(':scope>.endbar');b.hidden=!(d.open&&d.offsetHeight>innerHeight-bar.offsetHeight);});}
-function list(){bar.hidden=true;app.innerHTML=`<div class="list">${D.P.map(p=>`<a class="row" href="#/p/${p.id}">${spr(p.id,'s40')}<span class="num">${p.dex}</span><span class="rt"><span class="nm">${esc(p.n)}</span><span>${p.t.map(ty).join('')}</span></span><span class="bst">${p.s.reduce((a,b)=>a+b,0)}</span></a>`).join('')}</div><div class="mut small" style="margin-top:8px">Mockup: a few Emerald Imperium families. Other links and rail buttons are not in it.</div>`;}
+const allShut=()=>[...app.querySelectorAll('details.psec')].every(d=>!d.open);
+function segLabel(){const c=app.querySelector('.pall>[data-a="0"]');if(c)c.textContent=allShut()?'Reset all':'Collapse all';}
+function resetOpen(){S.open=null;save();cur={...DEF};app.querySelectorAll('details.psec').forEach(d=>d.open=!!DEF[d.dataset.s]);}
+function ends(){segLabel();app.querySelectorAll('details.psec').forEach(d=>{const b=d.querySelector(':scope>.endbar');b.hidden=!(d.open&&d.offsetHeight>innerHeight-bar.offsetHeight);});}
+const TYS=[...new Set(D.P.flatMap(p=>p.t))].sort();
+function list(){bar.hidden=true;app.innerHTML=`<div class="chips flt">${TYS.map(t=>`<button class="chip${S.f.includes(t)?' on':''}" data-t="${t}">${ty(t)}</button>`).join('')}</div><div class="list">${D.P.filter(inList).map(p=>`<a class="row" href="#/p/${p.id}">${spr(p.id,'s40')}<span class="num">${p.dex}</span><span class="rt"><span class="nm">${esc(p.n)}</span><span>${p.t.map(ty).join('')}</span></span><span class="bst">${p.s.reduce((a,b)=>a+b,0)}</span></a>`).join('')}</div><div class="mut small" style="margin-top:8px">Mockup: a few Emerald Imperium families. Other links and rail buttons are not in it. Type chips filter the list (all ticked types); the arrows then step through it.</div>`;
+ app.querySelectorAll('.flt button').forEach(b=>b.onclick=()=>{const t=b.dataset.t;S.f=S.f.includes(t)?S.f.filter(x=>x!==t):[...S.f,t];save();list();});}
 function render(){const h=location.hash||'#/',m=h.match(/^#\/p\/(.+)$/);document.body.dataset.v=m?'p':'list';document.getElementById('t-p').classList.add('on');if(m)detail(m[1]);else{PEND=null;list();scrollTo(0,0);}}
-function apply(){document.body.classList.remove('nav-card','nav-link');document.body.classList.add('nav-'+S.nav);}
+function apply(){}
 let tt;function toast(s){const t=document.getElementById('toast');t.textContent=s;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),1400);}
 document.addEventListener('click',e=>{const a=e.target.closest('a[href]');if(!a)return;const h=a.getAttribute('href');
  if(a.closest('#rail')){if(h==='#/')return;e.preventDefault();toast('Not in this mockup: only the Pokémon pages are.');return;}
@@ -266,9 +286,9 @@ document.addEventListener('click',e=>{const a=e.target.closest('a[href]');if(!a)
 bar.querySelector('.up').onclick=()=>window.scrollTo(0,0);
 bar.querySelectorAll('.ar').forEach(b=>b.onclick=()=>{const t=nb(byId[curId],+b.dataset.d);if(t)go(t.id);});
 bar.querySelector('.who').onclick=()=>formMenu(byId[curId],bar.querySelector('.who'));
-addEventListener('scroll',barState,{passive:true});addEventListener('resize',()=>{if(!bar.hidden)fitName();barState();ends();});
+addEventListener('scroll',barState,{passive:true});addEventListener('resize',()=>{barState();ends();});
 addEventListener('hashchange',render);
 window.setOption=(k,v)=>{S[k]=v;save();apply();if(document.body.dataset.v==='p'){PEND=anchor();detail(curId);}};
-window.resetSections=()=>{S.open=null;save();if(curId&&document.body.dataset.v==='p'){PEND=anchor();detail(curId);}};
+window.resetSections=()=>{if(document.body.dataset.v==='p')resetOpen();else{S.open=null;save();}};
 apply();render();
 </script></body></html>

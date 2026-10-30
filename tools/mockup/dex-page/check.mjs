@@ -22,7 +22,7 @@ const secTop = k => `(()=>{const d=document.querySelector('details.psec[data-s="
 await send('Page.navigate', { url: file }); await settle();
 for (const [w, h] of [[260, 316], [260, 350], [480, 392], [537, 424], [832, 424]]) {
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 2, mobile: true });
-  await open(6, "setOption('calc','vert');setOption('nav','card');");
+  await open(6, "setOption('calc','vert');");
   const over = await val(`(()=>{const r=[];document.querySelectorAll('details.psec').forEach(d=>d.open=true);
     for(const e of document.querySelectorAll('#app *'))if(e.scrollWidth>e.clientWidth+1&&getComputedStyle(e).overflowX==='auto')r.push(e.id||e.className);
     return {doc:document.documentElement.scrollWidth>innerWidth,scrollers:r}})()`);
@@ -38,6 +38,27 @@ for (const [w, h] of [[260, 316], [260, 350], [480, 392], [537, 424], [832, 424]
   await val(`document.querySelectorAll('.fmenu button')[0].click()`); await settle();
   const afterForm = await val(secTop('bs')), now2 = await val('location.hash');
   lines.push(`${w}x${h}: page-overflow=${over.doc} sideways-scrollers=[${over.scrollers.join(',')}] | next: bs ${before}->${after} (${now}) | forms menu ${forms}, picked ${now2}: bs ${afterForm}`);
+  // every section open, a Level-up row near the top: the same move (or the nearest level) stays at the same height
+  for (const [from, dir, row] of [[6, 1, 5], [5, 1, 9], [129, 1, 2]]) {
+    await open(from); await val(`document.querySelector('.pall [data-a="1"]').click()`); await settle();
+    const r0 = await val(`(()=>{const r=[...document.querySelectorAll('#mvb tr[data-k]')][${row}];scrollTo(0,r.getBoundingClientRect().top+scrollY-120);return r.dataset.k+' lv'+r.dataset.o})()`); await settle();
+    const y0 = await val(`(()=>{const line=document.getElementById('pbar').offsetHeight;const r=[...document.querySelectorAll('[data-k]')].filter(e=>e.getClientRects().length).find(e=>e.getBoundingClientRect().top>=line-1);return [r.dataset.k,Math.round(r.getBoundingClientRect().top)]})()`);
+    await val(`document.querySelector('#pbar .ar[data-d="${dir}"]').click()`); await settle();
+    const y1 = await val(`(()=>{const r=document.querySelector('[data-k="${'${'}y0[0]${'}'}"]');return r?Math.round(r.getBoundingClientRect().top):'missing'})()`.replace("${y0[0]}", '')) ;
+    lines.push(`  ${w}x${h} #${from}→${await val('location.hash')}: anchor ${y0[0]} at ${y0[1]} → ${await val(`(()=>{const r=document.querySelector('[data-k="${y0[0]}"]');if(!r)return 'missing (nearest: '+(()=>{const line=document.getElementById('pbar').offsetHeight;const e=[...document.querySelectorAll('[data-k]')].filter(e=>e.getClientRects().length).find(e=>e.getBoundingClientRect().top>=line-1);return e.dataset.k+' at '+Math.round(e.getBoundingClientRect().top)})()+')';return Math.round(r.getBoundingClientRect().top)})()`)}`);
+  }
+  await shot(`${w}x${h}-switched`);
+  // Collapse all, then again: Reset all, back to the defaults
+  await open(6); await val(`document.querySelector('.pall [data-a="0"]').click()`); await settle();
+  const lab = await val(`document.querySelector('.pall [data-a="0"]').textContent`);
+  await val(`document.querySelector('.pall [data-a="0"]').click()`); await settle();
+  const st = await val(`[...document.querySelectorAll('details.psec')].map(d=>d.dataset.s+(d.open?'+':'-')).join(' ')+' / '+document.querySelector('.pall [data-a="0"]').textContent`);
+  lines.push(`  collapse → "${lab}" → ${st}`);
+  // the widest name words never break inside: hero, bar, top links
+  const br = await val(`(()=>{const P6=byId[6],n0=P6.n,bad=[];for(const n of ['Crabominable','Brambleghast','Squawkabilly','Basculin (Blue-Striped)','Ogerpon (Hearthflame)']){P6.n=n;byId[5].n=n;detail('6');
+    for(const e of [document.querySelector('.hero h2'),document.querySelector('#pbar .nm'),...document.querySelectorAll('.pnav a .t b')])if(e.scrollWidth>e.clientWidth+1)bad.push(n+' in '+(e.closest('#pbar')?'bar':e.closest('.pnav')?'top link':'top card'));}
+    P6.n=n0;byId[5].n='Charmeleon';return bad})()`);
+  lines.push('  widest words: ' + (br.length ? 'OVERFLOW ' + br.join('; ') : 'fit'));
   await open(5); await val(`document.querySelector('details.psec[data-s=ev]').scrollIntoView()`); await settle(); await shot(`${w}x${h}-evo`);
   await open(6); await val(`document.querySelector('details.psec[data-s=sc]').open=true;document.querySelector('details.psec[data-s=sc]').scrollIntoView()`); await settle(); await shot(`${w}x${h}-calc`);
 }
