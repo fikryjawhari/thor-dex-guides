@@ -65,6 +65,10 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
    4. **Mechanics check** (long-term, the user): each guide's notes.md → Damage calc → In-game tests. Hardlove has no
       independent oracle, so its calc stays provisional until then. The source wins over the docs.
    5. **Footer credits** (item 3), hzla's calc among them.
+   6. **Status moves on the move cards** (the user, 2026-10-30; a later session, every guide): every status move's
+      effect usable from its move row, so a battle's changes apply from the move view. Today stat-stage moves (Leer,
+      Withdraw, Swords Dance ...) show "—" with no Use; only damage, self-HP and field-setting moves act. Applies to
+      boss sets and Unbound's guessed sets alike.
    Gen 5 save reading waits for the Blaze Black 2 Redux guide; the other families: `template/calc/readers/README.md`.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
