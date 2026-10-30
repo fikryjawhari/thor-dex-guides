@@ -188,6 +188,13 @@ not a replacement for omitted methods. No template change or browser sweep in th
   / Dropped Item; BB2R's reused slots Red Scarf = Ice Stone and Oval Stone = Link Cable (Item Changes, Modified
   Items); TMs / HMs map by number. 440 / 441 IT names map; Old Sea Map (BB2R's "God/Grey Stone" slot, no PKHeX
   name) stays unmapped: a key item, never held.
+- **Valuables** (2026-10-30; it held every medicine, ball and battle item): curated like Unbound's, `items.VALUABLES`:
+  Sell items (Nugget, Big Nugget, Pearl, Big Pearl, Pearl String, Stardust, Star Piece, Comet Shard, Rare Bone, the
+  three Mushrooms, Shoal Salt / Shell, Honey, the seven Relics), Shards (the move tutors' currency), Heart Scales,
+  Sacred Ash (Jasmine's Bells for Ho-Oh / Lugia). Master Ball is a Key Item (Unbound's rule); Iron / Light / Smoke
+  Ball are Held Items (Iron Ball's shop line too). Medicine, Poké Balls, X items, repels, Escape Rope, Poké Doll /
+  Toy, Fluffy Tail and food are `NOT_LISTED`: not in Items or the walkthrough (as in the other guides); Shops still
+  list what is sold, and GID still maps them (`items.UNLISTED`), so a save's held item imports as before.
 - **Walkthrough join:** `area_join(area, LOC names)` gives each item place (record area or shop place) its LOC areas;
   places with none are `NO_WILD` (towns and buildings with no wild encounters: Black City, Black Tower, Join Avenue,
   Lacunosa, Lentimas, Marine Tube, Mistralton, Nuvema, Opelucid, PWT, Plasma Frigate, Pokémon League, Royal Unova,

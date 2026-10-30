@@ -50,7 +50,22 @@ DROP_KEYS = {'Town Map IV', 'Town Map', 'Running Shoes', 'Xtransceiver B2W2', 'X
              'Fashion Case', 'Prop Case', 'Medal Box', 'Gram 1', 'Gram 2', 'Gram 3'}
 KEY_ITEMS = {'Bicycle', 'Super Rod', 'Dowsing Machine', 'Shiny Charm', 'Oval Charm', 'Permit', 'Old Sea Map',
              'Magma Stone', 'DNA Splicers', 'Reveal Glass', 'Gracidea', 'Dropped Item', 'Colress Machine',
-             'Round Charm', 'Light Stone', 'Dark Stone', 'License', 'Vs. Recorder'}
+             'Round Charm', 'Light Stone', 'Dark Stone', 'License', 'Vs. Recorder', 'Master Ball'}
+# Valuables (the Items standard; curated like Unbound's, 2026-10-30): items only worth selling, and the currencies some
+# NPCs take (Shards: the move tutors; Heart Scale: the Move Reminder; Sacred Ash: Jasmine's Bells for Ho-Oh and Lugia,
+# Legendary Locations). Item -> sub-heading.
+VALUABLES = {**{name: 'Sell items' for name in (
+                 'Nugget', 'Big Nugget', 'Pearl', 'Big Pearl', 'Pearl String', 'Stardust', 'Star Piece', 'Comet Shard',
+                 'Rare Bone', 'Tiny Mushroom', 'Big Mushroom', 'Balm Mushroom', 'Shoal Salt', 'Shoal Shell', 'Honey',
+                 'Relic Copper', 'Relic Silver', 'Relic Gold', 'Relic Vase', 'Relic Band', 'Relic Statue', 'Relic Crown')},
+             **{colour + ' Shard': 'Shards' for colour in ('Red', 'Blue', 'Green', 'Yellow')},
+             'Heart Scale': 'Heart Scales', 'Sacred Ash': 'Sacred Ash'}
+# Medicine, Poké Balls, battle items, repels, mail, food: not listed in Items or the walkthrough (as in the other
+# guides); Shops still list what is sold. Held balls are held items.
+NOT_LISTED = 'Not listed'
+CONSUMABLE = re.compile(r'Ball$|Potion$|Heal$|Repel$|Mail|Shard$|Mushroom$|Mulch$|Pearl|Nugget|Relic |^X |^(?:Ether|Elixir|Max Ether|Max Elixir|Revive|Max Revive|Full Restore|Antidote|Awakening|Escape Rope|Honey|Heart Scale|Sacred Ash|Berry Juice|Fresh Water|Soda Pop|Lemonade|Moomoo Milk|Rage Candy Bar|Casteliacone|Lava Cookie|Old Gateau|Poké Doll|Poké Toy|Fluffy Tail|Rare Bone|Stardust|Star Piece|Comet Shard|Shoal Salt|Shoal Shell|Guard Spec\.|Dire Hit|Energy Root|Energy Powder|Heal Powder|Revival Herb|Sweet Heart|Balm Mushroom)$')
+HELD_BALLS = {'Iron Ball', 'Light Ball', 'Smoke Ball'}
+UNLISTED = []   # names of the placed / Pickup items left out (NOT_LISTED): gid.py still maps their game IDs
 ITEM_NAMES = ['', 'Absorb Bulb', 'Adamant Orb', 'Aguav Berry', 'Air Balloon', 'Amulet Coin', 'Amulet Coin III', 'Antidote', 'Armor Fossil', 'Aspear Berry', 'Awakening', 'Balm Mushroom', 'Berry Juice', 'Bicycle', 'Big Mushroom', 'Big Nugget', 'Big Pearl', 'Big Root', 'Binding Band', 'Black Belt', 'Black Glasses', 'Black Sludge', 'Blue Shard', 'BridgeMail D', 'BridgeMail M', 'BridgeMail T', 'BridgeMail V', 'Bright Powder', 'Bug Gem', 'Burn Heal', 'Calcium', 'Carbos', 'Casteliacone', 'Cell Battery', 'Charcoal', 'Cheri Berry', 'Chesto Berry', 'Choice Band', 'Choice Scarf', 'Choice Specs', 'Claw Fossil', 'Cleanse Tag', 'Clever Wing', 'Colress Machine', 'Comet Shard', 'Cover Fossil', 'DNA Splicers', 'Damp Rock', 'Dark Gem', 'Dark Stone', 'Dawn Stone', 'Deep Sea Scale', 'Deep Sea Tooth', 'Destiny Knot', 'Dire Hit', 'Dive Ball', 'Dome Fossil', 'Dowsing MCHN', 'Dowsing Machine', 'Draco Plate', 'Dragon Fang', 'Dragon Gem', 'Dragon Scale', 'Dread Plate', 'Dream Ball', 'Dropped Item', 'Dubious Disc', 'Dusk Ball', 'Dusk Stone', 'Earth Plate', 'Eject Button', 'Electirizer', 'Electric Gem', 'Elixir', 'Energy Powder', 'Energy Root', 'Escape Rope', 'Ether', 'Everstone', 'Eviolite', 'Exp. Share', 'Expert Belt', 'Favored Mail', 'Fighting Gem', 'Figy Berry', 'Fire Gem', 'Fire Stone', 'Fist Plate', 'Flame Orb', 'Flame Plate', 'Float Stone', 'Fluffy Tail', 'Flying Gem', 'Focus Band', 'Focus Sash', 'Fresh Water', 'Full Heal', 'Full Incense', 'Full Restore', 'Genius Wing', 'Ghost Gem', 'Gracidea', 'Grass Gem', 'Great Ball', 'Green Shard', 'Greet Mail', 'Grepa Berry', 'Grip Claw', 'Griseous Orb', 'Ground Gem', 'Guard Spec.', 'HP Up', 'Haban Berry', 'Hard Stone', 'Heal Ball', 'Heal Powder', 'Health Wing', 'Heart Scale', 'Heat Rock', 'Helix Fossil', 'Hondew Berry', 'Honey', 'Hyper Potion', 'Iapapa Berry', 'Ice Gem', 'Ice Heal', 'Ice Stone', 'Icicle Plate', 'Icy Rock', 'Inquiry Mail', 'Insect Plate', 'Iron', 'Iron Ball', 'Iron Plate', 'Kelpsy Berry', "King's Rock", 'Lagging Tail', 'Lansat Berry', 'Lava Cookie', 'Lax Incense', 'Leaf Stone', 'Leftovers', 'Lemonade', 'Leppa Berry', 'License', 'Life Orb', 'Light Ball', 'Light Clay', 'Light Stone', 'Like Mail', 'Link Cable', 'Luck Incense', 'Lucky Egg', 'Lucky Punch', 'Lum Berry', 'Lunar Wing', 'Lustrous Orb', 'Luxury Ball', 'Macho Brace', 'Magma Stone', 'Magmarizer', 'Magnet', 'Mago Berry', 'Master Ball', 'Max Elixir', 'Max Ether', 'Max Potion', 'Max Repel', 'Max Revive', 'Meadow Plate', 'Medal Box', 'Mental Herb', 'Metal Coat', 'Metal Powder', 'Metronome', 'Mind Plate', 'Miracle Seed', 'Moomoo Milk', 'Moomoo Milk III', 'Moon Stone', 'Muscle Band', 'Muscle Wing', 'Mystic Water', 'Nest Ball', 'Net Ball', 'Never-Melt Ice', 'Normal Gem', 'Nugget', 'Odd Incense', 'Old Amber', 'Old Gateau', 'Old Sea Map', 'Oran Berry', 'Oval Charm', 'Oval Stone', 'PP Max', 'PP Up', 'Pal Pad', 'Paralyze Heal', 'Pearl', 'Pearl String', 'Pecha Berry', 'Permit', 'Persim Berry', 'Plasma Card', 'Plume Fossil', 'Poison Barb', 'Poison Gem', 'Poké Ball', 'Poké Doll', 'Poké Toy', 'Pomeg Berry', 'Potion', 'Power Anklet', 'Power Band', 'Power Belt', 'Power Bracer', 'Power Herb', 'Power Lens', 'Power Weight', 'Pretty Wing', 'Prism Scale', 'Protector', 'Protein', 'Psychic Gem', 'Pure Incense', 'Qualot Berry', 'Quick Ball', 'Quick Claw', 'RSVP Mail', 'Rage Candy Bar', 'Rare Bone', 'Rare Candy', 'Rawst Berry', 'Razor Claw', 'Razor Fang', 'Reaper Cloth', 'Red Card', 'Red Shard', 'Relic Band', 'Relic Copper', 'Relic Crown', 'Relic Gold', 'Relic Silver', 'Relic Statue', 'Relic Vase', 'Repeat Ball', 'Repel', 'Reply Mail', 'Resist Wing', 'Reveal Glass', 'Revival Herb', 'Revive', 'Ring Target', 'Rock Gem', 'Rock Incense', 'Rocky Helmet', 'Root Fossil', 'Rose Incense', 'Round Charm', 'Running Shoes', 'Sacred Ash', 'Scope Lens', 'Sea Incense', 'Sharp Beak', 'Shed Shell', 'Shell Bell', 'Shiny Charm', 'Shiny Stone', 'Shoal Salt', 'Shoal Shell', 'Silk Scarf', 'Silver Powder', 'Sitrus Berry', 'Skull Fossil', 'Sky Plate', 'Smoke Ball', 'Smooth Rock', 'Soda Pop', 'Soft Sand', 'Soothe Bell', 'Soul Dew', 'Spell Tag', 'Splash Plate', 'Spooky Plate', 'Star Piece', 'Stardust', 'Starf Berry', 'Steel Gem', 'Stick', 'Sticky Barb', 'Stone Plate', 'Sun Stone', 'Super Potion', 'Super Repel', 'Super Rod', 'Super Rod III', 'Swift Wing', 'Tamato Berry', 'Tanga Berry', 'Thanks Mail', 'Thick Club', 'Thunder Stone', 'Timer Ball', 'Tiny Mushroom', 'Town Map IV', 'Toxic Orb', 'Toxic Plate', 'Twisted Spoon', 'Ultra Ball', 'Up-Grade', 'Vs. Recorder', 'Water Gem', 'Water Stone', 'Wave Incense', 'White Herb', 'Wide Lens', 'Wiki Berry', 'Wise Glasses', 'X Accuracy', 'X Attack', 'X Defense', 'X Sp. Atk', 'X Sp. Def', 'X Speed', 'Xtransceiver B2W2', 'Yellow Shard', 'Zap Plate', 'Zinc', 'Zoom Lens']
 VANILLA = {
     'placements': [
@@ -1365,8 +1380,10 @@ def category(name):
         return 'Stats and Abilities'
     if re.search(r'^(?:HP Up|Protein|Iron|Calcium|Zinc|Carbos|Rare Candy|PP Up|PP Max|.* Wing|Power (?:Weight|Bracer|Belt|Lens|Band|Anklet))$', name):
         return 'Stats and Abilities'
-    if re.search(r'Ball$|Potion$|Heal$|Repel$|Mail|Shard$|Mushroom$|Mulch$|Pearl|Nugget|Relic |^X |^(?:Ether|Elixir|Max Ether|Max Elixir|Revive|Max Revive|Full Restore|Antidote|Awakening|Escape Rope|Honey|Heart Scale|Sacred Ash|Berry Juice|Fresh Water|Soda Pop|Lemonade|Moomoo Milk|Rage Candy Bar|Casteliacone|Lava Cookie|Old Gateau|Poké Doll|Poké Toy|Fluffy Tail|Rare Bone|Stardust|Star Piece|Comet Shard|Shoal Salt|Shoal Shell|Guard Spec\.|Dire Hit|Energy Root|Energy Powder|Heal Powder|Revival Herb|Sweet Heart|Balm Mushroom)$', name):
+    if name in VALUABLES:
         return 'Valuables'
+    if name not in HELD_BALLS and CONSUMABLE.search(name):
+        return NOT_LISTED
     return 'Held Items'
 
 
@@ -1394,6 +1411,8 @@ def subsection(name):
                 'Silver Powder', 'Hard Stone', 'Spell Tag', 'Dragon Fang', 'Black Glasses', 'Silk Scarf'):
             return 'Type boosters'
         return None
+    if box == 'Valuables':
+        return VALUABLES[name]
     return box
 
 
@@ -1402,7 +1421,7 @@ def shop_kind(name):
         return 'Evolution items'
     if re.match(r'TM\d', name):
         return 'TMs'
-    if name.endswith('Ball'):
+    if name.endswith('Ball') and name not in HELD_BALLS:
         return 'Poké Balls'
     if name.startswith('Power '):
         return 'Power items'
@@ -1410,7 +1429,7 @@ def shop_kind(name):
         return 'Stats and abilities'
     if category(name) == 'Held Items':
         return 'Held items'
-    if category(name) == 'Valuables' and not re.search(r'Mail|Shard|Scale|Honey', name):
+    if category(name) in ('Valuables', NOT_LISTED) and not re.search(r'Mail|Shard|Scale|Honey', name):
         return 'Healing and repels'
     return 'Other'
 
@@ -1569,8 +1588,12 @@ def build(data):
     grouped = collections.OrderedDict()
     for row in records:
         grouped.setdefault(row['item'], []).append(row)
+    UNLISTED[:] = []
     for name, places in grouped.items():
         box = category(name)
+        if box == NOT_LISTED:
+            UNLISTED.append(name)
+            continue
         parts = [found_line(row) for row in places]
         if name in {names(row['item']) for row in parsed['uses']}:
             parts.append('Also: has a Use option, like an evolution stone')
@@ -1580,6 +1603,9 @@ def build(data):
     for row in parsed['pickup']:
         name = names(row['item'], 'Pickup:%d' % row['line'])
         box = category(name)
+        if box == NOT_LISTED:
+            UNLISTED.append(name)
+            continue
         target = next((entry for entry in boxes.setdefault(box, []) if entry[0] == name), None)
         note = 'Also: Pickup, in place of every %s slot' % row['old']
         if target:
@@ -1589,6 +1615,9 @@ def build(data):
     for name, bands in pickup_table(parsed).items():
         name = names(name, 'Pickup vanilla table')
         box = category(name)
+        if box == NOT_LISTED:
+            UNLISTED.append(name)
+            continue
         target = next((entry for entry in boxes.setdefault(box, []) if entry[0] == name), None)
         note = 'Also: Pickup (10% after a win); on a successful pickup: ' + '; '.join('Lv %s: %d%%' % band for band in bands)
         if target:
