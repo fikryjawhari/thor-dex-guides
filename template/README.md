@@ -441,6 +441,11 @@ dex.css):
 3. Expand all / Collapse all bars (`segBar`): one at the page top for the boxes; in an Items box with 2+ sub-headings,
    under the box header; in a Locations place with 2+ sections, under the place header. Each only opens or closes its
    own level and never moves. The walkthrough has a Show switch instead (below).
+   **Reset all** (2026-10-31): the page-top Collapse all, pressed while every box is already closed, resets the page's
+   open state to the defaults (sections closed, Locations' places open, walkthrough stops closed, Trainers in Places) and
+   clears it from `LS`; ticks, trackers, caps and the walkthrough's Guide info and docs stay. While every box is closed the
+   button reads "Reset all". The reset is one function (`resetOpen`), so the trigger can change (a double tap was the
+   alternative).
 4. Collapse bars at the bottom of a block only when it is taller than the window (`bars()`); a pinned block collapses
    in place and flashes (inset accent ring). Rechecked on toggles, resizes, content-visibility renders and any change
    of the page size (a ResizeObserver on `#app`: the viewer's text zoom fires no resize but changes the height).
@@ -451,7 +456,12 @@ dex.css):
 8. Items: boxes don't pin, their sub-headings do. A box with one sub-heading named like itself shows the name twice
    (box header + sub-heading) on purpose: the user wants it that way so the box header never becomes sticky.
 
-**Walkthrough:** Guide info → Starter → Next step → Expand / Collapse all, nothing else above the splits. Inside a stop:
+**Walkthrough:** Guide info → Starter → Next step → Expand / Collapse all, nothing else above the splits. An opened box
+starts with a Show switch (`.wksw`, the Trainers page's style, pinned under the search bar with the stop headers under
+it): **Stops** (every stop closed, the default), **Sections** (every stop open, its yellow sections closed), **All**
+(stops and sections open; trainer and mission cards keep their own state). Read from the page, not stored: after single
+header taps that fit none of the three, no button is lit and "mixed" shows. Pressing one keeps the stop you're reading
+at the same pixel. Inside a stop:
 note, then Checklist / Encounters / Items / Trainers sections. Stops with trainers show `n/N | cap` (the split's cap
 when the stop has none). Empty stops are grey signs (`.wsign`), not boxes. Guide info holds tracker export / import /
 reset, the game docs and the intro text.

@@ -508,14 +508,28 @@ function flip(d,open){const sm=d.querySelector(':scope>summary'),y=sm.getBoundin
 // Collapse bars (.endbar, inside their details) show only where the open block, with its header and the bar itself,
 // doesn't fit under the search bar. Blocks inside a skipped content-visibility block are left until they render.
 const BH={};const barH=b=>{const k=b.className;if(BH[k]==null){b.hidden=false;const cs=getComputedStyle(b);BH[k]=b.offsetHeight+parseFloat(cs.marginTop)+parseFloat(cs.marginBottom);b.hidden=true;}return BH[k];};
-function bars(){const room=innerHeight-hdrH(),bs=[...app.querySelectorAll('.endbar')].map(b=>[b,b.closest('details')]).filter(([b,d])=>d&&!inSkip(d));
+// Collapse all, pressed when every box is already closed, resets everything inside to the defaults (resetOpen: the
+// one place to change if the trigger changes); meanwhile its label says so. Kept in step by bars().
+const allShut=()=>{const b=jts();return b.length>0&&b.every(d=>!d.open);};
+function segLabel(){const c=app.querySelector('.seg.all>[data-a="0"]');if(!c)return;const t=allShut()?'Reset all':'Collapse all';if(c.textContent!==t)c.textContent=t;}
+// Defaults: yellow sections closed, Locations' places open, walkthrough stops closed (Show: Stops), Trainers places and
+// trainers closed (Places). The saved open state of the page is cleared to match; ticks, trackers, caps, open boxes
+// (none: all closed) and the walkthrough's Guide info and docs stay.
+function resetOpen(){const v=document.body.dataset.v;
+ if(v==='walk'){for(const k of Object.keys(WO.x))if(!/^doc/.test(k))delete WO.x[k];WO.s={};const mm=misMap();if(mm)Object.values(mm).forEach(r=>{if(r&&typeof r==='object')r.o=false;});TRDO.clear();woSave();}
+ else if(v==='locs'||v==='l'){LO.x={};LO.s={};loSave();}
+ else if(v==='items'){IO.x={};IO.s={};try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}}
+ else if(v==='trainers'){TOPEN.p={};TOPEN.t={};delete TOPEN.d;CAPO.clear();trSave();}
+ else return;
+ rerender();const c=app.querySelector('.seg.all>[data-a="0"]');if(c)flash(c);}
+function bars(){segLabel();const room=innerHeight-hdrH(),bs=[...app.querySelectorAll('.endbar')].map(b=>[b,b.closest('details')]).filter(([b,d])=>d&&!inSkip(d));
  bs.forEach(([b])=>b.hidden=true);bs.filter(([b,d])=>d.open&&d.offsetHeight+barH(b)>room).forEach(([b])=>b.hidden=false);}
 let bq=0;const barsSoon=()=>{if(!bq)bq=requestAnimationFrame(()=>{bq=0;bars();});};
 document.addEventListener('contentvisibilityautostatechange',e=>{if(!e.skipped&&app.querySelector('.endbar'))barsSoon();},true);
 addEventListener('resize',()=>{if(app.querySelector('.endbar'))barsSoon();});
 new ResizeObserver(()=>{if(!app.querySelector('.endbar'))return;for(const key in BH)delete BH[key];barsSoon();}).observe(app);
 // Height of the Show row pinned above a Trainers-page element (less the 2px the place header overlaps it: dex.css).
-const trPinH=el=>{const bx=document.body.dataset.v==='trainers'&&!el.matches('details.split')&&el.closest('details.split');const w=bx&&bx.querySelector('.trsw');return w?w.getBoundingClientRect().height-2:0;};
+const trPinH=el=>{const bx=/^(trainers|walk)$/.test(document.body.dataset.v)&&!el.matches('details.split')&&el.closest('details.split');const w=bx&&bx.querySelector('.trsw');return w?w.getBoundingClientRect().height-2:0;};
 // A collapse bar. Anything but a split lands right under the headers pinned above it (the search bar, its stop's and
 // section's): a stop's or section's own header is pinned there already, so it closes in place; a trainer row's (not
 // sticky) is scrolled there if it's off the top. A split closes and its header goes to the top. All flash.
@@ -698,16 +712,34 @@ function listWalk(){fil.innerHTML='';const W=D.WK;const cf=caughtFams(-1);const 
   W.splits.map((sp,si)=>{const all=sp.st.flatMap((s,ti)=>stopLeaves(s,si,ti));const done=all.filter(leafDone).length;
    return `<details class="split jt" data-wo="${si}" ${WO.o[si]?'open':''}><summary>${esc(sp.n)} ${CHK?`<span class="tag ${done===all.length&&all.length?'got':''}">${done}/${all.length}</span>`:`<span class="mut small">${sp.st.length} stop${sp.st.length===1?'':'s'}</span>`}</summary>${sp.note?`<div class="trnote" style="margin:8px 2px">${esc(sp.note)}</div>`:''}<div class="body" data-si="${si}"></div></details>`;}).join('');
  app.querySelectorAll('details.split[data-wo]').forEach(d=>{const fill=()=>{const b=d.querySelector('.body');if(b&&d.open&&!b.innerHTML){if(b.dataset.gi){b.innerHTML=guideInfoHTML();bindWalk();return;}const si=+b.dataset.si;
-   b.innerHTML=W.splits[si].st.map((s,ti)=>walkStop(s,si,ti,cf,shown)).join('')+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(W.splits[si].n)}</span></button>`;bindWalk();}};
+   b.innerHTML=wkSwitch()+W.splits[si].st.map((s,ti)=>walkStop(s,si,ti,cf,shown)).join('')+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(W.splits[si].n)}</span></button>`;
+   if(!b.querySelector('details.stopd'))b.querySelector('.wksw').remove();else{trObs(d);wkSync(d);}bindWalk();}};
   d.addEventListener('toggle',()=>{if(d.open)WO.o[d.dataset.wo]=1;else delete WO.o[d.dataset.wo];woSave();fill();barsSoon();});fill();});
  bindWalk();bars();}
+// A walkthrough box's Show switch (template/README.md), pinned under the search bar like the Trainers page's: Stops (every
+// stop closed), Sections (every stop open, its sections closed), All (stops and sections open; trainer and mission
+// cards keep their own state). Read from the page, not stored: after a tap on a single header that fits none of the
+// three, no button is lit and "mixed" shows (as on Trainers). Pressing one keeps the stop you're reading in place.
+const wkSwitch=()=>`<div class="trsw wksw"><span>Show</span><div class="o" role="group" aria-label="Show">${['Stops','Sections','All'].map((x,i)=>`<button type="button" data-v="${i}">${x}</button>`).join('')}</div><span class="mx" hidden>mixed</span></div>`;
+const wkStops=b=>[...b.querySelectorAll(':scope>.body>details.stopd')];
+function wkLive(b){const ps=wkStops(b),op=ps.filter(p=>p.open).length;if(!op)return 0;if(op<ps.length)return -1;
+ const ss=ps.flatMap(p=>[...p.querySelectorAll('details.sec')]),n=ss.filter(x=>x.open).length;return !n?1:n===ss.length?2:-1;}
+function wkSync(b){const w=b&&b.querySelector(':scope>.body>.wksw');if(!w)return;const v=wkLive(b);
+ w.querySelectorAll('button').forEach(x=>{const on=+x.dataset.v===v;x.setAttribute('aria-pressed',on);x.className=on?'on':'';});w.querySelector('.mx').hidden=v!==-1;w.classList.toggle('m',v===-1);}
+const WKQ=new Set();let wkq=0;
+const wkSyncSoon=d=>{const b=d.closest('details.split');if(!b)return;WKQ.add(b);if(!wkq)wkq=requestAnimationFrame(()=>{wkq=0;WKQ.forEach(wkSync);WKQ.clear();});};
+function wkShow(b,v){if(wkLive(b)===v)return;const w=b.querySelector(':scope>.body>.wksw'),ps=wkStops(b),lim=w.getBoundingClientRect().bottom;
+ // anchor: the switch while the box header shows, else the first stop header at or below the pinned switch
+ const a=b.querySelector(':scope>summary').getBoundingClientRect().bottom>0?w:ps.map(p=>p.querySelector(':scope>summary')).find(x=>x.getBoundingClientRect().bottom>lim+1)||w,y=a.getBoundingClientRect().top;
+ noAnchor();ps.forEach(p=>{p.open=v>0;p.querySelectorAll('details.sec').forEach(x=>x.open=v===2);});
+ bars();scrollBy(0,a.getBoundingClientRect().top-y);wkSync(b);hold(a);jumpState();}
 function bindWalk(){bindTrackers();bindTrd();bindHead();app.querySelectorAll('.wstep input').forEach(c=>{if(c.dataset.b)return;c.dataset.b=1;c.onchange=()=>{const mk=c.dataset.mk;if(mk)misSet(mk,r=>{if(c.checked)r.c[c.dataset.ck]=1;else delete r.c[c.dataset.ck];});else{if(c.checked)WO.c[c.dataset.sk]=1;else delete WO.c[c.dataset.sk];woSave();}c.closest('.wstep').classList.toggle('done',c.checked);
   const tag=d=>{if(!d)return;const all=[...d.querySelectorAll('.wstep input')],n=all.filter(x=>x.checked).length,t=d.querySelector(':scope>summary .tag');if(t){t.textContent=n+'/'+all.length;t.classList.toggle('got',n===all.length);}};
   const mi=mk&&c.closest('details.wmis');tag(mi);tag(c.closest('details.sec'));tag(c.closest('details.split'));const nx=app.querySelector('.wk-next');if(nx)nx.innerHTML=nextInner();
   // The tick that completes a mission closes it, its header landing under the pinned ones.
   if(mi&&c.checked&&[...mi.querySelectorAll('.wstep input')].every(x=>x.checked)){foldUp(mi);mi.querySelector(':scope>summary').focus({preventScroll:true});}};});
- colBind(app);app.querySelectorAll('details.stopd').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{const k=d.dataset.k;if(/^doc/.test(k)){if(d.open)WO.x[k]=1;else delete WO.x[k];}else if(d.open)WO.x[k]=1;else delete WO.x[k];woSave();barsSoon();});});
- app.querySelectorAll('details.sec').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{WO.s[d.dataset.s]=d.open?1:0;woSave();barsSoon();});});
+ colBind(app);app.querySelectorAll('details.stopd').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{const k=d.dataset.k;if(/^doc/.test(k)){if(d.open)WO.x[k]=1;else delete WO.x[k];}else if(d.open)WO.x[k]=1;else delete WO.x[k];woSave();barsSoon();wkSyncSoon(d);});});
+ app.querySelectorAll('details.sec').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{WO.s[d.dataset.s]=d.open?1:0;woSave();barsSoon();wkSyncSoon(d);});});
  app.querySelectorAll('details.wmis').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{if(+d.dataset.w===+d.open)return;d.dataset.w=d.open?1:0;misSet(d.dataset.m,r=>{r.o=d.open;});barsSoon();});});
  const r=app.querySelector('.wk-reset');if(r&&!r.dataset.b){r.dataset.b=1;r.onclick=()=>{if(confirm('Clear every walkthrough checkbox?')){WO.c={};const mm=misMap();if(mm)Object.values(mm).forEach(r=>{if(r&&typeof r==='object')r.c={};});woSave();rerender();}};}
  barsSoon();}
@@ -718,9 +750,10 @@ const COLV={walk:1,locs:1,l:1,trainers:1,items:1};
 app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
  if(document.body.dataset.v==='trainers'){const w=e.target.closest('.trsw button'),pt=e.target.closest('button.pt');
   if(w){trShow(w.closest('details.split'),+w.dataset.v);return;}if(pt){e.preventDefault();e.stopPropagation();trTeams(pt.closest('details.stopd'),pt);return;}}
+ const ws=e.target.closest('.wksw button');if(ws){wkShow(ws.closest('details.split'),+ws.dataset.v);return;}
  const wk=e.target.closest('button.pt.wk');if(wk){e.preventDefault();e.stopPropagation();walkTeams(wk.closest('details.stopd'));return;}
  const b=e.target.closest('.seg button');
- if(b){const s=b.closest('.seg');if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.it-sp')?b.closest('.body').querySelectorAll('details.sec'):s.matches('.lc-pl')?b.closest('.stop').querySelectorAll(':scope>details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
+ if(b){const s=b.closest('.seg');if(s.matches('.all')&&b.dataset.a==='0'&&allShut()){resetOpen();return;}if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.it-sp')?b.closest('.body').querySelectorAll('details.sec'):s.matches('.lc-pl')?b.closest('.stop').querySelectorAll(':scope>details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
  const end=e.target.closest('.endbar,.trfold');if(end){foldUp(end.closest('details'));return;}
  if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;WO.x[k]=1;WO.s[k+'.c']=1;if(n.m)misSet(n.m.m,r=>{r.o=true;});woSave();render(true);
   const inp=app.querySelector(n.m?`.wstep input[data-mk="${CSS.escape(n.m.m)}"][data-ck="${CSS.escape(n.c.k)}"]`:`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;land(inp.closest('.wstep'),GAP);return;}

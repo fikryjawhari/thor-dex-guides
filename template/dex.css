@@ -424,6 +424,9 @@ table.lrn td:nth-child(2){overflow-wrap:anywhere}
 /* narrow: three names need the room, so "mixed" takes the place of "Show" */
 @media (max-width:359px){.trsw button{font-size:12px;padding:0 1px}.trsw.m>span:first-child{display:none}.trsw .mx{order:-1}}
 body[data-v=trainers] details.stopd[open]>summary{top:calc(var(--hh,0px) + var(--sw,36px) - 2px);box-shadow:0 -5px 0 var(--bg)}
+/* The walkthrough's Show switch (.wksw) pins the same way: its stop headers under it, their sections under those */
+body[data-v=walk] .body[data-si] details.stopd[open]>summary{top:calc(var(--hh,0px) + var(--sw,36px) - 2px);box-shadow:0 -5px 0 var(--bg)}
+body[data-v=walk] .body[data-si] details.stopd[open] details.sec[open]>summary{top:calc(var(--hh,0px) + var(--sw,36px) + var(--sh,34px) - 3px)}
 /* Stop and place headers on one line: the name truncates, tags and the "n/N | cap" button (a place's or walkthrough
    stop's trainers: open cards / trainers, level cap) keep their size, then the arrow */
 .stoph{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
