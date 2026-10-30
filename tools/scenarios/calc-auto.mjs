@@ -348,10 +348,13 @@ checks.push(
         if(effects.some(effect => effect.value === 'random')) assert.notEqual(state.terrain, 'random');
         if(effects.some(effect => effect.kind === 'hazard')) {
           assert.equal(state.atkSpikes, 1,trainer.k+' Spikes '+JSON.stringify(state)); assert.equal(state.atkToxicSpikes, 1,trainer.k+' Toxic Spikes '+JSON.stringify(state));
-          assert.ok(await page.value('CALC.state().hazardEntry.mine.status'), 'lead exempt');
+          assert.equal(await page.value('CALC.state().hzOffer.mine??null'), null, 'lead exempt: nothing offered');
+          assert.equal(await page.count('[data-a=hzapply][data-s=mine]'), 0, 'lead exempt: no hazard chip');
           const lead = await hpOf(page, 'mine');
           await pickCell(page, 'party', 0);
-          assert.ok((await hpOf(page, 'mine')) < (await maxOf(page, 'mine')), 'next grounded entrant takes Spikes');
+          assert.equal(await hpOf(page, 'mine'), await maxOf(page, 'mine'), 'the next entrant takes nothing by itself');
+          await page.tap('[data-a=hzapply][data-s=mine]');
+          assert.ok((await hpOf(page, 'mine')) < (await maxOf(page, 'mine')), 'next grounded entrant takes Spikes from its chip');
           assert.match(await page.text('#calc-log'), /entry.*Spikes/s);
           assert.ok(lead > 0);
           if(await page.count('#calc-log'))await page.tap('#calc-log button'); // the log covers the team row's corner
@@ -370,6 +373,7 @@ checks.push(
         await pickCell(page,'party',0);
         assert.equal(await hpOf(page,'mine'),await maxOf(page,'mine'),'first selection is exempt even when trainer was picked before the player');
         assert.equal(await page.value('CALC.mon("mine").status??""'),'','first selection is not poisoned');
+        assert.equal(await page.count('[data-a=hzapply][data-s=mine]'),0,'and is offered nothing');
       }
     },
   },

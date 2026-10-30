@@ -463,8 +463,6 @@ details.dfield>summary .mut{min-width:0;overflow:hidden;text-overflow:ellipsis;w
 .dtg>.dffield{grid-column:auto;margin:0}
 .dtg>.dffield[open]{grid-column:1/-1}
 .dffield>summary{min-height:24px;white-space:nowrap}
-.dhapply{min-height:28px;width:100%;margin-top:3px;border:1px solid var(--line);border-radius:7px;background:var(--panel2);color:var(--fg);font:inherit;font-size:11px;cursor:pointer;touch-action:manipulation}
-.dhapply:disabled{opacity:.45;cursor:default}
 .dfgroup{min-width:0}
 .dfgroup>.endbar.dfend{min-height:28px;margin-top:3px;font-size:11px}
 body.calc-route .dfside{gap:3px}
@@ -508,11 +506,14 @@ body.calc-route .cc .cl [data-tox]{width:18px}
 body.calc-route .cc .cl .mx{font-size:10px}
 body.calc-route .cc .cl .hpl{padding:0;width:15px;min-width:15px;font-size:12px}
 body.calc-route .cc .cl .dend{margin-left:auto;display:flex;align-items:center;gap:1px}
+/* Wide: the berry / hazard chip leads the turn-end group, so the residual stays put when the chip changes (narrow: order 10 below). */
+body.calc-route .cc .dend>.dberry{order:-1}
 body.calc-route .cc .cl .dtoxl{margin:0}
 body.calc-route .cc .cl .dturn{margin:0;min-width:0;min-height:18px;height:18px;padding:0 2px;font:700 10px/18px system-ui}
 body.calc-route .dturn.dn,body.calc-route .dqp .dn{color:#ff7b6b}
 body.calc-route .dturn.up,body.calc-route .dqp .up{color:#71d99a}
 body.calc-route .cc .cl .dberry{color:var(--fg)}
+body.calc-route .cc .cl .dberry.dhz.dn{color:#ff7b6b}body.calc-route .cc .cl .dberry.dhz.up{color:#71d99a}
 body.calc-route .dhpbar{height:2px;flex:none;margin-top:1px;background:var(--line);border-radius:2px;overflow:hidden}
 body.calc-route .dhpbar i{display:block;height:100%;background:#71d99a}
 body.calc-route .cc .ed .dentry{width:100%;min-width:0;height:27px;cursor:pointer;text-align:left;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--fg);padding:0 5px;font:11px system-ui;box-sizing:border-box;text-overflow:ellipsis}
@@ -522,6 +523,7 @@ body.calc-route .cc .ed .dqp{grid-template-columns:minmax(0,1fr);gap:2px;padding
 body.calc-route .dqp>button{display:flex;justify-content:space-between;align-items:center;gap:4px;min-height:24px;border:1px solid var(--line);border-radius:4px;background:var(--panel2);font:11px system-ui;padding:2px 4px;text-align:left;cursor:pointer}
 body.calc-route .sheet .shb{min-height:0}
 @media(prefers-color-scheme:light){body.calc-route .dturn.dn,body.calc-route .dqp .dn{color:#b63528}body.calc-route .dturn.up,body.calc-route .dqp .up{color:#187b47}}
+@media(prefers-color-scheme:light){body.calc-route .cc .cl .dberry.dhz.dn{color:#b63528}body.calc-route .cc .cl .dberry.dhz.up{color:#187b47}}
 body.calc-route.kbopen .sheet{bottom:var(--kbh,0px)}
 body.calc-route.kbopen .sheet .shb{padding-bottom:4px}
 /* Preview rows: exactly two lines. Line 1 name, level, item, then the ability, which shrinks (to an ellipsis) first. */
@@ -530,6 +532,13 @@ body.calc-route .ft .l1t em{flex:0 10 auto;margin-left:0}body.calc-route .ft .l1
 
 body.calc-route .dres .mr>.mm{width:100%;min-width:0;padding:1px 5px;box-sizing:border-box}
 body.calc-route .dres .mr .r1{height:17px;line-height:17px;align-items:center;gap:3px}
+/* Safari counts the move name's full text in the line's minimum width (Chrome counts min-width:0): without these the
+   name never truncates there and the right-hand button (Par, Enc, Subst -62...) is pushed past the row and the page. */
+body.calc-route .dres .mr .mm,body.calc-route .dres .mr .r1,body.calc-route .dres .mr .r2{min-width:0}
+/* Status rows: name | button as a grid, the name column shrinkable to 0 and the button pinned to the right edge
+   (flex let Safari push the button past the row). */
+body.calc-route .dres .mr.st .r1{display:grid;grid-template-columns:minmax(0,1fr) auto;justify-content:stretch}
+body.calc-route .dres .mr.st .r1>.hp{justify-self:end}
 body.calc-route .dres .mr .r2{height:15px;min-height:0;margin:0;line-height:15px;align-items:center;gap:3px;font-size:9px}
 body.calc-route .dres .mr .hp{display:flex;align-items:center;gap:1px;flex:none;font-size:11px}
 body.calc-route .dres .dendpoint{border:1px solid var(--line);border-radius:4px;padding:0 2px;background:var(--panel2);color:var(--fg);font:700 10px/14px system-ui;cursor:pointer;touch-action:manipulation}
@@ -625,14 +634,14 @@ body.calc-route .cc .l1 .ddl{line-height:1.6}
  body.calc-route .fbar .nav,body.calc-route .fbar .dsrc{height:auto;min-height:22px}
  body.calc-route .cc{display:flex;flex-direction:row;flex-wrap:wrap;align-content:start;align-items:center;gap:0 2px;padding:1px 3px;min-height:0}
  body.calc-route .cc .l1,body.calc-route .cc .cl,body.calc-route .cc .cl .dend{display:contents}
- /* At most three lines (the HP bar isn't one), by order: 0-1 the name line (.offteam only: name, M, ability boxes, Speed
+ /* At most three lines (the HP bar isn't one), by order: 0-1 the name line (the name, M, ability boxes, Speed
     at the right end), 2-3 HP + ✎, 4 the HP bar, 5-6 line 2 (M, ability boxes, Speed; not with the name line), 7 a
     break, 8-12 line 3 (battle state, Aura, berry at the left; T + Toxic box, residual at the right). A card that would
     take more than three lines gets .aup from fitCards() (Aura up to line 2, or the HP line when named), then .sup (the state too), then .tight. */
  body.calc-route .cc .cn{display:none}
- body.calc-route .cc.offteam .cn{display:block;order:0;flex:1 1 0;min-width:0;min-height:18px;overflow:hidden;text-align:left}
- body.calc-route .cc.offteam .cn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
- body.calc-route .cc.offteam::after{content:'';order:1;flex:0 0 100%;height:0}
+ body.calc-route .cc.named .cn{display:block;order:0;flex:1 1 0;min-width:0;min-height:18px;overflow:hidden;text-align:left}
+ body.calc-route .cc.named .cn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ body.calc-route .cc.named::after{content:'';order:1;flex:0 0 100%;height:0}
  body.calc-route .cc::before{content:'';order:7;flex:0 0 100%;height:0}
  body.calc-route .cc .cl>span:first-child,body.calc-route .cc [data-lv],body.calc-route .cc .dsl{display:none}
  body.calc-route .cc .hpl,body.calc-route .cc [data-hp],body.calc-route .cc .mx{order:2}
@@ -640,14 +649,14 @@ body.calc-route .cc .l1 .ddl{line-height:1.6}
  body.calc-route .cc>.dhpbar{order:4;flex-basis:100%;margin:0}
  body.calc-route .cc .mg,body.calc-route .cc .dmonstate,body.calc-route .cc .ddl,body.calc-route .cc .aum,body.calc-route .cc .dvol{order:5;flex:none;height:auto;min-height:18px;margin-left:0;box-sizing:border-box}
  body.calc-route .cc .l1 .sp{order:6;margin-left:auto;font-size:0;min-height:18px;display:flex;align-items:center}
- body.calc-route .cc.offteam .mg,body.calc-route .cc.offteam .dmonstate,body.calc-route .cc.offteam .ddl{order:0}
- body.calc-route .cc.offteam .l1 .sp{order:1;margin-left:2px}
+ body.calc-route .cc.named .mg,body.calc-route .cc.named .dmonstate,body.calc-route .cc.named .ddl{order:0}
+ body.calc-route .cc.named .l1 .sp{order:1;margin-left:2px}
  body.calc-route .cc .cl>.dvol{order:8}
  body.calc-route .cc .cl>.aum{order:9}
  body.calc-route .cc.aup .cl>.aum{order:5}
- body.calc-route .cc.offteam.aup .cl>.aum{order:2}
+ body.calc-route .cc.named.aup .cl>.aum{order:2}
  body.calc-route .cc.sup .cl>.dvol{order:5}
- body.calc-route .cc.offteam.sup .cl>.dvol{order:2}
+ body.calc-route .cc.named.sup .cl>.dvol{order:2}
  body.calc-route .cc .dend>.dberry{order:10}
  body.calc-route .cc .dend>.dtoxl,body.calc-route .cc .dend>[data-tox]{order:11}
  body.calc-route .cc .dend>button:not(.dberry){order:12}

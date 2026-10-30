@@ -48,8 +48,8 @@ const seed = (page, { until = null, all = false, ticks = [], open = [], closed =
   ${q(open)}.forEach(m=>misSet(m,r=>{r.o=true;}));${q(closed)}.forEach(m=>misSet(m,r=>{r.o=false;}));${extra};woSave();})()`);
 const saved = page => page.value(`JSON.parse(localStorage.getItem(LS.walk)||'{}')`);
 const tagOf = (page, sel) => page.value(`document.querySelector(${q(sel)})?.querySelector(':scope>summary .tag')?.textContent`);
-// The pinned headers' bottom edge above el, and el's top: a landing puts el right there, on screen.
-const landing = (page, sel, row = false) => page.value(`(()=>{let el=document.querySelector(${q(sel)});if(el&&${row})el=el.closest('.wstep');if(!el)return null;let y=hdrH();
+// The pinned headers' bottom edge above el (the Show switch included), and el's top: a landing puts el right there, on screen.
+const landing = (page, sel, row = false) => page.value(`(()=>{let el=document.querySelector(${q(sel)});if(el&&${row})el=el.closest('.wstep');if(!el)return null;let y=hdrH()+trPinH(el);
   for(let p=el.closest('details');p;p=p.parentElement.closest('details'))if(p.open&&p.matches('details.stopd,details.sec')&&p.querySelector(':scope>summary')!==el)y+=p.querySelector(':scope>summary').offsetHeight;
   const t=el.getBoundingClientRect().top;return {pin:y,top:t,h:innerHeight,end:scrollY+innerHeight>=document.documentElement.scrollHeight-1,flash:el.classList.contains('flash')};})()`);
 const assertLanded = (at, label) => {
