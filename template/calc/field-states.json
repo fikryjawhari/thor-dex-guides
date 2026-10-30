@@ -30,6 +30,7 @@
   {"k":"Swamp","l":"Swamp","gen":5,"all":["Water Pledge","Grass Pledge"]},
   {"k":"Charge","l":"Charge","group":"battle","gen":4,"moves":["Charge"],"abilities":["Electromorphosis","Wind Power"]},
   {"k":"Safeguard","l":"Safeguard","gen":4,"moves":["Safeguard"]},
+  {"k":"Mist","l":"Mist","gen":4,"moves":["Mist"]},
   {"k":"Protect","l":"Protect","group":"battle","gen":4,"moves":["Protect","Detect","King's Shield","Spiky Shield","Baneful Bunker","Obstruct","Silk Trap","Burning Bulwark"]},
   {"k":"Foresight","l":"Foresight","group":"battle","gen":4,"moves":["Foresight","Odor Sleuth"]},
   {"k":"MiracleEye","l":"Miracle Eye","group":"battle","gen":4,"moves":["Miracle Eye"]},
