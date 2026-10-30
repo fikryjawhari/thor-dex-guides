@@ -99,31 +99,16 @@ branch), Totem battles from the game (real IVs; "Doc says" notes on 6 difference
 `hacks/<hack>/.src/evless/luma/titles/<title id>/` on the Thor and checks in game: no EVs gained after battles
 (the summary screen's EVs stay 0), a trainer's Pokémon stats, and a Totem fight still hard.
 
-**Unbound 2.1.1.1 (Expert): in progress** on `worktree-unbound` (`.claude/worktrees/unbound`; pushed to origin at
-`35b862e`). Plan, every decision and unit findings: `plans/unbound.md`; mission spec `plans/unbound-missions.md`.
-- Merged on the branch (2026-10-30, `052cb0d`): sources, scaffold, dex + `tools/cfru.py` + GID, locations, items,
-  trainers + caps (393 cards, keys seeded), walkthrough with 84 keyed missions, CFRU save reader (`cfru.js`, 37 saves
-  vs Unbound-Cloud / hzla, 0 unexplained), calc profile (8b: 82 exact hzla fixtures), prune (21 species). Template
-  changes so far: `cfg.mgm`, no speed for unknown IVs / EVs (`monCard`).
-- 8c merged 2026-10-30 (`e0571af`): every gimmick in the engine, 27 field records, none left for review; the
-  calc UI spec is in `plans/unbound.md` → Findings → 8c. Engine change left for the UI pass: weight Speed in the
-  official order (Decisions).
-- 7b merged 2026-10-30 (`cd389e0`): missions as bordered cards with auto-close (`template/dex.js` / `dex.css`,
-  `tools/scenarios/walk-missions.mjs`, guide-update snapshot covers missions); domcompare: the other five guides
-  unchanged. Changed for every guide: Next step lands through the search-jump routine (same 8 px gap; EI checked).
-  Not done: Next doesn't move focus to the target checkbox; scroll anchors restore to the card, not the row. Mission
-  rows are 44 px, ordinary rows ~33 px (left as is unless the user minds). Phone preview of the merged build:
-  https://windows-pc.tail1846b8.ts.net/preview/unbound.html . Delete `plans/unbound-missions.md` once the user
-  approves (its decisions are in template/README.md).
-- Next, in order: **the calc UI pass**
-  (template `calc.js`: new field kinds, D2 assumed-set markers, import shows boxes when the party is empty; one
-  template session), then unit 9: the guide in the Thor frame on the phone preview for the user, then the Haiku
-  medium sceptic audit (`gate.py check unbound` + scenarios on all six guides).
-- The official Unbound calc is saved in `hacks/unbound/.src/unboundcalc/` (the user, 2026-10-30): the second calc
-  oracle. When 8c merges, check its gimmicks against it (Camomons: duplicate type counts twice there). A real `.srm`
-  import on the Thor after the calc UI pass.
-- Old unit worktrees under `~/.t3/worktrees/thor-dex-guides/` (sources, dex, missions, locs*, it*, trainers, tr*,
-  walk, calc) are merged or superseded: delete them and their branches once the guide is merged into main.
+**Unbound 2.1.1.1 (Expert): merged into `main` 2026-10-30.** Decisions: `hacks/unbound/notes.md` and
+`template/README.md` (the plans are deleted; git history keeps them). 393 trainers (101 bosses, 292 ordinary with
+guessed sets marked `?` on cards and in the calc), 84 keyed missions, CFRU save reader, calc with every Unbound gimmick
+(official Unbound calc + hzla as oracles). Sceptic audit 2026-10-30: gate check, all scenarios on all six guides and
+260 × 316 normal / dvkb pass after its fixes. Open follow-ups:
+- A real `.srm` import on the Thor (the user has no save yet; the reader is checked on 37 test saves).
+- In-game checks (notes.md): Focus Belt / Nine Lives as Sturdy; Camomons with two moves of the same type.
+- Ideas for later sessions (the user): sticky mission names in the walkthrough; Move Tutors headed by tutor in every
+  guide (Unbound has it via `itemstd` `keep_sub`).
+- Old unit worktrees under `~/.t3/worktrees/thor-dex-guides/` and their `worktree-unbound-*` branches: deleted on merge.
 
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
