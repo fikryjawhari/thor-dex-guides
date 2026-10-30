@@ -740,9 +740,11 @@ function guessMoves(id,level){const p=byId[id],learned=[];for(const {move} of (p
 const guessT=t=>CF.calc?.assumedSets==='level-up'&&(t.tags||[]).includes('Moves unknown');
 function monCard(x,cap,sel,trainerKey,index,guess){const p=byId[x.id];const lv=monLv(x,cap);
  const gm=guess&&!(x.m||[]).length&&Number.isFinite(lv)?guessMoves(x.id,lv):null;
- // No speed when the source gives no IVs, or no EVs where they count (unknown, not assumed).
- const spe=EVS&&!MGM?x.ev?.[5]:0;const main=p&&lv&&x.iv&&spe!=null?stat(p.s[5],5,x.iv[5],spe,x.sl??lv,x.na):null;
- const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b></span>${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
+ // No speed when the source gives no IVs, or no EVs where they count (unknown), except with assumed sets (Unbound D2):
+ // then the calc's guess (31 IVs, 0 EVs, neutral nature) gives it, marked " ?" like the guessed moves.
+ const sg=CF.calc?.assumedSets==='level-up'&&(!x.iv||EVS&&!MGM&&x.ev?.[5]==null);
+ const iv5=x.iv?x.iv[5]:sg?31:null,spe=EVS&&!MGM?x.ev?.[5]??(sg?0:null):0;const main=p&&lv&&iv5!=null&&spe!=null?stat(p.s[5],5,iv5,spe,x.sl??lv,x.na):null;
+ const spd=main==null?'':`<span class="spd"><span class="nw">Spe <b>${main}</b>${sg?'<span class="mut"> ?</span>':''}</span>${/choice scarf/i.test(x.i)?` <span class="mut small">Scarf ${Math.floor(main*1.5)}</span>`:''}</span>`;
  const lvs=x.l!=null||x.r==null?`Lv ${x.l??'?'}`:`Lv ${lv||'?'} <span class="mut small">cap${x.r?(x.r>0?'+':'−')+Math.abs(x.r):''}</span>`;
  const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'')+(x.au?`<span class="tag aura">${auTxt(x.au)}</span>`:'');
  const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');const ev=EVS&&!MGM&&x.ev?evTxt(x.ev):'';
