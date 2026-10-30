@@ -1,0 +1,41 @@
+{
+ "source": "hg-engine 64838bf7db (0.8.5, kumakuma1/hardlove beta_hardlove; hacks/hardlove-gold/.src/repos/hardlove: data/Moves.c effect ids and effectChance, include/config.h GEN_LATEST 9, in-game move descriptions in Moves.c). The pinned repo has no battle effect code, so each override rests on the effect id, its effectChance and the description text.",
+ "notes": [
+  "Smog: effectChance 100 with MOVE_EFFECT_POISON_HIT, so the poison is guaranteed (table: 40 %) (data/Moves.c:3337; Move Changes.xlsx: Effect chance 40 -> 100)",
+  "Rock Smash: effectChance 100 with MOVE_EFFECT_LOWER_DEFENSE_HIT, so the target's Defense -1 is guaranteed (table: 50 %) (data/Moves.c:6739; Move Changes.xlsx: Effect chance 50 -> 100)",
+  "Charge Beam: effectChance 100 with MOVE_EFFECT_RAISE_SP_ATK_HIT, so the user's Sp. Atk +1 is guaranteed (table: 70 %) (data/Moves.c:12193; Move Changes.xlsx: Effect chance 70 -> 100)",
+  "Diamond Storm: effectChance 50 with MOVE_EFFECT_RAISE_DEF_2_HIT, so the user's Defense +2 is a 50 % chance, not guaranteed (table: guaranteed from Gen 7) (data/Moves.c:16054; in-game text: \"This may also sharply boost the user's Defense stat.\")",
+  "Rapid Spin: MOVE_EFFECT_REMOVE_HAZARDS_AND_BINDING with no Speed effect and the in-game text names no Speed rise, so the user's Speed +1 (Gen 8+) is removed (data/Moves.c:6193; description at data/Moves.c:6211)",
+  "Growth: MOVE_EFFECT_SP_ATK_UP and the in-game text \"It raises the Sp. Atk stat.\": Sp. Atk +1 only, no Attack and no doubling in Sun (table: Atk +1 Sp. Atk +1, Sun x2) (data/Moves.c:2008; description at data/Moves.c:2024)",
+  "Thief: MOVE_EFFECT_HIT, and Move Changes.xlsx says \"No longer steal items\": no item steal (table: steal on hit). The in-game text (data/Moves.c:4540 description) still says it steals; the code and the sheet say no, so the steal is removed. Check on the Thor.",
+  "Covet: MOVE_EFFECT_HIT, same as Thief: no item steal (table: steal on hit) (data/Moves.c:9271; Move Changes.xlsx: No longer steal items). The in-game text still says it steals; the same conflict as Thief.",
+  "Scale Shot: MOVE_EFFECT_MULTI_HIT only. The in-game text says \"This raises Speed but lowers Defense.\" (data/Moves.c:21658 description), so the table's user Def -1 Spe +1 is kept. No code in the pinned repo to confirm it.",
+  "Thrash, Petal Dance, Outrage, Raging Fury: MOVE_EFFECT_CONTINUE_AND_CONFUSE_SELF (the user is confused after the rampage). Confusion on the user is a volatile the calc does not model, so no override (data/Moves.c:1003).",
+  "Blockers: include/config.h sets GEN_LATEST 9 for the battle rules (TYPE_EFFECTIVENESS_GEN, Protean 9, Battle Bond, and the rest of the modern gates), so the table's Gen 9 blockers hold. Electric paralysis (Gen 6+), powder vs Grass / Overcoat / Safety Goggles (Gen 6+), Prankster vs Dark (Gen 7+), Misty Terrain confusion (Gen 7+): no hack-specific switch found, so no rules override. Not checked: the handlers themselves (not in the pinned repo subset). FOG_WEATHER_MISTY_TERRAIN is commented out (Fog does not set Misty Terrain)."
+ ],
+ "moves": {
+  "Smog": {"sec": [{"c": 100, "st": "psn"}], "n": "hg-engine data/Moves.c:3337 effectChance 100 (table 40)"},
+  "Rock Smash": {"fl": ["contact"], "sec": [{"c": 100, "b": {"def": -1}}], "n": "hg-engine data/Moves.c:6739 effectChance 100 (table 50)"},
+  "Charge Beam": {"sec": [{"c": 100, "sb": {"spa": 1}}], "n": "hg-engine data/Moves.c:12193 effectChance 100 (table 70)"},
+  "Diamond Storm": {"sec": [{"c": 50, "sb": {"def": 2}}], "n": "hg-engine data/Moves.c:16054 effectChance 50, in-game text \"may also\""},
+  "Rapid Spin": {"fl": ["contact"], "n": "hg-engine data/Moves.c:6193 REMOVE_HAZARDS_AND_BINDING, no Speed rise (table Spe +1)"},
+  "Growth": {"b": {"spa": 1}, "tg": "s", "n": "hg-engine data/Moves.c:2008 SP_ATK_UP, in-game text: Sp. Atk only (table Atk +1 Sp. Atk +1, Sun x2)"},
+  "Thief": null,
+  "Covet": null
+ },
+ "unsourced": [
+  "Scale Shot: the table's self effect kept on the in-game text alone (the pinned repo has no handler for MULTI_HIT)",
+  "Growth, Rapid Spin, Diamond Storm, Thief, Covet: the effect id and description are the only evidence, no battle code in the pinned repo subset",
+  "Thrash, Petal Dance, Outrage, Raging Fury: user confusion after the rampage is a volatile, not modelled (no override)"
+ ],
+ "fixtures": [
+  {"title": "Smog: guaranteed poison (effectChance 100)", "move": "Smog", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax"}, "field": {}, "expect": {"def.status": "psn"}},
+  {"title": "Rock Smash: Defense -1 every hit (effectChance 100)", "move": "Rock Smash", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax"}, "field": {}, "expect": {"def.stg": [0, 0, -1, 0, 0, 0]}},
+  {"title": "Charge Beam: user Sp. Atk +1 every hit (effectChance 100)", "move": "Charge Beam", "kind": "hit", "user": {"n": "Umbreon"}, "target": {"n": "Snorlax"}, "field": {}, "expect": {"atk.stg": [0, 0, 0, 1, 0, 0]}},
+  {"title": "Diamond Storm: user Defense +2 is a 50 % chance, none guaranteed", "move": "Diamond Storm", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax"}, "field": {}, "expect": {"atk.stg": null}},
+  {"title": "Rapid Spin: no Speed rise on the user", "move": "Rapid Spin", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax"}, "field": {}, "expect": {"atk.stg": null}},
+  {"title": "Growth: Sp. Atk +1 only", "move": "Growth", "kind": "effect", "user": {"n": "Machamp"}, "target": {"n": "Machamp"}, "field": {}, "expect": {"atk.stg": [0, 0, 0, 1, 0, 0]}},
+  {"title": "Thief: no item steal (Move Changes: no longer steals)", "move": "Thief", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax", "it": "Leftovers"}, "field": {}, "expect": {"def.used": null}},
+  {"title": "Covet: no item steal (Move Changes: no longer steals)", "move": "Covet", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax", "it": "Leftovers"}, "field": {}, "expect": {"def.used": null}}
+ ]
+}
