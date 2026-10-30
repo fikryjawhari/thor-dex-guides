@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
-    "test": "node test.mjs && node imperium_check.mjs && node hardlove_check.mjs && node photonic_check.mjs && node eternal_check.mjs && node state_check.mjs && node blaze-black-2-redux_check.mjs && node unbound_check.mjs && node cfru_check.mjs"
+    "test": "node move_effects.mjs --check && node test.mjs && node imperium_check.mjs && node hardlove_check.mjs && node photonic_check.mjs && node eternal_check.mjs && node state_check.mjs && node blaze-black-2-redux_check.mjs && node unbound_check.mjs && node cfru_check.mjs"
   },
   "dependencies": {
     "@smogon/calc": "0.12.0"
