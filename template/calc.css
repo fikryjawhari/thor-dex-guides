@@ -535,6 +535,10 @@ body.calc-route .dres .mr .r1{height:17px;line-height:17px;align-items:center;ga
 /* Safari counts the move name's full text in the line's minimum width (Chrome counts min-width:0): without these the
    name never truncates there and the right-hand button (Par, Enc, Subst -62...) is pushed past the row and the page. */
 body.calc-route .dres .mr .mm,body.calc-route .dres .mr .r1,body.calc-route .dres .mr .r2{min-width:0}
+/* Status rows: name | button as a grid, the name column shrinkable to 0 and the button pinned to the right edge
+   (flex let Safari push the button past the row). */
+body.calc-route .dres .mr.st .r1{display:grid;grid-template-columns:minmax(0,1fr) auto;justify-content:stretch}
+body.calc-route .dres .mr.st .r1>.hp{justify-self:end}
 body.calc-route .dres .mr .r2{height:15px;min-height:0;margin:0;line-height:15px;align-items:center;gap:3px;font-size:9px}
 body.calc-route .dres .mr .hp{display:flex;align-items:center;gap:1px;flex:none;font-size:11px}
 body.calc-route .dres .dendpoint{border:1px solid var(--line);border-radius:4px;padding:0 2px;background:var(--panel2);color:var(--fg);font:700 10px/14px system-ui;cursor:pointer;touch-action:manipulation}
