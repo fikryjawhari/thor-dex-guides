@@ -246,8 +246,9 @@ Rise active / not that type / grounded, Camomons types, Weight Speed, Fog accura
 boost, Rainbow chances. Camomons takes each side's first two moves (`toEngine` passes `moves`; a duplicate type counts
 twice, as the official calc); with a first move unknown the results wait ("Choose first move for Camomons").
 **Assumed sets** (`cfg.calc.assumedSets: 'level-up'`): a `Moves unknown` trainer's mon without source moves gets the
-last four distinct level-up moves at its level, Hardy, 31 IVs, 0 EVs in the calc only (`foeBase`), each marked `?`
-until that field is edited; foe edits remember their species (`ST.foeSp`) and drop when another species is in the
+last four distinct level-up moves at its level (`dex.js` `guessMoves`), Hardy, 31 IVs, 0 EVs in the calc (`foeBase`),
+each marked `?` until that field is edited. The trainer card shows the same guessed moves in italics with `?` and keeps
+its `Moves unknown` tag (the user, 2026-10-30); foe edits remember their species (`ST.foeSp`) and drop when another species is in the
 slot after an update. **Import** maps party and boxes before refusing: a boxes-only save imports and starts on the
 first box Pokémon; empty = no Pokémon anywhere, wrong = none in this guide; a refused file keeps the previous import.
 Intimidate is a plain checked-by-default header box on its holder (no text; name in tooltip / aria-label); it applies the

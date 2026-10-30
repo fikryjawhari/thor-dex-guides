@@ -92,7 +92,8 @@ public 2.1.1.1 location guide workbook (`.src/research-2026-10-29/location-guide
 says"); the RomHackDex location pages only a membership report. No source has wild levels: the guide shows none.
 
 - **Areas:** 69 = Starter (the picker; Beldum / Gible / Larvitar at Shadow Base) + the 67 wiki pages in walkthrough
-  order (the Parts' headings, Part 1-40; post-game Battle Frontier and Cube Corp. last) + Mystery Gift. One tracker slot
+  order (the Parts' headings, Part 1-40; post-game Battle Frontier and Cube Corp. last) + Mystery Gift. Shadow Base
+  sits at its Part 19 visit, not first: at the start it is only the starter pick (the user, 2026-10-30). One tracker slot
   per area (EI's floor rule): floors, sub-places (Rift Cave in Dehara City, Tomb of Borrius in Great Desert, Safari Zone
   in Polder Town, Cave of Being in Route 10, Distortion World via the Rift Cave portal) and raid dens are sections.
   No slot (AR.ns): Tarmigan Mansion, Antisis Port, Ferrothorn Turf, S.S. Marine, Battle Frontier (no encounters in any
@@ -141,15 +142,17 @@ says"); the RomHackDex location pages only a membership report. No source has wi
 ### Items
 
 `items.py` from the unboundwiki.com export (`wiki.py` readers); the 2.1.1.1 `location-guide.xlsx` (TM & HM,
-Megastone, Z-Crystal sheets) cross-checks it in `check.py`. IT after the Items standard (1,241 rows): Valuables 419,
-Key Items 32, Shops 204 items, TMs and HMs 128, Move Tutors 192, Held Items 97, Evolution Items 35, Stats and
-Abilities 17, Mega Stones 49, Z-Crystals 34, Useful NPCs 34. No `itemstd.RULES` entry: the extract writes the
+Megastone, Z-Crystal sheets) cross-checks it in `check.py`. IT after the Items standard (825 rows): Key Items 33,
+Shops 204 items, TMs and HMs 128, Move Tutors 192, Held Items 99, Evolution Items 35, Stats and Abilities 17, Mega
+Stones 49, Z-Crystals 34, Useful NPCs 34. **No Valuables box** (the user, 2026-10-30): consumables and sell items
+(`items.VALUABLE`: balls, medicine, X items, shards, nuggets, Heart Scales, Master Ball) are left out of Items and
+the walkthrough; Shops still list what's sold. Zygarde Cells go in Key Items, Iron Ball and Snowball in Held Items. No `itemstd.RULES` entry: the extract writes the
 `Found:` / `Also:` / `Wild:` lines itself.
 - **Locations pages** (67 pages, 66 with an item table, 687 rows; KBT Expressway has none): every row is placed. A row
   reads `Found: <page title> · requires Rock Climb · hidden · <the wiki's place text>`; `(Gift)` rows are `Also:`.
   The wiki's flags become words: `requires X` (HMs, ADM, the Crystal Peak crystals, Mission #070), `hidden`,
   `repeatable daily`, sub-places ("Fallshore Beach"), and the item name's own brackets ("gate opens 12pm", "x5").
-  Valuables keep one row per place (sub-heading = the item); other boxes merge an item's places into one row.
+  Boxes merge an item's places into one row.
   TMs / HMs, Mega Stones and Z-Crystals on these pages only cross-check their own pages (check.py: every number,
   stone and crystal matches). `items.PLACED` keeps every row's page title for the walkthrough (unit 7).
   Two rows list several items: Tehl Town's Underground Pass (15 hidden items, "one spot per item") and Shadow Base's

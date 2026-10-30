@@ -71,11 +71,11 @@ TYPE_BOOSTERS = {'Charcoal', 'Miracle Seed', 'Mystic Water', 'Magnet', 'Never-Me
                  'Black Glasses', 'Silk Scarf', 'Sea Incense', 'Rose Incense', 'Odd Incense', 'Rock Incense',
                  'Wave Incense'}
 VALUABLE = re.compile(
-    r'Ball$|Potion$|Heal$|Repel$|Mail$|Shard$|Mushroom$|Pearl|Nugget|^Relic |^X |Flute$|^Zygarde Cell$|^Money$'
+    r'(?<!Iron )Ball$|Potion$|Heal$|Repel$|Mail$|Shard$|Mushroom$|Pearl|Nugget|^Relic |^X |Flute$|^Money$'
     r'|^(?:Ether|Elixir|Max Ether|Max Elixir|Revive|Max Revive|Full Restore|Antidote|Awakening|Escape Rope|Honey'
     r'|Heart Scale|Sacred Ash|Berry Juice|Fresh Water|Soda Pop|Lemonade|Moomoo Milk|Rage Candy Bar|Casteliacone'
     r'|Lava Cookie|Old Gateau|Poké Doll|Fluffy Tail|Rare Bone|Stardust|Star Piece|Comet Shard|Guard Spec\.|Dire Hit'
-    r'|Energy Root|Energy Powder|Heal Powder|Revival Herb|Sweet Heart|Snowball|Sea Salt|Sea Shell|Shoal Salt'
+    r'|Energy Root|Energy Powder|Heal Powder|Revival Herb|Sweet Heart|Sea Salt|Sea Shell|Shoal Salt'
     r'|Shoal Shell|Wishing Piece|Random healing item|Dream Mist|Balm Mushroom|Big Malasada|Lumiose Galette'
     r'|Shalour Sable|Pewter Crunchies)$')
 
@@ -155,7 +155,7 @@ def box_of(name):
         return 'Mega Stones', None
     if re.search(r'ium Z$', name):
         return 'Z-Crystals', None
-    if name in KEY_ITEMS:
+    if name in KEY_ITEMS or name == 'Zygarde Cell':
         return 'Key Items', None
     if name in EVOLUTION:
         return 'Evolution Items', None
@@ -259,6 +259,8 @@ def build(D):
     log, rows = [], []                          # rows: [old box, item, text, link, missable, sub]
 
     def add(box, item, txt, link=None, sub=None):
+        if box == 'Valuables':                  # no Valuables box in this guide (the user): shops still list them
+            return
         rows.append([box, item, txt, link, 0, sub])
 
     # Mega Stones (the dex placed them from the stone pages); the game's name for Houndoom's
@@ -303,6 +305,8 @@ def build(D):
             box, sub = box_of(name)
             if not resolve(name) and not re.match(r'(TM|HM)\d', name):
                 unresolved.add(raw)
+            if box == 'Valuables':
+                continue                        # consumables and sell items: not listed (the user, 2026-10-30)
             label, line = place_line(place, desc, nn, qty)
             PLACED.append((place, name, box, label + ': ' + line))
             listed.setdefault(name, set()).add(key(place))

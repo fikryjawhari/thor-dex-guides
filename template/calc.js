@@ -60,11 +60,10 @@ const isRel=t=>t.p.some(x=>x.l==null);
 function curMine(){const imp=ST.imp,m=ST.mine;if(m.src==='party'&&imp&&imp.party)return imp.party[m.i]||null;if(m.src==='box'&&imp&&imp.boxes&&imp.boxes[m.b])return imp.boxes[m.b][m.i]||null;if(m.src==='custom')return ST.custom[m.i]||null;return null;}
 function applyEdits(base,key){ST.saved=ST.saved||{};const sv=key&&ST.saved[key],e=key&&ST.edits[key];const w=!!e&&Object.keys(e).some(isSetField);if(!sv&&!e)return {...base};const out={...base,...sv,...e,edited:w,saved:!!sv};for(const f of ['m','na','iv','ev'])if(out[f+'Guess']&&(sv&&f in sv||e&&f in e))out[f+'Guess']=false;return out;}
 // D2 (plans/unbound.md, profile assumedSets 'level-up'): an ordinary trainer's mon with no source moves gets the last four
-// distinct level-up moves at its level, Hardy, 31 IVs, 0 EVs, each marked assumed (xGuess) until edited. Calc only: the
-// trainer card keeps "moves unknown". Same rule as tools/calc/unbound_assumed.mjs (calc-unbound checks they agree).
-function assumedSet(x,level){const p=byId[x.id],learned=[];for(const {move} of (p.lv||[]).map(([at,move],order)=>({at,move,order})).filter(row=>row.at<=level).sort((a,b)=>a.at-b.at||a.order-b.order)){if(!MV[move])continue;const previous=learned.indexOf(move);if(previous>=0)learned.splice(previous,1);learned.push(move);}
- return {m:learned.slice(-4),na:'Hardy',iv:Array(6).fill(31),ev:Array(6).fill(0),mGuess:true,naGuess:true,ivGuess:true,evGuess:true};}
-const assumes=(t,x)=>prof.assumedSets==='level-up'&&(t.tags||[]).includes('Moves unknown')&&!(x.m||[]).length;
+// distinct level-up moves at its level (dex.js guessMoves, also shown on the trainer card), Hardy, 31 IVs, 0 EVs, each
+// marked assumed (xGuess) until edited. Same rule as tools/calc/unbound_assumed.mjs (calc-unbound checks they agree).
+function assumedSet(x,level){return {m:guessMoves(x.id,level),na:'Hardy',iv:Array(6).fill(31),ev:Array(6).fill(0),mGuess:true,naGuess:true,ivGuess:true,evGuess:true};}
+const assumes=(t,x)=>guessT(t)&&!(x.m||[]).length;
 function foeBase(t,i){const x=t.p[i];if(!x)return null;const p=byId[x.id];const cap=capOf(t),level=monLv(x,cap),knownAbility=Number.isInteger(x.a)&&x.a>=0;
  const base={id:x.id,l:Number.isFinite(level)?Math.max(range[0],Math.min(range[1],level)):NaN,na:x.na||'Hardy',a:knownAbility?x.a:p.a[0],aGuess:!knownAbility,i:x.i||'',m:(x.m||[]).slice(),iv:x.iv||[31,31,31,31,31,31],ev:x.ev||[0,0,0,0,0,0],...(x.au?{stg:x.au.slice(),aura:x.au}:{}),...(Number.isFinite(x.sl)&&x.sl<x.l?{sd:x.l-x.sl}:{}),foe:true};
  if(assumes(t,x)&&Number.isFinite(base.l))Object.assign(base,assumedSet(x,base.l));return base;}

@@ -17,12 +17,12 @@ from wiki import key, legendaries, mystery_gifts, text
 
 # Game order: the walkthrough parts' headings (Parts 1-40); then the post-game places. Areas added later go at the
 # end of AR (saved trackers are keyed by AR index).
-ORDER = ['Shadow Base', 'Frozen Heights', 'Route 1', 'Bellin Town', 'Icicle Cave', 'Route 2', 'Dresco Town',
+ORDER = ['Frozen Heights', 'Route 1', 'Bellin Town', 'Icicle Cave', 'Route 2', 'Dresco Town',
          'Route 3', 'Flower Paradise', 'Grim Woods', 'Route 4', 'Cinder Volcano', 'Route 5', 'Crater Town',
          'KBT Expressway', 'Valley Cave', 'Route 6', 'Route 7', 'Frost Mountain', 'Route 8', 'Blizzard City',
          'Frozen Forest', 'Fallshore City', 'Route 11', 'Epidimy Town', 'Route 10', 'Tehl Town / Underground Pass',
          'Route 9', 'Thundercap Mountain', 'Cliff Cave', 'Tarmigan Town', 'Tarmigan Mansion', 'Route 12',
-         'Dehara City', 'Ruins of Void', 'Cinder Volcano Depths', 'Route 13', 'Route 14', 'Auburn Waterway',
+         'Dehara City', 'Ruins of Void', 'Cinder Volcano Depths', 'Shadow Base', 'Route 13', 'Route 14', 'Auburn Waterway',
          'Lost Tunnel', 'Great Desert', 'Gurun Town', 'Vivill Woods', 'Vivill Town', 'Vivill Warehouse', 'Route 15',
          'Route 16', 'Antisis City', 'Antisis Port', 'Antisis Sewers', 'Ferrothorn Turf', 'Icy Hole', 'Route 17',
          'Seaport City', 'Seaport Warehouses', 'S.S. Marine', 'Polder Town', 'Cootes Bog', 'Magnolia Town',
