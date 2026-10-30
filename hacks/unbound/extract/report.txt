@@ -484,10 +484,10 @@ trainers: 81 mons at relative levels; 4 with a later-cap line kept absolute; 130
   workbook only: Vivill Warehouse!B22 Light of Ruin Grunt
   workbook only: Vivill Warehouse!B29 Light of Ruin Grunt
   workbook only: Vivill Warehouse!B36 Light of Ruin Grunt
-items: old-box rows {'TMs and HMs': 128, 'Mega Stones': 49, 'Evolution Items': 140, 'Stats and Abilities': 68, 'Key Items': 122, 'Held Items': 103, 'Z-Crystals': 34, 'Shops': 239, 'Move Tutors': 192, 'Useful NPCs': 34}
-items: 128 machines, 49 Mega Stones / orbs, 34 Z-Crystals, 29 tutors (192 moves), 239 shop rows, 70 mission item rewards, 391 Locations rows placed
+items: old-box rows {'TMs and HMs': 128, 'Mega Stones': 49, 'Evolution Items': 140, 'Stats and Abilities': 68, 'Key Items': 125, 'Held Items': 103, 'Z-Crystals': 34, 'Shops': 239, 'Move Tutors': 192, 'Useful NPCs': 34}
+items: 128 machines, 49 Mega Stones / orbs, 34 Z-Crystals, 29 tutors (192 moves), 239 shop rows, 70 mission item rewards, 392 Locations rows placed
 items: item pages give 20 places the Locations pages lack: S.S. Ticket (Seaport City); Prison Bottle (Crystal Peak); Mega Keystone (Tarmigan Mansion); Lunar Wing (Fullmoon Island); Trainer Catalogue (Fallshore City); Reveal Glass (Magnolia Fields); Shiny Charm (Fallshore City); Grubby Hanky (Magnolia Cafe); Dusk Stone (Cube Corp.); Shiny Stone (Route 7); Shiny Stone (Vivill Warehouse); Gracidea (Flower Paradise); Ice Stone (Cube Corp.); Ice Stone (Cube Corp. (Stone Maker)); Dubious Disc (Seaport City East Warehouse); Old Rod (Route 7); Fire Stone (Route 9); Devon Scope (Route 16); Braille Converter (Icicle Cave 4F); ADM (Seaport City)
-walkthrough: parts 40, splits 11, stops 122, steps 182, missions 84, children 475, items 391, trainers 393
+walkthrough: parts 40, splits 11, stops 122, steps 182, missions 84, children 475, items 392, trainers 393
 walkthrough: longest mission mission-013 (Basic Literacy), 47 children
 walkthrough: mission-only checklists: postgame/mission-hq, postgame/dehara-city, postgame/magnolia-town, postgame/tehl-town, postgame/tarmigan-town, postgame/gurun-town, postgame/crater-town, postgame/tomb-of-borrius
 items: walkthrough rows left as they were: 1 [['Key Items', 'Costume Box', 'Also: Frozen Heights · Speak to your mother in your house']]

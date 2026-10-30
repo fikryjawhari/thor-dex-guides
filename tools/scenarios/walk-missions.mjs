@@ -4,9 +4,9 @@
 //   m1 card: open / close from the header (saved), tick / untick (mission, checklist and split counts), the tick that
 //      completes a mission closes it (header focused, under the pinned headers), reopened it stays open, untick; reload
 //      keeps it all; 44 px header and rows; every viewer size, normal and dvkb.
-//   m2 next: Next step opens split, stop, checklist and mission to land on a mission step (no tick, the same target
-//      again), leaves a finished mission for the next ordinary step, finds a stop with only missions, and the mission
-//      steps when every ordinary step is done; all done is harmless.
+//   m2 next: Next step skips missions (the user, 2026-10-30): lands on the next ordinary step (no tick, the same target
+//      again), leaves the mission closed and unticked, passes a stop with only missions; "Checklist done" (and a
+//      harmless Next) once every ordinary step is ticked, missions or not.
 //   m3 search: a step hit and a name hit open the closed chain, land under the pinned headers and flash; one row per
 //      mission for a name hit; no results changes nothing; the search-this-page action filters to the stop with the
 //      mission open.
@@ -146,52 +146,47 @@ const checks = [
     },
   },
   {
-    id: 'm2 next', title: 'Next step goes through missions in data order, opening only the target chain', sizes: [[260, 316], [537, 424]], modes: MODES, skip,
+    id: 'm2 next', title: 'Next step skips missions: the next ordinary step, missions left closed and unticked', sizes: [[260, 316], [537, 424]], modes: MODES, skip,
     run: async page => {
       const first = 'm:' + M1.m + ':' + M1.s[0].k;
+      const nextOrd = id => `(()=>{const L=${LEAVES};const i=L.findIndex(e=>e.id===${q(id)});return L.slice(i).find(e=>!e.l.m)?.id;})()`;
+      // Everything before a mission ticked: Next names and lands on the next ordinary step, not the mission.
       await seed(page, { until: first });
       await page.reload();
       await walk(page);
-      assert.ok((await page.text('.wk-next')).includes(M1.n), 'Next names the mission');
+      const after = await page.value(nextOrd(first));
+      const afterT = await page.value(`${LEAVES}.find(e=>e.id===${q(after)}).l.x[0]`);
+      assert.ok(!(await page.text('.wk-next')).includes(M1.n), 'Next does not name the mission');
+      assert.ok((await page.text('.wk-next')).includes(afterT), 'Next names the next ordinary step');
       for (const pass of [1, 2]) {
         await page.tap('.wk-next');
         await page.value('new Promise(r=>setTimeout(r,900))');
-        assert.equal(await page.value(`document.querySelector(${q(card(M1.m))}).open`), true, `pass ${pass}: the mission is opened`);
-        assertLanded(await landing(page, leafSel(first), true), `pass ${pass}: Next into a closed mission`);
-        assert.equal(await page.value(`document.querySelector(${q(leafBox(first))}).checked`), false, `pass ${pass}: no tick`);
+        assertLanded(await landing(page, leafSel(after), true), `pass ${pass}: Next past the mission to the ordinary step`);
+        assert.equal(await page.value(`document.querySelector(${q(leafBox(after))}).checked`), false, `pass ${pass}: no tick`);
       }
-      assert.equal(await page.value(`document.querySelector(${q(card(M2.m))}).open`), false, 'only the target mission opens');
-      // Both missions done: the next ordinary step after them, the finished missions left as they were.
-      const after = await page.value(`(()=>{const L=${LEAVES};const i=L.findIndex(e=>e.id===${q(first)});return L.slice(i).find(e=>!e.l.m)?.id;})()`);
-      await seed(page, { until: after, open: [M1.m] });
-      await page.reload();
-      await walk(page);
-      await page.tap('.wk-next');
-      await page.value('new Promise(r=>setTimeout(r,900))');
-      assertLanded(await landing(page, leafSel(after), true), 'Next out of a mission to the ordinary step');
-      assert.equal(await page.value(`document.querySelector(${q(card(M1.m))}).open`), true, 'a finished open mission is not closed by Next');
-      // A stop with only missions.
-      const om = ONLY.st.s[0], oid = 'm:' + om.m + ':' + om.s[0].k;
+      assert.notEqual(await page.value(`document.querySelector(${q(card(M1.m))})?.open`), true, 'the skipped mission stays closed');
+      assert.equal(await page.value(`${LEAVES}.filter(e=>e.id===${q(first)}).some(({l})=>leafDone(l))`), false, 'the skipped mission step stays unticked');
+      // A stop with only missions is passed over too.
+      const om = ONLY.st.s[0], oid = 'm:' + om.m + ':' + om.s[0].k, past = await page.value(nextOrd(oid));
       await seed(page, { until: oid });
       await page.reload();
       await walk(page);
       await page.tap('.wk-next');
       await page.value('new Promise(r=>setTimeout(r,900))');
-      assertLanded(await landing(page, leafSel(oid), true), 'Next into a stop with only missions');
+      assertLanded(await landing(page, leafSel(past), true), 'Next past a stop with only missions');
       assert.equal(await page.count(`.wsign[data-k="${ONLY.si}.${ONLY.ti}"]`), 0, 'a mission-only stop is a stop, not a sign');
-      // Every ordinary step done: the first mission step, not "Checklist done".
+      // Every ordinary step done, missions open: "Checklist done", and Next is harmless.
       await seed(page, { extra: `${LEAVES}.filter(e=>!e.l.m).forEach(({l})=>WO.c[l.si+'.'+l.ti+'.'+l.j]=1)` });
       await page.reload();
       await walk(page);
-      const firstM = await page.value(`${LEAVES}.find(e=>e.l.m).l.c.t`);
-      assert.ok((await page.text('.wk-next')).includes(firstM), 'only missions left: Next names a mission step');
+      assert.ok((await page.text('.wk-next')).includes('Checklist done'), 'only missions left: Checklist done');
+      const y = await page.value('scrollY');
+      await page.tap('.wk-next');
+      assert.equal(await page.value('scrollY'), y, 'only missions left: Next is harmless');
       await seed(page, { all: true });
       await page.reload();
       await walk(page);
       assert.ok((await page.text('.wk-next')).includes('Checklist done'), 'all ticked');
-      const y = await page.value('scrollY');
-      await page.tap('.wk-next');
-      assert.equal(await page.value('scrollY'), y, 'all done: Next is harmless');
     },
   },
   {

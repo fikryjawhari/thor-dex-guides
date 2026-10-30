@@ -155,7 +155,9 @@ def box_of(name):
         return 'Mega Stones', None
     if re.search(r'ium Z$', name):
         return 'Z-Crystals', None
-    if name in KEY_ITEMS or name == 'Zygarde Cell':
+    if name == 'Zygarde Cell':
+        return 'Key Items', 'Zygarde Cells'
+    if name in KEY_ITEMS or name == 'Master Ball':
         return 'Key Items', None
     if name in EVOLUTION:
         return 'Evolution Items', None
@@ -412,7 +414,7 @@ def build(D):
                 log.append('tutor move not in M: %s (%s)' % (mv, t.name))
             cost = re.sub(r'(Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day', lambda x: x.group(1)[:3], cost)
             who = 'teaches ' + learners[name] if name in learners else ''
-            add('Move Tutors', name or mv, ' · '.join(x for x in (t.name, where, cost, req, who) if x), Mi.get(name))
+            add('Move Tutors', name or mv, ' · '.join(x for x in (where, cost, req, who) if x), Mi.get(name), sub=t.name)
     # useful NPCs
     for npc, f in W.useful_npcs(WIKI):
         where, _, how = [x.strip() for x in f.get('Location', '').partition(' – ')]

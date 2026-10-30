@@ -631,8 +631,9 @@ function guideInfoHTML(){const W=D.WK,[n,f]=tkCounts();
  return (HAS_MGM?`<label class="mgm"><input type="checkbox" class="mgm-toggle" ${MGM?'checked':''}> MGM</label>`:'')+`<div class="psec">Encounter tracker</div><div class="mut small">${n} caught · ${f} failed</div>`+
   `<div class="bar pbar">${trackerButtons()}${CHK?'<button class="btn danger wk-reset">Reset checklist</button>':''}</div>`+
   (docs?`<div class="psec">Game docs</div>`+docs:'')+`<div class="mut small" style="margin:12px 0 4px">${TX.walk}</div>`;}
-// Next step: the first unticked checklist step, in walkthrough order.
-function nextStep(){const W=D.WK;for(let si=0;si<W.splits.length;si++){const sp=W.splits[si];for(let ti=0;ti<sp.st.length;ti++){const l=stopLeaves(sp.st[ti],si,ti).find(l=>!leafDone(l));if(l)return l;}}return null;}
+// Next step: the first unticked ordinary checklist step, in walkthrough order. Mission steps are skipped (the user,
+// 2026-10-30): some missions run until the end of the game and would hold Next on their first open step.
+function nextStep(){const W=D.WK;for(let si=0;si<W.splits.length;si++){const sp=W.splits[si];for(let ti=0;ti<sp.st.length;ti++){const l=stopLeaves(sp.st[ti],si,ti).find(l=>!l.m&&!leafDone(l));if(l)return l;}}return null;}
 const nextInner=()=>{const n=nextStep();return n?`<b>Next step</b><span>${esc(n.s.n)} · ${n.m?esc(n.m.n||n.m.m)+' · '+esc(n.c.t):esc(n.x[0])}</span>`:'<b>Checklist done</b>';};
 // Starter picker: named choices stored in TK.s, shared with the tracker bar and Trainers.
 function starterRow(){let sel='';
