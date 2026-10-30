@@ -70,6 +70,10 @@ TYPE_BOOSTERS = {'Charcoal', 'Miracle Seed', 'Mystic Water', 'Magnet', 'Never-Me
                  'Soft Sand', 'Sharp Beak', 'Twisted Spoon', 'Silver Powder', 'Hard Stone', 'Spell Tag', 'Dragon Fang',
                  'Black Glasses', 'Silk Scarf', 'Sea Incense', 'Rose Incense', 'Odd Incense', 'Rock Incense',
                  'Wave Incense'}
+# Valuables the guide lists (sub-heading each), the rest of VALUABLE (medicine, balls, sell items) is not listed.
+VALUABLES = {'Heart Scale': 'Heart Scales', 'Red Shard': 'Shards', 'Blue Shard': 'Shards', 'Green Shard': 'Shards',
+             'Yellow Shard': 'Shards', 'Beast Ball': 'Beast Balls'}
+NOT_LISTED = 'Not listed'
 VALUABLE = re.compile(
     r'(?<!Iron )Ball$|Potion$|Heal$|Repel$|Mail$|Shard$|Mushroom$|Pearl|Nugget|^Relic |^X |Flute$|^Money$'
     r'|^(?:Ether|Elixir|Max Ether|Max Elixir|Revive|Max Revive|Full Restore|Antidote|Awakening|Escape Rope|Honey'
@@ -177,8 +181,8 @@ def box_of(name):
         return 'Stats and Abilities', 'Abilities'
     if name in ('Rare Candy', 'PP Up', 'PP Max'):
         return 'Stats and Abilities', 'Levels and PP'
-    if VALUABLE.search(name):
-        return 'Valuables', name
+    if VALUABLE.search(name):                   # only the curated few are listed (the user, 2026-10-30)
+        return ('Valuables', VALUABLES[name]) if name in VALUABLES else (NOT_LISTED, None)
     if name.endswith(' Berry'):
         return 'Held Items', 'Berries'
     if name.endswith(' Gem'):
@@ -206,7 +210,7 @@ def shop_kind(name):
         return 'Held items'
     if box == 'Mega Stones':
         return 'Mega Stones'
-    if box == 'Valuables' and not re.search(r'Mail|Shard|Scale|Honey', name):
+    if box in ('Valuables', NOT_LISTED) and not re.search(r'Mail|Shard|Scale|Honey', name):
         return 'Healing and repels'
     return 'Other'
 
@@ -261,7 +265,7 @@ def build(D):
     log, rows = [], []                          # rows: [old box, item, text, link, missable, sub]
 
     def add(box, item, txt, link=None, sub=None):
-        if box == 'Valuables':                  # no Valuables box in this guide (the user): shops still list them
+        if box == NOT_LISTED:                   # consumables and sell items: shops still list them
             return
         rows.append([box, item, txt, link, 0, sub])
 
@@ -307,7 +311,7 @@ def build(D):
             box, sub = box_of(name)
             if not resolve(name) and not re.match(r'(TM|HM)\d', name):
                 unresolved.add(raw)
-            if box == 'Valuables':
+            if box == NOT_LISTED:
                 continue                        # consumables and sell items: not listed (the user, 2026-10-30)
             label, line = place_line(place, desc, nn, qty)
             PLACED.append((place, name, box, label + ': ' + line))

@@ -142,11 +142,12 @@ says"); the RomHackDex location pages only a membership report. No source has wi
 ### Items
 
 `items.py` from the unboundwiki.com export (`wiki.py` readers); the 2.1.1.1 `location-guide.xlsx` (TM & HM,
-Megastone, Z-Crystal sheets) cross-checks it in `check.py`. IT after the Items standard (825 rows): Key Items 33,
-Shops 204 items, TMs and HMs 128, Move Tutors 192, Held Items 99, Evolution Items 35, Stats and Abilities 17, Mega
-Stones 49, Z-Crystals 34, Useful NPCs 34. **No Valuables box** (the user, 2026-10-30): consumables and sell items
-(`items.VALUABLE`: balls, medicine, X items, shards, nuggets, Heart Scales, Master Ball) are left out of Items and
-the walkthrough; Shops still list what's sold. Zygarde Cells go in Key Items, Iron Ball and Snowball in Held Items. No `itemstd.RULES` entry: the extract writes the
+Megastone, Z-Crystal sheets) cross-checks it in `check.py`. IT after the Items standard: Valuables 58 (curated, the user 2026-10-30: Heart Scales, Shards for the Shard tutors,
+Beast Balls; `items.VALUABLES`), Key Items 123 (Master Ball in Key Items; Zygarde Cells under their own heading, one
+row per cell), Shops 204 items, TMs and HMs 128, Move Tutors 192 (a heading per tutor), Held Items 99, Evolution Items
+35, Stats and Abilities 17, Mega Stones 49, Z-Crystals 34, Useful NPCs 34. The rest of `items.VALUABLE` (medicine,
+balls, X items, sell items) is not listed in Items or the walkthrough; Shops still list what's sold. Iron Ball and
+Snowball are Held Items. `itemstd.RULES['unbound']`: game order, `keep_sub` (tutor / Zygarde headings) and `nomerge` (Zygarde Cell); the extract writes the
 `Found:` / `Also:` / `Wild:` lines itself.
 - **Locations pages** (67 pages, 66 with an item table, 687 rows; KBT Expressway has none): every row is placed. A row
   reads `Found: <page title> · requires Rock Climb · hidden · <the wiki's place text>`; `(Gift)` rows are `Also:`.

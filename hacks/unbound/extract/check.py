@@ -301,8 +301,8 @@ def check_items(D):
             elif name.endswith(' Z'):
                 if name not in zn:
                     other.append('%s: %s (not on the Z-Crystals page)' % (place, raw))
-            elif name in items.KEY_DROP or items.box_of(name)[0] == 'Valuables':
-                pass                            # Valuables: not listed in this guide (notes.md -> Items)
+            elif name in items.KEY_DROP or items.box_of(name)[0] == items.NOT_LISTED:
+                pass                            # not listed in this guide (notes.md -> Items)
             elif not any(place in r[1] for _, r in by_name.get(name, ())):
                 missing.append('%s: %s' % (place, raw))
     check(missing == E['not placed'], 'Locations rows no IT row places: %s' % missing)
@@ -603,7 +603,7 @@ def check_walkthrough(data):
     check(tabs_check.check('unbound'), 'tabs_check: walkthrough / Trainers order or caps disagree')
     expected_items = collections.Counter((place, items.canon(one)[0]) for place, raw, description in WIKI.item_locations()
                                          for one in items.split_names(raw)
-                                         if items.box_of(items.canon(one)[0])[0] != 'Valuables')
+                                         if items.box_of(items.canon(one)[0])[0] != items.NOT_LISTED)
     actual_items = collections.Counter()
     for stop in stops:
         areas = [data['AR'][index]['n'] for index in stop['a']]
