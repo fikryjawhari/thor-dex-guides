@@ -31,6 +31,7 @@ details.split[open]>.body,details.stopd[open]>.stop,.trd[open]>.trb{content-visi
 .row .bst{color:var(--mut);font-variant-numeric:tabular-nums;font-size:13px;text-align:right}
 .spr{overflow:hidden;flex:none;image-rendering:pixelated;background:no-repeat left/auto 100%}
 .spr img{height:100%;width:auto;display:block;image-rendering:pixelated}
+a.sprl{display:block;flex:none;width:max-content;line-height:0}
 .sprph{border-radius:50%;display:flex;align-items:center;justify-content:center;container-type:size}
 .sprph span{font-weight:700;font-size:38cqh;line-height:1;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35)}
 .ty.bt,.sprph.bt span{color:#000;text-shadow:none}
@@ -423,6 +424,9 @@ table.lrn td:nth-child(2){overflow-wrap:anywhere}
 /* narrow: three names need the room, so "mixed" takes the place of "Show" */
 @media (max-width:359px){.trsw button{font-size:12px;padding:0 1px}.trsw.m>span:first-child{display:none}.trsw .mx{order:-1}}
 body[data-v=trainers] details.stopd[open]>summary{top:calc(var(--hh,0px) + var(--sw,36px) - 2px);box-shadow:0 -5px 0 var(--bg)}
+/* The walkthrough's Show switch (.wksw) pins the same way: its stop headers under it, their sections under those */
+body[data-v=walk] .body[data-si] details.stopd[open]>summary{top:calc(var(--hh,0px) + var(--sw,36px) - 2px);box-shadow:0 -5px 0 var(--bg)}
+body[data-v=walk] .body[data-si] details.stopd[open] details.sec[open]>summary{top:calc(var(--hh,0px) + var(--sw,36px) + var(--sh,34px) - 3px)}
 /* Stop and place headers on one line: the name truncates, tags and the "n/N | cap" button (a place's or walkthrough
    stop's trainers: open cards / trainers, level cap) keep their size, then the arrow */
 .stoph{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}

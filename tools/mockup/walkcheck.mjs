@@ -26,6 +26,8 @@ const R = await ev(`(async()=>{const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  // open split 1 via its header
  const s0=sp()[0];s0.querySelector('summary').click();await sleep(300);
  o.push('split0 open '+s0.open+' stops '+s0.querySelectorAll('details.stopd').length+' secs '+s0.querySelectorAll('details.sec').length+' open secs '+s0.querySelectorAll('details.sec[open]').length+' bars '+[...s0.querySelectorAll('.endbar')].filter(b=>!b.hidden).length);
+ // stops and sections start closed: open them all for the checks below
+ s0.querySelectorAll('details.stopd,details.sec').forEach(x=>x.open=true);await sleep(400);
  // header tap stability on a section
  const sec=s0.querySelector('details.sec[open][data-s$=".e"]');scrollBy(0,sec.getBoundingClientRect().top-120);await sleep(600);const h=sec.querySelector('summary');const y0=Math.round(h.getBoundingClientRect().top);h.click();
  const ys=[];for(let i=0;i<20;i++){ys.push(Math.round(h.getBoundingClientRect().top));await fr();}o.push('tap sec header '+y0+' -> '+[...new Set(ys)].join(',')+' open '+sec.open+' saved '+JSON.parse(localStorage.getItem(Object.keys(localStorage).find(k=>/walk/i.test(k)))).s[sec.dataset.s]);

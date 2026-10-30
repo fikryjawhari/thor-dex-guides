@@ -29,6 +29,8 @@ const page = async (route, pick) => { await go(route); return ev(`(async()=>{con
  const y0=Math.round(s0.querySelector('summary').getBoundingClientRect().top);s0.querySelector('summary').click();await sleep(400);
  const lv=s=>[...s0.querySelectorAll(s)];
  o.push('open "'+s0.querySelector('summary').textContent.trim().slice(0,40)+'" header '+y0+' -> '+Math.round(s0.querySelector('summary').getBoundingClientRect().top)+' | places '+lv('details.stopd').length+' ('+lv('details.stopd').map(x=>x.querySelector('summary').textContent.trim().slice(0,28)).slice(0,6).join(' / ')+') secs '+lv('details.sec').length+' open '+lv('details.sec[open]').length+' trainers '+lv('details.trd').length+' open '+lv('details.trd[open]').length+' cards '+lv('.trc').length+' level boxes '+lv('details.capd').length+' open '+lv('details.capd[open]').length+' trackers '+lv('.trk[data-a]').length+' tables '+lv('table').length+' inner bar '+!!s0.querySelector('.body>.seg'));
+ // places, sections and trainers start closed: open them all for the checks below
+ lv('details.stopd,details.sec,details.trd').forEach(x=>x.open=true);await sleep(400);
  // a header tap on the first place or trainer holds the header still
  const inner=s0.querySelector('details.stopd[open],details.trd[open]');
  if(inner){const h=inner.querySelector(':scope>summary');scrollBy(0,h.getBoundingClientRect().top-150);await sleep(300);const y=Math.round(h.getBoundingClientRect().top);h.click();const ys=[];for(let i=0;i<15;i++){ys.push(Math.round(h.getBoundingClientRect().top));await fr();}

@@ -447,11 +447,23 @@ Keep these decisions; don't retry what's listed as rejected.
 
 **Collapsible pages** (walkthrough, Locations, Trainers, Items; `COLLAPSIBLE PAGES` in dex.js, "Collapsible pages" in
 dex.css):
-1. Levels: box (closed by default) → place (`details.stopd`, sticky under the search bar) → section
-   (`details.sec`, sticky under the place). Every level's open state is saved in the page's `LS` object.
+1. Levels: box → place (`details.stopd`, sticky under the search bar) → section (`details.sec`, sticky under the
+   place). **Boxes and sections start closed** (2026-10-31, every page, a stop with one section too); Locations'
+   places start open (the place header repeats the box name and gives a sticky header), the walkthrough's stops and
+   the Trainers page's places closed. Every level's open state is saved in the page's `LS` object (`1` open, `0`
+   closed; no entry = the level's default; a section's `0` from before still reads as closed). Links and jumps
+   (search, a Pokémon page's place link `#/l/<place>`, Next step) open their target's chain and save it open. A
+   filtered page (search this page) shows its places and sections open (the walkthrough's Checklist stays closed
+   unless a mission matches).
 2. Tapping a header never scrolls (`flip()`, `hold()`); browser scroll anchoring is off while it settles.
-3. Expand all / Collapse all bars (`segBar`): one at the page top for the boxes, one in a box with 2+ sub-levels. They
-   only open or close their own level and never move the bar.
+3. Expand all / Collapse all bars (`segBar`): one at the page top for the boxes; in an Items box with 2+ sub-headings,
+   under the box header; in a Locations place with 2+ sections, under the place header. Each only opens or closes its
+   own level and never moves. The walkthrough has a Show switch instead (below).
+   **Reset all** (2026-10-31): the page-top Collapse all, pressed while every box is already closed, resets the page's
+   open state to the defaults (sections closed, Locations' places open, walkthrough stops closed, Trainers in Places) and
+   clears it from `LS`; ticks, trackers, caps and the walkthrough's Guide info and docs stay. While every box is closed the
+   button reads "Reset all". The reset is one function (`resetOpen`), so the trigger can change (a double tap was the
+   alternative).
 4. Collapse bars at the bottom of a block only when it is taller than the window (`bars()`); a pinned block collapses
    in place and flashes (inset accent ring). Rechecked on toggles, resizes, content-visibility renders and any change
    of the page size (a ResizeObserver on `#app`: the viewer's text zoom fires no resize but changes the height).
@@ -462,7 +474,12 @@ dex.css):
 8. Items: boxes don't pin, their sub-headings do. A box with one sub-heading named like itself shows the name twice
    (box header + sub-heading) on purpose: the user wants it that way so the box header never becomes sticky.
 
-**Walkthrough:** Guide info → Starter → Next step → Expand / Collapse all, nothing else above the splits. Inside a stop:
+**Walkthrough:** Guide info → Starter → Next step → Expand / Collapse all, nothing else above the splits. An opened box
+starts with a Show switch (`.wksw`, the Trainers page's style, pinned under the search bar with the stop headers under
+it): **Stops** (every stop closed, the default), **Sections** (every stop open, its yellow sections closed), **All**
+(stops and sections open; trainer and mission cards keep their own state). Read from the page, not stored: after single
+header taps that fit none of the three, no button is lit and "mixed" shows. Pressing one keeps the stop you're reading
+at the same pixel. Inside a stop:
 note, then Checklist / Encounters / Items / Trainers sections. Stops with trainers show `n/N | cap` (the split's cap
 when the stop has none). Empty stops are grey signs (`.wsign`), not boxes. Guide info holds tracker export / import /
 reset, the game docs and the intro text.
@@ -480,7 +497,9 @@ the search-this-page filter shows a matching mission open. Rejected: a quiet div
 final tick (A), a sticky mission header, a mission tab or global list.
 
 **Trainers:** a Show switch per box (Places / Trainers / Teams, read from the page, not stored) pinned under the box
-header; each place header has a `n/N | cap` button that fills first (part → all open, all → all closed) and never
+header; an opened box starts in Places (every place closed; a box with no place headings, Trainers). `LS.tr` before
+`v: 2` saved only closes: one with any place or trainer entry (a view the user chose) is read the old way (`d`: no
+entry = open), one with none takes the new default; each place header has a `n/N | cap` button that fills first (part → all open, all → all closed) and never
 toggles the place. Toggling keeps the trainer you're reading in place (anchor = the first row edge under the pinned
 headers). Trainer cards: below 500 px a strip of up to six sprites above one Pokémon; from 500 px all Pokémon as
 blocks, three across at most. An opened card starts at its team. One speed per Pokémon (with EVs, or without under MGM).
@@ -495,6 +514,12 @@ content-visibility-skipped ancestors first.
 block sizes, saved when one of its routes is left), so scrolling one tab never moves another and an open Pokémon page
 stays open. A tap on the tab you're on clears the search and goes to the top; on a Pokémon / move / ability page it
 first goes to the list at its place (like ‹ All Pokémon), then the top. Back / forward keep their own per-entry restore.
+
+**Dex links** (2026-10-31): every Pokémon name or sprite opens its dex page `#/p/<id>` as a plain link (`plink`,
+`sprl`), so Back and the rail's tab memory need nothing more; the dex list keeps its own place. Not links, because the
+sprite or name is a control or part of one: a trainer card's sprite strip (`.tpick`, picks the Pokémon shown), the
+team previews in trainer / partner row headers (a tap opens the row), the SOS header, tracker and trade pickers, the
+tracker's Other… results, the keyboard's picks and search results (their Dex button). The calc has its own.
 
 **Rejected** (don't bring back): animated collapses (slide, smooth scroll then close, synced fold); pinned trainer
 rows or team previews; a ☰ rail; BST anywhere; IVs on cards; the "Changes from vanilla" card and Changed filter;
