@@ -123,11 +123,11 @@ foe's team, both cards, the attacker's four moves (wide: both lists) and the fig
 six columns. **Narrow (< 480):** box (unchanged), then the trainer bar (22 px, no panel border), the fight bar (S / D,
 weather, terrain, ↺; 22 px, its buttons too: accepted below the 26 px tap size), my team (3 × 2) facing the foe strip
 (3 × 2), the two cards side by side, the moves (closed rows 33 px). The first frame is the page scrolled to the trainer
-bar (`openMatch`). **Nameless card** (narrow): the highlighted team cell says who is in. Line 1 ↺, HP box, `/max`, ✎;
-the HP bar under it; line 2 M, ability boxes, Speed (no label) at the right; line 3 (only when it has something) the
-battle-state tag (Dig, Fly, ...), Aura and the berry chip at the left, T + Toxic box and residual at the right.
-State / Aura never sit on the name line. The name shows (line 0) only when the selected Pokémon is not
-in the team row: then M, the ability boxes and Speed move up beside it, the name truncating as far as needed. **At most
+bar (`openMatch`). **Card** (narrow, both sides; class `named`): line 0 the name, M, the ability boxes and Speed (no label) at the
+right, the name truncating as far as needed; line 1 ↺, HP box, `/max`, ✎; the HP bar under it; line 2 (only when it
+has something) the battle-state tag (Dig, Fly, ...), Aura and the berry chip at the left, T + Toxic box and residual
+at the right. State / Aura never sit on the name line. (Until 2026-10-31 the name showed only for a Pokémon not in
+the team row; the user wants it always.) **At most
 three lines, always**: `fitCards()` measures each narrow card (render, resize, size change: text zoom fires
 no resize); one that takes more moves Aura up (the ability / Speed line, or after `/max` on a named card: Aura is the
 rarest tag and about stages), then the battle state the same way, then goes tight (1 px gaps, Aura as "A"). No name line while Edit is open; an open card

@@ -146,8 +146,18 @@ q.addEventListener('input',()=>{st.q=q.value.trim().toLowerCase();if(st.q&&UP[st
 // The rail's top button opens the full-window search (the search box shows only while a query is set: dex.css).
 document.getElementById('t-s').addEventListener('click',e=>{e.preventDefault();SR.open();});
 // The search stays set across pages (detail pages hide it) until its × clears it, or a tap on the tab you're already on.
-document.getElementById('rail').addEventListener('click',e=>{const a=e.target.closest('a[href^="#/"]');
- if(a&&a.getAttribute('href')===(location.hash||'#/')&&q.value){e.preventDefault();q.value='';q.dispatchEvent(new Event('input'));window.scrollTo(0,0);}});
+// Each rail tab keeps its own page and place (TABS: route, anchor, block sizes; saved in the hashchange handler when a
+// route of that tab is left, kept for the session). A tap on another tab goes back to that tab's page and place (RAILGO);
+// a tap on the tab you're on clears the search and goes to the top, except on a Pokémon / move / ability page, where
+// it first goes to the Pokémon list at its place (like ‹ All Pokémon).
+const tabOf=h=>{const v=(h||'#/').slice(2).split('/')[0];return v===''||v==='p'||v==='m'||v==='a'?'p':v==='locs'||v==='l'?'l':v==='trainers'||v==='tr'?'t':v==='items'?'i':v==='walk'?'w':v==='calc'?'c':null;};
+const TABS={};let RAILGO=null;
+document.getElementById('rail').addEventListener('click',e=>{const a=e.target.closest('a[href^="#/"]');if(!a)return;e.preventDefault();
+ const t=a.id.slice(2),cur=location.hash||'#/';
+ if(tabOf(cur)!==t){const s=TABS[t];RAILGO=s||{top:1};location.hash=s?s.h:a.getAttribute('href');return;}
+ if(t==='p'&&cur!=='#/'&&cur!=='#'){location.hash='#/';return;}
+ if(q.value){q.value='';q.dispatchEvent(new Event('input'));}
+ window.scrollTo(0,0);});
 if(!CF.calc)document.getElementById('t-c').remove();
 function setTab(t){['p','l','t','i','w','c'].forEach(x=>document.getElementById('t-'+x)?.classList.toggle('on',x===t));}
 // ===== POKEMON TAB: chip filters (type / ability / move / location)
@@ -1099,10 +1109,14 @@ let posT=0;window.addEventListener('scroll',()=>{clearTimeout(posT);posT=setTime
 document.addEventListener('visibilitychange',()=>{if(document.hidden)posSave();});
 window.dexViewer={restoreScroll(y){let c=null;try{c=JSON.parse(localStorage.getItem(LS.pos)||'null')}catch(e){}
  if(c&&c.h===location.hash&&c.a&&c.a.sel&&app.querySelector(c.a.sel))toAnchor(c.a);else window.scrollTo(0,y);}};
-window.addEventListener('hashchange',()=>{const typed=searchNav;searchNav=false;if(!typed){SR.close();KB.close(true);}if(curKey)SNAP[curKey]={a:keepAnchor(),z:cvSizes()};
- st.lgo=typed;render(typed);curKey=entryKey();if(typed){if(!/^#\/l\//.test(location.hash))window.scrollTo(0,0);return;}const sn=SNAP[curKey];if(sn){if(landEnd)landEnd();cvApply(sn.z);toAnchor(sn.a);}
+let curHash=null;
+window.addEventListener('hashchange',()=>{const typed=searchNav;searchNav=false;if(!typed){SR.close();KB.close(true);}const left={a:keepAnchor(),z:cvSizes()};if(curKey)SNAP[curKey]=left;
+ const lt=tabOf(curHash);if(curHash!=null&&lt)TABS[lt]={h:curHash,...left};
+ st.lgo=typed;render(typed);curKey=entryKey();curHash=location.hash||'#/';
+ if(RAILGO){const g=RAILGO;RAILGO=null;if(landEnd)landEnd();if(g.top)window.scrollTo(0,0);else{cvApply(g.z);toAnchor(g.a);}return;}
+ if(typed){if(!/^#\/l\//.test(location.hash))window.scrollTo(0,0);return;}const sn=SNAP[curKey];if(sn){if(landEnd)landEnd();cvApply(sn.z);toAnchor(sn.a);}
  if(SR.after){const f=SR.after;SR.after=null;f();}});
 // Opened without a route (the viewer always loads the bare file): go back to the page it was on.
 if(!location.hash||location.hash==='#'){try{const c=JSON.parse(localStorage.getItem(LS.pos)||'null');if(c&&/^#\/[\w\/%.-]*$/.test(c.h))history.replaceState(null,'',c.h);}catch(e){}}
-render(false);curKey=entryKey();
+render(false);curKey=entryKey();curHash=location.hash||'#/';
 app.insertAdjacentHTML('afterend',`<div class="foot">${esc(CF.name)} offline dex · ${P.length} Pokémon and forms (${P.filter(p=>p.g===0).length} obtainable) · ${MV.filter(m=>m.h.length).length} changed moves · ${TRS.length} ${CF.trw[2]} · built ${D.built}${CF.credit?` · ${CF.credit}`:''}</div>`);

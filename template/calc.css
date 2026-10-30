@@ -625,14 +625,14 @@ body.calc-route .cc .l1 .ddl{line-height:1.6}
  body.calc-route .fbar .nav,body.calc-route .fbar .dsrc{height:auto;min-height:22px}
  body.calc-route .cc{display:flex;flex-direction:row;flex-wrap:wrap;align-content:start;align-items:center;gap:0 2px;padding:1px 3px;min-height:0}
  body.calc-route .cc .l1,body.calc-route .cc .cl,body.calc-route .cc .cl .dend{display:contents}
- /* At most three lines (the HP bar isn't one), by order: 0-1 the name line (.offteam only: name, M, ability boxes, Speed
+ /* At most three lines (the HP bar isn't one), by order: 0-1 the name line (the name, M, ability boxes, Speed
     at the right end), 2-3 HP + ✎, 4 the HP bar, 5-6 line 2 (M, ability boxes, Speed; not with the name line), 7 a
     break, 8-12 line 3 (battle state, Aura, berry at the left; T + Toxic box, residual at the right). A card that would
     take more than three lines gets .aup from fitCards() (Aura up to line 2, or the HP line when named), then .sup (the state too), then .tight. */
  body.calc-route .cc .cn{display:none}
- body.calc-route .cc.offteam .cn{display:block;order:0;flex:1 1 0;min-width:0;min-height:18px;overflow:hidden;text-align:left}
- body.calc-route .cc.offteam .cn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
- body.calc-route .cc.offteam::after{content:'';order:1;flex:0 0 100%;height:0}
+ body.calc-route .cc.named .cn{display:block;order:0;flex:1 1 0;min-width:0;min-height:18px;overflow:hidden;text-align:left}
+ body.calc-route .cc.named .cn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ body.calc-route .cc.named::after{content:'';order:1;flex:0 0 100%;height:0}
  body.calc-route .cc::before{content:'';order:7;flex:0 0 100%;height:0}
  body.calc-route .cc .cl>span:first-child,body.calc-route .cc [data-lv],body.calc-route .cc .dsl{display:none}
  body.calc-route .cc .hpl,body.calc-route .cc [data-hp],body.calc-route .cc .mx{order:2}
@@ -640,14 +640,14 @@ body.calc-route .cc .l1 .ddl{line-height:1.6}
  body.calc-route .cc>.dhpbar{order:4;flex-basis:100%;margin:0}
  body.calc-route .cc .mg,body.calc-route .cc .dmonstate,body.calc-route .cc .ddl,body.calc-route .cc .aum,body.calc-route .cc .dvol{order:5;flex:none;height:auto;min-height:18px;margin-left:0;box-sizing:border-box}
  body.calc-route .cc .l1 .sp{order:6;margin-left:auto;font-size:0;min-height:18px;display:flex;align-items:center}
- body.calc-route .cc.offteam .mg,body.calc-route .cc.offteam .dmonstate,body.calc-route .cc.offteam .ddl{order:0}
- body.calc-route .cc.offteam .l1 .sp{order:1;margin-left:2px}
+ body.calc-route .cc.named .mg,body.calc-route .cc.named .dmonstate,body.calc-route .cc.named .ddl{order:0}
+ body.calc-route .cc.named .l1 .sp{order:1;margin-left:2px}
  body.calc-route .cc .cl>.dvol{order:8}
  body.calc-route .cc .cl>.aum{order:9}
  body.calc-route .cc.aup .cl>.aum{order:5}
- body.calc-route .cc.offteam.aup .cl>.aum{order:2}
+ body.calc-route .cc.named.aup .cl>.aum{order:2}
  body.calc-route .cc.sup .cl>.dvol{order:5}
- body.calc-route .cc.offteam.sup .cl>.dvol{order:2}
+ body.calc-route .cc.named.sup .cl>.dvol{order:2}
  body.calc-route .cc .dend>.dberry{order:10}
  body.calc-route .cc .dend>.dtoxl,body.calc-route .cc .dend>[data-tox]{order:11}
  body.calc-route .cc .dend>button:not(.dberry){order:12}
