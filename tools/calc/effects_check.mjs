@@ -172,6 +172,14 @@ await check('Curse: stages for a non-Ghost, nothing for a Ghost (its switch + HP
   assert.deepEqual((await use('expansion', mew, pika, 'Curse')).atk.stg, stg(1, 1, 0, 0, -1));
   assert.equal(await use('expansion', mon('Gengar'), pika, 'Curse'), null);
 });
+await check('Stuff Cheeks eats the berry then Def +2 (fails without one); Purify cures the target; Tidy Up', async () => {
+  const cheeks = await use('expansion', mon('Blissey', {it: 'Sitrus Berry'}), pika, 'Stuff Cheeks');
+  assert.deepEqual([cheeks.atk.stg, cheeks.atk.used], [stg(0, 2, 0, 0, 0), true]);
+  assert.ok((await use('expansion', mew, pika, 'Stuff Cheeks')).fails);
+  assert.equal((await use('expansion', mew, mon('Pikachu', {st: 'brn'}), 'Purify')).def.status, '');
+  assert.ok((await use('expansion', mew, pika, 'Purify')).fails);
+  assert.deepEqual((await use('expansion', mew, pika, 'Tidy Up')).atk.stg, stg(1, 0, 0, 0, 1));
+});
 await check('Growth: +1 / +1, +2 / +2 in sun (Gen 5+); Gen 4 SpA +1', async () => {
   assert.deepEqual((await use('expansion', mew, pika, 'Growth')).atk.stg, stg(1, 0, 1, 0, 0));
   assert.deepEqual((await use('expansion', mew, pika, 'Growth', {weather: 'Sun'})).atk.stg, stg(2, 0, 2, 0, 0));

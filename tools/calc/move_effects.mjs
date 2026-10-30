@@ -83,6 +83,10 @@ const HAND = {
   magicpowder: { k: 'type', fn: 'onHit' },
   burnup: { k: 'type', tg: 's', fn: 'self.onHit' },
   acupressure: { k: 'random', fn: 'onHit' },
+  tidyup: { b: { atk: 1, spe: 1 }, tg: 's', fn: 'onHit' },
+  stuffcheeks: { k: 'cheeks', b: { def: 2 }, tg: 's', fn: 'onHit' },
+  purify: { k: 'purify', tg: 'o', fn: 'onHit' },
+  corrosivegas: { k: 'knock', tg: 'o', fn: 'onHit' },
   // Damaging moves: guaranteed secondaries.
   knockoff: { sec: 'knock', fn: 'onAfterHit' },
   thief: { sec: 'steal', fn: 'onAfterHit' },

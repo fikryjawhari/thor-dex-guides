@@ -253,7 +253,7 @@ export function createEffects(env) {
       const foe = tgt === 'def';
       let any = false;
       if (record0.k) any = kind(record0, tgt, foe) || any;
-      if (record0.b && !(record0.k === 'venom' || record0.k === 'growth' || record0.k === 'maxatk')) any = stages(tgt, record0.b, foe, name) || any;
+      if (record0.b && !['venom', 'growth', 'maxatk', 'cheeks'].includes(record0.k)) any = stages(tgt, record0.b, foe, name) || any;
       if (record0.st) any = status(tgt, record0.st, foe, true) || any;
       if (record0.v && !SWITCH_VOLATILES.has(record0.v)) any = volatile(tgt, record0.v, foe) || any;
       if (record0.sb) any = stages('atk', record0.sb, false, name) || any;
@@ -349,6 +349,21 @@ export function createEffects(env) {
         case 'venom': {
           if (!['psn', 'tox'].includes(state.st)) { out.parts.push({who, blocked: 'not poisoned'}); note('Target not poisoned'); return false; }
           return stages(who, entry.b, foe, name);
+        }
+        case 'cheeks': {
+          // Stuff Cheeks (Showdown onTry / onHit): needs a held berry; eats it, then Def +2.
+          const item = env.heldName(self.mon, self);
+          if (!item.endsWith(' Berry')) { out.parts.push({who: 'atk', blocked: 'no berry'}); note('No berry'); return false; }
+          self.consume(item);
+          out.parts.push({who: 'atk', item, lost: 'eat'});
+          return stages('atk', entry.b, false, name) || true;
+        }
+        case 'purify': {
+          if (!state.st) { out.parts.push({who, blocked: 'no status'}); note('Target has no status'); return false; }
+          state.setStatus('');
+          out.parts.push({who, cured: true});
+          note('Target cured');
+          return true;
         }
         case 'cure': {
           const only = entry.only || Object.keys(STATUS_LABEL);
