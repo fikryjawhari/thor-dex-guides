@@ -1,0 +1,133 @@
+{
+  "source": "User-saved official Unbound calc, 2026-10-30; reference only, no source redistributed",
+  "files": [
+    {
+      "name": "util_YA0k.js",
+      "sha256": "3e2c43e48c810250b80425b3e9c94325aaa18ce0a50601c28dca441e342ed622"
+    },
+    {
+      "name": "stats_YA0k.js",
+      "sha256": "aa4de23074b3d1425229774f00832b5e6597f14dbe8f245a9c8574e55b16a5c0"
+    },
+    {
+      "name": "species_YA0k.js",
+      "sha256": "0e3ddd9717d847c470cf2953467fa2fd47a3b37626bb35fb1b881e0b47c5bcd0"
+    },
+    {
+      "name": "gen8_YA0k.js",
+      "sha256": "ddd5abf302096717167b163e6eb7ed9337594c0dcee8267d1dc1937b161c9dc7"
+    },
+    {
+      "name": "gen7_YA0k.js",
+      "sha256": "72c11f51e218b5ebefdeebc1379990ada4952e60675e1fc39b960a99b0650e20"
+    },
+    {
+      "name": "gen6_YA0k.js",
+      "sha256": "5a5795fc0f6c916272152819d70acef081c7fd49b4ede44641888723ea9f69f2"
+    },
+    {
+      "name": "gen5_YA0k.js",
+      "sha256": "70757de012e9931564a7555a44bf0a0a2c0783ef1c67b908bc8e912022dd872e"
+    },
+    {
+      "name": "gen4_YA0k.js",
+      "sha256": "e4509933f1372ab6a7ffe82b5226c63e50c06ae09028c1d97ec6bdaaacff6d08"
+    },
+    {
+      "name": "gen3_YA0k.js",
+      "sha256": "71dfe5d4c285fa3907298a981fa59b4df0fbb20376d7d4d0da07022031e5388c"
+    },
+    {
+      "name": "gen2_YA0k.js",
+      "sha256": "70a14fd928db1ed217902d24deabf616fea0189873fafaed5c0ef028858ef036"
+    },
+    {
+      "name": "gen1_YA0k.js",
+      "sha256": "0afac0d28eeb0793d07938eb2cdcc7eee5b40fa23a84f47036b3dc9f454d9154"
+    },
+    {
+      "name": "types_YA0k.js",
+      "sha256": "c839080861af1b530319edd332a2daf44a4c84ca9fbaa7e436f8bb8284b3804a"
+    },
+    {
+      "name": "natures_YA0k.js",
+      "sha256": "39ffb5ef8e6bbd36cc3943699a54d18b2efef61ce407abd955e1626e2bf998d5"
+    },
+    {
+      "name": "abilities_YA0k.js",
+      "sha256": "2f26ded3c0fc4dc8c3bfda8fe06342a47446f72ab56cfaa5f0cac9ff85d64c57"
+    },
+    {
+      "name": "moves_YA0k.js",
+      "sha256": "72f1c3529928a61acbf92fe40bb8d7f1ef6bfc73e569f57d55ee94b3e20c890a"
+    },
+    {
+      "name": "items_YA0k.js",
+      "sha256": "ca675c1a91bee897830e0fa1519dc2df21a2f69aa262064bf09a244b57b2a304"
+    },
+    {
+      "name": "index_YA0k.js",
+      "sha256": "85d2812a5539df30f17a212503d617f56bbc340024bd8447e90dd07c71e545e5"
+    },
+    {
+      "name": "move_YA0k.js",
+      "sha256": "818c7e72502989ae230397aa02be7c32b7095318cf7107f0b620a4985d68545f"
+    },
+    {
+      "name": "pokemon_YA0k.js",
+      "sha256": "80515344eb0b5a2bd95ff5a444de62dac7eba25488aad234b1e026d228e5ed25"
+    },
+    {
+      "name": "field_YA0k.js",
+      "sha256": "cb5688ed7f8c0e1b4ca3901ccce11d737a4b8f2cc3cf69916012ab52c376e87a"
+    },
+    {
+      "name": "items_002_YA0k.js",
+      "sha256": "63be68304cc487b6a1970a18a8c6b7d87ee16e2ddd0e8e982078bf1d0642c468"
+    },
+    {
+      "name": "util_002_YA0k.js",
+      "sha256": "ca3aa96f935c87b2b448dbef556bb6dafc60ceb55f51d24155a1c3c5a7e3e084"
+    },
+    {
+      "name": "gen78_YA0k.js",
+      "sha256": "afde1fe7568620228a6aba44eff1388579b143c66b61138c46bb7adc4b274271"
+    },
+    {
+      "name": "gen56_YA0k.js",
+      "sha256": "d0635848dd07dc8fdcb88091aee87d02c83ea2259bbd59929ad2200116f88523"
+    },
+    {
+      "name": "gen4_002_YA0k.js",
+      "sha256": "9fb8dc83726d502243541225685cff50aa78e55e84cb74fef7568859b7e6520b"
+    },
+    {
+      "name": "gen3_002_YA0k.js",
+      "sha256": "e5cce40b4f46499d94142ab7723df3a7a951e28579cef1f716bf140ef68813ad"
+    },
+    {
+      "name": "gen12_YA0k.js",
+      "sha256": "7c875c30b63c47ca320658f07d71f2b87acf40c9c2bfd68ebb019b482ecc534f"
+    },
+    {
+      "name": "calc_YA0k.js",
+      "sha256": "86af10b92202fc6be596af24c9195ddd09429edefc18bdef31eebf494efc4e11"
+    },
+    {
+      "name": "desc_YA0k.js",
+      "sha256": "2f79ab5a02bd493dd541661bba701240b9e5871ca7bcc415aac31b13ff525734"
+    },
+    {
+      "name": "result_YA0k.js",
+      "sha256": "36adf90867948f524b3e320282fc2a3d9135a2026353cf3e8aa2945d74fde7e8"
+    },
+    {
+      "name": "adaptable_YA0k.js",
+      "sha256": "cea3fbddef219155fcceb46dfa8a080887a34e1f80f576c638a1f6c4c66e1c4c"
+    },
+    {
+      "name": "shared_controls_YA0k.js",
+      "sha256": "3ae2f7e993167ac867e64c0b4ef2b0a11cb9d41ea971beb5c1b13c9e90f0dda2"
+    }
+  ]
+}

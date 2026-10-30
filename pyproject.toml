@@ -6,6 +6,7 @@ requires-python = ">=3.12"
 dependencies = [
     "openpyxl",
     "pdfplumber",
+    "python-dotenv>=1.2.4",
 ]
 
 [tool.uv]

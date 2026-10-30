@@ -60,6 +60,9 @@ class Species:
         body = re.sub(r'<script.*?</script>|<style.*?</style>|<svg.*?</svg>', '', raw, flags=re.S)
         self.name = text(re.search(r'<h1[^>]*>(.*?)</h1>', body, re.S).group(1))
         sprite = re.search(r'/sprites/(\d+)\.png" alt="%s"' % re.escape(html.escape(self.name, quote=True)), raw)
+        if not sprite:      # the alt's apostrophe escaped another way ("Farfetch&#39;d")
+            alt = '|'.join(re.escape(html.escape(self.name, quote=True).replace('&#x27;', e)) for e in ('&#39;', "'"))
+            sprite = re.search(r'/sprites/(\d+)\.png" alt="(?:%s)"' % alt, raw)
         self.dex = int(sprite.group(1)) if sprite else None
         hero = body[body.find('<h1'):body.find('Base Stats</h2>')]
         self.types = [t for t in re.findall(r'<span[^>]*background-color[^>]*>\s*([A-Za-z]+)\s*</span>', hero) if t in TYPES]
@@ -81,7 +84,8 @@ class Species:
                 cells = re.findall(r'<td[^>]*>(.*?)</td>', row, re.S)
                 move = text(re.search(r'<a[^>]*>(.*?)</a>', row, re.S).group(1))
                 if attr == 'lv':
-                    self.lv.append((int(text(cells[0])), move))
+                    lvl = text(cells[0])
+                    self.lv.append((0 if lvl == '—' else int(lvl), move))     # an em dash: learned on evolution
                 elif attr == 'tm':
                     self.tm.append((text(cells[0]), move))
                 else:

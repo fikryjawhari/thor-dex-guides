@@ -143,6 +143,7 @@ body:is([data-v=p],[data-v=m],[data-v=a],[data-v=tr]) header{display:none}
 .mon .ab{margin-top:2px;color:var(--mut)}.mon .ab a{color:var(--fg)}
 .mon .mv{display:grid;grid-template-columns:1fr 1fr;gap:0 6px;margin-top:2px;font-size:11.5px}
 .mon .mv a{line-height:1.2}
+.mon .mv.guess a{font-style:italic}.mon .mv.guess a::after{content:' ?';color:var(--mut)}
 .mon .ex{margin-top:1px;font-size:11px}
 .mon .dot{width:7px;height:7px;margin-right:3px}
 /* Under 500 px wide: a strip of up to six sprite buttons (28 px, level under each) over one Pokemon */
@@ -291,6 +292,19 @@ details.sec>summary .tag{margin-left:0}
 .tag.miss{background:#5e2e2e;color:#ffb4b4;letter-spacing:.03em}
 .secb{padding:2px 0 4px}
 .chkb .wstep:last-child{border-bottom:0}
+/* A mission in a checklist: a bordered card; its header (name, progress) opens its unlock, reward and steps */
+details.wmis{margin:6px 0;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+details.wmis>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;min-height:44px;padding:6px 24px 6px 8px;position:relative;font-size:14px;-webkit-tap-highlight-color:transparent}
+details.wmis>summary::-webkit-details-marker{display:none}
+details.wmis>summary::after{content:'▸';position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:13px}
+details.wmis[open]>summary::after{content:'▾'}
+details.wmis[open]>summary{border-bottom:1px solid var(--line)}
+.wmis .mn{flex:1 1 auto;min-width:0;font-weight:600;overflow-wrap:anywhere}
+.wmis>summary .tag{flex:none;margin-left:0}
+.misb{padding:0 8px}
+.mmeta{font-size:12px;color:var(--mut);margin:6px 0;overflow-wrap:anywhere}.mmeta b{color:var(--fg)}
+.misb .wstep{min-height:44px;padding:10px 0}.misb .wstep>span{min-width:0;overflow-wrap:anywhere}
+.wmis>.endbar.sb{margin-right:4px}
 .secb>.itbl.wt{margin:6px 0 2px}
 /* Encounter areas: one box each; a short place tag where a stop has several */
 .area{padding:4px 0}.area+.area{border-top:1px dashed var(--line)}.area .trk{margin:4px 0}

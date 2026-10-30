@@ -13,7 +13,7 @@ if (!file) {
   process.exit(0);
 }
 
-const EXPECTED = { 'blaze-black-2-redux': 72, 'emerald-imperium': 14, 'hardlove-gold': 92, 'photonic-sun': 60, 'eternal-x': 62 };
+const EXPECTED = { 'unbound': 36, 'blaze-black-2-redux': 72, 'emerald-imperium': 14, 'hardlove-gold': 92, 'photonic-sun': 60, 'eternal-x': 62 };
 const all = () => guide().data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr));
 const doublesRecord = trainer => (trainer.field || []).find(record => !record.label && (record.effects || []).some(effect => effect.kind === 'gameType' && effect.value === 'Doubles'));
 const sourceOf = trainer => { const record = doublesRecord(trainer); return record.effects.find(effect => effect.kind === 'gameType').source || record.text; };
@@ -115,7 +115,8 @@ const checks = [
       assert.equal(await page.count('.dfsource [data-a="fieldauto"]'), 0, 'no Auto button for it');
       await page.tap('.dfight [data-f="gameType"][data-value="Doubles"]');
       assert.deepEqual(await format(page), { format: 'Doubles', manual: true }, 'tapping D on a singles trainer is manual');
-      await enter(page, all().find(trainer => trainer.k === guide().trainers.six?.k || trainer.k === guide().trainers.relative?.k));
+      // another singles trainer than four (Unbound's relative role is its four trainer too)
+      await enter(page, all().find(trainer => (trainer.k === guide().trainers.six?.k || trainer.k === guide().trainers.relative?.k) && trainer.k !== guide().trainers.four.k));
       await expectSingles(page, 'next trainer (singles) clears a manual D');
     },
   },

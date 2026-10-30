@@ -32,8 +32,8 @@ def source_check(root):
     print(f'PASS Hardlove source coverage: {count} field comments retained as evidence')
 
 
-DOUBLES_EXPECTED = {'emerald-imperium': 14, 'hardlove-gold': 92, 'photonic-sun': 60, 'eternal-x': 62}
-DOUBLES_PARTNER_ONLY = {'eternal-x': 12}
+DOUBLES_EXPECTED = {'emerald-imperium': 14, 'hardlove-gold': 92, 'photonic-sun': 60, 'eternal-x': 62, 'unbound': 36}
+DOUBLES_PARTNER_ONLY = {'eternal-x': 12, 'unbound': 2}
 
 
 def doubles_check(root):
@@ -76,6 +76,31 @@ def doubles_check(root):
 def main():
     root = Path(__file__).resolve().parent.parent
     doubles_check(root)
+    unbound = json.loads((root / 'hacks/unbound/data.json').read_text(encoding='utf-8'))
+    pending = [record for group in unbound['TR']['g'] for section in group['sec']
+               for trainer in section['tr'] for record in trainer.get('field', [])
+               if trainer_fields.unbound_proposal(record['text'])]
+    counts = {key: sum(trainer_fields.unbound_proposal(record['text']) == key for record in pending)
+              for key in trainer_fields.UNBOUND_FIELD_PROPOSALS}
+    assert counts == dict(fog=2, flying_tailwind=2, magnet_rise=2, weight_room=2, heavy_rain=2, vicious_sand=1,
+                          camomons=2, inverse=2, shadowy_veil=2, negative_energy=3, pixies=1, rainbow=1,
+                          sky=1, dynamax=1, rain=1, butterfree=2), counts
+    for record in pending:
+        assert record == trainer_fields.evidence(record['text'], record['scope'])
+    decisions = trainer_fields.UNBOUND_FIELD_DECISIONS.copy()
+    try:
+        for key, proposal in trainer_fields.UNBOUND_FIELD_PROPOSALS.items():
+            trainer_fields.UNBOUND_FIELD_DECISIONS[key] = 'text'
+            result = trainer_fields.evidence(proposal['prefix'], 'trainer-note')
+            assert result['effects'] == [] and result['review'] is False
+            trainer_fields.UNBOUND_FIELD_DECISIONS[key] = 'apply'
+            result = trainer_fields.evidence(proposal['prefix'], 'trainer-note')
+            assert result['effects'] == proposal['effects'] and result['review'] is False
+    finally:
+        trainer_fields.UNBOUND_FIELD_DECISIONS.update(decisions)
+    print(f'PASS Unbound: {len(pending)} source field records, {sum(record["review"] for record in pending)} awaiting user decisions')
+    assert not any(record['review'] for group in unbound['TR']['g'] for section in group['sec']
+                   for trainer in section['tr'] for record in trainer.get('field', []))
     thunder =trainer_fields.evidence('Permanent OW Thunderstorm: Rain and Electric Terrain', 'trainer-note')
     assert [(effect['kind'], effect['value']) for effect in thunder['effects']] == [
         ('weather', 'Rain'), ('terrain', 'Electric')]

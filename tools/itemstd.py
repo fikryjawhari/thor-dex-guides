@@ -72,6 +72,9 @@ HG_OTHER = {
         'Old man next to the Bidoof resets the Embedded Tower.'),
 }
 RULES = {
+    # keep_sub: boxes whose rows keep the extract's own sub-heading (Unbound: one per tutor, Zygarde Cells);
+    # nomerge: items that stay one row per place (Unbound's Zygarde Cells)
+    'unbound': {'reorder': set(GAME_ORDER_BOXES), 'keep_sub': {'Key Items', 'Move Tutors'}, 'nomerge': {'Zygarde Cell'}},
     'emerald-imperium': {
         'reorder': set(GAME_ORDER_BOXES), 'tm_width': 3, 'shop_kind_re': EI_KIND,
         'drop': {('Shops', 'Pomeg Berry')},     # the author's stray first row (it only holds the vanilla-stock remark)
@@ -189,8 +192,9 @@ def route(old, rules):
         return []
     if box in ('TMs', 'HMs', 'TMs and HMs'):
         return [E('TMs and HMs', 'HMs' if re.match(r'HM\d', item) else 'TMs')]
+    own = sub if box in rules.get('keep_sub', ()) and sub else None
     if box == 'Move Tutors':
-        return [E('Move Tutors', 'Move Tutors')]
+        return [E('Move Tutors', own or 'Move Tutors')]
     if box in ('Mega Stones', 'Z-Crystals'):
         return [E(box, box, ntext=text if box == 'Mega Stones' else to_lines(text))]
     if box in ('Evolution Items', 'Fossils'):
@@ -198,7 +202,7 @@ def route(old, rules):
     if box == 'Key Items':
         if re.match(r'HM\d', item):                       # EX files the HMs as key items; they belong with the TMs
             return [E('TMs and HMs', 'HMs', ntext=plain(text), fix_link=item)]
-        return [E('Key Items', 'Key Items', ntext=to_lines(text))]
+        return [E('Key Items', own or 'Key Items', ntext=to_lines(text))]
     if box == 'Stats and Abilities':
         return [E(box, sub or 'Levels and PP', ntext=to_lines(text))]
     if box == 'Held Items':
@@ -273,7 +277,8 @@ def standardise(D, rules=None, report=None):
     boxes = {n: [] for n in BOXES}
     for e in entries:
         rows = boxes[e.box]
-        hit = next((x for x in rows if x['item'] == e.item and x['sub'] == e.sub and (e.box in ('Shops', 'Held Items', 'Evolution Items', 'Stats and Abilities', 'Key Items'))), None)
+        hit = next((x for x in rows if x['item'] == e.item and x['sub'] == e.sub and (e.box in ('Shops', 'Held Items', 'Evolution Items', 'Stats and Abilities', 'Key Items'))
+                    and e.item not in rules.get('nomerge', ())), None)
         if hit:
             hit['parts'].append(e.text)
             hit['miss'] = hit['miss'] or e.miss
@@ -313,6 +318,11 @@ def standardise(D, rules=None, report=None):
             game = n in rules.get('reorder', ()) or f"{n}/{x['sub']}" in rules.get('reorder', ())
             return (sub_i, wk_first.get((n, x['item']), BIG) if game else 0)
         rows.sort(key=key)                                  # stable: the hack's own order is the tie-break
+        if not order:                                       # several sub-headings (keep_sub): the box's own first, then first seen
+            first = {n: -1}
+            for i, x in enumerate(rows):
+                first.setdefault(x['sub'], i)
+            rows.sort(key=lambda x: first[x['sub']])
         new.append({'n': n, 'k': KIND.get(n, 'gen'), 'note': ' '.join(notes.get(n, [])),
                     'r': [[x['item'], x['text'], x['link'], x['miss'], x['sub']] for x in rows]})
     D['IT'] = new

@@ -1,0 +1,498 @@
+dex: P 1114 (906 species, 58 regional forms, 50 Megas / Primals, 100 other forms); M 785; AB 290
+mirror pages: 1268 (base 906, drop 38, form 216, mega 50, regional 58); every one placed: 1114 in P, 116 merged into a species, 38 dropped
+  merged (cosmetic forms listed under their species) (116): pikachu-cap-alola -> pikachu; pikachu-cap-hoenn -> pikachu; pikachu-cap-kalos -> pikachu; pikachu-cap-original -> pikachu; pikachu-cap-partner -> pikachu; pikachu-cap-sinnoh -> pikachu; pikachu-cap-unova -> pikachu; pichu-spiky -> pichu; unown-b -> unown; unown-c -> unown; unown-d -> unown; unown-e -> unown; unown-exclamation -> unown; unown-f -> unown; unown-g -> unown; unown-h -> unown; unown-i -> unown; unown-j -> unown; unown-k -> unown; unown-l -> unown; unown-m -> unown; unown-n -> unown; unown-o -> unown; unown-p -> unown; unown-q -> unown; unown-question -> unown; unown-r -> unown; unown-s -> unown; unown-t -> unown; unown-u -> unown; unown-v -> unown; unown-w -> unown; unown-x -> unown; unown-y -> unown; unown-z -> unown; burmy-sandy -> burmy; burmy-trash -> burmy; cherrim-sun -> cherrim; shellos-east -> shellos; gastrodon-east -> gastrodon; hippopotas-f -> hippopotas; hippowdon-f -> hippowdon; deerling-autumn -> deerling; deerling-summer -> deerling; deerling-winter -> deerling; sawsbuck-autumn -> sawsbuck; sawsbuck-summer -> sawsbuck; sawsbuck-winter -> sawsbuck; jellicent-f -> jellicent; keldeo-resolute -> keldeo; genesect-burn -> genesect; genesect-chill -> genesect; genesect-douse -> genesect; genesect-shock -> genesect; vivillon-archipelago -> vivillon; vivillon-continental -> vivillon; vivillon-elegant -> vivillon; vivillon-fancy -> vivillon; vivillon-garden -> vivillon; vivillon-high-plains -> vivillon; vivillon-icy-snow -> vivillon; vivillon-jungle -> vivillon; vivillon-marine -> vivillon; vivillon-modern -> vivillon; vivillon-monsoon -> vivillon; vivillon-ocean -> vivillon; vivillon-pokeball -> vivillon; vivillon-polar -> vivillon; vivillon-river -> vivillon; vivillon-sandstorm -> vivillon; vivillon-savanna -> vivillon; vivillon-sun -> vivillon; vivillon-tundra -> vivillon; pyroar-female -> pyroar; flabebe-blue -> flabebe; flabebe-orange -> flabebe; flabebe-white -> flabebe; flabebe-yellow -> flabebe; floette-blue -> floette; floette-orange -> floette; floette-white -> floette; floette-yellow -> floette; florges-blue -> florges; florges-orange -> florges; florges-white -> florges; florges-yellow -> florges; furfrou-dandy -> furfrou; furfrou-debutante -> furfrou; furfrou-diamond -> furfrou; furfrou-heart -> furfrou; furfrou-kabuki -> furfrou; furfrou-la-reine -> furfrou; furfrou-matron -> furfrou; furfrou-pharoah -> furfrou; furfrou-star -> furfrou; xerneas-natural -> xerneas; minior-green -> minior_blue; minior-indigo -> minior_blue; minior-orange -> minior_blue; minior-red -> minior_blue; minior-violet -> minior_blue; minior-yellow -> minior_blue; mimikyu-busted -> mimikyu; magearna-p -> magearna; cramorant-gorging -> cramorant; cramorant-gulping -> cramorant; sinistea-chipped -> sinistea; polteageist-chipped -> polteageist; alcremie-berry -> alcremie; alcremie-clover -> alcremie; alcremie-flower -> alcremie; alcremie-love -> alcremie; alcremie-ribbon -> alcremie; alcremie-star -> alcremie; morpeko-hangry -> morpeko; zarude-dada -> zarude
+  dropped (38): alcremie-giga (Gigantamax (Dynamax only, in raids)); appletun-giga (Gigantamax (Dynamax only, in raids)); blastoise-giga (Gigantamax (Dynamax only, in raids)); butterfree-giga (Gigantamax (Dynamax only, in raids)); centiskorch-giga (Gigantamax (Dynamax only, in raids)); charizard-giga (Gigantamax (Dynamax only, in raids)); cinderace-giga (Gigantamax (Dynamax only, in raids)); coalossal-giga (Gigantamax (Dynamax only, in raids)); copperajah-giga (Gigantamax (Dynamax only, in raids)); corviknight-giga (Gigantamax (Dynamax only, in raids)); drednaw-giga (Gigantamax (Dynamax only, in raids)); duraludon-giga (Gigantamax (Dynamax only, in raids)); eevee-giga (Gigantamax (Dynamax only, in raids)); eternatus-eternamax (Eternamax (not a form a party can hold)); flapple-giga (Gigantamax (Dynamax only, in raids)); garbodor-giga (Gigantamax (Dynamax only, in raids)); gengar-giga (Gigantamax (Dynamax only, in raids)); grimmsnarl-giga (Gigantamax (Dynamax only, in raids)); hatterene-giga (Gigantamax (Dynamax only, in raids)); inteleon-giga (Gigantamax (Dynamax only, in raids)); kingler-giga (Gigantamax (Dynamax only, in raids)); lapras-giga (Gigantamax (Dynamax only, in raids)); machamp-giga (Gigantamax (Dynamax only, in raids)); melmetal-giga (Gigantamax (Dynamax only, in raids)); meowth-giga (Gigantamax (Dynamax only, in raids)); missingno (placeholder species); orbeetle-giga (Gigantamax (Dynamax only, in raids)); pikachu-giga (Gigantamax (Dynamax only, in raids)); rillaboom-giga (Gigantamax (Dynamax only, in raids)); sandaconda-giga (Gigantamax (Dynamax only, in raids)); snorlax-giga (Gigantamax (Dynamax only, in raids)); toxtricity-giga (Gigantamax (Dynamax only, in raids)); toxtricity-low-key-giga (Gigantamax (Dynamax only, in raids)); urshifu-rapid-giga (Gigantamax (Dynamax only, in raids)); urshifu-single-giga (Gigantamax (Dynamax only, in raids)); venusaur-giga (Gigantamax (Dynamax only, in raids)); zygarde-cell (Zygarde Cell (a collectible, not a battle form)); zygarde-core (Zygarde Core (a collectible, not a battle form))
+dex number: type-null: mirror sprite #773 (also silvally), wiki National Dex #772 (wiki taken)
+moves: 993 in moves.json; 102 Max / G-Max and 36 Z-move copies left out; 70 CFRU spellings merged into one official name
+  merged move entries (70): Facade <- "Facade" (1211 uses) / "Façade" (0 uses); Grassy Terrain <- "Grassy Terrain" (86 uses) / "GrassTerrain" (63 uses); Petal Blizzard <- "Petal Storm" (39 uses) / "Petalblizzard" (0 uses); Stomping Tantrum <- "Stomping Tantrum" (233 uses) / "Bad Tantrum" (22 uses); Power-Up Punch <- "Power-Up Punch" (299 uses) / "Power-Up Hit" (46 uses); Mystical Fire <- "Mystical Fire" (92 uses) / "Mystic Fire" (7 uses); Scorching Sands <- "Scorching Sands" (105 uses) / "Scorch Sands" (10 uses); Breaking Swipe <- "Breaking Swipe" (70 uses) / "Break Swipe" (9 uses); Draining Kiss <- "Draining Kiss" (131 uses) / "Drain Kiss" (54 uses); Psychic Fangs <- "Psychic Fangs" (80 uses) / "Psychic Fang" (8 uses); Electric Terrain <- "Electric Terrain" (57 uses) / "Elec Terrain" (23 uses); Disarming Voice <- "Disarm Cry" (61 uses) / "Disarmingvoice" (0 uses); Leech Life <- "Leech Fang" (88 uses) / "Leech Life" (21 uses); High Horsepower <- "High Horsepower" (110 uses) / "HiHorsepower" (19 uses); Dazzling Gleam <- "Dazzling Gleam" (201 uses) / "Dazzle Gleam" (63 uses); Misty Terrain <- "Misty Terrain" (64 uses) / "Mist Terrain" (56 uses); Baby-Doll Eyes <- "Doll Eyes" (63 uses) / "Babydolleyes" (0 uses); Expanding Force <- "Expanding Force" (108 uses) / "Expand Force" (3 uses); Smelling Salts <- "SmellingSalt" (30 uses) / "Smellingsalts" (0 uses); Thunderous Kick <- "Thunder Kick" (6 uses) / "Thunderouskick" (0 uses); Surging Strikes <- "SurgeStrikes" (3 uses) / "Surgingstrikes" (0 uses); Darkest Lariat <- "Darkest Lariat" (27 uses) / "Dark Lariat" (2 uses); Psychic Terrain <- "Psychic Terrain" (52 uses) / "Psyc Terrain" (26 uses); Meteor Assault <- "Meteor Rush" (2 uses) / "Meteorassault" (0 uses); First Impression <- "First Press" (16 uses) / "Firstimpression" (0 uses) differ in pr; Vise Grip <- "Vise Grip" (19 uses) / "Vicegrip" (0 uses); Magnetic Flux <- "Magnet Flux" (10 uses) / "Magneticflux" (0 uses); High Jump Kick <- "Hi Jump Kick" (24 uses) / "Highjumpkick" (0 uses); Strange Steam <- "Weird Steam" (4 uses) / "Strangesteam" (0 uses); Sparkling Aria <- "Sparkle Aria" (3 uses) / "Sparklingaria" (0 uses); Floral Healing <- "Floral Heal" (4 uses) / "Floralhealing" (0 uses); Tearful Look <- "Teary Look" (35 uses) / "Tearfullook" (0 uses); Flower Shield <- "Flower Guard" (11 uses) / "Flowershield" (0 uses); Psyshield Bash <- "PsyshieldRam" (4 uses) / "Psyshieldbash" (0 uses) differ in t, bp, ac; Clanging Scales <- "Clang Scales" (7 uses) / "Clangingscales" (0 uses); Dragon Hammer <- "Draco Hammer" (4 uses) / "Dragonhammer" (0 uses); Metal Bash <- "Metal Bash" (4 uses) / "Steelyhit" (0 uses) differ in bp, pp; Precipice Blades <- "Cliff Blades" (2 uses) / "Precipiceblades" (0 uses); Behemoth Bash <- "Giant Bash" (1 uses) / "Behemothbash" (0 uses) differ in bp; Aromatic Mist <- "Aroma Mist" (28 uses) / "Aromaticmist" (0 uses); Astral Barrage <- "Astral Storm" (2 uses) / "Astralbarrage" (0 uses); Moongeist Beam <- "Geist Beam" (3 uses) / "Moongeistbeam" (0 uses); Jungle Healing <- "Jungle Heal" (3 uses) / "Junglehealing" (0 uses); Mystical Power <- "Mystic Power" (3 uses) / "Mysticalpower" (0 uses) differ in bp, ac; Crafty Shield <- "Crafty Guard" (7 uses) / "Craftyshield" (0 uses) differ in pr; Water Shuriken <- "Water Star" (5 uses) / "Watershuriken" (0 uses) differ in pr; Bleakwind Storm <- "BleakiceWind" (2 uses) / "Bleakwindstorm" (0 uses); Wildbolt Storm <- "WildboltWind" (2 uses) / "Wildboltstorm" (0 uses); Sandsear Storm <- "SandsearWind" (2 uses) / "Sandsearstorm" (0 uses); Parabolic Charge <- "Para Charge" (3 uses) / "Paraboliccharge" (0 uses); Forest's Curse <- "Woods Curse" (2 uses) / "Forestscurse" (0 uses); Trick-or-Treat <- "TrickoTreat" (32 uses) / "Trickortreat" (0 uses); Spirit Shackle <- "Spirit Lock" (6 uses) / "Spiritshackle" (0 uses); Hyperspace Hole <- "Space Hole" (2 uses) / "Hyperspacehole" (0 uses); Hyperspace Fury <- "Space Fury" (2 uses) / "Hyperspacefury" (0 uses); Steam Eruption <- "Steam Pump" (1 uses) / "Steameruption" (0 uses); Light of Ruin <- "Light o Ruin" (1 uses) / "Lightofruin" (0 uses); Revelation Dance <- "Revel Dance" (4 uses) / "Revelationdance" (0 uses); Baneful Bunker <- "Baneful Bunk" (2 uses) / "Banefulbunker" (0 uses) differ in pr; Clangorous Soulblaze <- "Clang Soul" (1 uses) / "Clangorous Soulblaze" (0 uses); Nature's Madness <- "Nature's Mad" (4 uses) / "Naturesmadness" (0 uses); Sunsteel Strike <- "Sunsteel Ram" (2 uses) / "Sunsteelstrike" (0 uses); Core Enforcer <- "Core Enforce" (1 uses) / "Coreenforcer" (0 uses); Prismatic Laser <- "Prism Laser" (4 uses) / "Prismaticlaser" (0 uses); Spectral Thief <- "Spect Thief" (1 uses) / "Spectralthief" (0 uses); Double Iron Bash <- "Double Iron" (2 uses) / "Doubleironbash" (0 uses); Hold Back <- "False Yield" (4 uses) / "Holdback" (0 uses); Dynamax Cannon <- "DMax Cannon" (2 uses) / "Dynamaxcannon" (0 uses); Freezing Glare <- "Freeze Glare" (1 uses) / "Freezingglare" (0 uses); Springtide Storm <- "Spring Wind" (2 uses) / "Springtidestorm" (0 uses)
+moves the calc does not know (MV.x, Unbound original or unmatched) (3): Endless Edge, InfernalRage, Metal Bash
+abilities: 290; Unbound originals (AB[2]) 23: Bellow, Brain Bond, Cotton Cloud, Crabby Tactics, Drill Beak, Dusty Scales, Evaporate, Face Shield, Fiery Neigh, Focus Belt, Grass Dash, Honey Armor, Icy Skin, Multieye, Nine Lives, Portal Power, Pride, Royal Roar, Shocking Neigh, Slippery Tail, Sound Waves, Subterfuge, Tangling Wool
+  descriptions from the wiki (game text; the mirror pairs these names with another ability's text) (50): Analytic, Aura Break, Bellow, Berserk, Brain Bond, Bulletproof, Cotton Cloud, Cotton Down, Crabby Tactics, Curious Medicine, Cursed Body, Dauntless Shield, Drill Beak, Dusty Scales, Early Bird, Evaporate, Face Shield, Fairy Aura, Fiery Neigh, Filter, Forecast, Grass Dash, Honey Armor, Honey Gather, Icy Skin, Multieye, Multiscale, No Guard, Overcoat, Portal Power, Power Construct, Pride, Propeller Tail, Protean, Psychic Surge, Royal Roar, Run Away, Shocking Neigh, Simple, Slippery Tail, Sound Waves, Subterfuge, Suction Cups, Tangling Wool, Technician, Victory Star, Wandering Spirit, Water Absorb, Water Compaction, Water Veil
+abilities the mirror shows under another name, set from the game's species table (18): spearow: Keen Eye / Sniper | Merciless -> Keen Eye / Sniper | Drill Beak; fearow: Keen Eye / Sniper | Merciless -> Keen Eye / Sniper | Drill Beak; jynx: Oblivious / Dry Skin | Ice Scales -> Oblivious / Dry Skin | Icy Skin; sunflora: Chlorophyll / Solar Power | Gale Wings -> Chlorophyll / Solar Power | Grass Dash; magcargo: Storm Drain / Flame Body | Weak Armor -> Evaporate / Flame Body | Weak Armor; smoochum: Oblivious / Hydration | Ice Scales -> Oblivious / Hydration | Icy Skin; medicham_mega: Pure Power | None -> Huge Power | None; vibrava: Levitate | Punk Rock -> Levitate | Sound Waves; flygon: Levitate | Punk Rock -> Levitate | Sound Waves; seviper: Shed Skin / Infiltrator | Gale Wings -> Shed Skin / Infiltrator | Slippery Tail; glaceon: Snow Cloak | Ice Scales -> Snow Cloak | Icy Skin; pidove: Rivalry / Super Luck | Proud -> Rivalry / Super Luck | Pride; tranquill: Rivalry / Super Luck | Proud -> Rivalry / Super Luck | Pride; unfezant: Rivalry / Super Luck | Proud -> Rivalry / Super Luck | Pride; unfezant_f: Big Pecks / Super Luck | Moxie -> Big Pecks / Super Luck | Pride; calyrex_ice_rider: As One | None -> As One (Glastrier) | None; calyrex_shadow_rider: As One | None -> As One (Spectrier) | None; wyrdeer: Intimidate / Sap Sipper | Scrappy -> Intimidate / Frisk | Sap Sipper
+wiki vs the dex: 16 species differ (types 0, abilities 16; not shown: the game's tables agree with the dex on every one, notes.md)
+  meowth: Wiki says abilities Pickup / Technician / Sturdy; the dex has Pickup / Technician / Nine Lives; persian: Wiki says abilities Limber / Technician / Sturdy; the dex has Limber / Technician / Nine Lives; machoke: Wiki says abilities Guts / No Guard / Sturdy; the dex has Guts / No Guard / Focus Belt; machamp: Wiki says abilities Guts / No Guard / Sturdy; the dex has Guts / No Guard / Focus Belt; moltres: Wiki says abilities Pressure / Flame Body / Berserk (Hidden); the dex has Pressure / Flame Body / Berserk; meditite: Wiki says abilities Huge Power / Telepathy; the dex has Pure Power / Telepathy; medicham: Wiki says abilities Huge Power / Telepathy; the dex has Pure Power / Telepathy; camerupt: Wiki says abilities Magma Armor / Filter / Anger Point; the dex has Magma Armor / Solid Rock / Anger Point; rhyperior: Wiki says abilities Lightning Rod / Filter / Reckless; the dex has Lightning Rod / Solid Rock / Reckless; tirtouga: Wiki says abilities Filter / Solid Rock / Swift Swim; the dex has Solid Rock / Sturdy / Swift Swim; carracosta: Wiki says abilities Filter / Solid Rock / Swift Swim; the dex has Solid Rock / Sturdy / Swift Swim; meowstic: Wiki says abilities Keen Eye (Male) / Competitive (Female) / Infiltrator / Prankster (Male) / Psychic Surge (Female); the dex has Keen Eye / Infiltrator / Prankster; noibat: Wiki says abilities Frisk / Infiltrator / Sound Waves; the dex has Frisk / Infiltrator / Punk Rock; noivern: Wiki says abilities Frisk / Infiltrator / Sound Waves; the dex has Frisk / Infiltrator / Punk Rock; stonjourner: Wiki says abilities Power Spot / Filter; the dex has Power Spot / Solid Rock; wyrdeer: Wiki says abilities Intimidate / Sap Sipper / Scrappy; the dex has Intimidate / Frisk / Sap Sipper
+  learnsets that differ from the wiki (not shown; the wiki is older): {'TM': 943, 'egg': 14, 'level-up': 53}
+evolutions: 475 edges (wiki tables, the mirror's levels over them); 0 level conflicts, 9 from the mirror only, 19 wiki-only
+  mirror only (9): basculin_h -> basculegion_f (move-female: level up knowing Wave Crash (female)); burmy -> wormadam_sandy (level-female: level 20 (female, Sandy Cloak)); burmy -> wormadam_trash (level-female: level 20 (female, Trash Cloak)); espurr -> meowstic_female (level-female: level 25 (female)); pumpkaboo_l -> gourgeist_l (Trade: trade); pumpkaboo_m -> gourgeist_m (Trade: trade); pumpkaboo_xl -> gourgeist_xl (Trade: trade); koffing_g -> weezing_g (Lv. 35: level 35); mime_jr_g -> mr_mime_g (move: level up knowing Mimic)
+  wiki only (19): kubfu -> urshifu_rapid (using Water Stone); rockruff -> lycanroc_dusk (level 25 between 5:00 PM – 7:59 PM); rockruff -> lycanroc_n (level 25 From 8:00 PM – 4:59 AM); cosmoem -> lunala (level 53 during night); slowpoke_g -> slowking_g (using Galarica Wreath); applin -> appletun (using Sweet Apple); scyther -> kleavor (using Black Augurite); quilava -> typhlosion_h (level 36 while holding a Hisui Rock); petilil -> lilligant_h (using Sun Stone while Petilil holds a Hisui Rock); dartrix -> decidueye_h (level 34 (while Dartrix holds a Hisui Rock)); exeggcute -> exeggutor_a (using Leaf Stone (only on Exeggcute from the Safari Zone)); dewott -> samurott_h (level 36 (while Dewott holds a Hisui Rock)); rufflet -> braviary_h (level 50 (while holding Hisui Rock)); bergmite -> avalugg_h (level 37 (while holding Hisui Rock)); goomy -> sliggoo_h (level 40 while holding Hisui Rock); stantler -> wyrdeer (level up knowing Psyshield Bash); pikachu -> raichu_a (using Thunder Stone on a beach); cubone -> marowak_a (level 28 (night)); eevee -> leafeon (using Leaf Stone)
+Mega Stones: 49 placed from the wiki; Megas with no stone page (1): rayquaza_mega
+type chart vs the Gen VI+ chart: agrees
+tutors: wiki Move Tutors page 29 tutors / 152 moves; tutor moves in species lists 157; listed but no wiki tutor teaches them (11): Cut, Dazzling Gleam, Dive, Draining Kiss, Fly, Power-Up Punch, Rock Climb, Rock Smash, Strength, Surf, Waterfall
+  taught by a wiki tutor but in no species list (6): Draco Meteor, Dragon Ascent, Relic Song, Secret Sword, Steel Beam, Volt Tackle
+locations: 69 areas, 63 with a tracker slot; {'dens': 32, 'doc legend matched': 78, 'doc special added': 21, 'doc special matched': 55, 'doc wild cells added': 88, 'doc wild matched': 1101, 'doc wild rows added': 52, 'legend page added': 40, 'legend page matched': 41, 'legend page other place': 4, 'mystery gifts': 34, 'raid rows': 462, 'swarms': 24, 'wiki other': 247, 'wiki slots summed': 1, 'wiki starter rows': 3, 'wiki wild': 1162}
+doc separator labels (floors / headings, not species): 76 kinds
+NOT FOUND (21): Pikachu (Belle), Pikachu (Cosplay), Pikachu (Libre), Pikachu (PhD), Pikachu (Pop Star), Pikachu (Rock Star), Alolan Cubone, Zygarde (10%), Zacian, Zacian (Crowned), Zamazenta, Zamazenta (Crowned), Eternatus, Kubfu, Urshifu (Single Strike), Urshifu (Rapid Strike), Glastrier, Spectrier, Calyrex, Calyrex (Ice Rider), Calyrex (Shadow Rider)
+WIKI RATE TOTALS NOT 100% (22, as the wiki gives them):
+Route 3 / Good Rod / -: 120%
+Valley Cave / 1F – 2F / Cave: 85%
+Valley Cave / B1F / Cave: 80%
+Route 8 / Long Grass / -: 110%
+Frozen Forest / Long Grass / -: 115%
+Route 11 / Surf / -: 105%
+Epidimy Town / Old Rod / -: 200%
+Tehl Town / Underground Pass / Super Rod / -: 90%
+Thundercap Mountain / 3F Northwest Chamber / Rock Smash: 99%
+Cliff Cave / 1F / Cave: 102%
+Cliff Cave / 2F / Cave: 102%
+Cliff Cave / 3F / Cave: 102%
+Route 14 / West Land Bridge Super Rod / -: 80%
+Route 14 / Central Two Islands Super Rod / -: 80%
+Route 14 / East Sand Islands Super Rod / -: 80%
+Lost Tunnel / Cave / -: 85%
+Route 15 / Super Rod / -: 80%
+Route 16 / Long Grass / -: 95%
+Route 16 / Super Rod / -: 80%
+Magnolia Fields / Long Grass / -: 90%
+Magnolia Fields / Long Grass / -: 110%
+Route 18 / Long Grass / -: 75%
+LOCATION SOURCE DIFFERENCES (77):
+Route 13 | Deoxys | Legendary page: Route 13 (post-game) Found in the area only accessible with Jirachi in your team; location pages: Route 5
+Great Desert | Entei | Legendary page: Roaming Acquirable after interacting with the portal in the Tomb of Borrius; location pages: Ruins of Void
+Great Desert | Magearna | Legendary page: Tomb of Borrius Part of the “Tomb Raider” side mission; location pages: Frozen Heights
+Great Desert | Raikou | Legendary page: Roaming Acquirable after interacting with the portal in the Tomb of Borrius; location pages: Ruins of Void
+Route 7 | Indeedee (Female) | Doc says DexNav | M19
+Icy Hole | Eiscue | Doc says DexNav | AG10
+Dehara City | Golbat | Doc says Grass/cave (Rift Cave: 1F, B1F - B2F) | BI3 BI12
+Dehara City | Haunter | Doc says Grass/cave (Rift Cave: 1F, B1F - B2F) | BI4 BI13
+Dehara City | Duskull | Doc says Grass/cave (Rift Cave: 1F) | BI5
+Dehara City | Golett | Doc says Grass/cave (Rift Cave: 1F) | BI6
+Dehara City | Bronzor | Doc says Grass/cave (Rift Cave: 1F) | BI7
+Dehara City | Chimecho | Doc says Grass/cave (Rift Cave: 1F, B1F - B2F) | BI8 BI17
+Dehara City | Bronzong | Doc says Grass/cave (Rift Cave: 1F, B1F - B2F) | BI9 BI16
+Dehara City | Dusclops | Doc says Grass/cave (Rift Cave: 1F, B1F - B2F) | BI10 BI14
+Dehara City | Golurk | Doc says Grass/cave (Rift Cave: B1F - B2F) | BI15
+Dehara City | Sinistea | Doc says DexNav (Rift Cave: B1F - B2F) | BI19
+Antisis Sewers | Galarian Weezing | Doc says DexNav | BM11
+Great Desert | Unown | Doc says Grass/cave (Tomb of Borrius: 1F, B4F, B3F, B2F, B1F, 1F (Main Room)) | BO4 BO5 BO6 BO7 BO10 BO11 BO12 BO13 BO14 BO17 BO18 BO19 BO20 BO21 BO24 BO25 BO26 BO27 BO28 BO31 BO32 BO33 BO34 BO35 BO38 BO39 BO40
+Great Desert | Sigilyph | Doc says Grass/cave (Tomb of Borrius: 1F, B4F, B3F, B2F, B1F) | BO8 BO15 BO22 BO29 BO36
+Victory Road | Magcargo | Doc says Grass/cave (B1F) | CC12
+Victory Road | Salazzle | Doc says Grass/cave (B1F) | CC13
+Victory Road | Camerupt | Doc says Grass/cave (B1F) | CC14
+Victory Road | Excadrill | Doc says Grass/cave (B1F) | CC16
+Victory Road | Magmar | Doc says Grass/cave (B1F) | CC18
+Route 17 | Carvanha | Doc says Super Rod (Underwater) | AE27
+Route 17 | Sharpedo | Doc says Super Rod (Underwater) | AE28
+Route 18 | Kingdra | Doc says Super Rod | AG24
+Epidimy Town | Finneon | Doc says Surf | AO4
+Epidimy Town | Psyduck | Doc says Surf | AO5
+Epidimy Town | Lumineon | Doc says Surf | AO6
+Epidimy Town | Golduck | Doc says Surf | AO7
+Epidimy Town | Geodude | Doc says Rock Smash | AO23
+Epidimy Town | Graveler | Doc says Rock Smash | AO24
+Antisis City | Tentacool | Doc says Surf | AY4
+Antisis City | Pelipper | Doc says Surf | AY5
+Antisis City | Tentacruel | Doc says Surf | AY6
+Antisis City | Mantyke | Doc says Surf | AY7
+Antisis City | Magikarp | Doc says Old Rod | AY14
+Antisis City | Remoraid | Doc says Good Rod | AY16
+Antisis City | Horsea | Doc says Good Rod | AY17
+Antisis City | Octillery | Doc says Super Rod | AY19
+Antisis City | Seadra | Doc says Super Rod | AY20
+Antisis City | Gyarados | Doc says Super Rod | AY21
+Polder Town | Palpitoad | Doc says Surf | BC4
+Icy Hole | Cloyster | Doc says Super Rod | BE21
+Thundercap Mountain | Binacle | Doc says Rock Smash (Outside) | BW27
+Thundercap Mountain | Corsola | Doc says Rock Smash (Outside) | BW29
+Thundercap Mountain | Krabby | Doc says Rock Smash (Outside) | BW30
+Thundercap Mountain | Kingler | Doc says Rock Smash (Outside) | BW31
+Great Desert | Graveler | Doc says Rock Smash (Tomb of Borrius) | CE21
+Great Desert | Shuckle | Doc says Rock Smash (Tomb of Borrius) | CE22
+Redwood Forest | Drizzile | Doc says DexNav | CQ7
+Cube Corp. | Jellicent | Doc says Surf | CS4 CS5
+Cube Corp. | Dracovish | Doc says DexNav | CS9
+Cube Corp. | Arctovish | Doc says DexNav | CS10
+Victory Road | Magcargo | Doc says Surf (B1F) | CU12
+Frozen Heights | Beldum | Doc says Gift: Rival's House; post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A4
+Frozen Heights | Gible | Doc says Gift: Rival's House; post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A4
+Frozen Heights | Larvitar | Doc says Gift: Rival's House; post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A4
+Shadow Base | Beldum | Doc says Static: post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A5
+Shadow Base | Gible | Doc says Static: post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A5
+Shadow Base | Larvitar | Doc says Static: post-game; Beat the League; One of the Borrius Starters | Gift & Static Encounters!A5
+KBT Expressway | Carbink | Doc says Static: Behind any collapsed doors; ADM; Carbink | Gift & Static Encounters!A12
+Fallshore City | Lombre | Doc says Static: Gym; Lombre (Daily); wiki: Auburn Waterway, Route 10 | Gift & Static Encounters!A17
+Dehara City | Voltorb | Doc says Static: Gym; Voltorb/Electrode (Daily) | Gift & Static Encounters!A25
+Dehara City | Electrode | Doc says Static: Gym; Voltorb/Electrode (Daily); wiki: Blizzard City | Gift & Static Encounters!A25
+Antisis City | Garbodor | Doc says Static: Trubbish/Garbodor; wiki: Fallshore City | Gift & Static Encounters!A33
+Route 17 | Sharpedo | Doc says Static: Underwater; Do the Shark Bait mission; Sharpedo; wiki: Fallshore City, Route 12, Route 14 | Gift & Static Encounters!A36
+Magnolia Town | Vivillon | Doc says Mission Reward: Complete the Butterfly Effect mission; Shiny Vivillon; wiki: Dresco Town, Fallshore City, Seaport City | Gift & Static Encounters!A45
+Redwood Forest | Snorlax | Doc says Static: post-game; Beat the League; Snorlax | Gift & Static Encounters!A47
+Redwood Forest | Zoroark | Doc says Static: post-game; Daily (After chasing the illusions); Zoroark | Gift & Static Encounters!A48
+Magnolia Town | Bulbasaur | Doc says Random Egg: Free egg one a day; Kanto Starters | Gift & Static Encounters!A49
+Magnolia Town | Charmander | Doc says Random Egg: Free egg one a day; Kanto Starters | Gift & Static Encounters!A49
+Magnolia Town | Squirtle | Doc says Random Egg: Free egg one a day; Kanto Starters | Gift & Static Encounters!A49
+Magnolia Town | Chespin | Doc says Egg: Free egg once a day; Kalos Starters | Gift & Static Encounters!A50
+Magnolia Town | Fennekin | Doc says Egg: Free egg once a day; Kalos Starters | Gift & Static Encounters!A50
+Magnolia Town | Froakie | Doc says Egg: Post-game; Froakie | Gift & Static Encounters!A51
+DOC WILD HELD ITEMS NOT IN P.hi (0):
+
+RHD MEMBERSHIP DIFFERENCES (52 areas; 40 species RHD only, 297 guide only):
+Route 1 [Route 1] | RHD only: minior_blue | guide only: minior
+Icicle Cave [Icicle Cave, Icicle Cave 1F + B1F, Icicle Cave 4F - 1F, Icicle Cave 4F (Secret Entrance), Icicle Cave4F (Outside)] | RHD only: sandshrew | guide only: magikarp, sandshrew_a, shuckle
+Route 2 [Route 2] | RHD only: krabby, roggenrola | guide only: basculin, magikarp, pelipper, pikipek, starmie
+Dresco Town [Dresco Town] | RHD only: - | guide only: basculin, magikarp, pelipper, starmie
+Route 3 [Route 3] | RHD only: - | guide only: kingler, magikarp, pelipper, wingull
+Flower Paradise [Flower Paradise, Flower Paradise (Blue Flowers), Flower Paradise (Blue-Yellow Flowers), Flower Paradise (Pink Flowers), Flower Paradise (Pink-Purple Flowers), Flower Paradise (Red Flowers)] | RHD only: - | guide only: oricorio_p, oricorio_s, oricorio_y
+Grim Woods [Grim Woods] | RHD only: pumpkaboo_m | guide only: caterpie, magikarp, pumpkaboo, surskit
+Route 4 [Route 4] | RHD only: - | guide only: basculin, corphish, magikarp, pelipper, starly, starmie
+Cinder Volcano [Cinder Volcano, Cinder Volcano - Shadow Basement] | RHD only: camerupt, excadrill, heatmor, magmar | guide only: shuckle
+Route 5 [Route 5] | RHD only: - | guide only: basculin, corphish, ditto, lickitung, magikarp, pelipper, starmie
+Valley Cave [Valley Cave, Valley Cave - B1F] | RHD only: - | guide only: geodude, lumineon, magikarp
+Route 6 [Route 6] | RHD only: - | guide only: bunnelby, goldeen, magikarp, pelipper
+Route 7 [Route 7] | RHD only: raticate | guide only: goldeen, magikarp, pelipper, raticate_a, rattata_a, yungoos
+Frost Mountain [Frost Mountain] | RHD only: - | guide only: magikarp, roggenrola, sealeo, spheal
+Route 8 [Route 8] | RHD only: minior_blue | guide only: minior, snover
+Frozen Forest [Frozen Forest] | RHD only: - | guide only: snover
+Fallshore City [Fallshore City] | RHD only: - | guide only: magikarp, pelipper, remoraid, sharpedo
+Route 11 [Route 11] | RHD only: - | guide only: barboach, basculin, basculin_blue, magikarp, pelipper, swablu
+Epidimy Town [Epidimy Town] | RHD only: - | guide only: barboach, basculin, golduck, graveler, magikarp, pelipper, tentacool, tentacruel
+Route 10 [Route 10] | RHD only: - | guide only: bruxish, ditto, lotad, magikarp, surskit
+Tehl Town / Underground Pass [Tehl Town] | RHD only: - | guide only: bruxish, golduck, magikarp, marill
+Route 9 [Route 9 + Autl Woods] | RHD only: - | guide only: audino, bruxish, magikarp, spearow, surskit
+Thundercap Mountain [Thundercap Mt., Thundercap Mt. - 2F + 4F, Thundercap Mt. - 2F (Small Floor), Thundercap Mt. - 3F, Thundercap Mt. - Inside, Thundercap Mt. - Outside] | RHD only: - | guide only: binacle, corsola, geodude_a, magikarp, stunfisk
+Cliff Cave [Cliff Cave] | RHD only: - | guide only: geodude_a, golbat, graveler_a
+Tarmigan Town [Tarmigan Town] | RHD only: - | guide only: magikarp, poliwag, psyduck, slowpoke
+Route 12 [Route 12] | RHD only: - | guide only: carvanha, fletchling, magikarp, pelipper
+Dehara City [Dehara City, Rift Cave, Rift Cave - B1F - B2F] | RHD only: - | guide only: magikarp, pelipper, poliwhirl
+Ruins of Void [Ruins of Void, Ruins of Void - B1F - B2F] | RHD only: luvdisc | guide only: geodude, golduck, gyarados, horsea, kingdra, magikarp, pelipper, seadra
+Route 13 [Route 13] | RHD only: - | guide only: binacle, clauncher, corsola, geodude, magikarp, pelipper
+Route 14 [Route 14, Route 14 - East, Route 14 - Small Island, Route 14 - West] | RHD only: - | guide only: binacle, chinchou, clamperl, corsola, lanturn, magikarp, mareanie, pelipper, seadra, toxapex
+Auburn Waterway [Auburn Waterway] | RHD only: - | guide only: bruxish, ditto, lotad, magikarp, surskit
+Lost Tunnel [Lost Tunnel] | RHD only: - | guide only: diglett, dugtrio, geodude
+Great Desert [Great Desert, Tomb of Borrius] | RHD only: geodude | guide only: graveler, sandslash, shuckle, unown
+Gurun Town [Gurun Town] | RHD only: - | guide only: corsola, magikarp, pelipper, remoraid, seadra
+Vivill Woods [Vivill Woods] | RHD only: - | guide only: caterpie, foongus, magikarp, morelull, surskit, swadloon
+Vivill Town [Vivill Town] | RHD only: - | guide only: basculin, cloyster, corsola, horsea, magikarp, pelipper, remoraid, seadra
+Vivill Warehouse [Vivill Warehouse] | RHD only: - | guide only: basculin, dhelmise, horsea, magikarp
+Route 15 [Route 15] | RHD only: - | guide only: basculin, cloyster, horsea, magikarp, pelipper, seadra
+Route 16 [Route 16] | RHD only: - | guide only: binacle, chinchou, clamperl, corsola, geodude, kingler, krabby, lanturn, magikarp, pelipper, seadra, tangela
+Antisis City [Antisis City] | RHD only: - | guide only: magikarp, pelipper, remoraid, seadra
+Antisis Sewers [Antisis Sewers] | RHD only: - | guide only: raticate, whirlipede
+Icy Hole [Ice Hole, Icy Hole] | RHD only: - | guide only: golbat, magikarp, seel
+Route 17 [Route 17] | RHD only: pidgeot | guide only: binacle, chinchou, clamperl, corsola, kingler, krabby, lanturn, lapras, magikarp, remoraid, seadra, skiploom
+Seaport City [Seaport City] | RHD only: - | guide only: corsola, lapras, magikarp, pelipper, remoraid, seadra
+Polder Town [Polder Town, Safari Zone, Safari Zone - Hard, Safari Zone - Insane, Safari Zone - Medium] | RHD only: blitzle, bounsweet, diglett_a, exeggcute, helioptile, kangaskhan, meowth_a, minun, mudkip, natu, plusle, rhyhorn, skitty, spinda, steenee, tauros, torchic, treecko, wobbuffet, xatu, zebstrika | guide only: gastrodon, magikarp, palpitoad, politoed, poliwhirl, quagsire, sliggoo, stunfisk
+Cootes Bog [Cootes Bog] | RHD only: - | guide only: carnivine, croagunk, croconaw, gastrodon, magikarp, politoed, poliwhirl, toxicroak
+Crystal Peak [Crystal Peak, Crystal Peak - 1F, Crystal Peak - Outside] | RHD only: - | guide only: dragonair, finneon, gastrodon, loudred, lumineon, magikarp, psyduck, qwilfish, skarmory, zweilous
+Magnolia Fields [Magnolia Fields] | RHD only: - | guide only: frillish, furfrou, gogoat, jellicent, magikarp, miltank, mudsdale, noctowl, pelipper, quilava, qwilfish, tauros, tranquill
+Redwood Forest [Redwood Forest, Redwood Forest - Headbutt Trees] | RHD only: - | guide only: komala, ledian, magikarp, oranguru, passimian, psyduck, ursaring, vigoroth
+Route 18 [Route 18] | RHD only: - | guide only: bayleef, binacle, bouffalant, corsola, farfetchd, kingdra, magikarp, pelipper, persian, remoraid, seadra, skuntank, sudowoodo
+Victory Road [Victory Road - 1F, Victory Road - (1F - B1F - 2F), Victory Road - 2F, Victory Road - 3F, Victory Road - 4F + Kyurem's Cave, Victory Road - B1F, Victory Road - Kyurem's Cave, Victory Road - Maze Area, Victory Road - Snowy Area] | RHD only: drakloak, minior_blue | guide only: azumarill, basculin, bruxish, chansey, dewgong, durant, finneon, floatzel, hakamo_o, jigglypuff, lapras, lumineon, lurantis, magikarp, marill, minior, psyduck, roselia, seel
+Cube Corp. [Cube Corp.] | RHD only: gyarados, wailmer, wailord | guide only: ditto, jellicent, magikarp, pelipper, tentacool
+  ordinary: Cyclist Gerald (Thundercap Mt.): wiki 1 Pokémon, workbook 2
+  ordinary: Super Nerd Avery (Victory Road): wiki 3 Pokémon, workbook 4
+  ordinary: Science Society Scientist (Crystal Peak): wiki 3 Pokémon, workbook 2
+  ordinary: Fisherman Edgar (Route 3, Lv 41): no visit to the area covers it; placed in Galavan Split [Cap 45]
+  trainers: place Route 3 added to Galavan Split [Cap 45]
+  ordinary: Fisherman Jason (Route 3, Lv 42): no visit to the area covers it; placed in Galavan Split [Cap 45]
+  ordinary: Fisherman Cole (Route 3, Lv 41): no visit to the area covers it; placed in Galavan Split [Cap 45]
+trainers: 439 sheet slots in 84 boss blocks; hzla 383 sets: 381 slots joined (380 sets), 15 differ, 58 sheet only, 3 malformed hzla keys
+trainers: wiki 309 rows = 292 ordinary + 17 boss cards; 0 name-only rows with no team; workbook 287 matched, 50 held items, 143 workbook-only blocks
+trainers: 81 mons at relative levels; 4 with a later-cap line kept absolute; 130 comments used of 130
+  hzla differs: Rival!J43: EVs none
+  hzla differs: Team Shadow Bosses!B86: level 40
+  hzla differs: Team Shadow Bosses!D86: level 40
+  hzla differs: Team Shadow Bosses!E86: level 39
+  hzla differs: Team Shadow Bosses!F86: level 41
+  hzla differs: Rival!M62: moves Dragon Claw, Stomping Tantrum, Crunch, Fire Blast
+  hzla differs: Rival!B81: moves Ice Fang, Bulldoze, Ice Shard, Stealth Rock
+  hzla differs: Rival!N81: moves Dragon Rush, Stomping Tantrum, Crunch, Sandstorm
+  hzla differs: Rival!P81: moves Ice Fang, Bulldoze, Ice Shard, Stealth Rock
+  hzla differs: Pokemon League!B85: nature Adamant
+  hzla differs: Pokemon League!F85: nature Jolly
+  hzla differs: Team Light Of Ruin Bosses!B86: ability Serene Grace
+  hzla differs: Team Light Of Ruin Bosses!D86: ability none
+  hzla differs: Mega Trainers!E225: level 72; ability Limber; moves Dark Pulse, Burning Jealousy, Thunder Wave, Nasty Plot; nature Modest; EVs 6 / 252 / 252 / 252 / 252 / 252
+  hzla differs: Battleground!G65: level 83; ability Iron Fist; moves Double Iron Bash, Thunder Punch, Ice Punch, High Horsepower; nature Adamant; EVs 6 / 252 / 4 / 252 / 252 / 252
+  sheet only: Rival!B5
+  sheet only: Rival!I5
+  sheet only: Rival!P5
+  sheet only: Rival!B24
+  sheet only: Rival!C24
+  sheet only: Rival!I24
+  sheet only: Rival!J24
+  sheet only: Rival!P24
+  sheet only: Rival!Q24
+  sheet only: Team Shadow Bosses!I6
+  sheet only: Team Shadow Bosses!J6
+  sheet only: Team Shadow Bosses!K6
+  sheet only: Other Bosses!B5
+  sheet only: Other Bosses!C5
+  sheet only: Other Bosses!D5
+  sheet only: Other Bosses!E5
+  sheet only: Other Bosses!F5
+  sheet only: Team Shadow Bosses!I66
+  sheet only: Team Shadow Bosses!J66
+  sheet only: Team Shadow Bosses!K66
+  sheet only: Team Light Of Ruin Bosses!I6
+  sheet only: Team Light Of Ruin Bosses!J6
+  sheet only: Team Light Of Ruin Bosses!K6
+  sheet only: Team Light Of Ruin Bosses!C6
+  sheet only: Other Bosses!B125
+  sheet only: Other Bosses!C125
+  sheet only: Other Bosses!D125
+  sheet only: Other Bosses!B145
+  sheet only: Other Bosses!C145
+  sheet only: Other Bosses!D145
+  sheet only: Other Bosses!E145
+  sheet only: Boss Wild Battles!E193
+  sheet only: Boss Wild Battles!F193
+  sheet only: Boss Wild Battles!G193
+  sheet only: Team Light Of Ruin Bosses!I46
+  sheet only: Team Light Of Ruin Bosses!J46
+  sheet only: Team Light Of Ruin Bosses!K46
+  sheet only: Team Light Of Ruin Bosses!I66
+  sheet only: Team Light Of Ruin Bosses!J66
+  sheet only: Team Light Of Ruin Bosses!K66
+  sheet only: Team Shadow Bosses!I126
+  sheet only: Team Shadow Bosses!J126
+  sheet only: Team Shadow Bosses!K126
+  sheet only: Team Light Of Ruin Bosses!I86
+  sheet only: Team Light Of Ruin Bosses!J86
+  sheet only: Team Light Of Ruin Bosses!K86
+  sheet only: Other Bosses!B25
+  sheet only: Other Bosses!C25
+  sheet only: Other Bosses!D25
+  sheet only: Other Bosses!E25
+  sheet only: Other Bosses!F25
+  sheet only: Other Bosses!G25
+  sheet only: Battleground!B85
+  sheet only: Battleground!C85
+  sheet only: Battleground!D85
+  sheet only: Battleground!E85
+  sheet only: Battleground!F85
+  sheet only: Battleground!G85
+  hzla malformed key: '[2nd' / 'Lvl 47 Light of Ruin Vega'
+  hzla malformed key: 'Supply and Demand' / 'Lvl 53 Science Society Scientist |Supply and Demand|'
+  hzla malformed key: 'Rogue Electivire' / 'Lvl 59 Science Society Scientist |Rogue Electivire|'
+  unknown IVs: Rival!B5
+  unknown IVs: Rival!I5
+  unknown IVs: Rival!P5
+  unknown IVs: Rival!B24
+  unknown IVs: Rival!C24
+  unknown IVs: Rival!I24
+  unknown IVs: Rival!J24
+  unknown IVs: Rival!P24
+  unknown IVs: Rival!Q24
+  unknown IVs: Team Shadow Bosses!I6
+  unknown IVs: Team Shadow Bosses!J6
+  unknown IVs: Team Shadow Bosses!K6
+  unknown IVs: Other Bosses!B5
+  unknown IVs: Other Bosses!C5
+  unknown IVs: Other Bosses!D5
+  unknown IVs: Other Bosses!E5
+  unknown IVs: Other Bosses!F5
+  unknown IVs: Team Shadow Bosses!I66
+  unknown IVs: Team Shadow Bosses!J66
+  unknown IVs: Team Shadow Bosses!K66
+  unknown IVs: Boss Wild Battles!B3
+  unknown IVs: Boss Wild Battles!C3
+  unknown IVs: Team Light Of Ruin Bosses!I6
+  unknown IVs: Team Light Of Ruin Bosses!J6
+  unknown IVs: Team Light Of Ruin Bosses!K6
+  unknown IVs: Team Light Of Ruin Bosses!C6
+  unknown IVs: Other Bosses!B125
+  unknown IVs: Other Bosses!C125
+  unknown IVs: Other Bosses!D125
+  unknown IVs: Other Bosses!B145
+  unknown IVs: Other Bosses!C145
+  unknown IVs: Other Bosses!D145
+  unknown IVs: Other Bosses!E145
+  unknown IVs: Boss Wild Battles!E193
+  unknown IVs: Boss Wild Battles!F193
+  unknown EVs: Boss Wild Battles!F193
+  unknown IVs: Boss Wild Battles!G193
+  unknown IVs: Team Light Of Ruin Bosses!I46
+  unknown IVs: Team Light Of Ruin Bosses!J46
+  unknown EVs: Team Light Of Ruin Bosses!J46
+  unknown IVs: Team Light Of Ruin Bosses!K46
+  unknown IVs: Team Light Of Ruin Bosses!I66
+  unknown IVs: Team Light Of Ruin Bosses!J66
+  unknown EVs: Team Light Of Ruin Bosses!J66
+  unknown IVs: Team Light Of Ruin Bosses!K66
+  unknown IVs: Team Shadow Bosses!I126
+  unknown IVs: Team Shadow Bosses!J126
+  unknown EVs: Team Shadow Bosses!J126
+  unknown IVs: Team Shadow Bosses!K126
+  unknown IVs: Team Light Of Ruin Bosses!I86
+  unknown IVs: Team Light Of Ruin Bosses!J86
+  unknown IVs: Team Light Of Ruin Bosses!K86
+  unknown IVs: Other Bosses!B25
+  unknown IVs: Other Bosses!C25
+  unknown IVs: Other Bosses!D25
+  unknown IVs: Other Bosses!E25
+  unknown IVs: Other Bosses!F25
+  unknown IVs: Other Bosses!G25
+  unknown IVs: Battleground!B85
+  unknown IVs: Battleground!C85
+  unknown IVs: Battleground!D85
+  unknown IVs: Battleground!E85
+  unknown IVs: Battleground!F85
+  unknown IVs: Battleground!G85
+  later-cap levels not cap + one offset (absolute): Other Bosses!B205 Lv 57, cap 52, offsets [0]
+  later-cap levels not cap + one offset (absolute): Other Bosses!C205 Lv 59, cap 52, offsets [2]
+  later-cap levels not cap + one offset (absolute): Other Bosses!D205 Lv 58, cap 52, offsets [1]
+  later-cap levels not cap + one offset (absolute): Other Bosses!E205 Lv 59, cap 52, offsets [2]
+  sheet fix: Rival!B24: "default moveset", no moves listed
+  sheet fix: Rival!I24: "default moveset", no moves listed
+  sheet fix: Rival!P24: "default moveset", no moves listed
+  sheet fix: Mega Trainers!B166: Lv 59 at E4 Cap, the notes say 75: relative to the notes
+  sheet fix: Mega Trainers!C166: Lv 61 at E4 Cap, the notes say 77: relative to the notes
+  sheet fix: Mega Trainers!D166: Lv 60 at E4 Cap, the notes say 76: relative to the notes
+  sheet fix: Mega Trainers!E166: Lv 60 at E4 Cap, the notes say 76: relative to the notes
+  sheet fix: Mega Trainers!F166: Lv 61 at E4 Cap, the notes say 77: relative to the notes
+  sheet fix: Pokemon League!D85: hzla's EV key 'def' read as Defense
+  workbook only: Antisis City!B1 Black Emboar Goon
+  workbook only: Antisis City!B8 Black Ferrothorn Goon
+  workbook only: Antisis City!B15 Officer McGuinty
+  workbook only: Antisis City!B22 Officer Peralta
+  workbook only: Antisis City!B29 Officer Holt
+  workbook only: Antisis City!B36 Black Ferrothorn Goon ("Odd Odd Docks")
+  workbook only: Antisis City!B43 Black Ferrothorn Goon ("Odd Odd Docks")
+  workbook only: Antisis City!B50 Black Ferrothon Rory ("A Minor Scrap")
+  workbook only: Antisis City!B57 Roughneck Riff
+  workbook only: Antisis City!B64 Black Belt Hakawakawak
+  workbook only: Antisis City!B71 Roughneck Griff
+  workbook only: Antisis Sewers!B8 Science Society Scientist
+  workbook only: Bellin Town!B1 Pokefan Terrance
+  workbook only: Blizzard City!B1 Worker Alan
+  workbook only: Blizzard City!B8 Bird Keeper Wilton
+  workbook only: Blizzard City!B15 Bird Keeper Edwin
+  workbook only: Blizzard City!B22 Bird Keeper Sebastian
+  workbook only: Blizzard City!B29 Bird Keeper Chester
+  workbook only: Blizzard City!B36 Bird Keeper Perry
+  workbook only: Blizzard City!B43 Bird Keeper Robert
+  workbook only: Cinder Volcano!B78 Team Light of Ruin Grunt
+  workbook only: Crater Town!B1 Youngster Dixon
+  workbook only: Crater Town!B8 Scientist Dilweed
+  workbook only: Crater Town!B15 Medium Lyssa
+  workbook only: Crater Town!B22 Medium Clemonce
+  workbook only: Crystal Peak!B22 Light of Ruin Grunt & Grunt
+  workbook only: Crystal Peak!B29 Light of Ruin Grunt & Grunt
+  workbook only: Crystal Peak!B36 Light of Ruin Grunt & Grunt
+  workbook only: Crystal Peak!B43 Light of Ruin Grunt & Grunt
+  workbook only: Crystal Peak!B78 Science Society Scientist
+  workbook only: Dehara City!B1 Twins Mayo & May [Double Battle]
+  workbook only: Dehara City!B36 Battle Girl Ginger [Double Battle]
+  workbook only: Dehara City!B43 Gambler Artred [Double Battle]
+  workbook only: Dehara City!B50 Poke Maniac Garth [Double Battle]
+  workbook only: Dehara City!B57 Psychic Wyatt [Double Battle]
+  workbook only: Dehara City!B64 Bird Keeper Featred [Double Battle]
+  workbook only: Dehara City!B71 Super Nerd Ezra
+  workbook only: Dehara City!B78 Worker Humphrey
+  workbook only: Dehara City!B85 Guitarist Luca
+  workbook only: Dehara City!B92 Scientist Giselle
+  workbook only: Dehara City!B99 Scientist Jose
+  workbook only: Dehara City!B106 Scientist Jerry
+  workbook only: Dehara City!B113 Super Nerd Zack
+  workbook only: Dehara City!B120 Collector Ashton
+  workbook only: Dehara City!B127 Worker Bernie
+  workbook only: Dresco Town!B1 Youngster Doobie
+  workbook only: Dresco Town!B8 Camper Liam
+  workbook only: Dresco Town!B15 Kindler Daniel
+  workbook only: Dresco Town!B22 Tuber Renee
+  workbook only: Dresco Town!B29 Collector Kobe [Double Battle]
+  workbook only: Dresco Town!B36 Picnicker Sarah
+  workbook only: Dresco Town!B43 Ace Trainer Bram [Double Battle]
+  workbook only: Dresco Town!B50 Psychic Angelica
+  workbook only: Fallshore City!B1 Beauty Bridget
+  workbook only: Fallshore City!B8 Roughneck Koji
+  workbook only: Fallshore City!B15 Scientist Connor
+  workbook only: Fallshore City!B22 Ace Trainer Mary
+  workbook only: Fallshore City!B29 Beauty Lauren
+  workbook only: Fallshore City!B36 Beauty Lori
+  workbook only: Fallshore City!B43 Picnicker Caitlin
+  workbook only: Fallshore City!B50 Beauty Alessia
+  workbook only: Fallshore City!B57 Beauty Tamia
+  workbook only: Fallshore City!B64 Youngster Yasu
+  workbook only: Fallshore City!B71 Painter Monet
+  workbook only: Frost Mountain!B8 Painter Morris
+  workbook only: Frozen Forest!B1 Burglar Jett
+  workbook only: Frozen Heights!B1 Team Shadow Grunt
+  workbook only: KBT Expressway!B1 Black Emboar Goon
+  workbook only: KBT Expressway!B8 Black Emboar Goon
+  workbook only: KBT Expressway!B15 Black Emboar Goon
+  workbook only: KBT Expressway!B22 Black Emboar Goon
+  workbook only: Polder Town!B1 Fisherman Nicholas
+  workbook only: Polder Town!B8 Tuber Savannah
+  workbook only: Polder Town!B15 Ace Trainer Darwin
+  workbook only: Polder Town!B22 Ace Trainer Anita
+  workbook only: Redwood Village!B1 Ace Trainer Daisy
+  workbook only: Redwood Village!B8 Ninja Boy Fuller
+  workbook only: Redwood Village!B15 Expert Tizzy
+  workbook only: Redwood Village!B22 Bug Catcher Curtis
+  workbook only: Route 5!B36 Pokemon Breeder Annie
+  workbook only: Route 9!B1 Team Shadow Grunt
+  workbook only: Route 9!B8 Team Shadow Grunt
+  workbook only: Route 9!B15 Team Shadow Grunt
+  workbook only: Route 9!B22 Team Shadow Grunt
+  workbook only: Route 9!B29 Team Shadow Grunt
+  workbook only: Route 9!B36 Team Shadow Grunt
+  workbook only: Route 9!B43 Team Shadow Grunt
+  workbook only: Route 9!B50 Team Shadow Grunt
+  workbook only: Route 9!B57 Team Shadow Grunt
+  workbook only: Route 9!B64 Team Shadow Grunt
+  workbook only: Route 9!B71 Team Shadow Grunt
+  workbook only: Route 10!B29 Terror Granbull Goon
+  workbook only: Route 10!B36 Terror Granbull Goon
+  workbook only: Route 10!B43 Terror Granbull Goon
+  workbook only: Route 10!B50 Terror Granbull Goon
+  workbook only: Route 14!B92 Roughneck Raul
+  workbook only: Route 17!B43 Bug Cathcer Conner
+  workbook only: Ruins of Void!B1 Shadow Grunt
+  workbook only: Seaport City!B1 Ruin Maniac Abraham [Camomons Double Battle]
+  workbook only: Seaport City!B8 Ninja Boy Suryu [Camomons Battle]
+  workbook only: Seaport City!B15 Rancher Rangalik [Camomons Double Battle]
+  workbook only: Seaport City!B22 Pokefan Fatisimo [Camomons Battle]
+  workbook only: Seaport City!B29 Aroma Lady Paulinda [Camomons Double Battle]
+  workbook only: Seaport City!B36 Tuber Reetah [Camomons Battle]
+  workbook only: Seaport City!B43 Burglar Swizer & Black Ferrothorn Bullo [Double Battle]
+  workbook only: Seaport City!B50 Black Ferrothorn Goon & Burglar Milan [Double Battle]
+  workbook only: Seaport City!B57 Black Ferrothorn Goon & Burglar Colin [Double Battle]
+  workbook only: Seaport City!B64 Black Ferrothorn Goon & Burglar Toby [Double Battle]
+  workbook only: Seaport City!B71 Black Ferrothorn Goon & Burglar Fernando [Double Battle]
+  workbook only: Shadow Base!B1 Shadow Grunt
+  workbook only: Shadow Base!B8 Shadow Grunt
+  workbook only: Shadow Base!B15 Shadow Scientist
+  workbook only: Tarmigan Mansion!B1 Expert Andy
+  workbook only: Tarmigan Mansion!B8 Super Nerd Arnie
+  workbook only: Tarmigan Mansion!B15 Black Belt Atsushi
+  workbook only: Tarmigan Mansion!B22 Expert Tammy
+  workbook only: Tarmigan Mansion!B29 Ace Trainer Caroline
+  workbook only: Tarmigan Mansion!B36 Ace Trainer Samuel
+  workbook only: Tarmigan Mansion!B43 Expert Clancy
+  workbook only: Tarmigan Mansion!B50 Scientist Ted
+  workbook only: Tarmigan Mansion!B57 Collector Winston & Kindler Jeff
+  workbook only: Tarmigan Mansion!B64 Dragon Tamer Burle
+  workbook only: Tarmigan Mansion!B71 Expert Ken
+  workbook only: Tarmigan Mansion!B78 Expert Sheri
+  workbook only: Thundercap Mountain!B22 Shadow Grunt
+  workbook only: Thundercap Mountain!B43 Shadow Grunt
+  workbook only: Thundercap Mountain!B50 Shadow Grunt
+  workbook only: Thundercap Mountain!B71 Shadow Grunt
+  workbook only: Thundercap Mountain!B78 Shadow Grunt
+  workbook only: Thundercap Mountain!B85 Shadow Grunt
+  workbook only: Thundercap Mountain!B92 Shadow Grunt
+  workbook only: Thundercap Mountain!B99 Shadow Grunt
+  workbook only: Thundercap Mountain!B106 Shadow Grunt
+  workbook only: Thundercap Mountain!B113 Shadow Grunt
+  workbook only: Thundercap Mountain!B211 Roughneck Corey
+  workbook only: Thundercap Mountain!B218 Black Belt Kentaro
+  workbook only: Valley Cave!B1 Gamer Hugo
+  workbook only: Vivill Warehouse!B1 Light of Ruin Grunt
+  workbook only: Vivill Warehouse!B8 Light of Ruin Grunt
+  workbook only: Vivill Warehouse!B15 Light of Ruin Grunt
+  workbook only: Vivill Warehouse!B22 Light of Ruin Grunt
+  workbook only: Vivill Warehouse!B29 Light of Ruin Grunt
+  workbook only: Vivill Warehouse!B36 Light of Ruin Grunt
+items: old-box rows {'TMs and HMs': 128, 'Mega Stones': 49, 'Evolution Items': 140, 'Stats and Abilities': 68, 'Key Items': 125, 'Held Items': 103, 'Valuables': 58, 'Z-Crystals': 34, 'Shops': 239, 'Move Tutors': 192, 'Useful NPCs': 34}
+items: 128 machines, 49 Mega Stones / orbs, 34 Z-Crystals, 29 tutors (192 moves), 239 shop rows, 70 mission item rewards, 448 Locations rows placed
+items: item pages give 20 places the Locations pages lack: S.S. Ticket (Seaport City); Prison Bottle (Crystal Peak); Mega Keystone (Tarmigan Mansion); Lunar Wing (Fullmoon Island); Trainer Catalogue (Fallshore City); Reveal Glass (Magnolia Fields); Shiny Charm (Fallshore City); Grubby Hanky (Magnolia Cafe); Dusk Stone (Cube Corp.); Shiny Stone (Route 7); Shiny Stone (Vivill Warehouse); Gracidea (Flower Paradise); Ice Stone (Cube Corp.); Ice Stone (Cube Corp. (Stone Maker)); Dubious Disc (Seaport City East Warehouse); Old Rod (Route 7); Fire Stone (Route 9); Devon Scope (Route 16); Braille Converter (Icicle Cave 4F); ADM (Seaport City)
+walkthrough: parts 40, splits 11, stops 122, steps 182, missions 84, children 475, items 448, trainers 393
+walkthrough: longest mission mission-013 (Basic Literacy), 47 children
+walkthrough: mission-only checklists: postgame/mission-hq, postgame/dehara-city, postgame/magnolia-town, postgame/tehl-town, postgame/tarmigan-town, postgame/gurun-town, postgame/crater-town, postgame/tomb-of-borrius
+items: walkthrough rows left as they were: 1 [['Key Items', 'Costume Box', 'Also: Frozen Heights · Speak to your mother in your house']]
+prune: kept 1093 removed 21 pikachu_belle, pikachu_cosplay, pikachu_libre, pikachu_phd, pikachu_pop_star, pikachu_rock_star, cubone_a, zygarde_10, zacian, zacian_crowned, zamazenta, zamazenta_crowned, eternatus, kubfu, urshifu, urshifu_rapid, glastrier, spectrier, calyrex, calyrex_ice_rider, calyrex_shadow_rider
+trainers put in walkthrough order: Vega Split [Cap 26], Mel Split [Cap 36], Maxima Split [Cap 40], Galavan Split [Cap 45], Big Mo Split [Cap 52], Tessy Split [Cap 57]
+GID (Unbound-Cloud unbound_2_1): sp 1158 ids (1034 P entries reached, 59 not: abomasnow_mega, absol_mega, aegislash_blade, aerodactyl_mega, aggron_mega, alakazam_mega, altaria_mega, ampharos_mega, audino_mega, banette_mega, beedrill_mega, blastoise_mega, blaziken_mega, camerupt_mega, charizard_mega_x, charizard_mega_y, darmanitan_g_zen, darmanitan_zen, diancie_mega, eiscue_noice, gallade_mega, garchomp_mega, gardevoir_mega, gengar_mega, glalie_mega, greninja_ash, groudon_primal, gyarados_mega, heracross_mega, houndoom_mega, kangaskhan_mega, kyogre_primal, latias_mega, latios_mega, lopunny_mega, lucario_mega, manectric_mega, mawile_mega, medicham_mega, meloetta_pirouette, metagross_mega, mewtwo_mega_x, mewtwo_mega_y, necrozma_ultra, pidgeot_mega, pinsir_mega, rayquaza_mega, sableye_mega, salamence_mega, sceptile_mega, scizor_mega, shadow_warrior, sharpedo_mega, slowbro_mega, steelix_mega, swampert_mega, tyranitar_mega, venusaur_mega, zygarde_complete), mv 766 ids, it 522 ids, gr 1180
+  GID sp unmapped (22): 837 SPECIES_ZYGARDE_10 Zygarde-10%; 1038 SPECIES_CUBONE_A Cubone-Alola; 1087 SPECIES_PIKACHU_COSPLAY Pikachu-Cosplay; 1088 SPECIES_PIKACHU_LIBRE Pikachu-Libre; 1089 SPECIES_PIKACHU_POP_STAR Pikachu-Pop-Star; 1090 SPECIES_PIKACHU_ROCK_STAR Pikachu-Rock-Star; 1091 SPECIES_PIKACHU_BELLE Pikachu-Belle; 1092 SPECIES_PIKACHU_PHD Pikachu-PhD; 1180 SPECIES_ZACIAN Zacian; 1181 SPECIES_ZAMAZENTA Zamazenta; 1182 SPECIES_ETERNATUS Eternatus; 1183 SPECIES_KUBFU Kubfu; 1184 SPECIES_URSHIFU_SINGLE Urshifu-Single-Strike; 1188 SPECIES_GLASTRIER Glastrier; 1189 SPECIES_SPECTRIER Spectrier; 1190 SPECIES_CALYREX Calyrex; 1205 SPECIES_ZACIAN_CROWNED Zacian-Crowned; 1206 SPECIES_ZAMAZENTA_CROWNED Zamazenta-Crowned; 1207 SPECIES_ETERNATUS_ETERNAMAX Eternatus-Eternamax; 1208 SPECIES_URSHIFU_RAPID Urshifu-Rapid-Strike; 1210 SPECIES_CALYREX_ICE_RIDER Calyrex-Ice; 1211 SPECIES_CALYREX_SHADOW_RIDER Calyrex-Shadow
+  GID cross-check vs hzla unbound_2_1_constants.js: same ids for every species, move and item

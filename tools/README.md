@@ -225,7 +225,7 @@ run `uv run python -I tools/check_updates.py [hack]`; its pins and coverage are 
 | Radical Red | v4.1 | 2026-10-18, move details 2026-10-19 | – | RomHackDex; the two trainer sheets |
 | Renegade Platinum | v1.3.0 | 2026-10-18 (docs), 2026-10-19 (RomHackDex) | – | Drayano's Drive (Documentation folder), RomHackDex |
 | SoulGold | no version number | 2026-10-18, species details 2026-10-19 | – | eemeliri.github.io/soulgold data files |
-| Unbound | – | 2026-10-18, move details 2026-10-19 | – | RomHackDex, unboundwiki.com; the three trainer sheets |
+| Unbound | 2.1.1.1 Expert (docs target) | 2026-10-18/19 mirrors; 2026-10-29 reference pins, caps/regular/location docs, 37 save candidates | 2026-10-29 source audit (not guide build) | RomHackDex, unboundwiki.com, three boss sheets; hzla ff6c3e3, Unbound-Cloud 3d20f32; trainer-index LEVEL CAPS (Maxima 40); `plans/unbound-sources.md` |
 
 ## Source update checks
 

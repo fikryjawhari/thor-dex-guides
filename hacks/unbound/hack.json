@@ -1,0 +1,627 @@
+{
+ "id": "unbound",
+ "title": "Pokémon Unbound Dex",
+ "game": "Pokémon Unbound",
+ "platform": "GBA",
+ "version": "2.1.1.1",
+ "cfg": {
+  "name": "Pokémon Unbound",
+  "orig": "Unbound",
+  "evs": true,
+  "mgm": false,
+  "starter": "pick",
+  "orbs": true,
+  "g3trainer": false,
+  "capLast": false,
+  "walkAreaNote": false,
+  "trw": [
+   "trainer",
+   "trainers",
+   "trainers"
+  ],
+  "calc": {
+   "base": "cfru",
+   "save": "cfru",
+   "evs": true,
+   "mega": true,
+   "zmove": true,
+   "assumedSets": "level-up",
+   "field": [
+    {
+     "k": "gameType",
+     "l": "Battle",
+     "type": "select",
+     "o": [
+      [
+       "Singles",
+       "Singles"
+      ],
+      [
+       "Doubles",
+       "Doubles"
+      ]
+     ],
+     "side": "field",
+     "to": "gameType"
+    },
+    {
+     "k": "weather",
+     "l": "Weather",
+     "type": "select",
+     "o": [
+      [
+       "",
+       "None"
+      ],
+      [
+       "Sun",
+       "Sun"
+      ],
+      [
+       "Rain",
+       "Rain"
+      ],
+      [
+       "Sand",
+       "Sandstorm"
+      ],
+      [
+       "Hail",
+       "Hail"
+      ],
+      [
+       "Harsh Sunshine",
+       "Harsh sunshine"
+      ],
+      [
+       "Heavy Rain",
+       "Heavy rain"
+      ],
+      [
+       "Strong Winds",
+       "Strong winds"
+      ],
+      [
+       "Vicious Sandstorm",
+       "Vicious Sandstorm"
+      ],
+      [
+       "Fog",
+       "Fog"
+      ]
+     ],
+     "side": "field",
+     "to": "weather"
+    },
+    {
+     "k": "terrain",
+     "l": "Terrain",
+     "type": "select",
+     "o": [
+      [
+       "",
+       "None"
+      ],
+      [
+       "Electric",
+       "Electric"
+      ],
+      [
+       "Grassy",
+       "Grassy"
+      ],
+      [
+       "Misty",
+       "Misty"
+      ],
+      [
+       "Psychic",
+       "Psychic"
+      ]
+     ],
+     "side": "field",
+     "to": "terrain"
+    },
+    {
+     "k": "gravity",
+     "l": "Gravity",
+     "type": "toggle",
+     "side": "field",
+     "to": "isGravity"
+    },
+    {
+     "k": "wonderRoom",
+     "l": "Wonder Room",
+     "type": "toggle",
+     "side": "field",
+     "to": "isWonderRoom"
+    },
+    {
+     "k": "magicRoom",
+     "l": "Magic Room",
+     "type": "toggle",
+     "side": "field",
+     "to": "isMagicRoom"
+    },
+    {
+     "k": "atkReflect",
+     "l": "Attacker Reflect",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isReflect"
+    },
+    {
+     "k": "atkLightScreen",
+     "l": "Attacker Light Screen",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isLightScreen"
+    },
+    {
+     "k": "atkAuroraVeil",
+     "l": "Attacker Aurora Veil",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isAuroraVeil"
+    },
+    {
+     "k": "atkTailwind",
+     "l": "Attacker Tailwind",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isTailwind"
+    },
+    {
+     "k": "atkHelpingHand",
+     "l": "Attacker Helping Hand",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isHelpingHand"
+    },
+    {
+     "k": "atkFriendGuard",
+     "l": "Attacker Friend Guard",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFriendGuard"
+    },
+    {
+     "k": "defReflect",
+     "l": "Defender Reflect",
+     "type": "toggle",
+     "side": "def",
+     "to": "isReflect"
+    },
+    {
+     "k": "defLightScreen",
+     "l": "Defender Light Screen",
+     "type": "toggle",
+     "side": "def",
+     "to": "isLightScreen"
+    },
+    {
+     "k": "defAuroraVeil",
+     "l": "Defender Aurora Veil",
+     "type": "toggle",
+     "side": "def",
+     "to": "isAuroraVeil"
+    },
+    {
+     "k": "defTailwind",
+     "l": "Defender Tailwind",
+     "type": "toggle",
+     "side": "def",
+     "to": "isTailwind"
+    },
+    {
+     "k": "defHelpingHand",
+     "l": "Defender Helping Hand",
+     "type": "toggle",
+     "side": "def",
+     "to": "isHelpingHand"
+    },
+    {
+     "k": "defFriendGuard",
+     "l": "Defender Friend Guard",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFriendGuard"
+    },
+    {
+     "k": "atkFocus",
+     "l": "Attacker Focus Energy",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFocusEnergy"
+    },
+    {
+     "k": "defFocus",
+     "l": "Defender Focus Energy",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFocusEnergy"
+    },
+    {
+     "k": "shadowyVeil",
+     "l": "Shadowy Veil",
+     "type": "toggle",
+     "side": "field",
+     "to": "isShadowyVeil"
+    },
+    {"k": "weightSpeed", "l": "Weight as Speed", "type": "toggle", "side": "field", "to": "guideWeightSpeed"},
+    {"k": "camomons", "l": "Camomons", "type": "toggle", "side": "field", "to": "guideCamomons"},
+    {"k": "inverse", "l": "Inverse battle", "type": "toggle", "side": "field", "to": "isInverseBattle"},
+    {"k": "negativeEnergy", "l": "Negative Energy", "type": "toggle", "side": "field", "to": "guideNegativeEnergy"},
+    {"k": "pixies", "l": "Pixies", "type": "toggle", "side": "field", "to": "guidePixies"},
+    {"k": "rainbow", "l": "Rainbow Battle", "type": "toggle", "side": "field", "to": "guideRainbow"}
+   ],
+   "over": {
+    "weather": {
+     "Vicious Sandstorm": {
+      "effect": "Sand",
+      "residual": 8
+     }
+    },
+    "abilities": {
+     "Bellow": {
+      "effect": "Punk Rock"
+     },
+     "Sound Waves": {
+      "effect": "Punk Rock"
+     },
+     "Crabby Tactics": {
+      "effect": "Gorilla Tactics"
+     },
+     "Honey Armor": {
+      "effect": "Fur Coat"
+     },
+     "Icy Skin": {
+      "effect": "Ice Scales"
+     },
+     "Dusty Scales": {
+      "effect": "Ice Scales"
+     },
+     "Multieye": {
+      "effect": "Multiscale"
+     },
+     "Evaporate": {
+      "effect": "Storm Drain"
+     },
+     "Focus Belt": {
+      "effect": "Sturdy"
+     },
+     "Nine Lives": {
+      "effect": "Sturdy"
+     },
+     "Brain Bond": {
+      "effect": "Parental Bond"
+     },
+     "Cotton Cloud": {
+      "effect": "Cotton Down"
+     },
+     "Tangling Wool": {
+      "effect": "Cotton Down"
+     },
+     "Face Shield": {
+      "effect": "Dauntless Shield"
+     },
+     "Fiery Neigh": {
+      "effect": "Chilling Neigh"
+     },
+     "Shocking Neigh": {
+      "effect": "Chilling Neigh"
+     },
+     "Pride": {
+      "effect": "Moxie"
+     },
+     "Royal Roar": {
+      "effect": "Grim Neigh"
+     },
+     "Subterfuge": {
+      "effect": "Protean"
+     }
+    },
+    "moves": {
+     "Iron Tail": {
+      "flags": {
+       "tail": 1
+      }
+     },
+     "Aqua Tail": {
+      "flags": {
+       "tail": 1
+      }
+     },
+     "Poison Tail": {
+      "flags": {
+       "tail": 1
+      }
+     },
+     "Dragon Tail": {
+      "flags": {
+       "tail": 1
+      }
+     },
+     "Tail Slap": {
+      "flags": {
+       "tail": 1
+      }
+     },
+     "Drill Peck": {
+      "flags": {
+       "drill": 1
+      }
+     },
+     "Drill Run": {
+      "flags": {
+       "drill": 1
+      }
+     },
+     "Horn Drill": {
+      "flags": {
+       "drill": 1
+      }
+     }
+    },
+    "rules": [
+     {
+      "phase": "effectiveness",
+      "when": {"ref": "input.field.inverse"},
+      "value": {"op": "if", "args": [{"op": "eq", "args": [{"ref": "value"}, 0]}, 2, {"op": "div", "args": [1, {"ref": "value"}]}]},
+      "note": "Inverse battle: invert each defending type; type immunities become weaknesses. Ability immunities remain."
+     },
+     {
+      "phase": "afterMoveType",
+      "when": {
+       "op": "or",
+       "args": [
+        {
+         "op": "and",
+         "args": [
+          {
+           "op": "eq",
+           "args": [
+            {
+             "ref": "names.atkAbility"
+            },
+            "Grass Dash"
+           ]
+          },
+          {
+           "op": "eq",
+           "args": [
+            {
+             "ref": "move.type"
+            },
+            "Grass"
+           ]
+          }
+         ]
+        },
+        {
+         "op": "and",
+         "args": [
+          {
+           "op": "eq",
+           "args": [
+            {
+             "ref": "names.atkAbility"
+            },
+            "Slippery Tail"
+           ]
+          },
+          {
+           "ref": "move.flags.tail"
+          }
+         ]
+        }
+       ]
+      },
+      "set": {
+       "move.priority": 1
+      },
+      "note": "Unbound priority"
+     },
+     {
+      "phase": "critical",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Drill Beak"
+         ]
+        },
+        {
+         "ref": "move.flags.drill"
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "op": "in",
+           "args": [
+            {
+             "ref": "def.ability"
+            },
+            [
+             "Battle Armor",
+             "Shell Armor"
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "value": true,
+      "note": "Drill Beak"
+     },
+     {
+      "phase": "defenseMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "input.field.weather"
+          },
+          "Vicious Sandstorm"
+         ]
+        },
+        {"op": "eq", "args": [{"ref": "field.weather"}, "Sand"]},
+        {
+         "op": "not",
+         "args": [
+          {
+           "ref": "state.hitsPhysical"
+          }
+         ]
+        },
+        {
+         "op": "includes",
+         "args": [
+          {
+           "ref": "def.types"
+          },
+          "Ground"
+         ]
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "op": "includes",
+           "args": [
+            {
+             "ref": "def.types"
+            },
+            "Rock"
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Vicious Sandstorm"
+     },
+     {
+      "phase": "finalMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.defAbility"
+          },
+          "Portal Power"
+         ]
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "ref": "move.flags.contact"
+          }
+         ]
+        }
+       ]
+      },
+      "append": [
+       3072
+      ],
+      "note": "Portal Power"
+     },
+     {
+      "phase": "finalMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "ref": "input.field.shadowyVeil"
+        },
+        {"op": "eq", "args": [{"ref": "def.originalCurHP"}, {"ref": "def.rawStats.hp"}]},
+        {"op": "eq", "args": [{"ref": "state.hitCount"}, 0]},
+        {
+         "op": "includes",
+         "args": [
+          {
+           "ref": "def.types"
+          },
+          "Ghost"
+         ]
+        },
+        {
+         "op": "ne",
+         "args": [
+          {
+           "ref": "atk.ability"
+          },
+          "Parental Bond (Child)"
+         ]
+        }
+       ]
+      },
+      "append": [
+       2048
+      ],
+      "note": "Shadowy Veil"
+     }
+    ]
+   }
+  },
+  "ls": {
+   "dex": "unbounddex",
+   "calc": "unboundcalc",
+   "track": "unboundtrack",
+   "walk": "unboundwalk",
+   "cap": "unboundcap",
+   "tr": "unboundtr",
+   "recent": "unboundrecent",
+   "pos": "unboundpos",
+   "mgm": "unboundmgm",
+   "loc": "unboundloc",
+   "items": "unbounditems",
+   "dmg": "unbounddmg"
+  },
+  "txt": {
+   "obt": "Obtainable only",
+   "nw": "Not found only",
+   "g3": "Not in any location source (the wiki, RomHackDex), so probably not obtainable in Unbound 2.1.1.1.",
+   "conf": "",
+   "tc": "Gen 6+ type chart (the hack doesn't change it).",
+   "chdoc": "",
+   "mvh": "Unbound changes",
+   "nodc": "",
+   "mvsrc": "Type, category, power, accuracy, PP, priority and description from RomHackDex's Unbound data",
+   "mvsrcx": "; an Unbound original, so the calc may not know all of its effects",
+   "absrc": "",
+   "ns": "Not an encounter area, so it has no encounter slot here.",
+   "walk": "Walkthrough",
+   "capl": "Your level",
+   "capnone": "",
+   "noev": ""
+  }
+ },
+ "sk": {
+  "exeggcute_a": "0102",
+  "cubone_a": "0104",
+  "koffing_g": "0109",
+  "mime_jr_g": "0439",
+  "basculin_h": "0550-white-striped",
+  "eiscue_noice": "0875-noice",
+  "calyrex_ice_rider": "0898-ice",
+  "calyrex_shadow_rider": "0898-shadow"
+ }
+}

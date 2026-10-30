@@ -15,7 +15,7 @@ lag rules, scroll restore) are the viewer contract: `.agents/skills/rom-hack-off
 | `name` | The hack's name in wording. |
 | `orig` | Tag for hack-original moves / abilities (`''` = none). |
 | `evs` | `false` = no EV inputs or EV speeds. MGM shows only when this is on **and** some trainer Pokémon has EVs. |
-| `mgm` | `false` = no MGM switch even with EVs on (the hack has no way to turn EVs off: Unbound). Speeds always count EVs. Absent = on. |
+| `mgm` | `false` = no MGM switch even with EVs on (Unbound, which has no way to turn EVs off; Photonic Sun's EV-less copy). A trainer Pokémon with no `iv`, or no `ev` where EVs count, shows no speed (unknown, not assumed). Speeds always count EVs. Absent = on. |
 | `starter` | `pick` = named starter picker (tracker bar, Trainers header, walkthrough) stored in `TK.s`; `type` = the same picker for guides whose rivals follow a type (`t.st` = Grass / Fire / Water). |
 | `orbs` | Primal / Rayquaza Mega pages point at Useful NPCs. |
 | `g3trainer` | Unobtainable species are tagged Trainer only. |
@@ -43,6 +43,19 @@ an unknown key.
   level (the trainer speed uses it). `mon.hn` lists disagreements as "hzla says ...", independently of sheet `cf`.
 - Walkthrough: checklist steps `stop.s` (Next step and Reset checklist show only then), stop notes, cheat codes
   `WK.cheats`, game docs `WK.docs` / `WK.ko`, unplaced items `WK.np`, stop keys `stop.k`.
+- Walkthrough missions (Unbound): a `stop.s` entry that is an object, not a `[text, note]` pair,
+  `{m: slug, n: name, u: unlock, r: reward, note?, s: [{k, t, n?}]}`, is a mission card at that place in the stop's
+  checklist (`misHTML`). `m` is unique in the guide and never changes once published (the wiki slug, not a title or an
+  order); each step `k` never changes within its mission (an action or target name, not a position or a hash).
+  `tools/schema.py` rejects missing / repeated keys and empty step lists; at runtime a malformed mission or a repeated
+  slug is left out, nothing is invented. One leaf list (`stopLeaves`: ordinary steps, then each mission's steps at its
+  place) drives every count, Next step, search and reset. Saved in `LS.walk` → `missions: {slug: {o: open, c: {stepKey:
+  1}}}` (absent until a mission is used; an old save without it loads unchanged). Ordinary steps keep their keys
+  (`split.stop.j`, j counting only the pairs), so missions placed among them shift nothing. A record whose mission or
+  step is gone stays in the save, unused, and comes back with its key; a new step starts unticked, a moved or renamed
+  mission keeps its state. Reset clears every mission's ticks (orphans too) and keeps open states. Search recents
+  `{k:'ms', m, c?}` and scroll anchors (`details.wmis[data-m]`) go by slug; a gone step falls back to its mission, a
+  gone mission's recent drops. Checks: `tools/scenarios/walk-missions.mjs`, the snapshot in `guide-update.mjs`.
 - **Rule:** saved state never stores a position in the data (an index into `M` / `MV` / `AB` / `P` / `LOC` / `TR` / `WK` / `IT`). It stores
   names or stable keys, maps them back on load, says what happens when one is gone, and keeps loading older formats
   (below). `tools/scenarios/guide-update.mjs` checks it on every guide with a copy whose every index is shifted; a new
@@ -213,10 +226,32 @@ every manual Field override. Simultaneous leads resolve in Speed order, slower s
 Trick Room; at the same Speed the foe's wins); primal weather resists ordinary setters. `DMG.settings().setterStays` controls whether a departing
 setter leaves its layer behind. A fainted entrant sets nothing. Area evidence also supplies foe Tailwind, the
 foe's guessed +1 crit, lead-exempt player Spikes / Toxic Spikes and Trick Room. Thunderstorm is Rain + Electric
-Terrain; random terrain and Fog are text only. The Area line exposes the original wording on tap / tooltip;
+Terrain; random terrain and Fog are text only (Fog is a weather where the profile offers it: below). The Area line exposes the original wording on tap / tooltip;
 variant labels are ignored. Automatic Field toggles are dashed, pressed and marked A; tapping makes them manual.
 The fight bar's automatic D is the exception: dashed outline only.
 Trick Room is always offered from Gen 4 and reverses the faster-Speed colour, not damage.
+
+**Calc UI: area rules** (Unbound, 2026-10-30; `plans/unbound.md` → Unit 8c). Named trainer / section effects drive
+the engine, never a second damage path in the page: `speed-rule Weight`, `typing Camomons`, `battle-rule Inverse`,
+`field-rule` Shadowy Veil / Negative Energy / Pixies / Rainbow Battle turn on the profile's Global toggles (auto, A
+mark, tap = manual). `typed-side-condition` (Tailwind / Magnet Rise for listed types, both sides) and a locked
+weather (`locked:true`) become runtime values (`AREARULES`: `atk/def…Types`, `weatherLock`) that `battleField()`
+adds to the stored field; they are rebuilt by `updateField`, never saved. A lock beats every weather layer (select
+disabled, setters, actions, an old manual save). With a Fog option in the profile, area Fog is the bottom weather
+layer: a manual / setter weather covers it, **Defog** (Clear Fog on the move row) clears it for the fight. The
+Global group lists an area switch per typed rule / lock / Fog (on = applies); the switches and Defog are saved in
+`ST.areaByTrainer[t.k] = {disabled:{'kind:value:side':true}, fogCleared}` (trainer key + effect name; created only
+when used, cleared by `newFight` / Reset fight). Field readouts (`.dfrule`) give each side's state: Tailwind / Magnet
+Rise active / not that type / grounded, Camomons types, Weight Speed, Fog accuracy, Shadowy Veil eligibility, Pixies
+boost, Rainbow chances. Camomons takes each side's first two moves (`toEngine` passes `moves`; a duplicate type counts
+twice, as the official calc); with a first move unknown the results wait ("Choose first move for Camomons").
+**Assumed sets** (`cfg.calc.assumedSets: 'level-up'`): a `Moves unknown` trainer's mon without source moves gets the
+last four distinct level-up moves at its level (`dex.js` `guessMoves`), Hardy, 31 IVs, 0 EVs in the calc (`foeBase`),
+each marked `?` until that field is edited. The trainer card shows the same guessed moves in italics with `?` and keeps
+its `Moves unknown` tag (the user, 2026-10-30); a card Pokémon with no source IVs / EVs gets its Speed from the
+same guess (31 IVs, 0 EVs, neutral nature), marked `?` (`monCard`); foe edits remember their species (`ST.foeSp`) and drop when another species is in the
+slot after an update. **Import** maps party and boxes before refusing: a boxes-only save imports and starts on the
+first box Pokémon; empty = no Pokémon anywhere, wrong = none in this guide; a refused file keeps the previous import.
 Intimidate is a plain checked-by-default header box on its holder (no text; name in tooltip / aria-label); it applies the
 engine's net drop / reaction without changing Edit stages, with no mark on the target's card. Orb status is derived through `DMG.derived` and labelled
 `Burn (Orb)` / `Toxic (Orb)` in Edit; choosing any status, including None, is a kept override. Ice Face restoration
@@ -393,6 +428,18 @@ dex.css):
 note, then Checklist / Encounters / Items / Trainers sections. Stops with trainers show `n/N | cap` (the split's cap
 when the stop has none). Empty stops are grey signs (`.wsign`), not boxes. Guide info holds tracker export / import /
 reset, the game docs and the intro text.
+
+**Walkthrough missions** (decided 2026-10-29, Unbound unit 7a): a mission is a **bordered card** (panel background,
+1 px border, no extra gutter) inside the Checklist at its unlock place, closed by default. The header is the name
+(wraps, never cut), `done/total` and a chevron, 44 px tall, and doesn't pin (the stop and Checklist headers already
+take the top of a 316 px window). Open: unlock, reward and note (each omitted when empty), then its steps (44 px rows).
+No mission-wide checkbox. **The tick that completes a mission closes it** (`foldUp`: its header lands under the pinned
+headers and takes focus); only that mission, never its stop or Checklist, never on load; reopened it stays open until
+the next completing tick. Next step goes depth-first in data order (ordinary steps, every step of a mission, the next
+ordinary step), opening only the target's chain and landing with `land()`. Search: a hit on a mission's name, unlock,
+reward or note is one row for the mission (lands on its header); otherwise each matching step is a row (lands on it);
+the search-this-page filter shows a matching mission open. Rejected: a quiet divider title (A), staying open on the
+final tick (A), a sticky mission header, a mission tab or global list.
 
 **Trainers:** a Show switch per box (Places / Trainers / Teams, read from the page, not stored) pinned under the box
 header; each place header has a `n/N | cap` button that fills first (part → all open, all → all closed) and never

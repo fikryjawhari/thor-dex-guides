@@ -65,6 +65,10 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
    4. **Mechanics check** (long-term, the user): each guide's notes.md → Damage calc → In-game tests. Hardlove has no
       independent oracle, so its calc stays provisional until then. The source wins over the docs.
    5. **Footer credits** (item 3), hzla's calc among them.
+   6. **Status moves on the move cards** (the user, 2026-10-30; a later session, every guide): every status move's
+      effect usable from its move row, so a battle's changes apply from the move view. Today stat-stage moves (Leer,
+      Withdraw, Swords Dance ...) show "—" with no Use; only damage, self-HP and field-setting moves act. Applies to
+      boss sets and Unbound's guessed sets alike.
    Gen 5 save reading waits for the Blaze Black 2 Redux guide; the other families: `template/calc/readers/README.md`.
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used (Photonic Sun, Eternal X), the sprite set's credits (`sprites/SOURCES.md`), hzla's
@@ -94,6 +98,17 @@ Photonic Sun's trainers from the EV-less copy, MGM switch hidden (`cfg.mgm`, the
 branch), Totem battles from the game (real IVs; "Doc says" notes on 6 differences). The user installs
 `hacks/<hack>/.src/evless/luma/titles/<title id>/` on the Thor and checks in game: no EVs gained after battles
 (the summary screen's EVs stay 0), a trainer's Pokémon stats, and a Totem fight still hard.
+
+**Unbound 2.1.1.1 (Expert): merged into `main` 2026-10-30.** Decisions: `hacks/unbound/notes.md` and
+`template/README.md` (the plans are deleted; git history keeps them). 393 trainers (101 bosses, 292 ordinary with
+guessed sets marked `?` on cards and in the calc), 84 keyed missions, CFRU save reader, calc with every Unbound gimmick
+(official Unbound calc + hzla as oracles). Sceptic audit 2026-10-30: gate check, all scenarios on all six guides and
+260 × 316 normal / dvkb pass after its fixes. Open follow-ups:
+- A real `.srm` import on the Thor (the user has no save yet; the reader is checked on 37 test saves).
+- In-game checks (notes.md): Focus Belt / Nine Lives as Sturdy; Camomons with two moves of the same type.
+- Ideas for later sessions (the user): sticky mission names in the walkthrough; Move Tutors headed by tutor in every
+  guide (Unbound has it via `itemstd` `keep_sub`).
+- Old unit worktrees under `~/.t3/worktrees/thor-dex-guides/` and their `worktree-unbound-*` branches: deleted on merge.
 
 **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
