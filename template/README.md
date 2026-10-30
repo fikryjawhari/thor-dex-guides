@@ -430,16 +430,17 @@ Keep these decisions; don't retry what's listed as rejected.
 **Collapsible pages** (walkthrough, Locations, Trainers, Items; `COLLAPSIBLE PAGES` in dex.js, "Collapsible pages" in
 dex.css):
 1. Levels: box → place (`details.stopd`, sticky under the search bar) → section (`details.sec`, sticky under the
-   place). **Every level starts closed** (2026-10-31, every page, a stop with one section too): opening a box shows
-   its places closed, opening a place its yellow headings closed. Every level's open state is saved in the page's `LS`
-   object as `1` open (`0` closed, from before, still reads as closed; no entry = closed). Links and jumps (search, a
-   Pokémon page's place link `#/l/<place>`, Next step) open their target's chain and save it open. A filtered page
-   (search this page) shows its places and sections open (the walkthrough's Checklist stays closed unless a mission
-   matches).
+   place). **Boxes and sections start closed** (2026-10-31, every page, a stop with one section too); Locations'
+   places start open (the place header repeats the box name and gives a sticky header), the walkthrough's stops and
+   the Trainers page's places closed. Every level's open state is saved in the page's `LS` object (`1` open, `0`
+   closed; no entry = the level's default; a section's `0` from before still reads as closed). Links and jumps
+   (search, a Pokémon page's place link `#/l/<place>`, Next step) open their target's chain and save it open. A
+   filtered page (search this page) shows its places and sections open (the walkthrough's Checklist stays closed
+   unless a mission matches).
 2. Tapping a header never scrolls (`flip()`, `hold()`); browser scroll anchoring is off while it settles.
-3. Expand all / Collapse all bars (`segBar`): only one, at the page top for the boxes; it only opens or closes that
-   level and never moves. The in-box bars (walkthrough, Items, Locations) were removed 2026-10-31: everything starts
-   collapsed, so the user opens sections one by one.
+3. Expand all / Collapse all bars (`segBar`): one at the page top for the boxes; in an Items box with 2+ sub-headings,
+   under the box header; in a Locations place with 2+ sections, under the place header. Each only opens or closes its
+   own level and never moves. The walkthrough has a Show switch instead (below).
 4. Collapse bars at the bottom of a block only when it is taller than the window (`bars()`); a pinned block collapses
    in place and flashes (inset accent ring). Rechecked on toggles, resizes, content-visibility renders and any change
    of the page size (a ResizeObserver on `#app`: the viewer's text zoom fires no resize but changes the height).

@@ -363,8 +363,8 @@ function encSummary(a){const e=TK.e[a];if(!e)return '';if(e.f)return '<span clas
 // B1F...) → places (an area's own places, same names merged; one place = the area's own name) → methods. One area: its
 // tracker sits above its places; a box of several areas: each place is one area and carries its tracker. An area with
 // several places of its own never joins a box. State in LS.loc {o:{<first area>:1 open}, x:{<area>.<place>:0 closed},
-// s:{<area>.<place>.<method>:1 open}, layout (relayout)}: everything starts closed (a 0 saved before 2026-10-31 still
-// means closed; a filtered page shows its places and methods open). Layout: template/README.md.
+// s:{<area>.<place>.<method>:1 open}, layout (relayout)}: boxes and methods start closed, places open (a method's 0
+// saved before 2026-10-31 still means closed; a filtered page shows its places and methods open). Layout: template/README.md.
 // Open state saved by position (a box's index, "box.place", either with a ".rest") keeps the names it was saved under
 // (S.layout, as the walkthrough's WO.layout): when an update adds, drops or moves boxes or places, relayout moves each
 // key to the position that now has its name (a repeated name counts its occurrence) and drops one whose name is gone.
@@ -388,7 +388,9 @@ const LGRP=(()=>{const out=[],two=n=>n.split(' ').length>2?n.split(' ').slice(0,
 const LSEC=(k,m,tags,body)=>sectionHTML(esc(k+'.'+m),esc(m),tags,body,!!st.q||LO.s[k+'.'+m]===1);
 const encTable=(rows,note)=>(note?`<div class="mut small" style="margin:4px 0 2px">${esc(note)}</div>`:'')+`<table class="enc">${rows.map(x=>`<tr class="${x.d?'dupe':''}"><td style="width:44px">${sprl(x.p.id,'s40')}</td><td>${plink(x.p.id)}<div>${x.p.t.map(ty).join('')}</div>${x.note&&!note?`<div class="mut small">${esc(x.note)}</div>`:''}</td><td class="n">${esc(x.show)}${x.chg?'<div class="mut small">was '+(x.r?x.r+'%':esc(x.rs))+'</div>':''}</td><td class="n">${x.lv.size?'Lv '+esc([...x.lv].join(', ')):''}</td></tr>`).join('')}</table>`;
 const mTags=(rows,allD)=>allD?'<span class="tag">all dupes</span>':`<span class="mut small">${rows.length}</span>`;
-const locStop=(k,n,tags,body)=>`<details class="stopd" data-k="${k}" ${LO.x[k]===1||st.q?'open':''}><summary class="stoph"><span class="pn">${esc(n)}</span>${tags}</summary><div class="stop">${body}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(n)}</span></button></div></details>`;
+// A place starts open (its header repeats the box's name and pins), its sections closed; 2+ sections get an Expand /
+// Collapse all bar under the header for them.
+const locStop=(k,n,tags,body)=>`<details class="stopd" data-k="${k}" ${LO.x[k]!==0||st.q?'open':''}><summary class="stoph"><span class="pn">${esc(n)}</span>${tags}</summary><div class="stop">${(body.match(/<details class="sec"/g)||[]).length>1&&!st.q?segBar('lc-pl'):''}${body}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(n)}</span></button></div></details>`;
 function locPlace(a,p,cf,trk){const k=a+'.'+p.j;
  const ms=AR[a].es||AR[a].st?placeSecs(a,p,cf):adjRows(p.ls,cf).map(([m,rows,allD,note])=>LSEC(k,m,mTags(rows,allD),encTable(rows,note))).join('');
  return locStop(k,p.n,trk?encSummary(a):'',(trk?(AR[a].st?'':trackerHTML(a))+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:''):'')+(ms||'<div class="mut small" style="margin:6px 0">No wild Pokémon here.</div>'));}
@@ -438,11 +440,11 @@ function locBox(g,cf){const one=g.a.length===1&&!AR[g.a[0]].sub,a=g.a[0];let n=0
  return h+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
 TOG.locs=TOG.l=d=>{if(d.matches('details.split[data-a]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=locBox(LGRP[+d.dataset.g],caughtFams(-1));colBind(b);bindTrackers();}
   if(!st.q){if(d.open)LO.o[d.dataset.a]=1;else delete LO.o[d.dataset.a];loSave();}}
- else if(st.q)return;else if(d.matches('details.stopd')){if(d.open)LO.x[d.dataset.k]=1;else delete LO.x[d.dataset.k];loSave();}
+ else if(st.q)return;else if(d.matches('details.stopd')){if(d.open)delete LO.x[d.dataset.k];else LO.x[d.dataset.k]=0;loSave();}
  else if(d.matches('details.sec')){if(d.open)LO.s[d.dataset.s]=1;else delete LO.s[d.dataset.s];loSave();}};
 function listLocs2(scroll){fil.innerHTML='';const s=st.q;const li=st.lopenLi;st.lopenLi=null;
  // Opened from a Pokemon page (#/l/<place>): open its box and place, then scroll it under the search bar.
- let tk=null;if(li!=null&&LOC2A[li]!=null){const a=LOC2A[li];LO.o[LGRP.find(g=>g.a.includes(AR[a].in??a)).a[0]]=1;tk=AR[a].in!=null?AR[a].in+'.0':a+'.'+places(a).find(p=>p.ls.includes(li)).j;LO.x[tk]=1;loSave();}
+ let tk=null;if(li!=null&&LOC2A[li]!=null){const a=LOC2A[li];LO.o[LGRP.find(g=>g.a.includes(AR[a].in??a)).a[0]]=1;tk=AR[a].in!=null?AR[a].in+'.0':a+'.'+places(a).find(p=>p.ls.includes(li)).j;delete LO.x[tk];loSave();}
  const hit=i=>ARS(i).some(i=>AR[i].n.toLowerCase().includes(s)||AR[i].l.some(li=>LOC[li].toLowerCase().includes(s)||(locs[li]||[]).some(([p])=>p.key.includes(s))));
  const list=LGRP.map((g,gi)=>gi).filter(gi=>!s||LGRP[gi].a.some(hit));
  app.innerHTML=tkBar()+(s?'':segBar('lc-all all'))+
@@ -460,7 +462,7 @@ function listItems(){fil.innerHTML='';const s=st.q;const IT=D.IT||[];
  app.innerHTML=segBar('it-all all')+IT.map((sec,si)=>`<details class="split jt" data-si="${si}" ${IO.o[si]?'open':''}><summary>${esc(sec.n)} <span class="mut small">${sec.r.length}</span></summary><div class="body"></div></details>`).join('');
  app.querySelectorAll('details.split[open]').forEach(d=>TOG.items(d));bars();}
 // Inside a box: its name again as a sticky heading, then the rows, under yellow sub-headings where the data gives them
-// (r[4]: EI shops, Hardlove's held item kinds). State in LS.items {o:{<box>:1 open}, s:{<box>.<sub>:1 open}, layout
+// (r[4]: EI shops, Hardlove's held item kinds; two or more get an Expand / Collapse all bar). State in LS.items {o:{<box>:1 open}, s:{<box>.<sub>:1 open}, layout
 // (relayout)}: boxes and sub-headings start closed (a 0 saved before 2026-10-31 still means closed). Filled when first opened.
 const IO=(()=>{try{return Object.assign({o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.items)||'{}'))}catch(e){return {o:{},x:{},s:{}}}})();
 if(relayout(IO,(D.IT||[]).map(sec=>[sec.n,[]]),{o:1,x:1,s:1}))try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
@@ -468,6 +470,7 @@ function itemBox(si){const sec=D.IT[si],tbl=rs=>`<table class="itbl ix">${rs.map
  sec.r.forEach(r=>{const g=r[4]||'';if(!subs.length||subs[subs.length-1][0]!==g)subs.push([g,[]]);subs[subs.length-1][1].push(r);});
  // No stop header: the box's sub-headings (every row has one) pin straight under the search bar.
  return (sec.note?`<div class="mut small" style="margin:6px 0">${esc(sec.note)}</div>`:'')+
+  (subs.filter(([g])=>g).length>1?segBar('it-sp'):'')+
   subs.map(([g,rs])=>g?sectionHTML(esc(si+'.'+g),esc(g),`<span class="mut small">${rs.length}</span>`,tbl(rs),IO.s[si+'.'+g]===1):tbl(rs)).join('')+
   `<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(sec.n)}</span></button>`;}
 TOG.items=d=>{if(st.q)return;const iS=()=>{try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}};
@@ -717,7 +720,7 @@ app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
   if(w){trShow(w.closest('details.split'),+w.dataset.v);return;}if(pt){e.preventDefault();e.stopPropagation();trTeams(pt.closest('details.stopd'),pt);return;}}
  const wk=e.target.closest('button.pt.wk');if(wk){e.preventDefault();e.stopPropagation();walkTeams(wk.closest('details.stopd'));return;}
  const b=e.target.closest('.seg button');
- if(b){const s=b.closest('.seg');if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.it-sp')?b.closest('.body').querySelectorAll('details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
+ if(b){const s=b.closest('.seg');if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.it-sp')?b.closest('.body').querySelectorAll('details.sec'):s.matches('.lc-pl')?b.closest('.stop').querySelectorAll(':scope>details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
  const end=e.target.closest('.endbar,.trfold');if(end){foldUp(end.closest('details'));return;}
  if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;WO.x[k]=1;WO.s[k+'.c']=1;if(n.m)misSet(n.m.m,r=>{r.o=true;});woSave();render(true);
   const inp=app.querySelector(n.m?`.wstep input[data-mk="${CSS.escape(n.m.m)}"][data-ck="${CSS.escape(n.c.k)}"]`:`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;land(inp.closest('.wstep'),GAP);return;}
