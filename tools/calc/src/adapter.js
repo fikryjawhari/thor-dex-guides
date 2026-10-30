@@ -8,7 +8,7 @@ import {calculateSMSSSV} from '@smogon/calc/src/mechanics/gen789';
 import {getModifiedStat, getFinalSpeed, isGrounded, checkItem, checkForecast, checkAirLock} from '@smogon/calc/src/mechanics/util';
 import {applyPhase, prepareRules} from './rules.js';
 import {speciesName, weightNames} from './names.js';
-import {createEffects, describe, SWITCH_VOLATILES} from './effects.js';
+import {createEffects, describe, SWITCH_VOLATILES, STATUS_LABEL, STAT_LABEL} from './effects.js';
 
 const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 const toID = value => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -354,6 +354,114 @@ function entry(set, values = {}, side = 'atk') {
     && !mon.hasAbility('Clear Body', 'White Smoke', 'Full Metal Body', 'Mirror Armor')
     && !(profile.gen >= 9 && mon.hasItem('Clear Amulet'))) result.spe = mon.hasAbility('Contrary') ? 1 : -1;
   return result;
+}
+
+// Entry hazards on one Pokémon coming in on `side`, applied once from the page's hazard chip (never automatically):
+// Stealth Rock (type-scaled) / Steelsurge / Spikes damage, then Toxic Spikes' status and Sticky Web's Speed drop
+// through the effect resolver (phase 'entry': its status / drop blockers, Defiant / Competitive, Mirror Armor, Lum /
+// Pecha / White Herb / Eject Pack), then a pinch / HP berry the damage brought into range. Order and timing follow
+// Showdown conditions / moves at the pinned commit: Heavy-Duty Boots (Gen 8+) stops every hazard, but a grounded
+// Poison type still absorbs Toxic Spikes (removes them from its side); Magic Guard stops the damage, and in Gen 4
+// Toxic Spikes too (mods/gen4); airborne Pokémon (Flying, Levitate, Air Balloon, Magnet Rise) skip Spikes, Toxic
+// Spikes and Web. Items react on Update, right after the hazards, in every generation 4-9 (items.ts and the gen 4-8
+// mods: the berries are onUpdate), so the berry comes with the chip, never at turn end. Unbound's Shadowy Veil keeps
+// a full-HP Ghost out of all of them. Returns null when nothing would change; else `{[side]: patch (hp, status, stg,
+// used, toggles), [other side]: patch (Mirror Armor), parts: [{l, v}], net, label, text, log, cls, absorb?}`.
+// `label`: the net HP change (hazards and berry together, `−37` / `+12` / `±0`); without any HP part, the other
+// changes (`Psn`, `Spe−1`, `Tox Spe−1`, `Absorb`).
+function hazards(set, values = {}, otherSet = null, side = 'atk') {
+  const otherSide = side === 'atk' ? 'def' : 'atk';
+  const has = key => !!values[side + key];
+  if (!['StealthRock', 'Steelsurge', 'Spikes', 'ToxicSpikes', 'StickyWeb'].some(has)) return null;
+  // The resolver works on the entrant as its target ('def'): flip the field so `def*` is the entrant's side.
+  const local = side === 'def' ? values : Object.fromEntries(Object.entries(values).map(([key, value]) =>
+    [key.startsWith('atk') ? 'def' + key.slice(3) : key.startsWith('def') ? 'atk' + key.slice(3) : key, value]));
+  const target = actionState(set, local, 'def');
+  const user = otherSet ? actionState(otherSet, local, 'atk') : null;
+  const field = battleField(local);
+  checkAirLock(target.mon, field);
+  checkItem(target.mon, field.isMagicRoom);
+  if (user) { checkAirLock(user.mon, field); checkItem(user.mon, field.isMagicRoom); }
+  const mon = target.mon;
+  const max = mon.maxHP();
+  const start = mon.curHP();
+  if (!start) return null;
+  const notes = [];
+  const parts = [];
+  const boots = profile.gen >= 8 && holdsItem(mon, field) && mon.hasItem('Heavy-Duty Boots');
+  const veil = values.shadowyVeil && mon.hasType('Ghost') && start === max;
+  const stop = boots ? 'Heavy-Duty Boots' : veil ? 'Shadowy Veil' : '';
+  const grounded = isGrounded(mon, field);
+  const effectiveness = type => mon.types.reduce((total, defending) =>
+    total * (generation.types.get(toID(type))?.effectiveness[defending] ?? 1), 1);
+  const damage = (label, fraction) => {
+    if (stop) notes.push(`${stop}: no ${label}`);
+    else if (mon.hasAbility('Magic Guard')) notes.push(`Magic Guard: no ${label}`);
+    else if (fraction > 0) parts.push({l: label, v: -Math.max(1, Math.floor(max * fraction))});
+  };
+  const layers = (key, limit) => Math.max(0, Math.min(limit, Math.trunc(Number(values[side + key])) || 0));
+  if (profile.gen >= 4 && has('StealthRock')) damage('Stealth Rock', effectiveness('Rock') / 8);
+  if (profile.gen >= 8 && has('Steelsurge')) damage('Steelsurge', effectiveness('Steel') / 8);
+  const spikes = layers('Spikes', 3);
+  if (spikes) {
+    if (grounded) damage('Spikes', [0, 1 / 8, 1 / 6, 1 / 4][spikes]);
+    else notes.push('Airborne: no Spikes');
+  }
+  let hp = Math.max(0, start + parts.reduce((total, part) => total + part.v, 0));
+  mon.originalCurHP = hp;
+  const toxic = profile.gen >= 4 ? layers('ToxicSpikes', 2) : 0;
+  const web = profile.gen >= 6 && has('StickyWeb');
+  let absorb = false;
+  const record = {};
+  if (toxic) {
+    if (!grounded) notes.push('Airborne: no Toxic Spikes');
+    else if (mon.hasType('Poison')) { absorb = true; notes.push('Toxic Spikes absorbed'); }
+    else if (stop) notes.push(`${stop}: no Toxic Spikes`);
+    else if (profile.gen === 4 && mon.hasAbility('Magic Guard')) notes.push('Magic Guard: no Toxic Spikes');
+    else record.st = toxic >= 2 ? 'tox' : 'psn';
+  }
+  if (web) {
+    if (!grounded) notes.push('Airborne: no Sticky Web');
+    else if (stop) notes.push(`${stop}: no Sticky Web`);
+    else record.b = {spe: -1};
+  }
+  const stub = {mon: {hasAbility: () => false, hasType: () => false, hasItem: () => false, curHP: () => 0, maxHP: () => 1,
+    boosts: {atk: 0, def: 0, spa: 0, spd: 0, spe: 0}, types: [], item: ''}, update: {}, logs: [], volatiles: new Set(),
+    set() {}, change() {}, consume() {}, persist() {}, setStatus() {}, lose() {}, st: ''};
+  let resolved = {parts: [], log: []};
+  if (hp && (record.st || record.b)) {
+    resolved = effects.resolve({name: record.st ? 'Toxic Spikes' : 'Sticky Web', record, user: user || stub, target,
+      field, values: local, phase: 'entry'});
+  }
+  let berry = null;
+  if (hp && hp < start) {
+    berry = berryEffect(mon, field, user?.mon || null, hp);
+    if (berry) hp = applyBerry(target, field, user?.mon || null, hp);
+  }
+  const landed = resolved.parts.filter(part => part.who === 'def' && !part.blocked && !part.capped);
+  const net = hp - start;
+  if (!parts.length && !absorb && !landed.length && !berry && !Object.keys(target.update).length) return null;
+  // Non-HP pieces from the outcome (a Lum-cured poison or a White Herb-restored drop shows the item instead).
+  const pieces = [];
+  if (target.update.status) pieces.push(STATUS_LABEL[target.update.status]);
+  const after = target.update.stg || [];
+  statNames.forEach((stat, index) => {
+    const by = index && after.length ? after[index] - (set.stg?.[index] ?? 0) : 0;
+    if (by) pieces.push(STAT_LABEL[stat] + (by > 0 ? '+' : '−') + Math.abs(by));
+  });
+  if (!pieces.length && target.update.used) pieces.push((set.it || 'Item').replace(/ Berry$/, ''));
+  if (absorb) pieces.push('Absorb');
+  const signed = value => (value > 0 ? '+' : value < 0 ? '−' : '±') + Math.abs(value);
+  const label = parts.length || berry ? signed(net) : pieces.join(' ') || 'Use';
+  const text = [...parts.map(part => `${part.l} ${signed(part.v)}`), ...notes, ...resolved.log,
+    ...(berry ? [berry.heal ? `${berry.item} +${berry.heal}` : `${berry.item}${berry.stat ? ' ' + STAT_LABEL[berry.stat] + '+' + berry.by : ''}`] : [])];
+  const drops = net < 0 || landed.some(part => part.st || part.by < 0);
+  const raises = net > 0 || landed.some(part => part.by > 0);
+  const own = {...target.update};
+  if (hp !== start) own.hp = hp;
+  return {[side]: own, ...(user && Object.keys(user.update).length ? {[otherSide]: {...user.update}} : {}),
+    parts, net, label, text: text.join(' · '), log: text, cls: drops && !raises ? 'dn' : raises && !drops ? 'up' : '',
+    ...(absorb ? {absorb: true} : {})};
 }
 
 // End-of-turn HP change for one Pokémon, part by part: [{l, v: [turn 1..4]}], negative = damage. Mirrors stock
@@ -1624,4 +1732,4 @@ function effect(atk, def, slot, values = {}, options = {}) {
     ...(out.fails ? {fails: out.fails} : {}), ...(out.bounced ? {bounced: true} : {}), ...describe(out)};
 }
 
-window.DMG = {items: () => [...generation.items].map(item => item.name), init, stats, calc, residual, speed, entry, hp, hit, turn, berry, derived, settings, fieldEffects, secondaryChance, intimidate: intimidateMarks, effect, effects: moveEffects};
+window.DMG = {items: () => [...generation.items].map(item => item.name), init, stats, calc, residual, speed, entry, hazards, hp, hit, turn, berry, derived, settings, fieldEffects, secondaryChance, intimidate: intimidateMarks, effect, effects: moveEffects};

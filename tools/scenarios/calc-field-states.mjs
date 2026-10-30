@@ -9,11 +9,6 @@ const seed = async page => {
   await page.goto('#/calc');
   await page.value(`(()=>{const state=CALC.state(),species=P.find(mon=>mon.n==='Snorlax'),trainer=TRS.find(trainer=>trainer.p.length>=2),base={l:50,na:'Hardy',a:-1,i:'',status:'',iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0],stg:[0,0,0,0,5],m:[M.indexOf('Tackle'),M.indexOf('Earthquake')]};state.field={};state.custom=[];for(let index=0;index<2;index++){CALC.use(species);Object.assign(state.custom.at(-1),structuredClone(base));}TCAP[trainer.k]=50;CALC.enter(trainer.k,0);for(let index=0;index<2;index++)state.edits['foe:'+trainer.k+':'+index]={...structuredClone(base),id:species.id,sd:0};CALC.render();})()`);
 };
-const openHazards = async (page, side='atk') => {
-  if (!await page.value("document.querySelector('.dfield').open")) await page.tap('.dfield > summary');
-  if (await page.value(`!document.querySelector('[data-field-side="${side}"]').classList.contains('on')`)) await page.tap(`[data-a=fside][data-v=${side}]`);
-  if (!await page.value(`document.querySelector('[data-fgroup="${side}:hazards"]').open`)) await page.tap(`[data-fgroup="${side}:hazards"] > summary`);
-};
 const hp = (page, side='mine') => page.value(`Number(document.querySelector('[data-hp=${side}]').value)`);
 const selectStatus = async (page, value) => {
   if (!await page.count('.cc[data-s=mine] select[data-e=status]')) await page.tap('[data-a=eopen][data-s=mine]');
@@ -115,95 +110,99 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await enable();await page.value('CALC.enter(TRS.find(trainer=>trainer.k!==CALC.state().foe.k&&trainer.p.length>=2).k,0)');await cleared('trainer change');
   },
 },{
-  id:'entry lifecycle', title:'entry once, manual HP/status/Web reapply independently, no redraw/reload damage', sizes,
+  id:'entry lifecycle', title:'hazards never apply by themselves: the card chip offers them on a switch-in, ↺ and a new fight, goes on any other action, survives reload', sizes,
   run:async page=>{
     await seed(page);
     const max=await hp(page);
+    const chip='[data-a=hzapply][data-s=mine]';
+    const closeLog=async()=>{if(await page.count('#calc-log'))await page.tap('#calc-log button');};
     await page.value("Object.assign(CALC.state().field,{atkStealthRock:1,atkSpikes:2,atkToxicSpikes:2,atkStickyWeb:1});CALC.render()");
     assert.equal(await hp(page),max,'setting layers never subtracts HP');
     await page.tap('[data-a=mpick][data-src=custom][data-i="0"]');
-    // The action log (fixed at the top, gone after 3 s) can cover the next tap: close it first.
-    if(await page.count('#calc-log'))await page.tap('#calc-log button');
+    await closeLog();
     const loss=Math.floor(max/8)+Math.floor(max/6);
-    assert.equal(await hp(page),max-loss,'Rocks and two Spikes layers apply once');
-    assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
-    assert.equal(await page.value('CALC.mon("mine").stg[4]'),web?-1:5,'Web replaces +5 with -1');
+    assert.equal(await hp(page),max,'a switch-in changes no HP');
+    assert.equal(await page.value('CALC.state().custom[0].status||""'),'','nor status');
+    assert.equal(await page.value('CALC.mon("mine").stg[4]'),5,'nor stages');
+    assert.equal(await page.count(chip),1,'the hazard chip is offered');
+    assert.equal(await page.count('.cc[data-s=mine] .dberry'),1,'one chip in the berry spot');
+    assert.equal(await page.text(chip),'−'+loss,'its label is the net HP change');
+    assert.match(await page.value(`document.querySelector('${chip}').title`),/Stealth Rock −\d+.*Spikes −\d+.*Badly poisoned/);
+    assert.match(await page.value(`document.querySelector('${chip}').getAttribute('aria-label')`),/Apply entry hazards/);
     await page.value('CALC.render();CALC.render()');
-    assert.equal(await hp(page),max-loss,'redraw does not apply entry');
-    await openHazards(page);
-    assert.equal(await page.value('document.querySelector("[data-a=hazards][data-s=mine]").disabled'),true);
-    await page.tap('[data-a=hpfull][data-s=mine]');
-    assert.equal(await hp(page),max,'Full HP wins');
-    await openHazards(page);
-    await page.tap('[data-a=hazards][data-s=mine]');
-    assert.equal(await hp(page),max-loss,'manual reapplication');
-    await page.setBox('[data-hp=mine]',max-1);
-    assert.equal(await hp(page),max-1,'direct HP entry wins');
-    await openHazards(page);
-    await page.tap('[data-a=hazards][data-s=mine]');
-    assert.equal(await hp(page),max-1-loss,'direct HP entry re-arms damage');
-    await page.tap('[data-a=hpfull][data-s=mine]');
-    await openHazards(page);
-    await page.tap('[data-a=hazards][data-s=mine]');
-    await selectStatus(page,'');
-    assert.equal(await page.value('CALC.state().custom[0].status'),'','manual clear persists');
-    await page.value('CALC.render()');
-    assert.equal(await page.value('CALC.state().custom[0].status'),'');
-    await openHazards(page);
-    await page.tap('[data-a=hazards][data-s=mine]');
+    assert.equal(await hp(page),max,'redraw does not apply entry');
+    await page.reload();await page.goto('#/calc');
+    assert.equal(await hp(page),max,'reload does not apply entry');
+    assert.equal(await page.count(chip),1,'the offer survives reload');
+    const speed=await page.value('(CALC.mon("mine").stg||[])[4]||0');
+    await page.tap(chip);
+    await closeLog();
+    assert.equal(await hp(page),max-loss,'one tap: Rocks and two Spikes layers');
     assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
-    if(await page.count('#calc-log'))await page.tap('#calc-log button');
-    assert.equal(await hp(page),max-loss,'re-poisoning never reapplies damage');
-    await page.tap('[data-a=sstep][data-s=mine][data-x="4"]');
-    await page.value('CALC.set("mine","stg",[0,0,0,0,5]);CALC.render()');
-    await openHazards(page);
-    await page.tap('[data-a=hazards][data-s=mine]');
-    assert.equal(await page.value('CALC.mon("mine").stg[4]'),web?-1:5);
-    assert.equal(await hp(page),max-loss,'Web replay never reapplies damage');
-    await page.route('#/');
-    await page.route('#/calc');
-    assert.equal(await hp(page),max-loss,'route return does not apply entry');
-    await page.reload();
-    await page.goto('#/calc');
-    assert.equal(await hp(page),max-loss,'reload marker persists');
-    await page.tap('[data-a=mpick][data-src=custom][data-i="1"]');
-    await page.tap('[data-a=mpick][data-src=custom][data-i="0"]');
-    assert.equal(await hp(page),max-2*loss,'return after a different selection is a fresh entry');
+    assert.equal(await page.value('(CALC.mon("mine").stg||[])[4]||0'),web?speed-1:speed,'Web lowers Speed by one stage');
+    assert.equal(await page.count(chip),0,'gone once tapped');
+    await page.value('CALC.render()');
+    assert.equal(await hp(page),max-loss,'applied once');
+    // ↺: a fresh send-out, offered again; an HP edit ends the moment.
+    await page.tap('[data-a=hpfull][data-s=mine]');
+    assert.equal(await hp(page),max);
+    assert.equal(await page.count(chip),1,'↺ offers it again');
+    await page.setBox('[data-hp=mine]',max-1);
+    assert.equal(await page.count(chip),0,'an HP edit ends it');
+    assert.equal(await hp(page),max-1);
+    // A move / damage tap on either side ends it, for both cards.
+    await page.tap('[data-a=hpfull][data-s=mine]');
+    await page.value("Object.assign(CALC.state().field,{defStealthRock:1});CALC.state().hzOffer.foe=CALC.key('foe');CALC.render()");
+    assert.equal(await page.count('[data-a=hzapply][data-s=foe]'),1,'the foe card has its own chip');
+    await page.value("document.querySelector('[data-a=sub]:not([disabled])').scrollIntoView({block:'center'})");
+    await page.tap('[data-a=sub]:not([disabled])');
+    await closeLog();
+    assert.equal(await page.count('[data-a=hzapply]'),0,'a damage tap ends both');
+    // The turn end ends it too; the berry chip comes back in that spot.
+    await page.tap('[data-a=hpfull][data-s=mine]');
+    await page.value(`(()=>{const state=CALC.state();state.field={atkToxicSpikes:1};CALC.set('mine','i','Sitrus Berry');CALC.set('mine','hp',Math.floor(${max}/2));state.hzOffer.mine=CALC.key('mine');CALC.render();})()`);
+    assert.equal(await page.count(chip),1,'the hazard chip takes the berry spot');
+    assert.equal(await page.count('.cc[data-s=mine] [data-a=berry]'),0,'no berry chip beside it');
+    assert.equal(await page.text(chip),'Psn','only a status: its short label');
+    await page.tap(chip);
+    await closeLog();
+    assert.equal(await page.value('CALC.state().custom[0].status'),'psn');
+    assert.equal(await page.count('.cc[data-s=mine] [data-a=berry]'),1,'the berry chip returns');
+    // Reset fight / trainer change offer both sides again.
+    await page.tap('[data-a=fightreset]');
+    assert.equal(await page.value("CALC.state().hzOffer.foe===CALC.key('foe')"),true,'Reset fight offers the foe');
+    // Older builds' applied-markers load without applying anything.
+    await page.value("(()=>{const state=CALC.state();state.field={atkStealthRock:1};state.hazardEntry={mine:{key:CALC.key('mine'),damage:{},status:false,web:false,v:2}};delete state.hzOffer;localStorage.setItem(LS.dmg,JSON.stringify(state));})()");
+    await page.reload();await page.goto('#/calc');
+    assert.equal(await hp(page),max,'a stored marker never applies damage');
+    assert.equal(await page.value('CALC.state().hazardEntry===undefined'),true,'the old marker is dropped');
+    assert.equal(await page.count(chip),0,'and offers nothing');
   },
 },{
-  id:'entry immunity edits', title:'blocked hazards stay pending when an item, ability or grounding changes', sizes,
+  id:'entry immunity edits', title:'blocked hazards show no chip; lifting the block shows it, never applies it', sizes,
   run:async page=>{
     await seed(page);
     const max=await hp(page);
-    const loss=Math.floor(max/8);
+    const chip='[data-a=hzapply][data-s=mine]';
+    const eighth=Math.floor(max/8);
     const cases=[
-      ...(guide.cfg.calc.gen>=8?[{before:"mon.i='Heavy-Duty Boots'",after:"mon.i=''",field:{atkStealthRock:1,atkToxicSpikes:2,atkStickyWeb:1},damage:true}]:[]),
-      ...(guide.cfg.calc.gen>=8?[{before:"mon.i='Heavy-Duty Boots'",after:"mon.i=''",field:{atkStealthRock:1,atkToxicSpikes:2,atkStickyWeb:1},damage:true,legacy:true}]:[]),
-      {before:"mon.a=AB.findIndex(entry=>entry[0]==='Magic Guard')",after:'mon.a=-1',field:{atkStealthRock:1,atkStickyWeb:1},damage:true},
-      {before:'state.field.atkMagnetRise=1',after:'state.field.atkMagnetRise=0',field:{atkStealthRock:1,atkSpikes:1,atkStickyWeb:1},damage:true},
-      {before:"mon.a=AB.findIndex(entry=>entry[0]==='Immunity')",after:'mon.a=-1',field:{atkStealthRock:1,atkToxicSpikes:2},damage:false},
+      ...(guide.cfg.calc.gen>=8?[{before:"mon.i='Heavy-Duty Boots'",after:"mon.i=''",field:{atkStealthRock:1,atkToxicSpikes:2,atkStickyWeb:1},loss:eighth}]:[]),
+      {before:"mon.a=AB.findIndex(entry=>entry[0]==='Magic Guard')",after:'mon.a=-1',field:{atkStealthRock:1},loss:eighth},
+      {before:'state.field.atkMagnetRise=1',after:'state.field.atkMagnetRise=0',field:{atkSpikes:1,atkStickyWeb:1},loss:eighth},
+      {before:"mon.a=AB.findIndex(entry=>entry[0]==='Immunity')",after:'mon.a=-1',field:{atkToxicSpikes:2},loss:0},
     ];
     for(const fixture of cases){
-      await page.value(`(()=>{const state=CALC.state(),mon=state.custom[0];state.mine={src:'custom',b:0,i:0};state.hazardEntry={};state.field=${JSON.stringify(fixture.field)};mon.hp=${max};mon.a=-1;mon.i='';mon.status='';mon.stg=[0,0,0,0,5];CALC.set('mine','stg',[0,0,0,0,5]);${fixture.before};CALC.render();})()`);
-      if(fixture.legacy){
-        await page.value("(()=>{const state=CALC.state();state.hazardEntry.mine={key:'mine:'+state.custom[0].pid,status:true,web:true};localStorage.setItem(LS.dmg,JSON.stringify(state));})()");
-        await page.reload();await page.goto('#/calc');
-        assert.equal(await page.value('CALC.state().hazardEntry.mine.v'),2,'legacy Full HP marker migrates without a damage flag');
-      }
-      const entered=await hp(page);
-      await openHazards(page);
-      assert.equal(await page.value('document.querySelector("[data-a=hazards][data-s=mine]").disabled'),true,'immunity blocks pending effects');
+      await page.value(`(()=>{const state=CALC.state(),mon=state.custom[0];state.mine={src:'custom',b:0,i:0};state.field=${JSON.stringify(fixture.field)};mon.hp=${max};mon.a=-1;mon.i='';mon.status='';CALC.render();CALC.set('mine','stg',[0,0,0,0,5]);state.hzOffer={mine:CALC.key('mine')};${fixture.before};CALC.render();})()`);
+      assert.equal(await page.count(chip),0,'a blocked hazard offers nothing');
       await page.value(`(()=>{const state=CALC.state(),mon=state.custom[0];${fixture.after};CALC.render();})()`);
-      assert.equal(await hp(page),entered,'eligibility edits never apply damage automatically');
-      await openHazards(page);
-      assert.equal(await page.value('document.querySelector("[data-a=hazards][data-s=mine]").disabled'),false,'newly eligible effects can be applied');
-      await page.tap('[data-a=hazards][data-s=mine]');
-      assert.equal(await hp(page),entered-(fixture.damage?loss:0),'only pending damage applies, not previously consumed hazards');
+      assert.equal(await hp(page),max,'eligibility edits never apply damage');
+      assert.equal(await page.count(chip),1,'newly eligible hazards are offered');
+      await page.tap(chip);
+      if(await page.count('#calc-log'))await page.tap('#calc-log button');
+      assert.equal(await hp(page),max-fixture.loss);
       if(fixture.field.atkToxicSpikes)assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
-      if(fixture.field.atkStickyWeb&&web)assert.equal(await page.value('CALC.mon("mine").stg[4]'),-1);
-      await page.value('CALC.render()');
-      await openHazards(page);
-      assert.equal(await page.value('document.querySelector("[data-a=hazards][data-s=mine]").disabled'),true,'applied components remain consumed');
+      if(fixture.field.atkStickyWeb&&web)assert.equal(await page.value('CALC.mon("mine").stg[4]'),4);
+      assert.equal(await page.count(chip),0,'applied once');
     }
   },
 },{
@@ -250,6 +249,10 @@ await runChecks({name:'calc-field-states', file, checks:[{
     const max=await hp(page,'foe');
     await page.value('Object.assign(CALC.state().field,{defStealthRock:1,defStickyWeb:1,atkCursed:1,defIngrain:1});CALC.render()');
     await page.tap('[data-a=fpick][data-i="1"]',{index:await page.value('[...document.querySelectorAll(\'[data-a=fpick][data-i="1"]\')].findIndex(element=>element.offsetWidth>0)')});
+    assert.equal(await hp(page,'foe'),max,'the switch-in changes nothing');
+    assert.equal(await page.count('[data-a=hzapply][data-s=mine]'),0,'Foe hazards are not offered to the player');
+    await page.tap('[data-a=hzapply][data-s=foe]');
+    if(await page.count('#calc-log'))await page.tap('#calc-log button');
     assert.equal(await hp(page,'foe'),max-Math.floor(max/8));
     const amounts=await page.value('[...document.querySelectorAll(".dturn")].map(button=>button.textContent)');
     assert.ok(amounts.includes(String(Math.floor(max/4))),'Player curse');
@@ -257,7 +260,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await page.tap('.cc[data-s=foe] .sp');
     assert.equal(await hp(page,'foe'),max-Math.floor(max/8),'direction change is not entry');
     assert.deepEqual(await page.value('[...document.querySelectorAll(".dturn")].map(button=>button.textContent)'),amounts);
-    assert.equal(await page.value('Number(document.querySelector(".cc[data-s=foe] .sp i").textContent.replace(/[^0-9]/g,""))'),await page.value(`DMG.speed({id:CALC.state().edits["foe:"+CALC.state().foe.k+":1"].id,lv:50,ab:-1,stg:[0,0,0,0,0,${web?-1:5}]},CALC.state().field,"def")`));
+    assert.equal(await page.value('Number(document.querySelector(".cc[data-s=foe] .sp i").textContent.replace(/[^0-9]/g,""))'),await page.value(`DMG.speed({id:CALC.state().edits["foe:"+CALC.state().foe.k+":1"].id,lv:50,ab:-1,stg:[0,0,0,0,0,${web?4:5}]},CALC.state().field,"def")`));
   },
 },{
   id:'top-filled team',title:'added Pokemon fill compact rows from the top of the player box',sizes,

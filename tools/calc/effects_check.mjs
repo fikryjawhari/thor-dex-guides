@@ -267,6 +267,109 @@ await check('Exact damage (You / Dealt Apply) has no effects', async () => {
   assert.equal(out.def.status, undefined);
 });
 
+// Entry hazards (DMG.hazards, the card's hazard chip): damage, the blockers per generation, the resolver's status /
+// drop blockers and reactions, then the berry the damage brings into range (Showdown: items react on Update, right
+// after the hazards, in Gen 4-9). The entrant is on the foe side ('def'); `ab` names an ability.
+const hz = async (base, target, field, other = pika, extra) => plain((await engine(base, extra)).hazards(target, field, other, 'def'));
+const maxHP = async (base, set) => (await engine(base)).stats(set)[0];
+await check('Hazards: Rocks (type-scaled) and Spikes; the label is the net HP change; player side keys', async () => {
+  const lax = mon('Snorlax');
+  const max = await maxHP('expansion', lax);
+  const out = await hz('expansion', lax, {defStealthRock: true, defSpikes: 2});
+  assert.deepEqual(out.parts, [{l: 'Stealth Rock', v: -Math.floor(max / 8)}, {l: 'Spikes', v: -Math.floor(max / 6)}]);
+  assert.equal(out.def.hp, max - Math.floor(max / 8) - Math.floor(max / 6));
+  assert.equal(out.label, '−' + (Math.floor(max / 8) + Math.floor(max / 6)));
+  assert.equal(out.cls, 'dn');
+  const zard = mon('Charizard');
+  assert.equal((await hz('expansion', zard, {defStealthRock: true})).parts[0].v, -Math.floor(await maxHP('expansion', zard) / 2));
+  const mine = plain((await engine('expansion')).hazards(lax, {atkStealthRock: true}, pika, 'atk'));
+  assert.equal(mine.atk.hp, max - Math.floor(max / 8));
+  assert.equal(await hz('expansion', lax, {atkStealthRock: true}), null, 'the other side: nothing');
+  assert.equal(await hz('expansion', lax, {}), null);
+});
+await check('Hazards: Heavy-Duty Boots (Gen 8+) stop all, but a grounded Poison type still absorbs Toxic Spikes', async () => {
+  const all = {defStealthRock: true, defSpikes: 3, defToxicSpikes: 2, defStickyWeb: true};
+  assert.equal(await hz('expansion', mon('Snorlax', {it: 'Heavy-Duty Boots'}), all), null);
+  const gengar = await hz('expansion', mon('Gengar', {it: 'Heavy-Duty Boots'}), all);
+  assert.equal(gengar.absorb, true);
+  assert.equal(gengar.label, 'Absorb');
+  assert.equal(gengar.def.hp, undefined);
+  assert.ok((await hz('gen7', mon('Snorlax', {it: 'Heavy-Duty Boots'}), all)).parts.length, 'no Boots before Gen 8');
+  const poison = await hz('expansion', mon('Gengar'), {defToxicSpikes: 2});
+  assert.equal(poison.absorb, true);
+  assert.equal(poison.def.status, undefined);
+});
+await check('Hazards: Magic Guard stops the damage (and Toxic Spikes in Gen 4 only)', async () => {
+  const guard = mon('Snorlax', {ab: 'Magic Guard'});
+  assert.equal(await hz('expansion', guard, {defStealthRock: true, defSpikes: 3}), null);
+  assert.equal((await hz('expansion', guard, {defStealthRock: true, defToxicSpikes: 1})).def.status, 'psn');
+  assert.equal(await hz('gen4', guard, {defStealthRock: true, defToxicSpikes: 1}), null);
+});
+await check('Hazards: airborne (Flying, Levitate, Air Balloon, Magnet Rise) skip Spikes, Toxic Spikes and Web, not Rocks', async () => {
+  const ground = {defSpikes: 3, defToxicSpikes: 2, defStickyWeb: true};
+  for (const [title, set, extra] of [['Flying', mon('Charizard'), {}], ['Levitate', mon('Snorlax', {ab: 'Levitate'}), {}],
+    ['Air Balloon', mon('Snorlax', {it: 'Air Balloon'}), {}], ['Magnet Rise', mon('Snorlax'), {defMagnetRise: true}]]) {
+    assert.equal(await hz('expansion', set, {...ground, ...extra}), null, title);
+    assert.ok((await hz('expansion', set, {...ground, ...extra, defStealthRock: true})).parts.length, title + ' Rocks');
+  }
+  assert.ok((await hz('expansion', mon('Charizard'), {...ground, defGrounded: true})).parts.length, 'grounded by state');
+});
+await check('Hazards: Toxic Spikes status blockers (Steel, Immunity, Misty Terrain Gen 6+, Safeguard); layers', async () => {
+  assert.equal((await hz('expansion', mon('Snorlax'), {defToxicSpikes: 1})).label, 'Psn');
+  assert.equal((await hz('expansion', mon('Snorlax'), {defToxicSpikes: 2})).def.status, 'tox');
+  assert.equal(await hz('expansion', mon('Metagross'), {defToxicSpikes: 2}), null);
+  assert.equal(await hz('expansion', mon('Snorlax', {ab: 'Immunity'}), {defToxicSpikes: 2}), null);
+  assert.equal(await hz('expansion', mon('Snorlax'), {defToxicSpikes: 2, terrain: 'Misty'}), null);
+  assert.equal((await hz('gen5', mon('Snorlax'), {defToxicSpikes: 2, terrain: 'Misty'}))?.def.status, 'tox', 'no Misty Terrain in Gen 5');
+  assert.equal(await hz('expansion', mon('Snorlax'), {defToxicSpikes: 2, defSafeguard: true}), null);
+  assert.equal(await hz('expansion', mon('Snorlax', {st: 'brn'}), {defToxicSpikes: 2}), null);
+  const sync = await hz('expansion', mon('Snorlax', {ab: 'Synchronize'}), {defToxicSpikes: 1});
+  assert.equal(sync.atk, undefined, 'no Synchronize from Toxic Spikes');
+});
+await check('Hazards: Sticky Web (Gen 6+): Clear Body (a foe Mold Breaker does not break it), Contrary, Defiant, White Herb, Mist', async () => {
+  const web = {defStickyWeb: true};
+  assert.equal((await hz('expansion', mon('Snorlax'), web)).label, 'Spe−1');
+  assert.equal(await hz('gen5', mon('Snorlax'), web), null);
+  assert.equal(await hz('expansion', mon('Snorlax', {ab: 'Clear Body'}), web, mon('Pikachu', {ab: 'Mold Breaker'})), null);
+  assert.deepEqual((await hz('expansion', mon('Snorlax', {ab: 'Contrary'}), web)).def.stg, stg(0, 0, 0, 0, 1));
+  assert.deepEqual((await hz('expansion', mon('Snorlax', {ab: 'Defiant'}), web)).def.stg, stg(2, 0, 0, 0, -1));
+  const herb = await hz('expansion', mon('Snorlax', {it: 'White Herb'}), web);
+  assert.deepEqual(herb.def.stg, stg(0, 0, 0, 0, 0));
+  assert.equal(herb.def.used, true);
+  assert.equal(herb.label, 'White Herb');
+  assert.equal(await hz('expansion', mon('Snorlax'), {...web, defMist: true}), null, 'Mist');
+});
+await check('Hazards: the berry comes at once (Sitrus nets the label; Salac; Lum / Pecha cure; Unnerve stops it)', async () => {
+  const lax = mon('Snorlax');
+  const max = await maxHP('expansion', lax);
+  const rock = Math.floor(max / 8);
+  const hp = Math.floor(max / 2) + 1;
+  const heal = Math.floor(max / 4);
+  const sitrus = await hz('expansion', mon('Snorlax', {it: 'Sitrus Berry', hp}), {defStealthRock: true});
+  assert.equal(sitrus.def.hp, hp - rock + heal);
+  assert.equal(sitrus.def.used, true);
+  assert.equal(sitrus.label, '+' + (heal - rock));
+  assert.equal(sitrus.cls, 'up');
+  assert.match(sitrus.text, /Sitrus Berry \+\d+/);
+  const unnerved = await hz('expansion', mon('Snorlax', {it: 'Sitrus Berry', hp}), {defStealthRock: true}, mon('Pikachu', {ab: 'Unnerve'}));
+  assert.equal(unnerved.def.used, undefined);
+  assert.equal((await hz('expansion', mon('Snorlax', {it: 'Sitrus Berry'}), {defStealthRock: true})).def.used, undefined, 'above half: no berry');
+  const salac = await hz('expansion', mon('Snorlax', {it: 'Salac Berry', hp: Math.floor(max / 4) + 1}), {defStealthRock: true});
+  assert.deepEqual(salac.def.stg, stg(0, 0, 0, 0, 1));
+  for (const item of ['Lum Berry', 'Pecha Berry']) {
+    const cured = await hz('expansion', mon('Snorlax', {it: item}), {defToxicSpikes: 2});
+    assert.equal(cured.def.status, '');
+    assert.equal(cured.def.used, true);
+  }
+  for (const base of ['gen4', 'gen5', 'gen7']) {
+    const early = await hz(base, mon('Snorlax', {it: 'Sitrus Berry', hp}), {defStealthRock: true});
+    assert.equal(early.def.used, true, base + ': the berry right after the hazard');
+  }
+  const ko = await hz('expansion', mon('Snorlax', {it: 'Lum Berry', hp: 1}), {defStealthRock: true, defToxicSpikes: 2});
+  assert.equal(ko.def.hp, 0);
+  assert.equal(ko.def.status, undefined, 'a fainted entrant takes no status');
+});
+
 // Each guide's own differences (hacks/<hack>/calc_effects.json → fixtures): [{title, profile?, move, user, target,
 // field, kind: 'effect' | 'hit', expect: {dotted.path: value}}] on that guide's data and profile.
 for (const hack of await readdir(new URL('hacks/', root))) {

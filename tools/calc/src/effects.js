@@ -47,7 +47,7 @@ export const BLOCKERS = [
   {id: 'leaf-guard', on: ['status'], ability: 'Leaf Guard', gen: [4, 9], ign: true, test: c => c.field.hasWeather('Sun', 'Harsh Sunshine')},
   {id: 'flower-veil', on: ['status', 'drop'], ability: 'Flower Veil', gen: [6, 9], ign: true, foe: true, test: c => c.target.hasType('Grass')},
   {id: 'shields-down', on: ['status'], ability: 'Shields Down', gen: [7, 9], test: c => c.target.curHP() > c.target.maxHP() / 2},
-  {id: 'safeguard', on: ['status', 'confusion'], side: 'Safeguard', gen: [4, 9], foe: true, test: c => !(c.gen >= 6 && c.source.hasAbility('Infiltrator'))},
+  {id: 'safeguard', on: ['status', 'confusion'], side: 'Safeguard', gen: [4, 9], foe: true, test: c => c.entry || !(c.gen >= 6 && c.source.hasAbility('Infiltrator'))},
   {id: 'misty-terrain', on: ['status'], terrain: 'Misty', grounded: true, gen: [6, 9]},
   {id: 'misty-confusion', on: ['confusion'], terrain: 'Misty', grounded: true, gen: [7, 9]},
   {id: 'own-tempo', on: ['confusion'], ability: 'Own Tempo', gen: [4, 9], ign: true},
@@ -66,7 +66,7 @@ export const BLOCKERS = [
   {id: 'keen-eye', on: ['drop:acc'], ability: 'Keen Eye', gen: [4, 9], ign: true, foe: true},
   {id: 'minds-eye', on: ['drop:acc'], ability: "Mind's Eye", gen: [9, 9], ign: true, foe: true},
   {id: 'illuminate', on: ['drop:acc'], ability: 'Illuminate', gen: [9, 9], ign: true, foe: true},
-  {id: 'mist', on: ['drop'], side: 'Mist', gen: [4, 9], foe: true, test: c => !(c.gen >= 6 && c.source.hasAbility('Infiltrator'))},
+  {id: 'mist', on: ['drop'], side: 'Mist', gen: [4, 9], foe: true, test: c => c.entry || !(c.gen >= 6 && c.source.hasAbility('Infiltrator'))},
   {id: 'clear-amulet', on: ['drop'], item: 'Clear Amulet', gen: [9, 9], foe: true},
   {id: 'shield-dust', on: ['sec'], ability: 'Shield Dust', gen: [4, 9], ign: true},
   {id: 'covert-cloak', on: ['sec'], item: 'Covert Cloak', gen: [9, 9]},
@@ -94,7 +94,7 @@ export function createEffects(env) {
   // The first blocker that stops `what` on `ctx.target`, or null. ctx: {target, source, foe, field, values, side}.
   function blocker(what, ctx) {
     const gen = env.gen();
-    const mold = ctx.foe && ctx.source?.hasAbility(...MOLD);
+    const mold = !ctx.entry && ctx.foe && ctx.source?.hasAbility(...MOLD);
     for (const row of BLOCKERS) {
       if (!row.on.some(on => on === what || on === 'status' && STATUS_LABEL[what]
         || on === 'drop' && what.startsWith('drop'))) continue;
@@ -113,16 +113,19 @@ export function createEffects(env) {
   const reason = row => row.ability ? list(row.ability)[0] : row.item ? row.item : row.type ? list(row.type).join(' / ') + ' type'
     : row.terrain ? row.terrain + ' Terrain' : row.side;
 
-  // One use of `name`: `phase` 'status' (a status move's button) or 'after' (a damaging move's effects after its
-  // damage, `hit` = {landed, ko, dealt}). users: actionState-like objects with mon / update / logs / change / consume
+  // One use of `name`: `phase` 'status' (a status move's button), 'after' (a damaging move's effects after its
+  // damage, `hit` = {landed, ko, dealt}) or 'entry' (an entry hazard on the target as it comes in: the record's
+  // `st` / `b` land on the target as caused by the foe, with no move-level checks, Mold Breaker or Infiltrator
+  // (the setter isn't using a move), no Synchronize (Showdown: not from Toxic Spikes), then the reactions). users: actionState-like objects with mon / update / logs / change / consume
   // and `st` (current status); field: the Smogon Field; values: the page's field values (atk = user's side).
   function resolve({name, record, user, target, field, values, phase = 'status', hit = {}, moveType, toggles = false}) {
     const gen = env.gen();
     const out = {parts: [], log: [], fails: null};
     const sides = {atk: user, def: target};
     const other = who => who === 'atk' ? 'def' : 'atk';
+    const entry = phase === 'entry';
     const ctxFor = (who, foe) => ({target: sides[who].mon, source: sides[other(who)].mon, foe,
-      field, values, side: who});
+      field, values, side: who, entry});
     const note = text => out.log.push(text);
     const fail = text => { out.fails ||= text; return out; };
 
@@ -139,13 +142,13 @@ export function createEffects(env) {
         let by = amount;
         // Gen 5+ Simple / Contrary change the stored stage (Showdown onChangeBoost); Gen 4 Simple doubles the stage's
         // effect at calc time instead (abilities-gen4.ts onModifyBoost; the engine's Gen 4 formula does that).
-        const broken = foe && sides[other(who)].mon.hasAbility(...MOLD);
+        const broken = !entry && foe && sides[other(who)].mon.hasAbility(...MOLD);
         if (gen >= 5 && mon.hasAbility('Simple') && !broken) by *= 2;
         if (gen >= 5 && mon.hasAbility('Contrary') && !broken) by *= -1;
         if (by < 0 && foe) {
           const row = blocker('drop:' + stat, ctxFor(who, true));
           if (row) { note(`${reason(row)}: ${STAT_LABEL[stat]} not lowered`); out.parts.push({who, stat, blocked: reason(row)}); continue; }
-          if (gen >= 8 && !mirrored && mon.hasAbility('Mirror Armor') && !sides[other(who)].mon.hasAbility(...MOLD)) {
+          if (gen >= 8 && !mirrored && mon.hasAbility('Mirror Armor') && (entry || !sides[other(who)].mon.hasAbility(...MOLD))) {
             if ((mon.boosts[stat] ?? 0) > -6) reflect[stat] = amount;
             continue;
           }
@@ -203,7 +206,7 @@ export function createEffects(env) {
       out.parts.push({who, st});
       note(STATUS_TEXT[st].replace(/^./, c => c.toUpperCase()));
       // Synchronize passes burn / paralysis / poison back to the opponent who caused it (Gen 4: Toxic as poison).
-      if (foe && state.mon.hasAbility('Synchronize') && ['brn', 'par', 'psn', 'tox'].includes(st)) {
+      if (foe && !entry && state.mon.hasAbility('Synchronize') && ['brn', 'par', 'psn', 'tox'].includes(st)) {
         note('Synchronize');
         status(other(who), gen <= 4 && st === 'tox' ? 'psn' : st, true);
       }
@@ -234,6 +237,13 @@ export function createEffects(env) {
     const record0 = record || {};
     const flags = new Set(record0.fl || []);
     const foeParts = record0.tg === 'o' && (record0.b || record0.st || record0.v || record0.k);
+
+    if (entry) {
+      if (record0.st) status('def', record0.st, true);
+      if (record0.b) stages('def', record0.b, true, name);
+      reactions(['def']);
+      return out;
+    }
 
     if (phase === 'status') {
       if (!user.mon.curHP()) return fail('user fainted');
@@ -436,8 +446,8 @@ export function createEffects(env) {
     }
 
     // After the parts: status berries / Mental Herb cure on the spot, White Herb restores lowered stats, Eject Pack.
-    function reactions() {
-      for (const who of ['def', 'atk']) {
+    function reactions(whom = ['def', 'atk']) {
+      for (const who of whom) {
         const state = sides[who];
         const mon = state.mon;
         if (!mon.curHP() || !env.holds(mon, field)) continue;

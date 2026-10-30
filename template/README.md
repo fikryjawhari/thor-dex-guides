@@ -125,8 +125,8 @@ weather, terrain, ↺; 22 px, its buttons too: accepted below the 26 px tap size
 (3 × 2), the two cards side by side, the moves (closed rows 33 px). The first frame is the page scrolled to the trainer
 bar (`openMatch`). **Card** (narrow, both sides; class `named`): line 0 the name, M, the ability boxes and Speed (no label) at the
 right, the name truncating as far as needed; line 1 ↺, HP box, `/max`, ✎; the HP bar under it; line 2 (only when it
-has something) the battle-state tag (Dig, Fly, ...), Aura and the berry chip at the left, T + Toxic box and residual
-at the right. State / Aura never sit on the name line. (Until 2026-10-31 the name showed only for a Pokémon not in
+has something) the battle-state tag (Dig, Fly, ...), Aura and the berry chip (or, while offered, the hazard chip in its
+place) at the left, T + Toxic box and residual at the right. State / Aura never sit on the name line. (Until 2026-10-31 the name showed only for a Pokémon not in
 the team row; the user wants it always.) **At most
 three lines, always**: `fitCards()` measures each narrow card (render, resize, size change: text zoom fires
 no resize); one that takes more moves Aura up (the ability / Speed line, or after `/max` on a named card: Aura is the
@@ -209,7 +209,7 @@ Own states use the move user's side, hazards/debuffs the opponent's; Dig/Fly/Bou
 Edit battle state. Layered hazards cycle through their legal counts; Helping Hand and Dragon Cheer obey Doubles
 availability. Weather/terrain switches select that guide's value and toggle it back to none: Hail sets Snow in EI
 and Hardlove, Hail in Photonic/Eternal X. The native Field/Edit control and row switch stay synchronized both ways.
-Safeguard is per side where the move exists and blocks automatic opposing status (currently Toxic Spikes entry),
+Safeguard is per side where the move exists and blocks opposing status (Toxic Spikes from the hazard chip too),
 not self-induced Orb/Rest status. Protect is offered wherever a Protect-family move exists, independent of Z support.
 Protected incoming attacks show zero / Protected; endpoints and custom Apply do nothing. Feint / move-data bypasses
 and Unseen Fist contact bypass fully; Photonic Z damage is quarter strength, including with no held Z-crystal.
@@ -273,8 +273,8 @@ also comes from the entry API. The boxed damage endpoints apply `DMG.hit` patche
 Broken and field events); the user change follows with `DMG.hp` using actual dealt damage / hit count, including
 contact costs. Dealt / You Apply uses exact-damage threshold reactions only. Turn end applies `DMG.turn`, including
 Speed Boost and eligible berries. An eligible berry has its own HP-line chip (`Sitrus +13`, `Salac Spe+1`), applying
-`DMG.berry` once. A crowded card fits its berry action without clipping or widening the page; Intimidate has no target mark.
-These actions and entry hazards replace a fixed log at the top of the window (three lines, then internal
+`DMG.berry` once; while the hazard chip is offered it takes that spot instead (Entry hazards). A crowded card fits its berry action without clipping or widening the page; Intimidate has no target mark.
+These actions and the hazard chip replace a fixed log at the top of the window (three lines, then internal
 scrolling; gone 3 s after the last action, held while a long one is touched or scrolled, × closes it at once), never adding layout height or saved state. KO notes come from the engine.
 Field toggles never break a word: the narrowest box is the widest single word of any toggle (measured in the page's
 font at render, so text zoom counts), each toggle grid uses its own measured width and fits as many columns as there is room
@@ -309,16 +309,27 @@ Turn-end parts include trapping (the opposing holder's Binding Band), Leech Seed
 Ooze / Magic Guard), Salt Cure, Ghost Curse, sleeping Nightmare, Ingrain, Aqua Ring, pledge fire and automatic Bad
 Dreams. Speed uses the engine's final field-aware value, including Swamp. All side utilities use fixed Player/Foe
 prefixes; attack calculation still remaps them for the chosen direction.
-**Entry hazards**: Rocks and Spikes subtract HP once on team/strip selection, never on redraw, direction change
-or reload. Toxic Spikes sets Poison / Bad poison once; Poison entrants do not consume its layers. Sticky Web sets
-the absolute Speed stage to -1 (the engine respects drop immunity and Contrary), not current stage minus one.
-Manual HP entry / Full HP, status changes and stage changes independently re-arm damage, poison and Web for the
-**Apply hazards** button inside Hazards. Re-poisoning or resetting Web never subtracts already-applied Rocks again.
-Layer toggles cycle 0-3 / 0-2 and only configure the field; changing them makes the relevant component available
-to apply. Existing calc storage also keeps entry markers, so manual overrides survive reload. Hazards never appear
-in turn-end parts or the HP-line residual amount. No White Herb consumption or reciprocal stat-drop effects are
-simulated. Steelsurge is engine-only, with no control in any current or planned guide.
-Checks: `tools/scenarios/calc-field-states.mjs` (entry, reapply, persistence, side mapping, groups and availability),
+**Entry hazards** never apply by themselves (the user, 2026-10-31): picking a Pokémon (team cell, box, foe strip, a
+switch), a trainer's `after-first-send-out` hazards, redraw, direction change and reload change no HP, status or stage.
+While a Pokémon is freshly in with hazards on its side that would do something to it, its card shows the **hazard
+chip** in the berry chip's spot (narrow and wide; only one chip there, the card keeps its three lines). The label is the
+net HP change the tap makes, hazards and an at-once berry together (`−37`, `+12`, `±0`), no "Hazards" text; with no HP
+part, the other changes (`Psn`, `Tox`, `Spe−1`, `Tox Spe−1`, `Lum`, `White Herb`, `Absorb`). Title / aria-label give the
+breakdown (each hazard, blockers, status, drop, item). One tap applies it all (`DMG.hazards`, `tools/calc/README.md` →
+Entry hazards): Rocks (type-scaled) / Spikes damage, Toxic Spikes' status, Sticky Web's −1 (relative, through the
+resolver: Clear Body, Contrary, Defiant, Mirror Armor, White Herb ...), a grounded Poison type absorbing Toxic Spikes
+(the Field layer goes to 0, manual), then a pinch / HP / cure berry it triggers (at once in every generation).
+**Offered** (`ST.hzOffer[side]` = the card key): a Pokémon picked after another one was in on that side, ↺ on its
+card, Reset fight / a trainer change (both sides; not the player's lead when the trainer's hazards come after the first
+send-out). **Gone** once tapped or as soon as anything else happens with that Pokémon: a move / damage tap on either
+side (Use, effect buttons, endpoints, Damage / You Apply, crash, a move switch: both cards), its turn end or a
+residual part, an HP / status / stage edit (a level edit's HP clamp doesn't count). Then the berry chip, if any, is
+back. Field's layer toggles only configure the field (0-3 / 0-2) and never re-offer; while offered, the chip follows
+them. No Apply hazards button. Older builds stored applied-markers (`hazardEntry`): dropped on load, nothing applies.
+Hazards never appear in turn-end parts or the HP-line residual amount. Steelsurge is engine-only, with no control in any
+current or planned guide.
+Checks: `tools/scenarios/calc-field-states.mjs` (entry lifecycle, entry immunity edits, sides and residuals),
+`calc-auto.mjs` (lead exemption), `guide-update.mjs` (the offer), `tools/calc/effects_check.mjs` (blockers, berries).
 plus `tools/calc/test.mjs` (mechanics and generation splits).
 **One window**: an open card (Edit), the open Field and an open move each fit one window at the minimum height
 (316 px) at every width: the full name shares its line with Save/Reset, Type/Power/Hits share a row, the move's full
@@ -374,13 +385,13 @@ this fight, Singles / Doubles included); the foe team starts at full HP, slot 1 
 **Reset fight** (↺ in the fight bar): the same (every HP 100 %, every status cleared), same trainer and
 Pokémon. **↺ on a card** (before the HP box) does the same for that one Pokémon: a battle-state reset to a fresh
 send-out (full HP, no status / Toxic count, stages, toggles, battle-state tag, used item, `broken`, Mega), not a set reset
-(its set edits and Save stay; Edit's Reset / Original is the set reset); entry hazards re-arm, no entry effect fires,
+(its set edits and Save stay; Edit's Reset / Original is the set reset); its hazard chip is offered again, no entry effect fires,
 the other Pokémon and the Field are untouched. Lit (`.rs`) while the Pokémon has any of it. Scenario: `calc-team.mjs` mon reset.
 **Dex link:** a tap on the Pokémon already in (box cell, team cell, foe strip / foe row) opens its dex page (`#/p/<id>`,
 the base form); the first tap only picks it, and a drag never counts (`DROPPED` swallows the click after a drop).
 Scenario: `calc-team.mjs` dex link. Reload keeps HP / status, the foe's of the current fight and the manual Field;
 scratch is gone. Loading older storage drops stored scratch everywhere, turns a stored Mega (`pre`) into `mega` and
-keeps only HP / status / fight state on player cards not selected. Entry hazards still apply once per selection and on a new fight. Scenario: `tools/scenarios/calc-auto.mjs`.
+keeps only HP / status / fight state on player cards not selected. Entry hazards are only offered (the hazard chip), never applied by a selection or a new fight. Scenario: `tools/scenarios/calc-auto.mjs`.
 **Broken** is a labelled header checkbox only for a Mimikyu / Eiscue form with Disguise / Ice Face as its current
 and available ability, with abilities enabled and the supported generation. It reads/writes `broken` fight state;
 Damage taps / one-use actions tick it via `DMG.hit`. Busted / Noice forms start checked unless explicitly restored.
