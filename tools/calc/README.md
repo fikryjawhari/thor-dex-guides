@@ -394,7 +394,8 @@ unsourced, fixtures}`; `assemble.py` puts `moves` / `rules` in the profile as `o
 removes; `rules.blockers[id]` false or `[from, to]` changes a blocker row). `effects_audit.mjs <hack> [--changed]`
 lists every move's resolved record next to its description and change notes.
 
-**Resolver** `src/effects.js` (`BLOCKERS`, `resolve`, `describe`): every effect goes through it. Status move:
+**Resolver** `src/effects.js` (`BLOCKERS`, `resolve`, `describe`): every effect goes through it. Entry hazards' status and Web
+use its third phase, `entry` (Stackable side states and hazards → Entry hazards). Status move:
 move-level checks against the target (fainted, Protect, `ti` type immunity, powder / sound / bullet, Good as Gold,
 Prankster vs Dark Gen 7+, Magic Bounce reflects the whole move once), then its kind, stages, status, volatile and the
 user's stages, then reactions. Damaging move (`hit`, after the strikes and KO boosts, when it dealt damage or busted a
@@ -512,19 +513,24 @@ guide data or profiles.
   `speed` returns the final numeric speed for display, not the unstaged stat.
   Pass `otherSet` to include the opposing weather-suppressing ability.
 - Entry: `StealthRock` (boolean), `Spikes` (0-3), `ToxicSpikes` (0-2),
-  `StickyWeb` (boolean), `Steelsurge` (boolean, engine only). `entry` returns
-  `{parts: [{l, v: number}], status?: 'psn' | 'tox', spe?: -1 | 1}`. Damage
-  is negative, separate from turn-end residuals and not applied by the engine.
-  Rock and Steel hazards use the guide chart and a 1/8 base fraction. Spikes
-  use 1/8, 1/6, 1/4 and require grounding. Effective Heavy-Duty Boots block all
-  entry effects from Gen 8; Magic Guard blocks damage, not poison or Web.
-  Toxic Spikes require grounding, an empty status, and no type/ability/terrain
-  poison immunity. Poison entrants never consume layers. Web requires grounding
-  and Gen 6+, respects stat-drop immunity and Clear Amulet, and returns an
-  **absolute** stage: -1 normally, +1 for Contrary, independent of the current
-  speed stage. There is no reciprocal/reflected Web effect and no White Herb
-  consumption. Rock/Toxic Spikes require Gen 4, Steelsurge Gen 8. Layer inputs
-  are integer-clamped; active hazards are never consumed.
+  `StickyWeb` (boolean), `Steelsurge` (boolean, engine only). `entry` (the older, pure reading) returns
+  `{parts: [{l, v: number}], status?: 'psn' | 'tox', spe?: -1 | 1}`; the page uses `hazards` instead.
+  Rock and Steel hazards use the guide chart and a 1/8 base fraction. Spikes use 1/8, 1/6, 1/4 and require
+  grounding. Rock / Toxic Spikes require Gen 4, Web Gen 6, Steelsurge Gen 8. Layer inputs are integer-clamped.
+- **Entry hazards** `hazards(set, field, otherSet, side)`: what the card's hazard chip applies in one tap (the page
+  never applies hazards by itself). Null when nothing would change; else `{[side]: {hp?, status?, stg?, used?,
+  toggles?}, [other side]?: {stg} (Mirror Armor), parts: [{l, v}], net, label, text, log, cls, absorb?}`. Order and
+  blockers follow Showdown at the pinned commit (conditions / moves `onSwitchIn`, gen mods): damage first (Boots Gen 8+,
+  Magic Guard, airborne for Spikes; Unbound's Shadowy Veil: a full-HP Ghost takes none), then Toxic Spikes and Web
+  through the resolver's `entry` phase (`src/effects.js`: the foe-caused status / drop blockers, with no Mold Breaker,
+  Infiltrator or Synchronize, since no move is being used; Steel / Immunity / Misty Terrain Gen 6+ / Safeguard; Clear
+  Body family, Mist, Clear Amulet, Contrary, Defiant / Competitive, Mirror Armor; then Lum / Pecha / White Herb /
+  Eject Pack on the entrant). Heavy-Duty Boots stop all of it, but a grounded Poison type absorbs Toxic Spikes even with
+  them (`absorb`: the page sets the layer to 0); Magic Guard stops Toxic Spikes only in Gen 4. Web is a relative −1.
+  Then a pinch / HP berry the damage brought into range: items react on Update right after the hazards in every
+  generation 4-9 (Showdown items and the gen 4-8 mods: the berries are `onUpdate`), so none waits for turn end.
+  `label` is the net HP change (`−37`, `+12`, `±0`) when there is an HP part, else the other changes (`Psn`, `Spe−1`,
+  `Lum`, `Absorb`). Fixtures: `effects_check.mjs` (Hazards: ...).
 
 The engine still supports only Gen 4-9. The historical Gen 1 seed fraction and
 Gen 2-3 trapping branches are not reachable profiles and do not broaden support.
