@@ -17,6 +17,14 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   move effects (every guaranteed move effect: status-move buttons, secondaries on Use, one resolver with a
   generation-aware blocker table, per-hack `calc_effects.json`; `template/README.md` and `tools/calc/README.md` → Move
   effects). Accuracy / evasion stages and volatiles (confusion and the like) are logged only, not stored.
+  Then calc resets and page states (2026-10-31, merged from `worktree-calc-resets`): card ↺ resets that Pokémon's
+  battle state; entry hazards are a card chip offered on a switch-in, never automatic (Field's Apply hazards gone);
+  double tap on a calc Pokémon opens its dex page; rail tabs keep their own page and place; pages open collapsed
+  (Locations places open) with targeted Expand / Collapse bars, a walkthrough Show switch (Stops / Sections / All) and
+  Reset all; Pokémon sprites and tracker tags link to the dex page. Decisions in `template/README.md` and
+  `tools/calc/README.md`. Not yet on the Thor (Open 1).
+- **Next build:** the dex page, spec on `worktree-dex-page` (`plans/dex-page.md`: collapsible sections, name bar,
+  prev / next, forms menu, family evolution, compact moves, vertical stat calc). A template build: one at a time.
 - Where things are decided: `template/README.md` (template, UI, calc page), `tools/calc/README.md` (engine),
   `template/calc/readers/README.md` (save readers), each hack's `notes.md` (data, Damage calc, In-game tests / checks).
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
@@ -31,7 +39,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 
 1. **Thor / in-game tests** (the user, per guide). Nothing since the consistency pass has been on the device; BB2R
    and Unbound may not be in the library yet (add them from their Pages URLs). On the Thor: the text zoom fix (Items,
-   A−/A+, the collapse bars follow) and the calc in the offline viewer with the save bridge (the app repo
+   A−/A+, the collapse bars follow), the collapsed pages and Show switch, the hazard chip, rail-tab memory, and the calc in the offline viewer with the save bridge (the app repo
    `../thor-offline-viewer`: `docs/_plans/save-file-picker.md` → Left to do; if `docs/SAVE_BRIDGE.md` changes, update
    `template/calc.js` (import block) and `tools/scenarios/calc-bridge.mjs`). In game: each guide's notes.md → In-game
    tests (BB2R: In-game checks: trainer levels vs hzla, TM57, Giga Impact's TM, Triple Axel, Psyshield Bash; Unbound:
