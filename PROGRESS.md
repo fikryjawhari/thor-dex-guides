@@ -91,6 +91,10 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   When Royal Unova first opens (stop placed after Burgh). Castelia Cafe artist unconfirmed. Triple Axel's 30 / 40 / 50
   against a hit in game.
 - Real save import on the Thor (melonDS / DraStic `.sav`), like the other guides (Open → Damage calc → Real saves).
+- **Fixes on `worktree-bb2r-fixes` (2026-10-30, not merged):** cfg.txt wording for the 12 scaffold placeholders
+  (`assemble.py` now stops on TODO / TBD / FIXME in a hack.json); Aspertia City has no tracker slot (`AR.ns`, the
+  template drops a saved entry for a no-slot area); Items → Valuables curated (notes.md → Items). Needs the user's
+  look on the phone, then merge.
 - `worktree-bb2r-calc` and its T3 worktree (`~/.t3/worktrees/thor-dex-guides/t3-6ab62dd5`) are merged: delete them.
 
 **EV-less 3DS (merged into `main` 2026-10-29, not pushed):** `tools/ctr_evless.py` + `tools/usum_statics.py`;
