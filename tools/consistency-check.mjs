@@ -32,7 +32,11 @@ try {
     const evOn = mons => (mons || []).some(mon => mon.ev?.some(value => value > 0));
     const mgm = config.evs !== false && config.mgm !== false && (data.TR?.g || []).some(group => group.sec.some(section => section.tr.some(trainer =>
       evOn(trainer.p) || (trainer.pt || []).some(partner => evOn(partner.p)))));
-    const seed = { [config.ls.dex]: JSON.stringify({ av: 'chg' }), [config.ls.walk]: JSON.stringify({c:{'0.0.0':1}}), dvkb: keyboard ? '1' : '0' };
+    // Stops named by their own keys (Unbound: 'part-1/starter'), not positions: every save of such a guide carries its
+    // layout stamp (migrateWalkState), so the seeded tick does too; position-keyed guides keep the unstamped old save.
+    const layout = (data.WK?.splits || []).map(split => split.st.map((stop, index) => String(stop.k ?? '')));
+    const named = layout.flat().some(key => key && !/^\d+\.\d+(\.f\d+)?$/.test(key));
+    const seed = { [config.ls.dex]: JSON.stringify({ av: 'chg' }), [config.ls.walk]: JSON.stringify({c:{'0.0.0':1}, ...(named ? { layout } : {})}), dvkb: keyboard ? '1' : '0' };
     if (config.starter === 'type' && starter) seed[config.ls.track] = JSON.stringify({ e: { 0: { p: starter.id }, 1: { f: 1 } }, t: {} });
     await send('Page.addScriptToEvaluateOnNewDocument', { source: `for (const [key,value] of Object.entries(${JSON.stringify(seed)}))localStorage.setItem(key,value); window.checkErrors=[];addEventListener('error',event=>checkErrors.push(event.message));` }, sessionId);
     await send('Page.navigate', { url: pathToFileURL(resolve(`dist/${hack}.html`)).href + '#/trainers' }, sessionId);

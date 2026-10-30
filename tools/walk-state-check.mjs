@@ -99,7 +99,10 @@ try {
     // a stamped save names them by position in its own layout. Parity of a source's split / stop number picks what was
     // seeded, so the expectation holds when the old build's keys are not its positions (e.g. baseline against itself).
     const legacyOf = (splitIndex, stopIndex, stop) => String(stop.k ?? (splitIndex + '.' + stopIndex)).replace(/\.f\d+$/, '');
-    for (const stamped of [false, true]) {
+    // Stops named by their own keys (Unbound) never had an unstamped save: every save carries the layout. Only the stamped
+    // case applies there; position-keyed guides check both.
+    const named = updatedData.WK.splits.some(split => split.st.some(stop => stop.k != null && !/^\d+\.\d+(\.f\d+)?$/.test(String(stop.k))));
+    for (const stamped of named ? [true] : [false, true]) {
       const baselineState = { c: {}, o: { gi: 1 }, x: { doc0: 1 }, s: {} };
       const seedKey = key => {
         const [seedSplit, seedStop] = key.split('.').map(Number);

@@ -104,6 +104,7 @@ const SNAPSHOT = `(()=>{const C=CF.calc?CALC.state():null,tn=k=>TRK[k]?.n??'gone
     missionsOpen:ms&&ms.filter(([m])=>MIS.has(m)).map(([m,r])=>[m,mn(m),r.o===true]).sort(),
     missionTicks:ms&&ms.filter(([m])=>MIS.has(m)).flatMap(([m,r])=>Object.keys(r.c||{}).filter(k=>r.c[k]===1).map(k=>[m,k,MIS.get(m).s.find(c=>c.k===k)?.t??'gone:'+k])).sort(),
     tracker:Object.entries(TK.e).map(([a,e])=>[AR[a]?.n,e.p?byId[e.p]?.n:'failed']),
+    foeSpecies:C&&C.foeSp?Object.entries(C.foeSp).map(([k,v])=>{const i=k.lastIndexOf(':');return [tn(k.slice(4,i)),k.slice(i+1),byId[v]?.n??'gone:'+v];}):null,
     areaRules:C&&C.areaByTrainer?Object.entries(C.areaByTrainer).map(([k,v])=>[tn(k),Object.keys(v.disabled||{}).sort(),v.fogCleared===true]):null,
   };})()`;
 
@@ -132,6 +133,8 @@ const checks = [
         await page.value(`(()=>{const p=byId[${sid}];CALC.enter(${k},1);CALC.use(p);
           CALC.set('mine','m',[M.length-1,usedMoves[0],usedMoves[1],usedMoves[2]]);CALC.set('mine','a',p.a[p.a.length-1]);})()`);
         await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.edits['foe:'+${k}+':1']={l:77};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
+        // Assumed sets (Unbound): the foe edit remembers its species (ST.foeSp, a species id, dropped when another is there).
+        if (data.cfg.calc.assumedSets) await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.foeSp={['foe:'+${k}+':1']:TRK[${k}].p[1].id};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
         // Area rule switches and Defog (Unbound), keyed by trainer key and effect name.
         if (AREARULES) await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.areaByTrainer={[${k}]:{disabled:{'typed-side-condition:Tailwind:both':true,'weather:Heavy Rain:field':true},fogCleared:true}};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
       }
