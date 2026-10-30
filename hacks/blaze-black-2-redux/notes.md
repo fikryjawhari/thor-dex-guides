@@ -1,7 +1,7 @@
 # Blaze Black 2 Redux build notes
 
-Built unit by unit (plans/blaze-black-2-redux.md → Units): the dex is done; locations, items, trainers, walkthrough
-and calc are open. Feature switches need review.
+Built unit by unit 2026-10-29 (source audit, scaffold, hzla source, dex, locations, items, trainers + caps,
+walkthrough, calc + save; the plan is in git history, `plans/blaze-black-2-redux.md`). Open: In-game checks below.
 
 ## Build
 
@@ -326,6 +326,40 @@ and the gauntlet/healing note. Neither infers permanent weather from abilities. 
 Sandstorm boss conditions are separately retained. Settled 2026-10-29: both are text only, no field effect (the weather comes from the teams' abilities; `tools/trainer_fields.py`), no record left to review. `calc-doubles` EXPECTED is **72**
 from data; cfg.calc stays false, so the scenario still skips until the calc unit enables it, not bypassing its gate.
 
+## In-game checks
+
+Challenge Mode; read the level on the battle screen. Each answer changes data (`extract/trainers.py`), not keys.
+
+**Trainer levels vs hzla** (2026-10-29 analysis of the 328 displayed-level disagreements; report: `hzla disagreement`).
+hzla's `level` is the ROM's stored level (the stat level on Challenge); its `diff` is its own per-location number,
+not the game's (allies 0, postgame +5, ignores the doc's scoped "no level shift"). Settled without the game: the
+parser's sub-section scope bug (24 rows, fixed `5f596e7`: Burgh's Harlequins, Nimbasa Grunts #359 / #751); the doc
+wins for Castelia "after Surf" no-shift trainers (15), hzla's Frigate Grunt #500 +3 / #440 0 (7) and Route 4
+Braven / Clifford (8: hzla's export loses a Clifford team); 19 one-off base-level differences are doc typos (ROM
+right for stats; report lines). Left for the game:
+1. **School Kid Seymour or Cassie, Floccesy Town** (doc lv.11). Build **12**, hzla **11**. 11: the doc lists these 57
+   Pokémon (Seymour / Cassie, Hiker Jerome, Ranger Naoko, Scientist Clarke, Janitor Brady, Castelia Morimoto /
+   Nishino, Ingo & Emmet, Chargestone Hugh, Backpacker Annie, Ranger Lewis, Frigate Grunts #436 / #428, Giant Chasm
+   Grunt #724) at their Challenge level: show the doc level with `sl` = doc − increment.
+2. **Castelia Sewers tag, Hugh's Pokémon** (doc lv.24). Build **26**, hzla **24**. 24: allies get no increment (all
+   54 partner Pokémon, no `sl`).
+3. **Lenora and Hawes [Challenge], Nimbasa** (doc lv.31). Build **31**, hzla **33**. 33: this team's doc levels are
+   stored levels (shown 33, `sl` 31).
+4. Postgame: **Cilan / Cress / Chili, Striaton** (stored lv.82). Build **86** (the doc's +4 carried on: "+4 for the rest
+   of the game past Skyla"), hzla **87**. 87 moves 110 postgame Pokémon up one.
+5. **Ranger Lewis, Reversal Mountain B1F**: kept at the main area's +4; the section default would be +3.
+
+**Data:**
+- Pikachu, Stoutland, Unfezant: RomHackDex stats match neither of the doc's Old / New lines (the doc's New line is used).
+- TM57 in Chargestone Cave (the placement list) or Lentimas Town (the TM table)? Giga Impact at Shopping Mall Nine:
+  TM66 (mall prose) or TM68 (TM table)?
+- The Castelia Cafe artist (Challenge-locked vendor) = Bulbapedia's berry Harlequin? When Royal Unova first opens
+  (stop placed after Burgh).
+
+**Calc:** Triple Axel 30 / 40 / 50 (a hit in game); Night Shade / Seismic Toss from a level-bug Pokémon (hzla: stat
+level; the game may use the shown level); Kyurem (no hzla set); the ability slot the hack gives Competitive /
+Neutralizing Gas (a save with Milotic or Weezing); Psyshield Bash's Def / SpD +1 on every hit (Move Changes).
+
 ## Checks
 
 `uv run python -I tools/gate.py check blaze-black-2-redux`
@@ -394,9 +428,7 @@ Competitive), else its first, marked `?` like a guessed trainer ability (`templa
 `s<sl>` marker fits the level row at every viewer size, normal and dvkb; foe stats at `sl`, its Seismic Toss deals
 `sl`, the player's its own level); the shared calc scenarios run on BB2R (`gate.py scenarios blaze-black-2-redux`).
 
-Open / in-game tests: Triple Axel's 30 / 40 / 50 (compare a hit in game);
-Night Shade / Seismic Toss from a level-bug Pokemon (hzla: stat level; the game may use the shown level); Kyurem
-(no hzla set); which slot ID the hack gives Competitive / Neutralizing Gas (a save with Milotic or Weezing settles it).
+Open: In-game checks → Calc.
 
 ### Save import
 

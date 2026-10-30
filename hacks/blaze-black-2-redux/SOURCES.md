@@ -78,6 +78,16 @@ so vanilla is right). Trainers (with Challenge Mode teams), wild tables and item
 
 ## Files
 
+Doc layout (2026-10-29 source audit; the full report is in git history, `plans/blaze-black-2-redux-sources.md`): the
+text docs have a boxed title / version banner, `====` sections and optional `~~~~` sub-sections; keep source line
+numbers in reports. Trainer Changes: 468 battle records in 68 sections, both modes, partners and variants together.
+Wild Area Changes: positional two-column tables (one missing `Lv.`, one missing header colon), 20 grotto rarity lists.
+Item Changes: hidden markers, quantities, arrows and difficulty stars matter; seven mode footnotes are not items.
+Move Changes: numeric changes, prose effects and footnotes are different kinds. Type Changes says "Vanilla" for
+Classic (not a third patch). Gift Pokemon: choices are not simultaneous gifts; Stantler lacks a Level field.
+Legendary Locations: quest prose, no rates. Trade Changes: Phione says Route 7, its NPC prose Humilau. Useful Action
+Replay Codes: built in since v1.1.0, not item / encounter data. Changelog: v1.0.0 to v1.4.1 (24/06/23).
+
 The docs and RomHackDex inputs are listed at the top. Additional research inputs, all under `.src/`:
 
 | File | Contents |
@@ -230,7 +240,7 @@ supplies IVs/natures and an offset model. Record these as disagreements, not aut
 - **Patch choice:** Patching Guide 34-37 says to apply the additional Complete EVless patch to an already
   Complete-patched ROM, not directly to vanilla. Classic is a different secondary patch; EVless does not mean
   choosing Classic abilities/types/stats.
-- **Player EVs:** no player EVs is the chosen EVless rule in `plans/blaze-black-2-redux.md` (Decisions). The fetched
+- **Player EVs:** no player EVs is the chosen EVless rule (the user, 2026-10-29; notes.md → Sources and rules). The fetched
   Important/General Information, Patching Guide, Item Changes, Changelog and FAQ do **not** specify the exact
   implementation (battle EV yield, vitamins, wings, caps, resets, or behaviour of an existing EV-trained save).
   Do not promote that missing detail to a claim that every method/item is removed. The guide should calculate

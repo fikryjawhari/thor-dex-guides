@@ -2,7 +2,8 @@
 
 Fetched 2026-10-18/19 (original mirrors and boss sheets); references, cap/regular-trainer/location workbooks
 and save fixtures added 2026-10-29. Target: **Unbound 2.1.1.1, Expert**. Original shared inputs were not modified.
-Full source inventory, conflicts, gap searches and downstream map: `plans/unbound-sources.md`.
+The 2026-10-29 source audit (inventory, sheet-vs-hzla join, wiki-vs-RomHackDex forms, gap searches) was built into
+the extract and notes.md; the full report is in git history (`plans/unbound-sources.md`, deleted 2026-10-30).
 
 | Path | Contents |
 | --- | --- |
@@ -41,11 +42,12 @@ mkdir -p $D/unboundwiki
 python -I tools/wp_dump.py https://unboundwiki.com $D/unboundwiki/unboundwiki.json pages wiki
 ```
 
-Authority (settled in `plans/unbound.md`): RomHackDex for dex data; the Expert workbook for boss teams,
+Authority (settled at the decision round, notes.md → Sources and rules): RomHackDex for dex data; the Expert workbook for boss teams,
 hzla for IVs and discrepancies; wiki for locations/items/walkthrough/missions/catalogue trainers. Do not silently
 replace these with a newly discovered source. The two missing RHD form pages have Cloud/DPE alternatives:
 Minior meteor `SPECIES_MINIOR_SHIELD` / ID 991; Pumpkaboo average `SPECIES_PUMPKABOO_M` / ID 855.
-The bare Pumpkaboo entry is small, not average. Exact stats and learnset pointers are in the audit.
+The bare Pumpkaboo entry is small, not average (`SPECIES_PUMPKABOO` / 818: 44/66/70/44/55/56). Learnsets: DPE
+`Learnsets.c:21780` (Pumpkaboo_M shares the sizes' list), `Egg_Moves.c:3998`; `Learnsets.c:21916` (Minior shield).
 
 New workbook re-fetch (always into a new folder, never over existing shared inputs):
 
@@ -61,7 +63,22 @@ location-guide `cc268f58ac91288a6841d4e9897177aadc04d723ca0f976f00b464f4fbb8c218
 Google can regenerate workbook containers: compare cells too, not only byte hashes. The linked General Guide
 returned HTTP 401 and was not fetched. Public author source commits: DPE Unbound
 `fe058e0e3ac23cf968cf950de43332135bc1549d`; generic CFRU master
-`b637a27898b14e25dd24d0f69a3e302f0069deb8`. See audit section 5 for files, hashes and immutable URLs.
+`b637a27898b14e25dd24d0f69a3e302f0069deb8` (the CFRU Unbound branch does not exist: API 422). Not release-matched.
+General Guide ID `1LFSBZuPDtJrwAz7t6ZkJ-il4j8M3qCdaKLNe6EZdPmQ`.
+
+| File under `.src/research-2026-10-29/` | SHA-256 |
+| --- | --- |
+| `cfru/src/exp.c` | `aa1d1b96aa0e3f4677b60244cf23bacc22958891fa21b2f8c0769aac4f16c6e2` |
+| `cfru/src/wild_encounter.c` | `2435592ce801088d51d78db45b3f36adb0097a5ec9ed89c3279511334fbf3651` |
+| `dpe/include/abilities.h` | `6277f77cd8a637708bad50ce3508dd01990ecaf092cfc4649b7b42d4e34bdef8` |
+| `dpe/include/base_stats.h` | `579e15678703bf7ccabf9ed4a1884d3dfe76adfc0db0d77eaa0a296b3c4cde1a` |
+| `dpe/include/species.h` | `46a140dd639a0ff93396c0767abbcba9db4b2c76e5e69f829bd580889584376b` |
+| `dpe/src/Base_Stats.c` | `b1f9811e59fb26f876c8ddc222b3f52c83d48e3625d76037d3ed61107ac456cd` |
+| `dpe/src/Egg_Moves.c` | `63b69cfbae89cd9d4f61e797bc59d7e61a2b4f6866bf93c2b16d0a5e97d7c3fe` |
+| `dpe/src/Learnsets.c` | `674e86a4b5e1ac8c22beb04ff0982c080c0f3cd564fb9034f83f83f7804870b2` |
+
+Wild levels: no source has them (RomHackDex says so; wiki and location guide have no level column; generic CFRU
+`wild_encounter.c` 96-106 has an optional scaling flag, not proof Unbound enables it).
 
 
 ## Pinned hzla reference (2026-10-29)
@@ -162,7 +179,7 @@ not dictionary insertion order. Species/form display names are `SpeciesNames.jso
 Save oracle: 53 binary `.sav` fixtures in `server/pytests/data/saves/`; 37 contain the Unbound 2.1 signature
 `0x01121999` in at least one slot. Those 37 were copied preserving subpaths into `.src/saves/Unbound-Cloud/`.
 They include intentional corrupt/randomised controls; signature presence alone does not establish validity.
-File URLs, hashes and reader results are in `plans/unbound-sources.md`. No licence is granted for these fixtures;
+Paths, hashes and hzla reader results: Files below. No licence is granted for these fixtures;
 keep local only. The 2.1 signature identifies 2.1.0 through 2.1.1.1, not an exact point release.
 Current Cloud `Defines.py` calls 2.1 an old version: don't use its current upload rejection as a format failure.
 hzla's Unbound test file already references these Cloud fixtures as well as synthetic fixtures.
@@ -179,9 +196,51 @@ The older snapshot can be recovered with the recorded commit even after `main` a
 
 ## Files
 
-The inventory table above covers input groups. `plans/unbound-sources.md` enumerates worksheet dimensions,
-trainer/Pokémon counts, category versus URL counts, every compared field discrepancy, form-name collisions,
-and all 37 oracle candidate paths with immutable URLs, hashes and hzla reader results.
+The inventory table above covers input groups. The 37 save candidates under `.src/saves/Unbound-Cloud/` (paths
+relative to the pinned Cloud `server/pytests/data/saves/`; expected box data in `server/pytests/data/flex.json`,
+`flex_titles.json`, `test_hoopa_shaymin_preset_box.json`). `_new` files are upstream test-write outputs; corrupt /
+randomiser names are controls. Expert fixture: `var_test/expert_difficulty.sav` (the upstream test asserts difficulty
+var 2).
+
+| Save | Bytes | hzla reader | SHA-256 |
+| --- | --- | --- | --- |
+| `corrupt_blocks_30_31.sav` | 131072 | 1 party, 576 boxed | `466a0d60099b1533051d5dd310e06b218803690b3b40f4742c8679a8eb21a4a7` |
+| `corrupt_blocks_30_31_new.sav` | 131072 | 1 party, 576 boxed | `0617432c073e6fd6e696621627c736da44e7de2a2bc4fe67f3b74176f0b100f9` |
+| `duplicate_block_id.sav` | 131072 | 1 party, 597 boxed | `605909330a0d88e40f8d987d402399b6a1765af7cff826fa88af122c28e72ed2` |
+| `flag_test/unbound_easy_puzzles.sav` | 131072 | 0 party, 0 boxed | `fbdcc1b1b01d71ab82ab6c16fb29c15f1f35a0d5a0b95ded6276c874809ab17a` |
+| `flag_test/unbound_hard_puzzles.sav` | 131072 | 0 party, 0 boxed | `70b6ebaf73577b58ff7ef82542d2f4aa561ab75209e667694b1454a4ce7edd08` |
+| `flag_test/unbound_randomizers.sav` | 131072 | rejected (randomised) | `4592765aa85f35879bd48a7cfdf58f3bc58103148765b819a21976ef792f42ea` |
+| `flashcart.sav` | 131088 | 6 party, 45 boxed | `dafeb9afbf9717e9eed755aa6eaf8a978b5477098533b7479ab9ab187d767eb2` |
+| `flashcart_new.sav` | 131088 | 6 party, 45 boxed | `727b2cdf7f3a88ff9702101f70d5eb7018c14946960d1018d9531b0d874768a0` |
+| `flex.sav` | 131072 | 3 party, 598 boxed | `0528f870c0a282cd8ec9e933fa24e96643b91aaa3d756f041d60136bfbcc5c57` |
+| `flex_new.sav` | 131072 | 3 party, 598 boxed | `f8f9c2a67e5bf8e775ea6a72a3a57e99a26d951c5ab9d3328415d8c40a63e54b` |
+| `invalid_block_id.sav` | 131072 | 1 party, 597 boxed | `32b2f34d0b7d06338465067a690f3ca8b29d7bc147652cf0538c8eb627a2e359` |
+| `invalid_checksum.sav` | 131072 | 1 party, 597 boxed | `9f19dfcf6b5157f0469ebd813ce3aae5cbc4284df62197b1e46d1f9a5ba1a081` |
+| `invalid_file_signature.sav` | 131072 | 1 party, 597 boxed | `4a472dd4979ee89bbbc067ca493d6a4fe6ffc5e0d738d1a496f1071e56ae9a55` |
+| `mismatched_file_signature.sav` | 131072 | 1 party, 597 boxed | `02949350870c58089afdbd528280d8ba5d02df5003985f04c8e3ad195ee139a0` |
+| `mismatched_file_signature_new.sav` | 131072 | 1 party, 597 boxed | `99f264575844d353b8cca24681fe5d60d1dd70025e576728118c115be429b8bb` |
+| `mismatched_save_index.sav` | 131072 | 1 party, 597 boxed | `56d79d5743da505e7cec78615de70605c145e820e071541c787836385f3eefcc` |
+| `missingno.sav` | 131072 | 5 party, 586 boxed | `c35a1b87b876e9fa42f007dd1a5e6ccc023a7d1581cda99e4b655a7c80bda437` |
+| `missingno_new.sav` | 131072 | 5 party, 586 boxed | `6f3a19d1c9a8046a67a19ebdac1fe49151e015fe38fcbb74da780840382e7f9e` |
+| `ng+.sav` | 131072 | 6 party, 24 boxed | `55a724ff827ebc73ee5c10edec9f254e7e80256740a88bc8cb2381b669460707` |
+| `ng+_new.sav` | 131072 | 6 party, 80 boxed | `9f46b296352c0431d7c79e9539ee813d8cae04ad11604458ec804947c827da8a` |
+| `single_save.sav` | 131072 | 0 party, 0 boxed | `d83e23ede3a6e47a27c175ec8e89ebf8186e24cfeaa4f22fe810b2beb2d185bc` |
+| `single_save_2.sav` | 131072 | 0 party, 0 boxed | `8c04d8bb9c975a40d7c587f4e93c8efbe726ad075480461be9d16b6a23752f81` |
+| `single_save_corrupt_save_1.sav` | 131072 | rejected (not 2.1.x) | `61fba1f9ff3ceb2ec930d18bea92f38ffe0ee5709f3aa6b6a5f314e2ee9a9bac` |
+| `single_save_corrupt_save_2.sav` | 131072 | rejected (not 2.1.x) | `86d19b52be46bb4c65105862bd98d8cc11fd13cebdd8640ab49dc0a601ad2d9a` |
+| `single_save_new.sav` | 131072 | 3 party, 598 boxed | `4c97b9b7104e2f5fc3cfa1e284a360a949bf3869d5c84853fae28c4321fabdaa` |
+| `single_save_randomizer.sav` | 131072 | rejected (randomised) | `c6d1b16926ac5933c6a7ae5a1b4a0459e63d8508715b557a5cd27947e9cda4f5` |
+| `single_save_randomizer_new.sav` | 131072 | rejected (randomised) | `0460fd42fc9bfa7c16a66df029b69511db3e8e34faaa9d8b3ebde09de1adfddd` |
+| `test_hoopa_shaymin_preset_box.sav` | 131072 | 3 party, 598 boxed | `d688bd0ae3541ac251446570afc9363b7442b4c0957a735b784e6801fa057e84` |
+| `test_hoopa_shaymin_preset_box_new.sav` | 131072 | 3 party, 598 boxed | `045cebda7b51a189628ab3ac98213a4dfa72a3f614b598a67580edacab302924` |
+| `var_test/difficult_difficulty.sav` | 131072 | 3 party, 598 boxed | `fc314c90b5c42f95411fc2422401b3dd86635d45d56dbb202952d2fdba258e73` |
+| `var_test/expert_difficulty.sav` | 131072 | 3 party, 598 boxed | `0528f870c0a282cd8ec9e933fa24e96643b91aaa3d756f041d60136bfbcc5c57` |
+| `var_test/expert_sandbox.sav` | 131072 | 6 party, 5 boxed | `d7dcbdfb7599d7da1ad178ccb301e91be2cbbef9e764432cc7f1c8cb38ab572d` |
+| `var_test/expert_sandbox_post_game.sav` | 131072 | 6 party, 5 boxed | `cfc1cebe44efbb1690223a3897ef874707f1c5636898bc6e3a539df7ee6e526f` |
+| `var_test/insane_difficulty.sav` | 131072 | 3 party, 598 boxed | `1bfb74e2e74e4f8807732a6bb292ea889b5f1101e75e06701be5cb000cc1e8d3` |
+| `var_test/insane_main_game.sav` | 131072 | 0 party, 0 boxed | `de49aa7a7392cb9ef0f9e7c3525ba98cd1d4c201708ad9cfad41861d3f1649a0` |
+| `var_test/insane_ng+.sav` | 131072 | 0 party, 6 boxed | `23203a0d6432f86eecb4c6c377f397bd83dbf8e52ff8d80f0a2d67c635ec53bf` |
+| `var_test/vanilla_difficulty.sav` | 131072 | 3 party, 598 boxed | `d4e522e9ff89b28ccd1e91a2d912d605dd9ae0b1485bc1ebf9223c4788f62120` |
 
 
 ## Game files
@@ -197,5 +256,5 @@ was found. 32 of 37 2.1-signature candidates parse in hzla; 5 reject as randomis
 (381 matched slots, 380 distinct sets, 16 differing slots, 58 unmatched sheet slots, 3 malformed hzla species keys).
 Compared 968 wiki Pokémon pages by explicit form slugs (0 type disagreements, 41 displayed ability-list differences;
 wiki stats absent). All Cloud 2.1 species/move/item/BaseStats entries match hzla; AbilityNames has 7 extra tokens.
-Caps and supplemental sources are pinned above. Checks and caveats: audit sections 1-6. No browser/gate/build checks
+Caps and supplemental sources are pinned above. Checks and caveats: the audit in git history. No browser/gate/build checks
 are relevant to this research-only unit. No source baseline was accepted and no shared input was overwritten.
