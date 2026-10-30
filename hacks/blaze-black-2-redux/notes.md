@@ -14,7 +14,10 @@ unit's first build seeds it). Docs are read with `tools/drayano.py`, the mirror 
 (`tools/README.md` → Drayano family). `common.py` holds the name fixers (species, moves, abilities) every module
 resolves doc names through; `build.py` lists every fix they made at the end of `extract/report.txt`.
 
-TODO: audit inherited cfg switches and cfg.txt wording.
+`cfg.txt` (2026-10-30): the scaffold's "TODO: <key>" placeholders replaced with BB2R wording (`nw` "Trainer only":
+the four Pokestar species are the only g 3; `ns` names Aspertia City, the only no-slot area; `capl` / `capnone` are
+unused: no relative-level trainers). `assemble.py` now refuses to build a guide whose hack.json still has TODO / TBD /
+FIXME text.
 
 ## Sources and rules
 
