@@ -59,22 +59,22 @@
    "dmg": "bb2rdmg"
   },
   "txt": {
-   "obt": "TODO: obt",
-   "nw": "TODO: nw",
-   "g3": "TODO: g3",
+   "obt": "Obtainable only",
+   "nw": "Trainer only",
+   "g3": "Not obtainable in Blaze Black 2 Redux. Listed because trainers use it.",
    "conf": "",
-   "tc": "TODO: tc",
+   "tc": "Gen 6 type chart (Blaze Black 2 Redux adds Fairy).",
    "chdoc": "",
-   "mvh": "TODO: mvh",
+   "mvh": "Redux changes",
    "nodc": "",
-   "mvsrc": "TODO: mvsrc",
+   "mvsrc": "Type, category, power, accuracy, PP and priority from RomHackDex's Blaze Black 2 Redux data, with the Move Changes doc applied. No description: neither source has one",
    "mvsrcx": "",
-   "absrc": "TODO: absrc",
-   "ns": "TODO: ns",
-   "walk": "TODO: walk",
-   "capl": "TODO: capl",
-   "capnone": "TODO: capnone",
-   "noev": "TODO: noev"
+   "absrc": "Description from RomHackDex's Blaze Black 2 Redux data.",
+   "ns": "You get your starter here, so this town has no encounter slot of its own.",
+   "walk": "Blaze Black 2 Redux has no written walkthrough. The order follows Trainer Changes, split at the 21 level-cap battles: each stop is a place with its trainers, items and encounters. Stops marked \"on the way\" are places with no trainers, put where you pass them. Tap a trainer to open the team; the Trainers tab has them all by split.",
+   "capl": "Your level",
+   "capnone": "",
+   "noev": "No EVs: Blaze Black 2 Redux (EVless) removes them."
   }
  }
 }

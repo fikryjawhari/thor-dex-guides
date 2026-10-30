@@ -10,12 +10,15 @@ the shared set's sprites/png/<key>.png (sprites/README.md). A hack's sprites.jso
 species id or sprite key, for forms the shared set lacks; an entry there wins. Only the sprites a guide uses are
 inlined, each cropped to its visible area. Species with no sprite from either are reported, never silently dropped.
 
+Placeholders: a guide whose hack.json still has scaffold text (a string with TODO / TBD / FIXME, e.g. tools/new_hack.py's
+"TODO: obt" wording) is not built: the build stops and names each key, so placeholder text never reaches a page.
+
 Damage calc: only a hack whose cfg has `calc` gets it. Its profile is the base template/calc/profiles/<base>.json with
 the hack's own keys laid over it (dicts merge key by key, anything else replaces), written to the page as cfg.calc. The
 page then also inlines template/calc/engine.js, the save reader template/calc/readers/<save>.js when the profile names
 one, template/calc.js after dex.js and template/calc.css after dex.css. Guides without `calc` are built as before.
 """
-import base64, html, json, os, sys
+import base64, html, json, os, re, sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tools'))
 from sprite_keys import keys_for  # noqa: E402
@@ -23,6 +26,7 @@ import pngpal  # noqa: E402
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 PAGES = 'https://fikryjawhari.github.io/thor-dex-guides/'
+PLACEHOLDER = re.compile(r'\b(?:TODO|TBD|FIXME)\b')
 sys.stdout.reconfigure(encoding='utf-8')
 
 
@@ -125,8 +129,21 @@ def calc_parts(prof):
     return '\n'.join(js), read('template', 'calc.css')
 
 
+def placeholders(obj, path=''):
+    """hack.json strings still holding scaffold text: [(key path, value)]."""
+    if isinstance(obj, dict):
+        return [x for k, v in obj.items() for x in placeholders(v, f'{path}.{k}' if path else k)]
+    if isinstance(obj, list):
+        return [x for i, v in enumerate(obj) for x in placeholders(v, f'{path}[{i}]')]
+    return [(path, obj)] if isinstance(obj, str) and PLACEHOLDER.search(obj) else []
+
+
 def build(hid):
     h = json.loads(read('hacks', hid, 'hack.json'))
+    left = placeholders(h)
+    if left:
+        sys.exit(f'{hid}: hack.json still has scaffold placeholders (write the real wording; template/README.md lists '
+                 f'what each cfg key is): ' + '; '.join(f'{k} = {v!r}' for k, v in left))
     keys, data = keys_for(hid)
     own = json.loads(read('hacks', hid, 'sprites.json')) if os.path.exists(os.path.join(ROOT, 'hacks', hid, 'sprites.json')) else {}
     data['cfg'] = dict(h['cfg'])

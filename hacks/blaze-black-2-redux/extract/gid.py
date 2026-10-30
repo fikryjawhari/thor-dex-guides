@@ -92,7 +92,8 @@ def build(data):
     replace = replacements(ids)
     moves = indexed('move', ids['moves'], list(zip(data['M'], range(len(data['M'])))), replace)
     abilities = indexed('ability', ids['abilities'], [(ability[0], index) for index, ability in enumerate(data['AB'])])
-    items = list(dict.fromkeys(row[0] for section in data.get('IT', []) for row in section['r']))
+    import items as item_extract         # IT leaves out medicine, balls and the like (items.NOT_LISTED): map them too
+    items = list(dict.fromkeys([row[0] for section in data.get('IT', []) for row in section['r']] + item_extract.UNLISTED))
     item_ids = indexed('item', item_names(ids['items']), [(item_key(name), name) for name in items])
     if not items:
         report('GID items: IT empty; all 638 game item names deferred until the items unit merges')

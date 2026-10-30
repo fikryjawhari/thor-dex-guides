@@ -14,7 +14,10 @@ unit's first build seeds it). Docs are read with `tools/drayano.py`, the mirror 
 (`tools/README.md` → Drayano family). `common.py` holds the name fixers (species, moves, abilities) every module
 resolves doc names through; `build.py` lists every fix they made at the end of `extract/report.txt`.
 
-TODO: audit inherited cfg switches and cfg.txt wording.
+`cfg.txt` (2026-10-30): the scaffold's "TODO: <key>" placeholders replaced with BB2R wording (`nw` "Trainer only":
+the four Pokestar species are the only g 3; `ns` names Aspertia City, the only no-slot area; `capl` / `capnone` are
+unused: no relative-level trainers). `assemble.py` now refuses to build a guide whose hack.json still has TODO / TBD /
+FIXME text.
 
 ## Sources and rules
 
@@ -185,6 +188,13 @@ not a replacement for omitted methods. No template change or browser sweep in th
   / Dropped Item; BB2R's reused slots Red Scarf = Ice Stone and Oval Stone = Link Cable (Item Changes, Modified
   Items); TMs / HMs map by number. 440 / 441 IT names map; Old Sea Map (BB2R's "God/Grey Stone" slot, no PKHeX
   name) stays unmapped: a key item, never held.
+- **Valuables** (2026-10-30; it held every medicine, ball and battle item): curated like Unbound's, `items.VALUABLES`:
+  Sell items (Nugget, Big Nugget, Pearl, Big Pearl, Pearl String, Stardust, Star Piece, Comet Shard, Rare Bone, the
+  three Mushrooms, Shoal Salt / Shell, Honey, the seven Relics), Shards (the move tutors' currency), Heart Scales,
+  Sacred Ash (Jasmine's Bells for Ho-Oh / Lugia). Master Ball is a Key Item (Unbound's rule); Iron / Light / Smoke
+  Ball are Held Items (Iron Ball's shop line too). Medicine, Poké Balls, X items, repels, Escape Rope, Poké Doll /
+  Toy, Fluffy Tail and food are `NOT_LISTED`: not in Items or the walkthrough (as in the other guides); Shops still
+  list what is sold, and GID still maps them (`items.UNLISTED`), so a save's held item imports as before.
 - **Walkthrough join:** `area_join(area, LOC names)` gives each item place (record area or shop place) its LOC areas;
   places with none are `NO_WILD` (towns and buildings with no wild encounters: Black City, Black Tower, Join Avenue,
   Lacunosa, Lentimas, Marine Tube, Mistralton, Nuvema, Opelucid, PWT, Plasma Frigate, Pokémon League, Royal Unova,
@@ -198,6 +208,11 @@ stops, every trainer card in one stop, every AR area and every Found / shop line
   Aspertia City (the Starter area), Route 19 and Floccesy Town before Route 20; Royal Unova after Burgh (opens with
   the third badge; game order from memory, unconfirmed); Join Avenue on Route 4; Anville Town from Nimbasa; Driftveil
   Drawbridge after Route 5; the PWT after Clay; Lentimas Town after Skyla; Marine Tube before Humilau.
+- **Aspertia City has no tracker slot** (the user, 2026-10-30): it is where you get the starter, so the Starter slot is
+  its encounter. `locs.NO_SLOT` sets `AR.ns` (index 1 kept, append-only): its Surf / Fish / Ho-Oh rows still show in
+  the walkthrough's first stop and on Locations, with `txt.ns` in place of the tracker. A saved Aspertia entry
+  (`bb2rtrack.e["1"]`) drops on load (template `tkIn`), so it no longer counts as caught or as a dupe family. No stop
+  or trainer key moved.
 - **Areas:** at the first stop whose place names them (`locs.area_names`); `AREA_STOP` fixes four (Starter; Relic
   Passage centre room with the Driftveil side; Route 8 / Moor of Icirrus with Icirrus postgame; Marvellous Bridge).
   Seasons and Surf / fishing sections show at the first visit (one tracker slot per area).

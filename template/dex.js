@@ -262,10 +262,10 @@ const FAM={};(()=>{const par={};const f=x=>{while(par[x]!==x){par[x]=par[par[x]]
  P.forEach(p=>{if((p.g===1||p.fc)&&p.dex){const b=P.find(x=>x.dex===p.dex&&x.g!==1&&!x.fc);if(b){const a=f(p.id),c=f(b.id);if(a!==c)par[a]=c;}}});
  P.forEach(p=>FAM[p.id]=f(p.id));})();
 // Tracked and traded species are stored by name (spOut), and read back by name or, saved before names, by id (spIn;
-// a species no longer in the guide drops). The backup code is the stored form.
+// a species no longer in the guide drops; so does an entry for an area that has no slot now, AR.ns). The backup code is the stored form.
 const spOut=id=>byId[id]?nameOf(P,byId[id].i):id;
 const spIn=v=>{const i=typeof v==='string'?nameKeys(P).index.get(v):undefined;return i!=null?P[i].id:byId[v]?v:undefined;};
-const tkIn=o=>{const e={},t={};for(const [a,x] of Object.entries(o.e||{})){if(x&&x.p!=null){const p=spIn(x.p);if(p!=null)e[a]={...x,p};}else if(x)e[a]=x;}
+const tkIn=o=>{const e={},t={};for(const [a,x] of Object.entries(o.e||{})){if(AR[a]?.ns)continue;if(x&&x.p!=null){const p=spIn(x.p);if(p!=null)e[a]={...x,p};}else if(x)e[a]=x;}
  for(const [k,v] of Object.entries(o.t||{})){const p=spIn(v);if(p!=null)t[k]=p;}return {e,t};};
 const tkOut=()=>JSON.stringify({...TK,e:Object.fromEntries(Object.entries(TK.e).map(([a,x])=>[a,x&&x.p!=null?{...x,p:spOut(x.p)}:x])),t:Object.fromEntries(Object.entries(TK.t||{}).map(([k,v])=>[k,spOut(v)]))});
 const TK={s:'',pl:'',e:{},t:{}};try{Object.assign(TK,JSON.parse(localStorage.getItem(LS.track)||'{}'));}catch(e){}Object.assign(TK,tkIn(TK));

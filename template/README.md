@@ -34,8 +34,9 @@ an unknown key.
 
 - Pokémon: tutor moves `p.tu`, source conflicts `p.cf` ("Sheet says ..."), Mega stone `p.stone` / `p.sloc`.
 - Locations: a Starter area (`AR[i].st`, tied to the starter picker), sections per game table (`AR.es`), area maps
-  (`AR.map`), tracker sub-slots (`AR.sub`), optional page order `ARO` (areas added later sit at the end of `AR` so saved
-  trackers keep their slots).
+  (`AR.map`), tracker sub-slots (`AR.sub`), areas with no slot (`AR.ns`: encounters shown, `txt.ns` instead of a
+  tracker; a saved entry for one drops on load), optional page order `ARO` (areas added later sit at the end of `AR` so
+  saved trackers keep their slots).
 - Trainers: caps `TR.caps` (hidden when empty), partners `t.pt`, shared battles `t.bt`, starter `t.st` and player `t.pl`
   variants (the player picker shows when any trainer has `pl`), EVs (MGM). `t.normal` adds a collapsed Normal team
   below the default team, with its Normal levels and Easy decrement (`easy`); it has no saved open state or calc
