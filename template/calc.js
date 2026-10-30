@@ -78,7 +78,7 @@ let BAN=null;const ROWOPEN=new Set();let SMODE='+';
 ST.crit=ST.crit||{};ST.mvo=ST.mvo||{};ST.hits=ST.hits||{};ST.z=ST.z||{};ST.tgt={};ST.st={};ST.hitv=ST.hitv||{};
 const MH={};Object.entries(prof.multihit||{}).forEach(([name,hits])=>{const index=M.indexOf(name);if(index>=0)MH[index]=hits;});
 // HP moves: the row's one-use tap (USE, per render), exact entry (HX, not stored), moves whose Power box is the damage taken.
-const HZBOTH=new Set(['use','fx','hxuse','damage','sub','crash','movetoggle']),USE={},FXUSE={},HX={},TAKEN=new Set(['Counter','Mirror Coat','Bide','Metal Burst','Comeuppance']);
+let PICKTAP={};const HZBOTH=new Set(['use','fx','hxuse','damage','sub','crash','movetoggle']),USE={},FXUSE={},HX={},TAKEN=new Set(['Counter','Mirror Coat','Bide','Metal Burst','Comeuppance']);
 function applyUse(side,dealt,h){const other=side==='mine'?'foe':'mine',a=resolve(getMon(side)),d=resolve(getMon(other));if(h?.set){setField(side,'hp',h.set.atk);setField(other,'hp',h.set.def);return;}if(dealt>0&&d.hp!=null)setField(other,'hp',Math.max(0,d.hp-dealt));if(h&&a.hp!=null){setField(side,'hp',Math.max(0,Math.min(a.stats?.[0]||0,a.hp+h.v)));if(h.st)setField(side,'status',h.st);}}
 // Action log: fixed at the top, gone 3 s after the last action (a new one restarts it; holding / scrolling a long one
 // keeps it until 3 s after letting go); × closes it at once.
@@ -120,11 +120,12 @@ const effMv=(mi,ck)=>({...MV[mi],...((prof.varpow||[]).includes(M[mi])?{bp:null}
 function sideInfo(side){const isM=side==='mine';const t=trByK[ST.foe.k];const base=isM?curMine():(t?foeBase(t,ST.foe.i):null);const custom=isM&&ST.mine.src==='custom';const key=isM?'mine:'+(base||{}).pid:'foe:'+ST.foe.k+':'+ST.foe.i;return {isM,key,base,custom};}
 const megaView=m=>m.mega?{...m,pre:{id:m.id,a:m.a,i:m.i},...m.mega,aGuess:false}:m;
 function getMon(side){const i=sideInfo(side);if(!i.base)return null;const mon={...megaView(i.custom?i.base:applyEdits(i.base,i.key)),...SC[i.key],vol:ST.tgt[i.key]||''};if(!Object.hasOwn(mon,'status')&&Number.isFinite(mon.l)){const effect=window.DMG.derived(toEngine(mon),battleField());if(effect.status){mon.status=effect.status;mon.orb=true;}}return mon;}
-function setField(side,f,v,manual=false){if(f==='i')setField(side,'used',undefined);const i=sideInfo(side),store=i.custom?i.base:ST.edits[i.key];if(store&&store.mega&&MEGA_F.includes(f)){store.mega={...store.mega,[f]:v};save();return;}if(SCRATCH.has(f)){const s=(SC[i.key]=SC[i.key]||{});if(v===undefined)delete s[f];else s[f]=v;}else if(i.custom){if(v===undefined)delete i.base[f];else i.base[f]=v;}else{const e=(ST.edits[i.key]=ST.edits[i.key]||{});if(v===undefined)delete e[f];else e[f]=v;if(prof.assumedSets&&!i.isM)(ST.foeSp=ST.foeSp||{})[i.key]=i.base.id;}if(f==='hp'||f==='status'||f==='stg')hzDone(side);save();}
+function setField(side,f,v,manual=false){if(f==='i')setField(side,'used',undefined);const i=sideInfo(side),store=i.custom?i.base:ST.edits[i.key];if(store&&store.mega&&MEGA_F.includes(f)){store.mega={...store.mega,[f]:v};save();return;}if(SCRATCH.has(f)){const s=(SC[i.key]=SC[i.key]||{});if(v===undefined)delete s[f];else s[f]=v;}else if(i.custom){if(v===undefined)delete i.base[f];else i.base[f]=v;}else{const e=(ST.edits[i.key]=ST.edits[i.key]||{});if(v===undefined)delete e[f];else e[f]=v;if(prof.assumedSets&&!i.isM)(ST.foeSp=ST.foeSp||{})[i.key]=i.base.id;}save();}
 const fieldSide=side=>side==='foe'?'def':'atk';
 const effSpe=r=>{const other=getMon(r.side==='foe'?'mine':'foe');return r.stats?(window.DMG.speed?window.DMG.speed(toEngine(r),battleField(),fieldSide(r.side),other&&Number.isFinite(other.l)?toEngine(other):null):Math.floor(Math.floor(r.stats[5]*stageMul(r.stg[4]))*(r.status==='par'?(CF.calc.gen>=7?.5:.25):1))):null;};
 // Entry hazards are offered, never applied by themselves: ST.hzOffer[side] = the card key of a Pokémon freshly in (switched in,
-// ↺, a new fight), shown as the card's hazard chip until it is tapped or anything else happens to it. Older builds
+// ↺, a new fight, a tap on it while in: toggleHazards), shown as the card's hazard chip until it is tapped or a battle
+// action happens (edits keep it; {k, off:true} = hazards toggled out, kept across reload). Older builds
 // stored applied-markers (hazardEntry): dropped, nothing applies from them.
 delete ST.hazardEntry;if(!ST.hzOffer||typeof ST.hzOffer!=='object'||Array.isArray(ST.hzOffer))ST.hzOffer={};
 // Lifecycle: leaving a card drops its scratch and the player's unsaved set edits (HP / status / FIGHT and the foe's set
@@ -184,8 +185,12 @@ function syncFight(){const now=cardKeys(),left=[],before=LAST;if(now.mine!==LAST
  const fresh=now.tr!==LAST.tr;LAST=now;if(fresh)newFight();else if(left.length){for(const side of left)if(before[side]&&!before[side].endsWith(':undefined'))offerHazards(side);entered(left,false);}if(fresh||left.length)save();}
 function offerHazards(side){const key=sideInfo(side).key;if(key&&getMon(side))ST.hzOffer[side]=key;else delete ST.hzOffer[side];}
 function hzDone(side){if(ST.hzOffer&&side in ST.hzOffer)delete ST.hzOffer[side];}
+// The offer is the card key (hazards on) or {k, off:true} (a tap on the Pokémon already in took the hazards out: the
+// berry chip, if any, shows instead). The tap flips it; with no offer for this Pokémon it offers them (on).
+const hzOn=side=>{const o=ST.hzOffer[side],key=sideInfo(side).key;return o===key?true:o&&o.k===key?false:null;};
+function toggleHazards(side){const on=hzOn(side);if(on===null)offerHazards(side);else ST.hzOffer[side]=on?{k:sideInfo(side).key,off:true}:sideInfo(side).key;}
 // The hazard chip's effect (DMG.hazards: damage, status, Web, blockers, the berry it triggers), null when nothing would change.
-function hazardsOf(mon,side){if(!ST.hzOffer[side]||ST.hzOffer[side]!==sideInfo(side).key||mon.lv==null||!window.DMG.hazards)return null;return window.DMG.hazards(toEngine(mon),battleField(),otherEngine(side),fieldSide(side));}
+function hazardsOf(mon,side){if(hzOn(side)!==true||mon.lv==null||!window.DMG.hazards)return null;return window.DMG.hazards(toEngine(mon),battleField(),otherEngine(side),fieldSide(side));}
 function applyHazards(side){const r=resolve(getMon(side)),result=hazardsOf(r,side);hzDone(side);if(!result){save();return;}const own=fieldSide(side),other=own==='atk'?'def':'atk';actionPatch({atk:result[own],def:result[other]},side);
  if(result.absorb){const key=own+'ToxicSpikes';markManual(key);ST.field[key]=0;}hzDone(side);actionLog([r.name+' entry',...result.log]);save();}
 function mineList(){const imp=ST.imp,L=[];if(imp){imp.party.forEach((m,i)=>L.push({g:0,src:'party',b:0,i,m}));imp.boxes.forEach((bx,b)=>bx.forEach((m,i)=>L.push({g:1,src:'box',b,i,m})));}ST.custom.forEach((m,i)=>L.push({g:2,src:'custom',b:0,i,m}));return L;}
@@ -326,7 +331,7 @@ if(window.ResizeObserver){const probe=document.createElement('span');probe.textC
 
 window.addEventListener('resize',()=>{if(location.hash==='#/calc'&&innerWidth>=480&&EDITOPEN.mine!==EDITOPEN.foe)calcPage();else fitToggles();});
 function bindMain(){document.querySelectorAll('[data-ms]').forEach(i=>{i.onchange=()=>{setField(i.dataset.s,i.dataset.ms,i.checked);refresh();};});document.querySelectorAll('[data-lv],[data-hp]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const side=i.dataset.lv||i.dataset.hp,f=i.dataset.lv?'l':'hp';const v=parseInt(i.value);if(isNaN(v))return;
-  setField(side,f,f==='l'?Math.max(range[0],Math.min(range[1],v)):Math.max(0,Math.min(resolve(getMon(side)).stats?.[0]||0,v)),f==='hp');if(f==='l'){const mon=resolve(getMon(side)),offer=ST.hzOffer[side];if(mon.hp!=null)setField(side,'hp',mon.hp);if(offer)ST.hzOffer[side]=offer;}refresh();};});
+  setField(side,f,f==='l'?Math.max(range[0],Math.min(range[1],v)):Math.max(0,Math.min(resolve(getMon(side)).stats?.[0]||0,v)),f==='hp');if(f==='l'){const mon=resolve(getMon(side));if(mon.hp!=null)setField(side,'hp',mon.hp);}refresh();};});
  document.querySelectorAll('[data-hx]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const v=parseInt(i.value);if(isNaN(v))delete HX[i.dataset.ck];else HX[i.dataset.ck]={[i.dataset.hx]:Math.max(0,v)};refresh();};});
  document.querySelectorAll('[data-tox]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const v=parseInt(i.value);if(isNaN(v))return;TOX[sideInfo(i.dataset.tox).key]=Math.max(1,Math.min(15,v));refresh();};});
  document.querySelectorAll('[data-mo]').forEach(i=>{if(i.dataset.b)return;i.dataset.b=1;i.onchange=()=>{const mi=+i.dataset.mi,k=i.dataset.mo;
@@ -351,8 +356,9 @@ document.addEventListener('click',e=>{if(location.hash!=='#/calc')return;const e
  if(el.dataset.f==='gameType'&&el.tagName==='BUTTON'&&el.dataset.value===(AUTOFIELD.gameType||'Singles')){ST.fman=ST.fman.filter(key=>key!=='gameType');if(AUTOFIELD.gameType)ST.field.gameType=AUTOFIELD.gameType;else delete ST.field.gameType;window.__fo=1;save();refresh();return;}
  if(el.dataset.f&&el.tagName==='BUTTON'){const k=el.dataset.f,entry=prof.field.find(entry=>entry.k===k);markManual(k);ST.field[k]=el.dataset.value??(entry?.max?((Number(ST.field[k])||0)+1)%(entry.max+1):(ST.field[k]?0:1));window.__fo=1;save();refresh();return;}
  if(a==='row'&&e.target.closest('.dd,input,select,.nv,.num'))return;
- // A tap on the Pokémon already in (box, team row, foe strip / panel) opens its dex page; a drag never counts (DROPPED).
- if(a==='mpick'||a==='fpick'){const side=a==='mpick'?'mine':'foe',i=sideInfo(side),again=i.base&&(side==='mine'?el.dataset.pid!=null&&String(i.base.pid)===el.dataset.pid:ST.foe.i===+el.dataset.i);if(again&&byId[i.base.id]){location.hash='#/p/'+i.base.id;return;}if(side==='mine')ST.mine={src:el.dataset.src,b:+el.dataset.b,i:+el.dataset.i};else ST.foe.i=+el.dataset.i;save();refresh();}
+ // Box, team row, foe strip / panel: a tap picks; a tap on the Pokémon already in toggles its hazard chip (toggleHazards),
+ // nothing else changes; a double tap on the same cell (≤ 350 ms) opens its dex page, the toggle as it was. A drag never counts (DROPPED).
+ if(a==='mpick'||a==='fpick'){const side=a==='mpick'?'mine':'foe',i=sideInfo(side),cell=side==='mine'?'m:'+el.dataset.pid:'f:'+ST.foe.k+':'+el.dataset.i,now=Date.now(),twice=PICKTAP.cell===cell&&now-PICKTAP.t<=350;const prev=PICKTAP;PICKTAP=twice?{}:{cell,t:now};const again=i.base&&(side==='mine'?el.dataset.pid!=null&&String(i.base.pid)===el.dataset.pid:ST.foe.i===+el.dataset.i);if(twice&&again&&byId[i.base.id]){if('undo' in prev){if(prev.undo===undefined)delete ST.hzOffer[side];else ST.hzOffer[side]=prev.undo;save();}location.hash='#/p/'+i.base.id;return;}if(again){PICKTAP.undo=ST.hzOffer[side];toggleHazards(side);save();refresh();return;}if(side==='mine')ST.mine={src:el.dataset.src,b:+el.dataset.b,i:+el.dataset.i};else ST.foe.i=+el.dataset.i;save();refresh();}
  else if(a==='sel'){if(e.target.closest('input,select,.nv,.num,.ed,.stb,.mg,.hpl,.dmonstate,.ddl'))return;ST.dir=el.dataset.s==='mine'?'out':'in';save();refresh();}
  else if(a==='row'){const ck=el.dataset.ck;ROWOPEN.has(ck)?ROWOPEN.delete(ck):ROWOPEN.add(ck);el.closest('.mr').classList.toggle('open');}
  else if(a==='zmv'){const ck=el.dataset.ck;ST.z[ck]=ST.z[ck]?0:1;save();refresh();}
@@ -417,7 +423,7 @@ function dragDrop(){const d=DRAG,t=dragTarget(d.x,d.y),T=ST.team,ref=d.from==='f
  if(d.from==='team'){const n=+d.el.dataset.t;if(!t)T.splice(n,1);else{const m=+t.dataset.t;if(m>=T.length)T.push(T.splice(n,1)[0]);else [T[n],T[m]]=[T[m],T[n]];}}
  else if(t&&ref){const m=+t.dataset.t,at=T.findIndex(r=>sameRef(r,ref));if(at>=0){if(m>=T.length)T.push(T.splice(at,1)[0]);else [T[at],T[m]]=[T[m],T[at]];}else if(m<T.length)T[m]=ref;else T.push(ref);}
  ST.team=T.slice(0,6);dragEnd();save();refresh();}
-function dragEnd(){const d=DRAG;if(!d)return;DRAG=null;clearTimeout(d.timer);cancelAnimationFrame(d.raf);if(d.on){DROPPED=Date.now();d.ghost.remove();d.el.classList.remove('dlift');document.body.classList.remove('ddrag');document.querySelectorAll('.dteamrow .dover').forEach(el=>el.classList.remove('dover'));}}
+function dragEnd(){const d=DRAG;if(!d)return;DRAG=null;clearTimeout(d.timer);cancelAnimationFrame(d.raf);if(d.on){DROPPED=Date.now();PICKTAP={};d.ghost.remove();d.el.classList.remove('dlift');document.body.classList.remove('ddrag');document.querySelectorAll('.dteamrow .dover').forEach(el=>el.classList.remove('dover'));}}
 document.addEventListener('pointerdown',e=>{if(location.hash!=='#/calc'||e.button>0||DRAG)return;const el=e.target.closest(DRAGCELL),foe=el?.dataset.a==='fpick';if(!el||!foe&&!el.dataset.pid||!el.closest('#app'))return;
  DRAG={el,from:foe?'foe':el.closest('.dteamrow')?'team':'box',k:ST.foe.k,i:+el.dataset.i,x:e.clientX,y:e.clientY,x0:e.clientX,y0:e.clientY,mouse:e.pointerType==='mouse',id:e.pointerId,on:false};if(!DRAG.mouse){const d=DRAG;d.timer=setTimeout(()=>{if(DRAG===d&&!d.on)dragStart();},250);}},true);
 document.addEventListener('pointermove',e=>{const d=DRAG;if(!d||e.pointerId!==d.id)return;if(d.on){dragMove(e.clientX,e.clientY);return;}const dist=Math.hypot(e.clientX-d.x0,e.clientY-d.y0);if(d.mouse&&dist>5){d.x=e.clientX;d.y=e.clientY;dragStart();}else if(!d.mouse&&dist>8)dragEnd();},true);

@@ -139,17 +139,20 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await closeLog();
     assert.equal(await hp(page),max-loss,'one tap: Rocks and two Spikes layers');
     assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
-    assert.equal(await page.value('(CALC.mon("mine").stg||[])[4]||0'),web?speed-1:speed,'Web lowers Speed by one stage');
+    assert.equal(await page.value('(CALC.mon("mine").stg||[])[4]||0'),web?-1:speed,'Web: −1 from a fresh stage 0');
     assert.equal(await page.count(chip),0,'gone once tapped');
     await page.value('CALC.render()');
     assert.equal(await hp(page),max-loss,'applied once');
-    // ↺: a fresh send-out, offered again; an HP edit ends the moment.
+    // ↺: a fresh send-out, offered again; an HP edit keeps it (the chip recomputes from the new HP).
     await page.tap('[data-a=hpfull][data-s=mine]');
     assert.equal(await hp(page),max);
     assert.equal(await page.count(chip),1,'↺ offers it again');
     await page.setBox('[data-hp=mine]',max-1);
-    assert.equal(await page.count(chip),0,'an HP edit ends it');
     assert.equal(await hp(page),max-1);
+    assert.equal(await page.count(chip),1,'an HP edit keeps it');
+    await page.tap(chip);
+    if(await page.count('#calc-log'))await page.tap('#calc-log button');
+    assert.equal(await hp(page),max-1-loss,'applied from the edited HP');
     // A move / damage tap on either side ends it, for both cards.
     await page.tap('[data-a=hpfull][data-s=mine]');
     await page.value("Object.assign(CALC.state().field,{defStealthRock:1});CALC.state().hzOffer.foe=CALC.key('foe');CALC.render()");
@@ -201,7 +204,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
       if(await page.count('#calc-log'))await page.tap('#calc-log button');
       assert.equal(await hp(page),max-fixture.loss);
       if(fixture.field.atkToxicSpikes)assert.equal(await page.value('CALC.state().custom[0].status'),'tox');
-      if(fixture.field.atkStickyWeb&&web)assert.equal(await page.value('CALC.mon("mine").stg[4]'),4);
+      if(fixture.field.atkStickyWeb&&web)assert.equal(await page.value('CALC.mon("mine").stg[4]'),-1,'Web from a fresh 0');
       assert.equal(await page.count(chip),0,'applied once');
     }
   },
@@ -260,7 +263,7 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await page.tap('.cc[data-s=foe] .sp');
     assert.equal(await hp(page,'foe'),max-Math.floor(max/8),'direction change is not entry');
     assert.deepEqual(await page.value('[...document.querySelectorAll(".dturn")].map(button=>button.textContent)'),amounts);
-    assert.equal(await page.value('Number(document.querySelector(".cc[data-s=foe] .sp i").textContent.replace(/[^0-9]/g,""))'),await page.value(`DMG.speed({id:CALC.state().edits["foe:"+CALC.state().foe.k+":1"].id,lv:50,ab:-1,stg:[0,0,0,0,0,${web?4:5}]},CALC.state().field,"def")`));
+    assert.equal(await page.value('Number(document.querySelector(".cc[data-s=foe] .sp i").textContent.replace(/[^0-9]/g,""))'),await page.value(`DMG.speed({id:CALC.state().edits["foe:"+CALC.state().foe.k+":1"].id,lv:50,ab:-1,stg:[0,0,0,0,0,${web?-1:5}]},CALC.state().field,"def")`));
   },
 },{
   id:'top-filled team',title:'added Pokemon fill compact rows from the top of the player box',sizes,
