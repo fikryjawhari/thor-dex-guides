@@ -31,6 +31,7 @@ details.split[open]>.body,details.stopd[open]>.stop,.trd[open]>.trb{content-visi
 .row .bst{color:var(--mut);font-variant-numeric:tabular-nums;font-size:13px;text-align:right}
 .spr{overflow:hidden;flex:none;image-rendering:pixelated;background:no-repeat left/auto 100%}
 .spr img{height:100%;width:auto;display:block;image-rendering:pixelated}
+a.sprl{display:block;flex:none;width:max-content;line-height:0}
 .sprph{border-radius:50%;display:flex;align-items:center;justify-content:center;container-type:size}
 .sprph span{font-weight:700;font-size:38cqh;line-height:1;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35)}
 .ty.bt,.sprph.bt span{color:#000;text-shadow:none}

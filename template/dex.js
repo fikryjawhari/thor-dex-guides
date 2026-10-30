@@ -31,6 +31,8 @@ const spr=(id,c)=>{const u=sprUrl(id);if(u)return `<div class="spr ${c}" style="
  const p=byId[id],t=p?p.t[0]:'',l=p?(p.n.match(/[A-Za-z0-9]/)||['?'])[0].toUpperCase():'?';
  return `<div class="spr ${c} sprph${btc(t)}" style="background:${tcol(t)}"><span>${esc(l)}</span></div>`;};
 const plink=id=>byId[id]?`<a href="#/p/${id}">${esc(byId[id].name)}</a>`:'';
+// A sprite that opens its Pokémon's dex page (plain link, like plink: Back and the rail's tab memory need nothing more).
+const sprl=(id,c)=>byId[id]?`<a class="sprl" href="#/p/${id}">${spr(id,c)}</a>`:spr(id,c);
 const mlink=i=>`<a href="#/m/${i}">${esc(M[i])}</a>`;
 const alink=i=>`<a href="#/a/${i}">${esc(AB[i][0])}</a>`;
 const cat=c=>c?`<span class="cat ${c}">${c==='Physical'?'Phys':c==='Special'?'Spec':'Status'}</span>`:'';
@@ -247,14 +249,14 @@ function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const r=(learn[i]||[])
  ${v.e?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(v.e).replace(/\n/g,'<br>')}</div></div>`:''}
  ${v.h&&v.h.length?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.mvh}</b><ul>${v.h.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${v.dc||!TX.nodc?'':`<div class="mut small">${TX.nodc}</div>`}</div>`:''}${v.cf?confBox(v.cf):''}
  <div class="mut small" style="margin-top:8px">${TX.mvsrc}${v.x&&TX.mvsrcx?TX.mvsrcx:''}.</div></div>
- <div class="card"><h3>Learned by (${r.length})</h3><table class="lrn">${r.map(([p,h])=>`<tr><td style="width:44px">${spr(p.id,'s40')}</td><td>${plink(p.id)}${tag(p)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${h}</td></tr>`).join('')}</table>
+ <div class="card"><h3>Learned by (${r.length})</h3><table class="lrn">${r.map(([p,h])=>`<tr><td style="width:44px">${sprl(p.id,'s40')}</td><td>${plink(p.id)}${tag(p)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${h}</td></tr>`).join('')}</table>
  <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'mv',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
 // ===== ABILITY PAGE
 const abSlot=(p,i)=>{const n=new Set(p.a).size,r=[];if(p.a.includes(i))r.push(n===1?'Only ability':'Ability '+(p.a.indexOf(i)+1));if(p.ha===i)r.push('Hidden ability');return r.join(', ');};
 function abilityDetail(i){fil.innerHTML='';const a=AB[i];if(!a){app.innerHTML='<p>Not found.</p>';return;}const us=abUsers[i]||[];
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
  <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2><p style="margin:0">${esc(a[1]||'No description.')}</p>${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
- <div class="card"><h3>Pokémon with it (${us.length})</h3><table class="lrn">${us.map(p=>`<tr><td style="width:44px">${spr(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>
+ <div class="card"><h3>Pokémon with it (${us.length})</h3><table class="lrn">${us.map(p=>`<tr><td style="width:44px">${sprl(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>
  <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'ab',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
 
 // ===== LOCATIONS + ENCOUNTER TRACKER (state in localStorage LS.track {s starter, e:{area:{p}|{f}}, t:{trade}}; see hacks/<hack>/notes.md)
@@ -356,7 +358,7 @@ function tkBar(){const [n,f]=tkCounts();
  <div class="mut small" style="margin-top:6px">${cnt}</div>`:`<div class="bar" style="margin:0"><span class="mut small">${cnt}</span></div>`}
  <div class="bar" style="margin:8px 0 0">${trackerButtons()}</div></div>`;}
 const encAll=a=>ARS(a).map(encSummary).join('');
-function encSummary(a){const e=TK.e[a];if(!e)return '';if(e.f)return '<span class="tag">failed</span>';const p=byId[e.p];return p?`<span class="tag got">${esc(p.name)}</span>`:'';}
+function encSummary(a){const e=TK.e[a];if(!e)return '';if(e.f)return '<span class="tag">failed</span>';const p=byId[e.p];return p?`<a class="tag got" href="#/p/${p.id}">${esc(p.name)}</a>`:'';}
 // The page is boxes (one area, or next-to-each-other areas whose names share their first two words: Granite Cave 1F,
 // B1F...) → places (an area's own places, same names merged; one place = the area's own name) → methods. One area: its
 // tracker sits above its places; a box of several areas: each place is one area and carries its tracker. An area with
@@ -384,7 +386,7 @@ const LGRP=(()=>{const out=[],two=n=>n.split(' ').length>2?n.split(' ').slice(0,
   if(k&&one&&p&&p.one&&p.k===k)p.a.push(i);else out.push({k,one,a:[i]});});
  out.forEach(g=>g.n=g.a.length>1?g.k:AR[g.a[0]].n);return out;})();
 const LSEC=(k,m,tags,body)=>sectionHTML(esc(k+'.'+m),esc(m),tags,body,!!st.q||LO.s[k+'.'+m]===1);
-const encTable=(rows,note)=>(note?`<div class="mut small" style="margin:4px 0 2px">${esc(note)}</div>`:'')+`<table class="enc">${rows.map(x=>`<tr class="${x.d?'dupe':''}"><td style="width:44px">${spr(x.p.id,'s40')}</td><td>${plink(x.p.id)}<div>${x.p.t.map(ty).join('')}</div>${x.note&&!note?`<div class="mut small">${esc(x.note)}</div>`:''}</td><td class="n">${esc(x.show)}${x.chg?'<div class="mut small">was '+(x.r?x.r+'%':esc(x.rs))+'</div>':''}</td><td class="n">${x.lv.size?'Lv '+esc([...x.lv].join(', ')):''}</td></tr>`).join('')}</table>`;
+const encTable=(rows,note)=>(note?`<div class="mut small" style="margin:4px 0 2px">${esc(note)}</div>`:'')+`<table class="enc">${rows.map(x=>`<tr class="${x.d?'dupe':''}"><td style="width:44px">${sprl(x.p.id,'s40')}</td><td>${plink(x.p.id)}<div>${x.p.t.map(ty).join('')}</div>${x.note&&!note?`<div class="mut small">${esc(x.note)}</div>`:''}</td><td class="n">${esc(x.show)}${x.chg?'<div class="mut small">was '+(x.r?x.r+'%':esc(x.rs))+'</div>':''}</td><td class="n">${x.lv.size?'Lv '+esc([...x.lv].join(', ')):''}</td></tr>`).join('')}</table>`;
 const mTags=(rows,allD)=>allD?'<span class="tag">all dupes</span>':`<span class="mut small">${rows.length}</span>`;
 const locStop=(k,n,tags,body)=>`<details class="stopd" data-k="${k}" ${LO.x[k]===1||st.q?'open':''}><summary class="stoph"><span class="pn">${esc(n)}</span>${tags}</summary><div class="stop">${body}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(n)}</span></button></div></details>`;
 function locPlace(a,p,cf,trk){const k=a+'.'+p.j;
@@ -408,10 +410,10 @@ function secAdj(g,cf){const sum=(k,j,all)=>g.rows.reduce((s,x)=>s+(x[k]&&(all||!
  return k=>(x,j)=>{const live=sum(k,j),full=sum(k,j,1);return live&&live!==full?x/live*100:x;};}
 // A caller's allies drop down under it; a search for an ally opens the drop-downs it's in
 function sosDrop(x,cf){if(!x.sos||!x.sos.length)return '';const hit=st.q&&x.sos.some(([p])=>byId[p]&&byId[p].key.includes(st.q));
- return `<details class="sosd" ${hit?'open':''}><summary><span class="sosk">SOS</span> ${x.sos.map(([p])=>esc(byId[p]?byId[p].name:p)).join(', ')}</summary><div class="sosl">${x.sos.map(([p,w])=>`<div class="sosa${cf.has(FAM[p])?' dupe':''}">${spr(p,'s32')}<div>${plink(p)} ${whenI(w)}<div>${(byId[p]?byId[p].t:[]).map(ty).join('')}</div></div></div>`).join('')}</div></details>`;}
+ return `<details class="sosd" ${hit?'open':''}><summary><span class="sosk">SOS</span> ${x.sos.map(([p])=>esc(byId[p]?byId[p].name:p)).join(', ')}</summary><div class="sosl">${x.sos.map(([p,w])=>`<div class="sosa${cf.has(FAM[p])?' dupe':''}">${sprl(p,'s32')}<div>${plink(p)} ${whenI(w)}<div>${(byId[p]?byId[p].t:[]).map(ty).join('')}</div></div></div>`).join('')}</div></details>`;}
 function secRows(g,cf){const adj=secAdj(g,cf),raw=()=>x=>x,top=x=>Math.max(...x.r,...(x.b||[0]));
  return `<table class="enc lt">${[...g.rows].sort((a,b)=>top(b)-top(a)||byId[a.p].name.localeCompare(byId[b.p].name)).map(x=>{const d=cf.has(FAM[x.p]),f=d?raw:adj;
-  return `<tr class="${d?'dupe':''}"><td style="width:44px">${spr(x.p,'s40')}</td><td>${plink(x.p)}<div>${byId[x.p].t.map(ty).join('')}</div>${x.note?`<div class="mut small">${esc(x.note)}</div>`:''}${sosDrop(x,cf)}</td><td class="n">${rateCell(x.r,f('r'))}</td>${g.bl!=null?`<td class="n">${x.b?ICON.b+rateCell(x.b,f('b')):''}</td>`:''}</tr>`;}).join('')}</table>`;}
+  return `<tr class="${d?'dupe':''}"><td style="width:44px">${sprl(x.p,'s40')}</td><td>${plink(x.p)}<div>${byId[x.p].t.map(ty).join('')}</div>${x.note?`<div class="mut small">${esc(x.note)}</div>`:''}${sosDrop(x,cf)}</td><td class="n">${rateCell(x.r,f('r'))}</td>${g.bl!=null?`<td class="n">${x.b?ICON.b+rateCell(x.b,f('b')):''}</td>`:''}</tr>`;}).join('')}</table>`;}
 const secSub=g=>`<div class="ltsub"><b>${esc(g.m)}</b>${g.lv?`<span>Lv ${esc(g.lv)}</span>`:''}${g.bl?`<span>${ICON.b}bubbling Lv ${esc(g.bl)}</span>`:''}</div>`;
 function secTags(rows,cf,lv){const allD=rows.length&&rows.every(x=>cf.has(FAM[x.p]));return (lv?`<span class="mut small">Lv ${esc(lv)}</span>`:'')+(allD?'<span class="tag">all dupes</span>':`<span class="mut small">· ${rows.length}</span>`);}
 function placeSecs(a,p,cf){const k=a+'.'+p.j,T=AR[a].es||[];let h='';
@@ -761,7 +763,7 @@ function monCard(x,cap,sel,trainerKey,index,guess){const p=byId[x.id];const lv=m
  const lvs=x.l!=null||x.r==null?`Lv ${x.l??'?'}`:`Lv ${lv||'?'} <span class="mut small">cap${x.r?(x.r>0?'+':'−')+Math.abs(x.r):''}</span>`;
  const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'')+(x.au?`<span class="tag aura">${auTxt(x.au)}</span>`:'');
  const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');const ev=EVS&&!MGM&&x.ev?evTxt(x.ev):'';
- return `<div class="mon${sel?' sel':''}"><div class="mh">${spr(x.id,'s32')}<div class="mt"><div class="l1"><span class="mn">${p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:'?'}</span><b>${lvs}</b></div><div class="l2">${p?p.t.map(ty).join(''):''}${tags} ${spd}</div></div></div>
+ return `<div class="mon${sel?' sel':''}"><div class="mh">${sprl(x.id,'s32')}<div class="mt"><div class="l1"><span class="mn">${p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:'?'}</span><b>${lvs}</b></div><div class="l2">${p?p.t.map(ty).join(''):''}${tags} ${spd}</div></div></div>
  <div class="small ab">${ab}${x.i?' · '+esc(x.i):''}${x.na?` · <span title="${esc(natLabel(x.na))}">${esc(x.na)}</span>`:''}</div>
  <div class="mv${gm?' guess':''}">${(gm||x.m).map(i=>`<a href="#/m/${i}"><span class="dot" style="background:${tcol(M[i]==='Hidden Power'&&x.hp?x.hp:(MV[i]||{}).t)}"></span>${M[i]==='Hidden Power'&&x.hp?'HP '+esc(x.hp):esc(M[i])}</a>`).join('')}</div>
  ${ev?`<div class="mut small ex">EVs ${ev}</div>`:''}${(x.x||[]).length?`<div class="mut small ex">Sheet: ${x.x.map(esc).join('; ')}</div>`:''}

@@ -486,6 +486,12 @@ block sizes, saved when one of its routes is left), so scrolling one tab never m
 stays open. A tap on the tab you're on clears the search and goes to the top; on a Pokémon / move / ability page it
 first goes to the list at its place (like ‹ All Pokémon), then the top. Back / forward keep their own per-entry restore.
 
+**Dex links** (2026-10-31): every Pokémon name or sprite opens its dex page `#/p/<id>` as a plain link (`plink`,
+`sprl`), so Back and the rail's tab memory need nothing more; the dex list keeps its own place. Not links, because the
+sprite or name is a control or part of one: a trainer card's sprite strip (`.tpick`, picks the Pokémon shown), the
+team previews in trainer / partner row headers (a tap opens the row), the SOS header, tracker and trade pickers, the
+tracker's Other… results, the keyboard's picks and search results (their Dex button). The calc has its own.
+
 **Rejected** (don't bring back): animated collapses (slide, smooth scroll then close, synced fold); pinned trainer
 rows or team previews; a ☰ rail; BST anywhere; IVs on cards; the "Changes from vanilla" card and Changed filter;
 evo/breed tags; the trials / mini caps switch; per-hack item boxes; separate Expand / Collapse bars per island and place
