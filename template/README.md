@@ -429,11 +429,17 @@ Keep these decisions; don't retry what's listed as rejected.
 
 **Collapsible pages** (walkthrough, Locations, Trainers, Items; `COLLAPSIBLE PAGES` in dex.js, "Collapsible pages" in
 dex.css):
-1. Levels: box (closed by default) → place (`details.stopd`, sticky under the search bar) → section
-   (`details.sec`, sticky under the place). Every level's open state is saved in the page's `LS` object.
+1. Levels: box → place (`details.stopd`, sticky under the search bar) → section (`details.sec`, sticky under the
+   place). **Every level starts closed** (2026-10-31, every page, a stop with one section too): opening a box shows
+   its places closed, opening a place its yellow headings closed. Every level's open state is saved in the page's `LS`
+   object as `1` open (`0` closed, from before, still reads as closed; no entry = closed). Links and jumps (search, a
+   Pokémon page's place link `#/l/<place>`, Next step) open their target's chain and save it open. A filtered page
+   (search this page) shows its places and sections open (the walkthrough's Checklist stays closed unless a mission
+   matches).
 2. Tapping a header never scrolls (`flip()`, `hold()`); browser scroll anchoring is off while it settles.
-3. Expand all / Collapse all bars (`segBar`): one at the page top for the boxes, one in a box with 2+ sub-levels. They
-   only open or close their own level and never move the bar.
+3. Expand all / Collapse all bars (`segBar`): one at the page top for the boxes, and on Locations one in a box with 2+
+   places. They only open or close their own level and never move the bar. The walkthrough's and Items' in-box bars
+   were removed (2026-10-31).
 4. Collapse bars at the bottom of a block only when it is taller than the window (`bars()`); a pinned block collapses
    in place and flashes (inset accent ring). Rechecked on toggles, resizes, content-visibility renders and any change
    of the page size (a ResizeObserver on `#app`: the viewer's text zoom fires no resize but changes the height).
@@ -462,7 +468,9 @@ the search-this-page filter shows a matching mission open. Rejected: a quiet div
 final tick (A), a sticky mission header, a mission tab or global list.
 
 **Trainers:** a Show switch per box (Places / Trainers / Teams, read from the page, not stored) pinned under the box
-header; each place header has a `n/N | cap` button that fills first (part → all open, all → all closed) and never
+header; an opened box starts in Places (every place closed; a box with no place headings, Trainers). `LS.tr` before
+`v: 2` saved only closes: one with any place or trainer entry (a view the user chose) is read the old way (`d`: no
+entry = open), one with none takes the new default; each place header has a `n/N | cap` button that fills first (part → all open, all → all closed) and never
 toggles the place. Toggling keeps the trainer you're reading in place (anchor = the first row edge under the pinned
 headers). Trainer cards: below 500 px a strip of up to six sprites above one Pokémon; from 500 px all Pokémon as
 blocks, three across at most. An opened card starts at its team. One speed per Pokémon (with EVs, or without under MGM).
