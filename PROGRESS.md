@@ -53,6 +53,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 6. **Source updates** (`uv run python -I tools/check_updates.py`): SoulGold's data files changed since 2026-10-24
    (Mega Lopunny innates, Clefable / Mega Clefable and Unown learnsets, ability usage): re-fetch before its guide.
    hzla's live `decomp` branch differs from Unbound's pin in `gen789.js` (pin kept).
+7. **Pokémon page redesign** (decided 2026-10-31): spec `plans/dex-page.md`, mockup `tools/mockup/dex-page/`, branch
+   `worktree-dex-page`. Template build, after the calc-resets merge (merge `main` in first).
 
 ## Decisions
 
