@@ -289,8 +289,33 @@ const checks = [{
     assert.equal(edited.mGuess,true,'edit for another species dropped: defaults back');
     assert.deepEqual(edited.m,expected.m);
   },
+},{
+  id:'unbound boxes-only import',
+  title:'a save with an empty party but boxed Pokémon imports and selects the first box one; empty and wrong saves are refused and keep the previous import',
+  run:async page=>{
+    await fresh(page);
+    const load = async result => {
+      await page.value(`(()=>{window.__reader=window.__reader||READERS[CF.calc.save];READERS[CF.calc.save]=()=>(${JSON.stringify(result)});return CALC.importFile(new File([new Uint8Array([1])],'test.sav'));})()`);
+      await page.settle();
+      await page.value(`(()=>{READERS[CF.calc.save]=window.__reader;})()`);
+      return page.value(`(()=>{const s=CALC.state(),b=document.querySelector('.ban');return {imp:s.imp&&{party:s.imp.party.map(m=>m.id),boxes:s.imp.boxes.map(b=>b.map(m=>m.id))},mine:s.mine,ban:b?b.textContent:'',ok:!!b?.classList.contains('ok')};})()`);
+    };
+    const mon = {sp:'mew',lv:30,nat:'Adamant',abs:0,mv:[],pid:'box-mew'};
+    let state = await load({ids:'ours',party:[],boxes:[[],[mon]]});
+    assert.ok(state.ok,'imported: '+state.ban);
+    assert.deepEqual(state.imp,{party:[],boxes:[[],['mew']]});
+    assert.deepEqual(state.mine,{src:'box',b:1,i:0},'the first box Pokémon is selected');
+    assert.equal(await page.value(`CALC.mon('mine').id`),'mew');
+    const before = state.imp;
+    state = await load({ids:'ours',party:[],boxes:[[],[]]});
+    assert.ok(!state.ok&&state.ban.includes('No Pokémon yet'),'empty: '+state.ban);
+    assert.deepEqual(state.imp,before,'empty keeps the previous import');
+    state = await load({ids:'ours',party:[{...mon,sp:'not-in-this-guide'}],boxes:[[{...mon,sp:'not-either'}]]});
+    assert.ok(!state.ok&&state.ban.includes('Wrong game'),'wrong: '+state.ban);
+    assert.deepEqual(state.imp,before,'wrong keeps the previous import');
+  },
 }];
-const sizes = [[260,316],[480,392],[537,424],[832,424],[832,316]];
+const sizes =[[260,316],[480,392],[537,424],[832,424],[832,316]];
 // The gimmick checks walk many states: the narrow and one wide size cover them (calc-layout covers every size).
 const few = [[260,316],[832,424]];
 await runChecks({name:'calc-unbound',file,checks:checks.map(check=>({...check,sizes:check.id.startsWith('unbound ')&&!['unbound Mega boss','unbound Z holder','unbound D2 assumed moves'].includes(check.id)?few:sizes}))});
