@@ -344,7 +344,7 @@ checks.push(
         if(effects.some(effect => effect.value === 'Trick Room')) assert.equal(state.trickRoom, true);
         // Fog: a note where the profile has no Fog weather; where it has one (Unbound), the weather itself is Fog and the
         // accuracy readout is calc-unbound's 'unbound Fog' check.
-        if(effects.some(effect => effect.value === 'Fog')) { if(await page.value('FOGW')) assert.equal(state.weather, 'Fog', trainer.k+' Fog weather'); else assert.match(await page.text('.dfarea'), /Fog: accuracy ×0.6, no damage effect/); }
+        if(effects.some(effect => effect.value === 'Fog')) { if(await page.value(`[...document.querySelectorAll('select[data-f="weather"] option')].some(option=>option.value==='Fog')`)) assert.equal(state.weather, 'Fog', trainer.k+' Fog weather'); else assert.match(await page.text('.dfarea'), /Fog: accuracy ×0.6, no damage effect/); }
         if(effects.some(effect => effect.value === 'random')) assert.notEqual(state.terrain, 'random');
         if(effects.some(effect => effect.kind === 'hazard')) {
           assert.equal(state.atkSpikes, 1,trainer.k+' Spikes '+JSON.stringify(state)); assert.equal(state.atkToxicSpikes, 1,trainer.k+' Toxic Spikes '+JSON.stringify(state));

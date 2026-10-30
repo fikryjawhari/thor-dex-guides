@@ -168,6 +168,9 @@ try {
       writeFileSync(path, html);
       return { path, target };
     };
+    // The browser probe migrates an unstamped position-keyed save ('0.0') into the new build: no such save exists for a
+    // guide whose stops are named (see above).
+    if (named) { console.log('SKIP: named stops, no unstamped position save to migrate (' + after + (keyboard ? ', kb' : '') + ')'); continue; }
     const old = fixture(before, 'old', false), current = fixture(after, 'new', true);
     const { result: { browserContextId } } = await send('Target.createBrowserContext');
     const { result: { targetId } } = await send('Target.createTarget', { url: 'about:blank', browserContextId });
