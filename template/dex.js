@@ -31,6 +31,8 @@ const spr=(id,c)=>{const u=sprUrl(id);if(u)return `<div class="spr ${c}" style="
  const p=byId[id],t=p?p.t[0]:'',l=p?(p.n.match(/[A-Za-z0-9]/)||['?'])[0].toUpperCase():'?';
  return `<div class="spr ${c} sprph${btc(t)}" style="background:${tcol(t)}"><span>${esc(l)}</span></div>`;};
 const plink=id=>byId[id]?`<a href="#/p/${id}">${esc(byId[id].name)}</a>`:'';
+// A sprite that opens its Pokémon's dex page (plain link, like plink: Back and the rail's tab memory need nothing more).
+const sprl=(id,c)=>byId[id]?`<a class="sprl" href="#/p/${id}">${spr(id,c)}</a>`:spr(id,c);
 const mlink=i=>`<a href="#/m/${i}">${esc(M[i])}</a>`;
 const alink=i=>`<a href="#/a/${i}">${esc(AB[i][0])}</a>`;
 const cat=c=>c?`<span class="cat ${c}">${c==='Physical'?'Phys':c==='Special'?'Spec':'Status'}</span>`:'';
@@ -146,8 +148,18 @@ q.addEventListener('input',()=>{st.q=q.value.trim().toLowerCase();if(st.q&&UP[st
 // The rail's top button opens the full-window search (the search box shows only while a query is set: dex.css).
 document.getElementById('t-s').addEventListener('click',e=>{e.preventDefault();SR.open();});
 // The search stays set across pages (detail pages hide it) until its × clears it, or a tap on the tab you're already on.
-document.getElementById('rail').addEventListener('click',e=>{const a=e.target.closest('a[href^="#/"]');
- if(a&&a.getAttribute('href')===(location.hash||'#/')&&q.value){e.preventDefault();q.value='';q.dispatchEvent(new Event('input'));window.scrollTo(0,0);}});
+// Each rail tab keeps its own page and place (TABS: route, anchor, block sizes; saved in the hashchange handler when a
+// route of that tab is left, kept for the session). A tap on another tab goes back to that tab's page and place (RAILGO);
+// a tap on the tab you're on clears the search and goes to the top, except on a Pokémon / move / ability page, where
+// it first goes to the Pokémon list at its place (like ‹ All Pokémon).
+const tabOf=h=>{const v=(h||'#/').slice(2).split('/')[0];return v===''||v==='p'||v==='m'||v==='a'?'p':v==='locs'||v==='l'?'l':v==='trainers'||v==='tr'?'t':v==='items'?'i':v==='walk'?'w':v==='calc'?'c':null;};
+const TABS={};let RAILGO=null;
+document.getElementById('rail').addEventListener('click',e=>{const a=e.target.closest('a[href^="#/"]');if(!a)return;e.preventDefault();
+ const t=a.id.slice(2),cur=location.hash||'#/';
+ if(tabOf(cur)!==t){const s=TABS[t];RAILGO=s||{top:1};location.hash=s?s.h:a.getAttribute('href');return;}
+ if(t==='p'&&cur!=='#/'&&cur!=='#'){location.hash='#/';return;}
+ if(q.value){q.value='';q.dispatchEvent(new Event('input'));}
+ window.scrollTo(0,0);});
 if(!CF.calc)document.getElementById('t-c').remove();
 function setTab(t){['p','l','t','i','w','c'].forEach(x=>document.getElementById('t-'+x)?.classList.toggle('on',x===t));}
 // ===== POKEMON TAB: chip filters (type / ability / move / location)
@@ -237,14 +249,14 @@ function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const r=(learn[i]||[])
  ${v.e?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(v.e).replace(/\n/g,'<br>')}</div></div>`:''}
  ${v.h&&v.h.length?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.mvh}</b><ul>${v.h.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${v.dc||!TX.nodc?'':`<div class="mut small">${TX.nodc}</div>`}</div>`:''}${v.cf?confBox(v.cf):''}
  <div class="mut small" style="margin-top:8px">${TX.mvsrc}${v.x&&TX.mvsrcx?TX.mvsrcx:''}.</div></div>
- <div class="card"><h3>Learned by (${r.length})</h3><table class="lrn">${r.map(([p,h])=>`<tr><td style="width:44px">${spr(p.id,'s40')}</td><td>${plink(p.id)}${tag(p)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${h}</td></tr>`).join('')}</table>
+ <div class="card"><h3>Learned by (${r.length})</h3><table class="lrn">${r.map(([p,h])=>`<tr><td style="width:44px">${sprl(p.id,'s40')}</td><td>${plink(p.id)}${tag(p)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${h}</td></tr>`).join('')}</table>
  <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'mv',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
 // ===== ABILITY PAGE
 const abSlot=(p,i)=>{const n=new Set(p.a).size,r=[];if(p.a.includes(i))r.push(n===1?'Only ability':'Ability '+(p.a.indexOf(i)+1));if(p.ha===i)r.push('Hidden ability');return r.join(', ');};
 function abilityDetail(i){fil.innerHTML='';const a=AB[i];if(!a){app.innerHTML='<p>Not found.</p>';return;}const us=abUsers[i]||[];
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
  <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2><p style="margin:0">${esc(a[1]||'No description.')}</p>${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
- <div class="card"><h3>Pokémon with it (${us.length})</h3><table class="lrn">${us.map(p=>`<tr><td style="width:44px">${spr(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>
+ <div class="card"><h3>Pokémon with it (${us.length})</h3><table class="lrn">${us.map(p=>`<tr><td style="width:44px">${sprl(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>
  <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'ab',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
 
 // ===== LOCATIONS + ENCOUNTER TRACKER (state in localStorage LS.track {s starter, e:{area:{p}|{f}}, t:{trade}}; see hacks/<hack>/notes.md)
@@ -346,12 +358,13 @@ function tkBar(){const [n,f]=tkCounts();
  <div class="mut small" style="margin-top:6px">${cnt}</div>`:`<div class="bar" style="margin:0"><span class="mut small">${cnt}</span></div>`}
  <div class="bar" style="margin:8px 0 0">${trackerButtons()}</div></div>`;}
 const encAll=a=>ARS(a).map(encSummary).join('');
-function encSummary(a){const e=TK.e[a];if(!e)return '';if(e.f)return '<span class="tag">failed</span>';const p=byId[e.p];return p?`<span class="tag got">${esc(p.name)}</span>`:'';}
+function encSummary(a){const e=TK.e[a];if(!e)return '';if(e.f)return '<span class="tag">failed</span>';const p=byId[e.p];return p?`<a class="tag got" href="#/p/${p.id}">${esc(p.name)}</a>`:'';}
 // The page is boxes (one area, or next-to-each-other areas whose names share their first two words: Granite Cave 1F,
 // B1F...) → places (an area's own places, same names merged; one place = the area's own name) → methods. One area: its
 // tracker sits above its places; a box of several areas: each place is one area and carries its tracker. An area with
 // several places of its own never joins a box. State in LS.loc {o:{<first area>:1 open}, x:{<area>.<place>:0 closed},
-// s:{<area>.<place>.<method>:0 closed}, layout (relayout)}: boxes start closed, places and methods open. Layout: template/README.md.
+// s:{<area>.<place>.<method>:1 open}, layout (relayout)}: boxes and methods start closed, places open (a method's 0
+// saved before 2026-10-31 still means closed; a filtered page shows its places and methods open). Layout: template/README.md.
 // Open state saved by position (a box's index, "box.place", either with a ".rest") keeps the names it was saved under
 // (S.layout, as the walkthrough's WO.layout): when an update adds, drops or moves boxes or places, relayout moves each
 // key to the position that now has its name (a repeated name counts its occurrence) and drops one whose name is gone.
@@ -372,10 +385,12 @@ const LGRP=(()=>{const out=[],two=n=>n.split(' ').length>2?n.split(' ').slice(0,
  ARO.forEach(i=>{const A=AR[i];if(A.in!=null)return;const k=two(A.n),one=places(i).length===1,p=out[out.length-1];
   if(k&&one&&p&&p.one&&p.k===k)p.a.push(i);else out.push({k,one,a:[i]});});
  out.forEach(g=>g.n=g.a.length>1?g.k:AR[g.a[0]].n);return out;})();
-const LSEC=(k,m,tags,body)=>sectionHTML(esc(k+'.'+m),esc(m),tags,body,LO.s[k+'.'+m]!==0);
-const encTable=(rows,note)=>(note?`<div class="mut small" style="margin:4px 0 2px">${esc(note)}</div>`:'')+`<table class="enc">${rows.map(x=>`<tr class="${x.d?'dupe':''}"><td style="width:44px">${spr(x.p.id,'s40')}</td><td>${plink(x.p.id)}<div>${x.p.t.map(ty).join('')}</div>${x.note&&!note?`<div class="mut small">${esc(x.note)}</div>`:''}</td><td class="n">${esc(x.show)}${x.chg?'<div class="mut small">was '+(x.r?x.r+'%':esc(x.rs))+'</div>':''}</td><td class="n">${x.lv.size?'Lv '+esc([...x.lv].join(', ')):''}</td></tr>`).join('')}</table>`;
+const LSEC=(k,m,tags,body)=>sectionHTML(esc(k+'.'+m),esc(m),tags,body,!!st.q||LO.s[k+'.'+m]===1);
+const encTable=(rows,note)=>(note?`<div class="mut small" style="margin:4px 0 2px">${esc(note)}</div>`:'')+`<table class="enc">${rows.map(x=>`<tr class="${x.d?'dupe':''}"><td style="width:44px">${sprl(x.p.id,'s40')}</td><td>${plink(x.p.id)}<div>${x.p.t.map(ty).join('')}</div>${x.note&&!note?`<div class="mut small">${esc(x.note)}</div>`:''}</td><td class="n">${esc(x.show)}${x.chg?'<div class="mut small">was '+(x.r?x.r+'%':esc(x.rs))+'</div>':''}</td><td class="n">${x.lv.size?'Lv '+esc([...x.lv].join(', ')):''}</td></tr>`).join('')}</table>`;
 const mTags=(rows,allD)=>allD?'<span class="tag">all dupes</span>':`<span class="mut small">${rows.length}</span>`;
-const locStop=(k,n,tags,body)=>`<details class="stopd" data-k="${k}" ${LO.x[k]===0&&!st.q?'':'open'}><summary class="stoph"><span class="pn">${esc(n)}</span>${tags}</summary><div class="stop">${body}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(n)}</span></button></div></details>`;
+// A place starts open (its header repeats the box's name and pins), its sections closed; 2+ sections get an Expand /
+// Collapse all bar under the header for them.
+const locStop=(k,n,tags,body)=>`<details class="stopd" data-k="${k}" ${LO.x[k]!==0||st.q?'open':''}><summary class="stoph"><span class="pn">${esc(n)}</span>${tags}</summary><div class="stop">${(body.match(/<details class="sec"/g)||[]).length>1&&!st.q?segBar('lc-pl'):''}${body}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(n)}</span></button></div></details>`;
 function locPlace(a,p,cf,trk){const k=a+'.'+p.j;
  const ms=AR[a].es||AR[a].st?placeSecs(a,p,cf):adjRows(p.ls,cf).map(([m,rows,allD,note])=>LSEC(k,m,mTags(rows,allD),encTable(rows,note))).join('');
  return locStop(k,p.n,trk?encSummary(a):'',(trk?(AR[a].st?'':trackerHTML(a))+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:''):'')+(ms||'<div class="mut small" style="margin:6px 0">No wild Pokémon here.</div>'));}
@@ -397,10 +412,10 @@ function secAdj(g,cf){const sum=(k,j,all)=>g.rows.reduce((s,x)=>s+(x[k]&&(all||!
  return k=>(x,j)=>{const live=sum(k,j),full=sum(k,j,1);return live&&live!==full?x/live*100:x;};}
 // A caller's allies drop down under it; a search for an ally opens the drop-downs it's in
 function sosDrop(x,cf){if(!x.sos||!x.sos.length)return '';const hit=st.q&&x.sos.some(([p])=>byId[p]&&byId[p].key.includes(st.q));
- return `<details class="sosd" ${hit?'open':''}><summary><span class="sosk">SOS</span> ${x.sos.map(([p])=>esc(byId[p]?byId[p].name:p)).join(', ')}</summary><div class="sosl">${x.sos.map(([p,w])=>`<div class="sosa${cf.has(FAM[p])?' dupe':''}">${spr(p,'s32')}<div>${plink(p)} ${whenI(w)}<div>${(byId[p]?byId[p].t:[]).map(ty).join('')}</div></div></div>`).join('')}</div></details>`;}
+ return `<details class="sosd" ${hit?'open':''}><summary><span class="sosk">SOS</span> ${x.sos.map(([p])=>esc(byId[p]?byId[p].name:p)).join(', ')}</summary><div class="sosl">${x.sos.map(([p,w])=>`<div class="sosa${cf.has(FAM[p])?' dupe':''}">${sprl(p,'s32')}<div>${plink(p)} ${whenI(w)}<div>${(byId[p]?byId[p].t:[]).map(ty).join('')}</div></div></div>`).join('')}</div></details>`;}
 function secRows(g,cf){const adj=secAdj(g,cf),raw=()=>x=>x,top=x=>Math.max(...x.r,...(x.b||[0]));
  return `<table class="enc lt">${[...g.rows].sort((a,b)=>top(b)-top(a)||byId[a.p].name.localeCompare(byId[b.p].name)).map(x=>{const d=cf.has(FAM[x.p]),f=d?raw:adj;
-  return `<tr class="${d?'dupe':''}"><td style="width:44px">${spr(x.p,'s40')}</td><td>${plink(x.p)}<div>${byId[x.p].t.map(ty).join('')}</div>${x.note?`<div class="mut small">${esc(x.note)}</div>`:''}${sosDrop(x,cf)}</td><td class="n">${rateCell(x.r,f('r'))}</td>${g.bl!=null?`<td class="n">${x.b?ICON.b+rateCell(x.b,f('b')):''}</td>`:''}</tr>`;}).join('')}</table>`;}
+  return `<tr class="${d?'dupe':''}"><td style="width:44px">${sprl(x.p,'s40')}</td><td>${plink(x.p)}<div>${byId[x.p].t.map(ty).join('')}</div>${x.note?`<div class="mut small">${esc(x.note)}</div>`:''}${sosDrop(x,cf)}</td><td class="n">${rateCell(x.r,f('r'))}</td>${g.bl!=null?`<td class="n">${x.b?ICON.b+rateCell(x.b,f('b')):''}</td>`:''}</tr>`;}).join('')}</table>`;}
 const secSub=g=>`<div class="ltsub"><b>${esc(g.m)}</b>${g.lv?`<span>Lv ${esc(g.lv)}</span>`:''}${g.bl?`<span>${ICON.b}bubbling Lv ${esc(g.bl)}</span>`:''}</div>`;
 function secTags(rows,cf,lv){const allD=rows.length&&rows.every(x=>cf.has(FAM[x.p]));return (lv?`<span class="mut small">Lv ${esc(lv)}</span>`:'')+(allD?'<span class="tag">all dupes</span>':`<span class="mut small">· ${rows.length}</span>`);}
 function placeSecs(a,p,cf){const k=a+'.'+p.j,T=AR[a].es||[];let h='';
@@ -422,11 +437,11 @@ function locBox(g,cf){const one=g.a.length===1&&!AR[g.a[0]].sub,a=g.a[0];let n=0
  if(AR[a].sub){n=1;h=locSlots(a,cf);}
  else if(one){const ps=places(a);n=ps.length;h=(AR[a].st?'':trackerHTML(a))+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:'')+ps.map(p=>locPlace(a,p,cf,false)).join('');}
  else{n=g.a.length;h=g.a.map(a=>locPlace(a,places(a)[0],cf,true)).join('');}
- return (n>1?segBar('lc-sp'):'')+h+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
+ return h+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
 TOG.locs=TOG.l=d=>{if(d.matches('details.split[data-a]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=locBox(LGRP[+d.dataset.g],caughtFams(-1));colBind(b);bindTrackers();}
   if(!st.q){if(d.open)LO.o[d.dataset.a]=1;else delete LO.o[d.dataset.a];loSave();}}
  else if(st.q)return;else if(d.matches('details.stopd')){if(d.open)delete LO.x[d.dataset.k];else LO.x[d.dataset.k]=0;loSave();}
- else if(d.matches('details.sec')){if(d.open)delete LO.s[d.dataset.s];else LO.s[d.dataset.s]=0;loSave();}};
+ else if(d.matches('details.sec')){if(d.open)LO.s[d.dataset.s]=1;else delete LO.s[d.dataset.s];loSave();}};
 function listLocs2(scroll){fil.innerHTML='';const s=st.q;const li=st.lopenLi;st.lopenLi=null;
  // Opened from a Pokemon page (#/l/<place>): open its box and place, then scroll it under the search bar.
  let tk=null;if(li!=null&&LOC2A[li]!=null){const a=LOC2A[li];LO.o[LGRP.find(g=>g.a.includes(AR[a].in??a)).a[0]]=1;tk=AR[a].in!=null?AR[a].in+'.0':a+'.'+places(a).find(p=>p.ls.includes(li)).j;delete LO.x[tk];loSave();}
@@ -447,8 +462,8 @@ function listItems(){fil.innerHTML='';const s=st.q;const IT=D.IT||[];
  app.innerHTML=segBar('it-all all')+IT.map((sec,si)=>`<details class="split jt" data-si="${si}" ${IO.o[si]?'open':''}><summary>${esc(sec.n)} <span class="mut small">${sec.r.length}</span></summary><div class="body"></div></details>`).join('');
  app.querySelectorAll('details.split[open]').forEach(d=>TOG.items(d));bars();}
 // Inside a box: its name again as a sticky heading, then the rows, under yellow sub-headings where the data gives them
-// (r[4]: EI shops, Hardlove's held item kinds; two or more get an Expand / Collapse all bar). State in LS.items {o:{<box>:1 open}, x:{<box>:0 closed heading},
-// s:{<box>.<sub>:0 closed}, layout (relayout)}: boxes start closed, the rest open. Filled when first opened.
+// (r[4]: EI shops, Hardlove's held item kinds; two or more get an Expand / Collapse all bar). State in LS.items {o:{<box>:1 open}, s:{<box>.<sub>:1 open}, layout
+// (relayout)}: boxes and sub-headings start closed (a 0 saved before 2026-10-31 still means closed). Filled when first opened.
 const IO=(()=>{try{return Object.assign({o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.items)||'{}'))}catch(e){return {o:{},x:{},s:{}}}})();
 if(relayout(IO,(D.IT||[]).map(sec=>[sec.n,[]]),{o:1,x:1,s:1}))try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
 function itemBox(si){const sec=D.IT[si],tbl=rs=>`<table class="itbl ix">${rs.map(r=>itemRow(sec,r)).join('')}</table>`,subs=[];
@@ -456,11 +471,11 @@ function itemBox(si){const sec=D.IT[si],tbl=rs=>`<table class="itbl ix">${rs.map
  // No stop header: the box's sub-headings (every row has one) pin straight under the search bar.
  return (sec.note?`<div class="mut small" style="margin:6px 0">${esc(sec.note)}</div>`:'')+
   (subs.filter(([g])=>g).length>1?segBar('it-sp'):'')+
-  subs.map(([g,rs])=>g?sectionHTML(esc(si+'.'+g),esc(g),`<span class="mut small">${rs.length}</span>`,tbl(rs),IO.s[si+'.'+g]!==0):tbl(rs)).join('')+
+  subs.map(([g,rs])=>g?sectionHTML(esc(si+'.'+g),esc(g),`<span class="mut small">${rs.length}</span>`,tbl(rs),IO.s[si+'.'+g]===1):tbl(rs)).join('')+
   `<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(sec.n)}</span></button>`;}
 TOG.items=d=>{if(st.q)return;const iS=()=>{try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}};
  if(d.matches('details.split[data-si]')){const si=+d.dataset.si,b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=itemBox(si);colBind(b);}if(d.open)IO.o[si]=1;else delete IO.o[si];}
- else if(d.matches('details.sec')){if(d.open)delete IO.s[d.dataset.s];else IO.s[d.dataset.s]=0;}else return;iS();};
+ else if(d.matches('details.sec')){if(d.open)IO.s[d.dataset.s]=1;else delete IO.s[d.dataset.s];}else return;iS();};
 
 
 // ===== COLLAPSIBLE PAGES (template/README.md). Pages built from details.split use these: header taps that never
@@ -493,14 +508,28 @@ function flip(d,open){const sm=d.querySelector(':scope>summary'),y=sm.getBoundin
 // Collapse bars (.endbar, inside their details) show only where the open block, with its header and the bar itself,
 // doesn't fit under the search bar. Blocks inside a skipped content-visibility block are left until they render.
 const BH={};const barH=b=>{const k=b.className;if(BH[k]==null){b.hidden=false;const cs=getComputedStyle(b);BH[k]=b.offsetHeight+parseFloat(cs.marginTop)+parseFloat(cs.marginBottom);b.hidden=true;}return BH[k];};
-function bars(){const room=innerHeight-hdrH(),bs=[...app.querySelectorAll('.endbar')].map(b=>[b,b.closest('details')]).filter(([b,d])=>d&&!inSkip(d));
+// Collapse all, pressed when every box is already closed, resets everything inside to the defaults (resetOpen: the
+// one place to change if the trigger changes); meanwhile its label says so. Kept in step by bars().
+const allShut=()=>{const b=jts();return b.length>0&&b.every(d=>!d.open);};
+function segLabel(){const c=app.querySelector('.seg.all>[data-a="0"]');if(!c)return;const t=allShut()?'Reset all':'Collapse all';if(c.textContent!==t)c.textContent=t;}
+// Defaults: yellow sections closed, Locations' places open, walkthrough stops closed (Show: Stops), Trainers places and
+// trainers closed (Places). The saved open state of the page is cleared to match; ticks, trackers, caps, open boxes
+// (none: all closed) and the walkthrough's Guide info and docs stay.
+function resetOpen(){const v=document.body.dataset.v;
+ if(v==='walk'){for(const k of Object.keys(WO.x))if(!/^doc/.test(k))delete WO.x[k];WO.s={};const mm=misMap();if(mm)Object.values(mm).forEach(r=>{if(r&&typeof r==='object')r.o=false;});TRDO.clear();woSave();}
+ else if(v==='locs'||v==='l'){LO.x={};LO.s={};loSave();}
+ else if(v==='items'){IO.x={};IO.s={};try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}}
+ else if(v==='trainers'){TOPEN.p={};TOPEN.t={};delete TOPEN.d;CAPO.clear();trSave();}
+ else return;
+ rerender();const c=app.querySelector('.seg.all>[data-a="0"]');if(c)flash(c);}
+function bars(){segLabel();const room=innerHeight-hdrH(),bs=[...app.querySelectorAll('.endbar')].map(b=>[b,b.closest('details')]).filter(([b,d])=>d&&!inSkip(d));
  bs.forEach(([b])=>b.hidden=true);bs.filter(([b,d])=>d.open&&d.offsetHeight+barH(b)>room).forEach(([b])=>b.hidden=false);}
 let bq=0;const barsSoon=()=>{if(!bq)bq=requestAnimationFrame(()=>{bq=0;bars();});};
 document.addEventListener('contentvisibilityautostatechange',e=>{if(!e.skipped&&app.querySelector('.endbar'))barsSoon();},true);
 addEventListener('resize',()=>{if(app.querySelector('.endbar'))barsSoon();});
 new ResizeObserver(()=>{if(!app.querySelector('.endbar'))return;for(const key in BH)delete BH[key];barsSoon();}).observe(app);
 // Height of the Show row pinned above a Trainers-page element (less the 2px the place header overlaps it: dex.css).
-const trPinH=el=>{const bx=document.body.dataset.v==='trainers'&&!el.matches('details.split')&&el.closest('details.split');const w=bx&&bx.querySelector('.trsw');return w?w.getBoundingClientRect().height-2:0;};
+const trPinH=el=>{const bx=/^(trainers|walk)$/.test(document.body.dataset.v)&&!el.matches('details.split')&&el.closest('details.split');const w=bx&&bx.querySelector('.trsw');return w?w.getBoundingClientRect().height-2:0;};
 // A collapse bar. Anything but a split lands right under the headers pinned above it (the search bar, its stop's and
 // section's): a stop's or section's own header is pinned there already, so it closes in place; a trainer row's (not
 // sticky) is scrolled there if it's off the top. A split closes and its header goes to the top. All flash.
@@ -530,8 +559,9 @@ const sectionHTML=(key,label,tags,body,open)=>`<details class="sec" data-s="${ke
 const segBar=(cls,a='Expand all',c='Collapse all')=>`<div class="seg ${cls}"><button data-a="1">${a}</button><button data-a="0">${c}</button></div>`;
 
 // ===== WALKTHROUGH TAB (D.WK; state in localStorage LS.walk {c:{stepKey:1}, o:{splitIdx:1, gi:1 Guide info},
-// x:{stopKey:0 closed, doc*:1 open}, s:{stopKey.c/e/i/t: 1 open, 0 closed}}; sections c checklist, e encounters,
-// i items, t trainers; the checklist starts closed, the rest open). Layout and behaviour: template/README.md.
+// x:{stopKey / doc*: 1 open, 0 closed}, s:{stopKey.c/e/i/t: 1 open, 0 closed}}; sections c checklist, e encounters,
+// i items, t trainers; everything starts closed: a stop saved open before 2026-10-31 had no entry and now starts
+// closed too; a filtered page (st.q) shows its stops open and sections other than the checklist open). Layout and behaviour: template/README.md.
 // Optional parts, each shown when the data has it: cheat codes (WK.cheats), checklist steps (stop.s), stop notes
 // (stop.note), game docs (WK.docs, WK.ko), items with no place (WK.np).
 const WO=(()=>{try{return Object.assign({c:{},o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.walk)||'{}'))}catch(e){return {c:{},o:{},x:{},s:{}}}})();
@@ -594,7 +624,7 @@ function migrateWalkState(){
    if(!remap.has(source))remap.set(source,position);
    const oldSplit=source.split('.')[0];if(!splitMap.has(oldSplit))splitMap.set(oldSplit,String(splitIndex));
    if(old.o[oldSplit])next.o[splitIndex]=1;
-   if(old.x[source]===0)next.x[position]=0;
+   if(old.x[source]===0)next.x[position]=0;else if(old.x[source]===1&&next.x[position]===undefined)next.x[position]=1;
    for(const section of ['c','e','i','t']){
     const value=old.s[source+'.'+section],target=position+'.'+section;
     if(value!==undefined&&(next.s[target]===undefined||value===0))next.s[target]=value;
@@ -641,7 +671,7 @@ function starterRow(){let sel='';
  return (sel?`<div class="card strow"><span class="mut small">Starter</span>${sel}</div>`:'')+(PLAYER?`<div class="card strow"><span class="mut small">Player</span>${playerSel('tk-player','Not chosen (show all)')}</div>`:'');}
 // Sections inside a stop, opened and closed from their yellow header; the header shows a summary.
 const SECN={c:'Checklist',e:'Encounters',i:'Items',t:'Trainers'};
-function walkSec(k,t,tags,body,force){const sk=k+'.'+t,v=WO.s[sk],open=force||(v===undefined?t!=='c':!!v);
+function walkSec(k,t,tags,body,force){const sk=k+'.'+t,v=WO.s[sk],open=force||(v===undefined?!!st.q&&t!=='c':!!v);
  return sectionHTML(sk,SECN[t],tags,body,open);}
 // A mission card: name and progress on the header; open, its unlock, reward and note, then its steps. It starts closed;
 // on a filtered page (st.q) one that matches opens. data-w is the open state it was drawn with (bindWalk saves changes).
@@ -650,7 +680,7 @@ function misHTML(x){const nd=x.s.filter(c=>misDone(x.m,c.k)).length,open=misRec(
  return `<details class="wmis" data-m="${m}" data-w="${open?1:0}" ${open?'open':''}><summary><span class="mn">${esc(x.n||x.m)}</span><span class="tag${nd===x.s.length?' got':''}">${nd}/${x.s.length}</span></summary><div class="misb">`+
   meta('Unlock:',x.u)+meta('Reward:',x.r)+meta('',x.note)+x.s.map(c=>{const done=misDone(x.m,c.k);return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-mk="${m}" data-ck="${esc(c.k)}" ${done?'checked':''}><span>${esc(c.t)}${c.n?`<div class="mut small">${esc(c.n)}</div>`:''}</span></label>`;}).join('')+
   `</div><button class="endbar sb" hidden>${UPI}<span>Collapse ${esc(x.n||x.m)}</span></button></details>`;}
-function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=WO.x[k]===0;
+function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=!(WO.x[k]===1||st.q&&WO.x[k]!==0);
  const lv=stopLeaves(s,si,ti),nd=lv.filter(leafDone).length,mq=!!st.q&&stopEnt(s).some(e=>e.m&&misTx(e.m).includes(st.q));
  const steps=stopEnt(s).map(({j,x,m})=>{if(m)return misHTML(m);const sk=k+'.'+j;const done=!!WO.c[sk];return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-sk="${sk}" ${done?'checked':''}><span>${esc(x[0])}${x[1]?`<div class="mut small">${esc(x[1])}</div>`:''}</span></label>`;}).join('');
  const ts=(s.tr||[]).map(k=>TRK[k]).filter(t=>t&&!rivalHidden(t));
@@ -682,16 +712,34 @@ function listWalk(){fil.innerHTML='';const W=D.WK;const cf=caughtFams(-1);const 
   W.splits.map((sp,si)=>{const all=sp.st.flatMap((s,ti)=>stopLeaves(s,si,ti));const done=all.filter(leafDone).length;
    return `<details class="split jt" data-wo="${si}" ${WO.o[si]?'open':''}><summary>${esc(sp.n)} ${CHK?`<span class="tag ${done===all.length&&all.length?'got':''}">${done}/${all.length}</span>`:`<span class="mut small">${sp.st.length} stop${sp.st.length===1?'':'s'}</span>`}</summary>${sp.note?`<div class="trnote" style="margin:8px 2px">${esc(sp.note)}</div>`:''}<div class="body" data-si="${si}"></div></details>`;}).join('');
  app.querySelectorAll('details.split[data-wo]').forEach(d=>{const fill=()=>{const b=d.querySelector('.body');if(b&&d.open&&!b.innerHTML){if(b.dataset.gi){b.innerHTML=guideInfoHTML();bindWalk();return;}const si=+b.dataset.si;
-   b.innerHTML=segBar('wk-sp')+W.splits[si].st.map((s,ti)=>walkStop(s,si,ti,cf,shown)).join('')+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(W.splits[si].n)}</span></button>`;bindWalk();}};
+   b.innerHTML=wkSwitch()+W.splits[si].st.map((s,ti)=>walkStop(s,si,ti,cf,shown)).join('')+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(W.splits[si].n)}</span></button>`;
+   if(!b.querySelector('details.stopd'))b.querySelector('.wksw').remove();else{trObs(d);wkSync(d);}bindWalk();}};
   d.addEventListener('toggle',()=>{if(d.open)WO.o[d.dataset.wo]=1;else delete WO.o[d.dataset.wo];woSave();fill();barsSoon();});fill();});
  bindWalk();bars();}
+// A walkthrough box's Show switch (template/README.md), pinned under the search bar like the Trainers page's: Stops (every
+// stop closed), Sections (every stop open, its sections closed), All (stops and sections open; trainer and mission
+// cards keep their own state). Read from the page, not stored: after a tap on a single header that fits none of the
+// three, no button is lit and "mixed" shows (as on Trainers). Pressing one keeps the stop you're reading in place.
+const wkSwitch=()=>`<div class="trsw wksw"><span>Show</span><div class="o" role="group" aria-label="Show">${['Stops','Sections','All'].map((x,i)=>`<button type="button" data-v="${i}">${x}</button>`).join('')}</div><span class="mx" hidden>mixed</span></div>`;
+const wkStops=b=>[...b.querySelectorAll(':scope>.body>details.stopd')];
+function wkLive(b){const ps=wkStops(b),op=ps.filter(p=>p.open).length;if(!op)return 0;if(op<ps.length)return -1;
+ const ss=ps.flatMap(p=>[...p.querySelectorAll('details.sec')]),n=ss.filter(x=>x.open).length;return !n?1:n===ss.length?2:-1;}
+function wkSync(b){const w=b&&b.querySelector(':scope>.body>.wksw');if(!w)return;const v=wkLive(b);
+ w.querySelectorAll('button').forEach(x=>{const on=+x.dataset.v===v;x.setAttribute('aria-pressed',on);x.className=on?'on':'';});w.querySelector('.mx').hidden=v!==-1;w.classList.toggle('m',v===-1);}
+const WKQ=new Set();let wkq=0;
+const wkSyncSoon=d=>{const b=d.closest('details.split');if(!b)return;WKQ.add(b);if(!wkq)wkq=requestAnimationFrame(()=>{wkq=0;WKQ.forEach(wkSync);WKQ.clear();});};
+function wkShow(b,v){if(wkLive(b)===v)return;const w=b.querySelector(':scope>.body>.wksw'),ps=wkStops(b),lim=w.getBoundingClientRect().bottom;
+ // anchor: the switch while the box header shows, else the first stop header at or below the pinned switch
+ const a=b.querySelector(':scope>summary').getBoundingClientRect().bottom>0?w:ps.map(p=>p.querySelector(':scope>summary')).find(x=>x.getBoundingClientRect().bottom>lim+1)||w,y=a.getBoundingClientRect().top;
+ noAnchor();ps.forEach(p=>{p.open=v>0;p.querySelectorAll('details.sec').forEach(x=>x.open=v===2);});
+ bars();scrollBy(0,a.getBoundingClientRect().top-y);wkSync(b);hold(a);jumpState();}
 function bindWalk(){bindTrackers();bindTrd();bindHead();app.querySelectorAll('.wstep input').forEach(c=>{if(c.dataset.b)return;c.dataset.b=1;c.onchange=()=>{const mk=c.dataset.mk;if(mk)misSet(mk,r=>{if(c.checked)r.c[c.dataset.ck]=1;else delete r.c[c.dataset.ck];});else{if(c.checked)WO.c[c.dataset.sk]=1;else delete WO.c[c.dataset.sk];woSave();}c.closest('.wstep').classList.toggle('done',c.checked);
   const tag=d=>{if(!d)return;const all=[...d.querySelectorAll('.wstep input')],n=all.filter(x=>x.checked).length,t=d.querySelector(':scope>summary .tag');if(t){t.textContent=n+'/'+all.length;t.classList.toggle('got',n===all.length);}};
   const mi=mk&&c.closest('details.wmis');tag(mi);tag(c.closest('details.sec'));tag(c.closest('details.split'));const nx=app.querySelector('.wk-next');if(nx)nx.innerHTML=nextInner();
   // The tick that completes a mission closes it, its header landing under the pinned ones.
   if(mi&&c.checked&&[...mi.querySelectorAll('.wstep input')].every(x=>x.checked)){foldUp(mi);mi.querySelector(':scope>summary').focus({preventScroll:true});}};});
- colBind(app);app.querySelectorAll('details.stopd').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{const k=d.dataset.k;if(/^doc/.test(k)){if(d.open)WO.x[k]=1;else delete WO.x[k];}else if(d.open)delete WO.x[k];else WO.x[k]=0;woSave();barsSoon();});});
- app.querySelectorAll('details.sec').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{WO.s[d.dataset.s]=d.open?1:0;woSave();barsSoon();});});
+ colBind(app);app.querySelectorAll('details.stopd').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{const k=d.dataset.k;if(/^doc/.test(k)){if(d.open)WO.x[k]=1;else delete WO.x[k];}else if(d.open)WO.x[k]=1;else delete WO.x[k];woSave();barsSoon();wkSyncSoon(d);});});
+ app.querySelectorAll('details.sec').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{WO.s[d.dataset.s]=d.open?1:0;woSave();barsSoon();wkSyncSoon(d);});});
  app.querySelectorAll('details.wmis').forEach(d=>{if(d.dataset.bd)return;d.dataset.bd=1;d.addEventListener('toggle',()=>{if(+d.dataset.w===+d.open)return;d.dataset.w=d.open?1:0;misSet(d.dataset.m,r=>{r.o=d.open;});barsSoon();});});
  const r=app.querySelector('.wk-reset');if(r&&!r.dataset.b){r.dataset.b=1;r.onclick=()=>{if(confirm('Clear every walkthrough checkbox?')){WO.c={};const mm=misMap();if(mm)Object.values(mm).forEach(r=>{if(r&&typeof r==='object')r.c={};});woSave();rerender();}};}
  barsSoon();}
@@ -702,11 +750,12 @@ const COLV={walk:1,locs:1,l:1,trainers:1,items:1};
 app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v])return;
  if(document.body.dataset.v==='trainers'){const w=e.target.closest('.trsw button'),pt=e.target.closest('button.pt');
   if(w){trShow(w.closest('details.split'),+w.dataset.v);return;}if(pt){e.preventDefault();e.stopPropagation();trTeams(pt.closest('details.stopd'),pt);return;}}
+ const ws=e.target.closest('.wksw button');if(ws){wkShow(ws.closest('details.split'),+ws.dataset.v);return;}
  const wk=e.target.closest('button.pt.wk');if(wk){e.preventDefault();e.stopPropagation();walkTeams(wk.closest('details.stopd'));return;}
  const b=e.target.closest('.seg button');
- if(b){const s=b.closest('.seg');if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.it-sp')?b.closest('.body').querySelectorAll('details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
+ if(b){const s=b.closest('.seg');if(s.matches('.all')&&b.dataset.a==='0'&&allShut()){resetOpen();return;}if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?app.querySelectorAll('details.split.jt'):s.matches('.it-sp')?b.closest('.body').querySelectorAll('details.sec'):s.matches('.lc-pl')?b.closest('.stop').querySelectorAll(':scope>details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
  const end=e.target.closest('.endbar,.trfold');if(end){foldUp(end.closest('details'));return;}
- if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;delete WO.x[k];WO.s[k+'.c']=1;if(n.m)misSet(n.m.m,r=>{r.o=true;});woSave();render(true);
+ if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;WO.x[k]=1;WO.s[k+'.c']=1;if(n.m)misSet(n.m.m,r=>{r.o=true;});woSave();render(true);
   const inp=app.querySelector(n.m?`.wstep input[data-mk="${CSS.escape(n.m.m)}"][data-ck="${CSS.escape(n.c.k)}"]`:`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;land(inp.closest('.wstep'),GAP);return;}
  const sm=e.target.closest('summary');
  if(sm&&sm.parentElement.tagName==='DETAILS'&&app.contains(sm)&&!e.target.closest('a,select,input,button')){e.preventDefault();flip(sm.parentElement,!sm.parentElement.open);}});
@@ -750,7 +799,7 @@ function monCard(x,cap,sel,trainerKey,index,guess){const p=byId[x.id];const lv=m
  const lvs=x.l!=null||x.r==null?`Lv ${x.l??'?'}`:`Lv ${lv||'?'} <span class="mut small">cap${x.r?(x.r>0?'+':'−')+Math.abs(x.r):''}</span>`;
  const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'')+(x.au?`<span class="tag aura">${auTxt(x.au)}</span>`:'');
  const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');const ev=EVS&&!MGM&&x.ev?evTxt(x.ev):'';
- return `<div class="mon${sel?' sel':''}"><div class="mh">${spr(x.id,'s32')}<div class="mt"><div class="l1"><span class="mn">${p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:'?'}</span><b>${lvs}</b></div><div class="l2">${p?p.t.map(ty).join(''):''}${tags} ${spd}</div></div></div>
+ return `<div class="mon${sel?' sel':''}"><div class="mh">${sprl(x.id,'s32')}<div class="mt"><div class="l1"><span class="mn">${p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:'?'}</span><b>${lvs}</b></div><div class="l2">${p?p.t.map(ty).join(''):''}${tags} ${spd}</div></div></div>
  <div class="small ab">${ab}${x.i?' · '+esc(x.i):''}${x.na?` · <span title="${esc(natLabel(x.na))}">${esc(x.na)}</span>`:''}</div>
  <div class="mv${gm?' guess':''}">${(gm||x.m).map(i=>`<a href="#/m/${i}"><span class="dot" style="background:${tcol(M[i]==='Hidden Power'&&x.hp?x.hp:(MV[i]||{}).t)}"></span>${M[i]==='Hidden Power'&&x.hp?'HP '+esc(x.hp):esc(M[i])}</a>`).join('')}</div>
  ${ev?`<div class="mut small ex">EVs ${ev}</div>`:''}${(x.x||[]).length?`<div class="mut small ex">Sheet: ${x.x.map(esc).join('; ')}</div>`:''}
@@ -806,20 +855,24 @@ function listTrainers(){fil.innerHTML='';const s=st.q;
  bindHead();bindTrackers();app.querySelectorAll('details.split[data-gi][open]').forEach(d=>TOG.trainers(d));bars();}
 // The page is boxes (D.TR.g: one per level cap, "Roxanne Split [Cap 15]"; Hot House, Mini Bosses) → places (the
 // box's locations) → trainers (name, tags and team preview; open, the full card). State in LS.tr {o:{<box>:1 open},
-// p:{<box>.<place>:0 closed}, t:{<trainer key>:0 closed}, layout (relayout)}: boxes start closed, places and trainers
-// open. (Numeric keys and x are from before the boxes were mini-splits, and no longer read.)
+// p:{<box>.<place>:1 open, 0 closed}, t:{<trainer key>:1 open, 0 closed}, v:2, d, layout (relayout)}: everything starts
+// closed (the Places view). Before v 2 places and trainers started open and only closes were saved: a store from then
+// with any place or trainer entry (a view the user chose) keeps that meaning (d: no entry = open); one with none takes
+// the new defaults. (Numeric keys and x are from before the boxes were mini-splits, and no longer read.)
 TOPEN.o=TOPEN.o||{};TOPEN.p=TOPEN.p||{};TOPEN.t=TOPEN.t||{};
+if(TOPEN.v!==2){if(Object.keys(TOPEN.p).length||Object.keys(TOPEN.t).length)TOPEN.d=1;TOPEN.v=2;try{localStorage.setItem(LS.tr,JSON.stringify(TOPEN))}catch(e){}}
+const tOpen=(m,k)=>m[k]===1||!!TOPEN.d&&m[k]!==0,tKeep=(m,k,v)=>{if(v)m[k]=1;else if(TOPEN.d)m[k]=0;else delete m[k];};
 const trSave=()=>{try{localStorage.setItem(LS.tr,JSON.stringify(TOPEN))}catch(e){}};if(relayout(TOPEN,TRD.g.map(g=>[g.n,g.sec.map(x=>x.h)]),{o:1,p:2}))trSave();
 function trGroup(gi){const g=TRD.g[gi];
  const secs=g.sec.map((s,si)=>{const ts=s.tr.filter(t=>!rivalHidden(t));
   const head=((s.note||[]).length?`<div class="trnote">${s.note.map(esc).join('<br>')}</div>`:'')+(s.rw?`<div class="trnote"><b>Reward, pick one:</b> ${s.rw.map(z=>{const p=P.find(q=>q.name===z||q.name.startsWith(z+' ('));return p?plink(p.id):esc(z);}).join(', ')}</div>`:'');
-  const rows=trRows(ts,t=>TOPEN.t[t.k]!==0,!s.h);if(!s.h){return head+rows;}
-  const k=gi+'.'+si;return `<details class="stopd" data-k="${k}" ${TOPEN.p[k]===0?'':'open'}><summary class="stoph"><span class="pn">${esc(s.h)}</span>${s.opt?'<span class="tag">optional</span>':''}<button class="pt" type="button" data-cap="${capOfSec(s)?capOfSec(s)[0]:g.cap||''}"></button></summary><div class="stop">${capLine(s)}${head}${rows}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.h)}</span></button></div></details>`;}).join('');
+  const rows=trRows(ts,t=>tOpen(TOPEN.t,t.k),!s.h);if(!s.h){return head+rows;}
+  const k=gi+'.'+si;return `<details class="stopd" data-k="${k}" ${tOpen(TOPEN.p,k)?'open':''}><summary class="stoph"><span class="pn">${esc(s.h)}</span>${s.opt?'<span class="tag">optional</span>':''}<button class="pt" type="button" data-cap="${capOfSec(s)?capOfSec(s)[0]:g.cap||''}"></button></summary><div class="stop">${capLine(s)}${head}${rows}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.h)}</span></button></div></details>`;}).join('');
  return trSwitch(g.sec.some(s=>s.h))+(g.note&&g.note.length?`<div class="trnote" style="margin:8px 2px">${g.note.map(esc).join('<br>')}</div>`:'')+secs+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
 TOG.trainers=d=>{if(st.q)return;const k=d.dataset.k;
  if(d.matches('details.split[data-gi]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=trGroup(+d.dataset.gi);colBind(b);bindTrd(b);trObs(d);trSync(d);}if(d.open)TOPEN.o[d.dataset.gi]=1;else delete TOPEN.o[d.dataset.gi];}
- else if(d.matches('details.stopd')){if(d.open)delete TOPEN.p[k];else TOPEN.p[k]=0;}
- else if(d.matches('details.trd')){if(d.open)delete TOPEN.t[k];else TOPEN.t[k]=0;}else return;trSave();
+ else if(d.matches('details.stopd'))tKeep(TOPEN.p,k,d.open);
+ else if(d.matches('details.trd'))tKeep(TOPEN.t,k,d.open);else return;trSave();
  if(!d.matches('details.split')){const bx=d.closest('details.split');if(bx&&bx.querySelector('.trsw'))trSyncSoon(bx);}};
 // Trainers page controls (template/README.md). State is read from the page: the Show switch from which places and
 // cards are open (0 Places, 1 Trainers, 2 Teams, -1 mixed), the place buttons from their cards. Rows are the cards (one per
@@ -836,8 +889,8 @@ function trSync(b){const w=b.querySelector('.trsw');if(!w)return;const ps=[...b.
  ps.forEach(p=>{const t=p.querySelector('.pt'),r=trRowsOf(p),n=r.filter(d=>d.open).length;t.textContent=ptText(n,r.length,t.dataset.cap);t.className='pt'+(n&&n===r.length?' on':n?' part':'');t.hidden=!r.length;});}
 const TRQ=new Set();let trq=0;
 const trSyncSoon=b=>{TRQ.add(b);if(!trq)trq=requestAnimationFrame(()=>{trq=0;TRQ.forEach(trSync);TRQ.clear();});};
-const trSet=(d,v)=>{if(d.open!==v){d.open=v;if(d._f)d._f();}if(v)delete TOPEN.t[d.dataset.k];else TOPEN.t[d.dataset.k]=0;};
-const trOpenP=(p,v)=>{if(p.open!==v)p.open=v;if(v)delete TOPEN.p[p.dataset.k];else TOPEN.p[p.dataset.k]=0;};
+const trSet=(d,v)=>{if(d.open!==v){d.open=v;if(d._f)d._f();}tKeep(TOPEN.t,d.dataset.k,v);};
+const trOpenP=(p,v)=>{if(p.open!==v)p.open=v;tKeep(TOPEN.p,p.dataset.k,v);};
 // View anchoring: the first trainer row whose top edge is at or below the pinned stack (else the row spanning its edge,
 // else its place header, its island header, the pressed button); after the change it goes back to the same pixel, or just
 // under the pinned stack if it would sit beneath it.
@@ -948,16 +1001,16 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
  // Actions. find: search a list page for text; clear: no search, so the page shows in full for a jump.
  find(h,t){q.value=t;st.q=t.toLowerCase();this.go(h);},
  clear(){q.value='';st.q='';},
- jumpStop(si,ti){this.clear();WO.o[si]=1;delete WO.x[si+'.'+ti];woSave();this.go('#/walk',()=>land(app.querySelector(`details.stopd[data-k="${si}.${ti}"]>summary,.wsign[data-k="${si}.${ti}"]`)));},
+ jumpStop(si,ti){this.clear();WO.o[si]=1;WO.x[si+'.'+ti]=1;woSave();this.go('#/walk',()=>land(app.querySelector(`details.stopd[data-k="${si}.${ti}"]>summary,.wsign[data-k="${si}.${ti}"]`)));},
  // A mission (a hit on its name) or one of its steps: open its split, stop, checklist and card; a gone step lands on the card.
- jumpMis(m,c){const at=MISAT.get(m);if(!at)return;const k=at.join('.');this.clear();WO.o[at[0]]=1;delete WO.x[k];WO.s[k+'.c']=1;misSet(m,r=>{r.o=true;});
+ jumpMis(m,c){const at=MISAT.get(m);if(!at)return;const k=at.join('.');this.clear();WO.o[at[0]]=1;WO.x[k]=1;WO.s[k+'.c']=1;misSet(m,r=>{r.o=true;});
   this.go('#/walk',()=>{const d=app.querySelector(`details.wmis[data-m="${CSS.escape(m)}"]`),i=d&&c!=null&&d.querySelector(`input[data-ck="${CSS.escape(c)}"]`);land(i?i.closest('.wstep'):d&&d.querySelector(':scope>summary'));});},
  // A trainer fought alongside others shares their row, which goes by the first one's key: open them all, find it by data-ks.
- jumpWalkTr(k){const w=walkOf(k);if(!w)return;const sk=w[0]+'.'+w[1];this.clear();WO.o[w[0]]=1;delete WO.x[sk];WO.s[sk+'.t']=1;trMates(k).forEach(x=>TRDO.add(x));woSave();
+ jumpWalkTr(k){const w=walkOf(k);if(!w)return;const sk=w[0]+'.'+w[1];this.clear();WO.o[w[0]]=1;WO.x[sk]=1;WO.s[sk+'.t']=1;trMates(k).forEach(x=>TRDO.add(x));woSave();
   this.go('#/walk',()=>land(trRowOf(app.querySelector(`details.stopd[data-k="${sk}"]`),k)));},
- jumpTr(k){const t=TRK[k];if(!t)return;this.clear();const [gi,si]=t.at;TOPEN.o[gi]=1;delete TOPEN.p[gi+'.'+si];trMates(k).forEach(x=>delete TOPEN.t[x]);trSave();
+ jumpTr(k){const t=TRK[k];if(!t)return;this.clear();const [gi,si]=t.at;TOPEN.o[gi]=1;TOPEN.p[gi+'.'+si]=1;trMates(k).forEach(x=>TOPEN.t[x]=1);trSave();
   this.go('#/trainers',()=>land(trRowOf(app.querySelector(`details.split[data-gi="${gi}"]`),k)));},
- jumpItem(si,ri){const sec=D.IT[si],g=sec.r[ri][4];this.clear();IO.o[si]=1;if(g)delete IO.s[si+'.'+g];try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
+ jumpItem(si,ri){const sec=D.IT[si],g=sec.r[ri][4];this.clear();IO.o[si]=1;if(g)IO.s[si+'.'+g]=1;try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
   this.go('#/items',()=>land(app.querySelectorAll(`details.split[data-si="${si}"] .body tr`)[ri]));},
  place(a){this.clear();this.go('#/l/'+AR[ARS(a)[0]].l[0]);},
  // A result's actions, [label, run, page], the page you're on first (on the Pokemon tab, a Pokemon's Dex entry).
@@ -1099,10 +1152,14 @@ let posT=0;window.addEventListener('scroll',()=>{clearTimeout(posT);posT=setTime
 document.addEventListener('visibilitychange',()=>{if(document.hidden)posSave();});
 window.dexViewer={restoreScroll(y){let c=null;try{c=JSON.parse(localStorage.getItem(LS.pos)||'null')}catch(e){}
  if(c&&c.h===location.hash&&c.a&&c.a.sel&&app.querySelector(c.a.sel))toAnchor(c.a);else window.scrollTo(0,y);}};
-window.addEventListener('hashchange',()=>{const typed=searchNav;searchNav=false;if(!typed){SR.close();KB.close(true);}if(curKey)SNAP[curKey]={a:keepAnchor(),z:cvSizes()};
- st.lgo=typed;render(typed);curKey=entryKey();if(typed){if(!/^#\/l\//.test(location.hash))window.scrollTo(0,0);return;}const sn=SNAP[curKey];if(sn){if(landEnd)landEnd();cvApply(sn.z);toAnchor(sn.a);}
+let curHash=null;
+window.addEventListener('hashchange',()=>{const typed=searchNav;searchNav=false;if(!typed){SR.close();KB.close(true);}const left={a:keepAnchor(),z:cvSizes()};if(curKey)SNAP[curKey]=left;
+ const lt=tabOf(curHash);if(curHash!=null&&lt)TABS[lt]={h:curHash,...left};
+ st.lgo=typed;render(typed);curKey=entryKey();curHash=location.hash||'#/';
+ if(RAILGO){const g=RAILGO;RAILGO=null;if(landEnd)landEnd();if(g.top)window.scrollTo(0,0);else{cvApply(g.z);toAnchor(g.a);}return;}
+ if(typed){if(!/^#\/l\//.test(location.hash))window.scrollTo(0,0);return;}const sn=SNAP[curKey];if(sn){if(landEnd)landEnd();cvApply(sn.z);toAnchor(sn.a);}
  if(SR.after){const f=SR.after;SR.after=null;f();}});
 // Opened without a route (the viewer always loads the bare file): go back to the page it was on.
 if(!location.hash||location.hash==='#'){try{const c=JSON.parse(localStorage.getItem(LS.pos)||'null');if(c&&/^#\/[\w\/%.-]*$/.test(c.h))history.replaceState(null,'',c.h);}catch(e){}}
-render(false);curKey=entryKey();
+render(false);curKey=entryKey();curHash=location.hash||'#/';
 app.insertAdjacentHTML('afterend',`<div class="foot">${esc(CF.name)} offline dex · ${P.length} Pokémon and forms (${P.filter(p=>p.g===0).length} obtainable) · ${MV.filter(m=>m.h.length).length} changed moves · ${TRS.length} ${CF.trw[2]} · built ${D.built}${CF.credit?` · ${CF.credit}`:''}</div>`);

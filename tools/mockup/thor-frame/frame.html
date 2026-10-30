@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>/*TITLE*/</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -75,7 +78,7 @@ function scale(){const room=box.parentElement.parentElement.clientWidth||W;const
  document.getElementById('cw').value=W;document.getElementById('ch').value=H;document.getElementById('fit').setAttribute('aria-pressed',FIT);}
 function kbOn(){try{return win().localStorage.getItem('dvkb')==='1'}catch(e){return false}}
 // The base keeps the page's own links (#/locs) inside the frame instead of resolving against this page's address.
-function load(){const hook=`<base href="about:srcdoc"><script>window.__errs=[];addEventListener('error',e=>__errs.push(String(e.message)));`+
+function load(){const hook=`<base href="about:srcdoc"><style>html{-webkit-text-size-adjust:100%;text-size-adjust:100%}</style><script>window.__errs=[];addEventListener('error',e=>__errs.push(String(e.message)));`+
   `try{history.replaceState(null,'','about:srcdoc'+${JSON.stringify(route||'#/')})}catch(e){}<\/script>`;
  const src=SRC.includes('<head>')?SRC.replace('<head>','<head>'+hook):hook+SRC;
  fr.srcdoc=src;}

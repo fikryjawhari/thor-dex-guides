@@ -297,6 +297,110 @@ async function foeDragCheck(page) {
   assert.equal(await page.value('CALC.mon("mine").id'), id, 'the copy is sent in on my side');
 }
 
+// ↺ on a card resets that Pokémon's battle state (HP, status, stages; template/README.md → Reset fight) and keeps its set
+// edits; the other side is untouched.
+async function monResetCheck(page) {
+  await setupCalc(page);
+  await page.value(`(()=>{CALC.set('mine','na','Adamant');CALC.set('mine','hp',1);CALC.set('mine','status','brn');CALC.set('mine','stg',[2,0,0,0,0]);CALC.set('foe','hp',1);CALC.render();})()`);
+  await page.settle();
+  const reset = '.cc[data-s=mine] [data-a=hpfull]';
+  assert.equal(await page.value(`document.querySelector('${reset}').classList.contains('rs')`), true, '↺ is lit while the Pokémon has battle state');
+  await page.tap(reset);
+  const mon = await page.value(`(()=>{const m=CALC.mon('mine');return{hp:m.hp??null,status:m.status||'',stg:(m.stg||[]).filter(Boolean).length,na:m.na,max:+(document.querySelector('.cc[data-s=mine] .mx').textContent.match(/[0-9]+/)[0]),box:+document.querySelector('[data-hp=mine]').value};})()`);
+  assert.equal(mon.box, mon.max, 'HP back to full');
+  assert.equal(mon.status, '', 'status cleared');
+  assert.equal(mon.stg, 0, 'stat stages cleared');
+  assert.equal(mon.na, 'Adamant', 'set edits stay');
+  assert.equal(await page.value(`CALC.mon('foe').hp`), 1, "the foe's battle state stays");
+  assert.equal(await page.value(`document.querySelector('${reset}').classList.contains('rs')`), false, '↺ unlit after the reset');
+}
+
+// A tap on the Pokémon already in opens its dex page (box cell, team cell, foe); the first tap only picks; a drag never opens it.
+// Two taps on one cell within 350 ms, as a finger does it (no settle between them).
+async function doubleTap(page, selector) {
+  const info = await page.locate(selector);
+  assert.ok(info.onScreen && !info.covered, `${selector} is tappable`);
+  for (const type of ['mousePressed', 'mouseReleased', 'mousePressed', 'mouseReleased'])
+    await page.send('Input.dispatchMouseEvent', { type, x: info.x, y: info.y, button: 'left', clickCount: 1 });
+  await page.settle();
+}
+
+async function dexLinkCheck(page) {
+  await setupCalc(page);
+  await touchOn(page);
+  const wide = await page.value('innerWidth>=480');
+  const FOE = i => wide ? `.fteam .ft[data-a=fpick][data-i="${i}"]` : `.dside:not(.mg) .dstrip button[data-a=fpick][data-i="${i}"]`;
+  const hash = () => page.value('location.hash');
+  const back = async () => { await page.route('#/calc'); await page.settle(); };
+  const offer = side => page.value(`JSON.stringify(CALC.state().hzOffer.${side}??null)`);
+  const chip = '[data-a=hzapply][data-s=mine]', berry = '.cc[data-s=mine] [data-a=berry]';
+  // A single tap on the Pokémon already in toggles the hazards in its chip; nothing else changes.
+  const max = await page.value(`CALC.mon('mine').stats?.[0]??0`) || await page.value(`Number(document.querySelector('[data-hp=mine]').value)`);
+  await page.value(`(()=>{const state=CALC.state();state.field.atkStealthRock=1;CALC.set('mine','i','');CALC.set('mine','hp',${max});state.hzOffer.mine=CALC.key('mine');CALC.render();})()`);
+  assert.equal(await page.count(chip), 1, 'offered: the hazard chip');
+  await sleep(400); // setupCalc's own pick tap was on this cell
+  await page.tap(BOX(5));
+  assert.equal(await hash(), '#/calc', 'a single tap on the selected Pokémon stays in the calc');
+  assert.equal(await page.count(chip), 0, 'hazards out: no berry in range, no chip');
+  assert.equal(await page.value(`CALC.state().hzOffer.mine.off`), true);
+  assert.equal(await page.value(`Number(document.querySelector('[data-hp=mine]').value)`), max, 'nothing else changes');
+  await page.reload(); await page.goto('#/calc');
+  assert.equal(await page.value(`CALC.state().hzOffer.mine?.off`), true, 'the toggle survives reload');
+  await page.tap(BOX(5));
+  assert.equal(await page.count(chip), 1, 'the next tap brings it back');
+  // With a berry in range: hazards + berry, then the berry chip alone.
+  await page.value(`(()=>{CALC.set('mine','i','Sitrus Berry');CALC.set('mine','hp',Math.floor(${max}/2));CALC.render();})()`);
+  assert.equal(await page.count(chip), 1, 'edits keep the chip');
+  assert.equal(await page.count(berry), 0, 'one chip: hazards + berry');
+  await sleep(400);
+  await page.tap(BOX(5));
+  assert.equal(await page.count(chip), 0);
+  assert.equal(await page.count(berry), 1, 'hazards out: the berry chip alone');
+  await sleep(400);
+  await page.tap(BOX(5));
+  assert.equal(await page.count(chip), 1, 'hazards back in');
+  // Used / cleared: the first tap offers it again, hazards in.
+  await page.value(`(()=>{delete CALC.state().hzOffer.mine;CALC.render();})()`);
+  await sleep(400);
+  await page.tap(BOX(5));
+  assert.equal(await page.count(chip), 1, 'a cleared chip is offered again');
+  // A double tap opens the dex page; the toggle is as it was.
+  await sleep(400);
+  const was = await offer('mine');
+  let id = await page.value(`CALC.mon('mine').id`);
+  await doubleTap(page, BOX(5));
+  assert.equal(await hash(), `#/p/${id}`, 'a double tap on the selected box Pokémon opens its dex page');
+  assert.equal(await offer('mine'), was, 'the double tap leaves the toggle unchanged');
+  await back();
+  await sleep(400);
+  await doubleTap(page, BOX(0));
+  assert.equal(await page.value('CALC.state().mine.i'), 0, 'a double tap on another Pokémon picks it first');
+  assert.equal(await hash(), `#/p/${await page.value(`CALC.mon('mine').id`)}`, 'then opens its page');
+  assert.equal(await page.value(`CALC.state().hzOffer.mine===CALC.key('mine')`), true, 'switched in, hazards in');
+  await back();
+  await sleep(400);
+  await drag(page, BOX(0), SLOT(0));
+  await page.tap(SLOT(0));
+  assert.equal(await hash(), '#/calc', 'a drag then a tap never opens the page');
+  assert.deepEqual(await teamOf(page), ['party:0'], 'and it joined the team');
+  await sleep(400);
+  id = await page.value(`CALC.mon('mine').id`);
+  await doubleTap(page, SLOT(0));
+  assert.equal(await hash(), `#/p/${id}`, 'a double tap in the team row opens its page');
+  await back();
+  await sleep(400);
+  const foeWas = await offer('foe');
+  await page.tap(FOE(0));
+  assert.equal(await hash(), '#/calc', 'a single tap on the selected foe stays');
+  assert.notEqual(await offer('foe'), foeWas, 'and toggles its hazards');
+  await sleep(400);
+  id = await page.value(`CALC.mon('foe').id`);
+  const foeNow = await offer('foe');
+  await doubleTap(page, FOE(0));
+  assert.equal(await hash(), `#/p/${id}`, 'a double tap on the foe opens its page');
+  assert.equal(await offer('foe'), foeNow, 'its toggle unchanged');
+}
+
 // An empty team stays empty through an import (a fresh page: nothing dragged in yet).
 async function emptyTeamCheck(page) {
   assert.deepEqual(await teamOf(page), [], 'an import into an empty team never fills it');
@@ -323,7 +427,8 @@ async function persistCheck(page) {
   const withCustom = await teamOf(page);
   assert.equal(withCustom.length, 3, 'a custom set dragged into the team');
   assert.ok(withCustom[2].startsWith('custom:'), 'the third member is the custom set');
-  await page.tap(custom);
+  // CALC.use sent the custom set in already (a tap there would only toggle its hazard chip).
+  if (await page.value("CALC.state().mine.src") !== 'custom') await page.tap(custom);
   await page.tap('[data-a=eopen][data-s=mine]');
   await page.tap('[data-a=edel]');
   assert.deepEqual(await teamOf(page), before, 'deleting a custom set removes it from the team');
@@ -444,6 +549,18 @@ const checks = [
     title: 'HP bar colours by percent and the grey fainted sprite on the team row, the foe strip (narrow) and the foe rows (wide); Reset fight and a foe trainer change refill',
     sizes: [[260, 316], [480, 392]],
     run: hpCheck,
+  },
+  {
+    id: 'mon reset',
+    title: "↺ on a card clears that Pokémon's HP, status and stages, keeps its set edits, leaves the foe alone",
+    sizes: [[260, 316], [832, 424]],
+    run: monResetCheck,
+  },
+  {
+    id: 'dex link',
+    title: 'a double tap on a cell (box, team row, foe) opens its dex page; a single tap on the Pokémon already in toggles the hazards in its chip; a drag never counts',
+    sizes: [[260, 316], [480, 392], [832, 424]],
+    run: dexLinkCheck,
   },
   {
     id: 'auto doubles wide',
