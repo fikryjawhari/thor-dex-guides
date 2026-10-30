@@ -685,3 +685,6 @@ body.calc-route .thp i.y,body.calc-route .dhpbar i.y{background:#e8c547}
 body.calc-route .thp i.r,body.calc-route .dhpbar i.r{background:#ff6b6b}
 body.calc-route .ko>.spr{filter:grayscale(1)}
 .dformat button{position:relative}.dformat button.dauto{outline:1px dashed currentColor;outline-offset:-3px}.dformat button sup{position:absolute;right:2px;top:0;font:700 7px system-ui}
+/* D2 assumed values (moves unknown): a ? after the move name, IV / EV label; nature in italics */
+.mr.guess .mv::after,.dguess:not(input)::after{content:' ?';color:var(--mut)}
+.dentry.dguess{font-style:italic}

@@ -262,6 +262,32 @@ const checks = [{
     const expected=assumedTrainerSet(guide,source,mon.l);
     assert.deepEqual(mon.m,expected.m,'TEMPLATE HANDOFF: foeBase must use assumedTrainerSet after resolving level');
     assert.equal(mon.mGuess,true,'TEMPLATE HANDOFF: guessed moves need a visible assumed marker');
+    assert.deepEqual([mon.na,mon.iv,mon.ev,mon.naGuess,mon.ivGuess,mon.evGuess],[expected.na,expected.iv,expected.ev,true,true,true],'Hardy, 31 IVs, 0 EVs, each assumed');
+    assert.ok(await page.count('.dres .mr.guess'),'assumed move rows are marked');
+    // A cap change recomputes the untouched defaults.
+    await page.value(`(()=>{TCAP[${JSON.stringify(trainer.k)}]=40;CALC.render();})()`);
+    await page.settle();
+    const capped=await page.value(`CALC.mon('foe')`);
+    if (capped.l!==mon.l) assert.deepEqual(capped.m,assumedTrainerSet(guide,source,capped.l).m,'moves follow the cap');
+    await page.value(`(()=>{delete TCAP[${JSON.stringify(trainer.k)}];CALC.render();})()`);
+    // A manual move edit clears only the moves mark; it is saved with the species it was made for.
+    await page.value(`(()=>{CALC.set('foe','m',['Tackle',null,null,null].map(n=>n==null?null:M.indexOf(n)));CALC.render();})()`);
+    await page.settle();
+    let edited=await page.value(`CALC.mon('foe')`);
+    assert.deepEqual([edited.mGuess,edited.naGuess],[false,true],'edit clears its own mark only');
+    const key=await page.value(`CALC.key('foe')`);
+    assert.equal((await saved(page)).foeSp?.[key],source.id,'the edit remembers its species');
+    await page.reload();
+    await page.route('#/calc');
+    edited=await page.value(`CALC.mon('foe')`);
+    assert.equal(edited.mGuess,false,'edit kept after reload');
+    // A data update that puts another species in that slot drops the edit instead of moving it.
+    await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.foeSp[${JSON.stringify(key)}]='not-this-species';localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
+    await page.reload();
+    await page.route('#/calc');
+    edited=await page.value(`CALC.mon('foe')`);
+    assert.equal(edited.mGuess,true,'edit for another species dropped: defaults back');
+    assert.deepEqual(edited.m,expected.m);
   },
 }];
 const sizes = [[260,316],[480,392],[537,424],[832,424],[832,316]];
