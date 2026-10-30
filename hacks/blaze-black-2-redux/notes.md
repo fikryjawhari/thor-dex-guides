@@ -201,6 +201,11 @@ stops, every trainer card in one stop, every AR area and every Found / shop line
   Aspertia City (the Starter area), Route 19 and Floccesy Town before Route 20; Royal Unova after Burgh (opens with
   the third badge; game order from memory, unconfirmed); Join Avenue on Route 4; Anville Town from Nimbasa; Driftveil
   Drawbridge after Route 5; the PWT after Clay; Lentimas Town after Skyla; Marine Tube before Humilau.
+- **Aspertia City has no tracker slot** (the user, 2026-10-30): it is where you get the starter, so the Starter slot is
+  its encounter. `locs.NO_SLOT` sets `AR.ns` (index 1 kept, append-only): its Surf / Fish / Ho-Oh rows still show in
+  the walkthrough's first stop and on Locations, with `txt.ns` in place of the tracker. A saved Aspertia entry
+  (`bb2rtrack.e["1"]`) drops on load (template `tkIn`), so it no longer counts as caught or as a dupe family. No stop
+  or trainer key moved.
 - **Areas:** at the first stop whose place names them (`locs.area_names`); `AREA_STOP` fixes four (Starter; Relic
   Passage centre room with the Driftveil side; Route 8 / Moor of Icirrus with Icirrus postgame; Marvellous Bridge).
   Seasons and Surf / fishing sections show at the first visit (one tracker slot per area).
