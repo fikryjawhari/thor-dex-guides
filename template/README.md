@@ -316,15 +316,19 @@ chip** in the berry chip's spot (narrow and wide; only one chip there, the card 
 net HP change the tap makes, hazards and an at-once berry together (`−37`, `+12`, `±0`), no "Hazards" text; with no HP
 part, the other changes (`Psn`, `Tox`, `Spe−1`, `Tox Spe−1`, `Lum`, `White Herb`, `Absorb`). Title / aria-label give the
 breakdown (each hazard, blockers, status, drop, item). One tap applies it all (`DMG.hazards`, `tools/calc/README.md` →
-Entry hazards): Rocks (type-scaled) / Spikes damage, Toxic Spikes' status, Sticky Web's −1 (relative, through the
-resolver: Clear Body, Contrary, Defiant, Mirror Armor, White Herb ...), a grounded Poison type absorbing Toxic Spikes
+Entry hazards): Rocks (type-scaled) / Spikes damage, Toxic Spikes' status, Sticky Web's −1 from a fresh stage 0
+whatever the card's Speed stage (−2 Simple, +1 Contrary; through the resolver: Clear Body, Defiant, Mirror Armor,
+White Herb ...; a blocked Web leaves the stage), a grounded Poison type absorbing Toxic Spikes
 (the Field layer goes to 0, manual), then a pinch / HP / cure berry it triggers (at once in every generation).
 **Offered** (`ST.hzOffer[side]` = the card key): a Pokémon picked after another one was in on that side, ↺ on its
 card, Reset fight / a trainer change (both sides; not the player's lead when the trainer's hazards come after the first
-send-out). **Gone** once tapped or as soon as anything else happens with that Pokémon: a move / damage tap on either
-side (Use, effect buttons, endpoints, Damage / You Apply, crash, a move switch: both cards), its turn end or a
-residual part, an HP / status / stage edit (a level edit's HP clamp doesn't count). Then the berry chip, if any, is
-back. Field's layer toggles only configure the field (0-3 / 0-2) and never re-offer; while offered, the chip follows
+send-out). **A tap on the Pokémon already in** (box, team or foe cell) toggles the hazards in the chip
+(`{k, off:true}`, kept with the offer across reload): off, the berry chip (if one is in range) shows alone, with
+none the spot is empty; the next tap brings them back. With no offer (used or cleared), that tap offers them again,
+hazards in. Nothing else changes. **Edits keep it** (HP, status, stages, level, set): the chip recomputes, so "it came
+in at 60 %" is an HP edit, then the tap. **Gone** once tapped or on a battle action: a move / damage tap on either side
+(Use, effect buttons, endpoints, Damage / You Apply, crash, a move switch: both cards), its turn end or a residual
+part. Then the berry chip, if any, is back. Field's layer toggles only configure the field (0-3 / 0-2) and never re-offer; while offered, the chip follows
 them. No Apply hazards button. Older builds stored applied-markers (`hazardEntry`): dropped on load, nothing applies.
 Hazards never appear in turn-end parts or the HP-line residual amount. Steelsurge is engine-only, with no control in any
 current or planned guide.
@@ -385,10 +389,13 @@ this fight, Singles / Doubles included); the foe team starts at full HP, slot 1 
 **Reset fight** (↺ in the fight bar): the same (every HP 100 %, every status cleared), same trainer and
 Pokémon. **↺ on a card** (before the HP box) does the same for that one Pokémon: a battle-state reset to a fresh
 send-out (full HP, no status / Toxic count, stages, toggles, battle-state tag, used item, `broken`, Mega), not a set reset
-(its set edits and Save stay; Edit's Reset / Original is the set reset); its hazard chip is offered again, no entry effect fires,
+(its set edits and Save stay; Edit's Reset / Original is the set reset); its hazard chip is offered again (hazards in), no entry effect fires,
 the other Pokémon and the Field are untouched. Lit (`.rs`) while the Pokémon has any of it. Scenario: `calc-team.mjs` mon reset.
-**Dex link:** a tap on the Pokémon already in (box cell, team cell, foe strip / foe row) opens its dex page (`#/p/<id>`,
-the base form); the first tap only picks it, and a drag never counts (`DROPPED` swallows the click after a drop).
+**Dex link:** a double tap (two taps on the same cell within 350 ms) on any box cell, team cell or foe strip / foe row
+opens its dex page (`#/p/<id>`, the base form), selected or not (the user hit the old single tap by accident). The first
+tap does what a single tap does (picks, or toggles the hazards of the Pokémon already in); the double tap puts that
+toggle back, so it is unchanged when the page opens. A drag never counts (`DROPPED` swallows the click after a drop and
+resets the pair).
 Scenario: `calc-team.mjs` dex link. Reload keeps HP / status, the foe's of the current fight and the manual Field;
 scratch is gone. Loading older storage drops stored scratch everywhere, turns a stored Mega (`pre`) into `mega` and
 keeps only HP / status / fight state on player cards not selected. Entry hazards are only offered (the hazard chip), never applied by a selection or a new fight. Scenario: `tools/scenarios/calc-auto.mjs`.

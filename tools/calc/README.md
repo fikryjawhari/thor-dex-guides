@@ -526,7 +526,8 @@ guide data or profiles.
   Infiltrator or Synchronize, since no move is being used; Steel / Immunity / Misty Terrain Gen 6+ / Safeguard; Clear
   Body family, Mist, Clear Amulet, Contrary, Defiant / Competitive, Mirror Armor; then Lum / Pecha / White Herb /
   Eject Pack on the entrant). Heavy-Duty Boots stop all of it, but a grounded Poison type absorbs Toxic Spikes even with
-  them (`absorb`: the page sets the layer to 0); Magic Guard stops Toxic Spikes only in Gen 4. Web is a relative −1.
+  them (`absorb`: the page sets the layer to 0); Magic Guard stops Toxic Spikes only in Gen 4. Web lowers Speed from a
+  fresh stage 0, whatever the set's stage (−1, Simple −2, Contrary +1; blocked: the stage stays).
   Then a pinch / HP berry the damage brought into range: items react on Update right after the hazards in every
   generation 4-9 (Showdown items and the gen 4-8 mods: the berries are `onUpdate`), so none waits for turn end.
   `label` is the net HP change (`−37`, `+12`, `±0`) when there is an HP part, else the other changes (`Psn`, `Spe−1`,
