@@ -1,0 +1,26 @@
+{
+ "source": "Eternal X 2.67 Rebalanced: Move Changes.pdf (hacks/eternal-x/.src; the same change lines are in data.json MV.e: \"Strength ... now lowers the user's Defense and Sp. Def in addition to dealing damage\"). Generation 6 profile.",
+ "notes": [
+  "Strength: the user's Defense -1 and Special Defense -1 on every hit (doc: \"now lowers the user's Defense and Sp. Def in addition to dealing damage\"; no chance given, so guaranteed; same shape as Close Combat's user drops)",
+  "Checked, no override: Fell Stinger (doc says the effect was not changed, only Power 30 => 70 and PP; the table's Gen 6 Attack +2 on the KO stands); Steel Wing, Force Palm, Needle Arm, Cross Poison, Chatter, Mud Bomb, Freeze-Dry (power / PP / chance only); Rock Smash (power only in Eternal X; the table's 50 % Def -1 stands); Swagger (accuracy only; the table's Attack +2 and confusion match the doc's \"sharply raises the target's Attack\"); Thunder Wave, Dark Void (accuracy only); Mystical Fire (table already Sp. Atk -1 100 %); Drill Peck (crit ratio, not guaranteed); Cut (Type and crit only); Parabolic Charge / Draining Kiss / Absorb / Mega Drain (drain and power only); Ally Switch (priority only)",
+  "Not modelled, not a change: Rototiller, Flower Shield, Magnetic Flux and Gear Up (stat rises by target type / ally ability, no kind in the table); Defog (evasion only, not stored); Power Split / Guard Split / Speed Swap (stat average / swap); Extreme Evoboost (Z-move status, out of scope)"
+ ],
+ "moves": {
+  "Strength": {"fl": ["contact"], "sb": {"def": -1, "spd": -1}, "n": "Eternal X Move Changes.pdf: Strength now lowers the user's Defense and Sp. Def"}
+ },
+ "unsourced": [
+  "Rototiller, Flower Shield, Magnetic Flux, Gear Up: stat rises by target type / ally ability, no kind in the table (the shared table gap, not an Eternal X change)",
+  "Defog: lowers the target's evasion only (not stored); the screen removal is field state"
+ ],
+ "fixtures": [
+  {
+   "title": "Strength: the user's Defense -1 and Sp. Def -1 after the hit (doc)",
+   "move": "Strength",
+   "kind": "hit",
+   "user": {"n": "Machamp", "lv": 50},
+   "target": {"n": "Snorlax", "lv": 50},
+   "field": {},
+   "expect": {"atk.stg": [0, 0, -1, 0, -1, 0]}
+  }
+ ]
+}
