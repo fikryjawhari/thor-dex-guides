@@ -12,7 +12,8 @@ const D = new Proxy({}, { get: (_, key) => guide().data[key] });
 const threeLineFoe = `(()=>{CALC.set('foe','status','tox');CALC.set('foe','fadd','Ghost');CALC.state().tgt[CALC.key('foe')]='dig';CALC.render();})()`;
 
 // Every closed damaging row on two lines (template README → Calc page): at most 33 px; name, KO and min–max on line 1;
-// range, odds and controls on line 2; nothing past the row's right edge; min–max and the range not clipped.
+// range, odds and controls on line 2; nothing past the row's right edge; min–max and the range not clipped. Closed
+// status rows (Not modelled chip, use chip, Z) and empty slots: the same height.
 const rowShape = page => page.value(`(()=>{const bad=[];for(const r of document.querySelectorAll('.dres .mr:not(.st):not(.em):not(.open)')){const mm=r.querySelector('.mm'),a=mm.getBoundingClientRect(),n=r.querySelector('.mv').textContent.trim(),q=s=>mm.querySelector(s),rc=e=>e.getBoundingClientRect(),mv=rc(q('.mv')),hp=q('.hp'),ko=q('.ko');
  if(a.height>33.5)bad.push(n+': '+a.height+' px');
  if(Math.abs(rc(hp).top-mv.top)>2)bad.push(n+': .hp not on line 1');
@@ -20,6 +21,7 @@ const rowShape = page => page.value(`(()=>{const bad=[];for(const r of document.
  for(const e of mm.querySelectorAll('.r2>*:not(.ko)'))if(rc(e).width&&rc(e).top<mv.bottom-1)bad.push(n+': '+e.className+' not on line 2');
  for(const e of mm.querySelectorAll('.r1 *,.r2 *'))if(rc(e).width&&rc(e).right>a.right+0.5)bad.push(n+': '+(e.className||e.tagName)+' past the right edge');
  const pc=[...mm.querySelectorAll('.r2>span')].find(x=>/%$/.test(x.textContent.trim()));for(const e of [hp,pc])if(e&&e.scrollWidth>e.clientWidth+0.5)bad.push(n+': '+e.className+' clipped');}
+ for(const r of document.querySelectorAll('.dres .mr.st:not(.open),.dres .mr.em')){const h=r.querySelector('.mm').getBoundingClientRect().height;if(h>33.5)bad.push((r.querySelector('.mv')?.textContent.trim()||'empty slot')+': '+h+' px');}
  return bad;})()`);
 
 // A custom attacker (Blissey or a Normal type) at level 50 with these moves and item against the four-Pokémon trainer.
@@ -365,6 +367,10 @@ const checks = [
         await tapField(page, protect);
       }
       await page.value(`document.querySelector('details.dfield').open=false`);
+      // Status rows: Not modelled (Baton Pass), an effect chip (Swords Dance), Z in Z profiles.
+      await page.value(attacker(['Baton Pass', 'Swords Dance', 'Tackle', 'Fire Fang']));
+      await page.settle();
+      await shape('status rows');
       // Fainted.
       await page.value(`(()=>{CALC.set('foe','hp',0);CALC.render();})()`);
       await page.settle();
