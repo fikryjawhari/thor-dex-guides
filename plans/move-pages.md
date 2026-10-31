@@ -152,7 +152,7 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
   predated the Pokémon page's rail jumps; nothing wrong in the page). Running: 4b-i effect coverage (Sol, branch
   `worktree-move-pages-fx`, files `tools/calc/`, `calc.js` / `calc.css`), 5a move page (Sol, `worktree-move-pages-mp`,
   files `dex.js` / `dex.css`: split by file so they run side by side), 4c decide session (Sol thread, branch
-  `worktree-move-pages-calclayout`, spec `plans/calc-layout.md`, mockups only). Next: merge fx and mp one at a time,
+  `worktree-move-pages-calclayout`, spec `plans/calc-layout.md` (built and deleted: decisions in template/README.md), mockups only). Next: merge fx and mp one at a time,
   then 4b-ii (Photonic Z status effects), 5b (ability page, Pokémon-page marks), 4c build, 6, 7.
 - 2026-10-31 (later): 4b-i merged (586d140): `tools/calc/effects_coverage.mjs` (all M, zero gaps; in npm test),
   shared Not-modelled reasons (`tools/calc/move-coverage.json`), Rest / Speed Swap / Power Split / Defog ... 5a merged
@@ -165,6 +165,14 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
   aa89157: `calc_effects.json` `zmoves` (Z effect only; no copied records). Photonic kb's 729th route was noise (a
   serial rerun: only the 728 `#/m/` routes). Running: 5b (Opus, `worktree-move-pages-ab`); 4c spec in its decide
   thread (`worktree-move-pages-calclayout`).
-- 2026-10-31 (later): 4c spec merged (937afd5, `plans/calc-layout.md`; short-wide below 392 tall); the build runs on
+- 2026-10-31 (later): 4c spec merged (937afd5, `plans/calc-layout.md`, since built and deleted; short-wide below 392 tall); the build runs on
   Opus (`worktree-move-pages-cl`). The user's move-page feedback (filter as "+ Filter" on the Back line, on every
   filter page; the sticky Learned-by headers painted `--bg` inside a `--panel` card) went to 5b.
+- 2026-11-01: 5b merged (5bae3ba): ability page (Moves it affects, collapsed; Pokémon with it All / Normal / Hidden),
+  an "A" mark after a Pokémon's moves its own ability affects (tap: a row "Iron Fist: Power ×1.3"), "+ Filter" on the
+  Back line of the move / ability pages, sticky group headers in the card colour. 4c merged (388b8df): two-line rows,
+  Δn, short-wide, 20 px battle-state row, Field / grid pass the wheel to the page; fixes found on the way: the Not
+  modelled chip made status rows 35 px (now 15 px chip, 32 px rows), an added fight type on a dual-type foe was
+  ignored by the engine (Smogon reads two types; `instrument.mjs` multiplies the third in, every guide), Defog's chip
+  hid Clear Fog (the chip now clears the Fog too). Units 1-5 done. Open for the user: is the "A" mark right; is Defog
+  clearing the Fog in the same tap right. Next: 6 (item pages: decide, then build), 7 (audit).
