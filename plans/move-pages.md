@@ -176,3 +176,6 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
   ignored by the engine (Smogon reads two types; `instrument.mjs` multiplies the third in, every guide), Defog's chip
   hid Clear Fog (the chip now clears the Fog too). Units 1-5 done. Open for the user: is the "A" mark right; is Defog
   clearing the Fog in the same tap right. Next: 6 (item pages: decide, then build), 7 (audit).
+- 2026-11-01: unit 6 decide session started (Sol thread "Decide: item pages", branch `worktree-move-pages-items` from
+  044042e): data inventory per guide (`plans/item-pages-data.md`), mockups, spec `plans/item-pages.md`. Then the build
+  here (per-guide extract units from the inventory, then the template), then 7 (audit).
