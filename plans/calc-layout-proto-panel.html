@@ -1,0 +1,5 @@
+<div style="margin-top:12px;font:14px system-ui;display:flex;flex-wrap:wrap;gap:8px 14px">
+ <label>Moves <select onchange="thorFrame().setOption('moves',this.value)"><option value="l2">2 lines: KO on line 1, odds on line 2</option><option value="l3">3 lines: odds on line 3</option><option value="now">Today</option></select></label>
+ <label>Short wide <select onchange="thorFrame().setOption('short',this.value)"><option value="auto">Auto (480+ wide, under 420 tall)</option><option value="on">Always (480+ wide)</option><option value="off">Off (today)</option></select></label>
+ <label>Fight changes <select onchange="thorFrame().setOption('fx',this.value)"><option value="sum">Δn button, tap for chips</option><option value="chips">Chips (today)</option></select></label>
+</div>

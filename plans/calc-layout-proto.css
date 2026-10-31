@@ -1,0 +1,70 @@
+/* Calc layout prototype (unit 4c decide step), injected into a built guide by plans/calc-layout-proto.py.
+   Body classes from the frame panel: px-moves-{l2,l3,now}, px-short (auto: wide and under 420 tall), px-fx-{sum,chips}. */
+
+/* ---- Moves l2: line 1 name … KO · min–max; line 2 Z · HP chip · % range · odds … H / C ---- */
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em)>.mm{display:flex;flex-wrap:wrap;align-items:center;column-gap:3px;row-gap:0}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .r1,
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .r2{display:contents}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .mv{order:0;flex:1 1 0;min-width:0}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .hp{order:2;flex:none}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em)>.mm::after{content:'';order:3;flex:0 0 100%;height:0}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .r2>*{order:5;flex:none;font-size:9px}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .r2>span{line-height:13px}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .r2>.rz{order:4}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .r2>span:not(.ko):not(.dodds):not(.dmovecontrols):not(.dturn){order:6;font-size:10px;font-weight:700;color:var(--fg);white-space:nowrap}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .r2>.ko{order:1;flex:0 1 auto;min-width:0;font-size:10px;line-height:15px}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .r2>.dodds{order:7;flex:1 1 0;min-width:0}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .r2>.dmovecontrols{order:8;margin-left:auto}
+body.calc-route.px-moves-l2 .dres .mr:not(.st):not(.em) .dd{order:10;flex:0 0 100%;min-width:0}
+
+/* ---- Moves l3: line 1 name … min–max; line 2 Z · % range … KO · H / C; line 3 odds ---- */
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em)>.mm{display:flex;flex-wrap:wrap;align-items:center;column-gap:3px;row-gap:0}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .r1,
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .r2{display:contents}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .mv{order:0;flex:1 1 0;min-width:0}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .hp{order:1;flex:none}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em)>.mm::before{content:'';order:2;flex:0 0 100%;height:1px}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .r2>*{order:4;flex:none;font-size:9px}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .r2>span{line-height:13px}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .r2>.rz{order:3}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .r2>span:not(.ko):not(.dodds):not(.dmovecontrols):not(.dturn){order:5;font-size:10px;font-weight:700;color:var(--fg);white-space:nowrap}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .r2>.ko{order:6;margin-left:auto;font-size:10px}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .r2>.dmovecontrols{order:7;margin-left:0}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em)>.mm::after{content:'';order:8;flex:0 0 100%;height:0}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .r2>.dodds{order:9;flex:1 1 100%;min-width:0;line-height:11px;height:11px}
+body.calc-route.px-moves-l3 .dres .mr:not(.st):not(.em) .dd{order:10;flex:0 0 100%;min-width:0}
+/* every closed slot as tall as a three-line row, so the two columns line up */
+body.calc-route.px-moves-l3 .dres .mr:not(.open)>.mm{min-height:41px;box-sizing:border-box}
+
+/* ---- Fight changes: Δn beside Edit; tap shows the chips (tap a chip: clear, as today) ---- */
+body.calc-route.px-fx-sum .cc:not(.px-fopen)>.dfch{display:none}
+.cc .px-dsum{display:none}
+body.calc-route.px-fx-sum .cc .px-dsum{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:18px;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--acc);font:700 11px/1 system-ui;cursor:pointer;touch-action:manipulation;flex:none}
+body.calc-route.px-fx-sum .cc.px-fopen .px-dsum{background:var(--acc);border-color:var(--acc);color:#111}
+@media(max-width:479.98px){
+ body.calc-route.px-fx-sum .cc .px-dsum{order:8}
+}
+@media(min-width:480px){body.calc-route.px-fx-sum .cc .cl .px-dsum{min-height:20px}}
+
+/* ---- Short wide (480+ wide, under 420 tall): the narrow page's top (box above the fold, trainer bar, team strips)
+   with the wide match below; trainer bar and battle-state row share a line, team and foe strips are one row each ---- */
+@media(min-width:480px){
+ body.calc-route.px-short .fit,body.calc-route.px-short .fit:not(:has(.ban)){grid-template-areas:"ban ban" "box box" "tside fight" "team foe" "cm cf" "mv mf";grid-template-rows:none;align-content:start;gap:2px}
+ body.calc-route.px-short .fit:not(:has(.ban)){grid-template-areas:"box box" "tside fight" "team foe" "cm cf" "mv mf"}
+ body.calc-route.px-short .dbox{display:contents}
+ body.calc-route.px-short .dbox>.mg{grid-area:box;height:136px;box-sizing:border-box;display:flex;flex-direction:column;padding:2px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+ body.calc-route.px-short .dbox>.mg .tools{flex:none}
+ body.calc-route.px-short .dbox>.mg .dstrip{flex:1 1 auto;min-height:0;height:0;overflow-y:auto}
+ body.calc-route.px-short .top>.dtrainer{grid-area:tside;align-self:stretch;background:none;border:0;padding:0;min-height:0}
+ body.calc-route.px-short .dtrainer .fteam{display:none}
+ body.calc-route.px-short .dfight{grid-area:fight;align-self:stretch}
+ body.calc-route.px-short .dteam{grid-area:team;margin:0;padding:2px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+ body.calc-route.px-short .dfoe{display:block;grid-area:foe;padding:2px}
+ body.calc-route.px-short .dteamrow,body.calc-route.px-short .dfoe .dstrip{grid-template-columns:repeat(6,minmax(0,1fr));gap:2px}
+ body.calc-route.px-short .dteamrow button,body.calc-route.px-short .dfoe .dstrip button{height:24px;min-height:24px;padding:0}
+ body.calc-route.px-short .dside.dteam .dstrip .spr,body.calc-route.px-short .dfoe .dstrip .spr{width:22px;height:22px}
+ body.calc-route.px-short .fit{min-height:calc(100vh + 140px)}
+}
+
+/* ---- Battle-state row 2 px lower (selects, S / D, reset) ---- */
+body.calc-route .dfight select,body.calc-route .dfight .dformat button,body.calc-route .dfight .dfreset{height:20px;min-height:20px}
