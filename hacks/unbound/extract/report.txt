@@ -490,6 +490,7 @@ items: item pages give 20 places the Locations pages lack: S.S. Ticket (Seaport 
 walkthrough: parts 40, splits 11, stops 122, steps 182, missions 84, children 475, items 448, trainers 393
 walkthrough: longest mission mission-013 (Basic Literacy), 47 children
 walkthrough: mission-only checklists: postgame/mission-hq, postgame/dehara-city, postgame/magnolia-town, postgame/tehl-town, postgame/tarmigan-town, postgame/gurun-town, postgame/crater-town, postgame/tomb-of-borrius
+move metadata: 782 moves; no structured source: Endless Edge, InfernalRage, Metal Bash
 items: walkthrough rows left as they were: 1 [['Key Items', 'Costume Box', 'Also: Frozen Heights · Speak to your mother in your house']]
 prune: kept 1093 removed 21 pikachu_belle, pikachu_cosplay, pikachu_libre, pikachu_phd, pikachu_pop_star, pikachu_rock_star, cubone_a, zygarde_10, zacian, zacian_crowned, zamazenta, zamazenta_crowned, eternatus, kubfu, urshifu, urshifu_rapid, glastrier, spectrier, calyrex, calyrex_ice_rider, calyrex_shadow_rider
 trainers put in walkthrough order: Vega Split [Cap 26], Mel Split [Cap 36], Maxima Split [Cap 40], Galavan Split [Cap 45], Big Mo Split [Cap 52], Tessy Split [Cap 57]
