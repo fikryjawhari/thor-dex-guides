@@ -11,6 +11,7 @@ import re
 import changes
 from common import key, report
 from eidex import AD, CR, MD, SD, SDA, TD, TN, FC, MEGA, NAME, canon, item, keep, sp
+from move_metadata import Metadata
 
 mvname = lambda i: MD.get(str(i), {}).get('name', f'move {i}')
 spname = lambda i: NAME.get(canon(i), sp.get(i, {}).get('speciesName', f'#{i}'))
@@ -98,6 +99,14 @@ def build(D):
     # type chart: attacking type -> multiplier x10 per defending type id
     TCH = {TD[k]['typeName']: {TN[j]: TD[k]['matchup'][j] for j in TN if j < len(TD[k]['matchup'])} for k in TD}
     D.update(M=M, MV=MV, AB=AB, P=P, TC=TCH, src='eidex repo (Mar 2026)')
+
+
+def move_metadata(D):
+    metadata = Metadata()
+    by_name = {key(move['name']): move for move in MD.values()}
+    for name, move in zip(D['M'], D['MV']):
+        metadata.apply(name, move, by_name[key(name)])
+    metadata.finish()
     merge_changes(D)
 
 

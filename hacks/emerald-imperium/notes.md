@@ -108,6 +108,27 @@ Data rules:
   there, and the mart sells more).
 - **Move changes** compare EI data with Showdown Gen 9; status moves with a nominal 100 accuracy and variable-power moves
   (Showdown power 0) are not counted as changes.
+- **Move targets, properties and added effects** (`move_metadata.py`, run by `dex.move_metadata` on the merged MV):
+  MV.tg, MV.f and MV.se come from the release's `moves_info.h` (iriv24/pokeemerald-expansion `2576d0f`), with the
+  config read as the release builds it (latest generation, `B_USE_FROSTBITE` on, so "freeze" chances are frostbite).
+  Group fields (`makesContact`, `punchingMove`, EI's own `kickingMove`, ...) map to moveprops PROPS; a field set to
+  `B_EXTRAPOLATED_MOVE_FLAGS` takes the EI Dex `flags` instead. `noprotect` comes from `ignoresProtect` (a reliable
+  flag, so `protect_flags` applies). `secondary` follows each added effect's chance / `sheerForceBoost`; recoil, drain,
+  crash, multihit, charge, recharge and binding follow the move's effect. MV.se lists every added effect with its
+  chance (self effects as "user ..."), plus recoil / drain / heal fractions and a few EI-specific phrases in
+  `move_metadata.py`; nothing is read from description prose. **Showdown Gen 9 fallback** (only where both the
+  expansion and the dex are silent): the target of `MOVE_TARGET_DEPENDS` moves (call moves such as Metronome, Assist)
+  and side / team targets the expansion files as `USER` (Reflect, Tailwind, Heal Bell, Flower Shield, ...); the build
+  report lists every one. Counter / Mirror Coat / Metal Burst / Comeuppance are `scripted`; Life Dew `allies`.
+- **Interactions** (MI): the stock latest-generation rules (`tools/moveprops.py`) plus `extract/move_rules.json`, each
+  entry citing the release source line: Iron Fist ×1.3 (stock 1.2); EI originals Striker (kicking ×1.3), ORAORAORAORA!
+  (punching moves except multi-hit ones hit again for 50%), Bone Zone (its four bone moves), THE GRIPPER (contact
+  traps), Parasitic Waste (the poisoning moves drain), Bad Company (two records: self stat drops, recoil); changed
+  Ice Body (frostbite on contact), Liquid Voice (sound ×1.2), Shield Dust (entry hazards), Mountaineer (Stealth Rock);
+  item Kicking Shoes (kicking ×1.1, no contact). The contact / kicking / punching lists are the move lists of MV.f at
+  this build (the override format takes names), so recheck them when moves change. Other EI originals and changes
+  work by type, category, stat or every move (Blazing Soul, Corrosion, Fatal Precision, Emperor's Presence, ...),
+  so they get no move rule (moveprops docstring: Exclusions).
 - **Trainers** (trainers.py). Pairing: whole trainers by species overlap + name tokens (127 / 137), then per Pokémon
   (doubles with two calc trainers search every calc trainer; same dex number allows form names such as
   Wishiwashi-School). 674 of 677 Pokémon have a calc set; the 3 without are the Route 103 rival starters (the calc has
