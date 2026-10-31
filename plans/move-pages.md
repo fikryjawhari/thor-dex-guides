@@ -116,3 +116,12 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
   records are 36 bytes, flags at 0x20 not ORAS 0x1e), `-bb2r` ee8e88c, `-unbound` c39f259. Worktrees under
   `~/.t3/worktrees/thor-dex-guides/`. A resumed agent works in that same worktree (or merges the branch first) and
   repeats the original brief's remaining steps (rebuild, gate --data, calc checks, notes, report).
+- 2026-10-31: unit 2 finished on Claude (EI, Hardlove, 3DS on Opus; BB2R, Unbound on Haiku) and merged; unit 3
+  (reconcile) done: every guide has MV.f / tg / se and MI (EI 113, Hardlove 108, Photonic 94, Eternal X 72, BB2R 65,
+  Unbound 120 rows); moveprops tests, calc `npm test` and `assemble.py` pass. Added in reconcile: `move_rules.json`
+  `prop` / `unless` (select by property, no stale name lists) and `gen` (a generation correction: no "changed" tag);
+  Unbound's type-based Gale Wings / Grass Dash / Evaporate left out like Blaze. Known gaps: Unbound's Endless Edge,
+  InfernalRage, Metal Bash and Hardlove's Collision Course have no metadata (no source); 18 BB2R Shadow moves (mirror
+  only) none. For unit 4: Hardlove's code gives Zippy Zap no Sheer Force boost (the agent's finding; check the calc),
+  BB2R's `over.moves` punch flags on Needle Arm / Rock Smash now repeat MV.f (optional cleanup).
+  Next: unit 4 (calc fight-only type / ability / item changes + effect odds), then 4b, 5.
