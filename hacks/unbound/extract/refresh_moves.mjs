@@ -79,6 +79,7 @@ for (const [index, name] of data.M.entries()) {
     if (!statuses.every(status => String(move.secondary.onHit).includes(`'${status}'`))) throw new Error(`${name}: secondary callback drift`);
     record.effectOverrides = [{chance: move.secondary.chance, alternatives: statuses.map(status => ({kind: 'status', status}))}];
   }
+  if (id === 'fakeout') record.effectOverrides = [{kind: 'flinch', condition: 'first turn out only'}]; // Showdown onTry; Unbound text
   if (id === 'burningjealousy') record.effectOverrides = [{kind: 'status', status: 'brn', condition: 'target raised stats this turn'}];
   if (id === 'secretpower') record.effectOverrides = [
     {kind: 'status', status: 'par', chance: 30, condition: 'no terrain or Electric Terrain'},
