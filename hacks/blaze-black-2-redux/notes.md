@@ -47,9 +47,12 @@ Dex (2026-10-29):
   Axel). Where the mirror's value differs the move gets a "Sources disagree" card ("Move Changes says Power 35;
   RomHackDex says 20"): 154 fields (Power 64, PP 61, Accuracy 25, Type 3, Priority 1), the audit's count. The general
   "sound moves hit through Substitute" line names no move and stays in the report.
-- **No move descriptions**: the BB2R mirror has none (moves.json and the move pages); MV.d is empty. MV.f (flags) and
-  MV.cr (crit stage) are not set: the calc unit owns them (doc: Cut, Dragon Claw, Octazooka, X-Scissor gain high
-  crit; Crabhammer loses it).
+- **No move descriptions**: the BB2R mirror has none (moves.json and the move pages); MV.d is empty.
+- **Move properties** (`extract/move_metadata.py`, `tools/moveprops.py`): MV.f (flags), MV.tg (target) and MV.se
+  (added effects with odds) for the 559 moves in M; the 18 mirror-only Shadow moves have none. Stock Gen V
+  from Showdown, Move Changes' replacements over it (Scald 10% burn, Chatter, Tri Attack, ...) and the page-only
+  flags. MI (ability / item links) comes from the rules in `move_rules.json`. MV.cr (crit stage) is set by
+  extract/dex.py (doc: Cut, Dragon Claw, Octazooka, X-Scissor gain high crit; Crabhammer loses it).
 - **Abilities**: the names P uses, with the mirror's descriptions (all 166 have one).
 - **Type chart**: the mirror's chart (types/index.html). Type Changes.txt has species types only; the chart agrees
   with what the docs state (Fairy added as in Gen VI; Steel no longer resists Ghost / Dark).
@@ -402,12 +405,15 @@ permanent ability weather). Type chart: data `TC` (Fairy, Gen VI Steel). Overrid
 | Cut, Dragon Claw, Octazooka, X-Scissor high crit; Crabhammer not | Move Changes | `MV.cr` (extract/dex.py, with Gen V's high-crit list, Bulbapedia) | `crit ratio changes` (check) |
 | Wild Charge: no recoil | Move Changes | `over.moves` `recoil: null` | `wild-charge`, check |
 | Triple Axel hits 30 / 40 / 50 (power 30, later hits +10, "Triple Kick mechanics") | Move Changes; the user's call 2026-10-29 | `over.moves` `step: 10` (engine: each later hit adds the step; hit actions too) | `triple-axel` (known difference: hzla 30 x 3), check |
-| Needle Arm, Rock Smash boosted by Iron Fist | Move Changes; Changelog 291 | `over.moves` punch flag | `iron-fist-*` (known differences: hzla doesn't flag them), negatives |
+| Needle Arm, Rock Smash boosted by Iron Fist | Move Changes; Changelog 291 | `MV.f` punch (move_rules Iron Fist `add`); `over.moves` punch flag repeats it | `iron-fist-*` (known differences: hzla doesn't flag them), negatives |
 | Sound moves hit through Substitute | Move Changes, Further Modifications | nothing: the calc has no Substitute state | sound flags (Soundproof) |
 | Power / type / category / accuracy | Move Changes | data (`MV`) | `frost-breath`, `shadow-claw-90`, `esper-wing`, `wave-crash`, `hex-*` |
 
-`MV.f` is omitted, so the engine keeps stock Gen V flags (modern ones for the replacement moves); an empty list
-meant "no flags" and switched off Iron Fist / Soundproof.
+`MV.f` is set on every move, so the engine reads the guide's list instead of stock flags (present = replaces them;
+Protect stays stock unless `noprotect`). Every stock Gen V flag is in it (checked against the calc's Gen V move data:
+none missing; MV.f has contact on 186 moves, sound 18, punch 17); the page-only ones (bullet, bite, pulse, slicing, wind, bypasssub, reflectable,
+...) change no damage here, since BB2R has none of the abilities that read them (Bulletproof, Strong Jaw, Mega
+Launcher, Sharpness, Wind Rider). Iron Fist, Soundproof and the contact abilities read the list.
 
 **Level bug** (Challenge; hzla's model): a trainer Pokemon with `sl` has stats at `sl`; the damage formula uses the
 shown level `l`; Night Shade / Seismic Toss / Psywave use `sl` (hzla `handleFixedDamageMoves`); the player's Pokemon

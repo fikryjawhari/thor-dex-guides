@@ -17,6 +17,7 @@ import locs  # noqa: E402
 import trainers  # noqa: E402
 import items  # noqa: E402
 import walk  # noqa: E402
+import move_metadata  # noqa: E402
 
 EMPTY = {'LOC': [], 'AR': [], 'IT': [], 'WK': {'splits': [], 'np': []}, 'TR': {'g': [], 'caps': []}}
 
@@ -30,6 +31,7 @@ def main():
             report('not built yet:', module.__name__, '(%s)' % error)
     for k, v in EMPTY.items():
         data.setdefault(k, v)
+    move_metadata.build(data)
     names = [n for fixer in (SPECIES, MOVES, ABILITIES) for n in fixer.lines()]
     report('doc name fixes: %d (%s)' % (sum(f.count() for f in (SPECIES, MOVES, ABILITIES)),
            ', '.join('%s %d' % (f.kind, f.count()) for f in (SPECIES, MOVES, ABILITIES))))
