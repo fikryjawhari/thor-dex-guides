@@ -601,6 +601,29 @@ Scenario: `tools/scenarios/dex-page.mjs`.
    above themselves, with no exposed gap. Not one long mixed table or a saved method filter.
 Scenario: `tools/scenarios/move-page.mjs`, every guide, all viewer sizes in normal and `dvkb` modes.
 
+**Ability page** (`#/a/<index>`, decided 2026-10-31; `abilityDetail` in dex.js):
+1. The top card keeps the name, description (or the original one), hack changes and source line; the Pokémon-list
+   filter link belongs in it, as on the move page (absent when no Pokémon has the ability).
+2. Moves it affects (N = distinct moves), a `.sec` card collapsed on open, reads only `MI` records naming the ability
+   (`a`): Its holder's moves (`w: 'u'`), then Moves used against it (`w: 't'`), each only when present. Equal effect
+   text (`e`) is one block: the effect, the word changed for `h: 1`, then its moves (`moveList`: alphabetical, type,
+   power, tap = move page). One effect per block, not one flat move list, so Mega Launcher's healing line and Magic
+   Guard's two lines keep their own moves. No card when no record names it.
+3. Pokémon with it has the move page's picker (`pickCard` / `bindPick`, shared with Learned by): All / Normal /
+   Hidden with counts, only groups present; All shows each group collapsed, picking one shows only it, open; open
+   headers stick. Normal = one of `p.a`, Hidden = `p.ha`; a species with it in both is in both. Nothing saved.
+
+**Ability marks on the Pokémon page** (the compact moves table, `ownBoosts` / `bindBoosts` in dex.js): a move that one
+of this Pokémon's (this form's) own abilities affects (`MI`, `w: 'u'`, ability in `p.as`) gets an A in an accent dot
+after its name, in every tab, at every width: one form, no per-width variant. It is a button (padded hit area, no
+hover or `title`): a tap inserts a row under the move naming each ability that affects it, hidden when it's the hidden
+ability, and what it does ("Iron Fist: Power ×1.3", changed when `h: 1`); a second tap removes it. Not saved; the row
+goes when the tab changes. At 260 the dot wraps under a long name rather than widening the table. Rejected: a legend
+line under the table (repeats per tab and reads as instructions), a `title` tooltip (no hover on a touch screen),
+fuller per-width text (the multiplier column would cost the name column its room at 260), target-side records (those
+are about moves used against it, which this table doesn't list).
+Scenario: `tools/scenarios/ability-page.mjs`, every guide, all viewer sizes in normal and `dvkb` modes.
+
 **Search:** the full-window search on every device (the in-page keyboard in the viewer or `dvkb`, the device keyboard
 elsewhere). The current page's section first, then Pokémon, Filters, Locations, Trainers, Items, Walkthrough. Each
 result has action buttons (Dex, Trainers, Places, Walk, Filter...) that jump or search; Enter searches the current page.
