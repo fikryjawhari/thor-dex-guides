@@ -2,7 +2,7 @@
 (()=>{
  const opts={moves:'l2',short:'auto',fx:'sum'};
  const KEY='calcLayoutProto';try{Object.assign(opts,JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(e){}
- const isShort=()=>opts.short==='on'||(opts.short==='auto'&&innerWidth>=480&&innerHeight<420);
+ const isShort=()=>opts.short==='on'||(opts.short==='auto'&&innerWidth>=480&&innerHeight<392);
  const OPEN=new Set();
  const apply=()=>{const b=document.body;for(const c of [...b.classList])if(c.startsWith('px-'))b.classList.remove(c);
   b.classList.add('px-moves-'+opts.moves,'px-fx-'+opts.fx);b.classList.toggle('px-short',opts.short!=='off'&&isShort()&&innerWidth>=480);};
