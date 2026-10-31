@@ -154,3 +154,9 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
   files `dex.js` / `dex.css`: split by file so they run side by side), 4c decide session (Sol thread, branch
   `worktree-move-pages-calclayout`, spec `plans/calc-layout.md`, mockups only). Next: merge fx and mp one at a time,
   then 4b-ii (Photonic Z status effects), 5b (ability page, Pokémon-page marks), 4c build, 6, 7.
+- 2026-10-31 (later): 4b-i merged (586d140): `tools/calc/effects_coverage.mjs` (all M, zero gaps; in npm test),
+  shared Not-modelled reasons (`tools/calc/move-coverage.json`), Rest / Speed Swap / Power Split / Defog ... 5a merged
+  (1d33dbd): the move page (target grid, `#/mp/<prop>` lists, added effects, Affected by, Learned-by selector;
+  scenario `move-page`); its full gate: only `#/m/` routes differ, 154 pass, but Photonic kb domcompare flagged 729
+  routes for 728 moves: find the extra one (`LIST=1 node tools/domcompare.mjs ... --kb`). Sol hit its limit: 4b-ii
+  resumed on Opus (`worktree-move-pages-z`), 5b (ability page + Pokémon marks) on Opus (`worktree-move-pages-ab`).
