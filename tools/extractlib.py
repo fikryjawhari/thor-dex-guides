@@ -30,6 +30,7 @@ sys.path.insert(0, os.path.join(ROOT, 'tools'))
 import datajson  # noqa: E402
 import itemstd  # noqa: E402
 import schema  # noqa: E402
+import moveprops  # noqa: E402
 import trainer_fields  # noqa: E402
 import trainer_keys  # noqa: E402
 from splits import split_name  # noqa: E402,F401  (re-exported for the hacks' modules)
@@ -175,7 +176,8 @@ def trainers_follow_walk(D):
 def finalise(D, hack, prune=None):
     """The end of every build: Items standard (tools/itemstd.py), the hack's species prune, stable trainer keys
     (tools/trainer_keys.py: extract/trainer_keys.json), Trainers page in walkthrough order, shared split names, the data
-    schema (tools/schema.py: dead fields dropped, stop keys, key order). Idempotent."""
+    move properties/interactions (tools/moveprops.py), schema (tools/schema.py: dead fields dropped, stop keys,
+    key order). Idempotent."""
     itemstd.standardise(D, itemstd.RULES.get(hack, {}), report)
     if prune:
         prune(D)
@@ -183,6 +185,7 @@ def finalise(D, hack, prune=None):
     trainers_follow_walk(D)
     split_names(D)
     trainer_fields.annotate(D)
+    moveprops.apply(D, hack, report)
     schema.standardise(D)
 
 

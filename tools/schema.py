@@ -14,10 +14,11 @@ Walkthrough s accepts legacy [text, note] pairs or mission {m, n, u, r, note?, s
 
 # Canonical key order per object kind. Optional fields (omitted when empty) are marked in the notes, not here.
 ORDER = {
-    'top': ['M', 'MV', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'GID', 'built'],
+    'top': ['M', 'MV', 'MI', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'GID', 'built'],
     'P': ['id', 'n', 'dex', 't', 'a', 'ha', 's', 'ef', 'et', 'of', 'lv', 'tm', 'tu', 'eg', 'w', 'g', 'hi',
           'stone', 'sloc', 'nu', 'fc', 'cf'],
-    'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'cr', 'd', 'f', 'h', 'dc', 'e', 'cf', 'x'],
+    'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'cr', 'd', 'tg', 'f', 'se', 'h', 'dc', 'e', 'cf', 'x'],
+    'MI': ['a', 'i', 'w', 'e', 'm', 'h', 's'],
     'AR': ['n', 'l', 'st', 'sub', 'in', 'es', 'map', 'ns', 'note'],
     'IT': ['n', 'k', 'note', 'r'],
     'WK': ['splits', 'np', 'docs', 'ko', 'cheats', 'cnote'],
@@ -70,6 +71,8 @@ def standardise(D):
             a.pop()
     for m in D['MV']:
         order(m, 'MV')
+    for interaction in D.get('MI', []):
+        order(interaction, 'MI')
     for a in D['AR']:
         a.pop('t', None)
         order(a, 'AR')

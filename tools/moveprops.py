@@ -8,7 +8,8 @@ Protect flags call protect_flags(), before dropping protect.
 
 effect_text({kind, chance=100, who='target', ...}) returns MV.se [chance,text].
 Kinds: status (status=brn/par/psn/tox/slp/frz), flinch, confusion, stages
-(stages={atk:1, def:-1}), recoil/drain/heal (fraction=[numerator,denominator]).
+(stages={atk:1, def:-1}), recoil/drain/heal (fraction=[numerator,denominator],
+optional basis=damage/maxhp; defaults damage for recoil/drain, maxhp for heal).
 Render chance before effect text; recoil/drain/heal are complete phrases.
 
 apply(D,hack) normalises MV.f, reports invalid metadata, replaces MI. Items
@@ -27,22 +28,33 @@ Unknown/ambiguous references report and skip. Changes get h=1,s=src; unchanged
 stock moves survive additions/removals. Only present owners are emitted.
 rules_path is a test seam; production uses the hack's extract directory.
 
-Audit: local EI .src/repos/showdown abilities.js/items.js. The expansion
-snapshot has moves_info.h but no battle_util.c, battle_script_commands.c or
-battle_ai. Hack agents override historical/custom mechanics using source.
+Audit: local EI .src/repos/showdown abilities.js/items.js (Showdown 0.11.11),
+and missing expansion sources fetched read-only to .tmp/u1 from
+iriv24/pokeemerald-expansion 2576d0f3f4c861c760f0c55198e37e6d7b91683e:
+src/battle_util.c, battle_script_commands.c, battle_ai_main.c. Inspect move
+flags, secondaries, recoil, multihit, base power, priority and explicit lists,
+including checks delegated to checkMoveMakesContact()/engine events. EI's
+Iron Fist is 1.3 there, not stock 1.2: its agent must supply an override.
+Showdown 0.11.11 dist/sim/pokemon.js was also checked for Utility Umbrella
+effectiveWeather semantics; moves.js supplies its explicit move lists.
 
 Exclusions: type (Blaze, Steelworker, -ate/Normalize/Liquid Voice, plates,
 gems, absorb abilities); universal/category (Life Orb, Choice items, Huge
 Power, Hustle, Parental Bond, Infiltrator, Sniper, Battle/Shell Armor,
-Pressure, Protean/Libero, Magician, Stench, King's Rock, Razor Fang, Shell
-Bell, generic damage-trigger items/abilities); status-immunity (Limber,
+Pressure, Protean/Libero, Magician, Shell Bell, Muscle Band, Wise Glasses,
+Assault Vest, generic damage-trigger items/abilities); status-immunity (Limber,
 Insomnia, Immunity, Water Veil, Magma Armor, Own Tempo, Sweet Veil, Purifying
 Salt); field (terrain/weather abilities including Psychic Surge); indirect
-(item-loss, HP-threshold, species/form changes, Fling/Natural Gift payloads).
+(item-loss, HP-threshold, automatic species/form changes, Fling/Natural Gift
+payloads). Move-specific form changes (Gulp Missile, King's Shield) are included.
 These are move-independent descriptions, not near-complete move lists.
 Stage/status reactions are included when their added-effect kind is known.
 Primary status-move stage changes use explicit stock name lists; overrides
-must update these for a hack that changes them. CAP/hack rules use overrides.
+must update these for a hack that changes them. CAP/hack rules use overrides;
+unreleased Future entries (Piercing Drill) and informational warning abilities
+(Anticipation, Forewarn) are not stock interactions. Accuracy modifiers applying
+to all moves (Compound Eyes, Victory Star, No Guard, Wide/Zoom Lens, evasion
+items, Micle Berry, Blunder Policy) are universal, not property-selected rules.
 """
 
 import json
@@ -120,6 +132,8 @@ STATUS_NAMES = {'brn': 'burn', 'par': 'paralysis', 'psn': 'poison',
 
 def effect_text(effect):
     """Build one [chance, text] pair; invalid structured input raises ValueError."""
+    if not isinstance(effect, dict):
+        raise ValueError('effect must be a mapping')
     chance = effect.get('chance', 100)
     if not _number(chance) or not 0 <= chance <= 100:
         raise ValueError('chance must be a number from 0 to 100')
@@ -149,7 +163,7 @@ def effect_text(effect):
             raise ValueError('fraction must be [positive numerator, denominator], at most 1')
         percent = f'{100 * fraction[0] / fraction[1]:.2f}'.rstrip('0').rstrip('.') + '%'
         basis = effect.get('basis', 'maxhp' if kind == 'heal' else 'damage')
-        if basis not in ('damage', 'maxhp'):
+        if basis not in ('damage', 'maxhp') or kind == 'drain' and basis != 'damage':
             raise ValueError('basis must be damage or maxhp')
         measure = 'damage' if basis == 'damage' else 'maximum HP'
         text = {'recoil': f'Recoil: {percent} of {measure}',
@@ -177,7 +191,16 @@ RULES = [
     _rule('a', 'Rock Head', 'u', 'No recoil damage', flag='recoil', not_names=['Struggle']),
     _rule('a', 'Magic Guard', 'u', 'No recoil or crash damage', flags_any=['recoil', 'crash'], not_names=['Struggle']),
     _rule('a', 'Magic Guard', 'u', 'No indirect self-damage', names=['Mind Blown', 'Steel Beam', 'Chloroblast']),
-    _rule('a', 'Technician', 'u', 'Power ×1.5 when effective power ≤60', bp_max=60, damaging=True),
+    _rule('a', 'Magic Guard', 't', 'No binding damage (still trapped)', flag='binding'),
+    _rule('a', 'Magic Guard', 't', 'No residual damage', names=['Leech Seed', 'Curse', 'Nightmare', 'Salt Cure', 'G-Max Vine Lash', 'G-Max Wildfire', 'G-Max Cannonade', 'G-Max Volcalith']),
+    _rule('a', 'Technician', 'u', 'Power ×1.5 when effective power ≤60', damaging=True, any=[
+        {'bp_max': 60}, {'names': ['Low Kick', 'Grass Knot', 'Heavy Slam', 'Heat Crash',
+                                 'Gyro Ball', 'Electro Ball', 'Flail', 'Reversal',
+                                 'Return', 'Frustration', 'Crush Grip', 'Wring Out',
+                                 'Hard Press', 'Eruption', 'Water Spout', 'Dragon Energy',
+                                 'Fling', 'Present', 'Trump Card', 'Beat Up', 'Punishment',
+                                 'Stored Power', 'Power Trip', 'Magnitude']},
+    ]),
     _rule('a', 'Sheer Force', 'u', 'Power ×1.3; removes added effects', flag='secondary', damaging=True),
     _rule('a', 'Serene Grace', 'u', 'Added-effect chance ×2 (up to 100%)', effect='chance'),
     _rule('a', 'Shield Dust', 't', 'Blocks added effects on the target', effect='secondary-target'),
@@ -202,6 +225,8 @@ RULES = [
     _rule('a', 'Dancer', 't', 'Copies the dance', flag='dance'),
     _rule('a', 'Magic Bounce', 't', 'Reflects it', flag='reflectable'),
     _rule('a', 'Damp', 't', 'Prevents use while on the field', names=['Explosion', 'Self-Destruct', 'Mind Blown', 'Misty Explosion']),
+    _rule('a', 'Gulp Missile', 'u', 'Loads prey for a later counterattack (Cramorant)', names=['Surf', 'Dive']),
+    _rule('a', 'Stance Change', 'u', 'Changes Aegislash to Shield Forme', names=["King's Shield"]),
     _rule('a', 'Liquid Ooze', 't', 'Draining hurts the user instead of healing', any=[{'flag': 'drain'}, {'names': ['Leech Seed', 'Strength Sap']}]),
     _rule('a', 'Inner Focus', 't', 'Prevents flinching', effect='flinch'),
     _rule('a', 'Steadfast', 't', 'Speed +1 when flinched', effect='flinch'),
@@ -214,6 +239,7 @@ RULES = [
     _rule('a', 'Effect Spore', 't', 'May sleep (11%), paralyse (10%) or poison (9%) the attacker', flag='contact'),
     _rule('a', 'Cute Charm', 't', '30% chance to infatuate the attacker', flag='contact'),
     _rule('a', 'Poison Touch', 'u', '30% chance to poison the target', flag='contact'),
+    _rule('a', 'Stench', 'u', 'Adds 10% flinch', damaging=True, effect='no-flinch'),
     _rule('a', 'Gooey', 't', 'Attacker Speed −1', flag='contact'),
     _rule('a', 'Tangling Hair', 't', 'Attacker Speed −1', flag='contact'),
     _rule('a', 'Mummy', 't', "Replaces the attacker's ability with Mummy", flag='contact'),
@@ -234,6 +260,8 @@ RULES = [
     _rule('i', 'Sticky Barb', 't', 'Transfers to an empty-handed attacker', flag='contact'),
     _rule('i', 'Safety Goggles', 't', 'Blocks it', flag='powder'),
     _rule('i', 'Covert Cloak', 't', 'Blocks added effects on the target', effect='secondary-target'),
+    _rule('i', "King's Rock", 'u', 'Adds 10% flinch', damaging=True, effect='no-flinch'),
+    _rule('i', 'Razor Fang', 'u', 'Adds 10% flinch', damaging=True, effect='no-flinch'),
     _rule('i', 'Throat Spray', 'u', 'SpA +1 after use; consumed', flag='sound'),
     _rule('i', 'Big Root', 'u', 'Recovery ×1.3', any=[{'flag': 'drain'}, {'names': ['Leech Seed', 'Ingrain', 'Aqua Ring', 'Strength Sap']}]),
     _rule('i', 'Power Herb', 'u', 'Skips the charging turn; consumed', flag='charge', not_names=['Sky Drop']),
@@ -251,11 +279,17 @@ RULES = [
     _rule('i', 'Mental Herb', 't', 'Cures mental effects; consumed', names=['Attract', 'Disable', 'Encore', 'Heal Block', 'Taunt', 'Torment']),
     _rule('i', 'Utility Umbrella', 'u', 'Ignores sun/rain changes to recovery', names=['Synthesis', 'Morning Sun', 'Moonlight']),
     _rule('i', 'Utility Umbrella', 'u', 'Prevents sun from skipping the charging turn', names=['Solar Beam', 'Solar Blade']),
+    _rule('i', 'Utility Umbrella', 'u', 'Ignores rain power reduction', names=['Solar Beam', 'Solar Blade']),
+    _rule('i', 'Utility Umbrella', 'u', 'Prevents rain from skipping the charging turn', names=['Electro Shot']),
+    _rule('i', 'Utility Umbrella', 'u', 'Prevents the extra stat boosts in sun', names=['Growth']),
+    _rule('i', 'Utility Umbrella', 'u', 'Ignores sun/rain changes to type and power', names=['Weather Ball']),
+    _rule('i', 'Utility Umbrella', 't', 'Ignores sun/rain changes to accuracy', names=['Thunder', 'Hurricane', 'Bleakwind Storm', 'Sandsear Storm', 'Wildbolt Storm']),
     _rule('i', 'Destiny Knot', 't', 'Infatuates the attacker too', names=['Attract']),
     _rule('i', 'Room Service', 'u', 'Speed −1 when Trick Room begins; consumed', names=['Trick Room']),
     _rule('i', 'Room Service', 't', 'Speed −1 when Trick Room begins; consumed', names=['Trick Room']),
     _rule('i', 'Ability Shield', 't', 'Prevents ability changes or suppression', names=['Simple Beam', 'Entrainment', 'Worry Seed', 'Gastro Acid', 'Core Enforcer', 'Skill Swap']),
     _rule('i', 'Ability Shield', 'u', 'Prevents changes to its own ability', names=['Role Play', 'Skill Swap', 'Doodle']),
+    _rule('i', 'Ability Shield', 't', 'Keeps its ability active against ability-ignoring moves', names=['Sunsteel Strike', 'Moongeist Beam', 'Photon Geyser', 'Light That Burns the Sky', 'Searing Sunraze Smash', 'Menacing Moonraze Maelstrom', 'G-Max Drum Solo', 'G-Max Fireball', 'G-Max Hydrosnipe']),
     _rule('i', 'Float Stone', 'u', 'Halves user weight; may lower power', names=['Heavy Slam', 'Heat Crash']),
     _rule('i', 'Float Stone', 't', 'Halves target weight; may lower power', names=['Low Kick', 'Grass Knot']),
     _rule('i', 'Float Stone', 't', 'Halves target weight; may raise power', names=['Heavy Slam', 'Heat Crash']),
@@ -300,6 +334,15 @@ RULES.extend([
     _rule('a', 'Poison Puppeteer', 'u', 'Pecharunt also confuses targets it poisons', effect='poison'),
 ])
 
+for item, terrain, maximum, stat in (
+    ('Electric Seed', 'Electric Terrain', 'Max Lightning', 'Def'),
+    ('Grassy Seed', 'Grassy Terrain', 'Max Overgrowth', 'Def'),
+    ('Misty Seed', 'Misty Terrain', 'Max Starfall', 'SpD'),
+    ('Psychic Seed', 'Psychic Terrain', 'Max Mindstorm', 'SpD'),
+):
+    for side in ('u', 't'):
+        RULES.append(_rule('i', item, side, f'{stat} +1 when terrain begins; consumed', names=[terrain, maximum]))
+
 RAISING_USER = {
     'Acid Armor', 'Agility', 'Amnesia', 'Autotomize', 'Barrier', 'Bulk Up',
     'Calm Mind', 'Charge', 'Clangorous Soul', 'Coil', 'Cosmic Power', 'Cotton Guard',
@@ -309,6 +352,7 @@ RAISING_USER = {
     'Sharpen', 'Shell Smash', 'Shelter', 'Shift Gear', 'Swords Dance', 'Tail Glow',
     'Victory Dance', 'Withdraw', 'Work Up', 'Acupressure', 'Belly Drum', 'Curse',
     'Magnetic Flux', 'Gear Up', 'Rototiller', 'Flower Shield', 'Stuff Cheeks', 'Stockpile',
+    'Take Heart', 'Tidy Up',
 }
 RAISING_TARGET = {
     'Aromatic Mist', 'Coaching', 'Decorate', 'Flatter', 'Spicy Extract', 'Swagger',
@@ -381,9 +425,11 @@ def _matches(test, name, move):
             effects = _effects(move)
             if value == 'flinch' and not any(text == 'flinch' for _, text in effects):
                 return False
-            if value == 'chance' and not ('secondary' in flags and (not effects or any(chance < 100 for chance, _ in effects))):
+            if value == 'no-flinch' and any(text == 'flinch' for _, text in effects):
                 return False
-            if value == 'secondary-target' and not ('secondary' in flags and (not effects or any(
+            if value == 'chance' and not ('secondary' in flags and (not move.get('se') or any(chance < 100 for chance, _ in effects))):
+                return False
+            if value == 'secondary-target' and not ('secondary' in flags and (not move.get('se') or any(
                 not text.startswith(('user ', 'Recoil:', 'Drains ', 'Heals ')) for _, text in effects
             ))):
                 return False
