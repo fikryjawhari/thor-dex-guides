@@ -390,7 +390,7 @@ export function createEffects(env) {
           const theirs = sides.def.mon.rawStats.spe;
           self.setRaw('spe', theirs);
           sides.def.setRaw('spe', mine);
-          out.parts.push({who: 'both', swap: true});
+          out.parts.push({who: 'both', rawSwap: 'Spe'});
           note('Raw Speed swapped; stages stay');
           return true;
         }
@@ -589,7 +589,7 @@ export function createEffects(env) {
           return true;
         }
         case 'random': case 'log':
-          out.parts.push({who, log: entry.k});
+          out.parts.push({who, log: entry.k, text: entry.text});
           note(entry.k === 'random' ? 'Random stat +2 (set it in Edit)' : entry.text || `${name} (not tracked)`);
           return true;
         case 'stockpile':
@@ -835,6 +835,7 @@ export function describe(out) {
     if (part.reset) { pieces.push('Reset'); full.push('stat changes removed'); }
     if (part.copy) { pieces.push('Copy'); full.push('stat changes copied'); }
     if (part.swap) { pieces.push('Swap'); full.push('stat changes swapped'); }
+    if (part.rawSwap) { pieces.push(part.rawSwap + '↔'); full.push('raw ' + part.rawSwap + ' swapped; stages stay'); }
     if (part.invert) { pieces.push('Invert'); full.push('stat changes inverted'); }
     if (part.cured && !part.item) { pieces.push('Cure'); full.push('status cured'); }
     const whose = part.who === 'def' ? 'target ' : 'user ';
@@ -847,7 +848,7 @@ export function describe(out) {
     if (part.log) {
       pieces.push({type: 'Type', ability: 'Ability', random: '+2 ?'}[part.log] || 'Use');
       full.push({ability: 'ability changed (set it in Edit → Fight)', type: 'type changed (set it in Edit → Fight)',
-        random: 'a random stat +2 (set it in Edit)'}[part.log] || part.log);
+        random: 'a random stat +2 (set it in Edit)'}[part.log] || part.text || part.log);
     }
   }
   const drops = parts.filter(part => part.by < 0 || part.st || part.v || part.lost).length;

@@ -60,6 +60,7 @@ await check('Speed Swap keeps stages and swaps raw Speed in damage and speed cal
   const result = await use('expansion', user, target, 'Speed Swap');
   assert.equal(result.atk.rs.spe, before[1]);
   assert.equal(result.def.rs.spe, before[0]);
+  assert.equal(result.label, 'Spe↔');
   assert.equal(result.atk.stg, undefined);
   assert.equal(own.stats({...user, ...result.atk})[5], before[1]);
   assert.equal(own.speed({...user, ...result.atk}), before[1] * 2);
@@ -136,6 +137,8 @@ await check('Function-only volatiles and PP effects log, without bypassing secon
     assert.ok((await use('expansion', mew, pika, move)).log.some(text => /Trapped/.test(text)), move);
     assert.ok((await use('expansion', mew, mon('Gengar'), move)).fails, move);
     assert.ok(!(await use('gen5', mew, mon('Gengar'), move)).fails, move);
+    const protectedTarget = await use('expansion', mew, pika, move, {defProtect: true});
+    assert.equal(!!protectedTarget.fails, move === 'Spider Web', move + ' Protect');
   }
   assert.ok((await use('expansion', mew, pika, 'Spite')).log.some(text => /PP/.test(text)));
   for (const [move, text] of [['Throat Chop', 'Throatchop'], ['Anchor Shot', 'Trapped'], ['Spirit Shackle', 'Trapped']]) {

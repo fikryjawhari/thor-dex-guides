@@ -364,6 +364,7 @@ function recordFor(tables, gen, id) {
   }
   const flags = entry.flags || {};
   const fl = FLAG_KEYS.filter((f) => flags[f]);
+  if (['block', 'meanlook'].includes(id) && !flags.protect) fl.push('bypassprotect');
   if (fl.length && Object.keys(r).some((k) => k !== 'fl')) r.fl = fl;
   // A note alone is not an effect: the record is empty without the other keys.
   if (isEmpty(r)) return {};
