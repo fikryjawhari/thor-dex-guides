@@ -341,6 +341,16 @@ const moveEffects=move=>(move.se||[]).length?`<ul class="move-effects">${move.se
 function interactionRows(rows){const groups=new Map();rows.forEach(row=>{if(!groups.has(row.e))groups.set(row.e,[]);groups.get(row.e).push(row);});
  return `<div class="move-interactions">${[...groups].map(([effect,entries])=>`<div class="interaction-row"><span class="interaction-effect">${esc(effect)}</span><span class="interaction-who">${entries.map(row=>`<span>${row.a!=null&&AB[row.a]?alink(row.a):esc(row.i||'')}${row.h?'<span class="interaction-changed">changed</span>':''}</span>`).join(', ')}</span></div>`).join('')}</div>`;}
 function moveInteractions(index){const rows=(D.MI||[]).filter(row=>row.m.includes(index));return rows.length?`<div class="sech">Affected by</div>${['u','t'].map(side=>{const entries=rows.filter(row=>row.w===side);return entries.length?`<div class="card move-affected" data-side="${side}">${sectionHTML('mi:'+side,side==='u'?'Boosted / changed by':`Against it (${entries.length})`,'',interactionRows(entries),side==='u')}</div>`:'';}).join('')}`:'';}
+const LEARN_METHODS={Lv:'Level up',TM:'TM',HM:'HM',Tutor:'Tutor',Egg:'Egg',Evo:'Evo'};
+function moveLearnGroups(index){const machines=new Set((D.IT||[]).filter(section=>section.k==='tm').flatMap(section=>section.r.filter(row=>row[2]===index).map(row=>/^HM\d/i.test(row[0])?'HM':/^TM\d/i.test(row[0])?'TM':null)).filter(Boolean));
+ const groups={};(learn[index]||[]).forEach(([pokemon,how])=>{const methods=how==='TM'?(machines.size?[...machines]:['TM']):[how.split(' ')[0]];
+  methods.forEach(method=>{(groups[method]??=[]).push([pokemon,how==='TM'?method:how]);});});return Object.entries(LEARN_METHODS).filter(([method])=>groups[method]?.length).map(([method,label])=>({method,label,rows:groups[method]}));}
+function moveLearnTable(rows){return `<table class="lrn">${rows.map(([pokemon,how])=>`<tr><td class="learn-sprite">${sprl(pokemon.id,'s40')}</td><td>${plink(pokemon.id)}${tag(pokemon)}<div>${pokemon.t.map(ty).join('')}</div></td><td class="n">${esc(how)}</td></tr>`).join('')}</table>`;}
+function moveLearnBody(groups,method){return groups.filter(group=>method==='all'||method===group.method).map(group=>sectionHTML('ml:'+group.method,group.label,`<span class="mut small">${group.rows.length}</span>`,moveLearnTable(group.rows),method!=='all')).join('');}
+function moveLearnedBy(index){const groups=moveLearnGroups(index),count=groups.reduce((total,group)=>total+group.rows.length,0);
+ return `<div class="card move-learn"><h3>Learned by (${count})</h3><div class="sub" role="group" aria-label="Learned by method"><button type="button" class="on" data-method="all" aria-pressed="true">All (${count})</button>${groups.map(group=>`<button type="button" data-method="${group.method}" aria-pressed="false">${group.label} (${group.rows.length})</button>`).join('')}</div><div class="learn-groups">${moveLearnBody(groups,'all')}</div></div>`;}
+function bindMoveLearn(index){const root=app.querySelector('.move-learn'),groups=moveLearnGroups(index);root.querySelectorAll('[data-method]').forEach(button=>button.onclick=()=>{
+ root.querySelectorAll('[data-method]').forEach(other=>{other.classList.toggle('on',other===button);other.setAttribute('aria-pressed',String(other===button));});root.querySelector('.learn-groups').innerHTML=moveLearnBody(groups,button.dataset.method);});}
 const propertyMoves=prop=>Object.hasOwn(MOVE_PROPS,prop)?MV.map((move,index)=>moveProps(move).includes(prop)?index:-1).filter(index=>index>=0):[];
 const moveList=indices=>`<div class="list move-list">${[...indices].sort((first,second)=>M[first].localeCompare(M[second])).map(index=>`<a class="row" href="#/m/${index}"><span class="nm">${esc(M[index])}</span>${MV[index].t?ty(MV[index].t):''}<span class="bst">${esc(MV[index].bp??'-')}</span></a>`).join('')}</div>`;
 function moveProperty(prop){const moves=propertyMoves(prop);if(!moves.length){history.replaceState(history.state,'','#/');render();return;}
@@ -354,8 +364,7 @@ const MOVE_TARGETS={normal:['one one . me one .','One adjacent Pokémon'],any:['
  all:['on on on on on on','The whole field'],scripted:['one one . me . .','The last Pokémon to hit the user']};
 function moveTarget(target){const spec=MOVE_TARGETS[target];if(!spec)return '';const [cells,label]=spec;
  return `<div class="tgw" data-target="${esc(target)}"><div class="tgg" aria-hidden="true">${cells.split(' ').map((cell,index)=>`<i class="${cell==='.'?'':cell}">${index===3?'You':''}</i>`).join('')}</div><div class="tgt"><div class="mut small">Targets</div>${esc(label)}</div></div>`;}
-function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const r=(learn[i]||[]);const tms=(D.IT||[]).filter(s=>s.k==='tm').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>[s.n==='Move Tutors'?'Tutor':x[0].split(' ')[0],x[1]]));
- const order={Evo:0,Lv:0,TM:1,Tutor:2,Egg:3};r.sort((a,b)=>(order[a[1].split(' ')[0]]-order[b[1].split(' ')[0]])||a[0].i-b[0].i);
+function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tms=(D.IT||[]).filter(s=>s.k==='tm').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>[s.n==='Move Tutors'?'Tutor':x[0].split(' ')[0],x[1]]));
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
  <div class="card"><h2 style="margin:0 0 6px">${esc(M[i])}${v.x?` <span class="tag">${CF.orig} original</span>`:''}</h2><div>${v.t?ty(v.t):''} ${cat(v.c)}</div>
  <div class="mvst">${[['Power',v.bp??'-'],['Accuracy',v.ac!=null?v.ac+'%':'Never misses'],['PP',v.pp??'-'],['Priority',v.pr>0?'+'+v.pr:v.pr||0]].map(([n,x])=>`<div><span>${n}</span><b>${x}</b></div>`).join('')}</div>
@@ -368,8 +377,7 @@ function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const r=(learn[i]||[])
  <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'mv',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div>
  <div class="mut small" style="margin-top:8px">${TX.mvsrc}${v.x&&TX.mvsrcx?TX.mvsrcx:''}.</div></div>
  ${moveInteractions(i)}
- <div class="card"><h3>Learned by (${r.length})</h3><table class="lrn">${r.map(([p,h])=>`<tr><td style="width:44px">${sprl(p.id,'s40')}</td><td>${plink(p.id)}${tag(p)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${h}</td></tr>`).join('')}</table>
- </div>`;window.scrollTo(0,0);}
+ ${moveLearnedBy(i)}`;bindMoveLearn(i);window.scrollTo(0,0);}
 // ===== ABILITY PAGE
 const abSlot=(p,i)=>{const n=new Set(p.a).size,r=[];if(p.a.includes(i))r.push(n===1?'Only ability':'Ability '+(p.a.indexOf(i)+1));if(p.ha===i)r.push('Hidden ability');return r.join(', ');};
 function abilityDetail(i){fil.innerHTML='';const a=AB[i];if(!a){app.innerHTML='<p>Not found.</p>';return;}const us=abUsers[i]||[];

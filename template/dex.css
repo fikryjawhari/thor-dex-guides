@@ -395,6 +395,10 @@ table.lt td.n{vertical-align:top}table.lt .rt{display:block;white-space:nowrap}
 .interaction-effect{color:var(--mut);overflow-wrap:anywhere}
 .interaction-who{overflow-wrap:anywhere}
 .interaction-changed{color:var(--acc);font-size:11px;font-weight:700;margin-left:4px}
+.move-learn .sec[open]>summary{position:sticky;top:0;z-index:2;background:var(--bg);box-shadow:0 -5px 0 var(--bg)}
+.move-learn .learn-sprite{width:44px;padding-left:0;padding-right:4px}
+.move-learn .lrn td{padding-left:3px;padding-right:3px}
+.move-learn .lrn td:last-child{font-size:12px}
 .move-list .row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 6px;padding:5px 6px}
 .move-list .nm{overflow-wrap:anywhere}
 .move-list .ty{margin:0}
