@@ -109,3 +109,10 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
 
 ## Status
 - 2026-10-31: plan and mockup (`plans/move-pages-mockup.py` -> `.html`, panel; preview `move-pages.html`) with the user.
+- 2026-10-31: unit 1 merged (`tools/moveprops.py`, 137 rules; King's Rock / Razor Fang / Stench dropped as universal).
+  Calc adapter: Protect stays stock unless `noprotect` (959deb5, calc tests pass). Unit 2 dispatched (Sol) from
+  959deb5; all stopped on the Sol sharing limit with WIP commits, resume from each branch's last commit (its body
+  says next): `worktree-move-pages-ei` b115b6a, `-hl` 2a3c98d (or later), `-3ds` bd349d1 (Eternal X bug: XY move
+  records are 36 bytes, flags at 0x20 not ORAS 0x1e), `-bb2r` ee8e88c, `-unbound` c39f259. Worktrees under
+  `~/.t3/worktrees/thor-dex-guides/`. A resumed agent works in that same worktree (or merges the branch first) and
+  repeats the original brief's remaining steps (rebuild, gate --data, calc checks, notes, report).
