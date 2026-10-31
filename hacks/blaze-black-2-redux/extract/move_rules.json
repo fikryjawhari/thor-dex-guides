@@ -1,0 +1,7 @@
+[
+  {"a":"Iron Fist","w":"u","add":["Needle Arm","Rock Smash"],"src":"Move Changes.txt:384-387,458-461; Changelog.txt:291"},
+  {"a":"Prankster","w":"u","e":"Priority +1","src":"Stock Gen V; Showdown abilities-gen6.ts prankster.onTryHit undefined (Dark immunity starts Gen VII); docs specify no change"},
+  {"a":"Overcoat","w":"t","remove":["Spore","Stun Spore","Poison Powder","Sleep Powder","Cotton Spore","Rage Powder"],"src":"Stock Gen V; Showdown abilities-gen5.ts overcoat.onTryHit undefined; docs specify no powder immunity"},
+  {"a":"Oblivious","w":"t","remove":["Taunt"],"src":"Stock Gen V; Showdown abilities-gen5.ts oblivious.onTryHit only Captivate; docs specify no Taunt immunity"},
+  {"i":"Binding Band","w":"u","e":"Binding damage becomes 1/8 maximum HP","src":"Stock Gen V; Showdown moves-gen5.ts partiallytrapped condition; Item Changes.txt has no binding mechanic change"}
+]
