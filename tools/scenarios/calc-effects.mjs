@@ -39,6 +39,62 @@ const stages = (page, side) => page.value(`[...(CALC.mon(${JSON.stringify(side)}
 const mon = (page, side) => page.value(`(()=>{const m=CALC.mon(${JSON.stringify(side)});return {stg:[...(m.stg||[0,0,0,0,0])],status:m.status||'',used:!!m.used};})()`);
 
 const checks = [{
+  id: 'raw swap rest and defog',
+  title: 'Speed Swap changes card Speed, Rest heals and sleeps, Defog changes the actual field',
+  sizes: [[260, 316], [480, 392]],
+  skip: has('Speed Swap', 'Rest', 'Defog') ? '' : 'no Speed Swap / Rest / Defog',
+  run: async page => {
+    await page.route('#/calc');
+    await page.value(duel(['Speed Swap', 'Rest', 'Defog']));
+    await page.value("CALC.set('mine','a',-1);CALC.set('mine','stg',[0,0,0,0,0]);CALC.set('foe','stg',[0,0,0,0,0]);CALC.render()");
+    const before = await page.value("[CALC.speed('mine'),CALC.speed('foe')]");
+    await tapFx(page, 'Speed Swap');
+    assert.deepEqual(await page.value("[CALC.speed('mine'),CALC.speed('foe')]"), [before[1], before[0]]);
+    await page.value("CALC.set('mine','hp',1);CALC.render()");
+    await tapFx(page, 'Rest');
+    assert.equal((await mon(page, 'mine')).status, 'slp');
+    assert.ok(await page.value("CALC.mon('mine').hp>1"));
+    await page.value("CALC.set('mine','status','');const state=CALC.state();state.field.defSpikes=2;state.field.defReflect=true;state.fman.push('defSpikes','defReflect');CALC.render()");
+    await tapFx(page, 'Defog');
+    assert.equal(await page.value('CALC.state().field.defSpikes'), false);
+    assert.equal(await page.value('CALC.state().field.defReflect'), false);
+  },
+}, {
+  id: 'not modelled coverage',
+  title: 'unsupported status chip, opened reason and damaging partial reason fit without horizontal scroll',
+  sizes: [[260, 316], [480, 392]],
+  skip: has('Roar', 'U-turn') ? '' : 'no Roar / U-turn',
+  run: async page => {
+    await page.route('#/calc');
+    await page.value(duel(['Roar', 'U-turn', 'Splash']));
+    assert.equal(await page.value(`${row('Roar')}.querySelector('.dnotmodelled').textContent`), 'Not modelled');
+    assert.equal(await page.value(`${row('Roar')}.querySelector('.dnotmodelled').disabled`), true);
+    assert.equal(await page.value(`${row('U-turn')}.querySelector('.r1 .dnotmodelled')`), null);
+    await page.value(`${row('Roar')}.querySelector('.mm').click()`);
+    await page.settle();
+    assert.match(await page.value(`${row('Roar')}.querySelector('.dnmreason').textContent`), /Not modelled: Switching isn't modelled/);
+    await page.value(`${row('U-turn')}.querySelector('.mm').click()`);
+    await page.settle();
+    assert.match(await page.value(`${row('U-turn')}.querySelector('.dnmreason').textContent`), /Switching isn't modelled/);
+    assert.equal(await page.value(`${row('Splash')}.querySelector('.dnotmodelled').textContent`), 'No effect');
+    assert.ok(await page.value('document.documentElement.scrollWidth<=innerWidth'), 'no horizontal scroll');
+  },
+}, {
+  id: 'power split switch',
+  title: 'Power Split uses its existing switch and changes calculated attacking stats',
+  sizes: [[260, 316], [480, 392]],
+  skip: has('Power Split', 'Tackle') ? '' : 'no Power Split / Tackle',
+  run: async page => {
+    await page.route('#/calc');
+    await page.value(duel(['Power Split', 'Tackle']));
+    const before = await page.value(`${row('Tackle')}.querySelector('.r1 .hp').textContent`);
+    await page.value(`${row('Power Split')}.querySelector('[data-a="movetoggle"]').click()`);
+    await page.settle();
+    assert.equal(await page.value('CALC.state().field.powerSplit'), true);
+    const after = await page.value(`${row('Tackle')}.querySelector('.r1 .hp').textContent`);
+    assert.notEqual(after, before, 'damage changes with the shared raw Attack');
+  },
+}, {
   id: 'status buttons',
   title: 'Swords Dance raises the player, Leer lowers the foe; the label is the effect; +6 caps to Fails',
   sizes,
