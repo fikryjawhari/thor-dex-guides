@@ -338,6 +338,9 @@ const MOVE_PROPS={contact:'Makes contact',nocontact:'No contact',punch:'Punching
 const moveProps=move=>{const flags=move.f||[];return [...(move.c&&move.c!=='Status'&&!flags.includes('contact')?['nocontact']:[]),...Object.keys(MOVE_PROPS).filter(prop=>flags.includes(prop))];};
 const moveProperties=move=>`<ul class="move-props">${moveProps(move).map(prop=>`<li><a href="#/mp/${prop}">${MOVE_PROPS[prop]}</a></li>`).join('')}</ul>`;
 const moveEffects=move=>(move.se||[]).length?`<ul class="move-effects">${move.se.map(([chance,text])=>`<li>${chance===100&&/^[A-Z]/.test(text)?'':esc(chance)+'% '}${esc(text)}</li>`).join('')}</ul>`:'';
+function interactionRows(rows){const groups=new Map();rows.forEach(row=>{if(!groups.has(row.e))groups.set(row.e,[]);groups.get(row.e).push(row);});
+ return `<div class="move-interactions">${[...groups].map(([effect,entries])=>`<div class="interaction-row"><span class="interaction-effect">${esc(effect)}</span><span class="interaction-who">${entries.map(row=>`<span>${row.a!=null&&AB[row.a]?alink(row.a):esc(row.i||'')}${row.h?'<span class="interaction-changed">changed</span>':''}</span>`).join(', ')}</span></div>`).join('')}</div>`;}
+function moveInteractions(index){const rows=(D.MI||[]).filter(row=>row.m.includes(index));return rows.length?`<div class="sech">Affected by</div>${['u','t'].map(side=>{const entries=rows.filter(row=>row.w===side);return entries.length?`<div class="card move-affected" data-side="${side}">${sectionHTML('mi:'+side,side==='u'?'Boosted / changed by':`Against it (${entries.length})`,'',interactionRows(entries),side==='u')}</div>`:'';}).join('')}`:'';}
 const propertyMoves=prop=>Object.hasOwn(MOVE_PROPS,prop)?MV.map((move,index)=>moveProps(move).includes(prop)?index:-1).filter(index=>index>=0):[];
 const moveList=indices=>`<div class="list move-list">${[...indices].sort((first,second)=>M[first].localeCompare(M[second])).map(index=>`<a class="row" href="#/m/${index}"><span class="nm">${esc(M[index])}</span>${MV[index].t?ty(MV[index].t):''}<span class="bst">${esc(MV[index].bp??'-')}</span></a>`).join('')}</div>`;
 function moveProperty(prop){const moves=propertyMoves(prop);if(!moves.length){history.replaceState(history.state,'','#/');render();return;}
@@ -364,6 +367,7 @@ function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const r=(learn[i]||[])
  ${v.h&&v.h.length?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.mvh}</b><ul>${v.h.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${v.dc||!TX.nodc?'':`<div class="mut small">${TX.nodc}</div>`}</div>`:''}${v.cf?confBox(v.cf):''}
  <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'mv',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div>
  <div class="mut small" style="margin-top:8px">${TX.mvsrc}${v.x&&TX.mvsrcx?TX.mvsrcx:''}.</div></div>
+ ${moveInteractions(i)}
  <div class="card"><h3>Learned by (${r.length})</h3><table class="lrn">${r.map(([p,h])=>`<tr><td style="width:44px">${sprl(p.id,'s40')}</td><td>${plink(p.id)}${tag(p)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${h}</td></tr>`).join('')}</table>
  </div>`;window.scrollTo(0,0);}
 // ===== ABILITY PAGE
