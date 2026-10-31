@@ -131,10 +131,7 @@ for (const ability of ['Bellow', 'Sound Waves']) {
 rules.push({a: 'Drill Beak', w: 'u', e: 'Always critical (unless blocked)', add: Object.keys(moves).filter(name => moves[name].isDrill), src: 'unboundcalc/gen78_YA0k.js:60; moves_YA0k.js:3733-3734,3836; hzla/calc/mechanics/gen789.js:178'});
 rules.push({a: 'Slippery Tail', w: 'u', e: 'Priority becomes +1', add: Object.keys(moves).filter(name => moves[name].isTail), src: 'unboundcalc/gen78_YA0k.js:150-152; moves_YA0k.js isTail (includes Tail Glow and Tail Whip); hzla Unbound profile afterMoveType'});
 rules.push({a: 'Portal Power', w: 't', e: 'Damage ×0.75', add: noncontact, src: 'unboundcalc/gen78_YA0k.js:1002-1003; hzla Unbound profile finalMods (!move.flags.contact)'});
-const typed = (type, damaging) => Object.keys(moves).filter(name => data.MV[data.M.indexOf(name)].t === type
-  && (!damaging || data.MV[data.M.indexOf(name)].c !== 'Status'));
-rules.push({a: 'Gale Wings', w: 'u', e: 'Priority becomes +1', add: typed('Flying', false), src: 'unboundwiki.json Gale Wings ("Flying-type moves hit first", no HP condition); unboundcalc/gen78_YA0k.js:146-150 (no HP check)'});
-rules.push({a: 'Grass Dash', w: 'u', e: 'Priority becomes +1', add: typed('Grass', false), src: 'unboundwiki.json Grass Dash ("Grass-type moves hit first"); unboundcalc/gen78_YA0k.js:146-150'});
-rules.push({a: 'Evaporate', w: 't', e: 'Blocks it; ups Sp. Atk', add: typed('Water', true), src: 'unboundwiki.json Evaporate ("Nullifies all water to up Sp. Atk."); unboundcalc/gen78_YA0k.js:207 (water immunity only; the calc has no boost)'});
+// Type-based abilities (Gale Wings, Grass Dash: a type's moves first; Evaporate: Water immunity) are left out,
+// as the shared table leaves out Blaze and the absorb abilities (plans/move-pages.md, Out of scope).
 writeFileSync(resolve(here, 'move_rules.json'), JSON.stringify(rules, null, 2) + '\n');
 console.log(`metadata: ${Object.keys(moves).length}; missing: ${missing.join(', ')}`);
