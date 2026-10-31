@@ -29,6 +29,19 @@ Branch `worktree-move-pages` (every guide + template). Status at the bottom.
   serves all; else a short form on narrow cards (e.g. "30% flinch" only, or the top one + "…") and the full list on
   wide cards, with the expanded card always holding the full list. Guaranteed effects keep applying as now;
   chances are text only.
+- **Calc: type, ability and item changes for the fight** (the user, 2026-10-31). Today these moves' buttons only log
+  (`template/README.md` → Move effects: "ability / type changes and item swaps (set them in Edit)"). New per-Pokémon
+  battle state, in the card's battle-state row, for every Pokémon (not only Protean / Libero): its types, ability
+  and item for this fight, stored by name (types, ability name, item name) in the existing fight fields (`FIGHT`
+  in calc.js), so ↺ and Reset fight put them back and the saved set / Edit never changes. The engine reads them
+  in place of the set's. Moves that set them (resolver kinds `type`, `ability`, `trick`, `steal`, `knock`...):
+  Soak, Trick-or-Treat, Forest's Curse, Magic Powder, Reflect Type, Conversion / Conversion 2, Camouflage, Burn Up /
+  Double Shock (user loses the type); Worry Seed, Simple Beam, Entrainment, Skill Swap (both), Role Play, Doodle,
+  Gastro Acid (ability suppressed), Core Enforcer; Trick / Switcheroo (both), Bestow, Thief / Covet, Knock Off,
+  Corrosive Gas, Incinerate, Bug Bite / Pluck; contact abilities Mummy / Wandering Spirit / Lingering Aroma. The
+  card shows what changed (e.g. a chip "+Ghost", "Insomnia", "Item: Toxic Orb", tap = clear it). Saved-state rules:
+  names only, a gone name drops; `tools/scenarios/guide-update.mjs` snapshot gains the fields; a `calc-effects`
+  scenario per kind. Its own unit after the move data (engine + calc.js), before the page template unit.
 - **Item pages** (phase 2, its own decide step): description, icon, price, where found, held by, moves it affects;
   then the Items tab can drop what the pages carry.
 - Data: every guide gets the same move properties and targets, from its own source (code / game data first), with
@@ -76,9 +89,10 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
    fallback named in notes.md; `move_rules.json` for the hack's own / changed abilities (known: Hardlove
    `Mechanics.txt:26-32`, BB2R Iron Fist + Needle Arm / Rock Smash, EI originals, Unbound originals).
 3. Reconcile (main chat): rebuild all, review `MI` per guide.
-4. Template: move page, ability page (per the mockup), schema doc, scenario.
-5. Item pages: decide (mockup), then build.
-6. Audit.
+4. Calc: fight-only type / ability / item changes and the effect odds (engine + calc.js).
+5. Template: move page, ability page (per the mockup), schema doc, scenario.
+6. Item pages: decide (mockup), then build.
+7. Audit.
 
 
 ## Status
