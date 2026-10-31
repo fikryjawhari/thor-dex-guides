@@ -120,7 +120,6 @@ const checks = [{
     await page.route('#/calc');
     assert.deepEqual(await chips(page, 'foe'), ['+Ghost'], 'kept for the fight');
     const fits = await page.value(`(()=>{const c=document.querySelector('.cc[data-s=foe]').getBoundingClientRect(),b=document.querySelector('.cc[data-s=foe] .dfc').getBoundingClientRect();return b.right<=c.right+0.5&&b.left>=c.left-0.5;})()`);
-    await page.screenshot('fs-manual-' + await page.value('innerWidth'));
     assert.ok(fits, 'chip inside its card');
     await page.tap('.cc[data-s=foe] .dfc');
     assert.deepEqual(await page.value(`CALC.types('foe')`), own, 'chip tap clears');

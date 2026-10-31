@@ -708,5 +708,6 @@ body.calc-route .dres .mr.st .hp .dturn.hu{height:auto;min-height:15px;line-heig
 .cc .dfc{max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 9.5px/14px system-ui;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--acc);cursor:pointer;touch-action:manipulation}
 body.calc-route .cc>.dfch{order:12;flex:none;width:100%}
 /* Effect odds (calc.js oddsOf) on the closed row beside the KO text: as much as fits, then …; the open row lists all. */
-.mr .dodds{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--mut);font-weight:400}
+.mr .r2:has(.dodds)>span:not(.dodds){white-space:nowrap}
+.mr .dodds{flex:0 100 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--mut);font-weight:400}
 .mr .dodds2{color:var(--mut)}
