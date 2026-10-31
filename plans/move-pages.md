@@ -101,7 +101,9 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
    `Mechanics.txt:26-32`, BB2R Iron Fist + Needle Arm / Rock Smash, EI originals, Unbound originals).
 3. Reconcile (main chat): rebuild all, review `MI` per guide.
 4. Calc: fight-only type / ability / item changes and the effect odds (engine + calc.js).
+4a. Calc: the KO chance in the opened row (the user's feedback, below). Small; first thing next session.
 4b. Calc: the effect coverage pass (every guide) and Z status effects (Photonic).
+4c. Calc layout decide session (mockup, Sol / Haiku xhigh): the closed rows are crowded (below). Spec, then build.
 5. Template: move page, ability page (per the mockup), schema doc, scenario.
 6. Item pages: decide (mockup), then build.
 7. Audit.
@@ -131,3 +133,17 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
   clear them. Effect odds on the closed damaging row (one layout, odds shrink first), all in the open row. Zippy Zap:
   the Hardlove calc gives it no Sheer Force boost already (no change). Conversion 2 only logs (random). Scenario
   `calc-fight-state`. Next: merge it into `worktree-move-pages`, then 4b, 5.
+- 2026-10-31: unit 4 merged into `worktree-move-pages` (cd18ccc); assemble and calc `npm test` pass. Previews
+  `calc-ei.html`, `calc-ps.html`. The user's feedback (Thor screenshot, EI calc, 260 px): happy otherwise, but
+  - **KO chance**: the closed row's "2HKO 43.2%"-style text gets truncated with the odds after it, so the KO chance
+    can't be read anywhere. Put the KO chance (the number of hits and its %) in the opened row, always in full
+    (unit 4a). Tooltips are no answer: `title` never shows on Android / the Thor (no hover, no long-press tooltip).
+  - **Crowding**: the closed damaging row is now % range + KO text + odds on one line. Options the user named: hide
+    the KO text on the closed row when it won't fit (the % range already says how many hits), or a third line
+    (probably too tall, especially if Pokémon cards also grow). The user wants a separate calc UI decide session
+    (mockup) for another compression pass over the whole calc page (unit 4c); until then leave the closed row as is.
+  - Known failing check (not this branch's): `walkcheck` / `walkcheck-kb` on EI's Pokémon page, `#/p/1 RJ WRONG 10
+    w260` (rail jumps), failing the same way on 78e8426: from the merged dex-page work. Fix in unit 5 (it touches
+    that page anyway) or before.
+  - Worker worktrees / branches to remove (all merged): `~/.t3/worktrees/thor-dex-guides/t3-*` with branches
+    `worktree-move-pages-{u1,ei,hl,3ds,bb2r,unbound,calc}` (`git worktree remove`, then `git branch -d`).

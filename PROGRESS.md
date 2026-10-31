@@ -28,13 +28,13 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   sections, family evolution, compact moves, vertical stat calc, Use in calc ▸ in the top card; changed abilities show
   one statement (data `AB` [4], EI's 15 in `hacks/emerald-imperium/extract/ability_text.json`) and the ability page
   the original ([5]) and the change. `template/README.md` → Pokémon page; scenario `dex-page.mjs`. Not yet on the Thor.
-- **Next session: move and ability pages overhaul** (the user, 2026-10-31): move pages gain flags (contact, sharpness /
-  punch / sound / bite..., boosted by which abilities); ability pages list the moves they affect (Iron Fist → its
-  punching moves). Decide step first (mockup, spec in `plans/`). Unflagged ability changes found in other guides
-  (report only, not in their data): Hardlove Gold `.src/Mechanics.txt:26-32` (Libero every time, Battle Bond +1 Atk
-  / +1 Spe, Moody with accuracy / evasion, No Guard ignores OHKO level, permanent weather and Surge abilities);
-  Blaze Black 2 Redux Iron Fist also boosts Needle Arm and Rock Smash (`notes.md:405`); Unbound maybe permanent
-  weather and Gale Wings with no HP condition (mirror only, unconfirmed). Flag them with statements as part of it.
+- **Move, ability and item pages + calc fight state: in progress on `worktree-move-pages`** (worktree
+  `.claude/worktrees/move-pages`, not merged, not pushed). Plan, units and status: `plans/move-pages.md` (read its
+  Status section first). Done: shared move properties / targets / effect odds and ability-item rules
+  (`tools/moveprops.py`, `MV.f` / `tg` / `se`, top-level `MI`, per-hack `extract/move_rules.json`) in all six guides;
+  calc fight-only types / ability / item and effect odds on move rows; trainer full page links to Trainers /
+  Walkthrough. Next: 4a (KO chance in the opened calc row), 4b (every move does something + Photonic Z status
+  effects), 4c (calc layout decide session), 5 (move / ability page template per the mockup), 6 (item pages), 7 audit.
 - Where things are decided: `template/README.md` (template, UI, calc page), `tools/calc/README.md` (engine),
   `template/calc/readers/README.md` (save readers), each hack's `notes.md` (data, Damage calc, In-game tests / checks).
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
