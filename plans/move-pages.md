@@ -17,6 +17,14 @@ Branch `worktree-move-pages` (every guide + template). Status at the bottom.
 - **Ability page**: "Moves it affects (N)", collapsed by default, under the description: what it does, then the moves
   (name, type, power). "Pokémon with it": a selector All / Normal / Hidden (counts), Hidden in its own group like
   the move page's methods (sticky header, collapsed on open). The filter link moves into the top card.
+- **Properties as links** (the user, 2026-10-31): a property on a move page ("Sound move", "Makes contact") opens a
+  list of every move with it (name, type, power; tap = the move page). Route like `#/mp/<prop>`; no saved state.
+- **Boosts on the Pokémon page**: the moves its own abilities affect get a small mark ("×1.2" / the ability's short
+  name) in the compact moves table, only if it fits the minimum width with no sideways scroll and no clutter; if it
+  doesn't fit at 260 px, drop it (say so in the build report).
+- **Effect odds in the calc**: the move's `MV.se` odds ("30% flinch") on the outer move card, next to the damage %
+  and the 2HKO text; if it crowds the card at 260 px, the expanded view instead. Guaranteed effects keep applying
+  as now; chances are text only.
 - **Item pages** (phase 2, its own decide step): description, icon, price, where found, held by, moves it affects;
   then the Items tab can drop what the pages carry.
 - Data: every guide gets the same move properties and targets, from its own source (code / game data first), with
