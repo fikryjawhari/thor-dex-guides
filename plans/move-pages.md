@@ -42,6 +42,17 @@ Branch `worktree-move-pages` (every guide + template). Status at the bottom.
   card shows what changed (e.g. a chip "+Ghost", "Insomnia", "Item: Toxic Orb", tap = clear it). Saved-state rules:
   names only, a gone name drops; `tools/scenarios/guide-update.mjs` snapshot gains the fields; a `calc-effects`
   scenario per kind. Its own unit after the move data (engine + calc.js), before the page template unit.
+- **Calc: every move does what it does** (the user, 2026-10-31). Every move with an in-game function gets an effect
+  in the calc (Splash and the like excepted). Start from the report: `move_effects.mjs --report` (status moves with no
+  record) and `effects_audit.mjs <hack>` per guide (records with `fn` = unmapped, kinds that only log); classify each:
+  implement (a stage / status / field / fight-state change the calc has state for, or gains it in the unit above),
+  or "Not modelled" with a reason the button shows (switching: Roar, Teleport, U-turn's switch; turn-order and
+  accuracy only). The report's list goes in the build report; nothing silently does nothing.
+  Z status effects (Photonic Sun, profile `zmove`): status rows get the Z toggle too, and Z-on applies the Z effect
+  before the move (Z-Celebrate all +1, Z-Splash Atk +3, Z-Swords Dance resets lowered stats, Z-Memento heals the
+  replacement → logged, Z-Curse by type...). Table generated from Showdown's `zMove` per move (`move_effects.mjs`),
+  then checked against Photonic's game data for its changed moves (game data wins; "Doc says" on differences).
+  No move-by-move hand pass unless the game data differs.
 - **Item pages** (phase 2, its own decide step): description, icon, price, where found, held by, moves it affects;
   then the Items tab can drop what the pages carry.
 - Data: every guide gets the same move properties and targets, from its own source (code / game data first), with
@@ -90,6 +101,7 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
    `Mechanics.txt:26-32`, BB2R Iron Fist + Needle Arm / Rock Smash, EI originals, Unbound originals).
 3. Reconcile (main chat): rebuild all, review `MI` per guide.
 4. Calc: fight-only type / ability / item changes and the effect odds (engine + calc.js).
+4b. Calc: the effect coverage pass (every guide) and Z status effects (Photonic).
 5. Template: move page, ability page (per the mockup), schema doc, scenario.
 6. Item pages: decide (mockup), then build.
 7. Audit.
