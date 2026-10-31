@@ -36,7 +36,7 @@ const tapFx = async (page, name) => {
   await page.settle();
 };
 const abilityName = (page, side) => page.value(`AB[CALC.mon(${JSON.stringify(side)}).a]?.[0]??''`);
-const chips = (page, side) => page.value(`[...document.querySelectorAll('.cc[data-s=${side}] .dfx .dfc')].map(b=>b.textContent.trim())`);
+const chips = (page, side) => page.value(`[...document.querySelectorAll('.cc[data-s=${side}] .dfch .dfc')].map(b=>b.textContent.trim())`);
 const resetCard = async (page, side) => {
   await page.tap(`.cc[data-s=${side}] [data-a="hpfull"]`);
 };
