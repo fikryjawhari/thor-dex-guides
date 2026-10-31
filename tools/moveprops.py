@@ -22,7 +22,9 @@ hacks/<hack>/extract/move_rules.json is a JSON list:
     "remove":["Thunder Punch"],"src":"battle_util.c:123 / version"}]
 Exactly one of a (ability name) / i (item name); w=u/t; nonempty src required.
 Optional match selects a stock rule by its original phrase if ambiguous.
-Optional e replaces the phrase; add/remove contain move names. New owners
+Optional e replaces the phrase; add/remove contain move names; prop (property
+names, any of) selects every move with one, unless (property names) leaves some
+out: "prop":["punch"],"unless":["multihit"]. Prefer prop to long name lists. New owners
 start empty. To add another rule for an existing owner, use match:null.
 Unknown/ambiguous references report and skip. Changes get h=1,s=src; unchanged
 stock moves survive additions/removals. Only present owners are emitted.
@@ -521,7 +523,7 @@ def _validate(data, report):
         report('moveprops:', 'M/MV length mismatch')
 
 
-def _overrides(rows, path, abilities, items, moves, report):
+def _overrides(rows, path, abilities, items, moves, report, props_of=()):
     if not path.is_file():
         return
     try:
@@ -534,7 +536,7 @@ def _overrides(rows, path, abilities, items, moves, report):
         return
     for index, change in enumerate(changes):
         prefix = f'moveprops: {path.name}[{index}]:'
-        if not isinstance(change, dict) or set(change) - {'a', 'i', 'w', 'e', 'match', 'src', 'add', 'remove'}:
+        if not isinstance(change, dict) or set(change) - {'a', 'i', 'w', 'e', 'match', 'src', 'add', 'remove', 'prop', 'unless'}:
             report(prefix, 'invalid rule fields')
             continue
         kind = 'a' if 'a' in change else 'i'
@@ -549,6 +551,9 @@ def _overrides(rows, path, abilities, items, moves, report):
             continue
         if any(not isinstance(change.get(key, []), list) or any(not isinstance(name, str) for name in change.get(key, [])) for key in ('add', 'remove')):
             report(prefix, 'add/remove must be lists of move names')
+            continue
+        if any(not isinstance(change.get(key, []), list) or any(name not in PROPS for name in change.get(key, [])) for key in ('prop', 'unless')):
+            report(prefix, 'prop/unless must be lists of property names')
             continue
         owners = abilities if kind == 'a' else items
         owner_key = _key(change[kind])
@@ -577,6 +582,9 @@ def _overrides(rows, path, abilities, items, moves, report):
         else:
             row = candidates[0]
         selected = set(row['m'])
+        if change.get('prop'):
+            want, skip = set(change['prop']), set(change.get('unless', []))
+            selected |= {index for index, move in enumerate(props_of) if want & move and not skip & move}
         for operation in ('add', 'remove'):
             for name in change.get(operation, []):
                 move_key = _key(name)
@@ -606,7 +614,8 @@ def apply(data, hack, report=print, *, rules_path=None):
         rows.append({kind: owners[_key(rule[kind])], 'w': rule['w'], 'e': rule['e'],
                      'm': selected, '_phrase': rule['e']})
     path = Path(rules_path) if rules_path is not None else ROOT / 'hacks' / hack / 'extract' / 'move_rules.json'
-    _overrides(rows, path, abilities, items, moves, report)
+    _overrides(rows, path, abilities, items, moves, report,
+               [set(move.get('f') or []) for move in data.get('MV', [])])
     merged = {}
     for row in rows:
         if not row['m']:

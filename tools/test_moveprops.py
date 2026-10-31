@@ -62,7 +62,7 @@ def fixture():
             {'c': 'Status', 'bp': 'Varies', 'tg': 'oops', 'f': ['oops', ['bad']], 'se': [[101, 'burn'], [30, 'flinch'], 'oops']},
         ],
         'AB': [[name, ''] for name in ['Iron Fist', 'Rough Skin', 'Technician', 'Custom Fist',
-                                     'Serene Grace', 'Shield Dust', 'Inner Focus', 'Dazzling']],
+                                     'Serene Grace', 'Shield Dust', 'Inner Focus', 'Dazzling', 'Grabby']],
         'IT': [{'n': 'Held items', 'r': [['Punching Glove', 'Found somewhere']]}],
         'TR': {'g': [{'sec': [{'tr': [{'p': [{'id': 'pikachu', 'i': 'Rocky Helmet'}],
                                       'normal': {'p': [{'id': 'raichu', 'i': 'Covert Cloak'}]},
@@ -81,6 +81,7 @@ def test_apply():
              'remove': ['Thunder Punch'], 'src': 'test source:1'},
             {'a': 'Custom Fist', 'w': 'u', 'e': 'Custom power', 'add': ['Mach Punch'], 'src': 'test source:2'},
             {'i': 'Big Root', 'w': 'u', 'add': ['Mystery'], 'src': 'test source:3'},
+            {'a': 'Grabby', 'w': 'u', 'e': 'Grabs', 'prop': ['contact'], 'unless': ['secondary'], 'src': 'test source:4'},
         ]), encoding='utf-8')
         moveprops.apply(data, 'test', report, rules_path=rules)
         ability_rows = {data['AB'][row['a']][0]: row for row in data['MI'] if 'a' in row}
@@ -89,6 +90,7 @@ def test_apply():
         assert ability_rows['Iron Fist']['h'] == 1
         assert ability_rows['Iron Fist']['s'] == 'test source:1'
         assert ability_rows['Custom Fist']['m'] == [0]
+        assert ability_rows['Grabby']['m'] == [0, 2]
         assert ability_rows['Rough Skin']['m'] == [0, 1, 2]
         assert ability_rows['Technician']['m'] == [0, 2]
         assert ability_rows['Dazzling']['m'] == [0]
