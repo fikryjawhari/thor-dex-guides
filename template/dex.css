@@ -551,6 +551,11 @@ details.psec>.endbar{margin:-6px 8px 4px auto}
 .mvw td:nth-last-child(5){overflow-wrap:anywhere}
 .mvw td.lv{color:var(--mut)}
 .mvw th.tc,.mvw td.tc{text-align:center}
+/* its own ability affects the move: a tap mark after the name (A in a dot, the hit area padded out); the tap opens a row */
+.abm{border:0;background:none;padding:4px 5px;margin:-4px -3px -4px 0;vertical-align:middle;cursor:pointer;line-height:0}
+.abm::before{content:'A';display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--acc);color:#111;font:700 9.5px/1 system-ui,sans-serif}
+.abm[aria-expanded=true]::before{box-shadow:0 0 0 2px var(--fg)}
+.mvw tr.abd td{padding-top:0;font-size:12.5px;overflow-wrap:anywhere}
 .psec .warn{cursor:help}.psec .warn.q{color:#ef5350;font-size:12px}
 /* Evolution: the whole family, base stage first, forms under their Pokémon */
 .fam{display:flex;flex-direction:column}

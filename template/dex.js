@@ -235,11 +235,17 @@ function famBlock(p){const base=formsOf(p).find(x=>x.g!==1&&!x.fc)||p;let r=base
 function defBlock(p){const g={};types.forEach(a=>{let m=1;p.t.forEach(d=>{m*=((D.TC[a]||{})[d]??10)/10;});if(m!==1)(g[m]=g[m]||[]).push(a);});
  const row=(m,l)=>g[m]?`<div style="margin:3px 0"${PK('td:'+m,m)}><span class="mut" style="display:inline-block;width:44px">${l}</span>${g[m].map(ty).join('')}</div>`:'';
  return row(4,'4×')+row(2,'2×')+row(0.5,'½×')+row(0.25,'¼×')+row(0,'0×')+`<div class="mut small" style="margin-top:4px">${TX.tc} Abilities (Levitate and so on) not included.</div>`;}
-// A move row: full words while the table is wide, type and category letters when it's narrow (dex.css, .mvw).
-function mrow(i,lv,o,occ){const v=MV[i]||{};const w=(v.x?mark('New in '+CF.name):v.dc||(v.h&&v.h.length)?mark('Changed in '+CF.name):'')+(v.cf?mark('Sources disagree',1):'');
- return `<tr${PK('mv:'+M[i]+(occ>1?'#'+occ:''),o)}>${lv!==undefined?`<td class="n lv">${lv||'Evo'}</td>`:''}<td>${mlink(i)}${w}</td><td class="tc">${v.t?ty(v.t)+tyc(v.t):''}</td><td class="tc">${cat(v.c)+catc(v.c)}</td><td class="n">${v.bp==='Varies'?'<span class="hw">Varies</span><span class="pc0">Var</span>':v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'<span class="pc">%</span>':'-'}</td></tr>`;}
+// A move row: full words while the table is wide, type and category letters when it's narrow (dex.css, .mvw). bo: the
+// MI records of its own abilities on this move (ownBoosts): a tap mark after the name, the ability and effect on tap.
+function mrow(i,lv,o,occ,bo){const v=MV[i]||{};const w=(v.x?mark('New in '+CF.name):v.dc||(v.h&&v.h.length)?mark('Changed in '+CF.name):'')+(v.cf?mark('Sources disagree',1):'');
+ return `<tr${PK('mv:'+M[i]+(occ>1?'#'+occ:''),o)}>${lv!==undefined?`<td class="n lv">${lv||'Evo'}</td>`:''}<td>${mlink(i)}${w}${bo?`<button type="button" class="abm" data-m="${i}" aria-expanded="false" aria-label="${esc(bo.map(r=>AB[r.a][0]+': '+r.e).join('; '))}"></button>`:''}</td><td class="tc">${v.t?ty(v.t)+tyc(v.t):''}</td><td class="tc">${cat(v.c)+catc(v.c)}</td><td class="n">${v.bp==='Varies'?'<span class="hw">Varies</span><span class="pc0">Var</span>':v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'<span class="pc">%</span>':'-'}</td></tr>`;}
 const mhead=lv=>`<tr>${lv?'<th class="n">Lv</th>':''}<th>Move</th><th class="tc"><span class="hw">Type</span></th><th class="tc"><span class="hw">Cat</span></th><th class="n">Pow</th><th class="n">Acc</th></tr>`;
 let moveTab='lv';
+// Moves a Pokémon's own abilities affect (MI records on the user's side naming one of p.as): move index -> records.
+const ownBoosts=p=>{const out=new Map();(D.MI||[]).forEach(r=>{if(r.w==='u'&&r.a!=null&&AB[r.a]&&p.as.has(r.a))r.m.forEach(m=>{if(!out.has(m))out.set(m,[]);out.get(m).push(r);});});return out;};
+const boostLine=(p,r)=>`<div>${alink(r.a)}${p.ha===r.a&&!p.a.includes(r.a)?' <span class="mut small">hidden</span>':''}: ${esc(r.e)}${r.h?'<span class="interaction-changed">changed</span>':''}</div>`;
+function bindBoosts(p,boosts){app.querySelector('#mvb').addEventListener('click',e=>{const b=e.target.closest('.abm');if(!b)return;const tr=b.closest('tr'),next=tr.nextElementSibling,open=next?.classList.contains('abd');
+ if(open)next.remove();else tr.insertAdjacentHTML('afterend',`<tr class="abd"><td colspan="${tr.cells.length}">${boosts.get(+b.dataset.m).map(r=>boostLine(p,r)).join('')}</td></tr>`);b.setAttribute('aria-expanded',String(!open));bars();});}
 const abLine=i=>`${alink(i)}${AB[i][2]?mark('New in '+CF.name):AB[i][3]?mark('Changed in '+CF.name):''}<div class="mut small">${esc(AB[i][4]||AB[i][3]||AB[i][1])}</div>`;
 const psec=(k,label,body,cls='')=>`<details class="card psec${cls}" data-s="${k}" ${(PO[k]??PDEF[k])?'open':''}><summary${PK('sec:'+k,PSECS.findIndex(x=>x[0]===k))}><h3>${label}</h3></summary><div class="pb">${body}</div><button class="endbar sb" hidden>${UPI}<span>${label}</span></button></details>`;
 function navLink(p,t,d){if(!t)return '<span class="gap"></span>';const r=relOf(p,t);
@@ -247,7 +253,7 @@ function navLink(p,t,d){if(!t)return '<span class="gap"></span>';const r=relOf(p
 let PNB=[null,null],PCUR=null;
 function detail(id){const p=byId[id];if(!p){PB.hidden=true;app.innerHTML='<p>Not found.</p>';return;}fil.innerHTML='';PCUR=p;
  const byName=a=>[...a].sort((x,y)=>M[x].localeCompare(M[y]));
- const tbl=(a,lv)=>{const seen={};return a.length?`<table>${mhead(lv)}${a.map(x=>lv?mrow(x[1],x[0],x[0]||0.5,seen[x[1]]=(seen[x[1]]||0)+1):mrow(x,undefined,M[x],1)).join('')}</table>`:'<div class="mut">None</div>';};
+ const boosts=ownBoosts(p),tbl=(a,lv)=>{const seen={};return a.length?`<table>${mhead(lv)}${a.map(x=>lv?mrow(x[1],x[0],x[0]||0.5,seen[x[1]]=(seen[x[1]]||0)+1,boosts.get(x[1])):mrow(x,undefined,M[x],1,boosts.get(x))).join('')}</table>`:'<div class="mut">None</div>';};
  const mv={lv:['Level-up',p.lv.length,()=>tbl(p.lv,true)],tm:['TM/HM',p.tm.length,()=>tbl(byName(p.tm))],...HASTU?{tu:['Tutor',p.tu.length,()=>tbl(byName(p.tu))]}:{},eg:['Egg',p.eg.length,()=>tbl(byName(p.eg))]};
  if(!mv[moveTab])moveTab='lv';
  const fs=formsOf(p).length>1,u=TRUSE[p.id];PNB=[pnb(p,-1),pnb(p,1)];
@@ -265,6 +271,7 @@ function detail(id){const p=byId[id];if(!p){PB.hidden=true;app.innerHTML='<p>Not
  ${psec('ev','Evolution',famBlock(p))}
  ${u?psec('tr',`Used by trainers (${u.length})`,u.map((t,j)=>`<div${PK('tr:'+t.k,j)}><a href="#/tr/${t.k}">${esc(t.n)}</a> <span class="mut small">${esc(t.loc)} · ${esc(t.g)}${t.st?(PICK?' · if your starter is '+esc(t.st):' · '+esc(t.st)+' starter'):''}</span></div>`).join('')):''}
  ${psec('mv','Moves',`<div class="sub">${Object.entries(mv).map(([k,v])=>`<button data-k="${k}" class="${k===moveTab?'on':''}">${v[0]} (${v[1]})</button>`).join('')}</div><div id="mvb" class="mvw">${mv[moveTab][2]()}</div>`)}`;
+ bindBoosts(p,boosts);
  app.querySelectorAll('.sub button').forEach(b=>b.onclick=()=>{moveTab=b.dataset.k;app.querySelectorAll('.sub button').forEach(x=>x.classList.toggle('on',x===b));app.querySelector('#mvb').innerHTML=mv[moveTab][2]();bars();});
  const hero=app.querySelector('.hero');if(fs)hero.onclick=e=>{if(!e.target.closest('a,button'))formMenu(p,hero.querySelector('h2'));};
  const cu=hero.querySelector('.calc-use');if(cu)cu.onclick=()=>window.CALC?.use(p);
