@@ -541,6 +541,36 @@ area names have a stop; `a` resolves those names to the existing AR slots withou
   No gate/browser scenarios: missions deliberately await template unit 7b. Assembly's existing missing Shadow
   Warrior sprite warning is unchanged.
 
+### Moves (unit 2, 2026-10-31)
+
+- `f` / `tg` / `se`: `moves.py` applies `cfru.move_metadata()` to each `move_metadata.json` record. The snapshot is
+  written by `refresh_moves.mjs` from the pinned Showdown `moves.ts` + `moves-gen8.ts` (ccfaa20f) and the Unbound calc's
+  `moves_YA0k.js` (`calcFlags`: contact, punch, sound, tail, drill...); stock flags are the guide engine's at 959deb5.
+  Build: 782 of 785 moves have a record (`tg` 782, `f` 782 with flags, `se` 227: 212 of 526 damaging moves, 15 status).
+- Fallback: Endless Edge, InfernalRage and Metal Bash are in neither Showdown nor the calc, so they get no `f` / `tg` /
+  `se` (the report names them). Nothing is inferred from prose: InfernalRage's "may leave the target with a burn" has no
+  chance in any source, so it has no `se`. Metal Bash and Endless Edge describe a stat drop with no chance and no record.
+- Flags outside the shared vocabulary (Showdown's `nonsky`, `distance`, `mustpressure`, `noassist`) are dropped.
+- `effectOverrides` (`refresh_moves.mjs`) replace a move's stock added effects only: Tri Attack / Dire Claw (one of
+  each status at the stock chance), Burning Jealousy, Secret Power (terrain), Fake Out (flinch, first turn out only:
+  Showdown `onTry` and the Unbound text). Heal moves: Rest, Junglehealing, Healpulse, Pollenpuff, Purify, Moonlight /
+  Morning Sun / Synthesis (weather), Shore Up (sandstorm). Struggle recoil is 1/4 of max HP and Mind Blown 1/2
+  (`recoilBasis`, `mindBlownRecoil`).
+- `move_rules.json` (abilities, from the calc `gen78_YA0k.js` line given per entry; wiki text in
+  `unboundwiki.json`): Bellow / Sound Waves (sound moves: ×1.3 on the user, ×0.5 on the target), Drill Beak (drill moves
+  always critical), Slippery Tail (tail moves priority +1), Portal Power (non-contact damage ×0.75), Gale Wings (Flying
+  moves priority +1, **no HP condition**: the wiki says "Flying-type moves hit first", the calc checks no HP; stock
+  Showdown needs full HP), Grass Dash (Grass moves priority +1), Evaporate (damaging Water moves blocked; the wiki's
+  Sp. Atk +1 is shown, the calc models only the immunity).
+- Left out of `move_rules.json` (no move list or no source): category rules (Crabby Tactics / Gorilla Tactics ×1.5
+  Physical, Honey Armor / Fur Coat ×0.5 Physical, Icy Skin / Dusty Scales ×0.5 Special: the shared table excludes
+  category rules, as for Huge Power); universal (Multieye at full HP, Subterfuge: the type of every move); Brain Bond
+  (the wiki's "weaker second hit" has no calc formula); Cotton Cloud / Tangling Wool ("lowers everyone's Speed when
+  hit": no contact condition in the wiki; the calc groups Tangling Wool with Gooey only for Gyro Ball).
+- Weather: no permanent-weather mechanic in the calc or the wiki. The calc lists Desolate Land, Primordial Sea and
+  Delta Stream as abilities but doesn't model their duration; the wiki's "permanent" is a trainer's misty terrain
+  (Elite Four Arabella), not weather.
+
 ## Local storage
 
 Prefix `unbound`. Keep these keys once published.
