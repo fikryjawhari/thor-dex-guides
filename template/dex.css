@@ -480,6 +480,7 @@ body[data-v=p] #app{container:app/inline-size}
 .hero>.spr{grid-area:s}.hero>h2{grid-area:n;align-self:end;margin:0}.hero>.hm{grid-area:m;align-self:start;min-width:0}
 @container app (max-width:340px){.card.hero{grid-template-areas:"n n" "s m";column-gap:10px;padding:8px 10px}.hero>h2{font-size:20px}.hero>.hm{align-self:center}.hero .s112{width:88px;height:88px}}
 .hero.hasf{cursor:pointer;-webkit-tap-highlight-color:transparent}.hero .car{color:var(--acc);font-weight:600}
+@container app (max-width:340px){.hero .calc-use{white-space:nowrap;font-size:11px;padding:4px 5px}}
 .fmask{position:fixed;inset:0;z-index:7}
 .fmenu{position:fixed;z-index:8;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.45);padding:4px;max-height:70vh;overflow:auto}
 .fmenu button{display:flex;align-items:center;gap:6px;width:100%;min-height:44px;background:none;border:0;border-radius:8px;color:var(--fg);font:600 14px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;text-align:left;padding:2px 6px;cursor:pointer}

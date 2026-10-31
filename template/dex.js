@@ -243,7 +243,7 @@ const psec=(k,label,body,cls='')=>`<details class="card psec${cls}" data-s="${k}
 function navLink(p,t,d){if(!t)return '<span class="gap"></span>';const r=relOf(p,t);
  return `<a class="${d<0?'pv':'nx'}" href="#/p/${t.id}" data-keep data-rep><span class="ch">${CHEV(d)}</span><span class="t"><b>${esc(t.name)}</b><span class="r">${t.dex?'#'+t.dex:''}${r?`${t.dex?' · ':''}<span class="rel">${esc(r)}</span>`:''}</span></span></a>`;}
 let PNB=[null,null],PCUR=null;
-function detail(id){const p=byId[id];PB.hidden=true;if(!p){app.innerHTML='<p>Not found.</p>';return;}fil.innerHTML='';PCUR=p;
+function detail(id){const p=byId[id];if(!p){PB.hidden=true;app.innerHTML='<p>Not found.</p>';return;}fil.innerHTML='';PCUR=p;
  const byName=a=>[...a].sort((x,y)=>M[x].localeCompare(M[y]));
  const tbl=(a,lv)=>{const seen={};return a.length?`<table>${mhead(lv)}${a.map(x=>lv?mrow(x[1],x[0],x[0]||0.5,seen[x[1]]=(seen[x[1]]||0)+1):mrow(x,undefined,M[x],1)).join('')}</table>`:'<div class="mut">None</div>';};
  const mv={lv:['Level-up',p.lv.length,()=>tbl(p.lv,true)],tm:['TM/HM',p.tm.length,()=>tbl(byName(p.tm))],...HASTU?{tu:['Tutor',p.tu.length,()=>tbl(byName(p.tu))]}:{},eg:['Egg',p.eg.length,()=>tbl(byName(p.eg))]};
@@ -270,7 +270,7 @@ function detail(id){const p=byId[id];PB.hidden=true;if(!p){app.innerHTML='<p>Not
  PB.querySelector('.sp').innerHTML=spr(p.id,'')+`<span class="bdg">${p.t.map(tyc).join('')}</span>`;
  PB.querySelector('.nm').innerHTML=esc(p.name)+(fs?' <span class="fc">▾</span>':'');PB.querySelector('.tys').innerHTML=p.t.map(ty).join('');
  PB.querySelector('[data-d="-1"]').disabled=!PNB[0];PB.querySelector('[data-d="1"]').disabled=!PNB[1];
- PB.hidden=false;window.scrollTo(0,0);bars();pbState();}
+ if(PB.hidden){PB.classList.add('off');PB.hidden=false;}window.scrollTo(0,0);bars();pbState();}
 // The name bar: ‹ · sprite, name, types (the forms menu) · ↑ (top of the page) · ›. Fixed beside the rail; out (.off)
 // while the top card shows.
 document.body.insertAdjacentHTML('beforeend',`<div id="pbar" hidden><div class="in"><button class="ar" data-d="-1" aria-label="Previous Pokémon">${CHEV(-1)}</button><button class="who" aria-label="Forms"><span class="sp"></span><span class="nm"></span><span class="tys"></span></button><button class="up" aria-label="Top of page" title="Top of page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h14 M12 9v11 M7 14l5-5 5 5"/></svg></button><button class="ar" data-d="1" aria-label="Next Pokémon">${CHEV(1)}</button></div></div>`);

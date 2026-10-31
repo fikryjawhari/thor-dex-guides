@@ -3,7 +3,7 @@
 // the Trainers boxes and the first walkthrough split, every reference to them shifted. Rule: saved state never stores
 // a position in the data (template/README.md → What the data switches on). Runs on every guide.
 //   28a same state: calc sets (species, ability, moves), the calc's foe, recent trainers and foe edits, the hazard chip's offer, area rule
-//       switches / Defog (guides with area rules), list filters,
+//       switches / Defog (guides with area rules), list filters, the Pokémon page's open sections,
 //       level caps, Trainers open state, search recents, the stat calc, walkthrough ticks and the tracker, compared
 //       by name before and after the update.
 //   28b same pages: a Pokémon page and a trainer card read the same in both copies (the shifted copy is consistent).
@@ -95,6 +95,7 @@ const SNAPSHOT = `(()=>{const C=CF.calc?CALC.state():null,tn=k=>TRK[k]?.n??'gone
     recentTrainers:C?C.recent.map(tn):null,
     foeEdits:C?Object.entries(C.edits).filter(([k])=>k.startsWith('foe:')).map(([k,e])=>{const i=k.lastIndexOf(':');return [tn(k.slice(4,i)),k.slice(i+1),e.l];}):null,
     filters:st.f.map(f=>[f.k,f.k==='type'?f.v:fval(f)]),
+    dexOpen:Object.entries(PO).map(([k,o])=>[PSECS.find(x=>x[0]===k)?.[1]??'gone:'+k,o]).sort(),
     caps:Object.entries(TCAP).filter(([k])=>k!=='_last').map(([k,v])=>[tn(k),v]),
     trOpen:[Object.keys(TOPEN.o).map(g=>TRD.g[g]?.n),Object.keys(TOPEN.t).map(tn)],
     recents:recRead().map(o=>o.k==='p'?byId[o.v]?.n:o.k==='f'?fval(o.v):o.k==='t'?tn(o.v):o.k==='w'?D.WK.splits[o.si].st[o.ti].n:o.k==='i'?D.IT[o.si].r[o.ri][0]:o.k==='l'?AR[o.v].n:o.k==='ms'?mn(o.m)+(o.c!=null?' | '+o.c:''):'?'),
@@ -120,7 +121,7 @@ const checks = [
       const area = data.AR.findIndex(A => !A.st && A.in == null && !A.ns && A.l.length);
       // Saved through the guide's own code, as a player would leave it.
       await page.value(`(()=>{const p=byId[${sid}],last=M.length-1,mid=usedMoves[Math.floor(usedMoves.length/2)];
-        st.f.push({k:'mv',v:last},{k:'ab',v:p.a[p.a.length-1]},{k:'loc',v:LOC.length-1},{k:'type',v:p.t[0]});save();
+        st.f.push({k:'mv',v:last},{k:'ab',v:p.a[p.a.length-1]},{k:'loc',v:LOC.length-1},{k:'type',v:p.t[0]});PO.td=1;PO.mv=0;save();
         TCAP[${k}]=42;localStorage.setItem(LS.cap,JSON.stringify(TCAP));
         const t=TRK[${k}];TOPEN.o[t.at[0]]=1;TOPEN.t[t.k]=0;trSave();
         recSave([{k:'p',v:p.id},{k:'f',v:{k:'mv',v:mid}},{k:'t',v:t.k},...(${STOP ? 1 : 0}?[{k:'w',si:${STOP?.si},ti:${STOP?.ti}}]:[]),...((D.IT||[]).length?[{k:'i',si:0,ri:0}]:[])]);
