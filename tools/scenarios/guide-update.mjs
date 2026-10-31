@@ -166,7 +166,8 @@ const checks = [
     sizes: SIZE_SMALL,
     modes: ['normal'],
     run: async page => {
-      const text = () => page.value(`document.querySelector('#app').innerText.replace(/\\s+/g,' ').trim()`);
+      // the Pokémon page's pager left out: the update's new species can be its neighbour
+      const text = () => page.value(`(()=>{const a=document.querySelector('#app'),n=a.querySelector('.pnav');if(n)n.style.display='none';const t=a.innerText.replace(/\\s+/g,' ').trim();if(n)n.style.display='';return t})()`);
       await page.route('#/p/' + S.id);
       const pokemon = await text();
       await page.route('#/tr/' + X.t.k);

@@ -23,8 +23,12 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   (Locations places open) with targeted Expand / Collapse bars, a walkthrough Show switch (Stops / Sections / All) and
   Reset all; Pokémon sprites and tracker tags link to the dex page. Decisions in `template/README.md` and
   `tools/calc/README.md`. Not yet on the Thor (Open 1).
-- **Next build:** the dex page, spec on `worktree-dex-page` (`plans/dex-page.md`: collapsible sections, name bar,
-  prev / next, forms menu, family evolution, compact moves, vertical stat calc). A template build: one at a time.
+- **Dex page built** on `worktree-dex-page` (2026-10-31, not merged): collapsible sections (one open state, `LS.dex`
+  `o`), name bar, ‹ › through the list as it stands, forms menu, kept place on switching, family evolution, compact
+  moves, vertical stat calc; `template/README.md` → Pokémon page. Checked: `tools/scenarios/dex-page.mjs` on all six
+  guides, domcompare against `main` (only the Pokémon pages differ, normal and dvkb), `gate.py check --template`
+  (only the expected Pokémon-page DOM diffs). Waiting on the user: point 12 (Use in calc ▸ in the top card) on the
+  preview, then the Thor. Merge next; after it delete `plans/dex-page.md` and `tools/mockup/dex-page/`.
 - Where things are decided: `template/README.md` (template, UI, calc page), `tools/calc/README.md` (engine),
   `template/calc/readers/README.md` (save readers), each hack's `notes.md` (data, Damage calc, In-game tests / checks).
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
@@ -61,8 +65,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 6. **Source updates** (`uv run python -I tools/check_updates.py`): SoulGold's data files changed since 2026-10-24
    (Mega Lopunny innates, Clefable / Mega Clefable and Unown learnsets, ability usage): re-fetch before its guide.
    hzla's live `decomp` branch differs from Unbound's pin in `gen789.js` (pin kept).
-7. **Pokémon page redesign** (decided 2026-10-31): spec `plans/dex-page.md`, mockup `tools/mockup/dex-page/`, branch
-   `worktree-dex-page`. Template build, after the calc-resets merge (merge `main` in first).
+7. **Pokémon page redesign**: built on `worktree-dex-page`; the user's preview check (Use in calc ▸ placement, spec
+   point 12) and a Thor test before the merge.
 
 ## Decisions
 
