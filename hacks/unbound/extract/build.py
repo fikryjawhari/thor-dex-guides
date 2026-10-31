@@ -19,6 +19,7 @@ import trainers
 import items
 import walk
 import prune
+import moves
 
 
 def main():
@@ -31,6 +32,7 @@ def main():
             report('%s: not built yet (%s)' % (module.__name__, error))
     keys = os.path.join(H.extract, 'trainer_keys.json')
     seeded = os.path.exists(keys)
+    moves.build(data)
     extractlib.finalise(data, H.name, prune.build)
     if not seeded and not data['TR']['g']:
         os.remove(keys)     # no trainers yet: the first build with trainers (unit 6) seeds the key table

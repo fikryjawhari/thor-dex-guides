@@ -29,6 +29,85 @@ import re
 
 from romhackdex import key
 
+
+def move_metadata(record, damaging=True):
+    """Read structured CFRU calc / Showdown metadata into moveprops vocabulary.
+
+    calcFlags retains the existing guide engine's damage flags on migration.
+    Only callers with authoritative protect flags may set reliableProtect.
+    Missing metadata is never inferred from prose.
+    """
+    import moveprops
+
+    target = record.get('target', 'normal')
+    flags = list(record.get('flags', {}))
+    for source, flag in {'makesContact': 'contact', 'isPunch': 'punch', 'isBite': 'bite',
+                         'isBullet': 'bullet', 'isSound': 'sound', 'isPulse': 'pulse'}.items():
+        if source in record:
+            flags = [value for value in flags if value != flag]
+            if record[source]:
+                flags.append(flag)
+    flags.extend(record.get('calcFlags', []))
+    if record.get('reliableProtect'):
+        flags = moveprops.protect_flags(flags, target)
+    flags = [moveprops.ALIASES.get(flag) for flag in flags if moveprops.ALIASES.get(flag)]
+    effects = []
+
+    def effect(kind, **values):
+        effects.append(moveprops.effect_text({'kind': kind, **values}))
+
+    def added(source, chance=100, who='target'):
+        if source.get('status'):
+            effect('status', status=source['status'], chance=chance)
+        if source.get('volatileStatus') in ('flinch', 'confusion'):
+            effect(source['volatileStatus'], chance=chance)
+        if source.get('boosts'):
+            effect('stages', stages=source['boosts'], who=who, chance=chance)
+        if source.get('self'):
+            added(source['self'], chance, 'user')
+
+    secondaries = record.get('secondaries')
+    if not isinstance(secondaries, list):
+        secondaries = [record['secondary']] if isinstance(record.get('secondary'), dict) else []
+    if secondaries or record.get('secondaries') is True:
+        flags.append('secondary')
+    if damaging:
+        added(record)
+        for secondary in secondaries:
+            added(secondary, secondary.get('chance', 100))
+    if 'effectOverrides' in record:  # replaces the stock added effects only
+        effects = []
+        for entry in record['effectOverrides']:
+            if 'alternatives' in entry:
+                texts = [moveprops.effect_text(part)[1] for part in entry['alternatives']]
+                value = [entry['chance'], ' / '.join(texts) + ' (one at random)']
+            else:
+                value = moveprops.effect_text(entry)
+            if entry.get('condition'):
+                value[1] += ' (' + entry['condition'] + ')'
+            effects.append(value)
+    for kind in ('recoil', 'drain', 'heal'):
+        if record.get(kind):
+            flags.append(kind)
+            values = {'fraction': record[kind]}
+            if record.get(kind + 'Basis'):
+                values['basis'] = record[kind + 'Basis']
+            effect(kind, **values)
+    if record.get('mindBlownRecoil'):
+        effect('recoil', fraction=[1, 2], basis='maxhp')
+    if record.get('multihit'):
+        flags.append('multihit')
+    if record.get('hasCrashDamage'):
+        flags.append('crash')
+    if record.get('volatileStatus') == 'partiallytrapped':
+        flags.append('binding')
+    if record.get('self', {}).get('volatileStatus') == 'mustrecharge':
+        flags.append('recharge')
+    result = {'f': sorted(set(flags)), 'tg': target}
+    if effects:
+        result['se'] = [list(value) for value in dict.fromkeys(tuple(value) for value in effects)]
+    return result
+
 # ---- names ---------------------------------------------------------------------------------------------------------
 # The official name for each CFRU 12-character name the letters alone can't place (seen in Unbound 2.1.1.1 and Radical
 # Red 4.1 mirrors; a run-together name like "Petalblizzard" needs no entry). Unbound's own moves and abilities keep
