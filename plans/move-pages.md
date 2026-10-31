@@ -165,3 +165,6 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
   aa89157: `calc_effects.json` `zmoves` (Z effect only; no copied records). Photonic kb's 729th route was noise (a
   serial rerun: only the 728 `#/m/` routes). Running: 5b (Opus, `worktree-move-pages-ab`); 4c spec in its decide
   thread (`worktree-move-pages-calclayout`).
+- 2026-10-31 (later): 4c spec merged (937afd5, `plans/calc-layout.md`; short-wide below 392 tall); the build runs on
+  Opus (`worktree-move-pages-cl`). The user's move-page feedback (filter as "+ Filter" on the Back line, on every
+  filter page; the sticky Learned-by headers painted `--bg` inside a `--panel` card) went to 5b.
