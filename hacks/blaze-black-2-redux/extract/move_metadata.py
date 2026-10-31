@@ -51,6 +51,8 @@ def build(data):
             stock['secondary'] = replacements[name]
         if name == 'String Shot':
             stock['boosts'] = {'spe': -2}
+        if name == 'Chatter':
+            stock['secondary'] = {'chance': 100, 'volatileStatus': 'confusion'}
         if name == 'Psyshield Bash':
             stock['secondary'] = {'chance': 100, 'self': {'boosts': {'def': 1, 'spd': 1}}}
         if name == 'Headlong Rush':
@@ -81,6 +83,9 @@ def build(data):
         added = effects(stock, 'user' if target == 'self' else 'target')
         for secondary in secondaries:
             added.extend(effects(secondary, chance=secondary.get('chance', 100)))
+        if name == 'Tri Attack':
+            added.extend(effect_text({'kind': 'status', 'status': status, 'chance': 20 / 3})
+                         for status in ('brn', 'par', 'frz'))
         for field in ('recoil', 'drain', 'heal'):
             if stock.get(field):
                 added.append(effect_text({'kind': field, 'fraction': stock[field]}))
@@ -88,8 +93,43 @@ def build(data):
             added.append(effect_text({'kind': 'recoil', 'fraction': [1, 4], 'basis': 'maxhp'}))
         if name in ('Morning Sun', 'Synthesis', 'Moonlight', 'Rest'):
             added.append(effect_text({'kind': 'heal', 'fraction': [1, 1] if name == 'Rest' else [1, 2]}))
-        if name == 'Raging Fury':
-            added.append([100, 'user confusion after the attack ends'])
+        if name in ('Morning Sun', 'Synthesis', 'Moonlight'):
+            added[-1][1] += ' (normal weather)'
+            for fraction, weather in (([2, 3], 'sun'), ([1, 4], 'rain, sandstorm or hail')):
+                row = effect_text({'kind': 'heal', 'fraction': fraction})
+                row[1] += ' (' + weather + ')'
+                added.append(row)
+        if name == 'Rest':
+            added.append([100, 'user sleep for two turns'])
+        if name == 'Wish':
+            row = effect_text({'kind': 'heal', 'fraction': [1, 2]})
+            row[1] += " (user's maximum HP; recipient in this slot next turn)"
+            added.append(row)
+        if name == 'Swallow':
+            for layers, fraction in enumerate(([1, 4], [1, 2], [1, 1]), 1):
+                row = effect_text({'kind': 'heal', 'fraction': fraction})
+                row[1] += f' (Stockpile {layers}; removes Stockpile boosts)'
+                added.append(row)
+        if name in ('Charge', 'Skull Bash', 'Stockpile'):
+            stages = {'spd': 1} if name == 'Charge' else {'def': 1} if name == 'Skull Bash' else {'def': 1, 'spd': 1}
+            row = effect_text({'kind': 'stages', 'who': 'user', 'stages': stages})
+            if name == 'Skull Bash':
+                row[1] += ' (charging turn)'
+            added.append(row)
+        if name == 'Curse':
+            row = effect_text({'kind': 'stages', 'who': 'user', 'stages': {'atk': 1, 'def': 1, 'spe': -1}})
+            row[1] += ' (non-Ghost user only)'
+            added.append(row)
+        if name == 'Belly Drum':
+            added.extend([[100, 'user Atk set to +6'], [100, 'Costs 50% of maximum HP']])
+        if name == 'Acupressure':
+            added.append([100, 'user or target: one random eligible stat +2'])
+        if name == 'Growth':
+            added[0][1] += ' (doubled in sun)'
+        if name in ('Raging Fury', 'Outrage', 'Petal Dance'):
+            row = effect_text({'kind': 'confusion'})
+            row[1] = 'user ' + row[1] + ' after the attack ends'
+            added.append(row)
         move.update(f=sorted(set(flags)), tg=target, se=added)
     counts = Counter(flag for move in data['MV'] for flag in move.get('f', []))
     report('move metadata: %d targets, %d moves with effects; %s' % (

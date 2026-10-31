@@ -2075,7 +2075,7 @@ move metadata: no stock source for unused mirror-only move: Shadow Shed
 move metadata: no stock source for unused mirror-only move: Shadow Sky
 move metadata: no stock source for unused mirror-only move: Shadow Storm
 move metadata: no stock source for unused mirror-only move: Shadow Wave
-move metadata: 559 targets, 239 moves with effects; {'binding': 7, 'bite': 8, 'bullet': 18, 'bypasssub': 48, 'charge': 11, 'contact': 186, 'crash': 2, 'dance': 8, 'defrost': 5, 'drain': 8, 'gravity': 8, 'heal': 16, 'multihit': 18, 'noprotect': 14, 'powder': 5, 'pulse': 5, 'punch': 17, 'recharge': 7, 'recoil': 10, 'reflectable': 64, 'secondary': 136, 'slicing': 15, 'sound': 18, 'wind': 10}
+move metadata: 559 targets, 249 moves with effects; {'binding': 7, 'bite': 8, 'bullet': 18, 'bypasssub': 48, 'charge': 11, 'contact': 186, 'crash': 2, 'dance': 8, 'defrost': 5, 'drain': 8, 'gravity': 8, 'heal': 16, 'multihit': 18, 'noprotect': 14, 'powder': 5, 'pulse': 5, 'punch': 17, 'recharge': 7, 'recoil': 10, 'reflectable': 64, 'secondary': 136, 'slicing': 15, 'sound': 18, 'wind': 10}
 move metadata source: smogon/pokemon-showdown ccfaa20f32af363569cd21a9d501b2bc1ded26b1; moves.ts + mods 8,7,6,5; post-Gen-V replacements use base
 doc name fixes: 18 (species 6, move 11, ability 1)
   species fuzzy: Snubull -> Snubbull (1: Type Changes:39)

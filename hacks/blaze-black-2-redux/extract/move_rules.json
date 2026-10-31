@@ -3,5 +3,9 @@
   {"a":"Prankster","w":"u","e":"Priority +1","src":"Stock Gen V; Showdown abilities-gen6.ts prankster.onTryHit undefined (Dark immunity starts Gen VII); docs specify no change"},
   {"a":"Overcoat","w":"t","remove":["Spore","Stun Spore","Poison Powder","Sleep Powder","Cotton Spore","Rage Powder"],"src":"Stock Gen V; Showdown abilities-gen5.ts overcoat.onTryHit undefined; docs specify no powder immunity"},
   {"a":"Oblivious","w":"t","remove":["Taunt"],"src":"Stock Gen V; Showdown abilities-gen5.ts oblivious.onTryHit only Captivate; docs specify no Taunt immunity"},
-  {"i":"Binding Band","w":"u","e":"Binding damage becomes 1/8 maximum HP","src":"Stock Gen V; Showdown moves-gen5.ts partiallytrapped condition; Item Changes.txt has no binding mechanic change"}
+  {"i":"Binding Band","w":"u","e":"Binding damage becomes 1/8 maximum HP","src":"Stock Gen V; Showdown conditions-gen5.ts partiallytrapped.boundDivisor; Item Changes.txt has no binding mechanic change"},
+  {"a":"Contrary","w":"t","remove":["Howl"],"src":"Move Changes.txt:309-310 and unimplemented footnote: Howl raises only the user's Attack"},
+  {"a":"Simple","w":"t","remove":["Howl"],"src":"Move Changes.txt:309-310 and unimplemented footnote: Howl raises only the user's Attack"},
+  {"a":"Contrary","w":"u","remove":["Belly Drum"],"src":"Stock Gen V; Showdown moves.ts bellydrum.onHit directly sets boost to +6; not a stat-stage increment"},
+  {"a":"Simple","w":"u","remove":["Belly Drum"],"src":"Stock Gen V; Showdown moves.ts bellydrum.onHit directly sets boost to +6; not a stat-stage increment"}
 ]
