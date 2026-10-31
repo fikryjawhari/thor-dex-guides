@@ -24,7 +24,9 @@ Exactly one of a (ability name) / i (item name); w=u/t; nonempty src required.
 Optional match selects a stock rule by its original phrase if ambiguous.
 Optional e replaces the phrase; add/remove contain move names; prop (property
 names, any of) selects every move with one, unless (property names) leaves some
-out: "prop":["punch"],"unless":["multihit"]. Prefer prop to long name lists. New owners
+out: "prop":["punch"],"unless":["multihit"]. Prefer prop to long name lists.
+"gen":true marks a generation correction (the stock rule as that generation had
+it), not a hack change: no h tag. New owners
 start empty. To add another rule for an existing owner, use match:null.
 Unknown/ambiguous references report and skip. Changes get h=1,s=src; unchanged
 stock moves survive additions/removals. Only present owners are emitted.
@@ -536,7 +538,7 @@ def _overrides(rows, path, abilities, items, moves, report, props_of=()):
         return
     for index, change in enumerate(changes):
         prefix = f'moveprops: {path.name}[{index}]:'
-        if not isinstance(change, dict) or set(change) - {'a', 'i', 'w', 'e', 'match', 'src', 'add', 'remove', 'prop', 'unless'}:
+        if not isinstance(change, dict) or set(change) - {'a', 'i', 'w', 'e', 'match', 'src', 'add', 'remove', 'prop', 'unless', 'gen'}:
             report(prefix, 'invalid rule fields')
             continue
         kind = 'a' if 'a' in change else 'i'
@@ -594,7 +596,9 @@ def _overrides(rows, path, abilities, items, moves, report, props_of=()):
                     selected.add(moves[move_key])
                 else:
                     selected.discard(moves[move_key])
-        row.update(e=change.get('e', row['e']), m=sorted(selected), h=1, s=change['src'])
+        row.update(e=change.get('e', row['e']), m=sorted(selected), s=change['src'])
+        if not change.get('gen'):
+            row['h'] = 1
 
 
 def apply(data, hack, report=print, *, rules_path=None):
