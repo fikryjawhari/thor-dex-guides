@@ -75,10 +75,26 @@ def move_metadata(record, damaging=True):
         added(record)
         for secondary in secondaries:
             added(secondary, secondary.get('chance', 100))
+    if 'effectOverrides' in record:  # replaces the stock added effects only
+        effects = []
+        for entry in record['effectOverrides']:
+            if 'alternatives' in entry:
+                texts = [moveprops.effect_text(part)[1] for part in entry['alternatives']]
+                value = [entry['chance'], ' / '.join(texts) + ' (one at random)']
+            else:
+                value = moveprops.effect_text(entry)
+            if entry.get('condition'):
+                value[1] += ' (' + entry['condition'] + ')'
+            effects.append(value)
     for kind in ('recoil', 'drain', 'heal'):
         if record.get(kind):
             flags.append(kind)
-            effect(kind, fraction=record[kind])
+            values = {'fraction': record[kind]}
+            if record.get(kind + 'Basis'):
+                values['basis'] = record[kind + 'Basis']
+            effect(kind, **values)
+    if record.get('mindBlownRecoil'):
+        effect('recoil', fraction=[1, 2], basis='maxhp')
     if record.get('multihit'):
         flags.append('multihit')
     if record.get('hasCrashDamage'):
