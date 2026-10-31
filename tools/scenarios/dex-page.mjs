@@ -182,6 +182,31 @@ const checks = [
     },
   },
   {
+    id: 'rail-jumps',
+    title: "the rail's ↓ ↑ step through the sections, each landing just under the name bar; ↑ from the first goes to the top",
+    sizes: [[260, 316], [480, 392]],
+    run: async page => {
+      await open(page, F.id);
+      assert.equal(await page.value(`document.querySelector('.rjump').hidden`), false, 'jump buttons shown');
+      assert.equal(await page.value(`document.querySelector('.rjump [data-j="-1"]').disabled`), true, '↑ disabled at the top');
+      const secs = await page.value(`[...document.querySelectorAll('details.psec')].map(d=>d.dataset.s)`);
+      const at = k => page.value(`Math.round(document.querySelector('details.psec[data-s=${k}]>summary').getBoundingClientRect().top-document.getElementById('pbar').offsetHeight)`);
+      for (const k of secs.slice(0, 3)) {
+        await page.tap('.rjump [data-j="1"]');
+        await slid(page);
+        const y = await at(k);
+        assert(y >= 0 && y <= 12, `↓ lands ${k} under the bar (${y} px below it)`);
+      }
+      await page.tap('.rjump [data-j="-1"]');
+      await slid(page);
+      const y = await at(secs[1]);
+      assert(y >= 0 && y <= 12, `↑ goes back to ${secs[1]} (${y})`);
+      await page.tap('.rjump [data-j="-1"]');
+      await page.tap('.rjump [data-j="-1"]');
+      assert.equal(await page.value('scrollY'), 0, '↑ from the first section: the top');
+    },
+  },
+  {
     id: 'forms-family',
     title: 'the top card opens the forms menu (one form: no menu); Evolution lists the whole family, the current row not a link',
     sizes: SIZE_SMALL,

@@ -575,7 +575,8 @@ TOG.items=d=>{if(st.q)return;const iS=()=>{try{localStorage.setItem(LS.items,JSO
 const hdr=document.querySelector('header'),html=document.documentElement,GAP=8;
 // The search bar's height while it sticks (0 when it doesn't: very short windows), as --hh for the sticky headers.
 const hdrH=()=>getComputedStyle(hdr).position==='sticky'?hdr.getBoundingClientRect().height:0;
-const T=()=>hdrH()+GAP;
+// Under the search bar, and on the Pokémon page under its name bar too (pbH).
+const T=()=>hdrH()+pbH()+GAP;
 // Border box: the bar's padding changes at 420 px wide without its content box changing.
 new ResizeObserver(()=>html.style.setProperty('--hh',hdrH()+'px')).observe(hdr,{box:'border-box'});
 // Each stop carries its header's height (one or two lines) as --sh, so its section headers stick right under it, and
@@ -601,8 +602,7 @@ function flip(d,open){const sm=d.querySelector(':scope>summary'),y=sm.getBoundin
 const BH={};const barH=b=>{const k=b.className;if(BH[k]==null){b.hidden=false;const cs=getComputedStyle(b);BH[k]=b.offsetHeight+parseFloat(cs.marginTop)+parseFloat(cs.marginBottom);b.hidden=true;}return BH[k];};
 // Collapse all, pressed when every box is already closed, resets everything inside to the defaults (resetOpen: the
 // one place to change if the trigger changes); meanwhile its label says so. Kept in step by bars().
-const boxes=()=>document.body.dataset.v==='p'?[...app.querySelectorAll('details.psec')]:jts();
-const allShut=()=>{const b=boxes();return b.length>0&&b.every(d=>!d.open);};
+const allShut=()=>{const b=jts();return b.length>0&&b.every(d=>!d.open);};
 function segLabel(){const c=app.querySelector('.seg.all>[data-a="0"]');if(!c)return;const t=allShut()?'Reset all':'Collapse all';if(c.textContent!==t)c.textContent=t;}
 // Defaults: yellow sections closed, Locations' places open, walkthrough stops closed (Show: Stops), Trainers places and
 // trainers closed (Places). The saved open state of the page is cleared to match; ticks, trackers, caps, open boxes
@@ -638,7 +638,7 @@ function segAll(b,list){const open=b.dataset.a==='1',y=b.getBoundingClientRect()
 // Rail jump buttons: up = top of the split you're in, or the previous one when this one's header already sits at the
 // top with the gap above it; down = the next split to that same spot, so up and down undo each other.
 const RJ=document.querySelector('.rjump');
-const jts=()=>[...app.querySelectorAll('details.split.jt')];
+const jts=()=>[...app.querySelectorAll(document.body.dataset.v==='p'?'details.psec':'details.split.jt')];
 function jump(dir){if(CF.calc&&location.hash==='#/calc'&&window.CALC){const stops=window.CALC.stops();const target=dir>0?stops.find(stop=>stop>scrollY+3):stops.slice().reverse().find(stop=>stop<scrollY-3);scrollTo(0,target??(dir>0?stops[stops.length-1]:0));jumpState();return;}const t=T(),sp=jts(),hs=sp.map(d=>d.getBoundingClientRect().top);let i;
  if(dir<0){i=-1;hs.forEach((y,j)=>{if(y<t-2)i=j;});if(i<0){scrollTo(0,0);jumpState();return;}}
  else{i=hs.findIndex(y=>y>t+2);if(i<0){scrollTo(0,html.scrollHeight);jumpState();return;}}
@@ -846,7 +846,7 @@ app.addEventListener('click',e=>{if(!COLV[document.body.dataset.v]&&document.bod
  const ws=e.target.closest('.wksw button');if(ws){wkShow(ws.closest('details.split'),+ws.dataset.v);return;}
  const wk=e.target.closest('button.pt.wk');if(wk){e.preventDefault();e.stopPropagation();walkTeams(wk.closest('details.stopd'));return;}
  const b=e.target.closest('.seg button');
- if(b){const s=b.closest('.seg');if(s.matches('.all')&&b.dataset.a==='0'&&allShut()){resetOpen();return;}if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?boxes():s.matches('.it-sp')?b.closest('.body').querySelectorAll('details.sec'):s.matches('.lc-pl')?b.closest('.stop').querySelectorAll(':scope>details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
+ if(b){const s=b.closest('.seg');if(s.matches('.all')&&b.dataset.a==='0'&&allShut()){resetOpen();return;}if(s.matches('.tr-all')){trAll(b);return;}segAll(b,s.matches('.all')?jts():s.matches('.it-sp')?b.closest('.body').querySelectorAll('details.sec'):s.matches('.lc-pl')?b.closest('.stop').querySelectorAll(':scope>details.sec'):b.closest('.body').querySelectorAll(':scope>details'));return;}
  const end=e.target.closest('.endbar,.trfold');if(end){foldUp(end.closest('details'));return;}
  if(e.target.closest('.wk-next')){const n=nextStep();if(!n)return;const k=n.si+'.'+n.ti;WO.o[n.si]=1;WO.x[k]=1;WO.s[k+'.c']=1;if(n.m)misSet(n.m.m,r=>{r.o=true;});woSave();render(true);
   const inp=app.querySelector(n.m?`.wstep input[data-mk="${CSS.escape(n.m.m)}"][data-ck="${CSS.escape(n.c.k)}"]`:`.wstep input[data-sk="${k}.${n.j}"]`);if(!inp)return;land(inp.closest('.wstep'),GAP);return;}
@@ -1209,7 +1209,7 @@ function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).sp
  if(st.view===''&&v!==''&&!fromInput)st.listScroll=Object.assign(keepAnchor(),{z:cvSizes()});
  // The search stays set from page to page, except into a place (#/l/, a link from a Pokemon page): that's a jump to it.
  if(v==='l'&&!fromInput){q.value='';st.q='';}
- document.body.dataset.v=v;if(v!=='p')PB.hidden=true;if(RJ)RJ.hidden=!(COLV[v]&&!st.q||CF.calc&&v==='calc');
+ document.body.dataset.v=v;if(v!=='p')PB.hidden=true;if(RJ)RJ.hidden=!(COLV[v]&&!st.q||v==='p'||CF.calc&&v==='calc');
  if(v==='p'){setTab('p');detail(decodeURIComponent(parts[1]));}
  else if(v==='m'){setTab('p');moveDetail(+parts[1]);}
  else if(v==='a'){setTab('p');abilityDetail(+parts[1]);}
