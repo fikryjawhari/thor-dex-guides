@@ -22,6 +22,28 @@ const CURE_BERRY = {'Cheri Berry': ['par'], 'Chesto Berry': ['slp'], 'Pecha Berr
   'Rawst Berry': ['brn'], 'Aspear Berry': ['frz'], 'Lum Berry': ['par', 'slp', 'psn', 'tox', 'brn', 'frz', 'confusion'],
   'Persim Berry': ['confusion']};
 const MENTAL = ['attract', 'taunt', 'encore', 'torment', 'disable', 'healblock'];
+// Ability flags (Showdown abilities.ts at the pin): cantsuppress (no ability change or suppression), failroleplay (=
+// noentrain: Role Play / Doodle copy fails, Entrainment from it fails), failskillswap.
+const CANT_SUPPRESS = new Set(['As One (Glastrier)', 'As One (Spectrier)', 'Battle Bond', 'Comatose', 'Disguise',
+  'Gulp Missile', 'Ice Face', 'Multitype', 'Power Construct', 'RKS System', 'Schooling', 'Shields Down',
+  'Stance Change', 'Tera Shift', 'Zen Mode', 'Zero to Hero']);
+const FAIL_COPY = new Set(['As One (Glastrier)', 'As One (Spectrier)', 'Battle Bond', 'Comatose', 'Commander',
+  'Disguise', 'Embody Aspect (Cornerstone)', 'Embody Aspect (Hearthflame)', 'Embody Aspect (Teal)',
+  'Embody Aspect (Wellspring)', 'Flower Gift', 'Forecast', 'Hunger Switch', 'Ice Face', 'Illusion', 'Imposter',
+  'Multitype', 'Neutralizing Gas', 'Poison Puppeteer', 'Power Construct', 'Power of Alchemy', 'Protosynthesis',
+  'Quark Drive', 'Receiver', 'RKS System', 'Schooling', 'Shields Down', 'Stance Change', 'Teraform Zero', 'Tera Shell',
+  'Tera Shift', 'Trace', 'Wonder Guard', 'Zen Mode', 'Zero to Hero']);
+const FAIL_SWAP = new Set([...FAIL_COPY].filter(name => !['Flower Gift', 'Forecast', 'Imposter', 'Power of Alchemy',
+  'Receiver', 'Trace'].includes(name)));
+// Items a move can't take or swap (Showdown takeItem / onTakeItem): Z-Crystals, Mega Stones, Primal Orbs, and the
+// form items on their own species.
+const KEPT_ITEM = (item, mon) => / (Z|ium Z)$|ite( [XY])?$|^(Red|Blue) Orb$/.test(item)
+  || / Plate$/.test(item) && /^Arceus/.test(mon.name) || / Memory$/.test(item) && /^Silvally/.test(mon.name)
+  || /^Rusted (Sword|Shield)$/.test(item) && /^Zaci|^Zama/.test(mon.name)
+  || /^Griseous (Orb|Core)$/.test(item) && /^Giratina/.test(mon.name) || / Drive$/.test(item) && /^Genesect/.test(mon.name)
+  || item === 'Booster Energy' && mon.hasAbility('Protosynthesis', 'Quark Drive');
+// The Showdown id a record names in `n` ("Showdown moves.ts soak onHit"), else the move name's id.
+const moveId = (record, name) => /\.ts (\w+) /.exec(record?.n || '')?.[1] || String(name).toLowerCase().replace(/[^a-z0-9]/g, '');
 
 // Blocker table. `on`: what it stops (a status key, `confusion` / another volatile, `drop` = a stat drop caused by the
 // opponent, `drop:<stat>`, `sec` = the opponent's secondaries on this Pokémon, `move:<flag>` = the whole move, `status`
@@ -110,6 +132,8 @@ export function createEffects(env) {
     }
     return null;
   }
+  // The guide's name of a Pokémon's ability now ('' = none / suppressed).
+  const abilityOf = state => state.mon.guideAbility ?? (state.mon.ability === 'Guide no ability' ? '' : state.mon.ability);
   const reason = row => row.ability ? list(row.ability)[0] : row.item ? row.item : row.type ? list(row.type).join(' / ') + ' type'
     : row.terrain ? row.terrain + ' Terrain' : row.side;
 
@@ -273,10 +297,11 @@ export function createEffects(env) {
       if (record0.k) any = kind(record0, tgt, foe) || any;
       if (record0.b && !['venom', 'growth', 'maxatk', 'cheeks'].includes(record0.k)) any = stages(tgt, record0.b, foe, name) || any;
       if (record0.st) any = status(tgt, record0.st, foe, true) || any;
-      if (record0.v && !SWITCH_VOLATILES.has(record0.v)) any = volatile(tgt, record0.v, foe) || any;
+      if (record0.v && !SWITCH_VOLATILES.has(record0.v) && record0.v !== 'gastroacid') any = volatile(tgt, record0.v, foe) || any;
       if (record0.sb) any = stages('atk', record0.sb, false, name) || any;
       reactions();
       if (!any && !out.parts.some(part => part.cured)) {
+        if (out.fails) return out;
         const blocked = out.parts.find(part => part.blocked || part.capped);
         out.fails = blocked ? blocked.blocked || `${STAT_LABEL[blocked.stat]} ${blocked.capped > 0 ? '+6' : '−6'}` : 'no effect';
       }
@@ -290,7 +315,8 @@ export function createEffects(env) {
     const sheer = gen >= 5 && user.mon.hasAbility('Sheer Force');
     const after = entry => {
       if (entry.k === 'ko3') { if (hit.ko) stages('atk', {atk: entry.by || 3}, false, name); return; }
-      if (entry.k && entry.k !== 'fn' && target.mon.curHP()) kind(entry, 'def', true);
+      if (entry.k && entry.k !== 'fn' && (entry.tg === 's' || record0.tg === 's')) kind(entry, 'atk', false);
+      else if (entry.k && entry.k !== 'fn' && target.mon.curHP()) kind(entry, 'def', true);
     };
     if (record0.sb) stages('atk', record0.sb, false, name);
     const secondaries = (record0.sec || []).filter(sec => !sec.k || sec.b || sec.st || sec.v || sec.sb);
@@ -306,8 +332,30 @@ export function createEffects(env) {
     }
     if (record0.k) after(record0);
     for (const sec of record0.sec || []) if (sec.k && !(sec.b || sec.st || sec.v || sec.sb)) after(sec);
+    if (hit.contact) contactAbility();
     reactions();
     return out;
+
+    // Mummy / Lingering Aroma pass to a contact attacker, Wandering Spirit swaps (Showdown onDamagingHit).
+    function contactAbility() {
+      const mon = target.mon;
+      const own = user.mon;
+      const spread = gen >= 5 && mon.hasAbility('Mummy') || gen >= 9 && mon.hasAbility('Lingering Aroma');
+      if (spread) {
+        if (CANT_SUPPRESS.has(own.ability) || own.ability === mon.ability) return;
+        if (gen >= 9 && own.hasItem('Ability Shield') && env.holds(own, field)) return;
+        user.setAbility(abilityOf(target));
+        out.parts.push({who: 'atk', ab: abilityOf(user)});
+        note(`${mon.ability}: the user's ability is now ${abilityOf(user)}`);
+      } else if (gen >= 8 && mon.hasAbility('Wandering Spirit')) {
+        if (FAIL_SWAP.has(own.ability) || gen >= 9 && own.hasItem('Ability Shield') && env.holds(own, field)) return;
+        const mine = abilityOf(user);
+        user.setAbility(abilityOf(target));
+        target.setAbility(mine);
+        out.parts.push({who: 'both', ab: 'swap'});
+        note('Wandering Spirit: abilities swapped');
+      }
+    }
 
     // Hand-mapped kinds (record.k): Showdown's onHit functions, named in move-effects.json.
     function kind(entry, who, foe) {
@@ -415,13 +463,44 @@ export function createEffects(env) {
             return false;
           }
           if (/ (Z|ium Z)$|ite( [XY])?$|^(Red|Blue) Orb$/.test(item) && entry.k !== 'eat') return false;
+          const held = state.held();
           state.lose();
+          if (entry.k === 'steal') self.setItem(held);
           out.parts.push({who, item, lost: entry.k});
-          note({knock: `${item} knocked off`, steal: `${item} stolen (set it in Edit)`, eat: `${item} eaten by the user`,
+          note({knock: `${item} knocked off`, steal: `${item} stolen`, eat: `${item} eaten by the user`,
             burnitem: `${item} burned up`}[entry.k]);
           return true;
         }
-        case 'trick': note('Items swapped (set them in Edit)'); out.parts.push({who: 'both', log: 'trick'}); return true;
+        case 'trick': {
+          // Trick / Switcheroo (Showdown onTryImmunity Sticky Hold, takeItem on both): swaps the two held items.
+          const other = sides[who];
+          const mine = self.held();
+          const theirs = other.held();
+          if (other.mon.hasAbility('Sticky Hold') && !self.mon.hasAbility(...MOLD)) return refuse('Sticky Hold');
+          if (!mine && !theirs) return refuse('no items');
+          const kept = [[mine, self.mon], [theirs, other.mon]].find(([item, mon]) => item && KEPT_ITEM(item, mon));
+          if (kept) return refuse(kept[0] + ' stays');
+          self.setItem(theirs);
+          other.setItem(mine);
+          out.parts.push({who: 'both', swapItems: true});
+          note(`Items swapped: user ${theirs || 'no item'}, target ${mine || 'no item'}`);
+          return true;
+        }
+        case 'bestow': {
+          // Bestow (Showdown onHit): the target must hold nothing; the user's item moves to it.
+          const other = sides[who];
+          const mine = self.held();
+          if (other.held()) return refuse('target holds an item');
+          if (!mine) return refuse('user holds no item');
+          if (KEPT_ITEM(mine, self.mon)) return refuse(mine + ' stays');
+          self.lose();
+          other.setItem(mine);
+          out.parts.push({who, item: mine, gave: true});
+          note(`${mine} given to the target`);
+          return true;
+        }
+        case 'type': return typeKind(entry, who);
+        case 'ability': return abilityKind(entry, who);
         case 'drowsy': {
           if (state.st) { out.parts.push({who, blocked: 'already ' + STATUS_TEXT[state.st]}); return false; }
           const row = blocker('slp', ctxFor(who, foe));
@@ -430,10 +509,9 @@ export function createEffects(env) {
           out.parts.push({who, v: 'yawn'});
           return true;
         }
-        case 'ability': case 'type': case 'random': case 'log':
+        case 'random': case 'log':
           out.parts.push({who, log: entry.k});
-          note(entry.k === 'ability' ? 'Ability changed (set it in Edit)' : entry.k === 'type' ? 'Type changed (not tracked)'
-            : entry.k === 'random' ? 'Random stat +2 (set it in Edit)' : `${name} (not tracked)`);
+          note(entry.k === 'random' ? 'Random stat +2 (set it in Edit)' : `${name} (not tracked)`);
           return true;
         case 'stockpile':
         case 'curse':
@@ -442,6 +520,155 @@ export function createEffects(env) {
           return false; // their stages are the record's `b`; HP is DMG.hp
         default:
           return false;
+      }
+    }
+
+    // A reason the move fails: the status button says Fails (a damaging move's after-part just doesn't happen).
+    function refuse(text) { if (phase === 'status') out.fails ||= text; else note(`${name}: ${text}`); return false; }
+    // Showdown setType: Arceus / Silvally keep their types (Gen 4: Multitype).
+    function fixedType(mon) {
+      return gen >= 5 && /^(Arceus|Silvally)/.test(mon.name) || gen === 4 && mon.hasAbility('Multitype');
+    }
+    // Type changes (Showdown setType / addType; an added type replaces the previous added one).
+    function typeKind(entry, who) {
+      const self = sides.atk;
+      const state = sides[who];
+      const mon = state.mon;
+      const id = moveId(entry.n ? entry : record0, name);
+      const base = mon.guideAdded ? mon.types.slice(0, -1) : [...mon.types];
+      const label = state === self ? 'User' : 'Target';
+      const pure = type => {
+        if (mon.types.join() === type) return refuse('already ' + type);
+        if (fixedType(mon)) return refuse(mon.name + ' keeps its type');
+        state.setTypes([type]);
+        out.parts.push({who, types: [type]});
+        note(`${label} is now ${type} type`);
+        return true;
+      };
+      const add = type => {
+        if (mon.types.includes(type)) return refuse('already ' + type);
+        state.setTypes(base, type);
+        out.parts.push({who, added: type});
+        note(`${type} added to the ${label.toLowerCase()}'s types`);
+        return true;
+      };
+      switch (id) {
+        case 'soak': return pure('Water');
+        case 'magicpowder': return pure('Psychic');
+        case 'trickortreat': return add('Ghost');
+        case 'forestscurse': return add('Grass');
+        case 'camouflage': {
+          const terrain = gen >= 6 && ['Electric', 'Grassy', 'Misty', 'Psychic'].find(t => field.hasTerrain(t));
+          return pure(gen === 5 ? 'Ground' : terrain ? {Grassy: 'Grass', Misty: 'Fairy'}[terrain] || terrain : 'Normal');
+        }
+        case 'conversion': {
+          const moves = env.moves(mon);
+          const types = gen >= 6 ? moves.slice(0, 1).map(move => move.type)
+            : moves.filter(move => move.name !== 'Conversion' && !mon.types.includes(move.type)).map(move => move.type);
+          if (!types.length) return refuse(gen >= 6 ? 'no first move' : 'no move of a new type');
+          if (gen >= 6 && mon.types.includes(types[0])) return refuse('already ' + types[0]);
+          const done = pure(types[0]);
+          if (done && new Set(types).size > 1) note(`In game one of ${[...new Set(types)].join(' / ')} at random`);
+          return done;
+        }
+        case 'conversion2':
+          out.parts.push({who: 'atk', log: 'type'});
+          note('Conversion 2: a random type that resists the target\'s last move (set it in Edit → Fight)');
+          return true;
+        case 'reflecttype': {
+          // The user copies the target's types (Arceus / Silvally fail); a typeless target with an added type gives
+          // Normal + that type, one with none fails.
+          const source = sides.def.mon;
+          if (fixedType(self.mon)) return refuse(self.mon.name + ' keeps its type');
+          let types = (source.guideAdded ? source.types.slice(0, -1) : source.types).filter(type => type !== '???');
+          if (!types.length) {
+            if (!source.guideAdded) return refuse('target has no type');
+            types = ['Normal'];
+          }
+          self.setTypes(types, source.guideAdded);
+          out.parts.push({who: 'atk', types: self.mon.types});
+          note(`User is now ${self.mon.types.join(' / ')} type`);
+          return true;
+        }
+        case 'burnup':
+        case 'doubleshock': {
+          const type = id === 'burnup' ? 'Fire' : 'Electric';
+          if (!self.mon.types.includes(type)) return false;
+          const left = (self.mon.guideAdded ? self.mon.types.slice(0, -1) : self.mon.types).filter(t => t !== type);
+          self.setTypes(left.length ? left : ['???'], self.mon.guideAdded === type ? '' : self.mon.guideAdded);
+          out.parts.push({who: 'atk', types: self.mon.types, lostType: type});
+          note(`User loses its ${type} type`);
+          return true;
+        }
+        default:
+          out.parts.push({who, log: 'type'});
+          note('Type changed (set it in Edit → Fight)');
+          return true;
+      }
+    }
+
+    // Showdown setAbility: Ability Shield (Gen 9) or a cantsuppress ability keeps the ability.
+    function canSet(state) {
+      const mon = state.mon;
+      if (CANT_SUPPRESS.has(mon.ability)) return refuse(mon.ability);
+      if (gen >= 9 && mon.hasItem('Ability Shield') && env.holds(mon, field)) return refuse('Ability Shield');
+      return true;
+    }
+    // Ability changes by move (Showdown onTryHit / onHit of each).
+    function abilityKind(entry, who) {
+      const self = sides.atk;
+      const state = sides[who];
+      const mon = state.mon;
+      const own = self.mon;
+      const id = moveId(entry.n ? entry : record0, name);
+      const set = (to, ability, suffix = '') => {
+        to.setAbility(ability);
+        out.parts.push({who: to === self ? 'atk' : 'def', ab: ability || 'none'});
+        note(`${to === self ? 'User' : 'Target'}: ${ability || 'ability suppressed'}${suffix}`);
+        return true;
+      };
+      switch (id) {
+        case 'worryseed':
+          if (mon.hasAbility('Truant', 'Insomnia')) return refuse(mon.ability);
+          if (!canSet(state)) return false;
+          set(state, 'Insomnia');
+          if (state.st === 'slp') { state.setStatus(''); out.parts.push({who, cured: true}); note('Target wakes up'); }
+          return true;
+        case 'simplebeam':
+          if (mon.hasAbility('Simple', 'Truant')) return refuse(mon.ability);
+          return canSet(state) && set(state, 'Simple');
+        case 'entrainment':
+          if (mon.ability === own.ability) return refuse('same ability');
+          if (mon.hasAbility('Truant')) return refuse('Truant');
+          if (FAIL_COPY.has(own.ability)) return refuse(own.ability);
+          return canSet(state) && set(state, abilityOf(self));
+        case 'roleplay':
+        case 'doodle':
+          if (mon.ability === own.ability) return refuse('same ability');
+          if (FAIL_COPY.has(mon.ability)) return refuse(mon.ability);
+          return canSet(self) && set(self, abilityOf(state));
+        case 'skillswap': {
+          const fixed = [own, mon].find(m => FAIL_SWAP.has(m.ability));
+          if (fixed) return refuse(fixed.ability);
+          if (gen <= 5 && own.ability === mon.ability) return refuse('same ability');
+          if (!canSet(state) || !canSet(self)) return false;
+          const mine = abilityOf(self);
+          const theirs = abilityOf(state);
+          self.setAbility(theirs);
+          state.setAbility(mine);
+          out.parts.push({who: 'both', ab: 'swap'});
+          note(`Abilities swapped: user ${theirs || 'none'}, target ${mine || 'none'}`);
+          return true;
+        }
+        case 'gastroacid':
+        case 'coreenforcer':
+          if (!abilityOf(state)) return refuse('no ability');
+          if (!canSet(state)) return false;
+          return set(state, '', id === 'coreenforcer' ? ' (if it already moved this turn)' : '');
+        default:
+          out.parts.push({who, log: 'ability'});
+          note('Ability changed (set it in Edit → Fight)');
+          return true;
       }
     }
 
@@ -531,10 +758,17 @@ export function describe(out) {
     if (part.swap) { pieces.push('Swap'); full.push('stat changes swapped'); }
     if (part.invert) { pieces.push('Invert'); full.push('stat changes inverted'); }
     if (part.cured && !part.item) { pieces.push('Cure'); full.push('status cured'); }
+    const whose = part.who === 'def' ? 'target ' : 'user ';
+    if (part.types) { pieces.push(part.types.join('/')); full.push(whose + 'becomes ' + part.types.join(' / ')); }
+    if (part.added) { pieces.push('+' + part.added); full.push(whose + 'gains ' + part.added); }
+    if (part.ab === 'swap') { pieces.push('Swap'); full.push('abilities swapped'); }
+    else if (part.ab) { pieces.push(part.ab === 'none' ? 'No abil.' : part.ab); full.push(whose + (part.ab === 'none' ? 'ability suppressed' : 'ability ' + part.ab)); }
+    if (part.swapItems) { pieces.push('Swap'); full.push('items swapped'); }
+    if (part.gave) { pieces.push('Give'); full.push(part.item + ' given'); }
     if (part.log) {
-      pieces.push({trick: 'Swap', ability: 'Ability', type: 'Type', random: '+2 ?'}[part.log] || 'Use');
-      full.push({trick: 'items swapped (set them in Edit)', ability: 'ability changed (set it in Edit)',
-        type: 'type changed (not tracked)', random: 'a random stat +2 (set it in Edit)'}[part.log] || part.log);
+      pieces.push({type: 'Type', ability: 'Ability', random: '+2 ?'}[part.log] || 'Use');
+      full.push({ability: 'ability changed (set it in Edit → Fight)', type: 'type changed (set it in Edit → Fight)',
+        random: 'a random stat +2 (set it in Edit)'}[part.log] || part.log);
     }
   }
   const drops = parts.filter(part => part.by < 0 || part.st || part.v || part.lost).length;

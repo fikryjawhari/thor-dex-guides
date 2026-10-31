@@ -64,6 +64,7 @@ const HAND = {
   strengthsap: { k: 'sap', b: { atk: -1 }, tg: 'o', fn: 'onHit' },
   trick: { k: 'trick', fn: 'onHit' },
   switcheroo: { k: 'trick', fn: 'onHit' },
+  bestow: { k: 'bestow', fn: 'onHit' },
   yawn: { k: 'drowsy', fn: 'onTryHit' },
   // Switches out after (not modelled): only the stage drops are recorded.
   partingshot: { b: { atk: -1, spa: -1 }, tg: 'o', fn: 'onHit' },
@@ -82,6 +83,8 @@ const HAND = {
   reflecttype: { k: 'type', fn: 'onHit' },
   magicpowder: { k: 'type', fn: 'onHit' },
   burnup: { k: 'type', tg: 's', fn: 'self.onHit' },
+  doubleshock: { k: 'type', tg: 's', fn: 'self.onHit' },
+  camouflage: { k: 'type', fn: 'onHit' },
   acupressure: { k: 'random', fn: 'onHit' },
   tidyup: { b: { atk: 1, spe: 1 }, tg: 's', fn: 'onHit' },
   stuffcheeks: { k: 'cheeks', b: { def: 2 }, tg: 's', fn: 'onHit' },

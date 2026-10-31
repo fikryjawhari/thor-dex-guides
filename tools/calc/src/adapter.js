@@ -194,6 +194,8 @@ function pokemon(set) {
   if (set.hp !== undefined) result.originalCurHP = Math.max(0, Math.min(result.maxHP(), set.hp));
   if (result.hasAbility('Unburden') && set.used) result.abilityOn = true;
   result.guideItem = set.it || '';
+  result.guideAbility = profile.abilities !== false && ability ? ability[0] : '';
+  result.guideMoves = set.mvs || [];
   // Stats at `sl`, the damage formula at the shown level (BB2R Challenge trainers; tools/calc/README.md, Level bug).
   if (set.sl !== undefined && set.sl !== (set.lv ?? 50)) result.guideLevel = set.lv ?? 50;
   return result;
@@ -278,6 +280,9 @@ function fieldPokemon(set, values, side) {
     mon.guideCamomons = true;
   }
   if (mon.hasAbility('Plus', 'Minus')) mon.abilityOn = values.gameType === 'Doubles' && !!values[side + 'PlusMinus'];
+  // This fight's types (calc.js FIGHT ft / fadd: Soak, Trick-or-Treat, a manual change): base list + added type.
+  if (set.ty?.length) mon.types = [...set.ty];
+  mon.guideAdded = set.tya || '';
   if (set.pty && changesType(mon, set)) mon.types = [set.pty];
   if (values[side + 'Roost'] && mon.hasType('Flying')) {
     mon.types = mon.types.filter(type => type !== 'Flying');
@@ -938,7 +943,30 @@ function actionState(set, values, side) {
     mon.disabledItem = undefined;
     if (mon.hasAbility('Unburden')) mon.abilityOn = true;
   };
-  const state = {mon, update, logs, change, consume, persist, set: setStage, setStatus, lose, st: set.st || '', volatiles: new Set()};
+  // Fight-only type / ability / item changes (calc.js FIGHT ft / fadd, fa, fi), by guide name.
+  const held = () => mon.item || mon.disabledItem ? mon.guideItem || mon.item || mon.disabledItem : '';
+  const setTypes = (types, added = '') => {
+    update.ft = [...types];
+    update.fadd = added || undefined;
+    mon.types = [...types, ...(added ? [added] : [])];
+    mon.guideAdded = added;
+  };
+  const setAbility = name => {
+    update.fa = name;
+    update.abilityOn = undefined;
+    const entry = name && data.AB?.find(ability => ability[0] === name);
+    mon.ability = (name && effectName('abilities', name, !!entry?.[2])) || 'Guide no ability';
+    mon.guideAbility = name;
+  };
+  const setItem = name => {
+    update.fi = name;
+    update.used = undefined;
+    mon.item = name ? effectName('items', name) || name : '';
+    mon.disabledItem = undefined;
+    mon.guideItem = name;
+  };
+  const state = {mon, update, logs, change, consume, persist, set: setStage, setStatus, lose, held, setTypes, setAbility,
+    setItem, st: set.st || '', volatiles: new Set()};
   return state;
 }
 
@@ -1136,12 +1164,16 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
   }
   // The move's own effects after the damage (secondaries, self drops, item removal): the same resolver as the
   // status-move buttons. Not for an exact amount without reactions (the You / Dealt Apply).
-  const record = exact ? null : effectRecord(data.M[slot.mv]);
-  if (record && (record.sb || record.sec || record.k)) {
+  const record0 = exact ? null : effectRecord(data.M[slot.mv]);
+  // Mummy / Lingering Aroma / Wandering Spirit on a contact hit run through the resolver even with no record.
+  const touched = !exact && output.hits > 0 && target.mon.hasAbility('Mummy', 'Lingering Aroma', 'Wandering Spirit')
+    && makesContact(user.mon, target.mon, move, info.cat);
+  const record = record0 && (record0.sb || record0.sec || record0.k) ? record0 : touched ? {} : null;
+  if (record) {
     target.mon.originalCurHP = current;
     effectChance = fieldEffects(atk, values, 'atk').secondaryMultiplier;
     const out = effects.resolve({name: data.M[slot.mv], record, user, target, field, values: actionField, phase: 'after',
-      hit: {landed: dealt > 0 || !!result?.bust, ko: def.hp !== 0 && current === 0 && dealt > 0}, moveType: type});
+      hit: {landed: dealt > 0 || !!result?.bust, ko: def.hp !== 0 && current === 0 && dealt > 0, contact: touched}, moveType: type});
     output.log.push(...out.log);
     if (out.parts.length) output.effects = out.parts;
   }
@@ -1605,6 +1637,14 @@ const SELF_KO = new Set(['Explosion', 'Self-Destruct', 'Misty Explosion', 'Final
 const COSTS = {'Belly Drum': 2, Substitute: 4, 'Fillet Away': 2, 'Clangorous Soul': 3, 'Shed Tail': 2};
 const CRASH = new Set(['Jump Kick', 'High Jump Kick', 'Axe Kick', 'Supercell Slam']);
 
+// Whether `move` touches the target (contact flag, Long Reach / Protective Pads / Punching Glove; not Magic Guard).
+function makesContact(user, target, move, category) {
+  return !(!move || !(move.flags?.contact || move.name === 'Shell Side Arm' && category === 'Physical')
+    || profile.gen >= 7 && (user.hasAbility('Long Reach') || user.hasItem('Protective Pads'))
+    || profile.gen >= 9 && user.hasItem('Punching Glove') && move.flags?.punch
+    || profile.over?.contact?.defenderPads && target.hasItem('Protective Pads'));
+}
+
 function contactEffects(user, target, move, field, category) {
   if (!move || !(move.flags?.contact || move.name === 'Shell Side Arm' && category === 'Physical')
     || user.hasAbility('Magic Guard')
@@ -1715,6 +1755,8 @@ const effects = createEffects({
   holds: (mon, field) => holdsItem(mon, field),
   heldName: mon => mon.item || mon.disabledItem || '',
   unnerved: mon => mon.hasAbility('Unnerve', 'As One (Glastrier)', 'As One (Spectrier)'),
+  moves: mon => (mon.guideMoves || []).map(index => ({name: data.M[index], type: data.MV[index]?.t})).filter(move => move.name),
+  contact: (user, target, name, category) => makesContact(user, target, generation.moves.get(toID(name)), category),
 });
 
 // What a move does beyond damage and HP, for the move's own parts: the resolved record (null = nothing).
