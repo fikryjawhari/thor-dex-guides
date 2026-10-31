@@ -11,6 +11,7 @@ import re
 import changes
 from common import key, report
 from eidex import AD, CR, MD, SD, SDA, TD, TN, FC, MEGA, NAME, canon, item, keep, sp
+from move_metadata import Metadata
 
 mvname = lambda i: MD.get(str(i), {}).get('name', f'move {i}')
 spname = lambda i: NAME.get(canon(i), sp.get(i, {}).get('speciesName', f'#{i}'))
@@ -49,6 +50,7 @@ def build(D):
             if [how, i] not in EF[t]: EF[t].append([how, i])
     if unk: report(f'unknown evo methods {unk}')
     order = sorted(keep, key=lambda i: (sp[i]['dexId'], 0 if not sp[i]['formId'] else 1, sp[i]['speciesId']))
+    metadata = Metadata()
     Mi = {}; M = []; MV = []
     CAT = ['Physical', 'Special', 'Status']
     def m(mid):
@@ -70,6 +72,7 @@ def build(D):
             if sd['pp'] != d['pp']: h.append(f"PP {sd['pp']} → {d['pp']}")
             if sd['t'] != o['t']: h.append(f"Type {sd['t']} → {o['t']}")
             if sd['c'] != o['c']: h.append(f"Category {sd['c']} → {o['c']}")
+        metadata.apply(d['name'], o, d)
         o['h'] = h; MV.append(o)
         return Mi[mid]
     ABi = {}; AB = []
@@ -95,6 +98,7 @@ def build(D):
     for i, name in enumerate(M):
         if not SD.get(key(name)): nosd.add(name)
     report(f'EI original abilities: {[a[0] for a in AB if a[2]]}'); report(f'changed vs Gen 9: {sum(1 for x in MV if x["h"])}'); report(f'moves {len(M)} (no Showdown match for priority: {len(nosd)}: {", ".join(sorted(nosd)[:15])}...), abilities {len(AB)}')
+    metadata.finish()
     # type chart: attacking type -> multiplier x10 per defending type id
     TCH = {TD[k]['typeName']: {TN[j]: TD[k]['matchup'][j] for j in TN if j < len(TD[k]['matchup'])} for k in TD}
     D.update(M=M, MV=MV, AB=AB, P=P, TC=TCH, src='eidex repo (Mar 2026)')
