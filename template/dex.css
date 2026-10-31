@@ -116,7 +116,7 @@ body{padding-left:44px}
 #rail svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 body[data-v=calc] header{display:none}
 /* Pokemon, move, ability and trainer pages hide the search bar but keep the query: the list pages still show it. */
-body:is([data-v=p],[data-v=m],[data-v=a],[data-v=tr]) header{display:none}
+body:is([data-v=p],[data-v=m],[data-v=mp],[data-v=a],[data-v=tr]) header{display:none}
 /* Pokemon rows: types drop under the name when the row is narrow */
 .row .rt{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:2px 8px}
 .row .rt .nm{flex:1 1 auto}
@@ -378,6 +378,30 @@ table.lt td.n{vertical-align:top}table.lt .rt{display:block;white-space:nowrap}
 .mvst{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin-top:8px}
 .mvst>div{background:var(--panel2);border-radius:8px;padding:5px 8px;display:flex;flex-direction:column}
 .mvst span{font-size:11px;color:var(--mut);font-weight:600}.mvst b{font-variant-numeric:tabular-nums}
+.tgw{display:flex;gap:10px;align-items:center;margin-top:10px}
+.tgg{display:grid;grid-template-columns:repeat(3,22px);gap:3px;flex:none}
+.tgg i{height:15px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);font:700 9px/13px system-ui;text-align:center;color:var(--mut);font-style:normal}
+.tgg i.on{background:#d9534f;border-color:#d9534f;color:#fff}
+.tgg i.one{background:none;border:1.5px dashed #d9534f;color:#d9534f}
+.tgg i.me{background:var(--acc);border-color:var(--acc);color:#111}
+.tgw .tgt{font-size:13px;min-width:0;overflow-wrap:anywhere}
+.move-props{list-style:none;padding:0;margin:8px 0 0;font-size:13px}
+.move-props a{display:inline-block;padding:3px 0}
+.move-effects{list-style:none;margin:8px 0 0;padding:0;font-size:13px}
+.move-effects li{padding:2px 0}
+.move-interactions{font-size:13px}
+.interaction-row{display:grid;grid-template-columns:minmax(0,42fr) minmax(0,58fr);gap:6px;padding:5px 0;border-bottom:1px solid var(--line)}
+.interaction-row:last-child{border-bottom:0}
+.interaction-effect{color:var(--mut);overflow-wrap:anywhere}
+.interaction-who{overflow-wrap:anywhere}
+.interaction-changed{color:var(--acc);font-size:11px;font-weight:700;margin-left:4px}
+.move-learn .sec[open]>summary{position:sticky;top:0;z-index:2;background:var(--bg);box-shadow:0 -5px 0 var(--bg)}
+.move-learn .learn-sprite{width:44px;padding-left:0;padding-right:4px}
+.move-learn .lrn td{padding-left:3px;padding-right:3px}
+.move-learn .lrn td:last-child{font-size:12px}
+.move-list .row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 6px;padding:5px 6px}
+.move-list .nm{overflow-wrap:anywhere}
+.move-list .ty{margin:0}
 /* Learned by / Pokémon with it: a long name may break rather than widen the page at 260 (a few move pages were 261) */
 table.lrn td:nth-child(2){overflow-wrap:anywhere}
 /* The starter picker shrinks instead of running out of the tracker bar at 260 */
