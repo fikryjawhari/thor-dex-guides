@@ -104,9 +104,16 @@ function init(guide, configuration) {
     const engineName = effectName('moves', name, !!entry.x) || `Guide move ${index}`;
     const id = toID(engineName);
     const known = stock.moves[id] || modern.moves[id] || {};
+    // MV.f is the guide's property list (tools/moveprops.py): Showdown flag names plus page-only ones. Protect
+    // stays stock unless the guide says noprotect (guides don't list protect itself).
     const flagNames = {ballistic: 'bullet', biting: 'bite', punching: 'punch'};
     const flags = entry.f === undefined ? {...known.flags} : Object.fromEntries(
       entry.f.map(flag => [flagNames[flag] || flag, 1]));
+    if (entry.f !== undefined) {
+      delete flags.noprotect;
+      if (entry.f.includes('noprotect')) delete flags.protect;
+      else if (known.flags?.protect) flags.protect = 1;
+    }
     moves[toID(name)] = mergeRecord({
       ...known, id, kind: 'Move', name: engineName,
       basePower: Number(entry.bp) || 0, type: entry.t, category: entry.c,
