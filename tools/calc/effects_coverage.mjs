@@ -18,7 +18,7 @@ const weather = {'Sunny Day': 'Sun', 'Rain Dance': 'Rain', Sandstorm: 'Sand', Ha
 const terrain = {'Electric Terrain': 'Electric', 'Grassy Terrain': 'Grassy', 'Misty Terrain': 'Misty', 'Psychic Terrain': 'Psychic'};
 const kinds = new Set(['haze', 'clear', 'copy', 'swap', 'invert', 'maxatk', 'growth', 'venom', 'cheeks', 'purify',
   'cure', 'shift', 'knock', 'steal', 'eat', 'burnitem', 'trick', 'bestow', 'type', 'ability', 'drowsy', 'random',
-  'log', 'stockpile', 'curse', 'memento', 'sap', 'rest', 'speedswap', 'recycle', 'defog']);
+  'log', 'stockpile', 'curse', 'memento', 'sap', 'rest', 'speedswap', 'defog', 'courtchange', 'grassboost', 'plusminus', 'ko3']);
 
 function switches(name, profile) {
   for (const [map, prefix] of [[maps.MOVE_GLOBAL, ''], [maps.MOVE_OWN, 'atk'], [maps.MOVE_OTHER, 'def']]) {
@@ -28,7 +28,7 @@ function switches(name, profile) {
   }
   if (['Dig', 'Fly', 'Bounce', 'Dive', 'Minimize'].includes(name)) return 'battle volatile';
   for (const [key, value] of [['weather', weather[name]], ['terrain', terrain[name]]]) {
-    if (value && profile.field?.some(entry => entry.k === key && entry.o?.some(option => option[0] === value))) return key;
+    if (value && profile.field?.some(entry => entry.k === key && entry.o?.some(option => option[0] === value || name === 'Hail' && option[0] === 'Snow'))) return key;
   }
   return '';
 }
@@ -52,7 +52,10 @@ export async function coverage(hack) {
     if (category === 'Status' && engine.hp(mon, mon, {mv: index}, {}, 0)) actions.push('HP chip');
     let calculationError = '';
     if (category !== 'Status') {
-      try { if (engine.calc(mon, mon, {mv: index, bp: Number(data.MV[index]?.bp) || 80}, {})) actions.push('damage'); }
+      try {
+        if (engine.calc(mon, mon, {mv: index}, {})) actions.push('damage');
+        else if (engine.calc(mon, mon, {mv: index, bp: Number(data.MV[index]?.bp) || 80}, {})) actions.push('damage (Power input)');
+      }
       catch (error) { calculationError = error.message; }
     }
     const applies = record && (record.b || record.sb || record.st || record.v || kinds.has(record.k));

@@ -157,17 +157,20 @@ function resolveEffects() {
     for (const [from, entry] of entries) if (from <= profile.gen) record = entry;
     if (record) table[id] = record;
   }
+  for (const [reason, names] of Object.entries(catalog.coverage.notModelled)) {
+    for (const name of names) table[toID(name)] = {...table[toID(name)], nm: reason};
+  }
+  for (const [name, reason] of Object.entries(catalog.coverage.noops)) table[toID(name)] = {...table[toID(name)], noop: reason};
   for (const [name, record] of Object.entries(profile.over?.effects?.moves || {})) {
-    if (record === null) delete table[toID(name)];
-    else table[toID(name)] = record;
+    const id = toID(name);
+    const coverage = table[id]?.nm ? {nm: table[id].nm} : {};
+    table[id] = record === null ? Object.keys(coverage).length ? coverage : null : {...coverage, ...record};
   }
   return table;
 }
 
 function effectRecord(name) {
   if (!name) return null;
-  const own = profile.over?.effects?.moves || {};
-  if (Object.prototype.hasOwnProperty.call(own, name)) return own[name];
   const index = data.M.indexOf(name);
   const alias = effectName('moves', name, !!data.MV[index]?.x);
   return effectTable[toID(name)] || (alias ? effectTable[toID(alias)] : null) || null;
@@ -196,6 +199,10 @@ function pokemon(set) {
   result.guideItem = set.it || '';
   result.guideAbility = profile.abilities !== false && ability ? ability[0] : '';
   result.guideMoves = set.mvs || [];
+  result.guideRaw = {...set.rs};
+  for (const [stat, value] of Object.entries(result.guideRaw)) {
+    if (STAGES.includes(stat) && Number.isInteger(value) && value > 0) result.rawStats[stat] = result.stats[stat] = value;
+  }
   // Stats at `sl`, the damage formula at the shown level (BB2R Challenge trainers; tools/calc/README.md, Level bug).
   if (set.sl !== undefined && set.sl !== (set.lv ?? 50)) result.guideLevel = set.lv ?? 50;
   return result;
@@ -204,6 +211,8 @@ function pokemon(set) {
 const nativeClone = Pokemon.prototype.clone;
 Pokemon.prototype.clone = function clone() {
   const copy = nativeClone.call(this);
+  copy.guideRaw = {...this.guideRaw};
+  for (const [stat, value] of Object.entries(copy.guideRaw)) copy.rawStats[stat] = copy.stats[stat] = value;
   if (this.guideLevel !== undefined) copy.guideLevel = this.guideLevel;
   if (this.guideCamomons) {
     copy.guideCamomons = true;
@@ -965,7 +974,13 @@ function actionState(set, values, side) {
     mon.disabledItem = undefined;
     mon.guideItem = name;
   };
-  const state = {mon, update, logs, change, consume, persist, set: setStage, setStatus, lose, held, setTypes, setAbility,
+  const setRaw = (stat, value) => {
+    update.rs = {...mon.guideRaw, [stat]: value};
+    mon.guideRaw = {...update.rs};
+    mon.rawStats[stat] = mon.stats[stat] = value;
+  };
+  const setHP = value => { update.hp = value; mon.originalCurHP = value; };
+  const state = {mon, update, logs, change, consume, persist, set: setStage, setStatus, lose, held, setTypes, setAbility, setRaw, setHP,
     setItem, st: set.st || '', volatiles: new Set()};
   return state;
 }
@@ -1788,6 +1803,7 @@ function effect(atk, def, slot, values = {}, options = {}) {
   const out = effects.resolve({name, record: own, user, target, field, values, phase: 'status',
     moveType: slot.t || moveData.type, toggles: !!options.toggles});
   return {atk: user.update, def: target.update, log: out.log, parts: out.parts,
+    ...(out.field ? {field: {changes: out.field}} : {}),
     ...(out.fails ? {fails: out.fails} : {}), ...(out.bounced ? {bounced: true} : {}), ...describe(out)};
 }
 

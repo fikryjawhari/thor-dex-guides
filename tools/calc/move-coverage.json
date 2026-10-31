@@ -1,0 +1,31 @@
+{
+  "notModelled": {
+    "Switching isn't modelled": ["Roar", "Whirlwind", "Teleport", "Baton Pass", "U-turn", "Volt Switch", "Flip Turn", "Parting Shot", "Chilly Reception", "Shed Tail", "Dragon Tail", "Circle Throw"],
+    "Turn order only": ["After You", "Quash", "Quick Guard"],
+    "Spread-move protection isn't tracked": ["Wide Guard", "Mat Block", "Crafty Shield"],
+    "Accuracy only": ["Lock-On", "Mind Reader"],
+    "Random move": ["Metronome", "Assist", "Sleep Talk", "Copycat", "Mirror Move", "Me First", "Nature Power"],
+    "Needs an ally": ["Ally Switch", "Coaching", "Aromatic Mist", "Floral Healing", "Heal Pulse", "Instruct", "Dragon Cheer"],
+    "Copied species and moves aren't tracked": ["Transform"],
+    "Move replacement isn't tracked": ["Mimic", "Sketch"],
+    "Consumed item history isn't tracked": ["Recycle"],
+    "Fainted teammates aren't tracked": ["Revival Blessing"],
+    "Perish countdown isn't tracked": ["Perish Song"],
+    "Switching lock isn't tracked": ["Fairy Lock"],
+    "Choose the move's Type override": ["Electrify", "Ion Deluge"],
+    "Random status; choose it in Edit": ["Tri Attack", "Dire Claw"],
+    "Needs this turn's stat-change history": ["Burning Jealousy", "Alluring Voice"],
+    "Ally healing isn't modelled": ["Life Dew", "Jungle Healing", "Lunar Blessing", "Healing Wish", "Lunar Dance"],
+    "Ally effects aren't modelled": ["Rototiller", "Flower Shield", "Gear Up", "Magnetic Flux"],
+    "All battlers' berries aren't modelled": ["Teatime"],
+    "Z-status effects are not modelled yet": ["Extreme Evoboost"],
+    "Max-move protection isn't modelled": ["Max Guard"],
+    "Shadow move mechanics aren't modelled": ["Shadow Blast", "Shadow Blitz", "Shadow Bolt", "Shadow Break", "Shadow Chill", "Shadow Down", "Shadow End", "Shadow Fire", "Shadow Half", "Shadow Hold", "Shadow Mist", "Shadow Panic", "Shadow Rave", "Shadow Rush", "Shadow Shed", "Shadow Sky", "Shadow Storm", "Shadow Wave"]
+  },
+  "noops": {
+    "Splash": "No battle effect",
+    "Celebrate": "Celebration only; no battle effect",
+    "Hold Hands": "Animation only; no battle effect",
+    "Happy Hour": "Prize money only; no battle effect"
+  }
+}

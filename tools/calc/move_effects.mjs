@@ -41,6 +41,18 @@ const FIELD_KEYS = ['sideCondition', 'pseudoWeather', 'weather', 'terrain', 'slo
 // carries it (checked to exist in the effective entry; its file is cited in `n`). `top` kinds sit on
 // the move's record; `sec` kinds are a guaranteed secondary (c 100) of a damaging move.
 const HAND = {
+  rest: {k: 'rest', fn: 'onHit'},
+  speedswap: {k: 'speedswap', fn: 'onHit'},
+  defog: {k: 'defog', fn: 'onHit'},
+  courtchange: {k: 'courtchange', tg: 's', fn: 'onHitField'},
+  rototiller: {k: 'grassboost', tg: 's', fn: 'onHitField'},
+  flowershield: {k: 'grassboost', tg: 's', fn: 'onHitField'},
+  magneticflux: {k: 'plusminus', fn: 'onHitSide'},
+  gearup: {k: 'plusminus', fn: 'onHitSide'},
+  block: {v: 'trapped', fn: 'onHit'},
+  meanlook: {v: 'trapped', fn: 'onHit'},
+  spiderweb: {v: 'trapped', fn: 'onHit'},
+  spite: {k: 'log', text: 'Last move loses PP (PP not tracked)', fn: 'onHit'},
   haze: { k: 'haze', fn: 'onHitField' },
   clearsmog: { sec: 'clear', fn: 'onHit' },
   psychup: { k: 'copy', fn: 'onHit' },
@@ -321,6 +333,8 @@ function recordFor(tables, gen, id) {
       r.k = hand.k;
       if (hand.stats) r.stats = hand.stats;
       if (hand.only) r.only = hand.only;
+      if (hand.v) r.v = hand.v;
+      if (hand.text) r.text = hand.text;
       if (hand.b) r.b = { ...(r.b || {}), ...hand.b };
       if (hand.growth) {
         // Gen 4: Sp. Atk +1 only; Gen 5+: Atk and Sp. Atk +1, doubled in sun (source onModifyMove).
@@ -338,6 +352,9 @@ function recordFor(tables, gen, id) {
     notes.push(correction.n);
   }
   if (!r.sec?.length) delete r.sec;
+  const functionSecondary = {throatchop: {v: 'throatchop'}, anchorshot: {v: 'trapped'}, spiritshackle: {v: 'trapped'},
+    eeriespell: {k: 'log', text: 'Last move loses 3 PP (PP not tracked)'}}[id];
+  if (functionSecondary) r.sec = (r.sec || []).map(part => part.k === 'fn' ? {c: part.c, ...functionSecondary} : part);
   if (r.b || r.st || r.v || r.k) r.tg = tgOverride || tgOf(entry);
   if (r.sec) {
     // Sec items carry their own target logic; nothing to add.
