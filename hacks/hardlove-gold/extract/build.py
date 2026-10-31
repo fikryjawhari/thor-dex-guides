@@ -15,7 +15,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import H, report  # noqa: E402
 from extractlib import finalise, write_data  # noqa: E402
-import dex, gid, locs, trainers, items, walk  # noqa: E402
+import dex, gid, locs, trainers, items, walk, move_rules  # noqa: E402
 import json  # noqa: E402
 
 
@@ -45,6 +45,7 @@ def main():
     trainers.split(D)     # one box per mini-split
     items.split(D)        # Held Items + Berries, Valuables
     locs.starter(D)       # the Starter area
+    move_rules.write(D)   # move_rules.json from the source's lists, read by finalise's move interactions
     finalise(D, H.name)
     gid.build(D)          # GID: the save importer's game id tables (after finalise: M / AB indexes)
     write_data(D, H)

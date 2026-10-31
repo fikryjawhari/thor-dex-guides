@@ -255,10 +255,34 @@ certify every modifier-order/rounding combination in hg-engine.
 
 #### Move flags
 
-`extract/hgengine.py` → `move_flags()` starts `MV.f` with pinned Showdown Gen 9 flags, then takes **contact**
-from the hack's `data/Moves.c`. Source removes standard contact from Sunsteel Strike, Collision Course,
-Electro Drift, Thunderous Kick and Behemoth Blade. Source-specific additions: Growl's punch flag and slicing on
-Crush Claw, Dire Claw, Dragon Claw, Metal Claw and Shadow Claw.
+`extract/move_metadata.py` → `describe()` writes `MV.f` / `tg` / `se` in the `tools/moveprops.py` vocabulary (the
+move pages and the calc read the same `MV.f`). Source first, at the pin:
+- `data/Moves.c`: target (`.target` → `tg`; `RANGE_SINGLE_TARGET_SPECIAL` is `scripted` for Counter / Mirror Coat /
+  Metal Burst / Comeuppance, else `self`), **contact** (`FLAG_CONTACT`), `reflectable` (`FLAG_MAGIC_COAT`) and
+  `noprotect` (no `FLAG_PROTECT` on a move aimed at others: `protect_flags`). Source removes standard contact from
+  Sunsteel Strike, Collision Course, Electro Drift, Thunderous Kick and Behemoth Blade.
+- Move groups from the engine's tables (`extract/move_tables.json`, each with its source line): punch (Growl in,
+  Double Shock out), bite, pulse, slicing (adds Crush / Dire / Dragon / Metal / Shadow Claw), dance, powder, bullet,
+  wind, multihit, sound, and triage (→ `heal`, with the drain moves).
+- From the move's effect id (`.effect` + `.effectChance`, read against `data/battle_scripts/effects/*.s`): `se`
+  (status, flinch, confusion, stat stages with whose, recoil / drain / heal fractions; ON_HIT drops and recoil are
+  100% whatever effectChance says; Tri Attack / Dire Claw split their chance three ways; the fang moves roll 10% each),
+  `secondary` (a chance effect on a damaging move, plus Psychic Noise / Throat Chop / trapping hits / Secret Power),
+  `charge`, `recharge`, `binding`, `crash`, `defrost`, and `recoil` only for the effects Rock Head and Reckless see
+  (`Activate_RecoilDamage`; Steel Beam, Mind Blown and Struggle lose HP their own way: `se` only).
+- Showdown 0.11.11 (`.src/cache/showdown.json`) only where the source is silent: `bypasssub`, `gravity` and the
+  other flags the engine keeps in no table. Effects the source leaves as a plain hit stay plain (Aura Wheel, Salt
+  Cure, Order Up, Upper Hand, Alluring Voice, Eerie Spell have `MOVE_EFFECT_HIT`: no `se`). Collision Course is not
+  matched to the game data (its Moves.c name), so it keeps no metadata.
+
+`MI`: the shared rules plus `extract/move_rules.json`, which `extract/move_rules.py` writes on every build from the
+source's lists (so it follows an update): Sheer Force and Covert Cloak by `battle_script_commands.c:1070-1150`'s
+effect-id switch (Sheer Force also names Sparkling Aria, Spirit Shackle, Anchor Shot, Ceaseless Edge, Stone Axe,
+Electro Shot; Secret Power's case is commented out; the cloak also blocks the user's boosts, e.g. Flame Charge),
+Protective Pads on the defender (`IsContactBeingMade`, `other_battle_calculators.c:2874`) and No Guard on OHKO
+moves (`Mechanics.txt:30`; no level check, `BattleController_BeforeMove.c:4770`). Not move rules
+(Mechanics.txt 24-32): Unseen Fist (stock, contact only), Protean / Libero, Battle Bond, Moody, permanent weather
+and terrain.
 Reckless and Sheer Force follow the source's effect-code lists (`CalcBaseDamage.c:691-709`) through `over.rules`
 `powerMods`: Reckless x1.2 on Chloroblast (stock has no recoil flag on it); Sheer Force x1.3 added on Floaty Fall,
 Splishy Splash and Thousand Waves, and removed on the 21 moves stock boosts but the source does not (Rapid Spin,
