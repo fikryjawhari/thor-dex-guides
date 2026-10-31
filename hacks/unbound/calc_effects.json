@@ -12,11 +12,28 @@
     "Amounts kept at Gen 8 where CFRU's code differs from Unbound's text (see unsourced): Cotton Guard, Tail Glow, Shift Gear, Victory Dance, Toxic Thread, Rapid Spin, Rock Smash, Burning Jealousy"
   ],
   "moves": {
-    "Shelter": {"b": {"def": 1, "spe": 1}, "tg": "s"},
-    "Aromatic Mist": null,
-    "Coaching": null,
+    "Shelter": {"b": {"def": 1, "spe": 1}, "tg": "s", "z": {"b": {"spd": 1}}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 12307 Z_EFFECT_SPDEF_UP_1"},
+    "Aromatic Mist": {"z": {"b": {"spd": 2}}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 10397 Z_EFFECT_SPDEF_UP_2"},
+    "Coaching": {"z": {"effect": "clearnegativeboost"}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11789 Z_EFFECT_RESET_STATS"},
     "Triple Arrows": {"sec": [{"c": 100, "b": {"def": -1}}, {"c": 30, "v": "flinch"}]},
-    "Bitter Malice": {"sec": [{"c": 20, "st": "frz"}]}
+    "Bitter Malice": {"sec": [{"c": 20, "st": "frz"}]},
+    "Clangorous Soul": {"b": {"atk": 1, "def": 1, "spa": 1, "spd": 1, "spe": 1}, "fl": ["sound"], "tg": "s", "z": {"effect": "clearnegativeboost"}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11213 Z_EFFECT_RESET_STATS"},
+    "Court Change": {"k": "courtchange", "n": "Showdown moves.ts courtchange onHitField", "tg": "s", "z": {"b": {"spe": 1}}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11197 Z_EFFECT_SPD_UP_1"},
+    "Decorate": {"b": {"atk": 2, "spa": 2}, "tg": "o", "z": {"effect": "clearnegativeboost"}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11245 Z_EFFECT_RESET_STATS"},
+    "Forest's Curse": {"fl": ["reflectable"], "k": "type", "n": "Showdown moves.ts forestscurse onHit", "tg": "o", "z": null, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 10717 0"},
+    "Jungle Healing": {"fl": ["bypasssub"], "k": "cure", "n": "Showdown moves.ts junglehealing onHit", "tg": "s", "z": {"effect": "clearnegativeboost"}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11869 Z_EFFECT_RESET_STATS"},
+    "Life Dew": {"z": {"effect": "clearnegativeboost"}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11469 Z_EFFECT_RESET_STATS"},
+    "Lunar Blessing": {"k": "cure", "n": "Showdown moves.ts lunarblessing onHit", "tg": "s", "z": {"effect": "clearnegativeboost"}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 12474 Z_EFFECT_RESET_STATS"},
+    "Magic Powder": {"fl": ["powder", "reflectable"], "k": "type", "n": "Showdown moves.ts magicpowder onHit", "tg": "o", "z": {"b": {"spa": 1}}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11101 Z_EFFECT_SPATK_UP_1"},
+    "No Retreat": {"b": {"atk": 1, "def": 1, "spa": 1, "spd": 1, "spe": 1}, "tg": "s", "v": "noretreat", "z": {"effect": "clearnegativeboost"}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11069 Z_EFFECT_RESET_STATS"},
+    "Obstruct": {"tg": "s", "v": "obstruct", "z": {"b": {"def": 1}}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11485 Z_EFFECT_DEF_UP_1"},
+    "Octolock": {"tg": "o", "v": "octolock", "z": {"b": {"atk": 1}}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11149 Z_EFFECT_ATK_UP_1"},
+    "Power Shift": {"tg": "s", "v": "powershift", "z": {"b": {"atk": 1}}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 12081 Z_EFFECT_ATK_UP_1"},
+    "Stuff Cheeks": {"b": {"def": 2}, "k": "cheeks", "n": "Showdown moves.ts stuffcheeks onHit", "tg": "s", "z": {"effect": "clearnegativeboost"}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11053 Z_EFFECT_RESET_STATS"},
+    "Take Heart": {"b": {"spa": 1, "spd": 1}, "k": "cure", "n": "Showdown moves.ts takeheart onHit", "tg": "s", "z": {"effect": "heal"}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 12490 Z_EFFECT_RECOVER_HP"},
+    "Tar Shot": {"b": {"spe": -1}, "fl": ["reflectable"], "tg": "o", "v": "tarshot", "z": {"b": {"spe": 1}}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11085 Z_EFFECT_SPD_UP_1"},
+    "Teatime": {"z": {"b": {"atk": 1, "def": 1, "spa": 1, "spd": 1, "spe": 1}}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 11133 Z_EFFECT_ALL_STATS_UP_1"},
+    "Victory Dance": {"b": {"atk": 1, "def": 1, "spe": 1}, "tg": "s", "z": {"effect": "clearnegativeboost"}, "source": "Z effect: CFRU src/Tables/battle_moves.c @ b637a27 line 12213 Z_EFFECT_RESET_STATS"}
   },
   "unsourced": [
     "Cotton Guard: CFRU DEFENSE_UP_2 (+2) vs Gen 8 +3 and Unbound text 'drastically raises'; kept +3, unresolved",

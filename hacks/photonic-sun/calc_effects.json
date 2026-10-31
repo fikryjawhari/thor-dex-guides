@@ -8,7 +8,7 @@
  ],
  "moves": {
   "Rapid Spin": {"k": "spin", "tg": "s", "fl": ["contact"], "sec": [{"c": 100, "sb": {"spe": 1}}], "n": "Photonic Move Changes.pdf: Rapid Spin now boosts Speed"},
-  "Toxic Thread": {"b": {"spe": -2, "def": -2, "spd": -2}, "fl": ["reflectable"], "st": "psn", "tg": "o", "n": "Photonic Move Changes.pdf: Toxic Thread harshly lowers Speed, Defense and Special Defense, and poisons"}
+  "Toxic Thread": {"b": {"spe": -2, "def": -2, "spd": -2}, "fl": ["reflectable"], "st": "psn", "tg": "o", "n": "Photonic Move Changes.pdf: Toxic Thread harshly lowers Speed, Defense and Special Defense, and poisons", "z": {"b": {"spe": 1}}, "source": "Z effect: a/0/1/1 record 672, ZEffect byte 0x21=13 (game data agrees with the shared table; the override keeps it)"}
  },
  "unsourced": [
   "Rototiller, Flower Shield, Magnetic Flux, Gear Up: stat rises by target type / ally ability, no kind in the table (the shared table gap, not a Photonic change)",

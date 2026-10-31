@@ -1,6 +1,8 @@
 """Compare status Z metadata with USUM move bytes and a pinned CFRU battle_moves.c.
 
-python -I tools/calc/z_effects_check.py --cfru .tmp/z/cfru-battle_moves.c
+uv run python -I tools/calc/z_effects_check.py --cfru .tmp/z/cfru-battle_moves.c
+Prints per hack the status moves whose Z effect differs from the shared Showdown table (`differences`) and fails
+when the engine's record after the hack's calc_effects.json override still differs (`unresolved`).
 The CFRU input is b637a27898b14e25dd24d0f69a3e302f0069deb8/src/Tables/battle_moves.c.
 USUM offsets and effect indices follow pk3DS Move7 / MoveEditor7. Sources are read only.
 """
@@ -60,10 +62,13 @@ def main():
         if effect:
             value = None if effect[1] == '0' else CFRU[effect[1][9:]]
             cfru[key(match[1])] = (value, f'battle_moves.c:{source.count(chr(10), 0, match.start()) + 1} {effect[1]}')
+    failed = False
     for hack, game in [('photonic-sun', photonic), ('unbound', cfru)]:
         data = json.loads((ROOT / f'hacks/{hack}/data.json').read_text(encoding='utf-8'))
+        base = json.loads((ROOT / f'hacks/{hack}/hack.json').read_text(encoding='utf-8'))['cfg']['calc']['base']
+        gen = json.loads((ROOT / f'template/calc/profiles/{base}.json').read_text(encoding='utf-8'))['gen']
         own = json.loads((ROOT / f'hacks/{hack}/calc_effects.json').read_text(encoding='utf-8'))['moves']
-        differences, missing, overrides = [], [], []
+        differences, missing, unresolved = [], [], []
         count = 0
         for name, meta in zip(data['M'], data['MV']):
             if meta['c'] != 'Status':
@@ -74,14 +79,21 @@ def main():
                 continue
             count += 1
             actual, cite = found
-            record = next((record for gen, record in reversed(table.get(name, [])) if gen <= 7), {})
-            if record.get('z') != actual:
-                differences.append({'move': name, 'showdown': record.get('z'), 'game': actual, 'source': cite})
-            if name in own and actual and (own[name] or {}).get('z') != actual:
-                overrides.append({'move': name, 'game': actual, 'source': cite})
-        print(json.dumps({'hack': hack, 'checked': count, 'missing': missing,
-                          'differences': differences, 'overrideZMissing': overrides}, indent=2))
-
+            # The engine's record: the shared table's entry for the profile's generation, then the hack's override
+            # (a record replaces, null removes).
+            shared = next((record for start, record in reversed(table.get(name, [])) if start <= gen), {})
+            if shared.get('z') != actual:
+                differences.append({'move': name, 'showdown': shared.get('z'), 'game': actual, 'source': cite,
+                                    'override': name in own})
+            effective = (own[name] or {}) if name in own else shared
+            if effective.get('z') != actual:
+                unresolved.append({'move': name, 'engine': effective.get('z'), 'game': actual, 'source': cite})
+        failed |= bool(unresolved)
+        print(json.dumps({'hack': hack, 'gen': gen, 'checked': count, 'missing': missing,
+                          'differences': differences, 'unresolved': unresolved}, indent=2))
+    if failed:
+        sys.exit('z_effects_check: the engine and the game data disagree (unresolved); add the game value to '
+                 'calc_effects.json moves')
 
 if __name__ == '__main__':
     main()
