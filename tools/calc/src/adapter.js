@@ -149,7 +149,7 @@ function init(guide, configuration) {
 }
 
 // Move effects (tools/calc/README.md → Move effects): the generated table's record for this generation (the last
-// entry whose first generation is at most profile.gen), then the hack's own `over.effects.moves` (null = none).
+// entry whose first generation is at most profile.gen), then the hack's own `over.effects.moves` (null = none), then its `zmoves` (the Z effect only).
 function resolveEffects() {
   const table = {};
   for (const [id, entries] of Object.entries(catalog.fx || {})) {
@@ -165,6 +165,12 @@ function resolveEffects() {
     const id = toID(name);
     const coverage = table[id]?.nm ? {nm: table[id].nm} : {};
     table[id] = record === null ? Object.keys(coverage).length ? coverage : null : {...coverage, ...record};
+  }
+  // `zmoves` {name: {z, source}}: only the Z effect, over whatever the move's record is now (null = no Z effect), so the rest still
+  // follows the shared table.
+  for (const [name, {z}] of Object.entries(profile.over?.effects?.zmoves || {})) {
+    const id = toID(name), {z: _, ...rest} = table[id] || {};
+    table[id] = z === null ? (Object.keys(rest).length ? rest : null) : {...rest, z};
   }
   return table;
 }

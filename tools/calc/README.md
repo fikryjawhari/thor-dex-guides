@@ -390,8 +390,9 @@ ko3, memento, sap, ability, type, random, rest, speedswap, defog, courtchange, g
 clearterrain, log; `fn` = an unmapped function, requiring a coverage reason), `ti` the status move checks type immunity,
 `fl` powder / sound / bullet / reflectable / bypasssub / contact. A `self` / `selfBoost` with a `chance` (Diamond
 Storm's 50 % Def +2 from Gen 7) becomes a `sec` self part, never a sure `sb`. One correction: Rapid Spin's Speed +1 from Gen 8
-(Showdown's gen 4-7 data keeps it). **Per hack**: `hacks/<hack>/calc_effects.json` `{source, notes, moves, rules,
-unsourced, fixtures}`; `assemble.py` puts `moves` / `rules` in the profile as `over.effects` (a record replaces, null
+(Showdown's gen 4-7 data keeps it). **Per hack**: `hacks/<hack>/calc_effects.json` `{source, notes, moves, zmoves, rules,
+unsourced, fixtures}`; `assemble.py` puts `moves` / `zmoves` / `rules` in the profile as `over.effects` (`zmoves`
+`{move: {z, source}}` sets only the Z effect, null none, so the rest still follows the shared table; a `moves` record replaces, null
 removes the mechanical record; shared coverage metadata stays, and `nm: null` explicitly removes a reason for a
 hack that implements the missing part; `rules.blockers[id]` false or `[from, to]` changes a blocker row). `effects_audit.mjs <hack> [--changed]`
 lists every move's resolved record next to its description and change notes.

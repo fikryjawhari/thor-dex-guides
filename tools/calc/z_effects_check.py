@@ -67,7 +67,8 @@ def main():
         data = json.loads((ROOT / f'hacks/{hack}/data.json').read_text(encoding='utf-8'))
         base = json.loads((ROOT / f'hacks/{hack}/hack.json').read_text(encoding='utf-8'))['cfg']['calc']['base']
         gen = json.loads((ROOT / f'template/calc/profiles/{base}.json').read_text(encoding='utf-8'))['gen']
-        own = json.loads((ROOT / f'hacks/{hack}/calc_effects.json').read_text(encoding='utf-8'))['moves']
+        own_fx = json.loads((ROOT / f'hacks/{hack}/calc_effects.json').read_text(encoding='utf-8'))
+        own, own_z = own_fx.get('moves', {}), own_fx.get('zmoves', {})
         differences, missing, unresolved = [], [], []
         count = 0
         for name, meta in zip(data['M'], data['MV']):
@@ -84,16 +85,17 @@ def main():
             shared = next((record for start, record in reversed(table.get(name, [])) if start <= gen), {})
             if shared.get('z') != actual:
                 differences.append({'move': name, 'showdown': shared.get('z'), 'game': actual, 'source': cite,
-                                    'override': name in own})
+                                    'override': name in own or name in own_z})
             effective = (own[name] or {}) if name in own else shared
-            if effective.get('z') != actual:
-                unresolved.append({'move': name, 'engine': effective.get('z'), 'game': actual, 'source': cite})
+            engine_z = own_z[name]['z'] if name in own_z else effective.get('z')
+            if engine_z != actual:
+                unresolved.append({'move': name, 'engine': engine_z, 'game': actual, 'source': cite})
         failed |= bool(unresolved)
         print(json.dumps({'hack': hack, 'gen': gen, 'checked': count, 'missing': missing,
                           'differences': differences, 'unresolved': unresolved}, indent=2))
     if failed:
         sys.exit('z_effects_check: the engine and the game data disagree (unresolved); add the game value to '
-                 'calc_effects.json moves')
+                 'calc_effects.json zmoves')
 
 if __name__ == '__main__':
     main()
