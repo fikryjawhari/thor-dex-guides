@@ -116,7 +116,7 @@ body{padding-left:44px}
 #rail svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 body[data-v=calc] header{display:none}
 /* Pokemon, move, ability and trainer pages hide the search bar but keep the query: the list pages still show it. */
-body:is([data-v=p],[data-v=m],[data-v=a],[data-v=tr]) header{display:none}
+body:is([data-v=p],[data-v=m],[data-v=mp],[data-v=a],[data-v=tr]) header{display:none}
 /* Pokemon rows: types drop under the name when the row is narrow */
 .row .rt{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:2px 8px}
 .row .rt .nm{flex:1 1 auto}
@@ -385,6 +385,11 @@ table.lt td.n{vertical-align:top}table.lt .rt{display:block;white-space:nowrap}
 .tgg i.one{background:none;border:1.5px dashed #d9534f;color:#d9534f}
 .tgg i.me{background:var(--acc);border-color:var(--acc);color:#111}
 .tgw .tgt{font-size:13px;min-width:0;overflow-wrap:anywhere}
+.move-props{list-style:none;padding:0;margin:8px 0 0;font-size:13px}
+.move-props a{display:inline-block;padding:3px 0}
+.move-list .row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 6px;padding:5px 6px}
+.move-list .nm{overflow-wrap:anywhere}
+.move-list .ty{margin:0}
 /* Learned by / Pokémon with it: a long name may break rather than widen the page at 260 (a few move pages were 261) */
 table.lrn td:nth-child(2){overflow-wrap:anywhere}
 /* The starter picker shrinks instead of running out of the tracker bar at 260 */

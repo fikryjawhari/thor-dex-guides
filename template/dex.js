@@ -149,7 +149,7 @@ const app=document.getElementById('app'),q=searchDisp(document.getElementById('q
 document.getElementById('sugg').style.display='none';
 // Typing on a page with no list (Pokemon, move, ability or trainer page) goes to its section's list as a new history
 // entry, so the results show and Back returns to the page. The keyboard stays open (see hashchange).
-const UP={p:'#/',m:'#/',a:'#/',tr:'#/trainers'};let searchNav=false;
+const UP={p:'#/',m:'#/',mp:'#/',a:'#/',tr:'#/trainers'};let searchNav=false;
 q.addEventListener('input',()=>{st.q=q.value.trim().toLowerCase();if(st.q&&UP[st.view]){searchNav=true;location.hash=UP[st.view];return;}render(true);});
 // The rail's top button opens the full-window search (the search box shows only while a query is set: dex.css).
 document.getElementById('t-s').addEventListener('click',e=>{e.preventDefault();SR.open();});
@@ -158,7 +158,7 @@ document.getElementById('t-s').addEventListener('click',e=>{e.preventDefault();S
 // route of that tab is left, kept for the session). A tap on another tab goes back to that tab's page and place (RAILGO);
 // a tap on the tab you're on clears the search and goes to the top, except on a Pokémon / move / ability page, where
 // it first goes to the Pokémon list at its place.
-const tabOf=h=>{const v=(h||'#/').slice(2).split('/')[0];return v===''||v==='p'||v==='m'||v==='a'?'p':v==='locs'||v==='l'?'l':v==='trainers'||v==='tr'?'t':v==='items'?'i':v==='walk'?'w':v==='calc'?'c':null;};
+const tabOf=h=>{const v=(h||'#/').slice(2).split('/')[0];return v===''||v==='p'||v==='m'||v==='mp'||v==='a'?'p':v==='locs'||v==='l'?'l':v==='trainers'||v==='tr'?'t':v==='items'?'i':v==='walk'?'w':v==='calc'?'c':null;};
 const TABS={};let RAILGO=null;
 document.getElementById('rail').addEventListener('click',e=>{const a=e.target.closest('a[href^="#/"]');if(!a)return;e.preventDefault();
  const t=a.id.slice(2),cur=location.hash||'#/';
@@ -331,6 +331,16 @@ function bindCalc(p){const g=id=>app.querySelector(id);if(!g('#c-l'))return;
   try{localStorage.setItem(calcKey(p),JSON.stringify(s));localStorage.setItem(LS.calc+':lastlv',s.l);}catch(e){}};
  app.querySelectorAll('.calc input,.calc select,.calc .nv').forEach(e=>e.addEventListener('input',upd));upd();}
 // ===== MOVE PAGE
+const MOVE_PROPS={contact:'Makes contact',nocontact:'No contact',punch:'Punching move',bite:'Biting move',slicing:'Slicing move',sound:'Sound move',
+ bullet:'Ball / bomb move',pulse:'Pulse move',powder:'Powder move',wind:'Wind move',dance:'Dance move',heal:'Healing move',
+ secondary:'Has an added effect',recoil:'Recoil',drain:'Drains HP',multihit:'Hits more than once',charge:'Two turns',recharge:'User must recharge',
+ binding:'Traps and binds',crash:'Crash damage on a miss',noprotect:'Goes through Protect',bypasssub:'Hits through Substitute',gravity:'Unusable under Gravity',defrost:'Thaws the user'};
+const moveProps=move=>{const flags=move.f||[];return [...(move.c&&move.c!=='Status'&&!flags.includes('contact')?['nocontact']:[]),...Object.keys(MOVE_PROPS).filter(prop=>flags.includes(prop))];};
+const moveProperties=move=>`<ul class="move-props">${moveProps(move).map(prop=>`<li><a href="#/mp/${prop}">${MOVE_PROPS[prop]}</a></li>`).join('')}</ul>`;
+const propertyMoves=prop=>Object.hasOwn(MOVE_PROPS,prop)?MV.map((move,index)=>moveProps(move).includes(prop)?index:-1).filter(index=>index>=0):[];
+const moveList=indices=>`<div class="list move-list">${[...indices].sort((first,second)=>M[first].localeCompare(M[second])).map(index=>`<a class="row" href="#/m/${index}"><span class="nm">${esc(M[index])}</span>${MV[index].t?ty(MV[index].t):''}<span class="bst">${esc(MV[index].bp??'-')}</span></a>`).join('')}</div>`;
+function moveProperty(prop){const moves=propertyMoves(prop);if(!moves.length){history.replaceState(history.state,'','#/');render();return;}
+ fil.innerHTML='';app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a><div class="card"><h2>${MOVE_PROPS[prop]} (${moves.length})</h2>${moveList(moves)}</div>`;window.scrollTo(0,0);}
 const MOVE_TARGETS={normal:['one one . me one .','One adjacent Pokémon'],any:['one one one me one one','Any one Pokémon, far ones too'],
  adjacentFoe:['one one . me . .','One adjacent opponent'],adjacentAlly:['. . . me one .','One adjacent ally'],
  adjacentAllyOrSelf:['. . . one one .','The user or an adjacent ally'],allAdjacentFoes:['on on . me . .','All adjacent opponents'],
@@ -346,7 +356,8 @@ function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const r=(learn[i]||[])
  <div class="card"><h2 style="margin:0 0 6px">${esc(M[i])}${v.x?` <span class="tag">${CF.orig} original</span>`:''}</h2><div>${v.t?ty(v.t):''} ${cat(v.c)}</div>
  <div class="mvst">${[['Power',v.bp??'-'],['Accuracy',v.ac!=null?v.ac+'%':'Never misses'],['PP',v.pp??'-'],['Priority',v.pr>0?'+'+v.pr:v.pr||0]].map(([n,x])=>`<div><span>${n}</span><b>${x}</b></div>`).join('')}</div>
  ${moveTarget(v.tg)}
- ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${tms.map(t=>`<div style="margin-top:6px"><b>${esc(t[0])}:</b> ${esc(t[1])}</div>`).join('')}${v.f&&v.f.length?`<div class="mut small" style="margin-top:4px">Flags: ${v.f.map(esc).join(', ')}</div>`:''}
+ ${moveProperties(v)}
+ ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${tms.map(t=>`<div style="margin-top:6px"><b>${esc(t[0])}:</b> ${esc(t[1])}</div>`).join('')}
  ${v.e?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(v.e).replace(/\n/g,'<br>')}</div></div>`:''}
  ${v.h&&v.h.length?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.mvh}</b><ul>${v.h.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${v.dc||!TX.nodc?'':`<div class="mut small">${TX.nodc}</div>`}</div>`:''}${v.cf?confBox(v.cf):''}
  <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'mv',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div>
@@ -1225,6 +1236,7 @@ function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).sp
  document.body.dataset.v=v;if(v!=='p')PB.hidden=true;if(RJ)RJ.hidden=!(COLV[v]&&!st.q||v==='p'||CF.calc&&v==='calc');
  if(v==='p'){setTab('p');detail(decodeURIComponent(parts[1]));}
  else if(v==='m'){setTab('p');moveDetail(+parts[1]);}
+ else if(v==='mp'){setTab('p');moveProperty(decodeURIComponent(parts[1]||''));if(location.hash!==h)return;}
  else if(v==='a'){setTab('p');abilityDetail(+parts[1]);}
  else if(v==='locs'){setTab('l');listLocs2(false);}
  // #/l/<place>: a navigation (also one typed from search, st.lgo) opens and scrolls to the place once; re-renders don't.
