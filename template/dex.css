@@ -378,6 +378,13 @@ table.lt td.n{vertical-align:top}table.lt .rt{display:block;white-space:nowrap}
 .mvst{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin-top:8px}
 .mvst>div{background:var(--panel2);border-radius:8px;padding:5px 8px;display:flex;flex-direction:column}
 .mvst span{font-size:11px;color:var(--mut);font-weight:600}.mvst b{font-variant-numeric:tabular-nums}
+.tgw{display:flex;gap:10px;align-items:center;margin-top:10px}
+.tgg{display:grid;grid-template-columns:repeat(3,22px);gap:3px;flex:none}
+.tgg i{height:15px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);font:700 9px/13px system-ui;text-align:center;color:var(--mut);font-style:normal}
+.tgg i.on{background:#d9534f;border-color:#d9534f;color:#fff}
+.tgg i.one{background:none;border:1.5px dashed #d9534f;color:#d9534f}
+.tgg i.me{background:var(--acc);border-color:var(--acc);color:#111}
+.tgw .tgt{font-size:13px;min-width:0;overflow-wrap:anywhere}
 /* Learned by / Pokémon with it: a long name may break rather than widen the page at 260 (a few move pages were 261) */
 table.lrn td:nth-child(2){overflow-wrap:anywhere}
 /* The starter picker shrinks instead of running out of the tracker bar at 260 */
