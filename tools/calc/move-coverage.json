@@ -23,7 +23,6 @@
     "Ally healing isn't modelled": ["Life Dew", "Jungle Healing", "Lunar Blessing", "Healing Wish", "Lunar Dance"],
     "Ally effects aren't modelled": ["Rototiller", "Flower Shield", "Gear Up", "Magnetic Flux"],
     "All battlers' berries aren't modelled": ["Teatime"],
-    "Z-status effects are not modelled yet": ["Extreme Evoboost"],
     "Max-move protection isn't modelled": ["Max Guard"],
     "Shadow move mechanics aren't modelled": ["Shadow Blast", "Shadow Blitz", "Shadow Bolt", "Shadow Break", "Shadow Chill", "Shadow Down", "Shadow End", "Shadow Fire", "Shadow Half", "Shadow Hold", "Shadow Mist", "Shadow Panic", "Shadow Rave", "Shadow Rush", "Shadow Shed", "Shadow Sky", "Shadow Storm", "Shadow Wave"]
   },

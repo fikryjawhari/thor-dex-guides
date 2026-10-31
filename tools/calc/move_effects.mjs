@@ -303,8 +303,11 @@ function recordFor(tables, gen, id) {
   const { entry, srcOf } = eff;
   if (isSkipped(entry)) return {};
   // Ally-only moves (Coaching, Aromatic Mist, Helping Hand ...): the calc has no ally, and in singles they fail.
-  if (entry.target === 'adjacentAlly') return {};
+  const z = gen >= 7 && entry.category === 'Status' && entry.zMove
+    ? {...(entry.zMove.boost ? {b: boostsOf(entry.zMove.boost)} : {}), ...(entry.zMove.effect ? {effect: entry.zMove.effect} : {})} : null;
+  if (entry.target === 'adjacentAlly') return z ? {z} : {};
   const r = declarative(entry);
+  if (z) r.z = z;
   const tgOf = (e) => (SELF_TARGETS.has(e.target) ? 's' : 'o');
   let tgOverride = null;
   const hand = HAND[id];
