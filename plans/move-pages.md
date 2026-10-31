@@ -160,3 +160,8 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
   scenario `move-page`); its full gate: only `#/m/` routes differ, 154 pass, but Photonic kb domcompare flagged 729
   routes for 728 moves: find the extra one (`LIST=1 node tools/domcompare.mjs ... --kb`). Sol hit its limit: 4b-ii
   resumed on Opus (`worktree-move-pages-z`), 5b (ability page + Pokémon marks) on Opus (`worktree-move-pages-ab`).
+- 2026-10-31 (later): 4b-ii merged (e116891): Z toggle on status rows (Photonic, Unbound), the Showdown zMove table
+  checked by `tools/calc/z_effects_check.py` (Photonic: no differences; Unbound: 19, CFRU battle_moves.c), then
+  aa89157: `calc_effects.json` `zmoves` (Z effect only; no copied records). Photonic kb's 729th route was noise (a
+  serial rerun: only the 728 `#/m/` routes). Running: 5b (Opus, `worktree-move-pages-ab`); 4c spec in its decide
+  thread (`worktree-move-pages-calclayout`).
