@@ -23,12 +23,18 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   (Locations places open) with targeted Expand / Collapse bars, a walkthrough Show switch (Stops / Sections / All) and
   Reset all; Pokémon sprites and tracker tags link to the dex page. Decisions in `template/README.md` and
   `tools/calc/README.md`. Not yet on the Thor (Open 1).
-- **Dex page built** on `worktree-dex-page` (2026-10-31, not merged): collapsible sections (one open state, `LS.dex`
-  `o`), name bar, ‹ › through the list as it stands, forms menu, kept place on switching, family evolution, compact
-  moves, vertical stat calc; `template/README.md` → Pokémon page. Checked: `tools/scenarios/dex-page.mjs` on all six
-  guides, domcompare against `main` (only the Pokémon pages differ, normal and dvkb), `gate.py check --template`
-  (only the expected Pokémon-page DOM diffs). Waiting on the user: point 12 (Use in calc ▸ in the top card) on the
-  preview, then the Thor. Merge next; after it delete `plans/dex-page.md` and `tools/mockup/dex-page/`.
+  Then the Pokémon page (2026-10-31, merged from `worktree-dex-page`): collapsible sections with one saved open state
+  (`LS.dex` `o`), name bar, ‹ › through the list as it stands, forms menu, place kept on switching, rail jumps between
+  sections, family evolution, compact moves, vertical stat calc, Use in calc ▸ in the top card; changed abilities show
+  one statement (data `AB` [4], EI's 15 in `hacks/emerald-imperium/extract/ability_text.json`) and the ability page
+  the original ([5]) and the change. `template/README.md` → Pokémon page; scenario `dex-page.mjs`. Not yet on the Thor.
+- **Next session: move and ability pages overhaul** (the user, 2026-10-31): move pages gain flags (contact, sharpness /
+  punch / sound / bite..., boosted by which abilities); ability pages list the moves they affect (Iron Fist → its
+  punching moves). Decide step first (mockup, spec in `plans/`). Unflagged ability changes found in other guides
+  (report only, not in their data): Hardlove Gold `.src/Mechanics.txt:26-32` (Libero every time, Battle Bond +1 Atk
+  / +1 Spe, Moody with accuracy / evasion, No Guard ignores OHKO level, permanent weather and Surge abilities);
+  Blaze Black 2 Redux Iron Fist also boosts Needle Arm and Rock Smash (`notes.md:405`); Unbound maybe permanent
+  weather and Gale Wings with no HP condition (mirror only, unconfirmed). Flag them with statements as part of it.
 - Where things are decided: `template/README.md` (template, UI, calc page), `tools/calc/README.md` (engine),
   `template/calc/readers/README.md` (save readers), each hack's `notes.md` (data, Damage calc, In-game tests / checks).
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
@@ -65,8 +71,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 6. **Source updates** (`uv run python -I tools/check_updates.py`): SoulGold's data files changed since 2026-10-24
    (Mega Lopunny innates, Clefable / Mega Clefable and Unown learnsets, ability usage): re-fetch before its guide.
    hzla's live `decomp` branch differs from Unbound's pin in `gen789.js` (pin kept).
-7. **Pokémon page redesign**: built on `worktree-dex-page`; the user's preview check (Use in calc ▸ placement, spec
-   point 12) and a Thor test before the merge.
+7. **Pokémon page** (merged 2026-10-31): test on the Thor.
 
 ## Decisions
 
