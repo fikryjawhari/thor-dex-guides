@@ -344,13 +344,17 @@ function moveInteractions(index){const rows=(D.MI||[]).filter(row=>row.m.include
 const LEARN_METHODS={Lv:'Level up',TM:'TM',HM:'HM',Tutor:'Tutor',Egg:'Egg',Evo:'Evo'};
 function moveLearnGroups(index){const machines=new Set((D.IT||[]).filter(section=>section.k==='tm').flatMap(section=>section.r.filter(row=>row[2]===index).map(row=>/^HM\d/i.test(row[0])?'HM':/^TM\d/i.test(row[0])?'TM':null)).filter(Boolean));
  const groups={};(learn[index]||[]).forEach(([pokemon,how])=>{const methods=how==='TM'?(machines.size?[...machines]:['TM']):[how.split(' ')[0]];
-  methods.forEach(method=>{(groups[method]??=[]).push([pokemon,how==='TM'?method:how]);});});return Object.entries(LEARN_METHODS).filter(([method])=>groups[method]?.length).map(([method,label])=>({method,label,rows:groups[method]}));}
+  methods.forEach(method=>{(groups[method]??=[]).push([pokemon,how==='TM'?method:how]);});});return Object.entries(LEARN_METHODS).filter(([method])=>groups[method]?.length).map(([key,label])=>({key,label,rows:groups[key]}));}
 function moveLearnTable(rows){return `<table class="lrn">${rows.map(([pokemon,how])=>`<tr><td class="learn-sprite">${sprl(pokemon.id,'s40')}</td><td>${plink(pokemon.id)}${tag(pokemon)}<div>${pokemon.t.map(ty).join('')}</div></td><td class="n">${esc(how)}</td></tr>`).join('')}</table>`;}
-function moveLearnBody(groups,method){return groups.filter(group=>method==='all'||method===group.method).map(group=>sectionHTML('ml:'+group.method,group.label,`<span class="mut small">${group.rows.length}</span>`,moveLearnTable(group.rows),method!=='all')).join('');}
-function moveLearnedBy(index){const groups=moveLearnGroups(index),count=groups.reduce((total,group)=>total+group.rows.length,0);
- return `<div class="card move-learn"><h3>Learned by (${count})</h3><div class="sub" role="group" aria-label="Learned by method"><button type="button" class="on" data-method="all" aria-pressed="true">All (${count})</button>${groups.map(group=>`<button type="button" data-method="${group.method}" aria-pressed="false">${group.label} (${group.rows.length})</button>`).join('')}</div><div class="learn-groups">${moveLearnBody(groups,'all')}</div></div>`;}
-function bindMoveLearn(index){const root=app.querySelector('.move-learn'),groups=moveLearnGroups(index);root.querySelectorAll('[data-method]').forEach(button=>button.onclick=()=>{
- root.querySelectorAll('[data-method]').forEach(other=>{other.classList.toggle('on',other===button);other.setAttribute('aria-pressed',String(other===button));});root.querySelector('.learn-groups').innerHTML=moveLearnBody(groups,button.dataset.method);});}
+// A card with a .sub picker over groups [{key,label,rows}] (Learned by here, Pokémon with it on the ability page): All
+// shows every group's .sec collapsed, picking one shows only it, open. Neither the pick nor the open state is saved.
+function pickBody(groups,key,pre,table){return groups.filter(group=>key==='all'||key===group.key).map(group=>sectionHTML(pre+group.key,group.label,`<span class="mut small">${group.rows.length}</span>`,table(group.rows),key!=='all')).join('');}
+function pickCard(cls,title,aria,groups,total,pre,table){
+ return `<div class="card ${cls}"><h3>${title} (${total})</h3><div class="sub" role="group" aria-label="${aria}"><button type="button" class="on" data-method="all" aria-pressed="true">All (${total})</button>${groups.map(group=>`<button type="button" data-method="${group.key}" aria-pressed="false">${group.label} (${group.rows.length})</button>`).join('')}</div><div class="learn-groups">${pickBody(groups,'all',pre,table)}</div></div>`;}
+function bindPick(cls,groups,pre,table){const root=app.querySelector('.'+cls);root.querySelectorAll('[data-method]').forEach(button=>button.onclick=()=>{
+ root.querySelectorAll('[data-method]').forEach(other=>{other.classList.toggle('on',other===button);other.setAttribute('aria-pressed',String(other===button));});root.querySelector('.learn-groups').innerHTML=pickBody(groups,button.dataset.method,pre,table);});}
+function moveLearnedBy(index){const groups=moveLearnGroups(index);return pickCard('move-learn','Learned by','Learned by method',groups,groups.reduce((total,group)=>total+group.rows.length,0),'ml:',moveLearnTable);}
+const bindMoveLearn=index=>bindPick('move-learn',moveLearnGroups(index),'ml:',moveLearnTable);
 const propertyMoves=prop=>Object.hasOwn(MOVE_PROPS,prop)?MV.map((move,index)=>moveProps(move).includes(prop)?index:-1).filter(index=>index>=0):[];
 const moveList=indices=>`<div class="list move-list">${[...indices].sort((first,second)=>M[first].localeCompare(M[second])).map(index=>`<a class="row" href="#/m/${index}"><span class="nm">${esc(M[index])}</span>${MV[index].t?ty(MV[index].t):''}<span class="bst">${esc(MV[index].bp??'-')}</span></a>`).join('')}</div>`;
 function moveProperty(prop){const moves=propertyMoves(prop);if(!moves.length){history.replaceState(history.state,'','#/');render();return;}
@@ -380,11 +384,22 @@ function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tms=(D.IT||[]).f
  ${moveLearnedBy(i)}`;bindMoveLearn(i);window.scrollTo(0,0);}
 // ===== ABILITY PAGE
 const abSlot=(p,i)=>{const n=new Set(p.a).size,r=[];if(p.a.includes(i))r.push(n===1?'Only ability':'Ability '+(p.a.indexOf(i)+1));if(p.ha===i)r.push('Hidden ability');return r.join(', ');};
+// Moves it affects: the MI records naming this ability, one block per effect (e) on each side (u = its holder's moves,
+// t = moves used on it), each effect followed by its moves (moveList). Absent when no record names it.
+function abilityMoves(i){const rows=(D.MI||[]).filter(row=>row.a===i&&row.m.length);if(!rows.length)return '';
+ const body=['u','t'].map(side=>{const effects=new Map();rows.filter(row=>row.w===side).forEach(row=>{const effect=effects.get(row.e)||{e:row.e,h:0,m:new Set()};row.m.forEach(m=>effect.m.add(m));effect.h||=row.h;effects.set(row.e,effect);});
+  return effects.size?`<div class="ab-side" data-side="${side}"><div class="mut small">${side==='u'?"Its holder's moves":'Moves used against it'}</div>${[...effects.values()].map(effect=>`<div class="ab-effect">${esc(effect.e)}${effect.h?'<span class="interaction-changed">changed</span>':''}</div>${moveList(effect.m)}`).join('')}</div>`:'';}).join('');
+ return `<div class="card ab-affects">${sectionHTML('am',`Moves it affects (${new Set(rows.flatMap(row=>row.m)).size})`,'',body,false)}</div>`;}
+// Pokémon with it: Normal (one of its abilities) and Hidden groups under a picker (pickCard); a species with it in both is in both.
+const abilityUserGroups=i=>[['n','Normal',p=>p.a.includes(i)],['h','Hidden',p=>p.ha===i]].map(([key,label,has])=>({key,label,rows:(abUsers[i]||[]).filter(has)})).filter(group=>group.rows.length);
+const abilityUserTable=i=>rows=>`<table class="lrn">${rows.map(p=>`<tr><td class="learn-sprite">${sprl(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>`;
 function abilityDetail(i){fil.innerHTML='';const a=AB[i];if(!a){app.innerHTML='<p>Not found.</p>';return;}const us=abUsers[i]||[];
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
- <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2>${a[5]?`<div class="mut small">Original</div><p style="margin:0">${esc(a[5])}</p>`:`<p style="margin:0">${esc(a[1]||'No description.')}</p>`}${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
- <div class="card"><h3>Pokémon with it (${us.length})</h3><table class="lrn">${us.map(p=>`<tr><td style="width:44px">${sprl(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>
- <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'ab',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
+ <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2>${a[5]?`<div class="mut small">Original</div><p style="margin:0">${esc(a[5])}</p>`:`<p style="margin:0">${esc(a[1]||'No description.')}</p>`}${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}
+ ${us.length?`<div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'ab',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
+ ${abilityMoves(i)}
+ ${pickCard('ab-users','Pokémon with it','Pokémon with it by slot',abilityUserGroups(i),us.length,'au:',abilityUserTable(i))}`;
+ bindPick('ab-users',abilityUserGroups(i),'au:',abilityUserTable(i));window.scrollTo(0,0);}
 
 // ===== LOCATIONS + ENCOUNTER TRACKER (state in localStorage LS.track {s starter, e:{area:{p}|{f}}, t:{trade}}; see hacks/<hack>/notes.md)
 // FAM = evolution family via union-find over evolution links (dupes clause); Megas and form changes join their base.
