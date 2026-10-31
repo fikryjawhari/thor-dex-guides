@@ -240,6 +240,11 @@ export function createEffects(env) {
     const volatile = (who, id, foe) => {
       const state = sides[who];
       if (!state.mon.curHP()) return false;
+      if (id === 'trapped' && gen >= 6 && state.mon.hasType('Ghost')) {
+        out.parts.push({who, v: id, blocked: 'Ghost type'});
+        note('Ghost type: cannot be trapped');
+        return false;
+      }
       if (id === 'attract' && (!state.mon.gender || state.mon.gender === 'N' || state.mon.gender === sides[other(who)].mon.gender)
         && state.mon.gender !== undefined && sides[other(who)].mon.gender) {
         out.parts.push({who, v: id, blocked: 'gender'});
@@ -288,7 +293,7 @@ export function createEffects(env) {
           && !user.mon.hasAbility(...MOLD)) {
           const bounced = resolve({name, record: {...record0, bounced: true}, user: target, target: user,
             field, values: flipValues(values), phase, hit, moveType, toggles});
-          return {...bounced, log: ['Magic Bounce', ...bounced.log], bounced: true};
+          return {...bounced, ...(bounced.field ? {field: flipValues(bounced.field)} : {}), log: ['Magic Bounce', ...bounced.log], bounced: true};
         }
       }
       const tgt = record0.tg === 'o' ? 'def' : 'atk';
@@ -319,19 +324,20 @@ export function createEffects(env) {
       else if (entry.k && entry.k !== 'fn' && target.mon.curHP()) kind(entry, 'def', true);
     };
     if (record0.sb) stages('atk', record0.sb, false, name);
-    const secondaries = (record0.sec || []).filter(sec => !sec.k || sec.b || sec.st || sec.v || sec.sb);
+    const secondaries = (record0.sec || []).filter(sec => !sec.k || sec.k === 'log' || sec.b || sec.st || sec.v || sec.sb);
     for (const sec of sheer && secondaries.length ? [] : secondaries) {
       if (env.chance(sec.c ?? 100) < 100) continue;
       if (sec.sb) stages('atk', sec.sb, false, name);
-      if (!(sec.b || sec.st || sec.v) || !target.mon.curHP()) continue;
+      if (!(sec.b || sec.st || sec.v || sec.k === 'log') || !target.mon.curHP()) continue;
       const row = blocker('sec', ctxFor('def', true));
       if (row) { note(`${reason(row)}: no added effect`); out.parts.push({who: 'def', blocked: reason(row)}); continue; }
       if (sec.b) stages('def', sec.b, true, name);
       if (sec.st) status('def', sec.st, true);
       if (sec.v && sec.v !== 'flinch' && !SWITCH_VOLATILES.has(sec.v)) volatile('def', sec.v, true);
+      if (sec.k === 'log') kind(sec, 'def', true);
     }
     if (record0.k) after(record0);
-    for (const sec of record0.sec || []) if (sec.k && !(sec.b || sec.st || sec.v || sec.sb)) after(sec);
+    for (const sec of record0.sec || []) if (sec.k && sec.k !== 'log' && !(sec.b || sec.st || sec.v || sec.sb)) after(sec);
     if (hit.contact) contactAbility();
     reactions();
     return out;
@@ -362,6 +368,79 @@ export function createEffects(env) {
       const state = sides[who];
       const self = sides.atk;
       switch (entry.k) {
+        case 'spin':
+        case 'tidy': {
+          const changes = {};
+          for (const side of entry.k === 'tidy' ? ['atk', 'def'] : ['atk']) {
+            for (const key of ['Spikes', 'ToxicSpikes', 'StealthRock', 'StickyWeb', 'Steelsurge']) changes[side + key] = false;
+          }
+          if (entry.k === 'spin') for (const key of ['Seeded', 'Trapped']) changes['atk' + key] = false;
+          out.field = {...out.field, ...changes};
+          out.parts.push({who: 'atk', log: 'Clear hazards'});
+          note(entry.k === 'tidy' ? 'Hazards cleared on both sides' : 'User hazards, Leech Seed and partial trapping cleared');
+          return true;
+        }
+        case 'clearterrain':
+          out.field = {...out.field, terrain: ''};
+          out.parts.push({who: 'both', log: 'Clear terrain'});
+          note('Terrain cleared');
+          return true;
+        case 'speedswap': {
+          const mine = self.mon.rawStats.spe;
+          const theirs = sides.def.mon.rawStats.spe;
+          self.setRaw('spe', theirs);
+          sides.def.setRaw('spe', mine);
+          out.parts.push({who: 'both', rawSwap: 'Spe'});
+          note('Raw Speed swapped; stages stay');
+          return true;
+        }
+        case 'rest': {
+          if (self.st === 'slp' || self.mon.hasAbility('Comatose')) return refuse('already asleep');
+          if (self.mon.curHP() === self.mon.maxHP()) return refuse('HP full');
+          const row = blocker('slp', ctxFor('atk', false));
+          if (row) return refuse(reason(row));
+          self.setStatus('');
+          if (!status('atk', 'slp', false, true)) return false;
+          self.setHP(self.mon.maxHP());
+          note('HP fully restored; sleeps for two turns (duration not tracked)');
+          return true;
+        }
+        case 'defog': {
+          const hazards = ['Spikes', 'ToxicSpikes', 'StealthRock', ...(gen >= 6 ? ['StickyWeb'] : []), ...(gen >= 8 ? ['Steelsurge'] : [])];
+          const changes = {};
+          for (const key of ['Reflect', 'LightScreen', 'Safeguard', 'Mist', ...(gen >= 7 ? ['AuroraVeil'] : []), ...hazards]) changes['def' + key] = false;
+          if (gen >= 6) for (const key of hazards) changes['atk' + key] = false;
+          if (gen >= 8) changes.terrain = '';
+          out.field = changes;
+          stages('def', {eva: -1}, true, name);
+          out.parts.push({who: 'both', log: 'Field cleared'});
+          note(gen >= 6 ? 'Hazards cleared on both sides; target screens cleared' : 'Target hazards and screens cleared');
+          if (gen >= 8) note('Terrain cleared');
+          return true;
+        }
+        case 'courtchange': {
+          out.field = {};
+          for (const key of ['Reflect', 'LightScreen', 'AuroraVeil', 'Safeguard', 'Mist', 'Tailwind', 'StealthRock', 'Spikes', 'ToxicSpikes', 'StickyWeb', 'Steelsurge', 'SeaOfFire', 'Swamp', 'Rainbow']) {
+            out.field['atk' + key] = values['def' + key] || false;
+            out.field['def' + key] = values['atk' + key] || false;
+          }
+          out.parts.push({who: 'both', log: 'Sides swapped'});
+          note('Side conditions swapped');
+          return true;
+        }
+        case 'grassboost': {
+          let any = false;
+          for (const key of ['atk', 'def']) {
+            if (!sides[key].mon.hasType('Grass')) continue;
+            if (name === 'Rototiller' && !env.grounded(sides[key].mon, field)) continue;
+            any = stages(key, name === 'Rototiller' ? {atk: 1, spa: 1} : {def: 1}, key === 'def', name) || any;
+          }
+          return any;
+        }
+        case 'plusminus': {
+          if (!self.mon.hasAbility('Plus', 'Minus')) return refuse('user needs Plus or Minus');
+          return stages('atk', name === 'Gear Up' ? {atk: 1, spa: 1} : {def: 1, spd: 1}, false, name);
+        }
         case 'haze': {
           let any = false;
           for (const key of ['atk', 'def']) for (const stat of STATS) {
@@ -510,8 +589,8 @@ export function createEffects(env) {
           return true;
         }
         case 'random': case 'log':
-          out.parts.push({who, log: entry.k});
-          note(entry.k === 'random' ? 'Random stat +2 (set it in Edit)' : `${name} (not tracked)`);
+          out.parts.push({who, log: entry.k, text: entry.text});
+          note(entry.k === 'random' ? 'Random stat +2 (set it in Edit)' : entry.text || `${name} (not tracked)`);
           return true;
         case 'stockpile':
         case 'curse':
@@ -756,6 +835,7 @@ export function describe(out) {
     if (part.reset) { pieces.push('Reset'); full.push('stat changes removed'); }
     if (part.copy) { pieces.push('Copy'); full.push('stat changes copied'); }
     if (part.swap) { pieces.push('Swap'); full.push('stat changes swapped'); }
+    if (part.rawSwap) { pieces.push(part.rawSwap + '↔'); full.push('raw ' + part.rawSwap + ' swapped; stages stay'); }
     if (part.invert) { pieces.push('Invert'); full.push('stat changes inverted'); }
     if (part.cured && !part.item) { pieces.push('Cure'); full.push('status cured'); }
     const whose = part.who === 'def' ? 'target ' : 'user ';
@@ -768,7 +848,7 @@ export function describe(out) {
     if (part.log) {
       pieces.push({type: 'Type', ability: 'Ability', random: '+2 ?'}[part.log] || 'Use');
       full.push({ability: 'ability changed (set it in Edit → Fight)', type: 'type changed (set it in Edit → Fight)',
-        random: 'a random stat +2 (set it in Edit)'}[part.log] || part.log);
+        random: 'a random stat +2 (set it in Edit)'}[part.log] || part.text || part.log);
     }
   }
   const drops = parts.filter(part => part.by < 0 || part.st || part.v || part.lost).length;

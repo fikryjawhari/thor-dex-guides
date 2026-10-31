@@ -386,12 +386,14 @@ moves with no record). Per move `[[first generation, record], ...]`; `build.mjs`
 (`catalog.fx`). Record keys: `b` stages on `tg` (`s` user / `o` target), `st` major status, `v` volatile, `sb` the
 user's own stages, `sec` secondaries `{c, b, st, v, sb, k}`, `k` hand kinds (Showdown functions: haze, clear, copy,
 swap, invert, maxatk, curse, cure, shift, knock, steal, eat, burnitem, trick, bestow, drowsy, stockpile, growth, venom,
-ko3, memento, sap, ability, type, random; `fn` = an unmapped function, skipped), `ti` the status move checks type immunity,
+ko3, memento, sap, ability, type, random, rest, speedswap, defog, courtchange, grassboost, plusminus, spin, tidy,
+clearterrain, log; `fn` = an unmapped function, requiring a coverage reason), `ti` the status move checks type immunity,
 `fl` powder / sound / bullet / reflectable / bypasssub / contact. A `self` / `selfBoost` with a `chance` (Diamond
 Storm's 50 % Def +2 from Gen 7) becomes a `sec` self part, never a sure `sb`. One correction: Rapid Spin's Speed +1 from Gen 8
 (Showdown's gen 4-7 data keeps it). **Per hack**: `hacks/<hack>/calc_effects.json` `{source, notes, moves, rules,
 unsourced, fixtures}`; `assemble.py` puts `moves` / `rules` in the profile as `over.effects` (a record replaces, null
-removes; `rules.blockers[id]` false or `[from, to]` changes a blocker row). `effects_audit.mjs <hack> [--changed]`
+removes the mechanical record; shared coverage metadata stays, and `nm: null` explicitly removes a reason for a
+hack that implements the missing part; `rules.blockers[id]` false or `[from, to]` changes a blocker row). `effects_audit.mjs <hack> [--changed]`
 lists every move's resolved record next to its description and change notes.
 
 **Resolver** `src/effects.js` (`BLOCKERS`, `resolve`, `describe`): every effect goes through it. Entry hazards' status and Web
@@ -433,11 +435,34 @@ API: `effect(atk, def, slot, field)` (status moves) returns the `hit`-shaped pat
 none. `effects(name)` returns the resolved record. Checks: `effects_check.mjs` (in `npm test`): the blockers and order
 on EI data with each base profile, then each guide's `calc_effects.json` fixtures.
 
+Additional function effects follow the same pinned Showdown source: Rest replaces a status with sleep, fully heals,
+then runs berry reactions (full HP, existing sleep and sleep blockers fail); raw Speed Swap exchanges `rs.spe`, not
+stages. The page keeps `rs` in its scratch battle state, clears it with the card reset and never saves it as a set.
+Power Split and Guard Split already have Field switches and engine fixtures; Psych Up and the stage swaps keep
+their existing resolver. Defog clears target screens / safeguards / Mist and hazards in Gen 4-5, both sides' hazards
+from Gen 6, Aurora Veil from Gen 7, and terrain from Gen 8. It also clears Unbound's area Fog on the page.
+Court Change swaps tracked side conditions. Flower Shield and Rototiller boost eligible Grass battlers (Rototiller:
+grounded); Gear Up and Magnetic Flux affect a Plus / Minus user, not the opposing side. Their missing ally share
+has an explicit reason. Rapid Spin / Mortal Spin clear the user's hazards, partial trapping and Leech Seed;
+Tidy Up clears both sides' hazards; Ice Spinner clears terrain. Field changes return `field.changes` with the same
+attacker / defender orientation as HP patches. Throat Chop, Anchor Shot / Spirit Shackle and the non-damaging trap
+moves log their volatile; Ghosts cannot be trapped from Gen 6. Spite / Eerie Spell log PP loss (PP is not tracked).
+Function secondaries obey chance, Sheer Force and Shield Dust / Covert Cloak, unlike independent after-hit effects.
+
 ### Not modelled
 
-- The Gen 7 Rollout storage glitch (power carried over between uses).
-- Floral Healing / Heal Pulse, and Life Dew's ally share: no ally is modelled.
-- Electrify / Ion Deluge: no flag; use the move's Type override (Sports and raw-stat splits).
+`move-coverage.json` is the shared, compiled table of player-facing reasons (`nm`) and explicit battle no-ops
+(`noop`: Splash, Celebrate, Hold Hands, Happy Hour). A partial effect keeps its implemented damage, HP, stages or
+switch and explains the missing part in the opened row; unsupported status moves show a disabled Not modelled chip.
+Per-hack exceptions belong in that guide's `calc_effects.json`, not a duplicate per-guide reason list.
+
+`node tools/calc/effects_coverage.mjs <hack>|--all` inventories **every move in M**, not only learned / trainer moves.
+It uses the built profile's actual Field controls (via `assemble.calc_profile`), the page's move-control maps,
+`DMG.effect`, `DMG.hp` and damage calculations. A Power input is recorded separately from automatic damage;
+logged-only effects and switches are distinct from applied changes. Default output is counts by guide / reason and
+the offending list; `--json` includes every move, category, actions, reason and explicit no-op. Counts overlap:
+an implemented move may still have an unsupported part. Exit 1 means an inert move or unresolved function has no
+reason; it runs in a few seconds and is part of `npm test`. Z-status effects remain a separate unit.
 
 ## Base profiles and fields
 

@@ -55,6 +55,7 @@ const zBand = power => power <= 55 ? 100 : power <= 65 ? 120 : power <= 75 ? 140
   : power <= 100 ? 180 : power <= 110 ? 185 : power <= 125 ? 190 : power <= 130 ? 195 : 200;
 // Move effects (tools/calc/move_effects.mjs from Showdown, pinned): [[first generation, record], ...] by move id.
 records.fx = {};
+records.coverage = JSON.parse(await readFile(new URL('./move-coverage.json', import.meta.url), 'utf8'));
 const effectSource = JSON.parse(await readFile(new URL('./move-effects.json', import.meta.url), 'utf8'));
 for (const [name, entries] of Object.entries(effectSource.moves)) {
   records.fx[name.toLowerCase().replace(/[^a-z0-9]/g, '')] = entries;
