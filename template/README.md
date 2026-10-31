@@ -565,6 +565,34 @@ blocks, three across at most. An opened card starts at its team. One speed per P
     across the top at 20 px, the 88 px sprite and details under it; wider, the name beside the sprite.
 Scenario: `tools/scenarios/dex-page.mjs`.
 
+**Move page** (`#/m/<index>`, decided 2026-10-31; `MOVE PAGE` in dex.js):
+1. The top card keeps the name, type, category, power / accuracy / PP / priority, description, machine / tutor
+   locations, hack changes and source disagreements. The Pokémon-list filter link belongs in this card, not below
+   Learned by. The target (`MV.tg`) is a 2 × 3 field: opponents above, You at the left end below, then the adjacent
+   and far allies. Solid red cells are all hit; dashed red cells are choices (random / counter targets use the same
+   possible-target outline). The accompanying line says which. Missing target data shows no invented target.
+2. Properties (`MV.f`) are plain linked lines, not raw flags, pills, exception badges or tooltip-only explanations.
+   Damaging moves always say Makes contact / No contact; the groups and exceptions appear only when present.
+   `reflectable` appears through Magic Bounce in Affected by, not as another property. `moveProps` and
+   `moveProperties` are shared helpers for other pages. Added effects (`MV.se`, `[chance, text]` pairs) follow the
+   properties verbatim with their odds, including guaranteed effects. Capitalised guaranteed recoil / drain / heal
+   phrases already contain their quantity, so they do not get a redundant `100%` prefix.
+3. Each property opens `#/mp/<prop>`: every matching move, alphabetical by name, with type and power, linking to
+   its move page (`moveList`). `prop` is the stable `MV.f` string; `nocontact` is the derived damaging-move complement
+   of `contact`. No list state is saved: the existing position save keeps this hash without index mapping. A gone
+   or unknown property returns to the Pokémon list; Back and the Pokémon rail tab keep the usual route / position.
+4. Affected by reads only `MI` records containing the move (`m`); Boosted / changed by (`w: 'u'`) opens, Against it
+   (`w: 't'`, count of records) starts collapsed. Each is a card with a `.sec`. `interactionRows` groups equal effect
+   text (`e`); every ability links by its `AB` index, item names stay plain until item detail routes exist, and each
+   hack-changed name (`h: 1`) carries the visible word changed. No universal interactions are invented in the UI.
+5. Learned by has a `.sub`: All, Level up / TM / HM / Tutor / Egg / Evo, only methods present, with learn-record
+   counts. HM is distinguished from TM by its machine entry in `IT`; a move in both appears in both groups. All
+   starts with each method's `.sec` collapsed; selecting a method shows only it, open; returning to All collapses
+   them again. None of these selections or open states is saved. Pokémon stay in dex order inside each method;
+   their level / Evo labels, types, forms and links remain. Open method headers stick at the top and paint `--bg`
+   above themselves, with no exposed gap. Not one long mixed table or a saved method filter.
+Scenario: `tools/scenarios/move-page.mjs`, every guide, all viewer sizes in normal and `dvkb` modes.
+
 **Search:** the full-window search on every device (the in-page keyboard in the viewer or `dvkb`, the device keyboard
 elsewhere). The current page's section first, then Pokémon, Filters, Locations, Trainers, Items, Walkthrough. Each
 result has action buttons (Dex, Trainers, Places, Walk, Filter...) that jump or search; Enter searches the current page.
