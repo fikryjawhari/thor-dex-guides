@@ -43,7 +43,7 @@ await runChecks({name: 'calc-imperium', file, checks: [{
     const inverted = await page.value('document.querySelector(".dres:not(.na) .dcategory").getAttribute("title")');
     assert.ok(inverted.includes('Inverted'), inverted);
     assert.notEqual(label.split(' · ')[0], inverted.split(' · ')[0], 'category actually changes');
-    await page.tap('.dres:not(.na) .mr:has([data-mo="invert"]) .r1');
+    await page.tap('.dres:not(.na) .mr:has([data-mo="invert"]) > .mm .mv');
     assert.equal(await page.value('document.querySelector(".dres:not(.na) .mr:has([data-mo=\'invert\']) ").classList.contains("open")'), false, 'move is actually collapsed');
     assert.equal(await page.value('document.querySelector(".dres:not(.na) .dcategory").getAttribute("title")'), inverted, 'inversion is visible even when collapsed');
     if (!page.dvkb && [260,832].includes(page.width)) await page.screenshot('calc-imperium-controls-' + page.width);
