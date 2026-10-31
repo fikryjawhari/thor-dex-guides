@@ -364,6 +364,17 @@ both sides, locks vs setters / manual / old saves, Fog replace / Defog / Reset, 
 weight Speed with Scarf, persistence across reload, D2 marks and cap, boxes-only / empty / wrong import);
 guide-update covers `areaByTrainer` across an index-shifting update.
 
+#### Status Z effects (unit 4b-ii)
+
+`tools/calc/z_effects_check.py --cfru <battle_moves.c>` compares every status move's `z_move_effect` in CFRU
+`src/Tables/battle_moves.c` @ b637a27 with the shared table (Gen 8 records). Game data says a Z effect for 18 Gen 8+
+moves Showdown gives none (Showdown has no Z data for moves after Gen 7): Clangorous Soul, Coaching, Decorate, Jungle
+Healing, Life Dew, Lunar Blessing, No Retreat, Stuff Cheeks, Victory Dance reset lowered stats; Take Heart full heal;
+Court Change, Tar Shot Spe +1; Magic Powder SpA +1; Obstruct Def +1; Octolock, Power Shift Atk +1; Shelter SpD +1;
+Teatime all +1. Game data says none for Forest's Curse / Showdown says all +1. Each is a `calc_effects.json` override
+with `z` and `source` (the battle_moves.c line); Aromatic Mist (SpD +2) and Coaching keep their ally-only no-op with
+only the Z part. Fixtures: Z-Take Heart, Z-Teatime, Z-Forest's Curse.
+
 #### Save import
 
 Reader `cfru` (profile `unbound21`, signature 0x01121999 = Unbound 2.1.0-2.1.1.1); format: `template/calc/readers/README.md`

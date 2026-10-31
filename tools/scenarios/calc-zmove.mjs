@@ -42,10 +42,10 @@ const checks = [{
   sizes,
   run: async page => {
     await setup(page);
-    const before = await page.value(`${rows}.map(r=>({mv:r.querySelector('.mv').textContent,hp:r.querySelector('.hp').textContent,z:!!r.querySelector('.rz'),st:r.classList.contains('st')}))`);
+    const before = await page.value(`${rows}.map(r=>({mv:r.querySelector('.mv').textContent,hp:r.querySelector('.hp').textContent,z:!!r.querySelector('.rz'),st:r.classList.contains('st'),zfx:(()=>{const n=M.indexOf(r.querySelector('.mv').textContent.trim());return n>=0&&MV[n].c==='Status'&&!!window.DMG.effects(M[n])?.z;})()}))`);
     assert.ok(before.some(r => r.z), 'a damaging row has Z');
-    before.forEach(r => assert.equal(r.z, !r.st, `Z only on damaging rows (${r.mv})`));
-    const i = before.findIndex(r => r.z);
+    before.forEach(r => assert.equal(r.z, !r.st || r.zfx, `Z on damaging rows and status rows with a Z effect (${r.mv})`));
+    const i = before.findIndex(r => r.z && !r.st);
     const geo = await page.value(`(()=>{const r=${rows}[${i}],c=e=>{const b=e.getBoundingClientRect();return b.left+b.width/2;};
       const t=e=>{const g=document.createRange();g.selectNodeContents(e);return g.getBoundingClientRect().left;};
       const name=[...r.querySelector('.mv').childNodes].find(n=>n.nodeType===3);const g=document.createRange();g.selectNodeContents(name);
@@ -68,6 +68,46 @@ const checks = [{
       const span = await page.value(`(()=>{const f=document.querySelector('.fbar').getBoundingClientRect().top;return ${rows}.at(-1).getBoundingClientRect().bottom-f;})()`);
       assert.ok(span <= page.height, `trainer bar to the last move fits the window (${Math.round(span)} / ${page.height})`);
     }
+  },
+}, {
+  id: 'z status',
+  title: 'Z on a status row: same toggle, the opened row says the Z effect, the use chip applies it before the move; fits',
+  sizes: [[260, 316], [480, 392]],
+  run: async page => {
+    await setup(page);
+    await page.value(`(()=>{const state=CALC.state(),mon=state.custom.at(-1);mon.m=['Splash','Swords Dance',...mon.m.slice(2).map(i=>M[i])].map(n=>M.indexOf(n));state.dir='out';CALC.set('mine','stg',[0,-2,0,0,0]);CALC.render();})()`);
+    await page.settle();
+    const key = await page.value(`CALC.key('mine')`);
+    const row = slot => `document.querySelector('.mm[data-ck="${key}:${slot}"]').closest('.mr')`;
+    const info = slot => page.value(`(()=>{const r=${row(slot)};return {z:!!r.querySelector('.r2 .rz'),pressed:r.querySelector('.rz')?.getAttribute('aria-pressed'),zon:r.classList.contains('zon'),fx:!!r.querySelector('[data-a="fx"]'),zl:r.querySelector('.zl')?.textContent||''};})()`);
+    let splash = await info(0);
+    assert.ok(splash.z, 'Splash row has the Z toggle in its % line');
+    assert.equal(splash.pressed, 'false');
+    assert.ok(!splash.fx, 'Splash alone has no effect to use');
+    await page.tap(`.rz[data-ck="${key}:0"]`);
+    await page.value(`${row(0)}.querySelector('.mm').click()`);
+    await page.settle();
+    splash = await info(0);
+    assert.ok(splash.zon && splash.pressed === 'true', 'Splash row marked Z');
+    assert.equal(splash.zl, 'Z: Atk +3', 'the opened row says the Z effect');
+    assert.ok(splash.fx, 'Z-Splash has a use chip');
+    await page.value(`${row(0)}.querySelector('[data-a="fx"]').click()`);
+    await page.settle();
+    assert.deepEqual(await page.value(`[...CALC.mon('mine').stg]`), [3, -2, 0, 0, 0], 'Z-Splash: Atk +3, Def untouched');
+    await page.value(`CALC.set('mine','stg',[0,-2,0,0,0]);CALC.render()`);
+    await page.tap(`.rz[data-ck="${key}:1"]`);
+    await page.value(`${row(1)}.querySelector('.mm').click()`);
+    await page.settle();
+    assert.equal((await info(1)).zl, 'Z: lowered stats reset');
+    await page.value(`${row(1)}.querySelector('[data-a="fx"]').click()`);
+    await page.settle();
+    assert.deepEqual(await page.value(`[...CALC.mon('mine').stg]`), [2, 0, 0, 0, 0], 'Z-Swords Dance: Def reset, then Atk +2');
+    assert.ok(await page.value(`document.scrollingElement.scrollWidth<=innerWidth`), 'no sideways scroll');
+    await page.reload();
+    await page.route('#/calc');
+    assert.equal((await info(0)).pressed, 'true', 'status Z kept after a reload');
+    await page.tap(`.rz[data-ck="${key}:0"]`);
+    assert.ok(!(await info(0)).fx, 'Z off: Splash has nothing to use again');
   },
 }, {
   id: 'totem aura',
