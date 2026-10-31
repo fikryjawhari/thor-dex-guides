@@ -100,7 +100,12 @@ const checks = [
           props(move).map(prop => ['#/mp/' + prop, labels[prop]]));
         assert.deepEqual(await page.value(`[...document.querySelectorAll('.move-effects li')].map(row=>row.textContent)`),
           (move.se || []).map(([chance, text]) => (chance === 100 && /^[A-Z]/.test(text) ? '' : chance + '% ') + text));
-        assert.equal(await page.value(`!!document.querySelector('#app>.card:first-of-type a[onclick*="st.f"]')`), true, 'filter link in top card');
+        const filter = await page.value(`(()=>{const line=document.querySelector('#app>.backl'),back=line?.querySelector('.back:not(.fadd)'),add=line?.querySelector('.fadd'),probe=document.createElement('a');probe.className='back';probe.textContent='x';document.body.append(probe);const one=probe.getBoundingClientRect().height;probe.remove();return add?{text:add.textContent,href:add.getAttribute('href'),click:add.getAttribute('onclick'),same:Math.abs(add.getBoundingClientRect().top-back.getBoundingClientRect().top)<2,height:line.getBoundingClientRect().height,one,right:Math.abs(add.getBoundingClientRect().right-line.getBoundingClientRect().right)<1,rest:document.querySelectorAll('#app a[onclick*="st.f"]').length}:null})()`);
+        if (true) {
+          assert(filter, '+ Filter on the Back line');
+          assert.deepEqual([filter.text, filter.href, filter.click, filter.same, filter.right, filter.rest], ['+ Filter', '#/', `st.f=[{k:'mv',v:${index}}];save();`, true, true, 1], 'Back left, + Filter right, the only filter link');
+          assert(filter.height <= filter.one + 1, `one line high: ${filter.height} vs ${filter.one}`);
+        } else assert.equal(filter, null, 'no filter without Pokémon');
         await interactionsCheck(page, index);
         const groups = expectedGroups(index), count = groups.reduce((total, [, rows]) => total + rows.length, 0);
         assert.deepEqual(await page.value(String.raw`[...document.querySelectorAll('.move-learn [data-method]')].map(button=>[button.dataset.method,+button.textContent.match(/\((\d+)\)/)[1]])`),
@@ -114,6 +119,9 @@ const checks = [
           assert.equal(style[0], 'sticky');
           assert.notEqual(style[1], 'rgba(0, 0, 0, 0)');
           assert.notEqual(style[2], 'none', 'paint above the sticky header');
+          const card = await page.value(`(()=>{const summary=document.querySelector('.move-learn .learn-groups summary');return [getComputedStyle(summary).backgroundColor,getComputedStyle(summary.closest('.card')).backgroundColor,getComputedStyle(summary).boxShadow]})()`);
+          assert.equal(card[0], card[1], "sticky header in the card's colour");
+          assert(card[2].startsWith(card[1]), "paint above it in the card's colour");
           await page.assertFits(data.M[index] + ' ' + method);
         }
         await tap(page, '.move-learn [data-method="all"]');

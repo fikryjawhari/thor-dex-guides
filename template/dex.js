@@ -235,11 +235,17 @@ function famBlock(p){const base=formsOf(p).find(x=>x.g!==1&&!x.fc)||p;let r=base
 function defBlock(p){const g={};types.forEach(a=>{let m=1;p.t.forEach(d=>{m*=((D.TC[a]||{})[d]??10)/10;});if(m!==1)(g[m]=g[m]||[]).push(a);});
  const row=(m,l)=>g[m]?`<div style="margin:3px 0"${PK('td:'+m,m)}><span class="mut" style="display:inline-block;width:44px">${l}</span>${g[m].map(ty).join('')}</div>`:'';
  return row(4,'4×')+row(2,'2×')+row(0.5,'½×')+row(0.25,'¼×')+row(0,'0×')+`<div class="mut small" style="margin-top:4px">${TX.tc} Abilities (Levitate and so on) not included.</div>`;}
-// A move row: full words while the table is wide, type and category letters when it's narrow (dex.css, .mvw).
-function mrow(i,lv,o,occ){const v=MV[i]||{};const w=(v.x?mark('New in '+CF.name):v.dc||(v.h&&v.h.length)?mark('Changed in '+CF.name):'')+(v.cf?mark('Sources disagree',1):'');
- return `<tr${PK('mv:'+M[i]+(occ>1?'#'+occ:''),o)}>${lv!==undefined?`<td class="n lv">${lv||'Evo'}</td>`:''}<td>${mlink(i)}${w}</td><td class="tc">${v.t?ty(v.t)+tyc(v.t):''}</td><td class="tc">${cat(v.c)+catc(v.c)}</td><td class="n">${v.bp==='Varies'?'<span class="hw">Varies</span><span class="pc0">Var</span>':v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'<span class="pc">%</span>':'-'}</td></tr>`;}
+// A move row: full words while the table is wide, type and category letters when it's narrow (dex.css, .mvw). bo: the
+// MI records of its own abilities on this move (ownBoosts): a tap mark after the name, the ability and effect on tap.
+function mrow(i,lv,o,occ,bo){const v=MV[i]||{};const w=(v.x?mark('New in '+CF.name):v.dc||(v.h&&v.h.length)?mark('Changed in '+CF.name):'')+(v.cf?mark('Sources disagree',1):'');
+ return `<tr${PK('mv:'+M[i]+(occ>1?'#'+occ:''),o)}>${lv!==undefined?`<td class="n lv">${lv||'Evo'}</td>`:''}<td>${mlink(i)}${w}${bo?`<button type="button" class="abm" data-m="${i}" aria-expanded="false" aria-label="${esc(bo.map(r=>AB[r.a][0]+': '+r.e).join('; '))}"></button>`:''}</td><td class="tc">${v.t?ty(v.t)+tyc(v.t):''}</td><td class="tc">${cat(v.c)+catc(v.c)}</td><td class="n">${v.bp==='Varies'?'<span class="hw">Varies</span><span class="pc0">Var</span>':v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'<span class="pc">%</span>':'-'}</td></tr>`;}
 const mhead=lv=>`<tr>${lv?'<th class="n">Lv</th>':''}<th>Move</th><th class="tc"><span class="hw">Type</span></th><th class="tc"><span class="hw">Cat</span></th><th class="n">Pow</th><th class="n">Acc</th></tr>`;
 let moveTab='lv';
+// Moves a Pokémon's own abilities affect (MI records on the user's side naming one of p.as): move index -> records.
+const ownBoosts=p=>{const out=new Map();(D.MI||[]).forEach(r=>{if(r.w==='u'&&r.a!=null&&AB[r.a]&&p.as.has(r.a))r.m.forEach(m=>{if(!out.has(m))out.set(m,[]);out.get(m).push(r);});});return out;};
+const boostLine=(p,r)=>`<div>${alink(r.a)}${p.ha===r.a&&!p.a.includes(r.a)?' <span class="mut small">hidden</span>':''}: ${esc(r.e)}${r.h?'<span class="interaction-changed">changed</span>':''}</div>`;
+function bindBoosts(p,boosts){app.querySelector('#mvb').addEventListener('click',e=>{const b=e.target.closest('.abm');if(!b)return;const tr=b.closest('tr'),next=tr.nextElementSibling,open=next?.classList.contains('abd');
+ if(open)next.remove();else tr.insertAdjacentHTML('afterend',`<tr class="abd"><td colspan="${tr.cells.length}">${boosts.get(+b.dataset.m).map(r=>boostLine(p,r)).join('')}</td></tr>`);b.setAttribute('aria-expanded',String(!open));bars();});}
 const abLine=i=>`${alink(i)}${AB[i][2]?mark('New in '+CF.name):AB[i][3]?mark('Changed in '+CF.name):''}<div class="mut small">${esc(AB[i][4]||AB[i][3]||AB[i][1])}</div>`;
 const psec=(k,label,body,cls='')=>`<details class="card psec${cls}" data-s="${k}" ${(PO[k]??PDEF[k])?'open':''}><summary${PK('sec:'+k,PSECS.findIndex(x=>x[0]===k))}><h3>${label}</h3></summary><div class="pb">${body}</div><button class="endbar sb" hidden>${UPI}<span>${label}</span></button></details>`;
 function navLink(p,t,d){if(!t)return '<span class="gap"></span>';const r=relOf(p,t);
@@ -247,7 +253,7 @@ function navLink(p,t,d){if(!t)return '<span class="gap"></span>';const r=relOf(p
 let PNB=[null,null],PCUR=null;
 function detail(id){const p=byId[id];if(!p){PB.hidden=true;app.innerHTML='<p>Not found.</p>';return;}fil.innerHTML='';PCUR=p;
  const byName=a=>[...a].sort((x,y)=>M[x].localeCompare(M[y]));
- const tbl=(a,lv)=>{const seen={};return a.length?`<table>${mhead(lv)}${a.map(x=>lv?mrow(x[1],x[0],x[0]||0.5,seen[x[1]]=(seen[x[1]]||0)+1):mrow(x,undefined,M[x],1)).join('')}</table>`:'<div class="mut">None</div>';};
+ const boosts=ownBoosts(p),tbl=(a,lv)=>{const seen={};return a.length?`<table>${mhead(lv)}${a.map(x=>lv?mrow(x[1],x[0],x[0]||0.5,seen[x[1]]=(seen[x[1]]||0)+1,boosts.get(x[1])):mrow(x,undefined,M[x],1,boosts.get(x))).join('')}</table>`:'<div class="mut">None</div>';};
  const mv={lv:['Level-up',p.lv.length,()=>tbl(p.lv,true)],tm:['TM/HM',p.tm.length,()=>tbl(byName(p.tm))],...HASTU?{tu:['Tutor',p.tu.length,()=>tbl(byName(p.tu))]}:{},eg:['Egg',p.eg.length,()=>tbl(byName(p.eg))]};
  if(!mv[moveTab])moveTab='lv';
  const fs=formsOf(p).length>1,u=TRUSE[p.id];PNB=[pnb(p,-1),pnb(p,1)];
@@ -265,6 +271,7 @@ function detail(id){const p=byId[id];if(!p){PB.hidden=true;app.innerHTML='<p>Not
  ${psec('ev','Evolution',famBlock(p))}
  ${u?psec('tr',`Used by trainers (${u.length})`,u.map((t,j)=>`<div${PK('tr:'+t.k,j)}><a href="#/tr/${t.k}">${esc(t.n)}</a> <span class="mut small">${esc(t.loc)} · ${esc(t.g)}${t.st?(PICK?' · if your starter is '+esc(t.st):' · '+esc(t.st)+' starter'):''}</span></div>`).join('')):''}
  ${psec('mv','Moves',`<div class="sub">${Object.entries(mv).map(([k,v])=>`<button data-k="${k}" class="${k===moveTab?'on':''}">${v[0]} (${v[1]})</button>`).join('')}</div><div id="mvb" class="mvw">${mv[moveTab][2]()}</div>`)}`;
+ bindBoosts(p,boosts);
  app.querySelectorAll('.sub button').forEach(b=>b.onclick=()=>{moveTab=b.dataset.k;app.querySelectorAll('.sub button').forEach(x=>x.classList.toggle('on',x===b));app.querySelector('#mvb').innerHTML=mv[moveTab][2]();bars();});
  const hero=app.querySelector('.hero');if(fs)hero.onclick=e=>{if(!e.target.closest('a,button'))formMenu(p,hero.querySelector('h2'));};
  const cu=hero.querySelector('.calc-use');if(cu)cu.onclick=()=>window.CALC?.use(p);
@@ -331,6 +338,8 @@ function bindCalc(p){const g=id=>app.querySelector(id);if(!g('#c-l'))return;
   try{localStorage.setItem(calcKey(p),JSON.stringify(s));localStorage.setItem(LS.calc+':lastlv',s.l);}catch(e){}};
  app.querySelectorAll('.calc input,.calc select,.calc .nv').forEach(e=>e.addEventListener('input',upd));upd();}
 // ===== MOVE PAGE
+// The Back line of the move and ability pages: ‹ Back, and on the right + Filter (the Pokémon list filtered by it).
+const backLine=(k,v)=>`<div class="backl"><a class="back" href="javascript:history.back()">‹ Back</a>${v!=null?`<a class="back fadd" href="#/" onclick="st.f=[{k:'${k}',v:${v}}];save();">+ Filter</a>`:''}</div>`;
 const MOVE_PROPS={contact:'Makes contact',nocontact:'No contact',punch:'Punching move',bite:'Biting move',slicing:'Slicing move',sound:'Sound move',
  bullet:'Ball / bomb move',pulse:'Pulse move',powder:'Powder move',wind:'Wind move',dance:'Dance move',heal:'Healing move',kick:'Kicking move',
  secondary:'Has an added effect',recoil:'Recoil',drain:'Drains HP',multihit:'Hits more than once',charge:'Two turns',recharge:'User must recharge',
@@ -344,13 +353,17 @@ function moveInteractions(index){const rows=(D.MI||[]).filter(row=>row.m.include
 const LEARN_METHODS={Lv:'Level up',TM:'TM',HM:'HM',Tutor:'Tutor',Egg:'Egg',Evo:'Evo'};
 function moveLearnGroups(index){const machines=new Set((D.IT||[]).filter(section=>section.k==='tm').flatMap(section=>section.r.filter(row=>row[2]===index).map(row=>/^HM\d/i.test(row[0])?'HM':/^TM\d/i.test(row[0])?'TM':null)).filter(Boolean));
  const groups={};(learn[index]||[]).forEach(([pokemon,how])=>{const methods=how==='TM'?(machines.size?[...machines]:['TM']):[how.split(' ')[0]];
-  methods.forEach(method=>{(groups[method]??=[]).push([pokemon,how==='TM'?method:how]);});});return Object.entries(LEARN_METHODS).filter(([method])=>groups[method]?.length).map(([method,label])=>({method,label,rows:groups[method]}));}
+  methods.forEach(method=>{(groups[method]??=[]).push([pokemon,how==='TM'?method:how]);});});return Object.entries(LEARN_METHODS).filter(([method])=>groups[method]?.length).map(([key,label])=>({key,label,rows:groups[key]}));}
 function moveLearnTable(rows){return `<table class="lrn">${rows.map(([pokemon,how])=>`<tr><td class="learn-sprite">${sprl(pokemon.id,'s40')}</td><td>${plink(pokemon.id)}${tag(pokemon)}<div>${pokemon.t.map(ty).join('')}</div></td><td class="n">${esc(how)}</td></tr>`).join('')}</table>`;}
-function moveLearnBody(groups,method){return groups.filter(group=>method==='all'||method===group.method).map(group=>sectionHTML('ml:'+group.method,group.label,`<span class="mut small">${group.rows.length}</span>`,moveLearnTable(group.rows),method!=='all')).join('');}
-function moveLearnedBy(index){const groups=moveLearnGroups(index),count=groups.reduce((total,group)=>total+group.rows.length,0);
- return `<div class="card move-learn"><h3>Learned by (${count})</h3><div class="sub" role="group" aria-label="Learned by method"><button type="button" class="on" data-method="all" aria-pressed="true">All (${count})</button>${groups.map(group=>`<button type="button" data-method="${group.method}" aria-pressed="false">${group.label} (${group.rows.length})</button>`).join('')}</div><div class="learn-groups">${moveLearnBody(groups,'all')}</div></div>`;}
-function bindMoveLearn(index){const root=app.querySelector('.move-learn'),groups=moveLearnGroups(index);root.querySelectorAll('[data-method]').forEach(button=>button.onclick=()=>{
- root.querySelectorAll('[data-method]').forEach(other=>{other.classList.toggle('on',other===button);other.setAttribute('aria-pressed',String(other===button));});root.querySelector('.learn-groups').innerHTML=moveLearnBody(groups,button.dataset.method);});}
+// A card with a .sub picker over groups [{key,label,rows}] (Learned by here, Pokémon with it on the ability page): All
+// shows every group's .sec collapsed, picking one shows only it, open. Neither the pick nor the open state is saved.
+function pickBody(groups,key,pre,table){return groups.filter(group=>key==='all'||key===group.key).map(group=>sectionHTML(pre+group.key,group.label,`<span class="mut small">${group.rows.length}</span>`,table(group.rows),key!=='all')).join('');}
+function pickCard(cls,title,aria,groups,total,pre,table){
+ return `<div class="card ${cls}"><h3>${title} (${total})</h3><div class="sub" role="group" aria-label="${aria}"><button type="button" class="on" data-method="all" aria-pressed="true">All (${total})</button>${groups.map(group=>`<button type="button" data-method="${group.key}" aria-pressed="false">${group.label} (${group.rows.length})</button>`).join('')}</div><div class="learn-groups">${pickBody(groups,'all',pre,table)}</div></div>`;}
+function bindPick(cls,groups,pre,table){const root=app.querySelector('.'+cls);root.querySelectorAll('[data-method]').forEach(button=>button.onclick=()=>{
+ root.querySelectorAll('[data-method]').forEach(other=>{other.classList.toggle('on',other===button);other.setAttribute('aria-pressed',String(other===button));});root.querySelector('.learn-groups').innerHTML=pickBody(groups,button.dataset.method,pre,table);});}
+function moveLearnedBy(index){const groups=moveLearnGroups(index);return pickCard('move-learn','Learned by','Learned by method',groups,groups.reduce((total,group)=>total+group.rows.length,0),'ml:',moveLearnTable);}
+const bindMoveLearn=index=>bindPick('move-learn',moveLearnGroups(index),'ml:',moveLearnTable);
 const propertyMoves=prop=>Object.hasOwn(MOVE_PROPS,prop)?MV.map((move,index)=>moveProps(move).includes(prop)?index:-1).filter(index=>index>=0):[];
 const moveList=indices=>`<div class="list move-list">${[...indices].sort((first,second)=>M[first].localeCompare(M[second])).map(index=>`<a class="row" href="#/m/${index}"><span class="nm">${esc(M[index])}</span>${MV[index].t?ty(MV[index].t):''}<span class="bst">${esc(MV[index].bp??'-')}</span></a>`).join('')}</div>`;
 function moveProperty(prop){const moves=propertyMoves(prop);if(!moves.length){history.replaceState(history.state,'','#/');render();return;}
@@ -365,7 +378,7 @@ const MOVE_TARGETS={normal:['one one . me one .','One adjacent Pokémon'],any:['
 function moveTarget(target){const spec=MOVE_TARGETS[target];if(!spec)return '';const [cells,label]=spec;
  return `<div class="tgw" data-target="${esc(target)}"><div class="tgg" aria-hidden="true">${cells.split(' ').map((cell,index)=>`<i class="${cell==='.'?'':cell}">${index===3?'You':''}</i>`).join('')}</div><div class="tgt"><div class="mut small">Targets</div>${esc(label)}</div></div>`;}
 function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tms=(D.IT||[]).filter(s=>s.k==='tm').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>[s.n==='Move Tutors'?'Tutor':x[0].split(' ')[0],x[1]]));
- app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
+ app.innerHTML=`${backLine('mv',i)}
  <div class="card"><h2 style="margin:0 0 6px">${esc(M[i])}${v.x?` <span class="tag">${CF.orig} original</span>`:''}</h2><div>${v.t?ty(v.t):''} ${cat(v.c)}</div>
  <div class="mvst">${[['Power',v.bp??'-'],['Accuracy',v.ac!=null?v.ac+'%':'Never misses'],['PP',v.pp??'-'],['Priority',v.pr>0?'+'+v.pr:v.pr||0]].map(([n,x])=>`<div><span>${n}</span><b>${x}</b></div>`).join('')}</div>
  ${moveTarget(v.tg)}
@@ -374,17 +387,26 @@ function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tms=(D.IT||[]).f
  ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${tms.map(t=>`<div style="margin-top:6px"><b>${esc(t[0])}:</b> ${esc(t[1])}</div>`).join('')}
  ${v.e?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(v.e).replace(/\n/g,'<br>')}</div></div>`:''}
  ${v.h&&v.h.length?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.mvh}</b><ul>${v.h.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${v.dc||!TX.nodc?'':`<div class="mut small">${TX.nodc}</div>`}</div>`:''}${v.cf?confBox(v.cf):''}
- <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'mv',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div>
  <div class="mut small" style="margin-top:8px">${TX.mvsrc}${v.x&&TX.mvsrcx?TX.mvsrcx:''}.</div></div>
  ${moveInteractions(i)}
  ${moveLearnedBy(i)}`;bindMoveLearn(i);window.scrollTo(0,0);}
 // ===== ABILITY PAGE
 const abSlot=(p,i)=>{const n=new Set(p.a).size,r=[];if(p.a.includes(i))r.push(n===1?'Only ability':'Ability '+(p.a.indexOf(i)+1));if(p.ha===i)r.push('Hidden ability');return r.join(', ');};
+// Moves it affects: the MI records naming this ability, one block per effect (e) on each side (u = its holder's moves,
+// t = moves used on it), each effect followed by its moves (moveList). Absent when no record names it.
+function abilityMoves(i){const rows=(D.MI||[]).filter(row=>row.a===i&&row.m.length);if(!rows.length)return '';
+ const body=['u','t'].map(side=>{const effects=new Map();rows.filter(row=>row.w===side).forEach(row=>{const effect=effects.get(row.e)||{e:row.e,h:0,m:new Set()};row.m.forEach(m=>effect.m.add(m));effect.h||=row.h;effects.set(row.e,effect);});
+  return effects.size?`<div class="ab-side" data-side="${side}"><div class="mut small">${side==='u'?"Its holder's moves":'Moves used against it'}</div>${[...effects.values()].map(effect=>`<div class="ab-effect">${esc(effect.e)}${effect.h?'<span class="interaction-changed">changed</span>':''}</div>${moveList(effect.m)}`).join('')}</div>`:'';}).join('');
+ return `<div class="card ab-affects">${sectionHTML('am',`Moves it affects (${new Set(rows.flatMap(row=>row.m)).size})`,'',body,false)}</div>`;}
+// Pokémon with it: Normal (one of its abilities) and Hidden groups under a picker (pickCard); a species with it in both is in both.
+const abilityUserGroups=i=>[['n','Normal',p=>p.a.includes(i)],['h','Hidden',p=>p.ha===i]].map(([key,label,has])=>({key,label,rows:(abUsers[i]||[]).filter(has)})).filter(group=>group.rows.length);
+const abilityUserTable=i=>rows=>`<table class="lrn">${rows.map(p=>`<tr><td class="learn-sprite">${sprl(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>`;
 function abilityDetail(i){fil.innerHTML='';const a=AB[i];if(!a){app.innerHTML='<p>Not found.</p>';return;}const us=abUsers[i]||[];
- app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
+ app.innerHTML=`${backLine('ab',us.length?i:null)}
  <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2>${a[5]?`<div class="mut small">Original</div><p style="margin:0">${esc(a[5])}</p>`:`<p style="margin:0">${esc(a[1]||'No description.')}</p>`}${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
- <div class="card"><h3>Pokémon with it (${us.length})</h3><table class="lrn">${us.map(p=>`<tr><td style="width:44px">${sprl(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>
- <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'ab',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
+ ${abilityMoves(i)}
+ ${pickCard('ab-users','Pokémon with it','Pokémon with it by slot',abilityUserGroups(i),us.length,'au:',abilityUserTable(i))}`;
+ bindPick('ab-users',abilityUserGroups(i),'au:',abilityUserTable(i));window.scrollTo(0,0);}
 
 // ===== LOCATIONS + ENCOUNTER TRACKER (state in localStorage LS.track {s starter, e:{area:{p}|{f}}, t:{trade}}; see hacks/<hack>/notes.md)
 // FAM = evolution family via union-find over evolution links (dupes clause); Megas and form changes join their base.

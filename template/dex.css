@@ -55,6 +55,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .sub button{background:var(--panel2);color:var(--fg);border:0;border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600}
 .sub button.on{background:var(--acc);color:#111}
 .back{display:inline-block;margin-bottom:4px;font-weight:600}
+.backl{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}.backl .back{margin-bottom:0}.fadd{white-space:nowrap}
 .tag{font-size:11px;background:var(--panel2);color:var(--mut);padding:1px 6px;border-radius:6px;margin-left:4px;font-weight:600}
 .evo li{margin:3px 0}
 ul{margin:0;padding-left:18px}
@@ -395,9 +396,12 @@ table.lt td.n{vertical-align:top}table.lt .rt{display:block;white-space:nowrap}
 .interaction-effect{color:var(--mut);overflow-wrap:anywhere}
 .interaction-who{overflow-wrap:anywhere}
 .interaction-changed{color:var(--acc);font-size:11px;font-weight:700;margin-left:4px}
-.move-learn .sec[open]>summary{position:sticky;top:0;z-index:2;background:var(--bg);box-shadow:0 -5px 0 var(--bg)}
-.move-learn .learn-sprite{width:44px;padding-left:0;padding-right:4px}
-.move-learn .lrn td{padding-left:3px;padding-right:3px}
+/* inside a card: the card's colour, not the page's */
+.move-learn .sec[open]>summary,.ab-users .sec[open]>summary{position:sticky;top:0;z-index:2;background:var(--panel);box-shadow:0 -5px 0 var(--panel)}
+.move-learn .learn-sprite,.ab-users .learn-sprite{width:44px;padding-left:0;padding-right:4px}
+.move-learn .lrn td,.ab-users .lrn td{padding-left:3px;padding-right:3px}
+.ab-side+.ab-side{margin-top:10px}
+.ab-effect{font-weight:600;margin:6px 0 2px;overflow-wrap:anywhere}
 .move-learn .lrn td:last-child{font-size:12px}
 .move-list .row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 6px;padding:5px 6px}
 .move-list .nm{overflow-wrap:anywhere}
@@ -549,6 +553,11 @@ details.psec>.endbar{margin:-6px 8px 4px auto}
 .mvw td:nth-last-child(5){overflow-wrap:anywhere}
 .mvw td.lv{color:var(--mut)}
 .mvw th.tc,.mvw td.tc{text-align:center}
+/* its own ability affects the move: a tap mark after the name (A in a dot, the hit area padded out); the tap opens a row */
+.abm{border:0;background:none;padding:4px 5px;margin:-4px -3px -4px 0;vertical-align:middle;cursor:pointer;line-height:0}
+.abm::before{content:'A';display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--acc);color:#111;font:700 9.5px/1 system-ui,sans-serif}
+.abm[aria-expanded=true]::before{box-shadow:0 0 0 2px var(--fg)}
+.mvw tr.abd td{padding-top:0;font-size:12.5px;overflow-wrap:anywhere}
 .psec .warn{cursor:help}.psec .warn.q{color:#ef5350;font-size:12px}
 /* Evolution: the whole family, base stage first, forms under their Pokémon */
 .fam{display:flex;flex-direction:column}
