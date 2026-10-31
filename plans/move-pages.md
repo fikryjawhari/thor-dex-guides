@@ -147,3 +147,10 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
     that page anyway) or before.
   - Worker worktrees / branches to remove (all merged): `~/.t3/worktrees/thor-dex-guides/t3-*` with branches
     `worktree-move-pages-{u1,ei,hl,3ds,bb2r,unbound,calc}` (`git worktree remove`, then `git branch -d`).
+- 2026-10-31 (session 2): worker worktrees / branches removed. 4a done on `worktree-move-pages` (a949844): the opened
+  row starts with the KO chance in full (`koFull`; calc-fight-state checks it). walkcheck fixed (aba0e9e: the check
+  predated the Pokémon page's rail jumps; nothing wrong in the page). Running: 4b-i effect coverage (Sol, branch
+  `worktree-move-pages-fx`, files `tools/calc/`, `calc.js` / `calc.css`), 5a move page (Sol, `worktree-move-pages-mp`,
+  files `dex.js` / `dex.css`: split by file so they run side by side), 4c decide session (Sol thread, branch
+  `worktree-move-pages-calclayout`, spec `plans/calc-layout.md`, mockups only). Next: merge fx and mp one at a time,
+  then 4b-ii (Photonic Z status effects), 5b (ability page, Pokémon-page marks), 4c build, 6, 7.
