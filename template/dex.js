@@ -338,6 +338,8 @@ function bindCalc(p){const g=id=>app.querySelector(id);if(!g('#c-l'))return;
   try{localStorage.setItem(calcKey(p),JSON.stringify(s));localStorage.setItem(LS.calc+':lastlv',s.l);}catch(e){}};
  app.querySelectorAll('.calc input,.calc select,.calc .nv').forEach(e=>e.addEventListener('input',upd));upd();}
 // ===== MOVE PAGE
+// The Back line of the move and ability pages: ‹ Back, and on the right + Filter (the Pokémon list filtered by it).
+const backLine=(k,v)=>`<div class="backl"><a class="back" href="javascript:history.back()">‹ Back</a>${v!=null?`<a class="back fadd" href="#/" onclick="st.f=[{k:'${k}',v:${v}}];save();">+ Filter</a>`:''}</div>`;
 const MOVE_PROPS={contact:'Makes contact',nocontact:'No contact',punch:'Punching move',bite:'Biting move',slicing:'Slicing move',sound:'Sound move',
  bullet:'Ball / bomb move',pulse:'Pulse move',powder:'Powder move',wind:'Wind move',dance:'Dance move',heal:'Healing move',kick:'Kicking move',
  secondary:'Has an added effect',recoil:'Recoil',drain:'Drains HP',multihit:'Hits more than once',charge:'Two turns',recharge:'User must recharge',
@@ -376,7 +378,7 @@ const MOVE_TARGETS={normal:['one one . me one .','One adjacent Pokémon'],any:['
 function moveTarget(target){const spec=MOVE_TARGETS[target];if(!spec)return '';const [cells,label]=spec;
  return `<div class="tgw" data-target="${esc(target)}"><div class="tgg" aria-hidden="true">${cells.split(' ').map((cell,index)=>`<i class="${cell==='.'?'':cell}">${index===3?'You':''}</i>`).join('')}</div><div class="tgt"><div class="mut small">Targets</div>${esc(label)}</div></div>`;}
 function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tms=(D.IT||[]).filter(s=>s.k==='tm').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>[s.n==='Move Tutors'?'Tutor':x[0].split(' ')[0],x[1]]));
- app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
+ app.innerHTML=`${backLine('mv',i)}
  <div class="card"><h2 style="margin:0 0 6px">${esc(M[i])}${v.x?` <span class="tag">${CF.orig} original</span>`:''}</h2><div>${v.t?ty(v.t):''} ${cat(v.c)}</div>
  <div class="mvst">${[['Power',v.bp??'-'],['Accuracy',v.ac!=null?v.ac+'%':'Never misses'],['PP',v.pp??'-'],['Priority',v.pr>0?'+'+v.pr:v.pr||0]].map(([n,x])=>`<div><span>${n}</span><b>${x}</b></div>`).join('')}</div>
  ${moveTarget(v.tg)}
@@ -385,7 +387,6 @@ function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tms=(D.IT||[]).f
  ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${tms.map(t=>`<div style="margin-top:6px"><b>${esc(t[0])}:</b> ${esc(t[1])}</div>`).join('')}
  ${v.e?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(v.e).replace(/\n/g,'<br>')}</div></div>`:''}
  ${v.h&&v.h.length?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.mvh}</b><ul>${v.h.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${v.dc||!TX.nodc?'':`<div class="mut small">${TX.nodc}</div>`}</div>`:''}${v.cf?confBox(v.cf):''}
- <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'mv',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div>
  <div class="mut small" style="margin-top:8px">${TX.mvsrc}${v.x&&TX.mvsrcx?TX.mvsrcx:''}.</div></div>
  ${moveInteractions(i)}
  ${moveLearnedBy(i)}`;bindMoveLearn(i);window.scrollTo(0,0);}
@@ -401,9 +402,8 @@ function abilityMoves(i){const rows=(D.MI||[]).filter(row=>row.a===i&&row.m.leng
 const abilityUserGroups=i=>[['n','Normal',p=>p.a.includes(i)],['h','Hidden',p=>p.ha===i]].map(([key,label,has])=>({key,label,rows:(abUsers[i]||[]).filter(has)})).filter(group=>group.rows.length);
 const abilityUserTable=i=>rows=>`<table class="lrn">${rows.map(p=>`<tr><td class="learn-sprite">${sprl(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>`;
 function abilityDetail(i){fil.innerHTML='';const a=AB[i];if(!a){app.innerHTML='<p>Not found.</p>';return;}const us=abUsers[i]||[];
- app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
- <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2>${a[5]?`<div class="mut small">Original</div><p style="margin:0">${esc(a[5])}</p>`:`<p style="margin:0">${esc(a[1]||'No description.')}</p>`}${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}
- ${us.length?`<div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'ab',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
+ app.innerHTML=`${backLine('ab',us.length?i:null)}
+ <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2>${a[5]?`<div class="mut small">Original</div><p style="margin:0">${esc(a[5])}</p>`:`<p style="margin:0">${esc(a[1]||'No description.')}</p>`}${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
  ${abilityMoves(i)}
  ${pickCard('ab-users','Pokémon with it','Pokémon with it by slot',abilityUserGroups(i),us.length,'au:',abilityUserTable(i))}`;
  bindPick('ab-users',abilityUserGroups(i),'au:',abilityUserTable(i));window.scrollTo(0,0);}

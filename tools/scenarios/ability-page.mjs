@@ -80,7 +80,12 @@ const checks = [
     run: async page => {
       for (const index of [withRows, without]) {
         await open(page, index);
-        assert.equal(await page.value(`!!document.querySelector('#app>.card:first-of-type a[onclick*="st.f"]')`), true, 'filter link in top card');
+        const filter = await page.value(`(()=>{const line=document.querySelector('#app>.backl'),back=line?.querySelector('.back:not(.fadd)'),add=line?.querySelector('.fadd'),probe=document.createElement('a');probe.className='back';probe.textContent='x';document.body.append(probe);const one=probe.getBoundingClientRect().height;probe.remove();return add?{text:add.textContent,href:add.getAttribute('href'),click:add.getAttribute('onclick'),same:Math.abs(add.getBoundingClientRect().top-back.getBoundingClientRect().top)<2,height:line.getBoundingClientRect().height,one,right:Math.abs(add.getBoundingClientRect().right-line.getBoundingClientRect().right)<1,rest:document.querySelectorAll('#app a[onclick*="st.f"]').length}:null})()`);
+        if (users(index).length) {
+          assert(filter, '+ Filter on the Back line');
+          assert.deepEqual([filter.text, filter.href, filter.click, filter.same, filter.right, filter.rest], ['+ Filter', '#/', `st.f=[{k:'ab',v:${index}}];save();`, true, true, 1], 'Back left, + Filter right, the only filter link');
+          assert(filter.height <= filter.one + 1, `one line high: ${filter.height} vs ${filter.one}`);
+        } else assert.equal(filter, null, 'no filter without Pokémon');
         await movesCheck(page, index);
         await usersCheck(page, index);
         await page.assertFits('ability ' + data.AB[index][0]);
