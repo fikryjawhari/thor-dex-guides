@@ -141,6 +141,10 @@ const checks = [{
     await page.tap(`.dres:not(.na) .mr:has([data-slot="1"]) .hu`);
     const healed = await hps(page);
     assert.ok(healed.mine > after.mine, 'Soft-Boiled heals');
+    await page.value(`CALC.set('mine','hp',${healed.mineMax});CALC.render()`);
+    await page.tap(`.dres:not(.na) .mr:has([data-slot="2"]) .hu`);
+    assert.equal(await page.value(`CALC.mon('mine').status||''`), '', 'Rest fails at full HP');
+    await page.value(`CALC.set('mine','hp',1);CALC.render()`);
     await page.tap(`.dres:not(.na) .mr:has([data-slot="2"]) .hu`);
     after = await hps(page);
     assert.equal(after.mine, after.mineMax, 'Rest: full HP');
