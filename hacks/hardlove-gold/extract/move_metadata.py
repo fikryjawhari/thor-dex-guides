@@ -46,11 +46,12 @@ STATUS = {
     'FREEZE_HIT': 'frz', 'BLIZZARD': 'frz', 'PARALYZE_HIT': 'par',
     'RECOIL_PARALYZE_HIT': 'par', 'THUNDER': 'par', 'WILDBOLT_STORM': 'par',
     'SLEEP_HIT': 'slp', 'CHARGE_TURN_PARALYZE_HIT': 'par', 'BOUNCE': 'par',
-    'CHARGE_TURN_BURN_HIT': 'brn',
+    'CHARGE_TURN_BURN_HIT': 'brn', 'BURN_HIT_DOUBLE_POWER_ON_STATUS': 'brn',
+    'POISON_HIT_DOUBLE_POWER_ON_POISONED': 'psn', 'MORTAL_SPIN': 'psn',
 }
 FLINCH = {'FLINCH_HIT', 'FLINCH_MINIMIZE_DOUBLE_HIT', 'CHARGE_TURN_HIGH_CRIT_FLINCH',
           'FLINCH_DOUBLE_DAMAGE_FLY_OR_BOUNCE', 'FLINCH_WHILE_ASLEEP',
-          'ALWAYS_FLINCH_FIRST_TURN_ONLY'}
+          'ALWAYS_FLINCH_FIRST_TURN_ONLY', 'HIT_TWICE_AND_FLINCH', 'DAMAGE_WHILE_ASLEEP'}
 CONFUSION = {'CONFUSE_HIT', 'HURRICANE', 'CHATTER', 'CONFUSE_HIT_CRASH_ON_MISS'}
 USER_STAGES = {
     'USER_ATK_DEF_DOWN_HIT': {'atk': -1, 'def': -1},
@@ -73,12 +74,30 @@ RECOIL = {
 }
 DRAIN = {'RECOVER_HALF_DAMAGE_DEALT': [1, 2], 'RECOVER_DAMAGE_SLEEP': [1, 2],
          'RECOVER_THREE_QUARTERS_DAMAGE_DEALT': [3, 4],
-         'RECOVER_HALF_DAMAGE_DEALT_BURN_HIT': [1, 2]}
+         'RECOVER_HALF_DAMAGE_DEALT_BURN_HIT': [1, 2], 'RECOVER_FULL_DAMAGE_DEALT': [1, 1]}
 HEAL = {'RESTORE_HALF_HP': [1, 2], 'HEAL_HALF_REMOVE_FLYING_TYPE': [1, 2],
         'RECOVER_HEALTH_AND_SLEEP': [1, 1], 'HEAL_TARGET': [1, 2],
         'POLLEN_PUFF': [1, 2], 'LIFE_DEW': [1, 4]}
 CHARGE = {'FLY', 'DIG', 'DIVE', 'BOUNCE', 'SHADOW_FORCE', 'SKY_DROP', 'BEAK_BLAST'}
 BINDING = {'BIND_HIT', 'WHIRLPOOL'}
+# Recoil that Rock Head / Reckless see: the effects src/individual/ServerDoPostMoveEffects.c Activate_RecoilDamage
+# and CalcBaseDamage.c's Reckless list name. Steel Beam / Mind Blown / Struggle lose HP by their own script.
+ENGINE_RECOIL = set(RECOIL) - {'STEEL_BEAM', 'STRUGGLE'}
+# Sheer Force (and the Covert Cloak holder) by effect id: src/battle/battle_script_commands.c:1070-1150 at the pin,
+# plus the moves it names. Moves outside it keep their added effect under Sheer Force and Covert Cloak.
+SHEER_FORCE = {
+    'FLINCH_HIT', 'ALWAYS_FLINCH_FIRST_TURN_ONLY', 'RAISE_ALL_STATS_HIT', 'BLIZZARD', 'PARALYZE_HIT',
+    'LOWER_ATTACK_HIT', 'LOWER_SPEED_HIT', 'RAISE_SP_ATK_HIT', 'CONFUSE_HIT', 'LOWER_DEFENSE_HIT',
+    'LOWER_SP_DEF_HIT', 'BURN_HIT', 'FLINCH_BURN_HIT', 'RAISE_SPEED_HIT', 'POISON_HIT', 'FREEZE_HIT',
+    'FLINCH_FREEZE_HIT', 'RAISE_ATTACK_HIT', 'LOWER_ACCURACY_HIT', 'BADLY_POISON_HIT', 'SECRET_POWER',
+    'LOWER_SP_ATK_HIT', 'RAISE_DEF_HIT', 'THROAT_CHOP', 'THUNDER', 'HURRICANE', 'FLINCH_PARALYZE_HIT',
+    'FLINCH_DOUBLE_DAMAGE_FLY_OR_BOUNCE', 'LOWER_SP_DEF_2_HIT', 'PREVENT_ESCAPE_HIT', 'THAW_AND_BURN_HIT',
+    'CHATTER', 'FLINCH_MINIMIZE_DOUBLE_HIT', 'RANDOM_PRIMARY_STATUS_HIT', 'PREVENT_HEALING_HIT',
+    'SANDSEAR_STORM', 'BLEAKWIND_STORM', 'WILDBOLT_STORM', 'POISON_MULTI_HIT', 'HIGH_CRITICAL_BURN_HIT',
+    'HIGH_CRITICAL_POISON_HIT', 'RECOIL_BURN_HIT', 'RECOIL_PARALYZE_HIT',
+}
+SHEER_FORCE_MOVES = {'sparklingaria', 'spiritshackle', 'anchorshot', 'ceaselessedge', 'stoneaxe', 'electroshot'}
+EFFECT = {}   # move key -> its effect id, for move_rules.py
 
 
 def added_effects(move):
@@ -106,7 +125,7 @@ def added_effects(move):
         add('flinch', chance=10)
     if effect in {'RANDOM_PRIMARY_STATUS_HIT', 'SLEEP_POISON_PARALYZE_HIT'}:
         for status in (('brn', 'frz', 'par') if effect == 'RANDOM_PRIMARY_STATUS_HIT' else ('slp', 'psn', 'par')):
-            add('status', chance=chance / 3, status=status)
+            add('status', chance=round(chance / 3, 2), status=status)
     stat = re.fullmatch(r'(LOWER|RAISE)_(ATTACK|ATK|DEFENSE|DEF|SP_ATK|SP_DEF|SPEED|ACCURACY|EVA)(_2)?_HIT', effect)
     if stat:
         direction, name, double = stat.groups()
@@ -133,6 +152,7 @@ def added_effects(move):
 def describe(move, standard):
     name = key(move['names']['name'])
     effect = move['data']['effect'].removeprefix('MOVE_EFFECT_')
+    EFFECT[name] = effect
     target = move['battle']['target']
     if target == 'RANGE_SINGLE_TARGET_SPECIAL':
         target = 'scripted' if name in {'counter', 'mirrorcoat', 'metalburst', 'comeuppance'} else 'self'
@@ -166,14 +186,16 @@ def describe(move, standard):
     if effect in {'CRASH_ON_MISS', 'CONFUSE_HIT_CRASH_ON_MISS'}:
         flags.add('crash')
     effects = added_effects(move)
-    for kind in ('recoil', 'drain', 'heal'):
+    for kind in ('drain', 'heal'):
         if any(part['kind'] == kind for part in effects):
             flags.add(kind)
+    if effect in ENGINE_RECOIL:
+        flags.add('recoil')
     if name in GROUPS['triage'] or 'drain' in flags:
         flags.add('heal')
     if move['data']['split'] != 'SPLIT_STATUS' and (
         any(part['kind'] in {'status', 'flinch', 'confusion', 'stages'} and 'chance' in part for part in effects)
-        or effect in {'PREVENT_ESCAPE_HIT', 'THROAT_CHOP', 'PREVENT_HEALING_HIT'}
+        or effect in {'PREVENT_ESCAPE_HIT', 'THROAT_CHOP', 'PREVENT_HEALING_HIT', 'SECRET_POWER'}
     ):
         flags.add('secondary')
     return {'tg': target, 'f': sorted(protect_flags(sorted(flags), target)),
