@@ -337,6 +337,7 @@ const MOVE_PROPS={contact:'Makes contact',nocontact:'No contact',punch:'Punching
  binding:'Traps and binds',crash:'Crash damage on a miss',noprotect:'Goes through Protect',bypasssub:'Hits through Substitute',gravity:'Unusable under Gravity',defrost:'Thaws the user'};
 const moveProps=move=>{const flags=move.f||[];return [...(move.c&&move.c!=='Status'&&!flags.includes('contact')?['nocontact']:[]),...Object.keys(MOVE_PROPS).filter(prop=>flags.includes(prop))];};
 const moveProperties=move=>`<ul class="move-props">${moveProps(move).map(prop=>`<li><a href="#/mp/${prop}">${MOVE_PROPS[prop]}</a></li>`).join('')}</ul>`;
+const moveEffects=move=>(move.se||[]).length?`<ul class="move-effects">${move.se.map(([chance,text])=>`<li>${chance===100&&/^[A-Z]/.test(text)?'':esc(chance)+'% '}${esc(text)}</li>`).join('')}</ul>`:'';
 const propertyMoves=prop=>Object.hasOwn(MOVE_PROPS,prop)?MV.map((move,index)=>moveProps(move).includes(prop)?index:-1).filter(index=>index>=0):[];
 const moveList=indices=>`<div class="list move-list">${[...indices].sort((first,second)=>M[first].localeCompare(M[second])).map(index=>`<a class="row" href="#/m/${index}"><span class="nm">${esc(M[index])}</span>${MV[index].t?ty(MV[index].t):''}<span class="bst">${esc(MV[index].bp??'-')}</span></a>`).join('')}</div>`;
 function moveProperty(prop){const moves=propertyMoves(prop);if(!moves.length){history.replaceState(history.state,'','#/');render();return;}
@@ -357,6 +358,7 @@ function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const r=(learn[i]||[])
  <div class="mvst">${[['Power',v.bp??'-'],['Accuracy',v.ac!=null?v.ac+'%':'Never misses'],['PP',v.pp??'-'],['Priority',v.pr>0?'+'+v.pr:v.pr||0]].map(([n,x])=>`<div><span>${n}</span><b>${x}</b></div>`).join('')}</div>
  ${moveTarget(v.tg)}
  ${moveProperties(v)}
+ ${moveEffects(v)}
  ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${tms.map(t=>`<div style="margin-top:6px"><b>${esc(t[0])}:</b> ${esc(t[1])}</div>`).join('')}
  ${v.e?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(v.e).replace(/\n/g,'<br>')}</div></div>`:''}
  ${v.h&&v.h.length?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.mvh}</b><ul>${v.h.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${v.dc||!TX.nodc?'':`<div class="mut small">${TX.nodc}</div>`}</div>`:''}${v.cf?confBox(v.cf):''}
