@@ -1016,7 +1016,7 @@ function trTeams(p,btn){const r=trRowsOf(p),full=r.every(d=>d.open),g=trGrab(btn
 function trAll(btn){const open=btn.dataset.a==='1',g=trGrab(btn);noAnchor();
  app.querySelectorAll('details.split.jt').forEach(d=>{if(d.open!==open){d.open=open;TOG.trainers(d);}});bars();trRestore(g);}
 function trainerDetail(k){fil.innerHTML='';const t=TRK[k];if(!t){app.innerHTML='<p>Not found.</p>';return;}
- app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a><div class="mut small" style="margin-top:6px">${esc(t.g)}${t.h?' · '+esc(t.h):''}${t.c&&t.c.length?' · calc: '+t.c.map(esc).join(', '):''}</div>`+trainerBlock(t,true);bindTrainers();window.scrollTo(0,0);}
+ app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a><div class="mut small" style="margin-top:6px">${esc(t.g)}${t.h?' · '+esc(t.h):''}${t.c&&t.c.length?' · calc: '+t.c.map(esc).join(', '):''}</div><div class="small" style="margin-top:4px"><a href="javascript:SR.jumpTr('${t.k}')">In Trainers ›</a>${walkOf(k)?` · <a href="javascript:SR.jumpWalkTr('${t.k}')">In Walkthrough ›</a>`:''}</div>`+trainerBlock(t,true);bindTrainers();window.scrollTo(0,0);}
 // Trainer rows (Trainers page and walkthrough stops): name, tags (and the place, where no heading gives it) and the
 // team preview; open, the full card, built when first opened (bindTrd), with Collapse on its bottom line. open(t):
 // whether a row starts open.
