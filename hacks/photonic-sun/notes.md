@@ -248,6 +248,9 @@ shared browser coverage and usage: `tools/scenarios/README.md` → Calc checks.
 Z-moves use `zmove: true` and the 16 Move Changes powers in `zpow`, which override stock/band power.
 The 25 no-set-power fixtures cover documented powers, native exceptions and single-hit conversion, including
 Catastropika 210. Each damaging row's Z toggle follows `template/README.md` → Damage calculator.
+Status Z effects (unit 4b-ii): `tools/calc/z_effects_check.py` reads byte 0x21 of every status move's record in
+`a/0/1/1` (pk3DS Move7 / MoveEditor7 effect list). Game data says the same as Showdown for all 240 status moves:
+no differences. Toxic Thread's Photonic override keeps its Z effect (Spe +1) because an override replaces the record.
 Totem `au` comes from `extract/totems.py`; it initializes stages and the Aura mark, checked by
 `tools/scenarios/calc-zmove.mjs`.
 

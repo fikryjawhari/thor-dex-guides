@@ -371,11 +371,13 @@ Text zoom scales every font; box heights are fixed px. A hidden probe re-measure
 changes. **Search**: Find trainer and Find yours also match a set's moves, held item and known ability (a trainer:
 any of its Pokémon's); names rank first, and a term match is named on the row.
 Scenario: `tools/scenarios/calc-state.mjs`; trainer Metronome top-slot conflicts: `tools/calc_ui_check.py`.
-**Z-moves** (profile `zmove`, Photonic): each damaging row's % line has a Z toggle, centred under the
+**Z-moves** (profile `zmove`, Photonic and Unbound): each damaging row's % line has a Z toggle, centred under the
 row's type dot (a shared 20 px column keeps the name and % text aligned). Z before the name was rejected because
 it cut long names at 260 px. On: the row shows the Z-move's name in the accent colour and its damage
 (slot `z`, one hit: no ×n / Hits); the opened row says "Z-move of <move>". Stored per slot in `ST.z`,
-cleared with the slot's move. Status rows have no Z. Profiles without `zmove` have no Z control.
+cleared with the slot's move. A status row whose move has a Z effect gets the same toggle in its `.r2` line; on, the
+opened row says the effect ("Z: Atk +3", "Z: full heal", "Z: lowered stats reset") and the use chip applies it before
+the move (Z-Splash +3 Atk; Z-Belly Drum heals, then pays half). Profiles without `zmove` have no Z control.
 **Totem auras** (data `au`, five stages): the Trainers card tags the Totem ("Aura Def +1", "Aura +2 all"); in the calc
 its stages start at the aura, with an "Aura" mark while unchanged (Reset brings it back).
 Narrow placement follows the three-line card rules above. Scenario: `tools/scenarios/calc-zmove.mjs`.

@@ -4,7 +4,7 @@
   "Rapid Spin: the user's Speed +1 on every hit (doc: \"Power 20 => 50, now boosts Speed\"; no chance given, so guaranteed)",
   "Toxic Thread: lowers the target's Speed, Defense and Special Defense by two stages each and poisons it (doc: \"Now harshly lowers the target's Speed, Defense, and Special Defense stats, as well as poisoning them\"); \"harshly\" is the game's -2 wording, so -2 each, not the vanilla Speed -1 only",
   "Checked, no override: Curse (table already Atk +1 Def +1 Spe -1 for non-Ghost); Steel Wing, Twineedle, Water Pulse, Rock Climb, Chatter, Mud Bomb, Octazooka, Freeze-Dry, Force Palm, Cross Poison (the changed effects are chances, not 100 %, or accuracy / PP only); Dark Void (accuracy only); Mystical Fire (table already Sp. Atk -1 100 %); Fell Stinger not in Photonic's list; Drill Peck and Self-Destruct / Explosion (crit only, not an effect the table holds); Parabolic Charge / Horn Leech / Draining Kiss (drain changes only)",
-  "Shared resolver now covers Grass / Plus-Minus boosts, Defog, Speed Swap, and Rapid Spin's hazard clearing; raw-stat splits retain their Field switches. Extreme Evoboost remains outside this unit (Z-status); Spirit Shackle logs trapping. Missing ally effects are labelled by the shared coverage table."
+  "Shared resolver now covers Grass / Plus-Minus boosts, Defog, Speed Swap, and Rapid Spin's hazard clearing; raw-stat splits retain their Field switches. Status Z effects: the game data's Z bytes match Showdown (z_effects_check.py); Spirit Shackle logs trapping. Missing ally effects are labelled by the shared coverage table."
  ],
  "moves": {
   "Rapid Spin": {"k": "spin", "tg": "s", "fl": ["contact"], "sec": [{"c": 100, "sb": {"spe": 1}}], "n": "Photonic Move Changes.pdf: Rapid Spin now boosts Speed"},

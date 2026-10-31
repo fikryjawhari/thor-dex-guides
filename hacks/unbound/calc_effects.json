@@ -44,7 +44,7 @@
     "Rapid Spin: Gen 8 record Spe +1 on hit; Unbound text is silent and CFRU RAPID_SPIN was not checked; kept Gen 8",
     "Rock Smash: CFRU chance 100 vs Gen 8 50 and Unbound text 'may also lower'; kept 50 %",
     "Burning Jealousy: CFRU burns foes whose stats rose this turn (conditional, not modelled); kept no effect",
-    "Extreme Evoboost: Z-move only; CFRU EXTREME_EVOBOOST raises all five stats by +2 (general_attack_battle_scripts.s ExtremeEvoboost_Atk); Z-move status effects are out of scope in plan calc-move-effects.md",
+    "Extreme Evoboost: CFRU EXTREME_EVOBOOST raises all five stats by +2 (general_attack_battle_scripts.s ExtremeEvoboost_Atk); the shared table agrees (all +2)",
     "Stoked Sparksurfer: Z-move only; CFRU guarantees paralysis (chance 100); Z-move effect, out of scope",
     "Endless Edge, InfernalRage, Metal Bash, Vise Grip: no CFRU battle_moves.c row under that name; kept the Gen 8 record and did not check",
     "Gear Up, Magnetic Flux, Rototiller, Flower Shield: ally-only or Grass-type field effects; no Gen 8 record, so the calc does nothing (unchanged); not modelled",

@@ -487,6 +487,15 @@ type's Z-move, or the signature one for the held Z-crystal; one hit). Z power is
 so a hack's changed powers carry over, except the stock Z powers that are not the band (`catalog.zpow`, built from
 stock Gen 7, used while the hack leaves the move's power alone); a hack that sets a move's Z power in its game data
 lists it in `zpow` (`{"Arm Thrust": 140}`), which wins. The result then carries `z` (the Z-move's name).
+Status moves: `effect()` with slot `z` applies the move's Z effect first (the record's `z`: `b` the user's stages
+through the resolver, so caps / Simple / Contrary apply; `effect` clearnegativeboost resets the user's lowered stages,
+heal full HP, crit2 the Focus Energy switch, curse a Ghost user's full heal else Atk +1, healreplacement / redirect
+logged), then the move; a move that then fails keeps the Z part and returns `moveFails`. `hp()` with slot `z` counts a
+Z full heal before the move's own HP part (Z-Belly Drum at 1 HP pays half of full). The `z` comes from Showdown's
+`zMove` at the pin; the game data wins: `tools/calc/z_effects_check.py --cfru <battle_moves.c>` (run with
+`uv run python -I`) reads Photonic's USUM move records (pk3DS Move7 byte 0x21) and CFRU's `z_move_effect`, and fails
+while the engine's record (profile generation, then the hack's override) differs; differences go in that guide's
+`calc_effects.json` `moves` with `z` and `source` (a record replaces, so the override keeps the rest of the record).
 `varpow` lists upstream attacks lacking a fixed base power; `MV.bp === "Varies"`
 counts the same. Those stock can work out from the battle state (`AUTO_POWER` in
 `adapter.js`: Low Kick, Grass Knot, Heavy Slam, Heat Crash, Flail, Reversal, Gyro
