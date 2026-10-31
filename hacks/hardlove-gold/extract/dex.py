@@ -427,6 +427,8 @@ def movetable(D):
     # The game's own move data (Moves.c, config.h flags resolved: CHAMPIONS_* changes are on) wins. Notes say where the sheet
     # disagrees and which differences from Gen 9 the sheet doesn't list.
     GMV = {key(v['names']['name']): v for v in HG.MV.values()}
+    for v in HG.MV.values():   # a cut-short name ("ColisionCourse") still matches by its full name
+        GMV.setdefault(key(v['names'].get('fullName') or v['names']['name']), v)
     SPLIT = {'SPLIT_PHYSICAL': 'Physical', 'SPLIT_SPECIAL': 'Special', 'SPLIT_STATUS': 'Status'}
     MVSTAT = collections.Counter(); MVX = []
     for i, name in enumerate(M):

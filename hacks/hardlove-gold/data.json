@@ -1530,7 +1530,7 @@
 {"t":"Ground","c":"Physical","bp":120,"ac":100,"pp":5,"pr":0,"d":"Lowers the user's Defense and Sp. Def by 1.","tg":"normal","f":["contact","punch"],"se":[[100,"user Def −1, SpD −1"]],"h":[]},
 {"t":"Dragon","c":"Physical","bp":120,"ac":100,"pp":5,"pr":0,"d":"User takes sure-hit 2x damage until its next turn.","tg":"normal","f":["contact"],"se":[],"h":[]},
 {"t":"Steel","c":"Special","bp":120,"ac":95,"pp":5,"pr":0,"d":"Lowers the user's Sp. Atk by 1. Hits foe(s).","tg":"allAdjacentFoes","f":[],"se":[[100,"user SpA −1"]],"h":["Lower Sp. Atk by 1 Stage.","Not in the Move Changes sheet: Accuracy 100% → 95% (game data vs standard Gen 9)."]},
-{"t":"Fighting","c":"Physical","bp":100,"ac":100,"pp":5,"pr":0,"d":"Deals 1.3333x damage with supereffective hits.","f":[],"h":[]},
+{"t":"Fighting","c":"Physical","bp":100,"ac":100,"pp":5,"pr":0,"d":"Deals 1.3333x damage with supereffective hits.","tg":"normal","f":[],"se":[],"h":[]},
 {"t":"Electric","c":"Special","bp":100,"ac":100,"pp":5,"pr":0,"d":"Deals 1.3333x damage with supereffective hits.","tg":"normal","f":[],"se":[],"h":[]},
 {"t":"Water","c":"Special","bp":80,"ac":100,"pp":15,"pr":0,"d":"During Sunny Day: 1.5x damage instead of half.","tg":"normal","f":[],"se":[],"h":[]},
 {"t":"Psychic","c":"Physical","bp":80,"ac":100,"pp":15,"pr":0,"d":"During Electric Terrain: 1.5x power.","tg":"normal","f":["contact","slicing"],"se":[],"h":[]},
