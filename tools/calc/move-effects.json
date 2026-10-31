@@ -128,6 +128,7 @@
     "Entrainment": [[4,{"fl":["reflectable"],"k":"ability","n":"Showdown moves.ts entrainment onHit","tg":"o"}],[7,{"fl":["reflectable"],"k":"ability","n":"Showdown moves.ts entrainment onHit","tg":"o","z":{"b":{"spd":1}}}]],
     "Esper Wing": [[4,{"sec":[{"c":100,"sb":{"spe":1}}]}]],
     "Extrasensory": [[4,{"sec":[{"c":10,"v":"flinch"}]}]],
+    "Extreme Evoboost": [[7,{"b":{"atk":2,"def":2,"spa":2,"spd":2,"spe":2},"tg":"s"}]],
     "Fairy Lock": [[7,{"fl":["bypasssub"],"z":{"b":{"def":1}}}]],
     "Fake Out": [[4,{"fl":["contact"],"sec":[{"c":100,"v":"flinch"}]}]],
     "Fake Tears": [[4,{"b":{"spd":-2},"fl":["reflectable"],"tg":"o"}],[7,{"b":{"spd":-2},"fl":["reflectable"],"tg":"o","z":{"b":{"spa":1}}}]],

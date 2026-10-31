@@ -1791,19 +1791,32 @@ function effect(atk, def, slot, values = {}, options = {}) {
   if (!moveData || moveData.category !== 'Status') return null;
   const own = {...record};
   if (own.v && SWITCH_VOLATILES.has(own.v)) delete own.v;
-  if (!(own.b || own.st || own.v || own.k || own.sb)) return null;
+  const z = !!(profile.zmove && slot.z && own.z);
+  if (!(own.b || own.st || own.v || own.k || own.sb || z)) return null;
   const user = actionState(atk, values, 'atk');
   const target = actionState(def, values, 'def');
-  if (own.k === 'curse' && user.mon.hasType('Ghost')) return null;
+  const ghostCurse = own.k === 'curse' && user.mon.hasType('Ghost');
+  if (ghostCurse && !z) return null;
   const field = battleField(values);
   for (const mon of [user.mon, target.mon]) {
     checkAirLock(mon, field);
     checkItem(mon, field.isMagicRoom);
   }
   effectChance = fieldEffects(atk, values, 'atk').secondaryMultiplier;
-  const out = effects.resolve({name, record: own, user, target, field, values, phase: 'status',
-    moveType: slot.t || moveData.type, toggles: !!options.toggles});
+  const before = z ? effects.resolve({name, record: own, user, target, field, values, phase: 'z'}) : null;
+  const base = !ghostCurse && (own.b || own.st || own.v || own.k || own.sb);
+  const out = base ? effects.resolve({name, record: own, user, target, field, values, phase: 'status',
+    moveType: slot.t || moveData.type, toggles: !!options.toggles}) : {parts: [], log: []};
+  const moveFails = out.fails;
+  if (before) {
+    out.parts.unshift(...before.parts);
+    out.log.unshift(...before.log);
+    if (before.field || out.field) out.field = {...before.field, ...out.field};
+    if (before.parts.length && !before.fails) delete out.fails;
+    if (before.fails) out.fails = before.fails;
+  }
   return {atk: user.update, def: target.update, log: out.log, parts: out.parts,
+    ...(moveFails ? {moveFails} : {}),
     ...(out.field ? {field: {changes: out.field}} : {}),
     ...(out.fails ? {fails: out.fails} : {}), ...(out.bounced ? {bounced: true} : {}), ...describe(out)};
 }

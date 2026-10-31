@@ -8,6 +8,11 @@ import {createEngine} from './run.mjs';
 const root = new URL('../../', import.meta.url);
 const load = async path => JSON.parse(await readFile(new URL(path, root), 'utf8'));
 const data = await load('hacks/emerald-imperium/data.json');
+for (const name of ['Celebrate', 'Extreme Evoboost', 'Acupressure']) {
+  if (data.M.includes(name)) continue;
+  data.M.push(name);
+  data.MV.push({c: 'Status', t: 'Normal', bp: 0});
+}
 const engines = {};
 const engine = async (base, extra = {}) => {
   if (base === 'gen8') { base = 'expansion'; extra = {...extra, gen: 8}; }
@@ -51,6 +56,34 @@ const strike = async (base, user, target, move, field = {}, extra) => plain((awa
 
 const pika = mon('Pikachu');
 const mew = mon('Blissey');
+
+await check('Z-status boosts, resets, caps, abilities and ordering', async () => {
+  const own = await engine('gen7', {zmove: true});
+  const zuse = (move, extra = {}, field = {}) => plain(own.effect(mon('Pikachu', extra), mew, {...slot(move), z: true}, field));
+  assert.deepEqual(zuse('Swords Dance', {stg: stg(-4, -2, 1, 0, -1)}).atk.stg, stg(2, 0, 1, 0, 0));
+  assert.deepEqual(zuse('Splash').atk.stg, stg(3, 0, 0, 0, 0));
+  assert.deepEqual(zuse('Splash', {ab: 'Simple', stg: stg(1, 0, 0, 0, 0)}).atk.stg, stg(6, 0, 0, 0, 0));
+  assert.deepEqual(zuse('Splash', {ab: 'Contrary'}).atk.stg, stg(-3, 0, 0, 0, 0));
+  assert.deepEqual(zuse('Celebrate').atk.stg, stg(1, 1, 1, 1, 1));
+  assert.deepEqual(zuse('Extreme Evoboost').atk.stg, stg(2, 2, 2, 2, 2));
+  const drum = zuse('Belly Drum', {hp: 1});
+  assert.equal(drum.atk.hp, own.stats(pika)[0], 'full heal before the low-HP Belly Drum check');
+  assert.equal(drum.atk.stg[1], 6);
+  assert.equal(drum.fails, undefined);
+  assert.match(zuse('Memento').log.join(';'), /heals the replacement/);
+  assert.deepEqual(zuse('Curse').atk.stg, stg(2, 1, 0, 0, -1));
+  const ghost = plain(own.effect(mon('Gengar', {hp: 1}), mew, {...slot('Curse'), z: true}, {}));
+  assert.equal(ghost.atk.hp, own.stats(mon('Gengar'))[0]);
+  assert.equal(ghost.atk.stg, undefined, 'Ghost Curse has no stage boosts');
+  assert.equal(zuse('Acupressure').field.changes.atkFocus, true);
+  assert.match(zuse('Destiny Bond').log.join(';'), /draws attacks/);
+  const blocked = zuse('Parting Shot', {hp: 1}, {defProtect: true});
+  assert.match(blocked.log.join(';'), /heals the replacement/);
+  assert.equal(blocked.moveFails, 'Protect', 'Z effect precedes a blocked base move');
+  assert.equal(plain(own.effect(pika, mew, slot('Splash'), {})), null, 'no Z effect when off');
+  const disabled = await engine('gen7');
+  assert.equal(plain(disabled.effect(pika, mew, {...slot('Splash'), z: true}, {})), null, 'profile must enable Z');
+});
 
 await check('Speed Swap keeps stages and swaps raw Speed in damage and speed calculations', async () => {
   const own = await engine('expansion');

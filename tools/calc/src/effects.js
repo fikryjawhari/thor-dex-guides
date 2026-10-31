@@ -264,6 +264,33 @@ export function createEffects(env) {
     };
 
     const record0 = record || {};
+    if (phase === 'z') {
+      if (!user.mon.curHP()) return fail('user fainted');
+      const z = record0.z;
+      if (z?.b) stages('atk', z.b, false, 'Z-' + name);
+      const effect = z?.effect;
+      if (effect === 'clearnegativeboost') {
+        for (const stat of STATS) if (user.mon.boosts[stat] < 0) user.set(stat, 0);
+        out.parts.push({who: 'atk', log: 'Z: lowered stats restored'});
+        note('Z: lowered stats restored');
+      } else if (effect === 'heal' || effect === 'curse' && user.mon.hasType('Ghost')) {
+        user.setHP(user.mon.maxHP());
+        out.parts.push({who: 'atk', log: 'Z: full heal'});
+        note('Z: full heal');
+      } else if (effect === 'curse') {
+        stages('atk', {atk: 1}, false, 'Z-' + name);
+      } else if (effect === 'crit2') {
+        out.field = {atkFocus: true};
+        out.parts.push({who: 'atk', log: 'Z: crit stages +2'});
+        note('Z: crit stages +2 (Focus Energy)');
+      } else if (effect === 'healreplacement' || effect === 'redirect') {
+        const text = effect === 'healreplacement' ? 'Z: heals the replacement (switching not tracked)' : 'Z: draws attacks to the user (redirection not tracked)';
+        out.parts.push({who: 'atk', log: text});
+        note(text);
+      }
+      reactions(['atk']);
+      return out;
+    }
     const flags = new Set(record0.fl || []);
     const foeParts = record0.tg === 'o' && (record0.b || record0.st || record0.v || record0.k);
 

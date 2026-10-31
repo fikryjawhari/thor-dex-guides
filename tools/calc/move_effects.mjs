@@ -227,7 +227,7 @@ function effective(tables, gen, id) {
 }
 
 function isSkipped(entry) {
-  return Boolean(entry.isZ || entry.isMax);
+  return Boolean(entry.isZ && entry.category !== 'Status' || entry.isMax);
 }
 
 function fnKeys(entry) {
@@ -301,7 +301,7 @@ function recordFor(tables, gen, id) {
   const eff = effective(tables, gen, id);
   if (!eff) return {};
   const { entry, srcOf } = eff;
-  if (isSkipped(entry)) return {};
+  if (isSkipped(entry) || entry.isZ && gen < 7) return {};
   // Ally-only moves (Coaching, Aromatic Mist, Helping Hand ...): the calc has no ally, and in singles they fail.
   const z = gen >= 7 && entry.category === 'Status' && entry.zMove
     ? {...(entry.zMove.boost ? {b: boostsOf(entry.zMove.boost)} : {}), ...(entry.zMove.effect ? {effect: entry.zMove.effect} : {})} : null;
