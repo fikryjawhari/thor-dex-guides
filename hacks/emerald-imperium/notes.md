@@ -393,8 +393,23 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
   Top level, in order: M MV AB P LOC AR [ARO] IT WK TR TC [GID] built   (no build markers, no source strings)
   M   [moveName]
   MV  [{t type, c category, bp power or "Varies", ac accuracy or null, pp, pr priority, [cr crit stage when not 0,
-        6 = always a crit (the damage calc)], d description, f flags[], h change notes[], [dc 1 = the changes doc
+        6 = always a crit (the damage calc)], d description, [tg Showdown target code],
+        f properties[] (tools/moveprops.py PROPS / ALIASES), [se [[chance percent, effect text]]],
+        h change notes[], [dc 1 = the changes doc
         lists it, e the doc's paragraph], [cf doc-vs-data conflicts[]], [x 1 = hack original]}]
+      tg text / 2×3 grid: tools/moveprops.py TARGETS (all 15 codes named by the move-page plan).
+      se phrases come from moveprops.effect_text({kind, chance=100, who='target', ...}):
+      status (status=brn/par/psn/tox/slp/frz), flinch, confusion, stages (stages={def:-1,spd:-1}),
+      recoil/drain/heal (fraction=[numerator,denominator]; optional basis='damage'/'maxhp').
+      Examples: [30,'flinch'], [100,'user Def −1, SpD −1'], [100,'Drains 50% of damage'].
+      Prefix chance for effects, not complete recoil/drain/heal phrases. Missing metadata stays unknown;
+      source-aware extracts call protect_flags(flags,tg) to derive noprotect, never finalise().
+  MI  [{a AB index | i item name, w 'u' user / 't' target, e interaction phrase, m [M index],
+        [h 1 hack override], [s source line]}]
+      Rebuilt by finalise() after the prune; only abilities in AB and items in IT rows / trainer held items.
+      Stock latest-generation rules: tools/moveprops.py RULES; per-guide source-backed differences:
+      extract/move_rules.json (format and exclusions in that module's docstring). Several records may
+      describe one owner. Move/ability indexes are build-time links, never saved-state identifiers.
   AB  [[name, description, [1 if hack original, [changed, [statement, original]]]]]
       [0] name, [1] in-game description, [2] hack-original flag, [3] changes-doc text,
       [4] complete hack-effect statement, [5] standard original effect. Trailing falsy values are not written.
