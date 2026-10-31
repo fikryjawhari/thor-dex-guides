@@ -704,6 +704,9 @@ body.calc-route .dres .mr.st .hp .dturn.hu{height:auto;min-height:15px;line-heig
 /* This fight's types / ability / item (calc.js pickFight, fightChips): Fight… beside the battle state, the card's chips (tap = clear). */
 .cc .ed .e2.dstate,body.calc-route .cc .ed .e2.dstate{grid-template-columns:minmax(0,1fr) auto}
 .cc .ed .e2.dstate.dres2,body.calc-route .cc .ed .e2.dstate.dres2{grid-template-columns:minmax(0,1fr) auto auto}
-.cc>.dfx{display:flex;flex-wrap:wrap;gap:2px;min-width:0}
+.cc>.dfx{display:flex;flex-wrap:wrap;align-items:flex-start;gap:2px;min-width:0}
 .cc .dfc{max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 9.5px/14px system-ui;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--acc);cursor:pointer;touch-action:manipulation}
-body.calc-route .cc>.dfx{order:12;flex:0 0 100%}
+body.calc-route .cc>.dfx{order:12;flex:none;width:100%}
+/* Effect odds (calc.js oddsOf) on the closed row beside the KO text: as much as fits, then …; the open row lists all. */
+.mr .dodds{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--mut);font-weight:400}
+.mr .dodds2{color:var(--mut)}
