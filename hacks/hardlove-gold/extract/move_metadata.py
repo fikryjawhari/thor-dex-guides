@@ -84,12 +84,12 @@ BINDING = {'BIND_HIT', 'WHIRLPOOL'}
 # and CalcBaseDamage.c's Reckless list name. Steel Beam / Mind Blown / Struggle lose HP by their own script.
 ENGINE_RECOIL = set(RECOIL) - {'STEEL_BEAM', 'STRUGGLE'}
 # Sheer Force (and the Covert Cloak holder) by effect id: src/battle/battle_script_commands.c:1070-1150 at the pin,
-# plus the moves it names. Moves outside it keep their added effect under Sheer Force and Covert Cloak.
+# plus the moves it names (Secret Power's case is commented out there). Moves outside it keep their added effect under Sheer Force and Covert Cloak.
 SHEER_FORCE = {
     'FLINCH_HIT', 'ALWAYS_FLINCH_FIRST_TURN_ONLY', 'RAISE_ALL_STATS_HIT', 'BLIZZARD', 'PARALYZE_HIT',
     'LOWER_ATTACK_HIT', 'LOWER_SPEED_HIT', 'RAISE_SP_ATK_HIT', 'CONFUSE_HIT', 'LOWER_DEFENSE_HIT',
     'LOWER_SP_DEF_HIT', 'BURN_HIT', 'FLINCH_BURN_HIT', 'RAISE_SPEED_HIT', 'POISON_HIT', 'FREEZE_HIT',
-    'FLINCH_FREEZE_HIT', 'RAISE_ATTACK_HIT', 'LOWER_ACCURACY_HIT', 'BADLY_POISON_HIT', 'SECRET_POWER',
+    'FLINCH_FREEZE_HIT', 'RAISE_ATTACK_HIT', 'LOWER_ACCURACY_HIT', 'BADLY_POISON_HIT',
     'LOWER_SP_ATK_HIT', 'RAISE_DEF_HIT', 'THROAT_CHOP', 'THUNDER', 'HURRICANE', 'FLINCH_PARALYZE_HIT',
     'FLINCH_DOUBLE_DAMAGE_FLY_OR_BOUNCE', 'LOWER_SP_DEF_2_HIT', 'PREVENT_ESCAPE_HIT', 'THAW_AND_BURN_HIT',
     'CHATTER', 'FLINCH_MINIMIZE_DOUBLE_HIT', 'RANDOM_PRIMARY_STATUS_HIT', 'PREVENT_HEALING_HIT',
