@@ -132,7 +132,7 @@ def move_metadata(record, fallback):
                      record[1] == 7 and any(amount > 0 for stages in stage_groups.values() for amount in stages.values())):
         flags.append('secondary')
     result = {'f': list(dict.fromkeys(flags)), 'tg': target}
-    if effects:
+    if effects and damaging:    # MV.se: side effects of damaging moves; a status move's effect is its description
         result['se'] = effects
     return result
 
