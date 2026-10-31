@@ -25,6 +25,7 @@ def main():
     trainers.split(D)
     items.split(D)
     walk.name_splits(D)
+    dex.move_metadata(D)
     finalise(D, H.name, prune.build)
     gid.build(D)
     write_data(D, H)

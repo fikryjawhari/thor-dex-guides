@@ -81,7 +81,7 @@ def _enabled(expression):
 
 def _latest(expression):
     expression = expression.strip()
-    if '?' in expression:
+    if '?' in expression and expression.startswith('B_'):
         condition, choices = expression.split('?', 1)
         yes, no = choices.split(':', 1)
         return _latest(yes if _enabled(condition) else no)
@@ -128,7 +128,7 @@ def _effect(code, chance, who):
         return effect_text({'kind': 'stages', 'stages': stages, 'who': who, 'chance': chance})
     if code in ('TRI_ATTACK', 'DIRE_CLAW'):
         statuses = ('brn', 'frz', 'par') if code == 'TRI_ATTACK' else ('psn', 'par', 'slp')
-        words = [effect_text({'kind': 'status', 'status': status})[1] for status in statuses]
+        words = [effect_text({'kind': 'status', 'status': status})[1] if status != 'frz' else 'frostbite' for status in statuses]
         return [chance, ', '.join(words) + ' (one at random)']
     if code == 'RECOIL_HP_25':
         return effect_text({'kind': 'recoil', 'fraction': [1, 4], 'basis': 'maxhp'})
@@ -140,7 +140,8 @@ def _effect(code, chance, who):
 
 class Metadata:
     def __init__(self):
-        source = _preprocess((Path(SRC) / 'repos/expansion/moves_info.h').read_text(encoding='utf-8'))
+        source = (Path(SRC) / 'repos/expansion/moves_info.h').read_text(encoding='utf-8')
+        source = _preprocess(re.sub(r'/\*.*?\*/|//[^\n]*', '', source, flags=re.S))
         self.entries = {}
         for entry in re.split(r'\n\s*\[MOVE_', source)[1:]:
             name = re.search(r'\.name = COMPOUND_STRING\("([^"]*)"\)', entry)
@@ -173,7 +174,7 @@ class Metadata:
                 self.fallbacks.append(f'{name}: target ({target}; expansion DEPENDS)')
         else:
             target = TARGETS[target]
-        if target == 'self' and standard.get('target') in ('allySide', 'allyTeam', 'allies'):
+        if target == 'self' and standard.get('target') in ('allySide', 'allyTeam', 'allies', 'all'):
             target = standard['target']
             self.fallbacks.append(f'{name}: side/team target ({target}; expansion USER)')
         if name == 'Life Dew':
@@ -213,12 +214,51 @@ class Metadata:
             flags.append('multihit')
         if primary in ('EFFECT_TWO_TURNS_ATTACK', 'EFFECT_SOLAR_BEAM', 'EFFECT_SEMI_INVULNERABLE', 'EFFECT_SKY_DROP', 'EFFECT_GEOMANCY'):
             flags.append('charge')
+        if _field(entry, 'argument') == 'MOVE_EFFECT_SCALE_SHOT':
+            effects.append(effect_text({'kind': 'stages', 'who': 'user', 'stages': {'def': -1, 'spe': 1}}))
         if primary == 'EFFECT_RECOIL_IF_MISS':
             flags.append('crash')
+            effect = effect_text({'kind': 'recoil', 'fraction': [1, 2], 'basis': 'maxhp'})
+            effect[1] += ' on a miss (crash damage)'
+            effects.append(effect)
         if primary == 'EFFECT_RECOIL_HP_25':
             effects.append(effect_text({'kind': 'recoil', 'fraction': [1, 4], 'basis': 'maxhp'}))
-        if primary == 'EFFECT_RESTORE_HP':
+        if primary in ('EFFECT_MAX_HP_50_RECOIL', 'EFFECT_MIND_BLOWN'):
+            effects.append(effect_text({'kind': 'recoil', 'fraction': [1, 2], 'basis': 'maxhp'}))
+        if primary in ('EFFECT_RESTORE_HP', 'EFFECT_ROOST', 'EFFECT_SOFTBOILED', 'EFFECT_HEAL_PULSE', 'EFFECT_PURIFY'):
             effects.append(effect_text({'kind': 'heal', 'fraction': [1, 2]}))
+            if name == 'Floral Healing':
+                effect = effect_text({'kind': 'heal', 'fraction': [2, 3]})
+                effect[1] += ' instead on Grassy Terrain'
+                effects.append(effect)
+            if primary == 'EFFECT_PURIFY':
+                effects[-1][1] += " if the target's status is cured"
+        if primary in ('EFFECT_SYNTHESIS', 'EFFECT_MORNING_SUN', 'EFFECT_MOONLIGHT', 'EFFECT_SHORE_UP'):
+            effect = effect_text({'kind': 'heal', 'fraction': [1, 2]})
+            effect[1] += ' normally'
+            effects.append(effect)
+            effect = effect_text({'kind': 'heal', 'fraction': [2, 3]})
+            effect[1] += ' in ' + ('sandstorm' if primary == 'EFFECT_SHORE_UP' else 'sun')
+            effects.append(effect)
+            if primary != 'EFFECT_SHORE_UP':
+                effect = effect_text({'kind': 'heal', 'fraction': [1, 4]})
+                effect[1] += ' in other weather'
+                effects.append(effect)
+        if primary == 'EFFECT_JUNGLE_HEALING':
+            effect = effect_text({'kind': 'heal', 'fraction': [1, 4]})
+            effect[1] += ' for the user and allies'
+            effects.append(effect)
+        if primary == 'EFFECT_REST':
+            effects.append(effect_text({'kind': 'heal', 'fraction': [1, 1]}))
+        if primary == 'EFFECT_WISH':
+            effect = effect_text({'kind': 'heal', 'fraction': [1, 2]})
+            effect[1] += " of the user's maximum HP at the end of the next turn"
+            effects.append(effect)
+        if primary == 'EFFECT_SWALLOW':
+            for stockpile, fraction in enumerate(([1, 4], [1, 2], [1, 1]), 1):
+                effect = effect_text({'kind': 'heal', 'fraction': fraction})
+                effect[1] += f' at Stockpile {stockpile}'
+                effects.append(effect)
         if effects:
             move['se'] = effects
         move['f'] = list(dict.fromkeys(flags))
