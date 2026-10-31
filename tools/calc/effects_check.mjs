@@ -70,6 +70,9 @@ await check('Z-status boosts, resets, caps, abilities and ordering', async () =>
   assert.equal(drum.atk.hp, own.stats(pika)[0], 'full heal before the low-HP Belly Drum check');
   assert.equal(drum.atk.stg[1], 6);
   assert.equal(drum.fails, undefined);
+  const pikaMax = own.stats(pika)[0];
+  assert.equal(own.hp(mon('Pikachu', {hp: 1}), mew, {...slot('Belly Drum'), z: true}, {}).v, -Math.floor(pikaMax / 2), 'Belly Drum pays half after the Z heal');
+  assert.equal(own.hp(mon('Pikachu', {hp: 1}), mew, slot('Belly Drum'), {}).v, -Math.floor(pikaMax / 2));
   assert.match(zuse('Memento').log.join(';'), /heals the replacement/);
   assert.deepEqual(zuse('Curse').atk.stg, stg(2, 1, 0, 0, -1));
   const ghost = plain(own.effect(mon('Gengar', {hp: 1}), mew, {...slot('Curse'), z: true}, {}));
@@ -605,7 +608,7 @@ for (const hack of await readdir(new URL('hacks/', root))) {
       assert.notEqual(index, -1, `Missing move ${fixture.move}`);
       const result = fixture.kind === 'hit'
         ? hackEngine.hit(set(fixture.user), set(fixture.target), {mv: index}, fixture.field || {}, 'max')
-        : hackEngine.effect(set(fixture.user), set(fixture.target), {mv: index}, fixture.field || {});
+        : hackEngine.effect(set(fixture.user), set(fixture.target), {mv: index, ...(fixture.z ? {z: true} : {})}, fixture.field || {});
       for (const [path, value] of Object.entries(fixture.expect)) {
         const actual = plain(path ? path.split('.').reduce((node, key) => node?.[key], result) : result);
         assert.deepEqual(actual ?? null, value, path);

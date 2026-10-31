@@ -51,6 +51,9 @@
     "Coil: CFRU omits the accuracy +1 that the Gen 8 record and Unbound text include; accuracy is not modelled, so no calc change"
   ],
   "fixtures": [
+    {"title": "Z-Take Heart: full heal first (CFRU Z_EFFECT_RECOVER_HP; Showdown has no Z effect)", "move": "Take Heart", "kind": "effect", "z": true, "user": {"n": "Pikachu", "lv": 50, "hp": 1}, "target": {"n": "Snorlax", "lv": 50}, "field": {}, "expect": {"atk.stg": [0, 0, 0, 1, 1, 0], "parts.0.log": "Z: full heal"}},
+    {"title": "Z-Teatime: all stats +1 (CFRU Z_EFFECT_ALL_STATS_UP_1); the berry part stays not modelled", "move": "Teatime", "kind": "effect", "z": true, "user": {"n": "Pikachu", "lv": 50}, "target": {"n": "Snorlax", "lv": 50}, "field": {}, "expect": {"atk.stg": [0, 1, 1, 1, 1, 1]}},
+    {"title": "Z-Forest's Curse: no Z effect (CFRU z_move_effect 0; Showdown all +1)", "move": "Forest's Curse", "kind": "effect", "z": true, "user": {"n": "Pikachu", "lv": 50}, "target": {"n": "Snorlax", "lv": 50}, "field": {}, "expect": {"atk.stg": null}},
     {
       "title": "Shelter raises Def and Spe by 1 (CFRU DEF_SPD_UP)",
       "move": "Shelter",

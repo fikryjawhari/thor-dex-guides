@@ -15,6 +15,7 @@
   "Defog: lowers the target's evasion only (not stored); the screen removal is field state"
  ],
  "fixtures": [
+  {"title": "Z-Toxic Thread: the user's Spe +1, then the Photonic Toxic Thread (game data Z effect +1 Speed)", "move": "Toxic Thread", "kind": "effect", "z": true, "user": {"n": "Ariados", "lv": 50}, "target": {"n": "Snorlax", "lv": 50}, "field": {}, "expect": {"atk.stg": [0, 0, 0, 0, 0, 1], "def.stg": [0, 0, -2, 0, -2, -2], "def.status": "psn"}},
   {
    "title": "Rapid Spin: the user's Speed +1 after the hit (doc: now boosts Speed)",
    "move": "Rapid Spin",

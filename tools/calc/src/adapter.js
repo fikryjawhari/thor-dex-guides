@@ -1691,7 +1691,10 @@ function hp(atk, def, slot, values = {}, dealt = 0, options = {}) {
   checkItem(user, field.isMagicRoom);
   checkItem(target, field.isMagicRoom);
   const max = user.maxHP();
-  const now = Math.max(0, Math.min(max, atk.hp ?? max));
+  // A Z-status full heal (Z-Belly Drum, Ghost Z-Curse) comes before the move's own HP part.
+  const zEffect = profile.zmove && slot.z && moveData.category === 'Status' ? effectRecord(name)?.z?.effect : null;
+  const zHeal = zEffect === 'heal' || zEffect === 'curse' && user.hasType('Ghost');
+  const now = zHeal ? max : Math.max(0, Math.min(max, atk.hp ?? max));
   const part = (amount, num, den) => Math.max(1, profile.gen >= 5 ? Math.round(amount * num / den) : Math.floor(amount * num / den));
   const guard = user.hasAbility('Magic Guard');
   const items = !field.isMagicRoom && !user.hasAbility('Klutz');
