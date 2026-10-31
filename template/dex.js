@@ -206,6 +206,8 @@ const PK=(k,o)=>` data-pk="${esc(k)}" data-po="${esc(o)}"`;
 const CHEV=d=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="${d<0?'M15 5l-7 7 7 7':'M9 5l7 7-7 7'}"/></svg>`;
 const tyc=t=>`<span class="tyc${btc(t)}" style="background:${tcol(t)}" title="${esc(t)}" aria-label="${esc(t)}">${esc((t||'?')[0])}</span>`;
 const catc=c=>c?`<span class="catc ${c}" title="${c}" aria-label="${c}">${c==='Physical'?'P':c==='Special'?'Sp':'St'}</span>`:'';
+// An ability's text: the hack's one statement (AB [4], the standard effect with the change) where the data has it,
+// else its changes text, else its description; its own page shows the original ([5]) and the change.
 // New or changed in the hack: an amber !; sources disagree: a red ? (both when both).
 const mark=(t,q)=>`<span class="warn${q?' q':''}" title="${esc(t)}" aria-label="${esc(t)}">${q?'?':'!'}</span>`;
 function whereTable(p){let h='';
@@ -238,7 +240,7 @@ function mrow(i,lv,o,occ){const v=MV[i]||{};const w=(v.x?mark('New in '+CF.name)
  return `<tr${PK('mv:'+M[i]+(occ>1?'#'+occ:''),o)}>${lv!==undefined?`<td class="n lv">${lv||'Evo'}</td>`:''}<td>${mlink(i)}${w}</td><td class="tc">${v.t?ty(v.t)+tyc(v.t):''}</td><td class="tc">${cat(v.c)+catc(v.c)}</td><td class="n">${v.bp==='Varies'?'<span class="hw">Varies</span><span class="pc0">Var</span>':v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'<span class="pc">%</span>':'-'}</td></tr>`;}
 const mhead=lv=>`<tr>${lv?'<th class="n">Lv</th>':''}<th>Move</th><th class="tc"><span class="hw">Type</span></th><th class="tc"><span class="hw">Cat</span></th><th class="n">Pow</th><th class="n">Acc</th></tr>`;
 let moveTab='lv';
-const abLine=i=>`${alink(i)}${AB[i][2]?mark('New in '+CF.name):AB[i][3]?mark('Changed in '+CF.name):''}<div class="mut small">${esc(AB[i][3]||AB[i][1])}</div>`;
+const abLine=i=>`${alink(i)}${AB[i][2]?mark('New in '+CF.name):AB[i][3]?mark('Changed in '+CF.name):''}<div class="mut small">${esc(AB[i][4]||AB[i][3]||AB[i][1])}</div>`;
 const psec=(k,label,body,cls='')=>`<details class="card psec${cls}" data-s="${k}" ${(PO[k]??PDEF[k])?'open':''}><summary${PK('sec:'+k,PSECS.findIndex(x=>x[0]===k))}><h3>${label}</h3></summary><div class="pb">${body}</div><button class="endbar sb" hidden>${UPI}<span>${label}</span></button></details>`;
 function navLink(p,t,d){if(!t)return '<span class="gap"></span>';const r=relOf(p,t);
  return `<a class="${d<0?'pv':'nx'}" href="#/p/${t.id}" data-keep data-rep><span class="ch">${CHEV(d)}</span><span class="t"><b>${esc(t.name)}</b><span class="r">${t.dex?'#'+t.dex:''}${r?`${t.dex?' · ':''}<span class="rel">${esc(r)}</span>`:''}</span></span></a>`;}
@@ -344,7 +346,7 @@ function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const r=(learn[i]||[])
 const abSlot=(p,i)=>{const n=new Set(p.a).size,r=[];if(p.a.includes(i))r.push(n===1?'Only ability':'Ability '+(p.a.indexOf(i)+1));if(p.ha===i)r.push('Hidden ability');return r.join(', ');};
 function abilityDetail(i){fil.innerHTML='';const a=AB[i];if(!a){app.innerHTML='<p>Not found.</p>';return;}const us=abUsers[i]||[];
  app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
- <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2><p style="margin:0">${esc(a[1]||'No description.')}</p>${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
+ <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2>${a[5]?`<div class="mut small">Original</div><p style="margin:0">${esc(a[5])}</p>`:`<p style="margin:0">${esc(a[1]||'No description.')}</p>`}${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
  <div class="card"><h3>Pokémon with it (${us.length})</h3><table class="lrn">${us.map(p=>`<tr><td style="width:44px">${sprl(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>
  <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'ab',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
 

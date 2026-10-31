@@ -532,6 +532,9 @@ blocks, three across at most. An opened card starts at its team. One speed per P
 6. **Moves** fit: under 380 px of table (container query on `.mvw`) the type is a letter circle, the category P / Sp /
    St, Varies `Var`, no `%`, no Type / Cat header words; a one-word name that can't fit breaks inside the word.
    Markers instead of tags on this page: amber `!` new or changed in the hack, red `?` sources disagree (`title` says).
+   A changed ability shows the hack's one statement (data `AB` [4]: the standard effect with the change, written per
+   hack) where the data has it, else its changes text; its own page shows the original ([5]) and the change
+   (`txt.chdoc`).
 7. **Evolution** shows the whole family from its base stage: each Pokémon, its forms (not evolved into: Megas, Rockruff
    (Own Tempo)), then what it evolves into, indented per stage; the current row lit and not a link; one row: "Does not
    evolve."
