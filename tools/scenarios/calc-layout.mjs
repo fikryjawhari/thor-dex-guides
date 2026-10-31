@@ -6,7 +6,7 @@ import { dismissBanner, fixturePatches, guide, guideArg, pickCell, prepareGuide,
 
 const WIDE = [[480, 392], [537, 424], [832, 424]];
 const SHORT = [[480, 316], [537, 360]];
-const D = guide().data;
+const D = new Proxy({}, { get: (_, key) => guide().data[key] });
 
 // The foe's card on three lines: Toxic (T box + residual), a battle state (Dig) and a fight change (+Ghost: Δ1).
 const threeLineFoe = `(()=>{CALC.set('foe','status','tox');CALC.set('foe','fadd','Ghost');CALC.state().tgt[CALC.key('foe')]='dig';CALC.render();})()`;
@@ -23,9 +23,9 @@ const rowShape = page => page.value(`(()=>{const bad=[];for(const r of document.
  return bad;})()`);
 
 // A custom attacker (Blissey or a Normal type) at level 50 with these moves and item against the four-Pokémon trainer.
-const attackerName = D.P.find(e => e.n === 'Blissey') ? 'Blissey' : D.P.find(e => e.t.length === 1 && e.t[0] === 'Normal').n;
-const attacker = (moves, item = '') => `(()=>{CALC.use(P.find(e=>e.n===${JSON.stringify(attackerName)}));const s=CALC.state(),m=s.custom.at(-1);m.l=50;m.i=${JSON.stringify(item)};m.m=${JSON.stringify(moves)}.filter(n=>M.includes(n)).map(n=>M.indexOf(n));CALC.enter(${JSON.stringify(guide().trainers.four?.k)},0);s.dir='out';CALC.render();})()`;
-const longMove = ['Light That Burns the Sky', ...D.M.map((n, i) => [n, D.MV[i]]).filter(([, m]) => m?.bp > 1 && m.c !== 'Status').map(([n]) => n).sort((a, b) => b.length - a.length)].find(n => D.M.includes(n));
+const attackerName = () => (D.P.find(e => e.n === 'Blissey') ? 'Blissey' : D.P.find(e => e.t.length === 1 && e.t[0] === 'Normal').n);
+const attacker = (moves, item = '') => `(()=>{CALC.use(P.find(e=>e.n===${JSON.stringify(attackerName())}));const s=CALC.state(),m=s.custom.at(-1);m.l=50;m.i=${JSON.stringify(item)};m.m=${JSON.stringify(moves)}.filter(n=>M.includes(n)).map(n=>M.indexOf(n));CALC.enter(${JSON.stringify(guide().trainers.four?.k)},0);s.dir='out';CALC.render();})()`;
+const longMoveOf = () => ['Light That Burns the Sky', ...D.M.map((n, i) => [n, D.MV[i]]).filter(([, m]) => m?.bp > 1 && m.c !== 'Status').map(([n]) => n).sort((a, b) => b.length - a.length)].find(n => D.M.includes(n));
 const rowOf = name => `[...document.querySelectorAll('.dres:not(.na) .mr')].find(r=>r.querySelector('.mv')?.textContent.trim()===${JSON.stringify(name)})`;
 
 // The page passes the wheel on: over Field's open box, scrolled to its end, the page itself scrolls.
@@ -50,6 +50,18 @@ async function wheelOverField(page) {
   assert(tried, 'the page can scroll from Field at all');
 }
 
+// Same for the box grid (61 Pokémon): scrolled to its end, the wheel over it scrolls the page.
+async function wheelOverGrid(page) {
+  await setupCalc(page);
+  await page.value('scrollTo(0,0)');
+  await page.settle();
+  const at = await page.value(`(()=>{const g=document.querySelector('.mg .dstrip');g.scrollTop=g.scrollHeight;const r=g.getBoundingClientRect();return {over:g.scrollHeight>g.clientHeight,x:r.left+r.width/2,y:Math.min(r.bottom-4,innerHeight-4)};})()`);
+  assert(at.over, 'the grid scrolls (the check has nothing to prove otherwise)');
+  await page.send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: at.x, y: at.y, deltaX: 0, deltaY: 120 });
+  await page.value('new Promise(r=>setTimeout(r,300))');
+  assert((await page.value('scrollY')) > 0, 'wheel down over the grid at its end: the page stays at the top');
+}
+
 
 // Every failing condition of a check, not only the first: one run then shows the whole picture.
 function allOf(conditions) {
@@ -69,7 +81,7 @@ const longest = guide().data.P.filter(entry => /^[A-Za-z ]+$/.test(entry.n)).sor
 
 // Check 18 body, shared by the spec's window (316 high) and a taller one (400) where the stops separate.
 // The expected stops come from the spec's rule (Layout → Jump arrows), computed here from the DOM, not from CALC.stops().
-const expectedStops = page => page.value(`(()=>{const max=Math.max(0,document.documentElement.scrollHeight-innerHeight);const bar=document.querySelector('.fbar');const rows=[...document.querySelectorAll('.dres:not(.na) .mr')];const field=document.querySelector('details.dfield');const v=[0];let end=null;if(innerWidth<480&&bar){const top=bar.getBoundingClientRect().top+scrollY-2;v.push(top);end=rows.at(-1).getBoundingClientRect().bottom+scrollY-innerHeight+3;if(end>=top+24)v.push(end);else end=null;}if(field)v.push(field.getBoundingClientRect().top+scrollY-2);const c=v.map(x=>Math.round(Math.max(0,Math.min(max,x)))).sort((a,b)=>a-b);const out=[];for(const x of c)if(!out.length||x-out.at(-1)>=24)out.push(x);return {stops:out,end:end===null?null:Math.round(Math.max(0,Math.min(max,end))),window:innerHeight};})()`);
+const expectedStops = page => page.value(`(()=>{const max=Math.max(0,document.documentElement.scrollHeight-innerHeight);const bar=document.querySelector('.fbar');const rows=[...document.querySelectorAll('.dres:not(.na) .mr')];const field=document.querySelector('details.dfield');const v=[0];let end=null;if((innerWidth<480||innerHeight<392)&&bar){const top=bar.getBoundingClientRect().top+scrollY-2;v.push(top);end=rows.at(-1).getBoundingClientRect().bottom+scrollY-innerHeight+3;if(end>=top+24)v.push(end);else end=null;}if(field)v.push(field.getBoundingClientRect().top+scrollY-2);const c=v.map(x=>Math.round(Math.max(0,Math.min(max,x)))).sort((a,b)=>a-b);const out=[];for(const x of c)if(!out.length||x-out.at(-1)>=24)out.push(x);return {stops:out,end:end===null?null:Math.round(Math.max(0,Math.min(max,end))),window:innerHeight};})()`);
 
 // Walks the rail down through every stop and back up, checking each lands on its stop and the ends are disabled.
 async function walkStops(page, stops) {
@@ -128,7 +140,8 @@ const checks = [
       await page.settle();
       const m = await page.value(`(()=>{const rows=[...document.querySelectorAll('.dres:not(.na) .mr')];return {bar:document.querySelector('.fbar').getBoundingClientRect().top,rows:rows.length,bottom:rows.at(-1)?.getBoundingClientRect().bottom??null,edits:document.querySelectorAll('.ed').length,height:innerHeight};})()`);
       assert.equal(m.edits, 0, 'Edit is closed');
-      assert(Math.abs(m.bar - 2) < 2, `trainer bar at ${m.bar}, want 2`);
+      const atEnd = await page.value('Math.abs(scrollY-(document.documentElement.scrollHeight-innerHeight))<=1');
+      assert(Math.abs(m.bar - 2) < 2 || (atEnd && m.bar > 2), `trainer bar at ${m.bar}, want 2 (or the page scrolled to its end)`);
       assert.equal(m.rows, 4, 'attacker rows');
       // Z-move guides have 36 px rows: the fourth row ends inside the window, not 12 px above it (template README → Z-moves).
       const limit = page.height;
@@ -301,6 +314,7 @@ const checks = [
     run: async page => {
       await setupCalc(page);
       allOf((await rowShape(page)).map(text => [false, text]));
+      const longMove = longMoveOf();
       await page.value(attacker([longMove, 'Tackle', 'Fire Fang', 'Body Slam']));
       await page.settle();
       const long = await page.value(`(()=>{const r=${rowOf(longMove)},v=r.querySelector('.mv'),h=r.querySelector('.hp');return {cut:v.scrollWidth>v.clientWidth,hp:h.scrollWidth<=h.clientWidth+0.5,st:r.classList.contains('st')};})()`);
@@ -329,12 +343,17 @@ const checks = [
         await shape('Z on');
         await page.tap('.dres:not(.na) .mr:not(.st) .rz');
       }
-      // Immune: the foe made part Ghost, Tackle does nothing.
-      await page.value(`(()=>{CALC.set('foe','fadd','Ghost');CALC.render();})()`);
-      await page.settle();
-      if (D.M.includes('Tackle')) assert.equal(await page.value(`${rowOf('Tackle')}?.querySelector('.hp').textContent.trim()`), 'No effect', 'Tackle into a Ghost');
+      // Immune: the foe's types for the fight set to one its attacker's move can't touch (the first pair the guide's chart honours).
+      let immune = '';
+      for (const [move, type] of [['Tackle', 'Ghost'], ['Earthquake', 'Flying'], ['Thunderbolt', 'Ground'], ['Psychic', 'Dark']].filter(([move]) => D.M.includes(move))) {
+        await page.value(attacker(['Fire Fang', move, 'Bullet Seed', 'Giga Drain'], 'Life Orb'));
+        await page.value(`(()=>{CALC.set('foe','ft',[${JSON.stringify(type)}]);CALC.render();})()`);
+        await page.settle();
+        if ((await page.value(`${rowOf(move)}?.querySelector('.hp').textContent.trim()`)) === 'No effect') { immune = move; break; }
+      }
+      assert(immune, 'an immune row (No effect)');
       await shape('immune');
-      await page.value(`(()=>{CALC.set('foe','fadd',undefined);CALC.render();})()`);
+      await page.value(`(()=>{CALC.set('foe','ft',undefined);CALC.render();})()`);
       // Protected: the defender's Protect in Field.
       await page.value(`document.querySelector('details.dfield').open=true`);
       await page.settle();
@@ -357,18 +376,18 @@ const checks = [
     id: 'short wide',
     title: '480+ wide, under 392 tall: no trainer list, foe strip of six, trainer bar and battle state on one line, lands on the trainer bar, Field right under the rows',
     sizes: SHORT,
-    run: async page => {
+    run: async (page, { dvkb }) => {
       await setupCalc(page);
       await page.value(`CALC.enter(${JSON.stringify(T.four.k)},0)`);
       await page.settle();
       await page.value('new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))');
-      const m = await page.value(`(()=>{const q=s=>document.querySelector(s),r=s=>q(s)?.getBoundingClientRect(),bar=r('.fbar'),fight=r('.dfight'),cells=[...document.querySelectorAll('.dfoe .dstrip button')].map(b=>b.getBoundingClientRect()),rows=[...document.querySelectorAll('.dres')].map(d=>[...d.querySelectorAll('.mr')].at(-1).getBoundingClientRect().bottom),field=r('details.dfield');return {short:document.body.classList.contains('calc-short'),fteam:q('.fteam')?getComputedStyle(q('.fteam')).display:'none',foe:getComputedStyle(q('.dfoe')).display,cells:cells.length,oneRow:cells.every(c=>Math.abs(c.top-cells[0].top)<1),barTop:bar.top,shareLine:Math.abs(bar.top-fight.top)<=4&&bar.right<=fight.left+1,gap:field.top-Math.max(...rows),sideways:document.documentElement.scrollWidth>innerWidth+1};})()`);
+      const m = await page.value(`(()=>{const q=s=>document.querySelector(s),r=s=>q(s)?.getBoundingClientRect(),bar=r('.fbar'),fight=r('.dfight'),cells=[...document.querySelectorAll('.dfoe .dstrip button')].map(b=>b.getBoundingClientRect()),rows=[...document.querySelectorAll('.dres')].map(d=>[...d.querySelectorAll('.mr')].at(-1).getBoundingClientRect().bottom),field=r('details.dfield');return {short:document.body.classList.contains('calc-short'),fteam:q('.fteam')?getComputedStyle(q('.fteam')).display:'none',foe:getComputedStyle(q('.dfoe')).display,cells:cells.length,oneRow:cells.every(c=>Math.abs(c.top-cells[0].top)<1),barTop:bar.top,atEnd:Math.abs(scrollY-(document.documentElement.scrollHeight-innerHeight))<=1,shareLine:Math.abs(bar.top-fight.top)<=4&&bar.right<=fight.left+1,gap:field.top-Math.max(...rows),sideways:document.documentElement.scrollWidth>innerWidth+1};})()`);
       allOf([
         [m.short, 'body.calc-short is set'],
         [m.fteam === 'none', `trainer list shows (${m.fteam})`],
         [m.foe !== 'none' && m.cells >= 1 && m.oneRow, `foe strip: ${m.foe}, ${m.cells} cells, one row ${m.oneRow}`],
         [m.shareLine, 'trainer bar and battle-state row share a line'],
-        [Math.abs(m.barTop - 2) <= 2, `opening the calc lands on the trainer bar (at ${m.barTop}, want 2)`],
+        [Math.abs(m.barTop - 2) <= 2 || (m.atEnd && m.barTop > 2), `opening the calc scrolls to the trainer bar or as far as the page goes (bar at ${m.barTop})`],
         [m.gap >= 0 && m.gap <= 4, `Field ${m.gap} px under the rows, want at most 4`],
         [!m.sideways, 'no sideways scroll'],
       ]);
@@ -376,6 +395,8 @@ const checks = [
       const height = page.height;
       await page.resize(page.width, 424);
       assert.equal(await page.value(`document.body.classList.contains('calc-short')`), false, 'no short-wide at 424 tall');
+      // (dvkb: the HP box is the viewer's pad, not an input, and the viewer never resizes: nothing to hold)
+      if (dvkb) return;
       await page.value(`document.querySelector('.cc [data-hp]').focus()`);
       await page.resize(page.width, height);
       assert.equal(await page.value(`document.body.classList.contains('calc-short')`), false, 'held while the HP box has focus');
@@ -390,6 +411,13 @@ const checks = [
     sizes: [[260, 316], [480, 392]],
     modes: ['normal'],
     run: wheelOverField,
+  },
+  {
+    id: 'grid wheel',
+    title: 'the wheel over the box grid scrolls the page once the grid is at its end',
+    sizes: [[260, 316], [480, 392]],
+    modes: ['normal'],
+    run: wheelOverGrid,
   },
 ];
 

@@ -730,6 +730,10 @@ body.calc-route .dres .mr:not(.st):not(.em) .r2>.ko{order:1;flex:0 1 auto;min-wi
 body.calc-route .dres .mr:not(.st):not(.em) .r2>.dodds{order:7;flex:1 1 0;min-width:0}
 body.calc-route .dres .mr:not(.st):not(.em) .r2>.dmovecontrols{order:8;margin-left:auto}
 body.calc-route .dres .mr:not(.st):not(.em) .dd{order:10;flex:0 0 100%;min-width:0}
+body.calc-route .dres.zm .mr:not(.st):not(.em) .r2>.rz{margin-right:3px}
+/* status rows and empty slots: the same 32 px as a two-line row, so side-by-side columns line up */
+body.calc-route .dres .mr.st .r1{min-height:15px}
+body.calc-route .dres .mr.em .mm{min-height:32px}
 /* This fight's changes: Δn in the card (narrow: first on the third line; wide: in the HP line); tap opens the chips under the card. */
 body.calc-route .cc:not(.fopen)>.dfch{display:none}
 .cc .dfxn{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:18px;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--acc);font:700 11px/1 system-ui;cursor:pointer;touch-action:manipulation;flex:none}
