@@ -701,3 +701,9 @@ body.calc-route .ko>.spr{filter:grayscale(1)}
 .dentry.dguess{font-style:italic}
 /* Status-move buttons (effects, HP chips) are as tall as the damage endpoints, so closed status rows keep the height of a damaging row. */
 body.calc-route .dres .mr.st .hp .dturn.hu{height:auto;min-height:15px;line-height:1.15;box-sizing:border-box;border:1px solid var(--line);border-radius:4px;padding:0 3px}
+/* This fight's types / ability / item (calc.js pickFight, fightChips): Fight… beside the battle state, the card's chips (tap = clear). */
+.cc .ed .e2.dstate,body.calc-route .cc .ed .e2.dstate{grid-template-columns:minmax(0,1fr) auto}
+.cc .ed .e2.dstate.dres2,body.calc-route .cc .ed .e2.dstate.dres2{grid-template-columns:minmax(0,1fr) auto auto}
+.cc>.dfx{display:flex;flex-wrap:wrap;gap:2px;min-width:0}
+.cc .dfc{max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 9.5px/14px system-ui;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--acc);cursor:pointer;touch-action:manipulation}
+body.calc-route .cc>.dfx{order:12;flex:0 0 100%}
