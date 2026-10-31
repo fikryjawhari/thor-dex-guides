@@ -69,6 +69,9 @@ async function usersCheck(page, index) {
     assert.equal(style[0], 'sticky');
     assert.notEqual(style[1], 'rgba(0, 0, 0, 0)');
     assert.notEqual(style[2], 'none', 'paint above the sticky header');
+    const card = await page.value(`(()=>{const summary=document.querySelector('.ab-users .learn-groups summary');return [getComputedStyle(summary).backgroundColor,getComputedStyle(summary.closest('.card')).backgroundColor,getComputedStyle(summary).boxShadow]})()`);
+    assert.equal(card[0], card[1], "sticky header in the card's colour");
+    assert(card[2].startsWith(card[1]), "paint above it in the card's colour");
     await page.assertFits(data.AB[index][0] + ' ' + key);
   }
   await tap(page, '.ab-users [data-method="all"]');
