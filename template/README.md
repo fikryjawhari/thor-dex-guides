@@ -306,7 +306,7 @@ mark, tap = manual). `typed-side-condition` (Tailwind / Magnet Rise for listed t
 weather (`locked:true`) become runtime values (`AREARULES`: `atk/def…Types`, `weatherLock`) that `battleField()`
 adds to the stored field; they are rebuilt by `updateField`, never saved. A lock beats every weather layer (select
 disabled, setters, actions, an old manual save). With a Fog option in the profile, area Fog is the bottom weather
-layer: a manual / setter weather covers it, **Defog** (Clear Fog on the move row) clears it for the fight. The
+layer: a manual / setter weather covers it, **Defog** (its Use on the move row: the effect chip, or Clear Fog in a profile without Defog's effect) clears it for the fight. The
 Global group lists an area switch per typed rule / lock / Fog (on = applies); the switches and Defog are saved in
 `ST.areaByTrainer[t.k] = {disabled:{'kind:value:side':true}, fogCleared}` (trainer key + effect name; created only
 when used, cleared by `newFight` / Reset fight). Field readouts (`.dfrule`) give each side's state: Tailwind / Magnet
