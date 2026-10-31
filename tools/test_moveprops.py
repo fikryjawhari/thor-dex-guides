@@ -134,8 +134,6 @@ def test_rule_edges():
     assert not matches('Synchronize', 'Ice Beam', {'se': [[10, 'freeze']]})
     assert matches('Poison Puppeteer', 'Toxic', {'c': 'Status'})
     assert matches('Technician', 'Grass Knot', {'c': 'Special', 'bp': 'Varies'})
-    assert not matches("King's Rock", 'Rock Slide', {'c': 'Physical', 'se': [[30, 'flinch']]})
-    assert matches("King's Rock", 'Tackle', {'c': 'Physical'})
 
 
 def test_all_rules():

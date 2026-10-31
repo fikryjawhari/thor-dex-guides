@@ -54,7 +54,8 @@ must update these for a hack that changes them. CAP/hack rules use overrides;
 unreleased Future entries (Piercing Drill) and informational warning abilities
 (Anticipation, Forewarn) are not stock interactions. Accuracy modifiers applying
 to all moves (Compound Eyes, Victory Star, No Guard, Wide/Zoom Lens, evasion
-items, Micle Berry, Blunder Policy) are universal, not property-selected rules.
+items, Micle Berry, Blunder Policy, Stench / King's Rock / Razor Fang: a flinch on every
+damaging move) are universal, not property-selected rules.
 """
 
 import json
@@ -239,7 +240,6 @@ RULES = [
     _rule('a', 'Effect Spore', 't', 'May sleep (11%), paralyse (10%) or poison (9%) the attacker', flag='contact'),
     _rule('a', 'Cute Charm', 't', '30% chance to infatuate the attacker', flag='contact'),
     _rule('a', 'Poison Touch', 'u', '30% chance to poison the target', flag='contact'),
-    _rule('a', 'Stench', 'u', 'Adds 10% flinch', damaging=True, effect='no-flinch'),
     _rule('a', 'Gooey', 't', 'Attacker Speed −1', flag='contact'),
     _rule('a', 'Tangling Hair', 't', 'Attacker Speed −1', flag='contact'),
     _rule('a', 'Mummy', 't', "Replaces the attacker's ability with Mummy", flag='contact'),
@@ -260,8 +260,6 @@ RULES = [
     _rule('i', 'Sticky Barb', 't', 'Transfers to an empty-handed attacker', flag='contact'),
     _rule('i', 'Safety Goggles', 't', 'Blocks it', flag='powder'),
     _rule('i', 'Covert Cloak', 't', 'Blocks added effects on the target', effect='secondary-target'),
-    _rule('i', "King's Rock", 'u', 'Adds 10% flinch', damaging=True, effect='no-flinch'),
-    _rule('i', 'Razor Fang', 'u', 'Adds 10% flinch', damaging=True, effect='no-flinch'),
     _rule('i', 'Throat Spray', 'u', 'SpA +1 after use; consumed', flag='sound'),
     _rule('i', 'Big Root', 'u', 'Recovery ×1.3', any=[{'flag': 'drain'}, {'names': ['Leech Seed', 'Ingrain', 'Aqua Ring', 'Strength Sap']}]),
     _rule('i', 'Power Herb', 'u', 'Skips the charging turn; consumed', flag='charge', not_names=['Sky Drop']),
