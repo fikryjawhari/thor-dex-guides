@@ -1,9 +1,55 @@
-// Calc layout: spec checks 1 (fit), 17 (long names), 18 (scroll stops), 19 (box size), 20 (wide window), 22 (big box).
+// Calc layout: spec checks 1 (fit), 17 (long names), 18 (scroll stops), 19 (box size), 20 (wide window), 22 (big box),
+// the two-line move rows and the short-wide page (template/README.md → Calc page), Field's box passing the wheel on.
 // Each check runs at the sizes and modes the spec gives (see runChecks in tools/calc_check_lib.mjs). Without cfg.calc: skip.
 import assert from 'node:assert/strict';
-import { dismissBanner, fixturePatches, guide, guideArg, pickCell, prepareGuide, runChecks, setupCalc, SIZE_SMALL, SIZE_STAR } from '../calc_check_lib.mjs';
+import { dismissBanner, fixturePatches, guide, guideArg, pickCell, prepareGuide, runChecks, setupCalc, SIZE_SMALL, SIZE_STAR, tapField } from '../calc_check_lib.mjs';
 
 const WIDE = [[480, 392], [537, 424], [832, 424]];
+const SHORT = [[480, 316], [537, 360]];
+const D = guide().data;
+
+// The foe's card on three lines: Toxic (T box + residual), a battle state (Dig) and a fight change (+Ghost: Δ1).
+const threeLineFoe = `(()=>{CALC.set('foe','status','tox');CALC.set('foe','fadd','Ghost');CALC.state().tgt[CALC.key('foe')]='dig';CALC.render();})()`;
+
+// Every closed damaging row on two lines (template README → Calc page): at most 33 px; name, KO and min–max on line 1;
+// range, odds and controls on line 2; nothing past the row's right edge; min–max and the range not clipped.
+const rowShape = page => page.value(`(()=>{const bad=[];for(const r of document.querySelectorAll('.dres .mr:not(.st):not(.em):not(.open)')){const mm=r.querySelector('.mm'),a=mm.getBoundingClientRect(),n=r.querySelector('.mv').textContent.trim(),q=s=>mm.querySelector(s),rc=e=>e.getBoundingClientRect(),mv=rc(q('.mv')),hp=q('.hp'),ko=q('.ko');
+ if(a.height>33.5)bad.push(n+': '+a.height+' px');
+ if(Math.abs(rc(hp).top-mv.top)>2)bad.push(n+': .hp not on line 1');
+ if(ko&&ko.textContent.trim()&&Math.abs(rc(ko).top-mv.top)>2)bad.push(n+': .ko not on line 1');
+ for(const e of mm.querySelectorAll('.r2>*:not(.ko)'))if(rc(e).width&&rc(e).top<mv.bottom-1)bad.push(n+': '+e.className+' not on line 2');
+ for(const e of mm.querySelectorAll('.r1 *,.r2 *'))if(rc(e).width&&rc(e).right>a.right+0.5)bad.push(n+': '+(e.className||e.tagName)+' past the right edge');
+ const pc=[...mm.querySelectorAll('.r2>span')].find(x=>/%$/.test(x.textContent.trim()));for(const e of [hp,pc])if(e&&e.scrollWidth>e.clientWidth+0.5)bad.push(n+': '+e.className+' clipped');}
+ return bad;})()`);
+
+// A custom attacker (Blissey or a Normal type) at level 50 with these moves and item against the four-Pokémon trainer.
+const attackerName = D.P.find(e => e.n === 'Blissey') ? 'Blissey' : D.P.find(e => e.t.length === 1 && e.t[0] === 'Normal').n;
+const attacker = (moves, item = '') => `(()=>{CALC.use(P.find(e=>e.n===${JSON.stringify(attackerName)}));const s=CALC.state(),m=s.custom.at(-1);m.l=50;m.i=${JSON.stringify(item)};m.m=${JSON.stringify(moves)}.filter(n=>M.includes(n)).map(n=>M.indexOf(n));CALC.enter(${JSON.stringify(guide().trainers.four?.k)},0);s.dir='out';CALC.render();})()`;
+const longMove = ['Light That Burns the Sky', ...D.M.map((n, i) => [n, D.MV[i]]).filter(([, m]) => m?.bp > 1 && m.c !== 'Status').map(([n]) => n).sort((a, b) => b.length - a.length)].find(n => D.M.includes(n));
+const rowOf = name => `[...document.querySelectorAll('.dres:not(.na) .mr')].find(r=>r.querySelector('.mv')?.textContent.trim()===${JSON.stringify(name)})`;
+
+// The page passes the wheel on: over Field's open box, scrolled to its end, the page itself scrolls.
+async function wheelOverField(page) {
+  await setupCalc(page);
+  await page.value(`document.querySelector('details.dfield').open=true`);
+  await page.settle();
+  await page.value(`(()=>{const f=document.querySelector('details.dfield');scrollTo(0,f.getBoundingClientRect().top+scrollY-innerHeight/2);})()`);
+  await page.settle();
+  const at = await page.value(`(()=>{const b=document.querySelector('details.dfield .dfb').getBoundingClientRect();return {x:b.left+b.width/2,y:Math.max(b.top+4,Math.min(b.bottom-4,innerHeight/2)),max:document.documentElement.scrollHeight-innerHeight};})()`);
+  let tried = 0;
+  for (const [dy, dir] of [[-120, 'up'], [120, 'down']]) {
+    const before = await page.value('scrollY');
+    if (dy < 0 ? before <= 0 : before >= at.max) continue;
+    tried++;
+    await page.value(`(()=>{const b=document.querySelector('details.dfield .dfb');b.scrollTop=${dy < 0 ? 0 : 'b.scrollHeight'};})()`);
+    await page.send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: at.x, y: at.y, deltaX: 0, deltaY: dy });
+    await page.value('new Promise(r=>setTimeout(r,300))');
+    const after = await page.value('scrollY');
+    assert(dy < 0 ? after < before : after > before, `wheel ${dir} over Field's box at its end: the page stays at ${before} (now ${after})`);
+  }
+  assert(tried, 'the page can scroll from Field at all');
+}
+
 
 // Every failing condition of a check, not only the first: one run then shows the whole picture.
 function allOf(conditions) {
@@ -70,10 +116,14 @@ async function scrollStops(page) {
 const checks = [
   {
     id: '1 fit',
-    title: 'trainer bar at the top: the attacker\'s four rows end within the window',
-    sizes: SIZE_STAR,
+    title: 'trainer bar at the top, foe card on three lines (Toxic, Dig, Δ1): the four rows end within the window (both columns when wide); battle-state row 20 px',
+    sizes: [[260, 316], [260, 350], [480, 316], [480, 392], [537, 424], [832, 424]],
     run: async page => {
       await setupCalc(page);
+      await page.value(threeLineFoe);
+      await page.settle();
+      assert.equal(await page.value(`document.querySelector('.cc[data-s=foe] .dfxn')?.textContent`), 'Δ1', 'the foe card has a fight change');
+      if (page.width < 480) assert.equal(await page.value(`Math.round(document.querySelector('.dfight select').getBoundingClientRect().height)`), 20, 'battle-state row 20 px');
       await page.value(`scrollTo(0, document.querySelector('.fbar').getBoundingClientRect().top + scrollY - 2)`);
       await page.settle();
       const m = await page.value(`(()=>{const rows=[...document.querySelectorAll('.dres:not(.na) .mr')];return {bar:document.querySelector('.fbar').getBoundingClientRect().top,rows:rows.length,bottom:rows.at(-1)?.getBoundingClientRect().bottom??null,edits:document.querySelectorAll('.ed').length,height:innerHeight};})()`);
@@ -83,6 +133,10 @@ const checks = [
       // Z-move guides have 36 px rows: the fourth row ends inside the window, not 12 px above it (template README → Z-moves).
       const limit = page.height;
       assert(m.bottom <= limit, `fourth move row bottom ${m.bottom} is past ${limit}`);
+      if (page.width >= 480) {
+        const cols = await page.value(`[...document.querySelectorAll('.dres')].map(d=>[...d.querySelectorAll('.mr')].at(-1)?.getBoundingClientRect().bottom??0)`);
+        assert(cols.every(b => b <= limit), `a column's fourth row ends past ${limit}: ${cols}`);
+      }
     },
   },
   {
@@ -107,8 +161,8 @@ const checks = [
   },
   {
     id: '18 scroll stops',
-    title: 'rail up/down: top, the box above the trainer block, the trainer bar; collapse on a short page',
-    sizes: SIZE_SMALL,
+    title: 'rail up/down: top, the box above the trainer block, the trainer bar; collapse on a short page (short-wide too)',
+    sizes: [...SIZE_SMALL, [480, 316]],
     run: scrollStops,
   },
   {
@@ -239,6 +293,103 @@ const checks = [
         [m.fourthRow <= m.h, `the grid's fourth row ends at ${m.fourthRow}, past ${m.h}`],
       ]);
     },
+  },
+  {
+    id: 'two-line rows',
+    title: 'closed damaging rows: two lines, KO on line 1, nothing past the row; a long move name truncates first',
+    sizes: [...SIZE_STAR, [480, 316]],
+    run: async page => {
+      await setupCalc(page);
+      allOf((await rowShape(page)).map(text => [false, text]));
+      await page.value(attacker([longMove, 'Tackle', 'Fire Fang', 'Body Slam']));
+      await page.settle();
+      const long = await page.value(`(()=>{const r=${rowOf(longMove)},v=r.querySelector('.mv'),h=r.querySelector('.hp');return {cut:v.scrollWidth>v.clientWidth,hp:h.scrollWidth<=h.clientWidth+0.5,st:r.classList.contains('st')};})()`);
+      assert(!long.st, `${longMove} is a damaging row`);
+      if (page.width < 480) assert(long.cut, `${longMove} should truncate at ${page.width}`);
+      assert(long.hp, `${longMove}: min–max not clipped`);
+      allOf((await rowShape(page)).map(text => [false, text]));
+    },
+  },
+  {
+    id: 'edge rows',
+    title: 'HP chip + odds, H1 / ×n, Z on, immune, Protected, fainted: still two lines inside the row',
+    sizes: SIZE_SMALL,
+    run: async page => {
+      await setupCalc(page);
+      const failed = [];
+      const shape = async label => failed.push(...(await rowShape(page)).map(text => `${label}: ${text}`));
+      // HP chip + odds: Life Orb recoil beside Fire Fang's odds, a drain move; multi-hit: Bullet Seed's H1 / ×n.
+      await page.value(attacker(['Fire Fang', 'Giga Drain', 'Bullet Seed', 'Tackle'], 'Life Orb'));
+      await page.settle();
+      await shape('HP chip + odds');
+      if (D.M.includes('Bullet Seed')) assert(await page.value(`!!${rowOf('Bullet Seed')}?.querySelector('.rh')`), 'Bullet Seed has its hit buttons');
+      // Z on (Z profiles): the first damaging row's Z pressed.
+      if (await page.count('.dres:not(.na) .mr:not(.st) .rz')) {
+        await page.tap('.dres:not(.na) .mr:not(.st) .rz');
+        await shape('Z on');
+        await page.tap('.dres:not(.na) .mr:not(.st) .rz');
+      }
+      // Immune: the foe made part Ghost, Tackle does nothing.
+      await page.value(`(()=>{CALC.set('foe','fadd','Ghost');CALC.render();})()`);
+      await page.settle();
+      if (D.M.includes('Tackle')) assert.equal(await page.value(`${rowOf('Tackle')}?.querySelector('.hp').textContent.trim()`), 'No effect', 'Tackle into a Ghost');
+      await shape('immune');
+      await page.value(`(()=>{CALC.set('foe','fadd',undefined);CALC.render();})()`);
+      // Protected: the defender's Protect in Field.
+      await page.value(`document.querySelector('details.dfield').open=true`);
+      await page.settle();
+      const protect = await page.value(`[...document.querySelectorAll('[data-f]')].find(b=>/^Protect/.test(b.textContent.trim()))?.dataset.f??''`);
+      if (protect) {
+        await tapField(page, protect);
+        if (await page.value(`[...document.querySelectorAll('.dres .mr .hp')].some(h=>/Protected/.test(h.textContent))`)) await shape('Protected');
+        await tapField(page, protect);
+      }
+      await page.value(`document.querySelector('details.dfield').open=false`);
+      // Fainted.
+      await page.value(`(()=>{CALC.set('foe','hp',0);CALC.render();})()`);
+      await page.settle();
+      assert(await page.value(`[...document.querySelectorAll('.dres:not(.na) .mr .ko')].some(k=>k.textContent.trim()==='fainted')`), 'fainted KO text');
+      await shape('fainted');
+      allOf(failed.map(text => [false, text]));
+    },
+  },
+  {
+    id: 'short wide',
+    title: '480+ wide, under 392 tall: no trainer list, foe strip of six, trainer bar and battle state on one line, lands on the trainer bar, Field right under the rows',
+    sizes: SHORT,
+    run: async page => {
+      await setupCalc(page);
+      await page.value(`CALC.enter(${JSON.stringify(T.four.k)},0)`);
+      await page.settle();
+      await page.value('new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))');
+      const m = await page.value(`(()=>{const q=s=>document.querySelector(s),r=s=>q(s)?.getBoundingClientRect(),bar=r('.fbar'),fight=r('.dfight'),cells=[...document.querySelectorAll('.dfoe .dstrip button')].map(b=>b.getBoundingClientRect()),rows=[...document.querySelectorAll('.dres')].map(d=>[...d.querySelectorAll('.mr')].at(-1).getBoundingClientRect().bottom),field=r('details.dfield');return {short:document.body.classList.contains('calc-short'),fteam:q('.fteam')?getComputedStyle(q('.fteam')).display:'none',foe:getComputedStyle(q('.dfoe')).display,cells:cells.length,oneRow:cells.every(c=>Math.abs(c.top-cells[0].top)<1),barTop:bar.top,shareLine:Math.abs(bar.top-fight.top)<=4&&bar.right<=fight.left+1,gap:field.top-Math.max(...rows),sideways:document.documentElement.scrollWidth>innerWidth+1};})()`);
+      allOf([
+        [m.short, 'body.calc-short is set'],
+        [m.fteam === 'none', `trainer list shows (${m.fteam})`],
+        [m.foe !== 'none' && m.cells >= 1 && m.oneRow, `foe strip: ${m.foe}, ${m.cells} cells, one row ${m.oneRow}`],
+        [m.shareLine, 'trainer bar and battle-state row share a line'],
+        [Math.abs(m.barTop - 2) <= 2, `opening the calc lands on the trainer bar (at ${m.barTop}, want 2)`],
+        [m.gap >= 0 && m.gap <= 4, `Field ${m.gap} px under the rows, want at most 4`],
+        [!m.sideways, 'no sideways scroll'],
+      ]);
+      // A taller window leaves it; back under 392 tall it returns, but not while a calc input has focus.
+      const height = page.height;
+      await page.resize(page.width, 424);
+      assert.equal(await page.value(`document.body.classList.contains('calc-short')`), false, 'no short-wide at 424 tall');
+      await page.value(`document.querySelector('.cc [data-hp]').focus()`);
+      await page.resize(page.width, height);
+      assert.equal(await page.value(`document.body.classList.contains('calc-short')`), false, 'held while the HP box has focus');
+      await page.value(`document.activeElement.blur()`);
+      await page.resize(page.width, height + 1);
+      assert.equal(await page.value(`document.body.classList.contains('calc-short')`), true, 'short again once the box loses focus');
+    },
+  },
+  {
+    id: 'field wheel',
+    title: 'the wheel over Field\'s open box scrolls the page once the box is at its end',
+    sizes: [[260, 316], [480, 392]],
+    modes: ['normal'],
+    run: wheelOverField,
   },
 ];
 
