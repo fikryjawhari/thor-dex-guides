@@ -230,6 +230,13 @@ row's height (also the HP chips, which were 4 px taller). Moves with a Field / E
 also applies the move's other parts (Charge's SpD +1). Damaging moves get no new control: their guaranteed effects
 (Close Combat's drops, Nuzzle's paralysis, Knock Off, a 50 % effect under Serene Grace) apply with the damage
 endpoints, the custom Damage Apply and the damaging Use; the opened row says `After: …`. Chance effects never apply.
+Unsupported status moves use a small disabled **Not modelled** chip in the existing right slot. Their opened row
+shows `Not modelled: <reason>` as wrapping text, never a hover-only tooltip. A partly implemented move keeps its
+damage / effect / HP / Field control and puts the missing part's reason only in the opened row (U-turn: switching).
+Splash and other genuine battle no-ops show **No effect**, with the explanation in the opened row. The shared
+reason / no-op table is `tools/calc/move-coverage.json`; `effects_coverage.mjs --all` checks all six guides.
+Speed Swap's raw Speed is scratch battle state (`rs`), used in the card stats and engine and cleared by ↺;
+Rest uses the resolver's sleep checks, full healing and berry reactions rather than an unconditional HP-only tap.
 **Effect odds**: a damaging row's closed line shows its `MV.se` added effects after the KO text (`30% paralysis`,
 `10% burn, 10% flinch`, `100% target Atk −1`): the chances and the lower-case stage / status / flinch parts (recoil,
 drain and heal are the HP chips), as the user has them: Serene Grace / Rainbow double a chance (`DMG.secondaryChance`),
