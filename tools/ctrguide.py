@@ -1,9 +1,10 @@
 """Shared conversion, trainer and walkthrough helpers for the 3DS guides' source extracts."""
 
 import re
+import json
 from pathlib import Path
 from garc import mini, read_garc
-from moveprops import protect_flags
+from moveprops import effect_text, protect_flags
 from extractlib import fix, norm, report, slug
 
 
@@ -55,6 +56,87 @@ def read_move_records(archive):
     return records
 
 
+def move_metadata(record, fallback):
+    """Decode move-page fields from the game, using named stock rules only for unencoded mechanics."""
+    bits = int.from_bytes(record[-4:], 'little')
+    names = MOVE_FLAGS + (['dance'] if len(record) == 40 else [])
+    flags = [flag for bit, flag in enumerate(names) if bits & (1 << bit)]
+    target = MOVE_TARGETS[record[0x14]]
+    if target == 'normal' and 'triple-distance' in flags:
+        target = 'any'
+    flags = protect_flags(flags, target) + fallback.get('flags', [])
+    effects = []
+
+    def add(kind, chance=100, suffix='', **values):
+        effect = effect_text(dict(kind=kind, chance=chance, **values))
+        if suffix:
+            effect[1] += ' (' + suffix + ')'
+        if effect not in effects:
+            effects.append(effect)
+
+    damaging = record[2] != 0
+    inflict = int.from_bytes(record[8:10], 'little')
+    sequence = int.from_bytes(record[16:18], 'little')
+    status = {1: 'par', 2: 'slp', 3: 'frz', 4: 'brn', 5: 'psn'}.get(inflict)
+    if status:
+        if sequence in (33, 202):
+            status = 'tox'
+        add('status', record[10] or 100, status=status)
+    elif inflict == 6:
+        add('confusion', record[10] or 100)
+    if record[15]:
+        add('flinch', record[15])
+    if inflict == 8:
+        flags.append('binding')
+    if record[7] >> 4 > 1:
+        flags.append('multihit')
+
+    stats = {1: 'atk', 2: 'def', 3: 'spa', 4: 'spd', 5: 'spe', 6: 'acc', 7: 'eva'}
+    stage_groups = {}
+    for stat, amount, chance in zip(record[21:24], record[24:27], record[27:30]):
+        if not stat or not amount:
+            continue
+        amount = amount if amount < 128 else amount - 256
+        selected = ['atk', 'def', 'spa', 'spd', 'spe'] if stat == 8 else [stats[stat]]
+        stages = stage_groups.setdefault(chance or 100, {})
+        stages.update(dict.fromkeys(selected, amount))
+    who = 'user' if record[1] == 7 or target == 'self' else 'target'
+    for chance, stages in stage_groups.items():
+        add('stages', chance, who=who, stages=stages)
+
+    def fraction(percent):
+        return [1, 3] if percent == 33 else [percent, 100]
+
+    recovery = int.from_bytes(record[18:19], 'little', signed=True)
+    healing = int.from_bytes(record[19:20], 'little', signed=True)
+    if recovery:
+        kind = 'drain' if recovery > 0 else 'recoil'
+        flags.append(kind)
+        add(kind, fraction=fraction(abs(recovery)))
+    if healing < 0:
+        flags.append('recoil')
+        add('recoil', fraction=fraction(-healing), basis='maxhp')
+    elif healing > 0:
+        condition = fallback.get('healCondition', '')
+        add('heal', fraction=fraction(healing), suffix=condition)
+    for effect in fallback.get('effects', []):
+        effect = dict(effect)
+        scale = effect.pop('chanceScale', 1)
+        if effect.pop('recordChance', False):
+            effect['chance'] = round((record[10] or 100) * scale, 2)
+        add(**effect)
+    if fallback.get('crash'):
+        flags.append('crash')
+    if damaging and (fallback.get('secondary') or record[15] or status or inflict == 6 or
+                     record[1] == 6 and stage_groups or
+                     record[1] == 7 and any(amount > 0 for stages in stage_groups.values() for amount in stages.values())):
+        flags.append('secondary')
+    result = {'f': list(dict.fromkeys(flags)), 'tg': target}
+    if effects:
+        result['se'] = effects
+    return result
+
+
 def form_name(s):
     n, f = s['name'], s['formName']
     if s['id'] == 744 and s['form'] == 1:
@@ -69,7 +151,7 @@ def form_name(s):
 
 
 def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evolution_rows=None,
-              move_archive=None):
+              move_archive=None, move_fallback=None):
     """Populate dex tables and scratch mappings; callbacks supply local evolution rules and report output."""
     # Moves
     M = [m['name'] for m in hacked['moves']]
@@ -78,6 +160,7 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
     doc = dict(move_notes)
     MV = []
     records = read_move_records(move_archive) if move_archive else None
+    fallback = json.loads(Path(move_fallback).read_text(encoding='utf8'))['moves'] if move_fallback else {}
     for m in hacked['moves']:
         v = vm[m['id']]
         h = []
@@ -90,14 +173,7 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
         e = {'t': m['type'], 'c': m['cat'], 'bp': m['bp'] or None, 'ac': m['acc'] if m['acc'] and m['acc'] <= 100 else None,
              'pp': m['pp'], 'pr': m['pr'], 'd': fix(m['desc']), 'f': m['flags'], 'h': h}
         if records is not None:
-            record = records[m['id']]
-            bits = int.from_bytes(record[-4:], 'little')
-            names = MOVE_FLAGS + (['dance'] if len(record) == 40 else [])
-            flags = [flag for bit, flag in enumerate(names) if bits & (1 << bit)]
-            target = MOVE_TARGETS[record[0x14]]
-            if target == 'normal' and 'triple-distance' in flags:
-                target = 'any'
-            e.update(f=protect_flags(flags, target), tg=target)
+            e.update(move_metadata(records[m['id']], fallback.get(m['name'], {})))
         if m['crit']:
             e['cr'] = m['crit']    # crit stage (the damage calc); 6 = always a crit
         if norm(m['name']) in doc:

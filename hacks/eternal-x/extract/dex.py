@@ -48,4 +48,5 @@ def build(data):
     build_dex(data, load('dex-rebalanced.json'), load('dex-vanilla.json'),
               move_notes=parse_move_doc(text('Move Changes')), evolution_text=evo_text,
               evolution_rows=evolution_rows, report=report,
-              move_archive=H.src + '/romfs-dl/x/Eternal X 2.67/Game Files/Rebalanced version/luma/titles/0004000000055D00/romfs/a/2/1/2')
+              move_archive=H.src + '/romfs-dl/x/Eternal X 2.67/Game Files/Rebalanced version/luma/titles/0004000000055D00/romfs/a/2/1/2',
+              move_fallback=H.dir + '/extract/move_fallback.json')
