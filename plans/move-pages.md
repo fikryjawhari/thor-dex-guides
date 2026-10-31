@@ -125,3 +125,9 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
   only) none. For unit 4: Hardlove's code gives Zippy Zap no Sheer Force boost (the agent's finding; check the calc),
   BB2R's `over.moves` punch flags on Needle Arm / Rock Smash now repeat MV.f (optional cleanup).
   Next: unit 4 (calc fight-only type / ability / item changes + effect odds), then 4b, 5.
+- 2026-10-31: unit 4 built on `worktree-move-pages-calc` (unmerged): FIGHT `ft` / `fadd` / `fa` / `fi` (names) set by
+  the resolver's type / ability / trick / bestow / steal kinds and Mummy / Lingering Aroma / Wandering Spirit, with
+  Showdown's fail rules; Edit → Fight… (one searchable sheet) for any Pokémon; card chips (tap = clear); ↺ / Reset fight
+  clear them. Effect odds on the closed damaging row (one layout, odds shrink first), all in the open row. Zippy Zap:
+  the Hardlove calc gives it no Sheer Force boost already (no change). Conversion 2 only logs (random). Scenario
+  `calc-fight-state`. Next: merge it into `worktree-move-pages`, then 4b, 5.

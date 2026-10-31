@@ -38,6 +38,7 @@ Import scenarios inject `template/calc/readers/test.js`; real reader checks use 
 | `calc-field.mjs` | Profile-driven controls, engine inputs and persistence after profile edits. |
 | `calc-hidden.mjs` | As-built visibility and entry points with and without `cfg.calc`. |
 | `calc-auto.mjs` | Scratch/set/fight lifetimes, entry effects, trainer changes, Reset fight and migration. |
+| `calc-fight-state.mjs` | This fight's types / ability / item: Worry Seed then ↺, Soak then Reset fight, Trick swaps both, Edit → Fight… + chip clear (reload keeps it), effect odds on the rows with no sideways scroll. |
 | `calc-doubles.mjs` | Automatic trainer format, manual overrides, reset and non-doubles tags. |
 | `calc-field-states.mjs` | Global groups, sports/splits/auras, hazards and re-entry. |
 | `calc-moves.mjs` | Default power, hit restrictions, ally effects and HP-move actions. |

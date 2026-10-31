@@ -385,8 +385,8 @@ the source is fetched into `.tmp/showdown`, `--check` regenerates and compares, 
 moves with no record). Per move `[[first generation, record], ...]`; `build.mjs` compiles it into the engine
 (`catalog.fx`). Record keys: `b` stages on `tg` (`s` user / `o` target), `st` major status, `v` volatile, `sb` the
 user's own stages, `sec` secondaries `{c, b, st, v, sb, k}`, `k` hand kinds (Showdown functions: haze, clear, copy,
-swap, invert, maxatk, curse, cure, shift, knock, steal, eat, burnitem, trick, drowsy, stockpile, growth, venom, ko3,
-memento, sap, ability, type, random; `fn` = an unmapped function, skipped), `ti` the status move checks type immunity,
+swap, invert, maxatk, curse, cure, shift, knock, steal, eat, burnitem, trick, bestow, drowsy, stockpile, growth, venom,
+ko3, memento, sap, ability, type, random; `fn` = an unmapped function, skipped), `ti` the status move checks type immunity,
 `fl` powder / sound / bullet / reflectable / bypasssub / contact. A `self` / `selfBoost` with a `chance` (Diamond
 Storm's 50 % Def +2 from Gen 7) becomes a `sec` self part, never a sure `sb`. One correction: Rapid Spin's Speed +1 from Gen 8
 (Showdown's gen 4-7 data keeps it). **Per hack**: `hacks/<hack>/calc_effects.json` `{source, notes, moves, rules,
@@ -409,6 +409,23 @@ Persim (confusion), Mental Herb, White Herb (any lowered stage), Eject Pack (Gen
 volatiles the calc has no state for are logged, not stored (an accuracy / evasion drop still counts as lowered
 for Defiant, Competitive, White Herb and Eject Pack); a volatile that has a Field / Edit switch (Leech Seed,
 Focus Energy, Charge, ...) is the switch's.
+**Fight changes** (the page's FIGHT `ft` / `fadd` / `fa` / `fi`, by guide name; the set's `ty` / `tya` in, the patch
+keys out): kinds `type`, `ability`, `trick`, `bestow`, `steal` and contact abilities set them through the action
+state's `setTypes(base, added)`, `setAbility(name)`, `setItem(name)`, chosen by the record's Showdown id (`n`).
+Types (Showdown setType / addType): Soak, Magic Powder (fail: already that type; Arceus / Silvally Gen 5+, Multitype
+Gen 4), Camouflage (Gen 4 Normal, Gen 5 Ground, Gen 6+ by terrain), Conversion (Gen 6+ the first move's type; Gen 4-5
+the first move of a new type, logged as random), Reflect Type, Trick-or-Treat / Forest's Curse (an added type; fail:
+already has it), Burn Up / Double Shock (after the hit, the user loses Fire / Electric, `???` if none left);
+Conversion 2 only logs. Abilities (Showdown flags at the pin: `CANT_SUPPRESS`, `FAIL_COPY` = failroleplay / noentrain,
+`FAIL_SWAP`; setAbility fails on a cantsuppress holder and on Ability Shield, Gen 9): Worry Seed (fail Truant /
+Insomnia; wakes a sleeper), Simple Beam (fail Simple / Truant), Entrainment (fail same ability, Truant, the user's
+failroleplay), Role Play / Doodle (fail same, the target's failroleplay), Skill Swap (fail either failskillswap; same
+ability Gen 4-5), Gastro Acid (fail no ability) and Core Enforcer (`fa` `''`, logged as only if it moved first),
+Mummy (Gen 5+) / Lingering Aroma (Gen 9) pass to a contact attacker, Wandering Spirit (Gen 8+) swaps (`hit.contact`:
+`makesContact`, Long Reach / Protective Pads / Punching Glove). Items: Trick / Switcheroo swap both (fail Sticky Hold
+unless Mold Breaker, no items, a kept item: `KEPT_ITEM` Z-Crystals, Mega Stones, Primal Orbs, form items on their
+species), Bestow (fail the target holds one, the user none, a kept item), Thief / Covet give the user the item.
+Knock Off, Incinerate, Bug Bite / Pluck, Corrosive Gas and the giver of Bestow keep `used` (Unburden reads it).
 
 API: `effect(atk, def, slot, field)` (status moves) returns the `hit`-shaped patches plus `label` / `text` / `cls`,
 `parts` and `fails` (the reason nothing changes), null when the move has nothing beyond its HP part or its switch

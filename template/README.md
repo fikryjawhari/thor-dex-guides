@@ -230,9 +230,26 @@ row's height (also the HP chips, which were 4 px taller). Moves with a Field / E
 also applies the move's other parts (Charge's SpD +1). Damaging moves get no new control: their guaranteed effects
 (Close Combat's drops, Nuzzle's paralysis, Knock Off, a 50 % effect under Serene Grace) apply with the damage
 endpoints, the custom Damage Apply and the damaging Use; the opened row says `After: …`. Chance effects never apply.
-Not stored or not tracked (logged): accuracy / evasion, confusion and other volatiles, ability / type changes and item
-swaps (set them in Edit), switching. Mist is a side state (`atkMist` / `defMist`, beside Safeguard). No new saved
-state otherwise: stages, status, `used` and HP are the existing per-Pokémon battle state. Scenario: `calc-effects`.
+**Effect odds**: a damaging row's closed line shows its `MV.se` added effects after the KO text (`30% paralysis`,
+`10% burn, 10% flinch`, `100% target Atk −1`): the chances and the lower-case stage / status / flinch parts (recoil,
+drain and heal are the HP chips), as the user has them: Serene Grace / Rainbow double a chance (`DMG.secondaryChance`),
+Sheer Force (Gen 5+) removes the secondaries but not the user's own 100 % drops. One layout at every width: the odds
+shrink first and end in `…` (the % and KO text stay on one line); the opened row lists them all (`Effects: …`).
+Text only. **Fight changes**: moves that change a type, ability or item do it for this fight only (FIGHT fields
+`ft` types, `fadd` an added type, `fa` ability (`''` suppressed), `fi` item (`''` none); all names): Soak /
+Magic Powder / Camouflage / Conversion / Reflect Type / Burn Up / Double Shock, Trick-or-Treat / Forest's Curse (the
+added type replaces the last one), Worry Seed / Simple Beam / Entrainment / Role Play / Doodle / Skill Swap (both),
+Gastro Acid / Core Enforcer (suppressed), Trick / Switcheroo (both), Bestow, Thief / Covet (the user gets the item;
+the target's loss stays `used` like Knock Off / Incinerate / Bug Bite), Mummy / Lingering Aroma / Wandering Spirit on
+a contact hit. The fail reasons are the resolver's (`tools/calc/README.md` → Move effects). Conversion 2 (random)
+only logs. By hand, for any Pokémon: **Fight…** beside the battle state in Edit opens one searchable sheet (types
+`Becomes` / `+Adds`, abilities with No ability, items with No item). The card shows each change as a chip under the
+HP bar (`Water`, `+Ghost`, `Insomnia`, `No ability`, `Item: Leftovers`, `No item`); a tap clears that one. ↺ and
+Reset fight clear them all; Edit keeps showing the set's ability and item, and Save never stores them. Saved state:
+names; a type or ability the guide lacks drops on load (`fightIn`). Not stored or not tracked (logged): accuracy /
+evasion, confusion and other volatiles, switching. Mist is a side state (`atkMist` / `defMist`, beside Safeguard).
+Stages, status, `used` and HP are the existing per-Pokémon battle state. Scenarios: `calc-effects`,
+`calc-fight-state`.
 **Field**: Singles/Doubles, Weather and Terrain are in the fight bar; Field below it (layout: Field layout). Stored `atk*` means Player and `def*` means Foe; the page remaps inputs for foe attacks. Old
 attacker-relative state migrates once, using its saved direction. Focus Energy is offered on both sides in every
 profile. Weather / terrain layers are manual (this fight), then the most recent entering ability setter, then
