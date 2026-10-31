@@ -1,6 +1,6 @@
 // Walkthrough missions (template/README.md → What the data switches on: missions): a stop.s entry that is an object is
 // a bordered card in the stop's checklist, closed by default, with its own steps, saved by mission slug and step key.
-// Skips on guides with no missions. Checks (plans/unbound-missions.md → Checks):
+// Skips on guides with no missions. Checks (template/README.md → Walkthrough missions):
 //   m1 card: open / close from the header (saved), tick / untick (mission, checklist and split counts), the tick that
 //      completes a mission closes it (header focused, under the pinned headers), reopened it stays open, untick; reload
 //      keeps it all; 44 px header and rows; every viewer size, normal and dvkb.

@@ -554,7 +554,7 @@ content-visibility-skipped ancestors first.
 **Rail tabs** (2026-10-31): each tab keeps its own page and place for the session (`TABS` in dex.js: route, anchor,
 block sizes, saved when one of its routes is left), so scrolling one tab never moves another and an open Pokémon page
 stays open. A tap on the tab you're on clears the search and goes to the top; on a Pokémon / move / ability page it
-first goes to the list at its place (like ‹ All Pokémon), then the top. Back / forward keep their own per-entry restore.
+first goes to the list at its place, then the top. Back / forward keep their own per-entry restore.
 
 **Dex links** (2026-10-31): every Pokémon name or sprite opens its dex page `#/p/<id>` as a plain link (`plink`,
 `sprl`), so Back and the rail's tab memory need nothing more; the dex list keeps its own place. Not links, because the

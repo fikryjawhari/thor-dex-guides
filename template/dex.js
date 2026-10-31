@@ -157,7 +157,7 @@ document.getElementById('t-s').addEventListener('click',e=>{e.preventDefault();S
 // Each rail tab keeps its own page and place (TABS: route, anchor, block sizes; saved in the hashchange handler when a
 // route of that tab is left, kept for the session). A tap on another tab goes back to that tab's page and place (RAILGO);
 // a tap on the tab you're on clears the search and goes to the top, except on a Pokémon / move / ability page, where
-// it first goes to the Pokémon list at its place (like ‹ All Pokémon).
+// it first goes to the Pokémon list at its place.
 const tabOf=h=>{const v=(h||'#/').slice(2).split('/')[0];return v===''||v==='p'||v==='m'||v==='a'?'p':v==='locs'||v==='l'?'l':v==='trainers'||v==='tr'?'t':v==='items'?'i':v==='walk'?'w':v==='calc'?'c':null;};
 const TABS={};let RAILGO=null;
 document.getElementById('rail').addEventListener('click',e=>{const a=e.target.closest('a[href^="#/"]');if(!a)return;e.preventDefault();

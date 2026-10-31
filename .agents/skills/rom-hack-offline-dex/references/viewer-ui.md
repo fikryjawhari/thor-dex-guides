@@ -34,9 +34,12 @@ The guide loads at `https://<id>.appassets.androidplatform.net/guides/<id>/index
   - Tags and type badges are `inline-block` with `white-space:nowrap` (an inline tag glued to a long name made the page 271 px wide; the WebView then zoomed to 0.96 and stayed zoomed after maximising).
   - List rows put the types under the name when narrow, so badges never cover names.
   - Encounter tables (`table.enc`) and "Where to find" (`table.wh`) restack into a grid below 420 px.
-  - The Pokémon page hero shrinks; selects can shrink (`min-width:0`).
+  - The Pokémon page's top card puts the name across the top under 340 px; names never break inside a word (sizes fit
+    the widest, ~6.7 em); its moves table uses type and category letters under 380 px. Selects can shrink (`min-width:0`).
   - Trainer cards: below 500 px a strip of up to six sprite buttons above one Pokémon; from 500 px every Pokémon as a block, three across at most.
-- Sprites 24 px in closed trainer rows, 30 px in trainer cards, 32 px in walkthrough minis, 40 px in list rows, 112 px on the Pokémon page. `image-rendering: pixelated`.
+- Sprites 24 px in closed trainer rows, 30 px in trainer cards, 32 px in walkthrough minis, 40 px in list rows, 112 px on the Pokémon page (88 under 340 px).
+- The Pokémon page's name bar (`#pbar`) is the one other fixed element: beside the rail, 40 px, slides in once the top
+  card is off screen; ‹ › and the forms menu keep the row under it in place (`template/README.md` → Pokémon page). `image-rendering: pixelated`.
 
 ## Viewer detection
 
