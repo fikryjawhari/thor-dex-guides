@@ -332,7 +332,7 @@ function bindCalc(p){const g=id=>app.querySelector(id);if(!g('#c-l'))return;
  app.querySelectorAll('.calc input,.calc select,.calc .nv').forEach(e=>e.addEventListener('input',upd));upd();}
 // ===== MOVE PAGE
 const MOVE_PROPS={contact:'Makes contact',nocontact:'No contact',punch:'Punching move',bite:'Biting move',slicing:'Slicing move',sound:'Sound move',
- bullet:'Ball / bomb move',pulse:'Pulse move',powder:'Powder move',wind:'Wind move',dance:'Dance move',heal:'Healing move',
+ bullet:'Ball / bomb move',pulse:'Pulse move',powder:'Powder move',wind:'Wind move',dance:'Dance move',heal:'Healing move',kick:'Kicking move',
  secondary:'Has an added effect',recoil:'Recoil',drain:'Drains HP',multihit:'Hits more than once',charge:'Two turns',recharge:'User must recharge',
  binding:'Traps and binds',crash:'Crash damage on a miss',noprotect:'Goes through Protect',bypasssub:'Hits through Substitute',gravity:'Unusable under Gravity',defrost:'Thaws the user'};
 const moveProps=move=>{const flags=move.f||[];return [...(move.c&&move.c!=='Status'&&!flags.includes('contact')?['nocontact']:[]),...Object.keys(MOVE_PROPS).filter(prop=>flags.includes(prop))];};

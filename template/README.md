@@ -572,7 +572,8 @@ Scenario: `tools/scenarios/dex-page.mjs`.
    and far allies. Solid red cells are all hit; dashed red cells are choices (random / counter targets use the same
    possible-target outline). The accompanying line says which. Missing target data shows no invented target.
 2. Properties (`MV.f`) are plain linked lines, not raw flags, pills, exception badges or tooltip-only explanations.
-   Damaging moves always say Makes contact / No contact; the groups and exceptions appear only when present.
+   Damaging moves always say Makes contact / No contact; the groups and exceptions appear only when present
+   (including EI's `kick`, Kicking move).
    `reflectable` appears through Magic Bounce in Affected by, not as another property. `moveProps` and
    `moveProperties` are shared helpers for other pages. Added effects (`MV.se`, `[chance, text]` pairs) follow the
    properties verbatim with their odds, including guaranteed effects. Capitalised guaranteed recoil / drain / heal
