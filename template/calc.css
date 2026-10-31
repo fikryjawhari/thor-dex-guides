@@ -292,7 +292,7 @@ details.dfield>summary{min-height:30px;font-size:12px;padding:0 8px}
 .dstrip.fs button{min-height:26px;font-size:9px}.dstrip.fs button .spr{width:min(16px,100%)}
 .mr.st .mm{min-height:26px}
 
-.dside.mg .dstrip{max-height:136px;overflow-y:auto;overscroll-behavior:contain}
+.dside.mg .dstrip{max-height:136px;overflow-y:auto}
 @media (min-width:480px){
  main#app{height:100vh;display:flex;flex-direction:column;padding-bottom:4px;box-sizing:border-box;gap:4px!important}
  .top{flex:1 1 auto;min-height:76px;align-items:stretch;grid-template-rows:minmax(0,1fr)}
@@ -452,7 +452,8 @@ body.calc-route .cc .l1 .dmonstate input{width:14px;height:14px;margin:0;accent-
 .dfsw button[aria-pressed=true]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 .dfside section{min-width:0;display:flex;flex-direction:column}.dfside section:not(.on){display:none}
 .dfside section>.dtg:empty{display:none}
-body.calc-route .dfb{box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;gap:3px}
+/* Field and the box grid scroll inside but pass the wheel / drag on to the page at their ends (no overscroll-behavior:contain). */
+body.calc-route .dfb{box-sizing:border-box;overflow-y:auto;gap:3px}
 body.calc-route .dfb>*{flex-shrink:0}
 details.dfield>summary .mut{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dfgroup{margin-top:1px;border-top:1px solid var(--line)}
@@ -484,7 +485,7 @@ body.calc-route .mr .rcol .dcategory{font-size:10px;padding:0}
 .dturn.hu.dn{color:#ff7b6b}
 /* Move effects: a status move's button that would fail now (the reason in its title; a tap logs it). */
 body.calc-route .dturn.dfx.na{color:var(--mut);font-weight:400}
-body.calc-route .dnotmodelled{font-family:inherit;font-size:9px;line-height:14px;white-space:nowrap;border:1px solid var(--mut);border-radius:4px;padding:1px 4px;color:var(--mut);background:transparent;opacity:1}
+body.calc-route .dnotmodelled{font-family:inherit;font-size:9px;line-height:13px;white-space:nowrap;border:1px solid var(--mut);border-radius:4px;padding:0 4px;color:var(--mut);background:transparent;opacity:1}
 body.calc-route .dnmreason{font-size:11px;line-height:1.4;color:var(--mut);white-space:normal;overflow-wrap:anywhere;margin:4px 0}
 .dstock{display:flex;align-items:center;gap:6px;font-size:11px}.dstock select{width:44px}
 .hx{display:flex;gap:6px;align-items:end;flex-wrap:wrap}.hx label{display:flex;flex-direction:column;font-size:11px}
@@ -572,8 +573,8 @@ body.calc-route .dres .mr span.hu{height:auto;min-height:0;line-height:1.15}
 body.calc-route .dres .mr .mv{line-height:1.2;padding-bottom:0}
 body.calc-route .dres .mr .mm,body.calc-route .dres .mr.st .mm,body.calc-route .dres .mr.em .mm{min-height:0;padding:1px 5px}
 body.calc-route .dres .mr.em .mm{min-height:33px;display:flex;align-items:center}
-body.calc-route .dfight select,body.calc-route .dfight .dformat button,body.calc-route .dfight .dfreset{height:max(22px,1.4em);min-height:22px;line-height:1.15}
-body.calc-route .dfight .dfreset{height:max(22px,1.29em)}
+body.calc-route .dfight select,body.calc-route .dfight .dformat button,body.calc-route .dfight .dfreset{height:max(20px,1.4em);min-height:20px;line-height:1.15}
+body.calc-route .dfight .dfreset{height:max(20px,1.29em)}
 body.calc-route .cc .dend>.dturn,body.calc-route .cc .dend>[data-tox]{box-sizing:border-box;height:auto;min-height:18px;padding:0 3px;line-height:1.4545;font-size:11px;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center}
 body.calc-route .cc .dend>[data-tox]{width:18px;padding:0;text-align:center}
 body.calc-route .cc .dend>.dtoxl{display:inline-flex;align-items:center;min-height:18px;line-height:1}
@@ -709,8 +710,54 @@ body.calc-route .dres .mr.st .hp .dturn.hu{height:auto;min-height:15px;line-heig
 .cc>.dfch{display:flex;flex-wrap:wrap;align-items:flex-start;gap:2px;min-width:0}
 .cc .dfc{max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 9.5px/14px system-ui;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--acc);cursor:pointer;touch-action:manipulation}
 body.calc-route .cc>.dfch{order:12;flex:none;width:100%}
-/* Effect odds (calc.js oddsOf) on the closed row beside the KO text: as much as fits, then …; the open row lists all. */
+/* Effect odds (calc.js oddsOf) on the closed row's line 2 after the range: as much as fits, then …; the open row lists all. */
 .mr .r2:has(.dodds)>span:not(.dodds){white-space:nowrap}
 .mr .dodds{flex:0 100 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--mut);font-weight:400}
 .mr .dodds2{color:var(--mut)}
 .mr .dkof{font-weight:600}
+/* Closed damaging row, two lines (template/README.md → Calc page): line 1 name … KO · min–max; line 2 Z · HP chip ·
+   % range · odds … controls. .r1 / .r2 are display:contents inside a wrapping .mm; order moves the KO onto line 1
+   and .mm::after breaks the line. Status rows and empty slots keep name | right slot. */
+body.calc-route .dres .mr:not(.st):not(.em)>.mm{display:flex;flex-wrap:wrap;align-items:center;column-gap:3px;row-gap:0}
+body.calc-route .dres .mr:not(.st):not(.em) .r1,body.calc-route .dres .mr:not(.st):not(.em) .r2{display:contents}
+body.calc-route .dres .mr:not(.st):not(.em) .mv{order:0;flex:1 1 0;min-width:0}
+body.calc-route .dres .mr:not(.st):not(.em) .hp{order:2;flex:none}
+body.calc-route .dres .mr:not(.st):not(.em)>.mm::after{content:'';order:3;flex:0 0 100%;height:0}
+body.calc-route .dres .mr:not(.st):not(.em) .r2>*{order:5;flex:none;font-size:9px}
+body.calc-route .dres .mr:not(.st):not(.em) .r2>span{line-height:13px}
+body.calc-route .dres .mr:not(.st):not(.em) .r2>.rz{order:4}
+body.calc-route .dres .mr:not(.st):not(.em) .r2>span:not(.ko):not(.dodds):not(.dmovecontrols):not(.dturn){order:6;font-size:10px;font-weight:700;color:var(--fg);white-space:nowrap}
+body.calc-route .dres .mr:not(.st):not(.em) .r2>.ko{order:1;flex:0 1 auto;min-width:0;font-size:10px;line-height:15px}
+body.calc-route .dres .mr:not(.st):not(.em) .r2>.dodds{order:7;flex:1 1 0;min-width:0}
+body.calc-route .dres .mr:not(.st):not(.em) .r2>.dmovecontrols{order:8;margin-left:auto}
+body.calc-route .dres .mr:not(.st):not(.em) .dd{order:10;flex:0 0 100%;min-width:0}
+body.calc-route .dres.zm .mr:not(.st):not(.em) .r2>.rz{margin-right:3px}
+/* status rows and empty slots: the same 32 px as a two-line row, so side-by-side columns line up */
+body.calc-route .dres .mr.st .r1{min-height:15px}
+body.calc-route .dres .mr.em .mm{min-height:32px}
+/* This fight's changes: Δn in the card (narrow: first on the third line; wide: in the HP line); tap opens the chips under the card. */
+body.calc-route .cc:not(.fopen)>.dfch{display:none}
+.cc .dfxn{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:18px;padding:0 4px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--acc);font:700 11px/1 system-ui;cursor:pointer;touch-action:manipulation;flex:none}
+.cc.fopen .dfxn{background:var(--acc);border-color:var(--acc);color:#111}
+@media(max-width:479.98px){body.calc-route .cc .dfxn{order:8}}
+@media(min-width:480px){body.calc-route .cc .cl .dfxn{min-height:20px}}
+/* Short-wide page (calc.js shortWide: 480+ wide, under 392 tall): the narrow page's top (box above the fold, trainer
+   bar, team strips) with the wide match below; trainer bar and battle-state row share a line, team and foe strips are
+   one row of six each. */
+@media(min-width:480px){
+ body.calc-route.calc-short .fit,body.calc-route.calc-short .fit:not(:has(.ban)){grid-template-areas:"ban ban" "box box" "tside fight" "team foe" "cm cf" "mv mf";grid-template-rows:none;align-content:start;gap:2px}
+ body.calc-route.calc-short .fit:not(:has(.ban)){grid-template-areas:"box box" "tside fight" "team foe" "cm cf" "mv mf"}
+ body.calc-route.calc-short .dbox{display:contents}
+ body.calc-route.calc-short .dbox>.mg{grid-area:box;height:136px;box-sizing:border-box;display:flex;flex-direction:column;padding:2px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+ body.calc-route.calc-short .dbox>.mg .tools{flex:none}
+ body.calc-route.calc-short .dbox>.mg .dstrip{flex:1 1 auto;min-height:0;height:0;overflow-y:auto}
+ body.calc-route.calc-short .top>.dtrainer{grid-area:tside;align-self:stretch;background:none;border:0;padding:0;min-height:0}
+ body.calc-route.calc-short .dtrainer .fteam{display:none}
+ body.calc-route.calc-short .dfight{grid-area:fight;align-self:stretch}
+ body.calc-route.calc-short .dteam{grid-area:team;margin:0;padding:2px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+ body.calc-route.calc-short .dfoe{display:block;grid-area:foe;padding:2px}
+ body.calc-route.calc-short .dteamrow,body.calc-route.calc-short .dfoe .dstrip{grid-template-columns:repeat(6,minmax(0,1fr));gap:2px}
+ body.calc-route.calc-short .dteamrow button,body.calc-route.calc-short .dfoe .dstrip button{height:24px;min-height:24px;padding:0}
+ body.calc-route.calc-short .dside.dteam .dstrip .spr,body.calc-route.calc-short .dfoe .dstrip .spr{width:22px;height:22px}
+ body.calc-route.calc-short .fit,body.calc-route.calc-short .fit:has(.ed){min-height:0}
+}

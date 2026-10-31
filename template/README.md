@@ -123,8 +123,8 @@ No condition labels or category controls appear in profiles that do not declare 
 **Both teams in the first frame:** at every viewer size the first frame shows my team, the
 foe's team, both cards, the attacker's four moves (wide: both lists) and the fight bar at once. Both sprite grids keep
 six columns. **Narrow (< 480):** box (unchanged), then the trainer bar (22 px, no panel border), the fight bar (S / D,
-weather, terrain, ↺; 22 px, its buttons too: accepted below the 26 px tap size), my team (3 × 2) facing the foe strip
-(3 × 2), the two cards side by side, the moves (closed rows 33 px). The first frame is the page scrolled to the trainer
+weather, terrain, ↺; 20 px, its buttons too: accepted below the 26 px tap size; 22 until 2026-10-31), my team (3 × 2)
+facing the foe strip (3 × 2), the two cards side by side, the moves (closed rows 32 px, two lines: Move rows). The first frame is the page scrolled to the trainer
 bar (`openMatch`). **Card** (narrow, both sides; class `named`): line 0 the name, M, the ability boxes and Speed (no label) at the
 right, the name truncating as far as needed; line 1 ↺, HP box, `/max`, ✎; the HP bar under it; line 2 (only when it
 has something) the battle-state tag (Dig, Fly, ...), Aura and the berry chip (or, while offered, the hazard chip in its
@@ -138,6 +138,27 @@ column = the trainer panel, whose preview (two-line rows, 25 px, all six always 
 foe) is the foe's team (no strip); the cards (named, ~48 px) and both move lists pinned to the bottom of the window.
 Jump arrows (`CALC.stops()`): top, the first frame (trainer bar − 2, narrow), the fourth move's bottom when an open row
 or editor pushes it ≥ 24 px past that, and Field (always, clamped); stops within 24 px merge.
+Field's open box (capped to the window by `fitToggles`) and the box grid scroll inside but pass the wheel / drag on
+to the page at their ends (no `overscroll-behavior:contain`: with it the mouse wheel over Field never moved the page).
+**Short-wide (480+ wide and under 392 tall,** e.g. 480 × 316, 537 × 360): the narrow page's top with the wide match.
+Box (`.mg`, 136 px, the grid scrolls inside) above the fold, then the trainer bar and the battle-state row sharing
+one line, my team and the foe strip one row of six each (the narrow cells), then the wide cards, editors and two move
+columns; no blank band above Field. Opening the calc scrolls to the trainer bar (as far as the page goes: at 480 × 316
+the box's bottom still shows above it) and the rail has the narrow stops.
+`shortWide()` sets `body.calc-short` on load and resize, not a media query, and leaves it alone while a calc input or
+select has focus (a phone keyboard resizes the window); the page-top and scrolling tests (`stops`, `openMatch`, drag
+auto-scroll: `narrowTop()`) treat it as narrow, the card and editor tests (`fitCards`, `eopen`, the editors' resize
+handler) stay width-only. At 392 tall and up nothing changes (480 × 392 keeps the box beside the trainer list and fits
+four rows). Rejected (prototype, 2026-10-31): the full wide page at these sizes.
+**Move rows**: a closed damaging row is two lines, 32 px. Line 1: type dot + move name (shrinks first, `…`), the KO
+text (`.ko`, 10 px, its colour; shrinks second), the min–max buttons (`.hp`, never shrink) at the right. Line 2: Z,
+the HP / miss chip, the % range (10 px bold), the effect odds (grey, the rest of the line, `…`), the move controls
+(H1 / ×n, category, state, toggles, C) at the right. Built in CSS only: `.mm` is a wrapping flex row, `.r1` / `.r2`
+are `display:contents`, `order` puts the KO between the name and `.hp`, `.mm::after` breaks the line. Status rows
+and empty slots keep name | right slot (Not modelled chip, Z then the slot in Z profiles) at the same 32 px, so
+side-by-side columns line up; the opened row (`.dd`) follows line 2 at full width. The user reads the odds as "there
+is an effect": cut odds are fine, the open row lists them all. Rejected (prototype): three lines (odds alone on line
+3, every slot 41 px so the columns line up) and the earlier rows (range, KO and odds sharing line 2).
 **My team row**: `team: [{src, pid}]` (≤ 6, dense) in `cfg.ls.dmg`, resolved by pid (imported: party then boxes;
 custom: `ST.custom`); entries that no longer resolve drop out. Imports never fill or change it (the user): it is built
 by drag and drop only. Tap a team cell = send it in (as a box tap). Pointer-event drag (HTML5 drag doesn't fire on
@@ -237,11 +258,11 @@ Splash and other genuine battle no-ops show **No effect**, with the explanation 
 reason / no-op table is `tools/calc/move-coverage.json`; `effects_coverage.mjs --all` checks all six guides.
 Speed Swap's raw Speed is scratch battle state (`rs`), used in the card stats and engine and cleared by ↺;
 Rest uses the resolver's sleep checks, full healing and berry reactions rather than an unconditional HP-only tap.
-**Effect odds**: a damaging row's closed line shows its `MV.se` added effects after the KO text (`30% paralysis`,
+**Effect odds**: a damaging row's closed line 2 shows its `MV.se` added effects after the range (`30% paralysis`,
 `10% burn, 10% flinch`, `100% target Atk −1`): the chances and the lower-case stage / status / flinch parts (recoil,
 drain and heal are the HP chips), as the user has them: Serene Grace / Rainbow double a chance (`DMG.secondaryChance`),
 Sheer Force (Gen 5+) removes the secondaries but not the user's own 100 % drops. One layout at every width: the odds
-shrink first and end in `…` (the % and KO text stay on one line); the opened row lists them all (`Effects: …`).
+shrink first and end in `…` (the range and controls stay whole); the opened row lists them all (`Effects: …`).
 **KO chance**: the closed row's KO text (`2HKO 43%`) can be cut off at 260 px, so the opened row always starts with
 it in full (`43.2% chance to 2HKO`, `Guaranteed OHKO`, `No KO in 4 hits`; none when immune or fainted). Not a
 `title`: no tooltip shows on Android / the Thor.
@@ -253,8 +274,12 @@ Gastro Acid / Core Enforcer (suppressed), Trick / Switcheroo (both), Bestow, Thi
 the target's loss stays `used` like Knock Off / Incinerate / Bug Bite), Mummy / Lingering Aroma / Wandering Spirit on
 a contact hit. The fail reasons are the resolver's (`tools/calc/README.md` → Move effects). Conversion 2 (random)
 only logs. By hand, for any Pokémon: **Fight…** beside the battle state in Edit opens one searchable sheet (types
-`Becomes` / `+Adds`, abilities with No ability, items with No item). The card shows each change as a chip under the
-HP bar (`Water`, `+Ghost`, `Insomnia`, `No ability`, `Item: Leftovers`, `No item`); a tap clears that one. ↺ and
+`Becomes` / `+Adds`, abilities with No ability, items with No item). The card shows **Δn** (n changes; narrow: first
+on the card's third line, before the battle state / Aura / berry; wide: in the HP line after `/max`); a tap opens its
+chips under the card (`Water`, `+Ghost`, `Insomnia`, `No ability`, `Item: Leftovers`, `No item`; Δn filled,
+`aria-expanded`), again closes them; a chip tap clears that one, and at 0 the button and the row go. Open is per side in
+memory (`FXOPEN`: the side's key), closed on load, kept across re-renders, shut when n is 0 or the side's Pokémon
+changes. Rejected (prototype): the chips always on the card (as before); no sheet or new screen for them. ↺ and
 Reset fight clear them all; Edit keeps showing the set's ability and item, and Save never stores them. Saved state:
 names; a type or ability the guide lacks drops on load (`fightIn`). Not stored or not tracked (logged): accuracy /
 evasion, confusion and other volatiles, switching. Mist is a side state (`atkMist` / `defMist`, beside Safeguard).
@@ -281,7 +306,7 @@ mark, tap = manual). `typed-side-condition` (Tailwind / Magnet Rise for listed t
 weather (`locked:true`) become runtime values (`AREARULES`: `atk/def…Types`, `weatherLock`) that `battleField()`
 adds to the stored field; they are rebuilt by `updateField`, never saved. A lock beats every weather layer (select
 disabled, setters, actions, an old manual save). With a Fog option in the profile, area Fog is the bottom weather
-layer: a manual / setter weather covers it, **Defog** (Clear Fog on the move row) clears it for the fight. The
+layer: a manual / setter weather covers it, **Defog** (its Use on the move row: the effect chip, or Clear Fog in a profile without Defog's effect) clears it for the fight. The
 Global group lists an area switch per typed rule / lock / Fog (on = applies); the switches and Defog are saved in
 `ST.areaByTrainer[t.k] = {disabled:{'kind:value:side':true}, fogCleared}` (trainer key + effect name; created only
 when used, cleared by `newFight` / Reset fight). Field readouts (`.dfrule`) give each side's state: Tailwind / Magnet

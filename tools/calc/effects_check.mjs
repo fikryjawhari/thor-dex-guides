@@ -427,6 +427,17 @@ await check('Fight types: Soak pure Water (fails on Water, Arceus); Trick-or-Tre
   if (data.M.includes('Conversion')) assert.deepEqual((await use('expansion', mon('Porygon', {mvs: [data.M.indexOf('Flamethrower')]}), pika, 'Conversion')).atk.ft, ['Fire']);
   assert.deepEqual((await use('expansion', pika, mon('Snorlax'), 'Camouflage', {terrain: 'Grassy'})).atk.ft, ['Grass']);
 });
+await check('An added type counts as a third type for damage (stock reads two): immunity and effectiveness, every base', async () => {
+  // Charizard (Fire / Flying) + Ghost (Trick-or-Treat) / + Water: calc.js fightView sends ty base + added, tya.
+  const added = type => mon('Charizard', {lv: 100, ty: ['Fire', 'Flying', type], tya: type});
+  for (const base of ['expansion', 'cfru', 'gen4', 'gen5', 'gen6', 'gen7']) {
+    const hit = async (target, move) => plain((await engine(base)).calc(pika, target, slot(move), {}));
+    const tackle = await hit(added('Ghost'), 'Tackle');
+    assert.ok(!tackle?.rolls?.some(Boolean), `${base}: Tackle on +Ghost does nothing: ${JSON.stringify(tackle?.rolls)}`);
+    assert.equal((await hit(added('Water'), 'Thunderbolt')).eff, 4, `${base}: Thunderbolt on Fire / Flying + Water`);
+    assert.equal((await hit(mon('Charizard', {lv: 100}), 'Thunderbolt')).eff, 2, `${base}: Thunderbolt on Fire / Flying`);
+  }
+});
 await check('Fight abilities: Worry Seed (Insomnia, wakes; Truant / cantsuppress / Ability Shield fail), Simple Beam, Skill Swap both, Role Play, Entrainment, Gastro Acid', async () => {
   const worry = await use('expansion', pika, mon('Snorlax', {ab: 'Thick Fat', st: 'slp'}), 'Worry Seed');
   assert.equal(worry.def.fa, 'Insomnia');

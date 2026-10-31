@@ -56,8 +56,9 @@ export function getMoveEffectiveness(gen: any, move: any, type: any, revealed?: 
     body = body.slice(0, criticalStart) + body.slice(criticalStart, criticalEnd).replace('const isCritical', 'let isCritical')
       + `\n  const guideNativeCrit = isCritical;\n  isCritical = ${invocation(body, 'critical', 'isCritical')};` + body.slice(criticalEnd);
     body = once(body, '  const isGhostRevealed', `  ${invocation(body, 'afterMoveType', 'undefined')};\n  const isGhostRevealed`);
+    // A type added for the fight (calc.js FIGHT fadd: Trick-or-Treat, Forest's Curse) is a third type; stock reads two.
     body = once(body, '  let typeEffectiveness = type1Effectiveness * type2Effectiveness;',
-      `  let typeEffectiveness = type1Effectiveness * type2Effectiveness;\n  (gen as any).guideContext.state.typeEffectiveness = typeEffectiveness;`);
+      `  let typeEffectiveness = type1Effectiveness * type2Effectiveness;\n  for (const guideType of defender.types.slice(2)) typeEffectiveness *= getMoveEffectiveness(gen, move, guideType, isGhostRevealed, field.isGravity${modern ? ', isRingTarget' : ''});\n  (gen as any).guideContext.state.typeEffectiveness = typeEffectiveness;`);
     const powerMarker = modern ? `  const basePower = calculateBasePower${suffix}(` : '  let basePower = calculateBasePowerDPP(';
     body = once(body, powerMarker, `  (gen as any).guideContext.state.typeEffectiveness = typeEffectiveness;\n${powerMarker}`);
     if (body.includes("  const turnOrder = attacker.stats.spe > defender.stats.spe ? 'first' : 'last';")) {
