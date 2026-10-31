@@ -2,7 +2,8 @@
 // on the guide as built must point at the same things in a copy with one new entry at the front of M (and MV), AB, P,
 // the Trainers boxes and the first walkthrough split, every reference to them shifted. Rule: saved state never stores
 // a position in the data (template/README.md → What the data switches on). Runs on every guide.
-//   28a same state: calc sets (species, ability, moves), the calc's foe, recent trainers and foe edits, the hazard chip's offer, area rule
+//   28a same state: calc sets (species, ability, moves), the calc's foe, recent trainers and foe edits (with this fight's
+//   types / ability / item: FIGHT ft / fadd / fa / fi, by name), the hazard chip's offer, area rule
 //       switches / Defog (guides with area rules), list filters, the Pokémon page's open sections,
 //       level caps, Trainers open state, search recents, the stat calc, walkthrough ticks and the tracker, compared
 //       by name before and after the update.
@@ -93,7 +94,7 @@ const SNAPSHOT = `(()=>{const C=CF.calc?CALC.state():null,tn=k=>TRK[k]?.n??'gone
     custom:C?C.custom.map(c=>[byId[c.id]?.n,AB[c.a]?.[0],(c.m||[]).map(i=>i==null?null:M[i])]):null,
     foe:C?[tn(C.foe.k),C.foe.i]:null,
     recentTrainers:C?C.recent.map(tn):null,
-    foeEdits:C?Object.entries(C.edits).filter(([k])=>k.startsWith('foe:')).map(([k,e])=>{const i=k.lastIndexOf(':');return [tn(k.slice(4,i)),k.slice(i+1),e.l];}):null,
+    foeEdits:C?Object.entries(C.edits).filter(([k])=>k.startsWith('foe:')).map(([k,e])=>{const i=k.lastIndexOf(':');return [tn(k.slice(4,i)),k.slice(i+1),e.l,e.ft,e.fadd,e.fa,e.fi];}):null,
     filters:st.f.map(f=>[f.k,f.k==='type'?f.v:fval(f)]),
     dexOpen:Object.entries(PO).map(([k,o])=>[PSECS.find(x=>x[0]===k)?.[1]??'gone:'+k,o]).sort(),
     caps:Object.entries(TCAP).filter(([k])=>k!=='_last').map(([k,v])=>[tn(k),v]),
@@ -134,7 +135,7 @@ const checks = [
       if (data.cfg.calc) {
         await page.value(`(()=>{const p=byId[${sid}];CALC.enter(${k},1);CALC.use(p);
           CALC.set('mine','m',[M.length-1,usedMoves[0],usedMoves[1],usedMoves[2]]);CALC.set('mine','a',p.a[p.a.length-1]);})()`);
-        await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.edits['foe:'+${k}+':1']={l:77};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
+        await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));const t=Object.keys(D.TC);s.edits['foe:'+${k}+':1']={l:77,ft:[t[1]],fadd:t[2],fa:AB[byId[${sid}].a[0]][0],fi:'Leftovers'};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
         // The hazard chip's offer (ST.hzOffer: side → card key, trainer key + slot / custom pid, or {k, off} toggled out).
         await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.hzOffer={foe:{k:'foe:'+${k}+':1',off:true},mine:'mine:'+s.custom.at(-1).pid};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
         // Assumed sets (Unbound): the foe edit remembers its species (ST.foeSp, a species id, dropped when another is there).
