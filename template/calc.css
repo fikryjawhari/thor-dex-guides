@@ -292,7 +292,7 @@ details.dfield>summary{min-height:30px;font-size:12px;padding:0 8px}
 .dstrip.fs button{min-height:26px;font-size:9px}.dstrip.fs button .spr{width:min(16px,100%)}
 .mr.st .mm{min-height:26px}
 
-.dside.mg .dstrip{max-height:136px;overflow-y:auto;overscroll-behavior:contain}
+.dside.mg .dstrip{max-height:136px;overflow-y:auto}
 @media (min-width:480px){
  main#app{height:100vh;display:flex;flex-direction:column;padding-bottom:4px;box-sizing:border-box;gap:4px!important}
  .top{flex:1 1 auto;min-height:76px;align-items:stretch;grid-template-rows:minmax(0,1fr)}
@@ -452,7 +452,8 @@ body.calc-route .cc .l1 .dmonstate input{width:14px;height:14px;margin:0;accent-
 .dfsw button[aria-pressed=true]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 .dfside section{min-width:0;display:flex;flex-direction:column}.dfside section:not(.on){display:none}
 .dfside section>.dtg:empty{display:none}
-body.calc-route .dfb{box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;gap:3px}
+/* Field and the box grid scroll inside but pass the wheel / drag on to the page at their ends (no overscroll-behavior:contain). */
+body.calc-route .dfb{box-sizing:border-box;overflow-y:auto;gap:3px}
 body.calc-route .dfb>*{flex-shrink:0}
 details.dfield>summary .mut{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dfgroup{margin-top:1px;border-top:1px solid var(--line)}
