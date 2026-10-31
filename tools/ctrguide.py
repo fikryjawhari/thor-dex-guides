@@ -1,6 +1,9 @@
 """Shared conversion, trainer and walkthrough helpers for the 3DS guides' source extracts."""
 
 import re
+from pathlib import Path
+from garc import mini, read_garc
+from moveprops import protect_flags
 from extractlib import fix, norm, report, slug
 
 
@@ -31,6 +34,26 @@ FC = {351, 421, 479, 386, 487, 492, 555, 641, 642, 645, 646, 647, 648, 658, 681,
 FC_KEEP = {(718, 1), (718, 2), (718, 3)}  # Zygarde 10% / 50% are their own catches (cells), not changes
 MEGA_WORDS = ('Mega ', 'Primal')
 
+MOVE_FLAGS = ['contact', 'charge', 'recharge', 'protect', 'reflectable', 'snatch', 'mirror', 'punch',
+              'sound', 'gravity', 'defrost', 'triple-distance', 'heal', 'bypasssub', 'no-sky', 'animate-ally']
+MOVE_TARGETS = ['normal', 'adjacentAllyOrSelf', 'adjacentAlly', 'adjacentFoe', 'allAdjacent',
+                'allAdjacentFoes', 'allies', 'self', 'all', 'randomNormal', 'all', 'foeSide', 'allySide',
+                'scripted']
+
+
+def read_move_records(archive):
+    """Read uncompressed XY (36-byte) / ORAS (34-byte) / USUM (40-byte) move records.
+
+    XY has two bytes of padding before its flags, unlike pk3DS Move6's ORAS layout.
+    Flags are the final uint32 in all three layouts; never trust the older dex cache's flags.
+    """
+    records = read_garc(archive)
+    if len(records) == 1:
+        records = mini(records[0])[1]
+    if any(len(record) not in (34, 36, 40) for record in records):
+        raise ValueError(f'Unexpected move record size in {archive}')
+    return records
+
 
 def form_name(s):
     n, f = s['name'], s['formName']
@@ -45,7 +68,8 @@ def form_name(s):
     return f'{n} ({re.sub(r" (Form|Forme|Mode|Style|Size|Cloak|Trim|Pattern|Flower)$", "", f)})'
 
 
-def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evolution_rows=None):
+def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evolution_rows=None,
+              move_archive=None):
     """Populate dex tables and scratch mappings; callbacks supply local evolution rules and report output."""
     # Moves
     M = [m['name'] for m in hacked['moves']]
@@ -53,6 +77,7 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
     vm = {m['id']: m for m in vanilla['moves']}
     doc = dict(move_notes)
     MV = []
+    records = read_move_records(move_archive) if move_archive else None
     for m in hacked['moves']:
         v = vm[m['id']]
         h = []
@@ -64,6 +89,15 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
             h.append('New description')
         e = {'t': m['type'], 'c': m['cat'], 'bp': m['bp'] or None, 'ac': m['acc'] if m['acc'] and m['acc'] <= 100 else None,
              'pp': m['pp'], 'pr': m['pr'], 'd': fix(m['desc']), 'f': m['flags'], 'h': h}
+        if records is not None:
+            record = records[m['id']]
+            bits = int.from_bytes(record[-4:], 'little')
+            names = MOVE_FLAGS + (['dance'] if len(record) == 40 else [])
+            flags = [flag for bit, flag in enumerate(names) if bits & (1 << bit)]
+            target = MOVE_TARGETS[record[0x14]]
+            if target == 'normal' and 'triple-distance' in flags:
+                target = 'any'
+            e.update(f=protect_flags(flags, target), tg=target)
         if m['crit']:
             e['cr'] = m['crit']    # crit stage (the damage calc); 6 = always a crit
         if norm(m['name']) in doc:

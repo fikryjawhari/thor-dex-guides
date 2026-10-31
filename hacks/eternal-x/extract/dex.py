@@ -6,7 +6,7 @@ Forms: unnamed forms are dropped; cosmetic duplicates (same types, stats, abilit
 form of the same species: Unown, Vivillon, the Flabebe line, Furfrou...) fold into that form. SPEC maps every
 (species id, form) to the P id it ended up as, for the wild, trainer and item stages.
 """
-from common import load, report, text
+from common import H, load, report, text
 from ctrguide import build_dex, parse_move_doc
 
 def evo_text(e):
@@ -47,4 +47,5 @@ def evolution_rows(species, all_species):
 def build(data):
     build_dex(data, load('dex-rebalanced.json'), load('dex-vanilla.json'),
               move_notes=parse_move_doc(text('Move Changes')), evolution_text=evo_text,
-              evolution_rows=evolution_rows, report=report)
+              evolution_rows=evolution_rows, report=report,
+              move_archive=H.src + '/romfs-dl/x/Eternal X 2.67/Game Files/Rebalanced version/luma/titles/0004000000055D00/romfs/a/2/1/2')
