@@ -138,10 +138,13 @@ column = the trainer panel, whose preview (two-line rows, 25 px, all six always 
 foe) is the foe's team (no strip); the cards (named, ~48 px) and both move lists pinned to the bottom of the window.
 Jump arrows (`CALC.stops()`): top, the first frame (trainer bar − 2, narrow), the fourth move's bottom when an open row
 or editor pushes it ≥ 24 px past that, and Field (always, clamped); stops within 24 px merge.
+Field's open box (capped to the window by `fitToggles`) and the box grid scroll inside but pass the wheel / drag on
+to the page at their ends (no `overscroll-behavior:contain`: with it the mouse wheel over Field never moved the page).
 **Short-wide (480+ wide and under 392 tall,** e.g. 480 × 316, 537 × 360): the narrow page's top with the wide match.
 Box (`.mg`, 136 px, the grid scrolls inside) above the fold, then the trainer bar and the battle-state row sharing
 one line, my team and the foe strip one row of six each (the narrow cells), then the wide cards, editors and two move
-columns; no blank band above Field. Opening the calc lands on the trainer bar and the rail has the narrow stops.
+columns; no blank band above Field. Opening the calc scrolls to the trainer bar (as far as the page goes: at 480 × 316
+the box's bottom still shows above it) and the rail has the narrow stops.
 `shortWide()` sets `body.calc-short` on load and resize, not a media query, and leaves it alone while a calc input or
 select has focus (a phone keyboard resizes the window); the page-top and scrolling tests (`stops`, `openMatch`, drag
 auto-scroll: `narrowTop()`) treat it as narrow, the card and editor tests (`fitCards`, `eopen`, the editors' resize
