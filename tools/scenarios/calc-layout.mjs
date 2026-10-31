@@ -319,7 +319,8 @@ const checks = [
       await page.settle();
       const long = await page.value(`(()=>{const r=${rowOf(longMove)},v=r.querySelector('.mv'),h=r.querySelector('.hp');return {cut:v.scrollWidth>v.clientWidth,hp:h.scrollWidth<=h.clientWidth+0.5,st:r.classList.contains('st')};})()`);
       assert(!long.st, `${longMove} is a damaging row`);
-      if (page.width < 480) assert(long.cut, `${longMove} should truncate at ${page.width}`);
+      // (only a name long enough to need it: BB2R's longest, Disarming Voice, fits at 260)
+      if (page.width < 480 && longMove.length >= 20) assert(long.cut, `${longMove} should truncate at ${page.width}`);
       assert(long.hp, `${longMove}: min–max not clipped`);
       allOf((await rowShape(page)).map(text => [false, text]));
     },
