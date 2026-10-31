@@ -34,6 +34,7 @@ Import scenarios inject `template/calc/readers/test.js`; real reader checks use 
 | `guide-update.mjs` | The general update check (28a-b): a copy with one new entry at the front of M, AB, P, the Trainers boxes and the walkthrough (every index shifted, as Hardlove 0.8.5 did); every kind of saved state, compared by name, must point at the same things, and a Pokémon page and a trainer card must read the same. Runs on every guide: add new kinds of saved state to its snapshot. |
 | `stable-keys.mjs` | Saved state across a simulated guide update (27a-d): trainers (cap, open state, calc foe / recents / edits / copied foe), search recents, species (stat calc, tracker), open Items / Locations boxes and the reopen route; old storage formats. Runs on every guide. |
 | `calc-entry.mjs` | Trainer-card and Pokémon-page entry points. |
+| `dex-page.mjs` | The Pokémon page: section defaults, one saved open state, Reset all, the name bar, ‹ › through the filtered list, kept place on switching (arrows, forms menu, Evolution rows), forms and family, fit at the five viewer sizes with the widest names. Runs on every guide. |
 | `calc-field.mjs` | Profile-driven controls, engine inputs and persistence after profile edits. |
 | `calc-hidden.mjs` | As-built visibility and entry points with and without `cfg.calc`. |
 | `calc-auto.mjs` | Scratch/set/fight lifetimes, entry effects, trainer changes, Reset fight and migration. |

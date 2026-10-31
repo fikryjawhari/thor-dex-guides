@@ -86,6 +86,8 @@ an unknown key.
     place names they were saved under (`layout`); `relayout` moves them to the positions those names have now.
   - The reopen route (`cfg.ls.pos`) names its Pokémon, move, ability or place page (`n`) and its anchor's link (`an`);
     when that moved, the route follows the name (gone: the Pokémon list).
+  - The Pokémon page's open sections (`cfg.ls.dex` → `o`, beside the list filters): section names (`PSECS`), only those
+    that differ from the default; an unknown name is dropped, a missing one takes its default.
   Tracker areas (`AR` indexes, append-only) and walkthrough state (stop keys, `migrateWalkState`) were stable already.
 
 ## Shared rules every guide follows
@@ -504,6 +506,42 @@ toggles the place. Toggling keeps the trainer you're reading in place (anchor = 
 headers). Trainer cards: below 500 px a strip of up to six sprites above one Pokémon; from 500 px all Pokémon as
 blocks, three across at most. An opened card starts at its team. One speed per Pokémon (with EVs, or without under MGM).
 
+**Pokémon page** (decided 2026-10-31 on the phone preview; `POKEMON PAGE` in dex.js, "Pokémon page" in dex.css):
+1. Pager at the top (no "‹ All Pokémon"; the rail's Pokéball goes to the list), the top card, Expand all / Collapse all
+   (`segBar`, the page-top rule: Collapse all with every section closed reads and acts as **Reset all**, `resetOpen`),
+   "Sources disagree" when present (doesn't collapse), then the sections: Abilities, Base stats, Stat calculator, Type
+   defences, Where to find, Evolution, Used by trainers, Moves (`PSECS`; open by default: Abilities, Base stats,
+   Evolution, Moves). One open / closed state for every Pokémon (`LS.dex` `o`), so switching lands on the same boxes.
+   Header taps never scroll (`flip`); collapse bars as on the other pages (`bars()`, less the name bar's height).
+2. **Name bar** (`#pbar`): fixed at the top beside the rail, slides in (120 ms) once the top card is off screen:
+   `‹` · sprite, name, types (the forms menu) · `↑` (top of the page) · `›`. Under 300 px: name 13 px (two lines
+   at most), sprite 30 with the type letters down its right edge; wider: 15 px, sprite 34, type tags.
+3. **‹ ›** (bar and the top pager: chevron, name in link colour, `#dex · relation`) step through the Pokémon list as it
+   stands (`pokeList`: search, filters, availability, sort; no filter: dex order, forms after their Pokémon). A page not
+   in the list steps through the dex order to the nearest listed one. Nothing that way: the arrow is disabled, the
+   pager half empty. Relation: the evolution between the two (`level 16` → `Lv 16`), else Mega / Base form / Form.
+   The arrows and the forms menu replace the history entry; Evolution rows add one.
+4. **Forms** (same dex number): `#6 · 3 forms ▾` in the top card; the top card or the bar's sprite / name opens the
+   forms menu (sprite, name, type letters; the current one lit); a tap outside closes it. Forms keep their own pages.
+5. **Switching keeps the place** (arrows, forms menu, Evolution rows): the first keyed row under the bar (`data-pk`:
+   `sec:` / `ab:` / `bs:` / `sc:` / `td:` / `wh:<place>#n` / `ev:<id>` / `tr:<trainer key>` / `mv:<move>[#n]`, names,
+   never positions) lands at the same height on the new page; missing: the nearest of its kind in that section
+   (`data-po`: level, stat, slot; else the next name alphabetically), else that section's title, else the next one's.
+   At the top: the top. The hashchange handler runs it (`PKEEP`) instead of its snapshot restore; Back and reload use
+   the same keys (`ANCH`).
+6. **Moves** fit: under 380 px of table (container query on `.mvw`) the type is a letter circle, the category P / Sp /
+   St, Varies `Var`, no `%`, no Type / Cat header words; a one-word name that can't fit breaks inside the word.
+   Markers instead of tags on this page: amber `!` new or changed in the hack, red `?` sources disagree (`title` says).
+7. **Evolution** shows the whole family from its base stage: each Pokémon, its forms (not evolved into: Megas, Rockruff
+   (Own Tempo)), then what it evolves into, indented per stage; the current row lit and not a link; one row: "Does not
+   evolve."
+8. **Stat calculator**, stats down the side: Level and Nature, a row per stat (base, IV, EV when the guide has EVs,
+   result; the nature's raised stat red ↑, lowered blue ↓), Total (base total, EVs n / 510), Speed by level.
+9. **Use in calc ▸** sits in the top card under the types (the calculator starts closed).
+10. No word breaks inside a name: sizes fit the widest word in any guide (~6.7 em). Top card under 340 px: the name
+    across the top at 20 px, the 88 px sprite and details under it; wider, the name beside the sprite.
+Scenario: `tools/scenarios/dex-page.mjs`.
+
 **Search:** the full-window search on every device (the in-page keyboard in the viewer or `dvkb`, the device keyboard
 elsewhere). The current page's section first, then Pokémon, Filters, Locations, Trainers, Items, Walkthrough. Each
 result has action buttons (Dex, Trainers, Places, Walk, Filter...) that jump or search; Enter searches the current page.
@@ -522,6 +560,6 @@ team previews in trainer / partner row headers (a tap opens the row), the SOS he
 tracker's Other… results, the keyboard's picks and search results (their Dex button). The calc has its own.
 
 **Rejected** (don't bring back): animated collapses (slide, smooth scroll then close, synced fold); pinned trainer
-rows or team previews; a ☰ rail; BST anywhere; IVs on cards; the "Changes from vanilla" card and Changed filter;
+rows or team previews; a ☰ rail; BST anywhere but the stat calculator's Total row; IVs on cards; the "Changes from vanilla" card and Changed filter;
 evo/breed tags; the trials / mini caps switch; per-hack item boxes; separate Expand / Collapse bars per island and place
 on Trainers.

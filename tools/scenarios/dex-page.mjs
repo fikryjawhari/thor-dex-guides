@@ -11,7 +11,7 @@ const P = data.P, byId = Object.fromEntries(P.map(p => [p.id, p]));
 const forms = p => P.filter(x => p.dex && x.dex === p.dex);
 // F: a Pokémon with forms that evolves from E by level (Charizard and Charmeleon where the guide has them), and whose
 // next Pokémon in dex order is one of its forms.
-const levelFrom = p => p.ef.find(([how, id]) => /^level \d/i.test(how) && byId[id]);
+const levelFrom = p => p.ef.find(([how, id]) => /^(level|lv) \d/i.test(how) && byId[id]);
 const next = p => P[P.indexOf(p) + 1];
 const cands = P.filter(p => p.g === 0 && forms(p).length > 1 && levelFrom(p) && next(p) && next(p).dex === p.dex && p.lv.length >= 8);
 const F = cands.find(p => p.n === 'Charizard') || cands[0];
