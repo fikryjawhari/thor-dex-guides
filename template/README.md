@@ -235,6 +235,9 @@ endpoints, the custom Damage Apply and the damaging Use; the opened row says `Af
 drain and heal are the HP chips), as the user has them: Serene Grace / Rainbow double a chance (`DMG.secondaryChance`),
 Sheer Force (Gen 5+) removes the secondaries but not the user's own 100 % drops. One layout at every width: the odds
 shrink first and end in `…` (the % and KO text stay on one line); the opened row lists them all (`Effects: …`).
+**KO chance**: the closed row's KO text (`2HKO 43%`) can be cut off at 260 px, so the opened row always starts with
+it in full (`43.2% chance to 2HKO`, `Guaranteed OHKO`, `No KO in 4 hits`; none when immune or fainted). Not a
+`title`: no tooltip shows on Android / the Thor.
 Text only. **Fight changes**: moves that change a type, ability or item do it for this fight only (FIGHT fields
 `ft` types, `fadd` an added type, `fa` ability (`''` suppressed), `fi` item (`''` none); all names): Soak /
 Magic Powder / Camouflage / Conversion / Reflect Type / Burn Up / Double Shock, Trick-or-Treat / Forest's Curse (the

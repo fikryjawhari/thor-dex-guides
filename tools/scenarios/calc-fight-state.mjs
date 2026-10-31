@@ -1,7 +1,8 @@
 // This fight's types / ability / item (plans/move-pages.md → Calc: type, ability and item changes for the fight): the
 // moves that change them really do (Worry Seed, Soak, Trick), ↺ on the card and Reset fight put the set's back, Edit
 // keeps showing the set's; Edit → Fight… sets one by hand for any Pokémon, the card's chip shows it and a tap clears
-// it. Damaging rows show their added-effect odds beside the KO text with no sideways scroll. Parts whose moves the
+// it. Damaging rows show their added-effect odds beside the KO text with no sideways scroll; the open row starts
+// with the KO chance in full. Parts whose moves the
 // guide lacks are skipped. Without cfg.calc: skip.
 import assert from 'node:assert/strict';
 import {fixturePatches, guideArg, prepareGuide, readGuide, runChecks} from '../calc_check_lib.mjs';
@@ -127,7 +128,7 @@ const checks = [{
   },
 }, {
   id: 'odds',
-  title: 'damaging rows show their effect odds beside the KO text, inside the row, no sideways scroll; the open row lists them',
+  title: 'damaging rows show their effect odds beside the KO text, inside the row, no sideways scroll; the open row lists them and the KO chance in full',
   sizes: [[260, 316], [480, 392], [537, 424], [832, 424]],
   skip: has('Body Slam', 'Fire Fang') ? '' : 'no Body Slam / Fire Fang',
   run: async page => {
@@ -141,6 +142,11 @@ const checks = [{
     await page.value(`${row('Fire Fang')}.querySelector('.mm').click()`);
     await page.settle();
     assert.match(await page.value(`${row('Fire Fang')}.querySelector('.dodds2')?.textContent||''`), /burn.*flinch|flinch.*burn/);
+    // The KO chance in full at the top of the open row (the closed row's KO text can be cut off at 260).
+    const ko = await page.value(`(()=>{const r=${row('Fire Fang')},k=r.querySelector('.dd .dkof');if(!k)return null;const a=r.getBoundingClientRect(),b=k.getBoundingClientRect();return {t:k.textContent,first:k===r.querySelector('.dd').firstElementChild,fits:b.right<=a.right+0.5&&k.scrollWidth<=k.clientWidth+0.5};})()`);
+    assert.ok(ko, 'KO line in the open row');
+    assert.match(ko.t, /^((\d+\.\d|<0\.1|>99\.9)% chance to |Guaranteed )(OHKO|\dHKO)$|^No KO in 4 hits$/, ko.t);
+    assert.ok(ko.first && ko.fits, `KO line first and whole: ${JSON.stringify(ko)}`);
     assert.ok(await noScroll(page), 'no sideways scroll, open');
   },
 }];
