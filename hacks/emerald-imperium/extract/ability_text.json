@@ -1,0 +1,62 @@
+{
+  "Corrosion": {
+    "o": "Can poison or badly poison targets regardless of their type.",
+    "s": "Can poison or badly poison targets regardless of their type, and Poison-type moves can hit Steel types."
+  },
+  "Defeatist": {
+    "o": "Halves Attack and Special Attack at half HP or less.",
+    "s": "Halves Attack and Special Attack at 1/3 HP or less."
+  },
+  "Flare Boost": {
+    "o": "Boosts the power of special attacks by 50% while burned.",
+    "s": "Boosts the power of special attacks by 50% while burned, and prevents burn damage."
+  },
+  "Flower Gift": {
+    "o": "In sun, Cherrim changes to Sunshine Form and boosts its own and its allies' Attack and Special Defense by 50%.",
+    "s": "In sun, Cherrim changes to Sunshine Form and boosts its own and its allies' Attack and Special Defense by 50%."
+  },
+  "Ice Body": {
+    "o": "Restores 1/16 of maximum HP at the end of each turn in snow.",
+    "s": "Restores 1/16 of maximum HP at the end of each turn in snow. Attackers that make contact have a 30% chance of frostbite."
+  },
+  "Illuminate": {
+    "o": "Prevents other Pokemon from lowering its accuracy, and ignores the target's evasion boosts.",
+    "s": "Boosts accuracy by 20%."
+  },
+  "Illusion": {
+    "o": "Enters disguised as the last unfainted Pokemon in the party until hit by a damaging move.",
+    "s": "Enters disguised as the last unfainted Pokemon in the party until hit by a damaging move, and deals 30% more damage while disguised. The AI is not fooled by the disguise."
+  },
+  "Iron Fist": {
+    "o": "Boosts the power of punching moves by 20%.",
+    "s": "Boosts the power of punching moves by 30%."
+  },
+  "Liquid Voice": {
+    "o": "Turns sound-based moves into Water-type moves.",
+    "s": "Turns sound-based moves into Water-type moves and boosts their power by 20%."
+  },
+  "Mountaineer": {
+    "o": "Blocks Stealth Rock damage, and Rock-type attacks on the turn it enters battle.",
+    "s": "Blocks Rock-type attacks and Stealth Rock damage."
+  },
+  "Protean": {
+    "o": "Changes its type to match the move it is about to use, once each time it enters battle.",
+    "s": "Changes its type to match the move it is about to use, before every move."
+  },
+  "Quick Feet": {
+    "o": "Boosts Speed by 50% while it has a status condition, and ignores the Speed drop from paralysis.",
+    "s": "Doubles Speed while it has a status condition, and ignores the Speed drop from paralysis."
+  },
+  "Shield Dust": {
+    "o": "Blocks the added effects of moves that hit it.",
+    "s": "Blocks the added effects of moves that hit it, and damage from entry hazards."
+  },
+  "Toxic Boost": {
+    "o": "Boosts the power of physical attacks by 50% while poisoned.",
+    "s": "Boosts the power of physical attacks by 50% while poisoned, and prevents poison damage."
+  },
+  "Water Compaction": {
+    "o": "Raises Defense by two stages when hit by a damaging Water-type move.",
+    "s": "Halves damage from Water-type moves and raises Defense by two stages when hit by one."
+  }
+}
