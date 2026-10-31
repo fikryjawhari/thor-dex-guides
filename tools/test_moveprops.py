@@ -215,7 +215,7 @@ def test_override_errors():
         ]), encoding='utf-8')
         moveprops.apply(data, 'test', report, rules_path=path)
         assert any(row['e'] == 'New rule' and row['m'] == [2] for row in data['MI'])
-        assert any(row.get('a') == 8 and row['e'] == 'Power ×1.5' and row['m'] == [2] for row in data['MI'])
+        assert any(row.get('a') == 9 and row['e'] == 'Power ×1.5' and row['m'] == [2] for row in data['MI'])
         for fragment in ('ambiguous rule', 'unknown rule phrase', 'owner is absent', 'unknown move', 'requires a source line'):
             assert any(fragment in message for message in messages), fragment
 
