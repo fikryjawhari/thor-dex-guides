@@ -103,6 +103,21 @@ await check('Court Change swaps tracked side conditions, not terrain', async () 
   assert.equal(out.field.changes.terrain, undefined);
 });
 
+await check('Rapid Spin, Mortal Spin, Tidy Up and Ice Spinner clear their tracked fields', async () => {
+  for (const move of ['Rapid Spin', 'Mortal Spin']) {
+    const result = await strike('expansion', pika, mon('Wailord'), move, {atkSpikes: 2, atkSeeded: true, defSpikes: 1});
+    assert.equal(result.field.changes.atkSpikes, false, move);
+    assert.equal(result.field.changes.atkSeeded, false, move);
+    assert.equal(result.field.changes.defSpikes, undefined, move);
+  }
+  const tidy = await use('expansion', mew, pika, 'Tidy Up', {atkSpikes: 2, defSpikes: 1});
+  assert.equal(tidy.field.changes.atkSpikes, false);
+  assert.equal(tidy.field.changes.defSpikes, false);
+  assert.deepEqual(tidy.atk.stg, stg(1, 0, 0, 0, 1));
+  const ice = await strike('expansion', pika, mon('Wailord'), 'Ice Spinner', {terrain: 'Electric'});
+  assert.equal(ice.field.changes.terrain, '');
+});
+
 await check('Flower Shield and Rototiller target Grass, Rototiller requires grounding', async () => {
   const grass = mon('Bulbasaur');
   assert.deepEqual((await use('expansion', mew, grass, 'Flower Shield')).def.stg, stg(0, 1, 0, 0, 0));

@@ -368,6 +368,23 @@ export function createEffects(env) {
       const state = sides[who];
       const self = sides.atk;
       switch (entry.k) {
+        case 'spin':
+        case 'tidy': {
+          const changes = {};
+          for (const side of entry.k === 'tidy' ? ['atk', 'def'] : ['atk']) {
+            for (const key of ['Spikes', 'ToxicSpikes', 'StealthRock', 'StickyWeb', 'Steelsurge']) changes[side + key] = false;
+          }
+          if (entry.k === 'spin') for (const key of ['Seeded', 'Trapped']) changes['atk' + key] = false;
+          out.field = {...out.field, ...changes};
+          out.parts.push({who: 'atk', log: 'Clear hazards'});
+          note(entry.k === 'tidy' ? 'Hazards cleared on both sides' : 'User hazards, Leech Seed and partial trapping cleared');
+          return true;
+        }
+        case 'clearterrain':
+          out.field = {...out.field, terrain: ''};
+          out.parts.push({who: 'both', log: 'Clear terrain'});
+          note('Terrain cleared');
+          return true;
         case 'speedswap': {
           const mine = self.mon.rawStats.spe;
           const theirs = sides.def.mon.rawStats.spe;

@@ -18,7 +18,7 @@
   "Smog": {"sec": [{"c": 100, "st": "psn"}], "n": "hg-engine data/Moves.c:3337 effectChance 100 (table 40)"},
   "Rock Smash": {"fl": ["contact"], "sec": [{"c": 100, "b": {"def": -1}}], "n": "hg-engine data/Moves.c:6739 effectChance 100 (table 50)"},
   "Charge Beam": {"sec": [{"c": 100, "sb": {"spa": 1}}], "n": "hg-engine data/Moves.c:12193 effectChance 100 (table 70)"},
-  "Rapid Spin": {"fl": ["contact"], "n": "hg-engine data/Moves.c:6193 REMOVE_HAZARDS_AND_BINDING, no Speed rise (table Spe +1)"},
+  "Rapid Spin": {"k": "spin", "tg": "s", "fl": ["contact"], "n": "hg-engine data/Moves.c:6193 REMOVE_HAZARDS_AND_BINDING, no Speed rise (table Spe +1)"},
   "Growth": {"b": {"spa": 1}, "tg": "s", "n": "hg-engine data/Moves.c:2008 SP_ATK_UP, in-game text: Sp. Atk only (table Atk +1 Sp. Atk +1, Sun x2)"},
   "Thief": null,
   "Covet": null
@@ -33,7 +33,7 @@
   {"title": "Rock Smash: Defense -1 every hit (effectChance 100)", "move": "Rock Smash", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax"}, "field": {}, "expect": {"def.stg": [0, 0, -1, 0, 0, 0]}},
   {"title": "Charge Beam: user Sp. Atk +1 every hit (effectChance 100)", "move": "Charge Beam", "kind": "hit", "user": {"n": "Umbreon"}, "target": {"n": "Snorlax"}, "field": {}, "expect": {"atk.stg": [0, 0, 0, 1, 0, 0]}},
   {"title": "Diamond Storm: user Defense +2 is a 50 % chance, none guaranteed", "move": "Diamond Storm", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax"}, "field": {}, "expect": {"atk.stg": null}},
-  {"title": "Rapid Spin: no Speed rise on the user", "move": "Rapid Spin", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax"}, "field": {}, "expect": {"atk.stg": null}},
+  {"title": "Rapid Spin: no Speed rise on the user", "move": "Rapid Spin", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax"}, "field": {}, "expect": {"atk.stg": null, "field.changes.atkSpikes": false, "field.changes.atkSeeded": false}},
   {"title": "Growth: Sp. Atk +1 only", "move": "Growth", "kind": "effect", "user": {"n": "Machamp"}, "target": {"n": "Machamp"}, "field": {}, "expect": {"atk.stg": [0, 0, 0, 1, 0, 0]}},
   {"title": "Thief: no item steal (Move Changes: no longer steals)", "move": "Thief", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax", "it": "Leftovers"}, "field": {}, "expect": {"def.used": null}},
   {"title": "Covet: no item steal (Move Changes: no longer steals)", "move": "Covet", "kind": "hit", "user": {"n": "Machamp"}, "target": {"n": "Snorlax", "it": "Leftovers"}, "field": {}, "expect": {"def.used": null}}

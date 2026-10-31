@@ -41,6 +41,10 @@ const FIELD_KEYS = ['sideCondition', 'pseudoWeather', 'weather', 'terrain', 'slo
 // carries it (checked to exist in the effective entry; its file is cited in `n`). `top` kinds sit on
 // the move's record; `sec` kinds are a guaranteed secondary (c 100) of a damaging move.
 const HAND = {
+  rapidspin: {k: 'spin', tg: 's', fn: 'onAfterHit'},
+  mortalspin: {k: 'spin', tg: 's', fn: 'onAfterHit'},
+  tidyup: {k: 'tidy', b: {atk: 1, spe: 1}, tg: 's', fn: 'onHit'},
+  icespinner: {k: 'clearterrain', tg: 's', fn: 'onAfterHit'},
   rest: {k: 'rest', fn: 'onHit'},
   speedswap: {k: 'speedswap', fn: 'onHit'},
   defog: {k: 'defog', fn: 'onHit'},
@@ -98,7 +102,6 @@ const HAND = {
   doubleshock: { k: 'type', tg: 's', fn: 'self.onHit' },
   camouflage: { k: 'type', fn: 'onHit' },
   acupressure: { k: 'random', fn: 'onHit' },
-  tidyup: { b: { atk: 1, spe: 1 }, tg: 's', fn: 'onHit' },
   stuffcheeks: { k: 'cheeks', b: { def: 2 }, tg: 's', fn: 'onHit' },
   purify: { k: 'purify', tg: 'o', fn: 'onHit' },
   corrosivegas: { k: 'knock', tg: 'o', fn: 'onHit' },

@@ -1,5 +1,10 @@
 {
   "notModelled": {
+    "Surviving at 1 HP isn't tracked": ["Endure"],
+    "Substitute's shield isn't tracked": ["Substitute", "Tidy Up"],
+    "Berry consumption effects aren't modelled": ["Natural Gift", "Bug Bite", "Pluck"],
+    "Thrown-item effects aren't modelled": ["Fling"],
+    "Delayed attacks aren't scheduled": ["Future Sight", "Doom Desire"],
     "Switching isn't modelled": ["Roar", "Whirlwind", "Teleport", "Baton Pass", "U-turn", "Volt Switch", "Flip Turn", "Parting Shot", "Chilly Reception", "Shed Tail", "Dragon Tail", "Circle Throw"],
     "Turn order only": ["After You", "Quash", "Quick Guard"],
     "Spread-move protection isn't tracked": ["Wide Guard", "Mat Block", "Crafty Shield"],

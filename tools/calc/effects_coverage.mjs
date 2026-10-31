@@ -18,7 +18,7 @@ const weather = {'Sunny Day': 'Sun', 'Rain Dance': 'Rain', Sandstorm: 'Sand', Ha
 const terrain = {'Electric Terrain': 'Electric', 'Grassy Terrain': 'Grassy', 'Misty Terrain': 'Misty', 'Psychic Terrain': 'Psychic'};
 const kinds = new Set(['haze', 'clear', 'copy', 'swap', 'invert', 'maxatk', 'growth', 'venom', 'cheeks', 'purify',
   'cure', 'shift', 'knock', 'steal', 'eat', 'burnitem', 'trick', 'bestow', 'type', 'ability', 'drowsy', 'random',
-  'log', 'stockpile', 'curse', 'memento', 'sap', 'rest', 'speedswap', 'defog', 'courtchange', 'grassboost', 'plusminus', 'ko3']);
+  'log', 'stockpile', 'curse', 'memento', 'sap', 'rest', 'speedswap', 'defog', 'courtchange', 'grassboost', 'plusminus', 'ko3', 'spin', 'tidy', 'clearterrain']);
 
 function switches(name, profile) {
   for (const [map, prefix] of [[maps.MOVE_GLOBAL, ''], [maps.MOVE_OWN, 'atk'], [maps.MOVE_OTHER, 'def']]) {
@@ -33,14 +33,14 @@ function switches(name, profile) {
   return '';
 }
 
-export async function coverage(hack) {
+export async function coverage(hack, makeEngine = createEngine) {
   const data = await load(`hacks/${hack}/data.json`);
   const config = (await load(`hacks/${hack}/hack.json`)).cfg.calc;
   const own = await load(`hacks/${hack}/calc_effects.json`);
   const profile = await resolveProfile({...config, over: {...config.over, effects: own}});
   const built = JSON.parse(execFileSync('python', ['-c', 'import assemble,json,sys; h=sys.argv[1]; print(json.dumps(assemble.calc_profile(json.loads(assemble.read("hacks",h,"hack.json"))["cfg"]["calc"],json.loads(assemble.read("hacks",h,"data.json")))))', hack], {cwd: root, encoding: 'utf8'}));
   profile.field = built.field;
-  const engine = await createEngine(data, profile);
+  const engine = await makeEngine(data, profile);
   const mon = {id: data.P[0].id, lv: 50, nat: 'Serious', ab: -1, it: '', st: '', hp: 1,
     iv: [31, 31, 31, 31, 31, 31], ev: [0, 0, 0, 0, 0, 0], stg: [0, 0, 0, 0, 0, 0]};
   const rows = data.M.map((name, index) => {
@@ -58,10 +58,16 @@ export async function coverage(hack) {
       }
       catch (error) { calculationError = error.message; }
     }
-    const applies = record && (record.b || record.sb || record.st || record.v || kinds.has(record.k));
-    if (applies) actions.push(['log', 'random', 'drowsy'].includes(record.k) ? 'logs only' : 'applies: ' +
+    const statusAction = category === 'Status' ? engine.effect(mon, mon, {mv: index}, {}) : null;
+    const applies = category === 'Status' ? statusAction : record && (record.b || record.sb || record.st || record.v || kinds.has(record.k));
+    const logsOnly = statusAction && !statusAction.fails && !statusAction.field &&
+      !Object.keys(statusAction.atk).length && !Object.keys(statusAction.def).length;
+    if (applies) actions.push(logsOnly || ['log', 'random', 'drowsy'].includes(record.k) ? 'logs only' : 'applies: ' +
       [record.k, record.b && 'stages', record.st, record.v, record.sb && 'self stages'].filter(Boolean).join(', '));
-    if (record?.sec?.some(part => part.b || part.st || part.v || part.sb || kinds.has(part.k))) actions.push('secondary (guaranteed applies; chance text)');
+    for (const part of record?.sec || []) {
+      if (part.b || part.st || part.v || part.sb || kinds.has(part.k)) actions.push((part.c < 100 ? 'chance text: ' : 'secondary: ') +
+        [part.k, part.b && 'target stages', part.st, part.v && 'volatile log / switch', part.sb && 'self stages'].filter(Boolean).join(', '));
+    }
     const reason = record?.nm || '';
     const noop = record?.noop || '';
     const unmapped = record?.k && !kinds.has(record.k) || record?.sec?.some(part => part.k && !kinds.has(part.k));

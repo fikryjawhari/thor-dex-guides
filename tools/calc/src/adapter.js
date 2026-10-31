@@ -1190,6 +1190,7 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
     const out = effects.resolve({name: data.M[slot.mv], record, user, target, field, values: actionField, phase: 'after',
       hit: {landed: dealt > 0 || !!result?.bust, ko: def.hp !== 0 && current === 0 && dealt > 0, contact: touched}, moveType: type});
     output.log.push(...out.log);
+    if (out.field) (output.field ||= {}).changes = out.field;
     if (out.parts.length) output.effects = out.parts;
   }
   target.update.hp = current;
