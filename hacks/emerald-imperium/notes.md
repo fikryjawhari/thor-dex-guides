@@ -395,7 +395,11 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
   MV  [{t type, c category, bp power or "Varies", ac accuracy or null, pp, pr priority, [cr crit stage when not 0,
         6 = always a crit (the damage calc)], d description, f flags[], h change notes[], [dc 1 = the changes doc
         lists it, e the doc's paragraph], [cf doc-vs-data conflicts[]], [x 1 = hack original]}]
-  AB  [[name, description, [1 if hack original, [changed]]]]   (trailing falsy values are not written)
+  AB  [[name, description, [1 if hack original, [changed, [statement, original]]]]]
+      [0] name, [1] in-game description, [2] hack-original flag, [3] changes-doc text,
+      [4] complete hack-effect statement, [5] standard original effect. Trailing falsy values are not written.
+      EI's changed, non-original abilities get [4] and [5] from extract/ability_text.json (s and o).
+      Other abilities keep their existing fields. Mountaineer's original is Showdown CAP, not a vanilla ability.
   P   [{id speciesId string, n display name, dex, t[types], a[abilityIdx], ha hidden abilityIdx or -1,
         s[HP,Atk,Def,SpA,SpD,Spe], ef/et [[how, id]] evolves from/into, of[ids] other forms, lv[[level, moveIdx]]
         (level 0 = learned on evolution), tm[moveIdx], [tu[moveIdx] tutors], eg[moveIdx], w[[LOCidx, method, rate,

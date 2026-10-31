@@ -44,6 +44,20 @@ def check_gid(data):
     print(f'PASS: GID maps all {len(species)} species, {len(data["M"])} moves, {len(data["AB"])} abilities')
 
 
+def check_ability_text(data):
+    text = json.loads(Path(__file__).with_name('ability_text.json').read_text(encoding='utf-8'))
+    changed = {ability[0]: ability for ability in data['AB']
+               if len(ability) > 3 and not ability[2] and ability[3]}
+    assert set(text) == set(changed), ('Ability text coverage', set(text) ^ set(changed))
+    assert list(text) == sorted(text), 'Ability text names must be sorted'
+    for name, ability in changed.items():
+        assert set(text[name]) == {'o', 's'}, name
+        assert all(isinstance(value, str) and value.strip() for value in text[name].values()), name
+        assert len(ability) == 6 and ability[4:] == [text[name]['s'], text[name]['o']], name
+    assert all(len(ability) <= 4 for ability in data['AB'] if ability[0] not in changed)
+    print(f'PASS: {len(changed)} changed, non-original abilities have statement and original text')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('baseline', nargs='?', type=Path)
@@ -51,6 +65,7 @@ def main():
                         default=Path(__file__).resolve().parents[1] / 'data.json')
     args = parser.parse_args()
     after = json.loads(args.current.read_text(encoding='utf8'))
+    check_ability_text(after)
     check_metronome(after, 'emerald-imperium')
     check_gid(after)
     diffs = pdfwild.compare()

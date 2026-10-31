@@ -5,6 +5,8 @@ parseEvo.ts). Move values are the game's; Showdown's Gen 9 values give the prior
 abilities are EI originals. changes.py's doc-versus-dex comparison adds P.vc / P.cf, MV.dc / MV.e / MV.cf and the
 abilities' effect text. P.w and P.g are filled by locs.py.
 """
+import json
+from pathlib import Path
 import re
 import changes
 from common import key, report
@@ -119,6 +121,11 @@ def merge_changes(D):
     for a in D['AB']:
         d=CM['ab'].get(key(a[0]))
         a.append(d['e'] if d else '')
+    ability_text = json.loads(Path(__file__).with_name('ability_text.json').read_text(encoding='utf-8'))
+    for ability in D['AB']:
+        if not ability[2] and ability[3]:
+            text = ability_text[ability[0]]
+            ability.extend([text['s'], text['o']])
     D['src'] += '; EI Changes doc 1.3.1'
     report('changes doc merged: P vc', sum('vc' in p for p in D['P']), 'P cf', sum('cf' in p for p in D['P']), 'MV dc',
            sum('dc' in v for v in D['MV']), 'MV cf', [(D['M'][i], v['cf']) for i, v in enumerate(D['MV']) if 'cf' in v][:3],
