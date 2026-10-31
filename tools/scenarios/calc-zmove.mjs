@@ -45,7 +45,7 @@ const checks = [{
     const before = await page.value(`${rows}.map(r=>({mv:r.querySelector('.mv').textContent,hp:r.querySelector('.hp').textContent,z:!!r.querySelector('.rz'),st:r.classList.contains('st'),zfx:(()=>{const n=M.indexOf(r.querySelector('.mv').textContent.trim());return n>=0&&MV[n].c==='Status'&&!!window.DMG.effects(M[n])?.z;})()}))`);
     assert.ok(before.some(r => r.z), 'a damaging row has Z');
     before.forEach(r => assert.equal(r.z, !r.st || r.zfx, `Z on damaging rows and status rows with a Z effect (${r.mv})`));
-    const i = before.findIndex(r => r.z);
+    const i = before.findIndex(r => r.z && !r.st);
     const geo = await page.value(`(()=>{const r=${rows}[${i}],c=e=>{const b=e.getBoundingClientRect();return b.left+b.width/2;};
       const t=e=>{const g=document.createRange();g.selectNodeContents(e);return g.getBoundingClientRect().left;};
       const name=[...r.querySelector('.mv').childNodes].find(n=>n.nodeType===3);const g=document.createRange();g.selectNodeContents(name);
@@ -93,7 +93,7 @@ const checks = [{
     assert.ok(splash.fx, 'Z-Splash has a use chip');
     await page.value(`${row(0)}.querySelector('[data-a="fx"]').click()`);
     await page.settle();
-    assert.deepEqual(await page.value(`[...CALC.mon('mine').stg]`), [3, 0, 0, 0, 0], 'Z-Splash: Atk +3');
+    assert.deepEqual(await page.value(`[...CALC.mon('mine').stg]`), [3, -2, 0, 0, 0], 'Z-Splash: Atk +3, Def untouched');
     await page.value(`CALC.set('mine','stg',[0,-2,0,0,0]);CALC.render()`);
     await page.tap(`.rz[data-ck="${key}:1"]`);
     await page.value(`${row(1)}.querySelector('.mm').click()`);
