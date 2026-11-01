@@ -15,6 +15,12 @@ are exact versions, with npm's integrity hashes in `package-lock.json`.
 
 ## Hack validation
 
+`over.abilities.<guide name>.statusImmune` optionally lists status keys whose end-of-turn
+HP change is suppressed (for example `["psn", "tox"]`). It uses the active fight ability,
+including ability changes, without aliasing or removing its native damage effect. It suppresses
+only the status component (including `residual.status` overrides), not weather, hazards,
+items or other ability residuals. Omitted entries retain the existing behavior.
+
 `npm test --prefix tools/calc` runs the engine suite, each hack's source/stock checks and
 `state_check.mjs` against every `hacks/<hack>/calc_states.json`. The independent hzla comparison is separate:
 

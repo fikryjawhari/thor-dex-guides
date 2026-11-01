@@ -229,6 +229,17 @@ await test('residual parts: weather, items, status, terrain, profile abilities',
     [['Frostbite', -sixteenth], ['Huge Power', sixteenth]]);
 });
 
+await test('optional ability status immunity is scoped to the active guide ability', () => {
+  const holder = set('Snorlax', {ab: ability('Huge Power'), st: 'tox', toxn: 2, it: 'Leftovers'});
+  engine.init(data, {...profiles.expansion, over: {abilities: {'Huge Power': {statusImmune: ['psn', 'tox']}}}});
+  const parts = plain(engine.residual(holder, {weather: 'Sand'}));
+  assert.deepEqual(parts.map(part => part.l), ['Sandstorm', 'Leftovers']);
+  assert.deepEqual(plain(engine.residual({...holder, st: 'brn'})).map(part => part.l), ['Leftovers', 'Burn']);
+  assert.deepEqual(plain(engine.residual({...holder, ab: -1})).map(part => part.l), ['Leftovers', 'Toxic']);
+  engine.init(data, profiles.expansion);
+  assert.deepEqual(plain(engine.residual(holder)).map(part => part.l), ['Leftovers', 'Toxic']);
+});
+
 await test('KO text counts the defender residual each turn; rolls and percentages do not', () => {
   engine.init(data, profiles.expansion);
   const attacker = set('Charizard');

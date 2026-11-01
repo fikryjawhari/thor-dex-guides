@@ -545,7 +545,9 @@ function residual(set, values = {}, otherSet = null, side = 'atk') {
   else if (items && mon.hasItem('Sticky Barb')) add('Sticky Barb', -1, 8);
   if (profile.gen >= 6 && field.hasTerrain('Grassy') && isGrounded(mon, field)) add('Grassy Terrain', 1, 16);
   const own = profile.residual?.status?.[set.st];
-  if (own) add(own[2], own[0], own[1]);
+  const statusImmune = profile.over?.abilities?.[mon.guideAbility]?.statusImmune?.includes(set.st);
+  if (statusImmune) {}
+  else if (own) add(own[2], own[0], own[1]);
   else if ((set.st === 'psn' || set.st === 'tox') && mon.hasAbility('Poison Heal')) add('Poison Heal', 1, 8);
   else if (set.st === 'psn') add('Poison', -1, 8);
   else if (set.st === 'tox' && !guard) {
