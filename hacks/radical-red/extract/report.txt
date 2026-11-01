@@ -3160,6 +3160,62 @@ locs: not built yet (TODO: implement radical-red locs extraction)
   trainers: Trainer Order puts Gentleman Brooks (482) in Pre-Lt. Surge, data.js cap 28
 trainers: 464 data.js trainers = 460 cards + 2 partners + 2 same-team alternatives; 18 splits
 trainers: Trainer Order 115 entries; 46 cards with the cap box (222 relative mons); 186 boss blocks, 185 matched, 1 sheet only
+trainers: boss teams checked: sheet 967 mons, 11 differ ("Sheet says"), 0 sheet slots with no mon; RR calc 905 sets, 6 differ (report only); hzla 539 sets, 38 differ (report; "hzla says" where the sheet differs too)
+  Sheet says: 317 Leader Chuck #6: ability Steadfast
+  Sheet says: 55 PkMn Trainer Brendan #3: moves HP Fire
+  Sheet says: 39 Champion Lance #3: Naive (Team Rocket!O433)
+  Sheet says: 123 Lass Ali #3: Bashful (Mini Bosses!O145)
+  Sheet says: 122 Lass Reli #3: ability Battle Armor
+  Sheet says: 144 Camper Ethan #1: Adamant (Mini Bosses!E215)
+  Sheet says: 126 Lass Ann #1: ability Battle Armor
+  Sheet says: 155 Picnicker Caitlin #3: Bashful (Mini Bosses!O360)
+  Sheet says: 16 PkMn Trainer Sam #3: moves HP Psychic
+  Sheet says: 82 Ace Trainer Samantha #6: Jolly (Postgame!AD203)
+  Sheet says: 28 Leader Morty #5: moves Thunderbolt
+  calc says: 57 PkMn Trainer Brendan #6 sceptile: item Life Orb; moves Drain Punch, Leaf Blade, Rock Slide, Swords Dance
+  calc says: 26 PkMn Trainer Brendan #6 sceptile: item Life Orb; moves Drain Punch, Leaf Blade, Rock Slide
+  calc says: 67 Rocket Admin Archer #4 houndoom: ability Dark Aura; moves Fiery Wrath, Heat Wave, Pursuit, Scorching Sands
+  calc says: 68 Rocket Admin Ariana #4 mawile: moves Iron Head, Thunder Punch
+  calc says: 41 Rocket Admin Ariana #6 mawile: moves Sucker Punch
+  calc says: 42 Rocket Admin Archer #6 houndoom: Naive; ability Dark Aura; moves Fiery Wrath, Heat Wave, Pursuit, Scorching Sands
+  hzla says: 414 Leader Brock #6 varoom: ability Slow Start
+  hzla says: 74 Leader Clair #6 archaludon: ability Stalwart
+  hzla says: 48 Leader Misty #2 palafin_hero: ability Zero to Hero
+  hzla says: 48 Leader Misty #4 archaludon: ability Sturdy
+  hzla says: 47 Leader Bugsy #4 lokix: ability Swarm
+  hzla says: 8 Leader Bugsy #4 lokix: ability Swarm
+  hzla says: 317 Leader Chuck #1 iron_crown: ability Quark Drive
+  hzla says: 435 Rival Blue #3 celesteela: Modest; moves Flamethrower
+  hzla says: 437 Rival Blue #1 charizard: Jolly; ability Tough Claws; item Charzardite X; moves Dragon Dance, Dragon Claw, Flare Blitz, Earthquake
+  hzla says: 355 Team Rocket Grunt #2 crobat: level -1; Serious; item none; moves Leech Life, Dual Wingbeat, Haze, Venoshock
+  hzla says: 355 Team Rocket Grunt #3 raticate: Docile; item none; moves Zen Headbutt, Crunch, Return, Super Fang
+  hzla says: 357 Team Rocket Grunt #1 hypno: Mild; ability Forewarn; item none; moves Wake-Up Slap, Psych Up, Synchronoise
+  hzla says: 366 Team Rocket Grunt #1 weezing_galar: Adamant; item none; moves Self-Destruct, Sludge, Smokescreen, Haze
+  hzla says: 367 Team Rocket Grunt #2 shiftry: level 42; Careful; item none; moves Fake Out, Leaf Tornado, Hurricane, Nasty Plot
+  hzla says: 370 Team Rocket Grunt #2 obstagoon: Naive; item none; moves Take Down, Scary Face, Counter
+  hzla says: 371 Team Rocket Grunt #2 hydreigon: Calm; item none; moves Dragon Rush, Body Slam, Scary Face
+  hzla says: 53 Rocket Admin Archer #3 houndoom: level 100; Timid; ability Solar Power; moves Dark Hole, Fire Blast, Sludge Bomb, Solar Beam
+  hzla says: 54 Rocket Admin Ariana #3 mawile: level 100; moves Knock Off
+  hzla says: 349 Boss Giovanni #4 garganacl: ability Sturdy
+  hzla says: 72 Team Rocket Grunt #2 mandibuzz: level -1; Gentle; item none; moves Embargo, Whirlwind, Brave Bird, Mirror Move
+  hzla says: 72 Team Rocket Grunt #6 garbodor: level -1; Gentle; ability Weak Armor; item none; moves Amnesia, Belch, Gunk Shot, Explosion
+  hzla says: 70 Team Rocket Grunt #2 ursaring: Naughty; ability Quick Feet; item none; moves Scary Face, Rest, Thrash
+  hzla says: 70 Team Rocket Grunt #6 sharpedo: Hardy; ability Rough Skin; item none; moves Ice Fang, Poison Fang, Agility
+  hzla says: 67 Rocket Admin Archer #4 houndoom: Timid; moves Fire Blast, Sludge Bomb
+  hzla says: 68 Rocket Admin Ariana #4 mawile: moves Iron Head, Knock Off, Thunder Punch
+  hzla says: 69 Boss Giovanni #6 mewtwo: ability Insomnia
+  hzla says: 123 Lass Ali #3 brionne: Bashful (shown)
+  hzla says: 92 Youngster Timmy #3 snover: ability Soundproof
+  hzla says: 154 Picnicker Alicia #4 chatot: ability Frisk
+  hzla says: 448 Channeler Ruth #5 polteageist: ability Cursed Body
+  hzla says: 233 Fisherman Andrew #1 froslass: ability Snow Cloak
+  hzla says: 301 Bird Keeper Perry #5 dragapult: ability Cursed Body
+  hzla says: 335 Scientist Ted #1 froslass: ability Cursed Body
+  hzla says: 455 Burglar Anson #2 okidogi: ability Guard Dog
+  hzla says: 79 Leader Pryce #1 abomasnow: ability Slush Rush
+  hzla says: 546 SwimmerF Amara #3 dewgong: level -1; item none; moves Dive, Aqua Tail, Safeguard, Snowscape
+  hzla says: 76 Leader Whitney #2 miltank: Naive; ability Scrappy; item Leftovers; moves Body Press, Stomping Tantrum
+  hzla says: 76 Leader Whitney #6 snorlax: Naughty; moves Fire Punch
   sheet only: Postgame!C1175 BERRY FOREST SPIRIT
   trainers: Trainer Order row 366 BURGLAR LEWIS: cap 73, listed in Pre-Blaine: in Pre-May
 items: not built yet (TODO: implement radical-red items extraction)

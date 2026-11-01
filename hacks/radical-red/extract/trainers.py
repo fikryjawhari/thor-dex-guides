@@ -15,6 +15,7 @@ import re
 
 from common import DATA, SPECIES, SPECIES_IDS, CAPS, H, key, sid, move, ability, item, report
 import bosssheet
+import setcheck
 
 STATS = {}
 # Main E44:E78 (asserted against data.js caps on every build)
@@ -96,10 +97,16 @@ DEX = {SPECIES_IDS[i]: r['dexID'] for i, r in SPECIES.items()}
 T = DATA['trainers']
 
 
+def _stats(values):
+    """data.js IVs / EVs are in the game's order (HP, Atk, Def, Spe, SpA, SpD; the RR calc's ivs agree 245 / 253):
+    the schema's order is HP, Atk, Def, SpA, SpD, Spe."""
+    hp, at, df, sp, sa, sd = values
+    return [hp, at, df, sa, sd, sp]
+
+
 def _hp_type(iv):
-    hp, at, df, sa, sd, sp = iv
-    bits = [hp, at, df, sp, sa, sd]
-    return HP_TYPES[sum((v & 1) << i for i, v in enumerate(bits)) * 15 // 63]
+    """Hidden Power's type from data.js IVs (game order: the bits are HP, Atk, Def, Spe, SpA, SpD)."""
+    return HP_TYPES[sum((v & 1) << i for i, v in enumerate(iv)) * 15 // 63]
 
 
 def _sheet_dex(name):
@@ -152,11 +159,22 @@ def _link_block(link):
     return next(b for b in bosssheet.blocks() if b.sheet == sheet and row <= b.row <= row + 6)
 
 
-def _mega(species, held):
-    for how, stone, target, _ in SPECIES[str(species)].get('evolutions', []):
-        if how == 254 and stone == held:
+def _mega(m):
+    """The form a data.js mon battles in: data.js evolution method 254 [254, stone item, form, kind] = Mega, Primal,
+    Ultra Burst, Crowned (held item), or kind 2 = Mega by a move (Rayquaza: Dragon Ascent, holding no Z-crystal)."""
+    held = m.get('item')
+    for how, need, target, kind in SPECIES[str(m['species'])].get('evolutions', []):
+        if how == 254 and (need in m['moves'] and not (item(held) or '').endswith(' Z') if kind == 2 else need == held):
             return target
     return None
+
+
+def _mega_ability(m, mega):
+    """A Mega keeps the base's ability slot (RR's Megas have up to three; the sheet and RR calc agree); an empty slot is
+    the primary ability."""
+    abilities = SPECIES[str(mega)]['abilities']
+    slot = m['ability'] if m['ability'] <= 2 and abilities[m['ability']][0] else 1
+    return ability(abilities[slot])
 
 
 def build(D):
@@ -174,6 +192,7 @@ def build(D):
             block_of.setdefault(i, bk)
     counts = collections.Counter()
     fixes = []
+    checked, check_lines, check_counts = setcheck.compare(matched, blocks, caps)
 
     # Trainer Order: split, cap (or range), optional, order
     order = bosssheet.trainer_order()
@@ -283,21 +302,25 @@ def build(D):
         if slot > 2 or not abilities[slot][0]:
             slot = 1        # an empty slot (or 3) is the primary ability (RR calc / hzla agree)
         name = ability(abilities[slot])
-        mega = _mega(m['species'], held) if held else None
+        mega = _mega(m)
         if mega:
             out['id'] = SPECIES_IDS[str(mega)]
-            out['a0'] = ab_index[name]
-            name = ability(SPECIES[str(mega)]['abilities'][1])
+            mega_name = _mega_ability(m, mega)
+            if mega_name != name:
+                out['a0'] = ab_index[name]
+            name = mega_name
         out['a'] = ab_index[name]
         out['na'] = natures[str(m['nature'])]
-        out['iv'] = list(m['IVs'])
+        out['iv'] = _stats(m['IVs'])
         if any(m['EVs']):
-            out['ev'] = list(m['EVs'])
+            out['ev'] = _stats(m['EVs'])
         out['m'] = [move_index[move(v)] for v in m['moves'] if v]
         if any(move(v) == 'Hidden Power' for v in m['moves']):
             out['hp'] = _hp_type(m['IVs'])
         if (i, x) in pre_of:
             out['pre'] = [pre_of[(i, x)]]
+        for f, texts in checked.get((i, x), {}).items():
+            out[f] = list(texts)
         return out
 
     area_of = {}
@@ -382,6 +405,11 @@ def build(D):
            'matched, %d sheet only' % (len(order), counts['cap box'],
                                          sum(1 for i in relative for m in T[i]['hardcore'] if m['level'] in scaled),
                                          len(matched), len(matched) - len(sheet_only), len(sheet_only)))
+    report('trainers: boss teams checked: sheet %(sheet)d mons, %(sheet_diff)d differ ("Sheet says"), %(missing)d '
+           'sheet slots with no mon; RR calc %(calc)d sets, %(calc_diff)d differ (report only); hzla %(hzla)d sets, '
+           '%(hzla_diff)d differ (report; "hzla says" where the sheet differs too)' % check_counts)
+    for line in check_lines:
+        report('  ' + line)
     for bk in sheet_only:
         report('  sheet only: %s!C%d %s' % (bk[0], bk[1], blocks[bk].title))
     for f in fixes:
