@@ -40,7 +40,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
   3DS (`tools/ctrguide.py`; next Meissa Moon, Navy Sapphire), pokeemerald-expansion (Emerald Imperium; SoulGold),
   CFRU (Unbound, `tools/cfru.py`; Radical Red), NDS (Hardlove Gold; Blaze Black 2 Redux with the Drayano family's
-  `tools/drayano.py` / `tools/romhackdex.py`; Renegade Platinum reuses them; HeartGold Retiled).
+  `tools/drayano.py` / `tools/romhackdex.py`; Renegade Platinum reuses them; Heartfelt Gold, formerly HeartGold Retiled, is hg-engine like Hardlove).
 - **Shipping a guide update:** push `main`, wait for the Pages Action, then on the Thor long-press the guide → Update
   from link. Same library id, so saved state (tracker, ticks, calc) is kept.
 - **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
@@ -143,13 +143,15 @@ yet, and the dex source each extract will turn into `data.json`:
 | Meissa Moon | `.src/dex.json` (game data) | same | same | `trainers.json` (natures, EVs) |
 | Navy Sapphire | `.src/dex.json` (game data) | same | same, by method with rates | `trainers.json` |
 | Renegade Platinum | `romhackdex/pokedex/` | `romhackdex/moves.json` | `WildPokemon.txt` (+ RomHackDex) | `TrainerPokemon.txt` |
-| HeartGold Retiled | `hg-engine/species-pinned.json` | `hg-engine/pinned/Moves.c` | `source/Encounters.c` + guide | `source/Trainers.c` + guide |
+| Heartfelt Gold | `hg-engine/species-retiled.json` | `source/data/Moves.c` | `source/data/Encounters.c` + guide | `source/data/Trainers.c` + guide |
 | SoulGold | `data/species.json` + `data/species-details/` | `data/moves.json` | `data/encounters.json` | `data/trainers.json` |
 | Radical Red | `romhackdex/pokedex/` | `romhackdex/moves.json` | RomHackDex | the two sheets |
 
 Questions for those builds:
-- **HG Retiled:** never hg-engine `main`. Retiled's repo only carries the tables it changes; species / moves come from
-  the last upstream commit before its release (`dcbe17a`).
+- **Heartfelt Gold** (HeartGold Retiled renamed at v1.0.0, 2026-10-31; source pass 2026-11-01): the repo now carries its
+  own `Species.c` / learnsets / `Moves.c`, which win; upstream hg-engine only for ability text, at `61b510c` (never a
+  later `main`). Its Walkthrough and Item-Locations guides are still the Retiled-era ones (the author says they need an
+  audit), so walkthrough order and item locations need another source. `hacks/heartfelt-gold/SOURCES.md`.
 - Gen 7 wild tables have no method field (label them from the docs, as Photonic Sun does). Static and gift
   encounters of the 3DS games come from the game's `DllField.cro` (Eternal X's `locs.py`) or the docs.
 - Renegade Platinum: the Drayano family code (`tools/drayano.py`, `tools/romhackdex.py`) was written for it to reuse.
