@@ -10,7 +10,22 @@ TODO: implement extract modules; audit inherited cfg switches and cfg.txt wordin
 
 ## Sources and rules
 
-TODO: document sources and rules.
+The official 4.1 dex's pinned `data.js` is the numerical authority (SOURCES.md). Its object literal is tokenised,
+converted to JSON, and cached in memory only: no JavaScript evaluation or writes to the shared source junction.
+
+### Dex
+
+`common.py` exports `DATA`, `SPECIES`, `SPECIES_IDS`, `SPECIES_NAMES`, `FORM_KEYS`, `CAPS`, `sid`, `move`, `ability`,
+`item`, `type_name`, `area`, `cap_step`, and `cap`. IDs are lowercase underscore slugs of the official dex keys,
+not National Dex numbers. `sid(int)` means the game's data.js ID. Names accept sheet/Showdown ordering, regional
+prefixes and suffixes, and punctuation-insensitive CFRU short move/ability names. Unknown lookups return None.
+Ability pairs `[ID, variant]` preserve aliases sharing one game ID; a bare ability ID selects variant zero.
+Species ability slots are **hidden, primary, secondary**, not the other way round. Source stats are HP/Atk/Def/Spe/SpA/SpD.
+Area keys are progression steps, not levels; `cap(step)` returns `cap[1]` (Hardcore), normal is `cap[0]`.
+Cosmetic species IDs are kept distinct for now, including the source's otherwise indistinguishably named records;
+Pumpkaboo/Gourgeist order 0/1/2/3 means Average/Small/Large/Super. The base lookup always selects Average.
+The 827 named ordinary moves exclude Placeholder and generated Z/Max records (IDs >=848); no learnset uses those.
+Do not index M/AB until dex.build has run: their final lists are sorted by name, independently of game IDs.
 
 ## Local storage
 
