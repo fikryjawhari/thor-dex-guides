@@ -19,7 +19,7 @@ def names_in(data):
     found = {row[0] for section in data.get('IT', []) if section.get('k') != 'npc'
              and section.get('n') != 'Move Tutors' for row in section['r']}
     for species in data.get('P', []):
-        found.update(species.get('hi') or [])
+        found.update(held[0] if isinstance(held, list) else held for held in species.get('hi') or [])
         if species.get('stone'):
             found.add(species['stone'])
     for group in data.get('TR', {}).get('g', []):
