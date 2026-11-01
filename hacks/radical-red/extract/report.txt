@@ -3235,7 +3235,10 @@ items: shop price: Lava Cookie (Two Island shop) from FRLG, the Shops tab has no
 items: data.js care package items with no package on the sheet: Pomeg Berry, Rare Candy (Viridian City, step 0)
 items: tutor Uproar: data.js only (Saffron City Gian's House 2F)
 items: item_desc.json: 613 items, 41 changed vs FireRed or in effect
-walk: not built yet (TODO: implement radical-red walk extraction)
+walkthrough: splits 18, stops 136, steps 32, trainers 460, pickups 451, placed 451, np 0
+walkthrough: pickups placed by by item 8, later visit 14, own split 408, split before 21
+walkthrough: pickups at a later visit: TM046 Thief (Diglett's Cave 1F, step 0) -> diglett-cave; Lucky Egg (S.S. Anne 2F, step 2) -> ss-anne; Shiny Stone (S.S. Anne 2F, step 2) -> ss-anne; HM01 Cut (S.S. Anne Captain's Quarters, step 2) -> ss-anne; TM026 Earthquake (Saffron City Gian's House 1F, step 8) -> saffron-kid; Swampertite (Saffron City Gian's House 1F, step 8) -> saffron-kid; Venusaurite (Route 16 Gatehouse 2F, step 6) -> route-16; Charizardite Y (Route 16 Gatehouse 2F, step 6) -> route-16; Blastoisinite (Route 16 Gatehouse 2F, step 6) -> route-16; DNA Splicers (Cinnabar Island Lab Testing Room, step 10) -> cinnabar-lab; Aggronite (Cinnabar Island Lab, step 10) -> cinnabar-lab; Choice Band (Cinnabar Island Lab, step 10) -> cinnabar-lab; Assault Vest (Cinnabar Island Lab, step 10) -> cinnabar-lab; Steelixite (Cinnabar Island Lab, step 10) -> cinnabar-lab
+walkthrough: data.js areas in no stop: none
   description-derived metadata: Metal Bash: A physical attack in which the user charges, full body, into the foe.
 move metadata: 825 structured; 1 description-derived; 0 missing; 253 changed markers
 move metadata number disagreements (official dex retained): 113
@@ -3368,9 +3371,10 @@ pickup keys: 10 table entries no pickup matched
   p445: Latiasite (Cinnabar Island Lab Testing Room)
   p447: Latiosite (Cinnabar Island Lab Testing Room)
   p476: Waterium Z (Cerulean City Gym)
-pickup keys: 492 pickups, 0 walkthrough rows keyed
+pickup keys: 492 pickups, 451 walkthrough rows keyed
 prune: kept 1313; removed 30: dialga_origin, arceus_fighting, arceus_flying, arceus_poison, arceus_rock, arceus_ghost, arceus_fire, arceus_water, arceus_grass, arceus_electric, arceus_psychic, arceus_ice, arceus_dragon, arceus_dark, silvally_fighting, silvally_flying, silvally_poison, silvally_ground, silvally_rock, silvally_bug, silvally_ghost, silvally_steel, silvally_fire, silvally_water, silvally_grass, silvally_electric, silvally_psychic, silvally_ice, silvally_dragon, silvally_dark
-item name: Houndoomnite -> Houndoominite (5 use(s), Items tab spelling)
+trainers put in walkthrough order: Pre-Brock [Cap 16], Pre-Misty [Cap 28], Pre-Lt. Surge [Cap 36], Pre-Erika [Cap 44], Pre-Koga [Cap 68], Pre-May [Cap 73], Pre-Cerulean Cave Archer & Ariana [Cap 79], Pre-Brendan [Cap 82], Post Game [Cap 100]
+item name: Houndoomnite -> Houndoominite (6 use(s), Items tab spelling)
 item text: 365 own, 5 pooled, 0 from the wiki, 3 made up, 1 Mega Stone standard, 0 with no description
 in battle: 180 shown items with battle text, 194 without
 in battle: 747 moves with battle text, 79 without

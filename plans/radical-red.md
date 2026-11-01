@@ -103,6 +103,11 @@ Each unit adds the decisions it had to take to **Decisions taken in units** belo
 - [unit 6] Sheet differences show as "Sheet says" (11 mons); hzla only where the sheet also differs (its ability slots contradict both data.js and the sheet elsewhere); RR calc differences in the report only (hardcore.js, radredhc.js).
 - [unit 6] The sheet's BATTLE EFFECT lines are the field evidence: primal weathers locked, terrains permanent, Swamp / Magma Storm / Magnet Rise text only; "Permanent Tailwind" is the boss's side (guess); duo classes are doubles (47 doubles); the 71 setter teams without a battle effect rely on `setterStays` (Main E10).
 - [unit 6] The four gym rematches are not tagged Optional (3 of 4 required) and carry one trainer note each; the Berry Forest Spirit block (Postgame!C1175) has no data.js trainer and is left out.
+- [unit 8] The walkthrough route is a hand table in walk.py (`ROUTE`), one line per stop, with semantic stop keys written there (Unbound's scheme), not "split.stop" positions (Unbound walk.py, the brief).
+- [unit 8] Places whose fights sit in two boxes are visited once per box (S.S. Anne cabins before Misty, halls and Cut after; Route 9 / Rock Tunnel / Route 10 / Route 8 ordinary trainers before Lt. Surge, their mini bosses before Erika; Mansion B1F Lewis before May) so every stop holds only its split's fights (unit 6 boxes, the user's answers).
+- [unit 8] Pickups go to their area's stop in their own cap step's split, else the split before (boss rewards), else the first later visit; 8 area-less lines by item; all 451 placed, np empty (items.PICKUPS, data.js steps).
+- [unit 8] Rock Smash / Strength return items (step 9 at Route 2, Viridian Forest Heart, Mt. Moon, Route 6, Rock Tunnel, Celadon) get small Pre-Koga stops beside the gym rematches; Surf ones (step 10) a Pre-May Surf circuit before May (data.js steps; the order is a guess).
+- [unit 8] Story steps kept to gates and gifts (Tea, Cut, Card Key, Lapras, Lift Key, Poké Flute Snorlax, Gold Teeth, Secret Key, Kubfu, Mystery Gifts, Enamorus); no route prose (CLAUDE.md, unit 4 story stops).
 
 ## Units
 
