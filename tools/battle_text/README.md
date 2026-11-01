@@ -37,7 +37,7 @@ or hack-specific interaction.
 
 Leech Seed, Calm Mind, Toxic, Bullet Seed, Life Orb, Leftovers, Sitrus Berry,
 Dark Gem, Grass Gem and Dream Ball defaults are verbatim from
-`plans/item-pages-mockup.js`'s `HAND` object, as requested. Historical variants
+`plans/item-pages-mockup.js (deleted 2026-11-02, in git history)`'s `HAND` object, as requested. Historical variants
 do not replace those defaults. These are review examples, not a claim that an
 approved default covers every backported interaction.
 

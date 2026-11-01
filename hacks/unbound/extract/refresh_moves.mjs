@@ -132,6 +132,6 @@ rules.push({a: 'Drill Beak', w: 'u', e: 'Always critical (unless blocked)', add:
 rules.push({a: 'Slippery Tail', w: 'u', e: 'Priority becomes +1', add: Object.keys(moves).filter(name => moves[name].isTail), src: 'unboundcalc/gen78_YA0k.js:150-152; moves_YA0k.js isTail (includes Tail Glow and Tail Whip); hzla Unbound profile afterMoveType'});
 rules.push({a: 'Portal Power', w: 't', e: 'Damage ×0.75', add: noncontact, src: 'unboundcalc/gen78_YA0k.js:1002-1003; hzla Unbound profile finalMods (!move.flags.contact)'});
 // Type-based abilities (Gale Wings, Grass Dash: a type's moves first; Evaporate: Water immunity) are left out,
-// as the shared table leaves out Blaze and the absorb abilities (plans/move-pages.md, Out of scope).
+// as the shared table leaves out Blaze and the absorb abilities (plans/move-pages.md (deleted 2026-11-02, in git history), Out of scope).
 writeFileSync(resolve(here, 'move_rules.json'), JSON.stringify(rules, null, 2) + '\n');
 console.log(`metadata: ${Object.keys(moves).length}; missing: ${missing.join(', ')}`);

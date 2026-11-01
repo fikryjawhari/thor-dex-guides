@@ -104,7 +104,11 @@ The extract helpers apply most of these rules.
 - Trainers boxes are cap splits named `<Boss> Split [Cap N]`, then `Elite Four Split [Cap N]`, then `Post-game`
   (`tools/splits.py`). One cap list, mini caps included. The walkthrough's splits are the same boxes, and the
   Trainers page lists them in walkthrough order (`extractlib.trainers_follow_walk`; `tools/tabs_check.py` checks it).
-- Items: one box set, sub-headings and row style for every guide (`tools/itemstd.py`, rules in its docstring).
+- Items: one box set, sub-headings and row style for every guide (`tools/itemstd.py`, rules in its docstring): the
+  boxes are item kinds, each item is one row (shops fold in as Shop lines), one line per pickup labelled Found (in the
+  world) / Also (given, reward, raid drop) / Shop (bought); a walkthrough row matches the Items line of the same item
+  at the same place and shares its pickup key (`tools/pickup_keys.py`). One spelling per item, item text and In battle
+  text: `tools/item_text.py` (bag text pooled across guides, `tools/battle_text/` by generation).
 - A Starter area on Locations, listed first.
 
 ## Page design
@@ -657,7 +661,7 @@ Scenario: `tools/scenarios/move-page.mjs`, every guide, all viewer sizes in norm
    Hidden with counts, only groups present; All shows each group collapsed, picking one shows only it, open; open
    headers stick. Normal = one of `p.a`, Hidden = `p.ha`; a species with it in both is in both. Nothing saved.
 
-**Item page** (`#/i/<item name>`, decided 2026-11-01, `plans/item-pages.md`; `ITEM PAGE` in dex.js, "Item page" in dex.css):
+**Item page** (`#/i/<item name>`, decided 2026-11-01, `plans/item-pages.md (deleted 2026-11-02, in git history)`; `ITEM PAGE` in dex.js, "Item page" in dex.css):
 1. Routed by name (`ihref`: URL-encoded, `'()!*~` too, so the reopen route keeps it); the Items rail tab's page. `itemIdx`
    builds, once, everything the guide says about each item by name: its `IT` rows (not Useful NPCs or Move Tutors), wild
    holders (`P.hi` pairs, Mega and form-change forms left out), trainers whose Pokémon or partners hold it, `MI` records
@@ -686,7 +690,7 @@ Scenario: `tools/scenarios/move-page.mjs`, every guide, all viewer sizes in norm
    for items (a Page action). Not links: the calc's item chips and pickers (controls).
 Scenario: `tools/scenarios/item-page.mjs`, every guide, all viewer sizes in normal and `dvkb` modes.
 
-**Items tab** (decided 2026-11-01, `plans/item-pages.md` §5-6; `ITEMS TAB` in dex.js, "Items tab" in dex.css):
+**Items tab** (decided 2026-11-01, `plans/item-pages.md (deleted 2026-11-02, in git history)` §5-6; `ITEMS TAB` in dex.js, "Items tab" in dex.css):
 1. Boxes are the kinds, in the data's order (`D.IT`, `tools/itemstd.py` → `BOXES`), as the standard collapsible boxes
    (Collapsible pages above). Box count = items (a nomerge name counts once); Move Tutors: "N tutors". Sub-headings are
    the data's (`r[4]`), counted in cards.

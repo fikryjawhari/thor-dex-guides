@@ -1,4 +1,4 @@
-// This fight's types / ability / item (plans/move-pages.md → Calc: type, ability and item changes for the fight): the
+// This fight's types / ability / item (plans/move-pages.md (deleted 2026-11-02, in git history) → Calc: type, ability and item changes for the fight): the
 // moves that change them really do (Worry Seed, Soak, Trick), ↺ on the card and Reset fight put the set's back, Edit
 // keeps showing the set's; Edit → Fight… sets one by hand for any Pokémon, the card's Δn counts the changes and opens
 // their chips, a chip tap clears one. Damaging rows show their added-effect odds on line 2 after the range (the KO text

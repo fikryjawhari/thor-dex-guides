@@ -374,7 +374,7 @@ def documentation(report, provenance, canonical, same, conflicts):
         'Unbound held-item chance prefixes and Baile Style annotations are stripped for matching only; data is unchanged.',
         'Ilima’s Normalium Z uses the Normalium Z crystal; S.S. Aqua Ticket uses the S.S. Ticket.', '',
         '## Coverage and packed cost', '',
-        'Inventory reuses `plans/item-pages-mockup.py`’s `names_in` logic, retained in the tool so deleting the completed',
+        'Inventory reuses `plans/item-pages-mockup.py (deleted 2026-11-02, in git history)`’s `names_in` logic, retained in the tool so deleting the completed',
         'plan does not break rebuilding: IT except NPC/Move Tutors, P.hi/P.stone, trainers/partners/normal teams and MI.i.',
         'Names are exact distinct displayed labels per guide, including misspellings and malformed labels.', '',
         '| Guide | Names | With icon | Without | Distinct art | Sheet PNG bytes | Base64 bytes |',

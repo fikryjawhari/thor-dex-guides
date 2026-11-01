@@ -4,81 +4,78 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 `docs/PROGRESS.md` keeps the app's history. History here is in git, each hack's `notes.md` → History, and
 `template/README.md` (design decisions). This file is the current state and what's left.
 
-## Current status (2026-10-30)
+## Current status (2026-11-02)
 
 - **Six guides on `main`**, one template, one extract layout (`tools/extractlib.py`), one data schema
   (`tools/schema.py`), one Items standard (`tools/itemstd.py`), one notes / SOURCES layout, and the damage calc with
-  save import on every one: Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.6 (NDS), Photonic Sun 2.38 Rebalanced
+  save import on every one: Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.7 (NDS), Photonic Sun 2.38 Rebalanced
   (3DS, EV-less), Eternal X 2.67 Rebalanced (3DS), Blaze Black 2 Redux 1.4.1 (NDS, Complete EVless / Challenge),
   Unbound 2.1.1.1 (GBA, Expert). Live on GitHub Pages (https://fikryjawhari.github.io/thor-dex-guides/), built by the
-  Action from `main`.
-- **`main` is ahead of `origin/main`, not pushed** (the user decides): BB2R fixes (cfg.txt placeholders, `assemble.py`
-  stops on TODO / TBD / FIXME in a hack.json; Aspertia City has no tracker slot; curated Valuables) and the calc's
-  move effects (every guaranteed move effect: status-move buttons, secondaries on Use, one resolver with a
-  generation-aware blocker table, per-hack `calc_effects.json`; `template/README.md` and `tools/calc/README.md` → Move
-  effects). Accuracy / evasion stages and volatiles (confusion and the like) are logged only, not stored.
-  Then calc resets and page states (2026-10-31, merged from `worktree-calc-resets`): card ↺ resets that Pokémon's
-  battle state; entry hazards are a card chip offered on a switch-in, never automatic (Field's Apply hazards gone);
-  double tap on a calc Pokémon opens its dex page; rail tabs keep their own page and place; pages open collapsed
-  (Locations places open) with targeted Expand / Collapse bars, a walkthrough Show switch (Stops / Sections / All) and
-  Reset all; Pokémon sprites and tracker tags link to the dex page. Decisions in `template/README.md` and
-  `tools/calc/README.md`. Not yet on the Thor (Open 1).
-  Then the Pokémon page (2026-10-31, merged from `worktree-dex-page`): collapsible sections with one saved open state
-  (`LS.dex` `o`), name bar, ‹ › through the list as it stands, forms menu, place kept on switching, rail jumps between
-  sections, family evolution, compact moves, vertical stat calc, Use in calc ▸ in the top card; changed abilities show
-  one statement (data `AB` [4], EI's 15 in `hacks/emerald-imperium/extract/ability_text.json`) and the ability page
-  the original ([5]) and the change. `template/README.md` → Pokémon page; scenario `dex-page.mjs`. Not yet on the Thor.
-- **Move, ability and item pages + calc fight state: in progress on `worktree-move-pages`** (worktree
-  `.claude/worktrees/move-pages`, not merged, not pushed). Plan, units and status: `plans/move-pages.md` (read its
-  Status section first). Done: shared move properties / targets / effect odds and ability-item rules
-  (`tools/moveprops.py`, `MV.f` / `tg` / `se`, top-level `MI`, per-hack `extract/move_rules.json`) in all six guides;
-  calc fight-only types / ability / item and effect odds on move rows; trainer full page links to Trainers /
-  Walkthrough. Next: 4a (KO chance in the opened calc row), 4b (every move does something + Photonic Z status
-  effects), 4c (calc layout decide session), 5 (move / ability page template per the mockup), 6 (item pages), 7 audit.
+  Action from `main`; `main` pushed 2026-11-02.
+- **Merged 2026-11-02 from `worktree-move-pages`** (none of it on the Thor yet: Open 1):
+  - Move and ability pages; shared move properties / targets / effect odds and ability-item rules
+    (`tools/moveprops.py`, `MV.f` / `tg` / `se`, `MI`, per-hack `extract/move_rules.json`).
+  - Calc fight state: moves that change a type, ability or item do it for the fight (Worry Seed, Trick, Soak ...),
+    effect odds and KO chance on move rows, the new calc layout. `template/README.md`, `tools/calc/README.md`.
+  - Item pages (`#/i/<item>`), links from every place that names an item, the Items tab as one card per item in boxes
+    by kind, pickup ticks shared with the walkthrough (`LS.items.g`, stable keys `extract/pickup_keys.json`), the move
+    page's In battle box / Also TM / Where card, the Pokémon page's Held items (wild odds). `template/README.md` →
+    Item page, Items tab.
+  - Item data: bag text per guide (`extract/item_desc.json`, pooled across guides by `tools/item_text.py`, gaps in
+    `extract/item_text_extra.json`), hand-written In battle text (`tools/battle_text/`, per-hack
+    `extract/battle_text.json`), wild held-item odds (`P.hi`), one spelling per item, one line per pickup labelled
+    Found / Also / Shop, item icons (`sprites/items/`, per-guide sheets by `tools/item_sheets.py`).
+  - Hardlove 0.8.6 and 0.8.7, Heartfelt Gold v1.0.0 sources (formerly HeartGold Retiled; no guide yet).
 - Where things are decided: `template/README.md` (template, UI, calc page), `tools/calc/README.md` (engine),
   `template/calc/readers/README.md` (save readers), each hack's `notes.md` (data, Damage calc, In-game tests / checks).
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
   3DS (`tools/ctrguide.py`; next Meissa Moon, Navy Sapphire), pokeemerald-expansion (Emerald Imperium; SoulGold),
   CFRU (Unbound, `tools/cfru.py`; Radical Red), NDS (Hardlove Gold; Blaze Black 2 Redux with the Drayano family's
-  `tools/drayano.py` / `tools/romhackdex.py`; Renegade Platinum reuses them; Heartfelt Gold, formerly HeartGold Retiled, is hg-engine like Hardlove).
+  `tools/drayano.py` / `tools/romhackdex.py`; Renegade Platinum reuses them; Heartfelt Gold, formerly HeartGold
+  Retiled, is hg-engine like Hardlove).
 - **Shipping a guide update:** push `main`, wait for the Pages Action, then on the Thor long-press the guide → Update
   from link. Same library id, so saved state (tracker, ticks, calc) is kept.
-- **Waiting to merge: the 2026-11-01 source pass** (Hardlove 0.8.6, Heartfelt Gold v1.0.0, formerly HeartGold Retiled):
-  `plans/source-pass-2026-11-01-merge.md` is the whole procedure; run it after the move-pages work is merged.
-- **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
+- **Next session: profile the checks** (the user asked). The full `gate.py check` takes 45-60 min. The 2026-11-02
+  audit (6 guides) measured: scenarios per guide 219-259 s at `--jobs 8` (36 runs each); domcompare normal + kb in two
+  batches of 3 guides (6 node processes, `--jobs=2` each) 468 s + 320 s wall at 100 % CPU, against ~34 min one at a
+  time; data checks 2-15 s per guide. Ideas: a `gate.py` option for parallel domcompare (today it is the audit's
+  shell loop), checks chosen from the files a branch changed, the best `--jobs` for six guides, `#/i/` routes in
+  domcompare's route list.
+- **Next guide:** say which hack. A sources-only session can start from `.agents/references/new-guide-sources.md`;
+  `CLAUDE.md` → Making a new guide is the whole procedure.
 
-## Decided while the user was away (item pages build, 2026-11-01; reverse any)
+## Decided while the user was away (2026-11-01 / 02; reverse any)
 
 - Battle text: ≤ 230 characters, main effect + numbers + 1-2 interactions (the user picked this). Gen 4 variants in
   `tools/battle_text/` match no guide (Hardlove runs Gen 9 mechanics); left in, unused.
 - Item names: when a guide spells an item two ways, the spelled-out form wins (Silver Powder, Thunder Stone,
-  Empoleonite D), then the Items tab's spelling; rows renamed onto one item join (Photonic's Thunder Stone).
-- Item text: Mega Stones with no text get the games' standard sentence; Hardlove's 12 Z-A stones without a Mega form
-  by name; Unbound's Dream Mist = "gives a Pokémon its Hidden Ability", Max Powder = "gives a Pokémon the Gigantamax
-  Factor" (guesses from where they're sold: check in game); Pokégear Upgrade 1 = the Radio Card.
-- Hardlove's unobtainable Mega Stones show no "Found: Unavailable" line (the page's Mega line says so).
-- Item page: "changed" is a small accent word after the description, as on the move page; Held by leaves out Mega and
-  form-change forms.
-- Items tab: tutor box count without groups counts tutors by place (Hardlove "4 tutors" over 13 rows); no tick bar on
-  search results.
-- Pokémon page Held items: form-change forms (Castform Sunny, Shaymin Sky) list their wild items (only Megas have
-  none); "Trainers give it" counts the trainers of the page's "Used by trainers" (main teams, rivals of the other
-  starters in, partners out), so it can differ from the item page's Held by; sorted by count, then name.
-- Full gate (`gate.py check`) takes 45-60 min now: domcompare runs one guide at a time (~34 min of it). Later:
-  parallel domcompare, or checks chosen from the files a branch changed (Open).
+  Empoleonite D), then the Items tab's spelling; rows renamed onto one item join.
+- Item text: Mega Stones with no text get the games' standard sentence; Unbound's Dream Mist = "gives a Pokémon its
+  Hidden Ability" and Max Powder = "gives a Pokémon the Gigantamax Factor" (guesses from where they're sold: check in
+  game); Pokégear Upgrade 1 = the Radio Card.
+- Pickups: one line per pickup (walkthrough rows match the Items line at the same place); Found = in the world,
+  Also = given / reward / raid drop, Shop = bought; Key Items, TMs / HMs (not Hardlove's single-use TMs), Mega Stones
+  and Z-Crystals get a tick on Shop lines too; a TM Found line that only restates its shop goes. Disputed pairs
+  settled from the Unbound wiki and Bulbapedia (each hack's notes.md → Items).
+- Item page: "changed" is a small accent word after the description. Held by and the Pokémon page's Held items list
+  only base forms and forms with their own wild encounters (no Castform Sunny, Shaymin Sky, evolve-only regional
+  forms). The Pokémon page shows wild items only (the user: trainer counts belong on the item page).
+- Items tab: tutors are cards per tutor (the user liked it); without groups the box counts tutors by place; no tick
+  bar on search results.
 
 ## Open
 
-1. **Thor / in-game tests** (the user, per guide). Nothing since the consistency pass has been on the device; BB2R
-   and Unbound may not be in the library yet (add them from their Pages URLs). On the Thor: the text zoom fix (Items,
-   A−/A+, the collapse bars follow), the collapsed pages and Show switch, the hazard chip, rail-tab memory, and the calc in the offline viewer with the save bridge (the app repo
-   `../thor-offline-viewer`: `docs/_plans/save-file-picker.md` → Left to do; if `docs/SAVE_BRIDGE.md` changes, update
-   `template/calc.js` (import block) and `tools/scenarios/calc-bridge.mjs`). In game: each guide's notes.md → In-game
-   tests (BB2R: In-game checks: trainer levels vs hzla, TM57, Giga Impact's TM, Triple Axel, Psyshield Bash; Unbound:
-   Focus Belt / Nine Lives as Sturdy, Camomons with two moves of one type, Shelter Def +1 Spe +1; Photonic Sun: no EVs
-   gained on the EV-less copy, a Totem still hard, Toxic Thread −2 each; Hardlove: Thief / Covet steal nothing, Growth
-   SpA only, Rapid Spin no Speed, so its calc stays provisional until then). Calc page: is the `+2 −1` label style
-   (Shell Smash) clear on the device?
+1. **Thor / in-game tests** (the user, per guide). Nothing since the consistency pass has been on the device: the item
+   pages, Items tab and ticks, move / ability pages, the calc fight state, the Pokémon page, the text zoom fix, the
+   collapsed pages and Show switch, the hazard chip, rail-tab memory, and the calc in the offline viewer with the save
+   bridge (the app repo `../thor-offline-viewer`: `docs/_plans/save-file-picker.md` → Left to do; if
+   `docs/SAVE_BRIDGE.md` changes, update `template/calc.js` (import block) and `tools/scenarios/calc-bridge.mjs`).
+   BB2R and Unbound may not be in the library yet (add them from their Pages URLs). In game: each guide's notes.md →
+   In-game tests (BB2R: trainer levels vs hzla, TM57, Giga Impact's TM, Triple Axel, Psyshield Bash; Unbound: Focus
+   Belt / Nine Lives as Sturdy, Camomons with two moves of one type, Shelter Def +1 Spe +1, Dream Mist, Max Powder;
+   Photonic Sun: no EVs gained on the EV-less copy, a Totem still hard, Toxic Thread −2 each; Hardlove: Thief / Covet
+   steal nothing, Growth SpA only, Rapid Spin no Speed, Pokégear Upgrade 1, so its calc stays provisional until
+   then). Calc page: is the `+2 −1` label style (Shell Smash) clear on the device?
 2. **Real save tests.** Hardlove: the user plays on and reports what imports wrong (a 0.8.x save, mints, regional
    forms). One real import per guide on the Thor (EI RetroArch `.srm`, Hardlove DraStic `.dsv`, Photonic Sun / Eternal
    X Azahar `main`, BB2R melonDS / DraStic `.sav`, Unbound RetroArch `.srm`), compared with PKHeX on the PC; keep each
@@ -86,16 +83,20 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 3. **Footer credits:** `cfg.credit` is the hook (template reads it, no guide sets it). Hack authors from `SOURCES.md`,
    Bulbapedia / Serebii where used, the sprite set's credits (`sprites/SOURCES.md`), hzla's calc
    (Dynamic-Calc-Decomps, the oracle and save-reader reference). Agreed, not done.
-4. **Skill re-upload:** the repo copy (`.agents/skills/rom-hack-offline-dex/`) is current; the claude.ai account skill
-   is the 2026-10-18 hand-build version. Re-upload the repo copy (zip with forward-slash paths).
-5. **T3 worktree setup hook** (the user, in T3's project settings; sessions can't change them): a project script
+4. **Skill re-upload:** the repo copy (`.agents/skills/rom-hack-offline-dex/`) is the one to upload, once its
+   references cover the item pages (5); the claude.ai account skill is the 2026-10-18 hand-build version.
+5. **New-guide scaffold for the item data:** `tools/new_hack.py` stubs and the skill's references don't know
+   `extract/item_desc.json`, `item_text_extra.json`, `battle_text.json`, the generation entry in
+   `tools/item_text.py`, or `P.hi` odds yet (CLAUDE.md → Making a new guide lists them).
+6. **T3 worktree setup hook** (the user, in T3's project settings; sessions can't change them): a project script
    `python -I tools/worktree_setup.py`, icon Configure, run on worktree create. Until then run it by hand (CLAUDE.md → Git).
-6. **Source updates** (`uv run python -I tools/check_updates.py`; last full pass 2026-11-01): Hardlove 0.8.6 and the
-   Heartfelt Gold v1.0.0 source pass done (branches `worktree-hardlove-086`, `worktree-heartfelt-gold`); Emerald
-   Imperium's hzla backup index gained other games only (accepted). SoulGold's data files changed since 2026-10-24
-   (Mega Lopunny innates, Clefable / Mega Clefable and Unown learnsets, ability usage): re-fetch before its guide.
-   hzla's live `decomp` branch differs from Unbound's pin in `gen789.js` (now an Electromorphosis fix; pin kept).
-7. **Pokémon page** (merged 2026-10-31): test on the Thor.
+7. **Source updates** (`uv run python -I tools/check_updates.py`; last full pass 2026-11-01, Hardlove 0.8.7 on
+   2026-11-02): SoulGold's data files changed since 2026-10-24 (Mega Lopunny innates, Clefable / Mega Clefable and
+   Unown learnsets, ability usage): re-fetch before its guide. hzla's live `decomp` branch differs from Unbound's pin
+   in `gen789.js` (an Electromorphosis fix; pin kept).
+8. **Small data leftovers:** item icons missing for 19 Unbound key items and Pokégear Upgrade 1; tutor cards are
+   parsed from each row's " · " text (structured tutor fields from the extracts would be sturdier); a `nomerge` flag
+   in the data instead of the template inferring it; an unused `.phi .sh` rule in dex.css.
 
 ## Decisions
 

@@ -1,4 +1,4 @@
-// The item page #/i/<name> (plans/item-pages.md §1, §2, the tick plumbing of §6; template/README.md → Item page).
+// The item page #/i/<name> (plans/item-pages.md (deleted 2026-11-02, in git history) §1, §2, the tick plumbing of §6; template/README.md → Item page).
 //   page   cards present / absent per data (top card, In battle, Where to find, Held by, Moves it affects), the TM page
 //          (the move's row only), a Mega Stone (base → Mega, no In battle), a `nu` stone, Not found; fit at every size.
 //   ticks  a pickup tick is saved in LS.items g by key, every copy on screen follows, it survives a reload and moves the

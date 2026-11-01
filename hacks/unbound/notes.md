@@ -586,7 +586,7 @@ area names have a stop; `a` resolves those names to the existing AR slots withou
 - `move_rules.json` (abilities, from the calc `gen78_YA0k.js` line given per entry; wiki text in
   `unboundwiki.json`): Bellow / Sound Waves (sound moves: ×1.3 on the user, ×0.5 on the target), Drill Beak (drill moves
   always critical), Slippery Tail (tail moves priority +1), Portal Power (non-contact damage ×0.75). Type-based ones
-  are left out like Blaze (plans/move-pages.md): Gale Wings (Flying moves priority +1, **no HP condition**: the wiki
+  are left out like Blaze (plans/move-pages.md (deleted 2026-11-02, in git history)): Gale Wings (Flying moves priority +1, **no HP condition**: the wiki
   says "Flying-type moves hit first", the calc checks no HP; stock Showdown needs full HP), Grass Dash (Grass moves
   priority +1), Evaporate (damaging Water moves blocked; the wiki's Sp. Atk +1 is not modelled by the calc).
 - Left out of `move_rules.json` (no move list or no source): category rules (Crabby Tactics / Gorilla Tactics ×1.5

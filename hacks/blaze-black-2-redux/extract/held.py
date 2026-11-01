@@ -1,7 +1,7 @@
 """P.hi (wild held items) from extract/held_items.json (written from the user's ROM by held_items.py).
 
 Slot 1 50%, slot 2 5%, slot 3 1% (Gen 5); the same item in slots 1 and 2 = 100%, one entry per item (the rule in
-plans/item-pages-data.md → Wild held item odds). The keys are gen5-ids forms rows, mapped to P ids by gid.species_map.
+plans/item-pages-data.md (deleted 2026-11-02, in git history) → Wild held item odds). The keys are gen5-ids forms rows, mapped to P ids by gid.species_map.
 """
 import json
 from pathlib import Path
