@@ -544,14 +544,16 @@ function residual(set, values = {}, otherSet = null, side = 'atk') {
   else if (items && mon.hasItem('Black Sludge')) add('Black Sludge', mon.hasType('Poison') ? 1 : -1, mon.hasType('Poison') ? 16 : 8);
   else if (items && mon.hasItem('Sticky Barb')) add('Sticky Barb', -1, 8);
   if (profile.gen >= 6 && field.hasTerrain('Grassy') && isGrounded(mon, field)) add('Grassy Terrain', 1, 16);
-  const own = profile.residual?.status?.[set.st];
+  const statusImmune = profile.over?.abilities?.[mon.guideAbility]?.statusImmune?.includes(set.st);
+  const residualStatus = statusImmune ? '' : set.st;
+  const own = profile.residual?.status?.[residualStatus];
   if (own) add(own[2], own[0], own[1]);
-  else if ((set.st === 'psn' || set.st === 'tox') && mon.hasAbility('Poison Heal')) add('Poison Heal', 1, 8);
-  else if (set.st === 'psn') add('Poison', -1, 8);
-  else if (set.st === 'tox' && !guard) {
+  else if ((residualStatus === 'psn' || residualStatus === 'tox') && mon.hasAbility('Poison Heal')) add('Poison Heal', 1, 8);
+  else if (residualStatus === 'psn') add('Poison', -1, 8);
+  else if (residualStatus === 'tox' && !guard) {
     const counter = Math.max(1, set.toxn || 1);
     parts.push({l: 'Toxic', v: [0, 1, 2, 3].map(turn => -Math.max(1, Math.floor(max * Math.min(15, counter + turn) / 16)))});
-  } else if (set.st === 'brn') add(mon.hasAbility('Heatproof') ? 'Burn (Heatproof)' : 'Burn', -1,
+  } else if (residualStatus === 'brn') add(mon.hasAbility('Heatproof') ? 'Burn (Heatproof)' : 'Burn', -1,
     (profile.gen > 6 ? 16 : 8) * (mon.hasAbility('Heatproof') ? 2 : 1));
   const ability = profile.residual?.abilities?.[data.AB?.[set.ab]?.[0]];
   if (ability) add(data.AB[set.ab][0], ability[0], ability[1]);

@@ -726,6 +726,10 @@ override entries use **display names**, except species may use their guide ID:
   require engine work.
 - `residual` adds a hack's own end-of-turn effects to `DMG.residual` / the KO text:
   `{abilities: {Name: [sign, divisor]}, status: {key: [sign, divisor, label]}}` (EI: Self Sufficient, Frostbite).
+- `abilities[name].statusImmune` lists status keys whose end-of-turn HP change the ability suppresses (RR Toxic
+  Boost `["psn", "tox"]`, Flare Boost `["brn"]`). It reads the active fight ability (ability changes included) and
+  keeps the ability's native damage effect. Only the status part goes (including a `residual.status` entry), not
+  weather, hazards, items or other ability residuals. Profiles without it behave as before.
 
 ### Ordered modifier rules
 

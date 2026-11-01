@@ -19,7 +19,3373 @@
    "trainers",
    "trainers"
   ],
-  "calc": false,
+  "calc": {
+   "base": "cfru",
+   "mega": true,
+   "zmove": true,
+   "evs": true,
+   "status": [
+    [
+     "",
+     "Healthy"
+    ],
+    [
+     "brn",
+     "Burn"
+    ],
+    [
+     "par",
+     "Paralysis"
+    ],
+    [
+     "psn",
+     "Poison"
+    ],
+    [
+     "tox",
+     "Bad poison"
+    ],
+    [
+     "slp",
+     "Sleep"
+    ],
+    [
+     "frz",
+     "Frostbite"
+    ]
+   ],
+   "field": [
+    {
+     "k": "gameType",
+     "l": "Battle",
+     "type": "select",
+     "o": [
+      [
+       "Singles",
+       "Singles"
+      ],
+      [
+       "Doubles",
+       "Doubles"
+      ]
+     ],
+     "side": "field",
+     "to": "gameType"
+    },
+    {
+     "k": "weather",
+     "l": "Weather",
+     "type": "select",
+     "o": [
+      [
+       "",
+       "None"
+      ],
+      [
+       "Sun",
+       "Sun"
+      ],
+      [
+       "Rain",
+       "Rain"
+      ],
+      [
+       "Sand",
+       "Sandstorm"
+      ],
+      [
+       "Snow",
+       "Snow"
+      ],
+      [
+       "Harsh Sunshine",
+       "Harsh sunshine"
+      ],
+      [
+       "Heavy Rain",
+       "Heavy rain"
+      ],
+      [
+       "Strong Winds",
+       "Strong winds"
+      ]
+     ],
+     "side": "field",
+     "to": "weather"
+    },
+    {
+     "k": "terrain",
+     "l": "Terrain",
+     "type": "select",
+     "o": [
+      [
+       "",
+       "None"
+      ],
+      [
+       "Electric",
+       "Electric"
+      ],
+      [
+       "Grassy",
+       "Grassy"
+      ],
+      [
+       "Misty",
+       "Misty"
+      ],
+      [
+       "Psychic",
+       "Psychic"
+      ]
+     ],
+     "side": "field",
+     "to": "terrain"
+    },
+    {
+     "k": "gravity",
+     "l": "Gravity",
+     "type": "toggle",
+     "side": "field",
+     "to": "isGravity"
+    },
+    {
+     "k": "wonderRoom",
+     "l": "Wonder Room",
+     "type": "toggle",
+     "side": "field",
+     "to": "isWonderRoom"
+    },
+    {
+     "k": "magicRoom",
+     "l": "Magic Room",
+     "type": "toggle",
+     "side": "field",
+     "to": "isMagicRoom"
+    },
+    {
+     "k": "atkReflect",
+     "l": "Attacker Reflect",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isReflect"
+    },
+    {
+     "k": "atkLightScreen",
+     "l": "Attacker Light Screen",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isLightScreen"
+    },
+    {
+     "k": "atkAuroraVeil",
+     "l": "Attacker Aurora Veil",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isAuroraVeil"
+    },
+    {
+     "k": "atkTailwind",
+     "l": "Attacker Tailwind",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isTailwind"
+    },
+    {
+     "k": "atkHelpingHand",
+     "l": "Attacker Helping Hand",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isHelpingHand"
+    },
+    {
+     "k": "atkFriendGuard",
+     "l": "Attacker Friend Guard",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFriendGuard"
+    },
+    {
+     "k": "defReflect",
+     "l": "Defender Reflect",
+     "type": "toggle",
+     "side": "def",
+     "to": "isReflect"
+    },
+    {
+     "k": "defLightScreen",
+     "l": "Defender Light Screen",
+     "type": "toggle",
+     "side": "def",
+     "to": "isLightScreen"
+    },
+    {
+     "k": "defAuroraVeil",
+     "l": "Defender Aurora Veil",
+     "type": "toggle",
+     "side": "def",
+     "to": "isAuroraVeil"
+    },
+    {
+     "k": "defTailwind",
+     "l": "Defender Tailwind",
+     "type": "toggle",
+     "side": "def",
+     "to": "isTailwind"
+    },
+    {
+     "k": "defHelpingHand",
+     "l": "Defender Helping Hand",
+     "type": "toggle",
+     "side": "def",
+     "to": "isHelpingHand"
+    },
+    {
+     "k": "defFriendGuard",
+     "l": "Defender Friend Guard",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFriendGuard"
+    },
+    {
+     "k": "atkFocus",
+     "l": "Attacker Focus Energy",
+     "type": "toggle",
+     "side": "atk",
+     "to": "isFocusEnergy"
+    },
+    {
+     "k": "defFocus",
+     "l": "Defender Focus Energy",
+     "type": "toggle",
+     "side": "def",
+     "to": "isFocusEnergy"
+    },
+    {
+     "k": "atkIllusion",
+     "l": "Illusion intact",
+     "type": "toggle",
+     "side": "field",
+     "to": "guideIllusion"
+    },
+    {
+     "k": "atkBullRush",
+     "l": "First turn out",
+     "type": "toggle",
+     "side": "field",
+     "to": "guideBullRush"
+    }
+   ],
+   "residual": {
+    "status": {
+     "frz": [
+      -1,
+      16,
+      "Frostbite"
+     ]
+    },
+    "abilities": {
+     "Self Sufficient": [
+      1,
+      16
+     ]
+    }
+   },
+   "over": {
+    "abilities": {
+     "Toxic Boost": {
+      "statusImmune": [
+       "psn",
+       "tox"
+      ]
+     },
+     "Flare Boost": {
+      "statusImmune": [
+       "brn"
+      ]
+     },
+     "Blubber Defense": {
+      "effect": "Multiscale"
+     },
+     "Cash Splash": {
+      "effect": "Water Bubble"
+     },
+     "Mountaineer": {
+      "effect": "Mountaineer"
+     },
+     "Primal Armor": {
+      "effect": "Primal Armor"
+     },
+     "Iron Fist": {
+      "effect": ""
+     },
+     "Striker": {
+      "effect": ""
+     },
+     "Illusion": {
+      "effect": ""
+     },
+     "Reckless": {
+      "effect": ""
+     },
+     "Feline Prowess": {
+      "effect": ""
+     },
+     "Sage Power": {
+      "effect": ""
+     },
+     "Defeatist": {
+      "effect": ""
+     },
+     "Frozen Mist": {
+      "effect": "Shield Dust"
+     },
+     "Valiant Shield": {
+      "effect": "Dauntless Shield"
+     },
+     "Solar Power": {
+      "effect": ""
+     },
+     "Rivalry": {
+      "effect": ""
+     },
+     "SupremeOverlord": {
+      "effect": "Supreme Overlord"
+     },
+     "OrichalcumPulse": {
+      "effect": "Orichalcum Pulse"
+     },
+     "Zero To Hero": {
+      "effect": "Zero to Hero"
+     },
+     "ThermalExchange": {
+      "effect": "Thermal Exchange"
+     },
+     "WaterCompaction": {
+      "effect": "Water Compaction"
+     },
+     "Sword Of Ruin": {
+      "effect": "Sword of Ruin"
+     },
+     "Vessel Of Ruin": {
+      "effect": "Vessel of Ruin"
+     },
+     "ORAORAORAORA!": {
+      "effect": "ORAORAORAORA"
+     },
+     "Bone Zone ": {
+      "effect": "Bone Zone"
+     },
+     "Flower Gift": {
+      "effect": ""
+     },
+     "Bad Company": {
+      "effect": "Rock Head"
+     },
+     "Electromrphosis": {
+      "effect": "Electromorphosis"
+     },
+     "Neutralize Gas": {
+      "effect": "Neutralizing Gas"
+     },
+     "Wandering Soul": {
+      "effect": "Wandering Spirit"
+     }
+    },
+    "moves": {
+     "Cut": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      }
+     },
+     "Stomp": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "nonsky": 1,
+       "kick": 1
+      }
+     },
+     "Double Kick": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "kick": 1
+      }
+     },
+     "Mega Kick": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "kick": 1
+      }
+     },
+     "Jump Kick": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "gravity": 1,
+       "kick": 1
+      }
+     },
+     "Rolling Kick": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "kick": 1
+      }
+     },
+     "Drill Peck": {
+      "critRatio": 2
+     },
+     "Low Kick": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "kick": 1
+      }
+     },
+     "Soul Robbery": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "bypasssub": 1
+      }
+     },
+     "Bone Club": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1,
+       "bone": 1
+      }
+     },
+     "Spike Cannon": {
+      "flags": {
+       "bullet": 1,
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "High Jump Kick": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "gravity": 1,
+       "kick": 1
+      }
+     },
+     "Flash": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "Bonemerang": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1,
+       "bone": 1
+      }
+     },
+     "Dark Hole": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1,
+       "bypasssub": 1
+      }
+     },
+     "Slash": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      }
+     },
+     "Triple Kick": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "kick": 1
+      }
+     },
+     "Octazooka": {
+      "flags": {
+       "bullet": 1,
+       "protect": 1,
+       "pulse": 1,
+       "mirror": 1
+      }
+     },
+     "Bone Rush": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1,
+       "bone": 1
+      }
+     },
+     "False Swipe": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      }
+     },
+     "Fury Cutter": {
+      "flags": {
+       "slicing": 1,
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "Beat Up": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1
+      },
+      "multihit": [
+       2,
+       5
+      ],
+      "effect": ""
+     },
+     "Blaze Kick": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "kick": 1
+      }
+     },
+     "Volt Tackle": {
+      "recoil": [
+       1,
+       4
+      ]
+     },
+     "Leaf Blade": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      }
+     },
+     "Night Slash": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      }
+     },
+     "Psycho Cut": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      }
+     },
+     "Shadow Claw": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      }
+     },
+     "X-Scissor": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      }
+     },
+     "Low Sweep": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "kick": 1
+      }
+     },
+     "Flash Cannon": {
+      "flags": {
+       "bullet": 1,
+       "protect": 1,
+       "pulse": 1,
+       "mirror": 1
+      }
+     },
+     "Razor Shell": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      },
+      "critRatio": 2
+     },
+     "Sucker Punch": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "punch": 1,
+       "mirror": 1
+      }
+     },
+     "Roar of Time": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "Aqua Fang": {
+      "flags": {
+       "bite": 1,
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "Sacred Sword": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      }
+     },
+     "Secret Sword": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      }
+     },
+     "High Horsepower": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "kick": 1
+      }
+     },
+     "Shadow Bone": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1,
+       "bone": 1
+      }
+     },
+     "Solar Blade": {
+      "flags": {
+       "contact": 1,
+       "charge": 1,
+       "protect": 1,
+       "mirror": 1,
+       "slicing": 1
+      }
+     },
+     "Trop Kick": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "kick": 1
+      }
+     },
+     "Snipe Shot": {
+      "flags": {
+       "bullet": 1,
+       "protect": 1,
+       "pulse": 1,
+       "mirror": 1
+      },
+      "critRatio": 3
+     },
+     "Pyro Ball": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1,
+       "defrost": 1,
+       "bullet": 1,
+       "kick": 1
+      }
+     },
+     "Shell Side Arm": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1
+      },
+      "ignoreAbility": true,
+      "effect": ""
+     },
+     "Triple Axel": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "kick": 1
+      }
+     },
+     "Wicked Blow": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1,
+       "punch": 0
+      }
+     },
+     "Forbidden Spell": {
+      "flags": {}
+     },
+     "Zippy Zap": {
+      "willCrit": true
+     },
+     "Sappy Seed": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "Freezy Frost": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "Sparkly Swirl": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "Bouncy Bubble": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1,
+       "heal": 1
+      }
+     },
+     "Sonic Slash": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "Draco Barrage": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1
+      },
+      "recoil": [
+       1,
+       3
+      ]
+     },
+     "Triple Arrows": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1,
+       "kick": 1
+      }
+     },
+     "Barb Barrage": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "Chloroblast": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1
+      },
+      "recoil": [
+       1,
+       2
+      ]
+     },
+     "Bitter Malice": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "Psyshield Bash": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1
+      }
+     },
+     "Armor Cannon": {
+      "flags": {
+       "protect": 1,
+       "mirror": 1,
+       "pulse": 1
+      }
+     },
+     "Pounce": {
+      "flags": {
+       "contact": 1,
+       "protect": 1,
+       "mirror": 1
+      }
+     }
+    },
+    "items": {
+     "Adamant Orb": {
+      "flingPower": 60
+     },
+     "Reaper Cloth": {
+      "flingPower": 10
+     },
+     "Leek Stick": {
+      "flingPower": 60
+     },
+     "Link Cable": {
+      "flingPower": 30
+     },
+     "Butterfrite": {
+      "megaStone": {
+       "Butterfree": "Butterfree-Mega"
+      }
+     },
+     "Machampite": {
+      "megaStone": {
+       "Machamp": "Machamp-Mega"
+      }
+     },
+     "Garbodorite": {
+      "megaStone": {
+       "Garbodor": "Garbodor-Mega"
+      }
+     },
+     "Kinglerite": {
+      "megaStone": {
+       "Kingler": "Kingler-Mega"
+      }
+     },
+     "Snorlaxite": {
+      "megaStone": {
+       "Snorlax": "Snorlax-Mega"
+      }
+     },
+     "Laprasite": {
+      "megaStone": {
+       "Lapras": "Lapras-Mega"
+      }
+     },
+     "Drednawite": {
+      "megaStone": {
+       "Drednaw": "Drednaw-Mega"
+      }
+     },
+     "Coalossite": {
+      "megaStone": {
+       "Coalossal": "Coalossal-Mega"
+      }
+     },
+     "Orbeetlite": {
+      "megaStone": {
+       "Orbeetle": "Orbeetle-Mega"
+      }
+     },
+     "Toxtricitite": {
+      "megaStone": {
+       "Toxtricity": "Toxtricity-Mega"
+      }
+     },
+     "Copperajite": {
+      "megaStone": {
+       "Copperajah": "Copperajah-Mega"
+      }
+     },
+     "Centiskite": {
+      "megaStone": {
+       "Centiskorch": "Centiskorch-Mega"
+      }
+     },
+     "Sandacondite": {
+      "megaStone": {
+       "Sandaconda": "Sandaconda-Mega"
+      }
+     },
+     "Alcremite": {
+      "megaStone": {
+       "Alcremie": "Alcremie-Mega"
+      }
+     },
+     "Honey": {
+      "flingPower": 30
+     },
+     "Applite": {
+      "megaStone": {
+       "Flapple": "Flapple-Mega",
+       "Appletun": "Appletun-Mega"
+      }
+     }
+    },
+    "rules": [
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "or",
+         "args": [
+          {
+           "op": "in",
+           "args": [
+            {
+             "ref": "atk.ability"
+            },
+            [
+             "Mold Breaker",
+             "Teravolt",
+             "Turboblaze"
+            ]
+           ]
+          },
+          {
+           "op": "eq",
+           "args": [
+            {
+             "ref": "names.move"
+            },
+            "Shell Side Arm"
+           ]
+          }
+         ]
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "op": "in",
+           "args": [
+            {
+             "ref": "def.ability"
+            },
+            [
+             "Full Metal Body",
+             "Neutralizing Gas",
+             "Prism Armor",
+             "Shadow Shield",
+             "Primal Armor",
+             "Poison Heal"
+            ]
+           ]
+          }
+         ]
+        },
+        {
+         "op": "ne",
+         "args": [
+          {
+           "ref": "def.item"
+          },
+          "Ability Shield"
+         ]
+        }
+       ]
+      },
+      "set": {
+       "def.ability": ""
+      },
+      "note": "RR ability bypass exceptions"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Iron Fist"
+         ]
+        },
+        {
+         "ref": "move.flags.punch"
+        }
+       ]
+      },
+      "append": [
+       5325
+      ],
+      "note": "Iron Fist"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Striker"
+         ]
+        },
+        {
+         "ref": "move.flags.kick"
+        }
+       ]
+      },
+      "append": [
+       5325
+      ],
+      "note": "Striker"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Illusion"
+         ]
+        },
+        {
+         "ref": "input.field.atkIllusion"
+        }
+       ]
+      },
+      "append": [
+       5325
+      ],
+      "note": "Illusion"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Reckless"
+         ]
+        },
+        {
+         "op": "or",
+         "args": [
+          {
+           "ref": "move.recoil"
+          },
+          {
+           "ref": "move.hasCrashDamage"
+          },
+          {
+           "op": "in",
+           "args": [
+            {
+             "ref": "names.move"
+            },
+            [
+             "Explosion",
+             "Self-Destruct",
+             "Misty Explosion"
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "append": [
+       4915
+      ],
+      "note": "Reckless"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Liquid Voice"
+         ]
+        },
+        {
+         "ref": "move.flags.sound"
+        }
+       ]
+      },
+      "append": [
+       4915
+      ],
+      "note": "Liquid Voice"
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Feline Prowess"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.category"
+          },
+          "Special"
+         ]
+        }
+       ]
+      },
+      "append": [
+       8192
+      ],
+      "note": "Feline Prowess"
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Sage Power"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.category"
+          },
+          "Special"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Sage Power"
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          [
+           "Bull Rush",
+           "Quill Rush"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.category"
+          },
+          "Physical"
+         ]
+        },
+        {
+         "ref": "input.field.atkBullRush"
+        }
+       ]
+      },
+      "append": [
+       4915
+      ],
+      "note": "Bull Rush / Quill Rush"
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Defeatist"
+         ]
+        },
+        {
+         "op": "lte",
+         "args": [
+          {
+           "ref": "atk.originalCurHP"
+          },
+          {
+           "op": "div",
+           "args": [
+            {
+             "ref": "atk.rawStats.hp"
+            },
+            3
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "append": [
+       2048
+      ],
+      "note": "Defeatist at one-third HP"
+     },
+     {
+      "phase": "effectiveness",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Corrosion"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Poison"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "state.effectivenessType"
+          },
+          "Steel"
+         ]
+        }
+       ]
+      },
+      "value": 1,
+      "note": "Corrosion"
+     },
+     {
+      "phase": "effectiveness",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.defAbility"
+          },
+          "Mountaineer"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "def.ability"
+          },
+          "Mountaineer"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Rock"
+         ]
+        }
+       ]
+      },
+      "value": 0,
+      "note": "Mountaineer Rock immunity"
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.defAbility"
+          },
+          [
+           "Water Compaction",
+           "WaterCompaction"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "def.ability"
+          },
+          "Water Compaction"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Water"
+         ]
+        }
+       ]
+      },
+      "append": [
+       2048
+      ],
+      "note": "Water Compaction"
+     },
+     {
+      "phase": "finalMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Fatal Precision"
+         ]
+        },
+        {
+         "op": "gt",
+         "args": [
+          {
+           "ref": "state.typeEffectiveness"
+          },
+          1
+         ]
+        }
+       ]
+      },
+      "append": [
+       4915
+      ],
+      "note": "Fatal Precision"
+     },
+     {
+      "phase": "finalMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.defAbility"
+          },
+          "Primal Armor"
+         ]
+        },
+        {
+         "op": "gt",
+         "args": [
+          {
+           "ref": "state.typeEffectiveness"
+          },
+          1
+         ]
+        }
+       ]
+      },
+      "append": [
+       2048
+      ],
+      "note": "Primal Armor"
+     },
+     {
+      "phase": "beforeRolls",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.status"
+          },
+          "frz"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.category"
+          },
+          "Special"
+         ]
+        },
+        {
+         "op": "ne",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          "Facade"
+         ]
+        }
+       ]
+      },
+      "set": {
+       "value.isBurned": true
+      },
+      "note": "Frostbite special damage"
+     },
+     {
+      "phase": "defense",
+      "when": {
+       "op": "in",
+       "args": [
+        {
+         "ref": "names.move"
+        },
+        [
+         "Explosion",
+         "Self-Destruct",
+         "Misty Explosion"
+        ]
+       ]
+      },
+      "value": {
+       "op": "max",
+       "args": [
+        1,
+        {
+         "op": "floor",
+         "args": [
+          {
+           "op": "div",
+           "args": [
+            {
+             "ref": "value"
+            },
+            2
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "note": "Explosion halves the defending stat"
+     },
+     {
+      "phase": "afterMoveType",
+      "when": {
+       "op": "in",
+       "args": [
+        {
+         "ref": "names.move"
+        },
+        [
+         "Raging Bull",
+         "Multi-Attack"
+        ]
+       ]
+      },
+      "set": {
+       "move.type": {
+        "ref": "atk.types.0"
+       }
+      },
+      "note": "Raging Bull / Multi-Attack primary type"
+     },
+     {
+      "phase": "afterMoveType",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Blazing Soul"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.originalCurHP"
+          },
+          {
+           "ref": "atk.rawStats.hp"
+          }
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Fire"
+         ]
+        }
+       ]
+      },
+      "set": {
+       "move.priority": {
+        "op": "add",
+        "args": [
+         {
+          "ref": "move.priority"
+         },
+         1
+        ]
+       }
+      },
+      "note": "Blazing Soul at full HP"
+     },
+     {
+      "phase": "hits",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          [
+           "ORAORAORAORA",
+           "ORAORAORAORA!"
+          ]
+         ]
+        },
+        {
+         "ref": "move.flags.punch"
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "value"
+          },
+          1
+         ]
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "ref": "meta.move.multihit"
+          }
+         ]
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "ref": "move.isZ"
+          }
+         ]
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "ref": "move.flags.charge"
+          }
+         ]
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "ref": "move.selfdestruct"
+          }
+         ]
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "op": "in",
+           "args": [
+            {
+             "ref": "move.target"
+            },
+            [
+             "allAdjacent",
+             "allAdjacentFoes"
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "value": 2,
+      "note": "ORAORAORAORA extra strike"
+     },
+     {
+      "phase": "hitBaseDamage",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          [
+           "ORAORAORAORA",
+           "ORAORAORAORA!"
+          ]
+         ]
+        },
+        {
+         "ref": "move.flags.punch"
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "ref": "meta.move.multihit"
+          }
+         ]
+        },
+        {
+         "op": "not",
+         "args": [
+          {
+           "ref": "move.isZ"
+          }
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "state.hit"
+          },
+          2
+         ]
+        }
+       ]
+      },
+      "value": {
+       "op": "pokeRound",
+       "args": [
+        {
+         "op": "div",
+         "args": [
+          {
+           "ref": "value"
+          },
+          2
+         ]
+        }
+       ]
+      },
+      "note": "ORAORAORAORA half-damage child"
+     },
+     {
+      "phase": "effectiveness",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          [
+           "Bone Zone",
+           "Bone Zone "
+          ]
+         ]
+        },
+        {
+         "ref": "move.flags.bone"
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "value"
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "value": 1,
+      "note": "Bone Zone type immunity bypass"
+     },
+     {
+      "phase": "finalMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          [
+           "Bone Zone",
+           "Bone Zone "
+          ]
+         ]
+        },
+        {
+         "ref": "move.flags.bone"
+        },
+        {
+         "op": "lt",
+         "args": [
+          {
+           "ref": "state.typeEffectiveness"
+          },
+          1
+         ]
+        }
+       ]
+      },
+      "append": [
+       8192
+      ],
+      "note": "Bone Zone resisted hit"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atk"
+          },
+          "Electivire"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "Electirizer"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Fighting"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Electirizer"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atk"
+          },
+          "Sunflora"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "Burnt Seed"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Fire"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Burnt Seed"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Normal Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Normal Gem"
+      },
+      "note": "Normal Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Normal Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Normal"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Normal Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Fighting Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Fighting Gem"
+      },
+      "note": "Fighting Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Fighting Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Fighting"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Fighting Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Flying Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Flying Gem"
+      },
+      "note": "Flying Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Flying Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Flying"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Flying Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Poison Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Poison Gem"
+      },
+      "note": "Poison Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Poison Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Poison"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Poison Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Ground Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Ground Gem"
+      },
+      "note": "Ground Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Ground Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Ground"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Ground Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Rock Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Rock Gem"
+      },
+      "note": "Rock Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Rock Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Rock"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Rock Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Bug Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Bug Gem"
+      },
+      "note": "Bug Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Bug Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Bug"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Bug Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Ghost Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Ghost Gem"
+      },
+      "note": "Ghost Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Ghost Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Ghost"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Ghost Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Steel Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Steel Gem"
+      },
+      "note": "Steel Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Steel Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Steel"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Steel Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Fire Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Fire Gem"
+      },
+      "note": "Fire Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Fire Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Fire"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Fire Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Water Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Water Gem"
+      },
+      "note": "Water Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Water Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Water"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Water Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Grass Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Grass Gem"
+      },
+      "note": "Grass Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Grass Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Grass"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Grass Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Electric Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Electric Gem"
+      },
+      "note": "Electric Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Electric Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Electric"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Electric Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Psychic Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Psychic Gem"
+      },
+      "note": "Psychic Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Psychic Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Psychic"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Psychic Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Ice Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Ice Gem"
+      },
+      "note": "Ice Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Ice Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Ice"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Ice Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Dragon Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Dragon Gem"
+      },
+      "note": "Dragon Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Dragon Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Dragon"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Dragon Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Dark Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Dark Gem"
+      },
+      "note": "Dark Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Dark Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Dark"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Dark Gem 1.5x"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "atk.item"
+        },
+        "Fairy Gem"
+       ]
+      },
+      "set": {
+       "atk.item": "RR Fairy Gem"
+      },
+      "note": "Fairy Gem native handoff"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "RR Fairy Gem"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.type"
+          },
+          "Fairy"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Fairy Gem 1.5x"
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Solar Power"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.category"
+          },
+          "Special"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "field.weather"
+          },
+          [
+           "Sun",
+           "Harsh Sunshine"
+          ]
+         ]
+        },
+        {
+         "op": "ne",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "Utility Umbrella"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Solar Power without sun chip"
+     },
+     {
+      "phase": "powerMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Rivalry"
+         ]
+        },
+        {
+         "op": "ne",
+         "args": [
+          {
+           "ref": "atk.gender"
+          },
+          "N"
+         ]
+        },
+        {
+         "op": "ne",
+         "args": [
+          {
+           "ref": "def.gender"
+          },
+          "N"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.gender"
+          },
+          {
+           "ref": "def.gender"
+          }
+         ]
+        }
+       ]
+      },
+      "append": [
+       5120
+      ],
+      "note": "Rivalry same-gender bonus, no opposite-gender penalty"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "names.move"
+        },
+        "Sonic Slash"
+       ]
+      },
+      "value": {
+       "op": "if",
+       "args": [
+        {
+         "op": "gte",
+         "args": [
+          {
+           "ref": "atk.stats.spe"
+          },
+          {
+           "op": "mul",
+           "args": [
+            {
+             "ref": "def.stats.spe"
+            },
+            3
+           ]
+          }
+         ]
+        },
+        140,
+        {
+         "op": "if",
+         "args": [
+          {
+           "op": "gte",
+           "args": [
+            {
+             "ref": "atk.stats.spe"
+            },
+            {
+             "op": "mul",
+             "args": [
+              {
+               "ref": "def.stats.spe"
+              },
+              2
+             ]
+            }
+           ]
+          },
+          120,
+          80
+         ]
+        }
+       ]
+      },
+      "note": "Sonic Slash speed ratio"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          [
+           "Bitter Malice",
+           "Barb Barrage",
+           "Infernal Parade",
+           "Inferno Parade"
+          ]
+         ]
+        },
+        {
+         "op": "or",
+         "args": [
+          {
+           "op": "ne",
+           "args": [
+            {
+             "ref": "def.status"
+            },
+            ""
+           ]
+          },
+          {
+           "op": "eq",
+           "args": [
+            {
+             "ref": "def.ability"
+            },
+            "Comatose"
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      "value": {
+       "op": "mul",
+       "args": [
+        {
+         "ref": "move.bp"
+        },
+        2
+       ]
+      },
+      "note": "RR status-punishing moves"
+     },
+     {
+      "phase": "movePower",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          "Facade"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.status"
+          },
+          "frz"
+         ]
+        }
+       ]
+      },
+      "value": {
+       "op": "mul",
+       "args": [
+        {
+         "ref": "move.bp"
+        },
+        2
+       ]
+      },
+      "note": "Frostbite Facade"
+     },
+     {
+      "phase": "attackMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Flower Gift"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.atk"
+          },
+          [
+           "Cherrim",
+           "Cherrim-Sunshine"
+          ]
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "move.category"
+          },
+          "Physical"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "field.weather"
+          },
+          [
+           "Sun",
+           "Harsh Sunshine"
+          ]
+         ]
+        },
+        {
+         "op": "ne",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "Utility Umbrella"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Flower Gift Cherrim Attack in Sun"
+     },
+     {
+      "phase": "beforeStats",
+      "when": {
+       "op": "eq",
+       "args": [
+        {
+         "ref": "names.move"
+        },
+        "Draco Barrage"
+       ]
+      },
+      "set": {
+       "move.category": {
+        "op": "if",
+        "args": [
+         {
+          "op": "gt",
+          "args": [
+           {
+            "op": "floor",
+            "args": [
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "gte",
+                "args": [
+                 {
+                  "ref": "atk.boosts.atk"
+                 },
+                 0
+                ]
+               },
+               {
+                "op": "mul",
+                "args": [
+                 {
+                  "ref": "atk.rawStats.atk"
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "op": "add",
+                    "args": [
+                     2,
+                     {
+                      "ref": "atk.boosts.atk"
+                     }
+                    ]
+                   },
+                   2
+                  ]
+                 }
+                ]
+               },
+               {
+                "op": "div",
+                "args": [
+                 {
+                  "ref": "atk.rawStats.atk"
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "op": "sub",
+                    "args": [
+                     2,
+                     {
+                      "ref": "atk.boosts.atk"
+                     }
+                    ]
+                   },
+                   2
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "op": "floor",
+            "args": [
+             {
+              "op": "if",
+              "args": [
+               {
+                "op": "gte",
+                "args": [
+                 {
+                  "ref": "atk.boosts.spa"
+                 },
+                 0
+                ]
+               },
+               {
+                "op": "mul",
+                "args": [
+                 {
+                  "ref": "atk.rawStats.spa"
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "op": "add",
+                    "args": [
+                     2,
+                     {
+                      "ref": "atk.boosts.spa"
+                     }
+                    ]
+                   },
+                   2
+                  ]
+                 }
+                ]
+               },
+               {
+                "op": "div",
+                "args": [
+                 {
+                  "ref": "atk.rawStats.spa"
+                 },
+                 {
+                  "op": "div",
+                  "args": [
+                   {
+                    "op": "sub",
+                    "args": [
+                     2,
+                     {
+                      "ref": "atk.boosts.spa"
+                     }
+                    ]
+                   },
+                   2
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "Physical",
+         "Special"
+        ]
+       }
+      },
+      "note": "Draco Barrage Physical when boosted Attack beats Special Attack"
+     },
+     {
+      "phase": "effectiveness",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.move"
+          },
+          "Draco Barrage"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "state.effectivenessType"
+          },
+          "Fairy"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "value"
+          },
+          0
+         ]
+        }
+       ]
+      },
+      "value": 1,
+      "note": "Draco Barrage hits Fairy"
+     }
+    ],
+    "critItems": {
+     "Leek Stick": {
+      "Farfetch'd": 1,
+      "Sirfetch'd": 2
+     }
+    },
+    "effects": {
+     "moves": {
+      "Rapid Spin": {
+       "fl": [
+        "contact"
+       ],
+       "k": "spin",
+       "tg": "s",
+       "sec": [],
+       "n": "Hardcore Main!E28"
+      },
+      "Ice Spinner": {
+       "fl": [
+        "contact"
+       ],
+       "n": "Hardcore Main!E12"
+      },
+      "Steel Roller": {
+       "fl": [
+        "contact"
+       ],
+       "n": "Hardcore Main!E12"
+      },
+      "Splintered Stormshards": {
+       "n": "Hardcore Main!E12"
+      },
+      "Acupressure": {
+       "tg": "s",
+       "b": {
+        "atk": 1
+       },
+       "n": "Showdown gen9rr/moves.ts:4-12"
+      },
+      "Muddy Water": {
+       "sec": [
+        {
+         "c": 40,
+         "b": {
+          "atk": -1
+         }
+        }
+       ],
+       "n": "Showdown gen9rr/moves.ts:665-676"
+      },
+      "Octazooka": {
+       "fl": [
+        "bullet"
+       ],
+       "sec": [
+        {
+         "c": 100,
+         "b": {
+          "spe": -1
+         }
+        }
+       ],
+       "n": "Showdown gen9rr/moves.ts:717-730"
+      },
+      "Ice Hammer": {
+       "fl": [
+        "contact"
+       ],
+       "n": "Showdown gen9rr/moves.ts:492-500"
+      },
+      "Razor Shell": {
+       "fl": [
+        "contact",
+        "slicing"
+       ],
+       "n": "Showdown gen9rr/moves.ts:780-788"
+      },
+      "Shell Side Arm": {
+       "sec": [
+        {
+         "c": 10,
+         "st": "psn"
+        }
+       ],
+       "n": "Showdown gen9rr/moves.ts:888-905"
+      },
+      "Charge Beam": {
+       "sec": [
+        {
+         "c": 100,
+         "sb": {
+          "spa": 1
+         }
+        }
+       ],
+       "n": "Showdown gen9rr/moves.ts:149-160"
+      }
+     }
+    }
+   },
+   "varpow": [
+    "Bide",
+    "Counter",
+    "Dragon Rage",
+    "Fissure",
+    "Guillotine",
+    "Horn Drill",
+    "Night Shade",
+    "Psywave",
+    "Seismic Toss",
+    "Sonic Boom",
+    "Super Fang",
+    "Low Kick",
+    "Flail",
+    "Mirror Coat",
+    "Present",
+    "Reversal",
+    "Magnitude",
+    "Frustration",
+    "Return",
+    "Spit Up",
+    "Endeavor",
+    "Sheer Cold",
+    "Crush Grip",
+    "Fling",
+    "Metal Burst",
+    "Natural Gift",
+    "Wring Out",
+    "Gyro Ball",
+    "Grass Knot",
+    "Punishment",
+    "Trump Card",
+    "Electro Ball",
+    "Final Gambit",
+    "Heat Crash",
+    "Heavy Slam",
+    "Guardian of Alola",
+    "Nature's Madness"
+   ],
+   "setterStays": true,
+   "save": "cfru",
+   "cfru": "radicalred41"
+  },
   "ls": {
    "dex": "rrdex",
    "calc": "rrcalc",

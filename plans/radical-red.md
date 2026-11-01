@@ -69,6 +69,13 @@ Each unit adds the decisions it had to take to **Decisions taken in units** belo
 - [unit 1] Preserve source sprite pixels using palette PNG conversion; leave Chillet's letter fallback because neither data.js nor the shared set has its art, and use actual transformation parents for regional Mega pruning (data.js sprites/evolutions, sprites/index.json).
 - [unit 7] GID from data.js game ids; growth rates from RR's 2023 Base_Stats.c (derived `extract/growth.json`), the 16 later species Medium Fast; battle-only forms (Megas too) read as their base; hzla's by-name ability table not used (data.js, hzla id tables, ydarissep/Radical-Red-Pokedex 65712ed, RadicalHex build-data.py).
 - [unit 7] cfru.js profile `radicalred41`: retail signature 0x08012025, named only (Unbound unchanged), a vanilla save refused by its retail checksum windows, only the ability randomiser (0x942) refused, pokefirered experience formulas; `cfg.calc.cfru = "radicalred41"` needed (RadicalHex 3697412 / PKForge 2df0443 from real RR saves, hzla's reader).
+- [unit 2] Superseded: the main chat authorised one engine extension, `over.abilities[name].statusImmune` (Toxic Boost / Flare Boost chip; RR changes v3.1:46,49; Showdown gen9rr/abilities.ts:240,691); `cfg.calc` is enabled.
+- [unit 2] EVs as Photonic Sun's EV-less play: `evs` stays on, player sets default to 0, trainer EVs count (Ghost Marowak 252 HP) (Hardcore Main!E95).
+- [unit 2] `setterStays: true` for Hardcore's permanent AI weather / terrain; the player's setters follow the same switch (Main!E10; profile-level setting only).
+- [unit 2] Draco Barrage turns Physical when boosted Atk > SpA (Showdown gen9rr/moves.ts:247-266, dex description) though RR calc keeps it Special; recoil 1/3 (Showdown), not RR calc's 33/100.
+- [unit 2] Mega Stone records only for 4.1 Megas (`data.js` forms): Applite (Flapple, Appletun) added; Duraludite / Grimmsnite left out (4.1 changelog:14, no form in data.js).
+- [unit 2] Engine gaps recorded, not built (main chat's answer 1): Speed modifiers (Quick Feet 2x, Flower Gift / Bull Rush / Upgrade / Leek Stick), Shield Dust hazard immunity, Soul Robbery theft, Defog keeping terrain (Main!E12), Bad Company self-drops.
+- [unit 2] Move effects stay in `hack.json` `over.effects` until `data.json` exists (effects_check.mjs needs it for `calc_effects.json`); the finishing unit moves them.
 
 ## Units
 

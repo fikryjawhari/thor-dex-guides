@@ -3260,6 +3260,7 @@ items: walkthrough rows matched to an Items line at the same place: 0
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: none
+pickup keys: new table hacks\radical-red\extract\pickup_keys.json (0 pickups)
 pickup keys: 0 pickups, 0 walkthrough rows keyed
 prune: deferred (locations or trainers not built yet); kept all 1343 species
 trainer keys: new table hacks\radical-red\extract\trainer_keys.json (0 trainers, keys as they are)
