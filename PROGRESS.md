@@ -147,7 +147,7 @@ yet, and the dex source each extract will turn into `data.json`:
 | Renegade Platinum | `romhackdex/pokedex/` | `romhackdex/moves.json` | `WildPokemon.txt` (+ RomHackDex) | `TrainerPokemon.txt` |
 | HeartGold Retiled | `hg-engine/species-pinned.json` | `hg-engine/pinned/Moves.c` | `source/Encounters.c` + guide | `source/Trainers.c` + guide |
 | SoulGold | `data/species.json` + `data/species-details/` | `data/moves.json` | `data/encounters.json` | `data/trainers.json` |
-| Radical Red | `romhackdex/pokedex/` | `romhackdex/moves.json` | RomHackDex | the two sheets |
+| Radical Red | `repos/Radical-Red-Pokedex/data.js` (official dex) | same + Showdown flags | same | `data.js` hardcore teams + `trainers-hardcore.xlsx` |
 
 Questions for those builds:
 - **HG Retiled:** never hg-engine `main`. Retiled's repo only carries the tables it changes; species / moves come from

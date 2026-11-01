@@ -222,7 +222,7 @@ run `uv run python -I tools/check_updates.py [hack]`; its pins and coverage are 
 | Meissa Moon | v2.2.2 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Author's Drive, PokeCommunity thread |
 | Navy Sapphire | v2.1.5 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Hack's Drive, PokeCommunity thread |
 | Photonic Sun | v2.38 | 2026-10-18 (docs + romfs), dex extract 2026-10-19, vanilla extracts + Bulbapedia 2026-10-19 | 2026-10-19 | Buffel Saft's Drive, PokeCommunity thread, Bulbapedia (USUM) |
-| Radical Red | v4.1 | 2026-10-18, move details 2026-10-19 | – | RomHackDex; the two trainer sheets |
+| Radical Red | v4.1 (Hardcore) | 2026-10-18, move details 2026-10-19; official docs, dex data, Showdown / calc / hzla pins 2026-11-01 | – | Official Drive folder and dex (JwowSquared/Radical-Red-Pokedex), RR Showdown / damage-calc repos, hzla, RomHackDex; `hacks/radical-red/SOURCES.md` |
 | Renegade Platinum | v1.3.0 | 2026-10-18 (docs), 2026-10-19 (RomHackDex) | – | Drayano's Drive (Documentation folder), RomHackDex |
 | SoulGold | no version number | 2026-10-18, species details 2026-10-19 | – | eemeliri.github.io/soulgold data files |
 | Unbound | 2.1.1.1 Expert (docs target) | 2026-10-18/19 mirrors; 2026-10-29 reference pins, caps/regular/location docs, 37 save candidates | 2026-10-30 | RomHackDex, unboundwiki.com, three boss sheets; hzla ff6c3e3, Unbound-Cloud 3d20f32; trainer-index LEVEL CAPS (Maxima 40); `hacks/unbound/SOURCES.md` |
