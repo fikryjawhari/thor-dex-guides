@@ -120,6 +120,23 @@ unknown IDs. Item IDs map through the same stone-spelling corrections as P.stone
 progression keys use `cap_step`/`cap`, and trainers must use Hardcore `cap[1]`, not normal `cap[0]`. Obtainability
 and evolution/breeding closure must be assigned before D8 pruning is enabled by the locations/trainers merge.
 
+### Locations
+
+Source: data.js `areas` (221, game order; index = LOC index). Built by `extract/locs.py` (step 1 of unit 4).
+
+- LOC: one sublocation per data.js area. AR: one tracker slot per place, the area name without its floor / room
+  suffix (Mt. Moon 1F / B1F / B2F = Mt. Moon): 153 places, 67 with no encounters (`ns`, no slot).
+- Encounter keys: wild-day / wild-night (grass, 12 FRLG slots 20/20/10/10/10/10/5/5/4/4/1/1), wild-surf and
+  wild-smash (60/30/5/4/1), rods (old 70/30, good 60/20/20, super 40/40/15/4/1), raids 1-6 (12 drop items, kept in
+  the row note), fixed-overworld (Static), fixed-gift (Gift; more than one entry = "Gift (pick one)", "1 of N"),
+  fixed-trade (Trade), fixed-roaming (Roaming, "1 of N"). Trainers and item keys are other units'.
+- Cap step: each key's step is shown as its Hardcore level cap ("cap 22") in the group label and row notes.
+- P.g: 0 = found in a location, or the first same-dex base form found, or evolved from an obtainable species
+  (Unbound's rule); 3 = not found; Megas keep 1 (prune.py decides them).
+
+Open for step 2 (sheet cross-check): Safari, fossils, egg vendor, Game Corner, mystery gifts, Wonder Egg pools, and
+the "pick one" gift lists (Oak's Lab 27 entries, Vermilion fossils 10, Celadon 42) against the sheet.
+
 ## Local storage
 
 Prefix `rr`. Keep these keys once published.

@@ -68,6 +68,12 @@ Each unit adds the decisions it had to take to **Decisions taken in units** belo
 - [unit 1] Split the game's two As One IDs into Spectrier/Glastrier names and use learned canonical Leech Life ID 141 (15 PP), not the unused Leech Fang copy 355 (10 PP); do not invent the four absent hzla abilities (data.js, hzla radredhc.js).
 - [unit 1] Preserve source sprite pixels using palette PNG conversion; leave Chillet's letter fallback because neither data.js nor the shared set has its art, and use actual transformation parents for regional Mega pruning (data.js sprites/evolutions, sprites/index.json).
 
+- [unit 4] One sublocation per data.js area (221) and one tracker slot per place with floor / room suffixes removed (153 places, 67 with no encounters as `ns`) (data.js areas, Unbound's floor grouping).
+- [unit 4] Each encounter key's cap step shown as its Hardcore level in the group label and row notes ("cap 22"): the template has no per-row cap field (template/dex.js encounter sections, data.js keys).
+- [unit 4] Grass uses FRLG's 12 slot rates, Surf / Rock Smash 60/30/5/4/1, rods 70/30, 60/20/20, 40/40/15/4/1; the data.js entries are in slot order (standard FRLG, data.js).
+- [unit 4] Obtainable = found, or first same-dex base found, or evolved from an obtainable species (Unbound rule): 1192 obtainable, 83 not found, Megas g 1 (Unbound locs.py, data.js).
+- [unit 4] Multi-entry fixed gift lists are "Gift (pick one)" with "1 of N" until the sheet says otherwise (data.js fixed-gift lists; sheet check in step 2).
+
 ## Units
 
 Each unit: a Sol agent in its own worktree, branch off `worktree-radical-red` at the SHA given in its brief, commits
