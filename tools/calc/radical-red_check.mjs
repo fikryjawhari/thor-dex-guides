@@ -13,7 +13,8 @@ const data = {
     'Water Compaction', 'Fatal Precision', 'Primal Armor', 'Liquid Voice', 'Reckless',
     'ORAORAORAORA', 'ORAORAORAORA!', 'Bone Zone', 'Bone Zone ', 'Self Sufficient',
     'Blubber Defense', 'Cash Splash', 'WaterCompaction', 'Levitate', 'Sharpness',
-    'Bulletproof', 'Mega Launcher', 'Thick Fat', 'Solar Power', 'Rivalry', 'Klutz', 'Blazing Soul', 'Ice Scales', 'Mold Breaker'].map(name => [name, '']),
+    'Bulletproof', 'Mega Launcher', 'Thick Fat', 'Solar Power', 'Rivalry', 'Klutz', 'Blazing Soul', 'Ice Scales', 'Mold Breaker',
+    'Flower Gift', 'Bad Company', 'Rock Head', 'Neutralize Gas'].map(name => [name, '']),
   M: ['Tackle', 'Ember'],
   MV: [
     {bp: 40, t: 'Normal', c: 'Physical', f: ['contact']},
@@ -55,12 +56,17 @@ for (const [name, power, type, category, flags] of [
   ['Acupressure', 0, 'Normal', 'Status', []],
   ['Muddy Water', 95, 'Water', 'Special', []],
   ['Cut', 75, 'Steel', 'Physical', ['slicing', 'contact']],
+  ['Multi-Attack', 90, 'Normal', 'Physical', ['contact']],
+  ['Draco Barrage', 100, 'Dragon', 'Special', []],
+  ['Charge Beam', 50, 'Electric', 'Special', []],
+  ['Volt Tackle', 120, 'Electric', 'Physical', ['contact']],
+  ['Inferno Parade', 60, 'Ghost', 'Special', []],
 ]) {
   data.M.push(name);
   data.MV.push({bp: power, t: type, c: category, f: flags});
 }
 for (const [species, types] of [['Electivire', ['Electric']], ['Sunflora', ['Grass']],
-  ["Farfetch'd", ['Normal', 'Flying']], ["Sirfetch'd", ['Fighting']]]) {
+  ["Farfetch'd", ['Normal', 'Flying']], ["Sirfetch'd", ['Fighting']], ['Cherrim', ['Grass']]]) {
   data.P.push({id: species, n: species, s: [100, 100, 100, 100, 100, 100], t: types, a: [], et: []});
 }
 const unchanged = JSON.stringify({data, profile});
@@ -305,7 +311,7 @@ check('Sonic Slash exact speed thresholds', rr('741-745'), () => {
     assert.deepEqual(result(holder('', {rs: {spe: speed}}), 'Sonic Slash').rolls, expected(power));
   }
 });
-for (const name of ['Bitter Malice', 'Barb Barrage', 'Infernal Parade']) {
+for (const name of ['Bitter Malice', 'Barb Barrage', 'Infernal Parade', 'Inferno Parade']) {
   check(name + ' doubles for every major status', rr('757-763'), () => {
     assert.deepEqual(result(holder(''), name, target({st: 'par'})).rolls, expected(120));
     assert.deepEqual(result(holder(''), name).rolls, expected(60));
@@ -331,6 +337,44 @@ check('EV-less player defaults preserve Ghost Marowak 252 HP EVs', 'Hardcore Mai
   assert.equal(profile.evs, true);
   assert.equal(engine.stats(mon())[0], 175);
   assert.equal(engine.stats(mon({ev: [252, 0, 0, 0, 0, 0]}))[0], 207);
+});
+check('Flower Gift: Cherrim Attack in Sun only; no Special Defense boost', 'Showdown gen9rr/abilities.ts:251-269; ' + rr('1294-1302'), () => {
+  const cherrim = extra => holder('Flower Gift', {id: 'Cherrim', ...extra});
+  assert.deepEqual(result(cherrim(), 'Tackle', target(), {weather: 'Sun'}).rolls, expected(40, {attack: 180}));
+  assert.deepEqual(result(cherrim(), 'Tackle').rolls, expected(40));
+  assert.deepEqual(result(cherrim(), 'Ember', target(), {weather: 'Sun'}).rolls, expected(40, {weather: 1.5}));
+  assert.deepEqual(result(holder('Flower Gift'), 'Tackle', target(), {weather: 'Sun'}).rolls, expected(40));
+  assert.deepEqual(result(holder(''), 'Ember', cherrim(), {weather: 'Sun'}).rolls, expected(40, {weather: 1.5}));
+});
+check('Bad Company takes no recoil, like Rock Head', 'Showdown gen9rr/abilities.ts:2-25', () => {
+  const recoil = name => plain(engine.hp(holder(name), target(), {mv: move('Volt Tackle')}, {}, 100));
+  assert.equal(recoil('').v, -25);
+  assert.equal(recoil('Bad Company'), null);
+  assert.equal(recoil('Rock Head'), null);
+});
+check('Multi-Attack takes the primary type of its user', 'Showdown gen9rr/moves.ts:685-692; ' + rr('211-216'), () => {
+  assert.deepEqual(result(mon(), 'Multi-Attack', target({ty: ['Fighting']})).rolls, expected(90, {stab: 1.5, effectiveness: 2}));
+  assert.deepEqual(result(mon(), 'Multi-Attack', target({ty: ['Dark']})).max, 0);
+});
+check('Draco Barrage hits Fairy; Physical only when boosted Attack is higher', 'Showdown gen9rr/moves.ts:247-266; ' + reference + 'util.ts:167-168', () => {
+  assert.deepEqual(result(holder(''), 'Draco Barrage', target({ty: ['Fairy']})).rolls, expected(100));
+  assert.equal(result(holder(''), 'Draco Barrage', target({ty: ['Fairy']})).max > 0, true);
+  assert.deepEqual(result(holder('', {stg: [0, 1, 0, 0, 0, 0]}), 'Draco Barrage').rolls, expected(100, {attack: 180}));
+  assert.deepEqual(result(holder('', {stg: [0, 1, 0, 0, 0, 0]}), 'Draco Barrage', target({stg: [0, 0, 1, 0, 0, 0]})).rolls,
+    expected(100, {attack: 180, defense: 180}));
+  assert.deepEqual(result(holder('', {stg: [0, 1, 0, 1, 0, 0]}), 'Draco Barrage', target({stg: [0, 0, 1, 0, 0, 0]})).rolls,
+    expected(100, {attack: 180}));
+});
+check('Charge Beam always raises Special Attack', 'Showdown gen9rr/moves.ts:149-160', () => {
+  assert.deepEqual(plain(engine.hit(holder(''), target(), {mv: move('Charge Beam')}, {}, 'min')).atk.stg, [0, 0, 0, 1, 0, 0]);
+});
+check('Hardcore AI weather and terrain stay after the setter leaves', 'Hardcore Main!E10', () => {
+  assert.equal(engine.settings().setterStays, true);
+});
+check('CFRU raw ability names reach their engine effects', 'tools/cfru.py CFRU_NAMES', () => {
+  const thick = target({ab: ability('Thick Fat')});
+  assert.deepEqual(result(holder('Neutralize Gas'), 'Ember', thick).rolls, expected(40));
+  assert.notDeepEqual(result(holder(''), 'Ember', thick).rolls, expected(40));
 });
 check('fixture inputs remain unchanged', 'tools/calc/README.md: Public contract', () => {
   assert.equal(JSON.stringify({data, profile}), unchanged);

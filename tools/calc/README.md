@@ -15,12 +15,6 @@ are exact versions, with npm's integrity hashes in `package-lock.json`.
 
 ## Hack validation
 
-`over.abilities.<guide name>.statusImmune` optionally lists status keys whose end-of-turn
-HP change is suppressed (for example `["psn", "tox"]`). It uses the active fight ability,
-including ability changes, without aliasing or removing its native damage effect. It suppresses
-only the status component (including `residual.status` overrides), not weather, hazards,
-items or other ability residuals. Omitted entries retain the existing behavior.
-
 `npm test --prefix tools/calc` runs the engine suite, each hack's source/stock checks and
 `state_check.mjs` against every `hacks/<hack>/calc_states.json`. The independent hzla comparison is separate:
 
@@ -732,6 +726,10 @@ override entries use **display names**, except species may use their guide ID:
   require engine work.
 - `residual` adds a hack's own end-of-turn effects to `DMG.residual` / the KO text:
   `{abilities: {Name: [sign, divisor]}, status: {key: [sign, divisor, label]}}` (EI: Self Sufficient, Frostbite).
+- `abilities[name].statusImmune` lists status keys whose end-of-turn HP change the ability suppresses (RR Toxic
+  Boost `["psn", "tox"]`, Flare Boost `["brn"]`). It reads the active fight ability (ability changes included) and
+  keeps the ability's native damage effect. Only the status part goes (including a `residual.status` entry), not
+  weather, hazards, items or other ability residuals. Profiles without it behave as before.
 
 ### Ordered modifier rules
 
