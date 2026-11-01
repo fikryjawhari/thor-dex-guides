@@ -61,6 +61,11 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   form-change forms.
 - Items tab: tutor box count without groups counts tutors by place (Hardlove "4 tutors" over 13 rows); no tick bar on
   search results.
+- Pokémon page Held items: form-change forms (Castform Sunny, Shaymin Sky) list their wild items (only Megas have
+  none); "Trainers give it" counts the trainers of the page's "Used by trainers" (main teams, rivals of the other
+  starters in, partners out), so it can differ from the item page's Held by; sorted by count, then name.
+- Full gate (`gate.py check`) takes 45-60 min now: domcompare runs one guide at a time (~34 min of it). Later:
+  parallel domcompare, or checks chosen from the files a branch changed (Open).
 
 ## Open
 
