@@ -677,6 +677,32 @@ Scenario: `tools/scenarios/move-page.mjs`, every guide, all viewer sizes in norm
    for items (a Page action). Not links: the calc's item chips and pickers (controls).
 Scenario: `tools/scenarios/item-page.mjs`, every guide, all viewer sizes in normal and `dvkb` modes.
 
+**Items tab** (decided 2026-11-01, `plans/item-pages.md` §5-6; `ITEMS TAB` in dex.js, "Items tab" in dex.css):
+1. Boxes are the kinds, in the data's order (`D.IT`, `tools/itemstd.py` → `BOXES`), as the standard collapsible boxes
+   (Collapsible pages above). Box count = items (a nomerge name counts once); Move Tutors: "N tutors". Sub-headings are
+   the data's (`r[4]`), counted in cards.
+2. Open state by name: `LS.items` `o: {<kind>: 1}`, `s: {<kind>.<sub-heading>: 1}`. Saved before 2026-11-01 by box index
+   (`o` "3", `s` "3.Berries", a `layout`): those entries are dropped once on load and the rest saved back; a name a later
+   build drops waits unused. Ticks (`g`) are the item page's (Item page 5).
+3. **Cards** (the dex-row look, `.list>.row`, so `content-visibility:auto`): icon (or the 32 px spacer), name (item page
+   link), a TM's move type, MISSABLE, "done/total" with 2+ pickups; then the first 3 lines in the item page's order
+   (unticked pickups, other lines, ticked pickups) with their ticks and stop links, then "+N more" (item page). Every
+   pickup ticked: the card fades (.55). A tick redraws the cards of that item (`TICKHOOK`), so the next lines move up.
+   One card per item: a name on several rows of a box is one card with all its lines, except **nomerge** (every row of
+   the name is one pickup line: Unbound's 90 Zygarde Cells), a card per row titled by the place, the rest of the line
+   under it. (The data has no nomerge flag; the template reads it from the rows.)
+4. **Move Tutors**: when the rows carry group headings (RULES `tutor_groups`; Unbound), one card per tutor (rows sharing
+   a place and an unlock, "place · cost · unlock"): the place, "Needs: <unlock>", each move as a link + type + its cost,
+   under the group sub-headings. No groups (Hardlove): the table. Useful NPCs: the table.
+5. **Tick bar** above Expand / Collapse all: "N ticked" (pickups of this build) and, at N > 0, "Clear ticks". The first
+   tap arms it ("Tap again to clear N"); any other tap or a redraw (leaving the tab) disarms; the second clears `g`
+   (`tickClear`) and the hook redraws the cards and the bar. Not pinned: it is at the page top, where nothing covers it.
+6. **Search** (`st.q`): rows whose name or text matches, as cards (tutors: the matching moves of each tutor) under their
+   box names (`.sech`), ticks working. `SR.jumpItem` opens the box and sub-heading by name and lands on `[data-ri~=ri]`.
+7. **Walkthrough item rows** (the stops' Items and Guide info's "Items with no walkthrough place"): the pickup's tick box
+   before the place text (`walkItemText`), the same tick as the cards and the item page. Stop counts stay checklist-only.
+Scenario: `tools/scenarios/items-tab.mjs`, every guide, 260 × 316 in normal and `dvkb` modes.
+
 **Ability marks on the Pokémon page** (the compact moves table, `ownBoosts` / `bindBoosts` in dex.js): a move that one
 of this Pokémon's (this form's) own abilities affects (`MI`, `w: 'u'`, ability in `p.as`) gets an A in an accent dot
 after its name, in every tab, at every width: one form, no per-width variant. It is a button (padded hit area, no
