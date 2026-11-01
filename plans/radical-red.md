@@ -78,13 +78,13 @@ chat merges units into `worktree-radical-red` one at a time and rebuilds data.js
 
 | Unit | Files | After | Status |
 | --- | --- | --- | --- |
-| 1 Dex | common.py (data.js reader, `sid` / `move` / `ability` / `item` lookups), dex.py, moves.py, prune.py, gid.py's ID-table half if cheap, sprites.json, notes Dex | scaffold | |
+| 1 Dex ✓ merged | common.py (data.js reader, `sid` / `move` / `ability` / `item` lookups), dex.py, moves.py, prune.py, gid.py's ID-table half if cheap, sprites.json, notes Dex | scaffold | |
 | 2 Calc mechanics | hack.json `cfg.calc`, tools/calc/radical-red_check.mjs, notes Damage calc | scaffold | |
-| 3 Walk research | plans/radical-red-walk.md (order table only; no code) | scaffold | |
+| 3 Walk research ✓ merged | plans/radical-red-walk.md (order table only; no code) | scaffold | |
 | 4 Locations | locs.py, notes Locations | 1 | |
 | 5 Items | items.py, item_desc / battle_text / item_text_extra json, `P.hi`, itemstd RULES entry if needed, notes Items | 1 | |
 | 6 Trainers + caps | trainers.py, trainer fields review, notes Trainers / Caps | 1 | |
-| 7 Save IDs | gid.py, notes Save ID tables | 1 | |
+| 7 Save IDs ✓ merged (finish: set `cfg.calc.save` "cfru" and `cfg.calc.cfru` "radicalred41") | gid.py, notes Save ID tables | 1 | |
 | 8 Walkthrough | walk.py, notes Walkthrough | 3, 4, 5, 6 | |
 | 9 Finish | cfg wording, check.py, calc scenarios / doubles count / fields counts, sprites check, report review | 8 | |
 | Audit | the user's review of decisions first, then the full gate | 9 | |
