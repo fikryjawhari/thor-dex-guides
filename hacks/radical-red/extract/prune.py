@@ -2,7 +2,7 @@
 
 Incomplete integration must not prune: locations and trainer units start empty.
 """
-from common import report
+from common import SPECIES, report, sid
 from extractlib import filter_species_links
 
 
@@ -15,7 +15,14 @@ def build(data):
             for trainer in section['tr'] for mon in trainer['p']}
     obtainable = {mon['id'] for mon in species if mon['g'] == 0}
     base_dex = {mon['dex'] for mon in species if mon['id'] in obtainable and not mon.get('fc')}
-    obtainable.update(mon['id'] for mon in species if mon['g'] == 1 and mon['dex'] in base_dex)
+    mega_parents = {}
+    for record in SPECIES.values():
+        for edge in record.get('evolutions', []):
+            if edge[0] == 254:
+                mega_parents.setdefault(sid(edge[2]), set()).add(sid(record['ID']))
+    obtainable.update(mon['id'] for mon in species if mon['g'] == 1
+                      and (bool(mega_parents[mon['id']] & obtainable) if mon['id'] in mega_parents
+                           else mon['dex'] in base_dex))
     kept = obtainable | used
     missing = used - {mon['id'] for mon in species}
     if missing:

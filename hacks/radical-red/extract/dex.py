@@ -4,12 +4,13 @@ Source ability slots: hidden/primary/secondary; stats: HP/Atk/Def/Spe/SpA/SpD.
 No source is executed. Evolution templates are decoded explicitly, not evaluated.
 """
 from collections import Counter, defaultdict
+import json
 from pathlib import Path
 
 import cfru
 from romhackdex import Mirror, key
-from common import (DATA, FORM_KEYS, H, MOVE_IDS, SPECIES, SPECIES_NAMES, ability, item, move,
-                    report, sid, type_name)
+from common import (DATA, FORM_KEYS, H, MOVE_IDS, MOVE_RECORDS, SPECIES, SPECIES_NAMES, ability, item, move,
+                    parse_literal, report, sid, type_name)
 
 
 TARGETS = {0: 'normal', 1: 'scripted', 2: 'adjacentAllyOrSelf', 4: 'randomNormal', 8: 'allAdjacentFoes',
@@ -129,6 +130,21 @@ def _cross_check(data):
                for attack, row in data['TC'].items() for defend, value in row.items()
                if chart.get(attack, {}).get(defend) != value]
     report('type chart: %d types, %d RomHackDex differences: %s' % (len(data['TC']), len(changed), changed))
+    reference = parse_literal((Path(H.src) / 'repos/Dynamic-Calc-Decomps/backups/radredhc.js').read_text(encoding='utf-8'))
+    unknown = [name for name in reference if name != '-----' and sid(name) is None]
+    report('hzla lookup cross-check: %d species names; %d unresolved: %s'
+           % (len(reference) - 1, len(unknown), ', '.join(unknown) or 'none'))
+    for field, lookup in (('moves', move), ('ability', ability), ('item', item)):
+        values = set()
+        for name, teams in reference.items():
+            if name == '-----':
+                continue
+            for team in teams.values():
+                value = team.get(field)
+                values.update(value if isinstance(value, list) else [value] if value else [])
+        missing_names = sorted(value for value in values if lookup(value) is None)
+        report('hzla lookup %s: %d names; %d unresolved: %s'
+               % (field, len(values), len(missing_names), ', '.join(missing_names) or 'none'))
 
 
 def build(data):
@@ -138,7 +154,7 @@ def build(data):
                     for index in range(len(row['names']))}
     abilities = sorted(ability_rows, key=str.lower)
     ability_indexes = {name: index for index, name in enumerate(abilities)}
-    source_moves = {move(ident): row for ident, row in DATA['moves'].items() if move(ident)}
+    source_moves = MOVE_RECORDS
     calc_names = cfru.calc_names()
     move_rows = []
     for name in names:
@@ -191,8 +207,8 @@ def build(data):
         if held:
             entry['hi'] = [[name, chance] for name, chance in held.items()]
         suffix = form_key[len(row['name']):].strip('-').lower()
-        if not mega and (suffix in cfru.FORM_CHANGE or row['name'].lower() in cfru.TYPE_FORMS
-                         or suffix in ('ice', 'shadow', 'hero', 'bloodmoon') and suffix != 'bloodmoon'):
+        if not mega and suffix and (suffix in cfru.FORM_CHANGE or row['name'].lower() in cfru.TYPE_FORMS
+                                   or suffix in ('ice', 'shadow', 'hero')):
             entry['fc'] = 1
         pokemon.append(entry)
     by_id = {row['id']: row for row in pokemon}
@@ -223,6 +239,12 @@ def build(data):
            % (len(pokemon), len(families), sum(row['g'] == 1 for row in pokemon), len(names), len(abilities)))
     report('official dex: %d species records; %d ordinary moves; %d generated/placeholder move records excluded'
            % (len(SPECIES), len(names), len(DATA['moves']) - len(MOVE_IDS)))
+    for name in names:
+        source_ids = [ident for ident, mapped in MOVE_IDS.items() if mapped == name]
+        if len(source_ids) > 1:
+            report('merged move %s: game IDs %s; canonical ID %s; PP %s (other copies %s)'
+                   % (name, ', '.join(source_ids), source_moves[name]['ID'], source_moves[name]['pp'],
+                      ', '.join('%s=%s' % (ident, DATA['moves'][ident]['pp']) for ident in source_ids)))
     report('egg groups: %d species decoded; source groups available via dex.egg_groups (no breeding-group field in P schema)' % len(SPECIES))
     changed = [row for row in SPECIES.values() if row.get('changes')]
     report('species changes: %d source records; retained in common.DATA, not a template changes card (shared UI rule)' % len(changed))
@@ -231,3 +253,45 @@ def build(data):
     report('wild held items: %d species; common/rare 50/5; equal nonzero slots 100%%' % sum(bool(row.get('hi')) for row in pokemon))
     report('Mega/form items: %d assigned from evolution records' % sum(bool(row.get('stone')) for row in pokemon))
     _cross_check(data)
+    from sprite_keys import sprite_key
+    overrides = json.loads((Path(H.dir) / 'hack.json').read_text(encoding='utf-8')).get('sk', {})
+    own = json.loads((Path(H.dir) / 'sprites.json').read_text(encoding='utf-8'))
+    missing_art = [row['id'] for row in pokemon if row['id'] not in own and
+                   not (overrides.get(row['id']) or sprite_key(row['dex'], row['n'], row['id']))]
+    report('sprites: %d own supplements; %d species without art: %s'
+           % (len(own), len(missing_art), ', '.join(missing_art) or 'none'))
+
+
+def write_sprites():
+    """Export only forms lacking shared art; assembly crops the original transparent 64px frames."""
+    import base64
+    import io
+    from PIL import Image
+    import pngpal
+    from sprite_keys import keys_for
+    keys, data = keys_for('radical-red')
+    game_ids = {sid(ident): ident for ident in SPECIES}
+    sprites, missing = {}, []
+    for row in data['P']:
+        if keys[row['id']]:
+            continue
+        sprite = DATA['sprites'].get(game_ids[row['id']])
+        if sprite is None:
+            missing.append(row['id'])
+        else:
+            image = Image.open(io.BytesIO(base64.b64decode(sprite.split(',')[1]))).convert('RGBA')
+            if image.size != (64, 64):
+                raise ValueError('Species sprite is not a 64px frame: %s' % row['id'])
+            raw = image.tobytes()
+            pixels = list(zip(raw[0::4], raw[1::4], raw[2::4], raw[3::4]))
+            palette = sorted(set(pixels), key=lambda color: (color[3] != 0, color))
+            if len(palette) > 256:
+                raise ValueError('Species sprite needs quantisation: %s' % row['id'])
+            indexes = {color: index for index, color in enumerate(palette)}
+            rows = [[indexes[color] for color in pixels[start:start + 64]] for start in range(0, len(pixels), 64)]
+            encoded = pngpal.encode(rows, [color[:3] for color in palette], bytes(color[3] for color in palette))
+            sprites[row['id']] = 'data:image/png;base64,' + base64.b64encode(encoded).decode()
+    path = Path(H.dir) / 'sprites.json'
+    path.write_text(json.dumps(sprites, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+    print('sprites: %d official data.js supplements; %d absent in both sources: %s'
+          % (len(sprites), len(missing), ', '.join(missing) or 'none'))

@@ -55,6 +55,7 @@ def parse_literal(source):
     """Convert only strings, keys, numbers, arrays, objects and JSON literals to JSON."""
     token = re.compile(r'''\s+|//[^\r\n]*|/\*[\s\S]*?\*/|'(?:\\[\s\S]|[^'\\])*'|"(?:\\[\s\S]|[^"\\])*"|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?|[A-Za-z_$][\w$]*|[{}\[\]:,]''')
     source = source.strip().removesuffix(';')
+    source = re.sub(r'^(?:\s*(?://[^\r\n]*(?:\r?\n|$)|/\*[\s\S]*?\*/))*\s*', '', source)
     source = re.sub(r'^(?:(?:const|let|var)\s+)?[A-Za-z_$][\w$]*\s*=\s*', '', source)
     converted = []
     key_end = re.compile(r'\s*:')
@@ -91,7 +92,19 @@ MOVE_IDS = {ident: MOVE_FIX.get(row['name'], cfru.official(row['name'])) for ide
             if int(ident) < 848 and row['name'] != 'Placeholder'}
 MOVE_NAMES = {key(name): name for name in MOVE_IDS.values()}
 MOVE_NAMES.update({key(short): full for short, full in MOVE_FIX.items()})
-ABILITY_NAMES = {key(name): cfru.official(name) for row in DATA['abilities'].values() for name in row['names']}
+MOVE_RECORDS = {}
+for ident, name in MOVE_IDS.items():
+    row = DATA['moves'][ident]
+    previous = MOVE_RECORDS.get(name)
+    if previous is None or (row['name'] == name and previous['name'] != name):
+        MOVE_RECORDS[name] = row
+ABILITY_IDS = {(ident, index): ('As One (Spectrier)' if ident == '73' else 'As One (Glastrier)' if ident == '77'
+                              else 'Neutralizing Gas' if name == 'Neutralize Gas' else cfru.official(name))
+               for ident, row in DATA['abilities'].items() for index, name in enumerate(row['names'])}
+ABILITY_NAMES = {key(name): ABILITY_IDS[(ident, index)] for ident, row in DATA['abilities'].items()
+                 for index, name in enumerate(row['names']) if name != 'As One'}
+ABILITY_NAMES.update({key(name): name for name in ABILITY_IDS.values()})
+ABILITY_NAMES[key('Pheonix Down')] = 'Phoenix Down'
 ITEM_FIX = {'Charzardite X': 'Charizardite X', 'Charzardite Y': 'Charizardite Y', 'Blastoisnite': 'Blastoisinite',
             'Kangaskanite': 'Kangaskhanite', 'Aerodactlite': 'Aerodactylite'}
 ITEM_NAMES = {key(row['name']): ITEM_FIX.get(row['name'], row['name']) for row in DATA['items'].values()}
@@ -111,9 +124,9 @@ def ability(value):
     if isinstance(value, (list, tuple)):
         ident, variant = value
         row = DATA['abilities'].get(str(ident))
-        return cfru.official(row['names'][variant]) if row else None
+        return ABILITY_IDS[(str(ident), variant)] if row else None
     row = DATA['abilities'].get(str(value))
-    return cfru.official(row['names'][0]) if row else ABILITY_NAMES.get(key(value))
+    return ABILITY_IDS[(str(value), 0)] if row else ABILITY_NAMES.get(key(value))
 
 
 def item(value):
@@ -183,9 +196,11 @@ for ident, row in sorted(SPECIES.items(), key=lambda pair: (pair[1].get('order',
     suffix = form_key[len(base):].strip('-')
     if base in ('Nidoran', 'Nidoran-F', 'Nidoran-M'):
         name = 'Nidoran♀' if form_key.endswith('-F') else 'Nidoran♂'
+    elif row['dexID'] in (29, 32):
+        name = 'Nidoran♀' if row['dexID'] == 29 else 'Nidoran♂'
     elif '-Mega' in form_key:
         before, after = form_key.split('-Mega', 1)
-        name = 'Mega ' + before.replace('-Sevii', ' (Seviian)') + after.replace('-', ' ')
+        name = 'Mega ' + ('Seviian ' + before.removesuffix('-Sevii') if before.endswith('-Sevii') else before) + after.replace('-', ' ')
     elif suffix == 'Primal':
         name = 'Primal ' + base
     else:
@@ -194,6 +209,16 @@ for ident, row in sorted(SPECIES.items(), key=lambda pair: (pair[1].get('order',
         if region:
             parts.pop(0)
         label = FORM_WORDS.get('-'.join(parts), ' '.join(parts))
+        if base == 'Unown':
+            label = ' '.join(parts)
+        if parts == ['Ice'] and base != 'Calyrex':
+            label = 'Ice'
+        if parts == ['Super']:
+            label = 'Super'
+        if base == 'Minior' and form_key != 'Minior-Meteor':
+            color = {1065: 'Red', 1066: 'Blue', 1067: 'Orange', 1068: 'Yellow', 1069: 'Indigo',
+                     1070: 'Green', 1071: 'Violet'}[row['ID']]
+            label = color + ' Core'
         name = (region + ' ' if region else '') + base + (' (' + label + ')' if label else '')
     species_id = SPECIES_IDS[ident]
     SPECIES_NAMES[species_id] = name
@@ -202,6 +227,14 @@ for ident, row in sorted(SPECIES.items(), key=lambda pair: (pair[1].get('order',
         aliases.extend((base + ' ' + suffix, suffix + ' ' + base))
     if suffix == 'F':
         aliases.append(base + '-Female')
+    if name.startswith('Mega '):
+        aliases.append(name.replace('Mega ', '', 1) + '-Gmax')
+    if base == 'Minior' and form_key != 'Minior-Meteor':
+        aliases.append('Minior-' + color)
+    for region, adjective in REGIONS.items():
+        if '-' + region in form_key:
+            aliases.append(form_key.replace('-' + region, '-' + {'Alola': 'A', 'Galar': 'G', 'Hisui': 'H', 'Paldea': 'P', 'Sevii': 'S'}[region]))
+            aliases.append(form_key.replace('-' + region, '').replace('-', ' ') + ' ' + adjective)
     for alias in aliases:
         SPECIES_ALIASES.setdefault(key(alias), species_id)
     if not row.get('order', 0):
@@ -217,4 +250,8 @@ for alias, canonical in {'Urshifu-Single-Strike': 'Urshifu', 'Urshifu-Rapid-Stri
 
 
 def sid(value):
-    return SPECIES_IDS.get(str(value)) or SPECIES_ALIASES.get(key(value))
+    match = SPECIES_IDS.get(str(value)) or SPECIES_ALIASES.get(key(value))
+    if match:
+        return match
+    simple = re.sub(r'\b(?:Forme?|Mode|Size|Style)\b', '', str(value), flags=re.I)
+    return SPECIES_ALIASES.get(key(simple))

@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import DATA, H, key, move, report
+from common import DATA, H, MOVE_RECORDS, key, move, report
 import cfru
 
 
@@ -145,7 +145,7 @@ def refresh():
 def build(data):
     snapshot = json.loads(Path(__file__).with_name('move_metadata.json').read_text(encoding='utf-8'))
     missing, disagreements, changed = [], [], 0
-    source_moves = {move(ident): row for ident, row in DATA['moves'].items() if move(ident)}
+    source_moves = MOVE_RECORDS
     for name, entry in zip(data['M'], data['MV']):
         record = snapshot['moves'].get(name) or HAND.get(name)
         if record is None:

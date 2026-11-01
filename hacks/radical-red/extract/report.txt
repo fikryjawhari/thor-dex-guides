@@ -1,5 +1,6 @@
-dex: P 1343 (1026 National Dex numbers, 68 Mega/Primal); M 826; AB 280
+dex: P 1343 (1026 National Dex numbers, 68 Mega/Primal); M 826; AB 281
 official dex: 1343 species records; 826 ordinary moves; 176 generated/placeholder move records excluded
+merged move Leech Life: game IDs 141, 355; canonical ID 141; PP 15 (other copies 141=15, 355=10)
 egg groups: 1343 species decoded; source groups available via dex.egg_groups (no breeding-group field in P schema)
 species changes: 667 source records; retained in common.DATA, not a template changes card (shared UI rule)
   species changes Butterfree: {'stats': [60, 45, 50, 70, 90, 80]}
@@ -931,8 +932,6 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex cacnea hidden: official Sand Rush; mirror None
   RomHackDex cacturne stats: official [70, 120, 60, 120, 60, 55]; mirror [70, 115, 60, 115, 60, 55]
   RomHackDex cacturne hidden: official Sand Rush; mirror None
-  RomHackDex calyrex-ice abilities: official only ['As One']; mirror only ['As One (Glastrier)']
-  RomHackDex calyrex-shadow abilities: official only ['As One']; mirror only ['As One (Spectrier)']
   RomHackDex camerupt stats: official [90, 100, 70, 105, 75, 40]; mirror [70, 100, 70, 105, 75, 40]
   RomHackDex camerupt abilities: official only ['Solid Rock']; mirror only ['Anger Point']
   RomHackDex camerupt hidden: official Anger Point; mirror Solid Rock
@@ -3125,18 +3124,24 @@ Mega/form items: 108 assigned from evolution records
 RomHackDex: 1343 pages; 1343 distinct P entries matched; 0 pages unmatched; 0 P entries not mirrored
   RomHackDex unmatched pages: 
   Official species not mirrored: 
-RomHackDex species differences (official data retained): {'abilities': 983, 'hidden': 987, 'stats': 285, 'TM/HM': 80, 'tutor': 77, 'types': 39}
+RomHackDex species differences (official data retained): {'abilities': 981, 'hidden': 987, 'stats': 285, 'TM/HM': 80, 'tutor': 77, 'types': 39}
+  RomHackDex move Leech Life pp: official 15; mirror 10
   RomHackDex move Struggle t: official ???; mirror Normal
-RomHackDex moves: 826 in M; 0 not mirrored; differences {'t': 1}
+RomHackDex moves: 826 in M; 0 not mirrored; differences {'pp': 1, 't': 1}
   Moves not mirrored: 
 type chart: 18 types, 0 RomHackDex differences: []
+hzla lookup cross-check: 879 species names; 0 unresolved: none
+hzla lookup moves: 670 names; 1 unresolved: (No Move)
+hzla lookup ability: 258 names; 4 unresolved: Forewarn, Guard Dog, Pickpocket, Snow Cloak
+hzla lookup item: 196 names; 0 unresolved: none
+sprites: 44 own supplements; 1 species without art: chillet
 locs: not built yet (TODO: implement radical-red locs extraction)
 trainers: not built yet (TODO: implement radical-red trainers extraction)
 items: not built yet (TODO: implement radical-red items extraction)
 walk: not built yet (TODO: implement radical-red walk extraction)
   description-derived metadata: Metal Bash: A physical attack in which the user charges, full body, into the foe.
-move metadata: 825 structured; 1 description-derived; 0 missing; 252 changed markers
-move metadata number disagreements (official dex retained): 112
+move metadata: 825 structured; 1 description-derived; 0 missing; 253 changed markers
+move metadata number disagreements (official dex retained): 113
   Absorb basePower: official 25; Showdown 20
   Aqua Cutter pp: official 10; Showdown 20
   Aqua Fang pp: official 10; Showdown 15
@@ -3194,6 +3199,7 @@ move metadata number disagreements (official dex retained): 112
   Judgment pp: official 5; Showdown 10
   Jungle Healing pp: official 5; Showdown 10
   King's Shield pp: official 5; Showdown 10
+  Leech Life pp: official 15; Showdown 10
   Low Kick basePower: official 1; Showdown 0
   Lunge pp: official 10; Showdown 15
   Magnitude basePower: official 1; Showdown 0
