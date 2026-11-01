@@ -55,7 +55,7 @@ const checks = [{
     const mon=await page.value(`CALC.mon('foe')`);
     const source=trainer.p[index];
     assert.equal(mon.id,source.id);
-    assert.equal(mon.i,'Houndoomite');
+    assert.equal(mon.i,'Houndoominite');
     assert.deepEqual(mon.ev,[6,252,0,0,0,252]);
     assert.deepEqual(mon.m,source.m);
     assert.ok(await page.count('.dres .mr:not(.em)'),'damage rows');

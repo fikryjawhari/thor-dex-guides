@@ -15,7 +15,7 @@ compare API's 300-file cap. Reject truncated trees. Fetch raw text only for diff
 Repos often have no release tags: release-bound sources use a reviewed ref and
 a version-page guard. A new version blocks acceptance until its release commit
 is resolved by date/changelog and ref + release.version are updated. Never use
-Hardlove's development branch or Retiled's upstream engine head for game data.
+Hardlove's development branch or Heartfelt Gold's upstream engine head for game data.
 Public game code wins; their docs use Drive dates for order/splits, not sets.
 
 Sheets are not byte-stable. Reuse the builders' stdlib xlsx reader; hash cell

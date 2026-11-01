@@ -4,8 +4,8 @@
       "name": "Released game source",
       "type": "github",
       "repo": "kumakuma1/hardlove",
-      "ref": "64838bf7dbe032cd87fd986f9c8699c1436c67c5",
-      "baseline_note": "0.8.5 pin: the patch is dated 2026-10-27; 'merge' (this commit, 2026-10-26) was the reviewed beta_hardlove head fetched with the release and Drive docs on 2026-10-28.",
+      "ref": "4af49f7a8cc929aaecee77636f74c5729f89a1df",
+      "baseline_note": "0.8.6 pin: the patch is dated 2026-10-30; 'move ai struct to heap' (this commit, 2026-10-30 09:28 UTC) was the beta_hardlove head, fetched with the Drive docs on 2026-11-01; the changelog (AI stack-overflow crashes, double-faint crash, early game trainers) matches 57f0d5c..4af49f7.",
       "paths": [
         "asm/include/items.inc",
         "asm/include/species.inc",
@@ -35,10 +35,10 @@
         "url": "https://drive.google.com/embeddedfolderview?id=1tBVoMcm-kZdUOWL1yhkxwykvDH5o85C6&hl=en",
         "pattern": "flip-entry-title\">HardloveGold_Demo_([0-9.]+)\\.xdelta",
         "select": "latest",
-        "version": "0.8.5"
+        "version": "0.8.6"
       },
       "state": {
-        "sha": "64838bf7dbe032cd87fd986f9c8699c1436c67c5",
+        "sha": "4af49f7a8cc929aaecee77636f74c5729f89a1df",
         "files": {
           "asm/include/items.inc": "8299aa49b61f2b5aa1e234c9cd95c6918e99318b",
           "asm/include/species.inc": "0776df5d89d605ea6059905c0ae2e840b01bc79d",
@@ -49,11 +49,11 @@
           "data/HiddenAbilityTable.c": "8f6c5f96b2b7235e09ce8a66e6393cb099aa572b",
           "data/HiddenItems.c": "41fe90fc97f4e38a40fd001b118c2bd8e70d95ff",
           "data/MachineMoves.c": "7a15cb0a77757d79aa0578f1ac9921441ad53597",
-          "data/Moves.c": "d9a1d26d7ff58826993046d9eeac4d34493c315c",
+          "data/Moves.c": "c43343937dbe4480a503a9a3e88d7e09d1bc8f88",
           "data/PokeFormDataTbl.c": "6182520e3febb9eba6a4a05c9ba75b446a575ce6",
           "data/SafariEncounters.c": "dbcede440ddcb1be18671144fc9315e9427c0bb8",
           "data/Species.c": "e965dc63dfd08ed84f9a1075c88515c9a40ceecb",
-          "data/Trainers.c": "aca644a642546a02c8df1e14248367a93d672aea",
+          "data/Trainers.c": "0ea6bb64def560c05df512a4723ce1d30f03b977",
           "data/itemdata/itemdata.c": "ee644d63541e267a993bba0350eb5dfa4c45527d",
           "data/learnsets/learnsets.json": "e4979a16491a3288ba49402151116e1cae7df511",
           "data/text/keys.csv": "92e03e07ea62ef9814c6f9f14f753f48f921774c",
@@ -72,7 +72,7 @@
       "url": "https://drive.google.com/embeddedfolderview?id=1tBVoMcm-kZdUOWL1yhkxwykvDH5o85C6&hl=en",
       "pattern": "flip-entry-title\">HardloveGold_Demo_([0-9.]+)\\.xdelta",
       "select": "latest",
-      "state": "0.8.5"
+      "state": "0.8.6"
     },
     {
       "name": "Documentation dates (trainer order, splits, locations and AI)",
@@ -93,7 +93,7 @@
         },
         "1tlmV57L8dCQANVsNJrfvqCdfxeuZGN7o0ddZO11L3k4": {
           "name": "Move Changes",
-          "modified": "2026-10-14"
+          "modified": "2026-10-30"
         },
         "1ktoVFo597LeZ4chz07B5KFfeIikKvhozsKq2sFE5EK4": {
           "name": "Move Performance",
@@ -109,7 +109,7 @@
         },
         "1QtkxHFLeb1VVde2LEJiibGFRNoeFFcangj_OuX13OUI": {
           "name": "Trainer Battles",
-          "modified": "2026-10-27"
+          "modified": "2026-11-01"
         }
       },
       "baseline_note": "Seeded current Drive dates 2026-10-24; original modified dates were not saved with the 2026-10-18 downloads."

@@ -70,7 +70,7 @@ def build(D):
     sh = IL['Evolution Items']
     IT.append({'n': 'Evolution Items', 'k': 'gen', 'note': note1(S(sh.v(1, 1))), 'r': [[S(r.get(1)), S(r.get(2)), None, miss(S(r.get(2)))] for n, r in rows_(sh) if n > 2 and S(r.get(1))]})
     megaByStone = {key(p['stone']): p['id'] for p in P if p.get('stone')}
-    IT.append({'n': 'Mega Stones', 'k': 'mega', 'note': '', 'r': [[a, b, megaByStone.get(key(a)), miss(b)] for a, b in MS]})
+    IT.append({'n': 'Mega Stones', 'k': 'mega', 'note': '', 'r': [[a, '' if re.match(r'unavailable\b', b, re.I) else b, megaByStone.get(key(a)), miss(b)] for a, b in MS]})
     sh = IL['Other']
     IT.append({'n': 'Other', 'k': 'gen', 'note': '', 'r': [[S(r.get(1)), S(r.get(2)), None, miss(S(r.get(2)))] for n, r in rows_(sh) if n > 1 and S(r.get(1))]})
     nolink = [r[0] for r in IT[-2]['r'] if r[2] is None and not re.match(r'^unavailable', r[1], re.I)]

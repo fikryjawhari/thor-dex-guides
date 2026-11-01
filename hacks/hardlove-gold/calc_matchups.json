@@ -12,7 +12,7 @@
   "matchups": [
     {
       "name": "source-sheer-force-thousand-waves",
-      "atk": {"id": "snorlax", "lv": 50, "ab": 27},
+      "atk": {"id": "snorlax", "lv": 50, "ab": 29},
       "slot": {"mv": 672},
       "field": {},
       "def": {"id": "blastoise", "lv": 50, "ab": -1},
@@ -20,15 +20,15 @@
     },
     {
       "name": "source-sheer-force-bounce-not-boosted",
-      "atk": {"id": "snorlax", "lv": 50, "ab": 27},
-      "slot": {"mv": 277},
+      "atk": {"id": "snorlax", "lv": 50, "ab": 29},
+      "slot": {"mv": 300},
       "field": {},
       "def": {"id": "blastoise", "lv": 50, "ab": -1},
       "reference": {"item": "", "power": 85, "ability": ""}
     },
     {
       "name": "source-reckless-chloroblast",
-      "atk": {"id": "snorlax", "lv": 50, "ab": 83},
+      "atk": {"id": "snorlax", "lv": 50, "ab": 84},
       "slot": {"mv": 773},
       "field": {},
       "def": {"id": "blastoise", "lv": 50, "ab": -1},
@@ -36,7 +36,7 @@
     },
     {
       "name": "source-punch-fire-punch-iron-fist",
-      "atk": {"id": "snorlax", "lv": 50, "ab": 85},
+      "atk": {"id": "snorlax", "lv": 50, "ab": 86},
       "slot": {"mv": 36},
       "field": {},
       "def": {"id": "blastoise", "lv": 50, "ab": -1}
@@ -80,7 +80,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 296
+        "mv": 127
       },
       "field": {},
       "def": {
@@ -247,7 +247,7 @@
         "it": "Psychic Gem"
       },
       "slot": {
-        "mv": 296
+        "mv": 127
       },
       "field": {},
       "def": {
@@ -269,7 +269,7 @@
         "it": "Flying Gem"
       },
       "slot": {
-        "mv": 360
+        "mv": 106
       },
       "field": {},
       "def": {
@@ -476,7 +476,7 @@
         "ab": 173
       },
       "slot": {
-        "mv": 282
+        "mv": 305
       },
       "field": {
         "defProtected": true
@@ -533,7 +533,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 296
+        "mv": 127
       },
       "field": {
         "weather": "Snow"
@@ -571,7 +571,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 296
+        "mv": 127
       },
       "field": {
         "weather": "Sand"
@@ -628,7 +628,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 163
+        "mv": 193
       },
       "field": {
         "terrain": "Electric"
@@ -647,7 +647,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 296
+        "mv": 127
       },
       "field": {
         "terrain": "Psychic"
@@ -705,7 +705,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 296
+        "mv": 127
       },
       "field": {
         "defLightScreen": true
@@ -801,7 +801,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 296
+        "mv": 127
       },
       "field": {
         "defFlowerGift": true,
@@ -988,7 +988,7 @@
         "it": "Punching Glove"
       },
       "slot": {
-        "mv": 282
+        "mv": 305
       },
       "field": {
         "defProtected": true
@@ -1004,7 +1004,7 @@
       "atk": {
         "id": "garchomp",
         "lv": 50,
-        "ab": 27,
+        "ab": 29,
         "it": "Fire Gem"
       },
       "def": {
@@ -1064,7 +1064,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 140,
+        "mv": 116,
         "bp": 51
       },
       "field": {},
@@ -1085,7 +1085,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 140,
+        "mv": 116,
         "bp": 102
       },
       "field": {},
@@ -1103,7 +1103,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 150,
+        "mv": 135,
         "bp": 50
       },
       "field": {},
@@ -1158,7 +1158,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 463
+        "mv": 464
       },
       "field": {},
       "def": {
@@ -1175,7 +1175,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 351
+        "mv": 364
       },
       "field": {},
       "def": {
@@ -1192,7 +1192,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 290
+        "mv": 312
       },
       "field": {
         "terrain": "Misty"
@@ -1211,7 +1211,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 290
+        "mv": 312
       },
       "field": {},
       "def": {
@@ -1228,7 +1228,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 408
+        "mv": 409
       },
       "field": {},
       "def": {
@@ -1250,7 +1250,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141
+        "mv": 186
       },
       "field": {},
       "def": {
@@ -1272,7 +1272,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 452
+        "mv": 453
       },
       "field": {},
       "def": {
@@ -1294,7 +1294,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 428
+        "mv": 429
       },
       "field": {},
       "def": {
@@ -1316,7 +1316,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141
+        "mv": 186
       },
       "field": {},
       "def": {
@@ -1338,7 +1338,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141
+        "mv": 186
       },
       "field": {},
       "def": {
@@ -1360,7 +1360,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 408
+        "mv": 409
       },
       "field": {},
       "def": {
@@ -1387,7 +1387,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141
+        "mv": 186
       },
       "field": {},
       "expectedBP": 20,
@@ -1409,7 +1409,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141
+        "mv": 186
       },
       "field": {},
       "expectedBP": 40,
@@ -1431,7 +1431,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141
+        "mv": 186
       },
       "field": {},
       "expectedBP": 60,
@@ -1453,7 +1453,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141
+        "mv": 186
       },
       "field": {},
       "expectedBP": 80,
@@ -1475,7 +1475,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141
+        "mv": 186
       },
       "field": {},
       "expectedBP": 100,
@@ -1497,7 +1497,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 452
+        "mv": 453
       },
       "field": {},
       "expectedBP": 40,
@@ -1519,7 +1519,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141
+        "mv": 186
       },
       "field": {},
       "expectedBP": 80,
@@ -1541,7 +1541,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 141
+        "mv": 186
       },
       "field": {},
       "expectedBP": 60,
@@ -1564,7 +1564,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 338
+        "mv": 351
       },
       "field": {},
       "expectedBP": 20,
@@ -1587,7 +1587,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 338
+        "mv": 351
       },
       "field": {},
       "expectedBP": 40,
@@ -1610,7 +1610,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 338
+        "mv": 351
       },
       "field": {},
       "expectedBP": 200,
@@ -1633,7 +1633,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 176
+        "mv": 206
       },
       "field": {},
       "expectedBP": 20,
@@ -1656,7 +1656,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 176
+        "mv": 206
       },
       "field": {},
       "expectedBP": 40,
@@ -1679,7 +1679,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 176
+        "mv": 206
       },
       "field": {},
       "expectedBP": 200,
@@ -1701,7 +1701,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 212
+        "mv": 239
       },
       "field": {},
       "expectedBP": 25,
@@ -1723,7 +1723,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 207
+        "mv": 234
       },
       "field": {},
       "expectedBP": 60,
@@ -1753,7 +1753,7 @@
         ]
       },
       "slot": {
-        "mv": 420
+        "mv": 421
       },
       "field": {},
       "expectedBP": 160,
@@ -1795,7 +1795,7 @@
         "hp": 1
       },
       "slot": {
-        "mv": 456
+        "mv": 457
       },
       "field": {},
       "expectedBP": 1
@@ -1831,7 +1831,7 @@
         ]
       },
       "slot": {
-        "mv": 212
+        "mv": 239
       },
       "field": {
         "atkHelpingHand": true
@@ -1923,7 +1923,7 @@
         ]
       },
       "slot": {
-        "mv": 456
+        "mv": 457
       },
       "field": {
         "atkHelpingHand": true
@@ -1969,7 +1969,7 @@
         ]
       },
       "slot": {
-        "mv": 464
+        "mv": 465
       },
       "field": {
         "atkHelpingHand": true

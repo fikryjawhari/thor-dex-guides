@@ -174,8 +174,8 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
   Δn, short-wide, 20 px battle-state row, Field / grid pass the wheel to the page; fixes found on the way: the Not
   modelled chip made status rows 35 px (now 15 px chip, 32 px rows), an added fight type on a dual-type foe was
   ignored by the engine (Smogon reads two types; `instrument.mjs` multiplies the third in, every guide), Defog's chip
-  hid Clear Fog (the chip now clears the Fog too). Units 1-5 done. Open for the user: is the "A" mark right; is Defog
-  clearing the Fog in the same tap right. Next: 6 (item pages: decide, then build), 7 (audit).
+  hid Clear Fog (the chip now clears the Fog too). Units 1-5 done. The user (2026-11-01): the "A" mark is right; Defog
+  clearing the Fog in the same tap is right (the game clears Fog with Defog; Fog is text only in the calc). Next: 6 (item pages: decide, then build), 7 (audit).
 - 2026-11-01: unit 6 decided: spec `plans/item-pages.md` (data `plans/item-pages-data.md`, mockup
   `plans/item-pages-mockup.py`), branch `worktree-move-pages-items`; item icon set on `worktree-move-pages-icons`
   (a042a34, Sol). Both merged into `worktree-move-pages`; building the spec's build units 1-6 (the user added the BB2R ROM to
