@@ -13,7 +13,10 @@
   "Air Cutter": "Critical-hit rate is 1/8 before other modifiers.",
   "Air Slash": "30% chance to make the target flinch.",
   "Alluring Voice": "Confuses the target if any of its stats rose earlier this turn.",
-  "Ally Switch": "Priority +2. Swaps the user's position with its ally; fails in singles.",
+  "Ally Switch": {
+    "gen<=6": "Priority +1. Swaps the user with the ally on the far side. Fails in singles or if the user is in the middle.",
+    "": "Priority +2. Swaps the user's position with its ally; fails in singles."
+  },
   "Amnesia": "Raises the user's Sp. Def by 2 stages.",
   "Anchor Shot": "100% chance to trap the target: it can't switch out while the user stays in.",
   "Ancient Power": "10% chance to raise the user's Attack, Defense, Sp. Atk, Sp. Def and Speed by 1 stage each.",
@@ -71,6 +74,7 @@
     "": "Priority +1. Stores damage from attacks for 2 turns, then deals twice that HP damage to the last attacker on turn 3. Bypasses accuracy checks; Ghost types are immune."
   },
   "Bind": {
+    "gen<=4": "Traps the target for 2-5 turns; it loses 1/16 of its max HP at the end of each turn.",
     "gen<=5": "Traps the target for 4-5 turns; it loses 1/16 of its max HP at the end of each turn.",
     "": "Traps the target for 4-5 turns; it loses 1/8 of its max HP at the end of each turn."
   },
@@ -131,18 +135,23 @@
   },
   "Charge Beam": "70% chance to raise the user's Sp. Atk by 1 stage.",
   "Charm": "Lowers the target's Attack by 2 stages.",
-  "Chatter": "100% chance to confuse the target.",
+  "Chatter": {
+    "gen<=4": "Chatot only: 1%, 11% or 31% chance to confuse the target, by its recorded cry (1% if none). Other users: 0%.",
+    "gen<=5": "Chatot only: 0% or 10% chance to confuse the target, by its recorded cry (0% if none or quiet). Other users: 0%.",
+    "": "100% chance to confuse the target."
+  },
   "Chilling Water": "Lowers the target's Attack by 1 stage.",
   "Chilly Reception": "Sets snow for 5 turns, or 8 with Icy Rock, then switches to a chosen teammate. Snow gives Ice types 1.5× Defense.",
   "Chip Away": "Ignores the target's Defense and evasion stages when calculating damage and accuracy.",
   "Chloroblast": "The user loses half its max HP as recoil.",
   "Circle Throw": "Priority -6. Forces the target to switch out to a random teammate.",
   "Clamp": {
+    "gen<=4": "Traps the target for 2-5 turns; it loses 1/16 of its max HP at the end of each turn.",
     "gen<=5": "Traps the target for 4-5 turns; it loses 1/16 of its max HP at the end of each turn.",
     "": "Traps the target for 4-5 turns; it loses 1/8 of its max HP at the end of each turn."
   },
   "Clanging Scales": "Lowers the user's Defense by 1 stage after hitting, even if it hits both opponents.",
-  "Clangorous Soul": "Costs the user 1/3 of its max HP and fails at 1/3 or less. Raises its Attack, Defense, Sp. Atk, Sp. Def and Speed by 1 stage each.",
+  "Clangorous Soul": "Costs the user 33% of its max HP (rounded down). Fails if that would faint it or all five stats are at +6. Raises Attack, Defense, Sp. Atk, Sp. Def and Speed by 1 stage each.",
   "Clangorous Soulblaze": "After hitting, raises the user's Attack, Defense, Sp. Atk, Sp. Def and Speed by 1 stage each. Deals 1/4 damage through Protect or Detect.",
   "Clear Smog": "Resets all of the target's stat stages to 0 after hitting. Bypasses accuracy checks, but Substitute blocks the reset.",
   "Close Combat": "Lowers the user's Defense and Sp. Def by 1 stage each.",
@@ -209,7 +218,10 @@
     "gen<=5": "Priority +4. Blocks most attacks this turn. Consecutive protection succeeds at 1/2, then 1/4, then 1/8, and so on.",
     "": "Priority +4. Blocks most attacks this turn. Consecutive protection succeeds at 1/3, then 1/9, then 1/27, and so on. Damaging Z-Moves deal 1/4 damage through it."
   },
-  "Diamond Storm": "50% chance to raise the user's Defense by 2 stages.",
+  "Diamond Storm": {
+    "gen<=6": "50% chance per hit to raise the user's Defense by 1 stage.",
+    "": "50% chance to raise the user's Defense by 2 stages."
+  },
   "Dig": "Digs underground on turn 1 and attacks on turn 2. Most moves miss underground, but Earthquake and Magnitude hit for double damage. Power Herb skips the digging turn.",
   "Dire Claw": "50% chance to poison, paralyze or put the target to sleep (one at random).",
   "Disable": {
@@ -300,7 +312,10 @@
     "": "Power doubles if the user is burned, paralysed or poisoned. Ignores burn's physical damage penalty."
   },
   "Fairy Lock": "Prevents all Pokémon from switching on the next turn. Ghost types, Shed Shell and switching moves can escape.",
-  "Fake Out": "Priority +3. Makes the target flinch. Only works on the user's first turn out.",
+  "Fake Out": {
+    "gen<=4": "Priority +1. Has a 100% chance to make the target flinch. Only works on the user's first turn out.",
+    "": "Priority +3. Makes the target flinch. Only works on the user's first turn out."
+  },
   "Fake Tears": "Lowers the target's Sp. Def by 2 stages.",
   "False Surrender": "Bypasses accuracy and evasion checks.",
   "False Swipe": "Leaves the target with at least 1 HP.",
@@ -325,6 +340,7 @@
   "Fire Pledge": "Power 150 if a Grass or Water Pledge acted earlier this turn. Grass makes a Sea of Fire; Water makes a Rainbow.",
   "Fire Punch": "10% chance to burn the target.",
   "Fire Spin": {
+    "gen<=4": "Traps the target for 2-5 turns; it loses 1/16 of its max HP at the end of each turn.",
     "gen<=5": "Traps the target for 4-5 turns; it loses 1/16 of its max HP at the end of each turn.",
     "": "Traps the target for 4-5 turns; it loses 1/8 of its max HP at the end of each turn."
   },
@@ -355,7 +371,10 @@
   "Focus Blast": "10% chance to lower the target's Sp. Def by 1 stage.",
   "Focus Energy": "Raises the user's critical-hit ratio by 2 stages.",
   "Focus Punch": "Priority -3. Fails if the user takes damage from an attack before moving this turn. Damage to its Substitute does not break its focus.",
-  "Follow Me": "Priority +2. Redirects foes' single-target moves to the user this turn.",
+  "Follow Me": {
+    "gen<=5": "Priority +3. Redirects foes' single-target moves to the user this turn.",
+    "": "Priority +2. Redirects foes' single-target moves to the user this turn."
+  },
   "Force Palm": "30% chance to paralyze the target.",
   "Foresight": "Until the target switches out, ignores its positive evasion stages and lets Normal and Fighting moves hit it if it is Ghost type.",
   "Forest's Curse": "Adds Grass to the target's existing types until it switches out, giving it up to 3 types. Fails on a Grass type; replaces the extra type from Trick-or-Treat.",
@@ -401,7 +420,10 @@
   "Grav Apple": "Power is 1.5× during Gravity. Lowers the target's Defense by 1 stage.",
   "Gravity": "For 5 turns, all Pokémon are grounded and accuracy is multiplied by 5/3. Ground moves can hit Flying types and Levitate users. Fly, Bounce and jumping moves cannot be used.",
   "Growl": "Lowers the target's Attack by 1 stage.",
-  "Growth": "Raises the user's Attack and Sp. Atk by 1 stage (2 stages in harsh sunlight).",
+  "Growth": {
+    "gen<=4": "Raises the user's Special Attack by 1 stage.",
+    "": "Raises the user's Attack and Sp. Atk by 1 stage (2 stages in harsh sunlight)."
+  },
   "Grudge": "Until the user's next turn, an opposing attack that knocks it out loses all remaining PP.",
   "Guard Split": "Averages the user's and target's Defense and Sp. Def, rounding down. Stat stages are unchanged.",
   "Guard Swap": "Swaps the user's Defense and Sp. Def stat stages with the target's.",
@@ -496,7 +518,7 @@
   "Infestation": "Traps the target for 4-5 turns, dealing 1/8 max HP each turn. Binding Band makes it 1/6; Grip Claw makes it 7 turns. Ends if the user leaves. Ghost types can switch out.",
   "Ingrain": "Restores 1/16 of the user's max HP each turn, but prevents switching or being forced out. Grounds the user. Baton Pass transfers the effect.",
   "Instruct": "Makes the target immediately repeat its last move, spending PP again. Fails if that move has no PP or cannot be repeated.",
-  "Ion Deluge": "Normal-type moves become Electric-type this turn.",
+  "Ion Deluge": "Priority +1. Normal-type moves become Electric-type this turn.",
   "Iron Defense": "Raises the user's Defense by 2 stages.",
   "Iron Head": "30% chance to make the target flinch.",
   "Iron Tail": "30% chance to lower the target's Defense by 1 stage.",
@@ -559,9 +581,16 @@
     "": "Priority +4. Reflects reflectable status moves aimed at the user this turn, such as Toxic or Spikes, back at their source."
   },
   "Magic Powder": "Replaces the target's type with Psychic. Grass types, Overcoat and Safety Goggles block this powder move.",
-  "Magic Room": "For 5 turns, all held items have no effect.",
+  "Magic Room": {
+    "gen<=5": "Priority -7. For 5 turns, all held items have no effect.",
+    "": "For 5 turns, all held items have no effect."
+  },
   "Magical Leaf": "Does not check accuracy or evasion.",
-  "Magma Storm": "Traps the target for 4-5 turns, dealing 1/8 of its max HP each turn.",
+  "Magma Storm": {
+    "gen<=4": "Traps the target for 2-5 turns, dealing 1/16 of its max HP each turn.",
+    "gen<=5": "Traps the target for 4-5 turns, dealing 1/16 of its max HP each turn.",
+    "": "Traps the target for 4-5 turns, dealing 1/8 of its max HP each turn."
+  },
   "Magnet Bomb": "Does not check accuracy or evasion.",
   "Magnet Rise": "Makes the user immune to Ground moves for 5 turns. Ends on switching; Baton Pass transfers it. Gravity and grounding effects override it.",
   "Magnetic Flux": "Raises Defense and Sp. Def by 1 stage for the user and its allies with Plus or Minus.",
@@ -599,7 +628,10 @@
   },
   "Mind Blown": "The user loses 1/2 its max HP, rounded up, even if the attack misses or is blocked. Magic Guard prevents this loss; Damp stops the move.",
   "Mind Reader": "The user's moves cannot miss this target until the end of the next turn, even during Fly or Dig. Ends if either Pokémon switches out.",
-  "Minimize": "Raises the user's evasion by 2 stages. Stomp-type moves deal double damage to it.",
+  "Minimize": {
+    "gen<=4": "Raises the user's evasion by 1 stage. Stomp deals double damage to it.",
+    "": "Raises the user's evasion by 2 stages. Stomp-type moves deal double damage to it."
+  },
   "Miracle Eye": "Lets Psychic moves hit this Dark-type target and ignores its positive evasion stages. Ends when the target switches out.",
   "Mirror Coat": "Priority −5. Returns twice the HP lost to the last special attack that hit the user this turn. Counts only the last hit of a multi-hit move. Dark types are immune.",
   "Mirror Move": {
@@ -616,7 +648,7 @@
   },
   "Moonblast": "30% chance to lower the target's Sp. Atk by 1 stage.",
   "Moongeist Beam": "Ignores the target's ability.",
-  "Moonlight": "Heals the user by 50% of its max HP; 66% in sun, 25% in rain, sandstorm or hail.",
+  "Moonlight": "Heals the user by 50% of its max HP; 2/3 in sun, 25% in rain, sandstorm or hail.",
   "Morning Sun": "Restores 1/2 max HP in clear weather or strong winds, 2/3 in sun, or 1/4 in rain, sandstorm, hail or snow.",
   "Mortal Spin": "Poisons targets. After hitting, clears hazards from the user's side and frees the user from Leech Seed and binding moves.",
   "Mountain Gale": "30% chance to flinch the target.",
@@ -677,7 +709,10 @@
   "Play Nice": "Lowers the target's Attack by 1 stage.",
   "Play Rough": "10% chance to lower the target's Attack by 1 stage.",
   "Pluck": "Eats the target's Berry and gains its effect, even if the user holds an item. Sticky Hold prevents theft.",
-  "Poison Fang": "50% chance to badly poison the target.",
+  "Poison Fang": {
+    "gen<=5": "30% chance to badly poison the target.",
+    "": "50% chance to badly poison the target."
+  },
   "Poison Gas": "Poisons the target.",
   "Poison Jab": "30% chance to poison the target.",
   "Poison Powder": "Poisons the target.",
@@ -687,7 +722,7 @@
   "Poltergeist": "Fails unless the target holds an item. Does not consume or remove the item.",
   "Population Bomb": "Attempts up to 10 hits, checking 90% accuracy separately for each hit and stopping on a miss. Skill Link uses one accuracy check for all 10 hits.",
   "Pounce": "Lowers the target's Speed by 1 stage.",
-  "Powder": "The target's next Fire-type move fails and damages it for 1/4 of its max HP.",
+  "Powder": "Priority +1. The target's next Fire-type move fails and damages it for 1/4 of its max HP.",
   "Powder Snow": "10% chance to freeze each target.",
   "Power Shift": "Swaps the user's Attack and Defense stats, not their stat stages. Using it again swaps them back. Ends on switching; Baton Pass transfers the effect.",
   "Power Split": "Averages the user's and target's Attack and Sp. Atk, rounding down. Stat stages are unchanged.",
@@ -733,8 +768,8 @@
   "Rage": "After hitting, raises the user's Attack by 1 stage each time another Pokémon's attack hits it, while the user keeps choosing Rage.",
   "Rage Fist": "Power rises by 50 each time the user is hit, up to 350.",
   "Rage Powder": {
-    "gen<=5": "The user draws single-target attacks to itself this turn.",
-    "": "The user draws single-target attacks to itself this turn. Grass types and Overcoat ignore it."
+    "gen<=5": "Priority +3. The user draws single-target attacks to itself this turn.",
+    "": "Priority +2. The user draws single-target attacks to itself this turn. Grass types and Overcoat ignore it."
   },
   "Raging Bull": "Breaks Reflect, Light Screen and Aurora Veil before damage. For Paldean Tauros, becomes Fighting for Combat Breed, Fire for Blaze Breed, or Water for Aqua Breed.",
   "Raging Fury": "Rampages for 2-3 turns, then confuses the user.",
@@ -764,7 +799,7 @@
   },
   "Revival Blessing": "Revives one fainted teammate with 1/2 of its max HP.",
   "Rising Voltage": "Doubles in power during Electric Terrain if the target is grounded.",
-  "Roar": "The target is forced out and replaced by a random teammate; fails if it has none.",
+  "Roar": "Priority -6. The target is forced out and replaced by a random teammate; fails if it has none.",
   "Roar of Time": "The user must recharge on the next turn.",
   "Rock Climb": "20% chance to confuse the target.",
   "Rock Polish": "Raises the user’s Speed by 2 stages.",
@@ -782,7 +817,11 @@
   "Safeguard": "For 5 turns, protects the user’s side from new status conditions and confusion. Does not cure existing status.",
   "Salt Cure": "After hitting, drains 1/8 of the target’s max HP each turn, or 1/4 if it is Water or Steel type. Ends when the target switches out.",
   "Sand Attack": "Lowers the target's accuracy by 1 stage.",
-  "Sand Tomb": "Traps the target for 4-5 turns, dealing 1/8 of its max HP each turn.",
+  "Sand Tomb": {
+    "gen<=4": "Traps the target for 2-5 turns, dealing 1/16 of its max HP each turn.",
+    "gen<=5": "Traps the target for 4-5 turns, dealing 1/16 of its max HP each turn.",
+    "": "Traps the target for 4-5 turns, dealing 1/8 of its max HP each turn."
+  },
   "Sandsear Storm": "20% chance to burn the target.",
   "Sandstorm": "Summons a sandstorm for 5 turns (8 with Smooth Rock).",
   "Sappy Seed": "Seeds the target: it loses 1/8 of its max HP each turn, which the user recovers.",
@@ -811,7 +850,10 @@
   "Sharpen": "Raises the user’s Attack by 1 stage.",
   "Shattered Psyche": "Z-Move: power depends on the base move. Deals 1/4 damage through Protect.",
   "Shed Tail": "Spends 1/2 of max HP to switch to a teammate and pass it a Substitute with 1/4 of the user’s max HP. Fails if the cost would KO the user.",
-  "Sheer Cold": "One-hit KO. Ice-types are immune. Accuracy is the user's level minus the target's level, plus 30 (20 if the user is not Ice-type).",
+  "Sheer Cold": {
+    "gen<=6": "One-hit KO. Ice-types are immune. Accuracy is the user's level minus the target's level, plus 30.",
+    "": "One-hit KO. Ice-types are immune. Accuracy is the user's level minus the target's level, plus 30 (20 if the user is not Ice-type)."
+  },
   "Shell Side Arm": "Uses the higher of Attack or Sp. Atk. 20% chance to poison the target.",
   "Shell Smash": "Raises Attack, Sp. Atk and Speed by 2 stages; lowers Defense and Sp. Def by 1 stage.",
   "Shell Trap": "Priority -3. Works only if the user was hit by a physical move this turn.",
@@ -936,7 +978,10 @@
     "": "Raises the user’s Sp. Atk by 3 stages."
   },
   "Tail Whip": "Lowers each opposing Pokémon’s Defense by 1 stage.",
-  "Tailwind": "Doubles the Speed of the user's side for 4 turns.",
+  "Tailwind": {
+    "gen<=4": "Doubles the Speed of the user's side for 3 turns.",
+    "": "Doubles the Speed of the user's side for 4 turns."
+  },
   "Take Down": "The user takes 1/4 of the damage dealt as recoil.",
   "Take Heart": "Cures the user’s status condition and raises Sp. Atk and Sp. Def by 1 stage.",
   "Tar Shot": "Lowers the target’s Speed by 1 stage and doubles Fire damage against it until it switches out.",
@@ -1019,10 +1064,14 @@
   },
   "Water Spout": "Power = floor(150 × current HP / max HP), with a minimum of 1. Strongest at full HP.",
   "Waterfall": "20% chance to flinch the target.",
-  "Wave Crash": "The user takes 1/3 of the damage dealt as recoil.",
+  "Wave Crash": "The user takes 33% of the damage dealt as recoil.",
   "Weather Ball": "Normally 50-power Normal. In weather, becomes 100 power: Fire in sun, Water in rain, Rock in sandstorm, Ice in hail or snow. Strong winds do not change it; Cloud Nine and Air Lock suppress the effect.",
-  "Whirlpool": "Traps the target for 4-5 turns, dealing 1/8 of its max HP each turn.",
-  "Whirlwind": "The target is forced out and replaced by a random teammate; fails if it has none.",
+  "Whirlpool": {
+    "gen<=4": "Traps the target for 2-5 turns, dealing 1/16 of its max HP each turn.",
+    "gen<=5": "Traps the target for 4-5 turns, dealing 1/16 of its max HP each turn.",
+    "": "Traps the target for 4-5 turns, dealing 1/8 of its max HP each turn."
+  },
+  "Whirlwind": "Priority -6. The target is forced out and replaced by a random teammate; fails if it has none.",
   "Wicked Blow": "Always a critical hit.",
   "Wide Guard": "Protects the user and its allies from spread moves this turn.",
   "Wild Charge": "The user takes 1/4 of the damage dealt as recoil.",
@@ -1030,14 +1079,21 @@
   "Will-O-Wisp": "Burns the target.",
   "Wish": "At the end of next turn, heals the Pokémon in the user's position by 50% of the user's max HP.",
   "Withdraw": "Raises the user's Defense by 1 stage.",
-  "Wonder Room": "For 5 turns, swaps the Defense and Sp. Def of all Pokémon.",
+  "Wonder Room": {
+    "gen<=5": "Priority -7. For 5 turns, swaps the Defense and Sp. Def of all Pokémon.",
+    "": "For 5 turns, swaps the Defense and Sp. Def of all Pokémon."
+  },
   "Wood Hammer": {
     "gen<=4": "The user takes recoil equal to 1/3 of the damage dealt.",
     "": "The user takes recoil equal to 33% of the damage dealt."
   },
   "Work Up": "Raises the user’s Attack and Sp. Atk by 1 stage.",
   "Worry Seed": "Replaces the target’s Ability with Insomnia until it switches out, preventing sleep. Cannot replace Truant or certain form-changing Abilities.",
-  "Wrap": "Traps the target for 4-5 turns, dealing 1/8 of its max HP each turn.",
+  "Wrap": {
+    "gen<=4": "Traps the target for 2-5 turns, dealing 1/16 of its max HP each turn.",
+    "gen<=5": "Traps the target for 4-5 turns, dealing 1/16 of its max HP each turn.",
+    "": "Traps the target for 4-5 turns, dealing 1/8 of its max HP each turn."
+  },
   "Wring Out": {
     "gen<=4": "Power = floor(120 × target’s current HP / target’s max HP) + 1. Strongest against a full-HP target.",
     "": "Power = 120 × target’s current HP / target’s max HP, rounded to nearest with ties down, minimum 1. Strongest against a full-HP target."
