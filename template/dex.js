@@ -152,7 +152,7 @@ const app=document.getElementById('app'),q=searchDisp(document.getElementById('q
 document.getElementById('sugg').style.display='none';
 // Typing on a page with no list (Pokemon, move, ability or trainer page) goes to its section's list as a new history
 // entry, so the results show and Back returns to the page. The keyboard stays open (see hashchange).
-const UP={p:'#/',m:'#/',mp:'#/',a:'#/',tr:'#/trainers'};let searchNav=false;
+const UP={p:'#/',m:'#/',mp:'#/',a:'#/',tr:'#/trainers',i:'#/items'};let searchNav=false;
 q.addEventListener('input',()=>{st.q=q.value.trim().toLowerCase();if(st.q&&UP[st.view]){searchNav=true;location.hash=UP[st.view];return;}render(true);});
 // The rail's top button opens the full-window search (the search box shows only while a query is set: dex.css).
 document.getElementById('t-s').addEventListener('click',e=>{e.preventDefault();SR.open();});
@@ -161,7 +161,7 @@ document.getElementById('t-s').addEventListener('click',e=>{e.preventDefault();S
 // route of that tab is left, kept for the session). A tap on another tab goes back to that tab's page and place (RAILGO);
 // a tap on the tab you're on clears the search and goes to the top, except on a Pokémon / move / ability page, where
 // it first goes to the Pokémon list at its place.
-const tabOf=h=>{const v=(h||'#/').slice(2).split('/')[0];return v===''||v==='p'||v==='m'||v==='mp'||v==='a'?'p':v==='locs'||v==='l'?'l':v==='trainers'||v==='tr'?'t':v==='items'?'i':v==='walk'?'w':v==='calc'?'c':null;};
+const tabOf=h=>{const v=(h||'#/').slice(2).split('/')[0];return v===''||v==='p'||v==='m'||v==='mp'||v==='a'?'p':v==='locs'||v==='l'?'l':v==='trainers'||v==='tr'?'t':v==='items'||v==='i'?'i':v==='walk'?'w':v==='calc'?'c':null;};
 const TABS={};let RAILGO=null;
 document.getElementById('rail').addEventListener('click',e=>{const a=e.target.closest('a[href^="#/"]');if(!a)return;e.preventDefault();
  const t=a.id.slice(2),cur=location.hash||'#/';
@@ -397,10 +397,11 @@ function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tms=(D.IT||[]).f
 const abSlot=(p,i)=>{const n=new Set(p.a).size,r=[];if(p.a.includes(i))r.push(n===1?'Only ability':'Ability '+(p.a.indexOf(i)+1));if(p.ha===i)r.push('Hidden ability');return r.join(', ');};
 // Moves it affects: the MI records naming this ability, one block per effect (e) on each side (u = its holder's moves,
 // t = moves used on it), each effect followed by its moves (moveList). Absent when no record names it.
-function abilityMoves(i){const rows=(D.MI||[]).filter(row=>row.a===i&&row.m.length);if(!rows.length)return '';
+function affectsCard(rows,key,against){if(!rows.length)return '';
  const body=['u','t'].map(side=>{const effects=new Map();rows.filter(row=>row.w===side).forEach(row=>{const effect=effects.get(row.e)||{e:row.e,h:0,m:new Set()};row.m.forEach(m=>effect.m.add(m));effect.h||=row.h;effects.set(row.e,effect);});
-  return effects.size?`<div class="ab-side" data-side="${side}"><div class="mut small">${side==='u'?"Its holder's moves":'Moves used against it'}</div>${[...effects.values()].map(effect=>`<div class="ab-effect">${esc(effect.e)}${effect.h?'<span class="interaction-changed">changed</span>':''}</div>${moveList(effect.m)}`).join('')}</div>`:'';}).join('');
- return `<div class="card ab-affects">${sectionHTML('am',`Moves it affects (${new Set(rows.flatMap(row=>row.m)).size})`,'',body,false)}</div>`;}
+  return effects.size?`<div class="ab-side" data-side="${side}"><div class="mut small">${side==='u'?"Its holder's moves":against}</div>${[...effects.values()].map(effect=>`<div class="ab-effect">${esc(effect.e)}${effect.h?'<span class="interaction-changed">changed</span>':''}</div>${moveList(effect.m)}`).join('')}</div>`:'';}).join('');
+ return `<div class="card ab-affects">${sectionHTML(key,`Moves it affects (${new Set(rows.flatMap(row=>row.m)).size})`,'',body,false)}</div>`;}
+const abilityMoves=i=>affectsCard((D.MI||[]).filter(row=>row.a===i&&row.m.length),'am','Moves used against it');
 // Pokémon with it: Normal (one of its abilities) and Hidden groups under a picker (pickCard); a species with it in both is in both.
 const abilityUserGroups=i=>[['n','Normal',p=>p.a.includes(i)],['h','Hidden',p=>p.ha===i]].map(([key,label,has])=>({key,label,rows:(abUsers[i]||[]).filter(has)})).filter(group=>group.rows.length);
 const abilityUserTable=i=>rows=>`<table class="lrn">${rows.map(p=>`<tr><td class="learn-sprite">${sprl(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>`;
@@ -619,7 +620,22 @@ function listItems(){fil.innerHTML='';const s=st.q;const IT=D.IT||[];
 // (r[4]: EI shops, Hardlove's held item kinds; two or more get an Expand / Collapse all bar). State in LS.items {o:{<box>:1 open}, s:{<box>.<sub>:1 open}, layout
 // (relayout)}: boxes and sub-headings start closed (a 0 saved before 2026-10-31 still means closed). Filled when first opened.
 const IO=(()=>{try{return Object.assign({o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.items)||'{}'))}catch(e){return {o:{},x:{},s:{}}}})();
-if(relayout(IO,(D.IT||[]).map(sec=>[sec.n,[]]),{o:1,x:1,s:1}))try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
+if(!IO.g||typeof IO.g!=='object'||Array.isArray(IO.g))IO.g={};
+const ioSave=()=>{try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}};
+if(relayout(IO,(D.IT||[]).map(sec=>[sec.n,[]]),{o:1,x:1,s:1}))ioSave();
+// Pickup ticks (template/README.md → Item page): IO.g {pickupKey: 1}. A pickup is one place you get an item once; its key
+// (IT r[5], one per line of r[1], 0 for a line that isn't one; WK stop it [4]) is stable across updates, so a tick whose
+// key is gone from the data waits unused in g and comes back with it. Every copy of a tick box (input.itk[data-pk]) on
+// screen follows a tap; TICKHOOK functions (key, on) redraw what depends on it (cards, counts).
+const TICKHOOK=[];
+const tickHas=k=>!!(k&&IO.g[k]);
+function tickSet(k,on){if(!k)return;if(on)IO.g[k]=1;else delete IO.g[k];ioSave();
+ app.querySelectorAll(`input.itk[data-pk="${CSS.escape(k)}"]`).forEach(c=>{c.checked=!!on;});TICKHOOK.forEach(f=>f(k,!!on));}
+// Ticks of pickups in this build (orphans not counted); tickClear empties g, orphans too.
+const tickCount=()=>Object.keys(IO.g).filter(k=>pickupOf(k)).length;
+function tickClear(){IO.g={};ioSave();app.querySelectorAll('input.itk[data-pk]').forEach(c=>{c.checked=false;});TICKHOOK.forEach(f=>f(null,false));}
+const tickBox=k=>`<input type="checkbox" class="itk" data-pk="${esc(k)}"${tickHas(k)?' checked':''} aria-label="Got it">`;
+app.addEventListener('change',e=>{const c=e.target;if(c.matches&&c.matches('input.itk[data-pk]'))tickSet(c.dataset.pk,c.checked);});
 function itemBox(si){const sec=D.IT[si],tbl=rs=>`<table class="itbl ix">${rs.map(r=>itemRow(sec,r)).join('')}</table>`,subs=[];
  sec.r.forEach(r=>{const g=r[4]||'';if(!subs.length||subs[subs.length-1][0]!==g)subs.push([g,[]]);subs[subs.length-1][1].push(r);});
  // No stop header: the box's sub-headings (every row has one) pin straight under the search bar.
@@ -631,6 +647,60 @@ TOG.items=d=>{if(st.q)return;const iS=()=>{try{localStorage.setItem(LS.items,JSO
  if(d.matches('details.split[data-si]')){const si=+d.dataset.si,b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=itemBox(si);colBind(b);}if(d.open)IO.o[si]=1;else delete IO.o[si];}
  else if(d.matches('details.sec')){if(d.open)IO.s[d.dataset.s]=1;else delete IO.s[d.dataset.s];}else return;iS();};
 
+// ===== ITEM PAGE (#/i/<item name>; template/README.md → Item page). ITX: everything the guide says about each item, by
+// name, built on first use: its IT rows (not Useful NPCs or Move Tutors), wild holders (P.hi), trainers' Pokémon
+// holding it, MI records and the Megas it makes. PKU: pickup key → {n item, l line, w [split, stop] of its walk row}.
+let ITX=null,PKU=null;
+function itemIdx(){if(ITX)return ITX;const I={},get=n=>I[n]??={n,rows:[],wild:[],tr:[],mi:[],mega:[]};PKU={};
+ (D.IT||[]).forEach(sec=>{if(sec.k==='npc'||sec.n==='Move Tutors')return;sec.r.forEach(r=>{get(r[0]).rows.push({sec,r});
+  String(r[1]).split('\n').forEach((l,j)=>{const k=(r[5]||[])[j];if(k&&!PKU[k])PKU[k]={n:r[0],l:l.trim()};});});});
+ D.WK.splits.forEach((sp,si)=>sp.st.forEach((s,ti)=>(s.it||[]).forEach(i=>{const p=i[4]&&PKU[i[4]];if(p&&!p.w)p.w=[si,ti];})));
+ P.forEach(p=>{if(p.g!==1&&!p.fc)(p.hi||[]).forEach(h=>{const [n,pct]=Array.isArray(h)?h:[h,null];if(n)get(n).wild.push([p,pct]);});
+  if(p.g===1&&p.stone)get(p.stone).mega.push(p);});
+ TRS.forEach(t=>{const by={};[...t.p,...(t.pt||[]).flatMap(x=>x.p||[])].forEach(m=>{if(m.i)(by[m.i]??=[]).push(m);});Object.entries(by).forEach(([n,ms])=>get(n).tr.push([t,ms]));});
+ (D.MI||[]).forEach(r=>{if(r.i&&r.m.length)get(r.i).mi.push(r);});
+ Object.keys(D.IX||{}).forEach(get);return ITX=I;}
+const itemOf=n=>itemIdx()[n];
+const pickupOf=k=>(itemIdx(),PKU[k]);
+// Item links: '#/i/' + the name, with every character a saved route can't hold escaped (the reopen route allows only
+// [\w/%.-]). An item the guide doesn't know is plain text.
+const ihref=n=>'#/i/'+encodeURIComponent(n).replace(/[!'()*~]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());
+const ilink=(n,label)=>n&&itemOf(n)?`<a class="itl" href="${ihref(n)}">${icon(n,18)}${esc(label??n)}</a>`:esc(label??n??'');
+const isTMName=n=>/^(TM|HM|TR)\d/.test(n);
+const tmMoveOf=e=>{if(!isTMName(e.n))return null;const x=e.rows.find(x=>x.sec.k==='tm'&&x.r[2]!=null);return x?x.r[2]:null;};
+function itemKind(e){const x=e.rows[0];if(!x)return e.wild.length?'Wild Pokémon hold it':e.tr.length?'Only trainers hold it':'';
+ const sub=x.r[4];return x.sec.n+(sub&&sub!==x.sec.n&&sub!==e.n?' · '+sub:'');}
+// Every line of every row, with its pickup key (0: not a pickup) and MISSABLE; in the order a list shows them: pickups
+// not ticked yet, then the lines that aren't pickups (shops, wild, repeatable), then ticked pickups.
+function itemLines(e){const seen=new Set(),out=[];e.rows.forEach(({r})=>String(r[1]).split('\n').forEach((l,j)=>{l=l.trim();const k=(r[5]||[])[j]||0;
+ if(!l||seen.has(k+'|'+l))return;seen.add(k+'|'+l);out.push({l,k,miss:!!r[3]});}));return out;}
+const linesOrdered=ls=>[...ls.filter(x=>x.k&&!tickHas(x.k)),...ls.filter(x=>!x.k),...ls.filter(x=>x.k&&tickHas(x.k))];
+// A pickup's walkthrough stop as a link (SR.jumpPick: the stop's Items open, landing on the row).
+const stopLink=k=>{const p=k&&pickupOf(k),w=p&&p.w,s=w&&D.WK.splits[w[0]].st[w[1]];return s?` <a class="iwk" href="#/walk" data-pk="${esc(k)}">${esc(s.n)} ›</a>`:'';};
+const itemLine=x=>{const t=`${esc(x.l)}${x.miss?'<span class="warn">MISSABLE</span>':''}${stopLink(x.k)}`;
+ return x.k?`<label class="iline">${tickBox(x.k)}<span>${t}</span></label>`:`<div class="iline">${t}</div>`;};
+document.addEventListener('click',ev=>{const a=ev.target.closest&&ev.target.closest('a.iwk[data-pk]');if(!a)return;ev.preventDefault();SR.jumpPick(a.dataset.pk);});
+const fxBox=t=>t?`<div class="ifx"><div class="ifxh">In battle</div>${esc(t)}</div>`:'';
+function megaLine(e){return e.mega.map(p=>{const b=P.find(x=>x.dex===p.dex&&x.g!==1&&!x.fc);
+ return `<div class="imega">${b?sprl(b.id,'s40')+plink(b.id):''}<span class="mut">→</span>${sprl(p.id,'s40')}${plink(p.id)}</div>${p.nu?`<div class="mut small">Not obtainable in ${esc(CF.name)}; trainers use it.</div>`:''}`;}).join('');}
+function itemWhere(e){const ls=itemLines(e);if(!ls.length)return '';
+ return `<div class="card iwhere">${sectionHTML('iw',`Where to find (${ls.length})`,'',`<div class="iwl">${linesOrdered(ls).map(itemLine).join('')}</div>`,true)}</div>`;}
+// Held by: Wild (one row per species, highest % first) and Trainers (one row per trainer, its Pokémon holding it).
+const heldGroups=e=>[{key:'w',label:'Wild',rows:[...e.wild].sort((a,b)=>(b[1]??-1)-(a[1]??-1)||a[0].name.localeCompare(b[0].name))},
+ {key:'t',label:'Trainers',rows:e.tr.filter(([t])=>!rivalHidden(t))}].filter(g=>g.rows.length);
+const heldTable=rows=>`<table class="lrn">${rows.map(r=>r[0].k!=null?(([t,ms])=>`<tr><td class="learn-sprite">${ms.map(m=>sprl(m.id,'s40')).join('')}</td><td><a href="#/tr/${encodeURIComponent(t.k)}">${esc(t.n)}</a><div class="mut small">${esc([t.h||t.loc,t.g].filter(Boolean).join(' · '))}</div></td></tr>`)(r)
+ :(([p,pct])=>`<tr><td class="learn-sprite">${sprl(p.id,'s40')}</td><td>${plink(p.id)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${pct!=null?esc(pct)+'%':''}</td></tr>`)(r)).join('')}</table>`;
+function itemDetail(n){fil.innerHTML='';const e=itemOf(n);
+ if(!e){app.innerHTML='<a class="back" href="javascript:history.back()">‹ Back</a><p>Not found.</p>';window.scrollTo(0,0);return;}
+ const x=(D.IX||{})[n]||[],tm=tmMoveOf(e),held=heldGroups(e),kind=itemKind(e);
+ // A TM page is the move's row and where the TM is; the move page has the rest. A Mega Stone's line says what it does.
+ const top=tm!=null?moveList([tm]):(x[0]?`<p>${esc(x[0])}${x[2]?'<span class="interaction-changed">changed</span>':''}</p>`:'')+(e.mega.length?'':fxBox(x[1]))+megaLine(e);
+ app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
+ <div class="card ipg"><div class="ihd">${iconCard(n)}<h2>${esc(n)}</h2></div>${kind?`<div class="mut small ikind">${esc(kind)}</div>`:''}${top}</div>
+ ${itemWhere(e)}
+ ${held.length?pickCard('it-held','Held by','Held by',held,held.reduce((a,g)=>a+g.rows.length,0),'ih:',heldTable):''}
+ ${affectsCard(e.mi,'im','Moves used against its holder')}`;
+ if(held.length)bindPick('it-held',held,'ih:',heldTable);colBind(app);window.scrollTo(0,0);}
 
 // ===== COLLAPSIBLE PAGES (template/README.md). Pages built from details.split use these: header taps that never
 // scroll, collapse bars at the bottom of blocks taller than the window, the rail's jump buttons (to details.split.jt),
@@ -1149,7 +1219,7 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
  done(){const v=this.q.trim();this.close();if(v===q.value)return;q.value=v;q.dispatchEvent(new Event('input'));window.scrollTo(0,0);},
  // Open a route, then run then() once it has rendered (see hashchange).
  go(h,then){if(location.hash===h){render(false);if(then)then();}else{this.after=then||null;location.hash=h;}},
- cur(){const v=(location.hash||'#/').slice(2).split('/')[0];return {locs:'l',l:'l',trainers:'t',tr:'t',items:'i',walk:'w'}[v]||'p';},
+ cur(){const v=(location.hash||'#/').slice(2).split('/')[0];return {locs:'l',l:'l',trainers:'t',tr:'t',items:'i',i:'i',walk:'w'}[v]||'p';},
  pick(i,x){const it=this.items[i];if(!it)return;const o=it.o,a=it.acts[x]||it.acts[0];
   const r=[o,...recRead().filter(y=>JSON.stringify(y)!==JSON.stringify(o))].slice(0,6);recSave(r);
   this.close();a[1]();},
@@ -1163,6 +1233,10 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
  // A trainer fought alongside others shares their row, which goes by the first one's key: open them all, find it by data-ks.
  jumpWalkTr(k){const w=walkOf(k);if(!w)return;const sk=w[0]+'.'+w[1];this.clear();WO.o[w[0]]=1;WO.x[sk]=1;WO.s[sk+'.t']=1;trMates(k).forEach(x=>TRDO.add(x));woSave();
   this.go('#/walk',()=>land(trRowOf(app.querySelector(`details.stopd[data-k="${sk}"]`),k)));},
+ // A pickup's walkthrough row: its split, stop and Items section open, landing on the row (tr[data-pk]); a row not drawn
+ // (another starter's): the stop.
+ jumpPick(k){const p=pickupOf(k),w=p&&p.w;if(!w)return;const sk=w[0]+'.'+w[1];this.clear();WO.o[w[0]]=1;WO.x[sk]=1;WO.s[sk+'.i']=1;woSave();
+  this.go('#/walk',()=>{const d=app.querySelector(`details.stopd[data-k="${sk}"]`);land(d&&(d.querySelector(`tr[data-pk="${CSS.escape(k)}"]`)||d.querySelector(':scope>summary')));});},
  jumpTr(k){const t=TRK[k];if(!t)return;this.clear();const [gi,si]=t.at;TOPEN.o[gi]=1;TOPEN.p[gi+'.'+si]=1;trMates(k).forEach(x=>TOPEN.t[x]=1);trSave();
   this.go('#/trainers',()=>land(trRowOf(app.querySelector(`details.split[data-gi="${gi}"]`),k)));},
  jumpItem(si,ri){const sec=D.IT[si],g=sec.r[ri][4];this.clear();IO.o[si]=1;if(g)IO.s[si+'.'+g]=1;try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
@@ -1283,10 +1357,11 @@ function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).sp
  else if(v==='trainers'){setTab('t');listTrainers();}
  else if(v==='tr'){setTab('t');trainerDetail(decodeURIComponent(parts[1]));}
  else if(v==='items'){setTab('i');listItems();}
+ else if(v==='i'){setTab('i');itemDetail(decodeURIComponent(parts.slice(1).join('/')));}
  else if(v==='walk'){setTab('w');listWalk();}
  else if(v==='calc'){setTab('c');calcPage();}
  else{setTab('p');filtersPokemon();listPokemon();if(!fromInput&&st.view!==''&&st.listScroll){cvApply(st.listScroll.z);toAnchor(st.listScroll);}}
- q.placeholder=v==='walk'?'Search walkthrough':v==='trainers'||v==='tr'?'Search trainers':v==='items'?'Search items':v==='locs'||v==='l'?'Search locations':'Search, or add filters';
+ q.placeholder=v==='walk'?'Search walkthrough':v==='trainers'||v==='tr'?'Search trainers':v==='items'||v==='i'?'Search items':v==='locs'||v==='l'?'Search locations':'Search, or add filters';
  st.view=v;jumpState();}
 // Back and forward put each page back where it was (the browser's own restore would use a raw scrollY, which lands
 // wrong with estimated heights). The anchor is also saved (LS.pos) for Dex Viewer, which calls dexViewer.restoreScroll
