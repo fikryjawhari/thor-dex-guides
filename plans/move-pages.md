@@ -176,3 +176,7 @@ abilities / items: add, remove, new phrase; each with its source line). Only abi
   ignored by the engine (Smogon reads two types; `instrument.mjs` multiplies the third in, every guide), Defog's chip
   hid Clear Fog (the chip now clears the Fog too). Units 1-5 done. Open for the user: is the "A" mark right; is Defog
   clearing the Fog in the same tap right. Next: 6 (item pages: decide, then build), 7 (audit).
+- 2026-11-01: unit 6 decided: spec `plans/item-pages.md` (data `plans/item-pages-data.md`, mockup
+  `plans/item-pages-mockup.py`), branch `worktree-move-pages-items`; item icon set on `worktree-move-pages-icons`
+  (a042a34, Sol). Next: merge both into `worktree-move-pages`, then the spec's build units 1-6 (BB2R held items wait
+  for the user's ROM dump).
