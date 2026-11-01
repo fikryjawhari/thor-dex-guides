@@ -120,6 +120,77 @@ unknown IDs. Item IDs map through the same stone-spelling corrections as P.stone
 progression keys use `cap_step`/`cap`, and trainers must use Hardcore `cap[1]`, not normal `cap[0]`. Obtainability
 and evolution/breeding closure must be assigned before D8 pruning is enabled by the locations/trainers merge.
 
+### Items
+
+`items.py` (unit 5). Sources: `data.js` areas (what lies where: `item-standard` / `item-hidden` by cap step, `item-shop`
+stock, `item-cheat` = the care packages, `tutors`), the author's item sheet (`drive/Item, TM, and Move Tutor Locations
+v4.1`: Overworld Items is the master list with the place text, gifts and rewards; TMs & HMs, Mega Stones and Z-Crystals
+tabs cross-check it; Shops gives prices; Care Packages; Move Tutors), the Hardcore Main tab. IT is written in the old
+boxes and `extractlib.finalise` files it in the Items standard; `itemstd.RULES['radical-red']` = a card per tutor
+(`keep_sub`) and game order once the walkthrough exists.
+
+- **Pairing**: each Overworld row is paired with a data.js entry of the same item in the areas its heading covers
+  (`HEADING_AREAS`; hidden first when the sheet says hidden). No pairing across headings: data.js files the follower
+  finds (Safety Goggles, Red Card, Protective Pads, Eject Button, plus a Big Nugget and a Wishing Piece) under Viridian
+  City's Poké Center, so a wider search pairs wrong pickups. 442 sheet rows; 11 have no data.js entry and stay (gifts
+  data.js doesn't list: Time Changer, Poké Vial, DexNav, Infinite Repel, the PC Potion, follower finds, Waterium Z).
+  25 data.js pickups the Overworld tab lacks get a line from data.js (area name, `hidden`, `post-game` at the post-game
+  step) with the TM / Mega Stone / Z-Crystal tab's text where it has one: Berry Forest's hidden berries, Pokémon Tower
+  7F-9F Soothe Bells, Gouging Fire's room Iron / Rare Candy, Cape Brink PP Max, One Island's Z-Power Ring / Meteorite /
+  Fightinium Z, Magearna's chamber Gracidea, Kyogre's chamber Water Stone, the Saffron Gym Cameruptite. 8 more are
+  the second branch of one gift (Cinnabar Lab's Soul Dew / Reveal Glass / Prison Bottle / Lati stones, a second TM032)
+  or a key item data.js files elsewhere (Tri-Pass at One Island; the sheet: the Route 16 girl), absorbed.
+- **Lines**: `Found:` / `Also:` + the sheet's heading (`Route 4 (East)`, `Mt. Moon`) + `requires X` (the sheet's "(Surf
+  HM required)", "Requires Mega Ring -", "(Z-Ring required)", "(Keycard required)" -> Card Key) + `post-game` + `hidden`
+  + `xN` + the sheet's text. "left from the entrance" becomes "left of" (the shared relabeller reads "from <person>" as
+  a gift). Consumables and sell items are not listed (Unbound's rule: medicine, balls, X items, nuggets, pearls...);
+  Valuables are Shards, Heart Scales and Beast Balls. Key Items leave out Town Map, Pokédex, Teachy TV and the Silph
+  Scope costume. Fossils: Helix / Dome "(can only pick one)".
+- **Hardcore** (D1): rows tagged "(DEFAULT MODE(S) ONLY)" / "(REGULAR MODE)" go (Psyshock on the Underground Path,
+  Trick Room from Sabrina, Light Clay, Booster Energy in Cerulean Cave, the Power Plant Eject Button); "(HARDCORE)"
+  rows stay. Main E36: Weakness Policy, Throat Spray, Air Balloon, Light Clay and the four weather rocks are gone
+  everywhere (pickups, shops, care packages, `P.hi`: 17 wild species). TM sheet: TM012 Taunt, TM017 Protect (Game
+  Corner) and TM116 Trick Room are unavailable; TM104 Psyshock is Sabrina's. Main E24 / E26 swaps: Charizardite Y on
+  Route 16, X from Blaine, Gardevoirite in the Mansion, Cameruptite from Sabrina (data.js lists both of each pair;
+  `LEFT_DROP` keeps the Hardcore one). Quest rows take the sheet's MGM / Hardcore wording (125+ base stat, a shiny
+  for Sabrina; Main E81). Route 4's right Black Belt gives 4 PP Ups instead of the Macho Brace. Lucky Egg is not held
+  by wild Pelipper (Other Useful Items C12). Electric / Misty / Psychic Seed: a `Wild:` line "only after beating Lt.
+  Surge / Sabrina / Koga" (Main E14-E18). Care packages: red (not in Hardcore) and blue (not in MGM + Hardcore;
+  Hardcore turns MGM on, Main E95) items left out: 25 of 136, mostly the EV items. Move tutors in red go: the Vermilion
+  Fan Club, Pewter Museum, Fuchsia gate / Kangaskhan, Cinnabar R&D Room and Victory Road tutors, and Tailwind / Stealth
+  Rock / Spikes / Toxic Spikes at the Testing Room (data.js lists the Testing Room twice: the 8-move list is
+  Hardcore's). The report's "Hardcore leaves out" line lists every removal.
+- **Shops**: the marts' common stock (the 19 items all 10 data.js marts sell) is one "Any Poké Mart" line at FireRed's
+  price (pokefirered `items.json`; the sheet prices only the special shops); the rest per shop with the Shops tab's
+  price (Cerulean TMs, Celadon Dept. Store 2F / 4F / 5F / rooftop, Game Corner TMs in ₽, Trainer Fan Club, Cinnabar
+  Lab, Two Island, One Island's BP exchange). Two Island's Timer Ball / Lava Cookie take FireRed's price. TM113 Play
+  Rough is bought from the Dept. Store 3F clerk (₽15,000). BP Z-Crystals, the Master Ball and the Necromizer are Shop
+  lines in their own boxes.
+- **Care packages** (`item-cheat`): one `Also: Care package · <when> · xN` line per item, paired with its data.js area
+  by item overlap (walk.py gets the area and step). data.js also lists a Rare Candy and a Pomeg Berry at Viridian City
+  that no package has: left out (reported).
+- **Tutors**: a card per tutor, "<who> (<town>)"; moves with the tutor's place and cost. data.js's Uproar tutor in
+  Saffron's Gian's House 2F is on no sheet: its own card. The relearner, deleter and egg move tutor are Useful NPCs.
+- **Mega Stones**: P.stone of Mega / Primal forms; `P.sloc` = the stone's line without its label. Red Orb and Adamant
+  Orb (Primal Groudon / Dialga) have no place in any source.
+- **Cross-check** (report "tabs differ"): the TM, Mega Stone and Z-Crystal tabs name the same places as the lines for
+  every item (proper-name words compared); only wording differs (TM034 Teleport: "large grassy patch" vs "south
+  eastern corner near the Raid Den", both Route 3). The Z tab and Overworld tab put Waterium Z with Gian in Saffron City;
+  data.js files it under Cerulean City's Gym (Saffron kept: both tabs agree, and the Mudkip kid lives there).
+- **Item text**: `item_desc.json` is written by `items.py` from data.js (613 items; TMs and unused records left out).
+  `changed` = differs from FireRed's text (case, line breaks and accents ignored) or RR changed the effect
+  (`RR_EFFECT`): 41. `battle_text.json`: the RR effects from Showdown `gen9rr/items.ts` and the changelogs (Gems 1.5×,
+  Bright Powder / Lax Incense / King's Rock no battle effect, the signature items Electirizer, Magmarizer, Up-Grade,
+  Burnt Seed, Reaper Cloth, Leek Stick, the Adamant / Eternamax Orb Primal forms). `item_text_extra.json`: DexNav,
+  Necromizer, Time Changer (made-up from the changelogs). `item_text.ALIASES`: Houndoomnite -> Houndoominite, Fight
+  Memory -> Fighting Memory (icons). No icon: Leek Stick (RR's name for the Leek; the icon set's alias table would need a
+  rebuild), the RR / Gen 8-9 key items, Alcremite, Eternamax Orb, Cornerstone Mask, Necrozium Z, Rusty Sword / Shield,
+  and every TM / HM (the icon index has no radical-red guide map yet: `tools/item_icons.py` has to be rerun with
+  `--fetch` once data.json is merged).
+- **For walk.py**: `items.PICKUPS` = one record per Found / Also line `{box, item, line, area, step}` (data.js area index
+  and cap step; None for sheet-only rows). Lines are final after the Items standard except the relabeller may swap
+  Found / Also: match on item and place, not the label.
+
 ## Local storage
 
 Prefix `rr`. Keep these keys once published.
