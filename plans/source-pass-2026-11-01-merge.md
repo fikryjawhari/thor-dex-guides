@@ -1,5 +1,12 @@
 # Handoff: merge the 2026-11-01 source pass (Hardlove 0.8.6, Heartfelt Gold v1.0.0)
 
+**Status 2026-11-01:** both merged into `worktree-move-pages` (they reach `main` with the item pages, after its audit).
+Done: 1.1, 1.2 (the v1.0.0 `.src` is in the main checkout's `hacks/heartfelt-gold/.src`; the old
+`hacks/heartgold-retiled/.src` stays there until `main` takes the merge, then delete the folder), 1.3 (unchanged);
+2.1-2.4 (0.8.6 sources copied; rebuilt on the item-pages extract; check, state_check 800 / hardlove_check 107 pass
+with no remap; no trainer keys removed), 2.6 (unchanged). Left: 2.5's Hardlove scenarios (run them in the
+move-pages audit), 3 (push on the user's yes, delete the two worktrees / branches, this plan, PROGRESS Open 6).
+
 The work is done and committed on two branches; what's left is merging them into `main`, rebuilding Hardlove there,
 checking it, and (on the user's yes) pushing so the live Hardlove guide updates. Opus medium is enough. Start after the
 move-pages work (`worktree-move-pages`, claimed by `item-pages-build`) is merged or the user says go: it touches
