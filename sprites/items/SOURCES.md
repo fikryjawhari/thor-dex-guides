@@ -1235,6 +1235,64 @@ They were rejected after contact-sheet review; 28 use Serebii replacements and I
 - Thanks Mail: https://www.serebii.net/itemdex/sprites/thanksmail.png
 - Yellow Petal: https://www.serebii.net/itemdex/sprites/yellowpetal.png
 
+## Fallback framing
+
+Every non-expansion frame is cropped and centred. Only entries with a size in the last column are scaled.
+Hardlove provides DS-style 32px frames; Serebii frames vary, with exact dimensions recorded below.
+
+| Item key | Source frame | Visible bounds | Scaled artwork |
+| --- | --- | --- | --- |
+| bluepetal | [24, 24] | [4, 4, 20, 20] | not scaled |
+| bridgemailm | [24, 24] | [1, 1, 23, 23] | not scaled |
+| bridgemailt | [24, 24] | [1, 1, 23, 23] | not scaled |
+| bridgemailv | [24, 24] | [1, 1, 23, 23] | not scaled |
+| colressmachine | [32, 32] | [7, 5, 26, 27] | not scaled |
+| darkstone | [32, 32] | [4, 4, 20, 20] | not scaled |
+| elevatorkey | [24, 24] | [1, 3, 24, 22] | not scaled |
+| favoredmail | [24, 24] | [1, 1, 23, 23] | not scaled |
+| fishingrod | [32, 32] | [2, 4, 29, 30] | [24, 23] |
+| foragebag | [24, 26] | [3, 0, 21, 26] | [17, 24] |
+| greenpetal | [24, 24] | [5, 5, 19, 19] | not scaled |
+| greetmail | [24, 24] | [1, 1, 23, 23] | not scaled |
+| grubbyhanky | [32, 32] | [7, 7, 25, 25] | not scaled |
+| inquirymail | [24, 24] | [1, 1, 23, 23] | not scaled |
+| intriguingstone | [24, 24] | [5, 5, 19, 19] | not scaled |
+| jadeorb | [32, 32] | [5, 5, 19, 19] | not scaled |
+| keystone | [32, 32] | [5, 6, 19, 20] | not scaled |
+| labkeycarda | [40, 40] | [8, 3, 34, 38] | [18, 24] |
+| labkeycardb | [40, 40] | [8, 4, 34, 38] | [18, 24] |
+| labkeycardc | [40, 40] | [8, 3, 34, 38] | [18, 24] |
+| leftpokeball | [24, 24] | [3, 3, 21, 21] | not scaled |
+| lightstone | [32, 32] | [4, 4, 20, 20] | not scaled |
+| likemail | [24, 24] | [1, 1, 23, 23] | not scaled |
+| lookerticket | [28, 24] | [0, 3, 28, 21] | [24, 15] |
+| lunarwing | [32, 32] | [1, 2, 22, 22] | not scaled |
+| magmastone | [32, 32] | [2, 3, 22, 21] | not scaled |
+| megakeystone | [32, 32] | [5, 6, 19, 20] | not scaled |
+| membercard | [32, 32] | [2, 2, 23, 22] | not scaled |
+| moonflute | [32, 32] | [2, 2, 22, 22] | not scaled |
+| orangepetal | [24, 24] | [6, 5, 18, 19] | not scaled |
+| permit | [32, 32] | [6, 8, 27, 25] | not scaled |
+| pinkpetal | [24, 24] | [4, 4, 19, 19] | not scaled |
+| plasmacard | [32, 32] | [6, 8, 27, 25] | not scaled |
+| powerplantpass | [24, 24] | [2, 4, 23, 21] | not scaled |
+| professorsmask | [24, 24] | [1, 1, 22, 23] | not scaled |
+| profsletter | [24, 24] | [1, 3, 23, 22] | not scaled |
+| purplepetal | [24, 24] | [4, 4, 19, 19] | not scaled |
+| rainbowflower | [24, 24] | [1, 2, 23, 22] | not scaled |
+| redpetal | [24, 24] | [4, 4, 19, 19] | not scaled |
+| replymail | [24, 24] | [1, 1, 23, 23] | not scaled |
+| ridepager | [24, 24] | [1, 1, 23, 23] | not scaled |
+| rollerskates | [28, 25] | [0, 0, 28, 25] | [24, 21] |
+| rsvpmail | [24, 24] | [1, 1, 23, 23] | not scaled |
+| sparklingstone | [24, 24] | [2, 1, 21, 22] | not scaled |
+| startercard | [32, 32] | [1, 4, 22, 21] | not scaled |
+| sunflute | [32, 32] | [2, 2, 22, 22] | not scaled |
+| thanksmail | [24, 24] | [1, 1, 23, 23] | not scaled |
+| tmvpass | [27, 24] | [0, 3, 27, 21] | [24, 16] |
+| vsrecorder | [32, 32] | [1, 2, 23, 22] | not scaled |
+| yellowpetal | [24, 24] | [4, 4, 19, 20] | not scaled |
+
 ## Alias audit
 
 | Name key | Resolved item name |

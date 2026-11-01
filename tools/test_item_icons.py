@@ -63,7 +63,7 @@ def test_palettes_and_sources():
     with Image.open(item_icons.CACHE / 'expansion' / record['picture']) as indexed:
         image = item_icons.palette_image(record)
         colours = (item_icons.CACHE / 'expansion' / record['palette']).read_text().split()[3:]
-        for position, colour_index in enumerate(indexed.getdata()):
+        for position, colour_index in enumerate(indexed.get_flattened_data()):
             actual = image.getpixel((position % 24, position // 24))
             assert actual[:3] == tuple(int(channel) for channel in colours[3 * colour_index:3 * colour_index + 3])
             assert actual[3] == (255 if colour_index else 0)

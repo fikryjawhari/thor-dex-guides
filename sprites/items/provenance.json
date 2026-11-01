@@ -485,6 +485,16 @@
     "source": "serebii",
     "picture": "bluepetal.png",
     "url": "https://www.serebii.net/itemdex/sprites/bluepetal.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      4,
+      4,
+      20,
+      20
+    ],
     "picture_sha256": "ddb698956f6826d65ac3f6735f1b25a89c15e11fabcb8c5fc951d6ac3f115f44"
   },
   "blueshard": {
@@ -531,18 +541,48 @@
     "source": "serebii",
     "picture": "bridgemailm.png",
     "url": "https://www.serebii.net/itemdex/sprites/bridgemailm.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      23,
+      23
+    ],
     "picture_sha256": "673dd507e75c41df1c64b131a2313d30104e7496caff8ada398c56264a5bb80d"
   },
   "bridgemailt": {
     "source": "serebii",
     "picture": "bridgemailt.png",
     "url": "https://www.serebii.net/itemdex/sprites/bridgemailt.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      23,
+      23
+    ],
     "picture_sha256": "1c37fbfc90c788c98d0307bdec21090b13f84737e6b97b7e9aa390d2f102313c"
   },
   "bridgemailv": {
     "source": "serebii",
     "picture": "bridgemailv.png",
     "url": "https://www.serebii.net/itemdex/sprites/bridgemailv.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      23,
+      23
+    ],
     "picture_sha256": "69b5e8a8cb14e8b2c4c00a60ccef557ca91f032cd7ddba35d863bdb37cca36df"
   },
   "brightpowder": {
@@ -870,6 +910,16 @@
     "source": "serebii",
     "picture": "colressmachine.png",
     "url": "https://www.serebii.net/itemdex/sprites/colressmachine.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      7,
+      5,
+      26,
+      27
+    ],
     "picture_sha256": "7cd00349ba2d30e2e79a048939509dc275e649e1d4f41524ba992a9ebbf1c5df"
   },
   "cometshard": {
@@ -987,6 +1037,16 @@
   "darkstone": {
     "source": "hardlove",
     "picture": "data/graphics/item/dark_stone.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      4,
+      4,
+      20,
+      20
+    ],
     "picture_sha256": "190afe077d4eff6daf78c7297bd13ca9ad4b57fe51b3099b9249eaa5acbd88e3"
   },
   "dawnstone": {
@@ -1329,6 +1389,16 @@
     "source": "serebii",
     "picture": "elevatorkey.png",
     "url": "https://www.serebii.net/itemdex/sprites/elevatorkey.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      3,
+      24,
+      22
+    ],
     "picture_sha256": "bc57bfcac294f002eb261e3d56c25f2e4da6e91684b8e37bed45ef4be188c6c9"
   },
   "emboarite": {
@@ -1487,6 +1557,16 @@
     "source": "serebii",
     "picture": "favoredmail.png",
     "url": "https://www.serebii.net/itemdex/sprites/favoredmail.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      23,
+      23
+    ],
     "picture_sha256": "3bf308c36558da759f64db123cb5da725f6b872b0b2a97c144e07b2162fd38f5"
   },
   "feraligite": {
@@ -1565,6 +1645,20 @@
     "source": "serebii",
     "picture": "fishingrod.png",
     "url": "https://www.serebii.net/itemdex/sprites/fishingrod.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      2,
+      4,
+      29,
+      30
+    ],
+    "scaled_to": [
+      24,
+      23
+    ],
     "picture_sha256": "910482e4605eb0836238e397218d5783de28d7dd9be8520e6a0f76842cfa13ec"
   },
   "fistplate": {
@@ -1651,6 +1745,20 @@
     "source": "serebii",
     "picture": "foragebag.png",
     "url": "https://www.serebii.net/itemdex/sprites/foragebag.png",
+    "frame": [
+      24,
+      26
+    ],
+    "crop": [
+      3,
+      0,
+      21,
+      26
+    ],
+    "scaled_to": [
+      17,
+      24
+    ],
     "picture_sha256": "cdae4efdcc66b7bfcfee526e2f0eb38f862d1525c4c3196fd1288c5246db53d5"
   },
   "freshwater": {
@@ -1930,6 +2038,16 @@
     "source": "serebii",
     "picture": "greenpetal.png",
     "url": "https://www.serebii.net/itemdex/sprites/greenpetal.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      5,
+      5,
+      19,
+      19
+    ],
     "picture_sha256": "c17f96338452299e0ecfc4d36fa6f759edcffb74038deaa8962f022568268826"
   },
   "greenshard": {
@@ -1944,6 +2062,16 @@
     "source": "serebii",
     "picture": "greetmail.png",
     "url": "https://www.serebii.net/itemdex/sprites/greetmail.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      23,
+      23
+    ],
     "picture_sha256": "576dd988f3dbf25cacc34c8384235a6ba149170d434999cd3e2e4354a8f3d5cc"
   },
   "greninjite": {
@@ -2022,6 +2150,16 @@
     "source": "serebii",
     "picture": "grubbyhanky.png",
     "url": "https://www.serebii.net/itemdex/sprites/grubbyhanky.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      7,
+      7,
+      25,
+      25
+    ],
     "picture_sha256": "4725d9617e4651398a37046d4a84bc2c62843584c8a941cd165e67777c66dd4c"
   },
   "guardspec": {
@@ -2392,6 +2530,16 @@
     "source": "serebii",
     "picture": "inquirymail.png",
     "url": "https://www.serebii.net/itemdex/sprites/inquirymail.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      23,
+      23
+    ],
     "picture_sha256": "bfd41d4596f0d4085e07c4ddc5a6094f612c4c048af3f9290cc45d2c5bc3ad45"
   },
   "insectplate": {
@@ -2406,6 +2554,16 @@
     "source": "serebii",
     "picture": "intriguingstone.png",
     "url": "https://www.serebii.net/itemdex/sprites/intriguingstone.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      5,
+      5,
+      19,
+      19
+    ],
     "picture_sha256": "cb7bc31b3fbad7db145b260c5760afef032835fd73e1644b690ed702f81b595b"
   },
   "iron": {
@@ -2443,6 +2601,16 @@
   "jadeorb": {
     "source": "hardlove",
     "picture": "data/graphics/item/jade_orb.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      5,
+      5,
+      19,
+      19
+    ],
     "picture_sha256": "2dafd3f7591e2cf38cfe418db317f27575b608475bf01dd43aefce6b32bea1ed"
   },
   "jawfossil": {
@@ -2505,6 +2673,16 @@
   "keystone": {
     "source": "hardlove",
     "picture": "data/graphics/item/key_stone.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      5,
+      6,
+      19,
+      20
+    ],
     "picture_sha256": "50e2492756af581642c448915320131d950a549dda6fa7b68813589660990fc7"
   },
   "kickingshoes": {
@@ -2543,18 +2721,60 @@
     "source": "serebii",
     "picture": "labkeycarda.png",
     "url": "https://www.serebii.net/itemdex/sprites/labkeycarda.png",
+    "frame": [
+      40,
+      40
+    ],
+    "crop": [
+      8,
+      3,
+      34,
+      38
+    ],
+    "scaled_to": [
+      18,
+      24
+    ],
     "picture_sha256": "0b26eaf3827174f59799b346695dda88b5b85fbbe86fd517b2ee262811f9805b"
   },
   "labkeycardb": {
     "source": "serebii",
     "picture": "labkeycardb.png",
     "url": "https://www.serebii.net/itemdex/sprites/labkeycardb.png",
+    "frame": [
+      40,
+      40
+    ],
+    "crop": [
+      8,
+      4,
+      34,
+      38
+    ],
+    "scaled_to": [
+      18,
+      24
+    ],
     "picture_sha256": "0374da3c576cadabb735ca6e558e4aca9eeb7a570366c151979a7190d3aa7efb"
   },
   "labkeycardc": {
     "source": "serebii",
     "picture": "labkeycardc.png",
     "url": "https://www.serebii.net/itemdex/sprites/labkeycardc.png",
+    "frame": [
+      40,
+      40
+    ],
+    "crop": [
+      8,
+      3,
+      34,
+      38
+    ],
+    "scaled_to": [
+      18,
+      24
+    ],
     "picture_sha256": "91211af4a7717d979b8401e5ba4048bfa01ad112f672cb1c5469a5f622e9160e"
   },
   "laggingtail": {
@@ -2641,6 +2861,16 @@
     "source": "serebii",
     "picture": "leftpokeball.png",
     "url": "https://www.serebii.net/itemdex/sprites/leftpokeball.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      3,
+      3,
+      21,
+      21
+    ],
     "picture_sha256": "b02fe784deab7176537741525a5c17b1a742bfbcf9fd2bdac13f6adaad63506b"
   },
   "lemonade": {
@@ -2702,12 +2932,32 @@
   "lightstone": {
     "source": "hardlove",
     "picture": "data/graphics/item/light_stone.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      4,
+      4,
+      20,
+      20
+    ],
     "picture_sha256": "dea90637b36c3512ec041257b8ef1259f6b9785d321516d86b4b6c0215fd01de"
   },
   "likemail": {
     "source": "serebii",
     "picture": "likemail.png",
     "url": "https://www.serebii.net/itemdex/sprites/likemail.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      23,
+      23
+    ],
     "picture_sha256": "667a4dfc85ba98b5c9a49bf914d0c2fa5c4b13dadc578ff7453a535c61177b41"
   },
   "linkcable": {
@@ -2731,6 +2981,20 @@
     "source": "serebii",
     "picture": "lookerticket.png",
     "url": "https://www.serebii.net/itemdex/sprites/lookerticket.png",
+    "frame": [
+      28,
+      24
+    ],
+    "crop": [
+      0,
+      3,
+      28,
+      21
+    ],
+    "scaled_to": [
+      24,
+      15
+    ],
     "picture_sha256": "c7bada4bda189caee2252572e1ba8cff0ed46a1bd8f8e152ff51dff763c5ed1b"
   },
   "lopunnite": {
@@ -2817,6 +3081,16 @@
     "source": "hardlove",
     "picture": "data/graphics/item/lunar_feather.png",
     "alias": "Lunar Feather",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      1,
+      2,
+      22,
+      22
+    ],
     "picture_sha256": "33efe673b0aa113e610254c9be6e55436f275306fcef3ffd88f670e7d768cc4a"
   },
   "lureball": {
@@ -2903,6 +3177,16 @@
   "magmastone": {
     "source": "hardlove",
     "picture": "data/graphics/item/magma_stone.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      2,
+      3,
+      22,
+      21
+    ],
     "picture_sha256": "be509666ec8cc1926c8b4917a820b834d343b6e34a8196673a25425b1df433a3"
   },
   "magnet": {
@@ -3021,6 +3305,16 @@
     "source": "hardlove",
     "picture": "data/graphics/item/key_stone.png",
     "alias": "Key Stone",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      5,
+      6,
+      19,
+      20
+    ],
     "picture_sha256": "50e2492756af581642c448915320131d950a549dda6fa7b68813589660990fc7"
   },
   "meganiumite": {
@@ -3042,6 +3336,16 @@
   "membercard": {
     "source": "hardlove",
     "picture": "data/graphics/item/member_card.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      2,
+      2,
+      23,
+      22
+    ],
     "picture_sha256": "5e171eec29be6bcf59a89377ba811216b13f8169b21a0f0dfeb5d71fb222a552"
   },
   "mentalherb": {
@@ -3175,6 +3479,16 @@
   "moonflute": {
     "source": "hardlove",
     "picture": "data/graphics/item/moon_flute.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      2,
+      2,
+      22,
+      22
+    ],
     "picture_sha256": "5b67d14d2dc2c7081d96f776e302230610573154f41c6ab54b55fb4d68950f29"
   },
   "moonstone": {
@@ -3366,6 +3680,16 @@
     "source": "serebii",
     "picture": "orangepetal.png",
     "url": "https://www.serebii.net/itemdex/sprites/orangepetal.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      6,
+      5,
+      18,
+      19
+    ],
     "picture_sha256": "bf6d69864b56458821aaecd63110711fb801da640a24b71dc3b255606975c753"
   },
   "orbeetlite": {
@@ -3469,6 +3793,16 @@
     "source": "serebii",
     "picture": "permit.png",
     "url": "https://www.serebii.net/itemdex/sprites/permit.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      6,
+      8,
+      27,
+      25
+    ],
     "picture_sha256": "8890bfc3ddee64dc3911453014c3f07464965e10f2f92d3aa7d9ba64e9f6b0ce"
   },
   "persimberry": {
@@ -3531,6 +3865,16 @@
     "source": "serebii",
     "picture": "pinkpetal.png",
     "url": "https://www.serebii.net/itemdex/sprites/pinkpetal.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      4,
+      4,
+      19,
+      19
+    ],
     "picture_sha256": "1862c3098255c50cf6919d7425f07e79ccb149d467f7057889002a38f193ab00"
   },
   "pinsirite": {
@@ -3553,6 +3897,16 @@
     "source": "serebii",
     "picture": "plasmacard.png",
     "url": "https://www.serebii.net/itemdex/sprites/plasmacard.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      6,
+      8,
+      27,
+      25
+    ],
     "picture_sha256": "dc0262a03e2f00a16b220829a0e173fa6c181369199b105f5cfc082614a63d60"
   },
   "plumefossil": {
@@ -3695,6 +4049,16 @@
     "source": "serebii",
     "picture": "powerplantpass.png",
     "url": "https://www.serebii.net/itemdex/sprites/powerplantpass.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      2,
+      4,
+      23,
+      21
+    ],
     "picture_sha256": "894ab4f693c9136630011b9c76a3b700be046f6e49f2737a22d1aa1f728f04c4"
   },
   "powerweight": {
@@ -3774,12 +4138,32 @@
     "source": "serebii",
     "picture": "professorsmask.png",
     "url": "https://www.serebii.net/itemdex/sprites/professorsmask.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      22,
+      23
+    ],
     "picture_sha256": "8488d9fce83e3b09a563425a6e6539879d11bbca615ba27bda063355e0bd7f60"
   },
   "profsletter": {
     "source": "serebii",
     "picture": "profsletter.png",
     "url": "https://www.serebii.net/itemdex/sprites/prof'sletter.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      3,
+      23,
+      22
+    ],
     "picture_sha256": "fdb6d06c7743b5c0e700e04f5322c98135347f1e7edc47d64df98de05fd817f9"
   },
   "protectivepads": {
@@ -3866,6 +4250,16 @@
     "source": "serebii",
     "picture": "purplepetal.png",
     "url": "https://www.serebii.net/itemdex/sprites/purplepetal.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      4,
+      4,
+      19,
+      19
+    ],
     "picture_sha256": "61e145b1f7565a5817d858707d34924c374cfb65db67eef278d1e3cc4ef19759"
   },
   "pyroarite": {
@@ -3936,6 +4330,16 @@
     "source": "serebii",
     "picture": "rainbowflower.png",
     "url": "https://www.serebii.net/itemdex/sprites/rainbowflower.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      2,
+      23,
+      22
+    ],
     "picture_sha256": "61e20cc83d280462c47a1b345e710c5bf52a2c688f0ed7ca2b2e428c09e8479f"
   },
   "rarebone": {
@@ -4031,6 +4435,16 @@
     "source": "serebii",
     "picture": "redpetal.png",
     "url": "https://www.serebii.net/itemdex/sprites/redpetal.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      4,
+      4,
+      19,
+      19
+    ],
     "picture_sha256": "2ff53bb4391172f3088a9ac3d7763ce1a40b062fa7b5e0c23e3135885fa4ab8f"
   },
   "redshard": {
@@ -4117,6 +4531,16 @@
     "source": "serebii",
     "picture": "replymail.png",
     "url": "https://www.serebii.net/itemdex/sprites/replymail.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      23,
+      23
+    ],
     "picture_sha256": "fde5b58b0e9f9a62e2d1f8011e2808ccb835aaad116d23533dac27e58e1ee76e"
   },
   "resistwing": {
@@ -4164,6 +4588,16 @@
     "source": "serebii",
     "picture": "ridepager.png",
     "url": "https://www.serebii.net/itemdex/sprites/ridepager.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      23,
+      23
+    ],
     "picture_sha256": "3eabcd2f344a28e87f75931e37bc69faa66402faee569a24b3ae7cc677c37fa6"
   },
   "rindoberry": {
@@ -4226,6 +4660,20 @@
     "source": "serebii",
     "picture": "rollerskates.png",
     "url": "https://www.serebii.net/itemdex/sprites/rollerskates.png",
+    "frame": [
+      28,
+      25
+    ],
+    "crop": [
+      0,
+      0,
+      28,
+      25
+    ],
+    "scaled_to": [
+      24,
+      21
+    ],
     "picture_sha256": "7e2caaa7e270c3802af90f2d39e12da908d7faf9f3b12f2f739a1410658fcd41"
   },
   "roomservice": {
@@ -4280,6 +4728,16 @@
     "source": "serebii",
     "picture": "rsvpmail.png",
     "url": "https://www.serebii.net/itemdex/sprites/rsvpmail.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      23,
+      23
+    ],
     "picture_sha256": "698f47817fcc47bc65ec6a4ca51eabecaf7dde49f2a3ee647a4907367be0563f"
   },
   "rustedshield": {
@@ -4654,6 +5112,16 @@
     "source": "serebii",
     "picture": "sparklingstone.png",
     "url": "https://www.serebii.net/itemdex/sprites/sparklingstone.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      2,
+      1,
+      21,
+      22
+    ],
     "picture_sha256": "087d124f7444f89b88c474107f8cf15d88810f3c21fe82565453cf5fc72fecf2"
   },
   "spelltag": {
@@ -4756,6 +5224,16 @@
   "startercard": {
     "source": "hardlove",
     "picture": "data/graphics/item/starter_card.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      1,
+      4,
+      22,
+      21
+    ],
     "picture_sha256": "3614dc6945c56941e6f68e5c5dce9ae9d9b49a66e48415dca670f617eb7fa993"
   },
   "steelgem": {
@@ -4818,6 +5296,16 @@
   "sunflute": {
     "source": "hardlove",
     "picture": "data/graphics/item/sun_flute.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      2,
+      2,
+      22,
+      22
+    ],
     "picture_sha256": "1fb82e7dd312dc883163bbe1818c77459de87eca6dfc6cf55236b950a0ba3155"
   },
   "sunstone": {
@@ -4929,6 +5417,16 @@
     "source": "serebii",
     "picture": "thanksmail.png",
     "url": "https://www.serebii.net/itemdex/sprites/thanksmail.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      1,
+      1,
+      23,
+      23
+    ],
     "picture_sha256": "3e7f507ca50099971ea5e14fd2bdf4977280374589c63ef05d26c23f058e3268"
   },
   "thickclub": {
@@ -5137,6 +5635,20 @@
     "source": "serebii",
     "picture": "tmvpass.png",
     "url": "https://www.serebii.net/itemdex/sprites/tmvpass.png",
+    "frame": [
+      27,
+      24
+    ],
+    "crop": [
+      0,
+      3,
+      27,
+      21
+    ],
+    "scaled_to": [
+      24,
+      16
+    ],
     "picture_sha256": "8f87e1b865cf44c8308c4761255b71e5f03c36501cda35c6af46271e317f9c7d"
   },
   "torterrite": {
@@ -5246,6 +5758,16 @@
   "vsrecorder": {
     "source": "hardlove",
     "picture": "data/graphics/item/vs_recorder.png",
+    "frame": [
+      32,
+      32
+    ],
+    "crop": [
+      1,
+      2,
+      23,
+      22
+    ],
     "picture_sha256": "7cb409c0dae996c24d9015287af04bba1e104b354bc44504652e8d9a7ead7f3a"
   },
   "vsseeker": {
@@ -5468,6 +5990,16 @@
     "source": "serebii",
     "picture": "yellowpetal.png",
     "url": "https://www.serebii.net/itemdex/sprites/yellowpetal.png",
+    "frame": [
+      24,
+      24
+    ],
+    "crop": [
+      4,
+      4,
+      19,
+      20
+    ],
     "picture_sha256": "7c91764e6d1d9d43c891d521dabaf6f5e2cc4dfd4308b92b2d29dcb537d833b5"
   },
   "yellowshard": {

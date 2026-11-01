@@ -178,9 +178,15 @@ def palette_image(record):
         if record['source'] == 'hardlove':
             pixels.info['transparency'] = 0
         image = pixels.convert('RGBA')
-        artwork = image.crop(image.getbbox())
+        bounds = image.getbbox()
+        if bounds is None:
+            raise ValueError(f'Empty fallback artwork: {record}')
+        record['frame'] = list(image.size)
+        record['crop'] = list(bounds)
+        artwork = image.crop(bounds)
         if artwork.width > 24 or artwork.height > 24:
             artwork.thumbnail((24, 24), Image.Resampling.NEAREST)
+            record['scaled_to'] = list(artwork.size)
         canvas = Image.new('RGBA', (24, 24))
         canvas.paste(artwork, ((24 - artwork.width) // 2, (24 - artwork.height) // 2))
         return canvas
@@ -426,6 +432,12 @@ def documentation(report, provenance, canonical, same, conflicts):
         'The 29 Hardlove assets with blob `cd3bcb9e636866325bb3718c46ac6f73b6d78c00` are question-mark placeholders.',
         'They were rejected after contact-sheet review; 28 use Serebii replacements and Ilima’s crystal uses Normalium Z.', '']
     sources += [f'- {name}: {url}' for name, url in sorted(SEREBII.items())]
+    sources += ['', '## Fallback framing', '',
+        'Every non-expansion frame is cropped and centred. Only entries with a size in the last column are scaled.',
+        'Hardlove provides DS-style 32px frames; Serebii frames vary, with exact dimensions recorded below.', '',
+        '| Item key | Source frame | Visible bounds | Scaled artwork |', '| --- | --- | --- | --- |']
+    sources += [f"| {name} | {record['frame']} | {record['crop']} | {record.get('scaled_to', 'not scaled')} |"
+                for name, record in sorted(provenance.items()) if 'frame' in record]
     sources += ['', '## Alias audit', '', '| Name key | Resolved item name |', '| --- | --- |']
     sources += [f"| {name} | {record['alias']} |" for name, record in sorted(provenance.items()) if 'alias' in record]
     return {'README.md': '\n'.join(readme), 'SOURCES.md': '\n'.join(sources) + '\n'}
