@@ -1,9 +1,9 @@
-# In battle text: review sample
+# In battle text
 
-Hand-written mechanics, separate from bag text. This round selects 25 items and
-25 moves, plus six approved examples outside that selection: 30 item names and
-26 move names. White Herb and Flame Orb fill the two unnamed item slots.
-Mega Stones are excluded. No extract or template consumes this sample yet.
+Hand-written mechanics, separate from bag text. `items.json` covers battle-effect
+items named by the six guides; `moves.json` is maintained separately. Mega Stones
+are excluded: their item pages already have a Mega Evolution line. No extract or
+template consumes these files yet.
 
 ## Format
 
@@ -24,8 +24,12 @@ or interaction (such as Loaded Dice).
 
 - State the effect directly; omit flavour, acquisition and bag-text repetition.
 - Give fractions, multipliers, stages, durations, priority and hit odds explicitly.
-- State triggers, ending conditions, consumption and important failure cases.
-- Include consequential ability, Substitute, multi-hit and switching interactions.
+- Give the main effect and exact numbers, then at most the 1-2 interactions that
+  matter most in play. Drop edge cases and exception lists.
+- Aim for at most 230 characters per text, including each generation variant;
+  most should be far shorter. The approved Leech Seed is the ceiling, not a target.
+- Leftovers, Calm Mind and Sitrus Berry are the brevity models. Include triggers
+  and consumption where needed, not exhaustive ability or Substitute caveats.
 - Use short sentences, named stats and plain language, not simulator terminology.
 - Add variants for changed mechanics; preserve approved wording verbatim as defaults.
 

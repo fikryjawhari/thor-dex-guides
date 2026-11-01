@@ -2,54 +2,113 @@
   "Absorb Bulb": "After surviving a Water hit, raises Sp. Atk by 1 stage. Used up.",
   "Adamant Orb": "Dialga's Dragon and Steel moves do 1.2× damage.",
   "Adrenaline Orb": "When Intimidate affects the holder, raises Speed by 1 stage. Used up, even if Intimidate's Attack drop is blocked.",
+  "Aguav Berry": {
+    "gen<=6": "At 1/2 max HP or less, restores 1/8 max HP. Confuses a holder whose nature lowers Sp. Def. Eaten once.",
+    "gen<=7": "At 1/4 max HP or less, restores 1/2 max HP. Confuses a holder whose nature lowers Sp. Def; Gluttony triggers it at 1/2 HP instead. Eaten once.",
+    "": "At 1/4 max HP or less, restores 1/3 max HP. Confuses a holder whose nature lowers Sp. Def; Gluttony triggers it at 1/2 HP instead. Eaten once."
+  },
   "Air Balloon": "Makes the holder airborne, avoiding Ground moves and grounded entry hazards. A damaging hit pops it; indirect damage does not.",
+  "Apicot Berry": "At 1/4 max HP or less, raises Sp. Def by 1 stage. Gluttony triggers it at 1/2 HP instead. Eaten once.",
+  "Aspear Berry": "Cures freeze. Eaten once.",
   "Assault Vest": "Sp. Def ×1.5, but the holder cannot select status moves.",
+  "Babiri Berry": "Halves the damage of one super-effective Steel hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
   "Berry Juice": "At 1/2 max HP or less, restores 20 HP. Used up.",
   "Big Root": "Restores 1.3× HP from draining moves, Leech Seed, Ingrain and Aqua Ring. Does not increase damage dealt or Leftovers healing.",
   "Binding Band": {
     "gen<=5": "Trapping moves such as Bind deal 1/8 of the target's max HP each turn instead of 1/16. Does not increase the initial hit's damage.",
     "": "Trapping moves such as Bind deal 1/6 of the target's max HP each turn instead of 1/8. Does not increase the initial hit's damage."
   },
+  "Black Belt": "Fighting moves do 1.2× damage.",
+  "Black Glasses": "Dark moves do 1.2× damage.",
   "Black Sludge": "At each turn's end, restores 1/16 max HP to a Poison-type holder; other types lose 1/8 max HP instead.",
   "Blue Orb": "Kyogre becomes Primal Kyogre on entering battle, gaining Primordial Sea and its heavy rain. Cannot be removed from Kyogre.",
   "Blunder Policy": "After a move misses because of accuracy or evasion, raises Speed by 2 stages. Used up; immunities and Protect do not trigger it.",
   "Booster Energy": "Activates Protosynthesis or Quark Drive: the highest stat is ×1.3, or ×1.5 if Speed. Used up; the boost ends on switching out.",
   "Bright Powder": "Moves targeting the holder have 0.9× accuracy.",
+  "Bug Gem": {
+    "gen<=5": "The first successful damaging Bug move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Bug move does 1.3× damage; the gem is used up."
+  },
   "Burn Drive": "Makes Genesect's Techno Blast Fire type.",
   "Cell Battery": "After surviving an Electric hit, raises Attack by 1 stage. Used up; an Electric immunity prevents activation.",
-  "Charcoal": "The holder's Fire moves have 1.2× power. Not used up.",
+  "Charcoal": "Fire moves do 1.2× damage.",
+  "Charti Berry": "Halves the damage of one super-effective Rock hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
+  "Cheri Berry": "Cures paralysis. Eaten once.",
+  "Chesto Berry": "Cures sleep. Eaten once.",
+  "Chilan Berry": "Halves the damage of one Normal hit, even if it is not super effective. Eaten before that hit; protects against only one hit of a multi-hit move.",
   "Chill Drive": "Makes Genesect's Techno Blast Ice type.",
   "Choice Band": "Attack ×1.5, but locks the holder into its first move until it switches out or loses the item.",
   "Choice Scarf": "Speed ×1.5, but locks the holder into its first move until it switches out or loses the item.",
   "Choice Specs": "Sp. Atk ×1.5, but locks the holder into its first move until it switches out or loses the item.",
+  "Chople Berry": "Halves the damage of one super-effective Fighting hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
   "Clear Amulet": "Prevents other Pokémon from lowering the holder's stat stages. Does not stop the holder's own stat drops.",
+  "Coba Berry": "Halves the damage of one super-effective Flying hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
+  "Colbur Berry": "Halves the damage of one super-effective Dark hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
   "Covert Cloak": "Blocks extra effects of damaging moves, such as Fake Out's flinch and Scald's burn. Does not block status moves or the damage itself.",
+  "Custap Berry": "At 1/4 max HP or less, moves first within its priority bracket for one turn. Gluttony triggers it at 1/2 HP instead. Eaten once; does not beat higher-priority moves.",
   "Damp Rock": "Rain started by the holder lasts 8 turns instead of 5. Switching out does not shorten it.",
   "Dark Gem": {
-    "gen<=5": "The holder's first successful damaging Dark move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "gen<=5": "The first successful damaging Dark move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
     "": "The holder's first Dark move does 1.3× damage; the gem is used up."
   },
   "Deep Sea Scale": "Doubles Clamperl's Sp. Def.",
   "Deep Sea Tooth": "Doubles Clamperl's Sp. Atk.",
   "Destiny Knot": "If another Pokémon infatuates the holder, that Pokémon also becomes infatuated.",
   "Douse Drive": "Makes Genesect's Techno Blast Water type.",
+  "Draco Plate": "Dragon moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Dragon type.",
+  "Dragon Fang": "Dragon moves do 1.2× damage.",
+  "Dragon Gem": {
+    "gen<=5": "The first successful damaging Dragon move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Dragon move does 1.3× damage; the gem is used up."
+  },
+  "Dread Plate": "Dark moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Dark type.",
   "Dream Ball": {
     "gen<=7": "In Gen 5's Entree Forest, always catches the Pokémon. Outside that encounter, catch rate ×1; sleep gives no extra Dream Ball bonus.",
     "": "Catch rate ×4 on a sleeping Pokémon, ×1 otherwise."
   },
+  "Earth Plate": "Ground moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Ground type.",
   "Eject Button": "After surviving a damaging move, switches the holder to a teammate you choose. Used up; waits until all hits finish and cancels the attacker's U-turn or Volt Switch switch.",
   "Eject Pack": "When a stat stage falls, switches the holder to a teammate you choose. Used up; can trigger from Intimidate or the holder's own move.",
+  "Electric Gem": {
+    "gen<=5": "The first successful damaging Electric move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Electric move does 1.3× damage; the gem is used up."
+  },
   "Electric Seed": "In Electric Terrain, raises Defense by 1 stage, even if airborne. Used up; the boost remains after the terrain ends.",
   "Enigma Berry": "After surviving a super-effective hit, restores 1/4 max HP. Eaten once.",
   "Eviolite": "Defense and Sp. Def ×1.5 if the holder can still evolve.",
   "Expert Belt": "Super-effective moves do 1.2× damage. No boost to neutral or resisted hits.",
+  "Fairy Gem": "The first damaging Fairy move does 1.3× damage; the gem is used up.",
+  "Fighting Gem": {
+    "gen<=5": "The first successful damaging Fighting move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Fighting move does 1.3× damage; the gem is used up."
+  },
+  "Figy Berry": {
+    "gen<=6": "At 1/2 max HP or less, restores 1/8 max HP. Confuses a holder whose nature lowers Attack. Eaten once.",
+    "gen<=7": "At 1/4 max HP or less, restores 1/2 max HP. Confuses a holder whose nature lowers Attack; Gluttony triggers it at 1/2 HP instead. Eaten once.",
+    "": "At 1/4 max HP or less, restores 1/3 max HP. Confuses a holder whose nature lowers Attack; Gluttony triggers it at 1/2 HP instead. Eaten once."
+  },
+  "Fire Gem": {
+    "gen<=5": "The first successful damaging Fire move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Fire move does 1.3× damage; the gem is used up."
+  },
+  "Fist Plate": "Fighting moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Fighting type.",
   "Flame Orb": "Burns the holder at each turn's end if it has no status and can be burned. Activates Guts; not used up.",
+  "Flame Plate": "Fire moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Fire type.",
   "Float Stone": "Halves the holder's weight, affecting weight-based moves such as Low Kick and Heavy Slam.",
+  "Flying Gem": {
+    "gen<=5": "The first successful damaging Flying move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Flying move does 1.3× damage; the gem is used up."
+  },
   "Focus Band": "Each would-be knockout from an attack has a 10% chance to leave the holder at 1 HP. Can work below full HP; not used up.",
   "Focus Sash": "At full HP, survives one would-be knockout from an attack at 1 HP. Used up; later hits of a multi-hit move can still KO it.",
   "Full Incense": "The holder moves last within its priority bracket, even under Trick Room.",
+  "Ganlon Berry": "At 1/4 max HP or less, raises Defense by 1 stage. Gluttony triggers it at 1/2 HP instead. Eaten once.",
+  "Ghost Gem": {
+    "gen<=5": "The first successful damaging Ghost move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Ghost move does 1.3× damage; the gem is used up."
+  },
   "Grass Gem": {
-    "gen<=5": "The holder's first successful damaging Grass move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "gen<=5": "The first successful damaging Grass move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
     "": "The holder's first Grass move does 1.3× damage; the gem is used up."
   },
   "Grassy Seed": "In Grassy Terrain, raises Defense by 1 stage, even if airborne. Used up; the boost remains after the terrain ends.",
@@ -58,11 +117,31 @@
     "": "Trapping moves such as Bind always last 7 turns."
   },
   "Griseous Orb": "Giratina takes its Origin Forme; its Dragon and Ghost moves do 1.2× damage.",
+  "Ground Gem": {
+    "gen<=5": "The first successful damaging Ground move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Ground move does 1.3× damage; the gem is used up."
+  },
+  "Haban Berry": "Halves the damage of one super-effective Dragon hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
+  "Hard Stone": "Rock moves do 1.2× damage.",
   "Heat Rock": "Sun started by the holder lasts 8 turns instead of 5. Switching out does not shorten it.",
   "Heavy-Duty Boots": "Prevents entry hazards from affecting the holder when it switches in.",
+  "Iapapa Berry": {
+    "gen<=6": "At 1/2 max HP or less, restores 1/8 max HP. Confuses a holder whose nature lowers Defense. Eaten once.",
+    "gen<=7": "At 1/4 max HP or less, restores 1/2 max HP. Confuses a holder whose nature lowers Defense; Gluttony triggers it at 1/2 HP instead. Eaten once.",
+    "": "At 1/4 max HP or less, restores 1/3 max HP. Confuses a holder whose nature lowers Defense; Gluttony triggers it at 1/2 HP instead. Eaten once."
+  },
+  "Ice Gem": {
+    "gen<=5": "The first successful damaging Ice move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Ice move does 1.3× damage; the gem is used up."
+  },
+  "Icicle Plate": "Ice moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Ice type.",
   "Icy Rock": "Hail or snow started by the holder lasts 8 turns instead of 5. Switching out does not shorten it.",
+  "Insect Plate": "Bug moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Bug type.",
   "Iron Ball": "Halves Speed and grounds the holder, removing airborne immunity to Ground moves and grounded entry hazards.",
+  "Iron Plate": "Steel moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Steel type.",
   "Jaboca Berry": "After a physical hit, the attacker loses 1/8 of its own max HP. Eaten once; does not require contact.",
+  "Kasib Berry": "Halves the damage of one super-effective Ghost hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
+  "Kebia Berry": "Halves the damage of one super-effective Poison hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
   "Kee Berry": "After surviving a physical hit, raises Defense by 1 stage. Eaten once.",
   "King's Rock": {
     "gen<=4": "Eligible damaging moves gain a 10% flinch chance per hit. Only stops a target that has not acted; some moves are ineligible, even without a built-in flinch chance.",
@@ -74,6 +153,7 @@
   "Leek": "Raises Farfetch'd's or Sirfetch'd's critical-hit rate by 2 stages.",
   "Leftovers": "Restores 1/16 of the holder's max HP at the end of every turn.",
   "Leppa Berry": "When a move reaches 0 PP, restores 10 PP to it. Eaten once.",
+  "Liechi Berry": "At 1/4 max HP or less, raises Attack by 1 stage. Gluttony triggers it at 1/2 HP instead. Eaten once.",
   "Life Orb": "Damaging moves do 1.3× damage. The holder then loses 1/10 of its max HP (not with Magic Guard, or on a move Sheer Force boosted).",
   "Light Ball": {
     "gen<=4": "Doubles the power of Pikachu's damaging moves.",
@@ -86,24 +166,55 @@
   "Luminous Moss": "After surviving a Water hit, raises Sp. Def by 1 stage. Used up.",
   "Lustrous Orb": "Palkia's Dragon and Water moves do 1.2× damage.",
   "Macho Brace": "Halves the holder's Speed in battle.",
-  "Maranga Berry": "After surviving a special hit, raises Sp. Def by 1 stage. Eaten once.",
+  "Magnet": "Electric moves do 1.2× damage.",
+  "Mago Berry": {
+    "gen<=6": "At 1/2 max HP or less, restores 1/8 max HP. Confuses a holder whose nature lowers Speed. Eaten once.",
+    "gen<=7": "At 1/4 max HP or less, restores 1/2 max HP. Confuses a holder whose nature lowers Speed; Gluttony triggers it at 1/2 HP instead. Eaten once.",
+    "": "At 1/4 max HP or less, restores 1/3 max HP. Confuses a holder whose nature lowers Speed; Gluttony triggers it at 1/2 HP instead. Eaten once."
+  },
+  "Meadow Plate": "Grass moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Grass type.",
   "Mental Herb": {
     "gen<=4": "Cures infatuation. Used up.",
     "": "Cures infatuation, Taunt, Encore, Disable, Torment and Heal Block. Used up."
   },
+  "Metal Coat": "Steel moves do 1.2× damage.",
   "Metal Powder": "Doubles Ditto's Defense, but stops working after Transform.",
   "Metronome": {
     "gen<=4": "Repeating the same move raises damage by 10% per repeat, up to 2× on the 11th use. Changing moves, switching out or a failed previous use resets it.",
     "": "Repeating the same move raises damage by 20% per repeat, up to 2× on the 6th use. Changing moves, switching out or a failed previous use resets it."
   },
   "Micle Berry": "At 1/4 max HP or less, gives the next move 1.2× accuracy. Gluttony triggers it at 1/2 HP instead. Eaten once.",
+  "Mind Plate": "Psychic moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Psychic type.",
+  "Miracle Seed": "Grass moves do 1.2× damage.",
   "Misty Seed": "In Misty Terrain, raises Sp. Def by 1 stage, even if airborne. Used up; the boost remains after the terrain ends.",
   "Muscle Band": "Physical moves do 1.1× damage.",
+  "Mystic Water": "Water moves do 1.2× damage.",
+  "Never-Melt Ice": "Ice moves do 1.2× damage.",
+  "Normal Gem": {
+    "gen<=5": "The first successful damaging Normal move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Normal move does 1.3× damage; the gem is used up."
+  },
   "Normalium Z": "Once per battle for the team, turns a Normal attack into Breakneck Blitz: power 100/120/140/160/175/180/185/190/195/200 for original power up to 55/65/75/85/95/100/110/125/130/above 130, except move-specific overrides. A Normal status move gets its own Z bonus instead. Not used up; cannot be knocked off, stolen or swapped.",
   "Occa Berry": "Halves the damage of one super-effective Fire hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
+  "Odd Incense": "Psychic moves do 1.2× damage.",
   "Oran Berry": "At 1/2 max HP or less, restores 10 HP. Eaten once.",
+  "Passho Berry": "Halves the damage of one super-effective Water hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
+  "Payapa Berry": "Halves the damage of one super-effective Psychic hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
+  "Pecha Berry": "Cures poison, including bad poison. Eaten once.",
+  "Persim Berry": "Cures confusion. Eaten once.",
+  "Petaya Berry": "At 1/4 max HP or less, raises Sp. Atk by 1 stage. Gluttony triggers it at 1/2 HP instead. Eaten once.",
+  "Pixie Plate": "Fairy moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Fairy type.",
+  "Poison Barb": "Poison moves do 1.2× damage.",
+  "Poison Gem": {
+    "gen<=5": "The first successful damaging Poison move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Poison move does 1.3× damage; the gem is used up."
+  },
   "Power Herb": "Skips the charging turn of a two-turn move, including Geomancy. Used up; does not skip Solar Beam's bad-weather damage penalty.",
   "Protective Pads": "Prevents contact-triggered effects against the holder, such as Rocky Helmet damage, Static and King's Shield's Attack drop.",
+  "Psychic Gem": {
+    "gen<=5": "The first successful damaging Psychic move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Psychic move does 1.3× damage; the gem is used up."
+  },
   "Psychic Seed": "In Psychic Terrain, raises Sp. Def by 1 stage, even if airborne. Used up; the boost remains after the terrain ends.",
   "Punching Glove": "Punching moves do 1.1× damage and no longer make contact, avoiding effects such as Rocky Helmet and Static.",
   "Quick Ball": {
@@ -112,6 +223,7 @@
   },
   "Quick Claw": "Each turn, has a 20% chance to move first within its priority bracket, regardless of Speed or Trick Room. Does not outrun a higher-priority move.",
   "Quick Powder": "Doubles Ditto's Speed, but stops working after Transform.",
+  "Rawst Berry": "Cures burn. Eaten once.",
   "Razor Claw": "Raises the holder's critical-hit rate by 1 stage.",
   "Razor Fang": {
     "gen<=4": "Eligible damaging moves gain a 10% flinch chance per hit. Only stops a target that has not acted; some moves are ineligible, even without a built-in flinch chance.",
@@ -119,35 +231,75 @@
   },
   "Red Card": "After surviving a damaging move, forces the attacker into a random teammate. Used up; waits until all hits finish and can stop U-turn or Volt Switch choosing its switch.",
   "Red Orb": "Groudon becomes Primal Groudon on entering battle, gaining Desolate Land and its harsh sun. Cannot be removed from Groudon.",
+  "Rindo Berry": "Halves the damage of one super-effective Grass hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
   "Ring Target": "Removes the holder's type-based immunities, letting Normal hit Ghost or Ground hit Flying. Does not remove ability immunities such as Levitate.",
+  "Rock Gem": {
+    "gen<=5": "The first successful damaging Rock move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Rock move does 1.3× damage; the gem is used up."
+  },
+  "Rock Incense": "Rock moves do 1.2× damage.",
   "Rocky Helmet": "Each contact hit costs the attacker 1/6 of its own max HP. Triggers on every hit of a multi-hit move; Magic Guard prevents the damage.",
   "Room Service": "When Trick Room is active, lowers the holder's Speed by 1 stage. Used up.",
+  "Rose Incense": "Grass moves do 1.2× damage.",
+  "Roseli Berry": "Halves the damage of one super-effective Fairy hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
   "Rowap Berry": "After a special hit, the attacker loses 1/8 of its own max HP. Eaten once; does not require contact.",
   "Rusted Shield": "Zamazenta becomes Crowned Shield, gaining Steel typing and turning Iron Head into Behemoth Bash.",
   "Rusted Sword": "Zacian becomes Crowned Sword, gaining Steel typing and turning Iron Head into Behemoth Blade.",
   "Safety Goggles": "Blocks powder moves, Effect Spore and weather damage from sandstorm and hail.",
   "Salac Berry": "At 1/4 max HP or less, raises Speed by 1 stage. Gluttony triggers it at 1/2 HP instead. Eaten once.",
   "Scope Lens": "Raises the holder's critical-hit rate by 1 stage.",
+  "Sea Incense": "Water moves do 1.2× damage.",
+  "Sharp Beak": "Flying moves do 1.2× damage.",
   "Shed Shell": "Lets the holder switch out despite trapping moves or abilities. Does not let it flee from wild battles.",
   "Shell Bell": "After a damaging move, restores 1/8 of the total damage dealt, including all hits and targets. Does not trigger on a Sheer Force-boosted move.",
   "Shock Drive": "Makes Genesect's Techno Blast Electric type.",
+  "Shuca Berry": "Halves the damage of one super-effective Ground hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
+  "Silk Scarf": "Normal moves do 1.2× damage.",
+  "Silver Powder": "Bug moves do 1.2× damage.",
   "Sitrus Berry": "Eaten when the holder drops to 1/2 HP or less: restores 1/4 of its max HP. Once.",
+  "Sky Plate": "Flying moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Flying type.",
   "Smoke Ball": "Lets the holder flee from wild battles, even through trapping. Does not let it switch out of trapping.",
   "Smooth Rock": "Sandstorm started by the holder lasts 8 turns instead of 5. Switching out does not shorten it.",
   "Snowball": "After surviving an Ice hit, raises Attack by 1 stage. Used up.",
+  "Soft Sand": "Ground moves do 1.2× damage.",
   "Soul Dew": {
     "gen<=6": "Latias's and Latios's Sp. Atk and Sp. Def are ×1.5.",
     "": "Latias's and Latios's Dragon and Psychic moves do 1.2× damage."
   },
+  "Spell Tag": "Ghost moves do 1.2× damage.",
+  "Splash Plate": "Water moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Water type.",
+  "Spooky Plate": "Ghost moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Ghost type.",
+  "Starf Berry": "At 1/4 max HP or less, raises a random stat by 2 stages, excluding accuracy and evasion. Gluttony triggers it at 1/2 HP instead. Eaten once.",
+  "Steel Gem": {
+    "gen<=5": "The first successful damaging Steel move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Steel move does 1.3× damage; the gem is used up."
+  },
   "Stick": "Raises Farfetch'd's critical-hit rate by 2 stages.",
   "Sticky Barb": "At each turn's end, the holder loses 1/8 max HP. Transfers to an attacker with no held item when it lands a contact move.",
+  "Stone Plate": "Rock moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Rock type.",
+  "Tanga Berry": "Halves the damage of one super-effective Bug hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
   "Terrain Extender": "Terrain started by the holder lasts 8 turns instead of 5. Switching out does not shorten it.",
   "Thick Club": "Doubles Cubone's and Marowak's Attack, including Alolan Marowak.",
   "Throat Spray": "After the holder successfully uses a sound move, raises Sp. Atk by 1 stage. Used up; works with sound-based status moves too.",
   "Toxic Orb": "Badly poisons the holder at each turn's end if it has no status and can be poisoned. Poison Heal restores 1/8 max HP each turn instead of poison damage. Not used up.",
+  "Toxic Plate": "Poison moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Poison type.",
+  "Twisted Spoon": "Psychic moves do 1.2× damage.",
+  "Wacan Berry": "Halves the damage of one super-effective Electric hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
+  "Water Gem": {
+    "gen<=5": "The first successful damaging Water move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The first damaging Water move does 1.3× damage; the gem is used up."
+  },
+  "Wave Incense": "Water moves do 1.2× damage.",
   "Weakness Policy": "After surviving a super-effective hit, raises Attack and Sp. Atk by 2 stages each. Used up; can activate between hits of a multi-hit move.",
   "White Herb": "Restores all negative stat stages to 0, then is used up. Keeps positive stages; clears both Defense drops from Shell Smash at once.",
   "Wide Lens": "The holder's moves have 1.1× accuracy.",
+  "Wiki Berry": {
+    "gen<=6": "At 1/2 max HP or less, restores 1/8 max HP. Confuses a holder whose nature lowers Sp. Atk. Eaten once.",
+    "gen<=7": "At 1/4 max HP or less, restores 1/2 max HP. Confuses a holder whose nature lowers Sp. Atk; Gluttony triggers it at 1/2 HP instead. Eaten once.",
+    "": "At 1/4 max HP or less, restores 1/3 max HP. Confuses a holder whose nature lowers Sp. Atk; Gluttony triggers it at 1/2 HP instead. Eaten once."
+  },
   "Wise Glasses": "Special moves do 1.1× damage.",
+  "Yache Berry": "Halves the damage of one super-effective Ice hit. Eaten before that hit; protects against only one hit of a multi-hit move.",
+  "Zap Plate": "Electric moves do 1.2× damage. With Multitype, also makes Arceus and Judgment Electric type.",
   "Zoom Lens": "The holder's moves have 1.2× accuracy when the target has already acted this turn."
 }
