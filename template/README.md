@@ -571,7 +571,7 @@ blocks, three across at most. An opened card starts at its team. One speed per P
 1. Pager at the top (no "‹ All Pokémon"; the rail's Pokéball goes to the list), the top card, Expand all / Collapse all
    (`segBar`, the page-top rule: Collapse all with every section closed reads and acts as **Reset all**, `resetOpen`),
    "Sources disagree" when present (doesn't collapse), then the sections: Abilities, Base stats, Stat calculator, Type
-   defences, Where to find, Evolution, Used by trainers, Moves (`PSECS`; open by default: Abilities, Base stats,
+   defences, Where to find, Held items, Evolution, Used by trainers, Moves (`PSECS`; open by default: Abilities, Base stats,
    Evolution, Moves). One open / closed state for every Pokémon (`LS.dex` `o`), so switching lands on the same boxes.
    Header taps never scroll (`flip`); collapse bars as on the other pages (`bars()`, less the name bar's height).
 2. **Name bar** (`#pbar`): fixed at the top beside the rail, slides in (120 ms) once the top card is off screen:
@@ -585,7 +585,7 @@ blocks, three across at most. An opened card starts at its team. One speed per P
 4. **Forms** (same dex number): `#6 · 3 forms ▾` in the top card; the top card or the bar's sprite / name opens the
    forms menu (sprite, name, type letters; the current one lit); a tap outside closes it. Forms keep their own pages.
 5. **Switching keeps the place** (arrows, forms menu, Evolution rows): the first keyed row under the bar (`data-pk`:
-   `sec:` / `ab:` / `bs:` / `sc:` / `td:` / `wh:<place>#n` / `ev:<id>` / `tr:<trainer key>` / `mv:<move>[#n]`, names,
+   `sec:` / `ab:` / `bs:` / `sc:` / `td:` / `wh:<place>#n` / `hi:w:<item>` / `hi:t:<item>` / `ev:<id>` / `tr:<trainer key>` / `mv:<move>[#n]`, names,
    never positions) lands at the same height on the new page; missing: the nearest of its kind in that section
    (`data-po`: level, stat, slot; else the next name alphabetically), else that section's title, else the next one's.
    At the top: the top. The hashchange handler runs it (`PKEEP`) instead of its snapshot restore; Back and reload use
@@ -602,13 +602,20 @@ blocks, three across at most. An opened card starts at its team. One speed per P
 8. **Stat calculator**, stats down the side: Level and Nature, a row per stat (base, IV, EV when the guide has EVs,
    result; the nature's raised stat red ↑, lowered blue ↓), Total (base total, EVs n / 510), Speed by level.
 9. **Use in calc ▸** sits in the top card under the types (the calculator starts closed).
-10. No word breaks inside a name: sizes fit the widest word in any guide (~6.7 em). Top card under 340 px: the name
+10. **Held items** (`hi`, `heldBlock`; no section when nobody holds anything): "Wild" with each item (`ilink`) and its %
+    from `P.hi`, highest first (no % when the data has none; none on Mega forms), then "Trainers give it": each item and
+    ×count over the trainers' Pokémon of this form (`TRUSE`). Only trainers: "Wild: none" above them. Where to find no
+    longer has a "Wild held item" line.
+11. No word breaks inside a name: sizes fit the widest word in any guide (~6.7 em). Top card under 340 px: the name
     across the top at 20 px, the 88 px sprite and details under it; wider, the name beside the sprite.
 Scenario: `tools/scenarios/dex-page.mjs`.
 
 **Move page** (`#/m/<index>`, decided 2026-10-31; `MOVE PAGE` in dex.js):
-1. The top card keeps the name, type, category, power / accuracy / PP / priority, description, machine / tutor
-   locations, hack changes and source disagreements. The Pokémon-list filter is "+ Filter" at the right end of the
+1. The top card keeps the name, type, category, power / accuracy / PP / priority, description, the **In battle** box
+   (`MV.b`, the item page's `fxBox`; none without it), "Also TM004 Calm Mind" (`moveTMs`: every TM / HM / TR that
+   teaches it, each an `ilink` to its item page; it replaces the old TM place lines), tutor locations, hack changes and
+   source disagreements. Under it, one **Where to find TM004 (N)** card per TM (`itemWhere`, the item page's card, so
+   the ticks are the same ones). The Pokémon-list filter is "+ Filter" at the right end of the
    Back line (`backLine`: one flex row, the Back line's height, `nowrap` so it never wraps at 260 in kb mode; the user
    on the Thor, 2026-10-31: near the top, few words), not a sentence in the card or below Learned by. The target (`MV.tg`) is a 2 × 3 field: opponents above, You at the left end below, then the adjacent
    and far allies. Solid red cells are all hit; dashed red cells are choices (random / counter targets use the same
