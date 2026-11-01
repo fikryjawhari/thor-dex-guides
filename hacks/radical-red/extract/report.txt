@@ -3136,7 +3136,32 @@ hzla lookup ability: 258 names; 4 unresolved: Forewarn, Guard Dog, Pickpocket, S
 hzla lookup item: 196 names; 0 unresolved: none
 sprites: 44 own supplements; 1 species without art: chillet
 locs: not built yet (TODO: implement radical-red locs extraction)
-trainers: not built yet (TODO: implement radical-red trainers extraction)
+  trainers: Trainer Order puts Dumbass Kid (25) in Pre-Koga, data.js cap 59
+  trainers: Trainer Order puts Leader Whitney (49) in Pre-Lt. Surge, data.js cap 28
+  trainers: Trainer Order puts PkMn Trainer Brendan (50) in Pre-Lt. Surge, data.js cap 28
+  trainers: Trainer Order puts Leader Morty (52) in Pre-Erika, data.js cap 36
+  trainers: Trainer Order puts Leader Jasmine (62) in Pre-Blaine, data.js cap 73
+  trainers: Trainer Order puts Leader Jasmine (63) in Pre-Blaine, data.js cap 73
+  trainers: Trainer Order puts Leader Jasmine (64) in Pre-Blaine, data.js cap 73
+  trainers: Trainer Order puts Lass Ann (126) in Pre-Lt. Surge, data.js cap 28
+  trainers: Trainer Order puts Sailor Edmond (134) in Pre-Lt. Surge, data.js cap 28
+  trainers: Trainer Order puts Sailor Trevor (135) in Pre-Lt. Surge, data.js cap 28
+  trainers: Trainer Order puts Camper Jeff (146) in Pre-Lt. Surge, data.js cap 28
+  trainers: Trainer Order puts Picnicker Alicia (154) in Pre-Erika, data.js cap 36
+  trainers: Trainer Order puts Picnicker Caitlin (155) in Pre-Erika, data.js cap 36
+  trainers: Trainer Order puts Pokemaniac Herman (163) in Pre-Erika, data.js cap 36
+  trainers: Trainer Order puts Super Nerd Aidan (171) in Pre-Erika, data.js cap 36
+  trainers: Trainer Order puts Burglar Lewis (219) in Pre-May, data.js cap 76
+  trainers: Trainer Order puts Leader Chuck (317) in Pre-Sabrina, data.js cap 36
+  trainers: Trainer Order puts Team Rocket Grunt (355) in Pre-Lt. Surge, data.js cap 28
+  trainers: Trainer Order puts Channeler Ruth (448) in Pre-Silph Co. Archer & Ariana, data.js cap 36
+  trainers: Trainer Order puts Picnicker Dana (474) in Pre-Erika, data.js cap 36
+  trainers: Trainer Order puts Camper Justin (477) in Pre-Koga, data.js cap 36
+  trainers: Trainer Order puts Gentleman Brooks (482) in Pre-Lt. Surge, data.js cap 28
+trainers: 464 data.js trainers = 460 cards + 2 partners + 2 same-team alternatives; 18 splits
+trainers: Trainer Order 115 entries; 46 cards with the cap box (222 relative mons); 186 boss blocks, 185 matched, 1 sheet only
+  sheet only: Postgame!C1175 BERRY FOREST SPIRIT
+  trainers: Trainer Order row 366 BURGLAR LEWIS: cap 73, listed in Pre-Blaine: in Pre-May
 items: not built yet (TODO: implement radical-red items extraction)
 walk: not built yet (TODO: implement radical-red walk extraction)
   description-derived metadata: Metal Bash: A physical attack in which the user charges, full body, into the foe.
@@ -3262,10 +3287,8 @@ items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: none
 pickup keys: 0 pickups, 0 walkthrough rows keyed
 prune: deferred (locations or trainers not built yet); kept all 1343 species
-trainer keys: new table hacks\radical-red\extract\trainer_keys.json (0 trainers, keys as they are)
 item text: none for Leek Stick
-item text: 0 own, 200 pooled, 0 from the wiki, 0 made up, 8 Mega Stone standard, 1 with no description
-in battle: 73 shown items with battle text, 136 without
+item text: 0 own, 253 pooled, 0 from the wiki, 0 made up, 8 Mega Stone standard, 1 with no description
+in battle: 123 shown items with battle text, 139 without
 in battle: 747 moves with battle text, 79 without
-trainer keys: no trainers yet, no key table written
 gid: not built yet (TODO: gid)
