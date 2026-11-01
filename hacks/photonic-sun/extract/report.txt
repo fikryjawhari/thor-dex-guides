@@ -61,6 +61,7 @@ items: walkthrough rows added as IT lines: 3
   Big Root: Found: Lush Jungle, Diglett's Tunnel, Poni Coast, Vast Poni Canyon, Verdant Cavern
   Muscle Wing: Found: Poni Plains, Ultra Space Wilds
   Genius Wing: Found: Poni Plains, Ultra Space Wilds
+pickup keys: 364 pickups, 352 walkthrough rows keyed
 species pruned: 3 pikachu-original-cap, zygarde-10, zygarde-10-power-construct
 species retained: 928 obtainable: 876 trainer-only: 2 Megas/Primals: 50
 trainers put in walkthrough order: Post-game

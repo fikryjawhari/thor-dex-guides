@@ -29,6 +29,7 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 sys.path.insert(0, os.path.join(ROOT, 'tools'))
 import datajson  # noqa: E402
 import itemstd  # noqa: E402
+import pickup_keys
 import schema  # noqa: E402
 import moveprops  # noqa: E402
 import trainer_fields  # noqa: E402
@@ -179,6 +180,7 @@ def finalise(D, hack, prune=None):
     move properties/interactions (tools/moveprops.py), schema (tools/schema.py: dead fields dropped, stop keys,
     key order). Idempotent."""
     itemstd.standardise(D, itemstd.RULES.get(hack, {}), report)
+    pickup_keys.stabilise(D, os.path.join(ROOT, 'hacks', hack, 'extract', 'pickup_keys.json'), report)
     if prune:
         prune(D)
     trainer_keys.stabilise(D, os.path.join(ROOT, 'hacks', hack, 'extract', 'trainer_keys.json'), report)

@@ -151,6 +151,7 @@ items: walkthrough rows added as IT lines: 16
   Blackthorn City: Found: Old lady in the house next to the Poké Mart changes Greninja's ability to Battle Bond. Starter: Froakie
   Blackthorn City: Found: Old man in the house next to the Poké Mart tells you 3 of the 4 available Roamers
   Pokémon League: Found: Old man next to the Bidoof resets the Embedded Tower
+pickup keys: 334 pickups, 279 walkthrough rows keyed
 trainers put in walkthrough order: Morty Split [Cap 39]
 GID species: 1101 species:form keys for 986 of 986 P ids; 115 forms with their base's battle data map to the base
 GID move: 783 of 783 our names matched

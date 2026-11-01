@@ -61,12 +61,14 @@ items: TM place and shop retained: TM039 Rock Tomb ["Found: Dewford Town's outdo
 items: TM place and shop retained: TM040 Aerial Ace ["Found: Dewford Town's outdoor Mart workers", "Shop: Dewford Town's Outdoor Clerks · ₽100"]
 items: TM place and shop retained: TM044 Rest ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
 items: TM place and shop retained: TM049 Leech Life ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
+items: TM place and shop retained: TM053 Energy Ball ["Found: Lavaridge Town's outdoor Mart worker", 'Shop: Lavaridge Town Outdoor Clerk · ₽100']
 items: TM place and shop retained: TM062 Silver Wind ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
 items: TM place and shop retained: TM063 Venoshock ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
 items: TM place and shop retained: TM064 Explosion ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
 items: TM place and shop retained: TM065 Shadow Claw ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
 items: TM place and shop retained: TM066 Dazzling Gleam ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
 items: TM place and shop retained: TM072 Psyshock ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
+items: TM place and shop retained: TM074 Gyro Ball ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
 items: TM place and shop retained: TM079 Dark Pulse ["Found: Lavaridge Town's outdoor Mart worker", 'Shop: Lavaridge Town Outdoor Clerk · ₽100']
 items: TM place and shop retained: TM080 Rock Slide ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
 items: TM place and shop retained: TM082 Sleep Talk ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
@@ -203,6 +205,7 @@ items: walkthrough rows added as IT lines: 122
   Sootopolis City: Found: NPCs that give form-changing items for Dialga, Palkia, Giratina, Zacian, Zamazenta in houses on the east side of the city
   Evergrande City (before Victory Road): Also: Guy that gives Zygarde Cube to change Zygarde Forms, in Poke Center
   Victory Road: Found: Old woman on the lower floors who can summon a Paradox or Ultra Beast of the player's choosing
+pickup keys: 391 pickups, 391 walkthrough rows keyed
 prune: kept 1208 removed 67 1487, 1488, 150, 919, 920, 151, 249, 250, 380, 944, 381, 945, 386, 1054, 1055, 1056, 1059, 1060, 483, 1069, 484, 1070, 487, 1071, 493, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 644, 1141, 1157, 1158, 1159, 1160, 1161, 1162, 717, 718, 1164, 1165, 1166, 1167, 819, 820, 888, 1227, 889, 890, 1229, 1318, 1400, 1431, 1432
 trainers put in walkthrough order: Wattson Split [Cap 34], Mt. Chimney Magma bosses Split [Cap 44], Flannery Split [Cap 47], Trick House Split [Cap 56], Tate and Liza Split [Cap 76]
 GID species: 1208 of 1208 P ids are game species ids

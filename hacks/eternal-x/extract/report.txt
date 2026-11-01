@@ -93,6 +93,7 @@ items: TM place and shop retained: TM91 Flash Cannon ['Also: Kiloude City (gift)
 items: TM place and shop retained: TM93 Wild Charge ['Found: Anistar City shop', 'Found: Kiloude City shop', 'Shop: Anistar City · Mart, right cashier', 'Kiloude City · Mart, right cashier']
 items: walkthrough rows added as IT lines: 1
   Heat Rock: Found: Route 13 (hidden), Route 18, Route 19, Route 8, Terminus Cave
+pickup keys: 287 pickups, 276 walkthrough rows keyed
 availability: obtainable 763 trainer/partner species 594 kept 782 removed 4
   removed species IDs: mega-mewtwo-y, wormadam-sandy, wormadam-trash, floette-eternal
 GID: 880 species/form keys for 782 species, 617 moves, 188 abilities, 697 item names

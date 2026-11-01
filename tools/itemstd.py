@@ -328,6 +328,9 @@ def shop_entries(old, rules, E):
 def standardise(D, rules=None, report=None):
     rules = rules or {}
     say = report or (lambda *a: None)
+    keyed = any(len(row) > 5 for box in D['IT'] for row in box['r'])
+    old_keys = {(row[0], text): key for box in D['IT'] for row in box['r'] if len(row) > 5
+                for text, key in zip(row[1].splitlines(), row[5])}
     entries, notes = [], {}
     for b in D['IT']:
         for r in b['r']:
@@ -415,6 +418,13 @@ def standardise(D, rules=None, report=None):
     if rules.get('also'):
         relabel_also(D, rules['also'])
     sort_rows(D, rules)
+    if keyed:
+        for box in D['IT']:
+            for row in box['r']:
+                row.append([old_keys.get((row[0], text), 0) for text in row[1].splitlines()])
+        for rows in walk_rows(D['WK']):
+            for row in rows:
+                row[4:] = [old_keys.get((row[1], row[2]), 0)]
     return D
 
 
@@ -584,5 +594,9 @@ if __name__ == '__main__':
     path = sys.argv[2] if len(sys.argv) > 2 else os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'hacks', hack, 'data.json')
     data, raw = datajson.load(path)
     standardise(data, RULES.get(hack, {}), print)
+    import pickup_keys
+    keys = os.path.join(os.path.dirname(path), 'extract', 'pickup_keys.json')
+    if os.path.exists(keys):
+        pickup_keys.stabilise(data, keys, print)
     datajson.save(path, data, raw)
     print(hack, [(b['n'], len(b['r'])) for b in data['IT']])
