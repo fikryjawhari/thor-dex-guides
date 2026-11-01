@@ -157,6 +157,13 @@ Data rules:
   Shops have one row per item, each shop and price on its own line; berry lists split into individual berries.
   Battle rewards are `Also:` rows under the item's class, not a separate reward box; duplicate Leftovers merge.
   Mega Stones and Useful NPCs keep place text; NPCs sort A to Z. Name fixes use the rule's `rename` map.
+- **Descriptions** (`extract/item_desc.py` → `IX`): bag text from the hack's `items.h`, its `sXDesc` constants from
+  `src/data/text/item_descriptions.h` (same pin); an `#if` keeps its first branch (GEN_LATEST). `changed` = differs from
+  stock `items.h` at the sprite pin (`.src/stock/`, SOURCES.md); the 27 items stock doesn't have count as changed.
+  TMs / HMs get none. Names the game squeezes match by constant (`ITEM_` + name); `Pasho Berry` and `Link Cable` have no
+  item in the hack's `items.h` and no text. `extract/item_desc.json` is the table.
+- **Held odds** (`P.hi`, `dex.py` `held_odds`): `species_info` `[itemCommon, itemRare]` as `[[item, %]]`: common 50,
+  rare 5, the same item in both 100; a lone slot keeps its own odds. None on Mega / Primal forms.
 - **Kept species**: obtainable species or actual trainer use; Megas / Primals need an obtainable base dex number
   or trainer use. Trainer-only Primal Dialga / Palkia stay; unused Mega Mewtwo X/Y and Mega Latias/Latios do not.
   IDs, order and move/ability/location indices are preserved; links to removed species are cleared, including
