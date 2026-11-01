@@ -3343,6 +3343,7 @@ items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: none
 pickup keys: 0 pickups, 0 walkthrough rows keyed
 prune: deferred (locations or trainers not built yet); kept all 1343 species
+trainer keys: new table hacks\radical-red\extract\trainer_keys.json (460 trainers, keys as they are)
 item text: none for Leek Stick
 item text: 0 own, 253 pooled, 0 from the wiki, 0 made up, 8 Mega Stone standard, 1 with no description
 in battle: 123 shown items with battle text, 139 without

@@ -59,7 +59,7 @@ def blocks():
                     t = _text(v)
                     if t.startswith('BATTLE EFFECT'):
                         effects.append(t.split(':', 1)[1].strip())
-                    elif re.match(r'\(!!?\)', t):
+                    elif re.match(r'\(!!?\)|IF RIVAL HAS ', t):
                         labels.append(re.sub(r'^\(!+\)\s*', '', t))
             mons = []
             for col in COLS:

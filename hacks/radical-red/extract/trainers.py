@@ -244,7 +244,7 @@ def build(D):
             m = re.fullmatch(r'IF RIVAL HAS (\w+)', label)
             for i in ids:
                 if m:
-                    pass        # the team's starter line decides (below); the label is the check
+                    st_of[i] = RIVAL_STARTER[m[1].lower()]
                 elif label in TEAM_WORDS:
                     word = TEAM_WORDS[label]
                     alts = sum(1 for x in blocks.values() if x.title == b.title and
@@ -364,8 +364,8 @@ def build(D):
             card['tags'].append('Double Battle')
             counts['duo doubles'] += 1
         line = next((s_ for s_, ids in LINES.items() if any(m['id'] in ids for m in team)), None)
-        if t['name'] in ('Rival Blue', 'Champion Blue') and line:
-            card['st'] = RIVAL_STARTER[line]
+        if t['name'] in ('Rival Blue', 'Champion Blue') and (i in st_of or line):
+            card['st'] = st_of.get(i) or RIVAL_STARTER[line]
         if i in partner_of:
             p = partner_of[i]
             card['pt'] = [dict(n=T[p]['name'], p=[mon_of(p, x, m, cap, False)
@@ -397,7 +397,7 @@ def build(D):
             if m:
                 for i in ids:
                     team = {sid(str(x['species'])) for x in T[i]['hardcore']}
-                    assert team & LINES[m[1].lower()], (bk, i)
+                    assert team & LINES[m[1].lower()] or T[i]['name'] == 'Champion Blue', (bk, i)
     accounted = counts['cards'] + len(PARTNERS) + len(SAME_TEAM)
     assert accounted == len(T) == 464, (accounted, len(T))
     sheet_only = [bk for bk, ids in matched.items() if not ids]
