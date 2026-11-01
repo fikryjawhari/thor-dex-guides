@@ -61,7 +61,7 @@ in the game but not the sheet: Nuzlocker Ethan (Random Team, see Mini Bosses) ab
 trainer listed twice in the sheet, dropped: 9.0.2 Elite Four Will 702
 trainer listed twice in the sheet, dropped: 9.0.5 Elite Four Koga 703
 ability fuzzy: Swam > Swarm
-trainer sets: {'game set': 1461, 'sets where the sheet differs': 63, 'game Pokemon missing from the sheet': 6}
+trainer sets: {'game set': 1461, 'sets where the sheet differs': 65, 'game Pokemon missing from the sheet': 6}
   Leader Falkner Farfetch'd-G: sheet says ability Inner Focus
   Fisherman Ralph Poliwhirl: sheet says item Oran Berry
   Hiker Russel Geodude-A: sheet says moves Spark, Rock Tomb, Bulldoze, Thunder Wave
@@ -96,7 +96,9 @@ trainer sets: {'game set': 1461, 'sets where the sheet differs': 63, 'game Pokem
   Rocket Grunt♂ #23 Dewgong: sheet says nature Hasty
   Boarder Patton Tentacruel: sheet says level 61
   Boarder Deandre Avalugg: sheet says moves Icicle Spear, Body Press, Gyro Ball, Earthquake
-  Rocket Grunt♂ #25 Greninja: sheet says nature Naive; moves Liquidation, Water Shuriken, Night Slash, Grass Knot
+  Rocket Grunt♂ #24 Mew: sheet says moves Psychic Fangs, Play Rough, Liquidation, Dragon Dance
+  Rocket Grunt♂ #25 Greninja: sheet says nature Hasty; moves Liquidation, Water Shuriken, Night Slash, Gunk Shot
+  Rocket Grunt♂ #25 Meowstic-M: sheet says moves Psychic, Thunderbolt, Shadow Ball, Thunder Wave
   Executive Petrel Torkoal: sheet says level 66
   Executive Petrel Lycanroc-Dusk: sheet says nature Jolly
   Rival Silver Sinistcha: sheet says item Sitrus Berry
@@ -136,15 +138,6 @@ items: dropped duplicate Metal Coat from Held Items (kept in Evolution Items)
 items: dropped duplicate Razor Claw from Held Items (kept in Evolution Items)
 items: dropped duplicate Razor Fang from Held Items (kept in Evolution Items)
 items: dropped duplicate King's Rock from Held Items (kept in Evolution Items)
-trainer keys: 8 matched loosely
-  0.5.5: Leader Falkner (Violet City Gym) matched on id, n, st, pl
-  1.6.1: Bug Catcher Benny (Azalea Town Gym) matched on id, n, st, pl
-  2.0.2: Youngster Ian (Route 34) matched on id, n, st, pl
-  2.1.4: Juggler Irwin (Route 35) matched on id, n, st, pl
-  2.1.8: Policeman Dirk (Route 35) matched on id, n, st, pl
-  2.2.1: Lass Krise (National Park) matched on id, n, st, pl
-  2.4.1: Beauty Victoria (Goldenrod City Gym) matched on id, n, st, pl
-  3.4.3: Medium Martha (Ecruteak City Gym) matched on id, n, st, pl
 trainers put in walkthrough order: Morty Split [Cap 39]
 GID species: 1103 species:form keys for 987 of 987 P ids; 116 forms with their base's battle data map to the base
 GID move: 783 of 783 our names matched
