@@ -304,7 +304,7 @@ item name: Never-MeltIce -> Never-Melt Ice (6 use(s))
 item name: Pasho Berry -> Passho Berry (1 use(s), Items tab spelling)
 item text: 279 own, 1 pooled, 0 from the wiki, 0 made up, 0 Mega Stone standard, 0 with no description
 in battle: 163 shown items with battle text, 117 without
-in battle: 719 moves with battle text, 70 without
+in battle: 720 moves with battle text, 69 without
 GID species: 1208 of 1208 P ids are game species ids
 GID move: 789 of 789 ours matched by name
 GID ability: 284 of 284 ours matched by name
