@@ -2,6 +2,9 @@
   "moves": {
     "Cut": "Always a critical hit.",
     "Drill Peck": "Critical-hit rate is 1/8 before other modifiers.",
-    "Explosion": "The user faints after dealing damage. Always a critical hit."
+    "Explosion": "The user faints after dealing damage. Always a critical hit.",
+    "Parabolic Charge": "Drains 25% of the damage dealt.",
+    "Self-Destruct": "The user faints. Always a critical hit.",
+    "Strength": "Lowers the user's Defense and Sp. Def by 1 stage each."
   }
 }

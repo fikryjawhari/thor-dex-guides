@@ -2,6 +2,7 @@
   "moves": {
     "Behemoth Bash": "Lowers the user's Defense and Sp. Def.",
     "Endless Edge": "Also lowers the target's Attack.",
-    "InfernalRage": "Power doubles if the target has a status condition. May burn the target."
+    "InfernalRage": "Power doubles if the target has a status condition. May burn the target.",
+    "Metal Bash": "Lowers the user's Defense and Sp. Def by 1 stage each."
   }
 }
