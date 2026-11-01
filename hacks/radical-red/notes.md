@@ -27,6 +27,30 @@ Pumpkaboo/Gourgeist order 0/1/2/3 means Average/Small/Large/Super. The base look
 The 827 named ordinary moves exclude Placeholder and generated Z/Max records (IDs >=848); no learnset uses those.
 Do not index M/AB until dex.build has run: their final lists are sorted by name, independently of game IDs.
 
+First dex cross-check: all 1,343 official species records match all 1,343 RomHackDex pages, one-to-one (including
+its numeric cosmetic suffixes). 1,026 distinct National Dex numbers include Chillet (#2001); 68 Mega/Primal forms.
+827 ordinary game move IDs become 826 names after CFRU spelling normalisation; 176 generated/placeholder IDs
+are excluded. AB has 280 names, expanded from 255 game IDs and their name variants; descriptions are the game's
+actual text, not the mirror's incorrectly paired text. Species differences against RomHackDex: stats 285,
+types 39, regular abilities 983, hidden ability 987, TM/HM sets 80, tutor sets 77; level-up and egg sets agree.
+The complete per-species differences are in report.txt; official data wins. The mirror has old stats/types and
+frequently swapped hidden slots, so these are intentionally not presented as a dispute with the game itself.
+Every one of the 826 moves is mirrored. The sole numerical/type difference is Struggle: official type 9 is
+typeless (shown as ???), mirror Normal. The 18-type chart agrees in every cell. The v4.0/v4.1 changelogs make no
+type-chart change; this is the standard modern chart, not an assumed Ice/Bug buff.
+Learnsets resolve every referenced move strictly. TM slots 0-119 are TM01-120, slots 120-126 HM01-07; zero-valued
+TM/tutor placeholders are ignored. Evolutions explicitly decode every source method; 254 denotes Mega/form
+change, never ordinary evolution. Items and Mega stones are decoded from those records, including Primal orbs;
+Mega Rayquaza uses Dragon Ascent and has no fictitious stone. Wild held slots default to 50/5, equal nonzero
+slots to 100%; 416 species have held items. Historical changelog statements name common/rare slots and agree
+with the FRLG odds. `dex.egg_groups` exposes the 16 breeding groups; the existing P schema reserves `eg` for egg
+moves and has no breeding-group field. The 667 source species `changes` records are retained in common.DATA and
+logged, not injected as an unsupported P field or the prohibited changes-from-vanilla card. Move/ability changed
+markers use the existing MV/AB schema. No template change is made.
+
+The scaffold's cfg.calc=false exposed a shared item_text.generation crash. The minimal fix accepts false and
+registers Radical Red as generation 9 for item text (the Gen 9 additions), without enabling the calc or touching cfg.
+
 ## Local storage
 
 Prefix `rr`. Keep these keys once published.
@@ -62,3 +86,7 @@ Fill sources/watch.json, version/mode, GID/save reader and sprite additions by h
 ## History
 
 TODO: document history.
+Unit 1 shared-helper check: baseline 3400658 captured; `gate.py check unbound --data` passes 6/6, data identical
+except build date and report byte-identical (16.1 s). `build.py` runs with the other units' expected stubs.
+`python assemble.py radical-red` currently stops at the scaffold's ten cfg.txt TODO strings; replacing those is
+outside this unit's hack.json ownership (sk only). No placeholder guard is disabled and no wording is borrowed.

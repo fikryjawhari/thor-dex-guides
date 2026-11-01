@@ -90,7 +90,11 @@ MOVE_IDS = {ident: cfru.official(row['name']) for ident, row in DATA['moves'].it
             if int(ident) < 848 and row['name'] != 'Placeholder'}
 MOVE_NAMES = {key(name): name for name in MOVE_IDS.values()}
 ABILITY_NAMES = {key(name): cfru.official(name) for row in DATA['abilities'].values() for name in row['names']}
-ITEM_NAMES = {key(row['name']): row['name'] for row in DATA['items'].values()}
+ITEM_FIX = {'Charzardite X': 'Charizardite X', 'Charzardite Y': 'Charizardite Y', 'Blastoisnite': 'Blastoisinite',
+            'Kangaskanite': 'Kangaskhanite', 'Aerodactlite': 'Aerodactylite', 'Heracronite': 'Heracronite',
+            'Sceptilite': 'Sceptilite'}
+ITEM_NAMES = {key(row['name']): ITEM_FIX.get(row['name'], row['name']) for row in DATA['items'].values()}
+ITEM_NAMES.update({key(name): name for name in ITEM_NAMES.values()})
 for short, full in cfru.CFRU_NAMES.items():
     if key(full) in MOVE_NAMES:
         MOVE_NAMES[key(short)] = MOVE_NAMES[key(full)]
@@ -113,10 +117,12 @@ def ability(value):
 
 def item(value):
     row = DATA['items'].get(str(value))
-    return row['name'] if row else ITEM_NAMES.get(key(value))
+    return ITEM_FIX.get(row['name'], row['name']) if row else ITEM_NAMES.get(key(value))
 
 
 def type_name(value):
+    if str(value) == '9':
+        return '???'
     return DATA['types'][str(value)]['name']
 
 

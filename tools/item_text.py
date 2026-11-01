@@ -28,7 +28,7 @@ HACKS = os.path.join(ROOT, 'hacks')
 BATTLE = os.path.join(ROOT, 'tools', 'battle_text')
 # Mechanics generation for guides whose calc base does not say (cfg.calc.base "genN" wins).
 GENS = {'hardlove-gold': 9, 'blaze-black-2-redux': 5, 'eternal-x': 6, 'photonic-sun': 7, 'emerald-imperium': 9,
-        'unbound': 9}
+        'unbound': 9, 'radical-red': 9}
 # Generation for the description pool's nearest-generation order only: Hardlove's bag text is Gen 4-era game text.
 POOL_GENS = {'hardlove-gold': 4}
 ALIASES = {'Pasho Berry': 'Passho Berry', 'Never-MeltIce': 'Never-Melt Ice', 'Houndoomite': 'Houndoominite',
@@ -46,7 +46,8 @@ def load_json(path):
 
 
 def generation(hack):
-    base = load_json(os.path.join(HACKS, hack, 'hack.json')).get('cfg', {}).get('calc', {}).get('base', '')
+    calc = load_json(os.path.join(HACKS, hack, 'hack.json')).get('cfg', {}).get('calc') or {}
+    base = calc.get('base', '')
     match = re.fullmatch(r'gen(\d+)', base)
     if match:
         return int(match[1])
