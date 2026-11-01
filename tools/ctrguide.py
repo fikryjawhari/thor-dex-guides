@@ -34,6 +34,8 @@ Fairy: Fire .5 Fighting 2 Poison .5 Dragon 2 Dark 2 Steel .5"""
 FC = {351, 421, 479, 386, 487, 492, 555, 641, 642, 645, 646, 647, 648, 658, 681, 716, 718, 720, 741, 746, 774, 778, 800}
 FC_KEEP = {(718, 1), (718, 2), (718, 3)}  # Zygarde 10% / 50% are their own catches (cells), not changes
 MEGA_WORDS = ('Mega ', 'Primal')
+# Wild held items: slot 1 50%, slot 2 5%, slot 3 1% (the SM / XY rule, the same in every 3DS game here).
+WILD_HELD = (50, 5, 1)
 
 MOVE_FLAGS = ['contact', 'charge', 'recharge', 'protect', 'reflectable', 'snatch', 'mirror', 'punch',
               'sound', 'gravity', 'defrost', 'triple-distance', 'heal', 'bypasssub', 'no-sky', 'animate-ally']
@@ -228,9 +230,8 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
             p['g'] = 1
         elif s['form'] and s['id'] in FC and (s['id'], s['form']) not in FC_KEEP:
             p['fc'] = 1
-        hi = [x for x in dict.fromkeys(s['items']) if x]
-        if hi:
-            p['hi'] = hi
+        if not p['g'] and any(s['items']):  # Mega forms have no wild items
+            p['hi'] = wild_held(s['items'])
         p['_s'] = s
         P.append(p)
     byid = {p['id']: p for p in P}
@@ -273,6 +274,18 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
     data['_spec'], data['_MI'], data['_ABI'], data['_byid'] = spec, MI, ABI, byid
     report('species/forms', len(P), 'megas', sum(p['g'] == 1 for p in P), 'form changes', sum(bool(p.get('fc')) for p in P),
            'moves changed', sum(bool(e.get('h')) for e in MV))
+
+
+def wild_held(items):
+    """[[item, %]] from a species' three held-item slots (dex json `items`), one entry per item. The same item in slots
+    1 and 2 is 100% (the game gives it before rolling slot 3); otherwise an item in several slots sums their odds."""
+    if items[0] and items[0] == items[1]:
+        return [[items[0], 100]]
+    odds = {}
+    for item, pct in zip(items, WILD_HELD):
+        if item:
+            odds[item] = odds.get(item, 0) + pct
+    return [[item, pct] for item, pct in odds.items()]
 
 
 def build_save_ids(data, source):
