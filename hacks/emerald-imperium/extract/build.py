@@ -11,7 +11,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import H  # noqa: E402
 from extractlib import finalise, write_data  # noqa: E402
-import dex, locs, items, walk, trainers, prune, gid  # noqa: E402
+import dex, locs, items, walk, trainers, prune, gid, item_desc  # noqa: E402
 
 
 def main():
@@ -27,6 +27,7 @@ def main():
     walk.name_splits(D)
     dex.move_metadata(D)
     finalise(D, H.name, prune.build)
+    item_desc.build(D)
     gid.build(D)
     write_data(D, H)
 
