@@ -2135,6 +2135,9 @@ items: TM place and shop retained: TM73 Thunder Wave ['Found: Nimbasa City Poké
 items: TM place and shop retained: TM74 Gyro Ball ['Found: Nimbasa City Pokémon Center', 'Shop: Nimbasa City — Poké Mart / Technical Machine department (Lower cashier); $10000']
 items: walkthrough rows added as IT lines: 0
 pickup keys: 1023 pickups, 955 walkthrough rows keyed
+item name: BridgeMail M -> Bridge Mail M (2 use(s))
+item name: BridgeMail T -> Bridge Mail T (2 use(s))
+item name: BridgeMail V -> Bridge Mail V (3 use(s))
 item text: 513 own, 0 pooled, 1 with no description
 in battle: 180 shown items with battle text, 158 without
 in battle: 519 moves with battle text, 58 without

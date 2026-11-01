@@ -322,7 +322,6 @@ def item_text(D, hacked, vanilla, extract_dir):
             missing.append(name)
     with open(Path(extract_dir, 'item_desc.json'), 'w', encoding='utf8', newline='\n') as f:
         f.write(json.dumps(texts, ensure_ascii=False, indent=1, sort_keys=True) + '\n')
-    D['IX'] = {name: [text, '', changed] for name, (text, changed) in texts.items()}
     report('item text:', len(texts), 'changed', sum(c for _, c in texts.values()), 'no text:', ', '.join(missing) or 'none')
 
 

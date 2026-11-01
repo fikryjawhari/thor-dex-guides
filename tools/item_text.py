@@ -3,7 +3,8 @@
     import item_text; item_text.apply(D, hack, report)     # idempotent, in place
 
 Names: one spelling per item. The key (letters and digits, accents folded, case and punctuation ignored, so
-King's Rock = Kings Rock = KingsRock) groups the spellings; the Items tab's (IT) spelling wins, else the most used.
+King's Rock = Kings Rock = KingsRock) groups the spellings; the spelled-out one wins (Silver Powder over the game's
+squeezed SilverPowder), then the Items tab's (IT), then the most used.
 ALIASES holds the real misspellings. Renamed in IT, WK (np and stop rows), P.hi, P.stone, trainer Pokémon `i`, MI `i`
 and IX keys.
 
@@ -136,8 +137,8 @@ def apply(D, hack, report=print):
         groups[key(name)].add(name)
     final = {}
     for names in groups.values():
-        in_tab = [name for name in names if name in tab]
-        best = sorted(in_tab or names, key=lambda name: (-uses[name], name))[0]
+        # the spelled-out form wins (Silver Powder over SilverPowder, the game's squeezed bag name), then the Items tab's
+        best = sorted(names, key=lambda name: (-sum(c in " -'" for c in name), name not in tab, -uses[name], name))[0]
         for name in names:
             final[name] = best
     renames = collections.Counter()
@@ -148,7 +149,7 @@ def apply(D, hack, report=print):
             renames[(old, new)] += 1
         container[column] = new
     for old, new in sorted(renames):
-        report(f'item name: {old} -> {new} ({renames[(old, new)]} use(s), IT spelling)' if new in tab
+        report(f'item name: {old} -> {new} ({renames[(old, new)]} use(s), Items tab spelling)' if new in tab
                else f'item name: {old} -> {new} ({renames[(old, new)]} use(s))')
 
     def canon(name):

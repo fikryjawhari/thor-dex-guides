@@ -1,6 +1,6 @@
 """Item text (IX) from the hack's items.h: each item's in-game bag description, and whether the hack changed it.
 
-build(D) sets D['IX'] = {item name as the guide shows it: [description, in-battle text, changed]} for every item name the
+build(D) writes extract/item_desc.json (finalise's tools/item_text.py makes IX from it) = {item name as the guide shows it: [description, in-battle text, changed]} for every item name the
 guide shows: IT rows (not Useful NPCs), P.hi, P.stone, trainer held items, MI items. A name matches its items.h constant
 by the loose name key (as GID does); TMs and HMs get no entry (their page shows the move). changed = 1 when the text
 differs (whitespace folded) from stock pokeemerald-expansion's items.h where the iriv24 fork branched off (572ea14, SOURCES.md), fetched
@@ -104,7 +104,6 @@ def build(D):
         changed = 0 if const in stock and stock[const][1] and ' '.join(stock[const][1].split()) == desc else 1
         out[name] = [desc, changed]
 
-    D['IX'] = {name: [desc, '', changed] for name, (desc, changed) in sorted(out.items())}
     with open(os.path.join(HERE, 'item_desc.json'), 'w', encoding='utf8', newline='\n') as f:
         json.dump(out, f, ensure_ascii=False, indent=1, sort_keys=True)
         f.write('\n')

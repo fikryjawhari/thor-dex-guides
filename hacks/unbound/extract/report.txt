@@ -602,9 +602,9 @@ items: walkthrough rows added as IT lines: 85
 pickup keys: 807 pickups, 447 walkthrough rows keyed
 prune: kept 1093 removed 21 pikachu_belle, pikachu_cosplay, pikachu_libre, pikachu_phd, pikachu_pop_star, pikachu_rock_star, cubone_a, zygarde_10, zacian, zacian_crowned, zamazenta, zamazenta_crowned, eternatus, kubfu, urshifu, urshifu_rapid, glastrier, spectrier, calyrex, calyrex_ice_rider, calyrex_shadow_rider
 trainers put in walkthrough order: Vega Split [Cap 26], Mel Split [Cap 36], Maxima Split [Cap 40], Galavan Split [Cap 45], Big Mo Split [Cap 52], Tessy Split [Cap 57]
-item name: Kings Rock -> King's Rock (6 use(s), IT spelling)
-item name: Never Melt Ice -> Never-Melt Ice (9 use(s), IT spelling)
-item name: Up Grade -> Up-Grade (1 use(s), IT spelling)
+item name: Kings Rock -> King's Rock (6 use(s), Items tab spelling)
+item name: Never Melt Ice -> Never-Melt Ice (9 use(s), Items tab spelling)
+item name: Up Grade -> Up-Grade (1 use(s), Items tab spelling)
 item text: none for ADM
 item text: none for Baby Monitor
 item text: none for Bead Mail
