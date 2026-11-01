@@ -302,6 +302,7 @@ LEFT_DROP_AREAS = {'Viridian City Poke Center'}
 # data.js-only pickups the sheet's other tabs describe: (area, item) -> line text (label decided by line())
 LEFT_TEXT = {('Saffron City Gym', 'Cameruptite'): 'From Sabrina after defeating her and showing her a shiny Pokémon'}
 # Wild held items Hardcore keeps back until a boss (Main E14-E18)
+HC_SWAPPED = {'Charizardite X', 'Charizardite Y', 'Gardevoirite', 'Cameruptite'}  # Main E24 / E26: the tabs give the default
 UNIQUE = {'Key Items', 'TMs and HMs', 'Mega Stones', 'Z-Crystals'}      # one of each in the game
 HC_WILD = {'Electric Seed': 'Lt. Surge', 'Misty Seed': 'Sabrina', 'Psychic Seed': 'Koga'}
 
@@ -346,13 +347,12 @@ def line(place, text, qty=1, hidden=False, post=False):
     t = re.sub(r'\((?:Requires )?(Mega Ring|Z-Ring|Keycard)(?: required)?\)\.?', '', t)
     t = re.sub(r'\s+', ' ', t.replace(' / ', ' ')).strip().rstrip('.').strip().replace('; ', ', ')
     t = re.sub(r'\$(\d+) (\d{3})\b', r'₽\1,\2', t)
+    # "right from the two Black Belts" is a direction, not a giver (itemstd.source_label reads "from <person>")
+    t = re.sub(r'\b([Ll]eft|[Rr]ight|[Tt]op|[Bb]ottom|[Nn]orth|[Ss]outh|[Ee]ast|[Ww]est)(?:ward)? from\b', r'\1 of', t)
     if re.match(r'Hidden\b', t):
         hidden = False                                  # the text says so
     gift = re.search(r'\b(from|reward|given|gift|in exchange|receive[sd]?|dropped by|after defeating|rewards)\b', t, re.I)
-    label = 'Also' if gift and not re.match(r'(Hidden|In|On|At the other side|Follow|Near|Below|Above|Right|Left)\b', t)\
-        else 'Found'
-    if re.match(r'(From|Reward)\b', t):
-        label = 'Also'
+    label = 'Also' if gift and not re.match(r'Hidden\b', t) else 'Found'
     parts = [place] + (['requires ' + ', '.join(dict.fromkeys(reqs))] if reqs else []) + \
         (['post-game'] if post else []) + (['hidden'] if hidden else []) + (['x%d' % qty] if qty > 1 else []) + [t]
     return label + ': ' + ' · '.join(p for p in parts if p)
@@ -444,7 +444,7 @@ def build(D):
         if item == 'TM113 Play Rough':                  # bought from the 3F clerk (TM sheet A118)
             add(item, 'Shop: Celadon Dept. Store 3F (clerk) · ₽15,000', e['area'], e['step'])
             continue
-        lt = line(pretty(area_name), text, 1, e['hidden'])
+        lt = line(pretty(area_name), text, 1, e['hidden'], post=e['step'] == len(DATA['caps']) - 1)
         if not text and box_of(item)[0] == 'Key Items':
             lt = 'Also' + lt[len('Found'):]
         add(item, lt, e['area'], e['step'])
@@ -508,6 +508,45 @@ def build(D):
     report('items: Hardcore leaves out %d: %s' % (len(dropped), '; '.join(dropped)))
     for x in log:
         report('items:', x)
+    for x in crosscheck(rows, tm_text, mega_text, {z: (p + ', ' + t if p else t) for z, (p, t) in z_text_rows().items()}):
+        report('items: tabs differ:', x)
+
+
+PLACE_WORDS = re.compile(r"\b(?:Route \d+|[A-Z][a-zé.']+(?: [A-Z][a-zé.']+)*)")
+NOT_PLACES = {'From', 'In', 'On', 'The', 'Requires', 'Upstairs', 'Inside', 'After', 'Hidden', 'Near', 'Follow', 'Top',
+              'Beat', 'Access', 'Dropped', 'Mega Ring', 'Surf', 'Cut', 'Rock Smash', 'HM', 'Keycard', 'Z-Ring'}
+
+
+GENERIC = {'city', 'town', 'island', 'route', 'area', 'floor', 'house', 'room', 'part', 'side', 'pokemon'}
+
+
+def places_in(text):
+    """The proper-name words of a text, as keys ("Celadon City's Game Corner" -> celadon, game, corner)."""
+    return {key(w) for p in PLACE_WORDS.findall(text.replace("'s ", ' ')) if p not in NOT_PLACES
+            for w in ([p] if p.startswith('Route ') else p.split()) if len(key(w)) > 3 and key(w) not in GENERIC}
+
+
+def crosscheck(rows, tm_text, mega_text, z_text):
+    """The TM / Mega Stone / Z-Crystal tabs against the lines built from the Overworld tab and data.js: an item whose
+    tab names no place the lines name (or that the lines lack). Places are compared as name keys."""
+    lines = {}
+    for r in rows:
+        lines.setdefault(r[1], []).append(r[2])
+    out = []
+    for label, table in (('TM', {name(k) or k: v for k, v in tm_text.items()}), ('Mega Stone', mega_text),
+                         ('Z-Crystal', z_text)):
+        for item, text in sorted(table.items()):
+            have = lines.get(item)
+            if item is None or (label == 'TM' and item[:5] in HC_NO_TM) or (item in HC_SWAPPED and label != 'TM'):
+                continue
+            if not have:
+                out.append('%s %s: the tab has "%s"; no line' % (label, item, text))
+                continue
+            got = {k for line_ in have for k in places_in(line_)}
+            want = places_in(text)
+            if want and not want & got:
+                out.append('%s %s: the tab says "%s"; the guide: %s' % (label, item, text, ' / '.join(have)))
+    return out
 
 
 # ---- the sheet's other tabs ------------------------------------------------------------------------------------------
