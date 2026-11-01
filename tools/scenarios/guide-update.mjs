@@ -111,6 +111,7 @@ const SNAPSHOT = `(()=>{const C=CF.calc?CALC.state():null,tn=k=>TRK[k]?.n??'gone
     tracker:Object.entries(TK.e).map(([a,e])=>[AR[a]?.n,e.p?byId[e.p]?.n:'failed']),
     foeSpecies:C&&C.foeSp?Object.entries(C.foeSp).map(([k,v])=>{const i=k.lastIndexOf(':');return [tn(k.slice(4,i)),k.slice(i+1),byId[v]?.n??'gone:'+v];}):null,
     hazardOffer:C&&C.hzOffer&&Object.keys(C.hzOffer).length?Object.entries(C.hzOffer).map(([side,v])=>{const k=typeof v==='string'?v:v.k,off=typeof v==='object'&&v.off===true,i=k.lastIndexOf(':');return k.startsWith('foe:')?[side,tn(k.slice(4,i)),k.slice(i+1),off]:[side,byId[C.custom.find(c=>'mine:'+c.pid===k)?.id]?.n??'gone:'+k,off];}).sort():null,
+    itemsOpen:(D.IT||[]).length?[...Object.keys(IO.o),...Object.keys(IO.s)].sort():null,
     itemTicks:Object.keys(IO.g).map(k=>{const p=pickupOf(k);return p?p.n+' | '+p.l:'gone:'+k;}).sort(),
     areaRules:C&&C.areaByTrainer?Object.entries(C.areaByTrainer).map(([k,v])=>[tn(k),Object.keys(v.disabled||{}).sort(),v.fogCleared===true]):null,
   };})()`;
@@ -133,7 +134,8 @@ const checks = [
         localStorage.setItem(calcKey(p),JSON.stringify({l:37,n:'Adamant',iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0]}));
         ${STOP ? `WO.c['${STOP.si}.${STOP.ti}.0']=1;` : ''}WO.x['0.'+(D.WK.splits[0].st.length>1?1:0)]=0;woSave();
         TK.e[${area}]={p:p.id};tkSave();
-        const pk=(D.IT||[]).flatMap(sec=>sec.r.flatMap(r=>(r[5]||[]).filter(Boolean)));[pk[1],pk[pk.length-1]].forEach(k=>k&&tickSet(k,true));})()`);
+        const pk=(D.IT||[]).flatMap(sec=>sec.r.flatMap(r=>(r[5]||[]).filter(Boolean)));[pk[1],pk[pk.length-1]].forEach(k=>k&&tickSet(k,true));
+        const sec=(D.IT||[]).at(-1);if(sec){IO.o[sec.n]=1;if(sec.r[0][4])IO.s[sec.n+'.'+sec.r[0][4]]=1;ioSave();}})()`);
       if (MSTOP) await page.value(`(()=>{const [a,b]=${JSON.stringify(MS.map(m => [m.m, m.s.map(c => c.k)]))};
         misSet(a[0],r=>{r.o=true;r.c[a[1][0]]=1;});misSet(b[0],r=>{r.o=false;r.c[b[1][b[1].length-1]]=1;});
         WO.c['${LATER?.si}.${LATER?.ti}.0']=1;woSave();recSave([...recRead(),{k:'ms',m:a[0]},{k:'ms',m:b[0],c:b[1][0]}]);})()`);

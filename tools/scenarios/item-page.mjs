@@ -167,10 +167,10 @@ const checks = [
       // Items tab: open the box of the TM and of a plain item
       for (const e of [tm, plain, mega].filter(Boolean)) {
         const si = data.IT.indexOf(e.rows[0].sec);
-        await page.value(`IO.o[${si}]=1;Object.keys(IO.s).forEach(k=>delete IO.s[k]);(D.IT[${si}].r.map(r=>r[4]).filter(Boolean)).forEach(g=>IO.s['${si}.'+g]=1)`);
+        await page.value(`IO.o[D.IT[${si}].n]=1;Object.keys(IO.s).forEach(k=>delete IO.s[k]);(D.IT[${si}].r.map(r=>r[4]).filter(Boolean)).forEach(g=>IO.s[D.IT[${si}].n+'.'+g]=1)`);
         await page.route('#/');
         await page.route('#/items');
-        assert.ok((await hrefs(`details.split[data-si="${si}"] a.itl`)).includes(ihref(e.n)), 'Items tab row of ' + e.n);
+        assert.ok((await hrefs(`details.split[data-si="${si}"] .irow .nm a`)).includes(ihref(e.n)), 'Items tab card of ' + e.n);
       }
       // Walkthrough: the multi item's stop row
       const [si, ti] = walkKeys.get(lines(multi).find(l => l.k && walkKeys.has(l.k)).k);

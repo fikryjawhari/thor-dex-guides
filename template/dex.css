@@ -598,3 +598,18 @@ input.itk{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:var(--acc
 .iwk{font-size:12px;display:inline-block;max-width:100%;margin-left:2px}
 .it-held .learn-sprite .sprl+.sprl{margin-left:-8px}.it-held td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
 .it-held .learn-sprite{white-space:nowrap}
+/* ===== Items tab (template/README.md → Items tab): cards in the dex-row look, the tick bar */
+.itbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 2px 6px;min-height:28px}
+.itclr{background:var(--panel2);color:var(--fg);border:0;border-radius:8px;padding:5px 10px;font-size:13px;font-weight:600}
+.ilist{--rowh:84px;margin:4px 0}
+.irow{align-items:flex-start;gap:8px;padding:6px 8px}
+.irow .iico{flex:none;line-height:0;margin-top:1px}
+.irow .rt{display:block}
+.irow .nm{display:block;overflow-wrap:anywhere}.irow .nm a{color:inherit}.irow .nm .ty{vertical-align:1px}
+.irow .iwl{display:block}.irow .iwl .iline{margin:3px 0}
+.irow .imore{display:inline-block;font-size:12px;margin-top:1px}
+.irow.idone{opacity:.55}
+.iprog{font-size:12px;color:var(--mut);font-weight:600;font-variant-numeric:tabular-nums}
+.tut .tneed{display:block;margin-top:1px}.tut .tmoves{display:block;margin-top:4px;font-size:14px}.tut .tm1{display:block;margin:3px 0}
+.tcost{font-size:12px;color:var(--mut)}
+.itbl .iline{display:flex;gap:6px;align-items:flex-start}

@@ -608,21 +608,47 @@ function listLocs2(scroll){fil.innerHTML='';const s=st.q;const li=st.lopenLi;st.
  if(scroll&&tk)land(app.querySelector(`details.stopd[data-k="${tk}"]>summary`));}
 
 
-// ===== ITEMS TAB (D.IT sections from the items xlsx; r = [item, text, link, missable?])
-function itemRow(sec,r){const nm=sec.k==='npc'?esc(r[0]):sec.n==='Move Tutors'?(r[2]!=null?`<a href="#/m/${r[2]}">${esc(r[0])}</a>`:esc(r[0])):ilink(r[0]);
- return `<tr><td>${nm}</td><td>${esc(r[1]).replace(/\n/g,'<br>')}${r[3]?'<span class="warn">MISSABLE</span>':''}</td></tr>`;}
+// ===== ITEMS TAB (template/README.md → Items tab). D.IT: one box per kind, one row per item; r = [item, text, link,
+// missable?, sub-heading, pickup keys per line of text]. A name on several rows of a box (nomerge: Unbound's Zygarde
+// Cell) is a card per row, titled by its place. Move Tutors are a card per tutor (rows sharing a place and unlock) when
+// the rows carry group headings, else a table, like Useful NPCs.
+function itemRow(sec,r,ri){const nm=sec.k==='npc'?esc(r[0]):sec.n==='Move Tutors'?(r[2]!=null?`<a href="#/m/${r[2]}">${esc(r[0])}</a>`:esc(r[0])):ilink(r[0]);
+ return `<tr data-ri="${ri}"><td>${nm}</td><td>${esc(r[1]).replace(/\n/g,'<br>')}${r[3]?'<span class="warn">MISSABLE</span>':''}</td></tr>`;}
+const isCardBox=sec=>sec.k!=='npc'&&sec.n!=='Move Tutors';
+const tutGrouped=sec=>sec.n==='Move Tutors'&&new Set(sec.r.map(r=>r[4])).size>1;
+// Rows per name in a box (2+: one card per row).
+const nameRows=sec=>sec.nr??=sec.r.reduce((a,r)=>(a[r[0]]=(a[r[0]]||0)+1,a),{});
+// A card (dex-row look): icon, name, TM type, MISSABLE, done/total for 2+ pickups, its next 3 lines (unticked pickups,
+// other lines, ticked pickups), +N more; faded when every pickup is ticked. TICKHOOK redraws it on a tick.
+function itemCard(si,ri){const sec=D.IT[si],r=sec.r[ri],n=r[0],e=itemOf(n),one=nameRows(sec)[n]>1||!e,h=ihref(n);
+ let ls=(one?itemLines({rows:[{r}]}):itemLines(e)).map(x=>({...x,miss:false})),title=n;
+ if(one&&ls.length===1){const m=ls[0].l.match(/^(?:Found|Also):\s*([^·]+?)\s*·\s*(.+)$/);if(m){title=m[1];ls=[{...ls[0],l:m[2]}];}}
+ const pk=ls.filter(x=>x.k),done=pk.filter(x=>tickHas(x.k)).length,tm=e&&tmMoveOf(e),mv=tm!=null&&MV[tm];
+ return `<div class="row irow${pk.length&&done===pk.length?' idone':''}" data-n="${esc(n)}" data-si="${si}" data-ri="${ri}"><a class="iico" href="${h}" tabindex="-1">${iconCard(n)}</a><span class="rt"><span class="nm"><a href="${h}">${esc(title)}</a>${mv&&mv.t?' '+ty(mv.t):''}${r[3]?'<span class="warn">MISSABLE</span>':''}${pk.length>1?` <span class="iprog">${done}/${pk.length}</span>`:''}</span>`+
+  `<span class="iwl">${linesOrdered(ls).slice(0,3).map(itemLine).join('')}</span>${ls.length>3?`<a class="imore" href="${h}">+${ls.length-3} more</a>`:''}</span></div>`;}
+// Tutors: rows of one box sharing a place and unlock ("place · cost · unlock"), in first-row order.
+function tutors(sec,ris){const m=new Map();ris.forEach(ri=>{const p=String(sec.r[ri][1]).split(' · '),k=p[0]+'|'+p.slice(2).join(' · ');
+ if(!m.has(k))m.set(k,{p:p[0],need:p.slice(2).join(' · '),rs:[]});m.get(k).rs.push(ri);});return [...m.values()];}
+const tutorCards=(sec,ris)=>`<div class="list ilist">${tutors(sec,ris).map(t=>`<div class="row irow tut" data-ri="${t.rs.join(' ')}"><span class="rt"><span class="nm">${esc(t.p)}</span>${t.need?`<span class="mut small tneed">Needs: ${esc(t.need)}</span>`:''}<span class="tmoves">${t.rs.map(ri=>{const r=sec.r[ri],mv=r[2]!=null&&MV[r[2]],c=String(r[1]).split(' · ')[1]||'';
+ return `<span class="tm1">${r[2]!=null?`<a href="#/m/${r[2]}">${esc(r[0])}</a>`:esc(r[0])}${mv&&mv.t?' '+ty(mv.t):''}${c?` <span class="tcost">${esc(c)}</span>`:''}</span>`;}).join('')}</span></span></div>`).join('')}</div>`;
+// A box's rows (all, or a search's matches) as cards, tutor cards or a table.
+const boxBody=(si,ris)=>{const sec=D.IT[si];return tutGrouped(sec)?tutorCards(sec,ris):isCardBox(sec)?`<div class="list ilist">${ris.map(ri=>itemCard(si,ri)).join('')}</div>`:`<table class="itbl ix">${ris.map(ri=>itemRow(sec,sec.r[ri],ri)).join('')}</table>`;};
+// Box / sub-heading count: items (each row of a nomerge name counts in its sub-heading), tutors for Move Tutors.
+const boxCount=(sec,ris)=>sec.n==='Move Tutors'?tutors(sec,ris).length+' tutors':isCardBox(sec)&&ris.length===sec.r.length?Object.keys(nameRows(sec)).length:ris.length;
+const tickBar=()=>{const n=tickCount();return `<div class="itbar"><span class="mut small">${n} ticked</span>${n?'<button type="button" class="itclr">Clear ticks</button>':''}</div>`;};
 function listItems(){fil.innerHTML='';const s=st.q;const IT=D.IT||[];
- if(s){const html=IT.map(sec=>{const rows=sec.r.filter(r=>(r[0]+' '+r[1]).toLowerCase().includes(s));return rows.length?`<div class="sech">${esc(sec.n)}</div><table class="itbl ix">${rows.map(r=>itemRow(sec,r)).join('')}</table>`:'';}).join('');
-  app.innerHTML=html;return;}
- app.innerHTML=segBar('it-all all')+IT.map((sec,si)=>`<details class="split jt" data-si="${si}" ${IO.o[si]?'open':''}><summary>${esc(sec.n)} <span class="mut small">${sec.r.length}</span></summary><div class="body"></div></details>`).join('');
+ if(s){app.innerHTML=IT.map((sec,si)=>{const ris=sec.r.map((r,ri)=>ri).filter(ri=>(sec.r[ri][0]+' '+sec.r[ri][1]).toLowerCase().includes(s));
+  return ris.length?`<div class="sech">${esc(sec.n)}</div>`+boxBody(si,ris):'';}).join('');return;}
+ app.innerHTML=tickBar()+segBar('it-all all')+IT.map((sec,si)=>`<details class="split jt" data-si="${si}" ${IO.o[sec.n]?'open':''}><summary>${esc(sec.n)} <span class="mut small">${boxCount(sec,sec.r.map((r,ri)=>ri))}</span></summary><div class="body"></div></details>`).join('');
  app.querySelectorAll('details.split[open]').forEach(d=>TOG.items(d));bars();}
-// Inside a box: its name again as a sticky heading, then the rows, under yellow sub-headings where the data gives them
-// (r[4]: EI shops, Hardlove's held item kinds; two or more get an Expand / Collapse all bar). State in LS.items {o:{<box>:1 open}, s:{<box>.<sub>:1 open}, layout
-// (relayout)}: boxes and sub-headings start closed (a 0 saved before 2026-10-31 still means closed). Filled when first opened.
+// Inside a box: its name again as a sticky heading, then the cards under yellow sub-headings (r[4]; two or more get an
+// Expand / Collapse all bar). State in LS.items {o:{<kind>:1 open}, s:{<kind>.<sub-heading>:1 open}, g: ticks}, by
+// name; boxes and sub-headings start closed. Saved before 2026-11-01 by box index (o "3", s "3.Berries", a layout):
+// those entries are dropped once. Filled when first opened.
 const IO=(()=>{try{return Object.assign({o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.items)||'{}'))}catch(e){return {o:{},x:{},s:{}}}})();
 if(!IO.g||typeof IO.g!=='object'||Array.isArray(IO.g))IO.g={};
 const ioSave=()=>{try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}};
-if(relayout(IO,(D.IT||[]).map(sec=>[sec.n,[]]),{o:1,x:1,s:1}))ioSave();
+{let old='layout' in IO;delete IO.layout;['o','x','s'].forEach(m=>{if(!IO[m]||typeof IO[m]!=='object')IO[m]={};Object.keys(IO[m]).forEach(k=>{if(/^\d+(\.|$)/.test(k)){delete IO[m][k];old=true;}});});if(old)ioSave();}
 // Pickup ticks (template/README.md → Item page): IO.g {pickupKey: 1}. A pickup is one place you get an item once; its key
 // (IT r[5], one per line of r[1], 0 for a line that isn't one; WK stop it [4]) is stable across updates, so a tick whose
 // key is gone from the data waits unused in g and comes back with it. Every copy of a tick box (input.itk[data-pk]) on
@@ -636,16 +662,23 @@ const tickCount=()=>Object.keys(IO.g).filter(k=>pickupOf(k)).length;
 function tickClear(){IO.g={};ioSave();app.querySelectorAll('input.itk[data-pk]').forEach(c=>{c.checked=false;});TICKHOOK.forEach(f=>f(null,false));}
 const tickBox=k=>`<input type="checkbox" class="itk" data-pk="${esc(k)}"${tickHas(k)?' checked':''} aria-label="Got it">`;
 app.addEventListener('change',e=>{const c=e.target;if(c.matches&&c.matches('input.itk[data-pk]'))tickSet(c.dataset.pk,c.checked);});
-function itemBox(si){const sec=D.IT[si],tbl=rs=>`<table class="itbl ix">${rs.map(r=>itemRow(sec,r)).join('')}</table>`,subs=[];
- sec.r.forEach(r=>{const g=r[4]||'';if(!subs.length||subs[subs.length-1][0]!==g)subs.push([g,[]]);subs[subs.length-1][1].push(r);});
+// Cards and the tick bar follow a tick (a card's next lines move up, its count and fade change).
+TICKHOOK.push(k=>{if(document.body.dataset.v!=='items')return;const n=k&&(pickupOf(k)||{}).n;if(k&&!n)return;
+ app.querySelectorAll(n?`.irow[data-n="${CSS.escape(n)}"]`:'.irow[data-n]').forEach(c=>{const t=document.createElement('template');t.innerHTML=itemCard(+c.dataset.si,+c.dataset.ri);c.replaceWith(t.content);});
+ const b=app.querySelector('.itbar');if(b)b.outerHTML=tickBar();});
+// Clear ticks: the first tap arms it, the second clears; any other tap (or a redraw: leaving the tab) disarms it.
+document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('.itclr'),a=app.querySelector('.itclr[data-sure]');
+ if(a&&a!==t){delete a.dataset.sure;a.textContent='Clear ticks';}if(!t)return;
+ if(!t.dataset.sure){t.dataset.sure=1;t.textContent=`Tap again to clear ${tickCount()}`;return;}tickClear();});
+function itemBox(si){const sec=D.IT[si],subs=new Map();sec.r.forEach((r,ri)=>{const g=r[4]||'';if(!subs.has(g))subs.set(g,[]);subs.get(g).push(ri);});
  // No stop header: the box's sub-headings (every row has one) pin straight under the search bar.
  return (sec.note?`<div class="mut small" style="margin:6px 0">${esc(sec.note)}</div>`:'')+
-  (subs.filter(([g])=>g).length>1?segBar('it-sp'):'')+
-  subs.map(([g,rs])=>g?sectionHTML(esc(si+'.'+g),esc(g),`<span class="mut small">${rs.length}</span>`,tbl(rs),IO.s[si+'.'+g]===1):tbl(rs)).join('')+
+  ([...subs.keys()].filter(g=>g).length>1?segBar('it-sp'):'')+
+  [...subs].map(([g,ris])=>g?sectionHTML(esc(sec.n+'.'+g),esc(g),`<span class="mut small">${boxCount(sec,ris)}</span>`,boxBody(si,ris),IO.s[sec.n+'.'+g]===1):boxBody(si,ris)).join('')+
   `<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(sec.n)}</span></button>`;}
-TOG.items=d=>{if(st.q)return;const iS=()=>{try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}};
- if(d.matches('details.split[data-si]')){const si=+d.dataset.si,b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=itemBox(si);colBind(b);}if(d.open)IO.o[si]=1;else delete IO.o[si];}
- else if(d.matches('details.sec')){if(d.open)IO.s[d.dataset.s]=1;else delete IO.s[d.dataset.s];}else return;iS();};
+TOG.items=d=>{if(st.q)return;
+ if(d.matches('details.split[data-si]')){const si=+d.dataset.si,n=D.IT[si].n,b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=itemBox(si);colBind(b);}if(d.open)IO.o[n]=1;else delete IO.o[n];}
+ else if(d.matches('details.sec')){if(d.open)IO.s[d.dataset.s]=1;else delete IO.s[d.dataset.s];}else return;ioSave();};
 
 // ===== ITEM PAGE (#/i/<item name>; template/README.md → Item page). ITX: everything the guide says about each item, by
 // name, built on first use: its IT rows (not Useful NPCs or Move Tutors), wild holders (P.hi), trainers' Pokémon
@@ -877,13 +910,16 @@ const CHK=D.WK.splits.some((sp,si)=>sp.st.some((s,ti)=>stopLeaves(s,si,ti).lengt
 const tkCounts=()=>[Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length,Object.values(TK.e).filter(e=>e&&e.f).length];
 // Guide info: tracker and checklist tools, then the game docs (cheat codes and unplaced items count as docs), then the
 // intro. Built when opened.
+// A walkthrough item row's place text, with its pickup tick (the same tick as the Items tab and the item page).
+const walkItemText=i=>{const t=esc(i[2]).replace(/\n/g,'<br>')+(/miss permanently/i.test(i[2])?'<span class="warn">MISSABLE</span>':'');
+ return i[4]?`<label class="iline">${tickBox(i[4])}<span>${t}</span></label>`:t;};
 function guideInfoHTML(){const W=D.WK,[n,f]=tkCounts();
  const para=t=>esc(t).split(/\n\s*\n/).map(x=>/\S(?: {2,}|\t)\S/.test(x)?`<pre class="dpre">${x}</pre>`:`<p style="margin:6px 0">${x.replace(/\n/g,'<br>')}</p>`).join('');
  const doc=(k,n,body,cls='')=>`<details class="stopd" data-k="${k}" ${WO.x[k]===1?'open':''}><summary class="stoph"><span class="pn">${n}</span></summary><div class="stop${cls}">${body}</div></details>`;
  const docs=(W.cheats?doc('doccheat','Cheat codes',`<div class="mut small" style="margin:6px 0">${esc(W.cnote)}</div><table class="itbl">${W.cheats.map(c=>`<tr><td><b>${esc(c[0])}</b>${c[1]?`<div class="mut small">or ${esc(c[1])}</div>`:''}</td><td>${esc(c[2])}${c[3]?' <span class="tag">toggle</span>':''}</td></tr>`).join('')}</table>`):'')+
   (W.docs||[]).map(([t,x],j)=>doc('doc'+j,esc(t),para(x),' small doc')).join('')+
   (W.ko?doc('docko','Post-KO switch-in AI',`<table class="itbl">${W.ko.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</table>${W.ko.note.map(x=>`<div class="mut small" style="margin-top:6px">${esc(x)}</div>`).join('')}`):'')+
-  (W.np.length?doc('docnp',`Items with no walkthrough place <span class="mut small">${W.np.length}</span>`,`<table class="itbl wt">${W.np.map(i=>`<tr><td>${ilink(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2])}</td></tr>`).join('')}</table>`):'');
+  (W.np.length?doc('docnp',`Items with no walkthrough place <span class="mut small">${W.np.length}</span>`,`<table class="itbl wt">${W.np.map(i=>`<tr><td>${ilink(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${walkItemText(i)}</td></tr>`).join('')}</table>`):'');
  return (HAS_MGM?`<label class="mgm"><input type="checkbox" class="mgm-toggle" ${MGM?'checked':''}> MGM</label>`:'')+`<div class="psec">Encounter tracker</div><div class="mut small">${n} caught · ${f} failed</div>`+
   `<div class="bar pbar">${trackerButtons()}${CHK?'<button class="btn danger wk-reset">Reset checklist</button>':''}</div>`+
   (docs?`<div class="psec">Game docs</div>`+docs:'')+`<div class="mut small" style="margin:12px 0 4px">${TX.walk}</div>`;}
@@ -923,7 +959,7 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=!(WO.x[k]===1
   (s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+
   (lv.length?walkSec(k,'c',`<span class="tag${nd===lv.length?' got':''}">${nd}/${lv.length}</span>`,`<div class="chkb">${steps}</div>`,mq):'')+
   (areas.length?walkSec(k,'e',areas.map(([ai])=>encSummary(ai)).join(''),enc):'')+
-  (its.length?walkSec(k,'i',`<span class="tag">${its.length}</span>${its.some(i=>/miss permanently/i.test(i[2]))?'<span class="tag miss">MISSABLE</span>':''}`,`<table class="itbl wt ix">${its.map(i=>`<tr${i[4]?` data-pk="${esc(i[4])}"`:''}><td>${i[0]==='Move Tutors'&&i[3]!=null?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Useful NPCs'?esc(i[1]):ilink(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2]).replace(/\n/g,'<br>')}${/miss permanently/i.test(i[2])?'<span class="warn">MISSABLE</span>':''}</td></tr>`).join('')}</table>`):'')+
+  (its.length?walkSec(k,'i',`<span class="tag">${its.length}</span>${its.some(i=>/miss permanently/i.test(i[2]))?'<span class="tag miss">MISSABLE</span>':''}`,`<table class="itbl wt ix">${its.map(i=>`<tr${i[4]?` data-pk="${esc(i[4])}"`:''}><td>${i[0]==='Move Tutors'&&i[3]!=null?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Useful NPCs'?esc(i[1]):ilink(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${walkItemText(i)}</td></tr>`).join('')}</table>`):'')+
   (ts.length?walkSec(k,'t',`<span class="tag">${ts.length}</span>`,walkTrainers(ts)):'');
  return h+`<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.n)}</span></button></div></details>`;}
 // What a walkthrough search matches: the stop's name, notes, steps, items, areas (and their Pokemon) and trainers.
@@ -1239,8 +1275,8 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
   this.go('#/walk',()=>{const d=app.querySelector(`details.stopd[data-k="${sk}"]`);land(d&&(d.querySelector(`tr[data-pk="${CSS.escape(k)}"]`)||d.querySelector(':scope>summary')));});},
  jumpTr(k){const t=TRK[k];if(!t)return;this.clear();const [gi,si]=t.at;TOPEN.o[gi]=1;TOPEN.p[gi+'.'+si]=1;trMates(k).forEach(x=>TOPEN.t[x]=1);trSave();
   this.go('#/trainers',()=>land(trRowOf(app.querySelector(`details.split[data-gi="${gi}"]`),k)));},
- jumpItem(si,ri){const sec=D.IT[si],g=sec.r[ri][4];this.clear();IO.o[si]=1;if(g)IO.s[si+'.'+g]=1;try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
-  this.go('#/items',()=>land(app.querySelectorAll(`details.split[data-si="${si}"] .body tr`)[ri]));},
+ jumpItem(si,ri){const sec=D.IT[si],g=sec.r[ri][4];this.clear();IO.o[sec.n]=1;if(g)IO.s[sec.n+'.'+g]=1;ioSave();
+  this.go('#/items',()=>land(app.querySelector(`details.split[data-si="${si}"] .body [data-ri~="${ri}"]`)));},
  place(a){this.clear();this.go('#/l/'+AR[ARS(a)[0]].l[0]);},
  // A result's actions, [label, run, page], the page you're on first (on the Pokemon tab, a Pokemon's Dex entry).
  acts(o){const L=[],cur=this.cur(),add=(lb,pg,f)=>L.push([lb,f,pg]);
