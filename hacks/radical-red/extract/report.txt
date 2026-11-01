@@ -3135,11 +3135,12 @@ hzla lookup moves: 670 names; 1 unresolved: (No Move)
 hzla lookup ability: 258 names; 4 unresolved: Forewarn, Guard Dog, Pickpocket, Snow Cloak
 hzla lookup item: 196 names; 0 unresolved: none
 sprites: 44 own supplements; 1 species without art: chillet
+locs: sheet egg rows: 1084
 locs: sheet gift levels: 17
 locs: sheet rows added: 3
 locs: sheet shard rows the doc lacks: 1
 locs: sheet tables added: 6
-locs: 221 areas in 154 places, 2589 sublocation rows, 1214 obtainable species
+locs: 221 areas in 154 places, 3673 sublocation rows, 1226 obtainable species
 trainers: not built yet (TODO: implement radical-red trainers extraction)
 items: not built yet (TODO: implement radical-red items extraction)
 walk: not built yet (TODO: implement radical-red walk extraction)
@@ -3264,7 +3265,6 @@ items: walkthrough rows matched to an Items line at the same place: 0
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: none
-pickup keys: new table hacks\radical-red\extract\pickup_keys.json (0 pickups)
 pickup keys: 0 pickups, 0 walkthrough rows keyed
 prune: deferred (locations or trainers not built yet); kept all 1343 species
 trainer keys: new table hacks\radical-red\extract\trainer_keys.json (0 trainers, keys as they are)

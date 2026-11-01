@@ -128,8 +128,9 @@ Source: data.js `areas` (221, game order; index = LOC index). Built by `extract/
   suffix (Mt. Moon 1F / B1F / B2F = Mt. Moon): 153 places, 67 with no encounters (`ns`, no slot), then the
   Mystery Gift place (below).
 - Encounter keys: wild-day / wild-night (grass, 12 FRLG slots 20/20/10/10/10/10/5/5/4/4/1/1), wild-surf and
-  wild-smash (60/30/5/4/1), rods (old 70/30, good 60/20/20, super 40/40/15/4/1), raids 1-6 (12 drop items, kept in
-  the row note), fixed-overworld (Static), fixed-gift (Gift; more than one entry = "Gift (pick one)", "1 of N"),
+  wild-smash (60/30/5/4/1), rods (old 70/30, good 60/20/20, super 40/40/15/4/1), raids 1-6 (12 drop items in
+  the row note, each with its slot's chance 100/80/80/50/50/30/30/25/25/5/4/1%, the Raid Dens tab's fixed slot
+  rates; an item in two slots "Big Nugget 80/80%"), fixed-overworld (Static), fixed-gift (Gift; more than one entry = "Gift (pick one)", "1 of N"),
   fixed-trade (Trade), fixed-roaming (Roaming, "1 of N"). Trainers and item keys are other units'.
 - Cap step: each key's step is shown as its Hardcore level cap ("cap 22") in the group label and row notes.
 - P.g: 0 = found in a location, or the first same-dex base form found, or evolved from an obtainable species
@@ -155,6 +156,13 @@ encounter source, the sheet fills what it lacks):
 - Water tables data.js has none for, from the Fishing & Surfing tab, rows "Doc only": Fuchsia City (all 3 rods, Surf),
   S.S. Anne Port (Super Rod, Surf: Tentacool / Tentacruel / Barraskewda). Cap step = the step data.js gives the same
   table kind at the same levels. Not added: Route 11 Surf (Tentacool Lv 5-40, FRLG's unedited table).
+- Eggs (Wonder Egg Pokémon Pools v4.1 workbook, copied into `sheet_locs.json` → eggs): the egg NPC in Pewter,
+  Cerulean and Vermilion City (5,000$) sells a Wonder Egg (Pewter's pool 256, Cerulean / Vermilion's 339) or a
+  Paldea Egg (42); the Aide in the Celadon (after the 4th badge) and Fuchsia Pokémon Centers gives a Sevii Egg (12,
+  the two never the same). Methods `Wonder Egg` / `Paldea Egg` / `Sevii Egg`, "1 of N" (random), on the city's area
+  at its badge step (Pewter 0, Cerulean 1, Vermilion 2, Celadon / Fuchsia 4): 1,084 rows. They make 12 more species
+  obtainable; the rest of the pools are found in the wild too. Sheet colour names mapped to the dex's
+  (Squawkabilly-Green, Tatsugiri-Red, Tauros-Paldea-Fire / -Water).
 - Unobtainables tab: Arceus, Dialga-Origin, Eternatus, Magearna-Original, Palkia-Origin forced to g 3 (Magearna-Original
   was g 0 through its base, Dialga / Palkia-Origin would be through the Mystery Gifts).
 
@@ -168,6 +176,10 @@ Sheet vs data.js (name-matched, `.tmp` compare; data.js kept):
 - Safari Zone: all 30 bands match. Game Corner: the 15 match. Trades: the 9 match. Fossils: the 10 match.
 - Statics: the raid-den legendaries are data.js Raid rows; Keldeo (Seafoam B2F) and Marshadow (Pokémon Tower 9F) are
   data.js statics the sheet doesn't list.
+- Raid Dens: the 45 dens' 167 species all match. Stars: Route 2, 8, 9, 10, 12, 16, Rock Tunnel and Diglett's Cave
+  dens are ★★ on the sheet, data.js `raid1` (kept); the Loyal Three den is the sheet's "Safari Zone Far-Western Area"
+  ★★★★, data.js Moltres' Den `raid3` (kept). Drops: the 12 per species match as sets except Rock Tunnel B1F ★★★★★
+  Iron Leaves / Iron Crown (sheet Star Piece, data.js Nugget; kept); the sheet's "Ability Capsule" = Ability Pill.
 
 ## Local storage
 

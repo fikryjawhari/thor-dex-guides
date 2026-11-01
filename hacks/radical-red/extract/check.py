@@ -2,7 +2,8 @@
 
 Locations (LOC / AR / P.w / P.g): every data.js area is a sublocation, every encounter in data.js is a P.w row of its
 area, every area is in one tracker place, and every row resolves to a dex species; the locations sheet's additions
-(sheet_locs.json) are all placed: Starter choice, Mystery Gift place, gift levels, trade wants, unobtainables.
+(sheet_locs.json) are all placed: Starter choice, Mystery Gift place, gift levels, trade wants, egg pools,
+unobtainables.
 """
 import json
 import sys
@@ -19,7 +20,8 @@ if not data_path.is_file():
     sys.exit(0)
 
 METHODS = {'Grass/cave', 'Surf', 'Old Rod', 'Good Rod', 'Super Rod', 'Rock Smash', 'Raid', 'Static', 'Gift',
-           'Trade', 'Roaming', 'Starter choice', 'Shard trade', 'Shard egg', 'Fossil (pick one)', 'Mystery Gift'}
+           'Trade', 'Roaming', 'Starter choice', 'Shard trade', 'Shard egg', 'Fossil (pick one)', 'Mystery Gift',
+           'Wonder Egg', 'Paldea Egg', 'Sevii Egg'}
 SHEET = json.loads((HERE / 'sheet_locs.json').read_text(encoding='utf-8'))
 
 
@@ -100,6 +102,14 @@ def check_sheet(data, failures):
         if not any(row[0] == loc[area] and row[1] == 'Trade' and row[4].endswith('for a ' + wanted)
                    for mon in data['P'] for row in mon['w']):
             failures.append('trade at %s does not say it wants %s' % (area, wanted))
+    for egg in SHEET['eggs']:
+        rate = '1 of %d' % len(egg['species'])
+        for area, _, _ in egg['areas']:
+            lacking = [name for name in egg['species'] if not any(
+                row[0] == loc[area] and row[1] == egg['method'] and row[2] == rate for row in by_id[sid(name)]['w'])]
+            if lacking:
+                failures.append('%s at %s: %d species without a row, e.g. %s' % (egg['method'], area, len(lacking),
+                                                                                lacking[:3]))
     for name in SHEET['unobtainable']:
         if by_id[sid(name)]['g'] != 3:
             failures.append('%s should be unobtainable (g 3)' % name)

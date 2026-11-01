@@ -8,12 +8,14 @@ Smash), Other (raids, statics, gifts, trades, roaming).
 Each data.js encounter key holds {cap step: entries}. The step is the progression step the content unlocks at; its
 Hardcore level cap is written into the group label ("· cap 22") and the row notes, since the template has no per-row
 cap field. Grass uses FRLG's 12 slot rates, surf / Rock Smash its 5, the rods their 2 / 3 / 5 (Old / Good / Super).
-Raid rows keep the den's 12 drop items (names, 0 dropped) in the note.
+Raid rows keep the den's 12 drop items in the note with each slot's chance (100/80/80/50/50/30/30/25/25/5/4/1%, the
+sheet's Raid Dens tab; an item in two slots shows both, "Big Nugget 80/80%"; 0 = no drop).
 
 The locations sheet adds what data.js lacks (extract/sheet_locs.json, hand-copied; notes.md -> Locations): Oak's Lab's
 list as the Starter choice (AR.st), gift levels and how to get them, the shard each Fan Club fossil / Celadon egg costs,
-the Mt. Moon fossil pair, what each trade NPC wants, water tables data.js has none for ("Doc only"), the Mystery Gift
-legendaries (an AR place with no tracker slot, its LOC after the data.js areas) and the sheet's unobtainables.
+the Mt. Moon fossil pair, what each trade NPC wants, water tables data.js has none for ("Doc only"), the Wonder /
+Paldea / Sevii Egg pools (the Wonder Egg Pools workbook, "1 of N"), the Mystery Gift legendaries (an AR place with no
+tracker slot, its LOC after the data.js areas) and the sheet's unobtainables.
 
 Availability (P.g): 0 obtainable = found in a location, or the species' base form (first non-form entry of its dex
 number) is found, or it evolves from an obtainable species; 3 not found (trainer-only or unobtainable).
@@ -34,6 +36,7 @@ RODS = {'oldRod': ('Old Rod', [70, 30]), 'goodRod': ('Good Rod', [60, 20, 20]),
         'superRod': ('Super Rod', [40, 40, 15, 4, 1])}
 FLOOR = re.compile(r'\s+(?:B?\d+F|Room \d+)$')
 KIND = {'grass': 'grass', 'water': 'water', 'other': 'other'}
+RAID_DROPS = [100, 80, 80, 50, 50, 30, 30, 25, 25, 5, 4, 1]   # the 12 drop slots' chances (sheet, Raid Dens tab)
 NO_CAP = {'Starter choice', 'Mystery Gift'}       # group labels without "· cap N"
 DOC_ONLY = 'Doc only (not in the game data)'
 
@@ -157,7 +160,13 @@ def build(data):
                 elif key.startswith('raid'):
                     stars = key[4:]
                     for value, drops in entries:
-                        names = list(dict.fromkeys(item(x) for x in drops if x))
+                        if len(drops) != len(RAID_DROPS):
+                            raise ValueError('%s %s: %d raid drops' % (record['name'], key, len(drops)))
+                        chances = defaultdict(list)
+                        for chance, drop in zip(RAID_DROPS, drops):
+                            if drop:
+                                chances[item(drop)].append(str(chance))
+                        names = ['%s %s%%' % (name, '/'.join(rates)) for name, rates in chances.items()]
                         note = '%s★ den' % stars + ('; drops ' + ', '.join(names) if names else '')
                         add(area, 'other', 'Raid', step, sid_of(value), note=note + '; ' + cap_note)
                 elif key == 'fixed-overworld':
@@ -225,6 +234,13 @@ def build(data):
         add(gift_area, 'other', 'Mystery Gift', gift['step'], sid_of(species), low=gift['level'], high=gift['level'],
             note=gift['how'])
         note_row(groups[(gift_area, 'other', 'Mystery Gift', gift['step'])][sid_of(species)], extra)
+    for egg in SHEET['eggs']:
+        for name, step, how in egg['areas']:
+            for species in egg['species']:
+                add(area_index[name], 'other', egg['method'], step, sid_of(species), note='cap %d' % cap(step),
+                    pick=len(egg['species']))
+                note_row(groups[(area_index[name], 'other', egg['method'], step)][sid_of(species)], how)
+            sheet_counts['sheet egg rows'] += len(egg['species'])
 
     sections = {}
     for (area, kind, method, step), rows in sorted(groups.items()):
