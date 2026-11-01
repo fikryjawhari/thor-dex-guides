@@ -67,6 +67,8 @@ Each unit adds the decisions it had to take to **Decisions taken in units** belo
 - [unit 1] Use official dex secondary chances over Showdown, label freeze effects frostbite, and derive only Metal Bash's contact/target metadata from its in-game description; normalise Inferno Parade to Infernal Parade (data.js, gen9rr/moves.ts, v4.0 changelog).
 - [unit 1] Split the game's two As One IDs into Spectrier/Glastrier names and use learned canonical Leech Life ID 141 (15 PP), not the unused Leech Fang copy 355 (10 PP); do not invent the four absent hzla abilities (data.js, hzla radredhc.js).
 - [unit 1] Preserve source sprite pixels using palette PNG conversion; leave Chillet's letter fallback because neither data.js nor the shared set has its art, and use actual transformation parents for regional Mega pruning (data.js sprites/evolutions, sprites/index.json).
+- [unit 7] GID from data.js game ids; growth rates from RR's 2023 Base_Stats.c (derived `extract/growth.json`), the 16 later species Medium Fast; battle-only forms (Megas too) read as their base; hzla's by-name ability table not used (data.js, hzla id tables, ydarissep/Radical-Red-Pokedex 65712ed, RadicalHex build-data.py).
+- [unit 7] cfru.js profile `radicalred41`: retail signature 0x08012025, named only (Unbound unchanged), a vanilla save refused by its retail checksum windows, only the ability randomiser (0x942) refused, pokefirered experience formulas; `cfg.calc.cfru = "radicalred41"` needed (RadicalHex 3697412 / PKForge 2df0443 from real RR saves, hzla's reader).
 
 ## Units
 

@@ -1,0 +1,57 @@
+{
+ "save": "main.sav",
+ "sha256": "1a7f9c72d3d721b153a96154bdda8bc77d9627f77fc9f260e01b24602afeb359",
+ "party": [
+   {"species":"Venusaur","level":52,"nature":"Modest","ability":"Chlorophyll","item":"Leftovers","moves":["Giga Drain","Sludge Bomb","Earth Power","Synthesis"],"ivs":[31,0,30,31,29,28],"evs":[252,0,4,252,0,0]},
+   {"species":"Jellicent (Female)","level":40,"nature":"Calm","ability":"Damp","item":"Sitrus Berry","moves":["Scald","Hex","Recover","Will-O-Wisp"],"ivs":[20,21,22,23,24,25],"evs":[6,0,252,0,252,0]},
+   {"species":"Kabutops","level":100,"nature":"Adamant","ability":"Swift Swim","item":"Life Orb","moves":["Leech Life","Liquidation","Stone Edge","Draining Kiss"],"ivs":[31,31,31,31,31,31],"evs":[0,252,0,0,4,252]}
+ ],
+ "boxes": [
+  [
+   {"species":"Caterpie","level":37,"nature":"Hardy","ability":"Shield Dust","item":"","moves":["Tackle","String Shot","",""],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]},
+   {"species":"Caterpie","level":50,"nature":"Jolly","ability":"Run Away","item":"","moves":["Bug Bite","","",""],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]}
+  ],
+  [],
+  [
+   {"species":"Volbeat","level":80,"nature":"Bold","ability":"Prankster","item":"Damp Rock","moves":["Rain Dance","Encore","Thunder Wave","U-turn"],"ivs":[31,0,31,31,31,31],"evs":[252,0,252,0,4,0]}
+  ],
+  [],
+  [
+   {"species":"Seviper","level":37,"nature":"Naive","ability":"Shed Skin","item":"","moves":["Glare","Poison Jab","",""],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]}
+  ],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [
+   {"species":"Unown (B)","level":15,"nature":"Serious","ability":"Levitate","item":"","moves":["Hidden Power","","",""],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]}
+  ],
+  [
+   {"species":"Bulbasaur","level":15,"nature":"Lax","ability":"Overgrow","item":"","moves":["Vine Whip","","",""],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]},
+   {"species":"Clefairy","level":50,"nature":"Calm","ability":"Magic Guard","item":"Eviolite","moves":["Moonblast","Soft-Boiled","Stealth Rock","Thunder Wave"],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]}
+  ],
+  [],
+  [
+   {"species":"Growlithe","level":50,"nature":"Adamant","ability":"Intimidate","item":"","moves":["Flare Blitz","","",""],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]}
+  ],
+  [
+   {"species":"Garchomp","level":100,"nature":"Jolly","ability":"Rough Skin","item":"Choice Scarf","moves":["Earthquake","Outrage","Stone Edge","Fire Fang"],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]}
+  ],
+  [
+   {"species":"Darmanitan","level":50,"nature":"Brave","ability":"Sheer Force","item":"","moves":["Flare Blitz","","",""],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]}
+  ],
+  [
+   {"species":"Eevee","level":5,"nature":"Docile","ability":"Adaptability","item":"","moves":["Tackle","Growl","",""],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]},
+   {"species":"Shuckle","level":100,"nature":"Impish","ability":"Contrary","item":"Mental Herb","moves":["Sticky Web","Stealth Rock","Encore","Infestation"],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]}
+  ]
+ ]
+}

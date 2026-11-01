@@ -120,6 +120,62 @@ unknown IDs. Item IDs map through the same stone-spelling corrections as P.stone
 progression keys use `cap_step`/`cap`, and trainers must use Hardcore `cap[1]`, not normal `cap[0]`. Obtainability
 and evolution/breeding closure must be assigned before D8 pruning is enabled by the locations/trainers merge.
 
+### Save ID tables
+
+`gid.py` (unit 7, last in `build.py`, after `finalise()`): `GID {sp, mv, it, gr}` indexed by the game's ids, which are
+`data.js`'s keys. No `ab`: a CFRU Pokémon stores its ability slot, and the reader returns `abs`.
+- `sp`: 1,343 species ids -> P id (`SPECIES_IDS`), a P entry the prune removed -> null. Battle-only forms (Megas,
+  Primals, Zen, Pirouette, Blade, School, Busted, Ultra, Noice, Hangry, Crowned, Eternamax, Complete, Ash, Sunshine,
+  Gulping / Gorging, Terastal: `gid.BATTLE_ONLY`, 85 ids) read as their base, as Unbound's do; a save never holds one.
+- `mv`: 827 ids -> M index; Placeholder, Z-move and Max-move ids (821, 829-1003) -> null. 355 (the unused Leech Fang
+  copy, same name) reads as Leech Life like 141.
+- `it`: 749 ids -> `common.item` names (the stone spelling fixes).
+- `gr`: growth rates, from RR's own `Base_Stats.c` (`extract/growth.json`, derived; `python -I gid.py --growth <file>`
+  rewrites it). `data.js` has none. The file is the official dex repo's (ydarissep/Radical-Red-Pokedex `65712ed`, the
+  parent of `f848f86`, 2023-08-04; RadicalHex uses the same file): 1,270 ids directly, 57 forms from their base or
+  species under a short define (BASCULIN_RED ...), 16 species added after 2023 (Ogerpon and its masks, the Loyal Three,
+  Pecharunt, Poltchageist / Sinistcha, Raging Bolt, Iron Crown, Iron Boulder, Gouging Fire, Terapagos-Terastal, Chillet)
+  Medium Fast: CFRU's default for an entry without a rate, and RadicalHex found exp = level³ on every such species in
+  real saves. Provisional for those 16 until a real save.
+
+Checked every build against hzla's `save_constants/radical_red_*.js` (report.txt, GID lines): species, items and
+abilities (by species id) the same for every id; moves the same except 27 ids hzla reads as no move (moves RR took
+out: Guillotine, Double Team, Baton Pass ...; GID keeps them, harmless); 49 cosmetic forms hzla names by their species
+(Unown letters, female forms, Burmy, Shellos, Deerling, Minior cores). The ability slots P gives the reader (a[0] / a[1] /
+ha) give the game's ability in all four (personality bit, hidden bit) states for every species. hzla's other table,
+`abilitiesBySpecies` (by name), is not the game's: it has one entry per name (Jellicent-F gets the male's) and some
+abilities the id tables don't (Jellicent Cursed Body where data.js and hzla's id table have Damp); not used.
+
+### Save import
+
+Reader `cfru`, profile `radicalred41` (`template/calc/readers/cfru.js`): the finishing unit sets
+`cfg.calc.save = "cfru"` and `cfg.calc.cfru = "radicalred41"`. The profile is named only: Unbound names no profile and
+reads exactly as before. Format, from RadicalHex (jajaa17/RadicalHex `3697412`, GPLv3, `src/core.js`, "re-checked
+against real saves") and PKForge (sofianeelhor/PKForge `2df0443`, GPLv3, `RadicalRedFormat.cs`, from a real champion
+save), both agreeing with the Unbound reader's CFRU layout:
+- Signature: the retail 0x08012025 (no RR magic). A vanilla FireRed / Emerald save has it too: the profile tells one
+  by its checksums fitting the retail windows (0xF2C / 0xF80 / 0xF08 / 0x7D0, PKForge's table) and refuses it
+  (`wrong`); RR's sections only fit CFRU's (0xF24 / 0xFF0 / 0xD98 / 0x450).
+- Slots, checksums, party (SaveBlock1 0x34 / 0x38, 100-byte unencrypted), box Pokémon (58 bytes), and the 25-box map
+  (stream 1-19, sectors 30 / 31 for 20-22, SaveBlock1 0x1F08 for 23-24, SaveBlock2 0xB0 for 25): as Unbound's.
+- Randomisers: flags 0x940 / 0x941 / 0x942 (sector 0 0xF2C bits 0-2: species, learnset, abilities; hzla). Only the
+  ability randomiser is refused: stored species and moves are real ids (hzla and RadicalHex read them as they are),
+  but abilities are re-rolled from a pool by trainer id, which the reader's slot can't express.
+- Levels: the party's stored level; boxed from experience with `GID.gr` and pokefirered's formulas (CFRU's; Unbound's
+  own table differs at a few levels). hzla doesn't compute levels (it gives boxed Pokémon the level cap).
+
+Checked on synthetic saves (`tools/calc/cfru_rr.mjs` writes them to `tools/calc/cfru_rr/` with the expected imports
+from its specs, names to ids through hzla's tables, not GID): `node tools/calc/cfru_rr_check.mjs` (in `npm test`):
+7 saves, 18 Pokémon across party and boxes 1, 3, 5, 19, 20, 22, 23, 24, 25 (stream, raw and SaveBlock seams), every
+growth rate at an exact level threshold, a battle-only and a cosmetic form, an egg and a Bad Egg (skipped), the refusals
+(ability randomiser, vanilla FireRed, Unbound signature, erased) and the Unbound guide refusing an RR save.
+`node tools/calc/cfru_rr_oracles.mjs` runs hzla's RR reader and RadicalHex's loader on the same bytes: 0 unexplained;
+hzla's own rules (no signature / checksum check, boxes 1-19 only, misreads a Pokémon across two sectors, level cap as
+the boxed level, its form names) and RadicalHex's (an editor: lists eggs and Bad Eggs, loads randomised saves).
+**Provisional (D7):** no real RR save has been read. Open until the user's `.srm`: the signature on a 4.1 save, the
+experience table (a freshly caught boxed Pokémon should sit on pokefirered's value), the 16 growth fallbacks, and
+whether a 4.1 save with the ability randomiser sets 0x942.
+
 ## Local storage
 
 Prefix `rr`. Keep these keys once published.

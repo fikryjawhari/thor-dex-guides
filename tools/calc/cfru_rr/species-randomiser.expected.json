@@ -1,0 +1,34 @@
+{
+ "save": "species-randomiser.sav",
+ "sha256": "257346dddddc72f6069c9f1b426d8424ae90a263e62fa7072199deec4e562ad0",
+ "party": [
+   {"species":"Venusaur","level":52,"nature":"Modest","ability":"Chlorophyll","item":"Leftovers","moves":["Giga Drain","Sludge Bomb","Earth Power","Synthesis"],"ivs":[31,0,30,31,29,28],"evs":[252,0,4,252,0,0]}
+ ],
+ "boxes": [
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  []
+ ]
+}
