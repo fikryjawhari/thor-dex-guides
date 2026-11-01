@@ -151,13 +151,35 @@ def apply(D, hack, report=print):
         best = sorted(names, key=lambda name: (-sum(c in " -'" for c in name), name not in tab, -uses[name], name))[0]
         for name in names:
             final[name] = best
-    renames = collections.Counter()
-    for container, column, _, _ in slot_list:
+    renames, renamed = collections.Counter(), set()
+    for container, column, _, group in slot_list:
         old = container[column]
         new = final[spelled(old)]
         if new != old:
             renames[(old, new)] += 1
+            if group == 'it':
+                renamed.add(id(container))
         container[column] = new
+    # an IT row renamed onto another row of its box (Photonic's Shop "Thunderstone" and Found "Thunder Stone") joins it:
+    # one row per item, as the Items standard has it (nomerge rows share one spelling, so they are never renamed together)
+    for section in D.get('IT', []):
+        rows = {}
+        for row in list(section['r']):
+            first = rows.setdefault(row[0], row)
+            if first is row or not renamed.intersection({id(row), id(first)}):
+                continue
+            lines, keys = first[1].split('\n') if first[1] else [], list(first[5]) if len(first) > 5 else []
+            for line, k in zip(row[1].split('\n') if row[1] else [], row[5] if len(row) > 5 else []):
+                if line not in lines:
+                    lines.append(line)
+                    keys.append(k)
+            first[1] = '\n'.join(lines)
+            if len(first) > 5:
+                first[5] = keys
+            first[2] = first[2] or row[2]
+            first[3] = max(first[3], row[3])
+            section['r'].remove(row)
+            report(f'item rows joined: {row[0]} in {section["n"]}')
     for old, new in sorted(renames):
         report(f'item name: {old} -> {new} ({renames[(old, new)]} use(s), Items tab spelling)' if new in tab
                else f'item name: {old} -> {new} ({renames[(old, new)]} use(s))')
