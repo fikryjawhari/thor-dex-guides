@@ -508,6 +508,7 @@ def build(D):
     report('items: Hardcore leaves out %d: %s' % (len(dropped), '; '.join(dropped)))
     for x in log:
         report('items:', x)
+    report('items: item_desc.json: %d items, %d changed vs FireRed or in effect' % write_item_desc())
     for x in crosscheck(rows, tm_text, mega_text, {z: (p + ', ' + t if p else t) for z, (p, t) in z_text_rows().items()}):
         report('items: tabs differ:', x)
 
@@ -801,3 +802,43 @@ def tutors(add, Mi, log, dropped):
                     log.append('tutor %s: data.js only (%s)' % (m, place))
                     n += 1
     return n
+
+
+# ---- item text -------------------------------------------------------------------------------------------------------
+# items whose battle effect RR changed (Showdown gen9rr/items.ts; v4.0 / v4.1 changelogs): changed even when FireRed
+# has no text to compare with; their In battle text is extract/battle_text.json
+RR_EFFECT = {'Adamant Orb', 'Bright Powder', 'Burnt Seed', 'Electirizer', 'Eternamax Orb', "King's Rock", 'Lax Incense',
+             'Leek Stick', 'Magmarizer', 'Reaper Cloth', 'Upgrade', 'Up-Grade'} | \
+    {t + ' Gem' for t in ('Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying',
+                          'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy')}
+
+
+def bag_text(text):
+    text = re.sub(r'\s+', ' ', str(text)).strip()
+    return re.sub(r'\bPoke(?=\b| Ball|Block)', 'Poké', text.replace('Pokemon', 'Pokémon'))
+
+
+def write_item_desc():
+    """extract/item_desc.json: data.js bag text for every item but TMs / HMs and unused records; changed = the text
+    differs from FireRed's (pokefirered items.json, case, line breaks and accents ignored) or RR changed the effect."""
+    import json
+    vanilla = {key(r['english']): r['description_english']
+               for r in json.loads((Path(H.src) / 'repos/pokefirered/src/data/items.json').read_text('utf-8'))['items']}
+    vanilla['paralyzeheal'] = vanilla.get('parlyzheal')
+
+    def norm(text):
+        return key(str(text).replace(chr(92) + 'n', ' '))
+    out = {}
+    for ident, row in sorted(DATA['items'].items(), key=lambda x: int(x[0])):
+        item = name(ident)
+        text = bag_text(row['description'])
+        if not item or re.match(r'(TM|HM)\d', item) or text in ('', 'Unimplemented.') or '???' in text:
+            continue
+        old = vanilla.get(key(row['name']))
+        changed = int(bool(old) and norm(old) != norm(text) or item in RR_EFFECT)
+        out.setdefault(item, [text, changed])
+    path = Path(H.extract) / 'item_desc.json'
+    body = json.dumps(out, ensure_ascii=False, indent=1, sort_keys=True) + '\n'
+    if not path.exists() or path.read_text('utf-8') != body:
+        path.write_text(body, encoding='utf-8', newline='\n')
+    return len(out), sum(v[1] for v in out.values())

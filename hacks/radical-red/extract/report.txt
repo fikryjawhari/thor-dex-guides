@@ -3148,6 +3148,7 @@ items: shop price: Timer Ball (Two Island shop) from FRLG, the Shops tab has non
 items: shop price: Lava Cookie (Two Island shop) from FRLG, the Shops tab has none
 items: data.js care package items with no package on the sheet: Pomeg Berry, Rare Candy (Viridian City, step 0)
 items: tutor Uproar: data.js only (Saffron City Gian's House 2F)
+items: item_desc.json: 613 items, 41 changed vs FireRed or in effect
 walk: not built yet (TODO: implement radical-red walk extraction)
   description-derived metadata: Metal Bash: A physical attack in which the user charges, full body, into the foe.
 move metadata: 825 structured; 1 description-derived; 0 missing; 253 changed markers
@@ -3284,20 +3285,10 @@ pickup keys: 10 table entries no pickup matched
 pickup keys: 492 pickups, 0 walkthrough rows keyed
 prune: deferred (locations or trainers not built yet); kept all 1343 species
 trainer keys: new table hacks\radical-red\extract\trainer_keys.json (0 trainers, keys as they are)
-item text: none for Ability Pill
-item text: none for Burnt Seed
-item text: none for DexNav
-item text: none for Dream Patch
-item text: none for Itemfinder
-item text: none for Leek Stick
-item text: none for Medicine
-item text: none for Necromizer
-item text: none for Oak's Parcel
-item text: none for Poké Rider
-item text: none for Stat Scanner
-item text: none for Time Changer
-item text: 0 own, 352 pooled, 0 from the wiki, 0 made up, 8 Mega Stone standard, 12 with no description
-in battle: 143 shown items with battle text, 229 without
+item name: Fight Memory -> Fighting Memory (1 use(s))
+item name: Houndoomnite -> Houndoominite (2 use(s), Items tab spelling)
+item text: 363 own, 5 pooled, 0 from the wiki, 3 made up, 1 Mega Stone standard, 0 with no description
+in battle: 149 shown items with battle text, 223 without
 in battle: 747 moves with battle text, 79 without
 trainer keys: no trainers yet, no key table written
 gid: not built yet (TODO: gid)
