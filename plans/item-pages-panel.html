@@ -1,11 +1,11 @@
 <style>.ipn b{display:block;margin:8px 0 2px;font-size:13px}.ipn button{margin:2px 4px 2px 0}</style>
 <div class="ipn">
 <b>Items tab</b>
-<button onclick="thorFrame().setOption('layout','tabs')">Kinds bar, each item once (proposal)</button><button onclick="thorFrame().setOption('layout','rows')">Boxes, table as now</button><button onclick="thorFrame().setOption('layout','dex')">Boxes, dex rows</button>
-<b>Places under each name (kinds bar)</b>
-<button onclick="thorFrame().setOption('lines','3')">First 3, then "+N more"</button><button onclick="thorFrame().setOption('lines','all')">All of them</button>
+<button onclick="thorFrame().setOption('layout','kinds')">Kinds as boxes, cards (proposal)</button><button onclick="thorFrame().setOption('layout','rows')">Boxes as now</button>
 <b>Item pages</b>
 <button onclick="thorFrame().setOption('sample','life')">Life Orb</button><button onclick="thorFrame().setOption('sample','leftovers')">Leftovers</button><button onclick="thorFrame().setOption('sample','mega')">Abomasite</button><button onclick="thorFrame().setOption('sample','tm')">A TM</button><button onclick="thorFrame().setOption('sample','berry')">Sitrus Berry</button><button onclick="thorFrame().setOption('sample','key')">A key item / valuable</button><button onclick="thorFrame().setOption('sample','trainer')">Only trainers hold it</button><button onclick="thorFrame().setOption('sample','nodesc')">No description</button><button onclick="thorFrame().setOption('sample','hack')">Hack's own Mega Stone (EI)</button>
 <b>Move and Pokémon pages</b>
 <button onclick="thorFrame().setOption('sample','leech')">Leech Seed</button><button onclick="thorFrame().setOption('sample','calm')">Calm Mind (a TM)</button><button onclick="thorFrame().setOption('sample','mon')">Butterfree (held items)</button>
+<b>Reset</b>
+<button onclick="thorFrame().localStorage.removeItem('itmock-ticks');thorFrame().localStorage.removeItem('itmock-open');thorFrame().setOption('layout','kinds')">Clear ticks and open boxes</button>
 </div>

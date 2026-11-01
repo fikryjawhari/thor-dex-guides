@@ -148,7 +148,7 @@ def build(hack):
     print(f'{hack}: {len(names)} items, {len(wanted)} icons, sheet {len(uri) // 1024} KB, '
           f'{sum(1 for v in items.values() if v["d"])} with a description')
     frame = TMP / f'item-pages-{hack}-frame.html'
-    title = {'emerald-imperium': 'Emerald Imperium', 'unbound': 'Unbound'}.get(hack, hack)
+    title = {'emerald-imperium': 'Emerald Imperium', 'unbound': 'Unbound', 'hardlove-gold': 'Hardlove Gold'}.get(hack, hack)
     subprocess.run([sys.executable, '-I', str(ROOT / 'tools/mockup/thor-frame/build.py'), str(target), str(frame),
                     '--title', f'Item pages: {title}', '--sub', 'decide mockup',
                     '--panel', str(ROOT / 'plans/item-pages-panel.html')], check=True)
@@ -156,5 +156,5 @@ def build(hack):
                    check=True)
 
 
-for hack in sys.argv[1:] or ['emerald-imperium', 'unbound']:
+for hack in sys.argv[1:] or ['emerald-imperium', 'unbound', 'hardlove-gold']:
     build(hack)

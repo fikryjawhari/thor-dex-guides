@@ -2,7 +2,7 @@
 // reuses the template's globals (render, itemBox, moveDetail, detail, sectionHTML, pickCard, moveList, psec, sprl,
 // plink, SR ...) and patches some of them in place. The Items tab layout (panel) is kept in localStorage 'itmock'.
 (()=>{
-const X=window.ITX,OPT=Object.assign({layout:'tabs',lines:'3'},JSON.parse(localStorage.getItem('itmock')||'{}'));
+const X=window.ITX,OPT=Object.assign({layout:'kinds'},JSON.parse(localStorage.getItem('itmock')||'{}'));
 const isTM=n=>/^(TM|HM|TR)\d/.test(n);
 // ---- index: everything the guide says about each item, by name
 const IS={},get=n=>IS[n]??={rows:[],walk:[],wild:[],tr:[],mi:[],mega:[]};
@@ -49,7 +49,7 @@ const st0=document.createElement('style');st0.textContent=`
 .phi div{margin:3px 0}.phi .pct{color:var(--mut);font-variant-numeric:tabular-nums;margin-left:4px}.phi .sh{margin-top:8px}
 .ilist{margin:4px 0}.ilist .row{padding:4px 8px;gap:8px}.ilist .rt{display:block}.ilist .nm{display:block}
 .ilist .iloc{display:block;font-size:12px;color:var(--mut);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ilist .ino{width:32px;flex:none}.irow .iloc{white-space:normal;margin-top:1px}.irow .imore{display:block;font-size:12px;color:var(--acc)}.itabs{margin:4px 0 6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.itabs button{flex:none}.irow .nm{overflow-wrap:anywhere}.ilist .irow{align-items:flex-start}.irow .iic.m,.irow .ino{margin-top:2px}.isub{margin:8px 0 2px}.ipg a.row{text-decoration:none}.ilist .bst{align-self:center}`;document.head.appendChild(st0);document.documentElement.style.setProperty('--isheet','url('+X.sheet+')');
+.ilist .ino{width:32px;flex:none}.irow .iloc{white-space:normal;margin-top:1px}.irow .imore{display:block;font-size:12px;color:var(--acc)}.itabs{margin:4px 0 6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.itabs button{flex:none}.irow .nm{overflow-wrap:anywhere}.ilist .irow{align-items:flex-start}.irow .iic.m,.irow .ino{margin-top:2px}.isub{margin:8px 0 2px}.ipg a.row{text-decoration:none}.irow .nm a{color:inherit}.irow .iloc.itl2,.iwl .iloc.itl2{display:flex;gap:6px;align-items:flex-start}.itl2 input{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:var(--acc)}.idone{opacity:.55}.iprog{font-size:12px;color:var(--mut);font-weight:600}.irow .imore{display:block;font-size:12px;color:var(--acc);margin-top:2px}.tut .tmoves{display:block;margin-top:6px;font-size:14px}.tut .tm1{margin:3px 0}.tut .tcost{font-size:12px;color:var(--mut)}.iwl .iloc{display:flex;font-size:13px;color:var(--fg);margin:4px 0}.iwl span.iloc{display:block}.ilist .bst{align-self:center}`;document.head.appendChild(st0);document.documentElement.style.setProperty('--isheet','url('+X.sheet+')');
 const icon=(n,size)=>{const x=X.items[n];const z=size==='s'?18:size==='m'?32:24;if(!x||x.ic<0)return size==='m'?'<i class="ino"></i>':'';const s=z/24;
  return `<i class="iic ${size||''}" style="background-size:${384*s}px auto;background-position:-${x.ic%16*z}px -${Math.floor(x.ic/16)*z}px"></i>`;};
 const ihref=n=>'#/i/'+encodeURIComponent(n);
@@ -74,38 +74,65 @@ itemBox=function(si){const sec=D.IT[si];if(OPT.layout!=='dex'||sec.k==='npc')ret
  return (sec.note?`<div class="mut small" style="margin:6px 0">${esc(sec.note)}</div>`:'')+(subs.filter(([g])=>g).length>1?segBar('it-sp'):'')+
   subs.map(([g,rs])=>g?sectionHTML(esc(si+'.'+g),esc(g),`<span class="mut small">${rs.length}</span>`,list(rs),IO.s[si+'.'+g]===1):list(rs)).join('')+
   `<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(sec.n)}</span></button>`;};
-// ---- proposed Items tab: a bar of kinds (like Learned by), each item once in one kind, its places under its name
-const CATS=[['Key Items','Key'],['Poké Balls','Balls'],['Medicine','Medicine'],['Held Items','Held'],['TMs and HMs','TMs'],['Evolution Items','Evolution'],
- ['Stats and Abilities','Stats'],['Mega Stones','Megas'],['Z-Crystals','Z-Crystals'],['Fossils','Fossils'],['Valuables','Valuables'],['Other','Other']];
+// ---- proposed Items tab: the kinds as the boxes (standard collapsible boxes, sticky yellow sub-headings), each item
+// once as a card with its first 3 places, and a tick on every place you pick one up.
+const CATS=[['Key Items'],['Poké Balls'],['Medicine'],['Held Items'],['TMs and HMs'],['Evolution Items'],['Stats and Abilities'],
+ ['Mega Stones'],['Z-Crystals'],['Fossils'],['Valuables'],['Other']];
 const SHOPCAT={'Poké Balls':'Poké Balls','Healing and repels':'Medicine','Evolution items':'Evolution Items','Power items':'Stats and Abilities',
  'Stats and abilities':'Stats and Abilities','TMs':'TMs and HMs','Mega Stones':'Mega Stones','Held items':'Held Items'};
 // Its kind: the item's own box (not Shops) and sub-heading; a shop-only item goes by its shop kind.
 function catOf(n,e){const r=e.rows.find(r=>r.box!=='Shops');if(r)return [r.box,r.sub&&r.sub!==r.box?r.sub:''];
  const c=SHOPCAT[e.rows[0].sub]||'Other';return [c,c==='Held Items'?(/Berry$/.test(n)?'Berries':'Other held items'):''];}
-function itemGroups(){const by={};Object.entries(IS).forEach(([n,e])=>{if(!e.rows.length)return;const [c,sub]=catOf(n,e);((by[c]??={})[sub]??=[]).push(n);});
- const gs=CATS.filter(([c])=>by[c]).map(([key,short])=>({key,short,subs:Object.entries(by[key]).map(([sb,ns])=>[sb,ns.sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}))]),
+const SPLIT=new Set(['Zygarde Cell']);   // items with one card per place (each its own pickup)
+// Ticks (mockup: localStorage 'itmock-ticks', key "item|place line"; the build keys them by a stable pickup key)
+const TK=(()=>{try{return JSON.parse(localStorage.getItem('itmock-ticks')||'{}')}catch(e){return {}}})();
+const tkey=(n,l)=>n+'|'+l;
+const tickable=l=>!/^(Shop|Wild):/.test(l)&&!/repeatable|daily|every day|\((Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b|rematch/i.test(l);
+const lineHTML=(n,p)=>tickable(p.l)?`<label class="iloc itl2"><input type="checkbox" class="itk" data-k="${esc(tkey(n,p.l))}"${TK[tkey(n,p.l)]?' checked':''}><span>${esc(p.l2||p.l)}${p.miss?'<span class="warn">MISSABLE</span>':''}</span></label>`
+ :`<span class="iloc">${esc(p.l)}${p.miss?'<span class="warn">MISSABLE</span>':''}</span>`;
+function cardHTML(n,lines,max,title){const e=IS[n],tm=isTM(n)&&e.rows.find(r=>r.k==='tm'&&r.link!=null),mv=tm&&MV[tm.link];
+ const tk=lines.filter(p=>tickable(p.l)),done=tk.filter(p=>TK[tkey(n,p.l)]).length;
+ return `<div class="row irow${tk.length&&done===tk.length?' idone':''}" data-n="${esc(n)}"><a class="iico" href="${ihref(n)}">${icon(n,'m')}</a><span class="rt"><span class="nm"><a href="${ihref(n)}">${esc(title||n)}</a>${mv&&mv.t?' '+ty(mv.t):''}${tk.length>1?` <span class="iprog">${done}/${tk.length}</span>`:''}</span>${lines.slice(0,max).map(p=>lineHTML(n,p)).join('')}${lines.length>max?`<a class="imore" href="${ihref(n)}">+${lines.length-max} more</a>`:''}</span></div>`;}
+const cards=ns=>`<div class="list ilist">${ns.flatMap(n=>SPLIT.has(n)?placesOf(n,IS[n]).map(p=>{const m=p.l.match(/^(?:Found|Also):\s*([^·]+?)\s*·\s*(.+)$/);return cardHTML(n,[m?{...p,l2:m[2]}:p],1,m?m[1]:'');}):[cardHTML(n,placesOf(n,IS[n]),3)]).join('')}</div>`;
+// Unbound's tutors: one card per tutor (where, what it needs, each move with its cost), under four headings.
+const TUTGRP=[[/Shard Tutor/,'Shard tutors'],[/^Gem Family/,'Gem Family'],[/Ultimate|Special Moves|Draco/,'Special moves'],[/^Move Tutor \d/,'Battle Frontier tutors']];
+function tutorBox(sec){const tut=new Map();sec.r.forEach(r=>{const k=r[4]||sec.n;if(!tut.has(k))tut.set(k,[]);tut.get(k).push(r);});
+ const groups=new Map();tut.forEach((rows,name)=>{const g=(TUTGRP.find(([re])=>re.test(name))||[0,'Other tutors'])[1];if(!groups.has(g))groups.set(g,[]);groups.get(g).push([name,rows]);});
+ if(groups.size===1&&groups.has('Other tutors'))return null;
+ const card=([name,rows])=>{const parts=String(rows[0][1]).split(' · ');
+  return `<div class="row irow tut"><span class="rt"><span class="nm">${esc(name)}</span><span class="iloc">${esc(parts[0])}</span>${parts.length>2?`<span class="iloc">Needs: ${esc(parts.slice(2).join(' · '))}</span>`:''}<span class="tmoves">${rows.map(r=>{const mv=r[2]!=null&&MV[r[2]];
+   return `<div class="tm1"><a href="#/m/${r[2]}">${esc(r[0])}</a> ${mv&&mv.t?ty(mv.t):''} <span class="tcost">${esc(String(r[1]).split(' · ')[1]||'')}</span></div>`;}).join('')}</span></span></div>`;};
+ return [...groups].map(([g,ts])=>sectionHTML('kt.'+g,esc(g),`<span class="mut small">${ts.length}</span>`,`<div class="list ilist">${ts.map(card).join('')}</div>`,!!KO.s['kt.'+g])).join('');}
+const KO=Object.assign({o:{},s:{}},(()=>{try{return JSON.parse(localStorage.getItem('itmock-open')||'{}')}catch(e){return {}}})());
+const koSave=()=>localStorage.setItem('itmock-open',JSON.stringify(KO));
+function kindGroups(){const by={};Object.entries(IS).forEach(([n,e])=>{if(!e.rows.length)return;let [c,sub]=catOf(n,e);if(sub===n)sub='';if(SPLIT.has(n))sub=n+'s';((by[c]??={})[sub]??=[]).push(n);});
+ const gs=CATS.filter(([c])=>by[c]).map(([key])=>({key,subs:Object.entries(by[key]).map(([sb,ns])=>[sb,ns.sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}))]),
   count:Object.values(by[key]).reduce((a,x)=>a+x.length,0)}));
- (D.IT||[]).forEach((sec,si)=>{if(sec.k==='npc'||sec.n==='Move Tutors')gs.push({key:sec.n,short:sec.n==='Move Tutors'?'Tutors':'NPCs',si,count:sec.r.length});});return gs;}
-const tabRow=n=>{const e=IS[n],pl=placesOf(n,e),max=OPT.lines==='all'?999:3,tm=isTM(n)&&e.rows.find(r=>r.k==='tm'&&r.link!=null),mv=tm&&MV[tm.link];
- return `<a class="row irow" href="${ihref(n)}">${icon(n,'m')}<span class="rt"><span class="nm">${esc(n)}${mv&&mv.t?' '+ty(mv.t):''}${pl.some(p=>p.miss)?'<span class="warn">MISSABLE</span>':''}</span>${pl.slice(0,max).map(p=>`<span class="iloc">${esc(p.l)}</span>`).join('')}${pl.length>max?`<span class="imore">+${pl.length-max} more</span>`:''}</span></a>`;};
-const tabList=ns=>`<div class="list ilist">${ns.map(tabRow).join('')}</div>`;
-// All: every kind collapsed (its sub-headings as small labels); one kind: its sub-headings, open.
-function tabBody(gs,cur){const one=g=>g.si!=null?baseBox(g.si):g.subs.length===1&&!g.subs[0][0]?tabList(g.subs[0][1]):
-  g.subs.map(([sb,ns])=>sectionHTML('ik.'+g.key+'.'+sb,esc(sb||'Other'),`<span class="mut small">${ns.length}</span>`,tabList(ns),true)).join('');
- if(cur!=='all')return one(gs.find(g=>g.key===cur));
- return gs.map(g=>sectionHTML('ia.'+g.key,esc(g.key),`<span class="mut small">${g.count}</span>`,g.si!=null?baseBox(g.si):g.subs.map(([sb,ns])=>(sb?`<div class="mut small isub">${esc(sb)}</div>`:'')+tabList(ns)).join(''),false)).join('');}
+ (D.IT||[]).forEach((sec,si)=>{if(sec.k==='npc'||sec.n==='Move Tutors')gs.push({key:sec.n,si,count:sec.n==='Move Tutors'&&new Set(sec.r.map(r=>r[4])).size>1?new Set(sec.r.map(r=>r[4])).size+' tutors':sec.r.length});});return gs;}
+function kindBody(g){if(g.si!=null){const sec=D.IT[g.si];return (sec.n==='Move Tutors'&&tutorBox(sec))||baseBox(g.si);}
+ if(g.subs.length===1&&!g.subs[0][0])return cards(g.subs[0][1]);
+ return g.subs.map(([sb,ns])=>sectionHTML('ks.'+g.key+'.'+sb,esc(sb||'Other'),`<span class="mut small">${SPLIT.has(ns[0])?placesOf(ns[0],IS[ns[0]]).length:ns.length}</span>`,cards(ns),!!KO.s['ks.'+g.key+'.'+sb])).join('');}
+let KG=[];
 const baseList=listItems;
-listItems=function(){if(OPT.layout!=='tabs'||st.q)return baseList();fil.innerHTML='';const gs=itemGroups();
- const cur=gs.some(g=>g.key===OPT.tab)?OPT.tab:'all',total=gs.reduce((a,g)=>a+g.count,0);
- app.innerHTML=`<div class="sub itabs" role="group" aria-label="Item kinds">${[['all','All',total],...gs.map(g=>[g.key,g.short,g.count])].map(([k,l,c])=>`<button type="button" data-t="${esc(k)}" class="${k===cur?'on':''}" aria-pressed="${k===cur}">${esc(l)} (${c})</button>`).join('')}</div><div class="itb">${tabBody(gs,cur)}</div>`;
- app.querySelectorAll('.itabs button').forEach(b=>b.onclick=()=>{OPT.tab=b.dataset.t;localStorage.setItem('itmock',JSON.stringify(OPT));listItems();window.scrollTo(0,0);});colBind(app);bars();};
+listItems=function(){if(OPT.layout!=='kinds'||st.q)return baseList();fil.innerHTML='';KG=kindGroups();
+ app.innerHTML=KG.map((g,gi)=>`<details class="split jt" data-ki="${gi}" ${KO.o[g.key]?'open':''}><summary>${esc(g.key)} <span class="mut small">${g.count}</span></summary><div class="body"></div></details>`).join('');
+ app.querySelectorAll('details.split[data-ki][open]').forEach(fillKind);bars();};
+function fillKind(d){const b=d.querySelector(':scope>.body');if(!b.innerHTML){b.innerHTML=kindBody(KG[+d.dataset.ki]);colBind(b);}}
+app.addEventListener('toggle',ev=>{const d=ev.target;if(OPT.layout!=='kinds'||location.hash!=='#/items'||d.tagName!=='DETAILS')return;
+ if(d.matches('details.split[data-ki]')){if(d.open)fillKind(d);const k=KG[+d.dataset.ki].key;if(d.open)KO.o[k]=1;else delete KO.o[k];koSave();}
+ else if(d.matches('details.sec')&&/^k[st]\./.test(d.dataset.s)){if(d.open)KO.s[d.dataset.s]=1;else delete KO.s[d.dataset.s];koSave();}},true);
+// A tick: saved at once; the card's count and done state follow; the same place on the item page shares it.
+app.addEventListener('change',ev=>{const c=ev.target;if(!c.matches('.itk'))return;if(c.checked)TK[c.dataset.k]=1;else delete TK[c.dataset.k];
+ localStorage.setItem('itmock-ticks',JSON.stringify(TK));const card=c.closest('.irow[data-n]');if(!card)return;
+ const all=[...card.querySelectorAll('.itk')],n=card.dataset.n,tl=placesOf(n,IS[n]).filter(p=>tickable(p.l)),done=tl.filter(p=>TK[tkey(n,p.l)]).length;
+ const pr=card.querySelector('.iprog');if(pr)pr.textContent=done+'/'+tl.length;card.classList.toggle('idone',SPLIT.has(n)?all.every(x=>x.checked):done===tl.length);});
 // ---- the item page
 function kindOf(e){const rows=e.rows.filter(r=>r.box!=='Shops'&&r.box!=='Valuables');const r=rows[0]||e.rows[0];
  if(!r)return e.wild.length?'Wild Pokémon hold it':e.tr.length?'Only trainers hold it':'';return r.box==='Shops'?r.sub:r.sub&&r.sub!==r.box?r.box+' · '+r.sub:r.box;}
 function megaBlock(e){return e.mega.map(p=>{const b=P.find(x=>x.dex===p.dex&&x.g!==1&&!x.fc);
  return `<div class="imega">${b?sprl(b.id,'s40')+plink(b.id):''}<span class="arrow">→</span>${sprl(p.id,'s40')}${plink(p.id)}</div>${p.nu?`<div class="mut small">Not obtainable in ${esc(CF.name)}; trainers use it.</div>`:''}`;}).join('');}
 function whereCard(n,e,title){const pl=placesOf(n,e);if(!pl.length&&!e.walk.length)return '';
- const body=`<ul>${pl.map(p=>`<li>${esc(p.l)}${p.miss?'<span class="warn">MISSABLE</span>':''}</li>`).join('')}</ul>`+
+ const body=`<div class="iwl">${pl.map(p=>lineHTML(n,p)).join('')}</div>`+
   (e.walk.length?`<div class="iwalk"><span class="mut small">Walkthrough:</span> ${e.walk.map(([si,ti,s])=>`<a href="javascript:SR.jumpStop(${si},${ti})">${esc(s)}</a>`).join('')}</div>`:'');
  return `<div class="card iwhere">${sectionHTML('iw',`${title||'Where to find'}${pl.length?' ('+pl.length+')':''}`,'',body,true)}</div>`;}
 const heldGroups=e=>[{key:'w',label:'Wild',rows:[...e.wild].sort((a,b)=>b[1]-a[1]||a[0].name.localeCompare(b[0].name))},{key:'t',label:'Trainers',rows:e.tr}].filter(g=>g.rows.length);
