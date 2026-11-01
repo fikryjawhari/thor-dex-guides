@@ -1,0 +1,105 @@
+{
+  "sources": [
+    {
+      "name": "Heartfelt guides and engine overlay",
+      "type": "github",
+      "repo": "Trinsic64/Heart-Gold-Retiled",
+      "ref": "HEAD",
+      "paths": [
+        "Docs/Guides/Evolution-Guide.md",
+        "Docs/Guides/HG-Engine-Features.md",
+        "Docs/Guides/Item-Locations.md",
+        "Docs/Guides/README.md",
+        "Docs/Guides/Static-Encounter-Guide.md",
+        "Docs/Guides/Trainer-Guide.md",
+        "Docs/Guides/Walkthrough.md",
+        "Docs/Guides/Wild-Encounter-Guide.md",
+        "HG-Engine/data/BabyMons.c",
+        "HG-Engine/data/BaseExperienceTable.c",
+        "HG-Engine/data/ComplexEvolutionMethods.csv",
+        "HG-Engine/data/Encounters.c",
+        "HG-Engine/data/Evolutions.c",
+        "HG-Engine/data/Headbutt.c",
+        "HG-Engine/data/HiddenAbilityTable.c",
+        "HG-Engine/data/Moves.c",
+        "HG-Engine/data/PokedexArea.c",
+        "HG-Engine/data/SafariEncounters.c",
+        "HG-Engine/data/Species.c",
+        "HG-Engine/data/Trainers.c",
+        "HG-Engine/data/generated/PokedexAreaLists.inc",
+        "HG-Engine/data/itemdata/itemdata.c",
+        "HG-Engine/data/learnsets/learnsets.json",
+        "HG-Engine/include/config.h",
+        "HG-Engine/include/constants/encounter_tables.h",
+        "HG-Engine/include/constants/pokedex.h",
+        "HG-Engine/include/pokedex_archive_data.h",
+        "HG-Engine/src/field/mart.c",
+        "HG-Engine/src/starters.c"
+      ],
+      "state": {
+        "sha": "229a63d7f2581761f275c2ed5aefea0cfa558969",
+        "files": {
+          "Docs/Guides/Evolution-Guide.md": "05ad38122d32dddd56748d7aee0ba39e8d030fe3",
+          "Docs/Guides/HG-Engine-Features.md": "d0059b692f2dea7e9d1bce248e6ccadb07eecf6d",
+          "Docs/Guides/Item-Locations.md": "6e24706554dc8045123ca2a0b0bae5fd6f129935",
+          "Docs/Guides/README.md": "1ce596d6b0622e2593f9eeb03ff2fa6a7baa8172",
+          "Docs/Guides/Static-Encounter-Guide.md": "7d6ca97fcb724934f703a59d10cf4a80a420e904",
+          "Docs/Guides/Trainer-Guide.md": "ae67b724b00e04210ca5441299ac05dc90c8f85c",
+          "Docs/Guides/Walkthrough.md": "3d0967d887ca479b471ff85c93113146f63fc17f",
+          "Docs/Guides/Wild-Encounter-Guide.md": "06088ae00c51959f5a0e6065b6dcb42173811db8",
+          "HG-Engine/data/BabyMons.c": "7dc2f7eeef0ede94a0f7851366bddb2a571a26a2",
+          "HG-Engine/data/BaseExperienceTable.c": "b81d30ef066910927b5796dd3a3ca25eb95c7595",
+          "HG-Engine/data/ComplexEvolutionMethods.csv": "175880aa23c6407d9203a576f326fa0c98c3c147",
+          "HG-Engine/data/Encounters.c": "f8e37b50e9ad005f196ae51a49189b25f4107735",
+          "HG-Engine/data/Evolutions.c": "956a61f9733659d93fa916f7302448c3bc51f588",
+          "HG-Engine/data/Headbutt.c": "d20aa695488984dc1a6f724d2d2bdd5cd20b43fd",
+          "HG-Engine/data/HiddenAbilityTable.c": "65eb2f776f6596813413e98746482060eb637354",
+          "HG-Engine/data/Moves.c": "b75034a9c664b04429a2c78cab4355e27165b852",
+          "HG-Engine/data/PokedexArea.c": "174144019295f5a330a326d73e2ffa66300fe26b",
+          "HG-Engine/data/SafariEncounters.c": "bf24e2090ef8c2abe1c9c4b4114055c4d86aa6d0",
+          "HG-Engine/data/Species.c": "d8afe82d5156712efb9ced6957ea3b9328fed4e9",
+          "HG-Engine/data/Trainers.c": "7c09a4b3a47e7a2cb8678cb07469fd33614f49bd",
+          "HG-Engine/data/generated/PokedexAreaLists.inc": "dacbf119585edc48040c99402747827ba12e0e72",
+          "HG-Engine/data/itemdata/itemdata.c": "7121a3538e1b9c65dea46fd36c88967d60eefd02",
+          "HG-Engine/data/learnsets/learnsets.json": "d9b8d973057921261ec9d9d554fe6a11ab738a00",
+          "HG-Engine/include/config.h": "aa68932203d119094383839eb37aac577272baf7",
+          "HG-Engine/include/constants/encounter_tables.h": "ec07fe9816fe32dbedcd5870f55ec957e3739a05",
+          "HG-Engine/include/constants/pokedex.h": "fdfb9f48a5f752ba0ce3d7386726cb3e30bcdaca",
+          "HG-Engine/include/pokedex_archive_data.h": "54601c67e6ba47d2271ea9858ccbfee205ea0b4f",
+          "HG-Engine/src/field/mart.c": "501adfe98b4ec8b2c0b53640daed3ca49486e95f",
+          "HG-Engine/src/starters.c": "8e5026cad17e3603fecfb20abf8730b50f099c4f"
+        }
+      }
+    },
+    {
+      "name": "Release version",
+      "type": "version",
+      "url": "https://raw.githubusercontent.com/Trinsic64/Heart-Gold-Retiled/main/README.md",
+      "pattern": "RELEASE-NOTES-HEARTFELT-v([0-9.]+)\\.md",
+      "state": "1.0.0"
+    },
+    {
+      "name": "Upstream engine text (ability names / descriptions)",
+      "type": "github",
+      "repo": "BluRosie/hg-engine",
+      "ref": "61b510cfb6cf7d77c3b083150fad3499f82fd326",
+      "baseline_note": "Last hg-engine main commit before Heartfelt Gold v1.0.0 (2026-10-31); Retiled carries its own Species / learnsets / Moves since v1.0.0, so only the text it lacks comes from upstream.",
+      "paths": [
+        "data/text/720.txt",
+        "data/text/722.txt"
+      ],
+      "release": {
+        "url": "https://raw.githubusercontent.com/Trinsic64/Heart-Gold-Retiled/main/README.md",
+        "pattern": "RELEASE-NOTES-HEARTFELT-v([0-9.]+)\\.md",
+        "version": "1.0.0"
+      },
+      "state": {
+        "sha": "61b510cfb6cf7d77c3b083150fad3499f82fd326",
+        "files": {
+          "data/text/720.txt": "7091e4c382e69297ebee5b3d2281370d060f0f5b",
+          "data/text/722.txt": "5105d4bbef919ffc73be85caa91b9dbe70f621df"
+        }
+      }
+    }
+  ]
+}

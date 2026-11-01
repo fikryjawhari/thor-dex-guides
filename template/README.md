@@ -6,6 +6,13 @@ build). `assemble.py` inlines them with the hack's `hack.json`, `data.json` and 
 guide differs only by its data and its `cfg`. The device rules (window sizes, no Android keyboard, `<select>` shim,
 lag rules, scroll restore) are the viewer contract: `.agents/skills/rom-hack-offline-dex/references/viewer-ui.md`.
 
+## Item icon helpers
+
+`icon(name, size=24)` returns a decorative inline sheet cell, or `''` for an unmapped exact
+item name; `iconCard(name)` returns its 32 px cell or an empty 32 px spacer. `assemble.py` adds `D.IC` (name to
+zero-based slot), `--item-sheet` and `--item-rows` from the committed per-guide sheets. See
+`sprites/items/sheets/README.md` to regenerate them. No data URI is repeated in rendered markup.
+
 ## What a hack sets (`hack.json`)
 
 `id`, `title`, `game`, `platform` (GBA / NDS / 3DS), `version` (the `dex-viewer:version` meta tag), and `cfg`:
@@ -123,8 +130,8 @@ No condition labels or category controls appear in profiles that do not declare 
 **Both teams in the first frame:** at every viewer size the first frame shows my team, the
 foe's team, both cards, the attacker's four moves (wide: both lists) and the fight bar at once. Both sprite grids keep
 six columns. **Narrow (< 480):** box (unchanged), then the trainer bar (22 px, no panel border), the fight bar (S / D,
-weather, terrain, ↺; 22 px, its buttons too: accepted below the 26 px tap size), my team (3 × 2) facing the foe strip
-(3 × 2), the two cards side by side, the moves (closed rows 33 px). The first frame is the page scrolled to the trainer
+weather, terrain, ↺; 20 px, its buttons too: accepted below the 26 px tap size; 22 until 2026-10-31), my team (3 × 2)
+facing the foe strip (3 × 2), the two cards side by side, the moves (closed rows 32 px, two lines: Move rows). The first frame is the page scrolled to the trainer
 bar (`openMatch`). **Card** (narrow, both sides; class `named`): line 0 the name, M, the ability boxes and Speed (no label) at the
 right, the name truncating as far as needed; line 1 ↺, HP box, `/max`, ✎; the HP bar under it; line 2 (only when it
 has something) the battle-state tag (Dig, Fly, ...), Aura and the berry chip (or, while offered, the hazard chip in its
@@ -138,6 +145,27 @@ column = the trainer panel, whose preview (two-line rows, 25 px, all six always 
 foe) is the foe's team (no strip); the cards (named, ~48 px) and both move lists pinned to the bottom of the window.
 Jump arrows (`CALC.stops()`): top, the first frame (trainer bar − 2, narrow), the fourth move's bottom when an open row
 or editor pushes it ≥ 24 px past that, and Field (always, clamped); stops within 24 px merge.
+Field's open box (capped to the window by `fitToggles`) and the box grid scroll inside but pass the wheel / drag on
+to the page at their ends (no `overscroll-behavior:contain`: with it the mouse wheel over Field never moved the page).
+**Short-wide (480+ wide and under 392 tall,** e.g. 480 × 316, 537 × 360): the narrow page's top with the wide match.
+Box (`.mg`, 136 px, the grid scrolls inside) above the fold, then the trainer bar and the battle-state row sharing
+one line, my team and the foe strip one row of six each (the narrow cells), then the wide cards, editors and two move
+columns; no blank band above Field. Opening the calc scrolls to the trainer bar (as far as the page goes: at 480 × 316
+the box's bottom still shows above it) and the rail has the narrow stops.
+`shortWide()` sets `body.calc-short` on load and resize, not a media query, and leaves it alone while a calc input or
+select has focus (a phone keyboard resizes the window); the page-top and scrolling tests (`stops`, `openMatch`, drag
+auto-scroll: `narrowTop()`) treat it as narrow, the card and editor tests (`fitCards`, `eopen`, the editors' resize
+handler) stay width-only. At 392 tall and up nothing changes (480 × 392 keeps the box beside the trainer list and fits
+four rows). Rejected (prototype, 2026-10-31): the full wide page at these sizes.
+**Move rows**: a closed damaging row is two lines, 32 px. Line 1: type dot + move name (shrinks first, `…`), the KO
+text (`.ko`, 10 px, its colour; shrinks second), the min–max buttons (`.hp`, never shrink) at the right. Line 2: Z,
+the HP / miss chip, the % range (10 px bold), the effect odds (grey, the rest of the line, `…`), the move controls
+(H1 / ×n, category, state, toggles, C) at the right. Built in CSS only: `.mm` is a wrapping flex row, `.r1` / `.r2`
+are `display:contents`, `order` puts the KO between the name and `.hp`, `.mm::after` breaks the line. Status rows
+and empty slots keep name | right slot (Not modelled chip, Z then the slot in Z profiles) at the same 32 px, so
+side-by-side columns line up; the opened row (`.dd`) follows line 2 at full width. The user reads the odds as "there
+is an effect": cut odds are fine, the open row lists them all. Rejected (prototype): three lines (odds alone on line
+3, every slot 41 px so the columns line up) and the earlier rows (range, KO and odds sharing line 2).
 **My team row**: `team: [{src, pid}]` (≤ 6, dense) in `cfg.ls.dmg`, resolved by pid (imported: party then boxes;
 custom: `ST.custom`); entries that no longer resolve drop out. Imports never fill or change it (the user): it is built
 by drag and drop only. Tap a team cell = send it in (as a box tap). Pointer-event drag (HTML5 drag doesn't fire on
@@ -230,9 +258,40 @@ row's height (also the HP chips, which were 4 px taller). Moves with a Field / E
 also applies the move's other parts (Charge's SpD +1). Damaging moves get no new control: their guaranteed effects
 (Close Combat's drops, Nuzzle's paralysis, Knock Off, a 50 % effect under Serene Grace) apply with the damage
 endpoints, the custom Damage Apply and the damaging Use; the opened row says `After: …`. Chance effects never apply.
-Not stored or not tracked (logged): accuracy / evasion, confusion and other volatiles, ability / type changes and item
-swaps (set them in Edit), switching. Mist is a side state (`atkMist` / `defMist`, beside Safeguard). No new saved
-state otherwise: stages, status, `used` and HP are the existing per-Pokémon battle state. Scenario: `calc-effects`.
+Unsupported status moves use a small disabled **Not modelled** chip in the existing right slot. Their opened row
+shows `Not modelled: <reason>` as wrapping text, never a hover-only tooltip. A partly implemented move keeps its
+damage / effect / HP / Field control and puts the missing part's reason only in the opened row (U-turn: switching).
+Splash and other genuine battle no-ops show **No effect**, with the explanation in the opened row. The shared
+reason / no-op table is `tools/calc/move-coverage.json`; `effects_coverage.mjs --all` checks all six guides.
+Speed Swap's raw Speed is scratch battle state (`rs`), used in the card stats and engine and cleared by ↺;
+Rest uses the resolver's sleep checks, full healing and berry reactions rather than an unconditional HP-only tap.
+**Effect odds**: a damaging row's closed line 2 shows its `MV.se` added effects after the range (`30% paralysis`,
+`10% burn, 10% flinch`, `100% target Atk −1`): the chances and the lower-case stage / status / flinch parts (recoil,
+drain and heal are the HP chips), as the user has them: Serene Grace / Rainbow double a chance (`DMG.secondaryChance`),
+Sheer Force (Gen 5+) removes the secondaries but not the user's own 100 % drops. One layout at every width: the odds
+shrink first and end in `…` (the range and controls stay whole); the opened row lists them all (`Effects: …`).
+**KO chance**: the closed row's KO text (`2HKO 43%`) can be cut off at 260 px, so the opened row always starts with
+it in full (`43.2% chance to 2HKO`, `Guaranteed OHKO`, `No KO in 4 hits`; none when immune or fainted). Not a
+`title`: no tooltip shows on Android / the Thor.
+Text only. **Fight changes**: moves that change a type, ability or item do it for this fight only (FIGHT fields
+`ft` types, `fadd` an added type, `fa` ability (`''` suppressed), `fi` item (`''` none); all names): Soak /
+Magic Powder / Camouflage / Conversion / Reflect Type / Burn Up / Double Shock, Trick-or-Treat / Forest's Curse (the
+added type replaces the last one), Worry Seed / Simple Beam / Entrainment / Role Play / Doodle / Skill Swap (both),
+Gastro Acid / Core Enforcer (suppressed), Trick / Switcheroo (both), Bestow, Thief / Covet (the user gets the item;
+the target's loss stays `used` like Knock Off / Incinerate / Bug Bite), Mummy / Lingering Aroma / Wandering Spirit on
+a contact hit. The fail reasons are the resolver's (`tools/calc/README.md` → Move effects). Conversion 2 (random)
+only logs. By hand, for any Pokémon: **Fight…** beside the battle state in Edit opens one searchable sheet (types
+`Becomes` / `+Adds`, abilities with No ability, items with No item). The card shows **Δn** (n changes; narrow: first
+on the card's third line, before the battle state / Aura / berry; wide: in the HP line after `/max`); a tap opens its
+chips under the card (`Water`, `+Ghost`, `Insomnia`, `No ability`, `Item: Leftovers`, `No item`; Δn filled,
+`aria-expanded`), again closes them; a chip tap clears that one, and at 0 the button and the row go. Open is per side in
+memory (`FXOPEN`: the side's key), closed on load, kept across re-renders, shut when n is 0 or the side's Pokémon
+changes. Rejected (prototype): the chips always on the card (as before); no sheet or new screen for them. ↺ and
+Reset fight clear them all; Edit keeps showing the set's ability and item, and Save never stores them. Saved state:
+names; a type or ability the guide lacks drops on load (`fightIn`). Not stored or not tracked (logged): accuracy /
+evasion, confusion and other volatiles, switching. Mist is a side state (`atkMist` / `defMist`, beside Safeguard).
+Stages, status, `used` and HP are the existing per-Pokémon battle state. Scenarios: `calc-effects`,
+`calc-fight-state`.
 **Field**: Singles/Doubles, Weather and Terrain are in the fight bar; Field below it (layout: Field layout). Stored `atk*` means Player and `def*` means Foe; the page remaps inputs for foe attacks. Old
 attacker-relative state migrates once, using its saved direction. Focus Energy is offered on both sides in every
 profile. Weather / terrain layers are manual (this fight), then the most recent entering ability setter, then
@@ -254,7 +313,7 @@ mark, tap = manual). `typed-side-condition` (Tailwind / Magnet Rise for listed t
 weather (`locked:true`) become runtime values (`AREARULES`: `atk/def…Types`, `weatherLock`) that `battleField()`
 adds to the stored field; they are rebuilt by `updateField`, never saved. A lock beats every weather layer (select
 disabled, setters, actions, an old manual save). With a Fog option in the profile, area Fog is the bottom weather
-layer: a manual / setter weather covers it, **Defog** (Clear Fog on the move row) clears it for the fight. The
+layer: a manual / setter weather covers it, **Defog** (its Use on the move row: the effect chip, or Clear Fog in a profile without Defog's effect) clears it for the fight. The
 Global group lists an area switch per typed rule / lock / Fog (on = applies); the switches and Defog are saved in
 `ST.areaByTrainer[t.k] = {disabled:{'kind:value:side':true}, fogCleared}` (trainer key + effect name; created only
 when used, cleared by `newFight` / Reset fight). Field readouts (`.dfrule`) give each side's state: Tailwind / Magnet
@@ -344,11 +403,13 @@ Text zoom scales every font; box heights are fixed px. A hidden probe re-measure
 changes. **Search**: Find trainer and Find yours also match a set's moves, held item and known ability (a trainer:
 any of its Pokémon's); names rank first, and a term match is named on the row.
 Scenario: `tools/scenarios/calc-state.mjs`; trainer Metronome top-slot conflicts: `tools/calc_ui_check.py`.
-**Z-moves** (profile `zmove`, Photonic): each damaging row's % line has a Z toggle, centred under the
+**Z-moves** (profile `zmove`, Photonic and Unbound): each damaging row's % line has a Z toggle, centred under the
 row's type dot (a shared 20 px column keeps the name and % text aligned). Z before the name was rejected because
 it cut long names at 260 px. On: the row shows the Z-move's name in the accent colour and its damage
 (slot `z`, one hit: no ×n / Hits); the opened row says "Z-move of <move>". Stored per slot in `ST.z`,
-cleared with the slot's move. Status rows have no Z. Profiles without `zmove` have no Z control.
+cleared with the slot's move. A status row whose move has a Z effect gets the same toggle in its `.r2` line; on, the
+opened row says the effect ("Z: Atk +3", "Z: full heal", "Z: lowered stats reset") and the use chip applies it before
+the move (Z-Splash +3 Atk; Z-Belly Drum heals, then pays half). Profiles without `zmove` have no Z control.
 **Totem auras** (data `au`, five stages): the Trainers card tags the Totem ("Aura Def +1", "Aura +2 all"); in the calc
 its stages start at the aura, with an "Aura" mark while unchanged (Reset brings it back).
 Narrow placement follows the three-line card rules above. Scenario: `tools/scenarios/calc-zmove.mjs`.
@@ -510,7 +571,7 @@ blocks, three across at most. An opened card starts at its team. One speed per P
 1. Pager at the top (no "‹ All Pokémon"; the rail's Pokéball goes to the list), the top card, Expand all / Collapse all
    (`segBar`, the page-top rule: Collapse all with every section closed reads and acts as **Reset all**, `resetOpen`),
    "Sources disagree" when present (doesn't collapse), then the sections: Abilities, Base stats, Stat calculator, Type
-   defences, Where to find, Evolution, Used by trainers, Moves (`PSECS`; open by default: Abilities, Base stats,
+   defences, Where to find, Held items, Evolution, Used by trainers, Moves (`PSECS`; open by default: Abilities, Base stats,
    Evolution, Moves). One open / closed state for every Pokémon (`LS.dex` `o`), so switching lands on the same boxes.
    Header taps never scroll (`flip`); collapse bars as on the other pages (`bars()`, less the name bar's height).
 2. **Name bar** (`#pbar`): fixed at the top beside the rail, slides in (120 ms) once the top card is off screen:
@@ -524,7 +585,7 @@ blocks, three across at most. An opened card starts at its team. One speed per P
 4. **Forms** (same dex number): `#6 · 3 forms ▾` in the top card; the top card or the bar's sprite / name opens the
    forms menu (sprite, name, type letters; the current one lit); a tap outside closes it. Forms keep their own pages.
 5. **Switching keeps the place** (arrows, forms menu, Evolution rows): the first keyed row under the bar (`data-pk`:
-   `sec:` / `ab:` / `bs:` / `sc:` / `td:` / `wh:<place>#n` / `ev:<id>` / `tr:<trainer key>` / `mv:<move>[#n]`, names,
+   `sec:` / `ab:` / `bs:` / `sc:` / `td:` / `wh:<place>#n` / `hi:w:<item>` / `hi:t:<item>` / `ev:<id>` / `tr:<trainer key>` / `mv:<move>[#n]`, names,
    never positions) lands at the same height on the new page; missing: the nearest of its kind in that section
    (`data-po`: level, stat, slot; else the next name alphabetically), else that section's title, else the next one's.
    At the top: the top. The hashchange handler runs it (`PKEEP`) instead of its snapshot restore; Back and reload use
@@ -541,9 +602,126 @@ blocks, three across at most. An opened card starts at its team. One speed per P
 8. **Stat calculator**, stats down the side: Level and Nature, a row per stat (base, IV, EV when the guide has EVs,
    result; the nature's raised stat red ↑, lowered blue ↓), Total (base total, EVs n / 510), Speed by level.
 9. **Use in calc ▸** sits in the top card under the types (the calculator starts closed).
-10. No word breaks inside a name: sizes fit the widest word in any guide (~6.7 em). Top card under 340 px: the name
+10. **Held items** (`hi`, `heldBlock`; no section when the form holds nothing in the wild): each wild item (`ilink`) and
+    its % from `P.hi`, highest first (no % when the data has none), no heading. Only on a form you can meet in the wild
+    (`wildForm`): a species' base form (its first `P` entry), or another form with wild encounters of its own (`P.w`);
+    never a Mega. Castform's weather forms, Shaymin Sky or a regional form you only get by evolving list none (the data
+    keeps `hi`; the item page's Held by follows the same rule). What trainers hold is on the item page's Held by, not
+    here (rejected: a "Trainers give it" list, 2026-11-01). Where to find has no "Wild held item" line.
+11. No word breaks inside a name: sizes fit the widest word in any guide (~6.7 em). Top card under 340 px: the name
     across the top at 20 px, the 88 px sprite and details under it; wider, the name beside the sprite.
 Scenario: `tools/scenarios/dex-page.mjs`.
+
+**Move page** (`#/m/<index>`, decided 2026-10-31; `MOVE PAGE` in dex.js):
+1. The top card keeps the name, type, category, power / accuracy / PP / priority, description, the **In battle** box
+   (`MV.b`, the item page's `fxBox`; none without it), "Also TM004 Calm Mind" (`moveTMs`: every TM / HM / TR that
+   teaches it, each an `ilink` to its item page; it replaces the old TM place lines), tutor locations, hack changes and
+   source disagreements. Under it, one **Where to find TM004 (N)** card per TM (`itemWhere`, the item page's card, so
+   the ticks are the same ones). The Pokémon-list filter is "+ Filter" at the right end of the
+   Back line (`backLine`: one flex row, the Back line's height, `nowrap` so it never wraps at 260 in kb mode; the user
+   on the Thor, 2026-10-31: near the top, few words), not a sentence in the card or below Learned by. The target (`MV.tg`) is a 2 × 3 field: opponents above, You at the left end below, then the adjacent
+   and far allies. Solid red cells are all hit; dashed red cells are choices (random / counter targets use the same
+   possible-target outline). The accompanying line says which. Missing target data shows no invented target.
+2. Properties (`MV.f`) are plain linked lines, not raw flags, pills, exception badges or tooltip-only explanations.
+   Damaging moves always say Makes contact / No contact; the groups and exceptions appear only when present
+   (including EI's `kick`, Kicking move).
+   `reflectable` appears through Magic Bounce in Affected by, not as another property. `moveProps` and
+   `moveProperties` are shared helpers for other pages. Added effects (`MV.se`, `[chance, text]` pairs) follow the
+   properties verbatim with their odds, including guaranteed effects. Capitalised guaranteed recoil / drain / heal
+   phrases already contain their quantity, so they do not get a redundant `100%` prefix.
+3. Each property opens `#/mp/<prop>`: every matching move, alphabetical by name, with type and power, linking to
+   its move page (`moveList`). `prop` is the stable `MV.f` string; `nocontact` is the derived damaging-move complement
+   of `contact`. No list state is saved: the existing position save keeps this hash without index mapping. A gone
+   or unknown property returns to the Pokémon list; Back and the Pokémon rail tab keep the usual route / position.
+4. Affected by reads only `MI` records containing the move (`m`); Boosted / changed by (`w: 'u'`) opens, Against it
+   (`w: 't'`, count of records) starts collapsed. Each is a card with a `.sec`. `interactionRows` groups equal effect
+   text (`e`); every ability links by its `AB` index, item names link to their item page (`ilink`), and each
+   hack-changed name (`h: 1`) carries the visible word changed. No universal interactions are invented in the UI.
+5. Learned by has a `.sub`: All, Level up / TM / HM / Tutor / Egg / Evo, only methods present, with learn-record
+   counts. HM is distinguished from TM by its machine entry in `IT`; a move in both appears in both groups. All
+   starts with each method's `.sec` collapsed; selecting a method shows only it, open; returning to All collapses
+   them again. None of these selections or open states is saved. Pokémon stay in dex order inside each method;
+   their level / Evo labels, types, forms and links remain. Open method headers stick at the top and paint the card's
+   colour (`--panel`, not `--bg`: they sit in a card; `--bg` showed as a dark band) above themselves, with no gap. Not one long mixed table or a saved method filter.
+Scenario: `tools/scenarios/move-page.mjs`, every guide, all viewer sizes in normal and `dvkb` modes.
+
+**Ability page** (`#/a/<index>`, decided 2026-10-31; `abilityDetail` in dex.js):
+1. The top card keeps the name, description (or the original one), hack changes and source line; + Filter is on the
+   Back line as on the move page (absent when no Pokémon has the ability).
+2. Moves it affects (N = distinct moves), a `.sec` card collapsed on open, reads only `MI` records naming the ability
+   (`a`): Its holder's moves (`w: 'u'`), then Moves used against it (`w: 't'`), each only when present. Equal effect
+   text (`e`) is one block: the effect, the word changed for `h: 1`, then its moves (`moveList`: alphabetical, type,
+   power, tap = move page). One effect per block, not one flat move list, so Mega Launcher's healing line and Magic
+   Guard's two lines keep their own moves. No card when no record names it.
+3. Pokémon with it has the move page's picker (`pickCard` / `bindPick`, shared with Learned by): All / Normal /
+   Hidden with counts, only groups present; All shows each group collapsed, picking one shows only it, open; open
+   headers stick. Normal = one of `p.a`, Hidden = `p.ha`; a species with it in both is in both. Nothing saved.
+
+**Item page** (`#/i/<item name>`, decided 2026-11-01, `plans/item-pages.md`; `ITEM PAGE` in dex.js, "Item page" in dex.css):
+1. Routed by name (`ihref`: URL-encoded, `'()!*~` too, so the reopen route keeps it); the Items rail tab's page. `itemIdx`
+   builds, once, everything the guide says about each item by name: its `IT` rows (not Useful NPCs or Move Tutors), wild
+   holders (`P.hi` pairs, Mega and form-change forms left out), trainers whose Pokémon or partners hold it, `MI` records
+   with `i`, the Megas it makes (`p.stone`), and every `IX` name. A name it doesn't have: "‹ Back" and "Not found."
+2. Top card: icon (32), name, kind line (its first box and sub-heading, "Held Items · Battle gear"; the sub-heading left
+   out when it repeats the box or the name; no box: "Wild Pokémon hold it" / "Only trainers hold it"), the description
+   (`IX` [0], the word changed when [2]), the **In battle** box (`IX` [1]; accent bar, small-caps label). A Mega Stone has
+   no In battle box: its line `base sprite + name → Mega sprite + name` says it, and a `nu` Mega adds "Not obtainable in
+   <hack>; trainers use it." A TM / HM / TR page is the icon, name, kind line and the move's row (`moveList`) only.
+3. **Where to find (N)**, open: every line of its rows (N = lines). A pickup line (key in `r[5]`) has its tick box and, when
+   a walkthrough row has its key, the stop's name as a link (`SR.jumpPick`: the split, stop and Items section open,
+   search cleared, `land()` on `tr[data-pk]`, or on the stop when that row isn't drawn). Order: unticked pickups, the
+   lines that aren't pickups (wild, repeatable, shops of ordinary items; a one-of-a-kind item's Shop line is a pickup), ticked pickups; set when the page is drawn, so a tap doesn't
+   move the line under the finger.
+4. **Held by (N)**: the ability page's picker (`pickCard` / `bindPick`): Wild (sprite, name, types, % on the right,
+   highest first; no % when the data has none) and Trainers (its Pokémon holding it, name → `#/tr/<k>`, place · box;
+   rivals of the other starters left out). **Moves it affects (N)**, collapsed: `affectsCard`, shared with the ability
+   page. Nothing on the page is saved except ticks.
+5. **Ticks** (`LS.items` → `g: {pickupKey: 1}`, no new key): `tickHas` / `tickSet` / `tickCount` (pickups of this build)
+   / `tickClear` (empties `g`) / `tickBox(key)` (`input.itk[data-pk]`). One change listener on `#app` saves a tap,
+   every copy of that box on screen follows, and `TICKHOOK` functions `(key, on)` redraw what depends on it (`key`
+   null after a clear). Pickup keys are stable (`tools/pickup_keys.py`), so a tick whose key is gone waits in `g`.
+6. **Links** (`ilink`: 18 px icon + name; plain text for a name the guide doesn't know): Items tab rows (TMs and Mega
+   Stones too; tutors keep the move page), walkthrough item rows and Items with no walkthrough place, trainer cards'
+   item, the Pokémon page's wild held items and Mega stone, the move page's Affected by and TM line, search results
+   for items (a Page action). Not links: the calc's item chips and pickers (controls).
+Scenario: `tools/scenarios/item-page.mjs`, every guide, all viewer sizes in normal and `dvkb` modes.
+
+**Items tab** (decided 2026-11-01, `plans/item-pages.md` §5-6; `ITEMS TAB` in dex.js, "Items tab" in dex.css):
+1. Boxes are the kinds, in the data's order (`D.IT`, `tools/itemstd.py` → `BOXES`), as the standard collapsible boxes
+   (Collapsible pages above). Box count = items (a nomerge name counts once); Move Tutors: "N tutors". Sub-headings are
+   the data's (`r[4]`), counted in cards.
+2. Open state by name: `LS.items` `o: {<kind>: 1}`, `s: {<kind>.<sub-heading>: 1}`. Saved before 2026-11-01 by box index
+   (`o` "3", `s` "3.Berries", a `layout`): those entries are dropped once on load and the rest saved back; a name a later
+   build drops waits unused. Ticks (`g`) are the item page's (Item page 5).
+3. **Cards** (the dex-row look, `.list>.row`, so `content-visibility:auto`): icon (or the 32 px spacer), name (item page
+   link), a TM's move type, MISSABLE, "done/total" with 2+ pickups; then the first 3 lines in the item page's order
+   (unticked pickups, other lines, ticked pickups) with their ticks and stop links, then "+N more" (item page). Every
+   pickup ticked: the card fades (.55). A tick redraws the cards of that item (`TICKHOOK`), so the next lines move up.
+   One card per item: a name on several rows of a box is one card with all its lines, except **nomerge** (every row of
+   the name is one pickup line: Unbound's 90 Zygarde Cells), a card per row titled by the place, the rest of the line
+   under it. (The data has no nomerge flag; the template reads it from the rows.)
+4. **Move Tutors**: when the rows carry group headings (RULES `tutor_groups`; Unbound), one card per tutor (rows sharing
+   a place and an unlock, "place · cost · unlock"): the place, "Needs: <unlock>", each move as a link + type + its cost,
+   under the group sub-headings. No groups (Hardlove): the table. Useful NPCs: the table.
+5. **Tick bar** above Expand / Collapse all: "N ticked" (pickups of this build) and, at N > 0, "Clear ticks". The first
+   tap arms it ("Tap again to clear N"); any other tap or a redraw (leaving the tab) disarms; the second clears `g`
+   (`tickClear`) and the hook redraws the cards and the bar. Not pinned: it is at the page top, where nothing covers it.
+6. **Search** (`st.q`): rows whose name or text matches, as cards (tutors: the matching moves of each tutor) under their
+   box names (`.sech`), ticks working. `SR.jumpItem` opens the box and sub-heading by name and lands on `[data-ri~=ri]`.
+7. **Walkthrough item rows** (the stops' Items and Guide info's "Items with no walkthrough place"): the pickup's tick box
+   before the place text (`walkItemText`), the same tick as the cards and the item page. Stop counts stay checklist-only.
+Scenario: `tools/scenarios/items-tab.mjs`, every guide, 260 × 316 in normal and `dvkb` modes.
+
+**Ability marks on the Pokémon page** (the compact moves table, `ownBoosts` / `bindBoosts` in dex.js): a move that one
+of this Pokémon's (this form's) own abilities affects (`MI`, `w: 'u'`, ability in `p.as`) gets an A in an accent dot
+after its name, in every tab, at every width: one form, no per-width variant. It is a button (padded hit area, no
+hover or `title`): a tap inserts a row under the move naming each ability that affects it, hidden when it's the hidden
+ability, and what it does ("Iron Fist: Power ×1.3", changed when `h: 1`); a second tap removes it. Not saved; the row
+goes when the tab changes. At 260 the dot wraps under a long name rather than widening the table. Rejected: a legend
+line under the table (repeats per tab and reads as instructions), a `title` tooltip (no hover on a touch screen),
+fuller per-width text (the multiplier column would cost the name column its room at 260), target-side records (those
+are about moves used against it, which this table doesn't list).
+Scenario: `tools/scenarios/ability-page.mjs`, every guide, all viewer sizes in normal and `dvkb` modes.
 
 **Search:** the full-window search on every device (the in-page keyboard in the viewer or `dvkb`, the device keyboard
 elsewhere). The current page's section first, then Pokémon, Filters, Locations, Trainers, Items, Walkthrough. Each

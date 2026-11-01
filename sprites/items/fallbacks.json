@@ -1,0 +1,154 @@
+{
+  "bluepetal": {
+    "url": "https://www.serebii.net/itemdex/sprites/bluepetal.png",
+    "sha256": "ddb698956f6826d65ac3f6735f1b25a89c15e11fabcb8c5fc951d6ac3f115f44"
+  },
+  "bridgemailm": {
+    "url": "https://www.serebii.net/itemdex/sprites/bridgemailm.png",
+    "sha256": "673dd507e75c41df1c64b131a2313d30104e7496caff8ada398c56264a5bb80d"
+  },
+  "bridgemailt": {
+    "url": "https://www.serebii.net/itemdex/sprites/bridgemailt.png",
+    "sha256": "1c37fbfc90c788c98d0307bdec21090b13f84737e6b97b7e9aa390d2f102313c"
+  },
+  "bridgemailv": {
+    "url": "https://www.serebii.net/itemdex/sprites/bridgemailv.png",
+    "sha256": "69b5e8a8cb14e8b2c4c00a60ccef557ca91f032cd7ddba35d863bdb37cca36df"
+  },
+  "colressmachine": {
+    "url": "https://www.serebii.net/itemdex/sprites/colressmachine.png",
+    "sha256": "7cd00349ba2d30e2e79a048939509dc275e649e1d4f41524ba992a9ebbf1c5df"
+  },
+  "elevatorkey": {
+    "url": "https://www.serebii.net/itemdex/sprites/elevatorkey.png",
+    "sha256": "bc57bfcac294f002eb261e3d56c25f2e4da6e91684b8e37bed45ef4be188c6c9"
+  },
+  "favoredmail": {
+    "url": "https://www.serebii.net/itemdex/sprites/favoredmail.png",
+    "sha256": "3bf308c36558da759f64db123cb5da725f6b872b0b2a97c144e07b2162fd38f5"
+  },
+  "fishingrod": {
+    "url": "https://www.serebii.net/itemdex/sprites/fishingrod.png",
+    "sha256": "910482e4605eb0836238e397218d5783de28d7dd9be8520e6a0f76842cfa13ec"
+  },
+  "foragebag": {
+    "url": "https://www.serebii.net/itemdex/sprites/foragebag.png",
+    "sha256": "cdae4efdcc66b7bfcfee526e2f0eb38f862d1525c4c3196fd1288c5246db53d5"
+  },
+  "greenpetal": {
+    "url": "https://www.serebii.net/itemdex/sprites/greenpetal.png",
+    "sha256": "c17f96338452299e0ecfc4d36fa6f759edcffb74038deaa8962f022568268826"
+  },
+  "greetmail": {
+    "url": "https://www.serebii.net/itemdex/sprites/greetmail.png",
+    "sha256": "576dd988f3dbf25cacc34c8384235a6ba149170d434999cd3e2e4354a8f3d5cc"
+  },
+  "grubbyhanky": {
+    "url": "https://www.serebii.net/itemdex/sprites/grubbyhanky.png",
+    "sha256": "4725d9617e4651398a37046d4a84bc2c62843584c8a941cd165e67777c66dd4c"
+  },
+  "inquirymail": {
+    "url": "https://www.serebii.net/itemdex/sprites/inquirymail.png",
+    "sha256": "bfd41d4596f0d4085e07c4ddc5a6094f612c4c048af3f9290cc45d2c5bc3ad45"
+  },
+  "intriguingstone": {
+    "url": "https://www.serebii.net/itemdex/sprites/intriguingstone.png",
+    "sha256": "cb7bc31b3fbad7db145b260c5760afef032835fd73e1644b690ed702f81b595b"
+  },
+  "labkeycarda": {
+    "url": "https://www.serebii.net/itemdex/sprites/labkeycarda.png",
+    "sha256": "0b26eaf3827174f59799b346695dda88b5b85fbbe86fd517b2ee262811f9805b"
+  },
+  "labkeycardb": {
+    "url": "https://www.serebii.net/itemdex/sprites/labkeycardb.png",
+    "sha256": "0374da3c576cadabb735ca6e558e4aca9eeb7a570366c151979a7190d3aa7efb"
+  },
+  "labkeycardc": {
+    "url": "https://www.serebii.net/itemdex/sprites/labkeycardc.png",
+    "sha256": "91211af4a7717d979b8401e5ba4048bfa01ad112f672cb1c5469a5f622e9160e"
+  },
+  "leftpokeball": {
+    "url": "https://www.serebii.net/itemdex/sprites/leftpokeball.png",
+    "sha256": "b02fe784deab7176537741525a5c17b1a742bfbcf9fd2bdac13f6adaad63506b"
+  },
+  "likemail": {
+    "url": "https://www.serebii.net/itemdex/sprites/likemail.png",
+    "sha256": "667a4dfc85ba98b5c9a49bf914d0c2fa5c4b13dadc578ff7453a535c61177b41"
+  },
+  "lookerticket": {
+    "url": "https://www.serebii.net/itemdex/sprites/lookerticket.png",
+    "sha256": "c7bada4bda189caee2252572e1ba8cff0ed46a1bd8f8e152ff51dff763c5ed1b"
+  },
+  "orangepetal": {
+    "url": "https://www.serebii.net/itemdex/sprites/orangepetal.png",
+    "sha256": "bf6d69864b56458821aaecd63110711fb801da640a24b71dc3b255606975c753"
+  },
+  "permit": {
+    "url": "https://www.serebii.net/itemdex/sprites/permit.png",
+    "sha256": "8890bfc3ddee64dc3911453014c3f07464965e10f2f92d3aa7d9ba64e9f6b0ce"
+  },
+  "pinkpetal": {
+    "url": "https://www.serebii.net/itemdex/sprites/pinkpetal.png",
+    "sha256": "1862c3098255c50cf6919d7425f07e79ccb149d467f7057889002a38f193ab00"
+  },
+  "plasmacard": {
+    "url": "https://www.serebii.net/itemdex/sprites/plasmacard.png",
+    "sha256": "dc0262a03e2f00a16b220829a0e173fa6c181369199b105f5cfc082614a63d60"
+  },
+  "powerplantpass": {
+    "url": "https://www.serebii.net/itemdex/sprites/powerplantpass.png",
+    "sha256": "894ab4f693c9136630011b9c76a3b700be046f6e49f2737a22d1aa1f728f04c4"
+  },
+  "professorsmask": {
+    "url": "https://www.serebii.net/itemdex/sprites/professorsmask.png",
+    "sha256": "8488d9fce83e3b09a563425a6e6539879d11bbca615ba27bda063355e0bd7f60"
+  },
+  "profsletter": {
+    "url": "https://www.serebii.net/itemdex/sprites/prof'sletter.png",
+    "sha256": "fdb6d06c7743b5c0e700e04f5322c98135347f1e7edc47d64df98de05fd817f9"
+  },
+  "purplepetal": {
+    "url": "https://www.serebii.net/itemdex/sprites/purplepetal.png",
+    "sha256": "61e145b1f7565a5817d858707d34924c374cfb65db67eef278d1e3cc4ef19759"
+  },
+  "rainbowflower": {
+    "url": "https://www.serebii.net/itemdex/sprites/rainbowflower.png",
+    "sha256": "61e20cc83d280462c47a1b345e710c5bf52a2c688f0ed7ca2b2e428c09e8479f"
+  },
+  "redpetal": {
+    "url": "https://www.serebii.net/itemdex/sprites/redpetal.png",
+    "sha256": "2ff53bb4391172f3088a9ac3d7763ce1a40b062fa7b5e0c23e3135885fa4ab8f"
+  },
+  "replymail": {
+    "url": "https://www.serebii.net/itemdex/sprites/replymail.png",
+    "sha256": "fde5b58b0e9f9a62e2d1f8011e2808ccb835aaad116d23533dac27e58e1ee76e"
+  },
+  "ridepager": {
+    "url": "https://www.serebii.net/itemdex/sprites/ridepager.png",
+    "sha256": "3eabcd2f344a28e87f75931e37bc69faa66402faee569a24b3ae7cc677c37fa6"
+  },
+  "rollerskates": {
+    "url": "https://www.serebii.net/itemdex/sprites/rollerskates.png",
+    "sha256": "7e2caaa7e270c3802af90f2d39e12da908d7faf9f3b12f2f739a1410658fcd41"
+  },
+  "rsvpmail": {
+    "url": "https://www.serebii.net/itemdex/sprites/rsvpmail.png",
+    "sha256": "698f47817fcc47bc65ec6a4ca51eabecaf7dde49f2a3ee647a4907367be0563f"
+  },
+  "sparklingstone": {
+    "url": "https://www.serebii.net/itemdex/sprites/sparklingstone.png",
+    "sha256": "087d124f7444f89b88c474107f8cf15d88810f3c21fe82565453cf5fc72fecf2"
+  },
+  "thanksmail": {
+    "url": "https://www.serebii.net/itemdex/sprites/thanksmail.png",
+    "sha256": "3e7f507ca50099971ea5e14fd2bdf4977280374589c63ef05d26c23f058e3268"
+  },
+  "tmvpass": {
+    "url": "https://www.serebii.net/itemdex/sprites/tmvpass.png",
+    "sha256": "8f87e1b865cf44c8308c4761255b71e5f03c36501cda35c6af46271e317f9c7d"
+  },
+  "yellowpetal": {
+    "url": "https://www.serebii.net/itemdex/sprites/yellowpetal.png",
+    "sha256": "7c91764e6d1d9d43c891d521dabaf6f5e2cc4dfd4308b92b2d29dcb537d833b5"
+  }
+}

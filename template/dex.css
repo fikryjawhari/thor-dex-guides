@@ -30,6 +30,8 @@ details.split[open]>.body,details.stopd[open]>.stop,.trd[open]>.trb{content-visi
 .row .nm{flex:1;font-weight:600;min-width:0}
 .row .bst{color:var(--mut);font-variant-numeric:tabular-nums;font-size:13px;text-align:right}
 .spr{overflow:hidden;flex:none;image-rendering:pixelated;background:no-repeat left/auto 100%}
+.item-icon,.item-icon-spacer{display:inline-block;flex:none;vertical-align:middle;width:var(--icon-size,32px);height:var(--icon-size,32px)}
+.item-icon{image-rendering:pixelated;background-image:var(--item-sheet);background-repeat:no-repeat;background-size:calc(var(--icon-size) * 16) calc(var(--icon-size) * var(--item-rows))}
 .spr img{height:100%;width:auto;display:block;image-rendering:pixelated}
 a.sprl{display:block;flex:none;width:max-content;line-height:0}
 .sprph{border-radius:50%;display:flex;align-items:center;justify-content:center;container-type:size}
@@ -55,6 +57,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .sub button{background:var(--panel2);color:var(--fg);border:0;border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600}
 .sub button.on{background:var(--acc);color:#111}
 .back{display:inline-block;margin-bottom:4px;font-weight:600}
+.backl{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}.backl .back{margin-bottom:0}.fadd{white-space:nowrap}
 .tag{font-size:11px;background:var(--panel2);color:var(--mut);padding:1px 6px;border-radius:6px;margin-left:4px;font-weight:600}
 .evo li{margin:3px 0}
 ul{margin:0;padding-left:18px}
@@ -116,7 +119,7 @@ body{padding-left:44px}
 #rail svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 body[data-v=calc] header{display:none}
 /* Pokemon, move, ability and trainer pages hide the search bar but keep the query: the list pages still show it. */
-body:is([data-v=p],[data-v=m],[data-v=a],[data-v=tr]) header{display:none}
+body:is([data-v=p],[data-v=m],[data-v=mp],[data-v=a],[data-v=tr]) header{display:none}
 /* Pokemon rows: types drop under the name when the row is narrow */
 .row .rt{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:2px 8px}
 .row .rt .nm{flex:1 1 auto}
@@ -378,6 +381,33 @@ table.lt td.n{vertical-align:top}table.lt .rt{display:block;white-space:nowrap}
 .mvst{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin-top:8px}
 .mvst>div{background:var(--panel2);border-radius:8px;padding:5px 8px;display:flex;flex-direction:column}
 .mvst span{font-size:11px;color:var(--mut);font-weight:600}.mvst b{font-variant-numeric:tabular-nums}
+.tgw{display:flex;gap:10px;align-items:center;margin-top:10px}
+.tgg{display:grid;grid-template-columns:repeat(3,22px);gap:3px;flex:none}
+.tgg i{height:15px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);font:700 9px/13px system-ui;text-align:center;color:var(--mut);font-style:normal}
+.tgg i.on{background:#d9534f;border-color:#d9534f;color:#fff}
+.tgg i.one{background:none;border:1.5px dashed #d9534f;color:#d9534f}
+.tgg i.me{background:var(--acc);border-color:var(--acc);color:#111}
+.tgw .tgt{font-size:13px;min-width:0;overflow-wrap:anywhere}
+.move-props{list-style:none;padding:0;margin:8px 0 0;font-size:13px}
+.move-props a{display:inline-block;padding:3px 0}
+.move-effects{list-style:none;margin:8px 0 0;padding:0;font-size:13px}
+.move-effects li{padding:2px 0}
+.move-interactions{font-size:13px}
+.interaction-row{display:grid;grid-template-columns:minmax(0,42fr) minmax(0,58fr);gap:6px;padding:5px 0;border-bottom:1px solid var(--line)}
+.interaction-row:last-child{border-bottom:0}
+.interaction-effect{color:var(--mut);overflow-wrap:anywhere}
+.interaction-who{overflow-wrap:anywhere}
+.interaction-changed{color:var(--acc);font-size:11px;font-weight:700;margin-left:4px}
+/* inside a card: the card's colour, not the page's */
+.move-learn .sec[open]>summary,.ab-users .sec[open]>summary,.it-held .sec[open]>summary{position:sticky;top:0;z-index:2;background:var(--panel);box-shadow:0 -5px 0 var(--panel)}
+.move-learn .learn-sprite,.ab-users .learn-sprite,.it-held .learn-sprite{width:44px;padding-left:0;padding-right:4px}
+.move-learn .lrn td,.ab-users .lrn td,.it-held .lrn td{padding-left:3px;padding-right:3px}
+.ab-side+.ab-side{margin-top:10px}
+.ab-effect{font-weight:600;margin:6px 0 2px;overflow-wrap:anywhere}
+.move-learn .lrn td:last-child{font-size:12px}
+.move-list .row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 6px;padding:5px 6px}
+.move-list .nm{overflow-wrap:anywhere}
+.move-list .ty{margin:0}
 /* Learned by / Pokémon with it: a long name may break rather than widen the page at 260 (a few move pages were 261) */
 table.lrn td:nth-child(2){overflow-wrap:anywhere}
 /* The starter picker shrinks instead of running out of the tracker bar at 260 */
@@ -525,6 +555,11 @@ details.psec>.endbar{margin:-6px 8px 4px auto}
 .mvw td:nth-last-child(5){overflow-wrap:anywhere}
 .mvw td.lv{color:var(--mut)}
 .mvw th.tc,.mvw td.tc{text-align:center}
+/* its own ability affects the move: a tap mark after the name (A in a dot, the hit area padded out); the tap opens a row */
+.abm{border:0;background:none;padding:4px 5px;margin:-4px -3px -4px 0;vertical-align:middle;cursor:pointer;line-height:0}
+.abm::before{content:'A';display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--acc);color:#111;font:700 9.5px/1 system-ui,sans-serif}
+.abm[aria-expanded=true]::before{box-shadow:0 0 0 2px var(--fg)}
+.mvw tr.abd td{padding-top:0;font-size:12.5px;overflow-wrap:anywhere}
 .psec .warn{cursor:help}.psec .warn.q{color:#ef5350;font-size:12px}
 /* Evolution: the whole family, base stage first, forms under their Pokémon */
 .fam{display:flex;flex-direction:column}
@@ -550,3 +585,34 @@ table.cv th.up{color:#f0605a}table.cv th.up::after{content:'↑'}
 table.cv th.dn{color:#7fb2ff}table.cv th.dn::after{content:'↓'}
 table.cv tr.tot td,table.cv tr.tot th{border-bottom:0;color:var(--mut);font-size:12px}
 @media (max-width:340px){details.psec>summary{padding-left:8px}details.psec>.pb{padding:0 6px 8px}details.psec[data-s=mv]>.pb{padding:0 4px 6px}.calc table.cv th,.calc table.cv td{padding:3px 2px}}
+/* ===== Item page (template/README.md → Item page) */
+.itl{white-space:normal}.itl .item-icon{margin-right:3px;vertical-align:-4px}
+.ihd{display:flex;align-items:center;gap:6px;margin:0 0 4px}.ihd h2{margin:0;overflow-wrap:anywhere;min-width:0}
+.ikind{margin:0 0 6px}.ipg p{margin:6px 0 0}.ipg .move-list{margin-top:4px}
+.ifx{margin-top:8px;background:var(--panel2);border-left:3px solid var(--acc);border-radius:6px;padding:6px 8px;font-size:14px;line-height:1.4}
+.ifxh{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--acc);margin-bottom:2px}
+.imega{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px}
+.iwl .iline{display:flex;gap:6px;align-items:flex-start;margin:4px 0;font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+.iwl div.iline{display:block;padding-left:22px}
+input.itk{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:var(--acc)}
+.iwk{font-size:12px;display:inline-block;max-width:100%;margin-left:2px}
+.it-held .learn-sprite .sprl+.sprl{margin-left:-8px}.it-held td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.it-held .learn-sprite{white-space:nowrap}
+/* The move page's "Also TM004 Calm Mind" and the Pokémon page's Held items (template/README.md → Move page, Pokémon page) */
+.alsotm{margin-top:6px;font-size:14px;overflow-wrap:anywhere}
+.phi>div{margin:3px 0;overflow-wrap:anywhere}.phi .pct{color:var(--mut);font-variant-numeric:tabular-nums;margin-left:4px}.phi .sh{margin-top:8px}
+/* ===== Items tab (template/README.md → Items tab): cards in the dex-row look, the tick bar */
+.itbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 2px 6px;min-height:28px}
+.itclr{background:var(--panel2);color:var(--fg);border:0;border-radius:8px;padding:5px 10px;font-size:13px;font-weight:600}
+.ilist{--rowh:84px;margin:4px 0}
+.irow{align-items:flex-start;gap:8px;padding:6px 8px}
+.irow .iico{flex:none;line-height:0;margin-top:1px}
+.irow .rt{display:block}
+.irow .nm{display:block;overflow-wrap:anywhere}.irow .nm a{color:inherit}.irow .nm .ty{vertical-align:1px}
+.irow .iwl{display:block}.irow .iwl .iline{margin:3px 0}
+.irow .imore{display:inline-block;font-size:12px;margin-top:1px}
+.irow.idone{opacity:.55}
+.iprog{font-size:12px;color:var(--mut);font-weight:600;font-variant-numeric:tabular-nums}
+.tut .tneed{display:block;margin-top:1px}.tut .tmoves{display:block;margin-top:4px;font-size:14px}.tut .tm1{display:block;margin:3px 0}
+.tcost{font-size:12px;color:var(--mut)}
+.itbl .iline{display:flex;gap:6px;align-items:flex-start}

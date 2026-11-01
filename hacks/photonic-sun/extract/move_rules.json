@@ -1,0 +1,35 @@
+[
+  {
+    "i": "Big Root",
+    "w": "u",
+    "e": "Recovery ×2",
+    "src": "Changelog.txt:189 (Photonic Sun 2.38, v1.3 change)"
+  },
+  {
+    "a": "Big Pecks",
+    "w": "t",
+    "add": [
+      "Toxic Thread"
+    ],
+    "src": "Move Changes.txt:32 (Photonic Sun 2.38) and the move record: Toxic Thread harshly lowers Speed, Defense and Special Defense; the stock list has it as a Speed drop only"
+  },
+  {
+    "a": "Illuminate",
+    "w": "t",
+    "remove": [
+      "Sand Attack",
+      "Smokescreen",
+      "Kinesis",
+      "Flash",
+      "Mud-Slap",
+      "Octazooka",
+      "Muddy Water",
+      "Mud Bomb",
+      "Mirror Shot",
+      "Leaf Tornado",
+      "Night Daze"
+    ],
+    "src": "pokemon-showdown@0.11.11 data/mods/gen8/abilities.ts: Illuminate has no battle effect in generations 6/7; remove the shared latest-generation rule",
+    "gen": true
+  }
+]

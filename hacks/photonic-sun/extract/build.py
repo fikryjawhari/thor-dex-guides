@@ -10,7 +10,8 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import H  # noqa: E402
 from extractlib import finalise, write_data  # noqa: E402
-from ctrguide import build_save_ids  # noqa: E402
+import schema  # noqa: E402
+from ctrguide import build_save_ids, item_text  # noqa: E402
 import dex, locs, trainers, items, walk, prune  # noqa: E402
 
 
@@ -23,7 +24,9 @@ def main():
     items.build(D)
     walk.build(D)
     items.order(D)
+    item_text(D, H.load('dex-rebalanced.json'), H.load('dex-vanilla.json'), H.extract)   # before finalise: tools/item_text.py reads item_desc.json
     finalise(D, H.name, prune.build)
+    schema.standardise(D)
     build_save_ids(D, H.load('dex-rebalanced.json'))
     write_data(D, H)
 

@@ -392,8 +392,8 @@ def build(D):
     for p in P:
         if p['g'] == 1:
             continue
-        for it in p.get('hi', []):
-            it = fix(it)
+        for held in p.get('hi', []):
+            it = fix(held[0])
             wild.setdefault(it, [])
             if p['n'] not in wild[it]:
                 wild[it].append(p['n'])
@@ -534,7 +534,7 @@ def doc_check(D, wild):
     t = text('Item Changes _ Locations').split('Wild Hold Items:')[1]
     by_sp = {}
     for p in D['P']:
-        by_sp.setdefault(re.sub(r'^(Mega|Primal) ', '', p['n']), set()).update(fix(x) for x in p.get('hi', []))
+        by_sp.setdefault(re.sub(r'^(Mega|Primal) ', '', p['n']), set()).update(fix(x[0]) for x in p.get('hi', []))
     miss = []
     for line in t.splitlines():
         m = re.match(r'\s+([A-Z][A-Za-z\'’.\- ]+?):\s*(?:[Ss]ometimes|[Aa]lways)? ?held by wild (.*)$', line)

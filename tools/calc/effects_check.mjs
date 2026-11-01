@@ -8,8 +8,14 @@ import {createEngine} from './run.mjs';
 const root = new URL('../../', import.meta.url);
 const load = async path => JSON.parse(await readFile(new URL(path, root), 'utf8'));
 const data = await load('hacks/emerald-imperium/data.json');
+for (const name of ['Celebrate', 'Extreme Evoboost', 'Acupressure']) {
+  if (data.M.includes(name)) continue;
+  data.M.push(name);
+  data.MV.push({c: 'Status', t: 'Normal', bp: 0});
+}
 const engines = {};
 const engine = async (base, extra = {}) => {
+  if (base === 'gen8') { base = 'expansion'; extra = {...extra, gen: 8}; }
   const key = base + JSON.stringify(extra);
   engines[key] ||= await createEngine(data, {...await load(`template/calc/profiles/${base}.json`), ...extra});
   return engines[key];
@@ -50,6 +56,146 @@ const strike = async (base, user, target, move, field = {}, extra) => plain((awa
 
 const pika = mon('Pikachu');
 const mew = mon('Blissey');
+
+await check('Z-status boosts, resets, caps, abilities and ordering', async () => {
+  const own = await engine('gen7', {zmove: true});
+  const zuse = (move, extra = {}, field = {}) => plain(own.effect(mon('Pikachu', extra), mew, {...slot(move), z: true}, field));
+  assert.deepEqual(zuse('Swords Dance', {stg: stg(-4, -2, 1, 0, -1)}).atk.stg, stg(2, 0, 1, 0, 0));
+  assert.deepEqual(zuse('Splash').atk.stg, stg(3, 0, 0, 0, 0));
+  assert.deepEqual(zuse('Splash', {ab: 'Simple', stg: stg(1, 0, 0, 0, 0)}).atk.stg, stg(6, 0, 0, 0, 0));
+  assert.deepEqual(zuse('Splash', {ab: 'Contrary'}).atk.stg, stg(-3, 0, 0, 0, 0));
+  assert.deepEqual(zuse('Celebrate').atk.stg, stg(1, 1, 1, 1, 1));
+  assert.deepEqual(zuse('Extreme Evoboost').atk.stg, stg(2, 2, 2, 2, 2));
+  const drum = zuse('Belly Drum', {hp: 1});
+  assert.equal(drum.atk.hp, own.stats(pika)[0], 'full heal before the low-HP Belly Drum check');
+  assert.equal(drum.atk.stg[1], 6);
+  assert.equal(drum.fails, undefined);
+  const pikaMax = own.stats(pika)[0];
+  assert.equal(own.hp(mon('Pikachu', {hp: 1}), mew, {...slot('Belly Drum'), z: true}, {}).v, -Math.floor(pikaMax / 2), 'Belly Drum pays half after the Z heal');
+  assert.equal(own.hp(mon('Pikachu', {hp: 1}), mew, slot('Belly Drum'), {}).v, -Math.floor(pikaMax / 2));
+  assert.match(zuse('Memento').log.join(';'), /heals the replacement/);
+  assert.deepEqual(zuse('Curse').atk.stg, stg(2, 1, 0, 0, -1));
+  const ghost = plain(own.effect(mon('Gengar', {hp: 1}), mew, {...slot('Curse'), z: true}, {}));
+  assert.equal(ghost.atk.hp, own.stats(mon('Gengar'))[0]);
+  assert.equal(ghost.atk.stg, undefined, 'Ghost Curse has no stage boosts');
+  assert.equal(zuse('Acupressure').field.changes.atkFocus, true);
+  assert.match(zuse('Destiny Bond').log.join(';'), /draws attacks/);
+  const blocked = zuse('Parting Shot', {hp: 1}, {defProtect: true});
+  assert.match(blocked.log.join(';'), /heals the replacement/);
+  assert.equal(blocked.moveFails, 'Protect', 'Z effect precedes a blocked base move');
+  assert.equal(plain(own.effect(pika, mew, slot('Splash'), {})), null, 'no Z effect when off');
+  const disabled = await engine('gen7');
+  assert.equal(plain(disabled.effect(pika, mew, {...slot('Splash'), z: true}, {})), null, 'profile must enable Z');
+});
+
+await check('Speed Swap keeps stages and swaps raw Speed in damage and speed calculations', async () => {
+  const own = await engine('expansion');
+  const user = mon('Blissey', {stg: stg(0, 0, 0, 0, 2)});
+  const target = mon('Pikachu', {stg: stg(0, 0, 0, 0, -1)});
+  const before = [own.stats(user)[5], own.stats(target)[5]];
+  const result = await use('expansion', user, target, 'Speed Swap');
+  assert.equal(result.atk.rs.spe, before[1]);
+  assert.equal(result.def.rs.spe, before[0]);
+  assert.equal(result.label, 'Spe↔');
+  assert.equal(result.atk.stg, undefined);
+  assert.equal(own.stats({...user, ...result.atk})[5], before[1]);
+  assert.equal(own.speed({...user, ...result.atk}), before[1] * 2);
+  const back = await use('expansion', {...user, ...result.atk}, {...target, ...result.def}, 'Speed Swap');
+  assert.equal(back.atk.rs.spe, before[0]);
+});
+
+await check('Rest heals, replaces status, respects sleep blockers and consumes Chesto after sleep', async () => {
+  for (const base of ['gen4', 'gen5', 'gen6', 'gen7', 'gen8', 'expansion']) {
+    const user = mon('Blissey', {hp: 1, st: 'brn'});
+    const result = await use(base, user, pika, 'Rest');
+    assert.equal(result.atk.status, 'slp', base);
+    assert.equal(result.atk.hp, (await engine(base)).stats(user)[0], base);
+    assert.ok((await use(base, mon('Blissey', {hp: 1, ab: 'Insomnia'}), pika, 'Rest')).fails);
+    assert.ok((await use(base, mon('Blissey', {hp: 1, st: 'slp'}), pika, 'Rest')).fails);
+    assert.ok((await use(base, mew, pika, 'Rest')).fails);
+    const chesto = await use(base, mon('Blissey', {hp: 1, it: 'Chesto Berry'}), pika, 'Rest');
+    assert.equal(chesto.atk.status, '');
+    assert.equal(chesto.atk.used, true);
+  }
+  assert.ok((await use('expansion', mon('Blissey', {hp: 1}), pika, 'Rest', {terrain: 'Electric'})).fails);
+});
+
+await check('Defog generation-specific field clearing and Protect', async () => {
+  const field = {atkSpikes: 2, defSpikes: 3, atkReflect: true, defReflect: true, terrain: 'Electric'};
+  for (const [base, gen] of [['gen4', 4], ['gen5', 5], ['gen6', 6], ['gen7', 7], ['gen8', 8], ['expansion', 9]]) {
+    const out = await use(base, mew, pika, 'Defog', field);
+    assert.equal(out.field.changes.defSpikes, false, base);
+    assert.equal(out.field.changes.defReflect, false, base);
+    assert.equal(out.field.changes.atkReflect, undefined, base);
+    assert.equal(out.field.changes.atkSpikes, gen >= 6 ? false : undefined, base);
+    assert.equal(out.field.changes.terrain, gen >= 8 ? '' : undefined, base);
+    assert.ok((await use(base, mew, pika, 'Defog', {defProtect: true})).fails);
+  }
+});
+
+await check('Court Change swaps tracked side conditions, not terrain', async () => {
+  const out = await use('expansion', mew, pika, 'Court Change', {atkSpikes: 2, defReflect: true, terrain: 'Electric'});
+  assert.equal(out.field.changes.defSpikes, 2);
+  assert.equal(out.field.changes.atkReflect, true);
+  assert.equal(out.field.changes.terrain, undefined);
+});
+
+await check('Rapid Spin, Mortal Spin, Tidy Up and Ice Spinner clear their tracked fields', async () => {
+  for (const move of ['Rapid Spin', 'Mortal Spin']) {
+    const result = await strike('expansion', pika, mon('Wailord'), move, {atkSpikes: 2, atkSeeded: true, defSpikes: 1});
+    assert.equal(result.field.changes.atkSpikes, false, move);
+    assert.equal(result.field.changes.atkSeeded, false, move);
+    assert.equal(result.field.changes.defSpikes, undefined, move);
+  }
+  const tidy = await use('expansion', mew, pika, 'Tidy Up', {atkSpikes: 2, defSpikes: 1});
+  assert.equal(tidy.field.changes.atkSpikes, false);
+  assert.equal(tidy.field.changes.defSpikes, false);
+  assert.deepEqual(tidy.atk.stg, stg(1, 0, 0, 0, 1));
+  const ice = await strike('expansion', pika, mon('Wailord'), 'Ice Spinner', {terrain: 'Electric'});
+  assert.equal(ice.field.changes.terrain, '');
+});
+
+await check('Flower Shield and Rototiller target Grass, Rototiller requires grounding', async () => {
+  const grass = mon('Bulbasaur');
+  assert.deepEqual((await use('expansion', mew, grass, 'Flower Shield')).def.stg, stg(0, 1, 0, 0, 0));
+  assert.deepEqual((await use('expansion', grass, pika, 'Rototiller')).atk.stg, stg(1, 0, 1, 0, 0));
+  assert.ok((await use('expansion', mon('Bulbasaur', {ab: 'Levitate'}), pika, 'Rototiller')).fails);
+});
+
+await check('Gear Up and Magnetic Flux boost a Plus/Minus user, not the opponent', async () => {
+  assert.deepEqual((await use('expansion', mon('Pikachu', {ab: 'Plus'}), mew, 'Gear Up')).atk.stg, stg(1, 0, 1, 0, 0));
+  assert.deepEqual((await use('expansion', mon('Pikachu', {ab: 'Minus'}), mew, 'Magnetic Flux')).atk.stg, stg(0, 1, 0, 1, 0));
+  assert.ok((await use('expansion', mew, pika, 'Gear Up')).fails);
+});
+
+await check('Function-only volatiles and PP effects log, without bypassing secondary blockers', async () => {
+  for (const move of ['Block', 'Mean Look', 'Spider Web']) {
+    assert.ok((await use('expansion', mew, pika, move)).log.some(text => /Trapped/.test(text)), move);
+    assert.ok((await use('expansion', mew, mon('Gengar'), move)).fails, move);
+    assert.ok(!(await use('gen5', mew, mon('Gengar'), move)).fails, move);
+    const protectedTarget = await use('expansion', mew, pika, move, {defProtect: true});
+    assert.equal(!!protectedTarget.fails, move === 'Spider Web', move + ' Protect');
+  }
+  assert.ok((await use('expansion', mew, pika, 'Spite')).log.some(text => /PP/.test(text)));
+  for (const [move, text] of [['Throat Chop', 'Throatchop'], ['Anchor Shot', 'Trapped'], ['Spirit Shackle', 'Trapped']]) {
+    const result = await strike('expansion', mon('Pikachu'), mon('Wailord'), move);
+    assert.ok(result.log.some(part => part.includes(text)), move);
+    const shield = await strike('expansion', mon('Pikachu'), mon('Wailord', {ab: 'Shield Dust'}), move);
+    assert.ok(!shield.log.some(part => part.includes(text)), move + ' Shield Dust');
+  }
+});
+
+await check('Eerie Spell PP log obeys Shield Dust and Sheer Force', async () => {
+  const guide = await load('hacks/hardlove-gold/data.json');
+  const index = guide.M.indexOf('Eerie Spell');
+  assert.ok(index >= 0);
+  const sample = {...data, M: [...data.M, 'Eerie Spell'], MV: [...data.MV, guide.MV[index]]};
+  const own = await createEngine(sample, await load('template/calc/profiles/expansion.json'));
+  const cast = (user, target) => own.hit(user, target, {mv: data.M.length}, {}, 'max');
+  assert.ok(cast(pika, mon('Wailord')).log.some(text => text.includes('PP')));
+  assert.ok(!cast(pika, mon('Wailord', {ab: 'Shield Dust'})).log.some(text => text.includes('PP')));
+  assert.ok(!cast(mon('Pikachu', {ab: 'Sheer Force'}), mon('Wailord')).log.some(text => text.includes('PP')));
+});
 
 await check('Swords Dance +2 on the user', async () => {
   const out = await use('expansion', mew, pika, 'Swords Dance');
@@ -262,6 +408,70 @@ await check('Knock Off removes the item (Sticky Hold keeps it); Clear Smog reset
   assert.equal((await strike('expansion', mew, mon('Snorlax', {lv: 100, it: 'Leftovers', ab: 'Sticky Hold'}), 'Knock Off')).def.used, undefined);
   assert.deepEqual((await strike('expansion', mew, mon('Snorlax', {lv: 100, stg: stg(2, 2, 0, 0, 0)}), 'Clear Smog')).def.stg, stg(0, 0, 0, 0, 0));
 });
+await check('Fight types: Soak pure Water (fails on Water, Arceus); Trick-or-Treat / Forest\'s Curse add one (the last replaces); Burn Up drops Fire', async () => {
+  const soak = await use('expansion', pika, mon('Charizard'), 'Soak');
+  assert.deepEqual(soak.def.ft, ['Water']);
+  assert.equal(soak.label, 'Water');
+  assert.equal((await use('expansion', pika, mon('Squirtle'), 'Soak')).fails, 'already Water');
+  assert.match((await use('expansion', pika, mon('Silvally (Normal)'), 'Soak')).fails, /keeps its type/);
+  const tot = await use('expansion', pika, mon('Snorlax'), 'Trick-or-Treat');
+  assert.deepEqual([tot.def.ft, tot.def.fadd], [['Normal'], 'Ghost']);
+  assert.equal(tot.label, '+Ghost');
+  const curse = await use('expansion', pika, mon('Snorlax', {ty: ['Normal', 'Ghost'], tya: 'Ghost'}), "Forest's Curse");
+  assert.deepEqual([curse.def.ft, curse.def.fadd], [['Normal'], 'Grass'], 'replaces the added type');
+  assert.equal((await use('expansion', pika, mon('Gengar'), 'Trick-or-Treat')).fails, 'already Ghost');
+  const burn = await strike('expansion', mon('Charizard'), mon('Snorlax', {lv: 100}), 'Burn Up');
+  assert.deepEqual(burn.atk.ft, ['Flying']);
+  const reflect = await use('expansion', pika, mon('Gengar'), 'Reflect Type');
+  assert.deepEqual(reflect.atk.ft, ['Ghost', 'Poison']);
+  if (data.M.includes('Conversion')) assert.deepEqual((await use('expansion', mon('Porygon', {mvs: [data.M.indexOf('Flamethrower')]}), pika, 'Conversion')).atk.ft, ['Fire']);
+  assert.deepEqual((await use('expansion', pika, mon('Snorlax'), 'Camouflage', {terrain: 'Grassy'})).atk.ft, ['Grass']);
+});
+await check('An added type counts as a third type for damage (stock reads two): immunity and effectiveness, every base', async () => {
+  // Charizard (Fire / Flying) + Ghost (Trick-or-Treat) / + Water: calc.js fightView sends ty base + added, tya.
+  const added = type => mon('Charizard', {lv: 100, ty: ['Fire', 'Flying', type], tya: type});
+  for (const base of ['expansion', 'cfru', 'gen4', 'gen5', 'gen6', 'gen7']) {
+    const hit = async (target, move) => plain((await engine(base)).calc(pika, target, slot(move), {}));
+    const tackle = await hit(added('Ghost'), 'Tackle');
+    assert.ok(!tackle?.rolls?.some(Boolean), `${base}: Tackle on +Ghost does nothing: ${JSON.stringify(tackle?.rolls)}`);
+    assert.equal((await hit(added('Water'), 'Thunderbolt')).eff, 4, `${base}: Thunderbolt on Fire / Flying + Water`);
+    assert.equal((await hit(mon('Charizard', {lv: 100}), 'Thunderbolt')).eff, 2, `${base}: Thunderbolt on Fire / Flying`);
+  }
+});
+await check('Fight abilities: Worry Seed (Insomnia, wakes; Truant / cantsuppress / Ability Shield fail), Simple Beam, Skill Swap both, Role Play, Entrainment, Gastro Acid', async () => {
+  const worry = await use('expansion', pika, mon('Snorlax', {ab: 'Thick Fat', st: 'slp'}), 'Worry Seed');
+  assert.equal(worry.def.fa, 'Insomnia');
+  assert.equal(worry.def.status, '');
+  assert.equal((await use('expansion', pika, mon('Slaking', {ab: 'Truant'}), 'Worry Seed')).fails, 'Truant');
+  assert.equal((await use('expansion', pika, mon('Snorlax', {ab: 'Thick Fat', it: 'Ability Shield'}), 'Worry Seed')).fails, 'Ability Shield');
+  assert.equal((await use('expansion', pika, mon('Mimikyu', {ab: 'Disguise'}), 'Simple Beam')).fails, 'Disguise');
+  assert.equal((await use('expansion', pika, mon('Snorlax', {ab: 'Thick Fat'}), 'Simple Beam')).def.fa, 'Simple');
+  const swap = await use('expansion', mon('Pikachu', {ab: 'Static'}), mon('Snorlax', {ab: 'Thick Fat'}), 'Skill Swap');
+  assert.deepEqual([swap.atk.fa, swap.def.fa], ['Thick Fat', 'Static']);
+  assert.equal((await use('expansion', mon('Pikachu', {ab: 'Static'}), mon('Snorlax', {ab: 'Wonder Guard'}), 'Skill Swap')).fails, 'Wonder Guard');
+  assert.equal((await use('gen5', mon('Pikachu', {ab: 'Static'}), mon('Pikachu', {ab: 'Static'}), 'Skill Swap')).fails, 'same ability');
+  assert.equal((await use('expansion', mon('Pikachu', {ab: 'Static'}), mon('Snorlax', {ab: 'Thick Fat'}), 'Role Play')).atk.fa, 'Thick Fat');
+  assert.equal((await use('expansion', mon('Pikachu', {ab: 'Static'}), mon('Snorlax', {ab: 'Thick Fat'}), 'Entrainment')).def.fa, 'Static');
+  const acid = await use('expansion', pika, mon('Snorlax', {ab: 'Thick Fat'}), 'Gastro Acid');
+  assert.equal(acid.def.fa, '');
+  assert.equal(acid.fails, undefined);
+});
+await check('Fight items: Trick swaps both (Sticky Hold, Z / Mega fail), Bestow, Thief takes it, Knock Off; Mummy on contact', async () => {
+  const trick = await use('expansion', mon('Pikachu', {it: 'Choice Scarf'}), mon('Snorlax', {it: 'Leftovers'}), 'Trick');
+  assert.deepEqual([trick.atk.fi, trick.def.fi], ['Leftovers', 'Choice Scarf']);
+  assert.equal(trick.label, 'Swap');
+  assert.equal((await use('expansion', mon('Pikachu', {it: 'Choice Scarf'}), mon('Snorlax', {it: 'Leftovers', ab: 'Sticky Hold'}), 'Trick')).fails, 'Sticky Hold');
+  assert.equal((await use('expansion', pika, mon('Snorlax'), 'Trick')).fails, 'no items');
+  assert.match((await use('expansion', mon('Pikachu', {it: 'Choice Scarf'}), mon('Charizard', {it: 'Charizardite X'}), 'Trick')).fails, /stays/);
+  const bestow = await use('expansion', mon('Pikachu', {it: 'Light Ball'}), mon('Snorlax'), 'Bestow');
+  assert.deepEqual([bestow.atk.used, bestow.def.fi], [true, 'Light Ball']);
+  assert.equal((await use('expansion', mon('Pikachu', {it: 'Light Ball'}), mon('Snorlax', {it: 'Leftovers'}), 'Bestow')).fails, 'target holds an item');
+  const thief = await strike('expansion', mew, mon('Snorlax', {lv: 100, it: 'Leftovers'}), 'Thief');
+  assert.deepEqual([thief.def.used, thief.atk.fi], [true, 'Leftovers']);
+  const mummy = await strike('expansion', mon('Pikachu', {ab: 'Static'}), mon('Cofagrigus', {lv: 100, ab: 'Mummy'}), 'Thunder Punch');
+  assert.equal(mummy.atk.fa, 'Mummy');
+  assert.equal((await strike('expansion', mon('Pikachu', {ab: 'Static'}), mon('Cofagrigus', {lv: 100, ab: 'Mummy'}), 'Thunderbolt')).atk.fa, undefined, 'no contact');
+});
 await check('Exact damage (You / Dealt Apply) has no effects', async () => {
   const out = plain((await engine('expansion')).hit(mew, mon('Snorlax', {lv: 100}), slot('Nuzzle'), {}, 'max', {damage: 10}));
   assert.equal(out.def.status, undefined);
@@ -409,7 +619,7 @@ for (const hack of await readdir(new URL('hacks/', root))) {
       assert.notEqual(index, -1, `Missing move ${fixture.move}`);
       const result = fixture.kind === 'hit'
         ? hackEngine.hit(set(fixture.user), set(fixture.target), {mv: index}, fixture.field || {}, 'max')
-        : hackEngine.effect(set(fixture.user), set(fixture.target), {mv: index}, fixture.field || {});
+        : hackEngine.effect(set(fixture.user), set(fixture.target), {mv: index, ...(fixture.z ? {z: true} : {})}, fixture.field || {});
       for (const [path, value] of Object.entries(fixture.expect)) {
         const actual = plain(path ? path.split('.').reduce((node, key) => node?.[key], result) : result);
         assert.deepEqual(actual ?? null, value, path);

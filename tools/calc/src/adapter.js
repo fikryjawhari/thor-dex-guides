@@ -104,9 +104,16 @@ function init(guide, configuration) {
     const engineName = effectName('moves', name, !!entry.x) || `Guide move ${index}`;
     const id = toID(engineName);
     const known = stock.moves[id] || modern.moves[id] || {};
+    // MV.f is the guide's property list (tools/moveprops.py): Showdown flag names plus page-only ones. Protect
+    // stays stock unless the guide says noprotect (guides don't list protect itself).
     const flagNames = {ballistic: 'bullet', biting: 'bite', punching: 'punch'};
     const flags = entry.f === undefined ? {...known.flags} : Object.fromEntries(
       entry.f.map(flag => [flagNames[flag] || flag, 1]));
+    if (entry.f !== undefined) {
+      delete flags.noprotect;
+      if (entry.f.includes('noprotect')) delete flags.protect;
+      else if (known.flags?.protect) flags.protect = 1;
+    }
     moves[toID(name)] = mergeRecord({
       ...known, id, kind: 'Move', name: engineName,
       basePower: Number(entry.bp) || 0, type: entry.t, category: entry.c,
@@ -142,7 +149,7 @@ function init(guide, configuration) {
 }
 
 // Move effects (tools/calc/README.md → Move effects): the generated table's record for this generation (the last
-// entry whose first generation is at most profile.gen), then the hack's own `over.effects.moves` (null = none).
+// entry whose first generation is at most profile.gen), then the hack's own `over.effects.moves` (null = none), then its `zmoves` (the Z effect only).
 function resolveEffects() {
   const table = {};
   for (const [id, entries] of Object.entries(catalog.fx || {})) {
@@ -150,17 +157,26 @@ function resolveEffects() {
     for (const [from, entry] of entries) if (from <= profile.gen) record = entry;
     if (record) table[id] = record;
   }
+  for (const [reason, names] of Object.entries(catalog.coverage.notModelled)) {
+    for (const name of names) table[toID(name)] = {...table[toID(name)], nm: reason};
+  }
+  for (const [name, reason] of Object.entries(catalog.coverage.noops)) table[toID(name)] = {...table[toID(name)], noop: reason};
   for (const [name, record] of Object.entries(profile.over?.effects?.moves || {})) {
-    if (record === null) delete table[toID(name)];
-    else table[toID(name)] = record;
+    const id = toID(name);
+    const coverage = table[id]?.nm ? {nm: table[id].nm} : {};
+    table[id] = record === null ? Object.keys(coverage).length ? coverage : null : {...coverage, ...record};
+  }
+  // `zmoves` {name: {z, source}}: only the Z effect, over whatever the move's record is now (null = no Z effect), so the rest still
+  // follows the shared table.
+  for (const [name, {z}] of Object.entries(profile.over?.effects?.zmoves || {})) {
+    const id = toID(name), {z: _, ...rest} = table[id] || {};
+    table[id] = z === null ? (Object.keys(rest).length ? rest : null) : {...rest, z};
   }
   return table;
 }
 
 function effectRecord(name) {
   if (!name) return null;
-  const own = profile.over?.effects?.moves || {};
-  if (Object.prototype.hasOwnProperty.call(own, name)) return own[name];
   const index = data.M.indexOf(name);
   const alias = effectName('moves', name, !!data.MV[index]?.x);
   return effectTable[toID(name)] || (alias ? effectTable[toID(alias)] : null) || null;
@@ -187,6 +203,12 @@ function pokemon(set) {
   if (set.hp !== undefined) result.originalCurHP = Math.max(0, Math.min(result.maxHP(), set.hp));
   if (result.hasAbility('Unburden') && set.used) result.abilityOn = true;
   result.guideItem = set.it || '';
+  result.guideAbility = profile.abilities !== false && ability ? ability[0] : '';
+  result.guideMoves = set.mvs || [];
+  result.guideRaw = {...set.rs};
+  for (const [stat, value] of Object.entries(result.guideRaw)) {
+    if (STAGES.includes(stat) && Number.isInteger(value) && value > 0) result.rawStats[stat] = result.stats[stat] = value;
+  }
   // Stats at `sl`, the damage formula at the shown level (BB2R Challenge trainers; tools/calc/README.md, Level bug).
   if (set.sl !== undefined && set.sl !== (set.lv ?? 50)) result.guideLevel = set.lv ?? 50;
   return result;
@@ -195,6 +217,8 @@ function pokemon(set) {
 const nativeClone = Pokemon.prototype.clone;
 Pokemon.prototype.clone = function clone() {
   const copy = nativeClone.call(this);
+  copy.guideRaw = {...this.guideRaw};
+  for (const [stat, value] of Object.entries(copy.guideRaw)) copy.rawStats[stat] = copy.stats[stat] = value;
   if (this.guideLevel !== undefined) copy.guideLevel = this.guideLevel;
   if (this.guideCamomons) {
     copy.guideCamomons = true;
@@ -271,6 +295,9 @@ function fieldPokemon(set, values, side) {
     mon.guideCamomons = true;
   }
   if (mon.hasAbility('Plus', 'Minus')) mon.abilityOn = values.gameType === 'Doubles' && !!values[side + 'PlusMinus'];
+  // This fight's types (calc.js FIGHT ft / fadd: Soak, Trick-or-Treat, a manual change): base list + added type.
+  if (set.ty?.length) mon.types = [...set.ty];
+  mon.guideAdded = set.tya || '';
   if (set.pty && changesType(mon, set)) mon.types = [set.pty];
   if (values[side + 'Roost'] && mon.hasType('Flying')) {
     mon.types = mon.types.filter(type => type !== 'Flying');
@@ -931,7 +958,36 @@ function actionState(set, values, side) {
     mon.disabledItem = undefined;
     if (mon.hasAbility('Unburden')) mon.abilityOn = true;
   };
-  const state = {mon, update, logs, change, consume, persist, set: setStage, setStatus, lose, st: set.st || '', volatiles: new Set()};
+  // Fight-only type / ability / item changes (calc.js FIGHT ft / fadd, fa, fi), by guide name.
+  const held = () => mon.item || mon.disabledItem ? mon.guideItem || mon.item || mon.disabledItem : '';
+  const setTypes = (types, added = '') => {
+    update.ft = [...types];
+    update.fadd = added || undefined;
+    mon.types = [...types, ...(added ? [added] : [])];
+    mon.guideAdded = added;
+  };
+  const setAbility = name => {
+    update.fa = name;
+    update.abilityOn = undefined;
+    const entry = name && data.AB?.find(ability => ability[0] === name);
+    mon.ability = (name && effectName('abilities', name, !!entry?.[2])) || 'Guide no ability';
+    mon.guideAbility = name;
+  };
+  const setItem = name => {
+    update.fi = name;
+    update.used = undefined;
+    mon.item = name ? effectName('items', name) || name : '';
+    mon.disabledItem = undefined;
+    mon.guideItem = name;
+  };
+  const setRaw = (stat, value) => {
+    update.rs = {...mon.guideRaw, [stat]: value};
+    mon.guideRaw = {...update.rs};
+    mon.rawStats[stat] = mon.stats[stat] = value;
+  };
+  const setHP = value => { update.hp = value; mon.originalCurHP = value; };
+  const state = {mon, update, logs, change, consume, persist, set: setStage, setStatus, lose, held, setTypes, setAbility, setRaw, setHP,
+    setItem, st: set.st || '', volatiles: new Set()};
   return state;
 }
 
@@ -1129,13 +1185,18 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
   }
   // The move's own effects after the damage (secondaries, self drops, item removal): the same resolver as the
   // status-move buttons. Not for an exact amount without reactions (the You / Dealt Apply).
-  const record = exact ? null : effectRecord(data.M[slot.mv]);
-  if (record && (record.sb || record.sec || record.k)) {
+  const record0 = exact ? null : effectRecord(data.M[slot.mv]);
+  // Mummy / Lingering Aroma / Wandering Spirit on a contact hit run through the resolver even with no record.
+  const touched = !exact && output.hits > 0 && target.mon.hasAbility('Mummy', 'Lingering Aroma', 'Wandering Spirit')
+    && makesContact(user.mon, target.mon, move, info.cat);
+  const record = record0 && (record0.sb || record0.sec || record0.k) ? record0 : touched ? {} : null;
+  if (record) {
     target.mon.originalCurHP = current;
     effectChance = fieldEffects(atk, values, 'atk').secondaryMultiplier;
     const out = effects.resolve({name: data.M[slot.mv], record, user, target, field, values: actionField, phase: 'after',
-      hit: {landed: dealt > 0 || !!result?.bust, ko: def.hp !== 0 && current === 0 && dealt > 0}, moveType: type});
+      hit: {landed: dealt > 0 || !!result?.bust, ko: def.hp !== 0 && current === 0 && dealt > 0, contact: touched}, moveType: type});
     output.log.push(...out.log);
+    if (out.field) (output.field ||= {}).changes = out.field;
     if (out.parts.length) output.effects = out.parts;
   }
   target.update.hp = current;
@@ -1598,6 +1659,14 @@ const SELF_KO = new Set(['Explosion', 'Self-Destruct', 'Misty Explosion', 'Final
 const COSTS = {'Belly Drum': 2, Substitute: 4, 'Fillet Away': 2, 'Clangorous Soul': 3, 'Shed Tail': 2};
 const CRASH = new Set(['Jump Kick', 'High Jump Kick', 'Axe Kick', 'Supercell Slam']);
 
+// Whether `move` touches the target (contact flag, Long Reach / Protective Pads / Punching Glove; not Magic Guard).
+function makesContact(user, target, move, category) {
+  return !(!move || !(move.flags?.contact || move.name === 'Shell Side Arm' && category === 'Physical')
+    || profile.gen >= 7 && (user.hasAbility('Long Reach') || user.hasItem('Protective Pads'))
+    || profile.gen >= 9 && user.hasItem('Punching Glove') && move.flags?.punch
+    || profile.over?.contact?.defenderPads && target.hasItem('Protective Pads'));
+}
+
 function contactEffects(user, target, move, field, category) {
   if (!move || !(move.flags?.contact || move.name === 'Shell Side Arm' && category === 'Physical')
     || user.hasAbility('Magic Guard')
@@ -1628,7 +1697,10 @@ function hp(atk, def, slot, values = {}, dealt = 0, options = {}) {
   checkItem(user, field.isMagicRoom);
   checkItem(target, field.isMagicRoom);
   const max = user.maxHP();
-  const now = Math.max(0, Math.min(max, atk.hp ?? max));
+  // A Z-status full heal (Z-Belly Drum, Ghost Z-Curse) comes before the move's own HP part.
+  const zEffect = profile.zmove && slot.z && moveData.category === 'Status' ? effectRecord(name)?.z?.effect : null;
+  const zHeal = zEffect === 'heal' || zEffect === 'curse' && user.hasType('Ghost');
+  const now = zHeal ? max : Math.max(0, Math.min(max, atk.hp ?? max));
   const part = (amount, num, den) => Math.max(1, profile.gen >= 5 ? Math.round(amount * num / den) : Math.floor(amount * num / den));
   const guard = user.hasAbility('Magic Guard');
   const items = !field.isMagicRoom && !user.hasAbility('Klutz');
@@ -1708,6 +1780,8 @@ const effects = createEffects({
   holds: (mon, field) => holdsItem(mon, field),
   heldName: mon => mon.item || mon.disabledItem || '',
   unnerved: mon => mon.hasAbility('Unnerve', 'As One (Glastrier)', 'As One (Spectrier)'),
+  moves: mon => (mon.guideMoves || []).map(index => ({name: data.M[index], type: data.MV[index]?.t})).filter(move => move.name),
+  contact: (user, target, name, category) => makesContact(user, target, generation.moves.get(toID(name)), category),
 });
 
 // What a move does beyond damage and HP, for the move's own parts: the resolved record (null = nothing).
@@ -1726,19 +1800,33 @@ function effect(atk, def, slot, values = {}, options = {}) {
   if (!moveData || moveData.category !== 'Status') return null;
   const own = {...record};
   if (own.v && SWITCH_VOLATILES.has(own.v)) delete own.v;
-  if (!(own.b || own.st || own.v || own.k || own.sb)) return null;
+  const z = !!(profile.zmove && slot.z && own.z);
+  if (!(own.b || own.st || own.v || own.k || own.sb || z)) return null;
   const user = actionState(atk, values, 'atk');
   const target = actionState(def, values, 'def');
-  if (own.k === 'curse' && user.mon.hasType('Ghost')) return null;
+  const ghostCurse = own.k === 'curse' && user.mon.hasType('Ghost');
+  if (ghostCurse && !z) return null;
   const field = battleField(values);
   for (const mon of [user.mon, target.mon]) {
     checkAirLock(mon, field);
     checkItem(mon, field.isMagicRoom);
   }
   effectChance = fieldEffects(atk, values, 'atk').secondaryMultiplier;
-  const out = effects.resolve({name, record: own, user, target, field, values, phase: 'status',
-    moveType: slot.t || moveData.type, toggles: !!options.toggles});
+  const before = z ? effects.resolve({name, record: own, user, target, field, values, phase: 'z'}) : null;
+  const base = !ghostCurse && (own.b || own.st || own.v || own.k || own.sb);
+  const out = base ? effects.resolve({name, record: own, user, target, field, values, phase: 'status',
+    moveType: slot.t || moveData.type, toggles: !!options.toggles}) : {parts: [], log: []};
+  const moveFails = out.fails;
+  if (before) {
+    out.parts.unshift(...before.parts);
+    out.log.unshift(...before.log);
+    if (before.field || out.field) out.field = {...before.field, ...out.field};
+    if (before.parts.length && !before.fails) delete out.fails;
+    if (before.fails) out.fails = before.fails;
+  }
   return {atk: user.update, def: target.update, log: out.log, parts: out.parts,
+    ...(moveFails ? {moveFails} : {}),
+    ...(out.field ? {field: {changes: out.field}} : {}),
     ...(out.fails ? {fails: out.fails} : {}), ...(out.bounced ? {bounced: true} : {}), ...describe(out)};
 }
 

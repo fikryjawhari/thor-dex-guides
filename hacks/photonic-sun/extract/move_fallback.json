@@ -1,0 +1,396 @@
+{
+  "source": "pokemon-showdown@0.11.11, Dex.mod(gen7); data/moves.ts + generation overrides; only properties absent from the raw 3DS record",
+  "moves": {
+    "Jump Kick": {
+      "crash": true,
+      "effects": [
+        {
+          "kind": "recoil",
+          "fraction": [
+            1,
+            2
+          ],
+          "basis": "maxhp",
+          "suffix": "crash damage on a miss"
+        }
+      ]
+    },
+    "Bite": {
+      "flags": [
+        "bite"
+      ]
+    },
+    "Poison Powder": {
+      "flags": [
+        "powder"
+      ]
+    },
+    "Stun Spore": {
+      "flags": [
+        "powder"
+      ]
+    },
+    "Sleep Powder": {
+      "flags": [
+        "powder"
+      ]
+    },
+    "Egg Bomb": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "High Jump Kick": {
+      "crash": true,
+      "effects": [
+        {
+          "kind": "recoil",
+          "fraction": [
+            1,
+            2
+          ],
+          "basis": "maxhp",
+          "suffix": "crash damage on a miss"
+        }
+      ]
+    },
+    "Barrage": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Spore": {
+      "flags": [
+        "powder"
+      ]
+    },
+    "Hyper Fang": {
+      "flags": [
+        "bite"
+      ]
+    },
+    "Tri Attack": {
+      "secondary": true,
+      "effects": [
+        {
+          "kind": "status",
+          "status": "brn",
+          "recordChance": true,
+          "chanceScale": 0.3333333333333333
+        },
+        {
+          "kind": "status",
+          "status": "par",
+          "recordChance": true,
+          "chanceScale": 0.3333333333333333
+        },
+        {
+          "kind": "status",
+          "status": "frz",
+          "recordChance": true,
+          "chanceScale": 0.3333333333333333
+        }
+      ]
+    },
+    "Cotton Spore": {
+      "flags": [
+        "powder"
+      ]
+    },
+    "Sludge Bomb": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Octazooka": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Zap Cannon": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Crunch": {
+      "flags": [
+        "bite"
+      ]
+    },
+    "Shadow Ball": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Secret Power": {
+      "secondary": true,
+      "effects": [
+        {
+          "kind": "status",
+          "status": "par",
+          "recordChance": true,
+          "suffix": "no terrain or Electric Terrain"
+        },
+        {
+          "kind": "status",
+          "status": "slp",
+          "recordChance": true,
+          "suffix": "Grassy Terrain"
+        },
+        {
+          "kind": "stages",
+          "who": "target",
+          "stages": {
+            "spa": -1
+          },
+          "recordChance": true,
+          "suffix": "Misty Terrain"
+        },
+        {
+          "kind": "stages",
+          "who": "target",
+          "stages": {
+            "spe": -1
+          },
+          "recordChance": true,
+          "suffix": "Psychic Terrain"
+        }
+      ]
+    },
+    "Mist Ball": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Ice Ball": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Poison Fang": {
+      "flags": [
+        "bite"
+      ]
+    },
+    "Weather Ball": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Bullet Seed": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Rock Blast": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Water Pulse": {
+      "flags": [
+        "pulse"
+      ]
+    },
+    "Gyro Ball": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Aura Sphere": {
+      "flags": [
+        "bullet",
+        "pulse"
+      ]
+    },
+    "Dark Pulse": {
+      "flags": [
+        "pulse"
+      ]
+    },
+    "Seed Bomb": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Dragon Pulse": {
+      "flags": [
+        "pulse"
+      ]
+    },
+    "Focus Blast": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Energy Ball": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Thunder Fang": {
+      "flags": [
+        "bite"
+      ]
+    },
+    "Ice Fang": {
+      "flags": [
+        "bite"
+      ]
+    },
+    "Fire Fang": {
+      "flags": [
+        "bite"
+      ]
+    },
+    "Mud Bomb": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Rock Wrecker": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Magnet Bomb": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Rage Powder": {
+      "flags": [
+        "powder"
+      ]
+    },
+    "Electro Ball": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Acid Spray": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Heal Pulse": {
+      "flags": [
+        "pulse"
+      ]
+    },
+    "Searing Shot": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Powder": {
+      "flags": [
+        "powder"
+      ]
+    },
+    "Origin Pulse": {
+      "flags": [
+        "pulse"
+      ]
+    },
+    "Spirit Shackle": {
+      "secondary": true
+    },
+    "Sparkling Aria": {
+      "secondary": true
+    },
+    "Throat Chop": {
+      "secondary": true
+    },
+    "Pollen Puff": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Anchor Shot": {
+      "secondary": true
+    },
+    "Beak Blast": {
+      "flags": [
+        "bullet"
+      ]
+    },
+    "Genesis Supernova": {
+      "secondary": true
+    },
+    "Psychic Fangs": {
+      "flags": [
+        "bite"
+      ]
+    },
+    "Skull Bash": {
+      "effects": [
+        {
+          "kind": "stages",
+          "who": "user",
+          "stages": {
+            "def": 1
+          },
+          "suffix": "on the charging turn"
+        }
+      ]
+    },
+    "Fell Stinger": {
+      "effects": [
+        {
+          "kind": "stages",
+          "who": "user",
+          "stages": {
+            "atk": 3
+          },
+          "suffix": "only if the target faints"
+        }
+      ]
+    },
+    "Rest": {
+      "effects": [
+        {
+          "kind": "heal",
+          "fraction": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    "Morning Sun": {
+      "healCondition": "normal weather; 2/3 in sun, 1/4 in other weather"
+    },
+    "Synthesis": {
+      "healCondition": "normal weather; 2/3 in sun, 1/4 in other weather"
+    },
+    "Moonlight": {
+      "healCondition": "normal weather; 2/3 in sun, 1/4 in other weather"
+    },
+    "Swallow": {
+      "healCondition": "one Stockpile; 1/2 with two, all HP with three"
+    },
+    "Mind Blown": {
+      "effects": [
+        {
+          "kind": "recoil",
+          "fraction": [
+            1,
+            2
+          ],
+          "basis": "maxhp",
+          "suffix": "HP cost, not prevented by Rock Head"
+        }
+      ]
+    },
+    "Shore Up": {
+      "healCondition": "2/3 in sand"
+    },
+    "Floral Healing": {
+      "healCondition": "2/3 in Grassy Terrain"
+    },
+    "Purify": {
+      "healCondition": "only if it cures the target status"
+    }
+  }
+}

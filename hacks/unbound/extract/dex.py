@@ -98,6 +98,27 @@ def wiki_how(how):
     return cfru.evo_text(h)
 
 
+def wild_held(entries):
+    """The wiki's "Wild Held Items" as [item, %]: slot 1 50%, slot 2 5% as written; the same item in both slots is
+    always held, so 100 (CFRU's GenerateWildMonHeldItem). Basculin's entry lists one item per form in one string."""
+    held = {}
+    for entry in entries:
+        for piece in re.split(r'\s*(?:Blue|Red)-Striped Basculin:\s*', entry):
+            piece = piece.strip()
+            if not piece:
+                continue
+            m = re.fullmatch(r'(.+?)\s*\((\d+)%(?: chance)?\)', piece)
+            if m:
+                name, pct = m.group(1), int(m.group(2))
+            else:
+                m = re.fullmatch(r'(\d+)% (.+)', piece)
+                assert m, 'wiki held item not read: %r' % piece
+                name, pct = m.group(2), int(m.group(1))
+            name = re.sub(r'\s*\([^()]* Style\)$', '', name)  # "Honey (Baile Style)": the form is the Pokémon's
+            held[name] = 100 if name in held else pct
+    return [[name, pct] for name, pct in held.items()]
+
+
 def build(D):
     S = RD.species()
     calc = cfru.calc_names()
@@ -202,7 +223,7 @@ def build(D):
         if f.fc:
             p['fc'] = 1
         if w and w.held and f.kind in ('base', 'regional'):
-            p['hi'] = [re.sub(r'\s*\([^)]*\)$', '', h) for h in w.held]
+            p['hi'] = wild_held(w.held)
         # wiki cross-check (types, abilities): the "Wiki says ..." card
         p['_w'] = w
         if w and f.kind in ('base', 'regional'):

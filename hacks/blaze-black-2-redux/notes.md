@@ -47,9 +47,12 @@ Dex (2026-10-29):
   Axel). Where the mirror's value differs the move gets a "Sources disagree" card ("Move Changes says Power 35;
   RomHackDex says 20"): 154 fields (Power 64, PP 61, Accuracy 25, Type 3, Priority 1), the audit's count. The general
   "sound moves hit through Substitute" line names no move and stays in the report.
-- **No move descriptions**: the BB2R mirror has none (moves.json and the move pages); MV.d is empty. MV.f (flags) and
-  MV.cr (crit stage) are not set: the calc unit owns them (doc: Cut, Dragon Claw, Octazooka, X-Scissor gain high
-  crit; Crabhammer loses it).
+- **No move descriptions**: the BB2R mirror has none (moves.json and the move pages); MV.d is empty.
+- **Move properties** (`extract/move_metadata.py`, `tools/moveprops.py`): MV.f (flags), MV.tg (target) and MV.se
+  (added effects with odds) for the 559 moves in M; the 18 mirror-only Shadow moves have none. Stock Gen V
+  from Showdown, Move Changes' replacements over it (Scald 10% burn, Chatter, Tri Attack, ...) and the page-only
+  flags. MI (ability / item links) comes from the rules in `move_rules.json`. MV.cr (crit stage) is set by
+  extract/dex.py (doc: Cut, Dragon Claw, Octazooka, X-Scissor gain high crit; Crabhammer loses it).
 - **Abilities**: the names P uses, with the mirror's descriptions (all 166 have one).
 - **Type chart**: the mirror's chart (types/index.html). Type Changes.txt has species types only; the chart agrees
   with what the docs state (Fairy added as in Gen VI; Steel no longer resists Ghost / Dark).
@@ -188,6 +191,12 @@ not a replacement for omitted methods. No template change or browser sweep in th
   / Dropped Item; BB2R's reused slots Red Scarf = Ice Stone and Oval Stone = Link Cable (Item Changes, Modified
   Items); TMs / HMs map by number. 440 / 441 IT names map; Old Sea Map (BB2R's "God/Grey Stone" slot, no PKHeX
   name) stays unmapped: a key item, never held.
+- **ROM data** (2026-11-01, `extract/held_items.py` and `extract/item_desc.py`, read from the user's dump in
+  `.src/rom/`, committed as `held_items.json` / `item_desc.json`): wild held items are the personal NARC's three u16
+  slots at 0x0C / 0x0E / 0x10 (50 / 5 / 1%); only Latios, Latias and Giratina (both forms) hold any, all in every
+  slot (100%). Snorlax and Chansey hold nothing in this ROM. `P.hi` comes from those, not the docs. Bag text is
+  the text bank (`a/0/0/2`, members 63 / 64, line index not item id): 514 descriptions (`IX`, no in-battle
+  text yet); TMs / HMs have none; Bridge Mail and Up-Grade are not in the bank.
 - **Valuables** (2026-10-30; it held every medicine, ball and battle item): curated like Unbound's, `items.VALUABLES`:
   Sell items (Nugget, Big Nugget, Pearl, Big Pearl, Pearl String, Stardust, Star Piece, Comet Shard, Rare Bone, the
   three Mushrooms, Shoal Salt / Shell, Honey, the seven Relics), Shards (the move tutors' currency), Heart Scales,
@@ -199,6 +208,14 @@ not a replacement for omitted methods. No template change or browser sweep in th
   places with none are `NO_WILD` (towns and buildings with no wild encounters: Black City, Black Tower, Join Avenue,
   Lacunosa, Lentimas, Marine Tube, Mistralton, Nuvema, Opelucid, PWT, Plasma Frigate, Pokémon League, Royal Unova,
   Tubeline Bridge); the check asserts every place is one or the other.
+- **Two pickups at one place** (2026-11-01; `tools/item_dupes.py` lists them as "unsure"): Leaf Stone (Lostlorn
+  Forest), Moon Stone (Giant Chasm), PP Max (Route 18), Rare Candy (Victory Road, Route 3), Comet Shard (Dragonspiral
+  Tower), Nugget (Route 14), Rare Bone (Twist Mountain), Star Piece (Route 23), Stardust (Route 4), Blue Shard
+  (Route 17) each have a plain line and a "— Hidden" line. They are two pickups and stay two lines: Item Changes lists
+  both in that area ("Ultra Ball -> Leaf Stone" and "Leaf Stone (Hidden)", ...), and Bulbapedia's B2W2 location pages
+  (fetched 2026-11-01) list each as two separate entries (`display=... ×2`, one of them hidden; Route 4's Stardust is
+  hidden in both versions at two different spots). Link Cable at Driftveil City: "Calcium -> Link Cable" (the
+  vanilla Calcium near the stone bridge) and "Link Cable**" (Challenge only): two.
 
 ### Walkthrough
 `extract/walk.py` (WK), checked in `extract/check.py`. 22 splits = the Trainers boxes (21 caps, then Post-game), 117
@@ -402,12 +419,15 @@ permanent ability weather). Type chart: data `TC` (Fairy, Gen VI Steel). Overrid
 | Cut, Dragon Claw, Octazooka, X-Scissor high crit; Crabhammer not | Move Changes | `MV.cr` (extract/dex.py, with Gen V's high-crit list, Bulbapedia) | `crit ratio changes` (check) |
 | Wild Charge: no recoil | Move Changes | `over.moves` `recoil: null` | `wild-charge`, check |
 | Triple Axel hits 30 / 40 / 50 (power 30, later hits +10, "Triple Kick mechanics") | Move Changes; the user's call 2026-10-29 | `over.moves` `step: 10` (engine: each later hit adds the step; hit actions too) | `triple-axel` (known difference: hzla 30 x 3), check |
-| Needle Arm, Rock Smash boosted by Iron Fist | Move Changes; Changelog 291 | `over.moves` punch flag | `iron-fist-*` (known differences: hzla doesn't flag them), negatives |
+| Needle Arm, Rock Smash boosted by Iron Fist | Move Changes; Changelog 291 | `MV.f` punch (move_rules Iron Fist `add`); `over.moves` punch flag repeats it | `iron-fist-*` (known differences: hzla doesn't flag them), negatives |
 | Sound moves hit through Substitute | Move Changes, Further Modifications | nothing: the calc has no Substitute state | sound flags (Soundproof) |
 | Power / type / category / accuracy | Move Changes | data (`MV`) | `frost-breath`, `shadow-claw-90`, `esper-wing`, `wave-crash`, `hex-*` |
 
-`MV.f` is omitted, so the engine keeps stock Gen V flags (modern ones for the replacement moves); an empty list
-meant "no flags" and switched off Iron Fist / Soundproof.
+`MV.f` is set on every move, so the engine reads the guide's list instead of stock flags (present = replaces them;
+Protect stays stock unless `noprotect`). Every stock Gen V flag is in it (checked against the calc's Gen V move data:
+none missing; MV.f has contact on 186 moves, sound 18, punch 17); the page-only ones (bullet, bite, pulse, slicing, wind, bypasssub, reflectable,
+...) change no damage here, since BB2R has none of the abilities that read them (Bulletproof, Strong Jaw, Mega
+Launcher, Sharpness, Wind Rider). Iron Fist, Soundproof and the contact abilities read the list.
 
 **Level bug** (Challenge; hzla's model): a trainer Pokemon with `sl` has stats at `sl`; the damage formula uses the
 shown level `l`; Night Shade / Seismic Toss / Psywave use `sl` (hzla `handleFixedDamageMoves`); the player's Pokemon

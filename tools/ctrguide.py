@@ -1,6 +1,10 @@
 """Shared conversion, trainer and walkthrough helpers for the 3DS guides' source extracts."""
 
 import re
+import json
+from pathlib import Path
+from garc import mini, read_garc
+from moveprops import effect_text, protect_flags
 from extractlib import fix, norm, report, slug
 
 
@@ -30,6 +34,111 @@ Fairy: Fire .5 Fighting 2 Poison .5 Dragon 2 Dark 2 Steel .5"""
 FC = {351, 421, 479, 386, 487, 492, 555, 641, 642, 645, 646, 647, 648, 658, 681, 716, 718, 720, 741, 746, 774, 778, 800}
 FC_KEEP = {(718, 1), (718, 2), (718, 3)}  # Zygarde 10% / 50% are their own catches (cells), not changes
 MEGA_WORDS = ('Mega ', 'Primal')
+# Wild held items: slot 1 50%, slot 2 5%, slot 3 1% (the SM / XY rule, the same in every 3DS game here).
+WILD_HELD = (50, 5, 1)
+# Items-tab boxes (and kind 'tm') that take no bag text: TMs (the move page has the text), tutors and NPC items.
+NO_BAG_TEXT = {'TMs and HMs', 'Move Tutors', 'Useful NPCs'}
+
+MOVE_FLAGS = ['contact', 'charge', 'recharge', 'protect', 'reflectable', 'snatch', 'mirror', 'punch',
+              'sound', 'gravity', 'defrost', 'triple-distance', 'heal', 'bypasssub', 'no-sky', 'animate-ally']
+MOVE_TARGETS = ['normal', 'adjacentAllyOrSelf', 'adjacentAlly', 'adjacentFoe', 'allAdjacent',
+                'allAdjacentFoes', 'allies', 'self', 'all', 'randomNormal', 'all', 'foeSide', 'allySide',
+                'scripted']
+
+
+def read_move_records(archive):
+    """Read uncompressed XY (36-byte) / ORAS (34-byte) / USUM (40-byte) move records.
+
+    XY has two bytes of padding before its flags, unlike pk3DS Move6's ORAS layout.
+    Flags are the final uint32 in all three layouts; never trust the older dex cache's flags.
+    """
+    records = read_garc(archive)
+    if len(records) == 1:
+        records = mini(records[0])[1]
+    if any(len(record) not in (34, 36, 40) for record in records):
+        raise ValueError(f'Unexpected move record size in {archive}')
+    return records
+
+
+def move_metadata(record, fallback):
+    """Decode move-page fields from the game, using named stock rules only for unencoded mechanics."""
+    bits = int.from_bytes(record[-4:], 'little')
+    names = MOVE_FLAGS + (['dance'] if len(record) == 40 else [])
+    flags = [flag for bit, flag in enumerate(names) if bits & (1 << bit)]
+    target = MOVE_TARGETS[record[0x14]]
+    if target == 'normal' and 'triple-distance' in flags:
+        target = 'any'
+    flags = protect_flags(flags, target) + fallback.get('flags', [])
+    effects = []
+
+    def add(kind, chance=100, suffix='', **values):
+        effect = effect_text(dict(kind=kind, chance=chance, **values))
+        if suffix:
+            effect[1] += ' (' + suffix + ')'
+        if effect not in effects:
+            effects.append(effect)
+
+    damaging = record[2] != 0
+    inflict = int.from_bytes(record[8:10], 'little')
+    sequence = int.from_bytes(record[16:18], 'little')
+    status = {1: 'par', 2: 'slp', 3: 'frz', 4: 'brn', 5: 'psn'}.get(inflict)
+    if status:
+        if sequence in (33, 202):
+            status = 'tox'
+        add('status', record[10] or 100, status=status)
+    elif inflict == 6:
+        add('confusion', record[10] or 100)
+    if record[15]:
+        add('flinch', record[15])
+    if inflict == 8:
+        flags.append('binding')
+    if record[7] >> 4 > 1:
+        flags.append('multihit')
+
+    stats = {1: 'atk', 2: 'def', 3: 'spa', 4: 'spd', 5: 'spe', 6: 'acc', 7: 'eva'}
+    stage_groups = {}
+    for stat, amount, chance in zip(record[21:24], record[24:27], record[27:30]):
+        if not stat or not amount:
+            continue
+        amount = amount if amount < 128 else amount - 256
+        selected = ['atk', 'def', 'spa', 'spd', 'spe'] if stat == 8 else [stats[stat]]
+        stages = stage_groups.setdefault(chance or 100, {})
+        stages.update(dict.fromkeys(selected, amount))
+    who = 'user' if record[1] == 7 or target == 'self' else 'target'
+    for chance, stages in stage_groups.items():
+        add('stages', chance, who=who, stages=stages)
+
+    def fraction(percent):
+        return [1, 3] if percent == 33 else [percent, 100]
+
+    recovery = int.from_bytes(record[18:19], 'little', signed=True)
+    healing = int.from_bytes(record[19:20], 'little', signed=True)
+    if recovery:
+        kind = 'drain' if recovery > 0 else 'recoil'
+        flags.append(kind)
+        add(kind, fraction=fraction(abs(recovery)))
+    if healing < 0:
+        flags.append('recoil')
+        add('recoil', fraction=fraction(-healing), basis='maxhp')
+    elif healing > 0:
+        condition = fallback.get('healCondition', '')
+        add('heal', fraction=fraction(healing), suffix=condition)
+    for effect in fallback.get('effects', []):
+        effect = dict(effect)
+        scale = effect.pop('chanceScale', 1)
+        if effect.pop('recordChance', False):
+            effect['chance'] = round((record[10] or 100) * scale, 2)
+        add(**effect)
+    if fallback.get('crash'):
+        flags.append('crash')
+    if damaging and (fallback.get('secondary') or record[15] or status or inflict == 6 or
+                     record[1] == 6 and stage_groups or
+                     record[1] == 7 and any(amount > 0 for stages in stage_groups.values() for amount in stages.values())):
+        flags.append('secondary')
+    result = {'f': list(dict.fromkeys(flags)), 'tg': target}
+    if effects and damaging:    # MV.se: side effects of damaging moves; a status move's effect is its description
+        result['se'] = effects
+    return result
 
 
 def form_name(s):
@@ -45,7 +154,8 @@ def form_name(s):
     return f'{n} ({re.sub(r" (Form|Forme|Mode|Style|Size|Cloak|Trim|Pattern|Flower)$", "", f)})'
 
 
-def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evolution_rows=None):
+def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evolution_rows=None,
+              move_archive=None, move_fallback=None):
     """Populate dex tables and scratch mappings; callbacks supply local evolution rules and report output."""
     # Moves
     M = [m['name'] for m in hacked['moves']]
@@ -53,6 +163,8 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
     vm = {m['id']: m for m in vanilla['moves']}
     doc = dict(move_notes)
     MV = []
+    records = read_move_records(move_archive) if move_archive else None
+    fallback = json.loads(Path(move_fallback).read_text(encoding='utf8'))['moves'] if move_fallback else {}
     for m in hacked['moves']:
         v = vm[m['id']]
         h = []
@@ -64,6 +176,8 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
             h.append('New description')
         e = {'t': m['type'], 'c': m['cat'], 'bp': m['bp'] or None, 'ac': m['acc'] if m['acc'] and m['acc'] <= 100 else None,
              'pp': m['pp'], 'pr': m['pr'], 'd': fix(m['desc']), 'f': m['flags'], 'h': h}
+        if records is not None:
+            e.update(move_metadata(records[m['id']], fallback.get(m['name'], {})))
         if m['crit']:
             e['cr'] = m['crit']    # crit stage (the damage calc); 6 = always a crit
         if norm(m['name']) in doc:
@@ -118,9 +232,8 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
             p['g'] = 1
         elif s['form'] and s['id'] in FC and (s['id'], s['form']) not in FC_KEEP:
             p['fc'] = 1
-        hi = [x for x in dict.fromkeys(s['items']) if x]
-        if hi:
-            p['hi'] = hi
+        if not p['g'] and any(s['items']):  # Mega forms have no wild items
+            p['hi'] = wild_held(s['items'])
         p['_s'] = s
         P.append(p)
     byid = {p['id']: p for p in P}
@@ -163,6 +276,56 @@ def build_dex(data, hacked, vanilla, *, move_notes, evolution_text, report, evol
     data['_spec'], data['_MI'], data['_ABI'], data['_byid'] = spec, MI, ABI, byid
     report('species/forms', len(P), 'megas', sum(p['g'] == 1 for p in P), 'form changes', sum(bool(p.get('fc')) for p in P),
            'moves changed', sum(bool(e.get('h')) for e in MV))
+
+
+def wild_held(items):
+    """[[item, %]] from a species' three held-item slots (dex json `items`), one entry per item. The same item in slots
+    1 and 2 is 100% (the game gives it before rolling slot 3); otherwise an item in several slots sums their odds."""
+    if items[0] and items[0] == items[1]:
+        return [[items[0], 100]]
+    odds = {}
+    for item, pct in zip(items, WILD_HELD):
+        if item:
+            odds[item] = odds.get(item, 0) + pct
+    return [[item, pct] for item, pct in odds.items()]
+
+
+def squash(text):
+    """Game text with line breaks and the TM reflow folded to single spaces (fix() also decodes é)."""
+    return ' '.join(fix(text).split())
+
+
+def item_text(D, hacked, vanilla, extract_dir):
+    """Bag text (IX) for every item the guide shows, from the hack's dex json `items` by id. changed = 1 when it differs
+    from the vanilla text of the same id once squashed. Names: the Items tab rows (not NO_BAG_TEXT boxes), P.hi, trainer
+    held items and MI items. Writes extract_dir/item_desc.json ({name: [text, changed]}, committed); names the dex
+    doesn't have, or with no text, are reported and get no entry."""
+    by_name, by_norm = {}, {}
+    for item in hacked['items']:
+        by_name.setdefault(item['name'], item)
+        by_norm.setdefault(norm(item['name']), item)
+    vanilla_text = {item['id']: squash(item['desc']) for item in vanilla['items']}
+    textless = lambda section: section.get('k') == 'tm' or section['n'] in NO_BAG_TEXT
+    no_text = {row[0] for section in D['IT'] if textless(section) for row in section['r']}
+    names = [row[0] for section in D['IT'] if not textless(section) for row in section['r']]
+    names += [held[0] for p in D['P'] for held in p.get('hi', [])]
+    names += [mon['i'] for group in D['TR']['g'] for section in group['sec'] for trainer in section['tr']
+              for mon in trainer['p'] if mon.get('i')]
+    names += [x['i'] for x in D.get('MI', []) if x.get('i')]
+    shown = {norm(name) for name in names}   # then every other item the game has (MI is only made in finalise)
+    names += [item['name'] for item in hacked['items'] if item['name'] and norm(item['name']) not in shown
+              and not re.match(r'(TM|HM)\d', item['name'])]
+    texts, missing = {}, []
+    for name in dict.fromkeys(name for name in names if name not in no_text):
+        item = by_name.get(name) or by_norm.get(norm(name))  # the guide's own spelling may differ ("SilverPowder")
+        text = squash(item['desc']) if item else ''
+        if text:
+            texts[name] = [text, int(text != vanilla_text.get(item['id']))]
+        elif norm(name) in shown:
+            missing.append(name)
+    with open(Path(extract_dir, 'item_desc.json'), 'w', encoding='utf8', newline='\n') as f:
+        f.write(json.dumps(texts, ensure_ascii=False, indent=1, sort_keys=True) + '\n')
+    report('item text:', len(texts), 'changed', sum(c for _, c in texts.values()), 'no text:', ', '.join(missing) or 'none')
 
 
 def build_save_ids(data, source):

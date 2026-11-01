@@ -2,10 +2,11 @@
 // on the guide as built must point at the same things in a copy with one new entry at the front of M (and MV), AB, P,
 // the Trainers boxes and the first walkthrough split, every reference to them shifted. Rule: saved state never stores
 // a position in the data (template/README.md → What the data switches on). Runs on every guide.
-//   28a same state: calc sets (species, ability, moves), the calc's foe, recent trainers and foe edits, the hazard chip's offer, area rule
+//   28a same state: calc sets (species, ability, moves), the calc's foe, Z slots (ST.z, by set / trainer key), recent trainers and foe edits (with this fight's
+//   types / ability / item: FIGHT ft / fadd / fa / fi, by name), the hazard chip's offer, area rule
 //       switches / Defog (guides with area rules), list filters, the Pokémon page's open sections,
 //       level caps, Trainers open state, search recents, the stat calc, walkthrough ticks and the tracker, compared
-//       by name before and after the update.
+//       by name before and after the update; pickup ticks (LS.items g, by pickup key) name the same item and line.
 //   28b same pages: a Pokémon page and a trainer card read the same in both copies (the shifted copy is consistent).
 import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -48,6 +49,8 @@ function shifted() {
     if ('a0' in m) m.a0 = ab(m.a0);
   }
   for (const sec of D.IT || []) for (const r of sec.r) if (typeof r[2] === 'number') r[2] = mv(r[2]);
+  // A new item with a new pickup at the front of the first box: every IT row and pickup line moves down one.
+  if (D.IT?.length) D.IT[0].r.unshift(['Brand New Item', 'Found: Brand New Place', null, 0, D.IT[0].r[0]?.[4] || '', ['p-brand-new']]);
   for (const sp of D.WK.splits) for (const st of sp.st) for (const it of st.it || []) if (typeof it[3] === 'number') it[3] = mv(it[3]);
   for (const it of D.WK.np || []) if (typeof it[3] === 'number') it[3] = mv(it[3]);
   if (D.GID) {
@@ -92,8 +95,9 @@ const SNAPSHOT = `(()=>{const C=CF.calc?CALC.state():null,tn=k=>TRK[k]?.n??'gone
   return {
     custom:C?C.custom.map(c=>[byId[c.id]?.n,AB[c.a]?.[0],(c.m||[]).map(i=>i==null?null:M[i])]):null,
     foe:C?[tn(C.foe.k),C.foe.i]:null,
+    zSlots:C?Object.keys(C.z).filter(k=>C.z[k]).map(k=>{const [side,...rest]=k.split(':'),slot=rest.pop();return side==='foe'?[side,tn(rest.slice(0,-1).join(':')),rest.at(-1),slot]:[side,byId[C.custom.find(c=>String(c.pid)===rest.join(':'))?.id]?.n??'gone:'+rest.join(':'),slot];}).sort():null,
     recentTrainers:C?C.recent.map(tn):null,
-    foeEdits:C?Object.entries(C.edits).filter(([k])=>k.startsWith('foe:')).map(([k,e])=>{const i=k.lastIndexOf(':');return [tn(k.slice(4,i)),k.slice(i+1),e.l];}):null,
+    foeEdits:C?Object.entries(C.edits).filter(([k])=>k.startsWith('foe:')).map(([k,e])=>{const i=k.lastIndexOf(':');return [tn(k.slice(4,i)),k.slice(i+1),e.l,e.ft,e.fadd,e.fa,e.fi];}):null,
     filters:st.f.map(f=>[f.k,f.k==='type'?f.v:fval(f)]),
     dexOpen:Object.entries(PO).map(([k,o])=>[PSECS.find(x=>x[0]===k)?.[1]??'gone:'+k,o]).sort(),
     caps:Object.entries(TCAP).filter(([k])=>k!=='_last').map(([k,v])=>[tn(k),v]),
@@ -107,6 +111,8 @@ const SNAPSHOT = `(()=>{const C=CF.calc?CALC.state():null,tn=k=>TRK[k]?.n??'gone
     tracker:Object.entries(TK.e).map(([a,e])=>[AR[a]?.n,e.p?byId[e.p]?.n:'failed']),
     foeSpecies:C&&C.foeSp?Object.entries(C.foeSp).map(([k,v])=>{const i=k.lastIndexOf(':');return [tn(k.slice(4,i)),k.slice(i+1),byId[v]?.n??'gone:'+v];}):null,
     hazardOffer:C&&C.hzOffer&&Object.keys(C.hzOffer).length?Object.entries(C.hzOffer).map(([side,v])=>{const k=typeof v==='string'?v:v.k,off=typeof v==='object'&&v.off===true,i=k.lastIndexOf(':');return k.startsWith('foe:')?[side,tn(k.slice(4,i)),k.slice(i+1),off]:[side,byId[C.custom.find(c=>'mine:'+c.pid===k)?.id]?.n??'gone:'+k,off];}).sort():null,
+    itemsOpen:(D.IT||[]).length?[...Object.keys(IO.o),...Object.keys(IO.s)].sort():null,
+    itemTicks:Object.keys(IO.g).map(k=>{const p=pickupOf(k);return p?p.n+' | '+p.l:'gone:'+k;}).sort(),
     areaRules:C&&C.areaByTrainer?Object.entries(C.areaByTrainer).map(([k,v])=>[tn(k),Object.keys(v.disabled||{}).sort(),v.fogCleared===true]):null,
   };})()`;
 
@@ -127,14 +133,18 @@ const checks = [
         recSave([{k:'p',v:p.id},{k:'f',v:{k:'mv',v:mid}},{k:'t',v:t.k},...(${STOP ? 1 : 0}?[{k:'w',si:${STOP?.si},ti:${STOP?.ti}}]:[]),...((D.IT||[]).length?[{k:'i',si:0,ri:0}]:[])]);
         localStorage.setItem(calcKey(p),JSON.stringify({l:37,n:'Adamant',iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0]}));
         ${STOP ? `WO.c['${STOP.si}.${STOP.ti}.0']=1;` : ''}WO.x['0.'+(D.WK.splits[0].st.length>1?1:0)]=0;woSave();
-        TK.e[${area}]={p:p.id};tkSave();})()`);
+        TK.e[${area}]={p:p.id};tkSave();
+        const pk=(D.IT||[]).flatMap(sec=>sec.r.flatMap(r=>(r[5]||[]).filter(Boolean)));[pk[1],pk[pk.length-1]].forEach(k=>k&&tickSet(k,true));
+        const sec=(D.IT||[]).at(-1);if(sec){IO.o[sec.n]=1;if(sec.r[0][4])IO.s[sec.n+'.'+sec.r[0][4]]=1;ioSave();}})()`);
       if (MSTOP) await page.value(`(()=>{const [a,b]=${JSON.stringify(MS.map(m => [m.m, m.s.map(c => c.k)]))};
         misSet(a[0],r=>{r.o=true;r.c[a[1][0]]=1;});misSet(b[0],r=>{r.o=false;r.c[b[1][b[1].length-1]]=1;});
         WO.c['${LATER?.si}.${LATER?.ti}.0']=1;woSave();recSave([...recRead(),{k:'ms',m:a[0]},{k:'ms',m:b[0],c:b[1][0]}]);})()`);
       if (data.cfg.calc) {
         await page.value(`(()=>{const p=byId[${sid}];CALC.enter(${k},1);CALC.use(p);
           CALC.set('mine','m',[M.length-1,usedMoves[0],usedMoves[1],usedMoves[2]]);CALC.set('mine','a',p.a[p.a.length-1]);})()`);
-        await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.edits['foe:'+${k}+':1']={l:77};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
+        // Z slots (ST.z, by slot key: set pid / trainer key + index, then the move slot).
+        await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.z={...s.z,['mine:'+s.custom.at(-1).pid+':1']:1,['foe:'+${k}+':1:0']:1};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
+        await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));const t=Object.keys(D.TC);s.edits['foe:'+${k}+':1']={l:77,ft:[t[1]],fadd:t[2],fa:AB[byId[${sid}].a[0]][0],fi:'Leftovers'};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
         // The hazard chip's offer (ST.hzOffer: side → card key, trainer key + slot / custom pid, or {k, off} toggled out).
         await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.hzOffer={foe:{k:'foe:'+${k}+':1',off:true},mine:'mine:'+s.custom.at(-1).pid};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
         // Assumed sets (Unbound): the foe edit remembers its species (ST.foeSp, a species id, dropped when another is there).

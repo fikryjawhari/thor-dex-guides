@@ -8,7 +8,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 
 - **Six guides on `main`**, one template, one extract layout (`tools/extractlib.py`), one data schema
   (`tools/schema.py`), one Items standard (`tools/itemstd.py`), one notes / SOURCES layout, and the damage calc with
-  save import on every one: Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.5 (NDS), Photonic Sun 2.38 Rebalanced
+  save import on every one: Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.6 (NDS), Photonic Sun 2.38 Rebalanced
   (3DS, EV-less), Eternal X 2.67 Rebalanced (3DS), Blaze Black 2 Redux 1.4.1 (NDS, Complete EVless / Challenge),
   Unbound 2.1.1.1 (GBA, Expert). Live on GitHub Pages (https://fikryjawhari.github.io/thor-dex-guides/), built by the
   Action from `main`.
@@ -28,24 +28,44 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   sections, family evolution, compact moves, vertical stat calc, Use in calc ▸ in the top card; changed abilities show
   one statement (data `AB` [4], EI's 15 in `hacks/emerald-imperium/extract/ability_text.json`) and the ability page
   the original ([5]) and the change. `template/README.md` → Pokémon page; scenario `dex-page.mjs`. Not yet on the Thor.
-- **Next session: move and ability pages overhaul** (the user, 2026-10-31): move pages gain flags (contact, sharpness /
-  punch / sound / bite..., boosted by which abilities); ability pages list the moves they affect (Iron Fist → its
-  punching moves). Decide step first (mockup, spec in `plans/`). Unflagged ability changes found in other guides
-  (report only, not in their data): Hardlove Gold `.src/Mechanics.txt:26-32` (Libero every time, Battle Bond +1 Atk
-  / +1 Spe, Moody with accuracy / evasion, No Guard ignores OHKO level, permanent weather and Surge abilities);
-  Blaze Black 2 Redux Iron Fist also boosts Needle Arm and Rock Smash (`notes.md:405`); Unbound maybe permanent
-  weather and Gale Wings with no HP condition (mirror only, unconfirmed). Flag them with statements as part of it.
+- **Move, ability and item pages + calc fight state: in progress on `worktree-move-pages`** (worktree
+  `.claude/worktrees/move-pages`, not merged, not pushed). Plan, units and status: `plans/move-pages.md` (read its
+  Status section first). Done: shared move properties / targets / effect odds and ability-item rules
+  (`tools/moveprops.py`, `MV.f` / `tg` / `se`, top-level `MI`, per-hack `extract/move_rules.json`) in all six guides;
+  calc fight-only types / ability / item and effect odds on move rows; trainer full page links to Trainers /
+  Walkthrough. Next: 4a (KO chance in the opened calc row), 4b (every move does something + Photonic Z status
+  effects), 4c (calc layout decide session), 5 (move / ability page template per the mockup), 6 (item pages), 7 audit.
 - Where things are decided: `template/README.md` (template, UI, calc page), `tools/calc/README.md` (engine),
   `template/calc/readers/README.md` (save readers), each hack's `notes.md` (data, Damage calc, In-game tests / checks).
 - **Hack families** (write a family's first guide with its siblings in mind; lift shared code when the second comes):
   3DS (`tools/ctrguide.py`; next Meissa Moon, Navy Sapphire), pokeemerald-expansion (Emerald Imperium; SoulGold),
   CFRU (Unbound, `tools/cfru.py`; Radical Red), NDS (Hardlove Gold; Blaze Black 2 Redux with the Drayano family's
-  `tools/drayano.py` / `tools/romhackdex.py`; Renegade Platinum reuses them; HeartGold Retiled).
+  `tools/drayano.py` / `tools/romhackdex.py`; Renegade Platinum reuses them; Heartfelt Gold, formerly HeartGold Retiled, is hg-engine like Hardlove).
 - **Shipping a guide update:** push `main`, wait for the Pages Action, then on the Thor long-press the guide → Update
   from link. Same library id, so saved state (tracker, ticks, calc) is kept.
 - **Waiting to merge: the 2026-11-01 source pass** (Hardlove 0.8.6, Heartfelt Gold v1.0.0, formerly HeartGold Retiled):
   `plans/source-pass-2026-11-01-merge.md` is the whole procedure; run it after the move-pages work is merged.
 - **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
+
+## Decided while the user was away (item pages build, 2026-11-01; reverse any)
+
+- Battle text: ≤ 230 characters, main effect + numbers + 1-2 interactions (the user picked this). Gen 4 variants in
+  `tools/battle_text/` match no guide (Hardlove runs Gen 9 mechanics); left in, unused.
+- Item names: when a guide spells an item two ways, the spelled-out form wins (Silver Powder, Thunder Stone,
+  Empoleonite D), then the Items tab's spelling; rows renamed onto one item join (Photonic's Thunder Stone).
+- Item text: Mega Stones with no text get the games' standard sentence; Hardlove's 12 Z-A stones without a Mega form
+  by name; Unbound's Dream Mist = "gives a Pokémon its Hidden Ability", Max Powder = "gives a Pokémon the Gigantamax
+  Factor" (guesses from where they're sold: check in game); Pokégear Upgrade 1 = the Radio Card.
+- Hardlove's unobtainable Mega Stones show no "Found: Unavailable" line (the page's Mega line says so).
+- Item page: "changed" is a small accent word after the description, as on the move page; Held by leaves out Mega and
+  form-change forms.
+- Items tab: tutor box count without groups counts tutors by place (Hardlove "4 tutors" over 13 rows); no tick bar on
+  search results.
+- Pokémon page Held items: form-change forms (Castform Sunny, Shaymin Sky) list their wild items (only Megas have
+  none); "Trainers give it" counts the trainers of the page's "Used by trainers" (main teams, rivals of the other
+  starters in, partners out), so it can differ from the item page's Held by; sorted by count, then name.
+- Full gate (`gate.py check`) takes 45-60 min now: domcompare runs one guide at a time (~34 min of it). Later:
+  parallel domcompare, or checks chosen from the files a branch changed (Open).
 
 ## Open
 
@@ -70,9 +90,11 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
    is the 2026-10-18 hand-build version. Re-upload the repo copy (zip with forward-slash paths).
 5. **T3 worktree setup hook** (the user, in T3's project settings; sessions can't change them): a project script
    `python -I tools/worktree_setup.py`, icon Configure, run on worktree create. Until then run it by hand (CLAUDE.md → Git).
-6. **Source updates** (`uv run python -I tools/check_updates.py`): SoulGold's data files changed since 2026-10-24
+6. **Source updates** (`uv run python -I tools/check_updates.py`; last full pass 2026-11-01): Hardlove 0.8.6 and the
+   Heartfelt Gold v1.0.0 source pass done (branches `worktree-hardlove-086`, `worktree-heartfelt-gold`); Emerald
+   Imperium's hzla backup index gained other games only (accepted). SoulGold's data files changed since 2026-10-24
    (Mega Lopunny innates, Clefable / Mega Clefable and Unown learnsets, ability usage): re-fetch before its guide.
-   hzla's live `decomp` branch differs from Unbound's pin in `gen789.js` (pin kept).
+   hzla's live `decomp` branch differs from Unbound's pin in `gen789.js` (now an Electromorphosis fix; pin kept).
 7. **Pokémon page** (merged 2026-10-31): test on the Thor.
 
 ## Decisions
@@ -145,13 +167,15 @@ yet, and the dex source each extract will turn into `data.json`:
 | Meissa Moon | `.src/dex.json` (game data) | same | same | `trainers.json` (natures, EVs) |
 | Navy Sapphire | `.src/dex.json` (game data) | same | same, by method with rates | `trainers.json` |
 | Renegade Platinum | `romhackdex/pokedex/` | `romhackdex/moves.json` | `WildPokemon.txt` (+ RomHackDex) | `TrainerPokemon.txt` |
-| HeartGold Retiled | `hg-engine/species-pinned.json` | `hg-engine/pinned/Moves.c` | `source/Encounters.c` + guide | `source/Trainers.c` + guide |
+| Heartfelt Gold | `hg-engine/species-retiled.json` | `source/data/Moves.c` | `source/data/Encounters.c` + guide | `source/data/Trainers.c` + guide |
 | SoulGold | `data/species.json` + `data/species-details/` | `data/moves.json` | `data/encounters.json` | `data/trainers.json` |
 | Radical Red | `romhackdex/pokedex/` | `romhackdex/moves.json` | RomHackDex | the two sheets |
 
 Questions for those builds:
-- **HG Retiled:** never hg-engine `main`. Retiled's repo only carries the tables it changes; species / moves come from
-  the last upstream commit before its release (`dcbe17a`).
+- **Heartfelt Gold** (HeartGold Retiled renamed at v1.0.0, 2026-10-31; source pass 2026-11-01): the repo now carries its
+  own `Species.c` / learnsets / `Moves.c`, which win; upstream hg-engine only for ability text, at `61b510c` (never a
+  later `main`). Its Walkthrough and Item-Locations guides are still the Retiled-era ones (the author says they need an
+  audit), so walkthrough order and item locations need another source. `hacks/heartfelt-gold/SOURCES.md`.
 - Gen 7 wild tables have no method field (label them from the docs, as Photonic Sun does). Static and gift
   encounters of the 3DS games come from the game's `DllField.cro` (Eternal X's `locs.py`) or the docs.
 - Renegade Platinum: the Drayano family code (`tools/drayano.py`, `tools/romhackdex.py`) was written for it to reuse.

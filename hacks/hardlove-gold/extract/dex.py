@@ -8,6 +8,7 @@ build.py calls them: they share the working state X (common.py) with locs.py, tr
 from common import (X, S, SRC, collections, datetime, fid, json, key, lev, note1, os, re, report, unicodedata,
                     CALC, OLDP, SD, dexsite, enccheck, hgsource, xlsx)  # noqa: F401
 import hgengine
+import move_metadata
 
 
 # ---------------------------------------------------------------- Pokemon (site pages + Z-A Megas)
@@ -426,13 +427,15 @@ def movetable(D):
     # The game's own move data (Moves.c, config.h flags resolved: CHAMPIONS_* changes are on) wins. Notes say where the sheet
     # disagrees and which differences from Gen 9 the sheet doesn't list.
     GMV = {key(v['names']['name']): v for v in HG.MV.values()}
+    for v in HG.MV.values():   # a cut-short name ("ColisionCourse") still matches by its full name
+        GMV.setdefault(key(v['names'].get('fullName') or v['names']['name']), v)
     SPLIT = {'SPLIT_PHYSICAL': 'Physical', 'SPLIT_SPECIAL': 'Special', 'SPLIT_STATUS': 'Status'}
     MVSTAT = collections.Counter(); MVX = []
     for i, name in enumerate(M):
         o = MV[i]; g = GMV.get(key(name)); s = SDM.get(key(name))
         if not g: MVSTAT['not in the game data'] += 1; report('move not in the game data:', name); continue
         d, b = g['data'], g['battle']
-        o['f'] = hgengine.move_flags(g, s or {})
+        o.update(move_metadata.describe(g, s or {}))
         bp = HG.cfg(d['power']); ac = HG.cfg(d['accuracy']); pp = HG.cfg(d['pp'])
         gv = {'t': d['type'][5:].title(), 'c': SPLIT.get(d['split'], d['split']), 'bp': (None if bp in (0, 1) else bp), 'ac': (None if ac == 0 else ac), 'pp': pp, 'pr': HG.cfg(b['priority'])}
         if s and s['basePower'] and bp == 1: gv['bp'] = s['basePower']   # 1 marks variable power only when Showdown agrees

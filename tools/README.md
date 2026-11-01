@@ -30,6 +30,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `extractlib.py` | The shared start and end of every hack's `extract/` (layout in its docstring): paths, build report, PDF text, `finalise()` (Items standard, prune, stable trainer keys, Trainers in walkthrough order, split names, schema) and the `data.json` writer. |
 | `trainer_keys.py` | Stable trainer keys: `finalise()` matches each trainer to `hacks/<hack>/extract/trainer_keys.json` (committed) by identity, keeps its key, gives a new trainer `t<N>` and reports loose matches and unmatched entries. `trainer_keys_test.py [hack ...]` simulates an update on each guide (the gate runs it). |
 | `schema.py` | The `data.json` schema: key order per object, dead fields dropped, stop keys. Raises on a key it doesn't know (add it there and to the EI notes' Data schema). |
+| `moveprops.py` | Stdlib shared targets (`TARGETS`), properties (`PROPS` / `ALIASES`), source-aware `protect_flags()`, added-effect phrase builder `effect_text()`, and audited latest-generation ability/item `RULES`. `finalise()` calls `apply(D,hack)` after pruning to validate metadata and build `MI`; hack differences use source-backed `extract/move_rules.json` (format in the module docstring). `uv run python -I tools/test_moveprops.py` checks vocabulary, phrases, predicates, overrides and idempotence. |
 | `calcbackup.js <backup.js> <out.json>` | An hzla-style damage-calc backup file (trainer sets, moves) as JSON. |
 | `showdown.js <dist/data dir> <out.json>` | pokemon-showdown data files (moves, texts, dex, abilities) as one JSON. |
 | `drive_ls.py <folder-id> [out-dir]` | Lists a public Google Drive folder; with `out-dir`, downloads every file in it (Sheets as .xlsx, Docs as .txt, other files as-is). Skips subfolders and archives (.zip etc.). |
@@ -39,7 +40,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `wp_dump.py <site> <out.json> [types ...]` | Dumps a WordPress site (pages and custom post types) through its REST API into one JSON file. |
 | `wiki_dump.py <api.php> <out-dir>` | Dumps every page of a MediaWiki as wikitext. Not used by any hack right now. |
 | `rp_item_locations.py` | Builds Renegade Platinum's `item-locations.csv` from its docs plus vanilla Platinum (pret decomp). |
-| `hge_species.py` | Extracts per-species dex data from hg-engine data files, and diffs two extracts (HeartGold Retiled). |
+| `hge_species.py` | Extracts per-species dex data from hg-engine data files, and diffs two extracts (Heartfelt Gold). |
 | `sprites_pee.py <expansion dir> [out-dir]` | Builds the shared sprite set (`sprites/png/`, `sprites/index.json`) from a pokeemerald-expansion checkout (`sprites/SOURCES.md`). |
 | `sprite_keys.py <hack>` | Lists the sprite key each species gets (from dex number and name; `assemble.py` uses it) and the species not in the shared set, i.e. the hack's own forms. |
 | `datajson.py` | `load()` / `save()` for a hack's `data.json` in its own layout (one line per entry for M, MV, AB, P, LOC, AR); for extract steps that edit the finished file (`itemstd.py`). |
@@ -217,8 +218,8 @@ run `uv run python -I tools/check_updates.py [hack]`; its pins and coverage are 
 | Blaze Black 2 Redux | v1.4.1 | 2026-10-18 (docs), 2026-10-19 (RomHackDex), 2026-10-29 hzla pins | 2026-10-29 | Drayano's Drive (Documentation folder), RomHackDex, hzla Dynamic-Calc-Decomps |
 | Emerald Imperium | v1.3 / 1.3.1 | 2026-10-18 (guide built from the same sources) | 2026-10-02 | emeraldimperium.info Drive folder; eidex and Dynamic-Calc-Decomps repos |
 | Eternal X | v2.67 | 2026-10-18 (docs + romfs), dex extract 2026-10-19, regenerated + Bulbapedia 2026-10-22 | 2026-10-22 | Buffel Saft's Drive, PokeCommunity thread |
-| Hardlove Gold | 0.8.5 (source `kumakuma1/hardlove` `64838bf7db`; docs site `bb5862f` is older) | 2026-10-28 (source + Drive docs; site / Showdown retained) | 2026-10-28 | `kumakuma1/hardlove` branch `beta_hardlove` commits, the changelog, Drive sheets |
-| HeartGold Retiled | v6.12.1 | 2026-10-18, ability text 2026-10-19 | – | GitHub repo releases |
+| Hardlove Gold | 0.8.7 (source `kumakuma1/hardlove` `4a8d4a6308`; docs site `bb5862f` is older) | 2026-11-01 (source + Drive docs; site / Showdown retained) | 2026-11-01 | `kumakuma1/hardlove` branch `beta_hardlove` commits, the changelog, Drive sheets |
+| Heartfelt Gold (was HeartGold Retiled) | v1.0.0 (tag `heartfelt-v1.0.0` `8b6aa3a`) | 2026-11-01 (guides + Retiled's engine overlay; ability text from hg-engine `61b510c`) | – | GitHub repo releases / tags |
 | Meissa Moon | v2.2.2 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Author's Drive, PokeCommunity thread |
 | Navy Sapphire | v2.1.5 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Hack's Drive, PokeCommunity thread |
 | Photonic Sun | v2.38 | 2026-10-18 (docs + romfs), dex extract 2026-10-19, vanilla extracts + Bulbapedia 2026-10-19 | 2026-10-19 | Buffel Saft's Drive, PokeCommunity thread, Bulbapedia (USUM) |
@@ -257,9 +258,9 @@ plus raw-file requests for diffs. A run caps itself at fifty; that is not an hou
 runs too. Recursive trees avoid one request per watched path and the compare API's 300-file truncation; a truncated
 tree fails loudly. No token is required. No release tags are assumed.
 
-Hardlove watches its reviewed 0.8.5 release commit, not moving `beta_hardlove` head. Its Drive patch filenames guard that
+Hardlove watches its reviewed release commit (0.8.7), not moving `beta_hardlove` head. Its Drive patch filenames guard that
 pin. A new version blocks accepting the source until the release commit is matched by UTC date and changelog;
-then update `ref` and `release.version`. Retiled's upstream engine is likewise release-matched, never upstream
+then update `ref` and `release.version`. Heartfelt Gold's upstream engine text is likewise release-matched, never upstream
 main; its own guides/tables may be checked on head. Code wins over docs; docs' Drive dates independently signal
 trainer order/split/location changes, since code and docs can update at different times.
 

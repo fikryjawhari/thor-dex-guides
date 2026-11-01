@@ -29,7 +29,10 @@ check('profile settings', () => {
   assert.equal(profile.evs, false);
   assert.equal(profile.setterStays, true);
   assert.equal(profile.over.critMultiplier, undefined, 'Gen 5 crits stay x2');
-  assert.ok(data.MV.every(entry => entry.f === undefined), 'MV.f omitted: stock Gen 5 flags');
+  // MV.f is the guide's property list (stock Gen 5 flags plus the docs' changes; tools/moveprops.py)
+  const flagsOf = name => data.MV[data.M.indexOf(name)]?.f || [];
+  assert.ok(flagsOf('Needle Arm').includes('punch') && flagsOf('Rock Smash').includes('punch'), 'Iron Fist moves');
+  assert.ok(flagsOf('Hyper Voice').includes('sound') && flagsOf('Mach Punch').includes('contact'), 'stock flags kept');
 });
 
 // Triple Axel (Move Changes: power 30, successive hits +10, "Triple Kick mechanics"): hits of 30 / 40 / 50, a typed

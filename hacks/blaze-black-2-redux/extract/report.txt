@@ -2057,6 +2057,29 @@ items areas: 86 places (records and shops); 70 join a LOC area; no LOC area (no 
   move format: SolarBeam -> Solar Beam (2: Item Changes:307, TM table)
   move format: U-Turn -> U-turn (4: Item Changes:451, TM table, Bulbapedia shop Battle Subway)
 walkthrough: 22 splits, 117 stops (31 on the way), 466 trainers, 104 areas, 907 item lines + 1048 shop lines placed, 0 unplaced
+held items: 4 P entries: latias [['Soul Dew', 100]]; latios [['Soul Dew', 100]]; giratina [['Griseous Orb', 100]]; giratina_origin [['Griseous Orb', 100]]
+held items with no P entry (not shown): none
+item text: 514 IX entries from the ROM bag text (no in-battle text yet)
+move metadata: no stock source for unused mirror-only move: Shadow Blast
+move metadata: no stock source for unused mirror-only move: Shadow Blitz
+move metadata: no stock source for unused mirror-only move: Shadow Bolt
+move metadata: no stock source for unused mirror-only move: Shadow Break
+move metadata: no stock source for unused mirror-only move: Shadow Chill
+move metadata: no stock source for unused mirror-only move: Shadow Down
+move metadata: no stock source for unused mirror-only move: Shadow End
+move metadata: no stock source for unused mirror-only move: Shadow Fire
+move metadata: no stock source for unused mirror-only move: Shadow Half
+move metadata: no stock source for unused mirror-only move: Shadow Hold
+move metadata: no stock source for unused mirror-only move: Shadow Mist
+move metadata: no stock source for unused mirror-only move: Shadow Panic
+move metadata: no stock source for unused mirror-only move: Shadow Rave
+move metadata: no stock source for unused mirror-only move: Shadow Rush
+move metadata: no stock source for unused mirror-only move: Shadow Shed
+move metadata: no stock source for unused mirror-only move: Shadow Sky
+move metadata: no stock source for unused mirror-only move: Shadow Storm
+move metadata: no stock source for unused mirror-only move: Shadow Wave
+move metadata: 559 targets, 249 moves with effects; {'binding': 7, 'bite': 8, 'bullet': 18, 'bypasssub': 48, 'charge': 11, 'contact': 186, 'crash': 2, 'dance': 8, 'defrost': 5, 'drain': 8, 'gravity': 8, 'heal': 16, 'multihit': 18, 'noprotect': 14, 'powder': 5, 'pulse': 5, 'punch': 17, 'recharge': 7, 'recoil': 10, 'reflectable': 64, 'secondary': 136, 'slicing': 15, 'sound': 18, 'wind': 10}
+move metadata source: smogon/pokemon-showdown ccfaa20f32af363569cd21a9d501b2bc1ded26b1; moves.ts + mods 8,7,6,5; post-Gen-V replacements use base
 doc name fixes: 18 (species 6, move 11, ability 1)
   species fuzzy: Snubull -> Snubbull (1: Type Changes:39)
   species fuzzy: Grabull -> Granbull (1: Type Changes:40)
@@ -2077,6 +2100,56 @@ doc name fixes: 18 (species 6, move 11, ability 1)
   move alias: Minimise -> Minimize (1: Move Changes:375)
   move UNRESOLVED: Further Modifications (1: Move Changes:630)
   ability alias: Synchronise -> Synchronize (11: Pokemon Changes:2197, Pokemon Changes:2212, Pokemon Changes:2246)
+items: TM place and shop retained: TM31 Brick Break ['Found: Route 19', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 12 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 12 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM59 Incinerate ['Found: Virbank Complex', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 6 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 6 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM10 Hidden Power ['Found: Castelia City', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM88 Pluck ['Found: Castelia City', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM08 Bulk Up ['Found: Castelia Sewers', 'Found: Castelia City', 'Shop: Striaton City — Poké Mart / Lower cashier (Black 2 and White 2); $80000']
+items: TM place and shop retained: TM23 Smack Down ['Found: Relic Passage', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM14 Blizzard ['Found: Relic Passage', 'Shop: Icirrus City — Poké Mart / Technical Machine department (Black and White) (Lower cashier); $70000', 'Shop: Lacunosa Town — Poké Mart / Lower cashier (Black 2 and White 2); $70000']
+items: TM place and shop retained: TM38 Fire Blast ['Found: Relic Passage', 'Shop: Icirrus City — Poké Mart / Technical Machine department (Black and White) (Lower cashier); $70000', 'Shop: Lacunosa Town — Poké Mart / Lower cashier (Black 2 and White 2); $70000']
+items: TM place and shop retained: TM25 Thunder ['Found: Relic Passage', 'Shop: Icirrus City — Poké Mart / Technical Machine department (Black and White) (Lower cashier); $70000', 'Shop: Lacunosa Town — Poké Mart / Lower cashier (Black 2 and White 2); $70000']
+items: TM place and shop retained: TM79 Frost Breath ['Found: PWT', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 12 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 12 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM20 Tri Attack ['Found: Route 6', 'Found: Route 15', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 6 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 6 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM77 Psych Up ['Found: Chargestone Cave', 'Found: Twist Mountain', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 24 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 24 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM64 Explosion ['Found: Clay Tunnel', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 24 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 24 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM89 U-turn ['Found: Route 7', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 12 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 12 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM60 Quash ['Found: Abundant Shrine', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 24 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 24 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM32 Dazzling Gleam ['Found: Route 13', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 6 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 6 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM48 Mystical Fire ['Found: Route 13', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM04 Calm Mind ['Found: Lacunosa Town', 'Shop: Striaton City — Poké Mart / Lower cashier (Black 2 and White 2); $80000']
+items: TM place and shop retained: TM75 Swords Dance ['Found: Route 11', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM87 Rock Climb ['Found: Route 9', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 18 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM34 Sludge Wave ['Found: Route 9', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 24 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 24 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM51 Wave Crash ['Found: Humilau City', 'Found: Pinwheel Forest', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 24 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 24 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM17 Protect ['Found: Humilau City', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 6 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 6 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
+items: TM place and shop retained: TM07 Hail ['Found: Mistralton City Pokémon Center', 'Shop: Mistralton City — Poké Mart / Technical Machine department (Lower cashier); $50000']
+items: TM place and shop retained: TM11 Sunny Day ['Found: Mistralton City Pokémon Center', 'Shop: Mistralton City — Poké Mart / Technical Machine department (Lower cashier); $50000']
+items: TM place line that only names its shop dropped: TM15 Hyper Beam Found: Shopping Mall Nine
+items: TM place and shop retained: TM16 Light Screen ['Found: Nimbasa City Pokémon Center', 'Shop: Nimbasa City — Poké Mart / Technical Machine department (Lower cashier); $30000']
+items: TM place and shop retained: TM18 Rain Dance ['Found: Mistralton City Pokémon Center', 'Shop: Mistralton City — Poké Mart / Technical Machine department (Lower cashier); $50000']
+items: TM place and shop retained: TM33 Reflect ['Found: Nimbasa City Pokémon Center', 'Shop: Nimbasa City — Poké Mart / Technical Machine department (Lower cashier); $30000']
+items: TM place and shop retained: TM37 Sandstorm ['Found: Mistralton City Pokémon Center', 'Shop: Mistralton City — Poké Mart / Technical Machine department (Lower cashier); $50000']
+items: TM place line that only names its shop dropped: TM68 Giga Impact Found: Shopping Mall Nine
+items: TM place and shop retained: TM73 Thunder Wave ['Found: Nimbasa City Pokémon Center', 'Shop: Nimbasa City — Poké Mart / Technical Machine department (Lower cashier); $10000']
+items: TM place and shop retained: TM74 Gyro Ball ['Found: Nimbasa City Pokémon Center', 'Shop: Nimbasa City — Poké Mart / Technical Machine department (Lower cashier); $10000']
+items: walkthrough rows matched to an Items line at the same place: 2
+  TM15 Hyper Beam: Found: Shopping Mall Nine
+    + Shop: Shopping Mall Nine — Sections / Middle section / Right cashier; $90000
+    = Shop: Shopping Mall Nine — Sections / Middle section / Right cashier; $90000
+  TM68 Giga Impact: Found: Shopping Mall Nine
+    + Shop: Shopping Mall Nine — Sections / Middle section / Right cashier; $90000
+    = Shop: Shopping Mall Nine — Sections / Middle section / Right cashier; $90000
+items: walkthrough rows added as IT lines: 0
+items: walkthrough rows kept apart from a line at the same place (unsure): 0
+items: lines relabelled from what they say: Found -> Also 97, Found -> Shop 5
+pickup keys: 952 pickups, 952 walkthrough rows keyed
+item name: BridgeMail M -> Bridge Mail M (2 use(s))
+item name: BridgeMail T -> Bridge Mail T (2 use(s))
+item name: BridgeMail V -> Bridge Mail V (3 use(s))
+item text: 338 own, 0 pooled, 0 from the wiki, 0 made up, 0 Mega Stone standard, 0 with no description
+in battle: 180 shown items with battle text, 158 without
+in battle: 519 moves with battle text, 58 without
 GID species: 712 species:form keys; 671/675 P ids; 649/649 base species
 GID unmapped species: 351:1 Castform, 351:2 Castform, 351:3 Castform, 493:1 Arceus, 493:2 Arceus, 493:3 Arceus, 493:4 Arceus, 493:5 Arceus, 493:6 Arceus, 493:7 Arceus, 493:8 Arceus, 493:9 Arceus, 493:10 Arceus, 493:11 Arceus, 493:12 Arceus, 493:13 Arceus, 493:14 Arceus, 493:15 Arceus, 493:16 Arceus
 GID move: 559/577 guide names; unmapped: Shadow Blast, Shadow Blitz, Shadow Bolt, Shadow Break, Shadow Chill, Shadow Down, Shadow End, Shadow Fire, Shadow Half, Shadow Hold, Shadow Mist, Shadow Panic, Shadow Rave, Shadow Rush, Shadow Shed, Shadow Sky, Shadow Storm, Shadow Wave

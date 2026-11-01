@@ -55,7 +55,7 @@ const checks = [{
     const mon=await page.value(`CALC.mon('foe')`);
     const source=trainer.p[index];
     assert.equal(mon.id,source.id);
-    assert.equal(mon.i,'Houndoomite');
+    assert.equal(mon.i,'Houndoominite');
     assert.deepEqual(mon.ev,[6,252,0,0,0,252]);
     assert.deepEqual(mon.m,source.m);
     assert.ok(await page.count('.dres .mr:not(.em)'),'damage rows');
@@ -239,7 +239,9 @@ const checks = [{
     await pick(page,'@auto');
     await page.settle();
     assert.equal((await field(page)).weather,'Fog','Fog returns');
-    await click(page,'[data-a="defog"]');
+    // Defog's Use (its effect chip since the move effects; Clear Fog where a profile has none) clears the area Fog too.
+    assert.equal(await page.count('[data-a="defog"]'),0,'Defog has its effect chip, not the bare Clear Fog');
+    await click(page,'.dres .mr.st [data-a="fx"][aria-label^="Use Defog"]');
     await page.settle();
     assert.notEqual((await field(page)).weather,'Fog','Defog clears it');
     assert.equal((await saved(page)).areaByTrainer?.[trainer.k]?.fogCleared,true);

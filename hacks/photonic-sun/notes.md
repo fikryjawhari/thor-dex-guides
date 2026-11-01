@@ -34,6 +34,24 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
 - **Vanilla comparison**: `dex-vanilla.json` and `trainers-vanilla.json`, the same two tools on the vanilla dumps alone.
   MV.h (move change notes) compares the two dex files; the Move Changes doc's paragraph is MV.e (shown as "Move Changes
   doc"). P.vc is not emitted.
+- **Move properties** (`tools/ctrguide.py` `move_metadata`, vocabulary in `tools/moveprops.py`): `MV.f`, `MV.tg`
+  and `MV.se` come from the move records in the romfs move archive (`a/0/1/1`), not the dex cache's
+  flags. USUM records are 40 bytes; the flags are the record's final uint32 (bit 16 = dance). `MV.tg` is the target
+  byte (0x14; a `normal` move with the long-distance flag is `any`). `noprotect` is a move that targets others without
+  the protect flag (`protect_flags`); Z-moves have no protect flag in the game or in Showdown (the engine cuts them to ¼ through Protect), so they show it. `MV.se`, damaging moves only (a status move's effect is its description):
+  inflicted status / confusion and its chance (0x08-0x0a; bad poison by effect sequence), flinch (0x0f), up to three
+  stat stages with chances (0x15-0x1d; whose by the quality byte / target), recoil or drain (0x12, signed percent),
+  max-HP recoil or heal (0x13). `secondary`, `recoil`, `drain`, `multihit` (hit-count byte), `binding` follow from the
+  same bytes. Every effect chance in Move Changes matches the records (Twineedle, Parabolic Charge, Draining Kiss...).
+- **Move fallback** (`extract/move_fallback.json`): stock Showdown 0.11.11 (gen 7 mod) only where the record is silent:
+  the bite / bullet / pulse / powder groups (not encoded in USUM), crash damage (Jump Kick, High Jump Kick), the
+  conditional heals (Morning Sun / Synthesis / Moonlight, Swallow, Shore Up, Floral Healing, Purify), the three-way and terrain effects of Tri
+  Attack and Secret Power, Skull Bash's charge-turn boost, Fell Stinger (+3), Rest, Mind Blown (½ max HP cost), and `secondary` for moves
+  whose added effect isn't one of the record's kinds (Spirit Shackle, Sparkling Aria, Throat Chop, Anchor Shot, Genesis Supernova). Entries the record already gives are not listed.
+- **Move interactions** (`MI`, `extract/move_rules.json` over the shared rules): Big Root heals ×2 (Changelog.txt:189, v1.3); Big
+  Pecks also blocks Toxic Thread (Move Changes: it now lowers Speed, Defense and Sp. Def; the stock list has it as a
+  Speed drop); Illuminate loses the shared rule's accuracy-move list (no battle effect before Gen 9).
+  No ability's effect is changed in this hack (Pokemon Changes / Changelog only change which species get which).
 - **Forms** (dex.py): totem forms (unnamed forms in the personal table) are dropped, except Own Tempo Rockruff, which
   evolves into Dusk Lycanroc. Cosmetic duplicates (same types, stats, abilities and level-up moves as a lower form of the
   same species: Pikachu caps, Unown, Arceus, Silvally, Minior colours, Furfrou, Vivillon, Flabébé line, Genesect...) fold
@@ -116,6 +134,7 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   are generated in). Key Items: Surge Badge dropped (a souvenir from the Kantonian Gym); kept: Professor's Mask (Part 16
   asks you to deliver it to Kukui), story petals / flower / flutes, Forage Bag, Sparkling Stone, Left Poke Ball sidequest,
   charms, Exp. Share, Ride Pager, Fishing Rod, transformation tools, Key Stone, Z-Power Ring.
+- **Item text and wild odds** (`ctrguide.item_text`, `wild_held`): bag text from `dex-rebalanced.json` items by id, written to `extract/item_desc.json` and IX; changed = differs from `dex-vanilla.json` once whitespace is folded. Photonic's 35 differing texts are TM reflows, so none is changed; TMs and HMs take no text (the move page has it). Names the guide spells differently (SilverPowder, TwistedSpoon, Thunderstone) match the dex by letters only. Wild held items: `P.hi` [item, %] from the dex `items` slots, 50 / 5 / 1, the same item in slots 1 and 2 = 100 (Snorlax Leftovers 100, Chansey Lucky Punch 50 / Lucky Egg 5); no Mega forms.
 - **Walkthrough** (walk.py): stops start in Bulbapedia part / place order, then are regrouped into the Trainers cap splits.
   Areas join the first stop with their name (ALIAS for Routes 15 and 16 and others; PLACE picks the stop by hand: Route
   1's wild Pokémon with part 2's Route 1 visit, part 1 keeps the starter; Hau'oli Outskirts and Trainers' School in part
@@ -230,6 +249,9 @@ shared browser coverage and usage: `tools/scenarios/README.md` → Calc checks.
 Z-moves use `zmove: true` and the 16 Move Changes powers in `zpow`, which override stock/band power.
 The 25 no-set-power fixtures cover documented powers, native exceptions and single-hit conversion, including
 Catastropika 210. Each damaging row's Z toggle follows `template/README.md` → Damage calculator.
+Status Z effects (unit 4b-ii): `tools/calc/z_effects_check.py` reads byte 0x21 of every status move's record in
+`a/0/1/1` (pk3DS Move7 / MoveEditor7 effect list). Game data says the same as Showdown for all 240 status moves:
+no differences. Toxic Thread's Photonic override keeps its Z effect (Spe +1) because an override replaces the record.
 Totem `au` comes from `extract/totems.py`; it initializes stages and the Aura mark, checked by
 `tools/scenarios/calc-zmove.mjs`.
 

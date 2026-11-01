@@ -34,10 +34,13 @@ Import scenarios inject `template/calc/readers/test.js`; real reader checks use 
 | `guide-update.mjs` | The general update check (28a-b): a copy with one new entry at the front of M, AB, P, the Trainers boxes and the walkthrough (every index shifted, as Hardlove 0.8.5 did); every kind of saved state, compared by name, must point at the same things, and a Pokémon page and a trainer card must read the same. Runs on every guide: add new kinds of saved state to its snapshot. |
 | `stable-keys.mjs` | Saved state across a simulated guide update (27a-d): trainers (cap, open state, calc foe / recents / edits / copied foe), search recents, species (stat calc, tracker), open Items / Locations boxes and the reopen route; old storage formats. Runs on every guide. |
 | `calc-entry.mjs` | Trainer-card and Pokémon-page entry points. |
+| `item-page.mjs` | The item page (`#/i/<name>`): cards per data (top card, In battle, Where to find, Held by, Moves it affects), the TM page, a Mega Stone and a `nu` one, Not found, fit at every size; pickup ticks in `LS.items` `g` (saved by key, shared on screen, ordered last, kept on reload) and the stop link landing on the walkthrough row; item names linking from every page that names one. Runs on every guide. |
+| `items-tab.mjs` | The Items tab: box names / counts from the data, one card per item (nomerge: a card per pickup), tutor cards by group or the table; card ticks (next 3 lines, done/total, fade) shared with walkthrough rows and the item page; Clear ticks two taps (arm, disarm, clear); a card's stop link landing; search cards; old index-keyed open state dropped once. 260 × 316, normal and `dvkb`. |
 | `dex-page.mjs` | The Pokémon page: section defaults, one saved open state, Reset all, the name bar, ‹ › through the filtered list, kept place on switching (arrows, forms menu, Evolution rows), forms and family, fit at the five viewer sizes with the widest names. Runs on every guide. |
 | `calc-field.mjs` | Profile-driven controls, engine inputs and persistence after profile edits. |
 | `calc-hidden.mjs` | As-built visibility and entry points with and without `cfg.calc`. |
 | `calc-auto.mjs` | Scratch/set/fight lifetimes, entry effects, trainer changes, Reset fight and migration. |
+| `calc-fight-state.mjs` | This fight's types / ability / item: Worry Seed then ↺, Soak then Reset fight, Trick swaps both, Edit → Fight… + chip clear (reload keeps it), effect odds on the rows with no sideways scroll. |
 | `calc-doubles.mjs` | Automatic trainer format, manual overrides, reset and non-doubles tags. |
 | `calc-field-states.mjs` | Global groups, sports/splits/auras, hazards and re-entry. |
 | `calc-moves.mjs` | Default power, hit restrictions, ally effects and HP-move actions. |

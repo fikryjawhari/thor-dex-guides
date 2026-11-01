@@ -76,7 +76,7 @@ wins" rule.
   draws through forms are dropped (`NOT_EVO`). Report: 475 edges, 9 mirror-only, 19 wiki-only.
 - **Mega Stones:** `p.stone` / `p.sloc` from the wiki's 48 Mega Stone pages (the Location line; the Red Orb / Blue Orb
   page gives both Primals). Mega Rayquaza has none (Dragon Ascent).
-- **Wild held items** (`p.hi`): the wiki's "Wild Held Items", names only.
+- **Wild held items** (`p.hi`): the wiki's "Wild Held Items" with its odds (see Items → Wild held odds).
 - **Tutors** (`p.tu`): the mirror's per-species lists. Against the wiki's Move Tutors page (29 tutors, 152 moves): the
   lists also hold the HMs (Rock Climb included) and 3 moves no wiki tutor teaches (Dazzling Gleam, Draining Kiss, Power-Up Punch), and the
   special tutors' moves (Draco Meteor, Dragon Ascent, Relic Song, Secret Sword, Volt Tackle, Steel Beam) are in no
@@ -181,6 +181,7 @@ Snowball are Held Items. `itemstd.RULES['unbound']`: game order, `keep_sub` (tut
   friendship" (on that row); for the other five ("Ancient Moves") no source names the learners, so they are listed
   with their tutor only. Their move pages show the tutor and no learners.
 - **Useful NPCs**: the 34 Useful NPC pages (`<NPC>: purpose · cost · where`).
+- **Wild held odds** (`dex.wild_held`, `P.hi`): the wiki's "(50% chance)" / "(5% chance)" per slot, kept (392 species; 92 at 50, 342 at 5, 26 at 100 where one item is in both slots: CFRU's rule); Mega forms none. Basculin's one string gives each form's item at 5.
 - **Names** (`items.canon`): the game's names (Unbound-Cloud `src/data/ItemNames.json`), the official one where it
   differs. Wiki spellings fixed: CFRU short names (Nevermeltice, Parlyz Heal, Terrain Ext., Protect Pads, Whip Dream,
   Heavy Boots, Utility Parasol, Adrenal Orb, Charizite X, Aerodactite, Alorichium Z, Ultranecronium Z; TMs "Dazzle
@@ -189,6 +190,21 @@ Snowball are Held Items. `itemstd.RULES['unbound']`: game order, `keep_sub` (tut
   "Random healing item", Money (₽10,000), Silvally Memory (random), the key items Unbound-Cloud doesn't list.
 - **GID items**: `gid.py` renames Unbound-Cloud's names to IT's (`items.GAME_ITEMS`: Hp Up, Guard Spec, Dream Mist
   (Unbound), Heavy Duty Boots); check.py: every game item that is in IT is spelled as IT spells it (350 of them).
+- **One pickup, two wordings** (2026-11-01, `itemstd.RULES['unbound']['one_pickup']`; the wiki export
+  `.src/unboundwiki/unboundwiki.json`):
+  - TM077 Flame Charge, "Autl Woods" (its TM page and the TMs & HMs table) and "Route 9 · Underground Pass Access
+    clearing, far side of the pond" (the Route 9 page): one pickup. The Route 9 page opens "Route 9, also known as
+    'Autumnal Woods' or Atul Woods", and both say hidden, needs Surf, across the water near the underground-path
+    house. One line, "Route 9 (Autl Woods)".
+  - Rockium Z, "Crystal Peak 4F · Torture Chamber ice puzzle" (the Z-Crystals page) and "Victory Road · southeast
+    part of the chamber, hidden in a rock" (the Victory Road page): one pickup. The Victory Road page's 4F ice puzzle
+    lists "Rockium Z (hidden) 4F ice puzzle, hidden in southeast rock", and its walkthrough (Part 38) slides to "a
+    rock [with] a hidden Rockium-Z" in the last ice puzzle before the League; the Z-Crystals page's "Crystal Peak 4F"
+    names the same puzzle. One line, "Victory Road 4F".
+  - Lunalium / Solganium / Poisonium / Kommonium Z ("Solve the Tablet Puzzle for Mission #007" and the raid-den
+    chamber wording): one pickup each, already one line. The Victory Road page: "Kommonium Z: Inside the Raid Den
+    chamber revealed after the Ancient Tablet puzzle gets solved". The crystal lies in the chamber the tablet opens,
+    so it's not a raid drop: `Found:`.
 
 ### CFRU family (`tools/cfru.py`)
 
@@ -363,6 +379,17 @@ them), marked `?` per field; boxes-only saves import. Checks: `tools/scenarios/c
 both sides, locks vs setters / manual / old saves, Fog replace / Defog / Reset, Camomons edits and Mega, grounding,
 weight Speed with Scarf, persistence across reload, D2 marks and cap, boxes-only / empty / wrong import);
 guide-update covers `areaByTrainer` across an index-shifting update.
+
+#### Status Z effects (unit 4b-ii)
+
+`tools/calc/z_effects_check.py --cfru <battle_moves.c>` compares every status move's `z_move_effect` in CFRU
+`src/Tables/battle_moves.c` @ b637a27 with the shared table (Gen 8 records). Game data says a Z effect for 18 Gen 8+
+moves Showdown gives none (Showdown has no Z data for moves after Gen 7): Clangorous Soul, Coaching, Decorate, Jungle
+Healing, Life Dew, Lunar Blessing, No Retreat, Stuff Cheeks, Victory Dance reset lowered stats; Take Heart full heal;
+Court Change, Tar Shot Spe +1; Magic Powder SpA +1; Obstruct Def +1; Octolock, Power Shift Atk +1; Shelter SpD +1;
+Teatime all +1. Game data says none for Forest's Curse / Showdown says all +1. Each is a `calc_effects.json` override
+with `z` and `source` (the battle_moves.c line); Aromatic Mist (SpD +2) and Coaching keep their ally-only no-op with
+only the Z part. Fixtures: Z-Take Heart, Z-Teatime, Z-Forest's Curse.
 
 #### Save import
 
@@ -540,6 +567,36 @@ area names have a stop; `a` resolves those names to the existing AR slots withou
   `built` date (2026-10-28 to 2026-10-30); that generated date change was restored, leaving no other guide changed.
   No gate/browser scenarios: missions deliberately await template unit 7b. Assembly's existing missing Shadow
   Warrior sprite warning is unchanged.
+
+### Moves (unit 2, 2026-10-31)
+
+- `f` / `tg` / `se`: `moves.py` applies `cfru.move_metadata()` to each `move_metadata.json` record. The snapshot is
+  written by `refresh_moves.mjs` from the pinned Showdown `moves.ts` + `moves-gen8.ts` (ccfaa20f) and the Unbound calc's
+  `moves_YA0k.js` (`calcFlags`: contact, punch, sound, tail, drill...); stock flags are the guide engine's at 959deb5.
+  Build: 782 of 785 moves have a record (`tg` 782, `f` 782 with flags, `se` 227: 212 of 526 damaging moves, 15 status).
+- Fallback: Endless Edge, InfernalRage and Metal Bash are in neither Showdown nor the calc, so they get no `f` / `tg` /
+  `se` (the report names them). Nothing is inferred from prose: InfernalRage's "may leave the target with a burn" has no
+  chance in any source, so it has no `se`. Metal Bash and Endless Edge describe a stat drop with no chance and no record.
+- Flags outside the shared vocabulary (Showdown's `nonsky`, `distance`, `mustpressure`, `noassist`) are dropped.
+- `effectOverrides` (`refresh_moves.mjs`) replace a move's stock added effects only: Tri Attack / Dire Claw (one of
+  each status at the stock chance), Burning Jealousy, Secret Power (terrain), Fake Out (flinch, first turn out only:
+  Showdown `onTry` and the Unbound text). Heal moves: Rest, Junglehealing, Healpulse, Pollenpuff, Purify, Moonlight /
+  Morning Sun / Synthesis (weather), Shore Up (sandstorm). Struggle recoil is 1/4 of max HP and Mind Blown 1/2
+  (`recoilBasis`, `mindBlownRecoil`).
+- `move_rules.json` (abilities, from the calc `gen78_YA0k.js` line given per entry; wiki text in
+  `unboundwiki.json`): Bellow / Sound Waves (sound moves: ×1.3 on the user, ×0.5 on the target), Drill Beak (drill moves
+  always critical), Slippery Tail (tail moves priority +1), Portal Power (non-contact damage ×0.75). Type-based ones
+  are left out like Blaze (plans/move-pages.md): Gale Wings (Flying moves priority +1, **no HP condition**: the wiki
+  says "Flying-type moves hit first", the calc checks no HP; stock Showdown needs full HP), Grass Dash (Grass moves
+  priority +1), Evaporate (damaging Water moves blocked; the wiki's Sp. Atk +1 is not modelled by the calc).
+- Left out of `move_rules.json` (no move list or no source): category rules (Crabby Tactics / Gorilla Tactics ×1.5
+  Physical, Honey Armor / Fur Coat ×0.5 Physical, Icy Skin / Dusty Scales ×0.5 Special: the shared table excludes
+  category rules, as for Huge Power); universal (Multieye at full HP, Subterfuge: the type of every move); Brain Bond
+  (the wiki's "weaker second hit" has no calc formula); Cotton Cloud / Tangling Wool ("lowers everyone's Speed when
+  hit": no contact condition in the wiki; the calc groups Tangling Wool with Gooey only for Gyro Ball).
+- Weather: no permanent-weather mechanic in the calc or the wiki. The calc lists Desolate Land, Primordial Sea and
+  Delta Stream as abilities but doesn't model their duration; the wiki's "permanent" is a trainer's misty terrain
+  (Elite Four Arabella), not weather.
 
 ## Local storage
 

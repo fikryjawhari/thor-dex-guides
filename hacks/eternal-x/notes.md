@@ -25,6 +25,24 @@ PDFs). Fetch the sources with `SOURCES.md` (game data regenerated 2026-10-22). M
 - **Dex** (dex.py): cosmetic duplicates fold into the lowest form (Unown, Vivillon, Furfrou...); Floette Red and Yellow
   stay apart (their data differs somewhere). Pumpkaboo's sizes have blank evolution rows in XY: the base form's apply.
   Move Changes.pdf is MV.e.
+- **Move properties** (`tools/ctrguide.py` `move_metadata`, vocabulary in `tools/moveprops.py`): `MV.f`, `MV.tg`
+  and `MV.se` come from the move records in the romfs move archive (`a/2/1/2`), not the dex cache's
+  flags. XY records are 36 bytes; the flags are the record's final uint32 (0x20: two bytes of padding before it, not pk3DS's ORAS 0x1e. The old cache read the ORAS offset, so every move had every flag, and the calc saw that through `MV.f`). `MV.tg` is the target
+  byte (0x14; a `normal` move with the long-distance flag is `any`). `noprotect` is a move that targets others without
+  the protect flag (`protect_flags`). `MV.se`, damaging moves only (a status move's effect is its description):
+  inflicted status / confusion and its chance (0x08-0x0a; bad poison by effect sequence), flinch (0x0f), up to three
+  stat stages with chances (0x15-0x1d; whose by the quality byte / target), recoil or drain (0x12, signed percent),
+  max-HP recoil or heal (0x13). `secondary`, `recoil`, `drain`, `multihit` (hit-count byte), `binding` follow from the
+  same bytes. Every effect chance in Move Changes matches the records (Twineedle, Parabolic Charge, Draining Kiss...).
+- **Move fallback** (`extract/move_fallback.json`): stock Showdown 0.11.11 (gen 6 mod) only where the record is silent:
+  the bite / bullet / pulse / powder groups (not encoded in XY), crash damage (Jump Kick, High Jump Kick), the
+  conditional heals (Morning Sun / Synthesis / Moonlight, Swallow), the three-way and terrain effects of Tri
+  Attack and Secret Power, Skull Bash's charge-turn boost, Fell Stinger (+2 in Gen 6), Rest, and `secondary` for moves
+  whose added effect isn't one of the record's kinds. Entries the record already gives are not listed.
+- **Move interactions** (`MI`, `extract/move_rules.json` over the shared rules): Big Root heals ×2 (Changelog.txt:152, Item
+  Changes); Prankster without the Dark-type immunity (Gen 7+; move_rules overrides always tag "changed": a moveprops limit);
+  Illuminate loses the shared rule's accuracy-move list (no battle effect before Gen 9).
+  No ability's effect is changed in this hack (Pokemon Changes / Changelog only change which species get which).
 - **Wild tables** (locs.py): areas = the Wild Pokemon Locations doc's titles, in its order ("the order they become
   accessible"); the 53 game zones are matched to the doc's sub-areas by species overlap, one to one, and sub-areas (1F,
   B2F, Outside) are sections named by floor. Sections: Grass, flowers, Rough Terrain = grass; Surf and rods = water; Rock
@@ -66,6 +84,7 @@ PDFs). Fetch the sources with `SOURCES.md` (game data regenerated 2026-10-22). M
   of Kalos (trophy); kept: movement tools, all rods / HMs, Dowsing Machine, Exp. Share, Mega Ring, Poké Flute, story /
   access keys and passes, Poké Radar, Prof's Letter, Looker Ticket, Intriguing Stone (Sun Stone exchange), form-change
   items, Vs. Recorder.
+- **Item text and wild odds** (`ctrguide.item_text`, `wild_held`): bag text from `dex-rebalanced.json` items by id, written to `extract/item_desc.json` and IX; changed = differs from `dex-vanilla.json` once whitespace is folded. Changed: Big Root (vanilla: boosts HP-stealing moves; here: doubles the HP the holder recovers from them). Lab Key Card A / B / C are in the Items tab but not in the dex's item list, so they have no text. TMs and HMs take no text (the 12 TM / HM texts that differ from vanilla are the moves' own, on the move page). Wild held items: `P.hi` [item, %] from the dex `items` slots, 50 / 5 / 1, the same item in slots 1 and 2 = 100 (Snorlax Leftovers 100); no Mega forms.
 - **Walkthrough** (walk.py): the Trainers page's cap splits, then Post-game. A place spanning cap boundaries is split into
   trainer fragments; encounters, items and steps stay on the first fragment, without duplication. Every fragment carries
   a unique persistent `k`: the original gym-split stop coordinate for the first fragment, then `.f1`, `.f2`... within

@@ -10,7 +10,7 @@
       },
       "api": "hp",
       "slot": {
-        "mv": 344,
+        "mv": 357,
         "st": 1
       },
       "expect": {
@@ -30,7 +30,7 @@
       },
       "api": "hp",
       "slot": {
-        "mv": 344,
+        "mv": 357,
         "st": 2
       },
       "expect": {
@@ -50,7 +50,7 @@
       },
       "api": "hp",
       "slot": {
-        "mv": 344,
+        "mv": 357,
         "st": 3
       },
       "expect": {
@@ -69,7 +69,7 @@
         "id": "blastoise"
       },
       "slot": {
-        "mv": 345
+        "mv": 358
       },
       "expect": {
         "bp": 100
@@ -85,7 +85,7 @@
         "id": "blastoise"
       },
       "slot": {
-        "mv": 345,
+        "mv": 358,
         "st": 3
       },
       "expect": {
@@ -102,7 +102,7 @@
         "id": "blastoise"
       },
       "slot": {
-        "mv": 345,
+        "mv": 358,
         "st": 3,
         "bp": 50
       },
@@ -189,7 +189,7 @@
       },
       "api": "hp",
       "slot": {
-        "mv": 214
+        "mv": 241
       },
       "dealt": 40,
       "expect": {
@@ -227,7 +227,7 @@
       "name": "A2-crash-magic-guard",
       "atk": {
         "id": "blastoise",
-        "ab": 29
+        "ab": 31
       },
       "def": {
         "id": "blastoise"
@@ -336,7 +336,7 @@
         ]
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "expect": {
         "ref": {
@@ -358,14 +358,14 @@
       "name": "A2-foul-play-between-hit-justified",
       "atk": {
         "id": "blastoise",
-        "ab": 91
+        "ab": 92
       },
       "def": {
         "id": "blastoise",
-        "ab": 50
+        "ab": 51
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "expect": {
         "pre": [
@@ -599,7 +599,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 245,
+        "mv": 269,
         "st": 0
       },
       "field": {},
@@ -655,7 +655,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 245,
+        "mv": 269,
         "st": 1
       },
       "field": {},
@@ -711,7 +711,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 245,
+        "mv": 269,
         "st": 2
       },
       "field": {},
@@ -767,7 +767,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 245,
+        "mv": 269,
         "st": 3
       },
       "field": {},
@@ -823,7 +823,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 245,
+        "mv": 269,
         "st": 2
       },
       "field": {},
@@ -885,7 +885,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 225,
+        "mv": 252,
         "st": 0
       },
       "field": {},
@@ -941,7 +941,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 225,
+        "mv": 252,
         "st": 1
       },
       "field": {},
@@ -997,7 +997,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 225,
+        "mv": 252,
         "st": 2
       },
       "field": {},
@@ -1053,7 +1053,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 225,
+        "mv": 252,
         "st": 3
       },
       "field": {},
@@ -1109,7 +1109,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 225,
+        "mv": 252,
         "st": 4
       },
       "field": {},
@@ -1165,7 +1165,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 225,
+        "mv": 252,
         "st": 5
       },
       "field": {},
@@ -1221,7 +1221,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 0,
         "curl": false
       },
@@ -1278,7 +1278,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 1,
         "curl": false
       },
@@ -1335,7 +1335,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 2,
         "curl": false
       },
@@ -1392,7 +1392,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 3,
         "curl": false
       },
@@ -1449,7 +1449,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 4,
         "curl": false
       },
@@ -1506,7 +1506,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 5,
         "curl": false
       },
@@ -1563,7 +1563,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 5,
         "curl": false
       },
@@ -1626,7 +1626,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 0,
         "curl": true
       },
@@ -1683,7 +1683,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 1,
         "curl": true
       },
@@ -1740,7 +1740,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 2,
         "curl": true
       },
@@ -1797,7 +1797,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 3,
         "curl": true
       },
@@ -1854,7 +1854,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 4,
         "curl": true
       },
@@ -1911,7 +1911,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 5,
         "curl": true
       },
@@ -1968,7 +1968,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 301,
+        "mv": 318,
         "st": 5,
         "curl": true
       },
@@ -3749,7 +3749,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 126,
+        "mv": 177,
         "st": false
       },
       "field": {},
@@ -3805,7 +3805,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 126,
+        "mv": 177,
         "st": true
       },
       "field": {},
@@ -3861,7 +3861,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 175,
+        "mv": 205,
         "st": false
       },
       "field": {},
@@ -3917,7 +3917,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 175,
+        "mv": 205,
         "st": true
       },
       "field": {},
@@ -3973,7 +3973,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 175,
+        "mv": 205,
         "st": true
       },
       "field": {},
@@ -4029,7 +4029,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 239,
+        "mv": 263,
         "st": false
       },
       "field": {},
@@ -4085,7 +4085,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 239,
+        "mv": 263,
         "st": true
       },
       "field": {},
@@ -4141,7 +4141,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 149,
+        "mv": 189,
         "st": false
       },
       "field": {},
@@ -4197,7 +4197,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 149,
+        "mv": 189,
         "st": true
       },
       "field": {},
@@ -4253,7 +4253,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 181,
+        "mv": 209,
         "st": false
       },
       "field": {},
@@ -4309,7 +4309,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 181,
+        "mv": 209,
         "st": true
       },
       "field": {},
@@ -4477,7 +4477,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 423,
+        "mv": 424,
         "st": false
       },
       "field": {},
@@ -4533,7 +4533,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 423,
+        "mv": 424,
         "st": true
       },
       "field": {},
@@ -4589,7 +4589,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 151,
+        "mv": 136,
         "st": false
       },
       "field": {},
@@ -4645,7 +4645,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 151,
+        "mv": 136,
         "st": true
       },
       "field": {},
@@ -4933,7 +4933,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 423,
+        "mv": 424,
         "st": false
       },
       "field": {},
@@ -4997,7 +4997,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 423,
+        "mv": 424,
         "st": true
       },
       "field": {},
@@ -5053,7 +5053,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 124,
+        "mv": 175,
         "st": false
       },
       "field": {},
@@ -5110,7 +5110,7 @@
         "vol": "switch"
       },
       "slot": {
-        "mv": 124,
+        "mv": 175,
         "st": false
       },
       "field": {},
@@ -5167,7 +5167,7 @@
         "vol": "switch"
       },
       "slot": {
-        "mv": 124
+        "mv": 175
       },
       "field": {},
       "expect": {
@@ -5820,7 +5820,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 245,
+        "mv": 269,
         "st": 1,
         "met": 1
       },
@@ -6848,7 +6848,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 113
+        "mv": 92
       },
       "field": {},
       "expect": {
@@ -6920,7 +6920,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 113
+        "mv": 92
       },
       "field": {},
       "expect": {
@@ -6976,7 +6976,7 @@
         "vol": "fly"
       },
       "slot": {
-        "mv": 113
+        "mv": 92
       },
       "field": {},
       "expect": {
@@ -7049,7 +7049,7 @@
         "vol": "fly"
       },
       "slot": {
-        "mv": 113
+        "mv": 92
       },
       "field": {},
       "expect": {
@@ -7104,7 +7104,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 396
+        "mv": 152
       },
       "field": {},
       "expect": {
@@ -7176,7 +7176,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 396
+        "mv": 152
       },
       "field": {},
       "expect": {
@@ -7232,7 +7232,7 @@
         "vol": "fly"
       },
       "slot": {
-        "mv": 396
+        "mv": 152
       },
       "field": {},
       "expect": {
@@ -7305,7 +7305,7 @@
         "vol": "fly"
       },
       "slot": {
-        "mv": 396
+        "mv": 152
       },
       "field": {},
       "expect": {
@@ -7505,7 +7505,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 398,
+        "mv": 399,
         "bp": 70
       },
       "field": {},
@@ -7579,7 +7579,7 @@
         "vol": "dig"
       },
       "slot": {
-        "mv": 398,
+        "mv": 399,
         "bp": 70
       },
       "field": {},
@@ -8232,7 +8232,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 132
+        "mv": 181
       },
       "field": {},
       "expect": {
@@ -8305,7 +8305,7 @@
         "vol": "min"
       },
       "slot": {
-        "mv": 132
+        "mv": 181
       },
       "field": {},
       "expect": {
@@ -8667,7 +8667,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 428
+        "mv": 429
       },
       "field": {},
       "expect": {
@@ -8740,7 +8740,7 @@
         "vol": "min"
       },
       "slot": {
-        "mv": 428
+        "mv": 429
       },
       "field": {},
       "expect": {
@@ -8812,7 +8812,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 452
+        "mv": 453
       },
       "field": {},
       "expect": {
@@ -8885,7 +8885,7 @@
         "vol": "min"
       },
       "slot": {
-        "mv": 452
+        "mv": 453
       },
       "field": {},
       "expect": {
@@ -9537,7 +9537,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 357
+        "mv": 370
       },
       "field": {},
       "expect": {
@@ -9610,7 +9610,7 @@
         "vol": "min"
       },
       "slot": {
-        "mv": 357
+        "mv": 370
       },
       "field": {},
       "expect": {
@@ -9682,7 +9682,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 321
+        "mv": 335
       },
       "field": {},
       "expect": {
@@ -9755,7 +9755,7 @@
         "vol": "min"
       },
       "slot": {
-        "mv": 321
+        "mv": 335
       },
       "field": {},
       "expect": {
@@ -9827,7 +9827,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 162
+        "mv": 192
       },
       "field": {},
       "expect": {
@@ -9900,7 +9900,7 @@
         "vol": "fly"
       },
       "slot": {
-        "mv": 162
+        "mv": 192
       },
       "field": {},
       "expect": {
@@ -10262,7 +10262,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 254
+        "mv": 278
       },
       "field": {},
       "expect": {
@@ -10335,7 +10335,7 @@
         "vol": "fly"
       },
       "slot": {
-        "mv": 254
+        "mv": 278
       },
       "field": {},
       "expect": {
@@ -10552,7 +10552,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 244,
+        "mv": 268,
         "st": false
       },
       "field": {},
@@ -10608,7 +10608,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 244,
+        "mv": 268,
         "st": true
       },
       "field": {},
@@ -10664,7 +10664,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 128,
+        "mv": 179,
         "st": false
       },
       "field": {},
@@ -10720,7 +10720,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 128,
+        "mv": 179,
         "st": true
       },
       "field": {},
@@ -10776,7 +10776,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 438,
+        "mv": 439,
         "st": false
       },
       "field": {},
@@ -10832,7 +10832,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 438,
+        "mv": 439,
         "st": true
       },
       "field": {},
@@ -10888,7 +10888,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 354,
+        "mv": 367,
         "st": false
       },
       "field": {},
@@ -10944,7 +10944,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 354,
+        "mv": 367,
         "st": true
       },
       "field": {},
@@ -11113,7 +11113,7 @@
         "st": "slp"
       },
       "slot": {
-        "mv": 283,
+        "mv": 113,
         "st": false
       },
       "field": {},
@@ -11170,7 +11170,7 @@
         "st": "slp"
       },
       "slot": {
-        "mv": 283,
+        "mv": 113,
         "st": true
       },
       "field": {},
@@ -11338,7 +11338,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 190,
+        "mv": 218,
         "st": false
       },
       "field": {},
@@ -11394,7 +11394,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 190,
+        "mv": 218,
         "st": true
       },
       "field": {},
@@ -11972,7 +11972,7 @@
         "st": ""
       },
       "slot": {
-        "mv": 246
+        "mv": 270
       },
       "field": {},
       "expect": {
@@ -12028,7 +12028,7 @@
         "st": "brn"
       },
       "slot": {
-        "mv": 246
+        "mv": 270
       },
       "field": {},
       "expect": {
@@ -12084,7 +12084,7 @@
         "st": "slp"
       },
       "slot": {
-        "mv": 246
+        "mv": 270
       },
       "field": {},
       "expect": {
@@ -12140,7 +12140,7 @@
         "hp": 160
       },
       "slot": {
-        "mv": 405
+        "mv": 406
       },
       "field": {},
       "expect": {
@@ -12196,7 +12196,7 @@
         "hp": 81
       },
       "slot": {
-        "mv": 405
+        "mv": 406
       },
       "field": {},
       "expect": {
@@ -12252,7 +12252,7 @@
         "hp": 80
       },
       "slot": {
-        "mv": 405
+        "mv": 406
       },
       "field": {},
       "expect": {
@@ -12308,7 +12308,7 @@
         "hp": 79
       },
       "slot": {
-        "mv": 405
+        "mv": 406
       },
       "field": {},
       "expect": {
@@ -12364,7 +12364,7 @@
         "it": ""
       },
       "slot": {
-        "mv": 109
+        "mv": 165
       },
       "field": {},
       "expect": {
@@ -12420,7 +12420,7 @@
         "it": "Leftovers"
       },
       "slot": {
-        "mv": 109
+        "mv": 165
       },
       "field": {},
       "expect": {
@@ -12476,7 +12476,7 @@
         "it": "Blastoisinite"
       },
       "slot": {
-        "mv": 109
+        "mv": 165
       },
       "field": {},
       "expect": {
@@ -12532,7 +12532,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 360
+        "mv": 106
       },
       "field": {},
       "expect": {
@@ -12588,7 +12588,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 360
+        "mv": 106
       },
       "field": {},
       "expect": {
@@ -12934,7 +12934,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 305
+        "mv": 320
       },
       "field": {},
       "expect": {
@@ -12997,7 +12997,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 305
+        "mv": 320
       },
       "field": {},
       "expect": {
@@ -13060,7 +13060,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 305
+        "mv": 320
       },
       "field": {},
       "expect": {
@@ -13123,7 +13123,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 305
+        "mv": 320
       },
       "field": {},
       "expect": {
@@ -13224,7 +13224,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 419,
+        "mv": 420,
         "crit": false
       },
       "field": {},
@@ -13250,7 +13250,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 363,
+        "mv": 132,
         "crit": false
       },
       "field": {},
@@ -13302,7 +13302,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 184,
+        "mv": 212,
         "crit": false
       },
       "field": {},
@@ -13406,7 +13406,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 414,
+        "mv": 415,
         "crit": false
       },
       "field": {},
@@ -13458,7 +13458,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 115,
+        "mv": 149,
         "crit": false
       },
       "field": {},
@@ -13484,7 +13484,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 237,
+        "mv": 262,
         "crit": false
       },
       "field": {},
@@ -13510,7 +13510,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 455,
+        "mv": 456,
         "crit": false
       },
       "field": {},
@@ -13536,7 +13536,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 211,
+        "mv": 238,
         "crit": false
       },
       "field": {},
@@ -13562,7 +13562,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 230,
+        "mv": 256,
         "crit": false
       },
       "field": {},
@@ -13588,7 +13588,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 450,
+        "mv": 451,
         "crit": false
       },
       "field": {},
@@ -13614,7 +13614,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 359,
+        "mv": 372,
         "crit": false
       },
       "field": {},
@@ -13640,7 +13640,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 256,
+        "mv": 280,
         "crit": false
       },
       "field": {},
@@ -13770,7 +13770,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 105,
+        "mv": 161,
         "crit": false
       },
       "field": {},
@@ -14222,7 +14222,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 115
+        "ab": 116
       },
       "def": {
         "id": "manaphy",
@@ -14248,7 +14248,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 115
+        "ab": 116
       },
       "def": {
         "id": "manaphy",
@@ -14276,7 +14276,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 14
+        "ab": 16
       },
       "def": {
         "id": "manaphy",
@@ -14329,7 +14329,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 115
+        "ab": 116
       },
       "def": {
         "id": "manaphy",
@@ -14383,7 +14383,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 115,
+        "ab": 116,
         "it": "Scope Lens"
       },
       "def": {
@@ -14412,7 +14412,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 115,
+        "ab": 116,
         "it": "Scope Lens"
       },
       "def": {
@@ -14691,7 +14691,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 81
+        "ab": 82
       },
       "slot": {
         "mv": 0,
@@ -14712,13 +14712,13 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 115,
+        "ab": 116,
         "it": "Scope Lens"
       },
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 81
+        "ab": 82
       },
       "slot": {
         "mv": 33,
@@ -14746,7 +14746,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 81
+        "ab": 82
       },
       "slot": {
         "mv": 544,
@@ -14772,7 +14772,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 81
+        "ab": 82
       },
       "slot": {
         "mv": 0,
@@ -14798,7 +14798,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 65
+        "ab": 66
       },
       "slot": {
         "mv": 0,
@@ -14819,13 +14819,13 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 115,
+        "ab": 116,
         "it": "Scope Lens"
       },
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 65
+        "ab": 66
       },
       "slot": {
         "mv": 33,
@@ -14853,7 +14853,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 65
+        "ab": 66
       },
       "slot": {
         "mv": 544,
@@ -14879,7 +14879,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 65
+        "ab": 66
       },
       "slot": {
         "mv": 0,
@@ -15067,7 +15067,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 81,
+        "ab": 82,
         "st": "psn"
       },
       "slot": {
@@ -15094,7 +15094,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 65,
+        "ab": 66,
         "st": "psn"
       },
       "slot": {
@@ -15334,7 +15334,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 130,
             "t": "Normal"
           }
@@ -15487,7 +15487,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 130,
             "t": "Normal"
           }
@@ -15640,7 +15640,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 130,
             "t": "Normal"
           }
@@ -15793,7 +15793,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 130,
             "t": "Normal"
           }
@@ -15946,7 +15946,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 130,
             "t": "Normal"
           }
@@ -16092,7 +16092,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 130,
             "t": "Normal"
           }
@@ -16238,7 +16238,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 130,
             "t": "Normal"
           }
@@ -16393,7 +16393,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 130,
             "t": "Normal"
           }
@@ -16456,7 +16456,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -16527,7 +16527,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -16546,7 +16546,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 120,
             "t": "Normal"
           }
@@ -16609,7 +16609,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -16680,7 +16680,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -16699,7 +16699,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 120,
             "t": "Normal"
           }
@@ -16762,7 +16762,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -16833,7 +16833,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -16852,7 +16852,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 120,
             "t": "Normal"
           }
@@ -16915,7 +16915,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -16986,7 +16986,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -17005,7 +17005,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 120,
             "t": "Normal"
           }
@@ -17068,7 +17068,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -17139,7 +17139,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -17158,7 +17158,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 120,
             "t": "Normal"
           }
@@ -17221,7 +17221,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -17285,7 +17285,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -17304,7 +17304,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 120,
             "t": "Normal"
           }
@@ -17367,7 +17367,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -17431,7 +17431,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -17450,7 +17450,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 120,
             "t": "Normal"
           }
@@ -17514,7 +17514,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -17586,7 +17586,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal"
       },
       "field": {},
@@ -17605,7 +17605,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 120,
             "t": "Normal"
           }
@@ -17758,7 +17758,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -17911,7 +17911,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -18064,7 +18064,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -18217,7 +18217,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -18370,7 +18370,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -18516,7 +18516,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -18662,7 +18662,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -18817,7 +18817,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -18974,7 +18974,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -19131,7 +19131,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -19288,7 +19288,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -19447,7 +19447,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -19616,7 +19616,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 90,
             "t": "Ghost"
           }
@@ -19785,7 +19785,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 90,
             "t": "Ghost"
           }
@@ -19954,7 +19954,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 90,
             "t": "Ghost"
           }
@@ -20123,7 +20123,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 90,
             "t": "Ghost"
           }
@@ -20292,7 +20292,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 90,
             "t": "Ghost"
           }
@@ -20461,7 +20461,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 90,
             "t": "Ghost"
           }
@@ -20630,7 +20630,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 90,
             "t": "Ghost"
           }
@@ -20799,7 +20799,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 90,
             "t": "Ghost"
           }
@@ -20931,7 +20931,7 @@
       "expect": {
         "ref": {
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 90,
             "t": "Ghost"
           }
@@ -20995,7 +20995,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21068,7 +21068,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21146,7 +21146,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21219,7 +21219,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21297,7 +21297,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21370,7 +21370,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21448,7 +21448,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21521,7 +21521,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21599,7 +21599,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21672,7 +21672,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21750,7 +21750,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21816,7 +21816,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21894,7 +21894,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -21960,7 +21960,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22038,7 +22038,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22111,7 +22111,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22189,7 +22189,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22262,7 +22262,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22340,7 +22340,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22413,7 +22413,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22491,7 +22491,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22564,7 +22564,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22642,7 +22642,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22715,7 +22715,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22793,7 +22793,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22859,7 +22859,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -22937,7 +22937,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -23003,7 +23003,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -23073,7 +23073,7 @@
         "it": "Electric Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -23131,7 +23131,7 @@
         "it": "Electric Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -23193,7 +23193,7 @@
         "it": "Electric Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -23249,7 +23249,7 @@
         "it": "Electric Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -23309,7 +23309,7 @@
         "it": "Electric Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric",
@@ -23368,7 +23368,7 @@
         "it": "Electric Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric",
@@ -23431,7 +23431,7 @@
         "it": "Electric Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -23489,7 +23489,7 @@
         "it": "Electric Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -23559,7 +23559,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -23625,7 +23625,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -23666,7 +23666,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 75,
+        "ab": 76,
         "iv": [
           0,
           0,
@@ -23687,7 +23687,7 @@
         "it": "Electric Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -23731,7 +23731,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 75,
+        "ab": 76,
         "iv": [
           0,
           0,
@@ -23752,7 +23752,7 @@
         "it": "Electric Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -23830,7 +23830,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -23903,7 +23903,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -23981,7 +23981,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24054,7 +24054,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24132,7 +24132,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24205,7 +24205,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24283,7 +24283,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24356,7 +24356,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24434,7 +24434,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24507,7 +24507,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24585,7 +24585,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24651,7 +24651,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24729,7 +24729,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24795,7 +24795,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24873,7 +24873,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -24946,7 +24946,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25024,7 +25024,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25097,7 +25097,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25175,7 +25175,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25248,7 +25248,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25326,7 +25326,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25399,7 +25399,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25477,7 +25477,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25550,7 +25550,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25628,7 +25628,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25694,7 +25694,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25772,7 +25772,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25838,7 +25838,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -25908,7 +25908,7 @@
         "it": "Grassy Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -25966,7 +25966,7 @@
         "it": "Grassy Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -26028,7 +26028,7 @@
         "it": "Grassy Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -26084,7 +26084,7 @@
         "it": "Grassy Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -26144,7 +26144,7 @@
         "it": "Grassy Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy",
@@ -26203,7 +26203,7 @@
         "it": "Grassy Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy",
@@ -26266,7 +26266,7 @@
         "it": "Grassy Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -26324,7 +26324,7 @@
         "it": "Grassy Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -26394,7 +26394,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -26460,7 +26460,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -26501,7 +26501,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 75,
+        "ab": 76,
         "iv": [
           0,
           0,
@@ -26522,7 +26522,7 @@
         "it": "Grassy Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -26566,7 +26566,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 75,
+        "ab": 76,
         "iv": [
           0,
           0,
@@ -26587,7 +26587,7 @@
         "it": "Grassy Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Grassy"
@@ -26665,7 +26665,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -26738,7 +26738,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -26816,7 +26816,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -26889,7 +26889,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -26967,7 +26967,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27040,7 +27040,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27118,7 +27118,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27191,7 +27191,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27269,7 +27269,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27342,7 +27342,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27420,7 +27420,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27486,7 +27486,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27564,7 +27564,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27630,7 +27630,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27708,7 +27708,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27781,7 +27781,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27859,7 +27859,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -27932,7 +27932,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -28010,7 +28010,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -28083,7 +28083,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -28161,7 +28161,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -28234,7 +28234,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -28312,7 +28312,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -28385,7 +28385,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -28463,7 +28463,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -28529,7 +28529,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -28607,7 +28607,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -28673,7 +28673,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Misty"
@@ -28743,7 +28743,7 @@
         "it": "Misty Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -28801,7 +28801,7 @@
         "it": "Misty Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -28863,7 +28863,7 @@
         "it": "Misty Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -28919,7 +28919,7 @@
         "it": "Misty Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -28979,7 +28979,7 @@
         "it": "Misty Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Misty",
@@ -29038,7 +29038,7 @@
         "it": "Misty Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Misty",
@@ -29101,7 +29101,7 @@
         "it": "Misty Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Misty"
@@ -29159,7 +29159,7 @@
         "it": "Misty Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Misty"
@@ -29229,7 +29229,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Misty"
@@ -29295,7 +29295,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Misty"
@@ -29336,7 +29336,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 75,
+        "ab": 76,
         "iv": [
           0,
           0,
@@ -29357,7 +29357,7 @@
         "it": "Misty Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Misty"
@@ -29401,7 +29401,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 75,
+        "ab": 76,
         "iv": [
           0,
           0,
@@ -29422,7 +29422,7 @@
         "it": "Misty Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Misty"
@@ -29500,7 +29500,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -29573,7 +29573,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -29651,7 +29651,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -29724,7 +29724,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -29802,7 +29802,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -29875,7 +29875,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -29953,7 +29953,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30026,7 +30026,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30104,7 +30104,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30177,7 +30177,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30255,7 +30255,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30321,7 +30321,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30399,7 +30399,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30465,7 +30465,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30543,7 +30543,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30616,7 +30616,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30694,7 +30694,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30767,7 +30767,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30845,7 +30845,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30918,7 +30918,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -30996,7 +30996,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -31069,7 +31069,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -31147,7 +31147,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -31220,7 +31220,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -31298,7 +31298,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -31364,7 +31364,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -31442,7 +31442,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -31508,7 +31508,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {
         "terrain": "Psychic"
@@ -31578,7 +31578,7 @@
         "it": "Psychic Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -31636,7 +31636,7 @@
         "it": "Psychic Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Electric"
@@ -31698,7 +31698,7 @@
         "it": "Psychic Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -31754,7 +31754,7 @@
         "it": "Psychic Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -31814,7 +31814,7 @@
         "it": "Psychic Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Psychic",
@@ -31873,7 +31873,7 @@
         "it": "Psychic Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Psychic",
@@ -31936,7 +31936,7 @@
         "it": "Psychic Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Psychic"
@@ -31994,7 +31994,7 @@
         "it": "Psychic Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Psychic"
@@ -32064,7 +32064,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Psychic"
@@ -32130,7 +32130,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Psychic"
@@ -32171,7 +32171,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 75,
+        "ab": 76,
         "iv": [
           0,
           0,
@@ -32192,7 +32192,7 @@
         "it": "Psychic Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Psychic"
@@ -32236,7 +32236,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 75,
+        "ab": 76,
         "iv": [
           0,
           0,
@@ -32257,7 +32257,7 @@
         "it": "Psychic Seed"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {
         "terrain": "Psychic"
@@ -32342,7 +32342,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -32420,7 +32420,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -32504,7 +32504,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -32582,7 +32582,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -32666,7 +32666,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -32744,7 +32744,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -32828,7 +32828,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -32906,7 +32906,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -32990,7 +32990,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -33061,7 +33061,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -33146,7 +33146,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -33218,7 +33218,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -33294,7 +33294,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -33364,7 +33364,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -33441,7 +33441,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -33505,7 +33505,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -33581,7 +33581,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -33651,7 +33651,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -33728,7 +33728,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -33792,7 +33792,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -33868,7 +33868,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -33931,7 +33931,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34007,7 +34007,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34077,7 +34077,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34154,7 +34154,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34218,7 +34218,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34294,7 +34294,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34364,7 +34364,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34441,7 +34441,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34505,7 +34505,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34581,7 +34581,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34644,7 +34644,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34728,7 +34728,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -34806,7 +34806,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -34890,7 +34890,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -34968,7 +34968,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -35052,7 +35052,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -35130,7 +35130,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -35214,7 +35214,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -35292,7 +35292,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -35376,7 +35376,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -35447,7 +35447,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -35532,7 +35532,7 @@
         "dl": "off"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -35604,7 +35604,7 @@
         "dl": "off"
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -35680,7 +35680,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -35750,7 +35750,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -35827,7 +35827,7 @@
         "entry": false
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -35891,7 +35891,7 @@
         "entry": false
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -35967,7 +35967,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36037,7 +36037,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36114,7 +36114,7 @@
         "entry": false
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36178,7 +36178,7 @@
         "entry": false
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36254,7 +36254,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36317,7 +36317,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36393,7 +36393,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36463,7 +36463,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36540,7 +36540,7 @@
         "entry": false
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36604,7 +36604,7 @@
         "entry": false
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36680,7 +36680,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36750,7 +36750,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36827,7 +36827,7 @@
         "entry": false
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36891,7 +36891,7 @@
         "entry": false
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -36967,7 +36967,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -37030,7 +37030,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -37106,7 +37106,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -37187,7 +37187,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -37434,7 +37434,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Normal"
@@ -37500,7 +37500,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Normal"
@@ -37583,7 +37583,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -37664,7 +37664,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -37747,7 +37747,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 5,
         "bp": 10,
         "t": "Normal"
@@ -37842,7 +37842,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 5,
         "bp": 10,
         "t": "Normal"
@@ -37925,7 +37925,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -37999,7 +37999,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -38082,7 +38082,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -38148,7 +38148,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -38231,7 +38231,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -38312,7 +38312,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -38395,7 +38395,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -38476,7 +38476,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -38559,7 +38559,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 5,
         "bp": 10,
         "t": "Water"
@@ -38647,7 +38647,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 5,
         "bp": 10,
         "t": "Water"
@@ -38730,7 +38730,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -38804,7 +38804,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -38887,7 +38887,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -38953,7 +38953,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -39036,7 +39036,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Water"
@@ -39102,7 +39102,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Water"
@@ -39177,7 +39177,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -39235,7 +39235,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -39290,7 +39290,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -39318,7 +39318,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -39385,7 +39385,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -39413,7 +39413,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -39468,7 +39468,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -39534,7 +39534,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -39617,7 +39617,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -39645,7 +39645,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Normal"
@@ -39683,7 +39683,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -39711,7 +39711,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Normal"
@@ -39766,7 +39766,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -39794,7 +39794,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -39861,7 +39861,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -39889,7 +39889,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -39944,7 +39944,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -39972,7 +39972,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -40025,7 +40025,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -40053,7 +40053,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -40108,7 +40108,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -40136,7 +40136,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -40174,7 +40174,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 78,
+        "ab": 79,
         "iv": [
           0,
           0,
@@ -40202,7 +40202,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -41577,7 +41577,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -41644,7 +41644,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -42138,7 +42138,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -42166,7 +42166,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Dark"
@@ -42219,7 +42219,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -42247,7 +42247,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Dark"
@@ -42302,7 +42302,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -42330,7 +42330,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Dark"
@@ -42383,7 +42383,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -42411,7 +42411,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Dark"
@@ -42466,7 +42466,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -42494,7 +42494,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Dark"
@@ -42540,7 +42540,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -42568,7 +42568,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Dark"
@@ -42623,7 +42623,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -42651,7 +42651,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Dark"
@@ -42689,7 +42689,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -42717,7 +42717,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Dark"
@@ -42772,7 +42772,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -42800,7 +42800,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Dark"
@@ -42838,7 +42838,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -42866,7 +42866,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Dark"
@@ -42921,7 +42921,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -42949,7 +42949,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -42987,7 +42987,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -43015,7 +43015,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -43048,7 +43048,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 91,
+        "ab": 92,
         "iv": [
           0,
           0,
@@ -43070,7 +43070,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -43098,7 +43098,7 @@
         ]
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "field": {},
       "expect": {
@@ -43119,7 +43119,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 91,
+        "ab": 92,
         "iv": [
           0,
           0,
@@ -43141,7 +43141,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -43169,7 +43169,7 @@
         ]
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "field": {},
       "expect": {
@@ -43199,7 +43199,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 91,
+        "ab": 92,
         "iv": [
           0,
           0,
@@ -43250,7 +43250,7 @@
         ]
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "field": {},
       "expect": {
@@ -43278,7 +43278,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 91,
+        "ab": 92,
         "iv": [
           0,
           0,
@@ -43329,7 +43329,7 @@
         ]
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "field": {},
       "expect": {
@@ -43359,7 +43359,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 91,
+        "ab": 92,
         "iv": [
           0,
           0,
@@ -43381,7 +43381,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -43409,7 +43409,7 @@
         ]
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "field": {},
       "expect": {
@@ -43430,7 +43430,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 91,
+        "ab": 92,
         "iv": [
           0,
           0,
@@ -43452,7 +43452,7 @@
       "def": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 50,
+        "ab": 51,
         "iv": [
           0,
           0,
@@ -43480,7 +43480,7 @@
         ]
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "field": {},
       "expect": {
@@ -43510,7 +43510,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 91,
+        "ab": 92,
         "iv": [
           0,
           0,
@@ -43561,7 +43561,7 @@
         ]
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "field": {},
       "expect": {
@@ -43589,7 +43589,7 @@
       "atk": {
         "id": "manaphy",
         "lv": 50,
-        "ab": 91,
+        "ab": 92,
         "iv": [
           0,
           0,
@@ -43640,7 +43640,7 @@
         ]
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "field": {},
       "expect": {
@@ -43720,7 +43720,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -43794,7 +43794,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -43877,7 +43877,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Fire"
@@ -43951,7 +43951,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Fire"
@@ -44034,7 +44034,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -44115,7 +44115,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Water"
@@ -44198,7 +44198,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Fire"
@@ -44272,7 +44272,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Fire"
@@ -44355,7 +44355,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Fire"
@@ -44421,7 +44421,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Fire"
@@ -44504,7 +44504,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Water"
@@ -44570,7 +44570,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Water"
@@ -44653,7 +44653,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -44719,7 +44719,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -44803,7 +44803,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 5,
         "bp": 10,
         "t": "Normal"
@@ -44870,7 +44870,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 5,
         "bp": 10,
         "t": "Normal"
@@ -44954,7 +44954,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45021,7 +45021,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45105,7 +45105,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45172,7 +45172,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45256,7 +45256,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45323,7 +45323,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45407,7 +45407,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45474,7 +45474,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45558,7 +45558,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45625,7 +45625,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45709,7 +45709,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45776,7 +45776,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -45860,7 +45860,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Normal"
@@ -45927,7 +45927,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Normal"
@@ -46138,7 +46138,7 @@
         "it": "Kee Berry"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -46199,7 +46199,7 @@
         "it": "Kee Berry"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -46284,7 +46284,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -46350,7 +46350,7 @@
         ]
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -47634,7 +47634,7 @@
         "it": "Maranga Berry"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -47693,7 +47693,7 @@
         "it": "Maranga Berry"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48064,7 +48064,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48145,7 +48145,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48228,7 +48228,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48309,7 +48309,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48392,7 +48392,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48473,7 +48473,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48556,7 +48556,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48637,7 +48637,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48720,7 +48720,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48794,7 +48794,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48877,7 +48877,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -48943,7 +48943,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -49026,7 +49026,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -49100,7 +49100,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 3,
         "bp": 10,
         "t": "Normal"
@@ -49183,7 +49183,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Normal"
@@ -49249,7 +49249,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 262,
+        "mv": 286,
         "hits": 1,
         "bp": 10,
         "t": "Normal"
@@ -49341,7 +49341,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -49420,7 +49420,7 @@
         ]
       },
       "slot": {
-        "mv": 159
+        "mv": 145
       },
       "field": {},
       "expect": {
@@ -49505,7 +49505,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -49584,7 +49584,7 @@
         ]
       },
       "slot": {
-        "mv": 260
+        "mv": 284
       },
       "field": {},
       "expect": {
@@ -49660,7 +49660,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal",
         "pre": false
       },
@@ -49725,7 +49725,7 @@
         "nat": "Serious"
       },
       "slot": {
-        "mv": 289,
+        "mv": 311,
         "t": "Normal",
         "pre": false
       },
@@ -49745,7 +49745,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 120,
             "t": "Normal"
           }
@@ -49893,7 +49893,7 @@
             ]
           },
           "slot": {
-            "mv": 159,
+            "mv": 145,
             "bp": 130,
             "t": "Normal"
           }
@@ -50041,7 +50041,7 @@
             ]
           },
           "slot": {
-            "mv": 260,
+            "mv": 284,
             "bp": 130,
             "t": "Normal"
           }
@@ -50438,7 +50438,7 @@
         ]
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "field": {
         "powerSplit": true
@@ -50646,7 +50646,7 @@
         ]
       },
       "slot": {
-        "mv": 328
+        "mv": 342
       },
       "field": {
         "guardSplit": true
@@ -50931,7 +50931,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 429
+        "mv": 430
       },
       "field": {
         "gameType": "Doubles",
@@ -50973,7 +50973,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 429
+        "mv": 430
       },
       "field": {
         "gameType": "Singles",
@@ -51015,7 +51015,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 273
+        "mv": 297
       },
       "field": {
         "gameType": "Doubles",
@@ -51056,7 +51056,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 273
+        "mv": 297
       },
       "field": {
         "gameType": "Doubles",
@@ -51098,7 +51098,7 @@
         "ab": -1
       },
       "slot": {
-        "mv": 273
+        "mv": 297
       },
       "field": {
         "gameType": "Doubles",
@@ -51131,7 +51131,7 @@
       "atk": {
         "id": "snorlax",
         "lv": 50,
-        "ab": 116
+        "ab": 117
       },
       "def": {
         "id": "blissey",
