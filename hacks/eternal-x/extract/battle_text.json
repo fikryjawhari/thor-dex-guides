@@ -1,0 +1,7 @@
+{
+  "moves": {
+    "Cut": "Always a critical hit.",
+    "Drill Peck": "Critical-hit rate is 1/8 before other modifiers.",
+    "Explosion": "The user faints after dealing damage. Always a critical hit."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "moves": {
+    "Crabhammer": "10% chance to lower the target's Defense by 1 stage.",
+    "Cut": "Critical-hit rate is 1/8 before other modifiers.",
+    "Dragon Claw": "Critical-hit rate is 1/8 before other modifiers.",
+    "Esper Wing": "Priority +1. Critical-hit rate is 1/8 before other modifiers. Raises the user's Speed by 1 stage.",
+    "Howl": "Raises the user's Attack by 1 stage.",
+    "Leaf Tornado": "30% chance to lower the target's accuracy by 1 stage."
+  }
+}

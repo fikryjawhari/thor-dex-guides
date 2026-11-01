@@ -1,0 +1,11 @@
+{
+  "moves": {
+    "Bolt Strike": "Special Electric attack. 20% chance to paralyze the target.",
+    "Charge Beam": "100% chance to raise the user's Sp. Atk by 1 stage.",
+    "Covet": "Deals damage only; does not steal the target's held item.",
+    "Destiny Bond": "If the user faints before its next move, the foe that caused it also faints. Can be used on consecutive turns.",
+    "Explosion": "The user faints after dealing damage. Halves the target's Defense in the damage calculation.",
+    "Fusion Bolt": "Special Electric attack. Power doubles if Fusion Flare was used earlier this turn.",
+    "Leaf Tornado": "30% chance to lower the target's accuracy by 1 stage."
+  }
+}
