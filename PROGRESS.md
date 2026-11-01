@@ -43,6 +43,8 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   `tools/drayano.py` / `tools/romhackdex.py`; Renegade Platinum reuses them; HeartGold Retiled).
 - **Shipping a guide update:** push `main`, wait for the Pages Action, then on the Thor long-press the guide → Update
   from link. Same library id, so saved state (tracker, ticks, calc) is kept.
+- **Waiting to merge: the 2026-11-01 source pass** (Hardlove 0.8.6, Heartfelt Gold v1.0.0, formerly HeartGold Retiled):
+  `plans/source-pass-2026-11-01-merge.md` is the whole procedure; run it after the move-pages work is merged.
 - **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
 ## Open
