@@ -11,7 +11,8 @@ import re
 ROUNDS = [('i', 'loc', 't'), ('i', 't'), ('i', 'loc')]
 REPEATABLE = re.compile(r'\b(?:repeatable|daily|every day|each day|once (?:a|per) day|'
                         r'weekdays?|weekends?|weekly|every night|each night|'
-                        r'mondays?|tuesdays?|wednesdays?|thursdays?|fridays?|saturdays?|sundays?)\b', re.I)
+                        r'mondays?|tuesdays?|wednesdays?|thursdays?|fridays?|saturdays?|sundays?)\b'
+                        r'|^Also: (?:Pickup\b|has a Use option)', re.I)  # the Pickup ability's odds, a use note: no place
 
 
 def eligible(text, box):
