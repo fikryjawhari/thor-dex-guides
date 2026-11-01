@@ -95,3 +95,14 @@ chat merges units into `worktree-radical-red` one at a time and rebuilds data.js
 | 8 Walkthrough | walk.py, notes Walkthrough | 3, 4, 5, 6 | |
 | 9 Finish | cfg wording, check.py, calc scenarios / doubles count / fields counts, sprites check, report review | 8 | |
 | Audit | the user's review of decisions first, then the full gate | 9 | |
+
+## Finishing unit inputs (collected from unit reports)
+
+- `cfg.calc.save` / `cfru` are set (main chat, after units 2 / 7). Calc scenarios (`tools/scenarios/calc-radical-red.mjs`
+  still throws), calc-doubles EXPECTED, trainer_fields_check counts.
+- Move `cfg.calc.over.effects` into `hacks/radical-red/calc_effects.json` now that data.json exists (`effects_check.mjs`).
+- `tools/cfru.py` names: "Inferno Parade" -> Infernal Parade, "Soupercell Slam" -> Supercell Slam; then prune the
+  profile's raw-name aliases.
+- data.js item misspellings the engine won't know (Charzardite X/Y, Blastoisnite, Aerodactlite, Houndoomnite,
+  Kangaskanite, Alorichium Z, Pikshunium Z): standard names (unit 5 may have done it; check).
+- In-game checks in notes → Damage calc and Save import go to PROGRESS.md → Open.
