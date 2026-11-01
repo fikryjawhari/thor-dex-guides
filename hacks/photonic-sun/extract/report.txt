@@ -70,9 +70,7 @@ items: walkthrough rows matched to an Items line at the same place: 3
     = Found: Poni Plains, Ultra Space Wilds
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
-pickup keys: 2 table entries no pickup matched
-  p69: Leftovers (PickUp Item)
-  p128: Destiny Knot (Route 14)
+pickup keys: new table pickup_keys.json (346 pickups)
 pickup keys: 346 pickups, 337 walkthrough rows keyed
 species pruned: 3 pikachu-original-cap, zygarde-10, zygarde-10-power-construct
 species retained: 928 obtainable: 876 trainer-only: 2 Megas/Primals: 50

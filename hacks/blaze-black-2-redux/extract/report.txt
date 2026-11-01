@@ -2140,7 +2140,6 @@ items: walkthrough rows matched to an Items line at the same place: 2
     = Shop: Shopping Mall Nine — Sections / Middle section / Right cashier; $90000
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
-pickup keys: new table pickup_keys.json (896 pickups)
 pickup keys: 896 pickups, 896 walkthrough rows keyed
 item name: BridgeMail M -> Bridge Mail M (2 use(s))
 item name: BridgeMail T -> Bridge Mail T (2 use(s))
