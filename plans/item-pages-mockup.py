@@ -43,6 +43,53 @@ def showdown_icons():
     return out
 
 
+def showdown_text(kind):
+    """{key(name): shortDesc} from Showdown data/text/<kind>.ts (.tmp/inv/sd, fetched from GitHub master)."""
+    src = (TMP / 'inv/sd' / f'{kind}.ts').read_text(encoding='utf8')
+    out = {}
+    for entry in re.split(r'\n\t[a-z0-9]+: \{', src)[1:]:
+        name = re.search(r'\n\t\tname: "([^"]+)"', entry)
+        short = re.search(r'\n\t\tshortDesc: "((?:[^"\\]|\\.)*)"', entry)
+        if name and short:
+            out[key(name[1])] = short[1].replace('\\"', '"')
+    return out
+
+
+def held_odds(hack, data):
+    """{P id: [[item, %]]}: EI from its game data (eidex heldItems = [common, rare] game ids), Unbound from its wiki
+    ("Leftovers (50% chance)"). Gen 3: common 50%, rare 5%, the same item in both slots 100%. Mega forms: none
+    (never met in the wild)."""
+    out = {}
+    if hack == 'emerald-imperium':
+        import zipfile
+        z = zipfile.ZipFile(ROOT / 'hacks/emerald-imperium/.src/repos/eidex.zip')
+        root = z.namelist()[0].split('/')[0]
+        species = json.loads(z.read(f'{root}/src/data/speciesData.json'))
+        for p in data['P']:
+            held = (species.get(p['id']) or {}).get('heldItems') or [0, 0]
+            if p.get('g') == 1 or not any(held):
+                continue
+            names = [data['GID']['it'][x] if x else None for x in held]
+            out[p['id']] = [[names[0], 100]] if names[0] and names[0] == names[1] else \
+                [[n, pct] for n, pct in zip(names, (50, 5)) if n]
+    elif hack == 'unbound':
+        wiki = json.loads((ROOT / 'hacks/unbound/.src/unboundwiki/unboundwiki.json').read_text(encoding='utf8'))
+        by_title = {}
+        for row in wiki:
+            text = re.sub(r'<[^>]+>', ' ', row.get('html', ''))
+            found = re.search(r'Wild Held Items\s+(.*?)\s+(?:Evolution Line|Egg Groups|$)', re.sub(r'\s+', ' ', text))
+            if found and found[1] not in ('None', ''):
+                by_title[row['title'].lower()] = re.findall(r'([^,()]+?)\s*\((\d+)%[^)]*\)', found[1])
+        for p in data['P']:
+            pairs = by_title.get(p['n'].lower())
+            if p.get('g') == 1 or not pairs:
+                continue
+            names = [n.strip() for n, _ in pairs]
+            out[p['id']] = [[names[0], 100]] if len(names) == 2 and names[0] == names[1] else \
+                [[n.strip(), int(pct)] for n, pct in pairs]
+    return out
+
+
 def names_in(data):
     """Every item name the guide shows: Items tab rows (not Useful NPCs), wild held items, Mega Stones, trainer items."""
     found = {row[0] for sec in data['IT'] if sec.get('k') != 'npc' for row in sec['r']}
@@ -76,7 +123,12 @@ def build(hack):
     out.quantize(colors=255).save(buf, 'PNG', optimize=True)
     uri = 'data:image/png;base64,' + base64.b64encode(buf.getvalue()).decode()
     items = {n: {'d': desc.get(key(n), ''), 'ic': slot.get(sprite.get(key(n)), -1)} for n in names}
-    payload = {'items': items, 'sheet': uri, 'stock': hack != 'emerald-imperium'}
+    itfx, mvfx = showdown_text('items'), showdown_text('moves')
+    for n, v in items.items():
+        if itfx.get(key(n)):
+            v['fx'] = itfx[key(n)]
+    payload = {'items': items, 'sheet': uri, 'odds': held_odds(hack, data),
+               'mvfx': [mvfx.get(key(m), '') for m in data['M']]}
     page = (ROOT / 'dist' / f'{hack}.html').read_text(encoding='utf8')
     script = (ROOT / 'plans/item-pages-mockup.js').read_text(encoding='utf8')
     inject = ('<script>window.ITX=' + json.dumps(payload, ensure_ascii=True).replace('<', '\\u003c') + ';</script>'
