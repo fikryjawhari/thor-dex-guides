@@ -47,6 +47,21 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   `plans/source-pass-2026-11-01-merge.md` is the whole procedure; run it after the move-pages work is merged.
 - **Next guide:** say which hack; `CLAUDE.md` → Making a new guide is the whole procedure.
 
+## Decided while the user was away (item pages build, 2026-11-01; reverse any)
+
+- Battle text: ≤ 230 characters, main effect + numbers + 1-2 interactions (the user picked this). Gen 4 variants in
+  `tools/battle_text/` match no guide (Hardlove runs Gen 9 mechanics); left in, unused.
+- Item names: when a guide spells an item two ways, the spelled-out form wins (Silver Powder, Thunder Stone,
+  Empoleonite D), then the Items tab's spelling; rows renamed onto one item join (Photonic's Thunder Stone).
+- Item text: Mega Stones with no text get the games' standard sentence; Hardlove's 12 Z-A stones without a Mega form
+  by name; Unbound's Dream Mist = "gives a Pokémon its Hidden Ability", Max Powder = "gives a Pokémon the Gigantamax
+  Factor" (guesses from where they're sold: check in game); Pokégear Upgrade 1 = the Radio Card.
+- Hardlove's unobtainable Mega Stones show no "Found: Unavailable" line (the page's Mega line says so).
+- Item page: "changed" is a small accent word after the description, as on the move page; Held by leaves out Mega and
+  form-change forms.
+- Items tab: tutor box count without groups counts tutors by place (Hardlove "4 tutors" over 13 rows); no tick bar on
+  search results.
+
 ## Open
 
 1. **Thor / in-game tests** (the user, per guide). Nothing since the consistency pass has been on the device; BB2R
