@@ -11,10 +11,10 @@ const data = {
   AB: ['Toxic Boost', 'Flare Boost', 'Iron Fist', 'Striker', 'Illusion', 'Feline Prowess',
     'Sage Power', 'Bull Rush', 'Quill Rush', 'Defeatist', 'Corrosion', 'Mountaineer',
     'Water Compaction', 'Fatal Precision', 'Primal Armor', 'Liquid Voice', 'Reckless',
-    'ORAORAORAORA', 'ORAORAORAORA!', 'Bone Zone', 'Bone Zone ', 'Self Sufficient',
-    'Blubber Defense', 'Cash Splash', 'WaterCompaction', 'Levitate', 'Sharpness',
+    'ORAORAORAORA', 'ORAORAORAORA!', 'Bone Zone', 'Self Sufficient',
+    'Blubber Defense', 'Cash Splash', 'Levitate', 'Sharpness',
     'Bulletproof', 'Mega Launcher', 'Thick Fat', 'Solar Power', 'Rivalry', 'Klutz', 'Blazing Soul', 'Ice Scales', 'Mold Breaker',
-    'Flower Gift', 'Bad Company', 'Rock Head', 'Neutralize Gas'].map(name => [name, '']),
+    'Flower Gift', 'Bad Company', 'Rock Head', 'Neutralizing Gas'].map(name => [name, '']),
   M: ['Tackle', 'Ember'],
   MV: [
     {bp: 40, t: 'Normal', c: 'Physical', f: ['contact']},
@@ -60,7 +60,7 @@ for (const [name, power, type, category, flags] of [
   ['Draco Barrage', 100, 'Dragon', 'Special', []],
   ['Charge Beam', 50, 'Electric', 'Special', []],
   ['Volt Tackle', 120, 'Electric', 'Physical', ['contact']],
-  ['Inferno Parade', 60, 'Ghost', 'Special', []],
+  ['Infernal Parade', 60, 'Ghost', 'Special', []],
   ['Knock Off', 65, 'Dark', 'Physical', ['contact']],
 ]) {
   data.M.push(name);
@@ -185,12 +185,10 @@ check('Mountaineer Rock immunity only', 'Showdown abilities.ts:364-379', () => {
   assert.equal(result(holder(''), 'Rock Throw', target({ab: ability('Mountaineer')})).max, 0);
   assert.deepEqual(result(holder(''), 'Tackle', target({ab: ability('Mountaineer')})).rolls, expected(40));
 });
-for (const name of ['Water Compaction', 'WaterCompaction']) {
-  check(name + ' Water reduction; other type unchanged', rr('1355-1359'), () => {
-    assert.deepEqual(result(holder(''), 'Water Gun', target({ab: ability(name)})).rolls, expected(40, {attack: 60}));
-    assert.deepEqual(result(holder(''), 'Ember', target({ab: ability(name)})).rolls, expected(40));
-  });
-}
+check('Water Compaction Water reduction; other type unchanged', rr('1355-1359'), () => {
+  assert.deepEqual(result(holder(''), 'Water Gun', target({ab: ability('Water Compaction')})).rolls, expected(40, {attack: 60}));
+  assert.deepEqual(result(holder(''), 'Ember', target({ab: ability('Water Compaction')})).rolls, expected(40));
+});
 for (const [name, modifier, side] of [['Fatal Precision', 4915, 'atk'], ['Primal Armor', 2048, 'def']]) {
   check(name + ' only super effective', rr(side === 'atk' ? '1638' : '1677'), () => {
     const attacker = holder(side === 'atk' ? name : '');
@@ -231,13 +229,11 @@ for (const name of ['ORAORAORAORA', 'ORAORAORAORA!']) {
     assert.equal(applied.def.hp, 175 - expected(75)[15] - expected(75, {child: true})[15]);
   });
 }
-for (const name of ['Bone Zone', 'Bone Zone ']) {
-  check(name + ' type immunity and resisted strike', rr('299,1027,1646'), () => {
-    const single = {hits: 1};
-    assert.deepEqual(result(holder(name), 'Bonemerang', target({ty: ['Flying']}), {}, single).rolls, expected(50));
-    assert.deepEqual(result(holder(name), 'Bonemerang', target({ty: ['Grass']}), {}, single).rolls, expected(50, {effectiveness: 0.5, final: 8192}));
-  });
-}
+check('Bone Zone type immunity and resisted strike', rr('299,1027,1646'), () => {
+  const single = {hits: 1};
+  assert.deepEqual(result(holder('Bone Zone'), 'Bonemerang', target({ty: ['Flying']}), {}, single).rolls, expected(50));
+  assert.deepEqual(result(holder('Bone Zone'), 'Bonemerang', target({ty: ['Grass']}), {}, single).rolls, expected(50, {effectiveness: 0.5, final: 8192}));
+});
 for (const [item, species, attackMove, power] of [['Electirizer', 'Electivire', 'Aura Sphere', 120], ['Burnt Seed', 'Sunflora', 'Ember', 60]]) {
   check(item + ' species/type gate and Magic Room', rr('1195-1197'), () => {
     const attacker = holder('', {id: species, it: item});
@@ -313,7 +309,7 @@ check('Sonic Slash exact speed thresholds', rr('741-745'), () => {
     assert.deepEqual(result(holder('', {rs: {spe: speed}}), 'Sonic Slash').rolls, expected(power));
   }
 });
-for (const name of ['Bitter Malice', 'Barb Barrage', 'Infernal Parade', 'Inferno Parade']) {
+for (const name of ['Bitter Malice', 'Barb Barrage', 'Infernal Parade']) {
   check(name + ' doubles for every major status', rr('757-763'), () => {
     assert.deepEqual(result(holder(''), name, target({st: 'par'})).rolls, expected(120));
     assert.deepEqual(result(holder(''), name).rolls, expected(60));
@@ -373,9 +369,9 @@ check('Charge Beam always raises Special Attack', 'Showdown gen9rr/moves.ts:149-
 check('Hardcore AI weather and terrain stay after the setter leaves', 'Hardcore Main!E10', () => {
   assert.equal(engine.settings().setterStays, true);
 });
-check('CFRU raw ability names reach their engine effects', 'tools/cfru.py CFRU_NAMES', () => {
+check('Neutralizing Gas (the guide spells it officially) suppresses Thick Fat', 'tools/cfru.py CFRU_NAMES', () => {
   const thick = target({ab: ability('Thick Fat')});
-  assert.deepEqual(result(holder('Neutralize Gas'), 'Ember', thick).rolls, expected(40));
+  assert.deepEqual(result(holder('Neutralizing Gas'), 'Ember', thick).rolls, expected(40));
   assert.notDeepEqual(result(holder(''), 'Ember', thick).rolls, expected(40));
 });
 check('Knock Off gets no boost against a holder of its own RR Mega Stone', 'Showdown gen9rr/items.ts:935-1168 (onTakeItem); 4.1 data.js Mega forms (Applite: Flapple and Appletun)', () => {
@@ -385,6 +381,31 @@ check('Knock Off gets no boost against a holder of its own RR Mega Stone', 'Show
   }
   assert.deepEqual(knock('Butterfree', 'Applite'), expected(97));
   assert.deepEqual(knock('Butterfree', 'Leftovers'), expected(97));
+});
+// The guide's names are the official ones (tools/cfru.py CFRU_NAMES, common.py ITEM_FIX), so the profile needs no
+// raw data.js spellings: every name it keys on is one the built data uses.
+const built = JSON.parse(readFileSync(new URL('data.json', directory), 'utf8'));
+const builtAbilities = new Set(built.AB.map(row => row[0]));
+const builtMoves = new Set(built.M);
+const shortNames = [...readFileSync(new URL('../cfru.py', import.meta.url), 'utf8')
+  .split('CFRU_NAMES = {')[1].split('\n}')[0].matchAll(/'([^']+)': '[^']+'/g)].map(match => match[1]);
+check('profile ability overrides are guide ability names', 'hack.json cfg.calc.over.abilities; data.json AB', () => {
+  assert.deepEqual(Object.keys(configuration.cfg.calc.over.abilities).filter(name => !builtAbilities.has(name)), []);
+});
+check('profile rule name lists hold no raw spellings', 'hack.json cfg.calc.over.rules; tools/cfru.py CFRU_NAMES', () => {
+  const lists = [];
+  const walk = node => {
+    if (Array.isArray(node)) {
+      if (node.length && node.every(value => typeof value === 'string')) lists.push(...node);
+      node.forEach(walk);
+    } else if (node && typeof node === 'object') Object.values(node).forEach(walk);
+  };
+  walk(configuration.cfg.calc.over.rules);
+  assert.deepEqual(lists.filter(name => shortNames.includes(name) || name !== name.trim()), []);
+});
+check('guide moves and abilities use no CFRU short spelling', 'tools/cfru.py CFRU_NAMES; data.json M / AB', () => {
+  assert.ok(shortNames.length > 80);
+  assert.deepEqual(shortNames.filter(name => builtMoves.has(name) || builtAbilities.has(name)), []);
 });
 check('fixture inputs remain unchanged', 'tools/calc/README.md: Public contract', () => {
   assert.equal(JSON.stringify({data, profile}), unchanged);

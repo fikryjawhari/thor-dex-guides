@@ -36,7 +36,7 @@ def machine(kind, number):
 
 # sheet spellings data.js has no record for (key items the game keeps elsewhere) or spells differently
 SHEET_NAMES = {'Bugium Z': 'Buginium Z', 'Bugium': 'Buginium Z', 'Mewium Z': 'Mewnium Z', 'Mewium': 'Mewnium Z',
-               'Alolaraichium Z': 'Aloraichium Z', 'Beedrilite': 'Beedrillite', 'Houndoominite': 'Houndoomnite',
+               'Alolaraichium Z': 'Aloraichium Z', 'Beedrilite': 'Beedrillite',
                'Weakness Pol.': 'Weakness Policy', 'Pokédex': 'Pokédex', 'Time Changer': 'Time Changer',
                'Poké Vial': 'Poké Vial', 'DexNav': 'DexNav', 'Infinite Repel': 'Infinite Repel',
                'Hidden Costume': 'Hidden Costume', 'Necromizer (once)': 'Necromizer'}
