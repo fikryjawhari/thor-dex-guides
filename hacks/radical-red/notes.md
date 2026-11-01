@@ -51,6 +51,25 @@ markers use the existing MV/AB schema. No template change is made.
 The scaffold's cfg.calc=false exposed a shared item_text.generation crash. The minimal fix accepts false and
 registers Radical Red as generation 9 for item text (the Gen 9 additions), without enabling the calc or touching cfg.
 
+Unit 1 shared-helper check: baseline 3400658 captured; `gate.py check unbound --data` passes 6/6, data identical
+except build date and report byte-identical (16.1 s). `build.py` runs with the other units' expected stubs.
+`python assemble.py radical-red` currently stops at the scaffold's ten cfg.txt TODO strings; replacing those is
+outside this unit's hack.json ownership (sk only). No placeholder guard is disabled and no wording is borrowed.
+
+Move metadata: 825 moves from RR Showdown's gen9rr overlay on its base moves, with RR calc MOVES[9] overriding
+damage flags/targets. The one remaining move, Metal Bash, gets contact/normal-target metadata from its in-game
+full-body-charge description (no guessed secondary effect or Protect flag). `move_metadata.json` is committed;
+`moves.py --refresh` recreates it using the pinned TypeScript, without touching data.js or .src. Every build uses
+the snapshot without Node. Inferno Parade is normalised to the docs'/Showdown's Infernal Parade, retaining the old
+spelling as an alias. The 112 Showdown/official numerical and secondary-chance disagreements are in report.txt;
+official numbers win, including Barb Barrage 50%, Dragon Rush 30%, Freezing Glare 30%, Diamond Storm 50%.
+The source's freeze status is labelled frostbite in structured effects (v4.0 changelog: PLA frostbite replaced
+freeze, even though the game still calls it freeze). Tri Attack/Dire Claw alternatives, first-turn Fake Out,
+conditional Burning Jealousy, weather recovery, Secret Power terrain effects, Struggle's max-HP recoil, and
+ally-only Pollen Puff healing are explicit, not unconditional effects guessed from callbacks. 252 moves have
+changed markers relative to Showdown base and RR effect text; 48 abilities have RR Showdown change text, with
+the official in-game description retained. Damage/calculator behaviour remains the calc unit's responsibility.
+
 ## Local storage
 
 Prefix `rr`. Keep these keys once published.
@@ -86,7 +105,3 @@ Fill sources/watch.json, version/mode, GID/save reader and sprite additions by h
 ## History
 
 TODO: document history.
-Unit 1 shared-helper check: baseline 3400658 captured; `gate.py check unbound --data` passes 6/6, data identical
-except build date and report byte-identical (16.1 s). `build.py` runs with the other units' expected stubs.
-`python assemble.py radical-red` currently stops at the scaffold's ten cfg.txt TODO strings; replacing those is
-outside this unit's hack.json ownership (sk only). No placeholder guard is disabled and no wording is borrowed.

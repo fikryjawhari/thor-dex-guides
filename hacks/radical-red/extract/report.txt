@@ -3134,15 +3134,132 @@ locs: not built yet (TODO: implement radical-red locs extraction)
 trainers: not built yet (TODO: implement radical-red trainers extraction)
 items: not built yet (TODO: implement radical-red items extraction)
 walk: not built yet (TODO: implement radical-red walk extraction)
-moves: not built yet (TODO: moves)
+  description-derived metadata: Metal Bash: A physical attack in which the user charges, full body, into the foe.
+move metadata: 825 structured; 1 description-derived; 0 missing; 252 changed markers
+move metadata number disagreements (official dex retained): 112
+  Absorb basePower: official 25; Showdown 20
+  Aqua Cutter pp: official 10; Showdown 20
+  Aqua Fang pp: official 10; Showdown 15
+  Avalanche priority: official 252; Showdown -4
+  Baby-Doll Eyes pp: official 10; Showdown 30
+  Baneful Bunker pp: official 5; Showdown 10
+  Barb Barrage secondary chance: official 50; Showdown 30
+  Barb Barrage pp: official 15; Showdown 10
+  Baton Pass basePower: official 0; Showdown 40
+  Beak Blast priority: official 253; Showdown -3
+  Bide basePower: official 1; Showdown 0
+  Bitter Malice pp: official 15; Showdown 10
+  Breaking Swipe pp: official 10; Showdown 15
+  Burning Bulwark accuracy: official 100; Showdown True
+  Chloroblast basePower: official 120; Showdown 150
+  Circle Throw priority: official 250; Showdown -6
+  Comeuppance basePower: official 1; Showdown 0
+  Counter basePower: official 1; Showdown 0
+  Counter priority: official 251; Showdown -5
+  Cut pp: official 25; Showdown 30
+  Diamond Storm secondary chance: official 50; Showdown 100
+  Dragon Cheer basePower: official 1; Showdown 0
+  Dragon Cheer accuracy: official 100; Showdown True
+  Dragon Cheer pp: official 10; Showdown 15
+  Dragon Rage basePower: official 1; Showdown 0
+  Dragon Rush secondary chance: official 30; Showdown 20
+  Dragon Tail pp: official 10; Showdown 5
+  Dragon Tail priority: official 250; Showdown -6
+  Electro Ball basePower: official 1; Showdown 0
+  Endeavor basePower: official 1; Showdown 0
+  Expanding Force pp: official 20; Showdown 10
+  Fickle Beam pp: official 10; Showdown 5
+  Fillet Away accuracy: official 100; Showdown True
+  Final Gambit basePower: official 1; Showdown 0
+  Flail basePower: official 1; Showdown 0
+  Flash pp: official 10; Showdown 20
+  Fling basePower: official 1; Showdown 0
+  Focus Punch priority: official 253; Showdown -3
+  Freeze Shock accuracy: official 100; Showdown 90
+  Freezing Glare secondary chance: official 30; Showdown 10
+  Frustration basePower: official 1; Showdown 0
+  Fury Attack basePower: official 20; Showdown 15
+  Glaive Rush pp: official 10; Showdown 5
+  Grass Knot basePower: official 1; Showdown 0
+  Growl pp: official 15; Showdown 40
+  Gyro Ball basePower: official 1; Showdown 0
+  Hard Press basePower: official 1; Showdown 0
+  Heal Order pp: official 5; Showdown 10
+  Heat Crash basePower: official 1; Showdown 0
+  Heavy Slam basePower: official 1; Showdown 0
+  Hyper Beam accuracy: official 100; Showdown 90
+  Hyper Drill pp: official 10; Showdown 5
+  Ice Burn accuracy: official 100; Showdown 90
+  Infernal Parade pp: official 15; Showdown 10
+  Judgment pp: official 5; Showdown 10
+  Jungle Healing pp: official 5; Showdown 10
+  King's Shield pp: official 5; Showdown 10
+  Low Kick basePower: official 1; Showdown 0
+  Lunge pp: official 10; Showdown 15
+  Magnitude basePower: official 1; Showdown 0
+  Malignant Chain pp: official 15; Showdown 5
+  Matcha Gotcha pp: official 5; Showdown 15
+  Metal Burst basePower: official 1; Showdown 0
+  Metronome pp: official 30; Showdown 10
+  Mighty Cleave pp: official 10; Showdown 5
+  Mirror Coat basePower: official 1; Showdown 0
+  Mirror Coat priority: official 251; Showdown -5
+  Mystical Power accuracy: official 100; Showdown 90
+  Natural Gift basePower: official 1; Showdown 0
+  Nature's Madness basePower: official 1; Showdown 0
+  Night Shade basePower: official 1; Showdown 0
+  Obstruct accuracy: official 0; Showdown 100
+  Obstruct pp: official 5; Showdown 10
+  Pain Split basePower: official 1; Showdown 0
+  Play Nice pp: official 10; Showdown 20
+  Poison Tail basePower: official 60; Showdown 50
+  Pounce accuracy: official 0; Showdown 100
+  Pounce pp: official 10; Showdown 20
+  Present basePower: official 1; Showdown 0
+  Prismatic Laser pp: official 4; Showdown 1
+  Psywave basePower: official 1; Showdown 0
+  Punishment basePower: official 1; Showdown 0
+  Return basePower: official 1; Showdown 0
+  Revenge priority: official 252; Showdown -4
+  Reversal basePower: official 1; Showdown 0
+  Roar priority: official 250; Showdown -6
+  Roar of Time priority: official 250; Showdown -6
+  Ruination basePower: official 1; Showdown 0
+  Scale Shot pp: official 25; Showdown 20
+  Seismic Toss basePower: official 1; Showdown 0
+  Shell Trap priority: official 253; Showdown -3
+  Silk Trap pp: official 5; Showdown 10
+  Smokescreen pp: official 10; Showdown 20
+  Sonic Boom basePower: official 1; Showdown 0
+  Sonic Slash basePower: official 1; Showdown 0
+  Spacial Rend accuracy: official 100; Showdown 95
+  Spiky Shield pp: official 5; Showdown 10
+  Spit Up basePower: official 1; Showdown 0
+  Springtide Storm pp: official 10; Showdown 5
+  Super Fang basePower: official 1; Showdown 0
+  Take Heart pp: official 5; Showdown 15
+  Teleport priority: official 250; Showdown -6
+  Trick Room priority: official 249; Showdown -7
+  Triple Arrows pp: official 15; Showdown 10
+  Trop Kick pp: official 10; Showdown 15
+  Trump Card basePower: official 1; Showdown 0
+  Twin Beam basePower: official 50; Showdown 40
+  Upper Hand pp: official 10; Showdown 15
+  Vital Throw priority: official 255; Showdown -1
+  Wave Crash pp: official 15; Showdown 10
+  Whirlwind priority: official 250; Showdown -6
+  Wring Out basePower: official 1; Showdown 0
+ability changed markers: 48 from RR Showdown; descriptions remain official in-game text
 items: walkthrough rows matched to an Items line at the same place: 0
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: none
 pickup keys: 0 pickups, 0 walkthrough rows keyed
 prune: deferred (locations or trainers not built yet); kept all 1343 species
+trainer keys: new table hacks\radical-red\extract\trainer_keys.json (0 trainers, keys as they are)
 item text: none for Leek Stick
 item text: 0 own, 200 pooled, 0 from the wiki, 0 made up, 8 Mega Stone standard, 1 with no description
 in battle: 73 shown items with battle text, 136 without
-in battle: 746 moves with battle text, 80 without
+in battle: 747 moves with battle text, 79 without
+trainer keys: no trainers yet, no key table written
 gid: not built yet (TODO: gid)

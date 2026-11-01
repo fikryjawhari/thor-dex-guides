@@ -86,13 +86,14 @@ def read_data():
 DATA = read_data()
 SPECIES = DATA['species']
 CAPS = sorted(DATA['caps'].values(), key=lambda row: row['ID'])
-MOVE_IDS = {ident: cfru.official(row['name']) for ident, row in DATA['moves'].items()
+MOVE_FIX = {'Inferno Parade': 'Infernal Parade'}
+MOVE_IDS = {ident: MOVE_FIX.get(row['name'], cfru.official(row['name'])) for ident, row in DATA['moves'].items()
             if int(ident) < 848 and row['name'] != 'Placeholder'}
 MOVE_NAMES = {key(name): name for name in MOVE_IDS.values()}
+MOVE_NAMES.update({key(short): full for short, full in MOVE_FIX.items()})
 ABILITY_NAMES = {key(name): cfru.official(name) for row in DATA['abilities'].values() for name in row['names']}
 ITEM_FIX = {'Charzardite X': 'Charizardite X', 'Charzardite Y': 'Charizardite Y', 'Blastoisnite': 'Blastoisinite',
-            'Kangaskanite': 'Kangaskhanite', 'Aerodactlite': 'Aerodactylite', 'Heracronite': 'Heracronite',
-            'Sceptilite': 'Sceptilite'}
+            'Kangaskanite': 'Kangaskhanite', 'Aerodactlite': 'Aerodactylite'}
 ITEM_NAMES = {key(row['name']): ITEM_FIX.get(row['name'], row['name']) for row in DATA['items'].values()}
 ITEM_NAMES.update({key(name): name for name in ITEM_NAMES.values()})
 for short, full in cfru.CFRU_NAMES.items():
