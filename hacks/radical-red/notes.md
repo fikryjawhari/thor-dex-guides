@@ -71,6 +71,15 @@ failures with a nonzero exit. These are blocking regressions, not accepted oracl
 differences or a skip. Expected damage uses RR calc `util.ts:480,540` and
 `gen789.ts:1086-1099`, not results copied from this engine.
 
+Checkpoint checks (2026-11-02): `node tools/calc/radical-red_check.mjs` exits 1,
+with 13 passes and 3 blocking failures. On the synthetic 175-HP holder, Toxic
+Boost incorrectly loses 21 HP to poison or 10/21/32/43 HP to toxic over four
+turns; Flare Boost incorrectly loses 10 HP per burn turn. Expected: no status
+chip. The power boost rolls are 23-28 versus neutral 16-19; healthy Sand controls
+still lose 10 HP. Log: `.tmp/rr-calc/engine-check.log`. The Main tab was read with
+openpyxl through `uv run python -I`; cells are in `.tmp/rr-calc/hardcore-main.log`.
+No shared fixtures changed, so the brief's conditional `npm test` was not run.
+
 #### Follow-up and in-game checks
 
 After the engine decision, finish the full inventory/profile and one source-backed
