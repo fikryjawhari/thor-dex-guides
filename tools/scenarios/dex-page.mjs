@@ -56,7 +56,11 @@ const keepCheck = async (page, act, what) => {
 };
 
 // Held items: a species whose wild items have % (two or more where the guide has one), rows highest % first.
-const wildPct = p => p.g !== 1 && (p.hi || []).length && p.hi.every(h => Array.isArray(h) && h[1] != null);
+// Only a form you can meet in the wild lists them: a base form (first P entry of its dex) or a form with its own P.w.
+const BASE = new Set(P.filter((p, i) => P.findIndex(b => b.dex === p.dex) === i).map(p => p.id));
+const wildForm = p => p.g !== 1 && (BASE.has(p.id) || p.w.length > 0);
+const wildPct = p => wildForm(p) && (p.hi || []).length && p.hi.every(h => Array.isArray(h) && h[1] != null);
+const NOWILD = P.find(p => /^Castform \(/.test(p.n) && (p.hi || []).length && !wildForm(p)) || P.find(p => (p.hi || []).length && !wildForm(p));
 const HELD = P.find(p => wildPct(p) && p.hi.length > 1) || P.find(wildPct);
 const heldRows = p => p.hi.map((h, j) => [...h, j]).sort((a, b) => b[1] - a[1] || a[2] - b[2]).map(([n, pct]) => n + pct + '%');
 const heldSec = page => page.value(String.raw`(()=>{const d=document.querySelector('details.psec[data-s=hi]');return d&&{open:d.open,
@@ -65,7 +69,7 @@ const heldSec = page => page.value(String.raw`(()=>{const d=document.querySelect
 const checks = [
   {
     id: 'held',
-    title: 'Held items: wild % from P.hi, trainer-only "Wild: none", no section without either, open state saved',
+    title: 'Held items: wild % from P.hi on forms met in the wild, no trainers part, no section without wild items, open state saved',
     sizes: SIZE_SMALL, modes: MODES,
     run: async page => {
       if (HELD) {
@@ -74,7 +78,7 @@ const checks = [
         assert(h, 'a Held items section');
         assert.equal(h.open, false, 'closed by default');
         assert.equal(h.old, false, 'no Wild held item line under Where to find');
-        assert.equal(h.heads[0], 'Wild');
+        assert.deepEqual(h.heads, [], 'no headings: only the wild items');
         assert.deepEqual(h.rows.slice(0, HELD.hi.length), heldRows(HELD), 'wild items and % from P.hi, highest first');
         assert(h.links, 'item links');
         const order = await page.value(`[...document.querySelectorAll('details.psec')].map(d=>d.dataset.s)`);
@@ -84,20 +88,14 @@ const checks = [
         await page.settle();
         await page.assertFits('held items ' + HELD.n);
       }
-      // Trainer-only and neither: picked in the page (the trainers' Pokémon are built there).
-      const pick = await page.value(`(()=>{const tr=p=>(TRUSE[p.id]||[]).some(t=>t.p.some(m=>m.id===p.id&&m.i)),wild=p=>p.g!==1&&(p.hi||[]).length;
-        return [P.find(p=>!wild(p)&&tr(p))?.id??null,P.find(p=>!wild(p)&&!tr(p))?.id??null]})()`);
-      if (pick[0] != null) {
-        await open(page, pick[0]);
-        const h = await heldSec(page);
-        assert(h && h.open === !!HELD, 'the section, open as saved: ' + pick[0]);
-        assert.deepEqual(h.heads, ['Wild: none', 'Trainers give it'], 'trainer-only: Wild: none');
-        assert(h.rows.length && h.rows.every(r => /×\d+$/.test(r)), 'trainer items with ×count: ' + JSON.stringify(h.rows));
-        await page.assertFits('trainer-only held items ' + pick[0]);
-      }
-      if (pick[1] != null) {
-        await open(page, pick[1]);
-        assert.equal(await heldSec(page), null, 'no section without held items: ' + pick[1]);
+      // Trainers' held items are not here (the item page's Held by has them): a Pokémon whose only held items come from
+      // trainers has no section; nor does a form that has wild items in the data but no wild encounters (Castform Sunny).
+      const pick = await page.value(`(()=>{const tr=p=>(TRUSE[p.id]||[]).some(t=>t.p.some(m=>m.id===p.id&&m.i));
+        return P.find(p=>!(p.hi||[]).length&&tr(p))?.id??null})()`);
+      for (const id of [pick, NOWILD && NOWILD.id]) {
+        if (id == null) continue;
+        await open(page, id);
+        assert.equal(await heldSec(page), null, 'no Held items section: ' + id);
       }
       await page.value(`localStorage.removeItem(LS.dex)`);
       await page.reload();

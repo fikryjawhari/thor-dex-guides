@@ -602,10 +602,12 @@ blocks, three across at most. An opened card starts at its team. One speed per P
 8. **Stat calculator**, stats down the side: Level and Nature, a row per stat (base, IV, EV when the guide has EVs,
    result; the nature's raised stat red ↑, lowered blue ↓), Total (base total, EVs n / 510), Speed by level.
 9. **Use in calc ▸** sits in the top card under the types (the calculator starts closed).
-10. **Held items** (`hi`, `heldBlock`; no section when nobody holds anything): "Wild" with each item (`ilink`) and its %
-    from `P.hi`, highest first (no % when the data has none; none on Mega forms), then "Trainers give it": each item and
-    ×count over the trainers' Pokémon of this form (`TRUSE`). Only trainers: "Wild: none" above them. Where to find no
-    longer has a "Wild held item" line.
+10. **Held items** (`hi`, `heldBlock`; no section when the form holds nothing in the wild): each wild item (`ilink`) and
+    its % from `P.hi`, highest first (no % when the data has none), no heading. Only on a form you can meet in the wild
+    (`wildForm`): a species' base form (its first `P` entry), or another form with wild encounters of its own (`P.w`);
+    never a Mega. Castform's weather forms, Shaymin Sky or a regional form you only get by evolving list none (the data
+    keeps `hi`; the item page's Held by follows the same rule). What trainers hold is on the item page's Held by, not
+    here (rejected: a "Trainers give it" list, 2026-11-01). Where to find has no "Wild held item" line.
 11. No word breaks inside a name: sizes fit the widest word in any guide (~6.7 em). Top card under 340 px: the name
     across the top at 20 px, the 88 px sprite and details under it; wider, the name beside the sprite.
 Scenario: `tools/scenarios/dex-page.mjs`.
@@ -668,7 +670,7 @@ Scenario: `tools/scenarios/move-page.mjs`, every guide, all viewer sizes in norm
 3. **Where to find (N)**, open: every line of its rows (N = lines). A pickup line (key in `r[5]`) has its tick box and, when
    a walkthrough row has its key, the stop's name as a link (`SR.jumpPick`: the split, stop and Items section open,
    search cleared, `land()` on `tr[data-pk]`, or on the stop when that row isn't drawn). Order: unticked pickups, the
-   lines that aren't pickups (shops, wild, repeatable), ticked pickups; set when the page is drawn, so a tap doesn't
+   lines that aren't pickups (wild, repeatable, shops of ordinary items; a one-of-a-kind item's Shop line is a pickup), ticked pickups; set when the page is drawn, so a tap doesn't
    move the line under the finger.
 4. **Held by (N)**: the ability page's picker (`pickCard` / `bindPick`): Wild (sprite, name, types, % on the right,
    highest first; no % when the data has none) and Trainers (its Pokémon holding it, name → `#/tr/<k>`, place · box;

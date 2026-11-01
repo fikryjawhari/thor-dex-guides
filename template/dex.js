@@ -50,6 +50,9 @@ const natLabel=n=>{const x=NAT[n];return x?n+' (+'+SN[x[0]]+' -'+SN[x[1]]+')':n+
 const learn={};const L=(i,p,how)=>{(learn[i]=learn[i]||[]).push([p,how]);};
 P.forEach(p=>{p.lv.forEach(([l,m])=>L(m,p,l?'Lv '+l:'Evo'));p.tm.forEach(m=>L(m,p,'TM'));p.tu.forEach(m=>L(m,p,'Tutor'));p.eg.forEach(m=>L(m,p,'Egg'));});
 P.forEach(p=>{p.ms=new Set([...p.lv.map(x=>x[1]),...p.tm,...p.tu,...p.eg]);p.ls=new Set(p.w.map(w=>w[0]));p.as=new Set([...p.a,p.ha].filter(x=>x>=0));});
+// A form you can meet in the wild: a species' base form (its first P entry), or another form with wild encounters of
+// its own (Castform's Sunny form only exists in battle, a regional form only by evolving). Not Megas.
+const BASEF=new Set(),wildForm=p=>p.g!==1&&(BASEF.has(p.id)||p.w.length>0);{const seen=new Set();P.forEach(p=>{if(!seen.has(p.dex)){seen.add(p.dex);BASEF.add(p.id);}});}
 const locs={};P.forEach(p=>p.w.forEach(w=>{(locs[w[0]]=locs[w[0]]||[]).push([p,w]);}));
 const abUsers={};P.forEach(p=>p.as.forEach(a=>{(abUsers[a]=abUsers[a]||[]).push(p);}));
 const types=[...new Set(P.flatMap(p=>p.t))].sort();
@@ -221,12 +224,11 @@ function whereTable(p){let h='';
  else{const seen={};h=`<table class="wh"><tr><th>Location</th><th>Method</th><th>Rate</th><th>Lv</th></tr>${[...p.w].sort((a,b)=>locRank(a[0])-locRank(b[0])||a[0]-b[0]).map((w,j)=>{const n=LOC[w[0]],k=seen[n]=(seen[n]||0)+1;
   return `<tr${PK('wh:'+n+'#'+k,j)}><td><a href="#/l/${w[0]}">${esc(n)}</a>${w[4]?`<div class="mut small">${esc(w[4])}</div>`:''}</td><td>${esc(w[1])}</td><td class="n">${esc(w[2])}</td><td class="n">${esc(w[3])}</td></tr>`;}).join('')}</table>`;}
  return h;}
-// Held items: Wild (P.hi, highest % first, no % when the data has none; none on Mega forms), then what trainers give
-// this form (×count over their Pokémon). "Wild: none" when only trainers do; '' when neither (no section).
-function heldBlock(p){const wild=p.g===1?[]:(p.hi||[]).map(h=>Array.isArray(h)?h:[h,null]).filter(h=>h[0]).map((h,j)=>[...h,j]).sort((a,b)=>(b[1]??-1)-(a[1]??-1)||a[2]-b[2]),tc={};
- (TRUSE[p.id]||[]).forEach(t=>t.p.forEach(m=>{if(m.id===p.id&&m.i)tc[m.i]=(tc[m.i]||0)+1;}));
- const trs=Object.entries(tc).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));if(!wild.length&&!trs.length)return '';
- return `<div class="phi">${wild.length?`<div class="mut small">Wild</div>${wild.map(([n,pct],j)=>`<div${PK('hi:w:'+n,j)}>${ilink(n)}${pct!=null?`<span class="pct">${esc(pct)}%</span>`:''}</div>`).join('')}`:'<div class="mut small">Wild: none</div>'}${trs.length?`<div class="mut small sh">Trainers give it</div>${trs.map(([n,c],j)=>`<div${PK('hi:t:'+n,100+j)}>${ilink(n)}<span class="pct">×${c}</span></div>`).join('')}`:''}</div>`;}
+// Held items: what this form holds in the wild (P.hi, highest % first, no % when the data has none), only on a form you
+// can meet there (wildForm); '' when none (no section). Trainers' held items are on the item page's Held by.
+function heldBlock(p){const wild=wildForm(p)?(p.hi||[]).map(h=>Array.isArray(h)?h:[h,null]).filter(h=>h[0]).map((h,j)=>[...h,j]).sort((a,b)=>(b[1]??-1)-(a[1]??-1)||a[2]-b[2]):[];
+ if(!wild.length)return '';
+ return `<div class="phi">${wild.map(([n,pct],j)=>`<div${PK('hi:w:'+n,j)}>${ilink(n)}${pct!=null?`<span class="pct">${esc(pct)}%</span>`:''}</div>`).join('')}</div>`;}
 function confBox(cf){return cf&&cf.length?`<div class="card conf"><h3>Sources disagree</h3><ul>${cf.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="mut small" style="margin-top:4px">${TX.conf}</div></div>`:'';}
 // Evolution: the whole family from its base stage, each Pokémon then its forms (same dex number, not evolved into) then
 // what it evolves into, indented per stage. The current page's row is highlighted and not a link.
@@ -700,7 +702,7 @@ function itemIdx(){if(ITX)return ITX;const I={},get=n=>I[n]??={n,rows:[],wild:[]
  (D.IT||[]).forEach(sec=>{if(sec.k==='npc'||sec.n==='Move Tutors')return;sec.r.forEach(r=>{get(r[0]).rows.push({sec,r});
   String(r[1]).split('\n').forEach((l,j)=>{const k=(r[5]||[])[j];if(k&&!PKU[k])PKU[k]={n:r[0],l:l.trim()};});});});
  D.WK.splits.forEach((sp,si)=>sp.st.forEach((s,ti)=>(s.it||[]).forEach(i=>{const p=i[4]&&PKU[i[4]];if(p&&!p.w)p.w=[si,ti];})));
- P.forEach(p=>{if(p.g!==1&&!p.fc)(p.hi||[]).forEach(h=>{const [n,pct]=Array.isArray(h)?h:[h,null];if(n)get(n).wild.push([p,pct]);});
+ P.forEach(p=>{if(wildForm(p))(p.hi||[]).forEach(h=>{const [n,pct]=Array.isArray(h)?h:[h,null];if(n)get(n).wild.push([p,pct]);});
   if(p.g===1&&p.stone)get(p.stone).mega.push(p);});
  TRS.forEach(t=>{const by={};[...t.p,...(t.pt||[]).flatMap(x=>x.p||[])].forEach(m=>{if(m.i)(by[m.i]??=[]).push(m);});Object.entries(by).forEach(([n,ms])=>get(n).tr.push([t,ms]));});
  (D.MI||[]).forEach(r=>{if(r.i&&r.m.length)get(r.i).mi.push(r);});

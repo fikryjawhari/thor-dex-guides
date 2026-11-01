@@ -19,8 +19,12 @@ const J = JSON.stringify;
 const I = {};
 const get = n => (I[n] ??= { n, rows: [], wild: [], tr: 0, mi: [], mega: [] });
 for (const sec of data.IT || []) if (sec.k !== 'npc' && sec.n !== 'Move Tutors') for (const r of sec.r) get(r[0]).rows.push({ sec, r });
+// Wild holders: forms you can meet in the wild (a base form, or a form with its own P.w; not Castform Sunny).
+const BASE = new Set(data.P.filter((p, i) => data.P.findIndex(b => b.dex === p.dex) === i).map(p => p.id));
+const wildForm = p => p.g !== 1 && (BASE.has(p.id) || p.w.length > 0);
+const NOWILD = data.P.find(p => /^Castform \(/.test(p.n) && (p.hi || []).length && !wildForm(p)) || data.P.find(p => (p.hi || []).length && !wildForm(p));
 for (const p of data.P) {
-  if (p.g !== 1 && !p.fc) for (const h of p.hi || []) { const [n, pct] = Array.isArray(h) ? h : [h, null]; if (n) get(n).wild.push([p, pct]); }
+  if (wildForm(p)) for (const h of p.hi || []) { const [n, pct] = Array.isArray(h) ? h : [h, null]; if (n) get(n).wild.push([p, pct]); }
   if (p.g === 1 && p.stone) get(p.stone).mega.push(p);
 }
 const trainers = data.TR.g.flatMap(g => g.sec.flatMap(s => s.tr));
@@ -43,7 +47,8 @@ const plain = pick(['Leftovers', 'Life Orb', 'Sitrus Berry'], e => !isTM(e.n) &&
 const tm = all.find(e => tmMove(e) != null && lines(e).length);
 const mega = all.find(e => e.mega.length && !e.mega.some(p => p.nu) && e.rows.length);
 const nu = all.find(e => e.mega.some(p => p.nu));
-const held = all.filter(e => e.wild.length && e.tr).sort((a, b) => b.wild.length - a.wild.length)[0] || all.find(e => e.wild.length);
+const nowildItem = NOWILD && I[(Array.isArray(NOWILD.hi[0]) ? NOWILD.hi[0][0] : NOWILD.hi[0])];
+const held = (nowildItem && nowildItem.wild.length ? nowildItem : null) || all.filter(e => e.wild.length && e.tr).sort((a, b) => b.wild.length - a.wild.length)[0] || all.find(e => e.wild.length);
 const mi = all.find(e => e.mi.length && !tmMove(e));
 const trOnly = all.find(e => !e.rows.length && !e.wild.length && e.tr);
 // Ticks: an item with two or more pickups, one with a walkthrough row.
@@ -110,6 +115,7 @@ async function pageCheck(page, e) {
     const pct = await page.value(`[...document.querySelectorAll('.it-held .learn-groups tr')].map(tr=>[tr.querySelector('td:nth-child(2)>a').hash,tr.querySelector('td.n').textContent])`);
     const want = [...e.wild].sort((a, b) => (b[1] ?? -1) - (a[1] ?? -1) || a[0].n.localeCompare(b[0].n));
     assert.deepEqual(pct.map(([h]) => h).sort(), want.map(([p]) => '#/p/' + p.id).sort(), 'wild rows are the species with it');
+    if (NOWILD && e === nowildItem) assert(!pct.some(([h]) => h === '#/p/' + NOWILD.id), 'no wild row for ' + NOWILD.n + ' (no wild encounters)');
     assert.deepEqual(pct.map(([, v]) => v), want.map(([, v]) => (v != null ? v + '%' : '')), 'highest % first');
     await page.assertFits('held by wild ' + e.n);
   }
