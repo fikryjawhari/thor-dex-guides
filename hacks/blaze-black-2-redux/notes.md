@@ -191,6 +191,12 @@ not a replacement for omitted methods. No template change or browser sweep in th
   / Dropped Item; BB2R's reused slots Red Scarf = Ice Stone and Oval Stone = Link Cable (Item Changes, Modified
   Items); TMs / HMs map by number. 440 / 441 IT names map; Old Sea Map (BB2R's "God/Grey Stone" slot, no PKHeX
   name) stays unmapped: a key item, never held.
+- **ROM data** (2026-11-01, `extract/held_items.py` and `extract/item_desc.py`, read from the user's dump in
+  `.src/rom/`, committed as `held_items.json` / `item_desc.json`): wild held items are the personal NARC's three u16
+  slots at 0x0C / 0x0E / 0x10 (50 / 5 / 1%); only Latios, Latias and Giratina (both forms) hold any, all in every
+  slot (100%). Snorlax and Chansey hold nothing in this ROM. `P.hi` comes from those, not the docs. Bag text is
+  the text bank (`a/0/0/2`, members 63 / 64, line index not item id): 514 descriptions (`IX`, no in-battle
+  text yet); TMs / HMs have none; Bridge Mail and Up-Grade are not in the bank.
 - **Valuables** (2026-10-30; it held every medicine, ball and battle item): curated like Unbound's, `items.VALUABLES`:
   Sell items (Nugget, Big Nugget, Pearl, Big Pearl, Pearl String, Stardust, Star Piece, Comet Shard, Rare Bone, the
   three Mushrooms, Shoal Salt / Shell, Honey, the seven Relics), Shards (the move tutors' currency), Heart Scales,
