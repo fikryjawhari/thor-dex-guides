@@ -1,7 +1,8 @@
 """Source-backed radical-red checks, including baseline comparisons.
 
 Locations (LOC / AR / P.w / P.g): every data.js area is a sublocation, every encounter in data.js is a P.w row of its
-area, every area is in one tracker place, and every row resolves to a dex species.
+area, every area is in one tracker place, and every row resolves to a dex species; the locations sheet's additions
+(sheet_locs.json) are all placed: Starter choice, Mystery Gift place, gift levels, trade wants, unobtainables.
 """
 import json
 import sys
@@ -18,7 +19,8 @@ if not data_path.is_file():
     sys.exit(0)
 
 METHODS = {'Grass/cave', 'Surf', 'Old Rod', 'Good Rod', 'Super Rod', 'Rock Smash', 'Raid', 'Static', 'Gift',
-           'Gift (pick one)', 'Trade', 'Roaming'}
+           'Trade', 'Roaming', 'Starter choice', 'Shard trade', 'Shard egg', 'Fossil (pick one)', 'Mystery Gift'}
+SHEET = json.loads((HERE / 'sheet_locs.json').read_text(encoding='utf-8'))
 
 
 def expected_pairs():
@@ -44,16 +46,16 @@ def expected_pairs():
 
 def check_locations(data, failures):
     areas = DATA['areas']
-    if len(data['LOC']) != len(areas):
-        failures.append('LOC has %d rows, data.js has %d areas' % (len(data['LOC']), len(areas)))
+    if data['LOC'] != [area['name'] for area in areas] + [SHEET['mystery']['area']]:
+        failures.append('LOC is not the %d data.js areas then the Mystery Gift place' % len(areas))
     covered = Counter(index for place in data['AR'] for index in place['l'])
-    if sorted(covered) != list(range(len(areas))) or any(count != 1 for count in covered.values()):
+    if sorted(covered) != list(range(len(data['LOC']))) or any(count != 1 for count in covered.values()):
         failures.append('AR.l does not place every LOC exactly once')
     ids = {mon['id'] for mon in data['P']}
     rows = {(row[0], mon['id']) for mon in data['P'] for row in mon['w']}
     for mon in data['P']:
         for row in mon['w']:
-            if not 0 <= row[0] < len(areas):
+            if not 0 <= row[0] < len(data['LOC']):
                 failures.append('%s: P.w LOC index %s out of range' % (mon['id'], row[0]))
             if row[1] not in METHODS:
                 failures.append('%s: unknown P.w method %r' % (mon['id'], row[1]))
@@ -72,6 +74,35 @@ def check_locations(data, failures):
     obtainable = sum(mon['g'] == 0 for mon in data['P'])
     if not obtainable:
         failures.append('no obtainable species')
+    check_sheet(data, failures)
+
+
+def check_sheet(data, failures):
+    by_id = {mon['id']: mon for mon in data['P']}
+    loc = {name: index for index, name in enumerate(data['LOC'])}
+    starters = [mon['id'] for mon in data['P'] if any(row[1] == 'Starter choice' for row in mon['w'])]
+    lab = [place for place in data['AR'] if place.get('st')]
+    if len(starters) != 27 or len(lab) != 1 or lab[0]['l'] != [loc[SHEET['starter']]]:
+        failures.append('starter choice: %d species, %d starter places' % (len(starters), len(lab)))
+    gift = loc[SHEET['mystery']['area']]
+    place = next(place for place in data['AR'] if place['l'] == [gift])
+    for name, _ in SHEET['mystery']['rows']:
+        if not any(row[0] == gift and row[1] == 'Mystery Gift' and row[3] == '85' for row in by_id[sid(name)]['w']):
+            failures.append('Mystery Gift %s has no Lv 85 row' % name)
+    if not place.get('ns') or not place.get('es'):
+        failures.append('Mystery Gift place should have encounters and no tracker slot')
+    for area, mons in SHEET['gifts'].items():
+        for name, (level, how) in mons.items():
+            if not any(row[0] == loc[area] and row[1] == 'Gift' and row[3] == str(level) and how in row[4]
+                       for row in by_id[sid(name)]['w']):
+                failures.append('gift %s at %s has no Lv %d row' % (name, area, level))
+    for area, wanted in SHEET['trades'].items():
+        if not any(row[0] == loc[area] and row[1] == 'Trade' and row[4].endswith('for a ' + wanted)
+                   for mon in data['P'] for row in mon['w']):
+            failures.append('trade at %s does not say it wants %s' % (area, wanted))
+    for name in SHEET['unobtainable']:
+        if by_id[sid(name)]['g'] != 3:
+            failures.append('%s should be unobtainable (g 3)' % name)
 
 
 def main():

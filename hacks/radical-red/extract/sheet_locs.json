@@ -1,0 +1,77 @@
+{
+  "_doc": "Hand table from 'Pokémon Locations & Raid Dens v4.1 - Radical Red.xlsx' (.src/drive): what the sheet adds to data.js's areas. Areas are data.js area names, species are sheet / guide names (common.sid). Read by locs.py; notes.md -> Locations lists every difference.",
+  "starter": "Pallet Town Oak's Lab",
+  "gifts": {
+    "Cerulean City Gym": {"Finizen": [5, "Beat Misty's rematch"], "Drednaw": [100, "Beat Misty's rematch (Z-Ring); Gift Move Shell Smash"]},
+    "Route 4 Poke Center": {"Magikarp": [5, "500$ from a man inside; talk again for a Shiny one, 75,000$"]},
+    "Route 5 Daycare": {"Eevee": [5, "Beat the man in a Hisui-themed battle"]},
+    "Celadon City Mansion Roof House": {"Eevee": [25, "Poké Ball in the 4F room"]},
+    "Saffron City Fighting Dojo": {"Tauros-Paldea-Blaze": [35, "Beat Chuck"], "Tauros-Paldea-Aqua": [35, "Beat Chuck"]},
+    "Silph Co. 7F": {"Lapras": [25, "Beat your rival, then talk to the man behind him"]},
+    "Celadon City Gym": {"Ogerpon": [5, "Beat Erika's rematch"]},
+    "Cerulean Cave 2F": {"Kubfu": [30, "Beat Ketchup after Team Rocket leaves; a second Kubfu from his rematch a day later"]},
+    "Viridian City Gym": {"Dragapult": [100, "Beat Clair's rematch (Z-Ring); Gift Move Spirit Shackle"]},
+    "Saffron City Gian's House 1F": {"Cosmog": [50, "Beat Dumbass Kid's rematch (Z-Ring)"]},
+    "Treasure Beach": {"Pikachu-Libre": [100, "Beat Red after a 4+ win streak in the Battle Simulator; Shiny; Gift Move Aura Wheel"]},
+    "Kindle Road": {"Pinsir": [100, "Beat Bugsy's rematch; Gift Move Extreme Speed"]},
+    "Mt Ember Summit": {"Aerodactyl": [100, "Beat Archer's rematch; Gift Moves Headlong Rush, Brave Bird"]},
+    "Two Island House": {"Clefable": [100, "Beat Whitney's rematch; Gift Move Light of Ruin"]},
+    "Berry Forest": {"Mew": [100, "Beat Gatekeeper Owen after saving Lostelle"]}
+  },
+  "_gifts": "{area: {species: [level, how]}}: level and requirement from the Gifts tab, on data.js's gift rows.",
+  "add": [
+    {"area": "One Island Poke Center", "method": "Gift", "step": 17, "rows": [["Cosmog", 50, "Battle Simulator, 50 BP"]]},
+    {"area": "Vermilion City Pokemon Fan Club", "method": "Fossil (pick one)", "step": 2,
+     "rows": [["Omanyte", null, "Helix Fossil from Mt. Moon, revived here; the Hiker trades the other for a Blue Shard"],
+              ["Kabuto", null, "Dome Fossil from Mt. Moon, revived here; the Hiker trades the other for a Blue Shard"]]}
+  ],
+  "_add": "Rows data.js lacks: {area, method, step (data.js progression step), rows [[species, level, note]]}.",
+  "notes": {
+    "Vermilion City Pokemon Fan Club": {"Aerodactyl": "Old Amber from Pewter Museum, revived here"},
+    "Pokemon Tower 8F": {"Sinistcha": "Doc says Gengar at night", "Ursaluna-Bloodmoon": "Doc says Gengar at night"}
+  },
+  "_notes": "Extra row notes {area: {species: note}}.",
+  "shards": {
+    "Vermilion City Pokemon Fan Club": {"method": "Shard trade", "how": "%s: the Hiker's fossil Pokémon",
+      "colours": {"Green Shard": ["Lileep", "Archen", "Tirtouga"], "Blue Shard": ["Omanyte", "Kabuto", "Amaura"],
+                  "Red Shard": ["Cranidos", "Tyrunt"], "Yellow Shard": ["Anorith", "Shieldon"]}, "random": false},
+    "Celadon City Mansion 1F": {"method": "Shard egg", "how": "%s: a random egg of these",
+      "colours": {"Green Shard": ["Bulbasaur", "Chikorita", "Treecko", "Turtwig", "Snivy", "Chespin", "Rowlet", "Grookey", "Sprigatito"],
+                  "Blue Shard": ["Squirtle", "Totodile", "Mudkip", "Piplup", "Oshawott", "Froakie", "Popplio", "Sobble", "Quaxly"],
+                  "Red Shard": ["Charmander", "Cyndaquil", "Torchic", "Chimchar", "Tepig", "Fennekin", "Litten", "Scorbunny", "Fuecoco"],
+                  "Yellow Shard": ["Pikachu-Popstar", "Pikachu-Belle", "Pikachu-Rockstar", "Pikachu-Libre", "Pikachu-PhD",
+                                   "Pikachu-Flying", "Pikachu-Surfing", "Any Cap"]},
+      "any": ["Pikachu-Original", "Pikachu-Hoenn", "Pikachu-Sinnoh", "Pikachu-Unova", "Pikachu-Kalos", "Pikachu-Alola", "Pikachu-Partner"],
+      "random": true}
+  },
+  "_shards": "data.js's one fixed-gift list in these areas, split by the shard each costs (Fossils / Egg Vendor tabs). random: the shard gives one at random from its colour ('1 of N'); 'Any Cap' = one Yellow slot shared by the cap Pikachu (any). data.js entries no colour lists keep a 'Doc doesn't list it' note.",
+  "trades": {
+    "Cerulean City Central House": "Snom", "Celadon City Restaurant": "Murkrow", "Underground Path Route 5 Entrance": "Carbink",
+    "Route 18 Gatehouse 2F": "Dedenne", "Vermilion City Central House": "Pikipek", "Cinnabar Island Lab Meeting Room": "Aegislash",
+    "Route 11 Gatehouse 2F": "Florges", "Cinnabar Island Lab Testing Room": "Ursaluna", "Route 2 House": "Furret"
+  },
+  "_trades": "{area: the species the NPC wants} (Trades tab, 'Looking for...'); Route 2's reward is '?' on the sheet, data.js has Chillet.",
+  "tables": [
+    {"area": "Fuchsia City", "key": "wild-oldRod", "rows": [[70, "Magikarp", "2–4"], [30, "Magikarp", "2–4"]]},
+    {"area": "Fuchsia City", "key": "wild-goodRod", "rows": [[60, "Goldeen", "27–29"], [20, "Goldeen", "27–29"], [20, "Poliwag", "27–29"]]},
+    {"area": "Fuchsia City", "key": "wild-superRod", "rows": [[40, "Goldeen", "53–55"], [40, "Seaking", "53–55"], [15, "Gyarados", "53–55"], [4, "Psyduck", "53–55"], [1, "Psyduck", "53–55"]]},
+    {"area": "Fuchsia City", "key": "wild-surf", "rows": [[100, "Psyduck", "56–58"]]},
+    {"area": "S.S. Anne Port", "key": "wild-superRod", "rows": [[40, "Luvdisc", "53–55"], [40, "Luvdisc", "53–55"], [15, "Alomomola", "53–55"], [4, "Seadra", "53–55"], [1, "Gyarados", "53–55"]]},
+    {"area": "S.S. Anne Port", "key": "wild-surf", "rows": [[60, "Tentacool", "56–58"], [30, "Tentacool", "56–58"], [5, "Tentacruel", "56–58"], [4, "Barraskewda", "56–58"], [1, "Barraskewda", "56–58"]]}
+  ],
+  "_tables": "Water tables the sheet has and data.js lacks (Fishing & Surfing tab; rates %, levels). Step: the step data.js gives the same table kind with the same levels elsewhere. Rows say 'Doc only'. Not added: Route 11 Surf (Tentacool Lv 5-40, vanilla FRLG's table: the sheet's other tables are all edited).",
+  "mystery": {
+    "area": "Mystery Gift", "level": 85, "step": 17,
+    "how": "Code at a Pokémon Center Nurse after the Hall of Fame",
+    "rows": [["Ho-Oh", "Hidden Ability Phoenix Down"], ["Calyrex-Ice", ""], ["Lugia", ""],
+             ["Rayquaza", "Gift Moves Dragon Ascent, V-Create"], ["Darkrai", "Dark Hole (can be retaught only once)"],
+             ["Xerneas", ""], ["Zamazenta", "Holds Rusted Shield"], ["Reshiram", ""], ["Palkia", ""],
+             ["Zacian", "Holds Rusted Sword"], ["Deoxys", "Gift Move Mystic Power"], ["Koraidon", ""], ["Zekrom", ""],
+             ["Calyrex-Shadow", ""], ["Giratina", "Gift Moves Dragon Hammer, Spirit Shackle; holds Griseous Orb"],
+             ["Yveltal", "Dark Hole (can be retaught only once)"], ["Dialga", "Holds Adamant Orb"], ["Miraidon", ""],
+             ["Groudon", "Holds Red Orb"]]
+  },
+  "_mystery": "Mystery Gifts tab (codes left out): an AR place with no tracker slot (ns), LOC appended at the end.",
+  "unobtainable": ["Arceus", "Dialga-Origin", "Eternatus", "Magearna-Original", "Palkia-Origin"],
+  "_unobtainable": "Unobtainables tab: g 3 whatever the location rule finds (Magearna-Original's base is a static; Dialga / Palkia come as Mystery Gifts)."
+}

@@ -125,7 +125,8 @@ and evolution/breeding closure must be assigned before D8 pruning is enabled by 
 Source: data.js `areas` (221, game order; index = LOC index). Built by `extract/locs.py` (step 1 of unit 4).
 
 - LOC: one sublocation per data.js area. AR: one tracker slot per place, the area name without its floor / room
-  suffix (Mt. Moon 1F / B1F / B2F = Mt. Moon): 153 places, 67 with no encounters (`ns`, no slot).
+  suffix (Mt. Moon 1F / B1F / B2F = Mt. Moon): 153 places, 67 with no encounters (`ns`, no slot), then the
+  Mystery Gift place (below).
 - Encounter keys: wild-day / wild-night (grass, 12 FRLG slots 20/20/10/10/10/10/5/5/4/4/1/1), wild-surf and
   wild-smash (60/30/5/4/1), rods (old 70/30, good 60/20/20, super 40/40/15/4/1), raids 1-6 (12 drop items, kept in
   the row note), fixed-overworld (Static), fixed-gift (Gift; more than one entry = "Gift (pick one)", "1 of N"),
@@ -134,8 +135,39 @@ Source: data.js `areas` (221, game order; index = LOC index). Built by `extract/
 - P.g: 0 = found in a location, or the first same-dex base form found, or evolved from an obtainable species
   (Unbound's rule); 3 = not found; Megas keep 1 (prune.py decides them).
 
-Open for step 2 (sheet cross-check): Safari, fossils, egg vendor, Game Corner, mystery gifts, Wonder Egg pools, and
-the "pick one" gift lists (Oak's Lab 27 entries, Vermilion fossils 10, Celadon 42) against the sheet.
+Sheet additions (`extract/sheet_locs.json`, hand-copied from "Pokémon Locations & Raid Dens v4.1"; data.js stays the
+encounter source, the sheet fills what it lacks):
+- Oak's Lab's 27-entry gift list is the Starter choice (method `Starter choice`, "1 of 27", its AR has `st`), the
+  starter picker's list (`cfg.starter = "pick"`). Not on the sheet.
+- Mystery Gift: the 19 Lv 85 legendaries of the Mystery Gifts tab (Ho-Oh ... Groudon, with the sheet's held item /
+  Gift Move notes; codes left out: "Code at a Pokémon Center Nurse after the Hall of Fame"). LOC 221 and an AR place
+  appended after the data.js areas, `ns` (no tracker slot), no cap in the label.
+- Gift levels and how-to from the Gifts tab on data.js's gift rows (Finizen 5 ... Mew 100); One Island Poké Center
+  Cosmog (Battle Simulator, 50 BP) added. Lapras is Lv 25 at Silph 7F (data.js cap 56), Kubfu 30.
+- Vermilion Fan Club: data.js's 10-entry gift list is the Hiker's shard trade (method `Shard trade`, the shard
+  colour in the note, no "1 of N": each shard buys the one you pick); the Mt. Moon Helix / Dome Fossil pair added as
+  `Fossil (pick one)` (revived in the same building). Aerodactyl stays a Fan Club gift (data.js, cap 36) noted "Old
+  Amber from Pewter Museum, revived here": the sheet's "Pewter Museum" column is where the fossil is found.
+- Celadon Mansion 1F: data.js's 42-entry list is the shard eggs (method `Shard egg`): each shard gives a random egg of
+  its colour, "1 of 9" (Green / Blue / Red starters) or "1 of 8" (Yellow: 7 Pikachu forms + one "Any Cap" slot shared
+  by the 7 cap Pikachu). Pikachu-Cosplay is in data.js but not on the sheet ("Doc doesn't list it").
+- Trades: each row says what the NPC wants ("for a Snom"). Route 2's reward is "?" on the sheet; data.js: Chillet.
+- Water tables data.js has none for, from the Fishing & Surfing tab, rows "Doc only": Fuchsia City (all 3 rods, Surf),
+  S.S. Anne Port (Super Rod, Surf: Tentacool / Tentacruel / Barraskewda). Cap step = the step data.js gives the same
+  table kind at the same levels. Not added: Route 11 Surf (Tentacool Lv 5-40, FRLG's unedited table).
+- Unobtainables tab: Arceus, Dialga-Origin, Eternatus, Magearna-Original, Palkia-Origin forced to g 3 (Magearna-Original
+  was g 0 through its base, Dialga / Palkia-Origin would be through the Mystery Gifts).
+
+Sheet vs data.js (name-matched, `.tmp` compare; data.js kept):
+- Grass & Caves: 121 of 125 bands match. The sheet's Seafoam floors are one floor up (its 1F / B1F / B2F / B3F = data.js
+  B1F / B2F / B3F / B4F, all matching); its extra "Seafoam B4F" band has no data.js table. "Three Island" = Three Isle
+  Port. Rock Tunnel 1F: sheet Minior (Red Core), data.js Minior (Meteor) (the same wild Minior). Pokémon Tower 8F at
+  night: sheet Gengar, data.js Sinistcha / Ursaluna-Bloodmoon (as by day): row notes "Doc says Gengar at night".
+- Fishing & Surfing: every band data.js has matches (sheet "Seafoam B2F" = data.js B3F, "B3F-B4F" = B4F); the gaps
+  are the doc-only tables above.
+- Safari Zone: all 30 bands match. Game Corner: the 15 match. Trades: the 9 match. Fossils: the 10 match.
+- Statics: the raid-den legendaries are data.js Raid rows; Keldeo (Seafoam B2F) and Marshadow (Pokémon Tower 9F) are
+  data.js statics the sheet doesn't list.
 
 ## Local storage
 
