@@ -11,7 +11,9 @@ and IX keys.
 IX {item: [description, in-battle text, changed]} for every item the guide shows (IT outside TMs / Move Tutors /
 Useful NPCs, WK rows the same way, P.hi, P.stone, trainer `i`, MI `i`) plus the guide's own item_desc.json items:
 the hack's own extract/item_desc.json text (changed as written), else the same-key text of the other guide nearest in
-generation (changed 0). Items with neither are named in the report.
+generation (changed 0), else the hack's extract/item_text_extra.json ({name: [text, "wiki" or "made-up"]}, changed 0),
+else for a Mega Stone the games' standard wording with the species from its P.stone entry (changed 0). Items with
+none are named in the report.
 In battle: IX[item][1] from tools/battle_text/items.json by generation, the hack's extract/battle_text.json "items"
 over it; Mega Stones none. MV[i]['b'] likewise from moves.json and the hack's "moves", by the move's name M[i].
 """
@@ -31,6 +33,8 @@ GENS = {'hardlove-gold': 9, 'blaze-black-2-redux': 5, 'eternal-x': 6, 'photonic-
 POOL_GENS = {'hardlove-gold': 4}
 ALIASES = {'Pasho Berry': 'Passho Berry', 'Never-MeltIce': 'Never-Melt Ice'}
 NO_ITEM_PAGE = ('tm', 'npc')  # IT section kinds: TMs / HMs / TRs, Move Tutors, Useful NPCs
+MEGA_TEXT = ('One of a variety of mysterious Mega Stones. Have {species} hold it, and this stone will enable it to '
+             'Mega Evolve during battle.')
 
 
 def load_json(path):
@@ -61,6 +65,11 @@ def key(name):
 
 def spelled(name):
     return ALIASES.get(name, name)
+
+
+def mega_species(pokemon):
+    """The species a Mega Stone's P.stone entry names: "Mega Charizard X" -> "Charizard", "Mega Venusaur" -> "Venusaur"."""
+    return re.sub(r' [XY]$', '', re.sub(r'^Mega ', '', pokemon))
 
 
 def pick(value, gen):
@@ -168,11 +177,15 @@ def apply(D, hack, report=print):
             os.path.join(HACKS, other, 'extract', 'item_desc.json')).items() if text}
         pools.append((abs(other_gen - pool_gen), other_gen, other, texts))
     pools.sort(key=lambda pool: pool[:3])
+    extra = {key(name): (text, source) for name, (text, source) in
+             load_json(os.path.join(HACKS, hack, 'extract', 'item_text_extra.json')).items()}
 
     shown = {canon(container[column]) for container, column, section, group in slot_list
              if section not in no_page}
     shown_mega = {canon(container[column]) for container, column, section, group in slot_list
                   if section in mega or group == 'stone'}
+    stone_pokemon = {canon(container['stone']): container['n'] for container, column, _, group in slot_list
+                     if group == 'stone'}
     names = shown   # own item_desc.json covers every item of the game; pages only for the shown ones
 
     # In battle ------------------------------------------------------------------------------------------------------
@@ -196,6 +209,11 @@ def apply(D, hack, report=print):
                 if key(name) in texts:
                     text, source = texts[key(name)], 'pooled'
                     break
+        if not text and key(name) in extra:
+            text, origin = extra[key(name)]
+            source = 'extra-' + origin
+        if not text and name in shown_mega and name in stone_pokemon:
+            text, source = MEGA_TEXT.format(species=mega_species(stone_pokemon[name])), 'mega'
         changed = changed if source == 'own' else 0
         bt = '' if name in shown_mega else battle(name, item_tables)
         if text or bt:
@@ -204,7 +222,9 @@ def apply(D, hack, report=print):
         if not source and name in shown:
             report(f'item text: none for {name}')
     D['IX'] = IX
-    report(f'item text: {sources["own"]} own, {sources["pooled"]} pooled, {sources["none"]} with no description')
+    report(f'item text: {sources["own"]} own, {sources["pooled"]} pooled, {sources["extra-wiki"]} from the wiki, '
+           f'{sources["extra-made-up"]} made up, {sources["mega"]} Mega Stone standard, {sources["none"]} with no '
+           'description')
 
     items_with = sum(1 for name in shown if name in IX and IX[name][1])
     report(f'in battle: {items_with} shown items with battle text, {len(shown) - items_with} without')

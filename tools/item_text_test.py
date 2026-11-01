@@ -58,6 +58,19 @@ class Apply(unittest.TestCase):
         item_text.apply(D, 'unbound', lambda line: None)
         self.assertFalse(D.get('IX', {}).get('Venusaurite', ['', ''])[1])
 
+    def test_mega_stone_without_text_gets_the_standard_wording(self):
+        D = self.data([['Zzzite X', 'Stone', None, 0, 'Mega', ['p0', 0]]], p=[{'id': '1', 'n': 'Mega Zzz X',
+                                                                                  'stone': 'Zzzite X', 'hi': []}])
+        D['IT'][0]['k'] = 'mega'
+        item_text.apply(D, 'unbound', lambda line: None)
+        self.assertEqual(D['IX']['Zzzite X'][0], item_text.MEGA_TEXT.format(species='Zzz'))
+        self.assertEqual(D['IX']['Zzzite X'][2], 0)
+
+    def test_mega_species_drops_the_mega_prefix_and_the_x_or_y(self):
+        self.assertEqual(item_text.mega_species('Mega Charizard X'), 'Charizard')
+        self.assertEqual(item_text.mega_species('Mega Raichu Y'), 'Raichu')
+        self.assertEqual(item_text.mega_species('Mega Venusaur'), 'Venusaur')
+
     def test_idempotent(self):
         D = self.data([["King's Rock", 'd', None, 0, 'Held', ['p0', 0]]])
         item_text.apply(D, 'unbound', lambda line: None)
