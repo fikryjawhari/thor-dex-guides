@@ -70,7 +70,7 @@ def spelled(name):
 
 def mega_species(pokemon):
     """The species a Mega Stone's P.stone entry names: "Mega Charizard X" -> "Charizard", "Mega Venusaur" -> "Venusaur"."""
-    return re.sub(r' [XY]$', '', re.sub(r'^Mega ', '', pokemon))
+    return re.sub(r' [XYZ]$', '', re.sub(r'^Mega ', '', pokemon))
 
 
 def pick(value, gen):

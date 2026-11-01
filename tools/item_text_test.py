@@ -66,10 +66,11 @@ class Apply(unittest.TestCase):
         self.assertEqual(D['IX']['Zzzite X'][0], item_text.MEGA_TEXT.format(species='Zzz'))
         self.assertEqual(D['IX']['Zzzite X'][2], 0)
 
-    def test_mega_species_drops_the_mega_prefix_and_the_x_or_y(self):
+    def test_mega_species_drops_the_mega_prefix_and_the_x_y_or_z(self):
         self.assertEqual(item_text.mega_species('Mega Charizard X'), 'Charizard')
         self.assertEqual(item_text.mega_species('Mega Raichu Y'), 'Raichu')
         self.assertEqual(item_text.mega_species('Mega Venusaur'), 'Venusaur')
+        self.assertEqual(item_text.mega_species('Mega Absol Z'), 'Absol')
 
     def test_idempotent(self):
         D = self.data([["King's Rock", 'd', None, 0, 'Held', ['p0', 0]]])
