@@ -218,7 +218,7 @@ run `uv run python -I tools/check_updates.py [hack]`; its pins and coverage are 
 | Blaze Black 2 Redux | v1.4.1 | 2026-10-18 (docs), 2026-10-19 (RomHackDex), 2026-10-29 hzla pins | 2026-10-29 | Drayano's Drive (Documentation folder), RomHackDex, hzla Dynamic-Calc-Decomps |
 | Emerald Imperium | v1.3 / 1.3.1 | 2026-10-18 (guide built from the same sources) | 2026-10-02 | emeraldimperium.info Drive folder; eidex and Dynamic-Calc-Decomps repos |
 | Eternal X | v2.67 | 2026-10-18 (docs + romfs), dex extract 2026-10-19, regenerated + Bulbapedia 2026-10-22 | 2026-10-22 | Buffel Saft's Drive, PokeCommunity thread |
-| Hardlove Gold | 0.8.5 (source `kumakuma1/hardlove` `64838bf7db`; docs site `bb5862f` is older) | 2026-10-28 (source + Drive docs; site / Showdown retained) | 2026-10-28 | `kumakuma1/hardlove` branch `beta_hardlove` commits, the changelog, Drive sheets |
+| Hardlove Gold | 0.8.6 (source `kumakuma1/hardlove` `4af49f7a8c`; docs site `bb5862f` is older) | 2026-11-01 (source + Drive docs; site / Showdown retained) | 2026-11-01 | `kumakuma1/hardlove` branch `beta_hardlove` commits, the changelog, Drive sheets |
 | Heartfelt Gold (was HeartGold Retiled) | v1.0.0 (tag `heartfelt-v1.0.0` `8b6aa3a`) | 2026-11-01 (guides + Retiled's engine overlay; ability text from hg-engine `61b510c`) | – | GitHub repo releases / tags |
 | Meissa Moon | v2.2.2 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Author's Drive, PokeCommunity thread |
 | Navy Sapphire | v2.1.5 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Hack's Drive, PokeCommunity thread |
@@ -258,7 +258,7 @@ plus raw-file requests for diffs. A run caps itself at fifty; that is not an hou
 runs too. Recursive trees avoid one request per watched path and the compare API's 300-file truncation; a truncated
 tree fails loudly. No token is required. No release tags are assumed.
 
-Hardlove watches its reviewed 0.8.5 release commit, not moving `beta_hardlove` head. Its Drive patch filenames guard that
+Hardlove watches its reviewed release commit (0.8.6), not moving `beta_hardlove` head. Its Drive patch filenames guard that
 pin. A new version blocks accepting the source until the release commit is matched by UTC date and changelog;
 then update `ref` and `release.version`. Heartfelt Gold's upstream engine text is likewise release-matched, never upstream
 main; its own guides/tables may be checked on head. Code wins over docs; docs' Drive dates independently signal
