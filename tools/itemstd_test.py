@@ -56,6 +56,10 @@ class ItemsTest(unittest.TestCase):
                       ('Shops', [['TM04 Calm Mind', 'Town · 10 BP · Calm Mind', None, 0, 'TMs']])])
         itemstd.standardise(value)
         self.assertEqual(value['IT'][0]['r'][0][1], 'Shop: Town · 10 BP')
+        value = data([('TMs', [['TM04 Calm Mind', 'Found: Town · hidden in a rock', 1]]),
+                      ('Shops', [['TM04 Calm Mind', 'Town · 10 BP', None, 0, 'TMs']])])
+        itemstd.standardise(value)
+        self.assertIn('Found: Town · hidden in a rock', value['IT'][0]['r'][0][1])
 
     def test_basculin(self):
         value = data([('Evolution Items', [['Blue-Striped Basculin: Deep Sea Scale (5% chance) Red-Striped Basculin: Deep Sea Tooth', '', None]])])

@@ -378,7 +378,7 @@ check(sum(row[1] == 'Trade' for pokemon in P for row in pokemon['w']) == 30, '3 
 check(any(row[1] == 'Trade' and D['LOC'][row[0]] == 'Humilau City' and 'Provisional' in row[4] for row in byid['phione']['w']),
       'Phione Humilau provisional trade')
 check({pokemon['id']: pokemon['hi'] for pokemon in P if pokemon.get('hi')} ==
-      {'latios': ['Soul Dew'], 'latias': ['Soul Dew'], 'giratina': ['Griseous Orb']}, 'EVless wild held-item exceptions only')
+      {'latios': [['Soul Dew', None]], 'latias': [['Soul Dew', None]], 'giratina': [['Griseous Orb', None]]}, 'EVless wild held-item exceptions only')
 comparison = locs.mirror_comparison(wild)
 check((comparison['areas'], comparison['match'], comparison['doc_only'], comparison['mirror_only']) == (81, 1296, 761, 0),
       'RomHackDex audit reproduced: 81 areas / 1,296 match / 761 omissions / zero disagreements')

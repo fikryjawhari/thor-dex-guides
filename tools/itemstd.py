@@ -202,7 +202,7 @@ def remove_shop_place(text, item, say):
     out = []
     for line in lines:
         place = line_place(line).casefold()
-        if line.startswith(('Found:', 'Also:')) and any(place == shop or shop.startswith(place + ' ·') for shop in shops):
+        if line.startswith(('Found:', 'Also:')) and ' · ' not in line and place in shops:
             continue
         out.append(line)
     if any(line.startswith(('Found:', 'Also:')) for line in out):
@@ -589,6 +589,7 @@ def checks(D):
 
 
 if __name__ == '__main__':
+    sys.stdout.reconfigure(encoding='utf-8')
     import datajson
     hack = sys.argv[1]
     path = sys.argv[2] if len(sys.argv) > 2 else os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'hacks', hack, 'data.json')

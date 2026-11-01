@@ -175,7 +175,8 @@ def trainers_follow_walk(D):
 
 
 def finalise(D, hack, prune=None):
-    """The end of every build: Items standard (tools/itemstd.py), the hack's species prune, stable trainer keys
+    """The end of every build: Items standard (tools/itemstd.py), stable pickup keys (tools/pickup_keys.py),
+    the hack's species prune, stable trainer keys
     (tools/trainer_keys.py: extract/trainer_keys.json), Trainers page in walkthrough order, shared split names, the data
     move properties/interactions (tools/moveprops.py), schema (tools/schema.py: dead fields dropped, stop keys,
     key order). Idempotent."""

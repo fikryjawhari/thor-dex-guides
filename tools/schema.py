@@ -10,14 +10,17 @@ there (and to the notes) when a hack gets a new field.
 Trainer normal {easy, p} is an optional secondary Normal team; easy is its Easy level decrement. Mon l is displayed,
 sl is an optional different stat level, hn is a list of hzla disagreement notes. Missing data changes no rendering.
 Walkthrough s accepts legacy [text, note] pairs or mission {m, n, u, r, note?, s}; mission children are {k, t, n?}.
+IX is {item: [description, in-battle text, changed?]}; MV.b is optional in-battle text.
+P.hi is [[item, percent?]] (null = unknown). Legacy names become [item, null], never guessed odds.
+IT r[5] parallels text.splitlines(): pickup key or 0. WK it[4] is the matching key (or 0).
 """
 
 # Canonical key order per object kind. Optional fields (omitted when empty) are marked in the notes, not here.
 ORDER = {
-    'top': ['M', 'MV', 'MI', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'WK', 'TR', 'TC', 'GID', 'built'],
+    'top': ['M', 'MV', 'MI', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'IX', 'WK', 'TR', 'TC', 'GID', 'built'],
     'P': ['id', 'n', 'dex', 't', 'a', 'ha', 's', 'ef', 'et', 'of', 'lv', 'tm', 'tu', 'eg', 'w', 'g', 'hi',
           'stone', 'sloc', 'nu', 'fc', 'cf'],
-    'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'cr', 'd', 'tg', 'f', 'se', 'h', 'dc', 'e', 'cf', 'x'],
+    'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'cr', 'd', 'b', 'tg', 'f', 'se', 'h', 'dc', 'e', 'cf', 'x'],
     'MI': ['a', 'i', 'w', 'e', 'm', 'h', 's'],
     'AR': ['n', 'l', 'st', 'sub', 'in', 'es', 'map', 'ns', 'note'],
     'IT': ['n', 'k', 'note', 'r'],
@@ -58,28 +61,52 @@ def drop_empty(obj, *keys):
             del obj[key]
 
 
+def pickup_key(value):
+    return value == 0 or isinstance(value, str) and value.startswith('p') and value[1:].isdigit()
+
+
 def standardise(D):
     # Fields nothing reads: build markers and provenance strings, an old comparison log, ids the page never shows.
     for key in ('s7', 'su', 'src'):
         D.pop(key, None)
     for p in D['P']:
         p.pop('vc', None)
+        if p.get('hi'):
+            p['hi'] = [[held, None] if isinstance(held, str) else held for held in p['hi']]
+            p['hi'] = [held for index, held in enumerate(p['hi']) if held not in p['hi'][:index]]
+            assert all(isinstance(held, list) and 1 <= len(held) <= 2 and isinstance(held[0], str)
+                       and (len(held) == 1 or held[1] is None or isinstance(held[1], (int, float))
+                            and not isinstance(held[1], bool) and 0 <= held[1] <= 100) for held in p['hi']), 'invalid P.hi'
+            assert len({held[0] for held in p['hi']}) == len(p['hi']), 'duplicate P.hi item'
+            if p.get('stone'):
+                p.pop('hi')
         drop_empty(p, 'hi')
         order(p, 'P')
     for a in D['AB']:
         while len(a) > 2 and not a[-1]:
             a.pop()
     for m in D['MV']:
+        assert 'b' not in m or isinstance(m['b'], str), 'MV.b must be text'
+        drop_empty(m, 'b')
         order(m, 'MV')
+    for name, text in D.setdefault('IX', {}).items():
+        assert isinstance(name, str) and isinstance(text, list) and 2 <= len(text) <= 3, 'invalid IX entry'
+        assert all(isinstance(value, str) for value in text[:2]), 'IX description and in-battle text must be strings'
+        assert len(text) == 2 or text[2] in (False, True), 'IX changed marker must be boolean / 0 / 1'
     for interaction in D.get('MI', []):
         order(interaction, 'MI')
     for a in D['AR']:
         a.pop('t', None)
         order(a, 'AR')
     for section in D['IT']:
+        for row in section['r']:
+            assert len(row) == 6 and isinstance(row[5], list) and len(row[5]) == len(row[1].splitlines()), 'invalid IT pickup keys'
+            assert all(pickup_key(key) for key in row[5]), 'invalid IT pickup key'
         order(section, 'IT')
 
     wk = D['WK']
+    for row in wk['np'] + [row for split in wk['splits'] for stop in split['st'] for row in stop['it']]:
+        assert len(row) == 5 and pickup_key(row[4]), 'invalid WK item pickup key'
     for key in ('src', 'gc', 'legacyStops'):
         wk.pop(key, None)
     missions = set()

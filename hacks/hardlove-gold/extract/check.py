@@ -64,7 +64,7 @@ def check(data, baseline=None):
     boxes = [section['n'] for section in data['IT']]
     assert boxes == ['Key Items', 'Poké Balls', 'Medicine', 'Held Items', 'TMs and HMs', 'Evolution Items',
                      'Mega Stones', 'Valuables', 'Move Tutors', 'Useful NPCs'], boxes
-    assert all(len(row) >= 5 and (row[4] or section['n'] == 'Valuables') for section in data['IT'] for row in section['r']), 'row without a sub-heading'
+    assert all(len(row) == 6 and (row[4] or section['n'] == 'Valuables') for section in data['IT'] for row in section['r']), 'row without a sub-heading'
     if baseline is not None:
         old_species = {entry['id']: entry for entry in baseline['P']}
         assert set(species) <= set(old_species)

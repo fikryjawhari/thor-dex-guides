@@ -411,10 +411,10 @@ The other guides' notes link here.
 ```text
 The JSON in #data, the same for every guide. Key order and what is dropped: tools/schema.py, applied by the
 extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides that have that data, the others omit it.
-  Top level, in order: M MV AB P LOC AR [ARO] IT WK TR TC [GID] built   (no build markers, no source strings)
+  Top level, in order: M MV AB P LOC AR [ARO] IT [IX] WK TR TC [GID] built   (no build markers, no source strings)
   M   [moveName]
   MV  [{t type, c category, bp power or "Varies", ac accuracy or null, pp, pr priority, [cr crit stage when not 0,
-        6 = always a crit (the damage calc)], d description, [tg Showdown target code],
+        6 = always a crit (the damage calc)], d description, [b in-battle text], [tg Showdown target code],
         f properties[] (tools/moveprops.py PROPS / ALIASES), [se [[chance percent, effect text]]],
         h change notes[], [dc 1 = the changes doc
         lists it, e the doc's paragraph], [cf doc-vs-data conflicts[]], [x 1 = hack original]}]
@@ -440,7 +440,7 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
         s[HP,Atk,Def,SpA,SpD,Spe], ef/et [[how, id]] evolves from/into, of[ids] other forms, lv[[level, moveIdx]]
         (level 0 = learned on evolution), tm[moveIdx], [tu[moveIdx] tutors], eg[moveIdx], w[[LOCidx, method, rate,
         levels, note]], g availability (0 obtainable, 1 Mega/Primal, 3 not found / trainer only),
-        [hi wild held item names], [stone, sloc: a Mega's stone and where to get it], [nu 1 = Mega not usable],
+        [hi [[wild held item, percent?]]], [stone, sloc: a Mega's stone and where to get it], [nu 1 = Mega not usable],
         [fc 1 = form change], [cf doc-vs-data conflicts[] ("Sources disagree" card)]}]   dex order, base form then other forms
   LOC [sublocationName] in tracker order
   AR  [{n area name, l[LOC idx], [st 1 = the starter picker is this area's tracker], [sub [AR idx] tracker slots the
@@ -450,10 +450,17 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
   ARO [AR idx] [optional] the Locations page's area order, where areas added later sit at the end of AR (same reason)
   P.w methods: Grass/cave, Surf, Old/Good/Super Rod, Rock Smash (rates are %), Static, Gift, Egg / Starter egg /
   Pseudo egg, Starter choice, Hot House (N+ badges), Choice (...), Roaming (rates "1 of N"); w[4] = how to get it.
-  IT  [{n section, k tm|mega|gen|npc, note, r:[[item, text, link (move idx or mega id), missable 1?, sub-heading]]}]
+  IT  [{n section, k tm|mega|gen|npc, note, r:[[item, text, link (move idx or mega id), missable 1?, sub-heading, pickup keys]]}]
       (the Items standard: tools/itemstd.py)
+      Boxes are item kinds, never Shops. Each item appears once (except nomerge pickups and separate tutors).
+      Each acquisition is its own line; shops fold in as Shop: lines. An item-name-only sub-heading is empty.
+      Pickup keys parallel text.splitlines(), one p<N> or 0 per line; 0 for shops, wild sources and repeatable rewards.
+      extract/pickup_keys.json retains removed identities, appends new keys, matches strict then unique loose identities.
+  IX  {item: [description, in-battle text, changed?]} optional; empty until item-text units fill it.
+      P.hi is [[item, percent?]]: null/absent percent = unknown; old name-only lists become [[item, null]].
+      One entry per distinct held item; Mega forms have none. Per-guide extract units supply the actual odds.
   WK  {splits:[{n "Name Split [Cap N]" (the cap is read from the name; none after the League), [note],
-       st:[{k stop key, n place, a[AR idx], s:[[step, note]], [note], it:[[section, item, text, link]],
+       st:[{k stop key, n place, a[AR idx], s:[[step, note]], [note], it:[[section, item, text, link, pickup key or 0]],
        tr [trainer keys], [x 1 = "on the way" stop]}]}], np unplaced items, [docs [[title, text]]],
        [ko {rows, note}], [cheats [[code, alias, text, toggle]], cnote]}
        Stop key k: the stop's identity for saved state. A guide's first build sets it to "split.stop" (its position

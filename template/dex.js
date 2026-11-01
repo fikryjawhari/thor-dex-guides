@@ -217,7 +217,7 @@ function whereTable(p){let h='';
  else if(!p.w.length)h=`<div class="mut">No direct wild encounter. Obtained by evolving or breeding (see Evolution).</div>`;
  else{const seen={};h=`<table class="wh"><tr><th>Location</th><th>Method</th><th>Rate</th><th>Lv</th></tr>${[...p.w].sort((a,b)=>locRank(a[0])-locRank(b[0])||a[0]-b[0]).map((w,j)=>{const n=LOC[w[0]],k=seen[n]=(seen[n]||0)+1;
   return `<tr${PK('wh:'+n+'#'+k,j)}><td><a href="#/l/${w[0]}">${esc(n)}</a>${w[4]?`<div class="mut small">${esc(w[4])}</div>`:''}</td><td>${esc(w[1])}</td><td class="n">${esc(w[2])}</td><td class="n">${esc(w[3])}</td></tr>`;}).join('')}</table>`;}
- if(p.hi&&p.hi.length)h+=`<div class="mut small" style="margin-top:6px">Wild held item${p.hi.length>1?'s':''}: ${p.hi.map(esc).join(', ')}</div>`;
+ if(p.hi&&p.hi.length)h+=`<div class="mut small" style="margin-top:6px">Wild held item${p.hi.length>1?'s':''}: ${p.hi.map(held=>Array.isArray(held)?esc(held[0])+(held[1]!=null?' ('+esc(held[1])+'%)':''):esc(held)).join(', ')}</div>`;
  return h;}
 function confBox(cf){return cf&&cf.length?`<div class="card conf"><h3>Sources disagree</h3><ul>${cf.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="mut small" style="margin-top:4px">${TX.conf}</div></div>`:'';}
 // Evolution: the whole family from its base stage, each Pokémon then its forms (same dex number, not evolved into) then

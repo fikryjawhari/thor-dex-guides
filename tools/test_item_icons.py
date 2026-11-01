@@ -22,6 +22,8 @@ def test_inventory():
             'MI': [{'i': 'Move Item'}]}
     assert item_icons.names_in(data) == {'Potion', 'Held Berry', 'Mega Stone', 'Trainer Item',
                                          'Partner Item', 'Normal Item', 'Move Item'}
+    data['P'][0]['hi'] = [['Held Berry', None], ['Rare Berry', 5]]
+    assert {'Held Berry', 'Rare Berry'} <= item_icons.names_in(data)
     mockup = item_icons.ROOT / 'plans/item-pages-mockup.py'
     if mockup.exists():
         tree = ast.parse(mockup.read_text(encoding='utf8'))
@@ -31,6 +33,8 @@ def test_inventory():
         for data, names in item_icons.inventory().values():
             filtered = copy.copy(data)
             filtered['IT'] = [section for section in data['IT'] if section.get('n') != 'Move Tutors']
+            filtered['P'] = [dict(species, hi=[held[0] if isinstance(held, list) else held
+                                             for held in species.get('hi', [])]) for species in data['P']]
             assert set(names) == namespace['names_in'](filtered)
 
 
