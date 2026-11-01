@@ -48,6 +48,33 @@
     "sheet_base64_bytes": 182508,
     "missing": {}
   },
+  "radical-red": {
+    "names": 495,
+    "with_icon": 478,
+    "without_icon": 17,
+    "unique_icons": 365,
+    "sheet_png_bytes": 130492,
+    "sheet_base64_bytes": 173992,
+    "missing": {
+      "Ability Pill": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Alcremite": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Burnt Seed": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "DexNav": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Dream Patch": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Eternamax Orb": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Itemfinder": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Leek Stick": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Medicine": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Necromizer": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Necrozium Z": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Oak's Parcel": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Poké Rider": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Rusty Shield": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Rusty Sword": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Stat Scanner": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Time Changer": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented."
+    }
+  },
   "unbound": {
     "names": 564,
     "with_icon": 545,

@@ -64,6 +64,8 @@ MISSING_REASONS = {
         'Malformed held-item label combines two different items. Both individual items have icons; selecting one would misrepresent this label.',
     'Silvally Memory': 'A generic memory label without a type. Type-specific memories have distinct palettes; the guide does not identify one.',
 }
+HACK_ITEMS = {'unbound': 'Unbound-specific item or collectible',       # the default reason a name has no icon
+              'radical-red': 'Radical Red / FireRed item or collectible'}
 
 
 def key(name):
@@ -269,8 +271,8 @@ def build(check=False):
                 file_key = name_key
                 record = {'source': 'serebii', 'picture': name_key + '.png', 'url': SEREBII[name]}
             else:
-                missing[guide][name] = MISSING_REASONS.get(name,
-                    'Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.')
+                missing[guide][name] = MISSING_REASONS.get(name, HACK_ITEMS.get(guide, 'Hack-specific item or collectible') +
+                    ': no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.')
                 continue
             image = palette_image(record)
             if file_key in images and images[file_key].tobytes() != image.tobytes():
