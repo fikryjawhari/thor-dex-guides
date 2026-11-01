@@ -22,7 +22,7 @@ const TYPE = F.t[0];
 const LISTED = P.filter(p => p.t.includes(TYPE));
 const OUTSIDE = P.find((p, i) => !p.t.includes(TYPE) && P.slice(i + 1).some(x => x.t.includes(TYPE)) && P.slice(0, i).some(x => x.t.includes(TYPE)));
 const SIZES = [[260, 316], [260, 350], [480, 392], [537, 424], [832, 424]];
-const DEF = { ab: true, bs: true, sc: false, td: false, wh: false, ev: true, tr: false, mv: true };
+const DEF = { ab: true, bs: true, sc: false, td: false, wh: false, hi: false, ev: true, tr: false, mv: true };
 
 // Scripted scrolls send a wheel first: a press, wheel or key ends hold() (template), as a finger on the screen does.
 // The bar slides (120 ms): wait it out before reading or tapping what it may cover.
@@ -55,7 +55,54 @@ const keepCheck = async (page, act, what) => {
   return { before, after, len };
 };
 
+// Held items: a species whose wild items have % (two or more where the guide has one), rows highest % first.
+const wildPct = p => p.g !== 1 && (p.hi || []).length && p.hi.every(h => Array.isArray(h) && h[1] != null);
+const HELD = P.find(p => wildPct(p) && p.hi.length > 1) || P.find(wildPct);
+const heldRows = p => p.hi.map((h, j) => [...h, j]).sort((a, b) => b[1] - a[1] || a[2] - b[2]).map(([n, pct]) => n + pct + '%');
+const heldSec = page => page.value(String.raw`(()=>{const d=document.querySelector('details.psec[data-s=hi]');return d&&{open:d.open,
+  rows:[...d.querySelectorAll('.phi>div:not(.mut)')].map(r=>r.textContent),heads:[...d.querySelectorAll('.phi>.mut')].map(r=>r.textContent),
+  links:[...d.querySelectorAll('.phi a.itl')].every(a=>a.getAttribute('href').startsWith('#/i/')),old:/Wild held item/.test(document.querySelector('details.psec[data-s=wh]').textContent)}})()`);
 const checks = [
+  {
+    id: 'held',
+    title: 'Held items: wild % from P.hi, trainer-only "Wild: none", no section without either, open state saved',
+    sizes: SIZE_SMALL, modes: MODES,
+    run: async page => {
+      if (HELD) {
+        await open(page, HELD.id);
+        const h = await heldSec(page);
+        assert(h, 'a Held items section');
+        assert.equal(h.open, false, 'closed by default');
+        assert.equal(h.old, false, 'no Wild held item line under Where to find');
+        assert.equal(h.heads[0], 'Wild');
+        assert.deepEqual(h.rows.slice(0, HELD.hi.length), heldRows(HELD), 'wild items and % from P.hi, highest first');
+        assert(h.links, 'item links');
+        const order = await page.value(`[...document.querySelectorAll('details.psec')].map(d=>d.dataset.s)`);
+        assert.equal(order[order.indexOf('wh') + 1], 'hi', 'right after Where to find');
+        await tapIn(page, 'details.psec[data-s=hi]>summary');
+        assert.deepEqual(await saved(page), { hi: 1 }, 'open state saved by name');
+        await page.settle();
+        await page.assertFits('held items ' + HELD.n);
+      }
+      // Trainer-only and neither: picked in the page (the trainers' Pokémon are built there).
+      const pick = await page.value(`(()=>{const tr=p=>(TRUSE[p.id]||[]).some(t=>t.p.some(m=>m.id===p.id&&m.i)),wild=p=>p.g!==1&&(p.hi||[]).length;
+        return [P.find(p=>!wild(p)&&tr(p))?.id??null,P.find(p=>!wild(p)&&!tr(p))?.id??null]})()`);
+      if (pick[0] != null) {
+        await open(page, pick[0]);
+        const h = await heldSec(page);
+        assert(h && h.open === !!HELD, 'the section, open as saved: ' + pick[0]);
+        assert.deepEqual(h.heads, ['Wild: none', 'Trainers give it'], 'trainer-only: Wild: none');
+        assert(h.rows.length && h.rows.every(r => /×\d+$/.test(r)), 'trainer items with ×count: ' + JSON.stringify(h.rows));
+        await page.assertFits('trainer-only held items ' + pick[0]);
+      }
+      if (pick[1] != null) {
+        await open(page, pick[1]);
+        assert.equal(await heldSec(page), null, 'no section without held items: ' + pick[1]);
+      }
+      await page.value(`localStorage.removeItem(LS.dex)`);
+      await page.reload();
+    },
+  },
   {
     id: 'sections',
     title: 'defaults, one open state for every Pokémon (saved by name, kept on reload), Collapse all → Reset all → defaults',

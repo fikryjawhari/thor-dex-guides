@@ -60,7 +60,7 @@ const FLIST={mv:M,ab:AB,loc:LOC},fname=f=>FLIST[f.k]?{...f,v:nameOf(FLIST[f.k],f
 // The Pokémon page's sections (key, title, open by default). Their open state is one for every Pokémon, saved in LS.dex
 // as o: {key: 1 open / 0 closed} by section name, only where it differs from the default (Reset all clears it); a name
 // it doesn't know is dropped.
-const PSECS=[['ab','Abilities',1],['bs','Base stats',1],['sc','Stat calculator',0],['td','Type defences',0],['wh','Where to find',0],['ev','Evolution',1],['tr','Used by trainers',0],['mv','Moves',1]];
+const PSECS=[['ab','Abilities',1],['bs','Base stats',1],['sc','Stat calculator',0],['td','Type defences',0],['wh','Where to find',0],['hi','Held items',0],['ev','Evolution',1],['tr','Used by trainers',0],['mv','Moves',1]];
 const PDEF=Object.fromEntries(PSECS.map(([k,,o])=>[k,o]));let PO={};
 try{const s=JSON.parse(localStorage.getItem(LS.dex)||'{}');['f','sort','av'].forEach(k=>{if(s[k]!=null)st[k]=s[k];});
  if(s.o&&typeof s.o==='object')for(const k in s.o)if(k in PDEF&&(s.o[k]?1:0)!==PDEF[k])PO[k]=s.o[k]?1:0;}catch(e){}
@@ -220,8 +220,13 @@ function whereTable(p){let h='';
  else if(!p.w.length)h=`<div class="mut">No direct wild encounter. Obtained by evolving or breeding (see Evolution).</div>`;
  else{const seen={};h=`<table class="wh"><tr><th>Location</th><th>Method</th><th>Rate</th><th>Lv</th></tr>${[...p.w].sort((a,b)=>locRank(a[0])-locRank(b[0])||a[0]-b[0]).map((w,j)=>{const n=LOC[w[0]],k=seen[n]=(seen[n]||0)+1;
   return `<tr${PK('wh:'+n+'#'+k,j)}><td><a href="#/l/${w[0]}">${esc(n)}</a>${w[4]?`<div class="mut small">${esc(w[4])}</div>`:''}</td><td>${esc(w[1])}</td><td class="n">${esc(w[2])}</td><td class="n">${esc(w[3])}</td></tr>`;}).join('')}</table>`;}
- if(p.hi&&p.hi.length)h+=`<div class="mut small" style="margin-top:6px">Wild held item${p.hi.length>1?'s':''}: ${p.hi.map(held=>Array.isArray(held)?ilink(held[0])+(held[1]!=null?' ('+esc(held[1])+'%)':''):ilink(held)).join(', ')}</div>`;
  return h;}
+// Held items: Wild (P.hi, highest % first, no % when the data has none; none on Mega forms), then what trainers give
+// this form (×count over their Pokémon). "Wild: none" when only trainers do; '' when neither (no section).
+function heldBlock(p){const wild=p.g===1?[]:(p.hi||[]).map(h=>Array.isArray(h)?h:[h,null]).filter(h=>h[0]).map((h,j)=>[...h,j]).sort((a,b)=>(b[1]??-1)-(a[1]??-1)||a[2]-b[2]),tc={};
+ (TRUSE[p.id]||[]).forEach(t=>t.p.forEach(m=>{if(m.id===p.id&&m.i)tc[m.i]=(tc[m.i]||0)+1;}));
+ const trs=Object.entries(tc).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));if(!wild.length&&!trs.length)return '';
+ return `<div class="phi">${wild.length?`<div class="mut small">Wild</div>${wild.map(([n,pct],j)=>`<div${PK('hi:w:'+n,j)}>${ilink(n)}${pct!=null?`<span class="pct">${esc(pct)}%</span>`:''}</div>`).join('')}`:'<div class="mut small">Wild: none</div>'}${trs.length?`<div class="mut small sh">Trainers give it</div>${trs.map(([n,c],j)=>`<div${PK('hi:t:'+n,100+j)}>${ilink(n)}<span class="pct">×${c}</span></div>`).join('')}`:''}</div>`;}
 function confBox(cf){return cf&&cf.length?`<div class="card conf"><h3>Sources disagree</h3><ul>${cf.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="mut small" style="margin-top:4px">${TX.conf}</div></div>`:'';}
 // Evolution: the whole family from its base stage, each Pokémon then its forms (same dex number, not evolved into) then
 // what it evolves into, indented per stage. The current page's row is highlighted and not a link.
@@ -271,6 +276,7 @@ function detail(id){const p=byId[id];if(!p){PB.hidden=true;app.innerHTML='<p>Not
  ${psec('sc','Stat calculator',calcBody(p),' calc')}
  ${psec('td','Type defences',defBlock(p))}
  ${psec('wh','Where to find',whereTable(p))}
+ ${(hb=>hb?psec('hi','Held items',hb):'')(heldBlock(p))}
  ${psec('ev','Evolution',famBlock(p))}
  ${u?psec('tr',`Used by trainers (${u.length})`,u.map((t,j)=>`<div${PK('tr:'+t.k,j)}><a href="#/tr/${t.k}">${esc(t.n)}</a> <span class="mut small">${esc(t.loc)} · ${esc(t.g)}${t.st?(PICK?' · if your starter is '+esc(t.st):' · '+esc(t.st)+' starter'):''}</span></div>`).join('')):''}
  ${psec('mv','Moves',`<div class="sub">${Object.entries(mv).map(([k,v])=>`<button data-k="${k}" class="${k===moveTab?'on':''}">${v[0]} (${v[1]})</button>`).join('')}</div><div id="mvb" class="mvw">${mv[moveTab][2]()}</div>`)}`;
