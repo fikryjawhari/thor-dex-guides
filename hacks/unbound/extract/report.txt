@@ -607,56 +607,33 @@ item name: Never Melt Ice -> Never-Melt Ice (9 use(s), Items tab spelling)
 item name: Up Grade -> Up-Grade (1 use(s), Items tab spelling)
 item text: none for ADM
 item text: none for Baby Monitor
-item text: none for Bead Mail
-item text: none for Black Augurite
 item text: none for Blunder Policy
 item text: none for Braille Converter
 item text: none for Candy Sweet
 item text: none for Catching Charm
-item text: none for Chipped Pot
 item text: none for Costume Box
-item text: none for Cracked Pot
-item text: none for Devon Scope
 item text: none for DexNav
-item text: none for Dream Mail
 item text: none for Dream Mist
-item text: none for Eject Pack
-item text: none for Fab Mail
 item text: none for Frontier Card
-item text: none for Galarica Cuff
 item text: none for Galarica Wreath
-item text: none for Glitter Mail
-item text: none for Go-Goggles
-item text: none for Harbor Mail
 item text: none for Hisui Rock
 item text: none for Honey (Baile Style)
 item text: none for Houndoomite
 item text: none for Kangaskhite
 item text: none for Link Stone
 item text: none for Max Powder
-item text: none for Mech Mail
 item text: none for Mega Keystone
 item text: none for Motorcycle
 item text: none for Notebook
-item text: none for Orange Mail
-item text: none for Peat Block
 item text: none for Porta-PC
 item text: none for Red Nectar (Baile Style)
-item text: none for Retro Mail
-item text: none for Shadow Mail
 item text: none for Silvally Memory
 item text: none for Stat Scanner
-item text: none for Sweet Apple
-item text: none for Tart Apple
 item text: none for Time Turner
 item text: none for Trainer Catalogue
-item text: none for Tropic Mail
 item text: none for Utility Umbrella
-item text: none for Wave Mail
-item text: none for Wishing Piece
-item text: none for Wood Mail
 item text: none for Zygarde Cell
-item text: 0 own, 374 pooled, 51 with no description
+item text: 0 own, 397 pooled, 28 with no description
 in battle: 210 shown items with battle text, 215 without
 in battle: 711 moves with battle text, 74 without
 GID (Unbound-Cloud unbound_2_1): sp 1158 ids (1034 P entries reached, 59 not: abomasnow_mega, absol_mega, aegislash_blade, aerodactyl_mega, aggron_mega, alakazam_mega, altaria_mega, ampharos_mega, audino_mega, banette_mega, beedrill_mega, blastoise_mega, blaziken_mega, camerupt_mega, charizard_mega_x, charizard_mega_y, darmanitan_g_zen, darmanitan_zen, diancie_mega, eiscue_noice, gallade_mega, garchomp_mega, gardevoir_mega, gengar_mega, glalie_mega, greninja_ash, groudon_primal, gyarados_mega, heracross_mega, houndoom_mega, kangaskhan_mega, kyogre_primal, latias_mega, latios_mega, lopunny_mega, lucario_mega, manectric_mega, mawile_mega, medicham_mega, meloetta_pirouette, metagross_mega, mewtwo_mega_x, mewtwo_mega_y, necrozma_ultra, pidgeot_mega, pinsir_mega, rayquaza_mega, sableye_mega, salamence_mega, sceptile_mega, scizor_mega, shadow_warrior, sharpedo_mega, slowbro_mega, steelix_mega, swampert_mega, tyranitar_mega, venusaur_mega, zygarde_complete), mv 766 ids, it 522 ids, gr 1180

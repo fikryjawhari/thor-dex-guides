@@ -65,7 +65,7 @@ def build(D):
     for const, (name, _) in hack.items():
         if name: by_key.setdefault(key(name), []).append(const)
 
-    # every name the guide shows (in order, once)
+    # every name the guide shows (in order, once), then every other item the game has (MI is only made in finalise)
     names = []
     for box in D['IT']:
         if box['n'] in ('Useful NPCs', 'Move Tutors'): continue
@@ -73,7 +73,9 @@ def build(D):
     names += [h[0] for p in D['P'] for h in p.get('hi') or []]
     names += [p['stone'] for p in D['P'] if p.get('stone')]
     names += [m['i'] for g in D['TR']['g'] for s in g['sec'] for t in s.get('tr', []) for m in t.get('p', []) if m.get('i')]
-    names += [m['i'] for m in D['MI'] if m.get('i')]
+    names += [m['i'] for m in D.get('MI', []) if m.get('i')]
+    shown = {key(ALIAS.get(n, n)) for n in names if n}
+    names += [name for name, _ in hack.values() if name and key(name) not in shown]
     names = list(dict.fromkeys(n for n in names if n))
 
     out, none, skipped = {}, [], 0
@@ -88,16 +90,16 @@ def build(D):
                 report(f'  ITEM TEXT: {name} matched by its constant {guess} (the game squeezes the name)')
                 consts = [guess]
         if not consts:
-            report(f'  ITEM TEXT: {name}: no items.h constant')
-            none.append(name)
+            if key(ALIAS.get(name, name)) in shown: report(f'  ITEM TEXT: {name}: no items.h constant')
+            if key(ALIAS.get(name, name)) in shown: none.append(name)
             continue
         if len(consts) > 1:
             report(f'  ITEM TEXT: {name}: several items.h constants {", ".join(consts)}; the first is used')
         const = consts[0]
         desc = hack[const][1]
         if not desc:
-            report(f'  ITEM TEXT: {name} ({const}): no description')
-            none.append(name)
+            if key(ALIAS.get(name, name)) in shown: report(f'  ITEM TEXT: {name} ({const}): no description')
+            if key(ALIAS.get(name, name)) in shown: none.append(name)
             continue
         if const not in stock:
             report(f'  ITEM TEXT: {name} ({const}) is not in stock items.h: marked changed')

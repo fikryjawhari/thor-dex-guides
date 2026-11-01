@@ -312,13 +312,16 @@ def item_text(D, hacked, vanilla, extract_dir):
     names += [mon['i'] for group in D['TR']['g'] for section in group['sec'] for trainer in section['tr']
               for mon in trainer['p'] if mon.get('i')]
     names += [x['i'] for x in D.get('MI', []) if x.get('i')]
+    shown = {norm(name) for name in names}   # then every other item the game has (MI is only made in finalise)
+    names += [item['name'] for item in hacked['items'] if item['name'] and norm(item['name']) not in shown
+              and not re.match(r'(TM|HM)\d', item['name'])]
     texts, missing = {}, []
     for name in dict.fromkeys(name for name in names if name not in no_text):
         item = by_name.get(name) or by_norm.get(norm(name))  # the guide's own spelling may differ ("SilverPowder")
         text = squash(item['desc']) if item else ''
         if text:
             texts[name] = [text, int(text != vanilla_text.get(item['id']))]
-        else:
+        elif norm(name) in shown:
             missing.append(name)
     with open(Path(extract_dir, 'item_desc.json'), 'w', encoding='utf8', newline='\n') as f:
         f.write(json.dumps(texts, ensure_ascii=False, indent=1, sort_keys=True) + '\n')

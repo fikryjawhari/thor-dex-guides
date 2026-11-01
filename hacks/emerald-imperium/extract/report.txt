@@ -45,6 +45,95 @@ changes doc: moves 124 not in dex ['Strange Stream'] conflicts 7
 changes doc: abilities 30 not in dex data []
 changes doc: dex-detected move changes not in the doc 55 ['Grassy Glide', 'Substitute', 'Charm', 'Chloroblast', 'Dual Wingbeat', 'Pounce', 'Psychic Fangs', 'Poison Tail', 'Zippy Zap', 'Freezy Frost', 'Sparkly Swirl', 'Bouncy Bubble', 'Leech Life', 'Spiky Shield', 'Absorb', 'Sappy Seed', 'Mud-Slap', 'Mud Bomb', 'Leaf Tornado', 'Barb Barrage', 'Supercell Slam', 'Mirror Shot', 'Dark Void', 'Bonemerang', 'Strange Steam', 'Hyper Beam', 'Bleakwind Storm', 'Triple Dive', 'Victory Dance', 'Ion Deluge', 'Mystical Power', 'Twin Beam', 'Spin Out', 'Psyshield Bash', 'Triple Arrows', 'Silk Trap', 'Sandsear Storm', 'Mountain Gale', 'Bitter Malice', 'Roar of Time', 'Spacial Rend', 'Mat Block', 'Night Daze', 'Wildbolt Storm', 'Ice Burn', 'Mighty Cleave', 'Baneful Bunker', 'Burning Bulwark', "Nature's Madness", 'Obstruct', 'Meteor Assault', 'Springtide Storm', 'Skitter Smack', 'Ruination', 'Matcha Gotcha']
 changes doc merged: P vc 534 P cf 9 MV dc 124 MV cf [('Fly', ['Changes doc says PP 10, EI Dex says 15']), ('Fury Attack', ['Changes doc says power 15, EI Dex says 20']), ('Thunder Wave', ['Changes doc says accuracy 85, EI Dex says 90', 'Changes doc says PP 15, EI Dex says 20'])] AB doc 30
+  ITEM TEXT: Torterrite (ITEM_TORTERRITE) is not in stock items.h: marked changed
+  ITEM TEXT: EmpoleoniteO (ITEM_EMPOLEONITE_O) is not in stock items.h: marked changed
+  ITEM TEXT: EmpoleoniteD (ITEM_EMPOLEONITE_D) is not in stock items.h: marked changed
+  ITEM TEXT: Infernapite (ITEM_INFERNAPITE) is not in stock items.h: marked changed
+  ITEM TEXT: Luxite (ITEM_LUXRITE) is not in stock items.h: marked changed
+  ITEM TEXT: Roseradite (ITEM_ROSERADITE) is not in stock items.h: marked changed
+  ITEM TEXT: Dusknoirite (ITEM_DUSKNOIRITE) is not in stock items.h: marked changed
+  ITEM TEXT: Garbodorite (ITEM_GARBODORITE) is not in stock items.h: marked changed
+  ITEM TEXT: Kinglerite (ITEM_KINGLERITE) is not in stock items.h: marked changed
+  ITEM TEXT: Drednawite (ITEM_DREDNAWITE) is not in stock items.h: marked changed
+  ITEM TEXT: Toxtricitite (ITEM_TOXTRICITITE) is not in stock items.h: marked changed
+  ITEM TEXT: Laprasite (ITEM_LAPRASITE) is not in stock items.h: marked changed
+  ITEM TEXT: Sandacondite (ITEM_SANDACONDITE) is not in stock items.h: marked changed
+  ITEM TEXT: Applite (ITEM_APPLITE) is not in stock items.h: marked changed
+  ITEM TEXT: Machampite (ITEM_MACHAMPITE) is not in stock items.h: marked changed
+  ITEM TEXT: Coalossite (ITEM_COALOSSITE) is not in stock items.h: marked changed
+  ITEM TEXT: Slakite (ITEM_SLAKITE) is not in stock items.h: marked changed
+  ITEM TEXT: Butterfrite (ITEM_BUTTERFRITE) is not in stock items.h: marked changed
+  ITEM TEXT: Orbeetlite (ITEM_ORBEETLITE) is not in stock items.h: marked changed
+  ITEM TEXT: Snorlaxite (ITEM_SNORLAXITE) is not in stock items.h: marked changed
+  ITEM TEXT: Copperajite (ITEM_COPPERAJITE) is not in stock items.h: marked changed
+  ITEM TEXT: Centiskite (ITEM_CENTISKITE) is not in stock items.h: marked changed
+  ITEM TEXT: Grimmite (ITEM_GRIMMITE) is not in stock items.h: marked changed
+  ITEM TEXT: Leaf stones: no items.h constant
+  ITEM TEXT: Weakness Policy matched by its constant ITEM_WEAKNESS_POLICY (the game squeezes the name)
+  ITEM TEXT: Terrain Extender matched by its constant ITEM_TERRAIN_EXTENDER (the game squeezes the name)
+  ITEM TEXT: Kicking Shoes (ITEM_KICKING_SHOES) is not in stock items.h: marked changed
+  ITEM TEXT: Protective Pads matched by its constant ITEM_PROTECTIVE_PADS (the game squeezes the name)
+  ITEM TEXT: Heavy-Duty Boots matched by its constant ITEM_HEAVY_DUTY_BOOTS (the game squeezes the name)
+  ITEM TEXT: TM 015 - Electroweb: no items.h constant
+  ITEM TEXT: TM 039 - Rock Tomb: no items.h constant
+  ITEM TEXT: TM 040 - Aerial Ace: no items.h constant
+  ITEM TEXT: TM 087 - Low Kick: no items.h constant
+  ITEM TEXT: TM 088 - Pluck: no items.h constant
+  ITEM TEXT: TM 097 - Snarl: no items.h constant
+  ITEM TEXT: TM 103 - Smack Down: no items.h constant
+  ITEM TEXT: Ability Capsule matched by its constant ITEM_ABILITY_CAPSULE (the game squeezes the name)
+  ITEM TEXT: Chople Berry, Colbur Berry, Wacan Berry,: no items.h constant
+  ITEM TEXT: Ability Patch (after getting them): no items.h constant
+  ITEM TEXT: Charti Berry, Chilan Berry, Haban Berry,: no items.h constant
+  ITEM TEXT: Roseli Berry, Shuca Berry, Babiri Berry,: no items.h constant
+  ITEM TEXT: Kasib Berry, Coba Berry, Kebia Berry,: no items.h constant
+  ITEM TEXT: Occa Berry, Pasho Berry, Payapa Berry,: no items.h constant
+  ITEM TEXT: Rindo Berry, Yache Berry, Tanga Berry: no items.h constant
+  ITEM TEXT: Link Cable: no items.h constant
+  ITEM TEXT: TM 006 - Toxic: no items.h constant
+  ITEM TEXT: TM 012 -Taunt: no items.h constant
+  ITEM TEXT: TM 016 - Light Screen: no items.h constant
+  ITEM TEXT: TM 017 - Protect: no items.h constant
+  ITEM TEXT: TM 019 - Giga Drain: no items.h constant
+  ITEM TEXT: TM 033 - Reflect: no items.h constant
+  ITEM TEXT: TM 044 - Rest: no items.h constant
+  ITEM TEXT: TM 049 - Leech Life: no items.h constant
+  ITEM TEXT: TM 062 - Silver Wind: no items.h constant
+  ITEM TEXT: TM 063 - Venoshock: no items.h constant
+  ITEM TEXT: TM 064 - Explosion: no items.h constant
+  ITEM TEXT: TM 065 - Shadow Claw: no items.h constant
+  ITEM TEXT: TM 066 - Dazzling Gleam: no items.h constant
+  ITEM TEXT: TM 072-  Psyshock: no items.h constant
+  ITEM TEXT: TM 074 - Gyro Ball: no items.h constant
+  ITEM TEXT: TM 080 - Rock Slide: no items.h constant
+  ITEM TEXT: TM 082 - Sleep Talk: no items.h constant
+  ITEM TEXT: TM 084 - Poison Jab: no items.h constant
+  ITEM TEXT: TM 093 - Dragon Tail: no items.h constant
+  ITEM TEXT: TM 102 - Scorching Sands: no items.h constant
+  ITEM TEXT: TM 108 - Ice Spinner: no items.h constant
+  ITEM TEXT: TM 169 - Spikes: no items.h constant
+  ITEM TEXT: TM 173 - Gravity: no items.h constant
+  ITEM TEXT: TM 013 - Ice Beam: no items.h constant
+  ITEM TEXT: TM 020 - Hyper Voice: no items.h constant
+  ITEM TEXT: TM 024 - Thunderbolt: no items.h constant
+  ITEM TEXT: TM 035 - Flamethrower: no items.h constant
+  ITEM TEXT: TM 036 - Sludge Bomb: no items.h constant
+  ITEM TEXT: TM 053 - Energy Ball: no items.h constant
+  ITEM TEXT: TM 079 - Dark Pulse: no items.h constant
+  ITEM TEXT: Electric Memory matched by its constant ITEM_ELECTRIC_MEMORY (the game squeezes the name)
+  ITEM TEXT: Fighting Memory matched by its constant ITEM_FIGHTING_MEMORY (the game squeezes the name)
+  ITEM TEXT: Luxrite (ITEM_LUXRITE) is not in stock items.h: marked changed
+  ITEM TEXT: Empoleonite D (ITEM_EMPOLEONITE_D) is not in stock items.h: marked changed
+  ITEM TEXT: Wellspring Mask matched by its constant ITEM_WELLSPRING_MASK (the game squeezes the name)
+  ITEM TEXT: Empoleonite O (ITEM_EMPOLEONITE_O) is not in stock items.h: marked changed
+  ITEM TEXT: Hearthflame Mask matched by its constant ITEM_HEARTHFLAME_MASK (the game squeezes the name)
+  ITEM TEXT: Enigma Berry: several items.h constants ITEM_ENIGMA_BERRY, ITEM_ENIGMA_BERRY_E_READER; the first is used
+  ITEM TEXT: Steel Feather (ITEM_STEEL_FEATHER) is not in stock items.h: marked changed
+  ITEM TEXT: PokéVial (ITEM_POKE_VIAL) is not in stock items.h: marked changed
+  ITEM TEXT: InfiniteCandy (ITEM_INFINITE_CANDY) is not in stock items.h: marked changed
+  ITEM TEXT: InfiniteRepel (ITEM_INFINITE_REPEL) is not in stock items.h: marked changed
+  ITEM TEXT: Hex Orb (ITEM_HEX_ORB) is not in stock items.h: marked changed
+ITEM TEXT: 769 items with text (137 changed from stock), 432 TMs / HMs (the page shows the move), 46 with none: Leaf stones, TM 015 - Electroweb, TM 039 - Rock Tomb, TM 040 - Aerial Ace, TM 087 - Low Kick, TM 088 - Pluck, TM 097 - Snarl, TM 103 - Smack Down, Chople Berry, Colbur Berry, Wacan Berry,, Ability Patch (after getting them), Charti Berry, Chilan Berry, Haban Berry,, Roseli Berry, Shuca Berry, Babiri Berry,, Kasib Berry, Coba Berry, Kebia Berry,, Occa Berry, Pasho Berry, Payapa Berry,, Rindo Berry, Yache Berry, Tanga Berry, Link Cable, TM 006 - Toxic, TM 012 -Taunt, TM 016 - Light Screen, TM 017 - Protect, TM 019 - Giga Drain, TM 033 - Reflect, TM 044 - Rest, TM 049 - Leech Life, TM 062 - Silver Wind, TM 063 - Venoshock, TM 064 - Explosion, TM 065 - Shadow Claw, TM 066 - Dazzling Gleam, TM 072-  Psyshock, TM 074 - Gyro Ball, TM 080 - Rock Slide, TM 082 - Sleep Talk, TM 084 - Poison Jab, TM 093 - Dragon Tail, TM 102 - Scorching Sands, TM 108 - Ice Spinner, TM 169 - Spikes, TM 173 - Gravity, TM 013 - Ice Beam, TM 020 - Hyper Voice, TM 024 - Thunderbolt, TM 035 - Flamethrower, TM 036 - Sludge Bomb, TM 053 - Energy Ball, TM 079 - Dark Pulse
 items: TM place and shop retained: TM006 Toxic ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
 items: TM place and shop retained: TM012 Taunt ["Found: Mauville City's Game Corner", "Shop: Mauville City's Game Corner (Middle woman) · ₽100"]
 items: TM place and shop retained: TM013 Ice Beam ["Found: Lavaridge Town's outdoor Mart worker", 'Shop: Lavaridge Town Outdoor Clerk · ₽100']
@@ -208,51 +297,15 @@ items: walkthrough rows added as IT lines: 122
 pickup keys: 391 pickups, 391 walkthrough rows keyed
 prune: kept 1208 removed 67 1487, 1488, 150, 919, 920, 151, 249, 250, 380, 944, 381, 945, 386, 1054, 1055, 1056, 1059, 1060, 483, 1069, 484, 1070, 487, 1071, 493, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 644, 1141, 1157, 1158, 1159, 1160, 1161, 1162, 717, 718, 1164, 1165, 1166, 1167, 819, 820, 888, 1227, 889, 890, 1229, 1318, 1400, 1431, 1432
 trainers put in walkthrough order: Wattson Split [Cap 34], Mt. Chimney Magma bosses Split [Cap 44], Flannery Split [Cap 47], Trick House Split [Cap 56], Tate and Liza Split [Cap 76]
-item name: BoosterEnergy -> Booster Energy (20 use(s), IT spelling)
-item name: Empoleonite D -> EmpoleoniteD (4 use(s), IT spelling)
-item name: Empoleonite O -> EmpoleoniteO (3 use(s), IT spelling)
+item name: BoosterEnergy -> Booster Energy (20 use(s), Items tab spelling)
+item name: EmpoleoniteD -> Empoleonite D (3 use(s))
+item name: EmpoleoniteO -> Empoleonite O (3 use(s))
 item name: Never-MeltIce -> Never-Melt Ice (6 use(s))
-item name: Pasho Berry -> Passho Berry (1 use(s), IT spelling)
-item text: 279 own, 1 pooled, 0 with no description
+item name: Pasho Berry -> Passho Berry (1 use(s), Items tab spelling)
+item text: 760 own, 1 pooled, 0 with no description
 in battle: 163 shown items with battle text, 117 without
 in battle: 719 moves with battle text, 70 without
-  ITEM TEXT: Heavy-Duty Boots matched by its constant ITEM_HEAVY_DUTY_BOOTS (the game squeezes the name)
-  ITEM TEXT: Kicking Shoes (ITEM_KICKING_SHOES) is not in stock items.h: marked changed
-  ITEM TEXT: Protective Pads matched by its constant ITEM_PROTECTIVE_PADS (the game squeezes the name)
-  ITEM TEXT: Terrain Extender matched by its constant ITEM_TERRAIN_EXTENDER (the game squeezes the name)
-  ITEM TEXT: Weakness Policy matched by its constant ITEM_WEAKNESS_POLICY (the game squeezes the name)
-  ITEM TEXT: Link Cable: no items.h constant
-  ITEM TEXT: Ability Capsule matched by its constant ITEM_ABILITY_CAPSULE (the game squeezes the name)
-  ITEM TEXT: Applite (ITEM_APPLITE) is not in stock items.h: marked changed
-  ITEM TEXT: Butterfrite (ITEM_BUTTERFRITE) is not in stock items.h: marked changed
-  ITEM TEXT: Centiskite (ITEM_CENTISKITE) is not in stock items.h: marked changed
-  ITEM TEXT: Coalossite (ITEM_COALOSSITE) is not in stock items.h: marked changed
-  ITEM TEXT: Copperajite (ITEM_COPPERAJITE) is not in stock items.h: marked changed
-  ITEM TEXT: Drednawite (ITEM_DREDNAWITE) is not in stock items.h: marked changed
-  ITEM TEXT: Dusknoirite (ITEM_DUSKNOIRITE) is not in stock items.h: marked changed
-  ITEM TEXT: EmpoleoniteD (ITEM_EMPOLEONITE_D) is not in stock items.h: marked changed
-  ITEM TEXT: EmpoleoniteO (ITEM_EMPOLEONITE_O) is not in stock items.h: marked changed
-  ITEM TEXT: Garbodorite (ITEM_GARBODORITE) is not in stock items.h: marked changed
-  ITEM TEXT: Grimmite (ITEM_GRIMMITE) is not in stock items.h: marked changed
-  ITEM TEXT: Infernapite (ITEM_INFERNAPITE) is not in stock items.h: marked changed
-  ITEM TEXT: Kinglerite (ITEM_KINGLERITE) is not in stock items.h: marked changed
-  ITEM TEXT: Laprasite (ITEM_LAPRASITE) is not in stock items.h: marked changed
-  ITEM TEXT: Luxite (ITEM_LUXRITE) is not in stock items.h: marked changed
-  ITEM TEXT: Machampite (ITEM_MACHAMPITE) is not in stock items.h: marked changed
-  ITEM TEXT: Orbeetlite (ITEM_ORBEETLITE) is not in stock items.h: marked changed
-  ITEM TEXT: Roseradite (ITEM_ROSERADITE) is not in stock items.h: marked changed
-  ITEM TEXT: Sandacondite (ITEM_SANDACONDITE) is not in stock items.h: marked changed
-  ITEM TEXT: Slakite (ITEM_SLAKITE) is not in stock items.h: marked changed
-  ITEM TEXT: Snorlaxite (ITEM_SNORLAXITE) is not in stock items.h: marked changed
-  ITEM TEXT: Torterrite (ITEM_TORTERRITE) is not in stock items.h: marked changed
-  ITEM TEXT: Toxtricitite (ITEM_TOXTRICITITE) is not in stock items.h: marked changed
-  ITEM TEXT: Electric Memory matched by its constant ITEM_ELECTRIC_MEMORY (the game squeezes the name)
-  ITEM TEXT: Fighting Memory matched by its constant ITEM_FIGHTING_MEMORY (the game squeezes the name)
-  ITEM TEXT: Luxrite (ITEM_LUXRITE) is not in stock items.h: marked changed
-  ITEM TEXT: Wellspring Mask matched by its constant ITEM_WELLSPRING_MASK (the game squeezes the name)
-  ITEM TEXT: Hearthflame Mask matched by its constant ITEM_HEARTHFLAME_MASK (the game squeezes the name)
-ITEM TEXT: 279 items with text (56 changed from stock), 182 TMs / HMs (the page shows the move), 1 with none: Link Cable
 GID species: 1208 of 1208 P ids are game species ids
 GID move: 789 of 789 ours matched by name
 GID ability: 284 of 284 ours matched by name
-GID items: 18 spelt in full: AbilityShield -> Ability Shield, AdrenalineOrb -> Adrenaline Orb, BoosterEnergy -> Booster Energy, CharizarditeX -> Charizardite X, CharizarditeY -> Charizardite Y, DeepSeaScale -> Deep Sea Scale, DeepSeaTooth -> Deep Sea Tooth, GalaricaCuff -> Galarica Cuff, KickingShoes -> Kicking Shoes, LustrousGlobe -> Lustrous Globe, Never-MeltIce -> Never-Melt Ice, PrettyFeather -> Pretty Feather, PsychicMemory -> Psychic Memory, PunchingGlove -> Punching Glove, RustedShield -> Rusted Shield, RustedSword -> Rusted Sword, SafetyGoggles -> Safety Goggles, Upgrade -> Up-Grade
+GID items: 20 spelt in full: AbilityShield -> Ability Shield, AdrenalineOrb -> Adrenaline Orb, BoosterEnergy -> Booster Energy, CharizarditeX -> Charizardite X, CharizarditeY -> Charizardite Y, DeepSeaScale -> Deep Sea Scale, DeepSeaTooth -> Deep Sea Tooth, EmpoleoniteD -> Empoleonite D, EmpoleoniteO -> Empoleonite O, GalaricaCuff -> Galarica Cuff, KickingShoes -> Kicking Shoes, LustrousGlobe -> Lustrous Globe, Never-MeltIce -> Never-Melt Ice, PrettyFeather -> Pretty Feather, PsychicMemory -> Psychic Memory, PunchingGlove -> Punching Glove, RustedShield -> Rusted Shield, RustedSword -> Rusted Sword, SafetyGoggles -> Safety Goggles, Upgrade -> Up-Grade

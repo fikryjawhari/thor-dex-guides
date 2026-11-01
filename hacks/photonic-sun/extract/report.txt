@@ -49,7 +49,7 @@ key items removed: Surge Badge
 walkthrough: on the way stops 5 : Hau'oli Cemetery, Malie Garden, Thrifty Megamart, Victory Road, Ruins of Conflict
 walkthrough: 31 splits 148 stops, 326 items placed, 13 not placed
 items: Shops 126, TMs 100, Z-Crystals 35, Evolution Items 27, Held Items 118, Stats and Abilities 30, Key Items 29
-item text: 371 changed 0 no text: none
+item text: 743 changed 0 no text: none
 items: TM place and shop retained: TM26 Earthquake ['Found: Resolution Cave', 'Found: Tapu Village (Pokémon Center) shop', 'Shop: Tapu Village · Pokémon Center']
 items: TM place and shop retained: TM50 Overheat ['Found: Poni Meadow', 'Found: Tapu Village (Pokémon Center) shop', 'Shop: Tapu Village · Pokémon Center']
 items: TM place and shop retained: TM60 Aura Sphere ['Found: Was Quash in Ultra Sun', 'Found: Poni Plains', 'Found: Tapu Village (Pokémon Center) shop', 'Shop: Tapu Village · Pokémon Center']
@@ -69,7 +69,7 @@ trainers put in walkthrough order: Post-game
 item name: SilverPowder -> Silver Powder (3 use(s))
 item name: Thunderstone -> Thunder Stone (3 use(s), Items tab spelling)
 item name: TwistedSpoon -> Twisted Spoon (3 use(s))
-item text: 368 own, 0 pooled, 0 with no description
+item text: 740 own, 0 pooled, 0 with no description
 in battle: 208 shown items with battle text, 160 without
 in battle: 637 moves with battle text, 91 without
 GID: 1107 species/form keys for 928 species, 728 moves, 233 abilities, 896 item names
