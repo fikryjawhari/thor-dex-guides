@@ -247,9 +247,51 @@ def trainer_checks(D):
           (len(relative), len(doubles)))
 
 
+def check_walk(D):
+    """WK (notes.md → Walkthrough): the 18 Trainers boxes in TR.caps order, every card in one stop of its own split,
+    each split ending at its cap boss, every Found / Also pickup placed or in np, stop keys = walk.py's ROUTE."""
+    import walk
+    W, TR = D['WK'], D['TR']
+    assert [s['n'] for s in W['splits']] == [g['n'] for g in TR['g']], 'walk: splits are not the Trainers boxes'
+    assert [re.sub(r'(?: Split)? \[Cap \d+\]$', '', s['n']) for s in W['splits']] == [n for n, c in TR['caps']]
+    assert [int(re.search(r'\[Cap (\d+)\]$', s['n']).group(1)) for s in W['splits']] == [c for n, c in TR['caps']]
+    stops = [(si, st) for si, s in enumerate(W['splits']) for st in s['st']]
+    keys = [st['k'] for _, st in stops]
+    assert keys == [r[1] for r in walk.route()], 'walk: stop keys differ from ROUTE'
+    assert len(set(keys)) == len(keys) and not any(re.match(r'\d+\.\d+', k) for k in keys)
+    where = collections.defaultdict(list)
+    for si, st in stops:
+        for k in st['tr']:
+            where[k].append(si)
+    cards = {t['k']: gi for gi, g in enumerate(TR['g']) for s in g['sec'] for t in s['tr']}
+    assert set(where) == set(cards), 'walk: trainers missing %s, unknown %s' % (
+        sorted(set(cards) - set(where))[:5], sorted(set(where) - set(cards))[:5])
+    wrong = [(k, v, cards[k]) for k, v in where.items() if v != [cards[k]]]
+    assert not wrong, 'walk: a card twice or outside its box: %s' % wrong[:5]
+    # each split's last stop ends with its cap boss (data.js trainer ids; the Champion's three starter teams)
+    tid = {e['k']: e['id'] for e in json.load(open(HERE / 'trainer_keys.json', encoding='utf-8'))}
+    bosses = ['414', '46', '415', '416', '417', '348', '54', '349', '420', '418', '61', '419', '68', '69', '74', '26',
+              '438 439 440']
+    for si, boss in enumerate(bosses):
+        last = W['splits'][si]['st'][-1]['tr']
+        assert last and tid[last[-1]] in boss.split(), (W['splits'][si]['n'], last[-1:])
+    # pickups: every keyed Found / Also line of IT is a walkthrough row (a stop or np), each row keyed once
+    rows = [r for _, st in stops for r in st['it']] + W['np']
+    wk = [r[4] for r in rows]
+    assert all(wk) and len(wk) == len(set(wk)), 'walk: an item row unkeyed or twice'
+    it = {r[5][i] for b in D['IT'] for r in b['r'] for i, line in enumerate(r[1].splitlines())
+          if r[5][i] and line.startswith(('Found:', 'Also:'))}
+    assert it == set(wk), 'walk: pickups not in the walkthrough %d, rows with no Found / Also line %d' % (
+        len(it - set(wk)), len(set(wk) - it))
+    print('PASS walkthrough: %d splits = TR.caps, %d stops (keys from ROUTE), %d cards each in one stop of its box, '
+          'cap bosses last, %d pickups placed, %d in np' % (len(W['splits']), len(stops), len(where),
+                                                             len(rows) - len(W['np']), len(W['np'])))
+
+
 check_items()
 check_locations(D, FAIL)
 trainer_checks(D)
+check_walk(D)
 if FAIL:
     print('FAIL radical-red extract-check:\n  ' + '\n  '.join(FAIL))
     sys.exit(1)
