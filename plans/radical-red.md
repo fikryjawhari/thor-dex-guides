@@ -39,6 +39,13 @@ Each unit adds the decisions it had to take to **Decisions taken in units** belo
 
 (units append here: `- [unit] decision (source)`)
 
+- [unit 3] Use the Trainer Order spine with 18 unchanged Hardcore caps, but keep recommended visit split separate from source unlock/default cap; a bucket is not a physical door lock (Main E44-E78, Trainer Order's 28/36 and 36/44 ranges, data.js areas/caps; full route in radical-red-walk.md).
+- [unit 3] Place all 221 source areas and 464 trainer identities; resolve duplicate area references for Simon 218, Tammy 447 and Anthony 531 using each trainer's own cap/areaName, not the stale area membership (data.js trainers and areas 12/13, 86/88, 173/183).
+- [unit 3] Silph Brendan 55 and Cave Lance 39 are partners, not enemies; Ketchup 20 then 19 is a next-day rematch, Oak 200 then 210 is back-to-back, and numbered gauntlets override source array order (Team Rocket E240/E409, Optional Bosses E148/E176, Postgame E28 and gauntlet headers; locations Statics F116).
+- [unit 3] Brock/Misty/Surge rematches are optional in Hardcore; Bugsy 47/8 are pre-/post-Surge versions, not two mandatory battles; genuine team alternatives remain distinct source identities (v4.0 changelog opening, Johto Leaders E27/E52, data.js).
+- [unit 3] Retain data's Justin u3/36 and Lewis u11/76 while flagging Trainer Order F231=68 and F366=73; recommend Justin on the post-Sabrina southbound circuit and Lewis after May (data.js trainers 477/219, Main caps, Trainer Order).
+- [unit 3] Postgame ticket prerequisites are only the NPC's suggested opponents plus Gengarite, not an invented exhaustive boss list; ring gates chambers, and optional circuit order/ordinary spatial paths stay labelled guesses (item sheet F422, v3.0 changelog; unresolved Red/Abigail geography and Seafoam race floor recorded in radical-red-walk.md).
+
 ## Units
 
 Each unit: a Sol agent in its own worktree, branch off `worktree-radical-red` at the SHA given in its brief, commits
