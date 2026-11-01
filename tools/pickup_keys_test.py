@@ -52,6 +52,10 @@ class PickupKeysTest(unittest.TestCase):
             self.assertFalse(pickup_keys.eligible(text, 'Medicine'), text)
         self.assertTrue(pickup_keys.eligible('Also: City · buy once for $500', 'Medicine'))
         self.assertFalse(pickup_keys.eligible('Found: City', 'Move Tutors'))
+        self.assertTrue(pickup_keys.eligible('Shop: City · ₽10,000', 'TMs and HMs'))
+        self.assertTrue(pickup_keys.eligible('Shop: City · 250,000', 'Key Items'))
+        self.assertFalse(pickup_keys.eligible('Shop: City · ₽300', 'Medicine'))
+        self.assertFalse(pickup_keys.eligible('Shop: City · ₽3,000', 'TMs and HMs', {'Key Items'}))
 
     def test_guides_twice(self):
         for source in (ROOT / 'hacks').glob('*/data.json'):

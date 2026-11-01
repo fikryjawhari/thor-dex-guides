@@ -90,6 +90,7 @@ RULES = {
                    'Choice specs': 'Choice Specs', 'Assault vest': 'Assault Vest', 'Punching glove': 'Punching Glove'},
     },
     'hardlove-gold': {'reorder': set(GAME_ORDER_BOXES), 'other': HG_OTHER,
+                      'once': {'Key Items', 'Mega Stones', 'Z-Crystals'},    # its TMs are single-use: a bought one is no pickup
                       'also': {'Charcoal'}},        # Found: -> Also: (it is the Cutters' reward after Bugsy, not lying around)
     'eternal-x': {'reorder': {'TMs and HMs/HMs'},
                   'also': {'Poké Radar', "King's Rock", 'Blastoisinite', 'Charizardite X', 'Venusaurite'}},
@@ -314,6 +315,9 @@ def remove_shop_place(text, item, say):
     notes = [m.group() for line in lines for m in [_NOTE.search(line)] if m]
     lines = [_NOTE.sub('', line) for line in lines]
     out = [line for line in lines if not any(same_shop(line, shop) for shop in shops)]
+    for line in lines:
+        if line not in out:
+            say('items: TM place line that only names its shop dropped:', item, line)
     if notes:
         out[0] += ''.join(dict.fromkeys(notes))
     if any(line.startswith(('Found:', 'Also:')) for line in out):

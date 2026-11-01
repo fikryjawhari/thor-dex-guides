@@ -15,8 +15,14 @@ REPEATABLE = re.compile(r'\b(?:repeatable|daily|every day|each day|once (?:a|per
                         r'|^Also: (?:Pickup\b|has a Use option)', re.I)  # the Pickup ability's odds, a use note: no place
 
 
-def eligible(text, box):
-    return (box not in ('Useful NPCs', 'Move Tutors') and text.startswith(('Found:', 'Also:'))
+ONCE = frozenset({'Key Items', 'TMs and HMs', 'Mega Stones', 'Z-Crystals'})   # one of a kind: bought ones too
+
+
+def eligible(text, box, once=ONCE):
+    """A pickup: a Found / Also line, or a Shop line of a one-of-a-kind item (`once` boxes: a hack whose TMs are
+    single-use leaves TMs and HMs out); never Wild, Move Tutors / Useful NPCs or a repeatable line."""
+    labels = ('Found:', 'Also:', 'Shop:') if box in once else ('Found:', 'Also:')
+    return (box not in ('Useful NPCs', 'Move Tutors') and text.startswith(labels)
             and not REPEATABLE.search(text))
 
 
@@ -29,7 +35,7 @@ def walk_rows(data):
         yield '', row
 
 
-def pickups(data):
+def pickups(data, once=ONCE):
     """Return acquisition identities and writable (array, index) references to each."""
     locations = {}
     for place, row in walk_rows(data):
@@ -44,9 +50,9 @@ def pickups(data):
             lines = row[1].splitlines()
             row[5:] = [[0] * len(lines)]
             for index, text in enumerate(lines):
-                if not eligible(text, box['n']):
+                if not eligible(text, box['n'], once):
                     continue
-                place = re.sub(r'^(?:Found|Also):\s*', '', text).split(' · ', 1)[0].strip().rstrip('.')
+                place = re.sub(r'^(?:Found|Also|Shop):\s*', '', text).split(' · ', 1)[0].strip().rstrip('.')
                 stops = locations.get((row[0], text), [])
                 if len(set(stops)) == 1:
                     place = stops[0]
@@ -55,9 +61,9 @@ def pickups(data):
                 entry['refs'].append((row[5], index))
     for place, row in walk_rows(data):
         entry = found.get((row[1], row[2]))
-        if entry and eligible(row[2], row[0]):
+        if entry and eligible(row[2], row[0], once):
             entry['refs'].append((row, 4))
-        elif eligible(row[2], row[0]):
+        elif eligible(row[2], row[0], once):
             raise AssertionError(f'pickup keys: walkthrough item has no IT line: {place}: {row[:3]}')
     return list(found.values())
 
@@ -102,10 +108,10 @@ def write(path, table):
         stream.write(text)
 
 
-def stabilise(data, path, report):
+def stabilise(data, path, report, once=ONCE):
     seeded = os.path.exists(path)
     table = read(path)
-    entries = pickups(data)
+    entries = pickups(data, once)
     pairs = match(table, entries)
     loose, added = [], []
     old_count = len(table)
@@ -140,7 +146,7 @@ def stabilise(data, path, report):
     write(path, table)
 
 
-def check(data, path):
+def check(data, path, once=ONCE):
     known = {entry['k'] for entry in read(path)}
     issues = []
     item_keys = set()
@@ -151,12 +157,12 @@ def check(data, path):
                 issues.append(f'{row[0]}: pickup key / line count')
                 continue
             for text, key in zip(lines, row[5]):
-                if bool(key) != bool(eligible(text, box['n'])) or key and key not in known:
+                if bool(key) != bool(eligible(text, box['n'], once)) or key and key not in known:
                     issues.append(f'{row[0]}: invalid pickup key {key!r}')
                 if key:
                     item_keys.add((row[0], text, key))
     for place, row in walk_rows(data):
-        if len(row) != 5 or bool(row[4]) != bool(eligible(row[2], row[0])):
+        if len(row) != 5 or bool(row[4]) != bool(eligible(row[2], row[0], once)):
             issues.append(f'{place}: invalid walkthrough pickup key: {row[:3]}')
         elif row[4] and (row[1], row[2], row[4]) not in item_keys:
             issues.append(f'{place}: walkthrough / IT pickup mismatch: {row[:3]}')

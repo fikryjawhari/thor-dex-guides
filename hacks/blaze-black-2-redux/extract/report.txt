@@ -2125,10 +2125,12 @@ items: TM place and shop retained: TM51 Wave Crash ['Found: Humilau City', 'Foun
 items: TM place and shop retained: TM17 Protect ['Found: Humilau City', 'Shop: Battle Subway — Items / Exchange Service Corner / Pokémon Black 2 and White 2 / Left attendant; 6 BP; Challenge: absent until the postgame Route 3 Suicune sighting', 'Shop: Pokémon World Tournament — Exchange Service Corner / Left attendant; 6 BP; Challenge: absent until the postgame Route 3 Suicune sighting']
 items: TM place and shop retained: TM07 Hail ['Found: Mistralton City Pokémon Center', 'Shop: Mistralton City — Poké Mart / Technical Machine department (Lower cashier); $50000']
 items: TM place and shop retained: TM11 Sunny Day ['Found: Mistralton City Pokémon Center', 'Shop: Mistralton City — Poké Mart / Technical Machine department (Lower cashier); $50000']
+items: TM place line that only names its shop dropped: TM15 Hyper Beam Found: Shopping Mall Nine
 items: TM place and shop retained: TM16 Light Screen ['Found: Nimbasa City Pokémon Center', 'Shop: Nimbasa City — Poké Mart / Technical Machine department (Lower cashier); $30000']
 items: TM place and shop retained: TM18 Rain Dance ['Found: Mistralton City Pokémon Center', 'Shop: Mistralton City — Poké Mart / Technical Machine department (Lower cashier); $50000']
 items: TM place and shop retained: TM33 Reflect ['Found: Nimbasa City Pokémon Center', 'Shop: Nimbasa City — Poké Mart / Technical Machine department (Lower cashier); $30000']
 items: TM place and shop retained: TM37 Sandstorm ['Found: Mistralton City Pokémon Center', 'Shop: Mistralton City — Poké Mart / Technical Machine department (Lower cashier); $50000']
+items: TM place line that only names its shop dropped: TM68 Giga Impact Found: Shopping Mall Nine
 items: TM place and shop retained: TM73 Thunder Wave ['Found: Nimbasa City Pokémon Center', 'Shop: Nimbasa City — Poké Mart / Technical Machine department (Lower cashier); $10000']
 items: TM place and shop retained: TM74 Gyro Ball ['Found: Nimbasa City Pokémon Center', 'Shop: Nimbasa City — Poké Mart / Technical Machine department (Lower cashier); $10000']
 items: walkthrough rows matched to an Items line at the same place: 2
@@ -2184,7 +2186,7 @@ pickup keys: 42 table entries no pickup matched
   p740: Rare Candy (Nimbasa City)
   p741: Rare Candy (Nimbasa City)
   p742: Rare Candy (Nimbasa City)
-pickup keys: 896 pickups, 896 walkthrough rows keyed
+pickup keys: 952 pickups, 952 walkthrough rows keyed
 item name: BridgeMail M -> Bridge Mail M (2 use(s))
 item name: BridgeMail T -> Bridge Mail T (2 use(s))
 item name: BridgeMail V -> Bridge Mail V (3 use(s))

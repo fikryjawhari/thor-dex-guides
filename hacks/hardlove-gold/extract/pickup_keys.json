@@ -298,5 +298,12 @@
 {"k":"p296","i":"Rare Candy","loc":"Route 27","t":"Found: Route 27, On a rock near the end of the route, above a ledge only accessible from Route 26 (hidden)"},
 {"k":"p297","i":"Rare Candy","loc":"Victory Road 1F","t":"Found: Victory Road, Northeast of the last hole (vanilla)"},
 {"k":"p298","i":"Rare Candy","loc":"Goldenrod City","t":"Also: Goldenrod City Department Store, From a man on the left on the 5th floor, after beating Schorsch. Starter: Litten, Froakie"},
-{"k":"p299","i":"Rare Candy","loc":"SS Aqua 1F","t":"Also: Vermilion City, Received from the Pokémon Fan Club Chairman (vanilla)"}
+{"k":"p299","i":"Rare Candy","loc":"SS Aqua 1F","t":"Also: Vermilion City, Received from the Pokémon Fan Club Chairman (vanilla)"},
+{"k":"p300","i":"Crabominite","loc":"Mahogany Town","t":"Shop: Mahogany Souvenir Shop, Goldenrod City Store after clearing TR Hideout"},
+{"k":"p301","i":"Drampanite","loc":"Mahogany Town","t":"Shop: Mahogany Souvenir Shop, Goldenrod City Store after clearing TR Hideout"},
+{"k":"p302","i":"Hawluchanite","loc":"Mahogany Town","t":"Shop: Mahogany Souvenir Shop, Goldenrod City Store after clearing TR Hideout"},
+{"k":"p303","i":"Houndoominite","loc":"Mahogany Town","t":"Shop: Mahogany Souvenir Shop after defeating Team Rocket"},
+{"k":"p304","i":"Meganiumite","loc":"Mahogany Town","t":"Shop: Mahogany Souvenir Shop after defeating Team Rocket. Starter: Turtwig"},
+{"k":"p305","i":"Scovillainite","loc":"Mahogany Town","t":"Shop: Mahogany Souvenir Shop, Goldenrod City Store after clearing TR Hideout"},
+{"k":"p306","i":"Sharpedonite","loc":"Mahogany Town","t":"Shop: Mahogany Souvenir Shop, Goldenrod City Store after clearing TR Hideout"}
 ]

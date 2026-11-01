@@ -134,6 +134,43 @@ changes doc merged: P vc 534 P cf 9 MV dc 124 MV cf [('Fly', ['Changes doc says 
   ITEM TEXT: InfiniteRepel (ITEM_INFINITE_REPEL) is not in stock items.h: marked changed
   ITEM TEXT: Hex Orb (ITEM_HEX_ORB) is not in stock items.h: marked changed
 ITEM TEXT: 769 items with text (137 changed from stock), 432 TMs / HMs (the page shows the move), 46 with none: Leaf stones, TM 015 - Electroweb, TM 039 - Rock Tomb, TM 040 - Aerial Ace, TM 087 - Low Kick, TM 088 - Pluck, TM 097 - Snarl, TM 103 - Smack Down, Chople Berry, Colbur Berry, Wacan Berry,, Ability Patch (after getting them), Charti Berry, Chilan Berry, Haban Berry,, Roseli Berry, Shuca Berry, Babiri Berry,, Kasib Berry, Coba Berry, Kebia Berry,, Occa Berry, Pasho Berry, Payapa Berry,, Rindo Berry, Yache Berry, Tanga Berry, Link Cable, TM 006 - Toxic, TM 012 -Taunt, TM 016 - Light Screen, TM 017 - Protect, TM 019 - Giga Drain, TM 033 - Reflect, TM 044 - Rest, TM 049 - Leech Life, TM 062 - Silver Wind, TM 063 - Venoshock, TM 064 - Explosion, TM 065 - Shadow Claw, TM 066 - Dazzling Gleam, TM 072-  Psyshock, TM 074 - Gyro Ball, TM 080 - Rock Slide, TM 082 - Sleep Talk, TM 084 - Poison Jab, TM 093 - Dragon Tail, TM 102 - Scorching Sands, TM 108 - Ice Spinner, TM 169 - Spikes, TM 173 - Gravity, TM 013 - Ice Beam, TM 020 - Hyper Voice, TM 024 - Thunderbolt, TM 035 - Flamethrower, TM 036 - Sludge Bomb, TM 053 - Energy Ball, TM 079 - Dark Pulse
+items: TM place line that only names its shop dropped: TM006 Toxic Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM012 Taunt Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM013 Ice Beam Found: Lavaridge Town's outdoor Mart worker
+items: TM place line that only names its shop dropped: TM015 Electroweb Found: Dewford Town's outdoor Mart workers
+items: TM place line that only names its shop dropped: TM016 Light Screen Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM017 Protect Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM019 Giga Drain Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM020 Hyper Voice Found: Lavaridge Town's outdoor Mart worker
+items: TM place line that only names its shop dropped: TM024 Thunderbolt Found: Lavaridge Town's outdoor Mart worker
+items: TM place line that only names its shop dropped: TM033 Reflect Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM035 Flamethrower Found: Lavaridge Town's outdoor Mart worker
+items: TM place line that only names its shop dropped: TM036 Sludge Bomb Found: Lavaridge Town's outdoor Mart worker
+items: TM place line that only names its shop dropped: TM039 Rock Tomb Found: Dewford Town's outdoor Mart workers
+items: TM place line that only names its shop dropped: TM040 Aerial Ace Found: Dewford Town's outdoor Mart workers
+items: TM place line that only names its shop dropped: TM044 Rest Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM049 Leech Life Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM053 Energy Ball Found: Lavaridge Town's outdoor Mart worker
+items: TM place line that only names its shop dropped: TM062 Silver Wind Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM063 Venoshock Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM064 Explosion Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM065 Shadow Claw Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM066 Dazzling Gleam Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM072 Psyshock Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM074 Gyro Ball Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM079 Dark Pulse Found: Lavaridge Town's outdoor Mart worker
+items: TM place line that only names its shop dropped: TM080 Rock Slide Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM082 Sleep Talk Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM084 Poison Jab Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM087 Low Kick Found: Dewford Town's outdoor Mart workers
+items: TM place line that only names its shop dropped: TM088 Pluck Found: Dewford Town's outdoor Mart workers
+items: TM place line that only names its shop dropped: TM093 Dragon Tail Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM097 Snarl Found: Dewford Town's outdoor Mart workers
+items: TM place line that only names its shop dropped: TM102 Scorching Sands Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM103 Smack Down Found: Dewford Town's outdoor Mart workers
+items: TM place line that only names its shop dropped: TM108 Ice Spinner Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM169 Spikes Found: Mauville City's Game Corner
+items: TM place line that only names its shop dropped: TM173 Gravity Found: Mauville City's Game Corner
 items: walkthrough rows matched to an Items line at the same place: 37
   TM015 Electroweb: Found: Dewford Town's outdoor Mart workers
     + Shop: Dewford Town's Outdoor Clerks · ₽100
@@ -249,11 +286,7 @@ items: walkthrough rows matched to an Items line at the same place: 37
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: Also -> Shop 1, Found -> Also 4, Found -> Shop 2
-pickup keys: 3 table entries no pickup matched
-  p167: TM174 Misty Explosion (Sootopolis City)
-  p172: TM170 Steel Beam (Battle Frontier)
-  p173: TM171 Draco Barrage (Battle Frontier)
-pickup keys: 253 pickups, 253 walkthrough rows keyed
+pickup keys: 293 pickups, 293 walkthrough rows keyed
 prune: kept 1208 removed 67 1487, 1488, 150, 919, 920, 151, 249, 250, 380, 944, 381, 945, 386, 1054, 1055, 1056, 1059, 1060, 483, 1069, 484, 1070, 487, 1071, 493, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 644, 1141, 1157, 1158, 1159, 1160, 1161, 1162, 717, 718, 1164, 1165, 1166, 1167, 819, 820, 888, 1227, 889, 890, 1229, 1318, 1400, 1431, 1432
 trainers put in walkthrough order: Wattson Split [Cap 34], Mt. Chimney Magma bosses Split [Cap 44], Flannery Split [Cap 47], Trick House Split [Cap 56], Tate and Liza Split [Cap 76]
 item name: BoosterEnergy -> Booster Energy (20 use(s), Items tab spelling)

@@ -50,13 +50,21 @@ walkthrough: on the way stops 5 : Hau'oli Cemetery, Malie Garden, Thrifty Megama
 walkthrough: 31 splits 148 stops, 326 items placed, 13 not placed
 items: Shops 126, TMs 100, Z-Crystals 35, Evolution Items 27, Held Items 118, Stats and Abilities 30, Key Items 29
 item text: 743 changed 0 no text: none
+items: TM place line that only names its shop dropped: TM26 Earthquake Found: Tapu Village (Pokémon Center) shop
 items: TM place and shop retained: TM26 Earthquake ['Found: Resolution Cave', 'Shop: Tapu Village · Pokémon Center']
+items: TM place line that only names its shop dropped: TM50 Overheat Found: Tapu Village (Pokémon Center) shop
 items: TM place and shop retained: TM50 Overheat ['Found: Poni Meadow', 'Shop: Tapu Village · Pokémon Center']
+items: TM place line that only names its shop dropped: TM60 Aura Sphere Found: Tapu Village (Pokémon Center) shop
 items: TM place and shop retained: TM60 Aura Sphere ['Found: Poni Plains · was Quash in Ultra Sun', 'Shop: Tapu Village · Pokémon Center']
+items: TM place line that only names its shop dropped: TM75 Swords Dance Found: Tapu Village (Pokémon Center) shop
 items: TM place and shop retained: TM75 Swords Dance ['Found: Poni Meadow', 'Shop: Tapu Village · Pokémon Center']
+items: TM place line that only names its shop dropped: TM92 Trick Room Found: Tapu Village (Pokémon Center) shop
 items: TM place and shop retained: TM92 Trick Room ['Found: Hano Grand Resort', 'Shop: Tapu Village · Pokémon Center']
+items: TM place line that only names its shop dropped: TM94 Surf Found: Tapu Village (Pokémon Center) shop
 items: TM place and shop retained: TM94 Surf ['Found: Poni Breaker Coast', 'Shop: Tapu Village · Pokémon Center']
+items: TM place line that only names its shop dropped: TM97 Dark Pulse Found: Tapu Village (Pokémon Center) shop
 items: TM place and shop retained: TM97 Dark Pulse ['Found: Poni Coast', 'Shop: Tapu Village · Pokémon Center']
+items: TM place line that only names its shop dropped: TM98 Waterfall Found: Tapu Village (Pokémon Center) shop
 items: TM place and shop retained: TM98 Waterfall ['Found: Poni Breaker Coast', 'Shop: Tapu Village · Pokémon Center']
 items: walkthrough rows matched to an Items line at the same place: 3
   Big Root: Found: Lush Jungle, Diglett's Tunnel, Poni Coast, Vast Poni Canyon, Verdant Cavern
@@ -71,7 +79,7 @@ items: walkthrough rows matched to an Items line at the same place: 3
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: none
-pickup keys: 346 pickups, 337 walkthrough rows keyed
+pickup keys: 354 pickups, 337 walkthrough rows keyed
 species pruned: 3 pikachu-original-cap, zygarde-10, zygarde-10-power-construct
 species retained: 928 obtainable: 876 trainer-only: 2 Megas/Primals: 50
 trainers put in walkthrough order: Post-game

@@ -344,5 +344,13 @@
 {"k":"p342","i":"Steelium Z","loc":"Mount Hokulani","t":"Found: Mount Hokulani"},
 {"k":"p343","i":"Tapunium Z","loc":"Ruins of Conflict","t":"Found: Ruins of Conflict"},
 {"k":"p344","i":"Ultranecrozium Z","loc":"Mount Lanakila","t":"Found: Mount Lanakila"},
-{"k":"p345","i":"Waterium Z","loc":"Brooklet Hill","t":"Found: Brooklet Hill"}
+{"k":"p345","i":"Waterium Z","loc":"Brooklet Hill","t":"Found: Brooklet Hill"},
+{"k":"p346","i":"TM26 Earthquake","loc":"Tapu Village","t":"Shop: Tapu Village · Pokémon Center"},
+{"k":"p347","i":"TM50 Overheat","loc":"Tapu Village","t":"Shop: Tapu Village · Pokémon Center"},
+{"k":"p348","i":"TM60 Aura Sphere","loc":"Tapu Village","t":"Shop: Tapu Village · Pokémon Center"},
+{"k":"p349","i":"TM75 Swords Dance","loc":"Tapu Village","t":"Shop: Tapu Village · Pokémon Center"},
+{"k":"p350","i":"TM92 Trick Room","loc":"Tapu Village","t":"Shop: Tapu Village · Pokémon Center"},
+{"k":"p351","i":"TM94 Surf","loc":"Tapu Village","t":"Shop: Tapu Village · Pokémon Center"},
+{"k":"p352","i":"TM97 Dark Pulse","loc":"Tapu Village","t":"Shop: Tapu Village · Pokémon Center"},
+{"k":"p353","i":"TM98 Waterfall","loc":"Tapu Village","t":"Shop: Tapu Village · Pokémon Center"}
 ]

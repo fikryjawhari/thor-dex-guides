@@ -766,40 +766,30 @@ items: walkthrough rows added as IT lines: 3
   Rockium Z: Found: Victory Road · hidden · In the southeast part of the chamber, hidden in a rock
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: Also -> Shop 17, Found -> Also 11, Found -> Shop 15
-pickup keys: 32 table entries no pickup matched
-  p30: ADM (Seaport City)
+pickup keys: 22 table entries no pickup matched
   p299: TM084 Poison Jab (Bought from the Seaport City TM merchant for 20,000 Poké Dollars)
   p300: TM057 Charge Beam (Bought from the Seaport City TM merchant for 10,000 Poké Dollars)
   p301: TM053 Energy Ball (Bought from the Seaport City TM merchant for 20,000 Poké Dollars)
   p306: TM116 Trick Room (At the Battle Tower TM counter for 48 Battle Points)
   p307: TM115 Quash (At the Battle Tower TM counter for 24 Battle Points)
-  p308: TM113 Echoed Voice (Acquired in the Dehara City Game Corner for 2,000 Coins)
   p309: TM103 Sludge Wave (At the Battle Tower TM counter for 48 Battle Points)
   p310: TM096 Bulldoze (Bought from the Blizzard City Poké Mart for 10,000 Poké Dollars)
   p312: TM090 Substitute (Obtained at the Battle Tower TM counter for 32 Battle Points)
   p313: TM088 Pluck (Bought from the Blizzard City Poké Mart for 10,000 Poké Dollars)
-  p314: TM087 Swagger (Can be acquired in the Dehara City Game Corner for 2,000 Coins)
-  p317: TM082 Sleep Talk (Can be acquired in the Dehara City Game Corner for 4,000 Coins)
   p318: TM078 Low Sweep (Bought from the Blizzard City Poké Mart for 10,000 Poké Dollars)
-  p319: TM075 Swords Dance (Acquired in the Dehara City Game Corner for 4,000 Coins)
   p320: TM068 Giga Impact (Bought from the Dehara City Department Store 4F for 50,000 Pokémon Dollars)
   p321: TM064 Explosion (Bought from the Dehara City Department Store 4F for 40,000 Pokémon Dollars)
   p322: TM063 Venoshock (Bought from the Blizzard City Poké Mart for 10,000 Poké Dollars)
-  p323: TM061 Will-O-Wisp (Acquired in the Dehara City Game Corner for 4,000 Coins)
   p325: TM058 Endure (At the Battle Tower TM counter for 24 Battle Points)
   p327: TM055 Brine (Bought from the Blizzard City Poké Mart for 10,000 Poké Dollars)
   p328: TM052 Focus Blast (Bought from the Dehara City Department Store 4F for 30,000 Pokémon Dollars)
-  p332: TM043 Secret Power (Acquired in the Dehara City Game Corner for 3,000 Coins)
   p335: TM039 Rock Tomb (Bought from the Blizzard City Poké Mart for 10,000 Poké Dollars)
   p337: TM034 Shock Wave (Bought from the Blizzard City Poké Mart for 10,000 Poké Dollars)
-  p338: TM033 Reflect (Acquired in the Dehara City Game Corner for 2,000 Coins)
-  p339: TM032 Double Team (Acquired in the Dehara City Game Corner for 3,000 Coins)
   p340: TM020 Safeguard (Obtained at the Battle Tower TM counter for 16 Battle Points)
   p342: TM017 Protect (Bought from the merchant in Fallshore City for 10,000 Poké Dollars)
-  p343: TM016 Light Screen (Acquired in the Dehara City Game Corner for 2,000 Coins)
   p344: TM015 Hyper Beam (Bought from the Dehara City Department Store 4F for 50,000 Pokémon Dollars)
   p346: TM008 Bulk Up (Bought from the merchant in Fallshore City for 10,000 Poké Dollars)
-pickup keys: 632 pickups, 447 walkthrough rows keyed
+pickup keys: 665 pickups, 447 walkthrough rows keyed
 prune: kept 1093 removed 21 pikachu_belle, pikachu_cosplay, pikachu_libre, pikachu_phd, pikachu_pop_star, pikachu_rock_star, cubone_a, zygarde_10, zacian, zacian_crowned, zamazenta, zamazenta_crowned, eternatus, kubfu, urshifu, urshifu_rapid, glastrier, spectrier, calyrex, calyrex_ice_rider, calyrex_shadow_rider
 trainers put in walkthrough order: Vega Split [Cap 26], Mel Split [Cap 36], Maxima Split [Cap 40], Galavan Split [Cap 45], Big Mo Split [Cap 52], Tessy Split [Cap 57]
 item name: Houndoomite -> Houndoominite (2 use(s), Items tab spelling)

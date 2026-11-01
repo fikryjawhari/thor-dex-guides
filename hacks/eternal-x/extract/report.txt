@@ -58,9 +58,58 @@ walkthrough Lumiose items moved: part 8 stop Lumiose City: 5, part 11 stop Lumio
 walkthrough: 21 splits 74 stop fragments, 69 legacy stop keys, 294 items placed, 25 not placed
 items: Shops 145, TMs 100, Evolution Items 26, Held Items 136, Stats and Abilities 18, Fossils 11, Key Items 28
 item text: 585 changed 1 no text: Lab Key Card A, Lab Key Card B, Lab Key Card C, HM01 Cut, HM04 Strength, HM03 Surf, HM02 Fly, HM05 Waterfall
+items: TM place line that only names its shop dropped: TM05 Roar Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM05 Roar Found: Santalune City shop
+items: TM place line that only names its shop dropped: TM07 Hail Found: Shalour City shop
+items: TM place line that only names its shop dropped: TM11 Sunny Day Found: South Boulevard shop
+items: TM place line that only names its shop dropped: TM14 Blizzard Found: Laverre City shop
+items: TM place line that only names its shop dropped: TM15 Hyper Beam Found: Laverre City shop
+items: TM place line that only names its shop dropped: TM16 Light Screen Found: Kiloude City shop
+items: TM place line that only names its shop dropped: TM16 Light Screen Found: Santalune City shop
+items: TM place line that only names its shop dropped: TM18 Rain Dance Found: South Boulevard shop
+items: TM place line that only names its shop dropped: TM20 Safeguard Also: Shalour City shop
 items: TM place and shop retained: TM20 Safeguard ['Also: Hotel Richissime (gift)', 'Shop: Shalour City · Mart, right cashier']
+items: TM place line that only names its shop dropped: TM23 Smack Down Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM23 Smack Down Found: Santalune City shop
+items: TM place line that only names its shop dropped: TM25 Thunder Found: Laverre City shop
+items: TM place line that only names its shop dropped: TM28 Dig Found: Shalour City shop
+items: TM place line that only names its shop dropped: TM33 Reflect Found: Kiloude City shop
+items: TM place line that only names its shop dropped: TM33 Reflect Found: Santalune City shop
+items: TM place line that only names its shop dropped: TM34 Sludge Wave Found: Anistar City shop
+items: TM place line that only names its shop dropped: TM34 Sludge Wave Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM37 Sandstorm Found: Shalour City shop
+items: TM place line that only names its shop dropped: TM38 Fire Blast Found: Laverre City shop
+items: TM place line that only names its shop dropped: TM48 Ice Punch Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM48 Ice Punch Found: Santalune City shop
+items: TM place line that only names its shop dropped: TM50 Overheat Found: Anistar City shop
+items: TM place line that only names its shop dropped: TM50 Overheat Found: Kiloude City shop
+items: TM place line that only names its shop dropped: TM51 Sucker Punch Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM51 Sucker Punch Found: North Boulevard shop
+items: TM place line that only names its shop dropped: TM52 Focus Blast Found: Laverre City shop
+items: TM place line that only names its shop dropped: TM58 Thunder Punch Also: Santalune City shop
 items: TM place and shop retained: TM58 Thunder Punch ['Also: Kiloude City (gift) · was Sky Drop in Pokémon X', 'Shop: Santalune City · Mart, right cashier']
+items: TM place line that only names its shop dropped: TM59 Incinerate Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM59 Incinerate Found: Santalune City shop
+items: TM place line that only names its shop dropped: TM60 Fire Punch Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM60 Fire Punch Found: Santalune City shop
+items: TM place line that only names its shop dropped: TM64 Explosion Found: Anistar City shop
+items: TM place line that only names its shop dropped: TM64 Explosion Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM67 Retaliate Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM68 Giga Impact Found: Kiloude City shop
+items: TM place line that only names its shop dropped: TM68 Giga Impact Found: Laverre City shop
+items: TM place line that only names its shop dropped: TM72 Volt Switch Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM72 Volt Switch Found: North Boulevard shop
+items: TM place line that only names its shop dropped: TM75 Swords Dance Found: South Boulevard shop
+items: TM place line that only names its shop dropped: TM76 Struggle Bug Found: South Boulevard shop
+items: TM place line that only names its shop dropped: TM78 Bulldoze Found: South Boulevard shop
+items: TM place line that only names its shop dropped: TM84 Poison Jab Found: Shalour City shop
+items: TM place line that only names its shop dropped: TM85 Dream Eater Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM87 Swagger Found: Battle Maison shop
+items: TM place line that only names its shop dropped: TM87 Swagger Found: North Boulevard shop
+items: TM place line that only names its shop dropped: TM91 Flash Cannon Also: Anistar City shop
 items: TM place and shop retained: TM91 Flash Cannon ['Also: Kiloude City (gift)', 'Shop: Anistar City · Mart, right cashier']
+items: TM place line that only names its shop dropped: TM93 Wild Charge Found: Anistar City shop
+items: TM place line that only names its shop dropped: TM93 Wild Charge Found: Kiloude City shop
 items: walkthrough rows matched to an Items line at the same place: 47
   TM11 Sunny Day: Found: South Boulevard shop
     + Shop: South Boulevard · Mart, right cashier
@@ -206,7 +255,7 @@ items: walkthrough rows matched to an Items line at the same place: 47
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: Found -> Also 5
-pickup keys: 230 pickups, 220 walkthrough rows keyed
+pickup keys: 296 pickups, 283 walkthrough rows keyed
 availability: obtainable 763 trainer/partner species 594 kept 782 removed 4
   removed species IDs: mega-mewtwo-y, wormadam-sandy, wormadam-trash, floette-eternal
 item text: 295 own, 0 pooled, 0 from the wiki, 3 made up, 0 Mega Stone standard, 0 with no description
