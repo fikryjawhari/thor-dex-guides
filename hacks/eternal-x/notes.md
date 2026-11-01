@@ -84,6 +84,7 @@ PDFs). Fetch the sources with `SOURCES.md` (game data regenerated 2026-10-22). M
   of Kalos (trophy); kept: movement tools, all rods / HMs, Dowsing Machine, Exp. Share, Mega Ring, Poké Flute, story /
   access keys and passes, Poké Radar, Prof's Letter, Looker Ticket, Intriguing Stone (Sun Stone exchange), form-change
   items, Vs. Recorder.
+- **Item text and wild odds** (`ctrguide.item_text`, `wild_held`): bag text from `dex-rebalanced.json` items by id, written to `extract/item_desc.json` and IX; changed = differs from `dex-vanilla.json` once whitespace is folded. Changed: Big Root (vanilla: boosts HP-stealing moves; here: doubles the HP the holder recovers from them). Lab Key Card A / B / C are in the Items tab but not in the dex's item list, so they have no text. TMs and HMs take no text (the 12 TM / HM texts that differ from vanilla are the moves' own, on the move page). Wild held items: `P.hi` [item, %] from the dex `items` slots, 50 / 5 / 1, the same item in slots 1 and 2 = 100 (Snorlax Leftovers 100); no Mega forms.
 - **Walkthrough** (walk.py): the Trainers page's cap splits, then Post-game. A place spanning cap boundaries is split into
   trainer fragments; encounters, items and steps stay on the first fragment, without duplication. Every fragment carries
   a unique persistent `k`: the original gym-split stop coordinate for the first fragment, then `.f1`, `.f2`... within
