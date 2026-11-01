@@ -115,6 +115,13 @@ Data rules:
 - **Stats**: EVs are 0 everywhere (the hack removes them). TC is the standard Gen 9 chart (Mechanics: assume Gen 9).
   Evolution methods the text can't describe (SPIN_* variants) show as unknown.
 - **Items**: rules in `itemstd.RULES['hardlove-gold']`, the `Other` box mapped in `HG_OTHER` (History → Items standard).
+- **Held items and item text**: `held.py` sets `P.hi` from `data/Species.c` `.speciesData.wildHeldItems` (common 50%, rare 5%,
+  the same item in both 100%, a lone slot keeps its odds; Mega forms none). Only 12 species hold items: Paras / Parasect,
+  Shroomish / Breloom, Foongus / Amoonguss / Morelull / Shiinotic (Tiny / Big Mushroom), Shellder / Cloyster, Gulpin / Swalot
+  (Big Pearl). Leftovers is not a common wild item here (only Gigantamax Snorlax's rare slot). `itemtext.py` sets `IX` from
+  `extract/item_desc.json`: the two items the hack adds with text in `221.txt` (Infinite Candy, Starter Card; changed = 1).
+  The pin has no vanilla HGSS text to compare, so other items are not marked; the rest of `222.txt` (about 2,000 names past
+  id 536, with no text in the pin) gets text from the shared pool.
 
 ## Local storage (prefix hg)
 

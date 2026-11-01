@@ -75,3 +75,5 @@ starter nature"). `beta_hardlove` moves ahead of releases. Don't use `333sensati
 AI-edited copy (all species wild, 1/512 shinies). The Drive sheets have no version number, so re-download them. Mime Jr.'s
 page 404s on the site. The Drive's "Footage" and "Patch" subfolders are not needed. No walkthrough exists; the trainer
 sheet's split tabs give the order.
+
+Item text (`extract/item_desc.json`, the hack's own items): `data/text/221.txt` (descriptions; line 1 = Infinite Candy, line 2 = Starter Card, the ids 2685 / 2686 in `asm/include/items.inc`) and `data/text/222.txt` (names) at the pin: `curl -sL $R/data/text/221.txt`. These two are not in `watch.json`'s paths; fetch them by hand when the pin moves, and re-check `item_desc.json` against them.
