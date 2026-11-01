@@ -32,6 +32,7 @@ import itemstd  # noqa: E402
 import pickup_keys
 import schema  # noqa: E402
 import moveprops  # noqa: E402
+import item_text  # noqa: E402
 import trainer_fields  # noqa: E402
 import trainer_keys  # noqa: E402
 from splits import split_name  # noqa: E402,F401  (re-exported for the hacks' modules)
@@ -189,6 +190,7 @@ def finalise(D, hack, prune=None):
     split_names(D)
     trainer_fields.annotate(D)
     moveprops.apply(D, hack, report)
+    item_text.apply(D, hack, report)
     schema.standardise(D)
 
 
