@@ -396,6 +396,74 @@ Sheet vs data.js (name-matched, `.tmp` compare; data.js kept):
   dens are ★★ on the sheet, data.js `raid1` (kept); the Loyal Three den is the sheet's "Safari Zone Far-Western Area"
   ★★★★, data.js Moltres' Den `raid3` (kept). Drops: the 12 per species match as sets except Rock Tunnel B1F ★★★★★
   Iron Leaves / Iron Crown (sheet Star Piece, data.js Nugget; kept); the sheet's "Ability Capsule" = Ability Pill.
+### Trainers (unit 6, 2026-11-02)
+
+`extract/trainers.py` (TR), readers `bosssheet.py` (`.src/trainers-hardcore.xlsx`: boss blocks, Trainer Order, Main
+caps) and `setcheck.py` (the sheet / RR calc / hzla comparison); `check.py` → `trainer_checks` asserts the counts below.
+
+**Teams: data.js `hardcore`** (D1, D2) for all **464 trainers = 460 cards + 2 partners + 2 same-team copies**:
+Silph Brendan 55 is the `pt` of Archer 53 and Ariana 54 (one `bt`), Cerulean Cave Lance 39 the `pt` of Giovanni 69
+(Team Rocket E240 / E409); Jasmine 63 and 64 have exactly 62's Hardcore team (they differ only in Normal): one card.
+Mon fields: level codes 101-104 = cap + 0 / −1 / −2 / −3 (`scaledLevels`, the sheet's "Highest Lv −N" / "Player Max
+Level"), 250 kept (Creator 24); **IVs / EVs are in the game's order** (HP, Atk, Def, Spe, SpA, SpD: the RR calc's IVs
+agree 245 / 253, and the sheet's Hidden Power types follow from it), turned into the schema's; Hidden Power → `hp`.
+**Ability slot** 0 / 1 / 2 = hidden / primary / secondary, an empty slot or 3 = the primary (the RR calc's sets agree on
+1,251 of 1,278; the rest are name spellings or calc gaps). **Forms:** data.js evolution method 254 `[254, item, form, kind]` = Mega / Primal / Ultra Burst /
+Crowned when holding the item, kind 2 = by a move (Rayquaza: Dragon Ascent, no Z-crystal): `id` is that form, `a0`
+the base ability. **A Mega keeps the base's ability slot** (RR Megas have up to three; Mega Absol Sharpness, Mega
+Ampharos Mold Breaker, Mega Slowbro Shell Armor: sheet and calc agree).
+**Placement** (the user's answers): boxes are the 18 Hardcore caps (Caps). A Trainer Order entry (115, matched to
+trainers through its link to a boss block) places its trainer: a **number** is the only cap it's fought at, so that
+cap's box, even where the entry sits after the split's boss (row 366 Lewis 73, after May: Pre-May; Justin 68:
+Pre-Koga); a **range / open cap** ("28/36", "16+", "59/68") keeps its place in the order (the sheet's recommended
+split, F3 comment) and gets the **cap box**: scaled levels relative (`r`), `t.cap` the box's cap. A blank cap (Shelly,
+Cerulean Cave Ariana) is the fight before's. A fight's other teams (starter, Team one / two, Ketchup's rematch: same
+name, place and cap, a block of their own, no entry of their own) go with it. 22 trainers moved off their data.js cap
+(report: Nugget Bridge / S.S. Anne / Route 9-10 mini bosses, Johto leaders, Justin, Lewis, ...). Every other trainer is
+in its data.js cap's box. Order in a box: data.js area order, then Trainer Order, then the sheet's block order
+(unit 8 re-sorts by the walkthrough). **Gym rematches** (Brock 56, Misty 48, Lt. Surge 51, Erika 65): Pre-Koga, cap
+box (sheet 59 / 68), not Optional, the note "Beat at least 3 of these 4 gym rematches (Brock, Misty, Lt. Surge,
+Erika) before Koga." 46 cards have the cap box; no team mixes scaled and fixed levels.
+**Rival:** `t.st` = the **player's starter type** (Main E93: the Squirtle team = a Fire starter; the game offers 27
+starters from every generation, so a name can't work): from the block's "IF RIVAL HAS X" label, else the team's
+starter line. Six rival fights × 3 (Lab, Route 22 ×2, Cerulean, Silph, Champion). `cfg.starter` must be `type`.
+**Labels and BATTLE EFFECT lines** (`EFFECTS`, every part known or the build fails): tags Double Battle, Permanent
+Rain / Sun / Sandstorm / Snow / Desolate Land / Primordial Sea / Delta Stream / Electric / Grassy / Psychic / Misty
+Terrain / Trick Room / Swamp / Magma Storm / Magnet Rise, "Permanent Tailwind on enemy side" (Koga, Ketchup: the
+boss's side, guess from the sheet's tailwind speeds), Inverse Battle; "Team N of M" / "Rain team (1 of 2)" (E4,
+Pryce), First battle / Rematch (Ketchup 20 then 19, "at least a day after", unit 3), Back to Back #1-#3 (Justin →
+Andrew, Lao → Koji → Luke, Sam → Shelly, Archer 67 → Ariana 68, Oak 200 → 210); Bugsy 47 / 8 notes before / after Lt.
+Surge; the rest as short notes (Brock's 33 % cut, Erika's resisted Grass bonus, endure effects, Fairy ban, hazards,
+forms that start transformed, Swamp quarters your Speed, Magma Storm spares Fire types). "X IS PRE-BURNED /
+PRE-POISONED" → that mon's `pre`. Duo classes (Twins, Young Couple, Cool Couple, Sis And Bro, Crush Kin) are double
+battles (FRLG; the sheet marks Ray & Tyra and Joy & Meg DOUBLES). Optional = the Trainer Order's (OPTIONAL).
+**Checks** (`setcheck.compare`, report "boss teams checked"): 185 of 186 sheet blocks matched (team species, then
+moves; pair blocks → two trainers; Postgame!C1175 Berry Forest Spirit has no data.js trainer), 967 mons. **Sheet
+says** on the card (11): Chuck's Steadfast, Silph Brendan's HP Fire, Cave Lance Naive, Lass Ali / Picnicker Caitlin
+Bashful, Lass Reli / Lass Ann Battle Armor, Camper Ethan Adamant, Sam's HP Psychic, Samantha Jolly, Morty's
+Thunderbolt. Not shown: abbreviations (word prefixes), "(Both)", "A or B", Primal / Crowned forms listed with their
+own ability, the game's short item names (Houndoomnite, Rusty Shield / Sword, Necrozium Z, Leek Stick), data.js's
+"Soupercell Slam", the sheet's "Eathquake". RR calc (905 sets): 6 differences, report only. hzla (539 boss sets): 38,
+mostly ability slots that contradict both data.js and the sheet: report only; **hzla says** only where the sheet
+differs too (Lass Ali's Brionne Bashful). The Main tab's comments ("supposed to be Modest, actually Adamant", 0 Speed
+IVs) agree with data.js.
+**Field records** (`tools/trainer_fields.py` → `RR_FIELD_EFFECTS`, exact tag texts): 108 = 47 doubles + 61 field
+tags, none to review. Terrains and the existing weathers permanent; Desolate Land / Primordial Sea / Delta Stream =
+Harsh Sunshine / Heavy Rain / Strong Winds, permanent and locked; Swamp, Magma Storm, Magnet Rise text only (no calc
+field). Setter audit (Main E10, AI weather / terrain is permanent): 75 teams set weather / terrain by ability or move;
+4 also carry the sheet's tag, 71 don't (Sabrina's Misty Surge, Koga's Psychic Surge, ...): those stay with
+`cfg.calc.setterStays`, not a field record. 47 tagged teams have no setter (the field comes with the battle).
+**Trainer keys**: `extract/trainer_keys.json`, seeded by this unit's build (460 cards, "g.s.t" as they were, game id
+`id` = data.js trainer ID).
+
+### Caps
+
+data.js `caps` (`cap[1]`, Hardcore) = Main E44:E78, asserted on every build: Pre-Brock 16, Pre-Mt. Moon Archer 23,
+Pre-Misty 28, Pre-Lt. Surge 36, Pre-Erika 44, Pre-Game Corner Giovanni 47, Pre-Silph Co. Archer & Ariana 56,
+Pre-Giovanni Silph Co. 57, Pre-Sabrina 59, Pre-Koga 68, Pre-May 73, Pre-Blaine 76, Pre-Cerulean Cave Archer & Ariana
+79, Pre-Cerulean Cave Giovanni 80, Pre-Clair 81, Pre-Brendan 82, Pre-Elite 4 85, Post Game 100. `TR.caps` lists them;
+boxes are `<name> Split [Cap N]` (the shared `split_name`; the calc shows "Pre-Brock"), Post Game included (cap 100,
+so its scaled levels are 97-100). Each split ends at its Trainer Order boss (`ENDERS`), asserted against data.js.
 
 ## Local storage
 

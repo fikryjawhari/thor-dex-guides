@@ -1,11 +1,12 @@
 """Radical Red extract checks: data.json against data.js and the author's sheets. One function per tab; each unit
-adds its own. Usage: uv run python -I hacks/radical-red/extract/check.py
+adds its own (trainer_checks asserts). Usage: uv run python -I hacks/radical-red/extract/check.py
 
 Locations (LOC / AR / P.w / P.g): every data.js area is a sublocation, every encounter in data.js is a P.w row of its
 area, every area is in one tracker place, and every row resolves to a dex species; the locations sheet's additions
 (sheet_locs.json) are all placed: Starter choice, Mystery Gift place, gift levels, trade wants, egg pools,
 unobtainables."""
 from pathlib import Path
+import collections
 import json
 import re
 import sys
@@ -185,14 +186,70 @@ def check_sheet(data, failures):
                      if mon['g'] == 3 and not mon.get('fc') and mon['id'] not in unobtainable)
     if missing:
         failures.append('%d species not found that the sheet calls available, e.g. %s' % (len(missing), missing[:5]))
-    for name in SHEET['unobtainable']:
-        if by_id[sid(name)]['g'] != 3:
+    for name in SHEET['unobtainable']:     # pruned (gone from P) is fine too
+        if sid(name) in by_id and by_id[sid(name)]['g'] != 3:
             failures.append('%s should be unobtainable (g 3)' % name)
 
 
 
+def trainer_checks(D):
+    """TR from data.js and the Hardcore workbook (notes.md → Trainers, Caps)."""
+    from common import DATA, CAPS
+    import bosssheet
+    import trainers as T
+    TR = D['TR']
+    caps = [c['cap'][1] for c in CAPS]
+    # the 18 Hardcore caps: Main E44:E78 = data.js caps = the boxes
+    assert bosssheet.main_caps() == ['%s (%d)' % sc for sc in zip(T.SPLITS, caps)]
+    assert [[g['n'], g['cap']] for g in TR['g']] == [['%s Split [Cap %d]' % sc, sc[1]] for sc in zip(T.SPLITS, caps)]
+    assert TR['caps'] == [[n, c] for n, c in zip(T.SPLITS, caps)]
+    cards = [(g, s, t) for g in TR['g'] for s in g['sec'] for t in s['tr']]
+    for g, s, t in cards:
+        assert t['cap'] == g['cap'], (g['n'], t['k'])
+        assert t['loc'] == s['h'], t['k']
+    # all 464 data.js trainers: a card each (by the key table's game id), the two partners, the two same-team copies
+    keys = {e['k']: e for e in json.load(open(Path(__file__).with_name('trainer_keys.json'), encoding='utf-8'))}
+    ids = [keys[t['k']]['id'] for _, _, t in cards]
+    assert len(ids) == len(set(ids)) == 460, len(ids)
+    every = set(ids) | set(T.PARTNERS) | set(T.SAME_TEAM)
+    assert every == set(DATA['trainers']) and len(DATA['trainers']) == 464
+    assert not set(ids) & (set(T.PARTNERS) | set(T.SAME_TEAM))
+    split_of = {keys[t['k']]['id']: g['n'] for g, _, t in cards}
+    # the user's answers: Justin (Route 12) in the Koga split, Lewis (Pokémon Mansion B1F) in the May split
+    assert split_of['477'] == 'Pre-Koga Split [Cap 68]' and split_of['219'] == 'Pre-May Split [Cap 73]'
+    by_id = {keys[t['k']]['id']: t for _, _, t in cards}
+    assert all(m['l'] == 68 + {101: -2, 102: -1, 103: 0, 104: -3}[x['level']]
+               for m, x in zip(by_id['477']['p'], DATA['trainers']['477']['hardcore']))
+    # gym rematches: Pre-Koga, the cap box, the one note
+    for i in T.REMATCHES:
+        t = by_id[i]
+        assert split_of[i] == 'Pre-Koga Split [Cap 68]' and all('r' in m for m in t['p']), i
+        assert T.REMATCH_NOTE in t['note'] and 'Optional' not in t['tags'], i
+    # the cap box: every range / open Trainer Order entry with scaled levels; nothing else relative
+    relative = {i for i, t in by_id.items() if any('r' in m for m in t['p'])}
+    order = bosssheet.trainer_order()
+    assert len(order) == 115 and len(relative) == 46, (len(order), len(relative))
+    for i in relative:
+        assert not any('l' in m for m in by_id[i]['p']), i
+    # the rival follows the starter type: each team set covers Fire / Grass / Water once
+    rivals = collections.defaultdict(list)
+    for i, t in by_id.items():
+        if t['n'] in ('Rival Blue', 'Champion Blue'):
+            rivals[(t['loc'], DATA['trainers'][i]['cap'])].append(t.get('st'))
+    assert len(rivals) == 6 and all(sorted(v) == ['Fire', 'Grass', 'Water'] for v in rivals.values()), dict(rivals)
+    # partners and shared battles
+    assert [p['n'] for p in by_id['53']['pt']] == [p['n'] for p in by_id['54']['pt']] == ['PkMn Trainer Brendan']
+    assert by_id['53']['bt'] == by_id['54']['bt'] and [p['n'] for p in by_id['69']['pt']] == ['Champion Lance']
+    doubles = [t for _, _, t in cards if 'Double Battle' in t['tags']]
+    assert len(doubles) == 47, len(doubles)
+    print('PASS trainers: 464 data.js trainers (460 cards, 2 partners, 2 same-team), 18 Hardcore splits, '
+          '%d cap-box cards, %d doubles, Justin / Lewis / rematch placement, rivals by starter type' %
+          (len(relative), len(doubles)))
+
+
 check_items()
 check_locations(D, FAIL)
+trainer_checks(D)
 if FAIL:
     print('FAIL radical-red extract-check:\n  ' + '\n  '.join(FAIL))
     sys.exit(1)
