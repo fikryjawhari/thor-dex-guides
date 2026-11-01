@@ -131,10 +131,6 @@
   "Encapsuled energy ups Pokémon with certain Abilities.",
   0
  ],
- "BoosterEnergy": [
-  "Encapsuled energy ups Pokémon with certain Abilities.",
-  0
- ],
  "Bright Powder": [
   "A hold item that casts a glare to reduce accuracy.",
   0
@@ -314,14 +310,6 @@
  "Electric Seed": [
   "Boosts Defense on Electric Terrain, but only one time.",
   0
- ],
- "Empoleonite D": [
-  "This stone enables Empoleon to Mega Evolve in battle.",
-  1
- ],
- "Empoleonite O": [
-  "This stone enables Empoleon to Mega Evolve in battle.",
-  1
  ],
  "EmpoleoniteD": [
   "This stone enables Empoleon to Mega Evolve in battle.",
@@ -720,10 +708,6 @@
   0
  ],
  "Never-Melt Ice": [
-  "A hold item that raises the power of Ice-type moves.",
-  0
- ],
- "Never-MeltIce": [
   "A hold item that raises the power of Ice-type moves.",
   0
  ],

@@ -155,6 +155,60 @@ items: walkthrough rows added as IT lines: 16
   Pokémon League: Found: Old man next to the Bidoof resets the Embedded Tower
 pickup keys: 334 pickups, 279 walkthrough rows keyed
 trainers put in walkthrough order: Morty Split [Cap 39]
+item text: none for Absolite Z
+item text: none for Barbaracite
+item text: none for Baxcalibrite
+item text: none for Bike
+item text: none for Chandelurite
+item text: none for Chesnaughtite
+item text: none for Chimechite
+item text: none for Clear Amulet
+item text: none for Clefablite
+item text: none for Covert Cloak
+item text: none for Crabominite
+item text: none for Darkranite
+item text: none for Delphoxite
+item text: none for Dragalgite
+item text: none for Dragoninite
+item text: none for Drampanite
+item text: none for Eelektrossite
+item text: none for Eject Pack
+item text: none for Emboarite
+item text: none for Excadrite
+item text: none for Falinksite
+item text: none for Feraligite
+item text: none for Floettite
+item text: none for Froslassite
+item text: none for Garchompite Z
+item text: none for Glimmoranite
+item text: none for Golisopite
+item text: none for Golurkite
+item text: none for Greninjite
+item text: none for Hawluchanite
+item text: none for Heatranite
+item text: none for Lucarionite Z
+item text: none for Magearnite
+item text: none for Malamarite
+item text: none for Meganiumite
+item text: none for Meowsticite
+item text: none for Pokégear Upgrade 1
+item text: none for Pyroarite
+item text: none for Raichunite Y
+item text: none for Rusted Sword
+item text: none for SS Aqua Ticket
+item text: none for Scolipite
+item text: none for Scovillainite
+item text: none for Scraftinite
+item text: none for Skarmorite
+item text: none for Staraptite
+item text: none for Starminite
+item text: none for Tatsugirinite
+item text: none for Victreebelite
+item text: none for Zeraorite
+item text: none for Zygardite
+item text: 2 own, 207 pooled, 51 with no description
+in battle: 134 shown items with battle text, 126 without
+in battle: 716 moves with battle text, 67 without
 GID species: 1101 species:form keys for 986 of 986 P ids; 115 forms with their base's battle data map to the base
 GID move: 783 of 783 our names matched
 GID ability: 274 of 274 our names matched

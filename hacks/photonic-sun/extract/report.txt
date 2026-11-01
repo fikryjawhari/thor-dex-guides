@@ -65,6 +65,12 @@ pickup keys: 364 pickups, 352 walkthrough rows keyed
 species pruned: 3 pikachu-original-cap, zygarde-10, zygarde-10-power-construct
 species retained: 928 obtainable: 876 trainer-only: 2 Megas/Primals: 50
 trainers put in walkthrough order: Post-game
-item text: 371 changed 0 no text: none
+item name: Silver Powder -> SilverPowder (7 use(s), IT spelling)
+item name: Thunder Stone -> Thunderstone (1 use(s), IT spelling)
+item name: Twisted Spoon -> TwistedSpoon (4 use(s), IT spelling)
+item text: 368 own, 0 pooled, 0 with no description
+in battle: 208 shown items with battle text, 160 without
+in battle: 637 moves with battle text, 91 without
+item text: 368 changed 0 no text: none
 GID: 1107 species/form keys for 928 species, 728 moves, 233 abilities, 896 item names
 GID species/forms outside this guide: 9 25:1, 25:2, 25:3, 25:4, 25:5, 25:6, 25:7, 718:1, 718:2
