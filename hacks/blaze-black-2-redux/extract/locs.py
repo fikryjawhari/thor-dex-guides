@@ -353,8 +353,6 @@ def build(data):
             add(species, 'Nimbasa City', 'Trade', '', '50',
                 'For any Pokemon. ' + npc + ', daily trade ' + str(order) + '/12. Vanilla B2W2 (Bulbapedia); Redux doc says unchanged. '
                 'Return the Dropped Item, complete the calls and meet at the Ferris wheel. Hidden Ability; random nature.')
-    for species, item in (('latios', 'Soul Dew'), ('latias', 'Soul Dew'), ('giratina', 'Griseous Orb')):
-        byid[species]['hi'] = [item]
     obtainable = {pokemon['id'] for pokemon in data['P'] if pokemon['w']}
     pending = list(obtainable)
     while pending:

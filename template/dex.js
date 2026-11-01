@@ -30,6 +30,9 @@ const SPRU={};const sprUrl=id=>{if(SPRU[id]!==undefined)return SPRU[id];const d=
 const spr=(id,c)=>{const u=sprUrl(id);if(u)return `<div class="spr ${c}" style="background-image:url(${u})"></div>`;
  const p=byId[id],t=p?p.t[0]:'',l=p?(p.n.match(/[A-Za-z0-9]/)||['?'])[0].toUpperCase():'?';
  return `<div class="spr ${c} sprph${btc(t)}" style="background:${tcol(t)}"><span>${esc(l)}</span></div>`;};
+const icon=(name,size=24)=>{const slot=(D.IC||{})[name];if(!Number.isInteger(slot))return '';
+ return `<span class="item-icon" aria-hidden="true" style="--icon-size:${size}px;background-position:${-(slot%16)*size}px ${-Math.floor(slot/16)*size}px"></span>`;};
+const iconCard=name=>icon(name,32)||'<span class="item-icon-spacer" aria-hidden="true"></span>';
 const plink=id=>byId[id]?`<a href="#/p/${id}">${esc(byId[id].name)}</a>`:'';
 // A sprite that opens its Pokémon's dex page (plain link, like plink: Back and the rail's tab memory need nothing more).
 const sprl=(id,c)=>byId[id]?`<a class="sprl" href="#/p/${id}">${spr(id,c)}</a>`:spr(id,c);
@@ -47,6 +50,9 @@ const natLabel=n=>{const x=NAT[n];return x?n+' (+'+SN[x[0]]+' -'+SN[x[1]]+')':n+
 const learn={};const L=(i,p,how)=>{(learn[i]=learn[i]||[]).push([p,how]);};
 P.forEach(p=>{p.lv.forEach(([l,m])=>L(m,p,l?'Lv '+l:'Evo'));p.tm.forEach(m=>L(m,p,'TM'));p.tu.forEach(m=>L(m,p,'Tutor'));p.eg.forEach(m=>L(m,p,'Egg'));});
 P.forEach(p=>{p.ms=new Set([...p.lv.map(x=>x[1]),...p.tm,...p.tu,...p.eg]);p.ls=new Set(p.w.map(w=>w[0]));p.as=new Set([...p.a,p.ha].filter(x=>x>=0));});
+// A form you can meet in the wild: a species' base form (its first P entry), or another form with wild encounters of
+// its own (Castform's Sunny form only exists in battle, a regional form only by evolving). Not Megas.
+const BASEF=new Set(),wildForm=p=>p.g!==1&&(BASEF.has(p.id)||p.w.length>0);{const seen=new Set();P.forEach(p=>{if(!seen.has(p.dex)){seen.add(p.dex);BASEF.add(p.id);}});}
 const locs={};P.forEach(p=>p.w.forEach(w=>{(locs[w[0]]=locs[w[0]]||[]).push([p,w]);}));
 const abUsers={};P.forEach(p=>p.as.forEach(a=>{(abUsers[a]=abUsers[a]||[]).push(p);}));
 const types=[...new Set(P.flatMap(p=>p.t))].sort();
@@ -57,7 +63,7 @@ const FLIST={mv:M,ab:AB,loc:LOC},fname=f=>FLIST[f.k]?{...f,v:nameOf(FLIST[f.k],f
 // The Pokémon page's sections (key, title, open by default). Their open state is one for every Pokémon, saved in LS.dex
 // as o: {key: 1 open / 0 closed} by section name, only where it differs from the default (Reset all clears it); a name
 // it doesn't know is dropped.
-const PSECS=[['ab','Abilities',1],['bs','Base stats',1],['sc','Stat calculator',0],['td','Type defences',0],['wh','Where to find',0],['ev','Evolution',1],['tr','Used by trainers',0],['mv','Moves',1]];
+const PSECS=[['ab','Abilities',1],['bs','Base stats',1],['sc','Stat calculator',0],['td','Type defences',0],['wh','Where to find',0],['hi','Held items',0],['ev','Evolution',1],['tr','Used by trainers',0],['mv','Moves',1]];
 const PDEF=Object.fromEntries(PSECS.map(([k,,o])=>[k,o]));let PO={};
 try{const s=JSON.parse(localStorage.getItem(LS.dex)||'{}');['f','sort','av'].forEach(k=>{if(s[k]!=null)st[k]=s[k];});
  if(s.o&&typeof s.o==='object')for(const k in s.o)if(k in PDEF&&(s.o[k]?1:0)!==PDEF[k])PO[k]=s.o[k]?1:0;}catch(e){}
@@ -149,7 +155,7 @@ const app=document.getElementById('app'),q=searchDisp(document.getElementById('q
 document.getElementById('sugg').style.display='none';
 // Typing on a page with no list (Pokemon, move, ability or trainer page) goes to its section's list as a new history
 // entry, so the results show and Back returns to the page. The keyboard stays open (see hashchange).
-const UP={p:'#/',m:'#/',a:'#/',tr:'#/trainers'};let searchNav=false;
+const UP={p:'#/',m:'#/',mp:'#/',a:'#/',tr:'#/trainers',i:'#/items'};let searchNav=false;
 q.addEventListener('input',()=>{st.q=q.value.trim().toLowerCase();if(st.q&&UP[st.view]){searchNav=true;location.hash=UP[st.view];return;}render(true);});
 // The rail's top button opens the full-window search (the search box shows only while a query is set: dex.css).
 document.getElementById('t-s').addEventListener('click',e=>{e.preventDefault();SR.open();});
@@ -158,7 +164,7 @@ document.getElementById('t-s').addEventListener('click',e=>{e.preventDefault();S
 // route of that tab is left, kept for the session). A tap on another tab goes back to that tab's page and place (RAILGO);
 // a tap on the tab you're on clears the search and goes to the top, except on a Pokémon / move / ability page, where
 // it first goes to the Pokémon list at its place.
-const tabOf=h=>{const v=(h||'#/').slice(2).split('/')[0];return v===''||v==='p'||v==='m'||v==='a'?'p':v==='locs'||v==='l'?'l':v==='trainers'||v==='tr'?'t':v==='items'?'i':v==='walk'?'w':v==='calc'?'c':null;};
+const tabOf=h=>{const v=(h||'#/').slice(2).split('/')[0];return v===''||v==='p'||v==='m'||v==='mp'||v==='a'?'p':v==='locs'||v==='l'?'l':v==='trainers'||v==='tr'?'t':v==='items'||v==='i'?'i':v==='walk'?'w':v==='calc'?'c':null;};
 const TABS={};let RAILGO=null;
 document.getElementById('rail').addEventListener('click',e=>{const a=e.target.closest('a[href^="#/"]');if(!a)return;e.preventDefault();
  const t=a.id.slice(2),cur=location.hash||'#/';
@@ -211,14 +217,18 @@ const catc=c=>c?`<span class="catc ${c}" title="${c}" aria-label="${c}">${c==='P
 // New or changed in the hack: an amber !; sources disagree: a red ? (both when both).
 const mark=(t,q)=>`<span class="warn${q?' q':''}" title="${esc(t)}" aria-label="${esc(t)}">${q?'?':'!'}</span>`;
 function whereTable(p){let h='';
- if(p.g===1)h=p.nu?`<div class="mut">Mega form. ${p.stone?esc(p.stone)+' is':'Its stone is'} not obtainable in ${esc(CF.name)}; listed because trainers use it.</div>`:`<div class="mut">Mega form. ${p.stone?(p.sloc?esc(p.stone)+': '+esc(p.sloc):'Mega Stone: '+esc(p.stone)+'.'):CF.orbs&&(p.n.startsWith('Primal')||/Rayquaza/.test(p.n))?'Orb or move based (see Useful NPCs in Items).':'No stone location in the items sheet.'}</div>`;
+ if(p.g===1)h=p.nu?`<div class="mut">Mega form. ${p.stone?ilink(p.stone)+' is':'Its stone is'} not obtainable in ${esc(CF.name)}; listed because trainers use it.</div>`:`<div class="mut">Mega form. ${p.stone?(p.sloc?ilink(p.stone)+': '+esc(p.sloc):'Mega Stone: '+ilink(p.stone)+'.'):CF.orbs&&(p.n.startsWith('Primal')||/Rayquaza/.test(p.n))?'Orb or move based (see Useful NPCs in Items).':'No stone location in the items sheet.'}</div>`;
  else if(p.fc){const b=P.find(x=>x.dex===p.dex&&!x.fc&&x.g!==1);h=`<div class="mut">Form change of ${b?plink(b.id):'its base form'} (held item, move or in battle), so it is available whenever ${b?esc(b.name):'the base form'} is.</div>`;}
  else if(p.g===3)h=`<div class="mut">${TX.g3}</div>`;
  else if(!p.w.length)h=`<div class="mut">No direct wild encounter. Obtained by evolving or breeding (see Evolution).</div>`;
  else{const seen={};h=`<table class="wh"><tr><th>Location</th><th>Method</th><th>Rate</th><th>Lv</th></tr>${[...p.w].sort((a,b)=>locRank(a[0])-locRank(b[0])||a[0]-b[0]).map((w,j)=>{const n=LOC[w[0]],k=seen[n]=(seen[n]||0)+1;
   return `<tr${PK('wh:'+n+'#'+k,j)}><td><a href="#/l/${w[0]}">${esc(n)}</a>${w[4]?`<div class="mut small">${esc(w[4])}</div>`:''}</td><td>${esc(w[1])}</td><td class="n">${esc(w[2])}</td><td class="n">${esc(w[3])}</td></tr>`;}).join('')}</table>`;}
- if(p.hi&&p.hi.length)h+=`<div class="mut small" style="margin-top:6px">Wild held item${p.hi.length>1?'s':''}: ${p.hi.map(esc).join(', ')}</div>`;
  return h;}
+// Held items: what this form holds in the wild (P.hi, highest % first, no % when the data has none), only on a form you
+// can meet there (wildForm); '' when none (no section). Trainers' held items are on the item page's Held by.
+function heldBlock(p){const wild=wildForm(p)?(p.hi||[]).map(h=>Array.isArray(h)?h:[h,null]).filter(h=>h[0]).map((h,j)=>[...h,j]).sort((a,b)=>(b[1]??-1)-(a[1]??-1)||a[2]-b[2]):[];
+ if(!wild.length)return '';
+ return `<div class="phi">${wild.map(([n,pct],j)=>`<div${PK('hi:w:'+n,j)}>${ilink(n)}${pct!=null?`<span class="pct">${esc(pct)}%</span>`:''}</div>`).join('')}</div>`;}
 function confBox(cf){return cf&&cf.length?`<div class="card conf"><h3>Sources disagree</h3><ul>${cf.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="mut small" style="margin-top:4px">${TX.conf}</div></div>`:'';}
 // Evolution: the whole family from its base stage, each Pokémon then its forms (same dex number, not evolved into) then
 // what it evolves into, indented per stage. The current page's row is highlighted and not a link.
@@ -235,11 +245,17 @@ function famBlock(p){const base=formsOf(p).find(x=>x.g!==1&&!x.fc)||p;let r=base
 function defBlock(p){const g={};types.forEach(a=>{let m=1;p.t.forEach(d=>{m*=((D.TC[a]||{})[d]??10)/10;});if(m!==1)(g[m]=g[m]||[]).push(a);});
  const row=(m,l)=>g[m]?`<div style="margin:3px 0"${PK('td:'+m,m)}><span class="mut" style="display:inline-block;width:44px">${l}</span>${g[m].map(ty).join('')}</div>`:'';
  return row(4,'4×')+row(2,'2×')+row(0.5,'½×')+row(0.25,'¼×')+row(0,'0×')+`<div class="mut small" style="margin-top:4px">${TX.tc} Abilities (Levitate and so on) not included.</div>`;}
-// A move row: full words while the table is wide, type and category letters when it's narrow (dex.css, .mvw).
-function mrow(i,lv,o,occ){const v=MV[i]||{};const w=(v.x?mark('New in '+CF.name):v.dc||(v.h&&v.h.length)?mark('Changed in '+CF.name):'')+(v.cf?mark('Sources disagree',1):'');
- return `<tr${PK('mv:'+M[i]+(occ>1?'#'+occ:''),o)}>${lv!==undefined?`<td class="n lv">${lv||'Evo'}</td>`:''}<td>${mlink(i)}${w}</td><td class="tc">${v.t?ty(v.t)+tyc(v.t):''}</td><td class="tc">${cat(v.c)+catc(v.c)}</td><td class="n">${v.bp==='Varies'?'<span class="hw">Varies</span><span class="pc0">Var</span>':v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'<span class="pc">%</span>':'-'}</td></tr>`;}
+// A move row: full words while the table is wide, type and category letters when it's narrow (dex.css, .mvw). bo: the
+// MI records of its own abilities on this move (ownBoosts): a tap mark after the name, the ability and effect on tap.
+function mrow(i,lv,o,occ,bo){const v=MV[i]||{};const w=(v.x?mark('New in '+CF.name):v.dc||(v.h&&v.h.length)?mark('Changed in '+CF.name):'')+(v.cf?mark('Sources disagree',1):'');
+ return `<tr${PK('mv:'+M[i]+(occ>1?'#'+occ:''),o)}>${lv!==undefined?`<td class="n lv">${lv||'Evo'}</td>`:''}<td>${mlink(i)}${w}${bo?`<button type="button" class="abm" data-m="${i}" aria-expanded="false" aria-label="${esc(bo.map(r=>AB[r.a][0]+': '+r.e).join('; '))}"></button>`:''}</td><td class="tc">${v.t?ty(v.t)+tyc(v.t):''}</td><td class="tc">${cat(v.c)+catc(v.c)}</td><td class="n">${v.bp==='Varies'?'<span class="hw">Varies</span><span class="pc0">Var</span>':v.bp??'-'}</td><td class="n">${v.ac!=null?v.ac+'<span class="pc">%</span>':'-'}</td></tr>`;}
 const mhead=lv=>`<tr>${lv?'<th class="n">Lv</th>':''}<th>Move</th><th class="tc"><span class="hw">Type</span></th><th class="tc"><span class="hw">Cat</span></th><th class="n">Pow</th><th class="n">Acc</th></tr>`;
 let moveTab='lv';
+// Moves a Pokémon's own abilities affect (MI records on the user's side naming one of p.as): move index -> records.
+const ownBoosts=p=>{const out=new Map();(D.MI||[]).forEach(r=>{if(r.w==='u'&&r.a!=null&&AB[r.a]&&p.as.has(r.a))r.m.forEach(m=>{if(!out.has(m))out.set(m,[]);out.get(m).push(r);});});return out;};
+const boostLine=(p,r)=>`<div>${alink(r.a)}${p.ha===r.a&&!p.a.includes(r.a)?' <span class="mut small">hidden</span>':''}: ${esc(r.e)}${r.h?'<span class="interaction-changed">changed</span>':''}</div>`;
+function bindBoosts(p,boosts){app.querySelector('#mvb').addEventListener('click',e=>{const b=e.target.closest('.abm');if(!b)return;const tr=b.closest('tr'),next=tr.nextElementSibling,open=next?.classList.contains('abd');
+ if(open)next.remove();else tr.insertAdjacentHTML('afterend',`<tr class="abd"><td colspan="${tr.cells.length}">${boosts.get(+b.dataset.m).map(r=>boostLine(p,r)).join('')}</td></tr>`);b.setAttribute('aria-expanded',String(!open));bars();});}
 const abLine=i=>`${alink(i)}${AB[i][2]?mark('New in '+CF.name):AB[i][3]?mark('Changed in '+CF.name):''}<div class="mut small">${esc(AB[i][4]||AB[i][3]||AB[i][1])}</div>`;
 const psec=(k,label,body,cls='')=>`<details class="card psec${cls}" data-s="${k}" ${(PO[k]??PDEF[k])?'open':''}><summary${PK('sec:'+k,PSECS.findIndex(x=>x[0]===k))}><h3>${label}</h3></summary><div class="pb">${body}</div><button class="endbar sb" hidden>${UPI}<span>${label}</span></button></details>`;
 function navLink(p,t,d){if(!t)return '<span class="gap"></span>';const r=relOf(p,t);
@@ -247,7 +263,7 @@ function navLink(p,t,d){if(!t)return '<span class="gap"></span>';const r=relOf(p
 let PNB=[null,null],PCUR=null;
 function detail(id){const p=byId[id];if(!p){PB.hidden=true;app.innerHTML='<p>Not found.</p>';return;}fil.innerHTML='';PCUR=p;
  const byName=a=>[...a].sort((x,y)=>M[x].localeCompare(M[y]));
- const tbl=(a,lv)=>{const seen={};return a.length?`<table>${mhead(lv)}${a.map(x=>lv?mrow(x[1],x[0],x[0]||0.5,seen[x[1]]=(seen[x[1]]||0)+1):mrow(x,undefined,M[x],1)).join('')}</table>`:'<div class="mut">None</div>';};
+ const boosts=ownBoosts(p),tbl=(a,lv)=>{const seen={};return a.length?`<table>${mhead(lv)}${a.map(x=>lv?mrow(x[1],x[0],x[0]||0.5,seen[x[1]]=(seen[x[1]]||0)+1,boosts.get(x[1])):mrow(x,undefined,M[x],1,boosts.get(x))).join('')}</table>`:'<div class="mut">None</div>';};
  const mv={lv:['Level-up',p.lv.length,()=>tbl(p.lv,true)],tm:['TM/HM',p.tm.length,()=>tbl(byName(p.tm))],...HASTU?{tu:['Tutor',p.tu.length,()=>tbl(byName(p.tu))]}:{},eg:['Egg',p.eg.length,()=>tbl(byName(p.eg))]};
  if(!mv[moveTab])moveTab='lv';
  const fs=formsOf(p).length>1,u=TRUSE[p.id];PNB=[pnb(p,-1),pnb(p,1)];
@@ -262,9 +278,11 @@ function detail(id){const p=byId[id];if(!p){PB.hidden=true;app.innerHTML='<p>Not
  ${psec('sc','Stat calculator',calcBody(p),' calc')}
  ${psec('td','Type defences',defBlock(p))}
  ${psec('wh','Where to find',whereTable(p))}
+ ${(hb=>hb?psec('hi','Held items',hb):'')(heldBlock(p))}
  ${psec('ev','Evolution',famBlock(p))}
  ${u?psec('tr',`Used by trainers (${u.length})`,u.map((t,j)=>`<div${PK('tr:'+t.k,j)}><a href="#/tr/${t.k}">${esc(t.n)}</a> <span class="mut small">${esc(t.loc)} · ${esc(t.g)}${t.st?(PICK?' · if your starter is '+esc(t.st):' · '+esc(t.st)+' starter'):''}</span></div>`).join('')):''}
  ${psec('mv','Moves',`<div class="sub">${Object.entries(mv).map(([k,v])=>`<button data-k="${k}" class="${k===moveTab?'on':''}">${v[0]} (${v[1]})</button>`).join('')}</div><div id="mvb" class="mvw">${mv[moveTab][2]()}</div>`)}`;
+ bindBoosts(p,boosts);
  app.querySelectorAll('.sub button').forEach(b=>b.onclick=()=>{moveTab=b.dataset.k;app.querySelectorAll('.sub button').forEach(x=>x.classList.toggle('on',x===b));app.querySelector('#mvb').innerHTML=mv[moveTab][2]();bars();});
  const hero=app.querySelector('.hero');if(fs)hero.onclick=e=>{if(!e.target.closest('a,button'))formMenu(p,hero.querySelector('h2'));};
  const cu=hero.querySelector('.calc-use');if(cu)cu.onclick=()=>window.CALC?.use(p);
@@ -331,24 +349,80 @@ function bindCalc(p){const g=id=>app.querySelector(id);if(!g('#c-l'))return;
   try{localStorage.setItem(calcKey(p),JSON.stringify(s));localStorage.setItem(LS.calc+':lastlv',s.l);}catch(e){}};
  app.querySelectorAll('.calc input,.calc select,.calc .nv').forEach(e=>e.addEventListener('input',upd));upd();}
 // ===== MOVE PAGE
-function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const r=(learn[i]||[]);const tms=(D.IT||[]).filter(s=>s.k==='tm').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>[s.n==='Move Tutors'?'Tutor':x[0].split(' ')[0],x[1]]));
- const order={Evo:0,Lv:0,TM:1,Tutor:2,Egg:3};r.sort((a,b)=>(order[a[1].split(' ')[0]]-order[b[1].split(' ')[0]])||a[0].i-b[0].i);
- app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
+// The Back line of the move and ability pages: ‹ Back, and on the right + Filter (the Pokémon list filtered by it).
+const backLine=(k,v)=>`<div class="backl"><a class="back" href="javascript:history.back()">‹ Back</a>${v!=null?`<a class="back fadd" href="#/" onclick="st.f=[{k:'${k}',v:${v}}];save();">+ Filter</a>`:''}</div>`;
+const MOVE_PROPS={contact:'Makes contact',nocontact:'No contact',punch:'Punching move',bite:'Biting move',slicing:'Slicing move',sound:'Sound move',
+ bullet:'Ball / bomb move',pulse:'Pulse move',powder:'Powder move',wind:'Wind move',dance:'Dance move',heal:'Healing move',kick:'Kicking move',
+ secondary:'Has an added effect',recoil:'Recoil',drain:'Drains HP',multihit:'Hits more than once',charge:'Two turns',recharge:'User must recharge',
+ binding:'Traps and binds',crash:'Crash damage on a miss',noprotect:'Goes through Protect',bypasssub:'Hits through Substitute',gravity:'Unusable under Gravity',defrost:'Thaws the user'};
+const moveProps=move=>{const flags=move.f||[];return [...(move.c&&move.c!=='Status'&&!flags.includes('contact')?['nocontact']:[]),...Object.keys(MOVE_PROPS).filter(prop=>flags.includes(prop))];};
+const moveProperties=move=>`<ul class="move-props">${moveProps(move).map(prop=>`<li><a href="#/mp/${prop}">${MOVE_PROPS[prop]}</a></li>`).join('')}</ul>`;
+const moveEffects=move=>(move.se||[]).length?`<ul class="move-effects">${move.se.map(([chance,text])=>`<li>${chance===100&&/^[A-Z]/.test(text)?'':esc(chance)+'% '}${esc(text)}</li>`).join('')}</ul>`:'';
+function interactionRows(rows){const groups=new Map();rows.forEach(row=>{if(!groups.has(row.e))groups.set(row.e,[]);groups.get(row.e).push(row);});
+ return `<div class="move-interactions">${[...groups].map(([effect,entries])=>`<div class="interaction-row"><span class="interaction-effect">${esc(effect)}</span><span class="interaction-who">${entries.map(row=>`<span>${row.a!=null&&AB[row.a]?alink(row.a):ilink(row.i||'')}${row.h?'<span class="interaction-changed">changed</span>':''}</span>`).join(', ')}</span></div>`).join('')}</div>`;}
+function moveInteractions(index){const rows=(D.MI||[]).filter(row=>row.m.includes(index));return rows.length?`<div class="sech">Affected by</div>${['u','t'].map(side=>{const entries=rows.filter(row=>row.w===side);return entries.length?`<div class="card move-affected" data-side="${side}">${sectionHTML('mi:'+side,side==='u'?'Boosted / changed by':`Against it (${entries.length})`,'',interactionRows(entries),side==='u')}</div>`:'';}).join('')}`:'';}
+const LEARN_METHODS={Lv:'Level up',TM:'TM',HM:'HM',Tutor:'Tutor',Egg:'Egg',Evo:'Evo'};
+function moveLearnGroups(index){const machines=new Set((D.IT||[]).filter(section=>section.k==='tm').flatMap(section=>section.r.filter(row=>row[2]===index).map(row=>/^HM\d/i.test(row[0])?'HM':/^TM\d/i.test(row[0])?'TM':null)).filter(Boolean));
+ const groups={};(learn[index]||[]).forEach(([pokemon,how])=>{const methods=how==='TM'?(machines.size?[...machines]:['TM']):[how.split(' ')[0]];
+  methods.forEach(method=>{(groups[method]??=[]).push([pokemon,how==='TM'?method:how]);});});return Object.entries(LEARN_METHODS).filter(([method])=>groups[method]?.length).map(([key,label])=>({key,label,rows:groups[key]}));}
+function moveLearnTable(rows){return `<table class="lrn">${rows.map(([pokemon,how])=>`<tr><td class="learn-sprite">${sprl(pokemon.id,'s40')}</td><td>${plink(pokemon.id)}${tag(pokemon)}<div>${pokemon.t.map(ty).join('')}</div></td><td class="n">${esc(how)}</td></tr>`).join('')}</table>`;}
+// A card with a .sub picker over groups [{key,label,rows}] (Learned by here, Pokémon with it on the ability page): All
+// shows every group's .sec collapsed, picking one shows only it, open. Neither the pick nor the open state is saved.
+function pickBody(groups,key,pre,table){return groups.filter(group=>key==='all'||key===group.key).map(group=>sectionHTML(pre+group.key,group.label,`<span class="mut small">${group.rows.length}</span>`,table(group.rows),key!=='all')).join('');}
+function pickCard(cls,title,aria,groups,total,pre,table){
+ return `<div class="card ${cls}"><h3>${title} (${total})</h3><div class="sub" role="group" aria-label="${aria}"><button type="button" class="on" data-method="all" aria-pressed="true">All (${total})</button>${groups.map(group=>`<button type="button" data-method="${group.key}" aria-pressed="false">${group.label} (${group.rows.length})</button>`).join('')}</div><div class="learn-groups">${pickBody(groups,'all',pre,table)}</div></div>`;}
+function bindPick(cls,groups,pre,table){const root=app.querySelector('.'+cls);root.querySelectorAll('[data-method]').forEach(button=>button.onclick=()=>{
+ root.querySelectorAll('[data-method]').forEach(other=>{other.classList.toggle('on',other===button);other.setAttribute('aria-pressed',String(other===button));});root.querySelector('.learn-groups').innerHTML=pickBody(groups,button.dataset.method,pre,table);});}
+function moveLearnedBy(index){const groups=moveLearnGroups(index);return pickCard('move-learn','Learned by','Learned by method',groups,groups.reduce((total,group)=>total+group.rows.length,0),'ml:',moveLearnTable);}
+const bindMoveLearn=index=>bindPick('move-learn',moveLearnGroups(index),'ml:',moveLearnTable);
+const propertyMoves=prop=>Object.hasOwn(MOVE_PROPS,prop)?MV.map((move,index)=>moveProps(move).includes(prop)?index:-1).filter(index=>index>=0):[];
+const moveList=indices=>`<div class="list move-list">${[...indices].sort((first,second)=>M[first].localeCompare(M[second])).map(index=>`<a class="row" href="#/m/${index}"><span class="nm">${esc(M[index])}</span>${MV[index].t?ty(MV[index].t):''}<span class="bst">${esc(MV[index].bp??'-')}</span></a>`).join('')}</div>`;
+function moveProperty(prop){const moves=propertyMoves(prop);if(!moves.length){history.replaceState(history.state,'','#/');render();return;}
+ fil.innerHTML='';app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a><div class="card"><h2>${MOVE_PROPS[prop]} (${moves.length})</h2>${moveList(moves)}</div>`;window.scrollTo(0,0);}
+const MOVE_TARGETS={normal:['one one . me one .','One adjacent Pokémon'],any:['one one one me one one','Any one Pokémon, far ones too'],
+ adjacentFoe:['one one . me . .','One adjacent opponent'],adjacentAlly:['. . . me one .','One adjacent ally'],
+ adjacentAllyOrSelf:['. . . one one .','The user or an adjacent ally'],allAdjacentFoes:['on on . me . .','All adjacent opponents'],
+ allAdjacent:['on on . me on .','All adjacent Pokémon'],randomNormal:['one one . me . .','A random adjacent opponent'],
+ self:['. . . on . .','The user'],allies:['. . . on on on',"The user's side"],allySide:['. . . on on on',"The user's side"],
+ allyTeam:['. . . on on on',"The user's team"],foeSide:['on on on me . .','The opposing side'],
+ all:['on on on on on on','The whole field'],scripted:['one one . me . .','The last Pokémon to hit the user']};
+function moveTarget(target){const spec=MOVE_TARGETS[target];if(!spec)return '';const [cells,label]=spec;
+ return `<div class="tgw" data-target="${esc(target)}"><div class="tgg" aria-hidden="true">${cells.split(' ').map((cell,index)=>`<i class="${cell==='.'?'':cell}">${index===3?'You':''}</i>`).join('')}</div><div class="tgt"><div class="mut small">Targets</div>${esc(label)}</div></div>`;}
+// The TMs / HMs / TRs that teach a move (their item names, data order): "Also TM004 Calm Mind" and a Where to find card
+// each (the item page's, ticks shared). Tutor lines stay as the place lines.
+const moveTMs=i=>[...new Set((D.IT||[]).filter(s=>s.k==='tm'&&s.n!=='Move Tutors').flatMap(s=>s.r.filter(x=>x[2]===i&&isTMName(x[0])&&itemOf(x[0])).map(x=>x[0])))];
+function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tus=(D.IT||[]).filter(s=>s.k==='tm'&&s.n==='Move Tutors').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>x[1])),tms=moveTMs(i);
+ app.innerHTML=`${backLine('mv',i)}
  <div class="card"><h2 style="margin:0 0 6px">${esc(M[i])}${v.x?` <span class="tag">${CF.orig} original</span>`:''}</h2><div>${v.t?ty(v.t):''} ${cat(v.c)}</div>
  <div class="mvst">${[['Power',v.bp??'-'],['Accuracy',v.ac!=null?v.ac+'%':'Never misses'],['PP',v.pp??'-'],['Priority',v.pr>0?'+'+v.pr:v.pr||0]].map(([n,x])=>`<div><span>${n}</span><b>${x}</b></div>`).join('')}</div>
- ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${tms.map(t=>`<div style="margin-top:6px"><b>${esc(t[0])}:</b> ${esc(t[1])}</div>`).join('')}${v.f&&v.f.length?`<div class="mut small" style="margin-top:4px">Flags: ${v.f.map(esc).join(', ')}</div>`:''}
+ ${moveTarget(v.tg)}
+ ${moveProperties(v)}
+ ${moveEffects(v)}
+ ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${fxBox(v.b)}${tms.length?`<div class="alsotm">Also ${tms.map(n=>ilink(n)).join(', ')}</div>`:''}${tus.map(t=>`<div style="margin-top:6px"><b>Tutor:</b> ${esc(t)}</div>`).join('')}
  ${v.e?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(v.e).replace(/\n/g,'<br>')}</div></div>`:''}
  ${v.h&&v.h.length?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.mvh}</b><ul>${v.h.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${v.dc||!TX.nodc?'':`<div class="mut small">${TX.nodc}</div>`}</div>`:''}${v.cf?confBox(v.cf):''}
  <div class="mut small" style="margin-top:8px">${TX.mvsrc}${v.x&&TX.mvsrcx?TX.mvsrcx:''}.</div></div>
- <div class="card"><h3>Learned by (${r.length})</h3><table class="lrn">${r.map(([p,h])=>`<tr><td style="width:44px">${sprl(p.id,'s40')}</td><td>${plink(p.id)}${tag(p)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${h}</td></tr>`).join('')}</table>
- <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'mv',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
+ ${tms.map(n=>itemWhere(itemOf(n),'Where to find '+n.split(' ')[0],'iw:'+n)).join('')}
+ ${moveInteractions(i)}
+ ${moveLearnedBy(i)}`;bindMoveLearn(i);colBind(app);window.scrollTo(0,0);}
 // ===== ABILITY PAGE
 const abSlot=(p,i)=>{const n=new Set(p.a).size,r=[];if(p.a.includes(i))r.push(n===1?'Only ability':'Ability '+(p.a.indexOf(i)+1));if(p.ha===i)r.push('Hidden ability');return r.join(', ');};
+// Moves it affects: the MI records naming this ability, one block per effect (e) on each side (u = its holder's moves,
+// t = moves used on it), each effect followed by its moves (moveList). Absent when no record names it.
+function affectsCard(rows,key,against){if(!rows.length)return '';
+ const body=['u','t'].map(side=>{const effects=new Map();rows.filter(row=>row.w===side).forEach(row=>{const effect=effects.get(row.e)||{e:row.e,h:0,m:new Set()};row.m.forEach(m=>effect.m.add(m));effect.h||=row.h;effects.set(row.e,effect);});
+  return effects.size?`<div class="ab-side" data-side="${side}"><div class="mut small">${side==='u'?"Its holder's moves":against}</div>${[...effects.values()].map(effect=>`<div class="ab-effect">${esc(effect.e)}${effect.h?'<span class="interaction-changed">changed</span>':''}</div>${moveList(effect.m)}`).join('')}</div>`:'';}).join('');
+ return `<div class="card ab-affects">${sectionHTML(key,`Moves it affects (${new Set(rows.flatMap(row=>row.m)).size})`,'',body,false)}</div>`;}
+const abilityMoves=i=>affectsCard((D.MI||[]).filter(row=>row.a===i&&row.m.length),'am','Moves used against it');
+// Pokémon with it: Normal (one of its abilities) and Hidden groups under a picker (pickCard); a species with it in both is in both.
+const abilityUserGroups=i=>[['n','Normal',p=>p.a.includes(i)],['h','Hidden',p=>p.ha===i]].map(([key,label,has])=>({key,label,rows:(abUsers[i]||[]).filter(has)})).filter(group=>group.rows.length);
+const abilityUserTable=i=>rows=>`<table class="lrn">${rows.map(p=>`<tr><td class="learn-sprite">${sprl(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>`;
 function abilityDetail(i){fil.innerHTML='';const a=AB[i];if(!a){app.innerHTML='<p>Not found.</p>';return;}const us=abUsers[i]||[];
- app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
+ app.innerHTML=`${backLine('ab',us.length?i:null)}
  <div class="card"><h2 style="margin:0 0 6px">${esc(a[0])}${a[2]?` <span class="tag">${CF.orig} original</span>`:''}</h2>${a[5]?`<div class="mut small">Original</div><p style="margin:0">${esc(a[5])}</p>`:`<p style="margin:0">${esc(a[1]||'No description.')}</p>`}${a[3]?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(a[3])}</div></div>`:''}${TX.absrc?`<div class="mut small" style="margin-top:6px">${TX.absrc}</div>`:''}</div>
- <div class="card"><h3>Pokémon with it (${us.length})</h3><table class="lrn">${us.map(p=>`<tr><td style="width:44px">${sprl(p.id,'s40')}</td><td>${plink(p.id)}&#8203;<span class="tag">${abSlot(p,i)}</span><div>${p.t.map(ty).join('')}</div></td></tr>`).join('')}</table>
- <div style="margin-top:8px"><a href="#/" onclick="st.f=[{k:'ab',v:${i}}];save();">Show in Pokémon list as a filter ›</a></div></div>`;window.scrollTo(0,0);}
+ ${abilityMoves(i)}
+ ${pickCard('ab-users','Pokémon with it','Pokémon with it by slot',abilityUserGroups(i),us.length,'au:',abilityUserTable(i))}`;
+ bindPick('ab-users',abilityUserGroups(i),'au:',abilityUserTable(i));window.scrollTo(0,0);}
 
 // ===== LOCATIONS + ENCOUNTER TRACKER (state in localStorage LS.track {s starter, e:{area:{p}|{f}}, t:{trade}}; see hacks/<hack>/notes.md)
 // FAM = evolution family via union-find over evolution links (dupes clause); Megas and form changes join their base.
@@ -546,30 +620,134 @@ function listLocs2(scroll){fil.innerHTML='';const s=st.q;const li=st.lopenLi;st.
  if(scroll&&tk)land(app.querySelector(`details.stopd[data-k="${tk}"]>summary`));}
 
 
-// ===== ITEMS TAB (D.IT sections from the items xlsx; r = [item, text, link, missable?])
-function itemRow(sec,r){const nm=sec.k==='tm'&&r[2]!=null?`<a href="#/m/${r[2]}">${esc(r[0])}</a>`:sec.k==='mega'&&r[2]?`<a href="#/p/${r[2]}">${esc(r[0])}</a>`:esc(r[0]);
- return `<tr><td>${nm}</td><td>${esc(r[1]).replace(/\n/g,'<br>')}${r[3]?'<span class="warn">MISSABLE</span>':''}</td></tr>`;}
+// ===== ITEMS TAB (template/README.md → Items tab). D.IT: one box per kind, one row per item; r = [item, text, link,
+// missable?, sub-heading, pickup keys per line of text]. A name on several rows of a box (nomerge: Unbound's Zygarde
+// Cell) is a card per row, titled by its place. Move Tutors are a card per tutor (rows sharing a place and unlock) when
+// the rows carry group headings, else a table, like Useful NPCs.
+function itemRow(sec,r,ri){const nm=sec.k==='npc'?esc(r[0]):sec.n==='Move Tutors'?(r[2]!=null?`<a href="#/m/${r[2]}">${esc(r[0])}</a>`:esc(r[0])):ilink(r[0]);
+ return `<tr data-ri="${ri}"><td>${nm}</td><td>${esc(r[1]).replace(/\n/g,'<br>')}${r[3]?'<span class="warn">MISSABLE</span>':''}</td></tr>`;}
+const isCardBox=sec=>sec.k!=='npc'&&sec.n!=='Move Tutors';
+const tutGrouped=sec=>sec.n==='Move Tutors'&&new Set(sec.r.map(r=>r[4])).size>1;
+// Names of a box with a card per row: 2+ rows, each one pickup (nomerge). Any other repeat is one card (the first row's).
+const nameRows=sec=>sec.nr??=sec.r.reduce((a,r)=>(a[r[0]]=(a[r[0]]||0)+1,a),{});
+const splitName=(sec,n)=>(sec.ns??={})[n]??=nameRows(sec)[n]>1&&sec.r.every(r=>r[0]!==n||((r[5]||[]).length===1&&!!r[5][0]));
+const cardRows=(sec,ris)=>{const seen=new Set();return ris.filter(ri=>{const n=sec.r[ri][0];if(splitName(sec,n))return true;if(seen.has(n))return false;seen.add(n);return true;});};
+// A card (dex-row look): icon, name, TM type, MISSABLE, done/total for 2+ pickups, its next 3 lines (unticked pickups,
+// other lines, ticked pickups), +N more; faded when every pickup is ticked. TICKHOOK redraws it on a tick.
+function itemCard(si,ri){const sec=D.IT[si],r=sec.r[ri],n=r[0],e=itemOf(n),one=splitName(sec,n)||!e,h=ihref(n);
+ let ls=(one?itemLines({rows:[{r}]}):itemLines(e)).map(x=>({...x,miss:false})),title=n;
+ if(one&&ls.length===1){const m=ls[0].l.match(/^(?:Found|Also):\s*([^·]+?)\s*·\s*(.+)$/);if(m){title=m[1];ls=[{...ls[0],l:m[2]}];}}
+ const pk=ls.filter(x=>x.k),done=pk.filter(x=>tickHas(x.k)).length,tm=e&&tmMoveOf(e),mv=tm!=null&&MV[tm];
+ return `<div class="row irow${pk.length&&done===pk.length?' idone':''}" data-n="${esc(n)}" data-si="${si}" data-ri="${ri}"><a class="iico" href="${h}" tabindex="-1">${iconCard(n)}</a><span class="rt"><span class="nm"><a href="${h}">${esc(title)}</a>${mv&&mv.t?' '+ty(mv.t):''}${r[3]?'<span class="warn">MISSABLE</span>':''}${pk.length>1?` <span class="iprog">${done}/${pk.length}</span>`:''}</span>`+
+  `<span class="iwl">${linesOrdered(ls).slice(0,3).map(itemLine).join('')}</span>${ls.length>3?`<a class="imore" href="${h}">+${ls.length-3} more</a>`:''}</span></div>`;}
+// Tutors: rows of one box sharing a place and unlock ("place · cost · unlock"), in first-row order.
+function tutors(sec,ris){const m=new Map();ris.forEach(ri=>{const p=String(sec.r[ri][1]).split(' · '),k=p[0]+'|'+p.slice(2).join(' · ');
+ if(!m.has(k))m.set(k,{p:p[0],need:p.slice(2).join(' · '),rs:[]});m.get(k).rs.push(ri);});return [...m.values()];}
+const tutorCards=(sec,ris)=>`<div class="list ilist">${tutors(sec,ris).map(t=>`<div class="row irow tut" data-ri="${t.rs.join(' ')}"><span class="rt"><span class="nm">${esc(t.p)}</span>${t.need?`<span class="mut small tneed">Needs: ${esc(t.need)}</span>`:''}<span class="tmoves">${t.rs.map(ri=>{const r=sec.r[ri],mv=r[2]!=null&&MV[r[2]],c=String(r[1]).split(' · ')[1]||'';
+ return `<span class="tm1">${r[2]!=null?`<a href="#/m/${r[2]}">${esc(r[0])}</a>`:esc(r[0])}${mv&&mv.t?' '+ty(mv.t):''}${c?` <span class="tcost">${esc(c)}</span>`:''}</span>`;}).join('')}</span></span></div>`).join('')}</div>`;
+// A box's rows (all, or a search's matches) as cards, tutor cards or a table.
+const boxBody=(si,ris)=>{const sec=D.IT[si];return tutGrouped(sec)?tutorCards(sec,ris):isCardBox(sec)?`<div class="list ilist">${cardRows(sec,ris).map(ri=>itemCard(si,ri)).join('')}</div>`:`<table class="itbl ix">${ris.map(ri=>itemRow(sec,sec.r[ri],ri)).join('')}</table>`;};
+// Box / sub-heading count: items (each row of a nomerge name counts in its sub-heading), tutors for Move Tutors.
+const boxCount=(sec,ris)=>sec.n==='Move Tutors'?tutors(sec,ris).length+' tutors':!isCardBox(sec)?ris.length:ris.length===sec.r.length?Object.keys(nameRows(sec)).length:cardRows(sec,ris).length;
+const tickBar=()=>{const n=tickCount();return `<div class="itbar"><span class="mut small">${n} ticked</span>${n?'<button type="button" class="itclr">Clear ticks</button>':''}</div>`;};
 function listItems(){fil.innerHTML='';const s=st.q;const IT=D.IT||[];
- if(s){const html=IT.map(sec=>{const rows=sec.r.filter(r=>(r[0]+' '+r[1]).toLowerCase().includes(s));return rows.length?`<div class="sech">${esc(sec.n)}</div><table class="itbl ix">${rows.map(r=>itemRow(sec,r)).join('')}</table>`:'';}).join('');
-  app.innerHTML=html;return;}
- app.innerHTML=segBar('it-all all')+IT.map((sec,si)=>`<details class="split jt" data-si="${si}" ${IO.o[si]?'open':''}><summary>${esc(sec.n)} <span class="mut small">${sec.r.length}</span></summary><div class="body"></div></details>`).join('');
+ if(s){app.innerHTML=IT.map((sec,si)=>{const ris=sec.r.map((r,ri)=>ri).filter(ri=>(sec.r[ri][0]+' '+sec.r[ri][1]).toLowerCase().includes(s));
+  return ris.length?`<div class="sech">${esc(sec.n)}</div>`+boxBody(si,ris):'';}).join('');return;}
+ app.innerHTML=tickBar()+segBar('it-all all')+IT.map((sec,si)=>`<details class="split jt" data-si="${si}" ${IO.o[sec.n]?'open':''}><summary>${esc(sec.n)} <span class="mut small">${boxCount(sec,sec.r.map((r,ri)=>ri))}</span></summary><div class="body"></div></details>`).join('');
  app.querySelectorAll('details.split[open]').forEach(d=>TOG.items(d));bars();}
-// Inside a box: its name again as a sticky heading, then the rows, under yellow sub-headings where the data gives them
-// (r[4]: EI shops, Hardlove's held item kinds; two or more get an Expand / Collapse all bar). State in LS.items {o:{<box>:1 open}, s:{<box>.<sub>:1 open}, layout
-// (relayout)}: boxes and sub-headings start closed (a 0 saved before 2026-10-31 still means closed). Filled when first opened.
+// Inside a box: its name again as a sticky heading, then the cards under yellow sub-headings (r[4]; two or more get an
+// Expand / Collapse all bar). State in LS.items {o:{<kind>:1 open}, s:{<kind>.<sub-heading>:1 open}, g: ticks}, by
+// name; boxes and sub-headings start closed. Saved before 2026-11-01 by box index (o "3", s "3.Berries", a layout):
+// those entries are dropped once. Filled when first opened.
 const IO=(()=>{try{return Object.assign({o:{},x:{},s:{}},JSON.parse(localStorage.getItem(LS.items)||'{}'))}catch(e){return {o:{},x:{},s:{}}}})();
-if(relayout(IO,(D.IT||[]).map(sec=>[sec.n,[]]),{o:1,x:1,s:1}))try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
-function itemBox(si){const sec=D.IT[si],tbl=rs=>`<table class="itbl ix">${rs.map(r=>itemRow(sec,r)).join('')}</table>`,subs=[];
- sec.r.forEach(r=>{const g=r[4]||'';if(!subs.length||subs[subs.length-1][0]!==g)subs.push([g,[]]);subs[subs.length-1][1].push(r);});
+if(!IO.g||typeof IO.g!=='object'||Array.isArray(IO.g))IO.g={};
+const ioSave=()=>{try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}};
+{let old='layout' in IO;delete IO.layout;['o','x','s'].forEach(m=>{if(!IO[m]||typeof IO[m]!=='object')IO[m]={};Object.keys(IO[m]).forEach(k=>{if(/^\d+(\.|$)/.test(k)){delete IO[m][k];old=true;}});});if(old)ioSave();}
+// Pickup ticks (template/README.md → Item page): IO.g {pickupKey: 1}. A pickup is one place you get an item once; its key
+// (IT r[5], one per line of r[1], 0 for a line that isn't one; WK stop it [4]) is stable across updates, so a tick whose
+// key is gone from the data waits unused in g and comes back with it. Every copy of a tick box (input.itk[data-pk]) on
+// screen follows a tap; TICKHOOK functions (key, on) redraw what depends on it (cards, counts).
+const TICKHOOK=[];
+const tickHas=k=>!!(k&&IO.g[k]);
+function tickSet(k,on){if(!k)return;if(on)IO.g[k]=1;else delete IO.g[k];ioSave();
+ app.querySelectorAll(`input.itk[data-pk="${CSS.escape(k)}"]`).forEach(c=>{c.checked=!!on;});TICKHOOK.forEach(f=>f(k,!!on));}
+// Ticks of pickups in this build (orphans not counted); tickClear empties g, orphans too.
+const tickCount=()=>Object.keys(IO.g).filter(k=>pickupOf(k)).length;
+function tickClear(){IO.g={};ioSave();app.querySelectorAll('input.itk[data-pk]').forEach(c=>{c.checked=false;});TICKHOOK.forEach(f=>f(null,false));}
+const tickBox=k=>`<input type="checkbox" class="itk" data-pk="${esc(k)}"${tickHas(k)?' checked':''} aria-label="Got it">`;
+app.addEventListener('change',e=>{const c=e.target;if(c.matches&&c.matches('input.itk[data-pk]'))tickSet(c.dataset.pk,c.checked);});
+// Cards and the tick bar follow a tick (a card's next lines move up, its count and fade change).
+TICKHOOK.push(k=>{if(document.body.dataset.v!=='items')return;const n=k&&(pickupOf(k)||{}).n;if(k&&!n)return;
+ app.querySelectorAll(n?`.irow[data-n="${CSS.escape(n)}"]`:'.irow[data-n]').forEach(c=>{const t=document.createElement('template');t.innerHTML=itemCard(+c.dataset.si,+c.dataset.ri);c.replaceWith(t.content);});
+ const b=app.querySelector('.itbar');if(b)b.outerHTML=tickBar();});
+// Clear ticks: the first tap arms it, the second clears; any other tap (or a redraw: leaving the tab) disarms it.
+document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('.itclr'),a=app.querySelector('.itclr[data-sure]');
+ if(a&&a!==t){delete a.dataset.sure;a.textContent='Clear ticks';}if(!t)return;
+ if(!t.dataset.sure){t.dataset.sure=1;t.textContent=`Tap again to clear ${tickCount()}`;return;}tickClear();});
+function itemBox(si){const sec=D.IT[si],subs=new Map();sec.r.forEach((r,ri)=>{const g=r[4]||'';if(!subs.has(g))subs.set(g,[]);subs.get(g).push(ri);});
  // No stop header: the box's sub-headings (every row has one) pin straight under the search bar.
  return (sec.note?`<div class="mut small" style="margin:6px 0">${esc(sec.note)}</div>`:'')+
-  (subs.filter(([g])=>g).length>1?segBar('it-sp'):'')+
-  subs.map(([g,rs])=>g?sectionHTML(esc(si+'.'+g),esc(g),`<span class="mut small">${rs.length}</span>`,tbl(rs),IO.s[si+'.'+g]===1):tbl(rs)).join('')+
+  ([...subs.keys()].filter(g=>g).length>1?segBar('it-sp'):'')+
+  [...subs].map(([g,ris])=>g?sectionHTML(esc(sec.n+'.'+g),esc(g),`<span class="mut small">${boxCount(sec,ris)}</span>`,boxBody(si,ris),IO.s[sec.n+'.'+g]===1):boxBody(si,ris)).join('')+
   `<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(sec.n)}</span></button>`;}
-TOG.items=d=>{if(st.q)return;const iS=()=>{try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}};
- if(d.matches('details.split[data-si]')){const si=+d.dataset.si,b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=itemBox(si);colBind(b);}if(d.open)IO.o[si]=1;else delete IO.o[si];}
- else if(d.matches('details.sec')){if(d.open)IO.s[d.dataset.s]=1;else delete IO.s[d.dataset.s];}else return;iS();};
+TOG.items=d=>{if(st.q)return;
+ if(d.matches('details.split[data-si]')){const si=+d.dataset.si,n=D.IT[si].n,b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=itemBox(si);colBind(b);}if(d.open)IO.o[n]=1;else delete IO.o[n];}
+ else if(d.matches('details.sec')){if(d.open)IO.s[d.dataset.s]=1;else delete IO.s[d.dataset.s];}else return;ioSave();};
 
+// ===== ITEM PAGE (#/i/<item name>; template/README.md → Item page). ITX: everything the guide says about each item, by
+// name, built on first use: its IT rows (not Useful NPCs or Move Tutors), wild holders (P.hi), trainers' Pokémon
+// holding it, MI records and the Megas it makes. PKU: pickup key → {n item, l line, w [split, stop] of its walk row}.
+let ITX=null,PKU=null;
+function itemIdx(){if(ITX)return ITX;const I={},get=n=>I[n]??={n,rows:[],wild:[],tr:[],mi:[],mega:[]};PKU={};
+ (D.IT||[]).forEach(sec=>{if(sec.k==='npc'||sec.n==='Move Tutors')return;sec.r.forEach(r=>{get(r[0]).rows.push({sec,r});
+  String(r[1]).split('\n').forEach((l,j)=>{const k=(r[5]||[])[j];if(k&&!PKU[k])PKU[k]={n:r[0],l:l.trim()};});});});
+ D.WK.splits.forEach((sp,si)=>sp.st.forEach((s,ti)=>(s.it||[]).forEach(i=>{const p=i[4]&&PKU[i[4]];if(p&&!p.w)p.w=[si,ti];})));
+ P.forEach(p=>{if(wildForm(p))(p.hi||[]).forEach(h=>{const [n,pct]=Array.isArray(h)?h:[h,null];if(n)get(n).wild.push([p,pct]);});
+  if(p.g===1&&p.stone)get(p.stone).mega.push(p);});
+ TRS.forEach(t=>{const by={};[...t.p,...(t.pt||[]).flatMap(x=>x.p||[])].forEach(m=>{if(m.i)(by[m.i]??=[]).push(m);});Object.entries(by).forEach(([n,ms])=>get(n).tr.push([t,ms]));});
+ (D.MI||[]).forEach(r=>{if(r.i&&r.m.length)get(r.i).mi.push(r);});
+ Object.keys(D.IX||{}).forEach(get);return ITX=I;}
+const itemOf=n=>itemIdx()[n];
+const pickupOf=k=>(itemIdx(),PKU[k]);
+// Item links: '#/i/' + the name, with every character a saved route can't hold escaped (the reopen route allows only
+// [\w/%.-]). An item the guide doesn't know is plain text.
+const ihref=n=>'#/i/'+encodeURIComponent(n).replace(/[!'()*~]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());
+const ilink=(n,label)=>n&&itemOf(n)?`<a class="itl" href="${ihref(n)}">${icon(n,18)}${esc(label??n)}</a>`:esc(label??n??'');
+const isTMName=n=>/^(TM|HM|TR)\d/.test(n);
+const tmMoveOf=e=>{if(!isTMName(e.n))return null;const x=e.rows.find(x=>x.sec.k==='tm'&&x.r[2]!=null);return x?x.r[2]:null;};
+function itemKind(e){const x=e.rows[0];if(!x)return e.wild.length?'Wild Pokémon hold it':e.tr.length?'Only trainers hold it':'';
+ const sub=x.r[4];return x.sec.n+(sub&&sub!==x.sec.n&&sub!==e.n?' · '+sub:'');}
+// Every line of every row, with its pickup key (0: not a pickup) and MISSABLE; in the order a list shows them: pickups
+// not ticked yet, then the lines that aren't pickups (shops, wild, repeatable), then ticked pickups.
+function itemLines(e){const seen=new Set(),out=[];e.rows.forEach(({r})=>String(r[1]).split('\n').forEach((l,j)=>{l=l.trim();const k=(r[5]||[])[j]||0;
+ if(!l||seen.has(k+'|'+l))return;seen.add(k+'|'+l);out.push({l,k,miss:!!r[3]});}));return out;}
+const linesOrdered=ls=>[...ls.filter(x=>x.k&&!tickHas(x.k)),...ls.filter(x=>!x.k),...ls.filter(x=>x.k&&tickHas(x.k))];
+// A pickup's walkthrough stop as a link (SR.jumpPick: the stop's Items open, landing on the row).
+const stopLink=k=>{const p=k&&pickupOf(k),w=p&&p.w,s=w&&D.WK.splits[w[0]].st[w[1]];return s?` <a class="iwk" href="#/walk" data-pk="${esc(k)}">${esc(s.n)} ›</a>`:'';};
+const itemLine=x=>{const t=`${esc(x.l)}${x.miss?'<span class="warn">MISSABLE</span>':''}${stopLink(x.k)}`;
+ return x.k?`<label class="iline">${tickBox(x.k)}<span>${t}</span></label>`:`<div class="iline">${t}</div>`;};
+document.addEventListener('click',ev=>{const a=ev.target.closest&&ev.target.closest('a.iwk[data-pk]');if(!a)return;ev.preventDefault();SR.jumpPick(a.dataset.pk);});
+const fxBox=t=>t?`<div class="ifx"><div class="ifxh">In battle</div>${esc(t)}</div>`:'';
+function megaLine(e){return e.mega.map(p=>{const b=P.find(x=>x.dex===p.dex&&x.g!==1&&!x.fc);
+ return `<div class="imega">${b?sprl(b.id,'s40')+plink(b.id):''}<span class="mut">→</span>${sprl(p.id,'s40')}${plink(p.id)}</div>${p.nu?`<div class="mut small">Not obtainable in ${esc(CF.name)}; trainers use it.</div>`:''}`;}).join('');}
+function itemWhere(e,label='Where to find',key='iw'){const ls=itemLines(e);if(!ls.length)return '';
+ return `<div class="card iwhere">${sectionHTML(esc(key),`${esc(label)} (${ls.length})`,'',`<div class="iwl">${linesOrdered(ls).map(itemLine).join('')}</div>`,true)}</div>`;}
+// Held by: Wild (one row per species, highest % first) and Trainers (one row per trainer, its Pokémon holding it).
+const heldGroups=e=>[{key:'w',label:'Wild',rows:[...e.wild].sort((a,b)=>(b[1]??-1)-(a[1]??-1)||a[0].name.localeCompare(b[0].name))},
+ {key:'t',label:'Trainers',rows:e.tr.filter(([t])=>!rivalHidden(t))}].filter(g=>g.rows.length);
+const heldTable=rows=>`<table class="lrn">${rows.map(r=>r[0].k!=null?(([t,ms])=>`<tr><td class="learn-sprite">${ms.map(m=>sprl(m.id,'s40')).join('')}</td><td><a href="#/tr/${encodeURIComponent(t.k)}">${esc(t.n)}</a><div class="mut small">${esc([t.h||t.loc,t.g].filter(Boolean).join(' · '))}</div></td></tr>`)(r)
+ :(([p,pct])=>`<tr><td class="learn-sprite">${sprl(p.id,'s40')}</td><td>${plink(p.id)}<div>${p.t.map(ty).join('')}</div></td><td class="n">${pct!=null?esc(pct)+'%':''}</td></tr>`)(r)).join('')}</table>`;
+function itemDetail(n){fil.innerHTML='';const e=itemOf(n);
+ if(!e){app.innerHTML='<a class="back" href="javascript:history.back()">‹ Back</a><p>Not found.</p>';window.scrollTo(0,0);return;}
+ const x=(D.IX||{})[n]||[],tm=tmMoveOf(e),held=heldGroups(e),kind=itemKind(e);
+ // A TM page is the move's row and where the TM is; the move page has the rest. A Mega Stone's line says what it does.
+ const top=tm!=null?moveList([tm]):(x[0]?`<p>${esc(x[0])}${x[2]?'<span class="interaction-changed">changed</span>':''}</p>`:'')+(e.mega.length?'':fxBox(x[1]))+megaLine(e);
+ app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a>
+ <div class="card ipg"><div class="ihd">${iconCard(n)}<h2>${esc(n)}</h2></div>${kind?`<div class="mut small ikind">${esc(kind)}</div>`:''}${top}</div>
+ ${itemWhere(e)}
+ ${held.length?pickCard('it-held','Held by','Held by',held,held.reduce((a,g)=>a+g.rows.length,0),'ih:',heldTable):''}
+ ${affectsCard(e.mi,'im','Moves used against its holder')}`;
+ if(held.length)bindPick('it-held',held,'ih:',heldTable);colBind(app);window.scrollTo(0,0);}
 
 // ===== COLLAPSIBLE PAGES (template/README.md). Pages built from details.split use these: header taps that never
 // scroll, collapse bars at the bottom of blocks taller than the window, the rail's jump buttons (to details.split.jt),
@@ -746,13 +924,16 @@ const CHK=D.WK.splits.some((sp,si)=>sp.st.some((s,ti)=>stopLeaves(s,si,ti).lengt
 const tkCounts=()=>[Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length,Object.values(TK.e).filter(e=>e&&e.f).length];
 // Guide info: tracker and checklist tools, then the game docs (cheat codes and unplaced items count as docs), then the
 // intro. Built when opened.
+// A walkthrough item row's place text, with its pickup tick (the same tick as the Items tab and the item page).
+const walkItemText=i=>{const t=esc(i[2]).replace(/\n/g,'<br>')+(/miss permanently/i.test(i[2])?'<span class="warn">MISSABLE</span>':'');
+ return i[4]?`<label class="iline">${tickBox(i[4])}<span>${t}</span></label>`:t;};
 function guideInfoHTML(){const W=D.WK,[n,f]=tkCounts();
  const para=t=>esc(t).split(/\n\s*\n/).map(x=>/\S(?: {2,}|\t)\S/.test(x)?`<pre class="dpre">${x}</pre>`:`<p style="margin:6px 0">${x.replace(/\n/g,'<br>')}</p>`).join('');
  const doc=(k,n,body,cls='')=>`<details class="stopd" data-k="${k}" ${WO.x[k]===1?'open':''}><summary class="stoph"><span class="pn">${n}</span></summary><div class="stop${cls}">${body}</div></details>`;
  const docs=(W.cheats?doc('doccheat','Cheat codes',`<div class="mut small" style="margin:6px 0">${esc(W.cnote)}</div><table class="itbl">${W.cheats.map(c=>`<tr><td><b>${esc(c[0])}</b>${c[1]?`<div class="mut small">or ${esc(c[1])}</div>`:''}</td><td>${esc(c[2])}${c[3]?' <span class="tag">toggle</span>':''}</td></tr>`).join('')}</table>`):'')+
   (W.docs||[]).map(([t,x],j)=>doc('doc'+j,esc(t),para(x),' small doc')).join('')+
   (W.ko?doc('docko','Post-KO switch-in AI',`<table class="itbl">${W.ko.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</table>${W.ko.note.map(x=>`<div class="mut small" style="margin-top:6px">${esc(x)}</div>`).join('')}`):'')+
-  (W.np.length?doc('docnp',`Items with no walkthrough place <span class="mut small">${W.np.length}</span>`,`<table class="itbl wt">${W.np.map(i=>`<tr><td>${esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2])}</td></tr>`).join('')}</table>`):'');
+  (W.np.length?doc('docnp',`Items with no walkthrough place <span class="mut small">${W.np.length}</span>`,`<table class="itbl wt">${W.np.map(i=>`<tr><td>${ilink(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${walkItemText(i)}</td></tr>`).join('')}</table>`):'');
  return (HAS_MGM?`<label class="mgm"><input type="checkbox" class="mgm-toggle" ${MGM?'checked':''}> MGM</label>`:'')+`<div class="psec">Encounter tracker</div><div class="mut small">${n} caught · ${f} failed</div>`+
   `<div class="bar pbar">${trackerButtons()}${CHK?'<button class="btn danger wk-reset">Reset checklist</button>':''}</div>`+
   (docs?`<div class="psec">Game docs</div>`+docs:'')+`<div class="mut small" style="margin:12px 0 4px">${TX.walk}</div>`;}
@@ -792,7 +973,7 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=!(WO.x[k]===1
   (s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+
   (lv.length?walkSec(k,'c',`<span class="tag${nd===lv.length?' got':''}">${nd}/${lv.length}</span>`,`<div class="chkb">${steps}</div>`,mq):'')+
   (areas.length?walkSec(k,'e',areas.map(([ai])=>encSummary(ai)).join(''),enc):'')+
-  (its.length?walkSec(k,'i',`<span class="tag">${its.length}</span>${its.some(i=>/miss permanently/i.test(i[2]))?'<span class="tag miss">MISSABLE</span>':''}`,`<table class="itbl wt ix">${its.map(i=>`<tr><td>${i[3]!=null&&(i[0]==='TMs and HMs'||i[0]==='Move Tutors')?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Mega Stones'&&i[3]?`<a href="#/p/${i[3]}">${esc(i[1])}</a>`:esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2]).replace(/\n/g,'<br>')}${/miss permanently/i.test(i[2])?'<span class="warn">MISSABLE</span>':''}</td></tr>`).join('')}</table>`):'')+
+  (its.length?walkSec(k,'i',`<span class="tag">${its.length}</span>${its.some(i=>/miss permanently/i.test(i[2]))?'<span class="tag miss">MISSABLE</span>':''}`,`<table class="itbl wt ix">${its.map(i=>`<tr${i[4]?` data-pk="${esc(i[4])}"`:''}><td>${i[0]==='Move Tutors'&&i[3]!=null?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Useful NPCs'?esc(i[1]):ilink(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${walkItemText(i)}</td></tr>`).join('')}</table>`):'')+
   (ts.length?walkSec(k,'t',`<span class="tag">${ts.length}</span>`,walkTrainers(ts)):'');
  return h+`<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.n)}</span></button></div></details>`;}
 // What a walkthrough search matches: the stop's name, notes, steps, items, areas (and their Pokemon) and trainers.
@@ -895,7 +1076,7 @@ function monCard(x,cap,sel,trainerKey,index,guess){const p=byId[x.id];const lv=m
  const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'')+(x.au?`<span class="tag aura">${auTxt(x.au)}</span>`:'');
  const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');const ev=EVS&&!MGM&&x.ev?evTxt(x.ev):'';
  return `<div class="mon${sel?' sel':''}"><div class="mh">${sprl(x.id,'s32')}<div class="mt"><div class="l1"><span class="mn">${p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:'?'}</span><b>${lvs}</b></div><div class="l2">${p?p.t.map(ty).join(''):''}${tags} ${spd}</div></div></div>
- <div class="small ab">${ab}${x.i?' · '+esc(x.i):''}${x.na?` · <span title="${esc(natLabel(x.na))}">${esc(x.na)}</span>`:''}</div>
+ <div class="small ab">${ab}${x.i?' · '+ilink(x.i):''}${x.na?` · <span title="${esc(natLabel(x.na))}">${esc(x.na)}</span>`:''}</div>
  <div class="mv${gm?' guess':''}">${(gm||x.m).map(i=>`<a href="#/m/${i}"><span class="dot" style="background:${tcol(M[i]==='Hidden Power'&&x.hp?x.hp:(MV[i]||{}).t)}"></span>${M[i]==='Hidden Power'&&x.hp?'HP '+esc(x.hp):esc(M[i])}</a>`).join('')}</div>
  ${ev?`<div class="mut small ex">EVs ${ev}</div>`:''}${(x.x||[]).length?`<div class="mut small ex">Sheet: ${x.x.map(esc).join('; ')}</div>`:''}
  ${(x.cf||[]).length?`<div class="cfx">Sheet says ${x.cf.map(esc).join('; ')}</div>`:''}${(x.hn||[]).length?`<div class="cfx">hzla says ${x.hn.map(esc).join('; ')}</div>`:''}${CF.calc&&trainerKey?`<button class="calc-versus" data-trainer="${esc(trainerKey)}" data-index="${index}">Calc vs ${esc(p?.name||'?')} ▸</button>`:''}</div>`;}
@@ -1016,7 +1197,7 @@ function trTeams(p,btn){const r=trRowsOf(p),full=r.every(d=>d.open),g=trGrab(btn
 function trAll(btn){const open=btn.dataset.a==='1',g=trGrab(btn);noAnchor();
  app.querySelectorAll('details.split.jt').forEach(d=>{if(d.open!==open){d.open=open;TOG.trainers(d);}});bars();trRestore(g);}
 function trainerDetail(k){fil.innerHTML='';const t=TRK[k];if(!t){app.innerHTML='<p>Not found.</p>';return;}
- app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a><div class="mut small" style="margin-top:6px">${esc(t.g)}${t.h?' · '+esc(t.h):''}${t.c&&t.c.length?' · calc: '+t.c.map(esc).join(', '):''}</div>`+trainerBlock(t,true);bindTrainers();window.scrollTo(0,0);}
+ app.innerHTML=`<a class="back" href="javascript:history.back()">‹ Back</a><div class="mut small" style="margin-top:6px">${esc(t.g)}${t.h?' · '+esc(t.h):''}${t.c&&t.c.length?' · calc: '+t.c.map(esc).join(', '):''}</div><div class="small" style="margin-top:4px"><a href="javascript:SR.jumpTr('${t.k}')">In Trainers ›</a>${walkOf(k)?` · <a href="javascript:SR.jumpWalkTr('${t.k}')">In Walkthrough ›</a>`:''}</div>`+trainerBlock(t,true);bindTrainers();window.scrollTo(0,0);}
 // Trainer rows (Trainers page and walkthrough stops): name, tags (and the place, where no heading gives it) and the
 // team preview; open, the full card, built when first opened (bindTrd), with Collapse on its bottom line. open(t):
 // whether a row starts open.
@@ -1088,7 +1269,7 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
  done(){const v=this.q.trim();this.close();if(v===q.value)return;q.value=v;q.dispatchEvent(new Event('input'));window.scrollTo(0,0);},
  // Open a route, then run then() once it has rendered (see hashchange).
  go(h,then){if(location.hash===h){render(false);if(then)then();}else{this.after=then||null;location.hash=h;}},
- cur(){const v=(location.hash||'#/').slice(2).split('/')[0];return {locs:'l',l:'l',trainers:'t',tr:'t',items:'i',walk:'w'}[v]||'p';},
+ cur(){const v=(location.hash||'#/').slice(2).split('/')[0];return {locs:'l',l:'l',trainers:'t',tr:'t',items:'i',i:'i',walk:'w'}[v]||'p';},
  pick(i,x){const it=this.items[i];if(!it)return;const o=it.o,a=it.acts[x]||it.acts[0];
   const r=[o,...recRead().filter(y=>JSON.stringify(y)!==JSON.stringify(o))].slice(0,6);recSave(r);
   this.close();a[1]();},
@@ -1102,10 +1283,14 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
  // A trainer fought alongside others shares their row, which goes by the first one's key: open them all, find it by data-ks.
  jumpWalkTr(k){const w=walkOf(k);if(!w)return;const sk=w[0]+'.'+w[1];this.clear();WO.o[w[0]]=1;WO.x[sk]=1;WO.s[sk+'.t']=1;trMates(k).forEach(x=>TRDO.add(x));woSave();
   this.go('#/walk',()=>land(trRowOf(app.querySelector(`details.stopd[data-k="${sk}"]`),k)));},
+ // A pickup's walkthrough row: its split, stop and Items section open, landing on the row (tr[data-pk]); a row not drawn
+ // (another starter's): the stop.
+ jumpPick(k){const p=pickupOf(k),w=p&&p.w;if(!w)return;const sk=w[0]+'.'+w[1];this.clear();WO.o[w[0]]=1;WO.x[sk]=1;WO.s[sk+'.i']=1;woSave();
+  this.go('#/walk',()=>{const d=app.querySelector(`details.stopd[data-k="${sk}"]`);land(d&&(d.querySelector(`tr[data-pk="${CSS.escape(k)}"]`)||d.querySelector(':scope>summary')));});},
  jumpTr(k){const t=TRK[k];if(!t)return;this.clear();const [gi,si]=t.at;TOPEN.o[gi]=1;TOPEN.p[gi+'.'+si]=1;trMates(k).forEach(x=>TOPEN.t[x]=1);trSave();
   this.go('#/trainers',()=>land(trRowOf(app.querySelector(`details.split[data-gi="${gi}"]`),k)));},
- jumpItem(si,ri){const sec=D.IT[si],g=sec.r[ri][4];this.clear();IO.o[si]=1;if(g)IO.s[si+'.'+g]=1;try{localStorage.setItem(LS.items,JSON.stringify(IO))}catch(e){}
-  this.go('#/items',()=>land(app.querySelectorAll(`details.split[data-si="${si}"] .body tr`)[ri]));},
+ jumpItem(si,ri){const sec=D.IT[si],g=sec.r[ri][4];this.clear();IO.o[sec.n]=1;if(g)IO.s[sec.n+'.'+g]=1;ioSave();
+  this.go('#/items',()=>land(app.querySelector(`details.split[data-si="${si}"] .body [data-ri~="${ri}"]`)));},
  place(a){this.clear();this.go('#/l/'+AR[ARS(a)[0]].l[0]);},
  // A result's actions, [label, run, page], the page you're on first (on the Pokemon tab, a Pokemon's Dex entry).
  acts(o){const L=[],cur=this.cur(),add=(lb,pg,f)=>L.push([lb,f,pg]);
@@ -1123,7 +1308,7 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
   else if(o.k==='ms'){if(!MIS.has(o.m))return null;add('Walk','w',()=>this.jumpMis(o.m,o.c));}
   else if(o.k==='t'){if(!TRK[o.v])return null;add('Trainers','t',()=>this.jumpTr(o.v));if(walkOf(o.v))add('Walk','w',()=>this.jumpWalkTr(o.v));add('Full page','tp',()=>this.go('#/tr/'+o.v));}
   else if(o.k==='i'){const sec=(D.IT||[])[o.si],r=sec&&sec.r[o.ri];if(!r)return null;const lc=r[0].toLowerCase();
-   add('Items','i',()=>this.jumpItem(o.si,o.ri));
+   add('Items','i',()=>this.jumpItem(o.si,o.ri));if(sec.k!=='npc'&&sec.n!=='Move Tutors'&&itemOf(r[0]))add('Page','ip',()=>this.go(ihref(r[0])));
    if(walkStops().some(([s])=>s.it.some(i=>i[1].toLowerCase().includes(lc))))add('Walk','w',()=>this.find('#/walk',r[0]));
    if(TRS.some(t=>!rivalHidden(t)&&t.p.some(x=>x.i&&x.i.toLowerCase().includes(lc))))add('Trainers','t',()=>this.find('#/trainers',r[0]));}
   else return null;
@@ -1214,6 +1399,7 @@ function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).sp
  document.body.dataset.v=v;if(v!=='p')PB.hidden=true;if(RJ)RJ.hidden=!(COLV[v]&&!st.q||v==='p'||CF.calc&&v==='calc');
  if(v==='p'){setTab('p');detail(decodeURIComponent(parts[1]));}
  else if(v==='m'){setTab('p');moveDetail(+parts[1]);}
+ else if(v==='mp'){setTab('p');moveProperty(decodeURIComponent(parts[1]||''));if(location.hash!==h)return;}
  else if(v==='a'){setTab('p');abilityDetail(+parts[1]);}
  else if(v==='locs'){setTab('l');listLocs2(false);}
  // #/l/<place>: a navigation (also one typed from search, st.lgo) opens and scrolls to the place once; re-renders don't.
@@ -1221,10 +1407,11 @@ function render(fromInput){const h=location.hash||'#/';const parts=h.slice(2).sp
  else if(v==='trainers'){setTab('t');listTrainers();}
  else if(v==='tr'){setTab('t');trainerDetail(decodeURIComponent(parts[1]));}
  else if(v==='items'){setTab('i');listItems();}
+ else if(v==='i'){setTab('i');itemDetail(decodeURIComponent(parts.slice(1).join('/')));}
  else if(v==='walk'){setTab('w');listWalk();}
  else if(v==='calc'){setTab('c');calcPage();}
  else{setTab('p');filtersPokemon();listPokemon();if(!fromInput&&st.view!==''&&st.listScroll){cvApply(st.listScroll.z);toAnchor(st.listScroll);}}
- q.placeholder=v==='walk'?'Search walkthrough':v==='trainers'||v==='tr'?'Search trainers':v==='items'?'Search items':v==='locs'||v==='l'?'Search locations':'Search, or add filters';
+ q.placeholder=v==='walk'?'Search walkthrough':v==='trainers'||v==='tr'?'Search trainers':v==='items'||v==='i'?'Search items':v==='locs'||v==='l'?'Search locations':'Search, or add filters';
  st.view=v;jumpState();}
 // Back and forward put each page back where it was (the browser's own restore would use a raw scrollY, which lands
 // wrong with estimated heights). The anchor is also saved (LS.pos) for Dex Viewer, which calls dexViewer.restoreScroll

@@ -55,7 +55,8 @@ def replacements(ids):
     return {moves[normal('move', old)]: new for old, new, _ in drayano.move_changes(doc('Move Changes')).replacements}
 
 
-def build(data):
+def species_map(data):
+    """'dex:form' -> P id and growth rate for every gen 5 form that has a P entry, and the forms with none."""
     ids = tables()
     base = {normal('species', pokemon['n']): pokemon['id'] for pokemon in data['P']}
     available = {pokemon['id'] for pokemon in data['P']}
@@ -74,6 +75,13 @@ def build(data):
             growth[key] = rate
         else:
             missing.append(f'{key} {name}')
+    return species, growth, missing
+
+
+def build(data):
+    ids = tables()
+    available = {pokemon['id'] for pokemon in data['P']}
+    species, growth, missing = species_map(data)
     report(f'GID species: {len(species)} species:form keys; {len(set(species.values()))}/{len(available)} P ids;'
            f' {sum(f"{dex}:0" in species for dex in range(1, 650))}/649 base species')
     report('GID unmapped species: ' + (', '.join(missing) or 'none'))

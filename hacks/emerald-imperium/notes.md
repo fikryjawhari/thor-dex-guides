@@ -108,6 +108,27 @@ Data rules:
   there, and the mart sells more).
 - **Move changes** compare EI data with Showdown Gen 9; status moves with a nominal 100 accuracy and variable-power moves
   (Showdown power 0) are not counted as changes.
+- **Move targets, properties and added effects** (`move_metadata.py`, run by `dex.move_metadata` on the merged MV):
+  MV.tg, MV.f and MV.se come from the release's `moves_info.h` (iriv24/pokeemerald-expansion `2576d0f`), with the
+  config read as the release builds it (latest generation, `B_USE_FROSTBITE` on, so "freeze" chances are frostbite).
+  Group fields (`makesContact`, `punchingMove`, EI's own `kickingMove`, ...) map to moveprops PROPS; a field set to
+  `B_EXTRAPOLATED_MOVE_FLAGS` takes the EI Dex `flags` instead. `noprotect` comes from `ignoresProtect` (a reliable
+  flag, so `protect_flags` applies). `secondary` follows each added effect's chance / `sheerForceBoost`; recoil, drain,
+  crash, multihit, charge, recharge and binding follow the move's effect. MV.se lists every added effect with its
+  chance (self effects as "user ..."), plus recoil / drain / heal fractions and a few EI-specific phrases in
+  `move_metadata.py`; nothing is read from description prose. **Showdown Gen 9 fallback** (only where both the
+  expansion and the dex are silent): the target of `MOVE_TARGET_DEPENDS` moves (call moves such as Metronome, Assist)
+  and side / team targets the expansion files as `USER` (Reflect, Tailwind, Heal Bell, Flower Shield, ...); the build
+  report lists every one. Counter / Mirror Coat / Metal Burst / Comeuppance are `scripted`; Life Dew `allies`.
+- **Interactions** (MI): the stock latest-generation rules (`tools/moveprops.py`) plus `extract/move_rules.json`, each
+  entry citing the release source line: Iron Fist ×1.3 (stock 1.2); EI originals Striker (kicking ×1.3), ORAORAORAORA!
+  (punching moves except multi-hit ones hit again for 50%), Bone Zone (its four bone moves), THE GRIPPER (contact
+  traps), Parasitic Waste (the poisoning moves drain), Bad Company (two records: self stat drops, recoil); changed
+  Ice Body (frostbite on contact), Liquid Voice (sound ×1.2), Shield Dust (entry hazards), Mountaineer (Stealth Rock);
+  item Kicking Shoes (kicking ×1.1, no contact). The contact / kicking / punching lists are the move lists of MV.f at
+  this build (the override format takes names), so recheck them when moves change. Other EI originals and changes
+  work by type, category, stat or every move (Blazing Soul, Corrosion, Fatal Precision, Emperor's Presence, ...),
+  so they get no move rule (moveprops docstring: Exclusions).
 - **Trainers** (trainers.py). Pairing: whole trainers by species overlap + name tokens (127 / 137), then per Pokémon
   (doubles with two calc trainers search every calc trainer; same dex number allows form names such as
   Wishiwashi-School). 674 of 677 Pokémon have a calc set; the 3 without are the Route 103 rival starters (the calc has
@@ -136,6 +157,13 @@ Data rules:
   Shops have one row per item, each shop and price on its own line; berry lists split into individual berries.
   Battle rewards are `Also:` rows under the item's class, not a separate reward box; duplicate Leftovers merge.
   Mega Stones and Useful NPCs keep place text; NPCs sort A to Z. Name fixes use the rule's `rename` map.
+- **Descriptions** (`extract/item_desc.py` → `IX`): bag text from the hack's `items.h`, its `sXDesc` constants from
+  `src/data/text/item_descriptions.h` (same pin); an `#if` keeps its first branch (GEN_LATEST). `changed` = differs from
+  stock `items.h` where the fork branched off (572ea14, `.src/stock/`, SOURCES.md); the 27 items stock doesn't have count as changed.
+  TMs / HMs get none. Names the game squeezes match by constant (`ITEM_` + name); `Pasho Berry` and `Link Cable` have no
+  item in the hack's `items.h` and no text. `extract/item_desc.json` is the table.
+- **Held odds** (`P.hi`, `dex.py` `held_odds`): `species_info` `[itemCommon, itemRare]` as `[[item, %]]`: common 50,
+  rare 5, the same item in both 100; a lone slot keeps its own odds. None on Mega / Primal forms.
 - **Kept species**: obtainable species or actual trainer use; Megas / Primals need an obtainable base dex number
   or trainer use. Trainer-only Primal Dialga / Palkia stay; unused Mega Mewtwo X/Y and Mega Latias/Latios do not.
   IDs, order and move/ability/location indices are preserved; links to removed species are cleared, including
@@ -390,11 +418,26 @@ The other guides' notes link here.
 ```text
 The JSON in #data, the same for every guide. Key order and what is dropped: tools/schema.py, applied by the
 extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides that have that data, the others omit it.
-  Top level, in order: M MV AB P LOC AR [ARO] IT WK TR TC [GID] built   (no build markers, no source strings)
+  Top level, in order: M MV AB P LOC AR [ARO] IT [IX] WK TR TC [GID] built   (no build markers, no source strings)
   M   [moveName]
   MV  [{t type, c category, bp power or "Varies", ac accuracy or null, pp, pr priority, [cr crit stage when not 0,
-        6 = always a crit (the damage calc)], d description, f flags[], h change notes[], [dc 1 = the changes doc
+        6 = always a crit (the damage calc)], d description, [b in-battle text], [tg Showdown target code],
+        f properties[] (tools/moveprops.py PROPS / ALIASES), [se [[chance percent, effect text]]],
+        h change notes[], [dc 1 = the changes doc
         lists it, e the doc's paragraph], [cf doc-vs-data conflicts[]], [x 1 = hack original]}]
+      tg text / 2×3 grid: tools/moveprops.py TARGETS (all 15 codes named by the move-page plan).
+      se phrases come from moveprops.effect_text({kind, chance=100, who='target', ...}):
+      status (status=brn/par/psn/tox/slp/frz), flinch, confusion, stages (stages={def:-1,spd:-1}),
+      recoil/drain/heal (fraction=[numerator,denominator]; optional basis='damage'/'maxhp').
+      Examples: [30,'flinch'], [100,'user Def −1, SpD −1'], [100,'Drains 50% of damage'].
+      Prefix chance for effects, not complete recoil/drain/heal phrases. Missing metadata stays unknown;
+      source-aware extracts call protect_flags(flags,tg) to derive noprotect, never finalise().
+  MI  [{a AB index | i item name, w 'u' user / 't' target, e interaction phrase, m [M index],
+        [h 1 hack override], [s source line]}]
+      Rebuilt by finalise() after the prune; only abilities in AB and items in IT rows / trainer held items.
+      Stock latest-generation rules: tools/moveprops.py RULES; per-guide source-backed differences:
+      extract/move_rules.json (format and exclusions in that module's docstring). Several records may
+      describe one owner. Move/ability indexes are build-time links, never saved-state identifiers.
   AB  [[name, description, [1 if hack original, [changed, [statement, original]]]]]
       [0] name, [1] in-game description, [2] hack-original flag, [3] changes-doc text,
       [4] complete hack-effect statement, [5] standard original effect. Trailing falsy values are not written.
@@ -404,7 +447,7 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
         s[HP,Atk,Def,SpA,SpD,Spe], ef/et [[how, id]] evolves from/into, of[ids] other forms, lv[[level, moveIdx]]
         (level 0 = learned on evolution), tm[moveIdx], [tu[moveIdx] tutors], eg[moveIdx], w[[LOCidx, method, rate,
         levels, note]], g availability (0 obtainable, 1 Mega/Primal, 3 not found / trainer only),
-        [hi wild held item names], [stone, sloc: a Mega's stone and where to get it], [nu 1 = Mega not usable],
+        [hi [[wild held item, percent?]]], [stone, sloc: a Mega's stone and where to get it], [nu 1 = Mega not usable],
         [fc 1 = form change], [cf doc-vs-data conflicts[] ("Sources disagree" card)]}]   dex order, base form then other forms
   LOC [sublocationName] in tracker order
   AR  [{n area name, l[LOC idx], [st 1 = the starter picker is this area's tracker], [sub [AR idx] tracker slots the
@@ -414,10 +457,17 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
   ARO [AR idx] [optional] the Locations page's area order, where areas added later sit at the end of AR (same reason)
   P.w methods: Grass/cave, Surf, Old/Good/Super Rod, Rock Smash (rates are %), Static, Gift, Egg / Starter egg /
   Pseudo egg, Starter choice, Hot House (N+ badges), Choice (...), Roaming (rates "1 of N"); w[4] = how to get it.
-  IT  [{n section, k tm|mega|gen|npc, note, r:[[item, text, link (move idx or mega id), missable 1?, sub-heading]]}]
+  IT  [{n section, k tm|mega|gen|npc, note, r:[[item, text, link (move idx or mega id), missable 1?, sub-heading, pickup keys]]}]
       (the Items standard: tools/itemstd.py)
+      Boxes are item kinds, never Shops. Each item appears once (except nomerge pickups and separate tutors).
+      Each acquisition is its own line; shops fold in as Shop: lines. An item-name-only sub-heading is empty.
+      Pickup keys parallel text.splitlines(), one p<N> or 0 per line; 0 for shops, wild sources and repeatable rewards.
+      extract/pickup_keys.json retains removed identities, appends new keys, matches strict then unique loose identities.
+  IX  {item: [description, in-battle text, changed?]} optional; empty until item-text units fill it.
+      P.hi is [[item, percent?]]: null/absent percent = unknown; old name-only lists become [[item, null]].
+      One entry per distinct held item; Mega forms have none. Per-guide extract units supply the actual odds.
   WK  {splits:[{n "Name Split [Cap N]" (the cap is read from the name; none after the League), [note],
-       st:[{k stop key, n place, a[AR idx], s:[[step, note]], [note], it:[[section, item, text, link]],
+       st:[{k stop key, n place, a[AR idx], s:[[step, note]], [note], it:[[section, item, text, link, pickup key or 0]],
        tr [trainer keys], [x 1 = "on the way" stop]}]}], np unplaced items, [docs [[title, text]]],
        [ko {rows, note}], [cheats [[code, alias, text, toggle]], cnote]}
        Stop key k: the stop's identity for saved state. A guide's first build sets it to "split.stop" (its position

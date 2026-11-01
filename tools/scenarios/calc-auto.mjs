@@ -135,8 +135,9 @@ const checks = [
       await setWeather(page);
       const box = await page.value(`(()=>{const b=document.querySelector('[data-a="fightreset"]').getBoundingClientRect(),f=document.querySelector('.dformat').getBoundingClientRect(),d=document.querySelector('.dfield').getBoundingClientRect();return {top:Math.abs(b.top-f.top)<1,right:b.right<=d.right+0.5,after:b.left>=f.right,h:b.height,w:f.width};})()`);
       assert.ok(box.top && box.right && box.after, 'Reset fight on the format row, right of it, inside the Field: ' + JSON.stringify(box));
-      // Fight-bar buttons (↺ included) are 22 px high, accepted 2026-10-28; other buttons keep their 26 px minimum.
-      assert.ok(box.h >= 22, 'tap height ' + box.h);
+      // Battle-state row buttons (↺ included) are 20 px high (calc layout 4c, 2026-10-31; 22 px since 2026-10-28);
+      // other buttons keep their 26 px minimum.
+      assert.ok(box.h >= 20, 'tap height ' + box.h);
       await page.tap('[data-a="fightreset"]');
       assert.equal(await page.value('JSON.stringify([CALC.state().foe,CALC.state().mine])'), sel, 'same trainer and Pokémon');
       assert.equal(await hpOf(page, 'mine'), await maxOf(page, 'mine'), 'player HP 100 %');

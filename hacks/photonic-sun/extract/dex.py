@@ -6,7 +6,7 @@ Forms: totems (unnamed forms) are dropped, except Own Tempo Rockruff; cosmetic d
 abilities and level-up moves as a lower form of the same species) fold into that form. SPEC maps every
 (species id, form) to the P id it ended up as, for the wild, trainer and item stages.
 """
-from common import load, report, text
+from common import H, load, report, text
 from ctrguide import build_dex, parse_move_doc
 
 def evo_text(e):
@@ -39,4 +39,6 @@ def evo_text(e):
 
 def build(data):
     build_dex(data, load('dex-rebalanced.json'), load('dex-vanilla.json'),
-              move_notes=parse_move_doc(text('Move Changes')), evolution_text=evo_text, report=report)
+              move_notes=parse_move_doc(text('Move Changes')), evolution_text=evo_text, report=report,
+              move_archive=H.src + '/romfs-dl/x/Rebalanced/luma/titles/00040000001B5000/romfs/a/0/1/1',
+              move_fallback=H.dir + '/extract/move_fallback.json')

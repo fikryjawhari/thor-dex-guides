@@ -1,0 +1,186 @@
+[
+ {
+  "a": "Iron Fist",
+  "w": "u",
+  "e": "Power ×1.3",
+  "src": "EI 1.3.1 release 2576d0f, src/battle_util.c:9173"
+ },
+ {
+  "a": "Striker",
+  "w": "u",
+  "e": "Power ×1.3",
+  "src": "EI 1.3.1 release 2576d0f, src/battle_util.c:9177",
+  "prop": [
+   "kick"
+  ]
+ },
+ {
+  "a": "ORAORAORAORA!",
+  "w": "u",
+  "e": "Hits again for 50% damage (not multihit or Z-Moves)",
+  "src": "EI 1.3.1 release 2576d0f, src/battle_script_commands.c:1240",
+  "prop": [
+   "punch"
+  ],
+  "unless": [
+   "multihit"
+  ]
+ },
+ {
+  "a": "Bone Zone",
+  "w": "u",
+  "e": "Ignores immunities; damage ×2 when resisted",
+  "add": [
+   "Bone Club",
+   "Bonemerang",
+   "Bone Rush",
+   "Shadow Bone"
+  ],
+  "src": "EI 1.3.1 release 2576d0f, src/battle_util.c:10074,10465"
+ },
+ {
+  "a": "Ice Body",
+  "w": "t",
+  "e": "30% chance to inflict frostbite on the attacker",
+  "src": "EI 1.3.1 release 2576d0f, src/battle_util.c:5819",
+  "prop": [
+   "contact"
+  ]
+ },
+ {
+  "a": "THE GRIPPER",
+  "w": "u",
+  "e": "Traps the target on contact (except Ghost types)",
+  "src": "EI 1.3.1 release 2576d0f, src/battle_util.c:6110",
+  "prop": [
+   "contact"
+  ]
+ },
+ {
+  "a": "Parasitic Waste",
+  "w": "u",
+  "e": "Drains 50% of damage instead of poisoning",
+  "add": [
+   "Sludge",
+   "Sludge Bomb",
+   "Poison Sting",
+   "Twineedle",
+   "Cross Poison",
+   "Poison Jab",
+   "Gunk Shot",
+   "Sludge Wave",
+   "Poison Tail",
+   "Poison Fang",
+   "Barb Barrage",
+   "Shell Side Arm",
+   "Smog",
+   "Mortal Spin",
+   "Malignant Chain"
+  ],
+  "src": "EI 1.3.1 release 2576d0f, src/battle_util.c:11646; EI 1.3.1 release 2576d0f, src/battle_script_commands.c:5899"
+ },
+ {
+  "a": "Bad Company",
+  "w": "u",
+  "e": "Prevents the move’s self-inflicted stat drops",
+  "add": [
+   "Leaf Storm",
+   "Overheat",
+   "Scale Shot",
+   "Draco Meteor",
+   "Close Combat",
+   "Superpower",
+   "Headlong Rush",
+   "Hammer Arm",
+   "Psycho Boost",
+   "Spin Out",
+   "Dragon Ascent",
+   "Make It Rain",
+   "V-create",
+   "Hyperspace Fury",
+   "Armor Cannon",
+   "Clanging Scales",
+   "Fleur Cannon"
+  ],
+  "src": "EI 1.3.1 release 2576d0f, src/battle_script_commands.c:3564,3620,3700,3707,3784"
+ },
+ {
+  "a": "Bad Company",
+  "w": "u",
+  "e": "No recoil damage (except Struggle)",
+  "add": [
+   "Take Down",
+   "Double-Edge",
+   "Chloroblast",
+   "Flare Blitz",
+   "Draco Barrage",
+   "Brave Bird",
+   "Wild Charge",
+   "Volt Tackle",
+   "Steel Beam",
+   "Head Smash",
+   "Submission",
+   "Wood Hammer",
+   "Head Charge",
+   "Wave Crash",
+   "Mind Blown",
+   "Light Of Ruin"
+  ],
+  "src": "EI 1.3.1 release 2576d0f, src/battle_script_commands.c:6029; release BattleScript_MoveEffectRecoil",
+  "match": null
+ },
+ {
+  "a": "Liquid Voice",
+  "w": "u",
+  "e": "Becomes Water type; power ×1.2",
+  "add": [
+   "Bug Buzz",
+   "Uproar",
+   "Hyper Voice",
+   "Snarl",
+   "Alluring Voice",
+   "Psychic Noise",
+   "Disarming Voice",
+   "Round",
+   "Snore",
+   "Boomburst",
+   "Sparkling Aria",
+   "Echoed Voice",
+   "Overdrive",
+   "Chatter",
+   "Relic Song",
+   "Torch Song",
+   "Clanging Scales"
+  ],
+  "src": "EI 1.3.1 release 2576d0f, src/battle_util.c:9240"
+ },
+ {
+  "a": "Shield Dust",
+  "w": "t",
+  "e": "Blocks entry-hazard damage",
+  "add": [
+   "Spikes",
+   "Stealth Rock"
+  ],
+  "src": "EI 1.3.1 Changes Abilities tab: Shield Dust; extract/ability_text.json",
+  "match": null
+ },
+ {
+  "a": "Mountaineer",
+  "w": "t",
+  "e": "Blocks Stealth Rock damage",
+  "add": [
+   "Stealth Rock"
+  ],
+  "src": "EI 1.3.1 Changes Abilities tab: Mountaineer; extract/ability_text.json"
+ },
+ {
+  "i": "Kicking Shoes",
+  "w": "u",
+  "e": "Power ×1.1; no contact",
+  "src": "EI 1.3.1 release 2576d0f, src/battle_util.c:8501,9423",
+  "prop": [
+   "kick"
+  ]
+ }
+]

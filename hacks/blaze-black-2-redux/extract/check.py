@@ -150,8 +150,9 @@ for record in records:
     if record['source'] == 'Item Changes':
         doc_by_line.setdefault(record['line'], []).append(record)
     if record['box'] == items.NOT_LISTED:             # medicine, balls and the like: not in Items or the walkthrough
-        check(not any(row[0] == record['item'] for box in D['IT'] if box['n'] != 'Shops' for row in box['r']),
-              'items: not-listed item in IT outside Shops: ' + record['item'])
+        check(not any(row[0] == record['item'] and any(not line.startswith('Shop:') for line in row[1].splitlines())
+                      for box in D['IT'] for row in box['r']),
+              'items: not-listed item has a non-shop line: ' + record['item'])
     else:
         check(record['item'] in text_by_item, 'items: location item missing from IT: ' + record['item'])
     if record['link'] is not None:
@@ -169,14 +170,14 @@ for source in item_doc['placements']:
               'items: hidden/quantity at doc line %d' % source['line'])
         check(record['mode'] == source['mode'] and record['available'] == (source['mode'] != 'Easy/Normal'),
               'items: Challenge availability at doc line %d' % source['line'])
-        check(any(line.startswith('Found: ' + record['area']) for text in text_by_item.get(record['item'], [])
+        check(any(line.startswith(('Found: ' + record['area'], 'Also: ' + record['area'], 'Shop: ' + record['area'])) for text in text_by_item.get(record['item'], [])
                   for line in text.splitlines()), 'items: final IT lost doc line %d' % source['line'])
         if record['mode'] == 'Easy/Normal':
-            check(any(line.startswith('Found: ' + record['area']) and 'Easy/Normal only, not in Challenge' in line
+            check(any(line.startswith(('Found: ' + record['area'], 'Also: ' + record['area'], 'Shop: ' + record['area'])) and 'Easy/Normal only, not in Challenge' in line
                       for text in text_by_item[record['item']] for line in text.splitlines()),
                   'items: Easy/Normal-only placement flagged at doc line %d' % source['line'])
 valuables = {row[0]: row[4] for box in D['IT'] if box['n'] == 'Valuables' for row in box['r']}
-check(valuables and all(items.VALUABLES.get(name) == sub for name, sub in valuables.items()),
+check(valuables and all(('' if items.VALUABLES.get(name) == name else items.VALUABLES.get(name)) == sub for name, sub in valuables.items()),
       'items: Valuables holds only items.VALUABLES, under their sub-headings')
 check(not {'Iron Ball', 'Light Ball', 'Smoke Ball'} - {row[0] for box in D['IT'] if box['n'] == 'Held Items' for row in box['r']},
       'items: Iron / Light / Smoke Ball are Held Items')
@@ -209,10 +210,10 @@ check(any(row['item'] == 'HM01 Cut' and row['source'].startswith('Bulbapedia') f
 for record in records:
     if record['source'].startswith('Bulbapedia') and record['area'] == 'Castelia City' and 'Harlequin/Clerk' in record['note']:
         check(items.POSTGAME_VENDOR in record['note'], 'items: artist is postgame-only in Challenge')
-shops = next(box['r'] for box in D['IT'] if box['n'] == 'Shops')
+shops = [row for box in D['IT'] for row in box['r'] if any(line.startswith('Shop:') for line in row[1].splitlines())]
 for row in shops:
     for line in row[1].splitlines():
-        if line.startswith(('Battle Subway', 'Pokémon World Tournament')):
+        if line.startswith(('Shop: Battle Subway', 'Shop: Pokémon World Tournament')):
             check(items.POSTGAME_VENDOR in line, 'items: BP vendor is postgame-only in Challenge')
 check(any(row[0] == 'TM68 Giga Impact' and 'Doc says TM66' in row[1] for row in shops),
       'items: Giga Impact mart typo resolved against TM table')
@@ -377,7 +378,8 @@ check(sum(row[1] == 'Trade' for pokemon in P for row in pokemon['w']) == 30, '3 
 check(any(row[1] == 'Trade' and D['LOC'][row[0]] == 'Humilau City' and 'Provisional' in row[4] for row in byid['phione']['w']),
       'Phione Humilau provisional trade')
 check({pokemon['id']: pokemon['hi'] for pokemon in P if pokemon.get('hi')} ==
-      {'latios': ['Soul Dew'], 'latias': ['Soul Dew'], 'giratina': ['Griseous Orb']}, 'EVless wild held-item exceptions only')
+      {'latios': [['Soul Dew', 100]], 'latias': [['Soul Dew', 100]], 'giratina': [['Griseous Orb', 100]],
+       'giratina_origin': [['Griseous Orb', 100]]}, 'wild held items from the ROM: the four holders')
 comparison = locs.mirror_comparison(wild)
 check((comparison['areas'], comparison['match'], comparison['doc_only'], comparison['mirror_only']) == (81, 1296, 761, 0),
       'RomHackDex audit reproduced: 81 areas / 1,296 match / 761 omissions / zero disagreements')
@@ -433,7 +435,7 @@ cards = [t['k'] for g in D['TR']['g'] for s in g['sec'] for t in s['tr']]
 check(sorted(placed) == sorted(cards) and len(set(placed)) == len(placed), 'walkthrough: every trainer card in exactly one stop')
 check(not {a for a in range(len(D['AR']))} - {a for _, st in stops for a in st['a']}, 'walkthrough: every AR area in a stop')
 lines = sorted((box['n'], row[0], line) for box in D['IT'] for row in box['r'] for line in row[1].splitlines()
-               if box['n'] == 'Shops' or line.startswith('Found: '))
+               if line.startswith(('Shop: ', 'Found: ')) or line.startswith('Also: ') and ' — ' in line)   # doc pickups relabelled from what they say (itemstd.source_label); not Pickup / Use notes
 walked = sorted((r[0], r[1], r[2]) for _, st in stops for r in st['it']) + [(r[0], r[1], r[2]) for r in WK['np']]
 check(sorted(walked) == lines, 'walkthrough: every Found / shop line in exactly one stop or WK.np')
 check(not WK['np'], 'walkthrough: no unplaced item lines (%d)' % len(WK['np']))

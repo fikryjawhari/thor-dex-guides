@@ -169,11 +169,11 @@ const checks = [
   },
   {
     id: '27d boxes and route',
-    title: 'open Items / Locations boxes follow their names; the reopen route and anchor follow their names',
+    title: 'open Items boxes keep their names; Locations boxes follow their names; the reopen route and anchor follow their names',
     sizes: SIZE_SMALL,
     modes: ['normal'],
     run: async page => {
-      await page.value(`(()=>{if((D.IT||[]).length){IO.o[0]=1;IO.x[0]=0;localStorage.setItem(LS.items,JSON.stringify(IO));}
+      await page.value(`(()=>{if((D.IT||[]).length){IO.o[D.IT[0].n]=1;IO.s[D.IT[0].n+'.Sub']=1;localStorage.setItem(LS.items,JSON.stringify(IO));}
         LO.x[${AREA}+'.0']=0;LO.s[${AREA}+'.0.Grass']=0;loSave();})()`);
       await page.route('#/m/7');
       await page.value('posSave()');
@@ -187,8 +187,8 @@ const checks = [
       page.file = after;
       await page.goto('');
       assert.equal(await page.value('location.hash'), '#/m/7', 'the route follows the move name');
-      const got = await page.value(`(()=>({io:IO.o,ix:IO.x,lx:LO.x,ls:LO.s,pos:JSON.parse(window.__pos)}))()`);
-      if (data.IT?.length) assert.deepEqual([got.io, got.ix], [{ 1: 1 }, { 1: 0 }], 'the open Items box moved with its name');
+      const got = await page.value(`(()=>({io:IO.o,is:IO.s,lx:LO.x,ls:LO.s,pos:JSON.parse(window.__pos)}))()`);
+      if (data.IT?.length) assert.deepEqual([got.io, got.is], [{ [data.IT[0].n]: 1 }, { [data.IT[0].n + '.Sub']: 1 }], 'the open Items box and sub-heading, by name, kept');
       assert.deepEqual(got.lx, { [`${AREA}.1`]: 0 }, 'the closed place moved with its name');
       assert.deepEqual(got.ls, { [`${AREA}.1.Grass`]: 0 }, 'and its closed method');
       assert.equal(got.pos.a?.sel, `a.row[href="#/p/${NEW_ID}"]`, 'the anchor follows the species to its new id');

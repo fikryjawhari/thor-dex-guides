@@ -82,7 +82,7 @@ const windowChecks=[{
     for(let index=0;index<await page.count('.dres:not(.na) .mr:not(.em)');index++){
       await page.tap('.dres:not(.na) .mr:not(.em) > .mm',{index});
       assert.ok(await page.value(`document.querySelectorAll('.dres:not(.na) .mr:not(.em)')[${index}].offsetHeight<=${room}`),'open move '+index);
-      await page.tap('.dres:not(.na) .mr:not(.em) .r1',{index});
+      await page.tap('.dres:not(.na) .mr:not(.em) > .mm .mv',{index});
     }
     await page.tap('.dfield > summary');
     assert.ok(await page.value(`document.querySelector('details.dfield').offsetHeight<=${room}`),'open Field: '+await page.value(`document.querySelector('details.dfield').offsetHeight`));

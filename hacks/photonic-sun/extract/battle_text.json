@@ -1,0 +1,10 @@
+{
+  "moves": {
+    "Drill Peck": "Critical-hit rate is 1/8 before other modifiers.",
+    "Explosion": "The user faints after dealing damage. Always a critical hit.",
+    "Parabolic Charge": "Drains 25% of the damage dealt.",
+    "Self-Destruct": "The user faints. Always a critical hit.",
+    "Steel Wing": "20% chance to raise the user's Defense by 1 stage.",
+    "Twineedle": "Hits twice. Each hit has a 30% chance to poison the target."
+  }
+}

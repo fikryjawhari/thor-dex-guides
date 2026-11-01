@@ -270,7 +270,7 @@ def check_items(D):
           'tutors: %d, rows %d' % (len(tut), len(box.get('Move Tutors', []))))
     check(all(isinstance(r[2], int) for r in box.get('Move Tutors', [])), 'tutor rows without a move link')
     shops = WIKI.item_shops()
-    sold = {r[0] for r in box.get('Shops', [])}
+    sold = {r[0] for rows in box.values() for r in rows if any(line.startswith('Shop:') for line in r[1].splitlines())}
     check(len(shops) == E['shop rows'] and all(items.canon(s[2])[0] in sold for s in shops),
           'shops: %d stock rows; not in Shops: %s' % (len(shops), [s[2] for s in shops if items.canon(s[2])[0] not in sold]))
     mis = WIKI.item_missions()

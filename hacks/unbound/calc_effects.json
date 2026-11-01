@@ -18,6 +18,28 @@
     "Triple Arrows": {"sec": [{"c": 100, "b": {"def": -1}}, {"c": 30, "v": "flinch"}]},
     "Bitter Malice": {"sec": [{"c": 20, "st": "frz"}]}
   },
+  "zmoves": {
+    "Shelter": {"z": {"b": {"spd": 1}}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 12307 Z_EFFECT_SPDEF_UP_1"},
+    "Aromatic Mist": {"z": {"b": {"spd": 2}}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 10397 Z_EFFECT_SPDEF_UP_2"},
+    "Coaching": {"z": {"effect": "clearnegativeboost"}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11789 Z_EFFECT_RESET_STATS"},
+    "Clangorous Soul": {"z": {"effect": "clearnegativeboost"}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11213 Z_EFFECT_RESET_STATS"},
+    "Court Change": {"z": {"b": {"spe": 1}}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11197 Z_EFFECT_SPD_UP_1"},
+    "Decorate": {"z": {"effect": "clearnegativeboost"}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11245 Z_EFFECT_RESET_STATS"},
+    "Forest's Curse": {"z": null, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 10717 0"},
+    "Jungle Healing": {"z": {"effect": "clearnegativeboost"}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11869 Z_EFFECT_RESET_STATS"},
+    "Life Dew": {"z": {"effect": "clearnegativeboost"}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11469 Z_EFFECT_RESET_STATS"},
+    "Lunar Blessing": {"z": {"effect": "clearnegativeboost"}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 12474 Z_EFFECT_RESET_STATS"},
+    "Magic Powder": {"z": {"b": {"spa": 1}}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11101 Z_EFFECT_SPATK_UP_1"},
+    "No Retreat": {"z": {"effect": "clearnegativeboost"}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11069 Z_EFFECT_RESET_STATS"},
+    "Obstruct": {"z": {"b": {"def": 1}}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11485 Z_EFFECT_DEF_UP_1"},
+    "Octolock": {"z": {"b": {"atk": 1}}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11149 Z_EFFECT_ATK_UP_1"},
+    "Power Shift": {"z": {"b": {"atk": 1}}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 12081 Z_EFFECT_ATK_UP_1"},
+    "Stuff Cheeks": {"z": {"effect": "clearnegativeboost"}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11053 Z_EFFECT_RESET_STATS"},
+    "Take Heart": {"z": {"effect": "heal"}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 12490 Z_EFFECT_RECOVER_HP"},
+    "Tar Shot": {"z": {"b": {"spe": 1}}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11085 Z_EFFECT_SPD_UP_1"},
+    "Teatime": {"z": {"b": {"atk": 1, "def": 1, "spa": 1, "spd": 1, "spe": 1}}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 11133 Z_EFFECT_ALL_STATS_UP_1"},
+    "Victory Dance": {"z": {"effect": "clearnegativeboost"}, "source": "CFRU src/Tables/battle_moves.c @ b637a27 line 12213 Z_EFFECT_RESET_STATS"}
+  },
   "unsourced": [
     "Cotton Guard: CFRU DEFENSE_UP_2 (+2) vs Gen 8 +3 and Unbound text 'drastically raises'; kept +3, unresolved",
     "Tail Glow: CFRU SPECIAL_ATTACK_UP_2 (+2) vs Gen 8 +3 and text 'drastically raising'; kept +3, unresolved",
@@ -27,13 +49,16 @@
     "Rapid Spin: Gen 8 record Spe +1 on hit; Unbound text is silent and CFRU RAPID_SPIN was not checked; kept Gen 8",
     "Rock Smash: CFRU chance 100 vs Gen 8 50 and Unbound text 'may also lower'; kept 50 %",
     "Burning Jealousy: CFRU burns foes whose stats rose this turn (conditional, not modelled); kept no effect",
-    "Extreme Evoboost: Z-move only; CFRU EXTREME_EVOBOOST raises all five stats by +2 (general_attack_battle_scripts.s ExtremeEvoboost_Atk); Z-move status effects are out of scope in plan calc-move-effects.md",
+    "Extreme Evoboost: CFRU EXTREME_EVOBOOST raises all five stats by +2 (general_attack_battle_scripts.s ExtremeEvoboost_Atk); the shared table agrees (all +2)",
     "Stoked Sparksurfer: Z-move only; CFRU guarantees paralysis (chance 100); Z-move effect, out of scope",
     "Endless Edge, InfernalRage, Metal Bash, Vise Grip: no CFRU battle_moves.c row under that name; kept the Gen 8 record and did not check",
     "Gear Up, Magnetic Flux, Rototiller, Flower Shield: ally-only or Grass-type field effects; no Gen 8 record, so the calc does nothing (unchanged); not modelled",
     "Coil: CFRU omits the accuracy +1 that the Gen 8 record and Unbound text include; accuracy is not modelled, so no calc change"
   ],
   "fixtures": [
+    {"title": "Z-Take Heart: full heal first (CFRU Z_EFFECT_RECOVER_HP; Showdown has no Z effect)", "move": "Take Heart", "kind": "effect", "z": true, "user": {"n": "Pikachu", "lv": 50, "hp": 1}, "target": {"n": "Snorlax", "lv": 50}, "field": {}, "expect": {"atk.stg": [0, 0, 0, 1, 1, 0], "parts.0.log": "Z: full heal"}},
+    {"title": "Z-Teatime: all stats +1 (CFRU Z_EFFECT_ALL_STATS_UP_1); the berry part stays not modelled", "move": "Teatime", "kind": "effect", "z": true, "user": {"n": "Pikachu", "lv": 50}, "target": {"n": "Snorlax", "lv": 50}, "field": {}, "expect": {"atk.stg": [0, 1, 1, 1, 1, 1]}},
+    {"title": "Z-Forest's Curse: no Z effect (CFRU z_move_effect 0; Showdown all +1)", "move": "Forest's Curse", "kind": "effect", "z": true, "user": {"n": "Pikachu", "lv": 50}, "target": {"n": "Snorlax", "lv": 50}, "field": {}, "expect": {"atk.stg": null}},
     {
       "title": "Shelter raises Def and Spe by 1 (CFRU DEF_SPD_UP)",
       "move": "Shelter",

@@ -1,7 +1,7 @@
 # Hardlove Gold build notes
 
-Hardlove Gold 0.8.5, an hg-engine hack of Pokémon HeartGold. Built from the hack's own source code (the authority) and
-its sheets. 986 species and forms (596 obtainable, 74 Megas, 316 trainer-only), 783 moves, 284 abilities, 62 tracker
+Hardlove Gold 0.8.7, an hg-engine hack of Pokémon HeartGold. Built from the hack's own source code (the authority) and
+its sheets. 987 species and forms (596 obtainable, 74 Megas, 317 trainer-only), 783 moves, 284 abilities, 62 tracker
 areas (the Starter area is index 61), 329 trainers in 18 boxes, 94 walkthrough stops.
 
 ## Build
@@ -25,7 +25,7 @@ modules are called several times and share the working state `X` (`common.py`). 
 
 Sources (numbered as in SOURCES.md's table):
 
-0. **The hack's source**: github.com/kumakuma1/hardlove, branch `beta_hardlove`, pinned at 0.8.5 `64838bf7db`
+0. **The hack's source**: github.com/kumakuma1/hardlove, branch `beta_hardlove`, pinned at 0.8.7 `4a8d4a6308`
    (`repos/hardlove/COMMIT`, checked by build.py against `watch.json`). This is what the ROM is built from, so it wins wherever it has the data:
    `data/Species.c` + `HiddenAbilityTable.c` (types, base stats, abilities and hidden abilities of every species and
    form), `data/learnsets/learnsets.json` (level-up, TM, tutor and egg moves; forms without an entry use their base
@@ -115,6 +115,13 @@ Data rules:
 - **Stats**: EVs are 0 everywhere (the hack removes them). TC is the standard Gen 9 chart (Mechanics: assume Gen 9).
   Evolution methods the text can't describe (SPIN_* variants) show as unknown.
 - **Items**: rules in `itemstd.RULES['hardlove-gold']`, the `Other` box mapped in `HG_OTHER` (History → Items standard).
+- **Held items and item text**: `held.py` sets `P.hi` from `data/Species.c` `.speciesData.wildHeldItems` (common 50%, rare 5%,
+  the same item in both 100%, a lone slot keeps its odds; Mega forms none). Only 12 species hold items: Paras / Parasect,
+  Shroomish / Breloom, Foongus / Amoonguss / Morelull / Shiinotic (Tiny / Big Mushroom), Shellder / Cloyster, Gulpin / Swalot
+  (Big Pearl). Leftovers is not a common wild item here (only Gigantamax Snorlax's rare slot). `itemtext.py` sets `IX` from
+  `extract/item_desc.json`: the two items the hack adds with text in `221.txt` (Infinite Candy, Starter Card; changed = 1).
+  The pin has no vanilla HGSS text to compare, so other items are not marked; the rest of `222.txt` (about 2,000 names past
+  id 536, with no text in the pin) gets text from the shared pool.
 
 ## Local storage (prefix hg)
 
@@ -164,7 +171,17 @@ Automatic power follows source weight/HP/speed/boost rules: inclusive weight ban
 `floor(48 * HP / maxHP) >= 32`, Gyro Ball without the additive 1, Hard Press at 1 BP at full HP and a late
 zero-power clamp. Weight overrides cover Mega Garchomp Z, Mega Lucario Z and Maushold.
 
-#### Engine changes in 0.8.5 the calc does not model
+#### Engine changes in 0.8.5 to 0.8.7 the calc does not model
+
+0.8.7 (`4af49f7a8c..4a8d4a6308`): trainer AI only (`src/trainerai/`): the highest-damage / kill bonus is now +2 on 25% of rolls
+(was 20%), Future Sight / Doom Desire +7 (was +8) when the AI is faster and dies, the AI sees a priority move blocked by the
+target's ally's Dazzling / Queenly Majesty / Armor Tail in doubles, a doubles partner only ignores a target when both player
+Pokémon are up, and `firstTurnOut` uses `BattlerFirstTurnOut`. The AI doc says the same (and documents Metronome +6, already
+in 0.8.6). The calc does not predict AI choices, so nothing changes in `cfg.calc` or the engine.
+
+0.8.6 (`64838bf7db..4af49f7a8c`): trainer AI only (`src/trainerai/`, `include/custom/custom_ai.h`: the AI struct moved to the
+heap, move scores `s16`, Metronome-style moves scored +6 by the harassment AI) and the starter nature fix in
+`src/pokemon.c`; nothing the calc models. First Impression's power (100 -> 90) comes in with the data.
 
 Reviewed `ee4518c149..64838bf7db` against the existing profile and `tools/calc/README.md` (Not modelled).
 The 0.8.5 update changes notes and game data only, not `cfg.calc` or the shared engine. The older source traces
@@ -209,7 +226,7 @@ in play.
 #### Sources and profile
 
 Authority: `kumakuma1/hardlove` at `f1b236300187a2b18bf1a0b5ee1f80b3a2fed57b` (0.8.3) for the traces in this section;
-the guide's data now comes from `64838bf7db` (0.8.5): recheck a traced battle file against it when its rule matters.
+the guide's data now comes from `4a8d4a6308` (0.8.7): recheck a traced battle file against it when its rule matters.
 The mechanics table's source paths and line numbers refer to that 0.8.3 pin.
 User-supplied notes agree with `doc/Mechanics.txt:5-34`.
 
@@ -255,10 +272,34 @@ certify every modifier-order/rounding combination in hg-engine.
 
 #### Move flags
 
-`extract/hgengine.py` → `move_flags()` starts `MV.f` with pinned Showdown Gen 9 flags, then takes **contact**
-from the hack's `data/Moves.c`. Source removes standard contact from Sunsteel Strike, Collision Course,
-Electro Drift, Thunderous Kick and Behemoth Blade. Source-specific additions: Growl's punch flag and slicing on
-Crush Claw, Dire Claw, Dragon Claw, Metal Claw and Shadow Claw.
+`extract/move_metadata.py` → `describe()` writes `MV.f` / `tg` / `se` in the `tools/moveprops.py` vocabulary (the
+move pages and the calc read the same `MV.f`). Source first, at the pin:
+- `data/Moves.c`: target (`.target` → `tg`; `RANGE_SINGLE_TARGET_SPECIAL` is `scripted` for Counter / Mirror Coat /
+  Metal Burst / Comeuppance, else `self`), **contact** (`FLAG_CONTACT`), `reflectable` (`FLAG_MAGIC_COAT`) and
+  `noprotect` (no `FLAG_PROTECT` on a move aimed at others: `protect_flags`). Source removes standard contact from
+  Sunsteel Strike, Collision Course, Electro Drift, Thunderous Kick and Behemoth Blade.
+- Move groups from the engine's tables (`extract/move_tables.json`, each with its source line): punch (Growl in,
+  Double Shock out), bite, pulse, slicing (adds Crush / Dire / Dragon / Metal / Shadow Claw), dance, powder, bullet,
+  wind, multihit, sound, and triage (→ `heal`, with the drain moves).
+- From the move's effect id (`.effect` + `.effectChance`, read against `data/battle_scripts/effects/*.s`): `se`
+  (status, flinch, confusion, stat stages with whose, recoil / drain / heal fractions; ON_HIT drops and recoil are
+  100% whatever effectChance says; Tri Attack / Dire Claw split their chance three ways; the fang moves roll 10% each),
+  `secondary` (a chance effect on a damaging move, plus Psychic Noise / Throat Chop / trapping hits / Secret Power),
+  `charge`, `recharge`, `binding`, `crash`, `defrost`, and `recoil` only for the effects Rock Head and Reckless see
+  (`Activate_RecoilDamage`; Steel Beam, Mind Blown and Struggle lose HP their own way: `se` only).
+- Showdown 0.11.11 (`.src/cache/showdown.json`) only where the source is silent: `bypasssub`, `gravity` and the
+  other flags the engine keeps in no table. Effects the source leaves as a plain hit stay plain (Aura Wheel, Salt
+  Cure, Order Up, Upper Hand, Alluring Voice, Eerie Spell have `MOVE_EFFECT_HIT`: no `se`). Collision Course is not
+  matched to the game data (its Moves.c name), so it keeps no metadata.
+
+`MI`: the shared rules plus `extract/move_rules.json`, which `extract/move_rules.py` writes on every build from the
+source's lists (so it follows an update): Sheer Force and Covert Cloak by `battle_script_commands.c:1070-1150`'s
+effect-id switch (Sheer Force also names Sparkling Aria, Spirit Shackle, Anchor Shot, Ceaseless Edge, Stone Axe,
+Electro Shot; Secret Power's case is commented out; the cloak also blocks the user's boosts, e.g. Flame Charge),
+Protective Pads on the defender (`IsContactBeingMade`, `other_battle_calculators.c:2874`) and No Guard on OHKO
+moves (`Mechanics.txt:30`; no level check, `BattleController_BeforeMove.c:4770`). Not move rules
+(Mechanics.txt 24-32): Unseen Fist (stock, contact only), Protean / Libero, Battle Bond, Moody, permanent weather
+and terrain.
 Reckless and Sheer Force follow the source's effect-code lists (`CalcBaseDamage.c:691-709`) through `over.rules`
 `powerMods`: Reckless x1.2 on Chloroblast (stock has no recoil flag on it); Sheer Force x1.3 added on Floaty Fall,
 Splishy Splash and Thousand Waves, and removed on the 21 moves stock boosts but the source does not (Rapid Spin,
@@ -335,6 +376,8 @@ earlier data.json, that species order, move / ability tables, area names, traine
 
 ## History
 
+- **2026-11-01, 0.8.7.** Pinned `4a8d4a6308` (2026-11-01 08:16 UTC "27/25% for ai", the only commit after 0.8.6 and the one that sets the in-game version text to 0.8.7; the patch went up 2026-11-01 01:21 Drive time; no changelog was found, so this is from the commit). Game changes in the data: Growlithe -> Hisuian Arcanine at level 48 (was 51); Kubfu -> Urshifu now personality form A (both evolutions were form B); Hisuian Sliggoo's level-up moves replaced (Tackle, Bubble, Dragon Breath 5, Life Dew 10, Smart Strike 16 ... Dragon Pulse 55); nine trainer sets now match the sheet (Thom & Kae's Lucario Inner Focus, Grunt #6's Machamp Fire Punch, Deandre's Avalugg Earthquake, Grunt #24's Mew Liquidation, Grunt #25's Greninja Hasty / Liquidation, Night Slash, Gunk Shot and Meowstic Psychic), Fisherman Andre now a double battle in the game (the guide already tagged him Double from the sheet), two trainers' dialogue. Sheet conflicts 65 -> 60. Move Changes sheet (2026-11-01) adds Alluring Voice "Flat 20% chance to confuse." (now a sheet note on the move; `Moves.c` is unchanged). AI doc (2026-11-01): kill / highest-damage odds 75 / 25, Future Sight +7, a Metronome entry. Counts (987 species, 783 moves, 284 abilities), M / AB order, trainer, stop, area and pickup keys unchanged; calc fixtures pass without a remap. Engine changes: Damage calc -> Engine changes.
+- **2026-11-01, 0.8.6.** Pinned `4af49f7a8c` (beta_hardlove head, 2026-10-30 "move ai struct to heap"; the patch is dated 2026-10-30; changelog: AI stack-overflow crashes, a double-faint crash, early game trainers). Game changes in the data: early game trainers (through Morty) reworked: new team members for Benny (Butterfree), Ian (Seviper), Irwin (Maushold), Dirk (Solrock), Krise (Dedenne), Victoria (Mr. Rime), Martha (Scrafty), Falkner's Quaxly now Quaxwell, and moves, natures, items and levels changed on about 20 more early sets plus a few later ones (Randall's Bronzong, Carol's Hariyama, Grunt #34's Dragonite, which now match the sheet); First Impression 100 -> 90. Butterfree and Quaxwell join the data as trainer-only species and Quaxly leaves it (987 species); because the M / AB tables are in first-use order, move and ability indices shifted, so the calc fixtures (`calc_states.json`, `calc_matchups.json`) were remapped by name, and `check.py` with the 0.8.5 baseline stops at its species / table-order asserts by design (saved state stores names). Trainer, stop and area keys unchanged (8 early trainers matched on id with their new teams). Sheet conflicts 64 -> 65 (the Trainer Battles sheet was edited again on 2026-11-01, ahead of the code: Whirl Islands Grunts #24 / #25).
 - **2026-10-29, 0.8.5.** Pinned `64838bf7db` (beta_hardlove head, 2026-10-26; the patch is dated 2026-10-27). Game changes in the data: Tauros learnset (Body Slam 40, Raging Bull 48, Close Combat 55) and the new move Raging Bull (783 moves; it is inserted at guide index 767, so later move indices moved by one: the calc's source fixtures were remapped by name); Ice Path now matches the game (ten stale-sheet warnings gone), Safari Mountain Tauros instead of Furret; Mike's Gouging Fire Protosynthesis; four new sheet conflicts (61 -> 64). Counts, area, item, trainer and stop keys unchanged. The engine changes (Emergency Exit, Eject Pack, hazards + berries, Pastel Veil, Rage Powder, Pluck) are noted under Damage calc; no profile change.
 
 - **2026-10-26, 0.8.4 and one build.** Pinned 0.8.4 = `ee4518c149` ("add soak tm"; the patch went up 2026-10-24 20:55

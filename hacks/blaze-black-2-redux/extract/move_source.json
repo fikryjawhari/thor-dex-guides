@@ -1,0 +1,6109 @@
+{
+  "source": "smogon/pokemon-showdown ccfaa20f32af363569cd21a9d501b2bc1ded26b1; moves.ts + mods 8,7,6,5; post-Gen-V replacements use base",
+  "moves": {
+    "Absorb": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "drain": [
+        1,
+        2
+      ]
+    },
+    "Accelerock": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Acid": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 10,
+        "boosts": {
+          "spd": -1
+        }
+      }
+    },
+    "Acid Armor": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "def": 2
+      }
+    },
+    "Acid Spray": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "spd": -2
+        }
+      }
+    },
+    "Acrobatics": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1
+      },
+      "target": "any"
+    },
+    "Acupressure": {
+      "flags": {
+        "metronome": 1
+      },
+      "target": "adjacentAllyOrSelf"
+    },
+    "Aerial Ace": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "any"
+    },
+    "Aeroblast": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1,
+        "wind": 1
+      },
+      "target": "any"
+    },
+    "After You": {
+      "flags": {
+        "bypasssub": 1,
+        "allyanim": 1
+      },
+      "target": "normal"
+    },
+    "Agility": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "spe": 2
+      }
+    },
+    "Air Cutter": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1,
+        "wind": 1
+      },
+      "target": "allAdjacentFoes"
+    },
+    "Air Slash": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "any",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Ally Switch": {
+      "flags": {
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Amnesia": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "spd": 2
+      }
+    },
+    "Ancient Power": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "self": {
+          "boosts": {
+            "atk": 1,
+            "def": 1,
+            "spa": 1,
+            "spd": 1,
+            "spe": 1
+          }
+        }
+      }
+    },
+    "Aqua Jet": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Aqua Ring": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "volatileStatus": "aquaring"
+    },
+    "Aqua Tail": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Arm Thrust": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": [
+        2,
+        5
+      ]
+    },
+    "Aromatherapy": {
+      "flags": {
+        "snatch": 1,
+        "distance": 1,
+        "metronome": 1
+      },
+      "target": "allyTeam"
+    },
+    "Assist": {
+      "flags": {
+        "noassist": 1,
+        "failcopycat": 1,
+        "nosleeptalk": 1
+      },
+      "target": "self"
+    },
+    "Assurance": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Astonish": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Attack Order": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Attract": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "attract"
+    },
+    "Aura Sphere": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1,
+        "bullet": 1,
+        "pulse": 1
+      },
+      "target": "any"
+    },
+    "Aurora Beam": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "boosts": {
+          "atk": -1
+        }
+      }
+    },
+    "Autotomize": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "spe": 2
+      },
+      "volatileStatus": "autotomize"
+    },
+    "Avalanche": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Barrier": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "def": 2
+      }
+    },
+    "Baton Pass": {
+      "flags": {
+        "metronome": 1
+      },
+      "target": "self",
+      "self": {}
+    },
+    "Beat Up": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Belly Drum": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Bestow": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "normal"
+    },
+    "Bide": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "metronome": 1,
+        "nosleeptalk": 1,
+        "failinstruct": 1
+      },
+      "target": "self",
+      "volatileStatus": "bide"
+    },
+    "Bind": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "partiallytrapped"
+    },
+    "Bite": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bite": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Blast Burn": {
+      "flags": {
+        "recharge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "volatileStatus": "mustrecharge"
+      }
+    },
+    "Blaze Kick": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "brn"
+      }
+    },
+    "Blizzard": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "wind": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 10,
+        "status": "frz"
+      }
+    },
+    "Block": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Blue Flare": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20,
+        "status": "brn"
+      }
+    },
+    "Body Slam": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "par"
+      }
+    },
+    "Bolt Strike": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20,
+        "status": "par"
+      }
+    },
+    "Bone Club": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Bone Rush": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": [
+        2,
+        5
+      ]
+    },
+    "Bonemerang": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": 2
+    },
+    "Boomburst": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "sound": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacent"
+    },
+    "Bounce": {
+      "flags": {
+        "contact": 1,
+        "charge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "gravity": 1,
+        "distance": 1,
+        "metronome": 1,
+        "nosleeptalk": 1
+      },
+      "target": "any",
+      "secondary": {
+        "chance": 30,
+        "status": "par"
+      }
+    },
+    "Brave Bird": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1
+      },
+      "target": "any",
+      "recoil": [
+        33,
+        100
+      ]
+    },
+    "Breaking Swipe": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "atk": -1
+        }
+      }
+    },
+    "Brick Break": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Brine": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Brutal Swing": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacent"
+    },
+    "Bubble Beam": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "boosts": {
+          "spe": -1
+        }
+      }
+    },
+    "Bug Bite": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Bug Buzz": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "sound": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "boosts": {
+          "spd": -1
+        }
+      }
+    },
+    "Bulk Up": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "atk": 1,
+        "def": 1
+      }
+    },
+    "Bulldoze": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacent",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "spe": -1
+        }
+      }
+    },
+    "Bullet Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Bullet Seed": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal",
+      "multihit": [
+        2,
+        5
+      ]
+    },
+    "Calm Mind": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "spa": 1,
+        "spd": 1
+      }
+    },
+    "Camouflage": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Captivate": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "boosts": {
+        "spa": -2
+      }
+    },
+    "Charge": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "spd": 1
+      },
+      "volatileStatus": "charge"
+    },
+    "Charge Beam": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 70,
+        "self": {
+          "boosts": {
+            "spa": 1
+          }
+        }
+      }
+    },
+    "Charm": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "atk": -2
+      }
+    },
+    "Chatter": {
+      "flags": {
+        "protect": 1,
+        "sound": 1,
+        "distance": 1,
+        "noassist": 1,
+        "failcopycat": 1,
+        "failmefirst": 1,
+        "nosleeptalk": 1,
+        "failmimic": 1,
+        "nosketch": 1
+      },
+      "target": "any",
+      "secondary": {
+        "chance": 10,
+        "volatileStatus": "confusion"
+      }
+    },
+    "Chip Away": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Circle Throw": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "normal"
+    },
+    "Clamp": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "partiallytrapped"
+    },
+    "Clear Smog": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Close Combat": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "boosts": {
+          "def": -1,
+          "spd": -1
+        }
+      }
+    },
+    "Coil": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "atk": 1,
+        "def": 1,
+        "accuracy": 1
+      }
+    },
+    "Confuse Ray": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "confusion"
+    },
+    "Confusion": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "volatileStatus": "confusion"
+      }
+    },
+    "Conversion": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Conversion 2": {
+      "flags": {
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Copycat": {
+      "flags": {
+        "noassist": 1,
+        "failcopycat": 1,
+        "nosleeptalk": 1
+      },
+      "target": "self"
+    },
+    "Cosmic Power": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "def": 1,
+        "spd": 1
+      }
+    },
+    "Cotton Guard": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "def": 3
+      }
+    },
+    "Cotton Spore": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "powder": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "spe": -2
+      }
+    },
+    "Counter": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "failmefirst": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "scripted"
+    },
+    "Covet": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "failmefirst": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "normal"
+    },
+    "Crabhammer": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Cross Chop": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Cross Poison": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "psn"
+      }
+    },
+    "Crunch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bite": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20,
+        "boosts": {
+          "def": -1
+        }
+      }
+    },
+    "Crush Claw": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 50,
+        "boosts": {
+          "def": -1
+        }
+      }
+    },
+    "Crush Grip": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Curse": {
+      "flags": {
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "curse"
+    },
+    "Cut": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "normal"
+    },
+    "Dark Pulse": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1,
+        "pulse": 1
+      },
+      "target": "any",
+      "secondary": {
+        "chance": 20,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Dark Void": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "status": "slp"
+    },
+    "Dazzling Gleam": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes"
+    },
+    "Defend Order": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "def": 1,
+        "spd": 1
+      }
+    },
+    "Defense Curl": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "def": 1
+      },
+      "volatileStatus": "defensecurl"
+    },
+    "Defog": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Destiny Bond": {
+      "flags": {
+        "bypasssub": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "self",
+      "volatileStatus": "destinybond"
+    },
+    "Detect": {
+      "flags": {
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "self",
+      "volatileStatus": "protect"
+    },
+    "Dig": {
+      "flags": {
+        "contact": 1,
+        "charge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1,
+        "nosleeptalk": 1
+      },
+      "target": "normal"
+    },
+    "Disable": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "disable"
+    },
+    "Disarming Voice": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "sound": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes"
+    },
+    "Discharge": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacent",
+      "secondary": {
+        "chance": 30,
+        "status": "par"
+      }
+    },
+    "Dive": {
+      "flags": {
+        "contact": 1,
+        "charge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1,
+        "nosleeptalk": 1
+      },
+      "target": "normal"
+    },
+    "Dizzy Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20,
+        "volatileStatus": "confusion"
+      }
+    },
+    "Doom Desire": {
+      "flags": {
+        "metronome": 1,
+        "futuremove": 1
+      },
+      "target": "normal"
+    },
+    "Double Hit": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": 2
+    },
+    "Double Kick": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": 2
+    },
+    "Double Slap": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": [
+        2,
+        5
+      ]
+    },
+    "Double Team": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "evasion": 1
+      }
+    },
+    "Double-Edge": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "recoil": [
+        33,
+        100
+      ]
+    },
+    "Draco Meteor": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "boosts": {
+          "spa": -2
+        }
+      }
+    },
+    "Dragon Breath": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "par"
+      }
+    },
+    "Dragon Claw": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Dragon Dance": {
+      "flags": {
+        "snatch": 1,
+        "dance": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "atk": 1,
+        "spe": 1
+      }
+    },
+    "Dragon Pulse": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1,
+        "pulse": 1
+      },
+      "target": "any"
+    },
+    "Dragon Rage": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Dragon Rush": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Dragon Tail": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "normal"
+    },
+    "Drain Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "drain": [
+        1,
+        2
+      ]
+    },
+    "Draining Kiss": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "drain": [
+        3,
+        4
+      ]
+    },
+    "Dream Eater": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "drain": [
+        1,
+        2
+      ]
+    },
+    "Drill Peck": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1
+      },
+      "target": "any"
+    },
+    "Drill Run": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Dual Chop": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": 2
+    },
+    "Dual Wingbeat": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": 2
+    },
+    "Dynamic Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "volatileStatus": "confusion"
+      }
+    },
+    "Earth Power": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "boosts": {
+          "spd": -1
+        }
+      }
+    },
+    "Earthquake": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacent"
+    },
+    "Echoed Voice": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "sound": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Electro Ball": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal"
+    },
+    "Electroweb": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "spe": -1
+        }
+      }
+    },
+    "Embargo": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "embargo"
+    },
+    "Ember": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "brn"
+      }
+    },
+    "Encore": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "metronome": 1,
+        "failencore": 1
+      },
+      "target": "normal",
+      "volatileStatus": "encore"
+    },
+    "Endeavor": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "noparentalbond": 1
+      },
+      "target": "normal"
+    },
+    "Endure": {
+      "flags": {
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "self",
+      "volatileStatus": "endure"
+    },
+    "Energy Ball": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "boosts": {
+          "spd": -1
+        }
+      }
+    },
+    "Entrainment": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Eruption": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes"
+    },
+    "Esper Wing": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "self": {
+          "boosts": {
+            "spe": 1
+          }
+        }
+      }
+    },
+    "Explosion": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "noparentalbond": 1
+      },
+      "target": "allAdjacent"
+    },
+    "Extrasensory": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Extreme Speed": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Facade": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Fake Out": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Fake Tears": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "spd": -2
+      }
+    },
+    "False Swipe": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Feather Dance": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "dance": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "atk": -2
+      }
+    },
+    "Feint": {
+      "flags": {
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "normal"
+    },
+    "Feint Attack": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Fiery Dance": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "dance": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 50,
+        "self": {
+          "boosts": {
+            "spa": 1
+          }
+        }
+      }
+    },
+    "Final Gambit": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Fire Blast": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "brn"
+      }
+    },
+    "Fire Fang": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bite": 1
+      },
+      "target": "normal",
+      "secondaries": [
+        {
+          "chance": 10,
+          "status": "brn"
+        },
+        {
+          "chance": 10,
+          "volatileStatus": "flinch"
+        }
+      ]
+    },
+    "Fire Lash": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "def": -1
+        }
+      }
+    },
+    "Fire Pledge": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1,
+        "pledgecombo": 1
+      },
+      "target": "normal"
+    },
+    "Fire Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "brn"
+      }
+    },
+    "Fire Spin": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "partiallytrapped"
+    },
+    "Fissure": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Flail": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Flame Burst": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Flame Charge": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "self": {
+          "boosts": {
+            "spe": 1
+          }
+        }
+      }
+    },
+    "Flame Wheel": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "defrost": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "brn"
+      }
+    },
+    "Flamethrower": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "brn"
+      }
+    },
+    "Flare Blitz": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "defrost": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "brn"
+      },
+      "recoil": [
+        33,
+        100
+      ]
+    },
+    "Flash": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "accuracy": -1
+      }
+    },
+    "Flash Cannon": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "boosts": {
+          "spd": -1
+        }
+      }
+    },
+    "Flatter": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "spa": 1
+      },
+      "volatileStatus": "confusion"
+    },
+    "Fling": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1,
+        "noparentalbond": 1
+      },
+      "target": "normal"
+    },
+    "Fly": {
+      "flags": {
+        "contact": 1,
+        "charge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "gravity": 1,
+        "distance": 1,
+        "metronome": 1
+      },
+      "target": "any"
+    },
+    "Focus Blast": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "boosts": {
+          "spd": -1
+        }
+      }
+    },
+    "Focus Energy": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "volatileStatus": "focusenergy"
+    },
+    "Focus Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "punch": 1,
+        "failmefirst": 1,
+        "nosleeptalk": 1,
+        "noassist": 1,
+        "failcopycat": 1,
+        "failinstruct": 1
+      },
+      "target": "normal"
+    },
+    "Follow Me": {
+      "flags": {
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "self",
+      "volatileStatus": "followme"
+    },
+    "Force Palm": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "par"
+      }
+    },
+    "Foresight": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "foresight"
+    },
+    "Foul Play": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Freeze Shock": {
+      "flags": {
+        "charge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "nosleeptalk": 1,
+        "failinstruct": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "par"
+      }
+    },
+    "Frenzy Plant": {
+      "flags": {
+        "recharge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "volatileStatus": "mustrecharge"
+      }
+    },
+    "Frost Breath": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Frustration": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Fury Attack": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": [
+        2,
+        5
+      ]
+    },
+    "Fury Cutter": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "normal"
+    },
+    "Fury Swipes": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": [
+        2,
+        5
+      ]
+    },
+    "Fusion Bolt": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Fusion Flare": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "defrost": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Future Sight": {
+      "flags": {
+        "metronome": 1,
+        "futuremove": 1
+      },
+      "target": "normal"
+    },
+    "Gastro Acid": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "gastroacid"
+    },
+    "Gear Grind": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": 2
+    },
+    "Giga Drain": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "drain": [
+        1,
+        2
+      ]
+    },
+    "Giga Impact": {
+      "flags": {
+        "contact": 1,
+        "recharge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "volatileStatus": "mustrecharge"
+      }
+    },
+    "Glaciate": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "spe": -1
+        }
+      }
+    },
+    "Glare": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "status": "par"
+    },
+    "Grass Knot": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Grass Pledge": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1,
+        "pledgecombo": 1
+      },
+      "target": "normal"
+    },
+    "Grass Whistle": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "sound": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "status": "slp"
+    },
+    "Gravity": {
+      "flags": {
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "all"
+    },
+    "Growl": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "sound": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "boosts": {
+        "atk": -1
+      }
+    },
+    "Growth": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "atk": 1,
+        "spa": 1
+      }
+    },
+    "Grudge": {
+      "flags": {
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "volatileStatus": "grudge"
+    },
+    "Guard Split": {
+      "flags": {
+        "protect": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Guard Swap": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Guillotine": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Gunk Shot": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "psn"
+      }
+    },
+    "Gust": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1,
+        "wind": 1
+      },
+      "target": "any"
+    },
+    "Gyro Ball": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal"
+    },
+    "Hail": {
+      "flags": {
+        "metronome": 1
+      },
+      "target": "all"
+    },
+    "Hammer Arm": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "boosts": {
+          "spe": -1
+        }
+      }
+    },
+    "Harden": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "def": 1
+      }
+    },
+    "Haze": {
+      "flags": {
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "all"
+    },
+    "Head Charge": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "recoil": [
+        1,
+        4
+      ]
+    },
+    "Head Smash": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "recoil": [
+        1,
+        2
+      ]
+    },
+    "Headbutt": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Headlong Rush": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "boosts": {
+          "def": -1,
+          "spd": -1
+        }
+      }
+    },
+    "Heal Bell": {
+      "flags": {
+        "snatch": 1,
+        "sound": 1,
+        "metronome": 1
+      },
+      "target": "allyTeam"
+    },
+    "Heal Block": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "volatileStatus": "healblock"
+    },
+    "Heal Order": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "heal": [
+        1,
+        2
+      ]
+    },
+    "Heal Pulse": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "distance": 1,
+        "heal": 1,
+        "allyanim": 1,
+        "metronome": 1,
+        "pulse": 1
+      },
+      "target": "any"
+    },
+    "Healing Wish": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Heart Stamp": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Heart Swap": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Heat Crash": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Heat Wave": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "wind": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 10,
+        "status": "brn"
+      }
+    },
+    "Heavy Slam": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Helping Hand": {
+      "flags": {
+        "bypasssub": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "adjacentAlly",
+      "volatileStatus": "helpinghand"
+    },
+    "Hex": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Hidden Power": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "High Horsepower": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "High Jump Kick": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "gravity": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "hasCrashDamage": true
+    },
+    "Hone Claws": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "atk": 1,
+        "accuracy": 1
+      }
+    },
+    "Horn Attack": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Horn Leech": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "drain": [
+        1,
+        2
+      ]
+    },
+    "Howl": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "atk": 1
+      }
+    },
+    "Hurricane": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1,
+        "wind": 1
+      },
+      "target": "any",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "confusion"
+      }
+    },
+    "Hydro Cannon": {
+      "flags": {
+        "recharge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "volatileStatus": "mustrecharge"
+      }
+    },
+    "Hydro Pump": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Hyper Beam": {
+      "flags": {
+        "recharge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "volatileStatus": "mustrecharge"
+      }
+    },
+    "Hyper Fang": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bite": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Hyper Voice": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "sound": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes"
+    },
+    "Hypnosis": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "status": "slp"
+    },
+    "Ice Ball": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "failinstruct": 1,
+        "bullet": 1,
+        "noparentalbond": 1
+      },
+      "target": "normal"
+    },
+    "Ice Beam": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "frz"
+      }
+    },
+    "Ice Burn": {
+      "flags": {
+        "charge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "nosleeptalk": 1,
+        "failinstruct": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "brn"
+      }
+    },
+    "Ice Fang": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bite": 1
+      },
+      "target": "normal",
+      "secondaries": [
+        {
+          "chance": 10,
+          "status": "frz"
+        },
+        {
+          "chance": 10,
+          "volatileStatus": "flinch"
+        }
+      ]
+    },
+    "Ice Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "frz"
+      }
+    },
+    "Ice Shard": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Icicle Crash": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Icicle Spear": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": [
+        2,
+        5
+      ]
+    },
+    "Icy Wind": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "wind": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "spe": -1
+        }
+      }
+    },
+    "Imprison": {
+      "flags": {
+        "snatch": 1,
+        "bypasssub": 1,
+        "metronome": 1,
+        "mustpressure": 1
+      },
+      "target": "self",
+      "volatileStatus": "imprison"
+    },
+    "Incinerate": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes"
+    },
+    "Inferno": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "status": "brn"
+      }
+    },
+    "Infestation": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "partiallytrapped"
+    },
+    "Ingrain": {
+      "flags": {
+        "snatch": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "volatileStatus": "ingrain"
+    },
+    "Iron Defense": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "def": 2
+      }
+    },
+    "Iron Head": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Iron Tail": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "boosts": {
+          "def": -1
+        }
+      }
+    },
+    "Judgment": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Jump Kick": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "gravity": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "hasCrashDamage": true
+    },
+    "Karate Chop": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Kinesis": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "accuracy": -1
+      }
+    },
+    "Knock Off": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Last Resort": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Lava Plume": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacent",
+      "secondary": {
+        "chance": 30,
+        "status": "brn"
+      }
+    },
+    "Leaf Blade": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "normal"
+    },
+    "Leaf Storm": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "boosts": {
+          "spa": -2
+        }
+      }
+    },
+    "Leaf Tornado": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 50,
+        "boosts": {
+          "accuracy": -1
+        }
+      }
+    },
+    "Leech Life": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "drain": [
+        1,
+        2
+      ]
+    },
+    "Leech Seed": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "leechseed"
+    },
+    "Leer": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "boosts": {
+        "def": -1
+      }
+    },
+    "Lick": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "par"
+      }
+    },
+    "Light Screen": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "allySide"
+    },
+    "Lock-On": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Lovely Kiss": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "status": "slp"
+    },
+    "Low Kick": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Low Sweep": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "spe": -1
+        }
+      }
+    },
+    "Lucky Chant": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "allySide"
+    },
+    "Lunar Dance": {
+      "flags": {
+        "snatch": 1,
+        "dance": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Lunge": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "atk": -1
+        }
+      }
+    },
+    "Mach Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Magic Coat": {
+      "flags": {
+        "metronome": 1
+      },
+      "target": "self",
+      "volatileStatus": "magiccoat"
+    },
+    "Magic Room": {
+      "flags": {
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "all"
+    },
+    "Magical Leaf": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Magma Storm": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "partiallytrapped"
+    },
+    "Magnet Bomb": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal"
+    },
+    "Magnet Rise": {
+      "flags": {
+        "snatch": 1,
+        "gravity": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "volatileStatus": "magnetrise"
+    },
+    "Magnitude": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacent"
+    },
+    "Me First": {
+      "flags": {
+        "protect": 1,
+        "bypasssub": 1,
+        "noassist": 1,
+        "failcopycat": 1,
+        "failmefirst": 1,
+        "nosleeptalk": 1
+      },
+      "target": "adjacentFoe"
+    },
+    "Mean Look": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Meditate": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "atk": 1
+      }
+    },
+    "Mega Drain": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "drain": [
+        1,
+        2
+      ]
+    },
+    "Megahorn": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Memento": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "atk": -2,
+        "spa": -2
+      }
+    },
+    "Metal Burst": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "failmefirst": 1
+      },
+      "target": "scripted"
+    },
+    "Metal Claw": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "self": {
+          "boosts": {
+            "atk": 1
+          }
+        }
+      }
+    },
+    "Meteor Mash": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20,
+        "self": {
+          "boosts": {
+            "atk": 1
+          }
+        }
+      }
+    },
+    "Metronome": {
+      "flags": {
+        "noassist": 1,
+        "failcopycat": 1,
+        "nosleeptalk": 1
+      },
+      "target": "self"
+    },
+    "Milk Drink": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "heal": [
+        1,
+        2
+      ]
+    },
+    "Mimic": {
+      "flags": {
+        "protect": 1,
+        "bypasssub": 1,
+        "allyanim": 1,
+        "failencore": 1,
+        "nosleeptalk": 1,
+        "noassist": 1,
+        "failcopycat": 1,
+        "failmimic": 1,
+        "failinstruct": 1
+      },
+      "target": "normal"
+    },
+    "Mind Reader": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Minimize": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "evasion": 2
+      },
+      "volatileStatus": "minimize"
+    },
+    "Miracle Eye": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "miracleeye"
+    },
+    "Mirror Coat": {
+      "flags": {
+        "protect": 1,
+        "failmefirst": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "scripted"
+    },
+    "Mirror Move": {
+      "flags": {
+        "failencore": 1,
+        "nosleeptalk": 1,
+        "noassist": 1,
+        "failcopycat": 1,
+        "failinstruct": 1
+      },
+      "target": "normal"
+    },
+    "Mirror Shot": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "boosts": {
+          "accuracy": -1
+        }
+      }
+    },
+    "Mist": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "allySide"
+    },
+    "Moonblast": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "boosts": {
+          "spa": -1
+        }
+      }
+    },
+    "Moonlight": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Morning Sun": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Mud Bomb": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "boosts": {
+          "accuracy": -1
+        }
+      }
+    },
+    "Mud Shot": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "spe": -1
+        }
+      }
+    },
+    "Mud Sport": {
+      "flags": {
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "all",
+      "volatileStatus": "mudsport"
+    },
+    "Mud-Slap": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "accuracy": -1
+        }
+      }
+    },
+    "Muddy Water": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 30,
+        "boosts": {
+          "accuracy": -1
+        }
+      }
+    },
+    "Mystical Fire": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "spa": -1
+        }
+      }
+    },
+    "Nasty Plot": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "spa": 2
+      }
+    },
+    "Natural Gift": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Nature Power": {
+      "flags": {
+        "nosleeptalk": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "self"
+    },
+    "Needle Arm": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Night Daze": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 40,
+        "boosts": {
+          "accuracy": -1
+        }
+      }
+    },
+    "Night Shade": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Night Slash": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "normal"
+    },
+    "Nightmare": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "nightmare"
+    },
+    "Nuzzle": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "status": "par"
+      }
+    },
+    "Octazooka": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 50,
+        "boosts": {
+          "accuracy": -1
+        }
+      }
+    },
+    "Odor Sleuth": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "foresight"
+    },
+    "Ominous Wind": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "self": {
+          "boosts": {
+            "atk": 1,
+            "def": 1,
+            "spa": 1,
+            "spd": 1,
+            "spe": 1
+          }
+        }
+      }
+    },
+    "Outrage": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "failinstruct": 1
+      },
+      "target": "randomNormal",
+      "self": {
+        "volatileStatus": "lockedmove"
+      }
+    },
+    "Overheat": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "boosts": {
+          "spa": -2
+        }
+      }
+    },
+    "Pain Split": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Pay Day": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Payback": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Peck": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1
+      },
+      "target": "any"
+    },
+    "Perish Song": {
+      "flags": {
+        "sound": 1,
+        "distance": 1,
+        "metronome": 1
+      },
+      "target": "all"
+    },
+    "Petal Dance": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "dance": 1,
+        "metronome": 1,
+        "failinstruct": 1
+      },
+      "target": "randomNormal",
+      "self": {
+        "volatileStatus": "lockedmove"
+      }
+    },
+    "Pin Missile": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": [
+        2,
+        5
+      ]
+    },
+    "Play Rough": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "boosts": {
+          "atk": -1
+        }
+      }
+    },
+    "Pluck": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1
+      },
+      "target": "any"
+    },
+    "Poison Fang": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bite": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "tox"
+      }
+    },
+    "Poison Gas": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "status": "psn"
+    },
+    "Poison Jab": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "psn"
+      }
+    },
+    "Poison Powder": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "powder": 1
+      },
+      "target": "normal",
+      "status": "psn"
+    },
+    "Poison Sting": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "psn"
+      }
+    },
+    "Poison Tail": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "psn"
+      }
+    },
+    "Pound": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Powder Snow": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 10,
+        "status": "frz"
+      }
+    },
+    "Power Gem": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Power Split": {
+      "flags": {
+        "protect": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Power Swap": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Power Trick": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "volatileStatus": "powertrick"
+    },
+    "Power Whip": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Power-Up Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "self": {
+          "boosts": {
+            "atk": 1
+          }
+        }
+      }
+    },
+    "Present": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Protect": {
+      "flags": {
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "self",
+      "volatileStatus": "protect"
+    },
+    "Psybeam": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "volatileStatus": "confusion"
+      }
+    },
+    "Psych Up": {
+      "flags": {
+        "bypasssub": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Psychic": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "boosts": {
+          "spd": -1
+        }
+      }
+    },
+    "Psychic Fangs": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bite": 1
+      },
+      "target": "normal"
+    },
+    "Psycho Boost": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "boosts": {
+          "spa": -2
+        }
+      }
+    },
+    "Psycho Cut": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "normal"
+    },
+    "Psycho Shift": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {}
+    },
+    "Psyshield Bash": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "self": {
+          "boosts": {
+            "def": 1
+          }
+        }
+      }
+    },
+    "Psyshock": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Psystrike": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Psywave": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Pursuit": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Quash": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1
+      },
+      "target": "normal"
+    },
+    "Quick Attack": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Quick Guard": {
+      "flags": {
+        "snatch": 1
+      },
+      "target": "allySide"
+    },
+    "Quiver Dance": {
+      "flags": {
+        "snatch": 1,
+        "dance": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "spa": 1,
+        "spd": 1,
+        "spe": 1
+      }
+    },
+    "Rage": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "volatileStatus": "rage"
+      }
+    },
+    "Rage Powder": {
+      "flags": {
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "self",
+      "volatileStatus": "ragepowder"
+    },
+    "Raging Fury": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1
+      },
+      "target": "randomNormal",
+      "self": {
+        "volatileStatus": "lockedmove"
+      }
+    },
+    "Rain Dance": {
+      "flags": {
+        "metronome": 1
+      },
+      "target": "all"
+    },
+    "Rapid Spin": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Razor Leaf": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "allAdjacentFoes"
+    },
+    "Razor Shell": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 50,
+        "boosts": {
+          "def": -1
+        }
+      }
+    },
+    "Recover": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "heal": [
+        1,
+        2
+      ]
+    },
+    "Recycle": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Reflect": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "allySide"
+    },
+    "Reflect Type": {
+      "flags": {
+        "protect": 1,
+        "bypasssub": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Refresh": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Relic Song": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "sound": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 10,
+        "status": "slp"
+      }
+    },
+    "Rest": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Retaliate": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Return": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Revenge": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Reversal": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Roar": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "sound": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Roar of Time": {
+      "flags": {
+        "recharge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "volatileStatus": "mustrecharge"
+      }
+    },
+    "Rock Blast": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": [
+        2,
+        5
+      ]
+    },
+    "Rock Climb": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20,
+        "volatileStatus": "confusion"
+      }
+    },
+    "Rock Polish": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "spe": 2
+      }
+    },
+    "Rock Slide": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Rock Smash": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 50,
+        "boosts": {
+          "def": -1
+        }
+      }
+    },
+    "Rock Throw": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Rock Tomb": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "spe": -1
+        }
+      }
+    },
+    "Rock Wrecker": {
+      "flags": {
+        "recharge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal",
+      "self": {
+        "volatileStatus": "mustrecharge"
+      }
+    },
+    "Role Play": {
+      "flags": {
+        "bypasssub": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Rollout": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "failinstruct": 1,
+        "noparentalbond": 1
+      },
+      "target": "normal"
+    },
+    "Roost": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "self": {
+        "volatileStatus": "roost"
+      },
+      "heal": [
+        1,
+        2
+      ]
+    },
+    "Sacred Sword": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "normal"
+    },
+    "Safeguard": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "allySide"
+    },
+    "Sand Attack": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "accuracy": -1
+      }
+    },
+    "Sandstorm": {
+      "flags": {
+        "metronome": 1,
+        "wind": 1
+      },
+      "target": "all"
+    },
+    "Scald": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "defrost": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "brn"
+      }
+    },
+    "Scary Face": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "spe": -2
+      }
+    },
+    "Scorching Sands": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "defrost": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "brn"
+      }
+    },
+    "Scratch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Screech": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "sound": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "def": -2
+      }
+    },
+    "Searing Shot": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "allAdjacent",
+      "secondary": {
+        "chance": 30,
+        "status": "brn"
+      }
+    },
+    "Secret Power": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "boosts": {
+          "accuracy": -1
+        }
+      }
+    },
+    "Secret Sword": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "slicing": 1
+      },
+      "target": "normal"
+    },
+    "Seed Bomb": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal"
+    },
+    "Seed Flare": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 40,
+        "boosts": {
+          "spd": -2
+        }
+      }
+    },
+    "Seismic Toss": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Self-Destruct": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "noparentalbond": 1
+      },
+      "target": "allAdjacent"
+    },
+    "Shadow Ball": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20,
+        "boosts": {
+          "spd": -1
+        }
+      }
+    },
+    "Shadow Blast": null,
+    "Shadow Blitz": null,
+    "Shadow Bolt": null,
+    "Shadow Break": null,
+    "Shadow Chill": null,
+    "Shadow Claw": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Shadow Down": null,
+    "Shadow End": null,
+    "Shadow Fire": null,
+    "Shadow Force": {
+      "flags": {
+        "contact": 1,
+        "charge": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "nosleeptalk": 1
+      },
+      "target": "normal"
+    },
+    "Shadow Half": null,
+    "Shadow Hold": null,
+    "Shadow Mist": null,
+    "Shadow Panic": null,
+    "Shadow Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Shadow Rave": null,
+    "Shadow Rush": null,
+    "Shadow Shed": null,
+    "Shadow Sky": null,
+    "Shadow Sneak": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Shadow Storm": null,
+    "Shadow Wave": null,
+    "Sheer Cold": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Shell Smash": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "def": -1,
+        "spd": -1,
+        "atk": 2,
+        "spa": 2,
+        "spe": 2
+      }
+    },
+    "Shift Gear": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "spe": 2,
+        "atk": 1
+      }
+    },
+    "Shock Wave": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Signal Beam": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "volatileStatus": "confusion"
+      }
+    },
+    "Silver Wind": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "self": {
+          "boosts": {
+            "atk": 1,
+            "def": 1,
+            "spa": 1,
+            "spd": 1,
+            "spe": 1
+          }
+        }
+      }
+    },
+    "Simple Beam": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Sing": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "sound": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "status": "slp"
+    },
+    "Sketch": {
+      "flags": {
+        "bypasssub": 1,
+        "allyanim": 1,
+        "failencore": 1,
+        "nosleeptalk": 1,
+        "noassist": 1,
+        "failcopycat": 1,
+        "failmimic": 1,
+        "failinstruct": 1,
+        "nosketch": 1
+      },
+      "target": "normal"
+    },
+    "Skill Swap": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Skull Bash": {
+      "flags": {
+        "contact": 1,
+        "charge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "nosleeptalk": 1,
+        "failinstruct": 1
+      },
+      "target": "normal"
+    },
+    "Sky Attack": {
+      "flags": {
+        "charge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1,
+        "nosleeptalk": 1,
+        "failinstruct": 1
+      },
+      "target": "any",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Sky Drop": {
+      "flags": {
+        "contact": 1,
+        "charge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "gravity": 1,
+        "distance": 1,
+        "metronome": 1,
+        "nosleeptalk": 1
+      },
+      "target": "any"
+    },
+    "Sky Uppercut": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Slack Off": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "heal": [
+        1,
+        2
+      ]
+    },
+    "Slash": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "normal"
+    },
+    "Sleep Powder": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "powder": 1
+      },
+      "target": "normal",
+      "status": "slp"
+    },
+    "Sleep Talk": {
+      "flags": {
+        "nosleeptalk": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "self"
+    },
+    "Sludge": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "psn"
+      }
+    },
+    "Sludge Bomb": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "psn"
+      }
+    },
+    "Sludge Wave": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacent",
+      "secondary": {
+        "chance": 10,
+        "status": "psn"
+      }
+    },
+    "Smack Down": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "smackdown"
+    },
+    "Smart Strike": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Smog": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 40,
+        "status": "psn"
+      }
+    },
+    "Smokescreen": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "accuracy": -1
+      }
+    },
+    "Snarl": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "sound": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "spa": -1
+        }
+      }
+    },
+    "Snatch": {
+      "flags": {
+        "bypasssub": 1,
+        "mustpressure": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "self",
+      "volatileStatus": "snatch"
+    },
+    "Snore": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "sound": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Soak": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Soft-Boiled": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "heal": [
+        1,
+        2
+      ]
+    },
+    "Solar Beam": {
+      "flags": {
+        "charge": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "nosleeptalk": 1,
+        "failinstruct": 1
+      },
+      "target": "normal"
+    },
+    "Sonic Boom": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Spacial Rend": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Spark": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "par"
+      }
+    },
+    "Spider Web": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Spikes": {
+      "flags": {
+        "reflectable": 1,
+        "nonsky": 1,
+        "metronome": 1,
+        "mustpressure": 1
+      },
+      "target": "foeSide"
+    },
+    "Spit Up": {
+      "flags": {
+        "protect": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Spite": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Splash": {
+      "flags": {
+        "gravity": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Spore": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "powder": 1
+      },
+      "target": "normal",
+      "status": "slp"
+    },
+    "Stealth Rock": {
+      "flags": {
+        "reflectable": 1,
+        "metronome": 1,
+        "mustpressure": 1
+      },
+      "target": "foeSide"
+    },
+    "Steamroller": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "minimize": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Steel Wing": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "self": {
+          "boosts": {
+            "def": 1
+          }
+        }
+      }
+    },
+    "Stockpile": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "volatileStatus": "stockpile"
+    },
+    "Stomp": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1,
+        "minimize": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Stone Edge": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Stored Power": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Storm Throw": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Strength": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "String Shot": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "boosts": {
+        "spe": -1
+      }
+    },
+    "Struggle": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "failencore": 1,
+        "failmefirst": 1,
+        "nosleeptalk": 1,
+        "noassist": 1,
+        "failcopycat": 1,
+        "failmimic": 1,
+        "failinstruct": 1,
+        "nosketch": 1
+      },
+      "target": "randomNormal",
+      "struggleRecoil": true
+    },
+    "Struggle Bug": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 100,
+        "boosts": {
+          "spa": -1
+        }
+      }
+    },
+    "Stun Spore": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "powder": 1
+      },
+      "target": "normal",
+      "status": "par"
+    },
+    "Substitute": {
+      "flags": {
+        "snatch": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "volatileStatus": "substitute"
+    },
+    "Sucker Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Sunny Day": {
+      "flags": {
+        "metronome": 1
+      },
+      "target": "all"
+    },
+    "Super Fang": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Superpower": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "self": {
+        "boosts": {
+          "atk": -1,
+          "def": -1
+        }
+      }
+    },
+    "Supersonic": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "sound": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "confusion"
+    },
+    "Surf": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacent"
+    },
+    "Swagger": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "atk": 2
+      },
+      "volatileStatus": "confusion"
+    },
+    "Swallow": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Sweet Scent": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "boosts": {
+        "evasion": -1
+      }
+    },
+    "Swift": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes"
+    },
+    "Switcheroo": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "normal"
+    },
+    "Swords Dance": {
+      "flags": {
+        "snatch": 1,
+        "dance": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "atk": 2
+      }
+    },
+    "Synchronoise": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacent"
+    },
+    "Synthesis": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Tackle": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Tail Glow": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "spa": 3
+      }
+    },
+    "Tail Slap": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": [
+        2,
+        5
+      ]
+    },
+    "Tail Whip": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes",
+      "boosts": {
+        "def": -1
+      }
+    },
+    "Tailwind": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1,
+        "wind": 1
+      },
+      "target": "allySide"
+    },
+    "Take Down": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "recoil": [
+        1,
+        4
+      ]
+    },
+    "Taunt": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "taunt"
+    },
+    "Techno Blast": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1
+      },
+      "target": "normal"
+    },
+    "Teeter Dance": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "dance": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacent",
+      "volatileStatus": "confusion"
+    },
+    "Telekinesis": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "gravity": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "telekinesis"
+    },
+    "Teleport": {
+      "flags": {
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Thief": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "failmefirst": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "normal"
+    },
+    "Thunder": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 30,
+        "status": "par"
+      }
+    },
+    "Thunder Fang": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bite": 1
+      },
+      "target": "normal",
+      "secondaries": [
+        {
+          "chance": 10,
+          "status": "par"
+        },
+        {
+          "chance": 10,
+          "volatileStatus": "flinch"
+        }
+      ]
+    },
+    "Thunder Punch": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "punch": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "par"
+      }
+    },
+    "Thunder Shock": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "par"
+      }
+    },
+    "Thunder Wave": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "status": "par"
+    },
+    "Thunderbolt": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "par"
+      }
+    },
+    "Tickle": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "boosts": {
+        "atk": -1,
+        "def": -1
+      }
+    },
+    "Torment": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "torment"
+    },
+    "Toxic": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "status": "tox"
+    },
+    "Toxic Spikes": {
+      "flags": {
+        "reflectable": 1,
+        "nonsky": 1,
+        "metronome": 1,
+        "mustpressure": 1
+      },
+      "target": "foeSide"
+    },
+    "Transform": {
+      "flags": {
+        "allyanim": 1,
+        "failencore": 1,
+        "noassist": 1,
+        "failcopycat": 1,
+        "failmimic": 1,
+        "failinstruct": 1
+      },
+      "target": "normal"
+    },
+    "Tri Attack": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20
+      }
+    },
+    "Trick": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "noassist": 1,
+        "failcopycat": 1
+      },
+      "target": "normal"
+    },
+    "Trick Room": {
+      "flags": {
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "all"
+    },
+    "Triple Axel": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "multihit": 3
+    },
+    "Trump Card": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Twineedle": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20,
+        "status": "psn"
+      },
+      "multihit": 2
+    },
+    "Twister": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "wind": 1
+      },
+      "target": "allAdjacentFoes",
+      "secondary": {
+        "chance": 20,
+        "volatileStatus": "flinch"
+      }
+    },
+    "U-turn": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Uproar": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "sound": 1,
+        "metronome": 1,
+        "nosleeptalk": 1
+      },
+      "target": "randomNormal",
+      "self": {
+        "volatileStatus": "uproar"
+      }
+    },
+    "V-create": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1
+      },
+      "target": "normal",
+      "self": {
+        "boosts": {
+          "spe": -1,
+          "def": -1,
+          "spd": -1
+        }
+      }
+    },
+    "Vacuum Wave": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Venoshock": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Vine Whip": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Vital Throw": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Volt Switch": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Volt Tackle": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 10,
+        "status": "par"
+      },
+      "recoil": [
+        33,
+        100
+      ]
+    },
+    "Wake-Up Slap": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Water Gun": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Water Pledge": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "nonsky": 1,
+        "metronome": 1,
+        "pledgecombo": 1
+      },
+      "target": "normal"
+    },
+    "Water Pulse": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1,
+        "pulse": 1
+      },
+      "target": "any",
+      "secondary": {
+        "chance": 20,
+        "volatileStatus": "confusion"
+      }
+    },
+    "Water Sport": {
+      "flags": {
+        "nonsky": 1,
+        "metronome": 1
+      },
+      "target": "all",
+      "volatileStatus": "watersport"
+    },
+    "Water Spout": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "allAdjacentFoes"
+    },
+    "Waterfall": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20,
+        "volatileStatus": "flinch"
+      }
+    },
+    "Wave Crash": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "recoil": [
+        33,
+        100
+      ]
+    },
+    "Weather Ball": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal"
+    },
+    "Whirlpool": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "partiallytrapped"
+    },
+    "Whirlwind": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "bypasssub": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Wide Guard": {
+      "flags": {
+        "snatch": 1
+      },
+      "target": "allySide"
+    },
+    "Wild Charge": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "recoil": [
+        1,
+        4
+      ]
+    },
+    "Will-O-Wisp": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "status": "brn"
+    },
+    "Wing Attack": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "distance": 1,
+        "metronome": 1
+      },
+      "target": "any"
+    },
+    "Wish": {
+      "flags": {
+        "snatch": 1,
+        "heal": 1,
+        "metronome": 1
+      },
+      "target": "self"
+    },
+    "Withdraw": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "def": 1
+      }
+    },
+    "Wonder Room": {
+      "flags": {
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "all"
+    },
+    "Wood Hammer": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "recoil": [
+        33,
+        100
+      ]
+    },
+    "Work Up": {
+      "flags": {
+        "snatch": 1,
+        "metronome": 1
+      },
+      "target": "self",
+      "boosts": {
+        "atk": 1,
+        "spa": 1
+      }
+    },
+    "Worry Seed": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "allyanim": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "Wrap": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "partiallytrapped"
+    },
+    "Wring Out": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal"
+    },
+    "X-Scissor": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "slicing": 1
+      },
+      "target": "normal"
+    },
+    "Yawn": {
+      "flags": {
+        "protect": 1,
+        "reflectable": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "volatileStatus": "yawn"
+    },
+    "Zap Cannon": {
+      "flags": {
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1,
+        "bullet": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 100,
+        "status": "par"
+      }
+    },
+    "Zen Headbutt": {
+      "flags": {
+        "contact": 1,
+        "protect": 1,
+        "mirror": 1,
+        "metronome": 1
+      },
+      "target": "normal",
+      "secondary": {
+        "chance": 20,
+        "volatileStatus": "flinch"
+      }
+    }
+  }
+}

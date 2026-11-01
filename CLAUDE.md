@@ -43,8 +43,10 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome;
   options `--routes`, `--jobs`, `--ignore` in its header). Run browser sweeps one at a time, except scenarios through
   the gate: `uv run python -I tools/gate.py scenarios [hack ...] [--only calc-layout,calc-controls] --jobs 8` (and
-  `gate.py check ... --jobs 8`) runs them in parallel, the same results as serial (all scenarios × four guides on this
-  16-core PC: serial 19 min, 4 jobs 5.8, 8 jobs 4.0, 12 / 16 jobs 4.3 / 4.4: past 8 each run just slows down).
+  `gate.py check ... --jobs 8`) runs them in parallel, the same results as serial (measured with four guides on this
+  16-core PC: serial 19 min, 4 jobs 5.8, 8 jobs 4.0, 12 / 16 jobs 4.3 / 4.4: past 8 each run just slows down). With
+  six guides the full `gate.py check` takes 45-60 min, most of it domcompare one guide at a time: run the full set
+  once per job, in pieces (PROGRESS.md → Next session has the measured times).
 - When to check: only when no later work in the job will change what the check covers. During a job, run the
   scenarios the change touches on the guides it touches; the full set once at the end. A failure names its check and
   leaves a screenshot in `.tmp/calc-checks/`; if the cause still isn't clear, bisect the job's commits (one per
@@ -55,7 +57,8 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 ## Making a new guide
 The main chat writes the unit list (`plans/<hack>.md`: one unit per step / tab, with the sibling hack's script to
 adapt); agents build the units (Workflow → Which model).
-1. Fetch the sources into `hacks/<hack>/.src/` with its `SOURCES.md`; write its `watch.json` (3DS hacks also need the user's vanilla romfs
+1. Fetch the sources into `hacks/<hack>/.src/` with its `SOURCES.md` (what to collect:
+   `.agents/references/new-guide-sources.md`); write its `watch.json` (3DS hacks also need the user's vanilla romfs
    dumps: `tools/README.md` → 3DS game data). Update its "Fetched" line and the source log in `tools/README.md`.
 2. Write `hacks/<hack>/extract/` scripts (the shared layout: `tools/extractlib.py` docstring; copy a built hack's) that
    turn them into `hacks/<hack>/data.json`, in the schema in `hacks/emerald-imperium/notes.md` (Data schema).
@@ -63,7 +66,10 @@ adapt); agents build the units (Workflow → Which model).
    Items standard, cap split names, Trainers in walkthrough order, schema); a hack only adds an `itemstd.RULES` entry
    for its quirks. Trainer keys: with no `extract/trainer_keys.json` yet, `finalise()` (`tools/trainer_keys.py`) writes
    it from the extract's own keys (the "g.s.t" positions of that first build), so the first build seeds it; commit it
-   with the first data.json. Later builds match trainers to it and only add entries. What the template shows when the data has it: `template/README.md` → What the data switches on.
+   with the first data.json. Pickup keys (`extract/pickup_keys.json`, one per item pickup line) work the same way.
+   Items data: the hack's bag text for every item in `extract/item_desc.json` (`{item: [text, changed vs vanilla]}`;
+   gaps fill from other guides, then `extract/item_text_extra.json`), wild held-item odds in `P.hi` (`[[item, %]]`),
+   hack-changed In battle text in `extract/battle_text.json`, and the guide's generation in `tools/item_text.py`. Later builds match trainers to it and only add entries. What the template shows when the data has it: `template/README.md` → What the data switches on.
    For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences); 3DS hacks take
    the game data over the docs ("Doc says ...").
    Calc: settle each trainer `field` record marked `review` (`tools/trainer_fields_check.py`) with me (notes.md,
