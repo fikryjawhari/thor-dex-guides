@@ -41,6 +41,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   time; data checks 2-15 s per guide. Ideas: a `gate.py` option for parallel domcompare (today it is the audit's
   shell loop), checks chosen from the files a branch changed, the best `--jobs` for six guides, `#/i/` routes in
   domcompare's route list.
+- **Radical Red 4.1 (Hardcore), in progress** on `worktree-radical-red` (2026-11-02): `plans/radical-red.md` (units, decisions).
 - **Next guide:** say which hack. A sources-only session can start from `.agents/references/new-guide-sources.md`;
   `CLAUDE.md` → Making a new guide is the whole procedure.
 

@@ -1,0 +1,66 @@
+{
+ "id": "radical-red",
+ "title": "Pokémon Radical Red Dex",
+ "game": "Pokémon Radical Red",
+ "platform": "GBA",
+ "version": "4.1",
+ "cfg": {
+  "name": "Pokémon Radical Red",
+  "orig": "",
+  "evs": true,
+  "mgm": false,
+  "starter": "pick",
+  "orbs": true,
+  "g3trainer": false,
+  "capLast": false,
+  "walkAreaNote": false,
+  "trw": [
+   "trainer",
+   "trainers",
+   "trainers"
+  ],
+  "calc": false,
+  "ls": {
+   "dex": "rrdex",
+   "calc": "rrcalc",
+   "track": "rrtrack",
+   "walk": "rrwalk",
+   "cap": "rrcap",
+   "tr": "rrtr",
+   "recent": "rrrecent",
+   "pos": "rrpos",
+   "mgm": "rrmgm",
+   "loc": "rrloc",
+   "items": "rritems",
+   "dmg": "rrdmg"
+  },
+  "txt": {
+   "obt": "TODO: obt",
+   "nw": "TODO: nw",
+   "g3": "TODO: g3",
+   "conf": "",
+   "tc": "TODO: tc",
+   "chdoc": "",
+   "mvh": "TODO: mvh",
+   "nodc": "",
+   "mvsrc": "TODO: mvsrc",
+   "mvsrcx": "TODO: mvsrcx",
+   "absrc": "",
+   "ns": "TODO: ns",
+   "walk": "TODO: walk",
+   "capl": "TODO: capl",
+   "capnone": "",
+   "noev": ""
+  }
+ },
+ "sk": {
+  "exeggcute_a": "0102",
+  "cubone_a": "0104",
+  "koffing_g": "0109",
+  "mime_jr_g": "0439",
+  "basculin_h": "0550-white-striped",
+  "eiscue_noice": "0875-noice",
+  "calyrex_ice_rider": "0898-ice",
+  "calyrex_shadow_rider": "0898-shadow"
+ }
+}

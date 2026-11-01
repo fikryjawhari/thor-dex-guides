@@ -26,6 +26,7 @@ import time
 ROOT = Path(__file__).resolve().parent.parent
 BASE = ROOT / '.tmp' / 'baseline'
 REBUILDS = {
+    'radical-red': ['hacks/radical-red/extract/build.py'],
     'unbound': ['hacks/unbound/extract/build.py'],
     'blaze-black-2-redux': ['hacks/blaze-black-2-redux/extract/build.py'],
     'eternal-x': ['hacks/eternal-x/extract/build.py'],

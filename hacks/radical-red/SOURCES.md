@@ -75,3 +75,18 @@ as data, never `eval` it. Live site: `https://dex.radicalred.net/data.js`, ident
 
 Google regenerates xlsx containers: compare cells, not bytes. Wayback blocks scripted fetches now; PokeCommunity
 answered a plain curl with a browser User-Agent (2026-11-01).
+
+
+## Files
+
+TODO: document files.
+
+
+## Game files
+
+TODO: document game files.
+
+
+## Source checks
+
+TODO: document source checks.
