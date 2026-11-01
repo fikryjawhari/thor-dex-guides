@@ -26,7 +26,17 @@ def text(literals):
     """C string literals as game text: \\n, \\p, \\l are breaks, so spaces; whitespace folded."""
     body = ''.join(STR.findall(literals))
     body = re.sub(r'\\[npl]', ' ', body).replace('\\"', '"').replace('\\\\', '\\')
-    return ' '.join(body.split())
+    return re.sub(r'(\w)- ([a-z]\w*)', unbreak, ' '.join(body.split()))
+
+
+# a word split over two bag-text lines ("Poké-\nmon") is joined, unless the hyphen is real ("Water-\ntype", "Water- and")
+HYPHENATED = {'type', 'types', 'dwelling', 'effective', 'soaring', 'roaming', 'hit', 'glowing', 'ready'}
+
+
+def unbreak(m):
+    if m[2] == 'and':
+        return m[0]
+    return m[1] + ('-' if m[2] in HYPHENATED else '') + m[2]
 
 
 def first_branch(source):

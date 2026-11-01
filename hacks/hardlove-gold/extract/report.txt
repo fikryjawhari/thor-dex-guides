@@ -133,6 +133,7 @@ moves vs the game data: {'changed in game, not in the sheet': 44, 'sheet disagre
 move changes in the sheet: 189 on moves in the data: 184 ; not learned or used by anyone: barrage, freezeshock, iceburn, magmastorm, thundercage
 move names fuzzy-matched: Accelrock > Accelerock; Acient Power > Ancient Power; Baze Kick > Blaze Kick; ColisionCourse > Collision Course; Eartquake > Earthquake; Exploson > Explosion; Fisheous Rend > Fishious Rend; Fishous Rend > Fishious Rend; Flare Bitz > Flare Blitz; Icy Beam > Ice Beam; Leed Seed > Leech Seed; Precicipe Blades > Precipice Blades; Rock Romb > Rock Tomb; Sleep Power > Sleep Powder; Sludge Bumb > Sludge Bomb; Spirit Beak > Spirit Break; Stealth Rocks > Stealth Rock; Subsitute > Substitute; Sustitute > Substitute; Vaccuum Wave > Vacuum Wave; Vavuum Wave > Vacuum Wave; Vice Grip > Vise Grip; Whish > Wish
 TM/HM fixes from the game: TM14 = Blizzard; TM19 = Giga Drain; TM25 = Thunder; TM38 = Fire Blast; TM41 = Torment; TM52 = Focus Blast; TM53 = Energy Ball; TM55 = Brine; TM56 = Fling; TM63 = Embargo; TM65 = Shadow Claw; TM68 = Giga Impact; TM69 = Rock Polish; TM71 = Stone Edge; TM73 = Thunder Wave; TM78 = Captivate; TM80 = Rock Slide; TM81 = X-Scissor; TM82 = Sleep Talk; TM83 = Natural Gift; TM84 = Scald; TM85 = Dream Eater; TM86 = Grass Knot; TM90 = Protect; TM92 = Trick Room; HM05 Rock Smash is HM06 in the game; HM06 Whirlpool is HM05 in the game
+mega stones with a location but no Mega page: Abomasite, Barbaracite, Darkranite, Diancite, Falinksite, Heatranite, Latiasite, Magearnite, Malamarite, Meowsticite, Mewtwonite X, Mewtwonite Y, Scraftinite, Zeraorite, Zygardite, Glimmoranite, Tatsugirinite
 IX (hack item text): Infinite Candy, Starter Card
 P 987 obtainable 596 megas 74 trainer only 317 moves 783 abilities 284 trainers 329 areas 61 stops 94 unplaced items 0
 items: TM place and shop retained: TM39 Rock Tomb ['Found: Union Cave B1F', 'Shop: Goldenrod Department Store after beating Schorsch']
@@ -154,7 +155,38 @@ items: walkthrough rows added as IT lines: 16
   Blackthorn City: Found: Old lady in the house next to the Poké Mart changes Greninja's ability to Battle Bond. Starter: Froakie
   Blackthorn City: Found: Old man in the house next to the Poké Mart tells you 3 of the 4 available Roamers
   Pokémon League: Found: Old man next to the Bidoof resets the Embedded Tower
-pickup keys: 334 pickups, 279 walkthrough rows keyed
+pickup keys: 30 table entries no pickup matched
+  p196: Abomasite (Unavailable)
+  p206: Barbaracite (Unavailable)
+  p210: Blazikenite (Unavailable)
+  p214: Charizardite Y (Unavailable)
+  p217: Clefablite (Unavailable)
+  p218: Darkranite (Unavailable)
+  p220: Diancite (Unavailable)
+  p226: Falinksite (Unavailable)
+  p229: Floettite (Unavailable)
+  p230: Froslassite (Unavailable)
+  p237: Glimmoranite (Unavailable)
+  p242: Heatranite (Unavailable)
+  p244: Kangaskhanite (Unavailable)
+  p245: Latiasite (Unavailable)
+  p246: Latiosite (Unavailable)
+  p248: Lucarionite (Unavailable)
+  p250: Magearnite (Unavailable)
+  p251: Malamarite (Unavailable)
+  p256: Meowsticite (Unavailable)
+  p258: Mewtwonite X (Unavailable)
+  p259: Mewtwonite Y (Unavailable)
+  p264: Sablenite (Unavailable)
+  p266: Sceptilite (Unavailable)
+  p269: Scraftinite (Unavailable)
+  p272: Staraptite (Unavailable)
+  p273: Starminite (Unavailable)
+  p276: Tatsugirinite (Unavailable)
+  p277: Tyranitarite (Unavailable)
+  p281: Zeraorite (Unavailable)
+  p282: Zygardite (Unavailable)
+pickup keys: 304 pickups, 279 walkthrough rows keyed
 trainers put in walkthrough order: Morty Split [Cap 39]
 item text: 2 own, 212 pooled, 0 from the wiki, 14 made up, 32 Mega Stone standard, 0 with no description
 in battle: 134 shown items with battle text, 126 without
