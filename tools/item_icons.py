@@ -4,7 +4,6 @@ Usage: uv run python -I tools/item_icons.py [--fetch] [--check]
 Pinned sources are cached in .tmp/item-icons, never in published guides.
 """
 import argparse
-import ast
 import base64
 from concurrent.futures import ThreadPoolExecutor
 import hashlib
@@ -26,6 +25,44 @@ PINS = {
     'expansion': ('rh-hideout/pokeemerald-expansion', '73b3fbeb574327cd9420c89e56bef5aa3c08fead'),
     'imperium': ('iriv24/pokeemerald-expansion', '2576d0f3f4c861c760f0c55198e37e6d7b91683e'),
     'hardlove': ('kumakuma1/hardlove', '64838bf7dbe032cd87fd986f9c8699c1436c67c5'),
+}
+ALIASES = {
+    'Beedrilite': 'Beedrillite', 'Luxite': 'Luxrite', 'Pasho Berry': 'Passho Berry',
+    'Houndoomite': 'Houndoominite', 'Kangaskhite': 'Kangaskhanite',
+    'Clever Wing': 'Clever Feather', 'Genius Wing': 'Genius Feather',
+    'Health Wing': 'Health Feather', 'Muscle Wing': 'Muscle Feather',
+    'Pretty Wing': 'Pretty Feather', 'Resist Wing': 'Resist Feather', 'Swift Wing': 'Swift Feather',
+    'Stick': 'Leek', 'Lunar Wing': 'Lunar Feather', 'Link Cable': 'Linking Cord',
+    'SS Aqua Ticket': 'S.S. Ticket', 'Mega Keystone': 'Key Stone',
+    'Honey (Baile Style)': 'Honey', 'Red Nectar (Baile Style)': 'Red Nectar',
+    'Fishing Rod': 'Fishing Rod SM',
+    "Ilima's Normalium Z": 'Normalium Z',
+}
+SEREBII = {
+    name: 'https://www.serebii.net/itemdex/sprites/' + key_name + '.png'
+    for name, key_name in {
+        'BridgeMail M': 'bridgemailm', 'BridgeMail T': 'bridgemailt', 'BridgeMail V': 'bridgemailv',
+        'Favored Mail': 'favoredmail', 'Greet Mail': 'greetmail', 'Inquiry Mail': 'inquirymail',
+        'Like Mail': 'likemail', 'RSVP Mail': 'rsvpmail', 'Reply Mail': 'replymail',
+        'Thanks Mail': 'thanksmail',
+        'Blue Petal': 'bluepetal', 'Colress Machine': 'colressmachine', 'Elevator Key': 'elevatorkey',
+        'Fishing Rod': 'fishingrod', 'Forage Bag': 'foragebag', 'Green Petal': 'greenpetal',
+        'Grubby Hanky': 'grubbyhanky', 'Intriguing Stone': 'intriguingstone',
+        'Lab Key Card A': 'labkeycarda', 'Lab Key Card B': 'labkeycardb', 'Lab Key Card C': 'labkeycardc',
+        'Left Poké Ball': 'leftpokeball', 'Looker Ticket': 'lookerticket', 'Orange Petal': 'orangepetal',
+        'Permit': 'permit', 'Pink Petal': 'pinkpetal', 'Plasma Card': 'plasmacard',
+        'Power Plant Pass': 'powerplantpass', "Professor's Mask": 'professorsmask',
+        "Prof's Letter": "prof'sletter", 'Purple Petal': 'purplepetal', 'Rainbow Flower': 'rainbowflower',
+        'Red Petal': 'redpetal', 'Ride Pager': 'ridepager', 'Roller Skates': 'rollerskates',
+        'Sparkling Stone': 'sparklingstone', 'TMV Pass': 'tmvpass', 'Yellow Petal': 'yellowpetal',
+    }.items()
+}
+MISSING_REASONS = {
+    'Dropped Item': 'Ambiguous Xtransceiver: Curtis and Yancy have different artwork; the guide does not identify which.',
+    'Pokégear Upgrade 1': 'A Pokégear feature upgrade, not a distinct bag item; no matching icon in the pinned Hardlove graphics.',
+    'Blue-Striped Basculin: Deep Sea Scale (5% chance) Red-Striped Basculin: Deep Sea Tooth':
+        'Malformed held-item label combines two different items. Both individual items have icons; selecting one would misrepresent this label.',
+    'Silvally Memory': 'A generic memory label without a type. Type-specific memories have distinct palettes; the guide does not identify one.',
 }
 
 
@@ -66,20 +103,43 @@ def fetch_sources():
             list(pool.map(lambda path: download(f'https://raw.githubusercontent.com/{repo}/{pin}/{path}',
                                                CACHE / source / path), paths))
         print(f'{source}: {len(paths)} source files cached', flush=True)
+    candidates = hardlove_items()
+    names = {name for _, guide_names in inventory().values() for name in guide_names}
+    wanted = {key(ALIASES.get(name, name)) for name in names}
+    paths = {record['picture'] for name_key, record in candidates.items() if name_key in wanted}
+    repo, pin = PINS['hardlove']
+    with ThreadPoolExecutor(max_workers=12) as pool:
+        list(pool.map(lambda path: download(f'https://raw.githubusercontent.com/{repo}/{pin}/{path}',
+                                           CACHE / 'hardlove' / path), sorted(paths)))
+        list(pool.map(lambda pair: download(pair[1], CACHE / 'serebii' / (key(pair[0]) + '.png')),
+                      SEREBII.items()))
 
 
 def inventory():
-    """Reuse names_in without running the mockup's top-level build/preview loop."""
-    module = ast.parse((ROOT / 'plans/item-pages-mockup.py').read_text(encoding='utf8'))
-    function = next(node for node in module.body if isinstance(node, ast.FunctionDef) and node.name == 'names_in')
-    namespace = {}
-    exec(compile(ast.Module(body=[function], type_ignores=[]), 'names_in', 'exec'), namespace)
+    """Use the mockup's names_in inventory, retained here after plans are deleted."""
     guides = {}
     for path in sorted((ROOT / 'hacks').glob('*/data.json')):
         data = json.loads(path.read_text(encoding='utf8'))
-        data = dict(data, IT=[section for section in data['IT'] if section.get('n') != 'Move Tutors'])
-        guides[path.parent.name] = (data, sorted(namespace['names_in'](data)))
+        guides[path.parent.name] = (data, sorted(names_in(data)))
     return guides
+
+
+def names_in(data):
+    """The item-pages-mockup.py inventory, with Move Tutors excluded as requested."""
+    found = {row[0] for section in data['IT'] if section.get('k') != 'npc'
+             and section.get('n') != 'Move Tutors' for row in section['r']}
+    for species in data['P']:
+        found.update(species.get('hi') or [])
+        if species.get('stone'):
+            found.add(species['stone'])
+    for group in data['TR']['g']:
+        for section in group['sec']:
+            for trainer in section['tr']:
+                teams = [trainer['p']] + [mate.get('p', []) for mate in trainer.get('pt', [])]
+                teams.append((trainer.get('normal') or {}).get('p', []))
+                found.update(mon['i'] for team in teams for mon in team if mon.get('i'))
+    found.update(row['i'] for row in data.get('MI', []) if row.get('i'))
+    return found
 
 
 def source_items(source):
@@ -103,8 +163,27 @@ def source_items(source):
     return items, symbols
 
 
+def hardlove_items():
+    tree = json.loads((CACHE / 'hardlove-tree.json').read_bytes())
+    return {key(Path(entry['path']).stem): {'source': 'hardlove', 'picture': entry['path']}
+            for entry in tree['tree'] if entry['path'].startswith('data/graphics/item/')
+            and entry['path'].endswith('.png') and entry['sha'] != 'cd3bcb9e636866325bb3718c46ac6f73b6d78c00'}
+
+
 def palette_image(record):
     root = CACHE / record['source']
+    if 'palette' not in record:
+        with Image.open(root / record['picture']) as original:
+            pixels = original.copy()
+        if record['source'] == 'hardlove':
+            pixels.info['transparency'] = 0
+        image = pixels.convert('RGBA')
+        artwork = image.crop(image.getbbox())
+        if artwork.width > 24 or artwork.height > 24:
+            artwork.thumbnail((24, 24), Image.Resampling.NEAREST)
+        canvas = Image.new('RGBA', (24, 24))
+        canvas.paste(artwork, ((24 - artwork.width) // 2, (24 - artwork.height) // 2))
+        return canvas
     with Image.open(root / record['picture']) as original:
         if original.mode != 'P':
             raise ValueError(f'Expected indexed source: {record}')
@@ -126,7 +205,7 @@ def palette_image(record):
 def discs(data, symbols):
     result = {}
     for section in data['IT']:
-        if section.get('k') == 'npc':
+        if section.get('k') == 'npc' or section.get('n') == 'Move Tutors':
             continue
         for row in section['r']:
             match = re.match(r'^(TM|HM|TR)\s*\d', row[0])
@@ -136,6 +215,8 @@ def discs(data, symbols):
                 continue
             move_type = data['MV'][row[2]]['t']
             kind = match[1].lower()
+            if kind == 'tr':
+                continue
             pic_symbol = 'gItemIcon_' + ('HM' if kind == 'hm' else 'TM')
             pal_symbol = f'gItemIconPalette_{move_type}TMHM'
             if pic_symbol in symbols and pal_symbol in symbols:
@@ -158,27 +239,44 @@ def build(check=False):
     guides = inventory()
     stock, symbols = source_items('expansion')
     custom, _ = source_items('imperium')
-    candidates = dict(custom, **stock)
+    candidates = dict(hardlove_items(), **custom)
+    candidates.update(stock)
     images, provenance, mappings, missing = {}, {}, {}, {}
+    fallback_pins = json.loads((OUT / 'fallbacks.json').read_bytes())
     for guide, (data, names) in guides.items():
         machines = discs(data, symbols)
         mappings[guide], missing[guide] = {}, {}
         for name in names:
             name_key = key(name)
+            cleaned = re.sub(r'^\d+%\s+', '', name)
+            lookup_key = key(ALIASES.get(cleaned, cleaned))
             if name in machines:
                 file_key, record = machines[name]
             elif re.match(r'^(TM|HM|TR)\s*\d', name):
                 missing[guide][name] = 'No valid IT move link to determine the disc type.'
                 continue
-            elif name_key in candidates:
-                file_key, record = name_key, candidates[name_key]
+            elif lookup_key in candidates:
+                file_key, record = name_key, dict(candidates[lookup_key])
+                if lookup_key != name_key:
+                    record['alias'] = ALIASES.get(cleaned, cleaned)
+            elif name in SEREBII:
+                file_key = name_key
+                record = {'source': 'serebii', 'picture': name_key + '.png', 'url': SEREBII[name]}
             else:
-                missing[guide][name] = 'Absent from pinned expansion and Imperium item tables; fallback not yet sourced.'
+                missing[guide][name] = MISSING_REASONS.get(name,
+                    'Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.')
                 continue
             image = palette_image(record)
             if file_key in images and images[file_key].tobytes() != image.tobytes():
                 raise ValueError(f'Conflicting artwork: {file_key}')
             images[file_key] = image
+            for field in ['picture', 'palette']:
+                if field in record:
+                    record[field + '_sha256'] = hashlib.sha256((CACHE / record['source'] / record[field]).read_bytes()).hexdigest()
+            if record['source'] == 'serebii':
+                expected = fallback_pins[file_key]
+                if expected['url'] != record['url'] or expected['sha256'] != record['picture_sha256']:
+                    raise ValueError(f'Fallback source changed: {file_key}; review before updating fallbacks.json')
             provenance[file_key] = record
             mappings[guide][name_key] = file_key
     canonical, same, signatures = {}, {}, {}
@@ -212,6 +310,7 @@ def build(check=False):
     outputs = {'index.json': json.dumps(index, ensure_ascii=False, indent=2) + '\n',
                'provenance.json': json.dumps(dict(sorted(provenance.items())), indent=2) + '\n',
                'coverage.json': json.dumps(report, ensure_ascii=False, indent=2) + '\n'}
+    outputs.update(documentation(report, provenance, canonical, same, conflicts))
     for filename, text in outputs.items():
         path = OUT / filename
         if check:
@@ -229,6 +328,10 @@ def build(check=False):
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
             image.save(path, 'PNG', optimize=True)
+    if not check:
+        for path in (OUT / 'png').glob('*.png'):
+            if path.stem not in canonical:
+                path.unlink()
     if check:
         actual = {path.stem for path in (OUT / 'png').glob('*.png')}
         if actual != set(canonical):
@@ -240,6 +343,92 @@ def build(check=False):
     for guide, row in report.items():
         print(f"| {guide} | {row['names']} | {row['with_icon']} | {row['without_icon']} | {row['unique_icons']} | {row['sheet_base64_bytes']} |")
     print(f'{len(canonical)} PNGs, {len(same)} identical-art aliases, {len(conflicts)} ambiguous global keys')
+
+
+def documentation(report, provenance, canonical, same, conflicts):
+    readme = ['# Shared item icon set', '',
+        'Generated by `uv run python -I tools/item_icons.py`. Fetch on a fresh checkout with',
+        '`uv run python -I tools/item_icons.py --fetch`; verify without rewriting with `--check`.',
+        'Sources, pins, every asset URL and credits are in `SOURCES.md`. Do not edit generated PNGs or reports.', '',
+        f'{len(canonical)} distinct 24 × 24 RGBA PNGs in `png/`; {len(same)} byte-identical artwork aliases.',
+        'Keys are lower-case ASCII letters and digits (é becomes e). Discs use `tm-<type>` and `hm-<type>`.', '',
+        '## Lookup contract', '',
+        '`index.json` has `keys` (normalised item name → file key), `same` (file key → canonical file key),',
+        '`guides` (guide → normalised item name → file key), `pins`, and `ambiguous`.',
+        'Prefer `guides[guide][nameKey]`, falling back to `keys[nameKey]`, then follow `same` before loading',
+        '`png/<canonical>.png`. Alias keys deliberately have no duplicate PNG. A missing key means no verified icon.',
+        'The per-guide map is necessary because the same numbered HM can have different move types in different hacks:',
+        ', '.join(f'`{name}`' for name in sorted(conflicts)) + '.',
+        'TM/HM colour comes from that guide’s IT row move link into M/MV, never the machine number.',
+        'There are no numbered TRs in the current inventory; future TR art needs an explicit source, not a TM stand-in.', '',
+        '`provenance.json` records each logical icon’s source picture, actual palette, source hashes and explicit name aliases.',
+        'Hack stones intentionally sharing a standard stone use the picture/palette assigned by the hack’s item table.',
+        'For example, Imperium Butterfrite uses Abomasite art and Luxrite uses Beedrillite art in its pinned source.',
+        'Known spelling errors, Wing/Feather and Stick/Leek names are explicit aliases, not fuzzy matches.',
+        'Unbound held-item chance prefixes and Baile Style annotations are stripped for matching only; data is unchanged.',
+        'Ilima’s Normalium Z uses the Normalium Z crystal; S.S. Aqua Ticket uses the S.S. Ticket.', '',
+        '## Coverage and packed cost', '',
+        'Inventory reuses `plans/item-pages-mockup.py`’s `names_in` logic, retained in the tool so deleting the completed',
+        'plan does not break rebuilding: IT except NPC/Move Tutors, P.hi/P.stone, trainers/partners/normal teams and MI.i.',
+        'Names are exact distinct displayed labels per guide, including misspellings and malformed labels.', '',
+        '| Guide | Names | With icon | Without | Distinct art | Sheet PNG bytes | Base64 bytes |',
+        '| --- | ---: | ---: | ---: | ---: | ---: | ---: |']
+    for guide, row in report.items():
+        readme.append(f"| {guide} | {row['names']} | {row['with_icon']} | {row['without_icon']} | {row['unique_icons']} | {row['sheet_png_bytes']} | {row['sheet_base64_bytes']} |")
+    readme += ['', 'Each guide sheet contains its canonical art only, sorted by file key, 16 icons per row, 24px cells,',
+        'PNG `optimize=True`, lossless RGBA with no palette quantisation. Base64 counts exclude the 22-byte data URI prefix.',
+        'These measured lossless costs exceed the earlier 70–100 KB estimate; the mockup used a lossy 255-colour sheet.',
+        'Review sheets are written to `.tmp/item-icons/<guide>-sheet.png`, not published or committed.', '',
+        '## Missing icons', '']
+    for guide, row in report.items():
+        readme += [f'### {guide}', '']
+        readme += [f'- **{name}**: {reason}' for name, reason in row['missing'].items()] or ['None.']
+        readme.append('')
+    readme += ['## Validation', '',
+        '`uv run python -I tools/test_item_icons.py` checks inventory, aliases, palette application, placeholder rejection,',
+        'per-guide disc types, packed costs and deterministic output. `--check` compares every generated file and pixel.',
+        '`.tmp/item-icons-contact.png` labels every logical icon for visual inspection. Hardlove’s shared question-mark',
+        'placeholder blob is rejected, not counted as coverage. Browser/build gates do not apply: no guide inputs,',
+        'templates, extraction scripts or dist files are changed.', '']
+    sources = ['# Shared item icons: sources', '', 'Fetched 2026-11-01. Rebuilt by `tools/item_icons.py`.', '',
+        '## Pins and fetch', '', '```sh', 'uv sync', 'uv run python -I tools/item_icons.py --fetch',
+        'uv run python -I tools/item_icons.py --check', '```', '',
+        'Fetch uses GitHub recursive trees at exact commits and raw URLs; sources stay in ignored `.tmp/item-icons/`.',
+        'Each URL below is an input, not a runtime request. The script reapplies JASC palettes to expansion/EI indices;',
+        'colour zero is transparent. Hardlove PNGs use their embedded palette with index zero transparent.',
+        'Non-24px fallback frames are cropped to visible artwork, centred on 24px, and reduced with nearest-neighbour',
+        'only if their visible bounds exceed 24px. Serebii uses the existing transparent RGBA pixels.', '',
+        '## Counts', '', '| Source | Logical keys (including aliases) | Stored canonical PNGs |',
+        '| --- | ---: | ---: |']
+    for source in [*PINS, 'serebii']:
+        logical = sum(record['source'] == source for record in provenance.values())
+        stored = sum(provenance[file_key]['source'] == source for file_key in canonical)
+        sources.append(f'| {source} | {logical} | {stored} |')
+    sources += ['', 'Canonical counts assign shared art to its lexicographically first key; another source may provide',
+        'identical art. `provenance.json` preserves the actual source for each logical key.', '',
+        '## Terms and credits', '',
+        'Pokémon and item art © Nintendo / Creatures Inc. / GAME FREAK inc.; guides are free and non-commercial.',
+        'Credits: rh-hideout/pokeemerald-expansion, pret/pokeemerald, iriv24/Emerald Imperium, kumakuma1/Hardlove,',
+        'BluRosie/hg-engine and their contributors; Serebii for the fallback item images.',
+        'The expansion has no licence file; see the parent `sprites/SOURCES.md` and its upstream credits.',
+        'https://github.com/rh-hideout/pokeemerald-expansion/blob/73b3fbeb574327cd9420c89e56bef5aa3c08fead/CREDITS.md', '',
+        '## Exact source URLs', '']
+    for source, (repo, pin) in PINS.items():
+        sources += [f'### {source}: `{repo}`', '', f'Pin: `{pin}`.', '',
+            f'https://api.github.com/repos/{repo}/git/trees/{pin}?recursive=1', '']
+        paths = {record[field] for record in provenance.values() if record['source'] == source
+                 for field in ['picture', 'palette'] if field in record}
+        if source != 'hardlove':
+            paths.update(['src/data/items.h', 'src/data/graphics/items.h', 'include/constants/items.h'])
+        sources += [f'- https://raw.githubusercontent.com/{repo}/{pin}/{path}' for path in sorted(paths)] + ['']
+    sources += ['### Serebii', '',
+        'Unversioned URLs; SHA-256 of fetched source bytes is recorded in `fallbacks.json` and enforced on rebuild.',
+        'The 29 Hardlove assets with blob `cd3bcb9e636866325bb3718c46ac6f73b6d78c00` are question-mark placeholders.',
+        'They were rejected after contact-sheet review; 28 use Serebii replacements and Ilima’s crystal uses Normalium Z.', '']
+    sources += [f'- {name}: {url}' for name, url in sorted(SEREBII.items())]
+    sources += ['', '## Alias audit', '', '| Name key | Resolved item name |', '| --- | --- |']
+    sources += [f"| {name} | {record['alias']} |" for name, record in sorted(provenance.items()) if 'alias' in record]
+    return {'README.md': '\n'.join(readme), 'SOURCES.md': '\n'.join(sources) + '\n'}
 
 
 def contact_sheet(images):
