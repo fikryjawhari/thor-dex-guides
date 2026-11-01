@@ -375,10 +375,12 @@ encounter source, the sheet fills what it lacks):
 - Eggs (Wonder Egg Pokémon Pools v4.1 workbook, copied into `sheet_locs.json` → eggs): the egg NPC in Pewter,
   Cerulean and Vermilion City (5,000$) sells a Wonder Egg (Pewter's pool 256, Cerulean / Vermilion's 339) or a
   Paldea Egg (42); the Aide in the Celadon (after the 4th badge) and Fuchsia Pokémon Centers gives a Sevii Egg (12,
-  the two never the same). Methods `Wonder Egg` / `Paldea Egg` / `Sevii Egg`, "1 of N" (random), on the city's area
-  at its badge step (Pewter 0, Cerulean 1, Vermilion 2, Celadon / Fuchsia 4): 1,084 rows. They make 12 more species
-  obtainable; the rest of the pools are found in the wild too. Sheet colour names mapped to the dex's
-  (Squawkabilly-Green, Tatsugiri-Red, Tauros-Paldea-Fire / -Water).
+  the two never the same). The pools are not listed (the user, 2026-11-02: "just outline if it's a normal, Paldea,
+  or Sevii egg"): each vendor place gets an AR note naming the egg(s) it sells and the price / condition (5 notes).
+  A species no other way gives (not found, not an evolution, not bred from an obtainable one) keeps one P.w row
+  naming the egg type at its first vendor, no rate, the other vendors in the note: 2 (Phione, Minior). Unit 4's
+  1,084 per-city "1 of N" rows are gone (P.w 2,635 -> 1,553 rows, the guide 4.50 -> 4.30 MB). Sheet colour names
+  mapped to the dex's (Squawkabilly-Green, Tatsugiri-Red, Tauros-Paldea-Fire / -Water).
 - Unobtainables tab: Arceus, Dialga-Origin, Eternatus, Magearna-Original, Palkia-Origin forced to g 3 (Magearna-Original
   was g 0 through its base, Dialga / Palkia-Origin would be through the Mystery Gifts).
 

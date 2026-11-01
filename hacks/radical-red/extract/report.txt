@@ -3135,12 +3135,13 @@ hzla lookup moves: 670 names; 1 unresolved: (No Move)
 hzla lookup ability: 258 names; 4 unresolved: Forewarn, Guard Dog, Pickpocket, Snow Cloak
 hzla lookup item: 196 names; 0 unresolved: none
 sprites: 44 own supplements; 1 species without art: chillet
-locs: sheet egg rows: 1084
+locs: sheet egg vendor notes: 5
+locs: sheet egg-only species: 2
 locs: sheet gift levels: 17
 locs: sheet rows added: 4
 locs: sheet shard rows the doc lacks: 1
 locs: sheet tables added: 6
-locs: 221 areas in 154 places, 3674 sublocation rows, 1235 obtainable species
+locs: 221 areas in 154 places, 2590 sublocation rows, 1235 obtainable species
   trainers: Trainer Order puts Dumbass Kid (25) in Pre-Koga, data.js cap 59
   trainers: Trainer Order puts Leader Whitney (49) in Pre-Lt. Surge, data.js cap 28
   trainers: Trainer Order puts PkMn Trainer Brendan (50) in Pre-Lt. Surge, data.js cap 28

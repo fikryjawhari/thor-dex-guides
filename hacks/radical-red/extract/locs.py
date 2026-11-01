@@ -13,8 +13,9 @@ sheet's Raid Dens tab; an item in two slots shows both, "Big Nugget 80/80%"; 0 =
 
 The locations sheet adds what data.js lacks (extract/sheet_locs.json, hand-copied; notes.md -> Locations): Oak's Lab's
 list as the Starter choice (AR.st), gift levels and how to get them, the shard each Fan Club fossil / Celadon egg costs,
-the Mt. Moon fossil pair, what each trade NPC wants, water tables data.js has none for ("Doc only"), the Wonder /
-Paldea / Sevii Egg pools (the Wonder Egg Pools workbook, "1 of N"), the Mystery Gift legendaries (an AR place with no
+the Mt. Moon fossil pair, what each trade NPC wants, water tables data.js has none for ("Doc only"), which egg each
+vendor place sells (Wonder / Paldea / Sevii: an AR note; the pools are not listed, the user's call; a species only an
+egg gives keeps one P.w row naming the egg type, so it stays obtainable), the Mystery Gift legendaries (an AR place with no
 tracker slot, its LOC after the data.js areas) and the sheet's unobtainables.
 
 Availability (P.g): 0 obtainable = found in a location, or the species' base form (first non-form entry of its dex
@@ -235,13 +236,26 @@ def build(data):
         add(gift_area, 'other', 'Mystery Gift', gift['step'], sid_of(species), low=gift['level'], high=gift['level'],
             note=gift['how'])
         note_row(groups[(gift_area, 'other', 'Mystery Gift', gift['step'])][sid_of(species)], extra)
+    # Egg vendors: one area note per place naming the egg it sells (the pools are not listed); a species only an egg
+    # gives gets one P.w row naming the egg type (below, once availability without eggs is known).
+    vendors = defaultdict(dict)         # place -> {how without the egg name: [egg types]}
+    egg_of = {}                         # species -> (step, area, method, how, [other places])
     for egg in SHEET['eggs']:
         for name, step, how in egg['areas']:
+            vendors[place_of[area_index[name]]].setdefault(how.replace(' (%s)' % egg['method'], ''), [])
+            methods = vendors[place_of[area_index[name]]][how.replace(' (%s)' % egg['method'], '')]
+            if egg['method'] not in methods:
+                methods.append(egg['method'])
             for species in egg['species']:
-                add(area_index[name], 'other', egg['method'], step, sid_of(species), note='cap %d' % cap(step),
-                    pick=len(egg['species']))
-                note_row(groups[(area_index[name], 'other', egg['method'], step)][sid_of(species)], how)
-            sheet_counts['sheet egg rows'] += len(egg['species'])
+                first = egg_of.get(sid_of(species))
+                if first is None or step < first[0]:
+                    egg_of[sid_of(species)] = (step, area_index[name], egg['method'], how,
+                                               (first[4] + [first[1]]) if first else [])
+                elif area_index[name] not in first[4] and area_index[name] != first[1]:
+                    first[4].append(area_index[name])
+    for ar, hows in vendors.items():
+        data['AR'][ar]['note'] = '; '.join('%s: %s' % (' / '.join(methods), how) for how, methods in hows.items())
+        sheet_counts['sheet egg vendor notes'] += 1
 
     sections = {}
     for (area, kind, method, step), rows in sorted(groups.items()):
@@ -279,28 +293,39 @@ def build(data):
         if ar['l'] == [area_index[SHEET['starter']]]:
             ar['st'] = 1
 
-    found = {mon['id'] for mon in data['P'] if mon['w']}
     first = {}
     for mon in data['P']:
         if not mon.get('fc') and mon['g'] != 1:
             first.setdefault(mon['dex'], mon['id'])
-    obtainable = {mon['id'] for mon in data['P'] if mon['id'] in found or first.get(mon['dex']) in found}
     by_mega = {mon['id'] for mon in data['P'] if mon['g'] == 1}
     follow = {sid_of(form): sid_of(base) for form, base in SHEET['follow'].items()}
-    changed = True
-    while changed:
-        changed = False
-        for mon in data['P']:
-            if mon['g'] == 1 or mon['id'] in obtainable:
-                continue
-            if any(parent in obtainable for _, parent in mon['ef']) or follow.get(mon['id']) in obtainable:
-                obtainable.add(mon['id'])
-                changed = True
-            # breeding: the pre-evolution of an obtainable species hatches from it (Pichu, Cleffa, Azurill ...)
-            elif any(child in obtainable and child not in by_mega for _, child in mon['et']):
-                obtainable.add(mon['id'])
-                changed = True
-    obtainable -= {sid_of(name) for name in SHEET['unobtainable']}
+
+    def available():
+        found = {mon['id'] for mon in data['P'] if mon['w']}
+        obtainable = {mon['id'] for mon in data['P'] if mon['id'] in found or first.get(mon['dex']) in found}
+        changed = True
+        while changed:
+            changed = False
+            for mon in data['P']:
+                if mon['g'] == 1 or mon['id'] in obtainable:
+                    continue
+                if any(parent in obtainable for _, parent in mon['ef']) or follow.get(mon['id']) in obtainable:
+                    obtainable.add(mon['id'])
+                    changed = True
+                # breeding: the pre-evolution of an obtainable species hatches from it (Pichu, Cleffa, Azurill ...)
+                elif any(child in obtainable and child not in by_mega for _, child in mon['et']):
+                    obtainable.add(mon['id'])
+                    changed = True
+        return obtainable
+
+    without_eggs = available()
+    for species, (step, area, method, how, others) in sorted(egg_of.items()):
+        if species not in without_eggs:
+            also = '; also ' + ', '.join(data['LOC'][a] for a in others) if others else ''
+            by_id[species]['w'].append([area, method, '', '', '%s; cap %d%s' % (
+                how.replace(' (%s)' % method, ''), cap(step), also)])
+            sheet_counts['sheet egg-only species'] += 1
+    obtainable = available() - {sid_of(name) for name in SHEET['unobtainable']}
     for mon in data['P']:
         if mon['g'] != 1:
             mon['g'] = 0 if mon['id'] in obtainable else 3
