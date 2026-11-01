@@ -61,12 +61,14 @@ for (const [name, power, type, category, flags] of [
   ['Charge Beam', 50, 'Electric', 'Special', []],
   ['Volt Tackle', 120, 'Electric', 'Physical', ['contact']],
   ['Inferno Parade', 60, 'Ghost', 'Special', []],
+  ['Knock Off', 65, 'Dark', 'Physical', ['contact']],
 ]) {
   data.M.push(name);
   data.MV.push({bp: power, t: type, c: category, f: flags});
 }
 for (const [species, types] of [['Electivire', ['Electric']], ['Sunflora', ['Grass']],
-  ["Farfetch'd", ['Normal', 'Flying']], ["Sirfetch'd", ['Fighting']], ['Cherrim', ['Grass']]]) {
+  ["Farfetch'd", ['Normal', 'Flying']], ["Sirfetch'd", ['Fighting']], ['Cherrim', ['Grass']],
+  ['Butterfree', ['Bug', 'Flying']], ['Flapple', ['Grass', 'Dragon']], ['Appletun', ['Grass', 'Dragon']]]) {
   data.P.push({id: species, n: species, s: [100, 100, 100, 100, 100, 100], t: types, a: [], et: []});
 }
 const unchanged = JSON.stringify({data, profile});
@@ -375,6 +377,14 @@ check('CFRU raw ability names reach their engine effects', 'tools/cfru.py CFRU_N
   const thick = target({ab: ability('Thick Fat')});
   assert.deepEqual(result(holder('Neutralize Gas'), 'Ember', thick).rolls, expected(40));
   assert.notDeepEqual(result(holder(''), 'Ember', thick).rolls, expected(40));
+});
+check('Knock Off gets no boost against a holder of its own RR Mega Stone', 'Showdown gen9rr/items.ts:935-1168 (onTakeItem); official dex items Applite / Duraludite / Grimmsnite', () => {
+  const knock = (species, item) => result(holder(''), 'Knock Off', target({id: species, it: item})).rolls;
+  for (const [species, item] of [['Butterfree', 'Butterfrite'], ['Flapple', 'Applite'], ['Appletun', 'Applite']]) {
+    assert.deepEqual(knock(species, item), expected(65), species + ' ' + item);
+  }
+  assert.deepEqual(knock('Butterfree', 'Applite'), expected(97));
+  assert.deepEqual(knock('Butterfree', 'Leftovers'), expected(97));
 });
 check('fixture inputs remain unchanged', 'tools/calc/README.md: Public contract', () => {
   assert.equal(JSON.stringify({data, profile}), unchanged);

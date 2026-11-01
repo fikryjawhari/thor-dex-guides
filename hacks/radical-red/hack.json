@@ -865,63 +865,93 @@
       "flingPower": 30
      },
      "Butterfrite": {
-      "megaStone": "Butterfree-Mega",
-      "megaEvolves": "Butterfree"
+      "megaStone": {
+       "Butterfree": "Butterfree-Mega"
+      }
      },
      "Machampite": {
-      "megaStone": "Machamp-Mega",
-      "megaEvolves": "Machamp"
+      "megaStone": {
+       "Machamp": "Machamp-Mega"
+      }
      },
      "Garbodorite": {
-      "megaStone": "Garbodor-Mega",
-      "megaEvolves": "Garbodor"
+      "megaStone": {
+       "Garbodor": "Garbodor-Mega"
+      }
      },
      "Kinglerite": {
-      "megaStone": "Kingler-Mega",
-      "megaEvolves": "Kingler"
+      "megaStone": {
+       "Kingler": "Kingler-Mega"
+      }
      },
      "Snorlaxite": {
-      "megaStone": "Snorlax-Mega",
-      "megaEvolves": "Snorlax"
+      "megaStone": {
+       "Snorlax": "Snorlax-Mega"
+      }
      },
      "Laprasite": {
-      "megaStone": "Lapras-Mega",
-      "megaEvolves": "Lapras"
+      "megaStone": {
+       "Lapras": "Lapras-Mega"
+      }
      },
      "Drednawite": {
-      "megaStone": "Drednaw-Mega",
-      "megaEvolves": "Drednaw"
+      "megaStone": {
+       "Drednaw": "Drednaw-Mega"
+      }
      },
      "Coalossite": {
-      "megaStone": "Coalossal-Mega",
-      "megaEvolves": "Coalossal"
+      "megaStone": {
+       "Coalossal": "Coalossal-Mega"
+      }
      },
      "Orbeetlite": {
-      "megaStone": "Orbeetle-Mega",
-      "megaEvolves": "Orbeetle"
+      "megaStone": {
+       "Orbeetle": "Orbeetle-Mega"
+      }
      },
      "Toxtricitite": {
-      "megaStone": "Toxtricity-Mega",
-      "megaEvolves": "Toxtricity"
+      "megaStone": {
+       "Toxtricity": "Toxtricity-Mega"
+      }
      },
      "Copperajite": {
-      "megaStone": "Copperajah-Mega",
-      "megaEvolves": "Copperajah"
+      "megaStone": {
+       "Copperajah": "Copperajah-Mega"
+      }
      },
      "Centiskite": {
-      "megaStone": "Centiskorch-Mega",
-      "megaEvolves": "Centiskorch"
+      "megaStone": {
+       "Centiskorch": "Centiskorch-Mega"
+      }
      },
      "Sandacondite": {
-      "megaStone": "Sandaconda-Mega",
-      "megaEvolves": "Sandaconda"
+      "megaStone": {
+       "Sandaconda": "Sandaconda-Mega"
+      }
      },
      "Alcremite": {
-      "megaStone": "Alcremie-Mega",
-      "megaEvolves": "Alcremie"
+      "megaStone": {
+       "Alcremie": "Alcremie-Mega"
+      }
      },
      "Honey": {
       "flingPower": 30
+     },
+     "Applite": {
+      "megaStone": {
+       "Flapple": "Flapple-Mega",
+       "Appletun": "Appletun-Mega"
+      }
+     },
+     "Duraludite": {
+      "megaStone": {
+       "Duraludon": "Duraludon-Mega"
+      }
+     },
+     "Grimmsnite": {
+      "megaStone": {
+       "Grimmsnarl": "Grimmsnarl-Mega"
+      }
      }
     },
     "rules": [
