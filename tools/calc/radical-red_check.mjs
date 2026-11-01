@@ -5,7 +5,10 @@ import {createEngine, resolveProfile} from './run.mjs';
 const directory = new URL('../../hacks/radical-red/', import.meta.url);
 const configuration = JSON.parse(readFileSync(new URL('hack.json', directory), 'utf8'));
 assert.ok(configuration.cfg.calc, 'RR calc must stay configured for the finishing unit');
-const profile = await resolveProfile(configuration.cfg.calc);
+// assemble.py's merge: the engine reads calc_effects.json's moves / zmoves / rules as over.effects
+const ownEffects = JSON.parse(readFileSync(new URL('calc_effects.json', directory), 'utf8'));
+const profile = await resolveProfile({...configuration.cfg.calc, over: {...configuration.cfg.calc.over,
+  effects: Object.fromEntries(['moves', 'zmoves', 'rules'].filter(key => ownEffects[key]).map(key => [key, ownEffects[key]]))}});
 const data = {
   P: [{id: '151', n: 'Mew', s: [100, 100, 100, 100, 100, 100], t: ['Psychic'], a: [], et: []}],
   AB: ['Toxic Boost', 'Flare Boost', 'Iron Fist', 'Striker', 'Illusion', 'Feline Prowess',
