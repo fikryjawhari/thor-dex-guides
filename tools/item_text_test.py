@@ -38,13 +38,13 @@ class Apply(unittest.TestCase):
         self.assertEqual(D['WK']['splits'][0]['st'][0]['it'][0][1], "King's Rock")
         self.assertEqual(D['P'][0]['hi'][0][0], "King's Rock")
         self.assertEqual(D['MI'][0]['i'], "King's Rock")
-        self.assertIn("item name: Kings Rock -> King's Rock (3 use(s), IT spelling)", report)
+        self.assertIn("item name: Kings Rock -> King's Rock (3 use(s), Items tab spelling)", report)
 
-    def test_no_tab_spelling_takes_the_most_used(self):
+    def test_spelled_out_form_wins_over_the_most_used(self):
         D = self.data([], p=[{'id': '1', 'hi': [['Silver Powder', 1]]}, {'id': '2', 'hi': [['SilverPowder', 1]]},
                              {'id': '3', 'hi': [['SilverPowder', 1]]}])
         item_text.apply(D, 'hardlove-gold', lambda line: None)
-        self.assertEqual({p['hi'][0][0] for p in D['P']}, {'SilverPowder'})
+        self.assertEqual({p['hi'][0][0] for p in D['P']}, {'Silver Powder'})
 
     def test_pool_takes_the_text_of_the_same_key_in_another_guide(self):
         D = self.data([['Lum Berry', 'd', None, 0, 'Held', ['p0', 0]]])
