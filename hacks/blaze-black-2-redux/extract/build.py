@@ -18,6 +18,7 @@ import trainers  # noqa: E402
 import items  # noqa: E402
 import walk  # noqa: E402
 import held  # noqa: E402
+import item_desc  # noqa: E402
 import move_metadata  # noqa: E402
 
 EMPTY = {'LOC': [], 'AR': [], 'IT': [], 'WK': {'splits': [], 'np': []}, 'TR': {'g': [], 'caps': []}}
@@ -33,6 +34,7 @@ def main():
     for k, v in EMPTY.items():
         data.setdefault(k, v)
     held.build(data)                    # P.hi from held_items.json (the user's ROM, read by held_items.py)
+    item_desc.build(data)               # IX from item_desc.json (the user's ROM text bank, read by item_desc.py)
     move_metadata.build(data)
     names = [n for fixer in (SPECIES, MOVES, ABILITIES) for n in fixer.lines()]
     report('doc name fixes: %d (%s)' % (sum(f.count() for f in (SPECIES, MOVES, ABILITIES)),
