@@ -15,7 +15,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import H, report  # noqa: E402
 from extractlib import finalise, write_data  # noqa: E402
-import dex, gid, locs, trainers, items, walk, move_rules  # noqa: E402
+import dex, gid, held, itemtext, locs, trainers, items, walk, move_rules  # noqa: E402
 import json  # noqa: E402
 
 
@@ -33,8 +33,10 @@ def main():
     dex.species(D)        # P
     dex.abilities(D)      # AB
     trainers.build(D)     # TR
+    held.build(D)         # P.hi: wild held item odds (after TR: item spellings)
     dex.movetable(D)      # MV
     items.build(D)        # IT
+    itemtext.build(D)     # IX: the hack's own items' bag text
     walk.build(D)         # AR, WK
     dex.types(D)          # TC
     P = D['P']
