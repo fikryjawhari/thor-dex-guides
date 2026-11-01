@@ -6,13 +6,13 @@
 The standard:
 - Boxes in BOXES order, a box only when the hack has rows for it; no per-hack box names. Mega Stones only where the
   hack places its stones (not Photonic Sun: generated stones), Z-Crystals for Gen 7.
-- Every box has at least one yellow sub-heading (r[4]); a box with no natural groups gets one named after itself.
-  Shops by item kind (SHOP_KINDS; one row per item, every shop that sells it one per line), Held Items by class
+- Sub-headings use r[4]; headings equal to the item name are empty. Shops fold into the item's kind,
+  one shop per line; Held Items by class
   (HELD_CLASSES), Stats and Abilities by STATS_SUBS, TMs and HMs as TMs / HMs.
-- Rows are `Found:` / `Wild:` / `Also:` (gifts, rewards) / `Shop:` lines, in that order; TMs, tutors, Mega Stones and
-  Useful NPCs keep their place text and links.
+- Rows are `Found:` / `Wild:` / `Also:` (gifts, rewards) / `Shop:` lines, in that order;
+  tutors and Useful NPCs keep their place text and links.
 - Game order (earliest walkthrough stop) for GAME_ORDER_BOXES when a hack's RULES ask for it, A to Z otherwise.
-- Each item once (PRECEDENCE), except Shops and Valuables. Key Items keep only what unlocks something or has story /
+- Each item once (PRECEDENCE), except nomerge pickups and separate tutors. Key Items keep only what unlocks something or has story /
   QoL / gameplay value (no Town Map, Running Shoes, Holo Caster and the like).
 A new hack needs a RULES entry only for its quirks (renames, dropped rows, its own box names in route()).
 
@@ -28,8 +28,11 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # ---- the standard ---------------------------------------------------------------------------------------------------
-BOXES = ['Valuables', 'Key Items', 'Shops', 'TMs and HMs', 'Move Tutors', 'Held Items', 'Evolution Items',
-         'Stats and Abilities', 'Mega Stones', 'Z-Crystals', 'Fossils', 'Useful NPCs']
+BOXES = ['Key Items', 'Poké Balls', 'Medicine', 'Held Items', 'TMs and HMs', 'Evolution Items',
+         'Stats and Abilities', 'Mega Stones', 'Z-Crystals', 'Fossils', 'Valuables', 'Other', 'Move Tutors', 'Useful NPCs']
+SHOP_BOX = {'Poké Balls': 'Poké Balls', 'Healing and repels': 'Medicine', 'Evolution items': 'Evolution Items',
+            'Power items': 'Stats and Abilities', 'Held items': 'Held Items', 'Stats and abilities': 'Stats and Abilities',
+            'TMs': 'TMs and HMs', 'Mega Stones': 'Mega Stones', 'Other': 'Other'}
 KIND = {'TMs and HMs': 'tm', 'Move Tutors': 'tm', 'Mega Stones': 'mega', 'Useful NPCs': 'npc'}   # others: 'gen'
 SHOP_KINDS = ['Poké Balls', 'Healing and repels', 'Evolution items', 'Power items', 'Held items', 'Stats and abilities',
               'TMs', 'Mega Stones', 'Other']
@@ -45,7 +48,7 @@ HELD_MAP = {'Type boosting': 'Type boosters', 'Battle': 'Battle gear', 'Consumab
 ONE_USE = {'Weakness Policy', 'Grassy Seed', 'Electric Seed', 'Misty Seed', 'Psychic Seed', 'Focus Sash', 'Red Card',
            'Booster Energy', 'Air Balloon', 'Eject Button', 'Eject Pack', 'White Herb', 'Power Herb'}
 SPECIFIC = {'Thick Club', 'Light Ball', 'Stick', 'Lucky Punch', 'Metal Powder', 'Quick Powder', 'Soul Dew'}
-# Where an item that is in more than one box stays (Shops and Valuables are the only boxes meant to repeat items).
+# Where an item that is in more than one box stays.
 PRECEDENCE = ['Key Items', 'TMs and HMs', 'Move Tutors', 'Mega Stones', 'Z-Crystals', 'Fossils', 'Evolution Items',
               'Stats and Abilities', 'Held Items', 'Useful NPCs']
 # Boxes in game order (earliest walkthrough stop) when a hack asks for it; A to Z otherwise (GAME_ORDER_BOXES).
@@ -74,7 +77,11 @@ HG_OTHER = {
 RULES = {
     # keep_sub: boxes whose rows keep the extract's own sub-heading (Unbound: one per tutor, Zygarde Cells);
     # nomerge: items that stay one row per place (Unbound's Zygarde Cells)
-    'unbound': {'reorder': set(GAME_ORDER_BOXES), 'keep_sub': {'Key Items', 'Move Tutors'}, 'nomerge': {'Zygarde Cell'}},
+    'unbound': {'reorder': set(GAME_ORDER_BOXES), 'keep_sub': {'Key Items', 'Move Tutors'}, 'nomerge': {'Zygarde Cell'},
+                'text': {('TMs and HMs', 'TM004 Calm Mind'): 'Shop: Fallshore City Bazaar · Top-left Stall · ₽10,000'},
+                'tutor_groups': [(r'Shard Tutor', 'Shard tutors'), (r'Gem Family', 'Gem Family'),
+                                 (r'Ultimate and Battle Combo|Special Moves|Draco Meteor', 'Special moves'),
+                                 (r'Move Tutor [1-4]$', 'Battle Frontier tutors')]},
     'emerald-imperium': {
         'reorder': set(GAME_ORDER_BOXES), 'tm_width': 3, 'shop_kind_re': EI_KIND,
         'drop': {('Shops', 'Pomeg Berry')},     # the author's stray first row (it only holds the vanilla-stock remark)
@@ -160,10 +167,54 @@ def plain(text):
     return '; '.join(ln[_LABEL.match(ln).end():].strip() if _LABEL.match(ln) else ln for ln in clean(text).split('\n'))
 
 
+def pickup_lines(texts):
+    """Keep each acquisition on its own line, ordered by source kind and deduplicated."""
+    lines = []
+    for text in texts:
+        for line in to_lines(text).splitlines():
+            label = _LABEL.match(line)
+            parts = (line[label.end():].strip().split('; ') if label.group(1) != 'Shop'
+                     else [line[label.end():].strip()]) if label else [line]
+            joined = []
+            for part in parts:
+                if joined and re.match(r'^(?:replaces|requires|needs|only|not |hidden|vanilla|post-game)', part, re.I):
+                    joined[-1] += '; ' + part
+                else:
+                    joined.append(part)
+            for part in joined:
+                value = label.group() + ' ' + part if label else part
+                if value and value not in lines:
+                    lines.append(value)
+    return '\n'.join(sorted(lines, key=lambda line: next((index for index, label in enumerate(
+        ('Found:', 'Wild:', 'Also:', 'Shop:')) if line.startswith(label)), 4)))
+
+
+def line_place(text):
+    """The explicit place before an acquisition's detail separator, without its source label."""
+    return re.sub(r'^(?:Found|Also|Wild|Shop):\s*', '', text).split(' · ', 1)[0].strip().rstrip('.')
+
+
+def remove_shop_place(text, item, say):
+    lines = text.splitlines()
+    shops = [line_place(line).casefold() for line in lines if line.startswith('Shop:')]
+    if not shops:
+        return text
+    out = []
+    for line in lines:
+        place = line_place(line).casefold()
+        if line.startswith(('Found:', 'Also:')) and any(place == shop or shop.startswith(place + ' ·') for shop in shops):
+            continue
+        out.append(line)
+    if any(line.startswith(('Found:', 'Also:')) for line in out):
+        say('items: TM place and shop retained:', item, out)
+    return '\n'.join(out)
+
+
 # ---- routing: one old row -> entries for the new boxes --------------------------------------------------------------
 class Entry:
     """One old row's result: where it goes and what it reads. wk = the texts this row has in the walkthrough."""
     def __init__(self, old_box, old_item, old_text, box, sub, item, text, link=None, miss=0, wk=(), suffix=None, fix_link=None):
+        self.old_box = old_box
         self.old_item, self.old_text, self.box, self.sub, self.item, self.text = old_item, old_text, box, sub, item, text
         self.link, self.miss, self.suffix, self.fix_link = link, miss, suffix, fix_link
         self.wk = {old_text, *wk}
@@ -184,17 +235,24 @@ def route(old, rules):
     box, item, text, link, miss, sub = old
     rn = rules.get('rename', {})
     name = rn.get(item, item)
+    text = rules.get('text', {}).get((box, item), text)
 
     def E(nbox, nsub, nitem=None, ntext=None, nlink=link, **kw):
         return Entry(box, item, text, nbox, nsub, nitem or name, text if ntext is None else ntext, nlink, miss, **kw)
 
     if (box, item) in rules.get('drop', ()):
         return []
+    if name.endswith(' Ball') and name not in ('Iron Ball', 'Light Ball', 'Smoke Ball') and box in ('Valuables', 'Key Items', 'Poké Balls', 'Other'):
+        return [E('Poké Balls', 'Poké Balls', ntext=to_lines(text))]
+    if name == 'Escape Rope' and box != 'Shops':
+        return [E('Medicine', 'Medicine', ntext=to_lines(text))]
     if box in ('TMs', 'HMs', 'TMs and HMs'):
         return [E('TMs and HMs', 'HMs' if re.match(r'HM\d', item) else 'TMs')]
     own = sub if box in rules.get('keep_sub', ()) and sub else None
     if box == 'Move Tutors':
         return [E('Move Tutors', own or 'Move Tutors')]
+    if box in ('Poké Balls', 'Medicine') or box == 'Other' and item not in rules.get('other', {}):
+        return [E(box, sub or box, ntext=to_lines(text))]
     if box in ('Mega Stones', 'Z-Crystals'):
         return [E(box, box, ntext=text if box == 'Mega Stones' else to_lines(text))]
     if box in ('Evolution Items', 'Fossils'):
@@ -249,7 +307,20 @@ def shop_entries(old, rules, E):
         else:
             line, kind = clean(text), sub
         kind = rules.get('shop_kind', {}).get(n, kind)
-        out.append(E('Shops', kind, n, line, suffix=line if per_shop else None, wk=(line,)))
+        target = SHOP_BOX.get(kind, 'Other')
+        heading = ('Berries' if n.endswith('Berry') else 'Other held items') if target == 'Held Items' else target
+        if target == 'TMs and HMs':
+            heading = 'TMs'
+        elif target == 'Stats and Abilities':
+            heading = 'Power items (EVs while held)' if kind == 'Power items' else 'Levels and PP'
+        line = re.sub(r' · (?:' + re.escape(n) + '|' + re.escape(re.sub(r'^TM\d+\s*', '', n)) + r')$', '', line)
+        if ' · ' in line:
+            trailer = line.rsplit(' · ', 1)[1]
+            normal = lambda value: re.sub(r'[^a-z0-9]', '', value.casefold())
+            if normal(trailer) in (normal(n), normal(re.sub(r'^TM\d+\s*', '', n))):
+                line = line.rsplit(' · ', 1)[0]
+        out.append(E(target, heading, n, line if line.startswith('Shop:') else 'Shop: ' + line,
+                     suffix=line if per_shop else None, wk=(line,)))
     return out
 
 
@@ -261,7 +332,11 @@ def standardise(D, rules=None, report=None):
     for b in D['IT']:
         for r in b['r']:
             old = (b['n'], r[0], r[1], r[2] if len(r) > 2 else None, r[3] if len(r) > 3 else 0, r[4] if len(r) > 4 else None)
-            entries += route(old, rules)
+            if 'Blue-Striped Basculin:' in r[0] and 'Deep Sea Tooth' in r[0]:
+                for name, holder in (('Deep Sea Scale', 'Blue-Striped Basculin'), ('Deep Sea Tooth', 'Red-Striped Basculin')):
+                    entries += route((b['n'], name, 'Wild: ' + holder + ' (5% chance)', None, 0, None), rules)
+            else:
+                entries += route(old, rules)
         if b.get('note'):
             nb = {'TMs': 'TMs and HMs', 'HMs': 'TMs and HMs', 'Other': None, 'Battle item rewards': None}.get(b['n'], b['n'])
             if nb and b['note'] not in notes.setdefault(nb, []):
@@ -273,11 +348,25 @@ def standardise(D, rules=None, report=None):
             e.link = stones.get(e.item)
         elif e.fix_link and e.link is None:                 # an HM row: its move
             e.link = moves.get(e.item.split(' ', 1)[1]) if ' ' in e.item else None
-    # rows -> boxes; the same item twice in one box merges (EI's rewards, shops)
+    own = {}
+    for entry in sorted(entries, key=lambda entry: PRECEDENCE.index(entry.box) if entry.box in PRECEDENCE else len(PRECEDENCE)):
+        if entry.old_box != 'Shops' and entry.box not in ('Move Tutors', 'Useful NPCs'):
+            own.setdefault(entry.item.casefold(), (entry.box, entry.sub, entry.item, entry.link))
+    machines = {re.match(r'^(?:TM|HM)\d+', entry.item).group(): entry for entry in entries
+                if entry.box == 'TMs and HMs' and re.match(r'^(?:TM|HM)\d+\s+\S', entry.item)
+                and not entry.text.startswith('Shop:')}
+    for entry in entries:
+        machine = re.match(r'^(?:TM|HM)\d+', entry.item)
+        if entry.text.startswith('Shop:') and machine and machine.group() in machines:
+            target = machines[machine.group()]
+            entry.item, entry.link = target.item, target.link
+        if entry.item.casefold() in own and entry.box not in ('Move Tutors', 'Useful NPCs'):
+            entry.box, entry.sub, entry.item, link = own[entry.item.casefold()]
+            entry.link = link if link is not None else entry.link
     boxes = {n: [] for n in BOXES}
     for e in entries:
         rows = boxes[e.box]
-        hit = next((x for x in rows if x['item'] == e.item and x['sub'] == e.sub and (e.box in ('Shops', 'Held Items', 'Evolution Items', 'Stats and Abilities', 'Key Items'))
+        hit = next((x for x in rows if x['item'] == e.item and e.box not in ('Move Tutors', 'Useful NPCs')
                     and e.item not in rules.get('nomerge', ())), None)
         if hit:
             hit['parts'].append(e.text)
@@ -288,17 +377,14 @@ def standardise(D, rules=None, report=None):
     for n, rows in boxes.items():
         for x in rows:
             ps = list(dict.fromkeys(x['parts']))
-            x['text'] = ps[0] if len(ps) == 1 else ('\n'.join(ps) if n == 'Shops' else merge_lines(ps))
-    # an item in two boxes (not Shops / Valuables) stays in the first box of PRECEDENCE
-    seen = {}
-    for n in PRECEDENCE:
-        for x in list(boxes[n]):
-            k = x['item'].casefold()
-            if k in seen and seen[k] != n:
-                boxes[n].remove(x)
-                say('items: dropped duplicate', x['item'], 'from', n, '(kept in', seen[k] + ')')
-            else:
-                seen[k] = n
+            x['text'] = pickup_lines(ps) if n not in ('Move Tutors', 'Useful NPCs') else '\n'.join(ps)
+            if x['sub'] == x['item']:
+                x['sub'] = ''
+            if n == 'Move Tutors':
+                x['sub'] = next((heading for pattern, heading in rules.get('tutor_groups', ())
+                                 if re.search(pattern, x['sub'])), x['sub'])
+            if n == 'TMs and HMs':
+                x['text'] = remove_shop_place(x['text'], x['item'], say)
     wk_first = walk_first(D, entries)
     new = []
     for n in BOXES:
@@ -311,8 +397,6 @@ def standardise(D, rules=None, report=None):
 
         def key(x, order=order, az=az, n=n):
             sub_i = order.index(x['sub']) if order and x['sub'] in order else (len(order) if order else 0)
-            if n == 'Valuables':
-                return (x['sub'].casefold(), 0)
             if az:
                 return (sub_i, x['item'].casefold())
             game = n in rules.get('reorder', ()) or f"{n}/{x['sub']}" in rules.get('reorder', ())
@@ -330,7 +414,27 @@ def standardise(D, rules=None, report=None):
         walk(D['WK'], entries, new, rules, say)
     if rules.get('also'):
         relabel_also(D, rules['also'])
+    sort_rows(D, rules)
     return D
+
+
+def sort_rows(D, rules):
+    first = {}
+    for index, stop in enumerate(stop for split in D.get('WK', {}).get('splits', []) for stop in split['st']):
+        for row in stop['it']:
+            first.setdefault((row[0], row[1]), index)
+    for box in D['IT']:
+        name = box['n']
+        order = {'Held Items': HELD_CLASSES, 'Stats and Abilities': STATS_SUBS,
+                 'TMs and HMs': ['TMs', 'HMs']}.get(name, [])
+        headings = list(dict.fromkeys(row[4] for row in box['r']))
+
+        def key(row):
+            heading = order.index(row[4]) if row[4] in order else len(order) + headings.index(row[4])
+            game = name in rules.get('reorder', ()) or f'{name}/{row[4]}' in rules.get('reorder', ())
+            value = first.get((name, row[0]), BIG) if game else row[0].casefold()
+            return heading, value
+        box['r'].sort(key=key)
 
 
 def relabel_also(D, items):
@@ -372,31 +476,54 @@ def walk_rows(WK):
 
 
 def walk(WK, entries, new, rules, say):
-    std = {}
-    for b in new:
-        for r in b['r']:
-            std.setdefault((b['n'], r[0]), []).append(r[1])
     by_item = {}
     for e in entries:
         by_item.setdefault(e.old_item, []).append(e)
-    lost = []
+    added = []
     for rows in walk_rows(WK):
         out = []
         for row in rows:
             if (row[0], row[1]) in rules.get('drop', ()):
                 continue
-            if already(row, std):
-                out.append(row)
-                continue
             hit = [e for e in by_item.get(row[1], ()) if row[2] in e.wk or (e.suffix and row[2].endswith(e.suffix))]
-            if not hit:
-                if (row[0], row[1]) not in std:
-                    lost.append(row[:3])
+            names = {(entry.box, entry.item) for entry in hit}
+            name = rules.get('rename', {}).get(row[1], row[1])
+            candidates = [(box, item) for box in new for item in box['r']
+                          if (box['n'], item[0]) in names or item[0] == name]
+            if not candidates:
+                routed = route((row[0], row[1], row[2], row[3], 0, None), rules)
+                for entry in routed:
+                    box = next((box for box in new if box['n'] == entry.box), None)
+                    if box is None:
+                        box = {'n': entry.box, 'k': KIND.get(entry.box, 'gen'), 'note': '', 'r': []}
+                        new.append(box)
+                    item = [entry.item, pickup_lines([entry.text]), entry.link, entry.miss, entry.sub]
+                    box['r'].append(item)
+                    candidates.append((box, item))
+                    added.append((entry.item, item[1]))
+            if not candidates:
+                say('items: walkthrough row unresolved:', row)
                 out.append(row)
                 continue
-            for e in hit:
-                if (e.box, e.item) in std:
-                    out.append([e.box, e.item, e.text, e.link])
+            text = row[2]
+            if hit:
+                exact = [entry for entry in hit if entry.old_text == text]
+                if len(exact) == 1:
+                    text = exact[0].text
+            lines = pickup_lines([text]).splitlines()
+            matched = [(box, item, line) for box, item in candidates for line in item[1].splitlines()
+                       if line in lines]
+            if not matched:
+                box, item = candidates[0]
+                if name in rules.get('nomerge', ()):
+                    item = [name, '\n'.join(lines), row[3], 0, 'Zygarde Cells']
+                    box['r'].append(item)
+                elif box['n'] not in ('Move Tutors', 'Useful NPCs'):
+                    item[1] = pickup_lines([item[1], *lines])
+                matched = [(box, item, line) for line in lines]
+                added.extend((item[0], line) for line in lines)
+            for box, item, line in matched:
+                out.append([box['n'], item[0], line, item[2]])
         # a row two old boxes both produced is one row; an item on one stop twice stays twice
         seen, dedup = set(), []
         for r in out:
@@ -405,8 +532,10 @@ def walk(WK, entries, new, rules, say):
                 seen.add(k)
                 dedup.append(r)
         rows[:] = dedup
-    if lost:
-        say('items: walkthrough rows left as they were:', len(lost), lost[:5])
+    new.sort(key=lambda box: BOXES.index(box['n']))
+    say('items: walkthrough rows added as IT lines:', len(added))
+    for item, text in added:
+        say('  ' + item + ': ' + text)
 
 
 def walk_first(D, entries):
@@ -439,7 +568,7 @@ def checks(D):
     seen = {}
     for b in D['IT']:
         for r in b['r']:
-            if len(r) < 5 or not r[4]:
+            if len(r) < 5 or not r[4] and b['n'] != 'Valuables':
                 bad.append(f'no sub-heading: {b["n"]} / {r[0]}')
             if b['n'] not in ('Shops', 'Valuables'):
                 if seen.setdefault(r[0].casefold(), b['n']) != b['n']:

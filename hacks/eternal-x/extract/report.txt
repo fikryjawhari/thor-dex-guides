@@ -57,7 +57,42 @@ walkthrough: on the way stops 2 : Lost Hotel, Terminus Cave
 walkthrough Lumiose items moved: part 8 stop Lumiose City: 5, part 11 stop Lumiose City: 3 ; left in place 9
 walkthrough: 21 splits 74 stop fragments, 69 legacy stop keys, 294 items placed, 25 not placed
 items: Shops 145, TMs 100, Evolution Items 26, Held Items 136, Stats and Abilities 18, Fossils 11, Key Items 28
-items: dropped duplicate Exp. Share from Held Items (kept in Key Items)
+items: TM place and shop retained: TM05 Roar ['Found: Battle Maison shop', 'Found: Santalune City shop', 'Shop: Battle Maison · BP shop, right attendant', 'Santalune City · Mart, right cashier']
+items: TM place and shop retained: TM07 Hail ['Found: Shalour City shop', 'Shop: Shalour City · Mart, right cashier']
+items: TM place and shop retained: TM11 Sunny Day ['Found: South Boulevard shop', 'Shop: South Boulevard · Mart, right cashier']
+items: TM place and shop retained: TM14 Blizzard ['Found: Laverre City shop', 'Shop: Laverre City · Mart, right cashier']
+items: TM place and shop retained: TM15 Hyper Beam ['Found: Laverre City shop', 'Shop: Laverre City · Mart, right cashier']
+items: TM place and shop retained: TM16 Light Screen ['Found: Kiloude City shop', 'Found: Santalune City shop', 'Shop: Kiloude City · Mart, right cashier', 'Santalune City · Mart, right cashier']
+items: TM place and shop retained: TM18 Rain Dance ['Found: South Boulevard shop', 'Shop: South Boulevard · Mart, right cashier']
+items: TM place and shop retained: TM20 Safeguard ['Also: Hotel Richissime (gift)', 'Also: Shalour City shop', 'Shop: Shalour City · Mart, right cashier']
+items: TM place and shop retained: TM23 Smack Down ['Found: Battle Maison shop', 'Found: Santalune City shop', 'Shop: Battle Maison · BP shop, right attendant', 'Santalune City · Mart, right cashier']
+items: TM place and shop retained: TM25 Thunder ['Found: Laverre City shop', 'Shop: Laverre City · Mart, right cashier']
+items: TM place and shop retained: TM28 Dig ['Found: Shalour City shop', 'Shop: Shalour City · Mart, right cashier']
+items: TM place and shop retained: TM33 Reflect ['Found: Kiloude City shop', 'Found: Santalune City shop', 'Shop: Kiloude City · Mart, right cashier', 'Santalune City · Mart, right cashier']
+items: TM place and shop retained: TM34 Sludge Wave ['Found: Anistar City shop', 'Found: Battle Maison shop', 'Shop: Anistar City · Mart, right cashier', 'Battle Maison · BP shop, right attendant']
+items: TM place and shop retained: TM37 Sandstorm ['Found: Shalour City shop', 'Shop: Shalour City · Mart, right cashier']
+items: TM place and shop retained: TM38 Fire Blast ['Found: Laverre City shop', 'Shop: Laverre City · Mart, right cashier']
+items: TM place and shop retained: TM48 Ice Punch ['Found: Was Round in Pokémon X', 'Found: Battle Maison shop', 'Found: Santalune City shop', 'Shop: Battle Maison · BP shop, right attendant', 'Santalune City · Mart, right cashier']
+items: TM place and shop retained: TM50 Overheat ['Found: Anistar City shop', 'Found: Kiloude City shop', 'Shop: Anistar City · Mart, right cashier', 'Kiloude City · Mart, right cashier']
+items: TM place and shop retained: TM51 Sucker Punch ['Found: Was Steel Wing in Pokémon X', 'Found: Battle Maison shop', 'Found: North Boulevard shop', 'Shop: Battle Maison · BP shop, right attendant', 'North Boulevard · Mart, right cashier']
+items: TM place and shop retained: TM52 Focus Blast ['Found: Laverre City shop', 'Shop: Laverre City · Mart, right cashier']
+items: TM place and shop retained: TM58 Thunder Punch ['Found: Was Sky Drop in Pokémon X', 'Also: Kiloude City (gift)', 'Also: Santalune City shop', 'Shop: Santalune City · Mart, right cashier']
+items: TM place and shop retained: TM59 Incinerate ['Found: Battle Maison shop', 'Found: Santalune City shop', 'Shop: Battle Maison · BP shop, right attendant', 'Santalune City · Mart, right cashier']
+items: TM place and shop retained: TM60 Fire Punch ['Found: Was Quash in Pokémon X', 'Found: Battle Maison shop', 'Found: Santalune City shop', 'Shop: Battle Maison · BP shop, right attendant', 'Santalune City · Mart, right cashier']
+items: TM place and shop retained: TM64 Explosion ['Found: Anistar City shop', 'Found: Battle Maison shop', 'Shop: Anistar City · Mart, right cashier', 'Battle Maison · BP shop, right attendant']
+items: TM place and shop retained: TM67 Retaliate ['Found: Battle Maison shop', 'Shop: Battle Maison · BP shop, right attendant']
+items: TM place and shop retained: TM68 Giga Impact ['Found: Kiloude City shop', 'Found: Laverre City shop', 'Shop: Kiloude City · Mart, right cashier', 'Laverre City · Mart, right cashier']
+items: TM place and shop retained: TM72 Volt Switch ['Found: Battle Maison shop', 'Found: North Boulevard shop', 'Shop: Battle Maison · BP shop, right attendant', 'North Boulevard · Mart, right cashier']
+items: TM place and shop retained: TM75 Swords Dance ['Found: South Boulevard shop', 'Shop: South Boulevard · Mart, right cashier']
+items: TM place and shop retained: TM76 Struggle Bug ['Found: South Boulevard shop', 'Shop: South Boulevard · Mart, right cashier']
+items: TM place and shop retained: TM78 Bulldoze ['Found: South Boulevard shop', 'Shop: South Boulevard · Mart, right cashier']
+items: TM place and shop retained: TM84 Poison Jab ['Found: Shalour City shop', 'Shop: Shalour City · Mart, right cashier']
+items: TM place and shop retained: TM85 Dream Eater ['Found: Battle Maison shop', 'Shop: Battle Maison · BP shop, right attendant']
+items: TM place and shop retained: TM87 Swagger ['Found: Battle Maison shop', 'Found: North Boulevard shop', 'Shop: Battle Maison · BP shop, right attendant', 'North Boulevard · Mart, right cashier']
+items: TM place and shop retained: TM91 Flash Cannon ['Also: Kiloude City (gift)', 'Also: Anistar City shop', 'Shop: Anistar City · Mart, right cashier']
+items: TM place and shop retained: TM93 Wild Charge ['Found: Anistar City shop', 'Found: Kiloude City shop', 'Shop: Anistar City · Mart, right cashier', 'Kiloude City · Mart, right cashier']
+items: walkthrough rows added as IT lines: 1
+  Heat Rock: Found: Route 13 (hidden), Route 18, Route 19, Route 8, Terminus Cave
 availability: obtainable 763 trainer/partner species 594 kept 782 removed 4
   removed species IDs: mega-mewtwo-y, wormadam-sandy, wormadam-trash, floette-eternal
 GID: 880 species/form keys for 782 species, 617 moves, 188 abilities, 697 item names

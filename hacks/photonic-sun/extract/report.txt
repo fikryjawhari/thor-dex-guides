@@ -49,6 +49,18 @@ key items removed: Surge Badge
 walkthrough: on the way stops 5 : Hau'oli Cemetery, Malie Garden, Thrifty Megamart, Victory Road, Ruins of Conflict
 walkthrough: 31 splits 148 stops, 326 items placed, 13 not placed
 items: Shops 126, TMs 100, Z-Crystals 35, Evolution Items 27, Held Items 118, Stats and Abilities 30, Key Items 29
+items: TM place and shop retained: TM26 Earthquake ['Found: Resolution Cave', 'Found: Tapu Village (Pokémon Center) shop', 'Shop: Tapu Village · Pokémon Center']
+items: TM place and shop retained: TM50 Overheat ['Found: Poni Meadow', 'Found: Tapu Village (Pokémon Center) shop', 'Shop: Tapu Village · Pokémon Center']
+items: TM place and shop retained: TM60 Aura Sphere ['Found: Was Quash in Ultra Sun', 'Found: Poni Plains', 'Found: Tapu Village (Pokémon Center) shop', 'Shop: Tapu Village · Pokémon Center']
+items: TM place and shop retained: TM75 Swords Dance ['Found: Poni Meadow', 'Found: Tapu Village (Pokémon Center) shop', 'Shop: Tapu Village · Pokémon Center']
+items: TM place and shop retained: TM92 Trick Room ['Found: Hano Grand Resort', 'Found: Tapu Village (Pokémon Center) shop', 'Shop: Tapu Village · Pokémon Center']
+items: TM place and shop retained: TM94 Surf ['Found: Poni Breaker Coast', 'Found: Tapu Village (Pokémon Center) shop', 'Shop: Tapu Village · Pokémon Center']
+items: TM place and shop retained: TM97 Dark Pulse ['Found: Poni Coast', 'Found: Tapu Village (Pokémon Center) shop', 'Shop: Tapu Village · Pokémon Center']
+items: TM place and shop retained: TM98 Waterfall ['Found: Poni Breaker Coast', 'Found: Tapu Village (Pokémon Center) shop', 'Shop: Tapu Village · Pokémon Center']
+items: walkthrough rows added as IT lines: 3
+  Big Root: Found: Lush Jungle, Diglett's Tunnel, Poni Coast, Vast Poni Canyon, Verdant Cavern
+  Muscle Wing: Found: Poni Plains, Ultra Space Wilds
+  Genius Wing: Found: Poni Plains, Ultra Space Wilds
 species pruned: 3 pikachu-original-cap, zygarde-10, zygarde-10-power-construct
 species retained: 928 obtainable: 876 trainer-only: 2 Megas/Primals: 50
 trainers put in walkthrough order: Post-game
