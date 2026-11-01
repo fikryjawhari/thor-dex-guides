@@ -37,6 +37,14 @@ EVO = {
 }
 
 
+def held_odds(slots, mega):
+    """P.hi [[item, %]] from species_info's [itemCommon, itemRare] (src/pokemon.c SetWildMonHeldItem): common 50%, rare
+    5%, the same item in both 100%; a lone slot keeps its own odds. Mega forms: no wild held item (the game never uses theirs)."""
+    common, rare = (item(x) if x else None for x in slots)
+    if mega or not (common or rare): return []
+    if common == rare: return [[common, 100]]
+    return [[name, pct] for name, pct in ((common, 50), (rare, 5)) if name]
+
 def build(D):
 
     ET = {i: [] for i in keep}; EF = {i: [] for i in keep}; unk = set()
@@ -92,7 +100,7 @@ def build(D):
                   'ef': [[how, str(t)] for how, t in EF[i]], 'et': [[how, str(t)] for how, t in ET[i]], 'of': [str(x) for x in of],
                   'lv': [[l, m(x)] for x, l in v['levelUpMoves']], 'tm': [m(x) for x in v['tmMoves'] or []],
                   'eg': [m(x) for x in v['eggMoves'] or []], 'w': [], 'g': 1 if i in MEGA else 3,
-                  'hi': [item(x) for x in v['heldItems'] if x], **({'fc': 1} if i in FC else {})})
+                  'hi': held_odds(v['heldItems'], i in MEGA), **({'fc': 1} if i in FC else {})})
     for i, name in enumerate(M):
         if not SD.get(key(name)): nosd.add(name)
     report(f'EI original abilities: {[a[0] for a in AB if a[2]]}'); report(f'changed vs Gen 9: {sum(1 for x in MV if x["h"])}'); report(f'moves {len(M)} (no Showdown match for priority: {len(nosd)}: {", ".join(sorted(nosd)[:15])}...), abilities {len(AB)}')
