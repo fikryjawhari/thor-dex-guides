@@ -111,3 +111,9 @@ chat merges units into `worktree-radical-red` one at a time and rebuilds data.js
 - data.js item misspellings the engine won't know (Charzardite X/Y, Blastoisnite, Aerodactlite, Houndoomnite,
   Kangaskanite, Alorichium Z, Pikshunium Z): standard names (unit 5 may have done it; check).
 - In-game checks in notes → Damage calc and Save import go to PROGRESS.md → Open.
+- Item icons: 72 names with none (most TMs, FireRed key items): `tools/item_icons.py --fetch` to give the shared icon
+  index a `radical-red` map, then `tools/item_sheets.py radical-red`; Gen 8-9 items with no art in any pinned set stay
+  without.
+- `P.tu` (dex.py) still lists the tutor moves Hardcore removes (unit 5 dropped them from the Items tab): drop them.
+- Item text written by hand with no source: DexNav, Necromizer (a guess), Time Changer. Red Orb / Adamant Orb: no
+  source places them.
