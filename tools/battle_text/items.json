@@ -1,0 +1,62 @@
+{
+  "Air Balloon": "Makes the holder airborne: Ground moves miss, and Spikes, Toxic Spikes and Sticky Web do not affect it. A damaging hit pops the balloon, even through a Substitute. Gravity grounds it without popping it; Thousand Arrows can hit it.",
+  "Big Root": {
+    "gen<=6": "Multiplies HP recovered from draining moves, Leech Seed, Aqua Ring and Ingrain by 1.3. Does not increase damage or recovery from Shell Bell, Leftovers or Berries.",
+    "": "Multiplies HP recovered from draining moves, Leech Seed, Aqua Ring, Ingrain and Strength Sap by 1.3. Does not increase damage or recovery from Shell Bell, Leftovers or Berries."
+  },
+  "Black Sludge": "At the end of each turn, restores 1/16 of the holder's max HP if it is Poison type; otherwise it loses 1/8. Magic Guard prevents the damage, not the healing.",
+  "Charcoal": "The holder's Fire moves have 1.2× power. Not used up.",
+  "Choice Scarf": "Multiplies Speed by 1.5, but locks the holder into the first move it uses until it switches out or loses the Scarf. A Z-Move can bypass the lock for that turn.",
+  "Damp Rock": {
+    "gen<=5": "Rain Dance used by the holder lasts 8 turns instead of 5, including this turn. Drizzle already lasts until the weather changes.",
+    "": "Rain Dance or Drizzle started by the holder lasts 8 turns instead of 5, including this turn. Switching out does not shorten it."
+  },
+  "Dark Gem": {
+    "gen<=5": "The holder's first successful damaging Dark move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The holder's first Dark move does 1.3× damage; the gem is used up."
+  },
+  "Dream Ball": {
+    "gen<=7": "In Gen 5's Entree Forest, always catches the Pokémon. Outside that encounter, catch rate ×1; sleep gives no extra Dream Ball bonus.",
+    "": "Catch rate ×4 on a sleeping Pokémon, ×1 otherwise."
+  },
+  "Eviolite": "Multiplies Defense and Sp. Def by 1.5 if the holder's species can still evolve. A fully evolved Pokémon that can Mega Evolve does not qualify.",
+  "Expert Belt": "The holder's super-effective attacks do 1.2× damage. Neutral and resisted hits get no boost; fixed-damage moves are not boosted.",
+  "Flame Orb": "At the end of each turn, burns the holder if it has no status and can be burned. Fire types and Water Veil prevent it. Magic Guard prevents burn damage, not the burn. Not used up.",
+  "Focus Sash": {
+    "gen<=4": "At full HP, survives a would-be knockout with 1 HP, including every hit of the same multi-hit attack. Used up if it saves the holder. Does not stop indirect damage.",
+    "": "At full HP, survives one would-be knockout from an attack with 1 HP; then the Sash is used up. Later hits of a multi-hit move can still KO it. Does not stop indirect damage."
+  },
+  "Grass Gem": {
+    "gen<=5": "The holder's first successful damaging Grass move does 1.5× damage; the gem is used up. Boosts every hit of a multi-hit move.",
+    "": "The holder's first Grass move does 1.3× damage; the gem is used up."
+  },
+  "King's Rock": {
+    "gen<=4": "Eligible damaging moves gain a separate 10% flinch chance per hit. A move list decides eligibility: Air Slash and Dark Pulse qualify despite already causing flinches; Ice Beam does not. Only stops a target that has not acted. Inner Focus and Shield Dust block the added flinch.",
+    "": "Damaging moves with no built-in flinch chance gain a 10% chance per hit to make the target flinch. Only stops a target that has not acted. Inner Focus and Shield Dust block the added flinch; Serene Grace doubles its chance."
+  },
+  "Leftovers": "Restores 1/16 of the holder's max HP at the end of every turn.",
+  "Life Orb": "Damaging moves do 1.3× damage. The holder then loses 1/10 of its max HP (not with Magic Guard, or on a move Sheer Force boosted).",
+  "Light Clay": {
+    "gen<=6": "Reflect and Light Screen set by the holder last 8 turns instead of 5, including this turn. Switching out does not shorten them.",
+    "": "Reflect, Light Screen and Aurora Veil set by the holder last 8 turns instead of 5, including this turn. Switching out does not shorten them."
+  },
+  "Metronome": {
+    "gen<=4": "Repeating the same move on consecutive turns raises its damage by 10% per repeat: 1×, 1.1×, 1.2×, up to 2× on the 11th use. Changing moves, switching out or a failed previous use resets it.",
+    "": "Repeating the same move on consecutive turns raises its damage by 20% per repeat: 1×, 1.2×, 1.4×, up to 2× on the 6th use. Changing moves, switching out or a failed previous use resets it."
+  },
+  "Normalium Z": "Once per battle for the team, turns a Normal attack into Breakneck Blitz: power 100/120/140/160/175/180/185/190/195/200 for original power up to 55/65/75/85/95/100/110/125/130/above 130, except move-specific overrides. A Normal status move gets its own Z bonus instead. Not used up; cannot be knocked off, stolen or swapped.",
+  "Occa Berry": "Eaten before a super-effective Fire hit: halves that hit's damage. Protects against only one hit of a multi-hit move. Neutral Fire damage does not trigger it; Unnerve prevents it being eaten.",
+  "Quick Ball": {
+    "gen<=4": "Catch rate ×4 on the first turn of a wild battle, ×1 afterward. Switching does not reset the turn count; a new wild encounter does.",
+    "": "Catch rate ×5 on the first turn of a wild battle, ×1 afterward. Switching does not reset the turn count; a new wild encounter does."
+  },
+  "Quick Claw": "Each turn, has a 20% chance to move first within its priority bracket, regardless of Speed or Trick Room. Does not outrun a higher-priority move.",
+  "Red Card": "If the holder survives a damaging move, uses up the Card and forces the attacker into a random available teammate. Activates after all hits, not between hits. Does not activate through a Substitute or on a Sheer Force-boosted move. Suction Cups or Ingrain can stop the switch but still use up the Card.",
+  "Rocky Helmet": "Each contact hit costs the attacker 1/6 of its own max HP, including each hit of a multi-hit move. Magic Guard prevents this damage; non-contact moves do not trigger it.",
+  "Salac Berry": "Eaten at 1/4 max HP or less: raises Speed by 1 stage. With Gluttony, triggers at 1/2 HP or less instead. Once; Unnerve prevents it being eaten.",
+  "Shell Bell": "After a damaging move, restores HP equal to 1/8 of the total damage it dealt, including all hits and targets. Big Root does not boost this healing; a move boosted by Sheer Force does not trigger it.",
+  "Sitrus Berry": "Eaten when the holder drops to 1/2 HP or less: restores 1/4 of its max HP. Once.",
+  "Toxic Orb": "At the end of each turn, badly poisons the holder if it has no status and can be poisoned. Poison and Steel types and Immunity prevent it. Magic Guard prevents poison damage; Poison Heal restores 1/8 max HP each turn instead. Not used up.",
+  "Weakness Policy": "If the holder survives a super-effective hit, raises Attack and Sp. Atk by 2 stages each, then is used up. Can activate between hits. Does not trigger through a Substitute or on fixed damage.",
+  "White Herb": "When any stat stages are below 0, restores all the holder's negative stages to 0, then is used up. Keeps positive stages. Checks after the whole effect, so one Herb clears both Defense drops from Shell Smash."
+}
