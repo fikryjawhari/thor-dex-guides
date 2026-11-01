@@ -1,6 +1,7 @@
 """Items lines that describe one pickup twice, per guide (the itemstd matching rules, run over a built data.json).
 
-    uv run python -X utf8 -I tools/item_dupes.py [hack ...] [--samples N] [--out file.md]
+    uv run python -X utf8 -I tools/item_dupes.py [hack ...] [--samples N] [--out file.md] [--root dir]
+    (--root: a checkout to read hacks/<hack>/data.json from, e.g. an older build)
 
 Kinds: `twice` = two Found / Also lines of one item that read as one pickup (same_pickup, one to one); `shop` = a TM's
 Found / Also line that only names a place its Shop line sells it at; `no place` = a line that continues another
@@ -57,21 +58,23 @@ def scan(D):
 
 
 def main(argv):
-    samples, out, hacks = 3, None, []
+    samples, out, hacks, root = 3, None, [], ROOT
     args = iter(argv)
     for arg in args:
         if arg == '--samples':
             samples = int(next(args))
+        elif arg == '--root':
+            root = next(args)
         elif arg == '--out':
             out = next(args)
         else:
             hacks.append(arg)
-    hacks = hacks or sorted(h for h in os.listdir(os.path.join(ROOT, 'hacks'))
-                            if os.path.exists(os.path.join(ROOT, 'hacks', h, 'data.json')))
+    hacks = hacks or sorted(h for h in os.listdir(os.path.join(root, 'hacks'))
+                            if os.path.exists(os.path.join(root, 'hacks', h, 'data.json')))
     md = ['| guide | twice | shop | no place | repeat | unsure |', '|---|---|---|---|---|---|']
     body = []
     for hack in hacks:
-        D, _ = datajson.load(os.path.join(ROOT, 'hacks', hack, 'data.json'))
+        D, _ = datajson.load(os.path.join(root, 'hacks', hack, 'data.json'))
         found = scan(D)
         md.append(f'| {hack} | ' + ' | '.join(str(len(found[k])) for k in found) + ' |')
         body.append(f'\n## {hack}')

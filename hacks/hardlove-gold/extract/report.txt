@@ -138,55 +138,10 @@ IX (hack item text): Infinite Candy, Starter Card
 P 987 obtainable 596 megas 74 trainer only 317 moves 783 abilities 284 trainers 329 areas 61 stops 94 unplaced items 0
 items: TM place and shop retained: TM39 Rock Tomb ['Found: Union Cave B1F', 'Shop: Goldenrod Department Store after beating Schorsch']
 items: TM place and shop retained: TM70 Flash ['Found: Sprout Tower', 'Shop: Azalea Town Mart, Goldenrod Department Store']
-items: walkthrough rows added as IT lines: 16
-  Bug Bite: Found: Azalea City, NPC near the Poké Center
-  Headbutt: Found: Ilex Forrest, NPC near the entrace to Azalea City
-  Brick Break: Also: Goldenrod Game Corner, after beating Schorsch
-  Fire Punch: Also: Goldenrod Game Corner, after beating Schorsch
-  Ice Punch: Also: Goldenrod Game Corner, after beating Schorsch
-  Poison Jab: Also: Goldenrod Game Corner, after beating Schorsch
-  Shadow Punch: Also: Goldenrod Game Corner, after beating Schorsch
-  Thunder Punch: Also: Goldenrod Game Corner, after beating Schorsch
-  Blizzard: Also: Goldenrod Game Corner, after beating Misty
-  Fire Blast: Also: Goldenrod Game Corner, after beating Misty
-  Hurricane: Also: Goldenrod Game Corner, after beating Misty
-  Hydro Pump: Also: Goldenrod Game Corner, after beating Misty
-  Thunder: Also: Goldenrod Game Corner, after beating Misty
-  Blackthorn City: Found: Old lady in the house next to the Poké Mart changes Greninja's ability to Battle Bond. Starter: Froakie
-  Blackthorn City: Found: Old man in the house next to the Poké Mart tells you 3 of the 4 available Roamers
-  Pokémon League: Found: Old man next to the Bidoof resets the Embedded Tower
-pickup keys: 30 table entries no pickup matched
-  p196: Abomasite (Unavailable)
-  p206: Barbaracite (Unavailable)
-  p210: Blazikenite (Unavailable)
-  p214: Charizardite Y (Unavailable)
-  p217: Clefablite (Unavailable)
-  p218: Darkranite (Unavailable)
-  p220: Diancite (Unavailable)
-  p226: Falinksite (Unavailable)
-  p229: Floettite (Unavailable)
-  p230: Froslassite (Unavailable)
-  p237: Glimmoranite (Unavailable)
-  p242: Heatranite (Unavailable)
-  p244: Kangaskhanite (Unavailable)
-  p245: Latiasite (Unavailable)
-  p246: Latiosite (Unavailable)
-  p248: Lucarionite (Unavailable)
-  p250: Magearnite (Unavailable)
-  p251: Malamarite (Unavailable)
-  p256: Meowsticite (Unavailable)
-  p258: Mewtwonite X (Unavailable)
-  p259: Mewtwonite Y (Unavailable)
-  p264: Sablenite (Unavailable)
-  p266: Sceptilite (Unavailable)
-  p269: Scraftinite (Unavailable)
-  p272: Staraptite (Unavailable)
-  p273: Starminite (Unavailable)
-  p276: Tatsugirinite (Unavailable)
-  p277: Tyranitarite (Unavailable)
-  p281: Zeraorite (Unavailable)
-  p282: Zygardite (Unavailable)
-pickup keys: 304 pickups, 279 walkthrough rows keyed
+items: walkthrough rows matched to an Items line at the same place: 0
+items: walkthrough rows added as IT lines: 0
+items: walkthrough rows kept apart from a line at the same place (unsure): 0
+pickup keys: 300 pickups, 275 walkthrough rows keyed
 trainers put in walkthrough order: Morty Split [Cap 39]
 item text: 2 own, 212 pooled, 0 from the wiki, 14 made up, 32 Mega Stone standard, 0 with no description
 in battle: 134 shown items with battle text, 126 without

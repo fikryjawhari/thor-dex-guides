@@ -407,7 +407,7 @@ def merge_pickup(keep, other):
     for seg in re.split(r' · |; |\. ', body(other)):
         ws = words(seg)
         if ws and len(ws & words(text)) / len(ws) < 0.6:
-            seg = re.sub(r'^Found (?=(?:in|on|under|inside|at|near))', '', seg.strip().rstrip('.'))
+            seg = re.sub(r'^Found (?=(?:in|on|under|inside|at|near)\b)', '', seg.strip().rstrip('.'))
             text += ' · ' + seg[:1].upper() + seg[1:]
     notes = ''.join(dict.fromkeys(m.group() for m in (_NOTE.search(keep), _NOTE.search(other)) if m))
     return _LABEL.match(keep).group() + ' ' + drop_repeats(text) + notes
