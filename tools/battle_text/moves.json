@@ -1,83 +1,107 @@
 {
-  "Baton Pass": {
-    "gen<=4": "Switches to a chosen teammate, passing stat stages and a Substitute's remaining HP. Also passes Aqua Ring, Ingrain, Focus Energy, confusion, Leech Seed, Ghost-type Curse, Perish Song, Mean Look-style trapping, Embargo, Gastro Acid, Heal Block, Lock-On, Magnet Rise, Mud Sport, Water Sport and Power Trick. Does not pass HP or major status. Fails without an available teammate.",
-    "": "Switches to a chosen teammate, passing stat stages and a Substitute's remaining HP. Also passes Aqua Ring, Ingrain, Focus Energy, confusion, Leech Seed, Ghost-type Curse, Perish Song, Embargo, Gastro Acid, Heal Block, Lock-On, Magnet Rise, Power Trick and Telekinesis. Does not pass HP, major status or Mean Look-style trapping. Fails without an available teammate."
-  },
-  "Bullet Seed": {
-    "gen<=4": "Hits 2-5 times: 2 or 3 hits 37.5% each, 4 or 5 hits 12.5% each. Always 5 with Skill Link. A Focus Sash on a target that started at full HP protects it from every hit.",
-    "": "Hits 2-5 times: 2 or 3 hits 35% each, 4 or 5 hits 15% each. Always 5 with Skill Link."
-  },
+  "10,000,000 Volt Thunderbolt": "Critical-hit rate is 1/2 before other modifiers. Deals 1/4 damage through Protect or Detect.",
+  "Acid Spray": "Lowers the target's Sp. Def by 2 stages.",
+  "Acrobatics": "Power doubles if the user holds no item.",
+  "Acupressure": "Raises one random stat by 2 stages, including accuracy or evasion. Can target the user or an ally; only chooses stats not already at +6.",
+  "Aerial Ace": "Bypasses accuracy and evasion checks.",
+  "After You": "Makes the target act immediately after the user this turn, ignoring its move's priority. Fails if it has already acted.",
+  "Agility": "Raises the user's Speed by 2 stages.",
+  "Alluring Voice": "Confuses the target if any of its stats rose earlier this turn.",
+  "Amnesia": "Raises the user's Sp. Def by 2 stages.",
+  "Ancient Power": "10% chance to raise the user's Attack, Defense, Sp. Atk, Sp. Def and Speed by 1 stage each.",
+  "Aqua Cutter": "Critical-hit rate is 1/8 before other modifiers.",
+  "Aqua Jet": "Priority +1: acts before ordinary-priority moves.",
+  "Aqua Ring": "Restores 1/16 of the user's max HP at the end of each turn; Big Root multiplies healing by 1.3. Ends on switching, unless passed with Baton Pass.",
+  "Aqua Step": "Raises the user's Speed by 1 stage.",
+  "Armor Cannon": "Lowers the user's Defense and Sp. Def by 1 stage each.",
+  "Aromatherapy": "Cures the entire party of burn, poison, paralysis, sleep and freezing, including benched Pokémon.",
+  "Aromatic Mist": "Raises an adjacent ally's Sp. Def by 1 stage. Cannot target the user.",
+  "Assist": "Uses a random eligible move known by another party member, including fainted members.",
+  "Attract": "Infatuates an opposite-sex target: it has a 50% chance to be unable to move each turn. Ends when either Pokémon switches out. Fails if either is genderless.",
+  "Aura Wheel": "Raises the user's Speed by 1 stage. Electric in Morpeko's Full Belly Mode, Dark in Hangry Mode; fails for other Pokémon.",
+  "Aurora Veil": {"gen<=8": "Requires hail. For 5 turns, your side takes 1/2 physical and special damage, or 2/3 in doubles; Light Clay extends this to 8 turns. Critical hits bypass it; does not stack with Reflect or Light Screen.", "": "Requires hail or snow. For 5 turns, your side takes 1/2 physical and special damage, or 2/3 in doubles; Light Clay extends this to 8 turns. Critical hits bypass it; does not stack with Reflect or Light Screen."},
+  "Avalanche": "Priority -4. Power doubles if the target damaged the user with an attack earlier this turn.",
+  "Axe Kick": "30% chance to confuse the target. If the attack fails, including a miss or immunity, the user loses 1/2 of its max HP.",
+  "Barrage": {"gen<=4": "Hits 2-5 times: 2 or 3 hits 37.5% each, 4 or 5 hits 12.5% each. Always 5 with Skill Link.", "": "Hits 2-5 times: 2 or 3 hits 35% each, 4 or 5 hits 15% each. Always 5 with Skill Link."},
+  "Baton Pass": {"gen<=4": "Switches to a chosen teammate, passing stat stages and Substitute. Also passes effects such as Leech Seed, Ingrain and Mean Look trapping; these can help or hinder the replacement.", "": "Switches to a chosen teammate, passing stat stages and Substitute. Also passes effects such as Leech Seed and Ingrain; these can help or hinder the replacement. Does not pass Mean Look trapping."},
+  "Beak Blast": "Priority -3. Burns Pokémon that make contact with the user before it attacks this turn.",
+  "Beat Up": {"gen<=4": "Hits once per unfainted, status-free party member. Each hit has 10 power, deals typeless damage and uses that member's base Attack against the target's base Defense, ignoring stat stages.", "": "Hits once for the user and once per other unfainted, status-free party member. Each hit's power is 5 + floor(that member's base Attack / 10), using the user's Attack."},
+  "Behemoth Bash": "Deals 2× damage to Dynamax targets.",
+  "Behemoth Blade": "Deals 2× damage to Dynamax targets.",
+  "Belly Drum": "Spends 1/2 of the user's max HP to set its Attack to +6 stages. Fails if the user has at most half HP or its Attack is already +6.",
+  "Bestow": "Gives the user's held item to the target. Fails if the target already holds an item or the user's item cannot be transferred.",
+  "Bide": {"gen<=4": "Priority +1. Stores damage from attacks for 2 turns, then deals twice that HP damage to the last attacker on turn 3. Bypasses accuracy checks and Ghost immunity.", "": "Priority +1. Stores damage from attacks for 2 turns, then deals twice that HP damage to the last attacker on turn 3. Bypasses accuracy checks; Ghost types are immune."},
+  "Bitter Blade": "Restores the user's HP by 1/2 of the damage dealt.",
+  "Blast Burn": "After a successful hit, the user must recharge next turn and cannot act, but may switch out.",
+  "Block": "Prevents the target from switching while the user remains active. Switching moves can escape; Ghost types can also escape from Gen 6 onward.",
+  "Blood Moon": "Cannot be used on consecutive turns. Switching out resets this restriction.",
+  "Body Press": "Uses the user's Defense, including its stat stages, instead of Attack to calculate damage. Burn still halves the damage.",
+  "Body Slam": "30% chance to paralyse the target.",
+  "Brave Bird": "The user takes recoil equal to 1/3 of the damage dealt.",
+  "Brick Break": "Removes the target's Reflect, Light Screen and Aurora Veil before dealing damage.",
+  "Brine": "Power doubles if the target has half its max HP or less remaining.",
+  "Bug Bite": "Eats the target's held Berry and gives its effect to the user, even if the user already holds an item. Does not steal through Substitute.",
+  "Bug Buzz": "10% chance to lower the target's Sp. Def by 1 stage.",
+  "Bulldoze": "Lowers each target's Speed by 1 stage. Grassy Terrain halves its power against grounded targets.",
+  "Bullet Seed": {"gen<=4": "Hits 2-5 times: 2 or 3 hits 37.5% each, 4 or 5 hits 12.5% each. Always 5 with Skill Link. A Focus Sash on a target that started at full HP protects it from every hit.", "": "Hits 2-5 times: 2 or 3 hits 35% each, 4 or 5 hits 15% each. Always 5 with Skill Link."},
+  "Burn Up": "Requires the user to be Fire type. After hitting, removes its Fire type until it switches out; a pure Fire type becomes typeless.",
+  "Burning Jealousy": "Burns each target whose stats rose earlier this turn.",
   "Calm Mind": "Raises the user's Sp. Atk and Sp. Def by 1 stage each.",
-  "Counter": {
-    "gen<=4": "Priority -5. Returns twice the HP lost to the last opposing physical attack that hit the user this turn. Counts only the final hit of a multi-hit move. Fails without HP lost to such a hit; Ghost types are immune.",
-    "gen<=6": "Priority -5. Returns twice the HP lost to the last opposing physical attack that hit the user this turn. Counts only the final hit of a multi-hit move. Fails without an opposing physical hit; Ghost types are immune. If the hit took no HP, uses a 1-power attack instead.",
-    "": "Priority -5. Returns twice the HP lost to the last opposing physical attack that hit the user this turn. Counts only the final hit of a multi-hit move. Fails without an opposing physical hit; Ghost types are immune. If the hit took no HP, deals 1 HP instead."
-  },
-  "Double-Edge": {
-    "gen<=4": "After damaging the target, the user loses 1/3 of the HP it took, rounded down, at least 1 HP. Rock Head and Magic Guard prevent the recoil.",
-    "": "After damaging the target, the user loses 33% of the HP it took, rounded to the nearest HP with halves rounded up, at least 1 HP. Rock Head and Magic Guard prevent the recoil."
-  },
-  "Encore": {
-    "gen<=4": "Forces the target to repeat its last move for 4-8 turns. Ends on switching or when that move runs out of PP. Fails on no previous move, a move with no PP, Encore, Mimic, Mirror Move, Sketch, Struggle or Transform.",
-    "gen<=6": "Forces the target to repeat its last move for 3 turns, including this turn. Ends on switching or when that move runs out of PP. Fails on no previous move, a move with no PP, Encore, Mimic, Mirror Move, Sketch, Struggle or Transform.",
-    "": "Forces the target to repeat its last move for its next 3 actions. Ends on switching or when that move runs out of PP. Fails on no previous move, a move with no PP, Assist, Copycat, Encore, Me First, Metronome, Mimic, Mirror Move, Nature Power, Sketch, Sleep Talk, Struggle, Transform or a Z-Move. A Z-Move can bypass an existing Encore for that turn."
-  },
+  "Camouflage": {"gen<=5": "Changes the user's type to match the battlefield.", "": "Changes the user's type to match the battlefield. Electric, Grassy, Misty or Psychic Terrain makes it Electric, Grass, Fairy or Psychic, respectively."},
+  "Ceaseless Edge": "After hitting, lays 1 layer of Spikes on the opposing side, up to 3 layers. Grounded switch-ins lose 1/8, 1/6 or 1/4 max HP with 1, 2 or 3 layers.",
+  "Celebrate": "Has no effect in battle.",
+  "Charge": {"gen<=8": "Raises the user's Sp. Def by 1 stage. Doubles the power of its Electric attack if used on the next turn.", "": "Raises the user's Sp. Def by 1 stage. Doubles the power of its next Electric attack; the charge ends after attempting an Electric move or switching out."},
+  "Chilling Water": "Lowers the target's Attack by 1 stage.",
+  "Chilly Reception": "Sets snow for 5 turns, or 8 with Icy Rock, then switches to a chosen teammate. Snow gives Ice types 1.5× Defense.",
+  "Chip Away": "Ignores the target's Defense and evasion stages when calculating damage and accuracy.",
+  "Clanging Scales": "Lowers the user's Defense by 1 stage after hitting, even if it hits both opponents.",
+  "Clangorous Soulblaze": "After hitting, raises the user's Attack, Defense, Sp. Atk, Sp. Def and Speed by 1 stage each. Deals 1/4 damage through Protect or Detect.",
+  "Clear Smog": "Resets all of the target's stat stages to 0 after hitting. Bypasses accuracy checks, but Substitute blocks the reset.",
+  "Close Combat": "Lowers the user's Defense and Sp. Def by 1 stage each.",
+  "Coaching": "Raises adjacent allies' Attack and Defense by 1 stage each. Does not affect the user.",
+  "Coil": "Raises the user's Attack, Defense and accuracy by 1 stage each.",
+  "Collision Course": "Deals an extra 4/3× damage when super effective.",
+  "Comeuppance": "Priority -5. Returns 1.5× the HP damage from the last opposing attack that hit the user this turn. Counts only the last hit of a multi-hit move.",
+  "Confuse Ray": "Confuses the target for 2-5 turns. Switching out ends confusion.",
+  "Constrict": "10% chance to lower the target's Speed by 1 stage.",
+  "Conversion": {"gen<=5": "Changes the user's type to a randomly chosen type of one of its other moves, excluding its current types.", "": "Changes the user's type to the type of the move in its first move slot. Fails if that is already one of its types."},
+  "Conversion 2": {"gen<=4": "Changes the user's type to a random type that resists or is immune to the last move that successfully targeted it. Cannot choose either of its current types.", "": "Changes the user's type to a random type that resists or is immune to the target's last move. Cannot choose either of its current types."},
+  "Copycat": "Uses the last move used in battle, including a failed move. Fails if that move cannot be copied.",
+  "Core Enforcer": "If the target has already acted this turn, suppresses its Ability until it switches out. Some form-defining Abilities cannot be suppressed.",
+  "Corrosive Gas": "Destroys adjacent Pokémon's held items, including an ally's. Does not affect the user's item; Sticky Hold and unremovable items block it.",
+  "Cosmic Power": "Raises the user's Defense and Sp. Def by 1 stage each.",
+  "Cotton Guard": "Raises the user's Defense by 3 stages.",
+  "Cotton Spore": "Lowers each target's Speed by 2 stages. Grass types, Overcoat and Safety Goggles block it from Gen 6 onward.",
+  "Counter": "Priority -5. Returns twice the HP damage from the last physical attack that hit the user this turn. Counts only the final hit of a multi-hit move. Ghost types are immune.",
+  "Court Change": "Swaps entry hazards, screens, Tailwind and other side effects between the two sides. Does not swap weather or terrain.",
+  "Crafty Shield": "Priority +3. Protects your side from targeted status moves for this turn, not damaging moves. Can be used repeatedly without a rising failure chance.",
+  "Crush Grip": {"gen<=4": "Power is floor(120 × target's current HP / max HP) + 1: 121 at full HP, falling as the target loses HP.", "": "Power is 120 × target's current HP / max HP, rounded to the nearest integer with ties down; minimum 1. Strongest against a full-HP target."},
+  "Curse": "Ghost user: spends 1/2 max HP to make the target lose 1/4 max HP each turn. Other users: raises Attack and Defense by 1 stage each, lowers Speed by 1. The curse ends if the target switches normally.",
+  "Decorate": "Raises the target's Attack and Sp. Atk by 2 stages each. Can boost an ally even through Protect.",
+  "Defend Order": "Raises the user's Defense and Sp. Def by 1 stage each.",
+  "Defense Curl": "Raises the user's Defense by 1 stage. Also doubles the power of its Rollout and Ice Ball until it switches out.",
+  "Defog": {"gen<=5": "Lowers the target's evasion by 1 stage. Clears entry hazards, Reflect, Light Screen, Safeguard and Mist from the target's side only.", "gen<=7": "Lowers the target's evasion by 1 stage. Clears both sides' entry hazards, plus the target's screens, Safeguard and Mist.", "": "Lowers the target's evasion by 1 stage. Clears both sides' entry hazards, the target's screens, Safeguard and Mist, and active terrain."},
+  "Detect": {"gen<=4": "Priority +3. Blocks most attacks this turn. Consecutive protection succeeds at 1/2, then 1/4, then 1/8; it stays at 1/8 thereafter.", "gen<=5": "Priority +4. Blocks most attacks this turn. Consecutive protection succeeds at 1/2, then 1/4, then 1/8, and so on.", "": "Priority +4. Blocks most attacks this turn. Consecutive protection succeeds at 1/3, then 1/9, then 1/27, and so on. Damaging Z-Moves deal 1/4 damage through it."},
+  "Dig": "Digs underground on turn 1 and attacks on turn 2. Most moves miss underground, but Earthquake and Magnitude hit for double damage. Power Herb skips the digging turn.",
+  "Double-Edge": {"gen<=4": "After damaging the target, the user loses 1/3 of the HP it took, rounded down, at least 1 HP. Rock Head and Magic Guard prevent the recoil.", "": "After damaging the target, the user loses 33% of the HP it took, rounded to the nearest HP with halves rounded up, at least 1 HP. Rock Head and Magic Guard prevent the recoil."},
+  "Encore": {"gen<=4": "Forces the target to repeat its last move for 4-8 turns. Ends on switching or when that move runs out of PP. Fails on no previous move, a move with no PP, Encore, Mimic, Mirror Move, Sketch, Struggle or Transform.", "gen<=6": "Forces the target to repeat its last move for 3 turns, including this turn. Ends on switching or when that move runs out of PP. Fails on no previous move, a move with no PP, Encore, Mimic, Mirror Move, Sketch, Struggle or Transform.", "": "Forces the target to repeat its last move for its next 3 actions. Ends on switching or when that move runs out of PP. Fails on no previous move, a move with no PP, Assist, Copycat, Encore, Me First, Metronome, Mimic, Mirror Move, Nature Power, Sketch, Sleep Talk, Struggle, Transform or a Z-Move. A Z-Move can bypass an existing Encore for that turn."},
   "Fissure": "Knocks the target out if it hits. Accuracy is 30% plus 1 percentage point per level the user is above the target; ignores accuracy and evasion stages. Fails against higher-level targets or Sturdy. Ground immunities still block it. A Substitute takes the hit instead; Focus Sash can save a target at full HP.",
-  "Fly": {
-    "gen<=4": "Flies up on turn 1 and attacks on turn 2; Power Herb skips the charge once. While airborne, Gust, Twister, Thunder and Sky Uppercut can hit it; Gust and Twister do double damage. No Guard or Lock-On bypasses the avoidance. Gravity prevents Fly.",
-    "gen<=5": "Flies up on turn 1 and attacks on turn 2; Power Herb skips the charge once. While airborne, Gust, Twister, Thunder, Sky Uppercut, Hurricane and Smack Down can hit it; Gust and Twister do double damage. No Guard or Lock-On bypasses the avoidance. Gravity prevents Fly.",
-    "": "Flies up on turn 1 and attacks on turn 2; Power Herb skips the charge once. While airborne, Gust, Twister, Thunder, Sky Uppercut, Hurricane, Smack Down and Thousand Arrows can hit it; Gust and Twister do double damage. No Guard or Lock-On bypasses the avoidance. Gravity prevents Fly."
-  },
   "Foul Play": "Uses the target's Attack stat and Attack stages instead of the user's. The user's STAB, burn penalty, held-item boosts and abilities still apply; the target's Choice Band and Huge Power do not boost that borrowed Attack.",
-  "Giga Drain": {
-    "gen<=4": "Restores half the damage dealt as HP, rounded down. Big Root multiplies that recovery by 1.3, rounded down again. Liquid Ooze makes the user lose that HP instead; Heal Block prevents recovery.",
-    "": "Restores half the damage dealt as HP, rounded to the nearest HP with halves rounded up. Big Root multiplies that recovery by 1.3, with halves rounded down. Liquid Ooze makes the user lose that HP instead; Heal Block prevents recovery."
-  },
-  "Hidden Power": {
-    "gen<=5": "Type and power depend on the user's IVs: power is 30-70, and the type can be anything except Normal. Always special, regardless of its type.",
-    "": "Always 60 power. Type depends on the user's original IVs and can be anything except Normal or Fairy. Always special. Hyper Training does not change its type."
-  },
+  "Giga Drain": {"gen<=4": "Restores half the damage dealt as HP, rounded down. Big Root multiplies that recovery by 1.3, rounded down again. Liquid Ooze makes the user lose that HP instead; Heal Block prevents recovery.", "": "Restores half the damage dealt as HP, rounded to the nearest HP with halves rounded up. Big Root multiplies that recovery by 1.3, with halves rounded down. Liquid Ooze makes the user lose that HP instead; Heal Block prevents recovery."},
+  "Hidden Power": {"gen<=5": "Type and power depend on the user's IVs: power is 30-70, and the type can be anything except Normal. Always special, regardless of its type.", "": "Always 60 power. Type depends on the user's original IVs and can be anything except Normal or Fairy. Always special. Hyper Training does not change its type."},
   "Infestation": "After the hit, traps the target for 4-5 turns and removes 1/8 of its max HP at each turn's end. Binding Band makes this 1/6; Grip Claw makes it last 7 turns. Ends if the user leaves. Ghost types can switch; Shed Shell or a switching move can escape, and Rapid Spin removes it. Magic Guard prevents residual damage, not trapping.",
-  "Knock Off": {
-    "gen<=4": "20 power. Removes the target's item for the battle; Sticky Hold prevents removal. The target also cannot receive another item afterward. Cannot remove Giratina's Griseous Orb or Arceus's Plate. Recycle cannot recover a knocked-off item.",
-    "gen<=5": "20 power. Removes the target's item unless Sticky Hold or a species-specific restriction protects it, such as Arceus's Plate or Genesect's Drive. No damage bonus for an item. Recycle and Harvest cannot recover a knocked-off item.",
-    "": "65 power; 1.5× power if the target holds an item that can be knocked off. Removes it after damage. Sticky Hold prevents removal but not the boost. No boost or removal against a matching Mega Stone, Z-Crystal or protected species item such as Arceus's Plate. Recycle and Harvest cannot recover a knocked-off item."
-  },
+  "Knock Off": {"gen<=4": "20 power. Removes the target's item for the battle; Sticky Hold prevents removal. The target also cannot receive another item afterward. Cannot remove Giratina's Griseous Orb or Arceus's Plate. Recycle cannot recover a knocked-off item.", "gen<=5": "20 power. Removes the target's item unless Sticky Hold or a species-specific restriction protects it, such as Arceus's Plate or Genesect's Drive. No damage bonus for an item. Recycle and Harvest cannot recover a knocked-off item.", "": "65 power; 1.5× power if the target holds an item that can be knocked off. Removes it after damage. Sticky Hold prevents removal but not the boost. No boost or removal against a matching Mega Stone, Z-Crystal or protected species item such as Arceus's Plate. Recycle and Harvest cannot recover a knocked-off item."},
   "Leech Seed": "Seeds the target. At the end of each turn it loses 1/8 of its max HP and the Pokémon in the user's spot recovers that much (×1.3 with Big Root). Ends when the target switches out or spins it off. Grass types can't be seeded.",
-  "Protect": {
-    "gen<=4": "Priority +3. Blocks most moves aimed at the user this turn. Consecutive Protect, Detect or Endure uses succeed with chances 1, 1/2, 1/4, then 1/8 for each further use. A failure or a different move resets it. Fails if the user acts last; Feint breaks through.",
-    "gen<=5": "Priority +4. Blocks most moves aimed at the user this turn. Consecutive protection uses halve the success chance: 1, 1/2, 1/4, 1/8 and so on. Shares the counter with Detect, Endure, Quick Guard and Wide Guard. A failure or a different move resets it. Fails if the user acts last; Feint breaks through.",
-    "gen<=6": "Priority +4. Blocks most moves aimed at the user this turn. Consecutive protection uses succeed with chances 1, 1/3, 1/9 and so on, down to 1/729. Shares the counter with other protection moves. A failure or a different move resets it. Fails if the user acts last; Feint and Hyperspace moves break through.",
-    "": "Priority +4. Blocks most moves aimed at the user this turn. Consecutive protection uses succeed with chances 1, 1/3, 1/9 and so on, down to 1/729. Shares the counter with other protection moves. A failure or a different move resets it. Fails if the user acts last. Damaging Z-Moves deal 1/4 damage through it; Feint and Hyperspace moves bypass it."
-  },
+  "Protect": {"gen<=4": "Priority +3. Blocks most moves aimed at the user this turn. Consecutive Protect, Detect or Endure uses succeed with chances 1, 1/2, 1/4, then 1/8 for each further use. A failure or a different move resets it. Fails if the user acts last; Feint breaks through.", "gen<=5": "Priority +4. Blocks most moves aimed at the user this turn. Consecutive protection uses halve the success chance: 1, 1/2, 1/4, 1/8 and so on. Shares the counter with Detect, Endure, Quick Guard and Wide Guard. A failure or a different move resets it. Fails if the user acts last; Feint breaks through.", "gen<=6": "Priority +4. Blocks most moves aimed at the user this turn. Consecutive protection uses succeed with chances 1, 1/3, 1/9 and so on, down to 1/729. Shares the counter with other protection moves. A failure or a different move resets it. Fails if the user acts last; Feint and Hyperspace moves break through.", "": "Priority +4. Blocks most moves aimed at the user this turn. Consecutive protection uses succeed with chances 1, 1/3, 1/9 and so on, down to 1/729. Shares the counter with other protection moves. A failure or a different move resets it. Fails if the user acts last. Damaging Z-Moves deal 1/4 damage through it; Feint and Hyperspace moves bypass it."},
   "Quick Attack": "Priority +1: acts before ordinary-priority moves regardless of Speed. Speed decides order against other +1 moves; Trick Room reverses that Speed order, not priority.",
   "Rain Dance": "Sets rain for 5 turns including this turn, or 8 with Damp Rock. Water attacks do 1.5× damage; Fire attacks do half damage. Thunder and Hurricane bypass accuracy checks; Solar Beam's damage is halved. Fails if rain is already active. Cloud Nine and Air Lock suppress rain's effects without ending it.",
-  "Rapid Spin": {
-    "gen<=7": "20 power. After a successful hit, removes hazards from the user's side, Leech Seed and binding effects on the user. Does not raise Speed. If a Ghost type or Protect blocks the hit, nothing is cleared.",
-    "": "50 power. After a successful hit, removes hazards from the user's side, Leech Seed and binding effects on the user, and raises Speed by 1 stage. If a Ghost type or Protect blocks the hit, nothing is cleared or boosted."
-  },
+  "Rapid Spin": {"gen<=7": "20 power. After a successful hit, removes hazards from the user's side, Leech Seed and binding effects on the user. Does not raise Speed. If a Ghost type or Protect blocks the hit, nothing is cleared.", "": "50 power. After a successful hit, removes hazards from the user's side, Leech Seed and binding effects on the user, and raises Speed by 1 stage. If a Ghost type or Protect blocks the hit, nothing is cleared or boosted."},
   "Seismic Toss": "Deals HP damage equal to the user's level, regardless of Attack, Defense, STAB, resistance or weakness. Ghost types are immune. Cannot land a critical hit; a Substitute takes the damage instead.",
-  "Stealth Rock": {
-    "gen<=5": "Sets one layer of rocks on the opposing side. Each switch-in loses 1/8 max HP multiplied by its Rock weakness: 1/32, 1/16, 1/8, 1/4 or 1/2. Magic Guard prevents the damage. Rapid Spin clears the user's side; Defog clears only the target's side. Extra layers do nothing.",
-    "gen<=7": "Sets one layer of rocks on the opposing side. Each switch-in loses 1/8 max HP multiplied by its Rock weakness: 1/32, 1/16, 1/8, 1/4 or 1/2. Magic Guard prevents the damage. Rapid Spin clears the user's side; Defog clears both sides. Extra layers do nothing.",
-    "": "Sets one layer of rocks on the opposing side. Each switch-in loses 1/8 max HP multiplied by its Rock weakness: 1/32, 1/16, 1/8, 1/4 or 1/2. Magic Guard or Heavy-Duty Boots prevents the damage. Rapid Spin clears the user's side; Defog clears both sides. Extra layers do nothing."
-  },
-  "Substitute": {
-    "gen<=5": "Spends 1/4 max HP, rounded down, to make a decoy with that HP. Fails if the cost would KO the user or it already has a Substitute. Takes attacks and blocks most opposing status and stat drops. Excess damage from one hit does not spill over; later hits can reach the user. Weather and existing status still hurt it. Baton Pass transfers the decoy; ordinary switching removes it.",
-    "": "Spends 1/4 max HP, rounded down, to make a decoy with that HP. Fails if the cost would KO the user or it already has a Substitute. Takes attacks and blocks most opposing status and stat drops; sound moves and Infiltrator bypass it. Excess damage from one hit does not spill over; later hits can reach the user. Weather and existing status still hurt it. Baton Pass transfers the decoy; ordinary switching removes it."
-  },
-  "Sucker Punch": {
-    "gen<=4": "Priority +1. Hits only if the target chose a damaging move and has not acted yet. Fails against status moves, switching or a target that already moved.",
-    "": "Priority +1. Hits only if the target chose a damaging move or Me First and has not acted yet. Fails against other status moves, switching or a target that already moved."
-  },
-  "Toxic": {
-    "gen<=5": "Badly poisons the target: it loses 1/16 of its max HP after its first turn, 2/16 after the next, and 1/16 more each turn after. Uses normal accuracy even for a Poison-type user. Poison and Steel types are immune.",
-    "": "Badly poisons the target: it loses 1/16 of its max HP after its first turn, 2/16 after the next, and 1/16 more each turn after. Never misses when a Poison type uses it. Poison and Steel types are immune."
-  },
+  "Stealth Rock": {"gen<=5": "Sets one layer of rocks on the opposing side. Each switch-in loses 1/8 max HP multiplied by its Rock weakness: 1/32, 1/16, 1/8, 1/4 or 1/2. Magic Guard prevents the damage. Rapid Spin clears the user's side; Defog clears only the target's side. Extra layers do nothing.", "gen<=7": "Sets one layer of rocks on the opposing side. Each switch-in loses 1/8 max HP multiplied by its Rock weakness: 1/32, 1/16, 1/8, 1/4 or 1/2. Magic Guard prevents the damage. Rapid Spin clears the user's side; Defog clears both sides. Extra layers do nothing.", "": "Sets one layer of rocks on the opposing side. Each switch-in loses 1/8 max HP multiplied by its Rock weakness: 1/32, 1/16, 1/8, 1/4 or 1/2. Magic Guard or Heavy-Duty Boots prevents the damage. Rapid Spin clears the user's side; Defog clears both sides. Extra layers do nothing."},
+  "Substitute": {"gen<=5": "Spends 1/4 max HP, rounded down, to make a decoy with that HP. Fails if the cost would KO the user or it already has a Substitute. Takes attacks and blocks most opposing status and stat drops. Excess damage from one hit does not spill over; later hits can reach the user. Weather and existing status still hurt it. Baton Pass transfers the decoy; ordinary switching removes it.", "": "Spends 1/4 max HP, rounded down, to make a decoy with that HP. Fails if the cost would KO the user or it already has a Substitute. Takes attacks and blocks most opposing status and stat drops; sound moves and Infiltrator bypass it. Excess damage from one hit does not spill over; later hits can reach the user. Weather and existing status still hurt it. Baton Pass transfers the decoy; ordinary switching removes it."},
+  "Sucker Punch": {"gen<=4": "Priority +1. Hits only if the target chose a damaging move and has not acted yet. Fails against status moves, switching or a target that already moved.", "": "Priority +1. Hits only if the target chose a damaging move or Me First and has not acted yet. Fails against other status moves, switching or a target that already moved."},
+  "Toxic": {"gen<=5": "Badly poisons the target: it loses 1/16 of its max HP after its first turn, 2/16 after the next, and 1/16 more each turn after. Uses normal accuracy even for a Poison-type user. Poison and Steel types are immune.", "": "Badly poisons the target: it loses 1/16 of its max HP after its first turn, 2/16 after the next, and 1/16 more each turn after. Never misses when a Poison type uses it. Poison and Steel types are immune."},
   "Trick Room": "Priority -7. For 5 turns including this turn, slower Pokémon act before faster ones within each priority bracket; priority is unchanged. Using it again ends it early. Switching does not end it. From Gen 5, effective Speed above 1808 wraps around and can act before very slow Pokémon.",
   "U-turn": "After dealing damage, switches to a chosen teammate, even if the hit broke a Substitute or KO'd the target. Does not switch if the move misses, is blocked, or contact damage KOs the user first. Still deals damage without a teammate available. Escapes trapping without passing stat changes.",
-  "Weather Ball": {
-    "gen<=5": "Normally 50-power Normal. In weather, becomes 100 power: Fire in sun, Water in rain, Rock in sandstorm, Ice in hail. Sun and rain then apply their usual damage modifiers. Cloud Nine or Air Lock keeps it 50-power Normal.",
-    "": "Normally 50-power Normal. In weather, becomes 100 power: Fire in sun, Water in rain, Rock in sandstorm, Ice in hail. Sun and rain then apply their usual damage modifiers. Strong winds alone do not change it. Cloud Nine or Air Lock keeps it 50-power Normal."
-  }
+  "Weather Ball": {"gen<=5": "Normally 50-power Normal. In weather, becomes 100 power: Fire in sun, Water in rain, Rock in sandstorm, Ice in hail. Sun and rain then apply their usual damage modifiers. Cloud Nine or Air Lock keeps it 50-power Normal.", "": "Normally 50-power Normal. In weather, becomes 100 power: Fire in sun, Water in rain, Rock in sandstorm, Ice in hail. Sun and rain then apply their usual damage modifiers. Strong winds alone do not change it. Cloud Nine or Air Lock keeps it 50-power Normal."}
 }
