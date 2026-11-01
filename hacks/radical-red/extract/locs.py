@@ -18,8 +18,9 @@ Paldea / Sevii Egg pools (the Wonder Egg Pools workbook, "1 of N"), the Mystery 
 tracker slot, its LOC after the data.js areas) and the sheet's unobtainables.
 
 Availability (P.g): 0 obtainable = found in a location, or the species' base form (first non-form entry of its dex
-number) is found, or it evolves from an obtainable species; 3 not found (trainer-only or unobtainable).
-Megas keep g 1 (prune.py decides them from their bases).
+number) is found, or it evolves from an obtainable species, or it is the pre-evolution of one (breeding), or a form in
+sheet_locs.json -> follow whose base is obtainable; 3 not found or on the sheet's Unobtainables tab. Megas keep g 1
+(prune.py decides them from their bases).
 """
 import json
 import re
@@ -284,13 +285,19 @@ def build(data):
         if not mon.get('fc') and mon['g'] != 1:
             first.setdefault(mon['dex'], mon['id'])
     obtainable = {mon['id'] for mon in data['P'] if mon['id'] in found or first.get(mon['dex']) in found}
+    by_mega = {mon['id'] for mon in data['P'] if mon['g'] == 1}
+    follow = {sid_of(form): sid_of(base) for form, base in SHEET['follow'].items()}
     changed = True
     while changed:
         changed = False
         for mon in data['P']:
             if mon['g'] == 1 or mon['id'] in obtainable:
                 continue
-            if any(parent in obtainable for _, parent in mon['ef']):
+            if any(parent in obtainable for _, parent in mon['ef']) or follow.get(mon['id']) in obtainable:
+                obtainable.add(mon['id'])
+                changed = True
+            # breeding: the pre-evolution of an obtainable species hatches from it (Pichu, Cleffa, Azurill ...)
+            elif any(child in obtainable and child not in by_mega for _, child in mon['et']):
                 obtainable.add(mon['id'])
                 changed = True
     obtainable -= {sid_of(name) for name in SHEET['unobtainable']}

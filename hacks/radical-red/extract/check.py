@@ -110,6 +110,11 @@ def check_sheet(data, failures):
             if lacking:
                 failures.append('%s at %s: %d species without a row, e.g. %s' % (egg['method'], area, len(lacking),
                                                                                 lacking[:3]))
+    unobtainable = {sid(name) for name in SHEET['unobtainable']}
+    missing = sorted(mon['id'] for mon in data['P']
+                     if mon['g'] == 3 and not mon.get('fc') and mon['id'] not in unobtainable)
+    if missing:
+        failures.append('%d species not found that the sheet calls available, e.g. %s' % (len(missing), missing[:5]))
     for name in SHEET['unobtainable']:
         if by_id[sid(name)]['g'] != 3:
             failures.append('%s should be unobtainable (g 3)' % name)

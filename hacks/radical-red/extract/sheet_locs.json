@@ -37,9 +37,20 @@
         ["Omanyte", null, "Helix Fossil from Mt. Moon, revived here; the Hiker trades the other for a Blue Shard"],
         ["Kabuto", null, "Dome Fossil from Mt. Moon, revived here; the Hiker trades the other for a Blue Shard"]
       ]
+    },
+    {
+      "area": "Viridian City",
+      "method": "Roaming",
+      "step": 17,
+      "rows": [
+        [
+          "Enamorus", 100,
+          "roams Kanto after an 8-win streak (6 in Hardcore Simulator mode) at the One Island Battle Simulator"
+        ]
+      ]
     }
   ],
-  "_add": "Rows data.js lacks: {area, method, step (data.js progression step), rows [[species, level, note]]}.",
+  "_add": "Rows data.js lacks: {area, method, step (data.js progression step), rows [[species, level, note]]}. Enamorus: Statics tab (data.js's roamers, Viridian City, leave it out).",
   "notes": {
     "Vermilion City Pokemon Fan Club": {"Aerodactyl": "Old Amber from Pewter Museum, revived here"},
     "Pokemon Tower 8F": {"Sinistcha": "Doc says Gengar at night", "Ursaluna-Bloodmoon": "Doc says Gengar at night"}
@@ -162,6 +173,12 @@
   "_mystery": "Mystery Gifts tab (codes left out): an AR place with no tracker slot (ns), LOC appended at the end.",
   "unobtainable": ["Arceus", "Dialga-Origin", "Eternatus", "Magearna-Original", "Palkia-Origin"],
   "_unobtainable": "Unobtainables tab: g 3 whatever the location rule finds (Magearna-Original's base is a static; Dialga / Palkia come as Mystery Gifts).",
+  "follow": {
+    "Greninja-Ash": "Greninja",
+    "Cherrim-Sunshine": "Cherrim",
+    "Unfezant-F": "Unfezant"
+  },
+  "_follow": "Forms obtainable whenever their base is: Greninja-Ash (Statics tab: an Ability Pill gives Greninja Battle Bond), Cherrim's in-battle Sunshine form, female Unfezant (Tranquill evolves into either).",
   "eggs": [
     {
       "pool": "PEWTER CITY",

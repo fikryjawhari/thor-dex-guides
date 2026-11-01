@@ -134,7 +134,11 @@ Source: data.js `areas` (221, game order; index = LOC index). Built by `extract/
   fixed-trade (Trade), fixed-roaming (Roaming, "1 of N"). Trainers and item keys are other units'.
 - Cap step: each key's step is shown as its Hardcore level cap ("cap 22") in the group label and row notes.
 - P.g: 0 = found in a location, or the first same-dex base form found, or evolved from an obtainable species
-  (Unbound's rule); 3 = not found; Megas keep 1 (prune.py decides them).
+  (Unbound's rule), or the pre-evolution of one (breeding: Pichu, Cleffa, Igglybuff, Azurill), or a form in
+  `sheet_locs.json` → follow whose base is (Greninja-Ash by Ability Pill, Cherrim-Sunshine, Unfezant-F); 3 = not
+  found or on the sheet's Unobtainables tab; Megas keep 1 (prune.py decides them). Counts: 1,235 obtainable, 40 not
+  (Arceus, Eternatus, Magearna-Original and their / Dialga / Palkia's forms: the sheet's "1023/1025"; check.py fails
+  on any other species not found), 68 Megas. Step 1 (data.js only) had 1,192 / 83.
 
 Sheet additions (`extract/sheet_locs.json`, hand-copied from "Pokémon Locations & Raid Dens v4.1"; data.js stays the
 encounter source, the sheet fills what it lacks):
@@ -144,7 +148,9 @@ encounter source, the sheet fills what it lacks):
   Gift Move notes; codes left out: "Code at a Pokémon Center Nurse after the Hall of Fame"). LOC 221 and an AR place
   appended after the data.js areas, `ns` (no tracker slot), no cap in the label.
 - Gift levels and how-to from the Gifts tab on data.js's gift rows (Finizen 5 ... Mew 100); One Island Poké Center
-  Cosmog (Battle Simulator, 50 BP) added. Lapras is Lv 25 at Silph 7F (data.js cap 56), Kubfu 30.
+  Cosmog (Battle Simulator, 50 BP) added. Enamorus (Statics tab: Lv 100, roams Kanto after an 8-win streak, 6 in
+  Hardcore Simulator mode, at the One Island Battle Simulator) added as a Roaming row on Viridian City, where
+  data.js puts its 10 roamers, at the postgame step. Lapras is Lv 25 at Silph 7F (data.js cap 56), Kubfu 30.
 - Vermilion Fan Club: data.js's 10-entry gift list is the Hiker's shard trade (method `Shard trade`, the shard
   colour in the note, no "1 of N": each shard buys the one you pick); the Mt. Moon Helix / Dome Fossil pair added as
   `Fossil (pick one)` (revived in the same building). Aerodactyl stays a Fan Club gift (data.js, cap 36) noted "Old

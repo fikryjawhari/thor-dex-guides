@@ -3137,10 +3137,10 @@ hzla lookup item: 196 names; 0 unresolved: none
 sprites: 44 own supplements; 1 species without art: chillet
 locs: sheet egg rows: 1084
 locs: sheet gift levels: 17
-locs: sheet rows added: 3
+locs: sheet rows added: 4
 locs: sheet shard rows the doc lacks: 1
 locs: sheet tables added: 6
-locs: 221 areas in 154 places, 3673 sublocation rows, 1226 obtainable species
+locs: 221 areas in 154 places, 3674 sublocation rows, 1235 obtainable species
 trainers: not built yet (TODO: implement radical-red trainers extraction)
 items: not built yet (TODO: implement radical-red items extraction)
 walk: not built yet (TODO: implement radical-red walk extraction)
