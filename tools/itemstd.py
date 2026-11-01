@@ -221,7 +221,7 @@ def _fold(text):
 
 _SKIP = set("""a an the of in on at to and or by for with from your you is it its this that up down near next into
     onto off out inside found also requires require required needs need hidden pokemon party team be can after before
-    must then there has have get use using where which""".split())
+    must then there has have get use using where which reach""".split())
 
 
 def words(text):
@@ -229,14 +229,14 @@ def words(text):
 
 
 def drop_repeats(value):
-    """A value without requirement phrases that only repeat it ("...; Requires Surf · needs Surf"), nor repeated
-    ` · ` parts."""
+    """A value without requirement parts that only repeat what comes before ("...; Requires Surf · needs Surf"), nor
+    repeated ` · ` parts."""
     parts = value.split(' · ')
     out = []
     for i, part in enumerate(parts):
         m = re.match(r'^(needs|requires) (.+)$', part)
         if m and i:
-            rest = ' '.join(p for j, p in enumerate(parts) if j != i)
+            rest = ' '.join(parts[:i])
             keep = [need for need in re.split(r', | and ', m.group(2)) if not words(need) <= words(rest)]
             if not keep:
                 continue
@@ -293,6 +293,7 @@ def same_shop(line, shop):
     body = _NOTE.sub('', re.sub(r'^(?:Found|Also):\s*', '', line))
     if ' · ' in body or ' — ' in body:
         return False
+    named = body.endswith(' shop')                              # an extract's "<place> shop"
     a = _fold(re.sub(r'\s+shop$', '', body)).split()
     b = _fold(line_place(shop)).split()
     if a == b:
@@ -301,7 +302,8 @@ def same_shop(line, shop):
     while common < min(len(a), len(b)) and a[common] == b[common]:
         common += 1
     rest_a, rest_b = ' '.join(a[common:]), ' '.join(b[common:])
-    return common >= 2 and (not rest_a or bool(_SHOPWORD.search(rest_a)) and bool(_SHOPWORD.search(rest_b or ' '.join(b))))
+    return common >= 2 and (not rest_a or named and not rest_b
+                            or bool(_SHOPWORD.search(rest_a)) and bool(_SHOPWORD.search(rest_b or ' '.join(b))))
 
 
 def remove_shop_place(text, item, say):
@@ -351,26 +353,44 @@ def _place_set(line):
     return frozenset(parts) if len(parts) > 1 and all(len(p.split()) <= 5 for p in parts) else None
 
 
+def _stem(words_):
+    return {w[:-1] if len(w) > 3 and w.endswith('s') else w for w in words_}
+
+
+def _place_in(place, text):
+    """A place named in a text: as written, without a last qualifier word ("Cinder Volcano Depths" in "Cinder
+    Volcano B1F"), or all its words, singular ("Antisis Sewers" in "Antisis City Sewer's North area")."""
+    folded, ws = _fold(text), _fold(place).split()
+    if ' ' + ' '.join(ws) + ' ' in folded or len(ws) >= 3 and ' ' + ' '.join(ws[:-1]) + ' ' in folded:
+        return True
+    return len(ws) >= 2 and not any(w.isdigit() for w in ws) and _stem(ws) <= _stem(folded.split())
+
+
 def same_place(a, b):
     """Two lines that name the same place: one's place is in the other's text, or the same place list in another order."""
     if _place_set(a) is not None and _place_set(a) == _place_set(b):
         return True
-    fa, fb = _fold(body(a)), _fold(body(b))
-    return any(_fold(p) in fb for p in places(a)) or any(_fold(p) in fa for p in places(b))
+    return any(_place_in(p, body(b)) for p in places(a)) or any(_place_in(p, body(a)) for p in places(b))
 
 
 def details(line):
     return words(body(line)) - {w for p in places(line) for w in words(p)}
 
 
-def same_pickup(a, b, strict=False):
+UNIQUE = {'TMs and HMs', 'Mega Stones', 'Z-Crystals'}     # boxes of one-off items: one pickup per place
+
+
+def same_pickup(a, b, strict=False, unique=False):
     """'same' when two Found / Also lines of one item read as one pickup, 'unsure' when they name the same place but
     their details differ, None otherwise. A prose line (no place first) at the other's place is the same pickup unless
     `strict`; two structured lines need the same details (most of the shorter one's words, all of each other's with
-    `strict`), and different numbers (floors, counts, areas) keep them apart."""
+    `strict`), and different numbers (floors, counts, areas) keep them apart. A `unique` item (UNIQUE boxes, a
+    walkthrough row against the Items line left) has one pickup per place."""
     if not (a.startswith(('Found:', 'Also:')) and b.startswith(('Found:', 'Also:'))) or not same_place(a, b):
         return None
     if _place_set(a) is not None and _place_set(a) == _place_set(b) or _fold(body(a)) == _fold(body(b)):
+        return 'same'
+    if unique and not strict:
         return 'same'
     if not head(a) or not head(b):
         return 'unsure' if strict else 'same'
@@ -387,7 +407,8 @@ def merge_pickup(keep, other):
     for seg in re.split(r' · |; |\. ', body(other)):
         ws = words(seg)
         if ws and len(ws & words(text)) / len(ws) < 0.6:
-            text += ' · ' + seg.strip().rstrip('.')
+            seg = re.sub(r'^Found (?=(?:in|on|under|inside|at|near))', '', seg.strip().rstrip('.'))
+            text += ' · ' + seg[:1].upper() + seg[1:]
     notes = ''.join(dict.fromkeys(m.group() for m in (_NOTE.search(keep), _NOTE.search(other)) if m))
     return _LABEL.match(keep).group() + ' ' + drop_repeats(text) + notes
 
@@ -728,10 +749,10 @@ def walk(WK, entries, new, rules, say):
                 for box, item in candidates:
                     its = item[1].splitlines()
                     for il in its:
-                        if (id(item), il) in claimed:
+                        if (id(item), il) in claimed and not il.startswith('Shop:'):
                             continue
                         kind = 'same' if box['n'] == 'TMs and HMs' and any(same_shop(line, x) for x in its if x == il) \
-                            else same_pickup(line, il)
+                            else same_pickup(line, il, unique=box['n'] in UNIQUE)
                         if kind:
                             opts.append((kind, box, item, il))
                 want[(name, line)] = opts

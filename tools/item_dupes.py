@@ -5,7 +5,8 @@
 Kinds: `twice` = two Found / Also lines of one item that read as one pickup (same_pickup, one to one); `shop` = a TM's
 Found / Also line that only names a place its Shop line sells it at; `no place` = a line that continues another
 ("Found: at the rock in the northwest corner"); `repeat` = a line that says a requirement twice ("Requires Surf ·
-needs Surf"). `unsure` pairs name the same place with different details: kept apart, listed for review.
+needs Surf"). `unsure` = a place-only line next to a line with details at the same place ("Lostlorn Forest" /
+"Lostlorn Forest — Hidden"): kept apart, listed for review. Lines at one place with different details are separate.
 """
 import os
 import sys
@@ -33,8 +34,8 @@ def scan(D):
                     if kind == 'same':
                         same.setdefault(a, []).append(b)
                         same.setdefault(b, []).append(a)
-                    elif kind == 'unsure':
-                        found['unsure'].append((row[0], a, b))
+                    elif kind == 'unsure' and (not itemstd.details(a) or not itemstd.details(b)):
+                        found['unsure'].append((row[0], a, b))     # a place-only line next to a detailed one
             for a, bs in same.items():
                 for b in bs:
                     if a < b and len(bs) == 1 and len(same[b]) == 1:
