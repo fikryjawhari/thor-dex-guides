@@ -67,6 +67,14 @@ Each unit adds the decisions it had to take to **Decisions taken in units** belo
 - [unit 1] Use official dex secondary chances over Showdown, label freeze effects frostbite, and derive only Metal Bash's contact/target metadata from its in-game description; normalise Inferno Parade to Infernal Parade (data.js, gen9rr/moves.ts, v4.0 changelog).
 - [unit 1] Split the game's two As One IDs into Spectrier/Glastrier names and use learned canonical Leech Life ID 141 (15 PP), not the unused Leech Fang copy 355 (10 PP); do not invent the four absent hzla abilities (data.js, hzla radredhc.js).
 - [unit 1] Preserve source sprite pixels using palette PNG conversion; leave Chillet's letter fallback because neither data.js nor the shared set has its art, and use actual transformation parents for regional Mega pruning (data.js sprites/evolutions, sprites/index.json).
+- [unit 6] A numeric Trainer Order cap places the trainer in that cap's split even when listed after its boss (Lewis 73 → Pre-May, Justin 68 → Pre-Koga); a range / open cap keeps its Trainer Order position (recommended split) and gets the cap box at that split's cap (Trainer Order F3 comment, the user's answers).
+- [unit 6] Box names are the user's split names through the shared rule: "Pre-Brock Split [Cap 16]" ... "Post Game Split [Cap 100]"; the calc shows "Pre-Brock" (tools/splits.py, Main E44:E78).
+- [unit 6] The rival follows the player's starter TYPE (`t.st` Fire / Grass / Water): 27 starters are offered, so hack.json `cfg.starter` must change from `pick` to `type` (unit 9 / main chat; not changed here) (Main E93, data.js area 3).
+- [unit 6] data.js IVs / EVs are in game order (HP, Atk, Def, Spe, SpA, SpD) and are reordered; trainer ability slot 0/1/2 = hidden / primary / secondary, empty or 3 = primary; a Mega keeps the slot (RR calc and sheet agree).
+- [unit 6] Jasmine 63 / 64 share 62's Hardcore team: one card; Brendan 55 and Lance 39 are partners (`pt`); 464 = 460 cards + 2 + 2 (data.js, unit 3).
+- [unit 6] Sheet differences show as "Sheet says" (11 mons); hzla only where the sheet also differs (its ability slots contradict both data.js and the sheet elsewhere); RR calc differences in the report only (hardcore.js, radredhc.js).
+- [unit 6] The sheet's BATTLE EFFECT lines are the field evidence: primal weathers locked, terrains permanent, Swamp / Magma Storm / Magnet Rise text only; "Permanent Tailwind" is the boss's side (guess); duo classes are doubles (47 doubles); the 71 setter teams without a battle effect rely on `setterStays` (Main E10).
+- [unit 6] The four gym rematches are not tagged Optional (3 of 4 required) and carry one trainer note each; the Berry Forest Spirit block (Postgame!C1175) has no data.js trainer and is left out.
 
 ## Units
 
