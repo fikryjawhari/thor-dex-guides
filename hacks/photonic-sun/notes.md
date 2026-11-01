@@ -134,6 +134,7 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   are generated in). Key Items: Surge Badge dropped (a souvenir from the Kantonian Gym); kept: Professor's Mask (Part 16
   asks you to deliver it to Kukui), story petals / flower / flutes, Forage Bag, Sparkling Stone, Left Poke Ball sidequest,
   charms, Exp. Share, Ride Pager, Fishing Rod, transformation tools, Key Stone, Z-Power Ring.
+- **Item text and wild odds** (`ctrguide.item_text`, `wild_held`): bag text from `dex-rebalanced.json` items by id, written to `extract/item_desc.json` and IX; changed = differs from `dex-vanilla.json` once whitespace is folded. Photonic's 35 differing texts are TM reflows, so none is changed; TMs and HMs take no text (the move page has it). Names the guide spells differently (SilverPowder, TwistedSpoon, Thunderstone) match the dex by letters only. Wild held items: `P.hi` [item, %] from the dex `items` slots, 50 / 5 / 1, the same item in slots 1 and 2 = 100 (Snorlax Leftovers 100, Chansey Lucky Punch 50 / Lucky Egg 5); no Mega forms.
 - **Walkthrough** (walk.py): stops start in Bulbapedia part / place order, then are regrouped into the Trainers cap splits.
   Areas join the first stop with their name (ALIAS for Routes 15 and 16 and others; PLACE picks the stop by hand: Route
   1's wild Pokémon with part 2's Route 1 visit, part 1 keeps the starter; Hau'oli Outskirts and Trainers' School in part

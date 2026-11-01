@@ -65,5 +65,6 @@ pickup keys: 364 pickups, 352 walkthrough rows keyed
 species pruned: 3 pikachu-original-cap, zygarde-10, zygarde-10-power-construct
 species retained: 928 obtainable: 876 trainer-only: 2 Megas/Primals: 50
 trainers put in walkthrough order: Post-game
+item text: 371 changed 0 no text: none
 GID: 1107 species/form keys for 928 species, 728 moves, 233 abilities, 896 item names
 GID species/forms outside this guide: 9 25:1, 25:2, 25:3, 25:4, 25:5, 25:6, 25:7, 718:1, 718:2

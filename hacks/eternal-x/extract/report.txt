@@ -96,5 +96,6 @@ items: walkthrough rows added as IT lines: 1
 pickup keys: 287 pickups, 276 walkthrough rows keyed
 availability: obtainable 763 trainer/partner species 594 kept 782 removed 4
   removed species IDs: mega-mewtwo-y, wormadam-sandy, wormadam-trash, floette-eternal
+item text: 295 changed 1 no text: Lab Key Card A, Lab Key Card B, Lab Key Card C
 GID: 880 species/form keys for 782 species, 617 moves, 188 abilities, 697 item names
 GID species/forms outside this guide: 4 150:2, 413:1, 413:2, 670:5
