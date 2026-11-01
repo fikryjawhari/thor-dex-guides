@@ -24,6 +24,7 @@ r[4], turns prose places into Found / Wild / Also / Shop lines, sorts, and rewri
 import os
 import re
 import sys
+import unicodedata
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -79,6 +80,12 @@ RULES = {
     # nomerge: items that stay one row per place (Unbound's Zygarde Cells)
     'unbound': {'reorder': set(GAME_ORDER_BOXES), 'keep_sub': {'Key Items', 'Move Tutors'}, 'nomerge': {'Zygarde Cell'},
                 'text': {('TMs and HMs', 'TM004 Calm Mind'): 'Shop: Fallshore City Bazaar · Top-left Stall · ₽10,000'},
+                'one_pickup': {     # notes.md → Items: one pickup the sources word as two places
+                    'TM077 Flame Charge': (r'Autl Woods', r'^Found: Route 9 ', 'Found: Route 9 (Autl Woods) · requires Surf · '
+                                           'hidden · In an Underground Pass Access clearing, on the far side of the pond, '
+                                           'behind a tree'),
+                    'Rockium Z': (r'Crystal Peak 4F', r'^Found: Victory Road ', 'Found: Victory Road 4F · hidden · Ice '
+                                  'puzzle ("Torture Chamber"), in the southeast rock')},
                 'tutor_groups': [(r'Shard Tutor', 'Shard tutors'), (r'Gem Family', 'Gem Family'),
                                  (r'Ultimate and Battle Combo|Special Moves|Draco Meteor', 'Special moves'),
                                  (r'Move Tutor [1-4]$', 'Battle Frontier tutors')]},
@@ -89,6 +96,7 @@ RULES = {
                    'Choice specs': 'Choice Specs', 'Assault vest': 'Assault Vest', 'Punching glove': 'Punching Glove'},
     },
     'hardlove-gold': {'reorder': set(GAME_ORDER_BOXES), 'other': HG_OTHER,
+                      'once': {'Key Items', 'Mega Stones', 'Z-Crystals'},    # its TMs are single-use: a bought one is no pickup
                       'also': {'Charcoal'}},        # Found: -> Also: (it is the Cutters' reward after Bugsy, not lying around)
     'eternal-x': {'reorder': {'TMs and HMs/HMs'},
                   'also': {'Poké Radar', "King's Rock", 'Blastoisinite', 'Charizardite X', 'Venusaurite'}},
@@ -101,6 +109,8 @@ _LABEL = re.compile(r'^(Found|Wild|Also|Shop):')
 _ALSO = re.compile(r"\b(given by|gift|reward|received|trade[sd]?)\b|\bfrom (the |a |an |Leader )"
                    r"|\bafter (beating|defeating|you defeat)\b|\bgives\b", re.I)
 _TRAILER = re.compile(r'^(Starter:|Possible to miss permanently)')
+_WAS = re.compile(r'^Was .+ in (?:Pokémon X|Ultra Sun)$')          # EX / PS: the move a TM taught in the base game
+_NOTE = re.compile(r' · was .+ in (?:Pokémon X|Ultra Sun)$')
 
 
 def clean(text):
@@ -109,34 +119,49 @@ def clean(text):
 
 def to_lines(text):
     """Prose place -> `Found: ...` / `Also: ...` / `Shop: ...` lines (rows that already are lines pass through).
-    "Starter: X" and "Possible to miss permanently" stay at the very end (the walkthrough reads both there)."""
+    The sentences of one paragraph describe one pickup and stay one value (`Also:` when any of them reads as a gift);
+    a "Sold at ..." sentence is its own `Shop:` value, a new line a new value.
+    "Starter: X" and "Possible to miss permanently" stay at the very end (the walkthrough reads both there); a TM's
+    "Was <move> in <game>" note goes on the first line."""
     text = clean(text)
     if not text or _LABEL.match(text):
         return text
-    vals, trailers = {}, []
-    last = None
+    items, trailers, notes = [], [], []
     text = re.sub(r'\b(Mt|Lt|St|Dr|Mr|Mrs|Jr)\. ', lambda m: m.group(1) + '.\x01', text)      # not a sentence end
     text = re.sub(r'([^.\s]) (Yield:)', r'\1. \2', text)
-    for seg in re.split(r'\n|(?<=[.)])\s+(?=[A-Z])', text):
-        seg = seg.replace('\x01', ' ').strip().rstrip('.').strip()
-        if not seg:
-            continue
-        if _TRAILER.match(seg):
-            trailers.append(seg)
-            continue
-        if re.match(r'^Yield:', seg) and last:
-            last[0][last[1]] += '. ' + seg
-            continue
-        m = re.match(r'^(?:Sold|Sells) at (?:the )?(.*)$', seg, re.I)
-        if m:
-            label, seg = 'Shop', m.group(1).strip()
-        else:
+    for para in text.split('\n'):
+        current = None
+        for seg in re.split(r'(?<=[.)])\s+(?=[A-Z])', para):
+            seg = seg.replace('\x01', ' ').strip().rstrip('.').strip()
+            if not seg:
+                continue
+            if _TRAILER.match(seg):
+                trailers.append(seg)
+                continue
+            if _WAS.match(seg):
+                notes.append(seg[0].lower() + seg[1:])
+                continue
+            m = re.match(r'^(?:Sold|Sells) at (?:the )?(.*)$', seg, re.I)
+            if m:
+                items.append(['Shop', m.group(1).strip()])
+                current = None
+                continue
+            if current is not None:
+                current[1] += '. ' + seg
+                if _ALSO.search(seg):
+                    current[0] = 'Also'
+                continue
             label = 'Also' if _ALSO.search(seg) else 'Found'
             seg = re.sub(r'^(Given|Received) ', lambda mm: mm.group(1).lower() + ' ', seg)
-        vals.setdefault(label, []).append(seg)
-        last = (vals[label], len(vals[label]) - 1)
+            current = [label, seg]
+            items.append(current)
+    vals = {}
+    for label, value in items:
+        vals.setdefault(label, []).append(value)
     order = [lb for lb in ('Found', 'Wild', 'Also', 'Shop') if lb in vals]
     out = [f'{lb}: ' + '; '.join(vals[lb]) for lb in order]
+    if notes and out:
+        out[0] += ''.join(' · ' + note for note in notes)
     if trailers and out:
         out[-1] += '. ' + '. '.join(trailers)
     return '\n'.join(out)
@@ -167,26 +192,94 @@ def plain(text):
     return '; '.join(ln[_LABEL.match(ln).end():].strip() if _LABEL.match(ln) else ln for ln in clean(text).split('\n'))
 
 
+_CONTINUES = re.compile(r'^(?:replaces|requires|needs|only|not |hidden|vanilla|post-game)', re.I)
+_DETAIL = re.compile(r' · | — |: ')
+_ORDER = ('Found:', 'Wild:', 'Also:', 'Shop:')
+
+
+def split_values(value):
+    """One labelled value -> the pickups in it. `; ` parts are separate places ("Iki Town; Malie Garden") unless a
+    part continues the one before: it starts in lower case or with a qualifier (requires, hidden ...), or the line
+    is already in its details (after ` · ` / ` — ` / `: `: "Nimbasa City — ×12; Challenge only"). A detail part that
+    starts like the first detail is a sibling pickup at the same place ("Nimbasa City — Held by traded Meowth; Held
+    by traded Mankey") and gets the place again."""
+    out = []
+    for part in value.split('; '):
+        head = _DETAIL.split(out[0], 1) if out else []
+        if not out:
+            out.append(part)
+        elif len(head) > 1 and len(part.split()) > 2 and part.split()[:2] == head[1].split()[:2]:
+            out.append(out[0][:len(out[0]) - len(head[1])] + part)
+        elif part[:1].islower() or _CONTINUES.match(part) or _DETAIL.search(out[-1]) or not part[:1].isalnum():
+            out[-1] += '; ' + part
+        else:
+            out.append(part)
+    return out
+
+
+def _fold(text):
+    """Words only, for comparing: lower case, no accents, no apostrophes or hyphens inside words."""
+    text = unicodedata.normalize('NFKD', text.casefold())
+    text = ''.join(ch for ch in text if not unicodedata.combining(ch))
+    text = re.sub(r"['’]s\b", '', text)
+    text = re.sub(r"(?<=\w)[-'’](?=\w)", '', text)
+    return ' ' + ' '.join(re.findall(r'[a-z0-9]+', text)) + ' '
+
+
+_SKIP = set("""a an the of in on at to and or by for with from your you is it its this that up down near next into
+    onto off out inside found also requires require required needs need hidden pokemon party team be can after before
+    must then there has have get use using where which reach""".split())
+
+
+def words(text):
+    return {w for w in _fold(text).split() if (len(w) > 1 or w.isdigit()) and w not in _SKIP}
+
+
+def drop_repeats(value):
+    """A value without requirement parts that only repeat what comes before ("...; Requires Surf · needs Surf"), nor
+    repeated ` · ` parts."""
+    parts = value.split(' · ')
+    out = []
+    for i, part in enumerate(parts):
+        m = re.match(r'^(needs|requires) (.+)$', part)
+        if m and i:
+            rest = ' '.join(parts[:i])
+            keep = [need for need in re.split(r', | and ', m.group(2)) if not words(need) <= words(rest)]
+            if not keep:
+                continue
+            part = m.group(1) + ' ' + ', '.join(keep)
+        if part not in out:
+            out.append(part)
+    return ' · '.join(out)
+
+
+def sort_lines(lines):
+    return sorted(lines, key=lambda line: next((index for index, label in enumerate(_ORDER) if line.startswith(label)), 4))
+
+
 def pickup_lines(texts):
-    """Keep each acquisition on its own line, ordered by source kind and deduplicated."""
-    lines = []
+    """Keep each acquisition on its own line, ordered by source kind and deduplicated. A line without a label
+    continues the label before it (a shop row listing two shops)."""
+    lines, notes = [], []
     for text in texts:
+        label = None
         for line in to_lines(text).splitlines():
-            label = _LABEL.match(line)
-            parts = (line[label.end():].strip().split('; ') if label.group(1) != 'Shop'
-                     else [line[label.end():].strip()]) if label else [line]
-            joined = []
-            for part in parts:
-                if joined and re.match(r'^(?:replaces|requires|needs|only|not |hidden|vanilla|post-game)', part, re.I):
-                    joined[-1] += '; ' + part
-                else:
-                    joined.append(part)
-            for part in joined:
-                value = label.group() + ' ' + part if label else part
+            own = _LABEL.match(line)
+            if own:
+                label = own.group()
+                line = line[own.end():].strip()
+            note = _NOTE.search(line)
+            if note:
+                notes.append(note.group())
+                line = line[:note.start()]
+            for part in (split_values(line) if label != 'Shop:' else [line]):
+                value = (label + ' ' + drop_repeats(part)) if label else part
                 if value and value not in lines:
                     lines.append(value)
-    return '\n'.join(sorted(lines, key=lambda line: next((index for index, label in enumerate(
-        ('Found:', 'Wild:', 'Also:', 'Shop:')) if line.startswith(label)), 4)))
+    lines = sort_lines(lines)
+    if notes and lines:
+        lines[0] += ''.join(dict.fromkeys(notes))
+    return '\n'.join(lines)
 
 
 def line_place(text):
@@ -194,20 +287,140 @@ def line_place(text):
     return re.sub(r'^(?:Found|Also|Wild|Shop):\s*', '', text).split(' · ', 1)[0].strip().rstrip('.')
 
 
+_SHOPWORD = re.compile(r'\b(?:shop|mart|store|clerks?|cashiers?|workers?|vendors?|sellers?|attendants?|corner|counter|'
+                       r'market|exchange|boutique|stall)\b')
+
+
+def same_shop(line, shop):
+    """A TM's Found / Also line that only names the place one of its Shop lines sells it at ("Found: Battle Maison
+    shop" / "Shop: Battle Maison · BP shop"; "Found: Dewford Town's outdoor Mart workers" / "Shop: Dewford Town's
+    Outdoor Clerks · ₽100"). A line with details of its own is a pickup of its own."""
+    if not line.startswith(('Found:', 'Also:')) or not shop.startswith('Shop:'):
+        return False
+    body = _NOTE.sub('', re.sub(r'^(?:Found|Also):\s*', '', line))
+    if ' · ' in body or ' — ' in body:
+        return False
+    named = body.endswith(' shop')                              # an extract's "<place> shop"
+    a = _fold(re.sub(r'\s+shop$', '', body)).split()
+    b = _fold(line_place(shop)).split()
+    if a == b:
+        return True
+    common = 0
+    while common < min(len(a), len(b)) and a[common] == b[common]:
+        common += 1
+    rest_a, rest_b = ' '.join(a[common:]), ' '.join(b[common:])
+    return common >= 2 and (not rest_a or named and not rest_b
+                            or bool(_SHOPWORD.search(rest_a)) and bool(_SHOPWORD.search(rest_b or ' '.join(b))))
+
+
 def remove_shop_place(text, item, say):
     lines = text.splitlines()
-    shops = [line_place(line).casefold() for line in lines if line.startswith('Shop:')]
+    shops = [line for line in lines if line.startswith('Shop:')]
     if not shops:
         return text
-    out = []
+    notes = [m.group() for line in lines for m in [_NOTE.search(line)] if m]
+    lines = [_NOTE.sub('', line) for line in lines]
+    out = [line for line in lines if not any(same_shop(line, shop) for shop in shops)]
     for line in lines:
-        place = line_place(line).casefold()
-        if line.startswith(('Found:', 'Also:')) and ' · ' not in line and place in shops:
-            continue
-        out.append(line)
+        if line not in out:
+            say('items: TM place line that only names its shop dropped:', item, line)
+    if notes:
+        out[0] += ''.join(dict.fromkeys(notes))
     if any(line.startswith(('Found:', 'Also:')) for line in out):
         say('items: TM place and shop retained:', item, out)
     return '\n'.join(out)
+
+
+# ---- the same pickup in two wordings -------------------------------------------------------------------------------
+_PREP = re.compile(r'^(?:On|In|At|Near|Next|Found|Given|From|North|South|East|West|Inside|Behind|Across|Up|Down|The|A|'
+                   r'An|After|Before|Reward|Gift|Speak|Talk|Go|Use|Must|Solve|Beat|Defeat|Accessed|Hidden|Under|Over|'
+                   r'Through|Between|Top|Bottom|Left|Right|It|This|Received|Held|Trade|Pickup)\b')
+
+
+def body(line):
+    return _NOTE.sub('', re.sub(r'^(?:Found|Also|Wild|Shop):\s*', '', line))
+
+
+def head(line):
+    """The place a structured line starts with ("Bellin Town · ...", "Whirl Islands 1F, ..."); '' for prose."""
+    h = re.split(r' · | — |, |; |\. | \(', body(line), maxsplit=1)[0].strip()
+    return '' if not h or len(h.split()) > 5 or not h[0].isupper() or _PREP.match(h) else h
+
+
+def places(line):
+    """The place names a line gives: its head and short capitalised ` · ` parts ("Fallshore Beach")."""
+    out = [head(line)] if head(line) else []
+    for part in body(line).split(' · ')[1:]:
+        ws = part.split()
+        if 1 < len(ws) <= 4 and ws[0][0].isupper() and not _PREP.match(part) \
+                and all(w[0].isupper() or w[0].isdigit() or w in ('of', 'the', 'de') for w in ws):
+            out.append(part)
+    return out
+
+
+def _place_set(line):
+    parts = [p.strip() for p in body(line).split(', ')]
+    return frozenset(parts) if len(parts) > 1 and all(len(p.split()) <= 5 for p in parts) else None
+
+
+def _stem(words_):
+    return {w[:-1] if len(w) > 3 and w.endswith('s') else w for w in words_}
+
+
+def _place_in(place, text):
+    """A place named in a text: as written, without a last qualifier word ("Cinder Volcano Depths" in "Cinder
+    Volcano B1F"), or all its words, singular ("Antisis Sewers" in "Antisis City Sewer's North area")."""
+    folded, ws = _fold(text), _fold(place).split()
+    if ' ' + ' '.join(ws) + ' ' in folded or len(ws) >= 3 and ' ' + ' '.join(ws[:-1]) + ' ' in folded:
+        return True
+    return len(ws) >= 2 and not any(w.isdigit() for w in ws) and _stem(ws) <= _stem(folded.split())
+
+
+def same_place(a, b):
+    """Two lines that name the same place: one's place is in the other's text, or the same place list in another order."""
+    if _place_set(a) is not None and _place_set(a) == _place_set(b):
+        return True
+    return any(_place_in(p, body(b)) for p in places(a)) or any(_place_in(p, body(a)) for p in places(b))
+
+
+def details(line):
+    return words(body(line)) - {w for p in places(line) for w in words(p)}
+
+
+UNIQUE = {'TMs and HMs', 'Mega Stones', 'Z-Crystals'}     # boxes of one-off items: one pickup per place
+
+
+def same_pickup(a, b, strict=False, unique=False):
+    """'same' when two Found / Also lines of one item read as one pickup, 'unsure' when they name the same place but
+    their details differ, None otherwise. A prose line (no place first) at the other's place is the same pickup unless
+    `strict`; two structured lines need the same details (most of the shorter one's words, all of each other's with
+    `strict`), and different numbers (floors, counts, areas) keep them apart. A `unique` item (UNIQUE boxes, a
+    walkthrough row against the Items line left) has one pickup per place."""
+    if not (a.startswith(('Found:', 'Also:')) and b.startswith(('Found:', 'Also:'))) or not same_place(a, b):
+        return None
+    if _place_set(a) is not None and _place_set(a) == _place_set(b) or _fold(body(a)) == _fold(body(b)):
+        return 'same'
+    if unique and not strict:
+        return 'same'
+    if not head(a) or not head(b):
+        return 'unsure' if strict else 'same'
+    da, db = details(a), details(b)
+    if not da or not db or any(ch.isdigit() for w in da ^ db for ch in w):
+        return 'unsure'
+    score = len(da & db) / (len(da | db) if strict else min(len(da), len(db)))
+    return 'same' if score >= (0.8 if strict else 0.5) else 'unsure'
+
+
+def merge_pickup(keep, other):
+    """One line for two wordings of one pickup: `keep`, then the parts of `other` it doesn't already say."""
+    text = body(keep)
+    for seg in re.split(r' · |; |\. ', body(other)):
+        ws = words(seg)
+        if ws and len(ws & words(text)) / len(ws) < 0.6:
+            seg = re.sub(r'^Found (?=(?:in|on|under|inside|at|near)\b)', '', seg.strip().rstrip('.'))
+            text += ' · ' + seg[:1].upper() + seg[1:]
+    notes = ''.join(dict.fromkeys(m.group() for m in (_NOTE.search(keep), _NOTE.search(other)) if m))
+    return _LABEL.match(keep).group() + ' ' + drop_repeats(text) + notes
 
 
 # ---- routing: one old row -> entries for the new boxes --------------------------------------------------------------
@@ -415,6 +628,9 @@ def standardise(D, rules=None, report=None):
     D['IT'] = new
     if 'WK' in D:
         walk(D['WK'], entries, new, rules, say)
+    if rules.get('one_pickup'):
+        one_pickup(D, rules['one_pickup'], say)
+    relabel_sources(D, say)
     if rules.get('also'):
         relabel_also(D, rules['also'])
     sort_rows(D, rules)
@@ -473,6 +689,134 @@ def relabel_also(D, items):
                     r[2] = fix(r[2])
 
 
+# ---- one label rule for every pickup line (after merging) ---------------------------------------------------------
+_BOUGHT = re.compile(r"\b(?:sold by|bought|buyable|buy|purchased?)\b|^(?:post[- ]?game )?mart\b|\bfor [\d,]+ ?(?:coins|bp|battle points|"
+                     r"pok[eé](?:mon)? ?dollars|pokemon dollars|₽)", re.I)
+_GIVEN = re.compile(r"\b(?:given|gives?|gift(?:ed)?|rewards?|receive[sd]?|obtain(?:ed)? from|trade[sd]?|trading|"
+                    r"in exchange|exchange[sd]? for|prizes?|raid drop|boss reward|held by|events?|mystery gift|"
+                    r"speak to|talk to|talking to|speaking to|show(?:ing)? (?:him|her|them|it|the|a|an|one|all|your)\b|"
+                    r"complete mission|after (?:defeating|beating) (?:him|her|them)|left behind by|"
+                    r"raffle|lottery|selectable|choose|chosen starter|password)\b", re.I)
+_GIVEN_START = re.compile(r'^(?:Mission #\d+|Defeat |Beat |Win |Obtain |Complete )')
+_PERSON = re.compile(r"\bfrom (?:the |a |an )?(?:[\w'.é-]+ ){0,3}?(?:man|men|woman|women|girl|boy|kid|lady|gentleman|"
+                     r"guy|npc|elder|scientist|clown|breeder|trainer|worker|clerk|maid|ranger|hiker|fisherman|swimmer|"
+                     r"youngster|lass|chairman|professor|prof|aide|assistant|nurse|rival|leader|champion|captain|"
+                     r"grunt|admin|officer|policeman|teacher|child|father|mother|dad|mom|brother|sister|guard|owner|"
+                     r"chef|baker|artist|painter|creator|tutor|dude|belt|harlequin|maniac|collector|director|president|"
+                     r"manager|receptionist|member|beauty|gentleman|veteran|expert|ace)s?\b", re.I)
+_ACCESS = re.compile(r"\b(?:accessed|accessible|reached|reachable|visible|seen|across|away|coming|leading|access)\s*$", re.I)
+
+
+def _person(text):
+    """A "from <person>" that isn't a way in ("accessed from the ladder near the Painter")."""
+    return any(not _ACCESS.search(text[:m.start()]) and not re.search(r'\b(?:near|by|next to|behind)\b', m.group())
+               for m in _PERSON.finditer(text))
+
+
+_NAMED = re.compile(r"\bfrom ?([A-Z][a-z]+)(?:/[A-Z][a-z]+)?\b(?! (?:City|Town|Route|Cave|Island|Forest|Woods|Mountain|"
+                    r"Road|Path|Tower|Village|Lake|Bay|Beach|Gate|Bridge|Tunnel|Pass|Peak|Fields|Ruins|Volcano|"
+                    r"Desert|Sewers?|Corp|Base|Park|Garden|Hill|Mt|Mount|Area|Side|Plaza|Valley|Island)\b)")
+_PLACEWORD = {'Route', 'Cube', 'Crystal', 'Frost', 'The', 'Underground', 'Victory', 'Mt', 'Mount'}
+_FOUND = re.compile(r"\b(?:hidden|on the ground|item ?ball|poké ?ball on|dig(?:ging)? spot|dig|rock smash|smashed rock|"
+                    r"headbutt|search(?:ing)? the|in the (?:grass|water|corner|north|south|east|west)|on (?:a|the) "
+                    r"(?:ledge|rock|island|beach|cliff|platform|balcony|path)|lying|pick(?:ed)? up|itemfinder|dowsing)\b",
+                    re.I)
+
+
+def source_label(line, explain=False):
+    """The label a Found / Also pickup line takes from what it says (one rule for every guide, after merging):
+    `Shop:` bought (money, coins, BP); `Also:` given, a reward, traded, a prize, a raid drop, held by a gift or traded
+    Pokémon, an event; `Found:` lying in the world (ground, hidden, a ball, a rock or tree, a dig spot). A line with
+    no hint either way keeps the extract's label (it knew: "Festival Plaza", "Poké Pelago")."""
+    m = _LABEL.match(line)
+    if not m or m.group(1) not in ('Found', 'Also'):
+        return (m and m.group(1), 'other') if explain else (m and m.group(1))
+    text = body(line)
+    named = [n for n in _NAMED.findall(text) if n not in _PLACEWORD]
+    if _BOUGHT.search(text) and not re.search(r"\b(?:gives?|give|given|gift)\b", text, re.I):
+        out = 'Shop', 'bought'
+    elif _GIVEN.search(text) or _person(text) or named or any(_GIVEN_START.match(seg) for seg in re.split(r' · | — |; |\. |, ', text)):
+        out = 'Also', 'given'
+    elif _FOUND.search(text):
+        out = 'Found', 'found'
+    else:
+        out = m.group(1), 'kept'
+    return out if explain else out[0]
+
+
+def _numbers(text):
+    return {n.replace(',', '') for n in re.findall(r'\d[\d,]*', text)}
+
+
+def one_pickup(D, pairs, say):
+    """RULES `one_pickup` {item: (line A, line B, merged)}: two lines of an item the sources word as two places that
+    are one pickup (a place's other name, the same puzzle under two area names; notes.md has the source for each).
+    A and B are regexes over the lines; both become `merged`, in Items and the walkthrough."""
+    moved = {}
+    for box in D['IT']:
+        for row in box['r']:
+            if row[0] not in pairs:
+                continue
+            a, b, merged = pairs[row[0]]
+            lines = row[1].splitlines()
+            hit = [line for line in lines if re.search(a, line) or re.search(b, line)]
+            if len(hit) != 2:
+                if merged not in lines:
+                    say('items: one_pickup rule matched', len(hit), 'lines:', row[0])
+                continue
+            out = []
+            for line in lines:
+                line = merged if line in hit else line
+                if line not in out:
+                    out.append(line)
+            row[1] = '\n'.join(sort_lines(out))
+            moved.update({(box['n'], row[0], line): merged for line in hit})
+            say('items: one pickup:', row[0], '=', merged)
+    if 'WK' in D:
+        for rows in walk_rows(D['WK']):
+            for row in rows:
+                row[2] = moved.get((row[0], row[1], row[2]), row[2])
+
+
+def relabel_sources(D, say):
+    """Every Found / Also line of Items and the walkthrough takes its label from what it says (source_label), after
+    the merging. A line that turns out to be a purchase joins the item's Shop line at the same place or price ("Bought
+    from the Seaport City TM merchant for 20,000" / "Shop: Seaport City Bazaar · ₽20,000"), or becomes its Shop line."""
+    moved, counts = {}, {}
+    for box in D['IT']:
+        if box['n'] in ('Move Tutors', 'Useful NPCs'):
+            continue
+        for row in box['r']:
+            lines = row[1].splitlines()
+            shops = [line for line in lines if line.startswith('Shop:')]
+            out = []
+            for line in lines:
+                label = source_label(line)
+                new = line
+                if label and not line.startswith(label + ':'):
+                    new = label + ': ' + line[_LABEL.match(line).end():].strip()
+                    if label == 'Shop':
+                        twin = next((shop for shop in shops if same_place(new, shop)
+                                     or _numbers(body(new)) & _numbers(body(shop)) - {'1'}), None)
+                        new = twin or new
+                    moved[(box['n'], row[0], line)] = new
+                    counts[line.split(':')[0] + ' -> ' + new.split(':')[0]] = counts.get(line.split(':')[0] + ' -> ' + new.split(':')[0], 0) + 1
+                if new not in out:
+                    out.append(new)
+            row[1] = '\n'.join(sort_lines(out))
+    if 'WK' in D:
+        for rows in walk_rows(D['WK']):
+            for row in rows:
+                row[2] = moved.get((row[0], row[1], row[2]), row[2])
+            seen, keep = set(), []
+            for row in rows:
+                if tuple(map(str, row[:4])) not in seen:
+                    seen.add(tuple(map(str, row[:4])))
+                    keep.append(row)
+            rows[:] = keep
+    say('items: lines relabelled from what they say:', ', '.join(f'{k} {v}' for k, v in sorted(counts.items())) or 'none')
+
+
 def already(row, std):
     """A walkthrough row that already reads as the standard row (second run, or a row nothing changed)."""
     return any(row[2] == t or row[2] in t.splitlines() for t in std.get((row[0], row[1]), ()))
@@ -486,12 +830,15 @@ def walk_rows(WK):
 
 
 def walk(WK, entries, new, rules, say):
+    """Each walkthrough item row -> the Items line(s) it is. A row whose wording matches no line is matched, one to
+    one, to the line of the same item at the same place (same_pickup; a TM's place line to its Shop line), and both
+    then read the merged line; a row with no such line becomes a line of its own."""
     by_item = {}
     for e in entries:
         by_item.setdefault(e.old_item, []).append(e)
-    added = []
+    added, plan, claimed = [], [], set()
     for rows in walk_rows(WK):
-        out = []
+        res = []
         for row in rows:
             if (row[0], row[1]) in rules.get('drop', ()):
                 continue
@@ -513,25 +860,86 @@ def walk(WK, entries, new, rules, say):
                     added.append((entry.item, item[1]))
             if not candidates:
                 say('items: walkthrough row unresolved:', row)
-                out.append(row)
+                res.append(('row', row))
                 continue
             text = row[2]
             if hit:
                 exact = [entry for entry in hit if entry.old_text == text]
+                shop = [entry for entry in hit if entry.suffix and text.endswith(entry.suffix)]
                 if len(exact) == 1:
                     text = exact[0].text
+                elif not exact and len({entry.text for entry in shop}) == 1:      # a per-shop row: the Shop line
+                    text = shop[0].text
             lines = pickup_lines([text]).splitlines()
             matched = [(box, item, line) for box, item in candidates for line in item[1].splitlines()
                        if line in lines]
-            if not matched:
-                box, item = candidates[0]
-                if name in rules.get('nomerge', ()):
-                    item = [name, '\n'.join(lines), row[3], 0, 'Zygarde Cells']
-                    box['r'].append(item)
-                elif box['n'] not in ('Move Tutors', 'Useful NPCs'):
-                    item[1] = pickup_lines([item[1], *lines])
-                matched = [(box, item, line) for line in lines]
-                added.extend((item[0], line) for line in lines)
+            claimed.update((id(item), line) for _, item, line in matched)
+            res.append(('ok', row, matched) if matched else ('new', row, candidates, lines, name))
+        plan.append((rows, res))
+    # rows no line matches: the one line of the item at the same place, when it is the only one both ways
+    want = {}
+    for _, res in plan:
+        for step in res:
+            if step[0] != 'new' or step[2][0][0]['n'] in ('Move Tutors', 'Useful NPCs') or step[4] in rules.get('nomerge', ()):
+                continue
+            row, candidates, lines, name = step[1:]
+            for line in lines:
+                if (name, line) in want:
+                    continue
+                opts = []
+                for box, item in candidates:
+                    its = item[1].splitlines()
+                    for il in its:
+                        if (id(item), il) in claimed and not il.startswith('Shop:'):
+                            continue
+                        kind = 'same' if box['n'] == 'TMs and HMs' and any(same_shop(line, x) for x in its if x == il) \
+                            else same_pickup(line, il, unique=box['n'] in UNIQUE)
+                        if kind:
+                            opts.append((kind, box, item, il))
+                want[(name, line)] = opts
+    targets = {}
+    for key, opts in want.items():
+        for _, box, item, il in opts:
+            targets.setdefault((id(item), il), []).append(key)
+    merged, unsure, pairs = {}, [], []
+    for key, opts in want.items():
+        if len(opts) == 1 and (opts[0][0] == 'shop' or opts[0][0] == 'same' and len(targets[(id(opts[0][2]), opts[0][3])]) == 1):
+            _, box, item, il = opts[0]
+            line = il if il.startswith('Shop:') else merge_pickup(key[1], il)
+            its = item[1].splitlines()
+            its[its.index(il)] = line
+            item[1] = '\n'.join(sort_lines(list(dict.fromkeys(its))))
+            merged[key] = (box, item, line)
+            pairs.append(f'  {item[0]}: {key[1]}\n    + {il}\n    = {line}')
+        elif opts:
+            unsure.append((key, opts))
+    for rows, res in plan:
+        out = []
+        for step in res:
+            if step[0] == 'row':
+                out.append(step[1])
+                continue
+            if step[0] == 'ok':
+                matched = step[2]
+            else:
+                row, candidates, lines, name = step[1:]
+                matched, rest = [], []
+                for line in lines:
+                    if (name, line) in merged:
+                        matched.append(merged[(name, line)])
+                    else:
+                        rest.append(line)
+                if rest:
+                    box, item = candidates[0]
+                    if name in rules.get('nomerge', ()):
+                        item = [name, '\n'.join(rest), row[3], 0, 'Zygarde Cells']
+                        box['r'].append(item)
+                    elif box['n'] not in ('Move Tutors', 'Useful NPCs'):
+                        its = item[1].splitlines()
+                        new_lines = [line for line in rest if line not in its]
+                        item[1] = '\n'.join(sort_lines(its + new_lines))
+                        added.extend((item[0], line) for line in new_lines)
+                    matched += [(box, item, line) for line in rest]
             for box, item, line in matched:
                 out.append([box['n'], item[0], line, item[2]])
         # a row two old boxes both produced is one row; an item on one stop twice stays twice
@@ -543,9 +951,15 @@ def walk(WK, entries, new, rules, say):
                 dedup.append(r)
         rows[:] = dedup
     new.sort(key=lambda box: BOXES.index(box['n']))
+    say('items: walkthrough rows matched to an Items line at the same place:', len(merged))
+    for pair in pairs:
+        say(pair)
     say('items: walkthrough rows added as IT lines:', len(added))
     for item, text in added:
         say('  ' + item + ': ' + text)
+    say('items: walkthrough rows kept apart from a line at the same place (unsure):', len(unsure))
+    for (name, line), opts in unsure:
+        say(f'  {name}: {line}' + ''.join(f'\n    ~ {il} ({kind})' for kind, _, _, il in opts))
 
 
 def walk_first(D, entries):

@@ -182,7 +182,8 @@ def finalise(D, hack, prune=None):
     move properties/interactions (tools/moveprops.py), schema (tools/schema.py: dead fields dropped, stop keys,
     key order). Idempotent."""
     itemstd.standardise(D, itemstd.RULES.get(hack, {}), report)
-    pickup_keys.stabilise(D, os.path.join(ROOT, 'hacks', hack, 'extract', 'pickup_keys.json'), report)
+    pickup_keys.stabilise(D, os.path.join(ROOT, 'hacks', hack, 'extract', 'pickup_keys.json'), report,
+                          itemstd.RULES.get(hack, {}).get('once', pickup_keys.ONCE))
     if prune:
         prune(D)
     trainer_keys.stabilise(D, os.path.join(ROOT, 'hacks', hack, 'extract', 'trainer_keys.json'), report)

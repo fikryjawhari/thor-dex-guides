@@ -513,93 +513,262 @@ items: TM place and shop retained: TM020 Safeguard ['Found: Obtained at the Batt
 items: TM place and shop retained: TM017 Protect ['Also: Bought from the merchant in Fallshore City for 10,000 Poké Dollars · needs at least 10,000 Poké Dollars', 'Shop: Fallshore City Bazaar · Top-left Stall · ₽10,000']
 items: TM place and shop retained: TM015 Hyper Beam ['Also: Bought from the Dehara City Department Store 4F for 50,000 Pokémon Dollars · needs at least 50,000 Pokémon Dollars', 'Shop: Dehara City Dept. Store · 4th Floor (TM Corner) · ₽50,000']
 items: TM place and shop retained: TM008 Bulk Up ['Also: Bought from the merchant in Fallshore City for 10,000 Poké Dollars · needs at least 10,000 Poké Dollars', 'Shop: Fallshore City Bazaar · Top-left Stall · ₽10,000']
-items: walkthrough rows added as IT lines: 85
-  Costume Box: Also: Frozen Heights · Speak to your mother in your house
+items: walkthrough rows matched to an Items line at the same place: 82
   TM097 Frost Breath: Found: Bellin Town · requires Rock Climb · Near the northeast house, up a climbable wall
+    + Found: Next to a house in the North-East corner of Bellin Town. Requires Rock Climb
+    = Found: Bellin Town · requires Rock Climb · Near the northeast house, up a climbable wall
   TM013 Ice Beam: Found: Icicle Cave · Must beat Ace Trainers Lia and Lucian to reach
+    + Found: Found in Icicle Cave 4F, in a small area that requires you to Surf to a hidden ladder on the third floor
+    = Found: Icicle Cave · Must beat Ace Trainers Lia and Lucian to reach · In Icicle Cave 4F, in a small area that requires you to Surf to a hidden ladder on the third floor
   TM069 Rock Polish: Found: Icicle Cave · In the southeast corner of the chamber, on the ice floor
+    + Found: On the ground on Icicle Cave's B1F, at the bottom-right corner of the slippery ice puzzle · needs Rock Climb, Surf, Rock Smash
+    = Found: Icicle Cave · In the southeast corner of the chamber, on the ice floor · On the ground on Icicle Cave's B1F, at the bottom-right corner of the slippery ice puzzle · Needs Rock Climb, Surf, Rock Smash
   TM014 Blizzard: Found: Icicle Cave · After pushing the boulder down from below and solving the ice floor puzzle by reaching the center
+    + Found: Found in the Icicle Cave B1F slippery ice area. Requires you to push a bolder down first to retrieve the TM · needs Rock Climb, Surf, Strength, Rock Smash
+    = Found: Icicle Cave · After pushing the boulder down from below and solving the ice floor puzzle by reaching the center · In the Icicle Cave B1F slippery ice area · Requires you to push a bolder down first to retrieve the TM · Needs Rock Climb, Surf, Strength, Rock Smash
   TM112 Round: Found: Route 2 · requires Cut · Next to Hiker Nob
+    + Found: On Route 2, behind some cuttable trees and next to a mountain climber NPC · needs Cut
+    = Found: Route 2 · requires Cut · Next to Hiker Nob · On Route 2, behind some cuttable trees and next to a mountain climber NPC
   TM105 Brutal Swing: Found: Dresco Town · requires Surf · South of the Moltres plaza, at water level
+    + Found: Found under the bridges in Dresco Town. Requires Surf to reach
+    = Found: Dresco Town · requires Surf · South of the Moltres plaza, at water level · Under the bridges in Dresco Town
   TM045 Attract: Found: Route 3 · requires Surf · East side of the route, on a small island
+    + Found: On a small island with a fisherman on the Eastern side of Route 3. Requires Surf to reach
+    = Found: Route 3 · requires Surf · East side of the route, on a small island
   TM100 Infestation: Found: Grim Woods · West of Bug Catcher Anthony, in a hole in the long grass
+    + Found: Found on the North side of Grim Woods
+    = Found: Grim Woods · West of Bug Catcher Anthony, in a hole in the long grass · On the North side of Grim Woods
   TM066 Payback: Found: Route 4 · requires Cut · East part of the route, in the north grass patch accessible with Cut
+    + Found: Found on the West part of Route 4, North of the entrance to Grim Woods. Requires Cut
+    = Found: Route 4 · requires Cut · East part of the route, in the north grass patch accessible with Cut · On the West part of Route 4, North of the entrance to Grim Woods
   TM119 Sky Drop: Found: Route 4 · requires Waterfall · Up the big waterfall, on the plateau, up a Rock Climb wall
+    + Found: North of the Cinder Volcano entrance on Route 4. The TM can be reached by using Waterfall between both Cinder Volcano entrances and requires Rock Climb · needs Surf
+    = Found: Route 4 · requires Waterfall · Up the big waterfall, on the plateau, up a Rock Climb wall · North of the Cinder Volcano entrance on Route 4 · The TM can be reached by using Waterfall between both Cinder Volcano entrances and requires Rock Climb · Needs Surf
   TM035 Flamethrower: Found: Cinder Volcano · requires Surf · Across the small lava pool south of the 2F ladder
+    + Found: On the East side of Cinder Volcano 1F. Requires Surf and a fire-type Pokemon
+    = Found: Cinder Volcano · requires Surf · Across the small lava pool south of the 2F ladder · On the East side of Cinder Volcano 1F · Requires Surf and a fire-type Pokemon
   TM094 Incinerate: Found: Cinder Volcano · In the Battle Girl chamber accessed through the D ladder pair, next to the Battle Girl
+    + Found: Found in Cinder Volcano 3F, next to the battle girl NPC trainer
+    = Found: Cinder Volcano · In the Battle Girl chamber accessed through the D ladder pair, next to the Battle Girl · In Cinder Volcano 3F, next to the battle girl NPC trainer
   TM038 Fire Blast: Found: Cinder Volcano · requires Rock Climb · In the Battle Girl chamber accessed through the D ladder pair, west of the ladder, down a rock climb wall
-  Charizardite X: Found: Cinder Volcano · requires Strength and Raid Den access · After solving the boulder puzzle, across on the northeast side, in the tablet chamber
+    + Found: On the ground on the Cinder Volcano 3F's East side. Requires Rock Climb
+    = Found: Cinder Volcano · requires Rock Climb · In the Battle Girl chamber accessed through the D ladder pair, west of the ladder, down a rock climb wall · On the ground on the Cinder Volcano 3F's East side
+  Charizardite X: Found: Cinder Volcano · requires Strength, Raid Den access · After solving the boulder puzzle, across on the northeast side, in the tablet chamber
+    + Found: Found in the Cinder Volcano 2F in the room behind the stone tablet. Accessible only after solving the puzzle
+    = Found: Cinder Volcano · requires Strength, Raid Den access · After solving the boulder puzzle, across on the northeast side, in the tablet chamber · In the Cinder Volcano 2F in the room behind the stone tablet · Accessible only after solving the puzzle
   TM009 Bullet Seed: Found: Route 5 · requires Cut · In the east part of the route, on a ledge only accessible from the long passage behind the Cut tree near Youngster Calvin
+    + Found: Found on Route 5 by taking the path blocked by the cuttable tree near the Crater Town entrance · needs Cut
+    = Found: Route 5 · requires Cut · In the east part of the route, on a ledge only accessible from the long passage behind the Cut tree near Youngster Calvin · On Route 5 by taking the path blocked by the cuttable tree near the Crater Town entrance
   TM070 Flash: Also: Crater Town · Speak to the Battle Girl inside the Poke Mart
+    + Also: Gift from the blonde NPC sitting near the table in the Crater Town Poké Mart
+    = Also: Crater Town · Speak to the Battle Girl inside the Poke Mart · Gift from the blonde NPC sitting near the table in the Crater Town Poké Mart
   TM003 Water Pulse: Found: Valley Cave · In the middle part of the chamber, south of the recessed area with the pond
+    + Found: Inside Valley Cave, North of the giant stone tablet and the Gentleman Thomas NPC
+    = Found: Valley Cave · In the middle part of the chamber, south of the recessed area with the pond · Inside Valley Cave, North of the giant stone tablet and the Gentleman Thomas NPC
   TM044 Rest: Found: Valley Cave · requires Surf · In the south part of the chamber, cross a small pond in the southwest crater
+    + Found: Found in the Crater Town Valley Cave B1F directly North of the ladder leading out of the cave. Requires Surf
+    = Found: Valley Cave · requires Surf · In the south part of the chamber, cross a small pond in the southwest crater · In the Crater Town Valley Cave B1F directly North of the ladder leading out of the cave
   TM101 Power-Up Punch: Found: Valley Cave · requires Rock Climb · In the south part of the chamber, accessible after the tablet puzzle is solved
+    + Found: Found on the South side of the Valley Cave, directly next to a stone tablet. The tablet can be destroyed by interacting with a rock West of the Pokémon Ranger NPC while having a bug Pokémon in your party's first slot · needs a Bug-Type Pokémon on your team, Rock Climb
+    = Found: Valley Cave · requires Rock Climb · In the south part of the chamber, accessible after the tablet puzzle is solved · On the South side of the Valley Cave, directly next to a stone tablet · The tablet can be destroyed by interacting with a rock West of the Pokémon Ranger NPC while having a bug Pokémon in your party's first slot
   Lunalium Z: Found: Valley Cave · requires Rock Climb · Inside the cavern the Tablet turned into
+    + Also: Valley Cave · Solve the Tablet Puzzle for Mission #007: Am I Blind
+    = Found: Valley Cave · requires Rock Climb · Inside the cavern the Tablet turned into · Solve the Tablet Puzzle for Mission #007: Am I Blind
   TM095 Struggle Bug: Found: Route 6 · On the ledge at the eastern end of the canyon under the bridges
+    + Also: On Route 6, found in between two ledges after beating the Sun Trio
+    = Found: Route 6 · On the ledge at the eastern end of the canyon under the bridges · On Route 6, found in between two ledges after beating the Sun Trio
   TM074 Gyro Ball: Found: Route 6 · requires Rock Climb · Northwest side, accessed by Surf
+    + Found: Found on Route 6, directly West of the path leading to Route 14. Requires Surf and Rock Climb
+    = Found: Route 6 · requires Rock Climb · Northwest side, accessed by Surf · On Route 6, directly West of the path leading to Route 14
   TM108 Snarl: Found: Route 7 · Northern side of the route, on the ledge just east of the Frost Mountain entrance
+    + Found: Found on Route 7, just East of the entrance to Frost Mountain
+    = Found: Route 7 · Northern side of the route, on the ledge just east of the Frost Mountain entrance
   TM079 Dark Pulse: Found: Frost Mountain · requires Rock Climb · In the southwest corner of the main chamber, up a rock climb wall next to a Hiker
+    + Found: Found on Frost Mountain 1F, West of the main entrance. Requires Rock Climb
+    = Found: Frost Mountain · requires Rock Climb · In the southwest corner of the main chamber, up a rock climb wall next to a Hiker · On Frost Mountain 1F, West of the main entrance
   Solganium Z: Found: Frost Mountain · requires Rock Climb · Inside the Raid Den chamber after solving the Aggron Puzzle and opening the Ancient Tablet
+    + Also: Frost Mountain · Solve the Tablet Puzzle for Mission #007: Am I Blind
+    = Found: Frost Mountain · requires Rock Climb · Inside the Raid Den chamber after solving the Aggron Puzzle and opening the Ancient Tablet · Solve the Tablet Puzzle for Mission #007: Am I Blind
   TM080 Rock Slide: Found: Frost Mountain · requires Rock Climb · In the east part of the chamber, up a rock climb wall from the main section under the bridge
+    + Found: On Frost Mountain 2F, Eastern side underneath a bridge. Requires Rock Climb
+    = Found: Frost Mountain · requires Rock Climb · In the east part of the chamber, up a rock climb wall from the main section under the bridge · On Frost Mountain 2F, Eastern side underneath a bridge
   TM072 Avalanche: Found: Frost Mountain · In the south ledge section of 2F accessed from the ladder near the Painter, on the far west side
+    + Found: Frost Mountain 2F
+    = Found: Frost Mountain · In the south ledge section of 2F accessed from the ladder near the Painter, on the far west side
   TM118 Aurora Veil: Also: Blizzard City · Speak to the Juggler on the ground floor inside the first house (Lost Kid Mission House)
+    + Also: given as a gift by the juggler NPC on the ground floor of the Eastern-most house in Blizzard City
+    = Also: Blizzard City · Speak to the Juggler on the ground floor inside the first house (Lost Kid Mission House) · Given as a gift by the juggler NPC on the ground floor of the Eastern-most house in Blizzard City
   HM06 Rock Smash: Also: Blizzard City · Speak to the Hiker in the house near the KBT Expressway
+    + Also: From the Mountain Climber NPC in Blizzard City. You can find him on the ground floor of the house East of the KBT Expressway entrance · use outside battle: Wings Badge (Blizzard City Gym)
+    = Also: Blizzard City · Speak to the Hiker in the house near the KBT Expressway · From the Mountain Climber NPC in Blizzard City · You can find him on the ground floor of the house East of the KBT Expressway entrance · Use outside battle: Wings Badge (Blizzard City Gym)
   Steelixite: Found: Fallshore City · requires Surf · Fallshore Beach · On the far eastern ledge path off Fallshore Beach
+    + Found: Found on a mountain east of Route 11's Fallshore Beach. Requires Surf
+    = Found: Fallshore City · requires Surf · Fallshore Beach · On the far eastern ledge path off Fallshore Beach · On a mountain east of Route 11's Fallshore Beach
   TM029 Psychic: Found: Fallshore City · requires Waterfall · On the upper part of the KBT Entrance, accessible only through Waterfall
+    + Found: East of the Fallshore City KBT Expressway entrance. Requires Waterfall to reach · needs Surf
+    = Found: Fallshore City · requires Waterfall · On the upper part of the KBT Entrance, accessible only through Waterfall · Needs Surf
   TM010 Hidden Power: Also: Fallshore City · Speak to the Hidden Power Revealer inside the Hidden Power House
+    + Also: Gift from the Ace Trainer NPC inside of the house in Fallshore City. The house is just before Route 11
+    = Also: Fallshore City · Speak to the Hidden Power Revealer inside the Hidden Power House · Gift from the Ace Trainer NPC inside of the house in Fallshore City · The house is just before Route 11
   TM065 Shadow Claw: Found: Route 11 · requires Rock Climb · On the far west side of the upper ledges, accessible west of the Kindler
+    + Found: Found on Route 11. The TM is on the Cliff Cave cliff and requires Rock Climb to reach
+    = Found: Route 11 · requires Rock Climb · On the far west side of the upper ledges, accessible west of the Kindler · The TM is on the Cliff Cave cliff and requires Rock Climb to reach
   HM04 Strength: Also: Epidimy Town · From an NPC in the house just southwest of the town Pokémon Center
+    + Found: given to you by male NPC inside the Westernmost house in Epidimy Town · use outside battle: Fall Badge (Fallshore City Gym)
+    = Also: Epidimy Town · From an NPC in the house just southwest of the town Pokémon Center · Given to you by male NPC inside the Westernmost house in Epidimy Town · Use outside battle: Fall Badge (Fallshore City Gym)
   TM054 False Swipe: Found: Route 10 · North of Camper Chris, near the east set of stepping stones
+    + Found: On the East side of Route 10 behind a wooden fence
+    = Found: Route 10 · North of Camper Chris, near the east set of stepping stones · On the East side of Route 10 behind a wooden fence
   TM030 Shadow Ball: Found: Route 9 · requires Surf · On the big island in the middle of the lake
-  TM077 Flame Charge: Found: Route 9 · requires Surf · hidden · In an Underground Pass Access clearing, on the far side of the pond
+    + Found: On an island on Route 9 in the middle of the lake · needs Surf
+    = Found: Route 9 · requires Surf · On the big island in the middle of the lake
   TM024 Thunderbolt: Found: Thundercap Mountain · requires Surf · In the southwest part of the chamber, across a small pond near the entrance to Epidimy Town
+    + Found: Found in Thundercap Mountain, directly in front of the Epidimy Town entrance. Requires Surf
+    = Found: Thundercap Mountain · requires Surf · In the southwest part of the chamber, across a small pond near the entrance to Epidimy Town
   TM025 Thunder: Found: Thundercap Mountain · requires Rock Climb · On the northeast part of the summit up a rock climb wall
+    + Found: Found on the far Eastern side of Thundercap Mountain's peak. Requires Rock Climb to reach
+    = Found: Thundercap Mountain · requires Rock Climb · On the northeast part of the summit up a rock climb wall · On the far Eastern side of Thundercap Mountain's peak
   TM073 Thunder Wave: Found: Thundercap Mountain · Left behind by Milo after leading him out
+    + Also: A reward for completing "The Wayward Kid" , which is done by finding Milo on Thundercap Mountain's fourth floor · needs Surf, Rock Smash
+    = Found: Thundercap Mountain · Left behind by Milo after leading him out · A reward for completing "The Wayward Kid" , which is done by finding Milo on Thundercap Mountain's fourth floor · Needs Surf, Rock Smash
   TM091 Flash Cannon: Found: Thundercap Mountain · Near Expert Saundra, in the northeast corner of the section
+    + Found: In a small area found on the second floor of Thundercap Mountain. Requires Rock Climb, Rock Smash, Surf, and Strength to reach
+    = Found: Thundercap Mountain · Near Expert Saundra, in the northeast corner of the section · In a small area found on the second floor of Thundercap Mountain · Requires Rock Climb, Rock Smash, Surf, and Strength to reach
   TM085 Dream Eater: Also: Tarmigan Town · Speak to one of the Scientists in the Dream Research Lab
+    + Also: Gift from the scientist with the red glasses inside the Tarmigan Town Dream Research Lab
+    = Also: Tarmigan Town · Speak to one of the Scientists in the Dream Research Lab · Gift from the scientist with the red glasses inside the Tarmigan Town Dream Research Lab
   TM047 Steel Wing: Found: Route 12 · Eastern part of the route, south of Beauty Sheila on a ledge
+    + Found: Found on the East side of Route 12, when going from Dehara City to Tarmigan Town
+    = Found: Route 12 · Eastern part of the route, south of Beauty Sheila on a ledge · On the East side of Route 12, when going from Dehara City to Tarmigan Town
   TM048 Skill Swap: Found: Ruins of Void · requires ADM · On the southeast corner of the exterior, accessed through the Underwater passage
+    + Found: Found on the East side of the Ruins of Void mountain. It can be reached using the ADM gear in the spot West of the ruins entrance · needs Surf, Rock Climb
+    = Found: Ruins of Void · requires ADM · On the southeast corner of the exterior, accessed through the Underwater passage · On the East side of the Ruins of Void mountain · It can be reached using the ADM gear in the spot West of the ruins entrance · Needs Surf, Rock Climb
   TM031 Brick Break: Found: Ruins of Void · In the northwest corner of the maze, behind breakable rocks
+    + Found: Found behind some smashable rocks in the Ruins of Void · needs Rock Smash
+    = Found: Ruins of Void · In the northwest corner of the maze, behind breakable rocks · Needs Rock Smash
   TM076 Stealth Rock: Found: Cinder Volcano Depths · In the northwest part of the Shadow Remains Chamber, behind some smashable rocks
+    + Found: Found in the Western side of Cinder Volcano B1F, behind some smashable and moveable rocks · needs Strength, Rock Smash
+    = Found: Cinder Volcano Depths · In the northwest part of the Shadow Remains Chamber, behind some smashable rocks · Needs Strength, Rock Smash
   Metagrossite: Found: Shadow Base · In the western chamber where the game began, behind a Level 2 Key Card Access door
+    + Also: If starter is Beldum: Find the stone in the Shadow Base Warehouse in Frozen Heights. It's behind a locked door that you need the level 2 Key Pass to unlock. Otherwise: It is a gift from Professor Log after completing the “Portal Purge” post-game mission
+    = Found: Shadow Base · In the western chamber where the game began, behind a Level 2 Key Card Access door · If starter is Beldum: Find the stone in the Shadow Base Warehouse in Frozen Heights · Otherwise: It is a gift from Professor Log after completing the “Portal Purge” post-game mission
   Tyranitarite: Found: Shadow Base · In the western chamber where the game began, behind a Level 2 Key Card Access door
+    + Found: Found in the Shadow Base Warehouse in Frozen Heights behind a locked door requiring a level 2 Key Pass if you chose Larvitar as your starter. Otherwise, it is given to you by Professor Log after completing the “Portal Purge” post-game mission
+    = Found: Shadow Base · In the western chamber where the game began, behind a Level 2 Key Card Access door · In the Shadow Base Warehouse in Frozen Heights behind a locked door requiring a level 2 Key Pass if you chose Larvitar as your starter · Otherwise, it is given to you by Professor Log after completing the “Portal Purge” post-game mission
   Garchompite: Found: Shadow Base · In the western chamber where the game began, behind a Level 2 Key Card Access door
+    + Found: If you chose Gible as your starter, the Garchompite is in the Shadow Base Warehouse in Frozen Heights behind a locked door requiring a level 2 Key Pass. Otherwise, the Garchompite is given to you by Professor Log after completing the “Portal Purge” post-game mission
+    = Found: Shadow Base · In the western chamber where the game began, behind a Level 2 Key Card Access door · If you chose Gible as your starter, the Garchompite is in the Shadow Base Warehouse in Frozen Heights behind a locked door requiring a level 2 Key Pass · Otherwise, the Garchompite is given to you by Professor Log after completing the “Portal Purge” post-game mission
   TM041 Torment: Found: Shadow Base · In the northeast part of the main chamber, locked behind the Level 3 Key Card Access door
+    + Found: Found in the Shadow Base B2F, behind a door requiring a level 3 Key Card
+    = Found: Shadow Base · In the northeast part of the main chamber, locked behind the Level 3 Key Card Access door
   Houndoominite: Found: Shadow Base · Behind the couch in Zeph's office
+    + Found: Found in the Shadow Base B3F. The stone is hidden in the boxes behind the yellow sofa
+    = Found: Shadow Base · Behind the couch in Zeph's office · The stone is hidden in the boxes behind the yellow sofa
   TM023 Iron Tail: Found: Route 14 · requires ADM · Underwater Section A, accessed through the second dive spot west of the Ruins of Void spot
+    + Found: On a small patch of land on Route 14. Reachable using the ADM to use the dive spot in front of the Ruins of Void
+    = Found: Route 14 · requires ADM · Underwater Section A, accessed through the second dive spot west of the Ruins of Void spot · On a small patch of land on Route 14
   TM089 U-turn: Found: Auburn Waterway · On the peninsula, tucked away in the north point corner
+    + Found: Found on an island in the Auburn Waterway reachable by using Surf · needs Cut
+    = Found: Auburn Waterway · On the peninsula, tucked away in the north point corner · On an island in the Auburn Waterway reachable by using Surf · Needs Cut
   Aggronite: Found: Lost Tunnel · In the northeast part of the tunnel maze, behind a smashable rock
+    + Found: Found in the Lost Tunnels that requires the “Island Savior” mission to access
+    = Found: Lost Tunnel · In the northeast part of the tunnel maze, behind a smashable rock · In the Lost Tunnels that requires the “Island Savior” mission to access
   TM026 Earthquake: Found: Great Desert · requires Rock Climb · Up the wall near the Tomb of Borrius entrance
+    + Found: Found in the Great Desert, directly above the Tomb of Borrius. Requires both Rock Smash and Rock Climb
+    = Found: Great Desert · requires Rock Climb · Up the wall near the Tomb of Borrius entrance · Requires both Rock Smash and Rock Climb
   TM081 X-Scissor: Found: Vivill Woods · On the west bank of the western pond
+    + Found: On the ground in the Southwest side of Vivill Woods. It requires Surf and is hidden by some trees
+    = Found: Vivill Woods · On the west bank of the western pond · On the ground in the Southwest side of Vivill Woods · It requires Surf and is hidden by some trees
   Gardevoirite: Found: Vivill Warehouse · hidden · In B2F Hidden Storage, hidden on the bare floor
+    + Found: Found in the Vivill Town Warehouse B2F. The stone is hidden next to some boxes
+    = Found: Vivill Warehouse · hidden · In B2F Hidden Storage, hidden on the bare floor · The stone is hidden next to some boxes
   TM110 Draining Kiss: Found: Vivill Warehouse · requires Dive · In B4F Submerged Lab, in the southeast corner
+    + Found: In the drowned area of the Vivill Warehouse. Requires the ADM · needs Surf, the ADM gear
+    = Found: Vivill Warehouse · requires Dive · In B4F Submerged Lab, in the southeast corner · In the drowned area of the Vivill Warehouse · Requires the ADM · Needs Surf, the ADM gear
   TM117 Fling: Found: Route 16 · requires ADM · Underwater Section C, through the second dive spot
+    + Found: Found in a small area on Route 16, which can be reached by taking an underwater path on the same route · needs Surf, the ADM gear
+    = Found: Route 16 · requires ADM · Underwater Section C, through the second dive spot · In a small area on Route 16, which can be reached by taking an underwater path on the same route · Needs Surf, the ADM gear
   TM107 Acrobatics: Also: Antisis City · Speak to the Shocker in the Eerie House and show him a Pokemon that knows Eerie Pulse
+    + Also: From the NPC inside the bottom-left house in Antisis City after showing him a Pokémon with Eerie Impulse · needs a Pokémon with the move Eerie Impulse
+    = Also: Antisis City · Speak to the Shocker in the Eerie House and show him a Pokemon that knows Eerie Pulse · From the NPC inside the bottom-left house in Antisis City after showing him a Pokémon with Eerie Impulse
   Galladite: Found: Antisis Port · hidden · gate opens 12pm · Accessed through the southeast gate, accessed up a ladder, hidden on top of boxes
+    + Found: Found in the Antisis Port. The stone is hidden on top of some brown shipment crates to the east of the area that is only accessible between 12:00 PM and 1:59 PM
+    = Found: Antisis Port · hidden · gate opens 12pm · Accessed through the southeast gate, accessed up a ladder, hidden on top of boxes · The stone is hidden on top of some brown shipment crates to the east of the area that is only accessible between 12:00 PM and 1:59 PM
   TM067 Recycle: Found: Antisis Sewers · North section, west of Worker Ramon along the upper gantry
+    + Found: Found in the Antisis City Sewer's North area
+    = Found: Antisis Sewers · North section, west of Worker Ramon along the upper gantry · In the Antisis City Sewer's North area
   TM036 Sludge Bomb: Found: Antisis Sewers · South section, down a waterfall and on the northeast platform, west side
+    + Found: On the ground in the flooded area of the Antisis Sewer. Requires Surf and Waterfall to reach
+    = Found: Antisis Sewers · South section, down a waterfall and on the northeast platform, west side · On the ground in the flooded area of the Antisis Sewer · Requires Surf and Waterfall to reach
   TM109 Defog: Found: Antisis Sewers · South section, in the northwest portion, accessible only through the waterfall pipe – speak to the Clown and show him a Pokemon that knows Sweet Scent
+    + Also: given to you from the clown in the flooded area of the Antisis Sewer after showing him a Pokémon with Sweet Scent · needs Surf, Waterfall
+    = Found: Antisis Sewers · South section, in the northwest portion, accessible only through the waterfall pipe – speak to the Clown and show him a Pokemon that knows Sweet Scent · Given to you from the clown in the flooded area of the Antisis Sewer after showing him a Pokémon with Sweet Scent · Needs Surf, Waterfall
   TM104 Psyshock: Found: Route 17 · On the very northeast corner of the route, on the north cliff edge of the Seaport City peninsula, accessed via a Rock Climb wall from the beach
+    + Found: On Route 17, on the ground near Seaport City. Requires Rock Climb
+    = Found: Route 17 · On the very northeast corner of the route, on the north cliff edge of the Seaport City peninsula, accessed via a Rock Climb wall from the beach
   TM012 Taunt: Found: Seaport City · hidden · Just east of the Battle Frontier entrance, behind the Poke Mart
+    + Found: Hidden behind the Seaport City Pokémon Mart
+    = Found: Seaport City · hidden · Just east of the Battle Frontier entrance, behind the Poke Mart
   Slowbronite: Found: Seaport City · In the southwest corner of town, on the beach hidden in a dune on the sand island
+    + Found: Hidden on the beach south of Seaport City. Obtained by interacting with the middle tile on the patch of land surrounded by water
+    = Found: Seaport City · In the southwest corner of town, on the beach hidden in a dune on the sand island · Obtained by interacting with the middle tile on the patch of land surrounded by water
   TM114 Natural Gift: Also: Seaport City · Speak to the Battle Girl in the Seashore Marketplace
+    + Also: Gift from the yellow-haired NPC in the Seaport City Marketplace
+    = Also: Seaport City · Speak to the Battle Girl in the Seashore Marketplace · Gift from the yellow-haired NPC in the Seaport City Marketplace
   TM006 Toxic: Found: Cootes Bog · In the northeast corner of the route, across the pond
+    + Found: Found on the East side of the Cootes Bog. Requires Surf
+    = Found: Cootes Bog · In the northeast corner of the route, across the pond · On the East side of the Cootes Bog · Requires Surf
   TM005 Roar: Found: Crystal Peak · In the northeast corner of the chamber, up some stairs visible from the B1F ladder
+    + Found: Found in Crystal Peak 1F. The TM is East of the ladder leading to the ground floor and requires Surf · needs Rock Climb, Rock Smash
+    = Found: Crystal Peak · In the northeast corner of the chamber, up some stairs visible from the B1F ladder · The TM is East of the ladder leading to the ground floor and requires Surf · Needs Rock Climb, Rock Smash
   Aerodactylite: Found: Crystal Peak · requires All Crystals off · Inside the three-crystal door in the center of the chamber
-  Poisonium Z: Found: Crystal Peak · requires All Crystals off and Tablet solved · Inside the raid den, after solving the tablet puzzle
-  TM050 Overheat: Found: Crystal Peak · requires Orange and Blue Crystals off · In the northwest part of the West Chamber, behind the yellow crystal cluster
+    + Found: Found inside the puzzle room in Crystal Peak
+    = Found: Crystal Peak · requires All Crystals off · Inside the three-crystal door in the center of the chamber · Inside the puzzle room in Crystal Peak
+  Poisonium Z: Found: Crystal Peak · requires All Crystals off, Tablet solved · Inside the raid den, after solving the tablet puzzle
+    + Also: Crystal Peak · Solve the Tablet Puzzle for Mission #007: Am I Blind
+    = Found: Crystal Peak · requires All Crystals off, Tablet solved · Inside the raid den, after solving the tablet puzzle · Solve the Tablet Puzzle for Mission #007: Am I Blind
+  TM050 Overheat: Found: Crystal Peak · requires Orange, Blue Crystals off · In the northwest part of the West Chamber, behind the yellow crystal cluster
+    + Found: Found in the Eastern part of the Crystal Peak 1F. The red and blue crystals should be powered off · needs Surf, Rock Climb, Rock Smash
+    = Found: Crystal Peak · requires Orange, Blue Crystals off · In the northwest part of the West Chamber, behind the yellow crystal cluster · The red and blue crystals should be powered off · Needs Surf, Rock Climb, Rock Smash
   TM071 Stone Edge: Found: Crystal Peak · requires Yellow Crystals off · On the upper central platform accessed from a bridge
+    + Found: Found in the Crystal Peak 1F, near the entrance to Cube Corp. It requires Rock Climb and the yellow crystals should be powered off · needs Surf, Rock Smash, Waterfall
+    = Found: Crystal Peak · requires Yellow Crystals off · On the upper central platform accessed from a bridge · In the Crystal Peak 1F, near the entrance to Cube Corp · It requires Rock Climb and the yellow crystals should be powered off · Needs Surf, Rock Smash, Waterfall
   Aloraichium Z: Found: Crystal Peak · requires Blue Crystals off · Hidden in a corner when all the blue crystals are gone, best accessed from the Cube Corp. side
+    + Found: Crystal Peak · In the Cube Corp. Entrance cavern, hidden by blue crystals
+    = Found: Crystal Peak · requires Blue Crystals off · Hidden in a corner when all the blue crystals are gone, best accessed from the Cube Corp. side · Entrance cavern, hidden by blue crystals
   TM022 Solar Beam: Found: Magnolia Fields · In the southeast corner of the route, nestled in a grove, near where the Savanna Vivillon is located
+    + Found: Found in Magnolia Fields, in the Southeast area that you reach by Surfing. It's hidden behind some trees · needs Surf, Cut
+    = Found: Magnolia Fields · In the southeast corner of the route, nestled in a grove, near where the Savanna Vivillon is located · It's hidden behind some trees · Needs Surf, Cut
   TM102 Dazzling Gleam: Found: Redwood Village · hidden · In the southwest corner of the village, in a small alcove in the trees, hidden in open space
+    + Found: Found in Redwood Village, South of the house with the two breeders. The TM is hidden behind a tree
+    = Found: Redwood Village · hidden · In the southwest corner of the village, in a small alcove in the trees, hidden in open space · In Redwood Village, South of the house with the two breeders · The TM is hidden behind a tree
   TM059 Dragon Pulse: Found: Route 18 · On the Route 18 land section, north of the Pokémon Center, deep in the woods
+    + Found: Found on Route 18, on the path behind the Pokémon Center that's blocked by three small trees you have to use Cut on
+    = Found: Route 18 · On the Route 18 land section, north of the Pokémon Center, deep in the woods · On Route 18, on the path behind the Pokémon Center that's blocked by three small trees you have to use Cut on
   TM001 Focus Punch: Found: Victory Road · hidden · In the hedge maze, east of Tamer Phil and Dragon Tamer Pierce, in a dead end hidden by hedges and trees
+    + Found: Found in the Victory Road hedge maze area, hidden behind a hedge wall · needs all eight badges, Surf
+    = Found: Victory Road · hidden · In the hedge maze, east of Tamer Phil and Dragon Tamer Pierce, in a dead end hidden by hedges and trees · In the Victory Road hedge maze area, hidden behind a hedge wall · Needs all eight badges, Surf
   TM002 Dragon Claw: Found: Victory Road · On the east side of the ascent, on the long grass ledge
+    + Found: Found in the snowy cliff area of Victory Road. It's in the far East side that requires you to use Rock Climb to reach
+    = Found: Victory Road · On the east side of the ascent, on the long grass ledge · In the snowy cliff area of Victory Road · It's in the far East side that requires you to use Rock Climb to reach
   Gengarite: Found: Victory Road · hidden · On the central east side of the ascent, east of Kyurem's Cave, hidden in open space
-  Rockium Z: Found: Victory Road · hidden · In the southeast part of the chamber, hidden in a rock
+    + Found: Found in the snowy area of Victory Road. The mega stone is hidden east of the entrance to the room that has Kyurem, in a part of the mountain you have to use Rock Climb to reach
+    = Found: Victory Road · hidden · On the central east side of the ascent, east of Kyurem's Cave, hidden in open space · In the snowy area of Victory Road · The mega stone is hidden east of the entrance to the room that has Kyurem, in a part of the mountain you have to use Rock Climb to reach
   Kommonium Z: Found: Victory Road · Inside the Raid Den chamber revealed after the Ancient Tablet puzzle gets solved
+    + Also: Victory Road Lava Chamber · Solve the Tablet Puzzle for Mission #007: Am I Blind
+    = Found: Victory Road · Inside the Raid Den chamber revealed after the Ancient Tablet puzzle gets solved · Solve the Tablet Puzzle for Mission #007: Am I Blind
   TM019 Giga Drain: Found: Redwood Forest · In Clearing I, in the northeast corner, behind a Cut tree
-pickup keys: 807 pickups, 447 walkthrough rows keyed
+    + Found: Found in Redwood Forest, just East of the exit that leads to Cube Corp · needs Cut
+    = Found: Redwood Forest · In Clearing I, in the northeast corner, behind a Cut tree · In Redwood Forest, just East of the exit that leads to Cube Corp
+items: walkthrough rows added as IT lines: 3
+  Costume Box: Also: Frozen Heights · Speak to your mother in your house
+  TM077 Flame Charge: Found: Route 9 · requires Surf · hidden · In an Underground Pass Access clearing, on the far side of the pond
+  Rockium Z: Found: Victory Road · hidden · In the southeast part of the chamber, hidden in a rock
+items: walkthrough rows kept apart from a line at the same place (unsure): 0
+items: one pickup: TM077 Flame Charge = Found: Route 9 (Autl Woods) · requires Surf · hidden · In an Underground Pass Access clearing, on the far side of the pond, behind a tree
+items: one pickup: Rockium Z = Found: Victory Road 4F · hidden · Ice puzzle ("Torture Chamber"), in the southeast rock
+items: lines relabelled from what they say: Also -> Shop 17, Found -> Also 11, Found -> Shop 15
+pickup keys: 663 pickups, 447 walkthrough rows keyed
 prune: kept 1093 removed 21 pikachu_belle, pikachu_cosplay, pikachu_libre, pikachu_phd, pikachu_pop_star, pikachu_rock_star, cubone_a, zygarde_10, zacian, zacian_crowned, zamazenta, zamazenta_crowned, eternatus, kubfu, urshifu, urshifu_rapid, glastrier, spectrier, calyrex, calyrex_ice_rider, calyrex_shadow_rider
 trainers put in walkthrough order: Vega Split [Cap 26], Mel Split [Cap 36], Maxima Split [Cap 40], Galavan Split [Cap 45], Big Mo Split [Cap 52], Tessy Split [Cap 57]
 item name: Houndoomite -> Houndoominite (2 use(s), Items tab spelling)

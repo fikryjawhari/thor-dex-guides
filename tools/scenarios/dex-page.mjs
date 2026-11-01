@@ -22,7 +22,7 @@ const TYPE = F.t[0];
 const LISTED = P.filter(p => p.t.includes(TYPE));
 const OUTSIDE = P.find((p, i) => !p.t.includes(TYPE) && P.slice(i + 1).some(x => x.t.includes(TYPE)) && P.slice(0, i).some(x => x.t.includes(TYPE)));
 const SIZES = [[260, 316], [260, 350], [480, 392], [537, 424], [832, 424]];
-const DEF = { ab: true, bs: true, sc: false, td: false, wh: false, ev: true, tr: false, mv: true };
+const DEF = { ab: true, bs: true, sc: false, td: false, wh: false, hi: false, ev: true, tr: false, mv: true };
 
 // Scripted scrolls send a wheel first: a press, wheel or key ends hold() (template), as a finger on the screen does.
 // The bar slides (120 ms): wait it out before reading or tapping what it may cover.
@@ -55,7 +55,52 @@ const keepCheck = async (page, act, what) => {
   return { before, after, len };
 };
 
+// Held items: a species whose wild items have % (two or more where the guide has one), rows highest % first.
+// Only a form you can meet in the wild lists them: a base form (first P entry of its dex) or a form with its own P.w.
+const BASE = new Set(P.filter((p, i) => P.findIndex(b => b.dex === p.dex) === i).map(p => p.id));
+const wildForm = p => p.g !== 1 && (BASE.has(p.id) || p.w.length > 0);
+const wildPct = p => wildForm(p) && (p.hi || []).length && p.hi.every(h => Array.isArray(h) && h[1] != null);
+const NOWILD = P.find(p => /^Castform \(/.test(p.n) && (p.hi || []).length && !wildForm(p)) || P.find(p => (p.hi || []).length && !wildForm(p));
+const HELD = P.find(p => wildPct(p) && p.hi.length > 1) || P.find(wildPct);
+const heldRows = p => p.hi.map((h, j) => [...h, j]).sort((a, b) => b[1] - a[1] || a[2] - b[2]).map(([n, pct]) => n + pct + '%');
+const heldSec = page => page.value(String.raw`(()=>{const d=document.querySelector('details.psec[data-s=hi]');return d&&{open:d.open,
+  rows:[...d.querySelectorAll('.phi>div:not(.mut)')].map(r=>r.textContent),heads:[...d.querySelectorAll('.phi>.mut')].map(r=>r.textContent),
+  links:[...d.querySelectorAll('.phi a.itl')].every(a=>a.getAttribute('href').startsWith('#/i/')),old:/Wild held item/.test(document.querySelector('details.psec[data-s=wh]').textContent)}})()`);
 const checks = [
+  {
+    id: 'held',
+    title: 'Held items: wild % from P.hi on forms met in the wild, no trainers part, no section without wild items, open state saved',
+    sizes: SIZE_SMALL, modes: MODES,
+    run: async page => {
+      if (HELD) {
+        await open(page, HELD.id);
+        const h = await heldSec(page);
+        assert(h, 'a Held items section');
+        assert.equal(h.open, false, 'closed by default');
+        assert.equal(h.old, false, 'no Wild held item line under Where to find');
+        assert.deepEqual(h.heads, [], 'no headings: only the wild items');
+        assert.deepEqual(h.rows.slice(0, HELD.hi.length), heldRows(HELD), 'wild items and % from P.hi, highest first');
+        assert(h.links, 'item links');
+        const order = await page.value(`[...document.querySelectorAll('details.psec')].map(d=>d.dataset.s)`);
+        assert.equal(order[order.indexOf('wh') + 1], 'hi', 'right after Where to find');
+        await tapIn(page, 'details.psec[data-s=hi]>summary');
+        assert.deepEqual(await saved(page), { hi: 1 }, 'open state saved by name');
+        await page.settle();
+        await page.assertFits('held items ' + HELD.n);
+      }
+      // Trainers' held items are not here (the item page's Held by has them): a Pokémon whose only held items come from
+      // trainers has no section; nor does a form that has wild items in the data but no wild encounters (Castform Sunny).
+      const pick = await page.value(`(()=>{const tr=p=>(TRUSE[p.id]||[]).some(t=>t.p.some(m=>m.id===p.id&&m.i));
+        return P.find(p=>!(p.hi||[]).length&&tr(p))?.id??null})()`);
+      for (const id of [pick, NOWILD && NOWILD.id]) {
+        if (id == null) continue;
+        await open(page, id);
+        assert.equal(await heldSec(page), null, 'no Held items section: ' + id);
+      }
+      await page.value(`localStorage.removeItem(LS.dex)`);
+      await page.reload();
+    },
+  },
   {
     id: 'sections',
     title: 'defaults, one open state for every Pokémon (saved by name, kept on reload), Collapse all → Reset all → defaults',

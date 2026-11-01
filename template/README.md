@@ -8,7 +8,7 @@ lag rules, scroll restore) are the viewer contract: `.agents/skills/rom-hack-off
 
 ## Item icon helpers
 
-Not yet used by pages: `icon(name, size=24)` returns a decorative inline sheet cell, or `''` for an unmapped exact
+`icon(name, size=24)` returns a decorative inline sheet cell, or `''` for an unmapped exact
 item name; `iconCard(name)` returns its 32 px cell or an empty 32 px spacer. `assemble.py` adds `D.IC` (name to
 zero-based slot), `--item-sheet` and `--item-rows` from the committed per-guide sheets. See
 `sprites/items/sheets/README.md` to regenerate them. No data URI is repeated in rendered markup.
@@ -571,7 +571,7 @@ blocks, three across at most. An opened card starts at its team. One speed per P
 1. Pager at the top (no "‹ All Pokémon"; the rail's Pokéball goes to the list), the top card, Expand all / Collapse all
    (`segBar`, the page-top rule: Collapse all with every section closed reads and acts as **Reset all**, `resetOpen`),
    "Sources disagree" when present (doesn't collapse), then the sections: Abilities, Base stats, Stat calculator, Type
-   defences, Where to find, Evolution, Used by trainers, Moves (`PSECS`; open by default: Abilities, Base stats,
+   defences, Where to find, Held items, Evolution, Used by trainers, Moves (`PSECS`; open by default: Abilities, Base stats,
    Evolution, Moves). One open / closed state for every Pokémon (`LS.dex` `o`), so switching lands on the same boxes.
    Header taps never scroll (`flip`); collapse bars as on the other pages (`bars()`, less the name bar's height).
 2. **Name bar** (`#pbar`): fixed at the top beside the rail, slides in (120 ms) once the top card is off screen:
@@ -585,7 +585,7 @@ blocks, three across at most. An opened card starts at its team. One speed per P
 4. **Forms** (same dex number): `#6 · 3 forms ▾` in the top card; the top card or the bar's sprite / name opens the
    forms menu (sprite, name, type letters; the current one lit); a tap outside closes it. Forms keep their own pages.
 5. **Switching keeps the place** (arrows, forms menu, Evolution rows): the first keyed row under the bar (`data-pk`:
-   `sec:` / `ab:` / `bs:` / `sc:` / `td:` / `wh:<place>#n` / `ev:<id>` / `tr:<trainer key>` / `mv:<move>[#n]`, names,
+   `sec:` / `ab:` / `bs:` / `sc:` / `td:` / `wh:<place>#n` / `hi:w:<item>` / `hi:t:<item>` / `ev:<id>` / `tr:<trainer key>` / `mv:<move>[#n]`, names,
    never positions) lands at the same height on the new page; missing: the nearest of its kind in that section
    (`data-po`: level, stat, slot; else the next name alphabetically), else that section's title, else the next one's.
    At the top: the top. The hashchange handler runs it (`PKEEP`) instead of its snapshot restore; Back and reload use
@@ -602,13 +602,22 @@ blocks, three across at most. An opened card starts at its team. One speed per P
 8. **Stat calculator**, stats down the side: Level and Nature, a row per stat (base, IV, EV when the guide has EVs,
    result; the nature's raised stat red ↑, lowered blue ↓), Total (base total, EVs n / 510), Speed by level.
 9. **Use in calc ▸** sits in the top card under the types (the calculator starts closed).
-10. No word breaks inside a name: sizes fit the widest word in any guide (~6.7 em). Top card under 340 px: the name
+10. **Held items** (`hi`, `heldBlock`; no section when the form holds nothing in the wild): each wild item (`ilink`) and
+    its % from `P.hi`, highest first (no % when the data has none), no heading. Only on a form you can meet in the wild
+    (`wildForm`): a species' base form (its first `P` entry), or another form with wild encounters of its own (`P.w`);
+    never a Mega. Castform's weather forms, Shaymin Sky or a regional form you only get by evolving list none (the data
+    keeps `hi`; the item page's Held by follows the same rule). What trainers hold is on the item page's Held by, not
+    here (rejected: a "Trainers give it" list, 2026-11-01). Where to find has no "Wild held item" line.
+11. No word breaks inside a name: sizes fit the widest word in any guide (~6.7 em). Top card under 340 px: the name
     across the top at 20 px, the 88 px sprite and details under it; wider, the name beside the sprite.
 Scenario: `tools/scenarios/dex-page.mjs`.
 
 **Move page** (`#/m/<index>`, decided 2026-10-31; `MOVE PAGE` in dex.js):
-1. The top card keeps the name, type, category, power / accuracy / PP / priority, description, machine / tutor
-   locations, hack changes and source disagreements. The Pokémon-list filter is "+ Filter" at the right end of the
+1. The top card keeps the name, type, category, power / accuracy / PP / priority, description, the **In battle** box
+   (`MV.b`, the item page's `fxBox`; none without it), "Also TM004 Calm Mind" (`moveTMs`: every TM / HM / TR that
+   teaches it, each an `ilink` to its item page; it replaces the old TM place lines), tutor locations, hack changes and
+   source disagreements. Under it, one **Where to find TM004 (N)** card per TM (`itemWhere`, the item page's card, so
+   the ticks are the same ones). The Pokémon-list filter is "+ Filter" at the right end of the
    Back line (`backLine`: one flex row, the Back line's height, `nowrap` so it never wraps at 260 in kb mode; the user
    on the Thor, 2026-10-31: near the top, few words), not a sentence in the card or below Learned by. The target (`MV.tg`) is a 2 × 3 field: opponents above, You at the left end below, then the adjacent
    and far allies. Solid red cells are all hit; dashed red cells are choices (random / counter targets use the same
@@ -626,7 +635,7 @@ Scenario: `tools/scenarios/dex-page.mjs`.
    or unknown property returns to the Pokémon list; Back and the Pokémon rail tab keep the usual route / position.
 4. Affected by reads only `MI` records containing the move (`m`); Boosted / changed by (`w: 'u'`) opens, Against it
    (`w: 't'`, count of records) starts collapsed. Each is a card with a `.sec`. `interactionRows` groups equal effect
-   text (`e`); every ability links by its `AB` index, item names stay plain until item detail routes exist, and each
+   text (`e`); every ability links by its `AB` index, item names link to their item page (`ilink`), and each
    hack-changed name (`h: 1`) carries the visible word changed. No universal interactions are invented in the UI.
 5. Learned by has a `.sub`: All, Level up / TM / HM / Tutor / Egg / Evo, only methods present, with learn-record
    counts. HM is distinguished from TM by its machine entry in `IT`; a move in both appears in both groups. All
@@ -647,6 +656,61 @@ Scenario: `tools/scenarios/move-page.mjs`, every guide, all viewer sizes in norm
 3. Pokémon with it has the move page's picker (`pickCard` / `bindPick`, shared with Learned by): All / Normal /
    Hidden with counts, only groups present; All shows each group collapsed, picking one shows only it, open; open
    headers stick. Normal = one of `p.a`, Hidden = `p.ha`; a species with it in both is in both. Nothing saved.
+
+**Item page** (`#/i/<item name>`, decided 2026-11-01, `plans/item-pages.md`; `ITEM PAGE` in dex.js, "Item page" in dex.css):
+1. Routed by name (`ihref`: URL-encoded, `'()!*~` too, so the reopen route keeps it); the Items rail tab's page. `itemIdx`
+   builds, once, everything the guide says about each item by name: its `IT` rows (not Useful NPCs or Move Tutors), wild
+   holders (`P.hi` pairs, Mega and form-change forms left out), trainers whose Pokémon or partners hold it, `MI` records
+   with `i`, the Megas it makes (`p.stone`), and every `IX` name. A name it doesn't have: "‹ Back" and "Not found."
+2. Top card: icon (32), name, kind line (its first box and sub-heading, "Held Items · Battle gear"; the sub-heading left
+   out when it repeats the box or the name; no box: "Wild Pokémon hold it" / "Only trainers hold it"), the description
+   (`IX` [0], the word changed when [2]), the **In battle** box (`IX` [1]; accent bar, small-caps label). A Mega Stone has
+   no In battle box: its line `base sprite + name → Mega sprite + name` says it, and a `nu` Mega adds "Not obtainable in
+   <hack>; trainers use it." A TM / HM / TR page is the icon, name, kind line and the move's row (`moveList`) only.
+3. **Where to find (N)**, open: every line of its rows (N = lines). A pickup line (key in `r[5]`) has its tick box and, when
+   a walkthrough row has its key, the stop's name as a link (`SR.jumpPick`: the split, stop and Items section open,
+   search cleared, `land()` on `tr[data-pk]`, or on the stop when that row isn't drawn). Order: unticked pickups, the
+   lines that aren't pickups (wild, repeatable, shops of ordinary items; a one-of-a-kind item's Shop line is a pickup), ticked pickups; set when the page is drawn, so a tap doesn't
+   move the line under the finger.
+4. **Held by (N)**: the ability page's picker (`pickCard` / `bindPick`): Wild (sprite, name, types, % on the right,
+   highest first; no % when the data has none) and Trainers (its Pokémon holding it, name → `#/tr/<k>`, place · box;
+   rivals of the other starters left out). **Moves it affects (N)**, collapsed: `affectsCard`, shared with the ability
+   page. Nothing on the page is saved except ticks.
+5. **Ticks** (`LS.items` → `g: {pickupKey: 1}`, no new key): `tickHas` / `tickSet` / `tickCount` (pickups of this build)
+   / `tickClear` (empties `g`) / `tickBox(key)` (`input.itk[data-pk]`). One change listener on `#app` saves a tap,
+   every copy of that box on screen follows, and `TICKHOOK` functions `(key, on)` redraw what depends on it (`key`
+   null after a clear). Pickup keys are stable (`tools/pickup_keys.py`), so a tick whose key is gone waits in `g`.
+6. **Links** (`ilink`: 18 px icon + name; plain text for a name the guide doesn't know): Items tab rows (TMs and Mega
+   Stones too; tutors keep the move page), walkthrough item rows and Items with no walkthrough place, trainer cards'
+   item, the Pokémon page's wild held items and Mega stone, the move page's Affected by and TM line, search results
+   for items (a Page action). Not links: the calc's item chips and pickers (controls).
+Scenario: `tools/scenarios/item-page.mjs`, every guide, all viewer sizes in normal and `dvkb` modes.
+
+**Items tab** (decided 2026-11-01, `plans/item-pages.md` §5-6; `ITEMS TAB` in dex.js, "Items tab" in dex.css):
+1. Boxes are the kinds, in the data's order (`D.IT`, `tools/itemstd.py` → `BOXES`), as the standard collapsible boxes
+   (Collapsible pages above). Box count = items (a nomerge name counts once); Move Tutors: "N tutors". Sub-headings are
+   the data's (`r[4]`), counted in cards.
+2. Open state by name: `LS.items` `o: {<kind>: 1}`, `s: {<kind>.<sub-heading>: 1}`. Saved before 2026-11-01 by box index
+   (`o` "3", `s` "3.Berries", a `layout`): those entries are dropped once on load and the rest saved back; a name a later
+   build drops waits unused. Ticks (`g`) are the item page's (Item page 5).
+3. **Cards** (the dex-row look, `.list>.row`, so `content-visibility:auto`): icon (or the 32 px spacer), name (item page
+   link), a TM's move type, MISSABLE, "done/total" with 2+ pickups; then the first 3 lines in the item page's order
+   (unticked pickups, other lines, ticked pickups) with their ticks and stop links, then "+N more" (item page). Every
+   pickup ticked: the card fades (.55). A tick redraws the cards of that item (`TICKHOOK`), so the next lines move up.
+   One card per item: a name on several rows of a box is one card with all its lines, except **nomerge** (every row of
+   the name is one pickup line: Unbound's 90 Zygarde Cells), a card per row titled by the place, the rest of the line
+   under it. (The data has no nomerge flag; the template reads it from the rows.)
+4. **Move Tutors**: when the rows carry group headings (RULES `tutor_groups`; Unbound), one card per tutor (rows sharing
+   a place and an unlock, "place · cost · unlock"): the place, "Needs: <unlock>", each move as a link + type + its cost,
+   under the group sub-headings. No groups (Hardlove): the table. Useful NPCs: the table.
+5. **Tick bar** above Expand / Collapse all: "N ticked" (pickups of this build) and, at N > 0, "Clear ticks". The first
+   tap arms it ("Tap again to clear N"); any other tap or a redraw (leaving the tab) disarms; the second clears `g`
+   (`tickClear`) and the hook redraws the cards and the bar. Not pinned: it is at the page top, where nothing covers it.
+6. **Search** (`st.q`): rows whose name or text matches, as cards (tutors: the matching moves of each tutor) under their
+   box names (`.sech`), ticks working. `SR.jumpItem` opens the box and sub-heading by name and lands on `[data-ri~=ri]`.
+7. **Walkthrough item rows** (the stops' Items and Guide info's "Items with no walkthrough place"): the pickup's tick box
+   before the place text (`walkItemText`), the same tick as the cards and the item page. Stop counts stay checklist-only.
+Scenario: `tools/scenarios/items-tab.mjs`, every guide, 260 × 316 in normal and `dvkb` modes.
 
 **Ability marks on the Pokémon page** (the compact moves table, `ownBoosts` / `bindBoosts` in dex.js): a move that one
 of this Pokémon's (this form's) own abilities affects (`MI`, `w: 'u'`, ability in `p.as`) gets an A in an accent dot
