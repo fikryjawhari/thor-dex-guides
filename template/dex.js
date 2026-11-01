@@ -616,11 +616,13 @@ function itemRow(sec,r,ri){const nm=sec.k==='npc'?esc(r[0]):sec.n==='Move Tutors
  return `<tr data-ri="${ri}"><td>${nm}</td><td>${esc(r[1]).replace(/\n/g,'<br>')}${r[3]?'<span class="warn">MISSABLE</span>':''}</td></tr>`;}
 const isCardBox=sec=>sec.k!=='npc'&&sec.n!=='Move Tutors';
 const tutGrouped=sec=>sec.n==='Move Tutors'&&new Set(sec.r.map(r=>r[4])).size>1;
-// Rows per name in a box (2+: one card per row).
+// Names of a box with a card per row: 2+ rows, each one pickup (nomerge). Any other repeat is one card (the first row's).
 const nameRows=sec=>sec.nr??=sec.r.reduce((a,r)=>(a[r[0]]=(a[r[0]]||0)+1,a),{});
+const splitName=(sec,n)=>(sec.ns??={})[n]??=nameRows(sec)[n]>1&&sec.r.every(r=>r[0]!==n||((r[5]||[]).length===1&&!!r[5][0]));
+const cardRows=(sec,ris)=>{const seen=new Set();return ris.filter(ri=>{const n=sec.r[ri][0];if(splitName(sec,n))return true;if(seen.has(n))return false;seen.add(n);return true;});};
 // A card (dex-row look): icon, name, TM type, MISSABLE, done/total for 2+ pickups, its next 3 lines (unticked pickups,
 // other lines, ticked pickups), +N more; faded when every pickup is ticked. TICKHOOK redraws it on a tick.
-function itemCard(si,ri){const sec=D.IT[si],r=sec.r[ri],n=r[0],e=itemOf(n),one=nameRows(sec)[n]>1||!e,h=ihref(n);
+function itemCard(si,ri){const sec=D.IT[si],r=sec.r[ri],n=r[0],e=itemOf(n),one=splitName(sec,n)||!e,h=ihref(n);
  let ls=(one?itemLines({rows:[{r}]}):itemLines(e)).map(x=>({...x,miss:false})),title=n;
  if(one&&ls.length===1){const m=ls[0].l.match(/^(?:Found|Also):\s*([^·]+?)\s*·\s*(.+)$/);if(m){title=m[1];ls=[{...ls[0],l:m[2]}];}}
  const pk=ls.filter(x=>x.k),done=pk.filter(x=>tickHas(x.k)).length,tm=e&&tmMoveOf(e),mv=tm!=null&&MV[tm];
@@ -632,9 +634,9 @@ function tutors(sec,ris){const m=new Map();ris.forEach(ri=>{const p=String(sec.r
 const tutorCards=(sec,ris)=>`<div class="list ilist">${tutors(sec,ris).map(t=>`<div class="row irow tut" data-ri="${t.rs.join(' ')}"><span class="rt"><span class="nm">${esc(t.p)}</span>${t.need?`<span class="mut small tneed">Needs: ${esc(t.need)}</span>`:''}<span class="tmoves">${t.rs.map(ri=>{const r=sec.r[ri],mv=r[2]!=null&&MV[r[2]],c=String(r[1]).split(' · ')[1]||'';
  return `<span class="tm1">${r[2]!=null?`<a href="#/m/${r[2]}">${esc(r[0])}</a>`:esc(r[0])}${mv&&mv.t?' '+ty(mv.t):''}${c?` <span class="tcost">${esc(c)}</span>`:''}</span>`;}).join('')}</span></span></div>`).join('')}</div>`;
 // A box's rows (all, or a search's matches) as cards, tutor cards or a table.
-const boxBody=(si,ris)=>{const sec=D.IT[si];return tutGrouped(sec)?tutorCards(sec,ris):isCardBox(sec)?`<div class="list ilist">${ris.map(ri=>itemCard(si,ri)).join('')}</div>`:`<table class="itbl ix">${ris.map(ri=>itemRow(sec,sec.r[ri],ri)).join('')}</table>`;};
+const boxBody=(si,ris)=>{const sec=D.IT[si];return tutGrouped(sec)?tutorCards(sec,ris):isCardBox(sec)?`<div class="list ilist">${cardRows(sec,ris).map(ri=>itemCard(si,ri)).join('')}</div>`:`<table class="itbl ix">${ris.map(ri=>itemRow(sec,sec.r[ri],ri)).join('')}</table>`;};
 // Box / sub-heading count: items (each row of a nomerge name counts in its sub-heading), tutors for Move Tutors.
-const boxCount=(sec,ris)=>sec.n==='Move Tutors'?tutors(sec,ris).length+' tutors':isCardBox(sec)&&ris.length===sec.r.length?Object.keys(nameRows(sec)).length:ris.length;
+const boxCount=(sec,ris)=>sec.n==='Move Tutors'?tutors(sec,ris).length+' tutors':!isCardBox(sec)?ris.length:ris.length===sec.r.length?Object.keys(nameRows(sec)).length:cardRows(sec,ris).length;
 const tickBar=()=>{const n=tickCount();return `<div class="itbar"><span class="mut small">${n} ticked</span>${n?'<button type="button" class="itclr">Clear ticks</button>':''}</div>`;};
 function listItems(){fil.innerHTML='';const s=st.q;const IT=D.IT||[];
  if(s){app.innerHTML=IT.map((sec,si)=>{const ris=sec.r.map((r,ri)=>ri).filter(ri=>(sec.r[ri][0]+' '+sec.r[ri][1]).toLowerCase().includes(s));

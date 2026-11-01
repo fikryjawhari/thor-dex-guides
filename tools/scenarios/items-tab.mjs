@@ -20,6 +20,9 @@ const isCard = sec => sec.k !== 'npc' && sec.n !== 'Move Tutors';
 const grouped = sec => sec.n === 'Move Tutors' && new Set(sec.r.map(r => r[4])).size > 1;
 const tutorsOf = rows => new Set(rows.map(r => { const p = String(r[1]).split(' · '); return p[0] + '|' + p.slice(2).join(' · '); })).size;
 const nameRows = sec => sec.r.reduce((a, r) => ((a[r[0]] = (a[r[0]] || 0) + 1), a), {});
+// nomerge: 2+ rows of a name in a box, each one pickup line; a card per row. Another repeat is one card.
+const split = (sec, n) => nameRows(sec)[n] > 1 && sec.r.every(r => r[0] !== n || ((r[5] || []).length === 1 && !!r[5][0]));
+const cardCount = (sec, rows) => rows.filter(r => split(sec, r[0])).length + new Set(rows.filter(r => !split(sec, r[0])).map(r => r[0])).size;
 // Every line of an item over all its rows (as the item page and a card read them).
 const rowsOf = {};
 for (const sec of IT) if (isCard(sec)) for (const r of sec.r) (rowsOf[r[0]] ??= []).push(r);
@@ -35,6 +38,7 @@ const walkKeys = new Map();
 data.WK.splits.forEach((sp, si) => sp.st.forEach((st, ti) => (st.it || []).forEach(i => { if (i[4] && !walkKeys.has(i[4])) walkKeys.set(i[4], [si, ti]); })));
 // Sample: a card item with 4+ pickups whose first pickup has a walkthrough row (else the most pickups).
 const cands = IT.flatMap((sec, si) => isCard(sec) ? sec.r.map((r, ri) => ({ si, ri, n: r[0], sec, sub: r[4] })).filter(x => nameRows(sec)[x.n] === 1) : []);
+for (const sec of IT) if (isCard(sec)) for (const n of Object.keys(nameRows(sec))) if (nameRows(sec)[n] > 1 && !split(sec, n)) console.log(`data: ${n} on ${nameRows(sec)[n]} rows of ${sec.n} (one card)`);
 const pkOf = n => lines(n).filter(x => x.k).map(x => x.k);
 const multi = cands.find(x => pkOf(x.n).length >= 4 && walkKeys.has(pkOf(x.n)[0]))
   || [...cands].sort((a, b) => pkOf(b.n).length - pkOf(a.n).length)[0];
@@ -82,13 +86,13 @@ const checks = [
         const subs = [...new Set(sec.r.map(r => r[4]).filter(Boolean))];
         assert.deepEqual(b.subs.map(([s]) => s), subs, `${sec.n}: sub-headings`);
         if (isCard(sec)) {
-          assert.equal(b.cards.length, sec.r.length, `${sec.n}: a card per row`);
+          assert.equal(b.cards.length, cardCount(sec, sec.r), `${sec.n}: a card per item (per pickup for nomerge)`);
           for (const [n, title] of b.cards) {
-            if (nr[n] > 1) { assert.notEqual(title, n, `${sec.n}: a ${n} card is titled by its place`); continue; }
+            if (split(sec, n)) { assert.notEqual(title, n, `${sec.n}: a ${n} card is titled by its place`); continue; }
             assert.equal(title, n, `${sec.n}: card title`);
             assert.ok(!seen.has(n), `${n} twice (${seen.get(n)} and ${sec.n})`); seen.set(n, sec.n);
           }
-          b.subs.forEach(([s, c]) => assert.equal(c, String(sec.r.filter(r => r[4] === s).length), `${sec.n} · ${s}: count`));
+          b.subs.forEach(([s, c]) => assert.equal(c, String(cardCount(sec, sec.r.filter(r => r[4] === s))), `${sec.n} · ${s}: count`));
         } else if (grouped(sec)) {
           assert.equal(b.tut, tutorsOf(sec.r), 'a card per tutor');
           b.subs.forEach(([s, c]) => assert.equal(c, tutorsOf(sec.r.filter(r => r[4] === s)) + ' tutors', `tutors · ${s}: count`));
