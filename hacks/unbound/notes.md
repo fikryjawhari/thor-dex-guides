@@ -190,6 +190,21 @@ Snowball are Held Items. `itemstd.RULES['unbound']`: game order, `keep_sub` (tut
   "Random healing item", Money (₽10,000), Silvally Memory (random), the key items Unbound-Cloud doesn't list.
 - **GID items**: `gid.py` renames Unbound-Cloud's names to IT's (`items.GAME_ITEMS`: Hp Up, Guard Spec, Dream Mist
   (Unbound), Heavy Duty Boots); check.py: every game item that is in IT is spelled as IT spells it (350 of them).
+- **One pickup, two wordings** (2026-11-01, `itemstd.RULES['unbound']['one_pickup']`; the wiki export
+  `.src/unboundwiki/unboundwiki.json`):
+  - TM077 Flame Charge, "Autl Woods" (its TM page and the TMs & HMs table) and "Route 9 · Underground Pass Access
+    clearing, far side of the pond" (the Route 9 page): one pickup. The Route 9 page opens "Route 9, also known as
+    'Autumnal Woods' or Atul Woods", and both say hidden, needs Surf, across the water near the underground-path
+    house. One line, "Route 9 (Autl Woods)".
+  - Rockium Z, "Crystal Peak 4F · Torture Chamber ice puzzle" (the Z-Crystals page) and "Victory Road · southeast
+    part of the chamber, hidden in a rock" (the Victory Road page): one pickup. The Victory Road page's 4F ice puzzle
+    lists "Rockium Z (hidden) 4F ice puzzle, hidden in southeast rock", and its walkthrough (Part 38) slides to "a
+    rock [with] a hidden Rockium-Z" in the last ice puzzle before the League; the Z-Crystals page's "Crystal Peak 4F"
+    names the same puzzle. One line, "Victory Road 4F".
+  - Lunalium / Solganium / Poisonium / Kommonium Z ("Solve the Tablet Puzzle for Mission #007" and the raid-den
+    chamber wording): one pickup each, already one line. The Victory Road page: "Kommonium Z: Inside the Raid Den
+    chamber revealed after the Ancient Tablet puzzle gets solved". The crystal lies in the chamber the tablet opens,
+    so it's not a raid drop: `Found:`.
 
 ### CFRU family (`tools/cfru.py`)
 

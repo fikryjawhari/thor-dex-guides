@@ -208,6 +208,14 @@ not a replacement for omitted methods. No template change or browser sweep in th
   places with none are `NO_WILD` (towns and buildings with no wild encounters: Black City, Black Tower, Join Avenue,
   Lacunosa, Lentimas, Marine Tube, Mistralton, Nuvema, Opelucid, PWT, Plasma Frigate, Pokémon League, Royal Unova,
   Tubeline Bridge); the check asserts every place is one or the other.
+- **Two pickups at one place** (2026-11-01; `tools/item_dupes.py` lists them as "unsure"): Leaf Stone (Lostlorn
+  Forest), Moon Stone (Giant Chasm), PP Max (Route 18), Rare Candy (Victory Road, Route 3), Comet Shard (Dragonspiral
+  Tower), Nugget (Route 14), Rare Bone (Twist Mountain), Star Piece (Route 23), Stardust (Route 4), Blue Shard
+  (Route 17) each have a plain line and a "— Hidden" line. They are two pickups and stay two lines: Item Changes lists
+  both in that area ("Ultra Ball -> Leaf Stone" and "Leaf Stone (Hidden)", ...), and Bulbapedia's B2W2 location pages
+  (fetched 2026-11-01) list each as two separate entries (`display=... ×2`, one of them hidden; Route 4's Stardust is
+  hidden in both versions at two different spots). Link Cable at Driftveil City: "Calcium -> Link Cable" (the
+  vanilla Calcium near the stone bridge) and "Link Cable**" (Challenge only): two.
 
 ### Walkthrough
 `extract/walk.py` (WK), checked in `extract/check.py`. 22 splits = the Trainers boxes (21 caps, then Post-game), 117

@@ -80,6 +80,12 @@ RULES = {
     # nomerge: items that stay one row per place (Unbound's Zygarde Cells)
     'unbound': {'reorder': set(GAME_ORDER_BOXES), 'keep_sub': {'Key Items', 'Move Tutors'}, 'nomerge': {'Zygarde Cell'},
                 'text': {('TMs and HMs', 'TM004 Calm Mind'): 'Shop: Fallshore City Bazaar · Top-left Stall · ₽10,000'},
+                'one_pickup': {     # notes.md → Items: one pickup the sources word as two places
+                    'TM077 Flame Charge': (r'Autl Woods', r'^Found: Route 9 ', 'Found: Route 9 (Autl Woods) · requires Surf · '
+                                           'hidden · In an Underground Pass Access clearing, on the far side of the pond, '
+                                           'behind a tree'),
+                    'Rockium Z': (r'Crystal Peak 4F', r'^Found: Victory Road ', 'Found: Victory Road 4F · hidden · Ice '
+                                  'puzzle ("Torture Chamber"), in the southeast rock')},
                 'tutor_groups': [(r'Shard Tutor', 'Shard tutors'), (r'Gem Family', 'Gem Family'),
                                  (r'Ultimate and Battle Combo|Special Moves|Draco Meteor', 'Special moves'),
                                  (r'Move Tutor [1-4]$', 'Battle Frontier tutors')]},
@@ -622,6 +628,8 @@ def standardise(D, rules=None, report=None):
     D['IT'] = new
     if 'WK' in D:
         walk(D['WK'], entries, new, rules, say)
+    if rules.get('one_pickup'):
+        one_pickup(D, rules['one_pickup'], say)
     relabel_sources(D, say)
     if rules.get('also'):
         relabel_also(D, rules['also'])
@@ -738,6 +746,36 @@ def source_label(line, explain=False):
 
 def _numbers(text):
     return {n.replace(',', '') for n in re.findall(r'\d[\d,]*', text)}
+
+
+def one_pickup(D, pairs, say):
+    """RULES `one_pickup` {item: (line A, line B, merged)}: two lines of an item the sources word as two places that
+    are one pickup (a place's other name, the same puzzle under two area names; notes.md has the source for each).
+    A and B are regexes over the lines; both become `merged`, in Items and the walkthrough."""
+    moved = {}
+    for box in D['IT']:
+        for row in box['r']:
+            if row[0] not in pairs:
+                continue
+            a, b, merged = pairs[row[0]]
+            lines = row[1].splitlines()
+            hit = [line for line in lines if re.search(a, line) or re.search(b, line)]
+            if len(hit) != 2:
+                if merged not in lines:
+                    say('items: one_pickup rule matched', len(hit), 'lines:', row[0])
+                continue
+            out = []
+            for line in lines:
+                line = merged if line in hit else line
+                if line not in out:
+                    out.append(line)
+            row[1] = '\n'.join(sort_lines(out))
+            moved.update({(box['n'], row[0], line): merged for line in hit})
+            say('items: one pickup:', row[0], '=', merged)
+    if 'WK' in D:
+        for rows in walk_rows(D['WK']):
+            for row in rows:
+                row[2] = moved.get((row[0], row[1], row[2]), row[2])
 
 
 def relabel_sources(D, say):
