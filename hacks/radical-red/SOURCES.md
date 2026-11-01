@@ -90,3 +90,10 @@ TODO: document game files.
 ## Source checks
 
 TODO: document source checks.
+
+## Save format references (unit 7, 2026-11-02; read online, not fetched into `.src/`)
+
+- RR growth rates: `Base_Stats.c` from ydarissep/Radical-Red-Pokedex `65712ed` (2023-08-04), sha256 starting `2cd667a4`;
+  derived into `extract/growth.json`.
+- RR save format: RadicalHex (jajaa17/RadicalHex `3697412`, GPLv3, `src/core.js`) and PKForge
+  (sofianeelhor/PKForge `2df0443`, GPLv3, `RadicalRedFormat.cs`). Reference only; no code copied.
