@@ -39,6 +39,8 @@ Each unit adds the decisions it had to take to **Decisions taken in units** belo
 
 (units append here: `- [unit] decision (source)`)
 
+- [unit 2] Leave `cfg.calc` disabled pending the main chat's shared-engine decision: Toxic Boost/Flare Boost status-chip immunity needs a conditional residual hook; Hardcore implies no player EVs, but global `evs:false` also erases Ghost Marowak's 252 HP EVs (RR changes v3.1 lines 46/49; Showdown gen9rr abilities.ts:240/691; Hardcore Main!E95; tools/calc/src/adapter.js:199,507-557).
+
 ## Units
 
 Each unit: a Sol agent in its own worktree, branch off `worktree-radical-red` at the SHA given in its brief, commits
