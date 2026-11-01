@@ -26,7 +26,7 @@ No Pokémon yet. The family notes below describe format detection and validation
 | --- | --- | --- |
 | Gen 3 (pokeemerald / pokefirered) | SoulGold (expansion, like EI) | 14 sections in two slots (newest by save index); each Pokémon's 4 blocks ordered by personality value and XOR-encrypted with it. Expansion hacks change the struct per hack. |
 | CFRU | Radical Red | `cfru.js` with its own profile (signature, boxes, randomiser flags, experience table; cfru below) and GID. |
-| Gen 4 (Pt / HGSS) | HeartGold Retiled, Renegade Platinum | As `gen4.js`; vanilla-engine hacks differ in the species / form numbers. |
+| Gen 4 (Pt / HGSS) | Heartfelt Gold, Renegade Platinum | As `gen4.js`; vanilla-engine hacks differ in the species / form numbers. |
 | Gen 6/7 | Meissa Moon, Navy Sapphire | `gen67.js` as is, with the guide's own `GID`. |
 
 The hard part of each new guide is the ID tables, not the reader: the data has no game IDs, so the extract writes
@@ -243,7 +243,7 @@ from experience with `GID.gr` (keyed `species:form`, falling back to form 0), gr
 hack's `GID.sp` maps the forms (`PokeFormDataTbl.c`: form n of a base is its n-th entry). A Mega is reverted before
 saving, so a save never holds one.
 
-Other Gen 4 hacks (Renegade Platinum, HeartGold Retiled) need their own layout row: Platinum's blocks, vanilla HGSS's
+Other Gen 4 hacks (Renegade Platinum, Heartfelt Gold) need their own layout row: Platinum's blocks, vanilla HGSS's
 sizes, the box count. Add it to `LAYOUT` (make it a list) once a save of that game is in hand to confirm the sizes.
 
 ## gen67: decrypted 3DS main saves
