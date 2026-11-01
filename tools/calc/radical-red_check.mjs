@@ -13,7 +13,7 @@ const data = {
     'Water Compaction', 'Fatal Precision', 'Primal Armor', 'Liquid Voice', 'Reckless',
     'ORAORAORAORA', 'ORAORAORAORA!', 'Bone Zone', 'Bone Zone ', 'Self Sufficient',
     'Blubber Defense', 'Cash Splash', 'WaterCompaction', 'Levitate', 'Sharpness',
-    'Bulletproof', 'Mega Launcher', 'Thick Fat', 'Solar Power', 'Rivalry', 'Klutz', 'Blazing Soul'].map(name => [name, '']),
+    'Bulletproof', 'Mega Launcher', 'Thick Fat', 'Solar Power', 'Rivalry', 'Klutz', 'Blazing Soul', 'Ice Scales', 'Mold Breaker'].map(name => [name, '']),
   M: ['Tackle', 'Ember'],
   MV: [
     {bp: 40, t: 'Normal', c: 'Physical', f: ['contact']},
@@ -293,7 +293,12 @@ check('Beat Up uses flat power 25 for every selected strike', 'Showdown moves.ts
 check('Shell Side Arm stays Special and bypasses defensive abilities', 'Showdown moves.ts:888-905', () => {
   const attacker = holder('', {stg: [0, 6, 0, 0, 0, 0]});
   assert.deepEqual(result(attacker, 'Shell Side Arm').rolls, expected(100));
-  assert.deepEqual(result(attacker, 'Shell Side Arm', target({ab: ability('Thick Fat')})).rolls, expected(100));
+  assert.deepEqual(result(attacker, 'Shell Side Arm', target({ab: ability('Ice Scales')})).rolls, expected(100));
+});
+check('Mold Breaker bypasses custom defenses, but not Primal Armor', rr('134-165'), () => {
+  assert.deepEqual(result(holder('Mold Breaker'), 'Rock Throw', target({ab: ability('Mountaineer')})).rolls, expected(50));
+  assert.deepEqual(result(holder('Mold Breaker'), 'Water Gun', target({ab: ability('Water Compaction')})).rolls, expected(40));
+  assert.deepEqual(result(holder('Mold Breaker'), 'Ember', target({ab: ability('Primal Armor'), ty: ['Grass']})).rolls, expected(40, {effectiveness: 2, final: 2048}));
 });
 check('Sonic Slash exact speed thresholds', rr('741-745'), () => {
   for (const [speed, power] of [[239, 80], [240, 120], [359, 120], [360, 140]]) {
