@@ -141,6 +141,7 @@ items: TM place and shop retained: TM70 Flash ['Found: Sprout Tower', 'Shop: Aza
 items: walkthrough rows matched to an Items line at the same place: 0
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
+items: lines relabelled from what they say: none
 pickup keys: 300 pickups, 275 walkthrough rows keyed
 trainers put in walkthrough order: Morty Split [Cap 39]
 item text: 2 own, 212 pooled, 0 from the wiki, 14 made up, 32 Mega Stone standard, 0 with no description

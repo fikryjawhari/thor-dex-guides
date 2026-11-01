@@ -205,6 +205,7 @@ items: walkthrough rows matched to an Items line at the same place: 47
     = Shop: North Boulevard · Mart, right cashier
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
+items: lines relabelled from what they say: Found -> Also 5
 pickup keys: 230 pickups, 220 walkthrough rows keyed
 availability: obtainable 763 trainer/partner species 594 kept 782 removed 4
   removed species IDs: mega-mewtwo-y, wormadam-sandy, wormadam-trash, floette-eternal

@@ -107,6 +107,21 @@ class ItemsTest(unittest.TestCase):
         itemstd.standardise(value)
         self.assertEqual([row[0] for row in value['IT'][0]['r']], ['Deep Sea Scale', 'Deep Sea Tooth'])
 
+    def test_source_labels(self):
+        label = itemstd.source_label
+        self.assertEqual(label('Found: Dehara City · Speak to the man outside the Game Corner'), 'Also')
+        self.assertEqual(label('Found: Route 4 Raid Den · raid drop'), 'Also')
+        self.assertEqual(label('Also: Route 5 · hidden · in the grass'), 'Found')
+        self.assertEqual(label('Found: Frost Mountain · 2F accessed from the ladder near the Painter'), 'Found')
+        self.assertEqual(label('Also: Festival Plaza'), 'Also')                    # no hint: the extract's label
+        self.assertEqual(label('Found: Acquired in the Dehara City Game Corner for 2,000 Coins'), 'Shop')
+        value = data([('TMs', [['TM053 Energy Ball', 'Also: Bought from the Seaport City TM merchant for 20,000 Poké Dollars', 1]]),
+                      ('Shops', [['TM053 Energy Ball', 'Seaport City Bazaar · ₽20,000', None, 0, 'TMs']])],
+                     [['TMs and HMs', 'TM053 Energy Ball', 'Also: Bought from the Seaport City TM merchant for 20,000 Poké Dollars', 1]])
+        itemstd.standardise(value)
+        self.assertEqual(value['IT'][0]['r'][0][1], 'Shop: Seaport City Bazaar · ₽20,000')
+        self.assertEqual(value['WK']['splits'][0]['st'][0]['it'][0][2], 'Shop: Seaport City Bazaar · ₽20,000')
+
 
 if __name__ == '__main__':
     unittest.main()

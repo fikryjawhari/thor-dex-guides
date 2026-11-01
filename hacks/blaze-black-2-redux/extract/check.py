@@ -170,10 +170,10 @@ for source in item_doc['placements']:
               'items: hidden/quantity at doc line %d' % source['line'])
         check(record['mode'] == source['mode'] and record['available'] == (source['mode'] != 'Easy/Normal'),
               'items: Challenge availability at doc line %d' % source['line'])
-        check(any(line.startswith('Found: ' + record['area']) for text in text_by_item.get(record['item'], [])
+        check(any(line.startswith(('Found: ' + record['area'], 'Also: ' + record['area'], 'Shop: ' + record['area'])) for text in text_by_item.get(record['item'], [])
                   for line in text.splitlines()), 'items: final IT lost doc line %d' % source['line'])
         if record['mode'] == 'Easy/Normal':
-            check(any(line.startswith('Found: ' + record['area']) and 'Easy/Normal only, not in Challenge' in line
+            check(any(line.startswith(('Found: ' + record['area'], 'Also: ' + record['area'], 'Shop: ' + record['area'])) and 'Easy/Normal only, not in Challenge' in line
                       for text in text_by_item[record['item']] for line in text.splitlines()),
                   'items: Easy/Normal-only placement flagged at doc line %d' % source['line'])
 valuables = {row[0]: row[4] for box in D['IT'] if box['n'] == 'Valuables' for row in box['r']}
@@ -435,7 +435,7 @@ cards = [t['k'] for g in D['TR']['g'] for s in g['sec'] for t in s['tr']]
 check(sorted(placed) == sorted(cards) and len(set(placed)) == len(placed), 'walkthrough: every trainer card in exactly one stop')
 check(not {a for a in range(len(D['AR']))} - {a for _, st in stops for a in st['a']}, 'walkthrough: every AR area in a stop')
 lines = sorted((box['n'], row[0], line) for box in D['IT'] for row in box['r'] for line in row[1].splitlines()
-               if line.startswith(('Shop: ', 'Found: ')))
+               if line.startswith(('Shop: ', 'Found: ')) or line.startswith('Also: ') and ' — ' in line)   # doc pickups relabelled from what they say (itemstd.source_label); not Pickup / Use notes
 walked = sorted((r[0], r[1], r[2]) for _, st in stops for r in st['it']) + [(r[0], r[1], r[2]) for r in WK['np']]
 check(sorted(walked) == lines, 'walkthrough: every Found / shop line in exactly one stop or WK.np')
 check(not WK['np'], 'walkthrough: no unplaced item lines (%d)' % len(WK['np']))

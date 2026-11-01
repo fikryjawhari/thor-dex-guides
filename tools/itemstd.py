@@ -618,6 +618,7 @@ def standardise(D, rules=None, report=None):
     D['IT'] = new
     if 'WK' in D:
         walk(D['WK'], entries, new, rules, say)
+    relabel_sources(D, say)
     if rules.get('also'):
         relabel_also(D, rules['also'])
     sort_rows(D, rules)
@@ -674,6 +675,104 @@ def relabel_also(D, items):
             for r in rows:
                 if r[1] in items:
                     r[2] = fix(r[2])
+
+
+# ---- one label rule for every pickup line (after merging) ---------------------------------------------------------
+_BOUGHT = re.compile(r"\b(?:sold by|bought|buyable|buy|purchased?)\b|^(?:post[- ]?game )?mart\b|\bfor [\d,]+ ?(?:coins|bp|battle points|"
+                     r"pok[eé](?:mon)? ?dollars|pokemon dollars|₽)", re.I)
+_GIVEN = re.compile(r"\b(?:given|gives?|gift(?:ed)?|rewards?|receive[sd]?|obtain(?:ed)? from|trade[sd]?|trading|"
+                    r"in exchange|exchange[sd]? for|prizes?|raid drop|boss reward|held by|events?|mystery gift|"
+                    r"speak to|talk to|talking to|speaking to|show(?:ing)? (?:him|her|them|it|the|a|an|one|all|your)\b|"
+                    r"complete mission|after (?:defeating|beating) (?:him|her|them)|left behind by|"
+                    r"raffle|lottery|selectable|choose|chosen starter|password)\b", re.I)
+_GIVEN_START = re.compile(r'^(?:Mission #\d+|Defeat |Beat |Win |Obtain |Complete )')
+_PERSON = re.compile(r"\bfrom (?:the |a |an )?(?:[\w'.é-]+ ){0,3}?(?:man|men|woman|women|girl|boy|kid|lady|gentleman|"
+                     r"guy|npc|elder|scientist|clown|breeder|trainer|worker|clerk|maid|ranger|hiker|fisherman|swimmer|"
+                     r"youngster|lass|chairman|professor|prof|aide|assistant|nurse|rival|leader|champion|captain|"
+                     r"grunt|admin|officer|policeman|teacher|child|father|mother|dad|mom|brother|sister|guard|owner|"
+                     r"chef|baker|artist|painter|creator|tutor|dude|belt|harlequin|maniac|collector|director|president|"
+                     r"manager|receptionist|member|beauty|gentleman|veteran|expert|ace)s?\b", re.I)
+_ACCESS = re.compile(r"\b(?:accessed|accessible|reached|reachable|visible|seen|across|away|coming|leading|access)\s*$", re.I)
+
+
+def _person(text):
+    """A "from <person>" that isn't a way in ("accessed from the ladder near the Painter")."""
+    return any(not _ACCESS.search(text[:m.start()]) and not re.search(r'\b(?:near|by|next to|behind)\b', m.group())
+               for m in _PERSON.finditer(text))
+
+
+_NAMED = re.compile(r"\bfrom ?([A-Z][a-z]+)(?:/[A-Z][a-z]+)?\b(?! (?:City|Town|Route|Cave|Island|Forest|Woods|Mountain|"
+                    r"Road|Path|Tower|Village|Lake|Bay|Beach|Gate|Bridge|Tunnel|Pass|Peak|Fields|Ruins|Volcano|"
+                    r"Desert|Sewers?|Corp|Base|Park|Garden|Hill|Mt|Mount|Area|Side|Plaza|Valley|Island)\b)")
+_PLACEWORD = {'Route', 'Cube', 'Crystal', 'Frost', 'The', 'Underground', 'Victory', 'Mt', 'Mount'}
+_FOUND = re.compile(r"\b(?:hidden|on the ground|item ?ball|poké ?ball on|dig(?:ging)? spot|dig|rock smash|smashed rock|"
+                    r"headbutt|search(?:ing)? the|in the (?:grass|water|corner|north|south|east|west)|on (?:a|the) "
+                    r"(?:ledge|rock|island|beach|cliff|platform|balcony|path)|lying|pick(?:ed)? up|itemfinder|dowsing)\b",
+                    re.I)
+
+
+def source_label(line, explain=False):
+    """The label a Found / Also pickup line takes from what it says (one rule for every guide, after merging):
+    `Shop:` bought (money, coins, BP); `Also:` given, a reward, traded, a prize, a raid drop, held by a gift or traded
+    Pokémon, an event; `Found:` lying in the world (ground, hidden, a ball, a rock or tree, a dig spot). A line with
+    no hint either way keeps the extract's label (it knew: "Festival Plaza", "Poké Pelago")."""
+    m = _LABEL.match(line)
+    if not m or m.group(1) not in ('Found', 'Also'):
+        return (m and m.group(1), 'other') if explain else (m and m.group(1))
+    text = body(line)
+    named = [n for n in _NAMED.findall(text) if n not in _PLACEWORD]
+    if _BOUGHT.search(text) and not re.search(r"\b(?:gives?|give|given|gift)\b", text, re.I):
+        out = 'Shop', 'bought'
+    elif _GIVEN.search(text) or _person(text) or named or any(_GIVEN_START.match(seg) for seg in re.split(r' · | — |; |\. |, ', text)):
+        out = 'Also', 'given'
+    elif _FOUND.search(text):
+        out = 'Found', 'found'
+    else:
+        out = m.group(1), 'kept'
+    return out if explain else out[0]
+
+
+def _numbers(text):
+    return {n.replace(',', '') for n in re.findall(r'\d[\d,]*', text)}
+
+
+def relabel_sources(D, say):
+    """Every Found / Also line of Items and the walkthrough takes its label from what it says (source_label), after
+    the merging. A line that turns out to be a purchase joins the item's Shop line at the same place or price ("Bought
+    from the Seaport City TM merchant for 20,000" / "Shop: Seaport City Bazaar · ₽20,000"), or becomes its Shop line."""
+    moved, counts = {}, {}
+    for box in D['IT']:
+        if box['n'] in ('Move Tutors', 'Useful NPCs'):
+            continue
+        for row in box['r']:
+            lines = row[1].splitlines()
+            shops = [line for line in lines if line.startswith('Shop:')]
+            out = []
+            for line in lines:
+                label = source_label(line)
+                new = line
+                if label and not line.startswith(label + ':'):
+                    new = label + ': ' + line[_LABEL.match(line).end():].strip()
+                    if label == 'Shop':
+                        twin = next((shop for shop in shops if same_place(new, shop)
+                                     or _numbers(body(new)) & _numbers(body(shop)) - {'1'}), None)
+                        new = twin or new
+                    moved[(box['n'], row[0], line)] = new
+                    counts[line.split(':')[0] + ' -> ' + new.split(':')[0]] = counts.get(line.split(':')[0] + ' -> ' + new.split(':')[0], 0) + 1
+                if new not in out:
+                    out.append(new)
+            row[1] = '\n'.join(sort_lines(out))
+    if 'WK' in D:
+        for rows in walk_rows(D['WK']):
+            for row in rows:
+                row[2] = moved.get((row[0], row[1], row[2]), row[2])
+            seen, keep = set(), []
+            for row in rows:
+                if tuple(map(str, row[:4])) not in seen:
+                    seen.add(tuple(map(str, row[:4])))
+                    keep.append(row)
+            rows[:] = keep
+    say('items: lines relabelled from what they say:', ', '.join(f'{k} {v}' for k, v in sorted(counts.items())) or 'none')
 
 
 def already(row, std):
