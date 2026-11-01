@@ -283,3 +283,11 @@ official Drive/ZIP for EVless documentation and four hzla repository trees for B
 scripts/reports are in `.tmp/bb2r-hzla/`, raw inputs/JSON in `.src/repos/hzla/`; neither is committed. No oracle
 engine executed; runtime damage checks, the full trainer identity map and exhaustive EVless patch validation
 are follow-ups for their respective units, not established by this audit.
+
+## ROM (the user's dump, 2026-11-01)
+
+The user's Black 2 Redux Complete EVless v1.4.1 (`IREO`, Black 2 header) sits in `.src/rom/` (git-ignored, read only,
+never committed). `tools/ndsrom.py` reads its file table and NARCs; `extract/held_items.py` reads the personal NARC
+`a/0/1/6` (709 entries of 76 bytes, then a filler table) into `extract/held_items.json`, and `extract/item_desc.py` reads
+the text NARC `a/0/0/2` (member 63 descriptions, 64 names) into `extract/item_desc.json`. Both run without the ROM
+once their JSON is committed; rerun them after a ROM update, then `build.py`.
