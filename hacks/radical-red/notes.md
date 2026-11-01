@@ -14,86 +14,88 @@ TODO: document sources and rules.
 
 ### Damage calc
 
-Unit 2 (`rr-calc`, base `3400658`, 2026-11-02) is **blocked, not implemented**.
-Stop at the first missing shared-engine mechanic, per the brief. Leave `cfg.calc`
-disabled; no shared-engine/template edits are authorised. This is a partial
-inventory checkpoint, not an accepted or complete profile.
+Unit 2 (rounds 1-3, sessions `rr-calc` / `rr-calc3`, 2026-11-02). Profile: `hack.json` → `cfg.calc`; fixtures:
+`tools/calc/radical-red_check.mjs` (synthetic Mew data, no `data.json` needed; part of `npm test --prefix tools/calc`).
 
-#### Sources and inventory checkpoint
+**Sources** (paths under `.src/`): RR Showdown `repos/pokemon-showdown` @ `54955790` (`data/mods/gen9rr/*.ts`,
+"Showdown" below), RR calc `repos/damage-calc` @ `7f354003` (`calc/src/mechanics/gen789.ts`, `util.ts`: the oracle,
+"RR calc" below), the official dex `repos/Radical-Red-Pokedex/data.js` (what exists in 4.1), the changelogs in
+`drive/` and the Hardcore sheet's Main tab (`trainers-hardcore.xlsx`). hzla's `radredhc` backup
+(`repos/Dynamic-Calc-Decomps/backups/title_to_backup_mappings.js:40`) was not run. Showdown entries that are not in
+4.1's `data.js` (13 abilities such as Vocalizer / Jump Scare, Council Orb) and Megas 4.1 doesn't have (Duraludon:
+removed, 4.1 changelog line 14; Grimmsnarl: the Grimmsnite item exists but no Mega form) are left out. Where RR calc
+and Showdown disagree, the game's own description decides (Draco Barrage).
 
-Source paths below are relative to `.src/`. RR Showdown is pinned at
-`54955790eb71a0fb0a881850f1e8afed3bfe25bd`; RR calc at
-`7f3540035176b3db4386871956eec1c309aea26e`. These are reference code, not game
-source. Check version-sensitive changes against the release changelogs before
-including newer Showdown additions. hzla's backup mapping identifies 4.1 Hardcore
-as `radredhc` (`repos/Dynamic-Calc-Decomps/backups/title_to_backup_mappings.js:40`);
-its engine was not fetched or executed by this unit.
+**Base**: `cfru` (Gen 8 damage, Gen 6+ type chart: `data.js` types match it exactly), Megas and Z-moves on,
+statuses restated with `frz` labelled Frostbite. Field: the `cfru` controls, Snow instead of Hail, plus two toggles
+(Illusion intact; First turn out for Bull Rush / Quill Rush). `setterStays: true`: Hardcore Main!E10 makes every
+AI-set weather and terrain permanent, so a departing setter leaves its layer (the player's own setters follow the same
+switch; in the game theirs last 5 turns, which the calc does not count). Bosses' own permanent fields come from unit 6's
+trainer `field` records. Player EVs: Main!E95 turns on Minimal Grinding (no player EVs) and bosses have none except
+Ghost Marowak (252 HP). As in Photonic Sun's EV-less play, EVs stay on (`cfg.evs`, `cfg.calc.evs`): player sets
+default to 0 and a trainer's EVs count. Names: the profile uses the official names `tools/cfru.py` gives (unit 1) and
+also the raw `data.js` spellings (WaterCompaction, Bone Zone with its trailing space, Neutralize Gas, Inferno Parade,
+...), harmless once the names are standard. Move effects sit in `over.effects` in `hack.json` until `data.json`
+exists (`effects_check.mjs` loads a guide's `data.json` for `calc_effects.json`); the finishing unit moves them there.
 
-| Mechanic inspected | Source | Base / remaining work |
-| --- | --- | --- |
-| Toxic Boost: physical power x1.5 when poisoned; no poison or toxic chip | RR calc `calc/src/mechanics/gen789.ts:1088`; Showdown `data/mods/gen9rr/abilities.ts:691`; `drive/All Pokemon Changes v3.1  - Radical Red.txt:46` | Native power boost works; **status-chip immunity missing**. First blocker. |
-| Flare Boost: special power x1.5 when burned; no burn chip | RR calc `gen789.ts:1086`; Showdown `abilities.ts:240`; changes v3.1 `:49` | Native power boost works; **status-chip immunity missing**. Same blocker. |
-| Freeze is Frostbite: special damage halved and end-turn chip | `drive/Changelog up to v4.0 - Radical Red.txt:843`; RR calc `gen789.ts:553`, `util.ts:540`; Showdown `conditions.ts:2` | Base lacks the penalty; needs status/roll/residual overrides. Thick Fat's conditional residual divisor also needs audit and the missing residual facility. |
-| Snow replaces Hail: no chip, Ice Defense x1.5 | changelog up to v4.0 `:14`; RR calc `gen789.ts:1460`; Showdown `conditions.ts:37` (internal Hail) | Gen 8 base exposes Hail. Needs explicit weather/Defense handling, not vanilla Hail chip. |
-| Iron Fist x1.3, no Wicked Blow boost | changes v3.1 `:43`; RR calc `gen789.ts:1130`; Showdown `abilities.ts:342` | Disable/replace native x1.2; audit flags. Not implemented. |
-| ORAORAORAORA: single-strike punches gain a half-damage second hit | Showdown `abilities.ts:381`; RR calc `gen789.ts:588`, `:1571` | Existing `hits` and per-hit phases are intended for this (engine README); not yet profiled or tested. |
-| Hardcore AI weather/terrain permanent | `trainers-hardcore.xlsx`, Main!E10 | Trainer field locks, not permanent player-set weather. Per-boss setter records need unit 6 review. |
-| Defog/Steel Roller/Ice Spinner/Splintered Stormshards cannot remove terrain | Main!E12 | Stateful action/field-lock audit required. Not implemented. |
-| Rapid Spin no Speed boost; no player omniboost procs | Main!E28, E30 | Stateful effects need profile audit, not just damage multipliers. |
-| Ability swaps and exceptions | Main!E102:AJ134 | Player legality, not global boss-effect removal. Exceptions include Spinda Contrary, Comfey Triage and Espathra Speed Boost. |
-| Item restrictions/location swaps and banned moves | Main!E14:E40, E137:X178 | Availability, not permission to disable enemy held items or moves. |
-| Hardcore auto-enables Minimal Grinding; no EVs except Ghost Marowak's 252 HP | Main!E95 | Disable player EV entry, but preserve the boss exception: global `evs:false` currently zeros trainer EVs too (`tools/calc/src/adapter.js:199`). Needs main-chat review. |
+**Engine change** (the only one, authorised by the main chat): `over.abilities[name].statusImmune` (status keys whose
+end-of-turn chip the ability stops; `tools/calc/README.md` → Engine overrides; `test.mjs` "optional ability status
+immunity"). Profiles without it behave as before (regression sweep below).
 
-All remaining changed/new abilities, moves and items, type chart, critical hits,
-field controls and negative/rounding fixtures remain unaudited. Do not infer
-mechanical support from a display label. No `calc_effects.json` was created.
+**Inventory** (everything 4.1 adds or changes that bears on damage, Speed or the fight log; counts below):
 
-#### Shared-engine blocker
+| Group | Done by the profile (source; each has a fixture in radical-red_check) |
+| --- | --- |
+| Status-chip abilities | Toxic Boost (no psn / tox chip), Flare Boost (no burn chip): native boost + `statusImmune` (changes v3.1:46,49; Showdown abilities.ts:240,691) |
+| Power abilities | Iron Fist 1.3x, not Wicked Blow; Striker 1.3x kicks; Illusion 1.3x while intact; Reckless incl. the Explosion family; Liquid Voice 1.2x; Rivalry 1.25x same gender, no penalty; Sharpness through RR's slicing flags (RR calc gen789.ts:1093,1130-1167; Showdown abilities.ts:324-353,533-555) |
+| Attack abilities | Feline Prowess 2x SpA; Sage Power 1.5x SpA; Bull / Quill Rush 1.2x Atk on the first turn; Defeatist at 1/3 HP; Solar Power with no sun chip; Flower Gift: Cherrim's own Atk in Sun only, no SpD / ally boost (gen789.ts:1294-1349,1404; Showdown abilities.ts:93,170,230,251,556,665) |
+| Type / final abilities | Corrosion (Poison hits Steel), Mountaineer (Rock immune), Water Compaction (Water halved), Fatal Precision 1.2x SE, Primal Armor 0.5x SE (Mold Breaker doesn't bypass it), Bone Zone (bone moves ignore immunity, 2x when resisted), Blubber Defense = Multiscale, Cash Splash = Water Bubble, Mold Breaker's exceptions (gen789.ts:134-165,299,1027,1355,1638,1646,1677; Showdown abilities.ts:60-152,364,457,716) |
+| Other abilities | ORAORAORAORA! half-power second punch; Blazing Soul +1 Fire priority at full HP; Self Sufficient 1/16 heal; Bad Company no recoil (= Rock Head); Frozen Mist = Shield Dust, Valiant Shield = Dauntless Shield; Electromrphosis / Neutralize Gas / Wandering Soul = their official names (gen789.ts:588,1571; Showdown abilities.ts:2,51,381,638) |
+| Statuses / weather | Frostbite: special damage halved (not Facade), 1/16 chip, Facade 2x; Snow: Ice Def 1.5x, no chip (changelog to v4.0:14; gen789.ts:553,992,1460; util.ts:540) |
+| Moves (76 entries) | RR flags (kick, slicing, bullet, pulse, bone, punch; 41 moves); crit ratios (Drill Peck, Razor Shell, Snipe Shot, Zippy Zap); recoil (Volt Tackle 1/4, Chloroblast 1/2, Draco Barrage 1/3); Beat Up flat 25; Triple Kick 20 × hit; Shell Side Arm Special and ability-ignoring; the Explosion family halves Defense; Raging Bull / Multi-Attack take the user's first type; Sonic Slash 80 / 120 / 140 by speed ratio; Bitter Malice / Barb Barrage / Infernal Parade 2x on a status; Draco Barrage hits Fairy and turns Physical when boosted Atk > SpA; changed effects (Acupressure, Muddy Water, Octazooka, Ice Hammer, Razor Shell, Shell Side Arm, Charge Beam 100% SpA +1) (Showdown gen9rr/moves.ts; gen789.ts:211,741-763; util.ts:167) |
+| Hardcore rules | Rapid Spin: no Speed boost (Main!E28); Ice Spinner / Steel Roller / Splintered Stormshards leave terrain (Main!E12); permanent AI fields (Main!E10, `setterStays`) |
+| Items | Gems 1.5x (all 18); Electirizer (Electivire's Fighting 1.5x), Burnt Seed (Sunflora's Fire 1.5x); Leek Stick +1 / +2 crit (Farfetch'd / Sirfetch'd); fling powers (Adamant Orb, Reaper Cloth, Leek Stick, Link Cable, Honey); 15 RR Mega Stones as Smogon's `{base: mega}` records, so Knock Off isn't boosted against them (Applite serves Flapple and Appletun; the old string form let it boost) (gen789.ts:1193-1199; Showdown items.ts:133,244,902-1168) |
 
-`tools/calc/src/adapter.js:507` is compiled into `template/calc/engine.js`.
-Lines 547-555 always apply ordinary poison/toxic/burn except Poison Heal,
-Magic Guard and Heatproof. Toxic Boost and Flare Boost must retain the native
-power effects but take zero damage from their matching statuses.
-`profile.residual.status` is one fixed tuple per status, independent of ability;
-`profile.residual.abilities` only adds a fixed per-ability tuple. Damage-phase
-rules never run inside `residual()`. There is no conditional suppression hook.
-A compensating heal fails toxic escalation, odd-HP rounding and healthy holders.
-Aliasing to Magic Guard incorrectly prevents sand and other indirect damage.
+Done by the base with no entry: Protean / Libero (every move), Intrepid Sword / Dauntless Shield (every entry: the
+calc's entry toggle), Tera Shell, Protosynthesis, As One, Sharpness (1.5x; RR's slicing list is the profile's
+flags), Shield Dust (secondaries; hazards below), Adamant Orb (base Dialga only; it turns Primal on entry),
+Thick Club, plates / Z-crystals, the type chart, crits.
 
-Main chat must decide whether to authorise a generic conditional residual hook
-with shared tests/rebuild, or explicitly accept unsupported effects. Do not ship
-ordinary Toxic Boost/Flare Boost as correct RR mechanics. Conditional Frostbite
-chip is another likely consumer, but reconcile the final 4.1 Thick Fat rule first.
+Labels only (no damage effect in the calc): Battle Bond, Emergency Exit, Forecast, Ice Body, Illuminate, Phoenix
+Down, Pressure, Schooling, Truant, Zen Mode, Alchemic Power; Reaper Cloth / BrightPowder / Lax Incense accuracy,
+King's Rock; secondary chances under 100% (Frost Breath's 30% frostbite, Bleakwind Storm, Head Charge, Rock Slide,
+accuracy drops); Frenzy Plant / Blast Burn / Hydro Cannon / Meteor Assault skipping the recharge after a KO.
 
-`tools/calc/radical-red_check.mjs` uses a synthetic Mew fixture without `data.json`.
-It checks native boosts and negative cases, then reports the RR status-chip
-failures with a nonzero exit. These are blocking regressions, not accepted oracle
-differences or a skip. Expected damage uses RR calc `util.ts:480,540` and
-`gen789.ts:1086-1099`, not results copied from this engine.
+Not modelled (the engine has no hook; in-game numbers can differ):
+- Speed: Quick Feet 2x (stock 1.5x), Flower Gift / Bull Rush / Quill Rush Speed 1.5x, Upgrade (Porygon-Z 1.5x),
+  Leek Stick (Farfetch'd 1.5x). The calc's Speed readout and speed-based powers (Sonic Slash, Electro Ball, Gyro
+  Ball) miss them: no rule phase reaches the speed chain.
+- Shield Dust / Frozen Mist entry-hazard immunity (`entry()` still shows hazard chip).
+- Bad Company's block on self-lowered stats and Mind Blown recoil (only the recoil part is aliased).
+- Soul Robbery stealing boosts (the engine's theft is Spectral Thief's by name; aliasing would share its record).
+- Defog clearing terrain (Main!E12 says it doesn't; the shared `defog` kind clears it from Gen 8).
+- Magmarizer (Magmortar's Fire moves add Tar Shot), the Gulp Missile / Parasitic Waste changes, Sage Power's move
+  lock, Protosynthesis staying on while Sun is suppressed.
+- Draco Barrage recoil: Showdown's 1/3 (used); RR calc's 33/100 is at most 1 HP apart.
 
-Checkpoint checks (2026-11-02): `node tools/calc/radical-red_check.mjs` exits 1,
-with 13 passes and 3 blocking failures. On the synthetic 175-HP holder, Toxic
-Boost incorrectly loses 21 HP to poison or 10/21/32/43 HP to toxic over four
-turns; Flare Boost incorrectly loses 10 HP per burn turn. Expected: no status
-chip. The power boost rolls are 23-28 versus neutral 16-19; healthy Sand controls
-still lose 10 HP. Log: `.tmp/rr-calc/engine-check.log`. The Main tab was read with
-openpyxl through `uv run python -I`; cells are in `.tmp/rr-calc/hardcore-main.log`.
-No shared fixtures changed, so the brief's conditional `npm test` was not run.
+Counts: abilities 54 (32 profile, 8 base, 11 labels only, 3 not modelled); moves 76 profile entries (the other
+gen9rr move entries only change availability, power / type / accuracy, which `data.js` supplies, or chances under
+100%); held items: 18 gems, 15 Mega Stones and 7 other changed items in the profile (Electirizer, Burnt Seed, Leek
+Stick, Adamant Orb, Reaper Cloth, Link Cable, Honey), 2 not modelled (Magmarizer, Upgrade), plus the Hardcore rules.
 
-#### Follow-up and in-game checks
+**Checks** (2026-11-02, round 3): `node tools/calc/radical-red_check.mjs` 71 passed, 0 failed. Regression sweep:
+every check `npm test --prefix tools/calc` runs, here and in a worktree at `3400658`: the same results line for line
+except `test.mjs` 147 → 148 (the `statusImmune` test) and this check (skip → 71); all exit 0. Logs:
+`.tmp/rr-calc3/sweep-base/`, `.tmp/rr-calc3/sweep-head/`. Not run: the hzla comparison, browser checks, the gate.
 
-After the engine decision, finish the full inventory/profile and one source-backed
-fixture per RR-specific effect, including all sixteen rolls and negative cases.
-Use Unbound's ordinary field controls without its custom gimmicks; add RR Snow
-and boss state only when supported. Check Zangoose/Drifblim poison/burn immunity
-and boosted damage in-game, including Sand to prove unrelated chip still applies.
-Verify Ghost Marowak's HP with 252 EVs while ordinary player/boss EVs remain zero.
-No in-game tests, browser checks, gate runs or independent hzla comparisons ran.
-
-For unit 6: Main!E10 applies to every AI-set weather/terrain. Determine the actual
-field and setter for each boss from its sheet; per-boss rows were not audited by
-this blocked unit. Keep setter identity and `setterStays` explicit, rather than
-assuming one field for all bosses. Preserve Ghost Marowak's 252 HP EVs (Main!E95).
+#### Open in-game checks
+- Toxic Boost Zangoose poisoned and Flare Boost Drifblim burned take no chip, and still lose 1/16 to Sand.
+- Ghost Marowak's HP with 252 HP EVs; other boss sets at 0 EVs.
+- Draco Barrage turns Physical when the user's Atk is higher (dex text; RR calc keeps it Special) and hits Fairy.
+- Flower Gift Cherrim: Atk 1.5x in Sun, no SpD boost; Quick Feet Speed (2x per Showdown).
+- Defog with terrain up (Main!E12: the terrain stays; the calc's fight log clears it).
+- A Shield Dust / Frozen Mist holder on Stealth Rock: no chip expected.
+- Knock Off on a Mega Stone holder of the right species: no 1.5x.
 
 ## Local storage
 

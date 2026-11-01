@@ -378,7 +378,7 @@ check('CFRU raw ability names reach their engine effects', 'tools/cfru.py CFRU_N
   assert.deepEqual(result(holder('Neutralize Gas'), 'Ember', thick).rolls, expected(40));
   assert.notDeepEqual(result(holder(''), 'Ember', thick).rolls, expected(40));
 });
-check('Knock Off gets no boost against a holder of its own RR Mega Stone', 'Showdown gen9rr/items.ts:935-1168 (onTakeItem); official dex items Applite / Duraludite / Grimmsnite', () => {
+check('Knock Off gets no boost against a holder of its own RR Mega Stone', 'Showdown gen9rr/items.ts:935-1168 (onTakeItem); 4.1 data.js Mega forms (Applite: Flapple and Appletun)', () => {
   const knock = (species, item) => result(holder(''), 'Knock Off', target({id: species, it: item})).rolls;
   for (const [species, item] of [['Butterfree', 'Butterfrite'], ['Flapple', 'Applite'], ['Appletun', 'Applite']]) {
     assert.deepEqual(knock(species, item), expected(65), species + ' ' + item);
