@@ -214,13 +214,13 @@ const catc=c=>c?`<span class="catc ${c}" title="${c}" aria-label="${c}">${c==='P
 // New or changed in the hack: an amber !; sources disagree: a red ? (both when both).
 const mark=(t,q)=>`<span class="warn${q?' q':''}" title="${esc(t)}" aria-label="${esc(t)}">${q?'?':'!'}</span>`;
 function whereTable(p){let h='';
- if(p.g===1)h=p.nu?`<div class="mut">Mega form. ${p.stone?esc(p.stone)+' is':'Its stone is'} not obtainable in ${esc(CF.name)}; listed because trainers use it.</div>`:`<div class="mut">Mega form. ${p.stone?(p.sloc?esc(p.stone)+': '+esc(p.sloc):'Mega Stone: '+esc(p.stone)+'.'):CF.orbs&&(p.n.startsWith('Primal')||/Rayquaza/.test(p.n))?'Orb or move based (see Useful NPCs in Items).':'No stone location in the items sheet.'}</div>`;
+ if(p.g===1)h=p.nu?`<div class="mut">Mega form. ${p.stone?ilink(p.stone)+' is':'Its stone is'} not obtainable in ${esc(CF.name)}; listed because trainers use it.</div>`:`<div class="mut">Mega form. ${p.stone?(p.sloc?ilink(p.stone)+': '+esc(p.sloc):'Mega Stone: '+ilink(p.stone)+'.'):CF.orbs&&(p.n.startsWith('Primal')||/Rayquaza/.test(p.n))?'Orb or move based (see Useful NPCs in Items).':'No stone location in the items sheet.'}</div>`;
  else if(p.fc){const b=P.find(x=>x.dex===p.dex&&!x.fc&&x.g!==1);h=`<div class="mut">Form change of ${b?plink(b.id):'its base form'} (held item, move or in battle), so it is available whenever ${b?esc(b.name):'the base form'} is.</div>`;}
  else if(p.g===3)h=`<div class="mut">${TX.g3}</div>`;
  else if(!p.w.length)h=`<div class="mut">No direct wild encounter. Obtained by evolving or breeding (see Evolution).</div>`;
  else{const seen={};h=`<table class="wh"><tr><th>Location</th><th>Method</th><th>Rate</th><th>Lv</th></tr>${[...p.w].sort((a,b)=>locRank(a[0])-locRank(b[0])||a[0]-b[0]).map((w,j)=>{const n=LOC[w[0]],k=seen[n]=(seen[n]||0)+1;
   return `<tr${PK('wh:'+n+'#'+k,j)}><td><a href="#/l/${w[0]}">${esc(n)}</a>${w[4]?`<div class="mut small">${esc(w[4])}</div>`:''}</td><td>${esc(w[1])}</td><td class="n">${esc(w[2])}</td><td class="n">${esc(w[3])}</td></tr>`;}).join('')}</table>`;}
- if(p.hi&&p.hi.length)h+=`<div class="mut small" style="margin-top:6px">Wild held item${p.hi.length>1?'s':''}: ${p.hi.map(held=>Array.isArray(held)?esc(held[0])+(held[1]!=null?' ('+esc(held[1])+'%)':''):esc(held)).join(', ')}</div>`;
+ if(p.hi&&p.hi.length)h+=`<div class="mut small" style="margin-top:6px">Wild held item${p.hi.length>1?'s':''}: ${p.hi.map(held=>Array.isArray(held)?ilink(held[0])+(held[1]!=null?' ('+esc(held[1])+'%)':''):ilink(held)).join(', ')}</div>`;
  return h;}
 function confBox(cf){return cf&&cf.length?`<div class="card conf"><h3>Sources disagree</h3><ul>${cf.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="mut small" style="margin-top:4px">${TX.conf}</div></div>`:'';}
 // Evolution: the whole family from its base stage, each Pokémon then its forms (same dex number, not evolved into) then
@@ -351,7 +351,7 @@ const moveProps=move=>{const flags=move.f||[];return [...(move.c&&move.c!=='Stat
 const moveProperties=move=>`<ul class="move-props">${moveProps(move).map(prop=>`<li><a href="#/mp/${prop}">${MOVE_PROPS[prop]}</a></li>`).join('')}</ul>`;
 const moveEffects=move=>(move.se||[]).length?`<ul class="move-effects">${move.se.map(([chance,text])=>`<li>${chance===100&&/^[A-Z]/.test(text)?'':esc(chance)+'% '}${esc(text)}</li>`).join('')}</ul>`:'';
 function interactionRows(rows){const groups=new Map();rows.forEach(row=>{if(!groups.has(row.e))groups.set(row.e,[]);groups.get(row.e).push(row);});
- return `<div class="move-interactions">${[...groups].map(([effect,entries])=>`<div class="interaction-row"><span class="interaction-effect">${esc(effect)}</span><span class="interaction-who">${entries.map(row=>`<span>${row.a!=null&&AB[row.a]?alink(row.a):esc(row.i||'')}${row.h?'<span class="interaction-changed">changed</span>':''}</span>`).join(', ')}</span></div>`).join('')}</div>`;}
+ return `<div class="move-interactions">${[...groups].map(([effect,entries])=>`<div class="interaction-row"><span class="interaction-effect">${esc(effect)}</span><span class="interaction-who">${entries.map(row=>`<span>${row.a!=null&&AB[row.a]?alink(row.a):ilink(row.i||'')}${row.h?'<span class="interaction-changed">changed</span>':''}</span>`).join(', ')}</span></div>`).join('')}</div>`;}
 function moveInteractions(index){const rows=(D.MI||[]).filter(row=>row.m.includes(index));return rows.length?`<div class="sech">Affected by</div>${['u','t'].map(side=>{const entries=rows.filter(row=>row.w===side);return entries.length?`<div class="card move-affected" data-side="${side}">${sectionHTML('mi:'+side,side==='u'?'Boosted / changed by':`Against it (${entries.length})`,'',interactionRows(entries),side==='u')}</div>`:'';}).join('')}`:'';}
 const LEARN_METHODS={Lv:'Level up',TM:'TM',HM:'HM',Tutor:'Tutor',Egg:'Egg',Evo:'Evo'};
 function moveLearnGroups(index){const machines=new Set((D.IT||[]).filter(section=>section.k==='tm').flatMap(section=>section.r.filter(row=>row[2]===index).map(row=>/^HM\d/i.test(row[0])?'HM':/^TM\d/i.test(row[0])?'TM':null)).filter(Boolean));
@@ -380,14 +380,14 @@ const MOVE_TARGETS={normal:['one one . me one .','One adjacent Pokémon'],any:['
  all:['on on on on on on','The whole field'],scripted:['one one . me . .','The last Pokémon to hit the user']};
 function moveTarget(target){const spec=MOVE_TARGETS[target];if(!spec)return '';const [cells,label]=spec;
  return `<div class="tgw" data-target="${esc(target)}"><div class="tgg" aria-hidden="true">${cells.split(' ').map((cell,index)=>`<i class="${cell==='.'?'':cell}">${index===3?'You':''}</i>`).join('')}</div><div class="tgt"><div class="mut small">Targets</div>${esc(label)}</div></div>`;}
-function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tms=(D.IT||[]).filter(s=>s.k==='tm').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>[s.n==='Move Tutors'?'Tutor':x[0].split(' ')[0],x[1]]));
+function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tms=(D.IT||[]).filter(s=>s.k==='tm').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>[s.n==='Move Tutors'?'Tutor':x[0].split(' ')[0],x[1],s.n==='Move Tutors'?null:x[0]]));
  app.innerHTML=`${backLine('mv',i)}
  <div class="card"><h2 style="margin:0 0 6px">${esc(M[i])}${v.x?` <span class="tag">${CF.orig} original</span>`:''}</h2><div>${v.t?ty(v.t):''} ${cat(v.c)}</div>
  <div class="mvst">${[['Power',v.bp??'-'],['Accuracy',v.ac!=null?v.ac+'%':'Never misses'],['PP',v.pp??'-'],['Priority',v.pr>0?'+'+v.pr:v.pr||0]].map(([n,x])=>`<div><span>${n}</span><b>${x}</b></div>`).join('')}</div>
  ${moveTarget(v.tg)}
  ${moveProperties(v)}
  ${moveEffects(v)}
- ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${tms.map(t=>`<div style="margin-top:6px"><b>${esc(t[0])}:</b> ${esc(t[1])}</div>`).join('')}
+ ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${tms.map(t=>`<div style="margin-top:6px"><b>${t[2]?ilink(t[2],t[0]):esc(t[0])}:</b> ${esc(t[1])}</div>`).join('')}
  ${v.e?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(v.e).replace(/\n/g,'<br>')}</div></div>`:''}
  ${v.h&&v.h.length?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.mvh}</b><ul>${v.h.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${v.dc||!TX.nodc?'':`<div class="mut small">${TX.nodc}</div>`}</div>`:''}${v.cf?confBox(v.cf):''}
  <div class="mut small" style="margin-top:8px">${TX.mvsrc}${v.x&&TX.mvsrcx?TX.mvsrcx:''}.</div></div>
@@ -609,7 +609,7 @@ function listLocs2(scroll){fil.innerHTML='';const s=st.q;const li=st.lopenLi;st.
 
 
 // ===== ITEMS TAB (D.IT sections from the items xlsx; r = [item, text, link, missable?])
-function itemRow(sec,r){const nm=sec.k==='tm'&&r[2]!=null?`<a href="#/m/${r[2]}">${esc(r[0])}</a>`:sec.k==='mega'&&r[2]?`<a href="#/p/${r[2]}">${esc(r[0])}</a>`:esc(r[0]);
+function itemRow(sec,r){const nm=sec.k==='npc'?esc(r[0]):sec.n==='Move Tutors'?(r[2]!=null?`<a href="#/m/${r[2]}">${esc(r[0])}</a>`:esc(r[0])):ilink(r[0]);
  return `<tr><td>${nm}</td><td>${esc(r[1]).replace(/\n/g,'<br>')}${r[3]?'<span class="warn">MISSABLE</span>':''}</td></tr>`;}
 function listItems(){fil.innerHTML='';const s=st.q;const IT=D.IT||[];
  if(s){const html=IT.map(sec=>{const rows=sec.r.filter(r=>(r[0]+' '+r[1]).toLowerCase().includes(s));return rows.length?`<div class="sech">${esc(sec.n)}</div><table class="itbl ix">${rows.map(r=>itemRow(sec,r)).join('')}</table>`:'';}).join('');
@@ -883,7 +883,7 @@ function guideInfoHTML(){const W=D.WK,[n,f]=tkCounts();
  const docs=(W.cheats?doc('doccheat','Cheat codes',`<div class="mut small" style="margin:6px 0">${esc(W.cnote)}</div><table class="itbl">${W.cheats.map(c=>`<tr><td><b>${esc(c[0])}</b>${c[1]?`<div class="mut small">or ${esc(c[1])}</div>`:''}</td><td>${esc(c[2])}${c[3]?' <span class="tag">toggle</span>':''}</td></tr>`).join('')}</table>`):'')+
   (W.docs||[]).map(([t,x],j)=>doc('doc'+j,esc(t),para(x),' small doc')).join('')+
   (W.ko?doc('docko','Post-KO switch-in AI',`<table class="itbl">${W.ko.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</table>${W.ko.note.map(x=>`<div class="mut small" style="margin-top:6px">${esc(x)}</div>`).join('')}`):'')+
-  (W.np.length?doc('docnp',`Items with no walkthrough place <span class="mut small">${W.np.length}</span>`,`<table class="itbl wt">${W.np.map(i=>`<tr><td>${esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2])}</td></tr>`).join('')}</table>`):'');
+  (W.np.length?doc('docnp',`Items with no walkthrough place <span class="mut small">${W.np.length}</span>`,`<table class="itbl wt">${W.np.map(i=>`<tr><td>${ilink(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2])}</td></tr>`).join('')}</table>`):'');
  return (HAS_MGM?`<label class="mgm"><input type="checkbox" class="mgm-toggle" ${MGM?'checked':''}> MGM</label>`:'')+`<div class="psec">Encounter tracker</div><div class="mut small">${n} caught · ${f} failed</div>`+
   `<div class="bar pbar">${trackerButtons()}${CHK?'<button class="btn danger wk-reset">Reset checklist</button>':''}</div>`+
   (docs?`<div class="psec">Game docs</div>`+docs:'')+`<div class="mut small" style="margin:12px 0 4px">${TX.walk}</div>`;}
@@ -923,7 +923,7 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=!(WO.x[k]===1
   (s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+
   (lv.length?walkSec(k,'c',`<span class="tag${nd===lv.length?' got':''}">${nd}/${lv.length}</span>`,`<div class="chkb">${steps}</div>`,mq):'')+
   (areas.length?walkSec(k,'e',areas.map(([ai])=>encSummary(ai)).join(''),enc):'')+
-  (its.length?walkSec(k,'i',`<span class="tag">${its.length}</span>${its.some(i=>/miss permanently/i.test(i[2]))?'<span class="tag miss">MISSABLE</span>':''}`,`<table class="itbl wt ix">${its.map(i=>`<tr><td>${i[3]!=null&&(i[0]==='TMs and HMs'||i[0]==='Move Tutors')?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Mega Stones'&&i[3]?`<a href="#/p/${i[3]}">${esc(i[1])}</a>`:esc(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2]).replace(/\n/g,'<br>')}${/miss permanently/i.test(i[2])?'<span class="warn">MISSABLE</span>':''}</td></tr>`).join('')}</table>`):'')+
+  (its.length?walkSec(k,'i',`<span class="tag">${its.length}</span>${its.some(i=>/miss permanently/i.test(i[2]))?'<span class="tag miss">MISSABLE</span>':''}`,`<table class="itbl wt ix">${its.map(i=>`<tr${i[4]?` data-pk="${esc(i[4])}"`:''}><td>${i[0]==='Move Tutors'&&i[3]!=null?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Useful NPCs'?esc(i[1]):ilink(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${esc(i[2]).replace(/\n/g,'<br>')}${/miss permanently/i.test(i[2])?'<span class="warn">MISSABLE</span>':''}</td></tr>`).join('')}</table>`):'')+
   (ts.length?walkSec(k,'t',`<span class="tag">${ts.length}</span>`,walkTrainers(ts)):'');
  return h+`<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.n)}</span></button></div></details>`;}
 // What a walkthrough search matches: the stop's name, notes, steps, items, areas (and their Pokemon) and trainers.
@@ -1026,7 +1026,7 @@ function monCard(x,cap,sel,trainerKey,index,guess){const p=byId[x.id];const lv=m
  const tags=(x.ld?`<span class="tag">Lead ${x.ld}</span>`:'')+(x.pre||[]).map(z=>`<span class="tag warnb">${esc(PRE[z]||z)}</span>`).join('')+(x.src==='s'?'<span class="tag">sheet only</span>':'')+(x.au?`<span class="tag aura">${auTxt(x.au)}</span>`:'');
  const ab=x.ao?esc(x.ao):(x.a0!=null&&x.a0>=0?alink(x.a0)+' → ':'')+(x.a>=0?alink(x.a):'');const ev=EVS&&!MGM&&x.ev?evTxt(x.ev):'';
  return `<div class="mon${sel?' sel':''}"><div class="mh">${sprl(x.id,'s32')}<div class="mt"><div class="l1"><span class="mn">${p?`<a href="#/p/${x.id}">${esc(p.name)}</a>`:'?'}</span><b>${lvs}</b></div><div class="l2">${p?p.t.map(ty).join(''):''}${tags} ${spd}</div></div></div>
- <div class="small ab">${ab}${x.i?' · '+esc(x.i):''}${x.na?` · <span title="${esc(natLabel(x.na))}">${esc(x.na)}</span>`:''}</div>
+ <div class="small ab">${ab}${x.i?' · '+ilink(x.i):''}${x.na?` · <span title="${esc(natLabel(x.na))}">${esc(x.na)}</span>`:''}</div>
  <div class="mv${gm?' guess':''}">${(gm||x.m).map(i=>`<a href="#/m/${i}"><span class="dot" style="background:${tcol(M[i]==='Hidden Power'&&x.hp?x.hp:(MV[i]||{}).t)}"></span>${M[i]==='Hidden Power'&&x.hp?'HP '+esc(x.hp):esc(M[i])}</a>`).join('')}</div>
  ${ev?`<div class="mut small ex">EVs ${ev}</div>`:''}${(x.x||[]).length?`<div class="mut small ex">Sheet: ${x.x.map(esc).join('; ')}</div>`:''}
  ${(x.cf||[]).length?`<div class="cfx">Sheet says ${x.cf.map(esc).join('; ')}</div>`:''}${(x.hn||[]).length?`<div class="cfx">hzla says ${x.hn.map(esc).join('; ')}</div>`:''}${CF.calc&&trainerKey?`<button class="calc-versus" data-trainer="${esc(trainerKey)}" data-index="${index}">Calc vs ${esc(p?.name||'?')} ▸</button>`:''}</div>`;}
@@ -1258,7 +1258,7 @@ ${INV?`<button type="button" class="sq" data-a="kb" aria-label="Search"><span cl
   else if(o.k==='ms'){if(!MIS.has(o.m))return null;add('Walk','w',()=>this.jumpMis(o.m,o.c));}
   else if(o.k==='t'){if(!TRK[o.v])return null;add('Trainers','t',()=>this.jumpTr(o.v));if(walkOf(o.v))add('Walk','w',()=>this.jumpWalkTr(o.v));add('Full page','tp',()=>this.go('#/tr/'+o.v));}
   else if(o.k==='i'){const sec=(D.IT||[])[o.si],r=sec&&sec.r[o.ri];if(!r)return null;const lc=r[0].toLowerCase();
-   add('Items','i',()=>this.jumpItem(o.si,o.ri));
+   add('Items','i',()=>this.jumpItem(o.si,o.ri));if(sec.k!=='npc'&&sec.n!=='Move Tutors'&&itemOf(r[0]))add('Page','ip',()=>this.go(ihref(r[0])));
    if(walkStops().some(([s])=>s.it.some(i=>i[1].toLowerCase().includes(lc))))add('Walk','w',()=>this.find('#/walk',r[0]));
    if(TRS.some(t=>!rivalHidden(t)&&t.p.some(x=>x.i&&x.i.toLowerCase().includes(lc))))add('Trainers','t',()=>this.find('#/trainers',r[0]));}
   else return null;

@@ -8,7 +8,7 @@ lag rules, scroll restore) are the viewer contract: `.agents/skills/rom-hack-off
 
 ## Item icon helpers
 
-Not yet used by pages: `icon(name, size=24)` returns a decorative inline sheet cell, or `''` for an unmapped exact
+`icon(name, size=24)` returns a decorative inline sheet cell, or `''` for an unmapped exact
 item name; `iconCard(name)` returns its 32 px cell or an empty 32 px spacer. `assemble.py` adds `D.IC` (name to
 zero-based slot), `--item-sheet` and `--item-rows` from the committed per-guide sheets. See
 `sprites/items/sheets/README.md` to regenerate them. No data URI is repeated in rendered markup.
@@ -626,7 +626,7 @@ Scenario: `tools/scenarios/dex-page.mjs`.
    or unknown property returns to the Pokémon list; Back and the Pokémon rail tab keep the usual route / position.
 4. Affected by reads only `MI` records containing the move (`m`); Boosted / changed by (`w: 'u'`) opens, Against it
    (`w: 't'`, count of records) starts collapsed. Each is a card with a `.sec`. `interactionRows` groups equal effect
-   text (`e`); every ability links by its `AB` index, item names stay plain until item detail routes exist, and each
+   text (`e`); every ability links by its `AB` index, item names link to their item page (`ilink`), and each
    hack-changed name (`h: 1`) carries the visible word changed. No universal interactions are invented in the UI.
 5. Learned by has a `.sub`: All, Level up / TM / HM / Tutor / Egg / Evo, only methods present, with learn-record
    counts. HM is distinguished from TM by its machine entry in `IT`; a move in both appears in both groups. All
@@ -647,6 +647,35 @@ Scenario: `tools/scenarios/move-page.mjs`, every guide, all viewer sizes in norm
 3. Pokémon with it has the move page's picker (`pickCard` / `bindPick`, shared with Learned by): All / Normal /
    Hidden with counts, only groups present; All shows each group collapsed, picking one shows only it, open; open
    headers stick. Normal = one of `p.a`, Hidden = `p.ha`; a species with it in both is in both. Nothing saved.
+
+**Item page** (`#/i/<item name>`, decided 2026-11-01, `plans/item-pages.md`; `ITEM PAGE` in dex.js, "Item page" in dex.css):
+1. Routed by name (`ihref`: URL-encoded, `'()!*~` too, so the reopen route keeps it); the Items rail tab's page. `itemIdx`
+   builds, once, everything the guide says about each item by name: its `IT` rows (not Useful NPCs or Move Tutors), wild
+   holders (`P.hi` pairs, Mega and form-change forms left out), trainers whose Pokémon or partners hold it, `MI` records
+   with `i`, the Megas it makes (`p.stone`), and every `IX` name. A name it doesn't have: "‹ Back" and "Not found."
+2. Top card: icon (32), name, kind line (its first box and sub-heading, "Held Items · Battle gear"; the sub-heading left
+   out when it repeats the box or the name; no box: "Wild Pokémon hold it" / "Only trainers hold it"), the description
+   (`IX` [0], the word changed when [2]), the **In battle** box (`IX` [1]; accent bar, small-caps label). A Mega Stone has
+   no In battle box: its line `base sprite + name → Mega sprite + name` says it, and a `nu` Mega adds "Not obtainable in
+   <hack>; trainers use it." A TM / HM / TR page is the icon, name, kind line and the move's row (`moveList`) only.
+3. **Where to find (N)**, open: every line of its rows (N = lines). A pickup line (key in `r[5]`) has its tick box and, when
+   a walkthrough row has its key, the stop's name as a link (`SR.jumpPick`: the split, stop and Items section open,
+   search cleared, `land()` on `tr[data-pk]`, or on the stop when that row isn't drawn). Order: unticked pickups, the
+   lines that aren't pickups (shops, wild, repeatable), ticked pickups; set when the page is drawn, so a tap doesn't
+   move the line under the finger.
+4. **Held by (N)**: the ability page's picker (`pickCard` / `bindPick`): Wild (sprite, name, types, % on the right,
+   highest first; no % when the data has none) and Trainers (its Pokémon holding it, name → `#/tr/<k>`, place · box;
+   rivals of the other starters left out). **Moves it affects (N)**, collapsed: `affectsCard`, shared with the ability
+   page. Nothing on the page is saved except ticks.
+5. **Ticks** (`LS.items` → `g: {pickupKey: 1}`, no new key): `tickHas` / `tickSet` / `tickCount` (pickups of this build)
+   / `tickClear` (empties `g`) / `tickBox(key)` (`input.itk[data-pk]`). One change listener on `#app` saves a tap,
+   every copy of that box on screen follows, and `TICKHOOK` functions `(key, on)` redraw what depends on it (`key`
+   null after a clear). Pickup keys are stable (`tools/pickup_keys.py`), so a tick whose key is gone waits in `g`.
+6. **Links** (`ilink`: 18 px icon + name; plain text for a name the guide doesn't know): Items tab rows (TMs and Mega
+   Stones too; tutors keep the move page), walkthrough item rows and Items with no walkthrough place, trainer cards'
+   item, the Pokémon page's wild held items and Mega stone, the move page's Affected by and TM line, search results
+   for items (a Page action). Not links: the calc's item chips and pickers (controls).
+Scenario: `tools/scenarios/item-page.mjs`, every guide, all viewer sizes in normal and `dvkb` modes.
 
 **Ability marks on the Pokémon page** (the compact moves table, `ownBoosts` / `bindBoosts` in dex.js): a move that one
 of this Pokémon's (this form's) own abilities affects (`MI`, `w: 'u'`, ability in `p.as`) gets an A in an accent dot

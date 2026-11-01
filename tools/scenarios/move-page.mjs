@@ -76,7 +76,7 @@ async function interactionsCheck(page, index) {
     const grouped = new Map();
     for (const row of rows) {
       if (!grouped.has(row.e)) grouped.set(row.e, []);
-      grouped.get(row.e).push({ name: row.a != null ? data.AB[row.a][0] : row.i, href: row.a != null ? '#/a/' + row.a : null, changed: !!row.h });
+      grouped.get(row.e).push({ name: row.a != null ? data.AB[row.a][0] : row.i, href: row.a != null ? '#/a/' + row.a : '#/i/' + encodeURIComponent(row.i).replace(/[!'()*~]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase()), changed: !!row.h });
     }
     const actual = await page.value(`[...document.querySelectorAll('${selector} .interaction-row')].map(row=>[row.querySelector('.interaction-effect').textContent,[...row.querySelectorAll('.interaction-who>span')].map(who=>({name:who.querySelector('a')?.textContent||who.firstChild.textContent,href:who.querySelector('a')?.getAttribute('href')||null,changed:!!who.querySelector('.interaction-changed')}))])`);
     assert.deepEqual(actual, [...grouped], 'effect groups, links and changed tags match MI');
