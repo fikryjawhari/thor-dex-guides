@@ -1,0 +1,37 @@
+{
+ "save": "boxes-only.sav",
+ "sha256": "560da95ba1295d2770086a8df678e6daa9455f1187e2b5bf3fab9af17c1dfd2b",
+ "party": [
+
+ ],
+ "boxes": [
+  [
+   {"species":"Caterpie","level":37,"nature":"Hardy","ability":"Shield Dust","item":"","moves":["Tackle","String Shot","",""],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]},
+   {"species":"Caterpie","level":50,"nature":"Jolly","ability":"Run Away","item":"","moves":["Bug Bite","","",""],"ivs":[31,31,31,31,31,31],"evs":[0,0,0,0,0,0]}
+  ],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  []
+ ]
+}
