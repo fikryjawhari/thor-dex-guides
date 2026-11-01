@@ -24,8 +24,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HACKS = os.path.join(ROOT, 'hacks')
 BATTLE = os.path.join(ROOT, 'tools', 'battle_text')
 # Mechanics generation for guides whose calc base does not say (cfg.calc.base "genN" wins).
-GENS = {'hardlove-gold': 4, 'blaze-black-2-redux': 5, 'eternal-x': 6, 'photonic-sun': 7, 'emerald-imperium': 9,
+GENS = {'hardlove-gold': 9, 'blaze-black-2-redux': 5, 'eternal-x': 6, 'photonic-sun': 7, 'emerald-imperium': 9,
         'unbound': 9}
+# Generation for the description pool's nearest-generation order only: Hardlove's bag text is Gen 4-era game text.
+POOL_GENS = {'hardlove-gold': 4}
 ALIASES = {'Pasho Berry': 'Passho Berry', 'Never-MeltIce': 'Never-Melt Ice'}
 NO_ITEM_PAGE = ('tm', 'npc')  # IT section kinds: TMs / HMs / TRs, Move Tutors, Useful NPCs
 
@@ -45,6 +47,10 @@ def generation(hack):
     if hack in GENS:
         return GENS[hack]
     raise KeyError(f'{hack}: no mechanics generation (cfg.calc.base or item_text.GENS)')
+
+
+def pool_generation(hack):
+    return POOL_GENS.get(hack) or generation(hack)
 
 
 def key(name):
@@ -114,6 +120,7 @@ def slots(D):
 
 def apply(D, hack, report=print):
     gen = generation(hack)
+    pool_gen = pool_generation(hack)
     slot_list = list(slots(D))
     no_page = {s['n'] for s in D.get('IT', []) if s.get('k') in NO_ITEM_PAGE}
     mega = {s['n'] for s in D.get('IT', []) if s.get('k') == 'mega'}
@@ -155,10 +162,10 @@ def apply(D, hack, report=print):
     for other in sorted(os.listdir(HACKS)):
         if other == hack or not os.path.exists(os.path.join(HACKS, other, 'extract', 'item_desc.json')):
             continue
-        other_gen = generation(other)
+        other_gen = pool_generation(other)
         texts = {key(name): text for name, (text, _) in load_json(
             os.path.join(HACKS, other, 'extract', 'item_desc.json')).items() if text}
-        pools.append((abs(other_gen - gen), other_gen, other, texts))
+        pools.append((abs(other_gen - pool_gen), other_gen, other, texts))
     pools.sort(key=lambda pool: pool[:3])
 
     shown = {canon(container[column]) for container, column, section, group in slot_list
