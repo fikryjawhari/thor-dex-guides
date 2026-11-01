@@ -22,6 +22,7 @@ Fetched 2026-10-18 (v1.3 / 1.3.1) from the official docs folder linked from [eme
 | `repos/expansion/include/…`, `src/…` | The same commit: constants (species, moves, abilities, items), names (`src/data/abilities.h`, `items.h`), growth rates (`src/data/pokemon/species_info*.h`) for the save importer's `GID` (`extract/gid.py`); `pokemon.h`, `global.h`, `save.h`, `save.c`, `pokemon.c`, `pokemon_storage_system.h` are the save format (`template/calc/readers/README.md`) |
 | `saves/` | Save-reader test files (2026-10-27) from [hzla/Dynamic-Calc-Decomps](https://github.com/hzla/Dynamic-Calc-Decomps) `cypress/fixtures/` at `ecb3a77`: an EI 1.3 save, an mGBA save state of it, `em_imp.sav` and the paste hzla's importer makes of the save (prefixed `hzla-`); `ei-1.3.expected.json` is written from the paste (`tools/README.md` → Save check) |
 | `repos/showdown/moves.js`, `abilities.js`, `items.js` | pokemon-showdown 0.11.11 `dist/data`: move priority, and flags for EI changes and originals; `items.js` the full item names the game squeezes (`GID.it`) |
+| `stock/items.h` | rh-hideout/pokeemerald-expansion at `572ea14` (where the iriv24 fork branched off, 2024-11-19: `gh api repos/rh-hideout/pokeemerald-expansion/compare/master...iriv24:pokeemerald-expansion:2576d0f --jq .merge_base_commit.sha`): stock item text; `extract/item_desc.py` marks each item's bag text changed when it differs from this |
 
 ## Re-fetch
 
@@ -38,6 +39,10 @@ for f in imp_1-3.js title_to_backup_mappings.js; do
 done
 mkdir -p $D/repos/expansion
 curl -sL https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/src/data/moves_info.h -o $D/repos/expansion/moves_info.h
+mkdir -p $D/repos/expansion/src/data/text
+curl -sL https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/src/data/text/item_descriptions.h -o $D/repos/expansion/src/data/text/item_descriptions.h
+mkdir -p $D/stock
+curl -sL https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/572ea141af83caf2f57d50c4e74cb493fb306c88/src/data/items.h -o $D/stock/items.h
 for f in include/pokemon.h include/global.h include/save.h include/pokemon_storage_system.h src/save.c src/pokemon.c     include/constants/{species,moves,abilities,items,pokemon,global}.h src/data/{abilities,items}.h     src/data/pokemon/species_info.h src/data/pokemon/experience_tables.h src/data/pokemon/species_info/gen_{1,2,3,4,5,6,7,8,9}_families.h; do
   mkdir -p $D/repos/expansion/$(dirname $f)
   curl -sL https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/$f -o $D/repos/expansion/$f
