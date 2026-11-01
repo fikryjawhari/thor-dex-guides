@@ -60,3 +60,16 @@ Each writes `IX` (or whatever the spec names it) `{item: [description, changed?]
 2. 3DS (Photonic, Eternal X, one shared helper in `tools/ctrguide.py`): `dex-*.json` items by id.
 3. Hardlove: `221.txt` for its own items, stock for the rest.
 4. Unbound, BB2R: stock only (one shared helper reading Showdown text by generation).
+
+## Wild held item odds (checked 2026-11-01)
+Same rule in every engine the guides run: slot 1 50%, slot 2 5% (no item 45%); Gen 5+ games have a third 1% slot;
+the same item in slots 1 and 2 = 100%. Compound Eyes / Super Luck leading: 60% / 20% (not shown on pages).
+| Guide | Engine | Checked in | Slots in the guide's source | Extract today |
+|---|---|---|---|---|
+| Emerald Imperium | pokeemerald-expansion fork | `src/pokemon.c` `SetWildMonHeldItem` at the release pin (45 / 95 thresholds, 100% when itemCommon == itemRare) | `species_info` `.itemCommon` / `.itemRare` (eidex `heldItems` [common, rare]) | drops the empty slot (`dex.py`), so a single item's slot is lost; 20 Mega forms carry items (the game never uses them: Mega Snorlax has the Leftovers, base Snorlax none) |
+| Unbound | CFRU (Unbound's own code closed) | CFRU `src/build_pokemon.c` `GenerateWildMonHeldItem` (same thresholds, 100% rule) | its wiki: "Leftovers (50% chance), Leftovers (5% chance)" | strips the percentages (`dex.py` line 205): keep them |
+| Hardlove Gold | hg-engine on HeartGold | pret/pokeheartgold `WildMonSetRandomHeldItem` (`sItemOdds` 45 / 95, 20 / 80; 100% rule); Hardlove's `src/field/enemy_party.c` calls it unchanged, no hook replaces it | `data/Species.c` `.wildHeldItems = {.common, .rare}` | not extracted at all (no `hi`) |
+| Blaze Black 2 Redux | vanilla B2W2 code | Serebii BW pages (Snorlax Leftovers 100%, Chansey 50 / 5) | personal data (3 slots), not in `.src`; romhackdex item pages list holders without odds | only 3 hand-set `hi`: needs the ROM's personal NARC (the user's dump) |
+| Photonic Sun, Eternal X | vanilla SM / XY code | Serebii SM / XY pages (100% when both slots match) | `dex-*.json` species `items` [slot1, slot2, slot3] | `tools/ctrguide.py` dedupes the slots: keep positions |
+Data change: `P.hi` becomes `[[item, %]]` (one entry per distinct item, the rule applied in the extract), none on Mega
+forms. A guide without slot data keeps names only and shows no %.

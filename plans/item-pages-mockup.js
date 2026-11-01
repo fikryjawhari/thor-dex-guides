@@ -88,7 +88,7 @@ function itemMoves(e){const rows=e.mi.filter(r=>r.m.length);if(!rows.length)retu
 function itemDetail(n){fil.innerHTML='';const e=IS[n],x=X.items[n];if(!e){app.innerHTML='<a class="back" href="javascript:history.back()">‹ Back</a><p>Not found.</p>';return;}
  const tm=isTM(n)&&e.rows.find(r=>r.k==='tm'&&r.link!=null);
  // A TM page is the move's row and where the TM is; the move page has the rest.
- const top=tm?moveList([tm.link]):(x&&x.d?`<p>${esc(x.d)}</p>`:'')+fxBox(fxItem(n));
+ const top=tm?moveList([tm.link]):(x&&x.d?`<p>${esc(x.d)}</p>`:'')+(e.mega.length?'':fxBox(fxItem(n)));
  const held=heldGroups(e);
  app.innerHTML=`<div class="backl"><a class="back" href="javascript:history.back()">‹ Back</a></div>
  <div class="card ipg"><div class="ihd">${icon(n,'m')}<h2>${esc(n)}</h2></div><div class="mut small ikind">${esc(kindOf(e))}</div>${top}${megaBlock(e)}</div>
@@ -146,6 +146,6 @@ const SAMPLES={
  leech:()=>'#/m/'+M.indexOf('Leech Seed'),calm:()=>'#/m/'+M.indexOf('Calm Mind'),
  mon:()=>'#/p/'+(P.find(p=>p.n==='Butterfree')||{}).id};
 window.setOption=(k,v)=>{if(k==='sample'){location.hash=SAMPLES[v]?.()||'#/items';return;}
- OPT[k]=v;localStorage.setItem('itmock',JSON.stringify(OPT));location.reload();};
+ OPT[k]=v;localStorage.setItem('itmock',JSON.stringify(OPT));if(location.hash==='#/items')render(false);else location.hash='#/items';};
 render(false);
 })();
