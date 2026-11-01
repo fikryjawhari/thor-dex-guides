@@ -35,6 +35,11 @@ def check_items():
     from common import DATA
     rows = {r[0]: (box['n'], r) for box in D['IT'] for r in box['r']}
     lines = {name: r[1].splitlines() for name, (box, r) in rows.items()}
+    # tutors Hardcore removes: neither the Move Tutors box nor any species' P.tu lists them
+    gone = items.hardcore_gone_tutors()
+    expect(gone and not [n for n in gone if n in rows], 'Hardcore-removed tutors listed: %s' % sorted(gone & set(rows)))
+    taught = {D['M'][i] for mon in D['P'] for i in mon['tu']}
+    expect(not taught & gone, 'P.tu has Hardcore-removed tutor moves: %s' % sorted(taught & gone))
     # machines: every data.js TM / HM has a row, except the ones Hardcore lacks (TM107 / TM118 teach no move: no item)
     machines = set(items.TM_MOVES)
     have = {n.split(' ', 1)[0] for n, (box, r) in rows.items() if box == 'TMs and HMs'}

@@ -11,6 +11,7 @@ import cfru
 from romhackdex import Mirror, key
 from common import (DATA, FORM_KEYS, H, MOVE_IDS, MOVE_RECORDS, SPECIES, SPECIES_NAMES, ability, item, move,
                     parse_literal, report, sid, type_name)
+from items import hardcore_gone_tutors
 
 
 TARGETS = {0: 'normal', 1: 'scripted', 2: 'adjacentAllyOrSelf', 4: 'randomNormal', 8: 'allAdjacentFoes',
@@ -96,7 +97,8 @@ def _cross_check(data):
                   'hidden': (data['AB'][ours['ha']][0] if ours['ha'] >= 0 else None, cfru.official(page.hidden) if page.hidden else None),
                   'level-up': ({(level, data['M'][index]) for level, index in ours['lv']}, {(level, move(name) or name) for level, name in page.lv}),
                   'TM/HM': ({(label, data['M'][index]) for label, index in ours['tm']}, {(label, move(name) or name) for label, name in page.tm}),
-                  'tutor': ({data['M'][index] for index in ours['tu']}, {move(name) or name for name in page.tutor}),
+                  'tutor': ({data['M'][index] for index in ours['tu']},
+                            {move(name) or name for name in page.tutor} - hardcore_gone_tutors()),
                   'egg': ({data['M'][index] for index in ours['eg']}, {move(name) or name for name in page.egg})}
         for field, (official, other) in fields.items():
             if official != other:
@@ -148,6 +150,8 @@ def _cross_check(data):
 
 
 def build(data):
+    gone_tutors = hardcore_gone_tutors()      # Hardcore removes these tutors (items.py, the Move Tutors tab)
+    report('dex: P.tu leaves out %d tutor moves Hardcore removes: %s' % (len(gone_tutors), ', '.join(sorted(gone_tutors))))
     names = sorted(set(MOVE_IDS.values()), key=str.lower)
     indexes = {name: index for index, name in enumerate(names)}
     ability_rows = {ability([row['ID'], index]): row['description'] for row in DATA['abilities'].values()
@@ -194,7 +198,8 @@ def build(data):
                 label = 'TM%02d' % (slot + 1) if slot < 120 else 'HM%02d' % (slot - 119)
                 entry['tm'].append([label, mi(value)])
         entry['tu'] = list(dict.fromkeys(mi(DATA['tutorMoves'][str(slot)]) for slot in row.get('tutorMoves', [])
-                                        if DATA['tutorMoves'][str(slot)]))
+                                        if DATA['tutorMoves'][str(slot)]
+                                        and move(DATA['tutorMoves'][str(slot)]) not in gone_tutors))
         entry['eg'] = list(dict.fromkeys(mi(value) for value in row.get('eggMoves', [])))
         held = defaultdict(int)
         common, rare = row['items']
