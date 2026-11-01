@@ -76,6 +76,11 @@ Each unit adds the decisions it had to take to **Decisions taken in units** belo
 - [unit 2] Mega Stone records only for 4.1 Megas (`data.js` forms): Applite (Flapple, Appletun) added; Duraludite / Grimmsnite left out (4.1 changelog:14, no form in data.js).
 - [unit 2] Engine gaps recorded, not built (main chat's answer 1): Speed modifiers (Quick Feet 2x, Flower Gift / Bull Rush / Upgrade / Leek Stick), Shield Dust hazard immunity, Soul Robbery theft, Defog keeping terrain (Main!E12), Bad Company self-drops.
 - [unit 2] Move effects stay in `hack.json` `over.effects` until `data.json` exists (effects_check.mjs needs it for `calc_effects.json`); the finishing unit moves them.
+- [unit 5] Items show the Hardcore view only: "(DEFAULT MODE(S) ONLY)" / "(REGULAR MODE)" rows, the Main tab's unobtainable items (pickups, shops, care packages, wild holders), the red / blue care package items (Hardcore turns MGM on) and the red tutors go; the swapped Mega Stones, quest wording and Route 4's 4 PP Ups are the Hardcore ones (Main E24-E40, E81, E95; item sheet notes and colours).
+- [unit 5] The Overworld Items tab is the place text, data.js the check of what lies where: rows pair with data.js entries only within their heading's areas; data.js-only pickups get a data.js line, sheet-only gifts stay; Waterium Z stays with Gian in Saffron (both sheet tabs) though data.js files it under Cerulean Gym (data.js areas, item sheet).
+- [unit 5] Consumables and sell items are not listed (shops still are), Valuables = Shards, Heart Scales, Beast Balls, as Unbound (the user's 2026-10-30 rule there); Poké Mart stock is one "Any Poké Mart" line at FireRed's prices, which the sheet doesn't give (pokefirered items.json).
+- [unit 5] Care packages are Also lines "Care package · <when> · xN" (the sheet's headings), paired with data.js item-cheat areas for walk.py; data.js's Viridian City Rare Candy / Pomeg Berry (no package) left out (item sheet Care Packages, data.js).
+- [unit 5] Leek Stick keeps RR's name (data.js, Showdown) and has no icon; Houndoomnite / Fight Memory are renamed to the standard spellings (item_text.ALIASES) so they get icons; item text "changed" = differs from FireRed's bag text or RR changed the effect (pokefirered items.json, gen9rr items.ts).
 
 ## Units
 

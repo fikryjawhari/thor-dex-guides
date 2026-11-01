@@ -32,7 +32,8 @@ GENS = {'hardlove-gold': 9, 'blaze-black-2-redux': 5, 'eternal-x': 6, 'photonic-
 # Generation for the description pool's nearest-generation order only: Hardlove's bag text is Gen 4-era game text.
 POOL_GENS = {'hardlove-gold': 4}
 ALIASES = {'Pasho Berry': 'Passho Berry', 'Never-MeltIce': 'Never-Melt Ice', 'Houndoomite': 'Houndoominite',
-           'Kangaskhite': 'Kangaskhanite'}  # Unbound's wiki and trainer data spell the Mega Stones so
+           'Kangaskhite': 'Kangaskhanite',  # Unbound's wiki and trainer data spell the Mega Stones so
+           'Houndoomnite': 'Houndoominite', 'Fight Memory': 'Fighting Memory'}  # Radical Red's data.js
 NO_ITEM_PAGE = ('tm', 'npc')  # IT section kinds: TMs / HMs / TRs, Move Tutors, Useful NPCs
 MEGA_TEXT = ('One of a variety of mysterious Mega Stones. Have {species} hold it, and this stone will enable it to '
              'Mega Evolve during battle.')
