@@ -32,7 +32,8 @@ def source_check(root):
     print(f'PASS Hardlove source coverage: {count} field comments retained as evidence')
 
 
-DOUBLES_EXPECTED = {'emerald-imperium': 14, 'hardlove-gold': 92, 'photonic-sun': 60, 'eternal-x': 62, 'unbound': 36}
+DOUBLES_EXPECTED = {'emerald-imperium': 14, 'hardlove-gold': 92, 'photonic-sun': 60, 'eternal-x': 62, 'unbound': 36,
+                    'radical-red': 47}
 DOUBLES_PARTNER_ONLY = {'eternal-x': 12, 'unbound': 2}
 
 
@@ -155,8 +156,37 @@ def main():
                         if decided:
                             assert record['review'] is False, (path, trainer['n'], record['text'])
     print('PASS trainer field parsing, inheritance, ambiguity, schema and rebuild idempotence')
+    radical_red_check(root)
     if '--sources' in sys.argv:
         source_check(root)
+
+
+RR_FIELD_COUNTS = {'Permanent Rain': 11, 'Permanent Sandstorm': 9, 'Permanent Sun': 8, 'Permanent Snow': 7,
+                   'Permanent Desolate Land': 5, 'Permanent Psychic Terrain': 3, 'Permanent Electric Terrain': 2,
+                   'Permanent Grassy Terrain': 2, 'Permanent Misty Terrain': 2, 'Permanent Trick Room': 2,
+                   'Permanent Tailwind on enemy side': 2, 'Permanent Magma Storm': 2, 'Permanent Swamp': 2,
+                   'Permanent Magnet Rise': 1, 'Permanent Primordial Sea': 1, 'Permanent Delta Stream': 1,
+                   'Inverse Battle': 1, 'Double Battle': 47}
+
+
+def radical_red_check(root):
+    """Radical Red (2026-11-02): the Hardcore sheet's BATTLE EFFECT tags, all settled (no review records)."""
+    path = root / 'hacks/radical-red/data.json'
+    data = json.loads(path.read_text(encoding='utf-8'))
+    records = [record for group in data['TR']['g'] for section in group['sec'] for trainer in section['tr']
+               for record in trainer.get('field', [])]
+    counts = {}
+    for record in records:
+        counts[record['text']] = counts.get(record['text'], 0) + 1
+    assert counts == RR_FIELD_COUNTS, counts
+    assert not any(record['review'] for record in records)
+    desolate = trainer_fields.evidence('Permanent Desolate Land', 'trainer-tag')
+    assert desolate['effects'] == [dict(kind='weather', value='Harsh Sunshine', duration='permanent', locked=True)]
+    assert trainer_fields.evidence('Permanent Psychic Terrain', 'trainer-tag')['effects'][0]['value'] == 'Psychic'
+    for text in ('Permanent Swamp', 'Permanent Magma Storm', 'Permanent Magnet Rise'):
+        assert trainer_fields.evidence(text, 'trainer-tag') == dict(scope='trainer-tag', text=text, effects=[],
+                                                                    review=False), text
+    print(f'PASS Radical Red: {len(records)} field records, none to review')
 
 
 if __name__ == '__main__':

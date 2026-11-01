@@ -52,6 +52,22 @@ UNBOUND_FIELD_PROPOSALS = {
 }
 
 
+# Radical Red (the Hardcore sheet's BATTLE EFFECT lines, as hacks/radical-red/extract/trainers.py tags them; exact
+# texts). The primal weathers can't be replaced (locked); Swamp (your Speed quartered), Magma Storm and Lt. Surge's
+# Magnet Rise have no calc field: card text only (notes.md → Trainers).
+RR_FIELD_EFFECTS = {
+    'Permanent Electric Terrain': [dict(kind='terrain', value='Electric', duration='permanent')],
+    'Permanent Grassy Terrain': [dict(kind='terrain', value='Grassy', duration='permanent')],
+    'Permanent Psychic Terrain': [dict(kind='terrain', value='Psychic', duration='permanent')],
+    'Permanent Desolate Land': [dict(kind='weather', value='Harsh Sunshine', duration='permanent', locked=True)],
+    'Permanent Primordial Sea': [dict(kind='weather', value='Heavy Rain', duration='permanent', locked=True)],
+    'Permanent Delta Stream': [dict(kind='weather', value='Strong Winds', duration='permanent', locked=True)],
+    'Permanent Swamp': [],
+    'Permanent Magma Storm': [],
+    'Permanent Magnet Rise': [],
+}
+
+
 def unbound_proposal(text):
     return next((key for key, proposal in UNBOUND_FIELD_PROPOSALS.items()
                  if (text == proposal['prefix'] if proposal.get('exact')
@@ -68,6 +84,8 @@ def evidence(text, scope):
         suggested = UNBOUND_FIELD_PROPOSALS[proposal]
         return dict(scope=scope, text=text, effects=copy.deepcopy(suggested['effects']) if decision == 'apply' else [],
                     review=decision is None)
+    if text in RR_FIELD_EFFECTS:
+        return dict(scope=scope, text=text, effects=copy.deepcopy(RR_FIELD_EFFECTS[text]), review=False)
     if not CANDIDATE.search(text):
         return None
     if re.fullmatch(r'(?:Sydney|Sidney|Glacia) (?:Tailwind|TrickRoom|Sun|Snow)\.?', text.strip(), re.I):

@@ -358,6 +358,11 @@ def build(D):
         if i in optional:
             card['tags'].append('Optional')
         card['tags'] += tags_of[i]
+        # a duo class (Twins, Young Couple, Cool Couple, Sis And Bro, Crush Kin) is one trainer in a double battle, as
+        # in FRLG (the sheet marks Ray & Tyra and Joy & Meg DOUBLES)
+        if ' & ' in t['name'] and 'Double Battle' not in card['tags']:
+            card['tags'].append('Double Battle')
+            counts['duo doubles'] += 1
         line = next((s_ for s_, ids in LINES.items() if any(m['id'] in ids for m in team)), None)
         if t['name'] in ('Rival Blue', 'Champion Blue') and line:
             card['st'] = RIVAL_STARTER[line]
