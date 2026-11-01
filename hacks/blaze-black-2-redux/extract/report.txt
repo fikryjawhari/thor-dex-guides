@@ -2138,7 +2138,7 @@ pickup keys: 1023 pickups, 955 walkthrough rows keyed
 item name: BridgeMail M -> Bridge Mail M (2 use(s))
 item name: BridgeMail T -> Bridge Mail T (2 use(s))
 item name: BridgeMail V -> Bridge Mail V (3 use(s))
-item text: 338 own, 0 pooled, 0 with no description
+item text: 338 own, 0 pooled, 0 from the wiki, 0 made up, 0 Mega Stone standard, 0 with no description
 in battle: 180 shown items with battle text, 158 without
 in battle: 519 moves with battle text, 58 without
 GID species: 712 species:form keys; 671/675 P ids; 649/649 base species

@@ -302,7 +302,7 @@ item name: EmpoleoniteD -> Empoleonite D (3 use(s))
 item name: EmpoleoniteO -> Empoleonite O (3 use(s))
 item name: Never-MeltIce -> Never-Melt Ice (6 use(s))
 item name: Pasho Berry -> Passho Berry (1 use(s), Items tab spelling)
-item text: 279 own, 1 pooled, 0 with no description
+item text: 279 own, 1 pooled, 0 from the wiki, 0 made up, 0 Mega Stone standard, 0 with no description
 in battle: 163 shown items with battle text, 117 without
 in battle: 719 moves with battle text, 70 without
 GID species: 1208 of 1208 P ids are game species ids
