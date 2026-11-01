@@ -35,6 +35,22 @@ Each unit adds the decisions it had to take to **Decisions taken in units** belo
 - **D9 Version 4.1**, storage prefix `rr` (`rrdex`, ...).
 - **D10 Sprites:** the shared set; RR's own forms from `data.js` sprites into `sprites.json`.
 
+## User's answers (2026-11-02; these override any unit decision below)
+
+- **Splits = the 18 Hardcore caps** (Main E44:E78): Pre-Brock 16, Pre-Mt. Moon Archer 23, Pre-Misty 28, Pre-Lt. Surge
+  36, Pre-Erika 44, Pre-Game Corner Giovanni 47, Pre-Silph Co. Archer & Ariana 56, Pre-Giovanni Silph Co. 57,
+  Pre-Sabrina 59, Pre-Koga 68, Pre-May 73, Pre-Blaine 76, Pre-Cerulean Cave Archer & Ariana 79, Pre-Cerulean Cave
+  Giovanni 80, Pre-Clair 81, Pre-Brendan 82, Pre-Elite 4 85, Post Game 100. Split names in the guide follow these.
+- **The Trainer Order sheet wins over data.js caps** for which split a mini boss is in: Justin (Route 12) in the Koga
+  split (68, not 36); Lewis (Pokémon Mansion B1F) in the May split (73, not 76).
+- **Variable-cap trainers:** a Trainer Order entry with a range or open cap ("28/36", "36+", "59/68", "81+") is
+  fought at whichever cap the player is at; its card gets the "Your level" cap box (Unbound's relative levels: `r`
+  = level − cap, default the split's cap, saved per trainer key in `LS.cap`). Use data.js's scaled-level codes
+  (101-104) where they say how a level follows the cap.
+- **Gym rematches (Hardcore):** Brock / Misty / Surge / Erika rematches: at least 3 of the 4 must be beaten before
+  Koga. They go in the Koga split as required-choice fights (one note: "beat at least 3 of these 4 before Koga"),
+  with the cap box (sheet 59/68).
+
 ## Decisions taken in units
 
 (units append here: `- [unit] decision (source)`)
