@@ -26,8 +26,8 @@ def main():
     items.split(D)
     walk.name_splits(D)
     dex.move_metadata(D)
+    item_desc.build(D)   # before finalise: tools/item_text.py reads item_desc.json
     finalise(D, H.name, prune.build)
-    item_desc.build(D)
     gid.build(D)
     write_data(D, H)
 

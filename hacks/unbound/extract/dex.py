@@ -114,6 +114,7 @@ def wild_held(entries):
                 m = re.fullmatch(r'(\d+)% (.+)', piece)
                 assert m, 'wiki held item not read: %r' % piece
                 name, pct = m.group(2), int(m.group(1))
+            name = re.sub(r'\s*\([^()]* Style\)$', '', name)  # "Honey (Baile Style)": the form is the Pokémon's
             held[name] = 100 if name in held else pct
     return [[name, pct] for name, pct in held.items()]
 
