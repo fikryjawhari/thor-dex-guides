@@ -6,6 +6,13 @@ build). `assemble.py` inlines them with the hack's `hack.json`, `data.json` and 
 guide differs only by its data and its `cfg`. The device rules (window sizes, no Android keyboard, `<select>` shim,
 lag rules, scroll restore) are the viewer contract: `.agents/skills/rom-hack-offline-dex/references/viewer-ui.md`.
 
+## Item icon helpers
+
+Not yet used by pages: `icon(name, size=24)` returns a decorative inline sheet cell, or `''` for an unmapped exact
+item name; `iconCard(name)` returns its 32 px cell or an empty 32 px spacer. `assemble.py` adds `D.IC` (name to
+zero-based slot), `--item-sheet` and `--item-rows` from the committed per-guide sheets. See
+`sprites/items/sheets/README.md` to regenerate them. No data URI is repeated in rendered markup.
+
 ## What a hack sets (`hack.json`)
 
 `id`, `title`, `game`, `platform` (GBA / NDS / 3DS), `version` (the `dex-viewer:version` meta tag), and `cfg`:

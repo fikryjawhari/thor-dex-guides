@@ -30,6 +30,8 @@ details.split[open]>.body,details.stopd[open]>.stop,.trd[open]>.trb{content-visi
 .row .nm{flex:1;font-weight:600;min-width:0}
 .row .bst{color:var(--mut);font-variant-numeric:tabular-nums;font-size:13px;text-align:right}
 .spr{overflow:hidden;flex:none;image-rendering:pixelated;background:no-repeat left/auto 100%}
+.item-icon,.item-icon-spacer{display:inline-block;flex:none;vertical-align:middle;width:var(--icon-size,32px);height:var(--icon-size,32px)}
+.item-icon{image-rendering:pixelated;background-image:var(--item-sheet);background-repeat:no-repeat;background-size:calc(var(--icon-size) * 16) calc(var(--icon-size) * var(--item-rows))}
 .spr img{height:100%;width:auto;display:block;image-rendering:pixelated}
 a.sprl{display:block;flex:none;width:max-content;line-height:0}
 .sprph{border-radius:50%;display:flex;align-items:center;justify-content:center;container-type:size}

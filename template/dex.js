@@ -30,6 +30,9 @@ const SPRU={};const sprUrl=id=>{if(SPRU[id]!==undefined)return SPRU[id];const d=
 const spr=(id,c)=>{const u=sprUrl(id);if(u)return `<div class="spr ${c}" style="background-image:url(${u})"></div>`;
  const p=byId[id],t=p?p.t[0]:'',l=p?(p.n.match(/[A-Za-z0-9]/)||['?'])[0].toUpperCase():'?';
  return `<div class="spr ${c} sprph${btc(t)}" style="background:${tcol(t)}"><span>${esc(l)}</span></div>`;};
+const icon=(name,size=24)=>{const slot=(D.IC||{})[name];if(!Number.isInteger(slot))return '';
+ return `<span class="item-icon" aria-hidden="true" style="--icon-size:${size}px;background-position:${-(slot%16)*size}px ${-Math.floor(slot/16)*size}px"></span>`;};
+const iconCard=name=>icon(name,32)||'<span class="item-icon-spacer" aria-hidden="true"></span>';
 const plink=id=>byId[id]?`<a href="#/p/${id}">${esc(byId[id].name)}</a>`:'';
 // A sprite that opens its Pokémon's dex page (plain link, like plink: Back and the rail's tab memory need nothing more).
 const sprl=(id,c)=>byId[id]?`<a class="sprl" href="#/p/${id}">${spr(id,c)}</a>`:spr(id,c);
