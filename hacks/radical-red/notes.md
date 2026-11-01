@@ -27,7 +27,7 @@ Pumpkaboo/Gourgeist order 0/1/2/3 means Average/Small/Large/Super. The base look
 The 827 named ordinary moves exclude Placeholder and generated Z/Max records (IDs >=848); no learnset uses those.
 Do not index M/AB until dex.build has run: their final lists are sorted by name, independently of game IDs.
 
-First dex cross-check: all 1,343 official species records match all 1,343 RomHackDex pages, one-to-one (including
+Dex cross-check: all 1,343 official species records match all 1,343 RomHackDex pages, one-to-one (including
 its numeric cosmetic suffixes). 1,026 distinct National Dex numbers include Chillet (#2001); 68 Mega/Primal forms.
 827 ordinary game move IDs become 826 names after CFRU spelling normalisation; 176 generated/placeholder IDs
 are excluded. AB has 281 names, expanded from 255 game IDs and their name variants; descriptions are the game's
@@ -100,6 +100,25 @@ g=1 is Mega/Primal. Prune keeps g=0, trainer-used IDs and Megas of obtainable pa
 transformation parents so normal Centiskorch cannot make an unobtainable Seviian Mega obtainable. Dead
 evolution/form links and Mega item/walkthrough links are removed. Incomplete-location/trainer no-op paths,
 trainer-only preservation, regional Mega parentage and link cleanup are exercised with synthetic fixtures.
+
+Final unit checks (2026-11-02): build.py passes and repeated builds reproduce the committed data/report; remaining
+locs/trainers/items/walk/gid stubs report not built yet. Parser escape/key/comment tests and executable-input
+rejection pass. Every one of the 1,343 species is checked against source stats, regular/hidden ability slots and
+resolved learnset/evolution/form links. Lookup, cap, area, Mega-item, source-effect odds and type-chart assertions
+pass. All 44 exported sprites are pixel-identical to the source and accepted by pngpal.crop; source/shared
+coverage is 1,342/1,343, with only Chillet absent. `git diff --check` passes. Logs are local `.tmp/rr-dex/`.
+Assembly remains blocked solely by the scaffold cfg.txt TODO strings, outside unit 1 ownership. Therefore no
+dist render or browser check is claimed. The integration/wording unit must fill those ten strings, then run
+`python assemble.py radical-red`. No full gate, scenario sweep or domcompare was run.
+
+Next units: import common directly; its tables/lookups are ready before dex.build. Read raw records through
+`DATA`, not through a second parser, and never write caches under H.src/H.cache. Call `dex.build` before using M/AB
+indices; canonical `MOVE_RECORDS` chooses the learned Leech Life record. Source IDs are not National Dex numbers.
+Pass ability pairs intact; choosing the first name of an ID loses aliases such as Shell Armor and Shadow Shield.
+For save IDs use `sid`, `move`, `ability`, `item`, then index the final sorted M/AB; skip zero/placeholders and flag
+unknown IDs. Item IDs map through the same stone-spelling corrections as P.stone, preserving item links. Location
+progression keys use `cap_step`/`cap`, and trainers must use Hardcore `cap[1]`, not normal `cap[0]`. Obtainability
+and evolution/breeding closure must be assigned before D8 pruning is enabled by the locations/trainers merge.
 
 ## Local storage
 
