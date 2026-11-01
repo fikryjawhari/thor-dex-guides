@@ -142,6 +142,7 @@ CFRU_NAMES = {
     'Kings Shield': "King's Shield", 'Lets Snuggle Forever': "Let's Snuggle Forever",
     '10000000 Volt Thunderbolt': '10,000,000 Volt Thunderbolt', 'Soul Stealing 7 Star Strike': 'Soul-Stealing 7-Star Strike',
     'Guardian Of Alola': 'Guardian of Alola', 'Light That Burns The Sky': 'Light That Burns the Sky',
+    'Inferno Parade': 'Infernal Parade', 'Soupercell Slam': 'Supercell Slam',
     # abilities
     'Alchemic Power': 'Power of Alchemy', 'Neutralize Gas': 'Neutralizing Gas', 'Propellor Tail': 'Propeller Tail',
     'Valiant Shield': 'Dauntless Shield', 'Odd Medicine': 'Curious Medicine', 'Wandering Soul': 'Wandering Spirit', 'Water Compact': 'Water Compaction',

@@ -197,10 +197,13 @@ AI-set weather and terrain permanent, so a departing setter leaves its layer (th
 switch; in the game theirs last 5 turns, which the calc does not count). Bosses' own permanent fields come from unit 6's
 trainer `field` records. Player EVs: Main!E95 turns on Minimal Grinding (no player EVs) and bosses have none except
 Ghost Marowak (252 HP). As in Photonic Sun's EV-less play, EVs stay on (`cfg.evs`, `cfg.calc.evs`): player sets
-default to 0 and a trainer's EVs count. Names: the profile uses the official names `tools/cfru.py` gives (unit 1) and
-also the raw `data.js` spellings (WaterCompaction, Bone Zone with its trailing space, Neutralize Gas, Inferno Parade,
-...), harmless once the names are standard. Move effects sit in `over.effects` in `hack.json` until `data.json`
-exists (`effects_check.mjs` loads a guide's `data.json` for `calc_effects.json`); the finishing unit moves them there.
+default to 0 and a trainer's EVs count. Names: the profile keys on the official names only (unit 9 removed the raw
+`data.js` aliases: WaterCompaction, "Bone Zone " with its trailing space, Neutralize Gas, Inferno Parade and the
+other 12-character ability spellings); `tools/cfru.py` CFRU_NAMES gives Infernal Parade / Supercell Slam, and
+`radical-red_check.mjs` asserts that every override name is a guide name and that no CFRU short spelling is left in the
+data or the rules. Move effects (11 RR records) are in `hacks/radical-red/calc_effects.json` (unit 9; assemble.py and
+`radical-red_check.mjs` merge its moves into `over.effects`), with three fixtures `effects_check.mjs` runs on data.json
+(Acupressure Atk +1, Charge Beam SpA +1, Octazooka Spe −1).
 
 **Engine change** (the only one, authorised by the main chat): `over.abilities[name].statusImmune` (status keys whose
 end-of-turn chip the ability stops; `tools/calc/README.md` → Engine overrides; `test.mjs` "optional ability status
@@ -252,6 +255,14 @@ every check `npm test --prefix tools/calc` runs, here and in a worktree at `3400
 except `test.mjs` 147 → 148 (the `statusImmune` test) and this check (skip → 71); all exit 0. Logs:
 `.tmp/rr-calc3/sweep-base/`, `.tmp/rr-calc3/sweep-head/`. Not run: the hzla comparison, browser checks, the gate.
 
+**Scenarios** (unit 9, `tools/scenarios/calc-radical-red.mjs`, through the page): Leader Blaine's Permanent Desolate
+Land locks Harsh Sunshine (select read-only); setterStays: Pokemaniac Herman's Drought Ninetales leaves Sun up when he
+switches (the first setter team with no battle effect); Ghost Marowak (Pokémon Tower 6F) with its 252 HP EVs and
+player EVs at 0; statusImmune: Toxic Boost takes no poison / bad poison chip, Flare Boost no burn chip, other
+abilities do; the radicalred41 profile refuses a synthetic Unbound 2.1 save ("Wrong game", nothing imported).
+calc-doubles EXPECTED 47 (unit 6's count). Unit 9: `radical-red_check.mjs` 71 / 71, `effects_check.mjs` 90,
+gate scenarios calc-radical-red 32 / calc-doubles 4 / calc-import 6 passed.
+
 #### Open in-game checks
 - Toxic Boost Zangoose poisoned and Flare Boost Drifblim burned take no chip, and still lose 1/16 to Sand.
 - Ghost Marowak's HP with 252 HP EVs; other boss sets at 0 EVs.
@@ -299,7 +310,9 @@ boxes and `extractlib.finalise` files it in the Items standard; `itemstd.RULES['
   Hardcore turns MGM on, Main E95) items left out: 25 of 136, mostly the EV items. Move tutors in red go: the Vermilion
   Fan Club, Pewter Museum, Fuchsia gate / Kangaskhan, Cinnabar R&D Room and Victory Road tutors, and Tailwind / Stealth
   Rock / Spikes / Toxic Spikes at the Testing Room (data.js lists the Testing Room twice: the 8-move list is
-  Hardcore's). The report's "Hardcore leaves out" line lists every removal.
+  Hardcore's). The report's "Hardcore leaves out" line lists every removal. The same list
+  (`items.hardcore_gone_tutors()`: red on the Move Tutors tab and no Hardcore tutor teaching the move, 23 moves) is
+  dropped from every species' `P.tu` by dex.py (unit 9: 10,325 -> 3,654 entries); check.py guards both.
 - **Shops**: the marts' common stock (the 19 items all 10 data.js marts sell) is one "Any Poké Mart" line at FireRed's
   price (pokefirered `items.json`; the sheet prices only the special shops); the rest per shop with the Shops tab's
   price (Cerulean TMs, Celadon Dept. Store 2F / 4F / 5F / rooftop, Game Corner TMs in ₽, Trainer Fan Club, Cinnabar
@@ -322,11 +335,16 @@ boxes and `extractlib.finalise` files it in the Items standard; `itemstd.RULES['
   (`RR_EFFECT`): 41. `battle_text.json`: the RR effects from Showdown `gen9rr/items.ts` and the changelogs (Gems 1.5×,
   Bright Powder / Lax Incense / King's Rock no battle effect, the signature items Electirizer, Magmarizer, Up-Grade,
   Burnt Seed, Reaper Cloth, Leek Stick, the Adamant / Eternamax Orb Primal forms). `item_text_extra.json`: DexNav,
-  Necromizer, Time Changer (made-up from the changelogs). `item_text.ALIASES`: Houndoomnite -> Houndoominite, Fight
-  Memory -> Fighting Memory (icons). No icon: Leek Stick (RR's name for the Leek; the icon set's alias table would need a
-  rebuild), the RR / Gen 8-9 key items, Alcremite, Eternamax Orb, Cornerstone Mask, Necrozium Z, Rusty Sword / Shield,
-  and every TM / HM (the icon index has no radical-red guide map yet: `tools/item_icons.py` has to be rerun with
-  `--fetch` once data.json is merged).
+  Necromizer, Time Changer (made-up from the changelogs). Names: `common.ITEM_FIX` gives the standard spelling of
+  data.js's Charzardite X / Y, Blastoisnite, Kangaskanite, Aerodactlite, Houndoomnite, Alorichium Z, Pikshunium Z
+  and Fight Memory for every lookup (items, trainers, GID; unit 9 added the last four, so GID shows them too); the two
+  pickup keys whose item was renamed (p209 TM011 Supercell Slam, p439 Houndoominite) were renamed in place.
+  Icons (unit 9: `tools/item_icons.py --fetch` gave the shared index a radical-red map; the other guides' maps, PNGs
+  and sheets were kept as committed, since a full regenerate would also change theirs): 478 of 495 names, 12 new PNGs
+  (FireRed key items, Dynamax Band, Cornerstone Mask, Tea, Poké Vial, Meteorite ...; Infinite Repel uses Max Repel's).
+  No art in any pinned set (17): Ability Pill, Alcremite, Burnt Seed, DexNav, Dream Patch, Eternamax Orb, Itemfinder,
+  Leek Stick, Medicine, Necromizer, Necrozium Z, Oak's Parcel, Poké Rider, Rusty Shield, Rusty Sword, Stat Scanner,
+  Time Changer.
 - **For walk.py**: `items.PICKUPS` = one record per Found / Also line `{box, item, line, area, step}` (data.js area index
   and cap step; None for sheet-only rows). Lines are final after the Items standard except the relabeller may swap
   Found / Also: match on item and place, not the label.
@@ -375,10 +393,12 @@ encounter source, the sheet fills what it lacks):
 - Eggs (Wonder Egg Pokémon Pools v4.1 workbook, copied into `sheet_locs.json` → eggs): the egg NPC in Pewter,
   Cerulean and Vermilion City (5,000$) sells a Wonder Egg (Pewter's pool 256, Cerulean / Vermilion's 339) or a
   Paldea Egg (42); the Aide in the Celadon (after the 4th badge) and Fuchsia Pokémon Centers gives a Sevii Egg (12,
-  the two never the same). Methods `Wonder Egg` / `Paldea Egg` / `Sevii Egg`, "1 of N" (random), on the city's area
-  at its badge step (Pewter 0, Cerulean 1, Vermilion 2, Celadon / Fuchsia 4): 1,084 rows. They make 12 more species
-  obtainable; the rest of the pools are found in the wild too. Sheet colour names mapped to the dex's
-  (Squawkabilly-Green, Tatsugiri-Red, Tauros-Paldea-Fire / -Water).
+  the two never the same). The pools are not listed (the user, 2026-11-02: "just outline if it's a normal, Paldea,
+  or Sevii egg"): each vendor place gets an AR note naming the egg(s) it sells and the price / condition (5 notes).
+  A species no other way gives (not found, not an evolution, not bred from an obtainable one) keeps one P.w row
+  naming the egg type at its first vendor, no rate, the other vendors in the note: 2 (Phione, Minior). Unit 4's
+  1,084 per-city "1 of N" rows are gone (P.w 2,635 -> 1,553 rows, the guide 4.50 -> 4.30 MB). Sheet colour names
+  mapped to the dex's (Squawkabilly-Green, Tatsugiri-Red, Tauros-Paldea-Fire / -Water).
 - Unobtainables tab: Arceus, Dialga-Origin, Eternatus, Magearna-Original, Palkia-Origin forced to g 3 (Magearna-Original
   was g 0 through its base, Dialga / Palkia-Origin would be through the Mystery Gifts).
 
@@ -442,8 +462,7 @@ moves; pair blocks → two trainers; Postgame!C1175 Berry Forest Spirit has no d
 says** on the card (11): Chuck's Steadfast, Silph Brendan's HP Fire, Cave Lance Naive, Lass Ali / Picnicker Caitlin
 Bashful, Lass Reli / Lass Ann Battle Armor, Camper Ethan Adamant, Sam's HP Psychic, Samantha Jolly, Morty's
 Thunderbolt. Not shown: abbreviations (word prefixes), "(Both)", "A or B", Primal / Crowned forms listed with their
-own ability, the game's short item names (Houndoomnite, Rusty Shield / Sword, Necrozium Z, Leek Stick), data.js's
-"Soupercell Slam", the sheet's "Eathquake". RR calc (905 sets): 6 differences, report only. hzla (539 boss sets): 38,
+own ability, the game's short item names (Rusty Shield / Sword, Necrozium Z, Leek Stick), the sheet's "Eathquake". RR calc (905 sets): 6 differences, report only. hzla (539 boss sets): 38,
 mostly ability slots that contradict both data.js and the sheet: report only; **hzla says** only where the sheet
 differs too (Lass Ali's Brionne Bashful). The Main tab's comments ("supposed to be Modest, actually Adamant", 0 Speed
 IVs) agree with data.js.

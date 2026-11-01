@@ -108,6 +108,12 @@ Each unit adds the decisions it had to take to **Decisions taken in units** belo
 - [unit 8] Pickups go to their area's stop in their own cap step's split, else the split before (boss rewards), else the first later visit; 8 area-less lines by item; all 451 placed, np empty (items.PICKUPS, data.js steps).
 - [unit 8] Rock Smash / Strength return items (step 9 at Route 2, Viridian Forest Heart, Mt. Moon, Route 6, Rock Tunnel, Celadon) get small Pre-Koga stops beside the gym rematches; Surf ones (step 10) a Pre-May Surf circuit before May (data.js steps; the order is a guess).
 - [unit 8] Story steps kept to gates and gifts (Tea, Cut, Card Key, Lapras, Lift Key, Poké Flute Snorlax, Gold Teeth, Secret Key, Kubfu, Mystery Gifts, Enamorus); no route prose (CLAUDE.md, unit 4 story stops).
+- [unit 9] Eggs (the user's answer): each vendor place gets an AR note "Wonder Egg / Paldea Egg: a random Egg from an NPC here, 5,000$" / "Sevii Egg: from the Aide ..." (Pewter, Cerulean, Vermilion, Celadon, Fuchsia); only species no other way gives (not found, evolved or bred) keep one P.w row naming the egg type at its first vendor: 2 (Phione, Minior). P.w 2,635 -> 1,553 rows; the guide 4.50 -> 4.28 MB.
+- [unit 9] Item names are fixed once, in common.ITEM_FIX (Houndoominite, Aloraichium Z, Pikashunium Z, Fighting Memory added: the calc engine's spellings), so GID shows them too; items.py's sheet alias Houndoominite -> Houndoomnite went (it now pointed backwards). Pickup keys p209 / p439 renamed in place (no new keys; the guide is unpublished).
+- [unit 9] Move names: Inferno Parade / Soupercell Slam -> Infernal Parade / Supercell Slam in cfru.CFRU_NAMES (common.py's MOVE_FIX removed); cfg.calc's 12 raw ability aliases and the raw names in 4 rules removed; the check's alias variants became guards (override names are guide names, no CFRU short spelling in data or rules), still 71.
+- [unit 9] Hardcore-removed tutor moves: one list, items.hardcore_gone_tutors() (red on the Move Tutors tab, no Hardcore tutor teaches it: 23 moves), used by the Items tab and dex.py's P.tu (and the mirror compare, so the report doesn't list them as mirror-only).
+- [unit 9] Item icons: `item_icons.py --fetch` regenerates every guide's map, and the other guides' data changed after the index was built (a full regenerate drops BB2R's Bridge Mail art, Unbound's "5% ..." held-item keys ...): only the radical-red map, its 12 new PNGs and provenance were added; everything else is as committed (`item_sheets.py --check` passes for all). A full regenerate is a separate decision.
+- [unit 9] Calc scenarios: the setterStays check picks the first setter team with no battle effect (Pokemaniac Herman, Drought Ninetales); the save check uses a synthetic Unbound 2.1 save (valid sectors and checksums, filled so it can't read as a vanilla save).
 
 ## Units
 
@@ -130,17 +136,17 @@ chat merges units into `worktree-radical-red` one at a time and rebuilds data.js
 
 ## Finishing unit inputs (collected from unit reports)
 
-- `cfg.calc.save` / `cfru` are set (main chat, after units 2 / 7). Calc scenarios (`tools/scenarios/calc-radical-red.mjs`
+- ✓ (unit 9: scenarios, EXPECTED 47; trainer_fields_check already 47 / 108 records) `cfg.calc.save` / `cfru` are set (main chat, after units 2 / 7). Calc scenarios (`tools/scenarios/calc-radical-red.mjs`
   still throws), calc-doubles EXPECTED, trainer_fields_check counts.
-- Move `cfg.calc.over.effects` into `hacks/radical-red/calc_effects.json` now that data.json exists (`effects_check.mjs`).
-- `tools/cfru.py` names: "Inferno Parade" -> Infernal Parade, "Soupercell Slam" -> Supercell Slam; then prune the
+- ✓ (unit 9) Move `cfg.calc.over.effects` into `hacks/radical-red/calc_effects.json` now that data.json exists (`effects_check.mjs`).
+- ✓ (unit 9) `tools/cfru.py` names: "Inferno Parade" -> Infernal Parade, "Soupercell Slam" -> Supercell Slam; then prune the
   profile's raw-name aliases.
-- data.js item misspellings the engine won't know (Charzardite X/Y, Blastoisnite, Aerodactlite, Houndoomnite,
+- ✓ (unit 9: four were still raw, in GID) data.js item misspellings the engine won't know (Charzardite X/Y, Blastoisnite, Aerodactlite, Houndoomnite,
   Kangaskanite, Alorichium Z, Pikshunium Z): standard names (unit 5 may have done it; check).
 - In-game checks in notes → Damage calc and Save import go to PROGRESS.md → Open.
-- Item icons: 72 names with none (most TMs, FireRed key items): `tools/item_icons.py --fetch` to give the shared icon
+- ✓ (unit 9: 17 left without art) Item icons: 72 names with none (most TMs, FireRed key items): `tools/item_icons.py --fetch` to give the shared icon
   index a `radical-red` map, then `tools/item_sheets.py radical-red`; Gen 8-9 items with no art in any pinned set stay
   without.
-- `P.tu` (dex.py) still lists the tutor moves Hardcore removes (unit 5 dropped them from the Items tab): drop them.
+- ✓ (unit 9) `P.tu` (dex.py) still lists the tutor moves Hardcore removes (unit 5 dropped them from the Items tab): drop them.
 - Item text written by hand with no source: DexNav, Necromizer (a guess), Time Changer. Red Orb / Adamant Orb: no
   source places them.

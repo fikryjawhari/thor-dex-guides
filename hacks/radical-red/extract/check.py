@@ -3,8 +3,8 @@ adds its own (trainer_checks asserts). Usage: uv run python -I hacks/radical-red
 
 Locations (LOC / AR / P.w / P.g): every data.js area is a sublocation, every encounter in data.js is a P.w row of its
 area, every area is in one tracker place, and every row resolves to a dex species; the locations sheet's additions
-(sheet_locs.json) are all placed: Starter choice, Mystery Gift place, gift levels, trade wants, egg pools,
-unobtainables."""
+(sheet_locs.json) are all placed: Starter choice, Mystery Gift place, gift levels, trade wants, the egg each
+vendor place sells (an area note; one row only for species an egg alone gives), unobtainables."""
 from pathlib import Path
 import collections
 import json
@@ -35,6 +35,11 @@ def check_items():
     from common import DATA
     rows = {r[0]: (box['n'], r) for box in D['IT'] for r in box['r']}
     lines = {name: r[1].splitlines() for name, (box, r) in rows.items()}
+    # tutors Hardcore removes: neither the Move Tutors box nor any species' P.tu lists them
+    gone = items.hardcore_gone_tutors()
+    expect(gone and not [n for n in gone if n in rows], 'Hardcore-removed tutors listed: %s' % sorted(gone & set(rows)))
+    taught = {D['M'][i] for mon in D['P'] for i in mon['tu']}
+    expect(not taught & gone, 'P.tu has Hardcore-removed tutor moves: %s' % sorted(taught & gone))
     # machines: every data.js TM / HM has a row, except the ones Hardcore lacks (TM107 / TM118 teach no move: no item)
     machines = set(items.TM_MOVES)
     have = {n.split(' ', 1)[0] for n, (box, r) in rows.items() if box == 'TMs and HMs'}
@@ -173,14 +178,24 @@ def check_sheet(data, failures):
         if not any(row[0] == loc[area] and row[1] == 'Trade' and row[4].endswith('for a ' + wanted)
                    for mon in data['P'] for row in mon['w']):
             failures.append('trade at %s does not say it wants %s' % (area, wanted))
+    egg_methods = {egg['method'] for egg in SHEET['eggs']}
+    place = {index: ar for ar in data['AR'] for index in ar['l']}
     for egg in SHEET['eggs']:
-        rate = '1 of %d' % len(egg['species'])
         for area, _, _ in egg['areas']:
-            lacking = [name for name in egg['species'] if not any(
-                row[0] == loc[area] and row[1] == egg['method'] and row[2] == rate for row in by_id[sid(name)]['w'])]
-            if lacking:
-                failures.append('%s at %s: %d species without a row, e.g. %s' % (egg['method'], area, len(lacking),
-                                                                                lacking[:3]))
+            if egg['method'] not in place[loc[area]].get('note', ''):
+                failures.append('%s: the place note does not name the %s' % (area, egg['method']))
+    egg_rows = collections.Counter(mon['id'] for mon in data['P'] for row in mon['w'] if row[1] in egg_methods)
+    if any(count > 1 for count in egg_rows.values()):
+        failures.append('species with more than one egg row: %s' % [k for k, v in egg_rows.items() if v > 1][:5])
+    for ar in data['AR']:
+        for section in ar.get('es', []):
+            if any(group['m'].split(' · ')[0] in egg_methods for group in section['g']):
+                failures.append('%s still lists an egg pool section' % ar['n'])
+    pooled = {sid(name) for egg in SHEET['eggs'] for name in egg['species']}
+    lost = sorted(i for i in pooled if i in by_id and by_id[i]['g'] == 3 and i not in
+                  {sid(name) for name in SHEET['unobtainable']})
+    if lost:
+        failures.append('%d egg pool species not obtainable, e.g. %s' % (len(lost), lost[:5]))
     unobtainable = {sid(name) for name in SHEET['unobtainable']}
     missing = sorted(mon['id'] for mon in data['P']
                      if mon['g'] == 3 and not mon.get('fc') and mon['id'] not in unobtainable)

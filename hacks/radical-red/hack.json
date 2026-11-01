@@ -340,56 +340,20 @@
      "Frozen Mist": {
       "effect": "Shield Dust"
      },
-     "Valiant Shield": {
-      "effect": "Dauntless Shield"
-     },
      "Solar Power": {
       "effect": ""
      },
      "Rivalry": {
       "effect": ""
      },
-     "SupremeOverlord": {
-      "effect": "Supreme Overlord"
-     },
-     "OrichalcumPulse": {
-      "effect": "Orichalcum Pulse"
-     },
-     "Zero To Hero": {
-      "effect": "Zero to Hero"
-     },
-     "ThermalExchange": {
-      "effect": "Thermal Exchange"
-     },
-     "WaterCompaction": {
-      "effect": "Water Compaction"
-     },
-     "Sword Of Ruin": {
-      "effect": "Sword of Ruin"
-     },
-     "Vessel Of Ruin": {
-      "effect": "Vessel of Ruin"
-     },
      "ORAORAORAORA!": {
       "effect": "ORAORAORAORA"
-     },
-     "Bone Zone ": {
-      "effect": "Bone Zone"
      },
      "Flower Gift": {
       "effect": ""
      },
      "Bad Company": {
       "effect": "Rock Head"
-     },
-     "Electromrphosis": {
-      "effect": "Electromorphosis"
-     },
-     "Neutralize Gas": {
-      "effect": "Neutralizing Gas"
-     },
-     "Wandering Soul": {
-      "effect": "Wandering Spirit"
      }
     },
     "moves": {
@@ -1375,8 +1339,7 @@
            "ref": "names.defAbility"
           },
           [
-           "Water Compaction",
-           "WaterCompaction"
+           "Water Compaction"
           ]
          ]
         },
@@ -1769,8 +1732,7 @@
            "ref": "names.atkAbility"
           },
           [
-           "Bone Zone",
-           "Bone Zone "
+           "Bone Zone"
           ]
          ]
         },
@@ -1803,8 +1765,7 @@
            "ref": "names.atkAbility"
           },
           [
-           "Bone Zone",
-           "Bone Zone "
+           "Bone Zone"
           ]
          ]
         },
@@ -2908,8 +2869,7 @@
           [
            "Bitter Malice",
            "Barb Barrage",
-           "Infernal Parade",
-           "Inferno Parade"
+           "Infernal Parade"
           ]
          ]
         },
@@ -3247,99 +3207,6 @@
      "Leek Stick": {
       "Farfetch'd": 1,
       "Sirfetch'd": 2
-     }
-    },
-    "effects": {
-     "moves": {
-      "Rapid Spin": {
-       "fl": [
-        "contact"
-       ],
-       "k": "spin",
-       "tg": "s",
-       "sec": [],
-       "n": "Hardcore Main!E28"
-      },
-      "Ice Spinner": {
-       "fl": [
-        "contact"
-       ],
-       "n": "Hardcore Main!E12"
-      },
-      "Steel Roller": {
-       "fl": [
-        "contact"
-       ],
-       "n": "Hardcore Main!E12"
-      },
-      "Splintered Stormshards": {
-       "n": "Hardcore Main!E12"
-      },
-      "Acupressure": {
-       "tg": "s",
-       "b": {
-        "atk": 1
-       },
-       "n": "Showdown gen9rr/moves.ts:4-12"
-      },
-      "Muddy Water": {
-       "sec": [
-        {
-         "c": 40,
-         "b": {
-          "atk": -1
-         }
-        }
-       ],
-       "n": "Showdown gen9rr/moves.ts:665-676"
-      },
-      "Octazooka": {
-       "fl": [
-        "bullet"
-       ],
-       "sec": [
-        {
-         "c": 100,
-         "b": {
-          "spe": -1
-         }
-        }
-       ],
-       "n": "Showdown gen9rr/moves.ts:717-730"
-      },
-      "Ice Hammer": {
-       "fl": [
-        "contact"
-       ],
-       "n": "Showdown gen9rr/moves.ts:492-500"
-      },
-      "Razor Shell": {
-       "fl": [
-        "contact",
-        "slicing"
-       ],
-       "n": "Showdown gen9rr/moves.ts:780-788"
-      },
-      "Shell Side Arm": {
-       "sec": [
-        {
-         "c": 10,
-         "st": "psn"
-        }
-       ],
-       "n": "Showdown gen9rr/moves.ts:888-905"
-      },
-      "Charge Beam": {
-       "sec": [
-        {
-         "c": 100,
-         "sb": {
-          "spa": 1
-         }
-        }
-       ],
-       "n": "Showdown gen9rr/moves.ts:149-160"
-      }
      }
     }
    },

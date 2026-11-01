@@ -6,6 +6,7 @@ Hardcore Main tab's swaps and removals applied. notes.md → Items has the rules
               Found / Also line this module writes (shops, tutors and Useful NPCs are not pickups)
     build(D)  writes D['IT'] (old-box rows; extractlib.finalise runs the Items standard), P.sloc, Hardcore P.hi drops
 """
+from functools import lru_cache
 from pathlib import Path
 import re
 import sys
@@ -36,7 +37,7 @@ def machine(kind, number):
 
 # sheet spellings data.js has no record for (key items the game keeps elsewhere) or spells differently
 SHEET_NAMES = {'Bugium Z': 'Buginium Z', 'Bugium': 'Buginium Z', 'Mewium Z': 'Mewnium Z', 'Mewium': 'Mewnium Z',
-               'Alolaraichium Z': 'Aloraichium Z', 'Beedrilite': 'Beedrillite', 'Houndoominite': 'Houndoomnite',
+               'Alolaraichium Z': 'Aloraichium Z', 'Beedrilite': 'Beedrillite',
                'Weakness Pol.': 'Weakness Policy', 'Pokédex': 'Pokédex', 'Time Changer': 'Time Changer',
                'Poké Vial': 'Poké Vial', 'DexNav': 'DexNav', 'Infinite Repel': 'Infinite Repel',
                'Hidden Costume': 'Hidden Costume', 'Necromizer (once)': 'Necromizer'}
@@ -755,7 +756,8 @@ def cost(value):
     return text + (' (%s)' % note if note and note != 'only once' else ', once' if note else '')
 
 
-def tutors(add, Mi, log, dropped):
+def tutor_blocks():
+    """The Move Tutors tab's tutors: [{place, who, gone, moves [(move, red)], cost, special}]."""
     blocks, special = [], False
     for row, cells in tab('Move Tutors'):
         if 'A' in cells and 'SPECIAL MOVE TUTORS' in cells['A'][0]:
@@ -768,6 +770,24 @@ def tutors(add, Mi, log, dropped):
             blocks[-1]['moves'].append((fix(cells['H'][0]), cells['H'][1] == RED_FONT))
             if 'N' in cells:
                 blocks[-1]['cost'] = cost(cells['N'][0])
+    return blocks
+
+
+@lru_cache(maxsize=1)
+def hardcore_gone_tutors():
+    """The tutor moves Hardcore removes (red on the Move Tutors tab, no Hardcore tutor teaches them): the Items tab
+    leaves them out and dex.py drops them from P.tu."""
+    taught = {}
+    for b in tutor_blocks():
+        if not b['special']:
+            for mv, red in b['moves']:
+                m = move(mv) or mv
+                taught[m] = taught.get(m, False) or not (b['gone'] or red)
+    return frozenset(m for m, kept in taught.items() if not kept)
+
+
+def tutors(add, Mi, log, dropped):
+    blocks = tutor_blocks()
     n = 0
     sheet_moves = set()
     for b in blocks:

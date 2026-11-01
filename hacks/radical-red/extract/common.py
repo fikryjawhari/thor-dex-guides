@@ -87,11 +87,9 @@ def read_data():
 DATA = read_data()
 SPECIES = DATA['species']
 CAPS = sorted(DATA['caps'].values(), key=lambda row: row['ID'])
-MOVE_FIX = {'Inferno Parade': 'Infernal Parade'}
-MOVE_IDS = {ident: MOVE_FIX.get(row['name'], cfru.official(row['name'])) for ident, row in DATA['moves'].items()
+MOVE_IDS = {ident: cfru.official(row['name']) for ident, row in DATA['moves'].items()
             if int(ident) < 848 and row['name'] != 'Placeholder'}
 MOVE_NAMES = {key(name): name for name in MOVE_IDS.values()}
-MOVE_NAMES.update({key(short): full for short, full in MOVE_FIX.items()})
 MOVE_RECORDS = {}
 for ident, name in MOVE_IDS.items():
     row = DATA['moves'][ident]
@@ -106,7 +104,8 @@ ABILITY_NAMES = {key(name): ABILITY_IDS[(ident, index)] for ident, row in DATA['
 ABILITY_NAMES.update({key(name): name for name in ABILITY_IDS.values()})
 ABILITY_NAMES[key('Pheonix Down')] = 'Phoenix Down'
 ITEM_FIX = {'Charzardite X': 'Charizardite X', 'Charzardite Y': 'Charizardite Y', 'Blastoisnite': 'Blastoisinite',
-            'Kangaskanite': 'Kangaskhanite', 'Aerodactlite': 'Aerodactylite'}
+            'Kangaskanite': 'Kangaskhanite', 'Aerodactlite': 'Aerodactylite', 'Houndoomnite': 'Houndoominite',
+            'Alorichium Z': 'Aloraichium Z', 'Pikshunium Z': 'Pikashunium Z', 'Fight Memory': 'Fighting Memory'}
 ITEM_NAMES = {key(row['name']): ITEM_FIX.get(row['name'], row['name']) for row in DATA['items'].values()}
 ITEM_NAMES.update({key(name): name for name in ITEM_NAMES.values()})
 for short, full in cfru.CFRU_NAMES.items():

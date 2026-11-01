@@ -1,3 +1,4 @@
+dex: P.tu leaves out 23 tutor moves Hardcore removes: Bulk Up, Calm Mind, Charge Beam, Dragon Dance, Flame Charge, Hone Claws, Iron Defense, Meteor Beam, Nasty Plot, Power-Up Punch, Rain Dance, Rock Polish, Sandstorm, Snowscape, Spikes, Stealth Rock, Substitute, Sunny Day, Swords Dance, Tailwind, Toxic Spikes, Trailblaze, Work Up
 dex: P 1343 (1026 National Dex numbers, 68 Mega/Primal); M 826; AB 281
 official dex: 1343 species records; 826 ordinary moves; 176 generated/placeholder move records excluded
 merged move Leech Life: game IDs 141, 355; canonical ID 141; PP 15 (other copies 141=15, 355=10)
@@ -678,7 +679,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex abomasnow-mega abilities: official only ['Slush Rush']; mirror only ['Snow Warning']
   RomHackDex abomasnow-mega hidden: official Snow Warning; mirror None
   RomHackDex abomasnow-mega TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM04', 'Seed Bomb'), ('TM06', 'Toxic'), ('TM09', 'Bullet Seed'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM120', 'Ice Spinner'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM19', 'Giga Drain'), ('TM21', 'Icy Wind'), ('TM22', 'Weather Ball'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM53', 'Energy Ball'), ('TM54', 'Grassy Glide'), ('TM62', 'Iron Tail'), ('TM69', 'Stomping Tantrum'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM86', 'Grass Knot'), ('TM96', 'Bulldoze'), ('TM97', 'Frost Breath')]
-  RomHackDex abomasnow-mega tutor: official only []; mirror only ['Focus Punch', 'Icicle Spear', 'Rain Dance', 'Snowscape', 'Solar Beam', 'Substitute', 'Swords Dance', 'Trailblaze']
+  RomHackDex abomasnow-mega tutor: official only []; mirror only ['Focus Punch', 'Icicle Spear', 'Solar Beam']
   RomHackDex abra abilities: official only ['Inner Focus']; mirror only ['Magic Guard']
   RomHackDex abra hidden: official Magic Guard; mirror Inner Focus
   RomHackDex absol abilities: official only ['Super Luck']; mirror only ['Justified']
@@ -686,28 +687,28 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex absol-mega types: official ['Dark', 'Fairy']; mirror ['Dark']
   RomHackDex absol-mega abilities: official only ['Sharpness']; mirror only []
   RomHackDex absol-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM108', 'Snarl'), ('TM109', 'Superpower'), ('TM113', 'Play Rough'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM21', 'Icy Wind'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM27', 'Return'), ('TM30', 'Shadow Ball'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM56', 'Air Slash'), ('TM61', 'Will-O-Wisp'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM71', 'Stone Edge'), ('TM73', 'Thunder Wave'), ('TM75', 'Knock Off'), ('TM79', 'Dark Pulse'), ('TM80', 'Rock Slide'), ('TM81', 'X-Scissor'), ('TM82', 'Sleep Talk'), ('TM85', 'Future Sight'), ('TM87', 'Aerial Ace')]
-  RomHackDex absol-mega tutor: official only []; mirror only ['Body Slam', 'Calm Mind', 'Charge Beam', 'Dark Hole', 'Foul Play', 'Hex', 'Hone Claws', 'Megahorn', 'Rain Dance', 'Sandstorm', 'Snowscape', 'Substitute', 'Sunny Day', 'Swords Dance']
+  RomHackDex absol-mega tutor: official only []; mirror only ['Body Slam', 'Dark Hole', 'Foul Play', 'Hex', 'Megahorn']
   RomHackDex accelgor hidden: official Sheer Force; mirror Sticky Hold
   RomHackDex aerodactyl abilities: official only ['Pressure']; mirror only ['Unnerve']
   RomHackDex aerodactyl hidden: official Unnerve; mirror Pressure
   RomHackDex aerodactyl-mega TM/HM: official only []; mirror only [('HM02', 'Fly'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM12', 'Taunt'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM33', 'Reflect'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM47', 'Steel Wing'), ('TM48', 'Hurricane'), ('TM51', 'Roost'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM71', 'Stone Edge'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM89', 'U-turn'), ('TM96', 'Bulldoze')]
-  RomHackDex aerodactyl-mega tutor: official only []; mirror only ['Dragon Dance', 'Fire Fang', 'Hone Claws', 'Ice Fang', 'Meteor Beam', 'Psychic Fangs', 'Rain Dance', 'Rock Blast', 'Rock Polish', 'Sandstorm', 'Stealth Rock', 'Substitute', 'Sunny Day', 'Tailwind', 'Thunder Fang']
+  RomHackDex aerodactyl-mega tutor: official only []; mirror only ['Fire Fang', 'Ice Fang', 'Psychic Fangs', 'Rock Blast', 'Thunder Fang']
   RomHackDex aggron abilities: official only ['Rock Head']; mirror only ['Heavy Metal']
   RomHackDex aggron hidden: official Heavy Metal; mirror Rock Head
-  RomHackDex aggron-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM109', 'Superpower'), ('TM11', 'Soupercell Slam'), ('TM115', 'Body Press'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM23', 'Iron Head'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM35', 'Flamethrower'), ('TM37', 'High Horsepower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM66', 'Steel Beam'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM73', 'Thunder Wave'), ('TM76', 'Earth Power'), ('TM77', 'Thunder Punch'), ('TM79', 'Dark Pulse'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM91', 'Flash Cannon'), ('TM93', 'Dragon Tail'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex aggron-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Hone Claws', 'Iron Defense', 'Meteor Beam', 'Power-Up Punch', 'Rain Dance', 'Rock Blast', 'Rock Polish', 'Sandstorm', 'Solar Beam', 'Stealth Rock', 'Substitute', 'Sunny Day', 'Uproar']
+  RomHackDex aggron-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM109', 'Superpower'), ('TM11', 'Supercell Slam'), ('TM115', 'Body Press'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM23', 'Iron Head'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM35', 'Flamethrower'), ('TM37', 'High Horsepower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM66', 'Steel Beam'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM73', 'Thunder Wave'), ('TM76', 'Earth Power'), ('TM77', 'Thunder Punch'), ('TM79', 'Dark Pulse'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM91', 'Flash Cannon'), ('TM93', 'Dragon Tail'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
+  RomHackDex aggron-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Rock Blast', 'Solar Beam', 'Uproar']
   RomHackDex aipom abilities: official only ['Pickup']; mirror only ['Skill Link']
   RomHackDex aipom hidden: official Skill Link; mirror Pickup
   RomHackDex alakazam abilities: official only ['Inner Focus']; mirror only ['Magic Guard']
   RomHackDex alakazam hidden: official Magic Guard; mirror Inner Focus
   RomHackDex alakazam-mega TM/HM: official only []; mirror only [('HM05', 'Flash'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM102', 'Dazzling Gleam'), ('TM104', 'Psyshock'), ('TM116', 'Trick Room'), ('TM12', 'Taunt'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM52', 'Focus Blast'), ('TM53', 'Energy Ball'), ('TM55', 'Expanding Force'), ('TM60', 'Drain Punch'), ('TM62', 'Iron Tail'), ('TM73', 'Thunder Wave'), ('TM75', 'Knock Off'), ('TM77', 'Thunder Punch'), ('TM82', 'Sleep Talk'), ('TM85', 'Future Sight'), ('TM86', 'Grass Knot'), ('TM98', 'Fire Punch')]
-  RomHackDex alakazam-mega tutor: official only []; mirror only ['Body Slam', 'Calm Mind', 'Charge Beam', 'Focus Punch', 'Foul Play', 'Nasty Plot', 'Rain Dance', 'Stored Power', 'Substitute', 'Sunny Day']
+  RomHackDex alakazam-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Foul Play', 'Stored Power']
   RomHackDex alcremie abilities: official only []; mirror only ['Aroma Veil']
   RomHackDex alcremie hidden: official Aroma Veil; mirror None
   RomHackDex alcremie-mega stats: official [65, 70, 95, 140, 131, 84]; mirror [65, 60, 75, 110, 121, 64]
   RomHackDex alcremie-mega abilities: official only ['Self Sufficient']; mirror only ['Aroma Veil', 'Sweet Veil']
   RomHackDex alcremie-mega TM/HM: official only []; mirror only [('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM102', 'Dazzling Gleam'), ('TM104', 'Psyshock'), ('TM112', 'Misty Explosion'), ('TM113', 'Play Rough'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM19', 'Giga Drain'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM45', 'Draining Kiss'), ('TM53', 'Energy Ball'), ('TM60', 'Drain Punch'), ('TM82', 'Sleep Talk')]
-  RomHackDex alcremie-mega tutor: official only []; mirror only ['Alluring Voice', 'Calm Mind', 'Mystical Fire', 'Solar Beam', 'Stored Power', 'Substitute']
+  RomHackDex alcremie-mega tutor: official only []; mirror only ['Alluring Voice', 'Mystical Fire', 'Solar Beam', 'Stored Power']
   RomHackDex alomomola abilities: official only ['Hydration']; mirror only ['Healer', 'Regenerator']
   RomHackDex alomomola hidden: official Regenerator; mirror Hydration
   RomHackDex altaria stats: official [85, 70, 90, 70, 105, 80]; mirror [75, 70, 90, 70, 105, 80]
@@ -715,7 +716,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex altaria hidden: official Cloud Nine; mirror None
   RomHackDex altaria-mega stats: official [85, 110, 110, 110, 105, 80]; mirror [75, 110, 110, 110, 105, 80]
   RomHackDex altaria-mega TM/HM: official only []; mirror only [('HM02', 'Fly'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM102', 'Dazzling Gleam'), ('TM113', 'Play Rough'), ('TM117', 'Brave Bird'), ('TM119', 'Draco Meteor'), ('TM13', 'Ice Beam'), ('TM17', 'Protect'), ('TM20', 'Hyper Voice'), ('TM22', 'Weather Ball'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM47', 'Steel Wing'), ('TM48', 'Hurricane'), ('TM51', 'Roost'), ('TM59', 'Dragon Pulse'), ('TM61', 'Will-O-Wisp'), ('TM62', 'Iron Tail'), ('TM72', 'Draco Barrage'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM88', 'Pluck'), ('TM96', 'Bulldoze')]
-  RomHackDex altaria-mega tutor: official only []; mirror only ['Alluring Voice', 'Body Slam', 'Calm Mind', 'Dragon Dance', 'Hone Claws', 'Rain Dance', 'Solar Beam', 'Substitute', 'Sunny Day', 'Tailwind', 'Trailblaze', 'Uproar']
+  RomHackDex altaria-mega tutor: official only []; mirror only ['Alluring Voice', 'Body Slam', 'Solar Beam', 'Uproar']
   RomHackDex amaura abilities: official only []; mirror only ['Snow Warning']
   RomHackDex amaura hidden: official Snow Warning; mirror None
   RomHackDex ambipom abilities: official only ['Pickup']; mirror only ['Skill Link']
@@ -726,8 +727,8 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex ampharos hidden: official Plus; mirror None
   RomHackDex ampharos-mega abilities: official only ['Thick Fat']; mirror only ['Mold Breaker']
   RomHackDex ampharos-mega hidden: official Mold Breaker; mirror None
-  RomHackDex ampharos-mega TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM11', 'Soupercell Slam'), ('TM119', 'Draco Meteor'), ('TM15', 'Electroweb'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM27', 'Return'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM58', 'Rising Voltage'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM72', 'Draco Barrage'), ('TM73', 'Thunder Wave'), ('TM77', 'Thunder Punch'), ('TM82', 'Sleep Talk'), ('TM92', 'Volt Switch'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch'), ('TM99', 'Wild Charge')]
-  RomHackDex ampharos-mega tutor: official only []; mirror only ['Body Slam', 'Charge Beam', 'Focus Punch', 'Meteor Beam', 'Power Gem', 'Power-Up Punch', 'Rain Dance', 'Substitute', 'Trailblaze']
+  RomHackDex ampharos-mega TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM11', 'Supercell Slam'), ('TM119', 'Draco Meteor'), ('TM15', 'Electroweb'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM27', 'Return'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM58', 'Rising Voltage'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM72', 'Draco Barrage'), ('TM73', 'Thunder Wave'), ('TM77', 'Thunder Punch'), ('TM82', 'Sleep Talk'), ('TM92', 'Volt Switch'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch'), ('TM99', 'Wild Charge')]
+  RomHackDex ampharos-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Power Gem']
   RomHackDex annihilape abilities: official only ['Inner Focus']; mirror only ['Defiant']
   RomHackDex annihilape hidden: official Defiant; mirror Inner Focus
   RomHackDex anorith abilities: official only ['Skill Link']; mirror only ['Swift Swim']
@@ -735,7 +736,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex appletun abilities: official only ['Gluttony']; mirror only ['Thick Fat']
   RomHackDex appletun hidden: official Thick Fat; mirror Gluttony
   RomHackDex appletun-mega TM/HM: official only []; mirror only [('TM04', 'Seed Bomb'), ('TM06', 'Toxic'), ('TM09', 'Bullet Seed'), ('TM10', 'Hidden Power'), ('TM109', 'Superpower'), ('TM115', 'Body Press'), ('TM119', 'Draco Meteor'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM19', 'Giga Drain'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM33', 'Reflect'), ('TM37', 'High Horsepower'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM53', 'Energy Ball'), ('TM54', 'Grassy Glide'), ('TM59', 'Dragon Pulse'), ('TM72', 'Draco Barrage'), ('TM74', 'Gyro Ball'), ('TM82', 'Sleep Talk'), ('TM86', 'Grass Knot'), ('TM96', 'Bulldoze')]
-  RomHackDex appletun-mega tutor: official only []; mirror only ['Body Slam', 'Iron Defense', 'Solar Beam', 'Substitute', 'Sunny Day', 'Trailblaze']
+  RomHackDex appletun-mega tutor: official only []; mirror only ['Body Slam', 'Solar Beam']
   RomHackDex applin abilities: official only ['Gluttony']; mirror only ['Bulletproof']
   RomHackDex applin hidden: official Bulletproof; mirror Gluttony
   RomHackDex araquanid abilities: official only []; mirror only ['Water Absorb']
@@ -781,7 +782,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex audino hidden: official None; mirror Regenerator
   RomHackDex audino-mega abilities: official only ['Regenerator']; mirror only ['Healer']
   RomHackDex audino-mega TM/HM: official only []; mirror only [('HM03', 'Surf'), ('HM05', 'Flash'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM102', 'Dazzling Gleam'), ('TM104', 'Psyshock'), ('TM116', 'Trick Room'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM20', 'Hyper Voice'), ('TM21', 'Icy Wind'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM45', 'Draining Kiss'), ('TM60', 'Drain Punch'), ('TM62', 'Iron Tail'), ('TM69', 'Stomping Tantrum'), ('TM73', 'Thunder Wave'), ('TM75', 'Knock Off'), ('TM77', 'Thunder Punch'), ('TM82', 'Sleep Talk'), ('TM86', 'Grass Knot'), ('TM98', 'Fire Punch'), ('TM99', 'Wild Charge')]
-  RomHackDex audino-mega tutor: official only []; mirror only ['Body Slam', 'Calm Mind', 'Charge Beam', 'Focus Punch', 'Pain Split', 'Power-Up Punch', 'Rain Dance', 'Solar Beam', 'Substitute', 'Sunny Day', 'Uproar', 'Work Up']
+  RomHackDex audino-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Pain Split', 'Solar Beam', 'Uproar']
   RomHackDex aurorus abilities: official only []; mirror only ['Snow Warning']
   RomHackDex aurorus hidden: official Snow Warning; mirror None
   RomHackDex avalugg abilities: official only ['Filter', 'Ice Body']; mirror only ['Own Tempo', 'Sturdy']
@@ -800,7 +801,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex banette hidden: official Wandering Spirit; mirror Frisk
   RomHackDex banette-mega types: official ['Ghost', 'Normal']; mirror ['Ghost']
   RomHackDex banette-mega TM/HM: official only []; mirror only [('HM05', 'Flash'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM102', 'Dazzling Gleam'), ('TM116', 'Trick Room'), ('TM12', 'Taunt'), ('TM17', 'Protect'), ('TM21', 'Icy Wind'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM61', 'Will-O-Wisp'), ('TM65', 'Shadow Claw'), ('TM67', 'Poltergeist'), ('TM73', 'Thunder Wave'), ('TM75', 'Knock Off'), ('TM79', 'Dark Pulse'), ('TM82', 'Sleep Talk'), ('TM90', 'Gunk Shot')]
-  RomHackDex banette-mega tutor: official only []; mirror only ['Body Slam', 'Calm Mind', 'Charge Beam', 'Foul Play', 'Hex', 'Pain Split', 'Phantom Force', 'Rain Dance', 'Substitute', 'Sunny Day', 'Swords Dance', 'Trailblaze']
+  RomHackDex banette-mega tutor: official only []; mirror only ['Body Slam', 'Foul Play', 'Hex', 'Pain Split', 'Phantom Force']
   RomHackDex barbaracle abilities: official only ['Sniper']; mirror only ['Pickpocket']
   RomHackDex barbaracle hidden: official Infiltrator; mirror Sniper
   RomHackDex barboach abilities: official only []; mirror only ['Oblivious']
@@ -831,7 +832,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex beedrill abilities: official only []; mirror only ['Sniper']
   RomHackDex beedrill hidden: official Sniper; mirror None
   RomHackDex beedrill-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM02', 'Fly'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM106', 'Acrobatics'), ('TM15', 'Electroweb'), ('TM17', 'Protect'), ('TM19', 'Giga Drain'), ('TM27', 'Return'), ('TM31', 'Brick Break'), ('TM33', 'Reflect'), ('TM36', 'Sludge Bomb'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM51', 'Roost'), ('TM63', 'Venoshock'), ('TM75', 'Knock Off'), ('TM81', 'X-Scissor'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM87', 'Aerial Ace'), ('TM89', 'U-turn'), ('TM90', 'Gunk Shot')]
-  RomHackDex beedrill-mega tutor: official only []; mirror only ['Bug Bite', 'Drill Run', 'Iron Defense', 'Pin Missile', 'Solar Beam', 'Substitute', 'Sunny Day', 'Swords Dance', 'Tailwind', 'Toxic Spikes']
+  RomHackDex beedrill-mega tutor: official only []; mirror only ['Bug Bite', 'Drill Run', 'Pin Missile', 'Solar Beam']
   RomHackDex beheeyem stats: official [95, 75, 75, 125, 95, 40]; mirror [75, 75, 75, 125, 95, 40]
   RomHackDex beheeyem abilities: official only ['Synchronize']; mirror only ['Telepathy']
   RomHackDex beheeyem hidden: official None; mirror Synchronize
@@ -859,11 +860,11 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex blastoise abilities: official only []; mirror only ['Rain Dish']
   RomHackDex blastoise hidden: official Rain Dish; mirror None
   RomHackDex blastoise-mega TM/HM: official only []; mirror only [('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('HM07', 'Waterfall'), ('TM03', 'Flip Turn'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM115', 'Body Press'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM22', 'Weather Ball'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM39', 'Rock Tomb'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM74', 'Gyro Ball'), ('TM79', 'Dark Pulse'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM91', 'Flash Cannon'), ('TM93', 'Dragon Tail'), ('TM96', 'Bulldoze')]
-  RomHackDex blastoise-mega tutor: official only []; mirror only ['Body Slam', 'Celebrate', 'Focus Punch', 'Hydro Cannon', 'Iron Defense', 'Power-Up Punch', 'Rain Dance', 'Snowscape', 'Substitute', 'Work Up']
+  RomHackDex blastoise-mega tutor: official only []; mirror only ['Body Slam', 'Celebrate', 'Focus Punch', 'Hydro Cannon']
   RomHackDex blaziken abilities: official only ['Striker']; mirror only ['Blaze', 'Speed Boost']
   RomHackDex blaziken hidden: official Speed Boost; mirror None
   RomHackDex blaziken-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM10', 'Hidden Power'), ('TM106', 'Acrobatics'), ('TM109', 'Superpower'), ('TM110', 'Scorching Sands'), ('TM111', 'Vacuum Wave'), ('TM114', 'Heat Crash'), ('TM117', 'Brave Bird'), ('TM17', 'Protect'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM50', 'Overheat'), ('TM52', 'Focus Blast'), ('TM57', 'Temper Flare'), ('TM61', 'Will-O-Wisp'), ('TM65', 'Shadow Claw'), ('TM68', 'Dual Chop'), ('TM71', 'Stone Edge'), ('TM75', 'Knock Off'), ('TM77', 'Thunder Punch'), ('TM78', 'Low Sweep'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM87', 'Aerial Ace'), ('TM89', 'U-turn'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex blaziken-mega tutor: official only []; mirror only ['Blast Burn', 'Blaze Kick', 'Body Slam', 'Bulk Up', 'Flame Charge', 'Flare Blitz', 'Focus Punch', 'Hone Claws', 'Power-Up Punch', 'Solar Beam', 'Substitute', 'Sunny Day', 'Swords Dance', 'Work Up']
+  RomHackDex blaziken-mega tutor: official only []; mirror only ['Blast Burn', 'Blaze Kick', 'Body Slam', 'Flare Blitz', 'Focus Punch', 'Solar Beam']
   RomHackDex blipbug abilities: official only ['Compound Eyes']; mirror only ['Telepathy']
   RomHackDex blipbug hidden: official Telepathy; mirror Compound Eyes
   RomHackDex blissey abilities: official only ['Serene Grace']; mirror only ['Healer']
@@ -928,7 +929,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex butterfree abilities: official only []; mirror only ['Tinted Lens']
   RomHackDex butterfree hidden: official Tinted Lens; mirror None
   RomHackDex butterfree-mega TM/HM: official only []; mirror only [('HM02', 'Fly'), ('HM05', 'Flash'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM106', 'Acrobatics'), ('TM15', 'Electroweb'), ('TM17', 'Protect'), ('TM19', 'Giga Drain'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM45', 'Draining Kiss'), ('TM46', 'Thief'), ('TM48', 'Hurricane'), ('TM51', 'Roost'), ('TM53', 'Energy Ball'), ('TM56', 'Air Slash'), ('TM63', 'Venoshock'), ('TM82', 'Sleep Talk'), ('TM85', 'Future Sight'), ('TM87', 'Aerial Ace'), ('TM89', 'U-turn')]
-  RomHackDex butterfree-mega tutor: official only []; mirror only ['Bug Bite', 'Bug Buzz', 'Iron Defense', 'Rain Dance', 'Solar Beam', 'Substitute', 'Sunny Day', 'Tailwind']
+  RomHackDex butterfree-mega tutor: official only []; mirror only ['Bug Bite', 'Bug Buzz', 'Solar Beam']
   RomHackDex cacnea hidden: official Sand Rush; mirror None
   RomHackDex cacturne stats: official [70, 120, 60, 120, 60, 55]; mirror [70, 115, 60, 115, 60, 55]
   RomHackDex cacturne hidden: official Sand Rush; mirror None
@@ -937,7 +938,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex camerupt hidden: official Anger Point; mirror Solid Rock
   RomHackDex camerupt-mega stats: official [90, 100, 110, 145, 115, 20]; mirror [70, 120, 100, 145, 105, 20]
   RomHackDex camerupt-mega TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM10', 'Hidden Power'), ('TM110', 'Scorching Sands'), ('TM114', 'Heat Crash'), ('TM115', 'Body Press'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM35', 'Flamethrower'), ('TM37', 'High Horsepower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM50', 'Overheat'), ('TM57', 'Temper Flare'), ('TM61', 'Will-O-Wisp'), ('TM64', 'Explosion'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM91', 'Flash Cannon'), ('TM96', 'Bulldoze')]
-  RomHackDex camerupt-mega tutor: official only []; mirror only ['Body Slam', 'Flame Charge', 'Flare Blitz', 'Rock Polish', 'Sandstorm', 'Solar Beam', 'Stealth Rock', 'Substitute', 'Sunny Day', 'Trailblaze']
+  RomHackDex camerupt-mega tutor: official only []; mirror only ['Body Slam', 'Flare Blitz', 'Solar Beam']
   RomHackDex capsakid stats: official [52, 62, 40, 62, 40, 50]; mirror [50, 62, 40, 62, 40, 50]
   RomHackDex capsakid abilities: official only ['Insomnia']; mirror only ['Klutz']
   RomHackDex capsakid hidden: official None; mirror Insomnia
@@ -957,13 +958,13 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex centiskorch abilities: official only ['White Smoke']; mirror only ['Flame Body']
   RomHackDex centiskorch hidden: official Flame Body; mirror White Smoke
   RomHackDex centiskorch-mega TM/HM: official only []; mirror only [('HM05', 'Flash'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM10', 'Hidden Power'), ('TM110', 'Scorching Sands'), ('TM114', 'Heat Crash'), ('TM17', 'Protect'), ('TM27', 'Return'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM49', 'Leech Life'), ('TM50', 'Overheat'), ('TM61', 'Will-O-Wisp'), ('TM63', 'Venoshock'), ('TM75', 'Knock Off'), ('TM81', 'X-Scissor'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald')]
-  RomHackDex centiskorch-mega tutor: official only []; mirror only ['Bug Bite', 'Bug Buzz', 'Fire Fang', 'Flame Charge', 'Flare Blitz', 'Mystical Fire', 'Power Whip', 'Solar Beam', 'Substitute', 'Sunny Day', 'Thunder Fang']
+  RomHackDex centiskorch-mega tutor: official only []; mirror only ['Bug Bite', 'Bug Buzz', 'Fire Fang', 'Flare Blitz', 'Mystical Fire', 'Power Whip', 'Solar Beam', 'Thunder Fang']
   RomHackDex centiskorch-sevii abilities: official only ['White Smoke']; mirror only ['Mold Breaker']
   RomHackDex centiskorch-sevii hidden: official Mold Breaker; mirror White Smoke
   RomHackDex centiskorch-sevii-mega abilities: official only ['Sand Force']; mirror only []
   RomHackDex centiskorch-sevii-mega hidden: official None; mirror Sand Force
   RomHackDex centiskorch-sevii-mega TM/HM: official only []; mirror only [('HM05', 'Flash'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM10', 'Hidden Power'), ('TM110', 'Scorching Sands'), ('TM114', 'Heat Crash'), ('TM17', 'Protect'), ('TM27', 'Return'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM49', 'Leech Life'), ('TM50', 'Overheat'), ('TM61', 'Will-O-Wisp'), ('TM63', 'Venoshock'), ('TM75', 'Knock Off'), ('TM81', 'X-Scissor'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald')]
-  RomHackDex centiskorch-sevii-mega tutor: official only []; mirror only ['Bug Bite', 'Bug Buzz', 'Fire Fang', 'Flame Charge', 'Flare Blitz', 'Mystical Fire', 'Power Whip', 'Solar Beam', 'Substitute', 'Sunny Day', 'Thunder Fang']
+  RomHackDex centiskorch-sevii-mega tutor: official only []; mirror only ['Bug Bite', 'Bug Buzz', 'Fire Fang', 'Flare Blitz', 'Mystical Fire', 'Power Whip', 'Solar Beam', 'Thunder Fang']
   RomHackDex ceruledge hidden: official Sharpness; mirror None
   RomHackDex cetitan abilities: official only ['Slush Rush']; mirror only ['Sheer Force']
   RomHackDex cetitan hidden: official Sheer Force; mirror Slush Rush
@@ -978,9 +979,9 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex charizard abilities: official only []; mirror only ['Solar Power']
   RomHackDex charizard hidden: official Solar Power; mirror None
   RomHackDex charizard-mega-x TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM02', 'Fly'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM106', 'Acrobatics'), ('TM110', 'Scorching Sands'), ('TM114', 'Heat Crash'), ('TM119', 'Draco Meteor'), ('TM17', 'Protect'), ('TM22', 'Weather Ball'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM47', 'Steel Wing'), ('TM48', 'Hurricane'), ('TM50', 'Overheat'), ('TM51', 'Roost'), ('TM52', 'Focus Blast'), ('TM56', 'Air Slash'), ('TM57', 'Temper Flare'), ('TM59', 'Dragon Pulse'), ('TM61', 'Will-O-Wisp'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM72', 'Draco Barrage'), ('TM77', 'Thunder Punch'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM93', 'Dragon Tail'), ('TM94', 'Scale Shot'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex charizard-mega-x tutor: official only []; mirror only ['Blast Burn', 'Blaze Kick', 'Body Slam', 'Dragon Dance', 'Fire Fang', 'Flame Charge', 'Flare Blitz', 'Focus Punch', 'Hone Claws', 'Mystical Fire', 'Power-Up Punch', 'Solar Beam', 'Substitute', 'Sunny Day', 'Swords Dance', 'Tailwind', 'Work Up']
+  RomHackDex charizard-mega-x tutor: official only []; mirror only ['Blast Burn', 'Blaze Kick', 'Body Slam', 'Fire Fang', 'Flare Blitz', 'Focus Punch', 'Mystical Fire', 'Solar Beam']
   RomHackDex charizard-mega-y TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM02', 'Fly'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM106', 'Acrobatics'), ('TM110', 'Scorching Sands'), ('TM114', 'Heat Crash'), ('TM119', 'Draco Meteor'), ('TM17', 'Protect'), ('TM22', 'Weather Ball'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM47', 'Steel Wing'), ('TM48', 'Hurricane'), ('TM50', 'Overheat'), ('TM51', 'Roost'), ('TM52', 'Focus Blast'), ('TM56', 'Air Slash'), ('TM57', 'Temper Flare'), ('TM59', 'Dragon Pulse'), ('TM61', 'Will-O-Wisp'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM72', 'Draco Barrage'), ('TM77', 'Thunder Punch'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM93', 'Dragon Tail'), ('TM94', 'Scale Shot'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex charizard-mega-y tutor: official only []; mirror only ['Blast Burn', 'Blaze Kick', 'Body Slam', 'Dragon Dance', 'Fire Fang', 'Flame Charge', 'Flare Blitz', 'Focus Punch', 'Hone Claws', 'Mystical Fire', 'Power-Up Punch', 'Solar Beam', 'Substitute', 'Sunny Day', 'Swords Dance', 'Tailwind', 'Work Up']
+  RomHackDex charizard-mega-y tutor: official only []; mirror only ['Blast Burn', 'Blaze Kick', 'Body Slam', 'Fire Fang', 'Flare Blitz', 'Focus Punch', 'Mystical Fire', 'Solar Beam']
   RomHackDex charjabug abilities: official only ['Swarm']; mirror only ['Battery']
   RomHackDex charmander abilities: official only []; mirror only ['Solar Power']
   RomHackDex charmander hidden: official Solar Power; mirror None
@@ -1028,7 +1029,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex coalossal abilities: official only ['Flame Body']; mirror only ['Flash Fire']
   RomHackDex coalossal hidden: official Flash Fire; mirror Flame Body
   RomHackDex coalossal-mega TM/HM: official only []; mirror only [('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM10', 'Hidden Power'), ('TM110', 'Scorching Sands'), ('TM114', 'Heat Crash'), ('TM115', 'Body Press'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM33', 'Reflect'), ('TM35', 'Flamethrower'), ('TM37', 'High Horsepower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM50', 'Overheat'), ('TM57', 'Temper Flare'), ('TM61', 'Will-O-Wisp'), ('TM64', 'Explosion'), ('TM66', 'Steel Beam'), ('TM71', 'Stone Edge'), ('TM74', 'Gyro Ball'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM91', 'Flash Cannon'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex coalossal-mega tutor: official only []; mirror only ['Body Slam', 'Flame Charge', 'Flare Blitz', 'Iron Defense', 'Meteor Beam', 'Power Gem', 'Rock Blast', 'Rock Polish', 'Sandstorm', 'Solar Beam', 'Spikes', 'Stealth Rock', 'Substitute']
+  RomHackDex coalossal-mega tutor: official only []; mirror only ['Body Slam', 'Flare Blitz', 'Power Gem', 'Rock Blast', 'Solar Beam']
   RomHackDex cobalion hidden: official Sharpness; mirror None
   RomHackDex cofagrigus hidden: official Shadow Shield; mirror None
   RomHackDex combee abilities: official only ['Swarm']; mirror only ['Honey Gather', 'Hustle']
@@ -1041,8 +1042,8 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex conkeldurr hidden: official Iron Fist; mirror Sheer Force
   RomHackDex copperajah stats: official [122, 130, 79, 80, 79, 30]; mirror [122, 130, 69, 80, 69, 30]
   RomHackDex copperajah abilities: official only []; mirror only ['Sheer Force']
-  RomHackDex copperajah-mega TM/HM: official only []; mirror only [('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM108', 'Snarl'), ('TM109', 'Superpower'), ('TM11', 'Soupercell Slam'), ('TM113', 'Play Rough'), ('TM114', 'Heat Crash'), ('TM115', 'Body Press'), ('TM12', 'Taunt'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM37', 'High Horsepower'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM66', 'Steel Beam'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM75', 'Knock Off'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM91', 'Flash Cannon'), ('TM96', 'Bulldoze')]
-  RomHackDex copperajah-mega tutor: official only []; mirror only ['Body Slam', 'Iron Defense', 'Power Whip', 'Rock Blast', 'Stealth Rock', 'Substitute', 'Work Up']
+  RomHackDex copperajah-mega TM/HM: official only []; mirror only [('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM108', 'Snarl'), ('TM109', 'Superpower'), ('TM11', 'Supercell Slam'), ('TM113', 'Play Rough'), ('TM114', 'Heat Crash'), ('TM115', 'Body Press'), ('TM12', 'Taunt'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM37', 'High Horsepower'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM66', 'Steel Beam'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM75', 'Knock Off'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM91', 'Flash Cannon'), ('TM96', 'Bulldoze')]
+  RomHackDex copperajah-mega tutor: official only []; mirror only ['Body Slam', 'Power Whip', 'Rock Blast']
   RomHackDex corphish abilities: official only ['Shell Armor']; mirror only ['Adaptability']
   RomHackDex corphish hidden: official Adaptability; mirror Shell Armor
   RomHackDex corsola stats: official [85, 55, 100, 65, 100, 35]; mirror [65, 55, 95, 65, 95, 35]
@@ -1064,10 +1065,10 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex cramorant stats: official [85, 85, 65, 100, 95, 105]; mirror [70, 85, 55, 85, 95, 85]
   RomHackDex cramorant-gorging stats: official [85, 85, 65, 100, 95, 105]; mirror [70, 85, 55, 85, 95, 85]
   RomHackDex cramorant-gorging TM/HM: official only []; mirror only [('HM02', 'Fly'), ('HM03', 'Surf'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM106', 'Acrobatics'), ('TM109', 'Superpower'), ('TM117', 'Brave Bird'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM22', 'Weather Ball'), ('TM27', 'Return'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM47', 'Steel Wing'), ('TM48', 'Hurricane'), ('TM51', 'Roost'), ('TM56', 'Air Slash'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM87', 'Aerial Ace')]
-  RomHackDex cramorant-gorging tutor: official only []; mirror only ['Rain Dance', 'Substitute', 'Tailwind', 'Uproar']
+  RomHackDex cramorant-gorging tutor: official only []; mirror only ['Uproar']
   RomHackDex cramorant-gulping stats: official [85, 85, 65, 100, 95, 105]; mirror [70, 85, 55, 85, 95, 85]
   RomHackDex cramorant-gulping TM/HM: official only []; mirror only [('HM02', 'Fly'), ('HM03', 'Surf'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM106', 'Acrobatics'), ('TM109', 'Superpower'), ('TM117', 'Brave Bird'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM22', 'Weather Ball'), ('TM27', 'Return'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM47', 'Steel Wing'), ('TM48', 'Hurricane'), ('TM51', 'Roost'), ('TM56', 'Air Slash'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM87', 'Aerial Ace')]
-  RomHackDex cramorant-gulping tutor: official only []; mirror only ['Rain Dance', 'Substitute', 'Tailwind', 'Uproar']
+  RomHackDex cramorant-gulping tutor: official only []; mirror only ['Uproar']
   RomHackDex cranidos abilities: official only []; mirror only ['Sheer Force']
   RomHackDex cranidos hidden: official Sheer Force; mirror None
   RomHackDex crawdaunt abilities: official only ['Shell Armor']; mirror only ['Adaptability']
@@ -1107,7 +1108,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex darmanitan-galar hidden: official Zen Mode; mirror None
   RomHackDex darmanitan-galar-zen abilities: official only []; mirror only ['Gorilla Tactics']
   RomHackDex darmanitan-galar-zen TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM109', 'Superpower'), ('TM110', 'Scorching Sands'), ('TM115', 'Body Press'), ('TM116', 'Trick Room'), ('TM12', 'Taunt'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM29', 'Psychic'), ('TM31', 'Brick Break'), ('TM34', 'Teleport'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM50', 'Overheat'), ('TM52', 'Focus Blast'), ('TM55', 'Expanding Force'), ('TM61', 'Will-O-Wisp'), ('TM71', 'Stone Edge'), ('TM74', 'Gyro Ball'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM85', 'Future Sight'), ('TM86', 'Grass Knot'), ('TM89', 'U-turn'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex darmanitan-galar-zen tutor: official only []; mirror only ['Body Slam', 'Bulk Up', 'Fire Fang', 'Flame Charge', 'Flare Blitz', 'Focus Punch', 'Iron Defense', 'Mystical Fire', 'Power-Up Punch', 'Solar Beam', 'Substitute', 'Sunny Day', 'Uproar', 'Work Up']
+  RomHackDex darmanitan-galar-zen tutor: official only []; mirror only ['Body Slam', 'Fire Fang', 'Flare Blitz', 'Focus Punch', 'Mystical Fire', 'Solar Beam', 'Uproar']
   RomHackDex darmanitan-zen abilities: official only []; mirror only ['Sheer Force']
   RomHackDex dartrix abilities: official only []; mirror only ['Long Reach']
   RomHackDex dartrix hidden: official Tinted Lens; mirror None
@@ -1154,9 +1155,9 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex dialga-origin abilities: official only []; mirror only ['Telepathy']
   RomHackDex dialga-origin hidden: official Telepathy; mirror None
   RomHackDex dialga-primal TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM115', 'Body Press'), ('TM116', 'Trick Room'), ('TM119', 'Draco Meteor'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM20', 'Hyper Voice'), ('TM23', 'Iron Head'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM50', 'Overheat'), ('TM52', 'Focus Blast'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM66', 'Steel Beam'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM72', 'Draco Barrage'), ('TM73', 'Thunder Wave'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM91', 'Flash Cannon'), ('TM93', 'Dragon Tail'), ('TM94', 'Scale Shot'), ('TM96', 'Bulldoze')]
-  RomHackDex dialga-primal tutor: official only []; mirror only ['Body Slam', 'Bulk Up', 'Hone Claws', 'Iron Defense', 'Power Gem', 'Rain Dance', 'Sandstorm', 'Stealth Rock', 'Substitute', 'Sunny Day']
+  RomHackDex dialga-primal tutor: official only []; mirror only ['Body Slam', 'Power Gem']
   RomHackDex diancie-mega TM/HM: official only []; mirror only [('HM05', 'Flash'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM102', 'Dazzling Gleam'), ('TM104', 'Psyshock'), ('TM112', 'Misty Explosion'), ('TM113', 'Play Rough'), ('TM115', 'Body Press'), ('TM116', 'Trick Room'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM33', 'Reflect'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM45', 'Draining Kiss'), ('TM64', 'Explosion'), ('TM71', 'Stone Edge'), ('TM74', 'Gyro Ball'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk')]
-  RomHackDex diancie-mega tutor: official only []; mirror only ['Calm Mind', 'Iron Defense', 'Meteor Beam', 'Mystical Fire', 'Power Gem', 'Rock Polish', 'Sandstorm', 'Snowscape', 'Spikes', 'Stealth Rock', 'Stored Power', 'Substitute', 'Sunny Day']
+  RomHackDex diancie-mega tutor: official only []; mirror only ['Mystical Fire', 'Power Gem', 'Stored Power']
   RomHackDex diggersby abilities: official only ['Cheek Pouch']; mirror only ['Huge Power']
   RomHackDex diggersby hidden: official Huge Power; mirror Cheek Pouch
   RomHackDex diglett abilities: official only ['Arena Trap']; mirror only ['Sand Force']
@@ -1208,7 +1209,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex drednaw abilities: official only ['Shell Armor']; mirror only ['Swift Swim']
   RomHackDex drednaw hidden: official Swift Swim; mirror Shell Armor
   RomHackDex drednaw-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM03', 'Surf'), ('HM07', 'Waterfall'), ('TM03', 'Flip Turn'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM109', 'Superpower'), ('TM115', 'Body Press'), ('TM120', 'Ice Spinner'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM37', 'High Horsepower'), ('TM39', 'Rock Tomb'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM62', 'Iron Tail'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM84', 'Poison Jab'), ('TM94', 'Scale Shot'), ('TM96', 'Bulldoze')]
-  RomHackDex drednaw-mega tutor: official only []; mirror only ['Body Slam', 'Ice Fang', 'Iron Defense', 'Megahorn', 'Meteor Beam', 'Rain Dance', 'Rock Blast', 'Rock Polish', 'Sandstorm', 'Stealth Rock', 'Substitute', 'Swords Dance']
+  RomHackDex drednaw-mega tutor: official only []; mirror only ['Body Slam', 'Ice Fang', 'Megahorn', 'Rock Blast']
   RomHackDex dreepy abilities: official only ['Infiltrator']; mirror only ['Cursed Body']
   RomHackDex dreepy hidden: official Run Away; mirror Infiltrator
   RomHackDex drifblim abilities: official only ['Unburden']; mirror only ['Flare Boost']
@@ -1264,7 +1265,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex eiscue stats: official [75, 100, 110, 45, 90, 50]; mirror [75, 80, 110, 65, 90, 50]
   RomHackDex eiscue-noice stats: official [75, 100, 70, 45, 50, 130]; mirror [75, 80, 70, 65, 50, 130]
   RomHackDex eiscue-noice TM/HM: official only []; mirror only [('HM03', 'Surf'), ('HM07', 'Waterfall'), ('TM03', 'Flip Turn'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM120', 'Ice Spinner'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM22', 'Weather Ball'), ('TM23', 'Iron Head'), ('TM27', 'Return'), ('TM33', 'Reflect'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM82', 'Sleep Talk'), ('TM97', 'Frost Breath')]
-  RomHackDex eiscue-noice tutor: official only []; mirror only ['Icicle Spear', 'Iron Defense', 'Snowscape', 'Substitute']
+  RomHackDex eiscue-noice tutor: official only []; mirror only ['Icicle Spear']
   RomHackDex ekans abilities: official only ['Shed Skin']; mirror only ['Unnerve']
   RomHackDex ekans hidden: official Corrosion; mirror Shed Skin
   RomHackDex eldegoss stats: official [75, 50, 90, 90, 120, 60]; mirror [60, 50, 90, 80, 120, 60]
@@ -1304,7 +1305,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex eternatus-eternamax stats: official [140, 105, 110, 185, 110, 140]; mirror [255, 115, 250, 125, 250, 130]
   RomHackDex eternatus-eternamax abilities: official only ['Levitate']; mirror only ['Pressure']
   RomHackDex eternatus-eternamax TM/HM: official only []; mirror only [('HM02', 'Fly'), ('TM103', 'Sludge Wave'), ('TM119', 'Draco Meteor'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM30', 'Shadow Ball'), ('TM33', 'Reflect'), ('TM35', 'Flamethrower'), ('TM36', 'Sludge Bomb'), ('TM44', 'Rest'), ('TM59', 'Dragon Pulse'), ('TM63', 'Venoshock'), ('TM72', 'Draco Barrage'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM87', 'Aerial Ace'), ('TM91', 'Flash Cannon'), ('TM95', 'Cosmic Power')]
-  RomHackDex eternatus-eternamax tutor: official only []; mirror only ['Meteor Beam', 'Mystical Fire', 'Solar Beam', 'Substitute', 'Toxic Spikes']
+  RomHackDex eternatus-eternamax tutor: official only []; mirror only ['Mystical Fire', 'Solar Beam']
   RomHackDex excadrill abilities: official only ['Sand Force']; mirror only ['Mold Breaker']
   RomHackDex excadrill hidden: official Mold Breaker; mirror Sand Force
   RomHackDex exeggcute abilities: official only []; mirror only ['Harvest']
@@ -1354,7 +1355,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex flapple abilities: official only ['Gluttony']; mirror only ['Hustle']
   RomHackDex flapple hidden: official Hustle; mirror Gluttony
   RomHackDex flapple-mega TM/HM: official only []; mirror only [('HM02', 'Fly'), ('TM04', 'Seed Bomb'), ('TM06', 'Toxic'), ('TM09', 'Bullet Seed'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM106', 'Acrobatics'), ('TM119', 'Draco Meteor'), ('TM17', 'Protect'), ('TM19', 'Giga Drain'), ('TM27', 'Return'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM53', 'Energy Ball'), ('TM54', 'Grassy Glide'), ('TM56', 'Air Slash'), ('TM59', 'Dragon Pulse'), ('TM72', 'Draco Barrage'), ('TM82', 'Sleep Talk'), ('TM86', 'Grass Knot'), ('TM87', 'Aerial Ace'), ('TM89', 'U-turn'), ('TM94', 'Scale Shot')]
-  RomHackDex flapple-mega tutor: official only []; mirror only ['Dragon Dance', 'Iron Defense', 'Solar Beam', 'Substitute', 'Sunny Day', 'Trailblaze']
+  RomHackDex flapple-mega tutor: official only []; mirror only ['Solar Beam']
   RomHackDex flareon stats: official [65, 130, 70, 65, 100, 95]; mirror [65, 130, 60, 95, 110, 65]
   RomHackDex flareon abilities: official only []; mirror only ['Guts']
   RomHackDex flareon hidden: official Toxic Boost; mirror None
@@ -1410,23 +1411,23 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex gallade-mega abilities: official only ['Sharpness']; mirror only ['Inner Focus']
   RomHackDex gallade-mega hidden: official Inner Focus; mirror None
   RomHackDex gallade-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM102', 'Dazzling Gleam'), ('TM104', 'Psyshock'), ('TM111', 'Vacuum Wave'), ('TM116', 'Trick Room'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM20', 'Hyper Voice'), ('TM21', 'Icy Wind'), ('TM24', 'Thunderbolt'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM45', 'Draining Kiss'), ('TM46', 'Thief'), ('TM52', 'Focus Blast'), ('TM53', 'Energy Ball'), ('TM55', 'Expanding Force'), ('TM56', 'Air Slash'), ('TM60', 'Drain Punch'), ('TM61', 'Will-O-Wisp'), ('TM65', 'Shadow Claw'), ('TM68', 'Dual Chop'), ('TM70', 'Triple Axel'), ('TM71', 'Stone Edge'), ('TM73', 'Thunder Wave'), ('TM75', 'Knock Off'), ('TM77', 'Thunder Punch'), ('TM78', 'Low Sweep'), ('TM80', 'Rock Slide'), ('TM81', 'X-Scissor'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM85', 'Future Sight'), ('TM86', 'Grass Knot'), ('TM87', 'Aerial Ace'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex gallade-mega tutor: official only []; mirror only ['Alluring Voice', 'Body Slam', 'Bulk Up', 'Calm Mind', 'Charge Beam', 'Focus Punch', 'Leaf Blade', 'Pain Split', 'Power-Up Punch', 'Rain Dance', 'Solar Blade', 'Stored Power', 'Substitute', 'Sunny Day', 'Swords Dance', 'Work Up']
+  RomHackDex gallade-mega tutor: official only []; mirror only ['Alluring Voice', 'Body Slam', 'Focus Punch', 'Leaf Blade', 'Pain Split', 'Solar Blade', 'Stored Power']
   RomHackDex galvantula abilities: official only ['Unnerve']; mirror only ['Swarm']
   RomHackDex galvantula hidden: official Swarm; mirror Unnerve
   RomHackDex garbodor stats: official [80, 115, 82, 60, 82, 60]; mirror [80, 95, 82, 60, 82, 75]
   RomHackDex garbodor abilities: official only ['Gooey', 'Weak Armor']; mirror only ['Aftermath', 'Stench']
   RomHackDex garbodor hidden: official Aftermath; mirror Weak Armor
   RomHackDex garbodor-mega TM/HM: official only []; mirror only [('TM04', 'Seed Bomb'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM103', 'Sludge Wave'), ('TM109', 'Superpower'), ('TM115', 'Body Press'), ('TM17', 'Protect'), ('TM19', 'Giga Drain'), ('TM24', 'Thunderbolt'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM36', 'Sludge Bomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM52', 'Focus Blast'), ('TM60', 'Drain Punch'), ('TM63', 'Venoshock'), ('TM64', 'Explosion'), ('TM69', 'Stomping Tantrum'), ('TM77', 'Thunder Punch'), ('TM79', 'Dark Pulse'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM90', 'Gunk Shot'), ('TM98', 'Fire Punch')]
-  RomHackDex garbodor-mega tutor: official only []; mirror only ['Body Slam', 'Pain Split', 'Rain Dance', 'Rock Blast', 'Rock Polish', 'Solar Beam', 'Spikes', 'Substitute', 'Sunny Day', 'Toxic Spikes']
+  RomHackDex garbodor-mega tutor: official only []; mirror only ['Body Slam', 'Pain Split', 'Rock Blast', 'Solar Beam']
   RomHackDex garchomp abilities: official only []; mirror only ['Rough Skin']
   RomHackDex garchomp hidden: official Rough Skin; mirror None
   RomHackDex garchomp-mega stats: official [108, 170, 105, 120, 95, 102]; mirror [108, 170, 115, 120, 95, 92]
   RomHackDex garchomp-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM02', 'Fly'), ('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM110', 'Scorching Sands'), ('TM119', 'Draco Meteor'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM68', 'Dual Chop'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM72', 'Draco Barrage'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM87', 'Aerial Ace'), ('TM93', 'Dragon Tail'), ('TM94', 'Scale Shot'), ('TM96', 'Bulldoze')]
-  RomHackDex garchomp-mega tutor: official only []; mirror only ['Body Slam', 'Fire Fang', 'Hone Claws', 'Rain Dance', 'Sandstorm', 'Spikes', 'Stealth Rock', 'Substitute', 'Sunny Day', 'Swords Dance', 'Thunder Fang']
+  RomHackDex garchomp-mega tutor: official only []; mirror only ['Body Slam', 'Fire Fang', 'Thunder Fang']
   RomHackDex gardevoir abilities: official only ['Trace']; mirror only ['Telepathy']
   RomHackDex gardevoir hidden: official Telepathy; mirror Trace
   RomHackDex gardevoir-mega TM/HM: official only []; mirror only [('HM05', 'Flash'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM102', 'Dazzling Gleam'), ('TM104', 'Psyshock'), ('TM105', 'Psychic Noise'), ('TM111', 'Vacuum Wave'), ('TM112', 'Misty Explosion'), ('TM116', 'Trick Room'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM20', 'Hyper Voice'), ('TM21', 'Icy Wind'), ('TM24', 'Thunderbolt'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM45', 'Draining Kiss'), ('TM46', 'Thief'), ('TM52', 'Focus Blast'), ('TM53', 'Energy Ball'), ('TM55', 'Expanding Force'), ('TM61', 'Will-O-Wisp'), ('TM70', 'Triple Axel'), ('TM73', 'Thunder Wave'), ('TM77', 'Thunder Punch'), ('TM82', 'Sleep Talk'), ('TM85', 'Future Sight'), ('TM86', 'Grass Knot'), ('TM98', 'Fire Punch')]
-  RomHackDex gardevoir-mega tutor: official only []; mirror only ['Alluring Voice', 'Body Slam', 'Calm Mind', 'Charge Beam', 'Mystical Fire', 'Pain Split', 'Rain Dance', 'Stored Power', 'Substitute', 'Sunny Day']
+  RomHackDex gardevoir-mega tutor: official only []; mirror only ['Alluring Voice', 'Body Slam', 'Mystical Fire', 'Pain Split', 'Stored Power']
   RomHackDex garganacl abilities: official only ['Sturdy']; mirror only ['Clear Body']
   RomHackDex garganacl hidden: official Clear Body; mirror Sturdy
   RomHackDex gastrodon abilities: official only ['Storm Drain']; mirror only ['Sand Force']
@@ -1435,7 +1436,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex gastrodon-1 hidden: official Sand Force; mirror Storm Drain
   RomHackDex gengar abilities: official only ['Levitate']; mirror only ['Cursed Body']
   RomHackDex gengar-mega TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM102', 'Dazzling Gleam'), ('TM103', 'Sludge Wave'), ('TM105', 'Psychic Noise'), ('TM116', 'Trick Room'), ('TM12', 'Taunt'), ('TM17', 'Protect'), ('TM19', 'Giga Drain'), ('TM21', 'Icy Wind'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM36', 'Sludge Bomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM52', 'Focus Blast'), ('TM53', 'Energy Ball'), ('TM60', 'Drain Punch'), ('TM61', 'Will-O-Wisp'), ('TM63', 'Venoshock'), ('TM64', 'Explosion'), ('TM65', 'Shadow Claw'), ('TM67', 'Poltergeist'), ('TM75', 'Knock Off'), ('TM77', 'Thunder Punch'), ('TM79', 'Dark Pulse'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM98', 'Fire Punch')]
-  RomHackDex gengar-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Foul Play', 'Hex', 'Nasty Plot', 'Pain Split', 'Phantom Force', 'Power-Up Punch', 'Rain Dance', 'Substitute', 'Sunny Day', 'Toxic Spikes', 'Uproar']
+  RomHackDex gengar-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Foul Play', 'Hex', 'Pain Split', 'Phantom Force', 'Uproar']
   RomHackDex geodude abilities: official only ['Sturdy']; mirror only ['Sand Veil']
   RomHackDex geodude hidden: official Sand Veil; mirror Sturdy
   RomHackDex geodude-alola abilities: official only ['Rock Head', 'Sturdy']; mirror only ['Galvanize', 'Magnet Pull']
@@ -1446,7 +1447,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex gigalith hidden: official Sand Force; mirror Sand Stream
   RomHackDex gimmighoul abilities: official only ['Clear Body']; mirror only ['Rattled']
   RomHackDex gimmighoul-roaming TM/HM: official only []; mirror only [('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM27', 'Return'), ('TM30', 'Shadow Ball'), ('TM33', 'Reflect'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM82', 'Sleep Talk')]
-  RomHackDex gimmighoul-roaming tutor: official only []; mirror only ['Hex', 'Nasty Plot', 'Power Gem', 'Substitute']
+  RomHackDex gimmighoul-roaming tutor: official only []; mirror only ['Hex', 'Power Gem']
   RomHackDex girafarig abilities: official only ['Early Bird']; mirror only ['Inner Focus']
   RomHackDex girafarig hidden: official Inner Focus; mirror Early Bird
   RomHackDex giratina abilities: official only []; mirror only ['Telepathy']
@@ -1458,7 +1459,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex glalie hidden: official Refrigerate; mirror Ice Body
   RomHackDex glalie-mega stats: official [80, 135, 80, 105, 80, 100]; mirror [80, 120, 80, 120, 80, 100]
   RomHackDex glalie-mega TM/HM: official only []; mirror only [('HM05', 'Flash'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM12', 'Taunt'), ('TM120', 'Ice Spinner'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM20', 'Hyper Voice'), ('TM21', 'Icy Wind'), ('TM22', 'Weather Ball'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM30', 'Shadow Ball'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM64', 'Explosion'), ('TM74', 'Gyro Ball'), ('TM79', 'Dark Pulse'), ('TM82', 'Sleep Talk'), ('TM96', 'Bulldoze'), ('TM97', 'Frost Breath')]
-  RomHackDex glalie-mega tutor: official only []; mirror only ['Body Slam', 'Hex', 'Ice Fang', 'Icicle Spear', 'Rain Dance', 'Snowscape', 'Spikes', 'Substitute', 'Trailblaze']
+  RomHackDex glalie-mega tutor: official only []; mirror only ['Body Slam', 'Hex', 'Ice Fang', 'Icicle Spear']
   RomHackDex glameow abilities: official only ['Own Tempo']; mirror only ['Keen Eye']
   RomHackDex glameow hidden: official Frisk; mirror Own Tempo
   RomHackDex gligar abilities: official only ['Sand Veil']; mirror only ['Immunity']
@@ -1554,7 +1555,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex grotle abilities: official only ['Self Sufficient']; mirror only ['Shell Armor']
   RomHackDex grotle hidden: official Rock Head; mirror None
   RomHackDex groudon-primal TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM110', 'Scorching Sands'), ('TM114', 'Heat Crash'), ('TM115', 'Body Press'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM35', 'Flamethrower'), ('TM37', 'High Horsepower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM50', 'Overheat'), ('TM52', 'Focus Blast'), ('TM59', 'Dragon Pulse'), ('TM61', 'Will-O-Wisp'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM73', 'Thunder Wave'), ('TM76', 'Earth Power'), ('TM77', 'Thunder Punch'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM93', 'Dragon Tail'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex groudon-primal tutor: official only []; mirror only ['Body Slam', 'Bulk Up', 'Hone Claws', 'Power-Up Punch', 'Rock Blast', 'Rock Polish', 'Sandstorm', 'Solar Beam', 'Spikes', 'Stealth Rock', 'Substitute', 'Sunny Day', 'Swords Dance', 'Uproar']
+  RomHackDex groudon-primal tutor: official only []; mirror only ['Body Slam', 'Rock Blast', 'Solar Beam', 'Uproar']
   RomHackDex grovyle abilities: official only []; mirror only ['Unburden']
   RomHackDex grovyle hidden: official Unburden; mirror None
   RomHackDex growlithe abilities: official only ['Flash Fire']; mirror only ['Justified']
@@ -1576,7 +1577,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex gyarados abilities: official only []; mirror only ['Moxie']
   RomHackDex gyarados hidden: official Moxie; mirror None
   RomHackDex gyarados-mega TM/HM: official only []; mirror only [('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('HM07', 'Waterfall'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM23', 'Iron Head'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM33', 'Reflect'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM48', 'Hurricane'), ('TM57', 'Temper Flare'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM71', 'Stone Edge'), ('TM73', 'Thunder Wave'), ('TM79', 'Dark Pulse'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM93', 'Dragon Tail'), ('TM94', 'Scale Shot'), ('TM96', 'Bulldoze')]
-  RomHackDex gyarados-mega tutor: official only []; mirror only ['Body Slam', 'Celebrate', 'Dragon Dance', 'Ice Fang', 'Power Whip', 'Rain Dance', 'Sandstorm', 'Snowscape', 'Substitute', 'Uproar']
+  RomHackDex gyarados-mega tutor: official only []; mirror only ['Body Slam', 'Celebrate', 'Ice Fang', 'Power Whip', 'Uproar']
   RomHackDex hakamo-o abilities: official only ['Soundproof']; mirror only ['Overcoat']
   RomHackDex hakamo-o hidden: official Overcoat; mirror Soundproof
   RomHackDex happiny abilities: official only ['Serene Grace']; mirror only ['Friend Guard']
@@ -1605,7 +1606,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex heracross abilities: official only ['Guts']; mirror only ['Moxie']
   RomHackDex heracross hidden: official Moxie; mirror Guts
   RomHackDex heracross-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM06', 'Toxic'), ('TM09', 'Bullet Seed'), ('TM10', 'Hidden Power'), ('TM111', 'Vacuum Wave'), ('TM17', 'Protect'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM37', 'High Horsepower'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM52', 'Focus Blast'), ('TM63', 'Venoshock'), ('TM65', 'Shadow Claw'), ('TM71', 'Stone Edge'), ('TM75', 'Knock Off'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM96', 'Bulldoze')]
-  RomHackDex heracross-mega tutor: official only []; mirror only ['Body Slam', 'Bug Bite', 'Bulk Up', 'Calm Mind', 'Drill Run', 'Focus Punch', 'Iron Defense', 'Megahorn', 'Pin Missile', 'Rain Dance', 'Rock Blast', 'Spikes', 'Substitute', 'Sunny Day', 'Swords Dance', 'Trailblaze', 'Work Up']
+  RomHackDex heracross-mega tutor: official only []; mirror only ['Body Slam', 'Bug Bite', 'Drill Run', 'Focus Punch', 'Megahorn', 'Pin Missile', 'Rock Blast']
   RomHackDex herdier abilities: official only ['Sand Rush']; mirror only ['Scrappy']
   RomHackDex herdier hidden: official Scrappy; mirror Sand Rush
   RomHackDex hippopotas abilities: official only []; mirror only ['Sand Force']
@@ -1639,7 +1640,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex houndoom-mega stats: official [75, 110, 90, 140, 90, 115]; mirror [75, 90, 90, 140, 90, 115]
   RomHackDex houndoom-mega abilities: official only ['Dark Aura']; mirror only []
   RomHackDex houndoom-mega TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM10', 'Hidden Power'), ('TM108', 'Snarl'), ('TM110', 'Scorching Sands'), ('TM12', 'Taunt'), ('TM17', 'Protect'), ('TM20', 'Hyper Voice'), ('TM27', 'Return'), ('TM30', 'Shadow Ball'), ('TM35', 'Flamethrower'), ('TM36', 'Sludge Bomb'), ('TM38', 'Fire Blast'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM50', 'Overheat'), ('TM57', 'Temper Flare'), ('TM61', 'Will-O-Wisp'), ('TM62', 'Iron Tail'), ('TM79', 'Dark Pulse'), ('TM82', 'Sleep Talk')]
-  RomHackDex houndoom-mega tutor: official only []; mirror only ['Body Slam', 'Dark Hole', 'Fire Fang', 'Flame Charge', 'Foul Play', 'Nasty Plot', 'Solar Beam', 'Substitute', 'Sunny Day', 'Thunder Fang', 'Trailblaze', 'Uproar']
+  RomHackDex houndoom-mega tutor: official only []; mirror only ['Body Slam', 'Dark Hole', 'Fire Fang', 'Foul Play', 'Solar Beam', 'Thunder Fang', 'Uproar']
   RomHackDex houndour abilities: official only ['Flash Fire']; mirror only ['Unnerve']
   RomHackDex houndour hidden: official Unnerve; mirror Flash Fire
   RomHackDex houndstone abilities: official only []; mirror only ['Fluffy']
@@ -1703,7 +1704,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex kangaskhan abilities: official only ['Scrappy']; mirror only ['Inner Focus']
   RomHackDex kangaskhan hidden: official Inner Focus; mirror Scrappy
   RomHackDex kangaskhan-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM52', 'Focus Blast'), ('TM60', 'Drain Punch'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM77', 'Thunder Punch'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex kangaskhan-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Power-Up Punch', 'Rain Dance', 'Sandstorm', 'Snowscape', 'Solar Beam', 'Substitute', 'Sunny Day', 'Uproar', 'Work Up']
+  RomHackDex kangaskhan-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Solar Beam', 'Uproar']
   RomHackDex karrablast abilities: official only ['Shed Skin']; mirror only ['No Guard']
   RomHackDex karrablast hidden: official No Guard; mirror Shed Skin
   RomHackDex kecleon stats: official [85, 100, 70, 60, 120, 40]; mirror [60, 90, 70, 60, 120, 40]
@@ -1719,7 +1720,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex kingler abilities: official only ['Shell Armor']; mirror only ['Sheer Force']
   RomHackDex kingler hidden: official Sheer Force; mirror Shell Armor
   RomHackDex kingler-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM03', 'Flip Turn'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM109', 'Superpower'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM23', 'Iron Head'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM37', 'High Horsepower'), ('TM39', 'Rock Tomb'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM66', 'Steel Beam'), ('TM69', 'Stomping Tantrum'), ('TM75', 'Knock Off'), ('TM80', 'Rock Slide'), ('TM81', 'X-Scissor'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald')]
-  RomHackDex kingler-mega tutor: official only []; mirror only ['Body Slam', 'Hone Claws', 'Iron Defense', 'Rain Dance', 'Snowscape', 'Substitute', 'Swords Dance']
+  RomHackDex kingler-mega tutor: official only []; mirror only ['Body Slam']
   RomHackDex kirlia abilities: official only ['Trace']; mirror only ['Telepathy']
   RomHackDex kirlia hidden: official Telepathy; mirror Trace
   RomHackDex klang abilities: official only ['Minus']; mirror only ['Clear Body']
@@ -1751,7 +1752,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex krookodile abilities: official only ['Moxie']; mirror only ['Anger Point']
   RomHackDex krookodile hidden: official Anger Point; mirror Moxie
   RomHackDex kyogre-primal TM/HM: official only []; mirror only [('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('HM07', 'Waterfall'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM23', 'Iron Head'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM31', 'Brick Break'), ('TM39', 'Rock Tomb'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM73', 'Thunder Wave'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM96', 'Bulldoze')]
-  RomHackDex kyogre-primal tutor: official only []; mirror only ['Body Slam', 'Calm Mind', 'Rain Dance', 'Snowscape', 'Substitute', 'Uproar']
+  RomHackDex kyogre-primal tutor: official only []; mirror only ['Body Slam', 'Uproar']
   RomHackDex lairon abilities: official only ['Rock Head']; mirror only ['Heavy Metal']
   RomHackDex lairon hidden: official Heavy Metal; mirror Rock Head
   RomHackDex lampent abilities: official only ['Flame Body']; mirror only ['Infiltrator']
@@ -1763,15 +1764,15 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex lapras types: official ['Water', 'Dragon']; mirror ['Water', 'Ice']
   RomHackDex lapras hidden: official None; mirror Shell Armor
   RomHackDex lapras-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('HM07', 'Waterfall'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM105', 'Psychic Noise'), ('TM115', 'Body Press'), ('TM119', 'Draco Meteor'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM20', 'Hyper Voice'), ('TM21', 'Icy Wind'), ('TM22', 'Weather Ball'), ('TM23', 'Iron Head'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM72', 'Draco Barrage'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM85', 'Future Sight'), ('TM96', 'Bulldoze'), ('TM97', 'Frost Breath')]
-  RomHackDex lapras-mega tutor: official only []; mirror only ['Alluring Voice', 'Body Slam', 'Dragon Dance', 'Drill Run', 'Megahorn', 'Rain Dance', 'Snowscape', 'Solar Beam', 'Substitute']
+  RomHackDex lapras-mega tutor: official only []; mirror only ['Alluring Voice', 'Body Slam', 'Drill Run', 'Megahorn', 'Solar Beam']
   RomHackDex larvesta abilities: official only []; mirror only ['Swarm']
   RomHackDex larvesta hidden: official Swarm; mirror None
   RomHackDex larvitar abilities: official only []; mirror only ['Sand Veil']
   RomHackDex larvitar hidden: official Sand Veil; mirror None
   RomHackDex latias-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM02', 'Fly'), ('HM03', 'Surf'), ('HM05', 'Flash'), ('HM07', 'Waterfall'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM104', 'Psyshock'), ('TM119', 'Draco Meteor'), ('TM13', 'Ice Beam'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM21', 'Icy Wind'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM47', 'Steel Wing'), ('TM51', 'Roost'), ('TM53', 'Energy Ball'), ('TM55', 'Expanding Force'), ('TM56', 'Air Slash'), ('TM59', 'Dragon Pulse'), ('TM65', 'Shadow Claw'), ('TM72', 'Draco Barrage'), ('TM73', 'Thunder Wave'), ('TM82', 'Sleep Talk'), ('TM85', 'Future Sight'), ('TM86', 'Grass Knot'), ('TM87', 'Aerial Ace'), ('TM94', 'Scale Shot'), ('TM96', 'Bulldoze')]
-  RomHackDex latias-mega tutor: official only []; mirror only ['Alluring Voice', 'Body Slam', 'Calm Mind', 'Charge Beam', 'Dragon Dance', 'Hone Claws', 'Mystical Fire', 'Rain Dance', 'Sandstorm', 'Solar Beam', 'Stored Power', 'Substitute', 'Sunny Day', 'Tailwind']
+  RomHackDex latias-mega tutor: official only []; mirror only ['Alluring Voice', 'Body Slam', 'Mystical Fire', 'Solar Beam', 'Stored Power']
   RomHackDex latios-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM02', 'Fly'), ('HM03', 'Surf'), ('HM05', 'Flash'), ('HM07', 'Waterfall'), ('TM02', 'Dragon Claw'), ('TM03', 'Flip Turn'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM104', 'Psyshock'), ('TM105', 'Psychic Noise'), ('TM119', 'Draco Meteor'), ('TM13', 'Ice Beam'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM21', 'Icy Wind'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM47', 'Steel Wing'), ('TM51', 'Roost'), ('TM53', 'Energy Ball'), ('TM55', 'Expanding Force'), ('TM56', 'Air Slash'), ('TM59', 'Dragon Pulse'), ('TM65', 'Shadow Claw'), ('TM72', 'Draco Barrage'), ('TM73', 'Thunder Wave'), ('TM82', 'Sleep Talk'), ('TM85', 'Future Sight'), ('TM86', 'Grass Knot'), ('TM87', 'Aerial Ace'), ('TM94', 'Scale Shot'), ('TM96', 'Bulldoze')]
-  RomHackDex latios-mega tutor: official only []; mirror only ['Body Slam', 'Calm Mind', 'Charge Beam', 'Dragon Dance', 'Hone Claws', 'Mystical Fire', 'Rain Dance', 'Sandstorm', 'Solar Beam', 'Stored Power', 'Substitute', 'Sunny Day', 'Tailwind']
+  RomHackDex latios-mega tutor: official only []; mirror only ['Body Slam', 'Mystical Fire', 'Solar Beam', 'Stored Power']
   RomHackDex leafeon stats: official [65, 130, 110, 60, 65, 95]; mirror [65, 110, 130, 60, 65, 95]
   RomHackDex leafeon abilities: official only ['Sap Sipper']; mirror only ['Chlorophyll']
   RomHackDex leafeon hidden: official Chlorophyll; mirror None
@@ -1819,14 +1820,14 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex lopunny abilities: official only []; mirror only ['Limber']
   RomHackDex lopunny hidden: official Limber; mirror Klutz
   RomHackDex lopunny-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM106', 'Acrobatics'), ('TM113', 'Play Rough'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM20', 'Hyper Voice'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM60', 'Drain Punch'), ('TM62', 'Iron Tail'), ('TM70', 'Triple Axel'), ('TM73', 'Thunder Wave'), ('TM77', 'Thunder Punch'), ('TM78', 'Low Sweep'), ('TM82', 'Sleep Talk'), ('TM86', 'Grass Knot'), ('TM89', 'U-turn'), ('TM95', 'Cosmic Power'), ('TM98', 'Fire Punch')]
-  RomHackDex lopunny-mega tutor: official only []; mirror only ['Charge Beam', 'Focus Punch', 'Power-Up Punch', 'Rain Dance', 'Solar Beam', 'Substitute', 'Sunny Day', 'Uproar', 'Work Up']
+  RomHackDex lopunny-mega tutor: official only []; mirror only ['Focus Punch', 'Solar Beam', 'Uproar']
   RomHackDex lotad abilities: official only ['Rain Dish']; mirror only ['Own Tempo']
   RomHackDex lotad hidden: official Own Tempo; mirror Rain Dish
   RomHackDex loudred hidden: official Punk Rock; mirror None
   RomHackDex lucario abilities: official only ['Inner Focus']; mirror only ['Justified']
   RomHackDex lucario hidden: official Justified; mirror Inner Focus
   RomHackDex lucario-mega TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM111', 'Vacuum Wave'), ('TM17', 'Protect'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM59', 'Dragon Pulse'), ('TM60', 'Drain Punch'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM66', 'Steel Beam'), ('TM68', 'Dual Chop'), ('TM71', 'Stone Edge'), ('TM77', 'Thunder Punch'), ('TM78', 'Low Sweep'), ('TM79', 'Dark Pulse'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM91', 'Flash Cannon'), ('TM96', 'Bulldoze')]
-  RomHackDex lucario-mega tutor: official only []; mirror only ['Blaze Kick', 'Bulk Up', 'Calm Mind', 'Focus Punch', 'Hone Claws', 'Iron Defense', 'Nasty Plot', 'Power-Up Punch', 'Rain Dance', 'Substitute', 'Sunny Day', 'Swords Dance', 'Trailblaze', 'Work Up']
+  RomHackDex lucario-mega tutor: official only []; mirror only ['Blaze Kick', 'Focus Punch']
   RomHackDex ludicolo stats: official [80, 70, 70, 100, 100, 70]; mirror [80, 70, 70, 90, 100, 70]
   RomHackDex ludicolo abilities: official only ['Rain Dish']; mirror only ['Own Tempo']
   RomHackDex ludicolo hidden: official Own Tempo; mirror Rain Dish
@@ -1858,7 +1859,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex machamp abilities: official only ['No Guard']; mirror only ['Steadfast']
   RomHackDex machamp hidden: official Steadfast; mirror No Guard
   RomHackDex machamp-mega TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM109', 'Superpower'), ('TM111', 'Vacuum Wave'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM35', 'Flamethrower'), ('TM37', 'High Horsepower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM52', 'Focus Blast'), ('TM60', 'Drain Punch'), ('TM68', 'Dual Chop'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM75', 'Knock Off'), ('TM77', 'Thunder Punch'), ('TM78', 'Low Sweep'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex machamp-mega tutor: official only []; mirror only ['Body Slam', 'Bulk Up', 'Focus Punch', 'Power-Up Punch', 'Rain Dance', 'Rock Blast', 'Substitute', 'Sunny Day', 'Work Up']
+  RomHackDex machamp-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Rock Blast']
   RomHackDex machoke abilities: official only ['No Guard']; mirror only ['Steadfast']
   RomHackDex machoke hidden: official Steadfast; mirror No Guard
   RomHackDex machop abilities: official only ['No Guard']; mirror only ['Steadfast']
@@ -1891,7 +1892,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex manectric abilities: official only ['Lightning Rod']; mirror only ['Minus']
   RomHackDex manectric hidden: official Intimidate; mirror Lightning Rod
   RomHackDex manectric-mega TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM05', 'Flash'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM108', 'Snarl'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM20', 'Hyper Voice'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM27', 'Return'), ('TM35', 'Flamethrower'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM50', 'Overheat'), ('TM58', 'Rising Voltage'), ('TM62', 'Iron Tail'), ('TM73', 'Thunder Wave'), ('TM82', 'Sleep Talk'), ('TM92', 'Volt Switch'), ('TM99', 'Wild Charge')]
-  RomHackDex manectric-mega tutor: official only []; mirror only ['Body Slam', 'Charge Beam', 'Fire Fang', 'Ice Fang', 'Psychic Fangs', 'Rain Dance', 'Substitute', 'Thunder Fang', 'Uproar']
+  RomHackDex manectric-mega tutor: official only []; mirror only ['Body Slam', 'Fire Fang', 'Ice Fang', 'Psychic Fangs', 'Thunder Fang', 'Uproar']
   RomHackDex mankey abilities: official only ['Anger Point']; mirror only ['Defiant']
   RomHackDex mankey hidden: official Defiant; mirror Anger Point
   RomHackDex mantine stats: official [85, 40, 70, 90, 140, 70]; mirror [85, 40, 70, 80, 140, 70]
@@ -1929,11 +1930,11 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex mawile abilities: official only ['Intimidate']; mirror only ['Sheer Force']
   RomHackDex mawile hidden: official Sheer Force; mirror Intimidate
   RomHackDex mawile-mega TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM113', 'Play Rough'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM17', 'Protect'), ('TM21', 'Icy Wind'), ('TM23', 'Iron Head'), ('TM27', 'Return'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM35', 'Flamethrower'), ('TM36', 'Sludge Bomb'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM45', 'Draining Kiss'), ('TM52', 'Focus Blast'), ('TM66', 'Steel Beam'), ('TM71', 'Stone Edge'), ('TM75', 'Knock Off'), ('TM77', 'Thunder Punch'), ('TM79', 'Dark Pulse'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM86', 'Grass Knot'), ('TM91', 'Flash Cannon')]
-  RomHackDex mawile-mega tutor: official only []; mirror only ['Body Slam', 'Charge Beam', 'Fire Fang', 'Focus Punch', 'Foul Play', 'Ice Fang', 'Iron Defense', 'Pain Split', 'Power-Up Punch', 'Psychic Fangs', 'Rain Dance', 'Sandstorm', 'Solar Beam', 'Stealth Rock', 'Substitute', 'Sunny Day', 'Swords Dance', 'Thunder Fang']
+  RomHackDex mawile-mega tutor: official only []; mirror only ['Body Slam', 'Fire Fang', 'Focus Punch', 'Foul Play', 'Ice Fang', 'Pain Split', 'Psychic Fangs', 'Solar Beam', 'Thunder Fang']
   RomHackDex medicham abilities: official only []; mirror only ['Telepathy']
   RomHackDex medicham hidden: official Telepathy; mirror None
   RomHackDex medicham-mega TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM104', 'Psyshock'), ('TM111', 'Vacuum Wave'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM53', 'Energy Ball'), ('TM55', 'Expanding Force'), ('TM60', 'Drain Punch'), ('TM70', 'Triple Axel'), ('TM77', 'Thunder Punch'), ('TM78', 'Low Sweep'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM86', 'Grass Knot'), ('TM98', 'Fire Punch')]
-  RomHackDex medicham-mega tutor: official only []; mirror only ['Blaze Kick', 'Body Slam', 'Bulk Up', 'Calm Mind', 'Focus Punch', 'Pain Split', 'Power-Up Punch', 'Rain Dance', 'Stored Power', 'Substitute', 'Sunny Day', 'Trailblaze', 'Work Up']
+  RomHackDex medicham-mega tutor: official only []; mirror only ['Blaze Kick', 'Body Slam', 'Focus Punch', 'Pain Split', 'Stored Power']
   RomHackDex meditite abilities: official only []; mirror only ['Telepathy']
   RomHackDex meditite hidden: official Telepathy; mirror None
   RomHackDex meganium types: official ['Grass', 'Fairy']; mirror ['Grass']
@@ -1955,15 +1956,15 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex metagross abilities: official only []; mirror only ['Light Metal']
   RomHackDex metagross hidden: official Tough Claws; mirror None
   RomHackDex metagross-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM104', 'Psyshock'), ('TM105', 'Psychic Noise'), ('TM115', 'Body Press'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM21', 'Icy Wind'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM33', 'Reflect'), ('TM36', 'Sludge Bomb'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM55', 'Expanding Force'), ('TM64', 'Explosion'), ('TM66', 'Steel Beam'), ('TM69', 'Stomping Tantrum'), ('TM74', 'Gyro Ball'), ('TM75', 'Knock Off'), ('TM77', 'Thunder Punch'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM85', 'Future Sight'), ('TM86', 'Grass Knot'), ('TM87', 'Aerial Ace'), ('TM91', 'Flash Cannon'), ('TM95', 'Cosmic Power'), ('TM96', 'Bulldoze')]
-  RomHackDex metagross-mega tutor: official only []; mirror only ['Body Slam', 'Hone Claws', 'Iron Defense', 'Meteor Beam', 'Power-Up Punch', 'Psychic Fangs', 'Rain Dance', 'Rock Polish', 'Sandstorm', 'Stealth Rock', 'Substitute', 'Sunny Day']
+  RomHackDex metagross-mega tutor: official only []; mirror only ['Body Slam', 'Psychic Fangs']
   RomHackDex metang abilities: official only []; mirror only ['Light Metal']
   RomHackDex metang hidden: official Tough Claws; mirror None
   RomHackDex mewtwo abilities: official only []; mirror only ['Unnerve']
   RomHackDex mewtwo hidden: official Unnerve; mirror None
   RomHackDex mewtwo-mega-x TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM104', 'Psyshock'), ('TM105', 'Psychic Noise'), ('TM116', 'Trick Room'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM21', 'Icy Wind'), ('TM22', 'Weather Ball'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM48', 'Hurricane'), ('TM52', 'Focus Blast'), ('TM53', 'Energy Ball'), ('TM55', 'Expanding Force'), ('TM60', 'Drain Punch'), ('TM61', 'Will-O-Wisp'), ('TM62', 'Iron Tail'), ('TM71', 'Stone Edge'), ('TM73', 'Thunder Wave'), ('TM75', 'Knock Off'), ('TM76', 'Earth Power'), ('TM77', 'Thunder Punch'), ('TM78', 'Low Sweep'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM85', 'Future Sight'), ('TM86', 'Grass Knot'), ('TM87', 'Aerial Ace'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex mewtwo-mega-x tutor: official only []; mirror only ['Body Slam', 'Bulk Up', 'Calm Mind', 'Charge Beam', 'Focus Punch', 'Foul Play', 'Nasty Plot', 'Power Gem', 'Power-Up Punch', 'Rain Dance', 'Sandstorm', 'Snowscape', 'Solar Beam', 'Stored Power', 'Substitute', 'Sunny Day', 'Trailblaze']
+  RomHackDex mewtwo-mega-x tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Foul Play', 'Power Gem', 'Solar Beam', 'Stored Power']
   RomHackDex mewtwo-mega-y TM/HM: official only []; mirror only [('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM104', 'Psyshock'), ('TM105', 'Psychic Noise'), ('TM116', 'Trick Room'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM21', 'Icy Wind'), ('TM22', 'Weather Ball'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM48', 'Hurricane'), ('TM52', 'Focus Blast'), ('TM53', 'Energy Ball'), ('TM55', 'Expanding Force'), ('TM60', 'Drain Punch'), ('TM61', 'Will-O-Wisp'), ('TM62', 'Iron Tail'), ('TM71', 'Stone Edge'), ('TM73', 'Thunder Wave'), ('TM75', 'Knock Off'), ('TM76', 'Earth Power'), ('TM77', 'Thunder Punch'), ('TM78', 'Low Sweep'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM85', 'Future Sight'), ('TM86', 'Grass Knot'), ('TM87', 'Aerial Ace'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex mewtwo-mega-y tutor: official only []; mirror only ['Body Slam', 'Bulk Up', 'Calm Mind', 'Charge Beam', 'Focus Punch', 'Foul Play', 'Nasty Plot', 'Power Gem', 'Power-Up Punch', 'Rain Dance', 'Sandstorm', 'Snowscape', 'Solar Beam', 'Stored Power', 'Substitute', 'Sunny Day', 'Trailblaze']
+  RomHackDex mewtwo-mega-y tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Foul Play', 'Power Gem', 'Solar Beam', 'Stored Power']
   RomHackDex mienfoo abilities: official only ['Regenerator']; mirror only ['Reckless']
   RomHackDex mienfoo hidden: official Reckless; mirror Regenerator
   RomHackDex mienshao abilities: official only ['Regenerator']; mirror only ['Reckless']
@@ -2000,7 +2001,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex morpeko stats: official [58, 110, 58, 70, 58, 97]; mirror [58, 95, 58, 70, 58, 97]
   RomHackDex morpeko-hangry stats: official [58, 110, 58, 70, 58, 97]; mirror [58, 95, 58, 70, 58, 97]
   RomHackDex morpeko-hangry TM/HM: official only []; mirror only [('TM04', 'Seed Bomb'), ('TM06', 'Toxic'), ('TM09', 'Bullet Seed'), ('TM10', 'Hidden Power'), ('TM108', 'Snarl'), ('TM12', 'Taunt'), ('TM15', 'Electroweb'), ('TM17', 'Protect'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM27', 'Return'), ('TM31', 'Brick Break'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM58', 'Rising Voltage'), ('TM69', 'Stomping Tantrum'), ('TM73', 'Thunder Wave'), ('TM75', 'Knock Off'), ('TM77', 'Thunder Punch'), ('TM79', 'Dark Pulse'), ('TM82', 'Sleep Talk'), ('TM92', 'Volt Switch'), ('TM99', 'Wild Charge')]
-  RomHackDex morpeko-hangry tutor: official only []; mirror only ['Charge Beam', 'Dark Hole', 'Fire Fang', 'Foul Play', 'Ice Fang', 'Nasty Plot', 'Psychic Fangs', 'Substitute', 'Thunder Fang', 'Uproar']
+  RomHackDex morpeko-hangry tutor: official only []; mirror only ['Dark Hole', 'Fire Fang', 'Foul Play', 'Ice Fang', 'Psychic Fangs', 'Thunder Fang', 'Uproar']
   RomHackDex mothim stats: official [70, 84, 50, 94, 50, 80]; mirror [70, 94, 50, 94, 50, 66]
   RomHackDex mothim abilities: official only []; mirror only ['Tinted Lens']
   RomHackDex mothim hidden: official Tinted Lens; mirror None
@@ -2106,7 +2107,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex orbeetle abilities: official only ['Frisk']; mirror only ['Telepathy']
   RomHackDex orbeetle hidden: official Telepathy; mirror Frisk
   RomHackDex orbeetle-mega TM/HM: official only []; mirror only [('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM104', 'Psyshock'), ('TM115', 'Body Press'), ('TM116', 'Trick Room'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM19', 'Giga Drain'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM49', 'Leech Life'), ('TM53', 'Energy Ball'), ('TM55', 'Expanding Force'), ('TM82', 'Sleep Talk'), ('TM85', 'Future Sight'), ('TM87', 'Aerial Ace'), ('TM89', 'U-turn')]
-  RomHackDex orbeetle-mega tutor: official only []; mirror only ['Bug Buzz', 'Calm Mind', 'Iron Defense', 'Solar Beam', 'Stored Power', 'Substitute']
+  RomHackDex orbeetle-mega tutor: official only []; mirror only ['Bug Buzz', 'Solar Beam', 'Stored Power']
   RomHackDex orthworm abilities: official only []; mirror only ['Sand Veil']
   RomHackDex orthworm hidden: official Sand Veil; mirror None
   RomHackDex overqwil stats: official [95, 115, 100, 55, 80, 85]; mirror [85, 115, 95, 65, 65, 85]
@@ -2117,7 +2118,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex pachirisu hidden: official Volt Absorb; mirror Pickup
   RomHackDex palafin-hero hidden: official Mold Breaker; mirror None
   RomHackDex palafin-hero TM/HM: official only []; mirror only [('HM03', 'Surf'), ('HM04', 'Strength'), ('HM07', 'Waterfall'), ('TM01', 'Close Combat'), ('TM03', 'Flip Turn'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM106', 'Acrobatics'), ('TM115', 'Body Press'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM20', 'Hyper Voice'), ('TM21', 'Icy Wind'), ('TM23', 'Iron Head'), ('TM27', 'Return'), ('TM32', 'Aura Sphere'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM45', 'Draining Kiss'), ('TM52', 'Focus Blast'), ('TM60', 'Drain Punch'), ('TM75', 'Knock Off'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald')]
-  RomHackDex palafin-hero tutor: official only []; mirror only ['Body Slam', 'Bulk Up', 'Focus Punch', 'Rain Dance', 'Substitute']
+  RomHackDex palafin-hero tutor: official only []; mirror only ['Body Slam', 'Focus Punch']
   RomHackDex palkia stats: official [90, 120, 100, 150, 120, 100]; mirror [90, 100, 100, 150, 120, 120]
   RomHackDex palkia abilities: official only []; mirror only ['Telepathy']
   RomHackDex palkia hidden: official Telepathy; mirror None
@@ -2178,7 +2179,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex pidgeot abilities: official only ['Frisk']; mirror only ['Big Pecks', 'Keen Eye']
   RomHackDex pidgeot hidden: official No Guard; mirror Tangled Feet
   RomHackDex pidgeot-mega TM/HM: official only []; mirror only [('HM02', 'Fly'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM117', 'Brave Bird'), ('TM17', 'Protect'), ('TM20', 'Hyper Voice'), ('TM27', 'Return'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM47', 'Steel Wing'), ('TM48', 'Hurricane'), ('TM51', 'Roost'), ('TM52', 'Focus Blast'), ('TM56', 'Air Slash'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM88', 'Pluck'), ('TM89', 'U-turn')]
-  RomHackDex pidgeot-mega tutor: official only []; mirror only ['Rain Dance', 'Substitute', 'Sunny Day', 'Tailwind', 'Uproar', 'Work Up']
+  RomHackDex pidgeot-mega tutor: official only []; mirror only ['Uproar']
   RomHackDex pidgeotto abilities: official only ['Frisk']; mirror only ['Big Pecks', 'Keen Eye']
   RomHackDex pidgeotto hidden: official No Guard; mirror Tangled Feet
   RomHackDex pidgey abilities: official only ['Frisk']; mirror only ['Big Pecks', 'Keen Eye']
@@ -2234,7 +2235,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex pinsir abilities: official only ['Mold Breaker']; mirror only ['Moxie']
   RomHackDex pinsir hidden: official Moxie; mirror Mold Breaker
   RomHackDex pinsir-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM109', 'Superpower'), ('TM17', 'Protect'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM37', 'High Horsepower'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM52', 'Focus Blast'), ('TM71', 'Stone Edge'), ('TM75', 'Knock Off'), ('TM80', 'Rock Slide'), ('TM81', 'X-Scissor'), ('TM82', 'Sleep Talk'), ('TM96', 'Bulldoze')]
-  RomHackDex pinsir-mega tutor: official only []; mirror only ['Body Slam', 'Bug Bite', 'Bulk Up', 'Focus Punch', 'Iron Defense', 'Rain Dance', 'Stealth Rock', 'Substitute', 'Sunny Day', 'Swords Dance']
+  RomHackDex pinsir-mega tutor: official only []; mirror only ['Body Slam', 'Bug Bite', 'Focus Punch']
   RomHackDex piplup abilities: official only []; mirror only ['Competitive']
   RomHackDex piplup hidden: official Competitive; mirror None
   RomHackDex plusle stats: official [60, 50, 40, 85, 75, 110]; mirror [60, 50, 40, 85, 75, 95]
@@ -2348,7 +2349,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex rattata-alola abilities: official only ['Hustle']; mirror only ['Thick Fat']
   RomHackDex rattata-alola hidden: official Thick Fat; mirror Hustle
   RomHackDex rayquaza-mega TM/HM: official only []; mirror only [('HM02', 'Fly'), ('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('HM07', 'Waterfall'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM119', 'Draco Meteor'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM20', 'Hyper Voice'), ('TM21', 'Icy Wind'), ('TM23', 'Iron Head'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM50', 'Overheat'), ('TM52', 'Focus Blast'), ('TM53', 'Energy Ball'), ('TM56', 'Air Slash'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM71', 'Stone Edge'), ('TM72', 'Draco Barrage'), ('TM73', 'Thunder Wave'), ('TM74', 'Gyro Ball'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM89', 'U-turn'), ('TM93', 'Dragon Tail'), ('TM94', 'Scale Shot'), ('TM95', 'Cosmic Power'), ('TM96', 'Bulldoze')]
-  RomHackDex rayquaza-mega tutor: official only []; mirror only ['Body Slam', 'Bulk Up', 'Celebrate', 'Dragon Dance', 'Hone Claws', 'Meteor Beam', 'Rain Dance', 'Sandstorm', 'Solar Beam', 'Stealth Rock', 'Substitute', 'Sunny Day', 'Swords Dance', 'Tailwind', 'Uproar']
+  RomHackDex rayquaza-mega tutor: official only []; mirror only ['Body Slam', 'Celebrate', 'Solar Beam', 'Uproar']
   RomHackDex regice abilities: official only []; mirror only ['Ice Body']
   RomHackDex regice hidden: official Filter; mirror None
   RomHackDex regigigas hidden: official Comatose; mirror None
@@ -2397,11 +2398,11 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex sableye abilities: official only ['Frisk']; mirror only ['Keen Eye', 'Prankster']
   RomHackDex sableye hidden: official Prankster; mirror Stall
   RomHackDex sableye-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM102', 'Dazzling Gleam'), ('TM108', 'Snarl'), ('TM12', 'Taunt'), ('TM17', 'Protect'), ('TM21', 'Icy Wind'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM60', 'Drain Punch'), ('TM61', 'Will-O-Wisp'), ('TM65', 'Shadow Claw'), ('TM67', 'Poltergeist'), ('TM74', 'Gyro Ball'), ('TM75', 'Knock Off'), ('TM77', 'Thunder Punch'), ('TM78', 'Low Sweep'), ('TM79', 'Dark Pulse'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM87', 'Aerial Ace'), ('TM98', 'Fire Punch')]
-  RomHackDex sableye-mega tutor: official only []; mirror only ['Body Slam', 'Calm Mind', 'Focus Punch', 'Foul Play', 'Hex', 'Hone Claws', 'Nasty Plot', 'Pain Split', 'Power Gem', 'Power-Up Punch', 'Rain Dance', 'Substitute', 'Sunny Day']
+  RomHackDex sableye-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Foul Play', 'Hex', 'Pain Split', 'Power Gem']
   RomHackDex salamence abilities: official only []; mirror only ['Moxie']
   RomHackDex salamence hidden: official Moxie; mirror None
   RomHackDex salamence-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM02', 'Fly'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM07', 'Heat Wave'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM119', 'Draco Meteor'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM20', 'Hyper Voice'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM31', 'Brick Break'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM47', 'Steel Wing'), ('TM48', 'Hurricane'), ('TM51', 'Roost'), ('TM56', 'Air Slash'), ('TM57', 'Temper Flare'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM71', 'Stone Edge'), ('TM72', 'Draco Barrage'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM93', 'Dragon Tail'), ('TM96', 'Bulldoze')]
-  RomHackDex salamence-mega tutor: official only []; mirror only ['Body Slam', 'Dragon Dance', 'Fire Fang', 'Hone Claws', 'Iron Defense', 'Rain Dance', 'Substitute', 'Sunny Day', 'Tailwind', 'Thunder Fang']
+  RomHackDex salamence-mega tutor: official only []; mirror only ['Body Slam', 'Fire Fang', 'Thunder Fang']
   RomHackDex salandit abilities: official only []; mirror only ['Oblivious']
   RomHackDex salandit hidden: official Oblivious; mirror None
   RomHackDex salazzle abilities: official only []; mirror only ['Oblivious']
@@ -2415,7 +2416,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex sandaconda abilities: official only ['Shed Skin']; mirror only ['Sand Veil']
   RomHackDex sandaconda hidden: official Sand Veil; mirror Shed Skin
   RomHackDex sandaconda-mega TM/HM: official only []; mirror only [('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM110', 'Scorching Sands'), ('TM115', 'Body Press'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM37', 'High Horsepower'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM48', 'Hurricane'), ('TM71', 'Stone Edge'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM94', 'Scale Shot'), ('TM96', 'Bulldoze')]
-  RomHackDex sandaconda-mega tutor: official only []; mirror only ['Body Slam', 'Drill Run', 'Fire Fang', 'Iron Defense', 'Rock Blast', 'Sandstorm', 'Stealth Rock', 'Substitute']
+  RomHackDex sandaconda-mega tutor: official only []; mirror only ['Body Slam', 'Drill Run', 'Fire Fang', 'Rock Blast']
   RomHackDex sandile abilities: official only ['Moxie']; mirror only ['Anger Point']
   RomHackDex sandile hidden: official Anger Point; mirror Moxie
   RomHackDex sandshrew abilities: official only []; mirror only ['Sand Rush']
@@ -2454,11 +2455,11 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex sceptile-mega stats: official [70, 135, 75, 110, 85, 145]; mirror [70, 110, 75, 145, 85, 145]
   RomHackDex sceptile-mega abilities: official only ['Technician']; mirror only ['Lightning Rod']
   RomHackDex sceptile-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM04', 'Seed Bomb'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM09', 'Bullet Seed'), ('TM10', 'Hidden Power'), ('TM106', 'Acrobatics'), ('TM111', 'Vacuum Wave'), ('TM119', 'Draco Meteor'), ('TM17', 'Protect'), ('TM19', 'Giga Drain'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM53', 'Energy Ball'), ('TM54', 'Grassy Glide'), ('TM59', 'Dragon Pulse'), ('TM60', 'Drain Punch'), ('TM62', 'Iron Tail'), ('TM68', 'Dual Chop'), ('TM72', 'Draco Barrage'), ('TM77', 'Thunder Punch'), ('TM78', 'Low Sweep'), ('TM80', 'Rock Slide'), ('TM81', 'X-Scissor'), ('TM82', 'Sleep Talk'), ('TM86', 'Grass Knot'), ('TM87', 'Aerial Ace'), ('TM94', 'Scale Shot'), ('TM96', 'Bulldoze')]
-  RomHackDex sceptile-mega tutor: official only []; mirror only ['Body Slam', 'Dragon Dance', 'Focus Punch', 'Frenzy Plant', 'Hone Claws', 'Leaf Blade', 'Power-Up Punch', 'Solar Beam', 'Solar Blade', 'Substitute', 'Sunny Day', 'Swords Dance', 'Work Up']
+  RomHackDex sceptile-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Frenzy Plant', 'Leaf Blade', 'Solar Beam', 'Solar Blade']
   RomHackDex scizor abilities: official only ['Technician']; mirror only ['Light Metal']
   RomHackDex scizor hidden: official None; mirror Technician
   RomHackDex scizor-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM02', 'Fly'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM01', 'Close Combat'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM100', 'Dual Wingbeat'), ('TM106', 'Acrobatics'), ('TM109', 'Superpower'), ('TM111', 'Vacuum Wave'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM27', 'Return'), ('TM31', 'Brick Break'), ('TM42', 'Facade'), ('TM43', 'Defog'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM47', 'Steel Wing'), ('TM51', 'Roost'), ('TM56', 'Air Slash'), ('TM63', 'Venoshock'), ('TM66', 'Steel Beam'), ('TM75', 'Knock Off'), ('TM81', 'X-Scissor'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM89', 'U-turn'), ('TM91', 'Flash Cannon')]
-  RomHackDex scizor-mega tutor: official only []; mirror only ['Bug Bite', 'Bug Buzz', 'Iron Defense', 'Rain Dance', 'Sandstorm', 'Substitute', 'Sunny Day', 'Swords Dance', 'Tailwind', 'Trailblaze']
+  RomHackDex scizor-mega tutor: official only []; mirror only ['Bug Bite', 'Bug Buzz']
   RomHackDex scolipede abilities: official only ['Poison Touch', 'Swarm']; mirror only ['Poison Point', 'Speed Boost']
   RomHackDex scolipede hidden: official Speed Boost; mirror Swarm
   RomHackDex scorbunny abilities: official only []; mirror only ['Libero']
@@ -2495,7 +2496,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex sharpedo abilities: official only []; mirror only ['Speed Boost']
   RomHackDex sharpedo hidden: official Speed Boost; mirror None
   RomHackDex sharpedo-mega TM/HM: official only []; mirror only [('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('HM07', 'Waterfall'), ('TM01', 'Close Combat'), ('TM03', 'Flip Turn'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM108', 'Snarl'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM39', 'Rock Tomb'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM46', 'Thief'), ('TM79', 'Dark Pulse'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM84', 'Poison Jab'), ('TM94', 'Scale Shot'), ('TM96', 'Bulldoze')]
-  RomHackDex sharpedo-mega tutor: official only []; mirror only ['Dark Hole', 'Ice Fang', 'Psychic Fangs', 'Rain Dance', 'Snowscape', 'Substitute', 'Uproar']
+  RomHackDex sharpedo-mega tutor: official only []; mirror only ['Dark Hole', 'Ice Fang', 'Psychic Fangs', 'Uproar']
   RomHackDex shelgon abilities: official only []; mirror only ['Overcoat']
   RomHackDex shelgon hidden: official Overcoat; mirror None
   RomHackDex shellder abilities: official only ['Skill Link']; mirror only ['Overcoat']
@@ -2611,7 +2612,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex slowbro-mega abilities: official only ['Regenerator']; mirror only ['Shell Armor']
   RomHackDex slowbro-mega hidden: official Shell Armor; mirror None
   RomHackDex slowbro-mega TM/HM: official only []; mirror only [('HM03', 'Surf'), ('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM104', 'Psyshock'), ('TM105', 'Psychic Noise'), ('TM115', 'Body Press'), ('TM116', 'Trick Room'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM22', 'Weather Ball'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM33', 'Reflect'), ('TM34', 'Teleport'), ('TM35', 'Flamethrower'), ('TM38', 'Fire Blast'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM55', 'Expanding Force'), ('TM60', 'Drain Punch'), ('TM62', 'Iron Tail'), ('TM73', 'Thunder Wave'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM85', 'Future Sight'), ('TM86', 'Grass Knot'), ('TM87', 'Aerial Ace'), ('TM96', 'Bulldoze')]
-  RomHackDex slowbro-mega tutor: official only []; mirror only ['Body Slam', 'Calm Mind', 'Focus Punch', 'Foul Play', 'Iron Defense', 'Nasty Plot', 'Rain Dance', 'Snowscape', 'Stored Power', 'Substitute', 'Sunny Day']
+  RomHackDex slowbro-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Foul Play', 'Stored Power']
   RomHackDex slowking abilities: official only ['Own Tempo']; mirror only ['Regenerator']
   RomHackDex slowking hidden: official Regenerator; mirror Own Tempo
   RomHackDex slowking-galar abilities: official only ['Oblivious', 'Own Tempo']; mirror only ['Curious Medicine', 'Regenerator']
@@ -2643,8 +2644,8 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex snom hidden: official Ice Scales; mirror None
   RomHackDex snorlax abilities: official only ['Thick Fat']; mirror only ['Gluttony']
   RomHackDex snorlax hidden: official Gluttony; mirror Thick Fat
-  RomHackDex snorlax-mega TM/HM: official only []; mirror only [('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM04', 'Seed Bomb'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM109', 'Superpower'), ('TM11', 'Soupercell Slam'), ('TM114', 'Heat Crash'), ('TM115', 'Body Press'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM20', 'Hyper Voice'), ('TM21', 'Icy Wind'), ('TM23', 'Iron Head'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM33', 'Reflect'), ('TM35', 'Flamethrower'), ('TM37', 'High Horsepower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM69', 'Stomping Tantrum'), ('TM77', 'Thunder Punch'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM90', 'Gunk Shot'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch'), ('TM99', 'Wild Charge')]
-  RomHackDex snorlax-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Power-Up Punch', 'Rain Dance', 'Sandstorm', 'Solar Beam', 'Substitute', 'Sunny Day', 'Uproar', 'Work Up']
+  RomHackDex snorlax-mega TM/HM: official only []; mirror only [('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM04', 'Seed Bomb'), ('TM06', 'Toxic'), ('TM08', 'Zen Headbutt'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM109', 'Superpower'), ('TM11', 'Supercell Slam'), ('TM114', 'Heat Crash'), ('TM115', 'Body Press'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM20', 'Hyper Voice'), ('TM21', 'Icy Wind'), ('TM23', 'Iron Head'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM29', 'Psychic'), ('TM30', 'Shadow Ball'), ('TM31', 'Brick Break'), ('TM33', 'Reflect'), ('TM35', 'Flamethrower'), ('TM37', 'High Horsepower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM69', 'Stomping Tantrum'), ('TM77', 'Thunder Punch'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM90', 'Gunk Shot'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch'), ('TM99', 'Wild Charge')]
+  RomHackDex snorlax-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Solar Beam', 'Uproar']
   RomHackDex snorunt abilities: official only ['Ice Body']; mirror only ['Moody']
   RomHackDex snorunt hidden: official Refrigerate; mirror Ice Body
   RomHackDex snover abilities: official only ['Ice Body']; mirror only ['Snow Warning', 'Soundproof']
@@ -2697,8 +2698,8 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex steelix abilities: official only ['Sturdy']; mirror only ['Sheer Force']
   RomHackDex steelix hidden: official Sheer Force; mirror Sturdy
   RomHackDex steelix-mega abilities: official only ['Heatproof']; mirror only ['Sand Force']
-  RomHackDex steelix-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM11', 'Soupercell Slam'), ('TM110', 'Scorching Sands'), ('TM115', 'Body Press'), ('TM12', 'Taunt'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM37', 'High Horsepower'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM64', 'Explosion'), ('TM66', 'Steel Beam'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM74', 'Gyro Ball'), ('TM76', 'Earth Power'), ('TM79', 'Dark Pulse'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM91', 'Flash Cannon'), ('TM93', 'Dragon Tail'), ('TM96', 'Bulldoze')]
-  RomHackDex steelix-mega tutor: official only []; mirror only ['Body Slam', 'Dragon Dance', 'Drill Run', 'Fire Fang', 'Ice Fang', 'Iron Defense', 'Meteor Beam', 'Psychic Fangs', 'Rock Blast', 'Rock Polish', 'Sandstorm', 'Stealth Rock', 'Substitute', 'Sunny Day', 'Thunder Fang']
+  RomHackDex steelix-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM11', 'Supercell Slam'), ('TM110', 'Scorching Sands'), ('TM115', 'Body Press'), ('TM12', 'Taunt'), ('TM17', 'Protect'), ('TM23', 'Iron Head'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM37', 'High Horsepower'), ('TM39', 'Rock Tomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM64', 'Explosion'), ('TM66', 'Steel Beam'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM74', 'Gyro Ball'), ('TM76', 'Earth Power'), ('TM79', 'Dark Pulse'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM91', 'Flash Cannon'), ('TM93', 'Dragon Tail'), ('TM96', 'Bulldoze')]
+  RomHackDex steelix-mega tutor: official only []; mirror only ['Body Slam', 'Drill Run', 'Fire Fang', 'Ice Fang', 'Psychic Fangs', 'Rock Blast', 'Thunder Fang']
   RomHackDex steenee stats: official [52, 70, 48, 70, 48, 62]; mirror [52, 40, 48, 40, 48, 62]
   RomHackDex steenee abilities: official only ['Oblivious']; mirror only ['Sweet Veil']
   RomHackDex steenee hidden: official Sweet Veil; mirror Oblivious
@@ -2737,7 +2738,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex swampert abilities: official only []; mirror only ['Damp']
   RomHackDex swampert hidden: official Damp; mirror None
   RomHackDex swampert-mega TM/HM: official only []; mirror only [('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('HM07', 'Waterfall'), ('TM03', 'Flip Turn'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM103', 'Sludge Wave'), ('TM109', 'Superpower'), ('TM115', 'Body Press'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM21', 'Icy Wind'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM37', 'High Horsepower'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM41', 'Liquidation'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM62', 'Iron Tail'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM75', 'Knock Off'), ('TM76', 'Earth Power'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM83', 'Scald'), ('TM96', 'Bulldoze')]
-  RomHackDex swampert-mega tutor: official only []; mirror only ['Body Slam', 'Bulk Up', 'Focus Punch', 'Hydro Cannon', 'Power-Up Punch', 'Rain Dance', 'Snowscape', 'Stealth Rock', 'Substitute', 'Uproar', 'Work Up']
+  RomHackDex swampert-mega tutor: official only []; mirror only ['Body Slam', 'Focus Punch', 'Hydro Cannon', 'Uproar']
   RomHackDex swanna stats: official [75, 77, 63, 97, 63, 108]; mirror [75, 87, 63, 87, 63, 98]
   RomHackDex swanna abilities: official only ['Frisk']; mirror only ['Hydration', 'Keen Eye']
   RomHackDex swanna hidden: official No Guard; mirror Big Pecks
@@ -2858,7 +2859,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex toxtricity-low-key abilities: official only ['Minus']; mirror only ['Technician']
   RomHackDex toxtricity-low-key hidden: official Technician; mirror Minus
   RomHackDex toxtricity-mega TM/HM: official only []; mirror only [('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM103', 'Sludge Wave'), ('TM105', 'Psychic Noise'), ('TM108', 'Snarl'), ('TM12', 'Taunt'), ('TM17', 'Protect'), ('TM20', 'Hyper Voice'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM27', 'Return'), ('TM36', 'Sludge Bomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM58', 'Rising Voltage'), ('TM60', 'Drain Punch'), ('TM63', 'Venoshock'), ('TM73', 'Thunder Wave'), ('TM77', 'Thunder Punch'), ('TM82', 'Sleep Talk'), ('TM84', 'Poison Jab'), ('TM90', 'Gunk Shot'), ('TM92', 'Volt Switch'), ('TM98', 'Fire Punch'), ('TM99', 'Wild Charge')]
-  RomHackDex toxtricity-mega tutor: official only []; mirror only ['Charge Beam', 'Hex', 'Stored Power', 'Substitute', 'Toxic Spikes', 'Trailblaze', 'Uproar']
+  RomHackDex toxtricity-mega tutor: official only []; mirror only ['Hex', 'Stored Power', 'Uproar']
   RomHackDex tranquill abilities: official only ['Frisk', 'Super Luck']; mirror only ['Big Pecks', 'Rivalry']
   RomHackDex tranquill hidden: official Rivalry; mirror Super Luck
   RomHackDex trapinch abilities: official only ['Arena Trap']; mirror only ['Sheer Force']
@@ -2892,7 +2893,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex tyranitar abilities: official only []; mirror only ['Unnerve']
   RomHackDex tyranitar hidden: official Unnerve; mirror None
   RomHackDex tyranitar-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM03', 'Surf'), ('HM04', 'Strength'), ('HM06', 'Rock Smash'), ('TM02', 'Dragon Claw'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM10', 'Hidden Power'), ('TM101', 'Ice Punch'), ('TM108', 'Snarl'), ('TM109', 'Superpower'), ('TM110', 'Scorching Sands'), ('TM115', 'Body Press'), ('TM12', 'Taunt'), ('TM13', 'Ice Beam'), ('TM14', 'Blizzard'), ('TM17', 'Protect'), ('TM18', 'Hydro Pump'), ('TM23', 'Iron Head'), ('TM24', 'Thunderbolt'), ('TM25', 'Thunder'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM31', 'Brick Break'), ('TM32', 'Aura Sphere'), ('TM35', 'Flamethrower'), ('TM37', 'High Horsepower'), ('TM38', 'Fire Blast'), ('TM39', 'Rock Tomb'), ('TM40', 'Low Kick'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM52', 'Focus Blast'), ('TM59', 'Dragon Pulse'), ('TM62', 'Iron Tail'), ('TM65', 'Shadow Claw'), ('TM69', 'Stomping Tantrum'), ('TM71', 'Stone Edge'), ('TM73', 'Thunder Wave'), ('TM75', 'Knock Off'), ('TM76', 'Earth Power'), ('TM77', 'Thunder Punch'), ('TM79', 'Dark Pulse'), ('TM80', 'Rock Slide'), ('TM82', 'Sleep Talk'), ('TM87', 'Aerial Ace'), ('TM93', 'Dragon Tail'), ('TM96', 'Bulldoze'), ('TM98', 'Fire Punch')]
-  RomHackDex tyranitar-mega tutor: official only []; mirror only ['Body Slam', 'Dark Hole', 'Dragon Dance', 'Fire Fang', 'Focus Punch', 'Foul Play', 'Hone Claws', 'Ice Fang', 'Iron Defense', 'Meteor Beam', 'Power Gem', 'Power-Up Punch', 'Rain Dance', 'Rock Blast', 'Rock Polish', 'Sandstorm', 'Stealth Rock', 'Substitute', 'Sunny Day', 'Thunder Fang', 'Uproar']
+  RomHackDex tyranitar-mega tutor: official only []; mirror only ['Body Slam', 'Dark Hole', 'Fire Fang', 'Focus Punch', 'Foul Play', 'Ice Fang', 'Power Gem', 'Rock Blast', 'Thunder Fang', 'Uproar']
   RomHackDex tyrantrum abilities: official only []; mirror only ['Rock Head']
   RomHackDex tyrantrum hidden: official Rock Head; mirror None
   RomHackDex tyrogue abilities: official only ['Steadfast']; mirror only ['Vital Spirit']
@@ -2996,7 +2997,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex venusaur abilities: official only []; mirror only ['Chlorophyll']
   RomHackDex venusaur hidden: official Chlorophyll; mirror None
   RomHackDex venusaur-mega TM/HM: official only []; mirror only [('HM01', 'Cut'), ('HM04', 'Strength'), ('HM05', 'Flash'), ('HM06', 'Rock Smash'), ('TM04', 'Seed Bomb'), ('TM05', 'Roar'), ('TM06', 'Toxic'), ('TM09', 'Bullet Seed'), ('TM10', 'Hidden Power'), ('TM16', 'Light Screen'), ('TM17', 'Protect'), ('TM19', 'Giga Drain'), ('TM22', 'Weather Ball'), ('TM26', 'Earthquake'), ('TM27', 'Return'), ('TM28', 'Dig'), ('TM33', 'Reflect'), ('TM36', 'Sludge Bomb'), ('TM42', 'Facade'), ('TM44', 'Rest'), ('TM53', 'Energy Ball'), ('TM54', 'Grassy Glide'), ('TM63', 'Venoshock'), ('TM69', 'Stomping Tantrum'), ('TM75', 'Knock Off'), ('TM76', 'Earth Power'), ('TM82', 'Sleep Talk'), ('TM86', 'Grass Knot'), ('TM96', 'Bulldoze')]
-  RomHackDex venusaur-mega tutor: official only []; mirror only ['Body Slam', 'Celebrate', 'Frenzy Plant', 'Power Whip', 'Solar Beam', 'Substitute', 'Sunny Day', 'Swords Dance', 'Work Up']
+  RomHackDex venusaur-mega tutor: official only []; mirror only ['Body Slam', 'Celebrate', 'Frenzy Plant', 'Power Whip', 'Solar Beam']
   RomHackDex vespiquen stats: official [85, 80, 102, 80, 102, 40]; mirror [70, 80, 102, 80, 102, 40]
   RomHackDex vespiquen abilities: official only ['Queenly Majesty']; mirror only ['Pressure', 'Unnerve']
   RomHackDex vespiquen hidden: official Unnerve; mirror None
@@ -3065,7 +3066,7 @@ Mega/form items: 108 assigned from evolution records
   RomHackDex wingull abilities: official only ['Frisk']; mirror only ['Keen Eye']
   RomHackDex wishiwashi stats: official [55, 20, 20, 25, 25, 40]; mirror [45, 20, 20, 25, 25, 40]
   RomHackDex wishiwashi-school stats: official [55, 140, 130, 140, 135, 30]; mirror [45, 140, 130, 140, 135, 30]
-  RomHackDex wishiwashi-school tutor: official only []; mirror only ['Rain Dance', 'Snowscape', 'Substitute', 'Uproar']
+  RomHackDex wishiwashi-school tutor: official only []; mirror only ['Uproar']
   RomHackDex wobbuffet abilities: official only []; mirror only ['Telepathy']
   RomHackDex wobbuffet hidden: official Telepathy; mirror None
   RomHackDex woobat abilities: official only []; mirror only ['Simple']
@@ -3135,12 +3136,13 @@ hzla lookup moves: 670 names; 1 unresolved: (No Move)
 hzla lookup ability: 258 names; 4 unresolved: Forewarn, Guard Dog, Pickpocket, Snow Cloak
 hzla lookup item: 196 names; 0 unresolved: none
 sprites: 44 own supplements; 1 species without art: chillet
-locs: sheet egg rows: 1084
+locs: sheet egg vendor notes: 5
+locs: sheet egg-only species: 2
 locs: sheet gift levels: 17
 locs: sheet rows added: 4
 locs: sheet shard rows the doc lacks: 1
 locs: sheet tables added: 6
-locs: 221 areas in 154 places, 3674 sublocation rows, 1235 obtainable species
+locs: 221 areas in 154 places, 2590 sublocation rows, 1235 obtainable species
   trainers: Trainer Order puts Dumbass Kid (25) in Pre-Koga, data.js cap 59
   trainers: Trainer Order puts Leader Whitney (49) in Pre-Lt. Surge, data.js cap 28
   trainers: Trainer Order puts PkMn Trainer Brendan (50) in Pre-Lt. Surge, data.js cap 28
@@ -3240,7 +3242,8 @@ walkthrough: pickups placed by by item 8, later visit 14, own split 408, split b
 walkthrough: pickups at a later visit: TM046 Thief (Diglett's Cave 1F, step 0) -> diglett-cave; Lucky Egg (S.S. Anne 2F, step 2) -> ss-anne; Shiny Stone (S.S. Anne 2F, step 2) -> ss-anne; HM01 Cut (S.S. Anne Captain's Quarters, step 2) -> ss-anne; TM026 Earthquake (Saffron City Gian's House 1F, step 8) -> saffron-kid; Swampertite (Saffron City Gian's House 1F, step 8) -> saffron-kid; Venusaurite (Route 16 Gatehouse 2F, step 6) -> route-16; Charizardite Y (Route 16 Gatehouse 2F, step 6) -> route-16; Blastoisinite (Route 16 Gatehouse 2F, step 6) -> route-16; DNA Splicers (Cinnabar Island Lab Testing Room, step 10) -> cinnabar-lab; Aggronite (Cinnabar Island Lab, step 10) -> cinnabar-lab; Choice Band (Cinnabar Island Lab, step 10) -> cinnabar-lab; Assault Vest (Cinnabar Island Lab, step 10) -> cinnabar-lab; Steelixite (Cinnabar Island Lab, step 10) -> cinnabar-lab
 walkthrough: data.js areas in no stop: none
   description-derived metadata: Metal Bash: A physical attack in which the user charges, full body, into the foe.
-move metadata: 825 structured; 1 description-derived; 0 missing; 253 changed markers
+move metadata: 824 structured; 1 description-derived; 1 missing; 252 changed markers
+  no structured source: Supercell Slam: The user electrifies and slams the target. If it misses, the user takes damage instead.
 move metadata number disagreements (official dex retained): 113
   Absorb basePower: official 25; Showdown 20
   Aqua Cutter pp: official 10; Showdown 20
@@ -3374,8 +3377,7 @@ pickup keys: 10 table entries no pickup matched
 pickup keys: 492 pickups, 451 walkthrough rows keyed
 prune: kept 1313; removed 30: dialga_origin, arceus_fighting, arceus_flying, arceus_poison, arceus_rock, arceus_ghost, arceus_fire, arceus_water, arceus_grass, arceus_electric, arceus_psychic, arceus_ice, arceus_dragon, arceus_dark, silvally_fighting, silvally_flying, silvally_poison, silvally_ground, silvally_rock, silvally_bug, silvally_ghost, silvally_steel, silvally_fire, silvally_water, silvally_grass, silvally_electric, silvally_psychic, silvally_ice, silvally_dragon, silvally_dark
 trainers put in walkthrough order: Pre-Brock [Cap 16], Pre-Misty [Cap 28], Pre-Lt. Surge [Cap 36], Pre-Erika [Cap 44], Pre-Koga [Cap 68], Pre-May [Cap 73], Pre-Cerulean Cave Archer & Ariana [Cap 79], Pre-Brendan [Cap 82], Post Game [Cap 100]
-item name: Houndoomnite -> Houndoominite (6 use(s), Items tab spelling)
-item text: 365 own, 5 pooled, 0 from the wiki, 3 made up, 1 Mega Stone standard, 0 with no description
+item text: 367 own, 3 pooled, 0 from the wiki, 3 made up, 1 Mega Stone standard, 0 with no description
 in battle: 180 shown items with battle text, 194 without
 in battle: 747 moves with battle text, 79 without
 GID (data.js game ids): sp 1313 ids (1313 P entries reached or battle-only, 0 not: -), mv 827 ids, it 749 ids, gr 1343

@@ -20,8 +20,8 @@ only if their visible bounds exceed 24px. Serebii uses the existing transparent 
 
 | Source | Logical keys (including aliases) | Stored canonical PNGs |
 | --- | ---: | ---: |
-| expansion | 623 | 594 |
-| imperium | 26 | 8 |
+| expansion | 634 | 605 |
+| imperium | 28 | 9 |
 | hardlove | 12 | 11 |
 | serebii | 38 | 38 |
 
@@ -81,6 +81,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/bicycle.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/big_nugget.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/big_root.pal
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/bike_voucher.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/binding_band.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/black_augurite.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/black_sludge.pal
@@ -104,6 +105,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/calcium.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/cameruptite.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/carbos.pal
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/card_key.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/casteliacone.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/catching_charm.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/cell_battery.pal
@@ -131,6 +133,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/coin_case.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/colbur_berry.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/comet_shard.pal
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/cornerstone_mask.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/cornn_berry.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/cover_fossil.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/covert_cloak.pal
@@ -173,6 +176,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/durin_berry.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/dusk_ball.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/dusk_stone.pal
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/dynamax_band.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/earth_plate.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/eelektrossite.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/eevium_z.pal
@@ -247,6 +251,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/glitter_mail.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/go_goggles.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/gold_bottle_cap.pal
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/gold_teeth.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/golisopite.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/golurkite.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/good_rod.pal
@@ -312,6 +317,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/kebia_berry.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/kee_berry.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/kelpsy_berry.pal
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/key.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/kings_rock.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/kommonium_z.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/lagging_tail.pal
@@ -369,6 +375,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/metagrossite.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/metal_coat.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/metal_powder.pal
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/meteorite.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/metronome.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/mewnium_z.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/mewtwonite_x.pal
@@ -518,6 +525,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/scovillainite.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/scraftinite.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/sea_incense.pal
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/secret_key.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/shadow_mail.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/sharp_beak.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/sharpedonite.pal
@@ -529,6 +537,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/shock_drive.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/shuca_berry.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/silk_scarf.pal
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/silph_scope.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/silver_powder.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/sitrus_berry.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/skarmorite.pal
@@ -573,11 +582,13 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/tapunium_z.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/tart_apple.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/tatsugirinite.pal
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/tea.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/terrain_extender.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/throat_spray.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/thunder_stone.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/toxic_orb.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/toxic_plate.pal
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/tri_pass.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/tropic_mail.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/twisted_spoon.pal
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icon_palettes/tyranitarite.pal
@@ -661,6 +672,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/big_nugget.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/big_pearl.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/big_root.png
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/bike_voucher.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/binding_band.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/black_augurite.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/black_belt.png
@@ -678,6 +690,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/bug_memory.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/buginium_z.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/cameruptite.png
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/card_key.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/casteliacone.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/catching_charm.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/cell_battery.png
@@ -704,6 +717,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/coba_berry.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/coin_case.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/colbur_berry.png
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/cornerstone_mask.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/cornn_berry.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/cover_fossil.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/covert_cloak.png
@@ -741,6 +755,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/durin_berry.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/dusk_ball.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/dusk_stone.png
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/dynamax_band.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/eelektrossite.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/eevium_z.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/eject_button.png
@@ -797,6 +812,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/glimmoranite.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/glitter_mail.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/go_goggles.png
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/gold_teeth.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/golisopite.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/golurkite.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/good_rod.png
@@ -861,6 +877,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/level_ball.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/liechi_berry.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/life_orb.png
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/lift_key.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/light_ball.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/light_clay.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/linking_cord.png
@@ -898,6 +915,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/meowsticite.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/metagrossite.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/metal_coat.png
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/meteorite.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/metronome.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/mewnium_z.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/mewtwonite_x.png
@@ -1030,6 +1048,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/scovillainite.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/scraftinite.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/sea_incense.png
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/secret_key.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/shadow_mail.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/shard.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/sharp_beak.png
@@ -1041,6 +1060,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/shoal_shell.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/shuca_berry.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/silk_scarf.png
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/silph_scope.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/silver_powder.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/sitrus_berry.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/skarmorite.png
@@ -1076,6 +1096,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/tapunium_z.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/tart_apple.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/tatsugirinite.png
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/tea.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/terrain_extender.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/terrain_seed.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/throat_spray.png
@@ -1084,6 +1105,7 @@ https://api.github.com/repos/rh-hideout/pokeemerald-expansion/git/trees/73b3fbeb
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/tiny_mushroom.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/tm.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/toxic_orb.png
+- https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/tri_pass.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/tropic_mail.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/twisted_spoon.png
 - https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/graphics/items/icons/type_gem.png
@@ -1135,6 +1157,7 @@ https://api.github.com/repos/iriv24/pokeemerald-expansion/git/trees/2576d0f3f4c8
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/beedrillite.pal
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/blastoisinite.pal
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/blazikenite.pal
+- https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/blue_flute.pal
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/cameruptite.pal
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/charizardite_x.pal
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/charizardite_y.pal
@@ -1142,6 +1165,7 @@ https://api.github.com/repos/iriv24/pokeemerald-expansion/git/trees/2576d0f3f4c8
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/heavy_duty_boots.pal
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/lopunnite.pal
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/lucarionite.pal
+- https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/max_repel.pal
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/rare_candy.pal
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/sablenite.pal
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icon_palettes/sceptilite.pal
@@ -1158,11 +1182,13 @@ https://api.github.com/repos/iriv24/pokeemerald-expansion/git/trees/2576d0f3f4c8
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/cameruptite.png
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/charizardite_x.png
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/charizardite_y.png
+- https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/flute.png
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/gengarite.png
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/heavy_duty_boots.png
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/lopunnite.png
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/lucarionite.png
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/rare_candy.png
+- https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/repel.png
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/sablenite.png
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/sceptilite.png
 - https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/graphics/items/icons/steelixite.png
