@@ -105,7 +105,7 @@ def build(D):
         out[name] = [desc, changed]
 
     D['IX'] = {name: [desc, '', changed] for name, (desc, changed) in sorted(out.items())}
-    with open(os.path.join(HERE, 'item_desc.json'), 'w', encoding='utf8') as f:
+    with open(os.path.join(HERE, 'item_desc.json'), 'w', encoding='utf8', newline='\n') as f:
         json.dump(out, f, ensure_ascii=False, indent=1, sort_keys=True)
         f.write('\n')
     changed = sum(1 for v in out.values() if v[1])
