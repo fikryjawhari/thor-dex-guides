@@ -39,6 +39,8 @@ for f in imp_1-3.js title_to_backup_mappings.js; do
 done
 mkdir -p $D/repos/expansion
 curl -sL https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/src/data/moves_info.h -o $D/repos/expansion/moves_info.h
+mkdir -p $D/repos/expansion/src/data/text
+curl -sL https://raw.githubusercontent.com/iriv24/pokeemerald-expansion/2576d0f3f4c861c760f0c55198e37e6d7b91683e/src/data/text/item_descriptions.h -o $D/repos/expansion/src/data/text/item_descriptions.h
 mkdir -p $D/stock
 curl -sL https://raw.githubusercontent.com/rh-hideout/pokeemerald-expansion/73b3fbeb574327cd9420c89e56bef5aa3c08fead/src/data/items.h -o $D/stock/items.h
 for f in include/pokemon.h include/global.h include/save.h include/pokemon_storage_system.h src/save.c src/pokemon.c     include/constants/{species,moves,abilities,items,pokemon,global}.h src/data/{abilities,items}.h     src/data/pokemon/species_info.h src/data/pokemon/experience_tables.h src/data/pokemon/species_info/gen_{1,2,3,4,5,6,7,8,9}_families.h; do
