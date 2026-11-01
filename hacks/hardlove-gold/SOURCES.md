@@ -1,6 +1,6 @@
 # Hardlove Gold docs
 
-Fetched 2026-10-28 (0.8.5, 2026-10-27; source and Drive docs refreshed; docs site and Showdown retained;
+Fetched 2026-11-01 (0.8.6, 2026-10-30; source and Drive docs refreshed; docs site and Showdown retained;
 first fetched 2026-10-18 for 0.8.2) from the hack's own source code,
 [kumakuma1/hardlove](https://github.com/kumakuma1/hardlove) (the author's hg-engine build, branch `beta_hardlove`), the
 hack's [docs site](https://kumakuma1.github.io/hardlove-docs/index.html) (repo
@@ -8,8 +8,8 @@ hack's [docs site](https://kumakuma1.github.io/hardlove-docs/index.html) (repo
 [Google Drive](https://drive.google.com/drive/folders/1IltXECEUg7YKeUxO9K6g4bmg33NI4Wax). The source is the authority;
 the docs fill what it lacks. Where each input is used: `notes.md` → Sources and rules.
 
-Pin: 0.8.5 = `64838bf7db` (2026-10-26, "merge"; reviewed `beta_hardlove` head for the 2026-10-27 release,
-fetched 2026-10-28). Earlier: 0.8.4 = `ee4518c149`, 0.8.3 = `f1b2363001`, 0.8.2 = `8ac661afda`. `build.py` refuses
+Pin: 0.8.6 = `4af49f7a8c` (2026-10-30, "move ai struct to heap"; `beta_hardlove` head for the 2026-10-30 release,
+fetched 2026-11-01). Earlier: 0.8.5 = `64838bf7db`, 0.8.4 = `ee4518c149`, 0.8.3 = `f1b2363001`, 0.8.2 = `8ac661afda`. `build.py` refuses
 to run when `repos/hardlove/COMMIT` is not the `watch.json` ref, so update both together.
 
 ## Files
@@ -51,7 +51,7 @@ Source updates: `watch.json` (`uv run python -I tools/check_updates.py hardlove-
 
 ```bash
 D=hacks/hardlove-gold/.src
-SHA=64838bf7dbe032cd87fd986f9c8699c1436c67c5   # 0.8.5; update to the commit of the release you want
+SHA=4af49f7a8cc929aaecee77636f74c5729f89a1df   # 0.8.6; update to the commit of the release you want
 R=https://raw.githubusercontent.com/kumakuma1/hardlove/$SHA
 python -I tools/drive_ls.py 1IltXECEUg7YKeUxO9K6g4bmg33NI4Wax $D
 python -I tools/mirror.py https://kumakuma1.github.io/hardlove-docs/index.html $D/site
@@ -59,7 +59,7 @@ for f in data/Species.c data/HiddenAbilityTable.c data/learnsets/learnsets.json 
          data/Trainers.c data/Encounters.c data/SafariEncounters.c data/Headbutt.c data/HiddenItems.c data/itemdata/itemdata.c \
          data/FormToSpeciesMapping.c data/PokeFormDataTbl.c data/text/keys.csv include/config.h include/constants/species.h \
          include/constants/moves.h include/constants/ability.h \
-         asm/include/species.inc asm/include/items.inc doc/Mechanics.txt doc/LevelCaps.txt doc/Items.txt doc/GymHealing.txt; do
+         asm/include/species.inc asm/include/items.inc doc/Mechanics.txt doc/LevelCaps.txt doc/Items.txt doc/GymHealing.txt data/text/221.txt data/text/222.txt; do
   mkdir -p $D/repos/hardlove/$(dirname $f); curl -sf $R/$f -o $D/repos/hardlove/$f || echo "missing $f"; done
 echo $SHA > $D/repos/hardlove/COMMIT
 mkdir -p $D/repos/showdown/text $D/repos/sprites

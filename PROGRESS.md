@@ -8,7 +8,7 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 
 - **Six guides on `main`**, one template, one extract layout (`tools/extractlib.py`), one data schema
   (`tools/schema.py`), one Items standard (`tools/itemstd.py`), one notes / SOURCES layout, and the damage calc with
-  save import on every one: Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.5 (NDS), Photonic Sun 2.38 Rebalanced
+  save import on every one: Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.6 (NDS), Photonic Sun 2.38 Rebalanced
   (3DS, EV-less), Eternal X 2.67 Rebalanced (3DS), Blaze Black 2 Redux 1.4.1 (NDS, Complete EVless / Challenge),
   Unbound 2.1.1.1 (GBA, Expert). Live on GitHub Pages (https://fikryjawhari.github.io/thor-dex-guides/), built by the
   Action from `main`.
