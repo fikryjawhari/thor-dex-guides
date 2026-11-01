@@ -1,11 +1,11 @@
 {
  "Ability Capsule": [
   "Switches a Poké- mon's ability.",
-  1
+  0
  ],
  "Ability Patch": [
   "Turns the ability of a Pokémon into a rare ability.",
-  1
+  0
  ],
  "Abomasite": [
   "This stone enables Abomasnow to Mega Evolve in battle.",
@@ -17,11 +17,11 @@
  ],
  "Absorb Bulb": [
   "Raises Sp. Atk if the holder is hit by a Water-type move.",
-  1
+  0
  ],
  "Adamant Orb": [
   "Powers up Dialga's Dragon and Steel- type moves.",
-  1
+  0
  ],
  "Aerodactylite": [
   "This stone enables Aerodactyl to Mega Evolve in battle.",
@@ -33,7 +33,7 @@
  ],
  "Air Balloon": [
   "Makes the holder float but bursts if hit by an attack.",
-  1
+  0
  ],
  "Alakazite": [
   "This stone enables Alakazam to Mega Evolve in battle.",
@@ -53,11 +53,11 @@
  ],
  "Aspear Berry": [
   "A hold item that defrosts Pokémon in battle.",
-  1
+  0
  ],
  "Assault Vest": [
   "Raises Sp. Def but prevents the use of status moves.",
-  1
+  0
  ],
  "Audinite": [
   "This stone enables Audino to Mega Evolve in battle.",
@@ -65,7 +65,7 @@
  ],
  "Babiri Berry": [
   "A hold item that weakens a Steel move if weak to it.",
-  1
+  0
  ],
  "Banettite": [
   "This stone enables Banette to Mega Evolve in battle.",
@@ -73,7 +73,7 @@
  ],
  "Beast Ball": [
   "A Ball designed to catch Ultra Beasts.",
-  1
+  0
  ],
  "Beedrilite": [
   "This stone enables Beedrill to Mega Evolve in battle.",
@@ -89,7 +89,7 @@
  ],
  "Big Mushroom": [
   "A rare mushroom that would sell at a high price.",
-  0
+  1
  ],
  "Big Pearl": [
   "A lovely large pearl that would sell at a high price.",
@@ -97,19 +97,19 @@
  ],
  "Big Root": [
   "A held item that ups the power of HP-stealing moves.",
-  1
+  0
  ],
  "Black Belt": [
   "A hold item that boosts Fighting- type moves.",
-  1
+  0
  ],
  "Black Glasses": [
   "A hold item that raises the power of Dark-type moves.",
-  1
+  0
  ],
  "Black Sludge": [
   "Restores HP for Poison-types. Damages all others.",
-  1
+  0
  ],
  "Blastoisinite": [
   "This stone enables Blastoise to Mega Evolve in battle.",
@@ -125,23 +125,23 @@
  ],
  "Blue Shard": [
   "A shard from an ancient item. Can be sold cheaply.",
-  0
+  1
  ],
  "Booster Energy": [
   "Encapsuled energy ups Pokémon with certain Abilities.",
-  1
+  0
  ],
  "BoosterEnergy": [
   "Encapsuled energy ups Pokémon with certain Abilities.",
-  1
+  0
  ],
  "Bright Powder": [
   "A hold item that casts a glare to reduce accuracy.",
-  1
+  0
  ],
  "Bug Memory": [
   "A disc with Bug type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Butterfrite": [
   "This stone enables Butterfree to Mega Evolve in battle.",
@@ -153,7 +153,7 @@
  ],
  "Cell Battery": [
   "Raises Attack if the holder is hit by an Electric move.",
-  1
+  0
  ],
  "Centiskite": [
   "This stone enables Centiskorc to Mega Evolve in battle.",
@@ -161,51 +161,51 @@
  ],
  "Charcoal": [
   "A hold item that raises the power of Fire-type moves.",
-  1
+  0
  ],
  "Charizardite X": [
   "This stone enables Charizard to Mega Evolve in battle.",
-  0
+  1
  ],
  "Charizardite Y": [
   "This stone enables Charizard to Mega Evolve in battle.",
-  0
+  1
  ],
  "Charti Berry": [
   "A hold item that weakens a Rock move if weak to it.",
-  1
+  0
  ],
  "Cheri Berry": [
   "A hold item that heals paralysis in battle.",
-  1
+  0
  ],
  "Cherish Ball": [
   "A rare Ball made in commemoration of some event.",
-  1
+  0
  ],
  "Chesto Berry": [
   "A hold item that awakens Pokémon in battle.",
-  1
+  0
  ],
  "Chilan Berry": [
   "A hold item that weakens a Normal move.",
-  1
+  0
  ],
  "Choice Band": [
   "Boosts Attack, but allows the use of only one move.",
-  1
+  0
  ],
  "Choice Scarf": [
   "Boosts Speed, but allows the use of only one move.",
-  1
+  0
  ],
  "Choice Specs": [
   "Boosts Sp. Atk, but allows the use of only one move.",
-  1
+  0
  ],
  "Chople Berry": [
   "A hold item that weakens a Fighting move if weak to it.",
-  1
+  0
  ],
  "Cleanse Tag": [
   "A hold item that helps repel wild Pokémon.",
@@ -217,11 +217,11 @@
  ],
  "Coba Berry": [
   "A hold item that weakens a Flying move if weak to it.",
-  1
+  0
  ],
  "Colbur Berry": [
   "A hold item that weakens a Dark move if weak to it.",
-  1
+  0
  ],
  "Copperajite": [
   "This stone enables Copperajah to Mega Evolve in battle.",
@@ -229,31 +229,31 @@
  ],
  "Custap Berry": [
   "It allows a Pokémon in a pinch to move first just once.",
-  1
+  0
  ],
  "Damp Rock": [
   "Extends the length of Rain Dance if used by the holder.",
-  1
+  0
  ],
  "Dark Gem": [
   "Increases the power of Dark Type moves.",
-  1
+  0
  ],
  "Dark Memory": [
   "A disc with Dark type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Dawn Stone": [
   "Makes certain species of Pokémon evolve.",
-  0
+  1
  ],
  "DeepSeaScale": [
   "A hold item that raises the Sp. Def of Clamperl.",
-  1
+  0
  ],
  "DeepSeaTooth": [
   "A hold item that raises the Sp. Atk of Clamperl.",
-  1
+  0
  ],
  "Diancite": [
   "This stone enables Diancie to Mega Evolve in battle.",
@@ -261,19 +261,19 @@
  ],
  "Dive Ball": [
   "A Ball that works better on Pokémon on the ocean floor.",
-  1
+  0
  ],
  "Draco Plate": [
   "A tablet that ups the power of Dragon-type moves.",
-  1
+  0
  ],
  "Dragon Fang": [
   "A hold item that raises the power of Dragon-type moves.",
-  1
+  0
  ],
  "Dragon Memory": [
   "A disc with Dragon type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Dragon Scale": [
   "A strange scale held by Dragon- type Pokémon.",
@@ -281,7 +281,7 @@
  ],
  "Dream Ball": [
   "A Ball that works well on sleeping Pokémon.",
-  1
+  0
  ],
  "Drednawite": [
   "This stone enables Drednaw to Mega Evolve in battle.",
@@ -289,11 +289,11 @@
  ],
  "Dusk Ball": [
   "Works well if used in a dark place.",
-  1
+  0
  ],
  "Dusk Stone": [
   "Makes certain species of Pokémon evolve.",
-  0
+  1
  ],
  "Dusknoirite": [
   "This stone enables Dusknoir to Mega Evolve in battle.",
@@ -301,19 +301,19 @@
  ],
  "Eject Button": [
   "Switches out the user if they're hit by the foe.",
-  1
+  0
  ],
  "Electirizer": [
   "Loved by a certain Pokémon. It's full of electric energy.",
-  1
+  0
  ],
  "Electric Memory": [
   "A disc with Electric type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Electric Seed": [
   "Boosts Defense on Electric Terrain, but only one time.",
-  1
+  0
  ],
  "Empoleonite D": [
   "This stone enables Empoleon to Mega Evolve in battle.",
@@ -337,55 +337,55 @@
  ],
  "Eviolite": [
   "Raises the Def and Sp. Def of Pokémon that can evolve.",
-  1
+  0
  ],
  "Expert Belt": [
   "A belt that boosts the power of super effective moves.",
-  1
+  0
  ],
  "Fairy Memory": [
   "A disc with Fairy type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Fast Ball": [
   "Works well on very fast Pokémon.",
-  1
+  0
  ],
  "Fighting Gem": [
   "Increases the power of Fighting Type moves.",
-  1
+  0
  ],
  "Fighting Memory": [
   "Disc with Fighting type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Fire Memory": [
   "A disc with Fire type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Fire Stone": [
   "Makes certain species of Pokémon evolve.",
-  0
+  1
  ],
  "Flame Orb": [
   "A bizarre orb that inflicts a burn on holder in battle.",
-  1
+  0
  ],
  "Flying Memory": [
   "A disc with Flying type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Focus Band": [
   "A hold item that occasionally prevents fainting.",
-  1
+  0
  ],
  "Focus Sash": [
   "If the holder has full HP, it endures KO hits with 1 HP.",
-  1
+  0
  ],
  "Friend Ball": [
   "A Ball that makes a Pokémon friendly when caught.",
-  1
+  0
  ],
  "Galladite": [
   "This stone enables Gallade to Mega Evolve in battle.",
@@ -409,7 +409,7 @@
  ],
  "Ghost Memory": [
   "A disc with Ghost type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Glalitite": [
   "This stone enables Glalie to Mega Evolve in battle.",
@@ -417,15 +417,15 @@
  ],
  "Grass Memory": [
   "A disc with Grass type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Grassy Seed": [
   "Boosts Defense on Grassy Terrain, but only one time.",
-  1
+  0
  ],
  "Green Shard": [
   "A shard from an ancient item. Can be sold cheaply.",
-  0
+  1
  ],
  "Grimmite": [
   "This stone enables Grimmsnarl to Mega Evolve in battle.",
@@ -433,11 +433,11 @@
  ],
  "Grip Claw": [
   "A held item that extends binding moves like Wrap.",
-  1
+  0
  ],
  "Ground Memory": [
   "A disc with Ground type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Gyaradosite": [
   "This stone enables Gyarados to Mega Evolve in battle.",
@@ -445,7 +445,7 @@
  ],
  "Haban Berry": [
   "A hold item that weakens a Dragon move if weak to it.",
-  1
+  0
  ],
  "Hard Stone": [
   "A hold item that raises the power of Rock-type moves.",
@@ -461,19 +461,19 @@
  ],
  "Hearthflame Mask": [
   "Allows Ogerpon to wield the Fire- type in battle.",
-  1
+  0
  ],
  "Heat Rock": [
   "Extends the length of Sunny Day if used by the holder.",
-  1
+  0
  ],
  "Heavy Ball": [
   "Works well on very heavy Pokémon.",
-  1
+  0
  ],
  "Heavy-Duty Boots": [
   "Boots that prevent effects of traps set in the field.",
-  1
+  0
  ],
  "Heracronite": [
   "This stone enables Heracross to Mega Evolve in battle.",
@@ -481,7 +481,7 @@
  ],
  "Honey": [
   "Sweet honey that attracts wild Pokémon when used.",
-  1
+  0
  ],
  "Houndoominite": [
   "This stone enables Houndoom to Mega Evolve in battle.",
@@ -489,15 +489,15 @@
  ],
  "Ice Memory": [
   "A disc with Ice type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Ice Stone": [
   "Makes certain species of Pokémon evolve.",
-  0
+  1
  ],
  "Icy Rock": [
   "Extends the length of the move Hail used by the holder.",
-  1
+  0
  ],
  "Infernapite": [
   "This stone enables Infernape to Mega Evolve in battle.",
@@ -505,7 +505,7 @@
  ],
  "Iron Ball": [
   "Cuts Speed and becomes vulnerable to Ground moves.",
-  1
+  0
  ],
  "Kangaskhanite": [
   "This stone enables Kangaskhan to Mega Evolve in battle.",
@@ -513,11 +513,11 @@
  ],
  "Kasib Berry": [
   "A hold item that weakens a Ghost move if weak to it.",
-  1
+  0
  ],
  "Kebia Berry": [
   "A hold item that weakens a Poison move if weak to it.",
-  1
+  0
  ],
  "Kicking Shoes": [
   "Powers up kicking moves and removes their contact.",
@@ -549,35 +549,35 @@
  ],
  "Leaf Stone": [
   "Makes certain species of Pokémon evolve.",
-  0
+  1
  ],
  "Leek": [
   "A hold item that raises Farfetch'd's critical-hit ratio.",
-  1
+  0
  ],
  "Leftovers": [
   "A hold item that gradually restores HP in battle.",
-  1
+  0
  ],
  "Level Ball": [
   "A Ball that works well on lower level Pokémon.",
-  1
+  0
  ],
  "Life Orb": [
   "Boosts move power but holder loses HP with each attack.",
-  1
+  0
  ],
  "Light Ball": [
   "A hold item that raises the Atk and Sp. Atk of Pikachu.",
-  1
+  0
  ],
  "Light Clay": [
   "Extends the length of barrier moves used by the holder.",
-  1
+  0
  ],
  "Loaded Dice": [
   "Rolls high numbers. Multihit strikes hit more times.",
-  1
+  0
  ],
  "Lopunnite": [
   "This stone enables Lopunny to Mega Evolve in battle.",
@@ -585,7 +585,7 @@
  ],
  "Love Ball": [
   "Works well on Pokémon of the opposite gender.",
-  1
+  0
  ],
  "Lucarionite": [
   "This stone enables Lucario to Mega Evolve in battle.",
@@ -593,27 +593,27 @@
  ],
  "Lucky Egg": [
   "A hold item that boosts Exp. points earned in battle.",
-  1
+  0
  ],
  "Lucky Punch": [
   "A hold item that raises Chansey's critical-hit rate.",
-  1
+  0
  ],
  "Lum Berry": [
   "A hold item that heals any status problem in battle.",
-  1
+  0
  ],
  "Luminous Moss": [
   "Raises Sp. Def if the holder is hit by a Water-type move.",
-  1
+  0
  ],
  "Lure Ball": [
   "A Ball that works well on fished up Pokémon.",
-  1
+  0
  ],
  "Lustrous Orb": [
   "Powers up Palkia's Dragon and Water- type moves.",
-  1
+  0
  ],
  "Luxite": [
   "This stone enables Luxray to Mega Evolve in battle.",
@@ -625,7 +625,7 @@
  ],
  "Luxury Ball": [
   "A cozy Ball that makes Pokémon more friendly.",
-  1
+  0
  ],
  "Machampite": [
   "This stone enables Machamp to Mega Evolve in battle.",
@@ -633,11 +633,11 @@
  ],
  "Magmarizer": [
   "Loved by a certain Pokémon. It's full of magma energy.",
-  1
+  0
  ],
  "Magnet": [
   "A hold item that boosts Electric- type moves.",
-  1
+  0
  ],
  "Manectite": [
   "This stone enables Manectric to Mega Evolve in battle.",
@@ -649,7 +649,7 @@
  ],
  "Max Revive": [
   "Revives a fainted Pokémon with all its HP.",
-  0
+  1
  ],
  "Medichamite": [
   "This stone enables Medicham to Mega Evolve in battle.",
@@ -657,7 +657,7 @@
  ],
  "Mental Herb": [
   "Snaps Pokémon out of move-binding effects.",
-  1
+  0
  ],
  "Metagrossite": [
   "This stone enables Metagross to Mega Evolve in battle.",
@@ -665,23 +665,23 @@
  ],
  "Metal Coat": [
   "A hold item that raises the power of Steel-type moves.",
-  1
+  0
  ],
  "Metal Powder": [
   "A hold item that raises Ditto's Defense.",
-  1
+  0
  ],
  "Metronome": [
   "A held item that boosts a move used consecutively.",
-  1
+  0
  ],
  "Mewtwonite X": [
   "This stone enables Mewtwo to Mega Evolve in battle.",
-  0
+  1
  ],
  "Mewtwonite Y": [
   "This stone enables Mewtwo to Mega Evolve in battle.",
-  0
+  1
  ],
  "Miracle Seed": [
   "A hold item that raises the power of Grass-type moves.",
@@ -689,7 +689,7 @@
  ],
  "Misty Seed": [
   "Boosts Sp. Def. on Misty Terrain, but only one time.",
-  1
+  0
  ],
  "Moomoo Milk": [
   "A nutritious milk that restores HP by 100 points.",
@@ -697,19 +697,19 @@
  ],
  "Moon Ball": [
   "A Ball that works well on Moon Stone users.",
-  1
+  0
  ],
  "Moon Stone": [
   "Makes certain species of Pokémon evolve.",
-  0
+  1
  ],
  "Muscle Band": [
   "A headband that boosts the power of physical moves.",
-  1
+  0
  ],
  "Mystic Water": [
   "A hold item that raises the power of Water-type moves.",
-  1
+  0
  ],
  "Nest Ball": [
   "A Ball that works better on weaker Pokémon.",
@@ -721,23 +721,23 @@
  ],
  "Never-Melt Ice": [
   "A hold item that raises the power of Ice-type moves.",
-  1
+  0
  ],
  "Never-MeltIce": [
   "A hold item that raises the power of Ice-type moves.",
-  1
+  0
  ],
  "Normal Gem": [
   "Increases the power of Normal Type moves.",
-  1
+  0
  ],
  "Occa Berry": [
   "A hold item that weakens a Fire move if weak to it.",
-  1
+  0
  ],
  "Oran Berry": [
   "A hold item that restores 10 HP in battle.",
-  1
+  0
  ],
  "Orbeetlite": [
   "This stone enables Orbeetle to Mega Evolve in battle.",
@@ -745,7 +745,7 @@
  ],
  "Oval Stone": [
   "Peculiar stone that evolves a certain Pokémon.",
-  1
+  0
  ],
  "PP Max": [
   "Raises the PP of a move to its maximum points.",
@@ -753,11 +753,11 @@
  ],
  "Passho Berry": [
   "A hold item that weakens a Water move if weak to it.",
-  1
+  0
  ],
  "Payapa Berry": [
   "A hold item that weakens a Psychic move if weak to it.",
-  1
+  0
  ],
  "Pearl": [
   "A pretty pearl that would sell at a cheap price.",
@@ -765,11 +765,11 @@
  ],
  "Pecha Berry": [
   "A hold item that heals poisoning in battle.",
-  1
+  0
  ],
  "Persim Berry": [
   "A hold item that heals confusion in battle.",
-  1
+  0
  ],
  "Pidgeotite": [
   "This stone enables Pidgeot to Mega Evolve in battle.",
@@ -777,7 +777,7 @@
  ],
  "Pink Nectar": [
   "Flower nectar that changes the form of certain Pokémon.",
-  0
+  1
  ],
  "Pinsirite": [
   "This stone enables Pinsir to Mega Evolve in battle.",
@@ -785,15 +785,15 @@
  ],
  "Pixie Plate": [
   "A tablet that ups the power of Fairy-type moves.",
-  1
+  0
  ],
  "Poison Barb": [
   "A hold item that raises the power of Poison-type moves.",
-  1
+  0
  ],
  "Poison Memory": [
   "A disc with Poison type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Potion": [
   "Restores the HP of a Pokémon by 20 points.",
@@ -801,55 +801,55 @@
  ],
  "Power Herb": [
   "Allows immediate use of a move that charges first.",
-  1
+  0
  ],
  "PrettyFeather": [
   "A beautiful yet plain feather that does nothing.",
-  1
+  0
  ],
  "Prism Scale": [
   "A mysterious scale that evolves a certain Pokémon.",
-  1
+  0
  ],
  "Protective Pads": [
   "Guard the holder from contact move effects.",
-  1
+  0
  ],
  "Psychic Memory": [
   "A disc with Psychic type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Psychic Seed": [
   "Boosts Sp. Def. on Psychic Terrain, but only one time.",
-  1
+  0
  ],
  "Punching Glove": [
   "Powers up punching moves and removes their contact.",
-  1
+  0
  ],
  "Purple Nectar": [
   "Flower nectar that changes the form of certain Pokémon.",
-  0
+  1
  ],
  "Quick Ball": [
   "Works well if used on the first turn.",
-  1
+  0
  ],
  "Quick Claw": [
   "A hold item that occasionally allows the first strike.",
-  1
+  0
  ],
  "Quick Powder": [
   "A hold item that raises the Speed of Ditto.",
-  1
+  0
  ],
  "Rawst Berry": [
   "A hold item that heals a burn in battle.",
-  1
+  0
  ],
  "Razor Claw": [
   "A hooked claw that ups the holder's critical-hit ratio.",
-  1
+  0
  ],
  "Razor Fang": [
   "A hold item that may cause flinching when the foe is hit.",
@@ -857,7 +857,7 @@
  ],
  "Red Nectar": [
   "Flower nectar that changes the form of certain Pokémon.",
-  0
+  1
  ],
  "Red Orb": [
   "A red, glowing orb said to contain an ancient power.",
@@ -865,7 +865,7 @@
  ],
  "Red Shard": [
   "A shard from an ancient item. Can be sold cheaply.",
-  0
+  1
  ],
  "Repeat Ball": [
   "A Ball that works better on Pokémon caught before.",
@@ -877,23 +877,23 @@
  ],
  "Rindo Berry": [
   "A hold item that weakens a Grass move if weak to it.",
-  1
+  0
  ],
  "Rock Memory": [
   "A disc with Rock type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Rocky Helmet": [
   "Hurts the foe if they touch its holder.",
-  1
+  0
  ],
  "Room Service": [
   "Lowers Speed if Trick Room is active.",
-  1
+  0
  ],
  "Roseli Berry": [
   "A hold item that weakens a Fairy move if weak to it.",
-  1
+  0
  ],
  "Roseradite": [
   "This stone enables Roserade to Mega Evolve in battle.",
@@ -901,7 +901,7 @@
  ],
  "Rusted Shield": [
   "A rusty shield. A hero used it to halt a disaster.",
-  1
+  0
  ],
  "Sablenite": [
   "This stone enables Sableye to Mega Evolve in battle.",
@@ -909,11 +909,11 @@
  ],
  "Safety Goggles": [
   "Protect from weather damage and powder moves.",
-  1
+  0
  ],
  "Salac Berry": [
   "A hold item that raises Speed in a pinch.",
-  1
+  0
  ],
  "Salamencite": [
   "This stone enables Salamence to Mega Evolve in battle.",
@@ -933,11 +933,11 @@
  ],
  "Scope Lens": [
   "A hold item that improves the critical-hit rate.",
-  1
+  0
  ],
  "Sharp Beak": [
   "A hold item that raises the power of Flying-type moves.",
-  1
+  0
  ],
  "Sharpedonite": [
   "This stone enables Sharpedo to Mega Evolve in battle.",
@@ -945,31 +945,31 @@
  ],
  "Shed Shell": [
   "Allows the holder to switch out without fail.",
-  1
+  0
  ],
  "Shell Bell": [
   "A hold item that restores HP upon striking the foe.",
-  1
+  0
  ],
  "Shiny Stone": [
   "Makes certain species of Pokémon evolve.",
-  0
+  1
  ],
  "Shuca Berry": [
   "A hold item that weakens a Ground move if weak to it.",
-  1
+  0
  ],
  "Silk Scarf": [
   "A hold item that raises the power of Normal-type moves.",
-  1
+  0
  ],
  "Silver Powder": [
   "A hold item that raises the power of Bug-type moves.",
-  1
+  0
  ],
  "Sitrus Berry": [
   "A hold item that restores the user's HP a little.",
-  1
+  0
  ],
  "Slakite": [
   "This stone enables Slaking to Mega Evolve in battle.",
@@ -981,11 +981,11 @@
  ],
  "Smoke Ball": [
   "A hold item that assures fleeing from wild Pokémon.",
-  1
+  0
  ],
  "Smooth Rock": [
   "Extends the length of Sandstorm if used by the holder.",
-  1
+  0
  ],
  "Snorlaxite": [
   "This stone enables Snorlax to Mega Evolve in battle.",
@@ -993,15 +993,15 @@
  ],
  "Snowball": [
   "Raises Atk if its holder is hit by an Ice-type move.",
-  1
+  0
  ],
  "Soft Sand": [
   "A hold item that raises the power of Ground-type moves.",
-  1
+  0
  ],
  "Spell Tag": [
   "A hold item that raises the power of Ghost-type moves.",
-  1
+  0
  ],
  "Star Piece": [
   "A red gem shard. It would sell for a very high price.",
@@ -1013,7 +1013,7 @@
  ],
  "Steel Memory": [
   "A disc with Steel type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Steelixite": [
   "This stone enables Steelix to Mega Evolve in battle.",
@@ -1021,11 +1021,11 @@
  ],
  "Sticky Barb": [
   "Damages the holder each turn. May latch on to foes.",
-  1
+  0
  ],
  "Sun Stone": [
   "Makes certain species of Pokémon evolve.",
-  0
+  1
  ],
  "Swampertite": [
   "This stone enables Swampert to Mega Evolve in battle.",
@@ -1033,23 +1033,23 @@
  ],
  "Tanga Berry": [
   "A hold item that weakens a Bug move if weak to it.",
-  1
+  0
  ],
  "Terrain Extender": [
   "Extends the length of the active battle terrain.",
-  1
+  0
  ],
  "Thick Club": [
   "A hold item that raises Cubone or Marowak's Attack.",
-  1
+  0
  ],
  "Throat Spray": [
   "Raises Sp. Atk. if the holder uses a sound-based move.",
-  1
+  0
  ],
  "Thunderstone": [
   "Makes certain species of Pokémon evolve.",
-  0
+  1
  ],
  "Timer Ball": [
   "A Ball that gains power in battles taking many turns.",
@@ -1089,27 +1089,27 @@
  ],
  "Wacan Berry": [
   "A hold item that weakens a Electric move if weak to it.",
-  1
+  0
  ],
  "Water Memory": [
   "A disc with Water type data. It swaps Silvally's type.",
-  1
+  0
  ],
  "Water Stone": [
   "Makes certain species of Pokémon evolve.",
-  0
+  1
  ],
  "Weakness Policy": [
   "If hit by a super- effective move, ups Atk and Sp. Atk.",
-  1
+  0
  ],
  "Wellspring Mask": [
   "Allows Ogerpon to wield the Water- type in battle.",
-  1
+  0
  ],
  "White Herb": [
   "A hold item that restores any lowered stat.",
-  1
+  0
  ],
  "Wide Lens": [
   "A magnifying lens that boosts the accuracy of moves.",
@@ -1117,18 +1117,18 @@
  ],
  "Wise Glasses": [
   "A pair of glasses that ups the power of special moves.",
-  1
+  0
  ],
  "Yache Berry": [
   "A hold item that weakens a Ice move if weak to it.",
-  1
+  0
  ],
  "Yellow Nectar": [
   "Flower nectar that changes the form of certain Pokémon.",
-  0
+  1
  ],
  "Yellow Shard": [
   "A shard from an ancient item. Can be sold cheaply.",
-  0
+  1
  ]
 }

@@ -159,7 +159,7 @@ Data rules:
   Mega Stones and Useful NPCs keep place text; NPCs sort A to Z. Name fixes use the rule's `rename` map.
 - **Descriptions** (`extract/item_desc.py` → `IX`): bag text from the hack's `items.h`, its `sXDesc` constants from
   `src/data/text/item_descriptions.h` (same pin); an `#if` keeps its first branch (GEN_LATEST). `changed` = differs from
-  stock `items.h` at the sprite pin (`.src/stock/`, SOURCES.md); the 27 items stock doesn't have count as changed.
+  stock `items.h` where the fork branched off (572ea14, `.src/stock/`, SOURCES.md); the 27 items stock doesn't have count as changed.
   TMs / HMs get none. Names the game squeezes match by constant (`ITEM_` + name); `Pasho Berry` and `Link Cable` have no
   item in the hack's `items.h` and no text. `extract/item_desc.json` is the table.
 - **Held odds** (`P.hi`, `dex.py` `held_odds`): `species_info` `[itemCommon, itemRare]` as `[[item, %]]`: common 50,

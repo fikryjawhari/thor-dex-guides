@@ -3,7 +3,7 @@
 build(D) sets D['IX'] = {item name as the guide shows it: [description, in-battle text, changed]} for every item name the
 guide shows: IT rows (not Useful NPCs), P.hi, P.stone, trainer held items, MI items. A name matches its items.h constant
 by the loose name key (as GID does); TMs and HMs get no entry (their page shows the move). changed = 1 when the text
-differs (whitespace folded) from stock pokeemerald-expansion's items.h at the sprite pin (sprites/SOURCES.md), fetched
+differs (whitespace folded) from stock pokeemerald-expansion's items.h where the iriv24 fork branched off (572ea14, SOURCES.md), fetched
 to .src/stock/items.h (SOURCES.md has the command); an item stock doesn't have counts as changed. The in-battle text
 is hand-written (tools/battle_text), so it stays empty here. Also written to extract/item_desc.json (committed).
 """
