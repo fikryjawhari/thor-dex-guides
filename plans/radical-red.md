@@ -82,6 +82,20 @@ Each unit adds the decisions it had to take to **Decisions taken in units** belo
 - [unit 5] Care packages are Also lines "Care package · <when> · xN" (the sheet's headings), paired with data.js item-cheat areas for walk.py; data.js's Viridian City Rare Candy / Pomeg Berry (no package) left out (item sheet Care Packages, data.js).
 - [unit 5] Leek Stick keeps RR's name (data.js, Showdown) and has no icon; Houndoomnite / Fight Memory are renamed to the standard spellings (item_text.ALIASES) so they get icons; item text "changed" = differs from FireRed's bag text or RR changed the effect (pokefirered items.json, gen9rr items.ts).
 
+- [unit 4] One sublocation per data.js area (221) and one tracker slot per place with floor / room suffixes removed (153 places, 67 with no encounters as `ns`) (data.js areas, Unbound's floor grouping).
+- [unit 4] Each encounter key's cap step shown as its Hardcore level in the group label and row notes ("cap 22"): the template has no per-row cap field (template/dex.js encounter sections, data.js keys).
+- [unit 4] Grass uses FRLG's 12 slot rates, Surf / Rock Smash 60/30/5/4/1, rods 70/30, 60/20/20, 40/40/15/4/1; the data.js entries are in slot order (standard FRLG, data.js).
+- [unit 4] Obtainable = found, or first same-dex base found, or evolved from an obtainable species (Unbound rule): 1192 obtainable, 83 not found, Megas g 1 (Unbound locs.py, data.js).
+- [unit 4] Multi-entry fixed gift lists are "Gift (pick one)" with "1 of N" until the sheet says otherwise (data.js fixed-gift lists; sheet check in step 2).
+- [unit 4] data.js stays the encounter source; the locations sheet only adds what it lacks, from a committed hand table `extract/sheet_locs.json` (its tabs are irregular), and sheet-vs-data differences are kept in notes.md, as row notes only where they change what the player does (sheet, name-matched compare).
+- [unit 4] Oak's Lab's 27 entries are the Starter choice (method `Starter choice`, AR `st`, the `cfg.starter = "pick"` picker), as Unbound / EI do (data.js Oak's Lab, Unbound locs.py).
+- [unit 4] Vermilion Fan Club's 10 fossils are a Shard trade by colour (no "1 of N") and Celadon Mansion's 42 entries random Shard eggs ("1 of 9" / "1 of 8", the Yellow "Any Cap" slot shared by 7 cap Pikachu); Mt. Moon's Helix / Dome pair added as "Fossil (pick one)" at the Fan Club; Aerodactyl stays the Fan Club gift, noted Old Amber from Pewter Museum (sheet Fossils / Egg Vendor tabs).
+- [unit 4] The 19 Lv 85 Mystery Gift legendaries go in an appended "Mystery Gift" LOC / AR place with no tracker slot (`ns`), codes left out, "Code at a Pokémon Center Nurse after the Hall of Fame" (sheet Mystery Gifts tab, Unbound's Mystery Gift area).
+- [unit 4] Water tables data.js has none for (Fuchsia City rods and Surf, S.S. Anne Port Super Rod and Surf) added as "Doc only" rows; Route 11 Surf (Tentacool Lv 5-40, vanilla) not; the sheet's Seafoam floors are one floor off data.js, not differences (sheet Fishing & Surfing / Grass & Caves tabs).
+- [unit 4] Raid notes give each drop slot's chance (100/80/80/50/50/30/30/25/25/5/4/1%); data.js's star tiers and drops kept where the sheet differs (8 dens ★★ vs raid1, Loyal Three den, Rock Tunnel B1F Star Piece / Nugget) (sheet Raid Dens tab, data.js).
+- [unit 4] Wonder (256 / 339), Paldea (42) and Sevii (12) Egg pools are rows "1 of N" on the selling city at its badge step, 1,084 rows (Wonder Egg Pools workbook).
+- [unit 4] Obtainable also by breeding (pre-evolution of an obtainable species) and for forms that follow their base (Greninja-Ash, Cherrim-Sunshine, Unfezant-F); the sheet's Unobtainables are g 3 and Enamorus is a postgame roamer: 1,235 obtainable, 40 not found (Arceus, Eternatus, Magearna-Original and forms), matching the sheet's 1023/1025 (sheet Unobtainables / Statics tabs).
+
 ## Units
 
 Each unit: a Sol agent in its own worktree, branch off `worktree-radical-red` at the SHA given in its brief, commits

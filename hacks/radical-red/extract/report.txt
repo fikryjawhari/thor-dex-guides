@@ -3135,7 +3135,12 @@ hzla lookup moves: 670 names; 1 unresolved: (No Move)
 hzla lookup ability: 258 names; 4 unresolved: Forewarn, Guard Dog, Pickpocket, Snow Cloak
 hzla lookup item: 196 names; 0 unresolved: none
 sprites: 44 own supplements; 1 species without art: chillet
-locs: not built yet (TODO: implement radical-red locs extraction)
+locs: sheet egg rows: 1084
+locs: sheet gift levels: 17
+locs: sheet rows added: 4
+locs: sheet shard rows the doc lacks: 1
+locs: sheet tables added: 6
+locs: 221 areas in 154 places, 3674 sublocation rows, 1235 obtainable species
 trainers: not built yet (TODO: implement radical-red trainers extraction)
 items: old-box rows {'Key Items': 44, 'Z-Crystals': 26, 'Held Items': 156, 'TMs and HMs': 95, 'Mega Stones': 63, 'Stats and Abilities': 47, 'Fossils': 3, 'Evolution Items': 29, 'Shops': 112, 'Valuables': 6, 'Move Tutors': 34, 'Useful NPCs': 3}
 items: 451 pickups (Found / Also lines), 126 shop lines, 111 care package lines, 34 tutor moves
