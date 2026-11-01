@@ -3137,7 +3137,17 @@ hzla lookup item: 196 names; 0 unresolved: none
 sprites: 44 own supplements; 1 species without art: chillet
 locs: not built yet (TODO: implement radical-red locs extraction)
 trainers: not built yet (TODO: implement radical-red trainers extraction)
-items: not built yet (TODO: implement radical-red items extraction)
+items: old-box rows {'Key Items': 44, 'Z-Crystals': 26, 'Held Items': 156, 'TMs and HMs': 95, 'Mega Stones': 63, 'Stats and Abilities': 47, 'Fossils': 3, 'Evolution Items': 29, 'Shops': 112, 'Valuables': 6, 'Move Tutors': 34, 'Useful NPCs': 3}
+items: 451 pickups (Found / Also lines), 126 shop lines, 111 care package lines, 34 tutor moves
+items: 63 Mega Stones placed of 65; Mega pages without a place: Adamant Orb, Red Orb
+items: sheet rows data.js has no pickup for (kept: gifts, rewards, follower finds): 11: Potion (Pallet Town); Time Changer (Pallet Town); Pokédex (Pallet Town); Poké Vial (Viridian City); DexNav (Route 2); Infinite Repel (Viridian Forest); Safety Goggles (Rock Tunnel); Red Card (Celadon City); Waterium Z (Saffron City); Protective Pads (Saffron City); Hidden Costume (Pokémon Mansion)
+items: data.js pickups the Overworld tab lacks (added from data.js / the other tabs): 25: Soothe Bell (Pokémon Tower 7F); Cameruptite (Saffron City Gym); Iron (Pokémon Mansion Gouging Fire's Room); Rare Candy (Pokémon Mansion Gouging Fire's Room); Z-Power Ring (One Island); Fightinium Z (One Island); Soothe Bell (Pokémon Tower 8F); Soothe Bell (Pokémon Tower 9F); Gracidea (Rock Tunnel Magearna's Chamber); Water Stone (Seafoam Islands Kyogre's Chamber); Meteorite (One Island Poké Center); PP Max (Cape Brink); Cheri Berry (Berry Forest); Chesto Berry (Berry Forest); Pecha Berry (Berry Forest); Rawst Berry (Berry Forest); Aspear Berry (Berry Forest); Oran Berry (Berry Forest); Persim Berry (Berry Forest); Lum Berry (Berry Forest); Razz Berry (Berry Forest); Bluk Berry (Berry Forest); Nanab Berry (Berry Forest); Wepear Berry (Berry Forest); Pinap Berry (Berry Forest)
+items: data.js pickups already on a sheet row (a second branch of one gift, or a key item data.js files elsewhere): 8: TM032 Aura Sphere (Safari Zone Moltres' Den); Soul Dew (Cinnabar Island Lab Testing Room); Reveal Glass (Cinnabar Island Lab Testing Room); Prison Bottle (Cinnabar Island Lab Testing Room); Latiasite (Cinnabar Island Lab Testing Room); Latiosite (Cinnabar Island Lab Testing Room); Town Map (One Island Poké Center); Tri-Pass (One Island Poké Center)
+items: Hardcore leaves out 72: TM 104 - Psyshock (Underground Path (Route 7 - Route 8)): the sheet marks it default modes only; Light Clay (Celadon City): the sheet marks it default modes only; TM012 Taunt (Rocket Hideout): unobtainable in Hardcore; TM 116 - Trick Room (Saffron City): the sheet marks it default modes only; Booster Energy (Cerulean Cave): the sheet marks it default modes only; Eject Button (Power Plant): the sheet marks it default modes only; TM017 Protect (Celadon Game Corner): unobtainable in Hardcore; Psychic Seed x10 (care package, Exiting Viridian Forest): not given in Hardcore; Muscle Wing x10 (care package, Route 3 after Lass Sally): not given in Hardcore; Protein x10 (care package, Route 3 after Lass Sally): not given in Hardcore; Carbos x10 (care package, Route 3 after Lass Sally): not given in Hardcore; Swift Wing x10 (care package, Route 3 after Lass Sally): not given in Hardcore; Throat Spray x10 (care package, Route 3 after Lass Sally): not given in Hardcore; Carbos x10 (care package, Route 4 (East) after exiting Mt. Moon): not given in Hardcore; Swift Wing x10 (care package, Route 4 (East) after exiting Mt. Moon): not given in Hardcore; Calcium x10 (care package, Route 4 (East) after exiting Mt. Moon): not given in Hardcore; Genius Wing x10 (care package, Route 4 (East) after exiting Mt. Moon): not given in Hardcore; Heat Rock x10 (care package, Route 4 (East) after exiting Mt. Moon): not given in Hardcore; Health Wing x10 (care package, Nugget Bridge after defeating Grunt): not given in Hardcore; HP Up x10 (care package, Nugget Bridge after defeating Grunt): not given in Hardcore; Clever Wing x50 (care package, Cerulean City after defeating Grunt): not given in Hardcore; Resist Wing x50 (care package, Cerulean City after defeating Grunt): not given in Hardcore; Zinc x10 (care package, Cerulean City after defeating Grunt): not given in Hardcore; Iron x10 (care package, Cerulean City after defeating Grunt): not given in Hardcore; Air Balloon x10 (care package, Cerulean City after defeating Grunt): not given in Hardcore; Terrain Extender x10 (care package, Cerulean City after defeating Grunt): not given in Hardcore; Weakness Policy x10 (care package, Route 9 after First Mandatory Trainer): not given in Hardcore; Misty Seed x10 (care package, Before entering Lavender Town): not given in Hardcore; Electric Seed x10 (care package, Entering Celadon City Gym): not given in Hardcore; Smooth Rock x10 (care package, Defeating Brendan in Fuchsia City): not given in Hardcore; Icy Rock x10 (care package, Defeating Brendan in Fuchsia City): not given in Hardcore; Damp Rock x10 (care package, Defeating Brendan in Fuchsia City): not given in Hardcore; tutor Flame Charge (Tamer (Vermilion City)): not in Hardcore; tutor Trailblaze (Tamer (Vermilion City)): not in Hardcore; tutor Power-Up Punch (Tamer (Vermilion City)): not in Hardcore; tutor Charge Beam (Tamer (Vermilion City)): not in Hardcore; tutor Work Up (Tamer (Vermilion City)): not in Hardcore; tutor Hone Claws (Tamer (Vermilion City)): not in Hardcore; tutor Rock Polish (Scientist (Pewter City)): not in Hardcore; tutor Swords Dance (Super Nerd (Fuchsia City)): not in Hardcore; tutor Nasty Plot (Super Nerd (Fuchsia City)): not in Hardcore; tutor Bulk Up (Super Nerd (Fuchsia City)): not in Hardcore; tutor Calm Mind (Super Nerd (Fuchsia City)): not in Hardcore; tutor Meteor Beam (Super Nerd (Fuchsia City)): not in Hardcore; tutor Iron Defense (Super Nerd (Fuchsia City)): not in Hardcore; tutor Substitute (Bug Catcher (Fuchsia City)): not in Hardcore; tutor Sunny Day (Super Nerd (Cinnabar Island)): not in Hardcore; tutor Rain Dance (Super Nerd (Cinnabar Island)): not in Hardcore; tutor Snowscape (Super Nerd (Cinnabar Island)): not in Hardcore; tutor Sandstorm (Super Nerd (Cinnabar Island)): not in Hardcore; tutor Tailwind (Super Nerd (Cinnabar Island)): not in Hardcore; tutor Stealth Rock (Super Nerd (Cinnabar Island)): not in Hardcore; tutor Spikes (Super Nerd (Cinnabar Island)): not in Hardcore; tutor Toxic Spikes (Super Nerd (Cinnabar Island)): not in Hardcore; tutor Dragon Dance (Ace Trainer (Victory Road)): not in Hardcore; Heat Rock held by wild Ninetales: unobtainable in Hardcore; Icy Rock held by wild Alolan Ninetales: unobtainable in Hardcore; Weakness Policy held by wild Graveler: unobtainable in Hardcore; Weakness Policy held by wild Alolan Graveler: unobtainable in Hardcore; Weakness Policy held by wild Golem: unobtainable in Hardcore; Weakness Policy held by wild Alolan Golem: unobtainable in Hardcore; Damp Rock held by wild Politoed: unobtainable in Hardcore; Lucky Egg, Damp Rock held by wild Pelipper: unobtainable in Hardcore; Throat Spray held by wild Whismur: unobtainable in Hardcore; Throat Spray held by wild Loudred: unobtainable in Hardcore; Throat Spray held by wild Exploud: unobtainable in Hardcore; Heat Rock held by wild Torkoal: unobtainable in Hardcore; Air Balloon held by wild Drifloon: unobtainable in Hardcore; Air Balloon held by wild Drifblim: unobtainable in Hardcore; Smooth Rock held by wild Hippowdon: unobtainable in Hardcore; Smooth Rock held by wild Hippowdon (Female): unobtainable in Hardcore; Icy Rock held by wild Abomasnow: unobtainable in Hardcore
+items: shop price: Timer Ball (Two Island shop) from FRLG, the Shops tab has none
+items: shop price: Lava Cookie (Two Island shop) from FRLG, the Shops tab has none
+items: data.js care package items with no package on the sheet: Pomeg Berry, Rare Candy (Viridian City, step 0)
+items: tutor Uproar: data.js only (Saffron City Gian's House 2F)
 walk: not built yet (TODO: implement radical-red walk extraction)
   description-derived metadata: Metal Bash: A physical attack in which the user charges, full body, into the foe.
 move metadata: 825 structured; 1 description-derived; 0 missing; 253 changed markers
@@ -3259,13 +3269,35 @@ ability changed markers: 48 from RR Showdown; descriptions remain official in-ga
 items: walkthrough rows matched to an Items line at the same place: 0
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
-items: lines relabelled from what they say: none
-pickup keys: 0 pickups, 0 walkthrough rows keyed
+items: lines relabelled from what they say: Also -> Found 1, Found -> Also 13
+pickup keys: 10 table entries no pickup matched
+  p26: Prison Bottle (Cinnabar Island Lab Testing Room)
+  p28: Reveal Glass (Cinnabar Island Lab Testing Room)
+  p34: Soul Dew (Cinnabar Island Lab Testing Room)
+  p41: Tri-Pass (One Island Poké Center)
+  p114: Booster Energy (Cerulean Cave B1F)
+  p229: TM032 Aura Sphere (Safari Zone Moltres' Den)
+  p415: Cameruptite (Pokémon Mansion 1F)
+  p445: Latiasite (Cinnabar Island Lab Testing Room)
+  p447: Latiosite (Cinnabar Island Lab Testing Room)
+  p476: Waterium Z (Cerulean City Gym)
+pickup keys: 492 pickups, 0 walkthrough rows keyed
 prune: deferred (locations or trainers not built yet); kept all 1343 species
 trainer keys: new table hacks\radical-red\extract\trainer_keys.json (0 trainers, keys as they are)
+item text: none for Ability Pill
+item text: none for Burnt Seed
+item text: none for DexNav
+item text: none for Dream Patch
+item text: none for Itemfinder
 item text: none for Leek Stick
-item text: 0 own, 200 pooled, 0 from the wiki, 0 made up, 8 Mega Stone standard, 1 with no description
-in battle: 73 shown items with battle text, 136 without
+item text: none for Medicine
+item text: none for Necromizer
+item text: none for Oak's Parcel
+item text: none for Poké Rider
+item text: none for Stat Scanner
+item text: none for Time Changer
+item text: 0 own, 352 pooled, 0 from the wiki, 0 made up, 8 Mega Stone standard, 12 with no description
+in battle: 143 shown items with battle text, 229 without
 in battle: 747 moves with battle text, 79 without
 trainer keys: no trainers yet, no key table written
 gid: not built yet (TODO: gid)
