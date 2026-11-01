@@ -1,0 +1,3760 @@
+{
+  "abilitycapsule": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ability_capsule.png",
+    "palette": "graphics/items/icon_palettes/ability_capsule.pal",
+    "constant": "ITEM_ABILITY_CAPSULE"
+  },
+  "abilitypatch": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ability_patch.png",
+    "palette": "graphics/items/icon_palettes/ability_patch.pal",
+    "constant": "ITEM_ABILITY_PATCH"
+  },
+  "abomasite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/abomasite.png",
+    "palette": "graphics/items/icon_palettes/abomasite.pal",
+    "constant": "ITEM_ABOMASITE"
+  },
+  "absolite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/absolite.png",
+    "palette": "graphics/items/icon_palettes/absolite.pal",
+    "constant": "ITEM_ABSOLITE"
+  },
+  "absolitez": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/absolite_z.png",
+    "palette": "graphics/items/icon_palettes/absolite_z.pal",
+    "constant": "ITEM_ABSOLITE_Z"
+  },
+  "absorbbulb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/absorb_bulb.png",
+    "palette": "graphics/items/icon_palettes/absorb_bulb.pal",
+    "constant": "ITEM_ABSORB_BULB"
+  },
+  "adamantorb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/adamant_orb.png",
+    "palette": "graphics/items/icon_palettes/adamant_orb.pal",
+    "constant": "ITEM_ADAMANT_ORB"
+  },
+  "adrenalineorb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/adrenaline_orb.png",
+    "palette": "graphics/items/icon_palettes/adrenaline_orb.pal",
+    "constant": "ITEM_ADRENALINE_ORB"
+  },
+  "aerodactylite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/aerodactylite.png",
+    "palette": "graphics/items/icon_palettes/aerodactylite.pal",
+    "constant": "ITEM_AERODACTYLITE"
+  },
+  "aggronite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/aggronite.png",
+    "palette": "graphics/items/icon_palettes/aggronite.pal",
+    "constant": "ITEM_AGGRONITE"
+  },
+  "aguavberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/aguav_berry.png",
+    "palette": "graphics/items/icon_palettes/aguav_berry.pal",
+    "constant": "ITEM_AGUAV_BERRY"
+  },
+  "airballoon": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/air_balloon.png",
+    "palette": "graphics/items/icon_palettes/air_balloon.pal",
+    "constant": "ITEM_AIR_BALLOON"
+  },
+  "alakazite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/alakazite.png",
+    "palette": "graphics/items/icon_palettes/alakazite.pal",
+    "constant": "ITEM_ALAKAZITE"
+  },
+  "aloraichiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/aloraichium_z.png",
+    "palette": "graphics/items/icon_palettes/aloraichium_z.pal",
+    "constant": "ITEM_ALORAICHIUM_Z"
+  },
+  "altarianite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/altarianite.png",
+    "palette": "graphics/items/icon_palettes/altarianite.pal",
+    "constant": "ITEM_ALTARIANITE"
+  },
+  "ampharosite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ampharosite.png",
+    "palette": "graphics/items/icon_palettes/ampharosite.pal",
+    "constant": "ITEM_AMPHAROSITE"
+  },
+  "amuletcoin": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/amulet_coin.png",
+    "palette": "graphics/items/icon_palettes/amulet_coin.pal",
+    "constant": "ITEM_AMULET_COIN"
+  },
+  "antidote": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/status_heal.png",
+    "palette": "graphics/items/icon_palettes/antidote.pal",
+    "constant": "ITEM_ANTIDOTE"
+  },
+  "apicotberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/apicot_berry.png",
+    "palette": "graphics/items/icon_palettes/apicot_berry.pal",
+    "constant": "ITEM_APICOT_BERRY"
+  },
+  "applite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/sceptilite.png",
+    "palette": "graphics/items/icon_palettes/sceptilite.pal",
+    "constant": "ITEM_APPLITE"
+  },
+  "armorfossil": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/armor_fossil.png",
+    "palette": "graphics/items/icon_palettes/armor_fossil.pal",
+    "constant": "ITEM_ARMOR_FOSSIL"
+  },
+  "aspearberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/aspear_berry.png",
+    "palette": "graphics/items/icon_palettes/aspear_berry.pal",
+    "constant": "ITEM_ASPEAR_BERRY"
+  },
+  "assaultvest": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/assault_vest.png",
+    "palette": "graphics/items/icon_palettes/assault_vest.pal",
+    "constant": "ITEM_ASSAULT_VEST"
+  },
+  "audinite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/audinite.png",
+    "palette": "graphics/items/icon_palettes/audinite.pal",
+    "constant": "ITEM_AUDINITE"
+  },
+  "awakening": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/status_heal.png",
+    "palette": "graphics/items/icon_palettes/awakening.pal",
+    "constant": "ITEM_AWAKENING"
+  },
+  "babiriberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/babiri_berry.png",
+    "palette": "graphics/items/icon_palettes/babiri_berry.pal",
+    "constant": "ITEM_BABIRI_BERRY"
+  },
+  "balmmushroom": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/balm_mushroom.png",
+    "palette": "graphics/items/icon_palettes/balm_mushroom.pal",
+    "constant": "ITEM_BALM_MUSHROOM"
+  },
+  "banettite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/banettite.png",
+    "palette": "graphics/items/icon_palettes/banettite.pal",
+    "constant": "ITEM_BANETTITE"
+  },
+  "barbaracite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/barbaracite.png",
+    "palette": "graphics/items/icon_palettes/barbaracite.pal",
+    "constant": "ITEM_BARBARACITE"
+  },
+  "baxcalibrite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/baxcalibrite.png",
+    "palette": "graphics/items/icon_palettes/baxcalibrite.pal",
+    "constant": "ITEM_BAXCALIBRITE"
+  },
+  "beadmail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/bead_mail.png",
+    "palette": "graphics/items/icon_palettes/bead_mail.pal",
+    "constant": "ITEM_BEAD_MAIL"
+  },
+  "beastball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/beast_ball.png",
+    "palette": "graphics/items/icon_palettes/beast_ball.pal",
+    "constant": "ITEM_BEAST_BALL"
+  },
+  "beedrillite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/beedrillite.png",
+    "palette": "graphics/items/icon_palettes/beedrillite.pal",
+    "constant": "ITEM_BEEDRILLITE"
+  },
+  "belueberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/belue_berry.png",
+    "palette": "graphics/items/icon_palettes/belue_berry.pal",
+    "constant": "ITEM_BELUE_BERRY"
+  },
+  "berryjuice": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/berry_juice.png",
+    "palette": "graphics/items/icon_palettes/berry_juice.pal",
+    "constant": "ITEM_BERRY_JUICE"
+  },
+  "bicycle": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/bicycle.png",
+    "palette": "graphics/items/icon_palettes/bicycle.pal",
+    "constant": "ITEM_BICYCLE"
+  },
+  "bigmushroom": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/big_mushroom.png",
+    "palette": "graphics/items/icon_palettes/mushroom.pal",
+    "constant": "ITEM_BIG_MUSHROOM"
+  },
+  "bignugget": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/big_nugget.png",
+    "palette": "graphics/items/icon_palettes/big_nugget.pal",
+    "constant": "ITEM_BIG_NUGGET"
+  },
+  "bigpearl": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/big_pearl.png",
+    "palette": "graphics/items/icon_palettes/pearl.pal",
+    "constant": "ITEM_BIG_PEARL"
+  },
+  "bigroot": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/big_root.png",
+    "palette": "graphics/items/icon_palettes/big_root.pal",
+    "constant": "ITEM_BIG_ROOT"
+  },
+  "bike": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/bicycle.png",
+    "palette": "graphics/items/icon_palettes/bicycle.pal",
+    "constant": "ITEM_BICYCLE"
+  },
+  "bindingband": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/binding_band.png",
+    "palette": "graphics/items/icon_palettes/binding_band.pal",
+    "constant": "ITEM_BINDING_BAND"
+  },
+  "blackaugurite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/black_augurite.png",
+    "palette": "graphics/items/icon_palettes/black_augurite.pal",
+    "constant": "ITEM_BLACK_AUGURITE"
+  },
+  "blackbelt": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/black_belt.png",
+    "palette": "graphics/items/icon_palettes/black_type_enhancing_item.pal",
+    "constant": "ITEM_BLACK_BELT"
+  },
+  "blackglasses": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/black_glasses.png",
+    "palette": "graphics/items/icon_palettes/black_type_enhancing_item.pal",
+    "constant": "ITEM_BLACK_GLASSES"
+  },
+  "blacksludge": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/black_sludge.png",
+    "palette": "graphics/items/icon_palettes/black_sludge.pal",
+    "constant": "ITEM_BLACK_SLUDGE"
+  },
+  "blastoisinite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/blastoisinite.png",
+    "palette": "graphics/items/icon_palettes/blastoisinite.pal",
+    "constant": "ITEM_BLASTOISINITE"
+  },
+  "blazikenite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/blazikenite.png",
+    "palette": "graphics/items/icon_palettes/blazikenite.pal",
+    "constant": "ITEM_BLAZIKENITE"
+  },
+  "blueorb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/blue_orb.png",
+    "palette": "graphics/items/icon_palettes/blue_orb.pal",
+    "constant": "ITEM_BLUE_ORB"
+  },
+  "blueshard": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/shard.png",
+    "palette": "graphics/items/icon_palettes/blue_shard.pal",
+    "constant": "ITEM_BLUE_SHARD"
+  },
+  "blukberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/bluk_berry.png",
+    "palette": "graphics/items/icon_palettes/bluk_berry.pal",
+    "constant": "ITEM_BLUK_BERRY"
+  },
+  "blunderpolicy": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/blunder_policy.png",
+    "palette": "graphics/items/icon_palettes/blunder_policy.pal",
+    "constant": "ITEM_BLUNDER_POLICY"
+  },
+  "boosterenergy": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/booster_energy.png",
+    "palette": "graphics/items/icon_palettes/booster_energy.pal",
+    "constant": "ITEM_BOOSTER_ENERGY"
+  },
+  "bottlecap": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/bottle_cap.png",
+    "palette": "graphics/items/icon_palettes/bottle_cap.pal",
+    "constant": "ITEM_BOTTLE_CAP"
+  },
+  "brightpowder": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/bright_powder.png",
+    "palette": "graphics/items/icon_palettes/bright_powder.pal",
+    "constant": "ITEM_BRIGHT_POWDER"
+  },
+  "buggem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/bug_gem.pal",
+    "constant": "ITEM_BUG_GEM"
+  },
+  "buginiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/buginium_z.png",
+    "palette": "graphics/items/icon_palettes/buginium_z.pal",
+    "constant": "ITEM_BUGINIUM_Z"
+  },
+  "bugmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/bug_memory.png",
+    "palette": "graphics/items/icon_palettes/bug_memory.pal",
+    "constant": "ITEM_BUG_MEMORY"
+  },
+  "burndrive": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/drive.png",
+    "palette": "graphics/items/icon_palettes/burn_drive.pal",
+    "constant": "ITEM_BURN_DRIVE"
+  },
+  "burnheal": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/status_heal.png",
+    "palette": "graphics/items/icon_palettes/burn_heal.pal",
+    "constant": "ITEM_BURN_HEAL"
+  },
+  "butterfrite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/abomasite.png",
+    "palette": "graphics/items/icon_palettes/abomasite.pal",
+    "constant": "ITEM_BUTTERFRITE"
+  },
+  "calcium": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/vitamin.png",
+    "palette": "graphics/items/icon_palettes/calcium.pal",
+    "constant": "ITEM_CALCIUM"
+  },
+  "cameruptite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/cameruptite.png",
+    "palette": "graphics/items/icon_palettes/cameruptite.pal",
+    "constant": "ITEM_CAMERUPTITE"
+  },
+  "carbos": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/vitamin.png",
+    "palette": "graphics/items/icon_palettes/carbos.pal",
+    "constant": "ITEM_CARBOS"
+  },
+  "casteliacone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/casteliacone.png",
+    "palette": "graphics/items/icon_palettes/casteliacone.pal",
+    "constant": "ITEM_CASTELIACONE"
+  },
+  "catchingcharm": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/catching_charm.png",
+    "palette": "graphics/items/icon_palettes/catching_charm.pal",
+    "constant": "ITEM_CATCHING_CHARM"
+  },
+  "cellbattery": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/cell_battery.png",
+    "palette": "graphics/items/icon_palettes/cell_battery.pal",
+    "constant": "ITEM_CELL_BATTERY"
+  },
+  "centiskite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/charizardite_y.png",
+    "palette": "graphics/items/icon_palettes/charizardite_y.pal",
+    "constant": "ITEM_CENTISKITE"
+  },
+  "chandelurite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/chandelurite.png",
+    "palette": "graphics/items/icon_palettes/chandelurite.pal",
+    "constant": "ITEM_CHANDELURITE"
+  },
+  "charcoal": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/charcoal.png",
+    "palette": "graphics/items/icon_palettes/charcoal.pal",
+    "constant": "ITEM_CHARCOAL"
+  },
+  "charizarditex": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/charizardite_x.png",
+    "palette": "graphics/items/icon_palettes/charizardite_x.pal",
+    "constant": "ITEM_CHARIZARDITE_X"
+  },
+  "charizarditey": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/charizardite_y.png",
+    "palette": "graphics/items/icon_palettes/charizardite_y.pal",
+    "constant": "ITEM_CHARIZARDITE_Y"
+  },
+  "chartiberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/charti_berry.png",
+    "palette": "graphics/items/icon_palettes/charti_berry.pal",
+    "constant": "ITEM_CHARTI_BERRY"
+  },
+  "cheriberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/cheri_berry.png",
+    "palette": "graphics/items/icon_palettes/cheri_berry.pal",
+    "constant": "ITEM_CHERI_BERRY"
+  },
+  "cherishball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/cherish_ball.png",
+    "palette": "graphics/items/icon_palettes/cherish_ball.pal",
+    "constant": "ITEM_CHERISH_BALL"
+  },
+  "chesnaughtite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/chesnaughtite.png",
+    "palette": "graphics/items/icon_palettes/chesnaughtite.pal",
+    "constant": "ITEM_CHESNAUGHTITE"
+  },
+  "chestoberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/chesto_berry.png",
+    "palette": "graphics/items/icon_palettes/chesto_berry.pal",
+    "constant": "ITEM_CHESTO_BERRY"
+  },
+  "chilanberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/chilan_berry.png",
+    "palette": "graphics/items/icon_palettes/chilan_berry.pal",
+    "constant": "ITEM_CHILAN_BERRY"
+  },
+  "chilldrive": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/drive.png",
+    "palette": "graphics/items/icon_palettes/chill_drive.pal",
+    "constant": "ITEM_CHILL_DRIVE"
+  },
+  "chimechite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/chimechite.png",
+    "palette": "graphics/items/icon_palettes/chimechite.pal",
+    "constant": "ITEM_CHIMECHITE"
+  },
+  "chippedpot": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/chipped_pot.png",
+    "palette": "graphics/items/icon_palettes/pot.pal",
+    "constant": "ITEM_CHIPPED_POT"
+  },
+  "choiceband": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/choice_band.png",
+    "palette": "graphics/items/icon_palettes/choice_band.pal",
+    "constant": "ITEM_CHOICE_BAND"
+  },
+  "choicescarf": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/choice_scarf.png",
+    "palette": "graphics/items/icon_palettes/choice_scarf.pal",
+    "constant": "ITEM_CHOICE_SCARF"
+  },
+  "choicespecs": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/choice_specs.png",
+    "palette": "graphics/items/icon_palettes/choice_specs.pal",
+    "constant": "ITEM_CHOICE_SPECS"
+  },
+  "chopleberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/chople_berry.png",
+    "palette": "graphics/items/icon_palettes/chople_berry.pal",
+    "constant": "ITEM_CHOPLE_BERRY"
+  },
+  "clawfossil": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/claw_fossil.png",
+    "palette": "graphics/items/icon_palettes/hoenn_fossil.pal",
+    "constant": "ITEM_CLAW_FOSSIL"
+  },
+  "cleansetag": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/cleanse_tag.png",
+    "palette": "graphics/items/icon_palettes/cleanse_tag.pal",
+    "constant": "ITEM_CLEANSE_TAG"
+  },
+  "clearamulet": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/clear_amulet.png",
+    "palette": "graphics/items/icon_palettes/clear_amulet.pal",
+    "constant": "ITEM_CLEAR_AMULET"
+  },
+  "clefablite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/clefablite.png",
+    "palette": "graphics/items/icon_palettes/clefablite.pal",
+    "constant": "ITEM_CLEFABLITE"
+  },
+  "coalossite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/cameruptite.png",
+    "palette": "graphics/items/icon_palettes/cameruptite.pal",
+    "constant": "ITEM_COALOSSITE"
+  },
+  "cobaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/coba_berry.png",
+    "palette": "graphics/items/icon_palettes/coba_berry.pal",
+    "constant": "ITEM_COBA_BERRY"
+  },
+  "coincase": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/coin_case.png",
+    "palette": "graphics/items/icon_palettes/coin_case.pal",
+    "constant": "ITEM_COIN_CASE"
+  },
+  "colburberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/colbur_berry.png",
+    "palette": "graphics/items/icon_palettes/colbur_berry.pal",
+    "constant": "ITEM_COLBUR_BERRY"
+  },
+  "cometshard": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/star_piece.png",
+    "palette": "graphics/items/icon_palettes/comet_shard.pal",
+    "constant": "ITEM_COMET_SHARD"
+  },
+  "copperajite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/aggronite.png",
+    "palette": "graphics/items/icon_palettes/aggronite.pal",
+    "constant": "ITEM_COPPERAJITE"
+  },
+  "cornnberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/cornn_berry.png",
+    "palette": "graphics/items/icon_palettes/cornn_berry.pal",
+    "constant": "ITEM_CORNN_BERRY"
+  },
+  "coverfossil": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/cover_fossil.png",
+    "palette": "graphics/items/icon_palettes/cover_fossil.pal",
+    "constant": "ITEM_COVER_FOSSIL"
+  },
+  "covertcloak": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/covert_cloak.png",
+    "palette": "graphics/items/icon_palettes/covert_cloak.pal",
+    "constant": "ITEM_COVERT_CLOAK"
+  },
+  "crabominite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/crabominite.png",
+    "palette": "graphics/items/icon_palettes/crabominite.pal",
+    "constant": "ITEM_CRABOMINITE"
+  },
+  "crackedpot": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/cracked_pot.png",
+    "palette": "graphics/items/icon_palettes/pot.pal",
+    "constant": "ITEM_CRACKED_POT"
+  },
+  "custapberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/custap_berry.png",
+    "palette": "graphics/items/icon_palettes/custap_berry.pal",
+    "constant": "ITEM_CUSTAP_BERRY"
+  },
+  "dampmulch": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mulch.png",
+    "palette": "graphics/items/icon_palettes/damp_mulch.pal",
+    "constant": "ITEM_DAMP_MULCH"
+  },
+  "damprock": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/damp_rock.png",
+    "palette": "graphics/items/icon_palettes/damp_rock.pal",
+    "constant": "ITEM_DAMP_ROCK"
+  },
+  "darkgem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/dark_gem.pal",
+    "constant": "ITEM_DARK_GEM"
+  },
+  "darkiniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/darkinium_z.png",
+    "palette": "graphics/items/icon_palettes/darkinium_z.pal",
+    "constant": "ITEM_DARKINIUM_Z"
+  },
+  "darkmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dark_memory.png",
+    "palette": "graphics/items/icon_palettes/dark_memory.pal",
+    "constant": "ITEM_DARK_MEMORY"
+  },
+  "darkranite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/darkranite.png",
+    "palette": "graphics/items/icon_palettes/darkranite.pal",
+    "constant": "ITEM_DARKRANITE"
+  },
+  "dawnstone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dawn_stone.png",
+    "palette": "graphics/items/icon_palettes/dawn_stone.pal",
+    "constant": "ITEM_DAWN_STONE"
+  },
+  "decidiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/decidium_z.png",
+    "palette": "graphics/items/icon_palettes/decidium_z.pal",
+    "constant": "ITEM_DECIDIUM_Z"
+  },
+  "deepseascale": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/deep_sea_scale.png",
+    "palette": "graphics/items/icon_palettes/deep_sea_scale.pal",
+    "constant": "ITEM_DEEP_SEA_SCALE"
+  },
+  "deepseatooth": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/deep_sea_tooth.png",
+    "palette": "graphics/items/icon_palettes/deep_sea_tooth.pal",
+    "constant": "ITEM_DEEP_SEA_TOOTH"
+  },
+  "delphoxite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/delphoxite.png",
+    "palette": "graphics/items/icon_palettes/delphoxite.pal",
+    "constant": "ITEM_DELPHOXITE"
+  },
+  "destinyknot": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/destiny_knot.png",
+    "palette": "graphics/items/icon_palettes/destiny_knot.pal",
+    "constant": "ITEM_DESTINY_KNOT"
+  },
+  "devonscope": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/devon_scope.png",
+    "palette": "graphics/items/icon_palettes/devon_scope.pal",
+    "constant": "ITEM_DEVON_SCOPE"
+  },
+  "diancite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/diancite.png",
+    "palette": "graphics/items/icon_palettes/diancite.pal",
+    "constant": "ITEM_DIANCITE"
+  },
+  "direhit": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/battle_stat_item.png",
+    "palette": "graphics/items/icon_palettes/dire_hit.pal",
+    "constant": "ITEM_DIRE_HIT"
+  },
+  "diveball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dive_ball.png",
+    "palette": "graphics/items/icon_palettes/dive_ball.pal",
+    "constant": "ITEM_DIVE_BALL"
+  },
+  "dnasplicers": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dna_splicers.png",
+    "palette": "graphics/items/icon_palettes/dna_splicers.pal",
+    "constant": "ITEM_DNA_SPLICERS"
+  },
+  "domefossil": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dome_fossil.png",
+    "palette": "graphics/items/icon_palettes/kanto_fossil.pal",
+    "constant": "ITEM_DOME_FOSSIL"
+  },
+  "dousedrive": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/drive.png",
+    "palette": "graphics/items/icon_palettes/douse_drive.pal",
+    "constant": "ITEM_DOUSE_DRIVE"
+  },
+  "dowsingmachine": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dowsing_machine.png",
+    "palette": "graphics/items/icon_palettes/dowsing_machine.pal",
+    "constant": "ITEM_DOWSING_MACHINE"
+  },
+  "dracoplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/draco_plate.pal",
+    "constant": "ITEM_DRACO_PLATE"
+  },
+  "dragalgite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dragalgite.png",
+    "palette": "graphics/items/icon_palettes/dragalgite.pal",
+    "constant": "ITEM_DRAGALGITE"
+  },
+  "dragonfang": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dragon_fang.png",
+    "palette": "graphics/items/icon_palettes/dragon_fang.pal",
+    "constant": "ITEM_DRAGON_FANG"
+  },
+  "dragongem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/dragon_gem.pal",
+    "constant": "ITEM_DRAGON_GEM"
+  },
+  "dragoninite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dragoninite.png",
+    "palette": "graphics/items/icon_palettes/dragoninite.pal",
+    "constant": "ITEM_DRAGONINITE"
+  },
+  "dragoniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dragonium_z.png",
+    "palette": "graphics/items/icon_palettes/dragonium_z.pal",
+    "constant": "ITEM_DRAGONIUM_Z"
+  },
+  "dragonmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dragon_memory.png",
+    "palette": "graphics/items/icon_palettes/dragon_memory.pal",
+    "constant": "ITEM_DRAGON_MEMORY"
+  },
+  "dragonscale": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dragon_scale.png",
+    "palette": "graphics/items/icon_palettes/dragon_scale.pal",
+    "constant": "ITEM_DRAGON_SCALE"
+  },
+  "drampanite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/drampanite.png",
+    "palette": "graphics/items/icon_palettes/drampanite.pal",
+    "constant": "ITEM_DRAMPANITE"
+  },
+  "dreadplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/dread_plate.pal",
+    "constant": "ITEM_DREAD_PLATE"
+  },
+  "dreamball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dream_ball.png",
+    "palette": "graphics/items/icon_palettes/dream_ball.pal",
+    "constant": "ITEM_DREAM_BALL"
+  },
+  "dreammail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dream_mail.png",
+    "palette": "graphics/items/icon_palettes/dream_mail.pal",
+    "constant": "ITEM_DREAM_MAIL"
+  },
+  "drednawite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/swampertite.png",
+    "palette": "graphics/items/icon_palettes/swampertite.pal",
+    "constant": "ITEM_DREDNAWITE"
+  },
+  "dubiousdisc": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dubious_disc.png",
+    "palette": "graphics/items/icon_palettes/dubious_disc.pal",
+    "constant": "ITEM_DUBIOUS_DISC"
+  },
+  "durinberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/durin_berry.png",
+    "palette": "graphics/items/icon_palettes/durin_berry.pal",
+    "constant": "ITEM_DURIN_BERRY"
+  },
+  "duskball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dusk_ball.png",
+    "palette": "graphics/items/icon_palettes/dusk_ball.pal",
+    "constant": "ITEM_DUSK_BALL"
+  },
+  "dusknoirite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/sablenite.png",
+    "palette": "graphics/items/icon_palettes/sablenite.pal",
+    "constant": "ITEM_DUSKNOIRITE"
+  },
+  "duskstone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dusk_stone.png",
+    "palette": "graphics/items/icon_palettes/dusk_stone.pal",
+    "constant": "ITEM_DUSK_STONE"
+  },
+  "earthplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/earth_plate.pal",
+    "constant": "ITEM_EARTH_PLATE"
+  },
+  "eelektrossite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/eelektrossite.png",
+    "palette": "graphics/items/icon_palettes/eelektrossite.pal",
+    "constant": "ITEM_EELEKTROSSITE"
+  },
+  "eeviumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/eevium_z.png",
+    "palette": "graphics/items/icon_palettes/eevium_z.pal",
+    "constant": "ITEM_EEVIUM_Z"
+  },
+  "ejectbutton": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/eject_button.png",
+    "palette": "graphics/items/icon_palettes/eject_button.pal",
+    "constant": "ITEM_EJECT_BUTTON"
+  },
+  "ejectpack": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/eject_pack.png",
+    "palette": "graphics/items/icon_palettes/eject_pack.pal",
+    "constant": "ITEM_EJECT_PACK"
+  },
+  "electirizer": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/electirizer.png",
+    "palette": "graphics/items/icon_palettes/electirizer.pal",
+    "constant": "ITEM_ELECTIRIZER"
+  },
+  "electricgem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/electric_gem.pal",
+    "constant": "ITEM_ELECTRIC_GEM"
+  },
+  "electricmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/electric_memory.png",
+    "palette": "graphics/items/icon_palettes/electric_memory.pal",
+    "constant": "ITEM_ELECTRIC_MEMORY"
+  },
+  "electricseed": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/terrain_seed.png",
+    "palette": "graphics/items/icon_palettes/electric_seed.pal",
+    "constant": "ITEM_ELECTRIC_SEED"
+  },
+  "electriumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/electrium_z.png",
+    "palette": "graphics/items/icon_palettes/electrium_z.pal",
+    "constant": "ITEM_ELECTRIUM_Z"
+  },
+  "emboarite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/emboarite.png",
+    "palette": "graphics/items/icon_palettes/emboarite.pal",
+    "constant": "ITEM_EMBOARITE"
+  },
+  "empoleonited": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/blastoisinite.png",
+    "palette": "graphics/items/icon_palettes/blastoisinite.pal",
+    "constant": "ITEM_EMPOLEONITE_D"
+  },
+  "empoleoniteo": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/charizardite_x.png",
+    "palette": "graphics/items/icon_palettes/charizardite_x.pal",
+    "constant": "ITEM_EMPOLEONITE_O"
+  },
+  "energypowder": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/powder.png",
+    "palette": "graphics/items/icon_palettes/energy_powder.pal",
+    "constant": "ITEM_ENERGY_POWDER"
+  },
+  "energyroot": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/energy_root.png",
+    "palette": "graphics/items/icon_palettes/energy_root.pal",
+    "constant": "ITEM_ENERGY_ROOT"
+  },
+  "enigmaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/enigma_berry.png",
+    "palette": "graphics/items/icon_palettes/enigma_berry.pal",
+    "constant": "ITEM_ENIGMA_BERRY_E_READER"
+  },
+  "escaperope": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/escape_rope.png",
+    "palette": "graphics/items/icon_palettes/escape_rope.pal",
+    "constant": "ITEM_ESCAPE_ROPE"
+  },
+  "ether": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ether.png",
+    "palette": "graphics/items/icon_palettes/ether.pal",
+    "constant": "ITEM_ETHER"
+  },
+  "everstone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/everstone.png",
+    "palette": "graphics/items/icon_palettes/everstone.pal",
+    "constant": "ITEM_EVERSTONE"
+  },
+  "eviolite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/eviolite.png",
+    "palette": "graphics/items/icon_palettes/eviolite.pal",
+    "constant": "ITEM_EVIOLITE"
+  },
+  "excadrite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/excadrite.png",
+    "palette": "graphics/items/icon_palettes/excadrite.pal",
+    "constant": "ITEM_EXCADRITE"
+  },
+  "expertbelt": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/expert_belt.png",
+    "palette": "graphics/items/icon_palettes/expert_belt.pal",
+    "constant": "ITEM_EXPERT_BELT"
+  },
+  "expshare": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/exp_share.png",
+    "palette": "graphics/items/icon_palettes/exp_share.pal",
+    "constant": "ITEM_EXP_SHARE"
+  },
+  "fabmail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/fab_mail.png",
+    "palette": "graphics/items/icon_palettes/fab_mail.pal",
+    "constant": "ITEM_FAB_MAIL"
+  },
+  "fairiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/fairium_z.png",
+    "palette": "graphics/items/icon_palettes/fairium_z.pal",
+    "constant": "ITEM_FAIRIUM_Z"
+  },
+  "fairygem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/fairy_gem.pal",
+    "constant": "ITEM_FAIRY_GEM"
+  },
+  "fairymemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/fairy_memory.png",
+    "palette": "graphics/items/icon_palettes/fairy_memory.pal",
+    "constant": "ITEM_FAIRY_MEMORY"
+  },
+  "falinksite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/falinksite.png",
+    "palette": "graphics/items/icon_palettes/falinksite.pal",
+    "constant": "ITEM_FALINKSITE"
+  },
+  "fastball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/fast_ball.png",
+    "palette": "graphics/items/icon_palettes/fast_ball.pal",
+    "constant": "ITEM_FAST_BALL"
+  },
+  "feraligite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/feraligite.png",
+    "palette": "graphics/items/icon_palettes/feraligite.pal",
+    "constant": "ITEM_FERALIGITE"
+  },
+  "fightinggem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/fighting_gem.pal",
+    "constant": "ITEM_FIGHTING_GEM"
+  },
+  "fightingmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/fighting_memory.png",
+    "palette": "graphics/items/icon_palettes/fighting_memory.pal",
+    "constant": "ITEM_FIGHTING_MEMORY"
+  },
+  "fightiniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/fightinium_z.png",
+    "palette": "graphics/items/icon_palettes/fightinium_z.pal",
+    "constant": "ITEM_FIGHTINIUM_Z"
+  },
+  "figyberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/figy_berry.png",
+    "palette": "graphics/items/icon_palettes/figy_berry.pal",
+    "constant": "ITEM_FIGY_BERRY"
+  },
+  "firegem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/fire_gem.pal",
+    "constant": "ITEM_FIRE_GEM"
+  },
+  "firememory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/fire_memory.png",
+    "palette": "graphics/items/icon_palettes/fire_memory.pal",
+    "constant": "ITEM_FIRE_MEMORY"
+  },
+  "firestone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/fire_stone.png",
+    "palette": "graphics/items/icon_palettes/fire_stone.pal",
+    "constant": "ITEM_FIRE_STONE"
+  },
+  "firiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/firium_z.png",
+    "palette": "graphics/items/icon_palettes/firium_z.pal",
+    "constant": "ITEM_FIRIUM_Z"
+  },
+  "fistplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/fist_plate.pal",
+    "constant": "ITEM_FIST_PLATE"
+  },
+  "flameorb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/flame_orb.png",
+    "palette": "graphics/items/icon_palettes/flame_orb.pal",
+    "constant": "ITEM_FLAME_ORB"
+  },
+  "flameplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/flame_plate.pal",
+    "constant": "ITEM_FLAME_PLATE"
+  },
+  "floatstone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/float_stone.png",
+    "palette": "graphics/items/icon_palettes/float_stone.pal",
+    "constant": "ITEM_FLOAT_STONE"
+  },
+  "floettite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/floettite.png",
+    "palette": "graphics/items/icon_palettes/floettite.pal",
+    "constant": "ITEM_FLOETTITE"
+  },
+  "flyinggem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/flying_gem.pal",
+    "constant": "ITEM_FLYING_GEM"
+  },
+  "flyingmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/flying_memory.png",
+    "palette": "graphics/items/icon_palettes/flying_memory.pal",
+    "constant": "ITEM_FLYING_MEMORY"
+  },
+  "flyiniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/flyinium_z.png",
+    "palette": "graphics/items/icon_palettes/flyinium_z.pal",
+    "constant": "ITEM_FLYINIUM_Z"
+  },
+  "focusband": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/focus_band.png",
+    "palette": "graphics/items/icon_palettes/focus_band.pal",
+    "constant": "ITEM_FOCUS_BAND"
+  },
+  "focussash": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/focus_sash.png",
+    "palette": "graphics/items/icon_palettes/focus_sash.pal",
+    "constant": "ITEM_FOCUS_SASH"
+  },
+  "freshwater": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/fresh_water.png",
+    "palette": "graphics/items/icon_palettes/fresh_water.pal",
+    "constant": "ITEM_FRESH_WATER"
+  },
+  "friendball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/friend_ball.png",
+    "palette": "graphics/items/icon_palettes/friend_ball.pal",
+    "constant": "ITEM_FRIEND_BALL"
+  },
+  "froslassite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/froslassite.png",
+    "palette": "graphics/items/icon_palettes/froslassite.pal",
+    "constant": "ITEM_FROSLASSITE"
+  },
+  "fullheal": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/full_heal.png",
+    "palette": "graphics/items/icon_palettes/full_heal.pal",
+    "constant": "ITEM_FULL_HEAL"
+  },
+  "fullincense": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/full_incense.png",
+    "palette": "graphics/items/icon_palettes/full_incense.pal",
+    "constant": "ITEM_FULL_INCENSE"
+  },
+  "fullrestore": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/large_potion.png",
+    "palette": "graphics/items/icon_palettes/full_restore.pal",
+    "constant": "ITEM_FULL_RESTORE"
+  },
+  "galaricacuff": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/galarica_cuff.png",
+    "palette": "graphics/items/icon_palettes/galarica_item.pal",
+    "constant": "ITEM_GALARICA_CUFF"
+  },
+  "galaricawreath": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/galarica_wreath.png",
+    "palette": "graphics/items/icon_palettes/galarica_item.pal",
+    "constant": "ITEM_GALARICA_WREATH"
+  },
+  "galladite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/galladite.png",
+    "palette": "graphics/items/icon_palettes/galladite.pal",
+    "constant": "ITEM_GALLADITE"
+  },
+  "ganlonberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ganlon_berry.png",
+    "palette": "graphics/items/icon_palettes/ganlon_berry.pal",
+    "constant": "ITEM_GANLON_BERRY"
+  },
+  "garbodorite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/gengarite.png",
+    "palette": "graphics/items/icon_palettes/gengarite.pal",
+    "constant": "ITEM_GARBODORITE"
+  },
+  "garchompite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/garchompite.png",
+    "palette": "graphics/items/icon_palettes/garchompite.pal",
+    "constant": "ITEM_GARCHOMPITE"
+  },
+  "garchompitez": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/garchompite_z.png",
+    "palette": "graphics/items/icon_palettes/garchompite_z.pal",
+    "constant": "ITEM_GARCHOMPITE_Z"
+  },
+  "gardevoirite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/gardevoirite.png",
+    "palette": "graphics/items/icon_palettes/gardevoirite.pal",
+    "constant": "ITEM_GARDEVOIRITE"
+  },
+  "gengarite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/gengarite.png",
+    "palette": "graphics/items/icon_palettes/gengarite.pal",
+    "constant": "ITEM_GENGARITE"
+  },
+  "ghostgem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/ghost_gem.pal",
+    "constant": "ITEM_GHOST_GEM"
+  },
+  "ghostiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ghostium_z.png",
+    "palette": "graphics/items/icon_palettes/ghostium_z.pal",
+    "constant": "ITEM_GHOSTIUM_Z"
+  },
+  "ghostmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ghost_memory.png",
+    "palette": "graphics/items/icon_palettes/ghost_memory.pal",
+    "constant": "ITEM_GHOST_MEMORY"
+  },
+  "glalitite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/glalitite.png",
+    "palette": "graphics/items/icon_palettes/glalitite.pal",
+    "constant": "ITEM_GLALITITE"
+  },
+  "glimmoranite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/glimmoranite.png",
+    "palette": "graphics/items/icon_palettes/glimmoranite.pal",
+    "constant": "ITEM_GLIMMORANITE"
+  },
+  "glittermail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/glitter_mail.png",
+    "palette": "graphics/items/icon_palettes/glitter_mail.pal",
+    "constant": "ITEM_GLITTER_MAIL"
+  },
+  "gogoggles": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/go_goggles.png",
+    "palette": "graphics/items/icon_palettes/go_goggles.pal",
+    "constant": "ITEM_GO_GOGGLES"
+  },
+  "goldbottlecap": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/bottle_cap.png",
+    "palette": "graphics/items/icon_palettes/gold_bottle_cap.pal",
+    "constant": "ITEM_GOLD_BOTTLE_CAP"
+  },
+  "golisopite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/golisopite.png",
+    "palette": "graphics/items/icon_palettes/golisopite.pal",
+    "constant": "ITEM_GOLISOPITE"
+  },
+  "golurkite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/golurkite.png",
+    "palette": "graphics/items/icon_palettes/golurkite.pal",
+    "constant": "ITEM_GOLURKITE"
+  },
+  "goodrod": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/good_rod.png",
+    "palette": "graphics/items/icon_palettes/good_rod.pal",
+    "constant": "ITEM_GOOD_ROD"
+  },
+  "gooeymulch": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mulch.png",
+    "palette": "graphics/items/icon_palettes/gooey_mulch.pal",
+    "constant": "ITEM_GOOEY_MULCH"
+  },
+  "gracidea": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/gracidea.png",
+    "palette": "graphics/items/icon_palettes/gracidea.pal",
+    "constant": "ITEM_GRACIDEA"
+  },
+  "grassgem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/grass_gem.pal",
+    "constant": "ITEM_GRASS_GEM"
+  },
+  "grassiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/grassium_z.png",
+    "palette": "graphics/items/icon_palettes/grassium_z.pal",
+    "constant": "ITEM_GRASSIUM_Z"
+  },
+  "grassmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/grass_memory.png",
+    "palette": "graphics/items/icon_palettes/grass_memory.pal",
+    "constant": "ITEM_GRASS_MEMORY"
+  },
+  "grassyseed": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/terrain_seed.png",
+    "palette": "graphics/items/icon_palettes/grassy_seed.pal",
+    "constant": "ITEM_GRASSY_SEED"
+  },
+  "greatball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/great_ball.png",
+    "palette": "graphics/items/icon_palettes/great_ball.pal",
+    "constant": "ITEM_GREAT_BALL"
+  },
+  "greenshard": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/shard.png",
+    "palette": "graphics/items/icon_palettes/green_shard.pal",
+    "constant": "ITEM_GREEN_SHARD"
+  },
+  "greninjite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/greninjite.png",
+    "palette": "graphics/items/icon_palettes/greninjite.pal",
+    "constant": "ITEM_GRENINJITE"
+  },
+  "grepaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/grepa_berry.png",
+    "palette": "graphics/items/icon_palettes/grepa_berry.pal",
+    "constant": "ITEM_GREPA_BERRY"
+  },
+  "grimmite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/charizardite_x.png",
+    "palette": "graphics/items/icon_palettes/charizardite_x.pal",
+    "constant": "ITEM_GRIMMITE"
+  },
+  "gripclaw": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/grip_claw.png",
+    "palette": "graphics/items/icon_palettes/grip_claw.pal",
+    "constant": "ITEM_GRIP_CLAW"
+  },
+  "griseousorb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/griseous_orb.png",
+    "palette": "graphics/items/icon_palettes/griseous_orb.pal",
+    "constant": "ITEM_GRISEOUS_ORB"
+  },
+  "groundgem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/ground_gem.pal",
+    "constant": "ITEM_GROUND_GEM"
+  },
+  "groundiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/groundium_z.png",
+    "palette": "graphics/items/icon_palettes/groundium_z.pal",
+    "constant": "ITEM_GROUNDIUM_Z"
+  },
+  "groundmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ground_memory.png",
+    "palette": "graphics/items/icon_palettes/ground_memory.pal",
+    "constant": "ITEM_GROUND_MEMORY"
+  },
+  "growthmulch": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mulch.png",
+    "palette": "graphics/items/icon_palettes/growth_mulch.pal",
+    "constant": "ITEM_GROWTH_MULCH"
+  },
+  "guardspec": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/battle_stat_item.png",
+    "palette": "graphics/items/icon_palettes/guard_spec.pal",
+    "constant": "ITEM_GUARD_SPEC"
+  },
+  "gyaradosite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/gyaradosite.png",
+    "palette": "graphics/items/icon_palettes/gyaradosite.pal",
+    "constant": "ITEM_GYARADOSITE"
+  },
+  "habanberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/haban_berry.png",
+    "palette": "graphics/items/icon_palettes/haban_berry.pal",
+    "constant": "ITEM_HABAN_BERRY"
+  },
+  "harbormail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/harbor_mail.png",
+    "palette": "graphics/items/icon_palettes/harbor_mail.pal",
+    "constant": "ITEM_HARBOR_MAIL"
+  },
+  "hardstone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hard_stone.png",
+    "palette": "graphics/items/icon_palettes/hard_stone.pal",
+    "constant": "ITEM_HARD_STONE"
+  },
+  "hawluchanite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hawluchanite.png",
+    "palette": "graphics/items/icon_palettes/hawluchanite.pal",
+    "constant": "ITEM_HAWLUCHANITE"
+  },
+  "healball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/heal_ball.png",
+    "palette": "graphics/items/icon_palettes/heal_ball.pal",
+    "constant": "ITEM_HEAL_BALL"
+  },
+  "healpowder": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/powder.png",
+    "palette": "graphics/items/icon_palettes/heal_powder.pal",
+    "constant": "ITEM_HEAL_POWDER"
+  },
+  "hearthflamemask": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hearthflame_mask.png",
+    "palette": "graphics/items/icon_palettes/hearthflame_mask.pal",
+    "constant": "ITEM_HEARTHFLAME_MASK"
+  },
+  "heartscale": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/heart_scale.png",
+    "palette": "graphics/items/icon_palettes/heart_scale.pal",
+    "constant": "ITEM_HEART_SCALE"
+  },
+  "heatranite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/heatranite.png",
+    "palette": "graphics/items/icon_palettes/heatranite.pal",
+    "constant": "ITEM_HEATRANITE"
+  },
+  "heatrock": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/heat_rock.png",
+    "palette": "graphics/items/icon_palettes/heat_rock.pal",
+    "constant": "ITEM_HEAT_ROCK"
+  },
+  "heavyball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/heavy_ball.png",
+    "palette": "graphics/items/icon_palettes/heavy_ball.pal",
+    "constant": "ITEM_HEAVY_BALL"
+  },
+  "heavydutyboots": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/heavy_duty_boots.png",
+    "palette": "graphics/items/icon_palettes/heavy_duty_boots.pal",
+    "constant": "ITEM_HEAVY_DUTY_BOOTS"
+  },
+  "helixfossil": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/helix_fossil.png",
+    "palette": "graphics/items/icon_palettes/kanto_fossil.pal",
+    "constant": "ITEM_HELIX_FOSSIL"
+  },
+  "heracronite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/heracronite.png",
+    "palette": "graphics/items/icon_palettes/heracronite.pal",
+    "constant": "ITEM_HERACRONITE"
+  },
+  "hm-electric": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hm.png",
+    "palette": "graphics/items/icon_palettes/electric_tm_hm.pal",
+    "move": "Flash",
+    "type": "Electric"
+  },
+  "hm-fighting": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hm.png",
+    "palette": "graphics/items/icon_palettes/fighting_tm_hm.pal",
+    "move": "Rock Smash",
+    "type": "Fighting"
+  },
+  "hm-flying": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hm.png",
+    "palette": "graphics/items/icon_palettes/flying_tm_hm.pal",
+    "move": "Fly",
+    "type": "Flying"
+  },
+  "hm-grass": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hm.png",
+    "palette": "graphics/items/icon_palettes/grass_tm_hm.pal",
+    "move": "Cut",
+    "type": "Grass"
+  },
+  "hm-normal": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hm.png",
+    "palette": "graphics/items/icon_palettes/normal_tm_hm.pal",
+    "move": "Rock Climb",
+    "type": "Normal"
+  },
+  "hm-rock": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hm.png",
+    "palette": "graphics/items/icon_palettes/rock_tm_hm.pal",
+    "move": "Strength",
+    "type": "Rock"
+  },
+  "hm-steel": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hm.png",
+    "palette": "graphics/items/icon_palettes/steel_tm_hm.pal",
+    "move": "Cut",
+    "type": "Steel"
+  },
+  "hm-water": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hm.png",
+    "palette": "graphics/items/icon_palettes/water_tm_hm.pal",
+    "move": "Waterfall",
+    "type": "Water"
+  },
+  "hondewberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hondew_berry.png",
+    "palette": "graphics/items/icon_palettes/hondew_berry.pal",
+    "constant": "ITEM_HONDEW_BERRY"
+  },
+  "honey": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/honey.png",
+    "palette": "graphics/items/icon_palettes/honey.pal",
+    "constant": "ITEM_HONEY"
+  },
+  "houndoominite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/houndoominite.png",
+    "palette": "graphics/items/icon_palettes/houndoominite.pal",
+    "constant": "ITEM_HOUNDOOMINITE"
+  },
+  "hpup": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/hp_up.png",
+    "palette": "graphics/items/icon_palettes/hp_up.pal",
+    "constant": "ITEM_HP_UP"
+  },
+  "hyperpotion": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/potion.png",
+    "palette": "graphics/items/icon_palettes/hyper_potion.pal",
+    "constant": "ITEM_HYPER_POTION"
+  },
+  "iapapaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/iapapa_berry.png",
+    "palette": "graphics/items/icon_palettes/iapapa_berry.pal",
+    "constant": "ITEM_IAPAPA_BERRY"
+  },
+  "icegem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/ice_gem.pal",
+    "constant": "ITEM_ICE_GEM"
+  },
+  "iceheal": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/status_heal.png",
+    "palette": "graphics/items/icon_palettes/ice_heal.pal",
+    "constant": "ITEM_ICE_HEAL"
+  },
+  "icememory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ice_memory.png",
+    "palette": "graphics/items/icon_palettes/ice_memory.pal",
+    "constant": "ITEM_ICE_MEMORY"
+  },
+  "icestone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ice_stone.png",
+    "palette": "graphics/items/icon_palettes/ice_stone.pal",
+    "constant": "ITEM_ICE_STONE"
+  },
+  "icicleplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/icicle_plate.pal",
+    "constant": "ITEM_ICICLE_PLATE"
+  },
+  "iciumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/icium_z.png",
+    "palette": "graphics/items/icon_palettes/icium_z.pal",
+    "constant": "ITEM_ICIUM_Z"
+  },
+  "icyrock": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/icy_rock.png",
+    "palette": "graphics/items/icon_palettes/icy_rock.pal",
+    "constant": "ITEM_ICY_ROCK"
+  },
+  "inciniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/incinium_z.png",
+    "palette": "graphics/items/icon_palettes/incinium_z.pal",
+    "constant": "ITEM_INCINIUM_Z"
+  },
+  "infernapite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/blazikenite.png",
+    "palette": "graphics/items/icon_palettes/blazikenite.pal",
+    "constant": "ITEM_INFERNAPITE"
+  },
+  "infinitecandy": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/rare_candy.png",
+    "palette": "graphics/items/icon_palettes/rare_candy.pal",
+    "constant": "ITEM_INFINITE_CANDY"
+  },
+  "insectplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/insect_plate.pal",
+    "constant": "ITEM_INSECT_PLATE"
+  },
+  "iron": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/vitamin.png",
+    "palette": "graphics/items/icon_palettes/iron.pal",
+    "constant": "ITEM_IRON"
+  },
+  "ironball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/iron_ball.png",
+    "palette": "graphics/items/icon_palettes/iron_ball.pal",
+    "constant": "ITEM_IRON_BALL"
+  },
+  "ironplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/iron_plate.pal",
+    "constant": "ITEM_IRON_PLATE"
+  },
+  "jabocaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/jaboca_berry.png",
+    "palette": "graphics/items/icon_palettes/jaboca_berry.pal",
+    "constant": "ITEM_JABOCA_BERRY"
+  },
+  "jawfossil": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/jaw_fossil.png",
+    "palette": "graphics/items/icon_palettes/jaw_fossil.pal",
+    "constant": "ITEM_JAW_FOSSIL"
+  },
+  "kangaskhanite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/kangaskhanite.png",
+    "palette": "graphics/items/icon_palettes/kangaskhanite.pal",
+    "constant": "ITEM_KANGASKHANITE"
+  },
+  "kasibberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/kasib_berry.png",
+    "palette": "graphics/items/icon_palettes/kasib_berry.pal",
+    "constant": "ITEM_KASIB_BERRY"
+  },
+  "kebiaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/kebia_berry.png",
+    "palette": "graphics/items/icon_palettes/kebia_berry.pal",
+    "constant": "ITEM_KEBIA_BERRY"
+  },
+  "keeberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/kee_berry.png",
+    "palette": "graphics/items/icon_palettes/kee_berry.pal",
+    "constant": "ITEM_KEE_BERRY"
+  },
+  "kelpsyberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/kelpsy_berry.png",
+    "palette": "graphics/items/icon_palettes/kelpsy_berry.pal",
+    "constant": "ITEM_KELPSY_BERRY"
+  },
+  "kickingshoes": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/heavy_duty_boots.png",
+    "palette": "graphics/items/icon_palettes/heavy_duty_boots.pal",
+    "constant": "ITEM_KICKING_SHOES"
+  },
+  "kinglerite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/blastoisinite.png",
+    "palette": "graphics/items/icon_palettes/blastoisinite.pal",
+    "constant": "ITEM_KINGLERITE"
+  },
+  "kingsrock": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/kings_rock.png",
+    "palette": "graphics/items/icon_palettes/kings_rock.pal",
+    "constant": "ITEM_KINGS_ROCK"
+  },
+  "kommoniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/kommonium_z.png",
+    "palette": "graphics/items/icon_palettes/kommonium_z.pal",
+    "constant": "ITEM_KOMMONIUM_Z"
+  },
+  "laggingtail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lagging_tail.png",
+    "palette": "graphics/items/icon_palettes/lagging_tail.pal",
+    "constant": "ITEM_LAGGING_TAIL"
+  },
+  "lansatberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lansat_berry.png",
+    "palette": "graphics/items/icon_palettes/lansat_berry.pal",
+    "constant": "ITEM_LANSAT_BERRY"
+  },
+  "laprasite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/blastoisinite.png",
+    "palette": "graphics/items/icon_palettes/blastoisinite.pal",
+    "constant": "ITEM_LAPRASITE"
+  },
+  "latiasite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/latiasite.png",
+    "palette": "graphics/items/icon_palettes/latiasite.pal",
+    "constant": "ITEM_LATIASITE"
+  },
+  "latiosite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/latiosite.png",
+    "palette": "graphics/items/icon_palettes/latiosite.pal",
+    "constant": "ITEM_LATIOSITE"
+  },
+  "lavacookie": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lava_cookie.png",
+    "palette": "graphics/items/icon_palettes/lava_cookie_and_letter.pal",
+    "constant": "ITEM_LAVA_COOKIE"
+  },
+  "laxincense": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lax_incense.png",
+    "palette": "graphics/items/icon_palettes/lax_incense.pal",
+    "constant": "ITEM_LAX_INCENSE"
+  },
+  "leafstone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/leaf_stone.png",
+    "palette": "graphics/items/icon_palettes/leaf_stone.pal",
+    "constant": "ITEM_LEAF_STONE"
+  },
+  "leek": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/leek.png",
+    "palette": "graphics/items/icon_palettes/leek.pal",
+    "constant": "ITEM_LEEK"
+  },
+  "leftovers": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/leftovers.png",
+    "palette": "graphics/items/icon_palettes/leftovers.pal",
+    "constant": "ITEM_LEFTOVERS"
+  },
+  "lemonade": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lemonade.png",
+    "palette": "graphics/items/icon_palettes/lemonade.pal",
+    "constant": "ITEM_LEMONADE"
+  },
+  "leppaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/leppa_berry.png",
+    "palette": "graphics/items/icon_palettes/leppa_berry.pal",
+    "constant": "ITEM_LEPPA_BERRY"
+  },
+  "levelball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/level_ball.png",
+    "palette": "graphics/items/icon_palettes/level_ball.pal",
+    "constant": "ITEM_LEVEL_BALL"
+  },
+  "liechiberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/liechi_berry.png",
+    "palette": "graphics/items/icon_palettes/liechi_berry.pal",
+    "constant": "ITEM_LIECHI_BERRY"
+  },
+  "lifeorb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/life_orb.png",
+    "palette": "graphics/items/icon_palettes/life_orb.pal",
+    "constant": "ITEM_LIFE_ORB"
+  },
+  "lightball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/light_ball.png",
+    "palette": "graphics/items/icon_palettes/light_ball.pal",
+    "constant": "ITEM_LIGHT_BALL"
+  },
+  "lightclay": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/light_clay.png",
+    "palette": "graphics/items/icon_palettes/light_clay.pal",
+    "constant": "ITEM_LIGHT_CLAY"
+  },
+  "loadeddice": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/loaded_dice.png",
+    "palette": "graphics/items/icon_palettes/loaded_dice.pal",
+    "constant": "ITEM_LOADED_DICE"
+  },
+  "lopunnite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lopunnite.png",
+    "palette": "graphics/items/icon_palettes/lopunnite.pal",
+    "constant": "ITEM_LOPUNNITE"
+  },
+  "loveball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/love_ball.png",
+    "palette": "graphics/items/icon_palettes/love_ball.pal",
+    "constant": "ITEM_LOVE_BALL"
+  },
+  "lucarionite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lucarionite.png",
+    "palette": "graphics/items/icon_palettes/lucarionite.pal",
+    "constant": "ITEM_LUCARIONITE"
+  },
+  "lucarionitez": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lucarionite_z.png",
+    "palette": "graphics/items/icon_palettes/lucarionite_z.pal",
+    "constant": "ITEM_LUCARIONITE_Z"
+  },
+  "luckincense": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/luck_incense.png",
+    "palette": "graphics/items/icon_palettes/luck_incense.pal",
+    "constant": "ITEM_LUCK_INCENSE"
+  },
+  "luckyegg": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lucky_egg.png",
+    "palette": "graphics/items/icon_palettes/lucky_egg.pal",
+    "constant": "ITEM_LUCKY_EGG"
+  },
+  "luckypunch": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lucky_punch.png",
+    "palette": "graphics/items/icon_palettes/lucky_punch.pal",
+    "constant": "ITEM_LUCKY_PUNCH"
+  },
+  "lumberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lum_berry.png",
+    "palette": "graphics/items/icon_palettes/lum_berry.pal",
+    "constant": "ITEM_LUM_BERRY"
+  },
+  "luminousmoss": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/luminous_moss.png",
+    "palette": "graphics/items/icon_palettes/luminous_moss.pal",
+    "constant": "ITEM_LUMINOUS_MOSS"
+  },
+  "lunaliumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lunalium_z.png",
+    "palette": "graphics/items/icon_palettes/lunalium_z.pal",
+    "constant": "ITEM_LUNALIUM_Z"
+  },
+  "lureball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lure_ball.png",
+    "palette": "graphics/items/icon_palettes/lure_ball.pal",
+    "constant": "ITEM_LURE_BALL"
+  },
+  "lustrousorb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lustrous_orb.png",
+    "palette": "graphics/items/icon_palettes/lustrous_orb.pal",
+    "constant": "ITEM_LUSTROUS_ORB"
+  },
+  "luxrite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/beedrillite.png",
+    "palette": "graphics/items/icon_palettes/beedrillite.pal",
+    "constant": "ITEM_LUXRITE"
+  },
+  "luxuryball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/luxury_ball.png",
+    "palette": "graphics/items/icon_palettes/luxury_ball.pal",
+    "constant": "ITEM_LUXURY_BALL"
+  },
+  "lycaniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lycanium_z.png",
+    "palette": "graphics/items/icon_palettes/lycanium_z.pal",
+    "constant": "ITEM_LYCANIUM_Z"
+  },
+  "machampite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/lucarionite.png",
+    "palette": "graphics/items/icon_palettes/lucarionite.pal",
+    "constant": "ITEM_MACHAMPITE"
+  },
+  "machobrace": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/macho_brace.png",
+    "palette": "graphics/items/icon_palettes/macho_brace.pal",
+    "constant": "ITEM_MACHO_BRACE"
+  },
+  "magearnite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/magearnite.png",
+    "palette": "graphics/items/icon_palettes/magearnite.pal",
+    "constant": "ITEM_MAGEARNITE"
+  },
+  "magmarizer": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/magmarizer.png",
+    "palette": "graphics/items/icon_palettes/magmarizer.pal",
+    "constant": "ITEM_MAGMARIZER"
+  },
+  "magnet": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/magnet.png",
+    "palette": "graphics/items/icon_palettes/magnet.pal",
+    "constant": "ITEM_MAGNET"
+  },
+  "magoberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mago_berry.png",
+    "palette": "graphics/items/icon_palettes/mago_berry.pal",
+    "constant": "ITEM_MAGO_BERRY"
+  },
+  "magostberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/magost_berry.png",
+    "palette": "graphics/items/icon_palettes/magost_berry.pal",
+    "constant": "ITEM_MAGOST_BERRY"
+  },
+  "malamarite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/malamarite.png",
+    "palette": "graphics/items/icon_palettes/malamarite.pal",
+    "constant": "ITEM_MALAMARITE"
+  },
+  "manectite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/manectite.png",
+    "palette": "graphics/items/icon_palettes/manectite.pal",
+    "constant": "ITEM_MANECTITE"
+  },
+  "marshadiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/marshadium_z.png",
+    "palette": "graphics/items/icon_palettes/marshadium_z.pal",
+    "constant": "ITEM_MARSHADIUM_Z"
+  },
+  "masterball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/master_ball.png",
+    "palette": "graphics/items/icon_palettes/master_ball.pal",
+    "constant": "ITEM_MASTER_BALL"
+  },
+  "mawilite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mawilite.png",
+    "palette": "graphics/items/icon_palettes/mawilite.pal",
+    "constant": "ITEM_MAWILITE"
+  },
+  "maxpotion": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/large_potion.png",
+    "palette": "graphics/items/icon_palettes/max_potion.pal",
+    "constant": "ITEM_MAX_POTION"
+  },
+  "maxrepel": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/repel.png",
+    "palette": "graphics/items/icon_palettes/max_repel.pal",
+    "constant": "ITEM_MAX_REPEL"
+  },
+  "maxrevive": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/max_revive.png",
+    "palette": "graphics/items/icon_palettes/revive.pal",
+    "constant": "ITEM_MAX_REVIVE"
+  },
+  "meadowplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/meadow_plate.pal",
+    "constant": "ITEM_MEADOW_PLATE"
+  },
+  "mechmail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mech_mail.png",
+    "palette": "graphics/items/icon_palettes/mech_mail.pal",
+    "constant": "ITEM_MECH_MAIL"
+  },
+  "medichamite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/medichamite.png",
+    "palette": "graphics/items/icon_palettes/medichamite.pal",
+    "constant": "ITEM_MEDICHAMITE"
+  },
+  "meganiumite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/meganiumite.png",
+    "palette": "graphics/items/icon_palettes/meganiumite.pal",
+    "constant": "ITEM_MEGANIUMITE"
+  },
+  "megaring": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mega_ring.png",
+    "palette": "graphics/items/icon_palettes/mega_ring.pal",
+    "constant": "ITEM_MEGA_RING"
+  },
+  "mentalherb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/in_battle_herb.png",
+    "palette": "graphics/items/icon_palettes/mental_herb.pal",
+    "constant": "ITEM_MENTAL_HERB"
+  },
+  "meowsticite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/meowsticite.png",
+    "palette": "graphics/items/icon_palettes/meowsticite.pal",
+    "constant": "ITEM_MEOWSTICITE"
+  },
+  "metagrossite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/metagrossite.png",
+    "palette": "graphics/items/icon_palettes/metagrossite.pal",
+    "constant": "ITEM_METAGROSSITE"
+  },
+  "metalcoat": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/metal_coat.png",
+    "palette": "graphics/items/icon_palettes/metal_coat.pal",
+    "constant": "ITEM_METAL_COAT"
+  },
+  "metalpowder": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ditto_powder.png",
+    "palette": "graphics/items/icon_palettes/metal_powder.pal",
+    "constant": "ITEM_METAL_POWDER"
+  },
+  "metronome": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/metronome.png",
+    "palette": "graphics/items/icon_palettes/metronome.pal",
+    "constant": "ITEM_METRONOME"
+  },
+  "mewniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mewnium_z.png",
+    "palette": "graphics/items/icon_palettes/mewnium_z.pal",
+    "constant": "ITEM_MEWNIUM_Z"
+  },
+  "mewtwonitex": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mewtwonite_x.png",
+    "palette": "graphics/items/icon_palettes/mewtwonite_x.pal",
+    "constant": "ITEM_MEWTWONITE_X"
+  },
+  "mewtwonitey": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mewtwonite_y.png",
+    "palette": "graphics/items/icon_palettes/mewtwonite_y.pal",
+    "constant": "ITEM_MEWTWONITE_Y"
+  },
+  "micleberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/micle_berry.png",
+    "palette": "graphics/items/icon_palettes/micle_berry.pal",
+    "constant": "ITEM_MICLE_BERRY"
+  },
+  "mimikiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mimikium_z.png",
+    "palette": "graphics/items/icon_palettes/mimikium_z.pal",
+    "constant": "ITEM_MIMIKIUM_Z"
+  },
+  "mindplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/mind_plate.pal",
+    "constant": "ITEM_MIND_PLATE"
+  },
+  "miracleseed": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/miracle_seed.png",
+    "palette": "graphics/items/icon_palettes/miracle_seed.pal",
+    "constant": "ITEM_MIRACLE_SEED"
+  },
+  "mistyseed": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/terrain_seed.png",
+    "palette": "graphics/items/icon_palettes/misty_seed.pal",
+    "constant": "ITEM_MISTY_SEED"
+  },
+  "moomoomilk": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/moomoo_milk.png",
+    "palette": "graphics/items/icon_palettes/moomoo_milk.pal",
+    "constant": "ITEM_MOOMOO_MILK"
+  },
+  "moonball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/moon_ball.png",
+    "palette": "graphics/items/icon_palettes/moon_ball.pal",
+    "constant": "ITEM_MOON_BALL"
+  },
+  "moonstone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/moon_stone.png",
+    "palette": "graphics/items/icon_palettes/moon_stone.pal",
+    "constant": "ITEM_MOON_STONE"
+  },
+  "muscleband": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/muscle_band.png",
+    "palette": "graphics/items/icon_palettes/muscle_band.pal",
+    "constant": "ITEM_MUSCLE_BAND"
+  },
+  "mysticwater": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/mystic_water.png",
+    "palette": "graphics/items/icon_palettes/mystic_water.pal",
+    "constant": "ITEM_MYSTIC_WATER"
+  },
+  "nanabberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/nanab_berry.png",
+    "palette": "graphics/items/icon_palettes/nanab_berry.pal",
+    "constant": "ITEM_NANAB_BERRY"
+  },
+  "nestball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/nest_ball.png",
+    "palette": "graphics/items/icon_palettes/nest_ball.pal",
+    "constant": "ITEM_NEST_BALL"
+  },
+  "netball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/net_ball.png",
+    "palette": "graphics/items/icon_palettes/net_ball.pal",
+    "constant": "ITEM_NET_BALL"
+  },
+  "nevermeltice": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/never_melt_ice.png",
+    "palette": "graphics/items/icon_palettes/never_melt_ice.pal",
+    "constant": "ITEM_NEVER_MELT_ICE"
+  },
+  "nlunarizer": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/necrozma_fuser.png",
+    "palette": "graphics/items/icon_palettes/n_lunarizer.pal",
+    "constant": "ITEM_N_LUNARIZER"
+  },
+  "nomelberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/nomel_berry.png",
+    "palette": "graphics/items/icon_palettes/nomel_berry.pal",
+    "constant": "ITEM_NOMEL_BERRY"
+  },
+  "normalgem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/normal_gem.pal",
+    "constant": "ITEM_NORMAL_GEM"
+  },
+  "normaliumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/normalium_z.png",
+    "palette": "graphics/items/icon_palettes/normalium_z.pal",
+    "constant": "ITEM_NORMALIUM_Z"
+  },
+  "nsolarizer": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/necrozma_fuser.png",
+    "palette": "graphics/items/icon_palettes/n_solarizer.pal",
+    "constant": "ITEM_N_SOLARIZER"
+  },
+  "nugget": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/nugget.png",
+    "palette": "graphics/items/icon_palettes/nugget.pal",
+    "constant": "ITEM_NUGGET"
+  },
+  "occaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/occa_berry.png",
+    "palette": "graphics/items/icon_palettes/occa_berry.pal",
+    "constant": "ITEM_OCCA_BERRY"
+  },
+  "oddincense": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/odd_incense.png",
+    "palette": "graphics/items/icon_palettes/odd_incense.pal",
+    "constant": "ITEM_ODD_INCENSE"
+  },
+  "oddkeystone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/odd_keystone.png",
+    "palette": "graphics/items/icon_palettes/odd_keystone.pal",
+    "constant": "ITEM_ODD_KEYSTONE"
+  },
+  "oldamber": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/old_amber.png",
+    "palette": "graphics/items/icon_palettes/old_amber.pal",
+    "constant": "ITEM_OLD_AMBER"
+  },
+  "oldgateau": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/old_gateau.png",
+    "palette": "graphics/items/icon_palettes/old_gateau.pal",
+    "constant": "ITEM_OLD_GATEAU"
+  },
+  "oldrod": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/old_rod.png",
+    "palette": "graphics/items/icon_palettes/old_rod.pal",
+    "constant": "ITEM_OLD_ROD"
+  },
+  "oldseamap": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/old_sea_map.png",
+    "palette": "graphics/items/icon_palettes/old_sea_map.pal",
+    "constant": "ITEM_OLD_SEA_MAP"
+  },
+  "oranberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/oran_berry.png",
+    "palette": "graphics/items/icon_palettes/oran_berry.pal",
+    "constant": "ITEM_ORAN_BERRY"
+  },
+  "orangemail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/orange_mail.png",
+    "palette": "graphics/items/icon_palettes/orange_mail.pal",
+    "constant": "ITEM_ORANGE_MAIL"
+  },
+  "orbeetlite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/alakazite.png",
+    "palette": "graphics/items/icon_palettes/alakazite.pal",
+    "constant": "ITEM_ORBEETLITE"
+  },
+  "ovalcharm": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/oval_charm.png",
+    "palette": "graphics/items/icon_palettes/oval_charm.pal",
+    "constant": "ITEM_OVAL_CHARM"
+  },
+  "ovalstone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/oval_stone.png",
+    "palette": "graphics/items/icon_palettes/oval_stone.pal",
+    "constant": "ITEM_OVAL_STONE"
+  },
+  "pamtreberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pamtre_berry.png",
+    "palette": "graphics/items/icon_palettes/pamtre_berry.pal",
+    "constant": "ITEM_PAMTRE_BERRY"
+  },
+  "paralyzeheal": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/status_heal.png",
+    "palette": "graphics/items/icon_palettes/paralyze_heal.pal",
+    "constant": "ITEM_PARALYZE_HEAL"
+  },
+  "passhoberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/passho_berry.png",
+    "palette": "graphics/items/icon_palettes/passho_berry.pal",
+    "constant": "ITEM_PASSHO_BERRY"
+  },
+  "payapaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/payapa_berry.png",
+    "palette": "graphics/items/icon_palettes/payapa_berry.pal",
+    "constant": "ITEM_PAYAPA_BERRY"
+  },
+  "pearl": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pearl.png",
+    "palette": "graphics/items/icon_palettes/pearl.pal",
+    "constant": "ITEM_PEARL"
+  },
+  "pearlstring": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pearl_string.png",
+    "palette": "graphics/items/icon_palettes/pearl_string.pal",
+    "constant": "ITEM_PEARL_STRING"
+  },
+  "peatblock": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/peat_block.png",
+    "palette": "graphics/items/icon_palettes/peat_block.pal",
+    "constant": "ITEM_PEAT_BLOCK"
+  },
+  "pechaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pecha_berry.png",
+    "palette": "graphics/items/icon_palettes/pecha_berry.pal",
+    "constant": "ITEM_PECHA_BERRY"
+  },
+  "persimberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/persim_berry.png",
+    "palette": "graphics/items/icon_palettes/persim_berry.pal",
+    "constant": "ITEM_PERSIM_BERRY"
+  },
+  "petayaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/petaya_berry.png",
+    "palette": "graphics/items/icon_palettes/petaya_berry.pal",
+    "constant": "ITEM_PETAYA_BERRY"
+  },
+  "pidgeotite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pidgeotite.png",
+    "palette": "graphics/items/icon_palettes/pidgeotite.pal",
+    "constant": "ITEM_PIDGEOTITE"
+  },
+  "pikaniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pikanium_z.png",
+    "palette": "graphics/items/icon_palettes/pikanium_z.pal",
+    "constant": "ITEM_PIKANIUM_Z"
+  },
+  "pikashuniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pikashunium_z.png",
+    "palette": "graphics/items/icon_palettes/pikashunium_z.pal",
+    "constant": "ITEM_PIKASHUNIUM_Z"
+  },
+  "pinapberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pinap_berry.png",
+    "palette": "graphics/items/icon_palettes/pinap_berry.pal",
+    "constant": "ITEM_PINAP_BERRY"
+  },
+  "pinknectar": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/nectar.png",
+    "palette": "graphics/items/icon_palettes/pink_nectar.pal",
+    "constant": "ITEM_PINK_NECTAR"
+  },
+  "pinsirite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pinsirite.png",
+    "palette": "graphics/items/icon_palettes/pinsirite.pal",
+    "constant": "ITEM_PINSIRITE"
+  },
+  "pixieplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/pixie_plate.pal",
+    "constant": "ITEM_PIXIE_PLATE"
+  },
+  "plumefossil": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plume_fossil.png",
+    "palette": "graphics/items/icon_palettes/plume_fossil.pal",
+    "constant": "ITEM_PLUME_FOSSIL"
+  },
+  "poisonbarb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/poison_barb.png",
+    "palette": "graphics/items/icon_palettes/poison_barb.pal",
+    "constant": "ITEM_POISON_BARB"
+  },
+  "poisongem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/poison_gem.pal",
+    "constant": "ITEM_POISON_GEM"
+  },
+  "poisoniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/poisonium_z.png",
+    "palette": "graphics/items/icon_palettes/poisonium_z.pal",
+    "constant": "ITEM_POISONIUM_Z"
+  },
+  "poisonmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/poison_memory.png",
+    "palette": "graphics/items/icon_palettes/poison_memory.pal",
+    "constant": "ITEM_POISON_MEMORY"
+  },
+  "pokeball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/poke_ball.png",
+    "palette": "graphics/items/icon_palettes/poke_ball.pal",
+    "constant": "ITEM_POKE_BALL"
+  },
+  "pokeflute": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/poke_flute.png",
+    "palette": "graphics/items/icon_palettes/poke_flute.pal",
+    "constant": "ITEM_POKE_FLUTE"
+  },
+  "pokeradar": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/poke_radar.png",
+    "palette": "graphics/items/icon_palettes/poke_radar.pal",
+    "constant": "ITEM_POKE_RADAR"
+  },
+  "poketoy": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/poke_toy.png",
+    "palette": "graphics/items/icon_palettes/poke_toy.pal",
+    "constant": "ITEM_POKE_TOY"
+  },
+  "pomegberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pomeg_berry.png",
+    "palette": "graphics/items/icon_palettes/pomeg_berry.pal",
+    "constant": "ITEM_POMEG_BERRY"
+  },
+  "potion": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/potion.png",
+    "palette": "graphics/items/icon_palettes/potion.pal",
+    "constant": "ITEM_POTION"
+  },
+  "poweranklet": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/power_anklet.png",
+    "palette": "graphics/items/icon_palettes/power_anklet.pal",
+    "constant": "ITEM_POWER_ANKLET"
+  },
+  "powerband": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/power_band.png",
+    "palette": "graphics/items/icon_palettes/power_band.pal",
+    "constant": "ITEM_POWER_BAND"
+  },
+  "powerbelt": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/power_belt.png",
+    "palette": "graphics/items/icon_palettes/power_belt.pal",
+    "constant": "ITEM_POWER_BELT"
+  },
+  "powerbracer": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/power_bracer.png",
+    "palette": "graphics/items/icon_palettes/power_bracer.pal",
+    "constant": "ITEM_POWER_BRACER"
+  },
+  "powerherb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/power_herb.png",
+    "palette": "graphics/items/icon_palettes/power_herb.pal",
+    "constant": "ITEM_POWER_HERB"
+  },
+  "powerlens": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/power_lens.png",
+    "palette": "graphics/items/icon_palettes/power_lens.pal",
+    "constant": "ITEM_POWER_LENS"
+  },
+  "powerweight": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/power_weight.png",
+    "palette": "graphics/items/icon_palettes/power_weight.pal",
+    "constant": "ITEM_POWER_WEIGHT"
+  },
+  "ppmax": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pp_max.png",
+    "palette": "graphics/items/icon_palettes/pp_max.pal",
+    "constant": "ITEM_PP_MAX"
+  },
+  "ppup": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pp_up.png",
+    "palette": "graphics/items/icon_palettes/pp_up.pal",
+    "constant": "ITEM_PP_UP"
+  },
+  "premierball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/premier_ball.png",
+    "palette": "graphics/items/icon_palettes/premier_ball.pal",
+    "constant": "ITEM_PREMIER_BALL"
+  },
+  "prettyfeather": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pretty_feather.png",
+    "palette": "graphics/items/icon_palettes/pretty_feather.pal",
+    "constant": "ITEM_PRETTY_FEATHER"
+  },
+  "primariumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/primarium_z.png",
+    "palette": "graphics/items/icon_palettes/primarium_z.pal",
+    "constant": "ITEM_PRIMARIUM_Z"
+  },
+  "prismscale": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/prism_scale.png",
+    "palette": "graphics/items/icon_palettes/prism_scale.pal",
+    "constant": "ITEM_PRISM_SCALE"
+  },
+  "prisonbottle": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/prison_bottle.png",
+    "palette": "graphics/items/icon_palettes/prison_bottle.pal",
+    "constant": "ITEM_PRISON_BOTTLE"
+  },
+  "protectivepads": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/protective_pads.png",
+    "palette": "graphics/items/icon_palettes/protective_pads.pal",
+    "constant": "ITEM_PROTECTIVE_PADS"
+  },
+  "protector": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/protector.png",
+    "palette": "graphics/items/icon_palettes/protector.pal",
+    "constant": "ITEM_PROTECTOR"
+  },
+  "protein": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/vitamin.png",
+    "palette": "graphics/items/icon_palettes/protein.pal",
+    "constant": "ITEM_PROTEIN"
+  },
+  "psychicgem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/psychic_gem.pal",
+    "constant": "ITEM_PSYCHIC_GEM"
+  },
+  "psychicmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/psychic_memory.png",
+    "palette": "graphics/items/icon_palettes/psychic_memory.pal",
+    "constant": "ITEM_PSYCHIC_MEMORY"
+  },
+  "psychicseed": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/terrain_seed.png",
+    "palette": "graphics/items/icon_palettes/psychic_seed.pal",
+    "constant": "ITEM_PSYCHIC_SEED"
+  },
+  "psychiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/psychium_z.png",
+    "palette": "graphics/items/icon_palettes/psychium_z.pal",
+    "constant": "ITEM_PSYCHIUM_Z"
+  },
+  "punchingglove": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/punching_glove.png",
+    "palette": "graphics/items/icon_palettes/punching_glove.pal",
+    "constant": "ITEM_PUNCHING_GLOVE"
+  },
+  "pureincense": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pure_incense.png",
+    "palette": "graphics/items/icon_palettes/pure_incense.pal",
+    "constant": "ITEM_PURE_INCENSE"
+  },
+  "purplenectar": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/nectar.png",
+    "palette": "graphics/items/icon_palettes/purple_nectar.pal",
+    "constant": "ITEM_PURPLE_NECTAR"
+  },
+  "pyroarite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/pyroarite.png",
+    "palette": "graphics/items/icon_palettes/pyroarite.pal",
+    "constant": "ITEM_PYROARITE"
+  },
+  "qualotberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/qualot_berry.png",
+    "palette": "graphics/items/icon_palettes/qualot_berry.pal",
+    "constant": "ITEM_QUALOT_BERRY"
+  },
+  "quickball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/quick_ball.png",
+    "palette": "graphics/items/icon_palettes/quick_ball.pal",
+    "constant": "ITEM_QUICK_BALL"
+  },
+  "quickclaw": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/quick_claw.png",
+    "palette": "graphics/items/icon_palettes/quick_claw.pal",
+    "constant": "ITEM_QUICK_CLAW"
+  },
+  "quickpowder": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ditto_powder.png",
+    "palette": "graphics/items/icon_palettes/quick_powder.pal",
+    "constant": "ITEM_QUICK_POWDER"
+  },
+  "rabutaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rabuta_berry.png",
+    "palette": "graphics/items/icon_palettes/rabuta_berry.pal",
+    "constant": "ITEM_RABUTA_BERRY"
+  },
+  "ragecandybar": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rage_candy_bar.png",
+    "palette": "graphics/items/icon_palettes/rage_candy_bar.pal",
+    "constant": "ITEM_RAGE_CANDY_BAR"
+  },
+  "raichunitey": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/raichunite_y.png",
+    "palette": "graphics/items/icon_palettes/raichunite_y.pal",
+    "constant": "ITEM_RAICHUNITE_Y"
+  },
+  "rarebone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/bone.png",
+    "palette": "graphics/items/icon_palettes/bone.pal",
+    "constant": "ITEM_RARE_BONE"
+  },
+  "rarecandy": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rare_candy.png",
+    "palette": "graphics/items/icon_palettes/rare_candy.pal",
+    "constant": "ITEM_RARE_CANDY"
+  },
+  "rawstberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rawst_berry.png",
+    "palette": "graphics/items/icon_palettes/rawst_berry.pal",
+    "constant": "ITEM_RAWST_BERRY"
+  },
+  "razorclaw": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/razor_claw.png",
+    "palette": "graphics/items/icon_palettes/razor_claw.pal",
+    "constant": "ITEM_RAZOR_CLAW"
+  },
+  "razorfang": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/razor_fang.png",
+    "palette": "graphics/items/icon_palettes/razor_fang.pal",
+    "constant": "ITEM_RAZOR_FANG"
+  },
+  "razzberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/razz_berry.png",
+    "palette": "graphics/items/icon_palettes/razz_berry.pal",
+    "constant": "ITEM_RAZZ_BERRY"
+  },
+  "reapercloth": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/reaper_cloth.png",
+    "palette": "graphics/items/icon_palettes/reaper_cloth.pal",
+    "constant": "ITEM_REAPER_CLOTH"
+  },
+  "redcard": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/red_card.png",
+    "palette": "graphics/items/icon_palettes/red_card.pal",
+    "constant": "ITEM_RED_CARD"
+  },
+  "rednectar": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/nectar.png",
+    "palette": "graphics/items/icon_palettes/red_nectar.pal",
+    "constant": "ITEM_RED_NECTAR"
+  },
+  "redorb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/red_orb.png",
+    "palette": "graphics/items/icon_palettes/red_orb.pal",
+    "constant": "ITEM_RED_ORB"
+  },
+  "redshard": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/shard.png",
+    "palette": "graphics/items/icon_palettes/red_shard.pal",
+    "constant": "ITEM_RED_SHARD"
+  },
+  "relicband": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/relic_band.png",
+    "palette": "graphics/items/icon_palettes/relics.pal",
+    "constant": "ITEM_RELIC_BAND"
+  },
+  "reliccopper": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/relic_coin.png",
+    "palette": "graphics/items/icon_palettes/relic_copper.pal",
+    "constant": "ITEM_RELIC_COPPER"
+  },
+  "reliccrown": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/relic_crown.png",
+    "palette": "graphics/items/icon_palettes/relics.pal",
+    "constant": "ITEM_RELIC_CROWN"
+  },
+  "relicgold": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/relic_coin.png",
+    "palette": "graphics/items/icon_palettes/relic_gold.pal",
+    "constant": "ITEM_RELIC_GOLD"
+  },
+  "relicsilver": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/relic_coin.png",
+    "palette": "graphics/items/icon_palettes/relic_silver.pal",
+    "constant": "ITEM_RELIC_SILVER"
+  },
+  "relicstatue": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/relic_statue.png",
+    "palette": "graphics/items/icon_palettes/relics.pal",
+    "constant": "ITEM_RELIC_STATUE"
+  },
+  "relicvase": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/relic_vase.png",
+    "palette": "graphics/items/icon_palettes/relics.pal",
+    "constant": "ITEM_RELIC_VASE"
+  },
+  "repeatball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/repeat_ball.png",
+    "palette": "graphics/items/icon_palettes/repeat_ball.pal",
+    "constant": "ITEM_REPEAT_BALL"
+  },
+  "repel": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/repel.png",
+    "palette": "graphics/items/icon_palettes/repel.pal",
+    "constant": "ITEM_REPEL"
+  },
+  "retromail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/retro_mail.png",
+    "palette": "graphics/items/icon_palettes/retro_mail.pal",
+    "constant": "ITEM_RETRO_MAIL"
+  },
+  "revealglass": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/reveal_glass.png",
+    "palette": "graphics/items/icon_palettes/reveal_glass.pal",
+    "constant": "ITEM_REVEAL_GLASS"
+  },
+  "revivalherb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/revival_herb.png",
+    "palette": "graphics/items/icon_palettes/revival_herb.pal",
+    "constant": "ITEM_REVIVAL_HERB"
+  },
+  "revive": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/revive.png",
+    "palette": "graphics/items/icon_palettes/revive.pal",
+    "constant": "ITEM_REVIVE"
+  },
+  "rindoberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rindo_berry.png",
+    "palette": "graphics/items/icon_palettes/rindo_berry.pal",
+    "constant": "ITEM_RINDO_BERRY"
+  },
+  "ringtarget": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ring_target.png",
+    "palette": "graphics/items/icon_palettes/ring_target.pal",
+    "constant": "ITEM_RING_TARGET"
+  },
+  "rockgem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/rock_gem.pal",
+    "constant": "ITEM_ROCK_GEM"
+  },
+  "rockincense": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rock_incense.png",
+    "palette": "graphics/items/icon_palettes/rock_incense.pal",
+    "constant": "ITEM_ROCK_INCENSE"
+  },
+  "rockiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rockium_z.png",
+    "palette": "graphics/items/icon_palettes/rockium_z.pal",
+    "constant": "ITEM_ROCKIUM_Z"
+  },
+  "rockmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rock_memory.png",
+    "palette": "graphics/items/icon_palettes/rock_memory.pal",
+    "constant": "ITEM_ROCK_MEMORY"
+  },
+  "rockyhelmet": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rocky_helmet.png",
+    "palette": "graphics/items/icon_palettes/rocky_helmet.pal",
+    "constant": "ITEM_ROCKY_HELMET"
+  },
+  "roomservice": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/room_service.png",
+    "palette": "graphics/items/icon_palettes/room_service.pal",
+    "constant": "ITEM_ROOM_SERVICE"
+  },
+  "rootfossil": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/root_fossil.png",
+    "palette": "graphics/items/icon_palettes/hoenn_fossil.pal",
+    "constant": "ITEM_ROOT_FOSSIL"
+  },
+  "roseincense": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rose_incense.png",
+    "palette": "graphics/items/icon_palettes/rose_incense.pal",
+    "constant": "ITEM_ROSE_INCENSE"
+  },
+  "roseliberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/roseli_berry.png",
+    "palette": "graphics/items/icon_palettes/roseli_berry.pal",
+    "constant": "ITEM_ROSELI_BERRY"
+  },
+  "roseradite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/venusaurite.png",
+    "palette": "graphics/items/icon_palettes/venusaurite.pal",
+    "constant": "ITEM_ROSERADITE"
+  },
+  "rowapberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rowap_berry.png",
+    "palette": "graphics/items/icon_palettes/rowap_berry.pal",
+    "constant": "ITEM_ROWAP_BERRY"
+  },
+  "rustedshield": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rusted_shield.png",
+    "palette": "graphics/items/icon_palettes/rusted_weapons.pal",
+    "constant": "ITEM_RUSTED_SHIELD"
+  },
+  "rustedsword": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rusted_sword.png",
+    "palette": "graphics/items/icon_palettes/rusted_weapons.pal",
+    "constant": "ITEM_RUSTED_SWORD"
+  },
+  "sablenite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sablenite.png",
+    "palette": "graphics/items/icon_palettes/sablenite.pal",
+    "constant": "ITEM_SABLENITE"
+  },
+  "sachet": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sachet.png",
+    "palette": "graphics/items/icon_palettes/sachet.pal",
+    "constant": "ITEM_SACHET"
+  },
+  "sacredash": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ditto_powder.png",
+    "palette": "graphics/items/icon_palettes/sacred_ash.pal",
+    "constant": "ITEM_SACRED_ASH"
+  },
+  "safetygoggles": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/safety_goggles.png",
+    "palette": "graphics/items/icon_palettes/safety_goggles.pal",
+    "constant": "ITEM_SAFETY_GOGGLES"
+  },
+  "sailfossil": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sail_fossil.png",
+    "palette": "graphics/items/icon_palettes/sail_fossil.pal",
+    "constant": "ITEM_SAIL_FOSSIL"
+  },
+  "salacberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/salac_berry.png",
+    "palette": "graphics/items/icon_palettes/salac_berry.pal",
+    "constant": "ITEM_SALAC_BERRY"
+  },
+  "salamencite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/salamencite.png",
+    "palette": "graphics/items/icon_palettes/salamencite.pal",
+    "constant": "ITEM_SALAMENCITE"
+  },
+  "sandacondite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/steelixite.png",
+    "palette": "graphics/items/icon_palettes/steelixite.pal",
+    "constant": "ITEM_SANDACONDITE"
+  },
+  "sceptilite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sceptilite.png",
+    "palette": "graphics/items/icon_palettes/sceptilite.pal",
+    "constant": "ITEM_SCEPTILITE"
+  },
+  "scizorite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/scizorite.png",
+    "palette": "graphics/items/icon_palettes/scizorite.pal",
+    "constant": "ITEM_SCIZORITE"
+  },
+  "scolipite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/scolipite.png",
+    "palette": "graphics/items/icon_palettes/scolipite.pal",
+    "constant": "ITEM_SCOLIPITE"
+  },
+  "scopelens": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/scope_lens.png",
+    "palette": "graphics/items/icon_palettes/scope_lens.pal",
+    "constant": "ITEM_SCOPE_LENS"
+  },
+  "scovillainite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/scovillainite.png",
+    "palette": "graphics/items/icon_palettes/scovillainite.pal",
+    "constant": "ITEM_SCOVILLAINITE"
+  },
+  "scraftinite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/scraftinite.png",
+    "palette": "graphics/items/icon_palettes/scraftinite.pal",
+    "constant": "ITEM_SCRAFTINITE"
+  },
+  "seaincense": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sea_incense.png",
+    "palette": "graphics/items/icon_palettes/sea_incense.pal",
+    "constant": "ITEM_SEA_INCENSE"
+  },
+  "shadowmail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/shadow_mail.png",
+    "palette": "graphics/items/icon_palettes/shadow_mail.pal",
+    "constant": "ITEM_SHADOW_MAIL"
+  },
+  "sharpbeak": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sharp_beak.png",
+    "palette": "graphics/items/icon_palettes/sharp_beak.pal",
+    "constant": "ITEM_SHARP_BEAK"
+  },
+  "sharpedonite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sharpedonite.png",
+    "palette": "graphics/items/icon_palettes/sharpedonite.pal",
+    "constant": "ITEM_SHARPEDONITE"
+  },
+  "shedshell": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/shed_shell.png",
+    "palette": "graphics/items/icon_palettes/shed_shell.pal",
+    "constant": "ITEM_SHED_SHELL"
+  },
+  "shellbell": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/shell_bell.png",
+    "palette": "graphics/items/icon_palettes/shell.pal",
+    "constant": "ITEM_SHELL_BELL"
+  },
+  "shinycharm": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/shiny_charm.png",
+    "palette": "graphics/items/icon_palettes/shiny_charm.pal",
+    "constant": "ITEM_SHINY_CHARM"
+  },
+  "shinystone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/shiny_stone.png",
+    "palette": "graphics/items/icon_palettes/shiny_stone.pal",
+    "constant": "ITEM_SHINY_STONE"
+  },
+  "shoalsalt": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/powder.png",
+    "palette": "graphics/items/icon_palettes/shoal_salt.pal",
+    "constant": "ITEM_SHOAL_SALT"
+  },
+  "shoalshell": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/shoal_shell.png",
+    "palette": "graphics/items/icon_palettes/shell.pal",
+    "constant": "ITEM_SHOAL_SHELL"
+  },
+  "shockdrive": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/drive.png",
+    "palette": "graphics/items/icon_palettes/shock_drive.pal",
+    "constant": "ITEM_SHOCK_DRIVE"
+  },
+  "shucaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/shuca_berry.png",
+    "palette": "graphics/items/icon_palettes/shuca_berry.pal",
+    "constant": "ITEM_SHUCA_BERRY"
+  },
+  "silkscarf": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/silk_scarf.png",
+    "palette": "graphics/items/icon_palettes/silk_scarf.pal",
+    "constant": "ITEM_SILK_SCARF"
+  },
+  "silverpowder": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/silver_powder.png",
+    "palette": "graphics/items/icon_palettes/silver_powder.pal",
+    "constant": "ITEM_SILVER_POWDER"
+  },
+  "sitrusberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sitrus_berry.png",
+    "palette": "graphics/items/icon_palettes/sitrus_berry.pal",
+    "constant": "ITEM_SITRUS_BERRY"
+  },
+  "skarmorite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/skarmorite.png",
+    "palette": "graphics/items/icon_palettes/skarmorite.pal",
+    "constant": "ITEM_SKARMORITE"
+  },
+  "skullfossil": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/skull_fossil.png",
+    "palette": "graphics/items/icon_palettes/skull_fossil.pal",
+    "constant": "ITEM_SKULL_FOSSIL"
+  },
+  "skyplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/sky_plate.pal",
+    "constant": "ITEM_SKY_PLATE"
+  },
+  "slakite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/lopunnite.png",
+    "palette": "graphics/items/icon_palettes/lopunnite.pal",
+    "constant": "ITEM_SLAKITE"
+  },
+  "slowbronite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/slowbronite.png",
+    "palette": "graphics/items/icon_palettes/slowbronite.pal",
+    "constant": "ITEM_SLOWBRONITE"
+  },
+  "smokeball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/smoke_ball.png",
+    "palette": "graphics/items/icon_palettes/smoke_ball.pal",
+    "constant": "ITEM_SMOKE_BALL"
+  },
+  "smoothrock": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/smooth_rock.png",
+    "palette": "graphics/items/icon_palettes/smooth_rock.pal",
+    "constant": "ITEM_SMOOTH_ROCK"
+  },
+  "snorlaxite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/venusaurite.png",
+    "palette": "graphics/items/icon_palettes/venusaurite.pal",
+    "constant": "ITEM_SNORLAXITE"
+  },
+  "snorliumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/snorlium_z.png",
+    "palette": "graphics/items/icon_palettes/snorlium_z.pal",
+    "constant": "ITEM_SNORLIUM_Z"
+  },
+  "snowball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/snowball.png",
+    "palette": "graphics/items/icon_palettes/snowball.pal",
+    "constant": "ITEM_SNOWBALL"
+  },
+  "sodapop": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/soda_pop.png",
+    "palette": "graphics/items/icon_palettes/soda_pop.pal",
+    "constant": "ITEM_SODA_POP"
+  },
+  "softsand": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sand.png",
+    "palette": "graphics/items/icon_palettes/soft_sand.pal",
+    "constant": "ITEM_SOFT_SAND"
+  },
+  "solganiumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/solganium_z.png",
+    "palette": "graphics/items/icon_palettes/solganium_z.pal",
+    "constant": "ITEM_SOLGANIUM_Z"
+  },
+  "soothebell": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/soothe_bell.png",
+    "palette": "graphics/items/icon_palettes/soothe_bell.pal",
+    "constant": "ITEM_SOOTHE_BELL"
+  },
+  "souldew": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/soul_dew.png",
+    "palette": "graphics/items/icon_palettes/soul_dew.pal",
+    "constant": "ITEM_SOUL_DEW"
+  },
+  "spelltag": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/spell_tag.png",
+    "palette": "graphics/items/icon_palettes/spell_tag.pal",
+    "constant": "ITEM_SPELL_TAG"
+  },
+  "spelonberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/spelon_berry.png",
+    "palette": "graphics/items/icon_palettes/spelon_berry.pal",
+    "constant": "ITEM_SPELON_BERRY"
+  },
+  "splashplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/splash_plate.pal",
+    "constant": "ITEM_SPLASH_PLATE"
+  },
+  "spookyplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/spooky_plate.pal",
+    "constant": "ITEM_SPOOKY_PLATE"
+  },
+  "ssticket": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ss_ticket.png",
+    "palette": "graphics/items/icon_palettes/ss_ticket.pal",
+    "constant": "ITEM_SS_TICKET"
+  },
+  "stablemulch": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/stable_mulch.png",
+    "palette": "graphics/items/icon_palettes/stable_mulch.pal",
+    "constant": "ITEM_STABLE_MULCH"
+  },
+  "staraptite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/staraptite.png",
+    "palette": "graphics/items/icon_palettes/staraptite.pal",
+    "constant": "ITEM_STARAPTITE"
+  },
+  "stardust": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sand.png",
+    "palette": "graphics/items/icon_palettes/star.pal",
+    "constant": "ITEM_STARDUST"
+  },
+  "starfberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/starf_berry.png",
+    "palette": "graphics/items/icon_palettes/starf_berry.pal",
+    "constant": "ITEM_STARF_BERRY"
+  },
+  "starminite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/starminite.png",
+    "palette": "graphics/items/icon_palettes/starminite.pal",
+    "constant": "ITEM_STARMINITE"
+  },
+  "starpiece": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/star_piece.png",
+    "palette": "graphics/items/icon_palettes/star.pal",
+    "constant": "ITEM_STAR_PIECE"
+  },
+  "steelgem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/steel_gem.pal",
+    "constant": "ITEM_STEEL_GEM"
+  },
+  "steeliumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/steelium_z.png",
+    "palette": "graphics/items/icon_palettes/steelium_z.pal",
+    "constant": "ITEM_STEELIUM_Z"
+  },
+  "steelixite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/steelixite.png",
+    "palette": "graphics/items/icon_palettes/steelixite.pal",
+    "constant": "ITEM_STEELIXITE"
+  },
+  "steelmemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/steel_memory.png",
+    "palette": "graphics/items/icon_palettes/steel_memory.pal",
+    "constant": "ITEM_STEEL_MEMORY"
+  },
+  "stickybarb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sticky_barb.png",
+    "palette": "graphics/items/icon_palettes/sticky_barb.pal",
+    "constant": "ITEM_STICKY_BARB"
+  },
+  "stoneplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/stone_plate.pal",
+    "constant": "ITEM_STONE_PLATE"
+  },
+  "sunstone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sun_stone.png",
+    "palette": "graphics/items/icon_palettes/sun_stone.pal",
+    "constant": "ITEM_SUN_STONE"
+  },
+  "superpotion": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/potion.png",
+    "palette": "graphics/items/icon_palettes/super_potion.pal",
+    "constant": "ITEM_SUPER_POTION"
+  },
+  "superrepel": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/repel.png",
+    "palette": "graphics/items/icon_palettes/super_repel.pal",
+    "constant": "ITEM_SUPER_REPEL"
+  },
+  "superrod": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/super_rod.png",
+    "palette": "graphics/items/icon_palettes/super_rod.pal",
+    "constant": "ITEM_SUPER_ROD"
+  },
+  "swampertite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/swampertite.png",
+    "palette": "graphics/items/icon_palettes/swampertite.pal",
+    "constant": "ITEM_SWAMPERTITE"
+  },
+  "sweetapple": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sweet_apple.png",
+    "palette": "graphics/items/icon_palettes/sweet_apple.pal",
+    "constant": "ITEM_SWEET_APPLE"
+  },
+  "tamatoberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tamato_berry.png",
+    "palette": "graphics/items/icon_palettes/tamato_berry.pal",
+    "constant": "ITEM_TAMATO_BERRY"
+  },
+  "tangaberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tanga_berry.png",
+    "palette": "graphics/items/icon_palettes/tanga_berry.pal",
+    "constant": "ITEM_TANGA_BERRY"
+  },
+  "tapuniumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tapunium_z.png",
+    "palette": "graphics/items/icon_palettes/tapunium_z.pal",
+    "constant": "ITEM_TAPUNIUM_Z"
+  },
+  "tartapple": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tart_apple.png",
+    "palette": "graphics/items/icon_palettes/tart_apple.pal",
+    "constant": "ITEM_TART_APPLE"
+  },
+  "tatsugirinite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tatsugirinite.png",
+    "palette": "graphics/items/icon_palettes/tatsugirinite.pal",
+    "constant": "ITEM_TATSUGIRINITE"
+  },
+  "terrainextender": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/terrain_extender.png",
+    "palette": "graphics/items/icon_palettes/terrain_extender.pal",
+    "constant": "ITEM_TERRAIN_EXTENDER"
+  },
+  "thickclub": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/bone.png",
+    "palette": "graphics/items/icon_palettes/bone.pal",
+    "constant": "ITEM_THICK_CLUB"
+  },
+  "throatspray": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/throat_spray.png",
+    "palette": "graphics/items/icon_palettes/throat_spray.pal",
+    "constant": "ITEM_THROAT_SPRAY"
+  },
+  "thunderstone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/thunder_stone.png",
+    "palette": "graphics/items/icon_palettes/thunder_stone.pal",
+    "constant": "ITEM_THUNDER_STONE"
+  },
+  "timerball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/timer_ball.png",
+    "palette": "graphics/items/icon_palettes/repeat_ball.pal",
+    "constant": "ITEM_TIMER_BALL"
+  },
+  "tinymushroom": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tiny_mushroom.png",
+    "palette": "graphics/items/icon_palettes/mushroom.pal",
+    "constant": "ITEM_TINY_MUSHROOM"
+  },
+  "tm-bug": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/bug_tm_hm.pal",
+    "move": "Infestation",
+    "type": "Bug"
+  },
+  "tm-dark": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/dark_tm_hm.pal",
+    "move": "Fling",
+    "type": "Dark"
+  },
+  "tm-dragon": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/dragon_tm_hm.pal",
+    "move": "Dragon Tail",
+    "type": "Dragon"
+  },
+  "tm-electric": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/electric_tm_hm.pal",
+    "move": "Wild Charge",
+    "type": "Electric"
+  },
+  "tm-fairy": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/fairy_tm_hm.pal",
+    "move": "Draining Kiss",
+    "type": "Fairy"
+  },
+  "tm-fighting": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/fighting_tm_hm.pal",
+    "move": "Power-Up Punch",
+    "type": "Fighting"
+  },
+  "tm-fire": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/fire_tm_hm.pal",
+    "move": "Incinerate",
+    "type": "Fire"
+  },
+  "tm-flying": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/flying_tm_hm.pal",
+    "move": "Sky Drop",
+    "type": "Flying"
+  },
+  "tm-ghost": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/ghost_tm_hm.pal",
+    "move": "Shadow Claw",
+    "type": "Ghost"
+  },
+  "tm-grass": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/grass_tm_hm.pal",
+    "move": "Grass Knot",
+    "type": "Grass"
+  },
+  "tm-ground": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/ground_tm_hm.pal",
+    "move": "Bulldoze",
+    "type": "Ground"
+  },
+  "tm-ice": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/ice_tm_hm.pal",
+    "move": "Aurora Veil",
+    "type": "Ice"
+  },
+  "tm-normal": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/normal_tm_hm.pal",
+    "move": "Nature Power",
+    "type": "Normal"
+  },
+  "tm-poison": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/poison_tm_hm.pal",
+    "move": "Sludge Wave",
+    "type": "Poison"
+  },
+  "tm-psychic": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/psychic_tm_hm.pal",
+    "move": "Trick Room",
+    "type": "Psychic"
+  },
+  "tm-rock": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/rock_tm_hm.pal",
+    "move": "Smack Down",
+    "type": "Rock"
+  },
+  "tm-steel": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/steel_tm_hm.pal",
+    "move": "Smart Strike",
+    "type": "Steel"
+  },
+  "tm-water": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tm.png",
+    "palette": "graphics/items/icon_palettes/water_tm_hm.pal",
+    "move": "Scald",
+    "type": "Water"
+  },
+  "torterrite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/venusaurite.png",
+    "palette": "graphics/items/icon_palettes/venusaurite.pal",
+    "constant": "ITEM_TORTERRITE"
+  },
+  "toxicorb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/toxic_orb.png",
+    "palette": "graphics/items/icon_palettes/toxic_orb.pal",
+    "constant": "ITEM_TOXIC_ORB"
+  },
+  "toxicplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/toxic_plate.pal",
+    "constant": "ITEM_TOXIC_PLATE"
+  },
+  "toxtricitite": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/ampharosite.png",
+    "palette": "graphics/items/icon_palettes/ampharosite.pal",
+    "constant": "ITEM_TOXTRICITITE"
+  },
+  "tropicmail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tropic_mail.png",
+    "palette": "graphics/items/icon_palettes/tropic_mail.pal",
+    "constant": "ITEM_TROPIC_MAIL"
+  },
+  "twistedspoon": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/twisted_spoon.png",
+    "palette": "graphics/items/icon_palettes/twisted_spoon.pal",
+    "constant": "ITEM_TWISTED_SPOON"
+  },
+  "tyranitarite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tyranitarite.png",
+    "palette": "graphics/items/icon_palettes/tyranitarite.pal",
+    "constant": "ITEM_TYRANITARITE"
+  },
+  "ultraball": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ultra_ball.png",
+    "palette": "graphics/items/icon_palettes/ultra_ball.pal",
+    "constant": "ITEM_ULTRA_BALL"
+  },
+  "ultranecroziumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/ultranecrozium_z.png",
+    "palette": "graphics/items/icon_palettes/ultranecrozium_z.pal",
+    "constant": "ITEM_ULTRANECROZIUM_Z"
+  },
+  "upgrade": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/upgrade.png",
+    "palette": "graphics/items/icon_palettes/upgrade.pal",
+    "constant": "ITEM_UPGRADE"
+  },
+  "utilityumbrella": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/utility_umbrella.png",
+    "palette": "graphics/items/icon_palettes/utility_umbrella.pal",
+    "constant": "ITEM_UTILITY_UMBRELLA"
+  },
+  "venusaurite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/venusaurite.png",
+    "palette": "graphics/items/icon_palettes/venusaurite.pal",
+    "constant": "ITEM_VENUSAURITE"
+  },
+  "victreebelite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/victreebelite.png",
+    "palette": "graphics/items/icon_palettes/victreebelite.pal",
+    "constant": "ITEM_VICTREEBELITE"
+  },
+  "vsseeker": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/vs_seeker.png",
+    "palette": "graphics/items/icon_palettes/vs_seeker.pal",
+    "constant": "ITEM_VS_SEEKER"
+  },
+  "wacanberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/wacan_berry.png",
+    "palette": "graphics/items/icon_palettes/wacan_berry.pal",
+    "constant": "ITEM_WACAN_BERRY"
+  },
+  "watergem": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/type_gem.png",
+    "palette": "graphics/items/icon_palettes/water_gem.pal",
+    "constant": "ITEM_WATER_GEM"
+  },
+  "wateriumz": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/waterium_z.png",
+    "palette": "graphics/items/icon_palettes/waterium_z.pal",
+    "constant": "ITEM_WATERIUM_Z"
+  },
+  "watermemory": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/water_memory.png",
+    "palette": "graphics/items/icon_palettes/water_memory.pal",
+    "constant": "ITEM_WATER_MEMORY"
+  },
+  "waterstone": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/water_stone.png",
+    "palette": "graphics/items/icon_palettes/water_stone.pal",
+    "constant": "ITEM_WATER_STONE"
+  },
+  "watmelberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/watmel_berry.png",
+    "palette": "graphics/items/icon_palettes/watmel_berry.pal",
+    "constant": "ITEM_WATMEL_BERRY"
+  },
+  "waveincense": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/wave_incense.png",
+    "palette": "graphics/items/icon_palettes/wave_incense.pal",
+    "constant": "ITEM_WAVE_INCENSE"
+  },
+  "wavemail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/wave_mail.png",
+    "palette": "graphics/items/icon_palettes/wave_mail.pal",
+    "constant": "ITEM_WAVE_MAIL"
+  },
+  "weaknesspolicy": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/weakness_policy.png",
+    "palette": "graphics/items/icon_palettes/weakness_policy.pal",
+    "constant": "ITEM_WEAKNESS_POLICY"
+  },
+  "wellspringmask": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/wellspring_mask.png",
+    "palette": "graphics/items/icon_palettes/wellspring_mask.pal",
+    "constant": "ITEM_WELLSPRING_MASK"
+  },
+  "wepearberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/wepear_berry.png",
+    "palette": "graphics/items/icon_palettes/wepear_berry.pal",
+    "constant": "ITEM_WEPEAR_BERRY"
+  },
+  "whippeddream": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/whipped_dream.png",
+    "palette": "graphics/items/icon_palettes/whipped_dream.pal",
+    "constant": "ITEM_WHIPPED_DREAM"
+  },
+  "whiteherb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/in_battle_herb.png",
+    "palette": "graphics/items/icon_palettes/white_herb.pal",
+    "constant": "ITEM_WHITE_HERB"
+  },
+  "widelens": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/wide_lens.png",
+    "palette": "graphics/items/icon_palettes/wide_lens.pal",
+    "constant": "ITEM_WIDE_LENS"
+  },
+  "wikiberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/wiki_berry.png",
+    "palette": "graphics/items/icon_palettes/wiki_berry.pal",
+    "constant": "ITEM_WIKI_BERRY"
+  },
+  "wiseglasses": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/wise_glasses.png",
+    "palette": "graphics/items/icon_palettes/wise_glasses.pal",
+    "constant": "ITEM_WISE_GLASSES"
+  },
+  "wishingpiece": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/wishing_piece.png",
+    "palette": "graphics/items/icon_palettes/wishing_piece.pal",
+    "constant": "ITEM_WISHING_PIECE"
+  },
+  "woodmail": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/wood_mail.png",
+    "palette": "graphics/items/icon_palettes/wood_mail.pal",
+    "constant": "ITEM_WOOD_MAIL"
+  },
+  "xaccuracy": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/battle_stat_item.png",
+    "palette": "graphics/items/icon_palettes/x_accuracy.pal",
+    "constant": "ITEM_X_ACCURACY"
+  },
+  "xattack": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/battle_stat_item.png",
+    "palette": "graphics/items/icon_palettes/x_attack.pal",
+    "constant": "ITEM_X_ATTACK"
+  },
+  "xdefense": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/battle_stat_item.png",
+    "palette": "graphics/items/icon_palettes/x_defend.pal",
+    "constant": "ITEM_X_DEFENSE"
+  },
+  "xspatk": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/battle_stat_item.png",
+    "palette": "graphics/items/icon_palettes/x_special.pal",
+    "constant": "ITEM_X_SP_ATK"
+  },
+  "xspdef": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/battle_stat_item.png",
+    "palette": "graphics/items/icon_palettes/x_special_defense.pal",
+    "constant": "ITEM_X_SP_DEF"
+  },
+  "xspeed": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/battle_stat_item.png",
+    "palette": "graphics/items/icon_palettes/x_speed.pal",
+    "constant": "ITEM_X_SPEED"
+  },
+  "yacheberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/yache_berry.png",
+    "palette": "graphics/items/icon_palettes/yache_berry.pal",
+    "constant": "ITEM_YACHE_BERRY"
+  },
+  "yellownectar": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/nectar.png",
+    "palette": "graphics/items/icon_palettes/yellow_nectar.pal",
+    "constant": "ITEM_YELLOW_NECTAR"
+  },
+  "yellowshard": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/shard.png",
+    "palette": "graphics/items/icon_palettes/yellow_shard.pal",
+    "constant": "ITEM_YELLOW_SHARD"
+  },
+  "zapplate": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/plate.png",
+    "palette": "graphics/items/icon_palettes/zap_plate.pal",
+    "constant": "ITEM_ZAP_PLATE"
+  },
+  "zeraorite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/zeraorite.png",
+    "palette": "graphics/items/icon_palettes/zeraorite.pal",
+    "constant": "ITEM_ZERAORITE"
+  },
+  "zinc": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/vitamin.png",
+    "palette": "graphics/items/icon_palettes/zinc.pal",
+    "constant": "ITEM_ZINC"
+  },
+  "zoomlens": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/zoom_lens.png",
+    "palette": "graphics/items/icon_palettes/zoom_lens.pal",
+    "constant": "ITEM_ZOOM_LENS"
+  },
+  "zpowerring": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/z_power_ring.png",
+    "palette": "graphics/items/icon_palettes/z_power_ring.pal",
+    "constant": "ITEM_Z_POWER_RING"
+  },
+  "zygardecube": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/zygarde_cube.png",
+    "palette": "graphics/items/icon_palettes/zygarde_cube.pal",
+    "constant": "ITEM_ZYGARDE_CUBE"
+  },
+  "zygardite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/zygardite.png",
+    "palette": "graphics/items/icon_palettes/zygardite.pal",
+    "constant": "ITEM_ZYGARDITE"
+  }
+}
