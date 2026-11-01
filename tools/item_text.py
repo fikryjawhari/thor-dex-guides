@@ -173,7 +173,7 @@ def apply(D, hack, report=print):
              if section not in no_page}
     shown_mega = {canon(container[column]) for container, column, section, group in slot_list
                   if section in mega or group == 'stone'}
-    names = shown | set(own)
+    names = shown   # own item_desc.json covers every item of the game; pages only for the shown ones
 
     # In battle ------------------------------------------------------------------------------------------------------
     item_tables = lookup_tables(own_bt.get('items', {}), load_json(os.path.join(BATTLE, 'items.json')))

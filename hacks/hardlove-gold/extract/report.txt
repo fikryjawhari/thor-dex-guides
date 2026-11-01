@@ -158,7 +158,6 @@ trainers put in walkthrough order: Morty Split [Cap 39]
 item text: none for Absolite Z
 item text: none for Barbaracite
 item text: none for Baxcalibrite
-item text: none for Bike
 item text: none for Chandelurite
 item text: none for Chesnaughtite
 item text: none for Chimechite
@@ -202,7 +201,7 @@ item text: none for Tatsugirinite
 item text: none for Victreebelite
 item text: none for Zeraorite
 item text: none for Zygardite
-item text: 2 own, 211 pooled, 47 with no description
+item text: 2 own, 212 pooled, 46 with no description
 in battle: 134 shown items with battle text, 126 without
 in battle: 716 moves with battle text, 67 without
 GID species: 1101 species:form keys for 986 of 986 P ids; 115 forms with their base's battle data map to the base
