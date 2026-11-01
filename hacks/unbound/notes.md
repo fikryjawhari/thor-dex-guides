@@ -76,7 +76,7 @@ wins" rule.
   draws through forms are dropped (`NOT_EVO`). Report: 475 edges, 9 mirror-only, 19 wiki-only.
 - **Mega Stones:** `p.stone` / `p.sloc` from the wiki's 48 Mega Stone pages (the Location line; the Red Orb / Blue Orb
   page gives both Primals). Mega Rayquaza has none (Dragon Ascent).
-- **Wild held items** (`p.hi`): the wiki's "Wild Held Items", names only.
+- **Wild held items** (`p.hi`): the wiki's "Wild Held Items" with its odds (see Items → Wild held odds).
 - **Tutors** (`p.tu`): the mirror's per-species lists. Against the wiki's Move Tutors page (29 tutors, 152 moves): the
   lists also hold the HMs (Rock Climb included) and 3 moves no wiki tutor teaches (Dazzling Gleam, Draining Kiss, Power-Up Punch), and the
   special tutors' moves (Draco Meteor, Dragon Ascent, Relic Song, Secret Sword, Volt Tackle, Steel Beam) are in no
@@ -181,6 +181,7 @@ Snowball are Held Items. `itemstd.RULES['unbound']`: game order, `keep_sub` (tut
   friendship" (on that row); for the other five ("Ancient Moves") no source names the learners, so they are listed
   with their tutor only. Their move pages show the tutor and no learners.
 - **Useful NPCs**: the 34 Useful NPC pages (`<NPC>: purpose · cost · where`).
+- **Wild held odds** (`dex.wild_held`, `P.hi`): the wiki's "(50% chance)" / "(5% chance)" per slot, kept (392 species; 92 at 50, 342 at 5, 26 at 100 where one item is in both slots: CFRU's rule); Mega forms none. Basculin's one string gives each form's item at 5.
 - **Names** (`items.canon`): the game's names (Unbound-Cloud `src/data/ItemNames.json`), the official one where it
   differs. Wiki spellings fixed: CFRU short names (Nevermeltice, Parlyz Heal, Terrain Ext., Protect Pads, Whip Dream,
   Heavy Boots, Utility Parasol, Adrenal Orb, Charizite X, Aerodactite, Alorichium Z, Ultranecronium Z; TMs "Dazzle
