@@ -380,19 +380,23 @@ const MOVE_TARGETS={normal:['one one . me one .','One adjacent Pokémon'],any:['
  all:['on on on on on on','The whole field'],scripted:['one one . me . .','The last Pokémon to hit the user']};
 function moveTarget(target){const spec=MOVE_TARGETS[target];if(!spec)return '';const [cells,label]=spec;
  return `<div class="tgw" data-target="${esc(target)}"><div class="tgg" aria-hidden="true">${cells.split(' ').map((cell,index)=>`<i class="${cell==='.'?'':cell}">${index===3?'You':''}</i>`).join('')}</div><div class="tgt"><div class="mut small">Targets</div>${esc(label)}</div></div>`;}
-function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tms=(D.IT||[]).filter(s=>s.k==='tm').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>[s.n==='Move Tutors'?'Tutor':x[0].split(' ')[0],x[1],s.n==='Move Tutors'?null:x[0]]));
+// The TMs / HMs / TRs that teach a move (their item names, data order): "Also TM004 Calm Mind" and a Where to find card
+// each (the item page's, ticks shared). Tutor lines stay as the place lines.
+const moveTMs=i=>[...new Set((D.IT||[]).filter(s=>s.k==='tm'&&s.n!=='Move Tutors').flatMap(s=>s.r.filter(x=>x[2]===i&&isTMName(x[0])&&itemOf(x[0])).map(x=>x[0])))];
+function moveDetail(i){fil.innerHTML='';const v=MV[i]||{};const tus=(D.IT||[]).filter(s=>s.k==='tm'&&s.n==='Move Tutors').flatMap(s=>s.r.filter(x=>x[2]===i).map(x=>x[1])),tms=moveTMs(i);
  app.innerHTML=`${backLine('mv',i)}
  <div class="card"><h2 style="margin:0 0 6px">${esc(M[i])}${v.x?` <span class="tag">${CF.orig} original</span>`:''}</h2><div>${v.t?ty(v.t):''} ${cat(v.c)}</div>
  <div class="mvst">${[['Power',v.bp??'-'],['Accuracy',v.ac!=null?v.ac+'%':'Never misses'],['PP',v.pp??'-'],['Priority',v.pr>0?'+'+v.pr:v.pr||0]].map(([n,x])=>`<div><span>${n}</span><b>${x}</b></div>`).join('')}</div>
  ${moveTarget(v.tg)}
  ${moveProperties(v)}
  ${moveEffects(v)}
- ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${tms.map(t=>`<div style="margin-top:6px"><b>${t[2]?ilink(t[2],t[0]):esc(t[0])}:</b> ${esc(t[1])}</div>`).join('')}
+ ${v.d?`<p style="margin:8px 0 0">${esc(v.d)}</p>`:''}${fxBox(v.b)}${tms.length?`<div class="alsotm">Also ${tms.map(n=>ilink(n)).join(', ')}</div>`:''}${tus.map(t=>`<div style="margin-top:6px"><b>Tutor:</b> ${esc(t)}</div>`).join('')}
  ${v.e?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.chdoc}</b><div>${esc(v.e).replace(/\n/g,'<br>')}</div></div>`:''}
  ${v.h&&v.h.length?`<div style="margin-top:8px"><b style="color:var(--acc)">${TX.mvh}</b><ul>${v.h.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${v.dc||!TX.nodc?'':`<div class="mut small">${TX.nodc}</div>`}</div>`:''}${v.cf?confBox(v.cf):''}
  <div class="mut small" style="margin-top:8px">${TX.mvsrc}${v.x&&TX.mvsrcx?TX.mvsrcx:''}.</div></div>
+ ${tms.map(n=>itemWhere(itemOf(n),'Where to find '+n.split(' ')[0],'iw:'+n)).join('')}
  ${moveInteractions(i)}
- ${moveLearnedBy(i)}`;bindMoveLearn(i);window.scrollTo(0,0);}
+ ${moveLearnedBy(i)}`;bindMoveLearn(i);colBind(app);window.scrollTo(0,0);}
 // ===== ABILITY PAGE
 const abSlot=(p,i)=>{const n=new Set(p.a).size,r=[];if(p.a.includes(i))r.push(n===1?'Only ability':'Ability '+(p.a.indexOf(i)+1));if(p.ha===i)r.push('Hidden ability');return r.join(', ');};
 // Moves it affects: the MI records naming this ability, one block per effect (e) on each side (u = its holder's moves,
@@ -718,8 +722,8 @@ document.addEventListener('click',ev=>{const a=ev.target.closest&&ev.target.clos
 const fxBox=t=>t?`<div class="ifx"><div class="ifxh">In battle</div>${esc(t)}</div>`:'';
 function megaLine(e){return e.mega.map(p=>{const b=P.find(x=>x.dex===p.dex&&x.g!==1&&!x.fc);
  return `<div class="imega">${b?sprl(b.id,'s40')+plink(b.id):''}<span class="mut">→</span>${sprl(p.id,'s40')}${plink(p.id)}</div>${p.nu?`<div class="mut small">Not obtainable in ${esc(CF.name)}; trainers use it.</div>`:''}`;}).join('');}
-function itemWhere(e){const ls=itemLines(e);if(!ls.length)return '';
- return `<div class="card iwhere">${sectionHTML('iw',`Where to find (${ls.length})`,'',`<div class="iwl">${linesOrdered(ls).map(itemLine).join('')}</div>`,true)}</div>`;}
+function itemWhere(e,label='Where to find',key='iw'){const ls=itemLines(e);if(!ls.length)return '';
+ return `<div class="card iwhere">${sectionHTML(esc(key),`${esc(label)} (${ls.length})`,'',`<div class="iwl">${linesOrdered(ls).map(itemLine).join('')}</div>`,true)}</div>`;}
 // Held by: Wild (one row per species, highest % first) and Trainers (one row per trainer, its Pokémon holding it).
 const heldGroups=e=>[{key:'w',label:'Wild',rows:[...e.wild].sort((a,b)=>(b[1]??-1)-(a[1]??-1)||a[0].name.localeCompare(b[0].name))},
  {key:'t',label:'Trainers',rows:e.tr.filter(([t])=>!rivalHidden(t))}].filter(g=>g.rows.length);

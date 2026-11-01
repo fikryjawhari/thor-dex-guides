@@ -598,6 +598,9 @@ input.itk{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:var(--acc
 .iwk{font-size:12px;display:inline-block;max-width:100%;margin-left:2px}
 .it-held .learn-sprite .sprl+.sprl{margin-left:-8px}.it-held td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
 .it-held .learn-sprite{white-space:nowrap}
+/* The move page's "Also TM004 Calm Mind" and the Pokémon page's Held items (template/README.md → Move page, Pokémon page) */
+.alsotm{margin-top:6px;font-size:14px;overflow-wrap:anywhere}
+.phi>div{margin:3px 0;overflow-wrap:anywhere}.phi .pct{color:var(--mut);font-variant-numeric:tabular-nums;margin-left:4px}.phi .sh{margin-top:8px}
 /* ===== Items tab (template/README.md → Items tab): cards in the dex-row look, the tick bar */
 .itbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 2px 6px;min-height:28px}
 .itclr{background:var(--panel2);color:var(--fg);border:0;border-radius:8px;padding:5px 10px;font-size:13px;font-weight:600}

@@ -34,6 +34,14 @@ const samples = [...new Set([
 assert(samples.every(index => index >= 0), 'contact, spread, status, chance and guaranteed-effect samples');
 const kicking = pick(move => move.f?.includes('kick'));
 if (kicking >= 0 && !samples.includes(kicking)) samples.push(kicking);
+// TMs / HMs / TRs that teach a move, as the move page lists them ("Also ..." and a Where to find card each).
+const tmNames = index => [...new Set((data.IT || []).filter(box => box.k === 'tm' && box.n !== 'Move Tutors')
+  .flatMap(box => box.r.filter(row => row[2] === index && /^(TM|HM|TR)\d/.test(row[0])).map(row => row[0])))];
+const tmRows = name => (data.IT || []).filter(box => box.k !== 'npc' && box.n !== 'Move Tutors').flatMap(box => box.r.filter(row => row[0] === name));
+const tmKeys = name => tmRows(name).flatMap(row => (row[5] || []).filter(Boolean));
+const tmMove = data.MV.findIndex((move, index) => move.b && tmNames(index).some(name => tmKeys(name).length));
+assert(tmMove >= 0, 'a TM move with In battle text and a pickup');
+const noBattle = data.MV.findIndex(move => !move.b);
 const open = async (page, index) => {
   await page.route('#/m/' + index);
   await page.waitFor('!!document.querySelector(".move-learn")', 'move page');
@@ -141,6 +149,44 @@ const checks = [
           await page.waitFor(`!!document.querySelector('.move-learn')`, 'move reopened');
           assert.equal(await page.value(`[...document.querySelectorAll('.learn-groups details')].every(group=>!group.open)`), true, 'learner state is not saved');
         }
+      }
+    },
+  },
+  {
+    id: 'tm', title: 'In battle box, "Also TM..." links to the TM page, a Where to find card per TM with ticks shared with the item page', sizes: SIZE_SMALL, modes: MODES,
+    run: async page => {
+      await page.goto('#/');
+      await page.value(`localStorage.setItem(LS.items,JSON.stringify({o:{},x:{},s:{},g:{}}));IO.g={}`);
+      const move = data.MV[tmMove], names = tmNames(tmMove);
+      await open(page, tmMove);
+      const top = await page.value(String.raw`(()=>{const c=document.querySelector('#app>.card');return {fx:c.querySelector('.ifx')?.textContent,afterDesc:c.querySelector('.ifx')?.previousElementSibling?.tagName,
+        also:[...c.querySelectorAll('.alsotm a.itl')].map(a=>[a.textContent,a.getAttribute('href'),!!a.querySelector('.item-icon')||!D.IC||!(a.textContent in D.IC)]),alsoText:c.querySelector('.alsotm')?.textContent,
+        place:[...c.querySelectorAll(':scope>div>b')].map(b=>b.textContent).filter(t=>/^(TM|HM|TR)\d+:$/.test(t))}})()`);
+      assert.equal(top.fx, 'In battle' + move.b, 'In battle box with MV.b');
+      if (move.d) assert.equal(top.afterDesc, 'P', 'under the description');
+      assert.deepEqual(top.also.map(([n]) => n), names, 'every TM that teaches it');
+      assert.equal(top.alsoText, 'Also ' + names.join(', '));
+      assert(top.also.every(([, h, ic]) => h.startsWith('#/i/') && ic), 'links with icons: ' + JSON.stringify(top.also));
+      assert.deepEqual(top.place, [], 'no TMxxx: place lines');
+      const cards = await page.value(String.raw`(()=>{const out=[];let e=document.querySelector('#app>.card').nextElementSibling;while(e&&e.matches('.iwhere')){out.push([e.querySelector('summary .sn').textContent,e.querySelector('details').open,[...e.querySelectorAll('input.itk')].map(c=>c.dataset.pk)]);e=e.nextElementSibling;}return out;})()`);
+      const withLines = names.filter(name => tmRows(name).some(row => String(row[1]).trim()));
+      assert.deepEqual(cards.map(([t]) => t.replace(/ \(\d+\)$/, '')), withLines.map(name => 'Where to find ' + name.split(' ')[0]), 'a Where card per TM, right after the top card');
+      assert(cards.every(([, o]) => o), 'Where cards open');
+      const name = names.find(n => tmKeys(n).length), k = tmKeys(name)[0];
+      await page.assertFits('TM move ' + data.M[tmMove]);
+      await tap(page, `.iwhere input.itk[data-pk="${k}"]`);
+      assert.deepEqual(await page.value(`JSON.parse(localStorage.getItem(LS.items)).g`), { [k]: 1 }, 'tick saved by key');
+      await tap(page, `.alsotm a.itl[href="${await page.value(`ihref(${JSON.stringify(name)})`)}"]`);
+      await page.waitFor(`location.hash.startsWith('#/i/')&&!!document.querySelector('.ipg')`, 'the TM page');
+      assert.equal(await page.value(`document.querySelector('.ipg h2').textContent`), name, 'the link opens the TM page');
+      assert.equal(await page.value(`document.querySelector('.iwhere input.itk[data-pk="${k}"]').checked`), true, "the tick is the item page's");
+      await tap(page, `.iwhere input.itk[data-pk="${k}"]`);
+      await open(page, tmMove);
+      assert.equal(await page.value(`document.querySelector('.iwhere input.itk[data-pk="${k}"]').checked`), false, 'unticked on the item page, unticked here');
+      if (noBattle >= 0) {
+        await open(page, noBattle);
+        assert.equal(await page.value(`document.querySelectorAll('#app .ifx').length`), 0, 'no In battle box without MV.b');
+        await page.assertFits('no In battle ' + data.M[noBattle]);
       }
     },
   },
