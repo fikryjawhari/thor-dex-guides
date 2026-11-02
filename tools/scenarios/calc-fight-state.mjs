@@ -17,6 +17,7 @@ const sizes = [[260, 316], [480, 392], [832, 424]];
 const has = (...names) => names.every(name => data.M.includes(name));
 const ability = name => data.AB.findIndex(entry => entry[0] === name);
 const species = data.P.find(entry => entry.n === 'Blissey') ? 'Blissey' : data.P.find(entry => entry.t.length === 1 && entry.t[0] === 'Normal').n;
+const oddsMove = ['Fire Fang', 'Secret Power'].find(name => data.MV[data.M.indexOf(name)]?.se?.filter(([chance]) => chance < 100).length >= 2);
 
 // The player's custom `species` with `moves` and `item` against a level 30+ trainer lead that is not Water / Grass /
 // Ghost and has no Sticky Hold, its ability set to `foeAbility` (an AB name; none: no ability) and item `foeItem`.
@@ -24,7 +25,7 @@ const duel = (moves, {item = '', foeItem = '', foeAbility = ''} = {}) => `(()=>{
   CALC.use(P.find(entry=>entry.n===${JSON.stringify(species)}));
   const state=CALC.state(),mon=state.custom.at(-1);
   mon.l=50;mon.i=${JSON.stringify(item)};mon.m=${JSON.stringify(moves)}.map(name=>M.indexOf(name));
-  const plain=x=>{const p=P.find(e=>e.id===x.id);return p&&!p.t.some(t=>['Water','Grass','Ghost'].includes(t));};
+  const plain=x=>{const p=P.find(e=>e.id===x.id);return p&&p.name!=='Shedinja'&&AB[x.a]?.[0]!=='Wonder Guard'&&!p.t.some(t=>['Water','Grass','Ghost'].includes(t));};
   const trainer=TRS.find(t=>t.p.length&&t.p[0].l>=30&&plain(t.p[0]))||TRS.find(t=>t.p.length&&plain(t.p[0]));
   CALC.enter(trainer.k,0);state.dir='out';
   state.edits['foe:'+trainer.k+':0']={...(state.edits['foe:'+trainer.k+':0']||{}),a:${ability(foeAbility)},i:${JSON.stringify(foeItem)}};
@@ -149,20 +150,21 @@ const checks = [{
   id: 'odds',
   title: 'damaging rows show their effect odds on line 2 after the range, KO on line 1, inside the row, no sideways scroll; the open row lists them and the KO chance in full',
   sizes: [[260, 316], [480, 392], [537, 424], [832, 424]],
-  skip: has('Body Slam', 'Fire Fang') ? '' : 'no Body Slam / Fire Fang',
+  skip: has('Body Slam') && oddsMove ? '' : 'no Body Slam / multi-effect damaging move',
   run: async page => {
     await page.route('#/calc');
-    await page.value(duel(['Body Slam', 'Fire Fang', 'Tackle'].filter(name => data.M.includes(name))));
+    await page.value(duel(['Body Slam', oddsMove, 'Tackle'].filter(name => data.M.includes(name))));
     const text = await page.value(`${row('Body Slam')}.querySelector('.r2 .dodds')?.textContent??''`);
     assert.match(text, /^30% paralysis/);
-    const shown = await page.value(`(()=>{const m=${row('Fire Fang')}.querySelector('.mm'),o=m.querySelector('.dodds'),k=m.querySelector('.ko'),v=m.querySelector('.mv'),pc=[...m.querySelectorAll('.r2>span')].find(x=>/%$/.test(x.textContent.trim()));if(!o||!pc)return 'missing';const a=m.getBoundingClientRect(),b=o.getBoundingClientRect(),c=pc.getBoundingClientRect(),kr=k.getBoundingClientRect(),vr=v.getBoundingClientRect();return {inside:b.width>8&&b.right<=a.right+0.5&&b.left>=a.left-0.5,afterRange:b.left>=c.right-0.5&&Math.abs(b.top-c.top)<=3,koLine1:Math.abs(kr.top-vr.top)<=3&&kr.bottom<=c.top+1,ellipsis:getComputedStyle(o).textOverflow==='ellipsis'};})()`);
+    const shown = await page.value(`(()=>{const m=${row(oddsMove)}.querySelector('.mm'),o=m.querySelector('.dodds'),k=m.querySelector('.ko'),v=m.querySelector('.mv'),pc=[...m.querySelectorAll('.r2>span')].find(x=>/%$/.test(x.textContent.trim()));if(!o||!pc)return 'missing';const a=m.getBoundingClientRect(),b=o.getBoundingClientRect(),c=pc.getBoundingClientRect(),kr=k.getBoundingClientRect(),vr=v.getBoundingClientRect();return {inside:b.width>8&&b.right<=a.right+0.5&&b.left>=a.left-0.5,afterRange:b.left>=c.right-0.5&&Math.abs(b.top-c.top)<=3,koLine1:Math.abs(kr.top-vr.top)<=3&&kr.bottom<=c.top+1,ellipsis:getComputedStyle(o).textOverflow==='ellipsis'};})()`);
     assert.deepEqual(shown, {inside: true, afterRange: true, koLine1: true, ellipsis: true}, 'odds inside the row on line 2 after the range, KO on line 1, cut with …');
     assert.ok(await noScroll(page), 'no sideways scroll');
-    await page.value(`${row('Fire Fang')}.querySelector('.mm').click()`);
+    await page.value(`${row(oddsMove)}.querySelector('.mm').click()`);
     await page.settle();
-    assert.match(await page.value(`${row('Fire Fang')}.querySelector('.dodds2')?.textContent||''`), /burn.*flinch|flinch.*burn/);
+    const effects = await page.value(`${row(oddsMove)}.querySelector('.dodds2')?.textContent||''`);
+    for (const [chance, effect] of data.MV[data.M.indexOf(oddsMove)].se.filter(([chance]) => chance < 100)) assert.ok(effects.includes(chance + '% ' + effect), effect + ' listed in full');
     // The KO chance in full at the top of the open row (the closed row's KO text can be cut off at 260).
-    const ko = await page.value(`(()=>{const r=${row('Fire Fang')},k=r.querySelector('.dd .dkof');if(!k)return null;const a=r.getBoundingClientRect(),b=k.getBoundingClientRect();return {t:k.textContent,first:k===r.querySelector('.dd').firstElementChild,fits:b.right<=a.right+0.5&&k.scrollWidth<=k.clientWidth+0.5};})()`);
+    const ko = await page.value(`(()=>{const r=${row(oddsMove)},k=r.querySelector('.dd .dkof');if(!k)return null;const a=r.getBoundingClientRect(),b=k.getBoundingClientRect();return {t:k.textContent,first:k===r.querySelector('.dd').firstElementChild,fits:b.right<=a.right+0.5&&k.scrollWidth<=k.clientWidth+0.5};})()`);
     assert.ok(ko, 'KO line in the open row');
     assert.match(ko.t, /^((\d+\.\d|<0\.1|>99\.9)% chance to |Guaranteed )(OHKO|\dHKO)$|^No KO in 4 hits$/, ko.t);
     assert.ok(ko.first && ko.fits, `KO line first and whole: ${JSON.stringify(ko)}`);
