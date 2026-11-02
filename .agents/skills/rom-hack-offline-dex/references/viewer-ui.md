@@ -105,4 +105,4 @@ Use existing CDP / headless Chrome checks or available collaborative browser too
 4. In viewer mode: open search, type a name with the keyboard buttons, check the result order on a Pokémon page and a trainer page, pick a result, Done, Back; open a number pad and an "Other..." strip. Screenshot the minimum size and look at it.
 5. Check the light theme once (`colorScheme: 'light'`).
 
-On the Thor follow `PROGRESS.md` → Testing on the Thor and the sibling app docs as needed. Verify adb / CDP availability and authorisation before replacing an installed guide. Screenshot both screens and time a re-sort and opening the walkthrough (historical targets: about 0.25 s and under 0.7 s).
+On the Thor follow `PROGRESS-DETAIL.md` → Testing on the Thor and the sibling app docs as needed. Verify adb / CDP availability and authorisation before replacing an installed guide. Screenshot both screens and time a re-sort and opening the walkthrough (historical targets: about 0.25 s and under 0.7 s).

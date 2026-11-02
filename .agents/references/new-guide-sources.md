@@ -7,7 +7,7 @@ inventory: one line per item below saying which file covers it, or "none found".
 
 Rules: the hack's code / game data wins over its docs (hacks with public source; 3DS and NDS: the game files), the docs
 are the check. Never commit raw author files (xlsx, pdf, zips, ROMs, dumps). Look at the hack's family first
-(PROGRESS.md → Hack families): a sibling guide's SOURCES.md lists the files that family has.
+(PROGRESS-DETAIL.md → Hack families): a sibling guide's SOURCES.md lists the files that family has.
 
 ## Where hack data lives (by kind of hack)
 - **Decomp hacks** (pokeemerald-expansion, CFRU, hg-engine): the public repo at the release commit (species, moves,

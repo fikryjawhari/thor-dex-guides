@@ -3,7 +3,7 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { startBrowser } from '../browser.mjs';
+import { navigate, startBrowser } from '../browser.mjs';
 const [file, out, kb] = process.argv.slice(2);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const errs = [];
@@ -17,7 +17,7 @@ const ev = async expr => { const m = await send('Runtime.evaluate', { expression
 await send('Runtime.enable', {}, sessionId); await send('Page.enable', {}, sessionId);
 await send('Emulation.setDeviceMetricsOverride', { width: 260, height: 316, deviceScaleFactor: 2, mobile: false }, sessionId);
 const url = pathToFileURL(resolve(file)).href;
-const go = async h => { await send('Page.navigate', { url: url + h }, sessionId); await sleep(1500); };
+const go = h => navigate(send, sessionId, url + h);  // waits for the boot (or the hashchange render), not 1.5 s
 await go('#/locs');
 if (kb) { await ev(`localStorage.setItem('dvkb','1')`); }
 const shot = async name => { const s = await send('Page.captureScreenshot', { format: 'png' }, sessionId); writeFileSync(`${out}-${name}.png`, Buffer.from(s.result.data, 'base64')); };

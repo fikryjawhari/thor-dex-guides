@@ -21,7 +21,7 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
 
 ## Sources and rules
 
-- **Game data is the authority** (PROGRESS.md → Source data check): `dex-rebalanced.json` (tools/ctr_dex.py on the hack's
+- **Game data is the authority** (PROGRESS-DETAIL.md → Source data): `dex-rebalanced.json` (tools/ctr_dex.py on the hack's
   romfs and code.ips over the user's Ultra Sun v1.2 dumps) for species, moves, abilities, TMs and wild tables;
   `trainers-evless.json` (tools/usum_trainers.py on the EV-less mod copy) for every trainer set, natures and IVs
   included; `statics-rebalanced.json` (tools/usum_statics.py) for the Totem battles. The docs are the check and give

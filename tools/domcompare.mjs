@@ -9,8 +9,10 @@
 //             same order, so state carried over between routes is the same on both sides.
 //   --ignore  remove what matches regex from every snapshot before comparing (expected changes, e.g. --ignore=" bt"
 //             for a new class); can be given more than once.
-// Flagged routes are loaded fresh first (up to FRESH=n of them, default 100; the rest count as differing); only those
-// that still differ are replayed with their chunk's history and printed (SHOW=n of them, default 2; LIST=1 lists every differing route). Exit code 0: identical and no page errors, 1: not, 2: Chrome failed.
+// Flagged routes are loaded fresh first (up to FRESH=n of them, default 100; the rest count as differing); those that
+// still differ are replayed alone with their chunk's history (REPLAY=n, default 3), and only a route that differs again
+// counts and is printed (SHOW=n, default 2; LIST=1 lists every differing route).
+// Exit code 0: identical and no page errors, 1: not, 2: Chrome failed.
 // Needs Chrome or Edge (CHROME env var, or the usual Windows install paths). Node 22+ (fetch, WebSocket).
 // Picks a free debugging port; run whole sweeps one at a time to avoid layout-timing noise from CPU contention.
 // content-visibility is forced to visible in every tab (see tab()): offscreen skipped parts are not observed or measured, so DOM that depends on them varied from run to run.
@@ -62,7 +64,15 @@ async function tab() {
 // Runs in the page: visit each route, open every <details> until none are left closed, hash the body.
 const PAGE = `async (routes, want, ign) => {
   const sleep = ms => new Promise(r => setTimeout(r, ms));
+  // Attributes are put in name order first: their serialised order is the order they were set in, so a style that a
+  // ResizeObserver wrote before or after a box's open attribute made identical pages differ (Photonic #/walk, 2026-11-02).
   const snap = () => { const b = document.body.cloneNode(true); b.querySelectorAll('script').forEach(s => s.remove());
+    // The rail's jump buttons are enabled or not by the scroll position (dex.js jumpState), which under load lagged and
+    // then carried from route to route (Radical Red, 2026-11-02): left out here; pagecheck / walkcheck test them.
+    b.querySelectorAll('.rjump [data-j]').forEach(x => x.removeAttribute('disabled'));
+    for (const el of b.querySelectorAll('*')) { if (el.attributes.length < 2) continue;
+      const at = [...el.attributes].map(a => [a.name, a.value]).sort((p, q) => p[0] < q[0] ? -1 : 1);
+      for (const [n] of at) el.removeAttribute(n); for (const [n, v] of at) el.setAttribute(n, v); }
     let h = b.innerHTML; for (const p of ign) h = h.replace(new RegExp(p, 'g'), '');
     return h.replace(/blob:[^)"]+/g, 'blob').replace(/ class=""/g, '').replace(/>\\s+</g, '><').trim(); };
   const hash = s => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return h + ':' + s.length; };
@@ -70,12 +80,14 @@ const PAGE = `async (routes, want, ign) => {
   let muts = 0; new MutationObserver(() => muts++).observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
   const quiet = async (ms, max) => { const end = performance.now() + max; let n; do { n = muts; await sleep(ms); if (muts === n) return true; } while (performance.now() < end); return false; };
   // The guide's rAF work (the collapse bars) and ResizeObserver callbacks run in rendering frames: after the DOM is quiet,
-  // also wait until a whole frame pair passes with nothing changing.
+  // also wait until a whole frame pair (and a task turn: DC_SLEEP ms, default 0; it was 25 until 2026-11-02, which
+  // cost a third of the sweep with no route ever differing) passes with nothing changing.
   const frame = () => Promise.race([new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))), sleep(500)]);
-  const settled = async max => { const end = performance.now() + max; let n; do { n = muts; await frame(); await sleep(25); } while (muts !== n && performance.now() < end); return muts === n; };
-  const out = {}, errs = [], slow = [], busy = [];
+  const settled = async max => { const end = performance.now() + max; let n; do { n = muts; await frame(); await sleep(${+(process.env.DC_SLEEP ?? 0)}); } while (muts !== n && performance.now() < end); return muts === n; };
+  const out = {}, errs = [], slow = [], busy = [], kinds = {};
   window.addEventListener('error', e => errs.push(e.message));
   for (const r of routes) {
+    const t0 = performance.now();
     // Wait for this route's own hashchange (render runs inside the guide's handler, registered first). Matching the
     // URL keeps a late event from an earlier route from being taken for this one.
     if (location.hash !== r) {
@@ -91,8 +103,10 @@ const PAGE = `async (routes, want, ign) => {
     if (typeof bars === 'function') { bars(); await frame(); }
     const s = snap();
     out[r] = want.includes(r) ? s : hash(s);
+    const kind = r.split('/').slice(0, 2).join('/'), k = kinds[kind] || (kinds[kind] = [0, 0]);
+    k[0]++; k[1] += performance.now() - t0;
   }
-  return { out, errs, slow, busy };
+  return { out, errs, slow, busy, kinds };
 }`;
 
 // Load the file fresh in tab t (localStorage cleared, dvkb set before the guide boots), then sweep routes.
@@ -120,14 +134,20 @@ try {
   const first = await tab();
   let routes = await run(first, files[0]); await first.close();
   if (PAT) routes = routes.filter(r => PAT.startsWith('=') ? r === PAT.slice(1) : r.includes(PAT));
+  // Routes are dealt round-robin: kinds cost very different amounts (a location page ~600 ms, the rest ~90 ms), and
+  // contiguous chunks left one tab pair with every location page while the others sat idle. The list pages stay last.
   const n = Math.min(JOBS, routes.length || 1), size = Math.ceil(routes.length / n);
-  const chunks = Array.from({ length: n }, (_, i) => routes.slice(i * size, (i + 1) * size)).filter(c => c.length);
+  const chunks = Array.from({ length: n }, (_, i) => routes.filter((_, j) => j % n === i)).filter(c => c.length);
   console.log(routes.length, 'routes', KB ? '(keyboard mode)' : '', `in ${chunks.length} chunks of up to ${size}`);
   const sweep = async (url, c) => { const t = await tab(); try { return await run(t, url, c); } finally { await t.close(); } };
   const res = await Promise.all(chunks.map(c => Promise.all([sweep(files[0], c), sweep(files[1], c)])));
   const a = { out: {}, slow: [], busy: [], errs: [] }, b = { out: {}, slow: [], busy: [], errs: [] };
   for (const [x, y] of res) for (const [s, d] of [[x, a], [y, b]]) { Object.assign(d.out, s.out); for (const k of ['slow', 'busy', 'errs']) d[k].push(...s[k]); }
   console.log(`swept in ${secs()}`);
+  const kinds = {};
+  for (const [x, y] of res) for (const s of [x, y]) for (const [kind, [n, ms]] of Object.entries(s.kinds || {})) { const k = kinds[kind] || (kinds[kind] = [0, 0]); k[0] += n; k[1] += ms; }
+  console.log('time by route kind (both builds, tab-seconds):', Object.entries(kinds).sort((p, q) => q[1][1] - p[1][1])
+    .map(([kind, [n, ms]]) => `${kind} ${n} ${(ms / 1000).toFixed(1)}s (${Math.round(ms / n)} ms)`).join(', '));
   const flagged = routes.filter(r => a.out[r] !== b.out[r]);
   console.log('no hashchange (old/new):', a.slow.length, b.slow.length, a.slow.slice(0, 5));
   console.log('never settled (old/new):', a.busy.length, b.busy.length, a.busy.slice(0, 5));
@@ -142,18 +162,27 @@ try {
       await ta.close(); await tb.close();
     }));
   }
-  const bad = flagged.filter(r => !fresh.has(r));
+  let bad = flagged.filter(r => !fresh.has(r));
   console.log(`flagged by the sweep: ${flagged.length}, rechecked fresh: ${Math.min(flagged.length, +(process.env.FRESH ?? 100))}, identical on a fresh load: ${fresh.size}`, [...fresh].slice(0, 10).join(' '));
-  console.log('differing routes:', bad.length, bad.slice(0, process.env.LIST ? bad.length : 40).join(' '));
-  if (bad.length || a.errs.length || b.errs.length) code = 1;
-  for (const r of bad.slice(0, +(process.env.SHOW || 2))) {
+  // Still differing: replay each (up to REPLAY, default 3: a replay sweeps the chunk up to the route) alone, after the
+  // sweep. Identical on replay: timing (a huge page such as #/walk not settled while 8 checks ran at once). Differing
+  // again: printed (SHOW, default 2) and counted. Past REPLAY, every remaining route counts.
+  const replayed = [], shown = [];
+  for (const r of bad.slice(0, +(process.env.REPLAY ?? 3))) {
     const c = chunks.find(c => c.includes(r)), upTo = c.slice(0, c.indexOf(r) + 1);  // same history as the sweep
     const [ta, tb] = [await tab(), await tab()];
     const [x, y] = (await Promise.all([run(ta, files[0], upTo, [r]), run(tb, files[1], upTo, [r])])).map(o => o.out[r]);
     await ta.close(); await tb.close();
+    if (x === y) { replayed.push(r); continue; }
+    if (shown.length >= +(process.env.SHOW || 2)) continue;
+    shown.push(r);
     let i = 0; while (i < x.length && x[i] === y[i]) i++;
     console.log(`\n== ${r} (lengths ${x.length} / ${y.length}) first difference at ${i}:\n old: ${x.slice(Math.max(0, i - 150), i + 250)}\n new: ${y.slice(Math.max(0, i - 150), i + 250)}`);
   }
+  bad = bad.filter(r => !replayed.includes(r));
+  if (replayed.length) console.log('identical when replayed alone (timing under load):', replayed.join(' '));
+  console.log('differing routes:', bad.length, bad.slice(0, process.env.LIST ? bad.length : 40).join(' '));
+  if (bad.length || a.errs.length || b.errs.length) code = 1;
   console.log(`done in ${secs()}`);
 } catch (e) { console.log(e.message); code = 2; }
 await cleanup();

@@ -19,7 +19,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | Script | What it does |
 | --- | --- |
 | `new_hack.py <hack> --like <built hack> [--title name] [--version N] [--ls-prefix prefix] [--dry-run] [--force]` | Stdlib scaffold: config, notes / source headings, empty sprites, extract modules / check, gate rebuild and calc scenario / engine-check stubs. No data or other hack's mechanics / fixtures; calc off. Details below. |
-| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N]` / `scenarios [hack ...] [--only a,b] [--jobs N]` | Captures committed HTML/data/reports at a ref; rebuilds data and runs serial DOM, consistency, tabs, migration, mockup and scenario checks; `--jobs N` runs the scenario × guide runs N at a time (each its own browser; same results as serial). `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
+| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N] [--fresh]` / `scenarios [hack ...] [--only a,b] [--jobs N] [--fresh]` | Captures committed HTML/data/reports at a ref; rebuilds data, then runs every browser check (DOM, consistency, walk-state, mockup checks, scenarios) on every named guide, N at a time (default 8), failures rerun alone, passes cached by content. `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
 | `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` and the main checkout's `.tmp/item-icons/` cache when present (Windows junctions, no copying), then `uv sync`; no hacks means every built guide. Refuses other claims or existing source/cache copies. Release removes only the matching claim. |
 | `scenarios/tracker-reload.mjs <guide.html>` | Seeded tracker state, Clear and reload at 260 × 316 in `dvkb`; assertions on the control and saved state. `scenarios/README.md` describes new spec checks. |
 | `scenarios/calc-*.mjs <guide.html>` | Calc page checks: layout, controls, state, import/bridge, mechanics and per-hack fields. Coverage, sizes and failure output: `scenarios/README.md` → Calc checks. |
@@ -145,16 +145,25 @@ use the explicit `REBUILDS` table: EX/PS/HG raw, EI `itemstd.py`; unknown paths 
 Data compares ignore only the top-level `built` stamp; reports compare byte-for-byte. Counts report species,
 trainer cards, item rows and walkthrough stops. Stamp-only rebuilds restore the original data file bytes.
 
-Template checks assemble every guide, then compare each selected guide normal/keyboard (four DOM jobs within one
-sweep), consistency, tabs and keyed-stop migration. The four existing mockup checks run on EI in both modes;
-if EI was not selected, the first selected guide is used. Every `scenarios/*.mjs` runs on every selected guide.
+Template checks assemble every guide, then queue every browser check for each selected guide: domcompare
+normal / keyboard against the baseline, consistency, keyed-stop migration, the four mockup checks in both modes and
+every `scenarios/*.mjs`; tabs runs inline. The queue runs `--jobs` at a time (default 8, measured fastest on this
+16-thread PC), domcompare and jumpcheck first (the longest). A check that fails in the pool is rerun alone at the
+end: passing then, it counts as a pass and the summary lists it as FLAKY (timing under load); failing again, it fails.
 Mockup tools that only print diagnostics are treated as failures on page errors, bad jumps or wrong route bars;
 their detailed geometry output remains a review log, not an invented assertion. Logs: `.tmp/gate/<run>/`, with
 one PASS/FAIL line per check and a total time; any failure exits 1. No baseline refreshes or DOM ignores on failure.
 
-Browser sweeps are serial, across worktrees too; the gate checks running Node check commands before each browser
-invocation and refuses contention. Standalone checks need the same busy check. Do not run a second sweep in parallel.
-The gate replaces the cleanup's one-off `.tmp/cleanup-baseline/datacmp.py`.
+Result cache: a browser check that passes is recorded in the main checkout's `.tmp/check-cache/` (shared by every
+worktree) under the sha256 of what it reads: its command, the check script and every module it imports, the guide's
+dist and its `hacks/<hack>/*.json` / `extract/*.json`, the baseline HTML it compares with, `template/`, the save
+fixtures, the Thor frame, EI's data.json (the save-table source) and the Chrome / Node versions. Run again on the same
+inputs it reports `cached` without running, so an audit costs only the guides and checks a change touched, and a
+parent's audit after a worker's is free on what the worker already checked. Failures are never cached. `--fresh`
+runs everything (and records the passes); use it after changing something a check reads that the key doesn't cover.
+
+The gate refuses to start while another browser check runs (any worktree) and says which; standalone checks need
+the same busy check. The gate replaces the cleanup's one-off `.tmp/cleanup-baseline/datacmp.py`.
 
 T3 exposes project scripts with `runOnWorktreeCreate`; no repo project-config file is present. Set a Configure
 script to `python -I tools/worktree_setup.py` with that flag after integration. This worker could read the schema
@@ -180,13 +189,13 @@ The calc scenarios, shared harness, viewer sizes and failure output are document
 `tools/scenarios/README.md` → Calc checks. Run selected scenarios on built guides without rebuilding or a baseline:
 
 ```sh
-uv run python -I tools/gate.py scenarios --only calc-layout,calc-controls --jobs 8
+uv run python -I tools/gate.py scenarios --only calc-layout,calc-controls
 node tools/scenarios/calc-controls.mjs dist/emerald-imperium.html
 ```
 
-`gate.py check --template --jobs 8` includes all scenarios for the selected guides; non-calc guides skip calc cases
-except `calc-hidden`, which checks feature visibility. The gate runs browser sweeps one at a time, but scenario × guide
-jobs can run in parallel. Standard gates above describes the baseline and full checks.
+`gate.py check --template` includes all scenarios for the selected guides; non-calc guides skip calc cases
+except `calc-hidden`, which checks feature visibility. Standard gates above describes the pool, the cache and the
+baseline.
 
 **Save check** (`tools/calc_save_check.mjs`): the done-check for a save reader.
 
@@ -271,46 +280,40 @@ the publisher, not a guarantee. Unbound's wiki uses its page/wiki sitemap index 
 (today's clock is normalised to the date); edits on the same day can be missed. 3DS patch archives are watched in
 their actual folders, but a changed patch still needs manual romfs extraction, not an automatic ROM download.
 
-## Timing `domcompare.mjs` (choosing `--jobs`)
+## Check timings (measured 2026-11-02, this 16-thread PC)
 
-`domcompare.mjs` (usage in its header) splits the routes over `--jobs` pairs of tabs. To pick a job count on a
-machine, time one slice of routes rather than the full guide: compare a build with itself (always identical, so only
-the sweep is timed), with `--routes` picking the slice, and read the `swept in` line. Use a big slice; on a short one
-the fixed cost of booting each tab (each loads the whole 2.5 MB guide) hides the speedup.
+Full audit from scratch (`gate.py check --fresh`: data and every browser check, all seven guides, 8 at a time):
+**40 min, 393 / 393** (before this job: ~3 h of browser checks one guide at a time, plus 26 min of scenarios). Work by
+kind in that run (process-minutes under load, 239 in all): scenarios 57 %, domcompare 23 %, jumpcheck 11 %, pagecheck
+4 %, zoomcheck 3 %, the rest (data checks included) 2 %. A rerun with nothing changed: 88 s (343 of 393 cached; the rest are the seconds-long data checks); after a
+change to domcompare only, its 14 sweeps ran and the rest was cached: 10 min. The longest
+single checks (a big guide's domcompare, calc-field-states / calc-team on any guide: 3-4 min under load) set the floor.
+
+- **Page opens** were ~43 % of scenario time (EI: 760 cases, 639 s of 1500 s). A fresh open of a 3.5 MB guide took
+  ~560 ms, ~250 ms of it creating a blob for each of the Pokémon list's ~1200 sprites; with sprites as CSS classes
+  (`template/README.md` → Pokémon sprites) it is ~310 ms, the same as a build with no sprites at all. That is why a
+  sprite-less test build isn't needed: the cost was the blobs, not the bytes.
+- **jumpcheck** (EI, alone): 348 s → 55 s. It waited 1.1 s per jump plus fixed waits; now 4 tabs, and a jump waits for
+  `land()`'s 700 ms loop to end. Under load a jump can still end off screen (fewer frames in those 700 ms): the check
+  retries its failed jumps alone in a fresh tab and only a second failure counts.
+- **domcompare** (EI normal, alone): 196 s → 82 s. Location pages cost ~620 ms each against ~90 ms for every other
+  route kind (`time by route kind` line), and contiguous chunks put all of them in one tab pair: routes are now dealt
+  round-robin. The settle loop's 25 ms sleep per route went (0 flagged routes in every comparison since). Under load a
+  huge page (`#/walk`) can be snapshotted unsettled: a route that still differs after the fresh load is replayed with
+  its chunk's history, and only a second difference counts. Snapshots sort each element's attributes (the order they
+  were set in varied with timing) and leave out the rail jump buttons' `disabled` (scroll-derived; under load it drifted
+  and carried from route to route, flagging hundreds of identical Radical Red pages). In the gate each sweep uses `--jobs=2` (the pool is the
+  parallelism); alone, 4 is still the best (2026-10-19 slice timings: 1 job 41 s, 2 22 s, 4 14 s, 8 16 s, 12 22 s).
+- **zoom / page / walk checks** wait for the guide's boot (`browser.mjs` → `navigate()`) instead of 1.5 s after each
+  navigation: zoomcheck 42-60 s → ~30 s, walkcheck 20 s → 8 s, pagecheck 71 s → 49 s (most of the rest is its own
+  in-page waits). Their printed output matched the old runs line for line, apart from one 1 px sub-pixel line.
+
+To time a sweep slice by hand, compare a build with itself (always identical, so only the sweep is timed) and read
+`swept in` and `time by route kind`:
 
 ```
 MSYS_NO_PATHCONV=1 node tools/domcompare.mjs dist/emerald-imperium.html dist/emerald-imperium.html --routes=#/p/ --jobs=4
 ```
-
-Check `no hashchange` is 0 in every timed run: each miss is a 5 s timeout and skews the numbers. Results:
-
-| Machine | Slice | 1 | 2 | 4 | 6 | 8 | 12 |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| PC, 16 threads (2026-10-19) | EI `#/p/`, 1275 routes | 41.3 s | 21.9 s | **13.7 s** | 13.6 s | 15.5 s | 21.8 s |
-| PC, 16 threads (2026-10-19) | EI `#/a/`, 284 routes | 10.4 s | 6.5 s | **5.6 s** | 6.8 s | 8.4 s | – |
-
-Four jobs (the default, a quarter of the threads) is best on both the PC and the laptop; past 6 it gets slower.
-Before `--disable-ipc-flooding-protection` was added (2026-10-19), Chrome throttled each tab for about 10 s every 100
-routes (each route makes 2 history updates and Chrome allows 200 in 10 s). Those stalls showed as `no hashchange`
-misses at the 100th route of every tab, and they caused most of the older numbers and the apparent speedup from more
-jobs (EI `#/a/` at 1 job: 30.4 s with them, 10.4 s without).
-
-Since 2026-10-24, snapshots force `content-visibility:visible`, wait for rendering frames after DOM quiet, and
-recompute collapse bars after lazy cards fill. This removes skipped-layout and late-bar noise without ignoring DOM
-differences. The slice table above predates that change; remeasure it before tuning job counts. Run whole sweeps
-sequentially, not alongside another browser check. Before item/property coverage was added, the full EI guide (2649 routes) took
-about 150–153 s in normal / keyboard mode; a keyboard self-comparison took 152.0 s with no flagged routes or page
-errors. The preceding worker recorded 139.1 s after the fix and 161.8 s with one spurious flag rechecked clean before
-the final settling fix. These are full sweeps, not the historical slice timings; contention-heavy baseline logs
-(including the 458.3 s EI keyboard run) are not a controlled performance comparison.
-
-Since 2026-11-02, the default route list also visits every item from `itemIdx()` (including wild-held, trainer-held,
-Mega Stone, interaction-only and description-only items), using the page's `ihref()` escaping, and every nonempty
-move-property page. Moves and abilities were already exhaustive; items are exhaustive too, not sampled.
-On the same EI build at `697e916`, normal self-comparisons with `--jobs=4` visited 2650 routes in 196.0 s before
-and 3137 routes in 334.2 s after (487 additional item/property routes), both with zero differing routes, missed
-hashchanges, unsettled pages or page errors. Other workers ran browser checks concurrently under this job's explicit
-override, so these are observed runtimes, not a controlled estimate of the added coverage's cost.
 
 ## 3DS game data (found 2026-10-19)
 

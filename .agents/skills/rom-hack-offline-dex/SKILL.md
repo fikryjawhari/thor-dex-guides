@@ -103,7 +103,7 @@ The user wants a mockup before any UI change that isn't already in the template:
 
 ## Planned work
 
-Read `PROGRESS.md` → Open → Damage calc and `tools/calc/README.md` for calc / save-import work. Use the selected `@smogon/calc` (MIT)
+Read `PROGRESS-DETAIL.md` → Open and `tools/calc/README.md` for calc / save-import work. Use the selected `@smogon/calc` (MIT)
 engine; hzla's unlicensed code is read-only format reference, not code to copy. Keep each guide self-contained;
 do not introduce a multi-game runtime or expand agreed scope speculatively.
 Every new guide's extract writes its save ID tables (`GID`: the game's own numbers for species / forms, moves, items,
