@@ -27,6 +27,16 @@ Bridge Mail M/T/V resolve by normalised name to their existing SHA-256-pinned Se
 `PREFERRED_CANONICAL` preserves the published `maxrepel.png` name for the identical Infinite Repel art.
 All other identical-art groups keep their lexicographically first key.
 
+## Coverage audit (2026-11-02)
+
+Big Mushroom, Big Pearl and Tiny Mushroom (Hardlove), and Chilan Berry and Red Nectar (Unbound)
+already have expansion artwork. Regeneration adds them to the current per-guide maps; assembly previously
+found them through the global map, so this corrects stale coverage without changing the rendered guides.
+The pinned trees contain no Costume Box artwork. Hardlove has a Fashion Case and male/female contest
+costumes, not the Unbound item; none is substituted. Costume Box remains explicitly missing.
+The malformed Basculin held-item label is already split by Unbound extract/dex.py wild_held at the
+accepted base (697e916); P.hi contains item/chance pairs and inventory reads only each item name.
+
 ## Counts
 
 | Source | Logical keys (including aliases) | Stored canonical PNGs |
