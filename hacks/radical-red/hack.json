@@ -21,6 +21,12 @@
   ],
   "calc": {
    "base": "cfru",
+   "multihit": {
+    "Population Bomb": [1, 10, 10],
+    "Tachyon Cutter": [2, 2, 2],
+    "Triple Dive": [3, 3, 3],
+    "Twin Beam": [2, 2, 2]
+   },
    "mega": true,
    "zmove": true,
    "evs": true,
