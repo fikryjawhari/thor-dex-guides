@@ -17,7 +17,8 @@ const data = {
     'ORAORAORAORA', 'ORAORAORAORA!', 'Bone Zone', 'Self Sufficient',
     'Blubber Defense', 'Cash Splash', 'Levitate', 'Sharpness',
     'Bulletproof', 'Mega Launcher', 'Thick Fat', 'Solar Power', 'Rivalry', 'Klutz', 'Blazing Soul', 'Ice Scales', 'Mold Breaker',
-    'Flower Gift', 'Bad Company', 'Rock Head', 'Neutralizing Gas'].map(name => [name, '']),
+    'Flower Gift', 'Bad Company', 'Rock Head', 'Neutralizing Gas',
+    'Quick Feet', 'Shield Dust', 'Frozen Mist', 'Parasitic Waste', 'Protosynthesis', 'Cloud Nine'].map(name => [name, '']),
   M: ['Tackle', 'Ember'],
   MV: [
     {bp: 40, t: 'Normal', c: 'Physical', f: ['contact']},
@@ -65,13 +66,22 @@ for (const [name, power, type, category, flags] of [
   ['Volt Tackle', 120, 'Electric', 'Physical', ['contact']],
   ['Infernal Parade', 60, 'Ghost', 'Special', []],
   ['Knock Off', 65, 'Dark', 'Physical', ['contact']],
+  ['Electro Ball', 1, 'Electric', 'Special', ['bullet']],
+  ['Soul Robbery', 100, 'Psychic', 'Special', ['contact', 'bypasssub']],
+  ['Defog', 0, 'Flying', 'Status', []],
+  ['Close Combat', 120, 'Fighting', 'Physical', ['contact']],
+  ['Draco Meteor', 130, 'Dragon', 'Special', []],
+  ['Mind Blown', 150, 'Fire', 'Special', []],
+  ['Fire Blast', 110, 'Fire', 'Special', []],
 ]) {
   data.M.push(name);
   data.MV.push({bp: power, t: type, c: category, f: flags});
 }
 for (const [species, types] of [['Electivire', ['Electric']], ['Sunflora', ['Grass']],
   ["Farfetch'd", ['Normal', 'Flying']], ["Sirfetch'd", ['Fighting']], ['Cherrim', ['Grass']],
-  ['Butterfree', ['Bug', 'Flying']], ['Flapple', ['Grass', 'Dragon']], ['Appletun', ['Grass', 'Dragon']]]) {
+  ['Butterfree', ['Bug', 'Flying']], ['Flapple', ['Grass', 'Dragon']], ['Appletun', ['Grass', 'Dragon']],
+  ['Farfetch’d', ['Normal', 'Flying']], ['Galarian Farfetch’d', ['Fighting']], ['Porygon-Z', ['Normal']],
+  ['Cherrim (Sunshine)', ['Grass']], ['Magmortar', ['Fire']], ['Grimer', ['Poison']]]) {
   data.P.push({id: species, n: species, s: [100, 100, 100, 100, 100, 100], t: types, a: [], et: []});
 }
 const unchanged = JSON.stringify({data, profile});
@@ -392,6 +402,101 @@ const builtAbilities = new Set(built.AB.map(row => row[0]));
 const builtMoves = new Set(built.M);
 const shortNames = [...readFileSync(new URL('../cfru.py', import.meta.url), 'utf8')
   .split('CFRU_NAMES = {')[1].split('\n}')[0].matchAll(/'([^']+)': '[^']+'/g)].map(match => match[1]);
+// Unit 11: the mechanics unit 2 listed as not modelled (Speed, hazards, Defog, Soul Robbery, Bad Company, Magmarizer,
+// Parasitic Waste, Protosynthesis). Mew's Speed is 120 at level 50.
+const sd = 'Showdown 54955790 gen9rr/';
+const spe = (set, values = {}, side = 'atk') => engine.speed(set, values, side);
+check('Quick Feet doubles a statused holder, ignoring paralysis', sd + 'abilities.ts:505-511; RR calc util.ts:115-116', () => {
+  assert.equal(spe(holder('Quick Feet')), 120);
+  for (const st of ['psn', 'brn', 'par']) assert.equal(spe(holder('Quick Feet', {st})), 240, st);
+  assert.equal(spe(holder('Quick Feet', {st: 'psn', it: 'Choice Scarf'})), 360);
+});
+check('Flower Gift Cherrim Speed 1.5x in Sun, not with Umbrella or another species', sd + 'abilities.ts:251-268', () => {
+  for (const id of ['Cherrim', 'Cherrim (Sunshine)']) {
+    assert.equal(spe(holder('Flower Gift', {id}), {weather: 'Sun'}), 180, id);
+    assert.equal(spe(holder('Flower Gift', {id}), {weather: 'Harsh Sunshine'}), 180, id);
+    assert.equal(spe(holder('Flower Gift', {id})), 120, id);
+    assert.equal(spe(holder('Flower Gift', {id, it: 'Utility Umbrella'}), {weather: 'Sun'}), 120, id);
+  }
+  assert.equal(spe(holder('Flower Gift'), {weather: 'Sun'}), 120);
+});
+check('Flower Gift Attack reaches the guide Sunshine form', sd + 'abilities.ts:251-257', () => {
+  assert.deepEqual(result(holder('Flower Gift', {id: 'Cherrim (Sunshine)'}), 'Tackle', target(), {weather: 'Sun'}).rolls,
+    expected(40, {attack: 180}));
+});
+check('Bull Rush / Quill Rush Speed 1.5x on the first turn, either side', sd + 'abilities.ts:93-103,516-526', () => {
+  for (const name of ['Bull Rush', 'Quill Rush']) {
+    assert.equal(spe(holder(name), {atkBullRush: true}), 180, name);
+    assert.equal(spe(holder(name)), 120, name);
+    assert.equal(spe(holder(name), {defBullRush: true}, 'def'), 180, name);
+    assert.equal(spe(holder(name), {atkBullRush: true}, 'def'), 120, name);
+  }
+});
+check('Upgrade Porygon-Z and Leek Stick Farfetch’d Speed 1.5x; other holders and Magic Room none', sd + 'items.ts:848-853,902-917; RR calc util.ts:123-127', () => {
+  assert.equal(spe(holder('', {id: 'Porygon-Z', it: 'Upgrade'})), 180);
+  assert.equal(spe(holder('', {id: 'Porygon-Z', it: 'Upgrade'}), {magicRoom: true}), 120);
+  assert.equal(spe(holder('', {it: 'Upgrade'})), 120);
+  for (const id of ['Farfetch’d', 'Galarian Farfetch’d']) assert.equal(spe(holder('', {id, it: 'Leek Stick'})), 180, id);
+  assert.equal(spe(holder('', {id: "Sirfetch'd", it: 'Leek Stick'})), 120);
+});
+check('Speed-based powers follow the modified Speed (Electro Ball, Sonic Slash)', sd + 'abilities.ts:505-511; RR calc gen789.ts:741-763', () => {
+  assert.deepEqual(result(holder('Quick Feet'), 'Electro Ball').rolls, expected(60));
+  assert.deepEqual(result(holder('Quick Feet', {st: 'psn'}), 'Electro Ball').rolls, expected(80));
+  assert.deepEqual(result(holder('Quick Feet', {st: 'psn'}), 'Sonic Slash').rolls, expected(120));
+  assert.deepEqual(result(holder('', {id: 'Porygon-Z', it: 'Upgrade'}), 'Sonic Slash').rolls, expected(80));
+});
+check('Shield Dust / Frozen Mist: no entry hazard; a Poison holder still absorbs Toxic Spikes', sd + 'moves.ts:1053-1058,1070-1076,1090-1095,1129-1135; data.js Shield Dust / Frozen Mist', () => {
+  const field = {atkStealthRock: true, atkSpikes: 3, atkStickyWeb: true, atkToxicSpikes: 2};
+  for (const name of ['Shield Dust', 'Frozen Mist']) {
+    assert.deepEqual(plain(engine.entry(holder(name), field)), {parts: []}, name);
+    assert.equal(engine.hazards(holder(name), field), null, name);
+    assert.equal(plain(engine.hazards(holder(name, {id: 'Grimer', ty: ['Poison']}), {atkToxicSpikes: 1})).absorb, true, name);
+  }
+  assert.equal(plain(engine.hazards(holder(''), field)).net, -(21 + 43));
+});
+check('Hardcore Defog clears hazards and screens, not terrain', 'Hardcore Main!E12; calc_effects.json Defog', () => {
+  const applied = plain(engine.effect(holder(''), target(), {mv: move('Defog')}, {terrain: 'Psychic', defReflect: true, atkSpikes: 1}));
+  assert.equal(applied.field.changes.terrain, undefined);
+  assert.equal(applied.field.changes.defReflect, false);
+  assert.equal(applied.field.changes.atkSpikes, false);
+});
+check('Soul Robbery steals boosts like Spectral Thief (Psychic, Special, 100)', sd + 'moves.ts:1000-1015, scripts.ts:495-519; RR calc gen789.ts:465', () => {
+  const stolen = result(holder(''), 'Soul Robbery', target({stg: [0, 0, 0, 2, 0, 0]}));
+  assert.deepEqual(stolen.rolls, expected(100, {attack: 240}));
+  assert.deepEqual(stolen.pre.filter(part => part.src === 'Soul Robbery').map(part => [part.who, part.stat, part.by]),
+    [['def', 'spa', -2], ['atk', 'spa', 2]]);
+  assert.deepEqual(result(holder(''), 'Soul Robbery', target({ty: ['Dark'], stg: [0, 0, 0, 2, 0, 0]})).pre ?? [], []);
+});
+check('Bad Company blocks the user’s own stat drops and Mind Blown’s HP cost', sd + 'abilities.ts:2-20; data.js Bad Company', () => {
+  for (const name of ['Close Combat', 'Draco Meteor']) {
+    assert.equal(plain(engine.hit(holder('Bad Company'), target(), {mv: move(name)}, {}, 'max')).atk?.stg, undefined, name);
+    assert.notEqual(plain(engine.hit(holder(''), target(), {mv: move(name)}, {}, 'max')).atk?.stg, undefined, name);
+  }
+  assert.equal(engine.hp(holder('Bad Company'), target(), {mv: move('Mind Blown')}, {}, 100), null);
+  assert.equal(engine.hp(holder(''), target(), {mv: move('Mind Blown')}, {}, 100).v, -88);
+});
+check('Magmarizer: Magmortar’s Fire moves add Tar Shot (Speed -1, Tar Shot switch), once', sd + 'items.ts:514-526; data.js Magmarizer', () => {
+  const magmortar = holder('', {id: 'Magmortar', it: 'Magmarizer'});
+  for (const name of ['Ember', 'Fire Blast']) {
+    const applied = plain(engine.hit(magmortar, target(), {mv: move(name)}, {}, 'max'));
+    assert.equal(applied.def.stg[5], -1, name);
+    assert.equal(applied.field.changes.defTarShot, true, name);
+  }
+  assert.equal(plain(engine.hit(magmortar, target(), {mv: move('Ember')}, {defTarShot: true}, 'max')).def.stg, undefined);
+  assert.equal(plain(engine.hit(magmortar, target(), {mv: move('Tackle')}, {}, 'max')).def.stg, undefined);
+  assert.equal(plain(engine.hit(holder('', {it: 'Magmarizer'}), target(), {mv: move('Ember')}, {}, 'max')).def.stg, undefined);
+});
+check('Parasitic Waste: moves that can poison drain half the damage', sd + 'abilities.ts:400-416', () => {
+  assert.equal(engine.hp(holder('Parasitic Waste', {hp: 50}), target(), {mv: move('Sludge')}, {}, 41).v, 21);
+  assert.equal(engine.hp(holder('', {hp: 50}), target(), {mv: move('Sludge')}, {}, 41), null);
+  assert.equal(engine.hp(holder('Parasitic Waste', {hp: 50}), target(), {mv: move('Tackle')}, {}, 41), null);
+});
+check('Protosynthesis stays on in Sun suppressed by Cloud Nine (not Harsh Sunshine)', sd + 'abilities.ts:469-479', () => {
+  const sun = result(holder('Protosynthesis'), 'Tackle', target(), {weather: 'Sun'}).rolls;
+  assert.notDeepEqual(sun, expected(40));
+  assert.deepEqual(result(holder('Protosynthesis'), 'Tackle', target({ab: ability('Cloud Nine')}), {weather: 'Sun'}).rolls, sun);
+  assert.deepEqual(result(holder('Protosynthesis'), 'Tackle', target({ab: ability('Cloud Nine')}), {weather: 'Harsh Sunshine'}).rolls, expected(40));
+});
 check('profile ability overrides are guide ability names', 'hack.json cfg.calc.over.abilities; data.json AB', () => {
   assert.deepEqual(Object.keys(configuration.cfg.calc.over.abilities).filter(name => !builtAbilities.has(name)), []);
 });

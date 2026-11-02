@@ -3,7 +3,8 @@
  "notes": [
   "Rapid Spin keeps contact and spins, with no Speed boost (Hardcore Main!E28); Ice Spinner / Steel Roller / Ice Hammer gain contact (Hardcore Main!E12 and gen9rr moves.ts:492-500).",
   "Acupressure always raises Attack by 1 (gen9rr moves.ts:4-12), not a random stat by 2.",
-  "Muddy Water: 40% to lower Attack (gen9rr moves.ts:665-676); Octazooka is a bullet move that always lowers Speed (717-730); Shell Side Arm 10% poison (888-905); Charge Beam always raises Special Attack (149-160); Razor Shell has no Defense drop (780-788)."
+  "Muddy Water: 40% to lower Attack (gen9rr moves.ts:665-676); Octazooka is a bullet move that always lowers Speed (717-730); Shell Side Arm 10% poison (888-905); Charge Beam always raises Special Attack (149-160); Razor Shell has no Defense drop (780-788).",
+  "Defog leaves terrain (Hardcore Main!E12: Defog, Steel Roller, Ice Spinner and Splintered Stormshards don't remove terrain): the shared record plus keepTerrain."
  ],
  "moves": {
   "Rapid Spin": {
@@ -94,6 +95,21 @@
     }
    ],
    "n": "Showdown gen9rr/moves.ts:149-160"
+  },
+  "Defog": {
+   "fl": [
+    "reflectable",
+    "bypasssub"
+   ],
+   "k": "defog",
+   "tg": "o",
+   "z": {
+    "b": {
+     "acc": 1
+    }
+   },
+   "keepTerrain": true,
+   "n": "Hardcore Main!E12 (Defog leaves terrain); the rest Showdown moves.ts defog onHit"
   }
  },
  "fixtures": [
