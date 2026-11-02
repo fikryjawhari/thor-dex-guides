@@ -1,7 +1,8 @@
 // Radical Red's calc end to end (hacks/radical-red/notes.md → Damage calc, plans/radical-red.md → unit 9): a Hardcore
 // boss's permanent primal weather from its battle effect, the AI's weather staying after its setter leaves
 // (setterStays, Hardcore Main!E10), Ghost Marowak's 252 HP EVs (the only boss with EVs), the status-chip immunities
-// (statusImmune: Toxic Boost / Flare Boost) and the radicalred41 save profile refusing an Unbound save. RR only.
+// (statusImmune: Toxic Boost / Flare Boost), unit 11's Speed modifiers (speedMods) and hazard immunity (hazardImmune) and
+// the radicalred41 save profile refusing an Unbound save. RR only.
 import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
 import {guideArg, readGuide, runChecks} from '../calc_check_lib.mjs';
@@ -95,6 +96,40 @@ const checks = [{
     assert.equal(await chip('drifblim','Flare Boost','brn'),0,'Flare Boost: no burn chip');
     assert.ok(await chip('zangoose','Immunity','brn'),'another ability is burned');
     assert.ok(await chip('drifblim','Unburden','psn'),'another ability is poisoned');
+  },
+},{
+  id:'radical-red speed modifiers',
+  title:'the Speed readout follows RR: Upgrade Porygon-Z and Leek Stick Farfetch’d 1.5x, Quick Feet 2x when statused (speedMods rules)',
+  run:async page=>{
+    await fresh(page);
+    await fight(page,byKey('11.5.7').k,'porygon_z');
+    const bare=await page.value(`CALC.speed('mine')`);
+    await page.value(`(()=>{CALC.set('mine','i','Upgrade');CALC.render();})()`);
+    await page.settle();
+    assert.equal(await page.value(`CALC.speed('mine')`),Math.ceil(bare*1.5-0.5),'Upgrade Porygon-Z');
+    await fight(page,byKey('11.5.7').k,'farfetchd');
+    const leekless=await page.value(`CALC.speed('mine')`);
+    await page.value(`(()=>{CALC.set('mine','i','Leek Stick');CALC.render();})()`);
+    await page.settle();
+    assert.equal(await page.value(`CALC.speed('mine')`),Math.ceil(leekless*1.5-0.5),'Leek Stick Farfetch’d');
+    const speed=status=>page.value(`(()=>{const ab=AB.findIndex(a=>a[0]==='Quick Feet');
+      return DMG.speed({id:'ursaring',lv:50,nat:'Serious',ab,it:'',st:${JSON.stringify(status)},iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0]},{});})()`);
+    const healthy=await speed('');
+    assert.equal(await speed('psn'),healthy*2,'Quick Feet poisoned');
+    assert.equal(await speed('par'),healthy*2,'Quick Feet paralysed: no paralysis cut');
+  },
+},{
+  id:'radical-red hazard immunity',
+  title:'Shield Dust takes no entry hazard (hazardImmune); another ability takes the Stealth Rock and Spikes chip',
+  run:async page=>{
+    await page.route('#/calc');
+    const entry=ability=>page.value(`(()=>{const ab=AB.findIndex(a=>a[0]===${JSON.stringify(ability)});
+      const set={id:'ursaring',lv:50,nat:'Serious',ab,it:'',st:'',iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0]};
+      const field={atkStealthRock:1,atkSpikes:1,atkToxicSpikes:1,atkStickyWeb:1};
+      return {parts:DMG.entry(set,field).parts.length,hazards:DMG.hazards(set,field)};})()`);
+    assert.deepEqual(await entry('Shield Dust'),{parts:0,hazards:null});
+    const other=await entry('Compound Eyes');
+    assert.ok(other.parts>=2&&other.hazards&&other.hazards.net<0,'Compound Eyes: '+JSON.stringify(other));
   },
 },{
   id:'radical-red refuses an Unbound save',

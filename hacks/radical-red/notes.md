@@ -205,9 +205,13 @@ data or the rules. Move effects (11 RR records) are in `hacks/radical-red/calc_e
 `radical-red_check.mjs` merge its moves into `over.effects`), with three fixtures `effects_check.mjs` runs on data.json
 (Acupressure Atk +1, Charge Beam SpA +1, Octazooka Spe −1).
 
-**Engine change** (the only one, authorised by the main chat): `over.abilities[name].statusImmune` (status keys whose
-end-of-turn chip the ability stops; `tools/calc/README.md` → Engine overrides; `test.mjs` "optional ability status
-immunity"). Profiles without it behave as before (regression sweep below).
+**Engine changes** (authorised by the main chat; all optional profile keys, `tools/calc/README.md` → Engine overrides;
+profiles without them behave as before, regression sweeps below): unit 2's `over.abilities[name].statusImmune` (status
+keys whose end-of-turn chip the ability stops; `test.mjs` "optional ability status immunity"); unit 11's `speedMods`
+rule phase (the Speed modifier list of every Speed read: readout, turn order, Electro Ball / Gyro Ball, Sonic Slash's
+`atk.stats.spe`), the ability keys `hazardImmune`, `selfDropImmune`, `mindBlownRecoil: false`, `drain`,
+`keepsOnSuppressed`, `items[name].afterHit`, `state[name].theft` for a move other than Spectral Thief and a `defog`
+record's `keepTerrain` (`test.mjs` "optional speedMods rules ..." and "optional ability / item / move keys ...").
 
 **Inventory** (everything 4.1 adds or changes that bears on damage, Speed or the fight log; counts below):
 
@@ -220,7 +224,9 @@ immunity"). Profiles without it behave as before (regression sweep below).
 | Other abilities | ORAORAORAORA! half-power second punch; Blazing Soul +1 Fire priority at full HP; Self Sufficient 1/16 heal; Bad Company no recoil (= Rock Head); Frozen Mist = Shield Dust, Valiant Shield = Dauntless Shield; Electromrphosis / Neutralize Gas / Wandering Soul = their official names (gen789.ts:588,1571; Showdown abilities.ts:2,51,381,638) |
 | Statuses / weather | Frostbite: special damage halved (not Facade), 1/16 chip, Facade 2x; Snow: Ice Def 1.5x, no chip (changelog to v4.0:14; gen789.ts:553,992,1460; util.ts:540) |
 | Moves (76 entries) | RR flags (kick, slicing, bullet, pulse, bone, punch; 41 moves); crit ratios (Drill Peck, Razor Shell, Snipe Shot, Zippy Zap); recoil (Volt Tackle 1/4, Chloroblast 1/2, Draco Barrage 1/3); Beat Up flat 25; Triple Kick 20 × hit; Shell Side Arm Special and ability-ignoring; the Explosion family halves Defense; Raging Bull / Multi-Attack take the user's first type; Sonic Slash 80 / 120 / 140 by speed ratio; Bitter Malice / Barb Barrage / Infernal Parade 2x on a status; Draco Barrage hits Fairy and turns Physical when boosted Atk > SpA; changed effects (Acupressure, Muddy Water, Octazooka, Ice Hammer, Razor Shell, Shell Side Arm, Charge Beam 100% SpA +1) (Showdown gen9rr/moves.ts; gen789.ts:211,741-763; util.ts:167) |
-| Hardcore rules | Rapid Spin: no Speed boost (Main!E28); Ice Spinner / Steel Roller / Splintered Stormshards leave terrain (Main!E12); permanent AI fields (Main!E10, `setterStays`) |
+| Hardcore rules | Rapid Spin: no Speed boost (Main!E28); Ice Spinner / Steel Roller / Splintered Stormshards / Defog leave terrain (Main!E12; Defog: `calc_effects.json` record with `keepTerrain`); permanent AI fields (Main!E10, `setterStays`) |
+| Speed (unit 11, `speedMods` rules) | Quick Feet 2x when statused (stock 1.5x removed; paralysis still ignored); Flower Gift Cherrim 1.5x in Sun / Harsh Sunshine, not with Utility Umbrella; Bull Rush / Quill Rush 1.5x on the first turn (the same First turn out toggle as their Attack); Upgrade (Porygon-Z) and Leek Stick (Farfetch’d, Galarian Farfetch’d, not Sirfetch’d) 1.5x; Magic Room / Klutz switch the items off (Showdown abilities.ts:93-103,251-268,505-526; items.ts:848-853,902-917; RR calc util.ts:110-127) |
+| Other (unit 11) | Shield Dust / Frozen Mist: no entry hazard (`hazardImmune`; a Poison holder still absorbs Toxic Spikes; moves.ts:1053-1135); Bad Company: no self-caused stat drop, no Mind Blown / Steel Beam HP cost (`selfDropImmune`, `mindBlownRecoil`; abilities.ts:2-20); Soul Robbery steals boosts as Spectral Thief (`state`, theft `stock`; moves.ts:1000-1015, scripts.ts:495-519, RR calc gen789.ts:465); Magmarizer: Magmortar's damaging Fire moves add Tar Shot (Spe −1, the target's Tar Shot switch on), skipped when it already has it (`items.Magmarizer.afterHit`; items.ts:514-526); Parasitic Waste: moves with a psn / tox secondary drain 1/2 (`drain`; abilities.ts:400-416); Protosynthesis stays on in Sun under Cloud Nine / Air Lock (`keepsOnSuppressed: ["Sun"]`; abilities.ts:469-479) |
 | Items | Gems 1.5x (all 18); Electirizer (Electivire's Fighting 1.5x), Burnt Seed (Sunflora's Fire 1.5x); Leek Stick +1 / +2 crit (Farfetch'd / Sirfetch'd); fling powers (Adamant Orb, Reaper Cloth, Leek Stick, Link Cable, Honey); 15 RR Mega Stones as Smogon's `{base: mega}` records, so Knock Off isn't boosted against them (Applite serves Flapple and Appletun; the old string form let it boost) (gen789.ts:1193-1199; Showdown items.ts:133,244,902-1168) |
 
 Done by the base with no entry: Protean / Libero (every move), Intrepid Sword / Dauntless Shield (every entry: the
@@ -233,24 +239,29 @@ Down, Pressure, Schooling, Truant, Zen Mode, Alchemic Power; Reaper Cloth / Brig
 King's Rock; secondary chances under 100% (Frost Breath's 30% frostbite, Bleakwind Storm, Head Charge, Rock Slide,
 accuracy drops); Frenzy Plant / Blast Burn / Hydro Cannon / Meteor Assault skipping the recharge after a KO.
 
-Not modelled (the engine has no hook; in-game numbers can differ):
-- Speed: Quick Feet 2x (stock 1.5x), Flower Gift / Bull Rush / Quill Rush Speed 1.5x, Upgrade (Porygon-Z 1.5x),
-  Leek Stick (Farfetch'd 1.5x). The calc's Speed readout and speed-based powers (Sonic Slash, Electro Ball, Gyro
-  Ball) miss them: no rule phase reaches the speed chain.
-- Shield Dust / Frozen Mist entry-hazard immunity (`entry()` still shows hazard chip).
-- Bad Company's block on self-lowered stats and Mind Blown recoil (only the recoil part is aliased).
-- Soul Robbery stealing boosts (the engine's theft is Spectral Thief's by name; aliasing would share its record).
-- Defog clearing terrain (Main!E12 says it doesn't; the shared `defog` kind clears it from Gen 8).
-- Magmarizer (Magmortar's Fire moves add Tar Shot), the Gulp Missile / Parasitic Waste changes, Sage Power's move
-  lock, Protosynthesis staying on while Sun is suppressed.
+Not modelled (in-game numbers can differ):
+- Gulp Missile's change (Gulping Cramorant's spit lowers Speed, not Defense): the engine has no Gulp Missile reaction
+  at all (no guide models the 1/4 spit damage or its follow-up), so RR's change has nothing to change yet. It needs a
+  defender-form reaction in `hp()` and the resolver, a shared engine addition beyond this unit.
 - Draco Barrage recoil: Showdown's 1/3 (used); RR calc's 33/100 is at most 1 HP apart.
 
-Counts: abilities 54 (32 profile, 8 base, 11 labels only, 3 not modelled); moves 76 profile entries (the other
+No number changes (so nothing to model): Sage Power's move lock (it only stops other moves being chosen after the
+first; each move's damage is the same), Upgrade's no-consecutive-move lock (likewise), Battle Bond / Emergency Exit /
+Schooling / Zen Mode / Forecast (form or switch effects: the calc's species / type choice covers them), and the labels
+above.
+
+Counts: abilities 54 (39 profile, 8 base, 11 labels only, 1 not modelled: Gulp Missile; unit 11 moved Quick Feet,
+Shield Dust (hazards), Bad Company (drops), Parasitic Waste, Protosynthesis (suppressed Sun), Flower Gift / Bull Rush /
+Quill Rush (Speed) into the profile); moves 76 profile entries (the other
 gen9rr move entries only change availability, power / type / accuracy, which `data.js` supplies, or chances under
 100%); held items: 18 gems, 15 Mega Stones and 7 other changed items in the profile (Electirizer, Burnt Seed, Leek
-Stick, Adamant Orb, Reaper Cloth, Link Cable, Honey), 2 not modelled (Magmarizer, Upgrade), plus the Hardcore rules.
+Stick, Adamant Orb, Reaper Cloth, Link Cable, Honey) plus Magmarizer and Upgrade (unit 11), plus the Hardcore rules.
 
-**Checks** (2026-11-02, round 3): `node tools/calc/radical-red_check.mjs` 71 passed, 0 failed. Regression sweep:
+**Checks** (2026-11-02, unit 11): `radical-red_check.mjs` 84 passed, 0 failed (13 new); `test.mjs` 150 (2 new);
+every other `*_check.mjs` and `npm test` identical to BASE `d4b0f21` line for line apart from those (logs
+`.tmp/rr-calc4/base/`, `.tmp/rr-calc4/head/`); `gate.py scenarios radical-red unbound emerald-imperium --only
+calc-radical-red,calc-unbound,calc-layout,calc-controls` 12 / 12 (two new RR checks: Speed readout, hazard immunity).
+Round 3: `node tools/calc/radical-red_check.mjs` 71 passed, 0 failed. Regression sweep:
 every check `npm test --prefix tools/calc` runs, here and in a worktree at `3400658`: the same results line for line
 except `test.mjs` 147 → 148 (the `statusImmune` test) and this check (skip → 71); all exit 0. Logs:
 `.tmp/rr-calc3/sweep-base/`, `.tmp/rr-calc3/sweep-head/`. Not run: the hzla comparison, browser checks, the gate.

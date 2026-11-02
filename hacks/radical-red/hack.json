@@ -338,7 +338,8 @@
       "effect": ""
      },
      "Frozen Mist": {
-      "effect": "Shield Dust"
+      "effect": "Shield Dust",
+      "hazardImmune": true
      },
      "Solar Power": {
       "effect": ""
@@ -353,7 +354,29 @@
       "effect": ""
      },
      "Bad Company": {
-      "effect": "Rock Head"
+      "effect": "Rock Head",
+      "selfDropImmune": true,
+      "mindBlownRecoil": false
+     },
+     "Shield Dust": {
+      "hazardImmune": true
+     },
+     "Parasitic Waste": {
+      "drain": {
+       "st": [
+        "psn",
+        "tox"
+       ],
+       "ratio": [
+        1,
+        2
+       ]
+      }
+     },
+     "Protosynthesis": {
+      "keepsOnSuppressed": [
+       "Sun"
+      ]
      }
     },
     "moves": {
@@ -905,6 +928,19 @@
       "megaStone": {
        "Flapple": "Flapple-Mega",
        "Appletun": "Appletun-Mega"
+      }
+     },
+     "Magmarizer": {
+      "afterHit": {
+       "species": [
+        "Magmortar"
+       ],
+       "type": "Fire",
+       "v": "tarshot",
+       "b": {
+        "spe": -1
+       },
+       "toggle": "TarShot"
       }
      }
     },
@@ -2967,7 +3003,7 @@
           },
           [
            "Cherrim",
-           "Cherrim-Sunshine"
+           "Cherrim (Sunshine)"
           ]
          ]
         },
@@ -3201,12 +3237,194 @@
       },
       "value": 1,
       "note": "Draco Barrage hits Fairy"
+     },
+     {
+      "phase": "speedMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.ability"
+          },
+          "Quick Feet"
+         ]
+        },
+        {
+         "op": "ne",
+         "args": [
+          {
+           "ref": "atk.status"
+          },
+          ""
+         ]
+        }
+       ]
+      },
+      "remove": [
+       6144
+      ],
+      "append": [
+       8192
+      ],
+      "note": "Quick Feet 2x Speed (Showdown gen9rr abilities.ts:505-511)"
+     },
+     {
+      "phase": "speedMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          "Flower Gift"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.atk"
+          },
+          [
+           "Cherrim",
+           "Cherrim (Sunshine)"
+          ]
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "field.weather"
+          },
+          [
+           "Sun",
+           "Harsh Sunshine"
+          ]
+         ]
+        },
+        {
+         "op": "ne",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "Utility Umbrella"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Flower Gift Cherrim Speed in Sun (abilities.ts:259-263)"
+     },
+     {
+      "phase": "speedMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.atkAbility"
+          },
+          [
+           "Bull Rush",
+           "Quill Rush"
+          ]
+         ]
+        },
+        {
+         "ref": "input.field.atkBullRush"
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Bull Rush / Quill Rush first-turn Speed (abilities.ts:99-103,522-526)"
+     },
+     {
+      "phase": "speedMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "Upgrade"
+         ]
+        },
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "names.atk"
+          },
+          "Porygon-Z"
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Upgrade Porygon-Z Speed (items.ts:848-853)"
+     },
+     {
+      "phase": "speedMods",
+      "when": {
+       "op": "and",
+       "args": [
+        {
+         "op": "eq",
+         "args": [
+          {
+           "ref": "atk.item"
+          },
+          "Leek Stick"
+         ]
+        },
+        {
+         "op": "in",
+         "args": [
+          {
+           "ref": "names.atk"
+          },
+          [
+           "Farfetch’d",
+           "Galarian Farfetch’d"
+          ]
+         ]
+        }
+       ]
+      },
+      "append": [
+       6144
+      ],
+      "note": "Leek Stick Farfetch'd Speed (items.ts:913-917)"
      }
     ],
     "critItems": {
      "Leek Stick": {
       "Farfetch'd": 1,
       "Sirfetch'd": 2
+     }
+    },
+    "state": {
+     "Soul Robbery": {
+      "theft": "stock"
      }
     }
    },
