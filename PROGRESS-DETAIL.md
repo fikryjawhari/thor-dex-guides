@@ -5,6 +5,13 @@ that section), not the whole file.
 
 ## Recent merges
 
+- **Merged 2026-11-03 from `worktree-check-tests`:** scenarios run `dvkb` only where it changes something (normal
+  first; `dvkb` too if the case touched a number / text / search box, or failed; layout checks keep both), and
+  consistency-check's fit sweep covers move, ability and item pages. `tools/scenarios/blocks.mjs` asserts the box
+  pages' open / close behaviour on every guide (header taps, pinned headers, collapse bars, rail jumps, Expand /
+  Collapse all, reload, place link, Next step), opening blocks with the page's own controls; it replaced pagecheck /
+  walkcheck and was checked against four broken builds. zoomcheck retries stale states once in a fresh context.
+  Gate 372 / 372 (`tools/README.md` → Check timings).
 - **Merged 2026-11-03 from `worktree-check-speed`:** a full audit from scratch takes 40 min (was ~3.5 h), a rerun
   with nothing changed 88 s. `gate.py` runs every browser check in one pool (8 jobs), reruns pool failures alone and
   caches passes by content, shared by worktrees (`.tmp/check-cache/`; `--fresh` reruns); checks wait for the page
@@ -100,15 +107,11 @@ Write a family's first guide with its siblings in mind; lift shared code when th
 9. **Radical Red follow-ups:** the in-game checks in `hacks/radical-red/notes.md` (Damage calc, Save import, the
    Walkthrough's open order questions); one real `.srm` import compared with PKHeX; Gulp Missile's change not
    modelled; Chillet has no sprite (type-coloured circle).
-10. **Check speed follow-ups**, by payoff:
-   1. Scenarios are 57 % of the work: every case runs in normal and `dvkb`, most never touch an input. Option: `dvkb`
-      only for cases that use a number box / search / keyboard, plus a `dvkb` fit sweep per page (the 260 × 316 fit
-      rule must still hold in both modes). Needs the user's yes: it is test design.
-   2. A template change still runs everything on every guide (~5-6 min of pool time per guide): past ~10 guides,
-      consider tiers (full set on EI + the guide the change came from; domcompare / consistency / fit on the rest).
-   3. pagecheck / walkcheck assert only page errors and a jump bar; the rest is printed for a reader, with EI's box
-      names. Turn the printed geometry into assertions, or drop what scenarios already cover.
-   4. zoomcheck under load flaked once (Unbound, 1 stale bar of 475; passed alone): an in-check retry like jumpcheck's.
+10. **Check tiers** (the last check-speed follow-up): a template change still runs everything on every guide (~5-6 min
+    of pool time per guide). Past ~10 guides: the full set on the guide the change came from plus the guides whose
+    data switches on what the change touches (missions: Unbound; area maps: Photonic Sun; Z-moves / Totems: Photonic
+    Sun, Eternal X; cheats: EI; no tutor moves: EI), domcompare / consistency / fit on the rest. Not EI by default:
+    the scenarios were written on it, so it fails least (past audits failed on the other guides).
 
 ## Decisions
 

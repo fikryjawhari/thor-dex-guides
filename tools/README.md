@@ -308,6 +308,13 @@ single checks (a big guide's domcompare, calc-field-states / calc-team on any gu
   navigation: zoomcheck 42-60 s → ~30 s, walkcheck 20 s → 8 s, pagecheck 71 s → 49 s (most of the rest is its own
   in-page waits). Their printed output matched the old runs line for line, apart from one 1 px sub-pixel line.
 
+**2026-11-03, after the check-tests job** (`gate.py check`, all seven guides, 8 at a time, 28 of 372 cached):
+**24.5 min, 372 / 372**. Scenarios run `dvkb` only where the normal run touched a box (`tools/scenarios/README.md`):
+1,597 `dvkb` runs left out of 5,183, scenario work ~136 → ~106 process-minutes with the new `blocks.mjs` included
+(it replaced pagecheck / walkcheck); the other browser checks ~66. Unbound's zoomcheck (480 × 392, Locations, mixed,
+Route 5's two bars at zoom 0.5) went stale in the pool, stale again on its in-check replay (still under the pool's
+load) and passed alone: the gate's lone rerun is what clears it. The same state flaked on 2026-11-02.
+
 To time a sweep slice by hand, compare a build with itself (always identical, so only the sweep is timed) and read
 `swept in` and `time by route kind`:
 
