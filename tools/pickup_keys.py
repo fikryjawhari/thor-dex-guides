@@ -3,10 +3,14 @@
 Tables retain removed pickups and only append new keys. Matching rounds run globally,
 strictest first, accepting only unique candidates on both sides. Reworded / moved
 pickups, new keys and unmatched historical entries are reported like trainer keys.
+Item spellings share item_text's lookup key; historical spellings stay in the table
+so raw extracts and expanded published names can alternate without rewriting it.
 """
 import json
 import os
 import re
+
+import item_text
 
 ROUNDS = [('i', 'loc', 't'), ('i', 't'), ('i', 'loc')]
 REPEATABLE = re.compile(r'\b(?:repeatable|daily|every day|each day|once (?:a|per) day|'
@@ -69,7 +73,7 @@ def pickups(data, once=ONCE):
 
 
 def signature(entry, fields):
-    return tuple(entry[field] for field in fields)
+    return tuple(item_text.key(entry[field]) if field == 'i' else entry[field] for field in fields)
 
 
 def match(table, entries):
@@ -121,6 +125,7 @@ def stabilise(data, path, report, once=ONCE):
         if index in pairs:
             previous, round_index = pairs[index]
             key = table[previous]['k']
+            identity['i'] = table[previous]['i']
             table[previous] = dict(k=key, **identity)
             if round_index:
                 loose.append(f"  {key}: {entry['i']} ({entry['loc']}) matched on {', '.join(ROUNDS[round_index])}")

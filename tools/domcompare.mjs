@@ -1,5 +1,6 @@
 // Render two builds of a guide route by route in headless Chrome and compare the DOM (scripts removed), with every
 // <details> opened so lazily built sections are compared too. Used to check a template change renders the same.
+// Visits every Pokemon, move, ability, item, nonempty move property, location and trainer route, then the list pages.
 // Usage: node tools/domcompare.mjs <old.html> <new.html> [--kb] [--routes=pattern] [--jobs=N] [--ignore=regex ...]
 //   --kb      sets localStorage "dvkb" = "1" (the in-viewer keyboard and number boxes)
 //   --routes  keep routes containing pattern (=pattern: exactly that route)
@@ -104,6 +105,8 @@ async function run(t, url, routes, want = []) {
   // Big list pages last: their scroll-restore timers can still be running when the next route is snapshotted.
   if (!routes) return t.ev(`(()=>{const r=[];
     P.forEach(p=>r.push('#/p/'+p.id));M.forEach((m,i)=>r.push('#/m/'+i));AB.forEach((a,i)=>r.push('#/a/'+i));
+    Object.keys(itemIdx()).forEach(n=>r.push(ihref(n)));
+    Object.keys(MOVE_PROPS).filter(prop=>propertyMoves(prop).length).forEach(prop=>r.push('#/mp/'+prop));
     LOC.forEach((l,i)=>r.push('#/l/'+i));TRS.forEach(t=>r.push('#/tr/'+t.k));
     return r.concat(['#/','#/locs','#/trainers','#/items','#/walk','#/calc']);})()`);
   return t.ev(`(${PAGE})(${JSON.stringify(routes)}, ${JSON.stringify(want)}, ${JSON.stringify(IGN)})`);

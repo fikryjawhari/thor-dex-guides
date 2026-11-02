@@ -1,0 +1,189 @@
+{
+ "source": "Radical Red 4.1: the Showdown gen9rr mod (moves.ts, the RR calc's base) and the Hardcore Main tab (Hardcore Main!E12 / E28); each move entry's n names its line. Moved here from hack.json cfg.calc.over.effects by unit 9 once data.json existed.",
+ "notes": [
+  "Rapid Spin keeps contact and spins, with no Speed boost (Hardcore Main!E28); Ice Spinner / Steel Roller / Ice Hammer gain contact (Hardcore Main!E12 and gen9rr moves.ts:492-500).",
+  "Acupressure always raises Attack by 1 (gen9rr moves.ts:4-12), not a random stat by 2.",
+  "Muddy Water: 40% to lower Attack (gen9rr moves.ts:665-676); Octazooka is a bullet move that always lowers Speed (717-730); Shell Side Arm 10% poison (888-905); Charge Beam always raises Special Attack (149-160); Razor Shell has no Defense drop (780-788).",
+  "Defog leaves terrain (Hardcore Main!E12: Defog, Steel Roller, Ice Spinner and Splintered Stormshards don't remove terrain): the shared record plus keepTerrain."
+ ],
+ "moves": {
+  "Rapid Spin": {
+   "fl": [
+    "contact"
+   ],
+   "k": "spin",
+   "tg": "s",
+   "sec": [],
+   "n": "Hardcore Main!E28"
+  },
+  "Ice Spinner": {
+   "fl": [
+    "contact"
+   ],
+   "n": "Hardcore Main!E12"
+  },
+  "Steel Roller": {
+   "fl": [
+    "contact"
+   ],
+   "n": "Hardcore Main!E12"
+  },
+  "Splintered Stormshards": {
+   "n": "Hardcore Main!E12"
+  },
+  "Acupressure": {
+   "tg": "s",
+   "b": {
+    "atk": 1
+   },
+   "n": "Showdown gen9rr/moves.ts:4-12"
+  },
+  "Muddy Water": {
+   "sec": [
+    {
+     "c": 40,
+     "b": {
+      "atk": -1
+     }
+    }
+   ],
+   "n": "Showdown gen9rr/moves.ts:665-676"
+  },
+  "Octazooka": {
+   "fl": [
+    "bullet"
+   ],
+   "sec": [
+    {
+     "c": 100,
+     "b": {
+      "spe": -1
+     }
+    }
+   ],
+   "n": "Showdown gen9rr/moves.ts:717-730"
+  },
+  "Ice Hammer": {
+   "fl": [
+    "contact"
+   ],
+   "n": "Showdown gen9rr/moves.ts:492-500"
+  },
+  "Razor Shell": {
+   "fl": [
+    "contact",
+    "slicing"
+   ],
+   "n": "Showdown gen9rr/moves.ts:780-788"
+  },
+  "Shell Side Arm": {
+   "sec": [
+    {
+     "c": 10,
+     "st": "psn"
+    }
+   ],
+   "n": "Showdown gen9rr/moves.ts:888-905"
+  },
+  "Charge Beam": {
+   "sec": [
+    {
+     "c": 100,
+     "sb": {
+      "spa": 1
+     }
+    }
+   ],
+   "n": "Showdown gen9rr/moves.ts:149-160"
+  },
+  "Defog": {
+   "fl": [
+    "reflectable",
+    "bypasssub"
+   ],
+   "k": "defog",
+   "tg": "o",
+   "z": {
+    "b": {
+     "acc": 1
+    }
+   },
+   "keepTerrain": true,
+   "n": "Hardcore Main!E12 (Defog leaves terrain); the rest Showdown moves.ts defog onHit"
+  }
+ },
+ "fixtures": [
+  {
+   "title": "Acupressure: Attack +1 on the user (gen9rr moves.ts:4-12)",
+   "move": "Acupressure",
+   "kind": "effect",
+   "user": {
+    "n": "Shuckle",
+    "lv": 50
+   },
+   "target": {
+    "n": "Snorlax",
+    "lv": 50
+   },
+   "field": {},
+   "expect": {
+    "atk.stg": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "title": "Charge Beam: Special Attack +1 every time (gen9rr moves.ts:149-160)",
+   "move": "Charge Beam",
+   "kind": "hit",
+   "user": {
+    "n": "Pikachu",
+    "lv": 50
+   },
+   "target": {
+    "n": "Snorlax",
+    "lv": 50
+   },
+   "field": {},
+   "expect": {
+    "atk.stg": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "title": "Octazooka: Speed -1 every time (gen9rr moves.ts:717-730)",
+   "move": "Octazooka",
+   "kind": "hit",
+   "user": {
+    "n": "Octillery",
+    "lv": 50
+   },
+   "target": {
+    "n": "Snorlax",
+    "lv": 50
+   },
+   "field": {},
+   "expect": {
+    "def.stg": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     -1
+    ]
+   }
+  }
+ ]
+}

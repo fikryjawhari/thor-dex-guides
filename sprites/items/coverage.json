@@ -11,8 +11,8 @@
     }
   },
   "emerald-imperium": {
-    "names": 467,
-    "with_icon": 467,
+    "names": 462,
+    "with_icon": 462,
     "without_icon": 0,
     "unique_icons": 278,
     "sheet_png_bytes": 101212,
@@ -29,28 +29,55 @@
     "missing": {}
   },
   "hardlove-gold": {
-    "names": 357,
-    "with_icon": 356,
+    "names": 360,
+    "with_icon": 359,
     "without_icon": 1,
-    "unique_icons": 277,
-    "sheet_png_bytes": 96085,
-    "sheet_base64_bytes": 128116,
+    "unique_icons": 280,
+    "sheet_png_bytes": 96931,
+    "sheet_base64_bytes": 129244,
     "missing": {
       "Pokégear Upgrade 1": "A Pokégear feature upgrade, not a distinct bag item; no matching icon in the pinned Hardlove graphics."
     }
   },
   "photonic-sun": {
-    "names": 471,
-    "with_icon": 471,
+    "names": 468,
+    "with_icon": 468,
     "without_icon": 0,
     "unique_icons": 385,
     "sheet_png_bytes": 136879,
     "sheet_base64_bytes": 182508,
     "missing": {}
   },
+  "radical-red": {
+    "names": 495,
+    "with_icon": 478,
+    "without_icon": 17,
+    "unique_icons": 365,
+    "sheet_png_bytes": 130692,
+    "sheet_base64_bytes": 174256,
+    "missing": {
+      "Ability Pill": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Alcremite": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Burnt Seed": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "DexNav": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Dream Patch": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Eternamax Orb": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Itemfinder": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Leek Stick": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Medicine": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Necromizer": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Necrozium Z": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Oak's Parcel": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Poké Rider": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Rusty Shield": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Rusty Sword": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Stat Scanner": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Time Changer": "Radical Red / FireRed item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented."
+    }
+  },
   "unbound": {
-    "names": 564,
-    "with_icon": 545,
+    "names": 550,
+    "with_icon": 531,
     "without_icon": 19,
     "unique_icons": 425,
     "sheet_png_bytes": 153625,
@@ -58,9 +85,9 @@
     "missing": {
       "ADM": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
       "Baby Monitor": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
-      "Blue-Striped Basculin: Deep Sea Scale (5% chance) Red-Striped Basculin: Deep Sea Tooth": "Malformed held-item label combines two different items. Both individual items have icons; selecting one would misrepresent this label.",
       "Braille Converter": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
       "Candy Sweet": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
+      "Costume Box": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
       "DexNav": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
       "Dream Mist": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",
       "Frontier Card": "Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.",

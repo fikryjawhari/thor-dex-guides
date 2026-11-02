@@ -387,7 +387,8 @@ moves with no record). Per move `[[first generation, record], ...]`; `build.mjs`
 user's own stages, `sec` secondaries `{c, b, st, v, sb, k}`, `k` hand kinds (Showdown functions: haze, clear, copy,
 swap, invert, maxatk, curse, cure, shift, knock, steal, eat, burnitem, trick, bestow, drowsy, stockpile, growth, venom,
 ko3, memento, sap, ability, type, random, rest, speedswap, defog, courtchange, grassboost, plusminus, spin, tidy,
-clearterrain, log; `fn` = an unmapped function, requiring a coverage reason), `ti` the status move checks type immunity,
+clearterrain, log; `fn` = an unmapped function, requiring a coverage reason; `keepTerrain` on a `defog` record: terrain
+stays, RR Hardcore Main!E12), `ti` the status move checks type immunity,
 `fl` powder / sound / bullet / reflectable / bypasssub / contact. A `self` / `selfBoost` with a `chance` (Diamond
 Storm's 50 % Def +2 from Gen 7) becomes a `sec` self part, never a sure `sb`. One correction: Rapid Spin's Speed +1 from Gen 8
 (Showdown's gen 4-7 data keeps it). **Per hack**: `hacks/<hack>/calc_effects.json` `{source, notes, moves, zmoves, rules,
@@ -726,6 +727,31 @@ override entries use **display names**, except species may use their guide ID:
   require engine work.
 - `residual` adds a hack's own end-of-turn effects to `DMG.residual` / the KO text:
   `{abilities: {Name: [sign, divisor]}, status: {key: [sign, divisor, label]}}` (EI: Self Sufficient, Frostbite).
+- `abilities[name].statusImmune` lists status keys whose end-of-turn HP change the ability suppresses (RR Toxic
+  Boost `["psn", "tox"]`, Flare Boost `["brn"]`). It reads the active fight ability (ability changes included) and
+  keeps the ability's native damage effect. Only the status part goes (including a `residual.status` entry), not
+  weather, hazards, items or other ability residuals. Profiles without it behave as before.
+- More optional ability keys (all read the active fight ability by guide name, like `statusImmune`; profiles without
+  them behave as before; RR unit 11):
+  - `hazardImmune: true`: no entry hazard reaches the holder (Stealth Rock, Spikes, Toxic Spikes, Sticky Web,
+    Steelsurge), like Heavy-Duty Boots in `entry()` / `hazards()`; a grounded Poison type still absorbs Toxic Spikes
+    (RR Shield Dust / Frozen Mist).
+  - `selfDropImmune: true`: the resolver drops the stat decreases the holder causes itself (its own `sb`, a status
+    move's drops on itself, Curse / Shell Smash), not a foe's; logged as blocked (RR Bad Company).
+  - `mindBlownRecoil: false`: no Mind Blown / Steel Beam HP cost in `hp()` (RR Bad Company; its recoil block is the
+    `Rock Head` alias).
+  - `drain: {st: [status keys], ratio: [n, d]}`: the holder's damaging moves whose effect record has a secondary of one
+    of those statuses heal that share of the damage in `hp()`, replacing the move's own drain (RR Parasitic Waste).
+  - `keepsOnSuppressed: [weather values]`: Protosynthesis stays on under those page weathers when Air Lock / Cloud Nine
+    suppress them (RR: `["Sun"]`, Showdown's check is `weather !== 'sunnyday'`, so suppressed Harsh Sunshine still
+    turns it off). Damage and Speed both follow (`isQPActive`).
+- `items[name].afterHit: {species?, type?, v?, b?, toggle?}`: the holder's damaging moves (of `type`; held by one of
+  the guide `species`) give the target the volatile `v` and the stages `b` as the move lands, before the user's own
+  drops and the secondaries (Showdown onSourceHit: neither Sheer Force nor Shield Dust stops it). Skipped when the
+  target has `v` already, its field switch `def<toggle>` is on, or no stage can move; a landed `v` turns that switch on
+  through `field.changes` (RR Magmarizer: Magmortar's Fire moves, `tarshot`, Spe −1, `TarShot`).
+- `state[name].theft` on a move other than Spectral Thief (`'stock'` or `'headroom'`, as Spectral Thief's) makes it
+  steal the target's raised stages before the hit, the same way (RR Soul Robbery, a Psychic Special 100 move).
 
 ### Ordered modifier rules
 
@@ -791,6 +817,7 @@ type change, or `value: false` at `critical` to suppress a selected critical hit
 | `finalMods` | Native final-damage modifier list before chaining. |
 | `beforeRolls` | Mutable damage-input object before random rolls, once per hit. |
 | `roll` | Final integer for one random roll; `state.rollIndex` is 0-15. |
+| `speedMods` | Speed modifier list (4096 = 1x in every generation) for one Pokémon, just before getFinalSpeed chains it: every Speed read (`speed()`, turn order, Electro Ball / Gyro Ball, `atk.stats.spe` in later phases). `atk` / `names.atk`, `names.atkAbility`, `names.atkItem` are the Pokémon whose Speed it is (`def` and `move` unset), `input.field` is the page's field turned so `atk*` keys are its side, `state.side` is `'atk'` / `'def'`. Notes are ignored. Stock pushes its own ability modifier before its item one, so `remove` of a value takes the ability's (RR Quick Feet: remove 6144, append 8192). |
 
 These are semantic insertion points in our pinned Smogon engine, not promises
 that another calculator has identical intermediate state or ordering. Inspect

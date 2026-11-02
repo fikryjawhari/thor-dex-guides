@@ -101,6 +101,8 @@ RULES = {
     'eternal-x': {'reorder': {'TMs and HMs/HMs'},
                   'also': {'Poké Radar', "King's Rock", 'Blastoisinite', 'Charizardite X', 'Venusaurite'}},
     'photonic-sun': {'reorder': {'TMs and HMs/HMs'}, 'shop_kind': {'Thunder Stone': 'Evolution items', 'Cherish Ball': 'Poké Balls'}},
+    # a card per move tutor (keep_sub; the user liked them), game order once the walkthrough is built
+    'radical-red': {'reorder': set(GAME_ORDER_BOXES), 'keep_sub': {'Move Tutors'}},
 }
 
 

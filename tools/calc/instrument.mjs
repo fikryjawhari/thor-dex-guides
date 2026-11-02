@@ -34,10 +34,20 @@ export function instrument(source, filename) {
       `export function isGrounded(pokemon: Pokemon, field: Field) {
   const guideGrounded = fieldGrounded(pokemon, field);
   if (guideGrounded !== undefined) return guideGrounded;`);
+    // A profile's `speedMods` rules (rules.js speedPhase) edit the list just before it is chained.
+    source = once(source, '  speed = OF32(pokeRound((speed * chainMods(speedMods, 410, 131172)) / 4096));',
+      '  speed = OF32(pokeRound((speed * chainMods(speedPhase(gen, pokemon, field, side, speedMods), 410, 131172)) / 4096));');
+    // A hack's Protosynthesis that stays on while its Sun is suppressed (adapter `guideQP`: profile `keepsOnSuppressed`).
+    source = once(source, `  if (!pokemon.boostedStat) {
+    return false;
+  }`, `  if (!pokemon.boostedStat) {
+    return false;
+  }
+  if ((pokemon as any).guideQP) return true;`);
     source = once(source, '  // Pledge swamp would get applied here when implemented',
       '  if ((side as any).isSwamp) speedMods.push(1024);');
     source = once(source, 'export function getMoveEffectiveness(', 'function guideOriginalEffectiveness(');
-    return `import {applyPhase, fieldGrounded} from 'guide-calc-rules';\n${source}\n
+    return `import {applyPhase, fieldGrounded, speedPhase} from 'guide-calc-rules';\n${source}\n
 export function getMoveEffectiveness(gen: any, move: any, type: any, revealed?: boolean, gravity?: boolean, ring?: boolean) {
   const value = guideOriginalEffectiveness(gen, move, type, revealed, gravity, ring);
   return applyPhase(gen, 'effectiveness', {move, state: {effectivenessType: type}}, value);

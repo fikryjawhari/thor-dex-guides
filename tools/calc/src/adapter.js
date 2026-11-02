@@ -204,6 +204,7 @@ function pokemon(set) {
   if (result.hasAbility('Unburden') && set.used) result.abilityOn = true;
   result.guideItem = set.it || '';
   result.guideAbility = profile.abilities !== false && ability ? ability[0] : '';
+  result.guideSpecies = entry.n;
   result.guideMoves = set.mvs || [];
   result.guideRaw = {...set.rs};
   for (const [stat, value] of Object.entries(result.guideRaw)) {
@@ -226,6 +227,8 @@ Pokemon.prototype.clone = function clone() {
   }
   copy.guideGrounded = this.guideGrounded;
   copy.guideAirborne = this.guideAirborne;
+  copy.guideSpecies = this.guideSpecies;
+  if (this.guideQP) copy.guideQP = true;
   return copy;
 };
 
@@ -304,6 +307,10 @@ function fieldPokemon(set, values, side) {
     if (!mon.types.length) mon.types = [profile.gen === 4 ? 'Normal' : '???'];
   }
   mon.guideGrounded = !!(values[side + 'Grounded'] || values[side + 'Ingrain']);
+  // `over.abilities[name].keepsOnSuppressed`: weathers under which the ability stays on when Air Lock / Cloud Nine
+  // suppress them (RR Protosynthesis: Sun). The page's weather, before suppression; rules.js isQPActive reads it.
+  const keeps = profile.over?.abilities?.[mon.guideAbility]?.keepsOnSuppressed;
+  if (keeps?.includes(values.weatherLock || values.weather) && mon.hasAbility('Protosynthesis')) mon.guideQP = true;
   mon.guideAirborne = !!(values[side + 'MagnetRise'] || values[side + 'Telekinesis']
     || values[side + 'MagnetRiseTypes']?.some(type => mon.hasType(type)));
   return mon;
@@ -345,15 +352,24 @@ function speed(set, values = {}, side = 'atk', otherSet = null) {
   checkAirLock(mon, field);
   checkForecast(mon, field.weather);
   checkItem(mon, field.isMagicRoom);
-  return getFinalSpeed(generation, mon, field, side === 'def' ? field.defenderSide : field.attackerSide);
+  generation.guideSpeedInput = values;
+  try {
+    return getFinalSpeed(generation, mon, field, side === 'def' ? field.defenderSide : field.attackerSide);
+  } finally {
+    generation.guideSpeedInput = null;
+  }
 }
+
+// `over.abilities[name].hazardImmune`: the ability keeps its holder out of every entry hazard, like Heavy-Duty Boots
+// (RR Shield Dust / Frozen Mist; a grounded Poison type still absorbs Toxic Spikes). The active fight ability.
+const hazardImmune = mon => !!profile.over?.abilities?.[mon.guideAbility]?.hazardImmune;
 
 function entry(set, values = {}, side = 'atk') {
   const mon = fieldPokemon(set, values, side);
   const field = battleField(values);
   checkItem(mon, field.isMagicRoom);
   const result = {parts: []};
-  if (profile.gen >= 8 && mon.hasItem('Heavy-Duty Boots')) return result;
+  if (profile.gen >= 8 && mon.hasItem('Heavy-Duty Boots') || hazardImmune(mon)) return result;
   const max = mon.maxHP();
   if (values.shadowyVeil && mon.hasType('Ghost') && mon.curHP() === max) return result;
   const damage = (label, divisor, effectiveness = 1) => {
@@ -417,7 +433,7 @@ function hazards(set, values = {}, otherSet = null, side = 'atk') {
   const parts = [];
   const boots = profile.gen >= 8 && holdsItem(mon, field) && mon.hasItem('Heavy-Duty Boots');
   const veil = values.shadowyVeil && mon.hasType('Ghost') && start === max;
-  const stop = boots ? 'Heavy-Duty Boots' : veil ? 'Shadowy Veil' : '';
+  const stop = boots ? 'Heavy-Duty Boots' : veil ? 'Shadowy Veil' : hazardImmune(mon) ? mon.guideAbility : '';
   const grounded = isGrounded(mon, field);
   const effectiveness = type => mon.types.reduce((total, defending) =>
     total * (generation.types.get(toID(type))?.effectiveness[defending] ?? 1), 1);
@@ -544,14 +560,16 @@ function residual(set, values = {}, otherSet = null, side = 'atk') {
   else if (items && mon.hasItem('Black Sludge')) add('Black Sludge', mon.hasType('Poison') ? 1 : -1, mon.hasType('Poison') ? 16 : 8);
   else if (items && mon.hasItem('Sticky Barb')) add('Sticky Barb', -1, 8);
   if (profile.gen >= 6 && field.hasTerrain('Grassy') && isGrounded(mon, field)) add('Grassy Terrain', 1, 16);
-  const own = profile.residual?.status?.[set.st];
+  const statusImmune = profile.over?.abilities?.[mon.guideAbility]?.statusImmune?.includes(set.st);
+  const residualStatus = statusImmune ? '' : set.st;
+  const own = profile.residual?.status?.[residualStatus];
   if (own) add(own[2], own[0], own[1]);
-  else if ((set.st === 'psn' || set.st === 'tox') && mon.hasAbility('Poison Heal')) add('Poison Heal', 1, 8);
-  else if (set.st === 'psn') add('Poison', -1, 8);
-  else if (set.st === 'tox' && !guard) {
+  else if ((residualStatus === 'psn' || residualStatus === 'tox') && mon.hasAbility('Poison Heal')) add('Poison Heal', 1, 8);
+  else if (residualStatus === 'psn') add('Poison', -1, 8);
+  else if (residualStatus === 'tox' && !guard) {
     const counter = Math.max(1, set.toxn || 1);
     parts.push({l: 'Toxic', v: [0, 1, 2, 3].map(turn => -Math.max(1, Math.floor(max * Math.min(15, counter + turn) / 16)))});
-  } else if (set.st === 'brn') add(mon.hasAbility('Heatproof') ? 'Burn (Heatproof)' : 'Burn', -1,
+  } else if (residualStatus === 'brn') add(mon.hasAbility('Heatproof') ? 'Burn (Heatproof)' : 'Burn', -1,
     (profile.gen > 6 ? 16 : 8) * (mon.hasAbility('Heatproof') ? 2 : 1));
   const ability = profile.residual?.abilities?.[data.AB?.[set.ab]?.[0]];
   if (ability) add(data.AB[set.ab][0], ability[0], ability[1]);
@@ -1189,12 +1207,19 @@ function hit(atk, def, slot, values = {}, roll = 'max', options = {}) {
   // Mummy / Lingering Aroma / Wandering Spirit on a contact hit run through the resolver even with no record.
   const touched = !exact && output.hits > 0 && target.mon.hasAbility('Mummy', 'Lingering Aroma', 'Wandering Spirit')
     && makesContact(user.mon, target.mon, move, info.cat);
-  const record = record0 && (record0.sb || record0.sec || record0.k) ? record0 : touched ? {} : null;
+  // `over.items[name].afterHit` {species, type, v, b, toggle}: the holder's damaging moves of that type add the volatile
+  // and stages to the target as the move lands (RR Magmarizer: Magmortar's Fire moves add Tar Shot), unless the target
+  // already has it (the volatile, or its field switch `def<toggle>`, which the volatile then turns on) or no stage could change.
+  const itemHit = profile.over?.items?.[user.mon.guideItem]?.afterHit;
+  const hitItem = !exact && dealt > 0 && itemHit && holdsItem(user.mon, field) && info.cat !== 'Status'
+    && (!itemHit.species || itemHit.species.includes(user.mon.guideSpecies)) && (!itemHit.type || itemHit.type === type)
+    ? {...itemHit, item: user.mon.guideItem} : null;
+  const record = record0 && (record0.sb || record0.sec || record0.k) ? record0 : touched || hitItem ? {} : null;
   if (record) {
     target.mon.originalCurHP = current;
     effectChance = fieldEffects(atk, values, 'atk').secondaryMultiplier;
     const out = effects.resolve({name: data.M[slot.mv], record, user, target, field, values: actionField, phase: 'after',
-      hit: {landed: dealt > 0 || !!result?.bust, ko: def.hp !== 0 && current === 0 && dealt > 0, contact: touched}, moveType: type});
+      hit: {landed: dealt > 0 || !!result?.bust, ko: def.hp !== 0 && current === 0 && dealt > 0, contact: touched, item: hitItem}, moveType: type});
     output.log.push(...out.log);
     if (out.field) (output.field ||= {}).changes = out.field;
     if (out.parts.length) output.effects = out.parts;
@@ -1241,25 +1266,29 @@ function firstHitStages(attacker, defender, atk, def, slot, move, field, own) {
     }
   }
   const charge = CHARGE[move.name];
-  if ((charge || move.name === 'Spectral Thief') && slot.pre === false) move.name = `Guide ${move.name}`;
+  // A hack's own theft move (`over.state[name].theft`: RR Soul Robbery) steals as Spectral Thief does.
+  const thief = move.name === 'Spectral Thief' || !!own?.[move.name]?.theft;
+  // Stock steals Spectral Thief's boosts itself: the renamed move keeps it from doing so where the theft is off.
+  if ((charge || thief) && slot.pre === false) { if (charge || move.name === 'Spectral Thief') move.name = `Guide ${move.name}`; }
   else if (charge) {
     // Stock's Gen 7+ code raises Meteor Beam / Electro Shot itself: only reported there.
     change(profile.gen >= 7 && charge === 'spa' ? snapshot(attacker, field) : attacker, 'atk', charge, 1, move.name);
   }
-  else if (move.name === 'Spectral Thief') {
-    const theft = own?.['Spectral Thief'];
+  else if (thief) {
+    const src = move.name;
+    const theft = own?.[src];
     const immune = defender.types.some(type => generation.types.get(toID(move.type))?.effectiveness[type] === 0);
-    if (theft === false || immune) move.name = 'Guide Spectral Thief';
+    if (theft === false || immune) { if (src === 'Spectral Thief') move.name = 'Guide Spectral Thief'; }
     else {
       const stolen = [];
       for (const stat of STAGES) {
         const amount = defender.boosts[stat];
         if (amount <= 0 || (theft?.theft === 'headroom' && attacker.boosts[stat] >= 6)) continue;
         stolen.push([stat, theft?.theft === 'headroom' ? Math.min(amount, 6 - attacker.boosts[stat]) : amount]);
-        pre.push({who: 'def', stat, by: -amount, src: 'Spectral Thief'});
+        pre.push({who: 'def', stat, by: -amount, src});
         defender.boosts[stat] = 0;
       }
-      for (const [stat, amount] of stolen) change(attacker, 'atk', stat, amount, 'Spectral Thief');
+      for (const [stat, amount] of stolen) change(attacker, 'atk', stat, amount, src);
     }
   }
   return pre;
@@ -1749,13 +1778,18 @@ function hp(atk, def, slot, values = {}, dealt = 0, options = {}) {
     if (!landed) dealt = 0;
   }
   const parts = [];
-  if (moveData.drain && dealt && (name !== 'Dream Eater' || target.hasStatus('slp') || target.hasAbility('Comatose'))) {
-    const heal = root(part(dealt, ...moveData.drain));
+  // `over.abilities[name]`: `drain` {st, ratio}: the holder's damaging moves with a secondary of one of those statuses
+  // heal that share of the damage (RR Parasitic Waste: psn / tox, 1/2); `mindBlownRecoil: false` drops the Mind Blown /
+  // Steel Beam HP cost (RR Bad Company).
+  const own = profile.over?.abilities?.[user.guideAbility] || {};
+  const drain = own.drain && effectRecord(name)?.sec?.some(sec => own.drain.st.includes(sec.st)) ? own.drain.ratio : moveData.drain;
+  if (drain && dealt && (name !== 'Dream Eater' || target.hasStatus('slp') || target.hasAbility('Comatose'))) {
+    const heal = root(part(dealt, ...drain));
     parts.push(target.hasAbility('Liquid Ooze') ? (guard ? 0 : -heal) : heal);
   }
   if (!guard) {
     if (moveData.struggleRecoil) parts.push(-Math.max(1, Math.floor(max / 4)));
-    else if (moveData.mindBlownRecoil) parts.push(-Math.ceil(max / 2));
+    else if (moveData.mindBlownRecoil && own.mindBlownRecoil !== false) parts.push(-Math.ceil(max / 2));
     else if (moveData.recoil && dealt && !user.hasAbility('Rock Head')) parts.push(-part(dealt, ...moveData.recoil));
     if (items && user.hasItem('Life Orb') && dealt && !(user.hasAbility('Sheer Force') && moveData.secondaries)) {
       parts.push(-Math.max(1, Math.floor(max / 10)));
@@ -1782,6 +1816,8 @@ const effects = createEffects({
   unnerved: mon => mon.hasAbility('Unnerve', 'As One (Glastrier)', 'As One (Spectrier)'),
   moves: mon => (mon.guideMoves || []).map(index => ({name: data.M[index], type: data.MV[index]?.t})).filter(move => move.name),
   contact: (user, target, name, category) => makesContact(user, target, generation.moves.get(toID(name)), category),
+  // `over.abilities[name].selfDropImmune`: the ability stops the stat drops its holder causes itself (RR Bad Company).
+  selfDropImmune: mon => !!profile.over?.abilities?.[mon.guideAbility]?.selfDropImmune,
 });
 
 // What a move does beyond damage and HP, for the move's own parts: the resolved record (null = nothing).

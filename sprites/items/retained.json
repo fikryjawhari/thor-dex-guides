@@ -1,0 +1,128 @@
+{
+  "50rawstberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rawst_berry.png",
+    "palette": "graphics/items/icon_palettes/rawst_berry.pal",
+    "constant": "ITEM_RAWST_BERRY",
+    "alias": "Rawst Berry",
+    "picture_sha256": "d9aec5b98afd2e3d6dbeb37d9bfce562717c068fde2c635fd0716d3f8dc1d738",
+    "palette_sha256": "f239adbc93cfbe63c7cd868875f3a33e45315fbeb0003879054fc0c27639a979"
+  },
+  "5chilanberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/chilan_berry.png",
+    "palette": "graphics/items/icon_palettes/chilan_berry.pal",
+    "constant": "ITEM_CHILAN_BERRY",
+    "alias": "Chilan Berry",
+    "picture_sha256": "34561dd0857b282ff31a03dfd42592567e54c22aeb1c3650d825cd0d50ca7bb8",
+    "palette_sha256": "b10f82ffbf60a877b8395f058cf10b21e598f329ff2c2af516ae3c42da3b5f02"
+  },
+  "5focusband": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/focus_band.png",
+    "palette": "graphics/items/icon_palettes/focus_band.pal",
+    "constant": "ITEM_FOCUS_BAND",
+    "alias": "Focus Band",
+    "picture_sha256": "e621944731f94e22b3ad2fb3b1a98b202fa904a1937ccea782674c576f34436d",
+    "palette_sha256": "4402e6b3b2d2628ad395ac0a86c4dcb42450dcb51a602f6308b1af4923510704"
+  },
+  "5habanberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/haban_berry.png",
+    "palette": "graphics/items/icon_palettes/haban_berry.pal",
+    "constant": "ITEM_HABAN_BERRY",
+    "alias": "Haban Berry",
+    "picture_sha256": "2e8c402d060f094fa3be92a9372bd44f7c67820c7aa9dd753053cc61b1650f65",
+    "palette_sha256": "a72a48a2d0cd922cc0f165887c5d2f746e39aabebc101fbdddbfd6dfcb89ad6b"
+  },
+  "5lifeorb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/life_orb.png",
+    "palette": "graphics/items/icon_palettes/life_orb.pal",
+    "constant": "ITEM_LIFE_ORB",
+    "alias": "Life Orb",
+    "picture_sha256": "58af6ebcb0e025db433ed3fc95a92895c3d64dc426dd4242ad589cde937a7934",
+    "palette_sha256": "04b1a3d80d340823db84a367937c778823b02131913be39a042bcad5bc041068"
+  },
+  "5poisonbarb": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/poison_barb.png",
+    "palette": "graphics/items/icon_palettes/poison_barb.pal",
+    "constant": "ITEM_POISON_BARB",
+    "alias": "Poison Barb",
+    "picture_sha256": "5758a58d22d45dbeb5a7da953cb758864d2a005a4df05b5557dc4beb679473af",
+    "palette_sha256": "874262c0c7ef2cc7370e5dd3df8a5f05f52a82f45d5ef4a02a9407ff987602fb"
+  },
+  "5rawstberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/rawst_berry.png",
+    "palette": "graphics/items/icon_palettes/rawst_berry.pal",
+    "constant": "ITEM_RAWST_BERRY",
+    "alias": "Rawst Berry",
+    "picture_sha256": "d9aec5b98afd2e3d6dbeb37d9bfce562717c068fde2c635fd0716d3f8dc1d738",
+    "palette_sha256": "f239adbc93cfbe63c7cd868875f3a33e45315fbeb0003879054fc0c27639a979"
+  },
+  "5sharpbeak": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/sharp_beak.png",
+    "palette": "graphics/items/icon_palettes/sharp_beak.pal",
+    "constant": "ITEM_SHARP_BEAK",
+    "alias": "Sharp Beak",
+    "picture_sha256": "4ebab9adaf52a1e77316a1792f894cfc4b2af15cc5815abb500f59c395f7c40b",
+    "palette_sha256": "9e8e2a629d42f93ef5c48ec5ff5a78399d1962e66c87fbd497488b255c3015cf"
+  },
+  "5twistedspoon": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/twisted_spoon.png",
+    "palette": "graphics/items/icon_palettes/twisted_spoon.pal",
+    "constant": "ITEM_TWISTED_SPOON",
+    "alias": "Twisted Spoon",
+    "picture_sha256": "854117437fe5e1b499bc82034da576de66a7e48ebb53398d6c8c8a9f3016c85a",
+    "palette_sha256": "ab23204167347d9a95263ece03c5dbec500c5569408f24e84abefba538f18421"
+  },
+  "honeybailestyle": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/honey.png",
+    "palette": "graphics/items/icon_palettes/honey.pal",
+    "constant": "ITEM_HONEY",
+    "alias": "Honey",
+    "picture_sha256": "3d2e094a278ad1852f8ac1b76ccf75e6f6262822c6fd6392980f5fac2687b91a",
+    "palette_sha256": "c6103a0a36add3d33519784e650f32348c48590aa7f3a57ed32c958495bb9212"
+  },
+  "houndoomite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/houndoominite.png",
+    "palette": "graphics/items/icon_palettes/houndoominite.pal",
+    "constant": "ITEM_HOUNDOOMINITE",
+    "alias": "Houndoominite",
+    "picture_sha256": "cb4e453a713d599e63d8c581065b5a0bc9fd1981f73f97152ac6bbe67ac07580",
+    "palette_sha256": "9263ecd6e0fe941d7234543f4e94767824422383f77cf4f38ff5a05009c2d0f2"
+  },
+  "kangaskhite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/kangaskhanite.png",
+    "palette": "graphics/items/icon_palettes/kangaskhanite.pal",
+    "constant": "ITEM_KANGASKHANITE",
+    "alias": "Kangaskhanite",
+    "picture_sha256": "d6567a29a2c1978561a85865fd3d308d728f157a5e815ab24a274d09fff803b5",
+    "palette_sha256": "6145b5c728ad37aa54efb2a87e8dde1312a8a7b5e8b53d4adc0628e9c06d4569"
+  },
+  "pashoberry": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/passho_berry.png",
+    "palette": "graphics/items/icon_palettes/passho_berry.pal",
+    "constant": "ITEM_PASSHO_BERRY",
+    "alias": "Passho Berry",
+    "picture_sha256": "22e66df6374a867231132ee45ebcc8693e6c372979d450d034a7470ac8f11c62",
+    "palette_sha256": "626672e51187767e225d92b4f39fedd1b495f1dbeaeb716dc1826d067a159121"
+  },
+  "rednectarbailestyle": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/nectar.png",
+    "palette": "graphics/items/icon_palettes/red_nectar.pal",
+    "constant": "ITEM_RED_NECTAR",
+    "alias": "Red Nectar",
+    "picture_sha256": "94030acd22f12c53e619798a6e239e2c1b76249bd2191822475997c63bdfd430",
+    "palette_sha256": "b1deb3b9a0549a55e2e524327b964143481da47ded010a2b7c55412d9d1ce786"
+  }
+}

@@ -49,10 +49,11 @@ await runChecks({name:'calc-field-states', file, checks:[{
     await seed(page);
     await page.tap('.dfield > summary');
     await page.tap('[data-f=gameType][data-value=Singles]');
-    assert.deepEqual(globalEntries.map(entry=>entry.k).sort(),globalKeys.filter(key=>(key!=='allyDarkAura'||guide.cfg.name!=='Hardlove Gold')&&(gen6||!key.startsWith('ally'))).sort(),'A3 profile gates remain unchanged');
+    const auraAbilities = {allyFairyAura:'Fairy Aura',allyDarkAura:'Dark Aura',allyAuraBreak:'Aura Break'};
+    assert.deepEqual(globalEntries.map(entry=>entry.k).sort(),globalKeys.filter(key=>!key.startsWith('ally')||gen6&&guide.AB.some(ability=>ability[0]===auraAbilities[key])).sort(),'A3 profile gates follow available abilities');
     for(const entry of guide.cfg.calc.field.filter(entry=>entry.doubles))assert.equal(await page.count(`[data-f="${entry.k}"]`),0,entry.k+' hidden in Singles');
     await page.tap('[data-f=gameType][data-value=Doubles]');
-    assert.equal(await page.count('[data-f=allyDarkAura]'),guide.cfg.name==='Hardlove Gold'||!gen6?0:1);
+    for (const [key, ability] of Object.entries(auraAbilities)) assert.equal(await page.count(`[data-f=${key}]`),gen6&&guide.AB.some(entry=>entry[0]===ability)?1:0,ability+' availability');
     const closed=await page.value('(()=>{const body=document.querySelector(".dfb");return {height:body.closest("details").offsetHeight,scroll:body.scrollHeight,room:body.clientHeight};})()');
     assert.ok(closed.height<=316-8,'closed groups fit the minimum-height window');
     // In Doubles the ally effects join the side grid (grouped by what they affect), so only Singles must fit unscrolled.

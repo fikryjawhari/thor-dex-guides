@@ -32,7 +32,8 @@ const duel = (moves, foeMoves, foeEdit) => `(()=>{
   CALC.use(P.find(entry=>entry.n==='Blissey'));
   const state=CALC.state(),mon=state.custom.at(-1);
   mon.l=50;mon.i='';mon.m=${JSON.stringify(moves)}.map(name=>M.indexOf(name));
-  const trainer=TRS.find(t=>t.p.length&&t.p.every(p=>p.l>=45))||TRS.at(-1);
+  const normal=t=>t.p.length&&t.p.every(mon=>byId[mon.id]?.name!=='Shedinja'&&AB[mon.a]?.[0]!=='Wonder Guard');
+  const trainer=TRS.find(t=>normal(t)&&t.p.every(p=>p.l>=45))||TRS.find(normal);
   CALC.enter(trainer.k,0);state.dir='out';
   ${foeMoves ? `state.edits['foe:'+trainer.k+':0']={...(state.edits['foe:'+trainer.k+':0']||{}),m:${JSON.stringify(foeMoves)}.map(name=>M.indexOf(name))};` : ''}
   ${foeEdit ? `state.edits['foe:'+trainer.k+':0']={...(state.edits['foe:'+trainer.k+':0']||{}),...${JSON.stringify(foeEdit)}};` : ''}
@@ -77,7 +78,16 @@ const checks = [{
     await page.value(mine('Snorlax', ['Population Bomb']));
     let info = await page.value(rowInfo('Population Bomb'));
     assert.equal(info.btn, '×10');
-    assert.equal(info.act, 'hitv', 'no dice: inspection');
+    const limits = data.cfg.calc.multihit['Population Bomb'];
+    assert.equal(info.act, limits[0] === limits[1] ? 'hitv' : 'hits', 'profile hit-count control');
+    if (limits[0] !== limits[1]) {
+      const counts = [];
+      for (let step = 0; step < 10; step++) {
+        await page.tap('.dres:not(.na) .mr .rh[data-a="hits"]');
+        counts.push((await page.value(rowInfo('Population Bomb'))).btn);
+      }
+      assert.deepEqual(counts, Array.from({length: 10}, (_, index) => '\u00d7' + (index + 1)));
+    }
     await page.value(mine('Snorlax', ['Population Bomb'], 'Loaded Dice'));
     info = await page.value(rowInfo('Population Bomb'));
     assert.equal(info.btn, '×10', 'dice: default 10');

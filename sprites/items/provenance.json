@@ -417,6 +417,14 @@
     "picture_sha256": "b5c6d14d889b3d5d4a03fcf692aa60397cc9071046616730ed0f334759c9904f",
     "palette_sha256": "ad1296b5510a4d8dc64d732f20ee0ed42fd76c2af27206216d9b1fc6b2f54ec6"
   },
+  "bikevoucher": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/bike_voucher.png",
+    "palette": "graphics/items/icon_palettes/bike_voucher.pal",
+    "constant": "ITEM_BIKE_VOUCHER",
+    "picture_sha256": "58b1338de0869c004d53390a6267c47e8e1b15fafeeefb5fa52e1dc1dbd81bf8",
+    "palette_sha256": "e46ac6968d0c1250ff2efc34a7fac2da96b1598420fdbaf9761b06169bb56577"
+  },
   "bindingband": {
     "source": "expansion",
     "picture": "graphics/items/icons/binding_band.png",
@@ -664,6 +672,14 @@
     "constant": "ITEM_CARBOS",
     "picture_sha256": "2900e01a302c63dc86dd65e5b669aa3657d8f9f56f56d155ede3c3c55dabf783",
     "palette_sha256": "ee82dc47741604702242fc51e21e1935b0a9f1e37d6b2a0bd69cdb631aa03e0f"
+  },
+  "cardkey": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/card_key.png",
+    "palette": "graphics/items/icon_palettes/card_key.pal",
+    "constant": "ITEM_CARD_KEY",
+    "picture_sha256": "97f0de5634a8d9f44eba275f0bc6c9ebe48ce650311e2c381de0f76f116c4eeb",
+    "palette_sha256": "0d9d8787e3fb4be9f6bd4f10b8571c8cd30ee4be6d437204a81eaf69bc026dbb"
   },
   "casteliacone": {
     "source": "expansion",
@@ -937,6 +953,14 @@
     "constant": "ITEM_COPPERAJITE",
     "picture_sha256": "26b56f15d84e662d68a2a8c6b157fef31f6c4fc1f8345139c7ab04055559e913",
     "palette_sha256": "ee19aa32702bf5c1771af0281e1c8a34a46a2b573cfa5a2a7c8916c9d39130c2"
+  },
+  "cornerstonemask": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/cornerstone_mask.png",
+    "palette": "graphics/items/icon_palettes/cornerstone_mask.pal",
+    "constant": "ITEM_CORNERSTONE_MASK",
+    "picture_sha256": "1458bcce41080d676f5233ab1ebed7ac07b7259028d7715ffab8bfd690b4212d",
+    "palette_sha256": "93beb4557c2ef1477f21e29c2fb2e28afc9e8637494239242d1c026e8588abff"
   },
   "cornnberry": {
     "source": "expansion",
@@ -1304,6 +1328,14 @@
     "constant": "ITEM_DUSK_STONE",
     "picture_sha256": "0a8b2b98e75b1cac2755d3b303cd84aea786dcc89af84736454d6925a06ab283",
     "palette_sha256": "821746e7e067d88c8d798a7b3a22af5a055dc9ce67a4d457d76aa4b32d0d9bb0"
+  },
+  "dynamaxband": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/dynamax_band.png",
+    "palette": "graphics/items/icon_palettes/dynamax_band.pal",
+    "constant": "ITEM_DYNAMAX_BAND",
+    "picture_sha256": "2e646702b472d18e40983c67a455d59f4658474238ee3af46cea223560ff4eb8",
+    "palette_sha256": "d2c9756ca25dfad34e43430cc16a2a8fdb43b2b405e30ad3270d6bf55b1073ce"
   },
   "earthplate": {
     "source": "expansion",
@@ -1954,6 +1986,14 @@
     "picture_sha256": "82a330ff757016d21b60846b3cfbf79d570306fff1ab4d490044f448636f3bca",
     "palette_sha256": "132e0775eb73db9ff41cc2c0e5d425c0a8792e5e493288516088d0536e81975d"
   },
+  "goldteeth": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/gold_teeth.png",
+    "palette": "graphics/items/icon_palettes/gold_teeth.pal",
+    "constant": "ITEM_GOLD_TEETH",
+    "picture_sha256": "83f7359db21485b12edf7dddcd648d599d8123491550fb60954b4859cf2c8222",
+    "palette_sha256": "7b703aa1a0f98ce6198ad391e7d7b23ad78ae7d204292b2f7f3ebbe09fe12f8a"
+  },
   "golisopite": {
     "source": "expansion",
     "picture": "graphics/items/icons/golisopite.png",
@@ -2526,6 +2566,14 @@
     "picture_sha256": "1cb7027d2c9ada3a884269c7289fdfdfc4d00d44a17c7d9d7e26ff7cd3bc6bf5",
     "palette_sha256": "3646d57bd3c90e1f58460dc08c39730aedab1471b468834693972ec58b742d77"
   },
+  "infiniterepel": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/repel.png",
+    "palette": "graphics/items/icon_palettes/max_repel.pal",
+    "constant": "ITEM_INFINITE_REPEL",
+    "picture_sha256": "cc87ab37422efb66b2ab468461989ee12d69dda1e707de4a8ab0a55cf231ce41",
+    "palette_sha256": "47616532a645f5cf4b8b2764293e6f61253a2c6bb673facd91fee0720310abcd"
+  },
   "inquirymail": {
     "source": "serebii",
     "picture": "inquirymail.png",
@@ -2912,6 +2960,14 @@
     "constant": "ITEM_LIFE_ORB",
     "picture_sha256": "58af6ebcb0e025db433ed3fc95a92895c3d64dc426dd4242ad589cde937a7934",
     "palette_sha256": "04b1a3d80d340823db84a367937c778823b02131913be39a042bcad5bc041068"
+  },
+  "liftkey": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/lift_key.png",
+    "palette": "graphics/items/icon_palettes/key.pal",
+    "constant": "ITEM_LIFT_KEY",
+    "picture_sha256": "a31dcccf909836d297dcb05cb7af87399535cbcd9299d3eb7cb0db1e0ddccd77",
+    "palette_sha256": "7ec2fee6d68996ab9b21165bcc9d86564dcc6ae954276fb19e224ebab5a6e299"
   },
   "lightball": {
     "source": "expansion",
@@ -3387,6 +3443,14 @@
     "constant": "ITEM_METAL_POWDER",
     "picture_sha256": "52070eab970524b04619b10d5e02a8c4fe5e8682c66227f19f1d0722f35b36f6",
     "palette_sha256": "6f14eaafb2e4320ec53bdfbcdad8be948b5b4f170d923798faa48c670b7596f8"
+  },
+  "meteorite": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/meteorite.png",
+    "palette": "graphics/items/icon_palettes/meteorite.pal",
+    "constant": "ITEM_METEORITE",
+    "picture_sha256": "1a98bf81e885a02acc428c24bd63808c1428b018900c04091f1260f6183c0a64",
+    "palette_sha256": "b26302077a19b7bf4fa8a5b2656a3b2a8300535f391049202f0dfca0e97a44ed"
   },
   "metronome": {
     "source": "expansion",
@@ -3980,6 +4044,14 @@
     "constant": "ITEM_POKE_TOY",
     "picture_sha256": "fe214ce1e3fba18822dc867155cd47af9ce7fc31847aa12443f24a2dac34f586",
     "palette_sha256": "efc302cfeb177de253374d2b8506203ea8d7711d1e900bd3871f6f1e71f3c8f3"
+  },
+  "pokevial": {
+    "source": "imperium",
+    "picture": "graphics/items/icons/flute.png",
+    "palette": "graphics/items/icon_palettes/blue_flute.pal",
+    "constant": "ITEM_POKE_VIAL",
+    "picture_sha256": "a95fae52fc718c756edcba4282a2849c5ddbd6eaf595a75a027c519faffc6735",
+    "palette_sha256": "a2a7cc7d1757c22a6caaff816dc9c4825fa39ac40f2e81b3e29898a29f2d6937"
   },
   "pomegberry": {
     "source": "expansion",
@@ -4876,6 +4948,14 @@
     "picture_sha256": "8752030d628cb75f1ce159acf2215e3dcbb9d5a53e194c3249306ff8ee44c071",
     "palette_sha256": "a8cba8bbe37c66a680a3831adf7fa88688b4b105da37d78502a1ffabcd3b50a9"
   },
+  "secretkey": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/secret_key.png",
+    "palette": "graphics/items/icon_palettes/secret_key.pal",
+    "constant": "ITEM_SECRET_KEY",
+    "picture_sha256": "9e4469f176399fa54b708e92d2f3c4ad253edd05df7d0f3d20e2fd6a026d5f35",
+    "palette_sha256": "27fd3b11234646eb6f48d229a36b3aadc2b0207cec76e2572ab363033e0ae6af"
+  },
   "shadowmail": {
     "source": "expansion",
     "picture": "graphics/items/icons/shadow_mail.png",
@@ -4971,6 +5051,14 @@
     "constant": "ITEM_SILK_SCARF",
     "picture_sha256": "de4fcc525f0747c590bc7b1d82d987f8814bcb08d698ff80e594f7260e75d947",
     "palette_sha256": "0eb56cde44609e39c3886e841d1639dee9dc2a1628f96c906f5d08734eaed680"
+  },
+  "silphscope": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/silph_scope.png",
+    "palette": "graphics/items/icon_palettes/silph_scope.pal",
+    "constant": "ITEM_SILPH_SCOPE",
+    "picture_sha256": "bc314b6af19bf041a7831df169540fd9f339f79969bedfe89f1c5ef9eab7cf3f",
+    "palette_sha256": "24efcc3c8751087786e46c91872a0741aa382a0c86f96b7ddad2783e58593ec8"
   },
   "silverpowder": {
     "source": "expansion",
@@ -5405,6 +5493,14 @@
     "picture_sha256": "2782c879dea6d6c9fc02064e8eaa4c3e9af1a3cec4f9bff8ef170fe8f2d78078",
     "palette_sha256": "3f7959863040b73b37834e73663bb8b2605f522b32396ad211497c376f6f3f4e"
   },
+  "tea": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tea.png",
+    "palette": "graphics/items/icon_palettes/tea.pal",
+    "constant": "ITEM_TEA",
+    "picture_sha256": "8133260ee83b8a522a5ef014081ba76821fd3de568a27c52154ff8f105355fa4",
+    "palette_sha256": "b2a7ed901ff9149bb368ed4fb979c5ab0a4503dcde2b2c10b476043b4acffb1f"
+  },
   "terrainextender": {
     "source": "expansion",
     "picture": "graphics/items/icons/terrain_extender.png",
@@ -5682,6 +5778,14 @@
     "constant": "ITEM_TOXTRICITITE",
     "picture_sha256": "834cc400bd7ed0293a8055567d01eb196a1c366d69fa97badf7e5271a61eb590",
     "palette_sha256": "7ba55247396eb51df6a9a54e7b142de680d15af04bfef31d9be88a0c77c9840b"
+  },
+  "tripass": {
+    "source": "expansion",
+    "picture": "graphics/items/icons/tri_pass.png",
+    "palette": "graphics/items/icon_palettes/tri_pass.pal",
+    "constant": "ITEM_TRI_PASS",
+    "picture_sha256": "934b2bff271631631105443e412fbdcc43ca15120c9ba2c6b486c4c86864eb2d",
+    "palette_sha256": "22e1a7128acfe2754bfeae7c042e314f5d983b0497882a398e862c8eb256c0b9"
   },
   "tropicmail": {
     "source": "expansion",

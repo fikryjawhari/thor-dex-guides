@@ -2,7 +2,7 @@ import {sportPowerDPP} from './gen4-sport.js';
 
 const phases = new Set(['hits', 'beforeStats', 'afterMoveType', 'effectiveness', 'critical', 'turnOrder',
   'movePower', 'powerMods', 'attackMods', 'defenseMods', 'attack', 'defense',
-  'hitBaseDamage', 'beforeWeather', 'baseDamage', 'finalMods', 'beforeRolls', 'roll']);
+  'hitBaseDamage', 'beforeWeather', 'baseDamage', 'finalMods', 'beforeRolls', 'roll', 'speedMods']);
 const forbidden = new Set(['__proto__', 'prototype', 'constructor', 'gen']);
 const writeRoots = new Set(['atk', 'def', 'move', 'field', 'state', 'desc', 'value']);
 
@@ -122,6 +122,42 @@ export function prepareRules(over = {}) {
   return result;
 }
 
+function runRules(rules, context, notes) {
+  for (const rule of rules || []) {
+    if (rule.when !== undefined && !expression(rule.when, context)) continue;
+    for (const [path, node] of Object.entries(rule.set || {})) write(context, path, expression(node, context));
+    if ('value' in rule) context.value = expression(rule.value, context);
+    for (const node of rule.remove || []) {
+      const index = context.value.indexOf(expression(node, context));
+      if (index !== -1) context.value.splice(index, 1);
+    }
+    for (const replacement of rule.replace || []) {
+      const index = context.value.lastIndexOf(expression(replacement.from, context));
+      if (index !== -1) context.value[index] = expression(replacement.to, context);
+    }
+    for (const node of rule.append || []) context.value.push(expression(node, context));
+    if (rule.note && notes) notes.add(String(expression(rule.note, context)));
+  }
+}
+
+// `speedMods`: the Speed modifier list (4096 = 1x in every generation: getFinalSpeed chains it) for one Pokémon, from
+// every Speed read (the readout, turn order, Electro Ball / Gyro Ball, `atk.stats.spe` in later phases). `atk` /
+// `names.atk*` are the Pokémon whose Speed it is, `def` is unset, `input.field` is the page's field turned so `atk*`
+// keys are that Pokémon's side, `state.side` is 'atk' or 'def'. No notes (a Speed read has no result to carry them).
+export function speedPhase(gen, pokemon, field, side, value) {
+  const rules = gen.guideRules?.speedMods;
+  if (!rules?.length) return value;
+  const who = side === field.defenderSide ? 'def' : 'atk';
+  const raw = gen.guideSpeedInput || gen.guideContext?.input?.field || {};
+  const values = who === 'atk' ? raw : Object.fromEntries(Object.entries(raw).map(([key, entry]) =>
+    [key.startsWith('atk') ? 'def' + key.slice(3) : key.startsWith('def') ? 'atk' + key.slice(3) : key, entry]));
+  const context = {atk: pokemon, field, move: undefined, desc: {}, mechanics: gen.num, input: {field: values},
+    names: {atk: pokemon.guideSpecies || pokemon.name, atkAbility: pokemon.guideAbility ?? '', atkItem: pokemon.guideItem ?? ''},
+    state: {side: who}, value: [...value]};
+  runRules(rules, context, null);
+  return context.value;
+}
+
 export function applyPhase(gen, phase, local, value) {
   const base = gen.guideContext;
   if (!base) return value;
@@ -135,21 +171,7 @@ export function applyPhase(gen, phase, local, value) {
   fieldPhase(gen, phase, context);
   if (local?.desc) base.desc = local.desc;
   if (phase === 'afterMoveType') base.move = context.move;
-  for (const rule of gen.guideRules?.[phase] || []) {
-    if (rule.when !== undefined && !expression(rule.when, context)) continue;
-    for (const [path, node] of Object.entries(rule.set || {})) write(context, path, expression(node, context));
-    if ('value' in rule) context.value = expression(rule.value, context);
-    for (const node of rule.remove || []) {
-      const index = context.value.indexOf(expression(node, context));
-      if (index !== -1) context.value.splice(index, 1);
-    }
-    for (const replacement of rule.replace || []) {
-      const index = context.value.lastIndexOf(expression(replacement.from, context));
-      if (index !== -1) context.value[index] = expression(replacement.to, context);
-    }
-    for (const node of rule.append || []) context.value.push(expression(node, context));
-    if (rule.note) base.notes.add(String(expression(rule.note, context)));
-  }
+  runRules(gen.guideRules?.[phase], context, base.notes);
   fieldPhase(gen, phase, context, true);
   if (phase === 'critical') state.isCritical = context.value;
   if (phase === 'movePower') {

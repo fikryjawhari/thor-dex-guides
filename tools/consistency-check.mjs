@@ -29,6 +29,8 @@ try {
     const config = JSON.parse(readFileSync(`hacks/${hack}/hack.json`, 'utf8')).cfg;
     const data = JSON.parse(readFileSync(`hacks/${hack}/data.json`, 'utf8'));
     const starter = data.P.find(pokemon => pokemon.n === 'Treecko');
+    const starterArea = Math.max(data.AR.findIndex(area => area.st), config.starter === 'type' ? 0 : -1);
+    const failedArea = starterArea === 1 ? 0 : 1;
     const evOn = mons => (mons || []).some(mon => mon.ev?.some(value => value > 0));
     const mgm = config.evs !== false && config.mgm !== false && (data.TR?.g || []).some(group => group.sec.some(section => section.tr.some(trainer =>
       evOn(trainer.p) || (trainer.pt || []).some(partner => evOn(partner.p)))));
@@ -37,7 +39,7 @@ try {
     const layout = (data.WK?.splits || []).map(split => split.st.map((stop, index) => String(stop.k ?? '')));
     const named = layout.flat().some(key => key && !/^\d+\.\d+(\.f\d+)?$/.test(key));
     const seed = { [config.ls.dex]: JSON.stringify({ av: 'chg' }), [config.ls.walk]: JSON.stringify({c:{'0.0.0':1}, ...(named ? { layout } : {})}), dvkb: keyboard ? '1' : '0' };
-    if (config.starter === 'type' && starter) seed[config.ls.track] = JSON.stringify({ e: { 0: { p: starter.id }, 1: { f: 1 } }, t: {} });
+    if (config.starter === 'type' && starter) seed[config.ls.track] = JSON.stringify({ e: { [starterArea]: { p: starter.id }, [failedArea]: { f: 1 } }, t: {} });
     await send('Page.addScriptToEvaluateOnNewDocument', { source: `for (const [key,value] of Object.entries(${JSON.stringify(seed)}))localStorage.setItem(key,value); window.checkErrors=[];addEventListener('error',event=>checkErrors.push(event.message));` }, sessionId);
     await send('Page.navigate', { url: pathToFileURL(resolve(`dist/${hack}.html`)).href + '#/trainers' }, sessionId);
     for (let attempt = 0; attempt < 100; attempt++) {
@@ -56,7 +58,7 @@ try {
       check(/^Expand all(Collapse|Reset) all$/.test(document.querySelector('.tr-all')?.textContent),'split wording');
       check(capOfSec({cap:40})[0]===40&&capOfSec({cap:[42,'Boss','Place',2]})[0]===42,'both single cap schemas');
       if(CF.starter==='type'&&${!!starter}){
-        check(TK.s==='Treecko'&&starterType()==='Grass'&&TK.e[1].f,'old type-starter save migrated without shifting tracker');
+        check(TK.s==='Treecko'&&starterType()==='Grass'&&TK.e[${failedArea}].f&&TK.e[STARTER_AREA].p===${JSON.stringify(starter?.id)},'old type-starter save migrated without shifting tracker');
         check(TRS.filter(trainer=>trainer.st&&!rivalHidden(trainer)).every(trainer=>trainer.st==='Grass'),'rivals follow starter type');
       }
       if(PICK){

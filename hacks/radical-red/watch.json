@@ -6138,6 +6138,273 @@
         "Postgame": "f8ac21cb2001e1fea024b4aac4c8bdd7186ee9d4e993832ae6a534d02bd1ecaf",
         "Dex": "06a9a7cbd91a1ad42428ad0eb98bd4410509059657b30d8726799f97a8972997"
       }
+    },
+    {
+      "name": "Official docs Drive folder",
+      "type": "drive",
+      "id": "1YaYM-8dzRlBRuJm1bmYrjJC6HGwTwl-x",
+      "baseline_note": "Added 2026-11-01 (Hardcore 4.1 source pass). Includes rr4_1.ups; a new patch file means a new version.",
+      "state": {
+        "15q2O-OgtaqucghOEINeefYYWu8mAepuXLCOt6_yHnyc": {
+          "name": "4.1 Changelog - Radical Red",
+          "modified": "2024-07-09"
+        },
+        "1E1dVhlwRX1r909SW1byWzpSNxV0nl9gJPht6n8qS9RU": {
+          "name": "All Pokemon Changes v3.1  - Radical Red",
+          "modified": "2023-09-03"
+        },
+        "1Iudi1QxBSHOH-jhVrNF-IdaK_ixqbmacvgMmBce8n1c": {
+          "name": "Changelog up to v4.0 - Radical Red",
+          "modified": "2025-03-20"
+        },
+        "1ES8L4OzeJ8rCuMWFNvrDaZKArqR7Vys2ytFxjx2pbwE": {
+          "name": "Default Mode Bosses v4.1 (with EVs) - Radical Red",
+          "modified": "2026-08-26"
+        },
+        "1hJCmOWxWA3H70S5zCHuEMNlsQEQL22IiOEAJoFpfEwM": {
+          "name": "Evolution Changes v4.1 - Radical Red",
+          "modified": "2024-03-27"
+        },
+        "1KiFBB3d4sI6SY77fdTwDuj7aWze-F5jcz6kfYfgVWB0": {
+          "name": "Follower Pokémon Guide v4.1 - Radical Red",
+          "modified": "2024-03-06"
+        },
+        "16vBrWJDrsw5QsZyiJjD8ACH7079ZCkQ5BaPtioJOPTk": {
+          "name": "Item, TM, and Move Tutor Locations v4.1 - Radical Red",
+          "modified": "2026-01-23"
+        },
+        "15mUFUcN8250hRL7iUOJPX0s1rMcgVuJPuHANioL4o2o": {
+          "name": "Pokémon Locations & Raid Dens v4.1 - Radical Red",
+          "modified": "2026-06-23"
+        },
+        "1jDbKFA30xo8csPHZNLtsmqs781bW_Xb9mKoPYyE6KK8": {
+          "name": "Restricted/Hardcore Mode Info & Hardcore Bosses v4.1 - Radical Red",
+          "modified": "2026-06-12"
+        },
+        "1Mqg3fN1MepebSRKfQARYtbgAzMBLzahQ": {
+          "name": "rr4_0.ups",
+          "modified": "2023-08-02"
+        },
+        "1bG4jSdo9voFTz1oqKNr15zdZ8LyPaz17": {
+          "name": "rr4_1.ups",
+          "modified": "2024-03-22"
+        },
+        "1XvSoU-3V9AbrQf5MpSv67RbRh7XDYOM2pJogWibgV4A": {
+          "name": "Useful Links & Resources - Radical Red",
+          "modified": "2024-07-02"
+        },
+        "1gI9y4aSvrQpQmJHvuPcGXN0BhwPugWOaDz3CFvQ0jdM": {
+          "name": "Wonder Egg Pokémon Pools v4.1 - Radical Red",
+          "modified": "2024-05-22"
+        }
+      }
+    },
+    {
+      "name": "Version (Useful Links doc)",
+      "type": "version",
+      "url": "https://docs.google.com/document/d/1XvSoU-3V9AbrQf5MpSv67RbRh7XDYOM2pJogWibgV4A/export?format=txt",
+      "pattern": "Latest Version:\\s*v([0-9.]+)",
+      "baseline_note": "Added 2026-11-01 (Hardcore 4.1 source pass).",
+      "state": "4.1"
+    },
+    {
+      "name": "item-tm-tutor-locations",
+      "type": "sheet",
+      "id": "16vBrWJDrsw5QsZyiJjD8ACH7079ZCkQ5BaPtioJOPTk",
+      "baseline": ".src/drive/Item, TM, and Move Tutor Locations v4.1 - Radical Red.xlsx",
+      "baseline_note": "Added 2026-11-01 (Hardcore 4.1 source pass).",
+      "state": {
+        "Main": "1d6007876a5bc8d64a7ec32899186c1b57cbd61088e4197cc1b095efd02ef1d1",
+        "TMs & HMs": "b3205e8fd1368d0b71bdf1678e26b59937aef4e19eddfe661d7d03ed991876bf",
+        "Move Tutors": "57bf9562baeef364bae6326cb4046eab66fe4fbb5c78cbcbfa141dbc7a7e246b",
+        "Overworld Items": "cdffabee6b7b00d48b8f63c8cdcefcf555326423c9587f3dcc0e48e1e7a42d4f",
+        "Mega Stones": "d5c6283f58244d533589910de6a269acf3b428a24c46cec091eb61f6c71f8cb7",
+        "Z-Crystals": "d054bde801b86f034359f231660c4fb01da43c38aa2ae78643e1dd93b54796f0",
+        "Shops": "f021a570778ab8adc2548a438423d1513365ff719dbe0695ae39dab1c6f7a316",
+        "Care Packages": "1abdc6d68cac990e8fba50c5772b49d52baa477f9f50f9ffb651a632de761838",
+        "Other Useful Items": "b945667928475b4d4e2fc2fa8627b41bf0459e0b408f9ba000d07fa8d3f57afc",
+        "Source": "94668f774b57fb671677259a947f88c0a7dd2b6b95ab5cd4745233e8b6762467"
+      }
+    },
+    {
+      "name": "pokemon-locations-raids",
+      "type": "sheet",
+      "id": "15mUFUcN8250hRL7iUOJPX0s1rMcgVuJPuHANioL4o2o",
+      "baseline": ".src/drive/Pokémon Locations & Raid Dens v4.1 - Radical Red.xlsx",
+      "baseline_note": "Added 2026-11-01 (Hardcore 4.1 source pass).",
+      "state": {
+        "Main": "1a9330d3b08ab11e2b8f427c3ed6f1f961020aaebaea7d954eac8853d9a1c48c",
+        "Grass & Caves": "324cb264a18e0e7c52ac23815ea3d34c6bc07693ddff4a31cb1c1e1be79049dc",
+        "Fishing & Surfing": "3a90f5d310e16a6702972507d91e3229c5e731058f4efc0ec08c878e1d68d4cf",
+        "Fossils": "c78ef9967f58374c3576e98dd9222164a206ed0aaeec7a30e3bcc61daa5b2d92",
+        "Safari Zone": "d405b7070a480e9ca1e5070b967d041877fd29672878711d732bedea7252bc48",
+        "Statics & Special Pokemon": "39914040e4b4204069e7c0dea3b10360c3b7af339218e0149c67f750fba3001a",
+        "Raid Dens": "e6e9ce90d8a892a0f2b3a2da48c6a94f05dcf305f7cc8c1706cc1a89d95db833",
+        "Egg Vendor & Game Corner": "c12c0996dd5df2ac87df23ba0a7585e843a8f0212d138040b7bbdb8f0ea366bc",
+        "Trades": "4ff62f5f51b27b4aa694c59a4360f336b0d4935025c80b2570a1204916ee8a94",
+        "Gifts": "b9b98b48f626589b33511d7efef992b911190e199ab03fe72ad363ad0f06e007",
+        "Mystery Gifts": "8e44b3d77a4a8b69bc71f53b83594d03aa751e0316683f3687ffe98746ca0285",
+        "Unobtainables": "c1f8a004864a3c44a3f0db6a232b665cfa24d5db0a6e0cc9f8074631927a148f",
+        "Source": "8e7f798e396af02fafe636e64de61d6e0a32b8c0273d32ce369a1a0e86c98432",
+        "Dex": "0749c28cc8ad91694324f41b824cec8f84a00064fddbcc5534e584aed9348cef"
+      }
+    },
+    {
+      "name": "wonder-egg-pools",
+      "type": "sheet",
+      "id": "1gI9y4aSvrQpQmJHvuPcGXN0BhwPugWOaDz3CFvQ0jdM",
+      "baseline": ".src/drive/Wonder Egg Pokémon Pools v4.1 - Radical Red.xlsx",
+      "baseline_note": "Added 2026-11-01 (Hardcore 4.1 source pass).",
+      "state": {
+        "Info": "fbe01ae25931b4877378d30d14468c2547fdbdb758f9b4e3d2c52c81dbed30c3",
+        "List of Pokémon": "09cff074d2a18e2c6663ed4aa4fde8d47a334e3d568a3576d7b587096f046497",
+        "Dex": "70594e2b8c5a3a15758345462f2bf8a7635063d643e9173ce4e7c0b62297f83c"
+      }
+    },
+    {
+      "name": "4.1 Changelog doc",
+      "type": "page",
+      "url": "https://docs.google.com/document/d/15q2O-OgtaqucghOEINeefYYWu8mAepuXLCOt6_yHnyc/export?format=txt",
+      "baseline_note": "Added 2026-11-01 (Hardcore 4.1 source pass).",
+      "state": {}
+    },
+    {
+      "name": "Evolution Changes doc",
+      "type": "page",
+      "url": "https://docs.google.com/document/d/1hJCmOWxWA3H70S5zCHuEMNlsQEQL22IiOEAJoFpfEwM/export?format=txt",
+      "baseline_note": "Added 2026-11-01 (Hardcore 4.1 source pass).",
+      "state": {}
+    },
+    {
+      "name": "Official dex data (dex.radicalred.net)",
+      "type": "github",
+      "repo": "JwowSquared/Radical-Red-Pokedex",
+      "ref": "master",
+      "paths": [
+        "data.js",
+        "src/"
+      ],
+      "baseline_note": "Added 2026-11-01 (Hardcore 4.1 source pass). Pinned 488a091; data.js last changed 2024-04-15 (release 1.2.2, RR 4.1).",
+      "state": {
+        "sha": "488a0918194d567b5f7b02c396118d51fb9c81ce",
+        "files": {
+          "data.js": "9bb59c6b2a45079b7aa6df0444a0978400d2ed65",
+          "src/abilityRandomizer.js": "4d2d938ff8f281eb6415a9f69bf3eb82b1050cde",
+          "src/displayMethods.js": "9d02d05328dcfefd600a1b929fffd4d9f129be81",
+          "src/filterMethods.js": "fe4212a493414de4338134927d59f91e91eddff2",
+          "src/globals.js": "7711269e06138c2cdc8cf0c6bcab83973fead7e2",
+          "src/onStartUp.js": "9273a54af3da6225e149864dfaf8465303ab9947",
+          "src/sortMethods.js": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          "src/tableMethods.js": "b1ef04c767cead50515e023ef588efc900c86c76",
+          "src/utility.js": "fa199dc101501be13acc75bee2d2bdacfaaed1b6"
+        }
+      }
+    },
+    {
+      "name": "RR Showdown server data",
+      "type": "github",
+      "repo": "RadicalRedShowdown/pokemon-showdown",
+      "ref": "master",
+      "paths": [
+        "data/moves.ts",
+        "data/abilities.ts",
+        "data/items.ts",
+        "data/conditions.ts",
+        "data/typechart.ts",
+        "data/pokedex.ts",
+        "data/mods/gen9rr/",
+        "config/formats.ts"
+      ],
+      "baseline_note": "Added 2026-11-01 (Hardcore 4.1 source pass). Pinned 5495579. Showdown edits gen9rr after 4.1 (PvP balance too): flags and effect code reference, not authority for numbers.",
+      "state": {
+        "sha": "54955790eb71a0fb0a881850f1e8afed3bfe25bd",
+        "files": {
+          "config/formats.ts": "06e282d622fa2829aeaa10b799a9cca1140dd5e1",
+          "data/abilities.ts": "feff2954d3918c6d844b9b5a4258cb3d05d08906",
+          "data/conditions.ts": "bf25285685b2bf56d386134268d8300a0432b357",
+          "data/items.ts": "f9a4bdeeb5635abc837e3bf79cc1558d3c7bff1a",
+          "data/mods/gen9rr/abilities.ts": "fb0328eb8307179cee168911f66bf4fdff41602c",
+          "data/mods/gen9rr/conditions.ts": "48e6361da4e61e086260b34d1ccf1fbdcefa4248",
+          "data/mods/gen9rr/formats-data.ts": "e5599202c3b249c32c92ea556b6f79888a3fa587",
+          "data/mods/gen9rr/items.ts": "262e4286b28747c42de4d00bc64b4a66894a8623",
+          "data/mods/gen9rr/learnsets.ts": "65b89de8c226c3e240245a1d91a9398b252b07ee",
+          "data/mods/gen9rr/learnsets.ts.bak": "f05dd0bdad253be3c5238e919ff5717182b973f4",
+          "data/mods/gen9rr/moves.ts": "cd9dbfce3c94a4bb10604e412d457baca83b3e1b",
+          "data/mods/gen9rr/pokedex.ts": "2e76a73cb182af2f69bc1f71175618ff1dd52881",
+          "data/mods/gen9rr/random-sets.json": "384e720cd074af13336fe8c21b6336bd12701bc4",
+          "data/mods/gen9rr/random-teams.ts": "3f02104bc71051dc0a02172d6c916b3f521a6061",
+          "data/mods/gen9rr/rulesets.ts": "5a3191667f6d16b741370eeb2f9ccafa7b949ae6",
+          "data/mods/gen9rr/scripts.ts": "ccc1aa6b55496b72db66e5229e969e4023591908",
+          "data/moves.ts": "840964c383068a982b8670c7155155560b77c4a3",
+          "data/pokedex.ts": "8370d012e3e4dd64fc9ca512a14dba1a13078b38",
+          "data/typechart.ts": "fb4ebc08a63fbfb64e692b989b8353b72efd3fee"
+        }
+      }
+    },
+    {
+      "name": "RR damage calc",
+      "type": "github",
+      "repo": "RadicalRedShowdown/damage-calc",
+      "ref": "master",
+      "paths": [
+        "calc/src/data/",
+        "calc/src/mechanics/gen789.ts",
+        "calc/src/mechanics/util.ts",
+        "src/js/data/sets/hardcore.js",
+        "src/js/data/sets/normal.js"
+      ],
+      "baseline_note": "Added 2026-11-01 (Hardcore 4.1 source pass). Pinned 7f35400.",
+      "state": {
+        "sha": "7f3540035176b3db4386871956eec1c309aea26e",
+        "files": {
+          "calc/src/data/abilities.ts": "e951ed9e39c7b2e2becb02f05794262fd839ad6f",
+          "calc/src/data/index.ts": "ffb163c5db5b05c8d256cc7a31fb4f3c35cce27f",
+          "calc/src/data/interface.ts": "566ea57dd72e1887cbffd3fe505c2458b03aa7ad",
+          "calc/src/data/items.ts": "30e2fe0ec3f0ba255cd64d3e3e06a52a5c8731a9",
+          "calc/src/data/moves.ts": "9c197969cb02eec9f2b9ec8720c770dc2e4a5770",
+          "calc/src/data/natures.ts": "1c6badf306a1805af19bd6ee2c33d3ac1da06334",
+          "calc/src/data/species.ts": "c29d2e1609a3456fbd29a9191c6d7d705a6e5fe2",
+          "calc/src/data/types.ts": "8298460b8468d12cdaab82867ce15ada0bdf1c1f",
+          "calc/src/mechanics/gen789.ts": "2b16ef9c5d6538749a2337fcdb2f8b415e76f54d",
+          "calc/src/mechanics/util.ts": "c9b2eb7bc7991bf1b3697368627a4c9da8a36cd1",
+          "src/js/data/sets/hardcore.js": "4f7f932a8ee1bb663a4a34db4dd0a7908d864c35",
+          "src/js/data/sets/normal.js": "c8ed4078eb7a5b7e8a133899eb36e3f392cf4ca7"
+        }
+      }
+    },
+    {
+      "name": "hzla Radical Red files",
+      "type": "github",
+      "repo": "hzla/Dynamic-Calc-Decomps",
+      "ref": "decomp",
+      "paths": [
+        "backups/radredhc.js",
+        "backups/radrednm.js",
+        "backups/radrednmnew.js",
+        "backups/trainer_orders/radrednmnew.js",
+        "js/savereaders/savereader_radicalred.js",
+        "js/savereaders/save_constants/radical_red_constants.js",
+        "js/savereaders/save_constants/radical_red_dex_ability_constants.js",
+        "js/savereaders/save_constants/radical_red_item_constants.js",
+        "js/savereaders/save_constants/radical_red_randomizer_constants.js",
+        "calc/test/radicalred-savereader.test.js"
+      ],
+      "baseline_note": "Added 2026-11-01 (Hardcore 4.1 source pass). Pinned 2a54a6d; reference only (no top-level licence).",
+      "state": {
+        "sha": "2a54a6d9ce708a7870c16bcb5cf751c263e477a2",
+        "files": {
+          "backups/radredhc.js": "483e4b45074a336f0239d2f7f9dbd854f960e6b5",
+          "backups/radrednm.js": "1171c3a12ae6725df091f2f30d81215644e46856",
+          "backups/radrednmnew.js": "e67255560086f1274b9dba0e8214bee65f8de38f",
+          "backups/trainer_orders/radrednmnew.js": "4233a671651a020c1cabcd716d4f174783dc720e",
+          "calc/test/radicalred-savereader.test.js": "ae3120f0eba98d15038ac525da187ddf0ca3d71a",
+          "js/savereaders/save_constants/radical_red_constants.js": "97cd195727ffcc555375c7733195b47d2ddabc41",
+          "js/savereaders/save_constants/radical_red_dex_ability_constants.js": "1eae60878f4ebb69e18158a2d952902703ff15be",
+          "js/savereaders/save_constants/radical_red_item_constants.js": "a17acd45be0cdd2866d44c279efa616ad52bc813",
+          "js/savereaders/save_constants/radical_red_randomizer_constants.js": "0768dd70c6965188caf9f794dbdb5d73f0730250",
+          "js/savereaders/savereader_radicalred.js": "c183d50bdf7e9c6109d4044281c143183c536e4e"
+        }
+      }
     }
   ]
 }

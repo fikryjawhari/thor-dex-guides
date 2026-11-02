@@ -20,7 +20,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | --- | --- |
 | `new_hack.py <hack> --like <built hack> [--title name] [--version N] [--ls-prefix prefix] [--dry-run] [--force]` | Stdlib scaffold: config, notes / source headings, empty sprites, extract modules / check, gate rebuild and calc scenario / engine-check stubs. No data or other hack's mechanics / fixtures; calc off. Details below. |
 | `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N]` / `scenarios [hack ...] [--only a,b] [--jobs N]` | Captures committed HTML/data/reports at a ref; rebuilds data and runs serial DOM, consistency, tabs, migration, mockup and scenario checks; `--jobs N` runs the scenario × guide runs N at a time (each its own browser; same results as serial). `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
-| `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` to the main checkout (Windows junctions, no copying), then `uv sync`; no hacks means every built guide. Refuses other claims or existing source copies. Release removes only the matching claim. |
+| `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` and the main checkout's `.tmp/item-icons/` cache when present (Windows junctions, no copying), then `uv sync`; no hacks means every built guide. Refuses other claims or existing source/cache copies. Release removes only the matching claim. |
 | `scenarios/tracker-reload.mjs <guide.html>` | Seeded tracker state, Clear and reload at 260 × 316 in `dvkb`; assertions on the control and saved state. `scenarios/README.md` describes new spec checks. |
 | `scenarios/calc-*.mjs <guide.html>` | Calc page checks: layout, controls, state, import/bridge, mechanics and per-hack fields. Coverage, sizes and failure output: `scenarios/README.md` → Calc checks. |
 | `calc_check_lib.mjs` | Shared calc scenario harness: guide copies with fixture patches, role-based trainers and save IDs, isolated pages, hit-tested taps, number boxes/dvkb pad, real file input, error capture and result matrices. |
@@ -50,7 +50,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `itemstd.py` | Items tab standard (the rules are its docstring): `standardise(D, RULES.get(hack, {}))` puts `D['IT']` and the walkthrough's item rows in the shared box set, sub-headings and Found / Wild / Also / Shop lines; idempotent. CLI: `python -I tools/itemstd.py <hack> [data.json]`. |
 | `tabs_check.py` | `python -I tools/tabs_check.py [hack ...]` after a build: Walkthrough and Trainers pages list the same trainers in the same order, and the cap a place / stop shows never goes down (optional boxes left out). Exit 1 on a problem. |
 | `browser.mjs` | Shared `startBrowser({profilePrefix, flags, onEvent, onDisconnect})` for domcompare, consistency, walk-state and mockup checks. Discovers Chrome / Edge (`CHROME` overrides), starts an isolated profile and CDP connection, and returns `{send, close}`; `close()` stops Chrome and removes the profile. Scenarios, navigation waits, assertions and per-check flags stay in callers. Requires Node 22+. |
-| `domcompare.mjs <old.html> <new.html> [--kb]` | Renders two builds route by route in headless Chrome and compares the DOM (options in its header; timing below). The check after any template change. |
+| `domcompare.mjs <old.html> <new.html> [--kb]` | Renders two builds route by route in headless Chrome and compares the DOM: every Pokémon, move, ability, item, nonempty move property, location and trainer page, then the list pages (options in its header; timing below). The check after any template change. |
 | `consistency-check.mjs [hack ...]` | After `python assemble.py`: starter / player pickers and rival filtering, single caps, MGM, saved ticks, five viewer sizes, expanded pages and light theme, normal and `dvkb`, on every built guide (or the ones named). Requires Chrome or Edge. |
 | `walk-state-check.mjs` | `node tools/walk-state-check.mjs <old.html> <new.html> <legacy-stop-key>` checks walkthrough layout migration, every stop's saved state using the new build's migration function, fragment inheritance, real checkbox rendering (synthetic steps), Next step, uncheck/reset and reload, normal and `dvkb`. For an old build from before stop keys were stamped, use `1.8` for Eternal X or `1.0` for Photonic Sun; a current keyed baseline also works at `0.0`. With no arguments, compares each `.tmp/state-before/<hack>.html` snapshot against its `dist/` build at stop `0.0`; save those snapshots before rebuilding. Requires Chrome or Edge. |
 | `pngpal.py` | Reads, writes and crops palette PNGs (used by `sprites_pee.py` and `assemble.py`). |
@@ -223,7 +223,7 @@ run `uv run python -I tools/check_updates.py [hack]`; its pins and coverage are 
 | Meissa Moon | v2.2.2 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Author's Drive, PokeCommunity thread |
 | Navy Sapphire | v2.1.5 | 2026-10-18 (docs), 2026-10-19 (romfs) | – | Hack's Drive, PokeCommunity thread |
 | Photonic Sun | v2.38 | 2026-10-18 (docs + romfs), dex extract 2026-10-19, vanilla extracts + Bulbapedia 2026-10-19 | 2026-10-19 | Buffel Saft's Drive, PokeCommunity thread, Bulbapedia (USUM) |
-| Radical Red | v4.1 | 2026-10-18, move details 2026-10-19 | – | RomHackDex; the two trainer sheets |
+| Radical Red | v4.1 (Hardcore) | 2026-10-18, move details 2026-10-19; official docs, dex data, Showdown / calc / hzla pins 2026-11-01 | – | Official Drive folder and dex (JwowSquared/Radical-Red-Pokedex), RR Showdown / damage-calc repos, hzla, RomHackDex; `hacks/radical-red/SOURCES.md` |
 | Renegade Platinum | v1.3.0 | 2026-10-18 (docs), 2026-10-19 (RomHackDex) | – | Drayano's Drive (Documentation folder), RomHackDex |
 | SoulGold | no version number | 2026-10-18, species details 2026-10-19 | – | eemeliri.github.io/soulgold data files |
 | Unbound | 2.1.1.1 Expert (docs target) | 2026-10-18/19 mirrors; 2026-10-29 reference pins, caps/regular/location docs, 37 save candidates | 2026-10-30 | RomHackDex, unboundwiki.com, three boss sheets; hzla ff6c3e3, Unbound-Cloud 3d20f32; trainer-index LEVEL CAPS (Maxima 40); `hacks/unbound/SOURCES.md` |
@@ -298,11 +298,19 @@ jobs (EI `#/a/` at 1 job: 30.4 s with them, 10.4 s without).
 Since 2026-10-24, snapshots force `content-visibility:visible`, wait for rendering frames after DOM quiet, and
 recompute collapse bars after lazy cards fill. This removes skipped-layout and late-bar noise without ignoring DOM
 differences. The slice table above predates that change; remeasure it before tuning job counts. Run whole sweeps
-sequentially, not alongside another browser check. With four jobs, the current full EI guide (2649 routes) takes
+sequentially, not alongside another browser check. Before item/property coverage was added, the full EI guide (2649 routes) took
 about 150–153 s in normal / keyboard mode; a keyboard self-comparison took 152.0 s with no flagged routes or page
 errors. The preceding worker recorded 139.1 s after the fix and 161.8 s with one spurious flag rechecked clean before
 the final settling fix. These are full sweeps, not the historical slice timings; contention-heavy baseline logs
 (including the 458.3 s EI keyboard run) are not a controlled performance comparison.
+
+Since 2026-11-02, the default route list also visits every item from `itemIdx()` (including wild-held, trainer-held,
+Mega Stone, interaction-only and description-only items), using the page's `ihref()` escaping, and every nonempty
+move-property page. Moves and abilities were already exhaustive; items are exhaustive too, not sampled.
+On the same EI build at `697e916`, normal self-comparisons with `--jobs=4` visited 2650 routes in 196.0 s before
+and 3137 routes in 334.2 s after (487 additional item/property routes), both with zero differing routes, missed
+hashchanges, unsettled pages or page errors. Other workers ran browser checks concurrently under this job's explicit
+override, so these are observed runtimes, not a controlled estimate of the added coverage's cost.
 
 ## 3DS game data (found 2026-10-19)
 

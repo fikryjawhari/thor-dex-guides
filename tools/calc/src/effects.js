@@ -169,6 +169,11 @@ export function createEffects(env) {
         const broken = !entry && foe && sides[other(who)].mon.hasAbility(...MOLD);
         if (gen >= 5 && mon.hasAbility('Simple') && !broken) by *= 2;
         if (gen >= 5 && mon.hasAbility('Contrary') && !broken) by *= -1;
+        if (by < 0 && !foe && env.selfDropImmune?.(mon)) {
+          note(`${abilityOf(state)}: ${STAT_LABEL[stat]} not lowered`);
+          out.parts.push({who, stat, blocked: abilityOf(state)});
+          continue;
+        }
         if (by < 0 && foe) {
           const row = blocker('drop:' + stat, ctxFor(who, true));
           if (row) { note(`${reason(row)}: ${STAT_LABEL[stat]} not lowered`); out.parts.push({who, stat, blocked: reason(row)}); continue; }
@@ -350,6 +355,14 @@ export function createEffects(env) {
       if (entry.k && entry.k !== 'fn' && (entry.tg === 's' || record0.tg === 's')) kind(entry, 'atk', false);
       else if (entry.k && entry.k !== 'fn' && target.mon.curHP()) kind(entry, 'def', true);
     };
+    // A held item's on-hit effect (hit.item: adapter `over.items[name].afterHit`), Showdown onSourceHit: before the
+    // user's own drops and the secondaries, neither Sheer Force nor Shield Dust touches it.
+    const own = hit.item;
+    if (own && target.mon.curHP() && !(own.v && target.volatiles.has(own.v)) && !(own.toggle && values['def' + own.toggle])
+      && (!own.b || Object.entries(own.b).some(([stat, by]) => by > 0 ? (target.mon.boosts[stat] ?? 0) < 6 : (target.mon.boosts[stat] ?? 0) > -6))) {
+      if (own.v && volatile('def', own.v, true) && own.toggle) out.field = {...out.field, ['def' + own.toggle]: true};
+      if (own.b) stages('def', own.b, true, own.item);
+    }
     if (record0.sb) stages('atk', record0.sb, false, name);
     const secondaries = (record0.sec || []).filter(sec => !sec.k || sec.k === 'log' || sec.b || sec.st || sec.v || sec.sb);
     for (const sec of sheer && secondaries.length ? [] : secondaries) {
@@ -437,12 +450,14 @@ export function createEffects(env) {
           const changes = {};
           for (const key of ['Reflect', 'LightScreen', 'Safeguard', 'Mist', ...(gen >= 7 ? ['AuroraVeil'] : []), ...hazards]) changes['def' + key] = false;
           if (gen >= 6) for (const key of hazards) changes['atk' + key] = false;
-          if (gen >= 8) changes.terrain = '';
+          // `keepTerrain` (a hack's record: RR Hardcore Main!E12): Defog leaves terrain in every generation.
+          const terrain = gen >= 8 && !entry.keepTerrain;
+          if (terrain) changes.terrain = '';
           out.field = changes;
           stages('def', {eva: -1}, true, name);
           out.parts.push({who: 'both', log: 'Field cleared'});
           note(gen >= 6 ? 'Hazards cleared on both sides; target screens cleared' : 'Target hazards and screens cleared');
-          if (gen >= 8) note('Terrain cleared');
+          if (terrain) note('Terrain cleared');
           return true;
         }
         case 'courtchange': {

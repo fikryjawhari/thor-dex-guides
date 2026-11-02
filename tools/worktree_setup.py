@@ -59,6 +59,14 @@ def main():
                 raise ValueError(f'{target} already exists and is not linked to {source}; leave it intact')
         else:
             links.append((target, source))
+    source = main_root / '.tmp' / 'item-icons'
+    target = ROOT / '.tmp' / 'item-icons'
+    if source.is_dir():
+        if os.path.lexists(target):
+            if target.resolve() != source.resolve():
+                raise ValueError(f'{target} already exists and is not linked to {source}; leave it intact')
+        else:
+            links.append((target, source))
     claim.parent.mkdir(exist_ok=True)
     if not claim.exists():
         with claim.open('x', encoding='utf-8') as output:
@@ -66,6 +74,7 @@ def main():
                            start=datetime.datetime.now(datetime.timezone.utc).isoformat()), output)
             output.write('\n')
     for target, source in links:
+        target.parent.mkdir(parents=True, exist_ok=True)
         if os.name == 'nt':
             subprocess.run(['cmd', '/d', '/c', 'mklink', '/J', str(target), str(source)], check=True)
         else:

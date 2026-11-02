@@ -4,11 +4,15 @@
 (() => {
 window.READERS=window.READERS||{};
 // One profile per hack's save format: its sector signature, box count, randomiser flags and experience table. A guide
-// names its own in cfg.calc.cfru; unset, any profile here is accepted. Radical Red adds its own entry (README → cfru).
+// names its own in cfg.calc.cfru; unset, any profile not marked named is accepted. Radical Red keeps the retail
+// signature, so its profile is named only (a guide that names no profile never reads it) and tells a vanilla save by
+// its checksum windows (vanilla). README → cfru.
 const PROFILES={
- unbound21:{game:'Pokémon Unbound 2.1',signature:0x01121999,boxes:25,randomiser:[0x9FD,0x9FE],exp:'unbound'}},
+ unbound21:{game:'Pokémon Unbound 2.1',signature:0x01121999,boxes:25,randomiser:[0x9FD,0x9FE],exp:'unbound'},
+ radicalred41:{game:'Pokémon Radical Red 4.1',signature:0x08012025,boxes:25,randomiser:[0x942],exp:'cfru',named:true,vanilla:true}},
 OTHER={0x08012025:'FireRed / LeafGreen or Emerald (not CFRU)',0x01122000:'Pokémon Unbound 2.2 or later',0x01121998:'Pokémon Unbound 2.0',0x29012004:'A CFRU base build (CFRE)'};
 const SECTOR=0x1000,DATA=0xFF0,SLOT=14,CHECKED={0:0xF24,4:0xD98,13:0x450},BOX=58,PARTY=100,
+VANILLA={0:0xF2C,4:0xF08,13:0x7D0},                  // the retail games' checksum windows (0xF80 for the others)
 STATS=[0,1,2,4,5,3];                                  // the game's HP Atk Def Spe SpA SpD -> HP Atk Def SpA SpD Spe
 // Box storage in CFRU's 25-box layout: [sector id, from, to] runs joined in order; boxes 1-19 fill the vanilla storage
 // sectors, 20-22 the slot-independent sectors 30 / 31, 23-24 the ends of 2 / 3, box 25 the end of sector 0.
@@ -20,19 +24,21 @@ const expFor=(rate,n,u)=>{if(n<=1)return n;const c=n*n*n,d=Math.floor;switch(rat
 const levelFor=(rate,exp,u)=>{if(rate==null)return null;let level=1;while(level<=100&&expFor(rate,level,u)<=exp)level++;return level-1;};
 function isState(bytes){const head=String.fromCharCode(...bytes.subarray(0,8));return head.startsWith('\x89PNG')||head.startsWith('RASTATE')||bytes[0]===0x1f&&bytes[1]===0x8b;}
 // A slot is its 14 sectors: every id 0-13 once, one signature and save counter, each checksum right.
-function readSlot(view,base){const ids=new Map();let signature=null,counter=null;
+function readSlot(view,base,windows=CHECKED,rest=DATA){const ids=new Map();let signature=null,counter=null;
  for(let s=0;s<SLOT;s++){const o=base+s*SECTOR,id=view.getUint16(o+0xFF4,true),sig=view.getUint32(o+0xFF8,true),count=view.getUint32(o+0xFFC,true);
   if(id>=SLOT||ids.has(id))return {signature:s?signature:sig};
   if(signature===null){signature=sig;counter=count;}else if(sig!==signature||count!==counter)return {signature};
-  let sum=0;for(let i=0;i<(CHECKED[id]||DATA);i+=4)sum=(sum+view.getUint32(o+i,true))>>>0;
+  let sum=0;for(let i=0;i<(windows[id]||rest);i+=4)sum=(sum+view.getUint32(o+i,true))>>>0;
   if((((sum>>>16)+sum)&0xFFFF)!==view.getUint16(o+0xFF6,true))return {signature};
   ids.set(id,o);}
  return {signature,counter,ids};}
 // The newest valid slot whose signature is one this guide reads (the game ignores a slot signed by another build).
-function pick(bytes,view,accepted){const slots=[readSlot(view,0),readSlot(view,SLOT*SECTOR)],ok=slots.filter(s=>s.ids&&accepted.has(s.signature));
+function pick(bytes,view,accepted,vanilla){const slots=[readSlot(view,0),readSlot(view,SLOT*SECTOR)],ok=slots.filter(s=>s.ids&&accepted.has(s.signature));
  if(ok.length===2){const [a,b]=ok.map(s=>s.counter);return a===0xFFFFFFFF&&b===0?ok[1]:b===0xFFFFFFFF&&a===0?ok[0]:b>a?ok[1]:ok[0];}
  if(ok.length)return ok[0];
  const signed=slots.map(s=>s.signature).filter(s=>s!=null&&s!==0xFFFFFFFF&&s!==0);
+ // A hack with the retail signature: a slot whose checksums fit the retail windows is a vanilla game's save.
+ if(vanilla&&[0,SLOT*SECTOR].some(b=>readSlot(view,b,VANILLA,0xF80).ids))throw {code:'wrong',game:OTHER[0x08012025]+' save'};
  if(signed.some(s=>accepted.has(s)))throw {code:'unreadable'};                       // this game's slot, damaged
  const known=signed.map(s=>OTHER[s]||Object.values(PROFILES).find(p=>p.signature===s)?.game).find(Boolean);
  if(known)throw {code:'wrong',game:known+' save'};
@@ -55,9 +61,9 @@ function partyMon(b,o,ctx){const v=new DataView(b.buffer,b.byteOffset+o,PARTY),p
 window.READERS.cfru=(bytes,data)=>{
  if(isState(bytes))throw {code:'state'};
  if(bytes.length<0x20000||bytes.length>0x20000+64)throw {code:'wrong',game:bytes.length===0x10000?'A 64 KB save: not this game':undefined};
- const want=data?.cfg?.calc?.cfru,profiles=want?[PROFILES[want]].filter(Boolean):Object.values(PROFILES);
+ const want=data?.cfg?.calc?.cfru,profiles=want?[PROFILES[want]].filter(Boolean):Object.values(PROFILES).filter(p=>!p.named);
  if(!profiles.length)throw {code:'unreadable'};
- const view=new DataView(bytes.buffer,bytes.byteOffset,0x20000),slot=pick(bytes,view,new Set(profiles.map(p=>p.signature)));
+ const view=new DataView(bytes.buffer,bytes.byteOffset,0x20000),slot=pick(bytes,view,new Set(profiles.map(p=>p.signature)),profiles.some(p=>p.vanilla));
  const profile=profiles.find(p=>p.signature===slot.signature);
  const sector=id=>id>=SLOT?bytes.subarray(id*SECTOR,id*SECTOR+DATA):bytes.subarray(slot.ids.get(id),slot.ids.get(id)+DATA);
  // Randomised saves (species / learnset randomiser flags, or the Egglocke tool's trainer) map to the wrong species.

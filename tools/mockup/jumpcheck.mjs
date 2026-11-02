@@ -29,7 +29,7 @@ const res = await ev(`(async()=>{const sleep=ms=>new Promise(r=>setTimeout(r,ms)
  pick(TRS.filter(t=>!rivalHidden(t)),N).forEach(t=>jobs.push(['tr '+t.n+' ('+t.k+')',()=>SR.jumpTr(t.k),()=>{const [gi]=t.at;return app.querySelector('details.split[data-gi="'+gi+'"] details.trd[data-k="'+t.k+'"]>summary')||[...app.querySelectorAll('details.split[data-gi="'+gi+'"] details.trd')].find(d=>(d.dataset.ks||'').split(',').includes(t.k))?.querySelector(':scope>summary');},'#/trainers',1]));
  pick(TRS.filter(t=>!rivalHidden(t)&&walkOf(t.k)),N).forEach(t=>jobs.push(['walktr '+t.n+' ('+t.k+')',()=>SR.jumpWalkTr(t.k),()=>{const w=walkOf(t.k);return app.querySelector('details.stopd[data-k="'+w[0]+'.'+w[1]+'"] details.trd[data-k="'+t.k+'"]>summary')||[...app.querySelectorAll('details.stopd[data-k="'+w[0]+'.'+w[1]+'"] details.trd')].find(d=>(d.dataset.ks||'').split(',').includes(t.k))?.querySelector(':scope>summary');},'#/walk',1]));
  pick(walkStops(),N).forEach(([s,si,ti])=>jobs.push(['stop '+s.n+' ('+si+'.'+ti+')',()=>SR.jumpStop(si,ti),()=>app.querySelector('details.stopd[data-k="'+si+'.'+ti+'"]>summary,.wsign[data-k="'+si+'.'+ti+'"]'),'#/walk',0]));
- pick((D.IT||[]).flatMap((sec,si)=>sec.r.map((r,ri)=>[r[0],si,ri])),N).forEach(([n,si,ri])=>jobs.push(['item '+n+' ('+si+'.'+ri+')',()=>SR.jumpItem(si,ri),()=>app.querySelectorAll('details.split[data-si="'+si+'"] .body tr')[ri],'#/items',0]));
+ pick((D.IT||[]).flatMap((sec,si)=>sec.r.map((r,ri)=>[r[0],si,ri])),N).forEach(([n,si,ri])=>jobs.push(['item '+n+' ('+si+'.'+ri+')',()=>SR.jumpItem(si,ri),()=>app.querySelector('details.split[data-si="'+si+'"] .body [data-ri~="'+ri+'"]'),'#/items',0]));
  pick(AR.map((A,a)=>[A,a]).filter(([A])=>A.in==null),N).forEach(([A,a])=>jobs.push(['place '+A.n+' ('+a+')',()=>SR.place(a),()=>{const li=AR[ARS(a)[0]].l[0],b=LOC2A[li];if(b==null)return null;const tk=AR[b].in!=null?AR[b].in+'.0':b+'.'+places(b).find(p=>p.ls.includes(li)).j;return app.querySelector('details.stopd[data-k="'+tk+'"]>summary');},'#/locs',0]));
  const froms=['#/trainers','#/items','#/walk','#/locs','#/'];let fi=0;
  for(const [name,run,find,page,card] of jobs){tried++;
@@ -50,3 +50,4 @@ const res = await ev(`(async()=>{const sleep=ms=>new Promise(r=>setTimeout(r,ms)
 console.log(res);
 if (errs.length) console.log('page errors:\n' + errs.join('\n'));
 await browser.close();
+process.exitCode = errs.length || !/^tried \d+, bad 0(?:\n|$)/.test(res) ? 1 : 0;

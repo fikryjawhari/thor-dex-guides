@@ -25,7 +25,7 @@ No Pokémon yet. The family notes below describe format detection and validation
 | Family | Hacks | Format |
 | --- | --- | --- |
 | Gen 3 (pokeemerald / pokefirered) | SoulGold (expansion, like EI) | 14 sections in two slots (newest by save index); each Pokémon's 4 blocks ordered by personality value and XOR-encrypted with it. Expansion hacks change the struct per hack. |
-| CFRU | Radical Red | `cfru.js` with its own profile (signature, boxes, randomiser flags, experience table; cfru below) and GID. |
+| CFRU | Radical Red | `cfru.js`, profile `radicalred41` (cfru below), and GID. Provisional: no real save checked. |
 | Gen 4 (Pt / HGSS) | Heartfelt Gold, Renegade Platinum | As `gen4.js`; vanilla-engine hacks differ in the species / form numbers. |
 | Gen 6/7 | Meissa Moon, Navy Sapphire | `gen67.js` as is, with the guide's own `GID`. |
 
@@ -437,12 +437,14 @@ rename in-battle forms (28). The fixtures (`hacks/unbound/.src/saves/expected/`,
 written from the oracles, not from the reader: 12,177 Pokémon, 10 refused saves. Not checked: a 2.1.1.1 save played on
 RetroArch (the signature covers 2.1.0-2.1.1.1, so the format is the same).
 
-**Radical Red** needs its own profile: its sector signature (from an RR save's footer at 0xFF8), box count and
-whether its box map is the 25-box one above (Unbound-Cloud's CFRU map, used for every CFRU hack it reads), its
-randomiser flags (CFRU's defaults are 0x940 / 0x941), its experience table (check a save's freshly caught Pokémon
-against pokefirered's formulas, as above), and `cfg.calc.cfru` in both guides once there are two profiles. Its `GID`
-comes from RR's own tables (its species / move / item ids are not Unbound's). hzla's RR reader and PKHeX, if it reads
-RR, are the oracles; `cfru_compare.mjs` takes `--hack` but reads Unbound-Cloud's dumps: RR needs its own oracle dump.
+**Radical Red** has its own profile, `radicalred41` (`cfg.calc.cfru`; a guide that names none gets Unbound's, so
+Unbound reads as before): the vanilla FireRed signature `0x08012025` (a vanilla FireRed save is told apart by its
+checksums fitting the retail windows, and refused), the same 25-box map and party / box layout, randomiser flags
+0x940-0x942 with only the ability randomiser (0x942) refused, and pokefirered's experience formulas with growth rates
+from RR's `Base_Stats.c` (`hacks/radical-red/extract/growth.json`). Format sources: RadicalHex (`3697412`) and PKForge
+(`2df0443`), both built from real RR saves. Checked on 7 synthetic saves (`tools/calc/cfru_rr.mjs`, `cfru_rr/`,
+`cfru_rr_check.mjs`) and against hzla's reader and RadicalHex's loader on the same bytes (`cfru_rr_oracles.mjs`: 0
+unexplained). Not checked: a real RR save (`hacks/radical-red/notes.md` → Save import).
 
 ## PKHeX oracle recipe (Gen 6/7)
 
