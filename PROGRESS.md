@@ -36,12 +36,11 @@ from link (same library id, saved state kept).
 7. Source updates: SoulGold's data changed since 2026-10-24 (re-fetch before its guide); hzla `gen789.js` pin kept.
 8. Small data leftovers: missing item icons, tutor-card parsing, a `nomerge` flag, an unused CSS rule.
 9. Radical Red follow-ups: in-game checks, one real `.srm` import, Gulp Missile, Chillet's sprite.
-10. Check speed follow-ups: scenarios' `dvkb` runs (needs the user's yes), tiers past ~10 guides, pagecheck /
-    walkcheck assertions, a zoomcheck retry.
+10. Check tiers past ~10 guides (the last check-speed follow-up).
 
 ## Next session
 
-- **Next guide:** say which hack (or a check-speed follow-up: Open 10). Sources-only start:
+- **Next guide:** say which hack. Sources-only start:
   `.agents/references/new-guide-sources.md`; the whole procedure: `.agents/references/new-guide.md`.
 
 ## Elsewhere in DETAIL

@@ -51,7 +51,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `tabs_check.py` | `python -I tools/tabs_check.py [hack ...]` after a build: Walkthrough and Trainers pages list the same trainers in the same order, and the cap a place / stop shows never goes down (optional boxes left out). Exit 1 on a problem. |
 | `browser.mjs` | Shared `startBrowser({profilePrefix, flags, onEvent, onDisconnect})` for domcompare, consistency, walk-state and mockup checks. Discovers Chrome / Edge (`CHROME` overrides), starts an isolated profile and CDP connection, and returns `{send, close}`; `close()` stops Chrome and removes the profile. Scenarios, navigation waits, assertions and per-check flags stay in callers. Requires Node 22+. |
 | `domcompare.mjs <old.html> <new.html> [--kb]` | Renders two builds route by route in headless Chrome and compares the DOM: every Pokémon, move, ability, item, nonempty move property, location and trainer page, then the list pages (options in its header; timing below). The check after any template change. |
-| `consistency-check.mjs [hack ...]` | After `python assemble.py`: starter / player pickers and rival filtering, single caps, MGM, saved ticks, five viewer sizes, expanded pages and light theme, normal and `dvkb`, on every built guide (or the ones named). Requires Chrome or Edge. |
+| `consistency-check.mjs [hack ...]` | After `python assemble.py`: starter / player pickers and rival filtering, single caps, MGM, saved ticks, five viewer sizes on every page kind (Home, Locations, Trainers, Items, walkthrough, calc, a Pokémon, trainer, move, ability and item page), expanded pages and light theme, normal and `dvkb`, on every built guide (or the ones named). Requires Chrome or Edge. |
 | `walk-state-check.mjs` | `node tools/walk-state-check.mjs <old.html> <new.html> <legacy-stop-key>` checks walkthrough layout migration, every stop's saved state using the new build's migration function, fragment inheritance, real checkbox rendering (synthetic steps), Next step, uncheck/reset and reload, normal and `dvkb`. For an old build from before stop keys were stamped, use `1.8` for Eternal X or `1.0` for Photonic Sun; a current keyed baseline also works at `0.0`. With no arguments, compares each `.tmp/state-before/<hack>.html` snapshot against its `dist/` build at stop `0.0`; save those snapshots before rebuilding. Requires Chrome or Edge. |
 | `pngpal.py` | Reads, writes and crops palette PNGs (used by `sprites_pee.py` and `assemble.py`). |
 | `garc.py` | Reads 3DS GARC archives, LZ11 entries, mini packs and Gen 6/7 game text. Used by the scripts below. |
@@ -307,6 +307,13 @@ single checks (a big guide's domcompare, calc-field-states / calc-team on any gu
 - **zoom / page / walk checks** wait for the guide's boot (`browser.mjs` → `navigate()`) instead of 1.5 s after each
   navigation: zoomcheck 42-60 s → ~30 s, walkcheck 20 s → 8 s, pagecheck 71 s → 49 s (most of the rest is its own
   in-page waits). Their printed output matched the old runs line for line, apart from one 1 px sub-pixel line.
+
+**2026-11-03, after the check-tests job** (`gate.py check`, all seven guides, 8 at a time, 28 of 372 cached):
+**24.5 min, 372 / 372**. Scenarios run `dvkb` only where the normal run touched a box (`tools/scenarios/README.md`):
+1,597 `dvkb` runs left out of 5,183, scenario work ~136 → ~106 process-minutes with the new `blocks.mjs` included
+(it replaced pagecheck / walkcheck); the other browser checks ~66. Unbound's zoomcheck (480 × 392, Locations, mixed,
+Route 5's two bars at zoom 0.5) went stale in the pool, stale again on its in-check replay (still under the pool's
+load) and passed alone: the gate's lone rerun is what clears it. The same state flaked on 2026-11-02.
 
 To time a sweep slice by hand, compare a build with itself (always identical, so only the sweep is timed) and read
 `swept in` and `time by route kind`:

@@ -37,7 +37,7 @@ REBUILDS = {
     'hardlove-gold': ['hacks/hardlove-gold/extract/build.py'],
     'emerald-imperium': ['tools/itemstd.py', 'emerald-imperium'],
 }
-BROWSER_CHECK = r'(domcompare|consistency-check|walk-state-check|pagecheck|walkcheck|jumpcheck|zoomcheck|scenarios[/\\][^ ]+)\.mjs'
+BROWSER_CHECK = r'(domcompare|consistency-check|walk-state-check|jumpcheck|zoomcheck|scenarios[/\\][^ ]+)\.mjs'
 # Inputs every browser check may read besides its own scripts and the guide (readGuide's EI save tables, the
 # injected test reader, the frame, save fixtures).
 SHARED_INPUTS = ['template', 'tools/scenarios/fixtures', 'tools/mockup/thor-frame', 'hacks/emerald-imperium/data.json']
@@ -223,7 +223,7 @@ class Gate:
                                        encoding='utf-8', errors='replace', timeout=1800)
             text = completed.stdout
             logfile.write_text(' '.join(map(str, command)) + '\n' + text, encoding='utf-8')
-            diagnostics = bool(re.search(r'(?im)^0 routes|^page errors:|^ERRS (?!none)|RJ WRONG|tried \d+, bad [1-9]', text))
+            diagnostics = bool(re.search(r'(?im)^0 routes|^page errors:|tried \d+, bad [1-9]', text))
             tail = ' | '.join(text.strip().splitlines()[-2:])[-500:]
             if any(str(part).endswith('domcompare.mjs') for part in command):
                 tail = ' | '.join(line for line in text.splitlines()
@@ -349,11 +349,8 @@ def template_check(gate, names, jobs=8):
         guide = str(ROOT / 'dist' / (hack + '.html'))
         for mode in ([], ['kb']):
             suffix = '-kb' if mode else ''
-            for check in ('pagecheck', 'walkcheck', 'jumpcheck', 'zoomcheck'):
-                command = ['node', f'tools/mockup/{check}.mjs', guide]
-                if check in ('pagecheck', 'walkcheck'):
-                    command.append(str(gate.logs / (hack + '-' + check + suffix)))
-                runs.append((hack + '-' + check + suffix, command + mode, hack))
+            for check in ('jumpcheck', 'zoomcheck'):
+                runs.append((hack + '-' + check + suffix, ['node', f'tools/mockup/{check}.mjs', guide] + mode, hack))
     gate.run_browser(runs + scenario_runs(names), jobs)
 
 

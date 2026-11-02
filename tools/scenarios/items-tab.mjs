@@ -107,7 +107,7 @@ const checks = [
     },
   },
   {
-    id: 'ticks', title: 'card order / count / fade, shared with walk rows and the item page, Clear ticks two taps; bar not covered', sizes: SIZE_SMALL, modes: MODES,
+    id: 'ticks', title: 'card order / count / fade, shared with walk rows and the item page, Clear ticks two taps; bar not covered', sizes: SIZE_SMALL,
     run: async page => {
       await page.goto('#/');
       await page.value(`localStorage.setItem(LS.items,JSON.stringify({o:{},x:{},s:{},g:{'gone-key':1}}))`);
@@ -181,7 +181,7 @@ const checks = [
     },
   },
   {
-    id: 'stop', title: "a card line's stop link lands on the walkthrough row", sizes: SIZE_SMALL, modes: MODES, skip: !walked,
+    id: 'stop', title: "a card line's stop link lands on the walkthrough row", sizes: SIZE_SMALL, skip: !walked,
     run: async page => {
       await page.goto('#/');
       const x = walked, k = pkOf(x.n)[0], [si, ti] = walkKeys.get(k);

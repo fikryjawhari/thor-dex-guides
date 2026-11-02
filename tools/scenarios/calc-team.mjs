@@ -3,7 +3,7 @@
 // Each check runs at the sizes and modes the spec gives (runChecks in tools/calc_check_lib.mjs). Without cfg.calc: skip.
 // Usage: node tools/scenarios/calc-team.mjs [dist/<hack>.html]
 import assert from 'node:assert/strict';
-import { fixturePatches, guide, guideArg, prepareGuide, runChecks, setupCalc } from '../calc_check_lib.mjs';
+import { fixturePatches, guide, guideArg, MODES, prepareGuide, runChecks, setupCalc } from '../calc_check_lib.mjs';
 
 const file = prepareGuide(guideArg(process.argv), { tag: 'calc-team', edit: fixturePatches });
 if (!file) {
@@ -576,4 +576,6 @@ const checks = [
   },
 ];
 
-await runChecks({ name: 'calc-team', file, checks });
+// layout checks run in both modes (dvkb's number boxes have their own widths); the rest: auto (calc_check_lib MODES_AUTO)
+const LAYOUT = new Set(['first frame plain', 'first frame busy', 'field overlap', 'jump stops', 'first frame ability card', 'auto doubles wide']);
+await runChecks({ name: 'calc-team', file, checks: checks.map(c => (LAYOUT.has(c.id) ? { modes: MODES, ...c } : c)) });

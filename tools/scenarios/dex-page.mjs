@@ -70,7 +70,7 @@ const checks = [
   {
     id: 'held',
     title: 'Held items: wild % from P.hi on forms met in the wild, no trainers part, no section without wild items, open state saved',
-    sizes: SIZE_SMALL, modes: MODES,
+    sizes: SIZE_SMALL,
     run: async page => {
       if (HELD) {
         await open(page, HELD.id);
@@ -300,4 +300,5 @@ const checks = [
   },
 ];
 
-await runChecks({ name: 'dex-page', file, checks: checks.map(c => ({ modes: MODES, ...c })) });
+// fit in both modes (dvkb's search bar and number boxes have their own widths); the rest: auto (calc_check_lib MODES_AUTO)
+await runChecks({ name: 'dex-page', file, checks: checks.map(c => (c.id === 'fit' ? { modes: MODES, ...c } : c)) });

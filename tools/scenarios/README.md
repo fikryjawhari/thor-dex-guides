@@ -36,7 +36,8 @@ Import scenarios inject `template/calc/readers/test.js`; real reader checks use 
 | `stable-keys.mjs` | Saved state across a simulated guide update (27a-d): trainers (cap, open state, calc foe / recents / edits / copied foe), search recents, species (stat calc, tracker), open Items / Locations boxes and the reopen route; old storage formats. Runs on every guide. |
 | `calc-entry.mjs` | Trainer-card and Pokémon-page entry points. |
 | `item-page.mjs` | The item page (`#/i/<name>`): cards per data (top card, In battle, Where to find, Held by, Moves it affects), the TM page, a Mega Stone and a `nu` one, Not found, fit at every size; pickup ticks in `LS.items` `g` (saved by key, shared on screen, ordered last, kept on reload) and the stop link landing on the walkthrough row; item names linking from every page that names one. Runs on every guide. |
-| `items-tab.mjs` | The Items tab: box names / counts from the data, one card per item (nomerge: a card per pickup), tutor cards by group or the table; card ticks (next 3 lines, done/total, fade) shared with walkthrough rows and the item page; Clear ticks two taps (arm, disarm, clear); a card's stop link landing; search cards; old index-keyed open state dropped once. 260 × 316, normal and `dvkb`. |
+| `items-tab.mjs` | The Items tab: box names / counts from the data, one card per item (nomerge: a card per pickup), tutor cards by group or the table; card ticks (next 3 lines, done/total, fade) shared with walkthrough rows and the item page; Clear ticks two taps (arm, disarm, clear); a card's stop link landing; search cards; old index-keyed open state dropped once. 260 × 316 (boxes in normal and `dvkb`, the rest auto). |
+| `blocks.mjs` | The box pages (Locations, Trainers, Items, the walkthrough) at 260 × 316 and 537 × 424, normal and `dvkb`, on the box with the most in it: header taps hold the header (every frame), pinned headers at their CSS top with no gap and nothing over them, a tap on a pinned header closes / reopens in place, collapse bars land the header (`foldUp`), rail jumps and their disabled state, Expand / Collapse all hold the bar, reload keeps the open box and a closed place; a place link, Next step, where the rail shows. Blocks are opened with the page's own controls (Show switches, Expand all bars, header taps): forcing `details.open` makes layouts the page never does. Replaces `tools/mockup/pagecheck.mjs` / `walkcheck.mjs`. Runs on every guide. |
 | `dex-page.mjs` | The Pokémon page: section defaults, one saved open state, Reset all, the name bar, ‹ › through the filtered list, kept place on switching (arrows, forms menu, Evolution rows), forms and family, fit at the five viewer sizes with the widest names. Runs on every guide. |
 | `calc-field.mjs` | Profile-driven controls, engine inputs and persistence after profile edits. |
 | `calc-hidden.mjs` | As-built visibility and entry points with and without `cfg.calc`. |
@@ -55,7 +56,14 @@ Import scenarios inject `template/calc/readers/test.js`; real reader checks use 
 | `calc-imperium.mjs`, `calc-hardlove.mjs`, `calc-photonic.mjs`, `calc-eternal.mjs` | Each hack's actual profile controls and persistence. |
 
 Calc checks skip guides without `cfg.calc`, except `calc-hidden`. Missing data or trainer roles may skip individual
-cases. The shared harness defaults to 260 × 316 in normal and `dvkb`; each scenario declares extra sizes/modes.
+cases. The shared harness defaults to 260 × 316 and to `MODES_AUTO`: normal, then `dvkb` only if the normal run
+touched a number, text or search box (focus, input or change, or a `setBox` / `typeSearch` / pad helper) or failed.
+`dvkb` changes only those boxes, the search bar and the keyboard, so a case that touches none ran the same code twice
+(about half the scenario time). The matrix shows `skip` for a `dvkb` run left out. `MODES` (both always) is for
+layout: `calc-layout`, `calc-team`'s first-frame / overlap / stops checks, `dex-page` fit, `item-page` page,
+`items-tab` boxes, `walk-missions` m1; `calc-smoke` and `tracker-reload` set their own. Page fit in `dvkb` on every
+page kind at the five viewer sizes is `consistency-check.mjs`. A new check: leave `modes` out unless it is about
+layout or only `dvkb` reaches what it tests without touching a box.
 Layout includes 260 × 400, 537 × 424, 832 × 424, 480 × 392 and 832 × 316 diagnostics.
 Harness runs print PASS/FAIL and a matrix, write `.tmp/calc-checks/<scenario>-<guide>.json`, and save
 `<scenario>-<guide>-<check>-<size>-<mode>-FAIL.png` on failure. Page errors and horizontal overflow fail a case
