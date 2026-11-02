@@ -240,6 +240,59 @@ await test('optional ability status immunity is scoped to the active guide abili
   assert.deepEqual(plain(engine.residual(holder)).map(part => part.l), ['Leftovers', 'Toxic']);
 });
 
+await test('optional speedMods rules reach the Speed readout and Speed-based power, by side', () => {
+  const quick = set('Charizard', {it: 'Charcoal'});
+  const rules = [{phase: 'speedMods', when: {op: 'and', args: [{op: 'eq', args: [{ref: 'names.atkItem'}, 'Charcoal']},
+    {ref: 'input.field.atkFirst'}]}, append: [8192]}];
+  engine.init(data, profiles.expansion);
+  const before = engine.speed(quick, {atkFirst: true});
+  const power = plain(engine.calc(quick, set('Snorlax'), slot('Electro Ball'), {atkFirst: true})).rolls;
+  engine.init(data, {...profiles.expansion, over: {rules}});
+  assert.equal(engine.speed(quick, {atkFirst: true}), before * 2);
+  assert.equal(engine.speed(quick, {}), before);
+  assert.equal(engine.speed(quick, {defFirst: true}, 'def'), before * 2);
+  assert.equal(engine.speed(quick, {atkFirst: true}, 'def'), before);
+  assert.notDeepEqual(plain(engine.calc(quick, set('Snorlax'), slot('Electro Ball'), {atkFirst: true})).rolls, power);
+  assert.deepEqual(plain(engine.calc(quick, set('Snorlax'), slot('Electro Ball'), {})).rolls, power);
+  engine.init(data, profiles.expansion);
+});
+
+await test('optional ability / item / move keys: hazardImmune, selfDropImmune, mindBlownRecoil, drain, keepsOnSuppressed, afterHit, theft, keepTerrain', () => {
+  const holder = extra => set('Charizard', {ab: ability('Huge Power'), ...extra});
+  const hazards = {atkStealthRock: true, atkSpikes: 1};
+  const over = {abilities: {'Huge Power': {hazardImmune: true, selfDropImmune: true, mindBlownRecoil: false,
+    drain: {st: ['psn', 'tox'], ratio: [1, 2]}}},
+  items: {Charcoal: {afterHit: {species: ['Charizard'], type: 'Fire', v: 'tarshot', b: {spe: -1}, toggle: 'TarShot'}}},
+  state: {Psychic: {theft: 'stock'}},
+  effects: {moves: {Defog: {fl: ['reflectable', 'bypasssub'], k: 'defog', tg: 'o', keepTerrain: true}}}};
+  const run = () => ({
+    entry: plain(engine.entry(holder(), hazards)).parts.length,
+    hazards: engine.hazards(holder(), hazards) === null,
+    drop: plain(engine.hit(holder(), set('Snorlax'), slot('Close Combat'), {}, 'max')).atk?.stg,
+    blown: engine.hp(holder(), set('Snorlax'), slot('Mind Blown'), {}, 50)?.v,
+    drain: engine.hp(holder({hp: 50}), set('Snorlax'), slot('Sludge Bomb'), {}, 41)?.v,
+    tar: plain(engine.hit(holder({it: 'Charcoal'}), set('Snorlax'), slot('Flamethrower'), {}, 'max')).field?.changes?.defTarShot,
+    theft: plain(engine.calc(holder(), set('Snorlax', {stg: [0, 1, 0, 0, 0, 0]}), slot('Psychic'))).pre?.length ?? 0,
+    terrain: plain(engine.effect(holder(), set('Snorlax'), slot('Defog'), {terrain: 'Psychic'})).field.changes.terrain,
+  });
+  engine.init(data, profiles.expansion);
+  const stock = run();
+  assert.deepEqual(stock, {entry: 1, hazards: false, drop: [0, 0, -1, 0, -1, 0], blown: -77, drain: undefined,
+    tar: undefined, theft: 0, terrain: ''});
+  engine.init(data, {...profiles.expansion, over});
+  assert.deepEqual(run(), {entry: 0, hazards: true, drop: undefined, blown: undefined, drain: 21, tar: true, theft: 2,
+    terrain: undefined});
+  // keepsOnSuppressed: Protosynthesis in Sun keeps its boost under Cloud Nine only where the profile says so.
+  const proto = set('Charizard', {ab: ability('Protosynthesis')});
+  const cloud = set('Snorlax', {ab: ability('Cloud Nine')});
+  engine.init(data, profiles.expansion);
+  const off = plain(engine.calc(proto, cloud, slot('Psychic'), {weather: 'Sun'})).rolls;
+  engine.init(data, {...profiles.expansion, over: {abilities: {Protosynthesis: {keepsOnSuppressed: ['Sun']}}}});
+  assert.notDeepEqual(plain(engine.calc(proto, cloud, slot('Psychic'), {weather: 'Sun'})).rolls, off);
+  assert.deepEqual(plain(engine.calc(proto, cloud, slot('Psychic'), {weather: 'Harsh Sunshine'})).rolls, off);
+  engine.init(data, profiles.expansion);
+});
+
 await test('KO text counts the defender residual each turn; rolls and percentages do not', () => {
   engine.init(data, profiles.expansion);
   const attacker = set('Charizard');
