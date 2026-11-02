@@ -41,7 +41,14 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   time; data checks 2-15 s per guide. Ideas: a `gate.py` option for parallel domcompare (today it is the audit's
   shell loop), checks chosen from the files a branch changed, the best `--jobs` for six guides, `#/i/` routes in
   domcompare's route list.
-- **Radical Red 4.1 (Hardcore), in progress** on `worktree-radical-red` (2026-11-02): `plans/radical-red.md` (units, decisions).
+- **Radical Red 4.1 (Hardcore): built, reviewed by the user, audit next** on `worktree-radical-red` (checkout
+  `.claude/worktrees/radical-red`, HEAD `8c29623`, 2026-11-02; not pushed). Units 1-11 merged (dex, calc, walkthrough
+  research, locations, items, trainers, save IDs, walkthrough, finishing, the user's trainer-order rework, the calc
+  mechanics pass). Every RR check passes (extract checks, calc 84 / 84, engine tests 150, other guides' engine checks
+  identical, all seven guides assemble). **Next: the audit**, then merge into `main`:
+  `plans/radical-red.md` → Audit and merge (the audit agent's brief, how to answer it, the merge steps). The user's
+  rulings are in the plan (User's answers, unit 10 / 11 decisions); every other unit decision was reviewed by the user
+  2026-11-02 and stands. Phone preview: `radical-red-frame.html` (tools/preview.py).
 - **Next guide:** say which hack. A sources-only session can start from `.agents/references/new-guide-sources.md`;
   `CLAUDE.md` → Making a new guide is the whole procedure.
 
