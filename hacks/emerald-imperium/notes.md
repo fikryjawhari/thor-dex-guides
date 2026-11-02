@@ -463,6 +463,8 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
       Each acquisition is its own line; shops fold in as Shop: lines. An item-name-only sub-heading is empty.
       Pickup keys parallel text.splitlines(), one p<N> or 0 per line; 0 for shops, wild sources and repeatable rewards.
       extract/pickup_keys.json retains removed identities, appends new keys, matches strict then unique loose identities.
+      Matching folds item spellings with item_text.key but keeps the table's historical spelling, so EmpoleoniteD/O
+      and published Empoleonite D/O retain p246/p247 through raw builds and itemstd reprocessing (no new p293/p294).
   IX  {item: [description, in-battle text, changed?]} optional; empty until item-text units fill it.
       P.hi is [[item, percent?]]: null/absent percent = unknown; old name-only lists become [[item, null]].
       One entry per distinct held item; Mega forms have none. Per-guide extract units supply the actual odds.
