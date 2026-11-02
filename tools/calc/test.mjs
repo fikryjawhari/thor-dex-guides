@@ -157,6 +157,29 @@ for (const base of ['gen4', 'gen5', 'gen6', 'gen7', 'cfru']) {
   await compare(`${base} special critical`, set('Charizard'), set('Snorlax'), slot('Flamethrower', {crit: true}), {}, {}, profiles[base]);
 }
 
+await test('EI Striker boosts all 18 source-flagged kicks, not other moves', async () => {
+  const configured = await createEngine(data, (await load('hacks/emerald-imperium/hack.json')).cfg.calc);
+  const attacker = set('Hitmonlee', {ab: ability('Striker')});
+  const defender = set('Blastoise');
+  const kicks = data.M.filter((name, index) => data.MV[index].f?.includes('kick'));
+  assert.equal(kicks.length, 18);
+  for (const name of [...kicks, 'Tackle', 'Mach Punch']) {
+    const boosted = configured.calc(attacker, defender, slot(name), {});
+    const normal = configured.calc({...attacker, ab: -1}, defender, slot(name), {});
+    assert.ok(boosted && normal, name);
+    if (kicks.includes(name)) {
+      assert.ok(boosted.notes.includes('Striker'), name);
+      assert.ok(boosted.min > normal.min, name);
+    } else {
+      assert.ok(!boosted.notes.includes('Striker'), name);
+      assert.deepEqual(boosted.rolls, normal.rolls, name);
+    }
+  }
+  const fixture = (await load('hacks/emerald-imperium/calc_matchups.json')).matchups.find(row => row.name === 'striker-kick');
+  const jump = configured.calc(fixture.atk, fixture.def, fixture.slot, fixture.field);
+  assert.deepEqual([jump.min, jump.max], [84, 99]);
+});
+
 await test('variable power without input and status moves return null', () => {
   engine.init(data, profiles.expansion);
   assert.equal(engine.calc(set('Charizard'), set('Blastoise'), slot('Present'), {}), null);

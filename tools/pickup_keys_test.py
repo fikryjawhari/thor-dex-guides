@@ -46,6 +46,33 @@ class PickupKeysTest(unittest.TestCase):
         strict = [{'i': 'Potion', 'loc': 'Town', 't': 'old'}, entries[0]]
         self.assertEqual(pickup_keys.match(old, strict), {0: (0, 0)})
 
+    def test_spelling_changes_keep_historical_keys_and_table(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, 'pickup_keys.json')
+            table = [{'k': f'p{246 + index}', 'i': 'Empoleonite' + suffix, 'loc': place,
+                      't': 'Also: ' + place} for index, (suffix, place) in
+                     enumerate([('D', 'Lilycove City'), ('O', 'Fortree City')])]
+            pickup_keys.write(path, table)
+            original = pathlib.Path(path).read_bytes()
+            for expanded in (False, True, False, True):
+                rows = [[entry['i'].replace('Empoleonite', 'Empoleonite ' if expanded else 'Empoleonite'),
+                         entry['t'], None, 0, ''] for entry in table]
+                value = {'IT': [{'n': 'Mega Stones', 'r': rows}], 'WK': {'splits': [], 'np': [
+                    ['Mega Stones', row[0], row[1], None] for row in rows]}}
+                reports = []
+                pickup_keys.stabilise(value, path, reports.append)
+                self.assertEqual([row[5] for row in rows], [['p246'], ['p247']])
+                self.assertEqual([row[4] for row in value['WK']['np']], ['p246', 'p247'])
+                self.assertEqual(pathlib.Path(path).read_bytes(), original)
+                self.assertEqual(pickup_keys.check(value, path), [])
+                self.assertFalse(any('new keys' in line or 'matched loosely' in line for line in reports))
+
+    def test_ambiguous_spellings_do_not_guess(self):
+        old = [{'k': 'p0', 'i': 'EmpoleoniteD', 'loc': 'Town', 't': 'old'},
+               {'k': 'p1', 'i': 'Empoleonite D', 'loc': 'Town', 't': 'old'}]
+        entries = [{'i': 'Empoleonite D', 'loc': 'Town', 't': 'old'}]
+        self.assertEqual(pickup_keys.match(old, entries), {})
+
     def test_repeatable(self):
         for text in ('Shop: City', 'Wild: Chansey', 'Found: Town · daily', 'Also: Town · every day',
                      'Found: Town · Mondays', 'Also: City · repeatable reward'):

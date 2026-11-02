@@ -396,6 +396,11 @@ unless stated. Multi-hit rolls are per hit.
   - Expected: `123 124 126 127 129 130 132 133 135 136 138 139 141 142 144 145`.
   - Other way (no halving): `61 63 63 64 64 66 66 67 67 69 69 70 70 72 72 73`.
 
+Striker uses the shared `MV.f` property `kick` in the calc profile (not the source field name `kickingMove` or
+the old calc flag `kicking`). Release `2576d0f3` `src/battle_util.c:9177-9180` applies ×1.3 to kickingMove;
+`src/data/moves_info.h:744-766` flags Jump Kick. All 18 release kicking moves agree with the extracted `kick`
+list. The profile regression covers all 18 and two non-kicks; the hzla Jump Kick fixture is 84–99, not 64–76.
+
 ## Checks
 
 `check.py` [baseline.json [current.json]]: the Locations PDF's wild tables against the dex data slot by slot; given a
@@ -463,6 +468,8 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
       Each acquisition is its own line; shops fold in as Shop: lines. An item-name-only sub-heading is empty.
       Pickup keys parallel text.splitlines(), one p<N> or 0 per line; 0 for shops, wild sources and repeatable rewards.
       extract/pickup_keys.json retains removed identities, appends new keys, matches strict then unique loose identities.
+      Matching folds item spellings with item_text.key but keeps the table's historical spelling, so EmpoleoniteD/O
+      and published Empoleonite D/O retain p246/p247 through raw builds and itemstd reprocessing (no new p293/p294).
   IX  {item: [description, in-battle text, changed?]} optional; empty until item-text units fill it.
       P.hi is [[item, percent?]]: null/absent percent = unknown; old name-only lists become [[item, null]].
       One entry per distinct held item; Mega forms have none. Per-guide extract units supply the actual odds.
