@@ -87,7 +87,12 @@ async function busyCard(page, { names = [...longNames(), ...MEGA_CANDIDATES], ne
 function firstFrameCheck(mode) {
   return async (page, { width }) => {
     // The six-Pokemon trainer (the foe preview shows six rows at wide); a guide without one uses the four-Pokemon trainer.
-    const trainer = guide().trainers.six?.k ?? guide().trainers.four?.k;
+    const data = guide().data;
+    const fullTeam = data.TR.g.flatMap(group => group.sec.flatMap(section => section.tr)).find(trainer =>
+      trainer.p.length === 6 && trainer.p.every(mon => mon.l != null && mon.m?.length === 4 && data.P.some(entry => String(entry.id) === String(mon.id)))
+      && !(trainer.tags || []).some(tag => /double|triple|multi|2on2/i.test(tag))
+      && !(trainer.field || []).some(record => !record.label && (record.effects || []).some(effect => effect.kind === 'gameType' && effect.value === 'Doubles')));
+    const trainer = fullTeam?.k ?? guide().trainers.six?.k ?? guide().trainers.four?.k;
     await setupCalc(page, { trainer });
     // a guide without Megas (BB2R, Gen V) gets the busiest card without the Mega toggle: a long name
     if (mode === 'busy') assert.ok(await busyCard(page) || !guide().data.P.some(entry => entry.g === 1) && await busyCard(page, { names: longNames(), need: '.cc[data-s=mine]' }), 'a Mega species on the page (for the busiest card)');
