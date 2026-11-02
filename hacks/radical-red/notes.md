@@ -26,6 +26,8 @@ Cosmetic species IDs are kept distinct for now, including the source's otherwise
 Pumpkaboo/Gourgeist order 0/1/2/3 means Average/Small/Large/Super. The base lookup always selects Average.
 The 827 named ordinary moves exclude Placeholder and generated Z/Max records (IDs >=848); no learnset uses those.
 Do not index M/AB until dex.build has run: their final lists are sorted by name, independently of game IDs.
+`P.tm` uses bare move indexes, like the shared schema; machine labels live in the Items TM/HM rows.
+The mirror cross-check reconstructs labels from data.js `tmMoves`, without putting pairs in the learnsets.
 
 Dex cross-check: all 1,343 official species records match all 1,343 RomHackDex pages, one-to-one (including
 its numeric cosmetic suffixes). 1,026 distinct National Dex numbers include Chillet (#2001); 68 Mega/Primal forms.
@@ -204,6 +206,13 @@ other 12-character ability spellings); `tools/cfru.py` CFRU_NAMES gives Infernal
 data or the rules. Move effects (11 RR records) are in `hacks/radical-red/calc_effects.json` (unit 9; assemble.py and
 `radical-red_check.mjs` merge its moves into `over.effects`), with three fixtures `effects_check.mjs` runs on data.json
 (Acupressure Atk +1, Charge Beam SpA +1, Octazooka Spe −1).
+
+RR-only `cfg.calc.multihit` supplies Population Bomb 1-10 (default 10), Tachyon Cutter 2, Triple Dive 3 and
+Twin Beam 2. RR calc `7f354003` `calc/src/data/moves.ts` records those maximum/fixed hit counts and Population
+Bomb's `multiaccuracy`; Showdown's base moves agree, with gen9rr changing Triple Dive to power 40 / accuracy 90.
+Population Bomb's per-hit accuracy is represented by selecting the successful hit count, not an automatic
+accuracy probability calculation; Loaded Dice keeps the existing 1 / 4-10 choice. These are RR overrides, not a
+CFRU base change: Unbound and the other guides' profiles and output stay unchanged.
 
 **Engine changes** (authorised by the main chat; all optional profile keys, `tools/calc/README.md` → Engine overrides;
 profiles without them behave as before, regression sweeps below): unit 2's `over.abilities[name].statusImmune` (status
