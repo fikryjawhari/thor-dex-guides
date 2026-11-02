@@ -15,6 +15,7 @@ import re
 
 from common import DATA, SPECIES, SPECIES_IDS, CAPS, H, key, sid, move, ability, item, report
 import bosssheet
+import route
 import setcheck
 
 STATS = {}
@@ -29,6 +30,11 @@ ENDERS = ['BROCK', 'ARCHER', 'MISTY', 'LT. SURGE', 'ERIKA', 'GIOVANNI', 'ARIANA 
 PARTNERS = {'55': ['53', '54'], '39': ['69']}         # Silph Brendan, Cerulean Cave Lance (Team Rocket E240 / E409)
 REMATCHES = ['56', '48', '51', '65']                  # Brock, Misty, Lt. Surge, Erika (Kanto Rematch tab)
 REMATCH_NOTE = 'Beat at least 3 of these 4 gym rematches (Brock, Misty, Lt. Surge, Erika) before Koga.'
+# The user's rulings (2026-11-02, notes.md → Trainers): the optional Johto leaders (the Johto Leaders tab's Bugsy
+# after Lt. Surge, Whitney, Morty, Chuck) as one group in Pre-Erika; Bugsy's team before Lt. Surge in Pre-Lt. Surge
+GROUPS = {'47': 'Pre-Lt. Surge', '8': 'Pre-Erika', '49': 'Pre-Erika', '52': 'Pre-Erika', '317': 'Pre-Erika'}
+JOHTO = ['8', '49', '52', '317']
+TEAM_OF = {'8': '47'}       # Bugsy after Lt. Surge: no entry of its own, the entry's cap range, Optional and place
 # Same Hardcore team as the first (they differ only in Normal mode): one card
 SAME_TEAM = {'63': '62', '64': '62'}
 # Back-to-back chains (the sheet's "(!) BACK TO BACK" / "(!!) BACK TO BACK TO BACK" on the later fights)
@@ -196,7 +202,7 @@ def build(D):
 
     # Trainer Order: split, cap (or range), optional, order
     order = bosssheet.trainer_order()
-    split_of, cap_text, optional, to_pos = {}, {}, set(), {}
+    split_of, cap_text, optional, to_pos, enders = {}, {}, set(), {}, set()
     split, previous_cap = 0, None
     linked = [matched[(lambda b: (b.sheet, b.row))(_link_block(e.link))] for e in order]
     direct = {i for ids in linked for i in ids}
@@ -208,23 +214,30 @@ def build(D):
                 T[i]['areaName'] == first['areaName'] and T[i]['cap'] == first['cap']]
         cap = e.cap if e.cap != '' else previous_cap      # blank: as the fight before (Shelly after Sam, Ariana)
         previous_cap = cap
-        # A number is the only cap the fight is at (F3's comment): its split, even where the entry sits after that
-        # split's boss (Lewis 73 after May). A range / open cap ("28/36", "36+") is fought at the player's cap: the
-        # entry's place in the order is the sheet's recommended split.
-        where = caps.index(cap) if isinstance(cap, int) else split
-        if where != split:
-            fixes.append('Trainer Order row %d %s: cap %d, listed in %s: in %s' % (
-                e.row, e.name, cap, SPLITS[split], SPLITS[where]))
+        # The row order is the split (the user's ruling): an entry belongs to the split its row sits in, between the
+        # boss rows that end each cap, whatever cap number it names (Lewis 73, after May: Pre-Blaine at cap 76). A
+        # range / open cap ("28/36", "36+") is fought at the player's cap: the cap box.
+        if isinstance(cap, int) and cap != caps[split]:
+            fixes.append('Trainer Order row %d %s: cap %d, its row is in %s (cap %d)' % (
+                e.row, e.name, cap, SPLITS[split], caps[split]))
         for i in ids + alts:
             assert i not in split_of, (i, e)
-            split_of[i], cap_text[i], to_pos[i] = where, cap, n
+            split_of[i], cap_text[i], to_pos[i] = split, cap, n
             if e.optional:
                 optional.add(i)
         if split < len(ENDERS) and e.name == ENDERS[split]:
             for i in ids:
                 assert T[i]['cap'] == split, (e, i, T[i]['cap'])
+            enders.update(ids + alts)
             split += 1
     assert split == len(ENDERS), split
+    for i, j in TEAM_OF.items():
+        assert i not in split_of, i
+        split_of[i], cap_text[i], to_pos[i] = split_of[j], cap_text[j], to_pos[j]
+        if j in optional:
+            optional.add(i)
+    for i, name in GROUPS.items():
+        split_of[i] = SPLITS.index(name)
     for i in REMATCHES:
         cap_text[i] = '59/68'
         optional.discard(i)
@@ -232,8 +245,17 @@ def build(D):
     for i in moved:
         report('  trainers: Trainer Order puts %s (%s) in %s, data.js cap %d' % (
             T[i]['name'], i, SPLITS[split_of[i]], caps[T[i]['cap']]))
+    # ordinary trainers (no Trainer Order entry): the split of the walkthrough visit to their place (route.py)
+    visits = collections.Counter()
     for i in T:
-        split_of.setdefault(i, T[i]['cap'])
+        if i not in split_of:
+            s_ = route.visit_split(i, T[i]['areaName'], T[i]['cap'])
+            split_of[i] = T[i]['cap'] if s_ is None else s_
+            if split_of[i] != T[i]['cap']:
+                visits[(T[i]['cap'], split_of[i])] += 1
+    for (a, b), n in sorted(visits.items()):
+        report('  trainers: %d ordinary trainers of data.js cap %d in %s (their walkthrough visit)' % (
+            n, caps[a], SPLITS[b]))
 
     # labels, effects
     st_of, tags_of, notes_of, pre_of = {}, collections.defaultdict(list), collections.defaultdict(list), {}
@@ -402,7 +424,7 @@ def build(D):
     assert accounted == len(T) == 464, (accounted, len(T))
     sheet_only = [bk for bk, ids in matched.items() if not ids]
     STATS.update(dict(cards=counts['cards'], partners=len(PARTNERS), same=len(SAME_TEAM), relative=relative,
-                      cap_box=counts['cap box'], moved=moved, split_of=split_of, sheet_only=sheet_only,
+                      cap_box=counts['cap box'], moved=moved, split_of=split_of, to_pos=to_pos, enders=enders, sheet_only=sheet_only,
                       matched=matched, to=len(order)))
     report('trainers: %d data.js trainers = %d cards + %d partners + %d same-team alternatives; %d splits' %
            (len(T), counts['cards'], len(PARTNERS), len(SAME_TEAM), len(groups)))
