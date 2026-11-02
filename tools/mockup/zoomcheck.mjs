@@ -7,7 +7,7 @@
 // Prints the mismatching bars per step and a final pass / fail; page errors too.
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { startBrowser } from '../browser.mjs';
+import { navigate, startBrowser } from '../browser.mjs';
 const [file, kb] = process.argv.slice(2);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const errs = [];
@@ -25,9 +25,11 @@ let fails = 0;
 for (const [w, h] of [[260, 316], [480, 392]]) {
   await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 2, mobile: false }, sessionId);
   for (const route of ['#/locs', '#/trainers', '#/items']) for (const state of ['all', 'mixed']) {
+    // one tab for every state, as before: saved state carries from one state to the next (some states show bars only
+    // because of it). Waits are for the boot, not a fixed 1.5 s.
     await send('Page.navigate', { url: 'about:blank' }, sessionId);
-    await send('Page.navigate', { url: url + route }, sessionId); await sleep(1500);
-    if (kb) { await ev(`localStorage.setItem('dvkb','1')`); await send('Page.reload', {}, sessionId); await sleep(1500); }
+    await navigate(send, sessionId, url + route);
+    if (kb) { await ev(`localStorage.setItem('dvkb','1')`); await send('Page.navigate', { url: 'about:blank' }, sessionId); await navigate(send, sessionId, url + route); }
     const res = await ev(`(async()=>{const sleep=ms=>new Promise(r=>setTimeout(r,ms));const fr=()=>new Promise(r=>requestAnimationFrame(r));const d=document,o=[];
      // the zoom shim: original px font sizes are kept, each step rewrites them from the originals
      const rules=[];const walk=l=>[...l].forEach(r=>{if(r.style&&/px$/.test(r.style.fontSize))rules.push([r,parseFloat(r.style.fontSize)]);if(r.cssRules)walk(r.cssRules);});

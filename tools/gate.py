@@ -340,7 +340,7 @@ def template_check(gate, names, jobs=8):
         new = str(ROOT / 'dist' / (hack + '.html'))
         for mode in ([], ['--kb']):
             runs.append((hack + '-dom' + ('-kb' if mode else ''),
-                         ['node', 'tools/domcompare.mjs', old, new, '--jobs=4', *mode], hack))
+                         ['node', 'tools/domcompare.mjs', old, new, '--jobs=2', *mode], hack))
         runs.append((hack + '-consistency', ['node', 'tools/consistency-check.mjs', hack], hack))
         gate.run(hack + '-tabs', [sys.executable, '-I', 'tools/tabs_check.py', hack])
         stops = [stop for split in load(ROOT / 'hacks' / hack / 'data.json')['WK']['splits'] for stop in split['st']]
