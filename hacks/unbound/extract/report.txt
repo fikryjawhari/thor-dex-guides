@@ -776,7 +776,7 @@ item name: Kangaskhite -> Kangaskhanite (1 use(s), Items tab spelling)
 item name: Kings Rock -> King's Rock (6 use(s), Items tab spelling)
 item name: Never Melt Ice -> Never-Melt Ice (9 use(s), Items tab spelling)
 item name: Up Grade -> Up-Grade (1 use(s), Items tab spelling)
-item text: 0 own, 398 pooled, 14 from the wiki, 10 made up, 0 Mega Stone standard, 0 with no description
+item text: 0 own, 401 pooled, 13 from the wiki, 8 made up, 0 Mega Stone standard, 0 with no description
 in battle: 210 shown items with battle text, 212 without
 in battle: 711 moves with battle text, 74 without
 GID (Unbound-Cloud unbound_2_1): sp 1158 ids (1034 P entries reached, 59 not: abomasnow_mega, absol_mega, aegislash_blade, aerodactyl_mega, aggron_mega, alakazam_mega, altaria_mega, ampharos_mega, audino_mega, banette_mega, beedrill_mega, blastoise_mega, blaziken_mega, camerupt_mega, charizard_mega_x, charizard_mega_y, darmanitan_g_zen, darmanitan_zen, diancie_mega, eiscue_noice, gallade_mega, garchomp_mega, gardevoir_mega, gengar_mega, glalie_mega, greninja_ash, groudon_primal, gyarados_mega, heracross_mega, houndoom_mega, kangaskhan_mega, kyogre_primal, latias_mega, latios_mega, lopunny_mega, lucario_mega, manectric_mega, mawile_mega, medicham_mega, meloetta_pirouette, metagross_mega, mewtwo_mega_x, mewtwo_mega_y, necrozma_ultra, pidgeot_mega, pinsir_mega, rayquaza_mega, sableye_mega, salamence_mega, sceptile_mega, scizor_mega, shadow_warrior, sharpedo_mega, slowbro_mega, steelix_mega, swampert_mega, tyranitar_mega, venusaur_mega, zygarde_complete), mv 766 ids, it 522 ids, gr 1180
