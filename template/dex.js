@@ -21,13 +21,17 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const BT=new Set(['normal','electric','ice','fighting','flying','bug','rock','steel','fairy']);
 const btc=t=>BT.has((t||'').toLowerCase())?' bt':'';
 const ty=t=>`<span class="ty${btc(t)}" style="background:${tcol(t)}">${esc(t)}</span>`;
-// Sprites become blob: URLs on first use, so rendered HTML carries a short URL instead of the base64 (re-rendering
-// the Pokemon list or walkthrough used to parse megabytes of data URIs and took seconds on the Thor).
-const SPRU={};const sprUrl=id=>{if(SPRU[id]!==undefined)return SPRU[id];const d=SPR[id];let u='';
- if(d){try{const i=d.indexOf(',');const b=atob(d.slice(i+1));const a=new Uint8Array(b.length);for(let j=0;j<b.length;j++)a[j]=b.charCodeAt(j);u=URL.createObjectURL(new Blob([a],{type:d.slice(5,d.indexOf(';'))}));}catch(e){u=d;}}
- return SPRU[id]=u;};
+// A sprite is a class (sp-<id>) whose rule, added to one stylesheet on the sprite's first use, holds its data URI:
+// rendered HTML carries the short class, not the base64 (re-rendering the Pokemon list or walkthrough used to parse
+// megabytes of data URIs and took seconds on the Thor). Until 2026-11-02 each sprite became a blob: URL instead, and
+// creating the ~1200 blobs of the Pokemon list cost ~200 ms of every first open even on a desktop.
+const SPRC={};let sprSheet=null;const sprCls=id=>{if(SPRC[id]!==undefined)return SPRC[id];const d=SPR[id];let c='';
+ if(d){c='sp-'+String(id).replace(/[^A-Za-z0-9_-]/g,ch=>'_'+ch.charCodeAt(0).toString(16));
+  try{if(!sprSheet){const st=document.createElement('style');document.head.appendChild(st);sprSheet=st.sheet;}
+   sprSheet.insertRule(`.${c}{background-image:url("${d}")}`,sprSheet.cssRules.length);}catch(e){c='';}}
+ return SPRC[id]=c;};
 // No sprite: a circle in the primary type's colour with the name's first letter, text coloured like that type's tag.
-const spr=(id,c)=>{const u=sprUrl(id);if(u)return `<div class="spr ${c}" style="background-image:url(${u})"></div>`;
+const spr=(id,c)=>{const k=sprCls(id);if(k)return `<div class="spr ${c} ${k}"></div>`;
  const p=byId[id],t=p?p.t[0]:'',l=p?(p.n.match(/[A-Za-z0-9]/)||['?'])[0].toUpperCase():'?';
  return `<div class="spr ${c} sprph${btc(t)}" style="background:${tcol(t)}"><span>${esc(l)}</span></div>`;};
 const icon=(name,size=24)=>{const slot=(D.IC||{})[name];if(!Number.isInteger(slot))return '';

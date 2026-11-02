@@ -13,6 +13,14 @@ item name; `iconCard(name)` returns its 32 px cell or an empty 32 px spacer. `as
 zero-based slot), `--item-sheet` and `--item-rows` from the committed per-guide sheets. See
 `sprites/items/sheets/README.md` to regenerate them. No data URI is repeated in rendered markup.
 
+## Pokémon sprites
+
+`spr(id, sizeClass)` returns a `.spr` div with the class `sp-<id>` (unsafe characters escaped); the sprite's first use
+adds one rule `.sp-<id>{background-image:url(data:…)}` to a stylesheet appended to `<head>`, so markup stays short and
+an image is decoded only when painted. A species with no sprite gets the type-coloured circle (`.sprph`). Rejected
+(2026-11-02): a `blob:` URL per sprite, the earlier way; creating the Pokémon list's ~1200 blobs took ~200 ms of
+every first open on a desktop (more on the Thor), and nearly half of each check's page open.
+
 ## What a hack sets (`hack.json`)
 
 `id`, `title`, `game`, `platform` (GBA / NDS / 3DS), `version` (the `dex-viewer:version` meta tag), and `cfg`:
