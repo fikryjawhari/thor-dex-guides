@@ -282,10 +282,12 @@ their actual folders, but a changed patch still needs manual romfs extraction, n
 
 ## Check timings (measured 2026-11-02, this 16-thread PC)
 
-Full `gate.py check --template --fresh` on all seven guides through the pool (8 at a time): 61 min, 351 / 351
-(17 checks failed in the pool on timing and passed alone; the in-check retries added after it remove that ~17 min
-tail). Before: ~3 h one guide at a time plus 26 min of scenarios. Work by kind in that run (process-minutes under
-load, 274 in all): scenarios 65 %, domcompare 21 %, jumpcheck 6 %, pagecheck 4 %, zoomcheck 3 %, the rest 1 %.
+Full audit from scratch (`gate.py check --fresh`: data and every browser check, all seven guides, 8 at a time):
+**40 min, 393 / 393** (before this job: ~3 h of browser checks one guide at a time, plus 26 min of scenarios). Work by
+kind in that run (process-minutes under load, 239 in all): scenarios 57 %, domcompare 23 %, jumpcheck 11 %, pagecheck
+4 %, zoomcheck 3 %, the rest (data checks included) 2 %. A rerun with nothing changed: 88 s (343 of 393 cached; the rest are the seconds-long data checks); after a
+change to domcompare only, its 14 sweeps ran and the rest was cached: 10 min. The longest
+single checks (a big guide's domcompare, calc-field-states / calc-team on any guide: 3-4 min under load) set the floor.
 
 - **Page opens** were ~43 % of scenario time (EI: 760 cases, 639 s of 1500 s). A fresh open of a 3.5 MB guide took
   ~560 ms, ~250 ms of it creating a blob for each of the Pokémon list's ~1200 sprites; with sprites as CSS classes
@@ -298,7 +300,9 @@ load, 274 in all): scenarios 65 %, domcompare 21 %, jumpcheck 6 %, pagecheck 4 %
   route kind (`time by route kind` line), and contiguous chunks put all of them in one tab pair: routes are now dealt
   round-robin. The settle loop's 25 ms sleep per route went (0 flagged routes in every comparison since). Under load a
   huge page (`#/walk`) can be snapshotted unsettled: a route that still differs after the fresh load is replayed with
-  its chunk's history, and only a second difference counts. In the gate each sweep uses `--jobs=2` (the pool is the
+  its chunk's history, and only a second difference counts. Snapshots sort each element's attributes (the order they
+  were set in varied with timing) and leave out the rail jump buttons' `disabled` (scroll-derived; under load it drifted
+  and carried from route to route, flagging hundreds of identical Radical Red pages). In the gate each sweep uses `--jobs=2` (the pool is the
   parallelism); alone, 4 is still the best (2026-10-19 slice timings: 1 job 41 s, 2 22 s, 4 14 s, 8 16 s, 12 22 s).
 - **zoom / page / walk checks** wait for the guide's boot (`browser.mjs` → `navigate()`) instead of 1.5 s after each
   navigation: zoomcheck 42-60 s → ~30 s, walkcheck 20 s → 8 s, pagecheck 71 s → 49 s (most of the rest is its own
