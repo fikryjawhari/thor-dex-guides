@@ -331,7 +331,7 @@ def build(check=False):
                 raise ValueError(f'Stale generated file: {path}')
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(text, encoding='utf8')
+            path.write_text(text, encoding='utf8', newline='\n')
     for file_key, image in canonical.items():
         path = OUT / 'png' / f'{file_key}.png'
         if check:

@@ -27,19 +27,19 @@ Ilima’s Normalium Z uses the Normalium Z crystal; S.S. Aqua Ticket uses the S.
 
 ## Coverage and packed cost
 
-Inventory reuses `plans/item-pages-mockup.py (deleted 2026-11-02, in git history)`’s `names_in` logic, retained in the tool so deleting the completed
-plan does not break rebuilding: IT except NPC/Move Tutors, P.hi/P.stone, trainers/partners/normal teams and MI.i.
+Inventory is shared with `tools/item_sheets.py`: IT except NPC/Move Tutors, P.hi/P.stone,
+trainers/partners/normal teams, MI.i and walkthrough pickups. Held-item pairs contribute only their item name.
 Names are exact distinct displayed labels per guide, including misspellings and malformed labels.
 
 | Guide | Names | With icon | Without | Distinct art | Sheet PNG bytes | Base64 bytes |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | blaze-black-2-redux | 439 | 438 | 1 | 358 | 131549 | 175400 |
-| emerald-imperium | 467 | 467 | 0 | 278 | 101212 | 134952 |
+| emerald-imperium | 462 | 462 | 0 | 278 | 101212 | 134952 |
 | eternal-x | 403 | 403 | 0 | 320 | 118017 | 157356 |
-| hardlove-gold | 357 | 356 | 1 | 277 | 96085 | 128116 |
-| photonic-sun | 471 | 471 | 0 | 385 | 136879 | 182508 |
-| radical-red | 495 | 478 | 17 | 365 | 130492 | 173992 |
-| unbound | 564 | 545 | 19 | 425 | 153625 | 204836 |
+| hardlove-gold | 360 | 359 | 1 | 280 | 96931 | 129244 |
+| photonic-sun | 468 | 468 | 0 | 385 | 136879 | 182508 |
+| radical-red | 495 | 478 | 17 | 365 | 130692 | 174256 |
+| unbound | 550 | 531 | 19 | 425 | 153625 | 204836 |
 
 Each guide sheet contains its canonical art only, sorted by file key, 16 icons per row, 24px cells,
 PNG `optimize=True`, lossless RGBA with no palette quantisation. Base64 counts exclude the 22-byte data URI prefix.
@@ -92,9 +92,9 @@ None.
 
 - **ADM**: Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.
 - **Baby Monitor**: Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.
-- **Blue-Striped Basculin: Deep Sea Scale (5% chance) Red-Striped Basculin: Deep Sea Tooth**: Malformed held-item label combines two different items. Both individual items have icons; selecting one would misrepresent this label.
 - **Braille Converter**: Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.
 - **Candy Sweet**: Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.
+- **Costume Box**: Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.
 - **DexNav**: Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.
 - **Dream Mist**: Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.
 - **Frontier Card**: Unbound-specific item or collectible: no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.
@@ -115,5 +115,5 @@ None.
 `uv run python -I tools/test_item_icons.py` checks inventory, aliases, palette application, placeholder rejection,
 per-guide disc types, packed costs and deterministic output. `--check` compares every generated file and pixel.
 `.tmp/item-icons-contact.png` labels every logical icon for visual inspection. Hardlove’s shared question-mark
-placeholder blob is rejected, not counted as coverage. Browser/build gates do not apply: no guide inputs,
-templates, extraction scripts or dist files are changed.
+placeholder blob is rejected, not counted as coverage. After regeneration run `tools/item_sheets.py`
+and `assemble.py` to refresh and validate each committed guide sheet.
