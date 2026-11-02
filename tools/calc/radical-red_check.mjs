@@ -73,6 +73,10 @@ for (const [name, power, type, category, flags] of [
   ['Draco Meteor', 130, 'Dragon', 'Special', []],
   ['Mind Blown', 150, 'Fire', 'Special', []],
   ['Fire Blast', 110, 'Fire', 'Special', []],
+  ['Population Bomb', 20, 'Normal', 'Physical', ['contact', 'slicing']],
+  ['Tachyon Cutter', 50, 'Steel', 'Special', ['slicing']],
+  ['Triple Dive', 40, 'Water', 'Physical', ['contact']],
+  ['Twin Beam', 40, 'Psychic', 'Special', []],
 ]) {
   data.M.push(name);
   data.MV.push({bp: power, t: type, c: category, f: flags});
@@ -145,6 +149,20 @@ const holder = (name, extra = {}) => mon({ab: ability(name), ty: ['???'], ...ext
 const target = extra => mon({ty: ['???'], ...extra});
 const result = (attacker, name, defender = target(), field = {}, slot = {}) =>
   plain(engine.calc(attacker, defender, {mv: move(name), ...slot}, field));
+for (const [name, limits] of [['Population Bomb', [1, 10, 10]], ['Tachyon Cutter', [2, 2, 2]],
+  ['Triple Dive', [3, 3, 3]], ['Twin Beam', [2, 2, 2]]]) {
+  check(name + ' hit limits and default damage', 'RR calc 7f354003 calc/src/data/moves.ts; gen9rr moves.ts', () => {
+    assert.deepEqual(profile.multihit[name], limits);
+    const damage = result(holder(''), name);
+    assert.equal(damage.hits, limits[2]);
+    assert.ok(damage.min > 0);
+    for (let hits = limits[0]; hits <= limits[1]; hits++) {
+      const selected = result(holder(''), name, target(), {}, {hits});
+      assert.equal(selected.hits, hits);
+      assert.deepEqual(selected.rolls, damage.rolls);
+    }
+  });
+}
 const round = value => Math.ceil(value - 0.5);
 const expected = (power, {attack = 120, defense = 120, effectiveness = 1, stab = 1,
   final = 4096, frostbite = false, child = false, weather = 1} = {}) => {

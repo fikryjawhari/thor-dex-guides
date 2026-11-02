@@ -76,6 +76,11 @@ def _cross_check(data):
                 raw_key = SPECIES[ident]['key'] + ('-' + str(index) if index else '')
                 direct[key(raw_key)] = sid(ident)
     mapped, missing, differences = set(), [], Counter()
+    tm_labels = defaultdict(set)
+    for slot, value in DATA['tmMoves'].items():
+        slot = int(slot)
+        if value:
+            tm_labels[move(value)].add('TM%02d' % (slot + 1) if slot < 120 else 'HM%02d' % (slot - 119))
     for slug, page in mirror.species().items():
         form = forms[slug]
         base = mirror.species().get(cfru.VIRTUAL_BASE.get(form.base, form.base))
@@ -96,7 +101,7 @@ def _cross_check(data):
                   'abilities': ({data['AB'][index][0] for index in ours['a']}, {cfru.official(name) for name in page.abilities}),
                   'hidden': (data['AB'][ours['ha']][0] if ours['ha'] >= 0 else None, cfru.official(page.hidden) if page.hidden else None),
                   'level-up': ({(level, data['M'][index]) for level, index in ours['lv']}, {(level, move(name) or name) for level, name in page.lv}),
-                  'TM/HM': ({(label, data['M'][index]) for label, index in ours['tm']}, {(label, move(name) or name) for label, name in page.tm}),
+                  'TM/HM': ({(label, data['M'][index]) for index in ours['tm'] for label in tm_labels[data['M'][index]]}, {(label, move(name) or name) for label, name in page.tm}),
                   'tutor': ({data['M'][index] for index in ours['tu']},
                             {move(name) or name for name in page.tutor} - hardcore_gone_tutors()),
                   'egg': ({data['M'][index] for index in ours['eg']}, {move(name) or name for name in page.egg})}
@@ -195,8 +200,7 @@ def build(data):
         for slot in row.get('tmMoves', []):
             value = DATA['tmMoves'][str(slot)]
             if value:
-                label = 'TM%02d' % (slot + 1) if slot < 120 else 'HM%02d' % (slot - 119)
-                entry['tm'].append([label, mi(value)])
+                entry['tm'].append(mi(value))
         entry['tu'] = list(dict.fromkeys(mi(DATA['tutorMoves'][str(slot)]) for slot in row.get('tutorMoves', [])
                                         if DATA['tutorMoves'][str(slot)]
                                         and move(DATA['tutorMoves'][str(slot)]) not in gone_tutors))

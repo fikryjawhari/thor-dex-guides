@@ -39,6 +39,8 @@ def check_items():
     gone = items.hardcore_gone_tutors()
     expect(gone and not [n for n in gone if n in rows], 'Hardcore-removed tutors listed: %s' % sorted(gone & set(rows)))
     taught = {D['M'][i] for mon in D['P'] for i in mon['tu']}
+    expect(all(type(index) is int and 0 <= index < len(D['M']) for mon in D['P'] for index in mon['tm']),
+           'P.tm must contain bare move indexes in the shared learnset schema')
     expect(not taught & gone, 'P.tu has Hardcore-removed tutor moves: %s' % sorted(taught & gone))
     # machines: every data.js TM / HM has a row, except the ones Hardcore lacks (TM107 / TM118 teach no move: no item)
     machines = set(items.TM_MOVES)
