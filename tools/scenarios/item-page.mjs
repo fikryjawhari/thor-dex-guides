@@ -133,7 +133,7 @@ const checks = [
     },
   },
   {
-    id: 'ticks', title: 'ticks saved by key, shared on screen, kept on reload, ordered last; the stop link lands on the row', sizes: SIZE_SMALL, modes: MODES,
+    id: 'ticks', title: 'ticks saved by key, shared on screen, kept on reload, ordered last; the stop link lands on the row', sizes: SIZE_SMALL,
     run: async page => {
       await page.goto('#/');
       await page.value(`localStorage.setItem(LS.items,JSON.stringify({o:{},x:{},s:{},g:{'gone-key':1}}))`);

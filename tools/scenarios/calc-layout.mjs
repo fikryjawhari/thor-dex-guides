@@ -2,7 +2,7 @@
 // the two-line move rows and the short-wide page (template/README.md → Calc page), Field's box passing the wheel on.
 // Each check runs at the sizes and modes the spec gives (see runChecks in tools/calc_check_lib.mjs). Without cfg.calc: skip.
 import assert from 'node:assert/strict';
-import { dismissBanner, fixturePatches, guide, guideArg, pickCell, prepareGuide, runChecks, setupCalc, SIZE_SMALL, SIZE_STAR, tapField } from '../calc_check_lib.mjs';
+import { dismissBanner, fixturePatches, guide, guideArg, MODES, pickCell, prepareGuide, runChecks, setupCalc, SIZE_SMALL, SIZE_STAR, tapField } from '../calc_check_lib.mjs';
 
 const WIDE = [[480, 392], [537, 424], [832, 424]];
 const SHORT = [[480, 316], [537, 360]];
@@ -435,4 +435,5 @@ async function pickMineCustom(page, species) {
   await page.tap('.mrow[data-i="0"]');
 }
 
-await runChecks({ name: 'calc-layout', file, checks });
+// every check is about layout: both modes (dvkb's number boxes have their own widths) unless it says otherwise
+await runChecks({ name: 'calc-layout', file, checks: checks.map(c => ({ modes: MODES, ...c })) });

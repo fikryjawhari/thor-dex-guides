@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { MODES, guideArg, readGuide, runChecks } from '../calc_check_lib.mjs';
+import { guideArg, readGuide, runChecks } from '../calc_check_lib.mjs';
 
 const file = guideArg(process.argv);
 const { data } = readGuide(file);
@@ -79,7 +79,7 @@ async function usersCheck(page, index) {
 }
 const checks = [
   {
-    id: 'page', title: 'filter link in the top card, Moves it affects from MI, Normal / Hidden picker', sizes, modes: MODES,
+    id: 'page', title: 'filter link in the top card, Moves it affects from MI, Normal / Hidden picker', sizes,
     run: async page => {
       for (const index of [withRows, without]) {
         await open(page, index);
@@ -96,7 +96,7 @@ const checks = [
     },
   },
   {
-    id: 'marks', title: "a move its own ability affects is marked; the tap says which ability and what it does", sizes, modes: MODES,
+    id: 'marks', title: "a move its own ability affects is marked; the tap says which ability and what it does", sizes,
     run: async page => {
       await page.route('#/p/' + mon.id);
       await page.waitFor('!!document.querySelector("#mvb")', 'Pokémon page');

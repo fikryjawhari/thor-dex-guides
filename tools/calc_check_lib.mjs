@@ -160,6 +160,9 @@ export class Page {
     this.height = height;
     this.dvkb = dvkb;
     this.errors = [];
+    // Set when the case touches a box dvkb renders differently (a number, text or search input): focus, input or change
+    // on one, or one of the helpers below. In normal mode it decides whether an auto check also runs in dvkb.
+    this.kbTouched = false;
   }
 
   async init() {
@@ -168,9 +171,12 @@ export class Page {
     const { result: { targetId } } = await this.browser.send('Target.createTarget', { url: 'about:blank', browserContextId });
     const { result: { sessionId } } = await this.browser.send('Target.attachToTarget', { targetId, flatten: true });
     this.sessionId = sessionId;
-    this.browser.register(sessionId, this.errors);
+    this.browser.register(sessionId, this);
     await this.send('Page.enable');
     await this.send('Runtime.enable');
+    // the binding survives reloads and navigations, so a touch anywhere in the case counts
+    await this.send('Runtime.addBinding', { name: '__kbTouched' });
+    await this.send('Page.addScriptToEvaluateOnNewDocument', { source: KB_WATCH });
     await this.send('Log.enable');
     await this.send('Emulation.setDeviceMetricsOverride', { width: this.width, height: this.height, deviceScaleFactor: 1, mobile: false });
     await this.send('Page.addScriptToEvaluateOnNewDocument', { source: `try{localStorage.setItem('dvkb',${JSON.stringify(this.dvkb ? '1' : '0')});}catch(e){}` });
@@ -274,6 +280,7 @@ export class Page {
 
   // A number box: an input in a browser (change event), the number pad in dvkb (open, digits, Done).
   async setBox(selector, value, { index = 0 } = {}) {
+    this.kbTouched = true;
     const tag = await this.value(`(document.querySelectorAll(${JSON.stringify(selector)})[${index}]||{}).tagName||null`);
     assert(tag, `no number box ${selector} [${index}]`);
     if (tag === 'INPUT') {
@@ -287,6 +294,7 @@ export class Page {
 
   // Digits (or Clear) then Done on the open number pad.
   async padEntry(value) {
+    this.kbTouched = true;
     if (value === '') await this.tap('.kb .k[data-a="clear"]');
     else for (const ch of String(value)) await this.tap(`.kb .k[data-c="${ch}"]`);
     await this.tap('.kb .k[data-a="done"]');
@@ -294,6 +302,7 @@ export class Page {
 
   // +/− on a number pad (dvkb), for a box with no stepper buttons of its own (the cap box).
   async padStep(selector, direction, { index = 0 } = {}) {
+    this.kbTouched = true;
     await this.tap(selector, { index });
     await this.tap(`.kb .k[data-a="${direction > 0 ? 'up' : 'dn'}"]`);
     await this.tap('.kb .k[data-a="done"]');
@@ -301,6 +310,7 @@ export class Page {
 
   // Types into the open picker or the full-window search: the search input in a browser, the letters keyboard in dvkb.
   async typeSearch(text) {
+    this.kbTouched = true;
     if (!this.dvkb) {
       await this.value(`(()=>{const el=document.querySelector('#sheets input[type=search]');el.value=${JSON.stringify(text)};el.dispatchEvent(new Event('input',{bubbles:true}));})()`);
       await this.settle();
@@ -353,6 +363,13 @@ export class Page {
   }
 }
 
+// In the page: reports the first focus / input / change on an element dvkb replaces (number, text and search inputs,
+// textareas). Checkboxes, selects and the file input look the same in both modes.
+const KB_WATCH = `(()=>{let sent=false;const kinds=/^(number|text|search|)$/;
+  const watch=e=>{const t=e.target;if(sent||!t||!t.tagName)return;
+    if(t.tagName==='TEXTAREA'||(t.tagName==='INPUT'&&kinds.test(t.getAttribute('type')||''))){sent=true;try{window.__kbTouched('1');}catch(_){}}};
+  for(const type of ['focusin','input','change'])document.addEventListener(type,watch,true);})()`;
+
 // One browser for a whole check file. Errors are collected per page session (uncaught exceptions and console errors).
 export async function openBrowser(name) {
   const sessions = new Map();
@@ -361,9 +378,11 @@ export async function openBrowser(name) {
     profilePrefix: 'calc-checks-',
     flags: ['--hide-scrollbars'],
     onEvent({ method, params, sessionId }) {
-      const list = sessions.get(sessionId);
-      if (!list) return;
-      if (method === 'Runtime.exceptionThrown') list.push(params.exceptionDetails.exception?.description || params.exceptionDetails.text);
+      const page = sessions.get(sessionId);
+      if (!page) return;
+      const list = page.errors;
+      if (method === 'Runtime.bindingCalled' && params.name === '__kbTouched') page.kbTouched = true;
+      else if (method === 'Runtime.exceptionThrown') list.push(params.exceptionDetails.exception?.description || params.exceptionDetails.text);
       else if (method === 'Runtime.consoleAPICalled' && params.type === 'error') list.push(params.args.map(arg => arg.value ?? arg.description).join(' '));
       else if (method === 'Log.entryAdded' && params.entry.level === 'error') list.push(params.entry.text);
     },
@@ -375,17 +394,21 @@ export async function openBrowser(name) {
   });
   return {
     send: browser.send,
-    register(sessionId, list) { sessions.set(sessionId, list); },
+    register(sessionId, page) { sessions.set(sessionId, page); },
     close: browser.close,
     lost,
   };
 }
 
-// checks: [{ id, title, sizes?, modes?, run(page, info), file?, ready?, fit? }]. Sizes default to 260 x 316; modes to normal
-// and dvkb. file / ready: another page than the run's (a frame around the guide); fit: false skips the overflow assertion.
+// checks: [{ id, title, sizes?, modes?, run(page, info), file?, ready?, fit? }]. Sizes default to 260 x 316. Modes default
+// to MODES_AUTO: normal, then dvkb only if the normal run touched a box dvkb renders differently (or failed): dvkb changes
+// only number boxes, the search bar and the keyboard, so a case that never touches one runs the same code twice.
+// MODES runs both always: for layout checks (dvkb's boxes and search bar have their own widths) and dvkb-only behaviour.
+// file / ready: another page than the run's (a frame around the guide); fit: false skips the overflow assertion.
 export const SIZE_SMALL = [[260, 316]];
 export const SIZE_STAR = [[260, 316], [537, 424], [832, 424]];
 export const MODES = ['normal', 'dvkb'];
+export const MODES_AUTO = 'auto';
 
 // A check with skip (a reason) is reported as SKIP and passes: the guide lacks what it tests (a trainer role).
 export async function runChecks({ name: scenario, file, checks }) {
@@ -405,7 +428,14 @@ export async function runChecks({ name: scenario, file, checks }) {
         continue;
       }
       for (const [width, height] of check.sizes || SIZE_SMALL) {
-        for (const mode of check.modes || MODES) {
+        const auto = (check.modes || MODES_AUTO) === MODES_AUTO;
+        let touched = false;
+        for (const mode of auto ? MODES : check.modes) {
+          if (auto && mode === 'dvkb' && !touched) {
+            results.push({ id: check.id, title: check.title, width, height, mode, ok: true, skipped: 'no box touched in normal' });
+            console.log(`SKIP ${check.id} ${width}x${height} dvkb: no number / text / search box touched in normal`);
+            continue;
+          }
           const label = `${check.id} ${width}x${height} ${mode}`;
           const shot = `${name}-${check.id}-${width}x${height}-${mode}`;
           let message = null;
@@ -426,6 +456,8 @@ export async function runChecks({ name: scenario, file, checks }) {
           }
           const ok = !message;
           if (!ok) failed++;
+          // a failed normal run may have stopped before the box it would touch: dvkb runs too
+          if (mode === 'normal') touched = !ok || !!page?.kbTouched;
           const ms = { open: Math.round(opened - t0), run: Math.round(performance.now() - opened) };
           results.push({ id: check.id, title: check.title, width, height, mode, ok, message, ms });
           console.log(`${ok ? 'PASS' : 'FAIL'} ${label}${message ? '\n     ' + message.split('\n').join('\n     ') : ''}`);
@@ -438,7 +470,8 @@ export async function runChecks({ name: scenario, file, checks }) {
   mkdirSync(OUT, { recursive: true });
   writeFileSync(join(OUT, `${name}.json`), JSON.stringify(results, null, 2));
   printMatrix(results);
-  console.log(`${name}: ${results.length - failed} passed, ${failed} failed (${join(OUT, name + '.json')})`);
+  const skipped = results.filter(r => r.skipped).length;
+  console.log(`${name}: ${results.length - failed - skipped} passed, ${failed} failed, ${skipped} skipped (${join(OUT, name + '.json')})`);
   if (failed) process.exitCode = 1;
   return results;
 }
@@ -451,7 +484,7 @@ function printMatrix(results) {
   for (const id of ids) {
     const cells = columns.map(column => {
       const hit = results.find(r => r.id === id && `${r.width}x${r.height} ${r.mode === 'dvkb' ? 'kb' : 'nm'}` === column);
-      return (hit ? (hit.ok ? 'PASS' : 'FAIL') : '-').padEnd(10);
+      return (hit ? (hit.skipped ? 'skip' : hit.ok ? 'PASS' : 'FAIL') : '-').padEnd(10);
     });
     console.log([id.padEnd(width), ...cells].join('  '));
   }

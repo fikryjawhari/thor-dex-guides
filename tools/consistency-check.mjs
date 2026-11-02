@@ -5,8 +5,9 @@ import assert from 'node:assert/strict';
 import { startBrowser } from './browser.mjs';
 
 // node tools/consistency-check.mjs [hack ...]: after python assemble.py, the shared behaviour checks on every built guide
-// (or the ones named): saved state, starter / player pickers, single caps, MGM, five viewer sizes, expanded pages, light
-// theme, normal and dvkb. A guide is checked when hacks/<hack>/hack.json and dist/<hack>.html both exist.
+// (or the ones named): saved state, starter / player pickers, single caps, MGM, five viewer sizes on every page kind
+// (the scenarios' fit sweep in dvkb), expanded pages, light theme, normal and dvkb. A guide is checked when
+// hacks/<hack>/hack.json and dist/<hack>.html both exist.
 const ARGS = process.argv.slice(2);
 
 mkdirSync('.tmp', { recursive: true });
@@ -89,7 +90,9 @@ try {
     console.log(hack, keyboard ? 'dvkb' : 'normal', result.join('; '));
     for (const [width, height] of [[260,316],[260,350],[480,392],[537,424],[832,424]]) {
       await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 2.3, mobile: true }, sessionId);
-      await evaluate(`(async()=>{for(const route of ['#/','#/locs','#/trainers','#/items','#/walk','#/calc','#/p/'+P[0].id,'#/tr/'+TRS[0].k]){
+      // every page kind: an item page (the Items tab's first item link), a move page and an ability page too
+      await evaluate(`(async()=>{history.replaceState(null,'','#/items');render();const item=document.querySelector('#app a[href^="#/i/"]')?.getAttribute('href');
+       for(const route of ['#/','#/locs','#/trainers','#/items','#/walk','#/calc','#/p/'+P[0].id,'#/tr/'+TRS[0].k,'#/m/1','#/a/1',...(item?[item]:[])]){
         history.replaceState(null,'',route);render();await new Promise(requestAnimationFrame);
         if(document.documentElement.scrollWidth>${width})throw Error(route+' overflow '+document.documentElement.scrollWidth+' at ${width}');
       }return true;})()`);

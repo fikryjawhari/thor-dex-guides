@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { MODES, SIZE_SMALL, guideArg, readGuide, runChecks } from '../calc_check_lib.mjs';
+import { SIZE_SMALL, guideArg, readGuide, runChecks } from '../calc_check_lib.mjs';
 
 const file = guideArg(process.argv);
 const { data } = readGuide(file);
@@ -98,7 +98,7 @@ async function interactionsCheck(page, index) {
 }
 const checks = [
   {
-    id: 'page', title: 'targets, properties and lists, effects, grouped interactions and method filtering', sizes, modes: MODES,
+    id: 'page', title: 'targets, properties and lists, effects, grouped interactions and method filtering', sizes,
     run: async page => {
       for (const index of samples) {
         const move = data.MV[index];
@@ -153,7 +153,7 @@ const checks = [
     },
   },
   {
-    id: 'tm', title: 'In battle box, "Also TM..." links to the TM page, a Where to find card per TM with ticks shared with the item page', sizes: SIZE_SMALL, modes: MODES,
+    id: 'tm', title: 'In battle box, "Also TM..." links to the TM page, a Where to find card per TM with ticks shared with the item page', sizes: SIZE_SMALL,
     run: async page => {
       await page.goto('#/');
       await page.value(`localStorage.setItem(LS.items,JSON.stringify({o:{},x:{},s:{},g:{}}));IO.g={}`);
@@ -191,7 +191,7 @@ const checks = [
     },
   },
   {
-    id: 'targets', title: 'every target vocabulary value in this guide', sizes: SIZE_SMALL, modes: MODES,
+    id: 'targets', title: 'every target vocabulary value in this guide', sizes: SIZE_SMALL,
     run: async page => {
       const seen = new Set();
       for (const [index, move] of data.MV.entries()) if (!seen.has(move.tg)) {
@@ -203,7 +203,7 @@ const checks = [
     },
   },
   {
-    id: 'routes', title: 'stable property hash, reopen, rail memory and gone-property fallback', sizes: SIZE_SMALL, modes: MODES,
+    id: 'routes', title: 'stable property hash, reopen, rail memory and gone-property fallback', sizes: SIZE_SMALL,
     run: async page => {
       await page.route('#/mp/contact');
       await page.value('posSave()');

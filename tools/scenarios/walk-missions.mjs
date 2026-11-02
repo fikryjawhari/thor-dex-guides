@@ -146,7 +146,7 @@ const checks = [
     },
   },
   {
-    id: 'm2 next', title: 'Next step skips missions: the next ordinary step, missions left closed and unticked', sizes: [[260, 316], [537, 424]], modes: MODES, skip,
+    id: 'm2 next', title: 'Next step skips missions: the next ordinary step, missions left closed and unticked', sizes: [[260, 316], [537, 424]], skip,
     run: async page => {
       const first = 'm:' + M1.m + ':' + M1.s[0].k;
       const nextOrd = id => `(()=>{const L=${LEAVES};const i=L.findIndex(e=>e.id===${q(id)});return L.slice(i).find(e=>!e.l.m)?.id;})()`;
@@ -190,7 +190,7 @@ const checks = [
     },
   },
   {
-    id: 'm3 search', title: 'search: mission steps and names land in the closed chain; no results; search this page', sizes: [[260, 316], [537, 424]], modes: MODES, skip,
+    id: 'm3 search', title: 'search: mission steps and names land in the closed chain; no results; search this page', sizes: [[260, 316], [537, 424]], skip,
     run: async (page, { dvkb }) => {
       await seed(page, { ticks: ['m:' + M2.m + ':' + M2.s[0].k] });
       await page.reload();
@@ -234,7 +234,7 @@ const checks = [
     },
   },
   {
-    id: 'm4 reset', title: 'Reset checklist clears ordinary and mission ticks (orphans too), keeps open states and the tracker', sizes: [[260, 316]], modes: MODES, skip,
+    id: 'm4 reset', title: 'Reset checklist clears ordinary and mission ticks (orphans too), keeps open states and the tracker', sizes: [[260, 316]], skip,
     run: async page => {
       const o = await page.value(`${LEAVES}.find(e=>!e.l.m).id`);
       await seed(page, { ticks: [o, 'm:' + M1.m + ':' + M1.s[0].k], open: [M1.m],
