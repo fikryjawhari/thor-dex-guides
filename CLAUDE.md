@@ -1,214 +1,128 @@
 # Thor Dex Guides
 
-Offline, single-file dex guides for ROM hacks, built for Dex Viewer on the AYN Thor (the app lives in the sibling repo
-`../thor-offline-viewer`, private) and also usable in any phone browser. This repo is **public** and served by GitHub
-Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of every session.
+Offline, single-file dex guides for ROM hacks, built for Dex Viewer on the AYN Thor (app: sibling repo
+`../thor-offline-viewer`, private) and usable in any phone browser. This repo is **public**, served by GitHub Pages.
+Read PROGRESS.md at the start of every session (short); PROGRESS-DETAIL.md only for the section a line points to.
 
 ## Hard rules
-- Every guide stays ONE self-contained HTML file: all CSS, JS, data and sprites inline, no network requests. Sharing
-  happens at build time (`assemble.py` inlines the template); nothing moves into the app.
-- Never commit raw docs from hack authors (xlsx, pdf, zips, ROM or romfs dumps). They live in `hacks/<hack>/.src/`
-  (git-ignored) and are re-fetched with that hack's `SOURCES.md`.
-- Keep each hack's localStorage keys (`hack.json` → `cfg.ls`) once a guide is published: changing one throws away
-  people's saved trackers, checklists and positions. Likewise its walkthrough stop keys and trainer keys
-  (`extract/trainer_keys.json`: entries are only ever added; read the build report's trainer-keys lines on an update).
-- The guide must work at the viewer sizes (PROGRESS.md → Viewer sizes), especially 260 × 316, in normal and `dvkb` mode.
-  The full viewer contract is `.agents/skills/rom-hack-offline-dex/references/viewer-ui.md` (the repo's copy of the
-  `rom-hack-offline-dex` skill).
-- Saved state never stores a position in the data (an index into `M` / `MV` / `AB` / `P` / `LOC` / `TR` / `WK` / `IT`): hack updates insert entries and shift every later index. It stores names
-  (`nameOf` / `idxOf`) or stable keys (stop keys, trainer keys, `AR` indexes, which are append-only), maps them back on
-  load, says what happens when one is gone (falls back or drops), and keeps loading what older builds stored.
-  `tools/scenarios/guide-update.mjs` checks every kind on every guide: a new kind of saved state goes in its snapshot.
-- No explanatory or provenance text at the top of pages (where the data came from, how search works, rules of the
-  tracker): the user doesn't want it, in any guide. Credits go in the footer.
-- Template changes are shared by every guide: after one, run `assemble.py` and check every guide, not just the one
-  you were working on (`tools/domcompare.mjs` shows exactly what changed).
+- Every guide is ONE self-contained HTML file: CSS, JS, data and sprites inline, no network requests. Sharing happens
+  at build time (`assemble.py` inlines the template); nothing moves into the app.
+- Never commit raw docs from hack authors (xlsx, pdf, zips, ROM / romfs dumps): they live in `hacks/<hack>/.src/`
+  (git-ignored), re-fetched with that hack's `SOURCES.md`.
+- A published guide keeps its localStorage keys (`hack.json` → `cfg.ls`), walkthrough stop keys and trainer keys
+  (`extract/trainer_keys.json`: entries only ever added; read the build report's trainer-keys lines on an update).
+- The guide works at the viewer sizes (PROGRESS-DETAIL.md → Viewer sizes), especially 260 × 316, normal and `dvkb`.
+  Full viewer contract: `.agents/skills/rom-hack-offline-dex/references/viewer-ui.md`.
+- Saved state never stores a position in the data (an index into `M` / `MV` / `AB` / `P` / `LOC` / `TR` / `WK` /
+  `IT`): it stores names (`nameOf` / `idxOf`) or stable keys (stop keys, trainer keys, append-only `AR` indexes), maps
+  them back on load, says what happens when one is gone, and keeps loading older builds' formats. A new kind of saved
+  state goes in `tools/scenarios/guide-update.mjs`'s snapshot.
+- No explanatory or provenance text at the top of pages, in any guide. Credits go in the footer.
+- Template changes are shared by every guide: after one, `assemble.py` and check every guide (`tools/domcompare.mjs`).
 
 ## Layout
-- `template/` shell.html, dex.css, dex.js, and the damage calc (calc.js / calc.css, `calc/` engine, base profiles, save
-  readers; inlined only for hacks with `cfg.calc`): the one template (Emerald Imperium is the reference build). Its README:
-  what `hack.json` sets, what the data switches on, the shared rules and the page design (with what was rejected).
-- `hacks/<hack>/` hack.json (title, version, `cfg` = wording, storage keys, feature switches), data.json (`#data`),
-  sprites.json (only forms the shared set lacks), notes.md (build notes and schema), extract/ (the scripts that made data.json), SOURCES.md.
-- `sprites/` the shared sprite set (pokeemerald-expansion, 64×64, `png/<key>.png`; README has the key scheme,
-  SOURCES.md the pin and credits).
-- `tools/` source fetchers, extract helpers and checks (README), `mockup/` (the Thor frame and the page behaviour
-  checks). `plans/` work not done yet only. The damage calc is built and merged; open checks are in PROGRESS.md → Open.
-- `dist/` built output (git-ignored); the Pages workflow builds and deploys it.
+- `template/`: shell.html, dex.css, dex.js, the damage calc (calc.js / calc.css, `calc/` engine, profiles, save
+  readers; inlined only with `cfg.calc`). Emerald Imperium is the reference build. Its README: `hack.json` settings,
+  what the data switches on, shared rules, page design (and what was rejected).
+- `hacks/<hack>/`: hack.json (`cfg` = wording, storage keys, switches), data.json, sprites.json (only forms the shared
+  set lacks), notes.md (build notes, schema), extract/ (scripts that make data.json), SOURCES.md.
+- `sprites/`: the shared set (pokeemerald-expansion; README: key scheme). `tools/`: fetchers, extract helpers, checks
+  (README). `tools/mockup/`: the Thor frame and page checks. `plans/`: work not done yet only. `dist/`: built output
+  (git-ignored; the Pages workflow builds it).
 
 ## Commands
-- Build all: `python assemble.py` (or `python assemble.py <hack>`). Stdlib only (the Pages workflow runs it bare).
-- Python env for tools and checks: `uv sync` once per machine (`pyproject.toml` + `uv.lock` are committed), then
-  `uv run python -I tools/<script>`. Need a package? `uv add <name>` and commit both files; don't work around it.
-- Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome;
-  options `--routes`, `--jobs`, `--ignore` in its header). Browser checks are DOM assertions: running several at once
-  (other agents' included) only slows them; it doesn't change a result. Under heavy load jumpcheck / calc-layout can
-  fail on timing (OFFSCREEN jumps, a wheel step); rerun just that check alone before calling it a failure. Don't wait
-  for or block other sessions' runs (the gate's idle guard refuses to start while another browser check runs: say so
-  rather than wait on it silently). Scenarios through the gate:
-  `uv run python -I tools/gate.py scenarios [hack ...] [--only calc-layout,calc-controls] --jobs 8` (and
-  `gate.py check ... --jobs 8`) runs them in parallel, the same results as serial (measured with four guides on this
-  16-core PC: serial 19 min, 4 jobs 5.8, 8 jobs 4.0, 12 / 16 jobs 4.3 / 4.4: past 8 each run just slows down). With
-  seven guides a full audit takes ~3 h one guide at a time (2026-11-02: scenarios 26 min, browser checks 18-29 min
-  per guide, jumpcheck 54 % of that): run the full set once per job, in pieces (PROGRESS.md → Next session).
-- When to check: only when no later work in the job will change what the check covers. During a job, run the
-  scenarios the change touches on the guides it touches; the full set once at the end. A failure names its check and
-  leaves a screenshot in `.tmp/calc-checks/`; if the cause still isn't clear, bisect the job's commits (one per
-  sub-step) with that one scenario on that one guide. The whole procedure: the `verify` skill
-  (`.agents/skills/verify/SKILL.md`; `worktree_setup.py` links `.claude/skills` to `.agents/skills` so Claude Code sees it).
-- In Git Bash, prefix commands that take `/`-paths as arguments with `MSYS_NO_PATHCONV=1`.
+- Build: `python assemble.py [hack]` (stdlib only: the Pages workflow runs it bare).
+- Python env: `uv sync` once per machine, then `uv run python -I tools/<script>`. Need a package: `uv add <name>`,
+  commit `pyproject.toml` + `uv.lock`; don't work around it.
+- Checks: the `verify` skill (`.agents/skills/verify/SKILL.md`) says what to run for a change. The gate:
+  `uv run python -I tools/gate.py check [hack ...]` / `scenarios [hack ...] [--only a,b]`; browser checks run 8 at
+  once, failures rerun alone, and passes are cached by content (an unchanged guide costs nothing; `--fresh` reruns).
+- Git Bash: prefix commands that take `/`-paths with `MSYS_NO_PATHCONV=1`.
+
+## Checks: who runs what
+- Run a check only when no later work in the job changes what it covers. While working: the scenarios the change
+  touches, on the guides it touches (`gate.py scenarios <hack> --only ...`). The full gate once, at the end.
+- **The full gate belongs to whoever merges last.** A dispatched agent whose branch the parent will merge and audit
+  runs only its targeted checks and reports them; it does not run `gate.py check` on every guide. The parent runs the
+  full gate once, after the last merge into the branch it is finishing. (Unchanged guides come from the cache.)
+- A failure names its check and leaves a screenshot in `.tmp/calc-checks/` and logs in `.tmp/gate/<stamp>/`.
+  Unclear cause: bisect the job's commits with that one scenario on that one guide.
+- Don't wait silently on another session's browser run: the gate refuses to start while one runs; say so.
 
 ## Making a new guide
-The main chat writes the unit list (`plans/<hack>.md`: one unit per step / tab, with the sibling hack's script to
-adapt); agents build the units (Workflow → Which model).
-1. Fetch the sources into `hacks/<hack>/.src/` with its `SOURCES.md` (what to collect:
-   `.agents/references/new-guide-sources.md`); write its `watch.json` (3DS hacks also need the user's vanilla romfs
-   dumps: `tools/README.md` → 3DS game data). Update its "Fetched" line and the source log in `tools/README.md`.
-2. Write `hacks/<hack>/extract/` scripts (the shared layout: `tools/extractlib.py` docstring; copy a built hack's) that
-   turn them into `hacks/<hack>/data.json`, in the schema in `hacks/emerald-imperium/notes.md` (Data schema).
-   `build.py` ends with `extractlib.finalise()`, which applies the shared rules (`template/README.md` → Shared rules:
-   Items standard, cap split names, Trainers in walkthrough order, schema); a hack only adds an `itemstd.RULES` entry
-   for its quirks. Trainer keys: with no `extract/trainer_keys.json` yet, `finalise()` (`tools/trainer_keys.py`) writes
-   it from the extract's own keys (the "g.s.t" positions of that first build), so the first build seeds it; commit it
-   with the first data.json. Pickup keys (`extract/pickup_keys.json`, one per item pickup line) work the same way.
-   Items data: the hack's bag text for every item in `extract/item_desc.json` (`{item: [text, changed vs vanilla]}`;
-   gaps fill from other guides, then `extract/item_text_extra.json`), wild held-item odds in `P.hi` (`[[item, %]]`),
-   hack-changed In battle text in `extract/battle_text.json`, and the guide's generation in `tools/item_text.py`. Later builds match trainers to it and only add entries. What the template shows when the data has it: `template/README.md` → What the data switches on.
-   For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences); 3DS hacks take
-   the game data over the docs ("Doc says ...").
-   Calc: settle each trainer `field` record marked `review` (`tools/trainer_fields_check.py`) with me (notes.md,
-   normalised in `tools/trainer_fields.py`); check the mechanics doc for permanent weather / terrain (`setterStays`).
-   Save import: the extract writes the hack's save ID tables (`GID`: species / forms, moves, items, abilities as the
-   game numbers them, from the game source or game files) and the guide gets a reader for its generation
-   (`template/calc/readers/README.md`); check it on a save with `.agents/references/calc-save-reader.md`. A doubles
-   tag the shared list doesn't know yet goes in `tools/trainer_fields.py` → `DOUBLES_TAGS`.
-   Hacks come in families (PROGRESS.md → Hack families): reuse the family's shared code (3DS: `tools/ctrguide.py`),
-   write a family's first guide so its siblings can reuse it, and lift the shared part out when the second one comes.
-3. `python -I tools/new_hack.py <hack> --like <built hack> [--title "Game name"] [--version N] [--ls-prefix prefix]`:
-   scaffold `hack.json`, notes / SOURCES headings, empty sprites, extract modules and check, gate rebuild and calc
-   scenario / engine-check stubs. Existing files need `--force`; SOURCES text is append-only. `--dry-run` lists writes.
-   No data.json yet: assembly and default gates skip it. Add the guide to PROGRESS.md → Current status.
-4. Sprites: every guide uses the shared set (`sprites/README.md`); keys are worked out from dex number and name.
-   `python -I tools/sprite_keys.py <hack>` lists the forms it matched (check once) and the species it couldn't place:
-   those are the hack's own additions and go in its `sprites.json`, the only art a hack keeps. `assemble.py` lists
-   species with no sprite; they show as a type-coloured circle with the name's first letter.
-5. Damage calc: `hack.json` → `cfg.calc` from the hack's mechanics ([calc mechanics](.agents/references/calc-mechanics.md));
-   once the hack's save family has a reader, its ID tables and `save` ([save reader](.agents/references/calc-save-reader.md)).
-6. Finish the scaffold TODOs: audited sources / watch, extract modules and checks, cfg wording / feature switches,
-   version / mode and notes. The first build writes data.json, report.txt and trainer_keys.json; commit all three.
-   Calc stubs skip while disabled and fail when enabled: fill source-backed scenarios / engine fixtures, replace
-   calc-doubles EXPECTED's null, add trainer_fields_check counts and review calc/test.mjs profile fixtures. The
-   scaffold registers the engine check in calc/package.json; itemstd RULES needs an entry only for hack quirks.
-   `uv run python -I tools/gate.py check <hack>` (baseline setup: `tools/README.md` → Standard gates).
-   Then `python -I tools/preview.py dist/<hack>.html --frame` for Thor-frame review on the phone preview.
+The main chat writes the unit list (`plans/<hack>.md`, one unit per step / tab, with the sibling hack's script to
+adapt); agents build the units. The procedure: `.agents/references/new-guide.md` (sources: `new-guide-sources.md`).
 
 ## Git
-- Worker setup: `python -I tools/worktree_setup.py [hack ...] --session <name>`; `--release` removes only your claim.
-  It links each hack's `.src` and the item-icon cache `.tmp/item-icons` from the main checkout (not the hzla clones:
-  `hzla_compare.mjs --repo <main checkout>/.tmp/hzla...`).
-- Parallel work goes on a branch in a worktree. Claude Code creates them in `.claude/worktrees/<name>` (git-ignored);
-  merge into `main` when done. Only one session at a time edits on `main`.
-- Run `git status` before committing and stage files by name, not `git add -A`; never commit anything under `.claude/`.
-- Pushing to `main` publishes the site (the Pages workflow), so push only checked guides.
-- Push working branches (guide and tab branches) to `origin` often, as a backup: after each finished step or a few
-  meaningful commits. It publishes nothing (only `main` deploys), and it keeps unmerged work off this PC alone (the
-  agents view also refuses to delete a session whose worktree has unpushed commits). **Ask me before every push, every
-  time**: name the branch and what's new since the last push, and push only on a yes.
-- Pushing from a session: this clone's `.git/config` (not committed) sets `core.sshCommand` to Git Bash's `ssh.exe`,
-  because the global Windows OpenSSH one hangs after the push when git runs without a terminal. A fresh clone that
-  hangs on push needs the same setting.
+- Worker setup: `python -I tools/worktree_setup.py [hack ...] --session <name>` (`--release` removes your claim):
+  claims, links each hack's `.src` and `.tmp/item-icons` from the main checkout (hzla clones: `--repo <main>/.tmp/hzla...`).
+- Parallel work: a branch in a worktree (Claude Code: `.claude/worktrees/<name>`, git-ignored), merged into `main` when
+  done. One session at a time edits on `main`.
+- `git status` before committing; stage files by name, never `git add -A`; never commit anything under `.claude/`.
+- Pushing `main` publishes the site: push only checked guides. Push working branches to `origin` often as a backup
+  (after a finished step or a few commits). **Ask me before every push, every time**: name the branch and what's new.
+- This clone's `.git/config` sets `core.sshCommand` to Git Bash's `ssh.exe` (Windows OpenSSH hangs after a push
+  without a terminal); a fresh clone that hangs needs the same.
 
 ## Parallel sessions
-Git merges change by change and only stops on lines both branches changed, so split work by the files it touches.
-- One worktree per independent piece. Which branch it comes from: Where a session works (below).
-- A session owns its files: its tab's extract script(s), and its tab's heading in `notes.md` / `PROGRESS.md`. Shared
-  extract code (`common.py`, `build.py`): add to it freely; changing existing code is something to raise first.
-- `template/` is one session at a time, since it is shared by every guide. A second piece that needs template changes
-  waits until the first is merged, or goes in the same session.
-- `data.json` and `dist/` are build output: on a merge conflict take either side, then rerun the hack's extract
-  `build.py` and `assemble.py`. Never merge them by hand.
-- Merge one branch at a time: merge, rebuild, check the guides (`domcompare` if the template changed), then the
-  next. After a merge, delete the worktree and the branch, local and on `origin`.
-- If I propose parallel work that breaks these (two sessions on the template or the same script), say so and suggest
-  an order or a split before starting it.
+Git stops only on lines both branches changed, so split work by files.
+- A session owns its tab's extract script(s) and its tab's heading in `notes.md` / `PROGRESS.md`. Shared extract code
+  (`common.py`, `build.py`): add freely; raise changes to existing code first.
+- `template/` is one session at a time; a second piece needing it waits for the merge or joins that session.
+- `data.json` and `dist/` are build output: on a conflict take either side, rerun the extract's `build.py` and
+  `assemble.py`; never merge by hand.
+- Merge one branch at a time (merge, rebuild, check, then the next); then delete its worktree and branch, local and
+  `origin`. If I propose parallel work that breaks this, say so and suggest an order or split first.
 
 ## Where a session works
 Decide from my prompt, say it in one line ("working in X because Y"), then start. One session per worktree.
-- **Start order** (before any edit):
-  1. Work out the job from my prompt. Find the guide branch (below) and read the files the job is about straight
-     from it, without entering: `git show <branch>:<path>` (the spec, the plan's heading, PROGRESS.md).
-  2. **Model check**, now that you know the job: compare it with Which model (Workflow). If I picked a weaker model
-     than the job needs, say so and stop until I switch (`/model`) or say go on. If I picked a stronger one than it
-     needs, say which would do and carry on unless I switch. One line either way when it fits.
-  3. Busy check, claim, enter the worktree (or make the tab branch), then work.
-- **A hack's guide branch**: the branch ahead of `main` whose commits touch `hacks/<hack>/` (`git worktree list`,
-  `git branch`, `git log --oneline main..<branch>`), usually `worktree-<hack>...`. None: `main` is the base. Two: ask.
-- **Routing:**
-  - New hack ("let's move on to X"): new guide branch `worktree-<hack>` from `main`; the first build happens there,
-    one step after another. First say if a guide branch with `template/` changes is unmerged (merge it first, so the
-    new guide starts with them).
-  - A tab or change for one guide (review feedback, a decide session, a spec build, template changes that came out of
-    that guide's pass): its guide branch if it's free; a tab branch off it only if another session is working there.
-  - A change for every guide, not tied to one guide's pass (search, the damage calc): its own branch
-    `worktree-<thing>` from `main`. Say if a guide branch with unmerged `template/` changes exists (conflict risk).
-  - Questions, reading, planning: no branch. Small edits to CLAUDE.md / PROGRESS.md: on `main` if nobody else is.
-  - Nobody builds on `main`: it takes merges and doc edits only.
-- **Busy check** before entering a worktree: a `.claude/claim` file in it (session name, start time) means another
-  session holds it: say who and since when and ask before going in (older than a day is probably a crashed session;
-  still ask). Mention uncommitted changes there too. Write your own claim on entry; delete it when you finish or hand
-  over.
-- **Tab branch**: `git worktree add -b worktree-<hack>-<tab> .claude/worktrees/<hack>-<tab> <guide branch>` (a short
-  hack name is fine: `ps-items`), copy `hacks/<hack>/.src/` from the guide worktree (git-ignored), enter it by path
-  before any edit. Uncommitted changes in the guide worktree don't carry over: say so. Touch only the tab's files (its
-  extract script, mockups, `plans/<hack>-<tab>.md`, its own heading in notes / PROGRESS / the plan); a template
-  change is flagged and done in the guide branch. `git merge <guide branch>` when you need its newer commits.
-- **Merge order**: tab into its guide branch, one at a time (rebuild data.json and dist after each, check), then the
-  guide branch into `main`. Never a tab into `main` while its guide branch is unmerged. Finish a session by saying
-  which branch the work is on and what merges next.
+- **Start order:** (1) work out the job; find its guide branch and read the job's files from it with
+  `git show <branch>:<path>`. (2) **Model check** against Which model: weaker than needed, say so and stop until I
+  switch or say go on; stronger, say which would do and carry on. (3) Busy check, claim, enter, work.
+- **Guide branch**: the branch ahead of `main` touching `hacks/<hack>/` (usually `worktree-<hack>`). None: `main` is
+  the base. Two: ask.
+- **Routing:** new hack → `worktree-<hack>` from `main` (first say if a guide branch with unmerged `template/` changes
+  exists: merge it first). One guide's tab / fix / spec build → its guide branch, or a tab branch off it if another
+  session is there. A change for every guide → `worktree-<thing>` from `main` (say if unmerged `template/` changes
+  exist). Questions / planning: no branch. Small CLAUDE.md / PROGRESS.md edits: `main`, if nobody else is. Nobody
+  builds on `main`.
+- **Busy check:** a `.claude/claim` (session, start time) means it's held: say who and since when and ask (over a day
+  old is probably crashed; still ask). Mention uncommitted changes. Write your claim on entry, delete it when done.
+- **Tab branch:** `git worktree add -b worktree-<hack>-<tab> .claude/worktrees/<hack>-<tab> <guide branch>`, copy the
+  guide worktree's `.src/`, enter by path. Uncommitted guide-worktree changes don't carry over: say so. Touch only the
+  tab's files; template changes are flagged and done in the guide branch. `git merge <guide branch>` for newer commits.
+- **Merge order:** tab → its guide branch (one at a time, rebuild and check after each) → `main`. Never a tab into
+  `main` while its guide branch is unmerged. End a session by saying which branch the work is on and what merges next.
 
 ## Workflow
-- References: [worker brief](.agents/references/worker-brief.md), [spec skeleton](.agents/references/spec-skeleton.md), [big jobs](.agents/references/big-job.md), [calc mechanics](.agents/references/calc-mechanics.md), [save reader](.agents/references/calc-save-reader.md).
-- Prompts and briefs (session prompts I ask for, agent briefs): [prompt writing](.agents/references/prompt-writing.md).
-  Big jobs goal first (altitude, depth, range, speed, an outside judge); small ones task first with the end goal named.
-- I test on the Thor. Testing a guide there without the library: PROGRESS.md → Testing on the Thor.
-- UI changes: mockup first as a plain interactive HTML page at the viewer's real size, then build it.
-- **Showing pages to me** (mockups, unmerged builds): `python -I tools/preview.py <page.html> [name.html]` puts it on
-  the phone preview (served on my tailnet by `tailscale serve`; setup in `tools/README.md` → Phone preview) and prints
-  the link; give me that link. Same name = same link, I reload. Not artifacts: T3 Code sessions can't make them.
-- **Complex UI work (several linked decisions) goes in steps, each its own small context** (trial since 2026-10-20;
-  revise it, and add workflows for other kinds of work, once a few runs show what works):
-  1. *Decide* (a Sol session the user talks to directly, in a worktree; Haiku xhigh when Sol is low): cheap mockups only (a small standalone
-     page with sampled data from data.json, not the full build), wrapped in the Thor frame. Settle every behaviour,
-     then write the spec to `plans/<thing>.md`: what goes, what each control does in every state, edge cases, checks.
-     No template or extract changes in this step.
-  2. *Build* (the Opus main chat reads the spec, then dispatches agents (Which model) for template / UI logic and for
-     mechanical work: extract rules, notes; or builds it itself if the spec is already "this code in this place"). The build ends with the guide in the Thor frame put on the phone preview.
-  3. *Fix* in the main chat (the user's feedback after testing on the phone / Thor).
-  4. *Audit* (a Haiku xhigh agent): `assemble.py`, `domcompare` against main, the viewer-size checks, scenario runs from
-     the spec; reports pass / fail with evidence.
-  Template builds are one at a time (Parallel sessions); decide steps can run in parallel.
-- **When a plan is built and merged, delete it.** Lasting decisions go in `template/README.md` (template / UI) or the
-  hack's `notes.md` (data), the status in PROGRESS.md; git history keeps the plan and its mockup. `plans/` only ever
-  holds work not done yet.
-- **Which model** (ladder: Sol, Haiku, Opus; no Sonnet: it scores like Opus low and Haiku xhigh at a higher cost):
-  - Opus (medium): the main chat: building a spec, fixing after my tests, merges, anything that picks branches or
-    dispatches agents; a new hack's first build; anything unclear or touching data rules across tabs; and an agent
-    job Haiku can't do.
-  - Sol (`gpt-6.1-sol` via T3 `delegate_task`): first choice for dispatched agents and decide sessions (about Opus
-    quality at xhigh, a third of the cost). I say when my Sol usage is low.
-  - Haiku: medium for mechanical jobs (audits, extract rules, notes, ingestion); xhigh only when Sol is low, and then
-    only for jobs that stay under 100k context (above it every token costs 5x; xhigh agents spent ~90% of their
-    requests there). A bigger Haiku job is split into parts, not run at xhigh.
-  - Every agent commits after each working sub-step (`WIP:` when incomplete), so another can take over on a usage limit.
-  - Effort: medium unless I say otherwise. Opus low for question / analysis / docs sessions. Effort costs twice:
-    thinking stays in context and is re-read on every later request, so high / xhigh only for short, reasoning-heavy jobs.
-  - Size: brief an agent for one unit that ends at a commit, roughly 60-80 requests / 150k context (Haiku: 100k).
-    More work = more agents in sequence, each handed the previous commit and a short findings note.
-  - Main chat: past ~120 requests or ~250k context a session costs 2-3x per request what a fresh one does. At a
-    natural break (merge done, spec built), write the handover in PROGRESS.md and start a new session.
-- **Thor frame** (`tools/mockup/thor-frame/`): `python -I tools/mockup/thor-frame/build.py <page.html> <out.html>
-  [--title] [--sub] [--panel]` wraps a built guide or a mockup's inner page in a Thor-sized screen (the viewer sizes,
-  fit to screen, dvkb, tabs, reload / clear saved state, error and width readout; pinned on a phone). Put the
-  output on the phone preview. Mockups write only the inner page (and an optional `--panel` of options), never a frame.
-- When I say I'm moving to a new session, update PROGRESS.md with what a fresh session needs, commit, and delete
-  your `.claude/claim`.
+- References (`.agents/references/`): worker-brief, spec-skeleton, big-job, calc-mechanics, calc-save-reader,
+  new-guide, new-guide-sources, prompt-writing (prompts and briefs: big jobs goal first, small ones task first with
+  the end goal named).
+- I test on the Thor (PROGRESS-DETAIL.md → Testing on the Thor).
+- UI changes: mockup first, a plain interactive page at the viewer's real size, then build.
+- **Showing pages to me:** `python -I tools/preview.py <page.html> [name.html]` puts it on the phone preview (my
+  tailnet; `tools/README.md` → Phone preview) and prints the link; give me the link (same name = same link).
+  Thor frame: `python -I tools/mockup/thor-frame/build.py <page.html> <out.html> [--title] [--sub] [--panel]` (or
+  `preview.py ... --frame`); mockups write only the inner page (and an optional `--panel`), never a frame.
+- **Complex UI work goes in steps, each its own small context:** (1) *Decide*: a Sol session I talk to (Haiku xhigh
+  when Sol is low), cheap mockups with sampled data in the Thor frame, every behaviour settled, spec to
+  `plans/<thing>.md` (what goes, each control in every state, edge cases, checks); no template / extract changes.
+  (2) *Build*: the Opus main chat reads the spec and dispatches agents (or builds it if the spec is "this code here");
+  ends with the guide in the Thor frame on the phone preview. (3) *Fix* after my tests. (4) *Audit*: the full gate,
+  once, by whoever merges last (Checks above). Template builds one at a time; decide steps can run in parallel.
+- **A plan built and merged is deleted.** Lasting decisions go in `template/README.md` or the hack's `notes.md`,
+  status in PROGRESS.md; git keeps the plan.
+- **Which model** (Sol, Haiku, Opus; no Sonnet):
+  - Opus medium: the main chat (spec builds, fixes after my tests, merges, branch picking, dispatching), a new hack's
+    first build, anything unclear or crossing data rules, agent jobs Haiku can't do.
+  - Sol (`gpt-6.1-sol` via T3 `delegate_task`): first choice for dispatched agents and decide sessions. I say when my
+    Sol usage is low.
+  - Haiku medium for mechanical jobs (audits, extract rules, notes, ingestion); xhigh only when Sol is low and the job
+    stays under 100k context (split bigger jobs).
+  - Effort medium unless I say; Opus low for question / analysis / docs sessions. High / xhigh only for short,
+    reasoning-heavy jobs (thinking stays in context and is re-read every request).
+  - Agents commit after each working sub-step (`WIP:` when incomplete). Brief one unit ending at a commit, ~60-80
+    requests / 150k context (Haiku 100k); more work = more agents in sequence, each given the last commit and a short
+    findings note.
+  - Main chat past ~120 requests or ~250k context: at a natural break write the handover in PROGRESS.md and start fresh.
+- Moving to a new session: update PROGRESS.md for a fresh session, commit, delete your `.claude/claim`.

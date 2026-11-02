@@ -6,8 +6,10 @@ description: Pick and run the checks for a change in thor-dex-guides (data, calc
 # Verify a change
 
 Rule: run a check only when no later work in the job will change what it covers. While working, run what the change
-touches on the guides it touches; the full set once at the end of the job. Browser runs share the machine: the gate
-refuses to start while another browser check runs, so start one sweep, then the next.
+touches on the guides it touches; the full gate once at the end of the job, by whoever merges last: a dispatched agent
+whose branch the parent merges runs only its targeted checks and reports them (commands, results, log paths); the
+parent runs the full gate after its last merge. The gate caches passes by content (`.tmp/check-cache/` in the main
+checkout, shared by every worktree), so a rerun on unchanged guides is free; `--fresh` ignores the cache.
 
 ## 1. What changed → what to run
 
@@ -19,17 +21,18 @@ refuses to start while another browser check runs, so start one sweep, then the 
 | A scenario or `tools/calc_check_lib.mjs` | that scenario on every guide |
 | Docs only (`*.md`) | nothing |
 
-Scenarios for an area, every guide at once (8 jobs is the fastest on this PC: 4 min for everything; more only slows
-each run):
-`uv run python -I tools/gate.py scenarios [hack ...] --only calc-layout,calc-controls --jobs 8`
+Scenarios for an area, every guide at once (8 at a time by default; more only slows each run):
+`uv run python -I tools/gate.py scenarios [hack ...] --only calc-layout,calc-controls`
 (names are the stems in `tools/scenarios/`; no `--only` runs all of them; no hack runs every built guide).
 
 ## 2. End of the job
 
-`uv run python -I tools/gate.py check <hack ...> --jobs 8` for every guide the job touched (a template change: all of
-them). It rebuilds, compares with the baseline (`gate.py baseline [ref]`, see `tools/README.md` → Standard gates), runs
-consistency / tabs / walk-state / mockup checks one at a time and the scenarios `--jobs` at a time. Read the summary
-line and every FAIL: a difference the job intended (a page it changed) is fine; say so when reporting.
+`uv run python -I tools/gate.py check [hack ...]` for every guide the job touched (a template change: all of them;
+no hack named = all). It rebuilds, compares with the baseline (`gate.py baseline [ref]`, see `tools/README.md` →
+Standard gates), then runs every browser check (domcompare both modes, consistency, walk-state, the mockup checks,
+scenarios) 8 at a time on every named guide; a check that fails in the pool reruns alone and, passing then, is listed
+as FLAKY (timing under load, not a failure). Read the summary line and every FAIL: a difference the job intended (a
+page it changed) is fine; say so when reporting.
 The gate only means something when its baseline is the last good state (`.tmp/baseline/manifest.json` → ref): right
 after a merge into `main`, or recaptured at `main` before merging a branch. A baseline older than the branch (the calc
 branch's is from before the calc) flags every page; then answer "did this job change anything else" by building the
