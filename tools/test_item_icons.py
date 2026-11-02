@@ -1,10 +1,14 @@
 """Regression checks: uv run python -I tools/test_item_icons.py."""
 import ast
+import contextlib
 import copy
 import hashlib
+import io
 import json
 from pathlib import Path
+import shutil
 import sys
+import tempfile
 
 from PIL import Image
 
@@ -24,6 +28,11 @@ def test_inventory():
                                          'Partner Item', 'Normal Item', 'Move Item'}
     data['P'][0]['hi'] = [['Held Berry', None], ['Rare Berry', 5]]
     assert {'Held Berry', 'Rare Berry'} <= item_icons.names_in(data)
+    data['WK'] = {'np': [['Items', 'Walk Only']], 'splits': [{'st': [{'it': [
+        ['Items', 'Stop Only'], ['Move Tutors', 'Not a pickup'], ['Useful NPCs', 'Not a pickup']]}]}]}
+    assert {'Walk Only', 'Stop Only'} <= item_icons.names_in(data)
+    assert 'Not a pickup' not in item_icons.names_in(data)
+    assert '5' not in item_icons.names_in(data)
     mockup = item_icons.ROOT / 'plans/item-pages-mockup.py'
     if mockup.exists():
         tree = ast.parse(mockup.read_text(encoding='utf8'))
@@ -62,6 +71,14 @@ def test_palettes_and_sources():
     assert records['butterfrite']['picture'].endswith('/abomasite.png')
     assert records['kickingshoes']['picture'].endswith('/heavy_duty_boots.png')
     assert records['luxite']['palette'].endswith('/beedrillite.pal')
+    for name in ['Bridge Mail M', 'Bridge Mail T', 'Bridge Mail V']:
+        record = records[item_icons.key(name)]
+        assert record['source'] == 'serebii'
+        assert record['url'] == item_icons.SEREBII[name.replace('Bridge Mail', 'BridgeMail')]
+    assert index['same']['infiniterepel'] == 'maxrepel'
+    retained = json.loads((item_icons.OUT / 'retained.json').read_bytes())
+    for file_key, record in retained.items():
+        assert records[file_key] == record
     stock, _ = item_icons.source_items('expansion')
     record = stock['potion']
     with Image.open(item_icons.CACHE / 'expansion' / record['picture']) as indexed:
@@ -96,15 +113,43 @@ def test_discs_and_coverage():
         assert len(used) == row['unique_icons']
     assert 'hm01cut' in index['ambiguous']
     assert 'hm01cut' not in index['keys']
+    for guide, names in {'hardlove-gold': ['Big Mushroom', 'Big Pearl', 'Tiny Mushroom'],
+                         'unbound': ['Chilan Berry', 'Red Nectar']}.items():
+        for name in names:
+            assert item_icons.key(name) in index['guides'][guide]
+            assert name not in report[guide]['missing']
+    assert 'Costume Box' in report['unbound']['missing']
+    assert not any('Basculin:' in name for name in report['unbound']['missing'])
     for file_key, target in index['same'].items():
         assert target not in index['same']
         assert not (item_icons.OUT / 'png' / f'{file_key}.png').exists()
         assert (item_icons.OUT / 'png' / f'{target}.png').exists()
 
 
+def test_clean_rebuild():
+    original = item_icons.OUT
+    with tempfile.TemporaryDirectory() as folder:
+        scratch = Path(folder)
+        for filename in ['retained.json', 'fallbacks.json']:
+            shutil.copyfile(original / filename, scratch / filename)
+        try:
+            item_icons.OUT = scratch
+            with contextlib.redirect_stdout(io.StringIO()):
+                item_icons.build()
+                item_icons.build(check=True)
+        finally:
+            item_icons.OUT = original
+        for path in scratch.rglob('*'):
+            if path.is_file():
+                assert path.read_bytes() == (original / path.relative_to(scratch)).read_bytes(), path
+        assert {path.name for path in (scratch / 'png').glob('*.png')} == {
+            path.name for path in (original / 'png').glob('*.png')}
+
+
 if __name__ == '__main__':
     test_inventory()
     test_palettes_and_sources()
     test_discs_and_coverage()
+    test_clean_rebuild()
     item_icons.build(check=True)
     print('PASS: item icon inventory, sources, palettes, aliases, discs, coverage and deterministic rebuild')

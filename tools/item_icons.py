@@ -11,16 +11,21 @@ import io
 import json
 from pathlib import Path
 import re
+import sys
 import time
 import unicodedata
 from urllib.request import Request, urlopen
 
 from PIL import Image, ImageDraw, ImageFont
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from item_sheets import names_in as sheet_names_in
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / '.tmp/item-icons'
 OUT = ROOT / 'sprites/items'
+PREFERRED_CANONICAL = {'maxrepel'}
 PINS = {
     'expansion': ('rh-hideout/pokeemerald-expansion', '73b3fbeb574327cd9420c89e56bef5aa3c08fead'),
     'imperium': ('iriv24/pokeemerald-expansion', '2576d0f3f4c861c760f0c55198e37e6d7b91683e'),
@@ -108,7 +113,9 @@ def fetch_sources():
     candidates = hardlove_items()
     names = {name for _, guide_names in inventory().values() for name in guide_names}
     wanted = {key(ALIASES.get(name, name)) for name in names}
+    retained = json.loads((OUT / 'retained.json').read_bytes())
     paths = {record['picture'] for name_key, record in candidates.items() if name_key in wanted}
+    paths.update(record['picture'] for record in retained.values() if record['source'] == 'hardlove')
     repo, pin = PINS['hardlove']
     with ThreadPoolExecutor(max_workers=12) as pool:
         list(pool.map(lambda path: download(f'https://raw.githubusercontent.com/{repo}/{pin}/{path}',
@@ -118,7 +125,7 @@ def fetch_sources():
 
 
 def inventory():
-    """Use the mockup's names_in inventory, retained here after plans are deleted."""
+    """Collect each guide's current displayed item names."""
     guides = {}
     for path in sorted((ROOT / 'hacks').glob('*/data.json')):
         data = json.loads(path.read_text(encoding='utf8'))
@@ -127,21 +134,8 @@ def inventory():
 
 
 def names_in(data):
-    """The item-pages-mockup.py inventory, with Move Tutors excluded as requested."""
-    found = {row[0] for section in data['IT'] if section.get('k') != 'npc'
-             and section.get('n') != 'Move Tutors' for row in section['r']}
-    for species in data['P']:
-        found.update(held[0] if isinstance(held, list) else held for held in species.get('hi') or [])
-        if species.get('stone'):
-            found.add(species['stone'])
-    for group in data['TR']['g']:
-        for section in group['sec']:
-            for trainer in section['tr']:
-                teams = [trainer['p']] + [mate.get('p', []) for mate in trainer.get('pt', [])]
-                teams.append((trainer.get('normal') or {}).get('p', []))
-                found.update(mon['i'] for team in teams for mon in team if mon.get('i'))
-    found.update(row['i'] for row in data.get('MI', []) if row.get('i'))
-    return found
+    """Use exactly the displayed inventory that assembly packs into each guide."""
+    return set(sheet_names_in(data))
 
 
 def source_items(source):
@@ -251,6 +245,16 @@ def build(check=False):
     candidates.update(stock)
     images, provenance, mappings, missing = {}, {}, {}, {}
     fallback_pins = json.loads((OUT / 'fallbacks.json').read_bytes())
+    retained = json.loads((OUT / 'retained.json').read_bytes())
+    for file_key, record in retained.items():
+        image = palette_image(record)
+        for field in ['picture', 'palette']:
+            if field in record:
+                actual = hashlib.sha256((CACHE / record['source'] / record[field]).read_bytes()).hexdigest()
+                if actual != record[field + '_sha256']:
+                    raise ValueError(f'Retained source changed: {file_key} {field}')
+        images[file_key], provenance[file_key] = image, record
+    fallbacks = {key(name): url for name, url in SEREBII.items()}
     for guide, (data, names) in guides.items():
         machines = discs(data, symbols)
         mappings[guide], missing[guide] = {}, {}
@@ -267,9 +271,9 @@ def build(check=False):
                 file_key, record = name_key, dict(candidates[lookup_key])
                 if lookup_key != name_key:
                     record['alias'] = ALIASES.get(cleaned, cleaned)
-            elif name in SEREBII:
+            elif name_key in fallbacks:
                 file_key = name_key
-                record = {'source': 'serebii', 'picture': name_key + '.png', 'url': SEREBII[name]}
+                record = {'source': 'serebii', 'picture': name_key + '.png', 'url': fallbacks[name_key]}
             else:
                 missing[guide][name] = MISSING_REASONS.get(name, HACK_ITEMS.get(guide, 'Hack-specific item or collectible') +
                     ': no verified artwork in the pinned expansion, Imperium or Hardlove sets, or the Serebii item set. No substitute invented.')
@@ -288,14 +292,15 @@ def build(check=False):
             provenance[file_key] = record
             mappings[guide][name_key] = file_key
     canonical, same, signatures = {}, {}, {}
-    for file_key, image in sorted(images.items()):
+    for file_key in sorted(images, key=lambda name: (name not in PREFERRED_CANONICAL, name)):
+        image = images[file_key]
         digest = hashlib.sha256(image.tobytes()).hexdigest()
         if digest in signatures:
             same[file_key] = signatures[digest]
         else:
             signatures[digest] = file_key
             canonical[file_key] = image
-    keys, conflicts = {}, set()
+    keys, conflicts = {file_key: file_key for file_key in retained}, set()
     for mapping in mappings.values():
         for name_key, file_key in mapping.items():
             if name_key in keys and keys[name_key] != file_key:
@@ -326,7 +331,7 @@ def build(check=False):
                 raise ValueError(f'Stale generated file: {path}')
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(text, encoding='utf8')
+            path.write_text(text, encoding='utf8', newline='\n')
     for file_key, image in canonical.items():
         path = OUT / 'png' / f'{file_key}.png'
         if check:
@@ -376,8 +381,8 @@ def documentation(report, provenance, canonical, same, conflicts):
         'Unbound held-item chance prefixes and Baile Style annotations are stripped for matching only; data is unchanged.',
         'Ilima’s Normalium Z uses the Normalium Z crystal; S.S. Aqua Ticket uses the S.S. Ticket.', '',
         '## Coverage and packed cost', '',
-        'Inventory reuses `plans/item-pages-mockup.py (deleted 2026-11-02, in git history)`’s `names_in` logic, retained in the tool so deleting the completed',
-        'plan does not break rebuilding: IT except NPC/Move Tutors, P.hi/P.stone, trainers/partners/normal teams and MI.i.',
+        'Inventory is shared with `tools/item_sheets.py`: IT except NPC/Move Tutors, P.hi/P.stone,',
+        'trainers/partners/normal teams, MI.i and walkthrough pickups. Held-item pairs contribute only their item name.',
         'Names are exact distinct displayed labels per guide, including misspellings and malformed labels.', '',
         '| Guide | Names | With icon | Without | Distinct art | Sheet PNG bytes | Base64 bytes |',
         '| --- | ---: | ---: | ---: | ---: | ---: | ---: |']
@@ -396,8 +401,8 @@ def documentation(report, provenance, canonical, same, conflicts):
         '`uv run python -I tools/test_item_icons.py` checks inventory, aliases, palette application, placeholder rejection,',
         'per-guide disc types, packed costs and deterministic output. `--check` compares every generated file and pixel.',
         '`.tmp/item-icons-contact.png` labels every logical icon for visual inspection. Hardlove’s shared question-mark',
-        'placeholder blob is rejected, not counted as coverage. Browser/build gates do not apply: no guide inputs,',
-        'templates, extraction scripts or dist files are changed.', '']
+        'placeholder blob is rejected, not counted as coverage. After regeneration run `tools/item_sheets.py`',
+        'and `assemble.py` to refresh and validate each committed guide sheet.', '']
     sources = ['# Shared item icons: sources', '', 'Fetched 2026-11-01. Rebuilt by `tools/item_icons.py`.', '',
         '## Pins and fetch', '', '```sh', 'uv sync', 'uv run python -I tools/item_icons.py --fetch',
         'uv run python -I tools/item_icons.py --check', '```', '',
@@ -406,13 +411,29 @@ def documentation(report, provenance, canonical, same, conflicts):
         'colour zero is transparent. Hardlove PNGs use their embedded palette with index zero transparent.',
         'Non-24px fallback frames are cropped to visible artwork, centred on 24px, and reduced with nearest-neighbour',
         'only if their visible bounds exceed 24px. Serebii uses the existing transparent RGBA pixels.', '',
+        '## Retained published artwork', '',
+        '`retained.json` is a build input, not a generated report. It records the pinned source recipes and hashes',
+        'for published icons whose old labels no longer occur in guide data (chance-prefixed held items, spelling',
+        'aliases and Baile Style labels). Rebuilds regenerate these from the same pinned inputs, preserving canonical',
+        'PNG names and pixels as well as old global lookups. No artwork needs an unpinned or committed-only fallback.',
+        'Bridge Mail M/T/V resolve by normalised name to their existing SHA-256-pinned Serebii sources.', '',
+        '`PREFERRED_CANONICAL` preserves the published `maxrepel.png` name for the identical Infinite Repel art.',
+        'All other identical-art groups keep their lexicographically first key.', '',
+        '## Coverage audit (2026-11-02)', '',
+        'Big Mushroom, Big Pearl and Tiny Mushroom (Hardlove), and Chilan Berry and Red Nectar (Unbound)',
+        'already have expansion artwork. Regeneration adds them to the current per-guide maps; assembly previously',
+        'found them through the global map, so this corrects stale coverage without changing the rendered guides.',
+        'The pinned trees contain no Costume Box artwork. Hardlove has a Fashion Case and male/female contest',
+        'costumes, not the Unbound item; none is substituted. Costume Box remains explicitly missing.',
+        'The malformed Basculin held-item label is already split by Unbound extract/dex.py wild_held at the',
+        'accepted base (697e916); P.hi contains item/chance pairs and inventory reads only each item name.', '',
         '## Counts', '', '| Source | Logical keys (including aliases) | Stored canonical PNGs |',
         '| --- | ---: | ---: |']
     for source in [*PINS, 'serebii']:
         logical = sum(record['source'] == source for record in provenance.values())
         stored = sum(provenance[file_key]['source'] == source for file_key in canonical)
         sources.append(f'| {source} | {logical} | {stored} |')
-    sources += ['', 'Canonical counts assign shared art to its lexicographically first key; another source may provide',
+    sources += ['', 'Canonical counts assign shared art to its preferred published key, otherwise its lexicographically first key; another source may provide',
         'identical art. `provenance.json` preserves the actual source for each logical key.', '',
         '## Terms and credits', '',
         'Pokémon and item art © Nintendo / Creatures Inc. / GAME FREAK inc.; guides are free and non-commercial.',

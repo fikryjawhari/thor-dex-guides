@@ -16,6 +16,27 @@ colour zero is transparent. Hardlove PNGs use their embedded palette with index 
 Non-24px fallback frames are cropped to visible artwork, centred on 24px, and reduced with nearest-neighbour
 only if their visible bounds exceed 24px. Serebii uses the existing transparent RGBA pixels.
 
+## Retained published artwork
+
+`retained.json` is a build input, not a generated report. It records the pinned source recipes and hashes
+for published icons whose old labels no longer occur in guide data (chance-prefixed held items, spelling
+aliases and Baile Style labels). Rebuilds regenerate these from the same pinned inputs, preserving canonical
+PNG names and pixels as well as old global lookups. No artwork needs an unpinned or committed-only fallback.
+Bridge Mail M/T/V resolve by normalised name to their existing SHA-256-pinned Serebii sources.
+
+`PREFERRED_CANONICAL` preserves the published `maxrepel.png` name for the identical Infinite Repel art.
+All other identical-art groups keep their lexicographically first key.
+
+## Coverage audit (2026-11-02)
+
+Big Mushroom, Big Pearl and Tiny Mushroom (Hardlove), and Chilan Berry and Red Nectar (Unbound)
+already have expansion artwork. Regeneration adds them to the current per-guide maps; assembly previously
+found them through the global map, so this corrects stale coverage without changing the rendered guides.
+The pinned trees contain no Costume Box artwork. Hardlove has a Fashion Case and male/female contest
+costumes, not the Unbound item; none is substituted. Costume Box remains explicitly missing.
+The malformed Basculin held-item label is already split by Unbound extract/dex.py wild_held at the
+accepted base (697e916); P.hi contains item/chance pairs and inventory reads only each item name.
+
 ## Counts
 
 | Source | Logical keys (including aliases) | Stored canonical PNGs |
@@ -25,7 +46,7 @@ only if their visible bounds exceed 24px. Serebii uses the existing transparent 
 | hardlove | 12 | 11 |
 | serebii | 38 | 38 |
 
-Canonical counts assign shared art to its lexicographically first key; another source may provide
+Canonical counts assign shared art to its preferred published key, otherwise its lexicographically first key; another source may provide
 identical art. `provenance.json` preserves the actual source for each logical key.
 
 ## Terms and credits
