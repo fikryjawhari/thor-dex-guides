@@ -410,8 +410,11 @@ export async function runChecks({ name: scenario, file, checks }) {
           const shot = `${name}-${check.id}-${width}x${height}-${mode}`;
           let message = null;
           let page = null;
+          const t0 = performance.now();
+          let opened = t0;
           try {
             page = await Page.open(browser, { file: check.file || file, width, height, dvkb: mode === 'dvkb', ready: check.ready });
+            opened = performance.now();
             await check.run(page, { width, height, mode, dvkb: mode === 'dvkb' });
             if (check.fit !== false) await page.assertFits(label);
             if (page.errors.length) throw new Error(`page errors: ${page.errors.join(' | ').slice(0, 600)}`);
@@ -423,7 +426,8 @@ export async function runChecks({ name: scenario, file, checks }) {
           }
           const ok = !message;
           if (!ok) failed++;
-          results.push({ id: check.id, title: check.title, width, height, mode, ok, message });
+          const ms = { open: Math.round(opened - t0), run: Math.round(performance.now() - opened) };
+          results.push({ id: check.id, title: check.title, width, height, mode, ok, message, ms });
           console.log(`${ok ? 'PASS' : 'FAIL'} ${label}${message ? '\n     ' + message.split('\n').join('\n     ') : ''}`);
         }
       }

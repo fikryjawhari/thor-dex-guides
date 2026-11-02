@@ -55,3 +55,22 @@ export async function startBrowser({ profilePrefix = 'browser-', flags = [], onE
   });
   return { send, close };
 }
+
+// Navigate a guide tab and wait until it is ready instead of sleeping a fixed time (the mockup checks' 1.5 s sleeps
+// after each navigation were most of their cost). A new document (CDP returns a loaderId): wait until the old one is
+// gone and the router's first render is in #app. A same-document navigation (only the #hash differs, no loaderId):
+// the hashchange render. Then two rendering frames either way. Throws after `timeout` ms.
+export async function navigate(send, sessionId, url, timeout = 15000) {
+  const ev = expression => send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }, sessionId)
+    .then(m => m.result?.result?.value).catch(() => undefined);
+  await ev('window.__oldDoc=1');
+  const reply = await send('Page.navigate', { url }, sessionId);
+  const fresh = !!reply.result?.loaderId;
+  const ready = `${fresh ? 'window.__oldDoc===undefined&&' : ''}document.readyState==="complete"&&typeof P!=="undefined"&&!!document.querySelector("#app")&&document.querySelector("#app").children.length>0`;
+  for (let waited = 0; ; waited += 25) {
+    if (await ev(ready)) break;
+    if (waited >= timeout) throw new Error(`${url}: the guide did not boot in ${timeout} ms`);
+    await sleep(25);
+  }
+  await ev('new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))');
+}

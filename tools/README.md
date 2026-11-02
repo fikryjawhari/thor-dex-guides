@@ -19,7 +19,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | Script | What it does |
 | --- | --- |
 | `new_hack.py <hack> --like <built hack> [--title name] [--version N] [--ls-prefix prefix] [--dry-run] [--force]` | Stdlib scaffold: config, notes / source headings, empty sprites, extract modules / check, gate rebuild and calc scenario / engine-check stubs. No data or other hack's mechanics / fixtures; calc off. Details below. |
-| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N]` / `scenarios [hack ...] [--only a,b] [--jobs N]` | Captures committed HTML/data/reports at a ref; rebuilds data and runs serial DOM, consistency, tabs, migration, mockup and scenario checks; `--jobs N` runs the scenario × guide runs N at a time (each its own browser; same results as serial). `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
+| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N] [--fresh]` / `scenarios [hack ...] [--only a,b] [--jobs N] [--fresh]` | Captures committed HTML/data/reports at a ref; rebuilds data, then runs every browser check (DOM, consistency, walk-state, mockup checks, scenarios) on every named guide, N at a time (default 8), failures rerun alone, passes cached by content. `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
 | `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` and the main checkout's `.tmp/item-icons/` cache when present (Windows junctions, no copying), then `uv sync`; no hacks means every built guide. Refuses other claims or existing source/cache copies. Release removes only the matching claim. |
 | `scenarios/tracker-reload.mjs <guide.html>` | Seeded tracker state, Clear and reload at 260 × 316 in `dvkb`; assertions on the control and saved state. `scenarios/README.md` describes new spec checks. |
 | `scenarios/calc-*.mjs <guide.html>` | Calc page checks: layout, controls, state, import/bridge, mechanics and per-hack fields. Coverage, sizes and failure output: `scenarios/README.md` → Calc checks. |
@@ -145,16 +145,25 @@ use the explicit `REBUILDS` table: EX/PS/HG raw, EI `itemstd.py`; unknown paths 
 Data compares ignore only the top-level `built` stamp; reports compare byte-for-byte. Counts report species,
 trainer cards, item rows and walkthrough stops. Stamp-only rebuilds restore the original data file bytes.
 
-Template checks assemble every guide, then compare each selected guide normal/keyboard (four DOM jobs within one
-sweep), consistency, tabs and keyed-stop migration. The four existing mockup checks run on EI in both modes;
-if EI was not selected, the first selected guide is used. Every `scenarios/*.mjs` runs on every selected guide.
+Template checks assemble every guide, then queue every browser check for each selected guide: domcompare
+normal / keyboard against the baseline, consistency, keyed-stop migration, the four mockup checks in both modes and
+every `scenarios/*.mjs`; tabs runs inline. The queue runs `--jobs` at a time (default 8, measured fastest on this
+16-thread PC), domcompare and jumpcheck first (the longest). A check that fails in the pool is rerun alone at the
+end: passing then, it counts as a pass and the summary lists it as FLAKY (timing under load); failing again, it fails.
 Mockup tools that only print diagnostics are treated as failures on page errors, bad jumps or wrong route bars;
 their detailed geometry output remains a review log, not an invented assertion. Logs: `.tmp/gate/<run>/`, with
 one PASS/FAIL line per check and a total time; any failure exits 1. No baseline refreshes or DOM ignores on failure.
 
-Browser sweeps are serial, across worktrees too; the gate checks running Node check commands before each browser
-invocation and refuses contention. Standalone checks need the same busy check. Do not run a second sweep in parallel.
-The gate replaces the cleanup's one-off `.tmp/cleanup-baseline/datacmp.py`.
+Result cache: a browser check that passes is recorded in the main checkout's `.tmp/check-cache/` (shared by every
+worktree) under the sha256 of what it reads: its command, the check script and every module it imports, the guide's
+dist and its `hacks/<hack>/*.json` / `extract/*.json`, the baseline HTML it compares with, `template/`, the save
+fixtures, the Thor frame, EI's data.json (the save-table source) and the Chrome / Node versions. Run again on the same
+inputs it reports `cached` without running, so an audit costs only the guides and checks a change touched, and a
+parent's audit after a worker's is free on what the worker already checked. Failures are never cached. `--fresh`
+runs everything (and records the passes); use it after changing something a check reads that the key doesn't cover.
+
+The gate refuses to start while another browser check runs (any worktree) and says which; standalone checks need
+the same busy check. The gate replaces the cleanup's one-off `.tmp/cleanup-baseline/datacmp.py`.
 
 T3 exposes project scripts with `runOnWorktreeCreate`; no repo project-config file is present. Set a Configure
 script to `python -I tools/worktree_setup.py` with that flag after integration. This worker could read the schema

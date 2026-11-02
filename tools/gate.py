@@ -2,8 +2,11 @@
 
 Baselines use git archive: only committed files reach the build, no checkout or
 Git worktree registration changes, and no raw sources are needed.
-Browser checks run one at a time, except the scenario x guide runs with --jobs N
-(N processes at once, each its own browser; the default 1 is serial).
+Browser checks (domcompare, consistency, walk-state, the mockup checks, scenarios) run --jobs N at once
+(default 8); a check that fails in the pool is rerun alone once, and passes then only as a timing flake.
+Result cache: a browser check that passed is skipped while its inputs are byte-identical (the guide's dist and
+JSON files, the check script and what it imports, template/, fixtures, the frame, Chrome and Node): one cache
+in the main checkout's .tmp/check-cache, shared by every worktree. --fresh ignores it (still records passes).
 `scenarios` runs only tools/scenarios/ on the built dist (no rebuild, no baseline):
 --only names some of them (comma-separated stems, e.g. calc-layout,calc-controls).
 """
@@ -35,6 +38,94 @@ REBUILDS = {
     'emerald-imperium': ['tools/itemstd.py', 'emerald-imperium'],
 }
 BROWSER_CHECK = r'(domcompare|consistency-check|walk-state-check|pagecheck|walkcheck|jumpcheck|zoomcheck|scenarios[/\\][^ ]+)\.mjs'
+# Inputs every browser check may read besides its own scripts and the guide (readGuide's EI save tables, the
+# injected test reader, the frame, save fixtures).
+SHARED_INPUTS = ['template', 'tools/scenarios/fixtures', 'tools/mockup/thor-frame', 'hacks/emerald-imperium/data.json']
+IMPORT = re.compile(r'''(?:from|import)\s*\(?\s*['"](\.{1,2}/[^'"]+)['"]''')
+
+
+def main_checkout():
+    common = subprocess.run(['git', 'rev-parse', '--path-format=absolute', '--git-common-dir'], cwd=ROOT,
+                            capture_output=True, text=True, check=True).stdout.strip()
+    return Path(common).resolve().parent
+
+
+class Cache:
+    """Passes of browser checks keyed by the sha256 of everything they read; failures are never stored."""
+
+    def __init__(self, fresh=False):
+        self.fresh = fresh
+        self.dir = main_checkout() / '.tmp' / 'check-cache'
+        self.dir.mkdir(parents=True, exist_ok=True)
+        self.hashes = {}
+        self.lock = threading.RLock()
+        chrome = os.environ.get('CHROME') or next((p for p in ('C:/Program Files/Google/Chrome/Application/chrome.exe',
+            'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe') if Path(p).exists()), '')
+        stat = Path(chrome).stat() if chrome else None
+        node = subprocess.run(['node', '--version'], capture_output=True, text=True).stdout.strip()
+        self.env = f'{chrome}:{stat.st_size if stat else 0}:{stat.st_mtime_ns if stat else 0}:{node}'
+
+    def digest(self, path):
+        with self.lock:
+            if path not in self.hashes:
+                if path.is_dir():
+                    parts = [f'{p.relative_to(path).as_posix()}={self.digest(p)}' for p in sorted(path.rglob('*'))
+                             if p.is_file() and '__pycache__' not in p.parts]
+                    self.hashes[path] = hashlib.sha256('\n'.join(parts).encode()).hexdigest()
+                else:
+                    self.hashes[path] = hashlib.sha256(path.read_bytes()).hexdigest()
+            return self.hashes[path]
+
+    def scripts(self, script, seen=None):
+        """A Node script and every relative module it imports, transitively."""
+        seen = set() if seen is None else seen
+        if script in seen or not script.is_file():
+            return seen
+        seen.add(script)
+        for name in IMPORT.findall(script.read_text(encoding='utf-8', errors='replace')):
+            self.scripts((script.parent / name).resolve(), seen)
+        return seen
+
+    def key(self, command, hack):
+        inputs = set()
+        words = []
+        for part in map(str, command):
+            if re.search(r'\.tmp[/\\]gate[/\\]', part):  # a shot prefix: this run's log folder
+                words.append(re.sub(r'^.*[/\\]', '.tmp/gate/', part))
+                continue
+            path = Path(part) if Path(part).is_absolute() else ROOT / part
+            if part.endswith(('.mjs', '.js')) and path.is_file():
+                inputs |= self.scripts(path.resolve())
+            elif path.suffix == '.html' and path.is_file():
+                inputs.add(path.resolve())
+            if path.exists():
+                try:
+                    part = path.resolve().relative_to(ROOT.resolve()).as_posix()
+                except ValueError:
+                    part = path.name
+            words.append(part)
+        inputs |= {ROOT / name for name in SHARED_INPUTS}
+        if hack:
+            directory = ROOT / 'hacks' / hack
+            inputs |= set(directory.glob('*.json')) | set((directory / 'extract').glob('*.json'))
+            inputs.add(ROOT / 'dist' / (hack + '.html'))
+        lines = [self.env, ' '.join(words)]
+        for path in sorted(inputs):
+            if path.exists():
+                try:
+                    name = path.resolve().relative_to(ROOT.resolve()).as_posix()
+                except ValueError:
+                    name = path.name
+                lines.append(f'{name}={self.digest(path.resolve())}')
+        return hashlib.sha256('\n'.join(lines).encode()).hexdigest()
+
+    def get(self, key):
+        entry = self.dir / (key + '.json')
+        return None if self.fresh or not entry.exists() else load(entry)
+
+    def put(self, key, label, seconds):
+        (self.dir / (key + '.json')).write_text(json.dumps(dict(label=label, seconds=round(seconds, 1),
+            at=datetime.datetime.now().isoformat(timespec='seconds'), root=str(ROOT))) + '\n', encoding='utf-8')
 
 
 def guides(root):
@@ -67,10 +158,13 @@ def browser_idle():
 
 
 class Gate:
-    def __init__(self):
+    def __init__(self, fresh=False):
         self.started = time.monotonic()
         self.failed = 0
         self.total = 0
+        self.cached = 0
+        self.flaky = []
+        self.cache = Cache(fresh)
         stamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S-%f')
         self.logs = ROOT / '.tmp' / 'gate' / stamp
         self.logs.mkdir(parents=True)
@@ -86,22 +180,41 @@ class Gate:
                 output.write(line + '\n')
         return passed
 
-    def run_browser(self, runs, jobs=1):
-        """Browser runs [(label, command)]: one at a time, or `jobs` at once after one idle check."""
-        if jobs <= 1:
-            for label, command in runs:
-                self.run(label, command, browser=True)
-            return
+    def run_browser(self, runs, jobs=8):
+        """Browser runs [(label, command, hack)], `jobs` at once after one idle check, slowest kinds first.
+        A cached pass is skipped; a run that fails in the pool is rerun alone once (pool load only causes timing
+        flakes), and a pass then is reported as a flake."""
         try:
             browser_idle()
         except (OSError, subprocess.SubprocessError, RuntimeError) as error:
             self.result('browser-idle', False, str(error))
             return
-        with concurrent.futures.ThreadPoolExecutor(jobs) as pool:
-            list(pool.map(lambda run: self.run(*run), runs))
+        todo = []
+        for label, command, hack in runs:
+            key = self.cache.key(command, hack)
+            hit = self.cache.get(key)
+            if hit:
+                with self.lock:
+                    self.cached += 1
+                self.result(label, True, f'cached ({hit["seconds"]}s on {hit["at"]})')
+            else:
+                todo.append((label, command, key))
+        weight = lambda run: 0 if 'domcompare' in str(run[1]) else 1 if 'jumpcheck' in str(run[1]) else 2
+        todo.sort(key=weight)
+        if jobs > 1 and len(todo) > 1:
+            with concurrent.futures.ThreadPoolExecutor(jobs) as pool:
+                outcomes = list(pool.map(lambda run: (run, self.run(run[0], run[1], key=run[2], retry=True)), todo))
+            again = [run for run, passed in outcomes if passed is None]
+        else:
+            again = todo
+        for label, command, key in again:
+            passed = self.run(label, command, key=key)
+            if passed and jobs > 1 and len(todo) > 1:
+                self.flaky.append(label)
 
-    def run(self, label, command, cwd=ROOT, browser=False):
-        logfile = self.logs / (re.sub(r'[^a-zA-Z0-9_.-]', '-', label) + '.log')
+    def run(self, label, command, cwd=ROOT, browser=False, key=None, retry=False):
+        """One command; True / False as reported, or None (not reported) when it failed and retry is set."""
+        logfile = self.logs / (re.sub(r'[^a-zA-Z0-9_.-]', '-', label) + ('-pool' if retry else '') + '.log')
         started = time.monotonic()
         try:
             if browser:
@@ -115,15 +228,27 @@ class Gate:
             if any(str(part).endswith('domcompare.mjs') for part in command):
                 tail = ' | '.join(line for line in text.splitlines()
                                   if re.match(r'^\d+ routes|^page errors old:|^differing routes:', line)) or tail
-            return self.result(label, completed.returncode == 0 and not diagnostics,
-                               f'{time.monotonic() - started:.1f}s; {tail}; log={logfile.relative_to(ROOT)}')
+            passed = completed.returncode == 0 and not diagnostics
+            seconds = time.monotonic() - started
+            if not passed and retry:
+                print(f'RETRY {label}: failed in the pool after {seconds:.1f}s; rerunning alone at the end; '
+                      f'log={logfile.relative_to(ROOT)}', flush=True)
+                return None
+            if passed and key:
+                self.cache.put(key, label, seconds)
+            return self.result(label, passed, f'{seconds:.1f}s; {tail}; log={logfile.relative_to(ROOT)}')
         except (OSError, subprocess.SubprocessError, RuntimeError) as error:
             logfile.write_text(str(error), encoding='utf-8')
+            if retry:
+                return None
             return self.result(label, False, str(error))
 
     def finish(self):
-        print(f'{"FAIL" if self.failed else "PASS"} gate: {self.total - self.failed}/{self.total} checks; '
-              f'{time.monotonic() - self.started:.1f}s; logs={self.logs.relative_to(ROOT)}', flush=True)
+        if self.flaky:
+            print(f'FLAKY (failed in the pool, passed alone): {", ".join(self.flaky)}', flush=True)
+        print(f'{"FAIL" if self.failed else "PASS"} gate: {self.total - self.failed}/{self.total} checks '
+              f'({self.cached} cached); {time.monotonic() - self.started:.1f}s; logs={self.logs.relative_to(ROOT)}',
+              flush=True)
         return int(bool(self.failed))
 
 
@@ -195,41 +320,41 @@ def data_check(gate, hack):
 
 
 def scenario_runs(names, only=None):
-    """Every tools/scenarios/*.mjs (or the `only` stems) on each guide's dist."""
+    """Every tools/scenarios/*.mjs (or the `only` stems) on each guide's dist: [(label, command, hack)]."""
     scenarios = sorted((ROOT / 'tools' / 'scenarios').glob('*.mjs'))
     if only:
         missing = set(only) - {scenario.stem for scenario in scenarios}
         if missing:
             raise ValueError('no such scenario: ' + ', '.join(sorted(missing)))
         scenarios = [scenario for scenario in scenarios if scenario.stem in only]
-    return [(hack + '-scenario-' + scenario.stem, ['node', str(scenario), str(ROOT / 'dist' / (hack + '.html'))])
+    return [(hack + '-scenario-' + scenario.stem, ['node', str(scenario), str(ROOT / 'dist' / (hack + '.html'))], hack)
             for scenario in scenarios for hack in names]
 
 
-def template_check(gate, names, jobs=1):
+def template_check(gate, names, jobs=8):
     if not gate.run('assemble', [sys.executable, 'assemble.py']):
         return
+    runs = []
     for hack in names:
         old = str(BASE / 'dist' / (hack + '.html'))
         new = str(ROOT / 'dist' / (hack + '.html'))
         for mode in ([], ['--kb']):
-            gate.run(hack + '-dom' + ('-kb' if mode else ''),
-                     ['node', 'tools/domcompare.mjs', old, new, '--jobs=4', *mode], browser=True)
-        gate.run(hack + '-consistency', ['node', 'tools/consistency-check.mjs', hack], browser=True)
+            runs.append((hack + '-dom' + ('-kb' if mode else ''),
+                         ['node', 'tools/domcompare.mjs', old, new, '--jobs=4', *mode], hack))
+        runs.append((hack + '-consistency', ['node', 'tools/consistency-check.mjs', hack], hack))
         gate.run(hack + '-tabs', [sys.executable, '-I', 'tools/tabs_check.py', hack])
         stops = [stop for split in load(ROOT / 'hacks' / hack / 'data.json')['WK']['splits'] for stop in split['st']]
         if stops and all('k' in stop for stop in stops):
-            gate.run(hack + '-walk-state', ['node', 'tools/walk-state-check.mjs', old, new, '0.0'], browser=True)
-    sample = 'emerald-imperium' if 'emerald-imperium' in names else names[0]
-    guide = str(ROOT / 'dist' / (sample + '.html'))
-    for mode in ([], ['kb']):
-        suffix = '-kb' if mode else ''
-        for check in ('pagecheck', 'walkcheck', 'jumpcheck', 'zoomcheck'):
-            command = ['node', f'tools/mockup/{check}.mjs', guide]
-            if check in ('pagecheck', 'walkcheck'):
-                command.append(str(gate.logs / (check + suffix)))
-            gate.run(sample + '-' + check + suffix, command + mode, browser=True)
-    gate.run_browser(scenario_runs(names), jobs)
+            runs.append((hack + '-walk-state', ['node', 'tools/walk-state-check.mjs', old, new, '0.0'], hack))
+        guide = str(ROOT / 'dist' / (hack + '.html'))
+        for mode in ([], ['kb']):
+            suffix = '-kb' if mode else ''
+            for check in ('pagecheck', 'walkcheck', 'jumpcheck', 'zoomcheck'):
+                command = ['node', f'tools/mockup/{check}.mjs', guide]
+                if check in ('pagecheck', 'walkcheck'):
+                    command.append(str(gate.logs / (hack + '-' + check + suffix)))
+                runs.append((hack + '-' + check + suffix, command + mode, hack))
+    gate.run_browser(runs + scenario_runs(names), jobs)
 
 
 def main():
@@ -241,13 +366,15 @@ def main():
     check.add_argument('hacks', nargs='*')
     check.add_argument('--data', action='store_true')
     check.add_argument('--template', action='store_true')
-    check.add_argument('--jobs', type=int, default=1, help='scenario runs at once (default 1: serial)')
+    check.add_argument('--jobs', type=int, default=8, help='browser checks at once (default 8; 1: serial)')
+    check.add_argument('--fresh', action='store_true', help='ignore cached passes (still records new ones)')
     scenarios = commands.add_parser('scenarios')
     scenarios.add_argument('hacks', nargs='*')
     scenarios.add_argument('--only', type=lambda text: [part for part in text.split(',') if part])
-    scenarios.add_argument('--jobs', type=int, default=1, help='runs at once (default 1: serial)')
+    scenarios.add_argument('--jobs', type=int, default=8, help='runs at once (default 8; 1: serial)')
+    scenarios.add_argument('--fresh', action='store_true', help='ignore cached passes (still records new ones)')
     args = parser.parse_args()
-    gate = Gate()
+    gate = Gate(getattr(args, 'fresh', False))
     try:
         if args.command == 'baseline':
             baseline(gate, args.ref)
