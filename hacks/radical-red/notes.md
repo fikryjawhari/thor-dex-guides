@@ -432,16 +432,21 @@ agree 245 / 253, and the sheet's Hidden Power types follow from it), turned into
 Crowned when holding the item, kind 2 = by a move (Rayquaza: Dragon Ascent, no Z-crystal): `id` is that form, `a0`
 the base ability. **A Mega keeps the base's ability slot** (RR Megas have up to three; Mega Absol Sharpness, Mega
 Ampharos Mold Breaker, Mega Slowbro Shell Armor: sheet and calc agree).
-**Placement** (the user's answers): boxes are the 18 Hardcore caps (Caps). A Trainer Order entry (115, matched to
-trainers through its link to a boss block) places its trainer: a **number** is the only cap it's fought at, so that
-cap's box, even where the entry sits after the split's boss (row 366 Lewis 73, after May: Pre-May; Justin 68:
-Pre-Koga); a **range / open cap** ("28/36", "16+", "59/68") keeps its place in the order (the sheet's recommended
-split, F3 comment) and gets the **cap box**: scaled levels relative (`r`), `t.cap` the box's cap. A blank cap (Shelly,
-Cerulean Cave Ariana) is the fight before's. A fight's other teams (starter, Team one / two, Ketchup's rematch: same
-name, place and cap, a block of their own, no entry of their own) go with it. 22 trainers moved off their data.js cap
-(report: Nugget Bridge / S.S. Anne / Route 9-10 mini bosses, Johto leaders, Justin, Lewis, ...). Every other trainer is
-in its data.js cap's box. Order in a box: data.js area order, then Trainer Order, then the sheet's block order
-(unit 8 re-sorts by the walkthrough). **Gym rematches** (Brock 56, Misty 48, Lt. Surge 51, Erika 65): Pre-Koga, cap
+**Placement** (the user's rulings, 2026-11-02, replacing unit 6's): boxes are the 18 Hardcore caps (Caps). A
+Trainer Order entry (115, matched to trainers through its link to a boss block) goes in the split its **row** sits in
+(between the boss rows that end each cap), whatever cap number it names: Justin 68 (Route 12) Pre-Koga, **Lewis 73
+(Mansion B1F) Pre-Blaine at cap 76** (May blocks the way into the Mansion; his scaled levels follow 76). A **range /
+open cap** ("28/36", "16+", "59/68") gets the **cap box**: scaled levels relative (`r`), `t.cap` the box's cap. A blank
+cap (Shelly, Cerulean Cave Ariana) is the fight before's. A fight's other teams (starter, Team one / two, Ketchup's
+rematch: same name, place and cap, a block of their own, no entry of their own) go with it. **Johto group**
+(`GROUPS`): Bugsy after Lt. Surge (8: no entry of its own, takes Bugsy's "28+" and Optional), Whitney, Morty and Chuck
+in Pre-Erika with the cap box; Bugsy before Lt. Surge (47) in Pre-Lt. Surge. Pryce (Seafoam, "73+") and Jasmine
+(Cinnabar Lab, "73+"), the Johto Leaders tab's other two optional leaders, need Surf: they keep their rows (Pre-May,
+Pre-Blaine). **Ordinary trainers** (no entry) go in the split of the walkthrough visit to their place
+(`route.visit_split`: the stop that lists them, else a stop at their place in their data.js cap step's split, else the
+first later one): 12 of data.js cap 28 in Pre-Lt. Surge (S.S. Anne), 63 of cap 36 in Pre-Erika (Route 9 to Celadon,
+the Dojo); levels as data.js gives them. 22 Trainer Order trainers are off their data.js cap (report). Order in a box:
+the walkthrough's. **Gym rematches** (Brock 56, Misty 48, Lt. Surge 51, Erika 65): Pre-Koga, cap
 box (sheet 59 / 68), not Optional, the note "Beat at least 3 of these 4 gym rematches (Brock, Misty, Lt. Surge,
 Erika) before Koga." 46 cards have the cap box; no team mixes scaled and fixed levels.
 **Rival:** `t.st` = the **player's starter type** (Main E93: the Squirtle team = a Fire starter; the game offers 27
@@ -484,40 +489,46 @@ Pre-Giovanni Silph Co. 57, Pre-Sabrina 59, Pre-Koga 68, Pre-May 73, Pre-Blaine 7
 boxes are `<name> Split [Cap N]` (the shared `split_name`; the calc shows "Pre-Brock"), Post Game included (cap 100,
 so its scaled levels are 97-100). Each split ends at its Trainer Order boss (`ENDERS`), asserted against data.js.
 
-### Walkthrough (unit 8, 2026-11-02)
+### Walkthrough (unit 8, 2026-11-02; order: unit 10, the user's rulings)
 
-No RR walkthrough doc exists. `extract/walk.py` → `ROUTE` is a hand table, one line per stop: split (cap step),
-stop key, data.js areas, trainer ids in fight order (or empty = the split's cards at those areas, box order) and
-checklist steps. 18 splits = the Trainers boxes, 136 stops, 32 steps. Order: unit 3's research
-(`plans/radical-red-walk.md` section 2, in git history once deleted) with the Trainer Order's sequence, changed where
-the user's answers or unit 6's boxes say otherwise.
-- **A stop holds only its split's fights**: each card is in one stop of its own Trainers box (`check_walk`), and each
-  split's last stop ends with its cap boss. Where data.js and the Trainer Order put a place's fights in two boxes the
-  place is visited in each: S.S. Anne cabins before Misty (data.js cap 28), the hall doubles, Brendan and the Captain's
-  Cut after her (Trainer Order 28/36); Route 9 / Rock Tunnel / Route 10 / Route 8 ordinary trainers before Lt. Surge
-  (data.js cap 36: the Pre-Surge split loops Route 9 → Lavender → Celadon (Tea) → Saffron Dojo → Vermilion Gym), their
-  mini bosses (Alicia, Caitlin, Dana, Herman, Aidan, Morty, Bugsy 8) after him; Lewis (Mansion B1F) before May, the
-  rest of the Mansion before Blaine; Justin with Route 12 south in Pre-Koga; the four gym rematches in Pre-Koga, first
-  stop carrying the "3 of 4" step.
-- **Stop keys** are semantic (`pewter-gym`, `ss-anne-cabins`, `cerulean-cave-ketchup`), written in ROUTE: never
-  positions, never changed (a stop cut in two keeps its key on the first part). `check_walk` asserts the data's keys
-  = ROUTE's.
+No RR walkthrough doc exists. `extract/route.py` → `ROUTE` is a hand table, one line per stop: split (cap step),
+stop key, data.js areas, trainer ids in fight order (or empty = the split's cards at those areas) and checklist
+steps; trainers.py reads it too (ordinary trainers' boxes), `walk.py` builds WK from it. 18 splits = the Trainers boxes,
+128 stops, 32 steps. Order: the Trainer Order's row order, with unit 3's research for the places between.
+- **A stop holds only its split's fights** (`check_walk`: each card in one stop of its own box, each split's last stop
+  ends with its cap boss, each ordinary trainer's box = its stop's split).
+- **Hard line at Lt. Surge**: Pre-Lt. Surge is Bugsy 47 (Route 25), the Dig House Grunt, Camper Jeff, then the
+  **S.S. Anne in one visit** (cabins, the hall doubles, Brendan, Cut), Route 2 / Pewter Museum by Cut, the Vermilion
+  Gym. Route 9, Rock Tunnel, Route 10, Lavender, Pokémon Tower, Route 12 north, Route 8, Route 7, Celadon, Route 16
+  north (Lea & Jed, the Fly house: Cut from Celadon) and the Saffron Dojo are Pre-Erika, in row order (their mini
+  bosses can be fought before Misty; at the 28 / 36 caps that's very hard, so the guide follows the listed order).
+- **Johto Leaders** (`johto-leaders`, no tracker places): one Pre-Erika stop before the Celadon Gym, Bugsy 8, Whitney,
+  Morty, Chuck (the Johto Leaders tab's order), after the Dojo's Black Belts.
+- **Mini bosses first**: in a stop with an empty trainers field each place's Trainer Order fights come before its
+  ordinary trainers (in row order); a gym keeps its trainers, then its mini boss, then the leader; the cap boss last
+  (Archer and Ariana end both their splits together). Lewis is first on B1F of the one Mansion stop, after May.
+- **Stop keys** are semantic (`pewter-gym`, `ss-anne`, `cerulean-cave-ketchup`), written in ROUTE: never
+  positions, never changed once published (a stop cut in two keeps its key on the first part). `check_walk` asserts
+  the data's keys = ROUTE's. Unit 10 (unpublished) merged away `ss-anne-cabins`, `route-11-whitney`,
+  `route-9-picnickers`, `rock-tunnel-dana`, `route-10-herman`, `lavender-morty`, `route-8-aidan`, `saffron-chuck`,
+  `mansion-lewis`, and added `johto-leaders`.
 - **Trainers** by data.js id (the card's `id`; `trainer_keys.json` holds it); partners 55 / 39 and Jasmine 63 / 64
   have no card. Same-fight alternatives stay together (rival starter teams, E4 / Pryce teams).
 - **Encounters**: a stop's `a` = the tracker places (AR) of its data.js areas; Mystery Gift is its own Post Game stop.
 - **Items**: each `items.PICKUPS` line goes to the stop at its data.js area in its own cap step's split, else the
   last such stop of the split before (boss rewards are the next step's bucket: Brock's TM, Blazikenite, Clair's TM),
-  else the first later visit (14, listed in the report: Cut and the S.S. Anne 2F items, the Kid's rewards, the Route
-  16 gatehouse Mega Stones, Cinnabar Lab gifts). The 8 lines with no data.js area go by item (`NO_AREA`). All 451
-  placed, np empty. The pickup keys' `loc` now follows the stop names (keys unchanged).
-- **Guesses** (no source has the order): ordinary trainers within a stop keep the box order (data.js area order);
-  the Pre-May Surf circuit (Moltres' Den, Routes 19-20, Seafoam, Route 21, Viridian / Route 22, Route 24, Route 4
-  Crissy, Route 10 Mark, Power Plant, Vermilion, Route 12, then Mansion B1F and May); Rock Smash / Strength returns
-  (Route 2, Viridian Forest Heart, Mt. Moon, Route 6, Rock Tunnel, Celadon) in Pre-Koga between the gym rematches.
-- **Open order questions** (check in game): can the S.S. Anne cabins be cleared before Misty without passing the
-  1F / 2F hall doubles; is Saffron's Dojo reachable before Lt. Surge with the Tea (the Pre-Surge loop needs it); Mansion
-  B1F for Lewis before May without the rest of the Mansion; does Route 16's north side (Lea & Jed, Fly house) need
-  Cut from Celadon only; Kindle Road / Bond Bridge / Mt. Ember trainer order (Postgame sheet listing order).
+  else the first later visit (73, listed in the report: the S.S. Anne and Route 9 to Celadon / the Dojo lines of
+  data.js steps 2 / 3, now visited after Misty / Lt. Surge, the Kid's rewards, the Route 16 gatehouse Mega Stones,
+  Cinnabar Lab gifts). The 8 lines with no data.js area go by item (`NO_AREA`). All 451 placed, np empty. The pickup
+  keys' `loc` now follows the stop names (keys unchanged).
+- **Guesses** (no source has the order): ordinary trainers within a place keep data.js area order; the Pre-May Surf
+  circuit (Moltres' Den, Routes 19-20, Seafoam, Route 21, Viridian / Route 22, Route 24, Route 4 Crissy, Route 10
+  Mark, Power Plant, Vermilion, Route 12, then May); Rock Smash / Strength returns (Route 2, Viridian Forest Heart, Mt.
+  Moon, Route 6, Rock Tunnel, Celadon) in Pre-Koga between the gym rematches.
+- **Open order questions** (check in game): does Camper Jeff block Route 6 (the Pre-Misty Route 6 / Vermilion / Route
+  11 stops assume not); is S.S. Anne Brendan on the way to the cabins (mini bosses first puts him before them); is
+  Saffron's Dojo reachable before Erika with the Tea; Kindle Road / Bond Bridge / Mt. Ember trainer order (postgame,
+  Postgame sheet listing order).
 
 ## Local storage
 
