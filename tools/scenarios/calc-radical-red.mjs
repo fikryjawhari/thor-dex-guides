@@ -1,4 +1,4 @@
-// Radical Red's calc end to end (hacks/radical-red/notes.md → Damage calc, plans/radical-red.md → unit 9): a Hardcore
+// Radical Red's calc end to end (hacks/radical-red/notes.md → Damage calc, plans/radical-red.md → unit 9, in git history): a Hardcore
 // boss's permanent primal weather from its battle effect, the AI's weather staying after its setter leaves
 // (setterStays, Hardcore Main!E10), Ghost Marowak's 252 HP EVs (the only boss with EVs), the status-chip immunities
 // (statusImmune: Toxic Boost / Flare Boost), unit 11's Speed modifiers (speedMods) and hazard immunity (hazardImmune) and

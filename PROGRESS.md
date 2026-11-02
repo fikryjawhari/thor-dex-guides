@@ -6,12 +6,21 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
 
 ## Current status (2026-11-02)
 
-- **Six guides on `main`**, one template, one extract layout (`tools/extractlib.py`), one data schema
+- **Seven guides on `main`**, one template, one extract layout (`tools/extractlib.py`), one data schema
   (`tools/schema.py`), one Items standard (`tools/itemstd.py`), one notes / SOURCES layout, and the damage calc with
   save import on every one: Emerald Imperium 1.3.1 (GBA), Hardlove Gold 0.8.7 (NDS), Photonic Sun 2.38 Rebalanced
   (3DS, EV-less), Eternal X 2.67 Rebalanced (3DS), Blaze Black 2 Redux 1.4.1 (NDS, Complete EVless / Challenge),
-  Unbound 2.1.1.1 (GBA, Expert). Live on GitHub Pages (https://fikryjawhari.github.io/thor-dex-guides/), built by the
-  Action from `main`; `main` pushed 2026-11-02.
+  Unbound 2.1.1.1 (GBA, Expert), Radical Red 4.1 (GBA, Hardcore; merged 2026-11-02, not on the Thor yet). Live on
+  GitHub Pages (https://fikryjawhari.github.io/thor-dex-guides/), built by the Action from `main`.
+- **Merged 2026-11-02 from `worktree-radical-red`:** the Radical Red guide (units 1-11; decisions in
+  `hacks/radical-red/notes.md`), and the fixes from its audit, so every check now passes with no standing exceptions:
+  EI pickup keys stay put across item spellings (`tools/pickup_keys.py`; Empoleonite D / O keep p246 / p247), EI's
+  Striker reads the `kick` flag (hzla EI 142 + 12, 0 mismatch), RR's item text in the shared pool (EI Link Cable,
+  five Unbound items), reproducible item icons (`sprites/items/retained.json`; `worktree_setup.py` links the cache),
+  jumpcheck finds item rows by `data-ri` and exits 1 on a bad jump, domcompare visits every item and move-property
+  page, shared scenario fixtures fit every guide's data (hittable foes, aura toggles only where the ability exists,
+  the real starter area). Audit round 2: 259 / 259 scenarios (one load flake passed alone), domcompare, jump / page /
+  walk / zoom / consistency checks 14 / 14 each, saved state 7 / 7.
 - **Merged 2026-11-02 from `worktree-move-pages`** (none of it on the Thor yet: Open 1):
   - Move and ability pages; shared move properties / targets / effect odds and ability-item rules
     (`tools/moveprops.py`, `MV.f` / `tg` / `se`, `MI`, per-hack `extract/move_rules.json`).
@@ -35,20 +44,14 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
   Retiled, is hg-engine like Hardlove).
 - **Shipping a guide update:** push `main`, wait for the Pages Action, then on the Thor long-press the guide → Update
   from link. Same library id, so saved state (tracker, ticks, calc) is kept.
-- **Next session: profile the checks** (the user asked). The full `gate.py check` takes 45-60 min. The 2026-11-02
-  audit (6 guides) measured: scenarios per guide 219-259 s at `--jobs 8` (36 runs each); domcompare normal + kb in two
-  batches of 3 guides (6 node processes, `--jobs=2` each) 468 s + 320 s wall at 100 % CPU, against ~34 min one at a
-  time; data checks 2-15 s per guide. Ideas: a `gate.py` option for parallel domcompare (today it is the audit's
-  shell loop), checks chosen from the files a branch changed, the best `--jobs` for six guides, `#/i/` routes in
-  domcompare's route list.
-- **Radical Red 4.1 (Hardcore): built, reviewed by the user, audit next** on `worktree-radical-red` (checkout
-  `.claude/worktrees/radical-red`, HEAD `8c29623`, 2026-11-02; not pushed). Units 1-11 merged (dex, calc, walkthrough
-  research, locations, items, trainers, save IDs, walkthrough, finishing, the user's trainer-order rework, the calc
-  mechanics pass). Every RR check passes (extract checks, calc 84 / 84, engine tests 150, other guides' engine checks
-  identical, all seven guides assemble). **Next: the audit**, then merge into `main`:
-  `plans/radical-red.md` → Audit and merge (the audit agent's brief, how to answer it, the merge steps). The user's
-  rulings are in the plan (User's answers, unit 10 / 11 decisions); every other unit decision was reviewed by the user
-  2026-11-02 and stands. Phone preview: `radical-red-frame.html` (tools/preview.py).
+- **Next session: profile the checks** (the user asked; a full audit now takes ~3 h). Measured 2026-11-02, round 2 of
+  the RR audit (seven guides, one at a time): scenarios 26 min at `--jobs 8` (259 runs); browser checks per guide RR
+  29.1, EI 24.0, Unbound 22.9, BB2R 20.9, Photonic 18.9, Hardlove 18.8, Eternal X 17.9 min (~153 min); jumpcheck is
+  54 % of that (~6 min a run for 200 jumps: fixed waits, not work); domcompare 3-5 min a mode (RR 3629 routes since
+  item pages joined). Ideas: jumpcheck waits for the scroll to settle instead of fixed delays; a `gate.py` option to
+  run browser checks for 2-3 guides at once and rerun failures alone (parallel runs only cause timing flakes); checks
+  chosen from the files a branch changed (the full set only for `template/` / shared tools); the gate's idle guard
+  says whose run it is waiting for.
 - **Next guide:** say which hack. A sources-only session can start from `.agents/references/new-guide-sources.md`;
   `CLAUDE.md` → Making a new guide is the whole procedure.
 
@@ -102,9 +105,14 @@ Guides for Dex Viewer, split out of the app repo (`thor-offline-viewer`, private
    2026-11-02): SoulGold's data files changed since 2026-10-24 (Mega Lopunny innates, Clefable / Mega Clefable and
    Unown learnsets, ability usage): re-fetch before its guide. hzla's live `decomp` branch differs from Unbound's pin
    in `gen789.js` (an Electromorphosis fix; pin kept).
-8. **Small data leftovers:** item icons missing for 19 Unbound key items and Pokégear Upgrade 1; tutor cards are
+8. **Small data leftovers:** item icons missing (no pinned art): Unbound 19 (key items, Costume Box), Radical Red
+   17, Hardlove 1 (Pokégear Upgrade 1), BB2R 1; tutor cards are
    parsed from each row's " · " text (structured tutor fields from the extracts would be sturdier); a `nomerge` flag
    in the data instead of the template inferring it; an unused `.phi .sh` rule in dex.css.
+
+9. **Radical Red follow-ups:** the in-game checks in `hacks/radical-red/notes.md` (Damage calc, Save import, the
+   Walkthrough's open order questions); one real `.srm` import compared with PKHeX; Gulp Missile's change not
+   modelled; Chillet has no sprite (type-coloured circle).
 
 ## Decisions
 

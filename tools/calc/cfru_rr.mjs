@@ -1,4 +1,4 @@
-// Synthetic Radical Red 4.1 saves for the CFRU reader (no real RR save exists yet: plans/radical-red.md D7). The
+// Synthetic Radical Red 4.1 saves for the CFRU reader (no real RR save exists yet: plans/radical-red.md D7, in git history). The
 // encoder writes the format as RadicalHex (jajaa17/RadicalHex 3697412, src/core.js) and PKForge (sofianeelhor/PKForge
 // 2df0443, RadicalRedFormat.cs) document it from real RR saves: the retail signature 0x08012025, CFRU's checksum
 // windows, the game's slot rotation (newest slot = counter % 2, sector id k at slot position (k + counter) % 14), the

@@ -3,7 +3,7 @@ Usage: uv run python -I hacks/radical-red/extract/build.py
 
 dex.py runs first (M, MV, AB, P, TC; the move / ability / species lookups the others use); moves.py adds structured
 move metadata; gid.py last, after finalise() (GID indexes M as it ends up). A module still a stub (raises
-NotImplementedError) leaves its tables empty, so data.json builds while units are in progress (plans/radical-red.md).
+NotImplementedError) leaves its tables empty, so data.json builds while units are in progress (plans/radical-red.md, in git history).
 """
 from pathlib import Path
 import os

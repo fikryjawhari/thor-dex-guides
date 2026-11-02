@@ -1,7 +1,7 @@
 // The CFRU reader's Radical Red profile on the synthetic saves of cfru_rr.mjs (tools/calc/cfru_rr/: the saves and
 // their expected imports, written from the encoder's specs, not from the reader): party and all 25 boxes in the guide's
 // names, the refusals, and the Unbound guide (which names no profile) refusing an RR save. Provisional until a real
-// RR save (plans/radical-red.md D7).
+// RR save (plans/radical-red.md D7, in git history).
 //
 //   node tools/calc/cfru_rr_check.mjs
 import assert from 'node:assert/strict';

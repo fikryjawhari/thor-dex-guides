@@ -41,12 +41,16 @@ Pages. Status, open work and decisions: PROGRESS.md. Read it at the start of eve
 - Python env for tools and checks: `uv sync` once per machine (`pyproject.toml` + `uv.lock` are committed), then
   `uv run python -I tools/<script>`. Need a package? `uv add <name>` and commit both files; don't work around it.
 - Compare two builds route by route: `node tools/domcompare.mjs <old.html> <new.html> [--kb]` (headless Chrome;
-  options `--routes`, `--jobs`, `--ignore` in its header). Run browser sweeps one at a time, except scenarios through
-  the gate: `uv run python -I tools/gate.py scenarios [hack ...] [--only calc-layout,calc-controls] --jobs 8` (and
+  options `--routes`, `--jobs`, `--ignore` in its header). Browser checks are DOM assertions: running several at once
+  (other agents' included) only slows them; it doesn't change a result. Under heavy load jumpcheck / calc-layout can
+  fail on timing (OFFSCREEN jumps, a wheel step); rerun just that check alone before calling it a failure. Don't wait
+  for or block other sessions' runs (the gate's idle guard refuses to start while another browser check runs: say so
+  rather than wait on it silently). Scenarios through the gate:
+  `uv run python -I tools/gate.py scenarios [hack ...] [--only calc-layout,calc-controls] --jobs 8` (and
   `gate.py check ... --jobs 8`) runs them in parallel, the same results as serial (measured with four guides on this
   16-core PC: serial 19 min, 4 jobs 5.8, 8 jobs 4.0, 12 / 16 jobs 4.3 / 4.4: past 8 each run just slows down). With
-  six guides the full `gate.py check` takes 45-60 min, most of it domcompare one guide at a time: run the full set
-  once per job, in pieces (PROGRESS.md → Next session has the measured times).
+  seven guides a full audit takes ~3 h one guide at a time (2026-11-02: scenarios 26 min, browser checks 18-29 min
+  per guide, jumpcheck 54 % of that): run the full set once per job, in pieces (PROGRESS.md → Next session).
 - When to check: only when no later work in the job will change what the check covers. During a job, run the
   scenarios the change touches on the guides it touches; the full set once at the end. A failure names its check and
   leaves a screenshot in `.tmp/calc-checks/`; if the cause still isn't clear, bisect the job's commits (one per
@@ -100,6 +104,8 @@ adapt); agents build the units (Workflow → Which model).
 
 ## Git
 - Worker setup: `python -I tools/worktree_setup.py [hack ...] --session <name>`; `--release` removes only your claim.
+  It links each hack's `.src` and the item-icon cache `.tmp/item-icons` from the main checkout (not the hzla clones:
+  `hzla_compare.mjs --repo <main checkout>/.tmp/hzla...`).
 - Parallel work goes on a branch in a worktree. Claude Code creates them in `.claude/worktrees/<name>` (git-ignored);
   merge into `main` when done. Only one session at a time edits on `main`.
 - Run `git status` before committing and stage files by name, not `git add -A`; never commit anything under `.claude/`.
