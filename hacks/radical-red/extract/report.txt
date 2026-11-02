@@ -3144,7 +3144,8 @@ locs: sheet shard rows the doc lacks: 1
 locs: sheet tables added: 6
 locs: 221 areas in 154 places, 2590 sublocation rows, 1235 obtainable species
   trainers: Trainer Order puts Dumbass Kid (25) in Pre-Koga, data.js cap 59
-  trainers: Trainer Order puts Leader Whitney (49) in Pre-Lt. Surge, data.js cap 28
+  trainers: Trainer Order puts Leader Bugsy (47) in Pre-Lt. Surge, data.js cap 28
+  trainers: Trainer Order puts Leader Whitney (49) in Pre-Erika, data.js cap 28
   trainers: Trainer Order puts PkMn Trainer Brendan (50) in Pre-Lt. Surge, data.js cap 28
   trainers: Trainer Order puts Leader Morty (52) in Pre-Erika, data.js cap 36
   trainers: Trainer Order puts Leader Jasmine (62) in Pre-Blaine, data.js cap 73
@@ -3158,15 +3159,16 @@ locs: 221 areas in 154 places, 2590 sublocation rows, 1235 obtainable species
   trainers: Trainer Order puts Picnicker Caitlin (155) in Pre-Erika, data.js cap 36
   trainers: Trainer Order puts Pokemaniac Herman (163) in Pre-Erika, data.js cap 36
   trainers: Trainer Order puts Super Nerd Aidan (171) in Pre-Erika, data.js cap 36
-  trainers: Trainer Order puts Burglar Lewis (219) in Pre-May, data.js cap 76
-  trainers: Trainer Order puts Leader Chuck (317) in Pre-Sabrina, data.js cap 36
+  trainers: Trainer Order puts Leader Chuck (317) in Pre-Erika, data.js cap 36
   trainers: Trainer Order puts Team Rocket Grunt (355) in Pre-Lt. Surge, data.js cap 28
   trainers: Trainer Order puts Channeler Ruth (448) in Pre-Silph Co. Archer & Ariana, data.js cap 36
   trainers: Trainer Order puts Picnicker Dana (474) in Pre-Erika, data.js cap 36
   trainers: Trainer Order puts Camper Justin (477) in Pre-Koga, data.js cap 36
   trainers: Trainer Order puts Gentleman Brooks (482) in Pre-Lt. Surge, data.js cap 28
+  trainers: 12 ordinary trainers of data.js cap 28 in Pre-Lt. Surge (their walkthrough visit)
+  trainers: 63 ordinary trainers of data.js cap 36 in Pre-Erika (their walkthrough visit)
 trainers: 464 data.js trainers = 460 cards + 2 partners + 2 same-team alternatives; 18 splits
-trainers: Trainer Order 115 entries; 46 cards with the cap box (222 relative mons); 186 boss blocks, 185 matched, 1 sheet only
+trainers: Trainer Order 115 entries; 47 cards with the cap box (228 relative mons); 186 boss blocks, 185 matched, 1 sheet only
 trainers: boss teams checked: sheet 967 mons, 11 differ ("Sheet says"), 0 sheet slots with no mon; RR calc 905 sets, 6 differ (report only); hzla 539 sets, 38 differ (report; "hzla says" where the sheet differs too)
   Sheet says: 317 Leader Chuck #6: ability Steadfast
   Sheet says: 55 PkMn Trainer Brendan #3: moves HP Fire
@@ -3224,7 +3226,7 @@ trainers: boss teams checked: sheet 967 mons, 11 differ ("Sheet says"), 0 sheet 
   hzla says: 76 Leader Whitney #2 miltank: Naive; ability Scrappy; item Leftovers; moves Body Press, Stomping Tantrum
   hzla says: 76 Leader Whitney #6 snorlax: Naughty; moves Fire Punch
   sheet only: Postgame!C1175 BERRY FOREST SPIRIT
-  trainers: Trainer Order row 366 BURGLAR LEWIS: cap 73, listed in Pre-Blaine: in Pre-May
+  trainers: Trainer Order row 366 BURGLAR LEWIS: cap 73, its row is in Pre-Blaine (cap 76)
 items: old-box rows {'Key Items': 44, 'Z-Crystals': 26, 'Held Items': 156, 'TMs and HMs': 95, 'Mega Stones': 63, 'Stats and Abilities': 47, 'Fossils': 3, 'Evolution Items': 29, 'Shops': 112, 'Valuables': 6, 'Move Tutors': 34, 'Useful NPCs': 3}
 items: 451 pickups (Found / Also lines), 126 shop lines, 111 care package lines, 34 tutor moves
 items: 63 Mega Stones placed of 65; Mega pages without a place: Adamant Orb, Red Orb
@@ -3237,9 +3239,9 @@ items: shop price: Lava Cookie (Two Island shop) from FRLG, the Shops tab has no
 items: data.js care package items with no package on the sheet: Pomeg Berry, Rare Candy (Viridian City, step 0)
 items: tutor Uproar: data.js only (Saffron City Gian's House 2F)
 items: item_desc.json: 613 items, 41 changed vs FireRed or in effect
-walkthrough: splits 18, stops 136, steps 32, trainers 460, pickups 451, placed 451, np 0
-walkthrough: pickups placed by by item 8, later visit 14, own split 408, split before 21
-walkthrough: pickups at a later visit: TM046 Thief (Diglett's Cave 1F, step 0) -> diglett-cave; Lucky Egg (S.S. Anne 2F, step 2) -> ss-anne; Shiny Stone (S.S. Anne 2F, step 2) -> ss-anne; HM01 Cut (S.S. Anne Captain's Quarters, step 2) -> ss-anne; TM026 Earthquake (Saffron City Gian's House 1F, step 8) -> saffron-kid; Swampertite (Saffron City Gian's House 1F, step 8) -> saffron-kid; Venusaurite (Route 16 Gatehouse 2F, step 6) -> route-16; Charizardite Y (Route 16 Gatehouse 2F, step 6) -> route-16; Blastoisinite (Route 16 Gatehouse 2F, step 6) -> route-16; DNA Splicers (Cinnabar Island Lab Testing Room, step 10) -> cinnabar-lab; Aggronite (Cinnabar Island Lab, step 10) -> cinnabar-lab; Choice Band (Cinnabar Island Lab, step 10) -> cinnabar-lab; Assault Vest (Cinnabar Island Lab, step 10) -> cinnabar-lab; Steelixite (Cinnabar Island Lab, step 10) -> cinnabar-lab
+walkthrough: splits 18, stops 128, steps 32, trainers 460, pickups 451, placed 451, np 0
+walkthrough: pickups placed by by item 8, later visit 73, own split 349, split before 21
+walkthrough: pickups at a later visit: TM046 Thief (Diglett's Cave 1F, step 0) -> diglett-cave; Rare Candy (S.S. Anne B1F Room 2, step 2) -> ss-anne; TM031 Brick Break (S.S. Anne 1F Room 2, step 2) -> ss-anne; Chesto Berry (S.S. Anne Kitchen, step 2) -> ss-anne; Cheri Berry (S.S. Anne Kitchen, step 2) -> ss-anne; Pecha Berry (S.S. Anne Kitchen, step 2) -> ss-anne; TM069 Stomping Tantrum (S.S. Anne 2F Room 4, step 2) -> ss-anne; Lucky Egg (S.S. Anne 2F, step 2) -> ss-anne; Shiny Stone (S.S. Anne 2F, step 2) -> ss-anne; HM01 Cut (S.S. Anne Captain's Quarters, step 2) -> ss-anne; TM101 Ice Punch (Route 9, step 3) -> route-9; Chesto Berry (Route 9, step 3) -> route-9; Rare Candy (Route 9, step 3) -> route-9; Everstone (Route 10 Poke Center, step 3) -> route-10-north; Persim Berry (Route 10, step 3) -> route-10-north; Cheri Berry (Route 10, step 3) -> route-10-north; TM042 Facade (Route 10, step 3) -> route-10-north; Nanab Berry (Route 10, step 3) -> route-10-north; TM080 Rock Slide (Rock Tunnel B1F, step 3) -> rock-tunnel; TM023 Iron Head (Rock Tunnel 1F, step 3) -> rock-tunnel; TM030 Shadow Ball (Lavender Town Mr. Fuji's House, step 3) -> lavender-town; Soothe Bell (Lavender Town Mr. Fuji's House, step 3) -> lavender-town; Shed Shell (Lavender Town Mr. Fuji's House, step 3) -> lavender-town; TM027 Return (Route 12 Gatehouse 2F, step 3) -> route-12-north; Rawst Berry (Route 8, step 3) -> route-8; Lum Berry (Route 8, step 3) -> route-8; Leppa Berry (Route 8, step 3) -> route-8; TM106 Acrobatics (Route 8, step 3) -> route-8; Wepear Berry (Route 7, step 3) -> route-7; TM062 Iron Tail (Route 7, step 3) -> route-7; Loaded Dice (Celadon City, step 3) -> celadon-city; Tea (Celadon City Mansion 1F, step 3) -> celadon-city; Amulet Coin (Celadon City Mansion 2F, step 3) -> celadon-city; PP Up (Celadon City, step 3) -> celadon-city; Alakazite (Celadon City Department Store 6F, step 3) -> celadon-city; TM117 Brave Bird (Celadon City Hotel, step 3) -> celadon-city; Applite (Celadon City Hotel, step 3) -> celadon-city; Sablenite (Pokemon Tower 3F, step 3) -> pokemon-tower; Cleanse Tag (Pokemon Tower 5F, step 3) -> pokemon-tower; TM061 Will-O-Wisp (Pokemon Tower 6F, step 3) -> pokemon-tower; Rare Candy (Pokemon Tower 6F, step 3) -> pokemon-tower; Reaper Cloth (Pokemon Tower 6F, step 3) -> pokemon-tower; Thick Club (Pokemon Tower 6F, step 3) -> pokemon-tower; TM029 Psychic (Saffron City Mr. Psychic's House, step 3) -> saffron-dojo; TM060 Drain Punch (Saffron City Fighting Dojo, step 3) -> saffron-dojo; Expert Belt (Saffron City Fighting Dojo, step 3) -> saffron-dojo; Galladite (Saffron City Fighting Dojo, step 3) -> saffron-dojo; Focus Sash (Saffron City Fighting Dojo, step 3) -> saffron-dojo; TM026 Earthquake (Saffron City Gian's House 1F, step 8) -> saffron-kid; Swampertite (Saffron City Gian's House 1F, step 8) -> saffron-kid; HM02 Fly (Route 16 Fly HM House, step 3) -> route-16-north; TM100 Dual Wingbeat (Route 16, step 3) -> route-16-north; Leftovers (Route 16, step 3) -> route-16-north; Venusaurite (Route 16 Gatehouse 2F, step 6) -> route-16; Charizardite Y (Route 16 Gatehouse 2F, step 6) -> route-16; Blastoisinite (Route 16 Gatehouse 2F, step 6) -> route-16; Leftovers (Route 12, step 3) -> route-12-north; Iron (Route 12, step 3) -> route-12-north; Rare Candy (Route 12, step 3) -> route-12-north; TM004 Seed Bomb (Route 12, step 3) -> route-12-north; DNA Splicers (Cinnabar Island Lab Testing Room, step 10) -> cinnabar-lab; Aggronite (Cinnabar Island Lab, step 10) -> cinnabar-lab; Choice Band (Cinnabar Island Lab, step 10) -> cinnabar-lab; Assault Vest (Cinnabar Island Lab, step 10) -> cinnabar-lab; Steelixite (Cinnabar Island Lab, step 10) -> cinnabar-lab; Babiri Berry (Route 9, step 3) -> route-9; Black Sludge (Route 9, step 3) -> route-9; Everstone (Route 9, step 3) -> route-9; Flame Orb (Route 9, step 3) -> route-9; Kasib Berry (Route 9, step 3) -> route-9; Smoke Ball (Route 9, step 3) -> route-9; Thick Club (Route 9, step 3) -> route-9; Metal Coat (Celadon City, step 3) -> celadon-city
 walkthrough: data.js areas in no stop: none
   description-derived metadata: Metal Bash: A physical attack in which the user charges, full body, into the foe.
 move metadata: 824 structured; 1 description-derived; 1 missing; 252 changed markers
@@ -3376,7 +3378,7 @@ pickup keys: 10 table entries no pickup matched
   p476: Waterium Z (Cerulean City Gym)
 pickup keys: 492 pickups, 451 walkthrough rows keyed
 prune: kept 1313; removed 30: dialga_origin, arceus_fighting, arceus_flying, arceus_poison, arceus_rock, arceus_ghost, arceus_fire, arceus_water, arceus_grass, arceus_electric, arceus_psychic, arceus_ice, arceus_dragon, arceus_dark, silvally_fighting, silvally_flying, silvally_poison, silvally_ground, silvally_rock, silvally_bug, silvally_ghost, silvally_steel, silvally_fire, silvally_water, silvally_grass, silvally_electric, silvally_psychic, silvally_ice, silvally_dragon, silvally_dark
-trainers put in walkthrough order: Pre-Brock [Cap 16], Pre-Misty [Cap 28], Pre-Lt. Surge [Cap 36], Pre-Erika [Cap 44], Pre-Koga [Cap 68], Pre-May [Cap 73], Pre-Cerulean Cave Archer & Ariana [Cap 79], Pre-Brendan [Cap 82], Post Game [Cap 100]
+trainers put in walkthrough order: Pre-Brock [Cap 16], Pre-Mt. Moon Archer [Cap 23], Pre-Misty [Cap 28], Pre-Lt. Surge [Cap 36], Pre-Erika [Cap 44], Pre-Game Corner Giovanni [Cap 47], Pre-Silph Co. Archer & Ariana [Cap 56], Pre-Koga [Cap 68], Pre-May [Cap 73], Pre-Blaine [Cap 76], Pre-Cerulean Cave Archer & Ariana [Cap 79], Pre-Brendan [Cap 82], Post Game [Cap 100]
 item text: 367 own, 3 pooled, 0 from the wiki, 3 made up, 1 Mega Stone standard, 0 with no description
 in battle: 180 shown items with battle text, 194 without
 in battle: 747 moves with battle text, 79 without

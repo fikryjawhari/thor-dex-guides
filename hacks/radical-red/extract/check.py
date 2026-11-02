@@ -207,6 +207,28 @@ def check_sheet(data, failures):
 
 
 
+def trainer_order_ids():
+    """[(the split its row sits in, data.js ids)] for each Trainer Order entry: the entry's trainers and its other teams
+    (same name, place and data.js cap; Bugsy's post-Surge team), as trainers.py groups them."""
+    import bosssheet
+    import trainers as T
+    matched = T.match_blocks()
+    T_ = DATA['trainers']
+    linked = [matched[(b.sheet, b.row)] for b in (T._link_block(e.link) for e in bosssheet.trainer_order())]
+    direct = {i for ids in linked for i in ids}
+    teams = {i for ids in matched.values() for i in ids}
+    out, split = [], 0
+    for e, ids in zip(bosssheet.trainer_order(), linked):
+        f = T_[ids[0]]
+        alts = [i for i in T_ if i not in direct and i in teams and (T_[i]['name'], T_[i]['areaName'], T_[i]['cap']) ==
+                (f['name'], f['areaName'], f['cap'])]
+        alts += [i for i, j in T.TEAM_OF.items() if j in ids]
+        out.append((split, ids + alts))
+        if split < len(T.ENDERS) and e.name == T.ENDERS[split]:
+            split += 1
+    return out
+
+
 def trainer_checks(D):
     """TR from data.js and the Hardcore workbook (notes.md → Trainers, Caps)."""
     from common import DATA, CAPS
@@ -230,9 +252,29 @@ def trainer_checks(D):
     assert every == set(DATA['trainers']) and len(DATA['trainers']) == 464
     assert not set(ids) & (set(T.PARTNERS) | set(T.SAME_TEAM))
     split_of = {keys[t['k']]['id']: g['n'] for g, _, t in cards}
-    # the user's answers: Justin (Route 12) in the Koga split, Lewis (Pokémon Mansion B1F) in the May split
-    assert split_of['477'] == 'Pre-Koga Split [Cap 68]' and split_of['219'] == 'Pre-May Split [Cap 73]'
     by_id = {keys[t['k']]['id']: t for _, _, t in cards}
+    # the user's rulings (2026-11-02): every Trainer Order entry in the split its row sits in (Justin, Route 12: Pre-Koga;
+    # Lewis, Pokémon Mansion B1F: after May, Pre-Blaine at cap 76), apart from the Johto group
+    rows = trainer_order_ids()
+    for split, ids in rows:
+        for i in (i for i in ids if i not in T.SAME_TEAM):
+            want = T.GROUPS.get(i, T.SPLITS[split])
+            assert split_of[i].startswith(want + ' Split'), (i, split_of[i], want)
+    assert split_of['477'] == 'Pre-Koga Split [Cap 68]' and split_of['219'] == 'Pre-Blaine Split [Cap 76]'
+    assert by_id['219']['cap'] == 76 and [m['l'] for m in by_id['219']['p']] == [
+        76 + DATA['scaledLevels'][str(x['level'])] for x in DATA['trainers']['219']['hardcore']]
+    # the optional Johto leaders (Bugsy after Lt. Surge, Whitney, Morty, Chuck) in Pre-Erika with the cap box; Bugsy
+    # before Lt. Surge in Pre-Lt. Surge
+    assert set(T.JOHTO) == {'8', '49', '52', '317'}
+    for i in T.JOHTO:
+        assert split_of[i] == 'Pre-Erika Split [Cap 44]' and all('r' in m for m in by_id[i]['p']), i
+        assert 'Optional' in by_id[i]['tags'], i
+    assert split_of['47'] == 'Pre-Lt. Surge Split [Cap 36]' and all('r' in m for m in by_id['47']['p'])
+    # the hard line at Lt. Surge: nothing from Route 9, Rock Tunnel, Route 10, Route 8 or the Saffron Dojo before him
+    later = ('Route 9', 'Rock Tunnel', 'Route 10', 'Route 8', 'Saffron City Fighting Dojo')
+    early = [t['n'] for g, _, t in cards if g['n'].startswith('Pre-Lt. Surge ') and
+             re.sub(r' (\d+F|B\d+F)$', '', t['loc']) in later]
+    assert not early, early
     assert all(m['l'] == 68 + {101: -2, 102: -1, 103: 0, 104: -3}[x['level']]
                for m, x in zip(by_id['477']['p'], DATA['trainers']['477']['hardcore']))
     # gym rematches: Pre-Koga, the cap box, the one note
@@ -243,7 +285,7 @@ def trainer_checks(D):
     # the cap box: every range / open Trainer Order entry with scaled levels; nothing else relative
     relative = {i for i, t in by_id.items() if any('r' in m for m in t['p'])}
     order = bosssheet.trainer_order()
-    assert len(order) == 115 and len(relative) == 46, (len(order), len(relative))
+    assert len(order) == 115 and len(relative) == 47, (len(order), len(relative))
     for i in relative:
         assert not any('l' in m for m in by_id[i]['p']), i
     # the rival follows the starter type: each team set covers Fire / Grass / Water once
@@ -258,7 +300,8 @@ def trainer_checks(D):
     doubles = [t for _, _, t in cards if 'Double Battle' in t['tags']]
     assert len(doubles) == 47, len(doubles)
     print('PASS trainers: 464 data.js trainers (460 cards, 2 partners, 2 same-team), 18 Hardcore splits, '
-          '%d cap-box cards, %d doubles, Justin / Lewis / rematch placement, rivals by starter type' %
+          '%d cap-box cards, %d doubles, Trainer Order rows / Johto group / Lt. Surge line / rematch placement, rivals by '
+          'starter type' %
           (len(relative), len(doubles)))
 
 
@@ -290,6 +333,41 @@ def check_walk(D):
     for si, boss in enumerate(bosses):
         last = W['splits'][si]['st'][-1]['tr']
         assert last and tid[last[-1]] in boss.split(), (W['splits'][si]['n'], last[-1:])
+    # the user's rulings (2026-11-02)
+    import route
+    import trainers as T
+    card_of = {t['k']: t for g in TR['g'] for s in g['sec'] for t in s['tr']}
+    mini = {i for _, ids in trainer_order_ids() for i in ids}
+    stop_of = {tid[k]: (si, st['k']) for si, st in stops for k in st['tr']}
+    # ordinary trainers: their box is the split of their walkthrough visit (route.py), whatever their data.js cap
+    for i, (si, key) in stop_of.items():
+        if i not in mini:
+            assert route.visit_split(i, DATA['trainers'][i]['areaName'], DATA['trainers'][i]['cap']) == si, (i, key)
+    # a place's mini bosses before its ordinary trainers in each stop (a gym: its trainers, then the leader; the cap
+    # boss last)
+    # Archer and Ariana end both their splits together (Silph Co. 11F tag battle; Cerulean Cave 1F, one after the other)
+    cap_boss = {i for boss in bosses for i in boss.split()} | {'53', '67'}
+    for si, st in stops:
+        seen = collections.defaultdict(lambda: False)
+        for k in st['tr']:
+            loc, i = card_of[k]['loc'], tid[k]
+            if 'Gym' in loc or i in cap_boss:
+                continue
+            assert not (i in mini and seen[loc]), ('walk: ordinary trainer before a mini boss', st['k'], i)
+            seen[loc] |= i not in mini
+    for st in (st for _, st in stops if 'gym' in st['k']):
+        ids = [tid[k] for k in st['tr']]
+        leaders = [n for n, i in enumerate(ids) if card_of[st['tr'][n]]['n'].startswith('Leader ')]
+        assert not leaders or leaders == [len(ids) - 1], ('walk: gym leader not last', st['k'])
+    # one S.S. Anne visit, in Pre-Lt. Surge after the Dig House Grunt and Camper Jeff
+    anne = [(si, st['k']) for si, st in stops if any(card_of[k]['loc'].startswith('S.S. Anne') for k in st['tr'])]
+    surge = [st['k'] for si, st in stops if si == 3]
+    assert anne == [(3, 'ss-anne')] and surge.index('ss-anne') > max(surge.index('cerulean-dig-house'),
+                                                                     surge.index('route-6-jeff')), anne
+    # the Johto group: one stop in Pre-Erika (Bugsy after Lt. Surge, Whitney, Morty, Chuck); Bugsy before him in Pre-Lt. Surge
+    assert [stop_of[i] for i in T.JOHTO] == [(4, 'johto-leaders')] * 4 and stop_of['47'][0] == 3
+    # Lewis with the rest of the Mansion, after May
+    assert stop_of['219'] == (11, 'pokemon-mansion')
     # pickups: every keyed Found / Also line of IT is a walkthrough row (a stop or np), each row keyed once
     rows = [r for _, st in stops for r in st['it']] + W['np']
     wk = [r[4] for r in rows]
@@ -299,7 +377,8 @@ def check_walk(D):
     assert it == set(wk), 'walk: pickups not in the walkthrough %d, rows with no Found / Also line %d' % (
         len(it - set(wk)), len(set(wk) - it))
     print('PASS walkthrough: %d splits = TR.caps, %d stops (keys from ROUTE), %d cards each in one stop of its box, '
-          'cap bosses last, %d pickups placed, %d in np' % (len(W['splits']), len(stops), len(where),
+          'cap bosses last, ordinary trainers in their visit split, mini bosses first, one S.S. Anne visit, the Johto '
+          'group, %d pickups placed, %d in np' % (len(W['splits']), len(stops), len(where),
                                                              len(rows) - len(W['np']), len(W['np'])))
 
 
