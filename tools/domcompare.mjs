@@ -68,7 +68,7 @@ const PAGE = `async (routes, want, ign) => {
   // ResizeObserver wrote before or after a box's open attribute made identical pages differ (Photonic #/walk, 2026-11-02).
   const snap = () => { const b = document.body.cloneNode(true); b.querySelectorAll('script').forEach(s => s.remove());
     // The rail's jump buttons are enabled or not by the scroll position (dex.js jumpState), which under load lagged and
-    // then carried from route to route (Radical Red, 2026-11-02): left out here; pagecheck / walkcheck test them.
+    // then carried from route to route (Radical Red, 2026-11-02): left out here; tools/scenarios/blocks.mjs tests them.
     b.querySelectorAll('.rjump [data-j]').forEach(x => x.removeAttribute('disabled'));
     for (const el of b.querySelectorAll('*')) { if (el.attributes.length < 2) continue;
       const at = [...el.attributes].map(a => [a.name, a.value]).sort((p, q) => p[0] < q[0] ? -1 : 1);

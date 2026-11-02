@@ -12,11 +12,8 @@ Run browser sweeps one at a time so CPU contention does not change layout timing
   page (a small standalone HTML with data sampled from `data.json`) and an optional `--panel` of options, never a frame.
   `thor-frame/calc-presets.html` is the panel for a built calc guide: live-engine test sets (States, Download, Sword,
   Toxic...; All loads every preset as the team).
-- `walkcheck.mjs <guide.html> <shot-prefix> [kb]`: the walkthrough at 260 × 316 (`kb` = `dvkb` set): taps hold the
-  header, bars, jumps, Next step, starter, state after a reload, other routes; prints each check and page errors and
-  saves a screenshot.
-- `pagecheck.mjs <guide.html> <shot-prefix> [kb]`: the same for Locations, Trainers and Items (boxes, places, sticky
-  headers, bars, jumps, state after a reload, place links).
+- (`walkcheck.mjs` / `pagecheck.mjs`, which printed the box pages' header taps, pinned headers, bars and jumps for a
+  reader, are now the asserting scenario `tools/scenarios/blocks.mjs`.)
 - `jumpcheck.mjs <guide.html> [kb] [N]`: N (default 40) of each full-window search jump (trainer, walkthrough trainer,
   stop, item, place) from another page with a search set; lists any that don't end open and on screen under the
   pinned headers.

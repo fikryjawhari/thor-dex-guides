@@ -58,7 +58,7 @@ Also look for: a dex site's GitHub repo (EI's site is built from JSON in `src/da
 5. **Sprites:** the shared set; `tools/sprite_keys.py <hack>` lists the forms only the hack has, which go in its
    `sprites.json`.
 6. **Test** (`CLAUDE.md` → Making a new guide): `check.py`, `tools/tabs_check.py`, `tools/consistency-check.mjs`,
-   `walkcheck` / `pagecheck`, page errors on every route, nothing wider than 260. On the Thor when adb is available.
+   the scenarios (`tools/scenarios/`, `blocks.mjs` for the box pages), page errors on every route, nothing wider than 260. On the Thor when adb is available.
 7. **Write the notes** in `hacks/<hack>/notes.md` (headings: Build, Sources and rules, Local storage, Hack-only data,
    Checks, History) so a later session can extend it.
 8. **Deliver** the build in the Thor frame on the phone preview (`tools/preview.py`) for the user's review.
