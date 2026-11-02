@@ -108,7 +108,7 @@ ROUTE = """
 11|cinnabar-lab|165,166,167,168|62|Revive fossils in the Lab.
 11|pokemon-mansion|171,172,173,174||Find the Secret Key on B1F: it opens the Gym.
 11|cinnabar-gym|175||
-12|cerulean-cave|176,177|73 72 71 70 67 68|
+12|cerulean-cave|176,177|72 73 70 71 67 68|
 13|cerulean-cave-giovanni|178|69|
 14|route-4-rewards|21|-|
 14|cerulean-cave-ketchup|177|20 19|Ketchup gives a Kubfu after the first battle; the rematch, a day later, a second.
