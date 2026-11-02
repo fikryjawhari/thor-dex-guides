@@ -9,8 +9,10 @@
 //             same order, so state carried over between routes is the same on both sides.
 //   --ignore  remove what matches regex from every snapshot before comparing (expected changes, e.g. --ignore=" bt"
 //             for a new class); can be given more than once.
-// Flagged routes are loaded fresh first (up to FRESH=n of them, default 100; the rest count as differing); only those
-// that still differ are replayed with their chunk's history and printed (SHOW=n of them, default 2; LIST=1 lists every differing route). Exit code 0: identical and no page errors, 1: not, 2: Chrome failed.
+// Flagged routes are loaded fresh first (up to FRESH=n of them, default 100; the rest count as differing); those that
+// still differ are replayed alone with their chunk's history (REPLAY=n, default 3), and only a route that differs again
+// counts and is printed (SHOW=n, default 2; LIST=1 lists every differing route).
+// Exit code 0: identical and no page errors, 1: not, 2: Chrome failed.
 // Needs Chrome or Edge (CHROME env var, or the usual Windows install paths). Node 22+ (fetch, WebSocket).
 // Picks a free debugging port; run whole sweeps one at a time to avoid layout-timing noise from CPU contention.
 // content-visibility is forced to visible in every tab (see tab()): offscreen skipped parts are not observed or measured, so DOM that depends on them varied from run to run.
@@ -152,18 +154,27 @@ try {
       await ta.close(); await tb.close();
     }));
   }
-  const bad = flagged.filter(r => !fresh.has(r));
+  let bad = flagged.filter(r => !fresh.has(r));
   console.log(`flagged by the sweep: ${flagged.length}, rechecked fresh: ${Math.min(flagged.length, +(process.env.FRESH ?? 100))}, identical on a fresh load: ${fresh.size}`, [...fresh].slice(0, 10).join(' '));
-  console.log('differing routes:', bad.length, bad.slice(0, process.env.LIST ? bad.length : 40).join(' '));
-  if (bad.length || a.errs.length || b.errs.length) code = 1;
-  for (const r of bad.slice(0, +(process.env.SHOW || 2))) {
+  // Still differing: replay each (up to REPLAY, default 3: a replay sweeps the chunk up to the route) alone, after the
+  // sweep. Identical on replay: timing (a huge page such as #/walk not settled while 8 checks ran at once). Differing
+  // again: printed (SHOW, default 2) and counted. Past REPLAY, every remaining route counts.
+  const replayed = [], shown = [];
+  for (const r of bad.slice(0, +(process.env.REPLAY ?? 3))) {
     const c = chunks.find(c => c.includes(r)), upTo = c.slice(0, c.indexOf(r) + 1);  // same history as the sweep
     const [ta, tb] = [await tab(), await tab()];
     const [x, y] = (await Promise.all([run(ta, files[0], upTo, [r]), run(tb, files[1], upTo, [r])])).map(o => o.out[r]);
     await ta.close(); await tb.close();
+    if (x === y) { replayed.push(r); continue; }
+    if (shown.length >= +(process.env.SHOW || 2)) continue;
+    shown.push(r);
     let i = 0; while (i < x.length && x[i] === y[i]) i++;
     console.log(`\n== ${r} (lengths ${x.length} / ${y.length}) first difference at ${i}:\n old: ${x.slice(Math.max(0, i - 150), i + 250)}\n new: ${y.slice(Math.max(0, i - 150), i + 250)}`);
   }
+  bad = bad.filter(r => !replayed.includes(r));
+  if (replayed.length) console.log('identical when replayed alone (timing under load):', replayed.join(' '));
+  console.log('differing routes:', bad.length, bad.slice(0, process.env.LIST ? bad.length : 40).join(' '));
+  if (bad.length || a.errs.length || b.errs.length) code = 1;
   console.log(`done in ${secs()}`);
 } catch (e) { console.log(e.message); code = 2; }
 await cleanup();
