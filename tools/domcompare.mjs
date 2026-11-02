@@ -64,7 +64,15 @@ async function tab() {
 // Runs in the page: visit each route, open every <details> until none are left closed, hash the body.
 const PAGE = `async (routes, want, ign) => {
   const sleep = ms => new Promise(r => setTimeout(r, ms));
+  // Attributes are put in name order first: their serialised order is the order they were set in, so a style that a
+  // ResizeObserver wrote before or after a box's open attribute made identical pages differ (Photonic #/walk, 2026-11-02).
   const snap = () => { const b = document.body.cloneNode(true); b.querySelectorAll('script').forEach(s => s.remove());
+    // The rail's jump buttons are enabled or not by the scroll position (dex.js jumpState), which under load lagged and
+    // then carried from route to route (Radical Red, 2026-11-02): left out here; pagecheck / walkcheck test them.
+    b.querySelectorAll('.rjump [data-j]').forEach(x => x.removeAttribute('disabled'));
+    for (const el of b.querySelectorAll('*')) { if (el.attributes.length < 2) continue;
+      const at = [...el.attributes].map(a => [a.name, a.value]).sort((p, q) => p[0] < q[0] ? -1 : 1);
+      for (const [n] of at) el.removeAttribute(n); for (const [n, v] of at) el.setAttribute(n, v); }
     let h = b.innerHTML; for (const p of ign) h = h.replace(new RegExp(p, 'g'), '');
     return h.replace(/blob:[^)"]+/g, 'blob').replace(/ class=""/g, '').replace(/>\\s+</g, '><').trim(); };
   const hash = s => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return h + ':' + s.length; };
