@@ -26,7 +26,8 @@ from link (same library id, saved state kept).
 
 ## Open (DETAIL → Open has each in full)
 
-1. Thor / in-game tests of everything since the consistency pass (item, move, ability pages, calc fight state ...).
+1. Thor / in-game tests of everything since the consistency pass (item, move, ability pages, calc fight state,
+   sprites as CSS classes ...).
 2. Real save tests: one real import per guide on the Thor, compared with PKHeX.
 3. Footer credits: `cfg.credit` hook exists, no guide sets it. Agreed, not done.
 4. Skill re-upload once its references cover the item pages (5).
@@ -35,24 +36,13 @@ from link (same library id, saved state kept).
 7. Source updates: SoulGold's data changed since 2026-10-24 (re-fetch before its guide); hzla `gen789.js` pin kept.
 8. Small data leftovers: missing item icons, tutor-card parsing, a `nomerge` flag, an unused CSS rule.
 9. Radical Red follow-ups: in-game checks, one real `.srm` import, Gulp Missile, Chillet's sprite.
+10. Check speed follow-ups: scenarios' `dvkb` runs (needs the user's yes), tiers past ~10 guides, pagecheck /
+    walkcheck assertions, a zoomcheck retry.
 
 ## Next session
 
-- **Check speed (branch `worktree-check-speed`, 2026-11-02; not merged):** full audit from scratch 40 min (was
-  ~3.5 h); unchanged guides / checks come from the result cache (`gate.py`, `tools/README.md` → Standard gates and
-  Check timings). Sprites became CSS classes (`template/README.md` → Pokémon sprites): page opens 560 → 310 ms,
-  domcompare-identical on every guide apart from that markup. Before merging: the user looks at the Thor (sprites on
-  the list, Pokémon page, trainer cards, calc grids; first open feels faster?). Left, in order of payoff:
-  1. Scenarios are 57 % of the work: every case runs in normal and `dvkb`; most never touch an input. Option: `dvkb`
-     only for cases that use a number box / search / keyboard, plus a `dvkb` fit sweep per page (the 260 × 316 fit
-     rule must still hold in both modes). Needs the user's yes: it is test design.
-  2. A template change still runs everything on every guide (~5-6 min of pool time per guide): past ~10 guides,
-     consider tiers (full set on EI + the guide the change came from; domcompare / consistency / fit on the rest).
-  3. pagecheck / walkcheck assert only page errors and a jump bar; the rest is printed for a reader, with EI's box
-     names. Turn the printed geometry into assertions, or drop what scenarios already cover.
-  4. zoomcheck under load flaked once (Unbound, 1 stale bar of 475; passed alone): an in-check retry like jumpcheck's.
-- **Next guide:** say which hack. Sources-only start: `.agents/references/new-guide-sources.md`; the whole procedure:
-  `.agents/references/new-guide.md`.
+- **Next guide:** say which hack (or a check-speed follow-up: Open 10). Sources-only start:
+  `.agents/references/new-guide-sources.md`; the whole procedure: `.agents/references/new-guide.md`.
 
 ## Elsewhere in DETAIL
 

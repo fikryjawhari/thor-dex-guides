@@ -5,6 +5,13 @@ that section), not the whole file.
 
 ## Recent merges
 
+- **Merged 2026-11-03 from `worktree-check-speed`:** a full audit from scratch takes 40 min (was ~3.5 h), a rerun
+  with nothing changed 88 s. `gate.py` runs every browser check in one pool (8 jobs), reruns pool failures alone and
+  caches passes by content, shared by worktrees (`.tmp/check-cache/`; `--fresh` reruns); checks wait for the page
+  instead of fixed sleeps; jumpcheck and domcompare retry inside the check. Sprites became CSS classes (one `.sp-<id>`
+  rule per sprite instead of a blob URL each): page opens 560 → 310 ms (`template/README.md` → Pokémon sprites).
+  CLAUDE.md / AGENTS.md condensed, PROGRESS.md split into a short status and this file, the new-guide procedure
+  moved to `.agents/references/new-guide.md`. Timings: `tools/README.md` → Check timings.
 - **Merged 2026-11-02 from `worktree-radical-red`:** the Radical Red guide (units 1-11; decisions in
   `hacks/radical-red/notes.md`), and the fixes from its audit, so every check now passes with no standing exceptions:
   EI pickup keys stay put across item spellings (`tools/pickup_keys.py`; Empoleonite D / O keep p246 / p247), EI's
@@ -57,7 +64,8 @@ Write a family's first guide with its siblings in mind; lift shared code when th
 
 1. **Thor / in-game tests** (the user, per guide). Nothing since the consistency pass has been on the device: the item
    pages, Items tab and ticks, move / ability pages, the calc fight state, the Pokémon page, the text zoom fix, the
-   collapsed pages and Show switch, the hazard chip, rail-tab memory, and the calc in the offline viewer with the save
+   collapsed pages and Show switch, the hazard chip, rail-tab memory, the sprites as CSS classes (the Pokémon list,
+   Pokémon page, trainer cards, calc grids; does a first open feel faster?), and the calc in the offline viewer with the save
    bridge (the app repo `../thor-offline-viewer`: `docs/_plans/save-file-picker.md` → Left to do; if
    `docs/SAVE_BRIDGE.md` changes, update `template/calc.js` (import block) and `tools/scenarios/calc-bridge.mjs`).
    BB2R and Unbound may not be in the library yet (add them from their Pages URLs). In game: each guide's notes.md →
@@ -77,7 +85,7 @@ Write a family's first guide with its siblings in mind; lift shared code when th
    references cover the item pages (5); the claude.ai account skill is the 2026-10-18 hand-build version.
 5. **New-guide scaffold for the item data:** `tools/new_hack.py` stubs and the skill's references don't know
    `extract/item_desc.json`, `item_text_extra.json`, `battle_text.json`, the generation entry in
-   `tools/item_text.py`, or `P.hi` odds yet (CLAUDE.md → Making a new guide lists them).
+   `tools/item_text.py`, or `P.hi` odds yet (`.agents/references/new-guide.md` step 2 lists them).
 6. **T3 worktree setup hook** (the user, in T3's project settings; sessions can't change them): a project script
    `python -I tools/worktree_setup.py`, icon Configure, run on worktree create. Until then run it by hand (CLAUDE.md → Git).
 7. **Source updates** (`uv run python -I tools/check_updates.py`; last full pass 2026-11-01, Hardlove 0.8.7 on
@@ -92,6 +100,15 @@ Write a family's first guide with its siblings in mind; lift shared code when th
 9. **Radical Red follow-ups:** the in-game checks in `hacks/radical-red/notes.md` (Damage calc, Save import, the
    Walkthrough's open order questions); one real `.srm` import compared with PKHeX; Gulp Missile's change not
    modelled; Chillet has no sprite (type-coloured circle).
+10. **Check speed follow-ups**, by payoff:
+   1. Scenarios are 57 % of the work: every case runs in normal and `dvkb`, most never touch an input. Option: `dvkb`
+      only for cases that use a number box / search / keyboard, plus a `dvkb` fit sweep per page (the 260 × 316 fit
+      rule must still hold in both modes). Needs the user's yes: it is test design.
+   2. A template change still runs everything on every guide (~5-6 min of pool time per guide): past ~10 guides,
+      consider tiers (full set on EI + the guide the change came from; domcompare / consistency / fit on the rest).
+   3. pagecheck / walkcheck assert only page errors and a jump bar; the rest is printed for a reader, with EI's box
+      names. Turn the printed geometry into assertions, or drop what scenarios already cover.
+   4. zoomcheck under load flaked once (Unbound, 1 stale bar of 475; passed alone): an in-check retry like jumpcheck's.
 
 ## Decisions
 

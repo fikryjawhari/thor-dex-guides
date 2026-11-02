@@ -15,7 +15,7 @@ Describe every control in every applicable state. Include route changes, linked 
 sticky headers, expand/collapse, reset and reload. State what happens to search, focus and scroll, not just appearance.
 
 ## Edge cases
-- 260 × 316 and the other viewer sizes in PROGRESS.md; normal and `dvkb`; text zoom; light/dark.
+- 260 × 316 and the other viewer sizes in PROGRESS-DETAIL.md → Viewer sizes; normal and `dvkb`; text zoom; light/dark.
 - Empty data, no results, missing optional features, long names, repeated taps and partially expanded content.
 - Saved state from older builds, unchanged localStorage keys, migration, reset, reload and route history.
 - Offline: one self-contained HTML file, no network or app changes.
