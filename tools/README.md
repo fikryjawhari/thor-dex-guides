@@ -50,7 +50,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `itemstd.py` | Items tab standard (the rules are its docstring): `standardise(D, RULES.get(hack, {}))` puts `D['IT']` and the walkthrough's item rows in the shared box set, sub-headings and Found / Wild / Also / Shop lines; idempotent. CLI: `python -I tools/itemstd.py <hack> [data.json]`. |
 | `tabs_check.py` | `python -I tools/tabs_check.py [hack ...]` after a build: Walkthrough and Trainers pages list the same trainers in the same order, and the cap a place / stop shows never goes down (optional boxes left out). Exit 1 on a problem. |
 | `browser.mjs` | Shared `startBrowser({profilePrefix, flags, onEvent, onDisconnect})` for domcompare, consistency, walk-state and mockup checks. Discovers Chrome / Edge (`CHROME` overrides), starts an isolated profile and CDP connection, and returns `{send, close}`; `close()` stops Chrome and removes the profile. Scenarios, navigation waits, assertions and per-check flags stay in callers. Requires Node 22+. |
-| `domcompare.mjs <old.html> <new.html> [--kb]` | Renders two builds route by route in headless Chrome and compares the DOM (options in its header; timing below). The check after any template change. |
+| `domcompare.mjs <old.html> <new.html> [--kb]` | Renders two builds route by route in headless Chrome and compares the DOM: every Pokémon, move, ability, item, nonempty move property, location and trainer page, then the list pages (options in its header; timing below). The check after any template change. |
 | `consistency-check.mjs [hack ...]` | After `python assemble.py`: starter / player pickers and rival filtering, single caps, MGM, saved ticks, five viewer sizes, expanded pages and light theme, normal and `dvkb`, on every built guide (or the ones named). Requires Chrome or Edge. |
 | `walk-state-check.mjs` | `node tools/walk-state-check.mjs <old.html> <new.html> <legacy-stop-key>` checks walkthrough layout migration, every stop's saved state using the new build's migration function, fragment inheritance, real checkbox rendering (synthetic steps), Next step, uncheck/reset and reload, normal and `dvkb`. For an old build from before stop keys were stamped, use `1.8` for Eternal X or `1.0` for Photonic Sun; a current keyed baseline also works at `0.0`. With no arguments, compares each `.tmp/state-before/<hack>.html` snapshot against its `dist/` build at stop `0.0`; save those snapshots before rebuilding. Requires Chrome or Edge. |
 | `pngpal.py` | Reads, writes and crops palette PNGs (used by `sprites_pee.py` and `assemble.py`). |
@@ -298,11 +298,19 @@ jobs (EI `#/a/` at 1 job: 30.4 s with them, 10.4 s without).
 Since 2026-10-24, snapshots force `content-visibility:visible`, wait for rendering frames after DOM quiet, and
 recompute collapse bars after lazy cards fill. This removes skipped-layout and late-bar noise without ignoring DOM
 differences. The slice table above predates that change; remeasure it before tuning job counts. Run whole sweeps
-sequentially, not alongside another browser check. With four jobs, the current full EI guide (2649 routes) takes
+sequentially, not alongside another browser check. Before item/property coverage was added, the full EI guide (2649 routes) took
 about 150–153 s in normal / keyboard mode; a keyboard self-comparison took 152.0 s with no flagged routes or page
 errors. The preceding worker recorded 139.1 s after the fix and 161.8 s with one spurious flag rechecked clean before
 the final settling fix. These are full sweeps, not the historical slice timings; contention-heavy baseline logs
 (including the 458.3 s EI keyboard run) are not a controlled performance comparison.
+
+Since 2026-11-02, the default route list also visits every item from `itemIdx()` (including wild-held, trainer-held,
+Mega Stone, interaction-only and description-only items), using the page's `ihref()` escaping, and every nonempty
+move-property page. Moves and abilities were already exhaustive; items are exhaustive too, not sampled.
+On the same EI build at `697e916`, normal self-comparisons with `--jobs=4` visited 2650 routes in 196.0 s before
+and 3137 routes in 334.2 s after (487 additional item/property routes), both with zero differing routes, missed
+hashchanges, unsettled pages or page errors. Other workers ran browser checks concurrently under this job's explicit
+override, so these are observed runtimes, not a controlled estimate of the added coverage's cost.
 
 ## 3DS game data (found 2026-10-19)
 
