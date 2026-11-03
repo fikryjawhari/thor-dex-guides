@@ -129,6 +129,9 @@ Data rules:
   this build (the override format takes names), so recheck them when moves change. Other EI originals and changes
   work by type, category, stat or every move (Blazing Soul, Corrosion, Fatal Precision, Emperor's Presence, ...),
   so they get no move rule (moveprops docstring: Exclusions).
+- **Gauntlets** (`gc`, trainers.py): consecutive Back to Back #n tags per section; Museum's bare Back to Back
+  tags use the grunt names' #n. Aqua Museum Grunt #1 → #2; Winstrate Victor → Victoria → Vivi → Vicky;
+  Magma Hideout Courtney → Tabitha; Seafloor Cavern Shelly → Matt. Leaders following the pairs are excluded.
 - **Trainers** (trainers.py). Pairing: whole trainers by species overlap + name tokens (127 / 137), then per Pokémon
   (doubles with two calc trainers search every calc trainer; same dex number allows form names such as
   Wishiwashi-School). 674 of 677 Pokémon have a calc set; the 3 without are the Route 103 rival starters (the calc has

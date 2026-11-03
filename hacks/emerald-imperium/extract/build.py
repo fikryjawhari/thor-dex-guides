@@ -27,7 +27,7 @@ def main():
     walk.name_splits(D)
     dex.move_metadata(D)
     item_desc.build(D)   # before finalise: tools/item_text.py reads item_desc.json
-    finalise(D, H.name, prune.build)
+    finalise(D, H.name, prune.build, gauntlet_rules=trainers.gauntlet_rules)
     gid.build(D)
     write_data(D, H)
 

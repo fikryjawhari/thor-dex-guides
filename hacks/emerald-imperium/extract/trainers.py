@@ -10,6 +10,12 @@ import collections, re
 import bosssheet, match
 from common import H, report, split_name
 from eidex import SD, SDA, TN
+from extractlib import numbered_gauntlets
+
+
+def gauntlet_rules(group, section):
+    """Numbered Back to Back tags; the Museum's bare tag numbers its grunts in their names."""
+    return numbered_gauntlets(section, name_numbers=True)
 
 
 def build(D):
