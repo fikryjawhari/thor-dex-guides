@@ -5,3 +5,6 @@ body.calc-route .aicol{position:absolute;left:3px;top:1px;width:30px;height:30px
 body.calc-route .aicol b{font-size:12px;line-height:15px;color:var(--fg)}
 body.calc-route .aicol small{font-size:9px;line-height:12px;color:var(--mut);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 body.calc-route .aicol.aizero b{color:var(--mut)}
+body.calc-route .aidetail{margin:0 0 4px -30px;overflow-wrap:anywhere}
+body.calc-route .aitargets{color:var(--fg)}
+body.calc-route .aibranches{font-size:10px;color:var(--mut);margin-top:2px}

@@ -107,6 +107,24 @@ function rows(output){
   row.classList.add('airow');row.classList.toggle('aitop',entry.percent===highest&&highest>0);
   const column=document.createElement('span');column.className='aicol'+(entry.percent?'':' aizero');column.dataset.aiIndex=entry.index;column.dataset.aiPercent=entry.percent;column.dataset.aiProbability=entry.probability;column.setAttribute('aria-label',`AI ${entry.percent}%, score ${scoreText(entry.score)}`);
   const percent=document.createElement('b'),score=document.createElement('small');percent.textContent=entry.percent+'%';score.textContent=scoreText(entry.score);column.append(percent,score);body.prepend(column);
+  if(entry.pairs){
+   const detail=document.createElement('div');detail.className='aidetail';
+   const targets=document.createElement('div');targets.className='aitargets';
+   targets.textContent=entry.pairs.map(pair=>{
+    const side=pair.target.side==='foe'?'foe':'mine',key=slots[side][pair.target.slot],target=lastParties[side].find(entry=>entry.key===key),name=target?ctx.resolve(ctx.megaView(target.mon)).name:'empty';
+    return `→ ${side==='foe'?'ally ':''}${name} ${pair.percent} % ${scoreText(pair.score)}`;
+   }).join(' · ');detail.append(targets);
+   for(const pair of entry.pairs){
+    const contexts=pair.scoreContexts||[{branches:pair.branches}];
+    for(const context of contexts){
+     const branches=context.branches||[];if(!branches.length)continue;
+     const line=document.createElement('div');line.className='aibranches';
+     const base=Math.min(...branches.map(branch=>branch.score));
+     line.textContent=`${pair.target.side==='foe'?'Ally':'Player '+(pair.target.slot+1)}: base ${scoreText(base>0?'+'+base:base)} · `+branches.map(branch=>`${branch.score===base?'base':scoreText('+'+(branch.score-base))} ${Number((branch.probability*100).toFixed(3))}%`).join(' · ');detail.append(line);
+    }
+   }
+   body.querySelector('.dd')?.prepend(detail);
+  }
  }
  return template.innerHTML;
 }
