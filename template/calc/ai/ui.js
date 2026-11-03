@@ -91,8 +91,27 @@ function evaluate(){
  const key=JSON.stringify(state);if(key===cacheKey)return cached;
  cached=state.foes?api.evaluateDoubles(state):state.attacker.currentHP>0?api.evaluateSingles(state):null;cacheKey=key;return cached;
 }
+// Grid order (display only, never saved): foe = the field, then the switch-in order, fainted last; mine = party order,
+// in doubles my two on the field first. Zoroark (+0-2 random) gives several orders: the most likely one is shown.
+let orderKey='',orderCached=null;
+function switchOrder(state){
+ const key=JSON.stringify(state);if(key===orderKey)return orderCached;
+ let result=null;try{result=api.switchInOrder(state.foes?state:{foes:[state.attacker],players:[state.defender],foeParty:state.attackerParty,foePartySlots:[state.attackerPartySlot],field:state.field});}catch(error){result=null;}
+ orderKey=key;orderCached=result?.order||(result?.orders?.length?result.orders.reduce((best,order)=>order.probability>best.probability?order:best).partySlots:null);return orderCached;
+}
+function grid(side){
+ const state=input();if(!state||!lastParties)return null;
+ const doubles=!!state.foes,party=lastParties[side],mons=side==='foe'?state.foeParty||state.attackerParty:state.playerParty||state.defenderParty;
+ const alive=index=>mons[index]?.currentHP>0,field=slots[side].filter(key=>party.some(entry=>entry.key===key)),rank={};
+ if(side==='mine'&&!doubles)return {keys:party.map(entry=>entry.key),field:0,rank};
+ const bench=party.map((entry,index)=>index).filter(index=>!field.includes(party[index].key));
+ let ranked=[];
+ if(side==='foe'){const order=switchOrder(state)||[];ranked=order.filter(index=>bench.includes(index)&&alive(index));ranked.forEach((index,n)=>{rank[party[index].key]=n+1;});}
+ const rest=bench.filter(index=>!ranked.includes(index)),keys=[...field,...[...ranked,...(side==='foe'?rest.filter(alive):rest),...(side==='foe'?rest.filter(index=>!alive(index)):[])].map(index=>party[index].key)];
+ return {keys,field:doubles?field.length:0,rank};
+}
 function damage(){for(const side of ['mine','foe']){const key=ctx.sideInfo(side).key;(facts[key]||={}).firstTurnOut=false;}}
-function clear(){for(const key of Object.keys(facts))delete facts[key];slots.mine=[];slots.foe=[];viewed.mine=viewed.foe=0;cached=null;cacheKey='';lastInput=null;lastParties=null;}
+function clear(){for(const key of Object.keys(facts))delete facts[key];slots.mine=[];slots.foe=[];viewed.mine=viewed.foe=0;cached=null;cacheKey='';orderKey='';orderCached=null;lastInput=null;lastParties=null;}
 const scoreText=value=>String(value??'—').replace(/-/g,'−');
 function chip(side){const result=side==='foe'?evaluate():null;return result&&!result.foes&&result.switch.percent>0?`<span class="dvol aiswitch" title="AI hard-switch chance">Sw ${result.switch.percent}%</span>`:'';}
 function displayed(){
@@ -134,7 +153,7 @@ function rows(output){
  }
  return template.innerHTML;
 }
-return {input,evaluate,damage,clear,facts,slots,viewed,rows,chip,displayed,parties:()=>lastParties,current:()=>cached,lastInput:()=>lastInput,dirty:()=>Object.keys(facts).length>0,
+return {input,evaluate,damage,clear,grid,facts,slots,viewed,rows,chip,displayed,parties:()=>lastParties,current:()=>cached,lastInput:()=>lastInput,dirty:()=>Object.keys(facts).length>0,
  setFacts(side,patch){Object.assign(facts[ctx.sideInfo(side).key]||={},patch);},
  reset(key){delete facts[key];},
  switchInOrder(options){const state=input();if(!state)return null;return api.switchInOrder(state.foes?state:{foes:[state.attacker],players:[state.defender],foeParty:state.attackerParty,foePartySlots:[state.attackerPartySlot],field:state.field},options);}

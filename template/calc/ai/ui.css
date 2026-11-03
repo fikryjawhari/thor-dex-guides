@@ -11,3 +11,13 @@ body.calc-route .aibranches{font-size:10px;color:var(--mut);margin-top:2px}
 body.calc-route .cc .cl>.aiswitch{flex:none;padding:0 2px;border:1px solid var(--line);border-radius:4px;line-height:15px;min-height:15px;color:var(--acc);font-size:9px;font-weight:700;white-space:nowrap}
 body.calc-route .cc.named.swdn .cl>.aiswitch.dvol{order:8}
 body.calc-route .cc.tight .cl>.aiswitch{font-size:8.5px;padding:0 1px}
+body.calc-route .aigrid>*{position:relative}
+body.calc-route .airank{position:absolute;left:1px;top:0;z-index:1;font:700 9px/9px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--acc);pointer-events:none}
+body.calc-route .dstrip.aigrid .aifl::after,body.calc-route .fteam.aigrid .aifl::after{content:'';position:absolute;background:var(--line);pointer-events:none}
+body.calc-route .dstrip.aigrid .aifl::after{top:-1px;bottom:-1px;right:-3px;width:1px}
+body.calc-route .fteam.aigrid .aifl{margin-bottom:3px}
+body.calc-route .fteam.aigrid .aifl::after{left:0;right:0;bottom:-3px;height:1px}
+@media(max-width:479.98px){
+ body.calc-route .dstrip.aigrid{grid-auto-flow:column;grid-template-rows:repeat(2,auto)}
+ body.calc-route .dstrip.aigrid .aifld::after{content:'';position:absolute;background:var(--line);pointer-events:none;top:-2px;bottom:-2px;right:-3px;width:1px}
+}
