@@ -294,6 +294,23 @@ def baseline(gate, ref):
         gate.result('baseline', True, f'{ref} {sha}; {len(names)} guides; git archive; {BASE.relative_to(ROOT)}')
 
 
+def auto_baseline(gate):
+    """No baseline, or one whose commit isn't in HEAD's history: capture `git merge-base HEAD main` first."""
+    manifest = BASE / 'manifest.json'
+    why = 'no baseline'
+    if manifest.exists():
+        sha = load(manifest).get('sha', '')
+        ancestor = subprocess.run(['git', 'merge-base', '--is-ancestor', sha, 'HEAD'], cwd=ROOT, capture_output=True)
+        if ancestor.returncode == 0:
+            return True
+        why = f'baseline {sha[:12]} is not an ancestor of HEAD'
+    base = subprocess.run(['git', 'merge-base', 'HEAD', 'main'], cwd=ROOT, capture_output=True, text=True,
+                          check=True).stdout.strip()
+    print(f'Auto-baseline: {why}; capturing merge-base HEAD main = {base}', flush=True)
+    baseline(gate, base)
+    return manifest.exists() and load(manifest).get('sha') == base
+
+
 def data_check(gate, hack):
     directory = ROOT / 'hacks' / hack
     baseline_data = BASE / 'hacks' / hack / 'data.json'
@@ -412,7 +429,7 @@ def main():
             if unknown:
                 raise ValueError('no built guide: ' + ', '.join(unknown))
             gate.run_browser(scenario_runs(names, args.only), args.jobs)
-        else:
+        elif auto_baseline(gate):
             manifest = load(BASE / 'manifest.json')
             names = args.hacks or guides(ROOT)
             if not names:
