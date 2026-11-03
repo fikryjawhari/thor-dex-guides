@@ -414,8 +414,8 @@ No new localStorage keys or persisted fields are introduced.
 
 Foe rows display unconditional move odds (the viewed target in doubles, ally odds for ally-only moves), score
 branches and the maximum-% accent. Expanded doubles rows list all target pairs, including zero-probability targets,
-then each score distribution's base and bonus outcomes. Singles `Sw N%` is a battle-state-sized chip on the HP line;
-`fitCards` treats it like the other battle-state tags. The engine owns all rounding, including the 100% remainder.
+then each score distribution's base and bonus outcomes. Singles `Sw N%` is a battle-state-sized chip left of the battle-state tag;
+`fitCards` moves it with that tag (`.sup`), and back down (`.swdn`) when both don't fit the HP line. The engine owns all rounding, including the 100% remainder.
 Unit 3b still supplies grid order/rank numbers, doubles tap controls and Field → AI toggles; none are built here.
 
 The trainer AI (`src/trainerai/`, pinned `4a8d4a6308`, fetch: SOURCES.md) is ported headless in

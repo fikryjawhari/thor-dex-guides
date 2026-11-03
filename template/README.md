@@ -131,8 +131,8 @@ Foe move rows, including status rows, have a 30 px odds/score column (12 px bold
 muted, `A` for ally-only scores, `Lock` for a locked move). The largest displayed percent gets the 3 px accent bar.
 Closed rows stay 32 px; move names give up space first. In doubles the displayed percent is the move into the viewed
 player, or its ally-only percent; expanded rows list every target and the score distribution's base/bonus branches.
-In singles a nonzero hard-switch chance appears as `Sw 13%` on the foe card's HP line, before battle-state tags;
-it is also a `.dvol` tag so `fitCards` includes it in the three-line fitting pass. Move odds plus Sw total 100.
+In singles a nonzero hard-switch chance appears as `Sw 13%` on the foe card, just before the battle-state tag and
+placed as one (narrow: the last line; `.sup` moves both to the HP line, `.swdn` puts Sw back when both don't fit). Move odds plus Sw total 100.
 `CALC.ai` exposes the adapter, explicit per-mon scratch `facts`, stable implicit active slots and cached engine
 results for the follow-up grid/toggle UI. Nothing in AI state or returned party indices is saved. Facts default to
 inactive/unknown; first-turn-out defaults true on entry and false after a damage tap to/from the viewed mon.
