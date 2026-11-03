@@ -3,7 +3,8 @@
 // the Trainers boxes and the first walkthrough split, every reference to them shifted. Rule: saved state never stores
 // a position in the data (template/README.md → What the data switches on). Runs on every guide.
 //   28a same state: calc sets (species, ability, moves), the calc's foe, Z slots (ST.z, by set / trainer key), recent trainers and foe edits (with this fight's
-//   types / ability / item: FIGHT ft / fadd / fa / fi, by name), the hazard chip's offer, area rule
+//   types / ability / item: FIGHT ft / fadd / fa / fi, by name), the hazard chip's offer, gauntlet chain state (ST.gc /
+//       ST.gcSel, guides with chains), area rule
 //       switches / Defog (guides with area rules), list filters, the Pokémon page's open sections,
 //       level caps, Trainers open state, search recents, the stat calc, walkthrough ticks and the tracker, compared
 //       by name before and after the update; pickup ticks (LS.items g, by pickup key) name the same item and line.
@@ -19,7 +20,10 @@ const name = file.split(/[\\/]/).pop().replace(/\.html$/, '');
 const trainers = data.TR.g.flatMap((g, gi) => g.sec.flatMap((s, si) => s.tr.map((t, ti) => ({ t, gi, si, ti }))));
 const used = new Set(trainers.flatMap(({ t }) => [...t.p, ...(t.pt || []).flatMap(x => x.p)].map(m => m.id)));
 const AREARULES = trainers.some(({ t }) => (t.field || []).some(r => (r.effects || []).some(e => e.kind === 'typed-side-condition' || e.locked)));
-const X = trainers.find(({ t }) => t.p.length >= 2 && !t.st && !t.pl && !t.pt) || trainers[0];
+// A gauntlet member past the first when the guide has one (its chain state, ST.gc / ST.gcSel, is only kept while the
+// calc's foe is in that chain).
+const plainTr = ({ t }) => t.p.length >= 2 && !t.st && !t.pl && !t.pt;
+const X = trainers.find(x => plainTr(x) && x.t.gc && x.t.gc.indexOf(x.t.k) > 0) || trainers.find(plainTr) || trainers[0];
 const S = data.P.find(p => p.g === 0 && p.a.length > 1 && p.lv.length >= 4 && !used.has(p.id)) || data.P.find(p => p.g === 0);
 const STOP = data.WK.splits.flatMap((sp, si) => sp.st.map((st, ti) => ({ st, si, ti }))).find(({ st }) => (st.s || []).some(Array.isArray)) || null;
 // Walkthrough missions (stop.s objects): the first stop with two, and an ordinary step in a later stop.
@@ -113,6 +117,8 @@ const SNAPSHOT = `(()=>{const C=CF.calc?CALC.state():null,tn=k=>TRK[k]?.n??'gone
     hazardOffer:C&&C.hzOffer&&Object.keys(C.hzOffer).length?Object.entries(C.hzOffer).map(([side,v])=>{const k=typeof v==='string'?v:v.k,off=typeof v==='object'&&v.off===true,i=k.lastIndexOf(':');return k.startsWith('foe:')?[side,tn(k.slice(4,i)),k.slice(i+1),off]:[side,byId[C.custom.find(c=>'mine:'+c.pid===k)?.id]?.n??'gone:'+k,off];}).sort():null,
     itemsOpen:(D.IT||[]).length?[...Object.keys(IO.o),...Object.keys(IO.s)].sort():null,
     itemTicks:Object.keys(IO.g).map(k=>{const p=pickupOf(k);return p?p.n+' | '+p.l:'gone:'+k;}).sort(),
+    gauntlet:C&&C.gc?[tn(C.gc.first),Object.entries(C.gc.snap||{}).map(([k,v])=>[tn(k),Object.entries(v).map(([m,x])=>[byId[C.custom.find(c=>'mine:'+c.pid===m)?.id]?.n??'gone:'+m,x.hp??null,x.status??null,x.used===true])])]:null,
+    gauntletSlots:C&&C.gcSel?Object.entries(C.gcSel).map(([k,i])=>[tn(k),i]):null,
     areaRules:C&&C.areaByTrainer?Object.entries(C.areaByTrainer).map(([k,v])=>[tn(k),Object.keys(v.disabled||{}).sort(),v.fogCleared===true]):null,
   };})()`;
 
@@ -147,6 +153,9 @@ const checks = [
         await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));const t=Object.keys(D.TC);s.edits['foe:'+${k}+':1']={l:77,ft:[t[1]],fadd:t[2],fa:AB[byId[${sid}].a[0]][0],fi:'Leftovers'};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
         // The hazard chip's offer (ST.hzOffer: side → card key, trainer key + slot / custom pid, or {k, off} toggled out).
         await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.hzOffer={foe:{k:'foe:'+${k}+':1',off:true},mine:'mine:'+s.custom.at(-1).pid};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
+        // Gauntlet chain state (ST.gc: first trainer key, the player's side by trainer key and mine:<pid>; ST.gcSel: foe
+        // slot by trainer key), seeded when the foe is a chain member.
+        if (X.t.gc) await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg)),g=${JSON.stringify(X.t.gc)};s.gc={first:g[0],snap:{[${k}]:{['mine:'+s.custom.at(-1).pid]:{hp:1,status:'psn',used:true}}}};s.gcSel={[g[0]]:1,[${k}]:1};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
         // Assumed sets (Unbound): the foe edit remembers its species (ST.foeSp, a species id, dropped when another is there).
         if (data.cfg.calc.assumedSets) await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.foeSp={['foe:'+${k}+':1']:TRK[${k}].p[1].id};localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
         // Area rule switches and Defog (Unbound), keyed by trainer key and effect name.
