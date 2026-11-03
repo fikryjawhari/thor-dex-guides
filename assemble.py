@@ -134,7 +134,10 @@ def calc_parts(prof):
         js.append(read('template', 'calc', 'ai', prof['ai'] + '.js'))
         js.append(read('template', 'calc', 'ai', 'ui.js'))
     js.append(read('template', 'calc.js'))
-    return '\n'.join(js), read('template', 'calc.css')
+    css = read('template', 'calc.css')
+    if prof.get('ai'):
+        css += '\n' + read('template', 'calc', 'ai', 'ui.css')
+    return '\n'.join(js), css
 
 
 def placeholders(obj, path=''):

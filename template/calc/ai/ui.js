@@ -88,7 +88,29 @@ function evaluate(){
 }
 function damage(){for(const side of ['mine','foe']){const key=ctx.sideInfo(side).key;(facts[key]||={}).firstTurnOut=false;}}
 function clear(){for(const key of Object.keys(facts))delete facts[key];slots.mine=[];slots.foe=[];viewed.mine=viewed.foe=0;cached=null;cacheKey='';lastInput=null;lastParties=null;}
-return {input,evaluate,damage,clear,facts,slots,viewed,parties:()=>lastParties,current:()=>cached,lastInput:()=>lastInput,dirty:()=>Object.keys(facts).length>0,
+const scoreText=value=>String(value??'—').replace(/-/g,'−');
+function displayed(){
+ const result=evaluate();if(!result)return [];
+ if(!result.foes)return result.moves;
+ const foe=result.foes.find(foe=>foe.slot===viewed.foe);if(!foe)return [];
+ return lastInput.foes[viewed.foe].moves.map((move,index)=>{
+  const pairs=foe.pairs.filter(pair=>pair.index===index),ally=pairs.find(pair=>pair.target.side==='foe'),target=pairs.find(pair=>pair.target.side==='player'&&pair.target.slot===viewed.mine);
+  const allyOnly=move.target==='adjacentAlly'||move.target==='self'||!pairs.some(pair=>pair.target.side==='player'&&pair.probability>0)&&ally?.probability>0;
+  return {...(allyOnly?ally:target),index,name:move.name,percent:(allyOnly?ally:target)?.percent||0,probability:(allyOnly?ally:target)?.probability||0,pairs};
+ });
+}
+function rows(output){
+ const entries=displayed();if(!entries.length)return output;
+ const highest=Math.max(...entries.map(entry=>entry.percent)),template=document.createElement('template');template.innerHTML=output;
+ for(const row of template.content.querySelectorAll('.mr:not(.em)')){
+  const body=row.querySelector('.mm'),entry=entries.find(entry=>entry.name===data.M[Number(body.dataset.mi)]);if(!entry)continue;
+  row.classList.add('airow');row.classList.toggle('aitop',entry.percent===highest&&highest>0);
+  const column=document.createElement('span');column.className='aicol'+(entry.percent?'':' aizero');column.dataset.aiIndex=entry.index;column.dataset.aiPercent=entry.percent;column.dataset.aiProbability=entry.probability;column.setAttribute('aria-label',`AI ${entry.percent}%, score ${scoreText(entry.score)}`);
+  const percent=document.createElement('b'),score=document.createElement('small');percent.textContent=entry.percent+'%';score.textContent=scoreText(entry.score);column.append(percent,score);body.prepend(column);
+ }
+ return template.innerHTML;
+}
+return {input,evaluate,damage,clear,facts,slots,viewed,rows,displayed,parties:()=>lastParties,current:()=>cached,lastInput:()=>lastInput,dirty:()=>Object.keys(facts).length>0,
  setFacts(side,patch){Object.assign(facts[ctx.sideInfo(side).key]||={},patch);},
  reset(key){delete facts[key];},
  switchInOrder(options){const state=input();if(!state)return null;return api.switchInOrder(state.foes?state:{foes:[state.attacker],players:[state.defender],foeParty:state.attackerParty,foePartySlots:[state.attackerPartySlot],field:state.field},options);}

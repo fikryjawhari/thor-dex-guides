@@ -1,0 +1,7 @@
+body.calc-route .dres .mr.airow>.mm{position:relative;padding-left:35px}
+body.calc-route .dres .mr.airow>.mm{box-shadow:none}
+body.calc-route .dres .mr.airow.aitop>.mm{box-shadow:inset 3px 0 0 var(--acc)}
+body.calc-route .aicol{position:absolute;left:3px;top:1px;width:30px;height:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;line-height:15px;font-variant-numeric:tabular-nums;pointer-events:none}
+body.calc-route .aicol b{font-size:12px;line-height:15px;color:var(--fg)}
+body.calc-route .aicol small{font-size:9px;line-height:12px;color:var(--mut);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+body.calc-route .aicol.aizero b{color:var(--mut)}
