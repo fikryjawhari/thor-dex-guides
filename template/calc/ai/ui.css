@@ -8,3 +8,4 @@ body.calc-route .aicol.aizero b{color:var(--mut)}
 body.calc-route .aidetail{margin:0 0 4px -30px;overflow-wrap:anywhere}
 body.calc-route .aitargets{color:var(--fg)}
 body.calc-route .aibranches{font-size:10px;color:var(--mut);margin-top:2px}
+body.calc-route .cc .cl>.aiswitch{order:2;flex:none;padding:0 2px;border:1px solid var(--line);border-radius:4px;line-height:15px;min-height:15px;color:var(--acc);font-size:9px;font-weight:700;white-space:nowrap}

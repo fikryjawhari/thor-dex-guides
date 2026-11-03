@@ -89,6 +89,7 @@ function evaluate(){
 function damage(){for(const side of ['mine','foe']){const key=ctx.sideInfo(side).key;(facts[key]||={}).firstTurnOut=false;}}
 function clear(){for(const key of Object.keys(facts))delete facts[key];slots.mine=[];slots.foe=[];viewed.mine=viewed.foe=0;cached=null;cacheKey='';lastInput=null;lastParties=null;}
 const scoreText=value=>String(value??'—').replace(/-/g,'−');
+function chip(side){const result=side==='foe'?evaluate():null;return result&&!result.foes&&result.switch.percent>0?`<span class="dvol aiswitch" title="AI hard-switch chance">Sw ${result.switch.percent}%</span>`:'';}
 function displayed(){
  const result=evaluate();if(!result)return [];
  if(!result.foes)return result.moves;
@@ -128,7 +129,7 @@ function rows(output){
  }
  return template.innerHTML;
 }
-return {input,evaluate,damage,clear,facts,slots,viewed,rows,displayed,parties:()=>lastParties,current:()=>cached,lastInput:()=>lastInput,dirty:()=>Object.keys(facts).length>0,
+return {input,evaluate,damage,clear,facts,slots,viewed,rows,chip,displayed,parties:()=>lastParties,current:()=>cached,lastInput:()=>lastInput,dirty:()=>Object.keys(facts).length>0,
  setFacts(side,patch){Object.assign(facts[ctx.sideInfo(side).key]||={},patch);},
  reset(key){delete facts[key];},
  switchInOrder(options){const state=input();if(!state)return null;return api.switchInOrder(state.foes?state:{foes:[state.attacker],players:[state.defender],foeParty:state.attackerParty,foePartySlots:[state.attackerPartySlot],field:state.field},options);}
