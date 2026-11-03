@@ -28,7 +28,7 @@ The engine and its phases: `tools/calc/README.md`. The EI example, with every so
      only when the same effect exists under another name. Never alias a move to a name another guide move uses.
    - `over.moves` for basepower/type/flags data; use a rule for behaviour that depends on another name.
    - `over.rules` for each changed mechanic, each with `note` and a source citation in the hack's notes.
-   Run `python -I tools/datajson.py hacks/<hack>/hack.json`.
+   Run `python -X utf8 -I tools/datajson.py hacks/<hack>/hack.json`.
 3. **Fixtures.** `calc_matchups.json` → `matchups`: one per changed mechanic, plus negative cases (the ability on a
    move it does not affect), a neutral baseline and the edge cases the rule's `when` tests. Use guide IDs and
    display names. Run `node tools/calc/hzla_compare.mjs <hack> --fetch --output .tmp/calc-<hack>/compare.json`.
@@ -41,7 +41,7 @@ The engine and its phases: `tools/calc/README.md`. The EI example, with every so
    (phase table and the hzla mapping), then `node tools/calc/build.mjs` and commit `template/calc/engine.js`.
    Never hard-code a hack's names in the engine.
 6. **Checks.** `npm test --prefix tools/calc`, the comparison (every case `match` or an explained
-   `known-difference`), `python -I tools/datajson.py hacks/<hack>/hack.json`, `python assemble.py <hack>`.
+   `known-difference`), `python -X utf8 -I tools/datajson.py hacks/<hack>/hack.json`, `python assemble.py <hack>`.
    Comparison reports go in `.tmp/calc-<hack>/`. Page/data verification: `.agents/skills/verify/SKILL.md`.
 7. **Notes.** `notes.md` → "### Damage calc": the profile's base and why, a table of each override with its source
    line and fixtures, the doc/source disagreements (source followed), the known gaps, and what was not checked

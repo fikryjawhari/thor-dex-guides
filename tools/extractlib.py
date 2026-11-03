@@ -37,7 +37,10 @@ import trainer_fields  # noqa: E402
 import trainer_keys  # noqa: E402
 from splits import split_name  # noqa: E402,F401  (re-exported for the hacks' modules)
 
-sys.stdout.reconfigure(encoding='utf-8')
+# UTF-8 output however the build is run (python -I ignores PYTHONUTF8; a redirected cp1252 stdout crashed on '♂').
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, 'reconfigure'):
+        _stream.reconfigure(encoding='utf-8', errors='replace')
 
 REPORT = []     # the build report: every conflict and guess; build.py writes it to extract/report.txt
 

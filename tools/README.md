@@ -1,8 +1,8 @@
 # Tools
 
-Trainer field preparation: `python -I tools/trainer_fields.py` checks derived trainer `field` records; `--write`
+Trainer field preparation: `python -X utf8 -I tools/trainer_fields.py` checks derived trainer `field` records; `--write`
 refreshes them without changing existing notes, teams, keys or build dates. `extractlib.finalise()` does this
-automatically on rebuild. `python -I tools/trainer_fields_check.py` checks parsing, inheritance, unresolved labels,
+automatically on rebuild. `python -X utf8 -I tools/trainer_fields_check.py` checks parsing, inheritance, unresolved labels,
 schema compatibility and idempotence. Add `--sources` under the project Python environment to check every field
 comment in Hardlove's active Trainer Battles tabs (requires local `.src/` and openpyxl). The calc's use of it
 (area conditions): `template/README.md` → Damage calculator (Field).
@@ -11,7 +11,7 @@ Each hack's downloaded docs go in `hacks/<hack>/.src/` (git-ignored: raw docs fr
 this public repo), and its `SOURCES.md` says exactly how to fetch them again. Run its commands from the repo root in Git Bash.
 
 **Python environment:** `uv sync` (repo root) builds `.venv` from `pyproject.toml` + `uv.lock`, the same on every
-machine; run tools with `uv run python -I tools/<script>` (or `.venv/Scripts/python.exe`). The fetch and extract
+machine; run tools with `uv run python -X utf8 -I tools/<script>` (or `.venv/Scripts/python.exe`). The fetch and extract
 scripts below are stdlib only; the venv adds what checking the docs needs (openpyxl for xlsx, pdfplumber for PDFs).
 Add a package with `uv add <name>` and commit both files. `assemble.py` stays stdlib only: the Pages workflow runs
 it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
@@ -30,7 +30,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `extractlib.py` | The shared start and end of every hack's `extract/` (layout in its docstring): paths, build report, PDF text, `finalise()` (Items standard, prune, stable trainer keys, Trainers in walkthrough order, split names, schema) and the `data.json` writer. |
 | `trainer_keys.py` | Stable trainer keys: `finalise()` matches each trainer to `hacks/<hack>/extract/trainer_keys.json` (committed) by identity, keeps its key, gives a new trainer `t<N>` and reports loose matches and unmatched entries. `trainer_keys_test.py [hack ...]` simulates an update on each guide (the gate runs it). |
 | `schema.py` | The `data.json` schema: key order per object, dead fields dropped, stop keys. Raises on a key it doesn't know (add it there and to the EI notes' Data schema). |
-| `moveprops.py` | Stdlib shared targets (`TARGETS`), properties (`PROPS` / `ALIASES`), source-aware `protect_flags()`, added-effect phrase builder `effect_text()`, and audited latest-generation ability/item `RULES`. `finalise()` calls `apply(D,hack)` after pruning to validate metadata and build `MI`; hack differences use source-backed `extract/move_rules.json` (format in the module docstring). `uv run python -I tools/test_moveprops.py` checks vocabulary, phrases, predicates, overrides and idempotence. |
+| `moveprops.py` | Stdlib shared targets (`TARGETS`), properties (`PROPS` / `ALIASES`), source-aware `protect_flags()`, added-effect phrase builder `effect_text()`, and audited latest-generation ability/item `RULES`. `finalise()` calls `apply(D,hack)` after pruning to validate metadata and build `MI`; hack differences use source-backed `extract/move_rules.json` (format in the module docstring). `uv run python -X utf8 -I tools/test_moveprops.py` checks vocabulary, phrases, predicates, overrides and idempotence. |
 | `calcbackup.js <backup.js> <out.json>` | An hzla-style damage-calc backup file (trainer sets, moves) as JSON. |
 | `showdown.js <dist/data dir> <out.json>` | pokemon-showdown data files (moves, texts, dex, abilities) as one JSON. |
 | `drive_ls.py <folder-id> [out-dir]` | Lists a public Google Drive folder; with `out-dir`, downloads every file in it (Sheets as .xlsx, Docs as .txt, other files as-is). Skips subfolders and archives (.zip etc.). |
@@ -47,8 +47,8 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `splits.py` | Shared `split_name(name, cap=None)` for trainer and walkthrough split names; normalises `[Level Cap N]`, league names and post-game labels. |
 | `wikitext.py` | Shared `split_args(text)` splits template arguments around nested wikitext templates and links; each caller interprets and cleans its own fields. |
 | `ctrguide.py` | Shared 3DS guide dex conversion, form names, move-doc parsing, trainer matching, default level-up moves and initial walkthrough stop/area attachment; game-specific evolution handling, item routing and cap regrouping stay in each extract. |
-| `itemstd.py` | Items tab standard (the rules are its docstring): `standardise(D, RULES.get(hack, {}))` puts `D['IT']` and the walkthrough's item rows in the shared box set, sub-headings and Found / Wild / Also / Shop lines; idempotent. CLI: `python -I tools/itemstd.py <hack> [data.json]`. |
-| `tabs_check.py` | `python -I tools/tabs_check.py [hack ...]` after a build: Walkthrough and Trainers pages list the same trainers in the same order, and the cap a place / stop shows never goes down (optional boxes left out). Exit 1 on a problem. |
+| `itemstd.py` | Items tab standard (the rules are its docstring): `standardise(D, RULES.get(hack, {}))` puts `D['IT']` and the walkthrough's item rows in the shared box set, sub-headings and Found / Wild / Also / Shop lines; idempotent. CLI: `python -X utf8 -I tools/itemstd.py <hack> [data.json]`. |
+| `tabs_check.py` | `python -X utf8 -I tools/tabs_check.py [hack ...]` after a build: Walkthrough and Trainers pages list the same trainers in the same order, and the cap a place / stop shows never goes down (optional boxes left out). Exit 1 on a problem. |
 | `browser.mjs` | Shared `startBrowser({profilePrefix, flags, onEvent, onDisconnect})` for domcompare, consistency, walk-state and mockup checks. Discovers Chrome / Edge (`CHROME` overrides), starts an isolated profile and CDP connection, and returns `{send, close}`; `close()` stops Chrome and removes the profile. Scenarios, navigation waits, assertions and per-check flags stay in callers. Requires Node 22+. |
 | `domcompare.mjs <old.html> <new.html> [--kb]` | Renders two builds route by route in headless Chrome and compares the DOM: every Pokémon, move, ability, item, nonempty move property, location and trainer page, then the list pages (options in its header; timing below). The check after any template change. |
 | `consistency-check.mjs [hack ...]` | After `python assemble.py`: starter / player pickers and rival filtering, single caps, MGM, saved ticks, five viewer sizes on every page kind (Home, Locations, Trainers, Items, walkthrough, calc, a Pokémon, trainer, move, ability and item page), expanded pages and light theme, normal and `dvkb`, on every built guide (or the ones named). Requires Chrome or Edge. |
@@ -98,7 +98,7 @@ descriptions present, Farfetch'd's page incomplete; its stats and level-up lists
 
 ## New-guide scaffold
 
-`python -I tools/new_hack.py blaze-black-2-redux --like hardlove-gold --title "Blaze Black 2 Redux" --version 1.4.1 --ls-prefix bb2r`
+`python -X utf8 -I tools/new_hack.py blaze-black-2-redux --like hardlove-gold --title "Blaze Black 2 Redux" --version 1.4.1 --ls-prefix bb2r`
 uses a built sibling's config shape / feature switches, not its data, calc profile, descriptions or saved-state keys.
 Review the inherited switches; nonempty cfg.txt values become TODOs. The default prefix is the ID without hyphens;
 collisions with any configured guide are rejected. `--title` is the game name (the page title adds ` Dex`), version
@@ -123,15 +123,15 @@ DOUBLES_PARTNER_ONLY in trainer_fields_check.py (these enumerate data-bearing gu
 Review calc/test.mjs's field-profile fixtures, save readers / GID, and itemstd.py RULES for actual hack quirks only.
 Template/readers docs, hzla_compare's supported reference calculators, Hardlove source checks and the EI fixture
 defaults are not universal guide registries: don't add invented expectations there. Safety tests:
-`python -I tools/new_hack_test.py` (stdlib and Node).
+`python -X utf8 -I tools/new_hack_test.py` (stdlib and Node).
 
 ## Standard gates
 
 ```
-uv run python -I tools/gate.py baseline main
-uv run python -I tools/gate.py check
-uv run python -I tools/gate.py check eternal-x --data
-uv run python -I tools/gate.py check --template
+uv run python -X utf8 -I tools/gate.py baseline main
+uv run python -X utf8 -I tools/gate.py check
+uv run python -X utf8 -I tools/gate.py check eternal-x --data
+uv run python -X utf8 -I tools/gate.py check --template
 ```
 
 Capture the accepted pre-change ref once. `git archive` extracts committed files into a temporary directory under
@@ -166,7 +166,7 @@ The gate refuses to start while another browser check runs (any worktree) and sa
 the same busy check. The gate replaces the cleanup's one-off `.tmp/cleanup-baseline/datacmp.py`.
 
 T3 exposes project scripts with `runOnWorktreeCreate`; no repo project-config file is present. Set a Configure
-script to `python -I tools/worktree_setup.py` with that flag after integration. This worker could read the schema
+script to `python -X utf8 -I tools/worktree_setup.py` with that flag after integration. This worker could read the schema
 but the project update was denied (`capability_denied`: requires a full-access/default thread); the orchestrator
 must apply it. Setup does not imply permission to edit shared source inputs or commit, merge or push.
 
@@ -189,7 +189,7 @@ The calc scenarios, shared harness, viewer sizes and failure output are document
 `tools/scenarios/README.md` → Calc checks. Run selected scenarios on built guides without rebuilding or a baseline:
 
 ```sh
-uv run python -I tools/gate.py scenarios --only calc-layout,calc-controls
+uv run python -X utf8 -I tools/gate.py scenarios --only calc-layout,calc-controls
 node tools/scenarios/calc-controls.mjs dist/emerald-imperium.html
 ```
 
@@ -220,7 +220,7 @@ baseline.
 
 When each hack's sources were compiled, and the version they cover. **Whenever a hack's sources are fetched again,
 update its row here and the "Fetched <date> (<version>)" line at the top of its `SOURCES.md`.** To spot an update,
-run `uv run python -I tools/check_updates.py [hack]`; its pins and coverage are described below.
+run `uv run python -X utf8 -I tools/check_updates.py [hack]`; its pins and coverage are described below.
 
 | Hack | Version | Sources compiled | Guide built | Where to look for updates |
 | --- | --- | --- | --- | --- |
@@ -239,9 +239,9 @@ run `uv run python -I tools/check_updates.py [hack]`; its pins and coverage are 
 
 ## Source update checks
 
-`uv run python -I tools/check_updates.py` checks all twelve hacks; give one hack name for a smaller run.
+`uv run python -X utf8 -I tools/check_updates.py` checks all twelve hacks; give one hack name for a smaller run.
 Exit 0 means unchanged, 1 changed, 2 a failed check. Manual entries always print a reminder: they are not checked.
-After updating the guide or compiled sources, run `uv run python -I tools/check_updates.py --accept <hack>`.
+After updating the guide or compiled sources, run `uv run python -X utf8 -I tools/check_updates.py --accept <hack>`.
 Acceptance is atomic per hack and refused if any automatic check fails. It does not update this source log,
 the fetched version in `SOURCES.md`, the guide, or local baseline files. Review those separately.
 

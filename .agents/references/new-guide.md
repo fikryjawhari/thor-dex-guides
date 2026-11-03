@@ -26,12 +26,12 @@ adapt); agents build the units (Workflow → Which model).
    tag the shared list doesn't know yet goes in `tools/trainer_fields.py` → `DOUBLES_TAGS`.
    Hacks come in families (PROGRESS-DETAIL.md → Hack families): reuse the family's shared code (3DS: `tools/ctrguide.py`),
    write a family's first guide so its siblings can reuse it, and lift the shared part out when the second one comes.
-3. `python -I tools/new_hack.py <hack> --like <built hack> [--title "Game name"] [--version N] [--ls-prefix prefix]`:
+3. `python -X utf8 -I tools/new_hack.py <hack> --like <built hack> [--title "Game name"] [--version N] [--ls-prefix prefix]`:
    scaffold `hack.json`, notes / SOURCES headings, empty sprites, extract modules and check, gate rebuild and calc
    scenario / engine-check stubs. Existing files need `--force`; SOURCES text is append-only. `--dry-run` lists writes.
    No data.json yet: assembly and default gates skip it. Add the guide to the PROGRESS.md guide table.
 4. Sprites: every guide uses the shared set (`sprites/README.md`); keys are worked out from dex number and name.
-   `python -I tools/sprite_keys.py <hack>` lists the forms it matched (check once) and the species it couldn't place:
+   `python -X utf8 -I tools/sprite_keys.py <hack>` lists the forms it matched (check once) and the species it couldn't place:
    those are the hack's own additions and go in its `sprites.json`, the only art a hack keeps. `assemble.py` lists
    species with no sprite; they show as a type-coloured circle with the name's first letter.
 5. Damage calc: `hack.json` → `cfg.calc` from the hack's mechanics ([calc mechanics](.agents/references/calc-mechanics.md));
@@ -41,5 +41,5 @@ adapt); agents build the units (Workflow → Which model).
    Calc stubs skip while disabled and fail when enabled: fill source-backed scenarios / engine fixtures, replace
    calc-doubles EXPECTED's null, add trainer_fields_check counts and review calc/test.mjs profile fixtures. The
    scaffold registers the engine check in calc/package.json; itemstd RULES needs an entry only for hack quirks.
-   `uv run python -I tools/gate.py check <hack>` (baseline setup: `tools/README.md` → Standard gates).
-   Then `python -I tools/preview.py dist/<hack>.html --frame` for Thor-frame review on the phone preview.
+   `uv run python -X utf8 -I tools/gate.py check <hack>` (baseline setup: `tools/README.md` → Standard gates).
+   Then `python -X utf8 -I tools/preview.py dist/<hack>.html --frame` for Thor-frame review on the phone preview.

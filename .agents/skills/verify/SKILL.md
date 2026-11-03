@@ -15,19 +15,19 @@ checkout, shared by every worktree), so a rerun on unchanged guides is free; `--
 
 | Change | Run |
 | --- | --- |
-| A hack's extract / `data.json` | its `extract/build.py`, `extract/check.py`, `python assemble.py <hack>`, `uv run python -I tools/gate.py check <hack> --data` |
+| A hack's extract / `data.json` | its `extract/build.py`, `extract/check.py`, `python assemble.py <hack>`, `uv run python -X utf8 -I tools/gate.py check <hack> --data` |
 | Calc engine (`tools/calc/src`, `template/calc/profiles`), a profile in `hack.json` → `cfg.calc`, `calc_matchups.json` | `npm test --prefix tools/calc`; `node tools/calc/hzla_compare.mjs <hack>` for EI / Photonic / Eternal X / BB2R (expected: EI 142 + 12 known, Photonic 118 + 28, Eternal X 116 + 3, BB2R 46 + 4, 0 mismatch); `python assemble.py` |
 | `template/` (shell, dex.css / dex.js, calc.js / calc.css) | `python assemble.py`; the scenarios for the area (below) on every guide; `node tools/domcompare.mjs <old> <new> [--kb] --routes '<#/route>'` against the job's start build |
 | A scenario or `tools/calc_check_lib.mjs` | that scenario on every guide |
 | Docs only (`*.md`) | nothing |
 
 Scenarios for an area, every guide at once (8 at a time by default; more only slows each run):
-`uv run python -I tools/gate.py scenarios [hack ...] --only calc-layout,calc-controls`
+`uv run python -X utf8 -I tools/gate.py scenarios [hack ...] --only calc-layout,calc-controls`
 (names are the stems in `tools/scenarios/`; no `--only` runs all of them; no hack runs every built guide).
 
 ## 2. End of the job
 
-`uv run python -I tools/gate.py check [hack ...]` for every guide the job touched (a template change: all of them;
+`uv run python -X utf8 -I tools/gate.py check [hack ...]` for every guide the job touched (a template change: all of them;
 no hack named = all). It rebuilds, compares with the baseline (`gate.py baseline [ref]`, see `tools/README.md` →
 Standard gates), then runs every browser check (domcompare both modes, consistency, walk-state, the mockup checks,
 scenarios) 8 at a time on every named guide; a check that fails in the pool reruns alone and, passing then, is listed
@@ -38,7 +38,7 @@ after a merge into `main`, or recaptured at `main` before merging a branch. A ba
 branch's is from before the calc) flags every page; then answer "did this job change anything else" by building the
 job's start commit (step 3.2) and running `domcompare` on the routes the job touched, plus a hash of the other guides'
 dist with the build date removed.
-UI changes also end in the Thor frame on the phone preview (`python -I tools/preview.py <page> <name>.html --frame`).
+UI changes also end in the Thor frame on the phone preview (`python -X utf8 -I tools/preview.py <page> <name>.html --frame`).
 
 ## 3. A failure
 

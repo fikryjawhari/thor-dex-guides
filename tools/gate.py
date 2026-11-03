@@ -41,6 +41,9 @@ BROWSER_CHECK = r'(domcompare|consistency-check|walk-state-check|jumpcheck|zoomc
 # Inputs every browser check may read besides its own scripts and the guide (readGuide's EI save tables, the
 # injected test reader, the frame, save fixtures).
 SHARED_INPUTS = ['template', 'tools/scenarios/fixtures', 'tools/mockup/thor-frame', 'hacks/emerald-imperium/data.json']
+# Python children: UTF-8 I/O whatever the console code page (-I ignores PYTHONUTF8 / PYTHONIOENCODING, and a
+# redirected cp1252 stdout crashed on a species name such as Nidoran♂).
+PY = [sys.executable, '-X', 'utf8']
 IMPORT = re.compile(r'''(?:from|import)\s*\(?\s*['"](\.{1,2}/[^'"]+)['"]''')
 
 
@@ -263,7 +266,7 @@ def baseline(gate, ref):
         source.mkdir()
         with tarfile.open(archive) as snapshot:
             snapshot.extractall(source, filter='data')
-        if not gate.run('baseline-assemble', [sys.executable, 'assemble.py'], cwd=source):
+        if not gate.run('baseline-assemble', [*PY, 'assemble.py'], cwd=source):
             return
         output = stage / 'output'
         output.mkdir()
@@ -295,7 +298,7 @@ def data_check(gate, hack):
         gate.result(hack + '-rebuild', False, 'no reproducible command in REBUILDS; add this hack explicitly')
         return
     original = (directory / 'data.json').read_bytes()
-    rebuilt = gate.run(hack + '-rebuild', [sys.executable, '-I', *REBUILDS[hack]])
+    rebuilt = gate.run(hack + '-rebuild', [*PY, '-I', *REBUILDS[hack]])
     if rebuilt:
         current, before = load(directory / 'data.json'), load(baseline_data)
         current.pop('built', None)
@@ -313,10 +316,10 @@ def data_check(gate, hack):
         original_data.pop('built', None)
         if original_data == current:
             (directory / 'data.json').write_bytes(original)
-    gate.run(hack + '-trainer-keys', [sys.executable, '-I', 'tools/trainer_keys_test.py', hack])
+    gate.run(hack + '-trainer-keys', [*PY, '-I', 'tools/trainer_keys_test.py', hack])
     checker = directory / 'extract' / 'check.py'
     if checker.exists():
-        gate.run(hack + '-extract-check', [sys.executable, '-I', str(checker)])
+        gate.run(hack + '-extract-check', [*PY, '-I', str(checker)])
 
 
 def scenario_runs(names, only=None):
@@ -332,7 +335,7 @@ def scenario_runs(names, only=None):
 
 
 def template_check(gate, names, jobs=8):
-    if not gate.run('assemble', [sys.executable, 'assemble.py']):
+    if not gate.run('assemble', [*PY, 'assemble.py']):
         return
     runs = []
     for hack in names:
@@ -342,7 +345,7 @@ def template_check(gate, names, jobs=8):
             runs.append((hack + '-dom' + ('-kb' if mode else ''),
                          ['node', 'tools/domcompare.mjs', old, new, '--jobs=2', *mode], hack))
         runs.append((hack + '-consistency', ['node', 'tools/consistency-check.mjs', hack], hack))
-        gate.run(hack + '-tabs', [sys.executable, '-I', 'tools/tabs_check.py', hack])
+        gate.run(hack + '-tabs', [*PY, '-I', 'tools/tabs_check.py', hack])
         stops = [stop for split in load(ROOT / 'hacks' / hack / 'data.json')['WK']['splits'] for stop in split['st']]
         if stops and all('k' in stop for stop in stops):
             runs.append((hack + '-walk-state', ['node', 'tools/walk-state-check.mjs', old, new, '0.0'], hack))
@@ -354,7 +357,15 @@ def template_check(gate, names, jobs=8):
     gate.run_browser(runs + scenario_runs(names), jobs)
 
 
+def utf8_stdio():
+    """stdout / stderr in UTF-8: a guide name, species (Nidoran♂) or log tail never fails a print."""
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8', errors='replace')
+
+
 def main():
+    utf8_stdio()
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='command', required=True)
     capture = commands.add_parser('baseline')

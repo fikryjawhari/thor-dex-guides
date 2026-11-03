@@ -8,10 +8,10 @@ explicit task authorisation and provider-specific instructions still win.
 - Use the supplied fresh worker branch/worktree from the parent's accepted SHA. In T3 the parent binds it with
   workspace tools. Do not switch another checkout, create a top-level thread or edit the integration/main checkout.
 - Other worktrees are read-only. Check both claim paths; do not overwrite another session's claim or dirty work.
-- Run `python -I tools/worktree_setup.py [hack ...] --session <stable-name>`: claim, source junctions, `uv sync`.
+- Run `python -X utf8 -I tools/worktree_setup.py [hack ...] --session <stable-name>`: claim, source junctions, `uv sync`.
   Sources are shared inputs, not worker-owned files; never edit them. Existing extract caches are the exception.
   Existing source copies are not replaced automatically. Ask before removing or replacing them.
-- Run `uv run python -I tools/gate.py baseline <accepted-ref>` once before edits; record its SHA and path.
+- Run `uv run python -X utf8 -I tools/gate.py baseline <accepted-ref>` once before edits; record its SHA and path.
   `git archive` captures committed data/reports and builds HTML without switching checkouts or needing raw inputs.
 - Briefs (the parent's side) give the task, owned files, the exact line ranges / functions to read, checks and the
   stop point; not background the agent can read itself, and not whole prior reports (pass the findings list only).
@@ -31,7 +31,7 @@ explicit task authorisation and provider-specific instructions still win.
 - Own only the task's files. No template/extract/data edits outside the stated scope. Raise shared-file conflicts.
 - Keep each finding or coherent group small and independently testable. Introduce a helper, switch one caller and
   check, then the other. Do not leave a large rewrite without a working checkpoint.
-- `uv run python -I tools/gate.py check [hack ...] --data` rebuilds data and compares it/report/counts with baseline.
+- `uv run python -X utf8 -I tools/gate.py check [hack ...] --data` rebuilds data and compares it/report/counts with baseline.
 - Browser checks: only the ones the brief names (`gate.py scenarios <hack> --only ...`, a `domcompare --routes`).
   No full `gate.py check` on every guide unless the brief says this unit ends the job: the parent runs the full
   gate once after its last merge. Add task-specific checks under `tools/scenarios/`; do not weaken existing checks.
@@ -48,6 +48,6 @@ explicit task authorisation and provider-specific instructions still win.
 - Never push, merge, touch main or delete worktrees/branches without task authorisation. Ask before every push.
 - On a usage limit: preserve files/logs; commit what works. If incomplete, label the checkpoint WIP and list failed
   or unrun checks and the exact next action. A WIP is not accepted or eligible to merge as finished work.
-- Release only your claim: `python -I tools/worktree_setup.py --session <stable-name> --release`.
+- Release only your claim: `python -X utf8 -I tools/worktree_setup.py --session <stable-name> --release`.
 - Compact report: branch/path; commit SHAs and purpose; changed files; completed/deferred findings; exact gate
   commands, timings/results and log paths; breakage evidence where required; risks/blockers; what merges next.

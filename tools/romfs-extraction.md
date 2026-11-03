@@ -35,8 +35,8 @@ and pass paths to scripts kept outside them.
 mkdir -p hacks/eternal-x/.src/romfs-dl hacks/photonic-sun/.src/romfs-dl
 curl -L "https://drive.usercontent.google.com/download?id=1oLGsfL4PS7jggtbiM-qtpP3z67ftRENI&export=download&confirm=t" -o "hacks/eternal-x/.src/romfs-dl/Eternal X 2.67.zip"
 curl -L "https://drive.usercontent.google.com/download?id=14vNSGKhl9Z80PLhrT2D4ClskfTt9b6Pn&export=download&confirm=t" -o hacks/photonic-sun/.src/romfs-dl/Rebalanced.zip
-python -I -m zipfile -l "hacks/eternal-x/.src/romfs-dl/Eternal X 2.67.zip" | head -80   # look before extracting
-python -I -m zipfile -l hacks/photonic-sun/.src/romfs-dl/Rebalanced.zip | head -80
+python -X utf8 -I -m zipfile -l "hacks/eternal-x/.src/romfs-dl/Eternal X 2.67.zip" | head -80   # look before extracting
+python -X utf8 -I -m zipfile -l hacks/photonic-sun/.src/romfs-dl/Rebalanced.zip | head -80
 ```
 
 Both folders are covered by the `.src/` gitignore rule. Add the steps to each hack's `SOURCES.md` once they

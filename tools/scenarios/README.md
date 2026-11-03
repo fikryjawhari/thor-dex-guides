@@ -2,7 +2,7 @@
 
 Each `*.mjs` is executable: `node tools/scenarios/<name>.mjs dist/<hack>.html`.
 `gate.py check --template` runs every entry on each selected guide. For built guides without a rebuild or
-baseline: `uv run python -I tools/gate.py scenarios [hack ...] --only calc-layout,calc-controls`. Omit `--only` for
+baseline: `uv run python -X utf8 -I tools/gate.py scenarios [hack ...] --only calc-layout,calc-controls`. Omit `--only` for
 all scenarios. Both run 8 at a time with the other browser checks and skip a run whose inputs passed before
 (`tools/README.md` → Standard gates: result cache); `--fresh` reruns.
 Keep helpers outside this folder or use another extension: the gate discovers every `*.mjs` here.

@@ -23,7 +23,7 @@ One reader per save family, plus the hack's ID tables. Interface, formats and su
    `tools/schema.py` already accepts `GID`; schema details: `hacks/emerald-imperium/notes.md` → Data schema.
    Reuse `tools/expansion_ids.py` for expansion data or `tools/ctrguide.py` → `build_save_ids` for 3DS data.
 4. **Switch it on.** Set `hack.json` → `cfg.calc.save = "<family>"` (a base profile only when every family member
-   uses that reader), then `python -I tools/datajson.py hacks/<hack>/hack.json` and `python assemble.py <hack>`.
+   uses that reader), then `python -X utf8 -I tools/datajson.py hacks/<hack>/hack.json` and `python assemble.py <hack>`.
 5. **Checks.** Run `node tools/calc_save_check.mjs dist/<hack>.html <save> <expected.json>`. Test wrong-game,
    emulator-state, corrupted and empty controls, plus `node tools/scenarios/calc-import.mjs dist/<hack>.html`
    and `node tools/scenarios/calc-bridge.mjs dist/<hack>.html`. Page fixtures do not replace real-reader checks.

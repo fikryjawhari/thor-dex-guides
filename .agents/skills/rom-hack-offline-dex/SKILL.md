@@ -99,7 +99,7 @@ With the template in hand, aim for: batch 1 Pokémon + moves + abilities, batch 
 
 ## UI changes
 
-The user wants a mockup before any UI change that isn't already in the template: a plain interactive HTML page at the window's real size. Wrap with `tools/mockup/thor-frame/build.py`, publish with `python -I tools/preview.py <page.html> [name.html]`, and give the phone-preview link. Then build the agreed design and record the decision in `template/README.md`.
+The user wants a mockup before any UI change that isn't already in the template: a plain interactive HTML page at the window's real size. Wrap with `tools/mockup/thor-frame/build.py`, publish with `python -X utf8 -I tools/preview.py <page.html> [name.html]`, and give the phone-preview link. Then build the agreed design and record the decision in `template/README.md`.
 
 ## Planned work
 

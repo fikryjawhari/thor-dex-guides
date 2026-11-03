@@ -46,11 +46,14 @@ Read PROGRESS.md at the start of every session (short); PROGRESS-DETAIL.md only 
 
 ## Commands
 - Build: `python assemble.py [hack]` (stdlib only: the Pages workflow runs it bare).
-- Python env: `uv sync` once per machine, then `uv run python -I tools/<script>`. Need a package: `uv add <name>`,
-  commit `pyproject.toml` + `uv.lock`; don't work around it.
+- Python env: `uv sync` once per machine, then `uv run python -X utf8 -I tools/<script>` (`-X utf8`: `-I` ignores
+  `PYTHONUTF8`, and a redirected print of `♂` dies in cp1252). Need a package: `uv add <name>`, commit `pyproject.toml`
+  + `uv.lock`; don't work around it.
 - Checks: the `verify` skill (`.agents/skills/verify/SKILL.md`) says what to run for a change. The gate:
-  `uv run python -I tools/gate.py check [hack ...]` / `scenarios [hack ...] [--only a,b]`; browser checks run 8 at
-  once, failures rerun alone, and passes are cached by content (an unchanged guide costs nothing; `--fresh` reruns).
+  `uv run python -X utf8 -I tools/gate.py check [hack ...]` / `scenarios [hack ...] [--only a,b]` / `lint [--fix]`;
+  browser checks run 8 at once, failures rerun alone, and passes are cached by content (an unchanged guide costs
+  nothing; `--fresh` reruns). Intended changes are declared, not hand-diffed: `--accept-data` / `--accept-routes` or
+  `.tmp/accept.json` (`tools/README.md` → Gate).
 - Git Bash: prefix commands that take `/`-paths with `MSYS_NO_PATHCONV=1`.
 
 ## Checks: who runs what
@@ -68,8 +71,9 @@ The main chat writes the unit list (`plans/<hack>.md`, one unit per step / tab, 
 adapt); agents build the units. The procedure: `.agents/references/new-guide.md` (sources: `new-guide-sources.md`).
 
 ## Git
-- Worker setup: `python -I tools/worktree_setup.py [hack ...] --session <name>` (`--release` removes your claim):
-  claims, links each hack's `.src` and `.tmp/item-icons` from the main checkout (hzla clones: `--repo <main>/.tmp/hzla...`).
+- Worker setup: `python -X utf8 -I tools/worktree_setup.py [hack ...] --session <name>` (`--release` removes your
+  claim): claims, links each hack's `.src` and `.tmp/item-icons` from the main checkout (hzla clones:
+  `--repo <main>/.tmp/hzla...`), `uv sync`, `npm ci` for `tools/calc` when it has no node_modules.
 - Parallel work: a branch in a worktree (Claude Code: `.claude/worktrees/<name>`, git-ignored), merged into `main` when
   done. One session at a time edits on `main`.
 - `git status` before committing; stage files by name, never `git add -A`; never commit anything under `.claude/`.
@@ -116,10 +120,10 @@ Decide from my prompt, say it in one line ("working in X because Y"), then start
   the end goal named).
 - I test on the Thor (PROGRESS-DETAIL.md → Testing on the Thor).
 - UI changes: mockup first, a plain interactive page at the viewer's real size, then build.
-- **Showing pages to me:** `python -I tools/preview.py <page.html> [name.html]` puts it on the phone preview (my
+- **Showing pages to me:** `python -X utf8 -I tools/preview.py <page.html> [name.html]` puts it on the phone preview (my
   tailnet; `tools/README.md` → Phone preview) and prints the link; give me the link (same name = same link).
-  Thor frame: `python -I tools/mockup/thor-frame/build.py <page.html> <out.html> [--title] [--sub] [--panel]` (or
-  `preview.py ... --frame`); mockups write only the inner page (and an optional `--panel`), never a frame.
+  Thor frame: `python -X utf8 -I tools/mockup/thor-frame/build.py <page.html> <out.html> [--title] [--sub]
+  [--panel]` (or `preview.py ... --frame`); mockups write only the inner page (and an optional `--panel`), never a frame.
 - **Complex UI work goes in steps, each its own small context:** (1) *Decide*: a 6.1 sol session the user talks to,
   cheap mockups with sampled data in the Thor frame, every behaviour settled, spec to `plans/<thing>.md`; no template
   / extract changes. (2) *Build* (6.1 sol): implement the spec, delegating only when useful, same model; ends with the
