@@ -438,6 +438,12 @@ Sheet vs data.js (name-matched, `.tmp` compare; data.js kept):
   Iron Leaves / Iron Crown (sheet Star Piece, data.js Nugget; kept); the sheet's "Ability Capsule" = Ability Pill.
 ### Trainers (unit 6, 2026-11-02)
 
+`gc`: numbered Back to Back tags give Hotel Sam → Shelly, Route 12 Justin → Andrew, Route 16 Lao → Koji →
+Luke, Cerulean Cave Archer → Ariana, and Oak → Oak. Source Postgame!C180/C203/C226/C250 additionally names
+PKMN TOWER GAUNTLET 1/2/3/BOSS (Runan → Samantha → Symes → Morty); C1079/C1103/C1126/C1150 names
+BERRY FOREST GAUNTLET 1/2/3/4 (Barry → Sharon → Nick → Janny). These titles are matched to existing calc trainers;
+the unnumbered Berry Forest Spirit has no calc entry, and Gatekeeper Owen has no gauntlet label. No inferred gym chains.
+
 `extract/trainers.py` (TR), readers `bosssheet.py` (`.src/trainers-hardcore.xlsx`: boss blocks, Trainer Order, Main
 caps) and `setcheck.py` (the sheet / RR calc / hzla comparison); `check.py` → `trainer_checks` asserts the counts below.
 

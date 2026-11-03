@@ -36,7 +36,7 @@ def main():
         moves.build(data)
     except NotImplementedError as error:
         report('moves: not built yet (%s)' % error)
-    extractlib.finalise(data, H.name, prune.build)
+    extractlib.finalise(data, H.name, prune.build, gauntlet_rules=trainers.gauntlet_rules)
     if not seeded and not data['TR']['g'] and os.path.exists(keys):
         os.remove(keys)     # no trainers yet: the first build with trainers seeds the key table
         report('trainer keys: no trainers yet, no key table written')

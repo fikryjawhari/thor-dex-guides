@@ -17,8 +17,31 @@ from common import DATA, SPECIES, SPECIES_IDS, CAPS, H, key, sid, move, ability,
 import bosssheet
 import route
 import setcheck
+from extractlib import numbered_gauntlets
 
 STATS = {}
+
+
+def gauntlet_rules(group, section):
+    """B2B tags plus numbered GAUNTLET titles in the source's post-game blocks."""
+    yield from numbered_gauntlets(section)
+    source_chains = {}
+    for block in bosssheet.blocks():
+        marker = re.search(r'^(.+?) GAUNTLET (\d+|BOSS)\b', block.title)
+        if not marker:
+            continue
+        chain = source_chains.setdefault(marker[1], [])
+        if marker[2] != 'BOSS':
+            assert int(marker[2]) == len(chain) + 1, ('source gauntlet numbering', block.title)
+        matched = STATS['matched'][(block.sheet, block.row)]
+        assert len(matched) == 1, ('source gauntlet must resolve to one calc trainer', block.title, matched)
+        chain.extend(matched)
+    by_id = {trainer.get('id'): trainer for trainer in section['tr']}
+    for source_chain in source_chains.values():
+        if any(identity in by_id for identity in source_chain):
+            assert all(identity in by_id for identity in source_chain), ('source gauntlet split across sections', source_chain)
+            yield [by_id[identity] for identity in source_chain]
+
 # Main E44:E78 (asserted against data.js caps on every build)
 SPLITS = ['Pre-Brock', 'Pre-Mt. Moon Archer', 'Pre-Misty', 'Pre-Lt. Surge', 'Pre-Erika', 'Pre-Game Corner Giovanni',
           'Pre-Silph Co. Archer & Ariana', 'Pre-Giovanni Silph Co.', 'Pre-Sabrina', 'Pre-Koga', 'Pre-May', 'Pre-Blaine',
