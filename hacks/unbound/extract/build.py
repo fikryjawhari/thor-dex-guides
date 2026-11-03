@@ -33,7 +33,7 @@ def main():
     keys = os.path.join(H.extract, 'trainer_keys.json')
     seeded = os.path.exists(keys)
     moves.build(data)
-    extractlib.finalise(data, H.name, prune.build)
+    extractlib.finalise(data, H.name, prune.build, gauntlet_rules=trainers.gauntlet_rules)
     if not seeded and not data['TR']['g']:
         os.remove(keys)     # no trainers yet: the first build with trainers (unit 6) seeds the key table
         report('trainer keys: no trainers yet, no key table written')

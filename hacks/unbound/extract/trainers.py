@@ -21,6 +21,25 @@ import bosssheet
 from common import H, WIKI, sid, move, ability, report
 from romhackdex import key
 
+
+def gauntlet_rules(group, section):
+    """Consecutive statics sharing the workbook's explicit back-to-back note, split by encounter group."""
+    chain, evidence = [], None
+    for trainer in section['tr']:
+        note = next((text for text in trainer.get('note', []) if re.search(r'back to back', text, re.I)), None)
+        if note != evidence or not note:
+            if chain:
+                count = re.match(r'(Two|Three)\b', evidence, re.I)
+                assert count and len(chain) == {'two': 2, 'three': 3}[count[1].lower()], ('static gauntlet count', evidence)
+                yield chain
+            chain, evidence = [], note
+        if note:
+            chain.append(trainer)
+    if chain:
+        count = re.match(r'(Two|Three)\b', evidence, re.I)
+        assert count and len(chain) == {'two': 2, 'three': 3}[count[1].lower()], ('static gauntlet count', evidence)
+        yield chain
+
 STATS = {}
 
 # trainer-index.xlsx → LEVEL CAPS, column D (Difficult / Expert / Insane), rows 2-11.

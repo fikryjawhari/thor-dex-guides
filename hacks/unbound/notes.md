@@ -416,6 +416,10 @@ pokefirered's formulas at a few levels (README → cfru → Derived values); `GI
 table.
 ### Trainers (unit 6, 2026-10-29)
 
+`gc` groups consecutive entries sharing the Expert workbook's explicit back-to-back note: Ruins of Void
+Raikou → Entei → Suicune (three beasts), then Ho-Oh → Lugia (two birds). These statics are ordinary calc-list
+trainer entries; Claydol and Aklove are outside both chains. The note's count is asserted, never inferred from location.
+
 `extract/trainers.py` (TR), readers `bosssheet.py` (the Expert workbook) and `wiki.py` → `trainer_locations()`;
 `check.py` → `trainer_checks` reproduces every count below from the raw sources.
 
