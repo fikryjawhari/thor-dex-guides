@@ -280,6 +280,10 @@ species come from the pinned hzla table; everything stays in the one offline HTM
 
 ### Trainers
 
+`gc`: source-named Victory Road weather pairs Hail Trainer Caroll → Sun Trainer Elmer and Rain Trainer Porta →
+Sand Trainer Sterling (heal boundaries separate them; Lance alone). No School Kid chain, for any starter:
+Trainer Changes.txt:353 explicitly says "you are healed in between fights", despite the existing B2B tags.
+
 Unit 7 (2026-10-29), Complete / EVless / Challenge. All **468 battle records / 1,867 source Pokemon rows** parse,
 including 31 Normal alternatives. Selecting 437 Challenge records, then expanding starters, versions and joint
 sides, gives **466 cards / 1,711 opponent Pokemon**. Plus **150 Normal / 54 independently joined partner Pokemon**

@@ -10,6 +10,21 @@ from pathlib import Path
 import re
 
 from common import H, RD, SPECIES, MOVES, ABILITIES, doc, drayano, report
+from extractlib import numbered_gauntlets
+
+
+def gauntlet_rules(group, section):
+    """Respect explicit heals; weather pairs are named in order by the Trainer Changes doc."""
+    source = ' '.join(text for line, text in doc('Trainer Changes').section(section['h']))
+    if not re.search(r'healed (?:in )?between fights', source, re.I):
+        yield from numbered_gauntlets(section)
+    for first, last in re.findall(r'(?:The|Then the) (\w+) and (\w+) trainers are fought back-to-back', source, re.I):
+        chain = []
+        for weather in (first, last):
+            matches = [trainer for trainer in section['tr'] if trainer['n'].startswith(weather + ' Trainer ')]
+            assert len(matches) == 1, ('weather gauntlet member', weather, len(matches))
+            chain.append(matches[0])
+        yield chain
 
 CAPS = [('Cheren', 14), ('Roxie', 21), ('Brycen', 23), ('Burgh', 29), ('Lenora and Hawes', 33),
         ('Subway Masters', 36), ('Elesa', 38), ('Charles', 39), ('Rood', 41), ('Clay', 45), ('Colress', 53),
