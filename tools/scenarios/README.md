@@ -43,7 +43,7 @@ Import scenarios inject `template/calc/readers/test.js`; real reader checks use 
 | `calc-hidden.mjs` | As-built visibility and entry points with and without `cfg.calc`. |
 | `calc-auto.mjs` | Scratch/set/fight lifetimes, entry effects, trainer changes, Reset fight and migration. |
 | `calc-fight-state.mjs` | This fight's types / ability / item: Worry Seed then ↺, Soak then Reset fight, Trick swaps both, Edit → Fight… + chip clear (reload keeps it), effect odds on the rows with no sideways scroll. |
-| `calc-gauntlet.mjs` | Gauntlets (`gc`): carry and snapshot across members, per-battle state, ↺ member / gauntlet reset, leaving / entering, reload and stale `ST.gc`, dots and accent ‹ ›. Guides without chains skip. |
+| `calc-gauntlet.mjs` | Gauntlets (`gc`): carry and snapshot across members, per-battle state, ↺ member / gauntlet reset, leaving / entering, reload and stale `ST.gc`, dots and accent ‹ ›. Foe slots come from the trainer's actual team (including single-mon chains); outside trainers belong to no chain. Adjacent chains are checked in both directions for fresh fight state, snapshots, slots and dots. Guides without chains skip. |
 | `calc-doubles.mjs` | Automatic trainer format, manual overrides, reset and non-doubles tags. |
 | `calc-field-states.mjs` | Global groups, sports/splits/auras, hazards and re-entry. |
 | `calc-moves.mjs` | Default power, hit restrictions, ally effects and HP-move actions. |

@@ -23,6 +23,12 @@ const C = chains.sort((a, b) => (doubles(b) - doubles(a)) || (b.length - a.lengt
 const skip = C ? '' : 'no gauntlet chain';
 const [C0, C1] = C || [];
 const LASTK = C?.at(-1);
+const FOESLOT = C ? Math.min(1, byKey.get(C0).p.length - 1) : 0;
+const OUTSIDE = trainers.find(t => !t.gc && !t.st && t.p.length)?.k;
+const adjacent = trainers.flatMap((trainer, index) => {
+  const next = trainers[index + 1];
+  return trainer.gc && next?.gc && !trainer.gc.includes(next.k) ? [[trainer.k, next.k]] : [];
+});
 const J = JSON.stringify;
 
 const sizes = [[260, 316]];
@@ -67,7 +73,7 @@ const checks = [{
     assert.equal(s.foe.k, C0);
     assert.deepEqual(s.gc, {first: C0, snap: {[C0]: {}}}, 'entering the chain: a snapshot of the first member');
     await hit(page, 'mine', 5);
-    await page.value(`(()=>{CALC.set('mine','used',true);CALC.state().foe.i=1;CALC.render();})()`);
+    await page.value(`(()=>{CALC.set('mine','used',true);CALC.state().foe.i=${FOESLOT};CALC.render();})()`);
     await page.settle();
     await hit(page, 'foe', 1);
     await step(page, 1);
@@ -76,16 +82,16 @@ const checks = [{
     assert.equal(s.mine.hp, 5, 'mine\'s HP carried');
     assert.equal(s.mine.used, true, 'used item carried');
     assert.ok(!s.foeKeys.some(k => k.startsWith(`foe:${C1}:`)), `${C1}'s team full: ${s.foeKeys}`);
-    assert.equal(s.edits[`foe:${C0}:1`]?.hp, 1, 'the first member\'s foe state kept');
+    assert.equal(s.edits[`foe:${C0}:${FOESLOT}`]?.hp, 1, 'the first member\'s foe state kept');
     assert.equal(s.foe.i, 0, 'the new member opens on its first slot');
     assert.deepEqual(s.gc.snap[C1], {'mine:cg0': {hp: 5, used: true}}, 'forward: snapshot taken');
-    assert.deepEqual(s.gcSel, {[C0]: 1, [C1]: 0}, 'foe slot per member');
+    assert.deepEqual(s.gcSel, {[C0]: FOESLOT, [C1]: 0}, 'foe slot per member');
     await hit(page, 'mine', 3);
     await step(page, -1);
     s = await st(page);
     assert.equal(s.foe.k, C0);
-    assert.equal(s.foe.i, 1, '‹ back: the member\'s foe slot as left');
-    assert.equal(s.edits[`foe:${C0}:1`]?.hp, 1, '‹ back: its foes as left');
+    assert.equal(s.foe.i, FOESLOT, '‹ back: the member\'s foe slot as left');
+    assert.equal(s.edits[`foe:${C0}:${FOESLOT}`]?.hp, 1, '‹ back: its foes as left');
     assert.equal(s.mine.hp, 3, 'carried back');
     assert.deepEqual(s.gc.snap[C1], {'mine:cg0': {hp: 5, used: true}}, 'back: no new snapshot');
     assert.deepEqual(s.gc.snap[C0], {}, 'back: the member\'s own snapshot unchanged');
@@ -168,17 +174,26 @@ const checks = [{
       await step(page, 1);
       const s = await st(page);
       assert.ok(!C.includes(s.foe.k), 'left the chain');
-      assert.equal(s.gc, null, 'no chain state');
+      const chain = byKey.get(s.foe.k).gc;
+      assert.deepEqual(s.gc, chain ? {first: chain[0], snap: {[s.foe.k]: {}}} : null, 'fresh state for the destination');
       assert.deepEqual(s.foeKeys, [], 'all fresh');
       assert.equal(s.mine.hp, undefined, 'mine full');
-      assert.equal((await resetBtn(page)).label, 'Reset fight');
+      if (!chain) assert.equal((await resetBtn(page)).label, 'Reset fight');
     }
     await page.value(`CALC.enter(${J(C0)},0)`);
     await page.settle();
-    if (await page.value(`!document.querySelector('.fbar [data-a="tprev"]').disabled`)) {
-      await step(page, -1);
-      assert.ok(!C.includes((await st(page)).foe.k), 'the trainer before the chain');
-    }
+    assert.ok(OUTSIDE, 'a trainer in no chain exists');
+    await hit(page, 'mine', 5);
+    await hit(page, 'foe', 1);
+    await page.value(`CALC.enter(${J(OUTSIDE)},0)`);
+    await page.settle();
+    const outside = await st(page);
+    assert.equal(outside.foe.k, OUTSIDE, 'a trainer in no chain');
+    assert.equal(outside.gc, null, 'no chain state');
+    assert.equal(outside.gcSel, null, 'no chain slots');
+    assert.deepEqual(outside.foeKeys, [], 'all fresh');
+    assert.equal(outside.mine.hp, undefined, 'mine full');
+    assert.equal((await resetBtn(page)).label, 'Reset fight');
     await hit(page, 'mine', 5);
     await page.value(`CALC.enter(${J(C1)},0)`);
     await page.settle();
@@ -197,7 +212,7 @@ const checks = [{
   run: async page => {
     await setup(page);
     await hit(page, 'mine', 5);
-    await page.value(`(()=>{CALC.state().foe.i=1;CALC.render();})()`);
+    await page.value(`(()=>{CALC.state().foe.i=${FOESLOT};CALC.render();})()`);
     await page.settle();
     await hit(page, 'foe', 1);
     await step(page, 1);
@@ -208,7 +223,7 @@ const checks = [{
     const now = await st(page);
     for (const f of ['foe', 'gc', 'gcSel', 'foeKeys']) assert.deepEqual(now[f], was[f], `${f} kept`);
     assert.equal(now.mine.hp, 3);
-    assert.equal(now.edits[`foe:${C0}:1`]?.hp, 1, 'the other member\'s foe state kept');
+    assert.equal(now.edits[`foe:${C0}:${FOESLOT}`]?.hp, 1, 'the other member\'s foe state kept');
     let b = await resetBtn(page);
     assert.equal(b.label, 'Reset this fight', 'off its snapshot after reload');
     await page.value(`(()=>{const s=JSON.parse(localStorage.getItem(LS.dmg));s.gc.first='no-such-trainer';localStorage.setItem(LS.dmg,JSON.stringify(s));})()`);
@@ -242,9 +257,42 @@ const checks = [{
       if (page.width < 480) assert.deepEqual(h, [22, 22, 22], 'trainer bar 22 px');
       if (inNext) await step(page, 1);
     }
-    if (await page.value(`!document.querySelector('.fbar [data-a="tnext"]').disabled`)) {
-      await step(page, 1);
-      assert.equal((await markers(page)).dots, 0, 'no dots outside a chain');
+    assert.ok(OUTSIDE, 'a trainer in no chain exists');
+    await page.value(`CALC.enter(${J(OUTSIDE)},0)`);
+    await page.settle();
+    const outside = await markers(page);
+    assert.equal(outside.dots, 0, 'no dots outside a chain');
+    assert.equal(outside.prev.acc, false, 'no previous gauntlet arrow outside a chain');
+    assert.equal(outside.next.acc, false, 'no next gauntlet arrow outside a chain');
+  },
+}, {
+  id: 'adjacent-chains',
+  title: 'stepping into an adjacent chain starts a new fight with its own snapshot, slots and dots',
+  sizes: [[260, 316], [480, 316]],
+  modes: ['normal', 'dvkb'],
+  skip: skip || (!adjacent.length ? 'no adjacent chains' : ''),
+  run: async page => {
+    await setup(page);
+    for (const [before, after] of adjacent) {
+      for (const dir of [1, -1]) {
+        const source = dir === 1 ? before : after, target = dir === 1 ? after : before;
+        const chain = byKey.get(target).gc, at = chain.indexOf(target);
+        await page.value(`CALC.enter(${J(source)},0)`);
+        await page.settle();
+        await hit(page, 'mine', 5);
+        await page.value(`CALC.set('mine','used',true)`);
+        await hit(page, 'foe', 1);
+        assert.equal((await markers(page))[dir === 1 ? 'next' : 'prev'].acc, false, 'cross-chain arrow plain');
+        await step(page, dir);
+        const state = await st(page), dots = await markers(page);
+        assert.equal(state.foe.k, target, 'entered the adjacent chain');
+        assert.equal(state.mine.hp, undefined, 'new fight: player HP fresh');
+        assert.equal(state.mine.used, undefined, 'new fight: player item fresh');
+        assert.deepEqual(state.foeKeys, [], 'new fight: previous foes cleared');
+        assert.deepEqual(state.gc, {first: chain[0], snap: {[target]: {}}}, 'only the new chain and entered member snapshot');
+        assert.deepEqual(state.gcSel, {[target]: 0}, 'only the new member slot');
+        assert.deepEqual([dots.dots, dots.cur, dots.done], [chain.length, at, at], 'dots belong to the new chain');
+      }
     }
   },
 }];
