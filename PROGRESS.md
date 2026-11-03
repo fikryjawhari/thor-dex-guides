@@ -39,14 +39,14 @@ from link (same library id, saved state kept).
 10. Check tiers past ~10 guides (the last check-speed follow-up).
 11. Calc: gauntlets carry fight state (template, every guide): spec settled (mockup approved), next the build (data
     unit, then template unit); `plans/gauntlet-carry.md`. First of the calc plans.
-12. Calc: Hardlove AI move odds, switch-in order, doubles (port of `src/trainerai/`): decided, next the Sol mockup /
-    spec session after 11; `plans/calc-ai.md`.
+12. Calc: Hardlove AI move odds, switch-in order, doubles (port of `src/trainerai/`): UI spec settled (mockup
+    approved), build after 11 (both in calc.js); in-game tests listed in the plan; `plans/calc-ai.md`.
 13. Calc: range compare: noted for later (space); `plans/calc-range-compare.md`.
 
 ## Next session
 
-- **Calc plans (11, 12):** a Sol decide session on `plans/gauntlet-carry.md` first (mockups in the Thor frame,
-  the To settle items, spec), then `plans/calc-ai.md`.
+- **Calc plans (11, 12):** specs settled 2026-11-03. Build 11 (`plans/gauntlet-carry.md`: data unit, then template
+  unit), then 12 (`plans/calc-ai.md`: port + UI). Opus main chat dispatching Sol agents.
 - **Next guide:** say which hack. Sources-only start:
   `.agents/references/new-guide-sources.md`; the whole procedure: `.agents/references/new-guide.md`.
 
