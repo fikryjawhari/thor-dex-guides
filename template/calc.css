@@ -193,6 +193,15 @@ body.kbopen .shb{padding-bottom:calc(var(--kbh,0px) + 12px)}
 .fbar .nav:disabled{opacity:.3}
 .fbar .dsrc{flex:1;min-width:0;min-height:34px;padding:0 4px}
 .fbar .dsrc .nm{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Gauntlet (trainer gc): one dot per member under the name, inside the button's box (no height added); in-chain
+   ‹ › and the gauntlet reset (⇤) in the accent. */
+.fbar .dsrc.gc{position:relative}
+.gcdots{position:absolute;left:4px;bottom:-2px;display:flex;gap:2px;pointer-events:none}
+.gcdots i{display:block;width:6px;height:2px;border-radius:1px;background:var(--mut)}
+.gcdots i.done{background:var(--fg)}
+.gcdots i.cur{width:10px;background:var(--acc)}
+.fbar .nav.gcnav,.dfreset.gcnav{border-color:var(--acc);color:var(--acc)}
+.dfreset.gcnav svg{display:block;width:12px;height:12px;margin:auto}
 .dside{padding:2px 3px 3px}
 .dstrip.fs button{min-height:34px}.dstrip.fs button .spr{width:min(22px,100%)}
 .cc{padding:2px 5px;gap:0}
