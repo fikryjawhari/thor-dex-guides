@@ -435,6 +435,8 @@ def movetable(D):
         o = MV[i]; g = GMV.get(key(name)); s = SDM.get(key(name))
         if not g: MVSTAT['not in the game data'] += 1; report('move not in the game data:', name); continue
         d, b = g['data'], g['battle']
+        o['aiEffect'] = d['effect'].removeprefix('MOVE_EFFECT_')
+        o['aiChance'] = HG.cfg(d['effectChance'])
         o.update(move_metadata.describe(g, s or {}))
         bp = HG.cfg(d['power']); ac = HG.cfg(d['accuracy']); pp = HG.cfg(d['pp'])
         gv = {'t': d['type'][5:].title(), 'c': SPLIT.get(d['split'], d['split']), 'bp': (None if bp in (0, 1) else bp), 'ac': (None if ac == 0 else ac), 'pp': pp, 'pr': HG.cfg(b['priority'])}

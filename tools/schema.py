@@ -21,7 +21,7 @@ ORDER = {
     'top': ['M', 'MV', 'MI', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'IX', 'WK', 'TR', 'TC', 'GID', 'built'],
     'P': ['id', 'n', 'dex', 't', 'a', 'ha', 's', 'ef', 'et', 'of', 'lv', 'tm', 'tu', 'eg', 'w', 'g', 'hi',
           'stone', 'sloc', 'nu', 'fc', 'cf'],
-    'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'cr', 'd', 'b', 'tg', 'f', 'se', 'h', 'dc', 'e', 'cf', 'x'],
+    'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'cr', 'd', 'b', 'tg', 'f', 'se', 'h', 'dc', 'e', 'cf', 'x', 'aiEffect', 'aiChance'],
     'MI': ['a', 'i', 'w', 'e', 'm', 'h', 's'],
     'AR': ['n', 'l', 'st', 'sub', 'in', 'es', 'map', 'ns', 'note'],
     'IT': ['n', 'k', 'note', 'r'],
@@ -129,6 +129,8 @@ def standardise(D):
         while len(a) > 2 and not a[-1]:
             a.pop()
     for m in D['MV']:
+        assert 'aiEffect' not in m or isinstance(m['aiEffect'], str), 'MV.aiEffect must be text'
+        assert 'aiChance' not in m or isinstance(m['aiChance'], int) and 0 <= m['aiChance'] <= 100, 'MV.aiChance must be 0..100'
         assert 'b' not in m or isinstance(m['b'], str), 'MV.b must be text'
         drop_empty(m, 'b')
         order(m, 'MV')
