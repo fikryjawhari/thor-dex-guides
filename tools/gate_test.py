@@ -1,4 +1,4 @@
-"""Unit tests for the gate's helpers: text lint, accepted data differences, domcompare's build-stamp normalisation.
+"""Unit tests for the gate's helpers: text lint, the Chrome 109 compat lint, accepted data differences, domcompare's build-stamp normalisation.
 uv run python -X utf8 -I tools/gate_test.py"""
 from pathlib import Path
 import subprocess
@@ -7,6 +7,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'tools'))
+import compatlint  # noqa: E402
 import gateaccept  # noqa: E402
 import textlint  # noqa: E402
 
@@ -116,6 +117,30 @@ assert.ok(accepted('#/calc') && accepted('#/tr/t12'));
 assert.ok(!accepted('#/calcx') && !accepted('#/') && !accepted('#/p/1'));
 assert.ok(!routeMatcher([])('#/calc'));
 """, str(ROOT / 'tools/domnorm.mjs')], check=True, capture_output=True, text=True)
+
+
+class Compat(unittest.TestCase):
+    def features(self, name, text):
+        return [feature.split(' (')[0] for _, feature in compatlint.scan(Path(name), text)]
+
+    def test_css(self):
+        self.assertEqual(self.features('a.css', '@scope (body.x) {\n.a{color:red}\n}'), ['@scope'])
+        self.assertEqual(self.features('a.css', '.a{color:red;&:hover{color:blue}}'), ['CSS nesting &'])
+        self.assertEqual(self.features('a.css', '.a{content:"&"} /* & @scope */ .b{background:url(x?a&b)}'), [])
+
+    def test_color_mix_fallback(self):
+        mix = 'color-mix(in srgb,red 50%,blue)'
+        self.assertEqual(self.features('a.css', '.a{background:' + mix + '}'), ['color-mix() with no background fallback before it'])
+        self.assertEqual(self.features('a.css', '.a{background:red;background:' + mix + '}'), [])
+        self.assertEqual(self.features('a.css', '.a{color:red;background:' + mix + '}'), ['color-mix() with no background fallback before it'])
+
+    def test_js(self):
+        self.assertEqual(self.features('a.js', 'a.toSorted();b.union(c);Object.groupBy(d,f)'),
+                         ['Array change-by-copy', 'Object / Map.groupBy', 'Set methods'])
+        self.assertEqual(self.features('a.js', '// a.toSorted()\nconst s="b.union(c)";x.findLast(f)'), [])
+
+    def test_template_clean(self):
+        self.assertEqual(compatlint.lint(out=lambda line: None), 0)
 
 
 if __name__ == '__main__':

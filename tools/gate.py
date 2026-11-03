@@ -29,6 +29,7 @@ import time
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'tools'))
 import gateaccept  # noqa: E402
+import compatlint  # noqa: E402
 import textlint  # noqa: E402
 
 BASE = ROOT / '.tmp' / 'baseline'
@@ -363,6 +364,17 @@ def lint_check(gate, fix=False):
         'clean' if not left else f'{left} problem{"s" * (left != 1)} (above; CRLF / BOM: gate.py lint --fix)'))
 
 
+def compat_check(gate):
+    """tools/compatlint.py: no CSS / JS the Thor's WebView (Chrome 109) lacks in what a guide ships."""
+    started = time.monotonic()
+    hits = []
+    left = compatlint.lint(out=hits.append)
+    for line in hits:
+        print('  ' + line, flush=True)
+    return gate.result('compat', not left, f'{time.monotonic() - started:.1f}s; ' + (
+        'clean' if not left else f'{left} problem{"s" * (left != 1)} (above; the Thor WebView is {compatlint.FLOOR})'))
+
+
 def stale_inputs(hack):
     """What dist/<hack>.html is older than (assemble.py's inputs), or ['no build']."""
     built = ROOT / 'dist' / (hack + '.html')
@@ -461,8 +473,11 @@ def main():
             baseline(gate, args.ref)
         elif args.command == 'lint':
             lint_check(gate, args.fix)
+            compat_check(gate)
         elif not lint_check(gate):
             print('Text hygiene first: fix the lines above, then rerun.', flush=True)
+        elif not compat_check(gate):
+            print('Browser floor first: the Thor WebView is ' + compatlint.FLOOR + '; rewrite the lines above, then rerun.', flush=True)
         elif args.command == 'scenarios':
             names = args.hacks or guides(ROOT)
             unknown = [hack for hack in names if hack not in guides(ROOT)]

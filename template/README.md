@@ -107,6 +107,11 @@ an unknown key.
 
 ## Shared rules every guide follows
 
+**Browser floor: Chrome 109** (the Thor's WebView). Write CSS / JS that runs there: no `@scope` (calc.css scopes its
+rules with a `:where(body.calc-route)` prefix, `:where(body).calc-route` for the root, the same specificity), no CSS
+nesting, `color-mix()` only after a plain declaration of the same property. The list and the check:
+`tools/compatlint.py`; the contract: the skill's `references/viewer-ui.md` → The window.
+
 The extract helpers apply most of these rules.
 - Species that are neither obtainable nor used by a trainer are left out (Megas / forms too).
 - Trainers boxes are cap splits named `<Boss> Split [Cap N]`, then `Elite Four Split [Cap N]`, then `Post-game`

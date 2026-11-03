@@ -142,6 +142,12 @@ Always `python -X utf8 -I`: `-I` ignores `PYTHONUTF8` / `PYTHONIOENCODING`, and 
 where a `♂` or `é` crashed the print. The gate also reconfigures its own stdout / stderr to UTF-8 (`errors=replace`)
 and starts every Python child with `-X utf8`; `extractlib` does the same on import, so every extract is covered.
 
+**Compat** (`compatlint.py`, right after the lint in every gate command; ~0.2 s): what a guide ships (`template/*.js`,
+`*.css`, `shell.html`, `template/calc/**/*.js` / `*.css`) must run in Chrome 109, the Thor's WebView. Fails on
+`@scope`, CSS nesting, `color-mix()` with no fallback before it, `light-dark()`, `subgrid`, `@starting-style`,
+style container queries, Array change-by-copy and `.with()`, `Object` / `Map.groupBy`, `Promise.withResolvers`,
+`Array.fromAsync` and the Set methods, each named `path:line` (comments and strings skipped). No ignore list.
+
 **Lint** (`textlint.py`, first in `check` and `scenarios`, alone as `gate.py lint`; ~0.5 s): tracked and
 untracked-not-ignored text under `tools/`, `template/`, `hacks/*/` (not `.src`), `assemble.py` and every `*.md`;
 binaries skipped by extension and git's `binary` / `-text` attribute. Fails on CRLF, a UTF-8 BOM, invalid UTF-8 and

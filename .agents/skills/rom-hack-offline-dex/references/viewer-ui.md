@@ -4,6 +4,13 @@ The device contract every guide meets; `template/` implements all of it (names i
 
 ## The window
 
+**Browser floor: the Thor's WebView is Chrome 109** (`Chrome/109.0.5414.123`, seen over adb 2026-11-03); the gate and
+the phone preview run a recent Chrome, so only a check of the code finds a newer feature. No `@scope` (118: one
+unknown at-rule drops its whole block; it once took 352 calc rules and laid the foe's move rows side by side), CSS
+nesting `&`, `color-mix()` without a plain fallback before it (111), `light-dark()`, `subgrid`, `@starting-style`,
+`toSorted` / `toReversed` / `toSpliced` / `.with()`, `Object.groupBy`, `Promise.withResolvers`, Set methods.
+`tools/compatlint.py` (first in every gate run) fails on them.
+
 The guide loads at `https://<id>.appassets.androidplatform.net/guides/<id>/index.html` (each guide has its own origin) inside a WebView in a floating overlay window. The window is never focusable, so:
 
 - No Android keyboard: `<input>` and `<textarea>` can't be typed into.
