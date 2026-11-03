@@ -104,7 +104,7 @@ const windowChecks=[{
     await page.typeSearch(trainer.move);
     const rows=await page.value('[...document.querySelectorAll(".sheet:last-child .mrow")].map(row=>row.textContent)');
     assert.ok(rows.some(row=>row.includes(trainer.name)&&row.includes(trainer.move)),`trainer found by ${trainer.move}, the move shown`);
-    const place=await page.value("(()=>{const t=CALC.trainers().find(t=>t.loc&&/^[A-Za-z ]+$/.test(t.loc)&&!t.n.includes(t.loc)&&CALC.trainers().filter(u=>(u.loc||'').includes(t.loc)).length<30);return t&&{name:t.n,loc:t.loc};})()");
+    const place=await page.value("(()=>{const t=CALC.trainers().find(t=>t.loc&&/^[A-Za-z0-9 ]+$/.test(t.loc)&&!t.n.includes(t.loc)&&CALC.trainers().filter(u=>(u.loc||'').includes(t.loc)).length<30);return t&&{name:t.n,loc:t.loc};})()");
     if(place){
       await page.value('history.go(-1)');await page.settle();
       await page.tap('[data-s=findtr]');

@@ -317,8 +317,10 @@ export class Page {
       return;
     }
     for (const ch of text.toUpperCase()) {
-      if (ch === ' ') await this.tap('.kb .k[data-c=" "]');
-      else await this.tap(`.kb .k[data-c="${ch}"]`);
+      const key = `.kb .k[data-c="${ch}"]`;
+      // the full keyboard shows digits or QWERTY on its top row: 123 / ABC swaps it
+      if (ch !== ' ' && !(await this.count(key)) && (await this.count('.kb .k[data-a="dig"]'))) await this.tap('.kb .k[data-a="dig"]');
+      await this.tap(key);
     }
     await this.tap('.kb .k[data-a="done"]');
   }
