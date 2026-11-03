@@ -373,6 +373,51 @@ is what the game shows if the point goes the other way.
   - Physical in Snow: `22 22 22 22 24 24 24 24 24 24 25 25 25 25 25 27`. Other way (no Snow): `33 33 33 33 34 34 34 34 36 36 36 36 37 37 37 39`.
   - Special in Snow: `76 76 78 78 79 81 81 82 82 84 85 85 87 87 88 90`, the same with no Snow.
 
+### Damage calc / AI
+
+The trainer AI (`src/trainerai/`, pinned `4a8d4a6308`, fetch: SOURCES.md) is ported headless in
+`template/calc/ai/` (plan: `plans/calc-ai.md`). Singles only so far; doubles (`pick_command.c`), `postKO.c` and
+`CalculateSwitch` are later units.
+- Layout: `hardlove/damage.mjs` = `calcDamage.c` (the AI's own formula), `speed.mjs` = `calcSpeed.c`, `calc.mjs` =
+  `calc.c`, `helpers.mjs` = `scoringHelper.c`, `state.mjs` = `setupStateVariables.c` (`BuildStateVariables`: damage
+  tables; `ApplyDamageRolls`: one roll per move), `scoring.mjs` = `main.c` (each scorer is a line-for-line
+  `<Name>Port`, the C's names; ids upper-cased without punctuation, effects without `MOVE_EFFECT_`).
+  `enumerate.mjs` (shared): exact odds; `index.mjs` `evaluateSingles(state)` → per move `{percent, exact, score, branches}`.
+- Input state: `{attacker, defender, field}`; a mon is `{species, level, types, ability, item, status ('slp' ...),
+  attack, defense, spAttack, spDefense, speed, currentHP, totalHP, statBoosts {attack ...}, moves [{name, type,
+  category, power, effect, priority, flags, target, pp?, secondaryEffectChance?}], facts {...}}`. Move `effect` /
+  `secondaryEffectChance` come from `data/Moves.c` (`.effect`, `.effectChance`): not in `data.json` yet (the wiring
+  unit adds them to the extract). No `pp` = usable (the calc has no PP).
+- Rolls (setupStateVariables.c): one `BattleRand % 16` per hit (85-100 %, after crit, before STAB), Triple Axel /
+  Kick and Parental Bond roll each hit and sum; then `BattleAI_AdjustUnusualMoveDamage`; a killing roll is capped at
+  the target's HP. Damage the AI receives: the max roll. Scoring reads only its own move's roll plus the max over all
+  moves and "any move kills", so the enumerator conditions on (max, any-KO) per move instead of 16^4 products.
+- Score: the C adds 1000 base (+1000 more for an Encore / choice-locked move); the port reports the rest. Ties:
+  `ChooseMove` picks uniformly among equal top scores.
+- `BattleAI_GetDynamicMoveType`: the C's `default: type = TYPE_NORMAL` then `else if (type)`: `TYPE_NORMAL` is 0, so
+  ordinary moves keep the move table's type (the first port read it as "every move is Normal").
+- `EXPLOSION_ON_LAST_MON` is 0 (main.c:18): the last-mon Explosion penalty is off.
+- Engine vs `calcDamage.c`: unfinished. `tools/calc/hardlove_ai_damage_compare.mjs` runs `calc_matchups.json` through both:
+  51 / 95 identical with a rough state adapter. The differences so far are mostly the adapter (field keys such as
+  `defReflect`, crit, stages, weights, Power Trick, gems) and things the AI's formula leaves out by design (Protect
+  zeroes the engine's damage; the AI scores Protect separately). Each real gap goes here once classified.
+
+AI inputs the calc lacks (the AI toggle list; the port reads them from `facts`): first turn out (`firstTurnOut`:
+Fake Out / First Impression), last move (`lastUsedMove`: Torment, Encore, choice lock `moveNoChoice`), Encore
+(`encoredTurns`, `encoredMove`), Taunt (`tauntTurns`), Disable (`disabledTurns`, `disabledMove`), Torment, sleep turns
+(`sleepCounter`), Protect streak (`protectSuccessTurns`), Substitute, confusion, attraction, Yawn, Ingrain, Aqua Ring,
+Lock-On, Imprison, Heal Block, Throat Chop, Laser Focus, binding turns, Future Sight / Wish pending, Magnet Rise,
+Roost, Last Resort count, Recycle item, Fury Cutter / Metronome counts, Slow Start, Flash Fire, Protean used
+(`abilityActivated`), Transform, failed move last turn, teammate fainted last turn, can Belch, held item removable.
+From the party (later units): `highestPostKoScoreFromParty`, `postKoScoringPosition`, `highestDamageHitPrct`
+(`postKO.c`), `shouldSwitch` (`CalculateSwitch`), living members per side, a Mega Stone in the party.
+
+AI doc vs C (the C wins):
+- Explosion, trapping moves, Future Sight ... never get the highest-damage +6/+8, but their rolls still count for the
+  maximum: when Explosion rolls highest, no other move gets +6 either (the doc implies the next move would).
+- A Taunted status move is −80 plus whatever its other scorers add (Swords Dance: −68), still never picked.
+- An unusable damaging move (Disable, Torment, 0 PP) is never damage-calced, so it also scores the −40 immunity.
+
 ## Checks
 
 `check.py` [baseline.json]: reference integrity (species, trainer teams, area rows), the Starter area, Trainers / Walkthrough
