@@ -1,8 +1,10 @@
-"""Claim a worktree, link source inputs from the main checkout and .claude/skills to .agents/skills, and uv sync."""
+"""Claim a worktree, link source inputs from the main checkout and .claude/skills to .agents/skills, uv sync, and
+npm ci for tools/calc when it has a lockfile but no node_modules (once; log in .tmp/worktree-setup-npm.log)."""
 import argparse
 import datetime
 import json
 import os
+import shutil
 from pathlib import Path
 import socket
 import subprocess
@@ -89,6 +91,19 @@ def main():
             skills.symlink_to(Path('..') / '.agents' / 'skills', target_is_directory=True)
         print(f'Linked {skills} -> {versioned}')
     subprocess.run(['uv', 'sync'], cwd=ROOT, check=True)
+    calc = ROOT / 'tools' / 'calc'
+    if (calc / 'package-lock.json').is_file() and not (calc / 'node_modules').is_dir():
+        npm = shutil.which('npm')
+        if not npm:
+            raise ValueError('tools/calc needs node_modules and npm is not on PATH')
+        log = ROOT / '.tmp' / 'worktree-setup-npm.log'
+        log.parent.mkdir(exist_ok=True)
+        with log.open('w', encoding='utf-8') as output:
+            done = subprocess.run([npm, 'ci', '--prefix', str(calc), '--no-audit', '--no-fund'], cwd=ROOT,
+                                  stdout=output, stderr=subprocess.STDOUT)
+        if done.returncode:
+            raise ValueError(f'npm ci for tools/calc failed; see {log}')
+        print(f'Installed tools/calc/node_modules (npm ci; log {log.relative_to(ROOT).as_posix()})')
     print(f'Ready: {session}; {branch}; {ROOT}')
     print('Source junctions are shared inputs: read only; generated caches may be written by existing extracts.')
 
