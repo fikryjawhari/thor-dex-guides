@@ -3,6 +3,7 @@ import {mkdir, writeFile} from 'node:fs/promises';
 import {Fraction, enumerateRandomBranches, highestScoreOdds, enumerateDamageScores, roundedPercentages, scoreLabel} from '../../template/calc/ai/enumerate.mjs';
 import {evaluateSingles as evaluateSinglesResult, BuildStateVariables, CalculateSwitch, getVarianceFromDamage} from '../../template/calc/ai/hardlove/index.mjs';
 const evaluateSingles = (state, options) => evaluateSinglesResult(state, options).moves;
+import {FindTargets, ChooseMove, doublesPickOrder, pickDoublesMon, presentDoublesMon} from '../../template/calc/ai/hardlove/doubles.mjs';
 import {BattleAI_CalcBaseDamage, BattleAI_CalcDamage, BattleAI_GetDynamicMoveType, BattleAI_GetTypeEffectiveness, BattleAI_IsParentalBondMove} from '../../template/calc/ai/hardlove/damage.mjs';
 import * as calc from '../../template/calc/ai/hardlove/calc.mjs';
 import {SOURCE_MOVE_TRAITS} from '../../template/calc/ai/hardlove/damage-data.mjs';
@@ -553,6 +554,25 @@ check('review: AI formula deliberately omits Wonder Room, sports and Ruin', () =
 });
 
 await mkdir(new URL('../../.tmp/ai-engine/', import.meta.url), {recursive: true});
+const doubleState = extra => ({foes: [chomp({moves: [CLAW]}), chomp({speed: 80, moves: [CLAW]})], players: [lax(), lax()], field: {}, ...extra});
+
+check('doubles faster: target-first ties then tied move, not uniform across all pairs', () => {
+  assert.deepEqual(FindTargets([{score: 1006, mask: 3}, {score: 1006, mask: 1}, {score: 0, mask: 15}]), [0, 1]);
+  assert.deepEqual(ChooseMove({mask: 3}).map(move => [move.index, exact(move.weight)]), [[0, {numerator: '1', denominator: '2'}], [1, {numerator: '1', denominator: '2'}]]);
+  const state = doubleState();
+  const result = presentDoublesMon(state, 0, pickDoublesMon(state, 0));
+  assert.deepEqual(result.pairs.map(pair => pair.percent), [50, 50]);
+  assert.equal(result.pairs.reduce((sum, pair) => sum + pair.percent, 0), 100);
+});
+
+check('doubles order: Trick Room, Lagging Tail, Stall and speed tie keep the initial slot', () => {
+  assert.deepEqual(doublesPickOrder(doubleState()), [0, 1]);
+  assert.deepEqual(doublesPickOrder(doubleState({field: {trickRoom: true}})), [1, 0]);
+  assert.deepEqual(doublesPickOrder(doubleState({foes: [chomp({item: 'Lagging Tail'}), chomp({speed: 50})]})), [1, 0]);
+  assert.deepEqual(doublesPickOrder(doubleState({foes: [chomp({ability: 'Stall'}), chomp({speed: 50})]})), [1, 0]);
+  assert.deepEqual(doublesPickOrder(doubleState({foes: [chomp(), chomp()]})), [0, 1]);
+});
+
 check('hard switch: hand-calculated integer variance, thresholds and Perish Song', () => {
   const state = {attacker: chomp(), defender: lax()};
   const ai = {...BuildStateVariables(state), livingMembersAttacker: 2, highestPostKoScoreFromParty: 104,

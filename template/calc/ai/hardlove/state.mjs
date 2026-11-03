@@ -6,7 +6,7 @@ import {BattlerKnowsThawingMove, BattlerPositiveStatChangesSum} from './helpers.
 
 const statNames = ['attack', 'defense', 'speed', 'spAttack', 'spDefense', 'accuracy', 'evasion'];
 
-function snapshotMon(state, mon, side) {
+export function snapshotMon(state, mon, side) {
   const facts = {...mon.facts};
   const snapshot = {...mon, ...facts, facts, moves: (mon.moves ?? []).slice(0, 4).map(move => ({...move, flags: [...(move.flags ?? [])]})), types: [...(mon.types ?? [])], statBoosts: {...mon.statBoosts}};
   snapshot.item = BattleAI_GetActiveItem(state, mon);
@@ -56,16 +56,18 @@ function damageTable(state, move, attacker, defender, defendingSide = 'defender'
 }
 
 export function BuildStateVariables(state) {
-  if (state.isDoubleBattle || state.field?.isDoubleBattle || state.field?.doubles || ['doubles', 'multi', 'tag'].includes(String(state.battleType ?? state.format ?? state.gameType ?? state.field?.gameType ?? '').toLowerCase()) || state.allies?.some(mon => mon && (mon.currentHP ?? mon.hp ?? 1) > 0)) throw new RangeError('Hardlove AI state currently supports singles only');
+  const isDoubleBattle = Boolean(state.isDoubleBattle || state.field?.isDoubleBattle || state.field?.doubles || ['doubles', 'multi', 'tag'].includes(String(state.battleType ?? state.format ?? state.gameType ?? state.field?.gameType ?? '').toLowerCase()));
   const attackerMon = snapshotMon(state, state.attacker, 'attacker');
   const defenderMon = snapshotMon(state, state.defender, 'defender');
   const field = state.field ?? {};
+  const ally = state.attackerAlly ?? state.allies?.[0];
+  const defenderAlly = state.defenderAlly ?? state.allies?.[1];
   const attackerLastUsedMove = state.attacker.facts?.lastUsedMove ?? '';
   const defenderLastUsedMove = state.defender.facts?.lastUsedMove ?? '';
   const defenderLastUsedMoveEffect = state.defender.facts?.lastUsedMoveEffect ?? defenderMon.moves.find(move => move.name === (defenderLastUsedMove?.name ?? defenderLastUsedMove))?.effect ?? '';
   const ai = {
     attackerMon, defenderMon, attacker: 'attacker', defender: 'defender', attackerSide: 'attacker', defenderSide: 'defender',
-    isDoubleBattle: false, isAllyAlive: false, partnerCanAttack: false, isPartnerGrounded: false, defenderAllyHasMagicBounce: false,
+    isDoubleBattle, isAllyAlive: Boolean(isDoubleBattle && ally?.currentHP > 0), partnerCanAttack: false, isPartnerGrounded: false, defenderAllyHasMagicBounce: false,
     partnerClicksAttackingMove: false, ignoreTarget: false, partnerMoveNo: '', attackerMove: '', attackerMoveEffect: '',
     highestPostKoScoreFromParty: state.facts?.highestPostKoScoreFromParty ?? 0,
     postKoScoringPosition: state.facts?.postKoScoringPosition ?? -1,
@@ -92,6 +94,14 @@ export function BuildStateVariables(state) {
     attackerMoveUsable: [false, false, false, false], defenderMoveUsable: [false, false, false, false],
     ...partyFacts(state, 'attacker'), ...partyFacts(state, 'defender'),
   };
+  if (ai.isAllyAlive) {
+    ai.aimonAlly = snapshotMon(state, ally, 'attacker');
+    ai.isPartnerGrounded = ai.aimonAlly.isGrounded;
+    ai.partnerCanAttack = !['slp', 'frz'].includes(ally.status) && !ally.facts?.recharge
+      && ally.moves.some((move, index) => move.category !== 'Status' && IsMoveUsable(state, ally, move, ally.facts?.lastUsedMove, index));
+  }
+  ai.defenderAllyHasMagicBounce = Boolean(isDoubleBattle && defenderAlly?.currentHP > 0 && defenderAlly.ability === 'Magic Bounce' && !attackerMon.hasMoldBreaker);
+  ai.defenderAllySpeed = isDoubleBattle && defenderAlly?.currentHP > 0 ? snapshotMon(state, defenderAlly, 'defender').speed : 0;
   attackerMon.partnerMoveNo = ai.partnerMoveNo;
   const speed = AI_IsClient2Faster(state, defenderMon, attackerMon);
   ai.playerMovesFirst = speed === 0;

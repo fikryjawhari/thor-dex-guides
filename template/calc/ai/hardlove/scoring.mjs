@@ -37,7 +37,6 @@ const unsigned = value => integer(value) >>> 0;
 
 function sourceContext(state, inputAi, random) {
     if (typeof random !== 'function') throw new TypeError('Scoring requires an explicit random(modulus) function');
-    if (inputAi.isDoubleBattle) throw new RangeError('Hardlove scoring currently supports singles only');
     const attackerMon = sourceMon(inputAi.attackerMon ?? state.attacker);
     const defenderMon = sourceMon(inputAi.defenderMon ?? state.defender);
     const field = state.field ?? {};
@@ -46,13 +45,16 @@ function sourceContext(state, inputAi, random) {
     const weather = id(field.weather);
     let field_condition = ({ SAND: 1, SANDSTORM: 1, SNOW: 2, HAIL: 4, RAIN: 8, RAINDANCE: 8, SUN: 16, SUNNYDAY: 16, HARSHSUNSHINE: 16, HEAVYRAIN: 8, DESOLATELAND: 16, PRIMORDIALSEA: 8, FOG: 32 }[weather] ?? 0);
     for (const name of ['fog', 'trickRoom', 'gravity', 'uproar']) if (facts[name] ?? field[name]) field_condition |= FLAGS[`FIELD_CONDITION_${name.replace(/[A-Z]/g, letter => `_${letter}`).toUpperCase()}`];
-    const ai = { ...inputAi, attackerMon, defenderMon, attacker: 0, defender: 1, attackerSide: 0, defenderSide: 1, isDoubleBattle: false, isAllyAlive: false };
+    const ai = { ...inputAi, attackerMon, defenderMon, attacker: 0, defender: 1, attackerSide: 0, defenderSide: 1 };
+    if (ai.aimonAlly) ai.aimonAlly = sourceMon(ai.aimonAlly);
     for (const name of ['attackerLastUsedMove', 'defenderLastUsedMove', 'partnerMoveNo']) ai[name] = id(ai[name]);
     ai.defenderLastUsedMoveEffect = effect(ai.defenderLastUsedMoveEffect);
-    const moveTbl = Object.fromEntries([...(state.attacker.moves ?? []), ...(state.defender.moves ?? [])].map(move => [id(move.name), { ...move, effect: effect(move.effect), split: id(move.category), secondaryEffectChance: move.secondaryEffectChance ?? 0, target: move.target }]));
+    const empty = {currentHP: 0, totalHP: 1, moves: [], types: [], facts: {}};
+    const battlers = [state.attacker, state.defender, state.attackerAlly ?? state.allies?.[0] ?? empty, state.defenderAlly ?? state.allies?.[1] ?? empty];
+    const moveTbl = Object.fromEntries(battlers.flatMap(mon => mon.moves ?? []).map(move => [id(move.name), { ...move, effect: effect(move.effect), split: id(move.category), secondaryEffectChance: move.secondaryEffectChance ?? 0, target: move.target }]));
     moveTbl.NONE = { effect: '', split: 'STATUS', secondaryEffectChance: 0 };
     const context = {
-        state, ai, battlemon: [sourceMon(state.attacker), sourceMon(state.defender)], moveTbl, field_condition,
+        state, ai, battlemon: battlers.map(sourceMon), moveTbl, field_condition,
         terrainOverlay: { type: id(field.terrain).replace(/TERRAIN$/, ''), numberOfTurnsLeft: facts.terrainTurns ?? field.terrainTurns ?? (field.terrain ? 1 : 0) },
         side_condition: sides.map(side => bits({ ...side, spikes: side.spikes ?? side.spikesLayers, toxicSpikes: side.toxicSpikes ?? side.toxicSpikesLayers }, sideFlags)),
         scw: sides.map(side => ({ spikesLayers: side.spikesLayers ?? side.spikes ?? 0, toxicSpikesLayers: side.toxicSpikesLayers ?? side.toxicSpikes ?? 0 })),
@@ -1883,7 +1885,7 @@ function BasicScoringPort(battleSystem, attacker, moveIndex, ai)
 
 const HasType = (context, battler, type) => (context.battlemon[battler].types ?? []).some(name => id(name) === type);
 const GetBattlerAbility = (context, battler) => context.battlemon[battler].ability;
-const BattleWorkClientSetMaxGet = () => 2;
+const BattleWorkClientSetMaxGet = battleSystem => battleSystem.sp.ai.isDoubleBattle ? 4 : 2;
 const BATTLER_ALLY = battler => battler ^ 2;
 const IS_ITEM_BERRY = item => item.endsWith('BERRY');
 const HeldItemHoldEffectGet = (context, battler) => ({ CHOICEBAND: 'CHOICEATK', CHOICESCARF: 'CHOICESPEED', CHOICESPECS: 'CHOICESPATK' }[battler === 0 ? context.ai.attackerMon.item : context.ai.defenderMon.item] ?? 'NONE');
@@ -1896,7 +1898,7 @@ const IsUsedMoveEncouragedToEncore = (battleSystem, move, moveEffect) => helpers
 const IsBattleMonSlowerThanOpposition = (context, ai, mon) => calc.IsBattleMonSlowerThanOpposition(context.state, { ...ai, defenderMon: ai.defenderMon.source }, mon.source);
 
 function moveById(battleSystem, move) {
-    return [...(battleSystem.sp.state.attacker.moves ?? []), ...(battleSystem.sp.state.defender.moves ?? [])].find(known => id(known.name) === move) ?? { name: move };
+    return battleSystem.sp.battlemon.flatMap(mon => mon.source.moves ?? []).find(known => id(known.name) === move) ?? { name: move };
 }
 
 const HasMovePranksterPriority = (battleSystem, attacker, move, ability, defender) => calc.HasMovePranksterPriority(battleSystem.sp.state, battleSystem.sp.battlemon[attacker].source, moveById(battleSystem, move), battleSystem.sp.battlemon[defender].source);
