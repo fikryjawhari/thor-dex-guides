@@ -413,6 +413,25 @@ const checks = [
     },
   },
   {
+    id: 'gauntlet markers',
+    title: 'chain members only: one dot per member under the name inside the trainer bar, which stays 22 px; plain trainers none',
+    sizes: [[260, 316], [480, 316]],
+    skip: gauntletChain() ? '' : 'no gauntlet chain',
+    run: async page => {
+      const chain = gauntletChain(), plain = D.TR.g.flatMap(g => g.sec.flatMap(s => s.tr)).find(t => !t.gc && !t.st && t.p.length);
+      await page.route('#/calc');
+      for (const k of [...chain, plain.k]) {
+        await page.value(`CALC.enter(${JSON.stringify(k)},0)`);
+        await page.settle();
+        const m = await page.value(`(()=>{const r=e=>e.getBoundingClientRect(),q=s=>document.querySelector(s),d=[...document.querySelectorAll('.fbar .gcdots i')].map(r),b=r(q('.fbar .dsrc')),n=r(q('.fbar .nm'));
+          return {dots:d.length,inside:d.every(x=>x.left>=b.left&&x.right<=b.right),below:d.every(x=>x.top>=n.bottom-1),h:[...document.querySelectorAll('.fbar .nav,.fbar .dsrc')].map(e=>Math.round(r(e).height))};})()`);
+        assert.equal(m.dots, k === plain.k ? 0 : chain.length, `${k}: dots`);
+        assert.ok(m.inside && m.below, `${k}: dots under the name, inside the button ${JSON.stringify(m)}`);
+        if (page.width < 480) assert.deepEqual(m.h, [22, 22, 22], `${k}: trainer bar 22 px`);
+      }
+    },
+  },
+  {
     id: 'field wheel',
     title: 'the wheel over Field\'s open box scrolls the page once the box is at its end',
     sizes: [[260, 316], [480, 392]],
@@ -427,6 +446,11 @@ const checks = [
     run: wheelOverGrid,
   },
 ];
+
+// The guide's longest gauntlet chain (trainer gc, not a starter variant), or null.
+function gauntletChain() {
+  return D.TR.g.flatMap(g => g.sec.flatMap(s => s.tr)).filter(t => t.gc && !t.st).map(t => t.gc).sort((a, b) => b.length - a.length)[0] || null;
+}
 
 // A custom set named by species, through the + New picker (typed search, then the first match).
 async function pickMineCustom(page, species) {

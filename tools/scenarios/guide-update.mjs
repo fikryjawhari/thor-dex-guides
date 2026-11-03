@@ -165,6 +165,7 @@ const checks = [
       const was = await page.value(SNAPSHOT);
       for (const [kind, v] of Object.entries(was)) if (v !== null && (STOP || kind !== 'walkTicks')) assert.ok(JSON.stringify(v).length > 4, `nothing saved for ${kind}: ${JSON.stringify(v)}`);
       assert.ok(!JSON.stringify(was).includes('gone:'), `the guide as built reads its own state: ${JSON.stringify(was)}`);
+      if (data.cfg.calc && X.t.gc) assert.ok(was.gauntlet && was.gauntletSlots, `gauntlet chain state loads: ${JSON.stringify([was.gauntlet, was.gauntletSlots])}`);
       if (MSTOP) {
         assert.deepEqual(was.missionsOpen.map(x => x[2]), [true, false], 'one mission open, one closed');
         assert.ok(!/"\d+(\.\d+)+"/.test(await page.value(`JSON.stringify(misMap())`)), 'mission records hold no positions');
