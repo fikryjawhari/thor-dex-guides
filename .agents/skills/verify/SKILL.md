@@ -23,7 +23,9 @@ checkout, shared by every worktree), so a rerun on unchanged guides is free; `--
 
 Scenarios for an area, every guide at once (8 at a time by default; more only slows each run):
 `uv run python -X utf8 -I tools/gate.py scenarios [hack ...] --only calc-layout,calc-controls`
-(names are the stems in `tools/scenarios/`; no `--only` runs all of them; no hack runs every built guide).
+(names are the stems in `tools/scenarios/`; no `--only` runs all of them; no hack runs every built guide). It lints
+first (`gate.py lint [--fix]`: CRLF, BOM, control bytes, invalid UTF-8) and reassembles any guide whose dist is older
+than its inputs.
 
 ## 2. End of the job
 
@@ -31,13 +33,15 @@ Scenarios for an area, every guide at once (8 at a time by default; more only sl
 no hack named = all). It rebuilds, compares with the baseline (`gate.py baseline [ref]`, see `tools/README.md` →
 Standard gates), then runs every browser check (domcompare both modes, consistency, walk-state, the mockup checks,
 scenarios) 8 at a time on every named guide; a check that fails in the pool reruns alone and, passing then, is listed
-as FLAKY (timing under load, not a failure). Read the summary line and every FAIL: a difference the job intended (a
-page it changed) is fine; say so when reporting.
-The gate only means something when its baseline is the last good state (`.tmp/baseline/manifest.json` → ref): right
-after a merge into `main`, or recaptured at `main` before merging a branch. A baseline older than the branch (the calc
-branch's is from before the calc) flags every page; then answer "did this job change anything else" by building the
-job's start commit (step 3.2) and running `domcompare` on the routes the job touched, plus a hash of the other guides'
-dist with the build date removed.
+as FLAKY (timing under load, not a failure). Read the summary line and every FAIL.
+Differences the job intended are declared before the run, not read off a failure:
+`--accept-data '[hack:]TR.g[].sec[].tr[].gc,MV[].aiEffect'` (data paths, `[]` any index) and
+`--accept-routes '[hack:]#/calc'` (domcompare route globs), or the same in `.tmp/accept.json`
+(`tools/README.md` → Standard gates). Anything else that differs still fails, named by path or route; report the
+accepts used. The footer's build date is normalised away.
+The baseline is captured automatically from `git merge-base HEAD main` when there is none or it isn't an ancestor of
+HEAD (the SHA is printed); `gate.py baseline <ref>` pins another one. A baseline older than the branch flags
+everything the branch changed: declare those changes as accepts, or baseline the job's start commit.
 UI changes also end in the Thor frame on the phone preview (`python -X utf8 -I tools/preview.py <page> <name>.html --frame`).
 
 ## 3. A failure

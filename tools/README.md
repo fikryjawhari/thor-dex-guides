@@ -19,8 +19,8 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | Script | What it does |
 | --- | --- |
 | `new_hack.py <hack> --like <built hack> [--title name] [--version N] [--ls-prefix prefix] [--dry-run] [--force]` | Stdlib scaffold: config, notes / source headings, empty sprites, extract modules / check, gate rebuild and calc scenario / engine-check stubs. No data or other hack's mechanics / fixtures; calc off. Details below. |
-| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N] [--fresh]` / `scenarios [hack ...] [--only a,b] [--jobs N] [--fresh]` | Captures committed HTML/data/reports at a ref; rebuilds data, then runs every browser check (DOM, consistency, walk-state, mockup checks, scenarios) on every named guide, N at a time (default 8), failures rerun alone, passes cached by content. `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
-| `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` and the main checkout's `.tmp/item-icons/` cache when present (Windows junctions, no copying), then `uv sync`; no hacks means every built guide. Refuses other claims or existing source/cache copies. Release removes only the matching claim. |
+| `gate.py baseline [ref]` / `check [hack ...] [--data] [--template] [--jobs N] [--fresh] [--accept-data S] [--accept-routes S]` / `lint [--fix]` / `scenarios [hack ...] [--only a,b] [--jobs N] [--fresh]` | Captures committed HTML/data/reports at a ref; rebuilds data, then runs every browser check (DOM, consistency, walk-state, mockup checks, scenarios) on every named guide, N at a time (default 8), failures rerun alone, passes cached by content. `scenarios` runs only `scenarios/` on the built dist (no rebuild or baseline), `--only` some of them by name. Stdlib orchestration; run with `uv run python -I`. Standard gates below. |
+| `worktree_setup.py [hack ...] [--session name] [--release]` | Claims a worker checkout, links `.src/` and the main checkout's `.tmp/item-icons/` cache when present (Windows junctions, no copying), then `uv sync`, and `npm ci` for `tools/calc` when its lockfile is there but `node_modules` isn't (log `.tmp/worktree-setup-npm.log`); no hacks means every built guide. Refuses other claims or existing source/cache copies. Release removes only the matching claim. |
 | `scenarios/tracker-reload.mjs <guide.html>` | Seeded tracker state, Clear and reload at 260 × 316 in `dvkb`; assertions on the control and saved state. `scenarios/README.md` describes new spec checks. |
 | `scenarios/calc-*.mjs <guide.html>` | Calc page checks: layout, controls, state, import/bridge, mechanics and per-hack fields. Coverage, sizes and failure output: `scenarios/README.md` → Calc checks. |
 | `calc_check_lib.mjs` | Shared calc scenario harness: guide copies with fixture patches, role-based trainers and save IDs, isolated pages, hit-tested taps, number boxes/dvkb pad, real file input, error capture and result matrices. |
@@ -50,7 +50,7 @@ it on a bare runner. `pdftotext` (Git for Windows ships it) is also used.
 | `itemstd.py` | Items tab standard (the rules are its docstring): `standardise(D, RULES.get(hack, {}))` puts `D['IT']` and the walkthrough's item rows in the shared box set, sub-headings and Found / Wild / Also / Shop lines; idempotent. CLI: `python -X utf8 -I tools/itemstd.py <hack> [data.json]`. |
 | `tabs_check.py` | `python -X utf8 -I tools/tabs_check.py [hack ...]` after a build: Walkthrough and Trainers pages list the same trainers in the same order, and the cap a place / stop shows never goes down (optional boxes left out). Exit 1 on a problem. |
 | `browser.mjs` | Shared `startBrowser({profilePrefix, flags, onEvent, onDisconnect})` for domcompare, consistency, walk-state and mockup checks. Discovers Chrome / Edge (`CHROME` overrides), starts an isolated profile and CDP connection, and returns `{send, close}`; `close()` stops Chrome and removes the profile. Scenarios, navigation waits, assertions and per-check flags stay in callers. Requires Node 22+. |
-| `domcompare.mjs <old.html> <new.html> [--kb]` | Renders two builds route by route in headless Chrome and compares the DOM: every Pokémon, move, ability, item, nonempty move property, location and trainer page, then the list pages (options in its header; timing below). The check after any template change. |
+| `domcompare.mjs <old.html> <new.html> [--kb] [--accept-routes=globs]` | Renders two builds route by route in headless Chrome and compares the DOM: every Pokémon, move, ability, item, nonempty move property, location and trainer page, then the list pages (options in its header; timing below). The check after any template change. |
 | `consistency-check.mjs [hack ...]` | After `python assemble.py`: starter / player pickers and rival filtering, single caps, MGM, saved ticks, five viewer sizes on every page kind (Home, Locations, Trainers, Items, walkthrough, calc, a Pokémon, trainer, move, ability and item page), expanded pages and light theme, normal and `dvkb`, on every built guide (or the ones named). Requires Chrome or Edge. |
 | `walk-state-check.mjs` | `node tools/walk-state-check.mjs <old.html> <new.html> <legacy-stop-key>` checks walkthrough layout migration, every stop's saved state using the new build's migration function, fragment inheritance, real checkbox rendering (synthetic steps), Next step, uncheck/reset and reload, normal and `dvkb`. For an old build from before stop keys were stamped, use `1.8` for Eternal X or `1.0` for Photonic Sun; a current keyed baseline also works at `0.0`. With no arguments, compares each `.tmp/state-before/<hack>.html` snapshot against its `dist/` build at stop `0.0`; save those snapshots before rebuilding. Requires Chrome or Edge. |
 | `pngpal.py` | Reads, writes and crops palette PNGs (used by `sprites_pee.py` and `assemble.py`). |
@@ -132,7 +132,48 @@ uv run python -X utf8 -I tools/gate.py baseline main
 uv run python -X utf8 -I tools/gate.py check
 uv run python -X utf8 -I tools/gate.py check eternal-x --data
 uv run python -X utf8 -I tools/gate.py check --template
+uv run python -X utf8 -I tools/gate.py check hardlove-gold --data --accept-data 'TR.g[].sec[].tr[].gc,MV[].aiEffect'
+uv run python -X utf8 -I tools/gate.py check --accept-routes 'eternal-x:#/calc'
+uv run python -X utf8 -I tools/gate.py lint [--fix]
+uv run python -X utf8 -I tools/gate_test.py
 ```
+
+Always `python -X utf8 -I`: `-I` ignores `PYTHONUTF8` / `PYTHONIOENCODING`, and a redirected stdout is then cp1252,
+where a `♂` or `é` crashed the print. The gate also reconfigures its own stdout / stderr to UTF-8 (`errors=replace`)
+and starts every Python child with `-X utf8`; `extractlib` does the same on import, so every extract is covered.
+
+**Lint** (`textlint.py`, first in `check` and `scenarios`, alone as `gate.py lint`; ~0.5 s): tracked and
+untracked-not-ignored text under `tools/`, `template/`, `hacks/*/` (not `.src`), `assemble.py` and every `*.md`;
+binaries skipped by extension and git's `binary` / `-text` attribute. Fails on CRLF, a UTF-8 BOM, invalid UTF-8 and
+C0 control bytes other than tab and newline (NUL, ESC, a lone CR, DEL), each named `path:line`. A lint failure stops
+the gate before anything slow. `--fix` rewrites CRLF to LF and drops BOMs; control bytes are fixed by hand (a raw one
+in a JS / Python string is usually a missing escape).
+
+**Auto-baseline**: `check` with no `.tmp/baseline`, or one whose SHA isn't an ancestor of HEAD, first captures
+`git merge-base HEAD main` and prints the SHA. An explicit `baseline <ref>` still wins while it is an ancestor.
+
+**Accepts** (`gateaccept.py`): a job's intended changes are declared, not hand-diffed or hidden with a new baseline.
+- `--accept-data <spec>`: a comma list of `[hack:]path`; `path` is keys joined by `.`, `[]` for any list index, `*`
+  for any one key, and covers everything under it (`TR.g[].sec[].tr[].gc`, `MV[].aiEffect`, `MV[]`). The data check
+  then walks the structural diff against the baseline: it passes when every added, removed or changed value is under
+  an accepted path, and otherwise fails listing each other path with counts and a concrete example
+  (`MV[].aiChance: 783 added (e.g. MV[0].aiChance)`). The top-level `built` stamp is always ignored.
+- `--accept-routes <spec>`: `[hack:]glob` list (`#/calc`, `#/tr/*`) passed to domcompare: an accepted route that
+  differs is printed as `accepted, differs` and doesn't fail; every other route still must match.
+- `.tmp/accept.json` in the checkout the gate runs in is read on every `check` and merged with the flags:
+  `{"data": {"*": [...], "hardlove-gold": ["TR.g[].sec[].tr[].gc"]}, "routes": {"eternal-x": "#/calc"}}`. It is
+  under `.tmp/` on purpose: it can't be committed, so an accept never reaches `main` or outlives the job. The parent
+  that merges and audits writes it once for the job and deletes it after the gate. The gate prints every accept
+  it applies (`Accepting data on <hack>: ...`).
+
+**Build freshness**: `scenarios` compares each guide's `dist/<hack>.html` with what `assemble.py` reads
+(`template/**`, the hack's `data.json` / `hack.json` / `sprites.json` / `calc_effects.json`, `sprites/index.json`,
+`assemble.py`) by mtime; an older or missing build is reassembled first (`Build freshness: dist/x.html is older than
+template/dex.css; reassembling`, then an `assemble-stale` line). `check --template` assembles every guide anyway.
+
+domcompare normalises build stamps before comparing (`domnorm.mjs`: the footer's `built <date>`), so a rebuilt
+`data.json` no longer fails every route. One guide's sweep without the whole gate (Chrome-busy rule as above):
+`MSYS_NO_PATHCONV=1 node tools/domcompare.mjs .tmp/baseline/dist/<hack>.html dist/<hack>.html --accept-routes=#/calc`.
 
 Capture the accepted pre-change ref once. `git archive` extracts committed files into a temporary directory under
 `.tmp/`, builds there, then retains HTML, data and reports in `.tmp/baseline/`; it never switches the working tree
@@ -142,7 +183,7 @@ committed first data build; without that the gate fails explicitly rather than s
 
 Neither flag means both halves; both flags also run both. No hack names means every built guide. Data rebuilds
 use the explicit `REBUILDS` table: EX/PS/HG raw, EI `itemstd.py`; unknown paths fail until added.
-Data compares ignore only the top-level `built` stamp; reports compare byte-for-byte. Counts report species,
+Data compares ignore only the top-level `built` stamp and accepted paths (above); reports compare byte-for-byte. Counts report species,
 trainer cards, item rows and walkthrough stops. Stamp-only rebuilds restore the original data file bytes.
 
 Template checks assemble every guide, then queue every browser check for each selected guide: domcompare
@@ -152,7 +193,8 @@ every `scenarios/*.mjs`; tabs runs inline. The queue runs `--jobs` at a time (de
 end: passing then, it counts as a pass and the summary lists it as FLAKY (timing under load); failing again, it fails.
 Mockup tools that only print diagnostics are treated as failures on page errors, bad jumps or wrong route bars;
 their detailed geometry output remains a review log, not an invented assertion. Logs: `.tmp/gate/<run>/`, with
-one PASS/FAIL line per check and a total time; any failure exits 1. No baseline refreshes or DOM ignores on failure.
+one PASS/FAIL line per check and a total time; any failure exits 1. No baseline refreshes or DOM ignores on failure:
+intended changes go in the accepts.
 
 Result cache: a browser check that passes is recorded in the main checkout's `.tmp/check-cache/` (shared by every
 worktree) under the sha256 of what it reads: its command, the check script and every module it imports, the guide's

@@ -6,12 +6,15 @@ explicit task authorisation and provider-specific instructions still win.
 ## Setup
 - Read AGENTS.md, CLAUDE.md, PROGRESS.md and the task's spec/findings before editing. Recheck affected code.
 - Use the supplied fresh worker branch/worktree from the parent's accepted SHA. In T3 the parent binds it with
-  workspace tools. Do not switch another checkout, create a top-level thread or edit the integration/main checkout.
+  workspace tools. T3 creates the worktree from main: stay on the bound branch and `git merge --ff-only <sha>`;
+  verify HEAD. Do not switch another checkout, create a top-level thread or edit the integration/main checkout.
 - Other worktrees are read-only. Check both claim paths; do not overwrite another session's claim or dirty work.
 - Run `python -X utf8 -I tools/worktree_setup.py [hack ...] --session <stable-name>`: claim, source junctions, `uv sync`.
   Sources are shared inputs, not worker-owned files; never edit them. Existing extract caches are the exception.
   Existing source copies are not replaced automatically. Ask before removing or replacing them.
+- Python runs as `python -X utf8 -I` (`-I` drops PYTHONUTF8; without `-X utf8` a redirected `♂` crashes the print).
 - Run `uv run python -X utf8 -I tools/gate.py baseline <accepted-ref>` once before edits; record its SHA and path.
+  (`check` with none captures `git merge-base HEAD main` itself and prints the SHA.)
   `git archive` captures committed data/reports and builds HTML without switching checkouts or needing raw inputs.
 - Briefs (the parent's side) give the task, owned files, the exact line ranges / functions to read, checks and the
   stop point; not background the agent can read itself, and not whole prior reports (pass the findings list only).
@@ -31,6 +34,8 @@ explicit task authorisation and provider-specific instructions still win.
 - Own only the task's files. No template/extract/data edits outside the stated scope. Raise shared-file conflicts.
 - Keep each finding or coherent group small and independently testable. Introduce a helper, switch one caller and
   check, then the other. Do not leave a large rewrite without a working checkpoint.
+- `uv run python -X utf8 -I tools/gate.py lint [--fix]`: CRLF, BOM, control bytes, invalid UTF-8; `check` and
+  `scenarios` run it first and stop on a hit.
 - `uv run python -X utf8 -I tools/gate.py check [hack ...] --data` rebuilds data and compares it/report/counts with baseline.
 - Browser checks: only the ones the brief names (`gate.py scenarios <hack> --only ...`, a `domcompare --routes`).
   No full `gate.py check` on every guide unless the brief says this unit ends the job: the parent runs the full
@@ -40,7 +45,9 @@ explicit task authorisation and provider-specific instructions still win.
 - Saved state (localStorage) never stores a position in the data (an index into `M` / `MV` / `AB` / `P` / `LOC` / `TR` / `WK` / `IT`): store names or stable keys, map them back on load, handle a gone
   one, keep older formats loading (`template/README.md` → the Rule bullet). Template work that adds saved state adds
   it to `tools/scenarios/guide-update.mjs`'s snapshot.
-- Intended DOM/data changes need explicit acceptance, not a new baseline or `--ignore` used to hide failures.
+- Intended DOM/data changes need explicit acceptance, not a new baseline or `--ignore` used to hide failures:
+  `gate.py check --accept-data '[hack:]MV[].aiEffect,...' --accept-routes '[hack:]#/calc'` (or `.tmp/accept.json`;
+  `tools/README.md` → Standard gates). The brief names the accepts; the report lists the ones used.
 
 ## Commits and handover
 - Commit locally only when authorised. Small commits, no trailers; `git status` first, stage files by name.
