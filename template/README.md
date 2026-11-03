@@ -123,6 +123,22 @@ The extract helpers apply most of these rules.
 
 ### Damage calculator
 
+`cfg.calc.ai: "hardlove"` opts Hardlove into its command AI. `assemble.py` adds the standalone
+`template/calc/ai/hardlove.js` bundle, `ai/ui.js` adapter and `ai/ui.css` only for that profile; other guides do not
+include those resources. Rebuild the committed bundle with `node tools/calc/build_ai.mjs` after AI module changes
+(the assembly/Pages build stays Python-stdlib-only). The damage engine and its numbers are independent of the AI.
+Foe move rows, including status rows, have a 30 px odds/score column (12 px bold percent, 9 px muted score; zero
+muted, `A` for ally-only scores, `Lock` for a locked move). The largest displayed percent gets the 3 px accent bar.
+Closed rows stay 32 px; move names give up space first. In doubles the displayed percent is the move into the viewed
+player, or its ally-only percent; expanded rows list every target and the score distribution's base/bonus branches.
+In singles a nonzero hard-switch chance appears as `Sw 13%` on the foe card's HP line, before battle-state tags;
+it is also a `.dvol` tag so `fitCards` includes it in the three-line fitting pass. Move odds plus Sw total 100.
+`CALC.ai` exposes the adapter, explicit per-mon scratch `facts`, stable implicit active slots and cached engine
+results for the follow-up grid/toggle UI. Nothing in AI state or returned party indices is saved. Facts default to
+inactive/unknown; first-turn-out defaults true on entry and false after a damage tap to/from the viewed mon.
+Card reset, a switch away, fight reset and gauntlet battle changes clear the appropriate facts. See Hardlove's notes
+for the input/default boundary; field facts the calc already models are never duplicated as AI toggles.
+
 Profiles may declare `monControls` (`k`, `l`, `abilities`) for per-Pokémon battle-state checkboxes. EI uses
 `abilityOn` for First turn out (Bull/Quill Rush) and Disguised (Illusion); off is the default. Ability controls sit on
 the card's header line, left of Edit, no taller than Edit (the card keeps the height of one without them), with an

@@ -375,6 +375,49 @@ is what the game shows if the point goes the other way.
 
 ### Damage calc / AI
 
+#### Guide wiring (unit 3a)
+
+The Hardlove calc profile alone declares `ai: "hardlove"`. `tools/calc/build_ai.mjs` bundles the engine and
+metadata into `template/calc/ai/hardlove.js` (esbuild, IIFE); assembly inlines it, `ai/ui.js` and `ai/ui.css` only
+when that switch is set. No runtime import, fetch or extra file is needed. Other guides retain their damage
+engine and render path without AI resources or UI. Rebuild this bundle separately from the shared damage engine.
+
+`extract/dex.py` writes `MV.aiEffect` (source effect without `MOVE_EFFECT_`) and `MV.aiChance` (source
+`effectChance`, 0..100) for all 783 moves; schema accepts/validates both. Other data/report content is unchanged.
+The adapter restores the source's variable-power marker 1 from a damaging move's null `bp`, translates targeting
+names where the AI needs source constants, and passes source flags/chance rather than generic effect text.
+
+`CALC.ai.input()` builds complete parties in their original order and explicit active-party mappings. It resolves
+the calc's Mega view, pre-stage stats, form/base species via `GID.sp`, effective types/ability, raw available item,
+HP/status/stages, both side fields and move overrides. Weight and Fling/Natural Gift metadata use the same pinned
+stock dataset/name fallbacks as the damage engine, with profile species-weight overrides; Mega Stone metadata is
+derived from `P.stone`, not a toggle. Item suppression stays in the AI snapshots. Unselected party mons retain their
+stored set/form, without outgoing scratch boosts or history. A missing doubles partner is an explicit dead slot,
+mapped to a call-local empty party entry; real fainted actives retain their actual party index.
+
+Implicit `CALC.ai.slots` hold card keys, not data indices: viewing either active leaves opposite/across positions
+alone (important for the unit 2 C exceptions). Selecting a bench mon replaces the viewed slot. The engine input
+contains ephemeral party indices only; neither these nor any reordered grid is persisted. `viewed` identifies the
+currently inspected active; `parties()` maps card keys back to the unreordered input sets. Unit 3b can use these
+hooks for the field/bench controls and `switchInOrder(options)` for rank distributions.
+
+Unknown battle history is an explicit per-mon `facts` object. `setFacts(side, patch)` overrides defaults for 3b;
+firstTurnOut Auto is true on entry, becomes false after the first damage tap to/from it, and resets when it leaves.
+Other unknown flags/counters default false/0, last move/choice/Encore/Disable/Recycling item empty, sex unknown;
+sleep uses the engine's default two remaining turns when asleep. Existing Focus Energy, Laser Focus, Seeded,
+Ingrain/Aqua Ring/Magnet Rise/Roost, semi-invulnerability, Toxic count and ability activation feed it from calc state.
+Hidden Power, item powers/removability, Mega Stone presence, party survival and Paradox stat are metadata/derived
+inputs, not battle toggles. Escape prevention derives the known opposing trapping abilities and current typing;
+`cantEscape` and active `perishSong` also accept explicit overrides. Complete input JSON keys the one-result cache.
+`clearBattle()` clears AI scratch and slots; `memberDirty()` counts changed AI facts; card ↺ clears that mon's facts.
+No new localStorage keys or persisted fields are introduced.
+
+Foe rows display unconditional move odds (the viewed target in doubles, ally odds for ally-only moves), score
+branches and the maximum-% accent. Expanded doubles rows list all target pairs, including zero-probability targets,
+then each score distribution's base and bonus outcomes. Singles `Sw N%` is a battle-state-sized chip on the HP line;
+`fitCards` treats it like the other battle-state tags. The engine owns all rounding, including the 100% remainder.
+Unit 3b still supplies grid order/rank numbers, doubles tap controls and Field → AI toggles; none are built here.
+
 The trainer AI (`src/trainerai/`, pinned `4a8d4a6308`, fetch: SOURCES.md) is ported headless in
 `template/calc/ai/` (plan: `plans/calc-ai.md`). Singles/doubles picks, hard switching and post-KO ranks are headless;
 unit 3 still supplies the guide-data/state adapter, assembly and UI.
@@ -388,8 +431,8 @@ unit 3 still supplies the guide-data/state adapter, assembly and UI.
 - Input state: `{attacker, defender, field}`; a mon is `{species, level, types, ability, item, status ('slp' ...),
   attack, defense, spAttack, spDefense, speed, currentHP, totalHP, statBoosts {attack ...}, moves [{name, type,
   category, power, effect, priority, flags, target, pp?, secondaryEffectChance?}], facts {...}}`. Move `effect` /
-  `secondaryEffectChance` come from `data/Moves.c` (`.effect`, `.effectChance`): not in `data.json` yet (the wiring
-  unit adds them to the extract). No `pp` = usable (the calc has no PP).
+  `secondaryEffectChance` come from `data/Moves.c` (`.effect`, `.effectChance`), via `MV.aiEffect` / `MV.aiChance`.
+  No `pp` = usable (the calc has no PP).
 - Rolls (setupStateVariables.c): one `BattleRand % 16` per hit (85-100 %, after crit, before STAB), Triple Axel /
   Kick and Parental Bond roll each hit and sum; then `BattleAI_AdjustUnusualMoveDamage`; a killing roll is capped at
   the target's HP. Damage the AI receives: the max roll. Scoring reads only its own move's roll plus the max over all

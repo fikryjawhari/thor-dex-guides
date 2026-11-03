@@ -27,6 +27,7 @@ Import scenarios inject `template/calc/readers/test.js`; real reader checks use 
 
 | File | Coverage |
 | --- | --- |
+| `calc-ai.mjs` | Hardlove foe columns vs an independent node engine call, move/switch sums, scratch Auto/lock/Taunt hooks, doubles targets/ally odds/stable slots; no AI resources/UI on other guides. |
 | `calc-layout.mjs` | Fit, long names, scroll stops, box size, wide columns and foe list/strip; includes the 222 px resize and 61-Pokémon box. |
 | `calc-controls.mjs` | Attack taps, caps, trainer navigation, speed/stages, HP, crit, hits, moves, Mega, custom/unknown sets. |
 | `calc-import.mjs` | Save/reset/re-import, four error banners and empty states. |
