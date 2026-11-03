@@ -4,7 +4,7 @@ const id=name=>String(name||'').toLowerCase().replace(/[^a-z0-9]/g,'');
 const stages=['attack','defense','spAttack','spDefense','speed'];
 const forms=new Map(),bases=new Map(),stones=new Set(data.P.map(mon=>mon.stone).filter(Boolean));
 for(const [key,value] of Object.entries(data.GID.sp)){const [species,form]=key.split(':').map(Number);if(!forms.has(value))forms.set(value,{species,form});if(form===0)bases.set(species,byId[value]?.n);}
-const facts={},slots={mine:[],foe:[]},viewed={mine:0,foe:0};
+const facts={},manual={},slots={mine:[],foe:[]},viewed={mine:0,foe:0};
 let cacheKey='',cached=null,lastInput=null,lastParties=null;
 const empty=()=>({species:'',level:1,types:[],ability:'',item:'',status:'',attack:1,defense:1,spAttack:1,spDefense:1,speed:1,currentHP:0,totalHP:1,statBoosts:{},moves:[],facts:{}});
 const metadata=(kind,name)=>api.metadata[kind][id(name)]||{};
@@ -24,7 +24,7 @@ function syncSlots(side,party,doubles){
  if(!slots[side].includes(key)){const view=Math.min(viewed[side],count-1),down=slot=>{const entry=party.find(entry=>entry.key===slots[side][slot]);return !!entry&&!(ctx.resolve(ctx.megaView(entry.mon)).hp>0);},fainted=side==='foe'&&!down(view)?[0,1].slice(0,count).find(down):undefined;slots[side][fainted??view]=key;}
  while(slots[side].length<count)slots[side].push(null);
  for(let slot=0;slot<count;slot++)if(!slots[side][slot])slots[side][slot]=party.find(entry=>!slots[side].includes(entry.key))?.key||null;
- for(const previous of old)if(previous&&!slots[side].includes(previous))delete facts[previous];
+ for(const previous of old)if(previous&&!slots[side].includes(previous)){delete facts[previous];delete manual[previous];}
  viewed[side]=Math.max(0,slots[side].indexOf(key));
 }
 function move(index,key,slot,active){
@@ -52,6 +52,7 @@ function mon(entry,side,active,field){
  }
  if(!baseFacts.moveNoChoice&&baseFacts.lastUsedMove)baseFacts.moveNoChoice=baseFacts.lastUsedMove;
  if(!baseFacts.encoredMove&&baseFacts.encoredTurns)baseFacts.encoredMove=baseFacts.lastUsedMove;
+ if(!baseFacts.disabledMove&&baseFacts.disabledTurns)baseFacts.disabledMove=baseFacts.lastUsedMove;
  if((ability==='Protosynthesis'&&(['Sun','Harsh Sunshine'].includes(field.weather)||item==='Booster Energy'))||(ability==='Quark Drive'&&(field.terrain==='Electric'||item==='Booster Energy')))baseFacts.paradoxBoostedStat=api.BattleAI_GetHighestParadoxStat(attack,defense,spAttack,spDefense,speed);
  baseFacts.itemRemovable=baseFacts.heldItemRemovable;
  const stock=[api.speciesName(species.n),...api.weightNames(species.n)].map(name=>metadata('species',name)).find(entry=>entry.weightkg);
@@ -111,8 +112,48 @@ function grid(side){
  const rest=bench.filter(index=>!ranked.includes(index)),keys=[...field,...[...ranked,...(side==='foe'?rest.filter(alive):rest),...(side==='foe'?rest.filter(index=>!alive(index)):[])].map(index=>party[index].key)];
  return {keys,field:doubles?field.length:0,rank};
 }
-function damage(){for(const side of ['mine','foe']){const key=ctx.sideInfo(side).key;(facts[key]||={}).firstTurnOut=false;}}
-function clear(){for(const key of Object.keys(facts))delete facts[key];slots.mine=[];slots.foe=[];viewed.mine=viewed.foe=0;cached=null;cacheKey='';orderKey='';orderCached=null;lastInput=null;lastParties=null;}
+function damage(){for(const side of ['mine','foe']){const key=ctx.sideInfo(side).key;if(!manual[key]?.has('firstTurnOut'))(facts[key]||={}).firstTurnOut=false;}}
+function clear(){for(const key of Object.keys(facts))delete facts[key];for(const key of Object.keys(manual))delete manual[key];slots.mine=[];slots.foe=[];viewed.mine=viewed.foe=0;cached=null;cacheKey='';orderKey='';orderCached=null;lastInput=null;lastParties=null;}
+// Field → AI (template/README.md → Damage calculator, AI): the battle facts the AI reads that the calc can't know, for the
+// viewed on-field Pokemon of each side. Battle scratch (facts / manual): cleared on a switch, a new fight, ↺ and clearBattle.
+// on: the value a tap sets; cycle: values in turn; last: needs Last move; when: shown only then; derived: the input can set it.
+const TOGGLES={
+ foe:[{k:'firstTurnOut',l:'First turn',auto:true},{k:'protectSuccessTurns',cycle:[0,1,2],l:value=>['Protect ×0','Protect last turn','Protect 2 turns'][value]},{k:'tauntTurns',l:'Taunted',on:3},{k:'encoredTurns',l:'Encored',on:3,last:true},{k:'disabledTurns',l:'Disabled',on:4,last:true},{k:'torment',l:'Torment',last:true},{k:'substitute',l:'Substitute'},{k:'sleepCounter',cycle:[1,2,3],l:value=>'Sleep '+value,when:mon=>mon.status==='slp'},{k:'throatChopTimer',l:'Throat Chop',on:2},{k:'wishCount',l:'Wish',on:1},{k:'cantEscape',l:'Can’t escape',derived:true},{k:'perishSong',l:'Perish Song'},{k:'canBelch',l:'Ate berry',when:mon=>mon.moves.some(move=>move.name==='Belch')}],
+ mine:[{k:'firstTurnOut',l:'First turn',auto:true},{k:'confusion',l:'Confused'},{k:'attract',l:'Infatuated'},{k:'yawn',l:'Yawn'},{k:'nightmare',l:'Nightmare'},{k:'lockOn',l:'Lock-On'},{k:'imprisoned',l:'Imprison'},{k:'bindingTurns',l:'Bound',on:4},{k:'futurePredictionCount',l:'Future Sight',on:2},{k:'noCritical',l:'Lucky Chant'}],
+};
+let aiSide='foe';
+function activeOf(state,side){if(!state)return null;return state.foes?(side==='foe'?state.foes:state.players)[viewed[side]]:side==='foe'?state.attacker:state.defender;}
+const html=value=>String(value).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+function section(){
+ const state=input();let count=0;
+ const side=aiSide,mon=activeOf(state,side),key=ctx.sideInfo(side).key,own=facts[key]||{},set=manual[key]||new Set();
+ for(const each of ['mine','foe']){const other=ctx.sideInfo(each).key,stored=facts[other]||{},mine=manual[other]||new Set();count+=Object.keys(stored).filter(name=>name!=='firstTurnOut'||mine.has(name)).length;}
+ const segment=`<div class="dfsw" role="group" aria-label="AI side">${[['mine','Player'],['foe','Foe']].map(([value,label])=>`<button data-aiside="${value}" aria-pressed="${side===value}">${label}</button>`).join('')}</div>`;
+ if(!mon||!mon.species)return {count,body:segment+'<div class="dtg aitg"><span class="aiempty">No Pokémon on the field</span></div>'};
+ const last=mon.facts.lastUsedMove||'';
+ const buttons=TOGGLES[side].filter(toggle=>!toggle.when||toggle.when(mon)).map(toggle=>{
+  const value=mon.facts[toggle.k],auto=toggle.auto&&!set.has(toggle.k),derived=toggle.derived&&!own[toggle.k]&&!!value,disabled=toggle.last&&!last;
+  const label=typeof toggle.l==='function'?toggle.l(value||0):toggle.l,pressed=toggle.k==='sleepCounter'?false:!!value;
+  return `<button class="${auto||derived?'dauto':''}" data-aifact="${toggle.k}" aria-pressed="${pressed}"${disabled?' disabled title="Set Last move first"':''}>${html(label)}${auto||derived?'<sup>·A</sup>':''}</button>`;
+ }).join('');
+ const select=`<select class="ailast" data-ailast="${side}" aria-label="Last move"><option value="">Last move: none</option>${mon.moves.map(move=>`<option value="${html(move.name)}"${move.name===last?' selected':''}>Last: ${html(move.name)}</option>`).join('')}</select>`;
+ return {count,body:segment+`<div class="dtg aitg">${select}${buttons}</div>`};
+}
+function setFact(side,name,value){
+ const key=ctx.sideInfo(side).key,own=facts[key]||={};(manual[key]||=new Set()).add(name);
+ if(name==='firstTurnOut')own[name]=!!value;else if(value===undefined||value===false||value===0||value==='')delete own[name];else own[name]=value;
+ if(name==='lastUsedMove'&&!value)for(const locked of ['encoredTurns','disabledTurns','torment'])delete own[locked];
+ if(!Object.keys(own).length)delete facts[key];
+}
+function tapFact(name){
+ const side=aiSide,toggle=TOGGLES[side].find(toggle=>toggle.k===name),mon=activeOf(input(),side);if(!toggle||!mon)return;
+ const value=mon.facts[name];
+ if(toggle.cycle){const next=toggle.cycle[(toggle.cycle.indexOf(value||toggle.cycle[0])+1)%toggle.cycle.length];setFact(side,name,toggle.k==='sleepCounter'&&next===2?undefined:next);}
+ else setFact(side,name,value?(toggle.auto?false:undefined):toggle.on??true);
+}
+document.addEventListener('click',event=>{if(location.hash!=='#/calc')return;const button=event.target.closest('[data-aiside],[data-aifact]');if(!button||!button.closest('#app')||button.disabled)return;
+ if(button.dataset.aiside)aiSide=button.dataset.aiside;else tapFact(button.dataset.aifact);ctx.refresh();});
+document.addEventListener('change',event=>{if(location.hash!=='#/calc')return;const select=event.target.closest('select[data-ailast]');if(!select)return;setFact(select.dataset.ailast,'lastUsedMove',select.value);ctx.refresh();});
 const scoreText=value=>String(value??'—').replace(/-/g,'−');
 function chip(side){const result=side==='foe'?evaluate():null;return result&&!result.foes&&result.switch.percent>0?`<span class="dvol aiswitch" title="AI hard-switch chance">Sw ${result.switch.percent}%</span>`:'';}
 function displayed(){
@@ -156,7 +197,8 @@ function rows(output){
 }
 return {input,evaluate,damage,clear,grid,facts,slots,viewed,rows,chip,displayed,parties:()=>lastParties,current:()=>cached,lastInput:()=>lastInput,dirty:()=>Object.keys(facts).length>0,
  setFacts(side,patch){Object.assign(facts[ctx.sideInfo(side).key]||={},patch);},
- reset(key){delete facts[key];},
+ reset(key){delete facts[key];delete manual[key];},
+ section,
  switchInOrder(options){const state=input();if(!state)return null;return api.switchInOrder(state.foes?state:{foes:[state.attacker],players:[state.defender],foeParty:state.attackerParty,foePartySlots:[state.attackerPartySlot],field:state.field},options);}
 };
 };
