@@ -28,7 +28,8 @@ from link (same library id, saved state kept).
 
 1. Thor / in-game tests of everything since the consistency pass (item, move, ability pages, calc fight state,
    sprites as CSS classes, gauntlet carry, Find trainer by location, Hardlove's AI odds / switch-ins / Field → AI:
-   `hacks/hardlove-gold/notes.md` → In-game tests).
+   `hacks/hardlove-gold/notes.md` → In-game tests). Calc tests seen on the Thor before 2026-11-03 were on a broken
+   layout (Chrome 109 dropped `@scope`, fixed): redo them after updating each guide.
 2. Real save tests: one real import per guide on the Thor, compared with PKHeX.
 3. Footer credits: `cfg.credit` hook exists, no guide sets it. Agreed, not done.
 4. Skill re-upload once its references cover the item pages (5).

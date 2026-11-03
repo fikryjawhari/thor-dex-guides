@@ -15,6 +15,10 @@ that section), not the whole file.
   reassembled, the footer date ignored by domcompare). Source vs table differences kept from the source: Proton in
   Ariana's chain, no BB2R School Kids chain (healed between), RR Pokémon Tower and Berry Forest gauntlets. Plans
   deleted (git keeps them); in-game tests in `hacks/hardlove-gold/notes.md`.
+  Also the Thor calc layout fix (found over adb): the Thor's WebView is Chrome 109, which dropped calc.css's whole
+  `@scope` block (foe move rows side by side, page 1373 px wide, zoomed out); the rules now carry a
+  `:where(body.calc-route)` prefix, `color-mix()` has a fallback, and `tools/compatlint.py` fails on features newer
+  than Chrome 109 in every gate run. Every calc Thor test before this was on the broken layout: redo them.
 - **Merged 2026-11-03 from `worktree-check-tests`:** scenarios run `dvkb` only where it changes something (normal
   first; `dvkb` too if the case touched a number / text / search box, or failed; layout checks keep both), and
   consistency-check's fit sweep covers move, ability and item pages. `tools/scenarios/blocks.mjs` asserts the box
