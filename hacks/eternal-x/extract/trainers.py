@@ -20,6 +20,11 @@ from common import BULBA, load, norm, report, fix, split_name
 from wikitext import split_args
 from ctrguide import default_moves, trainer_match_score
 
+
+def gauntlet_rules(group, section):
+    """The source docs and parsed trainer records name no back-to-back gauntlets."""
+    return ()
+
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon X and Y-Part {}.wiki')
 NPARTS = 17
 # Boxes: (walkthrough parts, name)

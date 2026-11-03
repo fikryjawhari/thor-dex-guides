@@ -58,6 +58,8 @@ PDFs). Fetch the sources with `SOURCES.md` (game data regenerated 2026-10-22). M
   areas (ARO puts them in place); the roaming bird follows the starter (Chespin Articuno, Fennekin Zapdos, Froakie
   Moltres; "Starter: X" in the note). Frost Cavern's Abomasnow (Lv 45) is a battle, not a catch. In-game trades aren't
   added.
+- **Gauntlets** (`gc`, trainers.py): none; rechecked cached source-doc text and parsed trainer tags/notes.
+  The explicit empty rule writes no `gc` fields; gym trainers and leaders are not inferred chains.
 - **Trainers** (trainers.py): Bulbapedia's X / Y walkthrough matched on vanilla teams (class + name, species, levels); the
   hack's trainer with that id is used. 54 placeholders dropped. Rival / Shauna / Tierno / Trevor ids are fixed (RIVAL,
   FRIEND). Boxes follow the single cap list, including mini caps, named with `tools/splits.py`; the league is Elite Four

@@ -25,7 +25,7 @@ def main():
     walk.build(D)
     items.order(D)
     item_text(D, H.load('dex-rebalanced.json'), H.load('dex-vanilla.json'), H.extract)   # before finalise: tools/item_text.py reads item_desc.json
-    finalise(D, H.name, prune.build)
+    finalise(D, H.name, prune.build, gauntlet_rules=trainers.gauntlet_rules)
     schema.standardise(D)
     build_save_ids(D, H.load('dex-rebalanced.json'))
     write_data(D, H)
