@@ -230,11 +230,17 @@ const r3Field=async(page,doubles=false)=>{
 };
 const r3Groups=`[...document.querySelectorAll('.dfb details[data-fgroup]')].filter(d=>d.offsetParent)`;
 checks.push({
-  id:'R3 groups',title:"Global first, then Player | Foe, then the side's groups stacked in one column at every size",sizes,
+  id:'R3 groups',title:"AI first on an AI guide, then Global, then Player | Foe, then the side's groups stacked in one column at every size",sizes,
   run:async(page,{width,height,mode})=>{
     await r3Field(page,true);
-    const layout=await page.value(`(()=>{const body=document.querySelector('.dfb'),kids=[...body.children].filter(el=>el.offsetParent&&!el.matches('.dfsource,.dfarea'));const global=body.querySelector(':scope>details[data-fgroup="field:battle"]');return {globalIndex:kids.indexOf(global),switchIndex:kids.indexOf(body.querySelector(':scope>.dfside')),loose:body.querySelectorAll(':scope>.dtg button').length,outside:[...body.querySelectorAll('button[data-f]')].filter(el=>!el.closest('[data-field-side]')&&!el.closest('[data-fgroup="field:battle"]')).map(el=>el.dataset.f),switchShown:getComputedStyle(document.querySelector('.dfsw')).display!=='none',bars:document.querySelectorAll('.dfield .endbar').length,groupBars:document.querySelectorAll('.dfield details[data-fgroup]>.endbar').length,groups:document.querySelectorAll('.dfield details[data-fgroup]').length,trick:document.querySelector('[data-f=trickRoom]')?.closest('[data-fgroup]')?.dataset.fgroup??'none'};})()`);
-    assert.equal(layout.globalIndex,0,'Global is the first Field block');
+    const layout=await page.value(`(()=>{const body=document.querySelector('.dfb'),kids=[...body.children].filter(el=>el.offsetParent&&!el.matches('.dfsource,.dfarea'));const global=body.querySelector(':scope>details[data-fgroup="field:battle"]');const ai=body.querySelector(':scope>details[data-fgroup="ai"]');return {aiIndex:ai?kids.indexOf(ai):-1,globalIndex:kids.indexOf(global),switchIndex:kids.indexOf(body.querySelector(':scope>.dfside')),loose:body.querySelectorAll(':scope>.dtg button').length,outside:[...body.querySelectorAll('button[data-f]')].filter(el=>!el.closest('[data-field-side]')&&!el.closest('[data-fgroup="field:battle"]')).map(el=>el.dataset.f),switchShown:getComputedStyle(document.querySelector('.dfsw')).display!=='none',bars:document.querySelectorAll('.dfield .endbar').length,groupBars:document.querySelectorAll('.dfield details[data-fgroup]>.endbar').length,groups:document.querySelectorAll('.dfield details[data-fgroup]').length,trick:document.querySelector('[data-f=trickRoom]')?.closest('[data-fgroup]')?.dataset.fgroup??'none'};})()`);
+    if(guide().data.cfg.calc.ai){
+      assert.equal(layout.aiIndex,0,'AI is the first Field block on an AI guide');
+      assert.equal(layout.globalIndex,1,'Global is the second Field block, after AI');
+    }else{
+      assert.equal(layout.aiIndex,-1,'no AI section on a guide without an AI');
+      assert.equal(layout.globalIndex,0,'Global is the first Field block');
+    }
     assert(layout.switchIndex>layout.globalIndex,'side switch after Global');
     assert.equal(layout.loose,0,'no global toggles outside Global');
     assert.deepEqual(layout.outside,[],'every global toggle sits in Global');
@@ -248,8 +254,9 @@ checks.push({
       const rects=await page.value(`${r3Groups}.map(d=>{const r=d.getBoundingClientRect();return {id:d.dataset.fgroup,top:r.top,bottom:r.bottom,left:r.left,width:r.width,open:d.open};})`);
       const labels=await page.value(`${r3Groups}.map(d=>d.querySelector(':scope>summary').textContent.replace(/ · .*/,''))`);
       assert(rects.length>=2&&rects.every(r=>r.open),side+' groups open: '+JSON.stringify(rects));
-      assert.equal(labels[0],'Global');
-      const own=labels.slice(1),order=['States','Turn end','Hazards'];
+      const lead=guide().data.cfg.calc.ai?['AI','Global']:['Global'];
+      assert.deepEqual(labels.slice(0,lead.length),lead,side+' leading groups');
+      const own=labels.slice(lead.length),order=['States','Turn end','Hazards'];
       assert.deepEqual(own,order.filter(label=>own.includes(label)),side+' group order');
       for(let i=1;i<rects.length;i++){
         assert(Math.abs(rects[i].left-rects[0].left)<=1.5&&Math.abs(rects[i].width-rects[0].width)<=1.5,`one column: ${JSON.stringify(rects[i])} vs ${JSON.stringify(rects[0])}`);

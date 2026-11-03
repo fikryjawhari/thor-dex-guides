@@ -13,6 +13,12 @@ if (!file) {
   process.exit(0);
 }
 
+// A foe by its team index, not its cell: on an AI guide the foe strip reorders on every change (switch-in order) and
+// ignores other taps for 350 ms after a reorder (template/README.md -> AI grids), so wait that out first.
+const pickFoe = async (page, index) => {
+  if (await page.count('.dside:not(.mg) .dstrip.aigrid')) await new Promise(done => setTimeout(done, 400));
+  await page.tap(`.dside:not(.mg) .dstrip [data-a="fpick"][data-i="${index}"]`);
+};
 const hpOf = (page, side) => page.value(`+document.querySelector('[data-hp="${side}"]').value`);
 const maxOf = (page, side) => page.value(`+document.querySelector('.dmatch .cc[data-s="${side}"] .mx').textContent.replace('/','')`);
 const mon = (page, side) => page.value(`(()=>{const m=CALC.mon('${side}');return {na:m.na,hp:m.hp??null,status:m.status||'',stg:(m.stg||[0,0,0,0,0]).join(','),abilityOn:m.abilityOn??null,dl:m.dl??null,pty:m.pty??null,vol:m.vol||'',broken:m.broken??null};})()`);
@@ -78,8 +84,8 @@ const checks = [
       const foeMax = await maxOf(page, 'foe');
       await page.setBox('[data-hp="foe"]', 1);
       await page.value(`(()=>{CALC.set('foe','status','brn');CALC.set('foe','stg',[0,2,0,0,0]);CALC.render();})()`);
-      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 1 });
-      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 0 });
+      await pickFoe(page, 1);
+      await pickFoe(page, 0);
       const foe = await mon(page, 'foe');
       assert.equal(foe.hp, 1, `foe HP kept for the fight (max ${foeMax})`);
       assert.equal(foe.status, 'brn', 'foe status kept');
@@ -95,7 +101,7 @@ const checks = [
       await page.setBox('[data-hp="mine"]', max - 10);
       await page.setBox('[data-hp="foe"]', 1);
       await page.value(`(()=>{CALC.set('mine','stg',[1,0,0,0,0]);CALC.set('mine','broken',true);CALC.set('foe','status','par');CALC.render();})()`);
-      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 1 });
+      await pickFoe(page, 1);
       await page.setBox('[data-hp="foe"]', 2);
       await setWeather(page);
       await page.tap('[data-f="gameType"][data-value="Doubles"]');
@@ -129,9 +135,9 @@ const checks = [
       await page.setBox('[data-hp="mine"]', 5);
       await page.setBox('[data-hp="foe"]', 1);
       await page.value(`(()=>{CALC.set('mine','status','par');CALC.set('foe','status','brn');CALC.set('foe','broken',true);CALC.set('mine','stg',[2,0,0,0,0]);CALC.render();})()`);
-      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 1 });
+      await pickFoe(page, 1);
       await page.setBox('[data-hp="foe"]', 3);
-      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 0 });
+      await pickFoe(page, 0);
       await setWeather(page);
       const box = await page.value(`(()=>{const b=document.querySelector('[data-a="fightreset"]').getBoundingClientRect(),f=document.querySelector('.dformat').getBoundingClientRect(),d=document.querySelector('.dfield').getBoundingClientRect();return {top:Math.abs(b.top-f.top)<1,right:b.right<=d.right+0.5,after:b.left>=f.right,h:b.height,w:f.width};})()`);
       assert.ok(box.top && box.right && box.after, 'Reset fight on the format row, right of it, inside the Field: ' + JSON.stringify(box));
@@ -149,7 +155,7 @@ const checks = [
       assert.equal(mine.stg, '0,0,0,0,0', 'scratch cleared');
       assert.ok(!(await page.value('CALC.state().fman')).includes('weather'), 'manual weather cleared; automatic weather may apply');
       assert.ok(await page.value(`document.querySelector('.dfield').open`), 'the Field stays open');
-      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 1 });
+      await pickFoe(page, 1);
       assert.equal(await hpOf(page, 'foe'), await maxOf(page, 'foe'), 'the rest of the foe team too');
     },
   },
@@ -239,8 +245,8 @@ const checks = [
       const now = await page.value(`String(CALC.mon('foe').${field})`);
       console.log(`     note: foe ${field} ${was} -> ${now}`);
       await editorOpen(page, 'foe', false);
-      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 1 });
-      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 0 });
+      await pickFoe(page, 1);
+      await pickFoe(page, 0);
       assert.equal(await page.value(`String(CALC.mon('foe').${field})`), now, `foe ${field} edit kept after switching foes`);
       await page.reload();
       await page.route('#/calc');
@@ -297,7 +303,7 @@ checks.push(
       assert.equal(await page.value('CALC.state().field.weather'), 'Rain', 'faster Politoed wins under Trick Room');
       await openField(page);
       await page.tap('[data-a="fieldauto"]');
-      await page.tap('.dside:not(.mg) .dstrip [data-a="fpick"]', { index: 1 });
+      await pickFoe(page, 1);
       const stays = await page.value('DMG.settings().setterStays');
       assert.equal(await page.value('CALC.state().field.weather'), 'Rain', 'active player setter beats area');
       await pickCell(page, 'party', 0);
