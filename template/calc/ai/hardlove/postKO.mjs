@@ -1,7 +1,7 @@
 import {Fraction, roundedPercentages} from '../enumerate.mjs';
 import {snapshotMon} from './state.mjs';
 import {BattleAI_CalcDamage} from './damage.mjs';
-import {BattleAI_AdjustUnusualMoveDamage, BattleAI_GetHighestParadoxStat, CanAttackerOneShotDefender, IsMoveUsable} from './calc.mjs';
+import {AI_IsClientGrounded, BattleAI_AdjustUnusualMoveDamage, BattleAI_GetHighestParadoxStat, CanAttackerOneShotDefender, IsMoveUsable} from './calc.mjs';
 import {AI_IsClient2Faster, BattleAI_CalcEffectiveSpeed} from './speed.mjs';
 
 const ZERO = new Fraction();
@@ -19,9 +19,10 @@ export function FillDamageStructFromPartyMon(state, mon, calcWithHighestDamageHi
   const result = snapshotMon(state, source, 'attacker');
   result.item = mon.item ?? '';
   result.item_held_effect = mon.item_held_effect ?? facts.item_held_effect;
+  result.isGrounded = AI_IsClientGrounded(state, result);
   result.isSwitching = calcWithHighestDamageHit;
   result.firstTurnOut = true;
-  if ((mon.ability === 'Protosynthesis' && (state.field?.weather === 'Sun' || result.item === 'Booster Energy'))
+  if ((mon.ability === 'Protosynthesis' && (['Sun', 'Harsh Sunshine', 'Desolate Land'].includes(state.field?.weather) || result.item === 'Booster Energy'))
     || (mon.ability === 'Quark Drive' && ((['Electric', 'Electric Terrain'].includes(state.field?.terrain) && (state.field?.terrainTurns ?? 1) > 0) || result.item === 'Booster Energy'))) {
     result.paradoxBoostedStat = BattleAI_GetHighestParadoxStat(mon.attack, mon.defense, mon.spAttack, mon.spDefense, mon.speed);
   }
@@ -79,7 +80,8 @@ export function BattleAI_PostKOSwitchIn_Internal(state, {calcWithHighestDamageHi
   const candidates = [];
   for (const [partySlot, mon] of party.entries()) {
     if (!alive(mon) || excluded.has(partySlot)) continue;
-    const baseState = {...state, attacker: mon, defender: orderedPlayers.find(alive) ?? orderedPlayers[0], field: {...state.field, isDoubleBattle: doubles}};
+    const baseState = {...state, attacker: mon, defender: orderedPlayers.find(alive) ?? orderedPlayers[0],
+      attackerAlly: state.foes?.[opponentSlot ^ 1], defenderAlly: orderedPlayers[1], field: {...state.field, isDoubleBattle: doubles}};
     const partyMon = FillDamageStructFromPartyMon(baseState, mon, calcWithHighestDamageHit);
     const matchups = orderedPlayers.map((player, playerSlot) => {
       if (!alive(player)) return {active: false, speed: 0, percentReceived: 1, percentDealt: 1, incomingKO: false, outgoingKO: false};
@@ -128,12 +130,14 @@ export function BattleAI_PostKOSwitchIn_Internal(state, {calcWithHighestDamageHi
   return {candidates, choices: choices.filter(choice => choice.partySlot >= 0)};
 }
 
-export function switchInOrder(state, {digits = 0} = {}) {
+export function switchInOrder(state, {digits = 0, replacementSlots = state.foes?.every(mon => mon.currentHP === 0) ? [0, 1] : [state.attackerSlot ?? 0]} = {}) {
+  if (!replacementSlots.length || replacementSlots.some(slot => slot !== 0 && slot !== 1)) throw new RangeError('replacementSlots must contain foe field slots 0 or 1');
   const cache = new Map();
   const visit = excluded => {
     const code = [...excluded].sort((left, right) => left - right).join(',');
     if (cache.has(code)) return cache.get(code);
-    const {choices} = BattleAI_PostKOSwitchIn_Internal(state, {excludedPartySlots: excluded});
+    const attackerSlot = replacementSlots[Math.min(excluded.length, replacementSlots.length - 1)];
+    const {choices} = BattleAI_PostKOSwitchIn_Internal({...state, attackerSlot}, {excludedPartySlots: excluded});
     const orders = new Map();
     if (!choices.length) orders.set('', {partySlots: [], weight: ONE});
     for (const choice of choices) for (const suffix of visit([...excluded, choice.partySlot])) {

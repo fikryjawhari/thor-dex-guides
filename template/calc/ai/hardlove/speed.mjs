@@ -21,7 +21,7 @@ export function BattleAI_CalcEffectiveSpeed(state, mon, side = 'attacker', inPar
   if (stage > 6) throw new RangeError('Source speed stage exceeds StatBoostModifiers table after Sticky Web');
   let speed = Math.trunc(mon.speed * (stage >= 0 ? 2 + stage : 2) / (stage >= 0 ? 2 : 2 - stage)) % 65536;
   let modifier = 4096;
-  const weatherSuppressed = field.weatherSuppressed || [state.attacker, state.defender].some(battler => battler && (battler.currentHP ?? battler.hp ?? 1) > 0 && ['Cloud Nine', 'Air Lock'].includes(battler.ability));
+  const weatherSuppressed = field.weatherSuppressed || [state.attacker, state.defender, state.attackerAlly, state.defenderAlly, ...(state.allies ?? [])].some(battler => battler && (battler.currentHP ?? battler.hp ?? 1) > 0 && ['Cloud Nine', 'Air Lock'].includes(battler.ability));
   if (!weatherSuppressed && ((mon.ability === 'Swift Swim' && ['Rain', 'Heavy Rain', 'Primordial Sea'].includes(field.weather)) || (mon.ability === 'Chlorophyll' && ['Sun', 'Harsh Sunshine', 'Desolate Land'].includes(field.weather)) || (mon.ability === 'Sand Rush' && ['Sand', 'Sandstorm'].includes(field.weather)) || (mon.ability === 'Slush Rush' && ['Hail', 'Snow'].includes(field.weather)))) modifier = roundUp(modifier, 8192);
   const terrainActive = (field.terrainTurns ?? 1) > 0;
   if (terrainActive && ['Electric', 'Electric Terrain'].includes(field.terrain) && mon.ability === 'Surge Surfer') modifier = roundUp(modifier, 8192);

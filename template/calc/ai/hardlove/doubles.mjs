@@ -89,10 +89,12 @@ export function pickDoublesMon(state, slot, condition = {}) {
 export function doublesPickOrder(state) {
   const living = [0, 1].filter(slot => alive(state.foes[slot]));
   if (living.length < 2) return living;
-  const speedState = {attacker: state.foes[0], defender: state.players[0], field: state.field};
+  const speedState = {attacker: state.foes[0], defender: state.players[0], attackerAlly: state.foes[1], defenderAlly: state.players[1], field: state.field};
   const first = snapshotMon(speedState, state.foes[0], 'attacker');
   const second = snapshotMon(speedState, state.foes[1], 'attacker');
-  return AI_IsClient2Faster(speedState, first, second) === 1 ? [1, 0] : [0, 1];
+  const comparison = AI_IsClient2Faster(speedState, first, second);
+  if (comparison === 2 && state.firstRequestedSlot === 1) return [1, 0];
+  return comparison === 1 ? [1, 0] : [0, 1];
 }
 
 export function presentDoublesMon(state, slot, result, digits = 0) {

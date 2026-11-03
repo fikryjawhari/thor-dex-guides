@@ -572,6 +572,7 @@ check('doubles order: Trick Room, Lagging Tail, Stall and speed tie keep the ini
   assert.deepEqual(doublesPickOrder(doubleState({foes: [chomp({item: 'Lagging Tail'}), chomp({speed: 50})]})), [1, 0]);
   assert.deepEqual(doublesPickOrder(doubleState({foes: [chomp({ability: 'Stall'}), chomp({speed: 50})]})), [1, 0]);
   assert.deepEqual(doublesPickOrder(doubleState({foes: [chomp(), chomp()]})), [0, 1]);
+  assert.deepEqual(doublesPickOrder(doubleState({foes: [chomp(), chomp()], firstRequestedSlot: 1})), [1, 0]);
 });
 
 check('doubles mixture: 10/16 fast KO rolls ignore P0, otherwise slower picks P0 at 13/16', () => {
@@ -727,6 +728,128 @@ check('doubles: known Helping Hand affects slower damage before KO detection', (
   const helped = boosted.targets.find(target => target.target.side === 'player' && target.target.slot === 0);
   assert.equal(ordinary.ai.attackerRollTables[0].some(roll => roll.canOneShot), false);
   assert.equal(helped.ai.attackerRollTables[0].every(roll => roll.canOneShot), true);
+});
+
+check('hard switch: rolled any-KO and the global switch coin remain correlated', () => {
+  const state = {attacker: chomp({moves: [CLAW]}), defender: lax({currentHP: 60, moves: [EQ], attack: 400}),
+    facts: {livingMembersAttacker: 2, highestPostKoScoreFromParty: 104, highestDamageHitPrct: 17}};
+  const result = evaluateSinglesResult(state);
+  assert.deepEqual(result.switch.exact, {numerator: '27', denominator: '800'});
+  assert.deepEqual(result.moves[0].exact, {numerator: '773', denominator: '800'});
+});
+
+check('hard switch: a valid pivot spends the switch coin on +3 scoring instead of hard switching', () => {
+  const move = mv('U-turn', 'Bug', 'Physical', 1, 'SWITCH_HIT');
+  const state = {attacker: chomp({moves: [move, CLAW]}), defender: lax(),
+    facts: {livingMembersAttacker: 2, highestPostKoScoreFromParty: 106, highestDamageHitPrct: 1}};
+  const result = evaluateSinglesResult(state);
+  assert.equal(result.switch.percent, 0);
+  assert.deepEqual(result.moves[0].exact, {numerator: '47', denominator: '80'});
+  assert.equal(result.moves[0].score, '+6/+9');
+  assert.deepEqual(result.moves[0].branches.map(branch => branch.exact), [{numerator: '33', denominator: '50'}, {numerator: '17', denominator: '50'}]);
+});
+
+check('doubles: opposite ally weather/item abilities and side-specific incoming damage are respected', () => {
+  const state = doubleState({foes: [chomp({ability: 'Swift Swim', speed: 60}), chomp({speed: 100})],
+    players: [lax(), lax({ability: 'Cloud Nine'})], field: {weather: 'Rain'}});
+  assert.deepEqual(doublesPickOrder(state), [1, 0]);
+  const ai = BuildStateVariables({attacker: chomp({item: 'Sitrus Berry'}), defender: lax(),
+    attackerAlly: chomp(), defenderAlly: lax({ability: 'Unnerve'}), isDoubleBattle: true});
+  assert.equal(ai.attackerMon.item, '');
+  const balloon = FillDamageStructFromPartyMon({attacker: chomp(), defender: lax(), field: {magicRoom: true}}, chomp({item: 'Air Balloon'}));
+  assert.equal(balloon.isGrounded, false);
+  const pair = {attacker: chomp(), defender: lax({moves: [mv('Water Pulse', 'Water', 'Special', 60)]}), isDoubleBattle: true,
+    attackerAlly: chomp({ability: 'Battery'}), defenderAlly: lax({ability: 'Pressure'})};
+  const unboosted = BuildStateVariables(pair).maxDamageReceived;
+  assert.equal(BuildStateVariables({...pair, attackerAlly: chomp({ability: 'Pressure'})}).maxDamageReceived, unboosted);
+  assert.ok(BuildStateVariables({...pair, defenderAlly: lax({ability: 'Battery'})}).maxDamageReceived > unboosted);
+});
+
+check('API: inputs stay immutable, JSON serializes and merged self targets still total 100', () => {
+  const state = doubleState({foes: [chomp({moves: [mv('Milk Drink', 'Normal', 'Status', 0, 'RESTORE_HALF_HP')], currentHP: 30}), chomp({speed: 80})]});
+  const before = JSON.stringify(state);
+  const result = evaluateDoubles(state);
+  assert.equal(JSON.stringify(state), before);
+  assert.ok(JSON.stringify(result).length > 0);
+  const pairs = result.foes[0].pairs;
+  assert.ok(pairs.every(pair => pair.target.side === 'foe'));
+  assert.equal(new Set(pairs.map(pair => `${pair.index}:${pair.target.side}:${pair.target.slot}`)).size, pairs.length);
+  assert.equal(pairs.reduce((total, pair) => total + pair.percent, 0), 100);
+});
+
+check('doubles: opposite-slot KO check wins even when faster picks the across target', () => {
+  const state = doubleState({players: [lax({currentHP: 50}), lax({currentHP: 50})]});
+  const result = evaluateDoubles(state);
+  assert.ok(result.firstBranches.every(branch => branch.ignoredPlayer === 0));
+  assert.ok(result.firstBranches.some(branch => branch.target.side === 'player' && branch.target.slot === 1));
+  const swapped = evaluateDoubles({...state, foes: [state.foes[1], state.foes[0]]});
+  assert.ok(swapped.firstBranches.every(branch => branch.ignoredPlayer === 1));
+});
+
+check('doubles: Encore/choice lock, Taunt, Disable, Torment and zero PP follow defender scoring', () => {
+  const tackle = mv('Tackle', 'Normal', 'Physical', 40);
+  for (const facts of [{encoredTurns: 1, encoredMove: 'Tackle'}, {moveNoChoice: 'Tackle'}]) {
+    const state = doubleState({foes: [chomp({moves: [CLAW, tackle], item: 'Choice Band', facts}), chomp({speed: 80, moves: [CLAW]})]});
+    const result = evaluateDoubles(state).foes[0];
+    assert.equal(result.pairs.filter(pair => pair.name === 'Tackle').reduce((sum, pair) => sum + pair.probability, 0), 1);
+    assert.ok(result.pairs.filter(pair => pair.name === 'Tackle' && pair.target.side === 'player').every(pair => pair.score === 'Lock'));
+  }
+  for (const extra of [{facts: {disabledTurns: 1, disabledMove: 'Dragon Claw'}}, {facts: {torment: true, lastUsedMove: 'Dragon Claw'}}, {moves: [{...CLAW, pp: 0}, tackle]}]) {
+    const state = doubleState({foes: [chomp({moves: [CLAW, tackle], ...extra}), chomp({speed: 80, moves: [CLAW]})]});
+    assert.ok(evaluateDoubles(state).foes[0].pairs.filter(pair => pair.name === 'Dragon Claw').every(pair => pair.probability === 0));
+  }
+  const taunted = doubleState({foes: [chomp({moves: [CLAW, SD], facts: {tauntTurns: 1}}), chomp({speed: 80, moves: [CLAW]})]});
+  assert.ok(evaluateDoubles(taunted).foes[0].pairs.filter(pair => pair.name === 'Swords Dance').every(pair => pair.probability === 0));
+});
+
+check('doubles: four-slot mixed damage and support scores are finite and exact', () => {
+  const state = doubleState({foes: [chomp({moves: [EQ, CLAW, SD, mv('Helping Hand', 'Normal', 'Status', 0, 'BOOST_ALLY_POWER_BY_50_PERCENT')]}),
+    chomp({speed: 80, moves: [CLAW, mv('Aqua Jet', 'Water', 'Physical', 40), mv('Coaching', 'Fighting', 'Status', 0), mv('Protect', 'Normal', 'Status', 0, 'PROTECT')]})]});
+  const result = evaluateDoubles(state, {digits: 2});
+  for (const foe of result.foes) {
+    const sum = foe.pairs.reduce((total, pair) => total.add(new Fraction(pair.exact.numerator, pair.exact.denominator)), zero);
+    assert.deepEqual(exact(sum), exact(one));
+    assert.ok(Math.abs(foe.pairs.reduce((total, pair) => total + pair.percent, 0) - 100) < 1e-8);
+    assert.ok(foe.pairs.every(pair => Number.isFinite(pair.probability)));
+  }
+});
+
+check('double KO: source slot-sensitive Wobbuffet exception recomputes the second call without entry effects', () => {
+  const state = doubleState({players: [lax({moves: []}), lax({moves: [CLAW], attack: 1000})]});
+  state.foeParty = [...state.foes, chomp({attack: 2000, moves: [CLAW]}), chomp({species: 'Wobbuffet'}), chomp({species: 'Ditto'})];
+  state.foePartySlots = [0, 1];
+  state.foes = state.foes.map(mon => ({...mon, currentHP: 0}));
+  assert.deepEqual(switchInOrder(state).order, [2, 4, 3]);
+  assert.deepEqual(switchInOrder(state, {replacementSlots: [0]}).order, [2, 3, 4]);
+});
+
+check('doubles: fainted ally leaves one active picker, both player targets, and no partner-ignore', () => {
+  const state = doubleState({foes: [chomp({moves: [CLAW]}), chomp({currentHP: 0})], players: [lax({currentHP: 50}), lax()]});
+  const result = evaluateDoubles(state);
+  assert.deepEqual(result.order, [0]);
+  assert.equal(result.foes.length, 1);
+  assert.ok(result.foes[0].pairs.every(pair => pair.target.side === 'player'));
+  assert.ok(result.firstBranches.every(branch => branch.ignoredPlayer === -1));
+  assert.equal(result.foes[0].switch.percent, 0);
+});
+
+check('API: singles rejects doubles and no living player requests switch-in ranking instead', () => {
+  assert.throws(() => evaluateSinglesResult({attacker: chomp(), defender: lax(), field: {doubles: true}}), /evaluateDoubles/);
+  assert.throws(() => evaluateSinglesResult({attacker: chomp(), defender: lax(), attackerAlly: chomp()}), /evaluateDoubles/);
+  assert.throws(() => evaluateDoubles(doubleState({players: [lax({currentHP: 0}), lax({currentHP: 0})]})), /switchInOrder/);
+  assert.throws(() => switchInOrder({attacker: chomp(), defender: lax(), attackerParty: [chomp(), chomp()]}), /activePartySlots/);
+});
+
+check('doubles: positive CalculateSwitch coin affects pivot scores but never creates a hard switch', () => {
+  const pivot = mv('U-turn', 'Bug', 'Physical', 1, 'SWITCH_HIT');
+  const state = doubleState({foes: [chomp({moves: [pivot, CLAW]}), chomp({speed: 80, moves: [CLAW]})]});
+  state.foeParty = [...state.foes, chomp({speed: 150, moves: [mv('Dragon Claw', 'Dragon', 'Physical', 500)]})];
+  state.foePartySlots = [0, 1];
+  const result = evaluateDoubles(state);
+  assert.equal(result.foes[0].switch.percent, 0);
+  const pair = result.foes[0].pairs.find(pair => pair.name === 'U-turn' && pair.target.side === 'player');
+  assert.equal(pair.score, '+6/+9');
+  assert.deepEqual(pair.branches[1].exact, {numerator: '17', denominator: '50'});
 });
 
 check('hard switch: hand-calculated integer variance, thresholds and Perish Song', () => {

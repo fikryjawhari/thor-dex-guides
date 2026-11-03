@@ -376,13 +376,15 @@ is what the game shows if the point goes the other way.
 ### Damage calc / AI
 
 The trainer AI (`src/trainerai/`, pinned `4a8d4a6308`, fetch: SOURCES.md) is ported headless in
-`template/calc/ai/` (plan: `plans/calc-ai.md`). Singles only so far; doubles (`pick_command.c`), `postKO.c` and
-`CalculateSwitch` are later units.
+`template/calc/ai/` (plan: `plans/calc-ai.md`). Singles/doubles picks, hard switching and post-KO ranks are headless;
+unit 3 still supplies the guide-data/state adapter, assembly and UI.
 - Layout: `hardlove/damage.mjs` = `calcDamage.c` (the AI's own formula), `speed.mjs` = `calcSpeed.c`, `calc.mjs` =
   `calc.c`, `helpers.mjs` = `scoringHelper.c`, `state.mjs` = `setupStateVariables.c` (`BuildStateVariables`: damage
   tables; `ApplyDamageRolls`: one roll per move), `scoring.mjs` = `main.c` (each scorer is a line-for-line
   `<Name>Port`, the C's names; ids upper-cased without punctuation, effects without `MOVE_EFFECT_`).
-  `enumerate.mjs` (shared): exact odds; `index.mjs` `evaluateSingles(state)` → per move `{percent, exact, score, branches}`.
+  `pick_command.mjs` / `doubles.mjs` = `pick_command.c`, `postKO.mjs` = `postKO.c` plus the party snapshot from
+  `calc.c`. `enumerate.mjs` (shared): exact rational odds, joint top-score/tie-mask/any-KO distributions.
+  `index.mjs` exports `evaluateSingles`, `evaluateDoubles`, `switchInOrder` and the C-named entry/helpers.
 - Input state: `{attacker, defender, field}`; a mon is `{species, level, types, ability, item, status ('slp' ...),
   attack, defense, spAttack, spDefense, speed, currentHP, totalHP, statBoosts {attack ...}, moves [{name, type,
   category, power, effect, priority, flags, target, pp?, secondaryEffectChance?}], facts {...}}`. Move `effect` /
@@ -442,7 +444,7 @@ deltas, random branches and cases were machine-compared in the initial port. A f
 audit checked 5,032 move/effect entries against C (Sheer Force, Parental Bond, all ten trait tables, useful sound,
 switching, flinch/thaw and Encore lists); local record: `.tmp/ai-engine/source-audit.log`.
 
-Headless fixtures: `hardlove_ai_check.mjs` 49/49; existing damage suite `hardlove_check.mjs` 107/107. Status
+Unit 1 headless fixtures: `hardlove_ai_check.mjs` 49/49; existing damage suite `hardlove_check.mjs` 107/107. Status
 fixtures cover paralysis, burn, sleep/Yawn, poison, confusion and Leech Seed; hazards cover all four hazards,
 layer limits, first-turn bonuses, final foe and Magic Bounce/Mold Breaker; recovery covers strict thresholds,
 incoming maximum damage, healing cap, toxic, Heal Block, pending Wish, weather, Rest support and terrain.
@@ -462,9 +464,9 @@ Input boundary for wiring and the later party/doubles units:
 - Side fields are nested `field.attacker` / `field.defender` (screens, hazards etc.); flat screen keys are only
   a defender-side compatibility fallback. Keep raw battle-mon items distinct from active-item snapshots, and
   incoming max-range damage distinct from own scalar-return damage (especially Explosion-family moves).
-- `pick_command.c`, `postKO.c` and `CalculateSwitch` are not ported here. Singles rejects doubles/multi/tag and
-  living allies rather than presenting misleading odds. Party-derived scoring facts below still need their
-  real producers; the current singleton-party fallback is not a bench ranking or hard-switch prediction.
+- Unit 2 derives party/switch facts in the command API. Supply the complete party and active slots; omitting
+  the party deliberately means no known bench and therefore no hard-switch forecast. `evaluateSingles` still
+  rejects a doubles state; call `evaluateDoubles` for its correlated (move, target) pairs.
 - UI wiring still needs move `effect` / `effectChance` extraction and the battle facts below. No extract,
   `calc.js`, shared engine or assembly changes were made; do not enable AI UI before that adapter is complete.
 
@@ -475,8 +477,107 @@ Fake Out / First Impression), last move (`lastUsedMove`: Torment, Encore, choice
 Lock-On, Imprison, Heal Block, Throat Chop, Laser Focus, binding turns, Future Sight / Wish pending, Magnet Rise,
 Roost, Last Resort count, Recycle item, Fury Cutter / Metronome counts, Slow Start, Flash Fire, Protean used
 (`abilityActivated`), Transform, failed move last turn, teammate fainted last turn, can Belch, held item removable.
-From the party (later units): `highestPostKoScoreFromParty`, `postKoScoringPosition`, `highestDamageHitPrct`
-(`postKO.c`), `shouldSwitch` (`CalculateSwitch`), living members per side, a Mega Stone in the party.
+New switch facts: `cantEscape` (the result of the game's escape/trapping checks), `perishSong` (active effect,
+not the countdown). Derive escape prevention where possible; the calc otherwise needs an override. Bench metadata
+needs `facts.isMegaStone` (item data, not a battle toggle). Partner attack availability, partner move, ignored
+target, living members, party Mega presence, best post-KO score/slot/damage and `shouldSwitch` are produced by
+the engine, not user toggles. Unit 1's synthetic post-KO `state.facts` overrides remain usable in fixtures without a party;
+real party input takes precedence over synthetic post-KO facts.
+
+#### Headless command and switch API (unit 2)
+
+The mon shape above is unchanged. Pass pre-stage, pre-speed-modifier stats, raw held item, and current effective
+ability/types; the adapter must already resolve AI Mega stats/forms as described above. Pass actual learned moves
+in slot order (one to four, no empty placeholders). Parties use the same shape but their stored stats/ability/form,
+not their outgoing battle boosts/history. Party snapshots reset battle history, add Intrepid Sword/Dauntless Shield,
+compute entry speed (Sticky Web, Room Service, seeds), and retain the C's raw party item even under Magic Room.
+No entry hazard HP subtraction or new entry Intimidate is simulated: that is also what this C does.
+
+All probabilities include `probability` (0..1) and `exact: {numerator, denominator}` (decimal strings).
+`{digits: 0}` is the default second argument; 0..6 decimals are supported. Display percentages always sum to 100
+per acting foe (including singles switch); the largest actual pair/move takes the rounding remainder. Never derive
+another probability by summing the rounded percentages when exact weights are available.
+
+```js
+evaluateSingles({attacker, defender, field, attackerParty, defenderParty, attackerPartySlot})
+// {moves: [{index, name, probability, exact, percent, score, branches}],
+//  switch: {probability, exact, percent, partySlot}}
+
+evaluateDoubles({foes: [foe0, foe1], players: [player0, player1], field,
+  foeParty, playerParty, foePartySlots: [partySlot0, partySlot1], firstRequestedSlot: 0})
+// {order: [firstFieldSlot, secondFieldSlot], foes: [{slot, pairs, switch}], firstBranches}
+// pair: {index, name, target: {side: 'player' | 'foe', slot: 0 | 1},
+//        probability, exact, percent, score, branches?, selectionTarget, scoreContexts}
+
+switchInOrder({foes, players, field, foeParty, foePartySlots, attackerSlot: 0,
+  reservedPartySlots: []}, {digits: 0, replacementSlots: [0, 1]})
+// {order: [partySlot, ...] | null,
+//  ranks: [{partySlot, species, ranks: [{rank, probability, exact, percent}]}],
+//  orders: [{partySlots, probability, exact}]}
+```
+
+`field.attacker` is always the foe side and `field.defender` the player side, even when evaluating incoming damage.
+In doubles the player/foe array slots are opposite: foe 0 faces player 0. Fainted slots retain their mon with
+`currentHP: 0`; a fainted foe is omitted from move output, and a fainted player is not a target. With no player alive,
+skip move odds and use `switchInOrder` (party-order fallback). All public calls leave their input unchanged.
+
+`attackerPartySlot` is the singles active party index; `foePartySlots` are both doubles active indices, including
+fainted actives. `activePartySlots` is a shared alias. Active/reserved slots, dead mons and Eggs are excluded from
+bench results. If active objects are shared by reference with their party, indices can be inferred; otherwise pass
+them explicitly (unknown mapping throws, not a guess). These indices only map this call's input party: do not persist
+them or save the displayed reordered grid. The API here models one foe trainer's shared party, not separate multi
+trainer parties. `TrainerAI_PickCommand` dispatches to singles or doubles by the presence of `foes`.
+
+Singles `moves` is now inside a result object, not unit 1's bare array. Move probabilities are unconditional, not
+conditional on staying in. A successful switch roll changes pivot scoring even if a pivot prevents a hard switch;
+the shared roll is not an independent per-move bonus. Both the switch coin and damage any-KO remain correlated.
+`switch.partySlot` is the best hard-switch candidate (may differ from the post-KO next out); -1 means none.
+
+The slower foe is a mixture over the faster one's exact move AND any-KO/ignore branch, not just its marginal move.
+`firstBranches` exposes `{index, target, ignoredPlayer, probability, exact}` for audit; `ignoredPlayer: -1` means none.
+The slower's conditional damage already includes a known Helping Hand. Ally-target score labels start `A`, e.g.
+`A+6/+8`; target foe/own slot means self (Milk Drink/Acupressure target correction), not the partner.
+Pairs with zero probability are kept for evaluated targets; ignored targets keep zero pairs in the mixture.
+`branches` are scoring probabilities BEFORE choosing a winner, not the score conditional on clicking this pair.
+When a target was ignored on some branches, their mass sums to less than one (the missing mass was not scored).
+Self-target corrections can merge two selection targets; then use `scoreContexts` (each has `selectionTarget`,
+`score`, `branches`) instead of a flattened `branches`. `selectionTarget` alone identifies only the first context.
+
+`switchInOrder.order` is non-null only when the complete order is deterministic. Otherwise use `orders` or the
+per-mon `ranks` probabilities; never silently present the first random alternative as certain. Each successive
+post-KO C call rerolls remaining Zoroark bonuses; the ranking distribution does that too (not one frozen random sort).
+The second pick reserves/skips the first without applying entry effects. `replacementSlots` selects which foe slot
+each successive call replaces, reusing its last slot for the remaining forecast; by default it is `[attackerSlot]`,
+or `[0, 1]` when both foes are fainted. Singles also accepts its usual `{attacker, defender, attackerParty, ...}` shape.
+
+Unit 2 fixtures: `hardlove_ai_check.mjs` 77/77 (original 49 plus 28 new); damage suite 107/107. Coverage adds
+exact target-first ties, 39/128 hand-checked slower mixture, a non-OHKO
+Encore pick still causing partner-ignore, Helping Hand's 23/48 ally-pick race, every ally scoring family, all lock/
+usability rules, Trick Room/Stall/Lagging Tail/ties, both-player sums, Zoroark rank distributions and fresh rerolls,
+double KO/no entry effects, hard-switch variance/Perish Song/pivot scoring, input immutability and JSON output.
+Commands/logs: `node tools/calc/hardlove_ai_check.mjs` -> `.tmp/ai-doubles/test.log`;
+`node tools/calc/hardlove_check.mjs` -> `.tmp/ai-doubles/hl.log`. No browser scenarios or gate run in this unit.
+
+Unit 2 C/doc/spec differences (keep the C, confirm in-game):
+- The plan's slot-invariance claim has exceptions. The first fast OHKO check is the faster foe's OPPOSITE player,
+  even when both can be OHKO'd and the actual pick goes across. Reassigning the implicit field slots can change the
+  slower one's odds; viewing a different mon must not silently reassign those slots.
+- Wobbuffet/Wynaut's +2 checks only the OPPOSITE player's incoming KO, not both. Across-only danger does not remove
+  it; a fainted opposite player grants it. Its rank can therefore depend on which foe slot needs replacing.
+- The main damage score still applies PP/Disable/Torment/Taunt penalties and Encore/choice +1000 in doubles.
+  `ScoreMovesAgainstAlly` applies NONE of those checks/bonuses. A 0 PP, disabled, Taunted Helping Hand can still
+  win the ally table. This is not corrected to the doc's blanket claim that these moves are impossible.
+- Perish Song with score 104 is 60%, not the doc's example 66%. All variance divisions truncate as C integers.
+  The hard-switch post-KO calculation initializes the unused across damage percent to 1, so a zero-damage bench
+  matchup yields 34% at score >=105 (or 14% at 104), not the doc's nominal 35%/15% maxima.
+- Speed ties return 2: move-scoring treats that as AI-first, post-KO as fast, but deciding which foe picks first
+  keeps the initially requested slot. No coin flip; `firstRequestedSlot` defaults to 0.
+- Zoroark rolls happen per candidate per C invocation; successive replacement calls reroll the survivors. For two
+  base-103 Zoroark before a score-104 mon, order 1,2,3 is 10/27, not a frozen-sort probability.
+
+In-game follow-ups for the plan's To settle: ally usability bypass; both-fast-OHKO opposite-slot precedence;
+Wobbuffet/Wynaut opposite-only bonus (also a double KO with it on the bench); exact Speed-tie request order;
+Zoroark rerolls; double-KO picks before entry effects and before seeing a simultaneous player replacement.
 
 AI doc vs C (the C wins):
 - Trapping moves and Future Sight never get the highest-damage +6/+8, but their rolls still count for the maximum.

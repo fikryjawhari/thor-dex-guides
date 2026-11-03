@@ -24,7 +24,7 @@ export function CalculateSwitch(state, ai) {
     if (Math.trunc(100 * ai.maxDamageReceived / ai.attackerMon.hp) < Math.trunc(100 * ai.attackerMaxRollDamage / ai.defenderMon.hp)) return ZERO;
   }
   if (ai.highestPostKoScoreFromParty < 103) return ZERO;
-  const addon = ai.isDoubleBattle && state.defender.currentHP > 0 && state.allies?.[1]?.currentHP > 0 ? 3 : 0;
+  const addon = ai.isDoubleBattle && state.defender.currentHP > 0 && (state.defenderAlly ?? state.allies?.[1])?.currentHP > 0 ? 3 : 0;
   let score = 0;
   if (facts.perishSong) {
     if (ai.highestPostKoScoreFromParty >= 103 + addon) score = 30 * (ai.highestPostKoScoreFromParty - 102 - addon);
@@ -77,6 +77,7 @@ export function presentMove(state, ai, index, weight, scores, percent, ally = fa
 }
 
 export function pickSingles(state, {digits = 0} = {}) {
+  if ((state.attackerAlly?.currentHP ?? 0) > 0 || state.allies?.some(mon => mon?.currentHP > 0)) throw new RangeError('evaluateSingles requires singles; use evaluateDoubles');
   const baseAi = BuildStateVariables(state);
   if (state.attackerParty) {
     const best = BattleAI_PostKOSwitchIn_Internal(state, {calcWithHighestDamageHit: true}).choices[0];

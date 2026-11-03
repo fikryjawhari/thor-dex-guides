@@ -1,6 +1,6 @@
 import * as helpers from './helpers.mjs';
 import * as calc from './calc.mjs';
-import {BattleAI_GetTypeEffectiveness} from './damage.mjs';
+import {BattleAI_GetTypeEffectiveness as typeEffectiveness, BattleAI_GetDynamicMoveType as dynamicMoveType} from './damage.mjs';
 
 const id = value => String(value?.name ?? value ?? 'NONE').toUpperCase().replace(/[^A-Z0-9]/g, '') || 'NONE';
 const effect = value => String(value ?? '').replace(/^MOVE_EFFECT_/, '').toUpperCase();
@@ -1897,6 +1897,8 @@ const MonDiesFromResidualDamage = (context, battler, status, seeded) => helpers.
 const IsMonInflictedWithAnyNegativeStatus = (context, battler) => helpers.IsMonInflictedWithAnyNegativeStatus(context.battlemon[battler].source);
 const IsUsedMoveEncouragedToEncore = (battleSystem, move, moveEffect) => helpers.IsUsedMoveEncouragedToEncore(moveById(battleSystem, move), moveEffect);
 const IsBattleMonSlowerThanOpposition = (context, ai, mon) => calc.IsBattleMonSlowerThanOpposition(context.state, { ...ai, defenderMon: ai.defenderMon.source }, mon.source);
+const BattleAI_GetDynamicMoveType = (battleSystem, context, mon, move) => dynamicMoveType(context.state, moveById(battleSystem, move), mon.source);
+const BattleAI_GetTypeEffectiveness = (battleSystem, context, move, type, attacker, defender, attackerMon, defenderMon) => typeEffectiveness(context.state, moveById(battleSystem, move), attackerMon.source, defenderMon.source);
 
 function moveById(battleSystem, move) {
     return battleSystem.sp.battlemon.flatMap(mon => mon.source.moves ?? []).find(known => id(known.name) === move) ?? { name: move };
@@ -1988,7 +1990,7 @@ export function ScoreMovesAgainstAlly(state, moveIndex, ai, random) {
             || (id(ally.ability) === 'SLOWSTART' && id(ally.species) === 'REGIGIGAS')) score += 6 + (random(2) === 0 ? 3 : 0);
         break;
     case 'AQUAJET': case 'MACHPUNCH': case 'BULLETPUNCH': case 'VACUUMWAVE': case 'SHADOWSNEAK': case 'ICESHARD': case 'QUICKATTACK':
-        if (id(ally.item) === 'WEAKNESSPOLICY' && BattleAI_GetTypeEffectiveness(state, move, attacker, ally) >= 20) {
+        if (id(ally.item) === 'WEAKNESSPOLICY' && typeEffectiveness(state, move, attacker, ally) >= 20) {
             score += 6;
             const draw = random(4);
             if (draw === 0 || draw === 1) score += 3;

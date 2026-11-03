@@ -9,7 +9,7 @@ const statNames = ['attack', 'defense', 'speed', 'spAttack', 'spDefense', 'accur
 export function snapshotMon(state, mon, side) {
   const facts = {...mon.facts};
   const snapshot = {...mon, ...facts, facts, moves: (mon.moves ?? []).slice(0, 4).map(move => ({...move, flags: [...(move.flags ?? [])]})), types: [...(mon.types ?? [])], statBoosts: {...mon.statBoosts}};
-  snapshot.item = BattleAI_GetActiveItem(state, mon);
+  snapshot.item = BattleAI_GetActiveItem(state, mon, side);
   snapshot.hp = mon.currentHP;
   snapshot.maxhp = mon.totalHP;
   snapshot.percenthp = Math.trunc(100 * snapshot.hp / snapshot.maxhp);
@@ -62,6 +62,7 @@ function damageTable(state, move, attacker, defender, defendingSide = 'defender'
 
 export function BuildStateVariables(state) {
   const isDoubleBattle = Boolean(state.isDoubleBattle || state.field?.isDoubleBattle || state.field?.doubles || ['doubles', 'multi', 'tag'].includes(String(state.battleType ?? state.format ?? state.gameType ?? state.field?.gameType ?? '').toLowerCase()));
+  if (isDoubleBattle) state = {...state, field: {...state.field, isDoubleBattle: true}};
   const attackerMon = snapshotMon(state, state.attacker, 'attacker');
   const defenderMon = snapshotMon(state, state.defender, 'defender');
   const field = state.field ?? {};

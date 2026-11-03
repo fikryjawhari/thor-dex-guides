@@ -1024,7 +1024,7 @@ input is one `{atk,def,slot,field?}` or an array of those. Output is a result/nu
 or an equally ordered array. Species, move, ability and item selectors use
 guide IDs/indices. Errors go to stderr with a nonzero exit status.
 
-### Hardlove singles AI (headless)
+### Hardlove command AI (headless)
 
 ```sh
 node tools/calc/hardlove_ai_check.mjs
@@ -1032,14 +1032,19 @@ node tools/calc/hardlove_ai_damage_compare.mjs
 node tools/calc/hardlove_check.mjs
 ```
 
-The AI checks exercise `template/calc/ai/hardlove/index.mjs`'s `evaluateSingles(state)` and its exact rational
-branch enumeration without a browser. The damage comparison needs `npm ci --prefix tools/calc` and pinned
+The AI checks exercise `template/calc/ai/hardlove/index.mjs`'s `evaluateSingles(state)`, `evaluateDoubles(state)`
+and `switchInOrder(state)` with exact rational branch enumeration, including hard switches and correlated partner
+picks, without a browser. Singles returns `{moves, switch}`; doubles returns per-foe `(move, target)` pairs; bench
+ranking returns deterministic order or exact alternative orders/per-rank probabilities. Full input/output contracts,
+party mapping, slot-sensitive C exceptions and wiring requirements: the hack's `notes.md`, Damage calc / AI.
+The damage comparison needs `npm ci --prefix tools/calc` and pinned
 `hacks/hardlove-gold/.src/repos/hardlove/data/Moves.c` (fetch via that hack's `SOURCES.md`); no raw source is
 shipped. It adapts all 95 guide matchups: 82 identical and 13 reviewed formula differences, whose full rolls and
 reasons are locked in `hardlove_ai_damage_gaps.json`. Any unexplained, stale or changed difference fails.
 This compares the AI's own formula against our damage engine, not an independent runnable game oracle.
 Reports go to `.tmp/ai-engine/`; input requirements and C/doc differences are in the hack's `notes.md`,
-Damage calc / AI. Doubles, switch prediction and UI wiring are later units; do not use singles odds for those.
+Damage calc / AI. Unit 2 logs are `.tmp/ai-doubles/test.log` and `.tmp/ai-doubles/hl.log`; only the guide-data adapter,
+assembly and UI wiring remain for unit 3. Do not rebuild `engine.js` for these standalone headless modules.
 
 For a local diff tool:
 
