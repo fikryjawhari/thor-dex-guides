@@ -20,7 +20,8 @@ function syncSlots(side,party,doubles){
  const key=ctx.sideInfo(side).key,count=doubles?2:1;
  const old=slots[side].slice();
  slots[side]=slots[side].slice(0,count).map(value=>party.some(entry=>entry.key===value)?value:null);
- if(!slots[side].includes(key))slots[side][Math.min(viewed[side],count-1)]=key;
+ // A picked bench Pokemon takes the viewed one's cell (switching it in); a foe replacement takes a fainted one's cell.
+ if(!slots[side].includes(key)){const view=Math.min(viewed[side],count-1),down=slot=>{const entry=party.find(entry=>entry.key===slots[side][slot]);return !!entry&&!(ctx.resolve(ctx.megaView(entry.mon)).hp>0);},fainted=side==='foe'&&!down(view)?[0,1].slice(0,count).find(down):undefined;slots[side][fainted??view]=key;}
  while(slots[side].length<count)slots[side].push(null);
  for(let slot=0;slot<count;slot++)if(!slots[side][slot])slots[side][slot]=party.find(entry=>!slots[side].includes(entry.key))?.key||null;
  for(const previous of old)if(previous&&!slots[side].includes(previous))delete facts[previous];
