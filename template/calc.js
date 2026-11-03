@@ -61,7 +61,9 @@ const koTxt=ko=>!ko.n?'5+ hits':(ko.n===1?'OHKO':ko.n+'HKO')+(ko.p<1?' '+Math.mi
 const trByK={...TRK};
 // Partners (t.pt: at your side in a multi) are calc trainers of their own right after their battle ([P], key
 // <trainer>~p<n>; only your starter's team once chosen, as ptOf), so their Pokémon can be dragged to your team.
-const PARTNERS=new Map();for(const t of TRS)(t.pt||[]).forEach((partner,n)=>{const entry={...t,k:t.k+'~p'+n,n:ptName(partner.n)+(partner.st?` (${partner.st})`:''),p:partner.p,tags:[],partnerOf:t.k};delete entry.pt;PARTNERS.set(partner,entry);trByK[entry.k]=entry;});
+const PARTNERS=new Map();for(const t of TRS)(t.pt||[]).forEach((partner,n)=>{const entry={...t,k:t.k+'~p'+n,n:ptName(partner.n)+(partner.st?` (${partner.st})`:''),p:partner.p,tags:[],partnerOf:t.k};delete entry.pt;delete entry.gc;PARTNERS.set(partner,entry);trByK[entry.k]=entry;});
+const chainOf=key=>trByK[key]?.gc||null;
+const sameChain=(before,after)=>!!chainOf(before)?.includes(after);
 const isRel=t=>t.p.some(x=>x.l==null);
 function curMine(){const imp=ST.imp,m=ST.mine;if(m.src==='party'&&imp&&imp.party)return imp.party[m.i]||null;if(m.src==='box'&&imp&&imp.boxes&&imp.boxes[m.b])return imp.boxes[m.b][m.i]||null;if(m.src==='custom')return ST.custom[m.i]||null;return null;}
 function applyEdits(base,key){ST.saved=ST.saved||{};const sv=key&&ST.saved[key],e=key&&ST.edits[key];const w=!!e&&Object.keys(e).some(isSetField);if(!sv&&!e)return {...base};const out={...base,...sv,...e,edited:w,saved:!!sv};for(const f of ['m','na','iv','ev'])if(out[f+'Guess']&&(sv&&f in sv||e&&f in e))out[f+'Guess']=false;return out;}
@@ -188,11 +190,14 @@ function updateField(){AREARULES=areaRules();const area=areaField(),automatic={.
  for(const key of new Set([...Object.keys(AUTOFIELD),...Object.keys(automatic),'weather','terrain','gameType']))if(!ST.fman.includes(key)){if(key in automatic)ST.field[key]=automatic[key];else delete ST.field[key];}AUTOFIELD=automatic;}
 function addSetter(side,effect){if(!effect.weather&&!effect.terrain)return;const mon=getMon(side);SETTERS.push({...effect,side,key:sideInfo(side).key,ability:mon.a,name:byId[mon.id].n,label:AB[mon.a]});}
 function entered(sides,together){updateField();if(together)ENTRYTOGETHER=cardKeys();let order=sides.filter(side=>{const mon=getMon(side),key=sideInfo(side).key;if(mon&&!Number.isFinite(mon.l)){PENDINGENTRY.add(key);return false;}PENDINGENTRY.delete(key);return mon&&(mon.hp??1)>0;});if(!PENDINGENTRY.size)ENTRYTOGETHER=null;if(together)order.sort((left,right)=>{const first={...resolve(getMon(left)),side:left},second={...resolve(getMon(right)),side:right};return (effSpe(second)-effSpe(first))*(ST.field.trickRoom?-1:1);});for(const side of order)addSetter(side,window.DMG.derived(toEngine(getMon(side)),battleField()));updateField();for(const side of order){const other=getMon(side==='mine'?'foe':'mine'),effect=window.DMG.derived(toEngine(getMon(side)),battleField(),other&&Number.isFinite(other.l)?toEngine(other):null);if(effect.restore)setField(side,'broken',false);}}
-function newFight(){delete ST.areaByTrainer;delete ST.foeSp;for(const k of Object.keys(SC))delete SC[k];for(const k of Object.keys(TOX))delete TOX[k];ST.tgt={};ST.st={};ST.hzOffer={};
+function clearBattle(){delete ST.areaByTrainer;for(const k of Object.keys(SC))delete SC[k];for(const k of Object.keys(TOX))delete TOX[k];ST.tgt={};ST.st={};ST.hzOffer={};
+ for(const k of ST.fman)delete ST.field[k];ST.fman=[];SETTERS=[];PENDINGENTRY.clear();ENTRYTOGETHER=null;ACTIONFIELD={};}
+function startBattle(){offerHazards('foe');if(!areaRecords().some(record=>record.effects?.some(effect=>effect.timing==='after-first-send-out')))offerHazards('mine');entered(['mine','foe'],true);}
+function newFight(){clearBattle();delete ST.foeSp;
  const fields=[...KEPT,...FIGHT],clear=o=>{if(o)fields.forEach(f=>delete o[f]);};
  for(const [k,e] of Object.entries(ST.edits)){if(k.startsWith('foe:'))delete ST.edits[k];else{clear(e);if(!Object.keys(e).length)delete ST.edits[k];}}
  (ST.custom||[]).forEach(clear);
- for(const k of ST.fman)delete ST.field[k];ST.fman=[];SETTERS=[];PENDINGENTRY.clear();ACTIONFIELD={};offerHazards('foe');if(!areaRecords().some(record=>record.effects?.some(effect=>effect.timing==='after-first-send-out')))offerHazards('mine');entered(['mine','foe'],true);}
+ startBattle();}
 const cardKeys=()=>({mine:sideInfo('mine').key,foe:sideInfo('foe').key,tr:ST.foe.k});
 // Migration on load (older builds stored battle condition): scratch fields go everywhere, saved HP / status move to the
 // edits, a stored Mega (pre) becomes the FIGHT field mega, player cards not selected keep only HP / status / FIGHT, foe
