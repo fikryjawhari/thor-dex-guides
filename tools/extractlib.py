@@ -175,7 +175,59 @@ def trainers_follow_walk(D):
         report('trainers put in walkthrough order:', ', '.join(moved))
 
 
-def finalise(D, hack, prune=None):
+def numbered_gauntlets(section, name_numbers=False):
+    """Yield source-tagged #1..#n runs in one section, separately for each starter/player variant."""
+    variants = dict.fromkeys((trainer.get('st', ''), trainer.get('pl', '')) for trainer in section['tr'])
+    for starter, player in variants:
+        chain = []
+        for trainer in section['tr']:
+            if (trainer.get('st', ''), trainer.get('pl', '')) != (starter, player):
+                continue
+            match = next((re.fullmatch(r'Back to Back #(\d+)', tag) for tag in trainer['tags']
+                          if re.fullmatch(r'Back to Back #(\d+)', tag)), None)
+            if not match and name_numbers and 'Back to Back' in trainer['tags']:
+                match = re.search(r'#(\d+)$', trainer['n'])
+                assert match, ('unnumbered gauntlet member', trainer['n'])
+            number = int(match[1]) if match else None
+            if number in (None, 1):
+                if len(chain) >= 2:
+                    yield chain
+                chain = []
+            if number is not None:
+                assert number == len(chain) + 1, ('gauntlet numbering', trainer['n'], number)
+                chain.append(trainer)
+        if len(chain) >= 2:
+            yield chain
+
+
+def gauntlets(trainers, rules):
+    """Set stable-key gc lists from rules(group, section), which yields chains of trainer objects.
+
+    Run after trainer_keys.stabilise and trainers_follow_walk. No rule means explicitly no chains.
+    Reapplying replaces old gc fields, including ones whose source rule no longer selects a chain.
+    """
+    members = {id(trainer) for group in trainers['g'] for section in group['sec'] for trainer in section['tr']}
+    for group in trainers['g']:
+        for section in group['sec']:
+            for trainer in section['tr']:
+                trainer.pop('gc', None)
+    if rules is None:
+        return
+    for group in trainers['g']:
+        for section in group['sec']:
+            for chain in rules(group, section):
+                if len(chain) < 2:
+                    continue
+                assert all(id(trainer) in members for trainer in chain), 'gauntlet member outside TR'
+                keys = [trainer['k'] for trainer in chain]
+                assert all(isinstance(key, str) and key for key in keys), 'gauntlet needs stable trainer keys'
+                assert len(keys) == len(set(keys)), ('duplicate gauntlet member', keys)
+                for trainer in chain:
+                    assert 'gc' not in trainer, ('overlapping gauntlets', trainer['k'])
+                    trainer['gc'] = list(keys)
+
+
+def finalise(D, hack, prune=None, gauntlet_rules=None):
     """The end of every build: Items standard (tools/itemstd.py), stable pickup keys (tools/pickup_keys.py),
     the hack's species prune, stable trainer keys
     (tools/trainer_keys.py: extract/trainer_keys.json), Trainers page in walkthrough order, shared split names, the data
@@ -190,6 +242,7 @@ def finalise(D, hack, prune=None):
     trainers_follow_walk(D)
     split_names(D)
     trainer_fields.annotate(D)
+    gauntlets(D['TR'], gauntlet_rules)
     moveprops.apply(D, hack, report)
     item_text.apply(D, hack, report)
     schema.standardise(D)

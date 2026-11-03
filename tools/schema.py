@@ -13,6 +13,7 @@ Walkthrough s accepts legacy [text, note] pairs or mission {m, n, u, r, note?, s
 IX is {item: [description, in-battle text, changed?]}; MV.b is optional in-battle text.
 P.hi is [[item, percent?]] (null = unknown). Legacy names become [item, null], never guessed odds.
 IT r[5] parallels text.splitlines(): pickup key or 0. WK it[4] is the matching key (or 0).
+Trainer gc is the same ordered list of stable trainer keys on every member of a 2+ fight gauntlet; absent otherwise.
 """
 
 # Canonical key order per object kind. Optional fields (omitted when empty) are marked in the notes, not here.
@@ -32,7 +33,7 @@ ORDER = {
     'TR': ['g', 'caps'],
     'group': ['n', 'cap', 'tab', 'note', 'sec'],
     'section': ['h', 'cap', 'note', 'opt', 'rw', 'tr'],
-    'trainer': ['k', 'n', 'loc', 'tags', 'st', 'cap', 'note', 'field', 'rw', 'pp', 'c', 'bt', 'pl', 'pt', 'p', 'normal'],
+    'trainer': ['k', 'n', 'loc', 'tags', 'st', 'cap', 'note', 'field', 'rw', 'pp', 'c', 'bt', 'pl', 'gc', 'pt', 'p', 'normal'],
     'normal': ['easy', 'p'],
     'partner': ['n', 'st', 'pl', 'p'],
     'mon': ['id', 'l', 'sl', 'r', 'i', 'a0', 'a', 'ao', 'na', 'iv', 'ev', 'm', 'hp', 'ld', 'au', 'pre', 'x', 'cf', 'hn', 'src'],
@@ -63,6 +64,48 @@ def drop_empty(obj, *keys):
 
 def pickup_key(value):
     return value == 0 or isinstance(value, str) and value.startswith('p') and value[1:].isdigit()
+
+
+def check_gauntlets(trainers):
+    """Mirror dex.js TRS/rivalHidden/ptOf and calc.js D.TR, after finalise's walkthrough ordering."""
+    rows = [trainer for group in trainers['g'] for section in group['sec'] for trainer in section['tr']]
+    chains = []
+    by_key = {trainer['k']: trainer for trainer in rows}
+    for trainer in rows:
+        if 'gc' not in trainer:
+            continue
+        chain = trainer['gc']
+        assert isinstance(chain, list) and len(chain) >= 2, ('invalid gc list', trainer['k'])
+        assert all(isinstance(key, str) and key and '~p' not in key for key in chain), 'gc must use trainer keys'
+        assert len(set(chain)) == len(chain) and trainer['k'] in chain, ('invalid gc membership', trainer['k'])
+        assert all(key in by_key for key in chain), ('unresolved gc key', chain)
+        assert all(by_key[key].get('gc') == chain for key in chain), ('inconsistent gc lists', chain)
+        assert len({by_key[key].get('st', '') for key in chain}) == 1, ('mixed gc starters', chain)
+        assert len({by_key[key].get('pl', '') for key in chain}) == 1, ('mixed gc players', chain)
+        if chain not in chains:
+            chains.append(chain)
+    if not chains:
+        return
+    starters = {trainer['st'] for trainer in rows if trainer.get('st')} or {''}
+    players = {trainer['pl'] for trainer in rows if trainer.get('pl')} | {''}
+    for starter in starters:
+        for player in players:
+            visible = lambda entry: (not entry.get('st') or not starter or entry['st'] == starter) and (
+                not entry.get('pl') or not player or entry['pl'] == player)
+            order = []
+            for trainer in rows:
+                if not visible(trainer):
+                    continue
+                order.append(trainer['k'])
+                partners = trainer.get('pt', [])
+                chosen = [index for index, partner in enumerate(partners) if visible(partner)]
+                order.extend(trainer['k'] + '~p' + str(index) for index in (chosen or range(len(partners))))
+            positions = {key: index for index, key in enumerate(order)}
+            for chain in chains:
+                if chain[0] not in positions:
+                    continue
+                start = positions[chain[0]]
+                assert order[start:start + len(chain)] == chain, ('nonconsecutive gc', starter, player, chain)
 
 
 def standardise(D):
@@ -172,3 +215,4 @@ def standardise(D):
             order(section, 'section')
         order(group, 'group')
     order(tr, 'TR')
+    check_gauntlets(tr)

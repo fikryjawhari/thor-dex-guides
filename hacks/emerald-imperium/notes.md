@@ -492,6 +492,8 @@ extract's finalise(); hack.json: tools/datajson.py HACK_ORDER. [x] = only guides
        battles left]], [note[]], [opt 1 = optional place], [rw reward choices], tr:[trainer]}]}], caps:[[label, cap]]
        (the page's Level caps table)}
        (boxes are level cap runs named from caps, places runs of one location; Hot House stays one box)
+       gc [stable trainer keys in fight order]: optional on every member of a source-documented gauntlet of 2+;
+       identical across members, consecutive in calc order after starter/player filtering (partners follow battles).
        trainer {k key (Trainer key below), n name, loc place, tags[] (Optional, Double Battle, Back to Back #1, Permanent Rain, Trick
        Room...), [st "Water"/"Grass"/"Fire" or the starter's name = shown if that is YOUR starter], [cap default level
        cap], note[], [field evidence records], [rw rewards], [pp pokepast url], [c calc trainer names], [bt battle id shared by trainers fought at

@@ -9,8 +9,87 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import schema
+import extractlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+
+
+class GauntletTest(unittest.TestCase):
+    def trainer(self, key, starter='', player='', tags=None, **extra):
+        return dict(k=key, n=key, st=starter, pl=player, tags=tags or [], p=[], **extra)
+
+    def data(self, rows):
+        return {'g': [{'sec': [{'tr': rows}]}]}
+
+    def test_numbered_starter_chains(self):
+        rows = [self.trainer(starter + str(number), starter=starter, tags=['Back to Back #' + str(number)])
+                for number in (1, 2) for starter in ('Tepig', 'Snivy')]
+        trainers = self.data(rows)
+        rule = lambda group, section: extractlib.numbered_gauntlets(section)
+        extractlib.gauntlets(trainers, rule)
+        self.assertEqual(rows[0]['gc'], ['Tepig1', 'Tepig2'])
+        self.assertEqual(rows[1]['gc'], ['Snivy1', 'Snivy2'])
+        schema.check_gauntlets(trainers)
+        before = copy.deepcopy(trainers)
+        extractlib.gauntlets(trainers, rule)
+        self.assertEqual(trainers, before)
+        extractlib.gauntlets(trainers, None)
+        self.assertTrue(all('gc' not in trainer for trainer in rows))
+
+    def test_numbered_restarts_and_singletons(self):
+        rows = [self.trainer(str(index), tags=['Back to Back #' + str(number)])
+                for index, number in enumerate((1, 2, 1, 2, 3, 1))]
+        self.assertEqual(list(extractlib.numbered_gauntlets({'tr': rows})), [rows[:2], rows[2:5]])
+        rows[0]['tags'] = rows[1]['tags'] = ['Back to Back']
+        rows[0]['n'], rows[1]['n'] = 'Grunt #1', 'Grunt #2'
+        self.assertEqual(list(extractlib.numbered_gauntlets({'tr': rows[:2]}, name_numbers=True)), [rows[:2]])
+
+    def test_partner_after_last_member(self):
+        rows = [self.trainer('first'), self.trainer('last', pt=[{'n': 'Ally', 'p': []}])]
+        trainers = self.data(rows)
+        extractlib.gauntlets(trainers, lambda group, section: [section['tr']])
+        schema.check_gauntlets(trainers)
+
+    def test_invalid_chains(self):
+        for change in ('short', 'type', 'duplicate', 'missing', 'self', 'different', 'starter', 'player',
+                       'gap', 'partner', 'partner-key', 'reversed'):
+            with self.subTest(change=change):
+                rows = [self.trainer('first'), self.trainer('last')]
+                trainers = self.data(rows)
+                extractlib.gauntlets(trainers, lambda group, section: [section['tr']])
+                if change == 'short':
+                    rows[0]['gc'] = ['first']
+                elif change == 'type':
+                    rows[0]['gc'] = [1, 2]
+                elif change == 'duplicate':
+                    rows[0]['gc'] = ['first', 'first']
+                elif change == 'missing':
+                    rows[0]['gc'] = ['first', 'gone']
+                elif change == 'self':
+                    rows[0]['gc'] = ['last', 'gone']
+                elif change == 'different':
+                    del rows[1]['gc']
+                elif change == 'starter':
+                    rows[0]['st'], rows[1]['st'] = 'Tepig', 'Snivy'
+                elif change == 'player':
+                    rows[0]['pl'], rows[1]['pl'] = 'm', 'f'
+                elif change == 'gap':
+                    rows.insert(1, self.trainer('gap'))
+                elif change == 'partner':
+                    rows[0]['pt'] = [{'n': 'Ally', 'st': 'Snivy', 'p': []}]
+                    rows[0]['st'] = rows[1]['st'] = 'Tepig'
+                elif change == 'partner-key':
+                    rows[0]['gc'] = ['first', 'first~p0']
+                else:
+                    for trainer in rows:
+                        trainer['gc'].reverse()
+                with self.assertRaises(AssertionError):
+                    schema.check_gauntlets(trainers)
+
+    def test_overlapping_rules(self):
+        rows = [self.trainer('first'), self.trainer('last')]
+        with self.assertRaises(AssertionError):
+            extractlib.gauntlets(self.data(rows), lambda group, section: [rows, rows])
 
 
 class SchemaTest(unittest.TestCase):
