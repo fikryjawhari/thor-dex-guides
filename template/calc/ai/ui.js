@@ -46,12 +46,13 @@ function mon(entry,side,active,field){
  baseFacts.sleepCounter=resolved.status==='slp'?2:0;
  if(active){
   Object.assign(baseFacts,{focusEnergy:!!field[prefix+'Focus'],laserFocusTimer:field[prefix+'LaserFocus']?1:0,leechSeed:!!field[prefix+'Seeded'],ingrain:!!field[prefix+'Ingrain'],aquaRing:!!field[prefix+'AquaRing'],magnetRise:!!field[prefix+'MagnetRise'],roost:!!field[prefix+'Roost'],dig:input.vol==='dig',fly:input.vol==='fly',dive:input.vol==='dive',minimized:input.vol==='min',isSwitching:input.vol==='switch',toxicCounter:ctx.toxic[entry.key]||1,knockOffFlag:!!input.used,flashFire:ability==='Flash Fire'&&!!input.abilityOn,abilityActivated:!!input.abilityOn});
-  baseFacts.magnetRiseTurns=baseFacts.magnetRise?1:0;baseFacts.roostFlag=baseFacts.roost;baseFacts.isEnemy=side==='foe';
+  baseFacts.magnetRiseTurns=baseFacts.magnetRise?1:0;baseFacts.roostFlag=baseFacts.roost;baseFacts.isEnemy=side==='foe';baseFacts.flashFireActivated=baseFacts.flashFire;baseFacts.wideOpen=!!field[prefix+'GlaiveRush'];baseFacts.toxicCounter=Math.max(0,(ctx.toxic[entry.key]||1)-1);
   Object.assign(baseFacts,facts[entry.key]);
  }
  if(!baseFacts.moveNoChoice&&baseFacts.lastUsedMove)baseFacts.moveNoChoice=baseFacts.lastUsedMove;
  if(!baseFacts.encoredMove&&baseFacts.encoredTurns)baseFacts.encoredMove=baseFacts.lastUsedMove;
  if((ability==='Protosynthesis'&&(['Sun','Harsh Sunshine'].includes(field.weather)||item==='Booster Energy'))||(ability==='Quark Drive'&&(field.terrain==='Electric'||item==='Booster Energy')))baseFacts.paradoxBoostedStat=api.BattleAI_GetHighestParadoxStat(attack,defense,spAttack,spDefense,speed);
+ baseFacts.itemRemovable=baseFacts.heldItemRemovable;
  const stock=[api.speciesName(species.n),...api.weightNames(species.n)].map(name=>metadata('species',name)).find(entry=>entry.weightkg);
  return {species:bases.get(form.species)||species.n,form:form.form,level:input.l,types:resolved.types.slice(),ability,item,status:resolved.status,attack,defense,spAttack,spDefense,speed,totalHP,currentHP:resolved.hp,weight:Math.trunc(10*(profile.over?.species?.[species.id]?.weightkg??stock?.weightkg??1)),statBoosts:Object.fromEntries(stages.map((name,index)=>[name,active?resolved.stg[index]||0:0])),moves,facts:baseFacts};
 }
