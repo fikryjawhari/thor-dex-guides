@@ -2,6 +2,7 @@
 // <details> opened so lazily built sections are compared too. Used to check a template change renders the same.
 // Visits every Pokemon, move, ability, item, nonempty move property, location and trainer route, then the list pages.
 // Usage: node tools/domcompare.mjs <old.html> <new.html> [--kb] [--routes=pattern] [--jobs=N] [--ignore=regex ...]
+//          [--accept-routes=glob,glob]
 //   --kb      sets localStorage "dvkb" = "1" (the in-viewer keyboard and number boxes)
 //   --routes  keep routes containing pattern (=pattern: exactly that route)
 //   --jobs    split the routes into N chunks, each swept in its own old and new tab at once (default: a quarter of the CPU threads).
@@ -9,6 +10,10 @@
 //             same order, so state carried over between routes is the same on both sides.
 //   --ignore  remove what matches regex from every snapshot before comparing (expected changes, e.g. --ignore=" bt"
 //             for a new class); can be given more than once.
+//   --accept-routes  routes whose DOM is expected to change (comma globs, `*` any characters: '#/calc', '#/tr/*'): a
+//             differing one is listed as "accepted, differs" and doesn't fail. tools/gate.py passes the job's accepts
+//             (--accept-routes, .tmp/accept.json).
+// Build stamps (the footer's "built <date>") are normalised away first: tools/domnorm.mjs.
 // Flagged routes are loaded fresh first (up to FRESH=n of them, default 100; the rest count as differing); those that
 // still differ are replayed alone with their chunk's history (REPLAY=n, default 3), and only a route that differs again
 // counts and is printed (SHOW=n, default 2; LIST=1 lists every differing route).
@@ -22,12 +27,14 @@ import { availableParallelism } from 'node:os';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { startBrowser } from './browser.mjs';
+import { normalise, routeMatcher } from './domnorm.mjs';
 
 const args = process.argv.slice(2);
 const files = args.filter(a => !a.startsWith('--')).map(f => pathToFileURL(resolve(f)).href);
 const opt = k => (args.find(a => a.startsWith(`--${k}=`)) || '').slice(k.length + 3);
 const KB = args.includes('--kb'), PAT = opt('routes'), JOBS = Math.max(1, +opt('jobs') || Math.max(2, availableParallelism() >> 2));
 const IGN = args.filter(a => a.startsWith('--ignore=')).map(a => a.slice(9));
+const ACCEPTED = routeMatcher(args.filter(a => a.startsWith('--accept-routes=')).flatMap(a => a.slice(16).split(',')));
 let closing = false, browser;
 const fail = msg => { if (!closing) { console.log(msg); cleanup().then(() => process.exit(2)); } };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -73,7 +80,7 @@ const PAGE = `async (routes, want, ign) => {
     for (const el of b.querySelectorAll('*')) { if (el.attributes.length < 2) continue;
       const at = [...el.attributes].map(a => [a.name, a.value]).sort((p, q) => p[0] < q[0] ? -1 : 1);
       for (const [n] of at) el.removeAttribute(n); for (const [n, v] of at) el.setAttribute(n, v); }
-    let h = b.innerHTML; for (const p of ign) h = h.replace(new RegExp(p, 'g'), '');
+    let h = (${normalise.toString()})(b.innerHTML); for (const p of ign) h = h.replace(new RegExp(p, 'g'), '');
     return h.replace(/blob:[^)"]+/g, 'blob').replace(/ class=""/g, '').replace(/>\\s+</g, '><').trim(); };
   const hash = s => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return h + ':' + s.length; };
   // Lazy sections fill on toggle events and timers: wait until the DOM has had no change for a while.
@@ -148,7 +155,10 @@ try {
   for (const [x, y] of res) for (const s of [x, y]) for (const [kind, [n, ms]] of Object.entries(s.kinds || {})) { const k = kinds[kind] || (kinds[kind] = [0, 0]); k[0] += n; k[1] += ms; }
   console.log('time by route kind (both builds, tab-seconds):', Object.entries(kinds).sort((p, q) => q[1][1] - p[1][1])
     .map(([kind, [n, ms]]) => `${kind} ${n} ${(ms / 1000).toFixed(1)}s (${Math.round(ms / n)} ms)`).join(', '));
-  const flagged = routes.filter(r => a.out[r] !== b.out[r]);
+  const differs = routes.filter(r => a.out[r] !== b.out[r]);
+  const accepted = differs.filter(ACCEPTED), flagged = differs.filter(r => !ACCEPTED(r));
+  if (routes.some(ACCEPTED)) console.log(`accepted, differs: ${accepted.length}`, accepted.join(' '),
+    `| accepted, identical: ${routes.filter(r => ACCEPTED(r) && !accepted.includes(r)).join(' ') || '-'}`);
   console.log('no hashchange (old/new):', a.slow.length, b.slow.length, a.slow.slice(0, 5));
   console.log('never settled (old/new):', a.busy.length, b.busy.length, a.busy.slice(0, 5));
   console.log('page errors old:', a.errs.length, a.errs.slice(0, 3), ' new:', b.errs.length, b.errs.slice(0, 3));

@@ -1,6 +1,7 @@
 """Unit tests for the gate's helpers: text lint, accepted data differences, domcompare's build-stamp normalisation.
 uv run python -X utf8 -I tools/gate_test.py"""
 from pathlib import Path
+import subprocess
 import sys
 import unittest
 
@@ -95,6 +96,26 @@ class AcceptData(unittest.TestCase):
                              {'eternal-x': ['IT[]', 'P[].s', 'MV[].a', 'MV[].b'], 'hardlove-gold': ['IT[]', 'P[].s']})
             self.assertEqual(dict(gateaccept.accepts('routes', None, hacks, path)), {'hardlove-gold': ['#/calc']})
             self.assertEqual(gateaccept.accepts('data', None, hacks, Path(directory) / 'none.json'), {})
+
+
+class DomNormalise(unittest.TestCase):
+    def test_stamps_and_routes(self):
+        subprocess.run(['node', '--input-type=module', '-e', """
+import assert from 'node:assert/strict';
+import { pathToFileURL } from 'node:url';
+const { normalise, routeMatcher } = await import(pathToFileURL(process.argv[1]).href);
+const foot = d => `<div class="foot">Eternal X offline dex · 975 Pokémon · 40 trainers · built ${d} · credit</div>`;
+assert.equal(normalise(foot('2026-11-02')), normalise(foot('2026-11-03')));
+assert.equal(normalise(foot('2026-11-02')), foot('<date>'));
+assert.equal(normalise('built 2026-11-02T10:31:05.123Z.'), 'built <date>.');
+assert.equal(normalise('<p>prebuilt 2026-11-02</p><i>built by hand</i>'), '<p>prebuilt 2026-11-02</p><i>built by hand</i>');
+// injected into the page as source: it must still work stringified
+assert.equal(eval('(' + normalise.toString() + ')')(foot('2025-01-01')), foot('<date>'));
+const accepted = routeMatcher(['#/calc', '#/tr/*', '']);
+assert.ok(accepted('#/calc') && accepted('#/tr/t12'));
+assert.ok(!accepted('#/calcx') && !accepted('#/') && !accepted('#/p/1'));
+assert.ok(!routeMatcher([])('#/calc'));
+""", str(ROOT / 'tools/domnorm.mjs')], check=True, capture_output=True, text=True)
 
 
 if __name__ == '__main__':

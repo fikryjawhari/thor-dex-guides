@@ -234,7 +234,7 @@ class Gate:
             tail = ' | '.join(text.strip().splitlines()[-2:])[-500:]
             if any(str(part).endswith('domcompare.mjs') for part in command):
                 tail = ' | '.join(line for line in text.splitlines()
-                                  if re.match(r'^\d+ routes|^page errors old:|^differing routes:', line)) or tail
+                                  if re.match(r'^\d+ routes|^page errors old:|^differing routes:|^accepted, differs', line)) or tail
             passed = completed.returncode == 0 and not diagnostics
             seconds = time.monotonic() - started
             if not passed and retry:
@@ -382,9 +382,11 @@ def template_check(gate, names, jobs=8, routes_ok=None):
     for hack in names:
         old = str(BASE / 'dist' / (hack + '.html'))
         new = str(ROOT / 'dist' / (hack + '.html'))
+        accept = (routes_ok or {}).get(hack)
+        accept = ['--accept-routes=' + ','.join(accept)] if accept else []
         for mode in ([], ['--kb']):
             runs.append((hack + '-dom' + ('-kb' if mode else ''),
-                         ['node', 'tools/domcompare.mjs', old, new, '--jobs=2', *mode], hack))
+                         ['node', 'tools/domcompare.mjs', old, new, '--jobs=2', *mode, *accept], hack))
         runs.append((hack + '-consistency', ['node', 'tools/consistency-check.mjs', hack], hack))
         gate.run(hack + '-tabs', [*PY, '-I', 'tools/tabs_check.py', hack])
         stops = [stop for split in load(ROOT / 'hacks' / hack / 'data.json')['WK']['splits'] for stop in split['st']]
