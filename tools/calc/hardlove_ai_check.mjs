@@ -9,7 +9,7 @@ import * as calc from '../../template/calc/ai/hardlove/calc.mjs';
 import {SOURCE_MOVE_TRAITS} from '../../template/calc/ai/hardlove/damage-data.mjs';
 import * as helpers from '../../template/calc/ai/hardlove/helpers.mjs';
 import {BattleAI_CalcEffectiveSpeed, AI_IsClient2Faster} from '../../template/calc/ai/hardlove/speed.mjs';
-import {BasicScoring, HarassmentScoring, RecoveryScoring, shouldRecover, GetRecoverAmountPercent} from '../../template/calc/ai/hardlove/scoring.mjs';
+import {BasicScoring, HarassmentScoring, RecoveryScoring, shouldRecover, GetRecoverAmountPercent, ScoreMovesAgainstAlly} from '../../template/calc/ai/hardlove/scoring.mjs';
 
 const results = [];
 check('review: source punching table deliberately substitutes Growl for Double Shock', () => {
@@ -561,7 +561,7 @@ check('doubles faster: target-first ties then tied move, not uniform across all 
   assert.deepEqual(ChooseMove({mask: 3}).map(move => [move.index, exact(move.weight)]), [[0, {numerator: '1', denominator: '2'}], [1, {numerator: '1', denominator: '2'}]]);
   const state = doubleState();
   const result = presentDoublesMon(state, 0, pickDoublesMon(state, 0));
-  assert.deepEqual(result.pairs.map(pair => pair.percent), [50, 50]);
+  assert.deepEqual(result.pairs.filter(pair => pair.target.side === 'player').map(pair => pair.percent), [50, 50]);
   assert.equal(result.pairs.reduce((sum, pair) => sum + pair.percent, 0), 100);
 });
 
@@ -591,6 +591,42 @@ check('C partner-ignore: any OHKO is enough even when Encore picks a non-OHKO at
   assert.equal(result.foes[1].pairs.find(move => move.target.slot === 0).probability, 0);
   const onePlayer = evaluateDoubles({...state, players: [state.players[0], lax({currentHP: 0})]});
   assert.ok(onePlayer.firstBranches.every(branch => branch.ignoredPlayer === -1));
+});
+
+check('doc ally: Helping Hand target-first race is 23/48; ally score labels are prefixed A', () => {
+  const helping = mv('Helping Hand', 'Normal', 'Status', 0, 'BOOST_ALLY_POWER_BY_50_PERCENT');
+  const state = doubleState({foes: [chomp({moves: [CLAW, helping]}), chomp({speed: 80, moves: [CLAW]})]});
+  const result = evaluateDoubles(state);
+  const pair = result.foes[0].pairs.find(pair => pair.name === 'Helping Hand' && pair.target.side === 'foe');
+  assert.deepEqual(pair.exact, {numerator: '23', denominator: '48'});
+  assert.equal(pair.score, 'A+6/+8');
+  assert.ok(result.foes[0].pairs.filter(pair => pair.name === 'Helping Hand' && pair.target.side === 'player').every(pair => pair.probability === 0));
+  for (const foe of result.foes) assert.equal(foe.pairs.reduce((sum, pair) => sum + pair.percent, 0), 100);
+});
+
+check('doc ally: all support distributions, boosts, healing speed and Weakness Policy', () => {
+  const fixture = (move, attackerExtra = {}, allyExtra = {}, playerExtra = {}) => {
+    const attacker = chomp({moves: [move], ...attackerExtra});
+    const ally = chomp({...allyExtra});
+    const state = {attacker, defender: lax(playerExtra), attackerAlly: ally, defenderAlly: lax(), isDoubleBattle: true};
+    const ai = BuildStateVariables(state);
+    return enumerateRandomBranches(random => ScoreMovesAgainstAlly(state, 0, ai, random)).map(branch => [branch.score, Number(branch.weight)]);
+  };
+  const status = name => mv(name, 'Normal', 'Status', 0);
+  assert.deepEqual(fixture(status('Decorate')), [[1006, 0.5], [1008, 0.5]]);
+  assert.deepEqual(fixture(status('Coaching'), {}, {statBoosts: {attack: 2, defense: 2}}), [[1004, 0.5], [1006, 0.5]]);
+  assert.deepEqual(fixture(status('Skill Swap'), {}, {species: 'Slaking', ability: 'Truant'}), [[1006, 0.5], [1009, 0.5]]);
+  assert.deepEqual(fixture(status('Role Play'), {}, {ability: 'Huge Power'}), [[1009, 0.75], [1012, 0.25]]);
+  assert.deepEqual(fixture(status('Heal Pulse'), {}, {currentHP: 75}), [[1007, 1]]);
+  assert.deepEqual(fixture(status('Heal Pulse'), {}, {currentHP: 75}, {speed: 200}), [[0, 1]]);
+  assert.deepEqual(fixture(mv('Aqua Jet', 'Water', 'Physical', 40), {}, {types: ['Fire'], item: 'Weakness Policy'}), [[1006, 0.25], [1009, 0.5], [1012, 0.25]]);
+});
+
+check('C ally quirk: ally scoring bypasses PP, Taunt, Disable and Encore bonuses', () => {
+  const move = mv('Helping Hand', 'Normal', 'Status', 0, 'BOOST_ALLY_POWER_BY_50_PERCENT', {pp: 0});
+  const state = doubleState({foes: [chomp({moves: [move], facts: {tauntTurns: 1, disabledTurns: 1, disabledMove: move.name}}), chomp({speed: 80, moves: [CLAW]})]});
+  const result = evaluateDoubles(state);
+  assert.equal(result.foes[0].pairs.find(pair => pair.target.side === 'foe').percent, 100);
 });
 
 check('hard switch: hand-calculated integer variance, thresholds and Perish Song', () => {

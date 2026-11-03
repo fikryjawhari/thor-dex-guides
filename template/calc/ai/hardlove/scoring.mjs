@@ -1,5 +1,6 @@
 import * as helpers from './helpers.mjs';
 import * as calc from './calc.mjs';
+import {BattleAI_GetTypeEffectiveness} from './damage.mjs';
 
 const id = value => String(value?.name ?? value ?? 'NONE').toUpperCase().replace(/[^A-Z0-9]/g, '') || 'NONE';
 const effect = value => String(value ?? '').replace(/^MOVE_EFFECT_/, '').toUpperCase();
@@ -1944,6 +1945,60 @@ export function ScoreMovesAgainstDefender(state, moveIndex, ai, random) {
 }
 
 export const scoreMove = ScoreMovesAgainstDefender;
+
+export function ScoreMovesAgainstAlly(state, moveIndex, ai, random) {
+    if (!ai.isDoubleBattle || !ai.isAllyAlive) return 0;
+    const move = state.attacker.moves[moveIndex];
+    if (!move || id(move) === 'NONE') return 0;
+    const attacker = ai.attackerMon;
+    const ally = ai.aimonAlly;
+    const partnerMove = id(ai.partnerMoveNo);
+    let score = 0;
+    switch (id(move)) {
+    case 'HELPINGHAND': {
+        const partnerAttacks = partnerMove !== 'NONE' ? ai.partnerClicksAttackingMove : ai.partnerCanAttack;
+        score = ai.ignoreTarget || partnerMove === 'HELPINGHAND' || !partnerAttacks ? -20 : 6 + (random(2) === 0 ? 2 : 0);
+        break;
+    }
+    case 'MILKDRINK': case 'HEALPULSE': case 'POLLENPUFF':
+        if (!calc.IsBattleMonSlowerThanOpposition(state, ai, attacker) && ally.percenthp <= 50) score += 7;
+        break;
+    case 'SKILLSWAP':
+        if ((['FLASHFIRE', 'TECHNICIAN'].includes(id(attacker.ability)) && id(ally.ability) !== id(attacker.ability) && id(ally.species) === 'DURANT')
+            || (id(attacker.ability) === 'PRANKSTER' && id(ally.ability) !== 'PRANKSTER' && id(ally.species) === 'BRELOOM')
+            || (id(ally.ability) === 'TRUANT' && id(ally.species) === 'SLAKING')
+            || (id(ally.ability) === 'SLOWSTART' && id(ally.species) === 'REGIGIGAS')) score += 6 + (random(2) === 0 ? 3 : 0);
+        break;
+    case 'DECORATE':
+        score += 6 + (random(2) === 0 ? 2 : 0);
+        if (ally.states.attack > 1 || ally.states.spAttack > 1) score -= 2;
+        break;
+    case 'COACHING':
+        score += 6 + (random(2) === 0 ? 2 : 0);
+        if (ally.states.attack > 1) score--;
+        if (ally.states.defense > 1) score--;
+        break;
+    case 'ACUPRESSURE': score += 6 + (random(2) === 0 ? 2 : 0); break;
+    case 'ROLEPLAY':
+        if (['HUGEPOWER', 'PUREPOWER'].includes(id(ally.ability)) && !['HUGEPOWER', 'PUREPOWER'].includes(id(attacker.ability))) score += 9 + (random(4) === 0 ? 3 : 0);
+        break;
+    case 'ENTRAINMENT':
+        if ((id(attacker.ability) === 'NOGUARD' && ally.moves.some(known => ['FISSURE', 'HORNDRILL'].includes(id(known))))
+            || (id(ally.ability) === 'TRUANT' && id(ally.species) === 'SLAKING')
+            || (id(ally.ability) === 'SLOWSTART' && id(ally.species) === 'REGIGIGAS')) score += 6 + (random(2) === 0 ? 3 : 0);
+        break;
+    case 'AQUAJET': case 'MACHPUNCH': case 'BULLETPUNCH': case 'VACUUMWAVE': case 'SHADOWSNEAK': case 'ICESHARD': case 'QUICKATTACK':
+        if (id(ally.item) === 'WEAKNESSPOLICY' && BattleAI_GetTypeEffectiveness(state, move, attacker, ally) >= 20) {
+            score += 6;
+            const draw = random(4);
+            if (draw === 0 || draw === 1) score += 3;
+            else if (draw === 3) score += 6;
+        }
+        break;
+    }
+    if (partnerMove === 'HELPINGHAND' && move.category === 'Status') score -= 20;
+    return score > 0 ? score + 1000 : score;
+}
 
 function sourceMon(mon) {
     const facts = mon.facts ?? {};

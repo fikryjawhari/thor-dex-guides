@@ -1,11 +1,17 @@
-import {Fraction, roundedPercentages} from '../enumerate.mjs';
+import {Fraction, roundedPercentages, enumerateRandomBranches, highestScoreGroups} from '../enumerate.mjs';
 import {BuildStateVariables, snapshotMon} from './state.mjs';
 import {AI_IsClient2Faster} from './speed.mjs';
-import {damageScores, maskIndices, presentMove} from './pick_command.mjs';
+import {damageScores, maskIndices, presentMove, moveKey} from './pick_command.mjs';
+import {ScoreMovesAgainstAlly} from './scoring.mjs';
 
 const ZERO = new Fraction();
 const ONE = new Fraction(1n);
 const alive = mon => mon?.currentHP > 0;
+
+export function OverrideWrongTargetForMove(move, target, attackerSlot) {
+  if (['milkdrink', 'acupressure'].includes(moveKey(move)) && !(target.side === 'foe' && target.slot === (attackerSlot ^ 1))) return {side: 'foe', slot: attackerSlot};
+  return target;
+}
 
 export function FindTargets(groups) {
   const maximum = Math.max(...groups.map(group => group.score));
@@ -40,6 +46,12 @@ export function CalcTurnStateDamagesAndScores(state, slot, {partnerMove, ignored
     target.groups = distribution.groups.map(group => ({...group, score: group.score + 1000}));
     target.scores = distribution.scores;
   }
+  if (alive(ally) && targets.length) {
+    const reference = targets.find(target => target.target.slot === slot) ?? targets[0];
+    const distributions = attacker.moves.map((move, index) => enumerateRandomBranches(random => ScoreMovesAgainstAlly(reference.state, index, reference.ai, random)));
+    targets.push({target: {side: 'foe', slot: slot ^ 1}, state: reference.state, ai: reference.ai,
+      groups: highestScoreGroups(distributions), scores: distributions.map(branches => branches.map(branch => ({...branch, score: branch.score > 0 ? branch.score - 1000 : branch.score})))});
+  }
   return targets;
 }
 
@@ -64,7 +76,7 @@ export function pickDoublesMon(state, slot, condition = {}) {
       }
       const code = `${targetIndex}:${move.index}:${ignoredPlayer}`;
       const prior = branches.get(code);
-      branches.set(code, {index: move.index, target: targets[targetIndex].target, ignoredPlayer, weight: (prior?.weight ?? ZERO).add(mass)});
+      branches.set(code, {index: move.index, target: OverrideWrongTargetForMove(state.foes[slot].moves[move.index], targets[targetIndex].target, slot), ignoredPlayer, weight: (prior?.weight ?? ZERO).add(mass)});
     }
   };
   visit(0, [], ONE);
@@ -84,9 +96,26 @@ export function presentDoublesMon(state, slot, result, digits = 0) {
   const flat = result.weights.flat();
   const percentages = roundedPercentages(flat, digits);
   let offset = 0;
-  const pairs = result.targets.flatMap((target, targetIndex) => result.weights[targetIndex].map((weight, index) => ({
-    ...presentMove(target.state, target.ai, index, weight, target.scores[index], percentages[offset++]), target: target.target,
+  const selections = result.targets.flatMap((target, targetIndex) => result.weights[targetIndex].map((weight, index) => ({
+    ...presentMove(target.state, target.ai, index, weight, target.scores[index], percentages[offset++], target.target.side === 'foe'),
+    target: OverrideWrongTargetForMove(state.foes[slot].moves[index], target.target, slot), selectionTarget: target.target,
   })));
+  const combined = new Map();
+  for (const selection of selections) {
+    const code = `${selection.index}:${selection.target.side}:${selection.target.slot}`;
+    const prior = combined.get(code);
+    const weight = new Fraction(selection.exact.numerator, selection.exact.denominator);
+    if (prior) {
+      const total = new Fraction(prior.exact.numerator, prior.exact.denominator).add(weight);
+      prior.probability = Number(total);
+      prior.exact = total.toJSON();
+      prior.percent += selection.percent;
+      prior.scoreContexts.push({selectionTarget: selection.selectionTarget, score: selection.score, branches: selection.branches});
+      prior.score = [...new Set(prior.scoreContexts.flatMap(context => context.score.split('/')))].join('/');
+      delete prior.branches;
+    } else combined.set(code, {...selection, scoreContexts: [{selectionTarget: selection.selectionTarget, score: selection.score, branches: selection.branches}]});
+  }
+  const pairs = [...combined.values()];
   return {slot, pairs, switch: {probability: 0, exact: ZERO.toJSON(), percent: 0}};
 }
 
