@@ -147,6 +147,31 @@ const checks = [
     },
   },
   {
+    id: 'AI grids fit',
+    title: 'Hardlove grids (ranks, the doubles field column) and the AI section: cells one height (24 px narrow) in two rows when narrow, closed rows 32 px, cards on 3 lines',
+    sizes: [[260, 316], [480, 316]],
+    modes: MODES,
+    skip: guide().data.cfg.calc.ai ? null : 'profile has no AI',
+    run: async page => {
+      await setupCalc(page);
+      for (const format of ['Singles', 'Doubles']) {
+        await page.value(`(()=>{const s=CALC.state();s.team=s.imp.party.slice(0,6).map(mon=>({src:'party',pid:mon.pid}));s.field.gameType=${JSON.stringify(format)};if(!s.fman.includes('gameType'))s.fman.push('gameType');s.dir='in';CALC.ai.clear();CALC.render();})()`);
+        await page.value(`(()=>{const field=document.querySelector('details.dfield');if(field)field.open=true;const ai=document.querySelector('details[data-fgroup="ai"]');if(ai)ai.open=true;})()`);
+        await page.settle();
+        const m = await page.value(`(()=>{CALC.fit();const lines=card=>{const boxes=[],walk=el=>{for(const child of el.children){const style=getComputedStyle(child);if(style.display==='contents')walk(child);else if(style.display!=='none'&&!child.matches('.dhpbar,.ed,.dfch')){const r=child.getBoundingClientRect();if(r.height)boxes.push(r);}}};walk(card);boxes.sort((a,b)=>a.top-b.top);let n=0,bottom=-1e9;for(const r of boxes){if(r.top>=bottom-2){n++;bottom=r.bottom;}else bottom=Math.max(bottom,r.bottom);}return n;};const grid=sel=>{const cells=[...document.querySelectorAll(sel)].map(e=>e.getBoundingClientRect());return {h:[...new Set(cells.map(r=>Math.round(r.height)))],rows:new Set(cells.map(r=>Math.round(r.top))).size};};
+          return {foe:grid('.dfoe .dstrip>button'),team:grid('.dteamrow>button'),ranks:[...document.querySelectorAll('.airank')].map(b=>{const r=b.getBoundingClientRect(),c=b.parentElement.getBoundingClientRect();return r.left>=c.left&&r.top>=c.top&&r.right<=c.right&&r.height<=10;}),cards:[...document.querySelectorAll('.dmatch>.cc')].map(lines),rows:[...document.querySelectorAll('.dres .mr:not(.open)>.mm')].map(e=>e.getBoundingClientRect().height).filter(Boolean),ai:[...document.querySelectorAll('.dfai .aitg>button')].map(b=>Math.round(b.getBoundingClientRect().width)),aiWidth:Math.round(document.querySelector('.dfai .aitg')?.getBoundingClientRect().width||0)};})()`);
+        allOf([
+          [m.foe.h.length === 1 && m.team.h.length === 1 && (page.width >= 480 || m.foe.h[0] === 24 && m.team.h[0] === 24), `${format}: grid cells ${m.foe.h} / ${m.team.h}, want one height each (24 when narrow)`],
+          [page.width >= 480 || (m.foe.rows === 2 && m.team.rows === 2), `${format}: narrow grids in two rows (${m.foe.rows} / ${m.team.rows})`],
+          [m.ranks.length > 0 && m.ranks.every(Boolean), `${format}: rank numbers inside their cells (${m.ranks})`],
+          [page.width >= 480 || m.cards.every(n => n <= 3), `${format}: cards on ${m.cards} lines`],
+          [m.rows.every(h => h >= 31 && h <= 33.5), `${format}: closed rows ${m.rows}`],
+          [m.ai.length > 0 && m.ai.every(w => w >= m.aiWidth / 2 - 4 && w <= m.aiWidth / 2), `${format}: AI toggles in two columns (${m.ai} of ${m.aiWidth})`],
+        ]);
+      }
+    },
+  },
+  {
     id: '1 fit',
     title: 'trainer bar at the top, foe card on three lines (Toxic, Dig, Δ1): the four rows end within the window (both columns when wide); battle-state row 20 px',
     sizes: [[260, 316], [260, 350], [480, 316], [480, 392], [537, 424], [832, 424]],
