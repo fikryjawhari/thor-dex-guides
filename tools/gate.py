@@ -27,6 +27,9 @@ import threading
 import time
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / 'tools'))
+import textlint  # noqa: E402
+
 BASE = ROOT / '.tmp' / 'baseline'
 REBUILDS = {
     'radical-red': ['hacks/radical-red/extract/build.py'],
@@ -322,6 +325,17 @@ def data_check(gate, hack):
         gate.run(hack + '-extract-check', [*PY, '-I', str(checker)])
 
 
+def lint_check(gate, fix=False):
+    """tools/textlint.py over the repo's text, first in check / scenarios: False (and every hit listed) on a problem."""
+    started = time.monotonic()
+    hits = []
+    left = textlint.lint(fix=fix, out=hits.append)
+    for line in hits:
+        print('  ' + line, flush=True)
+    return gate.result('lint', not left, f'{time.monotonic() - started:.1f}s; ' + (
+        'clean' if not left else f'{left} problem{"s" * (left != 1)} (above; CRLF / BOM: gate.py lint --fix)'))
+
+
 def scenario_runs(names, only=None):
     """Every tools/scenarios/*.mjs (or the `only` stems) on each guide's dist: [(label, command, hack)]."""
     scenarios = sorted((ROOT / 'tools' / 'scenarios').glob('*.mjs'))
@@ -381,11 +395,17 @@ def main():
     scenarios.add_argument('--only', type=lambda text: [part for part in text.split(',') if part])
     scenarios.add_argument('--jobs', type=int, default=8, help='runs at once (default 8; 1: serial)')
     scenarios.add_argument('--fresh', action='store_true', help='ignore cached passes (still records new ones)')
+    tidy = commands.add_parser('lint', help='text hygiene only (tools/textlint.py); also first in check / scenarios')
+    tidy.add_argument('--fix', action='store_true', help='CRLF to LF and drop BOMs (control bytes: by hand)')
     args = parser.parse_args()
     gate = Gate(getattr(args, 'fresh', False))
     try:
         if args.command == 'baseline':
             baseline(gate, args.ref)
+        elif args.command == 'lint':
+            lint_check(gate, args.fix)
+        elif not lint_check(gate):
+            print('Text hygiene first: fix the lines above, then rerun.', flush=True)
         elif args.command == 'scenarios':
             names = args.hacks or guides(ROOT)
             unknown = [hack for hack in names if hack not in guides(ROOT)]
