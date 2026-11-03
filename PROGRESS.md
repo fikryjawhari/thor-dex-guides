@@ -27,7 +27,8 @@ from link (same library id, saved state kept).
 ## Open (DETAIL → Open has each in full)
 
 1. Thor / in-game tests of everything since the consistency pass (item, move, ability pages, calc fight state,
-   sprites as CSS classes ...).
+   sprites as CSS classes, gauntlet carry, Find trainer by location, Hardlove's AI odds / switch-ins / Field → AI:
+   `hacks/hardlove-gold/notes.md` → In-game tests).
 2. Real save tests: one real import per guide on the Thor, compared with PKHeX.
 3. Footer credits: `cfg.credit` hook exists, no guide sets it. Agreed, not done.
 4. Skill re-upload once its references cover the item pages (5).
@@ -37,16 +38,13 @@ from link (same library id, saved state kept).
 8. Small data leftovers: missing item icons, tutor-card parsing, a `nomerge` flag, an unused CSS rule.
 9. Radical Red follow-ups: in-game checks, one real `.srm` import, Gulp Missile, Chillet's sprite.
 10. Check tiers past ~10 guides (the last check-speed follow-up).
-11. Calc: gauntlets carry fight state (template, every guide): spec settled (mockup approved), next the build (data
-    unit, then template unit); `plans/gauntlet-carry.md`. First of the calc plans.
-12. Calc: Hardlove AI move odds, switch-in order, doubles (port of `src/trainerai/`): UI spec settled (mockup
-    approved), build after 11 (both in calc.js); in-game tests listed in the plan; `plans/calc-ai.md`.
-13. Calc: range compare: noted for later (space); `plans/calc-range-compare.md`.
+11. Calc: range compare: noted for later (space); `plans/calc-range-compare.md`.
 
 ## Next session
 
-- **Calc plans (11, 12):** specs settled 2026-11-03. Build 11 (`plans/gauntlet-carry.md`: data unit, then template
-  unit), then 12 (`plans/calc-ai.md`: port + UI). Opus main chat dispatching Sol agents.
+- **Calc plans done** (merged 2026-11-03): gauntlet carry (every guide with chains), Hardlove AI (odds, switch-ins,
+  doubles, Field → AI), Find trainer by location, gate hardening (`-X utf8`, text lint, accept lists, auto-baseline,
+  build freshness). Next: the user's Thor / in-game tests (Open 1), then range compare (Open 11) or a new guide.
 - **Next guide:** say which hack. Sources-only start:
   `.agents/references/new-guide-sources.md`; the whole procedure: `.agents/references/new-guide.md`.
 

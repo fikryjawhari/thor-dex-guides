@@ -373,6 +373,19 @@ is what the game shows if the point goes the other way.
   - Physical in Snow: `22 22 22 22 24 24 24 24 24 24 25 25 25 25 25 27`. Other way (no Snow): `33 33 33 33 34 34 34 34 36 36 36 36 37 37 37 39`.
   - Special in Snow: `76 76 78 78 79 81 81 82 82 84 85 85 87 87 88 90`, the same with no Snow.
 
+AI and gauntlet checks (the calc follows the C; these confirm it in game; details under Damage calc / AI):
+- **Gauntlets:** Kimono Girls / Lighthouse: HP, status and used items carry between members; nothing heals between
+  them.
+- **AI picks:** with Encore the locked move every turn; Taunted never a status move; Protect "last turn" / "2 turns"
+  changes how often it Protects; Sleep 1/2/3 changes the Sleep Talk / Snore pick; Yawn, Bound, Future Sight on your
+  Pokémon change its picks. Perish Song at score 104 is 60 %, not the doc's 66 %.
+- **Doubles:** the faster foe picks first (Speed-tie order: the first-requested slot); the slower one ignores a
+  Pokémon of yours the faster could OHKO with any move, even when the faster doesn't attack it (the opposite slot
+  wins when both are OHKO-able); ally moves skip the PP / Disable / Taunt / Encore checks.
+- **Switch-ins:** after a double KO the second foe in is rank #2, picked before entry effects and before your
+  replacement; Wobbuffet / Wynaut's bonus reads only your opposite-slot Pokémon; Zoroark rerolls per pick (the grid
+  shows the most likely order).
+
 ### Damage calc / AI
 
 #### Guide wiring (unit 3a)
@@ -448,7 +461,7 @@ UI rules: `template/README.md` → Damage calculator. Here: what feeds the engin
   fainted, Speed (unit 3a).
 
 The trainer AI (`src/trainerai/`, pinned `4a8d4a6308`, fetch: SOURCES.md) is ported headless in
-`template/calc/ai/` (plan: `plans/calc-ai.md`). Singles/doubles picks, hard switching and post-KO ranks are headless;
+`template/calc/ai/` (plan: `plans/calc-ai.md` in git history). Singles/doubles picks, hard switching and post-KO ranks are headless;
 unit 3 still supplies the guide-data/state adapter, assembly and UI.
 - Layout: `hardlove/damage.mjs` = `calcDamage.c` (the AI's own formula), `speed.mjs` = `calcSpeed.c`, `calc.mjs` =
   `calc.c`, `helpers.mjs` = `scoringHelper.c`, `state.mjs` = `setupStateVariables.c` (`BuildStateVariables`: damage

@@ -5,6 +5,16 @@ that section), not the whole file.
 
 ## Recent merges
 
+- **Merged 2026-11-03 from `worktree-calc-plans`:** gauntlet carry (`gc` = the chain's trainer keys on every member,
+  `extractlib.gauntlets`; 23 chains in five guides; the calc carries the player's side, keeps each member's foe state,
+  snapshots on a forward step, ↺ resets the member then the gauntlet, dots and accent ‹ ›; `ST.gc` / `ST.gcSel`), the
+  Hardlove AI port (`template/calc/ai/`, one module per `src/trainerai/` C file; 77 node tests; foe move odds column,
+  Sw %, grid order and bench ranks, doubles controls, Field → AI toggles; inlined only with the profile's AI switch),
+  Find trainer by location, and gate hardening (`-X utf8` in every command, `gate.py lint` for CRLF / control bytes /
+  BOM, `--accept-data` / `--accept-routes` or `.tmp/accept.json`, auto-baseline from the merge-base, stale builds
+  reassembled, the footer date ignored by domcompare). Source vs table differences kept from the source: Proton in
+  Ariana's chain, no BB2R School Kids chain (healed between), RR Pokémon Tower and Berry Forest gauntlets. Plans
+  deleted (git keeps them); in-game tests in `hacks/hardlove-gold/notes.md`.
 - **Merged 2026-11-03 from `worktree-check-tests`:** scenarios run `dvkb` only where it changes something (normal
   first; `dvkb` too if the case touched a number / text / search box, or failed; layout checks keep both), and
   consistency-check's fit sweep covers move, ability and item pages. `tools/scenarios/blocks.mjs` asserts the box
