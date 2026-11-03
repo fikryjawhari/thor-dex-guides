@@ -11,7 +11,8 @@ const metadata=(kind,name)=>api.metadata[kind][id(name)]||{};
 function party(side){
  const selected=ctx.sideInfo(side),trainer=ctx.trainer();
  if(side==='foe')return (trainer?.p||[]).map((unused,index)=>{const key='foe:'+trainer.k+':'+index;return {key,mon:ctx.applyEdits(ctx.foeBase(trainer,index),key)};});
- const members=ctx.team().map(entry=>({key:'mine:'+entry.m.pid,mon:entry.src==='custom'?entry.m:ctx.applyEdits(entry.m,'mine:'+entry.m.pid)}));
+ let members=ctx.team().map(entry=>({key:'mine:'+entry.m.pid,mon:entry.src==='custom'?entry.m:ctx.applyEdits(entry.m,'mine:'+entry.m.pid)}));
+ if(!members.length)members=(ctx.state().imp?.party||[]).map(mon=>({key:'mine:'+mon.pid,mon:ctx.applyEdits(mon,'mine:'+mon.pid)}));
  if(!members.some(entry=>entry.key===selected.key)&&selected.base){if(members.length===6)members.pop();members.push({key:selected.key,mon:selected.custom?selected.base:ctx.applyEdits(selected.base,selected.key)});}
  return members;
 }
@@ -28,7 +29,8 @@ function syncSlots(side,party,doubles){
 function move(index,key,slot,active){
  const source=data.MV[index],override=active?ctx.state().mvo[key+':'+slot]||{}:{};
  if(!source.aiEffect)throw new Error('Missing Hardlove AI move effect: '+data.M[index]);
- return {name:data.M[index],type:override.t||source.t,category:source.c,power:override.bp??source.bp??0,effect:source.aiEffect,secondaryEffectChance:source.aiChance,priority:source.pr||0,flags:source.f||[],target:source.tg};
+ const targets={normal:'SINGLE_TARGET',allAdjacentFoes:'ADJACENT_OPPONENTS',allAdjacent:'ALL_ADJACENT'};
+ return {name:data.M[index],type:override.t||source.t,category:source.c,power:override.bp??source.bp??(source.c==='Status'?0:1),effect:source.aiEffect,secondaryEffectChance:source.aiChance,priority:source.pr||0,flags:source.f||[],target:targets[source.tg]||source.tg};
 }
 function mon(entry,side,active,field){
  let input=ctx.megaView(entry.mon);
@@ -41,8 +43,10 @@ function mon(entry,side,active,field){
  const iv=input.iv||[31,31,31,31,31,31],ability=resolved.abil;
  const baseFacts={firstTurnOut:true,lastUsedMove:'',moveNoChoice:'',encoredTurns:0,encoredMove:'',tauntTurns:0,disabledTurns:0,disabledMove:'',torment:false,sleepCounter:0,protectSuccessTurns:0,substitute:false,confusion:false,attract:false,yawn:false,ingrain:false,aquaRing:false,lockOn:false,imprisoned:false,healBlock:false,throatChopTimer:0,laserFocusTimer:0,bindingTurns:0,futurePredictionCount:0,wishCount:0,magnetRise:false,roost:false,lastResortCount:0,recycleItem:'',furyCutterCount:0,metronomeCount:0,slowStartCount:0,flashFire:false,abilityActivated:false,transformed:false,failedLastMove:false,teammateFaintedLastTurn:false,canBelch:false,cantEscape:false,perishSong:false,
   hiddenPowerType:api.GetHiddenPowerType(iv[0],iv[1],iv[2],iv[5],iv[3],iv[4]),flingPower:itemData.fling?.basePower||0,naturalGiftType:itemData.naturalGift?.type||'Normal',naturalGiftPower:itemData.naturalGift?.basePower||0,heldItemRemovable:!!item&&!stones.has(item),isMegaStone:stones.has(item),canEvolve:!!species.et?.length};
+ baseFacts.sleepCounter=resolved.status==='slp'?2:0;
  if(active){
   Object.assign(baseFacts,{focusEnergy:!!field[prefix+'Focus'],laserFocusTimer:field[prefix+'LaserFocus']?1:0,leechSeed:!!field[prefix+'Seeded'],ingrain:!!field[prefix+'Ingrain'],aquaRing:!!field[prefix+'AquaRing'],magnetRise:!!field[prefix+'MagnetRise'],roost:!!field[prefix+'Roost'],dig:input.vol==='dig',fly:input.vol==='fly',dive:input.vol==='dive',minimized:input.vol==='min',isSwitching:input.vol==='switch',toxicCounter:ctx.toxic[entry.key]||1,knockOffFlag:!!input.used,flashFire:ability==='Flash Fire'&&!!input.abilityOn,abilityActivated:!!input.abilityOn});
+  baseFacts.magnetRiseTurns=baseFacts.magnetRise?1:0;baseFacts.roostFlag=baseFacts.roost;baseFacts.isEnemy=side==='foe';
   Object.assign(baseFacts,facts[entry.key]);
  }
  if(!baseFacts.moveNoChoice&&baseFacts.lastUsedMove)baseFacts.moveNoChoice=baseFacts.lastUsedMove;

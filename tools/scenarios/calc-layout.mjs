@@ -129,6 +129,24 @@ async function scrollStops(page) {
 
 const checks = [
   {
+    id: 'AI switch fit',
+    title: 'Hardlove odds rows stay 32 px and the real Sw chip fits the three-line card',
+    sizes: [[260, 316], [480, 316]],
+    skip: guide().data.cfg.calc.ai ? null : 'profile has no AI',
+    run: async page => {
+      await setupCalc(page);
+      await page.value(`(()=>{CALC.use(P.find(mon=>mon.n==='Heatran'));CALC.set('mine','l',50);CALC.set('mine','m',[M.indexOf('Earthquake')]);const s=CALC.state(),t=CALC.trainers().find(t=>t.k===s.foe.k),fish=P.find(mon=>mon.n==='Magikarp'),bench=P.find(mon=>mon.n==='Gyarados');CALC.set('foe','id',fish.id);CALC.set('foe','a',fish.a[0]);CALC.set('foe','l',50);CALC.set('foe','m',[M.indexOf('Tackle')]);CALC.set('foe','hp',1);s.edits['foe:'+t.k+':1']={id:bench.id,a:bench.a[0],l:50,m:[M.indexOf('Earthquake')],i:'',na:'Jolly'};for(let i=2;i<t.p.length;i++)s.edits['foe:'+t.k+':'+i]={hp:0};s.dir='in';CALC.ai.clear();CALC.render();})()`);
+      assert.ok(await page.count('.aiswitch'), 'real party calculation produces Sw > 0');
+      await page.value(threeLineFoe);
+      await page.settle();
+      assert.deepEqual(await rowShape(page), [], 'AI columns keep the closed row shape');
+      const measure=await page.value(`(()=>{CALC.fit();const card=document.querySelector('.cc[data-s=foe]'),rect=card.getBoundingClientRect(),chip=card.querySelector('.aiswitch').getBoundingClientRect();return {inside:chip.right<=rect.right&&chip.left>=rect.left,lines:(()=>{const boxes=[];for(const e of card.querySelectorAll('.l1>*,.cl>*')){if(getComputedStyle(e).display==='none')continue;const r=e.getBoundingClientRect();if(r.width&&r.height)boxes.push(r);}return new Set(boxes.map(r=>Math.round(r.top/4))).size;})(),rows:[...document.querySelectorAll('.dres .mr:not(.open)>.mm')].map(e=>e.getBoundingClientRect().height)};})()`);
+      assert.ok(measure.inside,'Sw is inside the card');
+      if(page.width<480)assert.ok(measure.lines<=3, 'Sw, Toxic, Dig and fight tag fit three lines: '+JSON.stringify(measure));
+      assert.ok(measure.rows.every(height=>height>=31&&height<=33.5),'all closed rows stay 32 px: '+measure.rows);
+    },
+  },
+  {
     id: '1 fit',
     title: 'trainer bar at the top, foe card on three lines (Toxic, Dig, Δ1): the four rows end within the window (both columns when wide); battle-state row 20 px',
     sizes: [[260, 316], [260, 350], [480, 316], [480, 392], [537, 424], [832, 424]],
