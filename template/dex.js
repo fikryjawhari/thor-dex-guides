@@ -230,7 +230,7 @@ function whereTable(p){let h='';
  return h;}
 // Held items: what this form holds in the wild (P.hi, highest % first, no % when the data has none), only on a form you
 // can meet there (wildForm); '' when none (no section). Trainers' held items are on the item page's Held by.
-function heldBlock(p){const wild=wildForm(p)?(p.hi||[]).map(h=>Array.isArray(h)?h:[h,null]).filter(h=>h[0]).map((h,j)=>[...h,j]).sort((a,b)=>(b[1]??-1)-(a[1]??-1)||a[2]-b[2]):[];
+function heldBlock(p){const wild=wildForm(p)?(p.hi||[]).map(h=>Array.isArray(h)?[h[0],h[1]??null]:[h,null]).filter(h=>h[0]).map((h,j)=>[...h,j]).sort((a,b)=>(b[1]??-1)-(a[1]??-1)||a[2]-b[2]):[];
  if(!wild.length)return '';
  return `<div class="phi">${wild.map(([n,pct],j)=>`<div${PK('hi:w:'+n,j)}>${ilink(n)}${pct!=null?`<span class="pct">${esc(pct)}%</span>`:''}</div>`).join('')}</div>`;}
 function confBox(cf){return cf&&cf.length?`<div class="card conf"><h3>Sources disagree</h3><ul>${cf.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="mut small" style="margin-top:4px">${TX.conf}</div></div>`:'';}

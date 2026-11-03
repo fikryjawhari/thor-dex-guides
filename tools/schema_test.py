@@ -174,18 +174,27 @@ class SchemaTest(unittest.TestCase):
                 self.assertEqual(value, before)
 
     def test_held_item_rendering(self):
+        # heldBlock (dex.js): the Pokémon page's wild held items, highest % first, no % when the data has none, only
+        # on a form met in the wild; '' when none. Run from the template's own source with stub helpers.
         subprocess.run(['node', '-e', r"""
 const assert = require('node:assert/strict');
-const source = require('node:fs').readFileSync(process.argv[1], 'utf8').split(/\r?\n/)
-  .find(line => line.includes('Wild held item${'));
-assert(source, 'held-item rendering expression exists');
-const render = new Function('p', 'esc', "let h='';" + source + ';return h;');
-assert.match(render({hi: ['Leftovers']}, String), /Wild held item: Leftovers<\/div>/);
-assert.match(render({hi: [['Leftovers', null]]}, String), /Wild held item: Leftovers<\/div>/);
-assert.match(render({hi: [['Leftovers', 50], ['Oran Berry', 5]]}, String), /Leftovers \(50%\), Oran Berry \(5%\)/);
-assert.match(render({hi: [['Mystery Berry']]}, String), /Wild held item: Mystery Berry<\/div>/);
+const lines = require('node:fs').readFileSync(process.argv[1], 'utf8').split(/\r?\n/);
+const at = lines.findIndex(line => line.startsWith('function heldBlock(p){'));
+assert(at >= 0, 'heldBlock exists');
+let end = at;
+while (!/^ return .*;}$/.test(lines[end])) end++;
+const make = new Function('wildForm', 'PK', 'ilink', 'esc', lines.slice(at, end + 1).join('\n') + ';return heldBlock;');
+const held = (p, wild = true) => make(() => wild, (k, j) => ` data-k="${k}"`, n => `<a>${n}</a>`, String)(p);
+const items = h => [...h.matchAll(/<a>([^<]*)<\/a>(?:<span class="pct">([^<]*)%<\/span>)?/g)].map(m => [m[1], m[2] ?? null]);
+assert.deepEqual(items(held({hi: ['Leftovers']})), [['Leftovers', null]]);
+assert.deepEqual(items(held({hi: [['Leftovers', null]]})), [['Leftovers', null]]);
+assert.deepEqual(items(held({hi: [['Oran Berry', 5], ['Leftovers', 50]]})), [['Leftovers', '50'], ['Oran Berry', '5']]);
+assert.deepEqual(items(held({hi: [['Mystery Berry']]})), [['Mystery Berry', null]]);
+assert.match(held({hi: ['Leftovers']}), /^<div class="phi">/);
+assert.equal(held({hi: []}), '');
+assert.equal(held({}), '');
+assert.equal(held({hi: ['Leftovers']}, false), '', 'not a wild form: no section');
 """, str(ROOT / 'template/dex.js')], check=True, capture_output=True, text=True)
-
 
 if __name__ == '__main__':
     unittest.main()
