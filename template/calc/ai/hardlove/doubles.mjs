@@ -89,3 +89,39 @@ export function presentDoublesMon(state, slot, result, digits = 0) {
   })));
   return {slot, pairs, switch: {probability: 0, exact: ZERO.toJSON(), percent: 0}};
 }
+
+export function evaluateDoubles(state, {digits = 0} = {}) {
+  if (state.foes?.length !== 2 || state.players?.length !== 2) throw new RangeError('Doubles requires two foe slots and two player slots (fainted slots retain their mon with HP zero)');
+  for (const mon of state.foes.filter(alive)) if (!mon.moves?.length || mon.moves.length > 4) throw new RangeError('Move odds require one to four moves');
+  const order = doublesPickOrder(state);
+  if (!order.length) return {order, foes: [], firstBranches: []};
+  const [first, second] = order;
+  const firstResult = pickDoublesMon(state, first);
+  const output = [presentDoublesMon(state, first, firstResult, digits)];
+  if (second !== undefined) {
+    const mixture = CalcTurnStateDamagesAndScores(state, second);
+    const weights = mixture.map(() => state.foes[second].moves.map(() => ZERO));
+    const scores = mixture.map(() => state.foes[second].moves.map(() => new Map()));
+    const cache = new Map();
+    for (const branch of firstResult.branches) {
+      const code = `${branch.index}:${branch.ignoredPlayer}`;
+      if (!cache.has(code)) cache.set(code, pickDoublesMon(state, second, {partnerMove: state.foes[first].moves[branch.index], ignoredPlayer: branch.ignoredPlayer}));
+      const conditional = cache.get(code);
+      for (const [targetIndex, target] of conditional.targets.entries()) {
+        const destination = mixture.findIndex(other => other.target.side === target.target.side && other.target.slot === target.target.slot);
+        for (const [index, weight] of conditional.weights[targetIndex].entries()) {
+          weights[destination][index] = weights[destination][index].add(weight.multiply(branch.weight));
+          for (const score of target.scores[index]) {
+            const prior = scores[destination][index].get(score.score) ?? ZERO;
+            scores[destination][index].set(score.score, prior.add(score.weight.multiply(branch.weight)));
+          }
+        }
+      }
+    }
+    const targets = mixture.map((target, targetIndex) => ({...target, scores: scores[targetIndex].map(distribution => [...distribution]
+      .sort(([left], [right]) => left - right).map(([score, weight]) => ({score, weight})))}));
+    output.push(presentDoublesMon(state, second, {targets, weights}, digits));
+  }
+  return {order, foes: output.sort((left, right) => left.slot - right.slot),
+    firstBranches: firstResult.branches.map(({weight, ...branch}) => ({...branch, probability: Number(weight), exact: weight.toJSON()}))};
+}

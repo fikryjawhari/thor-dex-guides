@@ -38,3 +38,4 @@ export function evaluateSinglesMoves(state, {digits = 0} = {}) {
 }
 
 export {pickSingles as evaluateSingles, CalculateSwitch, getVarianceFromDamage} from './pick_command.mjs';
+export {evaluateDoubles} from './doubles.mjs';

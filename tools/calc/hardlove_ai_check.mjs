@@ -3,7 +3,7 @@ import {mkdir, writeFile} from 'node:fs/promises';
 import {Fraction, enumerateRandomBranches, highestScoreOdds, enumerateDamageScores, roundedPercentages, scoreLabel} from '../../template/calc/ai/enumerate.mjs';
 import {evaluateSingles as evaluateSinglesResult, BuildStateVariables, CalculateSwitch, getVarianceFromDamage} from '../../template/calc/ai/hardlove/index.mjs';
 const evaluateSingles = (state, options) => evaluateSinglesResult(state, options).moves;
-import {FindTargets, ChooseMove, doublesPickOrder, pickDoublesMon, presentDoublesMon} from '../../template/calc/ai/hardlove/doubles.mjs';
+import {FindTargets, ChooseMove, doublesPickOrder, pickDoublesMon, presentDoublesMon, evaluateDoubles} from '../../template/calc/ai/hardlove/doubles.mjs';
 import {BattleAI_CalcBaseDamage, BattleAI_CalcDamage, BattleAI_GetDynamicMoveType, BattleAI_GetTypeEffectiveness, BattleAI_IsParentalBondMove} from '../../template/calc/ai/hardlove/damage.mjs';
 import * as calc from '../../template/calc/ai/hardlove/calc.mjs';
 import {SOURCE_MOVE_TRAITS} from '../../template/calc/ai/hardlove/damage-data.mjs';
@@ -571,6 +571,26 @@ check('doubles order: Trick Room, Lagging Tail, Stall and speed tie keep the ini
   assert.deepEqual(doublesPickOrder(doubleState({foes: [chomp({item: 'Lagging Tail'}), chomp({speed: 50})]})), [1, 0]);
   assert.deepEqual(doublesPickOrder(doubleState({foes: [chomp({ability: 'Stall'}), chomp({speed: 50})]})), [1, 0]);
   assert.deepEqual(doublesPickOrder(doubleState({foes: [chomp(), chomp()]})), [0, 1]);
+});
+
+check('doubles mixture: 10/16 fast KO rolls ignore P0, otherwise slower picks P0 at 13/16', () => {
+  const state = doubleState({players: [lax({currentHP: 60}), lax()]});
+  const result = evaluateDoubles(state);
+  const pair = result.foes[1].pairs.find(move => move.target.slot === 0);
+  assert.deepEqual(pair.exact, {numerator: '39', denominator: '128'});
+  assert.equal(result.firstBranches.filter(branch => branch.ignoredPlayer === 0).reduce((total, branch) => total + branch.probability, 0), 5 / 8);
+  for (const foe of result.foes) assert.equal(foe.pairs.reduce((total, move) => total + move.percent, 0), 100);
+});
+
+check('C partner-ignore: any OHKO is enough even when Encore picks a non-OHKO attacking move', () => {
+  const weak = mv('Tackle', 'Normal', 'Physical', 1);
+  const state = doubleState({foes: [chomp({moves: [CLAW, weak], facts: {encoredTurns: 1, encoredMove: 'Tackle'}}), chomp({speed: 80, moves: [CLAW]})],
+    players: [lax({currentHP: 50}), lax()]});
+  const result = evaluateDoubles(state);
+  assert.ok(result.firstBranches.every(branch => branch.index === 1 && branch.ignoredPlayer === 0));
+  assert.equal(result.foes[1].pairs.find(move => move.target.slot === 0).probability, 0);
+  const onePlayer = evaluateDoubles({...state, players: [state.players[0], lax({currentHP: 0})]});
+  assert.ok(onePlayer.firstBranches.every(branch => branch.ignoredPlayer === -1));
 });
 
 check('hard switch: hand-calculated integer variance, thresholds and Perish Song', () => {
