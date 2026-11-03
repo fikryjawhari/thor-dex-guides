@@ -392,13 +392,31 @@ export function BattleAI_CalcDamage(state, move, attacker = state.attacker, defe
   if (has(move.name, 'Triple Axel', 'Triple Kick')) {
     const hits = [1, 2, 3].map(hit => BattleAI_CalcDamageInternal(state, move, attacker, defender, {...options, pow: hit * (move.name === 'Triple Axel' ? 20 : 10)}));
     const range = Array.from({length: 16}, (_, index) => hits.reduce((sum, hit) => sum + hit.damageRange[index], 0));
-    return makeResult(range, hits[2].moveEffectiveness, options, options.roll === undefined ? undefined : hits.reduce((sum, hit) => sum + hit.damageRoll, 0));
+    const result = makeResult(range, hits[2].moveEffectiveness, options, options.roll === undefined ? undefined : hits.reduce((sum, hit) => sum + hit.damageRoll, 0));
+    result.hitRanges = hits.map(hit => [...hit.damageRange]); // each hit has its own BattleRand % 16
+    return result;
   }
   const result = BattleAI_CalcDamageInternal(state, move, attacker, defender, options);
+  const first = [...result.damageRange];
   if (ability(attacker, 'Parental Bond') && BattleAI_IsParentalBondMove(state, move, attacker, defender, options)) {
     const second = BattleAI_CalcDamageInternal(state, move, attacker, defender, {...options, isParentalBondSecondHit: true});
     result.damageRange = result.damageRange.map((value, index) => value + second.damageRange[index]);
     if (options.roll !== undefined) result.damageRoll += second.damageRoll;
+    result.hitRanges = [first, [...second.damageRange]];
+    return result;
   }
+  result.hitRanges = [[...result.damageRange]];
   return result;
+}
+
+// The rolled damage's distribution: one independent BattleRand % 16 per hit (Triple Axel / Kick: three, Parental
+// Bond: two), summed as BattleAI_CalcDamage sums each hit's damageRoll. Map raw damage -> count out of 16^hits.
+export function BattleAI_RolledDamageOutcomes(hitRanges) {
+  let outcomes = new Map([[0, 1]]);
+  for (const range of hitRanges) {
+    const next = new Map();
+    for (const [total, count] of outcomes) for (const damage of range) next.set(total + damage, (next.get(total + damage) ?? 0) + count);
+    outcomes = next;
+  }
+  return outcomes;
 }

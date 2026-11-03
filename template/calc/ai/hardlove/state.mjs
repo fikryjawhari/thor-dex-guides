@@ -1,4 +1,5 @@
-import {BattleAI_CalcDamage, BattleAI_GetTypeEffectiveness} from './damage.mjs';
+import {BattleAI_CalcDamage, BattleAI_GetTypeEffectiveness, BattleAI_RolledDamageOutcomes} from './damage.mjs';
+import {Fraction} from '../enumerate.mjs';
 import {AI_IsClientGrounded, IsMoveUsable, BattleAI_AdjustUnusualMoveDamage, CanAttackerOneShotDefender, IsMoveUsefulSoundMove, IsMoveForceSwitching, IsMoveValidSwitchingMove} from './calc.mjs';
 import {BattleAI_CalcEffectiveSpeed, AI_IsClient2Faster} from './speed.mjs';
 import {BattlerKnowsThawingMove, BattlerPositiveStatChangesSum} from './helpers.mjs';
@@ -44,6 +45,8 @@ function damageTable(state, move, attacker, defender) {
     raw: [...result.damageRange],
     adjusted: result.damageRange.map(damage => BattleAI_AdjustUnusualMoveDamage(attacker, defender, damage, move.effect, move, result.moveEffectiveness)),
     effectiveness: result.moveEffectiveness,
+    outcomes: BattleAI_RolledDamageOutcomes(result.hitRanges ?? [result.damageRange]),
+    hits: (result.hitRanges ?? [result.damageRange]).length,
   };
 }
 
@@ -136,9 +139,14 @@ export function BuildStateVariables(state) {
       ai.attackerRawDamageRanges[index] = table.raw;
       ai.attackerDamageRanges[index] = table.adjusted;
       ai.effectivenessOnPlayer[index] = table.effectiveness;
-      ai.attackerRollTables[index] = table.adjusted.map(damage => {
+      // The AI's own roll (setupStateVariables.c): rolled damage -> BattleAI_AdjustUnusualMoveDamage -> kill check ->
+      // a killing roll capped at the target's HP. One roll per hit (Triple Axel / Kick, Parental Bond: summed).
+      const denominator = 16n ** BigInt(table.hits);
+      const outcomes = table.hits === 1 ? table.raw.map(raw => [raw, 1]) : [...table.outcomes]; // single hit: index = roll
+      ai.attackerRollTables[index] = outcomes.map(([raw, count]) => {
+        const damage = BattleAI_AdjustUnusualMoveDamage(attackerMon, defenderMon, raw, move.effect, move, table.effectiveness);
         const canOneShot = Boolean(CanAttackerOneShotDefender(damage, move.category, move, attackerMon, defenderMon));
-        return {damage: canOneShot ? defenderMon.hp : damage, canOneShot};
+        return {damage: canOneShot ? defenderMon.hp : damage, canOneShot, weight: new Fraction(BigInt(count), denominator)};
       });
       if (table.effectiveness >= 10) ai.attackerHasValidDamagingMove = true;
     }
@@ -150,7 +158,7 @@ export function BuildStateVariables(state) {
 }
 
 export function ApplyDamageRolls(baseAi, rolls = [0, 0, 0, 0]) {
-  if (!Array.isArray(rolls) || rolls.length !== 4 || rolls.some(roll => !Number.isInteger(roll) || roll < 0 || roll > 15)) throw new RangeError('Provide four independent damage-roll indexes from 0 to 15');
+  if (!Array.isArray(rolls) || rolls.length !== 4 || rolls.some((roll, index) => !Number.isInteger(roll) || roll < 0 || roll >= Math.max(1, baseAi.attackerRollTables[index].length))) throw new RangeError('Provide one roll-outcome index per move slot (0-15 for a single hit)');
   const selected = baseAi.attackerRollTables.map((table, index) => table[rolls[index]]);
   const attackerRolledMoveDamages = selected.map(roll => roll.damage);
   const monCanOneShotPlayerWithMove = selected.map(roll => roll.canOneShot);
