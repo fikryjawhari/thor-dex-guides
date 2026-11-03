@@ -19,6 +19,7 @@
    "trainers"
   ],
   "calc": {
+   "ai": "hardlove",
    "setterStays": true,
    "base": "expansion",
    "save": "gen4",

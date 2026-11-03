@@ -130,6 +130,8 @@ def calc_parts(prof):
     js = [read('template', 'calc', 'engine.js')]
     if prof.get('save'):
         js.append(read('template', 'calc', 'readers', prof['save'] + '.js'))
+    if prof.get('ai'):
+        js.append(read('template', 'calc', 'ai', prof['ai'] + '.js'))
     js.append(read('template', 'calc.js'))
     return '\n'.join(js), read('template', 'calc.css')
 
