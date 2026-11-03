@@ -19,6 +19,8 @@ def gauntlet_rules(group, section):
     if not re.search(r'healed (?:in )?between fights', source, re.I):
         yield from numbered_gauntlets(section)
     for first, last in re.findall(r'(?:The|Then the) (\w+) and (\w+) trainers are fought back-to-back', source, re.I):
+        if not any(trainer['n'].startswith((first + ' Trainer ', last + ' Trainer ')) for trainer in section['tr']):
+            continue
         chain = []
         for weather in (first, last):
             matches = [trainer for trainer in section['tr'] if trainer['n'].startswith(weather + ' Trainer ')]
