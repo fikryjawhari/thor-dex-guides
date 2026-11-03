@@ -177,19 +177,21 @@ function rows(output){
   if(entry.pairs){
    const detail=document.createElement('div');detail.className='aidetail';
    const targets=document.createElement('div');targets.className='aitargets';
-   targets.textContent=entry.pairs.map(pair=>{
+   // The open row: every target, the viewed one first (`→ Scizor 40 % +8 · → Typhlosion 14 % +6 · → ally Arceus 6 %`), then
+   // the shown pair's score branches on one line (`base +6 · +2 25 %`; the slower foe's mixture: one per distinct context).
+   const signed=value=>scoreText(value>0?'+'+value:value),order=pair=>pair.target.side==='foe'?2:pair.target.slot===viewed.mine?0:1;
+   targets.textContent=entry.pairs.slice().sort((a,b)=>order(a)-order(b)).map(pair=>{
     const side=pair.target.side==='foe'?'foe':'mine',key=slots[side][pair.target.slot],target=lastParties[side].find(entry=>entry.key===key),name=target?ctx.resolve(ctx.megaView(target.mon)).name:'empty';
-    return `→ ${side==='foe'?'ally ':''}${name} ${pair.percent} % ${scoreText(pair.score)}`;
+    const top=Math.max(...(pair.scoreContexts||[{branches:pair.branches}]).flatMap(context=>(context.branches||[]).map(branch=>branch.score)));
+    return `→ ${side==='foe'?'ally ':''}${name} ${pair.percent} %${side==='foe'||!Number.isFinite(top)?'':' '+signed(top)}`;
    }).join(' · ');detail.append(targets);
-   for(const pair of entry.pairs){
-    const contexts=pair.scoreContexts||[{branches:pair.branches}];
-    for(const context of contexts){
-     const branches=context.branches||[];if(!branches.length)continue;
-     const line=document.createElement('div');line.className='aibranches';
-     const base=Math.min(...branches.map(branch=>branch.score));
-     line.textContent=`${pair.target.side==='foe'?'Ally':'Player '+(pair.target.slot+1)}: base ${scoreText(base>0?'+'+base:base)} · `+branches.map(branch=>`${branch.score===base?'base':scoreText('+'+(branch.score-base))} ${Number((branch.probability*100).toFixed(3))}%`).join(' · ');detail.append(line);
-    }
-   }
+   const shown=entry.pairs.find(pair=>pair.target.side===entry.target?.side&&pair.target.slot===entry.target?.slot);
+   const texts=[...new Set((shown?.scoreContexts||[{branches:shown?.branches}]).map(context=>{
+    const branches=context.branches||[];if(!branches.length)return '';
+    const base=Math.min(...branches.map(branch=>branch.score));
+    return [`base ${signed(base)}`,...branches.filter(branch=>branch.score!==base).map(branch=>`${signed(branch.score-base)} ${Number((branch.probability*100).toFixed(1))} %`)].join(' · ');
+   }).filter(Boolean))];
+   if(texts.length){const line=document.createElement('div');line.className='aibranches';line.textContent=texts.join(' | ');detail.append(line);}
    body.querySelector('.dd')?.prepend(detail);
   }
  }
