@@ -397,10 +397,26 @@ The trainer AI (`src/trainerai/`, pinned `4a8d4a6308`, fetch: SOURCES.md) is por
 - `BattleAI_GetDynamicMoveType`: the C's `default: type = TYPE_NORMAL` then `else if (type)`: `TYPE_NORMAL` is 0, so
   ordinary moves keep the move table's type (the first port read it as "every move is Normal").
 - `EXPLOSION_ON_LAST_MON` is 0 (main.c:18): the last-mon Explosion penalty is off.
-- Engine vs `calcDamage.c`: unfinished. `tools/calc/hardlove_ai_damage_compare.mjs` runs `calc_matchups.json` through both:
-  51 / 95 identical with a rough state adapter. The differences so far are mostly the adapter (field keys such as
-  `defReflect`, crit, stages, weights, Power Trick, gems) and things the AI's formula leaves out by design (Protect
-  zeroes the engine's damage; the AI scores Protect separately). Each real gap goes here once classified.
+- Engine vs `calcDamage.c`: `tools/calc/hardlove_ai_damage_compare.mjs` compares all sixteen summed rolls in the
+  95 `calc_matchups.json` cases: 82 identical, 13 explained, zero unexplained. JSON (full arrays and reasons):
+  `.tmp/ai-engine/damage-comparison.json`; log: `.tmp/ai-engine/compare.log`. This is not an independent game oracle.
+  Adapter repairs: source move effects (Reckless/Sheer Force and multi-hit adjustment), flag and target names,
+  screens, guaranteed crit state, Power Trick raw-stat swap, hectogram weights with form overrides, effective
+  Speed, Helping Hand partner move, living Flower Gift partner, spread target count, suppressed held items.
+  `GetBattleMonItem` (`src/battle/battle_calc_damage.c:200`, same pin) returns no item for Klutz, Embargo, Magic
+  Room and opposing Unnerve on berries; do not pass the UI's raw item as an active AI item in those states.
+
+Real formula gaps in those cases (odds always use the AI behaviour, not the displayed damage engine):
+| Term / cases | AI (`calcDamage.c` / `calc.c`) | Damage engine |
+| --- | --- | --- |
+| Sheer Force / `source-sheer-force-thousand-waves` | `IsMoveBoostedBySheerForce` excludes Thousand Waves | Includes it (48-57 vs AI 37-44) |
+| Gem / `gem-pledge-excluded` | Matching gem boosts Water Pledge by 1.5 | Pledges excluded (37-45 vs AI 55-66) |
+| Protect / `protect-blocks`, `unseen-fist-noncontact-still-blocked`, `source-noncontact-{sunsteel-strike,collision-course,electro-drift,thunderous-kick,behemoth-blade}`, `unseen-fist-punching-glove` | No Protect damage reduction; Protect is scored separately | Zero damage |
+| Protect / `unseen-fist-contact` | Full damage (152-180) | Engine contact bypass still applies 1/4 (38-45); not a claim that the game does |
+| Gyro Ball / `w2-gyro-ball-equal-speed` | `floor(25*defSpeed/atkSpeed)+1`, capped 150 (26 BP here) | No +1 (25 BP here) |
+| Punishment / `w2-punishment-positive-and-negative-boosts` | TODO/commented out; leaves move table power 1 | `min(200,60+20*sumPositiveDefenderStages)` (160 BP here) |
+
+The remaining helper/damage review and status/hazard/recovery fixtures are still in progress.
 
 AI inputs the calc lacks (the AI toggle list; the port reads them from `facts`): first turn out (`firstTurnOut`:
 Fake Out / First Impression), last move (`lastUsedMove`: Torment, Encore, choice lock `moveNoChoice`), Encore
