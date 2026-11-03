@@ -16,6 +16,11 @@ from collections import defaultdict
 from common import BULBA, load, norm, report, fix, split_name
 from wikitext import split_args
 from ctrguide import default_moves, trainer_match_score
+
+
+def gauntlet_rules(group, section):
+    """The source docs name no back-to-back chains; Poni Gauntlet is only a location."""
+    return ()
 import totems
 
 PART = os.path.join(BULBA, 'Walkthrough-Pokémon Ultra Sun and Ultra Moon-Part {}.wiki')

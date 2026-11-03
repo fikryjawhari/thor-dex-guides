@@ -94,6 +94,8 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   (Ultra Wormhole legendaries, Tapus in their Ruins, Necrozma, Nihilego / Xurkitree / Guzzlord) with no level. Trades:
   levels and items from the doc, the Pokémon you give from Bulbapedia's In-game trade page. Not found (5): Original Cap
   Pikachu (event), Eternal Floette, the Zygarde forms other than 50%.
+- **Gauntlets** (`gc`, trainers.py): none; rechecked cached source-doc text and parsed trainer tags/notes.
+  Poni Gauntlet is a location, not a no-heal chain. The explicit empty rule writes no `gc` fields.
 - **Trainers** (trainers.py): the game data has no places. Bulbapedia's Ultra Sun / Ultra Moon walkthrough lists the
   trainers in story order with vanilla teams (Trainerentry for regular trainers, Party for bosses); each entry is matched
   to a vanilla trainer by class + name, then species and levels (pairs like "Twins Isa and Nico" by either name), and the
