@@ -316,10 +316,18 @@ export class Page {
       await this.settle();
       return;
     }
+    const keys = () => this.value(`[...document.querySelectorAll('.kb .k[data-c]')].map(k=>k.dataset.c).join('')`);
     for (const ch of text.toUpperCase()) {
-      const key = `.kb .k[data-c="${ch}"]`;
+      const key = `.kb .k[data-c="${ch.replace(/["\\]/g, '\\$&')}"]`;
       // the full keyboard shows digits or QWERTY on its top row: 123 / ABC swaps it
       if (ch !== ' ' && !(await this.count(key)) && (await this.count('.kb .k[data-a="dig"]'))) await this.tap('.kb .k[data-a="dig"]');
+      if (!(await this.count(key))) {
+        const shown = await keys();
+        let other = '';
+        if (await this.count('.kb .k[data-a="dig"]')) { await this.tap('.kb .k[data-a="dig"]'); other = ` / ${JSON.stringify(await keys())}`; }
+        throw new Error(`typeSearch(${JSON.stringify(text)}): ${JSON.stringify(ch)} is not on the viewer keyboard `
+          + `(keys ${JSON.stringify(shown)}${other}); search with a substring that avoids it`);
+      }
       await this.tap(key);
     }
     await this.tap('.kb .k[data-a="done"]');
