@@ -47,6 +47,13 @@ Read only; never copied into runtime. Paths/line evidence and test limits: notes
 
 ## Re-fetch
 
+Trainer AI source at the same 0.8.7 pin (`4a8d4a63082176008ccda09214d6341d43674a6a`):
+`src/trainerai/{main,setupStateVariables,calcDamage,calcSpeed,scoringHelper,calc,pick_command,postKO}.c`
+and `include/custom/custom_ai.h`. These read-only inputs support the headless AI port; the damage engine's
+older battle-formula evidence above remains a separate reference. Fetch missing files without replacing the
+shared copies with `python -I hacks/hardlove-gold/extract/fetch_ai.py`; use `--destination <empty-dir>` to
+reproduce a clean copy. The script pins each URL, independently of a moving branch or an existing `COMMIT` file.
+
 Source updates: `watch.json` (`uv run python -I tools/check_updates.py hardlove-gold`).
 
 ```bash

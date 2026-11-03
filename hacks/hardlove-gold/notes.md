@@ -373,6 +373,126 @@ is what the game shows if the point goes the other way.
   - Physical in Snow: `22 22 22 22 24 24 24 24 24 24 25 25 25 25 25 27`. Other way (no Snow): `33 33 33 33 34 34 34 34 36 36 36 36 37 37 37 39`.
   - Special in Snow: `76 76 78 78 79 81 81 82 82 84 85 85 87 87 88 90`, the same with no Snow.
 
+### Damage calc / AI
+
+The trainer AI (`src/trainerai/`, pinned `4a8d4a6308`, fetch: SOURCES.md) is ported headless in
+`template/calc/ai/` (plan: `plans/calc-ai.md`). Singles only so far; doubles (`pick_command.c`), `postKO.c` and
+`CalculateSwitch` are later units.
+- Layout: `hardlove/damage.mjs` = `calcDamage.c` (the AI's own formula), `speed.mjs` = `calcSpeed.c`, `calc.mjs` =
+  `calc.c`, `helpers.mjs` = `scoringHelper.c`, `state.mjs` = `setupStateVariables.c` (`BuildStateVariables`: damage
+  tables; `ApplyDamageRolls`: one roll per move), `scoring.mjs` = `main.c` (each scorer is a line-for-line
+  `<Name>Port`, the C's names; ids upper-cased without punctuation, effects without `MOVE_EFFECT_`).
+  `enumerate.mjs` (shared): exact odds; `index.mjs` `evaluateSingles(state)` → per move `{percent, exact, score, branches}`.
+- Input state: `{attacker, defender, field}`; a mon is `{species, level, types, ability, item, status ('slp' ...),
+  attack, defense, spAttack, spDefense, speed, currentHP, totalHP, statBoosts {attack ...}, moves [{name, type,
+  category, power, effect, priority, flags, target, pp?, secondaryEffectChance?}], facts {...}}`. Move `effect` /
+  `secondaryEffectChance` come from `data/Moves.c` (`.effect`, `.effectChance`): not in `data.json` yet (the wiring
+  unit adds them to the extract). No `pp` = usable (the calc has no PP).
+- Rolls (setupStateVariables.c): one `BattleRand % 16` per hit (85-100 %, after crit, before STAB), Triple Axel /
+  Kick and Parental Bond roll each hit and sum; then `BattleAI_AdjustUnusualMoveDamage`; a killing roll is capped at
+  the target's HP. Damage the AI receives: the max roll. Scoring reads only its own move's roll plus the max over all
+  moves and "any move kills", so the enumerator conditions on (max, any-KO) per move instead of 16^4 products.
+- Score: the C adds 1000 base (+1000 more for an Encore / choice-locked move); the port reports the rest. Ties:
+  `ChooseMove` picks uniformly among equal top scores.
+- `BattleAI_GetDynamicMoveType`: the C's `default: type = TYPE_NORMAL` then `else if (type)`: `TYPE_NORMAL` is 0, so
+  ordinary moves keep the move table's type (the first port read it as "every move is Normal").
+- `EXPLOSION_ON_LAST_MON` is 0 (main.c:18): the last-mon Explosion penalty is off.
+- Engine vs `calcDamage.c`: `tools/calc/hardlove_ai_damage_compare.mjs` compares all sixteen summed rolls in the
+  95 `calc_matchups.json` cases: 82 identical, 13 explained, zero unexplained. JSON (full arrays and reasons):
+  `.tmp/ai-engine/damage-comparison.json`; log: `.tmp/ai-engine/compare.log`. This is not an independent game oracle.
+  Adapter repairs: source move effects (Reckless/Sheer Force and multi-hit adjustment), flag and target names,
+  screens, guaranteed crit state, Power Trick raw-stat swap, hectogram weights with form overrides, effective
+  Speed, Helping Hand partner move, living Flower Gift partner, spread target count, suppressed held items.
+  `GetBattleMonItem` (`src/battle/battle_calc_damage.c:200`, same pin) returns no item for Klutz, Embargo, Magic
+  Room and opposing Unnerve on berries; do not pass the UI's raw item as an active AI item in those states.
+
+Real formula gaps in those cases (odds always use the AI behaviour, not the displayed damage engine):
+| Term / cases | AI (`calcDamage.c` / `calc.c`) | Damage engine |
+| --- | --- | --- |
+| Sheer Force / `source-sheer-force-thousand-waves` | `IsMoveBoostedBySheerForce` excludes Thousand Waves | Includes it (48-57 vs AI 37-44) |
+| Gem / `gem-pledge-excluded` | Matching gem boosts Water Pledge by 1.5 | Pledges excluded (37-45 vs AI 55-66) |
+| Protect / `protect-blocks`, `unseen-fist-noncontact-still-blocked`, `source-noncontact-{sunsteel-strike,collision-course,electro-drift,thunderous-kick,behemoth-blade}`, `unseen-fist-punching-glove` | No Protect damage reduction; Protect is scored separately | Zero damage |
+| Protect / `unseen-fist-contact` | Full damage (152-180) | Engine contact bypass still applies 1/4 (38-45); not a claim that the game does |
+| Gyro Ball / `w2-gyro-ball-equal-speed` | `floor(25*defSpeed/atkSpeed)+1`, capped 150 (26 BP here) | No +1 (25 BP here) |
+| Punishment / `w2-punishment-positive-and-negative-boosts` | TODO/commented out; leaves move table power 1 | `min(200,60+20*sumPositiveDefenderStages)` (160 BP here) |
+
+Helper/damage review repairs (fixtures in `tools/calc/hardlove_ai_check.mjs`):
+- Parental Bond now carries the actual `IsBannedParentalBondMove` tables (multi-hit, OHKO, charge-turn, Z/Max,
+  Present etc.), rather than requiring the caller to supply a ban flag. Triple Axel/Kick still roll each hit.
+- Dynamic Normal moves use `MoveIsAffectedByNormalizeVariants` exclusions, including Z/Max. Source trait lists
+  supply Triage, powder, ball, punch, bite, pulse, slicing and Minimize; guide `bullet`/`slicing` aliases work too.
+  Preserve the source's unusual punching-table entry: Growl replaces Double Shock (an inline comment caused the
+  first table extraction to omit Growl). A fixture protects this, rather than substituting standard move flags.
+- `HasMovePriority` checks Grassy Terrain duration; single-target Prankster checks opposing sides.
+- Speed respects an explicit held-effect override (including `NONE`) instead of re-enabling a named item.
+  State snapshots suppress items using `GetBattleMonItem`; raw battle-mon items remain available to scoring and
+  residual helpers, matching the two C structures. Suppressed Choice items neither disable nor force a move.
+- Outgoing and incoming damage use the damaged side's screens, not one global Reflect applied both ways.
+- Fly/Dig/Dive flags no longer invent the separate `SEMI_INVULNERABLE` flag; effect flags accept camelCase,
+  snake_case and named arrays. State and damage grounding now share the same implementation.
+- Q4.12 multiplication follows `asm/qmath.s`: 32-bit wrap, half-down/up rounding, and the 4096 identity fast path.
+- Crucially, Explosion/Self-Destruct/Misty Explosion/Final Gambit return scalar **zero** before type/burn/final
+  modifiers, while leaving their damage ranges populated. `setupStateVariables.c` overwrites `damageRoll` with
+  that return value. Their own rolled outcomes are therefore zero; incoming max-roll tables remain nonzero.
+
+Review completed against pinned `4a8d4a63082176008ccda09214d6341d43674a6a`: `calc.c` (unusual damage,
+KO checks, usability, item/priority/grounding helpers and pure Hidden Power/Paradox helpers), `calcSpeed.c`,
+`scoringHelper.c`, and `calcDamage.c`, including their called move-trait and Q4.12 helpers. `main.c` scoring
+deltas, random branches and cases were machine-compared in the initial port. A final comment-stripped table
+audit checked 5,032 move/effect entries against C (Sheer Force, Parental Bond, all ten trait tables, useful sound,
+switching, flinch/thaw and Encore lists); local record: `.tmp/ai-engine/source-audit.log`.
+
+Headless fixtures: `hardlove_ai_check.mjs` 49/49; existing damage suite `hardlove_check.mjs` 107/107. Status
+fixtures cover paralysis, burn, sleep/Yawn, poison, confusion and Leech Seed; hazards cover all four hazards,
+layer limits, first-turn bonuses, final foe and Magic Bounce/Mold Breaker; recovery covers strict thresholds,
+incoming maximum damage, healing cap, toxic, Heal Block, pending Wish, weather, Rest support and terrain.
+They assert exact score distributions and mixed-move rational odds, not only rounded percentages. Logs:
+`.tmp/ai-engine/test.log`, `.tmp/ai-engine/hl.log`. The 13 explained comparison cases also have all sixteen
+engine and AI rolls committed in `tools/calc/hardlove_ai_damage_gaps.json`; changed, missing, stale or unexplained
+cases fail the comparison. No browser/gate checks or UI changes belong to this unit.
+
+Input boundary for wiring and the later party/doubles units:
+- Pass precomputed game stats before stages/speed modifiers, separate `statBoosts`, current types/effective ability,
+  base species name plus form number, HP and source move effect/chance. This module is not a ROM/NARC reader or
+  party stat constructor. `weight` is hectograms, not kg. The comparison adapter is not the production UI adapter.
+- Supply game-dependent facts: Hidden Power type (or use `GetHiddenPowerType` with IVs), Fling power, Natural Gift
+  type/power, held-item removability and selected Paradox stat. Do not silently invent unknown battle history.
+  `BattleAI_GetHighestParadoxStat` preserves the C helper's **u8 parameter truncation** and tie order
+  Attack, Defense, Sp. Atk, Sp. Def, Speed; review that call boundary when implementing party stat construction.
+- Side fields are nested `field.attacker` / `field.defender` (screens, hazards etc.); flat screen keys are only
+  a defender-side compatibility fallback. Keep raw battle-mon items distinct from active-item snapshots, and
+  incoming max-range damage distinct from own scalar-return damage (especially Explosion-family moves).
+- `pick_command.c`, `postKO.c` and `CalculateSwitch` are not ported here. Singles rejects doubles/multi/tag and
+  living allies rather than presenting misleading odds. Party-derived scoring facts below still need their
+  real producers; the current singleton-party fallback is not a bench ranking or hard-switch prediction.
+- UI wiring still needs move `effect` / `effectChance` extraction and the battle facts below. No extract,
+  `calc.js`, shared engine or assembly changes were made; do not enable AI UI before that adapter is complete.
+
+AI inputs the calc lacks (the AI toggle list; the port reads them from `facts`): first turn out (`firstTurnOut`:
+Fake Out / First Impression), last move (`lastUsedMove`: Torment, Encore, choice lock `moveNoChoice`), Encore
+(`encoredTurns`, `encoredMove`), Taunt (`tauntTurns`), Disable (`disabledTurns`, `disabledMove`), Torment, sleep turns
+(`sleepCounter`), Protect streak (`protectSuccessTurns`), Substitute, confusion, attraction, Yawn, Ingrain, Aqua Ring,
+Lock-On, Imprison, Heal Block, Throat Chop, Laser Focus, binding turns, Future Sight / Wish pending, Magnet Rise,
+Roost, Last Resort count, Recycle item, Fury Cutter / Metronome counts, Slow Start, Flash Fire, Protean used
+(`abilityActivated`), Transform, failed move last turn, teammate fainted last turn, can Belch, held item removable.
+From the party (later units): `highestPostKoScoreFromParty`, `postKoScoringPosition`, `highestDamageHitPrct`
+(`postKO.c`), `shouldSwitch` (`CalculateSwitch`), living members per side, a Mega Stone in the party.
+
+AI doc vs C (the C wins):
+- Trapping moves and Future Sight never get the highest-damage +6/+8, but their rolls still count for the maximum.
+  Explosion-family moves are different: their scalar return is zero (above). At 50% HP, Explosion vs Tackle is
+  exactly 3/8 vs 5/8, not the first port's 3/4 vs 1/4. The prior note/test conflated the scalar and range.
+- A Taunted status move is −80 plus whatever its other scorers add (Swords Dance: −68), still never picked.
+- An unusable damaging move (Disable, Torment, 0 PP) is never damage-calced, so it also scores the −40 immunity.
+- The KO helper ignores Focus Sash, Sturdy and Disguise, but retains its Ice Face physical-hit exception.
+  Residual death nets damage and healing, not real end-turn ordering: this helper does not prevent burn via
+  Magic Guard, allows airborne Grassy Terrain healing, and omits hail damage under `GEN_LATEST`.
+- Rest scoring does not test Insomnia, Vital Spirit, Comatose, Leaf Guard or already being asleep as the doc
+  suggests; Sweet Veil, Uproar and grounded Misty/Electric Terrain are checked. Pending Wish and terrain-blocked
+  Rest score -80, not the doc's generic -20. Fixtures preserve the C rather than correcting its strategy.
+- The AI damage formula omits Wonder Room, Water/Mud Sport and the four Ruin ability modifiers. These omissions
+  are tested separately; they are not additional differences among the 95 comparison cases above.
+
 ## Checks
 
 `check.py` [baseline.json]: reference integrity (species, trainer teams, area rows), the Starter area, Trainers / Walkthrough
