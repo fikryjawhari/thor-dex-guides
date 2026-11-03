@@ -1,0 +1,96 @@
+window.createCalcAI=function(ctx){
+const api=GUIDE_AI,data=ctx.data,profile=ctx.profile,byId=Object.fromEntries(data.P.map(mon=>[mon.id,mon]));
+const id=name=>String(name||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+const stages=['attack','defense','spAttack','spDefense','speed'];
+const forms=new Map(),bases=new Map(),stones=new Set(data.P.map(mon=>mon.stone).filter(Boolean));
+for(const [key,value] of Object.entries(data.GID.sp)){const [species,form]=key.split(':').map(Number);if(!forms.has(value))forms.set(value,{species,form});if(form===0)bases.set(species,byId[value]?.n);}
+const facts={},slots={mine:[],foe:[]},viewed={mine:0,foe:0};
+let cacheKey='',cached=null,lastInput=null,lastParties=null;
+const empty=()=>({species:'',level:1,types:[],ability:'',item:'',status:'',attack:1,defense:1,spAttack:1,spDefense:1,speed:1,currentHP:0,totalHP:1,statBoosts:{},moves:[],facts:{}});
+const metadata=(kind,name)=>api.metadata[kind][id(name)]||{};
+function party(side){
+ const selected=ctx.sideInfo(side),trainer=ctx.trainer();
+ if(side==='foe')return (trainer?.p||[]).map((unused,index)=>{const key='foe:'+trainer.k+':'+index;return {key,mon:ctx.applyEdits(ctx.foeBase(trainer,index),key)};});
+ const members=ctx.team().map(entry=>({key:'mine:'+entry.m.pid,mon:entry.src==='custom'?entry.m:ctx.applyEdits(entry.m,'mine:'+entry.m.pid)}));
+ if(!members.some(entry=>entry.key===selected.key)&&selected.base){if(members.length===6)members.pop();members.push({key:selected.key,mon:selected.custom?selected.base:ctx.applyEdits(selected.base,selected.key)});}
+ return members;
+}
+function syncSlots(side,party,doubles){
+ const key=ctx.sideInfo(side).key,count=doubles?2:1;
+ const old=slots[side].slice();
+ slots[side]=slots[side].slice(0,count).map(value=>party.some(entry=>entry.key===value)?value:null);
+ if(!slots[side].includes(key))slots[side][Math.min(viewed[side],count-1)]=key;
+ while(slots[side].length<count)slots[side].push(null);
+ for(let slot=0;slot<count;slot++)if(!slots[side][slot])slots[side][slot]=party.find(entry=>!slots[side].includes(entry.key))?.key||null;
+ for(const previous of old)if(previous&&!slots[side].includes(previous))delete facts[previous];
+ viewed[side]=Math.max(0,slots[side].indexOf(key));
+}
+function move(index,key,slot,active){
+ const source=data.MV[index],override=active?ctx.state().mvo[key+':'+slot]||{}:{};
+ if(!source.aiEffect)throw new Error('Missing Hardlove AI move effect: '+data.M[index]);
+ return {name:data.M[index],type:override.t||source.t,category:source.c,power:override.bp??source.bp??0,effect:source.aiEffect,secondaryEffectChance:source.aiChance,priority:source.pr||0,flags:source.f||[],target:source.tg};
+}
+function mon(entry,side,active,field){
+ let input=ctx.megaView(entry.mon);
+ if(active)input=entry.key===ctx.sideInfo(side).key?ctx.getMon(side):ctx.fightView({...input,...ctx.scratch[entry.key],vol:ctx.state().tgt[entry.key]||''});
+ if(!Number.isFinite(input.l))return null;
+ const resolved=ctx.resolve(input),species=byId[input.id],form=forms.get(input.id)||{form:0},prefix=side==='foe'?'def':'atk';
+ let [totalHP,attack,defense,spAttack,spDefense,speed]=resolved.stats;
+ if(active&&field[prefix+'PowerTrick'])[attack,defense]=[defense,attack];
+ const item=input.used?'':input.i||'',itemData=metadata('items',item),moves=(input.m||[]).flatMap((index,slot)=>index==null?[]:[move(index,entry.key,slot,active)]);
+ const iv=input.iv||[31,31,31,31,31,31],ability=resolved.abil;
+ const baseFacts={firstTurnOut:true,lastUsedMove:'',moveNoChoice:'',encoredTurns:0,encoredMove:'',tauntTurns:0,disabledTurns:0,disabledMove:'',torment:false,sleepCounter:0,protectSuccessTurns:0,substitute:false,confusion:false,attract:false,yawn:false,ingrain:false,aquaRing:false,lockOn:false,imprisoned:false,healBlock:false,throatChopTimer:0,laserFocusTimer:0,bindingTurns:0,futurePredictionCount:0,wishCount:0,magnetRise:false,roost:false,lastResortCount:0,recycleItem:'',furyCutterCount:0,metronomeCount:0,slowStartCount:0,flashFire:false,abilityActivated:false,transformed:false,failedLastMove:false,teammateFaintedLastTurn:false,canBelch:false,cantEscape:false,perishSong:false,
+  hiddenPowerType:api.GetHiddenPowerType(iv[0],iv[1],iv[2],iv[5],iv[3],iv[4]),flingPower:itemData.fling?.basePower||0,naturalGiftType:itemData.naturalGift?.type||'Normal',naturalGiftPower:itemData.naturalGift?.basePower||0,heldItemRemovable:!!item&&!stones.has(item),isMegaStone:stones.has(item),canEvolve:!!species.et?.length};
+ if(active){
+  Object.assign(baseFacts,{focusEnergy:!!field[prefix+'Focus'],laserFocusTimer:field[prefix+'LaserFocus']?1:0,leechSeed:!!field[prefix+'Seeded'],ingrain:!!field[prefix+'Ingrain'],aquaRing:!!field[prefix+'AquaRing'],magnetRise:!!field[prefix+'MagnetRise'],roost:!!field[prefix+'Roost'],dig:input.vol==='dig',fly:input.vol==='fly',dive:input.vol==='dive',minimized:input.vol==='min',isSwitching:input.vol==='switch',toxicCounter:ctx.toxic[entry.key]||1,knockOffFlag:!!input.used,flashFire:ability==='Flash Fire'&&!!input.abilityOn,abilityActivated:!!input.abilityOn});
+  Object.assign(baseFacts,facts[entry.key]);
+ }
+ if(!baseFacts.moveNoChoice&&baseFacts.lastUsedMove)baseFacts.moveNoChoice=baseFacts.lastUsedMove;
+ if(!baseFacts.encoredMove&&baseFacts.encoredTurns)baseFacts.encoredMove=baseFacts.lastUsedMove;
+ if((ability==='Protosynthesis'&&(['Sun','Harsh Sunshine'].includes(field.weather)||item==='Booster Energy'))||(ability==='Quark Drive'&&(field.terrain==='Electric'||item==='Booster Energy')))baseFacts.paradoxBoostedStat=api.BattleAI_GetHighestParadoxStat(attack,defense,spAttack,spDefense,speed);
+ const stock=[api.speciesName(species.n),...api.weightNames(species.n)].map(name=>metadata('species',name)).find(entry=>entry.weightkg);
+ return {species:bases.get(form.species)||species.n,form:form.form,level:input.l,types:resolved.types.slice(),ability,item,status:resolved.status,attack,defense,spAttack,spDefense,speed,totalHP,currentHP:resolved.hp,weight:Math.trunc(10*(profile.over?.species?.[species.id]?.weightkg??stock?.weightkg??1)),statBoosts:Object.fromEntries(stages.map((name,index)=>[name,active?resolved.stg[index]||0:0])),moves,facts:baseFacts};
+}
+function input(){
+ if(!ctx.getMon('mine')||!ctx.getMon('foe'))return null;
+ const original=ctx.field(),doubles=original.gameType==='Doubles',parties={mine:party('mine'),foe:party('foe')};
+ for(const side of ['mine','foe'])syncSlots(side,parties[side],doubles);
+ const field={...original,attacker:{},defender:{}};
+ for(const [key,value] of Object.entries(original))for(const [prefix,side] of [['def','attacker'],['atk','defender']])if(key.startsWith(prefix)&&key.length>prefix.length){const name=key.slice(prefix.length);field[side][name[0].toLowerCase()+name.slice(1)]=value;}
+ const partyMons={},actives={},partySlots={};
+ for(const side of ['mine','foe']){
+  partyMons[side]=parties[side].map(entry=>mon(entry,side,false,original));
+  if(partyMons[side].some(value=>!value))return null;
+  partySlots[side]=slots[side].map(key=>{const index=parties[side].findIndex(entry=>entry.key===key);if(index>=0)return index;partyMons[side].push(empty());return partyMons[side].length-1;});
+  actives[side]=slots[side].map(key=>{const entry=parties[side].find(entry=>entry.key===key);return entry?mon(entry,side,true,original):empty();});
+  if(actives[side].some(value=>!value))return null;
+  for(let slot=0;slot<actives[side].length;slot++){
+   const current=actives[side][slot];
+   if(partySlots[side][slot]>=0)partyMons[side][partySlots[side][slot]]={...partyMons[side][partySlots[side][slot]],currentHP:current.currentHP,status:current.status};
+  }
+ }
+ for(const side of ['mine','foe'])for(const current of actives[side]){
+  const opponents=actives[side==='foe'?'mine':'foe'];
+  current.facts.cantEscape ||= opponents.some(other=>other.currentHP>0&&(other.ability==='Shadow Tag'&&current.ability!=='Shadow Tag'||other.ability==='Magnet Pull'&&current.types.includes('Steel')||other.ability==='Arena Trap'&&!current.types.includes('Flying')&&current.ability!=='Levitate'))&&current.item!=='Shed Shell'&&!current.types.includes('Ghost');
+ }
+ field.weatherSuppressed=[...actives.mine,...actives.foe].some(current=>current.currentHP>0&&['Air Lock','Cloud Nine'].includes(current.ability));
+ field.possibleHits=actives.mine.filter(current=>current.currentHP>0).length;
+ lastParties=parties;
+ if(doubles)return {foes:actives.foe,players:actives.mine,foeParty:partyMons.foe,playerParty:partyMons.mine,foePartySlots:partySlots.foe,playerPartySlots:partySlots.mine,firstRequestedSlot:0,field};
+ return {attacker:actives.foe[0],defender:actives.mine[0],attackerParty:partyMons.foe,defenderParty:partyMons.mine,attackerPartySlot:partySlots.foe[0],field};
+}
+function evaluate(){
+ const state=input();lastInput=state;
+ const foes=state?.foes||[state?.attacker],players=state?.players||[state?.defender];
+ if(!state||!players.some(current=>current?.currentHP>0)||foes.some(current=>current?.currentHP>0&&!current.moves.length)){cached=null;cacheKey='';return null;}
+ const key=JSON.stringify(state);if(key===cacheKey)return cached;
+ cached=state.foes?api.evaluateDoubles(state):state.attacker.currentHP>0?api.evaluateSingles(state):null;cacheKey=key;return cached;
+}
+function damage(){for(const side of ['mine','foe']){const key=ctx.sideInfo(side).key;(facts[key]||={}).firstTurnOut=false;}}
+function clear(){for(const key of Object.keys(facts))delete facts[key];slots.mine=[];slots.foe=[];viewed.mine=viewed.foe=0;cached=null;cacheKey='';lastInput=null;lastParties=null;}
+return {input,evaluate,damage,clear,facts,slots,viewed,parties:()=>lastParties,current:()=>cached,lastInput:()=>lastInput,dirty:()=>Object.keys(facts).length>0,
+ setFacts(side,patch){Object.assign(facts[ctx.sideInfo(side).key]||={},patch);},
+ reset(key){delete facts[key];},
+ switchInOrder(options){const state=input();if(!state)return null;return api.switchInOrder(state.foes?state:{foes:[state.attacker],players:[state.defender],foeParty:state.attackerParty,foePartySlots:[state.attackerPartySlot],field:state.field},options);}
+};
+};

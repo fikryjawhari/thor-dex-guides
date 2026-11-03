@@ -132,6 +132,7 @@ def calc_parts(prof):
         js.append(read('template', 'calc', 'readers', prof['save'] + '.js'))
     if prof.get('ai'):
         js.append(read('template', 'calc', 'ai', prof['ai'] + '.js'))
+        js.append(read('template', 'calc', 'ai', 'ui.js'))
     js.append(read('template', 'calc.js'))
     return '\n'.join(js), read('template', 'calc.css')
 
