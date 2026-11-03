@@ -37,9 +37,16 @@ from link (same library id, saved state kept).
 8. Small data leftovers: missing item icons, tutor-card parsing, a `nomerge` flag, an unused CSS rule.
 9. Radical Red follow-ups: in-game checks, one real `.srm` import, Gulp Missile, Chillet's sprite.
 10. Check tiers past ~10 guides (the last check-speed follow-up).
+11. Calc: gauntlets carry fight state (template, every guide): decided, next the Sol mockup / spec session;
+    `plans/gauntlet-carry.md`. First of the calc plans.
+12. Calc: Hardlove AI move odds, switch-in order, doubles (port of `src/trainerai/`): decided, next the Sol mockup /
+    spec session after 11; `plans/calc-ai.md`.
+13. Calc: range compare: noted for later (space); `plans/calc-range-compare.md`.
 
 ## Next session
 
+- **Calc plans (11, 12):** a Sol decide session on `plans/gauntlet-carry.md` first (mockups in the Thor frame,
+  the To settle items, spec), then `plans/calc-ai.md`.
 - **Next guide:** say which hack. Sources-only start:
   `.agents/references/new-guide-sources.md`; the whole procedure: `.agents/references/new-guide.md`.
 
