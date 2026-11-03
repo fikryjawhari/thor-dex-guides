@@ -232,7 +232,8 @@ def finalise(D, hack, prune=None, gauntlet_rules=None):
     the hack's species prune, stable trainer keys
     (tools/trainer_keys.py: extract/trainer_keys.json), Trainers page in walkthrough order, shared split names, the data
     move properties/interactions (tools/moveprops.py), schema (tools/schema.py: dead fields dropped, stop keys,
-    key order). Idempotent."""
+    key order). Optional gauntlet_rules(group, section) runs after key assignment and walkthrough ordering;
+    omitted rules preserve existing gc when re-finishing built data. Idempotent."""
     itemstd.standardise(D, itemstd.RULES.get(hack, {}), report)
     pickup_keys.stabilise(D, os.path.join(ROOT, 'hacks', hack, 'extract', 'pickup_keys.json'), report,
                           itemstd.RULES.get(hack, {}).get('once', pickup_keys.ONCE))

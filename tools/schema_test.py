@@ -1,4 +1,4 @@
-"""Item-page schema and legacy held-item compatibility regression checks."""
+"""Shared schema, gauntlet order and legacy held-item compatibility regression checks."""
 import copy
 import json
 import os
@@ -90,6 +90,42 @@ class GauntletTest(unittest.TestCase):
         rows = [self.trainer('first'), self.trainer('last')]
         with self.assertRaises(AssertionError):
             extractlib.gauntlets(self.data(rows), lambda group, section: [rows, rows])
+
+    def test_source_chain_inventory(self):
+        expected = {
+            'hardlove-gold': [
+                ['1.3.2', '1.3.3'],
+                ['4.1.3', '4.1.4', '4.1.5', '4.1.6', '4.1.7', '4.1.8'],
+                ['6.4.1', '6.4.2'], ['6.4.3', '6.4.4'], ['6.4.5', '6.4.6'],
+                ['7.0.0', '7.0.1', '7.0.2'], ['10.3.0', '10.3.1', '10.3.2'],
+                ['10.11.0', '10.11.1', '10.11.2']],
+            'blaze-black-2-redux': [['18.1.23', '18.1.24'], ['18.1.25', '18.1.26']],
+            'emerald-imperium': [
+                ['3.0.0', '3.0.1'], ['5.0.0', '5.0.1', '5.0.2', '5.0.3'],
+                ['8.0.0', '8.0.1'], ['8.0.3', '8.0.4']],
+            'radical-red': [
+                ['8.1.0', '8.1.1'], ['9.2.2', '9.2.3'], ['9.3.0', '9.3.1', '9.3.2'],
+                ['12.0.2', '12.0.3'], ['17.0.0', '17.0.1'],
+                ['17.5.0', '17.5.1', '17.5.2', '17.5.3'], ['17.17.0', '17.17.1', '17.17.2', '17.17.3']],
+            'unbound': [['5.2.1', '5.2.2', '5.2.3'], ['5.2.4', '5.2.5']],
+            'photonic-sun': [],
+            'eternal-x': [],
+        }
+        for hack, chains in expected.items():
+            with self.subTest(hack=hack):
+                directory = ROOT / 'hacks' / hack
+                data = json.loads((directory / 'data.json').read_text(encoding='utf-8'))
+                stable = {entry['k'] for entry in json.loads((directory / 'extract/trainer_keys.json').read_text(encoding='utf-8'))}
+                actual = []
+                for group in data['TR']['g']:
+                    for section in group['sec']:
+                        for trainer in section['tr']:
+                            if 'gc' in trainer:
+                                self.assertTrue(set(trainer['gc']) <= stable)
+                                if trainer['gc'] not in actual:
+                                    actual.append(trainer['gc'])
+                self.assertEqual(actual, chains)
+                schema.check_gauntlets(data['TR'])
 
 
 class SchemaTest(unittest.TestCase):
