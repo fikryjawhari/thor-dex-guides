@@ -193,11 +193,17 @@ function entered(sides,together){updateField();if(together)ENTRYTOGETHER=cardKey
 function clearBattle(){delete ST.areaByTrainer;for(const k of Object.keys(SC))delete SC[k];for(const k of Object.keys(TOX))delete TOX[k];ST.tgt={};ST.st={};ST.hzOffer={};
  for(const k of ST.fman)delete ST.field[k];ST.fman=[];SETTERS=[];PENDINGENTRY.clear();ENTRYTOGETHER=null;ACTIONFIELD={};}
 function startBattle(){offerHazards('foe');if(!areaRecords().some(record=>record.effects?.some(effect=>effect.timing==='after-first-send-out')))offerHazards('mine');entered(['mine','foe'],true);}
+function playerStores(){return mineList().map(entry=>{const key='mine:'+entry.m.pid;return {key,base:entry.m,store:entry.src==='custom'?entry.m:ST.edits[key],mon:entry.src==='custom'?entry.m:applyEdits(entry.m,key)};});}
+function playerSnapshot(){const snapshot={};for(const {key,store,mon} of playerStores().sort((left,right)=>left.key.localeCompare(right.key))){if(!store)continue;const state={},max=resolve(megaView(mon)).stats?.[0];if(Number.isFinite(store.hp)&&store.hp<max)state.hp=store.hp;if(store.status)state.status=store.status;if(store.used)state.used=true;if(Object.keys(state).length)snapshot[key]=state;}return snapshot;}
+function takeSnapshot(){const chain=chainOf(ST.foe.k);if(!chain)return;ST.gc=ST.gc||{first:chain[0],snap:{}};ST.gc.snap[ST.foe.k]=playerSnapshot();}
+function clearMemberConditions(){const fields=FIGHT.filter(field=>field!=='used');for(const store of [...Object.values(ST.edits),...ST.custom])for(const field of fields)delete store[field];}
+function stepChain(before){ST.gcSel=ST.gcSel||{};ST.gcSel[before.tr]=Number(before.foe.slice(before.foe.lastIndexOf(':')+1));ST.foe.i=ST.gcSel[ST.foe.k]??0;
+ if(chainOf(ST.foe.k).indexOf(ST.foe.k)>chainOf(before.tr).indexOf(before.tr))takeSnapshot();clearBattle();clearMemberConditions();ST.field={};startBattle();}
 function newFight(){clearBattle();delete ST.foeSp;
  const fields=[...KEPT,...FIGHT],clear=o=>{if(o)fields.forEach(f=>delete o[f]);};
  for(const [k,e] of Object.entries(ST.edits)){if(k.startsWith('foe:'))delete ST.edits[k];else{clear(e);if(!Object.keys(e).length)delete ST.edits[k];}}
  (ST.custom||[]).forEach(clear);
- startBattle();}
+ delete ST.gc;delete ST.gcSel;const chain=chainOf(ST.foe.k);if(chain){ST.gcSel={};takeSnapshot();}startBattle();}
 const cardKeys=()=>({mine:sideInfo('mine').key,foe:sideInfo('foe').key,tr:ST.foe.k});
 // Migration on load (older builds stored battle condition): scratch fields go everywhere, saved HP / status move to the
 // edits, a stored Mega (pre) becomes the FIGHT field mega, player cards not selected keep only HP / status / FIGHT, foe
@@ -210,7 +216,7 @@ const cardKeys=()=>({mine:sideInfo('mine').key,foe:sideInfo('foe').key,tr:ST.foe
  if(!Array.isArray(ST.fman))ST.fman=Object.keys(ST.field).filter(k=>k!=='gameType');try{if(localStorage.getItem(KEY))save();}catch(error){}})();
 let LAST=cardKeys();
 function syncFight(){const now=cardKeys(),left=[],before=LAST;if(now.mine!==LAST.mine){leaveCard(LAST.mine);left.push('mine');}if(now.foe!==LAST.foe){leaveCard(LAST.foe);left.push('foe');}
- const fresh=now.tr!==LAST.tr;LAST=now;if(fresh)newFight();else if(left.length){for(const side of left)if(before[side]&&!before[side].endsWith(':undefined'))offerHazards(side);entered(left,false);}if(fresh||left.length)save();}
+ const fresh=now.tr!==LAST.tr;if(fresh){if(sameChain(before.tr,now.tr))stepChain(before);else newFight();}else if(left.length){for(const side of left)if(before[side]&&!before[side].endsWith(':undefined'))offerHazards(side);entered(left,false);}LAST=cardKeys();if(chainOf(ST.foe.k)){ST.gcSel=ST.gcSel||{};ST.gcSel[ST.foe.k]=ST.foe.i;}if(fresh||left.length)save();}
 function offerHazards(side){const key=sideInfo(side).key;if(key&&getMon(side))ST.hzOffer[side]=key;else delete ST.hzOffer[side];}
 function hzDone(side){if(ST.hzOffer&&side in ST.hzOffer)delete ST.hzOffer[side];}
 // The offer is the card key (hazards on) or {k, off:true} (a tap on the Pokémon already in took the hazards out: the
