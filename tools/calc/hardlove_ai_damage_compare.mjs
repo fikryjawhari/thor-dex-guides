@@ -1,6 +1,7 @@
 // Dev check (not in npm test): calc_matchups.json through our engine and the AI port of calcDamage.c; prints the
 // matchups whose 16 rolls differ. Classify each: the adapter below, or a real formula gap (notes.md -> Damage calc / AI).
-import {readFile, writeFile} from 'node:fs/promises';
+import {readFile, writeFile, mkdir} from 'node:fs/promises';
+import assert from 'node:assert/strict';
 import {createEngine} from './run.mjs';
 import {createRequire} from 'node:module';
 import {speciesName, weightNames} from './src/names.js';
@@ -11,6 +12,10 @@ const load = async p => JSON.parse(await readFile(new URL('../../' + p, import.m
 const data = await load('hacks/hardlove-gold/data.json');
 const cfg = (await load('hacks/hardlove-gold/hack.json')).cfg.calc;
 const {matchups} = await load('hacks/hardlove-gold/calc_matchups.json');
+const expectedGaps = await load('tools/calc/hardlove_ai_damage_gaps.json');
+assert.equal(expectedGaps.sourcePin, '4a8d4a63082176008ccda09214d6341d43674a6a');
+assert.equal(new Set(expectedGaps.cases.map(entry => entry.name)).size, expectedGaps.cases.length);
+assert.ok(expectedGaps.cases.every(entry => matchups.some(matchup => matchup.name === entry.name)));
 const engine = await createEngine(data, cfg);
 const {Generations} = createRequire(import.meta.url)('@smogon/calc');
 const species = Generations.get(9).species;
@@ -55,22 +60,20 @@ for (const m of matchups) {
   const same = eng && ai && eng.join() === ai.join();
   rows.push({name: m.name, move: move.name, field: JSON.stringify(m.field || {}), same, engine: eng, ai, err});
 }
-const gaps = {
-  'source-sheer-force-thousand-waves': 'sheer-force: AI calc.c excludes Thousand Waves; battle formula boosts it',
-  'gem-pledge-excluded': 'pledge-gem: AI applies matching gem; battle formula excludes pledges',
-  'w2-gyro-ball-equal-speed': 'gyro-ball: AI uses floor(25*defSpeed/atkSpeed)+1; battle formula omits +1',
-  'w2-punishment-positive-and-negative-boosts': 'punishment: AI leaves table power 1; battle formula uses 60+20*positive boosts, capped 200',
-};
-for (const name of ['protect-blocks', 'unseen-fist-noncontact-still-blocked', 'source-noncontact-sunsteel-strike', 'source-noncontact-collision-course', 'source-noncontact-electro-drift', 'source-noncontact-thunderous-kick', 'source-noncontact-behemoth-blade', 'unseen-fist-punching-glove']) gaps[name] = 'protect: AI does not reduce damage into Protect; battle formula blocks the move';
-gaps['unseen-fist-contact'] = 'protect-unseen-fist: AI ignores Protect; engine applies 1/4 damage to this contact bypass';
+const gaps = Object.fromEntries(expectedGaps.cases.map(entry => [entry.name, entry.difference]));
 for (const row of rows) {
   row.difference = row.same ? null : gaps[row.name] ?? null;
   row.status = row.err || !row.same && !row.difference ? 'unexplained' : row.same ? 'match' : 'known-difference';
   if (row.same && gaps[row.name]) row.status = 'stale-difference';
+  if (row.status === 'known-difference') {
+    const expected = expectedGaps.cases.find(entry => entry.name === row.name);
+    if (!expected || JSON.stringify([row.engine, row.ai]) !== JSON.stringify([expected.engine, expected.ai])) row.status = 'changed-difference';
+  }
 }
+await mkdir(new URL('../../.tmp/ai-engine/', import.meta.url), {recursive: true});
 await writeFile(new URL('../../.tmp/ai-engine/damage-comparison.json', import.meta.url), JSON.stringify({sourcePin: '4a8d4a63082176008ccda09214d6341d43674a6a', rows}, null, 2));
 console.log('same', rows.filter(row => row.same).length, 'of', rows.length);
 for (const row of rows.filter(row => !row.same)) console.log(row.name, '| engine', row.engine?.[0], row.engine?.[15], '| ai', row.ai?.[0], row.ai?.[15], '|', row.difference ?? row.err ?? 'UNEXPLAINED');
-const unexplained = rows.filter(row => ['unexplained', 'stale-difference'].includes(row.status));
-console.log(`${rows.length} cases: ${rows.filter(row => row.same).length} identical, ${rows.filter(row => row.status === 'known-difference').length} explained, ${unexplained.length} unexplained/stale`);
+const unexplained = rows.filter(row => !['match', 'known-difference'].includes(row.status));
+console.log(`${rows.length} cases: ${rows.filter(row => row.same).length} identical, ${rows.filter(row => row.status === 'known-difference').length} explained, ${unexplained.length} unexplained/stale/changed`);
 if (unexplained.length) process.exitCode = 1;

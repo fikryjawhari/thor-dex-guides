@@ -1024,6 +1024,23 @@ input is one `{atk,def,slot,field?}` or an array of those. Output is a result/nu
 or an equally ordered array. Species, move, ability and item selectors use
 guide IDs/indices. Errors go to stderr with a nonzero exit status.
 
+### Hardlove singles AI (headless)
+
+```sh
+node tools/calc/hardlove_ai_check.mjs
+node tools/calc/hardlove_ai_damage_compare.mjs
+node tools/calc/hardlove_check.mjs
+```
+
+The AI checks exercise `template/calc/ai/hardlove/index.mjs`'s `evaluateSingles(state)` and its exact rational
+branch enumeration without a browser. The damage comparison needs `npm ci --prefix tools/calc` and pinned
+`hacks/hardlove-gold/.src/repos/hardlove/data/Moves.c` (fetch via that hack's `SOURCES.md`); no raw source is
+shipped. It adapts all 95 guide matchups: 82 identical and 13 reviewed formula differences, whose full rolls and
+reasons are locked in `hardlove_ai_damage_gaps.json`. Any unexplained, stale or changed difference fails.
+This compares the AI's own formula against our damage engine, not an independent runnable game oracle.
+Reports go to `.tmp/ai-engine/`; input requirements and C/doc differences are in the hack's `notes.md`,
+Damage calc / AI. Doubles, switch prediction and UI wiring are later units; do not use singles odds for those.
+
 For a local diff tool:
 
 ```js

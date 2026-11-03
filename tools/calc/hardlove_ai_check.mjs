@@ -4,10 +4,16 @@ import {Fraction, enumerateRandomBranches, highestScoreOdds, enumerateDamageScor
 import {evaluateSingles, BuildStateVariables} from '../../template/calc/ai/hardlove/index.mjs';
 import {BattleAI_CalcBaseDamage, BattleAI_CalcDamage, BattleAI_GetDynamicMoveType, BattleAI_GetTypeEffectiveness, BattleAI_IsParentalBondMove} from '../../template/calc/ai/hardlove/damage.mjs';
 import * as calc from '../../template/calc/ai/hardlove/calc.mjs';
+import {SOURCE_MOVE_TRAITS} from '../../template/calc/ai/hardlove/damage-data.mjs';
 import * as helpers from '../../template/calc/ai/hardlove/helpers.mjs';
 import {BattleAI_CalcEffectiveSpeed, AI_IsClient2Faster} from '../../template/calc/ai/hardlove/speed.mjs';
+import {BasicScoring, HarassmentScoring, RecoveryScoring, shouldRecover, GetRecoverAmountPercent} from '../../template/calc/ai/hardlove/scoring.mjs';
 
 const results = [];
+check('review: source punching table deliberately substitutes Growl for Double Shock', () => {
+  assert.equal(SOURCE_MOVE_TRAITS.punch.has('GROWL'), true);
+  assert.equal(SOURCE_MOVE_TRAITS.punch.has('DOUBLESHOCK'), false);
+});
 const zero = new Fraction();
 const one = new Fraction(1n);
 const exact = value => value.toJSON();
@@ -411,7 +417,139 @@ check('fix: Explosion-family scalar returns differ from the max-roll damage tabl
   }
 });
 
-await mkdir(new URL('../../.tmp/ai-engine/', import.meta.url), {recursive: true});
+const scoringBranches = (scorer, move, atk = {}, def = {}, field = {}, facts = {}) => {
+  const state = {attacker: chomp({moves: [move], ...atk}), defender: lax(def), field, facts};
+  const ai = BuildStateVariables(state);
+  return enumerateRandomBranches(random => scorer(state, 0, {...ai}, random)).map(branch => [branch.score, `${branch.weight.numerator}/${branch.weight.denominator}`]);
+};
+const THUNDER_WAVE = mv('Thunder Wave', 'Electric', 'Status', 0, 'STATUS_PARALYZE');
+const WISP = mv('Will-O-Wisp', 'Fire', 'Status', 0, 'STATUS_BURN');
+const SPORE = mv('Spore', 'Grass', 'Status', 0, 'STATUS_SLEEP');
+const TOXIC = mv('Toxic', 'Poison', 'Status', 0, 'STATUS_BADLY_POISON');
+const HEX = mv('Hex', 'Ghost', 'Special', 65);
+const RECOVER = mv('Recover', 'Normal', 'Status', 0, 'RESTORE_HALF_HP');
+
+check('doc: paralysis +7 or +8 with an independent 50% subtraction', () => {
+  assert.deepEqual(scoringBranches(HarassmentScoring, THUNDER_WAVE), [[6, '1/2'], [7, '1/2']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, THUNDER_WAVE, {}, {speed: 200}), [[7, '1/2'], [8, '1/2']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, THUNDER_WAVE, {moves: [THUNDER_WAVE, HEX]}), [[7, '1/2'], [8, '1/2']]);
+  assert.deepEqual(scoringBranches(BasicScoring, THUNDER_WAVE, {}, {types: ['Electric']}), [[-20, '1/1']]);
+  assert.deepEqual(scoringBranches(BasicScoring, THUNDER_WAVE, {}, {types: ['Ground']}), [[-20, '1/1']]);
+});
+
+check('doc: burn checks physical moves and Hex on the same one-third branch', () => {
+  assert.deepEqual(scoringBranches(HarassmentScoring, WISP), [[6, '1/1']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, WISP, {}, {moves: [CLAW]}), [[6, '2/3'], [7, '1/3']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, WISP, {moves: [WISP, HEX]}, {moves: [CLAW]}), [[6, '2/3'], [8, '1/3']]);
+  for (const def of [{status: 'brn'}, {types: ['Fire']}, {ability: 'Water Veil'}]) assert.deepEqual(scoringBranches(BasicScoring, WISP, {}, def), [[-20, '1/1']]);
+});
+
+check('doc: sleep support, Prankster, Yawn and poison support branches', () => {
+  assert.deepEqual(scoringBranches(HarassmentScoring, SPORE), [[6, '3/4'], [7, '1/4']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, SPORE, {ability: 'Prankster', moves: [SPORE, HEX, mv('Dream Eater', 'Psychic', 'Special', 100)]}), [[8, '3/4'], [11, '1/4']]);
+  const yawn = mv('Yawn', 'Normal', 'Status', 0, 'STATUS_SLEEP_NEXT_TURN');
+  assert.deepEqual(scoringBranches(HarassmentScoring, yawn, {ability: 'Prankster'}), [[6, '3/4'], [7, '1/4']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, TOXIC, {moves: [TOXIC, HEX]}), [[6, '2/3'], [8, '1/3']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, TOXIC, {moves: [TOXIC, HEX]}, {currentHP: 50}), [[6, '1/1']]);
+  assert.deepEqual(scoringBranches(BasicScoring, SPORE, {}, {ability: 'Insomnia'}), [[-20, '1/1']]);
+  assert.deepEqual(scoringBranches(BasicScoring, SPORE, {}, {types: ['Grass']}), [[-40, '1/1']]);
+  assert.deepEqual(scoringBranches(BasicScoring, SPORE, {}, {}, {terrain: 'Electric'}), [[-20, '1/1']]);
+  assert.deepEqual(scoringBranches(BasicScoring, TOXIC, {}, {types: ['Steel']}), [[-20, '1/1']]);
+  assert.deepEqual(scoringBranches(BasicScoring, TOXIC, {ability: 'Corrosion'}, {types: ['Steel']}), [[0, '1/1']]);
+});
+
+check('doc: confusion and Leech Seed bonuses plus existing-status restrictions', () => {
+  const confuse = mv('Confuse Ray', 'Ghost', 'Status', 0, 'STATUS_CONFUSE');
+  const seed = mv('Leech Seed', 'Grass', 'Status', 0, 'STATUS_LEECH_SEED');
+  assert.deepEqual(scoringBranches(HarassmentScoring, confuse), [[6, '1/1']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, confuse, {}, {status: 'par'}), [[8, '1/1']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, seed), [[7, '1/2'], [8, '1/2']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, seed, {}, {status: 'psn', facts: {confusion: true}}), [[9, '1/2'], [10, '1/2']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, seed, {}, {facts: {leechSeed: true}}), [[-20, '1/1']]);
+  assert.deepEqual(scoringBranches(HarassmentScoring, seed, {}, {types: ['Grass']}), [[-20, '1/1']]);
+});
+
+check('doc: hazard scores, first-turn odds, existing layers and terminal restrictions', () => {
+  for (const [name, effect, key, maximum] of [['Stealth Rock', 'STEALTH_ROCK', 'stealthRock', 1], ['Spikes', 'SET_SPIKES', 'spikes', 3], ['Toxic Spikes', 'TOXIC_SPIKES', 'toxicSpikes', 2], ['Sticky Web', 'STICKY_WEB', 'stickyWeb', 1]]) {
+    const move = mv(name, 'Normal', 'Status', 0, effect);
+    const facts = {livingMembersDefender: 6};
+    const web = effect === 'STICKY_WEB';
+    assert.deepEqual(scoringBranches(HarassmentScoring, move, {}, {}, {}, facts), [[6, '1/4'], [web ? 9 : 7, '3/4']], name);
+    assert.deepEqual(scoringBranches(HarassmentScoring, move, {facts: {firstTurnOut: true}}, {}, {}, facts), [[web ? 9 : 8, '1/4'], [web ? 12 : 9, '3/4']], name);
+    assert.deepEqual(scoringBranches(BasicScoring, move, {}, {}, {defender: {[key]: maximum}}, facts), [[-20, '1/1']], name);
+    assert.deepEqual(scoringBranches(BasicScoring, move), [[-20, '1/1']], name + ' final foe');
+    assert.deepEqual(scoringBranches(BasicScoring, move, {}, {ability: 'Magic Bounce'}, {}, facts), [[-20, '1/1']], name + ' bounce');
+    assert.deepEqual(scoringBranches(BasicScoring, move, {ability: 'Mold Breaker'}, {ability: 'Magic Bounce'}, {}, facts), [[0, '1/1']], name + ' mold breaker');
+    if (maximum > 1) assert.deepEqual(scoringBranches(HarassmentScoring, move, {}, {}, {defender: {[key]: 1}}, facts), [[5, '1/4'], [6, '3/4']], name + ' extra layer');
+  }
+});
+
+check('doc: standard recovery thresholds, toxic, Heal Block, full HP and pending Wish', () => {
+  assert.deepEqual(scoringBranches(RecoveryScoring, RECOVER, {currentHP: 50}), [[7, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, RECOVER, {currentHP: 75}), [[5, '1/2'], [7, '1/2']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, RECOVER, {currentHP: 60}), [[5, '1/2'], [7, '1/2']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, RECOVER, {currentHP: 99}), [[5, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, RECOVER, {currentHP: 128}), [[-1, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, RECOVER), [[-20, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, RECOVER, {currentHP: 50, status: 'tox'}), [[5, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, RECOVER, {currentHP: 50, facts: {healBlockTurns: 2}}), [[-20, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, mv('Wish', 'Normal', 'Status', 0, 'HEAL_IN_3_TURNS'), {currentHP: 50, facts: {wishCount: 1}}), [[-80, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, RECOVER, {speed: 20, currentHP: 90}), [[5, '1/4'], [7, '3/4']]);
+});
+
+check('doc: recovery uses max incoming damage, healing cap, and strict thresholds', () => {
+  const state = {attacker: chomp({moves: [RECOVER], currentHP: 60}), defender: lax(), field: {}};
+  const ai = BuildStateVariables(state);
+  assert.equal(shouldRecover(state, 0, {...ai, aiMovesFirst: true, playerCanOneShotMonWithAnyMove: true, maxDamageReceived: 74}, () => 0), 1);
+  assert.equal(shouldRecover(state, 0, {...ai, aiMovesFirst: true, playerCanOneShotMonWithAnyMove: true, maxDamageReceived: 75}, () => 0), 1);
+  assert.equal(shouldRecover(state, 0, {...ai, aiMovesFirst: true, playerCanOneShotMonWithAnyMove: true, maxDamageReceived: 76}, () => 0), 0);
+  assert.equal(shouldRecover(state, 0, {...ai, aiMovesFirst: false, maxDamageReceived: 0}, () => 0), 1);
+});
+
+check('doc: weather recovery amounts and Rest sleep support/terrain restrictions', () => {
+  const synthesis = mv('Synthesis', 'Grass', 'Status', 0, 'HEAL_HALF_DIFFERENT_IN_WEATHER');
+  const shore = {...synthesis, name: 'Shore Up'};
+  for (const [move, weather, expected] of [[synthesis, 'Sun', 67], [synthesis, 'Rain', 25], [synthesis, '', 50], [shore, 'Sand', 67], [shore, 'Sun', 50]]) assert.deepEqual(scoringBranches(GetRecoverAmountPercent, move, {}, {}, {weather}), [[expected, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, synthesis, {currentHP: 50}, {}, {weather: 'Sun'}), [[7, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, synthesis, {currentHP: 50}, {}, {weather: 'Rain'}), [[5, '1/1']]);
+  const rest = mv('Rest', 'Psychic', 'Status', 0, 'RECOVER_HEALTH_AND_SLEEP');
+  assert.deepEqual(scoringBranches(RecoveryScoring, rest, {currentHP: 50}), [[7, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, rest, {currentHP: 50, item: 'Chesto Berry'}), [[8, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, rest, {currentHP: 50, status: 'tox'}), [[7, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, rest, {currentHP: 50}, {}, {terrain: 'Electric'}), [[-80, '1/1']]);
+  assert.deepEqual(scoringBranches(RecoveryScoring, rest, {currentHP: 50}, {}, {terrain: 'Electric', terrainTurns: 0}), [[7, '1/1']]);
+});
+
+check('status/recovery/hazards: mixed four-slot odds remain exact, finite and sum to 100', () => {
+  for (const moves of [[THUNDER_WAVE, WISP, SPORE, TOXIC], [RECOVER, WISP, mv('Spikes', 'Ground', 'Status', 0, 'SET_SPIKES'), CLAW]]) {
+    const result = evaluateSingles({attacker: chomp({currentHP: 75, moves}), defender: lax(), field: {}, facts: {livingMembersDefender: 6}});
+    sumsTo100(result);
+    assert.deepEqual(result.reduce((sum, row) => sum.add(new Fraction(BigInt(row.exact.numerator), BigInt(row.exact.denominator))), zero).toJSON(), one.toJSON());
+  }
+});
+
+check('review: IV Hidden Power type and Paradox helper preserve C order, ties and u8 arguments', () => {
+  assert.equal(calc.GetHiddenPowerType(0, 0, 0, 0, 0, 0), 'Fighting');
+  assert.equal(calc.GetHiddenPowerType(31, 31, 31, 31, 31, 31), 'Dark');
+  assert.equal(calc.GetHiddenPowerType(31, 30, 31, 30, 31, 30), 'Bug');
+  assert.equal(calc.BattleAI_GetHighestParadoxStat(100, 100, 100, 100, 100), 'attack');
+  assert.equal(calc.BattleAI_GetHighestParadoxStat(100, 101, 101, 101, 101), 'defense');
+  assert.equal(calc.BattleAI_GetHighestParadoxStat(100, 100, 100, 100, 200), 'speed');
+  assert.equal(calc.BattleAI_GetHighestParadoxStat(200, 300, 100, 100, 100), 'attack');
+});
+
+check('C vs doc: Rest does not reject Insomnia/Leaf Guard/asleep; Wish/terrain use -80', () => {
+  const rest = mv('Rest', 'Psychic', 'Status', 0, 'RECOVER_HEALTH_AND_SLEEP');
+  for (const extra of [{ability: 'Insomnia'}, {ability: 'Vital Spirit'}, {ability: 'Comatose'}, {ability: 'Leaf Guard'}, {status: 'slp'}]) assert.deepEqual(scoringBranches(RecoveryScoring, rest, {currentHP: 50, ...extra}), [[7, '1/1']]);
+});
+
+check('review: AI formula deliberately omits Wonder Room, sports and Ruin', () => {
+  const attacker = chomp(), defender = lax({defense: 150, spDefense: 50});
+  const state = {attacker, defender, field: {}};
+  const reference = BattleAI_CalcBaseDamage(state, CLAW);
+  assert.equal(BattleAI_CalcBaseDamage({...state, field: {wonderRoom: true, waterSport: true, mudSport: true}}, CLAW), reference);
+  for (const ability of ['Sword of Ruin', 'Beads of Ruin', 'Tablets of Ruin', 'Vessel of Ruin']) assert.equal(BattleAI_CalcBaseDamage(state, CLAW, {...attacker, ability}, defender), reference);
+});
 
 await mkdir(new URL('../../.tmp/ai-engine/', import.meta.url), {recursive: true});
 await writeFile(new URL('../../.tmp/ai-engine/results.json', import.meta.url), JSON.stringify({results}, null, 2));

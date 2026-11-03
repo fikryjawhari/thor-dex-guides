@@ -8,6 +8,16 @@ const hp = mon => mon.currentHP ?? mon.hp;
 const facts = mon => mon.facts || {};
 const moldBreaker = mon => mon.hasMoldBreaker ?? has(mon.ability, 'Mold Breaker', 'Teravolt', 'Turboblaze');
 
+export function GetHiddenPowerType(hpIV, attackIV, defenseIV, speedIV, spAttackIV, spDefenseIV) {
+  const bits = [hpIV, attackIV, defenseIV, speedIV, spAttackIV, spDefenseIV].reduce((value, iv, index) => value | (iv & 1) << index, 0);
+  return ['Fighting', 'Flying', 'Poison', 'Ground', 'Rock', 'Bug', 'Ghost', 'Steel', 'Fire', 'Water', 'Grass', 'Electric', 'Psychic', 'Ice', 'Dragon', 'Dark'][Math.trunc(bits * 15 / 63)];
+}
+
+export function BattleAI_GetHighestParadoxStat(attack, defense, spAttack, spDefense, speed) {
+  const values = [attack, defense, spAttack, spDefense, speed].map(value => value & 255);
+  return ['attack', 'defense', 'spAttack', 'spDefense', 'speed'][values.indexOf(Math.max(...values))];
+}
+
 export function IsMoveUsefulSoundMove(move) {
   return has(move, 'Alluring Voice', 'Boomburst', 'Bug Buzz', 'Chatter', 'Clanging Scales',
     'Clangorous Soulblaze', 'Eerie Spell', 'Grass Whistle', 'Hyper Voice', 'Overdrive',

@@ -421,6 +421,8 @@ Helper/damage review repairs (fixtures in `tools/calc/hardlove_ai_check.mjs`):
   Present etc.), rather than requiring the caller to supply a ban flag. Triple Axel/Kick still roll each hit.
 - Dynamic Normal moves use `MoveIsAffectedByNormalizeVariants` exclusions, including Z/Max. Source trait lists
   supply Triage, powder, ball, punch, bite, pulse, slicing and Minimize; guide `bullet`/`slicing` aliases work too.
+  Preserve the source's unusual punching-table entry: Growl replaces Double Shock (an inline comment caused the
+  first table extraction to omit Growl). A fixture protects this, rather than substituting standard move flags.
 - `HasMovePriority` checks Grassy Terrain duration; single-target Prankster checks opposing sides.
 - Speed respects an explicit held-effect override (including `NONE`) instead of re-enabling a named item.
   State snapshots suppress items using `GetBattleMonItem`; raw battle-mon items remain available to scoring and
@@ -433,7 +435,38 @@ Helper/damage review repairs (fixtures in `tools/calc/hardlove_ai_check.mjs`):
   modifiers, while leaving their damage ranges populated. `setupStateVariables.c` overwrites `damageRoll` with
   that return value. Their own rolled outcomes are therefore zero; incoming max-roll tables remain nonzero.
 
-The status/hazard/recovery scoring fixtures are still in progress.
+Review completed against pinned `4a8d4a63082176008ccda09214d6341d43674a6a`: `calc.c` (unusual damage,
+KO checks, usability, item/priority/grounding helpers and pure Hidden Power/Paradox helpers), `calcSpeed.c`,
+`scoringHelper.c`, and `calcDamage.c`, including their called move-trait and Q4.12 helpers. `main.c` scoring
+deltas, random branches and cases were machine-compared in the initial port. A final comment-stripped table
+audit checked 5,032 move/effect entries against C (Sheer Force, Parental Bond, all ten trait tables, useful sound,
+switching, flinch/thaw and Encore lists); local record: `.tmp/ai-engine/source-audit.log`.
+
+Headless fixtures: `hardlove_ai_check.mjs` 49/49; existing damage suite `hardlove_check.mjs` 107/107. Status
+fixtures cover paralysis, burn, sleep/Yawn, poison, confusion and Leech Seed; hazards cover all four hazards,
+layer limits, first-turn bonuses, final foe and Magic Bounce/Mold Breaker; recovery covers strict thresholds,
+incoming maximum damage, healing cap, toxic, Heal Block, pending Wish, weather, Rest support and terrain.
+They assert exact score distributions and mixed-move rational odds, not only rounded percentages. Logs:
+`.tmp/ai-engine/test.log`, `.tmp/ai-engine/hl.log`. The 13 explained comparison cases also have all sixteen
+engine and AI rolls committed in `tools/calc/hardlove_ai_damage_gaps.json`; changed, missing, stale or unexplained
+cases fail the comparison. No browser/gate checks or UI changes belong to this unit.
+
+Input boundary for wiring and the later party/doubles units:
+- Pass precomputed game stats before stages/speed modifiers, separate `statBoosts`, current types/effective ability,
+  base species name plus form number, HP and source move effect/chance. This module is not a ROM/NARC reader or
+  party stat constructor. `weight` is hectograms, not kg. The comparison adapter is not the production UI adapter.
+- Supply game-dependent facts: Hidden Power type (or use `GetHiddenPowerType` with IVs), Fling power, Natural Gift
+  type/power, held-item removability and selected Paradox stat. Do not silently invent unknown battle history.
+  `BattleAI_GetHighestParadoxStat` preserves the C helper's **u8 parameter truncation** and tie order
+  Attack, Defense, Sp. Atk, Sp. Def, Speed; review that call boundary when implementing party stat construction.
+- Side fields are nested `field.attacker` / `field.defender` (screens, hazards etc.); flat screen keys are only
+  a defender-side compatibility fallback. Keep raw battle-mon items distinct from active-item snapshots, and
+  incoming max-range damage distinct from own scalar-return damage (especially Explosion-family moves).
+- `pick_command.c`, `postKO.c` and `CalculateSwitch` are not ported here. Singles rejects doubles/multi/tag and
+  living allies rather than presenting misleading odds. Party-derived scoring facts below still need their
+  real producers; the current singleton-party fallback is not a bench ranking or hard-switch prediction.
+- UI wiring still needs move `effect` / `effectChance` extraction and the battle facts below. No extract,
+  `calc.js`, shared engine or assembly changes were made; do not enable AI UI before that adapter is complete.
 
 AI inputs the calc lacks (the AI toggle list; the port reads them from `facts`): first turn out (`firstTurnOut`:
 Fake Out / First Impression), last move (`lastUsedMove`: Torment, Encore, choice lock `moveNoChoice`), Encore
@@ -451,6 +484,14 @@ AI doc vs C (the C wins):
   exactly 3/8 vs 5/8, not the first port's 3/4 vs 1/4. The prior note/test conflated the scalar and range.
 - A Taunted status move is −80 plus whatever its other scorers add (Swords Dance: −68), still never picked.
 - An unusable damaging move (Disable, Torment, 0 PP) is never damage-calced, so it also scores the −40 immunity.
+- The KO helper ignores Focus Sash, Sturdy and Disguise, but retains its Ice Face physical-hit exception.
+  Residual death nets damage and healing, not real end-turn ordering: this helper does not prevent burn via
+  Magic Guard, allows airborne Grassy Terrain healing, and omits hail damage under `GEN_LATEST`.
+- Rest scoring does not test Insomnia, Vital Spirit, Comatose, Leaf Guard or already being asleep as the doc
+  suggests; Sweet Veil, Uproar and grounded Misty/Electric Terrain are checked. Pending Wish and terrain-blocked
+  Rest score -80, not the doc's generic -20. Fixtures preserve the C rather than correcting its strategy.
+- The AI damage formula omits Wonder Room, Water/Mud Sport and the four Ruin ability modifiers. These omissions
+  are tested separately; they are not additional differences among the 95 comparison cases above.
 
 ## Checks
 
