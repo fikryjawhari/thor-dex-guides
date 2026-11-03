@@ -1,3 +1,6 @@
+import {SOURCE_MOVE_TRAITS} from './damage-data.mjs';
+import {AI_IsClientGrounded as damageGrounded} from './damage.mjs';
+
 const key = value => String(typeof value === 'object' && value ? value.name : value ?? '').replace(/^(MOVE|ABILITY|ITEM|TYPE)_/, '').replace(/[^a-z0-9]/gi, '').toLowerCase();
 const effectKey = value => String(value ?? '').replace(/^MOVE_EFFECT_/, '');
 const has = (value, ...names) => names.some(name => key(value) === key(name));
@@ -79,11 +82,19 @@ export function BattleAI_GetWeather(state, mon) {
 export function HasMovePranksterPriority(state, attacker, move, defender) {
   const target = key(move.target || 'single target');
   return has(attacker.ability, 'Prankster') && has(move.category, 'Status')
-    && ['adjacentopponents', 'singletarget', 'normal', 'alladjacentfoes'].includes(target)
-    && attacker !== defender;
+    && (['adjacentopponents', 'alladjacentfoes'].includes(target)
+      || ['singletarget', 'normal'].includes(target) && attacker !== defender && !facts(defender).sameSide);
 }
 
-export function IsMoveUsable(state, mon, move, lastMove = facts(mon).lastMove, index = mon.moves.indexOf(move)) {
+export function BattleAI_GetActiveItem(state, mon) {
+  const input = facts(mon);
+  if (has(mon.ability, 'Klutz') || input.embargo || input.embargoFlag || state.field?.magicRoom) return '';
+  const opposing = mon === state.attacker ? state.defender : state.attacker;
+  if (String(mon.item ?? '').endsWith(' Berry') && has(opposing?.ability, 'Unnerve') && hp(opposing) > 0) return '';
+  return mon.item ?? '';
+}
+
+export function IsMoveUsable(state, mon, move, lastMove = facts(mon).lastUsedMove ?? facts(mon).lastMove, index = mon.moves.indexOf(move)) {
   const input = facts(mon);
   if (move.pp === 0) return false;
   if ((input.disabledTurns || input.disabled) && has(move, input.disabledMove)) return false;
@@ -92,14 +103,14 @@ export function IsMoveUsable(state, mon, move, lastMove = facts(mon).lastMove, i
   const choiceMove = input.moveNoChoice ?? input.choiceMove;
   if (choiceMove && !has(choiceMove, 'None')) {
     if ((input.encoredTurns || input.encored) && !has(move, input.encoredMove ?? lastMove)) return false;
-    if (has(mon.item, 'Choice Band', 'Choice Scarf', 'Choice Specs') && !has(move, choiceMove)) return false;
+    if (has(BattleAI_GetActiveItem(state, mon), 'Choice Band', 'Choice Scarf', 'Choice Specs') && !has(move, choiceMove)) return false;
   }
   return true;
 }
 
 export function HasMovePriority(state, attacker, move, defender) {
-  if (has(move, 'Grassy Glide') && has(state.field?.terrain, 'Grassy')) return true;
-  if (has(attacker.ability, 'Triage') && (move.triage ?? move.flags?.includes('triage'))) return true;
+  if (has(move, 'Grassy Glide') && has(state.field?.terrain, 'Grassy', 'Grassy Terrain') && (state.field?.terrainTurns ?? 1) > 0) return true;
+  if (has(attacker.ability, 'Triage') && (move.triage ?? (SOURCE_MOVE_TRAITS.triage.has(key(move).toUpperCase()) || move.flags?.includes('triage')))) return true;
   return HasMovePranksterPriority(state, attacker, move, defender) || (move.priority ?? 0) > 0;
 }
 
@@ -108,9 +119,5 @@ export function AI_MonHasType(mon, type) {
 }
 
 export function AI_IsClientGrounded(state, mon) {
-  const input = facts(mon);
-  if (input.fly || input.dig || input.dive || input.phantomForce) return false;
-  if (state.field?.gravity || input.ingrain || input.grounded || has(mon.item, 'Iron Ball')) return true;
-  return !(input.magnetRiseTurns ?? input.magnetRise) && !AI_MonHasType(mon, 'Flying')
-    && !has(mon.ability, 'Levitate', 'Eelevate') && !has(mon.item, 'Air Balloon');
+  return damageGrounded(state, mon);
 }

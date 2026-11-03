@@ -1,6 +1,6 @@
 import {BattleAI_CalcDamage, BattleAI_GetTypeEffectiveness, BattleAI_RolledDamageOutcomes} from './damage.mjs';
 import {Fraction} from '../enumerate.mjs';
-import {AI_IsClientGrounded, IsMoveUsable, BattleAI_AdjustUnusualMoveDamage, CanAttackerOneShotDefender, IsMoveUsefulSoundMove, IsMoveForceSwitching, IsMoveValidSwitchingMove} from './calc.mjs';
+import {AI_IsClientGrounded, IsMoveUsable, BattleAI_GetActiveItem, BattleAI_AdjustUnusualMoveDamage, CanAttackerOneShotDefender, IsMoveUsefulSoundMove, IsMoveForceSwitching, IsMoveValidSwitchingMove} from './calc.mjs';
 import {BattleAI_CalcEffectiveSpeed, AI_IsClient2Faster} from './speed.mjs';
 import {BattlerKnowsThawingMove, BattlerPositiveStatChangesSum} from './helpers.mjs';
 
@@ -9,6 +9,7 @@ const statNames = ['attack', 'defense', 'speed', 'spAttack', 'spDefense', 'accur
 function snapshotMon(state, mon, side) {
   const facts = {...mon.facts};
   const snapshot = {...mon, ...facts, facts, moves: (mon.moves ?? []).slice(0, 4).map(move => ({...move, flags: [...(move.flags ?? [])]})), types: [...(mon.types ?? [])], statBoosts: {...mon.statBoosts}};
+  snapshot.item = BattleAI_GetActiveItem(state, mon);
   snapshot.hp = mon.currentHP;
   snapshot.maxhp = mon.totalHP;
   snapshot.percenthp = Math.trunc(100 * snapshot.hp / snapshot.maxhp);
@@ -21,7 +22,7 @@ function snapshotMon(state, mon, side) {
   snapshot.type3 = snapshot.types[2] ?? 'Typeless';
   snapshot.form = mon.form ?? facts.form ?? 0;
   snapshot.hasMoldBreaker = mon.hasMoldBreaker ?? facts.hasMoldBreaker ?? ['Mold Breaker', 'Teravolt', 'Turboblaze'].includes(mon.ability);
-  snapshot.item_held_effect = mon.item_held_effect ?? facts.item_held_effect ?? (mon.item === 'Clear Amulet' ? 'PREVENT_STAT_DROPS' : '');
+  snapshot.item_held_effect = snapshot.item !== (mon.item ?? '') ? 'NONE' : mon.item_held_effect ?? facts.item_held_effect ?? (mon.item === 'Clear Amulet' ? 'PREVENT_STAT_DROPS' : undefined);
   snapshot.isGrounded = AI_IsClientGrounded(state, snapshot);
   snapshot.speed = BattleAI_CalcEffectiveSpeed(state, snapshot, side);
   return snapshot;
@@ -38,11 +39,15 @@ function partyFacts(state, side) {
   };
 }
 
-function damageTable(state, move, attacker, defender) {
-  const result = BattleAI_CalcDamage(state, move, attacker, defender);
+function damageTable(state, move, attacker, defender, defendingSide = 'defender') {
+  const originalField = state.field ?? {};
+  const side = originalField[defendingSide] ?? {};
+  const field = {...originalField, ...Object.fromEntries(['reflect', 'lightScreen', 'auroraVeil'].map(name => [name, side[name] ?? (defendingSide === 'defender' ? originalField[name] : false)]))};
+  const result = BattleAI_CalcDamage({...state, field}, move, attacker, defender);
   if (!Array.isArray(result.damageRange) || result.damageRange.length !== 16) throw new TypeError('AI damage calculation must return sixteen rolls');
   return {
     raw: [...result.damageRange],
+    rolled: [...(result.returnedDamageRange ?? result.damageRange)],
     adjusted: result.damageRange.map(damage => BattleAI_AdjustUnusualMoveDamage(attacker, defender, damage, move.effect, move, result.moveEffectiveness)),
     effectiveness: result.moveEffectiveness,
     outcomes: BattleAI_RolledDamageOutcomes(result.hitRanges ?? [result.damageRange]),
@@ -114,7 +119,7 @@ export function BuildStateVariables(state) {
       if (IsMoveUsefulSoundMove(move) && !defenderMon.facts.throatChopTimer) ai.defenderHasAtleastOneUsefulSoundMove = true;
       if (IsMoveForceSwitching(move)) ai.defenderCanForceSwitching = true;
     } else if (move.power) {
-      const table = damageTable(state, move, defenderMon, attackerMon);
+      const table = damageTable(state, move, defenderMon, attackerMon, 'attacker');
       ai.defenderRawDamageRanges[index] = table.raw;
       ai.defenderDamageRanges[index] = table.adjusted;
       ai.effectivenessOnAttacker[index] = table.effectiveness;
@@ -142,7 +147,7 @@ export function BuildStateVariables(state) {
       // The AI's own roll (setupStateVariables.c): rolled damage -> BattleAI_AdjustUnusualMoveDamage -> kill check ->
       // a killing roll capped at the target's HP. One roll per hit (Triple Axel / Kick, Parental Bond: summed).
       const denominator = 16n ** BigInt(table.hits);
-      const outcomes = table.hits === 1 ? table.raw.map(raw => [raw, 1]) : [...table.outcomes]; // single hit: index = roll
+      const outcomes = table.hits === 1 ? table.rolled.map(raw => [raw, 1]) : [...table.outcomes]; // single hit: index = roll
       ai.attackerRollTables[index] = outcomes.map(([raw, count]) => {
         const damage = BattleAI_AdjustUnusualMoveDamage(attackerMon, defenderMon, raw, move.effect, move, table.effectiveness);
         const canOneShot = Boolean(CanAttackerOneShotDefender(damage, move.category, move, attackerMon, defenderMon));

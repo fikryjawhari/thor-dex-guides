@@ -52,7 +52,7 @@ function sourceContext(state, inputAi, random) {
     const moveTbl = Object.fromEntries([...(state.attacker.moves ?? []), ...(state.defender.moves ?? [])].map(move => [id(move.name), { ...move, effect: effect(move.effect), split: id(move.category), secondaryEffectChance: move.secondaryEffectChance ?? 0, target: move.target }]));
     moveTbl.NONE = { effect: '', split: 'STATUS', secondaryEffectChance: 0 };
     const context = {
-        state, ai, battlemon: [attackerMon, defenderMon], moveTbl, field_condition,
+        state, ai, battlemon: [sourceMon(state.attacker), sourceMon(state.defender)], moveTbl, field_condition,
         terrainOverlay: { type: id(field.terrain).replace(/TERRAIN$/, ''), numberOfTurnsLeft: facts.terrainTurns ?? field.terrainTurns ?? (field.terrain ? 1 : 0) },
         side_condition: sides.map(side => bits({ ...side, spikes: side.spikes ?? side.spikesLayers, toxicSpikes: side.toxicSpikes ?? side.toxicSpikesLayers }, sideFlags)),
         scw: sides.map(side => ({ spikesLayers: side.spikesLayers ?? side.spikes ?? 0, toxicSpikesLayers: side.toxicSpikesLayers ?? side.toxicSpikes ?? 0 })),
@@ -1886,7 +1886,7 @@ const GetBattlerAbility = (context, battler) => context.battlemon[battler].abili
 const BattleWorkClientSetMaxGet = () => 2;
 const BATTLER_ALLY = battler => battler ^ 2;
 const IS_ITEM_BERRY = item => item.endsWith('BERRY');
-const HeldItemHoldEffectGet = (context, battler) => ({ CHOICEBAND: 'CHOICEATK', CHOICESCARF: 'CHOICESPEED', CHOICESPECS: 'CHOICESPATK' }[context.battlemon[battler].item] ?? 'NONE');
+const HeldItemHoldEffectGet = (context, battler) => ({ CHOICEBAND: 'CHOICEATK', CHOICESCARF: 'CHOICESPEED', CHOICESPECS: 'CHOICESPATK' }[battler === 0 ? context.ai.attackerMon.item : context.ai.defenderMon.item] ?? 'NONE');
 const BattlerPositiveStatChangesSum = (battleSystem, battler) => helpers.BattlerPositiveStatChangesSum(battleSystem.sp.battlemon[battler].source);
 const BattlerKnowsMove = (battleSystem, battler, move) => (battleSystem.sp.battlemon[battler].source.moves ?? []).some(known => id(known.name) === move);
 const BattlerKnowsFlinchingMove = (battleSystem, battler) => helpers.BattlerKnowsFlinchingMove(battleSystem.sp.battlemon[battler].source);
@@ -1928,7 +1928,7 @@ export function ScoreMovesAgainstDefender(state, moveIndex, ai, random) {
     if (!move || id(move.name) === 'NONE') return 0;
     const facts = state.attacker.facts ?? {};
     const forced = ((facts.encoredTurns ?? 0) > 0 && id(move.name) === id(facts.encoredMove))
-        || (id(move.name) === id(facts.moveNoChoice) && ['CHOICEBAND', 'CHOICESCARF', 'CHOICESPECS'].includes(id(state.attacker.item)));
+        || (id(move.name) === id(facts.moveNoChoice) && ['CHOICEBAND', 'CHOICESCARF', 'CHOICESPECS'].includes(id(ai.attackerMon.item)));
     const { battleSystem, ai: context } = sourceContext(state, ai, random);
     const score = (forced ? 1000 : 0)
         + BasicScoringPort(battleSystem, 0, moveIndex, context)

@@ -416,7 +416,24 @@ Real formula gaps in those cases (odds always use the AI behaviour, not the disp
 | Gyro Ball / `w2-gyro-ball-equal-speed` | `floor(25*defSpeed/atkSpeed)+1`, capped 150 (26 BP here) | No +1 (25 BP here) |
 | Punishment / `w2-punishment-positive-and-negative-boosts` | TODO/commented out; leaves move table power 1 | `min(200,60+20*sumPositiveDefenderStages)` (160 BP here) |
 
-The remaining helper/damage review and status/hazard/recovery fixtures are still in progress.
+Helper/damage review repairs (fixtures in `tools/calc/hardlove_ai_check.mjs`):
+- Parental Bond now carries the actual `IsBannedParentalBondMove` tables (multi-hit, OHKO, charge-turn, Z/Max,
+  Present etc.), rather than requiring the caller to supply a ban flag. Triple Axel/Kick still roll each hit.
+- Dynamic Normal moves use `MoveIsAffectedByNormalizeVariants` exclusions, including Z/Max. Source trait lists
+  supply Triage, powder, ball, punch, bite, pulse, slicing and Minimize; guide `bullet`/`slicing` aliases work too.
+- `HasMovePriority` checks Grassy Terrain duration; single-target Prankster checks opposing sides.
+- Speed respects an explicit held-effect override (including `NONE`) instead of re-enabling a named item.
+  State snapshots suppress items using `GetBattleMonItem`; raw battle-mon items remain available to scoring and
+  residual helpers, matching the two C structures. Suppressed Choice items neither disable nor force a move.
+- Outgoing and incoming damage use the damaged side's screens, not one global Reflect applied both ways.
+- Fly/Dig/Dive flags no longer invent the separate `SEMI_INVULNERABLE` flag; effect flags accept camelCase,
+  snake_case and named arrays. State and damage grounding now share the same implementation.
+- Q4.12 multiplication follows `asm/qmath.s`: 32-bit wrap, half-down/up rounding, and the 4096 identity fast path.
+- Crucially, Explosion/Self-Destruct/Misty Explosion/Final Gambit return scalar **zero** before type/burn/final
+  modifiers, while leaving their damage ranges populated. `setupStateVariables.c` overwrites `damageRoll` with
+  that return value. Their own rolled outcomes are therefore zero; incoming max-roll tables remain nonzero.
+
+The status/hazard/recovery scoring fixtures are still in progress.
 
 AI inputs the calc lacks (the AI toggle list; the port reads them from `facts`): first turn out (`firstTurnOut`:
 Fake Out / First Impression), last move (`lastUsedMove`: Torment, Encore, choice lock `moveNoChoice`), Encore
@@ -429,8 +446,9 @@ From the party (later units): `highestPostKoScoreFromParty`, `postKoScoringPosit
 (`postKO.c`), `shouldSwitch` (`CalculateSwitch`), living members per side, a Mega Stone in the party.
 
 AI doc vs C (the C wins):
-- Explosion, trapping moves, Future Sight ... never get the highest-damage +6/+8, but their rolls still count for the
-  maximum: when Explosion rolls highest, no other move gets +6 either (the doc implies the next move would).
+- Trapping moves and Future Sight never get the highest-damage +6/+8, but their rolls still count for the maximum.
+  Explosion-family moves are different: their scalar return is zero (above). At 50% HP, Explosion vs Tackle is
+  exactly 3/8 vs 5/8, not the first port's 3/4 vs 1/4. The prior note/test conflated the scalar and range.
 - A Taunted status move is −80 plus whatever its other scorers add (Swords Dance: −68), still never picked.
 - An unusable damaging move (Disable, Torment, 0 PP) is never damage-calced, so it also scores the −40 immunity.
 

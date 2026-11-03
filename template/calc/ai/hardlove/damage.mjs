@@ -1,9 +1,10 @@
-import {TYPE_CHART, TYPE_ITEMS, RESIST_BERRIES, SHEER_FORCE_EFFECTS, SHEER_FORCE_MOVES, RECKLESS_EFFECTS, EFFECTIVENESS_CODES, EFFECTIVENESS_MULTIPLIERS} from './damage-data.mjs';
+import {TYPE_CHART, TYPE_ITEMS, RESIST_BERRIES, SHEER_FORCE_EFFECTS, SHEER_FORCE_MOVES, RECKLESS_EFFECTS, PARENTAL_BOND_BANNED, SOURCE_MOVE_TRAITS, EFFECTIVENESS_CODES, EFFECTIVENESS_MULTIPLIERS} from './damage-data.mjs';
+import {BattlerHasSoundBasedMove} from './helpers.mjs';
 
 const floor = Math.floor;
 const Q = {quarter: 1024, half: 2048, twoThirds: 2732, threeQuarters: 3072, one: 4096, onePointOne: 4505, glove: 4506, onePointTwo: 4915, onePointTwoFive: 5120, lifeOrb: 5324, onePointThree: 5325, aura: 5448, fourThirds: 5461, onePointFour: 5734, onePointFive: 6144, onePointSix: 6553, onePointEight: 7372, two: 8192};
-const qDown = (value, modifier) => floor((value * modifier + 2047) / 4096);
-const qUp = (value, modifier) => floor((value * modifier + 2048) / 4096);
+const qDown = (value, modifier) => modifier === 4096 ? value : ((Math.imul(value, modifier) + 2047) >>> 0) >>> 12;
+const qUp = (value, modifier) => modifier === 4096 ? value : ((Math.imul(value, modifier) + 2048) >>> 0) >>> 12;
 const has = (value, ...names) => names.includes(value);
 const fact = (mon, name, otherwise = false) => mon?.[name] ?? mon?.facts?.[name] ?? otherwise;
 const fieldOf = state => state.field ?? {};
@@ -16,7 +17,7 @@ const ability = (mon, ...names) => has(mon?.ability, ...names);
 const moldBreaker = mon => fact(mon, 'hasMoldBreaker', ability(mon, 'Mold Breaker', 'Teravolt', 'Turboblaze'));
 const moveEffect = move => (move.effect ?? '').replace(/^MOVE_EFFECT_/, '');
 const flagsOf = mon => mon.effect_of_moves ?? mon.effectOfMoves ?? mon.facts?.effectOfMoves ?? [];
-const effectFlag = (mon, flag) => (Array.isArray(flagsOf(mon)) ? flagsOf(mon) : []).some(value => value.replace(/^MOVE_EFFECT_FLAG_/, '').toUpperCase() === flag) || fact(mon, flag.toLowerCase());
+const effectFlag = (mon, flag) => (Array.isArray(flagsOf(mon)) ? flagsOf(mon) : []).some(value => value.replace(/^MOVE_EFFECT_FLAG_/, '').toUpperCase() === flag) || fact(mon, flag.toLowerCase()) || fact(mon, flag.toLowerCase().replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()));
 const stage = (mon, stat) => mon.statBoosts?.[stat] ?? mon.facts?.statBoosts?.[stat] ?? 0;
 const boosted = (value, boost) => floor(value * (boost >= 0 ? 2 + boost : 2) / (boost >= 0 ? 2 : 2 - boost)) % 65536;
 const terrain = state => fieldOf(state).terrain ?? '';
@@ -30,9 +31,13 @@ const weatherIs = (weather, kind) => ({Sun: ['Sun', 'Harsh Sunshine', 'Extremely
 const fieldAbility = (state, attacker, defender, name) => ability(attacker, name) || ability(defender, name) || [partner(state, 'attacker'), partner(state, 'defender'), ...(fieldOf(state).battlers ?? [])].some(mon => living(mon) && ability(mon, name)) || (fieldOf(state).abilities ?? []).includes(name);
 
 function moveTrait(move, name) {
+  const aliases = {ball: 'bullet', slice: 'slicing'};
+  if (name === 'normalizeExcluded' && (has(move.name, 'Hidden Power', 'Weather Ball', 'Natural Gift', 'Judgment', 'Techno Blast', 'Multi-Attack', 'Terrain Pulse') || moveTrait(move, 'zMove') || moveTrait(move, 'maxMove'))) return true;
   if (move.facts?.[name] !== undefined) return !!move.facts[name];
   if (move[name] !== undefined) return !!move[name];
-  return (move.flags ?? []).some(flag => flag.replace(/^FLAG_/, '').replace(/[^a-z]/gi, '').toLowerCase() === name.replace(/[^a-z]/gi, '').toLowerCase());
+  if (SOURCE_MOVE_TRAITS[name]?.has(move.name?.toUpperCase().replace(/[^A-Z0-9]/g, ''))) return true;
+  if (name === 'sound' && BattlerHasSoundBasedMove({moves: [move]})) return true;
+  return (move.flags ?? []).some(flag => [name, aliases[name]].filter(Boolean).some(trait => flag.replace(/^FLAG_/, '').replace(/[^a-z]/gi, '').toLowerCase() === trait.replace(/[^a-z]/gi, '').toLowerCase()));
 }
 
 function contact(move, attacker, defender) {
@@ -308,7 +313,7 @@ export function BattleAI_CalcDamageInternal(state, move, attacker = state.attack
   const hasPriority = priority(state, move, attacker, defender);
   const zero = () => makeResult(Array(16).fill(0), 0, options);
   let canHit = true;
-  if (effectFlag(defender, 'SEMI_INVULNERABLE') || ['FLY', 'DIVE', 'DIG', 'PHANTOM_FORCE'].some(flag => effectFlag(defender, flag))) {
+  if (effectFlag(defender, 'SEMI_INVULNERABLE')) {
     canHit = has(move.name, 'Surf', 'Whirlpool') && effectFlag(defender, 'DIVE') || has(move.name, 'Earthquake', 'Fissure', 'Magnitude') && effectFlag(defender, 'DIG') || has(move.name, 'Sky Uppercut', 'Gust', 'Twister', 'Hurricane', 'Thunder', 'Smack Down', 'Thousand Arrows') && effectFlag(defender, 'FLY');
   }
   if (!canHit && !ability(defender, 'No Guard') && !ability(attacker, 'No Guard') && (hasPriority || attacker.speed > defender.speed)) return zero();
@@ -355,7 +360,7 @@ export function BattleAI_CalcDamageInternal(state, move, attacker = state.attack
   if (move.name === 'Sheer Cold' && isType(defender, 'Ice')) effectiveness = 0;
   if (has(move.name, 'Sheer Cold', 'Fissure', 'Guillotine', 'Horn Drill') && (!ability(attacker, 'No Guard') && attacker.level < defender.level || !bypass && ability(defender, 'Sturdy'))) effectiveness = 0;
   if (ability(defender, 'Wonder Guard') && !bypass && effectiveness < 20) effectiveness = 0;
-  if (has(move.name, 'Self-Destruct', 'Explosion', 'Misty Explosion', 'Final Gambit')) return makeResult(range, effectiveness, options, 0);
+  if (has(move.name, 'Self-Destruct', 'Explosion', 'Misty Explosion', 'Final Gambit')) return {...makeResult(range, effectiveness, options, 0), returnedDamageRange: Array(16).fill(0)};
   range = range.map(value => floor(value * (EFFECTIVENESS_MULTIPLIERS.get(effectiveness) ?? 0)));
   if (physical && attacker.status === 'brn' && !ability(attacker, 'Guts') && move.name !== 'Facade') range = range.map(value => qDown(value, Q.half));
   let modifier = Q.one;
@@ -386,7 +391,7 @@ export function BattleAI_CalcDamageInternal(state, move, attacker = state.attack
 }
 
 export function BattleAI_IsParentalBondMove(state, move, attacker = state.attacker, defender = state.defender, options = {}) {
-  if (moveTrait(move, 'parentalBondBanned')) return false;
+  if (moveTrait(move, 'parentalBondBanned') || PARENTAL_BOND_BANNED.has(move.name.toUpperCase().replace(/[^A-Z0-9]/g, ''))) return false;
   if (doubles(state) && fieldOf(state).gameType !== 'Tag' && has(move.target, 'ADJACENT_OPPONENTS', 'ALL_ADJACENT')) return false;
   return true;
 }
@@ -408,7 +413,7 @@ export function BattleAI_CalcDamage(state, move, attacker = state.attacker, defe
     result.hitRanges = [first, [...second.damageRange]];
     return result;
   }
-  result.hitRanges = [[...result.damageRange]];
+  result.hitRanges = [[...(result.returnedDamageRange ?? result.damageRange)]];
   return result;
 }
 

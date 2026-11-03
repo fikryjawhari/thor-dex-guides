@@ -29,7 +29,7 @@ export function evaluateSingles(state, {digits = 0} = {}) {
     const encoreMove = input.encoredMove ?? input.lastUsedMove ?? input.lastMove;
     const choiceMove = input.moveNoChoice ?? input.choiceMove;
     const locked = !!(((input.encoredTurns || input.encored) && key(move) === key(encoreMove))
-      || (['choiceband', 'choicescarf', 'choicespecs'].includes(key(state.attacker.item)) && choiceMove && key(move) === key(choiceMove)));
+      || (['choiceband', 'choicescarf', 'choicespecs'].includes(key(baseAi.attackerMon.item)) && choiceMove && key(move) === key(choiceMove)));
     return {index, name: move.name, probability: result.probability, exact: result.weight.toJSON(), percent: percentages[index],
       score: scoreLabel(result.scores.map(branch => branch.score), locked),
       branches: result.scores.map(branch => ({score: branch.score, probability: Number(branch.weight), exact: branch.weight.toJSON()})),

@@ -3,7 +3,8 @@ function roundUp(value, modifier) {
 }
 
 function heldEffect(mon, effect, items) {
-  return [effect, `HOLD_EFFECT_${effect}`].includes(mon.item_held_effect ?? mon.facts?.item_held_effect) || items.includes(mon.item);
+  const explicit = mon.item_held_effect ?? mon.facts?.item_held_effect;
+  return explicit === undefined ? items.includes(mon.item) : [effect, `HOLD_EFFECT_${effect}`].includes(explicit);
 }
 
 export function BattleAI_CalcEffectiveSpeed(state, mon, side = 'attacker', inParty = false) {
