@@ -104,6 +104,15 @@ const windowChecks=[{
     await page.typeSearch(trainer.move);
     const rows=await page.value('[...document.querySelectorAll(".sheet:last-child .mrow")].map(row=>row.textContent)');
     assert.ok(rows.some(row=>row.includes(trainer.name)&&row.includes(trainer.move)),`trainer found by ${trainer.move}, the move shown`);
+    const place=await page.value("(()=>{const t=CALC.trainers().find(t=>t.loc&&/^[A-Za-z ]+$/.test(t.loc)&&!t.n.includes(t.loc)&&CALC.trainers().filter(u=>(u.loc||'').includes(t.loc)).length<30);return t&&{name:t.n,loc:t.loc};})()");
+    if(place){
+      await page.value('history.go(-1)');await page.settle();
+      await page.tap('[data-s=findtr]');
+      await page.typeSearch(place.loc);
+      const hits=await page.value('[...document.querySelectorAll(".sheet:last-child .mrow")].map(row=>row.textContent)');
+      assert.ok(hits.some(row=>row.includes(place.name)),`trainer found by its location ${place.loc}`);
+      assert.ok(hits.filter(row=>row.includes(place.name)).every(row=>row.split(place.loc).length===2),'a location match is not named twice on the row');
+    }
     await page.value('history.go(-2)');await page.settle();
     await page.tap('[data-a=findmine]');
     await page.typeSearch('Rock Blast');

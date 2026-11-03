@@ -413,7 +413,8 @@ plus `tools/calc/test.mjs` (mechanics and generation splits).
 name shares its line with Change (and Reset), per-hit range and rolls share a line. Check: `calc-state.mjs` one-window.
 Text zoom scales every font; box heights are fixed px. A hidden probe re-measures the toggle widths when the font size
 changes. **Search**: Find trainer and Find yours also match a set's moves, held item and known ability (a trainer:
-any of its Pokémon's); names rank first, and a term match is named on the row.
+any of its Pokémon's) and, Find trainer, its location; names rank first, and a term match is named on the row (a location
+match isn't: the row already shows it).
 Scenario: `tools/scenarios/calc-state.mjs`; trainer Metronome top-slot conflicts: `tools/calc_ui_check.py`.
 **Z-moves** (profile `zmove`, Photonic and Unbound): each damaging row's % line has a Z toggle, centred under the
 row's type dot (a shared 20 px column keeps the name and % text aligned). Z before the name was rejected because
