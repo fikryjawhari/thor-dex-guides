@@ -7,6 +7,46 @@ from common import (X, S, SRC, collections, datetime, fid, json, key, lev, note1
 from extractlib import split_name
 
 
+def gauntlet_rules(group, section):
+    """The sheet's Back2Back openers/continuations and explicit gauntlet-note spans."""
+    rows = section['tr']
+    position = 0
+    while position < len(rows):
+        trainer = rows[position]
+        notes = ' '.join(trainer.get('note', []))
+        until = re.search(r'^Gauntlet until Trainer "([^"]+)"', notes)
+        opener = next((tag for tag in trainer['tags'] if tag.startswith('Back2Back with ')), '')
+        triple = any(tag.startswith('Back2Back2Back with ') for tag in trainer['tags'])
+        if not (until or opener or triple or notes.startswith('Gauntlet with ')):
+            position += 1
+            continue
+        chain = [trainer]
+        position += 1
+        while position < len(rows):
+            following = rows[position]
+            next_notes = ' '.join(following.get('note', []))
+            if until:
+                assert next_notes.startswith(('Part of Gauntlet', 'End of Gauntlet')), following['n']
+            elif opener:
+                if 'Back2Back' not in following['tags'] and not (len(chain) == 1 and following['n'] in opener):
+                    break
+            elif triple:
+                if not any(tag.startswith('Back2Back2Back with ') for tag in following['tags']):
+                    break
+            elif not next_notes.startswith('Part of Gauntlet'):
+                break
+            chain.append(following)
+            position += 1
+            if until and following['n'] == until[1]:
+                break
+        if until:
+            assert chain[-1]['n'] == until[1], ('gauntlet endpoint missing', until[1])
+        if triple:
+            assert len(chain) == 3, ('Back2Back2Back count', [member['n'] for member in chain])
+        assert len(chain) >= 2, ('gauntlet has no continuation', trainer['n'])
+        yield chain
+
+
 def sheet(D):
     """The Trainer Battles sheet (SPLITS: sections, trainers, sets) with every species matched to a dex page."""
     match = X.match

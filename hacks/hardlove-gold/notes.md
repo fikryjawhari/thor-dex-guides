@@ -141,6 +141,13 @@ bar (filters rival teams, trades, starter-only items), trade slots in the tracke
 "Level cap" box for cap-relative teams, availability filter "Trainer only" instead of "Changed from vanilla". No
 Minimal Grinding Mode, Hot House, changes doc or conflict cards.
 
+### Gauntlet chains
+
+`gc` follows the sheet's Back2Back/Back2Back2Back tags and Gauntlet/Part/End note spans: Slowpoke Well Ariana →
+Proton (Bugsy Split!B170 explicitly names the untagged Proton); Lighthouse Kent → Denis → Preston → Connie →
+Terrell → Roberto; Rocket HQ #8 → #9, #10 → #11, #12 → #13; Whirl Islands #24 → Ariana → #25; Route 34 Irene →
+Jenn → Kate; Kimono Zuki → Naoko → Miki (double). Keys come from the append-only trainer key table after ordering.
+
 ### Trainer fields
 
 Field-condition comments in the active Trainer Battles tabs are retained in notes and shared trainer `field`

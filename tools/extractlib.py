@@ -242,7 +242,8 @@ def finalise(D, hack, prune=None, gauntlet_rules=None):
     trainers_follow_walk(D)
     split_names(D)
     trainer_fields.annotate(D)
-    gauntlets(D['TR'], gauntlet_rules)
+    if gauntlet_rules is not None:
+        gauntlets(D['TR'], gauntlet_rules)
     moveprops.apply(D, hack, report)
     item_text.apply(D, hack, report)
     schema.standardise(D)
