@@ -170,6 +170,61 @@ export function enumerateDamageScores(damageTables, scoreMove) {
     .sort(([left], [right]) => left - right).map(([score, branchWeight]) => ({score, weight: branchWeight}))}));
 }
 
+export function highestScoreGroups(distributions) {
+  let groups = [{score: -Infinity, mask: 0, weight: ONE}];
+  for (const [index, distribution] of distributions.entries()) {
+    const next = new Map();
+    for (const group of groups) for (const branch of distribution) {
+      const score = Math.max(group.score, branch.score);
+      const mask = branch.score > group.score ? 1 << index : branch.score === group.score ? group.mask | (1 << index) : group.mask;
+      const code = `${score}:${mask}`;
+      const weight = group.weight.multiply(branch.weight);
+      const prior = next.get(code);
+      next.set(code, {score, mask, weight: (prior?.weight ?? ZERO).add(weight)});
+    }
+    groups = [...next.values()];
+  }
+  return groups;
+}
+
+export function enumerateDamageScoreGroups(damageTables, scoreMove) {
+  const tables = damageTables.map(groupedRolls);
+  const maxima = [...new Set(tables.flatMap(table => table.map(roll => roll.damage)))];
+  const groups = new Map();
+  const scores = tables.map(() => new Map());
+  for (const maximum of maxima) for (const anyKO of [false, true]) {
+    if (!eventWeight(tables, maximum, anyKO).numerator) continue;
+    const records = tables.map((table, index) => table.filter(roll => roll.damage <= maximum && (anyKO || !roll.canOneShot)).map(roll => {
+      const distribution = enumerateRandomBranches(random => scoreMove(index, roll, {maximum, anyKO}, random));
+      const conditional = tables.map((other, otherIndex) => otherIndex === index ? [{...roll, weight: ONE}] : other);
+      const weight = eventWeight(conditional, maximum, anyKO).multiply(roll.weight);
+      for (const branch of distribution) scores[index].set(branch.score, (scores[index].get(branch.score) ?? ZERO).add(weight.multiply(branch.weight)));
+      return {roll, distribution};
+    }));
+    const accumulate = (strict, noKO, sign) => {
+      const distributions = records.map(perMove => {
+        const combined = new Map();
+        for (const {roll, distribution} of perMove) {
+          if ((strict && roll.damage === maximum) || (noKO && roll.canOneShot)) continue;
+          for (const branch of distribution) combined.set(branch.score, (combined.get(branch.score) ?? ZERO).add(roll.weight.multiply(branch.weight)));
+        }
+        return [...combined].map(([score, weight]) => ({score, weight}));
+      });
+      for (const group of highestScoreGroups(distributions)) {
+        const code = `${anyKO}:${group.score}:${group.mask}`;
+        const weight = group.weight.multiply(new Fraction(sign));
+        const prior = groups.get(code);
+        groups.set(code, {...group, anyKO, weight: (prior?.weight ?? ZERO).add(weight)});
+      }
+    };
+    accumulate(false, !anyKO, 1);
+    accumulate(true, !anyKO, -1);
+    if (anyKO) { accumulate(false, true, -1); accumulate(true, true, 1); }
+  }
+  return {groups: [...groups.values()].filter(group => group.weight.numerator), scores: scores.map(distribution => [...distribution]
+    .filter(([, weight]) => weight.numerator).sort(([left], [right]) => left - right).map(([score, weight]) => ({score, weight})))};
+}
+
 export function roundedPercentages(probabilities, digits = 0) {
   if (!Number.isInteger(digits) || digits < 0 || digits > 6) throw new RangeError('Use zero to six percentage decimal places');
   if (!probabilities.length) return [];

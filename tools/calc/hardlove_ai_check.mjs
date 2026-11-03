@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import {mkdir, writeFile} from 'node:fs/promises';
 import {Fraction, enumerateRandomBranches, highestScoreOdds, enumerateDamageScores, roundedPercentages, scoreLabel} from '../../template/calc/ai/enumerate.mjs';
-import {evaluateSingles, BuildStateVariables} from '../../template/calc/ai/hardlove/index.mjs';
+import {evaluateSingles as evaluateSinglesResult, BuildStateVariables, CalculateSwitch, getVarianceFromDamage} from '../../template/calc/ai/hardlove/index.mjs';
+const evaluateSingles = (state, options) => evaluateSinglesResult(state, options).moves;
 import {BattleAI_CalcBaseDamage, BattleAI_CalcDamage, BattleAI_GetDynamicMoveType, BattleAI_GetTypeEffectiveness, BattleAI_IsParentalBondMove} from '../../template/calc/ai/hardlove/damage.mjs';
 import * as calc from '../../template/calc/ai/hardlove/calc.mjs';
 import {SOURCE_MOVE_TRAITS} from '../../template/calc/ai/hardlove/damage-data.mjs';
@@ -552,6 +553,27 @@ check('review: AI formula deliberately omits Wonder Room, sports and Ruin', () =
 });
 
 await mkdir(new URL('../../.tmp/ai-engine/', import.meta.url), {recursive: true});
+check('hard switch: hand-calculated integer variance, thresholds and Perish Song', () => {
+  const state = {attacker: chomp(), defender: lax()};
+  const ai = {...BuildStateVariables(state), livingMembersAttacker: 2, highestPostKoScoreFromParty: 104,
+    highestDamageHitPrct: 17, maxDamageReceived: 150, attackerMaxRollDamage: 10, monCanOneShotPlayerWithAnyMove: false};
+  assert.equal(getVarianceFromDamage(ai), 19);
+  assert.deepEqual(exact(CalculateSwitch(state, ai)), {numerator: '9', denominator: '100'});
+  assert.equal(Number(CalculateSwitch(state, {...ai, highestPostKoScoreFromParty: 105})), 0.24);
+  assert.equal(Number(CalculateSwitch({...state, attacker: chomp({facts: {perishSong: true}})}, ai)), 0.6);
+  assert.equal(Number(CalculateSwitch({...state, attacker: chomp({facts: {perishSong: true}})}, {...ai, highestPostKoScoreFromParty: 106})), 1);
+  for (const facts of [{cantEscape: true}, {substitute: true}]) assert.equal(Number(CalculateSwitch({...state, attacker: chomp({facts})}, ai)), 0);
+});
+
+check('singles API: switch and all moves have exact total one and rounded total 100', () => {
+  const result = evaluateSinglesResult({attacker: chomp({moves: [CLAW]}), defender: lax({moves: [EQ], attack: 400}),
+    facts: {livingMembersAttacker: 2, highestPostKoScoreFromParty: 104, highestDamageHitPrct: 17, postKoScoringPosition: 2}});
+  assert.equal(result.switch.percent, 9);
+  assert.equal(result.switch.partySlot, 2);
+  assert.equal(result.moves[0].percent, 91);
+  assert.deepEqual(result.moves[0].exact, {numerator: '91', denominator: '100'});
+});
+
 await writeFile(new URL('../../.tmp/ai-engine/results.json', import.meta.url), JSON.stringify({results}, null, 2));
 const failed = results.filter(result => result.status === 'fail').length;
 console.log(`Hardlove AI: ${results.length - failed}/${results.length} passed`);

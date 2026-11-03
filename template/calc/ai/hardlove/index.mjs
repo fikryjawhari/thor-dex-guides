@@ -9,7 +9,7 @@ export * from './scoring.mjs';
 
 const key = value => String(value?.name ?? value ?? '').replace(/[^a-z0-9]/gi, '').toLowerCase();
 
-export function evaluateSingles(state, {digits = 0} = {}) {
+export function evaluateSinglesMoves(state, {digits = 0} = {}) {
   const baseAi = BuildStateVariables(state);
   const moves = state.attacker.moves;
   if (!moves.length || moves.length > 4) throw new RangeError('Singles move odds require one to four moves');
@@ -36,3 +36,5 @@ export function evaluateSingles(state, {digits = 0} = {}) {
     };
   });
 }
+
+export {pickSingles as evaluateSingles, CalculateSwitch, getVarianceFromDamage} from './pick_command.mjs';
