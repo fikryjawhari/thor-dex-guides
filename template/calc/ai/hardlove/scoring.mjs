@@ -1960,6 +1960,6 @@ function sourceMon(mon) {
         condition, condition2: bits(facts, volatileFlags), effect_of_moves: bits(facts, moveEffectFlags),
         states: Object.fromEntries(['attack', 'defense', 'spAttack', 'spDefense', 'speed', 'accuracy', 'evasion'].map(name => [name, (stages[name] ?? 0) + 6])),
         move: Array.from({ length: 4 }, (_, index) => id(moves[index]?.name)),
-        pp: Array.from({ length: 4 }, (_, index) => moves[index]?.pp ?? 0), moveeffect,
+        pp: Array.from({ length: 4 }, (_, index) => moves[index] ? (moves[index].pp ?? 1) : 0), moveeffect, // the calc has no PP: usable unless 0
     };
 }

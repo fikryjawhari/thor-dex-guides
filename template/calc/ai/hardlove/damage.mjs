@@ -76,8 +76,11 @@ export function BattleAI_GetDynamicMoveType(state, move, attacker) {
     case 'Ivy Cudgel': type = attacker.species === 'Ogerpon' ? ['Grass', 'Water', 'Fire', 'Rock'][attacker.form ?? 0] ?? 'Grass' : 'Grass'; break;
     default: type = 'Normal'; break;
   }
+  // TYPE_NORMAL is 0 in hg-engine, so the C's `else if (type)` falls back to the move table's type for every move the
+  // switch set to Normal (its default: all ordinary moves).
   if (ability(attacker, 'Normalize')) type = 'Normal';
   else if (move.type === 'Normal' && !moveTrait(move, 'normalizeExcluded')) type = {Pixilate: 'Fairy', Refrigerate: 'Ice', Aerilate: 'Flying', Galvanize: 'Electric', Dragonize: 'Dragon'}[attacker.ability] ?? 'Normal';
+  else if (type === 'Normal') type = move.type;
   if (ability(attacker, 'Liquid Voice') && moveTrait(move, 'sound')) type = 'Water';
   if (type === 'Normal' && fieldOf(state).ionDeluge) type = 'Electric';
   return type;
