@@ -466,6 +466,24 @@ Pokémon. **↺ on a card** (before the HP box) does the same for that one Poké
 send-out (full HP, no status / Toxic count, stages, toggles, battle-state tag, used item, `broken`, Mega), not a set reset
 (its set edits and Save stay; Edit's Reset / Original is the set reset); its hazard chip is offered again (hazards in), no entry effect fires,
 the other Pokémon and the Field are untouched. Lit (`.rs`) while the Pokémon has any of it. Scenario: `calc-team.mjs` mon reset.
+**Gauntlets** (trainers with the same `gc`, the chain's stable trainer keys in fight order; partners `~p<n>` never
+carry it): one fight across the chain. A step to another member (‹ ›, Find trainer, a Calc link, recents) is not a
+trainer change: the player's **HP, status and used items carry**; each member's **foe state** (HP, status, used, set
+edits, its selected slot: `ST.gcSel[trainer key]`) stays as left for the whole chain; **per battle** (fresh on every
+member, `clearBattle`): scratch, `ST.st` / `ST.tgt`, Toxic counters, hazard offers, area switches, manual Field
+(`ST.fman`, so weather / screens / S / D: each member opens in its own Auto format), the player's `broken` / Mega /
+`ft` / `fadd` / `fa` / `fi`. A step **forward** (later in `gc`) takes the **snapshot** of the player's side
+(`ST.gc.snap[trainer key]['mine:<pid>'] = {hp, status, used}`, only what differs from fresh); back takes none.
+Leaving the chain is a trainer change as above (`ST.gc` / `ST.gcSel` go); entering a member from outside is a new fight
+that starts the chain there (`ST.gc.first` = the chain's first key, a snapshot of that member). **↺ in a chain** is
+two-stage: off its snapshot (player side ≠ snapshot, its foe team not fresh, or any per-battle state) it resets the
+**member** (its foes fresh, the player's side back to the snapshot, per-battle state cleared; label "Reset this
+fight"); at it, on the first member or with no snapshot it resets the **gauntlet** (⇤, accent: the chain's first
+trainer, everything fresh, label "Reset gauntlet (back to <first>)"). Trainer bar: a dot per member under the name
+(done fg, current accent and wider, later muted; no height added) and accent ‹ › ("Previous / Next in gauntlet") only
+for a step within the chain. Saved: `ST.gc` / `ST.gcSel` hold keys only; on load a `first` / snapshot key not in the
+current trainer's `gc` drops `ST.gc` (the next ↺ is the gauntlet reset), an unknown pid drops that entry, the foe
+edits of the current chain's members are kept. Scenario: `calc-gauntlet.mjs`.
 **Dex link:** a double tap (two taps on the same cell within 350 ms) on any box cell, team cell or foe strip / foe row
 opens its dex page (`#/p/<id>`, the base form), selected or not (the user hit the old single tap by accident). The first
 tap does what a single tap does (picks, or toggles the hazards of the Pokémon already in); the double tap puts that
