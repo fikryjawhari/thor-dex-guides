@@ -72,6 +72,9 @@ function by function (named after the C) so an update is a diff of `src/trainera
   moving first (`monCanOneShotPlayerWithAnyMove && aiMovesFirst`: what it could do, not what it picked; your
   opposite-slot Pokemon is checked first), the slower one ignores that Pokemon entirely (scores only your other one and
   its ally). Not faster than you: no ignore, so both can go into the same Pokemon.
+- Likely the hack's answer to Run & Bun's doubles bait (its slots ignore each other, so one low-HP Protect / Sash mon
+  drew both). Port it exactly as the C does, the "can OHKO, not the pick" quirk included (don't fix it): the % must
+  match the game; the in-game test only confirms.
 - So the slower one's odds are a mixture: for each branch of the faster one's pick (with its probability), the slower
   one's conditional odds. The calc computes the faster one exactly, then the slower one per branch.
 - Ally moves: `ScoreMovesAgainstAlly` scores Helping Hand (only if the partner's move attacks and isn't Helping Hand),
