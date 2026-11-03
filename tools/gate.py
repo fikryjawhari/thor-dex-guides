@@ -363,6 +363,30 @@ def lint_check(gate, fix=False):
         'clean' if not left else f'{left} problem{"s" * (left != 1)} (above; CRLF / BOM: gate.py lint --fix)'))
 
 
+def stale_inputs(hack):
+    """What dist/<hack>.html is older than (assemble.py's inputs), or ['no build']."""
+    built = ROOT / 'dist' / (hack + '.html')
+    if not built.exists():
+        return ['no build']
+    since = built.stat().st_mtime
+    inputs = [ROOT / 'assemble.py', ROOT / 'sprites' / 'index.json',
+              *[ROOT / 'hacks' / hack / name for name in ('data.json', 'hack.json', 'sprites.json', 'calc_effects.json')],
+              *(path for path in (ROOT / 'template').rglob('*') if path.is_file() and '__pycache__' not in path.parts)]
+    return [path.relative_to(ROOT).as_posix() for path in inputs if path.exists() and path.stat().st_mtime > since]
+
+
+def fresh_builds(gate, names):
+    """Reassemble every guide whose dist is older than its inputs, before browser checks run on it."""
+    stale = {hack: stale_inputs(hack) for hack in names}
+    stale = {hack: newer for hack, newer in stale.items() if newer}
+    if not stale:
+        return True
+    for hack, newer in stale.items():
+        print(f'Build freshness: dist/{hack}.html is older than {", ".join(newer[:4])}'
+              f'{f" (+{len(newer) - 4})" if len(newer) > 4 else ""}; reassembling', flush=True)
+    return gate.run('assemble-stale', [*PY, 'assemble.py', *sorted(stale)])
+
+
 def scenario_runs(names, only=None):
     """Every tools/scenarios/*.mjs (or the `only` stems) on each guide's dist: [(label, command, hack)]."""
     scenarios = sorted((ROOT / 'tools' / 'scenarios').glob('*.mjs'))
@@ -444,7 +468,9 @@ def main():
             unknown = [hack for hack in names if hack not in guides(ROOT)]
             if unknown:
                 raise ValueError('no built guide: ' + ', '.join(unknown))
-            gate.run_browser(scenario_runs(names, args.only), args.jobs)
+            runs = scenario_runs(names, args.only)
+            if fresh_builds(gate, names):
+                gate.run_browser(runs, args.jobs)
         elif auto_baseline(gate):
             manifest = load(BASE / 'manifest.json')
             names = args.hacks or guides(ROOT)
