@@ -416,7 +416,36 @@ Foe rows display unconditional move odds (the viewed target in doubles, ally odd
 branches and the maximum-% accent. Expanded doubles rows list all target pairs, including zero-probability targets,
 then each score distribution's base and bonus outcomes. Singles `Sw N%` is a battle-state-sized chip left of the battle-state tag;
 `fitCards` moves it with that tag (`.sup`), and back down (`.swdn`) when both don't fit the HP line. The engine owns all rounding, including the 100% remainder.
-Unit 3b still supplies grid order/rank numbers, doubles tap controls and Field → AI toggles; none are built here.
+#### Grids, doubles controls, Field → AI (unit 3b)
+
+UI rules: `template/README.md` → Damage calculator. Here: what feeds the engine.
+- Grid order: `CALC.ai.grid(side)` → `{keys, field, rank}` (card keys, display only). The foe bench order is
+  `switchInOrder` over the current input (cached by input JSON); when Zoroark's +0-2 gives several orders (`order` null)
+  the grid shows the most likely whole order (`orders` by probability) and its ranks.
+- Slots: a bench pick takes the viewed slot; on the foe side, if the viewed foe is alive and the other on-field foe has
+  fainted, the pick takes the fainted one's slot (the replacement after a KO).
+- Field → AI toggles (per viewed on-field Pokémon, stored in `facts` with a `manual` set; both cleared with the facts):
+  | Side | Toggle | Fact (value set) | Read by |
+  | --- | --- | --- | --- |
+  | Foe | First turn (Auto) | `firstTurnOut` | attacker scoring |
+  | Foe | Last move (select) | `lastUsedMove`; `moveNoChoice`, `encoredMove`, `disabledMove` derive from it | lock / usable moves |
+  | Foe | Protect ×0 / last turn / 2 turns | `protectSuccessTurns` 0 / 1 / 2 | Protect scoring |
+  | Foe | Taunted / Encored / Disabled / Torment | `tauntTurns` 3 / `encoredTurns` 3 / `disabledTurns` 4 / `torment` | `IsMoveUsable`, lock +1000 |
+  | Foe | Substitute | `substitute` | attacker STATUS2_SUBSTITUTE, hard switch |
+  | Foe | Sleep 1 / 2 / 3 (asleep only; default 2) | `sleepCounter` | Sleep Talk / Snore |
+  | Foe | Throat Chop / Wish | `throatChopTimer` 2 / `wishCount` 1 | sound moves / Wish |
+  | Foe | Can't escape (Auto when a trapping ability derives it) / Perish Song | `cantEscape` / `perishSong` | hard switch |
+  | Foe | Ate berry (knows Belch only) | `canBelch` | Belch |
+  | Player | First turn (Auto) | `firstTurnOut` | defender scoring |
+  | Player | Last move (select) | `lastUsedMove` (its choice lock) | switch-in / usable moves |
+  | Player | Confused / Infatuated / Nightmare | `confusion` / `attract` / `nightmare` | defender STATUS2 bits |
+  | Player | Yawn / Lock-On / Imprison / Lucky Chant | `yawn` / `lockOn` / `imprisoned` / `noCritical` | defender effect bits |
+  | Player | Bound / Future Sight | `bindingTurns` 4 / `futurePredictionCount` 2 | trapping / Future Sight scoring |
+  Left out (the port reads them only where a toggle would mislead, or not at all): player Substitute (the C reads
+  STATUS2_SUBSTITUTE on the attacker only), foe Confused / Infatuated (defender only), `lastResortCount`,
+  `recycleItem`, `furyCutterCount`, `metronomeCount`, `teammateFaintedLastTurn`, `transformed`, `healBlock`.
+  Derived, not toggles: the calc's Seeded, Focus Energy, Laser Focus, screens, Tailwind, Dig / Fly, Toxic count,
+  fainted, Speed (unit 3a).
 
 The trainer AI (`src/trainerai/`, pinned `4a8d4a6308`, fetch: SOURCES.md) is ported headless in
 `template/calc/ai/` (plan: `plans/calc-ai.md`). Singles/doubles picks, hard switching and post-KO ranks are headless;

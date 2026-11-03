@@ -134,10 +134,28 @@ player, or its ally-only percent; expanded rows list every target and the score 
 In singles a nonzero hard-switch chance appears as `Sw 13%` on the foe card, just before the battle-state tag and
 placed as one (narrow: the last line; `.sup` moves both to the HP line, `.swdn` puts Sw back when both don't fit). Move odds plus Sw total 100.
 `CALC.ai` exposes the adapter, explicit per-mon scratch `facts`, stable implicit active slots and cached engine
-results for the follow-up grid/toggle UI. Nothing in AI state or returned party indices is saved. Facts default to
-inactive/unknown; first-turn-out defaults true on entry and false after a damage tap to/from the viewed mon.
-Card reset, a switch away, fight reset and gauntlet battle changes clear the appropriate facts. See Hardlove's notes
-for the input/default boundary; field facts the calc already models are never duplicated as AI toggles.
+results. Nothing in AI state or returned party indices is saved. Facts default to inactive/unknown; first-turn-out
+defaults true on entry and false after a damage tap to/from the viewed mon. Card reset, a switch away, fight reset and
+gauntlet battle changes clear the appropriate facts. See Hardlove's notes for the input/default boundary; field facts
+the calc already models are never duplicated as AI toggles.
+
+With the AI on, both grids are AI grids (`.aigrid`, display only: the saved team order never changes). Narrow, they
+read down, then right (3 x 2); wide, the same order runs along my row and down the foe rows. Foe: singles r1c1 is the
+foe on the field (a picked foe moves there), then the switch-in order (`switchInOrder`; Zoroark's random bonus: the
+most likely whole order), fainted last and grey; doubles column 1 is the two on the field (a 1 px line after it),
+column 2 the first / second replacement (the double-KO pick), column 3 the rest, fainted last. Each benched, living
+foe has its rank (1 = next out) as a 9 px accent number at the top left. Mine: party order in singles; in doubles my
+two on the field first, then the bench in party order. The order is recomputed on every render, so cells move: for
+350 ms after a reorder a tap in that grid counts as a tap on the Pokémon tapped last (a double tap still opens its dex
+page) and any other tap is ignored. Doubles: a tap on an on-field Pokémon views it; a bench tap takes the viewed
+one's cell (a foe replacement takes a fainted foe's cell); no slot-swap control (Hardlove's numbers ignore the slot).
+
+Field → AI is the first Field section, above Global; open state as the other groups (`FIELDOPEN`, not saved). A
+Player / Foe segment, then two-column toggles for that side's viewed on-field Pokémon: battle facts the AI reads that
+the calc can't know (the list and the C fields: Hardlove's notes). First turn is Auto (dashed, `·A`) until tapped; a
+derived fact (Can't escape from a trapping ability) shows the same way. Encored / Disabled / Torment wait for Last
+move (a select of its moves; it also feeds a Choice item's lock); clearing Last move clears them. Any change
+recomputes the odds, Sw, scores and the bench ranks. The toggles are battle scratch: cleared as the facts above.
 
 Profiles may declare `monControls` (`k`, `l`, `abilities`) for per-Pokémon battle-state checkboxes. EI uses
 `abilityOn` for First turn out (Bull/Quill Rush) and Disguised (Illusion); off is the default. Ability controls sit on
