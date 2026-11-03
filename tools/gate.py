@@ -28,6 +28,7 @@ import time
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'tools'))
+import gateaccept  # noqa: E402
 import textlint  # noqa: E402
 
 BASE = ROOT / '.tmp' / 'baseline'
@@ -311,7 +312,7 @@ def auto_baseline(gate):
     return manifest.exists() and load(manifest).get('sha') == base
 
 
-def data_check(gate, hack):
+def data_check(gate, hack, accepted=()):
     directory = ROOT / 'hacks' / hack
     baseline_data = BASE / 'hacks' / hack / 'data.json'
     if hack not in REBUILDS:
@@ -323,8 +324,17 @@ def data_check(gate, hack):
         current, before = load(directory / 'data.json'), load(baseline_data)
         current.pop('built', None)
         before.pop('built', None)
-        same = current == before
-        gate.result(hack + '-data', same, 'identical except built' if same else 'data.json differs from baseline')
+        if current == before:
+            gate.result(hack + '-data', True, 'identical except built')
+        else:
+            ok, rest = gateaccept.data_diff(before, current, accepted)
+            for line in gateaccept.describe(rest):
+                print('  not accepted: ' + line, flush=True)
+            for line in gateaccept.describe(ok):
+                print('  accepted: ' + line, flush=True)
+            gate.result(hack + '-data', not rest, (f'differs only under accepted paths ({len(ok)})' if not rest else
+                        f'data.json differs from baseline at {len(rest)} path{"s" * (len(rest) != 1)} not accepted: '
+                        + ', '.join(sorted(rest)[:8]) + (' ...' if len(rest) > 8 else '')))
         gate.result(hack + '-counts', counts(current) == counts(before),
                     f'current={counts(current)} baseline={counts(before)}')
         report = directory / 'extract' / 'report.txt'
@@ -365,7 +375,7 @@ def scenario_runs(names, only=None):
             for scenario in scenarios for hack in names]
 
 
-def template_check(gate, names, jobs=8):
+def template_check(gate, names, jobs=8, routes_ok=None):
     if not gate.run('assemble', [*PY, 'assemble.py']):
         return
     runs = []
@@ -407,6 +417,10 @@ def main():
     check.add_argument('--template', action='store_true')
     check.add_argument('--jobs', type=int, default=8, help='browser checks at once (default 8; 1: serial)')
     check.add_argument('--fresh', action='store_true', help='ignore cached passes (still records new ones)')
+    check.add_argument('--accept-data', action='append', metavar='SPEC',
+                       help='data paths that may differ, [hack:]path,... (tools/gateaccept.py; plus .tmp/accept.json)')
+    check.add_argument('--accept-routes', action='append', metavar='SPEC',
+                       help='routes whose DOM may differ, [hack:]glob,... e.g. #/calc (plus .tmp/accept.json)')
     scenarios = commands.add_parser('scenarios')
     scenarios.add_argument('hacks', nargs='*')
     scenarios.add_argument('--only', type=lambda text: [part for part in text.split(',') if part])
@@ -441,11 +455,17 @@ def main():
                 if hashlib.sha256((BASE / name).read_bytes()).hexdigest() != digest:
                     raise ValueError(f'baseline changed: {name}; recapture it explicitly')
             print(f'Baseline: {manifest["ref"]} {manifest["sha"]}', flush=True)
+            data_ok = gateaccept.accepts('data', args.accept_data, names)
+            routes_ok = gateaccept.accepts('routes', args.accept_routes, names)
+            for kind, table in (('data', data_ok), ('routes', routes_ok)):
+                for hack in names:
+                    if table.get(hack):
+                        print(f'Accepting {kind} on {hack}: {", ".join(table[hack])}', flush=True)
             if args.data or not args.template:
                 for hack in names:
-                    data_check(gate, hack)
+                    data_check(gate, hack, data_ok.get(hack, []))
             if args.template or not args.data:
-                template_check(gate, names, args.jobs)
+                template_check(gate, names, args.jobs, routes_ok)
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
         gate.result('gate-setup', False, str(error))
     return gate.finish()

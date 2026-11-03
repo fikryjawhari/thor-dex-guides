@@ -6,6 +6,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'tools'))
+import gateaccept  # noqa: E402
 import textlint  # noqa: E402
 
 
@@ -34,6 +35,66 @@ class Lint(unittest.TestCase):
         self.assertIn('tools/gate.py', names)
         self.assertTrue(any(name.startswith('hacks/') and name.endswith('/hack.json') for name in names))
         self.assertFalse([name for name in names if '/.src/' in name or name.endswith(('.sav', '.png'))])
+
+
+class AcceptData(unittest.TestCase):
+    OLD = {'built': '2026-11-01', 'MV': [{'n': 'Tackle', 'bp': 40}, {'n': 'Ember', 'bp': 40}],
+           'TR': {'g': [{'sec': [{'tr': [{'n': 'Joey'}, {'n': 'Ace', 'gc': 1}]}]}]}}
+
+    def new(self):
+        import copy
+        data = copy.deepcopy(self.OLD)
+        data['built'] = '2026-11-03'
+        for move in data['MV']:
+            move['aiEffect'] = 'x'
+        data['TR']['g'][0]['sec'][0]['tr'][0]['gc'] = 2
+        data['TR']['g'][0]['sec'][0]['tr'][1]['gc'] = 3
+        return data
+
+    def test_built_ignored(self):
+        self.assertEqual(gateaccept.data_diff(self.OLD, dict(self.OLD, built='later')), ({}, {}))
+
+    def test_named_paths(self):
+        ok, rest = gateaccept.data_diff(self.OLD, self.new())
+        self.assertEqual(ok, {})
+        self.assertEqual(rest, {'MV[].aiEffect': {'e.g.': 'MV[0].aiEffect', 'added': 2},
+                                'TR.g[].sec[].tr[].gc': {'e.g.': 'TR.g[0].sec[0].tr[0].gc', 'added': 1, 'changed': 1}})
+
+    def test_accepted(self):
+        ok, rest = gateaccept.data_diff(self.OLD, self.new(), ['TR.g[].sec[].tr[].gc', 'MV[].aiEffect'])
+        self.assertEqual(rest, {})
+        self.assertEqual(sorted(ok), ['MV[].aiEffect', 'TR.g[].sec[].tr[].gc'])
+        ok, rest = gateaccept.data_diff(self.OLD, self.new(), ['MV[].aiEffect'])
+        self.assertEqual(list(rest), ['TR.g[].sec[].tr[].gc'])
+
+    def test_prefix_and_wildcard(self):
+        self.assertTrue(gateaccept.covered('MV[3].aiEffect.x', ['MV[]']))
+        self.assertTrue(gateaccept.covered('MV[3].aiEffect', ['MV[].*']))
+        self.assertFalse(gateaccept.covered('MV[3]', ['MV[].aiEffect']))
+        self.assertFalse(gateaccept.covered('MVX[3].aiEffect', ['MV[]']))
+        self.assertTrue(gateaccept.covered('TR.g[1].sec[0].tr[4]', ['TR.g[].sec[].tr[]']))
+        new = dict(self.OLD, MV=self.OLD['MV'][:1])
+        self.assertEqual(gateaccept.data_diff(self.OLD, new)[1], {'MV[]': {'e.g.': 'MV[1]', 'removed': 1}})
+        self.assertEqual(gateaccept.data_diff(self.OLD, dict(self.OLD, MV=[{'n': 'Tackle', 'bp': 40.0}, self.OLD['MV'][1]]))[1],
+                         {'MV[].bp': {'e.g.': 'MV[0].bp', 'changed': 1}})
+
+    def test_specs(self):
+        import json
+        import tempfile
+        hacks = ['eternal-x', 'hardlove-gold']
+        self.assertEqual(dict(gateaccept.parse(['MV[].a,hardlove-gold:TR.x', 'eternal-x:#/calc'], hacks)),
+                         {'eternal-x': ['MV[].a', '#/calc'], 'hardlove-gold': ['MV[].a', 'TR.x']})
+        self.assertEqual(dict(gateaccept.parse(['radical-red:MV[]'], hacks)), {})
+        with self.assertRaises(ValueError):
+            gateaccept.parse(['no-such-guide:MV[]'], hacks)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'accept.json'
+            path.write_text(json.dumps({'data': {'*': ['P[].s'], 'eternal-x': 'MV[].a,MV[].b'},
+                                        'routes': {'hardlove-gold': ['#/calc']}}), encoding='utf-8')
+            self.assertEqual(dict(gateaccept.accepts('data', ['IT[]'], hacks, path)),
+                             {'eternal-x': ['IT[]', 'P[].s', 'MV[].a', 'MV[].b'], 'hardlove-gold': ['IT[]', 'P[].s']})
+            self.assertEqual(dict(gateaccept.accepts('routes', None, hacks, path)), {'hardlove-gold': ['#/calc']})
+            self.assertEqual(gateaccept.accepts('data', None, hacks, Path(directory) / 'none.json'), {})
 
 
 if __name__ == '__main__':
