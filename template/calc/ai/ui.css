@@ -26,3 +26,7 @@ body.calc-route .dfield .dfb .dtg.aitg{grid-template-columns:repeat(2,minmax(0,1
 body.calc-route .dtg.aitg>.ailast{grid-column:1/-1;min-width:0;min-height:24px;font-size:11px}
 body.calc-route .dtg.aitg>.aiempty{grid-column:1/-1;font-size:11px;color:var(--mut)}
 body.calc-route .dtg.aitg button:disabled{opacity:.45;cursor:default}
+/* Closed AI and Global headers share one row (closed Field groups fit the 316 px window without scrolling); either open: stacked */
+body.calc-route .dfb:has(>.dfai:not([open])):has(>.dffield:not([open])){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;column-gap:8px}
+body.calc-route .dfb:has(>.dfai:not([open])):has(>.dffield:not([open]))>*{grid-column:1/-1}
+body.calc-route .dfb:has(>.dfai:not([open])):has(>.dffield:not([open]))>:is(.dfai,.dffield){grid-column:auto}
