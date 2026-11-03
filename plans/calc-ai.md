@@ -29,18 +29,36 @@ function by function (named after the C) so an update is a diff of `src/trainera
 - AI options: a collapsible section in Field, between Global and the next section (or above Global): the battle facts
   the calc can't know (first turn out, Protect last turn, Taunt / Encore up, sleep turns, last mon ...); derive what we
   can (first turn out = just entered) so the toggles stay few.
-- Switch-ins: the foe's team cells reorder by the post-KO switch-in score against the Pokémon on the field (recomputed
-  on every pick); fainted ones go grey (open: rank them in place, or always last). Singles also: the hard-switch chance.
-- Doubles in scope: slots 1 and 2 on both sides (a number in the sprite cell's corner); the AI scores against both of
-  the player's slotted Pokémon; the moves / rolls shown are the viewed Pokémon's; a foe move's % is "this move into the
-  viewed target" (so a move going into the other slot shows 0 %, plus a line for the other target).
+- Switch-ins (`postKO.c` `BattleAI_PostKOSwitchIn_Internal`): each bench mon is scored against BOTH player mons on the
+  field (`BATTLER_OPPONENT` + `BATTLER_ACROSS`, summed; a fainted one is left out; both down: party order), max rolls,
+  so the order is deterministic (but Zoroark's +0-2); ties go to the first party slot (strict `>`). Which foe faints
+  and which slot it was in change nothing. Singles also: the hard-switch chance on the foe card.
+- Double KO: both picks are made before either switches in (the second skips the first via `aiSwitchedPartySlot`), so
+  the second is #2 on the same ranking; the first one's entry (Intimidate ...) does not change it. In-game test.
+- Grids read down, then right (both sides, narrow 3 x 2):
+  ```
+   | F1 | F3 | F5
+   | F2 | F4 | F6
+    field next  rest, fainted last (grey)
+  ```
+  Singles foe: r1c1 the foe on the field (a picked foe moves there), then the switch-in order down the columns
+  (r2c1 = next out), fainted last. Doubles: column 1 = the two on the field (a 1 px line after it), c2r1 / c2r2 the
+  first / second replacement, c3 the rest, fainted last. My grid: party order in singles; in doubles column 1 = my two
+  on the field, the bench in party order. Wide: the first two cells of my row / the first two foe rows. Recomputed on
+  every change (HP, stages, picks), so the cells move: a double tap follows the Pokemon, not the cell, and taps are
+  ignored for a moment after a reorder. Display only: the saved team order is unchanged.
+- Doubles: the AI scores against both of the player's on-field Pokemon; the moves / rolls shown are the viewed one's;
+  a foe move's % is "this move into the viewed target" (so a move going into the other target shows 0 %, plus a line
+  for the other target).
+- Doubles controls: a tap on an on-field Pokemon views it; a tap on a benched one takes the viewed one's cell (as
+  switching it in; the foe's replacement after a KO goes into the fainted one's cell); the replaced one goes back to
+  its bench place. No 1 <-> 2 swap control: in Hardlove the slot changes no number (move scoring is against both
+  targets, faster first by Speed, target ties random; switch-ins sum over both). Explicit slots / swap only for a
+  future hack whose AI reads the opposite slot (Run & Bun).
 
 ## To settle
-- Doubles slot controls (proposal in chat 2026-11-03): a tap on a slotted Pokémon views it; a tap on a benched one
-  fills an empty slot, else takes the viewed one's slot (as switching it in; the foe's replacement after a KO goes into
-  the fainted one's slot); 1 <-> 2 swap = a tap on the slot number on that side's card. A second tap on the viewed cell
-  is taken (hazard chip; double tap = dex page), so it can't be the swap.
-- Default slots: each side's first two (the player's party order, the trainer's order).
+- In-game: the double-KO order above; when your Pokemon faints the same turn, does the AI pick before seeing your
+  replacement?
 - Doubles: faster AI mon scored first; its partner ignores a target it fast-OHKOs (`pick_command.c`).
 - How rnbcalc renders the % (not read); our numbers' text at 260 px.
 - Fixtures: the AI doc's examples; the user's in-game tests. Can `data/battle_tests/` run the AI headless?
