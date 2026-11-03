@@ -1,0 +1,51 @@
+export const TYPE_CHART = {
+  Normal: {Rock: .5, Ghost: 0, Steel: .5},
+  Fighting: {Normal: 2, Ice: 2, Rock: 2, Dark: 2, Steel: 2, Poison: .5, Flying: .5, Psychic: .5, Bug: .5, Fairy: .5, Ghost: 0},
+  Flying: {Fighting: 2, Bug: 2, Grass: 2, Rock: .5, Steel: .5, Electric: .5},
+  Poison: {Grass: 2, Fairy: 2, Poison: .5, Ground: .5, Rock: .5, Ghost: .5, Steel: 0},
+  Ground: {Poison: 2, Rock: 2, Steel: 2, Fire: 2, Electric: 2, Bug: .5, Grass: .5, Flying: 0},
+  Rock: {Flying: 2, Bug: 2, Fire: 2, Ice: 2, Fighting: .5, Ground: .5, Steel: .5},
+  Bug: {Grass: 2, Psychic: 2, Dark: 2, Fighting: .5, Flying: .5, Poison: .5, Ghost: .5, Steel: .5, Fire: .5, Fairy: .5},
+  Ghost: {Ghost: 2, Psychic: 2, Dark: .5, Normal: 0},
+  Steel: {Rock: 2, Ice: 2, Fairy: 2, Steel: .5, Fire: .5, Water: .5, Electric: .5},
+  Fire: {Bug: 2, Steel: 2, Grass: 2, Ice: 2, Rock: .5, Fire: .5, Water: .5, Dragon: .5},
+  Water: {Ground: 2, Rock: 2, Fire: 2, Water: .5, Grass: .5, Dragon: .5},
+  Grass: {Ground: 2, Rock: 2, Water: 2, Flying: .5, Poison: .5, Bug: .5, Steel: .5, Fire: .5, Grass: .5, Dragon: .5},
+  Electric: {Flying: 2, Water: 2, Grass: .5, Electric: .5, Dragon: .5, Ground: 0},
+  Psychic: {Fighting: 2, Poison: 2, Steel: .5, Psychic: .5, Dark: 0},
+  Ice: {Flying: 2, Ground: 2, Grass: 2, Dragon: 2, Steel: .5, Fire: .5, Water: .5, Ice: .5},
+  Dragon: {Dragon: 2, Steel: .5, Fairy: 0},
+  Dark: {Ghost: 2, Psychic: 2, Fighting: .5, Dark: .5, Fairy: .5},
+  Fairy: {Fighting: 2, Dragon: 2, Dark: 2, Poison: .5, Steel: .5, Fire: .5},
+};
+export const TYPE_ITEMS = {
+  'Silk Scarf': 'Normal', 'Black Belt': 'Fighting', 'Sharp Beak': 'Flying', 'Poison Barb': 'Poison',
+  'Soft Sand': 'Ground', 'Hard Stone': 'Rock', 'Silver Powder': 'Bug', 'Spell Tag': 'Ghost',
+  'Metal Coat': 'Steel', Charcoal: 'Fire', 'Mystic Water': 'Water', 'Miracle Seed': 'Grass',
+  Magnet: 'Electric', 'Twisted Spoon': 'Psychic', 'Never-Melt Ice': 'Ice', 'Dragon Fang': 'Dragon',
+  'Black Glasses': 'Dark', 'Fairy Feather': 'Fairy',
+  'Fist Plate': 'Fighting', 'Sky Plate': 'Flying', 'Toxic Plate': 'Poison', 'Earth Plate': 'Ground',
+  'Stone Plate': 'Rock', 'Insect Plate': 'Bug', 'Spooky Plate': 'Ghost', 'Iron Plate': 'Steel',
+  'Flame Plate': 'Fire', 'Splash Plate': 'Water', 'Meadow Plate': 'Grass', 'Zap Plate': 'Electric',
+  'Mind Plate': 'Psychic', 'Icicle Plate': 'Ice', 'Draco Plate': 'Dragon', 'Dread Plate': 'Dark', 'Pixie Plate': 'Fairy',
+};
+export const RESIST_BERRIES = {
+  Normal: 'Chilan Berry', Fighting: 'Chople Berry', Flying: 'Coba Berry', Poison: 'Kebia Berry',
+  Ground: 'Shuca Berry', Rock: 'Charti Berry', Bug: 'Tanga Berry', Ghost: 'Kasib Berry',
+  Steel: 'Babiri Berry', Fire: 'Occa Berry', Water: 'Passho Berry', Grass: 'Rindo Berry',
+  Electric: 'Wacan Berry', Psychic: 'Payapa Berry', Ice: 'Yache Berry', Dragon: 'Haban Berry',
+  Dark: 'Colbur Berry', Fairy: 'Roseli Berry',
+};
+export const SHEER_FORCE_EFFECTS = new Set([
+  'FLINCH_HIT', 'RAISE_ALL_STATS_HIT', 'BLIZZARD', 'PARALYZE_HIT', 'LOWER_SPEED_HIT', 'RAISE_SP_ATK_HIT',
+  'CONFUSE_HIT', 'LOWER_DEFENSE_HIT', 'LOWER_SP_DEF_HIT', 'BURN_HIT', 'FLINCH_BURN_HIT', 'RAISE_SPEED_HIT',
+  'POISON_HIT', 'FREEZE_HIT', 'FLINCH_FREEZE_HIT', 'RAISE_ATTACK_HIT', 'LOWER_ACCURACY_HIT',
+  'BADLY_POISON_HIT', 'SECRET_POWER', 'LOWER_SP_ATK_HIT', 'THUNDER', 'HURRICANE', 'FLINCH_PARALYZE_HIT',
+  'FLINCH_DOUBLE_DAMAGE_FLY_OR_BOUNCE', 'LOWER_SP_DEF_2_HIT', 'LOWER_ATTACK_HIT', 'THAW_AND_BURN_HIT',
+  'CHATTER', 'FLINCH_MINIMIZE_DOUBLE_HIT', 'RANDOM_PRIMARY_STATUS_HIT', 'PREVENT_HEALING_HIT',
+  'POISON_MULTI_HIT', 'HIGH_CRITICAL_BURN_HIT', 'HIGH_CRITICAL_POISON_HIT', 'RECOIL_BURN_HIT', 'RECOIL_PARALYZE_HIT',
+]);
+export const SHEER_FORCE_MOVES = new Set(['Sparkling Aria', 'Spirit Shackle', 'Anchor Shot', 'Ceaseless Edge', 'Stone Axe', 'Electro Shot']);
+export const RECKLESS_EFFECTS = new Set(['CRASH_ON_MISS', 'RECOIL_QUARTER', 'RECOIL_THIRD', 'RECOIL_BURN_HIT', 'RECOIL_PARALYZE_HIT', 'RECOIL_HALF', 'RECOIL_HALF_MAX_HP', 'CONFUSE_HIT_CRASH_ON_MISS']);
+export const EFFECTIVENESS_CODES = new Map([[0, 0], [.125, 3], [.25, 4], [.5, 5], [1, 10], [2, 20], [4, 30], [8, 40]]);
+export const EFFECTIVENESS_MULTIPLIERS = new Map([...EFFECTIVENESS_CODES].map(([multiplier, code]) => [code, multiplier]));
