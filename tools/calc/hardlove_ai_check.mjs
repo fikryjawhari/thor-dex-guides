@@ -4,6 +4,7 @@ import {Fraction, enumerateRandomBranches, highestScoreOdds, enumerateDamageScor
 import {evaluateSingles as evaluateSinglesResult, BuildStateVariables, CalculateSwitch, getVarianceFromDamage} from '../../template/calc/ai/hardlove/index.mjs';
 const evaluateSingles = (state, options) => evaluateSinglesResult(state, options).moves;
 import {FindTargets, ChooseMove, doublesPickOrder, pickDoublesMon, presentDoublesMon, evaluateDoubles} from '../../template/calc/ai/hardlove/doubles.mjs';
+import {switchInOrder, BattleAI_PostKOSwitchIn_Internal, getNormalScore, FillDamageStructFromPartyMon} from '../../template/calc/ai/hardlove/postKO.mjs';
 import {BattleAI_CalcBaseDamage, BattleAI_CalcDamage, BattleAI_GetDynamicMoveType, BattleAI_GetTypeEffectiveness, BattleAI_IsParentalBondMove} from '../../template/calc/ai/hardlove/damage.mjs';
 import * as calc from '../../template/calc/ai/hardlove/calc.mjs';
 import {SOURCE_MOVE_TRAITS} from '../../template/calc/ai/hardlove/damage-data.mjs';
@@ -627,6 +628,105 @@ check('C ally quirk: ally scoring bypasses PP, Taunt, Disable and Encore bonuses
   const state = doubleState({foes: [chomp({moves: [move], facts: {tauntTurns: 1, disabledTurns: 1, disabledMove: move.name}}), chomp({speed: 80, moves: [CLAW]})]});
   const result = evaluateDoubles(state);
   assert.equal(result.foes[0].pairs.find(pair => pair.target.side === 'foe').percent, 100);
+});
+
+check('post-KO: normal score table preserves speed-tie-as-fast and strict damage inequalities', () => {
+  assert.equal(getNormalScore(2, true, true, 100, 100), 5);
+  assert.equal(getNormalScore(1, false, false, 50, 50), 3);
+  assert.equal(getNormalScore(1, false, false, 49, 50), 1);
+  assert.equal(getNormalScore(0, true, false, 100, 0), 4);
+  assert.equal(getNormalScore(0, false, false, 50, 50), 0);
+  assert.equal(getNormalScore(0, false, true, 101, 100), 2);
+  assert.equal(getNormalScore(0, false, true, 100, 100), -1);
+});
+
+check('post-KO: both players summed, dead targets omitted, ties first slot and double KO skips first', () => {
+  const state = doubleState();
+  const bench = [chomp({speed: 150}), chomp({speed: 150}), chomp({speed: 10})];
+  state.foeParty = [...state.foes, ...bench];
+  state.foePartySlots = [0, 1];
+  const result = BattleAI_PostKOSwitchIn_Internal(state);
+  assert.equal(result.candidates[0].scores[0].score, 106);
+  assert.deepEqual(switchInOrder(state).order, [2, 3, 4]);
+  assert.deepEqual(switchInOrder({...state, reservedPartySlots: [2]}).order, [3, 4]);
+  assert.deepEqual(switchInOrder({...state, foes: state.foes.map(mon => ({...mon, currentHP: 0}))}).order, [2, 3, 4]);
+  const down = {...state, players: [lax({currentHP: 0}), lax()]};
+  assert.equal(BattleAI_PostKOSwitchIn_Internal(down).candidates[0].scores[0].score, 103);
+  assert.deepEqual(switchInOrder({...down, players: down.players.map(mon => ({...mon, currentHP: 0}))}).order, [2, 3, 4]);
+});
+
+check('post-KO: Zoroark random bonus yields per-rank rational probabilities', () => {
+  const active = chomp();
+  const state = {attacker: active, defender: lax(), attackerParty: [active, chomp(), chomp({species: 'Zoroark'})]};
+  const ranking = switchInOrder(state);
+  assert.equal(ranking.order, null);
+  assert.deepEqual(ranking.ranks[1].ranks.map(rank => rank.exact), [{numerator: '2', denominator: '3'}, {numerator: '1', denominator: '3'}]);
+  assert.equal(ranking.orders.length, 2);
+  assert.deepEqual(switchInOrder({...state, reservedPartySlots: [1]}).order, [2]);
+});
+
+check('post-KO: party snapshot resets battle boosts/history; raw held item and entry speed retained', () => {
+  const state = {attacker: chomp(), defender: lax(), field: {magicRoom: true, attacker: {stickyWeb: true}}};
+  const mon = chomp({item: 'Choice Scarf', statBoosts: {attack: 6, speed: 6}, facts: {firstTurnOut: false, flashFireActivated: true, metronomeTurns: 4}});
+  const party = FillDamageStructFromPartyMon(state, mon, true);
+  assert.equal(party.item, 'Choice Scarf');
+  assert.equal(party.states.attack, 0);
+  assert.equal(party.speed, 129);
+  assert.equal(party.firstTurnOut, true);
+  assert.equal(party.isSwitching, true);
+  assert.equal(party.facts.metronomeTurns, undefined);
+});
+
+check('hard switch: party producer supplies post-KO score, rank and variance without synthetic AI facts', () => {
+  const attacker = chomp({moves: [CLAW]});
+  const defender = lax({moves: [EQ], attack: 400});
+  const bench = chomp({types: ['Flying'], speed: 150, moves: [mv('Dragon Claw', 'Dragon', 'Physical', 500)]});
+  const state = {attacker, defender, attackerParty: [attacker, bench]};
+  const best = BattleAI_PostKOSwitchIn_Internal(state, {calcWithHighestDamageHit: true}).choices[0];
+  assert.equal(best.score, 106);
+  assert.equal(best.highestDamageHitPrct, 1);
+  assert.equal(evaluateSinglesResult(state).switch.percent, 34);
+});
+
+check('post-KO: two Zoroark reroll on each successive call, rather than freezing a sampled sorting key', () => {
+  const active = chomp();
+  const state = {attacker: active, defender: lax({speed: 80}), attackerParty: [active,
+    chomp({species: 'Zoroark'}), chomp({species: 'Zoroark'}), chomp({speed: 10, moves: [mv('Dragon Claw', 'Dragon', 'Physical', 500)]})]};
+  const result = switchInOrder(state);
+  const orders = Object.fromEntries(result.orders.map(order => [order.partySlots.join(','), order.exact]));
+  assert.deepEqual(orders['1,2,3'], {numerator: '10', denominator: '27'});
+  assert.deepEqual(orders['1,3,2'], {numerator: '5', denominator: '27'});
+  assert.deepEqual(orders['2,1,3'], {numerator: '2', denominator: '9'});
+  assert.deepEqual(orders['2,3,1'], {numerator: '1', denominator: '9'});
+  assert.deepEqual(orders['3,1,2'], {numerator: '2', denominator: '27'});
+  assert.deepEqual(orders['3,2,1'], {numerator: '1', denominator: '27'});
+});
+
+check('post-KO: Explosion uses maximum range, and opponent-only Wobbuffet bonus is preserved', () => {
+  const active = chomp();
+  const explosion = mv('Explosion', 'Normal', 'Physical', 250, 'SELFDESTRUCT');
+  const state = {attacker: active, defender: lax(), attackerParty: [active, chomp({moves: [explosion], attack: 500})]};
+  const candidate = BattleAI_PostKOSwitchIn_Internal(state).candidates[0];
+  assert.equal(candidate.matchups[0].outgoingKO, true);
+  assert.equal(candidate.scores[0].score, 105);
+  const double = doubleState();
+  double.players = [lax({moves: []}), lax({moves: [CLAW], attack: 1000})];
+  double.foeParty = [...double.foes, chomp({species: 'Wobbuffet'})];
+  double.foePartySlots = [0, 1];
+  const opposite = BattleAI_PostKOSwitchIn_Internal(double).candidates[0].scores[0].score;
+  const across = BattleAI_PostKOSwitchIn_Internal({...double, attackerSlot: 1}).candidates[0].scores[0].score;
+  assert.equal(opposite - across, 2);
+});
+
+check('doubles: known Helping Hand affects slower damage before KO detection', () => {
+  const state = doubleState({players: [lax({currentHP: 80}), lax()]});
+  const move = mv('Helping Hand', 'Normal', 'Status', 0, 'BOOST_ALLY_POWER_BY_50_PERCENT');
+  const normal = pickDoublesMon(state, 1);
+  const boosted = pickDoublesMon(state, 1, {partnerMove: move});
+  const ordinary = normal.targets.find(target => target.target.side === 'player' && target.target.slot === 0);
+  const helped = boosted.targets.find(target => target.target.side === 'player' && target.target.slot === 0);
+  assert.equal(ordinary.ai.attackerRollTables[0].some(roll => roll.canOneShot), false);
+  assert.equal(helped.ai.attackerRollTables[0].every(roll => roll.canOneShot), true);
 });
 
 check('hard switch: hand-calculated integer variance, thresholds and Perish Song', () => {

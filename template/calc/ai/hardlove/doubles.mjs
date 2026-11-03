@@ -1,8 +1,9 @@
 import {Fraction, roundedPercentages, enumerateRandomBranches, highestScoreGroups} from '../enumerate.mjs';
 import {BuildStateVariables, snapshotMon} from './state.mjs';
 import {AI_IsClient2Faster} from './speed.mjs';
-import {damageScores, maskIndices, presentMove, moveKey} from './pick_command.mjs';
+import {commandScores, maskIndices, presentMove, moveKey} from './pick_command.mjs';
 import {ScoreMovesAgainstAlly} from './scoring.mjs';
+import {BattleAI_PostKOSwitchIn_Internal} from './postKO.mjs';
 
 const ZERO = new Fraction();
 const ONE = new Fraction(1n);
@@ -29,7 +30,7 @@ export function CalcTurnStateDamagesAndScores(state, slot, {partnerMove, ignored
   const targets = [];
   for (const playerSlot of [slot, slot ^ 1]) {
     if (!alive(state.players[playerSlot]) || ignoredPlayer === playerSlot) continue;
-    const pairState = {...state, attacker, defender: state.players[playerSlot], attackerAlly: ally, defenderAlly: state.players[playerSlot ^ 1],
+    const pairState = {...state, attacker, defender: state.players[playerSlot], attackerAlly: ally, defenderAlly: state.players[playerSlot ^ 1], partnerMove,
       allies: [ally, state.players[playerSlot ^ 1]], attackerParty: state.foeParty ?? state.foes, defenderParty: state.playerParty ?? state.players,
       isDoubleBattle: true, field: {...state.field, isDoubleBattle: true}};
     const ai = BuildStateVariables(pairState);
@@ -38,11 +39,13 @@ export function CalcTurnStateDamagesAndScores(state, slot, {partnerMove, ignored
     ai.attackerMon.partnerMoveNo = ai.partnerMoveNo;
     targets.push({target: {side: 'player', slot: playerSlot}, state: pairState, ai});
   }
+  const best = state.foeParty ? BattleAI_PostKOSwitchIn_Internal({...state, attackerSlot: slot}, {calcWithHighestDamageHit: true}).choices[0] : undefined;
   const anyIncomingKO = targets.some(target => target.ai.playerCanOneShotMonWithAnyMove);
   for (const target of targets) {
     target.ai.anyPlayerMonCanOneShotMonWithAnyMove = anyIncomingKO;
     target.ai.defenderAllySpeed = targets.find(other => other !== target)?.ai.defenderMon.speed ?? 0;
-    const distribution = damageScores(target.state, target.ai);
+    if (best) Object.assign(target.ai, {highestPostKoScoreFromParty: best.score, postKoScoringPosition: best.partySlot, highestDamageHitPrct: best.highestDamageHitPrct});
+    const distribution = commandScores(target.state, target.ai);
     target.groups = distribution.groups.map(group => ({...group, score: group.score + 1000}));
     target.scores = distribution.scores;
   }
@@ -70,7 +73,7 @@ export function pickDoublesMon(state, slot, condition = {}) {
       const mass = weight.divide(bestTargets.length).multiply(move.weight);
       weights[targetIndex][move.index] = weights[targetIndex][move.index].add(mass);
       let ignoredPlayer = -1;
-      if (state.players.every(alive) && state.foes[slot].moves[move.index].category !== 'Status') {
+      if (alive(state.foes[slot ^ 1]) && state.players.every(alive) && state.foes[slot].moves[move.index].category !== 'Status') {
         const fastKO = targets.findIndex((target, targetSlot) => target.target.side === 'player' && selected[targetSlot].anyKO && target.ai.aiMovesFirst);
         if (fastKO >= 0) ignoredPlayer = targets[fastKO].target.slot;
       }
@@ -116,6 +119,8 @@ export function presentDoublesMon(state, slot, result, digits = 0) {
     } else combined.set(code, {...selection, scoreContexts: [{selectionTarget: selection.selectionTarget, score: selection.score, branches: selection.branches}]});
   }
   const pairs = [...combined.values()];
+  const rounded = roundedPercentages(pairs.map(pair => pair.probability), digits);
+  pairs.forEach((pair, index) => { pair.percent = rounded[index]; });
   return {slot, pairs, switch: {probability: 0, exact: ZERO.toJSON(), percent: 0}};
 }
 

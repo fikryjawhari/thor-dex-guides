@@ -43,7 +43,12 @@ function damageTable(state, move, attacker, defender, defendingSide = 'defender'
   const originalField = state.field ?? {};
   const side = originalField[defendingSide] ?? {};
   const field = {...originalField, ...Object.fromEntries(['reflect', 'lightScreen', 'auroraVeil'].map(name => [name, side[name] ?? (defendingSide === 'defender' ? originalField[name] : false)]))};
-  const result = BattleAI_CalcDamage({...state, field}, move, attacker, defender);
+  const ally = state.attackerAlly ?? state.allies?.[0];
+  const defenderAlly = state.defenderAlly ?? state.allies?.[1];
+  const attackerPartner = ally?.currentHP > 0 ? snapshotMon(state, ally, 'attacker') : ally;
+  const defenderPartner = defenderAlly?.currentHP > 0 ? snapshotMon(state, defenderAlly, 'defender') : defenderAlly;
+  const result = BattleAI_CalcDamage({...state, field, attackerAlly: defendingSide === 'defender' ? attackerPartner : defenderPartner,
+    defenderAlly: defendingSide === 'defender' ? defenderPartner : attackerPartner}, move, attacker, defender);
   if (!Array.isArray(result.damageRange) || result.damageRange.length !== 16) throw new TypeError('AI damage calculation must return sixteen rolls');
   return {
     raw: [...result.damageRange],
@@ -68,7 +73,7 @@ export function BuildStateVariables(state) {
   const ai = {
     attackerMon, defenderMon, attacker: 'attacker', defender: 'defender', attackerSide: 'attacker', defenderSide: 'defender',
     isDoubleBattle, isAllyAlive: Boolean(isDoubleBattle && ally?.currentHP > 0), partnerCanAttack: false, isPartnerGrounded: false, defenderAllyHasMagicBounce: false,
-    partnerClicksAttackingMove: false, ignoreTarget: false, partnerMoveNo: '', attackerMove: '', attackerMoveEffect: '',
+    partnerClicksAttackingMove: Boolean(state.partnerMove && state.partnerMove.category !== 'Status'), ignoreTarget: false, partnerMoveNo: state.partnerMove?.name ?? '', attackerMove: '', attackerMoveEffect: '',
     highestPostKoScoreFromParty: state.facts?.highestPostKoScoreFromParty ?? 0,
     postKoScoringPosition: state.facts?.postKoScoringPosition ?? -1,
     highestDamageHitPrct: state.facts?.highestDamageHitPrct ?? 0,

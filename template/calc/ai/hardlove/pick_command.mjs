@@ -1,6 +1,7 @@
 import {Fraction, enumerateDamageScoreGroups, roundedPercentages, scoreLabel} from '../enumerate.mjs';
 import {BuildStateVariables} from './state.mjs';
 import {scoreMove} from './scoring.mjs';
+import {BattleAI_PostKOSwitchIn_Internal} from './postKO.mjs';
 
 const ZERO = new Fraction();
 const ONE = new Fraction(1n);
@@ -47,39 +48,58 @@ export function isLocked(state, ai, move) {
     || (['choiceband', 'choicescarf', 'choicespecs'].includes(moveKey(ai.attackerMon.item)) && facts.moveNoChoice && moveKey(move) === moveKey(facts.moveNoChoice)));
 }
 
+export function commandScores(state, baseAi) {
+  const groups = [];
+  const scores = state.attacker.moves.map(() => new Map());
+  for (const shouldSwitch of [false, true]) {
+    const chance = anyKO => {
+      const weight = CalculateSwitch(state, {...baseAi, monCanOneShotPlayerWithAnyMove: anyKO});
+      return shouldSwitch ? weight : ONE.subtract(weight);
+    };
+    if (![false, true].some(anyKO => chance(anyKO).numerator)) continue;
+    const distribution = damageScores(state, baseAi, shouldSwitch);
+    for (const group of distribution.groups) {
+      const weight = group.weight.multiply(chance(group.anyKO));
+      if (weight.numerator) groups.push({...group, shouldSwitch, weight});
+    }
+    for (const [index, branches] of distribution.conditionalScores.entries()) for (const branch of branches) {
+      const weight = branch.weight.multiply(chance(branch.anyKO));
+      if (weight.numerator) scores[index].set(branch.score, (scores[index].get(branch.score) ?? ZERO).add(weight));
+    }
+  }
+  return {groups, scores: scores.map(distribution => [...distribution].sort(([left], [right]) => left - right).map(([score, weight]) => ({score, weight})))};
+}
+
 export function presentMove(state, ai, index, weight, scores, percent, ally = false) {
   return {index, name: state.attacker.moves[index].name, probability: Number(weight), exact: weight.toJSON(), percent,
-    score: (ally ? 'A' : '') + scoreLabel(scores.map(branch => branch.score), !ally && isLocked(state, ai, state.attacker.moves[index])),
+    score: scores.length ? (ally ? 'A' : '') + scoreLabel(scores.map(branch => branch.score), !ally && isLocked(state, ai, state.attacker.moves[index])) : '-',
     branches: scores.map(branch => ({score: branch.score, probability: Number(branch.weight), exact: branch.weight.toJSON()}))};
 }
 
 export function pickSingles(state, {digits = 0} = {}) {
   const baseAi = BuildStateVariables(state);
+  if (state.attackerParty) {
+    const best = BattleAI_PostKOSwitchIn_Internal(state, {calcWithHighestDamageHit: true}).choices[0];
+    baseAi.highestPostKoScoreFromParty = best?.score ?? 0;
+    baseAi.postKoScoringPosition = best?.partySlot ?? -1;
+    baseAi.highestDamageHitPrct = best?.highestDamageHitPrct ?? 0;
+  }
   if (baseAi.isDoubleBattle) throw new RangeError('evaluateSingles requires singles; use evaluateDoubles');
   const count = state.attacker.moves.length;
   if (!count || count > 4) throw new RangeError('Move odds require one to four moves');
   const weights = Array(count).fill(ZERO);
-  const scoreWeights = Array.from({length: count}, () => new Map());
   let switchWeight = ZERO;
-  for (const shouldSwitch of [false, true]) {
-    const distribution = damageScores(state, baseAi, shouldSwitch);
-    for (const group of distribution.groups) {
-      const chance = CalculateSwitch(state, {...baseAi, monCanOneShotPlayerWithAnyMove: group.anyKO});
-      const weight = group.weight.multiply(shouldSwitch ? chance : ONE.subtract(chance));
-      if (!weight.numerator) continue;
-      const hardSwitch = shouldSwitch && (!baseAi.attackerHasValidSwitchingMove || (baseAi.playerMovesFirst && baseAi.playerCanOneShotMonWithAnyMove));
-      if (hardSwitch) switchWeight = switchWeight.add(weight);
-      else {
-        const winners = maskIndices(group.mask);
-        for (const index of winners) weights[index] = weights[index].add(weight.divide(winners.length));
-      }
-    }
-    for (const [index, branches] of distribution.scores.entries()) for (const branch of branches) {
-      if (!shouldSwitch) scoreWeights[index].set(branch.score, branch.weight);
+  const distribution = commandScores(state, baseAi);
+  for (const group of distribution.groups) {
+    const weight = group.weight;
+    const hardSwitch = group.shouldSwitch && (!baseAi.attackerHasValidSwitchingMove || (baseAi.playerMovesFirst && baseAi.playerCanOneShotMonWithAnyMove));
+    if (hardSwitch) switchWeight = switchWeight.add(weight);
+    else {
+      const winners = maskIndices(group.mask);
+      for (const index of winners) weights[index] = weights[index].add(weight.divide(winners.length));
     }
   }
   const percentages = roundedPercentages([...weights, switchWeight], digits);
-  return {moves: weights.map((weight, index) => presentMove(state, baseAi, index, weight,
-    [...scoreWeights[index]].map(([score, branchWeight]) => ({score, weight: branchWeight})), percentages[index])),
+  return {moves: weights.map((weight, index) => presentMove(state, baseAi, index, weight, distribution.scores[index], percentages[index])),
     switch: {probability: Number(switchWeight), exact: switchWeight.toJSON(), percent: percentages[count], partySlot: baseAi.postKoScoringPosition}};
 }

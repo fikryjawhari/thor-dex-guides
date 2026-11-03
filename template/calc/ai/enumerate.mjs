@@ -192,13 +192,20 @@ export function enumerateDamageScoreGroups(damageTables, scoreMove) {
   const maxima = [...new Set(tables.flatMap(table => table.map(roll => roll.damage)))];
   const groups = new Map();
   const scores = tables.map(() => new Map());
+  const conditionalScores = tables.map(() => new Map());
   for (const maximum of maxima) for (const anyKO of [false, true]) {
     if (!eventWeight(tables, maximum, anyKO).numerator) continue;
     const records = tables.map((table, index) => table.filter(roll => roll.damage <= maximum && (anyKO || !roll.canOneShot)).map(roll => {
       const distribution = enumerateRandomBranches(random => scoreMove(index, roll, {maximum, anyKO}, random));
       const conditional = tables.map((other, otherIndex) => otherIndex === index ? [{...roll, weight: ONE}] : other);
       const weight = eventWeight(conditional, maximum, anyKO).multiply(roll.weight);
-      for (const branch of distribution) scores[index].set(branch.score, (scores[index].get(branch.score) ?? ZERO).add(weight.multiply(branch.weight)));
+      for (const branch of distribution) {
+        const mass = weight.multiply(branch.weight);
+        scores[index].set(branch.score, (scores[index].get(branch.score) ?? ZERO).add(mass));
+        const code = `${anyKO}:${branch.score}`;
+        const prior = conditionalScores[index].get(code);
+        conditionalScores[index].set(code, {score: branch.score, anyKO, weight: (prior?.weight ?? ZERO).add(mass)});
+      }
       return {roll, distribution};
     }));
     const accumulate = (strict, noKO, sign) => {
@@ -221,7 +228,7 @@ export function enumerateDamageScoreGroups(damageTables, scoreMove) {
     accumulate(true, !anyKO, -1);
     if (anyKO) { accumulate(false, true, -1); accumulate(true, true, 1); }
   }
-  return {groups: [...groups.values()].filter(group => group.weight.numerator), scores: scores.map(distribution => [...distribution]
+  return {groups: [...groups.values()].filter(group => group.weight.numerator), conditionalScores: conditionalScores.map(distribution => [...distribution.values()].filter(branch => branch.weight.numerator)), scores: scores.map(distribution => [...distribution]
     .filter(([, weight]) => weight.numerator).sort(([left], [right]) => left - right).map(([score, weight]) => ({score, weight})))};
 }
 
