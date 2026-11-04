@@ -198,7 +198,7 @@ def build(D):
         pairs = assign(zs, top['subs']) if zs else []
         multi = len({s for _, s in pairs}) > 1
         title = fix(top['title'])
-        enc = encstd.Enc(table_lv=True)   # the doc and the old pages give each table's range
+        enc = encstd.Enc()
         seen = set()
         for z, sub in pairs:
             floor = sub if multi else ''
@@ -223,6 +223,7 @@ def build(D):
                     report(f'locs: {top["title"]}: unknown method {meth}; filed under Special')
                     kind, v, chip = 'special', meth, ''
                 done = set()
+                tlv = lvstr(min(sl[2] for sl in t['slots']), max(sl[3] for sl in t['slots']))   # the doc gives each table's range
                 for sl in t['slots']:
                     name, form, lo, hi = sl[:4]
                     pid = pid_of(name, form)
@@ -237,7 +238,7 @@ def build(D):
                     else:
                         rate = sl[4]
                     if rate:
-                        enc.add(kind, pid, rate, lv=lvstr(lo, hi), floor=floor, v=v, chip=chip)
+                        enc.add(kind, pid, rate, lv=tlv, floor=floor, v=v, chip=chip)
         ENC.append(enc)
         LOC.append(title)
         AR.append({'n': title, 'l': [idx]})

@@ -45,8 +45,12 @@ PDFs). Fetch the sources with `SOURCES.md` (game data regenerated 2026-10-22). M
   No ability's effect is changed in this hack (Pokemon Changes / Changelog only change which species get which).
 - **Wild tables** (locs.py): areas = the Wild Pokemon Locations doc's titles, in its order ("the order they become
   accessible"); the 53 game zones are matched to the doc's sub-areas by species overlap, one to one, and sub-areas (1F,
-  B2F, Outside) are sections named by floor. Sections: Grass, flowers, Rough Terrain = grass; Surf and rods = water; Rock
-  Smash and hordes = other. Hordes: one group per horde table ("Horde 60%"). Slots of one species in a table are summed.
+  B2F, Outside) are its floors. Written in the encounter standard (`tools/encstd.py`, 2026-11-04): the game calls every
+  land table Grass, so `CAVES` (and Victory Road's "… Cave" floors; not Frost Cavern's Outside) makes it Cave; flowers
+  and Rough Terrain are Grass subheadings; hordes sit in the Grass / Cave table with a Horde chip and the horde table's
+  chance (once per species); Surf and rods are chips on one Water table; Rock Smash is Special; gifts, statics, roamers
+  and fossils are Gifts & static by kind. Levels are each table's range, as the doc gives them.
+  The Starter card's heading is Aquacorde Town (`LOC[0]`). Slots of one species in a table are summed.
   Cosmetic forms the dex folds (Scatterbug, Munchlax, Misdreavus, Whiscash) use the base form. About 79 of 694 doc rates
   differ from the game (doc typos, missing hordes): the game wins. Route 17 is "Snow" in the doc, Rough Terrain in the
   game.

@@ -80,8 +80,7 @@ def rate_text(byw):
 class Enc:
     """The rows of one tracker slot, in the order added; write() turns them into the standard."""
 
-    def __init__(self, table_lv=False):
-        self.table_lv = table_lv     # True: a chip's level is the range of its whole table (the source gives one)
+    def __init__(self):
         self.floors = ['']
         self.groups = {}     # (kind, floor, v) -> {'rows': {pid: row}, 'dr': '', 'order': n}
 
@@ -144,14 +143,6 @@ class Enc:
             row = {'p': x['p'], 'r': r, 'kl': {k: kl[k] for k in r}, 'plv': lv_merge(x['plv']), 't': x['t'],
                    'note': '; '.join(x['note']), 'sos': x['sos'], 'loc': x['loc']}
             out.append(row)
-        # table levels (a hack whose tables give one range): every row of a chip takes the chip's whole range
-        if self.table_lv:
-            span = {}
-            for row in out:
-                for k, l in row['kl'].items():
-                    span.setdefault(k.split('|')[0], []).append(l)
-            for row in out:
-                row['kl'] = {k: lv_merge(span[k.split('|')[0]]) for k in row['kl']}
         # level once: the most common level goes on the group; a row (one rate) or a chip line shows its own only
         # where it differs
         count, plain = {}, any(k.startswith('|') for row in out for k in row['kl'])

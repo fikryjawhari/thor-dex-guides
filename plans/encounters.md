@@ -107,7 +107,7 @@ can and starts the rest closed (UI state only, nothing lost). Tracker entries ar
 
 Branch `worktree-encounters` from `main` (a change for every guide). Two sessions:
 
-1. **Template session** (Opus medium): the template unit: card / white box / floor headings, the floor in the yellow
+1. **Template session** (Opus medium, done 2026-11-04): the template unit: card / white box / floor headings, the floor in the yellow
    heading, the seven sections by kind code, chips and per-chip levels, the grouped picker, the Extra card (`TK.x`),
    merged-slot handling (hidden member slots, "also:" line), saved-state migration and the scenario snapshot cases.
    It reads the new `es` shape, so it lands with one guide converted as its test bed (Eternal X: one slot per
@@ -121,6 +121,35 @@ Branch `worktree-encounters` from `main` (a change for every guide). Two session
    merges to `main`. Radical Red's unit carries the playtest fixes (Open 13) and the Celadon / Rocket Hideout places.
    Order: Eternal X (done in 1), Photonic Sun, Unbound, Hardlove Gold, Blaze Black 2 Redux, Emerald Imperium,
    Radical Red; the user may run several at once (each owns only its `hacks/<hack>/` files).
+
+## Template unit: done (2026-11-04, `worktree-encounters`)
+
+Built and documented in `template/README.md` → Encounters; Eternal X converted (its notes.md → Wild tables). What a
+guide agent needs:
+- **Write the data with `tools/encstd.py`**: one `Enc()` per tracker slot, `add(kind, pid, rate, lv=, floor=, v=,
+  chip=, when=, note=, t=, sos=, dr=, loc=)` for every row (wild, gifts, statics, trades, the starter), then
+  `write(D, a)` per area and `encstd.finish(D)` once (sets `D.ESV` 2 and fails on any `P.w` row of an area not added
+  through it). It merges rows per species, collapses whens, puts levels once and writes the flagged `P.w` lines with
+  the standard names. Eternal X's `locs.py` is the example. Pass each source table's own level range when the source
+  gives one (as Eternal X does); per-species levels otherwise.
+- `kind` is the section code (decided by the extract: Grass vs Cave per area / floor, never guessed from labels);
+  `v` the subheading (Special: the mechanic; Gifts & static: Gift / Gift (fossil) / Static / Roaming / Egg...; Raids:
+  the tier, drops in `dr`); `chip` Su / SuR / O / G / S / F / FR / Bub / H; `when` m / d / n / sa / sp / su / au / wi.
+  SOS allies `sos=[[pid, 'd'|'n'|'']]`.
+- **Starter**: its area keeps `st` and n "Starter"; its `LOC` name is the place (the white box's heading); rows are
+  `gift` with `v='Starter choice'` (the starter picker reads that label for `cfg.starter: pick`).
+- **Merges**: the slot keeps the first floor's area and gets every floor's rows (`floor=` the member's floor name,
+  `loc=` the member's LOC so Pokémon pages keep naming it); each other floor's area keeps its `l` and gets
+  `in: <slot>` (no es). The template's member name for "also:" is the member's `n` minus the slot's name.
+- **Places with nothing**: an area with no rows gets no card (AR stays append-only).
+- **EI's eggs** (`AR.sub`) still use the older per-slot rendering; the EI agent decides whether they stay sub-slots.
+- **Checks per guide**: its extract's `build.py` / `check.py`, `assemble.py <hack>`, then
+  `gate.py scenarios <hack> --only encounters,guide-update,stable-keys,tracker-reload,blocks,walk-missions,dex-page`,
+  and `node tools/domcompare.mjs <start build> dist/<hack>.html '--accept-routes=#/p/*,#/l/*,#/l,#/locs,#/walk'`
+  (any other route that differs is a bug). The Thor frame preview at the end.
+- **Last step of the guides session** (after every guide has `ESV`): delete the template's older paths (`adjRows` for
+  areas, `placeSecs`, `secRows`, `secLines`, `locPlace`'s method sections, LGRP's name grouping, `ESV` checks) unless EI
+  keeps `sub`, then the full gate.
 
 ## Open
 

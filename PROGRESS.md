@@ -40,11 +40,16 @@ from link (same library id, saved state kept).
 9. Radical Red follow-ups: in-game checks, one real `.srm` import, Gulp Missile, Chillet's sprite.
 10. Check tiers past ~10 guides (the last check-speed follow-up).
 11. Calc: range compare: noted for later (space); `plans/calc-range-compare.md`.
-12. Encounter box standard across guides: decided, `plans/encounters.md` (build plan: a template session, then a
-    guides session with one talkable agent per guide).
+12. Encounter box standard across guides: `plans/encounters.md`. Template unit done on `worktree-encounters`
+    (2026-11-04: `tools/encstd.py`, template, scenarios `encounters` + guide-update 28c, Eternal X converted); next the
+    guides session (one talkable agent per guide; the plan's "Template unit: done" says what each needs).
 13. Radical Red encounter / Locations / walkthrough fixes from the playtest: in 12's Radical Red unit.
 
 ## Next session
+
+- **Encounters (Open 12):** branch `worktree-encounters` (worktree `.claude/worktrees/encounters`), not merged; Eternal X
+  in the standard, the other six unchanged (domcompare: identical). Next: the guides session from the plan, each guide
+  a tab branch `worktree-encounters-<hack>` off it. Phone preview: `encounters-eternal-x.html`.
 
 - **Unpushed on `main` (the user's call, 2026-11-04):** one calc button per trainer (row preview line / card name
   line; the per-Pokémon Calc vs is gone), gate clean. It ships with Open 12 / 13 as one batch: don't push before.

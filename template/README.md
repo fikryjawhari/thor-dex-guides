@@ -48,7 +48,8 @@ optional) is `hacks/emerald-imperium/notes.md` → Data schema; `tools/schema.py
 an unknown key.
 
 - Pokémon: tutor moves `p.tu`, source conflicts `p.cf` ("Sheet says ..."), Mega stone `p.stone` / `p.sloc`.
-- Locations: a Starter area (`AR[i].st`, tied to the starter picker), sections per game table (`AR.es`), area maps
+- Locations: the encounter standard (`D.ESV` 2, `AR.es` / `AR.fo`; Encounters below; guides not converted yet keep
+  the older `AR.es` per game table or `P.w` methods), a Starter area (`AR[i].st`, tied to the starter picker), area maps
   (`AR.map`), tracker sub-slots (`AR.sub`), areas with no slot (`AR.ns`: encounters shown, `txt.ns` instead of a
   tracker; a saved entry for one drops on load), optional page order `ARO` (areas added later sit at the end of `AR` so
   saved trackers keep their slots).
@@ -92,7 +93,8 @@ an unknown key.
     trainers, the calc's foe, recent trainers, foe edits (`foe:<k>:<slot>`), copied foes (`f:<k>:<slot>`) and search
     recents need nothing in the template.
   - Species: the Dex stat calc (`cfg.ls.calc` + `:` + name, `calcKey`) and the tracker's caught / traded species
-    (`spOut` / `spIn`; the backup code too) by name. A stat calc key by species id moves to the name once on load;
+    (`spOut` / `spIn`; the backup code too) by name, the Extra card's rows too (`TK.x`; a species the guide no longer
+    has keeps its row and shows its stored name). A stat calc key by species id moves to the name once on load;
     tracker ids load as before.
   - Search recents: a species, move, ability or place filter by name, a walkthrough stop by its key (`w`), an item by
     its box and row names (`recOut` / `recIn`); a stop saved by position takes its key from the layout it was saved
@@ -609,6 +611,31 @@ dex.css):
 7. The level row ("Level cap 15 · yours 17") is closed by default.
 8. Items: boxes don't pin, their sub-headings do. A box with one sub-heading named like itself shows the name twice
    (box header + sub-heading) on purpose: the user wants it that way so the box header never becomes sticky.
+
+**Encounters** (the encounter standard, decided 2026-11-04; `plans/encounters.md` until every guide is converted).
+Data: `tools/encstd.py` (`Enc.add` per row, `write`, `finish` sets `D.ESV` 2 and checks every `P.w` row of an area is
+one of its es lines). Page (`ENCOUNTER STANDARD` in dex.js):
+- A card per location (an `AR` area = one tracker slot), never grouped; a place with nothing to catch has none. The
+  card's white box (the place, pinned) holds the tracker, then floor headings (`.esfl`, only with 2+ floors, `AR.fo`
+  order), then a yellow section per kind code in this order: Grass, Cave, Water, Special, Raids, Gifts & static,
+  Trades (`ESK`; an empty one is left out). The yellow header names its floor in small text, so the pinned pair says
+  where you are. Subheadings (`g.v`, or the section's name when it has several groups). Rejected: a white box per floor.
+- Rates are keyed `chip|when`: the chip (Surf, Old, Good, Super, Fish, Surf / Fish ripple, Bubbling, Horde) always
+  shows; when (morning / day / night icons, season chips) only where a row differs. One line per key. Dupes rescale
+  per chip and when. Levels once: `g.lv` on the section header (one table) or subheading, a row's `lv` / a line's `kl`
+  only where they differ.
+- Starter card: its white box is the place (`LOC` of the area), the starter picker, the choices listed directly.
+- Picker: None yet, Failed / fled, an `<optgroup>` per section (A–Z, each species once), Other…
+- Merged slots: floors that were slots of their own are hidden members (`AR[i].in` = the slot, which has no `sub`);
+  the slot shows the first recorded entry, the others stay stored, count, and show as "also: <species> (<floor>)"
+  with a clear button. A member's lone entry moves to the slot on load.
+- Extra card: last on the page. Rows the player adds (`TK.x` [{w place, p species | f 1}]): a place (in the viewer the
+  letters keyboard, words capitalised) and a species from the Other… search or failed, a remove button each, "+ Add
+  encounter". Counted in caught / failed and dupes, in the backup code; Reset all clears them. No explanation text.
+- Section open state: `LS.loc` s `area|floor|code`; names saved before the standard (`area.place.Grass`) move to the
+  code once (`LO.ev` 2), others drop (UI state only). Everything starts closed; the white box opens with its card.
+- The walkthrough's lines and Pokémon pages use the same names: `[floor · ]Section[ · subheading][ · chip]` (Special,
+  Raids, Gifts & static: the subheading alone; trades "Trade").
 
 **Walkthrough:** Guide info → Starter → Next step → Expand / Collapse all, nothing else above the splits. An opened box
 starts with a Show switch (`.wksw`, the Trainers page's style, pinned under the search bar with the stop headers under
