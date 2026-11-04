@@ -40,6 +40,8 @@ from link (same library id, saved state kept).
 9. Radical Red follow-ups: in-game checks, one real `.srm` import, Gulp Missile, Chillet's sprite.
 10. Check tiers past ~10 guides (the last check-speed follow-up).
 11. Calc: range compare: noted for later (space); `plans/calc-range-compare.md`.
+12. Encounter box standard across guides: needs a decide session (mockups, `plans/encounters.md`) first.
+13. Radical Red encounter / Locations / walkthrough fixes from the playtest: built after 12's spec.
 
 ## Next session
 

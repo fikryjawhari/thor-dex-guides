@@ -126,6 +126,23 @@ Write a family's first guide with its siblings in mind; lift shared code when th
     data switches on what the change touches (missions: Unbound; area maps: Photonic Sun; Z-moves / Totems: Photonic
     Sun, Eternal X; cheats: EI; no tutor moves: EI), domcompare / consistency / fit on the rest. Not EI by default:
     the scenarios were written on it, so it fails least (past audits failed on the other guides).
+11. **Calc: range compare:** noted for later (space); `plans/calc-range-compare.md`.
+12. **Encounter box standard** (the user, 2026-11-04; needs a decide session first, then a template build): the guides
+    lay encounters out differently (EI / Hardlove build them from `P.w` rows: a box per floor, a drop-down per rod; the
+    others from each extract's `AR.es` sections, each labelled its own way). Proposed standard to mock up: one card per
+    location (floors and buildings inside it, only when something is catchable there); sections named by method,
+    never by the place, in a fixed order: Grass / Cave (a subheading per floor or patch), Surfing, Fishing (one section,
+    Old / Good / Super Rod subheadings), Rock Smash / Headbutt, Raids / Swarms / DexNav and the like, Gifts & Static,
+    Trades; level / cap once per subheading; day / night as the rate's icon. Spec to `plans/encounters.md`.
+13. **Radical Red encounter / walkthrough fixes** (the user's playtest, 2026-11-04; follow from 12's spec, built after
+    it): sections are titled with the place's own name (shown twice); the grass rows aren't flagged `w[5]===1`, so
+    they repeat in a Special section re-scaled ("12.5%, was 20%"); day / night is a note, not the rate; "cap N" on
+    every row; 66 of 154 areas are houses / marts / Centers with nothing to catch, each its own Locations card, and
+    the two-word grouping shows Pallet Town twice (one card per location); Roaming sits under Viridian City; the
+    starter is under the Pallet Town stop, but Oak's Lab is its own met location (give it its own place); repeated
+    walkthrough stops (Route 2 ×3, Route 4 ×4, Silph Co. ×4...) are real return visits but show the same name and the
+    whole encounter box again: label why ("Route 2 · Cut") and show only what's new; the Lavender stop is named
+    "Lavender Town Mr. Fuji's House".
 
 ## Decisions
 
