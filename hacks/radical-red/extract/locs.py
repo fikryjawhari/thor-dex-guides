@@ -308,15 +308,55 @@ def build(data):
 # grass outdoors; data.js only says "Grass/cave"): caves, towers, mansions and the Power Plant walk on floors.
 CAVES = ("Diglett's Cave", 'Mt. Moon', 'Rock Tunnel', 'Pokemon Tower', 'Power Plant', 'Seafoam Islands', 'Pokemon Mansion',
          'Cerulean Cave', 'Victory Road', 'Mt Ember Interior', "Safari Zone Moltres' Den")
-# Tracker slots that are one met location (FRLG's map sections; the user, 2026-11-04): (slot name, the prefix that comes
-# off each member's name for its floor, the AR names: the first is the slot, keeping its index and tracker entry; None =
-# every place named "<prefix>...").
-MERGES = [('Mt. Ember', 'Mt Ember ', ['Mt Ember Exterior', 'Mt Ember Interior', 'Mt Ember Interior 2', 'Mt Ember Interior 3',
-                                     'Mt Ember Interior 4', 'Mt Ember Summit']),
-          ('Safari Zone', 'Safari Zone ', ['Safari Zone Area 1', 'Safari Zone Area 2', 'Safari Zone Area 3',
-                                           'Safari Zone Area 4', 'Safari Zone', 'Safari Zone Secret House']),
-          ('Route 21', 'Route 21 ', ['Route 21 North', 'Route 21 South']),
-          ('Celadon City', 'Celadon City ', None)]
+# Tracker slots that are one met location (FRLG's map sections; the user, 2026-11-04: a town or route is one place,
+# its houses, gatehouses, Centers, marts and gyms included; a legendary's room is its dungeon's; only Oak's Lab and the
+# Rocket Hideout are buildings of their own). One line per slot: its name | the AR names, the first is the slot (it
+# keeps that area's index and tracker entry), '*' = every place named "<slot> ..." | the prefix that comes off a member's
+# name for its floor heading (default "<slot> ").
+MERGE_TABLE = """
+Pallet Town|Pallet Town,Pallet Town Player's House,Pallet Town Rival's House
+Viridian City|Viridian City,*
+Viridian Forest|Viridian Forest,Viridian Forest Heart
+Pewter City|Pewter City,*
+Route 2|Route 2,*
+Route 4|Route 4,*
+Cerulean City|Cerulean City,*
+Route 25|Route 25,*
+Route 5|Route 5,*,Underground Path Route 5 Entrance
+Vermilion City|Vermilion City,*,S.S. Anne Port
+Route 11|Route 11,*
+Route 10|Route 10,*
+Rock Tunnel|Rock Tunnel,*
+Lavender Town|Lavender Town Mr. Fuji's House,Lavender Town EXP Farm,Lavender Town Poke Mart
+Route 12|Route 12,*
+Celadon City|Celadon City,*
+Route 16|Route 16,*
+Saffron City|Saffron City,*
+Silph Co.|Silph Co.,*
+Route 15|Route 15,*
+Route 18|Route 18,*
+Fuchsia City|Fuchsia City,*
+Safari Zone|Safari Zone Area 1,Safari Zone Area 2,Safari Zone Area 3,Safari Zone Area 4,Safari Zone,*
+Seafoam Islands|Seafoam Islands,*
+Cinnabar Island|Cinnabar Island,*
+Route 21|Route 21 North,Route 21 South
+Pokemon Mansion|Pokemon Mansion,*
+Indigo Plateau|Indigo Plateau League Approach,Pokemon League Lobby,Pokemon League
+One Island|One Island,*
+Kindle Road|Kindle Road,Ember Spa
+Mt. Ember|Mt Ember Exterior,Mt Ember Interior,Mt Ember Interior 2,Mt Ember Interior 3,Mt Ember Interior 4,Mt Ember Summit|Mt Ember 
+Two Island|Two Island,*
+Cape Brink|Cape Brink,*
+Three Island|Three Island,*
+"""
+MERGES = [(f[0], (f[2] if len(f) > 2 else f[0] + ' '), f[1].split(','))
+          for f in (line.split('|') for line in MERGE_TABLE.strip().splitlines())]
+# A legendary's room: its rows are in the place's main list, no floor heading of its own (the user, 2026-11-04)
+MAIN_LIST = {"Rock Tunnel Magearna's Chamber", "Silph Co. Raging Bolt's Office", "Seafoam Islands Kyogre's Chamber",
+             "Pokemon Mansion Gouging Fire's Room"}
+# Met locations with nothing wild: a tracker slot for an Egg hatched there (the user, 2026-11-04)
+EGG_HATCH = 'Egg hatch location.'
+OWN_PLACES = ['Rocket Hideout']    # buildings that are a met location of their own (and Oak's Lab, the Starter)
 CHIP = {'Surf': 'Su', 'Old Rod': 'O', 'Good Rod': 'G', 'Super Rod': 'S'}
 GIFT_V = {'Fossil (pick one)': 'Gift (fossil)'}
 STARTER_LOC = "Oak's Lab"          # the Starter card's place (its own met location)
@@ -347,9 +387,12 @@ def standardise(data, groups, place_of, starter_loc, gift_area):
     names = [A['n'] for A in AR]
     rows_at = {area for area, *_ in groups}
     prefix = {}
+    starter = next(i for i, A in enumerate(AR) if A['l'] == [starter_loc])
     for slot_name, pre, members in MERGES:
-        members = members or [n for n in names if n == slot_name or n.startswith(pre)]
+        members = [x for n in members for x in ([y for y in names if y.startswith(pre) and y not in members
+                                                  and y != names[starter]] if n == '*' else [n])]
         idx = [names.index(n) for n in members]
+        assert not any('in' in AR[i] for i in idx), 'locs: %s merged twice' % slot_name
         slot = idx[0]
         before = [i for i in idx if rows_at & set(AR[i]['l'])]
         AR[slot]['n'] = slot_name
@@ -360,7 +403,6 @@ def standardise(data, groups, place_of, starter_loc, gift_area):
                 AR[i]['n'] = slot_name + ' ' + AR[i]['n'][len(pre):]
         report('locs: merged %s: tracker slots %d -> 1 (AR %s; %d keeps the slot, members %s)' % (
             slot_name, len(before), ', '.join(map(str, before)), slot, ', '.join(map(str, idx[1:]))))
-    starter = next(i for i, A in enumerate(AR) if A['l'] == [starter_loc])
     AR[starter].update(n='Starter', st=1)
     LOC[starter_loc] = STARTER_LOC
     gift = next(i for i, A in enumerate(AR) if A['l'] == [gift_area])
@@ -376,6 +418,8 @@ def standardise(data, groups, place_of, starter_loc, gift_area):
         if len(ls) < 2:
             return ''
         name, pre = LOC[area], prefix.get(slot) or AR[slot]['n'] + ' '
+        if name in MAIN_LIST:
+            return ''
         return name[len(pre):] if name.startswith(pre) else '' if name == pre.strip() else name
 
     def lv_text(rows, step):
@@ -420,11 +464,18 @@ def standardise(data, groups, place_of, starter_loc, gift_area):
                 if LOC[area].endswith('Game Corner Exchange') and v == 'Gift':
                     v = 'Prize'
                 put(enc, slot, step, area, 'gift', species, lv=own_lv, v=v, t=pick, **where)
+    towns = {AR[i]['n'] for i in prefix} | set(OWN_PLACES)
+    hatch = []
     for i, A in enumerate(AR):
         A.pop('es', None)
         if A.get('in') is None and i not in (roam, gift):
             if enc[i].groups:
                 A.pop('ns', None)
+            elif A['n'] in towns:          # a met location with nothing wild: its slot is for an Egg hatched there
+                A.pop('ns', None)
+                A['note'] = '; '.join(x for x in (EGG_HATCH, A.get('note')) if x)
+                hatch.append(A['n'])
             else:
                 A['ns'] = 1
+    report('locs: egg hatch slots (no wild Pokémon): ' + ', '.join(hatch))
     return enc, found

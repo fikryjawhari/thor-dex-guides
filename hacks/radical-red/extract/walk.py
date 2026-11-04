@@ -86,8 +86,10 @@ def build(data):
             a = [gift]
         if key == 'roaming':
             a = [roam]
+        # unnamed: the slot's name when the stop takes in the slot's own area, else its first place's (Pewter City Gym)
         slot = places and data['AR'][ar_of[places[0]]].get('in', ar_of[places[0]])
-        stop = dict(k=key, n=name or data['AR'][slot]['n'], a=a, s=[[s, ''] for s in steps], it=[],
+        own = slot if any(ar_of[place] == slot for place in places) else places and ar_of[places[0]]
+        stop = dict(k=key, n=name or data['AR'][own]['n'], a=a, s=[[s, ''] for s in steps], it=[],
                     tr=[cards[split][i]['k'] for i in ids])
         stops[key] = stop
         order.append((split, key, places))

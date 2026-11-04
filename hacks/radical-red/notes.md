@@ -401,14 +401,18 @@ Source: data.js `areas` (221, game order; index = LOC index). Built by `extract/
 - Cards: places with no rows get `ns` and no card (66 houses, marts, Centers, Saffron City itself); AR stays
   append-only. Starter: AR 3, n "Starter", first in `D.ARO`, its place "Oak's Lab". Roaming: data.js's 10 roamers
   (Viridian City in data.js) and Enamorus are the Roaming card (AR 154, before Mystery Gift), place Kanto.
-- **Merges** (`locs.MERGES`; FRLG's map sections: one met location each; the user, 2026-11-04). The slot keeps
-  the first area's index, the others get `in` (members, no es, rows as floors, `loc` their own LOC):
-  Mt. Ember 3 slots → 1 (AR 136 Exterior; 137 Interior, 141 Summit; 138-140 Interior 2-4 had no slot);
-  Safari Zone 4 → 1 (AR 97 Area 1; 98-100; the entrance 96 and Secret House 101 had none);
-  Route 21 2 → 1 (AR 9 North; 116 South); Celadon City 6 → 1 (AR 64; Mansion 66, Roof House 67, Restaurant 68,
-  Gym 78, Game Corner Exchange 81; Department Store 65, Hotel 69, Game Corner 79 had none). Tracker slots 15 → 4
-  (the plan counted 11: it left the Celadon Restaurant / Gym / Exchange out; "everything in Celadon" folds them in).
-  Rocket Hideout (80) stays its own place: nothing catchable, no card.
+- **Merges** (`locs.MERGE_TABLE`; the user, 2026-11-04: a town or route is one met location, its houses,
+  gatehouses, Centers, marts, gyms and labs included; a legendary's room is its dungeon's; only Oak's Lab and the
+  Rocket Hideout are buildings of their own). 34 slots; the slot keeps the place's own area index (or the first
+  member's, where the place had none: Lavender Town 55, Saffron City 72, Indigo Plateau 126, One Island 129, Two
+  Island 142, Three Island 149), the others get `in` (members, no es; their rows are the slot's floors, `loc` their
+  own LOC). Tracker slots before → after per place: the build report's `locs: merged` lines (e.g. Vermilion City 4 →
+  1, Celadon City 6 → 1, Safari Zone 5 → 1 with Moltres' Den, Cinnabar Island 3 → 1). A legendary's room
+  (`MAIN_LIST`: Magearna's Chamber, Raging Bolt's Office, Kyogre's Chamber, Gouging Fire's Room) has no floor
+  heading: its rows are in the place's main list (its wild tables too: data.js gives those rooms their own tables).
+- **Egg hatch slots**: a merged town or own place with nothing wild keeps a tracker slot, note "Egg hatch location."
+  (Lavender Town, Rocket Hideout, Indigo Plateau, Three Island). They show a card once the template draws a slot
+  with no es (asked of the parent).
 - check.py → `check_standard`: ESV, the merges, one card per name, Starter first, Roaming not on Viridian, a "1 of
   N" group has N rows, raid notes with a tier list, no two walkthrough stops with one name; P.w labels match
   `METHODS` and are flagged.

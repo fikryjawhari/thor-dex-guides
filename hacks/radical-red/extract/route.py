@@ -92,7 +92,7 @@ ROUTE = """
 9|celadon-gym-rematch|112|65|Erika's rematch needs the Fuchsia Gloom errand done first.|Celadon City Gym · Rematch
 9|celadon-return|93|-||Celadon City · Rock Smash / Strength
 9|fuchsia-gym|155||
-10|safari-moltres|156,146|-|
+10|safari-moltres|156,146|-||Safari Zone · Moltres' Den
 10|route-19|154|||Route 19 · Surf
 10|route-20|158||
 10|seafoam-islands|159,160,161,162,163|-|

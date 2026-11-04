@@ -102,7 +102,6 @@ def check_items():
 METHODS = re.compile(r'(?:[^·]+ · )?(?:(?:Grass|Cave)|Water · (?:Surf|Old|Good|Super)|Rock Smash|[1-6]★ raid|Static|Gift'
                      r'|Gift \(fossil\)|Prize|Trade|Roaming(?: \(Battle Simulator\))?|Starter choice|(?:\w+ )?Shard (?:trade|egg)|Mystery Gift'
                      r'|Wonder Egg|Paldea Egg|Sevii Egg)')
-MERGED = {'Mt. Ember': 6, 'Safari Zone': 6, 'Route 21': 2, 'Celadon City': 9}   # slot -> its areas (members + itself)
 SHEET = json.loads((HERE / 'sheet_locs.json').read_text(encoding='utf-8'))
 
 
@@ -173,11 +172,15 @@ def check_standard(data, failures):
     AR = data['AR']
     if data.get('ESV') != 2:
         failures.append('D.ESV is not 2')
-    for name, count in MERGED.items():
+    for name, _, _ in locs.MERGES:
         slot = [i for i, A in enumerate(AR) if A['n'] == name and A.get('in') is None]
         members = [i for i, A in enumerate(AR) if slot and A.get('in') == slot[0]]
-        if len(slot) != 1 or len(members) + 1 != count or any(AR[i].get('es') for i in members):
+        if len(slot) != 1 or not members or any(AR[i].get('es') or AR[AR[i]['in']].get('in') is not None for i in members):
             failures.append('merge %s: slot %s, %d members' % (name, slot, len(members)))
+    left = [A['n'] for A in AR if A.get('in') is None and not A.get('ns') and not A.get('st') and
+            re.search(r"House|Gatehouse|Poke Center|Poke Mart|Gym|Chamber|Office|Room|Lab|Museum|Den", A['n'])]
+    if left:
+        failures.append('buildings that are still places of their own: %s' % left)
     cards = [A['n'] for A in AR if A.get('in') is None and A.get('es')]
     if len(cards) != len(set(cards)):
         failures.append('two cards with one name: %s' % sorted({n for n in cards if cards.count(n) > 1}))
