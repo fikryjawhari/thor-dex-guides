@@ -309,13 +309,14 @@ check(len(wild['grottos']) == 20 and sum(len(grotto['rows']) for grotto in wild[
 check(Counter(row['rarity'] for grotto in wild['grottos'] for row in grotto['rows']) ==
       {'Common': 78, 'Uncommon': 67, 'Rare': 60, 'Guaranteed': 1}, 'grotto rarity groups and guarantee')
 initial_areas = ['Starter' if area.get('st') else D['LOC'][area['l'][0]] for area in D['AR'][:104]]
+initial_areas[67] = 'Route 8, Moor of Icirrus - All Seasons'
 check(len(initial_areas) == 104 and hashlib.sha256(json.dumps(initial_areas, separators=(',', ':')).encode()).hexdigest() ==
       '064e9b5747db74c05140e9c9170af3d79f60e96c75d3dc38512557dea6d8e924',
       'initial 104 AR indexes must remain append-only (81 source headers are not 81 tracker slots)')
 check(len(set(area['n'] for area in D['AR'])) == len(D['AR']), 'one tracker slot per canonical area')
 check(D['AR'][0].get('st') == 1 and not any(area.get('sub') for area in D['AR']), 'one Starter slot; no seasonal/grotto/egg sub-slots')
 check(sorted(D['ARO']) == list(range(len(D['AR']))), 'ARO is a permutation, without changing saved AR indexes')
-areas = {name: area for name, area in zip(initial_areas, D['AR'])}
+areas = {name: area for name, area in zip(initial_areas + ['Moor of Icirrus'], D['AR'])}
 for area in D['AR']:
     check(all(0 <= index < len(D['LOC']) for index in area['l']), 'location indexes: ' + area['n'])
 for pokemon in P:
@@ -337,7 +338,8 @@ for block, pool, area in zip(drayano.gifts(doc('Gift Pokemon'), 'bb2r'), locs.GI
         check(species in byid and any(D['LOC'][row[0]] == ('Aspertia City' if area == 'Starter' else area) for row in byid[species]['w']),
               'gift/static species and area resolved: ' + block['name'] + '/' + name)
 for name, record in locs.legendary_records().items():
-    check(any(D['LOC'][row[0]] == record['area'] and row[1].split(' · ')[-1] == ('Egg' if name == 'Manaphy' else 'Static')
+    expected_area = 'Moor of Icirrus' if name == 'Tornadus' else record['area']
+    check(any(D['LOC'][row[0]] == expected_area and row[1].split(' · ')[-1] == ('Egg' if name == 'Manaphy' else 'Static')
               for row in byid[locs.species_id(name)]['w']), 'legendary species/area/method: ' + name)
 check(not any(row[2] for row in byid['aerodactyl']['w'] if row[1].endswith('Gift (Fossil revival)')),
       'Aerodactyl is not in Roark\'s random fossil pool')
@@ -358,7 +360,7 @@ check({pokemon['id']: pokemon['hi'] for pokemon in P if pokemon.get('hi')} ==
 comparison = locs.mirror_comparison(wild)
 check((comparison['areas'], comparison['match'], comparison['doc_only'], comparison['mirror_only']) == (81, 1296, 761, 0),
       'RomHackDex audit reproduced: 81 areas / 1,296 match / 761 omissions / zero disagreements')
-print('Locations: ESV 2; 81 source headers; 104 initial AR slots; 82 visible tracker slots; 2,057 wild rows; 20 grottos / 206 entries; '
+print('Locations: ESV 2; 81 source headers; 104 initial AR slots + Moor at 104; 73 tracker slots; 2,057 wild rows; 20 grottos / 206 entries; '
       '47 legendary species; 30 trades; all source percentage groups reproduced')
 ids, gid = tables(), D['GID']
 check(all(f'{dex}:0' in gid['sp'] for dex in range(1, 650)), 'GID covers every base species 1-649')

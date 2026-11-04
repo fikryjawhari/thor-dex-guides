@@ -72,7 +72,7 @@ AREA_ALIASES = {
     'Victory Road': ('Victory Road - Ruined Area', 'Victory Road - Lower Mountainside', 'Victory Road - Forest', 'Victory Road - Connecting Caves I', 'Victory Road - Upper Mountainside', 'Victory Road - Connecting Caves II', "Victory Road - N's Castle, Entrance"),
     "N's Castle": ("Victory Road - N's Castle, Entrance",),
     'Route 8': ('Route 8, Moor of Icirrus - All Seasons',),
-    'Moor of Icirrus': ('Route 8, Moor of Icirrus - All Seasons',),
+    'Moor of Icirrus': ('Moor of Icirrus',),
     'Icirrus City': ('Icirrus City - All Seasons',),
     'Icirrus City, Postgame': ('Icirrus City - All Seasons',),
     'Twist Mountain': ('Twist Mountain - All Seasons',),
@@ -135,10 +135,36 @@ PHONE_TRADES = {
     'Curtis (female player)': ('Mankey', 'Wobbuffet', 'Ralts', 'Cranidos', 'Rhyhorn', 'Shellos-E', 'Sableye', 'Spiritomb', 'Snorlax', 'Phanpy', 'Spinda', 'Togepi'),
 }
 
-MERGES = ('Relic Castle', 'Celestial Tower', 'Seaside Cave', 'Victory Road', 'Virbank Complex',
-          'Reversal Mountain', 'Pinwheel Forest')
+MERGES = {
+    'Relic Castle': (14, 23, 24, 25, 26, 27, 28),
+    'Celestial Tower': (32, 33, 34, 35),
+    'Seaside Cave': (43, 44),
+    'Victory Road': (58, 59, 60, 61, 62, 63, 64, 65, 66),
+    'Reversal Mountain': (36, 37),
+    'Pinwheel Forest': (78, 79),
+    'Relic Passage': (11, 21, 22),
+    'Giant Chasm': (53, 54, 55, 56),
+    'Dragonspiral Tower': (69, 70, 71, 100),
+    'Twist Mountain': (72, 73),
+    'Underground Ruins': (74, 75),
+    'Dreamyard': (83, 84),
+}
 SEASONS = {'Spring': 'sp', 'Summer': 'su', 'Autumn': 'au', 'Winter': 'wi',
            'Spring, Summer, Autumn': 'sa', 'Spring/Summer/Autumn': 'sa'}
+
+
+def merge_floor(area, parent):
+    if parent not in MERGES:
+        return ''
+    area = area.replace('Giants Chasm', 'Giant Chasm')
+    if area == parent:
+        return 'Outside' if parent == 'Dragonspiral Tower' else ''
+    floor = area.removeprefix(parent + ' - ').removeprefix('All Areas - ')
+    return 'Main' if floor in ('All Areas', 'All Seasons') else floor
+
+
+def slot_name(index, areas):
+    return next((name for name, members in MERGES.items() if members[0] == index), areas[index]['n'])
 
 
 def encounter_table(source, method, area, parent):
@@ -148,9 +174,7 @@ def encounter_table(source, method, area, parent):
     when = SEASONS[season[1]] if season else ''
     if source == 'Undella Bay' and head == 'Surf':
         when = 'wi' if 'Bay (Winter)' in parts else 'sa'
-    floor = area.removeprefix(parent + ' - ') if area != parent else ''
-    if parent not in MERGES:
-        floor = ''
+    floor = merge_floor(area, parent)
     explicit = next((part for part in parts if re.fullmatch(r'B?\d+F', part)), '')
     if explicit and explicit not in floor.split(' - '):
         floor = ' - '.join(part for part in (floor, explicit) if part)
@@ -181,8 +205,7 @@ def standard(data):
     original = [area['n'] for area in areas]
     byarea = {name: index for index, name in enumerate(original)}
     owners = list(range(len(areas)))
-    for name in MERGES:
-        members = [index for index, area in enumerate(original) if area.startswith(name + ' - ')]
+    for name, members in MERGES.items():
         parent = members[0]
         areas[parent]['n'] = name
         for member in members[1:]:
@@ -191,6 +214,11 @@ def standard(data):
         report('Encounter merge: %s %d -> 1; parent %d; members %s' %
                (name, len(members), parent, ', '.join(map(str, members[1:]))))
     encounters = [encstd.LevelAwareEnc() for area in areas]
+    areas[11]['n'] = 'Relic Passage - Castelia'
+    areas[21]['n'] = 'Relic Passage'
+    areas[21]['card'] = ['Driftveil Side', 'Center (Main) Room']
+    areas[22]['on'] = 21
+    areas[67]['n'] = 'Route 8'
     wild = drayano.wild(doc('Wild Area Changes'), 'bb2r')
     for source in wild['areas']:
         for group in source['groups']:
@@ -199,12 +227,15 @@ def standard(data):
             name = wild_area_name(source['name'], group['method'])
             index = byarea[name]
             parent = owners[index]
-            kind, floor, variant, chip, when = encounter_table(source['name'], group['method'], name, areas[parent]['n'])
+            kind, floor, variant, chip, when = encounter_table(source['name'], group['method'], name, slot_name(parent, areas))
             for row in group['rows']:
                 note = '; '.join(part for part in (('Form: ' + row['species']) if row['species'].startswith('Unown-') else '', row['note']) if part)
                 encounters[parent].add(kind, species_id(row['species']), row['rate'], lv=row['levels'],
                                        floor=floor, v=variant, chip=chip, when=when, note=note,
                                        loc=areas[index]['l'][0])
+                if index == 67:
+                    encounters[104].add(kind, species_id(row['species']), row['rate'], lv=row['levels'],
+                                        floor=floor, v=variant, chip=chip, when=when, note=note, loc=areas[104]['l'][0])
     for pokemon in data['P']:
         previous = pokemon['w']
         pokemon['w'] = []
@@ -212,8 +243,11 @@ def standard(data):
             if flag and not method.startswith('Hidden Grotto'):
                 continue
             index = next(index for index, area in enumerate(areas) if location in area['l'])
+            if pokemon['id'] == 'tornadus' and index == 67 and method == 'Static':
+                index = 104
+                location = areas[index]['l'][0]
             parent = owners[index]
-            floor = original[index].removeprefix(areas[parent]['n'] + ' - ') if areas[parent]['n'] in MERGES else ''
+            floor = merge_floor(original[index], slot_name(parent, areas))
             if method.startswith('Hidden Grotto'):
                 kind, variant = 'special', method.rsplit(' - ', 1)[0]
             else:
@@ -224,10 +258,11 @@ def standard(data):
     for area in areas:
         area.pop('es', None)
     data['LOC'][0] = 'Aspertia City'
+    data['LOC'][67] = 'Route 8'
     for index, encounter in enumerate(encounters):
         encounter.write(data, index)
     encstd.finish(data)
-    report('Encounter standard: AR %d unchanged; visible tracker slots %d; 4 seasonal places already share their slots' %
+    report('Encounter standard: first 104 AR indexes unchanged; AR %d; tracker slots %d; 4 seasonal places already share their slots' %
            (len(areas), sum(not area.get('ns') and 'in' not in area for area in areas)))
 
 
@@ -450,6 +485,7 @@ def build(data):
             add(species, 'Nimbasa City', 'Trade', '', '50',
                 'For any Pokemon. ' + npc + ', daily trade ' + str(order) + '/12. Vanilla B2W2 (Bulbapedia); Redux doc says unchanged. '
                 'Return the Dropped Item, complete the calls and meet at the Ferris wheel. Hidden Ability; random nature.')
+    add_area('Moor of Icirrus')
     obtainable = {pokemon['id'] for pokemon in data['P'] if pokemon['w']}
     pending = list(obtainable)
     while pending:
@@ -470,6 +506,8 @@ def build(data):
             area['ns'] = 1
     data['LOC'], data['AR'] = locations, areas
     order = list(range(len(areas)))
+    order.remove(byarea['Moor of Icirrus'])
+    order.insert(order.index(byarea['Route 8, Moor of Icirrus - All Seasons']) + 1, byarea['Moor of Icirrus'])
     for name, after in (('Floccesy Town', 'Route 19'), ('Liberty Garden', 'Castelia Gardens'),
                         ('Nimbasa City', 'Relic Castle - Upper Floors'), ('Anville Town', 'Nimbasa City'),
                         ('Driftveil City', 'Driftveil Drawbridge, Charizard Bridge')):

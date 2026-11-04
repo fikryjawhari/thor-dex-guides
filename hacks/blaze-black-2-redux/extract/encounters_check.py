@@ -8,6 +8,7 @@ import locs
 def check_standard(data, wild, check):
     areas = data['AR']
     original = ['Starter' if area.get('st') else data['LOC'][area['l'][0]] for area in areas]
+    original[67] = 'Route 8, Moor of Icirrus - All Seasons'
     byarea = {name: index for index, name in enumerate(original)}
     expected, levels = defaultdict(int), defaultdict(list)
     group_whens = defaultdict(set)
@@ -18,13 +19,18 @@ def check_standard(data, wild, check):
             name = locs.wild_area_name(source['name'], group['method'])
             index = byarea[name]
             parent = areas[index].get('in', index)
-            kind, floor, variant, chip, when = locs.encounter_table(source['name'], group['method'], name, areas[parent]['n'])
+            kind, floor, variant, chip, when = locs.encounter_table(source['name'], group['method'], name, locs.slot_name(parent, areas))
             group_key = parent, kind, floor, variant, chip
             group_whens[group_key].add(when)
             for row in group['rows']:
                 key = group_key + (locs.species_id(row['species']), when)
                 expected[key] += row['rate']
                 levels[key].append(row['levels'])
+                if index == 67:
+                    moor_key = (104,) + key[1:]
+                    expected[moor_key] += row['rate']
+                    levels[moor_key].append(row['levels'])
+                    group_whens[(104,) + group_key[1:]].add(when)
     actual = {}
     actual_levels = {}
     for index, area in enumerate(areas):
@@ -39,7 +45,7 @@ def check_standard(data, wild, check):
                             identity = group_key + (row['p'], season)
                             actual[identity] = rate
                             actual_levels[identity] = row.get('kl', {}).get(key, row.get('lv', group.get('lv', '')))
-    check(actual == expected, 'standard: all 2,057 source slots conserve aggregated rates, floors, methods and seasons')
+    check(actual == expected, 'standard: all 2,057 source slots conserve rates/floors/methods/seasons; Route 8 tables also appear on Moor')
     mismatches = [(key, actual_levels.get(key), encstd.lv_merge(value)) for key, value in levels.items()
                   if actual_levels.get(key) != encstd.lv_merge(value)]
     if mismatches:
@@ -48,12 +54,20 @@ def check_standard(data, wild, check):
           'standard: per-species source levels survive rate merging and common-level lifting')
     check(data.get('ESV') == 2 and all(len(row) > 5 and row[5] == 1 for pokemon in data['P'] for row in pokemon['w']),
           'standard: every encounter is flagged in P.w, including gifts, statics and trades')
-    for name, count in (('Relic Castle', 7), ('Celestial Tower', 4), ('Seaside Cave', 2), ('Victory Road', 9),
-                        ('Virbank Complex', 2), ('Reversal Mountain', 2), ('Pinwheel Forest', 2)):
-        members = [index for index, old in enumerate(original) if old.startswith(name + ' - ')]
-        check(len(members) == count and areas[members[0]]['n'] == name and
+    for name, members in locs.MERGES.items():
+        title = 'Relic Passage - Castelia' if name == 'Relic Passage' else name
+        check(areas[members[0]]['n'] == title and
               all(areas[index].get('in') == members[0] and 'es' not in areas[index] for index in members[1:]),
-              'standard: append-only merge %s %d -> 1' % (name, count))
+              'standard: append-only merge %s %d -> 1' % (name, len(members)))
+    check(all('in' not in areas[index] and areas[index].get('es') for index in (6, 7)),
+          'Virbank Outside/Inside remain separate slots, following ROM place IDs 131/154')
+    check(areas[21].get('card') == ['Driftveil Side', 'Center (Main) Room'] and areas[22].get('on') == 21 and
+          areas[11].get('fo') == ['Castelia', 'Driftveil Side', 'Center (Main) Room'],
+          'Relic Passage has two route-positioned cards sharing slot 11; Center routes to card 21')
+    check(len(areas) == 105 and areas[67]['n'] == 'Route 8' and areas[104]['n'] == 'Moor of Icirrus' and
+          areas[104]['l'] == [104] and 'in' not in areas[104], 'Moor is appended at 104, Route 8 keeps 67')
+    check(areas[67]['es'] == [section for section in areas[104]['es'] if section['k'] != 'gift'],
+          'Route 8/Moor share the verified identical wild tables, not their static encounter')
     grottos = [(index, group) for index, area in enumerate(areas) for section in area.get('es', [])
                if section['k'] == 'special' for group in section['g'] if group.get('v', '').startswith('Hidden Grotto')]
     check(len(grottos) == 20, '20 published grotto mechanics, not tracker areas')

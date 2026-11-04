@@ -98,37 +98,53 @@ not a replacement for omitted methods. No template change or browser sweep in th
 
 Encounter-standard conversion (2026-11-04): `locs.standard()` runs after the original location/item/walkthrough
 joins, before finalisation. It writes every wild/gift/static/trade row through `tools/encstd.py`, including the
-flagged `P.w` labels used by the walkthrough and Where to find. `ESV` is 2; no template changes. Grass/Cave follow
+flagged `P.w` labels used by the walkthrough and Where to find. `ESV` is 2; shared-card template/schema support is
+supplied by the parent encounters branch, not changed in this worker. Grass/Cave follow
 the source's first word (Floor/Sewer/Rooms and Relic Castle sand are Cave); doubles are Grass / Doubles. Shaking
 grass, dust clouds and bridge shadows are Special. Water combines Su/SuR/F/FR; grottos use text rarities, including
 multiple rarities on one species. Starter's card remains index 0, with Aspertia City as its white-box heading.
 The opt-in `encstd.LevelAwareEnc` keeps Route 20 Dunsparce's equal seasonal rates but different levels, and does
 not lift a known demonstration/static level onto rows whose levels are unspecified. Existing `Enc` is unchanged.
 
-- **Slot merges:** Relic Castle 7 -> 1 (parent 14; members 23-28), Celestial Tower 4 -> 1 (32; 33-35),
-  Seaside Cave 2 -> 1 (43; 44), Victory Road 9 -> 1 (58; 59-66), Virbank Complex 2 -> 1 (6; 7),
-  Reversal Mountain 2 -> 1 (36; 37), Pinwheel Forest 2 -> 1 (78; 79). The survey's 21 -> 7 was an undercount:
-  these are 28 -> 7, reducing the guide's 103 available tracker slots to 82. All 104 AR entries, original LOCs
-  (except Starter's heading), ARO order, walkthrough stop keys and trainer keys remain; members keep their `l`
-  and get `in` pointing to the first slot. Parent names are canonical; member names retain floor/area suffixes.
-  Old tracker entries can therefore load via the shared member migration, including multiple recorded floors.
+- **Slot merges (revised with the user, following ROM place IDs):** Relic Castle 7 -> 1 (parent 14; members 23-28),
+  Celestial Tower 4 -> 1 (32; 33-35), Seaside Cave 2 -> 1 (43; 44), Victory Road 9 -> 1 (58; 59-66),
+  Reversal Mountain 2 -> 1 (36; 37), Pinwheel Forest 2 -> 1 (78; 79), Relic Passage 3 -> 1 (11; 21-22),
+  Giant Chasm 4 -> 1 (53; 54-56), Dragonspiral Tower 4 -> 1 (69; 70-71, 100), Twist Mountain 2 -> 1 (72; 73),
+  Underground Ruins 2 -> 1 (74; 75), Dreamyard 2 -> 1 (83; 84). These 43 slots become 12; Virbank's two remain
+  separate. All first 104 AR indices and their `l` survive, with merged members pointing to the first via `in`.
+  Original LOCs remain except Starter's heading and the combined Route 8/Moor label, now Route 8. ARO preserves
+  original relative order, inserting new Moor index 104 after Route 8; walkthrough stop keys and trainer keys
+  remain. Old tracker entries load through the shared member migration, including multiple recorded floors.
+- **Relic Passage card exception (the only one permitted by the user):** slot 11 keeps the Castelia-side grey
+  card and name. Member 21 is named Relic Passage, with `in: 11` and `card: ['Driftveil Side', 'Center (Main) Room']`;
+  member 22 has `in: 11, on: 21`. Both cards use the complete slot 11 picker and one saved entry, while displaying
+  only their own floors. Castelia stays at its early route position; Driftveil and Center share the later card.
+  Center's place link/walkthrough route to card 21. No new Castelia area, duplicate tracker or saved-state kind.
 - **Map audit:** `extract/encounter_maps.py` checks the user's Complete EVless v1.4.1 ROM, a/0/1/2, 48-byte
   headers, low ten bits of u16 at byte 26. Zone identities/layout come from fuddlesworth/pokebw2 commit
   `41f42ca1afe6291f00b0ba0ec3f6099b9ff1346c` (`generated/zones.txt`, `tools/data/zone_data.py`). Relic Castle's
   31 maps share place 35; Celestial Tower's five share 56; Seaside Cave's two share 141; Reversal Mountain's
   13 share 132; Pinwheel's inside/outside share 33. Current B2W2 Victory Road maps share 134 (including entrance
-  map 602); older BW maps use 40. **Virbank is an exception:** maps 456/457 use 131/154 in this ROM, not one
-  place ID. Asked in-thread; absent a reply, kept the explicitly requested merge-all default. Extra can record
-  a second catch. This is a deliberate assumption, not a claim that the ROM gives Virbank one met location.
+  map 602); older BW maps use 40. Virbank maps 456/457 use 131/154, so the user's follow-up keeps Outside and
+  Inside as separate slots (6/7). The additional merges are verified too: Relic Passage maps 503-505 share 136;
+  Giant Chasm's six maps share 61; Dragonspiral's nine share 39; Twist Mountain's eight share 38; Underground
+  Ruins' three share 149; Dreamyard's two share 32. The original survey omitted these groups, not distinct IDs.
+- **Route 8 / Moor split:** map 345 is Route 8 (place 21); map 346 is Moor of Icirrus (57). The user explicitly
+  requested separate slots. Route 8 keeps published index 67; Moor is appended at 104, never inserted into AR.
+  Their a/1/2/7 encounter members 116/117 are byte-identical (928 bytes, all four seasons), verified by the map
+  audit, so both get the combined document's wild tables. Tornadus belongs only to Moor, explicitly stated by
+  Legendary Locations. Existing combined tracker entries stay on 67, not copied to both or guessed from species.
+  Moor starts unrecorded. Both appear at the existing Icirrus postgame walkthrough stop without renumbering stops.
 - **Seasons:** Route 20, Route 6, Route 7 and outdoor Dragonspiral Tower already shared their AR slots: no seasonal
   slot merges. Rates use sp/su/au/wi or sa/wi, collapsing only identical seasonal rates and levels. Undella Bay's
   extra Winter Surf tables imply its unqualified Surf tables are Spring-Autumn; Fish stays all-season. This is
   the one additional seasonal-table assumption. Repeated cosmetic Unown rows sum rates and combine form notes.
   Strange House Type One/Type Two stay source table headings inside its single slot, not invented numbered rooms.
-- **Published standard counts:** 104 AR / 104 LOC, 206 kind sections, 1,915 species/group rows, 2,064 flagged P.w
+- **Published standard counts:** 105 AR / 105 LOC, 73 tracker slots, 191 kind sections, 1,927 species/group rows, 2,082 flagged P.w
   lines. The 30 trade offers coalesce to 23 species/location rows; both phone-NPC notes remain. All 2,057 raw wild
   slots and 206 grotto rarity entries are checked against the standard after aggregation, not assumed unchanged
-  from the old row counts. Other named locations outside the seven requested groups keep their tracker identities.
+  from the old row counts, plus the verified shared wild table on Moor. Every source-defined split whose maps
+  share a place ID is now merged; distinct met locations keep separate slots.
 
 - **Counts:** 81 printed wild-area headers, 384 numeric method groups, 2,057 rate rows; 20 Hidden Grotto sections,
   206 entries (78 common, 67 uncommon, 60 rare, one guaranteed Stantler). Published: 104 AR entries, 104 LOC entries,
@@ -144,7 +160,7 @@ not lift a known demonstration/static level onto rows whose levels are unspecifi
   City, Faraway Island, Entralink, Abyssal Ruins, Nacrene City, Unity Tower, Liberty Garden, Dragonspiral Tower's roof,
   Pledge Grove, Accumula Town, Nimbasa City. Guidance Chamber is not an extra area.
 - **Original floor identities:** before the standard, separately named floors/rooms got their own tracker slots.
-  The seven merges above now make them headings inside one slot; the old indices remain as hidden members.
+  The merges above now make them headings inside one slot; the old indices remain as members.
   `FLOOR_AREAS` / `FLOOR_ALIASES` split Relic Castle's six lower rooms, Celestial Tower's four floors, Victory Road's
   main/dark and dragons/top caves, Dragonspiral's first/second room and roof, Dreamyard's surface/basement, Twist
   Mountain's Ice Room and the Underground Ruins' Regi Rooms (normal/dust methods on the same floor stay together).
