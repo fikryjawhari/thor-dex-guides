@@ -81,7 +81,8 @@ const INV=/\.appassets\.androidplatform\.net$/.test(location.hostname)||(()=>{tr
 // Name matching that ignores punctuation, spaces, accents and the gender signs: "mrmime", "typenull", "flabebe".
 const norm=x=>String(x).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
 const KROWS=['1234567890','QWERTYUIOP','ASDFGHJKL:',"ZXCVBNM.'-"];
-// One keyboard at a time. o = {mode:'abc'|'num', value, input(text), strip(text) for a results strip, pick(id),
+// One keyboard at a time. o = {mode:'abc'|'num', value, input(text), strip(text) for a results strip, pick(id), caps (words
+// start with a capital: free text),
 // target + done(text) for a number box, label, onClose(quiet)}.
 const KB={o:null,el:null,buf:'',fresh:false,rep:false,
  open(o){if(this.o)this.close(true);this.o=o;this.buf=o.value==null?'':String(o.value);this.fresh=o.mode==='num';
@@ -121,7 +122,7 @@ const KB={o:null,el:null,buf:'',fresh:false,rep:false,
    else if(a==='up'||a==='dn')this.buf=String(clampNum(o.target,(parseInt(this.buf)||0)+(a==='up'?st:-st)));
    else if(a==='done'){const v=this.buf;this.close();o.done(v);return;}
    this.fresh=false;this.show();return;}
-  if(c!=null){if(c===' '&&(!this.buf||this.buf.endsWith(' ')))return;this.buf+=c.toLowerCase();}
+  if(c!=null){if(c===' '&&(!this.buf||this.buf.endsWith(' ')))return;this.buf+=o.caps&&(!this.buf||this.buf.endsWith(' '))?c.toUpperCase():c.toLowerCase();}
   else if(a==='clear')this.buf='';else if(a==='bs')this.buf=this.buf.slice(0,-1);
   else if(a==='dig'){o.digits=!o.digits;this.draw();return;}
   else if(a==='done'){this.close();return;}
@@ -430,7 +431,7 @@ function abilityDetail(i){fil.innerHTML='';const a=AB[i];if(!a){app.innerHTML='<
 
 // ===== LOCATIONS + ENCOUNTER TRACKER (state in localStorage LS.track {s starter, e:{area:{p}|{f}}, t:{trade}}; see hacks/<hack>/notes.md)
 // FAM = evolution family via union-find over evolution links (dupes clause); Megas and form changes join their base.
-const AR=D.AR||[];const LOC2A={};AR.forEach((A,i)=>A.l.forEach(l=>LOC2A[l]=i));
+const AR=D.AR||[],ESV=D.ESV===2;const LOC2A={};AR.forEach((A,i)=>A.l.forEach(l=>LOC2A[l]=i));
 // Locations order (D.ARO, optional): areas added later go at the end of AR so saved trackers (keyed by area index) keep
 // their slots, and ARO puts them in place. ARK: an area's rank in it.
 const ARO=D.ARO||AR.map((A,i)=>i),ARK={};ARO.forEach((a,i)=>ARK[a]=i);
@@ -448,16 +449,28 @@ const FAM={};(()=>{const par={};const f=x=>{while(par[x]!==x){par[x]=par[par[x]]
 // a species no longer in the guide drops; so does an entry for an area that has no slot now, AR.ns). The backup code is the stored form.
 const spOut=id=>byId[id]?nameOf(P,byId[id].i):id;
 const spIn=v=>{const i=typeof v==='string'?nameKeys(P).index.get(v):undefined;return i!=null?P[i].id:byId[v]?v:undefined;};
+// The Extra card's rows (TK.x: [{w place text, p species | f 1 failed}], absent until used): a species the guide no
+// longer has keeps its row, its text and its stored name / id.
 const tkIn=o=>{const e={},t={};for(const [a,x] of Object.entries(o.e||{})){if(AR[a]?.ns)continue;if(x&&x.p!=null){const p=spIn(x.p);if(p!=null)e[a]={...x,p};}else if(x)e[a]=x;}
- for(const [k,v] of Object.entries(o.t||{})){const p=spIn(v);if(p!=null)t[k]=p;}return {e,t};};
-const tkOut=()=>JSON.stringify({...TK,e:Object.fromEntries(Object.entries(TK.e).map(([a,x])=>[a,x&&x.p!=null?{...x,p:spOut(x.p)}:x])),t:Object.fromEntries(Object.entries(TK.t||{}).map(([k,v])=>[k,spOut(v)]))});
+ for(const [k,v] of Object.entries(o.t||{})){const p=spIn(v);if(p!=null)t[k]=p;}
+ const x=Array.isArray(o.x)?o.x.filter(r=>r&&typeof r==='object').map(r=>{const y={w:String(r.w??'')};if(r.f)y.f=1;else if(r.p!=null)y.p=spIn(r.p)??String(r.p);return y;}):undefined;
+ return x?{e,t,x}:{e,t};};
+const tkOut=()=>JSON.stringify({...TK,e:Object.fromEntries(Object.entries(TK.e).map(([a,x])=>[a,x&&x.p!=null?{...x,p:spOut(x.p)}:x])),t:Object.fromEntries(Object.entries(TK.t||{}).map(([k,v])=>[k,spOut(v)])),...TK.x?{x:TK.x.map(r=>r.p!=null?{...r,p:spOut(r.p)}:r)}:{}});
 const TK={s:'',pl:'',e:{},t:{}};try{Object.assign(TK,JSON.parse(localStorage.getItem(LS.track)||'{}'));}catch(e){}Object.assign(TK,tkIn(TK));
 const tkSave=()=>{try{localStorage.setItem(LS.track,tkOut())}catch(e){}};
-const caughtFams=(skip)=>{const s=new Set();for(const v of Object.values(TK.t||{})){if(v)s.add(FAM[v]||v);}for(const [a,e] of Object.entries(TK.e)){if(e&&e.p&&+a!==skip)s.add(FAM[e.p]||e.p);}return s;};
-const areaSpecies=a=>{const seen=new Set(),out=[];(AR[a]?.l||[]).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]==='Trade')return;if(!seen.has(p.id)){seen.add(p.id);out.push(p);}}));return out;};
+const caughtFams=(skip)=>{const s=new Set();for(const v of Object.values(TK.t||{})){if(v)s.add(FAM[v]||v);}for(const [a,e] of Object.entries(TK.e)){if(e&&e.p&&+a!==skip)s.add(FAM[e.p]||e.p);}for(const r of TK.x||[])if(r.p)s.add(FAM[r.p]||r.p);return s;};
+// Merged slots (encounter standard): a location's floors / rooms that were tracker slots of their own. The slot keeps
+// the first floor's area; the others are hidden members (AR[i].in = the slot, which has no sub). MEM[slot] = members;
+// slotL(a) = the LOC indexes of a slot and its members.
+const MEM={};AR.forEach((A,i)=>{if(A.in!=null&&AR[A.in]&&!AR[A.in].sub)(MEM[A.in]=MEM[A.in]||[]).push(i);});
+const isMem=a=>AR[a].in!=null&&!!AR[AR[a].in]&&!AR[AR[a].in].sub,slotOf=a=>isMem(a)?AR[a].in:a;
+const slotL=a=>a==null||!AR[a]?[]:[a,...(MEM[a]||[])].flatMap(x=>AR[x].l);
+// A merged slot with no entry of its own shows its first floor's (route order); the others stay stored ("also:").
+for(const [a,ms] of Object.entries(MEM)){if(TK.e[a])continue;const m=ms.find(x=>TK.e[x]);if(m!=null){TK.e[a]=TK.e[m];delete TK.e[m];tkSave();}}
+const areaSpecies=a=>{const seen=new Set(),out=[];slotL(a).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]==='Trade')return;if(!seen.has(p.id)){seen.add(p.id);out.push(p);}}));return out;};
 // Areas split into tracker slots (AR[i].sub, e.g. one per egg; each slot has .in = the area): ARS(a) = the slots, or
 // the area itself. An encounter saved on the area before the split moves to the slot whose species it is.
-const ARS=a=>AR[a].sub||[a];
+const ARS=a=>AR[a].sub||[slotOf(a)];
 AR.forEach((A,a)=>{const e=A.sub&&TK.e[a];if(!e)return;const t=A.sub.find(x=>e.p&&areaSpecies(x).some(p=>p.id===e.p))??A.sub[0];if(!TK.e[t])TK.e[t]=e;delete TK.e[a];tkSave();});
 // CF.starter 'pick': a starter picker in the tracker bar decides some gifts, trades and the rival's team ("Starter: X" in
 // notes, t.st on trainers). Otherwise the rival follows the type of the starter caught in tracker area 0.
@@ -472,7 +485,7 @@ const STARTERS=PICK?[...new Set((CF.starter==='type'?areaSpecies(STARTER_AREA):P
 const syncStarter=()=>{if(STARTER_AREA<0)return;const entry=TK.e[STARTER_AREA];TK.s=entry&&!entry.f&&byId[entry.p]?.name||'';};
 if(PICK&&STARTER_AREA>=0){if(TK.e[STARTER_AREA])syncStarter();else if(TK.s){const starter=P.find(p=>p.name===TK.s);if(starter)TK.e[STARTER_AREA]={p:starter.id};}tkSave();}
 const starterOk=txt=>{const m=String(txt||'').match(/Starter:\s*([A-Za-z ,]+?)\.?\s*$/);return !(m&&TK.s)||m[1].split(',').map(x=>x.trim()).includes(TK.s);};
-function tradeHTML(a){const g={};(AR[a]?.l||[]).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]!=='Trade'||!starterOk(w[4]))return;(g[w[4]]=g[w[4]]||[]).push(p);}));
+function tradeHTML(a){const g={};slotL(a).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]!=='Trade'||!starterOk(w[4]))return;(g[w[4]]=g[w[4]]||[]).push(p);}));
  return Object.entries(g).map(([n,ps])=>{const k=a+'|'+n;const cur=(TK.t||{})[k]||'';return `<div class="trk"><span class="mut small">Trade (${esc(n.replace(/^For /,'for '))})</span><select class="tk-trade" data-k="${esc(k)}"><option value="">Not traded</option>${ps.map(p=>`<option value="${p.id}" ${cur===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div>`;}).join('');}
 function adjRows(li,cf,keep){const r=[].concat(li).flatMap(l=>locs[l]||[]).filter(([p,w])=>!keep||keep(w));const by={};r.forEach(([p,w])=>{const m=w[1]||'Other';(by[m]=by[m]||{});const o=by[m][p.id]=by[m][p.id]||{p,r:0,rs:'',lv:new Set(),note:w[4]};const x=parseFloat(w[2]);if(!isNaN(x)&&/%/.test(w[2]))o.r+=x;else if(w[2])o.rs=w[2];if(w[3])o.lv.add(w[3]);});
  const out=[];for(const [m,o] of Object.entries(by)){const rows=Object.values(o);rows.forEach(x=>x.d=cf.has(FAM[x.p.id]));const live=rows.filter(x=>!x.d);const sum=live.reduce((a,x)=>a+x.r,0);
@@ -484,16 +497,25 @@ function trackerHTML0(a,lab){
  const e=TK.e[a];const sp=areaSpecies(a);const cf=caughtFams(a);let cur=e?(e.f?'__fail':e.p):'';
  const extra=e&&e.p&&!sp.some(p=>p.id===e.p)&&byId[e.p]?[byId[e.p]]:[];
  const opt=p=>`<option value="${p.id}" ${cur===p.id?'selected':''}>${esc(p.name)}${cf.has(FAM[p.id])?' (dupe)':''}</option>`;
- return `<div class="trk" data-a="${a}">${lab===undefined?'<span class="mut small">Encounter</span>':lab?`<span class="atag">${esc(lab)}</span>`:''}<select class="tk-sel"><option value="">None yet</option><option value="__fail" ${cur==='__fail'?'selected':''}>Failed / fled</option>${extra.map(opt).join('')}${sp.map(opt).join('')}<option value="__other">Other…</option></select>${e?'<button class="tk-x" title="Clear">×</button>':''}
- <div class="tk-other" style="display:none"><input type="search" placeholder="Type a Pokémon name"><div class="tk-res"></div></div></div>`;}
+ return `<div class="trk" data-a="${a}">${lab===undefined?'<span class="mut small">Encounter</span>':lab?`<span class="atag">${esc(lab)}</span>`:''}<select class="tk-sel"><option value="">None yet</option><option value="__fail" ${cur==='__fail'?'selected':''}>Failed / fled</option>${extra.map(opt).join('')}${pickGroups(a,sp).map(([n,ps])=>n?`<optgroup label="${esc(n)}">${ps.map(opt).join('')}</optgroup>`:ps.map(opt).join('')).join('')}<option value="__other">Other…</option></select>${e?'<button class="tk-x" title="Clear">×</button>':''}
+ <div class="tk-other" style="display:none"><input type="search" placeholder="Type a Pokémon name"><div class="tk-res"></div></div></div>${alsoHTML(a)}`;}
+// The picker's species: by section in the standard's order, A–Z inside, each once (its first section); else one list.
+function pickGroups(a,sp){const es=ESV&&AR[a]?.es;if(!es)return [['',sp]];const seen=new Set(),out=[],ok=new Set(sp.map(p=>p.id));
+ ESK.forEach(([k,n])=>{if(k==='trade')return;const ps=[...new Set(es.filter(s=>s.k===k).flatMap(s=>s.g.flatMap(g=>g.rows.map(x=>x.p))))].filter(id=>ok.has(id)&&!seen.has(id)).map(id=>byId[id]).sort((x,y)=>x.name.localeCompare(y.name));
+  ps.forEach(p=>seen.add(p.id));if(ps.length)out.push([n,ps]);});
+ const rest=sp.filter(p=>!seen.has(p.id));if(rest.length)out.push(['',rest]);return out;}
+// A merged slot's other floors with an entry saved before the merge: kept, counted, shown here until cleared.
+const memName=(a,m)=>{const n=AR[m].n,s=AR[a].n;return n.startsWith(s)&&n.length>s.length?n.slice(s.length).replace(/^[\s:–-]+/,''):n;};
+const alsoHTML=a=>(MEM[a]||[]).filter(m=>TK.e[m]).map(m=>{const e=TK.e[m],p=e.p&&byId[e.p];return `<div class="tk-also mut small">also: ${e.f?'failed':p?`<a href="#/p/${p.id}">${esc(p.name)}</a>`:esc(e.p)} (${esc(memName(a,m))})<button class="tk-ax" data-m="${m}" title="Clear">×</button></div>`;}).join('');
 function bindTrackers(){app.querySelectorAll('.trk').forEach(el=>{if(el.dataset.b)return;el.dataset.b=1;const a=+el.dataset.a;const sel=el.querySelector('.tk-sel'),oth=el.querySelector('.tk-other');if(!sel)return;
  sel.onchange=()=>{const v=sel.value;if(v==='__other'&&INV){otherKb(a);return;}if(v==='__other'){oth.style.display='block';const inp=oth.querySelector('input');inp.focus();inp.oninput=()=>{const s=inp.value.trim().toLowerCase();const res=s.length<2?[]:P.filter(p=>p.g===0&&p.key.includes(s)).slice(0,8);
    oth.querySelector('.tk-res').innerHTML=res.map(p=>`<div class="tk-opt" data-id="${p.id}">${spr(p.id,'s40')}<span>${esc(p.name)}</span></div>`).join('');oth.querySelectorAll('.tk-opt').forEach(o=>o.onclick=()=>{TK.e[a]={p:o.dataset.id};tkSave();rerender();});};return;}
   if(v==='')delete TK.e[a];else if(v==='__fail')TK.e[a]={f:1};else TK.e[a]={p:v};tkSave();rerender();};
  const x=el.querySelector('.tk-x');if(x)x.onclick=()=>{delete TK.e[a];tkSave();rerender();};});
- app.querySelectorAll('.tk-reset').forEach(b=>{if(b.dataset.b)return;b.dataset.b=1;b.onclick=()=>{if(confirm(PICK?'Clear every tracked encounter, trade and the starter choice?':'Clear every tracked encounter?')){TK.e={};TK.t={};TK.s='';TK.pl='';tkSave();rerender();}};});
+ app.querySelectorAll('.tk-ax').forEach(b=>{if(b.dataset.b)return;b.dataset.b=1;b.onclick=()=>{delete TK.e[b.dataset.m];tkSave();rerender();};});
+ app.querySelectorAll('.tk-reset').forEach(b=>{if(b.dataset.b)return;b.dataset.b=1;b.onclick=()=>{if(confirm(PICK?'Clear every tracked encounter, trade and the starter choice?':'Clear every tracked encounter?')){TK.e={};TK.t={};TK.s='';TK.pl='';delete TK.x;tkSave();rerender();}};});
  app.querySelectorAll('.tk-export').forEach(b=>b.onclick=()=>{prompt('Copy this backup code:',tkOut());});
- app.querySelectorAll('.tk-import').forEach(b=>b.onclick=()=>{const t=prompt('Paste a backup code:');if(!t)return;try{const o=JSON.parse(t);TK.s=o.s||'';Object.assign(TK,tkIn(o));tkSave();rerender();}catch(e){alert('That code could not be read.');}});
+ app.querySelectorAll('.tk-import').forEach(b=>b.onclick=()=>{const t=prompt('Paste a backup code:');if(!t)return;try{const o=JSON.parse(t);TK.s=o.s||'';delete TK.x;Object.assign(TK,tkIn(o));tkSave();rerender();}catch(e){alert('That code could not be read.');}});
  app.querySelectorAll('.tk-trade').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.t=TK.t||{};if(s.value)TK.t[s.dataset.k]=s.value;else delete TK.t[s.dataset.k];tkSave();rerender();};});
  app.querySelectorAll('.tk-starter,.st-pick').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.s=s.value;const sa=STARTER_AREA,sp=P.find(x=>x.name===s.value);if(sa>=0){if(sp)TK.e[sa]={p:sp.id};else delete TK.e[sa];}tkSave();rerender();};});
  app.querySelectorAll('.tk-player').forEach(s=>{if(s.dataset.b)return;s.dataset.b=1;s.onchange=()=>{TK.pl=s.value;tkSave();rerender();};});}
@@ -528,7 +550,7 @@ function tkBar(){const [n,f]=tkCounts();
  return `<div class="card tkbar">${PICK?`<div class="bar tkchoices" style="margin:0"><label><span class="mut small">Starter</span>${starterSel('tk-starter')}</label>${PLAYER?`<label><span class="mut small">Player</span>${playerSel('tk-player')}</label>`:''}</div>
  <div class="mut small" style="margin-top:6px">${cnt}</div>`:`<div class="bar" style="margin:0"><span class="mut small">${cnt}</span></div>`}
  <div class="bar" style="margin:8px 0 0">${trackerButtons()}</div></div>`;}
-const encAll=a=>ARS(a).map(encSummary).join('');
+const encAll=a=>ARS(a).flatMap(x=>[x,...(MEM[x]||[])]).map(encSummary).join('');
 function encSummary(a){const e=TK.e[a];if(!e)return '';if(e.f)return '<span class="tag">failed</span>';const p=byId[e.p];return p?`<a class="tag got" href="#/p/${p.id}">${esc(p.name)}</a>`:'';}
 // The page is boxes (one area, or next-to-each-other areas whose names share their first two words: Granite Cave 1F,
 // B1F...) → places (an area's own places, same names merged; one place = the area's own name) → methods. One area: its
@@ -553,7 +575,9 @@ const loSave=()=>{try{localStorage.setItem(LS.loc,JSON.stringify(LO))}catch(e){}
 const places=a=>{const m=new Map();AR[a].l.forEach(li=>{const n=LOC[li];if(!m.has(n))m.set(n,[]);m.get(n).push(li);});return [...m].map(([n,ls],j)=>({n,ls,j}));};
 relayout(LO,AR.map((A,a)=>[String(a),places(a).map(p=>p.n)]),{x:2,s:2})&&loSave();
 const LGRP=(()=>{const out=[],two=n=>n.split(' ').length>2?n.split(' ').slice(0,2).join(' '):null;
- ARO.forEach(i=>{const A=AR[i];if(A.in!=null)return;const k=two(A.n),one=places(i).length===1,p=out[out.length-1];
+ ARO.forEach(i=>{const A=AR[i];if(A.in!=null)return;
+  // The standard: a card per location, never grouped; a place with nothing to catch has none.
+  if(ESV){if(A.sub||A.es||slotL(i).some(li=>locs[li]))out.push({k:null,one:true,a:[i]});return;}const k=two(A.n),one=places(i).length===1,p=out[out.length-1];
   if(k&&one&&p&&p.one&&p.k===k)p.a.push(i);else out.push({k,one,a:[i]});});
  out.forEach(g=>g.n=g.a.length>1?g.k:AR[g.a[0]].n);return out;})();
 const LSEC=(k,m,tags,body)=>sectionHTML(esc(k+'.'+m),esc(m),tags,body,!!st.q||LO.s[k+'.'+m]===1);
@@ -576,7 +600,7 @@ const locSlots=(a,cf)=>locStop(a+'.0',AR[a].n,encAll(a),AR[a].sub.map(x=>adjRows
 const ICON={s:'<svg class="dn s" viewBox="0 0 16 16"><circle cx="8" cy="8" r="3.4" fill="currentColor"/><path d="M8 .8v2.4M8 12.8v2.4M.8 8h2.4M12.8 8h2.4M2.9 2.9l1.7 1.7M11.4 11.4l1.7 1.7M2.9 13.1l1.7-1.7M11.4 4.6l1.7-1.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
  m:'<svg class="dn m" viewBox="0 0 16 16"><path d="M11.2 1.2a6.8 6.8 0 1 0 3.6 11.6A5.6 5.6 0 0 1 11.2 1.2z" fill="currentColor"/></svg>',
  b:'<svg class="dn b" viewBox="0 0 16 16"><circle cx="5" cy="10" r="3.2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="11" cy="5" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>'};
-const notSec=w=>w[5]!==1,pct=x=>Math.round(x*10)/10+'%',whenI=w=>w==='day'?ICON.s:w==='night'?ICON.m:'';
+const notSec=w=>w[5]!==1,pct=x=>Math.round(x*10)/10+'%',whenI=w=>w==='day'||w==='d'?ICON.s:w==='night'||w==='n'?ICON.m:w==='m'?ICON.mo||'':'';
 function rateCell(r,f){if(r[0]===r[1])return r[0]?pct(f(r[0],0)):'';return (r[0]?`<span class="rt">${ICON.s}${pct(f(r[0],0))}</span>`:'')+(r[1]?`<span class="rt">${ICON.m}${pct(f(r[1],1))}</span>`:'');}
 // Rates rescale over the rows that aren't dupes: day, night and bubbling each on their own
 function secAdj(g,cf){const sum=(k,j,all)=>g.rows.reduce((s,x)=>s+(x[k]&&(all||!cf.has(FAM[x.p]))?x[k][j]:0),0);
@@ -604,22 +628,112 @@ function secLines(a,cf){const out=[],txt=r=>r[0]===r[1]?r[0]+'%':!r[1]?r[0]+'% d
  (AR[a].es||[]).forEach(s=>s.g.forEach(g=>{const lab=s.k==='grass'?s.n:s.k==='water'?s.n+' · '+g.m:g.m;
   const row=k=>g.rows.filter(x=>x[k]&&(x[k][0]||x[k][1])).map(x=>({p:byId[x.p],d:cf.has(FAM[x.p]),show:txt(x[k])}));
   const n=row('r'),b=row('b');if(n.length)out.push([AR[a].l[0],[lab,n]]);if(b.length)out.push([AR[a].l[0],[lab+' (bubbling)',b]]);}));return out;}
+// ===== ENCOUNTER STANDARD (D.ESV 2; tools/encstd.py writes it, template/README.md → Encounters). A card per location
+// (AR area, its tracker slot) → its white box (the place; pins) → floor headings (AR.fo, 2+ floors) → a yellow section
+// per kind code in ESK order, the floor in small text → subheadings (g.v, or the section's name when it has several)
+// → rows. A row's rates are keyed 'chip|when': the chip says how (always shown), when is a time icon or a season chip
+// (only where the row differs); one line per key. Levels: g.lv once (the section header when it is one table), a row's
+// lv or a line's kl only where they differ. Section open state: LO.s['area|floor|code'].
+const ESK=[['grass','Grass'],['cave','Cave'],['water','Water'],['special','Special'],['raid','Raids'],['gift','Gifts & static'],['trade','Trades']],ESN=Object.fromEntries(ESK);
+const QL={Su:'Surf',SuR:'Surf ripple',O:'Old',G:'Good',S:'Super',F:'Fish',FR:'Fish ripple',Bub:'Bubbling',H:'Horde',sa:'Spr–Aut',sp:'Spring',su:'Summer',au:'Autumn',wi:'Winter'};
+const QO=['','Su','SuR','O','G','S','F','FR','Bub','H'],WO2=['','m','d','n','sa','sp','su','au','wi'];
+ICON.mo='<svg class="dn mo" viewBox="0 0 16 16"><path d="M3 11a5 5 0 0 1 10 0z" fill="currentColor"/><path d="M8 1.5v2.5M2.2 4.2l1.6 1.6M13.8 4.2l-1.6 1.6M1 13.5h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+const WICON={m:ICON.mo,d:ICON.s,n:ICON.m},WTX={m:'morning',d:'day',n:'night',sa:'Spring–Autumn',sp:'Spring',su:'Summer',au:'Autumn',wi:'Winter'};
+const qchip=c=>c&&QL[c]?`<span class="q q${c}">${QL[c]}</span>`:'';
+const whenM=w=>WICON[w]||qchip(w);
+// Old section names saved open before the standard (LS.loc s 'area.place.name') move to the codes, on the area's first
+// floor with that section; other names (Other, a patch...) drop: those sections start closed (UI state only).
+if(ESV&&LO.ev!==2){const nm={Grass:'grass',Cave:'cave',Water:'water',Special:'special',Raids:'raid',Trades:'trade'};
+ for(const [k,v] of Object.entries(LO.s)){const m=k.match(/^(\d+)\.(\d+)\.(.*)$/s);if(!m||!AR[m[1]])continue;delete LO.s[k];const c=nm[m[3]],A=AR[m[1]];if(!c||v!==1)continue;
+  const g=(A.es||[]).find(x=>x.k===c)?.g[0];if(g)LO.s[m[1]+'|'+(g.f||'')+'|'+c]=1;}
+ LO.ev=2;loSave();}
+const keyOrd=(a,b)=>{const [ca,wa]=a.split('|'),[cb,wb]=b.split('|');return QO.indexOf(ca)-QO.indexOf(cb)||WO2.indexOf(wa)-WO2.indexOf(wb);};
+// Rates rescale over the rows that aren't dupes, per chip and when (a 'chip|' rate counts in every when of its chip).
+// adj(x) = [[chip, when, rate, key]] for the row's lines.
+function esAdj(g,cf){const W={};g.rows.forEach(x=>Object.keys(x.r||{}).forEach(k=>{const [c,w]=k.split('|');(W[c]=W[c]||new Set()).add(w);}));
+ const ws=c=>{const s=[...(W[c]||[])].filter(w=>w);return s.length?s:[''];};
+ const val=(x,c,w)=>x.r?(x.r[c+'|'+w]??(w?x.r[c+'|']:undefined)):undefined;
+ const sum={};for(const c in W)for(const w of ws(c))for(const live of [0,1])sum[c+'|'+w+'|'+live]=g.rows.reduce((a,x)=>a+(live&&cf.has(FAM[x.p])?0:+(val(x,c,w)||0)),0);
+ return x=>{const d=cf.has(FAM[x.p]),out=[];if(!x.r)return out;
+  for(const k of Object.keys(x.r).sort(keyOrd)){const [c,w]=k.split('|');
+   const lines=(w?[w]:ws(c)).map(w2=>{const v=+(val(x,c,w2)||0),l=sum[c+'|'+w2+'|1'],f=sum[c+'|'+w2+'|0'];return [w2,d||!l||l===f?v:v/l*100];});
+   if(!w&&lines.every(([,v])=>pct(v)===pct(lines[0][1])))out.push([c,'',lines[0][1],k]);else lines.forEach(([w2,v])=>{if(v)out.push([c,w2,v,k]);});}
+  return out;};}
+function esRows(g,cf){const adj=esAdj(g,cf),top=x=>x.r?Math.max(...Object.values(x.r)):-1,live=g.rows.filter(x=>!cf.has(FAM[x.p])).length;
+ return `<table class="enc lt">${[...g.rows].sort((a,b)=>top(b)-top(a)||(top(a)>=0?byId[a.p].name.localeCompare(byId[b.p].name):0)).map(x=>{const d=cf.has(FAM[x.p]);
+  const rt=adj(x).map(([c,w,v,k])=>`<span class="rt">${qchip(c)}${w?whenM(w):''}${v?pct(v):''}${x.kl&&x.kl[k]?`<span class="lvr">Lv ${esc(x.kl[k])}</span>`:''}</span>`).join('');
+  const t=x.t?(/^1 of \d+$/.test(x.t)&&!d?'1 of '+live:x.t):'';
+  return `<tr class="${d?'dupe':''}"><td style="width:44px">${sprl(x.p,'s40')}</td><td>${plink(x.p)}<div>${byId[x.p].t.map(ty).join('')}</div>${x.note?`<div class="mut small">${esc(x.note)}</div>`:''}${sosDrop(x,cf)}</td><td class="n">${rt}${t?`<span class="rt">${esc(t)}</span>`:''}${x.lv?`<span class="lvr">Lv ${esc(x.lv)}</span>`:''}</td></tr>`;}).join('')}</table>`;}
+const esSub=(n,g)=>`<div class="ltsub"><b>${esc(n)}</b>${g.lv?`<span>Lv ${esc(g.lv)}</span>`:''}</div>`;
+const esDrops=g=>g.dr?`<details class="sosd drops"><summary>Drops</summary><div class="mut small">${esc(g.dr)}</div></details>`:'';
+const esFloors=A=>A.fo||[...new Set((A.es||[]).flatMap(s=>s.g.map(g=>g.f||'')))];
+// One floor's sections, each with its floor in small text when the slot has several.
+function esSecs(a,f,cf,many){return ESK.map(([k,n])=>{const gs=(AR[a].es||[]).filter(s=>s.k===k).flatMap(s=>s.g).filter(g=>(g.f||'')===f);if(!gs.length)return '';
+ const one=gs.length===1&&!gs[0].v,rows=gs.flatMap(g=>g.rows),ids=new Set(rows.map(x=>x.p)),allD=[...ids].every(p=>cf.has(FAM[p])),key=a+'|'+f+'|'+k;
+ const tags=(many&&f?`<span class="mut small">${esc(f)}</span>`:'')+(one&&gs[0].lv?`<span class="mut small">Lv ${esc(gs[0].lv)}</span>`:'')+(allD?'<span class="tag">all dupes</span>':`<span class="mut small">· ${ids.size}</span>`);
+ return sectionHTML(esc(key),n,tags,one?esDrops(gs[0])+esRows(gs[0],cf):gs.map(g=>esSub(g.v||n,g)+esDrops(g)+esRows(g,cf)).join(''),!!st.q||LO.s[key]===1);}).join('');}
+const esWhens=A=>new Set((A.es||[]).flatMap(s=>s.g.flatMap(g=>g.rows.flatMap(x=>Object.keys(x.r||{}).map(k=>k.split('|')[1])))));
+const esKey=ks=>`<div class="mut small ltkey">${['m','d','n'].filter(w=>ks.has(w)).map(w=>WICON[w]+WTX[w]).join(' ')}: the rate only holds then.</div>`;
+// The card's body: the white box (the place: the area's name; the Starter card's is where the choice happens).
+function esCard(a,cf){const A=AR[a],k=a+'.0',fl=esFloors(A),many=fl.length>1;
+ if(A.st)return locStop(k,LOC[A.l[0]]||A.n,'',(PICK?`<div class="trk"><span class="mut small">Starter</span>${starterSel('st-pick')}</div>`:trackerHTML(a))+(A.note?`<div class="trnote">${esc(A.note)}</div>`:'')+(A.es||[]).flatMap(s=>s.g).map(g=>esRows(g,cf)).join(''));
+ let h=trackerHTML(a)+(A.note?`<div class="trnote">${esc(A.note)}</div>`:'');
+ if(A.map)h+=`<details class="mapd"><summary>Map: grass patch numbers</summary>${A.map.map(u=>`<img src="${u}" alt="Map of ${esc(A.n)}">`).join('')}<div class="mut small">From the Wild Pokémon Locations doc.</div></details>`;
+ const ws=esWhens(A);if(['m','d','n'].some(w=>ws.has(w)))h+=esKey(ws);
+ const body=fl.map(f=>{const secs=esSecs(a,f,cf,many);return secs&&f&&many?`<div class="esfl">${esc(f)}</div>`+secs:secs;}).join('');
+ return locStop(k,A.n,'',h+(body||'<div class="mut small" style="margin:6px 0">No wild Pokémon here.</div>'));}
+// The walkthrough's lines, one per floor, section, subheading and chip, named as on Pokémon pages (tools/encstd.py label).
+function esLines(a,cf){const out=[],A=AR[a],li=A.l[0],many=esFloors(A).length>1;
+ (A.es||[]).forEach(s=>s.g.forEach(g=>{const adj=esAdj(g,cf),by=new Map(),put=(c,r)=>{if(!by.has(c))by.set(c,[]);by.get(c).push(r);};
+  g.rows.forEach(x=>{const p=byId[x.p],d=cf.has(FAM[x.p]),ls=adj(x);if(!ls.length){put('',{p,d,show:x.t||''});return;}
+   const c0={};ls.forEach(([c,w,v])=>{(c0[c]=c0[c]||[]).push(w?`${pct(v)} ${WTX[w]||w}`:pct(v));});
+   for(const [c,t] of Object.entries(c0))put(c,{p,d,show:t.join(', ')});});
+  const head=s.k==='trade'?'Trade':['special','raid','gift'].includes(s.k)&&g.v?g.v:[ESN[s.k],g.v].filter(Boolean).join(' · ');
+  for(const [c,rows] of by)out.push([li,[[many?g.f:'',head,QL[c]||''].filter(Boolean).join(' · '),rows]]);}));
+ return out;}
+// The Extra card: the last card on the Locations page. Rows the player adds for a place the guide has no slot for
+// (TK.x: free-text place, a species from the Other… search or failed), counted with the tracker, its dupes and backup.
+function extraHTML(){const X=TK.x||[];
+ const row=(x,i)=>{const p=x.p!=null&&byId[x.p];
+  const w=INV?`<button type="button" class="xw disp" data-i="${i}"><span class="tx" data-ph="Where">${esc(x.w)}</span></button>`:`<input class="xw" data-i="${i}" placeholder="Where" value="${esc(x.w)}">`;
+  const pick=x.f||x.p!=null?`<div class="xpick">${x.f?'<span class="tag">failed</span>':p?`${sprl(p.id,'s32')}<a href="#/p/${p.id}">${esc(p.name)}</a>`:`<span class="mut">${esc(x.p)}</span>`}<button class="btn xclr" data-i="${i}">Change</button></div>`
+   :INV?`<button type="button" class="xs disp" data-i="${i}"><span class="tx" data-ph="Pokémon or failed"></span></button>`:`<input class="xs" type="search" data-i="${i}" placeholder="Pokémon or failed"><div class="xres"></div>`;
+  return `<div class="xrow" data-i="${i}">${w}<button class="btn xdel" data-i="${i}" title="Remove">×</button>${pick}</div>`;};
+ return locStop('x','Extra','',X.map(row).join('')+`<div class="xadd-w"><button class="btn xadd">+ Add encounter</button></div>`);}
+const xHits=(x,q)=>(x.p!=null&&byId[x.p]?byId[x.p].key.includes(q):false)||String(x.w).toLowerCase().includes(q)||(!!x.f&&'failed'.includes(q));
+function bindExtra(){const b=app.querySelector('details.split[data-a="x"]>.body');if(!b||!b.innerHTML)return;const X=()=>TK.x=TK.x||[];
+ const set=(i,f)=>{f(X()[i]);tkSave();};
+ b.querySelector('.xadd').onclick=()=>{X().push({w:''});tkSave();rerender();const r=app.querySelectorAll('details.split[data-a="x"] .xw');const el=r[r.length-1];if(el){if(INV)el.click();else el.focus();}};
+ b.querySelectorAll('.xdel').forEach(e=>e.onclick=()=>{X().splice(+e.dataset.i,1);if(!TK.x.length)delete TK.x;tkSave();rerender();});
+ b.querySelectorAll('.xclr').forEach(e=>e.onclick=()=>{set(+e.dataset.i,r=>{delete r.p;delete r.f;});rerender();});
+ const choose=(i,id)=>{set(i,r=>{delete r.p;delete r.f;if(id==='__f')r.f=1;else r.p=id;});rerender();};
+ const hits=q=>{const n=norm(q),f=n&&'failed'.startsWith(n)?['__f']:[];return f.concat(n.length<2?[]:P.filter(p=>p.g===0&&(p.nk??=norm(p.n)).includes(n)).slice(0,8).map(p=>p.id));};
+ const opt=(id,c,sz)=>`<${c==='kpick'?'button type="button"':'div'} class="${c}" data-id="${esc(id)}">${id==='__f'?'<span>Failed / fled</span>':`${spr(id,sz)}<span>${esc(byId[id].name)}</span>`}</${c==='kpick'?'button':'div'}>`;
+ b.querySelectorAll('.xw').forEach(e=>{const i=+e.dataset.i;
+  if(INV)e.onclick=()=>KB.open({mode:'abc',caps:1,value:X()[i].w,label:'Where',target:e,input:t=>{set(i,r=>r.w=t);e.querySelector('.tx').textContent=t;}});
+  else e.oninput=()=>set(i,r=>r.w=e.value);});
+ b.querySelectorAll('.xs').forEach(e=>{const i=+e.dataset.i;
+  if(INV)e.onclick=()=>KB.open({mode:'abc',value:'',label:'Pokémon or failed',target:e,strip:x=>{const r=hits(x);return r.length?r.map(id=>opt(id,'kpick','s32')).join(''):`<span class="mut small">${norm(x).length<2?'Type a Pokémon name':'No match'}</span>`;},
+   pick:id=>{KB.close(true);choose(i,id);}});
+  else{const res=e.nextElementSibling;e.oninput=()=>{res.innerHTML=hits(e.value).map(id=>opt(id,'tk-opt','s40')).join('');res.querySelectorAll('.tk-opt').forEach(o=>o.onclick=()=>choose(i,o.dataset.id));};}});}
 function locBox(g,cf){const one=g.a.length===1&&!AR[g.a[0]].sub,a=g.a[0];let n=0,h;
  if(AR[a].sub){n=1;h=locSlots(a,cf);}
+ else if(ESV&&one)h=esCard(a,cf);
  else if(one){const ps=places(a);n=ps.length;h=(AR[a].st?'':trackerHTML(a))+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:'')+ps.map(p=>locPlace(a,p,cf,false)).join('');}
  else{n=g.a.length;h=g.a.map(a=>locPlace(a,places(a)[0],cf,true)).join('');}
  return h+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
-TOG.locs=TOG.l=d=>{if(d.matches('details.split[data-a]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){b.innerHTML=locBox(LGRP[+d.dataset.g],caughtFams(-1));colBind(b);bindTrackers();}
+TOG.locs=TOG.l=d=>{if(d.matches('details.split[data-a]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){if(d.dataset.g==='x'){b.innerHTML=extraHTML();colBind(b);bindExtra();}else{b.innerHTML=locBox(LGRP[+d.dataset.g],caughtFams(-1));colBind(b);bindTrackers();}}
   if(!st.q){if(d.open)LO.o[d.dataset.a]=1;else delete LO.o[d.dataset.a];loSave();}}
  else if(st.q)return;else if(d.matches('details.stopd')){if(d.open)delete LO.x[d.dataset.k];else LO.x[d.dataset.k]=0;loSave();}
  else if(d.matches('details.sec')){if(d.open)LO.s[d.dataset.s]=1;else delete LO.s[d.dataset.s];loSave();}};
 function listLocs2(scroll){fil.innerHTML='';const s=st.q;const li=st.lopenLi;st.lopenLi=null;
  // Opened from a Pokemon page (#/l/<place>): open its box and place, then scroll it under the search bar.
  let tk=null;if(li!=null&&LOC2A[li]!=null){const a=LOC2A[li];LO.o[LGRP.find(g=>g.a.includes(AR[a].in??a)).a[0]]=1;tk=AR[a].in!=null?AR[a].in+'.0':a+'.'+places(a).find(p=>p.ls.includes(li)).j;delete LO.x[tk];loSave();}
- const hit=i=>ARS(i).some(i=>AR[i].n.toLowerCase().includes(s)||AR[i].l.some(li=>LOC[li].toLowerCase().includes(s)||(locs[li]||[]).some(([p])=>p.key.includes(s))));
+ const hit=i=>ARS(i).some(i=>AR[i].n.toLowerCase().includes(s)||slotL(i).some(li=>LOC[li].toLowerCase().includes(s)||(locs[li]||[]).some(([p])=>p.key.includes(s))));
  const list=LGRP.map((g,gi)=>gi).filter(gi=>!s||LGRP[gi].a.some(hit));
  app.innerHTML=tkBar()+(s?'':segBar('lc-all all'))+
-  list.map(gi=>{const g=LGRP[gi];return `<details class="split jt" data-a="${g.a[0]}" data-g="${gi}" ${LO.o[g.a[0]]||s?'open':''}><summary>${esc(g.n)} ${g.a.map(encAll).join('')}</summary><div class="body"></div></details>`;}).join('');
+  list.map(gi=>{const g=LGRP[gi];return `<details class="split jt" data-a="${g.a[0]}" data-g="${gi}" ${LO.o[g.a[0]]||s?'open':''}><summary>${esc(g.n)} ${g.a.map(encAll).join('')}</summary><div class="body"></div></details>`;}).join('')+
+  (ESV&&(!s||'extra'.includes(s)||(TK.x||[]).some(x=>xHits(x,s)))?`<details class="split jt" data-a="x" data-g="x" ${LO.o.x||s?'open':''}><summary>Extra <span class="mut small">· ${(TK.x||[]).length}</span></summary><div class="body"></div></details>`:'');
  app.querySelectorAll('details.split[data-a][open]').forEach(d=>TOG.locs(d));bindTrackers();bars();
  if(scroll&&tk)land(app.querySelector(`details.stopd[data-k="${tk}"]>summary`));}
 
@@ -925,7 +1039,7 @@ function migrateWalkState(){
 }
 migrateWalkState();
 const CHK=D.WK.splits.some((sp,si)=>sp.st.some((s,ti)=>stopLeaves(s,si,ti).length));
-const tkCounts=()=>[Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length,Object.values(TK.e).filter(e=>e&&e.f).length];
+const tkCounts=()=>[Object.values(TK.e).filter(e=>e&&e.p).length+Object.values(TK.t||{}).filter(Boolean).length+(TK.x||[]).filter(r=>r.p).length,Object.values(TK.e).filter(e=>e&&e.f).length+(TK.x||[]).filter(r=>r.f).length];
 // Guide info: tracker and checklist tools, then the game docs (cheat codes and unplaced items count as docs), then the
 // intro. Built when opened.
 // A walkthrough item row's place text, with its pickup tick (the same tick as the Items tab and the item page).
@@ -965,7 +1079,7 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=!(WO.x[k]===1
  const steps=stopEnt(s).map(({j,x,m})=>{if(m)return misHTML(m);const sk=k+'.'+j;const done=!!WO.c[sk];return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-sk="${sk}" ${done?'checked':''}><span>${esc(x[0])}${x[1]?`<div class="mut small">${esc(x[1])}</div>`:''}</span></label>`;}).join('');
  const ts=(s.tr||[]).map(k=>TRK[k]).filter(t=>t&&!rivalHidden(t));
  // Encounters: one box per area with its own tracker; several areas get a short tag (the area name minus the stop's).
- const areas=[];s.a.flatMap(ARS).forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=A.es?secLines(ai,cf).concat(A.l.flatMap(li=>adjRows(li,cf,notSec).map(r=>[li,r]))):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;areas.push([ai,A,enc]);});
+ const areas=[];s.a.flatMap(ARS).forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=ESV&&A.es?esLines(ai,cf):A.es?secLines(ai,cf).concat(A.l.flatMap(li=>adjRows(li,cf,notSec).map(r=>[li,r]))):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;areas.push([ai,A,enc]);});
  const multi=areas.length>1;
  const enc=areas.map(([ai,A,enc])=>{const tag=multi?(A.n.startsWith(s.n+' ')?A.n.slice(s.n.length+1):A.n):'';
   return `<div class="area">${A.ns&&tag?`<span class="atag">${esc(tag)}</span>`:''}${trackerHTML(ai,tag)}${CF.walkAreaNote&&A.note?`<div class="trnote">${esc(A.note)}</div>`:''}`+enc.map(([li,[m,rows]])=>`<div class="encl"><span class="mut">${A.l.length>1||LOC[li]!==A.n?esc(LOC[li])+' · ':''}${esc(m)}:</span> ${rows.map(x=>`<span class="${x.d?'dupe':''}"><a href="#/p/${x.p.id}">${esc(x.p.name)}</a> ${esc(x.show)}</span>`).join(', ')}</div>`).join('')+'</div>';}).join('');
