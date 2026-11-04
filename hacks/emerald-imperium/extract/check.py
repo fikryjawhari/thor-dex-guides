@@ -12,6 +12,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'tools'))
 import itemstd  # noqa: E402
+import encstd  # noqa: E402
 from calc_ui_check import check_metronome
 import extractlib  # noqa: E402
 import pdfwild, prune, walk  # noqa: E402
@@ -58,6 +59,50 @@ def check_ability_text(data):
     print(f'PASS: {len(changed)} changed, non-original abilities have statement and original text')
 
 
+def check_encounters(data):
+    """Published floor and egg keys, met-location merges, and complete standard encounter rows."""
+    encstd.finish(data)
+    areas = data['AR']
+    merges = {
+        'Granite Cave': (15, 16, 17, 18),
+        'Meteor Falls': (33, 34, 35, 36, 37),
+        'Mirage Tower': (44, 45, 46, 47),
+        'Mt. Pyre': tuple(range(67, 75)),
+        'Safari Zone': tuple(range(76, 82)),
+        'Shoal Cave': tuple(range(86, 91)),
+        'Magma Hideout': tuple(range(101, 109)),
+        'Seafloor Cavern': tuple(range(109, 118)),
+        'Sky Pillar': (120, 121, 122),
+        'Victory Road': (124, 125, 126),
+        'Trick House': (41, 42, 43),
+    }
+    for name, members in merges.items():
+        parent = members[0]
+        assert areas[parent]['n'] == name and len(areas[parent]['fo']) == len(members), name
+        assert all(areas[index].get('in') == parent and 'es' not in areas[index] for index in members[1:]), name
+    eggs = {27: 134, 31: 139, 38: 144, 40: 149, 55: 154}
+    for parent, first in eggs.items():
+        assert areas[parent]['sub'] == list(range(first, first + 5)), parent
+        for index, kind in zip(areas[parent]['sub'], ('Fire', 'Water', 'Grass', 'Lavaridge', 'Pacifidlog')):
+            slot = areas[index]
+            assert slot['in'] == parent and slot['n'] == areas[parent]['n'] + ' ' + kind + ' egg', slot
+            assert [section['k'] for section in slot['es']] == ['gift'], slot
+            assert slot['es'][0]['g'][0]['v'] == kind + ' egg', slot
+    assert len(areas) == 159 and areas[0]['n'] == 'Starter' and areas[0]['st'] == 1
+    byid = {pokemon['id']: pokemon for pokemon in data['P']}
+    for area in areas:
+        for section in area.get('es', []):
+            for group in section['g']:
+                for row in group['rows']:
+                    assert row['p'] in byid, row
+    assert any(section['k'] == 'grass' for section in areas[67]['es'])
+    assert any(section['k'] == 'cave' for section in areas[67]['es'])
+    assert all('badges' in row['note'] for section in areas[20]['es'] for group in section['g']
+               for row in group['rows'])
+    print('PASS: encounter standard; 58 floor slots -> 11 map-checked slots; 159 published area indices retained')
+    print('PASS: all 25 published egg sub-slot keys and the starter key retained; Mt. Pyre Grass/Cave separated')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('baseline', nargs='?', type=Path)
@@ -65,6 +110,7 @@ def main():
                         default=Path(__file__).resolve().parents[1] / 'data.json')
     args = parser.parse_args()
     after = json.loads(args.current.read_text(encoding='utf8'))
+    check_encounters(after)
     check_ability_text(after)
     check_metronome(after, 'emerald-imperium')
     check_gid(after)

@@ -11,7 +11,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import H  # noqa: E402
 from extractlib import finalise, write_data  # noqa: E402
-import dex, locs, items, walk, trainers, prune, gid, item_desc  # noqa: E402
+import dex, locs, items, walk, trainers, prune, gid, item_desc, encounters  # noqa: E402
 
 
 def main():
@@ -25,6 +25,7 @@ def main():
     trainers.split(D)
     items.split(D)
     walk.name_splits(D)
+    encounters.build(D)
     dex.move_metadata(D)
     item_desc.build(D)   # before finalise: tools/item_text.py reads item_desc.json
     finalise(D, H.name, prune.build, gauntlet_rules=trainers.gauntlet_rules)
