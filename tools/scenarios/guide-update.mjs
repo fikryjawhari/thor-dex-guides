@@ -8,6 +8,9 @@
 //       switches / Defog (guides with area rules), list filters, the Pokémon page's open sections,
 //       level caps, Trainers open state, search recents, the stat calc, walkthrough ticks and the tracker, compared
 //       by name before and after the update; pickup ticks (LS.items g, by pickup key) name the same item and line.
+//   28c merged slots (encounter standard): two floors of one place recorded as their own slots before an update that
+//       merges them (the second floor's area becomes a member, AR.in = the slot): the slot shows the first floor's
+//       entry, the other stays stored, counted and shown as "also:" until cleared; a member's lone entry moves up.
 //   28b same pages: a Pokémon page and a trainer card read the same in both copies (the shifted copy is consistent).
 import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -113,6 +116,7 @@ const SNAPSHOT = `(()=>{const C=CF.calc?CALC.state():null,tn=k=>TRK[k]?.n??'gone
     missionsOpen:ms&&ms.filter(([m])=>MIS.has(m)).map(([m,r])=>[m,mn(m),r.o===true]).sort(),
     missionTicks:ms&&ms.filter(([m])=>MIS.has(m)).flatMap(([m,r])=>Object.keys(r.c||{}).filter(k=>r.c[k]===1).map(k=>[m,k,MIS.get(m).s.find(c=>c.k===k)?.t??'gone:'+k])).sort(),
     tracker:Object.entries(TK.e).map(([a,e])=>[AR[a]?.n,e.p?byId[e.p]?.n:'failed']),
+    extra:(TK.x||[]).map(r=>[r.w,r.f?'failed':byId[r.p]?.n??'gone:'+r.p]),
     foeSpecies:C&&C.foeSp?Object.entries(C.foeSp).map(([k,v])=>{const i=k.lastIndexOf(':');return [tn(k.slice(4,i)),k.slice(i+1),byId[v]?.n??'gone:'+v];}):null,
     hazardOffer:C&&C.hzOffer&&Object.keys(C.hzOffer).length?Object.entries(C.hzOffer).map(([side,v])=>{const k=typeof v==='string'?v:v.k,off=typeof v==='object'&&v.off===true,i=k.lastIndexOf(':');return k.startsWith('foe:')?[side,tn(k.slice(4,i)),k.slice(i+1),off]:[side,byId[C.custom.find(c=>'mine:'+c.pid===k)?.id]?.n??'gone:'+k,off];}).sort():null,
     itemsOpen:(D.IT||[]).length?[...Object.keys(IO.o),...Object.keys(IO.s)].sort():null,
@@ -139,7 +143,7 @@ const checks = [
         recSave([{k:'p',v:p.id},{k:'f',v:{k:'mv',v:mid}},{k:'t',v:t.k},...(${STOP ? 1 : 0}?[{k:'w',si:${STOP?.si},ti:${STOP?.ti}}]:[]),...((D.IT||[]).length?[{k:'i',si:0,ri:0}]:[])]);
         localStorage.setItem(calcKey(p),JSON.stringify({l:37,n:'Adamant',iv:[31,31,31,31,31,31],ev:[0,0,0,0,0,0]}));
         ${STOP ? `WO.c['${STOP.si}.${STOP.ti}.0']=1;` : ''}WO.x['0.'+(D.WK.splits[0].st.length>1?1:0)]=0;woSave();
-        TK.e[${area}]={p:p.id};tkSave();
+        TK.e[${area}]={p:p.id};TK.x=[{w:'Extra place',p:p.id},{w:'',f:1}];tkSave();
         const pk=(D.IT||[]).flatMap(sec=>sec.r.flatMap(r=>(r[5]||[]).filter(Boolean)));[pk[1],pk[pk.length-1]].forEach(k=>k&&tickSet(k,true));
         const sec=(D.IT||[]).at(-1);if(sec){IO.o[sec.n]=1;if(sec.r[0][4])IO.s[sec.n+'.'+sec.r[0][4]]=1;ioSave();}})()`);
       if (MSTOP) await page.value(`(()=>{const [a,b]=${JSON.stringify(MS.map(m => [m.m, m.s.map(c => c.k)]))};
@@ -199,5 +203,48 @@ const checks = [
     },
   },
 ];
+
+// 28c: a place with a second floor that was its own slot (before) and is a member of the place's slot (after).
+const SLOT = data.ESV === 2 ? data.AR.findIndex(A => A.es && !A.st && A.in == null && !A.ns && !A.sub) : -1;
+if (SLOT >= 0) {
+  const fam = data.P.filter(p => p.g === 0 && !p.w.length).slice(0, 2).map(p => p.id);
+  const floor = (merged) => {
+    const D = JSON.parse(JSON.stringify(data)), li = D.LOC.length, b = D.AR.length;
+    D.LOC.push(D.AR[SLOT].n + ' B9F');
+    D.AR.push({ n: D.AR[SLOT].n + ' B9F', l: [li], ...(merged ? { in: SLOT } : { es: [{ k: 'cave', g: [{ rows: [{ p: fam[1], r: { '|': 100 } }] }] }] }) });
+    if (merged) D.AR[SLOT].es.push({ k: 'cave', g: [{ f: 'B9F', rows: [{ p: fam[1], r: { '|': 100 } }] }] });
+    D.P.find(p => p.id === fam[1]).w.push([li, 'Cave', '100%', '5', '', 1]);
+    if (D.ARO && !merged) D.ARO.push(b);
+    return D;
+  };
+  const pre = write('premerge', floor(false)), post = write('merged', floor(true)), B = data.AR.length;
+  checks.push({
+    id: '28c merged slots',
+    title: 'two floors recorded before a merge: the slot shows the first, the other stays as "also:"',
+    sizes: SIZE_SMALL,
+    modes: ['normal'],
+    file: pre,
+    run: async page => {
+      const ids = JSON.stringify(fam);
+      await page.value(`(()=>{const f=${ids};TK.e[${SLOT}]={p:f[0]};TK.e[${B}]={p:f[1]};tkSave();})()`);
+      const counts = await page.value('tkCounts()');
+      page.file = post;
+      await page.goto('#/locs');
+      assert.deepEqual(await page.value(`[TK.e[${SLOT}]?.p,TK.e[${B}]?.p]`), fam, 'both entries kept');
+      assert.deepEqual(await page.value('tkCounts()'), counts, 'both still count');
+      assert.equal(await page.value(`caughtFams(${SLOT}).has(FAM[${JSON.stringify(fam[1])}])`), true, "the other floor's species counts for dupes");
+      assert.equal(await page.value(`!!document.querySelector('details.split[data-a="${B}"]')`), false, 'the member has no card');
+      await page.value(`(async()=>{const d=document.querySelector('details.split[data-a="${SLOT}"]');d.open=true;await new Promise(r=>setTimeout(r,150));})()`);
+      assert.equal(await page.value(`document.querySelector('.trk[data-a="${SLOT}"] .tk-sel').value`), fam[0], 'the slot shows its first floor');
+      assert.match(await page.value(`document.querySelector('details.split[data-a="${SLOT}"] .tk-also').textContent`), /also: .+ \(B9F\)/, 'the other as "also: <species> (<floor>)"');
+      await page.value(`document.querySelector('details.split[data-a="${SLOT}"] .tk-ax').click()`);
+      assert.equal(await page.value(`JSON.parse(localStorage.getItem(LS.track)).e[${B}]??null`), null, 'cleared');
+      // a member's lone entry (only the second floor recorded) moves to the slot
+      await page.value(`(()=>{const f=${ids};delete TK.e[${SLOT}];TK.e[${B}]={p:f[1]};tkSave();})()`);
+      await page.reload();
+      assert.deepEqual(await page.value(`[TK.e[${SLOT}]?.p,TK.e[${B}]??null]`), [fam[1], null], "a member's lone entry moves to the slot");
+    },
+  });
+}
 
 await runChecks({ name: 'guide-update-' + name, file: before, checks });
