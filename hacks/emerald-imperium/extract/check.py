@@ -99,8 +99,22 @@ def check_encounters(data):
     assert any(section['k'] == 'cave' for section in areas[67]['es'])
     assert all('badges' in row['note'] for section in areas[20]['es'] for group in section['g']
                for row in group['rows'])
+    underwater = areas[100]
+    assert underwater['n'] == 'Underwater Routes 124 and 126' and underwater['l'] == [92, 93]
+    assert underwater['in'] == 83 and 'es' not in underwater and 'card' not in underwater
+    assert underwater['to'] == [[91, ['170', '171', '369']]], underwater
+    for index, expected in ((83, {'366', '367', '368'}), (91, {'170', '171', '369'})):
+        groups = [group for section in areas[index]['es'] if section['k'] == 'water'
+                  for group in section['g'] if group.get('v') == 'Underwater']
+        assert len(groups) == 1 and {row['p'] for row in groups[0]['rows']} == expected
+        assert all(set(row['r']) == {'|'} for row in groups[0]['rows'])
+        assert all(any(row[0] == areas[index]['l'][0] and row[1] == 'Water · Underwater'
+                       for row in byid[species]['w']) for species in expected)
+    assert not any(row[0] in underwater['l'] for pokemon in data['P'] for row in pokemon['w'])
+    assert not any(100 in stop['a'] for split in data['WK']['splits'] for stop in split['st'])
     print('PASS: encounter standard; 58 floor slots -> 11 map-checked slots; 159 published area indices retained')
     print('PASS: all 25 published egg sub-slot keys and the starter key retained; Mt. Pyre Grass/Cave separated')
+    print('PASS: Underwater is inside Route 124/126 Water; legacy slot 100 retained with species-aware routing')
 
 
 def main():

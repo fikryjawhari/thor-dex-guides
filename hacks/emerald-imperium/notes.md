@@ -126,17 +126,27 @@ Data rules:
     and becomes a hidden member, putting Rayquaza in the same card; it is not part of the 58 tracker slots.
     First-floor indices stay the slots; every other area's `l` and index stay intact, with `in` pointing to the
     first. Member `loc` values remain on `P.w`. No LOC indices or walkthrough anchors/ticks move.
+  - **Underwater (user request, 2026-11-04):** Route 124's Clamperl / Huntail / Gorebyss and Route 126's
+    Chinchou / Lanturn / Relicanth now appear as **Underwater** within their route's **Water** section, with
+    the original rates/levels, no Surf chip, and `P.w` naming the route's LOC. No standalone card or tracker.
+    Published area 100 keeps its name and LOC list `[92, 93]`, has `in:83` (Route 124) and
+    `to:[[91,['170','171','369']]]` (Route 126). Parent template support `af6fa43` routes its saved record by
+    species; failed / unknown / Clamperl-line records default to Route 124. If the route already has a record,
+    area 100's remains stored, counted, exportable and shown there as "also:" until cleared. The redundant
+    encounter reference on walkthrough stop `7.14` is removed, but the stop and every saved stop/tick key remain.
   - **Egg decision:** keep all 25 published `AR.sub` / `AR.in` hatch-town slots (134–158) and their trackers;
     Oldale's single egg stays on area 2. Children get standard gift sections and flagged `P.w`, but the five
     hatch-town cards still need the template's `locSlots` → `adjRows` / `LSEC` / `encTable` path, one yellow
     egg-kind section with its own picker per slot. Keep that path and sub-slot tracker migration / `ARS` when
-    removing the template's older general encounter paths. No template changes or encstd additions.
-  - **Saved state:** all 159 AR entries, LOC entries, localStorage keys, starter key, egg keys and WK data stay
-    stable. Standard section state migrates using the shared template: recognisable legacy names map to codes;
+    removing the template's older general encounter paths. No worker-authored template changes or encstd additions.
+  - **Saved state:** all 159 AR entries, LOC entries, localStorage keys, starter key and egg keys stay stable;
+    WK data changes only by dropping area 100's redundant encounter reference (all stop keys remain).
+    Standard section state migrates using the shared template: recognisable legacy names map to codes;
     unmatched method names (including Grass/cave and egg names) start closed. Area / walkthrough open state
     and tracker entries are retained. `check_encounters.mjs` loads the captured pre-conversion HTML, records
     every real merge-member and egg key, then loads the updated build in the same browser/storage; it also
     checks lone-member migration (caught and failed), "also:" entries, counts and reload at 260×316 normal/dvkb.
+    Underwater cases cover all six species, failed and unknown records, each with a free and occupied destination.
 - **Move changes** compare EI data with Showdown Gen 9; status moves with a nominal 100 accuracy and variable-power moves
   (Showdown power 0) are not counted as changes.
 - **Move targets, properties and added effects** (`move_metadata.py`, run by `dex.move_metadata` on the merged MV):

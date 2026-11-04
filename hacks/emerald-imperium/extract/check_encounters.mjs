@@ -17,10 +17,13 @@ assert.equal(slots.length, 58);
 assert.equal(eggs.length, 25);
 assert.deepEqual(original.LOC, updated.LOC);
 assert.equal(original.AR.length, updated.AR.length);
-for (const key of Object.keys(original).filter(key => !['AR', 'P', 'built'].includes(key))) {
+for (const key of Object.keys(original).filter(key => !['AR', 'P', 'WK', 'built'].includes(key))) {
   assert.deepEqual(updated[key], original[key], key + ' is unchanged');
 }
 assert.deepEqual(updated.P.map(({ w, ...pokemon }) => pokemon), original.P.map(({ w, ...pokemon }) => pokemon));
+const walkthrough = JSON.parse(JSON.stringify(original.WK));
+for (const split of walkthrough.splits) for (const stop of split.st) stop.a = stop.a.filter(index => index !== 100);
+assert.deepEqual(updated.WK, walkthrough, 'only the redundant Underwater encounter reference changes');
 original.AR.forEach((area, index) => {
   assert.deepEqual(updated.AR[index].l, area.l, 'published location keys ' + index);
   assert.deepEqual(updated.AR[index].sub, area.sub, 'published egg sub-slot keys ' + index);
@@ -52,6 +55,40 @@ await runChecks({
         for (const index of eggs) assert.deepEqual(await page.value(`TK.e[${index}]`), entries[index]);
         await page.reload();
         assert.deepEqual(await page.value('TK.e'), entries);
+      },
+    },
+    {
+      id: 'published underwater split',
+      title: 'the real combined underwater key moves by species, preserves collisions and counts, and reloads',
+      sizes: SIZE_SMALL, modes: ['normal', 'dvkb'],
+      run: async page => {
+        const legacy = 100, choices = original.P.filter(pokemon => pokemon.w.some(row => original.AR[legacy].l.includes(row[0])));
+        const cases = [...choices.map(pokemon => ({ p: pokemon.id })), { f: 1 }, { p: 'Unknown underwater species' }];
+        for (const entry of cases) {
+          const destination = updated.AR[legacy].to.find(([, ids]) => ids.includes(entry.p))?.[0] ?? updated.AR[legacy].in;
+          for (const taken of [false, true]) {
+            page.file = before;
+            await page.goto('#/locs');
+            const entries = { [legacy]: entry };
+            if (taken) entries[destination] = { p: species(destination) };
+            await page.value(`(()=>{TK.e=${JSON.stringify(entries)};tkSave();})()`);
+            const counts = await page.value('tkCounts()');
+            page.file = after;
+            await page.goto('#/locs');
+            const expected = taken ? entries : { [destination]: entry };
+            assert.deepEqual(await page.value('TK.e'), expected);
+            assert.deepEqual(await page.value('tkCounts()'), counts);
+            assert.equal(await page.value(`!!document.querySelector('details.split[data-a="${legacy}"]')`), false);
+            if (taken) {
+              await page.value(`(async()=>{const card=document.querySelector('details.split[data-a="${destination}"]');
+                card.open=true;await new Promise(resolve=>setTimeout(resolve,150));})()`);
+              assert.match(await page.value(`document.querySelector('details.split[data-a="${destination}"] .tk-also').textContent`),
+                /Underwater Routes 124 and 126/);
+            }
+            await page.reload();
+            assert.deepEqual(await page.value('TK.e'), expected);
+          }
+        }
       },
     },
     {

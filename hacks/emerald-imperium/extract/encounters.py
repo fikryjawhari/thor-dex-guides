@@ -20,6 +20,13 @@ def build(data):
     areas = data['AR']
     locations = data['LOC']
     owner = {location: index for index, area in enumerate(areas) for location in area['l']}
+    routes = {name: next(index for index, area in enumerate(areas) if area['n'] == name)
+              for name in ('Route 124', 'Route 126')}
+    legacy = next(index for index, area in enumerate(areas) if area['n'] == 'Underwater Routes 124 and 126')
+    underwater = {location: routes[locations[location].removesuffix(' Underwater')]
+                  for location in areas[legacy]['l']}
+    areas[legacy]['in'] = routes['Route 124']
+    redirected = []
     merged = {}
     for name in MERGES:
         members = [index for index, area in enumerate(areas) if area['n'].startswith(name + ' ')]
@@ -76,10 +83,23 @@ def build(data):
                 elif method == 'Roaming':
                     note = '; '.join((rate, note))
             percent = float(rate[:-1]) if rate.endswith('%') else None
+            if location in underwater:
+                assert method == 'Surf', method
+                parent = underwater[location]
+                floor, kind, variant, chip = '', 'water', 'Underwater', ''
+                location = areas[parent]['l'][0]
+                if parent == routes['Route 126'] and pokemon['id'] not in redirected:
+                    redirected.append(pokemon['id'])
             encounters[parent].add(kind, pokemon['id'], percent, lv=level, floor=floor, v=variant, chip=chip,
                                    note=note, t='' if percent is not None else rate, loc=location)
+    areas[legacy]['to'] = [[routes['Route 126'], redirected]]
+    for split in data['WK']['splits']:
+        for stop in split['st']:
+            stop['a'] = [index for index in stop['a'] if index != legacy]
     for index, encounter in enumerate(encounters):
         encounter.write(data, index)
     encstd.finish(data)
+    report('encounters underwater: legacy', legacy, '->', routes['Route 124'], '(default),',
+           routes['Route 126'], '(species', ', '.join(redirected) + '); Water / Underwater, no standalone tracker')
     report('encounters: ESV', data['ESV'], 'standard sections; egg sub-slots retained:',
            sum(len(area.get('sub', [])) for area in areas))
