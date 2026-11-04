@@ -632,7 +632,8 @@ one of its es lines). Page (`ENCOUNTER STANDARD` in dex.js):
 - A member with its own card (`AR[i].card` = [floor, ...] of the slot's `fo`; BB2R's Relic Passage, Castelia side):
   one tracker slot, two cards. The member's card sits in its own route place under its own `n` and shows those
   floors; the slot's card shows the rest. Both show the slot's tracker (one `TK.e[slot]`, every species) and its
-  "also:" line. A place link (`#/l/<i>`) and a walkthrough stop on the member show its card's floors.
+  "also:" line. A place link (`#/l/<i>`) and a walkthrough stop on the member show its card's floors. A plain member
+  whose floor is on a member's card says so with `on` = that member (its place link opens that card).
 - Extra card: last on the page. Rows the player adds (`TK.x` [{w place, p species | f 1}]): a place (in the viewer the
   letters keyboard, words capitalised) and a species from the Other… search or failed, a remove button each, "+ Add
   encounter". Counted in caught / failed and dupes, in the backup code; Reset all clears them. No explanation text.
