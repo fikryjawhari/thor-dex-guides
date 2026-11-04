@@ -19,7 +19,10 @@ const NAMES = { grass: 'Grass', cave: 'Cave', water: 'Water', special: 'Special'
 const AR = data.AR || [];
 // A slot with the most sections (and floors when the guide has them), and one with a water chip.
 const rank = a => (AR[a].es || []).length * 10 + (AR[a].fo || []).length;
-const slots = AR.map((A, a) => a).filter(a => AR[a].es && AR[a].in == null && !AR[a].st && !AR[a].ns);
+// A member with its own card (AR.card: the slot's floors it shows); slots with one are checked by CARD below.
+const CARDS = AR.map((A, a) => a).filter(a => AR[a].card && AR[a].in != null);
+const CUT = new Set(CARDS.map(a => AR[a].in));
+const slots = AR.map((A, a) => a).filter(a => AR[a].es && AR[a].in == null && !AR[a].st && !AR[a].ns && !CUT.has(a));
 const BIG = slots.sort((x, y) => rank(y) - rank(x))[0];
 const FLOORS = slots.find(a => (AR[a].fo || []).length > 1);
 const species = slots.length ? AR[slots[0]].es[0].g[0].rows[0].p : null;
@@ -37,7 +40,20 @@ const checks = [
       const cards = await page.value(`[...document.querySelectorAll('#app>details.split[data-a]')].map(d=>d.dataset.a)`);
       assert.equal(cards.at(-1), 'x', 'the Extra card is last');
       assert.equal(new Set(cards).size, cards.length, 'a card per location, never twice');
-      assert.ok(!cards.some(a => a !== 'x' && AR[a].in != null), 'merged members have no card');
+      assert.ok(!cards.some(a => a !== 'x' && AR[a].in != null && !AR[a].card), 'merged members have no card (unless AR.card)');
+      for (const c of CARDS) {
+        const s = AR[c].in;
+        assert.ok(cards.includes(String(c)) && cards.includes(String(s)), `${AR[c].n}: its own card and its slot's`);
+        const seen = {};
+        for (const a of [c, s]) {
+          await page.value(openCard(a));
+          seen[a] = await page.value(`(()=>{const d=document.querySelector('details.split[data-a="${a}"]');
+            return {trk:[...d.querySelectorAll('.trk[data-a]')].map(t=>t.dataset.a),floors:[...d.querySelectorAll('.stop>details.sec')].map(x=>x.dataset.s.split('|')[1])};})()`);
+          assert.deepEqual([...new Set(seen[a].trk)], [String(s)], `${AR[a].n}: the slot's tracker`);
+        }
+        assert.ok(seen[c].floors.length && seen[c].floors.every(f => AR[c].card.includes(f)), `${AR[c].n}: only its card floors`);
+        assert.ok(seen[s].floors.every(f => !AR[c].card.includes(f)), `${AR[s].n}: not the member's floors`);
+      }
       for (const a of [BIG, FLOORS].filter(x => x != null)) {
         assert.ok(await page.value(openCard(a)), `card ${AR[a].n} opens with its white box`);
         const got = await page.value(`(()=>{const d=document.querySelector('details.split[data-a="${a}"]');
