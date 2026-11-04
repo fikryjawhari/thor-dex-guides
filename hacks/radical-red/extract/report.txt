@@ -3401,9 +3401,6 @@ items: walkthrough rows matched to an Items line at the same place: 0
 items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: Also -> Found 3, Found -> Also 2
-pickup keys: 2 matched loosely
-  p251: TM054 Grassy Glide (Safari Zone · Moltres' Den) matched on i, t
-  p334: Magmarizer (Safari Zone · Moltres' Den) matched on i, t
 pickup keys: 10 table entries no pickup matched
   p26: Prison Bottle (Cinnabar Island Lab Testing Room)
   p28: Reveal Glass (Cinnabar Island Lab Testing Room)

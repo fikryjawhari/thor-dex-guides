@@ -477,5 +477,7 @@ def standardise(data, groups, place_of, starter_loc, gift_area):
                 hatch.append(A['n'])
             else:
                 A['ns'] = 1
+        elif A.get('in') is not None and not (rows_at & set(A['l'])):
+            A['ns'] = 1                    # a member that never had a tracker slot (nothing there)
     report('locs: egg hatch slots (no wild Pokémon): ' + ', '.join(hatch))
     return enc, found
