@@ -29,6 +29,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from common import DATA, cap, item, report, sid
+import encstd
 
 SHEET = json.loads(Path(__file__).with_name('sheet_locs.json').read_text(encoding='utf-8'))
 
@@ -37,9 +38,7 @@ WATER = [60, 30, 5, 4, 1]                                  # Surf and Rock Smash
 RODS = {'oldRod': ('Old Rod', [70, 30]), 'goodRod': ('Good Rod', [60, 20, 20]),
         'superRod': ('Super Rod', [40, 40, 15, 4, 1])}
 FLOOR = re.compile(r'\s+(?:B?\d+F|Room \d+)$')
-KIND = {'grass': 'grass', 'water': 'water', 'other': 'other'}
 RAID_DROPS = [100, 80, 80, 50, 50, 30, 30, 25, 25, 5, 4, 1]   # the 12 drop slots' chances (sheet, Raid Dens tab)
-NO_CAP = {'Starter choice', 'Mystery Gift'}       # group labels without "· cap N"
 DOC_ONLY = 'Doc only (not in the game data)'
 
 
@@ -113,9 +112,9 @@ def build(data):
                 cap_forms = name == 'Any Cap'
                 for species in [sid_of(x) for x in shard['any']] if cap_forms else [sid_of(name)]:
                     placed.add(species)
-                    add(area, 'other', shard['method'], step, species, note='cap %d' % cap(step),
-                        pick=len(names) if shard['random'] else None)
-                    row = groups[(area, 'other', shard['method'], step)][species]
+                    method = '%s %s' % (colour, shard['method'].split()[-1])     # one choice per shard: Green Shard egg
+                    add(area, 'other', method, step, species, pick=len(names) if shard['random'] else None)
+                    row = groups[(area, 'other', method, step)][species]
                     note_row(row, shard['how'] % colour)
                     if cap_forms:
                         note_row(row, 'Any Cap: one slot for the %d cap Pikachu' % len(shard['any']))
@@ -124,7 +123,7 @@ def build(data):
                         sheet_counts['sheet shard rows data.js lacks'] += 1
         for species in listed:
             if species not in placed:
-                add(area, 'other', shard['method'], step, species, note='cap %d' % cap(step))
+                add(area, 'other', shard['method'], step, species)
                 note_row(groups[(area, 'other', shard['method'], step)][species], "Doc doesn't list it")
                 sheet_counts['sheet shard rows the doc lacks'] += 1
 
@@ -142,7 +141,6 @@ def build(data):
                 continue
             for step_key, entries in table.items():
                 step = int(step_key)
-                cap_note = 'cap %d' % cap(step)
                 if key in ('wild-day', 'wild-night'):
                     col = 0 if key == 'wild-day' else 1
                     rates = GRASS
@@ -150,15 +148,15 @@ def build(data):
                         report('locs: %s %s step %s has %d slots (expected %d)' % (record['name'], key, step,
                                                                                     len(entries), len(rates)))
                     for rate, (value, low, high) in zip(rates, entries):
-                        add(area, 'grass', 'Grass/cave', step, sid_of(value), rate, col, low, high, cap_note)
+                        add(area, 'grass', 'Grass/cave', step, sid_of(value), rate, col, low, high)
                 elif key == 'wild-surf' or key == 'wild-smash':
                     method = 'Surf' if key == 'wild-surf' else 'Rock Smash'
                     for rate, (value, low, high) in zip(WATER, entries):
-                        add(area, 'water', method, step, sid_of(value), rate, None, low, high, cap_note)
+                        add(area, 'water', method, step, sid_of(value), rate, None, low, high)
                 elif key in ('wild-oldRod', 'wild-goodRod', 'wild-superRod'):
                     method, rates = RODS[key[5:]]
                     for rate, (value, low, high) in zip(rates, entries):
-                        add(area, 'water', method, step, sid_of(value), rate, None, low, high, cap_note)
+                        add(area, 'water', method, step, sid_of(value), rate, None, low, high)
                 elif key.startswith('raid'):
                     stars = key[4:]
                     for value, drops in entries:
@@ -169,27 +167,25 @@ def build(data):
                             if drop:
                                 chances[item(drop)].append(str(chance))
                         names = ['%s %s%%' % (name, '/'.join(rates)) for name, rates in chances.items()]
-                        note = '%s★ den' % stars + ('; drops ' + ', '.join(names) if names else '')
-                        add(area, 'other', 'Raid', step, sid_of(value), note=note + '; ' + cap_note)
+                        add(area, 'other', '%s★ raid' % stars, step, sid_of(value))
+                        groups[(area, 'other', '%s★ raid' % stars, step)][sid_of(value)]['drops'] = ', '.join(names)
                 elif key == 'fixed-overworld':
                     for value in entries:
-                        add(area, 'other', 'Static', step, sid_of(value), note=cap_note)
+                        add(area, 'other', 'Static', step, sid_of(value))
                 elif key == 'fixed-gift' and record['name'] == SHEET['starter']:
                     for value in entries:
-                        add(area, 'other', 'Starter choice', step, sid_of(value), note='at the start',
-                            pick=len(entries))
+                        add(area, 'other', 'Starter choice', step, sid_of(value))
                 elif key == 'fixed-gift' and record['name'] in SHEET['shards'] and len(entries) > 1:
                     shard_rows(area, step, SHEET['shards'][record['name']], [sid_of(value) for value in entries])
                 elif key == 'fixed-gift':
                     for value in entries:
-                        add(area, 'other', 'Gift', step, sid_of(value), note=cap_note,
-                            pick=len(entries) if len(entries) > 1 else None)
+                        add(area, 'other', 'Gift', step, sid_of(value), pick=len(entries) if len(entries) > 1 else None)
                 elif key == 'fixed-trade':
                     for value in entries:
-                        add(area, 'other', 'Trade', step, sid_of(value), note=cap_note)
+                        add(area, 'other', 'Trade', step, sid_of(value))
                 elif key == 'fixed-roaming':
                     for value in entries:
-                        add(area, 'other', 'Roaming', step, sid_of(value), note=cap_note)
+                        add(area, 'other', 'Roaming', step, sid_of(value))
                         groups[(area, 'other', 'Roaming', step)][sid_of(value)]['pick'] = len(entries)
 
     # The locations sheet (sheet_locs.json)
@@ -203,8 +199,7 @@ def build(data):
         area = area_index[extra['area']]
         pick = len(extra['rows']) if '(pick one)' in extra['method'] else None
         for species, level, how in extra['rows']:
-            add(area, 'other', extra['method'], extra['step'], sid_of(species), low=level, high=level,
-                note='cap %d' % cap(extra['step']), pick=pick)
+            add(area, 'other', extra['method'], extra['step'], sid_of(species), low=level, high=level, pick=pick)
             note_row(groups[(area, 'other', extra['method'], extra['step'])][sid_of(species)], how)
             sheet_counts['sheet rows added'] += 1
     for name, mons in SHEET['notes'].items():
@@ -228,13 +223,12 @@ def build(data):
         step = steps[(key, min(low for low, _ in levels))].most_common(1)[0][0]
         method = 'Surf' if key == 'wild-surf' else RODS[key[5:]][0]
         for (rate, species, _), (low, high) in zip(table['rows'], levels):
-            add(area, 'water', method, step, sid_of(species), rate, None, low, high, 'cap %d' % cap(step))
+            add(area, 'water', method, step, sid_of(species), rate, None, low, high)
             note_row(groups[(area, 'water', method, step)][sid_of(species)], DOC_ONLY)
         sheet_counts['sheet tables added'] += 1
     gift = SHEET['mystery']
     for species, extra in gift['rows']:
-        add(gift_area, 'other', 'Mystery Gift', gift['step'], sid_of(species), low=gift['level'], high=gift['level'],
-            note=gift['how'])
+        add(gift_area, 'other', 'Mystery Gift', gift['step'], sid_of(species), low=gift['level'], high=gift['level'])
         note_row(groups[(gift_area, 'other', 'Mystery Gift', gift['step'])][sid_of(species)], extra)
     # Egg vendors: one area note per place naming the egg it sells (the pools are not listed); a species only an egg
     # gives gets one P.w row naming the egg type (below, once availability without eggs is known).
@@ -257,41 +251,7 @@ def build(data):
         data['AR'][ar]['note'] = '; '.join('%s: %s' % (' / '.join(methods), how) for how, methods in hows.items())
         sheet_counts['sheet egg vendor notes'] += 1
 
-    sections = {}
-    for (area, kind, method, step), rows in sorted(groups.items()):
-        ar = place_of[area]
-        section = sections.setdefault((ar, area, kind), {'n': data['LOC'][area], 'k': KIND[kind], 'g': []})
-        levels = [v for row in rows.values() for v in row['lv']]
-        low = min((v[0] for v in levels), default=None)
-        high = max((v[1] for v in levels), default=None)
-        label = method + (' (pick one)' if any(row.get('pick') for row in rows.values()) and method == 'Gift' else '')
-        group = {'m': label if method in NO_CAP else '%s · cap %d' % (label, cap(step)), 'rows': []}
-        if low is not None:
-            group['lv'] = level_text(low, high)
-        for species, row in rows.items():
-            group['rows'].append({'p': species, 'r': row['r'], 'note': '; '.join(row['note'])})
-            pick = row.get('pick')
-            rate = '%d%% day / %d%% night' % tuple(row['r']) if all(row['r']) and row['r'][0] != row['r'][1] \
-                else '%d%%' % (row['r'][0] or row['r'][1]) if any(row['r']) else ''
-            if pick:
-                rate = '1 of %d' % pick
-            data_note = '; '.join(row['note'])
-            if row['r'][0] and not row['r'][1]:
-                data_note = 'Day; ' + data_note
-            elif row['r'][1] and not row['r'][0]:
-                data_note = 'Night; ' + data_note
-            lv = level_text(min(v[0] for v in row['lv']), max(v[1] for v in row['lv'])) if row['lv'] else ''
-            by_id[species]['w'].append([area, method, rate, lv, data_note.strip('; ')])
-        section['g'].append(group)
-        data['AR'][ar].setdefault('es', [])
-        if section not in data['AR'][ar]['es']:
-            data['AR'][ar]['es'].append(section)
-
-    for ar in data['AR']:
-        if not ar.get('es'):
-            ar['ns'] = 1
-        if ar['l'] == [area_index[SHEET['starter']]]:
-            ar['st'] = 1
+    enc, found = standardise(data, groups, place_of, area_index[SHEET['starter']], gift_area)
 
     first = {}
     for mon in data['P']:
@@ -301,7 +261,6 @@ def build(data):
     follow = {sid_of(form): sid_of(base) for form, base in SHEET['follow'].items()}
 
     def available():
-        found = {mon['id'] for mon in data['P'] if mon['w']}
         obtainable = {mon['id'] for mon in data['P'] if mon['id'] in found or first.get(mon['dex']) in found}
         changed = True
         while changed:
@@ -321,10 +280,19 @@ def build(data):
     without_eggs = available()
     for species, (step, area, method, how, others) in sorted(egg_of.items()):
         if species not in without_eggs:
-            also = '; also ' + ', '.join(data['LOC'][a] for a in others) if others else ''
-            by_id[species]['w'].append([area, method, '', '', '%s; cap %d%s' % (
-                how.replace(' (%s)' % method, ''), cap(step), also)])
+            also = 'also ' + ', '.join(data['LOC'][a] for a in others) if others else ''
+            enc[slot_of(data, place_of[area])].add('gift', species, v=method, loc=area, note='; '.join(
+                x for x in (how.replace(' (%s)' % method, ''), also) if x))
+            found.add(species)
             sheet_counts['sheet egg-only species'] += 1
+    for index, e in enumerate(enc):
+        e.write(data, index)
+    for mon in data['P']:       # the floor is in the LOC name already (Mt. Moon B1F): the label keeps the method
+        for w in mon['w']:
+            floor, _, rest = w[1].partition(' · ')
+            if rest and floor not in encstd.KIND_NAME.values() and floor in data['LOC'][w[0]]:
+                w[1] = rest
+    encstd.finish(data)
     obtainable = available() - {sid_of(name) for name in SHEET['unobtainable']}
     for mon in data['P']:
         if mon['g'] != 1:
@@ -334,3 +302,114 @@ def build(data):
             report('locs: %s: %d' % (what, count))
     report('locs: %d areas in %d places, %d sublocation rows, %d obtainable species' % (
         len(areas), len(data['AR']), sum(counts.values()), sum(mon['g'] == 0 for mon in data['P'])))
+
+
+# The encounter standard (plans/encounters.md, tools/encstd.py). Land tables are Cave unless the place is grass (tall
+# grass outdoors; data.js only says "Grass/cave"): caves, towers, mansions and the Power Plant walk on floors.
+CAVES = ("Diglett's Cave", 'Mt. Moon', 'Rock Tunnel', 'Pokemon Tower', 'Power Plant', 'Seafoam Islands', 'Pokemon Mansion',
+         'Cerulean Cave', 'Victory Road', 'Mt Ember Interior', "Safari Zone Moltres' Den")
+# Tracker slots that are one met location (FRLG's map sections; the user, 2026-11-04): (slot name, the prefix that comes
+# off each member's name for its floor, the AR names: the first is the slot, keeping its index and tracker entry; None =
+# every place named "<prefix>...").
+MERGES = [('Mt. Ember', 'Mt Ember ', ['Mt Ember Exterior', 'Mt Ember Interior', 'Mt Ember Interior 2', 'Mt Ember Interior 3',
+                                     'Mt Ember Interior 4', 'Mt Ember Summit']),
+          ('Safari Zone', 'Safari Zone ', ['Safari Zone Area 1', 'Safari Zone Area 2', 'Safari Zone Area 3',
+                                           'Safari Zone Area 4', 'Safari Zone', 'Safari Zone Secret House']),
+          ('Route 21', 'Route 21 ', ['Route 21 North', 'Route 21 South']),
+          ('Celadon City', 'Celadon City ', None)]
+CHIP = {'Surf': 'Su', 'Old Rod': 'O', 'Good Rod': 'G', 'Super Rod': 'S'}
+GIFT_V = {'Fossil (pick one)': 'Gift (fossil)'}
+STARTER_LOC = "Oak's Lab"          # the Starter card's place (its own met location)
+ROAMING = ('Roaming', 'Kanto')     # the Roaming card and its place (LOC)
+
+
+def slot_of(data, ar):
+    return data['AR'][ar].get('in', ar)
+
+
+def standardise(data, groups, place_of, starter_loc, gift_area):
+    """data.js / sheet rows -> one encstd.Enc per tracker slot (AR index; written once the egg-only rows are in).
+    Merges set AR.in; the Starter and Roaming cards are their own places. Returns ([Enc], species found)."""
+    AR, LOC = data['AR'], data['LOC']
+    names = [A['n'] for A in AR]
+    rows_at = {area for area, *_ in groups}
+    prefix = {}
+    for slot_name, pre, members in MERGES:
+        members = members or [n for n in names if n == slot_name or n.startswith(pre)]
+        idx = [names.index(n) for n in members]
+        slot = idx[0]
+        before = [i for i in idx if rows_at & set(AR[i]['l'])]
+        AR[slot]['n'] = slot_name
+        prefix[slot] = pre
+        for i in idx[1:]:
+            AR[i]['in'] = slot
+            if AR[i]['n'].startswith(pre):
+                AR[i]['n'] = slot_name + ' ' + AR[i]['n'][len(pre):]
+        report('locs: merged %s: tracker slots %d -> 1 (AR %s; %d keeps the slot, members %s)' % (
+            slot_name, len(before), ', '.join(map(str, before)), slot, ', '.join(map(str, idx[1:]))))
+    starter = next(i for i, A in enumerate(AR) if A['l'] == [starter_loc])
+    AR[starter].update(n='Starter', st=1)
+    LOC[starter_loc] = STARTER_LOC
+    gift = next(i for i, A in enumerate(AR) if A['l'] == [gift_area])
+    LOC.append(ROAMING[1])
+    AR.append({'n': ROAMING[0], 'l': [len(LOC) - 1], 'ns': 1})
+    roam = len(AR) - 1
+    data['ARO'] = [starter] + [i for i in range(len(AR)) if i not in (starter, roam, gift)] + [roam, gift]
+    enc = [encstd.Enc() for _ in AR]
+    found = set()
+
+    def floor_of(area, slot):
+        ls = [li for i, A in enumerate(AR) if i == slot or A.get('in') == slot for li in A['l']]
+        if len(ls) < 2:
+            return ''
+        name, pre = LOC[area], prefix.get(slot) or AR[slot]['n'] + ' '
+        return name[len(pre):] if name.startswith(pre) else '' if name == pre.strip() else name
+
+    def lv_text(rows, step):
+        """A table's (or a row's) level range, with the step's level cap once."""
+        levels = [v for row in rows for v in row['lv']]
+        if not levels:
+            return ''
+        return '%s · cap %d' % (level_text(min(v[0] for v in levels), max(v[1] for v in levels)), cap(step))
+
+    for (area, kind, method, step), rows in sorted(groups.items()):
+        slot = roam if method.startswith('Roaming') else slot_of(data, place_of[area])
+        floor = '' if slot == roam else floor_of(area, slot)
+        common = Counter(row.get('drops') for row in rows.values()).most_common(1)[0][0]
+        land = 'cave' if LOC[area].startswith(CAVES) else 'grass'
+        table_lv = lv_text(rows.values(), step)
+        for species, row in rows.items():
+            found.add(species)
+            note = '; '.join(row['note'])
+            pick = '1 of %d' % row['pick'] if row.get('pick') and method != 'Starter choice' else ''
+            if pick and row['pick'] != len(rows):    # Yellow Shard: 8 slots, one shared by the 7 cap Pikachu (the
+                pick += ' slots'                      # template recounts a plain "1 of N" over the group's rows)
+            own_lv = lv_text([row], step)
+            where = dict(floor=floor, note=note, loc=area)
+            if method == 'Grass/cave':
+                for when, rate in zip('dn', row['r']):
+                    if rate:
+                        enc[slot].add(land, species, rate, lv=table_lv, when=when, **where)
+            elif method in CHIP:
+                enc[slot].add('water', species, row['r'][0], lv=table_lv, chip=CHIP[method], **where)
+            elif method == 'Rock Smash':
+                enc[slot].add('special', species, row['r'][0], lv=table_lv, v='Rock Smash', **where)
+            elif method.endswith('raid'):     # the drop list once per tier; a species with other drops says so
+                if row['drops'] != common:
+                    where['note'] = '; '.join(x for x in (note, 'Drops ' + row['drops'] if row['drops'] else 'No drops') if x)
+                enc[slot].add('raid', species, v=method, dr=common, **where)
+            elif method == 'Trade':
+                enc[slot].add('trade', species, lv=own_lv, **where)
+            else:
+                v = GIFT_V.get(method, method)
+                if LOC[area].endswith('Game Corner Exchange') and v == 'Gift':
+                    v = 'Prize'
+                enc[slot].add('gift', species, lv=own_lv, v=v, t=pick, **where)
+    for i, A in enumerate(AR):
+        A.pop('es', None)
+        if A.get('in') is None and i not in (roam, gift):
+            if enc[i].groups:
+                A.pop('ns', None)
+            else:
+                A['ns'] = 1
+    return enc, found

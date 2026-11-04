@@ -37,6 +37,7 @@ def build(data):
         for loc in place['l']:
             ar_of.setdefault(loc, index)
     gift = next(index for index, place in enumerate(data['AR']) if place['n'] == 'Mystery Gift')
+    roam = next(index for index, place in enumerate(data['AR']) if place['n'] == 'Roaming')
     splits = [dict(n=group['n'], st=[]) for group in groups]
     stops, order = {}, []
     cards = [{} for _ in groups]                 # split -> trainer id -> card
@@ -79,7 +80,10 @@ def build(data):
                 a.append(ar_of[place])
         if key == 'mystery-gift':
             a = [gift]
-        stop = dict(k=key, n=name or data['AR'][ar_of[places[0]]]['n'], a=a, s=[[s, ''] for s in steps], it=[],
+        if key == 'roaming':
+            a = [roam]
+        slot = places and data['AR'][ar_of[places[0]]].get('in', ar_of[places[0]])
+        stop = dict(k=key, n=name or data['AR'][slot]['n'], a=a, s=[[s, ''] for s in steps], it=[],
                     tr=[cards[split][i]['k'] for i in ids])
         stops[key] = stop
         order.append((split, key, places))
