@@ -387,6 +387,8 @@ def standardise(data, groups, place_of, starter_loc, gift_area):
 
     for (area, kind, method, step), rows in sorted(groups.items()):
         slot = roam if method.startswith('Roaming') else slot_of(data, place_of[area])
+        if slot == roam:            # met wherever it is caught: its place is Kanto, not data.js's Viridian City
+            area = AR[roam]['l'][0]
         floor = '' if slot == roam else floor_of(area, slot)
         common = Counter(row.get('drops') for row in rows.values()).most_common(1)[0][0]
         land = 'cave' if LOC[area].startswith(CAVES) else 'grass'
