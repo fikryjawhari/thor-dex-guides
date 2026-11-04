@@ -167,7 +167,8 @@ in a JS / Python string is usually a missing escape).
 - `--accept-routes <spec>`: `[hack:]glob` list (`#/calc`, `#/tr/*`) passed to domcompare: an accepted route that
   differs is printed as `accepted, differs` and doesn't fail; every other route still must match.
 - `.tmp/accept.json` in the checkout the gate runs in is read on every `check` and merged with the flags:
-  `{"data": {"*": [...], "hardlove-gold": ["TR.g[].sec[].tr[].gc"]}, "routes": {"eternal-x": "#/calc"}}`. It is
+  `{"data": {"*": [...], "hardlove-gold": ["TR.g[].sec[].tr[].gc"]}, "routes": {"eternal-x": "#/calc"}}`; `"build":
+  {"<hack>": ["report", "counts.stops"]}` (file only) accepts an intended `report.txt` / count change. It is
   under `.tmp/` on purpose: it can't be committed, so an accept never reaches `main` or outlives the job. The parent
   that merges and audits writes it once for the job and deletes it after the gate. The gate prints every accept
   it applies (`Accepting data on <hack>: ...`).

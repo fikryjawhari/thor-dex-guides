@@ -1,4 +1,4 @@
-// The encounter standard on the Locations page (plans/encounters.md, template/README.md → Encounters). Guides whose
+// The encounter standard on the Locations page (template/README.md → Encounters). Guides whose
 // data is in the standard (D.ESV 2); others skip.
 //   e1 cards: a card per location, the Extra card last; in a white box, sections in the standard's order (per floor),
 //      floor headings and the floor in the yellow header when there are 2+; the picker grouped by section, each

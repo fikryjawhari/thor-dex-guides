@@ -381,7 +381,7 @@ Source: data.js `areas` (221, game order; index = LOC index). Built by `extract/
   slots "Big Nugget 80/80%"), fixed-overworld (Static), fixed-gift (Gift, "1 of N" when it is a choice),
   fixed-trade (Trade), fixed-roaming (Roaming, "1 of N"). Trainers and item keys are other units'.
 
-#### Wild tables: the encounter standard (2026-11-04, plans/encounters.md, Open 12 / 13)
+#### Wild tables: the encounter standard (2026-11-04; template/README.md → Encounters)
 
 `locs.standardise` writes every row through `tools/encstd.py` (`D.ESV` 2): one `Enc` per tracker slot.
 - Sections by kind code, never the place name: data.js "Grass/cave" is **Cave** for `locs.CAVES` (Diglett's Cave,

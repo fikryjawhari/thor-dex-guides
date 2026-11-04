@@ -124,6 +124,11 @@ try {
           key === wanted ? [oldSplitIndex + '.' + oldStopIndex] : []));
         const sourceList = !stamped ? [legacy] : find(String(stop.k ?? position)).length ? find(String(stop.k ?? position)) : find(legacy);
         const parts = sourceList.map(source => source.split('.').map(Number));
+        // A stop the update adds (a key the old build never had: Radical Red's roaming) has no state to carry.
+        if (stamped && stop.k != null && !parts.length && !previousLayout.flat().includes(String(stop.k))) {
+          assert.notEqual(baselineState.c[position + '.0'], 1, 'new stop ' + position + ' starts unticked');
+          return;
+        }
         assert(parts.length, 'old position known for ' + position);
         assert.equal(baselineState.c[position + '.0'], 1, 'tick ' + position);
         assert.equal(baselineState.x[position], parts.some(([, oldStop]) => oldStop % 2 === 0) ? 0 : undefined, 'stop ' + position);

@@ -304,7 +304,7 @@ def build(data):
         len(areas), len(data['AR']), sum(counts.values()), sum(mon['g'] == 0 for mon in data['P'])))
 
 
-# The encounter standard (plans/encounters.md, tools/encstd.py). Land tables are Cave unless the place is grass (tall
+# The encounter standard (template/README.md → Encounters, tools/encstd.py). Land tables are Cave unless the place is grass (tall
 # grass outdoors; data.js only says "Grass/cave"): caves, towers, mansions and the Power Plant walk on floors.
 CAVES = ("Diglett's Cave", 'Mt. Moon', 'Rock Tunnel', 'Pokemon Tower', 'Power Plant', 'Seafoam Islands', 'Pokemon Mansion',
          'Cerulean Cave', 'Victory Road', 'Mt Ember Interior', "Safari Zone Moltres' Den")

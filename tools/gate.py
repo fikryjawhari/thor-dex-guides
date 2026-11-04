@@ -313,7 +313,7 @@ def auto_baseline(gate):
     return manifest.exists() and load(manifest).get('sha') == base
 
 
-def data_check(gate, hack, accepted=()):
+def data_check(gate, hack, accepted=(), build=()):
     directory = ROOT / 'hacks' / hack
     baseline_data = BASE / 'hacks' / hack / 'data.json'
     if hack not in REBUILDS:
@@ -336,13 +336,18 @@ def data_check(gate, hack, accepted=()):
             gate.result(hack + '-data', not rest, (f'differs only under accepted paths ({len(ok)})' if not rest else
                         f'data.json differs from baseline at {len(rest)} path{"s" * (len(rest) != 1)} not accepted: '
                         + ', '.join(sorted(rest)[:8]) + (' ...' if len(rest) > 8 else '')))
-        gate.result(hack + '-counts', counts(current) == counts(before),
-                    f'current={counts(current)} baseline={counts(before)}')
+        # build accepts (.tmp/accept.json "build": {hack: ["report", "counts.stops"]}): an intended report / count change.
+        free = {item.split('.', 1)[1] for item in build if item.startswith('counts.')}
+        now, was = counts(current), counts(before)
+        same = {k: v for k, v in now.items() if k not in free} == {k: v for k, v in was.items() if k not in free}
+        gate.result(hack + '-counts', same, f'current={now} baseline={was}'
+                    + (f' (accepted: {", ".join(sorted(free))})' if free and now != was else ''))
         report = directory / 'extract' / 'report.txt'
         old_report = baseline_data.parent / 'extract' / 'report.txt'
         same_report = report.exists() == old_report.exists() and (
             not report.exists() or report.read_bytes() == old_report.read_bytes())
-        gate.result(hack + '-report', same_report, 'byte-identical' if same_report else 'report.txt differs')
+        gate.result(hack + '-report', same_report or 'report' in build,
+                    'byte-identical' if same_report else 'report.txt differs' + (' (accepted)' if 'report' in build else ''))
         original_data = json.loads(original)
         original_data.pop('built', None)
         if original_data == current:
@@ -500,13 +505,14 @@ def main():
             print(f'Baseline: {manifest["ref"]} {manifest["sha"]}', flush=True)
             data_ok = gateaccept.accepts('data', args.accept_data, names)
             routes_ok = gateaccept.accepts('routes', args.accept_routes, names)
-            for kind, table in (('data', data_ok), ('routes', routes_ok)):
+            build_ok = gateaccept.accepts('build', [], names)
+            for kind, table in (('data', data_ok), ('routes', routes_ok), ('build', build_ok)):
                 for hack in names:
                     if table.get(hack):
                         print(f'Accepting {kind} on {hack}: {", ".join(table[hack])}', flush=True)
             if args.data or not args.template:
                 for hack in names:
-                    data_check(gate, hack, data_ok.get(hack, []))
+                    data_check(gate, hack, data_ok.get(hack, []), build_ok.get(hack, []))
             if args.template or not args.data:
                 template_check(gate, names, args.jobs, routes_ok)
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
