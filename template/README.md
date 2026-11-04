@@ -634,6 +634,10 @@ one of its es lines). Page (`ENCOUNTER STANDARD` in dex.js):
   floors; the slot's card shows the rest. Both show the slot's tracker (one `TK.e[slot]`, every species) and its
   "also:" line. A place link (`#/l/<i>`) and a walkthrough stop on the member show its card's floors. A plain member
   whose floor is on a member's card says so with `on` = that member (its place link opens that card).
+- A published slot split into several (`AR[m].to` = [[slot, [species id, ...]], ...], `in` = the default; EI's
+  Underwater into Routes 124 / 126): no card, no tracker of its own. Its saved entry moves on load to the slot whose
+  list has the species (else `in`); when that slot already has an entry, it stays stored, counts, and shows there as
+  "also:".
 - Extra card: last on the page. Rows the player adds (`TK.x` [{w place, p species | f 1}]): a place (in the viewer the
   letters keyboard, words capitalised) and a species from the Other… search or failed, a remove button each, "+ Add
   encounter". Counted in caught / failed and dupes, in the backup code; Reset all clears them. No explanation text.

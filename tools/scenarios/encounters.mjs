@@ -7,6 +7,7 @@
 //      kept across a reload, in the backup code; removing them and Reset all clear them; an older backup (no x) loads.
 //   e3 old saves: a tracker save from before the standard (no x) loads unchanged; open sections saved by the old
 //      section names ('area.place.Grass') open the same section by code; other names drop.
+//   e4 split slots: a published slot split by species (AR.to) moves its entry, or keeps it as "also:".
 import assert from 'node:assert/strict';
 import { SIZE_SMALL, guideArg, readGuide, runChecks } from '../calc_check_lib.mjs';
 
@@ -144,6 +145,26 @@ const checks = [
       assert.equal(lo.ev, 2, 'migrated once');
       await page.value(openCard(a));
       assert.equal(await page.value(`document.querySelector('details.sec[data-s="${a}|${f0}|${k0}"]').open`), true, 'that section opens');
+    },
+  },
+  {
+    id: 'e4 split slots',
+    title: 'a published slot split into several (AR.to): its entry moves by species, else to in; "also:" when taken',
+    skip: skip || (AR.some(A => A.to) ? undefined : 'no split slots'), sizes: SIZE_SMALL, modes: ['normal'],
+    run: async page => {
+      const m = AR.findIndex(A => A.to), [d, ps] = AR[m].to[0], x = ps[0], y = AR[d].es[0].g[0].rows.find(r => r.p !== x).p;
+      const load = async e => {
+        await page.value(`localStorage.setItem(LS.track,${JSON.stringify(JSON.stringify({ s: '', pl: '', e, t: {} }))})`);
+        await page.reload();
+        await page.route('#/locs');
+        return page.value('TK.e');
+      };
+      assert.deepEqual(await load({ [m]: { p: nameOf(x) } }), { [d]: { p: x } }, `${AR[m].n}: ${nameOf(x)} moves to ${AR[d].n}`);
+      assert.deepEqual(await load({ [m]: { f: 1 } }), { [AR[m].in]: { f: 1 } }, `${AR[m].n}: failed goes to ${AR[AR[m].in].n}`);
+      assert.deepEqual(await load({ [m]: { p: nameOf(x) }, [d]: { p: nameOf(y) } }), { [m]: { p: x }, [d]: { p: y } }, 'kept when taken');
+      await page.value(openCard(d));
+      assert.ok(await page.value(`[...document.querySelectorAll('details.split[data-a="${d}"] .tk-also')].some(e=>e.textContent.includes(${JSON.stringify(nameOf(x))}))`),
+        `${AR[d].n}: "also: ${nameOf(x)}"`);
     },
   },
 ];

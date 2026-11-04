@@ -462,7 +462,13 @@ const caughtFams=(skip)=>{const s=new Set();for(const v of Object.values(TK.t||{
 // Merged slots (encounter standard): a location's floors / rooms that were tracker slots of their own. The slot keeps
 // the first floor's area; the others are hidden members (AR[i].in = the slot, which has no sub). MEM[slot] = members;
 // slotL(a) = the LOC indexes of a slot and its members.
-const MEM={};AR.forEach((A,i)=>{if(A.in!=null&&AR[A.in]&&!AR[A.in].sub)(MEM[A.in]=MEM[A.in]||[]).push(i);});
+const MEM={};AR.forEach((A,i)=>{if(A.in!=null&&!A.to&&AR[A.in]&&!AR[A.in].sub)(MEM[A.in]=MEM[A.in]||[]).push(i);});
+// A slot split into several (EI's Underwater, into Routes 124 / 126): AR[m].to = [[slot, [species id...]]...], in = the
+// default. Its saved entry goes to the slot whose list has the species (else in); when that slot has its own, it stays
+// stored and shows there as "also:". toSlot(m) = where m's entry goes.
+const TOM=AR.map((A,i)=>i).filter(i=>AR[i].to&&AR[i].in!=null);
+const toSlot=m=>{const e=TK.e[m],t=e&&e.p&&AR[m].to.find(([,ps])=>ps.includes(e.p));return t?t[0]:AR[m].in;};
+TOM.forEach(m=>{const d=toSlot(m);if(TK.e[m]&&!TK.e[d]){TK.e[d]=TK.e[m];delete TK.e[m];tkSave();}});
 const isMem=a=>AR[a].in!=null&&!!AR[AR[a].in]&&!AR[AR[a].in].sub,slotOf=a=>isMem(a)?AR[a].in:a;
 const slotL=a=>a==null||!AR[a]?[]:[a,...(MEM[a]||[])].flatMap(x=>AR[x].l);
 // A member with card: [floor...] (ESV) is still part of its slot's tracker, but shows those of the slot's floors on a card
@@ -511,7 +517,7 @@ function pickGroups(a,sp){const es=ESV&&AR[a]?.es;if(!es)return [['',sp]];const 
  const rest=sp.filter(p=>!seen.has(p.id));if(rest.length)out.push(['',rest]);return out;}
 // A merged slot's other floors with an entry saved before the merge: kept, counted, shown here until cleared.
 const memName=(a,m)=>{const n=AR[m].n,s=AR[a].n;return n.startsWith(s)&&n.length>s.length?n.slice(s.length).replace(/^[\s:–-]+/,''):n;};
-const alsoHTML=a=>(MEM[a]||[]).filter(m=>TK.e[m]).map(m=>{const e=TK.e[m],p=e.p&&byId[e.p];return `<div class="tk-also mut small">also: ${e.f?'failed':p?`<a href="#/p/${p.id}">${esc(p.name)}</a>`:esc(e.p)} (${esc(memName(a,m))})<button class="tk-ax" data-m="${m}" title="Clear">×</button></div>`;}).join('');
+const alsoHTML=a=>[...(MEM[a]||[]),...TOM.filter(m=>toSlot(m)===a)].filter(m=>TK.e[m]).map(m=>{const e=TK.e[m],p=e.p&&byId[e.p];return `<div class="tk-also mut small">also: ${e.f?'failed':p?`<a href="#/p/${p.id}">${esc(p.name)}</a>`:esc(e.p)} (${esc(memName(a,m))})<button class="tk-ax" data-m="${m}" title="Clear">×</button></div>`;}).join('');
 function bindTrackers(){app.querySelectorAll('.trk').forEach(el=>{if(el.dataset.b)return;el.dataset.b=1;const a=+el.dataset.a;const sel=el.querySelector('.tk-sel'),oth=el.querySelector('.tk-other');if(!sel)return;
  sel.onchange=()=>{const v=sel.value;if(v==='__other'&&INV){otherKb(a);return;}if(v==='__other'){oth.style.display='block';const inp=oth.querySelector('input');inp.focus();inp.oninput=()=>{const s=inp.value.trim().toLowerCase();const res=s.length<2?[]:P.filter(p=>p.g===0&&p.key.includes(s)).slice(0,8);
    oth.querySelector('.tk-res').innerHTML=res.map(p=>`<div class="tk-opt" data-id="${p.id}">${spr(p.id,'s40')}<span>${esc(p.name)}</span></div>`).join('');oth.querySelectorAll('.tk-opt').forEach(o=>o.onclick=()=>{TK.e[a]={p:o.dataset.id};tkSave();rerender();});};return;}
