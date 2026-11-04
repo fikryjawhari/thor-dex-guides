@@ -244,3 +244,41 @@ def finish(D):
                     for k in x.get('r', {}):
                         c, w = k.split('|')
                         assert c in CHIPS and w in WHEN, f"encstd: {A['n']}: bad rate key {k}"
+
+
+class LevelAwareEnc(Enc):
+    """Opt-in: preserve seasonal levels and never give an unspecified row the group's known level."""
+
+    def _group(self, kind, floor, variant, group):
+        output, rows, common_level = super()._group(kind, floor, variant, group)
+        if common_level and any(not row['plv'] and not any(row['kl'].values()) for _, row in rows):
+            common_level = ''
+            output.pop('lv', None)
+        for published, row in rows:
+            source = group['rows'][row['p']]
+            for collapsed in list(row['r']):
+                chip, when = collapsed.split('|')
+                if when:
+                    continue
+                keys = [key for key in source['r'] if key.split('|')[0] == chip]
+                levels = {key: lv_merge(source['lv'].get(key, [])) for key in keys}
+                if len(keys) < 2 or len(set(levels.values())) < 2:
+                    continue
+                row['r'].pop(collapsed)
+                row['kl'].pop(collapsed, None)
+                row['r'].update({key: source['r'][key] for key in keys})
+                row['kl'].update(levels)
+            row['r'] = dict(sorted(row['r'].items(), key=lambda entry: key_sort(entry[0])))
+            if row['r']:
+                published['r'] = row['r']
+            published.pop('lv', None)
+            published.pop('kl', None)
+            if row['r']:
+                own = {key: level for key, level in row['kl'].items() if level and level != common_level}
+                if own and len(row['r']) == 1:
+                    published['lv'] = next(iter(own.values()))
+                elif own:
+                    published['kl'] = own
+            elif row['plv'] and row['plv'] != common_level:
+                published['lv'] = row['plv']
+        return output, rows, common_level

@@ -47,6 +47,7 @@ def main():
     trainers.split(D)     # one box per mini-split
     items.split(D)        # Held Items + Berries, Valuables
     locs.starter(D)       # the Starter area
+    locs.standardise(D)
     move_rules.write(D)   # move_rules.json from the source's lists, read by finalise's move interactions
     finalise(D, H.name, gauntlet_rules=trainers.gauntlet_rules)
     gid.build(D)          # GID: the save importer's game id tables (after finalise: M / AB indexes)

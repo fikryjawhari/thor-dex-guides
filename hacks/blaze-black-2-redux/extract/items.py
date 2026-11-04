@@ -1326,6 +1326,7 @@ def area_join(area, loc_names):
     place = re.sub(r' (?:Gym|Pokémon Center)$', '', place)
     place = ITEM_AREA_ALIASES.get(place, place)
     names = tuple(name for name in locs.area_names(place) if name in loc_names)
+    names = names or ((place,) if place in loc_names else ())
     names = names or tuple(sorted(name for name in loc_names if name.startswith((place + ' - ', place + ', '))))
     return place, names
 

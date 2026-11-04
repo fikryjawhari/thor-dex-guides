@@ -13,6 +13,7 @@ Usage: uv run python -I hacks/unbound/extract/check.py
   species' types, stats and abilities against it.
 """
 import collections
+import copy
 import glob
 import json
 import os
@@ -172,6 +173,42 @@ def main():
 
 
 def check_locations(D, ids):
+    import encstd
+    import encounters
+    import locs
+    source = {'P': copy.deepcopy(D['P'])}
+    locs.build(source, standard=False)
+    check_location_sources(source, ids)
+    source_pairs = {(row[0], species['id']) for species in source['P'] for row in species['w']}
+    source_total = sum(sum(row['r']) for area in source['AR'] for section in area.get('es', [])
+                       for group in section['g'] for row in group['rows'])
+    encounters.build(source)
+    encstd.finish(D)
+    check(D['LOC'] == source['LOC'], 'encounters: LOC differs from the source conversion')
+    check(D['AR'] == source['AR'], 'encounters: sections, rates, floors, rewards or tracker indexes differ from sources')
+    expected = {species['id']: species['w'] for species in source['P']}
+    check(all(species['w'] == expected[species['id']] for species in D['P']),
+          'encounters: standard P.w lines differ from sources')
+    check(source_pairs == {(row[0], species['id']) for species in D['P'] for row in species['w']},
+          'encounters: a source species/location pair was lost or added')
+    total = sum(rate * (2 if not key.split('|')[1] else 1)
+                for area in D['AR'] for section in area.get('es', []) for group in section['g']
+                for row in group['rows'] for key, rate in row.get('r', {}).items())
+    check(abs(total - source_total) < 0.01, 'encounters: day/night rate mass changed in the standard')
+    target, member = (locs.ORDER.index(name) + 1 for name in ('Cinder Volcano', 'Cinder Volcano Depths'))
+    check(D['AR'][member].get('in') == target and not D['AR'][member].get('es'),
+          'encounters: Cinder Volcano Depths must retain its index as a hidden member')
+    check(sum(not area.get('ns') and area.get('in') is None for area in D['AR']) == 62,
+          'encounters: expected 62 tracker slots after the Cinder merge (63 before)')
+    groups = [group for area in D['AR'] for section in area.get('es', []) if section['k'] == 'raid'
+              for group in section['g']]
+    check(groups and all(group.get('dr') and group.get('lv') for group in groups),
+          'encounters: every raid tier requires its own drop list and level range')
+    print('encounters: ESV 2; 69 saved indexes retained; 63 -> 62 tracker slots; %d raid tiers; source conversion matches'
+          % len(groups))
+
+
+def check_location_sources(D, ids):
     import locs
     LOC, AR = D['LOC'], D['AR']
     got = collections.Counter()

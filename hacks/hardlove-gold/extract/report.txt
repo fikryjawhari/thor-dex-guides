@@ -131,6 +131,7 @@ TM/HM fixes from the game: TM14 = Blizzard; TM19 = Giga Drain; TM25 = Thunder; T
 mega stones with a location but no Mega page: Abomasite, Barbaracite, Darkranite, Diancite, Falinksite, Heatranite, Latiasite, Magearnite, Malamarite, Meowsticite, Mewtwonite X, Mewtwonite Y, Scraftinite, Zeraorite, Zygardite, Glimmoranite, Tatsugirinite
 IX (hack item text): Infinite Candy, Starter Card
 P 987 obtainable 596 megas 74 trainer only 317 moves 783 abilities 284 trainers 329 areas 61 stops 94 unplaced items 0
+encounter standard: tracker slots 62 -> 62 (61 encounter slots + Roaming); AR and LOC indexes unchanged; National Park morning/day/night already share AR 20; no slot merges
 items: TM place and shop retained: TM39 Rock Tomb ['Found: Union Cave B1F', 'Shop: Goldenrod Department Store after beating Schorsch']
 items: TM place and shop retained: TM70 Flash ['Found: Sprout Tower', 'Shop: Azalea Town Mart, Goldenrod Department Store']
 items: walkthrough rows matched to an Items line at the same place: 0

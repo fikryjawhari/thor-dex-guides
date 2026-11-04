@@ -123,6 +123,32 @@ Data rules:
   The pin has no vanilla HGSS text to compare, so other items are not marked; the rest of `222.txt` (about 2,000 names past
   id 536, with no text in the pin) gets text from the shared pool.
 
+### Wild tables: encounter standard
+
+`locs.standardise` writes every verified sheet/game row through `tools/encstd.py` into `AR.es` and flagged `P.w`
+(`ESV: 2`). Locations, walkthrough lines and Pokémon rows share Grass / Cave / Water / Special / Gifts & static /
+Trades names. Source LOC order supplies floor order, not Pokédex order; levels are factored by the shared writer.
+Surf and the hack's single fishing table share Water with Surf (`Su`) / Fish (`F`) rate chips. Azalea's Land rows
+are Headbutt; Safari tables are Special → Safari (one floor per Safari area, retaining Surf / Fish chips), Rock
+Smash is its own Special subheading. `Other` and Legendary become Static; Roamer becomes Roaming; Togepi Egg becomes
+Egg; Game Corner becomes Prize; random pools become Random gift, Random gift (starter), Random gift (pseudo), Trap
+and Gift (fossil). Pool sizes, levels, starter conditions and all notes stay on their rows.
+
+National Park's Morning / Day / Night LOCs already belong to AR 20: one Grass table now has `m` / `d` / `n` rate
+keys, identical rows collapse, and all three LOC labels read National Park. No slot merges: **62 → 62 AR entries,
+61 → 61 tracker slots** (Roaming has `ns`). Every AR index/name/LOC membership, species ID, trainer key, walkthrough
+stop key and localStorage key is retained. The appended Starter remains AR 61 / LOC 95; its LOC heading now reads
+New Bark Town, its card still reads Starter and its rows still say Starter choice. Older UI section names migrate
+where the shared template recognises them; other method-open flags close as the standard specifies. Tracker entries
+and their species remain independent of those UI flags.
+
+Land classification is an explicit per-map/area decision based on `Encounters.c`'s indoor D15/D18/D25/D26/D38–40/
+D42–44/D50 maps, not a guess from Land or a displayed heading. Ruins of Alph Inside is Cave, Outside is Grass;
+Mt. Silver Entrance/Moltres Room are Cave, Mountainside/Snowy Area are Grass. **Assumption:** the cached hg-engine
+snapshot omits map-type headers, so those two outdoor Mt. Silver maps retain their outdoor classification. No new
+availability or time-of-day tables are invented: beyond the three National Park source tables the existing verified
+sheet/game rows remain the data. Mt. Silver Moltres Room still carries the existing unmatched-table warning.
+
 ## Local storage (prefix hg)
 
 `hgdex4` list filters, `hgcalc:<species name>` (was `<id>`) + `hgcalc:lastlv` stat calc, `hgtrack` tracker {s starter,
