@@ -15,6 +15,7 @@ from collections import Counter
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from common import DATA, sid   # noqa: E402
+import locs   # noqa: E402
 data = Path(__file__).resolve().parents[1] / 'data.json'
 if not data.is_file():
     print('SKIP radical-red extract-check: no data.json')
@@ -97,9 +98,10 @@ def check_items():
 
 
 
-METHODS = {'Grass/cave', 'Surf', 'Old Rod', 'Good Rod', 'Super Rod', 'Rock Smash', 'Raid', 'Static', 'Gift',
-           'Trade', 'Roaming', 'Starter choice', 'Shard trade', 'Shard egg', 'Fossil (pick one)', 'Mystery Gift',
-           'Wonder Egg', 'Paldea Egg', 'Sevii Egg'}
+# P.w method labels (the encounter standard's, tools/encstd.py label; a floor already in the LOC name is left off)
+METHODS = re.compile(r'(?:[^·]+ · )?(?:(?:Grass|Cave)|Water · (?:Surf|Old|Good|Super)|Rock Smash|[1-6]★ raid|Static|Gift'
+                     r'|Gift \(fossil\)|Prize|Trade|Roaming(?: \(Battle Simulator\))?|Starter choice|(?:\w+ )?Shard (?:trade|egg)|Mystery Gift'
+                     r'|Wonder Egg|Paldea Egg|Sevii Egg)')
 SHEET = json.loads((HERE / 'sheet_locs.json').read_text(encoding='utf-8'))
 
 
@@ -126,8 +128,10 @@ def expected_pairs():
 
 def check_locations(data, failures):
     areas = DATA['areas']
-    if data['LOC'] != [area['name'] for area in areas] + [SHEET['mystery']['area']]:
-        failures.append('LOC is not the %d data.js areas then the Mystery Gift place' % len(areas))
+    names = [area['name'] for area in areas]
+    names[names.index(SHEET['starter'])] = locs.STARTER_LOC
+    if data['LOC'] != names + [SHEET['mystery']['area'], locs.ROAMING[1]]:
+        failures.append("LOC is not the %d data.js areas (Oak's Lab renamed), the Mystery Gift place, Kanto" % len(areas))
     covered = Counter(index for place in data['AR'] for index in place['l'])
     if sorted(covered) != list(range(len(data['LOC']))) or any(count != 1 for count in covered.values()):
         failures.append('AR.l does not place every LOC exactly once')
@@ -137,15 +141,20 @@ def check_locations(data, failures):
         for row in mon['w']:
             if not 0 <= row[0] < len(data['LOC']):
                 failures.append('%s: P.w LOC index %s out of range' % (mon['id'], row[0]))
-            if row[1] not in METHODS:
-                failures.append('%s: unknown P.w method %r' % (mon['id'], row[1]))
+            if not METHODS.fullmatch(row[1]) or row[5:] != [1]:
+                failures.append('%s: unknown or unflagged P.w method %r' % (mon['id'], row[1]))
+            if ' · cap ' in row[4] or row[4].startswith('cap '):
+                failures.append('%s: cap in a note %r' % (mon['id'], row[4]))
     for place in data['AR']:
         for section in place.get('es', []):
             for group in section['g']:
                 for row in group['rows']:
                     if row['p'] not in ids:
                         failures.append('encounter species %r does not resolve' % row['p'])
-    missing = sorted(pair for pair in expected_pairs() if pair not in rows and pair[1] is not None)
+    kanto = data['LOC'].index(locs.ROAMING[1])
+    roamers = {(area, sid(str(v))) for area, r in enumerate(areas) for e in r.get('fixed-roaming', {}).values() for v in e}
+    missing = sorted(pair for pair in expected_pairs() if pair[1] is not None and pair not in rows and not (
+        pair in roamers and (kanto, pair[1]) in rows))
     if missing:
         failures.append('%d data.js encounters have no P.w row, e.g. %s' % (len(missing), missing[:5]))
     unresolved = sorted(area for area, species in expected_pairs() if species is None)
@@ -155,6 +164,44 @@ def check_locations(data, failures):
     if not obtainable:
         failures.append('no obtainable species')
     check_sheet(data, failures)
+    check_standard(data, failures)
+
+
+def check_standard(data, failures):
+    """The encounter standard: the merges, one card per place, Starter / Roaming / Mystery Gift cards, the stop names."""
+    AR = data['AR']
+    if data.get('ESV') != 2:
+        failures.append('D.ESV is not 2')
+    for name, _, _ in locs.MERGES:
+        slot = [i for i, A in enumerate(AR) if A['n'] == name and A.get('in') is None]
+        members = [i for i, A in enumerate(AR) if slot and A.get('in') == slot[0]]
+        if len(slot) != 1 or not members or any(AR[i].get('es') or AR[AR[i]['in']].get('in') is not None for i in members):
+            failures.append('merge %s: slot %s, %d members' % (name, slot, len(members)))
+    left = [A['n'] for A in AR if A.get('in') is None and not A.get('ns') and not A.get('st') and
+            re.search(r"House|Gatehouse|Poke Center|Poke Mart|Gym|Chamber|Office|Room|Lab|Museum|Den\b", A['n'])]
+    if left:
+        failures.append('buildings that are still places of their own: %s' % left)
+    cards = [A['n'] for A in AR if A.get('in') is None and A.get('es')]
+    if len(cards) != len(set(cards)):
+        failures.append('two cards with one name: %s' % sorted({n for n in cards if cards.count(n) > 1}))
+    if [A['n'] for A in AR if A.get('st')] != ['Starter'] or data['ARO'][0] != next(i for i, A in enumerate(AR) if A.get('st')):
+        failures.append('the Starter card is not first')
+    if any(A.get('es') and A.get('ns') and A['n'] not in ('Mystery Gift', 'Roaming') for A in AR):
+        failures.append('a place with encounters has no tracker slot')
+    viridian = next(A for A in AR if A['n'] == 'Viridian City')
+    if any(g.get('v', '').startswith('Roaming') for s in viridian.get('es', []) for g in s['g']):
+        failures.append('Roaming is still under Viridian City')
+    for A in AR:
+        for s in A.get('es', []):
+            for g in s['g']:
+                picks = {x['t'] for x in g['rows'] if re.fullmatch(r'1 of \d+', x.get('t', ''))}
+                if picks and picks != {'1 of %d' % len(g['rows'])}:
+                    failures.append('%s %s: a "1 of N" group with %d rows (%s)' % (A['n'], g.get('v'), len(g['rows']), picks))
+                if s['k'] == 'raid' and any(x.get('note', '').startswith('Drops ') for x in g['rows']) and not g.get('dr'):
+                    failures.append('%s %s: per-row drops with no tier list' % (A['n'], g.get('v')))
+    names = [s['n'] for sp in data['WK']['splits'] for s in sp['st']]
+    if len(names) != len(set(names)):
+        failures.append('walkthrough stops share a name: %s' % sorted({n for n in names if names.count(n) > 1}))
 
 
 def check_sheet(data, failures):
@@ -162,18 +209,18 @@ def check_sheet(data, failures):
     loc = {name: index for index, name in enumerate(data['LOC'])}
     starters = [mon['id'] for mon in data['P'] if any(row[1] == 'Starter choice' for row in mon['w'])]
     lab = [place for place in data['AR'] if place.get('st')]
-    if len(starters) != 27 or len(lab) != 1 or lab[0]['l'] != [loc[SHEET['starter']]]:
+    if len(starters) != 27 or len(lab) != 1 or lab[0]['l'] != [loc[locs.STARTER_LOC]]:
         failures.append('starter choice: %d species, %d starter places' % (len(starters), len(lab)))
     gift = loc[SHEET['mystery']['area']]
     place = next(place for place in data['AR'] if place['l'] == [gift])
     for name, _ in SHEET['mystery']['rows']:
-        if not any(row[0] == gift and row[1] == 'Mystery Gift' and row[3] == '85' for row in by_id[sid(name)]['w']):
+        if not any(row[0] == gift and row[1] == 'Mystery Gift' and row[3].split(' · ')[0] == '85' for row in by_id[sid(name)]['w']):
             failures.append('Mystery Gift %s has no Lv 85 row' % name)
     if not place.get('ns') or not place.get('es'):
         failures.append('Mystery Gift place should have encounters and no tracker slot')
     for area, mons in SHEET['gifts'].items():
         for name, (level, how) in mons.items():
-            if not any(row[0] == loc[area] and row[1] == 'Gift' and row[3] == str(level) and how in row[4]
+            if not any(row[0] == loc[area] and row[1] == 'Gift' and row[3].split(' · ')[0] == str(level) and how in row[4]
                        for row in by_id[sid(name)]['w']):
                 failures.append('gift %s at %s has no Lv %d row' % (name, area, level))
     for area, wanted in SHEET['trades'].items():
@@ -191,7 +238,7 @@ def check_sheet(data, failures):
         failures.append('species with more than one egg row: %s' % [k for k, v in egg_rows.items() if v > 1][:5])
     for ar in data['AR']:
         for section in ar.get('es', []):
-            if any(group['m'].split(' · ')[0] in egg_methods for group in section['g']):
+            if any(group.get('v') in egg_methods and len(group['rows']) > 5 for group in section['g']):
                 failures.append('%s still lists an egg pool section' % ar['n'])
     pooled = {sid(name) for egg in SHEET['eggs'] for name in egg['species']}
     lost = sorted(i for i in pooled if i in by_id and by_id[i]['g'] == 3 and i not in
