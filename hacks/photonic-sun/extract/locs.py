@@ -18,6 +18,7 @@ import base64, io, json, re
 from collections import Counter, defaultdict
 import pdfplumber
 from common import SRC, load, norm, report
+import encstd
 
 STARTERS = [('Rowlet', 5), ('Litten', 5), ('Popplio', 5)]
 # (area, method, species, level, note)
@@ -366,8 +367,67 @@ def build(D):
         D['AR'][A[a]]['note'] = ' '.join(ns)
     D['AR'][A['Ultra Space Wilds']]['note'] = ('Legendaries from the Special Encounters doc. The other Ultra Wormhole '
                                               'Pokémon are as in Ultra Sun.')
+    standardise(D, LT)
     availability(D)
     report('found only as SOS allies:', ', '.join(p['n'] for p in P if p['w'] and all(w[1] == 'SOS ally' for w in p['w'])))
+
+
+def standardise(data, tables):
+    areas = data['AR']
+    parent = next(index for index, area in enumerate(areas) if area['n'] == 'Lush Jungle')
+    member = next(index for index, area in enumerate(areas) if area['n'] == 'Lush Jungle Cave')
+    areas[member]['in'] = parent
+    data['LOC'][0] = 'Route 1'
+    encounters = [encstd.Enc() for area in areas]
+    for index, place in tables.items():
+        enc = encounters[parent if index == member else index]
+        for section in place['s']:
+            head = section['n']
+            floor = 'Cave' if index == member else ''
+            variant = ''
+            if section['k'] == 'grass':
+                kind = 'cave' if 'Cave' in head or areas[index]['n'] == 'Sandy Cave' else 'grass'
+                if head not in ('Grass', 'All Grass', 'Cave', 'Everywhere', 'Flowers', 'Sand', 'Building'):
+                    floor = head
+                variant = head if head in ('Flowers', 'Sand') else ''
+            elif section['k'] == 'water':
+                kind = 'water'
+                if head != 'Water':
+                    floor = head.removeprefix('Water ').strip('()')
+            else:
+                kind = 'special'
+            for group in section['g']:
+                chip = {'Fishing': 'F', 'Surfing': 'Su'}.get(group['m'], '')
+                sub = group['m'] if kind == 'special' else variant
+                for row in group['rows']:
+                    sos = [[pid, {'day': 'd', 'night': 'n', '': ''}[when]] for pid, when in row.get('sos', [])]
+                    for rates, levels, method in ((row['r'], group['lv'], chip),
+                                                   (row.get('b', []), group.get('bl', ''), 'Bub')):
+                        if not any(rates):
+                            continue
+                        for when, rate in zip(('d', 'n'), rates):
+                            enc.add(kind, row['p'], rate, lv=levels, floor=floor, v=sub, chip=method,
+                                    when=when, note=row.get('note', ''), sos=sos, loc=index)
+    for pokemon in data['P']:
+        previous = pokemon['w']
+        pokemon['w'] = []
+        for location, method, rate, level, note, *flag in previous:
+            if flag and method not in ('SOS ally', 'Weather SOS'):
+                continue
+            owner = parent if location == member else location
+            if method == 'Trade':
+                kind = 'trade'
+            elif method.startswith(('Island Scan', 'Ultra Wormhole', 'SOS ally', 'Weather SOS')):
+                kind = 'special'
+            else:
+                kind = 'gift'
+            variant = 'Egg' if method in ('Breed', 'Gift (egg)') else method
+            encounters[owner].add(kind, pokemon['id'], lv=level, v=variant, note=note, loc=location,
+                                  floor='Cave' if location == member else '')
+    for index, enc in enumerate(encounters):
+        enc.write(data, index)
+    encstd.finish(data)
+    report('encounter standard: Lush Jungle + Lush Jungle Cave share game met location Lush Jungle; tracker slots 72 -> 71; AR 73 unchanged; member 28 -> 27')
 
 
 def rate_str(r):
