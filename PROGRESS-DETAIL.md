@@ -127,7 +127,7 @@ Write a family's first guide with its siblings in mind; lift shared code when th
     Sun, Eternal X; cheats: EI; no tutor moves: EI), domcompare / consistency / fit on the rest. Not EI by default:
     the scenarios were written on it, so it fails least (past audits failed on the other guides).
 11. **Calc: range compare:** noted for later (space); `plans/calc-range-compare.md`.
-12. **Encounter box standard** (the user, 2026-11-04; needs a decide session first, then a template build): the guides
+12. **Encounter box standard** (the user, 2026-11-04; decided 2026-11-04: `plans/encounters.md` is the spec; the text below is the starting proposal it replaced): the guides
     lay encounters out differently (EI / Hardlove build them from `P.w` rows: a box per floor, a drop-down per rod; the
     others from each extract's `AR.es` sections, each labelled its own way). Proposed standard to mock up: one card per
     location (floors and buildings inside it, only when something is catchable there); sections named by method,
