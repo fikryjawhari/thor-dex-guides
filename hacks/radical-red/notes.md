@@ -372,15 +372,46 @@ boxes and `extractlib.finalise` files it in the Items standard; `itemstd.RULES['
 
 Source: data.js `areas` (221, game order; index = LOC index). Built by `extract/locs.py` (step 1 of unit 4).
 
-- LOC: one sublocation per data.js area. AR: one tracker slot per place, the area name without its floor / room
-  suffix (Mt. Moon 1F / B1F / B2F = Mt. Moon): 153 places, 67 with no encounters (`ns`, no slot), then the
-  Mystery Gift place (below).
+- LOC: one sublocation per data.js area (LOC 3 renamed "Oak's Lab", the Starter card's place), then Mystery Gift
+  (221) and Kanto (222, the roamers' place). AR: one tracker slot per place, the area name without its floor / room
+  suffix (Mt. Moon 1F / B1F / B2F = Mt. Moon), then Mystery Gift (153, `ns`) and Roaming (154, `ns`, appended).
 - Encounter keys: wild-day / wild-night (grass, 12 FRLG slots 20/20/10/10/10/10/5/5/4/4/1/1), wild-surf and
-  wild-smash (60/30/5/4/1), rods (old 70/30, good 60/20/20, super 40/40/15/4/1), raids 1-6 (12 drop items in
-  the row note, each with its slot's chance 100/80/80/50/50/30/30/25/25/5/4/1%, the Raid Dens tab's fixed slot
-  rates; an item in two slots "Big Nugget 80/80%"), fixed-overworld (Static), fixed-gift (Gift; more than one entry = "Gift (pick one)", "1 of N"),
+  wild-smash (60/30/5/4/1), rods (old 70/30, good 60/20/20, super 40/40/15/4/1), raids 1-6 (12 drop items, each
+  with its slot's chance 100/80/80/50/50/30/30/25/25/5/4/1%, the Raid Dens tab's fixed slot rates; an item in two
+  slots "Big Nugget 80/80%"), fixed-overworld (Static), fixed-gift (Gift, "1 of N" when it is a choice),
   fixed-trade (Trade), fixed-roaming (Roaming, "1 of N"). Trainers and item keys are other units'.
-- Cap step: each key's step is shown as its Hardcore level cap ("cap 22") in the group label and row notes.
+
+#### Wild tables: the encounter standard (2026-11-04, plans/encounters.md, Open 12 / 13)
+
+`locs.standardise` writes every row through `tools/encstd.py` (`D.ESV` 2): one `Enc` per tracker slot.
+- Sections by kind code, never the place name: data.js "Grass/cave" is **Cave** for `locs.CAVES` (Diglett's Cave,
+  Mt. Moon, Rock Tunnel, Pokémon Tower, Power Plant, Seafoam, Pokémon Mansion, Cerulean Cave, Victory Road, Mt Ember
+  Interior, Moltres' Den: walking on floors, no tall grass; no map-type data exists for RR, so this is a hand list),
+  else Grass. Water: Surf / Old / Good / Super chips in one table. Special: Rock Smash. Raids: a subheading per tier
+  ("3★ raid"), the tier's most common drop list once in `dr`; a species with other drops says so in its note
+  ("Drops ...", 19 of 45 tiers have one). Gifts & static: Static, Gift, Gift (fossil), Prize (the Game Corner),
+  "<colour> Shard egg" / "<colour> Shard trade" (one subheading per shard, so "1 of N" counts that shard's list),
+  Starter choice, Roaming, Roaming (Battle Simulator) (Enamorus), Mystery Gift, the egg types. Trades.
+- Day / night: wild-day / wild-night are `when` d / n, collapsed where equal (no "Day;" notes).
+- Level cap once with the level: each table's own range plus its step's cap, "Lv 3–6 · cap 16" (a gift's own
+  level, "25 · cap 36"); no level, no cap. No cap in notes.
+- A floor already in the LOC name is left off the P.w label (Pokémon pages: "Mt. Moon B1F | Cave").
+- Yellow Shard eggs are "1 of 8 slots" (7 Pikachu forms + one slot shared by the 7 cap Pikachu: the template
+  recounts a plain "1 of N" over the group's rows).
+- Cards: places with no rows get `ns` and no card (66 houses, marts, Centers, Saffron City itself); AR stays
+  append-only. Starter: AR 3, n "Starter", first in `D.ARO`, its place "Oak's Lab". Roaming: data.js's 10 roamers
+  (Viridian City in data.js) and Enamorus are the Roaming card (AR 154, before Mystery Gift), place Kanto.
+- **Merges** (`locs.MERGES`; FRLG's map sections: one met location each; the user, 2026-11-04). The slot keeps
+  the first area's index, the others get `in` (members, no es, rows as floors, `loc` their own LOC):
+  Mt. Ember 3 slots → 1 (AR 136 Exterior; 137 Interior, 141 Summit; 138-140 Interior 2-4 had no slot);
+  Safari Zone 4 → 1 (AR 97 Area 1; 98-100; the entrance 96 and Secret House 101 had none);
+  Route 21 2 → 1 (AR 9 North; 116 South); Celadon City 6 → 1 (AR 64; Mansion 66, Roof House 67, Restaurant 68,
+  Gym 78, Game Corner Exchange 81; Department Store 65, Hotel 69, Game Corner 79 had none). Tracker slots 15 → 4
+  (the plan counted 11: it left the Celadon Restaurant / Gym / Exchange out; "everything in Celadon" folds them in).
+  Rocket Hideout (80) stays its own place: nothing catchable, no card.
+- check.py → `check_standard`: ESV, the merges, one card per name, Starter first, Roaming not on Viridian, a "1 of
+  N" group has N rows, raid notes with a tier list, no two walkthrough stops with one name; P.w labels match
+  `METHODS` and are flagged.
 - P.g: 0 = found in a location, or the first same-dex base form found, or evolved from an obtainable species
   (Unbound's rule), or the pre-evolution of one (breeding: Pichu, Cleffa, Igglybuff, Azurill), or a form in
   `sheet_locs.json` → follow whose base is (Greninja-Ash by Ability Pill, Cherrim-Sunshine, Unfezant-F); 3 = not
@@ -541,6 +572,18 @@ steps; trainers.py reads it too (ordinary trainers' boxes), `walk.py` builds WK 
 - **Trainers** by data.js id (the card's `id`; `trainer_keys.json` holds it); partners 55 / 39 and Jasmine 63 / 64
   have no card. Same-fight alternatives stay together (rival starter teams, E4 / Pryce teams).
 - **Encounters**: a stop's `a` = the tracker places (AR) of its data.js areas; Mystery Gift is its own Post Game stop.
+- **Return visits** (the user's playtest, 2026-11-04): every repeated stop is named for why you're back, "Place ·
+  why" (Route 2 · Cut, Route 2 · Rock Smash, Silph Co. · Giovanni, Celadon City Gym · Rematch...; ROUTE's name
+  field; keys unchanged); `check_standard` fails on two stops with one name. The Lavender stops are Lavender Town
+  (no longer Mr. Fuji's House). Celadon stops keep their old names (Celadon City Gym / Game Corner / Hotel) now that
+  those places are Celadon City floors. A stop with no name takes its slot's name. New stop `roaming` (Roaming, first
+  in Pre-Brendan: data.js's roamers unlock at that step).
+- **Only what's new on a return** (`walk.stop_lines`): each encounter line (the walkthrough label, "B2F · Static")
+  goes to the first visit of its LOC in a split at or after its table's data.js step, else the last visit (43 lines
+  move to a later visit, e.g. Viridian City's Good / Super / Surf to Viridian City · Surf; Mt. Moon B2F Static to Mt.
+  Moon · Rock Smash / Strength). Written as `stop.e` {slot: [labels]} only once `tools/schema.py` lists `stop.e`
+  (the template part, rendering only those lines at that stop, is the parent's); until then the template shows a
+  place's whole box once.
 - **Items**: each `items.PICKUPS` line goes to the stop at its data.js area in its own cap step's split, else the
   last such stop of the split before (boss rewards are the next step's bucket: Brock's TM, Blazikenite, Clair's TM),
   else the first later visit (73, listed in the report: the S.S. Anne and Route 9 to Celadon / the Dojo lines of
