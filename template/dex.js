@@ -431,7 +431,7 @@ function abilityDetail(i){fil.innerHTML='';const a=AB[i];if(!a){app.innerHTML='<
 
 // ===== LOCATIONS + ENCOUNTER TRACKER (state in localStorage LS.track {s starter, e:{area:{p}|{f}}, t:{trade}}; see hacks/<hack>/notes.md)
 // FAM = evolution family via union-find over evolution links (dupes clause); Megas and form changes join their base.
-const AR=D.AR||[],ESV=D.ESV===2;const LOC2A={};AR.forEach((A,i)=>A.l.forEach(l=>LOC2A[l]=i));
+const AR=D.AR||[];const LOC2A={};AR.forEach((A,i)=>A.l.forEach(l=>LOC2A[l]=i));
 // Locations order (D.ARO, optional): areas added later go at the end of AR so saved trackers (keyed by area index) keep
 // their slots, and ARO puts them in place. ARK: an area's rank in it.
 const ARO=D.ARO||AR.map((A,i)=>i),ARK={};ARO.forEach((a,i)=>ARK[a]=i);
@@ -474,8 +474,8 @@ const slotL=a=>a==null||!AR[a]?[]:[a,...(MEM[a]||[])].flatMap(x=>AR[x].l);
 // A member with card: [floor...] (ESV) is still part of its slot's tracker, but shows those of the slot's floors on a card
 // of its own, in its own route place (BB2R's Relic Passage, Castelia side). CARDF[slot] = the floors its members show;
 // cardOf(a) = the area whose card a place of a is on (a plain member whose floor is on a member's card: on = that member).
-const CARDF={};if(ESV)AR.forEach(A=>{if(A.card&&isMem(AR.indexOf(A)))A.card.forEach(f=>(CARDF[A.in]=CARDF[A.in]||new Set()).add(f));});
-const isCard=a=>ESV&&!!AR[a].card&&isMem(a),cardOf=a=>isCard(a)?a:ESV&&AR[a].on!=null&&isCard(AR[a].on)?AR[a].on:AR[a].in??a;
+const CARDF={};AR.forEach(A=>{if(A.card&&isMem(AR.indexOf(A)))A.card.forEach(f=>(CARDF[A.in]=CARDF[A.in]||new Set()).add(f));});
+const isCard=a=>!!AR[a].card&&isMem(a),cardOf=a=>isCard(a)?a:AR[a].on!=null&&isCard(AR[a].on)?AR[a].on:AR[a].in??a;
 // A merged slot with no entry of its own shows its first floor's (route order); the others stay stored ("also:").
 for(const [a,ms] of Object.entries(MEM)){if(TK.e[a])continue;const m=ms.find(x=>TK.e[x]);if(m!=null){TK.e[a]=TK.e[m];delete TK.e[m];tkSave();}}
 const areaSpecies=a=>{const seen=new Set(),out=[];slotL(a).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]==='Trade')return;if(!seen.has(p.id)){seen.add(p.id);out.push(p);}}));return out;};
@@ -511,7 +511,7 @@ function trackerHTML0(a,lab){
  return `<div class="trk" data-a="${a}">${lab===undefined?'<span class="mut small">Encounter</span>':lab?`<span class="atag">${esc(lab)}</span>`:''}<select class="tk-sel"><option value="">None yet</option><option value="__fail" ${cur==='__fail'?'selected':''}>Failed / fled</option>${extra.map(opt).join('')}${pickGroups(a,sp).map(([n,ps])=>n?`<optgroup label="${esc(n)}">${ps.map(opt).join('')}</optgroup>`:ps.map(opt).join('')).join('')}<option value="__other">Other…</option></select>${e?'<button class="tk-x" title="Clear">×</button>':''}
  <div class="tk-other" style="display:none"><input type="search" placeholder="Type a Pokémon name"><div class="tk-res"></div></div></div>${alsoHTML(a)}`;}
 // The picker's species: by section in the standard's order, A–Z inside, each once (its first section); else one list.
-function pickGroups(a,sp){const es=ESV&&AR[a]?.es;if(!es)return [['',sp]];const seen=new Set(),out=[],ok=new Set(sp.map(p=>p.id));
+function pickGroups(a,sp){const es=AR[a]?.es;if(!es)return [['',sp]];const seen=new Set(),out=[],ok=new Set(sp.map(p=>p.id));
  ESK.forEach(([k,n])=>{if(k==='trade')return;const ps=[...new Set(es.filter(s=>s.k===k).flatMap(s=>s.g.flatMap(g=>g.rows.map(x=>x.p))))].filter(id=>ok.has(id)&&!seen.has(id)).map(id=>byId[id]).sort((x,y)=>x.name.localeCompare(y.name));
   ps.forEach(p=>seen.add(p.id));if(ps.length)out.push([n,ps]);});
  const rest=sp.filter(p=>!seen.has(p.id));if(rest.length)out.push(['',rest]);return out;}
@@ -563,15 +563,10 @@ function tkBar(){const [n,f]=tkCounts();
  <div class="bar" style="margin:8px 0 0">${trackerButtons()}</div></div>`;}
 const encAll=a=>ARS(a).flatMap(x=>[x,...(MEM[x]||[])]).map(encSummary).join('');
 function encSummary(a){const e=TK.e[a];if(!e)return '';if(e.f)return '<span class="tag">failed</span>';const p=byId[e.p];return p?`<a class="tag got" href="#/p/${p.id}">${esc(p.name)}</a>`:'';}
-// The page is boxes (one area, or next-to-each-other areas whose names share their first two words: Granite Cave 1F,
-// B1F...) → places (an area's own places, same names merged; one place = the area's own name) → methods. One area: its
-// tracker sits above its places; a box of several areas: each place is one area and carries its tracker. An area with
-// several places of its own never joins a box. State in LS.loc {o:{<first area>:1 open}, x:{<area>.<place>:0 closed},
-// s:{<area>.<place>.<method>:1 open}, layout (relayout)}: boxes and methods start closed, places open (a method's 0
-// saved before 2026-10-31 still means closed; a filtered page shows its places and methods open). Layout: template/README.md.
-// Open state saved by position (a box's index, "box.place", either with a ".rest") keeps the names it was saved under
-// (S.layout, as the walkthrough's WO.layout): when an update adds, drops or moves boxes or places, relayout moves each
-// key to the position that now has its name (a repeated name counts its occurrence) and drops one whose name is gone.
+// The page (template/README.md → Encounters): a card per location (LGRP, route order; the encounter standard below,
+// or EI's egg towns: locSlots). State in LS.loc {o:{<area>:1 open card}, x:{<area>.0:0 closed white box},
+// s:{'area|floor|code':1 open section}, ev 2 (old section names migrated), layout (relayout)}. Open state saved by
+// position keeps the names it was saved under (S.layout): relayout moves each key to the position that now has its name.
 // lay: [[box name, [place names]]] in this build's order; kinds: {state map: 1 keyed by box, 2 by box.place}. Returns
 // true when the stored state needs saving (moved, or saved before layouts); the layout goes with the next save anyway.
 function relayout(S,lay,kinds){if(JSON.stringify(S.layout)===JSON.stringify(lay))return false;const had=Array.isArray(S.layout)||Object.keys(kinds).some(k=>Object.keys(S[k]||{}).length);
@@ -585,61 +580,28 @@ const LO=(()=>{try{return Object.assign({o:{},x:{},s:{}},JSON.parse(localStorage
 const loSave=()=>{try{localStorage.setItem(LS.loc,JSON.stringify(LO))}catch(e){}};
 const places=a=>{const m=new Map();AR[a].l.forEach(li=>{const n=LOC[li];if(!m.has(n))m.set(n,[]);m.get(n).push(li);});return [...m].map(([n,ls],j)=>({n,ls,j}));};
 relayout(LO,AR.map((A,a)=>[String(a),places(a).map(p=>p.n)]),{x:2,s:2})&&loSave();
-const LGRP=(()=>{const out=[],two=n=>n.split(' ').length>2?n.split(' ').slice(0,2).join(' '):null;
+const LGRP=(()=>{const out=[];
  ARO.forEach(i=>{const A=AR[i];if(A.in!=null&&!isCard(i))return;
   // The standard: a card per location, never grouped; a place with nothing to catch has none, unless it is a tracker
   // slot with a note (RR's egg-hatch places: the tracker, the note, "No wild Pokémon here.").
-  if(ESV){if(A.sub||A.es||isCard(i)||(A.in==null&&!A.ns&&A.note)||slotL(i).some(li=>locs[li]))out.push({k:null,one:true,a:[i]});return;}const k=two(A.n),one=places(i).length===1,p=out[out.length-1];
-  if(k&&one&&p&&p.one&&p.k===k)p.a.push(i);else out.push({k,one,a:[i]});});
- out.forEach(g=>g.n=g.a.length>1?g.k:AR[g.a[0]].n);return out;})();
+  if(A.sub||A.es||isCard(i)||(A.in==null&&!A.ns&&A.note)||slotL(i).some(li=>locs[li]))out.push({a:[i],n:A.n});});
+ return out;})();
 const LSEC=(k,m,tags,body)=>sectionHTML(esc(k+'.'+m),esc(m),tags,body,!!st.q||LO.s[k+'.'+m]===1);
 const encTable=(rows,note)=>(note?`<div class="mut small" style="margin:4px 0 2px">${esc(note)}</div>`:'')+`<table class="enc">${rows.map(x=>`<tr class="${x.d?'dupe':''}"><td style="width:44px">${sprl(x.p.id,'s40')}</td><td>${plink(x.p.id)}<div>${x.p.t.map(ty).join('')}</div>${x.note&&!note?`<div class="mut small">${esc(x.note)}</div>`:''}</td><td class="n">${esc(x.show)}${x.chg?'<div class="mut small">was '+(x.r?x.r+'%':esc(x.rs))+'</div>':''}</td><td class="n">${x.lv.size?'Lv '+esc([...x.lv].join(', ')):''}</td></tr>`).join('')}</table>`;
 const mTags=(rows,allD)=>allD?'<span class="tag">all dupes</span>':`<span class="mut small">${rows.length}</span>`;
 // A place starts open (its header repeats the box's name and pins), its sections closed; 2+ sections get an Expand /
 // Collapse all bar under the header for them.
 const locStop=(k,n,tags,body)=>`<details class="stopd" data-k="${k}" ${LO.x[k]!==0||st.q?'open':''}><summary class="stoph"><span class="pn">${esc(n)}</span>${tags}</summary><div class="stop">${(body.match(/<details class="sec"/g)||[]).length>1&&!st.q?segBar('lc-pl'):''}${body}<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(n)}</span></button></div></details>`;
-function locPlace(a,p,cf,trk){const k=a+'.'+p.j;
- const ms=AR[a].es||AR[a].st?placeSecs(a,p,cf):adjRows(p.ls,cf).map(([m,rows,allD,note])=>LSEC(k,m,mTags(rows,allD),encTable(rows,note))).join('');
- return locStop(k,p.n,trk?encSummary(a):'',(trk?(AR[a].st?'':trackerHTML(a))+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:''):'')+(ms||'<div class="mut small" style="margin:6px 0">No wild Pokémon here.</div>'));}
 // A town split into tracker slots (EI's eggs): one place with the town's name, a yellow section per slot with its tracker.
 const locSlots=(a,cf)=>locStop(a+'.0',AR[a].n,encAll(a),AR[a].sub.map(x=>adjRows(AR[x].l,cf).map(([m,rows,allD,note])=>LSEC(a+'.0',m,encSummary(x)+mTags(rows,allD),trackerHTML(x,'')+encTable(rows,note))).join('')).join(''));
-// Encounter sections (AR[i].es, from the hack's extract; Photonic Sun): one per game table (a grass patch, cave,
-// building), Water (Fishing with the bubbling spot as a second rate, Surfing) and Other (berry piles, ambush...). A
-// section's groups are {m label, lv, bl bubbling levels, rows:[{p, r:[day,night], b:[day,night], sos:[[ally,when]],
-// note}]}. Day and night share a row: a sun or moon marks a rate that only holds then. The P.w rows flagged w[5]===1
-// repeat these for Pokémon pages, search and the tracker, so the page adds only the others (gifts, trades, weather
-// SOS). AR[i].st: the starter picker is the area's tracker. AR[i].map: the doc's maps (data URIs).
+// The rate icons (sun, moon; ICON.mo morning) and the SOS ally drop-down, used by the encounter standard below.
 const ICON={s:'<svg class="dn s" viewBox="0 0 16 16"><circle cx="8" cy="8" r="3.4" fill="currentColor"/><path d="M8 .8v2.4M8 12.8v2.4M.8 8h2.4M12.8 8h2.4M2.9 2.9l1.7 1.7M11.4 11.4l1.7 1.7M2.9 13.1l1.7-1.7M11.4 4.6l1.7-1.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
  m:'<svg class="dn m" viewBox="0 0 16 16"><path d="M11.2 1.2a6.8 6.8 0 1 0 3.6 11.6A5.6 5.6 0 0 1 11.2 1.2z" fill="currentColor"/></svg>',
  b:'<svg class="dn b" viewBox="0 0 16 16"><circle cx="5" cy="10" r="3.2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="11" cy="5" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>'};
-const notSec=w=>w[5]!==1,pct=x=>Math.round(x*10)/10+'%',whenI=w=>w==='day'||w==='d'?ICON.s:w==='night'||w==='n'?ICON.m:w==='m'?ICON.mo||'':'';
-function rateCell(r,f){if(r[0]===r[1])return r[0]?pct(f(r[0],0)):'';return (r[0]?`<span class="rt">${ICON.s}${pct(f(r[0],0))}</span>`:'')+(r[1]?`<span class="rt">${ICON.m}${pct(f(r[1],1))}</span>`:'');}
-// Rates rescale over the rows that aren't dupes: day, night and bubbling each on their own
-function secAdj(g,cf){const sum=(k,j,all)=>g.rows.reduce((s,x)=>s+(x[k]&&(all||!cf.has(FAM[x.p]))?x[k][j]:0),0);
- return k=>(x,j)=>{const live=sum(k,j),full=sum(k,j,1);return live&&live!==full?x/live*100:x;};}
+const pct=x=>Math.round(x*10)/10+'%',whenI=w=>w==='day'||w==='d'?ICON.s:w==='night'||w==='n'?ICON.m:w==='m'?ICON.mo||'':'';
 // A caller's allies drop down under it; a search for an ally opens the drop-downs it's in
 function sosDrop(x,cf){if(!x.sos||!x.sos.length)return '';const hit=st.q&&x.sos.some(([p])=>byId[p]&&byId[p].key.includes(st.q));
  return `<details class="sosd" ${hit?'open':''}><summary><span class="sosk">SOS</span> ${x.sos.map(([p])=>esc(byId[p]?byId[p].name:p)).join(', ')}</summary><div class="sosl">${x.sos.map(([p,w])=>`<div class="sosa${cf.has(FAM[p])?' dupe':''}">${sprl(p,'s32')}<div>${plink(p)} ${whenI(w)}<div>${(byId[p]?byId[p].t:[]).map(ty).join('')}</div></div></div>`).join('')}</div></details>`;}
-function secRows(g,cf){const adj=secAdj(g,cf),raw=()=>x=>x,top=x=>Math.max(...x.r,...(x.b||[0]));
- return `<table class="enc lt">${[...g.rows].sort((a,b)=>top(b)-top(a)||byId[a.p].name.localeCompare(byId[b.p].name)).map(x=>{const d=cf.has(FAM[x.p]),f=d?raw:adj;
-  return `<tr class="${d?'dupe':''}"><td style="width:44px">${sprl(x.p,'s40')}</td><td>${plink(x.p)}<div>${byId[x.p].t.map(ty).join('')}</div>${x.note?`<div class="mut small">${esc(x.note)}</div>`:''}${sosDrop(x,cf)}</td><td class="n">${rateCell(x.r,f('r'))}</td>${g.bl!=null?`<td class="n">${x.b?ICON.b+rateCell(x.b,f('b')):''}</td>`:''}</tr>`;}).join('')}</table>`;}
-const secSub=g=>`<div class="ltsub"><b>${esc(g.m)}</b>${g.lv?`<span>Lv ${esc(g.lv)}</span>`:''}${g.bl?`<span>${ICON.b}bubbling Lv ${esc(g.bl)}</span>`:''}</div>`;
-function secTags(rows,cf,lv){const allD=rows.length&&rows.every(x=>cf.has(FAM[x.p]));return (lv?`<span class="mut small">Lv ${esc(lv)}</span>`:'')+(allD?'<span class="tag">all dupes</span>':`<span class="mut small">· ${rows.length}</span>`);}
-function placeSecs(a,p,cf){const k=a+'.'+p.j,T=AR[a].es||[];let h='';
- if(AR[a].st)h+=`<div class="trk"><span class="mut small">Your starter</span>${starterSel('st-pick')}</div><div class="mut small" style="margin:2px 0 6px">The same picker as the tracker bar: it records this encounter and sets the rival's teams.</div>`;
- if(T.some(s=>s.g.some(g=>g.rows.some(x=>x.r[0]!==x.r[1]||(x.b&&x.b[0]!==x.b[1])))))h+=`<div class="mut small ltkey">${ICON.s}day ${ICON.m}night: the rate only holds then.</div>`;
- if(AR[a].map)h+=`<details class="mapd"><summary>Map: grass patch numbers</summary>${AR[a].map.map(u=>`<img src="${u}" alt="Map of ${esc(AR[a].n)}">`).join('')}<div class="mut small">From the Wild Pokémon Locations doc.</div></details>`;
- h+=T.map(s=>{const one=s.g.length===1&&!s.g[0].m;return LSEC(k,s.n,secTags(s.g.flatMap(g=>g.rows),cf,one?s.g[0].lv:''),one?secRows(s.g[0],cf):s.g.map(g=>secSub(g)+secRows(g,cf)).join(''));}).join('');
- const ws=adjRows(p.ls,cf,w=>w[1]==='Weather SOS');
- if(ws.length)h+=LSEC(k,'Weather SOS',`<span class="mut small">· ${ws[0][1].length}</span>`,`<div class="mut small" style="margin:4px 0 2px">Any Pokémon here can call these in rain, sand or hail.</div>`+encTable(ws[0][1],''));
- const sp=adjRows(p.ls,cf,notSec);
- if(sp.length)h+=LSEC(k,AR[a].st?'Starter':'Special',`<span class="mut small">· ${sp.reduce((n,x)=>n+x[1].length,0)}</span>`,sp.map(([m,rows,allD,note])=>(AR[a].st?'':secSub({m}))+encTable(rows,note)).join(''));
- return h;}
-// The walkthrough's one-line-per-method summary, from the sections
-function secLines(a,cf){const out=[],txt=r=>r[0]===r[1]?r[0]+'%':!r[1]?r[0]+'% day':!r[0]?r[1]+'% night':r[0]+'% day, '+r[1]+'% night';
- (AR[a].es||[]).forEach(s=>s.g.forEach(g=>{const lab=s.k==='grass'?s.n:s.k==='water'?s.n+' · '+g.m:g.m;
-  const row=k=>g.rows.filter(x=>x[k]&&(x[k][0]||x[k][1])).map(x=>({p:byId[x.p],d:cf.has(FAM[x.p]),show:txt(x[k])}));
-  const n=row('r'),b=row('b');if(n.length)out.push([AR[a].l[0],[lab,n]]);if(b.length)out.push([AR[a].l[0],[lab+' (bubbling)',b]]);}));return out;}
 // ===== ENCOUNTER STANDARD (D.ESV 2; tools/encstd.py writes it, template/README.md → Encounters). A card per location
 // (AR area, its tracker slot) → its white box (the place; pins) → floor headings (AR.fo, 2+ floors) → a yellow section
 // per kind code in ESK order, the floor in small text → subheadings (g.v, or the section's name when it has several)
@@ -655,7 +617,7 @@ const qchip=c=>c&&QL[c]?`<span class="q q${c}">${QL[c]}</span>`:'';
 const whenM=w=>WICON[w]||qchip(w);
 // Old section names saved open before the standard (LS.loc s 'area.place.name') move to the codes, on the area's first
 // floor with that section; other names (Other, a patch...) drop: those sections start closed (UI state only).
-if(ESV&&LO.ev!==2){const nm={Grass:'grass',Cave:'cave',Water:'water',Special:'special',Raids:'raid',Trades:'trade'};
+if(LO.ev!==2){const nm={Grass:'grass',Cave:'cave',Water:'water',Special:'special',Raids:'raid',Trades:'trade'};
  for(const [k,v] of Object.entries(LO.s)){const m=k.match(/^(\d+)\.(\d+)\.(.*)$/s);if(!m||!AR[m[1]])continue;delete LO.s[k];const c=nm[m[3]],A=AR[m[1]];if(!c||v!==1)continue;
   const g=(A.es||[]).find(x=>x.k===c)?.g[0];if(g)LO.s[m[1]+'|'+(g.f||'')+'|'+c]=1;}
  LO.ev=2;loSave();}
@@ -730,11 +692,7 @@ function bindExtra(){const b=app.querySelector('details.split[data-a="x"]>.body'
   if(INV)e.onclick=()=>KB.open({mode:'abc',value:'',label:'Pokémon or failed',target:e,strip:x=>{const r=hits(x);return r.length?r.map(id=>opt(id,'kpick','s32')).join(''):`<span class="mut small">${norm(x).length<2?'Type a Pokémon name':'No match'}</span>`;},
    pick:id=>{KB.close(true);choose(i,id);}});
   else{const res=e.nextElementSibling;e.oninput=()=>{res.innerHTML=hits(e.value).map(id=>opt(id,'tk-opt','s40')).join('');res.querySelectorAll('.tk-opt').forEach(o=>o.onclick=()=>choose(i,o.dataset.id));};}});}
-function locBox(g,cf){const one=g.a.length===1&&!AR[g.a[0]].sub,a=g.a[0];let n=0,h;
- if(AR[a].sub){n=1;h=locSlots(a,cf);}
- else if(ESV&&one)h=esCard(a,cf);
- else if(one){const ps=places(a);n=ps.length;h=(AR[a].st?'':trackerHTML(a))+(AR[a].note?`<div class="trnote">${esc(AR[a].note)}</div>`:'')+ps.map(p=>locPlace(a,p,cf,false)).join('');}
- else{n=g.a.length;h=g.a.map(a=>locPlace(a,places(a)[0],cf,true)).join('');}
+function locBox(g,cf){const a=g.a[0];const h=AR[a].sub?locSlots(a,cf):esCard(a,cf);
  return h+`<button class="endbar sp" hidden>${UPI}<span>Collapse ${esc(g.n)}</span></button>`;}
 TOG.locs=TOG.l=d=>{if(d.matches('details.split[data-a]')){const b=d.querySelector(':scope>.body');if(d.open&&!b.innerHTML){if(d.dataset.g==='x'){b.innerHTML=extraHTML();colBind(b);bindExtra();}else{b.innerHTML=locBox(LGRP[+d.dataset.g],caughtFams(-1));colBind(b);bindTrackers();}}
   if(!st.q){if(d.open)LO.o[d.dataset.a]=1;else delete LO.o[d.dataset.a];loSave();}}
@@ -746,12 +704,12 @@ function listLocs2(scroll){fil.innerHTML='';const s=st.q;const li=st.lopenLi;st.
  // nothing to catch has no card (the standard leaves it out): its link shows the page as it is.
  let tk=null;const g0=li!=null&&LOC2A[li]!=null&&LGRP.find(g=>g.a.includes(cardOf(LOC2A[li])));
  if(g0){const a=LOC2A[li],o=cardOf(a),g=g0;LO.o[g.a[0]]=1;
-  tk=AR[a].in!=null||(ESV&&g.a.length===1&&!AR[o].sub)?o+'.0':a+'.'+places(a).find(p=>p.ls.includes(li)).j;delete LO.x[tk];loSave();}
+  tk=o+'.0';delete LO.x[tk];loSave();}
  const hit=i=>ARS(i).some(i=>AR[i].n.toLowerCase().includes(s)||slotL(i).some(li=>LOC[li].toLowerCase().includes(s)||(locs[li]||[]).some(([p])=>p.key.includes(s))));
  const list=LGRP.map((g,gi)=>gi).filter(gi=>!s||LGRP[gi].a.some(hit));
  app.innerHTML=tkBar()+(s?'':segBar('lc-all all'))+
   list.map(gi=>{const g=LGRP[gi];return `<details class="split jt" data-a="${g.a[0]}" data-g="${gi}" ${LO.o[g.a[0]]||s?'open':''}><summary>${esc(g.n)} ${g.a.map(encAll).join('')}</summary><div class="body"></div></details>`;}).join('')+
-  (ESV&&(!s||'extra'.includes(s)||(TK.x||[]).some(x=>xHits(x,s)))?`<details class="split jt" data-a="x" data-g="x" ${LO.o.x||s?'open':''}><summary>Extra <span class="mut small">· ${(TK.x||[]).length}</span></summary><div class="body"></div></details>`:'');
+  ((!s||'extra'.includes(s)||(TK.x||[]).some(x=>xHits(x,s)))?`<details class="split jt" data-a="x" data-g="x" ${LO.o.x||s?'open':''}><summary>Extra <span class="mut small">· ${(TK.x||[]).length}</span></summary><div class="body"></div></details>`:'');
  app.querySelectorAll('details.split[data-a][open]').forEach(d=>TOG.locs(d));bindTrackers();bars();
  if(scroll&&tk)land(app.querySelector(`details.stopd[data-k="${tk}"]>summary`));}
 
@@ -1098,8 +1056,8 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=!(WO.x[k]===1
  const ts=(s.tr||[]).map(k=>TRK[k]).filter(t=>t&&!rivalHidden(t));
  // Encounters: one box per area with its own tracker; several areas get a short tag (the area name minus the stop's).
  // A return visit (s.e = {slot: [line label...]}) shows only those lines, each visit that brings one (no first-visit rule).
- const E=ESV&&s.e,areas=[];s.a.flatMap(a=>isCard(cardOf(a))?[cardOf(a)]:ARS(a)).forEach(ai=>{const want=E&&(E[slotOf(ai)]||E[ai]);if(E?!want:shown.has(ai))return;if(!E)shown.add(ai);const A=AR[ai];
-  const enc=E?esLines(ai,cf).filter(([,[m]])=>want.includes(m)):ESV&&(A.es||isCard(ai))?esLines(ai,cf):A.es?secLines(ai,cf).concat(A.l.flatMap(li=>adjRows(li,cf,notSec).map(r=>[li,r]))):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&(A.ns||E))return;areas.push([ai,A,enc]);});
+ const E=s.e,areas=[];s.a.flatMap(a=>isCard(cardOf(a))?[cardOf(a)]:ARS(a)).forEach(ai=>{const want=E&&(E[slotOf(ai)]||E[ai]);if(E?!want:shown.has(ai))return;if(!E)shown.add(ai);const A=AR[ai];
+  const enc=E?esLines(ai,cf).filter(([,[m]])=>want.includes(m)):A.es||isCard(ai)?esLines(ai,cf):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&(A.ns||E))return;areas.push([ai,A,enc]);});
  const multi=areas.length>1;
  const enc=areas.map(([ai,A,enc])=>{const tag=multi?(A.n.startsWith(s.n+' ')?A.n.slice(s.n.length+1):A.n):'';
   return `<div class="area">${A.ns&&tag?`<span class="atag">${esc(tag)}</span>`:''}${trackerHTML(slotOf(ai),tag)}${CF.walkAreaNote&&A.note?`<div class="trnote">${esc(A.note)}</div>`:''}`+enc.map(([li,[m,rows]])=>`<div class="encl"><span class="mut">${A.l.length>1||LOC[li]!==A.n?esc(LOC[li])+' · ':''}${esc(m)}:</span> ${rows.map(x=>`<span class="${x.d?'dupe':''}"><a href="#/p/${x.p.id}">${esc(x.p.name)}</a> ${esc(x.show)}</span>`).join(', ')}</div>`).join('')+'</div>';}).join('');

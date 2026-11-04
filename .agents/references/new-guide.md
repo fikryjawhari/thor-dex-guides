@@ -15,7 +15,8 @@ adapt); agents build the units (Workflow → Which model).
    with the first data.json. Pickup keys (`extract/pickup_keys.json`, one per item pickup line) work the same way.
    Items data: the hack's bag text for every item in `extract/item_desc.json` (`{item: [text, changed vs vanilla]}`;
    gaps fill from other guides, then `extract/item_text_extra.json`), wild held-item odds in `P.hi` (`[[item, %]]`),
-   hack-changed In battle text in `extract/battle_text.json`, and the guide's generation in `tools/item_text.py`. Later builds match trainers to it and only add entries. What the template shows when the data has it: `template/README.md` → What the data switches on.
+   hack-changed In battle text in `extract/battle_text.json`, encounters through `tools/encstd.py` (every row: wild,
+   gifts, statics, trades, the starter; `template/README.md` → Encounters; Eternal X's `locs.py` is the example), and the guide's generation in `tools/item_text.py`. Later builds match trainers to it and only add entries. What the template shows when the data has it: `template/README.md` → What the data switches on.
    For hacks with public source code, the code wins over the docs ("Sheet says ..." on differences); 3DS hacks take
    the game data over the docs ("Doc says ...").
    Calc: settle each trainer `field` record marked `review` (`tools/trainer_fields_check.py`) with me (notes.md,

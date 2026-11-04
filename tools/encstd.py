@@ -1,4 +1,4 @@
-"""Encounter standard (plans/encounters.md, decided with the user 2026-11-04): one shape for every guide's encounters.
+"""Encounter standard (template/README.md → Encounters, decided with the user 2026-11-04): one shape for every guide's encounters.
 
     import encstd
     e = encstd.Enc()                                   # one per tracker slot (AR area)

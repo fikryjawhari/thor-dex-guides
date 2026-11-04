@@ -48,8 +48,8 @@ optional) is `hacks/emerald-imperium/notes.md` → Data schema; `tools/schema.py
 an unknown key.
 
 - Pokémon: tutor moves `p.tu`, source conflicts `p.cf` ("Sheet says ..."), Mega stone `p.stone` / `p.sloc`.
-- Locations: the encounter standard (`D.ESV` 2, `AR.es` / `AR.fo`; Encounters below; guides not converted yet keep
-  the older `AR.es` per game table or `P.w` methods), a Starter area (`AR[i].st`, tied to the starter picker), area maps
+- Locations: the encounter standard (`D.ESV` 2, required by `tools/schema.py`; `AR.es` / `AR.fo`; Encounters
+  below), a Starter area (`AR[i].st`, tied to the starter picker), area maps
   (`AR.map`), tracker sub-slots (`AR.sub`), areas with no slot (`AR.ns`: encounters shown, `txt.ns` instead of a
   tracker; a saved entry for one drops on load), optional page order `ARO` (areas added later sit at the end of `AR` so
   saved trackers keep their slots).
@@ -612,7 +612,8 @@ dex.css):
 8. Items: boxes don't pin, their sub-headings do. A box with one sub-heading named like itself shows the name twice
    (box header + sub-heading) on purpose: the user wants it that way so the box header never becomes sticky.
 
-**Encounters** (the encounter standard, decided 2026-11-04; `plans/encounters.md` until every guide is converted).
+**Encounters** (the encounter standard, decided 2026-11-04 and on every guide; each hack's notes.md says how its
+extract maps its source onto it).
 Data: `tools/encstd.py` (`Enc.add` per row, `write`, `finish` sets `D.ESV` 2 and checks every `P.w` row of an area is
 one of its es lines). Page (`ENCOUNTER STANDARD` in dex.js):
 - A card per location (an `AR` area = one tracker slot), never grouped; a place with nothing to catch has none. The

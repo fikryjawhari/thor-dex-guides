@@ -109,6 +109,7 @@ def check_gauntlets(trainers):
 
 
 def standardise(D):
+    assert D.get('ESV') == 2, 'encounters: the extract writes them through tools/encstd.py (encstd.finish sets ESV 2)'
     # Fields nothing reads: build markers and provenance strings, an old comparison log, ids the page never shows.
     for key in ('s7', 'su', 'src'):
         D.pop(key, None)
