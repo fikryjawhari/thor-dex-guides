@@ -1,7 +1,7 @@
 # Photonic Sun build notes
 
 Photonic Sun 2.38 (Buffel Saft), **Rebalanced** version, a 3DS hack of Ultra Sun. 928 Pokémon and forms (876 obtainable,
-50 Megas / Primals, 2 trainer-only), 728 moves (38 changed), 233 abilities, 73 encounter areas (72 tracker slots), 497
+50 Megas / Primals, 2 trainer-only), 728 moves (38 changed), 233 abilities, 73 encounter areas (71 tracker slots), 497
 trainers plus 13 Totem encounter cards, 29 caps and 31 trainer / walkthrough splits. The 137 published walkthrough stops are 148 cap-aligned
 fragments.
 
@@ -62,18 +62,35 @@ drop SOS rows); regenerate it with the `ctr_dex.py` command in SOURCES.md.
   whose base dex is obtainable; other-form and evolution references are filtered to retained IDs. 931 -> 928: removed
   `pikachu-original-cap`, `zygarde-10`, `zygarde-10-power-construct` (unavailable and unused). `zygarde-50-power-construct`
   and `blacephalon` stay as trainer-only.
-- **Wild tables** (locs.py): the game's tables have no method and repeat for every grass patch and fishing spot. Identical
+- **Wild tables** (locs.py): written through `tools/encstd.py` in encounter standard v2 (2026-11-04); Locations,
+  walkthrough encounter lines and Pokémon Where to find use the same section names. Grass patches are `f` headings,
+  the source's Cave tables stay Cave (including places with both Grass and Cave); for labels without a method,
+  Sandy Cave's "Everywhere" is assumed Cave from the place name, while Thrifty Megamart's "Building" remains
+  land/Grass. Flowers and Sand are Grass subheadings.
+  Water combines Surf (`Su`), Fishing (`F`, one rod) and Bubbling (`Bub`) with each table's levels, and day/night
+  rates collapse when equal. Caller rows retain SOS allies with `d` / `n` conditions; explicit SOS ally rows and
+  Weather SOS are Special, as are berry piles, ambushes, rustling, dust, shadows, splashes, Wimpod, Island Scan
+  (weekday subheadings) and Ultra Wormholes (colour subheadings). Gifts, eggs, fossils, statics and totem gifts are
+  Gifts & static; in-game trades are Trades. Starter stays its own first card with Route 1 as its heading.
+  Lush Jungle and Lush Jungle Cave merge into slot 27: the game's areas 87/88/89/91 (zones 105/106/107/109) all
+  have met location "Lush Jungle", covering the map's three grass patches and cave. The Cave is an internal floor;
+  `AR[28]` keeps its LOC and becomes `in: 27`. All 73 AR indices/names/LOC memberships and ARO entries are retained,
+  so both published tracker keys load (additional recorded catches remain stored and shown as "also"). Slots:
+  72 → 71 (the two Jungle slots become one); no other met-location merges assumed. Existing template migration
+  handles old section-open keys; unrecognised method/patch keys reset closed, without changing tracker data.
+  The game's tables have no method and repeat for every grass patch and fishing spot. Identical
   tables merge; each is labelled from `Wild Pokemon Locations.pdf`, read by word position (area titles are the 18 pt
   lines; a table is a bold heading, a bold "Levels: a-b" line, species in the first column). A game table takes the PDF
   table under a matching area title that shares at least half its species, scored on species and the level range. Small
   partial matches that aren't water tables are "Ambush Encounters" (shaking trees and grass the PDF doesn't always
   list). The game's leftover placeholder tables (Route 1 copies at level 2-3, Pikipek 100% in towns) are left out.
-- **Sections** (`sections()` in locs.py): each area's Locations page is one section per game table, named from the PDF
+- **Source tables** (`sections()` in locs.py, before `standardise()`): one source section per game table, named from the PDF
   (Grass 1, Hau'oli Outskirts, Cave...), with day and night in one row ([day, night] rates). The same table in two game
   areas counts once; copies of a table in other patches merge, and a species only some copies have says "Only in some
   patches" (Route 1 Grass 3: Scatterbug at night). Water = Fishing + Surfing; of an area's fishing copies, the
   higher-level ones are the bubbling spot, shown as a second rate (the PDF's level ranges don't always match the game's,
-  so they can't decide it). Berry piles, ambush, dust clouds, shadows, splashes and Wimpod share an "Other" section. 0%
+  so they can't decide it). Berry piles, ambush, dust clouds, shadows, splashes and Wimpod are collected together,
+  then written as Special subheadings by `standardise()`. 0%
   slots are dropped (Poni Grove's Stakataka / Blacephalon).
 - **SOS** (tools/ctr_dex.py `sosBy`): each slot's allies, so a row knows exactly whom it calls (Corsola → Mareanie,
   Clamperl → Gorebyss by day, Huntail at night); allies the same as the caller are left out, other forms kept (Kantonian

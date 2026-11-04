@@ -5,9 +5,9 @@ and one game area holds a copy of the table for every grass patch or fishing spo
 and each one is labelled from "Wild Pokemon Locations.pdf": the PDF is read by word position (area titles are the
 18 pt lines; a table is a bold heading, a bold "Levels: a-b" line and the species in its first column), and each
 game table takes the PDF table with the same level range and the most species in common, preferring tables under
-an area title that matches the game area's name. sections() then builds each area's Locations sections (AR.es: one
-per game table, day and night in one row, Water with the bubbling spot as a second rate, SOS allies per caller), and
-the P.w rows are made from them (hacks/photonic-sun/notes.md says how).
+an area title that matches the game area's name. sections() collects the labelled source tables; standardise()
+writes AR.es and P.w through encstd, with patches as floors, water chips, day/night rates and SOS allies per caller
+(hacks/photonic-sun/notes.md says how).
 
 Areas (the tracker's slots) are the PDF's area titles in its order ("roughly the order they become accessible"),
 plus Starter (first) and the places of the Special Encounters doc that have no wild table. SPECIALS is
@@ -369,10 +369,11 @@ def build(D):
                                               'Pokémon are as in Ultra Sun.')
     standardise(D, LT)
     availability(D)
-    report('found only as SOS allies:', ', '.join(p['n'] for p in P if p['w'] and all(w[1] == 'SOS ally' for w in p['w'])))
+    report('found only as SOS allies:', ', '.join(p['n'] for p in P if p['w'] and all(w[1].endswith('SOS ally') for w in p['w'])))
 
 
 def standardise(data, tables):
+    """Convert the labelled source tables and fixed encounters without changing published area indices."""
     areas = data['AR']
     parent = next(index for index, area in enumerate(areas) if area['n'] == 'Lush Jungle')
     member = next(index for index, area in enumerate(areas) if area['n'] == 'Lush Jungle Cave')
@@ -440,9 +441,9 @@ OTHER = ('Berry Piles', 'Ambush Encounters', 'Dust Clouds', 'Shadows', 'Rustling
 
 
 def sections(LAB, A, pid_of, tabs):
-    """Location sections (pass 2 preview, not shipped yet): {area index: {'s': [section], 'ws': [weather SOS allies]}}.
-    A section is one game table (a grass patch, cave, building), or Water (Surfing + Fishing, bubbling as a second
-    rate), or Other (berry piles, ambush, dust clouds...), or Special (gifts, trades, Island Scan). Rows carry
+    """Labelled source tables: {area index: {'s': [section], 'ws': [weather SOS allies]}}.
+    A section is one game table (a grass patch, cave, building), Water (Surfing + Fishing, bubbling as a second
+    rate), or Other (berry piles, ambush, dust clouds...). Rows carry
     [day, night] rates and the allies that Pokémon calls (other species or forms only)."""
     lv = lambda lo, hi: f'{lo}' if lo == hi else f'{lo}-{hi}'
     tabsof = lambda ga, tns: [t for t in ga['tables'] if t['table'] == tns[0]]

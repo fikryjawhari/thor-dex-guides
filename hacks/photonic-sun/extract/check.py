@@ -36,6 +36,7 @@ def check_gid(data):
 
 def check_current(new):
     check_gid(new)
+    check_encounters(new)
     new_pokemon = {pokemon['id']: pokemon for pokemon in new['P']}
     assert len(new_pokemon) == len(new['P'])
     for pokemon in new['P']:
@@ -124,6 +125,31 @@ def check_totems(data, cards):
             assert trainer['cap'] == data['TR']['g'][target]['cap']
     assert next(trainer for trainer in totems if trainer['n'] == 'Ultra Necrozma')['p'][0]['l'] == 100
     print('PASS: all 13 Totem battles, game sets (IVs, EVs), exact auras, no trainer EVs outside Totems, foe allies, version tags, cap boxes and walkthrough links')
+
+
+def check_encounters(data):
+    assert data['ESV'] == 2
+    assert len(data['AR']) == 73
+    assert sum(not area.get('ns') and 'in' not in area for area in data['AR']) == 71
+    assert data['AR'][27]['n'] == 'Lush Jungle' and data['AR'][27]['l'] == [27]
+    assert data['AR'][28] == {'n': 'Lush Jungle Cave', 'l': [28], 'in': 27}
+    assert data['AR'][0]['st'] == 1 and data['LOC'][0] == 'Route 1'
+    assert data['AR'][0]['es'][0]['g'][0]['v'] == 'Starter choice'
+    jungle = [area for area in load('dex-rebalanced.json')['encounters'] if 'Jungle' in area['location']]
+    assert len(jungle) == 4 and {area['location'] for area in jungle} == {'Lush Jungle'}
+    for name in ('Ten Carat Hill', 'Victory Road', 'Vast Poni Canyon', 'Lush Jungle'):
+        area = next(area for area in data['AR'] if area['n'] == name)
+        assert {'grass', 'cave'} <= {section['k'] for section in area['es']}, name
+    assert any(group.get('f') == 'Cave' for section in data['AR'][27]['es'] for group in section['g'])
+    for pokemon in data['P']:
+        assert all(len(row) == 6 and row[5] == 1 for row in pokemon['w']), pokemon['id']
+    chips = {key.split('|')[0] for area in data['AR'] for section in area.get('es', [])
+             for group in section['g'] for row in group['rows'] for key in row.get('r', {})}
+    assert chips == {'', 'Su', 'F', 'Bub'}, chips
+    allies = [ally for area in data['AR'] for section in area.get('es', [])
+              for group in section['g'] for row in group['rows'] for ally in row.get('sos', [])]
+    assert {when for pid, when in allies} == {'', 'd', 'n'}
+    print('PASS: ESV 2; 73 stable AR indices, 72 -> 71 tracker slots; Lush Jungle zones 105/106/107/109 share one met location; member 28 -> 27; Cave/Grass, water chips, SOS and starter')
 
 
 def check(baseline_path):
