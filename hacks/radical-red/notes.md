@@ -408,10 +408,13 @@ Source: data.js `areas` (221, game order; index = LOC index). Built by `extract/
   Island 142, Three Island 149), the others get `in` (members, no es; their rows are the slot's floors, `loc` their
   own LOC). Tracker slots before → after per place: the build report's `locs: merged` lines (e.g. Vermilion City 4 →
   1, Celadon City 6 → 1, Safari Zone 5 → 1 with Moltres' Den, Cinnabar Island 3 → 1). A legendary's room
-  (`MAIN_LIST`: Magearna's Chamber, Raging Bolt's Office, Kyogre's Chamber, Gouging Fire's Room) has no floor
-  heading: its rows are in the place's main list (its wild tables too: data.js gives those rooms their own tables).
+  (`MAIN_LIST`: Magearna's Chamber, Raging Bolt's Office, Kyogre's Chamber, Gouging Fire's Room) has its static in
+  the place's main list and its wild tables under a floor heading of its name (the user: a special place, not its
+  own box). S.S. Anne is its own place (the ship and the Port: the doc's "S.S. ANNE" fishing column, Wimpod), not
+  Vermilion City's.
 - **Egg hatch slots**: a merged town or own place with nothing wild keeps a tracker slot, note "Egg hatch location."
-  (Lavender Town, Rocket Hideout, Indigo Plateau, Three Island). They show a card once the template draws a slot
+  (Underground Path (Vertical + Horizontal; the Route 5 entrance hut is Route 5's), Lavender Town, Rocket Hideout,
+  Indigo Plateau, Three Island). Three Isle Path stays without one (postgame; the user doesn't know). They show a card once the template draws a slot
   with no es (asked of the parent).
 - check.py → `check_standard`: ESV, the merges, one card per name, Starter first, Roaming not on Viridian, a "1 of
   N" group has N rows, raid notes with a tier list, no two walkthrough stops with one name; P.w labels match

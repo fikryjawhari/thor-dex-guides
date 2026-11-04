@@ -323,7 +323,9 @@ Route 4|Route 4,*
 Cerulean City|Cerulean City,*
 Route 25|Route 25,*
 Route 5|Route 5,*,Underground Path Route 5 Entrance
-Vermilion City|Vermilion City,*,S.S. Anne Port
+Vermilion City|Vermilion City,*
+S.S. Anne|S.S. Anne Port,S.S. Anne,*
+Underground Path|Underground Path Vertical,Underground Path Horizontal
 Route 11|Route 11,*
 Route 10|Route 10,*
 Rock Tunnel|Rock Tunnel,*
@@ -351,7 +353,8 @@ Three Island|Three Island,*
 """
 MERGES = [(f[0], (f[2] if len(f) > 2 else f[0] + ' '), f[1].split(','))
           for f in (line.split('|') for line in MERGE_TABLE.strip().splitlines())]
-# A legendary's room: its rows are in the place's main list, no floor heading of its own (the user, 2026-11-04)
+# A legendary's room: its static is in the place's main list; its wild tables under a small heading of the room's
+# name (the user, 2026-11-04: "a special place but don't need their own full box")
 MAIN_LIST = {"Rock Tunnel Magearna's Chamber", "Silph Co. Raging Bolt's Office", "Seafoam Islands Kyogre's Chamber",
              "Pokemon Mansion Gouging Fire's Room"}
 # Met locations with nothing wild: a tracker slot for an Egg hatched there (the user, 2026-11-04)
@@ -413,12 +416,12 @@ def standardise(data, groups, place_of, starter_loc, gift_area):
     enc = [encstd.Enc() for _ in AR]
     found = set()
 
-    def floor_of(area, slot):
+    def floor_of(area, slot, kind):
         ls = [li for i, A in enumerate(AR) if i == slot or A.get('in') == slot for li in A['l']]
         if len(ls) < 2:
             return ''
         name, pre = LOC[area], prefix.get(slot) or AR[slot]['n'] + ' '
-        if name in MAIN_LIST:
+        if name in MAIN_LIST and kind == 'other':
             return ''
         return name[len(pre):] if name.startswith(pre) else '' if name == pre.strip() else name
 
@@ -433,7 +436,7 @@ def standardise(data, groups, place_of, starter_loc, gift_area):
         slot = roam if method.startswith('Roaming') else slot_of(data, place_of[area])
         if slot == roam:            # met wherever it is caught: its place is Kanto, not data.js's Viridian City
             area = AR[roam]['l'][0]
-        floor = '' if slot == roam else floor_of(area, slot)
+        floor = '' if slot == roam else floor_of(area, slot, kind)
         common = Counter(row.get('drops') for row in rows.values()).most_common(1)[0][0]
         land = 'cave' if LOC[area].startswith(CAVES) else 'grass'
         table_lv = lv_text(rows.values(), step)
