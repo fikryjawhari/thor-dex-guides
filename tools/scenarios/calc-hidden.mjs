@@ -26,8 +26,8 @@ const hidden = {
     assert.equal(await page.value(`document.getElementById('t-p').classList.contains('on')`), true, 'the Pokémon tab is on');
     assert.equal(await page.value('typeof window.CALC'), 'undefined', 'the calc page is not in the guide');
     await page.route(`#/tr/${trainerKey}`);
-    assert.equal(await page.count('.calc-versus'), 0, 'no Calc vs button on a trainer card');
-    assert.equal(await bodyHas(page, 'Calc vs'), false, 'no Calc vs text');
+    assert.equal(await page.count('.trcalc'), 0, 'no Calc button on a trainer card');
+    assert.equal(await bodyHas(page, 'Calc ▸'), false, 'no Calc text');
     await page.route(`#/p/${speciesId}`);
     assert.equal(await page.count('.calc-use'), 0, 'no Use in calc button on a Pokémon page');
     assert.equal(await bodyHas(page, 'Use in calc'), false, 'no Use in calc text');
@@ -45,7 +45,7 @@ const shown = {
     assert.equal(await page.count('.fit'), 1, 'the calc page renders');
     assert.equal(await page.value(`document.getElementById('t-c').classList.contains('on')`), true, 'the Calc tab is on');
     await page.route(`#/tr/${trainerKey}`);
-    assert(await page.count('.calc-versus') > 0, 'Calc vs buttons on a trainer card');
+    assert.equal(await page.count('.trcalc'), 1, 'a Calc button on a trainer card');
     await page.route(`#/p/${speciesId}`);
     assert.equal(await page.count('.calc-use'), 1, 'Use in calc on a Pokémon page');
   },

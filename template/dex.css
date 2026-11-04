@@ -104,6 +104,10 @@ details.stopd>.stop::before{content:'';position:absolute;left:0;top:0;bottom:12p
 .tag.aura{background:#4a3d12;color:#f3e3a6}
 .trd{margin:2px 0}.trd>summary{cursor:pointer;padding:5px 4px;list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:1px 4px;line-height:1.25;font-size:14px;border-bottom:1px solid var(--line)}
 .trd>summary::-webkit-details-marker{display:none}.trd[open]>summary{color:var(--acc)}
+.trcalc{margin-left:auto;flex:none;display:inline-grid;place-items:center;width:28px;height:26px;padding:0;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--acc);cursor:pointer;touch-action:manipulation}
+.trcalc svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.trd>summary .trmini+.trcalc{margin-left:0}details.trd[open]>summary .trmini+.trcalc{margin-left:auto}
+.trn .trcalc{float:right;margin-left:6px}
 /* A closed trainer row's team: 24 px sprites, six to a line at most, beside the name when it leaves room, else under it
    at the right. An open card shows the team, so the row's goes. */
 .trmini{display:flex;flex-wrap:wrap;gap:2px;margin-left:auto;justify-content:flex-end;max-width:calc(6*24px + 10px)}
@@ -468,7 +472,7 @@ details.stopd>summary.stoph{padding-top:2px;padding-bottom:2px}
 .pt[hidden]{display:none}
 .pt.part{background:none;border-color:var(--acc);color:var(--acc)}
 .pt.on{background:var(--acc);border-color:var(--acc);color:#1b1608}
-.calc-use,.calc-versus{display:block;min-height:40px;margin-top:6px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--acc);font:600 12px system-ui;cursor:pointer}
+.calc-use{display:block;min-height:40px;margin-top:6px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--acc);font:600 12px system-ui;cursor:pointer}
 /* ===== Pokémon page (template/README.md → Pokémon page) */
 #pbar svg.i,.pnav svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 /* Name bar: fixed beside the rail, slides in once the top card is off screen. ‹ [sprite name types] ↑ › */

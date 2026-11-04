@@ -554,8 +554,11 @@ import, "No save file linked". `ST.imp.mod` keeps the save's `modified`; `saveIn
 their formats: `calc/readers/README.md`. `calc/readers/test.js` and `tools/scenarios/fixtures/calc/` supply synthetic JSON saves.
 `node tools/scenarios/calc-smoke.mjs dist/emerald-imperium.html` patches only a temporary built page to select that reader.
 
-`dex.js` owns guarded rail, trainer-card and stat-calculator entry hooks and delegates scroll stops to
-`CALC.stops()` (see Both teams in the first frame). Without `cfg.calc`, only removal of the Calc tab changes the
+`dex.js` owns guarded rail, trainer and stat-calculator entry hooks and delegates scroll stops to
+`CALC.stops()` (see Both teams in the first frame). The trainer entry is one calc-icon button per trainer, at the end
+of a trainer row's team preview line (usable without opening the row; it fits beside six sprites at 260 px) and on a
+lone card's name line; it opens the calc on that trainer, lead first. Not a button per Pokémon card (2026-11-04: it
+cost each card a line, so a six-card team didn't fit the tallest viewer frame). Without `cfg.calc`, only removal of the Calc tab changes the
 other pages' DOM, and `#/calc` redirects to the Pokémon list.
 
 Engine contracts, mechanics and profile authoring: `tools/calc/README.md`. Save formats and reader coverage:
