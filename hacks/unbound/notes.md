@@ -90,24 +90,64 @@ wins" rule.
 public 2.1.1.1 location guide workbook (`.src/research-2026-10-29/location-guide.xlsx`) is the cross-check ("Doc
 says"); the RomHackDex location pages only a membership report. No source has wild levels: the guide shows none.
 
+#### Wild tables (encounter standard, 2026-11-04)
+
+`locs.py` first builds and audits the original source tables; `encounters.py` then writes every encounter through
+`tools/encstd.py` (`Enc.add`, `write`, `finish`, `ESV: 2`). The original source counts below are before that final
+conversion. `check.py` re-extracts those sources, runs the existing source audit, compares the converted sections and
+P.w lines, and checks that every species/location pair and the day/night rate total survived.
+
+- **Structure:** floors/chambers are `g.f` headings, never methods. Sections are Grass, Cave, Water, Special, Raids,
+  Gifts & static, Trades, in the shared order. Surf and the three rods share Water (`Su`, `O`, `G`, `S`); the three
+  named fishing patches are floor headings. Underwater and Lava use their own Water subheadings and `Su`.
+  Flowers/long grass are Grass; explicit Cave is Cave. DexNav, swarms, Headbutt, Rock Smash, Safari and portals are
+  Special mechanics. Day/night rates use the shared keys, Gen 8 and Safari modes keep their qualifiers, source
+  requirements and swarm schedules stay in the row notes. Workbook-only sub-places/floors become headings too.
+- **Gifts:** Gift, Gift (fossil), Static, Roaming, Egg; trades get Trades. Mission Vivillon are static encounters.
+  The starter keeps `AR[0].st`, the Starter card and its three choices; its white heading is Shadow Base
+  (`LOC[0]`), not a second Starter heading. The regular Shadow Base card stays at its later story visit.
+- **Raids:** the 462 source membership rows expand into 983 rows in 104 individual star-tier groups, each with
+  its source level range and one `dr` drop list. The wiki's combined 5/6-Star rewards stay one tier, using its
+  5-Star membership. Species-specific drop differences name the species inside that tier's list, not on every
+  encounter row; common drops appear once. Gigantamax and underwater-den access remain explicit.
+- **Cinder merge:** 63 tracker slots -> 62; all 69 published AR indexes, names and `l: [index]` identities remain.
+  Cinder Volcano stays slot **11**; Cinder Volcano Depths stays index **35**, with `in: 11` and no separate `es`.
+  Its rows have Depths-prefixed floor headings and `loc=35`, so Pokémon pages still name the Depths. The wiki maps
+  name both sets Cinder Volcano: main 1F-5F, Depths 1F/B1F/B2F; the Depths map's Route 4 entrance and internal
+  ladders/tunnels identify the separate wing. This is a map/name cross-check, not proof of the game's numeric
+  met-location field: no release-matched map headers are available locally. The instructed merge default applies;
+  Extra covers a separate met location if in-game testing establishes one.
+- **Assumptions:** no private CFRU map/decomp source was fetched. Explicit source Cave/Long Grass/flower words
+  take priority; otherwise `encounters.CAVES` lists the wiki's underground locations, with exterior/outside/snowy
+  floors and Crystal Cliff treated as Grass. Workbook Rift Cave and Tomb of Borrius are Cave by their sub-place.
+  Floors from different documents are not guessed into matching rooms. No wild levels were invented; raid levels
+  come from the reward headings. Underwater/Lava follow the agreed `Su` default.
+- **Saves:** storage keys, walkthrough stop keys and trainer keys are unchanged. Tracker records keep their AR
+  indexes; the shared member migration retains both Cinder records, counts both and offers the extra as "also:"
+  until cleared; a Depths-only record moves to slot 11. The shared open-state migration recognises the old standard
+  section names; unsupported old method/chamber names start closed, as specified (UI state only).
+- **Checks:** `test_encounters.py` covers cave/exterior choices, flower tables, rods/patches, underwater/lava,
+  mechanics, gifts and the 32 dens' 104 reward tiers. No template or `encstd.py` change is needed.
+
 - **Areas:** 69 = Starter (the picker; Beldum / Gible / Larvitar at Shadow Base) + the 67 wiki pages in walkthrough
   order (the Parts' headings, Part 1-40; post-game Battle Frontier and Cube Corp. last) + Mystery Gift. Shadow Base
   sits at its Part 19 visit, not first: at the start it is only the starter pick (the user, 2026-10-30). One tracker slot
-  per area (EI's floor rule): floors, sub-places (Rift Cave in Dehara City, Tomb of Borrius in Great Desert, Safari Zone
-  in Polder Town, Cave of Being in Route 10, Distortion World via the Rift Cave portal) and raid dens are sections.
+  per met location (Cinder Volcano + Depths is the merge above): floors, sub-places (Rift Cave in Dehara City, Tomb of
+  Borrius in Great Desert, Safari Zone in Polder Town, Cave of Being in Route 10, Distortion World via the Rift Cave
+  portal) and raid dens stay inside it.
   No slot (AR.ns): Tarmigan Mansion, Antisis Port, Ferrothorn Turf, S.S. Marine, Battle Frontier (no encounters in any
   source) and Mystery Gift (codes, any Pokémon Center after the Elite Four). New areas go at the end of AR (saved
   trackers are keyed by AR index).
-- **Rated rows** -> AR.es: a floor is a section with a group per method (· qualifier), a page without floors gets a
-  section per method (· qualifier). Day / Night rows share one row, r [day, night]; "Requires Gen 8 Activation" ->
+- **Rated source tables** (before the standard conversion): a floor has a table per method (· qualifier), a page
+  without floors has a table per method (· qualifier). Day / Night rows share one row; "Requires Gen 8 Activation" ->
   "· Gen 8", Safari Zone modes -> "· Easy" etc.; Special Encounter = DexNav. One row is listed twice in one table and
   summed. 22 tables don't total 100% as the wiki gives them (Route 3 Good Rod 120%, Epidimy Town Old Rod 200%, Route 14
   / 15 / 16 Super Rod 80%...; report: WIKI RATE TOTALS): shown as given.
-- **Other wiki rows** (gifts, statics, trades, fossils, Game Corner, missions, swarms: 247) are P.w rows with the
+- **Other wiki rows** (gifts, statics, trades, fossils, Game Corner, missions, swarms: 247) keep the
   wiki's time cell as the note. Swarms: the wiki's rate-less Swarm rows get the Swarms page's hour for each day of the
   month; area note "Swarm: 50% ... one swarm at a time" (the Swarms page).
-- **Raid dens:** a section per den, a group per star level as listed; a Gigantamax species is its base with
-  "Gigantamax"; the den's access text (its lead "The X Raid Den is found" trimmed) is the area note. 462 rows.
+- **Raid den sources:** a Gigantamax species is its base with "Gigantamax"; the den's access text (its lead
+  "The X Raid Den is found" trimmed) is the area note. 462 membership rows, expanded into tiers above.
 - **Legendary page:** 40 rows the location pages lack, worded as the page has them (Entei / Raikou roam from the Tomb
   of Borrius portal: Great Desert; Tornadus / Thundurus: Magnolia Fields; Latios / Latias: Fallshore City; Phione:
   Ruins of Void with Manaphy). Wiki says two places for Deoxys (location page Route 5, Legendary page Route 13 with
