@@ -18,12 +18,12 @@ Trainer gc is the same ordered list of stable trainer keys on every member of a 
 
 # Canonical key order per object kind. Optional fields (omitted when empty) are marked in the notes, not here.
 ORDER = {
-    'top': ['M', 'MV', 'MI', 'AB', 'P', 'LOC', 'AR', 'ARO', 'IT', 'IX', 'WK', 'TR', 'TC', 'GID', 'built'],
+    'top': ['M', 'MV', 'MI', 'AB', 'P', 'LOC', 'AR', 'ARO', 'ESV', 'IT', 'IX', 'WK', 'TR', 'TC', 'GID', 'built'],
     'P': ['id', 'n', 'dex', 't', 'a', 'ha', 's', 'ef', 'et', 'of', 'lv', 'tm', 'tu', 'eg', 'w', 'g', 'hi',
           'stone', 'sloc', 'nu', 'fc', 'cf'],
     'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'cr', 'd', 'b', 'tg', 'f', 'se', 'h', 'dc', 'e', 'cf', 'x', 'aiEffect', 'aiChance'],
     'MI': ['a', 'i', 'w', 'e', 'm', 'h', 's'],
-    'AR': ['n', 'l', 'st', 'sub', 'in', 'es', 'map', 'ns', 'note'],
+    'AR': ['n', 'l', 'st', 'sub', 'in', 'es', 'fo', 'map', 'ns', 'note'],
     'IT': ['n', 'k', 'note', 'r'],
     'WK': ['splits', 'np', 'docs', 'ko', 'cheats', 'cnote'],
     'split': ['n', 'note', 'st'],

@@ -1,17 +1,21 @@
 """Locations (LOC, AR, P.w): the Locations pages, the tracker areas and each Pokemon's wild rows.
 
 The game's encounter tables (dex-rebalanced.json) are the data. Wild Pokemon Locations.pdf names the areas and gives
-their story order. Each doc title is one tracker area and one Locations page. Its game zones (floors, rooms) become
-sections: Grass (walk encounters, flowers, Rough Terrain), Water (Surf and rods), Other (Rock Smash, hordes).
+their story order. Each doc title is one tracker area and one Locations card, written in the encounter standard
+(tools/encstd.py): its game zones (floors, rooms) are floors; Grass or Cave (walk encounters, flowers and Rough Terrain
+as subheadings, hordes as a Horde chip), Water (Surf and rods as chips), Special (Rock Smash), Gifts & static.
 A location with several zones is matched to the doc's sub-areas (1F, B2F, Outside...) by species.
 """
 import os, re
 
 from common import SRC, load, fix, norm, report, text
+import encstd
 
 GRASS = {'Grass', 'Yellow Flowers', 'Purple Flowers', 'Red Flowers', 'Rough Terrain'}
-WATER = {'Surf', 'Old Rod', 'Good Rod', 'Super Rod'}
-SECTIONS = [('grass', 'Grass'), ('water', 'Water'), ('other', 'Other')]
+WATER = {'Surf': 'Su', 'Old Rod': 'O', 'Good Rod': 'G', 'Super Rod': 'S'}
+# The game calls every land table "Grass": these places (and Victory Road's caves) are caves (Bulbapedia's maps).
+CAVES = {'Connecting Cave: Zubat Roost', 'Glittering Cave', 'Reflection Cave', 'Frost Cavern', 'Terminus Cave'}
+GIFT_V = {'Starter choice': 'Starter choice'}   # other methods are their own subheading (Gift, Static, Roaming...)
 PDF_TABLE = re.compile(r'^(Grass|Yellow Flowers|Purple Flowers|Red Flowers|Rough Terrain|Snow|Cave|Surf|Rock Smash|'
                        r'Old Rod|Good Rod|Super Rod|Hordes)\b')
 PDF_RATE = re.compile(r'([^,()]+?)\s*\((\d+)%\)')
@@ -183,8 +187,9 @@ def build(D):
     if missing:
         report('locs: game locations with no doc title: ' + ', '.join(sorted(missing)))
 
-    LOC = ['Starter']
+    LOC = ['Aquacorde Town']      # the Starter card: its heading is where the choice happens
     AR = [{'n': 'Starter', 'l': [0], 'st': 1}]
+    ENC = [encstd.Enc()]
     for top in tops:
         idx = len(AR)
         zs = by_loc.get(top['loc'], [])
@@ -192,9 +197,12 @@ def build(D):
             report(f'locs: doc title "{top["title"]}" has no game zone')
         pairs = assign(zs, top['subs']) if zs else []
         multi = len({s for _, s in pairs}) > 1
-        groups = {k: [] for k, _ in SECTIONS}
+        title = fix(top['title'])
+        enc = encstd.Enc(table_lv=True)   # the doc and the old pages give each table's range
         seen = set()
         for z, sub in pairs:
+            floor = sub if multi else ''
+            land = 'cave' if title in CAVES and floor != 'Outside' or 'Cave' in floor else 'grass'
             for t in z['tables']:
                 meth = t['method']
                 sig = (sub, meth, tuple(map(tuple, t['slots'])))
@@ -202,62 +210,51 @@ def build(D):
                     report(f'locs: {top["title"]}: {meth} table of zone {z["zone"]} repeats an earlier zone; skipped')
                     continue
                 seen.add(sig)
-                if meth.startswith('Horde'):
-                    k, label, chance = 'other', f"Horde {t.get('chance', '')}%", t.get('chance', 0)
+                horde = meth.startswith('Horde')
+                if horde:
+                    kind, v, chip = land, '', 'H'
+                elif meth in WATER:
+                    kind, v, chip = 'water', '', WATER[meth]
+                elif meth in GRASS:
+                    kind, v, chip = land, '' if meth == 'Grass' else meth, ''
+                elif meth == 'Rock Smash':
+                    kind, v, chip = 'special', 'Rock Smash', ''
                 else:
-                    k = 'grass' if meth in GRASS else 'water' if meth in WATER else 'other'
-                    label, chance = meth, None
-                if multi and sub:
-                    label = f'{sub} · {label}'
-                groups[k].append((label, t, chance))
-        secs = []
-        for k, sname in SECTIONS:
-            gs = []
-            for label, t, chance in groups[k]:
-                agg = {}
-                tlo = min(sl[2] for sl in t['slots'])
-                thi = max(sl[3] for sl in t['slots'])
+                    report(f'locs: {top["title"]}: unknown method {meth}; filed under Special')
+                    kind, v, chip = 'special', meth, ''
+                done = set()
                 for sl in t['slots']:
                     name, form, lo, hi = sl[:4]
-                    rate = sl[4] if len(sl) > 4 else chance
                     pid = pid_of(name, form)
                     if pid is None:
                         report(f'locs: species "{name}" not found ({top["title"]}, {t["method"]})')
                         continue
-                    a = agg.setdefault(pid, [0, lo, hi])
-                    a[0] = a[0] + rate if len(sl) > 4 else rate  # horde slots repeat the chance: once per species
-                    a[1], a[2] = min(a[1], lo), max(a[2], hi)
-                rows = []
-                for pid in sorted(agg):
-                    rate, lo, hi = agg[pid]
-                    if not rate:
-                        continue
-                    rows.append((pid, {'p': pid, 'r': [rate, rate]}, lo, hi, rate))
-                g_rows = []
-                for pid, row, lo, hi, rate in rows:
-                    g_rows.append(row)
-                    D['_byid'][pid]['w'].append([idx, label, f'{rate}%', lvstr(lo, hi), '', 1])
-                gs.append({'label': label, 'lv': lvstr(tlo, thi), 'rows': g_rows})
-            if not gs:
-                continue
-            multi_g = len(gs) > 1 or multi
-            secs.append({'n': sname, 'k': k, 'g': [{'m': g['label'] if multi_g else '', 'lv': g['lv'],
-                                                    'rows': g['rows']} for g in gs]})
-        LOC.append(fix(top['title']))
-        AR.append({'n': fix(top['title']), 'l': [idx], 'es': secs})
+                    if horde:            # horde slots repeat the table's chance: once per species
+                        if pid in done:
+                            continue
+                        done.add(pid)
+                        rate = t.get('chance', 0)
+                    else:
+                        rate = sl[4]
+                    if rate:
+                        enc.add(kind, pid, rate, lv=lvstr(lo, hi), floor=floor, v=v, chip=chip)
+        ENC.append(enc)
+        LOC.append(title)
+        AR.append({'n': title, 'l': [idx]})
 
     for s in STARTERS:
         pid = pid_of(s, 0)
         if pid is None:
             report(f'locs: starter {s} not found')
             continue
-        D['_byid'][pid]['w'].append([0, 'Starter choice', '', '5', 'Choose one in Aquacorde Town; holds a Big Nugget'])
+        ENC[0].add('gift', pid, lv='5', v='Starter choice', note='Holds a Big Nugget')
 
     # Gifts and fixed encounters: species, levels and held items from the hack's DllField.cro (cro_specials()); the
     # places are vanilla X's (Bulbapedia; the hack has no script edits).
     def add_area(name, before):
         LOC.append(name)
         AR.append({'n': name, 'l': [len(LOC) - 1]})
+        ENC.append(encstd.Enc())
         aro.insert(aro.index([x['n'] for x in AR].index(before)), len(AR) - 1)
     aro = list(range(len(AR)))
     add_area('Lumiose City', 'Route 5: Versant Road')
@@ -271,8 +268,11 @@ def build(D):
         lv, item = cro[sp]
         a = [x['n'] for x in AR].index(area)
         note = '; '.join(x for x in (note, f'holds {item}' if item else '') if x)
-        D['_byid'][pid_of(sp, 0)]['w'].append([AR[a]['l'][0], method, '', str(lv), note])
+        ENC[a].add('gift', pid_of(sp, 0), lv=str(lv), v=GIFT_V.get(method, method), note=note)
     report('locs: specials from DllField.cro', len(SPECIALS), '(Abomasnow Lv 45 in Frost Cavern is a battle, not a catch; Yveltal is Y only)')
 
     D['LOC'] = LOC
     D['AR'] = AR
+    for a, enc in enumerate(ENC):
+        enc.write(D, a)
+    encstd.finish(D)
