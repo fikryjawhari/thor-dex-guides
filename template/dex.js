@@ -465,6 +465,11 @@ const caughtFams=(skip)=>{const s=new Set();for(const v of Object.values(TK.t||{
 const MEM={};AR.forEach((A,i)=>{if(A.in!=null&&AR[A.in]&&!AR[A.in].sub)(MEM[A.in]=MEM[A.in]||[]).push(i);});
 const isMem=a=>AR[a].in!=null&&!!AR[AR[a].in]&&!AR[AR[a].in].sub,slotOf=a=>isMem(a)?AR[a].in:a;
 const slotL=a=>a==null||!AR[a]?[]:[a,...(MEM[a]||[])].flatMap(x=>AR[x].l);
+// A member with card: [floor...] (ESV) is still part of its slot's tracker, but shows those of the slot's floors on a card
+// of its own, in its own route place (BB2R's Relic Passage, Castelia side). CARDF[slot] = the floors its members show;
+// cardOf(a) = the area whose card a place of a is on.
+const CARDF={};if(ESV)AR.forEach(A=>{if(A.card&&isMem(AR.indexOf(A)))A.card.forEach(f=>(CARDF[A.in]=CARDF[A.in]||new Set()).add(f));});
+const isCard=a=>ESV&&!!AR[a].card&&isMem(a),cardOf=a=>isCard(a)?a:AR[a].in??a;
 // A merged slot with no entry of its own shows its first floor's (route order); the others stay stored ("also:").
 for(const [a,ms] of Object.entries(MEM)){if(TK.e[a])continue;const m=ms.find(x=>TK.e[x]);if(m!=null){TK.e[a]=TK.e[m];delete TK.e[m];tkSave();}}
 const areaSpecies=a=>{const seen=new Set(),out=[];slotL(a).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]==='Trade')return;if(!seen.has(p.id)){seen.add(p.id);out.push(p);}}));return out;};
@@ -575,9 +580,9 @@ const loSave=()=>{try{localStorage.setItem(LS.loc,JSON.stringify(LO))}catch(e){}
 const places=a=>{const m=new Map();AR[a].l.forEach(li=>{const n=LOC[li];if(!m.has(n))m.set(n,[]);m.get(n).push(li);});return [...m].map(([n,ls],j)=>({n,ls,j}));};
 relayout(LO,AR.map((A,a)=>[String(a),places(a).map(p=>p.n)]),{x:2,s:2})&&loSave();
 const LGRP=(()=>{const out=[],two=n=>n.split(' ').length>2?n.split(' ').slice(0,2).join(' '):null;
- ARO.forEach(i=>{const A=AR[i];if(A.in!=null)return;
+ ARO.forEach(i=>{const A=AR[i];if(A.in!=null&&!isCard(i))return;
   // The standard: a card per location, never grouped; a place with nothing to catch has none.
-  if(ESV){if(A.sub||A.es||slotL(i).some(li=>locs[li]))out.push({k:null,one:true,a:[i]});return;}const k=two(A.n),one=places(i).length===1,p=out[out.length-1];
+  if(ESV){if(A.sub||A.es||isCard(i)||slotL(i).some(li=>locs[li]))out.push({k:null,one:true,a:[i]});return;}const k=two(A.n),one=places(i).length===1,p=out[out.length-1];
   if(k&&one&&p&&p.one&&p.k===k)p.a.push(i);else out.push({k,one,a:[i]});});
  out.forEach(g=>g.n=g.a.length>1?g.k:AR[g.a[0]].n);return out;})();
 const LSEC=(k,m,tags,body)=>sectionHTML(esc(k+'.'+m),esc(m),tags,body,!!st.q||LO.s[k+'.'+m]===1);
@@ -675,16 +680,18 @@ function esSecs(a,f,cf,many){return ESK.map(([k,n])=>{const gs=(AR[a].es||[]).fi
 const esWhens=A=>new Set((A.es||[]).flatMap(s=>s.g.flatMap(g=>g.rows.flatMap(x=>Object.keys(x.r||{}).map(k=>k.split('|')[1])))));
 const esKey=ks=>`<div class="mut small ltkey">${['m','d','n'].filter(w=>ks.has(w)).map(w=>WICON[w]+WTX[w]).join(' ')}: the rate only holds then.</div>`;
 // The card's body: the white box (the place: the area's name; the Starter card's is where the choice happens).
-function esCard(a,cf){const A=AR[a],k=a+'.0',fl=esFloors(A),many=fl.length>1;
+function esCard(c,cf){const a=isCard(c)?AR[c].in:c,A=AR[a],k=c+'.0',cut=CARDF[a],
+  fl=esFloors(A).filter(f=>a!==c?AR[c].card.includes(f):!cut||!cut.has(f)),many=fl.length>1;
  if(A.st)return locStop(k,LOC[A.l[0]]||A.n,'',(PICK?`<div class="trk"><span class="mut small">Starter</span>${starterSel('st-pick')}</div>`:trackerHTML(a))+(A.note?`<div class="trnote">${esc(A.note)}</div>`:'')+(A.es||[]).flatMap(s=>s.g).map(g=>esRows(g.lv?{...g,rows:g.rows.map(x=>x.lv?x:{...x,lv:g.lv})}:g,cf)).join(''));
  let h=trackerHTML(a)+(A.note?`<div class="trnote">${esc(A.note)}</div>`:'');
- if(A.map)h+=`<details class="mapd"><summary>Map: grass patch numbers</summary>${A.map.map(u=>`<img src="${u}" alt="Map of ${esc(A.n)}">`).join('')}<div class="mut small">From the Wild Pokémon Locations doc.</div></details>`;
+ if(A.map&&a===c)h+=`<details class="mapd"><summary>Map: grass patch numbers</summary>${A.map.map(u=>`<img src="${u}" alt="Map of ${esc(A.n)}">`).join('')}<div class="mut small">From the Wild Pokémon Locations doc.</div></details>`;
  const ws=esWhens(A);if(['m','d','n'].some(w=>ws.has(w)))h+=esKey(ws);
  const body=fl.map(f=>{const secs=esSecs(a,f,cf,many);return secs&&f&&many?`<div class="esfl">${esc(f)}</div>`+secs:secs;}).join('');
- return locStop(k,A.n,'',h+(body||'<div class="mut small" style="margin:6px 0">No wild Pokémon here.</div>'));}
+ return locStop(k,AR[c].n,'',h+(body||'<div class="mut small" style="margin:6px 0">No wild Pokémon here.</div>'));}
 // The walkthrough's lines, one per floor, section, subheading and chip, named as on Pokémon pages (tools/encstd.py label).
-function esLines(a,cf){const out=[],A=AR[a],li=A.l[0],many=esFloors(A).length>1;
- (A.es||[]).forEach(s=>s.g.forEach(g=>{const adj=esAdj(g,cf),by=new Map(),put=(c,r)=>{if(!by.has(c))by.set(c,[]);by.get(c).push(r);};
+function esLines(c,cf){const out=[],a=isCard(c)?AR[c].in:c,A=AR[a],li=AR[c].l[0],cut=CARDF[a],
+  keep=f=>a!==c?AR[c].card.includes(f||''):!cut||!cut.has(f||''),many=esFloors(A).filter(keep).length>1;
+ (A.es||[]).forEach(s=>s.g.forEach(g=>{if(!keep(g.f))return;const adj=esAdj(g,cf),by=new Map(),put=(c,r)=>{if(!by.has(c))by.set(c,[]);by.get(c).push(r);};
   g.rows.forEach(x=>{const p=byId[x.p],d=cf.has(FAM[x.p]),ls=adj(x);if(!ls.length){put('',{p,d,show:x.t||''});return;}
    const c0={};ls.forEach(([c,w,v])=>{(c0[c]=c0[c]||[]).push(w?`${pct(v)} ${WTX[w]||w}`:pct(v));});
    for(const [c,t] of Object.entries(c0))put(c,{p,d,show:t.join(', ')});});
@@ -730,8 +737,8 @@ function listLocs2(scroll){fil.innerHTML='';const s=st.q;const li=st.lopenLi;st.
  // Opened from a Pokemon page (#/l/<place>): open its box and place, then scroll it under the search bar.
  // A standard card (esCard: one area, no sub-slots) is one box, k <slot>.0, whichever floor the place is. A place with
  // nothing to catch has no card (the standard leaves it out): its link shows the page as it is.
- let tk=null;const g0=li!=null&&LOC2A[li]!=null&&LGRP.find(g=>g.a.includes(AR[LOC2A[li]].in??LOC2A[li]));
- if(g0){const a=LOC2A[li],o=AR[a].in??a,g=g0;LO.o[g.a[0]]=1;
+ let tk=null;const g0=li!=null&&LOC2A[li]!=null&&LGRP.find(g=>g.a.includes(cardOf(LOC2A[li])));
+ if(g0){const a=LOC2A[li],o=cardOf(a),g=g0;LO.o[g.a[0]]=1;
   tk=AR[a].in!=null||(ESV&&g.a.length===1&&!AR[o].sub)?o+'.0':a+'.'+places(a).find(p=>p.ls.includes(li)).j;delete LO.x[tk];loSave();}
  const hit=i=>ARS(i).some(i=>AR[i].n.toLowerCase().includes(s)||slotL(i).some(li=>LOC[li].toLowerCase().includes(s)||(locs[li]||[]).some(([p])=>p.key.includes(s))));
  const list=LGRP.map((g,gi)=>gi).filter(gi=>!s||LGRP[gi].a.some(hit));
@@ -1083,10 +1090,10 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=!(WO.x[k]===1
  const steps=stopEnt(s).map(({j,x,m})=>{if(m)return misHTML(m);const sk=k+'.'+j;const done=!!WO.c[sk];return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-sk="${sk}" ${done?'checked':''}><span>${esc(x[0])}${x[1]?`<div class="mut small">${esc(x[1])}</div>`:''}</span></label>`;}).join('');
  const ts=(s.tr||[]).map(k=>TRK[k]).filter(t=>t&&!rivalHidden(t));
  // Encounters: one box per area with its own tracker; several areas get a short tag (the area name minus the stop's).
- const areas=[];s.a.flatMap(ARS).forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=ESV&&A.es?esLines(ai,cf):A.es?secLines(ai,cf).concat(A.l.flatMap(li=>adjRows(li,cf,notSec).map(r=>[li,r]))):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;areas.push([ai,A,enc]);});
+ const areas=[];s.a.flatMap(a=>isCard(a)?[a]:ARS(a)).forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=ESV&&(A.es||isCard(ai))?esLines(ai,cf):A.es?secLines(ai,cf).concat(A.l.flatMap(li=>adjRows(li,cf,notSec).map(r=>[li,r]))):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;areas.push([ai,A,enc]);});
  const multi=areas.length>1;
  const enc=areas.map(([ai,A,enc])=>{const tag=multi?(A.n.startsWith(s.n+' ')?A.n.slice(s.n.length+1):A.n):'';
-  return `<div class="area">${A.ns&&tag?`<span class="atag">${esc(tag)}</span>`:''}${trackerHTML(ai,tag)}${CF.walkAreaNote&&A.note?`<div class="trnote">${esc(A.note)}</div>`:''}`+enc.map(([li,[m,rows]])=>`<div class="encl"><span class="mut">${A.l.length>1||LOC[li]!==A.n?esc(LOC[li])+' · ':''}${esc(m)}:</span> ${rows.map(x=>`<span class="${x.d?'dupe':''}"><a href="#/p/${x.p.id}">${esc(x.p.name)}</a> ${esc(x.show)}</span>`).join(', ')}</div>`).join('')+'</div>';}).join('');
+  return `<div class="area">${A.ns&&tag?`<span class="atag">${esc(tag)}</span>`:''}${trackerHTML(slotOf(ai),tag)}${CF.walkAreaNote&&A.note?`<div class="trnote">${esc(A.note)}</div>`:''}`+enc.map(([li,[m,rows]])=>`<div class="encl"><span class="mut">${A.l.length>1||LOC[li]!==A.n?esc(LOC[li])+' · ':''}${esc(m)}:</span> ${rows.map(x=>`<span class="${x.d?'dupe':''}"><a href="#/p/${x.p.id}">${esc(x.p.name)}</a> ${esc(x.show)}</span>`).join(', ')}</div>`).join('')+'</div>';}).join('');
  const its=s.it.filter(i=>starterOk(i[2]));
  // A stop with nothing in it is just a direction ("back to Iki Town"): a grey sign, not a box that opens nothing.
  if(!lv.length&&!areas.length&&!its.length&&!ts.length&&!s.note)return `<div class="wsign" data-k="${k}">${esc(s.n)}</div>`;
@@ -1094,7 +1101,7 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=!(WO.x[k]===1
  let h=`<details class="stopd" ${closed?'':'open'} data-k="${k}"><summary class="stoph"><span class="pn">${esc(s.n)}${s.x?' <span class="mut small">(on the way)</span>':''}</span>${s.a.map(encAll).join('')}${ts.length?walkPt(ts,cap):''}</summary><div class="stop">`+
   (s.note?`<div class="trnote" style="margin:6px 0">${esc(s.note)}</div>`:'')+
   (lv.length?walkSec(k,'c',`<span class="tag${nd===lv.length?' got':''}">${nd}/${lv.length}</span>`,`<div class="chkb">${steps}</div>`,mq):'')+
-  (areas.length?walkSec(k,'e',areas.map(([ai])=>encSummary(ai)).join(''),enc):'')+
+  (areas.length?walkSec(k,'e',areas.map(([ai])=>encSummary(slotOf(ai))).join(''),enc):'')+
   (its.length?walkSec(k,'i',`<span class="tag">${its.length}</span>${its.some(i=>/miss permanently/i.test(i[2]))?'<span class="tag miss">MISSABLE</span>':''}`,`<table class="itbl wt ix">${its.map(i=>`<tr${i[4]?` data-pk="${esc(i[4])}"`:''}><td>${i[0]==='Move Tutors'&&i[3]!=null?`<a href="#/m/${i[3]}">${esc(i[1])}</a>`:i[0]==='Useful NPCs'?esc(i[1]):ilink(i[1])}<div class="mut small">${esc(i[0])}</div></td><td>${walkItemText(i)}</td></tr>`).join('')}</table>`):'')+
   (ts.length?walkSec(k,'t',`<span class="tag">${ts.length}</span>`,walkTrainers(ts)):'');
  return h+`<button class="endbar st" hidden>${UPI}<span>Collapse ${esc(s.n)}</span></button></div></details>`;}
