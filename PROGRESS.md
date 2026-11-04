@@ -45,6 +45,8 @@ from link (same library id, saved state kept).
 
 ## Next session
 
+- **Unpushed on `main` (the user's call, 2026-11-04):** one calc button per trainer (row preview line / card name
+  line; the per-Pokémon Calc vs is gone), gate clean. It ships with Open 12 / 13 as one batch: don't push before.
 - **Calc plans done** (merged 2026-11-03): gauntlet carry (every guide with chains), Hardlove AI (odds, switch-ins,
   doubles, Field → AI), Find trainer by location, gate hardening (`-X utf8`, text lint, accept lists, auto-baseline,
   build freshness). Next: the user's Thor / in-game tests (Open 1), then range compare (Open 11) or a new guide.
