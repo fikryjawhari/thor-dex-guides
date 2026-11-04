@@ -676,7 +676,7 @@ const esWhens=A=>new Set((A.es||[]).flatMap(s=>s.g.flatMap(g=>g.rows.flatMap(x=>
 const esKey=ks=>`<div class="mut small ltkey">${['m','d','n'].filter(w=>ks.has(w)).map(w=>WICON[w]+WTX[w]).join(' ')}: the rate only holds then.</div>`;
 // The card's body: the white box (the place: the area's name; the Starter card's is where the choice happens).
 function esCard(a,cf){const A=AR[a],k=a+'.0',fl=esFloors(A),many=fl.length>1;
- if(A.st)return locStop(k,LOC[A.l[0]]||A.n,'',(PICK?`<div class="trk"><span class="mut small">Starter</span>${starterSel('st-pick')}</div>`:trackerHTML(a))+(A.note?`<div class="trnote">${esc(A.note)}</div>`:'')+(A.es||[]).flatMap(s=>s.g).map(g=>esRows(g,cf)).join(''));
+ if(A.st)return locStop(k,LOC[A.l[0]]||A.n,'',(PICK?`<div class="trk"><span class="mut small">Starter</span>${starterSel('st-pick')}</div>`:trackerHTML(a))+(A.note?`<div class="trnote">${esc(A.note)}</div>`:'')+(A.es||[]).flatMap(s=>s.g).map(g=>esRows(g.lv?{...g,rows:g.rows.map(x=>x.lv?x:{...x,lv:g.lv})}:g,cf)).join(''));
  let h=trackerHTML(a)+(A.note?`<div class="trnote">${esc(A.note)}</div>`:'');
  if(A.map)h+=`<details class="mapd"><summary>Map: grass patch numbers</summary>${A.map.map(u=>`<img src="${u}" alt="Map of ${esc(A.n)}">`).join('')}<div class="mut small">From the Wild Pokémon Locations doc.</div></details>`;
  const ws=esWhens(A);if(['m','d','n'].some(w=>ws.has(w)))h+=esKey(ws);
@@ -689,7 +689,7 @@ function esLines(a,cf){const out=[],A=AR[a],li=A.l[0],many=esFloors(A).length>1;
    const c0={};ls.forEach(([c,w,v])=>{(c0[c]=c0[c]||[]).push(w?`${pct(v)} ${WTX[w]||w}`:pct(v));});
    for(const [c,t] of Object.entries(c0))put(c,{p,d,show:t.join(', ')});});
   const head=s.k==='trade'?'Trade':['special','raid','gift'].includes(s.k)&&g.v?g.v:[ESN[s.k],g.v].filter(Boolean).join(' · ');
-  for(const [c,rows] of by)out.push([li,[[many?g.f:'',head,QL[c]||''].filter(Boolean).join(' · '),rows]]);}));
+  [...by].sort((a,b)=>QO.indexOf(a[0])-QO.indexOf(b[0])).forEach(([c,rows])=>out.push([li,[[many?g.f:'',head,QL[c]||''].filter(Boolean).join(' · '),rows.sort((x,y)=>(x.d-y.d)||(parseFloat(y.show)||0)-(parseFloat(x.show)||0))]]));}));
  return out;}
 // The Extra card: the last card on the Locations page. Rows the player adds for a place the guide has no slot for
 // (TK.x: free-text place, a species from the Other… search or failed), counted with the tracker, its dupes and backup.
