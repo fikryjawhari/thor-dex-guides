@@ -728,7 +728,9 @@ TOG.locs=TOG.l=d=>{if(d.matches('details.split[data-a]')){const b=d.querySelecto
  else if(d.matches('details.sec')){if(d.open)LO.s[d.dataset.s]=1;else delete LO.s[d.dataset.s];loSave();}};
 function listLocs2(scroll){fil.innerHTML='';const s=st.q;const li=st.lopenLi;st.lopenLi=null;
  // Opened from a Pokemon page (#/l/<place>): open its box and place, then scroll it under the search bar.
- let tk=null;if(li!=null&&LOC2A[li]!=null){const a=LOC2A[li];LO.o[LGRP.find(g=>g.a.includes(AR[a].in??a)).a[0]]=1;tk=AR[a].in!=null?AR[a].in+'.0':a+'.'+places(a).find(p=>p.ls.includes(li)).j;delete LO.x[tk];loSave();}
+ // A standard card (esCard: one area, no sub-slots) is one box, k <slot>.0, whichever floor the place is.
+ let tk=null;if(li!=null&&LOC2A[li]!=null){const a=LOC2A[li],o=AR[a].in??a,g=LGRP.find(g=>g.a.includes(o));LO.o[g.a[0]]=1;
+  tk=AR[a].in!=null||(ESV&&g.a.length===1&&!AR[o].sub)?o+'.0':a+'.'+places(a).find(p=>p.ls.includes(li)).j;delete LO.x[tk];loSave();}
  const hit=i=>ARS(i).some(i=>AR[i].n.toLowerCase().includes(s)||slotL(i).some(li=>LOC[li].toLowerCase().includes(s)||(locs[li]||[]).some(([p])=>p.key.includes(s))));
  const list=LGRP.map((g,gi)=>gi).filter(gi=>!s||LGRP[gi].a.some(hit));
  app.innerHTML=tkBar()+(s?'':segBar('lc-all all'))+
