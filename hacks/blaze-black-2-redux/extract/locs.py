@@ -1,8 +1,9 @@
 """BB2R Locations and tracker: doc tables first, mirror only as a measured cross-check.
 
-AREA_ALIASES maps walkthrough source headings to one or more canonical AR names. Seasonal source headers map
-through area_name(). Doc floor/room boundaries stay intact, like EI's tracker-defined map boundaries. Gift buildings
-fold into their town; grottos and seasons are sections, never extra tracker slots. AR order is frozen by check.py.
+AREA_ALIASES maps walkthrough headings to the published AR/LOC names, before standard() renames merged parents.
+Seasonal source headers map through area_name(). build() retains the original append-only identities for joins;
+standard() writes the shared encounter shape after the walkthrough has joined them. Gift buildings fold into their
+town; grottos and seasons never add tracker slots. AR order is frozen by check.py.
 """
 from collections import Counter
 import html
@@ -10,6 +11,7 @@ from pathlib import Path
 import re
 
 from common import H, RD, SPECIES, doc, drayano, report
+import encstd
 
 
 SEASON = re.compile(r' - (Spring|Summer|Autumn|Winter|Spring, Summer, Autumn|Spring/Summer/Autumn)$')
@@ -132,6 +134,101 @@ PHONE_TRADES = {
     'Yancy (male player)': ('Meowth', 'Wobbuffet', 'Ralts', 'Shieldon', 'Rhyhorn', 'Shellos-W', 'Mawile', 'Spiritomb', 'Snorlax', 'Teddiursa', 'Spinda', 'Togepi'),
     'Curtis (female player)': ('Mankey', 'Wobbuffet', 'Ralts', 'Cranidos', 'Rhyhorn', 'Shellos-E', 'Sableye', 'Spiritomb', 'Snorlax', 'Phanpy', 'Spinda', 'Togepi'),
 }
+
+MERGES = ('Relic Castle', 'Celestial Tower', 'Seaside Cave', 'Victory Road', 'Virbank Complex',
+          'Reversal Mountain', 'Pinwheel Forest')
+SEASONS = {'Spring': 'sp', 'Summer': 'su', 'Autumn': 'au', 'Winter': 'wi',
+           'Spring, Summer, Autumn': 'sa', 'Spring/Summer/Autumn': 'sa'}
+
+
+def encounter_table(source, method, area, parent):
+    parts = method.split(', ')
+    head = parts[0]
+    season = SEASON.search(source)
+    when = SEASONS[season[1]] if season else ''
+    if source == 'Undella Bay' and head == 'Surf':
+        when = 'wi' if 'Bay (Winter)' in parts else 'sa'
+    floor = area.removeprefix(parent + ' - ') if area != parent else ''
+    if parent not in MERGES:
+        floor = ''
+    explicit = next((part for part in parts if re.fullmatch(r'B?\d+F', part)), '')
+    if explicit and explicit not in floor.split(' - '):
+        floor = ' - '.join(part for part in (floor, explicit) if part)
+    if head == 'Rooms':
+        floor = parts[1]
+    if 'Dust Cloud' in parts:
+        kind, variant, chip = 'special', 'Dust clouds', ''
+    elif 'Shaking Spots' in parts:
+        kind, variant, chip = 'special', 'Shaking grass', ''
+    elif head == 'Bridge':
+        kind, variant, chip = 'special', 'Shadows', ''
+    elif head in ('Surf', 'Fish'):
+        kind, variant = 'water', ''
+        chip = ('Su' if head == 'Surf' else 'F') + ('R' if 'Dark Spot' in parts else '')
+    elif head == 'Hidden Grotto':
+        kind, variant, chip = 'special', 'Hidden Grotto', ''
+    elif head in ('Cave', 'Floor', 'Rooms', 'Sewer') or head == 'Sand' and area != 'Desert Resort':
+        kind, variant, chip = 'cave', '', ''
+    elif head in ('Grass', 'Sand', 'Swamps'):
+        kind, variant, chip = 'grass', 'Doubles' if 'Doubles' in parts else '', ''
+    else:
+        raise ValueError('unmapped encounter table: ' + source + ' / ' + method)
+    return kind, floor, variant, chip, when
+
+
+def standard(data):
+    areas = data['AR']
+    original = [area['n'] for area in areas]
+    byarea = {name: index for index, name in enumerate(original)}
+    owners = list(range(len(areas)))
+    for name in MERGES:
+        members = [index for index, area in enumerate(original) if area.startswith(name + ' - ')]
+        parent = members[0]
+        areas[parent]['n'] = name
+        for member in members[1:]:
+            areas[member]['in'] = parent
+            owners[member] = parent
+        report('Encounter merge: %s %d -> 1; parent %d; members %s' %
+               (name, len(members), parent, ', '.join(map(str, members[1:]))))
+    encounters = [encstd.LevelAwareEnc() for area in areas]
+    wild = drayano.wild(doc('Wild Area Changes'), 'bb2r')
+    for source in wild['areas']:
+        for group in source['groups']:
+            if not group['rows']:
+                continue
+            name = wild_area_name(source['name'], group['method'])
+            index = byarea[name]
+            parent = owners[index]
+            kind, floor, variant, chip, when = encounter_table(source['name'], group['method'], name, areas[parent]['n'])
+            for row in group['rows']:
+                note = '; '.join(part for part in (('Form: ' + row['species']) if row['species'].startswith('Unown-') else '', row['note']) if part)
+                encounters[parent].add(kind, species_id(row['species']), row['rate'], lv=row['levels'],
+                                       floor=floor, v=variant, chip=chip, when=when, note=note,
+                                       loc=areas[index]['l'][0])
+    for pokemon in data['P']:
+        previous = pokemon['w']
+        pokemon['w'] = []
+        for location, method, rate, level, note, *flag in previous:
+            if flag and not method.startswith('Hidden Grotto'):
+                continue
+            index = next(index for index, area in enumerate(areas) if location in area['l'])
+            parent = owners[index]
+            floor = original[index].removeprefix(areas[parent]['n'] + ' - ') if areas[parent]['n'] in MERGES else ''
+            if method.startswith('Hidden Grotto'):
+                kind, variant = 'special', method.rsplit(' - ', 1)[0]
+            else:
+                kind = 'trade' if method == 'Trade' else 'gift'
+                variant = method
+            encounters[parent].add(kind, pokemon['id'], lv=level, floor=floor, v=variant,
+                                   t=rate, note=note, loc=location)
+    for area in areas:
+        area.pop('es', None)
+    data['LOC'][0] = 'Aspertia City'
+    for index, encounter in enumerate(encounters):
+        encounter.write(data, index)
+    encstd.finish(data)
+    report('Encounter standard: AR %d unchanged; visible tracker slots %d; 4 seasonal places already share their slots' %
+           (len(areas), sum(not area.get('ns') and 'in' not in area for area in areas)))
 
 
 def area_name(name):

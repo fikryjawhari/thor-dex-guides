@@ -2057,6 +2057,14 @@ items areas: 86 places (records and shops); 70 join a LOC area; no LOC area (no 
   move format: SolarBeam -> Solar Beam (2: Item Changes:307, TM table)
   move format: U-Turn -> U-turn (4: Item Changes:451, TM table, Bulbapedia shop Battle Subway)
 walkthrough: 22 splits, 117 stops (31 on the way), 466 trainers, 104 areas, 907 item lines + 1048 shop lines placed, 0 unplaced
+Encounter merge: Relic Castle 7 -> 1; parent 14; members 23, 24, 25, 26, 27, 28
+Encounter merge: Celestial Tower 4 -> 1; parent 32; members 33, 34, 35
+Encounter merge: Seaside Cave 2 -> 1; parent 43; members 44
+Encounter merge: Victory Road 9 -> 1; parent 58; members 59, 60, 61, 62, 63, 64, 65, 66
+Encounter merge: Virbank Complex 2 -> 1; parent 6; members 7
+Encounter merge: Reversal Mountain 2 -> 1; parent 36; members 37
+Encounter merge: Pinwheel Forest 2 -> 1; parent 78; members 79
+Encounter standard: AR 104 unchanged; visible tracker slots 82; 4 seasonal places already share their slots
 held items: 4 P entries: latias [['Soul Dew', 100]]; latios [['Soul Dew', 100]]; giratina [['Griseous Orb', 100]]; giratina_origin [['Griseous Orb', 100]]
 held items with no P entry (not shown): none
 item text: 514 IX entries from the ROM bag text (no in-battle text yet)
@@ -2084,8 +2092,8 @@ doc name fixes: 18 (species 6, move 11, ability 1)
   species fuzzy: Snubull -> Snubbull (1: Type Changes:39)
   species fuzzy: Grabull -> Granbull (1: Type Changes:40)
   species fuzzy: Poliswine -> Piloswine (1: Evolution Changes:60)
-  species fuzzy: Cherrim -S -> Cherrim (2: Locations, Locations)
-  species fuzzy: Whiripede -> Whirlipede (2: Locations, Locations)
+  species fuzzy: Cherrim -S -> Cherrim (3: Locations, Locations, Locations)
+  species fuzzy: Whiripede -> Whirlipede (3: Locations, Locations, Locations)
   species typo: Treeko -> Treecko (1: Locations)
   move alias: Vice Grip -> Vise Grip (1: Move Changes:31)
   move typo: Submisson -> Submission (1: Move Changes:41)

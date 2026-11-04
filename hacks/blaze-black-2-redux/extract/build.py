@@ -33,6 +33,7 @@ def main():
             report('not built yet:', module.__name__, '(%s)' % error)
     for k, v in EMPTY.items():
         data.setdefault(k, v)
+    locs.standard(data)
     held.build(data)                    # P.hi from held_items.json (the user's ROM, read by held_items.py)
     item_desc.build(data)               # IX from item_desc.json (the user's ROM text bank, read by item_desc.py)
     move_metadata.build(data)
