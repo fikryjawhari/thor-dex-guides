@@ -467,9 +467,9 @@ const isMem=a=>AR[a].in!=null&&!!AR[AR[a].in]&&!AR[AR[a].in].sub,slotOf=a=>isMem
 const slotL=a=>a==null||!AR[a]?[]:[a,...(MEM[a]||[])].flatMap(x=>AR[x].l);
 // A member with card: [floor...] (ESV) is still part of its slot's tracker, but shows those of the slot's floors on a card
 // of its own, in its own route place (BB2R's Relic Passage, Castelia side). CARDF[slot] = the floors its members show;
-// cardOf(a) = the area whose card a place of a is on.
+// cardOf(a) = the area whose card a place of a is on (a plain member whose floor is on a member's card: on = that member).
 const CARDF={};if(ESV)AR.forEach(A=>{if(A.card&&isMem(AR.indexOf(A)))A.card.forEach(f=>(CARDF[A.in]=CARDF[A.in]||new Set()).add(f));});
-const isCard=a=>ESV&&!!AR[a].card&&isMem(a),cardOf=a=>isCard(a)?a:AR[a].in??a;
+const isCard=a=>ESV&&!!AR[a].card&&isMem(a),cardOf=a=>isCard(a)?a:ESV&&AR[a].on!=null&&isCard(AR[a].on)?AR[a].on:AR[a].in??a;
 // A merged slot with no entry of its own shows its first floor's (route order); the others stay stored ("also:").
 for(const [a,ms] of Object.entries(MEM)){if(TK.e[a])continue;const m=ms.find(x=>TK.e[x]);if(m!=null){TK.e[a]=TK.e[m];delete TK.e[m];tkSave();}}
 const areaSpecies=a=>{const seen=new Set(),out=[];slotL(a).forEach(li=>(locs[li]||[]).forEach(([p,w])=>{if(w[1]==='Trade')return;if(!seen.has(p.id)){seen.add(p.id);out.push(p);}}));return out;};
@@ -1090,7 +1090,7 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=!(WO.x[k]===1
  const steps=stopEnt(s).map(({j,x,m})=>{if(m)return misHTML(m);const sk=k+'.'+j;const done=!!WO.c[sk];return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-sk="${sk}" ${done?'checked':''}><span>${esc(x[0])}${x[1]?`<div class="mut small">${esc(x[1])}</div>`:''}</span></label>`;}).join('');
  const ts=(s.tr||[]).map(k=>TRK[k]).filter(t=>t&&!rivalHidden(t));
  // Encounters: one box per area with its own tracker; several areas get a short tag (the area name minus the stop's).
- const areas=[];s.a.flatMap(a=>isCard(a)?[a]:ARS(a)).forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=ESV&&(A.es||isCard(ai))?esLines(ai,cf):A.es?secLines(ai,cf).concat(A.l.flatMap(li=>adjRows(li,cf,notSec).map(r=>[li,r]))):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;areas.push([ai,A,enc]);});
+ const areas=[];s.a.flatMap(a=>isCard(cardOf(a))?[cardOf(a)]:ARS(a)).forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=ESV&&(A.es||isCard(ai))?esLines(ai,cf):A.es?secLines(ai,cf).concat(A.l.flatMap(li=>adjRows(li,cf,notSec).map(r=>[li,r]))):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;areas.push([ai,A,enc]);});
  const multi=areas.length>1;
  const enc=areas.map(([ai,A,enc])=>{const tag=multi?(A.n.startsWith(s.n+' ')?A.n.slice(s.n.length+1):A.n):'';
   return `<div class="area">${A.ns&&tag?`<span class="atag">${esc(tag)}</span>`:''}${trackerHTML(slotOf(ai),tag)}${CF.walkAreaNote&&A.note?`<div class="trnote">${esc(A.note)}</div>`:''}`+enc.map(([li,[m,rows]])=>`<div class="encl"><span class="mut">${A.l.length>1||LOC[li]!==A.n?esc(LOC[li])+' · ':''}${esc(m)}:</span> ${rows.map(x=>`<span class="${x.d?'dupe':''}"><a href="#/p/${x.p.id}">${esc(x.p.name)}</a> ${esc(x.show)}</span>`).join(', ')}</div>`).join('')+'</div>';}).join('');
