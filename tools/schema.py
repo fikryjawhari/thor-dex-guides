@@ -23,7 +23,7 @@ ORDER = {
           'stone', 'sloc', 'nu', 'fc', 'cf'],
     'MV': ['t', 'c', 'bp', 'ac', 'pp', 'pr', 'cr', 'd', 'b', 'tg', 'f', 'se', 'h', 'dc', 'e', 'cf', 'x', 'aiEffect', 'aiChance'],
     'MI': ['a', 'i', 'w', 'e', 'm', 'h', 's'],
-    'AR': ['n', 'l', 'st', 'sub', 'in', 'es', 'fo', 'map', 'ns', 'note'],
+    'AR': ['n', 'l', 'st', 'sub', 'in', 'card', 'on', 'es', 'fo', 'map', 'ns', 'note'],
     'IT': ['n', 'k', 'note', 'r'],
     'WK': ['splits', 'np', 'docs', 'ko', 'cheats', 'cnote'],
     'split': ['n', 'note', 'st'],
@@ -143,6 +143,16 @@ def standardise(D):
     for a in D['AR']:
         a.pop('t', None)
         order(a, 'AR')
+    # Encounter standard: a member with its own card (card = the slot's floors it shows) and a plain member on it (on).
+    for i, a in enumerate(D['AR']):
+        if 'card' in a:
+            slot = D['AR'][a['in']] if isinstance(a.get('in'), int) else None
+            assert slot is not None and 'sub' not in slot and 'es' not in a, f'AR[{i}].card needs in = a slot and no es'
+            floors = slot.get('fo') or sorted({g.get('f', '') for s in slot.get('es', []) for g in s['g']})
+            assert a['card'] and all(isinstance(f, str) and f in floors for f in a['card']), f'AR[{i}].card: not floors of AR[{a["in"]}]'
+        if 'on' in a:
+            on = D['AR'][a['on']] if isinstance(a['on'], int) and 0 <= a['on'] < len(D['AR']) else None
+            assert on is not None and 'card' in on and on['in'] == a.get('in'), f'AR[{i}].on needs a card member of the same slot'
     for section in D['IT']:
         for row in section['r']:
             assert len(row) == 6 and isinstance(row[5], list) and len(row[5]) == len(row[1].splitlines()), 'invalid IT pickup keys'
