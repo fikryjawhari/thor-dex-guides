@@ -40,10 +40,7 @@ from link (same library id, saved state kept).
 9. Radical Red follow-ups: in-game checks, one real `.srm` import, Gulp Missile, Chillet's sprite.
 10. Check tiers past ~10 guides (the last check-speed follow-up).
 11. Calc: range compare: noted for later (space); `plans/calc-range-compare.md`.
-12. Encounter box standard across guides: `plans/encounters.md`. Template unit done on `worktree-encounters`
-    (2026-11-04: `tools/encstd.py`, template, scenarios `encounters` + guide-update 28c, Eternal X converted); next the
-    guides session (one talkable agent per guide; the plan's "Template unit: done" says what each needs).
-13. Radical Red encounter / Locations / walkthrough fixes from the playtest: in 12's Radical Red unit.
+12. Encounter standard follow-ups: Thor checks, source assumptions to confirm in-game, two empty T3 folders.
 
 ## Next session
 
@@ -51,8 +48,8 @@ from link (same library id, saved state kept).
   in the standard, the other six unchanged (domcompare: identical). Next: the guides session from the plan, each guide
   a tab branch `worktree-encounters-<hack>` off it. Phone preview: `encounters-eternal-x.html`.
 
-- **Unpushed on `main` (the user's call, 2026-11-04):** one calc button per trainer (row preview line / card name
-  line; the per-Pokémon Calc vs is gone), gate clean. It ships with Open 12 / 13 as one batch: don't push before.
+- **Unpushed on `main` (2026-11-04):** one calc button per trainer, and the encounter standard on every guide (Open
+  12's follow-ups), full gate clean. The user decides when to push; then update each guide on the Thor (Open 1).
 - **Calc plans done** (merged 2026-11-03): gauntlet carry (every guide with chains), Hardlove AI (odds, switch-ins,
   doubles, Field → AI), Find trainer by location, gate hardening (`-X utf8`, text lint, accept lists, auto-baseline,
   build freshness). Next: the user's Thor / in-game tests (Open 1), then range compare (Open 11) or a new guide.

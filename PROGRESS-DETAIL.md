@@ -5,6 +5,13 @@ that section), not the whole file.
 
 ## Recent merges
 
+- **Merged 2026-11-04 from `worktree-encounters`:** the encounter standard on all seven guides (`tools/encstd.py`
+  writes `AR.es` / `AR.fo` and the flagged `P.w`; `D.ESV` 2, required by the schema): a card per location, floors in
+  one white box, the seven sections by kind code, chips on rates, the grouped tracker picker, the Extra card (`TK.x`).
+  Slot merges by met location (members via `AR.in`; `AR.card` / `AR.on` for BB2R's two Relic Passage cards; `AR.to`
+  for EI's Underwater split into Routes 124 / 126). Radical Red's playtest fixes (one card per location, no empty
+  houses, Starter / Roaming cards, egg-hatch cards, return-visit stops named and showing only their new lines via
+  `stop.e`). The template's older encounter paths are gone (EI's egg sub-slots keep `locSlots`).
 - **Merged 2026-11-03 from `worktree-calc-plans`:** gauntlet carry (`gc` = the chain's trainer keys on every member,
   `extractlib.gauntlets`; 23 chains in five guides; the calc carries the player's side, keeps each member's foe state,
   snapshots on a forward step, ↺ resets the member then the gauntlet, dots and accent ‹ ›; `ST.gc` / `ST.gcSel`), the
@@ -127,22 +134,14 @@ Write a family's first guide with its siblings in mind; lift shared code when th
     Sun, Eternal X; cheats: EI; no tutor moves: EI), domcompare / consistency / fit on the rest. Not EI by default:
     the scenarios were written on it, so it fails least (past audits failed on the other guides).
 11. **Calc: range compare:** noted for later (space); `plans/calc-range-compare.md`.
-12. **Encounter box standard** (the user, 2026-11-04; decided 2026-11-04: `plans/encounters.md` is the spec; the text below is the starting proposal it replaced): the guides
-    lay encounters out differently (EI / Hardlove build them from `P.w` rows: a box per floor, a drop-down per rod; the
-    others from each extract's `AR.es` sections, each labelled its own way). Proposed standard to mock up: one card per
-    location (floors and buildings inside it, only when something is catchable there); sections named by method,
-    never by the place, in a fixed order: Grass / Cave (a subheading per floor or patch), Surfing, Fishing (one section,
-    Old / Good / Super Rod subheadings), Rock Smash / Headbutt, Raids / Swarms / DexNav and the like, Gifts & Static,
-    Trades; level / cap once per subheading; day / night as the rate's icon. Spec to `plans/encounters.md`.
-13. **Radical Red encounter / walkthrough fixes** (the user's playtest, 2026-11-04; follow from 12's spec, built after
-    it): sections are titled with the place's own name (shown twice); the grass rows aren't flagged `w[5]===1`, so
-    they repeat in a Special section re-scaled ("12.5%, was 20%"); day / night is a note, not the rate; "cap N" on
-    every row; 66 of 154 areas are houses / marts / Centers with nothing to catch, each its own Locations card, and
-    the two-word grouping shows Pallet Town twice (one card per location); Roaming sits under Viridian City; the
-    starter is under the Pallet Town stop, but Oak's Lab is its own met location (give it its own place); repeated
-    walkthrough stops (Route 2 ×3, Route 4 ×4, Silph Co. ×4...) are real return visits but show the same name and the
-    whole encounter box again: label why ("Route 2 · Cut") and show only what's new; the Lavender stop is named
-    "Lavender Town Mr. Fuji's House".
+12. **Encounter standard follow-ups** (built 2026-11-04 on every guide; `template/README.md` → Encounters, each hack's
+    notes.md): check on the Thor, then confirm these source assumptions in-game: Hardlove's Mt. Silver Mountainside /
+    Snowy Area as Grass (no map types in the source); Unbound's Cinder Volcano + Depths as one met location; Photonic
+    Sun's Sandy Cave as Cave, the Megamart as Grass; BB2R's Undella Bay surf with no season as Spring–Autumn; EI's
+    old Underwater entry (failed / unknown species) moving to Route 124; Radical Red's Three Isle Path with no slot. A
+    place link lands on the location's white box, not its floor heading (the blocks check would need a change).
+    Empty T3 worktree folders under `~/.t3/worktrees/thor-dex-guides/` (radical-red, emerald-imperium) were held open
+    at deletion: remove them.
 
 ## Decisions
 
