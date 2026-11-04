@@ -281,7 +281,7 @@ def build(data):
     for species, (step, area, method, how, others) in sorted(egg_of.items()):
         if species not in without_eggs:
             also = 'also ' + ', '.join(data['LOC'][a] for a in others) if others else ''
-            enc[slot_of(data, place_of[area])].add('gift', species, v=method, loc=area, note='; '.join(
+            put(enc, slot_of(data, place_of[area]), step, area, 'gift', species, v=method, loc=area, note='; '.join(
                 x for x in (how.replace(' (%s)' % method, ''), also) if x))
             found.add(species)
             sheet_counts['sheet egg-only species'] += 1
@@ -321,6 +321,19 @@ CHIP = {'Surf': 'Su', 'Old Rod': 'O', 'Good Rod': 'G', 'Super Rod': 'S'}
 GIFT_V = {'Fossil (pick one)': 'Gift (fossil)'}
 STARTER_LOC = "Oak's Lab"          # the Starter card's place (its own met location)
 ROAMING = ('Roaming', 'Kanto')     # the Roaming card and its place (LOC)
+
+
+# Each encounter line's unlock (walk.py: a return visit shows only the lines new since the last one): slot ->
+# {(kind, floor, v, chip): [the lowest data.js step, {LOC index}]}
+LINES = {}
+
+
+def put(enc, slot, step, area, kind, species, *args, **kw):
+    line = LINES.setdefault(slot, {}).setdefault((kind, kw.get('floor', ''), kw.get('v', ''), kw.get('chip', '')),
+                                                 [step, set()])
+    line[0] = min(line[0], step)
+    line[1].add(area)
+    enc[slot].add(kind, species, *args, **kw)
 
 
 def slot_of(data, ar):
@@ -389,22 +402,22 @@ def standardise(data, groups, place_of, starter_loc, gift_area):
             if method == 'Grass/cave':
                 for when, rate in zip('dn', row['r']):
                     if rate:
-                        enc[slot].add(land, species, rate, lv=table_lv, when=when, **where)
+                        put(enc, slot, step, area, land, species, rate, lv=table_lv, when=when, **where)
             elif method in CHIP:
-                enc[slot].add('water', species, row['r'][0], lv=table_lv, chip=CHIP[method], **where)
+                put(enc, slot, step, area, 'water', species, row['r'][0], lv=table_lv, chip=CHIP[method], **where)
             elif method == 'Rock Smash':
-                enc[slot].add('special', species, row['r'][0], lv=table_lv, v='Rock Smash', **where)
+                put(enc, slot, step, area, 'special', species, row['r'][0], lv=table_lv, v='Rock Smash', **where)
             elif method.endswith('raid'):     # the drop list once per tier; a species with other drops says so
                 if row['drops'] != common:
                     where['note'] = '; '.join(x for x in (note, 'Drops ' + row['drops'] if row['drops'] else 'No drops') if x)
-                enc[slot].add('raid', species, v=method, dr=common, **where)
+                put(enc, slot, step, area, 'raid', species, v=method, dr=common, **where)
             elif method == 'Trade':
-                enc[slot].add('trade', species, lv=own_lv, **where)
+                put(enc, slot, step, area, 'trade', species, lv=own_lv, **where)
             else:
                 v = GIFT_V.get(method, method)
                 if LOC[area].endswith('Game Corner Exchange') and v == 'Gift':
                     v = 'Prize'
-                enc[slot].add('gift', species, lv=own_lv, v=v, t=pick, **where)
+                put(enc, slot, step, area, 'gift', species, lv=own_lv, v=v, t=pick, **where)
     for i, A in enumerate(AR):
         A.pop('es', None)
         if A.get('in') is None and i not in (roam, gift):

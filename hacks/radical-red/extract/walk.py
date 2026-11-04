@@ -9,11 +9,15 @@ one in the split before (a boss's reward is the next step's bucket), else the fi
 import collections
 
 from common import DATA, report
+import encstd
+import locs
+import schema
 import items
 import trainers
 from route import ROUTE, route   # noqa: F401 (check.py reads walk.route)
 
 STATS = {}
+LINES_AT = {}   # stop key -> {slot: [encounter line labels new there]} (stop_lines)
 
 # pickups with no data.js area (items.PICKUPS area None): item -> stop key
 NO_AREA = {
@@ -119,6 +123,7 @@ def build(data):
             how['np'] += 1
             report('walkthrough: pickup with no stop: %s (%s, step %s)' % (pickup['item'], areas[pickup['area']]['name'], step))
     data['WK'] = dict(splits=splits, np=np)
+    stop_lines(data, order, stops)
     placed = set(a for split, key, places in order for a in places)
     loose = [a for a in range(len(areas)) if a not in placed]
     STATS.update(splits=len(splits), stops=len(stops), steps=sum(len(stop['s']) for stop in stops.values()),
@@ -128,3 +133,46 @@ def build(data):
     report('walkthrough: pickups placed by', ', '.join('%s %d' % pair for pair in sorted(how.items())))
     report('walkthrough: pickups at a later visit:', '; '.join(later_rows))
     report('walkthrough: data.js areas in no stop:', ', '.join('%d %s' % (a, areas[a]['name']) for a in loose) or 'none')
+
+
+def stop_lines(data, order, stops):
+    """A return visit shows only what is new (the user's playtest, 2026-11-04): each encounter line (the walkthrough's
+    "[floor · ]Section[ · subheading][ · chip]", tools/encstd.py label) goes to the first visit of its place in a split
+    at or after the step its table unlocks at (data.js), else the last visit. stop.e = {slot: [labels]}, written once
+    the template reads it (tools/schema.py lists stop.e)."""
+    AR = data['AR']
+    rank = {key: n for n, (split, key, places) in enumerate(order)}
+    visits = collections.defaultdict(list)          # LOC index -> [(split, key)]
+    for split, key, places in order:
+        for place in places:
+            visits[place].append((split, key))
+    by_slot = collections.defaultdict(list)          # stops listing the slot itself (Roaming, Mystery Gift)
+    for split, key, places in order:
+        for a in stops[key]['a']:
+            by_slot[AR[a].get('in', a)].append((split, key))
+    e = collections.defaultdict(lambda: collections.defaultdict(list))
+    moved, late = 0, []
+    for slot, lines in locs.LINES.items():
+        A = AR[slot]
+        many = len(A.get('fo') or {g.get('f', '') for s in A.get('es', []) for g in s['g']}) > 1
+        for (kind, floor, v, chip), (step, places) in lines.items():
+            label = encstd.label(kind, v, chip, floor if many else '')
+            seen = sorted({x for place in places for x in visits.get(place, [])} or set(by_slot[slot]),
+                          key=lambda x: rank[x[1]])
+            if not seen:
+                continue
+            after = [key for split, key in seen if split >= step]
+            key = after[0] if after else seen[-1][1]
+            if not after:
+                late.append('%s %s (step %d)' % (A['n'], label, step))
+            if key != seen[0][1]:
+                moved += 1
+            if label not in e[key][slot]:
+                e[key][slot].append(label)
+    if 'e' in schema.ORDER['stop']:
+        for key, by in e.items():
+            stops[key]['e'] = {str(slot): labels for slot, labels in by.items()}
+    report("walkthrough: encounter lines on a later visit than the place's first: %d; lines unlocked after every visit "
+           '(on the last): %s' % (moved, '; '.join(late) or 'none'))
+    LINES_AT.clear()
+    LINES_AT.update({key: dict(by) for key, by in e.items()})
