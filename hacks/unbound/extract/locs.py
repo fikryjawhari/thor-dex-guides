@@ -2,9 +2,8 @@
 dens, Legendary Pokémon and Mystery Gift pages, checked against the public 2.1.1.1 location guide workbook ("Doc says"
 rows where only it lists an encounter) and RomHackDex's location pages (membership, report only).
 
-One tracker slot per area (EI's floor rule): floors, sub-places and dens are sections of their area. Numeric-rate rows
-are AR.es sections (rows r [day, night]) repeated in P.w with w[5] = 1; everything else (gifts, statics, trades,
-legendaries, the doc's rows) is a plain P.w row and shows under the area's Special section.
+Source tables and rows are audited in their original method/time shape, then encounters.py writes the encounter
+standard with encstd. Cinder Volcano Depths keeps its saved index as a member of Cinder Volcano.
 """
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -282,7 +281,7 @@ VARIANTS = {'frillish_f', 'unfezant_f', 'pumpkaboo_l', 'pumpkaboo_m', 'gourgeist
             'minior_blue', 'wishiwashi_s'}
 
 
-def build(data):
+def build(data, *, standard=True):
     pages = {page.title: page for page in WIKI.locations()}
     if set(pages) != set(ORDER):
         raise ValueError('Location page inventory changed: %s' % (set(pages) ^ set(ORDER)))
@@ -540,3 +539,6 @@ def build(data):
             '%s [%s] | RHD only: %s | guide only: %s' % (area, ', '.join(names), ', '.join(missing) or '-',
                                                          ', '.join(extra) or '-')
             for area, names, missing, extra in rhd)))
+    if standard:
+        import encounters
+        encounters.build(data)
