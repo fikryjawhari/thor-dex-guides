@@ -26,6 +26,7 @@ from dex import BASE_LABEL, FORMS, FORM_NAMES, VERSION  # noqa: E402
 import itemstd
 import items
 import locs
+from encounters_check import check_standard
 from gid import build as build_gid, replacements, tables
 
 D = json.load(open(data, encoding='utf-8'))
@@ -307,50 +308,23 @@ check(len(wild['grottos']) == 20 and sum(len(grotto['rows']) for grotto in wild[
       '20 grottos / 206 rarity entries')
 check(Counter(row['rarity'] for grotto in wild['grottos'] for row in grotto['rows']) ==
       {'Common': 78, 'Uncommon': 67, 'Rare': 60, 'Guaranteed': 1}, 'grotto rarity groups and guarantee')
-initial_areas = [area['n'] for area in D['AR'][:104]]
+initial_areas = ['Starter' if area.get('st') else D['LOC'][area['l'][0]] for area in D['AR'][:104]]
+initial_areas[67] = 'Route 8, Moor of Icirrus - All Seasons'
 check(len(initial_areas) == 104 and hashlib.sha256(json.dumps(initial_areas, separators=(',', ':')).encode()).hexdigest() ==
       '064e9b5747db74c05140e9c9170af3d79f60e96c75d3dc38512557dea6d8e924',
       'initial 104 AR indexes must remain append-only (81 source headers are not 81 tracker slots)')
 check(len(set(area['n'] for area in D['AR'])) == len(D['AR']), 'one tracker slot per canonical area')
 check(D['AR'][0].get('st') == 1 and not any(area.get('sub') for area in D['AR']), 'one Starter slot; no seasonal/grotto/egg sub-slots')
 check(sorted(D['ARO']) == list(range(len(D['AR']))), 'ARO is a permutation, without changing saved AR indexes')
-areas = {area['n']: area for area in D['AR']}
+areas = {name: area for name, area in zip(initial_areas + ['Moor of Icirrus'], D['AR'])}
 for area in D['AR']:
     check(all(0 <= index < len(D['LOC']) for index in area['l']), 'location indexes: ' + area['n'])
 for pokemon in P:
     check(all(0 <= row[0] < len(D['LOC']) for row in pokemon['w']), 'P.w location indexes: ' + pokemon['id'])
 for heading, names in locs.AREA_ALIASES.items():
     check(all(name in areas for name in names), 'alias points to canonical areas: ' + heading)
-expected_wild = Counter()
-for source, group in groups:
-    area = areas[locs.wild_area_name(source['name'], group['method'])]
-    season = locs.SEASON.search(source['name'])
-    label = season[1] if season else group['method']
-    section = next((section for section in area['es'] if section['n'] == label), None)
-    check(section is not None, 'wild method/season section missing: ' + source['name'] + '/' + group['method'])
-    if section:
-        method = season[1] + ' - ' + group['method'] if season else ''
-        output = next((entry for entry in section['g'] if entry['m'] == method), None)
-        check(output is not None and sum(row['r'][0] for row in output['rows']) == sum(row['rate'] for row in group['rows']),
-              'published rate-group sum differs: ' + source['name'] + '/' + group['method'])
-        if output:
-            check(Counter((row['p'], row['r'][0], re.match(r'Lv\. ([\d-]+)', row['note'])[1]) for row in output['rows']) ==
-                  Counter((locs.species_id(row['species']), row['rate'], row['levels']) for row in group['rows']),
-                  'published slot species/rates/levels differ: ' + source['name'] + '/' + group['method'])
-    for row in group['rows']:
-        species = locs.species_id(row['species'])
-        check(species in byid, 'wild species resolved: ' + row['species'])
-        method = (season[1] + ' - ' if season else '') + group['method']
-        expected_wild[(species, area['l'][0], method, str(row['rate']) + '%', row['levels'])] += 1
-actual_wild = Counter((pokemon['id'], row[0], row[1], row[2], row[3]) for pokemon in P for row in pokemon['w']
-                      if len(row) > 5 and row[5] == 1 and row[2].endswith('%'))
-check(actual_wild == expected_wild, 'P.w reproduces all 2,057 source slots with season, method, level and rate')
-grotto_sections = [section for area in D['AR'] for section in area.get('es', []) if section['n'].startswith('Hidden Grotto')]
-check(len(grotto_sections) == 20, '20 published grotto sections, not tracker areas')
-check(sum(len(group['rows']) for section in grotto_sections for group in section['g']) == 206, 'all grotto rarity rows published')
-check(all(row['r'] == [0, 0] and row['note'].split(';')[0] in ('Common', 'Uncommon', 'Rare', 'Guaranteed')
-          for section in grotto_sections for group in section['g'] for row in group['rows']), 'no invented grotto rates')
-check(any(row[1] == 'Hidden Grotto - Guaranteed' and row[3] == '30' and D['LOC'][row[0]] == 'Route 5'
+check_standard(D, wild, check)
+check(any(row[1] == 'Hidden Grotto' and 'Guaranteed' in row[2].split(', ') and row[3] == '30' and D['LOC'][row[0]] == 'Route 5'
           for row in byid['stantler']['w']), 'guaranteed Stantler shares Route 5 slot')
 check(any(row['species'] == 'Mime Jr.' and row['levels'] == '32-36' for row in rows), 'missing Lv. marker parsed')
 check(all(any(row['species'] == name for row in rows) for name in ('Unown-!', 'Unown-?', 'Porygon2')), 'punctuation/digits in names')
@@ -361,20 +335,23 @@ check(len(locs.RANCH_EGG) == 17 and 'Audino' not in locs.RANCH_EGG, 'ranch egg i
 for block, pool, area in zip(drayano.gifts(doc('Gift Pokemon'), 'bb2r'), locs.GIFT_POOLS, locs.GIFT_AREAS, strict=True):
     for name in pool:
         species = locs.species_id(name)
-        check(species in byid and any(D['LOC'][row[0]] == area for row in byid[species]['w']),
+        check(species in byid and any(D['LOC'][row[0]] == ('Aspertia City' if area == 'Starter' else area) for row in byid[species]['w']),
               'gift/static species and area resolved: ' + block['name'] + '/' + name)
 for name, record in locs.legendary_records().items():
-    check(any(D['LOC'][row[0]] == record['area'] and row[1] == ('Egg' if name == 'Manaphy' else 'Static')
+    expected_area = 'Moor of Icirrus' if name == 'Tornadus' else record['area']
+    check(any(D['LOC'][row[0]] == expected_area and row[1].split(' · ')[-1] == ('Egg' if name == 'Manaphy' else 'Static')
               for row in byid[locs.species_id(name)]['w']), 'legendary species/area/method: ' + name)
-check(not any(row[2] for row in byid['aerodactyl']['w'] if row[1] == 'Gift (Fossil revival)'),
+check(not any(row[2] for row in byid['aerodactyl']['w'] if row[1].endswith('Gift (Fossil revival)')),
       'Aerodactyl is not in Roark\'s random fossil pool')
-check(sum(row[1] == 'Choice (Roark fossil)' and row[2] == '1 of 8' for pokemon in P for row in pokemon['w']) == 8,
+check(sum(row[1].endswith('Choice (Roark fossil)') and row[2] == '1 of 8' for pokemon in P for row in pokemon['w']) == 8,
       'Roark offers one of eight fossils, with all nine species revivable')
 check(all(row[2] == '' for species in ('pansage', 'pansear', 'panpour') for row in byid[species]['w'] if row[1] == 'Gift'),
       'monkey gift depends on starter, not a random one-of-three rate')
 check({pokemon['n'] for pokemon in P if any(row[1] == 'Egg' and D['LOC'][row[0]] == 'Floccesy Ranch' for row in pokemon['w'])} ==
       set(locs.RANCH_EGG), 'ranch egg pool published completely')
-check(sum(row[1] == 'Trade' for pokemon in P for row in pokemon['w']) == 30, '3 doc + 3 other vanilla + 24 Curtis/Yancy trades')
+check(sum(row[1] == 'Trade' and 'daily trade ' not in row[4] for pokemon in P for row in pokemon['w']) == 6 and
+      sum(row[4].count('daily trade ') for pokemon in P for row in pokemon['w'] if row[1] == 'Trade') == 24,
+      '3 doc + 3 other vanilla + 24 Curtis/Yancy trades, coalesced by species with both NPC notes')
 check(any(row[1] == 'Trade' and D['LOC'][row[0]] == 'Humilau City' and 'Provisional' in row[4] for row in byid['phione']['w']),
       'Phione Humilau provisional trade')
 check({pokemon['id']: pokemon['hi'] for pokemon in P if pokemon.get('hi')} ==
@@ -383,7 +360,7 @@ check({pokemon['id']: pokemon['hi'] for pokemon in P if pokemon.get('hi')} ==
 comparison = locs.mirror_comparison(wild)
 check((comparison['areas'], comparison['match'], comparison['doc_only'], comparison['mirror_only']) == (81, 1296, 761, 0),
       'RomHackDex audit reproduced: 81 areas / 1,296 match / 761 omissions / zero disagreements')
-print('Locations: 81 source headers; 104 initial AR slots; 352 sections; 2,057 wild rows; 20 grottos / 206 entries; '
+print('Locations: ESV 2; 81 source headers; 104 initial AR slots + Moor at 104; 73 tracker slots; 2,057 wild rows; 20 grottos / 206 entries; '
       '47 legendary species; 30 trades; all source percentage groups reproduced')
 ids, gid = tables(), D['GID']
 check(all(f'{dex}:0' in gid['sp'] for dex in range(1, 650)), 'GID covers every base species 1-649')

@@ -7,6 +7,7 @@
 //      kept across a reload, in the backup code; removing them and Reset all clear them; an older backup (no x) loads.
 //   e3 old saves: a tracker save from before the standard (no x) loads unchanged; open sections saved by the old
 //      section names ('area.place.Grass') open the same section by code; other names drop.
+//   e4 split slots: a published slot split by species (AR.to) moves its entry, or keeps it as "also:".
 import assert from 'node:assert/strict';
 import { SIZE_SMALL, guideArg, readGuide, runChecks } from '../calc_check_lib.mjs';
 
@@ -19,7 +20,10 @@ const NAMES = { grass: 'Grass', cave: 'Cave', water: 'Water', special: 'Special'
 const AR = data.AR || [];
 // A slot with the most sections (and floors when the guide has them), and one with a water chip.
 const rank = a => (AR[a].es || []).length * 10 + (AR[a].fo || []).length;
-const slots = AR.map((A, a) => a).filter(a => AR[a].es && AR[a].in == null && !AR[a].st && !AR[a].ns);
+// A member with its own card (AR.card: the slot's floors it shows); slots with one are checked by CARD below.
+const CARDS = AR.map((A, a) => a).filter(a => AR[a].card && AR[a].in != null);
+const CUT = new Set(CARDS.map(a => AR[a].in));
+const slots = AR.map((A, a) => a).filter(a => AR[a].es && AR[a].in == null && !AR[a].st && !AR[a].ns && !CUT.has(a));
 const BIG = slots.sort((x, y) => rank(y) - rank(x))[0];
 const FLOORS = slots.find(a => (AR[a].fo || []).length > 1);
 const species = slots.length ? AR[slots[0]].es[0].g[0].rows[0].p : null;
@@ -37,7 +41,20 @@ const checks = [
       const cards = await page.value(`[...document.querySelectorAll('#app>details.split[data-a]')].map(d=>d.dataset.a)`);
       assert.equal(cards.at(-1), 'x', 'the Extra card is last');
       assert.equal(new Set(cards).size, cards.length, 'a card per location, never twice');
-      assert.ok(!cards.some(a => a !== 'x' && AR[a].in != null), 'merged members have no card');
+      assert.ok(!cards.some(a => a !== 'x' && AR[a].in != null && !AR[a].card), 'merged members have no card (unless AR.card)');
+      for (const c of CARDS) {
+        const s = AR[c].in;
+        assert.ok(cards.includes(String(c)) && cards.includes(String(s)), `${AR[c].n}: its own card and its slot's`);
+        const seen = {};
+        for (const a of [c, s]) {
+          await page.value(openCard(a));
+          seen[a] = await page.value(`(()=>{const d=document.querySelector('details.split[data-a="${a}"]');
+            return {trk:[...d.querySelectorAll('.trk[data-a]')].map(t=>t.dataset.a),floors:[...d.querySelectorAll('.stop>details.sec')].map(x=>x.dataset.s.split('|')[1])};})()`);
+          assert.deepEqual([...new Set(seen[a].trk)], [String(s)], `${AR[a].n}: the slot's tracker`);
+        }
+        assert.ok(seen[c].floors.length && seen[c].floors.every(f => AR[c].card.includes(f)), `${AR[c].n}: only its card floors`);
+        assert.ok(seen[s].floors.every(f => !AR[c].card.includes(f)), `${AR[s].n}: not the member's floors`);
+      }
       for (const a of [BIG, FLOORS].filter(x => x != null)) {
         assert.ok(await page.value(openCard(a)), `card ${AR[a].n} opens with its white box`);
         const got = await page.value(`(()=>{const d=document.querySelector('details.split[data-a="${a}"]');
@@ -128,6 +145,26 @@ const checks = [
       assert.equal(lo.ev, 2, 'migrated once');
       await page.value(openCard(a));
       assert.equal(await page.value(`document.querySelector('details.sec[data-s="${a}|${f0}|${k0}"]').open`), true, 'that section opens');
+    },
+  },
+  {
+    id: 'e4 split slots',
+    title: 'a published slot split into several (AR.to): its entry moves by species, else to in; "also:" when taken',
+    skip: skip || (AR.some(A => A.to) ? undefined : 'no split slots'), sizes: SIZE_SMALL, modes: ['normal'],
+    run: async page => {
+      const m = AR.findIndex(A => A.to), [d, ps] = AR[m].to[0], x = ps[0], y = AR[d].es[0].g[0].rows.find(r => r.p !== x).p;
+      const load = async e => {
+        await page.value(`localStorage.setItem(LS.track,${JSON.stringify(JSON.stringify({ s: '', pl: '', e, t: {} }))})`);
+        await page.reload();
+        await page.route('#/locs');
+        return page.value('TK.e');
+      };
+      assert.deepEqual(await load({ [m]: { p: nameOf(x) } }), { [d]: { p: x } }, `${AR[m].n}: ${nameOf(x)} moves to ${AR[d].n}`);
+      assert.deepEqual(await load({ [m]: { f: 1 } }), { [AR[m].in]: { f: 1 } }, `${AR[m].n}: failed goes to ${AR[AR[m].in].n}`);
+      assert.deepEqual(await load({ [m]: { p: nameOf(x) }, [d]: { p: nameOf(y) } }), { [m]: { p: x }, [d]: { p: y } }, 'kept when taken');
+      await page.value(openCard(d));
+      assert.ok(await page.value(`[...document.querySelectorAll('details.split[data-a="${d}"] .tk-also')].some(e=>e.textContent.includes(${JSON.stringify(nameOf(x))}))`),
+        `${AR[d].n}: "also: ${nameOf(x)}"`);
     },
   },
 ];

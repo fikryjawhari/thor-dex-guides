@@ -38,6 +38,7 @@ AREA_STOP = {
     'Starter': ('Cheren', 'Aspertia City'),
     'Relic Passage - Center (Main) Room': ('Colress', 'Relic Passage - Driftveil Side'),
     'Route 8, Moor of Icirrus - All Seasons': ('Post-game', 'Icirrus City, Postgame'),
+    'Moor of Icirrus': ('Post-game', 'Icirrus City, Postgame'),
     'Marvellous Bridge': ('Post-game', 'Marvelous Bridge'),
 }
 # Revisit stops that show an area again (Waterfall: the trainers that need it): (box, stop name) -> [AR names]

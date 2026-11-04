@@ -178,6 +178,7 @@ Redwood Forest [Redwood Forest, Redwood Forest - Headbutt Trees] | RHD only: - |
 Route 18 [Route 18] | RHD only: - | guide only: bayleef, binacle, bouffalant, corsola, farfetchd, kingdra, magikarp, pelipper, persian, remoraid, seadra, skuntank, sudowoodo
 Victory Road [Victory Road - 1F, Victory Road - (1F - B1F - 2F), Victory Road - 2F, Victory Road - 3F, Victory Road - 4F + Kyurem's Cave, Victory Road - B1F, Victory Road - Kyurem's Cave, Victory Road - Maze Area, Victory Road - Snowy Area] | RHD only: drakloak, minior_blue | guide only: azumarill, basculin, bruxish, chansey, dewgong, durant, finneon, floatzel, hakamo_o, jigglypuff, lapras, lumineon, lurantis, magikarp, marill, minior, psyduck, roselia, seel
 Cube Corp. [Cube Corp.] | RHD only: gyarados, wailmer, wailord | guide only: ditto, jellicent, magikarp, pelipper, tentacool
+encounter standard: ESV 2; tracker slots 63 -> 62; Cinder Volcano [11] <- Cinder Volcano Depths [35]; all 69 AR indexes retained
   ordinary: Cyclist Gerald (Thundercap Mt.): wiki 1 Pokémon, workbook 2
   ordinary: Super Nerd Avery (Victory Road): wiki 3 Pokémon, workbook 4
   ordinary: Science Society Scientist (Crystal Peak): wiki 3 Pokémon, workbook 2
