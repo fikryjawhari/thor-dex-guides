@@ -37,6 +37,19 @@ name fixes ["ability: Emperor's Prescence -> Emperor's Presence", 'ability: Gulp
 unresolved ['ability?: As One (Spectrier)']
 walkthrough: moved into its box 1.0.0 -> Mauville City
 walkthrough splits = trainer boxes: Roxanne Split [Cap 15] 12, Rustboro Rival Split [Cap 20] 3, Brawly Split [Cap 25] 6, Hot House (optional, by badges) 6, Aqua Museum Split [Cap 30] 2, Route 110 Rival Split [Cap 32] 1, Wattson Split [Cap 34] 3, Mt. Chimney Magma bosses Split [Cap 44] 12, Flannery Split [Cap 47] 2, Trick House Split [Cap 56] 4, Norman Split [Cap 59] 6, Route 119 Rival Split [Cap 64] 3, Winona Split [Cap 68] 2, Dawn in Lilycove Split [Cap 71] 12, Archie in Aqua Hideout Split [Cap 74] 6, Tate and Liza Split [Cap 76] 5, Seafloor Cavern Split [Cap 80] 10, Juan Split [Cap 82] 8, Victory Road Split [Cap 84] 3, Elite Four Split [Cap 85] 7
+encounters merge: Granite Cave: 4 -> 1 (MAPSEC_GRANITE_CAVE); members [15, 16, 17, 18]
+encounters merge: Meteor Falls: 5 -> 1 (MAPSEC_METEOR_FALLS); members [33, 34, 35, 36, 37]
+encounters merge: Mirage Tower: 4 -> 1 (MAPSEC_MIRAGE_TOWER); members [44, 45, 46, 47]
+encounters merge: Mt. Pyre: 8 -> 1 (MAPSEC_MT_PYRE); members [67, 68, 69, 70, 71, 72, 73, 74]
+encounters merge: Safari Zone: 6 -> 1 (MAPSEC_SAFARI_ZONE); members [76, 77, 78, 79, 80, 81]
+encounters merge: Shoal Cave: 5 -> 1 (MAPSEC_SHOAL_CAVE); members [86, 87, 88, 89, 90]
+encounters merge: Magma Hideout: 8 -> 1 (MAPSEC_MAGMA_HIDEOUT); members [101, 102, 103, 104, 105, 106, 107, 108]
+encounters merge: Seafloor Cavern: 9 -> 1 (MAPSEC_SEAFLOOR_CAVERN); members [109, 110, 111, 112, 113, 114, 115, 116, 117]
+encounters merge: Sky Pillar: 3 -> 1 (MAPSEC_SKY_PILLAR); members [120, 121, 122, 132]; 1 no-slot area folded in
+encounters merge: Victory Road: 3 -> 1 (MAPSEC_VICTORY_ROAD); members [124, 125, 126]
+encounters merge: Trick House: 3 -> 1 (MAPSEC_TRICK_HOUSE); members [41, 42, 43]
+encounters underwater: legacy 100 -> 83 (default), 91 (species 170, 171, 369); Water / Underwater, no standalone tracker
+encounters: ESV 2 standard sections; egg sub-slots retained: 25
 move metadata: expansion moves_info.h; dex-site conditional group flags; Showdown target fallback: Light Screen: side/team target (allySide; expansion USER); Reflect: side/team target (allySide; expansion USER); Sleep Talk: target (self; expansion DEPENDS); Nature Power: target (normal; expansion DEPENDS); Tailwind: side/team target (allySide; expansion USER); Mist: side/team target (allySide; expansion USER); Safeguard: side/team target (allySide; expansion USER); Mirror Move: target (normal; expansion DEPENDS); Snatch: target (self; expansion DEPENDS); Metronome: target (self; expansion DEPENDS); Lucky Chant: side/team target (allySide; expansion USER); Howl: side/team target (allies; expansion USER); Aurora Veil: side/team target (allySide; expansion USER); Quick Guard: side/team target (allySide; expansion USER); Aromatherapy: side/team target (allyTeam; expansion USER); Wide Guard: side/team target (allySide; expansion USER); Assist: target (self; expansion DEPENDS); Magnetic Flux: side/team target (allySide; expansion USER); Heal Bell: side/team target (allyTeam; expansion USER); Copycat: target (self; expansion DEPENDS); Magic Coat: target (self; expansion DEPENDS); Flower Shield: side/team target (all; expansion USER); Mat Block: side/team target (allySide; expansion USER); Crafty Shield: side/team target (allySide; expansion USER); Gear Up: side/team target (allySide; expansion USER); Jungle Healing: side/team target (allies; expansion USER)
 changes doc: species rows 1224 matched 1224 unmatched 0 []
 changes doc: species differing from the dex 16

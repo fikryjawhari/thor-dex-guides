@@ -26,6 +26,12 @@ Fetched 2026-10-18 (v1.3 / 1.3.1) from the official docs folder linked from [eme
 
 ## Re-fetch
 
+Encounter map metadata (`extract/map_meta.json`, derived 2026-11-04) uses the same release pin below:
+`data/maps/*/map.json` from the decomp archive. Keep only the map IDs in eidex's live wild encounter tables
+(exclude UNUSED, deduplicate Altering Cave), plus `MAP_SKY_PILLAR_TOP`; record each map's `region_map_section`
+and its `map_type` without the `MAP_TYPE_` prefix. This small derived table is committed, not the raw maps/archive.
+It supplies the Grass/Cave decision and verifies that merged tracker floors share a met location.
+
 Source updates: `watch.json` (`uv run python -I tools/check_updates.py emerald-imperium`).
 
 ```bash
