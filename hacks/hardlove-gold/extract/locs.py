@@ -4,6 +4,7 @@ starter() moves the three starter encounters to their own Starter area. Areas (A
 """
 from common import (X, S, SRC, collections, datetime, fid, json, key, lev, note1, os, re, report, unicodedata,
                     CALC, OLDP, SD, dexsite, enccheck, hgsource, xlsx)  # noqa: F401
+import encstd
 
 
 def sheet(D):
@@ -254,3 +255,73 @@ def starter(D):
         first_stop['a'].insert(0, starter_area)
     # Locations order: the Starter box first, like every guide (it sits at the end of AR so saved trackers keep their slots)
     D['ARO'] = [starter_area] + [index for index in range(len(areas)) if index != starter_area]
+
+
+CAVE_AREAS = {'Dark Cave', 'Sprout Tower', 'Union Cave', 'Slowpoke Well', 'Burned Tower', 'Cliff Cave',
+              'Mt. Mortar', 'Whirl Islands', 'Ice Path', "Dragon's Den", 'Victory Road'}
+CAVE_PLACES = {'Ruins of Alph - Inside', 'Mt. Silver Entrance', 'Mt. Silver (Moltres Room)'}
+GIFT_KINDS = {'Other': 'Static', 'Legendary': 'Static', 'Roamer': 'Roaming', 'Togepi Egg': 'Egg',
+              'Random Starter': 'Random gift (starter)', 'Random Gift': 'Random gift', 'Random Trap': 'Trap',
+              'Random Fossil': 'Gift (fossil)', 'Random Pseudo': 'Random gift (pseudo)',
+              'Game Corner prize': 'Prize', 'Starter choice': 'Starter choice'}
+TIMES = {'Morning': 'm', 'Day': 'd', 'Night': 'n'}
+
+
+def standardise(data):
+    """Build the encounter standard from verified rows, keeping published tracker slots and LOC indexes.
+
+    Indoor land maps in Encounters.c (D15, D18, D25, D26, D38-40, D42-44, D50) use Cave; D24's outside map and
+    D41's Mountainside / Snowy Area are outdoors. The snapshot has no map-type headers: explicit area/place sets
+    distinguish those maps, not the displayed method. Safari and Azalea's Headbutt are triggered mechanics.
+    """
+    areas, locations = data['AR'], data['LOC']
+    encounters = [encstd.Enc() for area in areas]
+    owners = {location: index for index, area in enumerate(areas) for location in area['l']}
+    source_names = list(locations)
+    def floor_of(area, place):
+        if len(area['l']) == 1 or area['n'] == 'National Park':
+            return ''
+        floor = place.removeprefix(area['n']).strip(' :-')
+        return floor[1:-1] if floor.startswith('(') and floor.endswith(')') else floor
+    for index, area in enumerate(areas):
+        encounters[index].floors = list(dict.fromkeys([''] + [floor_of(area, source_names[location])
+                                                            for location in area['l']]))
+        if area.get('st'):
+            locations[area['l'][0]] = 'New Bark Town'
+        if area['n'] == 'National Park':
+            for location in area['l']:
+                locations[location] = 'National Park'
+    for pokemon in data['P']:
+        rows, pokemon['w'] = pokemon['w'], []
+        for location, method, rate, level, note, *flags in rows:
+            owner = owners[location]
+            area = areas[owner]
+            place = source_names[location]
+            when = TIMES.get(place.rsplit(' - ', 1)[-1], '') if area['n'] == 'National Park' else ''
+            floor = floor_of(area, place)
+            chip = {'Surf': 'Su', 'Fishing': 'F'}.get(method, '')
+            variant = ''
+            if method in ('Land', 'Surf', 'Fishing', 'Rock Smash', 'Headbutt'):
+                if area['n'] == 'Safari Zone':
+                    kind, variant = 'special', 'Safari'
+                elif place == 'Azalea Town (Headbutt)' or method == 'Headbutt':
+                    kind, variant = 'special', 'Headbutt'
+                elif method == 'Rock Smash':
+                    kind, variant = 'special', 'Rock Smash'
+                elif chip:
+                    kind = 'water'
+                else:
+                    kind = 'cave' if area['n'] in CAVE_AREAS or place in CAVE_PLACES else 'grass'
+            elif method == 'Trade':
+                kind = 'trade'
+            else:
+                assert method in GIFT_KINDS, f'encounter method not classified: {place}: {method}'
+                kind, variant = 'gift', GIFT_KINDS[method]
+            numeric = float(rate[:-1]) if rate.endswith('%') else None
+            encounters[owner].add(kind, pokemon['id'], numeric, lv=level, floor=floor, v=variant, chip=chip,
+                                  when=when, note=note, t='' if numeric is not None else rate, loc=location)
+    for index, encounter in enumerate(encounters):
+        encounter.write(data, index)
+    encstd.finish(data)
+    report('encounter standard: tracker slots 62 -> 62 (61 encounter slots + Roaming); AR and LOC indexes unchanged; '
+           'National Park morning/day/night already share AR 20; no slot merges')

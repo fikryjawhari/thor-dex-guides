@@ -629,6 +629,10 @@ one of its es lines). Page (`ENCOUNTER STANDARD` in dex.js):
 - Merged slots: floors that were slots of their own are hidden members (`AR[i].in` = the slot, which has no `sub`);
   the slot shows the first recorded entry, the others stay stored, count, and show as "also: <species> (<floor>)"
   with a clear button. A member's lone entry moves to the slot on load.
+- A member with its own card (`AR[i].card` = [floor, ...] of the slot's `fo`; BB2R's Relic Passage, Castelia side):
+  one tracker slot, two cards. The member's card sits in its own route place under its own `n` and shows those
+  floors; the slot's card shows the rest. Both show the slot's tracker (one `TK.e[slot]`, every species) and its
+  "also:" line. A place link (`#/l/<i>`) and a walkthrough stop on the member show its card's floors.
 - Extra card: last on the page. Rows the player adds (`TK.x` [{w place, p species | f 1}]): a place (in the viewer the
   letters keyboard, words capitalised) and a species from the Other… search or failed, a remove button each, "+ Add
   encounter". Counted in caught / failed and dupes, in the backup code; Reset all clears them. No explanation text.
