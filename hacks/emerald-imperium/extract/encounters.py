@@ -22,8 +22,7 @@ def build(data):
     owner = {location: index for index, area in enumerate(areas) for location in area['l']}
     merged = {}
     for name in MERGES:
-        members = [index for index, area in enumerate(areas)
-                   if not area.get('ns') and area['n'].startswith(name + ' ')]
+        members = [index for index, area in enumerate(areas) if area['n'].startswith(name + ' ')]
         assert len(members) > 1, (name, members)
         assert all(any(locations[location] in maps for location in areas[index]['l']) for index in members), name
         sections = {maps[locations[location]][0] for index in members for location in areas[index]['l']
@@ -31,11 +30,14 @@ def build(data):
         assert len(sections) == 1, (name, sections)
         parent = members[0]
         for index in members:
-            merged[index] = (parent, areas[index]['n'][len(name):].strip())
+            floor = areas[index]['n'][len(name):].strip().removesuffix(' (post-game, no slot)')
+            merged[index] = (parent, floor)
             if index != parent:
                 areas[index]['in'] = parent
         areas[parent]['n'] = name
-        report(f'encounters merge: {name}: {len(members)} -> 1 ({next(iter(sections))}); members {members}')
+        slots = sum(not areas[index].get('ns') for index in members)
+        extra = f'; {len(members) - slots} no-slot area folded in' if slots != len(members) else ''
+        report(f'encounters merge: {name}: {slots} -> 1 ({next(iter(sections))}); members {members}{extra}')
     encounters = [encstd.Enc() for area in areas]
     for pokemon in data['P']:
         previous = pokemon['w']

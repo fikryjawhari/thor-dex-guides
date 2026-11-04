@@ -45,7 +45,7 @@ encounters merge: Safari Zone: 6 -> 1 (MAPSEC_SAFARI_ZONE); members [76, 77, 78,
 encounters merge: Shoal Cave: 5 -> 1 (MAPSEC_SHOAL_CAVE); members [86, 87, 88, 89, 90]
 encounters merge: Magma Hideout: 8 -> 1 (MAPSEC_MAGMA_HIDEOUT); members [101, 102, 103, 104, 105, 106, 107, 108]
 encounters merge: Seafloor Cavern: 9 -> 1 (MAPSEC_SEAFLOOR_CAVERN); members [109, 110, 111, 112, 113, 114, 115, 116, 117]
-encounters merge: Sky Pillar: 3 -> 1 (MAPSEC_SKY_PILLAR); members [120, 121, 122]
+encounters merge: Sky Pillar: 3 -> 1 (MAPSEC_SKY_PILLAR); members [120, 121, 122, 132]; 1 no-slot area folded in
 encounters merge: Victory Road: 3 -> 1 (MAPSEC_VICTORY_ROAD); members [124, 125, 126]
 encounters merge: Trick House: 3 -> 1 (MAPSEC_TRICK_HOUSE); members [41, 42, 43]
 encounters: ESV 2 standard sections; egg sub-slots retained: 25

@@ -98,14 +98,45 @@ Data rules:
   evolution family (both directions) of something that is; 1 = Mega / Primal; 3 = not in the wild tables (starters,
   gifts, fossils, statics, legendaries, or unobtainable). P.fc = form change (Rotom appliances, Arceus plates, Castform,
   Aegislash...: CHANGE list in dex.py), takes its base form's availability.
-- **Wild tables and areas** (locs.py). Altering Cave has 9 tables; only the first is live, the rest are skipped
-  (UNUSED_RUBY_SAPPHIRE maps skipped). Areas are the tracker's. Hatch towns (Verdanturf, Fallarbor, Mt. Chimney,
+- **Wild tables and areas** (locs.py, encounters.py). Altering Cave has 9 tables; only the first is live, the rest are skipped
+  (UNUSED_RUBY_SAPPHIRE maps skipped). Areas start in the tracker's order. Hatch towns (Verdanturf, Fallarbor, Mt. Chimney,
   Lavaridge, Fortree) get one tracker slot per egg (Fire / Water / Grass egg = starter egg by shard, Lavaridge,
   Pacifidlog egg; any of them can hatch at any of those towns), appended to AR; Oldale keeps only its own egg. Gardenia
   (Petalburg Woods, cap 20) sits in the Wattson split at cap 34 (the player delays her for a stronger team; the
   walkthrough keeps her stop). Littleroot's lab and the gift houses of Rustboro, Mossdeep, Sootopolis fold into the town
-  ("Gift (Devon Corp 2F)"). Shop rows get their shop as a sub-heading ("All free" dropped from Verdanturf's rows: gifts
+  (the building stays in the gift note). Shop rows get their shop as a sub-heading ("All free" dropped from Verdanturf's rows: gifts
   there, and the mart sells more).
+  - **Encounter standard (2026-11-04):** after `locs.split`, `encounters.build` feeds every existing encounter row
+    through `tools/encstd.py`: `AR.es`, fixed kind codes, floors, Water chips `Su/O/G/S`, Special / Rock Smash,
+    Gifts & static / Gift, Gift (fossil), Static, Roaming, egg kinds, Hot House and Choice kinds. All `P.w` rows are
+    flagged and use the same names as the walkthrough. Hot House badge conditions and roaming "1 of N" stay in
+    the notes; the source has no trade encounters. Starter remains area 0 with Littleroot Town as its heading.
+  - **Grass vs Cave / met locations:** `extract/map_meta.json` derives only `region_map_section` and `map_type`
+    from the release decomp `iriv24/pokeemerald-expansion@2576d0f3f4c861c760f0c55198e37e6d7b91683e`,
+    `data/maps/*/map.json` (124 live wild-table map IDs plus `MAP_SKY_PILLAR_TOP`). UNDERGROUND and INDOOR
+    land tables are Cave; ROUTE, OCEAN_ROUTE and CITY land tables are Grass. Thus Mt. Pyre's interior floors
+    are Cave, Exterior / Summit Grass; Safari sectors stay Grass. Every merged member has a mapped source and
+    every group's map section is checked by the build. No guessed met-location identity was needed.
+  - **Tracker merges:** Granite Cave 4→1 (`MAPSEC_GRANITE_CAVE`); Meteor Falls 5→1 (`MAPSEC_METEOR_FALLS`);
+    Mirage Tower 4→1 (`MAPSEC_MIRAGE_TOWER`); Mt. Pyre 8→1 (`MAPSEC_MT_PYRE`); Safari Zone 6→1
+    (`MAPSEC_SAFARI_ZONE`); Shoal Cave 5→1 (`MAPSEC_SHOAL_CAVE`); Magma Hideout 8→1 (`MAPSEC_MAGMA_HIDEOUT`);
+    Seafloor Cavern 9→1 (`MAPSEC_SEAFLOOR_CAVERN`); Sky Pillar 3→1 (`MAPSEC_SKY_PILLAR`); Victory Road 3→1
+    (`MAPSEC_VICTORY_ROAD`); Trick House 3→1 (`MAPSEC_TRICK_HOUSE`, puzzles 1–3 only). The actual published
+    count is **58→11**, not the survey's 57→11. Sky Pillar Top's no-slot area 132 also has `MAPSEC_SKY_PILLAR`
+    and becomes a hidden member, putting Rayquaza in the same card; it is not part of the 58 tracker slots.
+    First-floor indices stay the slots; every other area's `l` and index stay intact, with `in` pointing to the
+    first. Member `loc` values remain on `P.w`. No LOC indices or walkthrough anchors/ticks move.
+  - **Egg decision:** keep all 25 published `AR.sub` / `AR.in` hatch-town slots (134–158) and their trackers;
+    Oldale's single egg stays on area 2. Children get standard gift sections and flagged `P.w`, but the five
+    hatch-town cards still need the template's `locSlots` → `adjRows` / `LSEC` / `encTable` path, one yellow
+    egg-kind section with its own picker per slot. Keep that path and sub-slot tracker migration / `ARS` when
+    removing the template's older general encounter paths. No template changes or encstd additions.
+  - **Saved state:** all 159 AR entries, LOC entries, localStorage keys, starter key, egg keys and WK data stay
+    stable. Standard section state migrates using the shared template: recognisable legacy names map to codes;
+    unmatched method names (including Grass/cave and egg names) start closed. Area / walkthrough open state
+    and tracker entries are retained. `check_encounters.mjs` loads the captured pre-conversion HTML, records
+    every real merge-member and egg key, then loads the updated build in the same browser/storage; it also
+    checks lone-member migration (caught and failed), "also:" entries, counts and reload at 260×316 normal/dvkb.
 - **Move changes** compare EI data with Showdown Gen 9; status moves with a nominal 100 accuracy and variable-power moves
   (Showdown power 0) are not counted as changes.
 - **Move targets, properties and added effects** (`move_metadata.py`, run by `dex.move_metadata` on the merged MV):
@@ -191,7 +222,7 @@ Starter picker sets that same tracker value.
 
 Beyond the shared schema (the last section): P.cf / MV.cf
 (doc-vs-data conflicts, the "Sources disagree" card), MV.dc + MV.e (the doc's text), AR.sub / AR.in (hatch-town slots),
-AR.ns, P.w methods `Hot House (N+ badges)`, `Choice (...)`, `Starter egg`, `Pseudo egg`, `Roaming` (rates "1 of N"),
+AR.ns, standard `ESV` 2 / `AR.es` / `AR.fo`; P.w methods `Hot House`, `Choice (...)`, egg kinds, `Roaming` (rates "1 of N"),
 WK.cheats (+ `cnote`), trainer `c` (calc trainer names), `pp` (pokepaste), mon `a0` / `ld` / `pre` / `x` / `cf` /
 `src`, and the Hot House tiers in the caps list. No WK.docs, no WK.ko.
 
@@ -405,6 +436,10 @@ the old calc flag `kicking`). Release `2576d0f3` `src/battle_util.c:9177-9180` a
 list. The profile regression covers all 18 and two non-kicks; the hzla Jump Kick fixture is 84–99, not 64–76.
 
 ## Checks
+
+`check.py` checks the encounter standard and published merge/egg indices as well as the existing data checks.
+`node hacks/emerald-imperium/extract/check_encounters.mjs [before.html [after.html]]` tests the actual published-key
+migration (defaults: `.tmp/start/emerald-imperium.html`, `dist/emerald-imperium.html`; capture before changing data).
 
 `check.py` [baseline.json [current.json]]: the Locations PDF's wild tables against the dex data slot by slot; given a
 pre-pruning data.json, the keep rule for species (every trainer-used species stays), reference integrity, unchanged tables

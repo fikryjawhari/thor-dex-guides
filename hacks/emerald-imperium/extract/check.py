@@ -72,7 +72,7 @@ def check_encounters(data):
         'Shoal Cave': tuple(range(86, 91)),
         'Magma Hideout': tuple(range(101, 109)),
         'Seafloor Cavern': tuple(range(109, 118)),
-        'Sky Pillar': (120, 121, 122),
+        'Sky Pillar': (120, 121, 122, 132),
         'Victory Road': (124, 125, 126),
         'Trick House': (41, 42, 43),
     }
