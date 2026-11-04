@@ -178,7 +178,7 @@ def check_standard(data, failures):
         if len(slot) != 1 or not members or any(AR[i].get('es') or AR[AR[i]['in']].get('in') is not None for i in members):
             failures.append('merge %s: slot %s, %d members' % (name, slot, len(members)))
     left = [A['n'] for A in AR if A.get('in') is None and not A.get('ns') and not A.get('st') and
-            re.search(r"House|Gatehouse|Poke Center|Poke Mart|Gym|Chamber|Office|Room|Lab|Museum|Den", A['n'])]
+            re.search(r"House|Gatehouse|Poke Center|Poke Mart|Gym|Chamber|Office|Room|Lab|Museum|Den\b", A['n'])]
     if left:
         failures.append('buildings that are still places of their own: %s' % left)
     cards = [A['n'] for A in AR if A.get('in') is None and A.get('es')]
