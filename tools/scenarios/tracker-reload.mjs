@@ -7,7 +7,7 @@ import { startBrowser } from '../browser.mjs';
 const guide = process.argv[2];
 assert(guide, 'usage: tracker-reload.mjs <guide.html>');
 const data = JSON.parse(readFileSync(guide, 'utf8').match(/<script id="data"[^>]*>([\s\S]*?)<\/script>/)[1]);
-const area = data.AR.findIndex(entry => !entry.ns && !entry.sub && !entry.st && entry.l?.length);
+const area = data.AR.findIndex(entry => !entry.ns && !entry.sub && !entry.st && entry.in == null && entry.l?.length); // a slot (not a merged member)
 assert(area >= 0, 'guide has a trackable area');
 const key = data.cfg.ls.track;
 const selector = `.trk[data-a="${area}"]`;

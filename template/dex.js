@@ -587,8 +587,9 @@ const places=a=>{const m=new Map();AR[a].l.forEach(li=>{const n=LOC[li];if(!m.ha
 relayout(LO,AR.map((A,a)=>[String(a),places(a).map(p=>p.n)]),{x:2,s:2})&&loSave();
 const LGRP=(()=>{const out=[],two=n=>n.split(' ').length>2?n.split(' ').slice(0,2).join(' '):null;
  ARO.forEach(i=>{const A=AR[i];if(A.in!=null&&!isCard(i))return;
-  // The standard: a card per location, never grouped; a place with nothing to catch has none.
-  if(ESV){if(A.sub||A.es||isCard(i)||slotL(i).some(li=>locs[li]))out.push({k:null,one:true,a:[i]});return;}const k=two(A.n),one=places(i).length===1,p=out[out.length-1];
+  // The standard: a card per location, never grouped; a place with nothing to catch has none, unless it is a tracker
+  // slot with a note (RR's egg-hatch places: the tracker, the note, "No wild Pokémon here.").
+  if(ESV){if(A.sub||A.es||isCard(i)||(A.in==null&&!A.ns&&A.note)||slotL(i).some(li=>locs[li]))out.push({k:null,one:true,a:[i]});return;}const k=two(A.n),one=places(i).length===1,p=out[out.length-1];
   if(k&&one&&p&&p.one&&p.k===k)p.a.push(i);else out.push({k,one,a:[i]});});
  out.forEach(g=>g.n=g.a.length>1?g.k:AR[g.a[0]].n);return out;})();
 const LSEC=(k,m,tags,body)=>sectionHTML(esc(k+'.'+m),esc(m),tags,body,!!st.q||LO.s[k+'.'+m]===1);
@@ -1096,7 +1097,9 @@ function walkStop(s,si,ti,cf,shown){const k=si+'.'+ti;const closed=!(WO.x[k]===1
  const steps=stopEnt(s).map(({j,x,m})=>{if(m)return misHTML(m);const sk=k+'.'+j;const done=!!WO.c[sk];return `<label class="wstep ${done?'done':''}"><input type="checkbox" data-sk="${sk}" ${done?'checked':''}><span>${esc(x[0])}${x[1]?`<div class="mut small">${esc(x[1])}</div>`:''}</span></label>`;}).join('');
  const ts=(s.tr||[]).map(k=>TRK[k]).filter(t=>t&&!rivalHidden(t));
  // Encounters: one box per area with its own tracker; several areas get a short tag (the area name minus the stop's).
- const areas=[];s.a.flatMap(a=>isCard(cardOf(a))?[cardOf(a)]:ARS(a)).forEach(ai=>{if(shown.has(ai))return;shown.add(ai);const A=AR[ai];const enc=ESV&&(A.es||isCard(ai))?esLines(ai,cf):A.es?secLines(ai,cf).concat(A.l.flatMap(li=>adjRows(li,cf,notSec).map(r=>[li,r]))):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&A.ns)return;areas.push([ai,A,enc]);});
+ // A return visit (s.e = {slot: [line label...]}) shows only those lines, each visit that brings one (no first-visit rule).
+ const E=ESV&&s.e,areas=[];s.a.flatMap(a=>isCard(cardOf(a))?[cardOf(a)]:ARS(a)).forEach(ai=>{const want=E&&(E[slotOf(ai)]||E[ai]);if(E?!want:shown.has(ai))return;if(!E)shown.add(ai);const A=AR[ai];
+  const enc=E?esLines(ai,cf).filter(([,[m]])=>want.includes(m)):ESV&&(A.es||isCard(ai))?esLines(ai,cf):A.es?secLines(ai,cf).concat(A.l.flatMap(li=>adjRows(li,cf,notSec).map(r=>[li,r]))):A.l.flatMap(li=>adjRows(li,cf).map(r=>[li,r]));if(!enc.length&&(A.ns||E))return;areas.push([ai,A,enc]);});
  const multi=areas.length>1;
  const enc=areas.map(([ai,A,enc])=>{const tag=multi?(A.n.startsWith(s.n+' ')?A.n.slice(s.n.length+1):A.n):'';
   return `<div class="area">${A.ns&&tag?`<span class="atag">${esc(tag)}</span>`:''}${trackerHTML(slotOf(ai),tag)}${CF.walkAreaNote&&A.note?`<div class="trnote">${esc(A.note)}</div>`:''}`+enc.map(([li,[m,rows]])=>`<div class="encl"><span class="mut">${A.l.length>1||LOC[li]!==A.n?esc(LOC[li])+' · ':''}${esc(m)}:</span> ${rows.map(x=>`<span class="${x.d?'dupe':''}"><a href="#/p/${x.p.id}">${esc(x.p.name)}</a> ${esc(x.show)}</span>`).join(', ')}</div>`).join('')+'</div>';}).join('');

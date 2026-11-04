@@ -27,7 +27,7 @@ ORDER = {
     'IT': ['n', 'k', 'note', 'r'],
     'WK': ['splits', 'np', 'docs', 'ko', 'cheats', 'cnote'],
     'split': ['n', 'note', 'st'],
-    'stop': ['k', 'n', 'a', 's', 'note', 'it', 'tr', 'x'],
+    'stop': ['k', 'n', 'a', 'e', 's', 'note', 'it', 'tr', 'x'],
     'mission': ['m', 'n', 'u', 'r', 'note', 's'],
     'mission_step': ['k', 't', 'n'],
     'TR': ['g', 'caps'],
@@ -202,6 +202,10 @@ def standardise(D):
                     order(child, 'mission_step')
                 assert 'note' not in step or isinstance(step['note'], str), 'mission note must be a string'
                 order(step, 'mission')
+            if 'e' in stop:  # a return visit's new encounter lines: {slot AR index: [line label, ...]}
+                e = stop['e']
+                assert isinstance(e, dict) and e and all(k.isdigit() and int(k) < len(D['AR']) and isinstance(v, list) and v
+                    and all(isinstance(x, str) for x in v) for k, v in e.items()), f'stop {stop["k"]}: e = {{slot: [label...]}}'
             order(stop, 'stop')
         order(split, 'split')
     keys = [stop['k'] for split in wk['splits'] for stop in split['st']]

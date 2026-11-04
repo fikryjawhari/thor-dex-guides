@@ -638,6 +638,10 @@ one of its es lines). Page (`ENCOUNTER STANDARD` in dex.js):
   Underwater into Routes 124 / 126): no card, no tracker of its own. Its saved entry moves on load to the slot whose
   list has the species (else `in`); when that slot already has an entry, it stays stored, counts, and shows there as
   "also:".
+- A tracker slot with nothing wild but a note (RR's egg-hatch places) gets a card: the tracker, the note, "No wild
+  Pokémon here." A return visit in the walkthrough (`stop.e` = {slot: [line label, ...]}, labels as
+  `tools/encstd.py` label makes them) shows only those lines, at each visit that lists some; without `e` a place's
+  lines show at its first stop only.
 - Extra card: last on the page. Rows the player adds (`TK.x` [{w place, p species | f 1}]): a place (in the viewer the
   letters keyboard, words capitalised) and a species from the Other… search or failed, a remove button each, "+ Add
   encounter". Counted in caught / failed and dupes, in the backup code; Reset all clears them. No explanation text.
