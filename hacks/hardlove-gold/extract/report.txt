@@ -142,16 +142,6 @@ items: walkthrough rows added as IT lines: 0
 items: walkthrough rows kept apart from a line at the same place (unsure): 0
 items: lines relabelled from what they say: none
 pickup keys: 307 pickups, 282 walkthrough rows keyed
-trainer keys: 7 matched loosely
-  1.0.5: Camper Roland (Route 32) matched on id, st, pl, sp
-  6.5.0: Rocket Grunt♂ #16 (Team Rocket HQ B2F) matched on id, n, st, pl
-  6.7.0: Rocket Grunt♂ #21 (Team Rocket HQ B3F) matched on id, n, st, pl
-  6.7.3: Rocket Grunt♂ #22 (Team Rocket HQ B3F) matched on id, n, st, pl
-  7.2.0: Rocket Grunt♂ #26 (Goldenrod City Radio Tower 1F) matched on id, n, st, pl
-  7.3.0: Rocket Grunt♀ #27 (Goldenrod City Radio Tower 2F) matched on id, n, st, pl
-  7.4.0: Rocket Grunt♂ #31 (Goldenrod City Radio Tower 3F) matched on id, n, st, pl
-trainer keys: 1 new keys
-  t329: Roughneck Rodney (Victory Road 1F)
 trainers put in walkthrough order: Morty Split [Cap 39]
 item text: 2 own, 212 pooled, 0 from the wiki, 14 made up, 32 Mega Stone standard, 0 with no description
 in battle: 134 shown items with battle text, 126 without
